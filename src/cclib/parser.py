@@ -1,9 +1,9 @@
 """
-GaussSum is a parser for computational chemistry log files.
+cclib is a parser for computational chemistry log files.
 
-See http://gausssum.sf.net for more information.
+See http://cclib.sf.net for more information.
 
-Copyright (C) 2005 Noel O'Boyle <baoilleach@gmail.com>
+Copyright (C) 2006 Noel O'Boyle and Adam Tenderholt
 
  This program is free software; you can redistribute and/or modify it
  under the terms of the GNU General Public License as published by the
@@ -17,10 +17,8 @@ Copyright (C) 2005 Noel O'Boyle <baoilleach@gmail.com>
 
 Contributions (monetary as well as code :-) are encouraged.
 """
-import math,sys,logging,copy,re,os,time
+import math,sys,logging,copy,re,os,time # How many of these are necessary?
 import Numeric
-from utils import *
-from gnupy import Gnuplot
 
 def convertor(value,fromunits,tounits):
     """Convert from one set of units to another.
@@ -52,474 +50,14 @@ class PeriodicTable(object):
 class Logfile(object):
     """Abstract class that contains the methods that act on data
     parsed from various types of logfile."""
+    def __init__(self,filename):
+        self.filename = filename
 
-    def tidyevalue(self):
-        """Create a namedlist of orbital number, orbital name and evalue."""
+    def float(number):
+        """Convert a string to a float avoiding the problem with Ds."""
+        number = number.replace("D","E")
+        return float(number)
 
-        if not hasattr(self,"orbitalname"):
-            self.calcorbitalname()
-
-        numbers = range(len(self.evalue[0]),0,-1)
-        orbitalname = copy.deepcopy(self.orbitalname)
-
-        for x in orbitalname:
-            x.reverse()
-        evalue = copy.deepcopy(self.evalue)
-        for y in evalue:
-            y.reverse()
-        
-        if len(self.HOMO)==1:
-            # Restricted
-            colA = Namedlist("Orbital no.",numbers)
-            colB = Namedlist("Name",orbitalname[0])
-            colC = Namedlist("Eigenvalue (eV)",evalue[0])
-            t = colA + colB + colC
-        else:
-            # Unrestricted
-            colA = Namedlist("Orbital no.",numbers)
-            colB = Namedlist("Alpha Name",orbitalname[0])
-            colC = Namedlist("Alpha Eigenvalue (eV?)",evalue[0])
-            colD = Namedlist("Beta Name",orbitalname[1])
-            colE = Namedlist("Beta Eigenvalue (eV?)",evalue[1])
-            t = colA + colB + colC + colD + colE
-
-        return t
-
-    def calcorbitalname(self):
-        """Calculate the name of each orbital in terms of HOMO/LUMO."""
-
-        self.logger.info("Calculating orbitalname [[]]")
-        self.orbitalname = []
-        for homo in self.HOMO:
-            names = []
-            for i in range(0,len(self.evalue[0])): # i runs over orbital indices
-                if i==homo:
-                    name = "HOMO"
-                elif i==homo+1:
-                    name = "LUMO"
-                elif i>homo:
-                    name = "L + %d" % (i-homo-1)
-                else:
-                    name = "H - %d" % (homo-i)
-                names.append(name)
-            self.orbitalname.append(names)
-                
-    
-    def calcscfprogress(self):
-        """Calculate the progress of the self-consistent field convergence.
-
-        Requires:
-         scfvalue
-         scftarget
-        """
-        self.logger.info("Calculating scfprogress [[]]")
-        answer = []
-        for geom in self.scfvalue:
-            thisgeom = []
-            for scfcycle in range(len(geom[0])):
-                progress = 0
-                for i in range(len(self.scftarget)):
-                    target = self.scftarget[i]
-                    value = geom[i][scfcycle]
-                    if value>target:
-                        progress += math.log(value/target)
-                thisgeom.append(progress)
-            answer.append(thisgeom)
-        self.scfprogress = answer
-
-    def tidyscfprogress(self):
-        """Print out the progress of the self-consistent field convergence."""
-
-        df = Namedlist("Step",range(1,len(self.scfprogress[-1])+1))
-        df += Namedlist("Progress",self.scfprogress[-1])
-
-        return df
-
-    def plotscfprogress(self,filename):
-        """Plot the progress of the SCF optimisation."""
-        self.logger.info("Plotting the progress of the SCF convergence")
-
-        g = Gnuplot(filename)        
-
-        g.data( zip(range(1,len(self.scfprogress[-1])+1),self.scfprogress[-1]),"notitle with lines")
-        g.data( zip(range(1,len(self.scfprogress[-1])+1),self.scfprogress[-1]),"notitle with points")
-
-        g.commands( "set xrange [%d:%d]" % (1,len(self.scfprogress[-1])),
-                    "set yrange [0:]",
-                    "set title 'Progress of the SCF convergence'",
-                    "set xlabel 'Step number",
-                    "set ylabel 'Progress'" )
-
-        g.plot()
-        
-
-    def tidygeoprogress(self):
-        """Print out the progress of the geometry optimisation."""
-
-        df = Namedlist("Step",range(1,len(self.geoprogress)+1))
-        df += Namedlist("Progress",self.geoprogress)
-
-        return df
-                   
-    def calcgeoprogress(self):
-        """Calculate the progress of the geometry optimisation.
-
-        Requires:
-         geovalue
-         geotarget
-        """
-        self.logger.info("Calculating geoprogress []")        
-        answer = []
-        for geom in self.geovalue:
-            progress = 0
-            for i in range(len(self.geotarget)):
-                target = self.geotarget[i]
-                value = geom[i]
-                if value>target:
-                    progress += math.log(value/target)
-            answer.append(progress)
-        self.geoprogress = answer
-
-    def plotgeoprogress(self,filename):
-        """Plot the progress of the geometry optimisation."""
-        self.logger.info("Plotting the progress of the geometry optimisation")
-
-        g = Gnuplot(filename)
-
-        g.data( zip(range(1,len(self.geoprogress)+1),self.geoprogress),"notitle with lines")
-        g.data( zip(range(1,len(self.geoprogress)+1),self.geoprogress),"notitle with points")
-
-        g.commands(  "set xrange [%d:%d]" % (1,len(self.geoprogress)),
-                     "set yrange [0:]",
-                     'set title "Progress of the geometry optimisation"',
-                     'set xlabel "Step number"',
-                     'set ylabel "Progress"' )
-                    
-        g.plot()
-
-
-    def tidyirspectrum(self):
-        """Print out the IR spectrum."""
-
-        df = Namedlist("Energy (cm-1)",self.irspectrum.xvalues)
-        df += Namedlist("Intensity",self.irspectrum.spectrum[:,0])
-
-        return df
-
-    def plotirspectrum(self,filename):
-        """Plot the IR spectrum."""
-
-        self.logger.info("Plotting the IR spectrum")
-        
-        start = self.irspectrum.start
-        end = self.irspectrum.end
-
-        g = Gnuplot(filename)
-
-        g.data( zip(self.irspectrum.xvalues,self.irspectrum.spectrum[:,0]),"notitle with lines")
-
-        g.commands( "set xlabel 'Frequency (cm-1)'",
-                    "set ylabel 'IR activity'",
-                    "set xrange [%f:%f] reverse" % (start,end),
-                    "set yrange [*:*] reverse",
-                    "set key bottom",
-                    "set title 'IR spectrum'" )
-        
-        g.plot()
-
-    def tidyramanspectrum(self):
-        """Print out the Raman spectrum."""
-
-        df = Namedlist("Energy (cm-1)",self.ramanspectrum.xvalues)
-        df += Namedlist("Intensity",self.ramanspectrum.spectrum[:,0])
-
-        return df
-
-    def plotramanspectrum(self,filename):
-        """Plot the Raman spectrum."""
-
-        self.logger.info("Plotting the Raman spectrum")
-        
-        start = self.ramanspectrum.start
-        end = self.ramanspectrum.end
-
-        g = Gnuplot(filename)
-
-        g.data( zip(self.ramanspectrum.xvalues,self.ramanspectrum.spectrum[:,0]),"notitle with lines")
-
-        g.commands( "set xlabel 'Frequency (cm-1)'",
-                    "set ylabel 'Raman activity'",
-                    "set title 'Raman spectrum'" )
-        
-        g.plot()
-
-    def tidyuvspectrum(self):
-        """Print out the UV spectrum."""
-
-        df = Namedlist("Energy (cm-1)",self.uvspectrum.xvalues)
-        df += Namedlist("Wavelength (nm)",
-                        [convertor(x,"cm-1","nm") for x in self.uvspectrum.xvalues])
-        df += Namedlist("Oscillator strength", self.uvspectrum.spectrum[:,0])
-
-        return df    
-
-
-    def calcuvspectrum(self):
-        """Convolute the UV spectrum.
-
-        Requires:
-         etenergy
-         etosc
-        """
-        self.logger.info("Calculating uvspectrum 'GaussianSpectrum'")        
-        # UV spectrum is Gaussian in *energy* not *wavelength*
-        start = convertor(self.pref['uvvis.start'],"nm","cm-1")
-        end = convertor(self.pref['uvvis.end'],"nm","cm-1")
-        
-        t = GaussianSpectrum(start,end,self.pref['uvvis.numpoints'],
-                             ( self.etenergy,[[x*2.174e8/self.pref['uvvis.fwhm'] for x in self.etosc]] ),
-                             self.pref['uvvis.fwhm'])
-        self.uvspectrum = t
-
-    def plotuvspectrum(self,filename):
-        """Plot the UV spectrum."""
-
-        self.logger.info("Plotting the UV spectrum")
-        wavelen = [convertor(x,"cm-1","nm") for x in self.uvspectrum.xvalues]
-        start = convertor(self.uvspectrum.start,"cm-1","nm")
-        end = convertor(self.uvspectrum.end,"cm-1","nm")
-
-        g = Gnuplot(filename)
-
-        g.data( zip(wavelen,self.uvspectrum.spectrum[:,0]),"notitle with lines")
-        g.data( zip(self.etwavelen,self.etosc),"notitle axes x1y2 with impulses")
-
-        g.commands(  "set xrange [%f:%f]" % (start,end),
-                     "set ytics nomirror",
-                     "set y2tics",
-                     'set title "UV spectrum"',
-                     'set ylabel "Epsilon"',
-                     'set y2label "Oscillator strength"' )
-
-        g.plot()
-    
-
-    def calcirspectrum(self):
-        """Convolute the IR spectrum.
-
-        Requires:
-         vibfreq
-         ir
-        """
-        self.logger.info("Calculating irspectrum 'Spectrum'")                
-        # IR spectrum is Lorentzian in energy
-        start = self.pref['ir.start']
-        end = self.pref['ir.end']
-        
-        t = Spectrum(start,end,self.pref['ir.numpoints'],
-                     [zip(self.vibfreq,self.ir)],
-                     self.pref['ir.fwhm'], lorentzian)
-        self.irspectrum = t
-
-    def calcramanspectrum(self):
-        """Convolute the Raman spectrum.
-
-        Requires:
-         vibfreq
-         raman
-        """
-        self.logger.info("Calculating ramanspectrum 'Spectrum'")                
-        # Raman spectrum is Lorentzian in energy
-        start = self.pref['raman.start']
-        end = self.pref['raman.end']
-        
-        t = Spectrum(start,end,self.pref['raman.numpoints'],
-                     [zip(self.vibfreq,self.raman)],
-                     self.pref['raman.fwhm'], lorentzian)
-        self.ramanspectrum = t
-
-
-    def calcpdos(self):
-        """Calculate the contribution of various groups to each orbital.
-
-        Requires:
-         mocoeff
-         overlap
-
-        Optional:
-         groups (defaults to "allorbitals")
-        """
-        self.logger.info("Calculating pdos")
-        # contrib is a matrix of the contributions of each basis fn to each MO
-        # dot() is matrix multiplication
-        #  * is tensor multiplication(?): corresponding entries are multiplied
-        contrib = self.mocoeff * Numeric.dot(self.mocoeff,self.overlap)
-
-        if not hasattr(self,"groups"):
-            self.groups = Groups(self.orbitals,type="allorbitals")
-
-        groups = self.groups.groups
-        groupnames = groups.keys()
-        data = Numeric.zeros( (self.NBsUse,len(groups)), "float")
-
-        for i,groupname in enumerate(groupnames):
-            for basisfn in groups[groupname]:
-                data[:,i] += contrib[:,basisfn]
-
-        self.pdos = data
-
-    def tidypdos(self):
-        """Create a nice dataframe for the pdos."""
-
-        if not hasattr(self,"orbitalname"):
-            self.calcorbitalname()
-        orbitalname = copy.deepcopy(self.orbitalname)
-        for x in orbitalname:
-            x.reverse()
-        evalue = copy.deepcopy(self.evalue)
-        for y in evalue:
-            y.reverse()
-            
-        groupnames = self.groups.groups.keys()
-        numbers = range(len(self.evalue[0]),0,-1)            
-        colA = Namedlist("Orbital number",numbers)
-
-        if len(self.HOMO)==1:
-            # Restricted
-            colB = Namedlist("Name",orbitalname[0])
-            colC = Namedlist("Eigenvalue (eV)",evalue[0])
-            t = colA + colB + colC
-            for i in range(len(groupnames)):
-                groupdata = list(self.pdos[:,i])
-                groupdata.reverse()
-                t += Namedlist(groupnames[i],groupdata)
-        else:
-            # Unrestricted
-            pass
-
-        return t
-
-    def tidydosspectrum(self):
-        """Print the dos spectrum nicely."""
-
-        df = Namedlist("Energy (eV)",self.dosspectrum[0].xvalues)
-        for i,spectrum in enumerate(self.dosspectrum):
-            name = "DOS"
-            if len(self.HOMO)==2:
-                name = ["Alpha DOS","Beta DOS"] [i]
-            df += Namedlist(name, spectrum.spectrum[:,i])
-
-        return df
-
-    def plotdosspectrum(self,filename):
-        """Plot the DOS spectrum."""
-
-        self.logger.info("Plotting the DOS spectrum")
-        
-        start = self.dosspectrum[0].start
-        end = self.dosspectrum[0].end
-
-        g = Gnuplot(filename)
-
-        g.data( zip(self.dosspectrum[0].xvalues,self.dosspectrum[0].spectrum[:,0]),'title "DOS spectrum"')
-        # HOMO holds the index of the HOMO in evalue
-        realorbs = [ (x,-1) for x in self.evalue[0][:self.HOMO[0]+1] ]
-        virtorbs = [ (x,-1) for x in self.evalue[0][self.HOMO[0]+1:] ]
-        g.data(realorbs,'title "Occupied orbitals" with impulses')
-        g.data(virtorbs,'title "Virtual orbitals" with impulses')
-        
-        g.commands(  "set data style lines",
-                     "set xlabel 'Energy (eV)'",
-                     "set xrange [%f:%f]" % (start,end),
-                     "set yrange [-1:*]",
-                     'set title "Density of states spectrum"' )
-        
-        g.plot()
-   
-
-    def calcdosspectrum(self):
-        """Convolute the density of states spectrum."""
-        self.logger.info("Calculating dosspectrum")
-        self.dosspectrum = []
-
-        for i in range(len(self.HOMO)):
-             t = GaussianSpectrum(self.pref['dos.start'],self.pref['dos.end'],self.pref['dos.numpoints'],
-                                 ( self.evalue[i], [[1]*len(self.evalue[i])]),
-                                 self.pref['dos.fwhm'])
-             self.dosspectrum.append(t)
-
-    def tidypdosspectrum(self):
-        """Make a nice print out of the pdosspectrum."""
-
-        groups = self.groups.groups
-        groupnames = groups.keys()
-
-        df = Namedlist("Energy (eV)",self.pdosspectrum[0].xvalues)
-        for i,spectrum in enumerate(self.pdosspectrum):
-            prefix = ""
-            if len(self.HOMO)==2:
-                prefix = ["Alpha","Beta"] [i]
-            df += Namedlist([prefix+x for x in groupnames], spectrum.spectrum)
-
-        return df
-
-    def plotpdosspectrum(self,filename,stacked=False):
-        """Plot the PDOS spectrum."""
-
-        self.logger.info("Plotting the PDOS spectrum")
-        
-        start = self.pdosspectrum[0].start
-        end = self.pdosspectrum[0].end
-
-        g = Gnuplot(filename)
-
-        tot = Numeric.zeros( len(self.pdosspectrum[0].xvalues),"double" )
-        for i,v in enumerate(self.groups.groups.keys()):
-            g.data( zip(self.pdosspectrum[0].xvalues,tot+self.pdosspectrum[0].spectrum[:,i]),                    'title "%s"' % v)
-            if stacked:
-                tot += self.pdosspectrum[0].spectrum[:,i]
-        
-        # HOMO holds the index of the HOMO in evalue
-        realorbs = [ (x,-1) for x in self.evalue[0][:self.HOMO[0]+1] ]
-        virtorbs = [ (x,-1) for x in self.evalue[0][self.HOMO[0]+1:] ]
-        g.data(realorbs,'title "Occupied orbitals" with impulses')
-        g.data(virtorbs,'title "Virtual orbitals" with impulses')
-        
-        g.commands( "set data style lines",
-                    "set xlabel 'Energy (eV)'",
-                    "set xrange [%f:%f]" % (start,end),
-                    "set yrange [-1:*]",
-                    'set title "Partial density of states spectrum"' )
-        g.plot()
-
-        
-    def calcpdosspectrum(self):
-        """Convolute the partial density of states spectrum."""
-        self.logger.info("Calculating pdosspectrum")
-        
-        self.pdosspectrum = []
-        groups = self.groups.groups
-        groupnames = groups.keys()
-
-        if len(self.HOMO)==1:
-            # Restricted
-            peaks = ( self.evalue[0],[self.pdos[:,x] for x in range(len(groups))] )
-            t = GaussianSpectrum(self.pref['dos.start'],self.pref['dos.end'],self.pref['dos.numpoints'],
-                         peaks,self.pref['dos.fwhm'])
-            self.pdosspectrum.append(t)
-        else:
-            # Unrestricted
-            peaks = ( self.evalue[0],[self.pdos[0][:,x] for x in range(len(groups))] )
-            t = GaussianSpectrum(self.pref['dos.start'],self.pref['dos.end'],self.pref['dos.numpoints'],
-                         peaks,self.pref['dos.fwhm'])
-            self.pdosspectrum.append(t)
-            peaks = ( self.evalue[1],[self.pdos[1][:,x] for x in range(len(groups))] )
-            t = GaussianSpectrum(self.pref['dos.start'],self.pref['dos.end'],self.pref['dos.numpoints'],
-                         peaks,self.pref['dos.fwhm'])
-            self.pdosspectrum.append(t)
-            
-
-        
 class G03(Logfile):
     """A Gaussian 03 log file
     
@@ -540,11 +78,6 @@ class G03(Logfile):
     SCFRMS,SCFMAX,SCFENERGY = range(3) # Used to index self.scftarget[]
     def __init__(self,filename):
 
-        self.filename = filename
-
-        # Set up the preferences (with the default values)
-        self.pref = Preferences()
-        
         # Set up the logger...
         # Note: all loggers with the same name share the logger.
         # Here, loggers with different filenames are different
@@ -612,11 +145,11 @@ class G03(Logfile):
                 if not hasattr(self,"scftarget"):
                     self.logger.info("Creating attribute scftarget[]")
                 self.scftarget = [None]*3
-                self.scftarget[G03.SCFRMS] = G03.float(line.split('=')[1].split()[0])
+                self.scftarget[G03.SCFRMS] = self.float(line.split('=')[1].split()[0])
             if line[1:44]=='Requested convergence on MAX density matrix':
-                self.scftarget[G03.SCFMAX] = G03.float(line.strip().split('=')[1][:-1])
+                self.scftarget[G03.SCFMAX] = self.float(line.strip().split('=')[1][:-1])
             if line[1:44]=='Requested convergence on             energy':
-                self.scftarget[G03.SCFENERGY] = G03.float(line.strip().split('=')[1][:-1])
+                self.scftarget[G03.SCFENERGY] = self.float(line.strip().split('=')[1][:-1])
 
             if line[1:10]=='Cycle   1':
 # Extract SCF convergence information (QM calcs)
@@ -630,15 +163,15 @@ class G03(Logfile):
                         self.logger.debug(line)
                     if line.find(" RMSDP")==0:
                         parts = line.split()
-                        newlist[G03.SCFRMS].append(G03.float(parts[0].split('=')[1]))
-                        newlist[G03.SCFMAX].append(G03.float(parts[1].split('=')[1]))
+                        newlist[G03.SCFRMS].append(self.float(parts[0].split('=')[1]))
+                        newlist[G03.SCFMAX].append(self.float(parts[1].split('=')[1]))
                         energy = 1.0
                         if len(parts)>4:
                             energy = parts[2].split('=')[1]
                             if energy=="":
-                                energy = G03.float(parts[3])
+                                energy = self.float(parts[3])
                             else:
-                                energy = G03.float(energy)
+                                energy = self.float(energy)
                         # I moved the following line back a TAB to see the effect
                         # (it was originally part of the above "if len(parts)")
                         newlist[G03.SCFENERGY].append(energy)
@@ -658,7 +191,7 @@ class G03(Logfile):
                 while line.find(" Energy")==-1:
                     self.logger.debug(line)
                     parts = line.strip().split()
-                    self.scfvalue[0].append(G03.float(parts[-1][:-1]))
+                    self.scfvalue[0].append(self.float(parts[-1][:-1]))
                     line = inputfile.next()
 
             if line[1:9]=='SCF Done':
@@ -684,12 +217,12 @@ class G03(Logfile):
                     self.logger.debug(line)
                     parts = line.split()
                     try:
-                        value = G03.float(parts[2])
+                        value = self.float(parts[2])
                     except ValueError:
                         self.logger.error("Problem parsing the value for geometry optimisation: %s is not a number." % parts[2])
                     else:
                         newlist[i] = value
-                    self.geotarget[i] = G03.float(parts[3])
+                    self.geotarget[i] = self.float(parts[3])
                 self.geovalue.append(newlist)
 
             if line[1:19]=='Orbital symmetries' and not hasattr(self,"orbsym"):
@@ -744,7 +277,7 @@ class G03(Logfile):
                     i = 0
                     while i*10+4<len(part):
                         x = part[i*10:(i+1)*10]
-                        self.evalue[0].append(G03.float(x)*27.2114) # from a.u. (hartrees) to eV
+                        self.evalue[0].append(self.float(x)*27.2114) # from a.u. (hartrees) to eV
                         i += 1
                     line = inputfile.next()            
                 if line.find('Beta')==2:
@@ -765,7 +298,7 @@ class G03(Logfile):
                     i = 0
                     while i*10+4<len(part):
                         x = part[i*10:(i+1)*10]
-                        self.evalue[1].append(G03.float(x)*27.2114) # from a.u. (hartrees) to eV
+                        self.evalue[1].append(self.float(x)*27.2114) # from a.u. (hartrees) to eV
                         i += 1
                     line = inputfile.next()   
 
@@ -786,17 +319,17 @@ class G03(Logfile):
                     self.logger.debug(line)
                     self.vibsym.extend(line.split()) # Adding new symmetry
                     line = inputfile.next()
-                    self.vibfreq.extend(map(G03.float,line[15:].split())) # Adding new frequencies
+                    self.vibfreq.extend(map(self.float,line[15:].split())) # Adding new frequencies
                     [inputfile.next() for i in [0,1]] # Skip two lines
                     line = inputfile.next()
-                    self.ir.extend(map(G03.float,line[15:].split())) # Adding IR intensities
+                    self.ir.extend(map(self.float,line[15:].split())) # Adding IR intensities
                     line = inputfile.next()
                     if line.find("Raman")>=0:
                         if not hasattr(self,"raman"):
                             self.raman = []
                             self.logger.info("Creating attribute raman[]")
                         line = inputfile.next()
-                        self.raman.extend(map(G03.float,line[15:].split())) # Adding Raman intensities
+                        self.raman.extend(map(self.float,line[15:].split())) # Adding Raman intensities
                     line = inputfile.next()
                     while len(line[:15].split())>0:
                         line = inputfile.next()
@@ -818,9 +351,9 @@ class G03(Logfile):
                 # Excited State   2:   ?Spin  -A      0.1222 eV 10148.75 nm  f=0.0000
                 parts = line[36:].split()
                 self.logger.debug(parts)
-                self.etenergy.append(convertor(G03.float(parts[0]),"eV","cm-1"))
-                self.etwavelen.append(G03.float(parts[2]))
-                self.etosc.append(G03.float(parts[4].split("=")[1]))
+                self.etenergy.append(convertor(self.float(parts[0]),"eV","cm-1"))
+                self.etwavelen.append(self.float(parts[2]))
+                self.etosc.append(self.float(parts[4].split("=")[1]))
                 self.etsym.append(line[21:36].split())
                 
                 line = inputfile.next()
@@ -846,7 +379,7 @@ class G03(Logfile):
                         tomoindex = 1
                     toMO = int(p.match(toMO).group())
 
-                    percent = G03.float(t[1])
+                    percent = self.float(t[1])
                     sqr = percent**2*2 # The fractional contribution of this CI
                     if percent<0:
                         sqr = -sqr
@@ -865,7 +398,7 @@ class G03(Logfile):
                 parts = line.strip().split()
                 while len(parts)==5:
                     try:
-                        R = G03.float(parts[-1])
+                        R = self.float(parts[-1])
                     except ValueError:
                         # nan or -nan if there is no first excited state
                         # (for unrestricted calculations)
@@ -973,18 +506,7 @@ class G03(Logfile):
                  
         inputfile.close()
 
-        
-#    @staticmethod
-    def float(number):
-        """Convert a string to a float."""
-        try:
-            ans = float(number)
-        except ValueError:
-            number = "E".join(number.split("D"))
-            ans = float(number)
-        return ans
-    float = staticmethod(float)
-    
+# Note to self: Needs to be added to the main parser
     def extractTrajectory(self):
         """Extract trajectory information from a Gaussian logfile."""
         inputfile = open(self.filename,"r")
@@ -997,7 +519,7 @@ class G03(Logfile):
                     line = inputfile.next()
                     parts = line.strip().split()
                     # Conversion from a.u. to Angstrom
-                    coords.append([ G03.float(x)*0.5292 for x in [parts[3],parts[5],parts[7]] ])
+                    coords.append([ self.float(x)*0.5292 for x in [parts[3],parts[5],parts[7]] ])
                 self.traj.append(coords)
             if line==" Trajectory summary\n":
                 # self.trajSummaryHeader = inputfile.next().strip().split()
@@ -1010,33 +532,6 @@ class G03(Logfile):
         inputfile.close()
         assert len(self.traj)==len(self.trajSummary)
         
-    def writeTrajectory(self,outputfilename):
-        """Write trajectory information to a quasi-PDB file."""
-        outputfile = open(outputfilename,"w")
-        pt = PeriodicTable()
-        for i in range(len(self.traj)):
-            for j in range(self.NAtoms):
-                line = "HETATM %4d %2s   UNK            % .3f  % .3f  % .3f  0.00  0.00          %2s\n" % (j+1,pt.element[self.atomicNo[j]],self.traj[i][j][0],self.traj[i][j][1],self.traj[i][j][2],pt.element[self.atomicNo[j]])
-                outputfile.write(line)
-            if hasattr(self,"connect"):
-                for k,v in self.connect[i].iteritems():
-                    line = "CONECT %4d" % (k+1)
-                    for value in v:
-                        line += " %4d" % (value+1)
-                    outputfile.write(line+"\n")
-                    
-            outputfile.write("END\n")
-        outputfile.close()
-
-    def writeTrajectorySummary(self,outputfilename):
-        """Write trajectory summary information to TSF."""
-        outputfile = open(outputfilename,"w")
-        header = "\t".join(["Time (fs)","Kinetic (au)","Potent (au)","Delta E (au)","Delta A (h-bar)"])
-        outputfile.write(header+"\n")
-        for x in self.trajSummary:
-            outputfile.write("\t".join(x)+"\n")
-        outputfile.close()
-
 if __name__=="__main__":
     import doctest,parser
     doctest.testmod(parser,verbose=False)
