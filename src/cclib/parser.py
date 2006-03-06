@@ -53,7 +53,7 @@ class Logfile(object):
     def __init__(self,filename):
         self.filename = filename
 
-    def float(number):
+    def float(self,number):
         """Convert a string to a float avoiding the problem with Ds."""
         number = number.replace("D","E")
         return float(number)
@@ -78,7 +78,11 @@ class G03(Logfile):
     SCFRMS,SCFMAX,SCFENERGY = range(3) # Used to index self.scftarget[]
     def __init__(self,filename):
 
-        # Set up the logger...
+        # Call the __init__ method of the superclass
+        super(G03, self).__init__(filename)
+        
+        # Set up the logger...will move this into superclass
+        # through a function call with G03 as a parameter.
         # Note: all loggers with the same name share the logger.
         # Here, loggers with different filenames are different
         self.logger = logging.getLogger('G03.%s' % self.filename)
