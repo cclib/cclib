@@ -19,7 +19,7 @@ Contributions (monetary as well as code :-) are encouraged.
 """
 import math,sys,logging,copy,re,os,time # How many of these are necessary?
 import Numeric
-from Logfile import Logfile # import the superclass
+from logfileparser import Logfile # import the superclass
 
 class G03(Logfile):
     """A Gaussian 03 log file

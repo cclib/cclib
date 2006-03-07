@@ -1,1 +1,1 @@
-from G03 import G03
+from g03parser import G03
