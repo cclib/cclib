@@ -48,8 +48,36 @@ class PeriodicTable(object):
             self.number[self.element[i]] = i
 
 class Logfile(object):
-    """Abstract class that contains the methods that act on data
-    parsed from various types of logfile."""
+    """Abstract class for logfile objects.
+
+    Subclasses:
+       G03
+    
+    Attributes:
+        aonames -- list of "Ru_3p", etc.
+        aooverlaps -- the atomic orbital overlap matrix
+        atomnos -- atomic numbers
+        etenergies -- energy of electronic transitions (i.e. UV-Vis, CD)
+        etoscs -- oscillator strength of electronic transition
+        etrotats -- rotatory strength(?) of electronic transitions (for CD)
+        etsecs -- singly-excited configurations comprising each electronic transition
+        etsyms -- symmetry of electronic transition
+        geotargets -- targets for convergence of the geometry
+        geovalues -- current values for convergence of the geometry
+        homos -- location of HOMO(s)
+        mocoeffs -- molecular orbital coefficients
+        moenergies -- orbital energies
+        mosyms -- orbital symmetries
+        natom -- number of atoms
+        nbasis -- number of basis functions
+        nindep -- number of linearly-independent basis functions
+        scftargets -- targets for convergence of the SCF
+        scfvalues -- current values for convergence of the SCF
+        vibfreqs -- vibrational frequencies
+        vibirs -- IR intensity
+        vibramans -- Raman intensity
+        vibsyms -- symmetry of vibrations    
+    """
     def __init__(self,filename):
         self.filename = filename
 
