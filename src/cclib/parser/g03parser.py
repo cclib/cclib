@@ -22,23 +22,8 @@ import Numeric
 from logfileparser import Logfile # import the superclass
 
 class G03(Logfile):
-    """A Gaussian 03 log file
-    
-    Attributes:
-     filename -- the name of the log file
-     logger -- a logging object
-     NAtoms -- the number of atoms in the molecule
-     atomicNo[] -- the atomic numbers of the atoms
-
-     scfenergy[] -- the SCF energies
-
-    Class Methods:
-     float(a) -- convert a string to a float
-
-    Methods:
-     parse() -- extract general info from the logfile
-    """
-    SCFRMS,SCFMAX,SCFENERGY = range(3) # Used to index self.scftarget[]
+    """A Gaussian 98/03 log file"""
+    SCFRMS,SCFMAX,SCFENERGY = range(3) # Used to index self.scftargets[]
     def __init__(self,filename):
 
         # Call the __init__ method of the superclass
@@ -63,67 +48,60 @@ class G03(Logfile):
         return 'G03("%s")' % (self.filename)
 
     def parse(self):
-        """Extract general info from the logfile.
-        
-        Creates the following instance attributes:
-         NAtoms, atomicNo[], 
-         scfProgress[], SCF_target_rms, SCF_target_energy, SCF_target_max,
-         geoProgress[], scfenergy[]
-         evalue [[]]
-        """
+        """Extract information from the logfile."""
         inputfile = open(self.filename,"r")
         for line in inputfile:
             
             if line[1:8]=="NAtoms=":
 # Find the number of atoms
-                NAtoms = int(line.split()[1])
-                if hasattr(self,"NAtoms"):
-                    assert self.NAtoms==NAtoms
+                natom = int(line.split()[1])
+                if hasattr(self,"natom"):
+                    assert self.natom==natom
                 else:
                     # I wonder whether this code will ever be executed
-                    self.NAtoms = NAtoms
-                    self.logger.info("Creating attribute NAtoms: %d" % self.NAtoms)                    
+                    self.natom = natom
+                    self.logger.info("Creating attribute natom: %d" % self.natom)                    
             
-            if not hasattr(self,"atomicNo") and (line.find("Z-Matrix orientation")>=0
+            if not hasattr(self,"atomnos") and (line.find("Z-Matrix orientation")>=0
                                                  or line[25:45]=="Standard orientation"
                                                  or line[26:43]=="Input orientation"):
 # Extract the atomic numbers of the atoms
-                self.logger.info("Creating attribute atomicNo[]")
-                self.atomicNo = []
+                self.logger.info("Creating attribute atomnos[]")
+                self.atomnos = []
                 hyphens = inputfile.next()
                 colmNames = inputfile.next(); colmNames = inputfile.next()
                 hyphens = inputfile.next()
                 line = inputfile.next()
                 while line!=hyphens:
-                    self.atomicNo.append(int(line.split()[1]))
+                    self.atomnos.append(int(line.split()[1]))
                     line = inputfile.next()
-                NAtoms = len(self.atomicNo)
-                if hasattr(self,"NAtoms"):
-                    assert self.NAtoms==NAtoms
+                natom = len(self.atomnos)
+                if hasattr(self,"natom"):
+                    assert self.natom==natom
                 else:
-                    self.NAtoms = NAtoms
-                    self.logger.info("Creating attribute NAtoms: %d" % self.NAtoms)
+                    self.natom = natom
+                    self.logger.info("Creating attribute natom: %d" % self.natom)
 
 
 # Find the targets for the SCF convergence (QM calcs)
 # We assume that the targets don't change, although it's
 # easy enough to store all of the targets
             if line[1:44]=='Requested convergence on RMS density matrix':
-                if not hasattr(self,"scftarget"):
-                    self.logger.info("Creating attribute scftarget[]")
-                self.scftarget = [None]*3
-                self.scftarget[G03.SCFRMS] = self.float(line.split('=')[1].split()[0])
+                if not hasattr(self,"scftargets"):
+                    self.logger.info("Creating attribute scftargets[]")
+                self.scftargets = [None]*3
+                self.scftargets[G03.SCFRMS] = self.float(line.split('=')[1].split()[0])
             if line[1:44]=='Requested convergence on MAX density matrix':
-                self.scftarget[G03.SCFMAX] = self.float(line.strip().split('=')[1][:-1])
+                self.scftargets[G03.SCFMAX] = self.float(line.strip().split('=')[1][:-1])
             if line[1:44]=='Requested convergence on             energy':
-                self.scftarget[G03.SCFENERGY] = self.float(line.strip().split('=')[1][:-1])
+                self.scftargets[G03.SCFENERGY] = self.float(line.strip().split('=')[1][:-1])
 
             if line[1:10]=='Cycle   1':
 # Extract SCF convergence information (QM calcs)
-                if not hasattr(self,"scfvalue"):
-                    self.logger.info("Creating attribute scfvalue[[]]")
-                    self.scfvalue = []
-                newlist = [ [] for x in self.scftarget ]
+                if not hasattr(self,"scfvalues"):
+                    self.logger.info("Creating attribute scfvalues[[]]")
+                    self.scfvalues = []
+                newlist = [ [] for x in self.scftargets ]
                 line = inputfile.next()
                 while line.find("SCF Done")==-1:
                     if line.find(' E=')==0:
@@ -147,18 +125,18 @@ class G03(Logfile):
                         line = inputfile.next()
                     except StopIteration: # May be interupted by EOF
                         break
-                self.scfvalue.append(newlist)
+                self.scfvalues.append(newlist)
 
             if line[1:4]=='It=':
 # Extract SCF convergence information (AM1 calcs)
-                self.logger.info("Creating attributes scftarget[],scfvalue[[]]")
-                self.scftarget = [1E-7] # This is the target value for the rms
-                self.scfvalue = [[]]
+                self.logger.info("Creating attributes scftargets[],scfvalues[[]]")
+                self.scftargets = [1E-7] # This is the target value for the rms
+                self.scfvalues = [[]]
                 line = inputfile.next()
                 while line.find(" Energy")==-1:
                     self.logger.debug(line)
                     parts = line.strip().split()
-                    self.scfvalue[0].append(self.float(parts[-1][:-1]))
+                    self.scfvalues[0].append(self.float(parts[-1][:-1]))
                     line = inputfile.next()
 
             if line[1:9]=='SCF Done':
@@ -166,18 +144,18 @@ class G03(Logfile):
 # a loop when extract SCF convergence information
                 self.logger.debug(line)
                 self.logger.debug("SCF Done")
-                if hasattr(self,"scfenergy"):
-                    self.scfenergy.append(line.split()[4])
+                if hasattr(self,"scfenergies"):
+                    self.scfenergies.append(line.split()[4])
                 else:
-                    self.scfenergy = [line.split()[4]]
-                    self.logger.info("Creating attribute scfenergy[]")
+                    self.scfenergies = [line.split()[4]]
+                    self.logger.info("Creating attribute scfenergies[]")
 
             if line[49:59]=='Converged?':
 # Extract Geometry convergence information
-                if not hasattr(self,"geotarget"):
-                    self.logger.info("Creating attributes geotarget[],geovalue[[]]")
-                    self.geovalue = []
-                    self.geotarget = [None]*4
+                if not hasattr(self,"geotargets"):
+                    self.logger.info("Creating attributes geotargets[],geovalues[[]]")
+                    self.geovalues = []
+                    self.geotargets = [None]*4
                 newlist = [0]*4
                 for i in range(4):
                     line = inputfile.next()
@@ -189,13 +167,13 @@ class G03(Logfile):
                         self.logger.error("Problem parsing the value for geometry optimisation: %s is not a number." % parts[2])
                     else:
                         newlist[i] = value
-                    self.geotarget[i] = self.float(parts[3])
-                self.geovalue.append(newlist)
+                    self.geotargets[i] = self.float(parts[3])
+                self.geovalues.append(newlist)
 
-            if line[1:19]=='Orbital symmetries' and not hasattr(self,"orbsym"):
+            if line[1:19]=='Orbital symmetries' and not hasattr(self,"mosyms"):
 # Extracting orbital symmetries
-                self.logger.info("Creating attribute orbsym[[]]")
-                self.orbsym = [[]]
+                self.logger.info("Creating attribute mosyms[[]]")
+                self.mosyms = [[]]
                 line = inputfile.next()
                 unres = False
                 if line.find("Alpha Orbitals")==1:
@@ -204,24 +182,24 @@ class G03(Logfile):
                 i = 0
                 while len(line)>18 and line[17]=='(':
                     if line.find('Virtual')>=0:
-                        self.HOMO = [i-1] # 'HOMO' indexes the HOMO in the arrays
+                        self.homos = [i-1] # 'HOMO' indexes the HOMO in the arrays
                         self.logger.info("Creating attribute HOMO[]")
                     parts = line[17:].split()
                     for x in parts:
-                        self.orbsym[0].append(x.strip('()'))
+                        self.mosyms[0].append(x.strip('()'))
                         i+= 1 
                     line = inputfile.next()
                 if unres:
                     line = inputfile.next()
                     # Repeat with beta orbital information
                     i = 0
-                    self.orbsym.append([])
+                    self.mosyms.append([])
                     while len(line)>18 and line[17]=='(':
                         if line.find('Virtual')>=0:
-                            self.HOMO.append(i-1) # 'HOMO' indexes the HOMO in the arrays
+                            self.homos.append(i-1) # 'HOMO' indexes the HOMO in the arrays
                         parts = line[17:].split()
                         for x in parts:
-                            self.orbsym[1].append(x.strip('()'))
+                            self.mosyms[1].append(x.strip('()'))
                             i+= 1
                         line = inputfile.next()
 
@@ -235,11 +213,11 @@ class G03(Logfile):
                         # If there aren't any symmetries,
                         # this is a good way to find the HOMO
                         HOMO = len(self.evalue[0])-1
-                        if hasattr(self,"HOMO"):
-                            assert HOMO==self.HOMO[0]
+                        if hasattr(self,"homos"):
+                            assert HOMO==self.homos[0]
                         else:
-                            self.logger.info("Creating attribute HOMO[]")
-                            self.HOMO = [HOMO]
+                            self.logger.info("Creating attribute homos[]")
+                            self.homos = [HOMO]
                     part = line[28:]
                     i = 0
                     while i*10+4<len(part):
@@ -255,12 +233,12 @@ class G03(Logfile):
                         # If there aren't any symmetries,
                         # this is a good way to find the HOMO
                         HOMO = len(self.evalue[1])-1
-                        if len(self.HOMO)==2:
-                            # It already has a self.HOMO (with the Alpha value)
+                        if len(self.homos)==2:
+                            # It already has a self.homos (with the Alpha value)
                             # but does it already have a Beta value?
-                            assert HOMO==self.HOMO[1]
+                            assert HOMO==self.homos[1]
                         else:
-                             self.HOMO.append(HOMO)
+                             self.homos.append(HOMO)
                     part = line[28:]
                     i = 0
                     while i*10+4<len(part):
@@ -271,12 +249,12 @@ class G03(Logfile):
 
             if line[1:14]=="Harmonic freq":
 # Start of the IR/Raman frequency section
-                self.vibsym = []
-                self.ir = []
+                self.vibsyms = []
+                self.vibirs = []
                 self.vibfreq = []
-                self.logger.info("Creating attribute vibsym[]")
-                self.logger.info("Creating attribute vibfreq[]")
-                self.logger.info("Creating attribute ir[]")                
+                self.logger.info("Creating attribute vibsyms[]")
+                self.logger.info("Creating attribute vibfreqs[]")
+                self.logger.info("Creating attribute vibirs[]")                
                 line = inputfile.next()
                 while len(line[:15].split())>0:
                     # Get past the three/four line title of the columns
@@ -284,19 +262,19 @@ class G03(Logfile):
                 line = inputfile.next() # The line with symmetries
                 while len(line[:15].split())==0:
                     self.logger.debug(line)
-                    self.vibsym.extend(line.split()) # Adding new symmetry
+                    self.vibsyms.extend(line.split()) # Adding new symmetry
                     line = inputfile.next()
                     self.vibfreq.extend(map(self.float,line[15:].split())) # Adding new frequencies
                     [inputfile.next() for i in [0,1]] # Skip two lines
                     line = inputfile.next()
-                    self.ir.extend(map(self.float,line[15:].split())) # Adding IR intensities
+                    self.vibirs.extend(map(self.float,line[15:].split())) # Adding IR intensities
                     line = inputfile.next()
                     if line.find("Raman")>=0:
                         if not hasattr(self,"raman"):
-                            self.raman = []
+                            self.vibramans = []
                             self.logger.info("Creating attribute raman[]")
                         line = inputfile.next()
-                        self.raman.extend(map(self.float,line[15:].split())) # Adding Raman intensities
+                        self.vibramans.extend(map(self.float,line[15:].split())) # Adding Raman intensities
                     line = inputfile.next()
                     while len(line[:15].split())>0:
                         line = inputfile.next()
@@ -482,7 +460,7 @@ class G03(Logfile):
         for line in inputfile:
             if line.find(" Cartesian coordinates:")==0:
                 coords = []
-                for i in range(self.NAtoms):
+                for i in range(self.natom):
                     line = inputfile.next()
                     parts = line.strip().split()
                     # Conversion from a.u. to Angstrom
