@@ -71,6 +71,7 @@ class Logfile(object):
         natom -- number of atoms
         nbasis -- number of basis functions
         nindep -- number of linearly-independent basis functions
+        progress -- class (or None) for handling progress info
         scftargets -- targets for convergence of the SCF
         scfvalues -- current values for convergence of the SCF
         vibfreqs -- vibrational frequencies
@@ -78,8 +79,9 @@ class Logfile(object):
         vibramans -- Raman intensity
         vibsyms -- symmetry of vibrations    
     """
-    def __init__(self,filename):
+    def __init__(self,filename,progress=None):
         self.filename = filename
+        self.progress = progress
 
     def float(self,number):
         """Convert a string to a float avoiding the problem with Ds."""

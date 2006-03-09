@@ -24,10 +24,10 @@ from logfileparser import Logfile # import the superclass
 class G03(Logfile):
     """A Gaussian 98/03 log file"""
     SCFRMS,SCFMAX,SCFENERGY = range(3) # Used to index self.scftargets[]
-    def __init__(self,filename):
+    def __init__(self,*args):
 
         # Call the __init__ method of the superclass
-        super(G03, self).__init__(filename)
+        super(G03, self).__init__(*args)
         
         # Set up the logger...will move this into superclass
         # through a function call with G03 as a parameter.
@@ -50,8 +50,24 @@ class G03(Logfile):
     def parse(self):
         """Extract information from the logfile."""
         inputfile = open(self.filename,"r")
+        
+        if self.progress:
+            
+            inputfile.seek(0,2) #go to end of file
+            nstep=inputfile.tell()
+            inputfile.seek(0)
+            self.progress.initialize(nstep)
+            self.oldstep=0
+            
         for line in inputfile:
             
+            if self.progress:
+                
+                step=inputfile.tell()
+                if not (step==self.oldstep):
+                    self.progress.update(step)
+                self.oldstep=step
+                
             if line[1:8]=="NAtoms=":
 # Find the number of atoms
                 natom = int(line.split()[1])
