@@ -183,7 +183,7 @@ class G03(Logfile):
                 while len(line)>18 and line[17]=='(':
                     if line.find('Virtual')>=0:
                         self.homos = [i-1] # 'HOMO' indexes the HOMO in the arrays
-                        self.logger.info("Creating attribute HOMO[]")
+                        self.logger.info("Creating attribute homos[]")
                     parts = line[17:].split()
                     for x in parts:
                         self.mosyms[0].append(x.strip('()'))
@@ -205,14 +205,14 @@ class G03(Logfile):
 
             if line[1:6]=="Alpha" and line.find("eigenvalues")>=0:
 # Extract the alpha electron eigenvalues
-                self.logger.info("Creating attribute evalue[[]]")
-                self.evalue = [[]]
+                self.logger.info("Creating attribute moenergies[[]]")
+                self.moenergies = [[]]
                 HOMO = -2
                 while line.find('Alpha')==1:
                     if line.split()[1]=="virt." and HOMO==-2:
                         # If there aren't any symmetries,
                         # this is a good way to find the HOMO
-                        HOMO = len(self.evalue[0])-1
+                        HOMO = len(self.moenergies[0])-1
                         if hasattr(self,"homos"):
                             assert HOMO==self.homos[0]
                         else:
@@ -222,17 +222,17 @@ class G03(Logfile):
                     i = 0
                     while i*10+4<len(part):
                         x = part[i*10:(i+1)*10]
-                        self.evalue[0].append(self.float(x)*27.2114) # from a.u. (hartrees) to eV
+                        self.moenergies[0].append(self.float(x)*27.2114) # from a.u. (hartrees) to eV
                         i += 1
                     line = inputfile.next()            
                 if line.find('Beta')==2:
-                    self.evalue.append([])
+                    self.moenergies.append([])
                 HOMO = -2
                 while line.find('Beta')==2:
                     if line.split()[1]=="virt." and HOMO==-2:
                         # If there aren't any symmetries,
                         # this is a good way to find the HOMO
-                        HOMO = len(self.evalue[1])-1
+                        HOMO = len(self.moenergies[1])-1
                         if len(self.homos)==2:
                             # It already has a self.homos (with the Alpha value)
                             # but does it already have a Beta value?
@@ -243,7 +243,7 @@ class G03(Logfile):
                     i = 0
                     while i*10+4<len(part):
                         x = part[i*10:(i+1)*10]
-                        self.evalue[1].append(self.float(x)*27.2114) # from a.u. (hartrees) to eV
+                        self.moenergies[1].append(self.float(x)*27.2114) # from a.u. (hartrees) to eV
                         i += 1
                     line = inputfile.next()   
 
@@ -251,7 +251,7 @@ class G03(Logfile):
 # Start of the IR/Raman frequency section
                 self.vibsyms = []
                 self.vibirs = []
-                self.vibfreq = []
+                self.vibfreqs = []
                 self.logger.info("Creating attribute vibsyms[]")
                 self.logger.info("Creating attribute vibfreqs[]")
                 self.logger.info("Creating attribute vibirs[]")                
@@ -264,15 +264,15 @@ class G03(Logfile):
                     self.logger.debug(line)
                     self.vibsyms.extend(line.split()) # Adding new symmetry
                     line = inputfile.next()
-                    self.vibfreq.extend(map(self.float,line[15:].split())) # Adding new frequencies
+                    self.vibfreqs.extend(map(self.float,line[15:].split())) # Adding new frequencies
                     [inputfile.next() for i in [0,1]] # Skip two lines
                     line = inputfile.next()
                     self.vibirs.extend(map(self.float,line[15:].split())) # Adding IR intensities
                     line = inputfile.next()
                     if line.find("Raman")>=0:
-                        if not hasattr(self,"raman"):
+                        if not hasattr(self,"vibramans"):
                             self.vibramans = []
-                            self.logger.info("Creating attribute raman[]")
+                            self.logger.info("Creating attribute vibramans[]")
                         line = inputfile.next()
                         self.vibramans.extend(map(self.float,line[15:].split())) # Adding Raman intensities
                     line = inputfile.next()
@@ -283,23 +283,20 @@ class G03(Logfile):
             if line[1:14]=="Excited State":
 # Extract the electronic transitions
                 if not hasattr(self,"etenergy"):
-                    self.etenergy = []
-                    self.etwavelen = []
-                    self.etosc = []
-                    self.etsym = []
-                    self.etcis = []
-                    self.logger.info("Creating attributes etenergy[], etwavelen[], etosc[], etsym[], etcis[]")
+                    self.etenergies = []
+                    self.etoscs = []
+                    self.etsyms = []
+                    self.etsecs = []
+                    self.logger.info("Creating attributes etenergies[], etoscs[], etsyms[], etsecs[]")
                 # Need to deal with lines like:
                 # (restricted calc)
                 # Excited State   1:   Singlet-BU     5.3351 eV  232.39 nm  f=0.1695
                 # (unrestricted calc) (first excited state is 2!)
                 # Excited State   2:   ?Spin  -A      0.1222 eV 10148.75 nm  f=0.0000
                 parts = line[36:].split()
-                self.logger.debug(parts)
-                self.etenergy.append(convertor(self.float(parts[0]),"eV","cm-1"))
-                self.etwavelen.append(self.float(parts[2]))
-                self.etosc.append(self.float(parts[4].split("=")[1]))
-                self.etsym.append(line[21:36].split())
+                self.etenergies.append(convertor(self.float(parts[0]),"eV","cm-1"))
+                self.etoscs.append(self.float(parts[4].split("=")[1]))
+                self.etsyms.append(line[21:36].split())
                 
                 line = inputfile.next()
 
@@ -330,13 +327,13 @@ class G03(Logfile):
                         sqr = -sqr
                     CIScontrib.append([(fromMO,frommoindex),(toMO,tomoindex),sqr])
                     line = inputfile.next()
-                self.etcis.append(CIScontrib)
+                self.etsecs.append(CIScontrib)
 
 
             if line[1:52]=="<0|r|b> * <b|rxdel|0>  (Au), Rotatory Strengths (R)":
 # Extract circular dichroism data
-                self.rotatory = []
-                self.logger.info("Creating attribute rotatory[]")
+                self.etrotats = []
+                self.logger.info("Creating attribute etrotats[]")
                 inputfile.next()
                 inputfile.next()
                 line = inputfile.next()
@@ -349,43 +346,43 @@ class G03(Logfile):
                         # (for unrestricted calculations)
                         pass
                     else:
-                        self.rotatory.append(R)
+                        self.etrotats.append(R)
                     line = inputfile.next()
                     temp = line.strip().split()
                     parts = line.strip().split()                
 
             if line[1:7]=="NBasis" or line[4:10]=="NBasis":
 # Extract the number of basis sets
-                NBasis = int(line.split('=')[1].split()[0])
+                nbasis = int(line.split('=')[1].split()[0])
                 # Has to deal with lines like:
-                #  NBasis=   434 NAE=    97 NBE=    97 NFC=    34 NFV=     0
+                #  NBasis =   434 NAE=    97 NBE=    97 NFC=    34 NFV=     0
                 #     NBasis = 148  MinDer = 0  MaxDer = 0
                 # Although the former is in every file, it doesn't occur before
                 # the overlap matrix is printed
-                if hasattr(self,"NBasis"):
-                    assert NBasis==self.NBasis
+                if hasattr(self,"nbasis"):
+                    assert nbasis==self.nbasis
                 else:
-                    self.NBasis = NBasis
-                    self.logger.info("Creating attribute NBasis: %d" % self.NBasis)
+                    self.nbasis= nbasis
+                    self.logger.info("Creating attribute nbasis: %d" % self.nbasis)
                     
             if line[1:7]=="NBsUse":
 # Extract the number of linearly-independent basis sets
-                NBsUse = int(line.split('=')[1].split()[0])
-                if hasattr(self,"NBsUse"):
-                    assert NBsUse==self.NBsUse
+                nindep = int(line.split('=')[1].split()[0])
+                if hasattr(self,"nindep"):
+                    assert nindep==self.nindep
                 else:
-                    self.NBsUse = NBsUse
-                    self.logger.info("Creating attribute NBsUse: %d" % self.NBsUse)
+                    self.nindep = nindep
+                    self.logger.info("Creating attribute nindep: %d" % self.nindep)
 
             if line[7:22]=="basis functions,":
-# For AM1 calculations, set NBasis by a second method
-# (NBsUse may not always be explicitly stated)
-                    NBasis = int(line.split()[0])
-                    if hasattr(self,"NBasis"):
-                        assert NBasis==self.NBasis
+# For AM1 calculations, set nbasis by a second method
+# (nindep may not always be explicitly stated)
+                    nbasis = int(line.split()[0])
+                    if hasattr(self,"nbasis"):
+                        assert nbasis==self.nbasis
                     else:
-                        self.NBasis = NBasis
-                        self.logger.info("Creating attribute NBasis: %d" % self.NBasis)
+                        self.nbasis = nbasis
+                        self.logger.info("Creating attribute nbasis: %d" % self.nbasis)
 
             if line[1:4]=="***" and (line[5:12]=="Overlap"
                                              or line[8:15]=="Overlap"):
@@ -393,20 +390,20 @@ class G03(Logfile):
                 # Has to deal with lines such as:
                 #  *** Overlap ***
                 #  ****** Overlap ******
-                self.logger.info("Creating attribute overlap[x,y]")
+                self.logger.info("Creating attribute aooverlaps[x,y]")
                 import time; oldtime = time.time()
-                self.overlap = Numeric.zeros( (self.NBasis,self.NBasis), "float")
-                # Overlap integrals for basis fn#1 are in overlap[0]
+                self.aooverlaps = Numeric.zeros( (self.nbasis,self.nbasis), "float")
+                # Overlap integrals for basis fn#1 are in aooverlaps[0]
                 base = 0
                 colmNames = inputfile.next()
-                while base<self.NBasis:
-                    for i in range(self.NBasis-base): # Fewer lines this time
+                while base<self.nbasis:
+                    for i in range(self.nbasis-base): # Fewer lines this time
                         line = inputfile.next()
                         parts = line.split()
                         for j in range(len(parts)-1): # Some lines are longer than others
                             k = float(parts[j].replace("D","E"))
-                            self.overlap[base+j,i+base] = k
-                            self.overlap[i+base,base+j] = k
+                            self.aooverlaps[base+j,i+base] = k
+                            self.aooverlaps[i+base,base+j] = k
                     base += 5
                     colmNames = inputfile.next()
                 self.logger.info("Took %f seconds" % (time.time()-oldtime))
@@ -415,20 +412,20 @@ class G03(Logfile):
                 import time; oldtime = time.time()
                 if line[5:40]=="Beta Molecular Orbital Coefficients":
                     beta = True
-                    # Need to add an extra dimension to self.mocoeff
-                    self.mocoeff = Numeric.resize(self.mocoeff,(2,NBsUse,NBasis))
+                    # Need to add an extra dimension to self.mocoeffs
+                    self.mocoeffs = Numeric.resize(self.mocoeffs,(2,nindep,nbasis))
                 else:
                     beta = False
-                    self.logger.info("Creating attributes orbitals[], mocoeff[][]")
-                    self.orbitals = []
-                    self.mocoeff = Numeric.zeros((NBsUse,NBasis),"float")
+                    self.logger.info("Creating attributes aonames[], mocoeffs[][]")
+                    self.aonames = []
+                    self.mocoeffs = Numeric.zeros((nindep,nbasis),"float")
 
                 base = 0
-                for base in range(0,NBsUse,5):
+                for base in range(0,nindep,5):
                     colmNames = inputfile.next()
                     symmetries = inputfile.next()
                     eigenvalues = inputfile.next()
-                    for i in range(NBasis):
+                    for i in range(nbasis):
                         line = inputfile.next()
                         if base==0 and not beta: # Just do this the first time 'round
                             # Changed below from :12 to :11 to deal with Elmar Neumann's example
@@ -436,18 +433,17 @@ class G03(Logfile):
                             if len(parts)>1: # New atom
                                 atomname = "%s%s" % (parts[2],parts[1])
                             orbital = line[11:20].strip()
-                            self.orbitals.append("%s_%s" % (atomname,orbital))
+                            self.aonames.append("%s_%s" % (atomname,orbital))
 
                         part = line[21:].replace("D","E").rstrip()
                         temp = [] 
                         for j in range(0,len(part),10):
                             temp.append(float(part[j:j+10]))
                         if beta:
-                            self.mocoeff[1,base:base+len(part)/10,i] = temp
+                            self.mocoeffs[1,base:base+len(part)/10,i] = temp
                         else:
-                            self.mocoeff[base:base+len(part)/10,i] = temp
+                            self.mocoeffs[base:base+len(part)/10,i] = temp
                 self.logger.info("Took %f seconds" % (time.time()-oldtime))
-
                  
         inputfile.close()
 
