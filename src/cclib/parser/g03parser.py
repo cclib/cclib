@@ -19,6 +19,7 @@ Contributions (monetary as well as code :-) are encouraged.
 """
 import math,sys,logging,copy,re,os,time # How many of these are necessary?
 import Numeric
+import random # For sometimes running the progress updater
 from logfileparser import Logfile # import the superclass
 
 class G03(Logfile):
@@ -57,16 +58,16 @@ class G03(Logfile):
             nstep=inputfile.tell()
             inputfile.seek(0)
             self.progress.initialize(nstep)
-            self.oldstep=0
+            oldstep=0
             
         for line in inputfile:
             
-            if self.progress:
+            if self.progress and random.random()<0.05:
                 
-                step=inputfile.tell()
-                if not (step==self.oldstep):
+                step = inputfile.tell()
+                if step!=oldstep:
                     self.progress.update(step)
-                self.oldstep=step
+                    oldstep = step
                 
             if line[1:8]=="NAtoms=":
 # Find the number of atoms
