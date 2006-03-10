@@ -13,12 +13,12 @@ class TextProgress:
         self.nstep=float(nstep)
         self.text=text
         
-    def update(self,step,newtext=None):
+    def update(self,step):
         
-        self.progress=int(float(step)/self.nstep*100)
+        self.progress = int(step/self.nstep*100)
         #print step,self.nstep
         
-        if(self.progress/10==self.oldprogress/10+1): #just went through an interval of ten, ie. from 39 to 41, so update
+        if self.progress/10==self.oldprogress/10+1: #just went through an interval of ten, ie. from 39 to 41, so update
             
             str="["
             for i in range(self.progress/10):
