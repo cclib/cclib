@@ -72,7 +72,7 @@ class Logfile(object):
         nbasis -- number of basis functions (integer)
         nindep -- number of linearly-independent basis functions (integer)
         scftargets -- targets for convergence of the SCF (array[1])
-        scfvalues -- current values for convergence of the SCF (array[1], same units as scftargets)
+        scfvalues -- current values for convergence of the SCF (array[2], same units as scftargets)
         vibfreqs -- vibrational frequencies (array, 1/cm)
         vibirs -- IR intensity (array, ??)
         vibramans -- Raman intensity (array, ??)

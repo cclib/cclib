@@ -89,14 +89,11 @@ class G03(Logfile):
                     self.natom = natom
                     self.logger.info("Creating attribute natom: %d" % self.natom)
 
-
-# Find the targets for the SCF convergence (QM calcs)
-# We assume that the targets don't change, although it's
-# easy enough to store all of the targets
             if line[1:44]=='Requested convergence on RMS density matrix':
+# Find the targets for SCF convergence (QM calcs)                
                 if not hasattr(self,"scftargets"):
                     self.logger.info("Creating attribute scftargets[]")
-                self.scftargets = [None]*3
+                self.scftargets = Numeric.array([0.0,0.0,0.0],'f')
                 self.scftargets[G03.SCFRMS] = self.float(line.split('=')[1].split()[0])
             if line[1:44]=='Requested convergence on MAX density matrix':
                 self.scftargets[G03.SCFMAX] = self.float(line.strip().split('=')[1][:-1])
@@ -106,7 +103,7 @@ class G03(Logfile):
             if line[1:10]=='Cycle   1':
 # Extract SCF convergence information (QM calcs)
                 if not hasattr(self,"scfvalues"):
-                    self.logger.info("Creating attribute scfvalues[[]]")
+                    self.logger.info("Creating attribute scfvalues")
                     self.scfvalues = []
                 newlist = [ [] for x in self.scftargets ]
                 line = inputfile.next()
@@ -127,7 +124,6 @@ class G03(Logfile):
                         # I moved the following line back a TAB to see the effect
                         # (it was originally part of the above "if len(parts)")
                         newlist[G03.SCFENERGY].append(energy)
-                        self.logger.debug(line)
                     try:
                         line = inputfile.next()
                     except StopIteration: # May be interupted by EOF
@@ -136,21 +132,18 @@ class G03(Logfile):
 
             if line[1:4]=='It=':
 # Extract SCF convergence information (AM1 calcs)
-                self.logger.info("Creating attributes scftargets[],scfvalues[[]]")
-                self.scftargets = [1E-7] # This is the target value for the rms
+                self.logger.info("Creating attributes scftargets, scfvalues")
+                self.scftargets = Numeric.array([1E-7],"f") # This is the target value for the rms
                 self.scfvalues = [[]]
                 line = inputfile.next()
                 while line.find(" Energy")==-1:
-                    self.logger.debug(line)
                     parts = line.strip().split()
                     self.scfvalues[0].append(self.float(parts[-1][:-1]))
                     line = inputfile.next()
 
             if line[1:9]=='SCF Done':
 # Note: this needs to follow the section where 'SCF Done' is used to terminate
-# a loop when extract SCF convergence information
-                self.logger.debug(line)
-                self.logger.debug("SCF Done")
+# a loop when extracting SCF convergence information
                 if hasattr(self,"scfenergies"):
                     self.scfenergies.append(line.split()[4])
                 else:
