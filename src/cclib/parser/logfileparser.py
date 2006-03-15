@@ -84,7 +84,7 @@ class Logfile(object):
     """
     def __init__(self,filename,progress=None,
                  loglevel=logging.INFO,logname="Log"):
-        """Initialise the logging object.
+        """Initialise the Logfile object.
 
         Typically called by subclasses in their own __init__ methods.
         """

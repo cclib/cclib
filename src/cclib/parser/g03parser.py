@@ -17,7 +17,7 @@ Copyright (C) 2006 Noel O'Boyle and Adam Tenderholt
 
 Contributions (monetary as well as code :-) are encouraged.
 """
-import math,sys,logging,copy,re,os,time # How many of these are necessary?
+import re,time
 import Numeric
 import random # For sometimes running the progress updater
 from logfileparser import Logfile # import the superclass
@@ -398,7 +398,7 @@ class G03(Logfile):
                 #  *** Overlap ***
                 #  ****** Overlap ******
                 self.logger.info("Creating attribute aooverlaps[x,y]")
-                import time; oldtime = time.time()
+                # oldtime = time.time()
                 self.aooverlaps = Numeric.zeros( (self.nbasis,self.nbasis), "float")
                 # Overlap integrals for basis fn#1 are in aooverlaps[0]
                 base = 0
@@ -413,10 +413,10 @@ class G03(Logfile):
                             self.aooverlaps[i+base,base+j] = k
                     base += 5
                     colmNames = inputfile.next()
-                self.logger.info("Took %f seconds" % (time.time()-oldtime))
+                # self.logger.info("Took %f seconds" % (time.time()-oldtime))
 
             if line[5:35]=="Molecular Orbital Coefficients" or line[5:41]=="Alpha Molecular Orbital Coefficients" or line[5:40]=="Beta Molecular Orbital Coefficients":
-                import time; oldtime = time.time()
+                # oldtime = time.time()
                 if line[5:40]=="Beta Molecular Orbital Coefficients":
                     beta = True
                     # Need to add an extra dimension to self.mocoeffs
@@ -450,7 +450,7 @@ class G03(Logfile):
                             self.mocoeffs[1,base:base+len(part)/10,i] = temp
                         else:
                             self.mocoeffs[base:base+len(part)/10,i] = temp
-                self.logger.info("Took %f seconds" % (time.time()-oldtime))
+                # self.logger.info("Took %f seconds" % (time.time()-oldtime))
                  
         inputfile.close()
 
