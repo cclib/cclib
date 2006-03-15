@@ -71,6 +71,7 @@ class Logfile(object):
         natom -- number of atoms (integer)
         nbasis -- number of basis functions (integer)
         nindep -- number of linearly-independent basis functions (integer)
+        scfenergies -- the electronic energy of the molecule (array[1], a.u.)
         scftargets -- targets for convergence of the SCF (array[1])
         scfvalues -- current values for convergence of the SCF (array[2], same units as scftargets)
         vibfreqs -- vibrational frequencies (array, 1/cm)
@@ -94,7 +95,7 @@ class Logfile(object):
         self.logname  = logname
 
         # Set up the logger
-        self.logger = logging.getLogger('%s.%s' % (self.logname,self.filename))
+        self.logger = logging.getLogger('%s %s' % (self.logname,self.filename))
         self.logger.setLevel(logging.INFO)
         handler = logging.StreamHandler(sys.stdout)
         handler.setFormatter(logging.Formatter("[%(name)s %(levelname)s] %(message)s"))

@@ -28,7 +28,7 @@ class G03(Logfile):
     def __init__(self,*args):
 
         # Call the __init__ method of the superclass
-        super(G03, self).__init__(*args,logname="G03")
+        super(G03, self).__init__(logname="G03",*args)
         
     def __str__(self):
         """Return a string representation of the object."""
@@ -155,7 +155,7 @@ class G03(Logfile):
                 if not hasattr(self,"geotargets"):
                     self.logger.info("Creating attributes geotargets[],geovalues[[]]")
                     self.geovalues = []
-                    self.geotargets = [None]*4
+                    self.geotargets = Numeric.array( [0.0,0.0,0.0,0.0],"f")
                 newlist = [0]*4
                 for i in range(4):
                     line = inputfile.next()
@@ -446,6 +446,12 @@ class G03(Logfile):
                 # self.logger.info("Took %f seconds" % (time.time()-oldtime))
                  
         inputfile.close()
+
+        # Convert from lists to arrays (it's easier this way in most cases)
+        self.scfenergies = Numeric.array(self.scfenergies,"f")
+        self.scfvalues = Numeric.array(self.scftargets,"f")
+        scf.geovalues = Numeric.array(self.scfvalues,"f")
+        
 
 # Note to self: Needs to be added to the main parser
     def extractTrajectory(self):
