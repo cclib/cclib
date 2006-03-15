@@ -17,14 +17,14 @@ Copyright (C) 2006 Noel O'Boyle and Adam Tenderholt
 
 Contributions (monetary as well as code :-) are encouraged.
 """
-import math,sys,logging,copy,re,os,time # How many of these are necessary?
+import logging, sys
 import Numeric
 
 def convertor(value,fromunits,tounits):
     """Convert from one set of units to another.
 
-    >>> convertor(8,"eV","cm-1")
-    64000
+    >>> print "%.1f" % convertor(8,"eV","cm-1")
+    64524.8
     """
     _convertor = {"eV_to_cm-1": lambda x: x*8065.6,
                   "nm_to_cm-1": lambda x: 1e7/x,
@@ -51,43 +51,67 @@ class Logfile(object):
     """Abstract class for logfile objects.
 
     Subclasses:
-       G03
+        G03
     
     Attributes:
-        aonames -- list of "Ru_3p", etc.
-        aooverlaps -- the atomic orbital overlap matrix
-        atomnos -- atomic numbers
-        etenergies -- energy of electronic transitions (i.e. UV-Vis, CD)
-        etoscs -- oscillator strength of electronic transition
-        etrotats -- rotatory strength(?) of electronic transitions (for CD)
-        etsecs -- singly-excited configurations comprising each electronic transition
-        etsyms -- symmetry of electronic transition
-        geotargets -- targets for convergence of the geometry
-        geovalues -- current values for convergence of the geometry
-        homos -- location of HOMO(s)
-        mocoeffs -- molecular orbital coefficients
-        moenergies -- orbital energies
-        mosyms -- orbital symmetries
-        natom -- number of atoms
-        nbasis -- number of basis functions
-        nindep -- number of linearly-independent basis functions
-        progress -- class (or None) for handling progress info
-        scftargets -- targets for convergence of the SCF
-        scfvalues -- current values for convergence of the SCF
-        vibfreqs -- vibrational frequencies
-        vibirs -- IR intensity
-        vibramans -- Raman intensity
-        vibsyms -- symmetry of vibrations    
+        aonames -- "Ru_3p" (list)
+        aooverlaps -- atomic orbital overlap matrix (array[2])
+        atomnos -- atomic numbers (array)
+        etenergies -- energy of electronic transitions (array[1], 1/cm)
+        etoscs -- oscillator strength of electronic transition (array[1], ??)
+        etrotats -- rotatory strength of electronic transitions (array[1], ??)
+        etsecs -- singly-excited configurations comprising each electronic transition (??)
+        etsyms -- symmetry of electronic transition (list)
+        geotargets -- targets for convergence of the geometry (array[1])
+        geovalues -- current values for convergence of the geometry (array[1], same units as geotargets)
+        homos -- molecular orbital index of HOMO(s) (array[1])
+        mocoeffs -- molecular orbital coefficients (array[3])
+        moenergies -- orbital energies (array[2], eV)
+        mosyms -- orbital symmetries (array[2])
+        natom -- number of atoms (integer)
+        nbasis -- number of basis functions (integer)
+        nindep -- number of linearly-independent basis functions (integer)
+        scftargets -- targets for convergence of the SCF (array[1])
+        scfvalues -- current values for convergence of the SCF (array[1], same units as scftargets)
+        vibfreqs -- vibrational frequencies (array, 1/cm)
+        vibirs -- IR intensity (array, ??)
+        vibramans -- Raman intensity (array, ??)
+        vibsyms -- symmetry of vibrations (list)
+    (1) The term 'array' currently refers to a Numeric array
+    (2) The number of dimensions of an array is given in square brackets
+    (3) Python indexes arrays/lists starting at zero. So if homos==[10], then
+        the 11th molecular orbital is the HOMO
     """
-    def __init__(self,filename,progress=None):
+    def __init__(self,filename,progress=None,
+                 loglevel=logging.INFO,logname="Log"):
+        """Initialise the logging object.
+
+        Typically called by subclasses in their own __init__ methods.
+        """
         self.filename = filename
         self.progress = progress
+        self.loglevel = loglevel
+        self.logname  = logname
+
+        # Set up the logger
+        self.logger = logging.getLogger('%s.%s' % (self.logname,self.filename))
+        self.logger.setLevel(logging.INFO)
+        handler = logging.StreamHandler(sys.stdout)
+        handler.setFormatter(logging.Formatter("[%(name)s %(levelname)s] %(message)s"))
+        self.logger.addHandler(handler)
 
     def float(self,number):
-        """Convert a string to a float avoiding the problem with Ds."""
+        """Convert a string to a float avoiding the problem with Ds.
+
+        >>> t = Logfile("dummyfile")
+        >>> t.float("123.2323E+02")
+        12323.23
+        >>> t.float("123.2323D+02")
+        12323.23
+        """
         number = number.replace("D","E")
         return float(number)
 
 if __name__=="__main__":
-    import doctest,parser
-    doctest.testmod(parser,verbose=False)
+    import doctest,logfileparser
+    doctest.testmod(logfileparser,verbose=False)

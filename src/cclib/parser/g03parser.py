@@ -28,18 +28,8 @@ class G03(Logfile):
     def __init__(self,*args):
 
         # Call the __init__ method of the superclass
-        super(G03, self).__init__(*args)
+        super(G03, self).__init__(*args,logname="G03")
         
-        # Set up the logger...will move this into superclass
-        # through a function call with G03 as a parameter.
-        # Note: all loggers with the same name share the logger.
-        # Here, loggers with different filenames are different
-        self.logger = logging.getLogger('G03.%s' % self.filename)
-        self.logger.setLevel(logging.INFO)
-        handler = logging.StreamHandler(sys.stdout)
-        handler.setFormatter(logging.Formatter("[%(name)s %(levelname)s] %(message)s"))
-        self.logger.addHandler(handler)
-
     def __str__(self):
         """Return a string representation of the object."""
         return "Gaussian 03 log file %s" % (self.filename)
