@@ -20,7 +20,7 @@ Contributions (monetary as well as code :-) are encouraged.
 import re,time
 import Numeric
 import random # For sometimes running the progress updater
-from logfileparser import Logfile # import the superclass
+from logfileparser import Logfile,convertor
 
 class G03(Logfile):
     """A Gaussian 98/03 log file"""
@@ -222,7 +222,7 @@ class G03(Logfile):
                     i = 0
                     while i*10+4<len(part):
                         x = part[i*10:(i+1)*10]
-                        self.moenergies[0].append(self.float(x)*27.2114) # from a.u. (hartrees) to eV
+                        self.moenergies[0].append(convertor(self.float(x),"hartree","eV"))
                         i += 1
                     line = inputfile.next()            
                 if line.find('Beta')==2:
@@ -243,9 +243,10 @@ class G03(Logfile):
                     i = 0
                     while i*10+4<len(part):
                         x = part[i*10:(i+1)*10]
-                        self.moenergies[1].append(self.float(x)*27.2114) # from a.u. (hartrees) to eV
+                        self.moenergies[1].append(convertor(self.float(x),"hartree","eV"))
                         i += 1
-                    line = inputfile.next()   
+                    line = inputfile.next()
+                self.moenergies = Numeric.array(self.moenergies,"f")                    
 
             if line[1:14]=="Harmonic freq":
 # Start of the IR/Raman frequency section
@@ -279,6 +280,9 @@ class G03(Logfile):
                     while len(line[:15].split())>0:
                         line = inputfile.next()
                     line = inputfile.next() # Should be the line with symmetries
+                self.vibfreqs = Numeric.array(self.vibfreqs,"f")
+                self.vibirs = Numeric.array(self.vibirs,"f")
+                self.vibramans = Numeric.array(self.vibramans,"f")
                     
             if line[1:14]=="Excited State":
 # Extract the electronic transitions
@@ -328,6 +332,9 @@ class G03(Logfile):
                     CIScontrib.append([(fromMO,frommoindex),(toMO,tomoindex),sqr])
                     line = inputfile.next()
                 self.etsecs.append(CIScontrib)
+                self.etenergies = Numeric.array(self.etenergies,"f")
+                self.etoscs = Numeric.array(self.etosc,"f")
+
 
 
             if line[1:52]=="<0|r|b> * <b|rxdel|0>  (Au), Rotatory Strengths (R)":
@@ -350,6 +357,7 @@ class G03(Logfile):
                     line = inputfile.next()
                     temp = line.strip().split()
                     parts = line.strip().split()                
+                self.etrotats = Numeric.array(self.etrotats,"f")
 
             if line[1:7]=="NBasis" or line[4:10]=="NBasis":
 # Extract the number of basis sets
@@ -385,13 +393,12 @@ class G03(Logfile):
                         self.logger.info("Creating attribute nbasis: %d" % self.nbasis)
 
             if line[1:4]=="***" and (line[5:12]=="Overlap"
-                                             or line[8:15]=="Overlap"):
+                                     or line[8:15]=="Overlap"):
 # Extract the molecular orbital overlap matrix
                 # Has to deal with lines such as:
                 #  *** Overlap ***
                 #  ****** Overlap ******
                 self.logger.info("Creating attribute aooverlaps[x,y]")
-                # oldtime = time.time()
                 self.aooverlaps = Numeric.zeros( (self.nbasis,self.nbasis), "float")
                 # Overlap integrals for basis fn#1 are in aooverlaps[0]
                 base = 0
@@ -406,10 +413,10 @@ class G03(Logfile):
                             self.aooverlaps[i+base,base+j] = k
                     base += 5
                     colmNames = inputfile.next()
-                # self.logger.info("Took %f seconds" % (time.time()-oldtime))
+                self.aooverlaps = Numeric.array(self.aooverlaps,"f")                    
+
 
             if line[5:35]=="Molecular Orbital Coefficients" or line[5:41]=="Alpha Molecular Orbital Coefficients" or line[5:40]=="Beta Molecular Orbital Coefficients":
-                # oldtime = time.time()
                 if line[5:40]=="Beta Molecular Orbital Coefficients":
                     beta = True
                     # Need to add an extra dimension to self.mocoeffs
@@ -418,7 +425,7 @@ class G03(Logfile):
                     beta = False
                     self.logger.info("Creating attributes aonames[], mocoeffs[][]")
                     self.aonames = []
-                    self.mocoeffs = Numeric.zeros((nindep,nbasis),"float")
+                    self.mocoeffs = Numeric.zeros((1,nindep,nbasis),"float")
 
                 base = 0
                 for base in range(0,nindep,5):
@@ -443,14 +450,15 @@ class G03(Logfile):
                             self.mocoeffs[1,base:base+len(part)/10,i] = temp
                         else:
                             self.mocoeffs[base:base+len(part)/10,i] = temp
-                # self.logger.info("Took %f seconds" % (time.time()-oldtime))
                  
         inputfile.close()
 
-        # Convert from lists to arrays (it's easier this way in most cases)
+
+        self.geovalues = Numeric.array(self.geovalues,"f")
+        self.homos = Numeric.array(self.homos,"d")
         self.scfenergies = Numeric.array(self.scfenergies,"f")
         self.scfvalues = Numeric.array(self.scftargets,"f")
-        scf.geovalues = Numeric.array(self.scfvalues,"f")
+
         
 
 # Note to self: Needs to be added to the main parser
