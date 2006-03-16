@@ -27,6 +27,7 @@ def convertor(value,fromunits,tounits):
     64524.8
     """
     _convertor = {"eV_to_cm-1": lambda x: x*8065.6,
+                  "hartree_to_eV": lambda x: x*27.2114,
                   "nm_to_cm-1": lambda x: 1e7/x,
                   "cm-1_to_nm": lambda x: 1e7/x}
 
@@ -67,7 +68,7 @@ class Logfile(object):
         homos -- molecular orbital index of HOMO(s) (array[1])
         mocoeffs -- molecular orbital coefficients (array[3])
         moenergies -- orbital energies (array[2], eV)
-        mosyms -- orbital symmetries (array[2])
+        mosyms -- orbital symmetries (list[2])
         natom -- number of atoms (integer)
         nbasis -- number of basis functions (integer)
         nindep -- number of linearly-independent basis functions (integer)
