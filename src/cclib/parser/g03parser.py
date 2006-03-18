@@ -182,7 +182,7 @@ class G03(Logfile):
                 i = 0
                 while len(line)>18 and line[17]=='(':
                     if line.find('Virtual')>=0:
-                        self.homos = [i-1] # 'HOMO' indexes the HOMO in the arrays
+                        self.homos = Numeric.array([i-1],"d") # 'HOMO' indexes the HOMO in the arrays
                         self.logger.info("Creating attribute homos[]")
                     parts = line[17:].split()
                     for x in parts:
@@ -196,7 +196,8 @@ class G03(Logfile):
                     self.mosyms.append([])
                     while len(line)>18 and line[17]=='(':
                         if line.find('Virtual')>=0:
-                            self.homos.append(i-1) # 'HOMO' indexes the HOMO in the arrays
+                            self.homos.resize([2]) # Extend the array to two elements
+                            self.homos[1] = i-1 # 'HOMO' indexes the HOMO in the arrays
                         parts = line[17:].split()
                         for x in parts:
                             self.mosyms[1].append(x.strip('()'))
@@ -217,7 +218,7 @@ class G03(Logfile):
                             assert HOMO==self.homos[0]
                         else:
                             self.logger.info("Creating attribute homos[]")
-                            self.homos = [HOMO]
+                            self.homos = Numeric.array([HOMO],"d")
                     part = line[28:]
                     i = 0
                     while i*10+4<len(part):
@@ -238,7 +239,8 @@ class G03(Logfile):
                             # but does it already have a Beta value?
                             assert HOMO==self.homos[1]
                         else:
-                             self.homos.append(HOMO)
+                             self.homos.resize([2])
+                             self.homos[1] = HOMO
                     part = line[28:]
                     i = 0
                     while i*10+4<len(part):
@@ -282,7 +284,7 @@ class G03(Logfile):
                     line = inputfile.next() # Should be the line with symmetries
                 self.vibfreqs = Numeric.array(self.vibfreqs,"f")
                 self.vibirs = Numeric.array(self.vibirs,"f")
-                self.vibramans = Numeric.array(self.vibramans,"f")
+                if hasattr(self,"vibramans"): self.vibramans = Numeric.array(self.vibramans,"f")
                     
             if line[1:14]=="Excited State":
 # Extract the electronic transitions
@@ -333,7 +335,7 @@ class G03(Logfile):
                     line = inputfile.next()
                 self.etsecs.append(CIScontrib)
                 self.etenergies = Numeric.array(self.etenergies,"f")
-                self.etoscs = Numeric.array(self.etosc,"f")
+                self.etoscs = Numeric.array(self.etoscs,"f")
 
 
 
@@ -449,15 +451,14 @@ class G03(Logfile):
                         if beta:
                             self.mocoeffs[1,base:base+len(part)/10,i] = temp
                         else:
-                            self.mocoeffs[base:base+len(part)/10,i] = temp
+                            self.mocoeffs[0,base:base+len(part)/10,i] = temp
                  
         inputfile.close()
 
 
-        self.geovalues = Numeric.array(self.geovalues,"f")
-        self.homos = Numeric.array(self.homos,"d")
-        self.scfenergies = Numeric.array(self.scfenergies,"f")
-        self.scfvalues = Numeric.array(self.scftargets,"f")
+        if hasattr(self,"geovalues"): self.geovalues = Numeric.array(self.geovalues,"f")
+        if hasattr(self,"scfenergies"): self.scfenergies = Numeric.array(self.scfenergies,"f")
+        if hasattr(self,"scfvalues"): self.scfvalues = Numeric.array(self.scftargets,"f")
 
         
 
