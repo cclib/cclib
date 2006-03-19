@@ -77,32 +77,28 @@ class GAMESS(Logfile):
                                 opttol = float(x.split('=')[1])
                             self.geotargets = Numeric.array([opttol,3./opttol])
                             
-            if line.find("EQUILIBRIUM GEOMETRY LOCATED")>=0:
-# This is necessary if a frequency calculation follows a geometry optimisation
-                endofopt = True
-                
-            if not endofopt and line.find("FINAL")==1:
+            if line.find("FINAL")==1:
                 if not hasattr(self,"scfenergies"):
                     self.logger.info("Creating attribute scfenergies[]")
                     self.scfenergies = []
-# Here is an example from Neil Berry:
+# Has to deal with such lines as:
 #  FINAL R-B3LYP ENERGY IS     -382.0507446475 AFTER  10 ITERATIONS
-# but in some cases the energy can be in position [3] not [4] so let's
-# take the number after the "IS"
+#  FINAL ENERGY IS     -379.7594673378 AFTER   9 ITERATIONS
+# ...so take the number after the "IS"
                 temp = line.split()
                 self.scfenergies.append(temp[temp.index("IS")+1])
 
-            if not endofopt and line.find("MAXIMUM GRADIENT")>0:
+            if line.find("MAXIMUM GRADIENT")>0:
                 if not hasattr(self,"geovalues"):
                     self.logger.info("Creating attribute geovalues[]")
                     self.geovalues = []
                 temp = line.strip().split()
                 self.geovalues.append([float(temp[3]),float(temp[7])])
 
-
-
             if line.find("DENSITY CONV=")==5:
-                self.scftargets[0] = float(line.strip().split()[-1])
+                if not hasattr(self,"scftargets"):
+                    self.logger.info("Creating attribute scftargets")
+                    self.scftargets = Numeric.array([float(line.strip().split()[-1])])
                 
             if line.find("ITER EX DEM")==1:
 # This is the section with the SCF information                
@@ -127,7 +123,38 @@ class GAMESS(Logfile):
                 self.scfvalues.append(den)
 
             if line.find("NORMAL COORDINATE ANALYSIS IN THE HARMONIC APPROXIMATION")>=0:
-                # Start of the frequency section
+# GAMESS has...
+# MODES 1 TO 6 ARE TAKEN AS ROTATIONS AND TRANSLATIONS.
+#
+#     FREQUENCIES IN CM**-1, IR INTENSITIES IN DEBYE**2/AMU-ANGSTROM**2,
+#     REDUCED MASSES IN AMU.
+#
+#                          1           2           3           4           5
+#       FREQUENCY:        52.49       41.45       17.61        9.23       10.61  
+#    REDUCED MASS:      3.92418     3.77048     5.43419     6.44636     5.50693
+#    IR INTENSITY:      0.00013     0.00001     0.00004     0.00000     0.00003
+
+# whereas PC-GAMESS has...
+# MODES 1 TO 6 ARE TAKEN AS ROTATIONS AND TRANSLATIONS.
+#
+#     FREQUENCIES IN CM**-1, IR INTENSITIES IN DEBYE**2/AMU-ANGSTROM**2
+#
+#                          1           2           3           4           5
+#       FREQUENCY:         5.89        1.46        0.01        0.01        0.01  
+#    IR INTENSITY:      0.00000     0.00000     0.00000     0.00000     0.00000
+
+# If Raman is present we have (for PC-GAMESS)...
+# MODES 1 TO 6 ARE TAKEN AS ROTATIONS AND TRANSLATIONS.
+#
+#     FREQUENCIES IN CM**-1, IR INTENSITIES IN DEBYE**2/AMU-ANGSTROM**2
+#     RAMAN INTENSITIES IN ANGSTROM**4/AMU, DEPOLARIZATIONS ARE DIMENSIONLESS
+#
+#                          1           2           3           4           5
+#       FREQUENCY:         5.89        1.46        0.04        0.03        0.01  
+#    IR INTENSITY:      0.00000     0.00000     0.00000     0.00000     0.00000
+# RAMAN INTENSITY:       12.675       1.828       0.000       0.000       0.000
+#  DEPOLARIZATION:        0.750       0.750       0.124       0.009       0.750
+
                 self.logger.info("Creating attributes vibfreqs, vibirs")
                 self.vibfreqs = []
                 self.vibirs = []
@@ -143,22 +170,32 @@ class GAMESS(Logfile):
                     numAtom += 1
                     line = inputfile.next()
 
-                # Print out the following lines which may contain some useful info:
-                # e.g. WARNING, MODE 7 HAS BEEN CHOSEN AS A VIBRATION
                 line = inputfile.next()
                 while line.find("FREQUENCIES IN CM**-1")==-1:
                     line = inputfile.next()
-                line = inputfile.next()
-
-                blank = inputfile.next()
+                while line!=blank:
+                    line = inputfile.next()
+                
                 freqNo = inputfile.next()
                 while freqNo.find("SAYVETZ")==-1:
                     freq = inputfile.next().strip().split()
                     self.vibfreqs.extend(map(float,freq[1:]))
-                    reducedMass = inputfile.next()
-                    irIntensity = inputfile.next().strip().split()
+                    line = inputfile.next()
+                    if line.find("REDUCED")>=0: # skip the reduced mass (not always present)
+                        line = inputfile.next()
+                    irIntensity = line.strip().split()
                     self.vibirs.extend(map(float,irIntensity[2:]))
-                    blank = inputfile.next()
+                    line = inputfile.next()
+                    if line.find("RAMAN")>=0:
+                        if not hasattr(self,"vibramans"):
+                            self.logger.info("Creating attribute vibramans")
+                            self.vibramans = []
+                        ramanIntensity = line.strip().split()
+                        self.vibramans.extend(map(float,ramanIntensity[2:]))
+                        depolar = inputfile.next()
+                        line = inputfile.next()
+                    assert line==blank
+
                     # Skip XYZ data for each atom plus
                     # the Sayvetz stuff at the end
                     for j in range(numAtom*3+10):
@@ -177,24 +214,22 @@ class GAMESS(Logfile):
                 # Take the last one of either in the file
                 if not hasattr(self,"moenergies"):
                     self.logger.info("Creating attributes moenergies, mosyms")
-                self.moenergies = []
+                self.moenergies = [[]]
                 self.mosyms = []
                 if not hasattr(self,"nindep"):
                     self.logger.info("Creating attribute nindep with default value")
                     self.nindep = self.nbasis
                 self.mocoeffs = Numeric.zeros((1,self.nindep,self.nbasis),"f")
                 line = inputfile.next()
-                blank = inputfile.next() # blank line
-                base = 0
-                while line.find("END OF RHF")==-1:
+                for base in range(0,self.nindep,5):
+                    blank = inputfile.next()
                     line = inputfile.next() # Eigenvector no
                     line = inputfile.next()
-                    self.moenergies.extend(map(float,line.split()))
+                    self.moenergies[0].extend([convertor(float(x),"hartree","eV") for x in line.split()])
                     line = inputfile.next()
                     self.mosyms.extend(line.split())
-                    line = inputfile.next()
-                    i=0
-                    while line!=blank and line.find("END OF RHF")==-1:
+                    for i in range(self.nbasis):
+                        line = inputfile.next()
                         if base==0: # Just do this the first time 'round
                             atomno=int(line.split()[2])-1
                             # atomorb[atomno].append(int(line.split()[0])-1)
@@ -204,16 +239,46 @@ class GAMESS(Logfile):
                         while j*11+4<len(temp):
                             self.mocoeffs[0,base+j,i] = float(temp[j*11:(j+1)*11])
                             j+=1
+                line = inputfile.next()
+                if line.find("END OF RHF")==-1: # implies unrestricted
+# If it's restricted we have
+#  ...... END OF RHF CALCULATION ......
+# If it's unrestricted we have...
+#
+#  ----- BETA SET ----- 
+#
+#          ------------
+#          EIGENVECTORS
+#          ------------
+#
+#                      1          2          3          4          5
+
+                    self.mocoeffs.resize((2,self.nindep,self.nbasis))
+                    for i in range(5):
                         line = inputfile.next()
-                        i+=1
-                    base+=5
+                    for base in range(0,self.nindep,5):
+                        blank = inputfile.next()
+                        line = inputfile.next() # Eigenvector no
+                        line = inputfile.next()
+                        self.moenergies.extend(map(float,line.split()))
+                        line = inputfile.next()
+                        self.mosyms.extend(line.split())
+                        for i in range(self.nbasis):
+                            line = inputfile.next()
+                            temp = line[15:] # Strip off the crud at the start
+                            j = 0
+                            while j*11+4<len(temp):
+                                self.mocoeffs[1,base+j,i] = float(temp[j*11:(j+1)*11])
+                                j+=1
+                    line = inputfile.next()
+                assert line.find("END OF")>=0
                 self.moenergies = Numeric.array(self.moenergies,"f")
 
             if line.find("NUMBER OF OCCUPIED ORBITALS")>=0:
                 if not hasattr(self,"homos"):
                     self.logger.info("Creating attribute homos")
                     temp = line.strip().split('=')
-                    self.homos = Numeric.array(int(temp[-1])-1,"d")
+                    self.homos = Numeric.array([int(temp[-1])-1],"i")
 
             if line.find("TOTAL NUMBER OF ATOMS")==1:
                 self.logger.info("Creating attribute natom")
@@ -234,8 +299,11 @@ class GAMESS(Logfile):
             elif line.find("OVERLAP MATRIX")==0 or line.find("OVERLAP MATRIX")==1:
                 # The first is for PC-GAMESS, the second for GAMESS
                 # Read 1-electron overlap matrix
-                self.logger.info("Creating attribute aooverlaps")
-                self.aooverlaps = Numeric.zeros((self.nbasis,self.nbasis), "f")
+                if not hasattr(self,"aooverlaps"):
+                    self.logger.info("Creating attribute aooverlaps")
+                    self.aooverlaps = Numeric.zeros((self.nbasis,self.nbasis), "f")
+                else:
+                    self.logger.info("Reading additional aooverlaps...")
                 base = 0
                 while base<self.nbasis:
                     blank = inputfile.next()
