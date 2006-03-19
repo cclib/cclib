@@ -144,11 +144,10 @@ class G03(Logfile):
             if line[1:9]=='SCF Done':
 # Note: this needs to follow the section where 'SCF Done' is used to terminate
 # a loop when extracting SCF convergence information
-                if hasattr(self,"scfenergies"):
-                    self.scfenergies.append(line.split()[4])
-                else:
-                    self.scfenergies = [line.split()[4]]
+                if not hasattr(self,"scfenergies"):
                     self.logger.info("Creating attribute scfenergies[]")
+                    self.scfenergies = []
+                self.scfenergies.append(self.float(line.split()[4]))
 
             if line[49:59]=='Converged?':
 # Extract Geometry convergence information
@@ -182,7 +181,7 @@ class G03(Logfile):
                 i = 0
                 while len(line)>18 and line[17]=='(':
                     if line.find('Virtual')>=0:
-                        self.homos = Numeric.array([i-1],"d") # 'HOMO' indexes the HOMO in the arrays
+                        self.homos = Numeric.array([i-1],"i") # 'HOMO' indexes the HOMO in the arrays
                         self.logger.info("Creating attribute homos[]")
                     parts = line[17:].split()
                     for x in parts:
@@ -218,7 +217,7 @@ class G03(Logfile):
                             assert HOMO==self.homos[0]
                         else:
                             self.logger.info("Creating attribute homos[]")
-                            self.homos = Numeric.array([HOMO],"d")
+                            self.homos = Numeric.array([HOMO],"i")
                     part = line[28:]
                     i = 0
                     while i*10+4<len(part):
@@ -336,8 +335,6 @@ class G03(Logfile):
                 self.etsecs.append(CIScontrib)
                 self.etenergies = Numeric.array(self.etenergies,"f")
                 self.etoscs = Numeric.array(self.etoscs,"f")
-
-
 
             if line[1:52]=="<0|r|b> * <b|rxdel|0>  (Au), Rotatory Strengths (R)":
 # Extract circular dichroism data
