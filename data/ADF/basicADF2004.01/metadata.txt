@@ -1,0 +1,3 @@
+ADF v.2004.01 build 200410211341
+Redhat 9
+Original unoptimized cartesian coordinates from file created in molden
