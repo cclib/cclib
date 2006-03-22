@@ -97,7 +97,7 @@ class Logfile(object):
 
         # Set up the logger
         self.logger = logging.getLogger('%s %s' % (self.logname,self.filename))
-        self.logger.setLevel(logging.INFO)
+        self.logger.setLevel(self.loglevel)
         handler = logging.StreamHandler(sys.stdout)
         handler.setFormatter(logging.Formatter("[%(name)s %(levelname)s] %(message)s"))
         self.logger.addHandler(handler)

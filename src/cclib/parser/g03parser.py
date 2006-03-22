@@ -38,7 +38,7 @@ class G03(Logfile):
         """Return a representation of the object."""
         return 'G03("%s")' % (self.filename)
 
-    def parse(self):
+    def parse(self,fupdate=0.05,cupdate=0.002):
         """Extract information from the logfile."""
         inputfile = open(self.filename,"r")
         
@@ -52,15 +52,21 @@ class G03(Logfile):
             
         for line in inputfile:
             
-            if self.progress and random.random()<0.05:
+            if self.progress and random.random()<cupdate:
                 
                 step = inputfile.tell()
                 if step!=oldstep:
-                    self.progress.update(step)
+                    self.progress.update(step,"Unsupported Information")
                     oldstep = step
                 
             if line[1:8]=="NAtoms=":
 # Find the number of atoms
+                if self.progress and random.random()<fupdate:
+                    step = inputfile.tell()
+                    if step!=oldstep:
+                        self.progress.update(step,"Attributes")
+                        oldstep=step
+                        
                 natom = int(line.split()[1])
                 if hasattr(self,"natom"):
                     assert self.natom==natom
@@ -73,6 +79,12 @@ class G03(Logfile):
                                                  or line[25:45]=="Standard orientation"
                                                  or line[26:43]=="Input orientation"):
 # Extract the atomic numbers of the atoms
+                if self.progress and random.random()<cupdate:
+                    step = inputfile.tell()
+                    if step!=oldstep:
+                        self.progress.update(step,"Attributes")
+                        oldstep=step
+                        
                 self.logger.info("Creating attribute atomnos[]")
                 self.atomnos = []
                 hyphens = inputfile.next()
@@ -102,6 +114,12 @@ class G03(Logfile):
 
             if line[1:10]=='Cycle   1':
 # Extract SCF convergence information (QM calcs)
+                if self.progress and random.random()<fupdate:
+                    step=inputfile.tell()
+                    if step!=oldstep:
+                        self.progress.update(step,"QM Convergence")
+                        oldstep=step
+                        
                 if not hasattr(self,"scfvalues"):
                     self.logger.info("Creating attribute scfvalues")
                     self.scfvalues = []
@@ -132,6 +150,12 @@ class G03(Logfile):
 
             if line[1:4]=='It=':
 # Extract SCF convergence information (AM1 calcs)
+                if self.progress:
+                    step=inputfile.tell()
+                    if step!=oldstep:
+                        self.progress.update(step,"AM1 Convergence")
+                        oldstep=step
+                        
                 self.logger.info("Creating attributes scftargets, scfvalues")
                 self.scftargets = Numeric.array([1E-7],"f") # This is the target value for the rms
                 self.scfvalues = [[]]
@@ -171,6 +195,12 @@ class G03(Logfile):
 
             if line[1:19]=='Orbital symmetries' and not hasattr(self,"mosyms"):
 # Extracting orbital symmetries
+                if self.progress and random.random()<fupdate:
+                    step=inputfile.tell()
+                    if step!=oldstep:
+                        self.progress.update(step,"MO Symmetries")
+                        oldstep=step
+                        
                 self.logger.info("Creating attribute mosyms[[]]")
                 self.mosyms = [[]]
                 line = inputfile.next()
@@ -205,6 +235,12 @@ class G03(Logfile):
 
             if line[1:6]=="Alpha" and line.find("eigenvalues")>=0:
 # Extract the alpha electron eigenvalues
+                if self.progress and random.random()<fupdate:
+                    step=inputfile.tell()
+                    if step!=oldstep:
+                        self.progress.update(step,"Eigenvalues")
+                        oldstep=step
+                        
                 self.logger.info("Creating attribute moenergies[[]]")
                 self.moenergies = [[]]
                 HOMO = -2
@@ -251,6 +287,12 @@ class G03(Logfile):
 
             if line[1:14]=="Harmonic freq":
 # Start of the IR/Raman frequency section
+                if self.progress and random.random()<fupdate:
+                    step=inputfile.tell()
+                    if step!=oldstep:
+                        self.progress.update(step,"Frequency Information")
+                        oldstep=step
+                        
                 self.vibsyms = []
                 self.vibirs = []
                 self.vibfreqs = []
@@ -403,6 +445,13 @@ class G03(Logfile):
                 base = 0
                 colmNames = inputfile.next()
                 while base<self.nbasis:
+                    
+                    if self.progress and random.random()<fupdate:
+                        step=inputfile.tell()
+                        if step!=oldstep:
+                            self.progress.update(step,"Overlap")
+                            oldstep=step
+                            
                     for i in range(self.nbasis-base): # Fewer lines this time
                         line = inputfile.next()
                         parts = line.split()
@@ -428,6 +477,13 @@ class G03(Logfile):
 
                 base = 0
                 for base in range(0,nindep,5):
+                    
+                    if self.progress:
+                        step=inputfile.tell()
+                        if step!=oldstep and random.random() < fupdate:
+                            self.progress.update(step,"Coefficients")
+                            oldstep=step
+                            
                     colmNames = inputfile.next()
                     symmetries = inputfile.next()
                     eigenvalues = inputfile.next()
@@ -452,7 +508,9 @@ class G03(Logfile):
                  
         inputfile.close()
 
-
+        if self.progress:
+            self.progress.update(nstep,"Done")
+            
         if hasattr(self,"geovalues"): self.geovalues = Numeric.array(self.geovalues,"f")
         if hasattr(self,"scfenergies"): self.scfenergies = Numeric.array(self.scfenergies,"f")
         if hasattr(self,"scfvalues"): self.scfvalues = Numeric.array(self.scftargets,"f")

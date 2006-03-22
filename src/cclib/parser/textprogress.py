@@ -1,3 +1,5 @@
+import sys
+import thread
 
 class TextProgress:
     
@@ -7,29 +9,38 @@ class TextProgress:
         self.text=None
         self.oldprogress=0
         self.progress=0
+        self.calls=0
         
     def initialize(self,nstep,text=None):
         
         self.nstep=float(nstep)
         self.text=text
+
+        #sys.stdout.write("\n")
         
-    def update(self,step):
+    def update(self,step,text=None):
+
+        self.progress = int(step*100/self.nstep)
         
-        self.progress = int(step/self.nstep*100)
-        #print step,self.nstep
-        
-        if self.progress/10==self.oldprogress/10+1: #just went through an interval of ten, ie. from 39 to 41, so update
+        if self.progress/2>=self.oldprogress/2+1 or self.text!=text: #just went through at least an interval of ten, ie. from 39 to 41, so update
             
-            str="["
-            for i in range(self.progress/10):
-                str+="="
-            for i in range(self.progress/10,10):
-                str+="-"
-                
-            str+="]"
+            str="\r["
+            prog=self.progress/10
+            str+=prog*"="+(10-prog)*"-"
+            str+="] %3i"%(self.progress)+"%"
             
-            print str
+            if text:
+                str+="    Parsing "+text
+
+            sys.stdout.write("\r"+70*" ")
+            sys.stdout.flush()
+            sys.stdout.write(str)
+            sys.stdout.flush()
+            self.oldprogress=self.progress
             
-        self.oldprogress=self.progress
+            if(self.progress>=100 and text=="Done"):
+                print " "
+            
+            
         return
 
