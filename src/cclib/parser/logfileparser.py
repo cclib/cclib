@@ -94,6 +94,7 @@ class Logfile(object):
         self.progress = progress
         self.loglevel = loglevel
         self.logname  = logname
+        self.table = PeriodicTable()
 
         # Set up the logger
         self.logger = logging.getLogger('%s %s' % (self.logname,self.filename))
