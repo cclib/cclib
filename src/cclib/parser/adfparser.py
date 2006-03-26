@@ -61,17 +61,19 @@ class ADF(Logfile):
                 
             if line.find("INPUT FILE")>=0:
 #check to make sure we aren't parsing Create jobs
-                line2=inputfile.next()
                 while line:
-                    if line.find("Create")<0:
-                        break
+                    if line.find("INPUT FILE")>=0:
+                      line2=inputfile.next()
+                    if line2.find("Create")<0:
+                      break
                     
                     if self.progress and random.random()<cupdate:
-                        step=inputfile.tell()
-                        if step!=oldstep:
-                            self.progress.update(step,"Unsupported Information")
-                            oldstep=step
+                      step=inputfile.tell()
+                      if step!=oldstep:
+                          self.progress.update(step,"Unsupported Information")
+                          oldstep=step
                             
+                    line=inputfile.next()
             
             if line[1:6]=="ATOMS":
 # Find the number of atoms and their atomic numbers
@@ -188,6 +190,28 @@ class ADF(Logfile):
 #                     self.geotargets[i] = self.float(parts[3])
 #                 self.geovalues.append(newlist)
 # 
+            if line[1:29]=='Orbital Energies, all Irreps' and not hasattr(self,"mosyms"):
+#Extracting orbital symmetries and energies
+              self.logger.info("Creating attribute mosyms[[]]")
+              self.mosyms=[[]]
+              
+              self.logger.info("Creating attribute moenergies[[]]")
+              self.moenergies=[[]]
+              
+              underline=inputfile.next()
+              blank=inputfile.next()
+              header=inputfile.next()
+              underline2=inputfile.next()
+              line=inputfile.next()
+              
+              while len(line)>1:
+                info=line.split()
+                if len(info)==5: #this is restricted
+                  self.mosyms[0].append(info[0])
+                  self.moenergies[0].append(convertor(float(info[3]),'hartree','eV'))
+                  line=inputfile.next()
+              self.moenergies=Numeric.array(self.moenergies,"f")
+              
 #             if line[1:19]=='Orbital symmetries' and not hasattr(self,"mosyms"):
 # # Extracting orbital symmetries
 #                 if self.progress and random.random()<fupdate:
