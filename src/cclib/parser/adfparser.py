@@ -191,7 +191,7 @@ class ADF(Logfile):
 #                 self.geovalues.append(newlist)
 # 
             if line[1:29]=='Orbital Energies, all Irreps' and not hasattr(self,"mosyms"):
-#Extracting orbital symmetries and energies
+#Extracting orbital symmetries and energies, homos
               self.logger.info("Creating attribute mosyms[[]]")
               self.mosyms=[[]]
               
@@ -209,6 +209,9 @@ class ADF(Logfile):
                 if len(info)==5: #this is restricted
                   self.mosyms[0].append(info[0])
                   self.moenergies[0].append(convertor(float(info[3]),'hartree','eV'))
+                  if info[2]=='0.00' and not hasattr(self,'homos'):
+                      self.logger.info("Creating attribute homos[]")
+                      self.homos=[len(self.moenergies[0])-2]
                   line=inputfile.next()
               self.moenergies=Numeric.array(self.moenergies,"f")
               
