@@ -419,6 +419,45 @@ class ADF(Logfile):
 #                     parts = line.strip().split()                
 #                 self.etrotats = Numeric.array(self.etrotats,"f")
 # 
+            if line[1:21] == "Total nr. of (C)SFOs":
+# Extract the number of basis sets
+
+                self.nbasis=int(line.split(":")[1].split()[0])
+                # e.g. Total nr. of (C)SFOs (summation over all irreps) :    60
+                self.logger.info("Creating attribute nbasis: %i" % self.nbasis)
+                
+# now that we're here, let's extract aonames
+
+                self.logger.info("Creating attribute aonames[]")
+                self.aonames=[]
+                
+                blank=inputfile.next()
+                note=inputfile.next()
+                
+                while len(self.aonames)<self.nbasis:
+                    blank=inputfile.next(); blank=inputfile.next(); blank=inputfile.next()
+                    sym=inputfile.next()
+                    line=inputfile.next()
+                    num=int(line.split(':')[1].split()[0])
+                    
+                    #read until line "--------..." is found
+                    while line.find('--')<0:
+                        line=inputfile.next()
+                    
+                    for i in range(num):
+                        line=inputfile.next()
+                        info=line.split()
+                        temporb=info[8]
+                        pos=temporb.find(':')
+                        if pos>0:
+                            orbital=temporb[:pos]+temporb[pos+1:]
+                        else:
+                            orbital=temporb
+                        
+                        self.aonames.append("%s%i_%i%s"%(info[5],int(info[9]),int(info[7]),orbital))
+                        line=inputfile.next() #get rid of line with energy in eV
+                
+                
 #             if line[1:7]=="NBasis" or line[4:10]=="NBasis":
 # # Extract the number of basis sets
 #                 nbasis = int(line.split('=')[1].split()[0])
