@@ -544,5 +544,5 @@ class G03(Logfile):
         assert len(self.traj)==len(self.trajSummary)
         
 if __name__=="__main__":
-    import doctest,parser
-    doctest.testmod(parser,verbose=False)
+    import doctest,g03parser
+    doctest.testmod(g03parser,verbose=False)

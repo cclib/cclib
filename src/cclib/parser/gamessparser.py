@@ -334,5 +334,5 @@ class GAMESS(Logfile):
 
         
 if __name__=="__main__":
-    import doctest,parser
-    doctest.testmod(parser,verbose=False)
+    import doctest,gamessparser
+    doctest.testmod(gamessparser,verbose=False)
