@@ -86,7 +86,7 @@ class GAMESS(Logfile):
 #  FINAL ENERGY IS     -379.7594673378 AFTER   9 ITERATIONS
 # ...so take the number after the "IS"
                 temp = line.split()
-                self.scfenergies.append(temp[temp.index("IS")+1])
+                self.scfenergies.append(float(temp[temp.index("IS")+1]))
 
             if line.find("MAXIMUM GRADIENT")>0:
                 if not hasattr(self,"geovalues"):
