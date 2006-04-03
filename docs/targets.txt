@@ -1,0 +1,19 @@
+targets.txt: information on the scftargets and geotargets attributes of different parsers.
+
+
+
+scftargets
+                Gaussian GAMESS ADF
+delta density               X         (this may be the same as rms density)
+rms density        X                 
+max density        X
+delta energy       X
+
+
+
+geotargets
+                Gaussian GAMESS ADF
+max gradient        X       X         (Gaussian uses the terms max force and rms force)
+rms gradient        X       X
+max displacement    X
+rms displacement    X
