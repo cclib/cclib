@@ -107,7 +107,7 @@ class GAMESS(Logfile):
                     self.scfvalues = []
                 line = inputfile.next()
                 den = []
-                while line!='\n':
+                while line.strip():
 # The SCF information is terminated by a blank line                    
                     try:
                         temp = int(line[0:4])
@@ -166,7 +166,7 @@ class GAMESS(Logfile):
                 blank = inputfile.next()
                 line = inputfile.next()
                 numAtom = 0
-                while line!="\n":
+                while line.strip():
                     numAtom += 1
                     line = inputfile.next()
 
