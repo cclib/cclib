@@ -9,7 +9,7 @@ for file in ["ex.out","WinGAMESS.log","exam01.out"]:
 
 os.chdir("basicPCGAMESS")
 
-for file in ["dvb_gopt.out","dvb_sp.out","dvb_ir.out","dvb_raman.out",
+for file in ["dvb_gopt_a.out","dvb_gopt_b.out","dvb_sp.out","dvb_ir.out","dvb_raman.out",
              "dvb_un_sp.out"]:
 	t = GAMESS(file)
 	t.parse()
