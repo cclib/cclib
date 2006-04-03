@@ -20,21 +20,31 @@ class GenericTest(unittest.TestCase):
 
 class GaussianTest(GenericTest):
     def setUp(self):
-        self.data = G03(os.path.join("..","data","Gaussian","basicGaussian03","dvb_gopt.out"))
-        self.data.logger.setLevel(0)
-        self.data.parse()
+        self.data = getfile(G03,"basicGaussian03","dvb_gopt.out")
 
 class GamessTest(GenericTest):
     def setUp(self):
-        self.data = GAMESS(os.path.join("..","data","GAMESS","basicPCGAMESS","dvb_gopt_a.out"))
-        self.data.logger.setLevel(0)
-        self.data.parse()
+        self.data = getfile(GAMESS,"basicPCGAMESS","dvb_gopt_a.out")
 
 class ADFTest(GenericTest):
     def setUp(self):
-        self.data = ADF(os.path.join("..","data","ADF","basicADF2004.01","dvb_gopt.adfout"))
-        self.data.logger.setLevel(0)
-        self.data.parse()
+        self.data = getfile(ADF,"basicADF2004.01","dvb_gopt.adfout")
+
+def getfile(parser,*location):
+    """Returns a parsed logfile."""
+    if parser.__name__ in ['GAMESS','ADF']:
+        fullpath = ("..","data",parser.__name__) + location
+    elif parser.__name__=="G03":
+        fullpath = ("..","data","Gaussian") + location
+    logfile = parser(os.path.join(*fullpath))
+    logfile.logger.setLevel(0)
+    logfile.parse()
+    return logfile
+
+def visualtests():
+    """These are not formal tests -- but they should be eyeballed."""
+    pass
+    
     
 if __name__=="__main__":
     gaussiantests = unittest.makeSuite(GaussianTest)
