@@ -1,0 +1,4 @@
+Gaussian 03, Revision B.04
+Windows XP
+Pentium ??
+Original Z-matrix created using GaussView (as far as I remember).

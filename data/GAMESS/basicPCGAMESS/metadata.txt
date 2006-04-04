@@ -1,4 +1,5 @@
 PC-GAMESS v.6.2 build 2068
-WinXP
+Windows XP
+Pentium ??
 Original input file created using GaussView with C2h symmetry and saved as Cartesian coordinates.
 After GeoOpt of this, the final coordinates were used as the input for a single point energy calculations (unrestricted, no sym) and an IR calculation. For the Raman calculation, the $GRAD and $HESS sections were cut from the PUNCH file of the IR calc and pasted into the Raman calc input file.
