@@ -215,7 +215,7 @@ class GAMESS(Logfile):
                 if not hasattr(self,"moenergies"):
                     self.logger.info("Creating attributes moenergies, mosyms")
                 self.moenergies = [[]]
-                self.mosyms = []
+                self.mosyms = [[]]
                 if not hasattr(self,"nindep"):
                     self.logger.info("Creating attribute nindep with default value")
                     self.nindep = self.nbasis
@@ -227,7 +227,7 @@ class GAMESS(Logfile):
                     line = inputfile.next()
                     self.moenergies[0].extend([convertor(float(x),"hartree","eV") for x in line.split()])
                     line = inputfile.next()
-                    self.mosyms.extend(line.split())
+                    self.mosyms[0].extend(line.split())
                     for i in range(self.nbasis):
                         line = inputfile.next()
                         if base==0: # Just do this the first time 'round
@@ -254,15 +254,17 @@ class GAMESS(Logfile):
 #                      1          2          3          4          5
 
                     self.mocoeffs.resize((2,self.nindep,self.nbasis))
+                    self.moenergies.append([])
+                    self.mosyms.append([])
                     for i in range(5):
                         line = inputfile.next()
                     for base in range(0,self.nindep,5):
                         blank = inputfile.next()
                         line = inputfile.next() # Eigenvector no
                         line = inputfile.next()
-                        self.moenergies.extend(map(float,line.split()))
+                        self.moenergies[1].extend([convertor(float(x),"hartree","eV") for x in line.split()])
                         line = inputfile.next()
-                        self.mosyms.extend(line.split())
+                        self.mosyms[1].extend(line.split())
                         for i in range(self.nbasis):
                             line = inputfile.next()
                             temp = line[15:] # Strip off the crud at the start
