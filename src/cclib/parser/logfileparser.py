@@ -103,6 +103,15 @@ class Logfile(object):
         handler.setFormatter(logging.Formatter("[%(name)s %(levelname)s] %(message)s"))
         self.logger.addHandler(handler)
 
+    def normalisesym(self,symlabel):
+        """Standardise the symmetry labels between parsers.
+
+        This method should be overwritten by individual parsers, and should
+        contain appropriate doctests. If is not overwritten, this is detected
+        as an error by unit tests.
+        """
+        return "ERROR: This should be overwritten by this subclass"
+    
     def float(self,number):
         """Convert a string to a float avoiding the problem with Ds.
 

@@ -19,6 +19,10 @@ class GenericGeoOptTest(unittest.TestCase):
         """Is the SCF energy within 3eV(?) of -382.3?"""
         self.assert_(self.data.scfenergies[-1]+382.3<3)
 
+    def testnormalisesym(self):
+        """Did this subclasses overwrite normalisesym?"""
+        self.assertNotEquals(self.data.normalisesym("A"),"ERROR: This should be overwritten by this subclass")
+
 class GaussianGeoOptTest(GenericGeoOptTest):
     def setUp(self):
         self.data = getfile(G03,"basicGaussian03","dvb_gopt.out")
