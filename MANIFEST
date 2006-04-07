@@ -1,0 +1,15 @@
+THANKS
+README
+INSTALL
+ANNOUNCE
+CHANGELOG
+LICENSE
+setup.py
+src/cclib/__init__.py
+src/cclib/parser/__init__.py
+src/cclib/parser/adfparser.py
+src/cclib/parser/g03parser.py
+src/cclib/parser/gamessparser.py
+src/cclib/parser/logfileparser.py
+src/cclib/parser/textprogress.py
+test/testall.py

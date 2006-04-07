@@ -1,0 +1,11 @@
+How to install cclib
+
+Requirements:
+
+cclib requires the Numeric extension for python. (Other variants, e.g. scipy, numarray, numpy, should also work but you will have to do some manual replacement of the appropriate references to Numeric)
+
+Installation:
+
+Type (as root):
+    python setup.py install
+ 
