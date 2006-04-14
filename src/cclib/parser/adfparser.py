@@ -478,6 +478,8 @@ class ADF(Logfile):
                 
                     atomheader=inputfile.next()
                     underline=inputfile.next()
+                    if len(atomheader)==1: #in the case of gopt, there is no * line after we finish, just two blank lines
+                      break
                     
                     funcs=[]
                     line=inputfile.next()
