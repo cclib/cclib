@@ -544,37 +544,36 @@ class ADF(Logfile):
 #                         self.nbasis = nbasis
 #                         self.logger.info("Creating attribute nbasis: %d" % self.nbasis)
 # 
-#             if line[1:4]=="***" and (line[5:12]=="Overlap"
-#                                      or line[8:15]=="Overlap"):
-# # Extract the molecular orbital overlap matrix
-#                 # Has to deal with lines such as:
-#                 #  *** Overlap ***
-#                 #  ****** Overlap ******
-#                 self.logger.info("Creating attribute aooverlaps[x,y]")
-#                 self.aooverlaps = Numeric.zeros( (self.nbasis,self.nbasis), "float")
-#                 # Overlap integrals for basis fn#1 are in aooverlaps[0]
-#                 base = 0
-#                 colmNames = inputfile.next()
-#                 while base<self.nbasis:
-#                     
-#                     if self.progress and random.random()<fupdate:
-#                         step=inputfile.tell()
-#                         if step!=oldstep:
-#                             self.progress.update(step,"Overlap")
-#                             oldstep=step
-#                             
-#                     for i in range(self.nbasis-base): # Fewer lines this time
-#                         line = inputfile.next()
-#                         parts = line.split()
-#                         for j in range(len(parts)-1): # Some lines are longer than others
-#                             k = float(parts[j].replace("D","E"))
-#                             self.aooverlaps[base+j,i+base] = k
-#                             self.aooverlaps[i+base,base+j] = k
-#                     base += 5
-#                     colmNames = inputfile.next()
-#                 self.aooverlaps = Numeric.array(self.aooverlaps,"f")                    
-# 
-# 
+            if line[1:13]=="======  smat":
+# Extract the overlap matrix
+
+                self.logger.info("Creating attribute aooverlaps[x,y]")
+                self.aooverlaps = Numeric.zeros( (self.nbasis,self.nbasis), "float")
+                # Overlap integrals for basis fn#1 are in aooverlaps[0]
+                base = 0
+                
+                while base<self.nbasis:
+                    
+                    if self.progress and random.random()<fupdate:
+                        step=inputfile.tell()
+                        if step!=oldstep:
+                            self.progress.update(step,"Overlap")
+                            oldstep=step
+                     
+                    blankline=inputfile.next()
+                    colName=inputfile.next()
+                    rowName=inputfile.next()
+                    
+                    for i in range(self.nbasis-base): # Fewer lines this time
+                        line = inputfile.next()
+                        parts = line.split()[1:]
+                        for j in range(len(parts)): # Some lines are longer than others
+                            k = float(parts[j])
+                            self.aooverlaps[base+j,i+base] = k
+                            self.aooverlaps[i+base,base+j] = k
+                    base += 4
+                    
+
 #             if line[5:35]=="Molecular Orbital Coefficients" or line[5:41]=="Alpha Molecular Orbital Coefficients" or line[5:40]=="Beta Molecular Orbital Coefficients":
 #                 if line[5:40]=="Beta Molecular Orbital Coefficients":
 #                     beta = True
