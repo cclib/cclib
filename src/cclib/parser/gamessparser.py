@@ -38,6 +38,26 @@ class GAMESS(Logfile):
         """Return a representation of the object."""
         return 'GAMESS("%s")' % (self.filename)
 
+    def normalisesym(self,label):
+        """Normalise the symmetries used by GAMESS.
+
+        To normalise, two rules need to be applied:
+        (1) Occurences of U/G in the 2/3 position of the label
+            must be lower-cased
+        (2) Two single quotation marks must be replaced by a double
+
+        >>> t = GAMESS("dummyfile").normalisesym
+        >>> labels = ['A','A1','A1G',"A'","A''","AG"]
+        >>> answers = map(t,labels)
+        >>> print answers
+        ['A', 'A1', 'A1g', "A'", 'A"', 'Ag']
+        """
+        if label[1:] == "''":
+            end = '"'
+        else:
+            end = label[1:].replace("U","u").replace("G","g")
+        return label[0] + end
+
     def parse(self):
         """Extract information from the logfile."""
         inputfile = open(self.filename,"r")
