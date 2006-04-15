@@ -23,6 +23,15 @@ class GenericGeoOptTest(unittest.TestCase):
         """Did this subclasses overwrite normalisesym?"""
         self.assertNotEquals(self.data.normalisesym("A"),"ERROR: This should be overwritten by this subclass")
 
+    def testlengthmosyms(self):
+        """Is the number of evalues equal to 60?"""
+        self.assertEquals(60,len(self.data.moenergies[0]))
+
+    def testsymlabels(self):
+        """Are all the symmetry labels either Ag/u or Bg/u?"""
+        sumwronglabels = sum([x not in ['Ag','Bu','Au','Bg'] for x in self.data.mosyms[0]])
+        self.assertEquals(sumwronglabels,0)
+
 class GaussianGeoOptTest(GenericGeoOptTest):
     def setUp(self):
         self.data = getfile(G03,"basicGaussian03","dvb_gopt.out")
@@ -63,13 +72,11 @@ def visualtests():
                  getfile(Jaguar,"basicJaguar","eg01","dvb_gopt.out")]
 
     print "\n\nMO energies of optimised dvb"
-    print "    ","".join(["%8s" % x for x in ['Gaussian','PCGAMESS','GAMESS-US','ADF']])
+    print "    ","".join(["%8s" % x for x in ['Gaussian','PCGAMESS','GAMESS-US','ADF','Jaguar']])
     print "HOMO", "  ".join(["%+2.4f" % x.moenergies[0,x.homos[0]] for x in logfiles])
     print "LUMO", "  ".join(["%+2.4f" % x.moenergies[0,x.homos[0]+1] for x in logfiles])
     print "H-L  ", "  ".join(["%2.4f" % (x.moenergies[0,x.homos[0]+1]-x.moenergies[0,x.homos[0]],) for x in logfiles])
 
-    for x in logfiles:
-        print x.mosyms
     
     
 if __name__=="__main__":
