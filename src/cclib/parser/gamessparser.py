@@ -247,7 +247,7 @@ class GAMESS(Logfile):
                     line = inputfile.next()
                     self.moenergies[0].extend([convertor(float(x),"hartree","eV") for x in line.split()])
                     line = inputfile.next()
-                    self.mosyms[0].extend(line.split())
+                    self.mosyms[0].extend(map(self.normalisesym,line.split()))
                     for i in range(self.nbasis):
                         line = inputfile.next()
                         if base==0: # Just do this the first time 'round
@@ -284,7 +284,7 @@ class GAMESS(Logfile):
                         line = inputfile.next()
                         self.moenergies[1].extend([convertor(float(x),"hartree","eV") for x in line.split()])
                         line = inputfile.next()
-                        self.mosyms[1].extend(line.split())
+                        self.mosyms[1].extend(map(self.normalisesym,line.split()))
                         for i in range(self.nbasis):
                             line = inputfile.next()
                             temp = line[15:] # Strip off the crud at the start
