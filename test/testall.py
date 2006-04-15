@@ -1,5 +1,5 @@
 import os, unittest
-from cclib.parser import GAMESS,G03,ADF
+from cclib.parser import GAMESS,G03,ADF,Jaguar
 from Numeric import array
 
 class GenericGeoOptTest(unittest.TestCase):
@@ -12,7 +12,7 @@ class GenericGeoOptTest(unittest.TestCase):
         self.assertEquals(self.data.natom,20)
 
     def testnbasis(self):
-        """Is the number of basis set function equal to 60?"""
+        """Is the number of basis set functions equal to 60?"""
         self.assertEquals(self.data.nbasis,60)
 
     def testscfenergy(self):
@@ -39,9 +39,13 @@ class ADFGeoOptTest(GenericGeoOptTest):
     def setUp(self):
         self.data = getfile(ADF,"basicADF2004.01","dvb_gopt.adfout")
 
+class JaguarGeoOptTest(GenericGeoOptTest):
+    def setUp(self):
+        self.data = getfile(Jaguar,"basicJaguar","eg01","dvb_gopt.out")
+
 def getfile(parser,*location):
     """Returns a parsed logfile."""
-    if parser.__name__ in ['GAMESS','ADF']:
+    if parser.__name__ in ['GAMESS','ADF','Jaguar']:
         fullpath = ("..","data",parser.__name__) + location
     elif parser.__name__=="G03":
         fullpath = ("..","data","Gaussian") + location
@@ -55,7 +59,8 @@ def visualtests():
     logfiles = [ getfile(G03,"basicGaussian03","dvb_gopt.out"),
                  getfile(GAMESS,"basicPCGAMESS","dvb_gopt_a.out"),
                  getfile(GAMESS,"basicGAMESS-US","dvb_gopt_a.out"),
-                 getfile(ADF,"basicADF2004.01","dvb_gopt.adfout") ]
+                 getfile(ADF,"basicADF2004.01","dvb_gopt.adfout"),
+                 getfile(Jaguar,"basicJaguar","eg01","dvb_gopt.out")]
 
     print "\n\nMO energies of optimised dvb"
     print "    ","".join(["%8s" % x for x in ['Gaussian','PCGAMESS','GAMESS-US','ADF']])
@@ -72,6 +77,7 @@ if __name__=="__main__":
     pcgamesstests = unittest.makeSuite(PCGamessGeoOptTest)
     gamessustests = unittest.makeSuite(GamessUSGeoOptTest)
     adftests = unittest.makeSuite(ADFGeoOptTest)
+    jaguartests = unittest.makeSuite(JaguarGeoOptTest)
     print "\n*** Testing Gaussian dvb_gopt.out ***"
     unittest.TextTestRunner(verbosity=2).run(gaussiantests)
     print "\n\n*** Testing PCGAMESS dvb_gopt_a.out ***"    
@@ -80,5 +86,7 @@ if __name__=="__main__":
     unittest.TextTestRunner(verbosity=2).run(gamessustests)
     print "\n\n*** Testing ADF dvb_gopt.adfout ***"
     unittest.TextTestRunner(verbosity=2).run(adftests)
+    print "\n\n*** Testing Jaguar dvb_gopt.out ***"
+    unittest.TextTestRunner(verbosity=2).run(jaguartests)
     print "\n\n*** Visual tests ***"
     visualtests()
