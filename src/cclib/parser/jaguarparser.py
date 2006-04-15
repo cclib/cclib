@@ -113,7 +113,7 @@ class Jaguar(Logfile):
                 while line.strip():
                     temp = line.strip().split()
                     for i in range(0,len(temp),2):
-                        self.moenergies[0].append(float(temp[i]))
+                        self.moenergies[0].append(convertor(float(temp[i]),"hartree","eV"))
                         self.mosyms[0].append(temp[i+1])
                     line = inputfile.next()
                 self.moenergies = Numeric.array(self.moenergies,"f")
