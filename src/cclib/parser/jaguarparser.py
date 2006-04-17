@@ -64,6 +64,7 @@ class Jaguar(Logfile):
                 if not hasattr(self,"scfvalues"):
                     self.scfvalues = []
                     self.logger.info("Creating attribute: scfvalues")
+                values = []
                 while line[0:4]=="etot":
                     if line[39:47].strip():
                         denergy = float(line[39:47])
@@ -72,8 +73,9 @@ class Jaguar(Logfile):
                                     # or should we just ignore the values in this line
                     ddensity = float(line[48:56])
                     maxdiiserr = float(line[57:65])
-                    self.scfvalues.append([denergy,ddensity,maxdiiserr])
+                    values.append([denergy,ddensity,maxdiiserr])
                     line = inputfile.next()
+                self.scfvalues.append(values)
 
             if line[1:5]=="SCFE":
 # Get the energy of the molecule
@@ -128,10 +130,40 @@ class Jaguar(Logfile):
                     self.logger.info("Creating attribute: nbasis")
                 self.nbasis = float(line.strip().split()[-1])
 
+            if line[2:23]=="start of program freq":
+# IR stuff
+                self.logger.info("Creating attribute: vibfreqs")
+                self.vibfreqs = []
+                blank = inputfile.next()
+                line = inputfile.next(); line = inputfile.next()
+                blank = inputfile.next()
+                
+                freqs = inputfile.next()
+                while freqs!=blank:
+                    temp = freqs.strip().split()
+                    self.vibfreqs.extend(map(float,temp[1:]))
+                    temp = inputfile.next().strip().split()
+                    if temp[0]=="symmetries": # May go straight from frequencies to reduced mass
+                        if not hasattr(self,"vibsyms"):
+                            self.logger.info("Creating attributes: vibsyms, vibirs")
+                            self.vibsyms = []
+                            self.vibirs = []
+                        self.vibsyms.extend(map(self.normalisesym,temp[1:]))
+                        temp = inputfile.next().strip().split()                                
+                        self.vibirs.extend(map(float,temp[1:]))
+                        reducedmass = inputfile.next()
+                    line = inputfile.next()
+                    while line!=blank: # Read the cartesian displacements
+                        line = inputfile.next()
+                    freqs = inputfile.next()
+                self.vibfreqs = Numeric.array(self.vibfreqs)
+                if hasattr(self,"vibirs"):
+                    self.vibirs = Numeric.array(self.vibirs)
+
         inputfile.close()
 
-        if hasattr(self,"scfvalues"):
-            self.scfvalues = Numeric.array(self.scfvalues,"f")
+##        if hasattr(self,"scfvalues"):
+##            self.scfvalues = Numeric.array(self.scfvalues,"f")
         if hasattr(self,"scfenergies"):
             self.scfenergies = Numeric.array(self.scfenergies,"f")
         
