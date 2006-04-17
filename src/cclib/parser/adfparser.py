@@ -38,6 +38,36 @@ class ADF(Logfile):
         """Return a representation of the object."""
         return 'ADF("%s")' % (self.filename)
 
+    def normalisesym(self,label):
+        """Use standard symmetry labels instead of ADF labels.
+
+        To normalise:
+        (1) any periods are removed (except in the case of greek letters)
+        (2) XXX is replaced by X, and a " added.
+        (3) XX is replaced by X, and a ' added.
+        (4) The greek letters Sigma, Pi, Delta and Phi are replaced by
+            their lowercase equivalent.
+
+        >>> sym = ADF("dummyfile").normalisesym
+        >>> labels = ['A','s','A1','A1.g','Sigma','Pi','Delta','Phi','Sigma.g','A.g','AA','AAA','EE1','EEE1']
+        >>> map(sym,labels)
+        ['A', 's', 'A1', 'A1g', 'sigma', 'pi', 'delta', 'phi', 'sigma.g', 'Ag', "A'", 'A"', "E1'", 'E1"']
+        """
+        greeks = ['Sigma','Pi','Delta','Phi']
+        for greek in greeks:
+            if label.startswith(greek):
+                return label.lower()
+            
+        ans = label.replace(".","")
+        l = len(ans)
+        if l>1 and ans[0]==ans[1]: # Python only tests the second condition if the first is true
+            if l>2 and ans[1]==ans[2]:
+                ans = ans.replace(ans[0]*3,ans[0]) + '"'
+            else:
+                ans = ans.replace(ans[0]*2,ans[0]) + "'"
+        return ans
+        
+
     def parse(self,fupdate=0.05,cupdate=0.002):
         """Extract information from the logfile."""
         inputfile = open(self.filename,"r")
@@ -207,7 +237,7 @@ class ADF(Logfile):
               while len(line)>1:
                 info=line.split()
                 if len(info)==5: #this is restricted
-                  self.mosyms[0].append(info[0].replace('.',''))
+                  self.mosyms[0].append(self.normalisesym(info[0]))
                   self.moenergies[0].append(convertor(float(info[3]),'hartree','eV'))
                   if info[2]=='0.00' and not hasattr(self,'homos'):
                       self.logger.info("Creating attribute homos[]")
@@ -656,5 +686,5 @@ class ADF(Logfile):
         assert len(self.traj)==len(self.trajSummary)
         
 if __name__=="__main__":
-    import doctest,parser
-    doctest.testmod(parser,verbose=False)
+    import doctest,adfparser
+    doctest.testmod(adfparser,verbose=False)
