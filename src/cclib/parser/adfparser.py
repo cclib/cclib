@@ -236,8 +236,8 @@ class ADF(Logfile):
               
               homoa=None
               homob=None
-              
-              while len(line)>1:
+
+              while len(line)==77:
                 info=line.split()
                 if len(info)==5: #this is restricted
                   self.mosyms[0].append(self.normalisesym(info[0]))
@@ -247,8 +247,9 @@ class ADF(Logfile):
                       self.homos=[len(self.moenergies[0])-2]
                   line=inputfile.next()
                 elif len(info)==6: #this is unrestricted
-                  self.moenergies.append([])
-                  self.mosyms.append([])
+                  if len(self.moenergies)<2: #if we don't have space, create it
+                    self.moenergies.append([])
+                    self.mosyms.append([])
                   if info[2]=='A':
                     self.mosyms[0].append(self.normalisesym(info[0]))
                     self.moenergies[0].append(convertor(float(info[4]),'hartree','eV'))
@@ -265,12 +266,19 @@ class ADF(Logfile):
                   
                 else: #different number of lines
                   print "Error",info
+
               if len(info)==6: #still unrestricted, despite being out of loop
                 self.logger.info("Creating attribute homos[]")
                 self.homos=[homoa,homob]
-                    
-              self.moenergies=Numeric.array(self.moenergies,"f")
-              
+
+#                tempa=Numeric.array(self.moenergies[0],"f")
+#                tempb=Numeric.array(self.moenergies[1],"f")
+#                self.moenergies=[tempa,tempb]
+#              elif len(info)==5:
+#                self.moenergies=[
+
+              temp=Numeric.array(self.moenergies,"f")
+              self.moenergies=temp
 #             if line[1:19]=='Orbital symmetries' and not hasattr(self,"mosyms"):
 # # Extracting orbital symmetries
 #                 if self.progress and random.random()<fupdate:
