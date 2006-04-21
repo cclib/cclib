@@ -234,6 +234,9 @@ class ADF(Logfile):
               underline2=inputfile.next()
               line=inputfile.next()
               
+              homoa=None
+              homob=None
+              
               while len(line)>1:
                 info=line.split()
                 if len(info)==5: #this is restricted
@@ -243,6 +246,29 @@ class ADF(Logfile):
                       self.logger.info("Creating attribute homos[]")
                       self.homos=[len(self.moenergies[0])-2]
                   line=inputfile.next()
+                elif len(info)==6: #this is unrestricted
+                  self.moenergies.append([])
+                  self.mosyms.append([])
+                  if info[2]=='A':
+                    self.mosyms[0].append(self.normalisesym(info[0]))
+                    self.moenergies[0].append(convertor(float(info[4]),'hartree','eV'))
+                    if info[3]=='0.00' and homoa==None:
+                      homoa=len(self.moenergies[0])-2
+                      
+                  if info[2]=='B':
+                    self.mosyms[1].append(self.normalisesym(info[0]))
+                    self.moenergies[1].append(convertor(float(info[4]),'hartree','eV'))
+                    if info[3]=='0.00' and homob==None:
+                      homob=len(self.moenergies[1])-2
+                      
+                  line=inputfile.next()
+                  
+                else: #different number of lines
+                  print "Error",info
+              if len(info)==6: #still unrestricted, despite being out of loop
+                self.logger.info("Creating attribute homos[]")
+                self.homos=[homoa,homob]
+                    
               self.moenergies=Numeric.array(self.moenergies,"f")
               
 #             if line[1:19]=='Orbital symmetries' and not hasattr(self,"mosyms"):
