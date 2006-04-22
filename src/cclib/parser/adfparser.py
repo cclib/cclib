@@ -175,51 +175,30 @@ class ADF(Logfile):
 #                         break
 #                 self.scfvalues.append(newlist)
 # 
-#             if line[1:4]=='It=':
-# # Extract SCF convergence information (AM1 calcs)
-#                 if self.progress:
-#                     step=inputfile.tell()
-#                     if step!=oldstep:
-#                         self.progress.update(step,"AM1 Convergence")
-#                         oldstep=step
-#                         
-#                 self.logger.info("Creating attributes scftargets, scfvalues")
-#                 self.scftargets = Numeric.array([1E-7],"f") # This is the target value for the rms
-#                 self.scfvalues = [[]]
-#                 line = inputfile.next()
-#                 while line.find(" Energy")==-1:
-#                     parts = line.strip().split()
-#                     self.scfvalues[0].append(self.float(parts[-1][:-1]))
-#                     line = inputfile.next()
-# 
-#             if line[1:9]=='SCF Done':
-# # Note: this needs to follow the section where 'SCF Done' is used to terminate
-# # a loop when extracting SCF convergence information
-#                 if not hasattr(self,"scfenergies"):
-#                     self.logger.info("Creating attribute scfenergies[]")
-#                     self.scfenergies = []
-#                 self.scfenergies.append(self.float(line.split()[4]))
-# 
-#             if line[49:59]=='Converged?':
-# # Extract Geometry convergence information
-#                 if not hasattr(self,"geotargets"):
-#                     self.logger.info("Creating attributes geotargets[],geovalues[[]]")
-#                     self.geovalues = []
-#                     self.geotargets = Numeric.array( [0.0,0.0,0.0,0.0],"f")
-#                 newlist = [0]*4
-#                 for i in range(4):
-#                     line = inputfile.next()
-#                     self.logger.debug(line)
-#                     parts = line.split()
-#                     try:
-#                         value = self.float(parts[2])
-#                     except ValueError:
-#                         self.logger.error("Problem parsing the value for geometry optimisation: %s is not a number." % parts[2])
-#                     else:
-#                         newlist[i] = value
-#                     self.geotargets[i] = self.float(parts[3])
-#                 self.geovalues.append(newlist)
-# 
+
+            if line[1:27]=='Geometry Convergence Tests':
+# Extract Geometry convergence information
+                if not hasattr(self,"geotargets"):
+                    self.logger.info("Creating attributes geotargets[],geovalues[[]]")
+                    self.geovalues = []
+                    self.geotargets = Numeric.array( [0.0,0.0,0.0,0.0,0.0],"f")
+                if not hasattr(self,"scfenergies"):
+                    self.logger.info("Creating attribute scfenergies[]")
+                    self.scfenergies = []
+                equals = inputfile.next()
+                blank = inputfile.next()
+                line = inputfile.next()
+                temp = inputfile.next().strip().split()
+                self.scfenergies.append(convertor(float(temp[-1]),"hartree","eV"))
+                for i in range(6):
+                    line = inputfile.next()
+                values = []
+                for i in range(5):
+                    temp = inputfile.next().split()
+                    self.geotargets[i] = float(temp[-3])
+                    values.append(float(temp[-4]))
+                self.geovalues.append(values)
+ 
             if line[1:29]=='Orbital Energies, all Irreps' and not hasattr(self,"mosyms"):
 #Extracting orbital symmetries and energies, homos
               self.logger.info("Creating attribute mosyms[[]]")
@@ -689,7 +668,7 @@ class ADF(Logfile):
             
         if hasattr(self,"geovalues"): self.geovalues = Numeric.array(self.geovalues,"f")
         if hasattr(self,"scfenergies"): self.scfenergies = Numeric.array(self.scfenergies,"f")
-        if hasattr(self,"scfvalues"): self.scfvalues = Numeric.array(self.scftargets,"f")
+        if hasattr(self,"scfvalues"): self.scfvalues = [Numeric.array(x,"f") for x in self.scfvalues]
 
         
 
