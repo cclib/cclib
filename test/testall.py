@@ -32,6 +32,14 @@ class GenericGeoOptTest(unittest.TestCase):
         sumwronglabels = sum([x not in ['Ag','Bu','Au','Bg'] for x in self.data.mosyms[0]])
         self.assertEquals(sumwronglabels,0)
 
+    def testscfvaluetype(self):
+        """Do the scf values have the right type?"""
+        self.assert_(type(self.data.scfvalues[0])==type(array([])) and type(self.data.scfvalues)==type([]))
+
+    def testscfvaluedim(self):
+        """Do the scf values have the right dimensions?"""
+        self.assert_(len(self.data.scfvalues)==len(self.data.geovalues) and len(self.data.scfvalues[0])==len(self.data.scftargets))
+
 class GaussianGeoOptTest(GenericGeoOptTest):
     def setUp(self):
         self.data = getfile(G03,"basicGaussian03","dvb_gopt.out")
