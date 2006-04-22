@@ -126,7 +126,7 @@ class GAMESS(Logfile):
                     self.logger.info("Creating attribute scfvalues")
                     self.scfvalues = []
                 line = inputfile.next()
-                den = []
+                values = []
                 while line.strip():
 # The SCF information is terminated by a blank line                    
                     try:
@@ -138,9 +138,9 @@ class GAMESS(Logfile):
 #  DFT CODE IS SWITCHING BACK TO THE FINER GRID
                         pass
                     else:
-                        den.append(float(line.split()[5]))
+                        values.append(float(line.split()[5]))
                     line = inputfile.next()
-                self.scfvalues.append(den)
+                self.scfvalues.append([values])
 
             if line.find("NORMAL COORDINATE ANALYSIS IN THE HARMONIC APPROXIMATION")>=0:
 # GAMESS has...
@@ -348,6 +348,8 @@ class GAMESS(Logfile):
         if not hasattr(self,"scftargets"):
             self.logger.info("Creating attribute scftargets[] with default values")
             self.scftargets = Numeric.array([1e-5])
+        if hasattr(self,"scfvalues"):
+            self.scfvalues = [Numeric.array(x,"f") for x in self.scfvalues]
         if hasattr(self,"geovalues"): self.geovalues = Numeric.array(self.geovalues,"f")
         if not hasattr(self,"nindep"):
             self.logger.info("Creating attribute nindep with default value")
