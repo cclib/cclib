@@ -350,48 +350,31 @@ class ADF(Logfile):
 #                     line = inputfile.next()
 #                 self.moenergies = Numeric.array(self.moenergies,"f")                    
 # 
-#             if line[1:14]=="Harmonic freq":
-# # Start of the IR/Raman frequency section
-#                 if self.progress and random.random()<fupdate:
-#                     step=inputfile.tell()
-#                     if step!=oldstep:
-#                         self.progress.update(step,"Frequency Information")
-#                         oldstep=step
-#                         
-#                 self.vibsyms = []
-#                 self.vibirs = []
-#                 self.vibfreqs = []
+            if line[1:24]=="List of All Frequencies":
+# Start of the IR/Raman frequency section
+                if self.progress and random.random()<fupdate:
+                    step=inputfile.tell()
+                    if step!=oldstep:
+                        self.progress.update(step,"Frequency Information")
+                        oldstep=step
+                         
+#                 self.vibsyms = [] # Need to look into this a bit more
+                self.vibirs = []
+                self.vibfreqs = []
 #                 self.logger.info("Creating attribute vibsyms[]")
-#                 self.logger.info("Creating attribute vibfreqs[]")
-#                 self.logger.info("Creating attribute vibirs[]")                
-#                 line = inputfile.next()
-#                 while len(line[:15].split())>0:
-#                     # Get past the three/four line title of the columns
-#                     line = inputfile.next()
-#                 line = inputfile.next() # The line with symmetries
-#                 while len(line[:15].split())==0:
-#                     self.logger.debug(line)
-#                     self.vibsyms.extend(line.split()) # Adding new symmetry
-#                     line = inputfile.next()
-#                     self.vibfreqs.extend(map(self.float,line[15:].split())) # Adding new frequencies
-#                     [inputfile.next() for i in [0,1]] # Skip two lines
-#                     line = inputfile.next()
-#                     self.vibirs.extend(map(self.float,line[15:].split())) # Adding IR intensities
-#                     line = inputfile.next()
-#                     if line.find("Raman")>=0:
-#                         if not hasattr(self,"vibramans"):
-#                             self.vibramans = []
-#                             self.logger.info("Creating attribute vibramans[]")
-#                         line = inputfile.next()
-#                         self.vibramans.extend(map(self.float,line[15:].split())) # Adding Raman intensities
-#                     line = inputfile.next()
-#                     while len(line[:15].split())>0:
-#                         line = inputfile.next()
-#                     line = inputfile.next() # Should be the line with symmetries
-#                 self.vibfreqs = Numeric.array(self.vibfreqs,"f")
-#                 self.vibirs = Numeric.array(self.vibirs,"f")
-#                 if hasattr(self,"vibramans"): self.vibramans = Numeric.array(self.vibramans,"f")
-#                     
+                self.logger.info("Creating attribute vibfreqs[],vibirs[]")
+                for i in range(8):
+                    line = inputfile.next()
+                line = inputfile.next().strip()
+                while line:
+                    temp = line.split()
+                    self.vibfreqs.append(float(temp[0]))                    
+                    self.vibirs.append(float(temp[2])) # or is it temp[1]?
+                    line = inputfile.next().strip()
+                self.vibfreqs = Numeric.array(self.vibfreqs,"f")
+                self.vibirs = Numeric.array(self.vibirs,"f")
+                if hasattr(self,"vibramans"): self.vibramans = Numeric.array(self.vibramans,"f")
+
 #             if line[1:14]=="Excited State":
 # # Extract the electronic transitions
 #                 if not hasattr(self,"etenergy"):
