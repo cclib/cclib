@@ -539,6 +539,12 @@ class ADF(Logfile):
                 self.nbasis=len(self.aonames)
                 self.logger.info("Creating attribute nbasis: %d" % self.nbasis)
                   
+            if line[1:49]=="Total nr. of (C)SFOs (summation over all irreps)":
+#Extract the number of basis sets              
+              self.nbasis=int(line.split()[-1])
+              self.logger.info("Creating attribute nbasis: %d" % self.nbasis)
+              
+                  
 #             if line[1:7]=="NBasis" or line[4:10]=="NBasis":
 # # Extract the number of basis sets
 #                 nbasis = int(line.split('=')[1].split()[0])
