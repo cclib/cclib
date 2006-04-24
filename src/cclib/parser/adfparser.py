@@ -607,7 +607,70 @@ class ADF(Logfile):
                             self.aooverlaps[i+base,base+j] = k
                     base += 4
                     
-
+            if line[48:67]=="SFO MO coefficients":
+              
+              #read stars and three blank lines
+              inputfile.next()
+              inputfile.next()
+              inputfile.next()
+              inputfile.next()
+              
+              line=inputfile.next()
+              
+              if line.find("***** SPIN 1 *****")>0:
+                beta = 1
+                self.mocoeffs = Numeric.zeros((2,self.nbasis,self.nbasis),"float")
+                
+                #get rid of two blank lines and symmetry label
+                inputfile.next()
+                inputfile.next()
+                sym=inputfile.next()
+                #print sym
+                
+              else:
+                beta = 0
+                self.mocoeffs = Numeric.zeros((1,self.nbasis,self.nbasis),"float")
+                
+              #get rid of 12 lines of text
+              for i in range(10):
+                inputfile.next()
+              
+              for spin in range(beta+1):
+                symoffset=0
+                base=0
+                
+                if spin==1:
+                  #read spin, blank, blank, symlabel, blank, text, underline, blank
+                  for i in range(8):
+                    line=inputfile.next()
+                        
+                while symoffset+base<self.nbasis:
+                
+                  line=inputfile.next()
+                  if len(line)<3:
+                    symoffset+=base
+                    base=0
+                    #print symoffset
+                    
+                  monumbers=line.split()
+                  #print monumbers
+                  #get rid of next two lines
+                  inputfile.next()
+                  inputfile.next()
+                  
+                  row=0
+                  line=inputfile.next()
+                  while len(line)>2:
+                    cols=line.split()
+                    for i in range(len(cols[1:])):
+                      self.mocoeffs[spin,row+symoffset,i+symoffset+base]=float(cols[i+1])
+                  
+                    line=inputfile.next()
+                    row+=1
+                  
+                  base+=len(cols[1:])
+                  
+                  
 #             if line[5:35]=="Molecular Orbital Coefficients" or line[5:41]=="Alpha Molecular Orbital Coefficients" or line[5:40]=="Beta Molecular Orbital Coefficients":
 #                 if line[5:40]=="Beta Molecular Orbital Coefficients":
 #                     beta = True
