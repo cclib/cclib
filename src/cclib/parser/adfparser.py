@@ -502,7 +502,9 @@ class ADF(Logfile):
                         coeff=float(info[4])
                         if coeff<0: orbital+='-'+info[5]+info[6].replace(":","")
                         else: orbital+="+"+info[5]+info[6].replace(":","")
-                          
+                    
+                    else:
+                      inputfile.next()
                     self.fonames.append("%s_%s"%(frag,orbital))
                   symoffset+=num
                   
