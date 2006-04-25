@@ -451,99 +451,64 @@ class ADF(Logfile):
 
 #******************************************************************************************************************8
 #delete this after new implementation using smat, eigvec print,eprint?
-#             if line[1:21] == "Total nr. of (C)SFOs":
-# # Extract the number of basis sets
-# 
-#                 self.nbasis=int(line.split(":")[1].split()[0])
-#                 # e.g. Total nr. of (C)SFOs (summation over all irreps) :    60
-#                 self.logger.info("Creating attribute nbasis: %i" % self.nbasis)
-#                 
-# # now that we're here, let's extract aonames
-# 
-#                 self.logger.info("Creating attribute aonames[]")
-#                 self.aonames=[]
-#                 
-#                 blank=inputfile.next()
-#                 note=inputfile.next()
-#                 
-#                 while len(self.aonames)<self.nbasis:
-#                     blank=inputfile.next(); blank=inputfile.next(); blank=inputfile.next()
-#                     sym=inputfile.next()
-#                     line=inputfile.next()
-#                     num=int(line.split(':')[1].split()[0])
-#                     
-#                     #read until line "--------..." is found
-#                     while line.find('--')<0:
-#                         line=inputfile.next()
-#                     
-#                     for i in range(num):
-#                         line=inputfile.next()
-#                         info=line.split()
-#                         temporb=info[8]
-#                         pos=temporb.find(':')
-#                         if pos>0:
-#                             orbital=temporb[:pos]+temporb[pos+1:]
-#                         else:
-#                             orbital=temporb
-#                         
-#                         self.aonames.append("%s%i_%i%s"%(info[5],int(info[9]),int(info[7]),orbital))
-#                         line=inputfile.next() #get rid of line with energy in eV
-#****************************************************************************************************************************
-
-            if line[1:10]=="BAS: List":
-
-                self.logger.info("Creating attribute aonames[]")
-                self.aonames=[]
-                
-                #get rid of descriptive text
-                for i in range(18):
-                    inputfile.next()
-                
-                line=inputfile.next()
-                while line[1:5]!="****":
-                
-                    atomheader=inputfile.next()
-                    underline=inputfile.next()
-                    if len(atomheader)==1: #in the case of gopt, there is no * line after we finish, just two blank lines
-                      break
-                    
-                    funcs=[]
-                    line=inputfile.next()
-                    
-                    #read functions up to blank line
-                    while len(line)>1:
-                        
-                        if line[1:5]=="****":
-                            break
-                        
-                        if line[12:22]=="0  0  0  0":
-                            funcs.append("1S")
-                        if line[12:22]=="0  0  0  1":
-                            funcs.append("2S")
-                        if line[12:22]=="1  0  0  0":
-                            funcs.append("2PX")
-                        if line[12:22]=="0  1  0  0":
-                            funcs.append("2PY")
-                        if line[12:22]=="0  0  1  0":
-                            funcs.append("2PZ")
-                            
-                        line=inputfile.next()
-
-                    element=atomheader[:38].split()[0]
-                    numbers=atomheader[38:].split()
-                    for num in numbers:
-                        for j in range(len(funcs)):
-                            self.aonames.append(element+num+"_"+funcs[j])
-                            
-                            
-                self.nbasis=len(self.aonames)
-                self.logger.info("Creating attribute nbasis: %d" % self.nbasis)
-                  
-            if line[1:49]=="Total nr. of (C)SFOs (summation over all irreps)":
-#Extract the number of basis sets              
-              self.nbasis=int(line.split()[-1])
-              self.logger.info("Creating attribute nbasis: %d" % self.nbasis)
+            if line[1:49] == "Total nr. of (C)SFOs (summation over all irreps)":
+# Extract the number of basis sets
+              self.nbasis=int(line.split(":")[1].split()[0])
+              self.logger.info("Creating attribute nbasis: %i" % self.nbasis)
+                 
+ # now that we're here, let's extract aonames
+ 
+              self.logger.info("Creating attribute fonames[]")
+              self.fonames=[]
+                 
+              blank=inputfile.next()
+              note=inputfile.next()
+              symoffset=0
+              blank=inputfile.next(); blank=inputfile.next(); blank=inputfile.next()
               
+              while len(self.fonames)<self.nbasis:
+                  sym=inputfile.next()
+                  line=inputfile.next()
+                  num=int(line.split(':')[1].split()[0])
+                     
+                  #read until line "--------..." is found
+                  while line.find('-----')<0:
+                      line=inputfile.next()
+                     
+                  #for i in range(num):
+                  while len(self.fonames)<symoffset+num:
+                    line=inputfile.next()
+                    info=line.split()
+                      
+                    #index0 index1 occ2 energy3/4 fragname5 coeff6 orbnum7 orbname8 fragname9
+                    orbname=info[8]
+                    orbital=info[7]+orbname.replace(":","")
+                      
+                    fragname=info[5]
+                    frag=fragname+info[9]
+                      
+                    coeff=float(info[6])
+                    if coeff**2<1.0: #is this a linear combination?
+                      line=inputfile.next()
+                      info=line.split()
+                        
+                      if line[42]==' ': #no new fragment type
+                        frag+="+"+fragname+info[6]
+                        coeff=float(info[3])
+                        if coeff<0: orbital+='-'+info[4]+info[5].replace(":","")
+                        else: orbital+='+'+info[4]+info[5].replace(":","")
+                      else:
+                        frag+="+"+info[3]+info[7]
+                        coeff=float(info[4])
+                        if coeff<0: orbital+='-'+info[5]+info[6].replace(":","")
+                        else: orbital+="+"+info[5]+info[6].replace(":","")
+                          
+                    self.fonames.append("%s_%s"%(frag,orbital))
+                  symoffset+=num
+                  
+                  #nextline blankline blankline
+                  inputfile.next(); inputfile.next(); inputfile.next()
+                  
                   
 #             if line[1:7]=="NBasis" or line[4:10]=="NBasis":
 # # Extract the number of basis sets
@@ -608,7 +573,7 @@ class ADF(Logfile):
                     base += 4
                     
             if line[48:67]=="SFO MO coefficients":
-              
+#extract MO coefficients              
               #read stars and three blank lines
               inputfile.next()
               inputfile.next()
