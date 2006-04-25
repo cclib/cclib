@@ -375,10 +375,12 @@ class ADF(Logfile):
               symoffset=0
               blank=inputfile.next(); blank=inputfile.next(); blank=inputfile.next()
               
+              nosymreps=[]
               while len(self.fonames)<self.nbasis:
                   sym=inputfile.next()
                   line=inputfile.next()
                   num=int(line.split(':')[1].split()[0])
+                  nosymreps.append(num)
                      
                   #read until line "--------..." is found
                   while line.find('-----')<0:
@@ -453,35 +455,45 @@ class ADF(Logfile):
 #                     else:
 #                         self.nbasis = nbasis
 #                         self.logger.info("Creating attribute nbasis: %d" % self.nbasis)
-# 
-            if line[1:13]=="======  smat":
-# Extract the overlap matrix
 
-                self.logger.info("Creating attribute aooverlaps[x,y]")
-                self.aooverlaps = Numeric.zeros( (self.nbasis,self.nbasis), "float")
-                # Overlap integrals for basis fn#1 are in aooverlaps[0]
-                base = 0
+#           
+            if line[1:32]=="S F O   P O P U L A T I O N S ,":
+              
+              self.logger.info("Creating attribute fooverlaps[x,y]")
+              self.fooverlaps = Numeric.zeros((self.nbasis,self.nbasis),"float")
+              
+              symoffset=0
+              
+              for nosymrep in nosymreps:
                 
-                while base<self.nbasis:
+                line=inputfile.next()
+                while line.find('===')<10: #look for the symmetry labels
+                  line=inputfile.next()
+                #blank blank text blank col row
+                for i in range(6): inputfile.next()
+                
+                base=0
+                
+                while base<nosymrep: #have we read all the columns?
+                
+                  for i in range(nosymrep-base):
+                  #while symoffset+base+i<self.nbasis: #have we read all the rows?
+                  #while True:  
+                    line=inputfile.next()
+                    parts=line.split()[1:]
                     
-                    if self.progress and random.random()<fupdate:
-                        step=inputfile.tell()
-                        if step!=oldstep:
-                            self.progress.update(step,"Overlap")
-                            oldstep=step
-                     
-                    blankline=inputfile.next()
-                    colName=inputfile.next()
-                    rowName=inputfile.next()
+                    for j in range(len(parts)):
+                      k=float(parts[j])
+                      self.fooverlaps[base+symoffset+j, base+symoffset+i] = k
+                      self.fooverlaps[base+symoffset+i, base+symoffset+j] = k
                     
-                    for i in range(self.nbasis-base): # Fewer lines this time
-                        line = inputfile.next()
-                        parts = line.split()[1:]
-                        for j in range(len(parts)): # Some lines are longer than others
-                            k = float(parts[j])
-                            self.aooverlaps[base+j,i+base] = k
-                            self.aooverlaps[i+base,base+j] = k
-                    base += 4
+                  #blank, blank, column
+                  for i in range(3): inputfile.next()
+                  
+                  base+=4
+                                  
+                symoffset+=nosymrep
+                base=0
                     
             if line[48:67]=="SFO MO coefficients":
 #extract MO coefficients              
