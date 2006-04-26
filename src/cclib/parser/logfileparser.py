@@ -43,7 +43,8 @@ class PeriodicTable(object):
     6
     """
     def __init__(self):
-        self.element = [None,"H","He","Li","Be","B","C","N","O","F","Ne"]
+        self.element = [None,"H","He","Li","Be","B","C","N","O","F","Ne","Na","Mg","Al","Si","P","S","Cl","Ar","K","Ca","Sc","Ti","V","Cr","Mn","Fe"
+                        "Co","Ni","Cu","Zn","Ga","Ge","As","Se","Br","Kr","Rb","Sr","Y","Zr","Nb","Mo"]
         self.number = {}
         for i in range(1,len(self.element)):
             self.number[self.element[i]] = i

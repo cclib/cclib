@@ -83,7 +83,6 @@ class ADF(Logfile):
         for line in inputfile:
             
             if self.progress and random.random()<cupdate:
-                
                 step = inputfile.tell()
                 if step!=oldstep:
                     self.progress.update(step,"Unsupported Information")
@@ -92,16 +91,17 @@ class ADF(Logfile):
             if line.find("INPUT FILE")>=0:
 #check to make sure we aren't parsing Create jobs
                 while line:
+                
+                    if self.progress and random.random()<fupdate:
+                      step = inputfile.tell()
+                      #if step!=oldstep:
+                      self.progress.update(step,"Unsupported Information")
+                      oldstep = step
+                  
                     if line.find("INPUT FILE")>=0:
                       line2=inputfile.next()
                     if line2.find("Create")<0:
                       break
-                    
-                    if self.progress and random.random()<cupdate:
-                      step=inputfile.tell()
-                      if step!=oldstep:
-                          self.progress.update(step,"Unsupported Information")
-                          oldstep=step
                             
                     line=inputfile.next()
             
@@ -377,6 +377,7 @@ class ADF(Logfile):
               
               nosymreps=[]
               while len(self.fonames)<self.nbasis:
+                          
                   sym=inputfile.next()
                   line=inputfile.next()
                   num=int(line.split(':')[1].split()[0])
@@ -458,14 +459,15 @@ class ADF(Logfile):
 
 #           
             if line[1:32]=="S F O   P O P U L A T I O N S ,":
-              
+#Extract overlap matrix
+
               self.logger.info("Creating attribute fooverlaps[x,y]")
               self.fooverlaps = Numeric.zeros((self.nbasis,self.nbasis),"float")
               
               symoffset=0
               
               for nosymrep in nosymreps:
-                
+                          
                 line=inputfile.next()
                 while line.find('===')<10: #look for the symmetry labels
                   line=inputfile.next()
@@ -475,10 +477,15 @@ class ADF(Logfile):
                 base=0
                 
                 while base<nosymrep: #have we read all the columns?
-                
+                      
                   for i in range(nosymrep-base):
-                  #while symoffset+base+i<self.nbasis: #have we read all the rows?
-                  #while True:  
+                  
+                    if self.progress:
+                      step=inputfile.tell()
+                      if step!=oldstep and random.random() < fupdate:
+                        self.progress.update(step,"Overlap")
+                        oldstep=step
+                    
                     line=inputfile.next()
                     parts=line.split()[1:]
                     
@@ -533,7 +540,7 @@ class ADF(Logfile):
                     line=inputfile.next()
                         
                 while symoffset+base<self.nbasis:
-                
+            
                   line=inputfile.next()
                   if len(line)<3:
                     symoffset+=base
@@ -549,6 +556,13 @@ class ADF(Logfile):
                   row=0
                   line=inputfile.next()
                   while len(line)>2:
+                     
+                    if self.progress:
+                      step=inputfile.tell()
+                      if step!=oldstep and random.random() < fupdate:
+                        self.progress.update(step,"Coefficients")
+                        oldstep=step
+
                     cols=line.split()
                     for i in range(len(cols[1:])):
                       self.mocoeffs[spin,row+symoffset,i+symoffset+base]=float(cols[i+1])
