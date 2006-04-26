@@ -5,4 +5,4 @@ setup(name="cclib",
       author_email="baoilleach@users.sf.net",
       url="http://cclib.sourceforge.net",
       package_dir = {'cclib':'src/cclib'},
-      packages=['cclib','cclib.parser'])
+      packages=['cclib','cclib.parser','cclib.progress'])
