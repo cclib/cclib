@@ -114,11 +114,6 @@ class G03(Logfile):
 
             if line[1:10]=='Cycle   1':
 # Extract SCF convergence information (QM calcs)
-                if self.progress and random.random()<fupdate:
-                    step=inputfile.tell()
-                    if step!=oldstep:
-                        self.progress.update(step,"QM Convergence")
-                        oldstep=step
                         
                 if not hasattr(self,"scfvalues"):
                     self.logger.info("Creating attribute scfvalues")
@@ -126,6 +121,13 @@ class G03(Logfile):
                 newlist = [ [] for x in self.scftargets ]
                 line = inputfile.next()
                 while line.find("SCF Done")==-1:
+                
+                    if self.progress and random.random()<fupdate:
+                        step=inputfile.tell()
+                        if step!=oldstep:
+                            self.progress.update(step,"QM Convergence")
+                            oldstep=step                
+                          
                     if line.find(' E=')==0:
                         self.logger.debug(line)
                     if line.find(" RMSDP")==0:
@@ -150,17 +152,19 @@ class G03(Logfile):
 
             if line[1:4]=='It=':
 # Extract SCF convergence information (AM1 calcs)
-                if self.progress:
-                    step=inputfile.tell()
-                    if step!=oldstep:
-                        self.progress.update(step,"AM1 Convergence")
-                        oldstep=step
                         
                 self.logger.info("Creating attributes scftargets, scfvalues")
                 self.scftargets = Numeric.array([1E-7],"f") # This is the target value for the rms
                 self.scfvalues = [[]]
                 line = inputfile.next()
                 while line.find(" Energy")==-1:
+                
+                    if self.progress:
+                        step=inputfile.tell()
+                        if step!=oldstep:
+                            self.progress.update(step,"AM1 Convergence")
+                            oldstep=step
+                            
                     parts = line.strip().split()
                     self.scfvalues[0].append(self.float(parts[-1][:-1]))
                     line = inputfile.next()
@@ -488,6 +492,8 @@ class G03(Logfile):
                     symmetries = inputfile.next()
                     eigenvalues = inputfile.next()
                     for i in range(nbasis):
+                    
+                    
                         line = inputfile.next()
                         if base==0 and not beta: # Just do this the first time 'round
                             # Changed below from :12 to :11 to deal with Elmar Neumann's example
