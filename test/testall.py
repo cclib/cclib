@@ -56,6 +56,11 @@ class ADFGeoOptTest(GenericGeoOptTest):
     def setUp(self):
         self.data = getfile(ADF,"basicADF2004.01","dvb_gopt.adfout")
 
+    def testscfvaluedim(self):
+        """Do the scf values have the right dimensions? 
+           ADF calculations one more SCF cycle after the geometry is converged"""
+        self.assert_(len(self.data.scfvalues)==len(self.data.geovalues)+1 and len(self.data.scfvalues[0])==len(self.data.scftargets))
+
 class JaguarGeoOptTest(GenericGeoOptTest):
     def setUp(self):
         self.data = getfile(Jaguar,"basicJaguar","eg01","dvb_gopt.out")

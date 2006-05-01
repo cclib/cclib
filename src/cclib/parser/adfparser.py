@@ -24,7 +24,8 @@ from logfileparser import Logfile,convertor
 
 class ADF(Logfile):
     """A Gaussian 98/03 log file"""
-    SCFRMS,SCFMAX,SCFENERGY = range(3) # Used to index self.scftargets[]
+    #SCFRMS,SCFMAX,SCFENERGY = range(3) # Used to index self.scftargets[]
+    SCFCNV,SCFCNV2 = range(2) #used to index self.scftargets[]
     def __init__(self,*args):
 
         # Call the __init__ method of the superclass
@@ -128,17 +129,53 @@ class ADF(Logfile):
                 self.natom=len(self.atomnos)
                 self.logger.info("Creating attribute natom: %d" % self.natom)
                 
-#             if line[1:44]=='Requested convergence on RMS density matrix':
-# # Find the targets for SCF convergence (QM calcs)                
-#                 if not hasattr(self,"scftargets"):
-#                     self.logger.info("Creating attribute scftargets[]")
-#                 self.scftargets = Numeric.array([0.0,0.0,0.0],'f')
-#                 self.scftargets[G03.SCFRMS] = self.float(line.split('=')[1].split()[0])
-#             if line[1:44]=='Requested convergence on MAX density matrix':
-#                 self.scftargets[G03.SCFMAX] = self.float(line.strip().split('=')[1][:-1])
-#             if line[1:44]=='Requested convergence on             energy':
-#                 self.scftargets[G03.SCFENERGY] = self.float(line.strip().split('=')[1][:-1])
-# 
+            if line[1:22]=="S C F   U P D A T E S":
+# find targets for SCF convergence (QM calcs)
+
+              if not hasattr(self,"scftargets"):
+                self.logger.info("Creating attribute scftargets[]")
+              self.scftargets = Numeric.array([0.0, 0.0],'f')
+              
+              #underline, blank, nr
+              for i in range(3): inputfile.next()
+              
+              line=inputfile.next()
+              self.scftargets[ADF.SCFCNV]=float(line.split()[2])
+              line=inputfile.next()
+              self.scftargets[ADF.SCFCNV2]=float(line.split()[2])
+              
+            if line[1:11]=="CYCLE    1":
+              
+              if self.progress and random.random() < fupdate:
+                step=inputfile.tell()
+                if step!=oldstep:
+                  self.progress.update(step, "QM Convergence")
+                  oldstep=step
+              
+              if not hasattr(self,"scfvalues"):
+                self.logger.info("Creating attribute scfvalues")
+                self.scfvalues = []
+                
+              newlist = [ [] for x in self.scftargets ]
+              line=inputfile.next()
+              
+              while line.find("SCF CONVERGED")==-1:
+              
+                if line[1:7]=="d-Pmat":
+                  info=line.split()
+                  newlist[ADF.SCFCNV].append(float(info[2]))
+                  
+                  line=inputfile.next()
+                  info=line.split()
+                  newlist[ADF.SCFCNV2].append(float(info[2]))
+              
+                try:
+                  line=inputfile.next()
+                except StopIteration: #EOF reached?
+                  break
+              
+              self.scfvalues.append(newlist)
+              
 #             if line[1:10]=='Cycle   1':
 # # Extract SCF convergence information (QM calcs)
 #                 if self.progress and random.random()<fupdate:
