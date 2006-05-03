@@ -93,20 +93,21 @@ def visualtests():
     
     
 if __name__=="__main__":
-    gaussiantests = unittest.makeSuite(GaussianGeoOptTest)
-    pcgamesstests = unittest.makeSuite(PCGamessGeoOptTest)
-    gamessustests = unittest.makeSuite(GamessUSGeoOptTest)
-    adftests = unittest.makeSuite(ADFGeoOptTest)
-    jaguartests = unittest.makeSuite(JaguarGeoOptTest)
-    print "\n*** Testing Gaussian dvb_gopt.out ***"
-    unittest.TextTestRunner(verbosity=2).run(gaussiantests)
-    print "\n\n*** Testing PCGAMESS dvb_gopt_a.out ***"    
-    unittest.TextTestRunner(verbosity=2).run(pcgamesstests)
-    print "\n\n*** Testing GAMESS-US dvb_gopt_a.out ***"    
-    unittest.TextTestRunner(verbosity=2).run(gamessustests)
-    print "\n\n*** Testing ADF dvb_gopt.adfout ***"
-    unittest.TextTestRunner(verbosity=2).run(adftests)
-    print "\n\n*** Testing Jaguar dvb_gopt.out ***"
-    unittest.TextTestRunner(verbosity=2).run(jaguartests)
+    names = [ "Gaussian", "PCGamess", "GAMESS", "ADF", "Jaguar" ]
+    tests = [ GaussianGeoOptTest, PCGamessGeoOptTest,
+              GamessUSGeoOptTest, ADFGeoOptTest,
+              JaguarGeoOptTest ]
+    total = errors = failures = 0
+    for name,test in zip(names,tests):
+        print "\n**** Testing %s Geo Opt ****" % name
+        myunittest = unittest.makeSuite(test)
+        a = unittest.TextTestRunner(verbosity=2).run(myunittest)
+        total += a.testsRun
+        errors += len(a.errors)
+        failures += len(a.failures)
+
+    print "\n\n********* SUMMARY OF EVERYTHING **************"
+    print "TOTAL: %d\tPASSED: %d\tFAILED: %d\tERRORS: %d" % (total,total-(errors+failures),failures,errors)
+
     print "\n\n*** Visual tests ***"
     visualtests()
