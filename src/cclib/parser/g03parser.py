@@ -37,6 +37,20 @@ class G03(Logfile):
     def __repr__(self):
         """Return a representation of the object."""
         return 'G03("%s")' % (self.filename)
+    
+    def normalisesym(self,label):
+        """Use standard symmetry labels instead of Gaussian labels.
+
+        To normalise:
+        (1) replace any G or U by their lowercase equivalent
+
+        >>> sym = G03("dummyfile").normalisesym
+        >>> labels = ['A1','AG','A1G']
+        >>> map(sym,labels)
+        ['A1', 'Ag', 'A1g']
+        """
+        ans = label.replace("U","u").replace("G","g") 
+        return ans
 
     def parse(self,fupdate=0.05,cupdate=0.002):
         """Extract information from the logfile."""
@@ -219,7 +233,7 @@ class G03(Logfile):
                         self.logger.info("Creating attribute homos[]")
                     parts = line[17:].split()
                     for x in parts:
-                        self.mosyms[0].append(x.strip('()'))
+                        self.mosyms[0].append(self.normalisesym(x.strip('()')))
                         i+= 1 
                     line = inputfile.next()
                 if unres:
@@ -233,7 +247,7 @@ class G03(Logfile):
                             self.homos[1] = i-1 # 'HOMO' indexes the HOMO in the arrays
                         parts = line[17:].split()
                         for x in parts:
-                            self.mosyms[1].append(x.strip('()'))
+                            self.mosyms[1].append(self.normalisesym(x.strip('()')))
                             i+= 1
                         line = inputfile.next()
 
