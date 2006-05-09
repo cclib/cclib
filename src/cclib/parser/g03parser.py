@@ -474,7 +474,7 @@ class G03(Logfile):
                         line = inputfile.next()
                         parts = line.split()
                         for j in range(len(parts)-1): # Some lines are longer than others
-                            k = float(parts[j].replace("D","E"))
+                            k = float(parts[j+1].replace("D","E"))
                             self.aooverlaps[base+j,i+base] = k
                             self.aooverlaps[i+base,base+j] = k
                     base += 5
