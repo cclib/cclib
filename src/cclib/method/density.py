@@ -40,22 +40,22 @@ class Density(Method):
     def calculate(self,fupdate=0.05,cupdate=0.002):
         """Calculate the density matrix given the results of a parser"""
     
-        if not self.parser.parsed:
-            self.parser.parse()
+        #if not self.parser.parsed:
+        #    self.parser.parse()
 
         #do we have the needed info in the parser?
-        if not hasattr(self.parser,"mocoeffs") 
-          and not hasattr(self.parser,"aooverlaps") 
-          and not hasattr(self.parser,"nbasis") 
+        if not hasattr(self.parser,"mocoeffs") \
+          and not hasattr(self.parser,"aooverlaps") \
+          and not hasattr(self.parser,"nbasis") \
           and not hasattr(self.parser,"homos"):
             self.logger.error("Missing mocoeffs or aooverlaps")
             return False #let the caller of function know we didn't finish
 
         self.logger.info("Creating attribute density: array[3]")
         size=self.parser.nbasis
-        beta=(len(self.parser.mocoeffs)==2)
+        unrestricted=(len(self.parser.mocoeffs)==2)
 
-        if beta:
+        if unrestricted:
             self.density=Numeric.zeros([2,size,size],"f")
         else:
             self.density=Numeric.zeros([1,size,size],"f")
@@ -66,8 +66,11 @@ class Density(Method):
                 col=Numeric.reshape(self.parser.mocoeffs[spin][i],(size,1))
                 colt=Numeric.reshape(col,(1,size))
 
-                tempdensity=Numeric.matrixmultipy(col,colt)
-                density[spin]=Numeric.add(density[spin],tempdensity)
+                tempdensity=Numeric.matrixmultiply(col,colt)
+                self.density[spin]=Numeric.add(self.density[spin],tempdensity)
+
+        if not unrestricted: #multiply by two to account for second electron
+            self.density[0]=Numeric.add(self.density[0],self.density[0])
 
 if __name__=="__main__":
     import doctest,g03parser
