@@ -41,7 +41,7 @@ def importName(modulename, name):
 
 if __name__=="__main__":
     total = errors = failures = 0
-    for module in [ "testGeoOpt", "testSP" ]:
+    for module in [ "testGeoOpt", "testSP", "testSPun" ]:
         names = importName(module, "names") # i.e. from testGeoOpt import names
         tests = importName(module, "tests") # i.e. from testGeoOpt import tests
         for name,test in zip(names,tests):
