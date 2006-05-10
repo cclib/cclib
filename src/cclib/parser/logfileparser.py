@@ -93,6 +93,7 @@ class Logfile(object):
         """
         self.filename = filename
         self.progress = progress
+        self.parsed = False
         self.loglevel = loglevel
         self.logname  = logname
         self.table = PeriodicTable()

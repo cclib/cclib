@@ -355,6 +355,8 @@ class GAMESS(Logfile):
             self.logger.info("Creating attribute nindep with default value")
             self.nindep = self.nbasis
 
+        self.parsed = True
+
 
         
 if __name__=="__main__":

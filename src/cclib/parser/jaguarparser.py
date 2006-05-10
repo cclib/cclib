@@ -166,6 +166,7 @@ class Jaguar(Logfile):
 ##            self.scfvalues = Numeric.array(self.scfvalues,"f")
         if hasattr(self,"scfenergies"):
             self.scfenergies = Numeric.array(self.scfenergies,"f")
+        self.parsed = True
         
 if __name__=="__main__":
     import doctest,g03parser

@@ -660,6 +660,7 @@ class ADF(Logfile):
         if hasattr(self,"geovalues"): self.geovalues = Numeric.array(self.geovalues,"f")
         if hasattr(self,"scfenergies"): self.scfenergies = Numeric.array(self.scfenergies,"f")
         if hasattr(self,"scfvalues"): self.scfvalues = [Numeric.array(x,"f") for x in self.scfvalues]
+        self.parsed = True
 
         
 

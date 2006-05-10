@@ -40,8 +40,8 @@ class Density(Method):
     def calculate(self,fupdate=0.05,cupdate=0.002):
         """Calculate the density matrix given the results of a parser"""
     
-        #if not self.parser.parsed:
-        #    self.parser.parse()
+        if not self.parser.parsed:
+            self.parser.parse()
 
         #do we have the needed info in the parser?
         if not hasattr(self.parser,"mocoeffs") \
