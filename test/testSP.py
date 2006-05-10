@@ -28,6 +28,11 @@ class PCGamessSPTest(GenericSPTest):
 class ADFSPTest(GenericSPTest):
     def setUp(self):
         self.data = getfile(ADF,"basicADF2004.01","dvb_sp_b.adfout")
+    
+    def testdimaooverlaps(self):
+        """Are the dims of the overlap matrix consistent with nbasis?"""
+        #ADF uses fooverlaps
+        self.assertEquals(self.data.fooverlaps.shape,(self.data.nbasis,self.data.nbasis))
 
 names = [ "Gaussian", "PCGamess", "GAMESS", "ADF", "Jaguar" ]
 tests = [ GaussianSPTest, PCGamessSPTest,
