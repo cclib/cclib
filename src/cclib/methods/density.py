@@ -60,12 +60,14 @@ class Density(Method):
         else:
             self.density=Numeric.zeros([1,size,size],"f")
 
-        for i in range(self.parser.homos[0]+1):
-            col=Numeric.reshape(self.parser.mocoeffs[0][i],(size,1))
-            colt=Numeric.reshape(col,(1,size))
+        for spin in range(len(self.parser.mocoeffs)):
 
-            tempdensity=Numeric.matrixmultipy(col,colt)
-            density[0]=Numeric.add(density[0],tempdensity)
+            for i in range(self.parser.homos[spin]+1):
+                col=Numeric.reshape(self.parser.mocoeffs[spin][i],(size,1))
+                colt=Numeric.reshape(col,(1,size))
+
+                tempdensity=Numeric.matrixmultipy(col,colt)
+                density[spin]=Numeric.add(density[spin],tempdensity)
 
 if __name__=="__main__":
     import doctest,g03parser
