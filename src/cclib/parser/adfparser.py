@@ -295,6 +295,7 @@ class ADF(Logfile):
 
               temp=Numeric.array(self.moenergies,"f")
               self.moenergies=temp
+              self.homos=Numeric.array(self.homos)
 
             if line[1:24]=="List of All Frequencies":
 # Start of the IR/Raman frequency section
