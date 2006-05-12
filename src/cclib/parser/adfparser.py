@@ -662,6 +662,7 @@ class ADF(Logfile):
         if hasattr(self,"scfenergies"): self.scfenergies = Numeric.array(self.scfenergies,"f")
         if hasattr(self,"scfvalues"): self.scfvalues = [Numeric.array(x,"f") for x in self.scfvalues]
         self.parsed = True
+        if hasattr(self,"moenergies"): self.nindep = len(self.moenergies[0])
 
         
 
