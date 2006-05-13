@@ -55,7 +55,7 @@ class PCGamessGeoOptTest(GenericGeoOptTest):
 
 class ADFGeoOptTest(GenericGeoOptTest):
     def setUp(self):
-        self.data = getfile(ADF,"basicADF2004.01","dvb_gopt.adfout")
+        self.data = getfile(ADF,"basicADF2004.01","dvb_gopt_b.adfout")
 
     def testscfvaluedim(self):
         """Do the scf values have the right dimensions? 

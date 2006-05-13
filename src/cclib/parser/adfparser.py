@@ -25,6 +25,7 @@ from logfileparser import Logfile,convertor
 class ADF(Logfile):
     """An ADF log file"""
     SCFCNV,SCFCNV2 = range(2) #used to index self.scftargets[]
+    maxelem,norm = range(2) # used to index scf.values
     def __init__(self,*args):
 
         # Call the __init__ method of the superclass
@@ -139,9 +140,8 @@ class ADF(Logfile):
                 for i in range(3): inputfile.next()
 
                 line=inputfile.next()
-                self.scftargets[ADF.SCFCNV]=float(line.split()[2])
-                line=inputfile.next()
-                self.scftargets[ADF.SCFCNV2]=float(line.split()[2])
+                self.scftargets[ADF.maxelem] = float(line.split()[2])
+                self.scftargets[ADF.norm] = self.scftargets[ADF.maxelem]*10
               
             if line[1:11]=="CYCLE    1":
               
@@ -151,29 +151,24 @@ class ADF(Logfile):
                         self.progress.update(step, "QM Convergence")
                         oldstep=step
               
-                if not hasattr(self,"scfvalues"):
-                    self.logger.info("Creating attribute scfvalues")
-                    self.scfvalues = []
-                
-                newlist = [ [] for x in self.scftargets ]
+                newlist = []
                 line=inputfile.next()
 
                 while line.find("SCF CONVERGED")==-1:
+                    if line[4:12]=="SCF test":
+                        if not hasattr(self,"scfvalues"):
+                            self.logger.info("Creating attribute scfvalues")
+                            self.scfvalues = []
+                                                
+                        info = line.split()
+                        newlist.append([float(info[4]),abs(float(info[6]))])
+                    try:
+                        line=inputfile.next()
+                    except StopIteration: #EOF reached?
+                        break            
 
-                  if line[1:7]=="d-Pmat":
-                      info=line.split()
-                      newlist[ADF.SCFCNV].append(float(info[2]))
-                  
-                      line=inputfile.next()
-                      info=line.split()
-                      newlist[ADF.SCFCNV2].append(float(info[2]))
-
-                  try:
-                      line=inputfile.next()
-                  except StopIteration: #EOF reached?
-                      break
-
-                self.scfvalues.append(newlist)
+                if hasattr(self,"scfvalues"):
+                    self.scfvalues.append(newlist)
               
 #             if line[1:10]=='Cycle   1':
 # # Extract SCF convergence information (QM calcs)
