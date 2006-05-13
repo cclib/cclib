@@ -1,2 +1,7 @@
 from textprogress import TextProgress
-from qtprogress import QtProgress
+try:
+    import qt
+except ImportError:
+    pass # import QtProgress will cause an error
+else:
+    from qtprogress import QtProgress
