@@ -236,12 +236,12 @@ class GAMESS(Logfile):
                     self.logger.info("Creating attributes moenergies, mosyms")
                 self.moenergies = [[]]
                 self.mosyms = [[]]
-                if not hasattr(self,"nindep"):
-                    self.logger.info("Creating attribute nindep with default value")
-                    self.nindep = self.nbasis
-                self.mocoeffs = Numeric.zeros((1,self.nindep,self.nbasis),"f")
+                if not hasattr(self,"nmo"):
+                    self.logger.info("Creating attribute nmo with default value")
+                    self.nmo = self.nbasis
+                self.mocoeffs = Numeric.zeros((1,self.nmo,self.nbasis),"f")
                 line = inputfile.next()
-                for base in range(0,self.nindep,5):
+                for base in range(0,self.nmo,5):
                     blank = inputfile.next()
                     line = inputfile.next() # Eigenvector no
                     line = inputfile.next()
@@ -273,12 +273,12 @@ class GAMESS(Logfile):
 #
 #                      1          2          3          4          5
 
-                    self.mocoeffs.resize((2,self.nindep,self.nbasis))
+                    self.mocoeffs.resize((2,self.nmo,self.nbasis))
                     self.moenergies.append([])
                     self.mosyms.append([])
                     for i in range(5):
                         line = inputfile.next()
-                    for base in range(0,self.nindep,5):
+                    for base in range(0,self.nmo,5):
                         blank = inputfile.next()
                         line = inputfile.next() # Eigenvector no
                         line = inputfile.next()
@@ -315,7 +315,7 @@ class GAMESS(Logfile):
             elif line.find("TOTAL NUMBER OF MOS IN VARIATION SPACE")==1:
                 # Note that this line is not always present, so by default
                 # NBsUse is set equal to NBasis (see below).
-                self.logger.info("Creating attribute nindep")
+                self.logger.info("Creating attribute nmo")
                 self.indep = int(line.split()[-1])
                 
             elif line.find("OVERLAP MATRIX")==0 or line.find("OVERLAP MATRIX")==1:
@@ -351,9 +351,9 @@ class GAMESS(Logfile):
         if hasattr(self,"scfvalues"):
             self.scfvalues = [Numeric.array(x,"f") for x in self.scfvalues]
         if hasattr(self,"geovalues"): self.geovalues = Numeric.array(self.geovalues,"f")
-        if not hasattr(self,"nindep"):
-            self.logger.info("Creating attribute nindep with default value")
-            self.nindep = self.nbasis
+        if not hasattr(self,"nmo"):
+            self.logger.info("Creating attribute nmo with default value")
+            self.nmo = self.nbasis
 
         self.parsed = True
 

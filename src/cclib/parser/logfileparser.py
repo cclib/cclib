@@ -72,7 +72,7 @@ class Logfile(object):
         mosyms -- orbital symmetries (list[2])
         natom -- number of atoms (integer)
         nbasis -- number of basis functions (integer)
-        nindep -- number of linearly-independent basis functions (integer)
+        nmo -- number of linearly-independent basis functions (integer)
         scfenergies -- the electronic energy of the molecule (array[1], a.u.)
         scftargets -- targets for convergence of the SCF (array[1])
         scfvalues -- current values for convergence of the SCF (array[2], same units as scftargets)

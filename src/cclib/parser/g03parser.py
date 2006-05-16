@@ -445,16 +445,16 @@ class G03(Logfile):
                     
             if line[1:7]=="NBsUse":
 # Extract the number of linearly-independent basis sets
-                nindep = int(line.split('=')[1].split()[0])
-                if hasattr(self,"nindep"):
-                    assert nindep==self.nindep
+                nmo = int(line.split('=')[1].split()[0])
+                if hasattr(self,"nmo"):
+                    assert nmo==self.nmo
                 else:
-                    self.nindep = nindep
-                    self.logger.info("Creating attribute nindep: %d" % self.nindep)
+                    self.nmo = nmo
+                    self.logger.info("Creating attribute nmo: %d" % self.nmo)
 
             if line[7:22]=="basis functions,":
 # For AM1 calculations, set nbasis by a second method
-# (nindep may not always be explicitly stated)
+# (nmo may not always be explicitly stated)
                     nbasis = int(line.split()[0])
                     if hasattr(self,"nbasis"):
                         assert nbasis==self.nbasis
@@ -497,15 +497,15 @@ class G03(Logfile):
                 if line[5:40]=="Beta Molecular Orbital Coefficients":
                     beta = True
                     # Need to add an extra dimension to self.mocoeffs
-                    self.mocoeffs = Numeric.resize(self.mocoeffs,(2,nindep,nbasis))
+                    self.mocoeffs = Numeric.resize(self.mocoeffs,(2,nmo,nbasis))
                 else:
                     beta = False
                     self.logger.info("Creating attributes aonames[], mocoeffs[][]")
                     self.aonames = []
-                    self.mocoeffs = Numeric.zeros((1,nindep,nbasis),"float")
+                    self.mocoeffs = Numeric.zeros((1,nmo,nbasis),"float")
 
                 base = 0
-                for base in range(0,nindep,5):
+                for base in range(0,nmo,5):
                     
                     if self.progress:
                         step=inputfile.tell()
