@@ -64,6 +64,8 @@ class G03(Logfile):
             self.progress.initialize(nstep)
             oldstep=0
             
+        optfinished = False # Flag that indicates whether it has reached the end of a geoopt
+        
         for line in inputfile:
             
             if self.progress and random.random()<cupdate:
@@ -89,30 +91,39 @@ class G03(Logfile):
                     self.natom = natom
                     self.logger.info("Creating attribute natom: %d" % self.natom)                    
             
-            if not hasattr(self,"atomnos") and (line.find("Z-Matrix orientation")>=0
-                                                 or line[25:45]=="Standard orientation"
-                                                 or line[26:43]=="Input orientation"):
-# Extract the atomic numbers of the atoms
+            if line[1:23]=="Optimization completed":
+                optfinished = True
+            
+            if not optfinished and line[26:43]=="Input orientation":
+# Extract the atomic numbers and coordinates of the atoms
                 if self.progress and random.random()<cupdate:
                     step = inputfile.tell()
                     if step!=oldstep:
                         self.progress.update(step,"Attributes")
                         oldstep=step
                         
-                self.logger.info("Creating attribute atomnos[]")
-                self.atomnos = []
+                if not hasattr(self,"atomcoords"):
+                    self.logger.info("Creating attribute atomcoords[]")
+                    self.atomcoords = []
+                
                 hyphens = inputfile.next()
-                colmNames = inputfile.next(); colmNames = inputfile.next()
+                colmNames = inputfile.next()
+                colmNames = inputfile.next()
                 hyphens = inputfile.next()
+                
+                atomnos = []
+                atomcoords = []
                 line = inputfile.next()
                 while line!=hyphens:
-                    self.atomnos.append(int(line.split()[1]))
+                    broken = line.split()
+                    atomnos.append(int(broken[1]))
+                    atomcoords.append(map(float,broken[3:6]))
                     line = inputfile.next()
-                natom = len(self.atomnos)
-                if hasattr(self,"natom"):
-                    assert self.natom==natom
-                else:
-                    self.natom = natom
+                self.atomcoords.append(atomcoords)
+                if not hasattr(self,"natom"):
+                    self.atomnos = Numeric.array(atomnos,'f')
+                    self.logger.info("Creating attribute atomnos[]")
+                    self.natom = len(self.atomnos)
                     self.logger.info("Creating attribute natom: %d" % self.natom)
 
             if line[1:44]=='Requested convergence on RMS density matrix':
@@ -534,6 +545,7 @@ class G03(Logfile):
         if hasattr(self,"geovalues"): self.geovalues = Numeric.array(self.geovalues,"f")
         if hasattr(self,"scfenergies"): self.scfenergies = Numeric.array(self.scfenergies,"f")
         if hasattr(self,"scfvalues"): self.scfvalues = [Numeric.array(x,"f") for x in self.scfvalues]
+        if hasattr(self,"atomcoords"): self.atomcoords = Numeric.array(self.atomcoords,"f")
         self.parsed = True
 
         
