@@ -20,7 +20,7 @@ Contributions (monetary as well as code :-) are encouraged.
 import re,time
 import Numeric
 import random # For sometimes running the progress updater
-from logfileparser import Logfile,convertor
+from logfileparser import Logfile,convertor,PeriodicTable
 
 class GAMESS(Logfile):
     """A GAMESS log file."""
@@ -29,6 +29,8 @@ class GAMESS(Logfile):
 
         # Call the __init__ method of the superclass
         super(GAMESS, self).__init__(logname="GAMESS",*args)
+
+        self.pt = PeriodicTable()
         
     def __str__(self):
         """Return a string representation of the object."""
@@ -120,6 +122,31 @@ class GAMESS(Logfile):
                     self.logger.info("Creating attribute scftargets")
                     self.scftargets = Numeric.array([float(line.strip().split()[-1])])
                 
+            if line[11:50]=="ATOMIC                      COORDINATES":
+                # This is the input orientation, which is the only data available for
+                # SP calcs, but which should be overwritten by the standard orientation
+                # values, which is the only information available for all geoopt cycles.
+                if not hasattr(self,"atomcoords"):
+                    self.logger.info("Creating attribute atomcoords, atomnos")
+                    self.atomcoords = []
+                    self.atomnos = []
+                line = inputfile.next()
+                atomcoords = []
+                atomnos = []
+                line = inputfile.next()
+                while line.strip():
+                    temp = line.strip().split()
+                    atomcoords.append(map(float,temp[2:4]))
+                    atomnos.append(self.pt.number[temp[0]]) # Use the element name
+                    line = inputfile.next()
+                self.atomnos = Numeric.array(atomnos,"i")
+                self.atomcoords.append(atomcoords)
+
+            if line[1:37]=="COORDINATES OF ALL ATOMS ARE":
+                # This is the standard orientation, which is the only coordinate
+                # information available for all geometry optimisation cycles.
+                pass
+            
             if line.find("ITER EX DEM")==1:
 # This is the section with the SCF information                
                 if not hasattr(self,"scfvalues"):
@@ -322,8 +349,9 @@ class GAMESS(Logfile):
                 # The first is for PC-GAMESS, the second for GAMESS
                 # Read 1-electron overlap matrix
                 if not hasattr(self,"aooverlaps"):
-                    self.logger.info("Creating attribute aooverlaps")
+                    self.logger.info("Creating attribute aooverlaps, aonames")
                     self.aooverlaps = Numeric.zeros((self.nbasis,self.nbasis), "f")
+                    self.aonames = []
                 else:
                     self.logger.info("Reading additional aooverlaps...")
                 base = 0
@@ -334,10 +362,12 @@ class GAMESS(Logfile):
                     for i in range(self.nbasis-base): # Fewer lines each time
                         line = inputfile.next()
                         temp = line.split()
+                        if base==0: # Only do this for the first block
+                            self.aonames.append("%s%s_%s" % (temp[1],temp[2],temp[3]))
                         for j in range(4,len(temp)):
                             self.aooverlaps[base+j-4,i+base] = float(temp[j])
                             self.aooverlaps[i+base,base+j-4] = float(temp[j])
-                    base+=5
+                    base += 5
 
         inputfile.close()
 
