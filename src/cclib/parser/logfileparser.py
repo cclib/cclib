@@ -29,7 +29,8 @@ def convertor(value,fromunits,tounits):
     _convertor = {"eV_to_cm-1": lambda x: x*8065.6,
                   "hartree_to_eV": lambda x: x*27.2114,
                   "nm_to_cm-1": lambda x: 1e7/x,
-                  "cm-1_to_nm": lambda x: 1e7/x}
+                  "cm-1_to_nm": lambda x: 1e7/x,
+                  "au_to_Ang": lambda x: x*0.529177}
 
     return _convertor["%s_to_%s" % (fromunits,tounits)] (value)
 

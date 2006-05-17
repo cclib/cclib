@@ -73,7 +73,7 @@ class GAMESS(Logfile):
             oldstep=0
 
 
-        endofopt = False
+        firststdorient = True # Used to decide whether to wipe the atomcoords clean
             
         for line in inputfile:
             
@@ -136,7 +136,7 @@ class GAMESS(Logfile):
                 line = inputfile.next()
                 while line.strip():
                     temp = line.strip().split()
-                    atomcoords.append(map(float,temp[2:4]))
+                    atomcoords.append([convertor(float(x),"au","Ang") for x in temp[2:4]])
                     atomnos.append(self.pt.number[temp[0]]) # Use the element name
                     line = inputfile.next()
                 self.atomnos = Numeric.array(atomnos,"i")
@@ -145,7 +145,22 @@ class GAMESS(Logfile):
             if line[1:37]=="COORDINATES OF ALL ATOMS ARE":
                 # This is the standard orientation, which is the only coordinate
                 # information available for all geometry optimisation cycles.
-                pass
+                # The input orientation will be overwritten if this is a geometry optimisation
+                # We assume that a previous Input Orientation has been found and
+                # used to extract the atomnos
+                if firststdorient:
+                    firststdorient = False
+                    # Wipes out the single input coordinate at the start of the file
+                    self.atomcoords = []
+                    
+                line = inputfile.next()
+                hyphens = inputfile.next()
+                atomcoords = []
+                while line.strip():
+                    temp = line.strip().split()
+                    atomcoords.append(map(float,temp[2:4]))
+                    line = inputfile.next()
+                self.atomcoords.append(atomcoords)
             
             if line.find("ITER EX DEM")==1:
 # This is the section with the SCF information                
