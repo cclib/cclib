@@ -121,7 +121,7 @@ class G03(Logfile):
                     line = inputfile.next()
                 self.atomcoords.append(atomcoords)
                 if not hasattr(self,"natom"):
-                    self.atomnos = Numeric.array(atomnos,'f')
+                    self.atomnos = Numeric.array(atomnos,'i')
                     self.logger.info("Creating attribute atomnos[]")
                     self.natom = len(self.atomnos)
                     self.logger.info("Creating attribute natom: %d" % self.natom)
