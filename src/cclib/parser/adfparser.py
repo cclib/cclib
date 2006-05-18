@@ -20,9 +20,10 @@ Contributions (monetary as well as code :-) are encouraged.
 import re,time
 import Numeric
 import random # For sometimes running the progress updater
-from logfileparser import Logfile,convertor
+import utils
+import logfileparser
 
-class ADF(Logfile):
+class ADF(logfileparser.Logfile):
     """An ADF log file"""
     SCFCNV,SCFCNV2 = range(2) #used to index self.scftargets[]
     maxelem,norm = range(2) # used to index scf.values
@@ -220,7 +221,7 @@ class ADF(Logfile):
                 blank = inputfile.next()
                 line = inputfile.next()
                 temp = inputfile.next().strip().split()
-                self.scfenergies.append(convertor(float(temp[-1]),"hartree","eV"))
+                self.scfenergies.append(utils.convertor(float(temp[-1]),"hartree","eV"))
                 for i in range(6):
                     line = inputfile.next()
                 values = []
@@ -251,7 +252,7 @@ class ADF(Logfile):
                 info=line.split()
                 if len(info)==5: #this is restricted
                   self.mosyms[0].append(self.normalisesym(info[0]))
-                  self.moenergies[0].append(convertor(float(info[3]),'hartree','eV'))
+                  self.moenergies[0].append(utils.convertor(float(info[3]),'hartree','eV'))
                   if info[2]=='0.00' and not hasattr(self,'homos'):
                       self.logger.info("Creating attribute homos[]")
                       self.homos=[len(self.moenergies[0])-2]
@@ -262,13 +263,13 @@ class ADF(Logfile):
                     self.mosyms.append([])
                   if info[2]=='A':
                     self.mosyms[0].append(self.normalisesym(info[0]))
-                    self.moenergies[0].append(convertor(float(info[4]),'hartree','eV'))
+                    self.moenergies[0].append(utils.convertor(float(info[4]),'hartree','eV'))
                     if info[3]=='0.00' and homoa==None:
                       homoa=len(self.moenergies[0])-2
                       
                   if info[2]=='B':
                     self.mosyms[1].append(self.normalisesym(info[0]))
-                    self.moenergies[1].append(convertor(float(info[4]),'hartree','eV'))
+                    self.moenergies[1].append(utils.convertor(float(info[4]),'hartree','eV'))
                     if info[3]=='0.00' and homob==None:
                       homob=len(self.moenergies[1])-2
                       

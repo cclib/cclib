@@ -20,9 +20,10 @@ Contributions (monetary as well as code :-) are encouraged.
 import re,time
 import Numeric
 import random # For sometimes running the progress updater
-from logfileparser import Logfile,convertor
+import utils
+import logfileparser
 
-class Jaguar(Logfile):
+class Jaguar(logfileparser.Logfile):
     """A Jaguar output file"""
 
     def __init__(self,*args):
@@ -115,7 +116,7 @@ class Jaguar(Logfile):
                 while line.strip():
                     temp = line.strip().split()
                     for i in range(0,len(temp),2):
-                        self.moenergies[0].append(convertor(float(temp[i]),"hartree","eV"))
+                        self.moenergies[0].append(utils.convertor(float(temp[i]),"hartree","eV"))
                         self.mosyms[0].append(temp[i+1])
                     line = inputfile.next()
                 self.moenergies = Numeric.array(self.moenergies,"f")

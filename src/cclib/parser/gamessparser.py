@@ -20,9 +20,10 @@ Contributions (monetary as well as code :-) are encouraged.
 import re,time
 import Numeric
 import random # For sometimes running the progress updater
-from logfileparser import Logfile,convertor,PeriodicTable
+import utils
+import logfileparser
 
-class GAMESS(Logfile):
+class GAMESS(logfileparser.Logfile):
     """A GAMESS log file."""
     SCFRMS,SCFMAX,SCFENERGY = range(3) # Used to index self.scftargets[]
     def __init__(self,*args):
@@ -30,8 +31,6 @@ class GAMESS(Logfile):
         # Call the __init__ method of the superclass
         super(GAMESS, self).__init__(logname="GAMESS",*args)
 
-        self.pt = PeriodicTable()
-        
     def __str__(self):
         """Return a string representation of the object."""
         return "GAMESS log file %s" % (self.filename)
@@ -136,8 +135,8 @@ class GAMESS(Logfile):
                 line = inputfile.next()
                 while line.strip():
                     temp = line.strip().split()
-                    atomcoords.append([convertor(float(x),"au","Ang") for x in temp[2:4]])
-                    atomnos.append(self.pt.number[temp[0]]) # Use the element name
+                    atomcoords.append([utils.convertor(float(x),"au","Ang") for x in temp[2:4]])
+                    atomnos.append(self.table.number[temp[0]]) # Use the element name
                     line = inputfile.next()
                 self.atomnos = Numeric.array(atomnos,"i")
                 self.atomcoords.append(atomcoords)
@@ -287,7 +286,7 @@ class GAMESS(Logfile):
                     blank = inputfile.next()
                     line = inputfile.next() # Eigenvector no
                     line = inputfile.next()
-                    self.moenergies[0].extend([convertor(float(x),"hartree","eV") for x in line.split()])
+                    self.moenergies[0].extend([utils.convertor(float(x),"hartree","eV") for x in line.split()])
                     line = inputfile.next()
                     self.mosyms[0].extend(map(self.normalisesym,line.split()))
                     for i in range(self.nbasis):
@@ -324,7 +323,7 @@ class GAMESS(Logfile):
                         blank = inputfile.next()
                         line = inputfile.next() # Eigenvector no
                         line = inputfile.next()
-                        self.moenergies[1].extend([convertor(float(x),"hartree","eV") for x in line.split()])
+                        self.moenergies[1].extend([utils.convertor(float(x),"hartree","eV") for x in line.split()])
                         line = inputfile.next()
                         self.mosyms[1].extend(map(self.normalisesym,line.split()))
                         for i in range(self.nbasis):

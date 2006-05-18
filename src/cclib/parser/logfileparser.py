@@ -19,36 +19,7 @@ Contributions (monetary as well as code :-) are encouraged.
 """
 import logging, sys
 import Numeric
-
-def convertor(value,fromunits,tounits):
-    """Convert from one set of units to another.
-
-    >>> print "%.1f" % convertor(8,"eV","cm-1")
-    64524.8
-    """
-    _convertor = {"eV_to_cm-1": lambda x: x*8065.6,
-                  "hartree_to_eV": lambda x: x*27.2114,
-                  "nm_to_cm-1": lambda x: 1e7/x,
-                  "cm-1_to_nm": lambda x: 1e7/x,
-                  "au_to_Ang": lambda x: x*0.529177}
-
-    return _convertor["%s_to_%s" % (fromunits,tounits)] (value)
-
-class PeriodicTable(object):
-    """Allows conversion between element name and atomic no.
-
-    >>> t = PeriodicTable()
-    >>> t.element[6]
-    'C'
-    >>> t.number['C']
-    6
-    """
-    def __init__(self):
-        self.element = [None,"H","He","Li","Be","B","C","N","O","F","Ne","Na","Mg","Al","Si","P","S","Cl","Ar","K","Ca","Sc","Ti","V","Cr","Mn","Fe"
-                        "Co","Ni","Cu","Zn","Ga","Ge","As","Se","Br","Kr","Rb","Sr","Y","Zr","Nb","Mo"]
-        self.number = {}
-        for i in range(1,len(self.element)):
-            self.number[self.element[i]] = i
+import utils
 
 class Logfile(object):
     """Abstract class for logfile objects.
@@ -97,7 +68,7 @@ class Logfile(object):
         self.parsed = False
         self.loglevel = loglevel
         self.logname  = logname
-        self.table = PeriodicTable()
+        self.table = utils.PeriodicTable()
 
         # Set up the logger
         self.logger = logging.getLogger('%s %s' % (self.logname,self.filename))

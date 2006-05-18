@@ -20,9 +20,10 @@ Contributions (monetary as well as code :-) are encouraged.
 import re,time
 import Numeric
 import random # For sometimes running the progress updater
-from logfileparser import Logfile,convertor
+import utils
+import logfileparser
 
-class Gaussian(Logfile):
+class Gaussian(logfileparser.Logfile):
     """A Gaussian 98/03 log file"""
     SCFRMS,SCFMAX,SCFENERGY = range(3) # Used to index self.scftargets[]
     def __init__(self,*args):
@@ -287,7 +288,7 @@ class Gaussian(Logfile):
                     i = 0
                     while i*10+4<len(part):
                         x = part[i*10:(i+1)*10]
-                        self.moenergies[0].append(convertor(self.float(x),"hartree","eV"))
+                        self.moenergies[0].append(utils.convertor(self.float(x),"hartree","eV"))
                         i += 1
                     line = inputfile.next()            
                 if line.find('Beta')==2:
@@ -309,7 +310,7 @@ class Gaussian(Logfile):
                     i = 0
                     while i*10+4<len(part):
                         x = part[i*10:(i+1)*10]
-                        self.moenergies[1].append(convertor(self.float(x),"hartree","eV"))
+                        self.moenergies[1].append(utils.convertor(self.float(x),"hartree","eV"))
                         i += 1
                     line = inputfile.next()
                 self.moenergies = Numeric.array(self.moenergies,"f")                    
@@ -370,7 +371,7 @@ class Gaussian(Logfile):
                 # (unrestricted calc) (first excited state is 2!)
                 # Excited State   2:   ?Spin  -A      0.1222 eV 10148.75 nm  f=0.0000
                 parts = line[36:].split()
-                self.etenergies.append(convertor(self.float(parts[0]),"eV","cm-1"))
+                self.etenergies.append(utils.convertor(self.float(parts[0]),"eV","cm-1"))
                 self.etoscs.append(self.float(parts[4].split("=")[1]))
                 self.etsyms.append(line[21:36].split())
                 

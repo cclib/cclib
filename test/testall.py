@@ -1,6 +1,9 @@
 import unittest
 import os
-from cclib.parser import Gaussian,GAMESS,ADF,Jaguar
+from cclib.parser.adfparser import ADF
+from cclib.parser.gamessparser import GAMESS
+from cclib.parser.gaussianparser import Gaussian
+from cclib.parser.jaguarparser import Jaguar
 
 def getfile(parser,*location):
     """Returns a parsed logfile."""
