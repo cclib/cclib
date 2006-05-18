@@ -169,5 +169,5 @@ class Jaguar(Logfile):
         self.parsed = True
         
 if __name__=="__main__":
-    import doctest,g03parser
-    doctest.testmod(g03parser,verbose=False)
+    import doctest,jaguarparser
+    doctest.testmod(jaguarparser,verbose=False)

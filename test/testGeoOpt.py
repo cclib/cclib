@@ -1,5 +1,5 @@
 import os, unittest
-from cclib.parser import GAMESS,G03,ADF,Jaguar
+from cclib.parser import GAMESS,Gaussian,ADF,Jaguar
 from Numeric import array
 from testall import getfile
 
@@ -43,7 +43,7 @@ class GenericGeoOptTest(unittest.TestCase):
 
 class GaussianGeoOptTest(GenericGeoOptTest):
     def setUp(self):
-        self.data = getfile(G03,"basicGaussian03","dvb_gopt.out")
+        self.data = getfile(Gaussian,"basicGaussian03","dvb_gopt.out")
 
 class GamessUSGeoOptTest(GenericGeoOptTest):
     def setUp(self):

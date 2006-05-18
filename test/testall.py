@@ -1,12 +1,12 @@
 import unittest
 import os
-from cclib.parser import G03,GAMESS,ADF,Jaguar
+from cclib.parser import Gaussian,GAMESS,ADF,Jaguar
 
 def getfile(parser,*location):
     """Returns a parsed logfile."""
     if parser.__name__ in ['GAMESS','ADF','Jaguar']:
         fullpath = ("..","data",parser.__name__) + location
-    elif parser.__name__=="G03":
+    elif parser.__name__=="Gaussian":
         fullpath = ("..","data","Gaussian") + location
     logfile = parser(os.path.join(*fullpath))
     logfile.logger.setLevel(0)
@@ -15,7 +15,7 @@ def getfile(parser,*location):
 
 def visualtests():
     """These are not formal tests -- but they should be eyeballed."""
-    logfiles = [ getfile(G03,"basicGaussian03","dvb_gopt.out"),
+    logfiles = [ getfile(Gaussian,"basicGaussian03","dvb_gopt.out"),
                  getfile(GAMESS,"basicPCGAMESS","dvb_gopt_a.out"),
                  getfile(GAMESS,"basicGAMESS-US","dvb_gopt_a.out"),
                  getfile(ADF,"basicADF2004.01","dvb_gopt.adfout"),

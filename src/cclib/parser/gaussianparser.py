@@ -22,21 +22,21 @@ import Numeric
 import random # For sometimes running the progress updater
 from logfileparser import Logfile,convertor
 
-class G03(Logfile):
+class Gaussian(Logfile):
     """A Gaussian 98/03 log file"""
     SCFRMS,SCFMAX,SCFENERGY = range(3) # Used to index self.scftargets[]
     def __init__(self,*args):
 
         # Call the __init__ method of the superclass
-        super(G03, self).__init__(logname="G03",*args)
+        super(Gaussian, self).__init__(logname="Gaussian",*args)
         
     def __str__(self):
         """Return a string representation of the object."""
-        return "Gaussian 03 log file %s" % (self.filename)
+        return "Gaussian log file %s" % (self.filename)
 
     def __repr__(self):
         """Return a representation of the object."""
-        return 'G03("%s")' % (self.filename)
+        return 'Gaussian("%s")' % (self.filename)
     
     def normalisesym(self,label):
         """Use standard symmetry labels instead of Gaussian labels.
@@ -44,7 +44,7 @@ class G03(Logfile):
         To normalise:
         (1) replace any G or U by their lowercase equivalent
 
-        >>> sym = G03("dummyfile").normalisesym
+        >>> sym = Gaussian("dummyfile").normalisesym
         >>> labels = ['A1','AG','A1G']
         >>> map(sym,labels)
         ['A1', 'Ag', 'A1g']
@@ -131,11 +131,11 @@ class G03(Logfile):
                 if not hasattr(self,"scftargets"):
                     self.logger.info("Creating attribute scftargets[]")
                 self.scftargets = Numeric.array([0.0,0.0,0.0],'f')
-                self.scftargets[G03.SCFRMS] = self.float(line.split('=')[1].split()[0])
+                self.scftargets[Gaussian.SCFRMS] = self.float(line.split('=')[1].split()[0])
             if line[1:44]=='Requested convergence on MAX density matrix':
-                self.scftargets[G03.SCFMAX] = self.float(line.strip().split('=')[1][:-1])
+                self.scftargets[Gaussian.SCFMAX] = self.float(line.strip().split('=')[1][:-1])
             if line[1:44]=='Requested convergence on             energy':
-                self.scftargets[G03.SCFENERGY] = self.float(line.strip().split('=')[1][:-1])
+                self.scftargets[Gaussian.SCFENERGY] = self.float(line.strip().split('=')[1][:-1])
 
             if line[1:10]=='Cycle   1':
 # Extract SCF convergence information (QM calcs)
@@ -157,8 +157,8 @@ class G03(Logfile):
                         self.logger.debug(line)
                     if line.find(" RMSDP")==0:
                         parts = line.split()
-                        newlist[G03.SCFRMS].append(self.float(parts[0].split('=')[1]))
-                        newlist[G03.SCFMAX].append(self.float(parts[1].split('=')[1]))
+                        newlist[Gaussian.SCFRMS].append(self.float(parts[0].split('=')[1]))
+                        newlist[Gaussian.SCFMAX].append(self.float(parts[1].split('=')[1]))
                         energy = 1.0
                         if len(parts)>4:
                             energy = parts[2].split('=')[1]
@@ -168,7 +168,7 @@ class G03(Logfile):
                                 energy = self.float(energy)
                         # I moved the following line back a TAB to see the effect
                         # (it was originally part of the above "if len(parts)")
-                        newlist[G03.SCFENERGY].append(energy)
+                        newlist[Gaussian.SCFENERGY].append(energy)
                     try:
                         line = inputfile.next()
                     except StopIteration: # May be interupted by EOF
@@ -577,5 +577,5 @@ class G03(Logfile):
         assert len(self.traj)==len(self.trajSummary)
         
 if __name__=="__main__":
-    import doctest,g03parser
-    doctest.testmod(g03parser,verbose=False)
+    import doctest,gaussianparser
+    doctest.testmod(gaussianparser,verbose=False)

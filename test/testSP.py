@@ -1,5 +1,5 @@
 import os, unittest
-from cclib.parser import GAMESS,G03,ADF,Jaguar
+from cclib.parser import GAMESS,Gaussian,ADF,Jaguar
 from Numeric import array
 from testall import getfile
 
@@ -15,7 +15,7 @@ class GenericSPTest(unittest.TestCase):
 
 class GaussianSPTest(GenericSPTest):
     def setUp(self):
-        self.data = getfile(G03,"basicGaussian03","dvb_sp.out")
+        self.data = getfile(Gaussian,"basicGaussian03","dvb_sp.out")
 
 class GamessUSSPTest(GenericSPTest):
     def setUp(self):

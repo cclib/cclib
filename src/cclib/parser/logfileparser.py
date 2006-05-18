@@ -54,7 +54,7 @@ class Logfile(object):
     """Abstract class for logfile objects.
 
     Subclasses:
-        G03
+        ADF, GAMESS, Gaussian, Jaguar
     
     Attributes:
         aonames -- "Ru_3p" (list)
