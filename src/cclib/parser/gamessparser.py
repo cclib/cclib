@@ -59,6 +59,34 @@ class GAMESS(logfileparser.Logfile):
             end = label[1:].replace("U","u").replace("G","g")
         return label[0] + end
 
+    def normalise_aonames(self,listoflines):
+        """Normalise the aonames attribute to agree with the other parsers.
+
+        We want this to work even if there are 1000+ atoms. Our only assumption
+        is that all of the relevant information is in the first 17 characters
+        of the line.
+        
+        >>> t = GAMESS("dummyfile")
+        >>> data = ['    5  C  1  S   ', '    6  C  1  S   ',\
+                    '    7  C  1  S   ', '   56  C  1XXXX  ']
+        >>> print t.normalise_aonames(data)
+        ['C1_1S', 'C1_2S', 'C1_3S', 'C1_1XXXX']
+        """
+        p = re.compile("(\d+)\s*([A-Z][a-z]?)\s*(\d+)\s*([A-Z]+)")
+        ans = []
+        for line in listoflines:
+            m = p.search(line.strip())
+            assert m, "Cannot pick out the aoname from this information: %s" % line
+            
+            g = m.groups()
+            i = 1
+            aoname = "%s%s_%d%s" % (g[1],g[2],i,g[3])
+            while aoname in ans: # Ensures unique aoname
+                i += 1
+                aoname = "%s%s_%d%s" % (g[1],g[2],i,g[3])
+            ans.append(aoname)
+        return ans
+    
     def parse(self):
         """Extract information from the logfile."""
         inputfile = open(self.filename,"r")
@@ -291,8 +319,8 @@ class GAMESS(logfileparser.Logfile):
                     self.mosyms[0].extend(map(self.normalisesym,line.split()))
                     for i in range(self.nbasis):
                         line = inputfile.next()
-                        if base==0: # Just do this the first time 'round
-                            atomno=int(line.split()[2])-1
+                        # if base==0: # Just do this the first time 'round
+                            # atomno=int(line.split()[2])-1
                             # atomorb[atomno].append(int(line.split()[0])-1)
                             # What's the story with the previous line?
                         temp = line[15:] # Strip off the crud at the start
@@ -351,14 +379,21 @@ class GAMESS(logfileparser.Logfile):
                 # The first is from Julien's Example and the second is from Alexander's
                 # I think it happens if you use a polar basis function instead of a cartesian one
                 self.logger.info("Creating attribute nbasis")
-                self.nbasis = int(line.split()[-1])
+                self.nbasis = int(line.strip().split()[-1])
                     
+            elif line.find("SPHERICAL HARMONICS KEPT IN THE VARIATION SPACE")>=0:
+                # Note that this line is present if ISPHER=1, e.g. for C_bigbasis
+                if not hasattr(self,"nmo"):
+                    self.logger.info("Creating attribute nmo")
+                self.nmo = int(line.strip().split()[-1])
+                
             elif line.find("TOTAL NUMBER OF MOS IN VARIATION SPACE")==1:
                 # Note that this line is not always present, so by default
                 # NBsUse is set equal to NBasis (see below).
-                self.logger.info("Creating attribute nmo")
-                self.indep = int(line.split()[-1])
-                
+                if not hasattr(self,"nmo"):
+                    self.logger.info("Creating attribute nmo")
+                self.nmo = int(line.split()[-1])
+
             elif line.find("OVERLAP MATRIX")==0 or line.find("OVERLAP MATRIX")==1:
                 # The first is for PC-GAMESS, the second for GAMESS
                 # Read 1-electron overlap matrix
@@ -369,6 +404,7 @@ class GAMESS(logfileparser.Logfile):
                 else:
                     self.logger.info("Reading additional aooverlaps...")
                 base = 0
+                aonames = []
                 while base<self.nbasis:
                     blank = inputfile.next()
                     line = inputfile.next() # Basis fn number
@@ -377,11 +413,12 @@ class GAMESS(logfileparser.Logfile):
                         line = inputfile.next()
                         temp = line.split()
                         if base==0: # Only do this for the first block
-                            self.aonames.append("%s%s_%s" % (temp[1],temp[2],temp[3]))
+                            aonames.append(line[:17])
                         for j in range(4,len(temp)):
                             self.aooverlaps[base+j-4,i+base] = float(temp[j])
                             self.aooverlaps[i+base,base+j-4] = float(temp[j])
                     base += 5
+                self.aonames = self.normalise_aonames(aonames)
 
         inputfile.close()
 
