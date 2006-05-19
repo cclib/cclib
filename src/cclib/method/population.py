@@ -20,14 +20,17 @@ Contributions (monetary as well as code :-) are encouraged.
 import re,time
 import Numeric
 import random # For sometimes running the progress updater
+import logging
+
 from calculationmethod import Method
 
 class Population(Method):
     """A base class for all population-type methods"""
-    def __init__(self,*args):
+    def __init__(self,parser,progress=None, \
+                 loglevel=logging.INFO,logname="Log"):
 
         # Call the __init__ method of the superclass
-        super(Population, self).__init__(logname="Population",*args)
+        super(Population, self).__init__(parser,progress,loglevel,logname)
         self.fragresults=None
         
     def __str__(self):
