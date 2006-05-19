@@ -70,21 +70,21 @@ class GAMESS(logfileparser.Logfile):
         >>> data = ['    5  C  1  S   ', '    6  C  1  S   ',\
                     '    7  C  1  S   ', '   56  C  1XXXX  ']
         >>> print t.normalise_aonames(data)
-        ['C1_1S', 'C1_2S', 'C1_3S', 'C1_1XXXX']
+        ['C1_1S', 'C1_2S', 'C1_3S', 'C1_4XXXX']
         """
         p = re.compile("(\d+)\s*([A-Z][a-z]?)\s*(\d+)\s*([A-Z]+)")
         ans = []
+	i = 0
         for line in listoflines:
             m = p.search(line.strip())
             assert m, "Cannot pick out the aoname from this information: %s" % line
-            
             g = m.groups()
-            i = 1
-            aoname = "%s%s_%d%s" % (g[1],g[2],i,g[3])
-            while aoname in ans: # Ensures unique aoname
+	    if g[3] in ['S','X','XX','XXX','XXXX']:
                 i += 1
-                aoname = "%s%s_%d%s" % (g[1],g[2],i,g[3])
+            aoname = "%s%s_%d%s" % (g[1],g[2],i,g[3])
             ans.append(aoname)
+	    
+	    
         return ans
     
     def parse(self):
