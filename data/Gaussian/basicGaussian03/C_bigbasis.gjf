@@ -1,0 +1,10 @@
+%chk=test.chk
+%mem=300MB
+%nproc=1
+#p HF/aug-cc-pVQZ pop=full iop(3/33=1,3/36=-1)
+
+Title card required
+
+0 1
+ C	0.0	0.0	0.0
+
