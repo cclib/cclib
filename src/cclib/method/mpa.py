@@ -20,9 +20,9 @@ Contributions (monetary as well as code :-) are encouraged.
 import re,time
 import Numeric
 import random # For sometimes running the progress updater
-from calculationmethod import Method
+from population import Population
 
-class MPA(Method):
+class MPA(Population):
     """The Mulliken population analysis"""
     def __init__(self,*args):
 
@@ -37,7 +37,7 @@ class MPA(Method):
         """Return a representation of the object."""
         return 'MPA("%s")' % (self.parser)
     
-    def calculate(self,fupdate=0.05):
+    def calculate(self,indices=None,fupdate=0.05):
         """Perform a Mulliken population analysis given the results of a parser"""
     
         if not self.parser.parsed:
@@ -95,72 +95,28 @@ class MPA(Method):
         if self.progress:
             self.progress.update(nstep,"Done")
 
-#build list of groups of orbitals in each atom for atomresults
-        if hasattr(self.parser,"aonames"):
-            names=self.parser.aonames
-        elif hasattr(self.parser,"foonames"):
-            names=self.parser.fonames
+        retval=super(MPA, self).partition(indices)
 
-        atoms=[]
-        indices=[]
-
-        name=names[0].split('_')[0]
-        atoms.append(name)
-        indices.append([0])
-
-        for i in range(1,len(names)):
-            name=names[i].split('_')[0]
-            if name==atoms[-1]:
-                indices[-1].append(i)
-            else:
-                atoms.append(name)
-                indices.append([i])
-
-        self.logger.info("Creating atomresults: array[3]")
-        self.atomresults=self.partition(indices)
+        if not retval:
+            self.logger.error("Error in partitioning results")
+            return False
 
 #create array for mulliken charges
-        self.logger.info("Creating atomcharges: array[1]")
-        size=len(self.atomresults[0][0])
-        self.atomcharges=Numeric.zeros([size],"f")
+        self.logger.info("Creating fragcharges: array[1]")
+        size=len(self.fragresults[0][0])
+        self.fragcharges=Numeric.zeros([size],"f")
         
-        for spin in range(len(self.atomresults)):
+        for spin in range(len(self.fragresults)):
 
             for i in range(self.parser.homos[spin]+1):
 
-                temp=Numeric.reshape(self.atomresults[spin][i],(size,))
-                self.atomcharges=Numeric.add(self.atomcharges,temp)
+                temp=Numeric.reshape(self.fragresults[spin][i],(size,))
+                self.fragcharges=Numeric.add(self.fragcharges,temp)
         
         if not unrestricted:
-            self.atomcharges=Numeric.multiply(self.atomcharges,2)
+            self.fragcharges=Numeric.multiply(self.fragcharges,2)
 
         return True
-
-    def partition(self,indices):
-
-        if not hasattr(self,"aoresults"):
-            self.calculate()
-
-        natoms=len(indices)
-        nmocoeffs=len(self.aoresults[0])
-        
-#build results Numeric array[3]
-        if len(self.aoresults)==2:
-            results=Numeric.zeros([2,nmocoeffs,natoms],"f")
-        else:
-            results=Numeric.zeros([1,nmocoeffs,natoms],"f")
-        
-#for each spin, splice Numeric array at ao index, and add to correct result row
-        for spin in range(len(results)):
-
-            for i in range(natoms): #number of groups
-
-                for j in range(len(indices[i])): #for each group
-                
-                    temp=self.aoresults[spin,:,indices[i][j]]
-                    results[spin,:,i]=Numeric.add(results[spin,:,i],temp)
-
-        return results
 
 if __name__=="__main__":
     import doctest,mpa
