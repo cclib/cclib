@@ -1,4 +1,7 @@
-import os, unittest
+import os
+import math
+import unittest
+
 from Numeric import array
 from testall import getfile
 from cclib.parser import ADF, GAMESS, Gaussian, Jaguar
@@ -8,6 +11,22 @@ class GenericGeoOptTest(unittest.TestCase):
         """Is the index of the homo equal to 34?"""
         self.assertEquals(self.data.homos,array([34]))
 
+    def testatomcoords(self):
+        """Are atomcoords consistent with natom, Angstroms and geovalues?"""
+        coords = self.data.atomcoords
+        self.assertEquals(self.data.natom,len(coords[0]),"len(atomcoords[0]) is %d but natom is %d" % (self.data.natom,len(coords[0])))
+        self.assertEquals(len(self.data.geovalues),len(coords),"len(atomcoords) is %d but len(geovalues) is % d" % (len(coords),len(self.data.geovalues)))
+        # Find the minimum distance between two C atoms
+        mindist = 999
+        for i in range(self.data.natom-1):
+            if self.data.atomnos[i]==6:
+                for j in range(i+1,self.data.natom):
+                    if self.data.atomnos[j]==6:
+                        # Find the distance in the final iteration
+                        dist = math.sqrt(sum((coords[-1][i]-coords[-1][j])**2))
+                        mindist = min(mindist,dist)
+        self.assert_(abs(mindist-1.34)<0.02,"Mindist is %f (not 1.34)" % mindist)
+    
     def testnatom(self):
         """Is the number of atoms equal to 20?"""
         self.assertEquals(self.data.natom,20)
