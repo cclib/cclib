@@ -1,10 +1,7 @@
 import os, unittest
 from Numeric import array
 from testall import getfile
-from cclib.parser.adfparser import ADF
-from cclib.parser.gamessparser import GAMESS
-from cclib.parser.gaussianparser import Gaussian
-from cclib.parser.jaguarparser import Jaguar
+from cclib.parser import ADF, GAMESS, Gaussian, Jaguar
 
 class GenericSPTest(unittest.TestCase):
     """Restricted single point calculations with MO coeffs and overlap info."""
