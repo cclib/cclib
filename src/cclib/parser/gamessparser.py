@@ -173,7 +173,7 @@ class GAMESS(logfileparser.Logfile):
                 self.atomnos = Numeric.array(atomnos,"i")
                 self.atomcoords.append(atomcoords)
 
-            if line[1:37]=="COORDINATES OF ALL ATOMS ARE":
+            if line[1:29]=="COORDINATES OF ALL ATOMS ARE":
                 # This is the standard orientation, which is the only coordinate
                 # information available for all geometry optimisation cycles.
                 # The input orientation will be overwritten if this is a geometry optimisation
@@ -186,7 +186,9 @@ class GAMESS(logfileparser.Logfile):
                     
                 line = inputfile.next()
                 hyphens = inputfile.next()
+
                 atomcoords = []
+                line = inputfile.next()                
                 while line.strip():
                     temp = line.strip().split()
                     atomcoords.append(map(float,temp[2:4]))
