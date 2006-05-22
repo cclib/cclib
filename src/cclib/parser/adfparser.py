@@ -82,6 +82,10 @@ class ADF(logfileparser.Logfile):
             self.progress.initialize(nstep)
             oldstep=0
             
+        # Used to avoid extracting the final geometry twice in a GeoOpt
+        NOTFOUND, GETLAST, NOMORE = range(3)
+        finalgeometry= NOTFOUND 
+        
         for line in inputfile:
             
             if self.progress and random.random()<cupdate:
@@ -109,23 +113,28 @@ class ADF(logfileparser.Logfile):
             
             if line[1:6]=="ATOMS":
 # Find the number of atoms and their atomic numbers
+# Also extract the starting coordinates (for a GeoOpt anyway)
                 if self.progress and random.random()<cupdate:
                     step=inputfile.tell()
                     if step!=oldstep:
                         self.progress.update(step,"Attributes")
                         oldstep=step
                 
-                self.logger.info("Creating attribute atomnos[]")
+                self.logger.info("Creating attribute atomnos[], atomcoords[]")
                 self.atomnos=[]
+                self.atomcoords = []
                 
                 underline=inputfile.next()  #clear pointless lines
                 label1=inputfile.next()     # 
                 label2=inputfile.next()     #
                 line=inputfile.next()
+                atomcoords = []
                 while len(line)>1: #ensure that we are reading no blank lines
                     info=line.split()
                     self.atomnos.append(self.table.number[info[1]])
+                    atomcoords.append(map(float,info[2:5]))
                     line=inputfile.next()
+                self.atomcoords.append(atomcoords)
                 
                 self.natom=len(self.atomnos)
                 self.logger.info("Creating attribute natom: %d" % self.natom)
@@ -171,42 +180,28 @@ class ADF(logfileparser.Logfile):
                 if hasattr(self,"scfvalues"):
                     self.scfvalues.append(newlist)
               
-#             if line[1:10]=='Cycle   1':
-# # Extract SCF convergence information (QM calcs)
-#                 if self.progress and random.random()<fupdate:
-#                     step=inputfile.tell()
-#                     if step!=oldstep:
-#                         self.progress.update(step,"QM Convergence")
-#                         oldstep=step
-#                         
-#                 if not hasattr(self,"scfvalues"):
-#                     self.logger.info("Creating attribute scfvalues")
-#                     self.scfvalues = []
-#                 newlist = [ [] for x in self.scftargets ]
-#                 line = inputfile.next()
-#                 while line.find("SCF Done")==-1:
-#                     if line.find(' E=')==0:
-#                         self.logger.debug(line)
-#                     if line.find(" RMSDP")==0:
-#                         parts = line.split()
-#                         newlist[G03.SCFRMS].append(self.float(parts[0].split('=')[1]))
-#                         newlist[G03.SCFMAX].append(self.float(parts[1].split('=')[1]))
-#                         energy = 1.0
-#                         if len(parts)>4:
-#                             energy = parts[2].split('=')[1]
-#                             if energy=="":
-#                                 energy = self.float(parts[3])
-#                             else:
-#                                 energy = self.float(energy)
-#                         # I moved the following line back a TAB to see the effect
-#                         # (it was originally part of the above "if len(parts)")
-#                         newlist[G03.SCFENERGY].append(energy)
-#                     try:
-#                         line = inputfile.next()
-#                     except StopIteration: # May be interupted by EOF
-#                         break
-#                 self.scfvalues.append(newlist)
-# 
+            if line[51:65]=="Final Geometry":
+                finalgeometry = GETLAST
+            
+            if line[1:24]=="Coordinates (Cartesian)" and finalgeometry in [NOTFOUND, GETLAST]:
+                # Get the coordinates from each step of the GeoOpt
+                if not hasattr(self,"atomcoords"):
+                    self.logger.info("Creating attribute atomcoords")
+                    self.atomcoords = []
+                equals = inputfile.next()
+                blank = inputfile.next()
+                title = inputfile.next()
+                title = inputfile.next()
+                hyphens = inputfile.next()
+
+                atomcoords = []
+                line = inputfile.next()
+                while line!=hyphens:
+                    atomcoords.append(map(float,line.split()[5:]))
+                    line = inputfile.next()
+                self.atomcoords.append(atomcoords)
+                if finalgeometry==GETLAST: # Don't get any more coordinates
+                    finalgeometry = NOMORE
 
             if line[1:27]=='Geometry Convergence Tests':
 # Extract Geometry convergence information
@@ -652,12 +647,15 @@ class ADF(logfileparser.Logfile):
 
         if self.progress:
             self.progress.update(nstep,"Done")
-            
+
         if hasattr(self,"geovalues"): self.geovalues = Numeric.array(self.geovalues,"f")
         if hasattr(self,"scfenergies"): self.scfenergies = Numeric.array(self.scfenergies,"f")
         if hasattr(self,"scfvalues"): self.scfvalues = [Numeric.array(x,"f") for x in self.scfvalues]
-        self.parsed = True
         if hasattr(self,"moenergies"): self.nmo = len(self.moenergies[0])
+        if hasattr(self,"atomcoords"): self.atomcoords = Numeric.array(self.atomcoords,"f")
+
+        self.parsed = True
+
 
         
 
