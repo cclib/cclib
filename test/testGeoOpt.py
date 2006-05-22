@@ -25,7 +25,7 @@ class GenericGeoOptTest(unittest.TestCase):
                         # Find the distance in the final iteration
                         dist = math.sqrt(sum((coords[-1][i]-coords[-1][j])**2))
                         mindist = min(mindist,dist)
-        self.assert_(abs(mindist-1.34)<0.02,"Mindist is %f (not 1.34)" % mindist)
+        self.assert_(abs(mindist-1.34)<0.03,"Mindist is %f (not 1.34)" % mindist)
     
     def testnatom(self):
         """Is the number of atoms equal to 20?"""
