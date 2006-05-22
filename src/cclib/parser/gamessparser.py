@@ -105,6 +105,7 @@ class GAMESS(logfileparser.Logfile):
 
 
         firststdorient = True # Used to decide whether to wipe the atomcoords clean
+        geooptfinished = False # Used to avoid extracting the final geometry twice
             
         for line in inputfile:
             
@@ -173,7 +174,11 @@ class GAMESS(logfileparser.Logfile):
                 self.atomnos = Numeric.array(atomnos,"i")
                 self.atomcoords.append(atomcoords)
 
-            if line[1:29]=="COORDINATES OF ALL ATOMS ARE":
+            if line[12:40]=="EQUILIBRIUM GEOMETRY LOCATED":
+                # Prevent extraction of the final geometry twice
+                geooptfinished = True
+            
+            if line[1:29]=="COORDINATES OF ALL ATOMS ARE" and not geooptfinished:
                 # This is the standard orientation, which is the only coordinate
                 # information available for all geometry optimisation cycles.
                 # The input orientation will be overwritten if this is a geometry optimisation

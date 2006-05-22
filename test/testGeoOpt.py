@@ -12,10 +12,10 @@ class GenericGeoOptTest(unittest.TestCase):
         self.assertEquals(self.data.homos,array([34]))
 
     def testatomcoords(self):
-        """Are atomcoords consistent with natom, Angstroms and geovalues?"""
+        """Are atomcoords consistent with natom and Angstroms?"""
         coords = self.data.atomcoords
         self.assertEquals(self.data.natom,len(coords[0]),"len(atomcoords[0]) is %d but natom is %d" % (self.data.natom,len(coords[0])))
-        self.assertEquals(len(self.data.geovalues),len(coords)-1,"len(atomcoords)-1 is %d but len(geovalues) is %d" % (len(coords)-1,len(self.data.geovalues)))
+
         # Find the minimum distance between two C atoms
         mindist = 999
         for i in range(self.data.natom-1):
@@ -26,6 +26,12 @@ class GenericGeoOptTest(unittest.TestCase):
                         dist = math.sqrt(sum((coords[-1][i]-coords[-1][j])**2))
                         mindist = min(mindist,dist)
         self.assert_(abs(mindist-1.34)<0.03,"Mindist is %f (not 1.34)" % mindist)
+
+    def testatomcoords_more(self):
+        """Are atomcoords consistent with geovalues?"""
+        coords = self.data.atomcoords
+        self.assertEquals(len(self.data.geovalues),len(coords),"len(atomcoords) is %d but len(geovalues) is %d" % (len(coords),len(self.data.geovalues)))
+        
     
     def testnatom(self):
         """Is the number of atoms equal to 20?"""
@@ -80,6 +86,11 @@ class ADFGeoOptTest(GenericGeoOptTest):
         """Do the scf values have the right dimensions? 
            ADF calculations one more SCF cycle after the geometry is converged"""
         self.assert_(len(self.data.scfvalues)==len(self.data.geovalues)+1 and len(self.data.scfvalues[0])==len(self.data.scftargets))
+
+    def testatomcoords_more(self):
+        """Are atomcoords consistent with geovalues?"""
+        coords = self.data.atomcoords
+        self.assertEquals(len(self.data.geovalues),len(coords)-1,"len(atomcoords)-1 is %d but len(geovalues) is %d" % (len(coords)-1,len(self.data.geovalues)))
 
 class JaguarGeoOptTest(GenericGeoOptTest):
     def setUp(self):
