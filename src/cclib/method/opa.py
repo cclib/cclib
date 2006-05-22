@@ -99,7 +99,7 @@ class OPA(Method):
             for i in range(nmocoeffs):
 
                 if self.progress and random.random()<fupdate:
-                    self.progress.update(step,"Mulliken Population Analysis")
+                    self.progress.update(step,"Overlap Population Analysis")
 
                 # OP_{AB,i} = \sum_{a in A} \sum_{b in B} 2 c_{ai} c_{bi} S_{ab}
                 #       = \sum_{a in A} c_{ai} \sum_{b in B} c_{bi} S_{ab}

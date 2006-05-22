@@ -30,7 +30,7 @@ class TextProgress:
             str+="] %3i"%(self.progress)+"%"
             
             if text:
-                str+="    Parsing "+text
+                str+="    "+text
 
             sys.stdout.write("\r"+70*" ")
             sys.stdout.flush()
