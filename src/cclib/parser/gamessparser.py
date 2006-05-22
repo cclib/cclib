@@ -167,7 +167,7 @@ class GAMESS(logfileparser.Logfile):
                 line = inputfile.next()
                 while line.strip():
                     temp = line.strip().split()
-                    atomcoords.append([utils.convertor(float(x),"au","Ang") for x in temp[2:4]])
+                    atomcoords.append([utils.convertor(float(x),"au","Ang") for x in temp[2:5]])
                     atomnos.append(self.table.number[temp[0]]) # Use the element name
                     line = inputfile.next()
                 self.atomnos = Numeric.array(atomnos,"i")
@@ -191,7 +191,7 @@ class GAMESS(logfileparser.Logfile):
                 line = inputfile.next()                
                 while line.strip():
                     temp = line.strip().split()
-                    atomcoords.append(map(float,temp[2:4]))
+                    atomcoords.append(map(float,temp[2:5]))
                     line = inputfile.next()
                 self.atomcoords.append(atomcoords)
             
@@ -438,6 +438,8 @@ class GAMESS(logfileparser.Logfile):
         if hasattr(self,"scfvalues"):
             self.scfvalues = [Numeric.array(x,"f") for x in self.scfvalues]
         if hasattr(self,"geovalues"): self.geovalues = Numeric.array(self.geovalues,"f")
+        if hasattr(self,"atomcoords"):
+            self.atomcoords = Numeric.array(self.atomcoords,"f")
         if not hasattr(self,"nmo"):
             self.logger.info("Creating attribute nmo with default value")
             self.nmo = self.nbasis

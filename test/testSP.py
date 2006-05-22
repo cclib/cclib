@@ -9,6 +9,10 @@ class GenericSPTest(unittest.TestCase):
         """Are the dims of the overlap matrix consistent with nbasis?"""
         self.assertEquals(self.data.aooverlaps.shape,(self.data.nbasis,self.data.nbasis))
 
+    def testatomcoords(self):
+        """Are the dimensions of atomcoords 1 x natom x 3?"""
+        self.assertEquals(self.data.atomcoords.shape,(1,self.data.natom,3))
+    
     def testdimmocoeffs(self):
         """Are the dimensions of mocoeffs equal to 1 x nmo x nbasis?"""
         self.assertEquals(self.data.mocoeffs.shape,(1,self.data.nmo,self.data.nbasis))
