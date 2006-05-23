@@ -82,7 +82,7 @@ class OPA(Method):
         #determine number of steps, and whether process involves beta orbitals
         nstep=nmocoeffs
         nfrag=len(indices) #nfrag
-        self.logger.info("Creating attribute aoresults: array[3]")
+        self.logger.info("Creating attribute results: array[4]")
         if unrestricted:
             self.results=Numeric.ones([2,nmocoeffs,nfrag,nfrag],"f")
             nstep+=nmocoeffs
