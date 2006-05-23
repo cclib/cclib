@@ -42,8 +42,8 @@ class GenericGeoOptTest(unittest.TestCase):
         self.assertEquals(self.data.nbasis,60)
 
     def testscfenergy(self):
-        """Is the SCF energy within 3eV(?) of -382.3?"""
-        self.assert_(self.data.scfenergies[-1]+382.3<3)
+        """Is the SCF energy within 40eV of -10365"""
+        self.assert_(abs(self.data.scfenergies[-1]-(-10365))<40,"Final scf energy: %f not -10365+-40eV" % self.data.scfenergies[-1])
 
     def testnormalisesym(self):
         """Did this subclasses overwrite normalisesym?"""
@@ -91,6 +91,10 @@ class ADFGeoOptTest(GenericGeoOptTest):
         """Are atomcoords consistent with geovalues?"""
         coords = self.data.atomcoords
         self.assertEquals(len(self.data.geovalues),len(coords)-1,"len(atomcoords)-1 is %d but len(geovalues) is %d" % (len(coords)-1,len(self.data.geovalues)))
+    
+    def testscfenergy(self):
+        """Is the SCF energy within 1eV of -140eV"""
+        self.assert_(abs(self.data.scfenergies[-1]-(-140))<1,"Final scf energy: %f not -140+-1eV" % self.data.scfenergies[-1])
 
 class JaguarGeoOptTest(GenericGeoOptTest):
     def setUp(self):

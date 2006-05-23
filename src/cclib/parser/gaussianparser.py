@@ -201,7 +201,7 @@ class Gaussian(logfileparser.Logfile):
                 if not hasattr(self,"scfenergies"):
                     self.logger.info("Creating attribute scfenergies[]")
                     self.scfenergies = []
-                self.scfenergies.append(self.float(line.split()[4]))
+                self.scfenergies.append(utils.convertor(self.float(line.split()[4]),"hartree","eV"))
 
             if line[49:59]=='Converged?':
 # Extract Geometry convergence information
