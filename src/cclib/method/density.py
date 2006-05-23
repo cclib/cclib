@@ -20,14 +20,15 @@ Contributions (monetary as well as code :-) are encouraged.
 import re,time
 import Numeric
 import random # For sometimes running the progress updater
+import logging
 from calculationmethod import Method
 
 class Density(Method):
     """Calculate the density matrix"""
-    def __init__(self,*args):
+    def __init__(self,parser,progress=None,loglevel=logging.INFO,logname="Log"):
 
         # Call the __init__ method of the superclass
-        super(Density, self).__init__(logname="Density",*args)
+        super(Density, self).__init__(parser, progress,loglevel,logname)
         
     def __str__(self):
         """Return a string representation of the object."""
