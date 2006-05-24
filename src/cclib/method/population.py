@@ -68,7 +68,7 @@ class Population(Method):
 #build list of groups of orbitals in each atom for atomresults
             if hasattr(self.parser,"aonames"):
                 names=self.parser.aonames
-            elif hasattr(self.parser,"foonames"):
+            elif hasattr(self.parser,"fonames"):
                 names=self.parser.fonames
 
             atoms=[]
