@@ -379,8 +379,21 @@ class GAMESS(logfileparser.Logfile):
             if line.find("NUMBER OF OCCUPIED ORBITALS")>=0:
                 if not hasattr(self,"homos"):
                     self.logger.info("Creating attribute homos")
-                    temp = line.strip().split('=')
-                    self.homos = Numeric.array([int(temp[-1])-1],"i")
+                homos = [int(line.split()[-1])-1]
+                line = inputfile.next()
+                homos.append(int(line.split()[-1])-1)
+                # Note that we cannot trust this self.homos until we come to
+                # a line that contains the phrase:
+                # "SYMMETRIES FOR INITAL GUESS ORBITALS FOLLOW"
+                # which either is followed by "ALPHA" or "BOTH"
+                # at which point we can say for certain that it is an
+                # un/restricted calculations
+                self.homos = Numeric.array(homos,"i")
+
+            if line.find("SYMMETRIES FOR INITIAL GUESS ORBITALS FOLLOW")>=0:
+                # Not unrestricted, so lop off the second index
+                if line.find("BOTH SET(S)")>=0:
+                    self.homos = Numeric.resize(self.homos,[1])
 
             if line.find("TOTAL NUMBER OF ATOMS")==1:
                 self.logger.info("Creating attribute natom")
