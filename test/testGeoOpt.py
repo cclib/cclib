@@ -1,15 +1,16 @@
 import os
 import math
 import unittest
+import bettertest
 
 from Numeric import array
 from testall import getfile
 from cclib.parser import ADF, GAMESS, Gaussian, Jaguar
 
-class GenericGeoOptTest(unittest.TestCase):
+class GenericGeoOptTest(bettertest.TestCase):
     def testhomos(self):
         """Is the index of the homo equal to 34?"""
-        self.assertEquals(self.data.homos,array([34]))
+        self.assertArrayEquals(self.data.homos,array([34]),"%s != array([34])" % self.data.homos)
 
     def testatomcoords(self):
         """Are atomcoords consistent with natom and Angstroms?"""
@@ -43,7 +44,7 @@ class GenericGeoOptTest(unittest.TestCase):
 
     def testscfenergy(self):
         """Is the SCF energy within 40eV of -10365"""
-        self.assert_(abs(self.data.scfenergies[-1]-(-10365))<40,"Final scf energy: %f not -10365+-40eV" % self.data.scfenergies[-1])
+        self.assertInside(self.data.scfenergies[-1],-10365,40,"Final scf energy: %f not -10365+-40eV" % self.data.scfenergies[-1])
 
     def testnormalisesym(self):
         """Did this subclasses overwrite normalisesym?"""
@@ -60,11 +61,13 @@ class GenericGeoOptTest(unittest.TestCase):
 
     def testscfvaluetype(self):
         """Do the scf values have the right type?"""
-        self.assert_(type(self.data.scfvalues[0])==type(array([])) and type(self.data.scfvalues)==type([]))
+        self.assertEquals(type(self.data.scfvalues),type([]))
+        self.assertEquals(type(self.data.scfvalues[0]),type(array([])))
 
     def testscfvaluedim(self):
         """Do the scf values have the right dimensions?"""
-        self.assert_(len(self.data.scfvalues)==len(self.data.geovalues) and len(self.data.scfvalues[0])==len(self.data.scftargets))
+        self.assertEquals(len(self.data.scfvalues),len(self.data.geovalues))
+        self.assertEquals(len(self.data.scfvalues[0]),len(self.data.scftargets))        
 
 class GaussianGeoOptTest(GenericGeoOptTest):
     def setUp(self):
@@ -94,7 +97,7 @@ class ADFGeoOptTest(GenericGeoOptTest):
     
     def testscfenergy(self):
         """Is the SCF energy within 1eV of -140eV"""
-        self.assert_(abs(self.data.scfenergies[-1]-(-140))<1,"Final scf energy: %f not -140+-1eV" % self.data.scfenergies[-1])
+        self.assertInside(self.data.scfenergies[-1],-140,1,"Final scf energy: %f not -140+-1eV" % self.data.scfenergies[-1])
 
 class JaguarGeoOptTest(GenericGeoOptTest):
     def setUp(self):
