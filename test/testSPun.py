@@ -1,9 +1,12 @@
-import os, unittest
-from Numeric import array
+import os
+import unittest
+import bettertest
+import Numeric
+
 from testall import getfile
 from cclib.parser import ADF, GAMESS, Gaussian, Jaguar
 
-class GenericSPunTest(unittest.TestCase):
+class GenericSPunTest(bettertest.TestCase):
     """Restricted single point calculations with MO coeffs and overlap info."""
     def testdimaooverlaps(self):
         """Are the dims of the overlap matrix consistent with nbasis?"""
@@ -14,9 +17,8 @@ class GenericSPunTest(unittest.TestCase):
         self.assertEquals(self.data.mocoeffs.shape,(2,self.data.nmo,self.data.nbasis))
 
     def testhomos(self):
-        """What are the homos?"""
-        self.assertEquals(type(self.data.homos),type(array([])))
-        self.assertEquals(self.data.homos,array([34,33],"i"))
+        """Are the homos correct?"""
+        self.assertArrayEquals(self.data.homos,Numeric.array([34,33],"i"),"%s != array([34,33],'i')" % Numeric.array_repr(self.data.homos))
 
 class GaussianSPunTest(GenericSPunTest):
     def setUp(self):

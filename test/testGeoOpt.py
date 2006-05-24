@@ -1,16 +1,16 @@
 import os
 import math
+import Numeric
 import unittest
 import bettertest
 
-from Numeric import array
 from testall import getfile
 from cclib.parser import ADF, GAMESS, Gaussian, Jaguar
 
 class GenericGeoOptTest(bettertest.TestCase):
     def testhomos(self):
         """Is the index of the homo equal to 34?"""
-        self.assertArrayEquals(self.data.homos,array([34]),"%s != array([34])" % self.data.homos)
+        self.assertArrayEquals(self.data.homos,Numeric.array([34],"i"),"%s != array([34],'i')" % Numeric.array_repr(self.data.homos))
 
     def testatomcoords(self):
         """Are atomcoords consistent with natom and Angstroms?"""
@@ -62,7 +62,7 @@ class GenericGeoOptTest(bettertest.TestCase):
     def testscfvaluetype(self):
         """Do the scf values have the right type?"""
         self.assertEquals(type(self.data.scfvalues),type([]))
-        self.assertEquals(type(self.data.scfvalues[0]),type(array([])))
+        self.assertEquals(type(self.data.scfvalues[0]),type(Numeric.array([])))
 
     def testscfvaluedim(self):
         """Do the scf values have the right dimensions?"""
