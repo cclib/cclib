@@ -15,7 +15,7 @@ class GenericGeoOptTest(bettertest.TestCase):
     def testatomcoords(self):
         """Are atomcoords consistent with natom and Angstroms?"""
         coords = self.data.atomcoords
-        self.assertEquals(self.data.natom,len(coords[0]),"len(atomcoords[0]) is %d but natom is %d" % (self.data.natom,len(coords[0])))
+        self.assertEquals(self.data.natom,len(coords[0]),"natom  is %d but len(atomcoords[0]) is %d" % (self.data.natom,len(coords[0])))
 
         # Find the minimum distance between two C atoms
         mindist = 999

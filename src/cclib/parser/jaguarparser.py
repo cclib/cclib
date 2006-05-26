@@ -86,25 +86,49 @@ class Jaguar(logfileparser.Logfile):
                 temp = line.strip().split()
                 self.scfenergies.append(float(temp[temp.index("hartrees")-1]))
 
+            if line[2:14]=="new geometry" or line[1:21]=="Symmetrized geometry":
+# Get the atom coordinates
+                if not hasattr(self,"atomcoords"):
+                    self.logger.info("Creating attributes: atomcoords, atomnos, natom")
+                    self.atomcoords = []
+                p = re.compile("(\D+)\d+") # One/more letters followed by a number
+                atomcoords = []
+                atomnos = []
+                angstrom = inputfile.next()
+                title = inputfile.next()
+                line = inputfile.next()
+                while line.strip():
+                    temp = line.split()
+                    element = p.findall(temp[0])[0]
+                    atomnos.append(self.table.number[element])
+                    atomcoords.append(map(float,temp[1:]))
+                    line = inputfile.next()
+                self.atomcoords.append(atomcoords)
+                self.atomnos = Numeric.array(atomnos,"i")
+                self.natom = len(atomcoords)
+
             if line[2:28]=="geometry optimization step":
 # Get Geometry Opt convergence information
                 if not hasattr(self,"geovalues"):
                     self.geovalues = []
-                    self.geotargets = Numeric.zeros(4,"float")
-                    self.logger.info("Creating attributes: geovalues,geotargets")
+                    geotargets = Numeric.zeros(4,"f")
+                    i = 0
+                    self.logger.info("Creating attributs: geovalues,geotargets")
                 blank = inputfile.next()
                 blank = inputfile.next()
                 line = inputfile.next()
-                i = 0
                 values = []
                 while line!=blank:
                     if line[41]=="(":
                         # A new geo convergence value
                         values.append(float(line[26:37]))
-                        self.geotargets[i] = float(line[43:54])
-                        i+=1
+                        if not hasattr(self,"geotargets"):
+                            geotargets[i] = float(line[43:54])
+                            i += 1
                     line = inputfile.next()
                 self.geovalues.append(values)
+                if not hasattr(self,"geotargets"):
+                    self.geotargets = geotargets
 
             if line[2:33]=="Orbital energies/symmetry label":
 # Get MO Energies and symmetrys
@@ -167,6 +191,8 @@ class Jaguar(logfileparser.Logfile):
 ##            self.scfvalues = Numeric.array(self.scfvalues,"f")
         if hasattr(self,"scfenergies"):
             self.scfenergies = Numeric.array(self.scfenergies,"f")
+        if hasattr(self,"atomcoords"):
+            self.atomcoords = Numeric.array(self.atomcoords,"f")
         self.parsed = True
         
 if __name__=="__main__":
