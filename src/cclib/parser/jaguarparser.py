@@ -50,6 +50,8 @@ class Jaguar(logfileparser.Logfile):
             inputfile.seek(0)
             self.progress.initialize(nstep)
             oldstep=0
+
+        geoopt = False # Is this a GeoOpt? Needed for SCF targets/values.
             
         for line in inputfile:
             
@@ -64,8 +66,12 @@ class Jaguar(logfileparser.Logfile):
 # Get SCF convergence information
                 if not hasattr(self,"scfvalues"):
                     self.scfvalues = []
-                    self.logger.info("Creating attribute: scfvalues")
-                values = []
+                    self.logger.info("Creating attribute: scfvalues,scftargets")
+                    self.scftargets = Numeric.array([5E-5,5E-6],"f")
+                if not geoopt:
+                    values = [[],[]]
+                else:
+                    values = [[]]
                 while line[0:4]=="etot":
                     if line[39:47].strip():
                         denergy = float(line[39:47])
@@ -74,7 +80,11 @@ class Jaguar(logfileparser.Logfile):
                                     # or should we just ignore the values in this line
                     ddensity = float(line[48:56])
                     maxdiiserr = float(line[57:65])
-                    values.append([denergy,ddensity,maxdiiserr])
+                    if not geoopt:
+                        values[0].append(denergy)
+                        values[1].append(ddensity)
+                    else:
+                        values[0].append(ddensity)
                     line = inputfile.next()
                 self.scfvalues.append(values)
 
@@ -84,7 +94,7 @@ class Jaguar(logfileparser.Logfile):
                     self.logger.info("Creating attribute scfenergies")
                     self.scfenergies = []
                 temp = line.strip().split()
-                self.scfenergies.append(float(temp[temp.index("hartrees")-1]))
+                self.scfenergies.append(utils.convertor(float(temp[temp.index("hartrees")-1]),"hartree","eV"))
 
             if line[2:14]=="new geometry" or line[1:21]=="Symmetrized geometry":
 # Get the atom coordinates
@@ -106,6 +116,14 @@ class Jaguar(logfileparser.Logfile):
                 self.atomcoords.append(atomcoords)
                 self.atomnos = Numeric.array(atomnos,"i")
                 self.natom = len(atomcoords)
+
+            if not geoopt and line[2:24]=="start of program geopt":
+                geoopt = True
+                if hasattr(self,"scfvalues"):
+                    # Need to keep only the RMS density change info
+                    # if this is a geoopt
+                    self.scfvalues[0] = [self.scfvalues[0][1]]
+                    self.scftargets = self.scftargets[0]
 
             if line[2:28]=="geometry optimization step":
 # Get Geometry Opt convergence information
@@ -187,8 +205,8 @@ class Jaguar(logfileparser.Logfile):
 
         inputfile.close()
 
-##        if hasattr(self,"scfvalues"):
-##            self.scfvalues = Numeric.array(self.scfvalues,"f")
+        if hasattr(self,"scfvalues"):
+            self.scfvalues = [Numeric.array(x,"f") for x in self.scfvalues]
         if hasattr(self,"scfenergies"):
             self.scfenergies = Numeric.array(self.scfenergies,"f")
         if hasattr(self,"atomcoords"):

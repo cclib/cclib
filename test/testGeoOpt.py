@@ -33,7 +33,6 @@ class GenericGeoOptTest(bettertest.TestCase):
         coords = self.data.atomcoords
         self.assertEquals(len(self.data.geovalues),len(coords),"len(atomcoords) is %d but len(geovalues) is %d" % (len(coords),len(self.data.geovalues)))
         
-    
     def testnatom(self):
         """Is the number of atoms equal to 20?"""
         self.assertEquals(self.data.natom,20)
@@ -101,7 +100,7 @@ class ADFGeoOptTest(GenericGeoOptTest):
 
 class JaguarGeoOptTest(GenericGeoOptTest):
     def setUp(self):
-        self.data = getfile(Jaguar,"basicJaguar","eg01","dvb_gopt.out")
+        self.data = getfile(Jaguar,"basicJaguar","eg01","dvb_gopt_b.out")
 
 names = [ "Gaussian", "PCGamess", "GAMESS", "ADF", "Jaguar" ]
 tests = [ GaussianGeoOptTest, PCGamessGeoOptTest,
