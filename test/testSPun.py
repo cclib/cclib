@@ -22,19 +22,19 @@ class GenericSPunTest(bettertest.TestCase):
 
 class GaussianSPunTest(GenericSPunTest):
     def setUp(self):
-        self.data = getfile(Gaussian,"basicGaussian03","dvb_un_sp.out")
+        self.data = data[0]
 
 class GamessUSSPunTest(GenericSPunTest):
     def setUp(self):
-        self.data = getfile(GAMESS,"basicGAMESS-US","dvb_un_sp.out")
+        self.data = data[1]
 
 class PCGamessSPunTest(GenericSPunTest):
     def setUp(self):
-        self.data = getfile(GAMESS,"basicPCGAMESS","dvb_un_sp.out")
+        self.data = data[2]
 
 class ADFSPunTest(GenericSPunTest):
     def setUp(self):
-        self.data = getfile(ADF,"basicADF2004.01","dvb_un_sp.adfout")
+        self.data = data[3]
 
     def testdimaooverlaps(self):
         """Are the dims of the overlap matrix consistent with nbasis?"""
@@ -45,6 +45,10 @@ class ADFSPunTest(GenericSPunTest):
 names = [ "Gaussian", "PCGamess", "GAMESS", "ADF" ]
 tests = [ GaussianSPunTest, PCGamessSPunTest,
           GamessUSSPunTest, ADFSPunTest ]
+data = [ getfile(Gaussian,"basicGaussian03","dvb_un_sp.out"),
+         getfile(GAMESS,"basicGAMESS-US","dvb_un_sp.out"),
+         getfile(GAMESS,"basicPCGAMESS","dvb_un_sp.out"),
+         getfile(ADF,"basicADF2004.01","dvb_un_sp.adfout") ]
               
 if __name__=="__main__":
     total = errors = failures = 0

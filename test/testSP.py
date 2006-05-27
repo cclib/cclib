@@ -19,19 +19,19 @@ class GenericSPTest(unittest.TestCase):
 
 class GaussianSPTest(GenericSPTest):
     def setUp(self):
-        self.data = getfile(Gaussian,"basicGaussian03","dvb_sp.out")
+        self.data = data[0]
 
 class GamessUSSPTest(GenericSPTest):
     def setUp(self):
-        self.data = getfile(GAMESS,"basicGAMESS-US","dvb_sp.out")
+        self.data = data[1]
 
 class PCGamessSPTest(GenericSPTest):
     def setUp(self):
-        self.data = getfile(GAMESS,"basicPCGAMESS","dvb_sp.out")
+        self.data = data[2]
 
 class ADFSPTest(GenericSPTest):
     def setUp(self):
-        self.data = getfile(ADF,"basicADF2004.01","dvb_sp_b.adfout")
+        self.data = data[3]
     
     def testdimaooverlaps(self):
         """Are the dims of the overlap matrix consistent with nbasis?"""
@@ -41,6 +41,10 @@ class ADFSPTest(GenericSPTest):
 names = [ "Gaussian", "PCGamess", "GAMESS", "ADF", "Jaguar" ]
 tests = [ GaussianSPTest, PCGamessSPTest,
           GamessUSSPTest, ADFSPTest ]
+data = [getfile(Gaussian,"basicGaussian03","dvb_sp.out"),
+        getfile(GAMESS,"basicGAMESS-US","dvb_sp.out"),
+        getfile(GAMESS,"basicPCGAMESS","dvb_sp.out"),
+        getfile(ADF,"basicADF2004.01","dvb_sp_b.adfout")]
               
 if __name__=="__main__":
     total = errors = failures = 0
