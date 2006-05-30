@@ -405,8 +405,6 @@ class Gaussian(logfileparser.Logfile):
                     CIScontrib.append([(fromMO,frommoindex),(toMO,tomoindex),sqr])
                     line = inputfile.next()
                 self.etsecs.append(CIScontrib)
-                self.etenergies = Numeric.array(self.etenergies,"f")
-                self.etoscs = Numeric.array(self.etoscs,"f")
 
             if line[1:52]=="<0|r|b> * <b|rxdel|0>  (Au), Rotatory Strengths (R)":
 # Extract circular dichroism data
@@ -547,6 +545,9 @@ class Gaussian(logfileparser.Logfile):
         if hasattr(self,"scfenergies"): self.scfenergies = Numeric.array(self.scfenergies,"f")
         if hasattr(self,"scfvalues"): self.scfvalues = [Numeric.array(x,"f") for x in self.scfvalues]
         if hasattr(self,"atomcoords"): self.atomcoords = Numeric.array(self.atomcoords,"f")
+        if hasattr(self,"etenergies"): self.etenergies = Numeric.array(self.etenergies,"f")
+        if hasattr(self,"etoscs"): self.etoscs = Numeric.array(self.etoscs,"f")
+
         self.parsed = True
 
         
