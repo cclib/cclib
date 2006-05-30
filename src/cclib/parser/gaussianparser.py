@@ -359,7 +359,7 @@ class Gaussian(logfileparser.Logfile):
                     
             if line[1:14]=="Excited State":
 # Extract the electronic transitions
-                if not hasattr(self,"etenergy"):
+                if not hasattr(self,"etenergies"):
                     self.etenergies = []
                     self.etoscs = []
                     self.etsyms = []
