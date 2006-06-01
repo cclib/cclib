@@ -86,6 +86,9 @@ class ADF(logfileparser.Logfile):
         NOTFOUND, GETLAST, NOMORE = range(3)
         finalgeometry= NOTFOUND 
         
+        # Used for calculating the scftarget (variables names taken from the ADF manual)
+        accint = SCFconv = sconv2 = None
+        
         for line in inputfile:
             
             if self.progress and random.random()<cupdate:
@@ -140,18 +143,19 @@ class ADF(logfileparser.Logfile):
                 self.logger.info("Creating attribute natom: %d" % self.natom)
                 
             if line[1:22]=="S C F   U P D A T E S":
-# find targets for SCF convergence (QM calcs)
+# find targets for SCF convergence
 
                 if not hasattr(self,"scftargets"):
                     self.logger.info("Creating attribute scftargets[]")
-                    self.scftargets = Numeric.array([0.0, 0.0],'f')
+                    self.scftargets = []
 
                 #underline, blank, nr
                 for i in range(3): inputfile.next()
 
-                line=inputfile.next()
-                self.scftargets[ADF.maxelem] = float(line.split()[2])
-                self.scftargets[ADF.norm] = self.scftargets[ADF.maxelem]*10
+                line = inputfile.next()
+                SCFconv = float(line.split()[-1])
+                line = inputfile.next()
+                sconv2 = float(line.split()[-1])
               
             if line[1:11]=="CYCLE    1":
               
@@ -164,6 +168,19 @@ class ADF(logfileparser.Logfile):
                 newlist = []
                 line=inputfile.next()
 
+                if not hasattr(self,"geovalues"):
+                    # This is the first SCF cycle
+                    self.scftargets.append([sconv2*10,sconv2])
+                elif finalgeometry in [GETLAST,NOMORE]:
+                    # This is the final SCF cycle
+                    self.scftargets.append([SCFconv*10,SCFconv])
+                else:
+                    # This is an intermediate SCF cycle
+                    oldscftst = self.scftargets[-1][1]
+                    grdmax = self.geovalues[-1][1]
+                    scftst = max(SCFconv,min(oldscftst,grdmax/30,10**(-accint)))
+                    self.scftargets.append([scftst*10,scftst])
+                        
                 while line.find("SCF CONVERGED")==-1:
                     if line[4:12]=="SCF test":
                         if not hasattr(self,"scfvalues"):
@@ -226,6 +243,11 @@ class ADF(logfileparser.Logfile):
                     values.append(float(temp[-4]))
                 self.geovalues.append(values)
  
+            if line[1:27]=='General Accuracy Parameter':
+                # Need to know the accuracy of the integration grid to
+                # calculate the scftarget...note that it changes with time
+                accint = float(line.split()[-1])
+            
             if line[1:29]=='Orbital Energies, all Irreps' and not hasattr(self,"mosyms"):
 #Extracting orbital symmetries and energies, homos
               self.logger.info("Creating attribute mosyms[[]]")
@@ -312,79 +334,6 @@ class ADF(logfileparser.Logfile):
                 self.vibirs = Numeric.array(self.vibirs,"f")
                 if hasattr(self,"vibramans"): self.vibramans = Numeric.array(self.vibramans,"f")
 
-#             if line[1:14]=="Excited State":
-# # Extract the electronic transitions
-#                 if not hasattr(self,"etenergy"):
-#                     self.etenergies = []
-#                     self.etoscs = []
-#                     self.etsyms = []
-#                     self.etsecs = []
-#                     self.logger.info("Creating attributes etenergies[], etoscs[], etsyms[], etsecs[]")
-#                 # Need to deal with lines like:
-#                 # (restricted calc)
-#                 # Excited State   1:   Singlet-BU     5.3351 eV  232.39 nm  f=0.1695
-#                 # (unrestricted calc) (first excited state is 2!)
-#                 # Excited State   2:   ?Spin  -A      0.1222 eV 10148.75 nm  f=0.0000
-#                 parts = line[36:].split()
-#                 self.etenergies.append(convertor(self.float(parts[0]),"eV","cm-1"))
-#                 self.etoscs.append(self.float(parts[4].split("=")[1]))
-#                 self.etsyms.append(line[21:36].split())
-#                 
-#                 line = inputfile.next()
-# 
-#                 p = re.compile("(\d+)")
-#                 CIScontrib = []
-#                 while line.find(" ->")>=0: # This is a contribution to the transition
-#                     parts = line.split("->")
-#                     self.logger.debug(parts)
-#                     # Has to deal with lines like:
-#                     #       32 -> 38         0.04990
-#                     #      35A -> 45A        0.01921
-#                     frommoindex = 0 # For restricted or alpha unrestricted
-#                     fromMO = parts[0].strip()
-#                     if fromMO[-1]=="B":
-#                         frommoindex = 1 # For beta unrestricted
-#                     fromMO = int(p.match(fromMO).group()) # extract the number
-#                     
-#                     t = parts[1].split()
-#                     tomoindex = 0
-#                     toMO = t[0]
-#                     if toMO[-1]=="B":
-#                         tomoindex = 1
-#                     toMO = int(p.match(toMO).group())
-# 
-#                     percent = self.float(t[1])
-#                     sqr = percent**2*2 # The fractional contribution of this CI
-#                     if percent<0:
-#                         sqr = -sqr
-#                     CIScontrib.append([(fromMO,frommoindex),(toMO,tomoindex),sqr])
-#                     line = inputfile.next()
-#                 self.etsecs.append(CIScontrib)
-#                 self.etenergies = Numeric.array(self.etenergies,"f")
-#                 self.etoscs = Numeric.array(self.etoscs,"f")
-# 
-#             if line[1:52]=="<0|r|b> * <b|rxdel|0>  (Au), Rotatory Strengths (R)":
-# # Extract circular dichroism data
-#                 self.etrotats = []
-#                 self.logger.info("Creating attribute etrotats[]")
-#                 inputfile.next()
-#                 inputfile.next()
-#                 line = inputfile.next()
-#                 parts = line.strip().split()
-#                 while len(parts)==5:
-#                     try:
-#                         R = self.float(parts[-1])
-#                     except ValueError:
-#                         # nan or -nan if there is no first excited state
-#                         # (for unrestricted calculations)
-#                         pass
-#                     else:
-#                         self.etrotats.append(R)
-#                     line = inputfile.next()
-#                     temp = line.strip().split()
-#                     parts = line.strip().split()                
-#                 self.etrotats = Numeric.array(self.etrotats,"f")
-# 
 
 #******************************************************************************************************************8
 #delete this after new implementation using smat, eigvec print,eprint?
@@ -452,40 +401,6 @@ class ADF(logfileparser.Logfile):
                   inputfile.next(); inputfile.next(); inputfile.next()
                   
                   
-#             if line[1:7]=="NBasis" or line[4:10]=="NBasis":
-# # Extract the number of basis sets
-#                 nbasis = int(line.split('=')[1].split()[0])
-#                 # Has to deal with lines like:
-#                 #  NBasis =   434 NAE=    97 NBE=    97 NFC=    34 NFV=     0
-#                 #     NBasis = 148  MinDer = 0  MaxDer = 0
-#                 # Although the former is in every file, it doesn't occur before
-#                 # the overlap matrix is printed
-#                 if hasattr(self,"nbasis"):
-#                     assert nbasis==self.nbasis
-#                 else:
-#                     self.nbasis= nbasis
-#                     self.logger.info("Creating attribute nbasis: %d" % self.nbasis)
-#                     
-#             if line[1:7]=="NBsUse":
-# # Extract the number of linearly-independent basis sets
-#                 nmo = int(line.split('=')[1].split()[0])
-#                 if hasattr(self,"nmo"):
-#                     assert nmo==self.nmo
-#                 else:
-#                     self.nmo = nmo
-#                     self.logger.info("Creating attribute nmo: %d" % self.nmo)
-# 
-#             if line[7:22]=="basis functions,":
-# # For AM1 calculations, set nbasis by a second method
-# # (nmo may not always be explicitly stated)
-#                     nbasis = int(line.split()[0])
-#                     if hasattr(self,"nbasis"):
-#                         assert nbasis==self.nbasis
-#                     else:
-#                         self.nbasis = nbasis
-#                         self.logger.info("Creating attribute nbasis: %d" % self.nbasis)
-
-#           
             if line[1:32]=="S F O   P O P U L A T I O N S ,":
 #Extract overlap matrix
 
@@ -601,48 +516,6 @@ class ADF(logfileparser.Logfile):
                   base+=len(cols[1:])
                   
                   
-#             if line[5:35]=="Molecular Orbital Coefficients" or line[5:41]=="Alpha Molecular Orbital Coefficients" or line[5:40]=="Beta Molecular Orbital Coefficients":
-#                 if line[5:40]=="Beta Molecular Orbital Coefficients":
-#                     beta = True
-#                     # Need to add an extra dimension to self.mocoeffs
-#                     self.mocoeffs = Numeric.resize(self.mocoeffs,(2,nmo,nbasis))
-#                 else:
-#                     beta = False
-#                     self.logger.info("Creating attributes aonames[], mocoeffs[][]")
-#                     self.aonames = []
-#                     self.mocoeffs = Numeric.zeros((1,nmo,nbasis),"float")
-# 
-#                 base = 0
-#                 for base in range(0,nmo,5):
-#                     
-#                     if self.progress:
-#                         step=inputfile.tell()
-#                         if step!=oldstep and random.random() < fupdate:
-#                             self.progress.update(step,"Coefficients")
-#                             oldstep=step
-#                             
-#                     colmNames = inputfile.next()
-#                     symmetries = inputfile.next()
-#                     eigenvalues = inputfile.next()
-#                     for i in range(nbasis):
-#                         line = inputfile.next()
-#                         if base==0 and not beta: # Just do this the first time 'round
-#                             # Changed below from :12 to :11 to deal with Elmar Neumann's example
-#                             parts = line[:11].split()
-#                             if len(parts)>1: # New atom
-#                                 atomname = "%s%s" % (parts[2],parts[1])
-#                             orbital = line[11:20].strip()
-#                             self.aonames.append("%s_%s" % (atomname,orbital))
-# 
-#                         part = line[21:].replace("D","E").rstrip()
-#                         temp = [] 
-#                         for j in range(0,len(part),10):
-#                             temp.append(float(part[j:j+10]))
-#                         if beta:
-#                             self.mocoeffs[1,base:base+len(part)/10,i] = temp
-#                         else:
-#                             self.mocoeffs[0,base:base+len(part)/10,i] = temp
-                 
         inputfile.close()
 
         if self.progress:
@@ -651,6 +524,7 @@ class ADF(logfileparser.Logfile):
         if hasattr(self,"geovalues"): self.geovalues = Numeric.array(self.geovalues,"f")
         if hasattr(self,"scfenergies"): self.scfenergies = Numeric.array(self.scfenergies,"f")
         if hasattr(self,"scfvalues"): self.scfvalues = [Numeric.array(x,"f") for x in self.scfvalues]
+        if hasattr(self,"scftargets"): self.scftargets = Numeric.array(self.scftargets,"f")
         if hasattr(self,"moenergies"): self.nmo = len(self.moenergies[0])
         if hasattr(self,"atomcoords"): self.atomcoords = Numeric.array(self.atomcoords,"f")
 
