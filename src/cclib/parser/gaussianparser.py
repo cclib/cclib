@@ -131,12 +131,14 @@ class Gaussian(logfileparser.Logfile):
 # Find the targets for SCF convergence (QM calcs)                
                 if not hasattr(self,"scftargets"):
                     self.logger.info("Creating attribute scftargets[]")
-                self.scftargets = Numeric.array([0.0,0.0,0.0],'f')
-                self.scftargets[Gaussian.SCFRMS] = self.float(line.split('=')[1].split()[0])
-            if line[1:44]=='Requested convergence on MAX density matrix':
-                self.scftargets[Gaussian.SCFMAX] = self.float(line.strip().split('=')[1][:-1])
-            if line[1:44]=='Requested convergence on             energy':
-                self.scftargets[Gaussian.SCFENERGY] = self.float(line.strip().split('=')[1][:-1])
+                    self.scftargets = []
+                scftargets = []
+                scftargets.append(self.float(line.split('=')[1].split()[0]))
+                line = inputfile.next()
+                scftargets.append(self.float(line.strip().split('=')[1][:-1]))
+                line = inputfile.next()
+                scftargets.append(self.float(line.strip().split('=')[1][:-1]))
+                self.scftargets.append(scftargets)
 
             if line[1:10]=='Cycle   1':
 # Extract SCF convergence information (QM calcs)
@@ -144,7 +146,7 @@ class Gaussian(logfileparser.Logfile):
                 if not hasattr(self,"scfvalues"):
                     self.logger.info("Creating attribute scfvalues")
                     self.scfvalues = []
-                newlist = [ [] for x in self.scftargets ]
+                scfvalues = []
                 line = inputfile.next()
                 while line.find("SCF Done")==-1:
                 
@@ -157,9 +159,8 @@ class Gaussian(logfileparser.Logfile):
                     if line.find(' E=')==0:
                         self.logger.debug(line)
                     if line.find(" RMSDP")==0:
-                        parts = line.split()
-                        newlist[Gaussian.SCFRMS].append(self.float(parts[0].split('=')[1]))
-                        newlist[Gaussian.SCFMAX].append(self.float(parts[1].split('=')[1]))
+                        parts = line.split()[0:2]
+                        newlist = [self.float(x.split('=')[1]) for x in parts]
                         energy = 1.0
                         if len(parts)>4:
                             energy = parts[2].split('=')[1]
@@ -169,12 +170,13 @@ class Gaussian(logfileparser.Logfile):
                                 energy = self.float(energy)
                         # I moved the following line back a TAB to see the effect
                         # (it was originally part of the above "if len(parts)")
-                        newlist[Gaussian.SCFENERGY].append(energy)
+                        newlist.append(energy)
+                        scfvalues.append(newlist)
                     try:
                         line = inputfile.next()
                     except StopIteration: # May be interupted by EOF
                         break
-                self.scfvalues.append(newlist)
+                self.scfvalues.append(scfvalues)
 
             if line[1:4]=='It=':
 # Extract SCF convergence information (AM1 calcs)
@@ -544,6 +546,7 @@ class Gaussian(logfileparser.Logfile):
         if hasattr(self,"geovalues"): self.geovalues = Numeric.array(self.geovalues,"f")
         if hasattr(self,"scfenergies"): self.scfenergies = Numeric.array(self.scfenergies,"f")
         if hasattr(self,"scfvalues"): self.scfvalues = [Numeric.array(x,"f") for x in self.scfvalues]
+        if hasattr(self,"scftargets"): self.scftargets = Numeric.array(self.scftargets,"f")
         if hasattr(self,"atomcoords"): self.atomcoords = Numeric.array(self.atomcoords,"f")
         if hasattr(self,"etenergies"): self.etenergies = Numeric.array(self.etenergies,"f")
         if hasattr(self,"etoscs"): self.etoscs = Numeric.array(self.etoscs,"f")

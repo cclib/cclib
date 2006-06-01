@@ -149,11 +149,6 @@ class GAMESS(logfileparser.Logfile):
                 temp = line.strip().split()
                 self.geovalues.append([float(temp[3]),float(temp[7])])
 
-            if line.find("DENSITY CONV=")==5:
-                if not hasattr(self,"scftargets"):
-                    self.logger.info("Creating attribute scftargets")
-                    self.scftargets = Numeric.array([float(line.strip().split()[-1])])
-                
             if line[11:50]=="ATOMIC                      COORDINATES":
                 # This is the input orientation, which is the only data available for
                 # SP calcs, but which should be overwritten by the standard orientation
@@ -200,8 +195,19 @@ class GAMESS(logfileparser.Logfile):
                     line = inputfile.next()
                 self.atomcoords.append(atomcoords)
             
-            if line.find("ITER EX DEM")==1:
-# This is the section with the SCF information                
+            if line.rstrip()[-15:]=="SCF CALCULATION":
+                # This is the section with the SCF information
+                line = inputfile.next()
+                while line.find("ITER EX")<0:
+                    if line.find("DENSITY CONV=")==5 or line.find("DENSITY MATRIX CONV")==11:
+                        scftarget = float(line.split()[-1])
+                    line = inputfile.next()
+
+                if not hasattr(self,"scftargets"):
+                    self.logger.info("Creating attribute scftargets")
+                    self.scftargets = []
+                self.scftargets.append([scftarget])
+
                 if not hasattr(self,"scfvalues"):
                     self.logger.info("Creating attribute scfvalues")
                     self.scfvalues = []
@@ -218,9 +224,9 @@ class GAMESS(logfileparser.Logfile):
 #  DFT CODE IS SWITCHING BACK TO THE FINER GRID
                         pass
                     else:
-                        values.append(float(line.split()[5]))
+                        values.append([float(line.split()[5])])
                     line = inputfile.next()
-                self.scfvalues.append([values])
+                self.scfvalues.append(values)
 
             if line.find("NORMAL COORDINATE ANALYSIS IN THE HARMONIC APPROXIMATION")>=0:
 # GAMESS has...
@@ -451,8 +457,11 @@ class GAMESS(logfileparser.Logfile):
             opttol = 1e-4
             self.geotargets = Numeric.array([opttol,3./opttol])
         if not hasattr(self,"scftargets"):
+            assert False
             self.logger.info("Creating attribute scftargets[] with default values")
-            self.scftargets = Numeric.array([1e-5])
+            self.scftargets = Numeric.array([[1e-5] for x in self.scfvalues]) ## Need to fix as the dimensions are wrong
+        else:
+            self.scftargets = Numeric.array(self.scftargets,"f")
         if hasattr(self,"scfvalues"):
             self.scfvalues = [Numeric.array(x,"f") for x in self.scfvalues]
         if hasattr(self,"geovalues"): self.geovalues = Numeric.array(self.geovalues,"f")

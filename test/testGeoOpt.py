@@ -63,10 +63,17 @@ class GenericGeoOptTest(bettertest.TestCase):
         self.assertEquals(type(self.data.scfvalues),type([]))
         self.assertEquals(type(self.data.scfvalues[0]),type(Numeric.array([])))
 
+    def testgeotargets(self):
+        """Do the geo targets have the right dimensions?"""
+        self.assertEquals(self.data.geotargets.shape,(len(self.data.geovalues[0]),))
+    
     def testscfvaluedim(self):
         """Do the scf values have the right dimensions?"""
         self.assertEquals(len(self.data.scfvalues),len(self.data.geovalues))
-        self.assertEquals(len(self.data.scfvalues[0]),len(self.data.scftargets))        
+
+    def testscftargetdim(self):
+        """Do the scf targets have the right dimensions?"""
+        self.assertEquals(self.data.scftargets.shape,(len(self.data.scfvalues),len(self.data.scfvalues[0][0])))
 
 class GaussianGeoOptTest(GenericGeoOptTest):
     def setUp(self):
@@ -85,9 +92,10 @@ class ADFGeoOptTest(GenericGeoOptTest):
         self.data = data[3]
 
     def testscfvaluedim(self):
-        """Do the scf values have the right dimensions? 
-           ADF calculations one more SCF cycle after the geometry is converged"""
-        self.assert_(len(self.data.scfvalues)==len(self.data.geovalues)+1 and len(self.data.scfvalues[0])==len(self.data.scftargets))
+        """Do the scf values have the right dimensions?"""
+        # ADF calculations have one more SCF cycle after the geometry is converged
+        # with a tighter SCF convergence cutoff
+        self.assertEquals(len(self.data.scfvalues),len(self.data.geovalues)+1)
 
     def testatomcoords_more(self):
         """Are atomcoords consistent with geovalues?"""
@@ -108,7 +116,7 @@ tests = [ GaussianGeoOptTest, PCGamessGeoOptTest,
           GamessUSGeoOptTest, ADFGeoOptTest,
           JaguarGeoOptTest ]
 data = [ getfile(Gaussian,"basicGaussian03","dvb_gopt.out"),
-         getfile(GAMESS,"basicPCGAMESS","dvb_gopt_a.out"),
+         getfile(GAMESS,"basicPCGAMESS","dvb_gopt_b.out"),
          getfile(GAMESS,"basicGAMESS-US","dvb_gopt_a.out"),
          getfile(ADF,"basicADF2004.01","dvb_gopt_b.adfout"),
          getfile(Jaguar,"basicJaguar","eg01","dvb_gopt_b.out") ]
