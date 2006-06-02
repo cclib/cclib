@@ -43,13 +43,18 @@ class Gaussian(logfileparser.Logfile):
         """Use standard symmetry labels instead of Gaussian labels.
 
         To normalise:
-        (1) replace any G or U by their lowercase equivalent
+        (1) If label is one of [SG,PI,PHI,DLTA], replace by [sigma,pi,phi,delta]
+        (2) replace any G or U by their lowercase equivalent
 
         >>> sym = Gaussian("dummyfile").normalisesym
-        >>> labels = ['A1','AG','A1G']
+        >>> labels = ['A1','AG','A1G',"SG","PI","PHI","DLTA"]
         >>> map(sym,labels)
-        ['A1', 'Ag', 'A1g']
+        ['A1', 'Ag', 'A1g', "sigma", "pi", "phi", "delta"]
         """
+        _greek = {'SG':'sigma','PI':'pi','PHI':'phi','DLTA':'delta'}
+        if label in _greek:
+            return _greek[label]
+
         ans = label.replace("U","u").replace("G","g") 
         return ans
 
@@ -391,14 +396,14 @@ class Gaussian(logfileparser.Logfile):
                     fromMO = parts[0].strip()
                     if fromMO[-1]=="B":
                         frommoindex = 1 # For beta unrestricted
-                    fromMO = int(p.match(fromMO).group()) # extract the number
+                    fromMO = int(p.match(fromMO).group())-1 # subtract 1 so that it is an index into moenergies
                     
                     t = parts[1].split()
                     tomoindex = 0
                     toMO = t[0]
                     if toMO[-1]=="B":
                         tomoindex = 1
-                    toMO = int(p.match(toMO).group())
+                    toMO = int(p.match(toMO).group())-1 # subtract 1 so that it is an index into moenergies
 
                     percent = self.float(t[1])
                     sqr = percent**2*2 # The fractional contribution of this CI
