@@ -5,13 +5,20 @@ import logging
 
 from cclib.parser import guesstype
 
+_allowedargs = ['aonames','aooveralps','atomcoords','atomnos', 
+                'etenergies','etoscs','etrotats','etsecs','etsyms',
+                'fonames','fooverlaps','geotargets','geovalues',
+                'homos','mocoeffs','moenergies','mosyms','natom','nbasis',
+                'nmo','scfenergies','scftargets','scfvalues',
+                'vibfreqs','vibirs','vibramans','vibsyms']
+
 def moreusage():
     """More detailed usage information"""
     print """Usage:  ccget <attribute> [<attribute>] <compchemlogfile>
-where <attribute> is one of the available attributes parsed by cclib
-from <compchemlogfile>.
+     where <attribute> is one of the available attributes parsed by cclib
+     from <compchemlogfile>.
 For a list of attributes parsed from the file, type:
-     ccget --list     [or -l]"""
+     ccget --list <compchemlogfile>   [or -l]"""
 
 def usage():
     """Display usage information"""
@@ -42,17 +49,20 @@ def main():
     log.parse()
     if showattr:
         print "cclib can parse the following attributes from %s:" % args[-1]
-        for x in ['aonames','aooveralps','atomcoords','atomnos',
-                  'etenergies','etoscs','etrotats','etsecs','etsyms',
-                  'fonames','fooverlaps','geotargets','geovalues',
-                  'homos','mocoeffs','moenergies','mosyms','natom','nbasis',
-                  'nmo','scfenergies','scftargets','scfvalues',
-                  'vibfreqs','vibirs','vibramans','vibsyms']:
+        for x in _allowedargs:
             if hasattr(log,x):
                 print "  %s" % x
     else:
+	invalid = False
         for arg in args[:-1]:
-            print getattr(log,arg)
+	    if arg in _allowedargs:
+                print "%s:\n%s" % (arg,getattr(log,arg))
+	    else:
+	        print "%s: invalid attribute" % arg
+		invalid = True
+	if invalid:
+	    print
+	    moreusage()
     return log 
 
 if __name__ == "__main__":
