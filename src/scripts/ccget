@@ -7,7 +7,7 @@ from cclib.parser import guesstype
 
 def moreusage():
     """More detailed usage information"""
-    print """Usage:  python ccget.py <attribute> [<attribute>] <compchemlogfile>
+    print """Usage:  ccget <attribute> [<attribute>] <compchemlogfile>
 where <attribute> is one of the available attributes parsed by cclib
 from <compchemlogfile>.
 For a list of attributes parsed from the file, type:
@@ -15,7 +15,7 @@ For a list of attributes parsed from the file, type:
 
 def usage():
     """Display usage information"""
-    print """Usage:  python ccget.py <attribute> [<attribute>] <compchemlogfile>
+    print """Usage:  ccget <attribute> [<attribute>] <compchemlogfile>
 Try     ccget --help    for more information"""
 
 
