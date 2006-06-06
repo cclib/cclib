@@ -380,7 +380,7 @@ class Gaussian(logfileparser.Logfile):
                 parts = line[36:].split()
                 self.etenergies.append(utils.convertor(self.float(parts[0]),"eV","cm-1"))
                 self.etoscs.append(self.float(parts[4].split("=")[1]))
-                self.etsyms.append(line[21:36].split())
+                self.etsyms.append(line[21:36].strip())
                 
                 line = inputfile.next()
 
