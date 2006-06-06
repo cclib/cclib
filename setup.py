@@ -4,5 +4,6 @@ setup(name="cclib",
       author="Noel O'Boyle",
       author_email="baoilleach@users.sf.net",
       url="http://cclib.sourceforge.net",
+      scripts=["src/scripts/ccget"],
       package_dir = {'cclib':'src/cclib'},
       packages=['cclib','cclib.parser','cclib.progress','cclib.method'])
