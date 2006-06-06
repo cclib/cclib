@@ -552,7 +552,8 @@ class ADF(logfileparser.Logfile):
 
                     cols=line.split()
                     for i in range(len(cols[1:])):
-                      self.mocoeffs[spin,row+symoffset,i+symoffset+base]=float(cols[i+1])
+                      #self.mocoeffs[spin,row+symoffset,i+symoffset+base]=float(cols[i+1])
+                      self.mocoeffs[spin,i+symoffset+base,row+symoffset]=float(cols[i+1])
                   
                     line=inputfile.next()
                     row+=1
