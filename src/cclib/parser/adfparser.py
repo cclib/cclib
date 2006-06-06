@@ -89,6 +89,9 @@ class ADF(logfileparser.Logfile):
         # Used for calculating the scftarget (variables names taken from the ADF manual)
         accint = SCFconv = sconv2 = None
         
+        # keep track of nosym case to parse Energies since it doens't have an all Irreps section
+        nosymflag = False
+
         for line in inputfile:
             
             if self.progress and random.random()<cupdate:
@@ -114,6 +117,11 @@ class ADF(logfileparser.Logfile):
                             
                     line=inputfile.next()
             
+            if line[1:10]=="Symmetry:":
+                info=line.split()
+                if info[1]=="NOSYM":
+                    nosymflag = True
+
             if line[1:6]=="ATOMS":
 # Find the number of atoms and their atomic numbers
 # Also extract the starting coordinates (for a GeoOpt anyway)
@@ -248,6 +256,42 @@ class ADF(logfileparser.Logfile):
                 # calculate the scftarget...note that it changes with time
                 accint = float(line.split()[-1])
             
+            if line[1:37]=='Orbital Energies, per Irrep and Spin' and not hasattr(self,"mosyms") and nosymflag:
+#Extracting orbital symmetries and energies, homos for nosym case
+#Should only be for restricted case because there is a better text block for unrestricted and nosym
+                
+                underline=inputfile.next()
+                header=inputfile.next()
+                underline=inputfile.next()
+                label=inputfile.next()
+                line=inputfile.next()
+
+                info=line.split()
+                if not info[0]=='1':
+                    self.logger.error("MO info up to #%s is missing"%(info[0]))
+                    break
+                
+                self.logger.info("Creating attribute mosyms[[]]")
+                self.mosyms=[[]]
+
+                self.logger.info("Creating attribute moenergies[[]]")
+                self.moenergies=[[]]
+            
+                homoA=None
+
+                while len(line)>3:
+                    info=line.split()
+                    self.mosyms[0].append('A')
+                    self.moenergies[0].append(utils.convertor(float(info[2]),'hartree','eV'))
+                    if info[1]=='0.000' and not hasattr(self,'homos'):
+                        self.logger.info("Creating attribute homos[]")
+                        self.homos=[len(self.moenergies[0])-2]
+                    line=inputfile.next()
+
+                temp=Numeric.array(self.moenergies,"f")
+                self.moenergies=temp
+                self.homos=Numeric.array(self.homos,"i")
+
             if line[1:29]=='Orbital Energies, all Irreps' and not hasattr(self,"mosyms"):
 #Extracting orbital symmetries and energies, homos
               self.logger.info("Creating attribute mosyms[[]]")
