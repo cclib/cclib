@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 import sys
 import getopt
 import logging
@@ -10,12 +11,12 @@ def moreusage():
 where <attribute> is one of the available attributes parsed by cclib
 from <compchemlogfile>.
 For a list of attributes parsed from the file, type:
-     python ccget.py --list     [or -l]"""
+     ccget --list     [or -l]"""
 
 def usage():
     """Display usage information"""
     print """Usage:  python ccget.py <attribute> [<attribute>] <compchemlogfile>
-Try     python ccget.py --help    for more information"""
+Try     ccget --help    for more information"""
 
 
 def main():
