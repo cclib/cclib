@@ -43,13 +43,24 @@ class MPA(Population):
         if not self.parser.parsed:
             self.parser.parse()
 
-        #do we have the needed info in the parser?
-        if not hasattr(self.parser,"mocoeffs") \
-          and not ( hasattr(self.parser,"aooverlaps") \
-                    or hasattr(self.parser, "fooverlaps") ) \
-          and not hasattr(self.parser,"nbasis"):
-            self.logger.error("Missing mocoeffs, aooverlaps/fooverlaps or nbasis")
-            return False #let the caller of function know we didn't finish
+#do we have the needed info in the parser?
+        if not hasattr(self.parser,"mocoeffs"):
+            self.logger.error("Missing mocoeffs")
+            return False
+
+        if not (hasattr(self.parser,"aooverlaps") \
+                    or hasattr(self.parser, "fooverlaps") ):
+            self.logger.error("Missing overlap matrix")
+            return False
+
+        if not hasattr(self.parser,"nbasis"):
+            self.logger.error("Missing nbasis")
+            return False
+
+        if not hasattr(self.parser,"homos"):
+            self.logger.error("Missing homos")
+            return False
+#end attribute checks
 
         unrestricted=(len(self.parser.mocoeffs)==2)
         nmocoeffs=len(self.parser.mocoeffs[0])
