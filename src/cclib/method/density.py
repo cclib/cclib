@@ -25,7 +25,7 @@ from calculationmethod import Method
 
 class Density(Method):
     """Calculate the density matrix"""
-    def __init__(self,parser,progress=None,loglevel=logging.INFO,logname="Log"):
+    def __init__(self,parser,progress=None,loglevel=logging.INFO,logname="Density"):
 
         # Call the __init__ method of the superclass
         super(Density, self).__init__(parser, progress,loglevel,logname)
@@ -44,12 +44,17 @@ class Density(Method):
         if not self.parser.parsed:
             self.parser.parse()
 
-        #do we have the needed info in the parser?
-        if not hasattr(self.parser,"mocoeffs") \
-          and not hasattr(self.parser,"nbasis") \
-          and not hasattr(self.parser,"homos"):
-            self.logger.error("Missing mocoeffs, nbasis, or homos")
-            return False #let the caller of function know we didn't finish
+#do we have the needed info in the parser?
+        if not hasattr(self.parser,"mocoeffs"): 
+            self.logger.error("Parser missing mocoeffs")
+            return False
+        if not hasattr(self.parser,"nbasis"):
+            self.logger.error("Parser missing nbasis")
+            return False
+        if not hasattr(self.parser,"homos"):
+            self.logger.error("Parser missing homos")
+            return False
+#end attribute check
 
         self.logger.info("Creating attribute density: array[3]")
         size=self.parser.nbasis
