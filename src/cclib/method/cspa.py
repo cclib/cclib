@@ -43,11 +43,17 @@ class CSPA(Population):
         if not self.parser.parsed:
             self.parser.parse()
 
-        #do we have the needed info in the parser?
-        if not hasattr(self.parser,"mocoeffs") \
-          and not hasattr(self.parser,"nbasis"):
-            self.logger.error("Missing mocoeffs or nbasis")
-            return False #let the caller of function know we didn't finish
+#do we have the needed info in the parser?
+        if not hasattr(self.parser,"mocoeffs"):
+            self.logger.error("Missing mocoeffs")
+            return False
+        if not hasattr(self.parser,"nbasis"):
+            self.logger.error("Missing nbasis")
+            return False
+        if not hasattr(self.parser,"homos"):
+            self.logger.error("Missing homos")
+            return False
+#end attributes check
 
         self.logger.info("Creating attribute aoresults: array[3]")
         unrestricted=(len(self.parser.mocoeffs)==2)
