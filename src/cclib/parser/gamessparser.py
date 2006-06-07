@@ -69,23 +69,18 @@ class GAMESS(logfileparser.Logfile):
         >>> t = GAMESS("dummyfile")
         >>> data = ['    5  C  1  S   ', '    6  C  1  S   ',\
                     '    7  C  1  S   ', '   56  C  1XXXX  ',\
-                    '  100  C  2  S   ' ]
+                    '  100  C  2  S   ', '    1  SI  1  S  ' ]
         >>> print t.normalise_aonames(data)
-        ['C1_1S', 'C1_2S', 'C1_3S', 'C1_4XXXX', 'C2_1S']
+        ['C1_S', 'C1_S', 'C1_S', 'C1_XXXX', 'C2_S', 'Si1_S']
         """
-        p = re.compile("(\d+)\s*([A-Z][a-z]?)\s*(\d+)\s*([A-Z]+)")
+        p = re.compile("(\d+)\s*([A-Z][A-Z]?)\s*(\d+)\s*([A-Z]+)")
         ans = []
-	i = 0
-	oldatom = "0"
+        oldatom = "0"
         for line in listoflines:
             m = p.search(line.strip())
             assert m, "Cannot pick out the aoname from this information: %s" % line
             g = m.groups()
-	    if g[3] in ['S','X','XX','XXX','XXXX']:
-                i += 1
-            if g[2]!=oldatom: # Reset for a new atom
-                i = 1
-            aoname = "%s%s_%d%s" % (g[1],g[2],i,g[3])
+            aoname = "%s%s_%s" % (g[1].capitalize(),g[2],g[3])
             oldatom = g[2]
             ans.append(aoname)
 	    
@@ -164,7 +159,7 @@ class GAMESS(logfileparser.Logfile):
                 while line.strip():
                     temp = line.strip().split()
                     atomcoords.append([utils.convertor(float(x),"au","Ang") for x in temp[2:5]])
-                    atomnos.append(self.table.number[temp[0]]) # Use the element name
+                    atomnos.append(int(round(float(temp[1])))) # Don't use the atom name as this is arbitary
                     line = inputfile.next()
                 self.atomnos = Numeric.array(atomnos,"i")
                 self.atomcoords.append(atomcoords)
@@ -325,6 +320,8 @@ class GAMESS(logfileparser.Logfile):
                 if not hasattr(self,"nmo"):
                     self.logger.info("Creating attribute nmo with default value")
                     self.nmo = self.nbasis
+                if not hasattr(self,"mocoeffs"):
+                    self.logger.info("Creating attribute mocoeffs")
                 self.mocoeffs = Numeric.zeros((1,self.nmo,self.nbasis),"f")
                 line = inputfile.next()
                 for base in range(0,self.nmo,5):
