@@ -138,11 +138,15 @@ class Gaussian(logfileparser.Logfile):
                     self.logger.info("Creating attribute scftargets[]")
                     self.scftargets = []
                 scftargets = []
+                # The RMS density matrix
                 scftargets.append(self.float(line.split('=')[1].split()[0]))
                 line = inputfile.next()
+                # The MAX density matrix
                 scftargets.append(self.float(line.strip().split('=')[1][:-1]))
                 line = inputfile.next()
-                scftargets.append(self.float(line.strip().split('=')[1][:-1]))
+                # For G03, there's also the energy (not for G98)
+                if line[1:10]=="Requested":
+                    scftargets.append(self.float(line.strip().split('=')[1][:-1]))
                 self.scftargets.append(scftargets)
 
             if line[1:10]=='Cycle   1':
@@ -173,9 +177,8 @@ class Gaussian(logfileparser.Logfile):
                                 energy = self.float(parts[3])
                             else:
                                 energy = self.float(energy)
-                        # I moved the following line back a TAB to see the effect
-                        # (it was originally part of the above "if len(parts)")
-                        newlist.append(energy)
+                        if len(self.scftargets[0])==3: # Only add the energy if it's a target criteria
+                            newlist.append(energy)
                         scfvalues.append(newlist)
                     try:
                         line = inputfile.next()
