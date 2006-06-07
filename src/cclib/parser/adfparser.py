@@ -146,9 +146,10 @@ class ADF(logfileparser.Logfile):
                 label2=inputfile.next()     #
                 line=inputfile.next()
                 atomcoords = []
-                while len(line)>1: #ensure that we are reading no blank lines
+                while len(line)>2: #ensure that we are reading no blank lines
                     info=line.split()
-                    self.atomnos.append(self.table.number[info[1]])
+                    element=info[1].split('.')[0]
+                    self.atomnos.append(self.table.number[element])
                     atomcoords.append(map(float,info[2:5]))
                     line=inputfile.next()
                 self.atomcoords.append(atomcoords)
@@ -318,7 +319,7 @@ class ADF(logfileparser.Logfile):
                 homoa=None
                 homob=None
 
-                while len(line)>3:
+                while len(line)>5:
                     info=line.split()
                     if info[2]=='A': 
                         self.mosyms[0].append('A')
@@ -587,13 +588,15 @@ class ADF(logfileparser.Logfile):
                     
                   monumbers=line.split()
                   #print monumbers
-                  #get rid of next two lines
-                  inputfile.next()
-                  inputfile.next()
+                  #get rid of unneeded lines
+                  line=inputfile.next()
+                  info=line.split()
+                  if len(info)>1: #ie was previous line info about occupation numbers?
+                    inputfile.next()
                   
                   row=0
                   line=inputfile.next()
-                  while len(line)>2:
+                  while len(line)>5:
                      
                     if self.progress:
                       step=inputfile.tell()
