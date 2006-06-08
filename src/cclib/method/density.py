@@ -94,6 +94,8 @@ class Density(Method):
         if self.progress:
             self.progress.update(nstep,"Done")
 
+        return True #let caller know we finished density
+
 if __name__=="__main__":
     import doctest,g03parser
     doctest.testmod(g03parser,verbose=False)

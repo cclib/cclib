@@ -43,7 +43,9 @@ class MBO(Density):
         if not self.parser.parsed:
             self.parser.parse()
 
-        super(MBO,self).calculate(fupdate)
+        retval=super(MBO,self).calculate(fupdate)
+        if not retval: #making density didn't work
+            return False
 
         #do we have the needed info in the parser?
         if not ( hasattr(self.parser,"aooverlaps") or hasattr(self.parser,"fooverlaps")):
@@ -54,8 +56,13 @@ class MBO(Density):
 #build list of groups of orbitals in each atom for atomresults
             if hasattr(self.parser,"aonames"):
                 names=self.parser.aonames
-            elif hasattr(self.parser,"foonames"):
+                overlaps=self.parser.aooverlaps
+            elif hasattr(self.parser,"fonames"):
                 names=self.parser.fonames
+                overlaps=self.parser.fooverlaps
+            else:
+                self.logger.error("Missing aonames or fonames")
+                return False
 
             atoms=[]
             indices=[]
@@ -81,11 +88,11 @@ class MBO(Density):
 
         #determine number of steps, and whether process involves beta orbitals
         PS=[]
-        PS.append(Numeric.matrixmultiply(self.density[0],self.parser.aooverlaps))
+        PS.append(Numeric.matrixmultiply(self.density[0],overlaps))
         nstep=size**2 #approximately quadratic in size
         if unrestricted:
             self.fragresults=Numeric.zeros([2,size,size],"f")
-            PS.append(Numeric.matrixmultiply(self.density[1],self.parser.aooverlaps))
+            PS.append(Numeric.matrixmultiply(self.density[1],overlaps))
         else:
             self.fragresults=Numeric.zeros([1,size,size],"f")
 
