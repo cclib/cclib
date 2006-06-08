@@ -45,6 +45,11 @@ def main():
         sys.exit()
 
     log = guesstype(args[-1])
+    if log==None:
+        print "Cannot figure out what type of computation chemistry output file '%s' is.\nReport this to the cclib development team if you think this is an error." % args[-1]
+	usage()
+	sys.exit()
+	      
     log.logger.setLevel(logging.ERROR)
     log.parse()
     if showattr:

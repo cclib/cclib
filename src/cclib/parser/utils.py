@@ -25,22 +25,23 @@ import jaguarparser
 def guesstype(filename):
     """Guess the identity of a particular log file and return an instance of that.
     
-    Notes: uses the first 20 lines of a log file to guess its identity
-
     Returns: one of ADF, GAMESS, Gaussian, Jaguar, or None (if it cannot figure it out).
     """
     filetype = None
     inputfile = open(filename,"r")
-    for i,line in enumerate(inputfile):
-        if i>20: break # not elegant, but less buggy than a while loop testing for EOF
+    for line in inputfile:
         if line.find("Amsterdam Density Functional")>=0:
             filetype = adfparser.ADF
+            break
         elif line.find("GAMESS")>=0:
             filetype = gamessparser.GAMESS
+            break
         elif line.find("Gaussian")>=0:
             filetype = gaussianparser.Gaussian
+            break
         elif line.find("Jaguar")>=0:
             filetype = jaguarparser.Jaguar
+            break
     inputfile.close() # Need to close before creating an instance
     if filetype:
         filetype = apply(filetype,[filename]) # Create an instance of the chosen class
