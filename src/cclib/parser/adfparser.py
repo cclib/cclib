@@ -303,7 +303,6 @@ class ADF(logfileparser.Logfile):
 #Extracting orbital symmetries and energies, homos for nosym case
 #should only be here if unrestricted and nosym
 
-                print "got inside"
                 self.logger.info("Creating attribute mosymms[[]]")
                 self.mosyms=[[],[]]
 
