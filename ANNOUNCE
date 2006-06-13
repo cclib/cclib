@@ -1,0 +1,34 @@
+cclib 0.5b is now available for download from http://cclib.sf.net.
+
+cclib is an open source library, written in Python, for parsing and interpreting
+the results of computational chemistry packages. It currently parses output
+files from ADF, GAMESS (US), Gaussian, and PC GAMESS. (Support for Jaguar and
+GAMESS UK is being added.)
+
+Among other data, cclib extracts:
+
+    * coordinates
+    * atomic orbital information
+    * molecular orbital information
+    * information on vibrational modes
+    * the results of a TD-DFT calculation 
+
+(For a complete list see http://cclib.sf.net/wiki/index.php/Parsed_Data).
+
+cclib also provides some calculation methods for interpreting some electronic
+properties of molecules using analyses such as:
+
+    * Mulliken population analysis
+    * Overlap population analysis
+    * Calculation of Mayer's bond orders. 
+
+For information on how to use cclib, see
+      http://cclib.sf.net/wiki/index.php/Using_cclib.
+
+If you need help, find a bug, want new features or have any questions, please
+send an email to our mailing list:
+	https://lists.sourceforge.net/lists/listinfo/cclib-users
+
+Regards,
+
+ The cclib development team
