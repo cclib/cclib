@@ -466,11 +466,7 @@ class GAMESS(logfileparser.Logfile):
             self.logger.info("Creating attribute geotargets[] with default values")
             opttol = 1e-4
             self.geotargets = Numeric.array([opttol,3./opttol])
-        if not hasattr(self,"scftargets"):
-            assert False
-            self.logger.info("Creating attribute scftargets[] with default values")
-            self.scftargets = Numeric.array([[1e-5] for x in self.scfvalues]) ## Need to fix as the dimensions are wrong
-        else:
+        if hasattr(self,"scftargets"):
             self.scftargets = Numeric.array(self.scftargets,"f")
         if hasattr(self,"scfvalues"):
             self.scfvalues = [Numeric.array(x,"f") for x in self.scfvalues]
