@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+import os
 import sys
 import getopt
 import logging
@@ -44,31 +45,44 @@ def main():
         usage()
         sys.exit()
 
-    log = guesstype(args[-1])
-    if log==None:
-        print "Cannot figure out what type of computation chemistry output file '%s' is.\nReport this to the cclib development team if you think this is an error." % args[-1]
-	usage()
-	sys.exit()
-	      
-    log.logger.setLevel(logging.ERROR)
-    log.parse()
-    if showattr:
-        print "cclib can parse the following attributes from %s:" % args[-1]
-        for x in _allowedargs:
-            if hasattr(log,x):
-                print "  %s" % x
-    else:
-	invalid = False
-        for arg in args[:-1]:
-	    if arg in _allowedargs:
-                print "%s:\n%s" % (arg,getattr(log,arg))
-	    else:
-	        print "%s: invalid attribute" % arg
-		invalid = True
-	if invalid:
-	    print
-	    moreusage()
-    return log 
+    # Figure out which are the attribute names and which are the filenames
+    attrnames = []
+    filenames = []
+    for arg in args:
+        if arg in _allowedargs:
+            attrnames.append(arg)
+        elif os.path.isfile(arg):
+            filenames.append(arg)
+        else:
+            print "%s is neither a filename nor an attribute name."
+            usage()
+            sys.exit(1)
+    
+    for filename in filenames:
+        print "Attempting to parse %s" % filename
+        log = guesstype(filename)
+        if log==None:
+            print "Cannot figure out what type of computation chemistry output file '%s' is.\nReport this to the cclib development team if you think this is an error." % filename
+            usage()
+            sys.exit()
+              
+        log.logger.setLevel(logging.ERROR)
+        log.parse()
+        if showattr:
+            print "cclib can parse the following attributes from %s:" % filename
+            for x in _allowedargs:
+                if hasattr(log,x):
+                    print "  %s" % x
+        else:
+            invalid = False
+            for attr in attrnames:
+                if hasattr(log,attr):
+                    print "%s:\n%s" % (attr,getattr(log,attr))
+                else:
+                    invalid = True
+            if invalid:
+                print
+                moreusage()
 
 if __name__ == "__main__":
-    t = main()
+    main()
