@@ -194,8 +194,21 @@ class GAMESS(logfileparser.Logfile):
                 # This is the section with the SCF information
                 line = inputfile.next()
                 while line.find("ITER EX")<0:
-                    if line.find("DENSITY CONV=")==5 or line.find("DENSITY MATRIX CONV")==11:
-                        scftarget = float(line.split()[-1])
+                    if line.find("DENSITY CONV=")>=0 or line.find("DENSITY MATRIX CONV=")>=0:
+# Needs to deal with lines like:
+# (GAMESS VERSION = 12 DEC 2003)
+#     DENSITY MATRIX CONV=  2.00E-05  DFT GRID SWITCH THRESHOLD=  3.00E-04
+# (GAMESS VERSION = 22 FEB 2006)
+#           DENSITY MATRIX CONV=  1.00E-05
+# (PC GAMESS version 6.2, Not DFT?)
+#     DENSITY CONV=  1.00E-05
+                        index = line.find("DENSITY CONV=")
+                        if index<0:
+                            index = line.find("DENSITY MATRIX CONV=")
+                            index += len("DENSITY MATRIX CONV=")
+                        else:
+                            index += len("DENSITY CONV=")
+                        scftarget = float(line[index:].split()[0])
                     line = inputfile.next()
 
                 if not hasattr(self,"scftargets"):
