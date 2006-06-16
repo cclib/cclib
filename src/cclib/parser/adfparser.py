@@ -55,36 +55,36 @@ class ADF(logfileparser.Logfile):
         >>> map(sym,labels)
         ['A', 's', 'A1', 'A1g', 'sigma', 'pi', 'delta', 'phi', 'sigma.g', 'Ag', "A'", 'A"', "E1'", 'E1"']
         """
-        greeks = ['Sigma','Pi','Delta','Phi']
+        greeks = ['Sigma', 'Pi', 'Delta', 'Phi']
         for greek in greeks:
             if label.startswith(greek):
                 return label.lower()
             
-        ans = label.replace(".","")
+        ans = label.replace(".", "")
         l = len(ans)
-        if l>1 and ans[0]==ans[1]: # Python only tests the second condition if the first is true
-            if l>2 and ans[1]==ans[2]:
-                ans = ans.replace(ans[0]*3,ans[0]) + '"'
+        if l > 1 and ans[0] == ans[1]: # Python only tests the second condition if the first is true
+            if l > 2 and ans[1] == ans[2]:
+                ans = ans.replace(ans[0]*3, ans[0]) + '"'
             else:
-                ans = ans.replace(ans[0]*2,ans[0]) + "'"
+                ans = ans.replace(ans[0]*2, ans[0]) + "'"
         return ans
         
 
-    def parse(self,fupdate=0.05,cupdate=0.002):
+    def parse(self, fupdate=0.05, cupdate=0.002):
         """Extract information from the logfile."""
-        inputfile = open(self.filename,"r")
+        inputfile = open(self.filename, "r")
         
         if self.progress:
             
-            inputfile.seek(0,2) #go to end of file
-            nstep=inputfile.tell()
+            inputfile.seek(0, 2) #go to end of file
+            nstep = inputfile.tell()
             inputfile.seek(0)
             self.progress.initialize(nstep)
-            oldstep=0
+            oldstep = 0
             
         # Used to avoid extracting the final geometry twice in a GeoOpt
         NOTFOUND, GETLAST, NOMORE = range(3)
-        finalgeometry= NOTFOUND 
+        finalgeometry = NOTFOUND 
         
         # Used for calculating the scftarget (variables names taken from the ADF manual)
         accint = SCFconv = sconv2 = None
@@ -95,69 +95,69 @@ class ADF(logfileparser.Logfile):
         
         for line in inputfile:
             
-            if self.progress and random.random()<cupdate:
+            if self.progress and random.random() < cupdate:
                 step = inputfile.tell()
-                if step!=oldstep:
-                    self.progress.update(step,"Unsupported Information")
+                if step != oldstep:
+                    self.progress.update(step, "Unsupported Information")
                     oldstep = step
                 
-            if line.find("INPUT FILE")>=0:
+            if line.find("INPUT FILE") >= 0:
 #check to make sure we aren't parsing Create jobs
                 while line:
                 
-                    if self.progress and random.random()<fupdate:
+                    if self.progress and random.random() < fupdate:
                       step = inputfile.tell()
                       #if step!=oldstep:
-                      self.progress.update(step,"Unsupported Information")
+                      self.progress.update(step, "Unsupported Information")
                       oldstep = step
                   
-                    if line.find("INPUT FILE")>=0:
-                      line2=inputfile.next()
-                    if line2.find("Create")<0:
+                    if line.find("INPUT FILE") >= 0:
+                      line2 = inputfile.next()
+                    if line2.find("Create") < 0:
                       break
                             
-                    line=inputfile.next()
+                    line = inputfile.next()
             
-            if line[1:10]=="Symmetry:":
-                info=line.split()
-                if info[1]=="NOSYM":
+            if line[1:10] == "Symmetry:":
+                info = line.split()
+                if info[1] == "NOSYM":
                     nosymflag = True
 
-            if line [4:13]=='Molecule:':
-                info=line.split()
-                if info[1]=='UNrestricted':
+            if line[4:13] == 'Molecule:':
+                info = line.split()
+                if info[1] == 'UNrestricted':
                     unrestrictedflag = True
 
-            if line[1:6]=="ATOMS":
+            if line[1:6] == "ATOMS":
 # Find the number of atoms and their atomic numbers
 # Also extract the starting coordinates (for a GeoOpt anyway)
-                if self.progress and random.random()<cupdate:
-                    step=inputfile.tell()
-                    if step!=oldstep:
-                        self.progress.update(step,"Attributes")
-                        oldstep=step
+                if self.progress and random.random() < cupdate:
+                    step = inputfile.tell()
+                    if step != oldstep:
+                        self.progress.update(step, "Attributes")
+                        oldstep = step
                 
                 self.logger.info("Creating attribute atomnos[], atomcoords[]")
-                self.atomnos=[]
+                self.atomnos = []
                 self.atomcoords = []
                 
-                underline=inputfile.next()  #clear pointless lines
-                label1=inputfile.next()     # 
-                label2=inputfile.next()     #
-                line=inputfile.next()
+                underline = inputfile.next()  #clear pointless lines
+                label1 = inputfile.next()     # 
+                label2 = inputfile.next()     #
+                line = inputfile.next()
                 atomcoords = []
                 while len(line)>2: #ensure that we are reading no blank lines
-                    info=line.split()
-                    element=info[1].split('.')[0]
+                    info = line.split()
+                    element = info[1].split('.')[0]
                     self.atomnos.append(self.table.number[element])
-                    atomcoords.append(map(float,info[2:5]))
-                    line=inputfile.next()
+                    atomcoords.append(map(float, info[2:5]))
+                    line = inputfile.next()
                 self.atomcoords.append(atomcoords)
                 
-                self.natom=len(self.atomnos)
+                self.natom = len(self.atomnos)
                 self.logger.info("Creating attribute natom: %d" % self.natom)
                 
-            if line[1:22]=="S C F   U P D A T E S":
+            if line[1:22] == "S C F   U P D A T E S":
 # find targets for SCF convergence
 
                 if not hasattr(self,"scftargets"):
@@ -172,13 +172,13 @@ class ADF(logfileparser.Logfile):
                 line = inputfile.next()
                 sconv2 = float(line.split()[-1])
               
-            if line[1:11]=="CYCLE    1":
+            if line[1:11] == "CYCLE    1":
               
                 if self.progress and random.random() < fupdate:
-                    step=inputfile.tell()
-                    if step!=oldstep:
+                    step = inputfile.tell()
+                    if step != oldstep:
                         self.progress.update(step, "QM Convergence")
-                        oldstep=step
+                        oldstep = step
               
                 newlist = []
                 line=inputfile.next()
