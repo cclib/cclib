@@ -1,7 +1,8 @@
-from cclib.parser.utils import PeriodicTable
+__revision__ = "$Revision$"
+
 from PyQuante.Molecule import Molecule
 
-def makepyquante(atomcoords,atomnos):
+def makepyquante(atomcoords, atomnos):
     """Create a PyQuante Molecule.
 
     >>> import Numeric
@@ -16,10 +17,10 @@ def makepyquante(atomcoords,atomnos):
 # The only thing missing is charge, but this is also missing
 # from cclib...things to do
 
-    return Molecule("notitle",zip(atomnos,atomcoords),units = "Angstrom")
+    return Molecule("notitle", zip(atomnos, atomcoords), units = "Angstrom")
     
-if __name__=="__main__":
-    import doctest,cclib2pyquante
+if __name__ == "__main__":
+    import doctest, cclib2pyquante
     doctest.testmod(cclib2pyquante)
     
 

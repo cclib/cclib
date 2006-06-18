@@ -1,8 +1,9 @@
+__revision__ = "$Revision$"
+
 from Bio.PDB.Atom import Atom
-import pyopenbabel as pob
 from cclib.parser.utils import PeriodicTable
 
-def makebiopython(atomcoords,atomnos):
+def makebiopython(atomcoords, atomnos):
     """Create a list of BioPython Atoms.
     
     This creates a list of BioPython Atoms suitable for use
@@ -20,21 +21,11 @@ def makebiopython(atomcoords,atomnos):
     """
     pt = PeriodicTable()
     bioatoms = []
-    for coords,atomno in zip(atomcoords,atomnos):
-        bioatoms.append(Atom(pt.element[atomno],coords,0,0,0,0,0))
+    for coords, atomno in zip(atomcoords, atomnos):
+        bioatoms.append(Atom(pt.element[atomno], coords, 0, 0, 0, 0, 0))
     return bioatoms
     
-def pyopenbabel(atomcoords,atomnos):
-    """Create a list of pyopenbabel molecules.
-
-    >>> atomnos = Numeric.array([1,8,1],"i")
-    >>> a = Numeric.array([[-1,1,0],[0,0,0],[1,1,0]],"f")
-    >>> pyOBmol = pyopenbabel(a,atomnos)
-    >>> print pyOBmol.writestring("inchi")
-    """
-    pass
-    
-if __name__=="__main__":
-    import doctest,biopython
+if __name__ == "__main__":
+    import doctest, biopython
     doctest.testmod(biopython)
 

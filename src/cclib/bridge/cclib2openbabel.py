@@ -1,8 +1,9 @@
+__revision__ = "$Revision$"
+
 import pyopenbabel as pob
 import openbabel as ob
-from cclib.parser.utils import PeriodicTable
 
-def makeopenbabel(atomcoords,atomnos):
+def makeopenbabel(atomcoords, atomnos):
     """Create a list of pyopenbabel molecules.
 
     >>> import Numeric
@@ -15,7 +16,7 @@ def makeopenbabel(atomcoords,atomnos):
 # The only thing missing is charge, but this is also missing
 # from cclib...things to do
     obmol = ob.OBMol()
-    for coords,atomno in zip(atomcoords,atomnos):
+    for coords, atomno in zip(atomcoords, atomnos):
         obatom = ob.OBAtom()
         obatom.SetAtomicNum(atomno)
         obatom.SetVector(*coords)
@@ -24,7 +25,7 @@ def makeopenbabel(atomcoords,atomnos):
     obmol.PerceiveBondOrders()
     return pob.Molecule(obmol)
     
-if __name__=="__main__":
-    import doctest,cclib2openbabel
+if __name__ == "__main__":
+    import doctest, cclib2openbabel
     doctest.testmod(cclib2openbabel)
 
