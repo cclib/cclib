@@ -181,43 +181,43 @@ class ADF(logfileparser.Logfile):
                         oldstep = step
               
                 newlist = []
-                line=inputfile.next()
+                line = inputfile.next()
 
                 if not hasattr(self,"geovalues"):
                     # This is the first SCF cycle
-                    self.scftargets.append([sconv2*10,sconv2])
-                elif finalgeometry in [GETLAST,NOMORE]:
+                    self.scftargets.append([sconv2*10, sconv2])
+                elif finalgeometry in [GETLAST, NOMORE]:
                     # This is the final SCF cycle
-                    self.scftargets.append([SCFconv*10,SCFconv])
+                    self.scftargets.append([SCFconv*10, SCFconv])
                 else:
                     # This is an intermediate SCF cycle
                     oldscftst = self.scftargets[-1][1]
                     grdmax = self.geovalues[-1][1]
-                    scftst = max(SCFconv,min(oldscftst,grdmax/30,10**(-accint)))
-                    self.scftargets.append([scftst*10,scftst])
+                    scftst = max(SCFconv, min(oldscftst, grdmax/30, 10**(-accint)))
+                    self.scftargets.append([scftst*10, scftst])
                         
-                while line.find("SCF CONVERGED")==-1:
-                    if line[4:12]=="SCF test":
-                        if not hasattr(self,"scfvalues"):
+                while line.find("SCF CONVERGED") == -1:
+                    if line[4:12] == "SCF test":
+                        if not hasattr(self, "scfvalues"):
                             self.logger.info("Creating attribute scfvalues")
                             self.scfvalues = []
                                                 
                         info = line.split()
-                        newlist.append([float(info[4]),abs(float(info[6]))])
+                        newlist.append([float(info[4]), abs(float(info[6]))])
                     try:
-                        line=inputfile.next()
+                        line = inputfile.next()
                     except StopIteration: #EOF reached?
                         break            
 
-                if hasattr(self,"scfvalues"):
+                if hasattr(self, "scfvalues"):
                     self.scfvalues.append(newlist)
               
-            if line[51:65]=="Final Geometry":
+            if line[51:65] == "Final Geometry":
                 finalgeometry = GETLAST
             
-            if line[1:24]=="Coordinates (Cartesian)" and finalgeometry in [NOTFOUND, GETLAST]:
+            if line[1:24] == "Coordinates (Cartesian)" and finalgeometry in [NOTFOUND, GETLAST]:
                 # Get the coordinates from each step of the GeoOpt
-                if not hasattr(self,"atomcoords"):
+                if not hasattr(self, "atomcoords"):
                     self.logger.info("Creating attribute atomcoords")
                     self.atomcoords = []
                 equals = inputfile.next()
@@ -228,27 +228,27 @@ class ADF(logfileparser.Logfile):
 
                 atomcoords = []
                 line = inputfile.next()
-                while line!=hyphens:
-                    atomcoords.append(map(float,line.split()[5:]))
+                while line != hyphens:
+                    atomcoords.append(map(float, line.split()[5:]))
                     line = inputfile.next()
                 self.atomcoords.append(atomcoords)
-                if finalgeometry==GETLAST: # Don't get any more coordinates
+                if finalgeometry == GETLAST: # Don't get any more coordinates
                     finalgeometry = NOMORE
 
-            if line[1:27]=='Geometry Convergence Tests':
+            if line[1:27] == 'Geometry Convergence Tests':
 # Extract Geometry convergence information
-                if not hasattr(self,"geotargets"):
-                    self.logger.info("Creating attributes geotargets[],geovalues[[]]")
+                if not hasattr(self, "geotargets"):
+                    self.logger.info("Creating attributes geotargets[], geovalues[[]]")
                     self.geovalues = []
-                    self.geotargets = Numeric.array( [0.0,0.0,0.0,0.0,0.0],"f")
-                if not hasattr(self,"scfenergies"):
+                    self.geotargets = Numeric.array([0.0,0.0,0.0,0.0,0.0], "f")
+                if not hasattr(self, "scfenergies"):
                     self.logger.info("Creating attribute scfenergies[]")
                     self.scfenergies = []
                 equals = inputfile.next()
                 blank = inputfile.next()
                 line = inputfile.next()
                 temp = inputfile.next().strip().split()
-                self.scfenergies.append(utils.convertor(float(temp[-1]),"hartree","eV"))
+                self.scfenergies.append(utils.convertor(float(temp[-1]), "hartree", "eV"))
                 for i in range(6):
                     line = inputfile.next()
                 values = []
@@ -258,130 +258,130 @@ class ADF(logfileparser.Logfile):
                     values.append(float(temp[-4]))
                 self.geovalues.append(values)
  
-            if line[1:27]=='General Accuracy Parameter':
+            if line[1:27] == 'General Accuracy Parameter':
                 # Need to know the accuracy of the integration grid to
                 # calculate the scftarget...note that it changes with time
                 accint = float(line.split()[-1])
             
-            if line[1:37]=='Orbital Energies, per Irrep and Spin' and not hasattr(self,"mosyms") and nosymflag and not unrestrictedflag:
+            if line[1:37] == 'Orbital Energies, per Irrep and Spin' and not hasattr(self, "mosyms") and nosymflag and not unrestrictedflag:
 #Extracting orbital symmetries and energies, homos for nosym case
 #Should only be for restricted case because there is a better text block for unrestricted and nosym
                 
-                underline=inputfile.next()
-                header=inputfile.next()
-                underline=inputfile.next()
-                label=inputfile.next()
-                line=inputfile.next()
+                underline = inputfile.next()
+                header = inputfile.next()
+                underline = inputfile.next()
+                label = inputfile.next()
+                line = inputfile.next()
 
-                info=line.split()
-                if not info[0]=='1':
-                    self.logger.error("MO info up to #%s is missing"%(info[0]))
+                info = line.split()
+                if not info[0] == '1':
+                    self.logger.error("MO info up to #%s is missing" % info[0])
                 
                 else:
                     self.logger.info("Creating attribute mosyms[[]]")
-                    self.mosyms=[[]]
+                    self.mosyms = [[]]
 
                     self.logger.info("Creating attribute moenergies[[]]")
-                    self.moenergies=[[]]
+                    self.moenergies = [[]]
                 
-                    homoA=None
+                    homoA = None
 
-                    while len(line)>3:
-                        info=line.split()
+                    while len(line) > 3:
+                        info = line.split()
                         self.mosyms[0].append('A')
-                        self.moenergies[0].append(utils.convertor(float(info[2]),'hartree','eV'))
-                        if info[1]=='0.000' and not hasattr(self,'homos'):
+                        self.moenergies[0].append(utils.convertor(float(info[2]), 'hartree', 'eV'))
+                        if info[1] == '0.000' and not hasattr(self, 'homos'):
                             self.logger.info("Creating attribute homos[]")
-                            self.homos=[len(self.moenergies[0])-2]
-                        line=inputfile.next()
+                            self.homos = [len(self.moenergies[0]) - 2]
+                        line = inputfile.next()
 
-                    temp=Numeric.array(self.moenergies,"f")
-                    self.moenergies=temp
-                    self.homos=Numeric.array(self.homos,"i")
+                    temp = Numeric.array(self.moenergies, "f")
+                    self.moenergies = temp
+                    self.homos = Numeric.array(self.homos, "i")
 
-            if line[1:29]=='Orbital Energies, both Spins' and not hasattr(self,"mosyms") and nosymflag and unrestrictedflag:
+            if line[1:29] == 'Orbital Energies, both Spins' and not hasattr(self, "mosyms") and nosymflag and unrestrictedflag:
 #Extracting orbital symmetries and energies, homos for nosym case
 #should only be here if unrestricted and nosym
 
                 self.logger.info("Creating attribute mosymms[[]]")
-                self.mosyms=[[],[]]
+                self.mosyms = [[], []]
 
                 self.logger.info("Creating attribute moenergies[[]]")
-                self.moenergies=[[],[]]
+                self.moenergies = [[], []]
 
-                underline=inputfile.next()
-                blank=inputfile.next()
-                header=inputfile.next()
-                underline=inputfile.next()
-                line=inputfile.next()
+                underline = inputfile.next()
+                blank = inputfile.next()
+                header = inputfile.next()
+                underline = inputfile.next()
+                line = inputfile.next()
 
-                homoa=None
-                homob=None
+                homoa = None
+                homob = None
 
-                while len(line)>5:
-                    info=line.split()
-                    if info[2]=='A': 
+                while len(line) > 5:
+                    info = line.split()
+                    if info[2] == 'A': 
                         self.mosyms[0].append('A')
-                        self.moenergies[0].append(utils.convertor(float(info[4]),'hartree','eV'))
-                        if info[3]=='0.00' and not homoa:
-                            homoa=len(self.moenergies[0])-2
-                    elif info[2]=='B':
+                        self.moenergies[0].append(utils.convertor(float(info[4]), 'hartree', 'eV'))
+                        if info[3] == '0.00' and not homoa:
+                            homoa = len(self.moenergies[0]) - 2
+                    elif info[2] == 'B':
                         self.mosyms[1].append('A')
-                        self.moenergies[1].append(utils.convertor(float(info[4]),'hartree','eV'))
-                        if info[3]=='0.00' and not homob:
-                            homob=len(self.moenergies[0])-2
+                        self.moenergies[1].append(utils.convertor(float(info[4]), 'hartree', 'eV'))
+                        if info[3] == '0.00' and not homob:
+                            homob = len(self.moenergies[0]) - 2
                     else:
-                        print "Error reading line: %s"%line
+                        print "Error reading line: %s" % line
 
-                    line=inputfile.next()
+                    line = inputfile.next()
 
-                temp=Numeric.array(self.moenergies,"f")
-                self.moenergies=temp
+                temp = Numeric.array(self.moenergies, "f")
+                self.moenergies = temp
                 self.logger.info("Creating attribute homos[]")
-                self.homos=Numeric.array([homoa,homob],"i")
+                self.homos = Numeric.array([homoa, homob], "i")
 
 
-            if line[1:29]=='Orbital Energies, all Irreps' and not hasattr(self,"mosyms"):
+            if line[1:29] == 'Orbital Energies, all Irreps' and not hasattr(self, "mosyms"):
 #Extracting orbital symmetries and energies, homos
               self.logger.info("Creating attribute mosyms[[]]")
-              self.mosyms=[[]]
+              self.mosyms = [[]]
               
               self.logger.info("Creating attribute moenergies[[]]")
-              self.moenergies=[[]]
+              self.moenergies = [[]]
               
-              underline=inputfile.next()
-              blank=inputfile.next()
-              header=inputfile.next()
-              underline2=inputfile.next()
+              underline = inputfile.next()
+              blank = inputfile.next()
+              header = inputfile.next()
+              underline2 = inputfile.next()
               line=inputfile.next()
               
-              homoa=None
-              homob=None
+              homoa = None
+              homob = None
 
-              while len(line)==77:
-                info=line.split()
-                if len(info)==5: #this is restricted
+              while len(line) == 77:
+                info = line.split()
+                if len(info) == 5: #this is restricted
                   self.mosyms[0].append(self.normalisesym(info[0]))
-                  self.moenergies[0].append(utils.convertor(float(info[3]),'hartree','eV'))
-                  if info[2]=='0.00' and not hasattr(self,'homos'):
+                  self.moenergies[0].append(utils.convertor(float(info[3]), 'hartree', 'eV'))
+                  if info[2] == '0.00' and not hasattr(self, 'homos'):
                       self.logger.info("Creating attribute homos[]")
-                      self.homos=[len(self.moenergies[0])-2]
-                  line=inputfile.next()
-                elif len(info)==6: #this is unrestricted
-                  if len(self.moenergies)<2: #if we don't have space, create it
+                      self.homos = [len(self.moenergies[0]) - 2]
+                  line = inputfile.next()
+                elif len(info) == 6: #this is unrestricted
+                  if len(self.moenergies) < 2: #if we don't have space, create it
                     self.moenergies.append([])
                     self.mosyms.append([])
-                  if info[2]=='A':
+                  if info[2] == 'A':
                     self.mosyms[0].append(self.normalisesym(info[0]))
-                    self.moenergies[0].append(utils.convertor(float(info[4]),'hartree','eV'))
-                    if info[3]=='0.00' and homoa==None:
-                      homoa=len(self.moenergies[0])-2
+                    self.moenergies[0].append(utils.convertor(float(info[4]), 'hartree', 'eV'))
+                    if info[3] == '0.00' and homoa == None:
+                      homoa = len(self.moenergies[0]) - 2
                       
-                  if info[2]=='B':
+                  if info[2] == 'B':
                     self.mosyms[1].append(self.normalisesym(info[0]))
-                    self.moenergies[1].append(utils.convertor(float(info[4]),'hartree','eV'))
-                    if info[3]=='0.00' and homob==None:
-                      homob=len(self.moenergies[1])-2
+                    self.moenergies[1].append(utils.convertor(float(info[4]), 'hartree', 'eV'))
+                    if info[3] == '0.00' and homob == None:
+                      homob = len(self.moenergies[1]) - 2
                       
                   line=inputfile.next()
                   
