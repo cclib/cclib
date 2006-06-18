@@ -17,7 +17,10 @@ Copyright (C) 2006 Noel O'Boyle and Adam Tenderholt
 
 Contributions (monetary as well as code :-) are encouraged.
 """
-import re,time
+
+__revision__ = "$Revision$"
+
+import re
 import Numeric
 import random # For sometimes running the progress updater
 import utils
@@ -26,10 +29,10 @@ import logfileparser
 class Jaguar(logfileparser.Logfile):
     """A Jaguar output file"""
 
-    def __init__(self,*args):
+    def __init__(self, *args):
 
         # Call the __init__ method of the superclass
-        super(Jaguar, self).__init__(logname="Jaguar",*args)
+        super(Jaguar, self).__init__(logname="Jaguar", *args)
         
     def __str__(self):
         """Return a string representation of the object."""
@@ -39,37 +42,37 @@ class Jaguar(logfileparser.Logfile):
         """Return a representation of the object."""
         return 'Jaguar("%s")' % (self.filename)
 
-    def parse(self,fupdate=0.05,cupdate=0.002):
+    def parse(self, fupdate=0.05, cupdate=0.002):
         """Extract information from the logfile."""
-        inputfile = open(self.filename,"r")
+        inputfile = open(self.filename, "r")
         
         if self.progress:
             
-            inputfile.seek(0,2) #go to end of file
-            nstep=inputfile.tell()
+            inputfile.seek(0, 2) #go to end of file
+            nstep = inputfile.tell()
             inputfile.seek(0)
             self.progress.initialize(nstep)
-            oldstep=0
+            oldstep = 0
 
         geoopt = False # Is this a GeoOpt? Needed for SCF targets/values.
             
         for line in inputfile:
             
-            if self.progress and random.random()<cupdate:
+            if self.progress and random.random() < cupdate:
                 
                 step = inputfile.tell()
-                if step!=oldstep:
-                    self.progress.update(step,"Unsupported Information")
+                if step != oldstep:
+                    self.progress.update(step, "Unsupported Information")
                     oldstep = step
 
-            if line[0:4]=="etot":
+            if line[0:4] == "etot":
 # Get SCF convergence information
-                if not hasattr(self,"scfvalues"):
+                if not hasattr(self, "scfvalues"):
                     self.scfvalues = []
                     self.logger.info("Creating attribute: scfvalues,scftargets")
-                    self.scftargets = [[5E-5,5E-6]]
+                    self.scftargets = [[5E-5, 5E-6]]
                 values = []
-                while line[0:4]=="etot":
+                while line[0:4] == "etot":
                     if line[39:47].strip():
                         denergy = float(line[39:47])
                     else:
@@ -78,23 +81,23 @@ class Jaguar(logfileparser.Logfile):
                     ddensity = float(line[48:56])
                     maxdiiserr = float(line[57:65])
                     if not geoopt:
-                        values.append([denergy,ddensity])
+                        values.append([denergy, ddensity])
                     else:
                         values.append([ddensity])
                     line = inputfile.next()
                 self.scfvalues.append(values)
 
-            if line[1:5]=="SCFE":
+            if line[1:5] == "SCFE":
 # Get the energy of the molecule
-                if not hasattr(self,"scfenergies"):
+                if not hasattr(self, "scfenergies"):
                     self.logger.info("Creating attribute scfenergies")
                     self.scfenergies = []
                 temp = line.strip().split()
-                self.scfenergies.append(utils.convertor(float(temp[temp.index("hartrees")-1]),"hartree","eV"))
+                self.scfenergies.append(utils.convertor(float(temp[temp.index("hartrees") - 1]), "hartree", "eV"))
 
-            if line[2:14]=="new geometry" or line[1:21]=="Symmetrized geometry":
+            if line[2:14] == "new geometry" or line[1:21] == "Symmetrized geometry":
 # Get the atom coordinates
-                if not hasattr(self,"atomcoords"):
+                if not hasattr(self, "atomcoords"):
                     self.logger.info("Creating attributes: atomcoords, atomnos, natom")
                     self.atomcoords = []
                 p = re.compile("(\D+)\d+") # One/more letters followed by a number
@@ -107,36 +110,36 @@ class Jaguar(logfileparser.Logfile):
                     temp = line.split()
                     element = p.findall(temp[0])[0]
                     atomnos.append(self.table.number[element])
-                    atomcoords.append(map(float,temp[1:]))
+                    atomcoords.append(map(float, temp[1:]))
                     line = inputfile.next()
                 self.atomcoords.append(atomcoords)
-                self.atomnos = Numeric.array(atomnos,"i")
+                self.atomnos = Numeric.array(atomnos, "i")
                 self.natom = len(atomcoords)
 
-            if line[2:24]=="start of program geopt":
+            if line[2:24] == "start of program geopt":
                 if not geoopt:
                     # Need to keep only the RMS density change info
                     # if this is a geoopt
                     self.scftargets = [[self.scftargets[0][0]]]
-                    if hasattr(self,"scfvalues"):
+                    if hasattr(self, "scfvalues"):
                         self.scfvalues[0] = [[x[0]] for x in self.scfvalues[0]]
                     geoopt = True
                 else:
                     self.scftargets.append([5E-5])
 
-            if line[2:28]=="geometry optimization step":
+            if line[2:28] == "geometry optimization step":
 # Get Geometry Opt convergence information
-                if not hasattr(self,"geovalues"):
+                if not hasattr(self, "geovalues"):
                     self.geovalues = []
-                    geotargets = Numeric.zeros(4,"f")
+                    geotargets = Numeric.zeros(4, "f")
                     i = 0
                     self.logger.info("Creating attributs: geovalues,geotargets")
                 blank = inputfile.next()
                 blank = inputfile.next()
                 line = inputfile.next()
                 values = []
-                while line!=blank:
-                    if line[41]=="(":
+                while line != blank:
+                    if line[41] == "(":
                         # A new geo convergence value
                         values.append(float(line[26:37]))
                         if not hasattr(self,"geotargets"):
@@ -144,10 +147,10 @@ class Jaguar(logfileparser.Logfile):
                             i += 1
                     line = inputfile.next()
                 self.geovalues.append(values)
-                if not hasattr(self,"geotargets"):
+                if not hasattr(self, "geotargets"):
                     self.geotargets = geotargets
 
-            if line[2:33]=="Orbital energies/symmetry label":
+            if line[2:33] == "Orbital energies/symmetry label":
 # Get MO Energies and symmetrys
                 if not hasattr(self,"moenergies"):
                     self.logger.info("Creating attributes: moenergies, mosyms")
@@ -156,64 +159,65 @@ class Jaguar(logfileparser.Logfile):
                 line = inputfile.next()
                 while line.strip():
                     temp = line.strip().split()
-                    for i in range(0,len(temp),2):
-                        self.moenergies[0].append(utils.convertor(float(temp[i]),"hartree","eV"))
+                    for i in range(0, len(temp), 2):
+                        self.moenergies[0].append(utils.convertor(float(temp[i]), "hartree", "eV"))
                         self.mosyms[0].append(temp[i+1])
                     line = inputfile.next()
-                self.moenergies = Numeric.array(self.moenergies,"f")
+                self.moenergies = Numeric.array(self.moenergies, "f")
 
-            if line[1:28]=="number of occupied orbitals":
-                if not hasattr(self,"homos"):
+            if line[1:28] == "number of occupied orbitals":
+                if not hasattr(self, "homos"):
                     self.logger.info("Creating attribute: homos")
-                self.homos = Numeric.array([float(line.strip().split()[-1])-1],"i")
+                self.homos = Numeric.array([float(line.strip().split()[-1])-1], "i")
 
-            if line[2:27]=="number of basis functions":
-                if not hasattr(self,"nbasis"):
+            if line[2:27] == "number of basis functions":
+                if not hasattr(self, "nbasis"):
                     self.logger.info("Creating attribute: nbasis")
                 self.nbasis = float(line.strip().split()[-1])
 
-            if line[2:23]=="start of program freq":
+            if line[2:23] == "start of program freq":
 # IR stuff
                 self.logger.info("Creating attribute: vibfreqs")
                 self.vibfreqs = []
                 blank = inputfile.next()
-                line = inputfile.next(); line = inputfile.next()
+                line = inputfile.next()
+                line = inputfile.next()
                 blank = inputfile.next()
                 
                 freqs = inputfile.next()
-                while freqs!=blank:
+                while freqs != blank:
                     temp = freqs.strip().split()
-                    self.vibfreqs.extend(map(float,temp[1:]))
+                    self.vibfreqs.extend(map(float, temp[1:]))
                     temp = inputfile.next().strip().split()
-                    if temp[0]=="symmetries": # May go straight from frequencies to reduced mass
-                        if not hasattr(self,"vibsyms"):
+                    if temp[0] == "symmetries": # May go straight from frequencies to reduced mass
+                        if not hasattr(self, "vibsyms"):
                             self.logger.info("Creating attributes: vibsyms, vibirs")
                             self.vibsyms = []
                             self.vibirs = []
-                        self.vibsyms.extend(map(self.normalisesym,temp[1:]))
+                        self.vibsyms.extend(map(self.normalisesym, temp[1:]))
                         temp = inputfile.next().strip().split()                                
-                        self.vibirs.extend(map(float,temp[1:]))
+                        self.vibirs.extend(map(float, temp[1:]))
                         reducedmass = inputfile.next()
                     line = inputfile.next()
-                    while line!=blank: # Read the cartesian displacements
+                    while line != blank: # Read the cartesian displacements
                         line = inputfile.next()
                     freqs = inputfile.next()
                 self.vibfreqs = Numeric.array(self.vibfreqs)
-                if hasattr(self,"vibirs"):
+                if hasattr(self, "vibirs"):
                     self.vibirs = Numeric.array(self.vibirs)
 
         inputfile.close()
 
-        if hasattr(self,"scfvalues"):
-            self.scfvalues = [Numeric.array(x,"f") for x in self.scfvalues]
-        if hasattr(self,"scftargets"):
-            self.scftargets = Numeric.array(self.scftargets,"f")
-        if hasattr(self,"scfenergies"):
-            self.scfenergies = Numeric.array(self.scfenergies,"f")
-        if hasattr(self,"atomcoords"):
-            self.atomcoords = Numeric.array(self.atomcoords,"f")
+        if hasattr(self, "scfvalues"):
+            self.scfvalues = [Numeric.array(x, "f") for x in self.scfvalues]
+        if hasattr(self, "scftargets"):
+            self.scftargets = Numeric.array(self.scftargets, "f")
+        if hasattr(self, "scfenergies"):
+            self.scfenergies = Numeric.array(self.scfenergies, "f")
+        if hasattr(self, "atomcoords"):
+            self.atomcoords = Numeric.array(self.atomcoords, "f")
         self.parsed = True
         
-if __name__=="__main__":
-    import doctest,jaguarparser
-    doctest.testmod(jaguarparser,verbose=False)
+if __name__ == "__main__":
+    import doctest, jaguarparser
+    doctest.testmod(jaguarparser, verbose=False)
