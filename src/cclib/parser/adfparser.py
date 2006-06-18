@@ -17,7 +17,6 @@ Copyright (C) 2006 Noel O'Boyle and Adam Tenderholt
 
 Contributions (monetary as well as code :-) are encouraged.
 """
-import re,time
 import Numeric
 import random # For sometimes running the progress updater
 import utils
@@ -25,12 +24,12 @@ import logfileparser
 
 class ADF(logfileparser.Logfile):
     """An ADF log file"""
-    SCFCNV,SCFCNV2 = range(2) #used to index self.scftargets[]
-    maxelem,norm = range(2) # used to index scf.values
-    def __init__(self,*args):
+    SCFCNV, SCFCNV2 = range(2) #used to index self.scftargets[]
+    maxelem, norm = range(2) # used to index scf.values
+    def __init__(self, *args):
 
         # Call the __init__ method of the superclass
-        super(ADF, self).__init__(logname="ADF",*args)
+        super(ADF, self).__init__(logname="ADF", *args)
         
     def __str__(self):
         """Return a string representation of the object."""
@@ -40,7 +39,7 @@ class ADF(logfileparser.Logfile):
         """Return a representation of the object."""
         return 'ADF("%s")' % (self.filename)
 
-    def normalisesym(self,label):
+    def normalisesym(self, label):
         """Use standard symmetry labels instead of ADF labels.
 
         To normalise:
@@ -106,15 +105,15 @@ class ADF(logfileparser.Logfile):
                 while line:
                 
                     if self.progress and random.random() < fupdate:
-                      step = inputfile.tell()
-                      #if step!=oldstep:
-                      self.progress.update(step, "Unsupported Information")
-                      oldstep = step
+                        step = inputfile.tell()
+                        #if step!=oldstep:
+                        self.progress.update(step, "Unsupported Information")
+                        oldstep = step
                   
                     if line.find("INPUT FILE") >= 0:
-                      line2 = inputfile.next()
+                        line2 = inputfile.next()
                     if line2.find("Create") < 0:
-                      break
+                        break
                             
                     line = inputfile.next()
             
@@ -165,7 +164,8 @@ class ADF(logfileparser.Logfile):
                     self.scftargets = []
 
                 #underline, blank, nr
-                for i in range(3): inputfile.next()
+                for i in range(3):
+                    inputfile.next()
 
                 line = inputfile.next()
                 SCFconv = float(line.split()[-1])
@@ -240,7 +240,7 @@ class ADF(logfileparser.Logfile):
                 if not hasattr(self, "geotargets"):
                     self.logger.info("Creating attributes geotargets[], geovalues[[]]")
                     self.geovalues = []
-                    self.geotargets = Numeric.array([0.0,0.0,0.0,0.0,0.0], "f")
+                    self.geotargets = Numeric.array([0.0, 0.0, 0.0, 0.0, 0.0], "f")
                 if not hasattr(self, "scfenergies"):
                     self.logger.info("Creating attribute scfenergies[]")
                     self.scfenergies = []
@@ -353,7 +353,7 @@ class ADF(logfileparser.Logfile):
               blank = inputfile.next()
               header = inputfile.next()
               underline2 = inputfile.next()
-              line=inputfile.next()
+              line = inputfile.next()
               
               homoa = None
               homob = None
@@ -383,14 +383,14 @@ class ADF(logfileparser.Logfile):
                     if info[3] == '0.00' and homob == None:
                       homob = len(self.moenergies[1]) - 2
                       
-                  line=inputfile.next()
+                  line = inputfile.next()
                   
                 else: #different number of lines
-                  print "Error",info
+                  print "Error", info
 
-              if len(info)==6: #still unrestricted, despite being out of loop
+              if len(info) == 6: #still unrestricted, despite being out of loop
                 self.logger.info("Creating attribute homos[]")
-                self.homos=[homoa,homob]
+                self.homos = [homoa, homob]
 
 #                tempa=Numeric.array(self.moenergies[0],"f")
 #                tempb=Numeric.array(self.moenergies[1],"f")
@@ -398,23 +398,23 @@ class ADF(logfileparser.Logfile):
 #              elif len(info)==5:
 #                self.moenergies=[
 
-              temp=Numeric.array(self.moenergies,"f")
-              self.moenergies=temp
-              self.homos=Numeric.array(self.homos,"i")
+              temp = Numeric.array(self.moenergies, "f")
+              self.moenergies = temp
+              self.homos = Numeric.array(self.homos, "i")
 
-            if line[1:24]=="List of All Frequencies":
+            if line[1:24] == "List of All Frequencies":
 # Start of the IR/Raman frequency section
-                if self.progress and random.random()<fupdate:
-                    step=inputfile.tell()
-                    if step!=oldstep:
-                        self.progress.update(step,"Frequency Information")
-                        oldstep=step
+                if self.progress and random.random() < fupdate:
+                    step = inputfile.tell()
+                    if step != oldstep:
+                        self.progress.update(step, "Frequency Information")
+                        oldstep = step
                          
 #                 self.vibsyms = [] # Need to look into this a bit more
                 self.vibirs = []
                 self.vibfreqs = []
 #                 self.logger.info("Creating attribute vibsyms[]")
-                self.logger.info("Creating attribute vibfreqs[],vibirs[]")
+                self.logger.info("Creating attribute vibfreqs[], vibirs[]")
                 for i in range(8):
                     line = inputfile.next()
                 line = inputfile.next().strip()
@@ -423,122 +423,129 @@ class ADF(logfileparser.Logfile):
                     self.vibfreqs.append(float(temp[0]))                    
                     self.vibirs.append(float(temp[2])) # or is it temp[1]?
                     line = inputfile.next().strip()
-                self.vibfreqs = Numeric.array(self.vibfreqs,"f")
-                self.vibirs = Numeric.array(self.vibirs,"f")
-                if hasattr(self,"vibramans"): self.vibramans = Numeric.array(self.vibramans,"f")
+                self.vibfreqs = Numeric.array(self.vibfreqs, "f")
+                self.vibirs = Numeric.array(self.vibirs, "f")
+                if hasattr(self, "vibramans"):
+                    self.vibramans = Numeric.array(self.vibramans, "f")
 
 
 #******************************************************************************************************************8
 #delete this after new implementation using smat, eigvec print,eprint?
             if line[1:49] == "Total nr. of (C)SFOs (summation over all irreps)":
 # Extract the number of basis sets
-              self.nbasis=int(line.split(":")[1].split()[0])
+              self.nbasis = int(line.split(":")[1].split()[0])
               self.logger.info("Creating attribute nbasis: %i" % self.nbasis)
                  
  # now that we're here, let's extract aonames
  
               self.logger.info("Creating attribute fonames[]")
-              self.fonames=[]
+              self.fonames = []
                  
-              blank=inputfile.next()
-              note=inputfile.next()
-              symoffset=0
-              blank=inputfile.next(); blank=inputfile.next(); blank=inputfile.next()
+              blank = inputfile.next()
+              note = inputfile.next()
+              symoffset = 0
+              blank = inputfile.next(); blank = inputfile.next(); blank = inputfile.next()
               
-              nosymreps=[]
-              while len(self.fonames)<self.nbasis:
+              nosymreps = []
+              while len(self.fonames) < self.nbasis:
                           
-                  sym=inputfile.next()
-                  line=inputfile.next()
-                  num=int(line.split(':')[1].split()[0])
+                  sym = inputfile.next()
+                  line = inputfile.next()
+                  num = int(line.split(':')[1].split()[0])
                   nosymreps.append(num)
                      
                   #read until line "--------..." is found
-                  while line.find('-----')<0:
-                      line=inputfile.next()
+                  while line.find('-----') < 0:
+                      line = inputfile.next()
                      
                   #for i in range(num):
-                  while len(self.fonames)<symoffset+num:
-                    line=inputfile.next()
-                    info=line.split()
+                  while len(self.fonames) < symoffset + num:
+                    line = inputfile.next()
+                    info = line.split()
                       
                     #index0 index1 occ2 energy3/4 fragname5 coeff6 orbnum7 orbname8 fragname9
-                    orbname=info[8]
-                    orbital=info[7]+orbname.replace(":","")
+                    orbname = info[8]
+                    orbital = info[7] + orbname.replace(":", "")
                       
-                    fragname=info[5]
-                    frag=fragname+info[9]
+                    fragname = info[5]
+                    frag = fragname + info[9]
                       
-                    coeff=float(info[6])
-                    if coeff**2<1.0: #is this a linear combination?
-                      line=inputfile.next()
-                      info=line.split()
+                    coeff = float(info[6])
+                    if coeff**2 < 1.0: #is this a linear combination?
+                      line = inputfile.next()
+                      info = line.split()
                         
-                      if line[42]==' ': #no new fragment type
-                        frag+="+"+fragname+info[6]
-                        coeff=float(info[3])
-                        if coeff<0: orbital+='-'+info[4]+info[5].replace(":","")
-                        else: orbital+='+'+info[4]+info[5].replace(":","")
+                      if line[42] == ' ': #no new fragment type
+                        frag += "+" + fragname + info[6]
+                        coeff = float(info[3])
+                        if coeff < 0:
+                            orbital += '-' + info[4] + info[5].replace(":", "")
+                        else:
+                            orbital += '+' + info[4] + info[5].replace(":", "")
                       else:
-                        frag+="+"+info[3]+info[7]
-                        coeff=float(info[4])
-                        if coeff<0: orbital+='-'+info[5]+info[6].replace(":","")
-                        else: orbital+="+"+info[5]+info[6].replace(":","")
+                        frag += "+" + info[3] + info[7]
+                        coeff = float(info[4])
+                        if coeff < 0:
+                            orbital += '-' + info[5] + info[6].replace(":", "")
+                        else:
+                            orbital += "+" + info[5] + info[6].replace(":", "")
                     
                     else:
                       inputfile.next()
-                    self.fonames.append("%s_%s"%(frag,orbital))
-                  symoffset+=num
+                    self.fonames.append("%s_%s" % (frag, orbital))
+                  symoffset += num
                   
                   #nextline blankline blankline
                   inputfile.next(); inputfile.next(); inputfile.next()
                   
                   
-            if line[1:32]=="S F O   P O P U L A T I O N S ,":
+            if line[1:32] == "S F O   P O P U L A T I O N S ,":
 #Extract overlap matrix
 
-              self.logger.info("Creating attribute fooverlaps[x,y]")
-              self.fooverlaps = Numeric.zeros((self.nbasis,self.nbasis),"float")
+              self.logger.info("Creating attribute fooverlaps[x, y]")
+              self.fooverlaps = Numeric.zeros((self.nbasis, self.nbasis), "float")
               
-              symoffset=0
+              symoffset = 0
               
               for nosymrep in nosymreps:
                           
-                line=inputfile.next()
-                while line.find('===')<10: #look for the symmetry labels
-                  line=inputfile.next()
+                line = inputfile.next()
+                while line.find('===') < 10: #look for the symmetry labels
+                  line = inputfile.next()
                 #blank blank text blank col row
-                for i in range(6): inputfile.next()
+                for i in range(6):
+                    inputfile.next()
                 
-                base=0
+                base = 0
                 
-                while base<nosymrep: #have we read all the columns?
+                while base < nosymrep: #have we read all the columns?
                       
-                  for i in range(nosymrep-base):
+                  for i in range(nosymrep - base):
                   
                     if self.progress:
-                      step=inputfile.tell()
-                      if step!=oldstep and random.random() < fupdate:
-                        self.progress.update(step,"Overlap")
-                        oldstep=step
+                      step = inputfile.tell()
+                      if step != oldstep and random.random() < fupdate:
+                        self.progress.update(step, "Overlap")
+                        oldstep = step
                     
-                    line=inputfile.next()
-                    parts=line.split()[1:]
+                    line = inputfile.next()
+                    parts = line.split()[1:]
                     
                     for j in range(len(parts)):
-                      k=float(parts[j])
-                      self.fooverlaps[base+symoffset+j, base+symoffset+i] = k
-                      self.fooverlaps[base+symoffset+i, base+symoffset+j] = k
+                      k = float(parts[j])
+                      self.fooverlaps[base + symoffset + j, base + symoffset +i] = k
+                      self.fooverlaps[base + symoffset + i, base + symoffset + j] = k
                     
                   #blank, blank, column
-                  for i in range(3): inputfile.next()
+                  for i in range(3):
+                      inputfile.next()
                   
-                  base+=4
+                  base += 4
                                   
-                symoffset+=nosymrep
-                base=0
+                symoffset += nosymrep
+                base = 0
                     
-            if line[48:67]=="SFO MO coefficients":
+            if line[48:67] == "SFO MO coefficients":
 #extract MO coefficients              
               #read stars and three blank lines
               inputfile.next()
@@ -548,115 +555,93 @@ class ADF(logfileparser.Logfile):
 
               self.logger.info("Creating attribute mocoeffs: array[]")
               
-              line=inputfile.next()
+              line = inputfile.next()
               
-              if line.find("***** SPIN 1 *****")>0:
+              if line.find("***** SPIN 1 *****") > 0:
                 beta = 1
-                self.mocoeffs = Numeric.zeros((2,self.nbasis,self.nbasis),"float")
+                self.mocoeffs = Numeric.zeros((2, self.nbasis, self.nbasis), "float")
                 
                 #get rid of two blank lines and symmetry label
                 inputfile.next()
                 inputfile.next()
-                sym=inputfile.next()
+                sym = inputfile.next()
                 #print sym
                 
               else:
                 beta = 0
-                self.mocoeffs = Numeric.zeros((1,self.nbasis,self.nbasis),"float")
+                self.mocoeffs = Numeric.zeros((1, self.nbasis, self.nbasis), "float")
                 
               #get rid of 12 lines of text
               for i in range(10):
                 inputfile.next()
               
-              for spin in range(beta+1):
-                symoffset=0
-                base=0
+              for spin in range(beta + 1):
+                symoffset = 0
+                base = 0
                 
-                if spin==1:
+                if spin == 1:
                   #read spin, blank, blank, symlabel, blank, text, underline, blank
                   for i in range(8):
-                    line=inputfile.next()
+                    line = inputfile.next()
                         
-                while symoffset+base<self.nbasis:
+                while symoffset + base < self.nbasis:
             
-                  line=inputfile.next()
-                  if len(line)<3:
-                    symoffset+=base
-                    base=0
+                  line = inputfile.next()
+                  if len(line) < 3:
+                    symoffset += base
+                    base = 0
                     #print symoffset
                     
-                  monumbers=line.split()
+                  monumbers = line.split()
                   #print monumbers
                   #get rid of unneeded lines
-                  line=inputfile.next()
-                  info=line.split()
-                  if len(info)>1: #ie was previous line info about occupation numbers?
+                  line = inputfile.next()
+                  info = line.split()
+                  if len(info) > 1: #ie was previous line info about occupation numbers?
                     inputfile.next()
                   
-                  row=0
-                  line=inputfile.next()
-                  while len(line)>5:
+                  row = 0
+                  line = inputfile.next()
+                  while len(line) > 5:
                      
                     if self.progress:
-                      step=inputfile.tell()
-                      if step!=oldstep and random.random() < fupdate:
-                        self.progress.update(step,"Coefficients")
-                        oldstep=step
+                      step = inputfile.tell()
+                      if step != oldstep and random.random() < fupdate:
+                        self.progress.update(step, "Coefficients")
+                        oldstep = step
 
-                    cols=line.split()
+                    cols = line.split()
                     for i in range(len(cols[1:])):
                       #self.mocoeffs[spin,row+symoffset,i+symoffset+base]=float(cols[i+1])
-                      self.mocoeffs[spin,i+symoffset+base,row+symoffset]=float(cols[i+1])
+                      self.mocoeffs[spin, i + symoffset + base, row + symoffset] = float(cols[i + 1])
                   
-                    line=inputfile.next()
-                    row+=1
+                    line = inputfile.next()
+                    row += 1
                   
-                  base+=len(cols[1:])
+                  base += len(cols[1:])
                   
                   
         inputfile.close()
 
         if self.progress:
-            self.progress.update(nstep,"Done")
+            self.progress.update(nstep, "Done")
 
-        if hasattr(self,"geovalues"): self.geovalues = Numeric.array(self.geovalues,"f")
-        if hasattr(self,"scfenergies"): self.scfenergies = Numeric.array(self.scfenergies,"f")
-        if hasattr(self,"scfvalues"): self.scfvalues = [Numeric.array(x,"f") for x in self.scfvalues]
-        if hasattr(self,"scftargets"): self.scftargets = Numeric.array(self.scftargets,"f")
-        if hasattr(self,"moenergies"): self.nmo = len(self.moenergies[0])
-        if hasattr(self,"atomcoords"): self.atomcoords = Numeric.array(self.atomcoords,"f")
+        if hasattr(self,"geovalues"):
+            self.geovalues = Numeric.array(self.geovalues, "f")
+        if hasattr(self,"scfenergies"):
+            self.scfenergies = Numeric.array(self.scfenergies, "f")
+        if hasattr(self,"scfvalues"):
+            self.scfvalues = [Numeric.array(x, "f") for x in self.scfvalues]
+        if hasattr(self,"scftargets"):
+            self.scftargets = Numeric.array(self.scftargets, "f")
+        if hasattr(self,"moenergies"):
+            self.nmo = len(self.moenergies[0])
+        if hasattr(self,"atomcoords"):
+            self.atomcoords = Numeric.array(self.atomcoords, "f")
 
         self.parsed = True
 
-
         
-
-# Note to self: Needs to be added to the main parser
-    def extractTrajectory(self):
-        """Extract trajectory information from a Gaussian logfile."""
-        inputfile = open(self.filename,"r")
-        self.traj = []
-        self.trajSummary = []
-        for line in inputfile:
-            if line.find(" Cartesian coordinates:")==0:
-                coords = []
-                for i in range(self.natom):
-                    line = inputfile.next()
-                    parts = line.strip().split()
-                    # Conversion from a.u. to Angstrom
-                    coords.append([ self.float(x)*0.5292 for x in [parts[3],parts[5],parts[7]] ])
-                self.traj.append(coords)
-            if line==" Trajectory summary\n":
-                # self.trajSummaryHeader = inputfile.next().strip().split()
-                header = inputfile.next()
-                line = inputfile.next()
-                while line.find("Max Error")==-1:
-                    parts = line.strip().split("  ")
-                    self.trajSummary.append(parts)
-                    line = inputfile.next()
-        inputfile.close()
-        assert len(self.traj)==len(self.trajSummary)
-        
-if __name__=="__main__":
-    import doctest,adfparser
-    doctest.testmod(adfparser,verbose=False)
+if __name__ == "__main__":
+    import doctest, adfparser
+    doctest.testmod(adfparser, verbose=False)
