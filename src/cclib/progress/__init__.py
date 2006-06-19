@@ -1,3 +1,5 @@
+__revision__ = "$Revision$"
+
 from textprogress import TextProgress
 try:
     import qt
