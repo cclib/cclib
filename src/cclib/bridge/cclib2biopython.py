@@ -5,7 +5,7 @@ from cclib.parser.utils import PeriodicTable
 
 def makebiopython(atomcoords, atomnos):
     """Create a list of BioPython Atoms.
-    
+
     This creates a list of BioPython Atoms suitable for use
     by Bio.PDB.Superimposer, for example.
 
@@ -24,8 +24,7 @@ def makebiopython(atomcoords, atomnos):
     for coords, atomno in zip(atomcoords, atomnos):
         bioatoms.append(Atom(pt.element[atomno], coords, 0, 0, 0, 0, 0))
     return bioatoms
-    
+
 if __name__ == "__main__":
     import doctest, biopython
     doctest.testmod(biopython)
-

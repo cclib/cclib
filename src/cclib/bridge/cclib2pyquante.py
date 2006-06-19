@@ -18,9 +18,7 @@ def makepyquante(atomcoords, atomnos):
 # from cclib...things to do
 
     return Molecule("notitle", zip(atomnos, atomcoords), units = "Angstrom")
-    
+
 if __name__ == "__main__":
     import doctest, cclib2pyquante
     doctest.testmod(cclib2pyquante)
-    
-

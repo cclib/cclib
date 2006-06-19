@@ -86,7 +86,7 @@ class GAMESS(logfileparser.Logfile):
             aoname = "%s%s_%s" % (g[1].capitalize(), g[2], g[3])
             oldatom = g[2]
             ans.append(aoname)
-	    
+            
         return ans
     
     def parse(self):

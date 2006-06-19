@@ -24,8 +24,7 @@ def makeopenbabel(atomcoords, atomnos):
     obmol.ConnectTheDots()
     obmol.PerceiveBondOrders()
     return pob.Molecule(obmol)
-    
+
 if __name__ == "__main__":
     import doctest, cclib2openbabel
     doctest.testmod(cclib2openbabel)
-
