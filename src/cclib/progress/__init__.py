@@ -1,9 +1,7 @@
 __revision__ = "$Revision$"
 
 from textprogress import TextProgress
-try:
-    import qt
-except ImportError:
-    pass # import QtProgress will cause an error
-else:
+import sys
+
+if 'qt' in sys.modules.keys():
     from qtprogress import QtProgress
