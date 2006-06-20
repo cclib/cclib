@@ -17,8 +17,10 @@ Copyright (C) 2006 Noel O'Boyle and Adam Tenderholt
 
 Contributions (monetary as well as code :-) are encouraged.
 """
+
+__revision__ = "$Revision"
+
 import logging, sys
-import Numeric
 
 class Method(object):
     """Abstract class for logfile objects.
@@ -28,8 +30,8 @@ class Method(object):
     
     Attributes:
     """
-    def __init__(self,parser,progress=None,
-                 loglevel=logging.INFO,logname="Log"):
+    def __init__(self, parser, progress=None,
+                 loglevel=logging.INFO, logname="Log"):
         """Initialise the Logfile object.
 
         Typically called by subclasses in their own __init__ methods.
@@ -37,16 +39,17 @@ class Method(object):
         self.parser = parser
         self.progress = progress
         self.loglevel = loglevel
-        self.logname  = logname
+        self.logname = logname
 
         # Set up the logger
-        self.logger = logging.getLogger('%s %s' % (self.logname,self.parser))
+        self.logger = logging.getLogger('%s %s' % (self.logname, self.parser))
         self.logger.setLevel(self.loglevel)
         handler = logging.StreamHandler(sys.stdout)
-        handler.setFormatter(logging.Formatter("[%(name)s %(levelname)s] %(message)s"))
+        handler.setFormatter(logging.Formatter(
+                             "[%(name)s %(levelname)s] %(message)s"))
         self.logger.addHandler(handler)
 
 
-if __name__=="__main__":
-    import doctest,calculationmethod
-    doctest.testmod(calculationmethod,verbose=False)
+if __name__ == "__main__":
+    import doctest, calculationmethod
+    doctest.testmod(calculationmethod, verbose=False)
