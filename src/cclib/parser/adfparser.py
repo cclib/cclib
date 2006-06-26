@@ -229,7 +229,7 @@ class ADF(logfileparser.Logfile):
                 atomcoords = []
                 line = inputfile.next()
                 while line != hyphens:
-                    atomcoords.append(map(float, line.split()[5:]))
+                    atomcoords.append(map(float, line.split()[5:8]))
                     line = inputfile.next()
                 self.atomcoords.append(atomcoords)
                 if finalgeometry == GETLAST: # Don't get any more coordinates
