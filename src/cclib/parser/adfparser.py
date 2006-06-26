@@ -471,17 +471,29 @@ class ADF(logfileparser.Logfile):
                         frag = fragname + info[9]
                           
                         coeff = float(info[6])
-                        if coeff**2 < 1.0: #is this a linear combination?
+                        sum = coeff**2
+                        while sum < 1.0:
+                        #if coeff**2 <= 1.0: #is this a linear combination?
+                            
                             line = inputfile.next()
                             info = line.split()
                               
-                            if line[42] == ' ': #no new fragment type
+                            if line[42] == ' ' and len(info) > 4: #no new fragment/atom type and energy on line
                                 frag += "+" + fragname + info[6]
                                 coeff = float(info[3])
                                 if coeff < 0:
                                     orbital += '-' + info[4] + info[5].replace(":", "")
                                 else:
                                     orbital += '+' + info[4] + info[5].replace(":", "")
+
+                            elif line[42] == ' ': #no new fragment/atom type, but no energy on line
+                                frag += "+" + fragname + info[3]
+                                coeff = float(info[0])
+                                if coeff < 0:
+                                    orbital += '-' + info[1] + info[2].replace(":","")
+                                else:
+                                    orbital += '+' + info[1] + info[2].replace(":","")
+
                             else:
                                 frag += "+" + info[3] + info[7]
                                 coeff = float(info[4])
@@ -490,8 +502,11 @@ class ADF(logfileparser.Logfile):
                                 else:
                                     orbital += "+" + info[5] + info[6].replace(":", "")
                             
-                        else:
+                            sum += coeff**2
+                            
+                        if sum == coeff**2: #if we did not go into the while loop, read a new line
                             inputfile.next()
+
                         self.fonames.append("%s_%s" % (frag, orbital))
                     symoffset += num
                     
