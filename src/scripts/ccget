@@ -54,7 +54,7 @@ def main():
         elif os.path.isfile(arg):
             filenames.append(arg)
         else:
-            print "%s is neither a filename nor an attribute name."
+            print "%s is neither a filename nor an attribute name." % arg
             usage()
             sys.exit(1)
     
