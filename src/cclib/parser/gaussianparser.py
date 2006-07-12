@@ -100,7 +100,7 @@ class Gaussian(logfileparser.Logfile):
             if line[1:23] == "Optimization completed":
                 optfinished = True
             
-            if not optfinished and line[26:43] == "Input orientation":
+            if not optfinished and line[25:45] == "Standard orientation":
 # Extract the atomic numbers and coordinates of the atoms
                 if self.progress and random.random() < cupdate:
                     step = inputfile.tell()

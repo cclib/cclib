@@ -1,2 +1,2 @@
-tar cf logfiles.tar data/ADF/ADF2004.01 data/GAMESS/GAMESS-US data/GAMESS/PCGAMESS data/Gaussian/Gaussian98
+tar cf logfiles.tar data/ADF/ADF2004.01 data/GAMESS/GAMESS-US data/GAMESS/PCGAMESS data/Gaussian/Gaussian98 data/Gaussian/Gaussian03
 gzip logfiles.tar
