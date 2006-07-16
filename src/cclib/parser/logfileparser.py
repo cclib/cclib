@@ -1,22 +1,10 @@
 """
-cclib is a parser for computational chemistry log files.
-
-See http://cclib.sf.net for more information.
-
-Copyright (C) 2006 Noel O'Boyle and Adam Tenderholt
-
- This program is free software; you can redistribute and/or modify it
- under the terms of the GNU General Public License as published by the
- Free Software Foundation; either version 2, or (at your option) any later
- version.
-
- This program is distributed in the hope that it will be useful, but
- WITHOUT ANY WARRANTY, without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- General Public License for more details.
-
-Contributions (monetary as well as code :-) are encouraged.
+cclib (http://cclib.sf.net) is (c) 2006, the cclib development team
+and licensed under the LGPL (http://www.gnu.org/copyleft/lgpl.html).
 """
+
+__revision__ = "$Revision$"
+
 import logging, sys
 import Numeric
 import utils
