@@ -1,6 +1,8 @@
 """cclib -- parsers and algorithms for computational chemistry
 
-cclib is a Python library that provides parsers for computational chemistry log files. It also provides a platform to implement algorithms in a package-independent manner.
+cclib is a Python library that provides parsers for computational
+chemistry log files. It also provides a platform to implement
+algorithms in a package-independent manner.
 """
 
 from distutils.core import setup
@@ -10,7 +12,7 @@ classifiers = """\
 Development Status :: 4 - Beta
 Intended Audience :: Science/Research
 Intended Audience :: Developers
-License :: OSI Approved :: GNU General Public License (GPL)
+License :: OSI Approved :: GNU Library or Lesser General Public License (LGPL)
 Programming Language :: Python
 Topic :: Software Development :: Libraries :: Python Modules
 Operating System :: OS Independent
@@ -20,14 +22,14 @@ Topic :: Scientific/Engineering :: Chemistry
 doclines = __doc__.split("\n")
 
 setup(name="cclib",
-      version="0.5b",
-      author="Noel O'Boyle, Adam Tenderholt",
+      version="0.5",
+      author="cclib development team",
       author_email="cclib-users@lists.sourceforge.net",
       url="http://cclib.sf.net",
       description=doclines[0],
       long_description = "\n".join(doclines[2:]),      
       classifiers=filter(None, classifiers.split("\n")),
-      license="GPL",
+      license="LGPL",
       platforms=["Any."],
       scripts=["src/scripts/ccget"],
       package_dir = {'cclib':'src/cclib'},
