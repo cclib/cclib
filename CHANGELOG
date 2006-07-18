@@ -1,0 +1,43 @@
+Changes since cclib-0.5b:
+
+Features
+	* src/scripts/ccget: Added handling of multiple filenames.
+	  
+	  It's now possible to use ccget as follows:
+	  ccget *.log
+	  
+	  This is a good way of checking out whether cclib is able to
+	  parse all of the files in a given directory.
+	  
+	  Also possible is:
+	  ccget homos *.log
+
+	* Change of license: Changed license from GPL to LGPL
+
+Bugfixes
+	* src/cclib/parser/gamessparser.py: Bugfix: gamessparser was dying
+	  on GAMESS VERSION = 12 DEC 2003 gopts, as it was unable to parse
+	  the scftargets.
+	* src/cclib/parser/gamessparser.py: Remove assertion to catch
+	  instances where scftargets is unset. This occurs in the case of
+	  failed calculations (e.g. wrong multiplicity).
+	* src/cclib/parser/adfparser.py: Fixed one of the errors with the
+	  Mo5Obdt2-c2v-opt.adfout example, which had to do with the SFOs
+	  being made of more than two combinations of atoms (4, because of
+	  rotation in c2v point group).
+	  
+	  At least one error is still present with atomcoords. It looks
+	  like non-coordinate integers are being parsed as well, which
+	  makes some of the atomcoords list have more than the 3 values
+	  for x,y,z.
+	* src/cclib/parser/adfparser.py: Hopefully fixed the last error in
+	  Mo5Obdt2-c2v-opt. Problem was that it was adding
+	  line.split()[5:], but sometimes there was more than 3 fields
+	  left, so it was changed to [5:8]. Need to check actual parsed
+	  values to make sure it is parsed correctly.
+	* data/Gaussian, logfiledist, src/cclib/parser/gaussianparser.py,
+	  test/regression.py: Bug fix: Mo4OSibdt2-opt.log has no
+	  atomcoords despite being a geo-opt. This was due to the fact
+	  that the parser was extracting "Input orientation" and not
+	  "Standard orientation". It's now changed to "Standard
+	  orientation" which works for all of the files in the repository.
