@@ -28,23 +28,9 @@ class GAMESSUK(logfileparser.Logfile):
         return 'GAMESSUK("%s")' % (self.filename)
     
     def normalisesym(self, label):
-        """Use standard symmetry labels instead of Gaussian labels.
-
-        To normalise:
-        (1) If label is one of [SG, PI, PHI, DLTA], replace by [sigma, pi, phi, delta]
-        (2) replace any G or U by their lowercase equivalent
-
-        >>> sym = Gaussian("dummyfile").normalisesym
-        >>> labels = ['A1', 'AG', 'A1G', "SG", "PI", "PHI", "DLTA"]
-        >>> map(sym, labels)
-        ['A1', 'Ag', 'A1g', 'sigma', 'pi', 'phi', 'delta']
+        """Use standard symmetry labels instead of GAMESS UK labels.
         """
-        _greek = {'SG':'sigma', 'PI':'pi', 'PHI':'phi', 'DLTA':'delta'}
-        if label in _greek:
-            return _greek[label]
-
-        ans = label.replace("U", "u").replace("G", "g") 
-        return ans
+        pass
 
     def parse(self, fupdate=0.05, cupdate=0.002):
         """Extract information from the logfile."""
@@ -58,8 +44,6 @@ class GAMESSUK(logfileparser.Logfile):
             self.progress.initialize(nstep)
             oldstep = 0
             
-        optfinished = False # Flag that indicates whether it has reached the end of a geoopt
-        
         for line in inputfile:
             
             if self.progress and random.random() < cupdate:
@@ -69,16 +53,6 @@ class GAMESSUK(logfileparser.Logfile):
                     self.progress.update(step, "Unsupported Information")
                     oldstep = step
                 
-                self.scfenergies.append(utils.convertor(self.float(line.split()[4]), "hartree", "eV"))
-
-            if line[49:59] == 'Converged?':
-# Extract Geometry convergence information
-                if not hasattr(self, "geotargets"):
-                    self.logger.info("Creating attributes geotargets[], geovalues[[]]")
-                    self.geovalues = []
-                    self.geotargets = Numeric.array([0.0, 0.0, 0.0, 0.0], "f")
-                newlist = [0]*4
-
         if self.progress:
             self.progress.update(nstep, "Done")
             

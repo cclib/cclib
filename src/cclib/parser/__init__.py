@@ -16,6 +16,7 @@ from gaussianparser import Gaussian
 from gamessparser import GAMESS
 from adfparser import ADF
 from jaguarparser import Jaguar
+from gamessukparser import GAMESSUK
 
 # This allow users to type:
 #         from cclib.parser import guesstype
