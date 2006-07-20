@@ -5,7 +5,7 @@ import unittest
 import bettertest
 
 from testall import getfile
-from cclib.parser import ADF, GAMESS, Gaussian, Jaguar
+from cclib.parser import ADF, GAMESS, Gaussian, Jaguar, GAMESSUK
 
 class GenericGeoOptTest(bettertest.TestCase):
     def testhomos(self):
@@ -79,14 +79,14 @@ class GaussianGeoOptTest(GenericGeoOptTest):
     def setUp(self):
         self.data = data[0]
 
+class PCGamessGeoOptTest(GenericGeoOptTest):
+    def setUp(self):
+        self.data = data[1]
+
 class GamessUSGeoOptTest(GenericGeoOptTest):
     def setUp(self):
         self.data = data[2]
 
-class PCGamessGeoOptTest(GenericGeoOptTest):
-    def setUp(self):
-        self.data = data[1]
-        
 class ADFGeoOptTest(GenericGeoOptTest):
     def setUp(self):
         self.data = data[3]
@@ -110,16 +110,21 @@ class JaguarGeoOptTest(GenericGeoOptTest):
     def setUp(self):
         self.data = data[4]
         
+class GamessUKGeoOptTest(GenericGeoOptTest):
+    def setUp(self):
+        self.data = data[5]
+        
 
-names = [ "Gaussian", "PCGamess", "GAMESS", "ADF", "Jaguar" ]
+names = [ "Gaussian", "PCGamess", "GAMESS", "ADF", "Jaguar", "GAMESS UK" ]
 tests = [ GaussianGeoOptTest, PCGamessGeoOptTest,
           GamessUSGeoOptTest, ADFGeoOptTest,
-          JaguarGeoOptTest ]
+          JaguarGeoOptTest, GamessUKGeoOptTest ]
 data = [ getfile(Gaussian,"basicGaussian03","dvb_gopt.out"),
          getfile(GAMESS,"basicPCGAMESS","dvb_gopt_b.out"),
          getfile(GAMESS,"basicGAMESS-US","dvb_gopt_a.out"),
          getfile(ADF,"basicADF2004.01","dvb_gopt_b.adfout"),
-         getfile(Jaguar,"basicJaguar","eg01","dvb_gopt_b.out") ]
+         getfile(Jaguar,"basicJaguar","eg01","dvb_gopt_b.out"),
+         getfile(GAMESSUK,"basicGAMESS-UK","dvb_gopt_b.out") ]
 
 if __name__=="__main__":
     total = errors = failures = 0
