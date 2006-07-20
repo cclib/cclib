@@ -52,9 +52,46 @@ class GAMESSUK(logfileparser.Logfile):
                 if step != oldstep:
                     self.progress.update(step, "Unsupported Information")
                     oldstep = step
+
+            if line[1:22] == "total number of atoms":
+                if not hasattr(self, "natom"):
+                    self.natom = int(line.split()[-1])
+                    self.logger.info("Creating attribute natom: %d" % self.natom)
+            
+            if line[40:59] == "nuclear coordinates":
+                if not hasattr(self, "atomcoords"):
+                    self.logger.info("Creating attribute atomcoords[], atomnos[]")
+                    self.atomcoords = []
+                    self.atomnos = []
+                    
+                asterisk = inputfile.next()
+                blank = inputfile.next()
+                colmname = inputfile.next()
+                equals = inputfile.next()
+
+                atomcoords = []
+                atomnos = []
+                line = inputfile.next()
+                while line != equals:
+                    temp = line.strip().split()
+                    atomcoords.append(map(float, temp[0:2]))
+                    if not self.atomnos:
+                        atomnos.append(int(float(temp[3])))
+                        
+                    line = inputfile.next()
+
+                self.atomcoords.append(atomcoords)
+                if not self.atomnos:
+                    self.atomnos = atomnos
                 
         if self.progress:
             self.progress.update(nstep, "Done")
+
+        _toarray = ['atomcoords']
+        for attr in _toarray:
+            if hasattr(self, attr):
+                setattr(self, attr, Numeric.array(getattr(self, attr), 'f'))
+
             
 if __name__ == "__main__":
     import doctest, gamessukparser
