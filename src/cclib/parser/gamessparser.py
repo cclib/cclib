@@ -146,7 +146,7 @@ class GAMESS(logfileparser.Logfile):
                 line = inputfile.next()
                 while line.strip():
                     temp = line.strip().split()
-                    atomcoords.append([utils.convertor(float(x), "au", "Ang") for x in temp[2:5]])
+                    atomcoords.append([utils.convertor(float(x), "bohr", "Angstrom") for x in temp[2:5]])
                     atomnos.append(int(round(float(temp[1])))) # Don't use the atom name as this is arbitary
                     line = inputfile.next()
                 self.atomnos = Numeric.array(atomnos, "i")
