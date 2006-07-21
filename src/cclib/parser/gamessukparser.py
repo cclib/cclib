@@ -74,7 +74,7 @@ class GAMESSUK(logfileparser.Logfile):
                 line = inputfile.next()
                 while line != equals:
                     temp = line.strip().split()
-                    atomcoords.append(map(float, temp[0:2]))
+                    atomcoords.append([utils.convertor(float(x), "bohr", "Angstrom") for x in temp[0:2]])
                     if not self.atomnos:
                         atomnos.append(int(float(temp[3])))
                         
