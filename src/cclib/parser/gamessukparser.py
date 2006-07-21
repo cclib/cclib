@@ -83,6 +83,30 @@ class GAMESSUK(logfileparser.Logfile):
                 self.atomcoords.append(atomcoords)
                 if not self.atomnos:
                     self.atomnos = atomnos
+
+            if line[1:32] == "total number of basis functions":
+                self.logger.info("Creating attribute nbasis")
+                self.nbasis = int(line.split()[-1])
+            
+            if line[1:36] == "number of occupied orbitals (alpha)":
+                if not hasattr(self, "homos"):
+                    self.logger.info("Creating attribute homos")
+                self.homos = Numeric.array([int(line.split()[-1])-1], "i")
+
+            if line[2:12] == "m.o. irrep":
+                ########## eigenvalues ###########
+                # This section appears once at the start of a geo-opt and once at the end
+                if not hasattr(self, "moenergies"):
+                    self.logger.info("Creating attribute moenergies")
+                self.moenergies = [[]]
+
+                title = inputfile.next()
+                equals = inputfile.next()
+                line = inputfile.next()
+                while line != equals:
+                    temp = line.strip().split()
+                    self.moenergies[0].append(float(temp[3]))
+                    line = inputfile.next()
                 
         if self.progress:
             self.progress.update(nstep, "Done")
