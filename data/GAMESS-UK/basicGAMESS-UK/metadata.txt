@@ -2,4 +2,6 @@ GAMESS-UK Generic version 7.0
 Debian Sarge
 Pentium 4
 As Raman was not available for B3LYP, the second (_b) geometry optimisation is using HF/STO-3G, and the Raman was calculated using the same level of theory and at the optimised geometry.
+The first two gopts both took place in Cartesian coordinates (OPTXYZ).
+gopt c, used OPTIMIZE to optimize in internal coordinates (created from the Cartesian coordinates with GEOMETRY ALL). I had to lower the symmetry to Cs though, as the symmetry changed during the course of the optimization from C2v to Cs, stopping the calculation. (I lowered the symmetry by designating the first C as C1 - this is just a tag) Despite this, the final symmetry was C2v in the end (though not designated as such).
 
