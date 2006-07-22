@@ -43,7 +43,7 @@ class GAMESSUK(logfileparser.Logfile):
             inputfile.seek(0)
             self.progress.initialize(nstep)
             oldstep = 0
-            
+
         for line in inputfile:
             
             if self.progress and random.random() < cupdate:
@@ -57,6 +57,38 @@ class GAMESSUK(logfileparser.Logfile):
                 if not hasattr(self, "natom"):
                     self.natom = int(line.split()[-1])
                     self.logger.info("Creating attribute natom: %d" % self.natom)
+
+            if line[3:44] == "convergence threshold in optimization run":
+                # Assuming that this is only found in the case of OPTXYZ
+                # (i.e. an optimization in Cartesian coordinates)
+                if not hasattr(self, "geotargets"):
+                    self.logger.info("Creating attributes geotargets")
+                self.geotargets = [float(line.split()[-2])]
+
+            if line[32:61] == "largest component of gradient":
+                # This is the geotarget in the case of OPTXYZ
+                if not hasattr(self, "geovalues"):
+                    self.logger.info("Creating attribute geovalues")
+                    self.geovalues = []
+                self.geovalues.append(float(line.split()[4]))
+
+            if line[37:49] == "convergence?":
+                # Get the geovalues and geotargets for OPTIMIZE
+                if not hasattr(self, "geovalues"):
+                    self.logger.info("Creating attribute geotargets, geovalues")
+                    self.geovalues = []
+                    self.geotargets = []
+                geotargets = []
+                geovalues = []
+                for i in range(4):
+                    temp = line.split()
+                    geovalues.append(float(temp[2]))
+                    if not self.geotargets:
+                        geotargets.append(float(temp[-2]))
+                    line = inputfile.next()
+                self.geovalues.append(geovalues)
+                if not self.geotargets:
+                    self.geotargets = geotargets
             
             if line[40:59] == "nuclear coordinates":
                 if not hasattr(self, "atomcoords"):
@@ -111,7 +143,7 @@ class GAMESSUK(logfileparser.Logfile):
         if self.progress:
             self.progress.update(nstep, "Done")
 
-        _toarray = ['atomcoords']
+        _toarray = ['atomcoords', 'geotargets', 'geovalues']
         for attr in _toarray:
             if hasattr(self, attr):
                 setattr(self, attr, Numeric.array(getattr(self, attr), 'f'))
