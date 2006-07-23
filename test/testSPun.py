@@ -4,7 +4,7 @@ import bettertest
 import Numeric
 
 from testall import getfile
-from cclib.parser import ADF, GAMESS, Gaussian, Jaguar
+from cclib.parser import ADF, GAMESS, Gaussian, Jaguar, GAMESSUK
 
 class GenericSPunTest(bettertest.TestCase):
     """Restricted single point calculations with MO coeffs and overlap info."""
@@ -41,14 +41,24 @@ class ADFSPunTest(GenericSPunTest):
         #ADF uses fooverlaps
         self.assertEquals(self.data.fooverlaps.shape,(self.data.nbasis,self.data.nbasis))
 
+class JaguarSPunTest(GenericSPunTest):
+    def setUp(self):
+        self.data = data[4]
 
-names = [ "Gaussian", "PCGamess", "GAMESS", "ADF" ]
+class GamessUKSPunTest(GenericSPunTest):
+    def setUp(self):
+        self.data = data[5]
+
+names = [ "Gaussian", "PCGamess", "GAMESS", "ADF", "Jaguar", "GAMESS UK"]
 tests = [ GaussianSPunTest, PCGamessSPunTest,
-          GamessUSSPunTest, ADFSPunTest ]
+          GamessUSSPunTest, ADFSPunTest,
+          JaguarSPunTest] #, GamessUKSPunTest ]
 data = [ getfile(Gaussian,"basicGaussian03","dvb_un_sp.out"),
          getfile(GAMESS,"basicGAMESS-US","dvb_un_sp.out"),
          getfile(GAMESS,"basicPCGAMESS","dvb_un_sp.out"),
-         getfile(ADF,"basicADF2004.01","dvb_un_sp.adfout") ]
+         getfile(ADF,"basicADF2004.01","dvb_un_sp.adfout"),
+         getfile(Jaguar, "basicJaguar", "eg06", "dvb_un_sp.out")]
+         # getfile(GAMESSUK, "basicGAMESS-UK", "dvb_un_sp.out")]
               
 if __name__=="__main__":
     total = errors = failures = 0
