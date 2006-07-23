@@ -125,6 +125,30 @@ class GAMESSUK(logfileparser.Logfile):
                     self.logger.info("Creating attribute homos")
                 self.homos = Numeric.array([int(line.split()[-1])-1], "i")
 
+            if line[3:27] == "Wavefunction convergence":
+                self.logger.info("Creating attribute scftargets")
+                scftarget = float(line.split()[-2])
+                self.scftargets = []
+
+            if line[15:31] == "convergence data":
+                if not hasattr(self, "scfvalues"):
+                    self.logger.info("Creating attribute scfvalues")
+                    self.scfvalues = []
+                self.scftargets.append([scftarget]) # Assuming it does not change over time
+                while line[1:10] != "="*9:
+                    line = inputfile.next()
+                title = inputfile.next()
+                title = inputfile.next()
+                equals = inputfile.next()
+                
+                scfvalues = []
+                line = inputfile.next()
+                while line.strip():
+                    temp = line.split()
+                    scfvalues.append([float(temp[5])])
+                    line = inputfile.next()
+                self.scfvalues.append(scfvalues)   
+
             if line[2:12] == "m.o. irrep":
                 ########## eigenvalues ###########
                 # This section appears once at the start of a geo-opt and once at the end
@@ -143,12 +167,15 @@ class GAMESSUK(logfileparser.Logfile):
         if self.progress:
             self.progress.update(nstep, "Done")
 
-        _toarray = ['atomcoords', 'geotargets', 'geovalues']
+        _toarray = ['atomcoords', 'geotargets', 'geovalues', 'scftargets']
         for attr in _toarray:
             if hasattr(self, attr):
                 setattr(self, attr, Numeric.array(getattr(self, attr), 'f'))
 
-            
+        if hasattr(self, "scfvalues"):
+            self.scfvalues = [Numeric.array(x, "f") for x in self.scfvalues]
+
+             
 if __name__ == "__main__":
-    import doctest, gamessukparser
+    import doctest
     doctest.testmod()
