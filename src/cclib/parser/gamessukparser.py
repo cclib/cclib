@@ -131,12 +131,20 @@ class GAMESSUK(logfileparser.Logfile):
             if line[1:36] == "number of occupied orbitals (alpha)":
                 if not hasattr(self, "homos"):
                     self.logger.info("Creating attribute homos")
-                self.homos = Numeric.array([int(line.split()[-1])-1], "i")
+                alpha = int(line.split()[-1])-1
+                beta = int(inputfile.next().split()[-1])-1
+                self.homos = Numeric.array([alpha, beta], "i")
 
             if line[3:27] == "Wavefunction convergence":
                 self.logger.info("Creating attribute scftargets")
                 scftarget = float(line.split()[-2])
                 self.scftargets = []
+
+            if line[3:11] == "SCF TYPE":
+                type = line.split()[-2]
+                assert type in ['rhf', 'uhf'] # what about rohf?
+                if type != 'uhf':
+                    self.homos = Numeric.array(self.homos[0])
 
             if line[15:31] == "convergence data":
                 if not hasattr(self, "scfvalues"):
