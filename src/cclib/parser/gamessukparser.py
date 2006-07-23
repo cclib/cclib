@@ -29,8 +29,16 @@ class GAMESSUK(logfileparser.Logfile):
     
     def normalisesym(self, label):
         """Use standard symmetry labels instead of GAMESS UK labels.
+
+        >>> t = GAMESSUK("dummyfile.txt")
+        >>> labels = ['au', 'bg', "a'", "a''"]
+        >>> answer = [t.normalisesym(x) for x in labels]
+        >>> answer
+        ['Au', 'Bg', "A'", "A''"]
         """
-        pass
+        ans = label.replace("a", "A").replace("b", "B") 
+        
+        return ans
 
     def parse(self, fupdate=0.05, cupdate=0.002):
         """Extract information from the logfile."""
@@ -156,20 +164,50 @@ class GAMESSUK(logfileparser.Logfile):
                 scfenergy = utils.convertor(float(line.split()[-1]), "hartree", "eV")
                 self.scfenergies.append(scfenergy)
 
+            if line[31:50] == "SYMMETRY ASSIGNMENT":
+                # (Need IPRINT SCF to get the mosyms for every step of a geoopt)
+                if not hasattr(self, "mosyms"):
+                    self.logger.info("Creating attribute mosyms")
+                    self.mosyms = []
+                equals = inputfile.next()
+                title = inputfile.next()
+                title = inputfile.next()
+                equals = inputfile.next()
+
+                mosyms = []
+                line = inputfile.next()
+                while line != equals:
+                    temp = line[91:].strip().split()
+                    for i in range(1,len(temp),2):
+                        mosyms.append(self.normalisesym(temp[i]))
+                    line = inputfile.next()
+                assert len(mosyms) == self.nmo
+                self.mosyms.append(mosyms)
+
             if line[2:12] == "m.o. irrep":
                 ########## eigenvalues ###########
                 # This section appears once at the start of a geo-opt and once at the end
+                # unless IPRINT SCF is used (when it appears at every step in addition)
+                # This means that the energies of the final geometry appear twice in the
+                # case of IPRINT SCF (there's no way around this [unless we test
+                # for IPRINT SCF, which I don't like to do], since the alternative would
+                # be for the final geometry not to appear at all in the case of no
+                # IPRINT SCF, which I think would be a bad idea)
                 if not hasattr(self, "moenergies"):
-                    self.logger.info("Creating attribute moenergies")
-                self.moenergies = [[]]
+                    self.logger.info("Creating attribute moenergies, nmo")
+                    self.moenergies = []
 
                 title = inputfile.next()
                 equals = inputfile.next()
+
+                moenergies = []
                 line = inputfile.next()
                 while line != equals:
                     temp = line.strip().split()
-                    self.moenergies[0].append(float(temp[3]))
+                    moenergies.append(float(temp[3]))
                     line = inputfile.next()
+                self.nmo = len(moenergies)
+                self.moenergies.append(moenergies)
                 
         if self.progress:
             self.progress.update(nstep, "Done")
