@@ -145,9 +145,9 @@ class GAMESSUK(logfileparser.Logfile):
                 self.scftargets.append([scftarget]) # Assuming it does not change over time
                 while line[1:10] != "="*9:
                     line = inputfile.next()
-                title = inputfile.next()
-                title = inputfile.next()
-                equals = inputfile.next()
+                line = inputfile.next()
+                while line[1:10] != "="*9: # May be two or three lines (unres)
+                    line = inputfile.next()
                 
                 scfvalues = []
                 line = inputfile.next()
