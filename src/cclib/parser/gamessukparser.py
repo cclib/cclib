@@ -149,6 +149,13 @@ class GAMESSUK(logfileparser.Logfile):
                     line = inputfile.next()
                 self.scfvalues.append(scfvalues)   
 
+            if line[10:22] == "total energy":
+                if not hasattr(self, "scfenergies"):
+                    self.logger.info("Creating attribute scfenergies")
+                    self.scfenergies = []
+                scfenergy = utils.convertor(float(line.split()[-1]), "hartree", "eV")
+                self.scfenergies.append(scfenergy)
+
             if line[2:12] == "m.o. irrep":
                 ########## eigenvalues ###########
                 # This section appears once at the start of a geo-opt and once at the end
@@ -167,7 +174,8 @@ class GAMESSUK(logfileparser.Logfile):
         if self.progress:
             self.progress.update(nstep, "Done")
 
-        _toarray = ['atomcoords', 'geotargets', 'geovalues', 'scftargets']
+        _toarray = ['atomcoords', 'geotargets', 'geovalues', 'scftargets',
+                    'scfenergies']
         for attr in _toarray:
             if hasattr(self, attr):
                 setattr(self, attr, Numeric.array(getattr(self, attr), 'f'))
