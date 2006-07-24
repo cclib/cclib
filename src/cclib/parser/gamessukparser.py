@@ -135,6 +135,24 @@ class GAMESSUK(logfileparser.Logfile):
                 beta = int(inputfile.next().split()[-1])-1
                 self.homos = Numeric.array([alpha, beta], "i")
 
+            if line[37:69] == "s-matrix over gaussian basis set":
+                self.logger.info("Creating attribute aooverlaps")
+                self.aooverlaps = Numeric.zeros((self.nbasis, self.nbasis), "d")
+
+                minus = inputfile.next()
+                blank = inputfile.next()
+                for i in range(0,self.nbasis,12):
+                    blank = inputfile.next()
+                    blank = inputfile.next()
+                    header = inputfile.next()
+                    blank = inputfile.next()
+                    blank = inputfile.next()
+
+                    for j in range(self.nbasis):
+                        temp = map(float, inputfile.next().split()[1:])
+                        self.aooverlaps[j,(0+i):(len(temp)+i)] = temp
+                
+
             if line[3:27] == "Wavefunction convergence":
                 self.logger.info("Creating attribute scftargets")
                 scftarget = float(line.split()[-2])
