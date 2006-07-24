@@ -31,12 +31,14 @@ class GAMESSUK(logfileparser.Logfile):
         """Use standard symmetry labels instead of GAMESS UK labels.
 
         >>> t = GAMESSUK("dummyfile.txt")
-        >>> labels = ['au', 'bg', "a'", "a''"]
+        >>> labels = ['a', 'a1', 'ag', "a'", 'a"', "a''", "a1''", 'a1"']
+        >>> labels.extend(["e1+", "e1-"])
         >>> answer = [t.normalisesym(x) for x in labels]
         >>> answer
-        ['Au', 'Bg', "A'", "A''"]
+        ['A', 'A1', 'Ag', "A'", 'A"', 'A"', 'A1"', 'A1"', 'E1', 'E1']
         """
-        ans = label.replace("a", "A").replace("b", "B") 
+        label = label.replace("''", '"').replace("+", "").replace("-", "")
+        ans = label[0].upper() + label[1:]
         
         return ans
 
