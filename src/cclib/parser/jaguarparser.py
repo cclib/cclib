@@ -149,7 +149,21 @@ class Jaguar(logfileparser.Logfile):
                         self.mosyms[0].append(temp[i+1])
                     line = inputfile.next()
                 self.moenergies = Numeric.array(self.moenergies, "f")
+            
+            if line[2:6] == "olap":
+                if line[6]=="-":
+                    continue # avoid "olap-dev"
+                self.logger.info("Creating attribute aooverlaps")
+                self.aooverlaps = Numeric.zeros((self.nbasis, self.nbasis), "d")
 
+                for i in range(0, self.nbasis, 5):
+                    blank = inputfile.next()
+                    header = inputfile.next()
+                    for j in range(i, self.nbasis):
+                        temp = map(float, inputfile.next().split()[1:])
+                        self.aooverlaps[j, i:(i+len(temp))] = temp
+                        self.aooverlaps[i:(i+len(temp)), j] = temp
+                
             if line[1:28] == "number of occupied orbitals":
                 if not hasattr(self, "homos"):
                     self.logger.info("Creating attribute: homos")
@@ -158,7 +172,7 @@ class Jaguar(logfileparser.Logfile):
             if line[2:27] == "number of basis functions":
                 if not hasattr(self, "nbasis"):
                     self.logger.info("Creating attribute: nbasis")
-                self.nbasis = float(line.strip().split()[-1])
+                self.nbasis = int(line.strip().split()[-1])
 
             if line[2:23] == "start of program freq":
 # IR stuff
