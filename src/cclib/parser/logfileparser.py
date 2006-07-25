@@ -45,6 +45,14 @@ class Logfile(object):
     (3) Python indexes arrays/lists starting at zero. So if homos==[10], then
         the 11th molecular orbital is the HOMO
     """
+    __parsedattr = ['aonames', 'aooverlaps', 'atomnos', 'etenergies',
+                    'etoscs', 'etrotats', 'etsecs', 'etsyms',
+                    'fonames', 'fooverlaps',
+                    'geotargets', 'geovalues', 'homos', 'mocoeffs',
+                    'moenergies', 'mosyms', 'natom', 'nbasis', 'nmo',
+                    'scfenergies', 'scftargets', 'scfvalues',
+                    'vibfreqs', 'vibirs', 'vibramans', 'vibsyms']
+    
     def __init__(self,filename,progress=None,
                  loglevel=logging.INFO,logname="Log"):
         """Initialise the Logfile object.
@@ -64,6 +72,12 @@ class Logfile(object):
         handler = logging.StreamHandler(sys.stdout)
         handler.setFormatter(logging.Formatter("[%(name)s %(levelname)s] %(message)s"))
         self.logger.addHandler(handler)
+
+    def clean(self):
+        """Delete all of the parsed attributes."""
+        for attr in __parsedattr:
+            if hasattr(self, attr):
+                delattr(self, attr)
 
     def normalisesym(self,symlabel):
         """Standardise the symmetry labels between parsers.
