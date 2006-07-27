@@ -156,8 +156,11 @@ class Gaussian(logfileparser.Logfile):
                     if line.find(' E=') == 0:
                         self.logger.debug(line)
                     if line.find(" RMSDP") == 0:
-                        parts = line.split()[0:2]
-                        newlist = [self.float(x.split('=')[1]) for x in parts]
+#  RMSDP=3.74D-06 MaxDP=7.27D-05 DE=-1.73D-07 OVMax= 3.67D-05
+# or
+#  RMSDP=1.13D-05 MaxDP=1.08D-04              OVMax= 1.66D-04
+                        parts = line.split()
+                        newlist = [self.float(x.split('=')[1]) for x in parts[0:2]]
                         energy = 1.0
                         if len(parts) > 4:
                             energy = parts[2].split('=')[1]
