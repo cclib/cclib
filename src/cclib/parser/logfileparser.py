@@ -45,13 +45,7 @@ class Logfile(object):
     (3) Python indexes arrays/lists starting at zero. So if homos==[10], then
         the 11th molecular orbital is the HOMO
     """
-    __parsedattr = ['aonames', 'aooverlaps', 'atomnos', 'etenergies',
-                    'etoscs', 'etrotats', 'etsecs', 'etsyms',
-                    'fonames', 'fooverlaps',
-                    'geotargets', 'geovalues', 'homos', 'mocoeffs',
-                    'moenergies', 'mosyms', 'natom', 'nbasis', 'nmo',
-                    'scfenergies', 'scftargets', 'scfvalues',
-                    'vibfreqs', 'vibirs', 'vibramans', 'vibsyms']
+
     
     def __init__(self,filename,progress=None,
                  loglevel=logging.INFO,logname="Log"):
@@ -66,6 +60,14 @@ class Logfile(object):
         self.logname  = logname
         self.table = utils.PeriodicTable()
 
+        self.attrlist = ['aonames', 'aooverlaps', 'atomcoords', 'atomnos',
+                         'etenergies', 'etoscs', 'etrotats', 'etsecs', 'etsyms',
+                         'fonames', 'fooverlaps',
+                         'geotargets', 'geovalues', 'homos', 'mocoeffs',
+                         'moenergies', 'mosyms', 'natom', 'nbasis', 'nmo',
+                         'scfenergies', 'scftargets', 'scfvalues',
+                         'vibfreqs', 'vibirs', 'vibramans', 'vibsyms']
+
         # Set up the logger
         self.logger = logging.getLogger('%s %s' % (self.logname,self.filename))
         self.logger.setLevel(self.loglevel)
@@ -75,7 +77,7 @@ class Logfile(object):
 
     def clean(self):
         """Delete all of the parsed attributes."""
-        for attr in __parsedattr:
+        for attr in self.attrlist:
             if hasattr(self, attr):
                 delattr(self, attr)
 
