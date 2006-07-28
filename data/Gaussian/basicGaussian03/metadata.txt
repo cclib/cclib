@@ -2,3 +2,8 @@ Gaussian 03, Revision B.04
 Windows XP
 Intel Celeron
 Original Z-matrix created using GaussView (as far as I remember).
+
+Gaussian 03, Rev. B.04
+Linux
+Intel P4
+dvb_sp_basis uses the coordinates in dvb_raman to do a SP calc with basis set information.
