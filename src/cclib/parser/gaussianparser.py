@@ -315,6 +315,40 @@ class Gaussian(logfileparser.Logfile):
                         i += 1
                     line = inputfile.next()
                 self.moenergies = Numeric.array(self.moenergies, "f")                    
+            if line[1:14] == "AO basis set ":
+                ## Gaussian Rev <= B.0.3
+                self.logger.info("Creating attribute gbasis")
+                self.gbasis = []
+# AO basis set in the form of general basis input:
+#  1 0
+# S   3 1.00       0.000000000000
+#      0.7161683735D+02  0.1543289673D+00
+#      0.1304509632D+02  0.5353281423D+00
+#      0.3530512160D+01  0.4446345422D+00
+# SP   3 1.00       0.000000000000
+#      0.2941249355D+01 -0.9996722919D-01  0.1559162750D+00
+#      0.6834830964D+00  0.3995128261D+00  0.6076837186D+00
+#      0.2222899159D+00  0.7001154689D+00  0.3919573931D+00
+                line = inputfile.next()
+                while line.strip():
+                    gbasis = []
+                    line = inputfile.next()
+                    while line.find("*")<0:
+                        temp = line.split()
+                        print temp
+                        symtype = temp[0]
+                        numgau = int(temp[1])
+                        gau = []
+                        for i in range(numgau):
+                            temp = map(self.float, inputfile.next().split())
+                            gau.append(temp)
+                            
+                        for i,x in enumerate(symtype):
+                            newgau = [(z[0],z[i+1]) for z in gau]
+                            gbasis.append( (x,newgau) )
+                        line = inputfile.next() # i.e. "****" or "SP ...."
+                    self.gbasis.append(gbasis)
+                    line = inputfile.next() # i.e. "20 0" or blank line
 
             if line[1:14] == "Harmonic freq":
 # Start of the IR/Raman frequency section
