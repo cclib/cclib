@@ -307,6 +307,41 @@ class GAMESS(logfileparser.Logfile):
                 self.vibfreqs = Numeric.array(self.vibfreqs, "f")
                 self.vibirs = Numeric.array(self.vibirs, "f")
 
+            if line[5:21] == "ATOMIC BASIS SET":
+                if not hasattr(self, "gbasis"):
+                    self.logger.info("Creating attribute gbasis")
+                    self.gbasis = []
+                line = inputfile.next()
+                while line.find("SHELL")<0:
+                    line = inputfile.next()
+                blank = inputfile.next()
+                atomname = inputfile.next()
+                while line.find("TOTAL NUMBER")<0:
+                    gbasis = [] # Stores basis sets on one atom
+                    blank = inputfile.next()
+                    line = inputfile.next()
+                    while len(line.split())!=1 and line.find("TOTAL NUMBER")<0:
+                        coeff = {}
+                        # coefficients and symmetries for a block of rows
+                        while line.strip():
+                            temp = line.strip().split()
+                            sym = temp[1]
+                            assert sym in ['S', 'P', 'D', 'F', 'L']
+                            if sym == "L": # L appears to refer to SP
+                                assert temp[6][-1] == temp[9][-1] == ')'
+                                coeff.setdefault("S", []).append( (float(temp[3]), float(temp[6][:-1])) )
+                                coeff.setdefault("P", []).append( (float(temp[3]), float(temp[9][:-1])) )
+                            else:
+                                assert temp[6][-1] == ')'
+                                coeff.setdefault(sym, []).append( (float(temp[3]), float(temp[6][:-1])) )
+                            line = inputfile.next()
+# either a blank or a continuation of the block
+                        for x,y in coeff.iteritems():
+                            gbasis.append( (x,y) )
+                        line = inputfile.next()
+# either the start of the next block or the start of a new atom or
+# the end of the basis function section
+                    self.gbasis.append(gbasis)
 
             if line.find("EIGENVECTORS") == 10 or line.find("MOLECULAR OBRITALS") == 10:
                 # The details returned come from the *final* report of evalues and
