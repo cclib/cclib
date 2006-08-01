@@ -327,13 +327,20 @@ class GAMESS(logfileparser.Logfile):
                             temp = line.strip().split()
                             sym = temp[1]
                             assert sym in ['S', 'P', 'D', 'F', 'L']
-                            if sym == "L": # L appears to refer to SP
-                                assert temp[6][-1] == temp[9][-1] == ')'
-                                coeff.setdefault("S", []).append( (float(temp[3]), float(temp[6][:-1])) )
-                                coeff.setdefault("P", []).append( (float(temp[3]), float(temp[9][:-1])) )
+                            if sym == "L": # L refers to SP
+                                if len(temp)==6: # GAMESS US
+                                    coeff.setdefault("S", []).append( (float(temp[3]), float(temp[4])) )
+                                    coeff.setdefault("P", []).append( (float(temp[3]), float(temp[5])) )
+                                else: # PC GAMESS
+                                    assert temp[6][-1] == temp[9][-1] == ')'
+                                    coeff.setdefault("S", []).append( (float(temp[3]), float(temp[6][:-1])) )
+                                    coeff.setdefault("P", []).append( (float(temp[3]), float(temp[9][:-1])) )
                             else:
-                                assert temp[6][-1] == ')'
-                                coeff.setdefault(sym, []).append( (float(temp[3]), float(temp[6][:-1])) )
+                                if len(temp)==5: # GAMESS US
+                                    coeff.setdefault(sym, []).append( (float(temp[3]), float(temp[4])) )
+                                else: # PC GAMESS
+                                    assert temp[6][-1] == ')'
+                                    coeff.setdefault(sym, []).append( (float(temp[3]), float(temp[6][:-1])) )
                             line = inputfile.next()
 # either a blank or a continuation of the block
                         for x,y in coeff.iteritems():
