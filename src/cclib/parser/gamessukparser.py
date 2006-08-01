@@ -192,6 +192,44 @@ class GAMESSUK(logfileparser.Logfile):
                 scfenergy = utils.convertor(float(line.split()[-1]), "hartree", "eV")
                 self.scfenergies.append(scfenergy)
 
+            if line[40:59] == "molecular basis set":
+                if not hasattr(self, "gbasis"):
+                    self.logger.info("Creating attribute gbasis")
+                self.gbasis = []
+                line = inputfile.next()
+                while line.find("contraction coefficients")<0:
+                    line = inputfile.next()
+                equals = inputfile.next()
+                blank = inputfile.next()
+                atomname = inputfile.next()
+                while line!=equals:
+                    gbasis = [] # Stores basis sets on one atom
+                    blank = inputfile.next()
+                    blank = inputfile.next()
+                    line = inputfile.next()
+                    while len(line.split())!=1 and line!=equals:
+                        coeff = {}
+                        # coefficients and symmetries for a block of rows
+                        while line.strip() and line!=equals:
+                            temp = line.strip().split()
+                            sym = temp[1][1:]
+                            assert sym in ['s', 'p', 'd', 'f', 'sp']
+                            if sym == "sp":
+                                coeff.setdefault("S", []).append( (float(temp[3]), float(temp[6])) )
+                                coeff.setdefault("P", []).append( (float(temp[3]), float(temp[10])) )
+                            else:
+                                coeff.setdefault(sym.upper(), []).append( (float(temp[3]), float(temp[6])) )
+                            line = inputfile.next()
+# either a blank or a continuation of the block
+                        for x,y in coeff.iteritems():
+                            gbasis.append( (x,y) )
+                        if line==equals:
+                            continue
+                        line = inputfile.next()
+# either the start of the next block or the start of a new atom or
+# the end of the basis function section (signified by a line of equals)
+                    self.gbasis.append(gbasis)
+                    
             if line[31:50] == "SYMMETRY ASSIGNMENT":
                 # (Need IPRINT SCF to get the mosyms for every step of a geoopt)
                 if not hasattr(self, "mosyms"):
