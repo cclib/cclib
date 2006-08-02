@@ -335,7 +335,6 @@ class Gaussian(logfileparser.Logfile):
                     line = inputfile.next()
                     while line.find("*")<0:
                         temp = line.split()
-                        print temp
                         symtype = temp[0]
                         numgau = int(temp[1])
                         gau = []
