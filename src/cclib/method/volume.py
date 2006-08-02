@@ -128,7 +128,7 @@ def electrondensity(coords, mocoeffs, gbasis, volume):
         for i in range(density.data.shape[0]):
             for j in range(density.data.shape[1]):
                 for k in range(density.data.shape[2]):
-                    data[i, j, k] = bfs[bs].amp(x[i], y[j], z[k])
+                    data[i, j, k] = bfs[bs].amp(x[i], y[j], z[k])**2
         data = data * sumofsquares[bs]
         density.data += data
     
