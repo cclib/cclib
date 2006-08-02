@@ -13,26 +13,23 @@ class Volume(object):
     """Represent a volume in space.
 
     Attributes:
-       origin -- the bottom left hand corner of the volume :-)
+       origin -- the bottom left hand corner of the volume
+       topcorner -- the top right hand corner
        data -- a Numeric array of values for each point in the volume
-       spacing -- a tuple of (dx, dy, dz)
 
     """
-    def __init__(self, origin, data, spacing):
+    def __init__(self, origin, topcorner, spacing):
         self.origin = origin
-        self.data = data
         self.spacing = spacing
-
-    def corner(self):
-        topcorner = []
+        self.topcorner = topcorner
+        numpts = []
         for i in range(3):
-            topcorner.append(self.origin[i] + 
-                             self.spacing[i] * (self.data.shape[i]-1))
-        return tuple(topcorner)
-    
+            numpts.append( (self.topcorner[i]-self.origin[i])/self.spacing[i] + 1 )
+        self.data = Numeric.zeros( tuple(numpts), "d")
+
     def __str__(self):
         """Return a string representation."""
-        return "Volume %s to %s (density: %s)" % (self.origin, self.corner(),
+        return "Volume %s to %s (density: %s)" % (self.origin, self.topcorner,
                                                   self.spacing)
 
     def write(self, filename, format="VTK"):
@@ -84,9 +81,9 @@ def wavefunction(coords, mocoeffs, bfs, volume):
     wavefn.data = Numeric.zeros( wavefn.data.shape, "d")
 
     conversion = convertor(1,"bohr","Angstrom")
-    x = Numeric.arange(wavefn.origin[0], wavefn.corner()[0]+wavefn.spacing[0], wavefn.spacing[0]) / conversion
-    y = Numeric.arange(wavefn.origin[1], wavefn.corner()[1]+wavefn.spacing[1], wavefn.spacing[1]) / conversion
-    z = Numeric.arange(wavefn.origin[2], wavefn.corner()[2]+wavefn.spacing[2], wavefn.spacing[2]) / conversion
+    x = Numeric.arange(wavefn.origin[0], wavefn.topcorner[0]+wavefn.spacing[0], wavefn.spacing[0]) / conversion
+    y = Numeric.arange(wavefn.origin[1], wavefn.topcorner[1]+wavefn.spacing[1], wavefn.spacing[1]) / conversion
+    z = Numeric.arange(wavefn.origin[2], wavefn.topcorner[2]+wavefn.spacing[2], wavefn.spacing[2]) / conversion
 
     for bs in range(len(bfs)):
         data = Numeric.zeros( wavefn.data.shape, "d")
@@ -113,7 +110,7 @@ if __name__=="__main__":
     b.logger.setLevel(logging.ERROR)
     b.parse()
 
-    vol = Volume( (-2.5,-5,-1.5), Numeric.zeros((20,40,12)), spacing=(0.25,0.25,0.25) )
+    vol = Volume( (-2.5,-5,-1.5), (2.5, 5, 1.5), spacing=(0.5,0.5,0.5) )
     homowavefn = wavefunction(b.atomcoords[0], b.mocoeffs[0,b.homos[0]], a.gbasis, vol)
     homowavefn.write("cubefile.vtk")
     
