@@ -153,7 +153,7 @@ if __name__=="__main__":
     vol = Volume( (-2.5,-5,-1.5), (2.5, 5, 1.5), spacing=(0.25,0.25,0.25) )
     # homowavefn = wavefunction(b.atomcoords[0], b.mocoeffs[0,b.homos[0]], a.gbasis, vol)
     # homowavefn.write("cubefile.vtk")
-    density = electrondensity(b.atomcoords[0], b.mocoeffs[0,0:b.homos[0]]*2, a.gbasis, vol)
+    density = electrondensity(b.atomcoords[0], b.mocoeffs[0,0:b.homos[0]], a.gbasis, vol)
     density.write("cubefile.vtk")
     
     
