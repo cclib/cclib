@@ -47,15 +47,8 @@ class Volume(object):
         outputfile.write(v.to_string())
         outputfile.close()
 
-def wavefunction(coords, mocoeffs, bfs, volume):
-    """Calculate the magnitude of the wavefunction at every point in a volume.
-    
-    Attributes:
-        coords -- the coordinates of the atoms
-        mocoeffs -- mocoeffs for one eigenvalue
-        bfs -- typically gbasis (although eventually STOs too)
-        volume -- a template Volume object (will not be altered)
-    """
+def getbfs(coords, gbasis):
+    """Convenience function for both wavefunction and density based on PyQuante Ints.py."""
     mymol = makepyquante(coords, [0 for x in coords])
 
     sym2powerlist = {
@@ -68,7 +61,7 @@ def wavefunction(coords, mocoeffs, bfs, volume):
 
     bfs = []
     for i,atom in enumerate(mymol):
-        bs = a.gbasis[i]
+        bs = gbasis[i]
         for sym,prims in bs:
             for power in sym2powerlist[sym]:
                 bf = CGBF(atom.pos(),power)
@@ -77,6 +70,19 @@ def wavefunction(coords, mocoeffs, bfs, volume):
                 bf.normalize()
                 bfs.append(bf)
 
+    return bfs
+
+def wavefunction(coords, mocoeffs, bfs, volume):
+    """Calculate the magnitude of the wavefunction at every point in a volume.
+    
+    Attributes:
+        coords -- the coordinates of the atoms
+        mocoeffs -- mocoeffs for one eigenvalue
+        gbasis -- gbasis from a parser object
+        volume -- a template Volume object (will not be altered)
+    """
+    bfs = getbfs(coords, gbasis)
+    
     wavefn = copy.copy(volume)
     wavefn.data = Numeric.zeros( wavefn.data.shape, "d")
 
@@ -96,6 +102,40 @@ def wavefunction(coords, mocoeffs, bfs, volume):
     
     return wavefn
 
+def electrondensity(coords, mocoeffs, gbasis, volume):
+    """Calculate the magnitude of the electron density at every point in a volume.
+    
+    Attributes:
+        coords -- the coordinates of the atoms
+        mocoeffs -- mocoeffs for all of the occupied eigenvalues
+        gbasis -- gbasis from a parser object
+        volume -- a template Volume object (will not be altered)
+    """
+    bfs = getbfs(coords, gbasis)
+    
+    density = copy.copy(volume)
+    density.data = Numeric.zeros( density.data.shape, "d")
+
+    conversion = convertor(1,"bohr","Angstrom")
+    x = Numeric.arange(density.origin[0], density.topcorner[0]+density.spacing[0], density.spacing[0]) / conversion
+    y = Numeric.arange(density.origin[1], density.topcorner[1]+density.spacing[1], density.spacing[1]) / conversion
+    z = Numeric.arange(density.origin[2], density.topcorner[2]+density.spacing[2], density.spacing[2]) / conversion
+
+    sumofsquares = sum(mocoeffs**2)
+    
+    for bs in range(len(bfs)):
+        data = Numeric.zeros( density.data.shape, "d")
+        for i in range(density.data.shape[0]):
+            for j in range(density.data.shape[1]):
+                for k in range(density.data.shape[2]):
+                    data[i, j, k] = bfs[bs].amp(x[i], y[j], z[k])
+        data = data * sumofsquares[bs]
+        density.data += data
+    
+    density.data = density.data*2 # doubly-occupied
+    
+    return density
+
 if __name__=="__main__":
     import psyco
     psyco.full() # Down from 3.5 to 1.5
@@ -110,7 +150,10 @@ if __name__=="__main__":
     b.logger.setLevel(logging.ERROR)
     b.parse()
 
-    vol = Volume( (-2.5,-5,-1.5), (2.5, 5, 1.5), spacing=(0.5,0.5,0.5) )
-    homowavefn = wavefunction(b.atomcoords[0], b.mocoeffs[0,b.homos[0]], a.gbasis, vol)
-    homowavefn.write("cubefile.vtk")
+    vol = Volume( (-2.5,-5,-1.5), (2.5, 5, 1.5), spacing=(0.25,0.25,0.25) )
+    # homowavefn = wavefunction(b.atomcoords[0], b.mocoeffs[0,b.homos[0]], a.gbasis, vol)
+    # homowavefn.write("cubefile.vtk")
+    density = electrondensity(b.atomcoords[0], b.mocoeffs[0,0:b.homos[0]]*2, a.gbasis, vol)
+    density.write("cubefile.vtk")
+    
     
