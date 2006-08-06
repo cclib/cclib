@@ -58,13 +58,20 @@ class Jaguar(logfileparser.Logfile):
                     self.scftargets = [[5E-5, 5E-6]]
                 values = []
                 while line[0:4] == "etot":
-                    if line[39:47].strip():
-                        denergy = float(line[39:47])
+# Jaguar 4.2
+# etot   1  N  N  0  N  -382.08751886450           2.3E-03  1.4E-01
+# etot   2  Y  Y  0  N  -382.27486023153  1.9E-01  1.4E-03  5.7E-02
+# Jaguar 6.5
+# etot   1  N  N  0  N    -382.08751881733           2.3E-03  1.4E-01
+# etot   2  Y  Y  0  N    -382.27486018708  1.9E-01  1.4E-03  5.7E-02
+                    temp = line.split()[7:]
+                    if len(temp)==3:
+                        denergy = float(temp[0])
                     else:
                         denergy = 0 # Should really be greater than target value
                                     # or should we just ignore the values in this line
-                    ddensity = float(line[48:56])
-                    maxdiiserr = float(line[57:65])
+                    ddensity = float(temp[-2])
+                    maxdiiserr = float(temp[-1])
                     if not geoopt:
                         values.append([denergy, ddensity])
                     else:
@@ -181,10 +188,16 @@ class Jaguar(logfileparser.Logfile):
                 blank = inputfile.next()
                 line = inputfile.next()
                 line = inputfile.next()
-                blank = inputfile.next()
+                forceconstants = False
+                if line.find("force constants")>=0:
+                    forceconstants = True
+                    # Could handle this differently if a problem in future
+                line = inputfile.next()
+                while line.strip():
+                    line = inputfile.next()
                 
                 freqs = inputfile.next()
-                while freqs != blank:
+                while freqs.strip():
                     temp = freqs.strip().split()
                     self.vibfreqs.extend(map(float, temp[1:]))
                     temp = inputfile.next().strip().split()
@@ -197,8 +210,10 @@ class Jaguar(logfileparser.Logfile):
                         temp = inputfile.next().strip().split()                                
                         self.vibirs.extend(map(float, temp[1:]))
                         reducedmass = inputfile.next()
+                        if forceconstants:
+                            forceconst = inputfile.next()
                     line = inputfile.next()
-                    while line != blank: # Read the cartesian displacements
+                    while line.strip(): # Read the cartesian displacements
                         line = inputfile.next()
                     freqs = inputfile.next()
                 self.vibfreqs = Numeric.array(self.vibfreqs)
