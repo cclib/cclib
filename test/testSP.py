@@ -63,7 +63,7 @@ data = [getfile(Gaussian, "basicGaussian03","dvb_sp.out"),
         getfile(ADF, "basicADF2004.01","dvb_sp_b.adfout"),
         getfile(Jaguar, "basicJaguar4.2", "dvb_sp.out"),
         getfile(Jaguar, "basicJaguar6.5", "dvb_sp.out"),
-        getfile(GAMESSUK, "basicGAMESS-UK", "dvb_sp.out")]
+        getfile(GAMESSUK, "basicGAMESS-UK", "dvb_sp_b.out")]
               
 if __name__=="__main__":
     total = errors = failures = 0
