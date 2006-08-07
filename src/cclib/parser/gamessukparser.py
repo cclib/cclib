@@ -164,7 +164,7 @@ class GAMESSUK(logfileparser.Logfile):
                 type = line.split()[-2]
                 assert type in ['rhf', 'uhf'] # what about rohf?
                 if type != 'uhf':
-                    self.homos = Numeric.array(self.homos[0])
+                    self.homos = Numeric.array([self.homos[0]], 'i')
 
             if line[15:31] == "convergence data":
                 if not hasattr(self, "scfvalues"):
