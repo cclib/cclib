@@ -1,6 +1,6 @@
 import unittest
 import os
-from cclib.parser import ADF, GAMESS, Gaussian, Jaguar
+from cclib.parser import ADF, GAMESS, Gaussian, Jaguar, GAMESSUK
 
 def getfile(parser,*location):
     """Returns a parsed logfile."""
@@ -43,7 +43,7 @@ def importName(modulename, name):
 
 if __name__=="__main__":
     total = errors = failures = 0
-    for module in [ "testGeoOpt", "testSP", "testSPun" ]:
+    for module in [ "testGeoOpt", "testSP", "testSPun", "testBasis" ]:
         names = importName(module, "names") # i.e. from testGeoOpt import names
         tests = importName(module, "tests") # i.e. from testGeoOpt import tests
         for name,test in zip(names,tests):

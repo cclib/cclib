@@ -343,8 +343,11 @@ class GAMESS(logfileparser.Logfile):
                                     coeff.setdefault(sym, []).append( (float(temp[3]), float(temp[6][:-1])) )
                             line = inputfile.next()
 # either a blank or a continuation of the block
-                        for x,y in coeff.iteritems():
-                            gbasis.append( (x,y) )
+                        if sym == "L":
+                            gbasis.append( ('S', coeff['S']))
+                            gbasis.append( ('P', coeff['P']))
+                        else:
+                            gbasis.append( (sym, coeff[sym]))
                         line = inputfile.next()
 # either the start of the next block or the start of a new atom or
 # the end of the basis function section

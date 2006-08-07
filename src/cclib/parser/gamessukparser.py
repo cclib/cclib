@@ -221,8 +221,12 @@ class GAMESSUK(logfileparser.Logfile):
                                 coeff.setdefault(sym.upper(), []).append( (float(temp[3]), float(temp[6])) )
                             line = inputfile.next()
 # either a blank or a continuation of the block
-                        for x,y in coeff.iteritems():
-                            gbasis.append( (x,y) )
+                        if coeff:
+                            if sym == "sp":
+                                gbasis.append( ('S', coeff['S']))
+                                gbasis.append( ('P', coeff['P']))
+                            else:
+                                gbasis.append( (sym.upper(), coeff[sym.upper()]))
                         if line==equals:
                             continue
                         line = inputfile.next()
