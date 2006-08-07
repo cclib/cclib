@@ -46,7 +46,7 @@ class GenericGeoOptTest(bettertest.TestCase):
         self.assertInside(self.data.scfenergies[-1],-10365,40,"Final scf energy: %f not -10365+-40eV" % self.data.scfenergies[-1])
 
     def testnormalisesym(self):
-        """Did this subclasses overwrite normalisesym?"""
+        """Did this subclass overwrite normalisesym?"""
         self.assertNotEquals(self.data.normalisesym("A"),"ERROR: This should be overwritten by this subclass")
 
     def testlengthmoenergies(self):
@@ -106,24 +106,31 @@ class ADFGeoOptTest(GenericGeoOptTest):
         """Is the SCF energy within 1eV of -140eV"""
         self.assertInside(self.data.scfenergies[-1],-140,1,"Final scf energy: %f not -140+-1eV" % self.data.scfenergies[-1])
 
-class JaguarGeoOptTest(GenericGeoOptTest):
+class Jaguar42GeoOptTest(GenericGeoOptTest):
     def setUp(self):
         self.data = data[4]
-        
-class GamessUKGeoOptTest(GenericGeoOptTest):
+
+class Jaguar65GeoOptTest(GenericGeoOptTest):
     def setUp(self):
         self.data = data[5]
         
+class GamessUKGeoOptTest(GenericGeoOptTest):
+    def setUp(self):
+        self.data = data[6]
+        
 
-names = [ "Gaussian", "PCGamess", "GAMESS", "ADF", "Jaguar", "GAMESS UK" ]
+names = [ "Gaussian", "PCGamess", "GAMESS", "ADF", "Jaguar4.2",
+          "Jaguar6.5", "GAMESS UK" ]
 tests = [ GaussianGeoOptTest, PCGamessGeoOptTest,
           GamessUSGeoOptTest, ADFGeoOptTest,
-          JaguarGeoOptTest, GamessUKGeoOptTest ]
+          Jaguar42GeoOptTest, Jaguar65GeoOptTest,
+          GamessUKGeoOptTest ]
 data = [ getfile(Gaussian,"basicGaussian03","dvb_gopt.out"),
          getfile(GAMESS,"basicPCGAMESS","dvb_gopt_b.out"),
          getfile(GAMESS,"basicGAMESS-US","dvb_gopt_a.out"),
          getfile(ADF,"basicADF2004.01","dvb_gopt_b.adfout"),
          getfile(Jaguar,"basicJaguar4.2","dvb_gopt_b.out"),
+         getfile(Jaguar,"basicJaguar6.5","dvb_gopt_b.out"),
          getfile(GAMESSUK,"basicGAMESS-UK","dvb_gopt_d.out") ]
 
 if __name__=="__main__":

@@ -38,23 +38,31 @@ class ADFSPTest(GenericSPTest):
         #ADF uses fooverlaps
         self.assertEquals(self.data.fooverlaps.shape,(self.data.nbasis,self.data.nbasis))
 
-class JaguarSPTest(GenericSPTest):
+class Jaguar42SPTest(GenericSPTest):
+    def setUp(self):
+        self.data = data[4]
+
+
+class Jaguar65SPTest(GenericSPTest):
     def setUp(self):
         self.data = data[4]
 
 class GamessUKSPTest(GenericSPTest):
     def setUp(self):
-        self.data = data[5]
+        self.data = data[6]
 
-names = [ "Gaussian", "PCGamess", "GAMESS", "ADF", "Jaguar", "GAMESS UK"]
+names = [ "Gaussian", "PCGamess", "GAMESS", "ADF", "Jaguar 4.2",
+          "Jaguar 6.5", "GAMESS UK"]
 tests = [ GaussianSPTest, PCGamessSPTest,
           GamessUSSPTest, ADFSPTest,
-          JaguarSPTest, GamessUKSPTest]
+          Jaguar42SPTest, Jaguar65SPTest,
+          GamessUKSPTest]
 data = [getfile(Gaussian, "basicGaussian03","dvb_sp.out"),
         getfile(GAMESS, "basicGAMESS-US","dvb_sp.out"),
         getfile(GAMESS, "basicPCGAMESS","dvb_sp.out"),
         getfile(ADF, "basicADF2004.01","dvb_sp_b.adfout"),
         getfile(Jaguar, "basicJaguar4.2", "dvb_sp.out"),
+        getfile(Jaguar, "basicJaguar6.5", "dvb_sp.out"),
         getfile(GAMESSUK, "basicGAMESS-UK", "dvb_sp.out")]
               
 if __name__=="__main__":
