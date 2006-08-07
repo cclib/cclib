@@ -72,7 +72,7 @@ def getbfs(coords, gbasis):
 
     return bfs
 
-def wavefunction(coords, mocoeffs, bfs, volume):
+def wavefunction(coords, mocoeffs, gbasis, volume):
     """Calculate the magnitude of the wavefunction at every point in a volume.
     
     Attributes:
@@ -151,9 +151,9 @@ if __name__=="__main__":
     b.parse()
 
     vol = Volume( (-2.5,-5,-1.5), (2.5, 5, 1.5), spacing=(0.25,0.25,0.25) )
-    # homowavefn = wavefunction(b.atomcoords[0], b.mocoeffs[0,b.homos[0]], a.gbasis, vol)
-    # homowavefn.write("cubefile.vtk")
-    density = electrondensity(b.atomcoords[0], b.mocoeffs[0,0:(b.homos[0]+1)], a.gbasis, vol)
-    density.write("cubefile.vtk")
+    homowavefn = wavefunction(b.atomcoords[0], b.mocoeffs[0,b.homos[0]], a.gbasis, vol)
+    homowavefn.write("homo.vtk")
+    # density = electrondensity(b.atomcoords[0], b.mocoeffs[0,0:(b.homos[0]+1)], a.gbasis, vol)
+    # density.write("cubefile.vtk")
     
     

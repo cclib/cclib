@@ -54,7 +54,7 @@ data = [getfile(Gaussian, "basicGaussian03","dvb_sp.out"),
         getfile(GAMESS, "basicGAMESS-US","dvb_sp.out"),
         getfile(GAMESS, "basicPCGAMESS","dvb_sp.out"),
         getfile(ADF, "basicADF2004.01","dvb_sp_b.adfout"),
-        getfile(Jaguar, "basicJaguar", "dvb_sp.out"),
+        getfile(Jaguar, "basicJaguar4.2", "dvb_sp.out"),
         getfile(GAMESSUK, "basicGAMESS-UK", "dvb_sp.out")]
               
 if __name__=="__main__":

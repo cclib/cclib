@@ -19,7 +19,7 @@ def visualtests():
                  getfile(GAMESS,"basicPCGAMESS","dvb_gopt_a.out"),
                  getfile(GAMESS,"basicGAMESS-US","dvb_gopt_a.out"),
                  getfile(ADF,"basicADF2004.01","dvb_gopt.adfout"),
-                 getfile(Jaguar,"basicJaguar", "dvb_gopt.out")]
+                 getfile(Jaguar,"basicJaguar4.2", "dvb_gopt.out")]
 
     print "\n\nMO energies of optimised dvb"
     print "    ","".join(["%8s" % x for x in ['Gaussian','PCGAMESS','GAMESS-US','ADF','Jaguar']])
