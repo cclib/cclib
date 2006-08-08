@@ -254,6 +254,33 @@ class GAMESSUK(logfileparser.Logfile):
                 assert len(mosyms) == self.nmo
                 self.mosyms.append(mosyms)
 
+            if line[50:62] == "eigenvectors":
+# Mocoeffs...can get evalues from here too
+# (only if using FORMAT HIGH though will they all be present)                
+                if not hasattr(self, "mocoeffs"):
+                    self.logger.info("Creating attribute mocoeffs")
+                    self.mocoeffs = Numeric.zeros( (1,self.nmo, self.nbasis), "f")
+                minus = inputfile.next()
+
+                blank = inputfile.next()
+                blank = inputfile.next()
+                evalues = inputfile.next()
+                for mo in range(0, self.nmo, 7):
+                    blank = inputfile.next()
+                    blank = inputfile.next()
+                    nums = inputfile.next()
+                    blank = inputfile.next()
+                    blank = inputfile.next()
+                    for basis in range(self.nbasis):
+                        temp = map(float, inputfile.next()[19:].split())
+                        self.mocoeffs[0, mo:(mo+len(temp)), basis] = temp
+                    blank = inputfile.next()
+                    blank = inputfile.next()
+                    evalues = inputfile.next()
+                    if evalues[:17].strip(): # i.e. if these aren't evalues
+                        break # Not all the MOs are present
+                self.mocoeffs = self.mocoeffs[:, 0:(mo+len(temp)), :]
+
             if line[2:12] == "m.o. irrep":
                 ########## eigenvalues ###########
                 # This section appears once at the start of a geo-opt and once at the end
