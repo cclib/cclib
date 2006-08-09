@@ -265,7 +265,8 @@ class GAMESSUK(logfileparser.Logfile):
                 blank = inputfile.next()
                 blank = inputfile.next()
                 evalues = inputfile.next()
-                for mo in range(0, self.nmo, 7):
+                mo = 0
+                while mo < self.nmo:
                     blank = inputfile.next()
                     blank = inputfile.next()
                     nums = inputfile.next()
@@ -279,6 +280,7 @@ class GAMESSUK(logfileparser.Logfile):
                     evalues = inputfile.next()
                     if evalues[:17].strip(): # i.e. if these aren't evalues
                         break # Not all the MOs are present
+                    mo += len(temp)
                 self.mocoeffs = self.mocoeffs[:, 0:(mo+len(temp)), :]
 
             if line[2:12] == "m.o. irrep":
