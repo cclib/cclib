@@ -9,6 +9,7 @@ import adfparser
 import gamessparser
 import gaussianparser
 import jaguarparser
+import gamessukparser
 
 def guesstype(filename):
     """Guess the identity of a particular log file and return an instance of it.
@@ -24,6 +25,9 @@ def guesstype(filename):
             break
         elif line.find("GAMESS") >= 0:
             filetype = gamessparser.GAMESS
+            # don't break as it may be a GAMESS-UK file
+        elif line.find("G A M E S S - U K") >= 0:
+            filetype = gamessukparser.GAMESSUK
             break
         elif line.find("Gaussian") >= 0:
             filetype = gaussianparser.Gaussian
