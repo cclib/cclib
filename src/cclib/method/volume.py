@@ -140,13 +140,13 @@ if __name__=="__main__":
     import psyco
     psyco.full() # Down from 3.5 to 1.5
 
-    from cclib.parser import guesstype
+    from cclib.parser import ccopen
     import logging
-    a = guesstype("../../../data/Gaussian/basicGaussian03/dvb_sp_basis.log")
+    a = ccopen("../../../data/Gaussian/basicGaussian03/dvb_sp_basis.log")
     a.logger.setLevel(logging.ERROR)
     a.parse()
     
-    b = guesstype("../../../data/Gaussian/basicGaussian03/dvb_sp.out")
+    b = ccopen("../../../data/Gaussian/basicGaussian03/dvb_sp.out")
     b.logger.setLevel(logging.ERROR)
     b.parse()
 

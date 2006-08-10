@@ -19,6 +19,6 @@ from jaguarparser import Jaguar
 from gamessukparser import GAMESSUK
 
 # This allow users to type:
-#         from cclib.parser import guesstype
+#         from cclib.parser import ccopen
 
-from utils import guesstype
+from utils import ccopen

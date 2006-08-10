@@ -1,5 +1,5 @@
 import os
-from cclib.parser import guesstype
+from cclib.parser import ccopen
 
 def makefilename(shortfilename):
     """Add ../data/ to the filenames in an OS-independent way."""
@@ -13,14 +13,14 @@ _brokeparser = ['Gaussian/Gaussian98/oo-LAN.out',
 for filename in _brokeparser:
     print "\n\nAttempting to parse %s." % filename
     newname = makefilename(filename)
-    t = guesstype(newname)
+    t = ccopen(newname)
     t.parse()
 
 # The following file had no atomcoords as it did not contain any
 # "Input orientation" sections, only "Standard orientation" sections
 print "\n\nAttempting to assert that %s has atomcoords." % filename
 filename = 'Gaussian/Gaussian03/Mo4OSibdt2-opt.log'
-t = guesstype(makefilename(filename))
+t = ccopen(makefilename(filename))
 t.parse()
 assert hasattr(t,"atomcoords")
 

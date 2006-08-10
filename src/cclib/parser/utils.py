@@ -11,10 +11,10 @@ import gaussianparser
 import jaguarparser
 import gamessukparser
 
-def guesstype(filename):
+def ccopen(filename):
     """Guess the identity of a particular log file and return an instance of it.
     
-    Returns: one of ADF, GAMESS, Gaussian, Jaguar, or
+    Returns: one of ADF, GAMESS, GAMESS UK, Gaussian, Jaguar, or
              None (if it cannot figure it out).
     """
     filetype = None
