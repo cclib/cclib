@@ -326,7 +326,7 @@ class GAMESS(logfileparser.Logfile):
                         while line.strip():
                             temp = line.strip().split()
                             sym = temp[1]
-                            assert sym in ['S', 'P', 'D', 'F', 'L']
+                            assert sym in ['S', 'P', 'D', 'F', 'G', 'L']
                             if sym == "L": # L refers to SP
                                 if len(temp)==6: # GAMESS US
                                     coeff.setdefault("S", []).append( (float(temp[3]), float(temp[4])) )
