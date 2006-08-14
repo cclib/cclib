@@ -80,7 +80,7 @@ class GAMESSUK(logfileparser.Logfile):
                 if not hasattr(self, "geovalues"):
                     self.logger.info("Creating attribute geovalues")
                     self.geovalues = []
-                self.geovalues.append(float(line.split()[4]))
+                self.geovalues.append([float(line.split()[4])])
 
             if line[37:49] == "convergence?":
                 # Get the geovalues and geotargets for OPTIMIZE
