@@ -5,7 +5,7 @@ import glob
 import getopt
 import logging
 
-from cclib.parser import guesstype
+from cclib.parser import ccopen
 
 _allowedargs = ['aonames','aooveralps','atomcoords','atomnos', 
                 'etenergies','etoscs','etrotats','etsecs','etsyms',
@@ -67,7 +67,7 @@ def main():
     
     for filename in filenames:
         print "Attempting to parse %s" % filename
-        log = guesstype(filename)
+        log = ccopen(filename)
         if log==None:
             print "Cannot figure out what type of computation chemistry output file '%s' is.\nReport this to the cclib development team if you think this is an error." % filename
             usage()
