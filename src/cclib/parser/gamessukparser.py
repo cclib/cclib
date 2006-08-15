@@ -54,6 +54,8 @@ class GAMESSUK(logfileparser.Logfile):
             self.progress.initialize(nstep)
             oldstep = 0
 
+        betaset = False # used for determining whether to add mosyms
+
         for line in inputfile:
             
             if self.progress and random.random() < cupdate:
@@ -233,9 +235,13 @@ class GAMESSUK(logfileparser.Logfile):
 # either the start of the next block or the start of a new atom or
 # the end of the basis function section (signified by a line of equals)
                     self.gbasis.append(gbasis)
+
+            if line[50:70] == "----- beta set -----":
+                betaset = True
+                # betaset will be turned off in the next
+                # SYMMETRY ASSIGNMENT section
                     
             if line[31:50] == "SYMMETRY ASSIGNMENT":
-                # (Need IPRINT SCF to get the mosyms for every step of a geoopt)
                 if not hasattr(self, "mosyms"):
                     self.logger.info("Creating attribute mosyms")
                     self.mosyms = []
@@ -252,7 +258,13 @@ class GAMESSUK(logfileparser.Logfile):
                         mosyms.append(self.normalisesym(temp[i]))
                     line = inputfile.next()
                 assert len(mosyms) == self.nmo
-                self.mosyms.append(mosyms)
+                if betaset:
+                    # Only append if beta (otherwise with IPRINT SCF
+                    # it will add mosyms for every step of a geo opt)
+                    self.mosyms.append(mosyms)
+                    betaset = False
+                else:
+                    self.mosyms = [mosyms]
 
             if line[50:62] == "eigenvectors":
 # Mocoeffs...can get evalues from here too
