@@ -30,10 +30,10 @@ class Jaguar(logfileparser.Logfile):
     def normalisesym(self, label):
         """Normalise the symmetries used by Jaguar.
 
-        To normalise, two rules need to be applied:
-        (1) Occurences of U/G in the 2/3 position of the label
-            must be lower-cased
-        (2) Two single quotation marks must be replaced by a double
+        To normalise, three rules need to be applied:
+        (1) To handle orbitals of E symmetry, retain everything before the /
+        (2) Replace two p's by "
+        (2) Replace any remaining single p's by '
 
         >>> t = Jaguar("dummyfile").normalisesym
         >>> labels = ['A', 'A1', 'Ag', 'Ap', 'App', "A1p", "A1pp", "E1pp/Ap"]
