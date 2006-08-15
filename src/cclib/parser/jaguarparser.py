@@ -36,12 +36,12 @@ class Jaguar(logfileparser.Logfile):
         (2) Two single quotation marks must be replaced by a double
 
         >>> t = Jaguar("dummyfile").normalisesym
-        >>> labels = ['A', 'A1', 'Ag', 'Ap', 'App', "A1p", "A1pp"]
+        >>> labels = ['A', 'A1', 'Ag', 'Ap', 'App', "A1p", "A1pp", "E1pp/Ap"]
         >>> answers = map(t, labels)
         >>> print answers
-        ['A', 'A1', 'Ag', "A'", 'A"', "A1'", 'A1"']
+        ['A', 'A1', 'Ag', "A'", 'A"', "A1'", 'A1"', 'E1"']
         """
-        ans = label.replace("pp", '"').replace("p", "'")
+        ans = label.split("/")[0].replace("pp", '"').replace("p", "'")
         return ans
 
     def parse(self, fupdate=0.05, cupdate=0.002):
