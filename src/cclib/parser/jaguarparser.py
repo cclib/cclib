@@ -27,6 +27,23 @@ class Jaguar(logfileparser.Logfile):
         """Return a representation of the object."""
         return 'Jaguar("%s")' % (self.filename)
 
+    def normalisesym(self, label):
+        """Normalise the symmetries used by Jaguar.
+
+        To normalise, two rules need to be applied:
+        (1) Occurences of U/G in the 2/3 position of the label
+            must be lower-cased
+        (2) Two single quotation marks must be replaced by a double
+
+        >>> t = Jaguar("dummyfile").normalisesym
+        >>> labels = ['A', 'A1', 'Ag', 'Ap', 'App', "A1p", "A1pp"]
+        >>> answers = map(t, labels)
+        >>> print answers
+        ['A', 'A1', 'Ag', "A'", 'A"', "A1'", 'A1"']
+        """
+        ans = label.replace("pp", '"').replace("p", "'")
+        return ans
+
     def parse(self, fupdate=0.05, cupdate=0.002):
         """Extract information from the logfile."""
         inputfile = open(self.filename, "r")
@@ -153,7 +170,7 @@ class Jaguar(logfileparser.Logfile):
                     temp = line.strip().split()
                     for i in range(0, len(temp), 2):
                         self.moenergies[0].append(utils.convertor(float(temp[i]), "hartree", "eV"))
-                        self.mosyms[0].append(temp[i+1])
+                        self.mosyms[0].append(self.normalisesym(temp[i+1]))
                     line = inputfile.next()
                 self.moenergies = Numeric.array(self.moenergies, "f")
             
