@@ -293,17 +293,22 @@ class GAMESSUK(logfileparser.Logfile):
                     self.mosyms = []
                 equals = inputfile.next()
                 title = inputfile.next()
+                decomposition = title.find("decomposition")>=0
                 title = inputfile.next()
                 equals = inputfile.next()
 
                 mosyms = []
                 line = inputfile.next()
                 while line != equals:
-                    temp = line[91:].strip().split()
-                    for i in range(1,len(temp),2):
-                        mosyms.append(self.normalisesym(temp[i]))
+                    if decomposition: # e.g. in dvb_gopt_b.out
+                        temp = line[91:].strip().split()
+                        for i in range(1,len(temp),2):
+                            mosyms.append(self.normalisesym(temp[i]))
+                    else: # e.g. in examples/chap12/pyridine2_rhf.out in the GAMESS UK distribution
+                        temp = line[25:30].strip()
+                        mosyms.append(self.normalisesym(temp))
                     line = inputfile.next()
-                assert len(mosyms) == self.nmo
+                assert len(mosyms) == self.nmo, "mosyms: %d but nmo: %d" % (len(mosyms), self.nmo)
                 if betaset:
                     # Only append if beta (otherwise with IPRINT SCF
                     # it will add mosyms for every step of a geo opt)
