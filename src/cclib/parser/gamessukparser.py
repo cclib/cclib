@@ -243,6 +243,7 @@ class GAMESSUK(logfileparser.Logfile):
                 equals = inputfile.next()
                 blank = inputfile.next()
                 atomname = inputfile.next()
+                basisregexp = re.compile("\d*(\D.*)") # Get everything after any digits
                 while line!=equals:
                     gbasis = [] # Stores basis sets on one atom
                     blank = inputfile.next()
@@ -253,8 +254,11 @@ class GAMESSUK(logfileparser.Logfile):
                         # coefficients and symmetries for a block of rows
                         while line.strip() and line!=equals:
                             temp = line.strip().split()
-                            sym = temp[1][1:]
-                            assert sym in ['s', 'p', 'd', 'f', 'sp']
+# temp[1] may be either like (a) "1s" and "1sp", or (b) "s" and "sp"
+# See GAMESS-UK 7.0 distribution/examples/chap12/pyridine2_21m10r.out
+# for an example of the latter
+                            sym = basisregexp.match(temp[1]).groups()[0]
+                            assert sym in ['s', 'p', 'd', 'f', 'sp'], "'%s' not a recognized symmetry" % sym
                             if sym == "sp":
                                 coeff.setdefault("S", []).append( (float(temp[3]), float(temp[6])) )
                                 coeff.setdefault("P", []).append( (float(temp[3]), float(temp[10])) )
