@@ -293,20 +293,25 @@ class GAMESSUK(logfileparser.Logfile):
                     self.mosyms = []
                 equals = inputfile.next()
                 title = inputfile.next()
-                decomposition = title.find("decomposition")>=0
                 title = inputfile.next()
                 equals = inputfile.next()
 
                 mosyms = []
                 line = inputfile.next()
                 while line != equals:
-                    if decomposition: # e.g. in dvb_gopt_b.out
-                        temp = line[91:].strip().split()
-                        for i in range(1,len(temp),2):
-                            mosyms.append(self.normalisesym(temp[i]))
-                    else: # e.g. in examples/chap12/pyridine2_rhf.out in the GAMESS UK distribution
-                        temp = line[25:30].strip()
+                    temp = line[25:30].strip()
+                    if temp[-1]=='?':
+# e.g. e? or t? or g? (see example/chap12/na7mg_uhf.out)
+# for two As, an A and an E, and two Es of the same energy respectively.
+                        t = line[91:].strip().split()
+                        for i in range(1,len(t),2):
+                            mosyms.append(self.normalisesym(t[i]))
+                            if t[i][0]=='e': # Add a second time
+                                mosyms.append(self.normalisesym(t[i]))
+                    else:
                         mosyms.append(self.normalisesym(temp))
+                        if temp[0]=='e': # Add a second time
+                            mosyms.append(self.normalisesym(temp))
                     line = inputfile.next()
                 assert len(mosyms) == self.nmo, "mosyms: %d but nmo: %d" % (len(mosyms), self.nmo)
                 if betaset:
