@@ -203,7 +203,7 @@ class GAMESSUK(logfileparser.Logfile):
 
             if line[3:11] == "SCF TYPE":
                 type = line.split()[-2]
-                assert type in ['rhf', 'uhf'] # what about rohf?
+                assert type in ['rhf', 'uhf'], "%s not one of 'rhf', 'uhf'" % type  # what about rohf?
                 if type != 'uhf':
                     self.homos = Numeric.array([self.homos[0]], 'i')
 
@@ -215,14 +215,17 @@ class GAMESSUK(logfileparser.Logfile):
                 while line[1:10] != "="*9:
                     line = inputfile.next()
                 line = inputfile.next()
+                tester = line.find("tester") # Can be in a different place depending
+                assert tester>=0
                 while line[1:10] != "="*9: # May be two or three lines (unres)
                     line = inputfile.next()
                 
                 scfvalues = []
                 line = inputfile.next()
                 while line.strip():
-                    temp = line.split()
-                    scfvalues.append([float(temp[5])])
+                    if line[2:6]!="****":
+# e.g. **** recalulation of fock matrix on iteration  4 (examples/chap12/pyridine.out)
+                        scfvalues.append([float(line[tester-5:tester+6])])
                     line = inputfile.next()
                 self.scfvalues.append(scfvalues)   
 
