@@ -54,6 +54,10 @@ class GAMESSUK(logfileparser.Logfile):
             self.progress.initialize(nstep)
             oldstep = 0
 
+        firstnuccoords = True
+        # This will be used to detect the first set of "nuclear coordinates" in
+        # a geometry-optimization
+
         betaset = False # used for determining whether to add mosyms
 
         for line in inputfile:
@@ -102,7 +106,42 @@ class GAMESSUK(logfileparser.Logfile):
                 if not self.geotargets:
                     self.geotargets = geotargets
             
+            if line[40:58] == "molecular geometry":
+                # Only one set of atomcoords is taken from this section
+                # For geo-opts, more coordinates are taken from the "nuclear coordinates"
+                if not hasattr(self, "atomcoords"):
+                    self.logger.info("Creating attribute atomcoords[], atomnos[]")
+                    self.atomcoords = []
+                    self.atomnos = []
+                
+                stop = " "*9 + "*"*79
+                line = inputfile.next()
+                while not line.startswith(stop):
+                    line = inputfile.next()
+                line = inputfile.next()
+                while not line.startswith(stop):
+                    line = inputfile.next()
+                empty = inputfile.next()
+
+                atomcoords = []
+                line = inputfile.next()
+                while not line.startswith(stop):
+                    line = inputfile.next()
+                    atomcoords.append(map(float,line.split()[3:6]))
+                    while line!=empty:
+                        line = inputfile.next()
+                    line = inputfile.next()
+
+                self.atomcoords.append(atomcoords)
+
             if line[40:59] == "nuclear coordinates":
+                # We need not remember the first geometry in the geo-opt as this will
+                # be recorded already, in the "molecular geometry" section
+                # (note: single-point calculations have no "nuclear coordinates" only
+                # "molecular geometry")
+                if firstnuccoords:
+                    firstnuccoords = False
+                    continue
                 if not hasattr(self, "atomcoords"):
                     self.logger.info("Creating attribute atomcoords[], atomnos[]")
                     self.atomcoords = []
@@ -118,7 +157,7 @@ class GAMESSUK(logfileparser.Logfile):
                 line = inputfile.next()
                 while line != equals:
                     temp = line.strip().split()
-                    atomcoords.append([utils.convertor(float(x), "bohr", "Angstrom") for x in temp[0:2]])
+                    atomcoords.append([utils.convertor(float(x), "bohr", "Angstrom") for x in temp[0:3]])
                     if not self.atomnos:
                         atomnos.append(int(float(temp[3])))
                         
