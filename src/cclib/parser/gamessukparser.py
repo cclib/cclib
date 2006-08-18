@@ -291,6 +291,9 @@ class GAMESSUK(logfileparser.Logfile):
                 if not hasattr(self, "mosyms"):
                     self.logger.info("Creating attribute mosyms")
                     self.mosyms = []
+
+                multiple = {'a':1, 'b':1, 'e':2, 't':3, 'g':4, 'h':5}
+                
                 equals = inputfile.next()
                 title = inputfile.next()
                 title = inputfile.next()
@@ -305,13 +308,11 @@ class GAMESSUK(logfileparser.Logfile):
 # for two As, an A and an E, and two Es of the same energy respectively.
                         t = line[91:].strip().split()
                         for i in range(1,len(t),2):
-                            mosyms.append(self.normalisesym(t[i]))
-                            if t[i][0]=='e': # Add a second time
+                            for j in range(multiple[t[i][0]]): # add twice for 'e', etc.
                                 mosyms.append(self.normalisesym(t[i]))
                     else:
-                        mosyms.append(self.normalisesym(temp))
-                        if temp[0]=='e': # Add a second time
-                            mosyms.append(self.normalisesym(temp))
+                        for j in range(multiple[temp[0]]):
+                            mosyms.append(self.normalisesym(temp)) # add twice for 'e', etc.
                     line = inputfile.next()
                 assert len(mosyms) == self.nmo, "mosyms: %d but nmo: %d" % (len(mosyms), self.nmo)
                 if betaset:
