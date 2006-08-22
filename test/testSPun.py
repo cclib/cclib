@@ -53,6 +53,11 @@ class GamessUKSPunTest(GenericSPunTest):
     def setUp(self):
         self.data = data[6]
 
+    def testdimmocoeffs(self):
+        """Are the dimensions of mocoeffs equal to 1 x (max(homos)+5) x nbasis?"""
+        self.assertEquals(self.data.mocoeffs.shape,(2,max(self.data.homos)+6,self.data.nbasis))
+
+
 names = [ "Gaussian", "PCGamess", "GAMESS", "ADF", "Jaguar 4.2",
           "Jaguar 6.5", "GAMESS UK"]
 tests = [ GaussianSPunTest, PCGamessSPunTest,
