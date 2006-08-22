@@ -58,7 +58,8 @@ class GAMESSUK(logfileparser.Logfile):
         # This will be used to detect the first set of "nuclear coordinates" in
         # a geometry-optimization
 
-        betaset = False # used for determining whether to add mosyms
+        betamosyms = betamoenergies = betamocoeffs = False
+        # used for determining whether to add a second mosyms, etc.
 
         for line in inputfile:
             
@@ -170,13 +171,18 @@ class GAMESSUK(logfileparser.Logfile):
             if line[1:32] == "total number of basis functions":
                 self.logger.info("Creating attribute nbasis")
                 self.nbasis = int(line.split()[-1])
-            
-            if line[1:36] == "number of occupied orbitals (alpha)":
+                while line.find("multiplicity")<0:
+                    line = inputfile.next()
+                multiplicity = int(line.split()[-1])
+
                 if not hasattr(self, "homos"):
                     self.logger.info("Creating attribute homos")
-                alpha = int(line.split()[-1])-1
+                alpha = int(inputfile.next().split()[-1])-1
                 beta = int(inputfile.next().split()[-1])-1
-                self.homos = Numeric.array([alpha, beta], "i")
+                if multiplicity==1:
+                    self.homos = Numeric.array([alpha], "i")
+                else:
+                    self.homos = Numeric.array([alpha,beta], "i")
 
             if line[37:69] == "s-matrix over gaussian basis set":
                 self.logger.info("Creating attribute aooverlaps")
@@ -195,17 +201,14 @@ class GAMESSUK(logfileparser.Logfile):
                         temp = map(float, inputfile.next().split()[1:])
                         self.aooverlaps[j,(0+i):(len(temp)+i)] = temp
                 
-
             if line[3:27] == "Wavefunction convergence":
                 self.logger.info("Creating attribute scftargets")
                 scftarget = float(line.split()[-2])
                 self.scftargets = []
 
             if line[3:11] == "SCF TYPE":
-                type = line.split()[-2]
-                assert type in ['rhf', 'uhf'], "%s not one of 'rhf', 'uhf'" % type  # what about rohf?
-                if type != 'uhf':
-                    self.homos = Numeric.array([self.homos[0]], 'i')
+                scftype = line.split()[-2]
+                assert scftype in ['rhf', 'uhf', 'gvb'], "%s not one of 'rhf', 'uhf' or 'gvb'" % scftype
 
             if line[15:31] == "convergence data":
                 if not hasattr(self, "scfvalues"):
@@ -283,8 +286,10 @@ class GAMESSUK(logfileparser.Logfile):
                     self.gbasis.append(gbasis)
 
             if line[50:70] == "----- beta set -----":
-                betaset = True
-                # betaset will be turned off in the next
+                betamosyms = True
+                betamoenergies = True
+                betamocoeffs = True
+                # betamosyms will be turned off in the next
                 # SYMMETRY ASSIGNMENT section
                     
             if line[31:50] == "SYMMETRY ASSIGNMENT":
@@ -315,11 +320,14 @@ class GAMESSUK(logfileparser.Logfile):
                             mosyms.append(self.normalisesym(temp)) # add twice for 'e', etc.
                     line = inputfile.next()
                 assert len(mosyms) == self.nmo, "mosyms: %d but nmo: %d" % (len(mosyms), self.nmo)
-                if betaset:
+                if betamosyms:
                     # Only append if beta (otherwise with IPRINT SCF
                     # it will add mosyms for every step of a geo opt)
                     self.mosyms.append(mosyms)
-                    betaset = False
+                    betamosyms = False
+                elif scftype=='gvb':
+                    # gvb has alpha and beta orbitals but they are identical
+                    self.mosysms = [mosyms, mosyms]
                 else:
                     self.mosyms = [mosyms]
 
@@ -328,9 +336,9 @@ class GAMESSUK(logfileparser.Logfile):
 # (only if using FORMAT HIGH though will they all be present)                
                 if not hasattr(self, "mocoeffs"):
                     self.logger.info("Creating attribute mocoeffs")
-                    self.mocoeffs = Numeric.zeros( (1,self.nmo, self.nbasis), "f")
                 minus = inputfile.next()
 
+                mocoeffs = Numeric.zeros( (1, self.nmo, self.nbasis), "f")
                 blank = inputfile.next()
                 blank = inputfile.next()
                 evalues = inputfile.next()
@@ -343,24 +351,29 @@ class GAMESSUK(logfileparser.Logfile):
                     blank = inputfile.next()
                     for basis in range(self.nbasis):
                         temp = map(float, inputfile.next()[19:].split())
-                        self.mocoeffs[0, mo:(mo+len(temp)), basis] = temp
+                        mocoeffs[0, mo:(mo+len(temp)), basis] = temp
                     blank = inputfile.next()
                     blank = inputfile.next()
                     evalues = inputfile.next()
                     if evalues[:17].strip(): # i.e. if these aren't evalues
                         break # Not all the MOs are present
                     mo += len(temp)
-                self.mocoeffs = self.mocoeffs[:, 0:(mo+len(temp)), :]
+                mocoeffs = mocoeffs[:, 0:(mo+len(temp)), :]
+                if betamocoeffs:
+                    # Add space for the beta mocoeffs
+                    self.mocoeffs = Numeric.resize(self.mocoeffs, (2, self.mocoeffs.shape[1], self.mocoeffs.shape[2]))
+                    # Set the beta mocoeffs all to zero (as there may be more alpha than beta)
+                    self.mocoeffs[1, :, :] = Numeric.zeros( (self.mocoeffs.shape[1], self.mocoeffs.shape[2]), "f")
+                    # Set the beta mocoeffs to those just extracted
+                    self.mocoeffs[1, :mocoeffs.shape[1], :mocoeffs.shape[2]] = mocoeffs[0, :, :]
+                    betamocoeffs = False
+                else:
+                    self.mocoeffs = mocoeffs
 
             if line[2:12] == "m.o. irrep":
                 ########## eigenvalues ###########
                 # This section appears once at the start of a geo-opt and once at the end
                 # unless IPRINT SCF is used (when it appears at every step in addition)
-                # This means that the energies of the final geometry appear twice in the
-                # case of IPRINT SCF (there's no way around this [unless we test
-                # for IPRINT SCF, which I don't like to do], since the alternative would
-                # be for the final geometry not to appear at all in the case of no
-                # IPRINT SCF, which I think would be a bad idea)
                 if not hasattr(self, "moenergies"):
                     self.logger.info("Creating attribute moenergies, nmo")
                     self.moenergies = []
@@ -375,12 +388,18 @@ class GAMESSUK(logfileparser.Logfile):
                     moenergies.append(float(temp[3]))
                     line = inputfile.next()
                 self.nmo = len(moenergies)
-                self.moenergies.append(moenergies)
+                if betamoenergies:
+                    self.moenergies.append(moenergies)
+                    betamoenergies = False
+                elif scftype=='gvb':
+                    self.moenergies = [moenergies, moenergies]
+                else:
+                    self.moenergies = [moenergies]
                 
         if self.progress:
             self.progress.update(nstep, "Done")
 
-        _toarray = ['atomcoords', 'geotargets', 'geovalues', 'scftargets',
+        _toarray = ['atomcoords', 'geotargets', 'geovalues', 'moenergies', 'scftargets',
                     'scfenergies']
         for attr in _toarray:
             if hasattr(self, attr):
