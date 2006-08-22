@@ -249,7 +249,7 @@ class GAMESSUK(logfileparser.Logfile):
                 equals = inputfile.next()
                 blank = inputfile.next()
                 atomname = inputfile.next()
-                basisregexp = re.compile("\d*(\D.*)") # Get everything after any digits
+                basisregexp = re.compile("\d*(\D+)") # Get everything after any digits
                 while line!=equals:
                     gbasis = [] # Stores basis sets on one atom
                     blank = inputfile.next()
@@ -336,12 +336,20 @@ class GAMESSUK(logfileparser.Logfile):
 # (only if using FORMAT HIGH though will they all be present)                
                 if not hasattr(self, "mocoeffs"):
                     self.logger.info("Creating attribute mocoeffs")
+                    self.logger.info("Creating attribute aonames")
+                    self.aonames = []
+                    aonames = []
                 minus = inputfile.next()
 
+                
                 mocoeffs = Numeric.zeros( (1, self.nmo, self.nbasis), "f")
                 blank = inputfile.next()
                 blank = inputfile.next()
                 evalues = inputfile.next()
+
+                p = re.compile(r"\d+\s+(\d+)\s*(\w+) (\w+)")
+                oldatomname = "DUMMY VALUE"
+
                 mo = 0
                 while mo < self.nmo:
                     blank = inputfile.next()
@@ -350,8 +358,22 @@ class GAMESSUK(logfileparser.Logfile):
                     blank = inputfile.next()
                     blank = inputfile.next()
                     for basis in range(self.nbasis):
-                        temp = map(float, inputfile.next()[19:].split())
+                        line = inputfile.next()
+                        if not self.aonames:
+                            pg = p.match(line[:18].strip()).groups()
+                            atomname = "%s%s%s" % (pg[1][0].upper(), pg[1][1:], pg[0])
+                            if atomname!=oldatomname:
+                                aonum = 1
+                            oldatomname = atomname
+                            name = "%s_%d%s" % (atomname, aonum, pg[2].upper())
+                            if name in aonames:
+                                aonum += 1
+                            name = "%s_%d%s" % (atomname, aonum, pg[2].upper())
+                            aonames.append(name) 
+                        temp = map(float, line[19:].split())
                         mocoeffs[0, mo:(mo+len(temp)), basis] = temp
+                    if not self.aonames:
+                        self.aonames = aonames
 
                     line = inputfile.next() # blank line
                     while line==blank:
