@@ -13,7 +13,7 @@ class GenericSPunTest(bettertest.TestCase):
         self.assertEquals(self.data.aooverlaps.shape,(self.data.nbasis,self.data.nbasis))
 
     def testdimmocoeffs(self):
-        """Are the dimensions of mocoeffs equal to 1 x nmo x nbasis?"""
+        """Are the dimensions of mocoeffs equal to 2 x nmo x nbasis?"""
         self.assertEquals(self.data.mocoeffs.shape,(2,self.data.nmo,self.data.nbasis))
 
     def testhomos(self):
@@ -54,7 +54,7 @@ class GamessUKSPunTest(GenericSPunTest):
         self.data = data[6]
 
     def testdimmocoeffs(self):
-        """Are the dimensions of mocoeffs equal to 1 x (max(homos)+5) x nbasis?"""
+        """Are the dimensions of mocoeffs equal to 2 x (max(homos)+6) x nbasis?"""
         self.assertEquals(self.data.mocoeffs.shape,(2,max(self.data.homos)+6,self.data.nbasis))
 
 
