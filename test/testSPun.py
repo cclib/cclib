@@ -20,6 +20,15 @@ class GenericSPunTest(bettertest.TestCase):
         """Are the homos correct?"""
         self.assertArrayEquals(self.data.homos,Numeric.array([34,33],"i"),"%s != array([34,33],'i')" % Numeric.array_repr(self.data.homos))
 
+    def testmoenergies(self):
+        """Are the dims of the moenergies equals to 2 x nmo?"""
+        self.assertEquals(self.data.moenergies.shape, (2, self.data.nmo))
+
+    def testmosyms(self):
+        """Are the dims of the mosyms equals to 2 x nmo?"""
+        shape = (len(self.data.mosyms), len(self.data.mosyms[0]))
+        self.assertEquals(shape, (2, self.data.nmo))
+        
 class GaussianSPunTest(GenericSPunTest):
     def setUp(self):
         self.data = data[0]
