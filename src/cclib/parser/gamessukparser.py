@@ -300,9 +300,9 @@ class GAMESSUK(logfileparser.Logfile):
                 multiple = {'a':1, 'b':1, 'e':2, 't':3, 'g':4, 'h':5}
                 
                 equals = inputfile.next()
-                title = inputfile.next()
-                title = inputfile.next()
-                equals = inputfile.next()
+                line = inputfile.next()
+                while line != equals: # There may be one or two lines of title (compare mg10.out and duhf_1.out)
+                    line = inputfile.next()
 
                 mosyms = []
                 line = inputfile.next()
@@ -352,9 +352,11 @@ class GAMESSUK(logfileparser.Logfile):
                     for basis in range(self.nbasis):
                         temp = map(float, inputfile.next()[19:].split())
                         mocoeffs[0, mo:(mo+len(temp)), basis] = temp
-                    blank = inputfile.next()
-                    blank = inputfile.next()
-                    evalues = inputfile.next()
+
+                    line = inputfile.next() # blank line
+                    while line==blank:
+                        line = inputfile.next()
+                    evalues = line
                     if evalues[:17].strip(): # i.e. if these aren't evalues
                         break # Not all the MOs are present
                     mo += len(temp)
@@ -370,7 +372,7 @@ class GAMESSUK(logfileparser.Logfile):
                 else:
                     self.mocoeffs = mocoeffs
 
-            if line[2:12] == "m.o. irrep":
+            if line[7:12] == "irrep":
                 ########## eigenvalues ###########
                 # This section appears once at the start of a geo-opt and once at the end
                 # unless IPRINT SCF is used (when it appears at every step in addition)
@@ -378,14 +380,18 @@ class GAMESSUK(logfileparser.Logfile):
                     self.logger.info("Creating attribute moenergies, nmo")
                     self.moenergies = []
 
-                title = inputfile.next()
                 equals = inputfile.next()
+                while equals[1:5] != "====": # May be one or two lines of title (compare duhf_1.out and mg10.out)
+                    equals = inputfile.next()
 
                 moenergies = []
                 line = inputfile.next()
-                while line != equals:
+                if not line.strip(): # May be a blank line here (compare duhf_1.out and mg10.out)
+                    line = inputfile.next()
+
+                while line.strip() and line != equals: # May end with a blank or equals
                     temp = line.strip().split()
-                    moenergies.append(float(temp[3]))
+                    moenergies.append(utils.convertor(float(temp[2]), "hartree", "eV"))
                     line = inputfile.next()
                 self.nmo = len(moenergies)
                 if betamoenergies:
