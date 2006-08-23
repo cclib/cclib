@@ -206,6 +206,22 @@ class GAMESSUK(logfileparser.Logfile):
                 scftarget = float(line.split()[-2])
                 self.scftargets = []
 
+            if line[11:22] == "normal mode":
+                if not hasattr(self, "vibfreqs"):
+                    self.logger.info("Creating attributes vibfreqs, vibirs")
+                    self.vibfreqs = []
+                    self.vibirs = []
+                
+                units = inputfile.next()
+                xyz = inputfile.next()
+                equals = inputfile.next()
+                line = inputfile.next()
+                while line!=equals:
+                    temp = line.split()
+                    self.vibfreqs.append(float(temp[1]))
+                    self.vibirs.append(float(temp[-2]))
+                    line = inputfile.next()
+
             if line[3:11] == "SCF TYPE":
                 scftype = line.split()[-2]
                 assert scftype in ['rhf', 'uhf', 'gvb'], "%s not one of 'rhf', 'uhf' or 'gvb'" % scftype
@@ -428,7 +444,7 @@ class GAMESSUK(logfileparser.Logfile):
             self.progress.update(nstep, "Done")
 
         _toarray = ['atomcoords', 'geotargets', 'geovalues', 'moenergies', 'scftargets',
-                    'scfenergies']
+                    'scfenergies', 'vibfreqs', 'vibirs']
         for attr in _toarray:
             if hasattr(self, attr):
                 setattr(self, attr, Numeric.array(getattr(self, attr), 'f'))
