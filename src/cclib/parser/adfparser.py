@@ -446,9 +446,9 @@ class ADF(logfileparser.Logfile):
                     while line.find('-----') < 0:
                         line = inputfile.next()
                        
-                    #for i in range(num):
+                    line = inputfile.next() # the start of the first SFO
+
                     while len(self.fonames) < symoffset + num:
-                        line = inputfile.next()
                         info = line.split()
                           
                         #index0 index1 occ2 energy3/4 fragname5 coeff6 orbnum7 orbname8 fragname9
@@ -459,47 +459,27 @@ class ADF(logfileparser.Logfile):
                         frag = fragname + info[9]
                           
                         coeff = float(info[6])
-                        sum = coeff**2
-                        while sum < 1.0:
-                        #if coeff**2 <= 1.0: #is this a linear combination?
-                            
+
+                        line = inputfile.next()
+                        while line.strip() and not line[:7].strip(): # while it's the same SFO
+                            # i.e. while not completely blank, but blank at the start
+                            info = line[43:].split()
+                            if len(info)>0: # len(info)==0 for the second line of dvb_ir.adfout
+                                frag += "+" + fragname + info[-1]
+                                coeff = float(info[-4])
+                                if coeff < 0:
+                                    orbital += '-' + info[-3] + info[-2].replace(":", "")
+                                else:
+                                    orbital += '+' + info[-3] + info[-2].replace(":", "")
                             line = inputfile.next()
-                            info = line.split()
-                              
-                            if line[42] == ' ' and len(info) > 4: #no new fragment/atom type and energy on line
-                                frag += "+" + fragname + info[6]
-                                coeff = float(info[3])
-                                if coeff < 0:
-                                    orbital += '-' + info[4] + info[5].replace(":", "")
-                                else:
-                                    orbital += '+' + info[4] + info[5].replace(":", "")
-
-                            elif line[42] == ' ': #no new fragment/atom type, but no energy on line
-                                frag += "+" + fragname + info[3]
-                                coeff = float(info[0])
-                                if coeff < 0:
-                                    orbital += '-' + info[1] + info[2].replace(":","")
-                                else:
-                                    orbital += '+' + info[1] + info[2].replace(":","")
-
-                            else:
-                                frag += "+" + info[3] + info[7]
-                                coeff = float(info[4])
-                                if coeff < 0:
-                                    orbital += '-' + info[5] + info[6].replace(":", "")
-                                else:
-                                    orbital += "+" + info[5] + info[6].replace(":", "")
-                            
-                            sum += coeff**2
-                            
-                        if sum == coeff**2: #if we did not go into the while loop, read a new line
-                            inputfile.next()
+                        # At this point, we are either at the start of the next SFO or at
+                        # a blank line...the end
 
                         self.fonames.append("%s_%s" % (frag, orbital))
                     symoffset += num
                     
-                    #nextline blankline blankline
-                    inputfile.next(); inputfile.next(); inputfile.next()
+                    # blankline blankline
+                    inputfile.next(); inputfile.next()
                     
                     
             if line[1:32] == "S F O   P O P U L A T I O N S ,":
