@@ -345,12 +345,15 @@ class ADF(logfileparser.Logfile):
                 
                 homoa = None
                 homob = None
+
+                multiple = {'E':2, 'T':3}
   
                 while line.strip():
                     info = line.split()
                     if len(info) == 5: #this is restricted
-                        self.mosyms[0].append(self.normalisesym(info[0]))
-                        self.moenergies[0].append(utils.convertor(float(info[3]), 'hartree', 'eV'))
+                        for repeat in range(multiple.get(info[0][0], 1)): # i.e. add E's twice, T's thrice
+                            self.mosyms[0].append(self.normalisesym(info[0]))
+                            self.moenergies[0].append(utils.convertor(float(info[3]), 'hartree', 'eV'))
                         if info[2] == '0.00' and not hasattr(self, 'homos'):
                             self.logger.info("Creating attribute homos[]")
                             self.homos = [len(self.moenergies[0]) - 2]
@@ -360,14 +363,16 @@ class ADF(logfileparser.Logfile):
                             self.moenergies.append([])
                             self.mosyms.append([])
                         if info[2] == 'A':
-                            self.mosyms[0].append(self.normalisesym(info[0]))
-                            self.moenergies[0].append(utils.convertor(float(info[4]), 'hartree', 'eV'))
+                            for repeat in range(multiple.get(info[0][0], 1)): # i.e. add E's twice, T's thrice
+                                self.mosyms[0].append(self.normalisesym(info[0]))
+                                self.moenergies[0].append(utils.convertor(float(info[4]), 'hartree', 'eV'))
                             if info[3] == '0.00' and homoa == None:
                                 homoa = len(self.moenergies[0]) - 2
                                 
                         if info[2] == 'B':
-                            self.mosyms[1].append(self.normalisesym(info[0]))
-                            self.moenergies[1].append(utils.convertor(float(info[4]), 'hartree', 'eV'))
+                            for repeat in range(multiple.get(info[0][0], 1)): # i.e. add E's twice, T's thrice
+                                self.mosyms[1].append(self.normalisesym(info[0]))
+                                self.moenergies[1].append(utils.convertor(float(info[4]), 'hartree', 'eV'))
                             if info[3] == '0.00' and homob == None:
                                 homob = len(self.moenergies[1]) - 2
                                 
