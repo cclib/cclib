@@ -346,7 +346,7 @@ class ADF(logfileparser.Logfile):
                 homoa = None
                 homob = None
   
-                while len(line) == 77:
+                while line.strip():
                     info = line.split()
                     if len(info) == 5: #this is restricted
                         self.mosyms[0].append(self.normalisesym(info[0]))
