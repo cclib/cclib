@@ -7,3 +7,5 @@ Gaussian 03, Rev. B.04
 Linux
 Intel P4
 dvb_sp_basis uses the coordinates in dvb_raman to do a SP calc with basis set information.
+
+Removed the nosym for dvb_un_sp to create _b.
