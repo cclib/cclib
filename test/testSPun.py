@@ -73,7 +73,7 @@ tests = [ GaussianSPunTest, PCGamessSPunTest,
           GamessUSSPunTest, ADFSPunTest,
           Jaguar42SPunTest, Jaguar65SPunTest,
           GamessUKSPunTest ]
-data = [ getfile(Gaussian,"basicGaussian03","dvb_un_sp.out"),
+data = [ getfile(Gaussian,"basicGaussian03","dvb_un_sp_b.log"),
          getfile(GAMESS,"basicGAMESS-US","dvb_un_sp.out"),
          getfile(GAMESS,"basicPCGAMESS","dvb_un_sp.out"),
          getfile(ADF,"basicADF2004.01","dvb_un_sp.adfout"),
