@@ -1,9 +1,12 @@
 """
 A combined test framework for regression, ccopen and parsing which is
 designed to make it easy to add new tests or datafiles.
+
+To run the doctest, just use "python regression.py test".
 """
 
 import os
+import sys
 import logging
 
 from glob import glob
@@ -58,10 +61,11 @@ filenames = [glob(os.path.join(data, "Gaussian", "basicGaussian03", "*.out")) +
 def normalisefilename(filename):
     """Replace all non-alphanumeric symbols by _
 
+    >>> import regression
     >>> for x in [ "Gaussian_Gaussian03_Mo4OSibdt2-opt.log" ]:
-    ...     print normalisefilename(x)
+    ...     print regression.normalisefilename(x)
     ...
-    'Gaussian_Gaussian03_Mo4Sibdt2_opt_log'
+    Gaussian_Gaussian03_Mo4OSibdt2_opt_log
     """
     ans = []
     for y in filename:
@@ -72,41 +76,49 @@ def normalisefilename(filename):
             ans.append("_")
     return "".join(ans)
 
-print
-failures = errors = total = 0
-for i in range(len(names)):
-    print "Are the %s files ccopened and parsed correctly?" % names[i]
-    for filename in filenames[i]:
-        total += 1
-        print "  %s..."  % filename,
-        try:
-            a  = ccopen(filename)
-        except:
-            errors += 1
-            print "ccopen error"
-        else:
-            if type(a) == type(dummyfiles[i]):
-                try:
-                    a.logger.setLevel(logging.ERROR)
-                    a.parse()
-                except:
-                    print "parse error"
-                    errors += 1
-                else:    
-                    fnname = "test" + normalisefilename("_".join(filename.split(os.sep)[2:]))
-                    if fnname in globals(): # If there is a test that matches...
-                        try:
-                            eval(fnname)(a) # Run the test
-                        except AssertionError:
-                            print "test failed"
-                            failures += 1
-                        else:
-                            print "parsed and tested"
-                    else:
-                        print "parsed"
-            else:
-                print "ccopen failed"
-                failures += 1
+def main():
     print
+    failures = errors = total = 0
+    for i in range(len(names)):
+        print "Are the %s files ccopened and parsed correctly?" % names[i]
+        for filename in filenames[i]:
+            total += 1
+            print "  %s..."  % filename,
+            try:
+                a  = ccopen(filename)
+            except:
+                errors += 1
+                print "ccopen error"
+            else:
+                if type(a) == type(dummyfiles[i]):
+                    try:
+                        a.logger.setLevel(logging.ERROR)
+                        a.parse()
+                    except:
+                        print "parse error"
+                        errors += 1
+                    else:    
+                        fnname = "test" + normalisefilename("_".join(filename.split(os.sep)[2:]))
+                        if fnname in globals(): # If there is a test that matches...
+                            try:
+                                eval(fnname)(a) # Run the test
+                            except AssertionError:
+                                print "test failed"
+                                failures += 1
+                            else:
+                                print "parsed and tested"
+                        else:
+                            print "parsed"
+                else:
+                    print "ccopen failed"
+                    failures += 1
+        print
 
-print "Total: %d   Failed: %d  Errors: %d" % (total, failures, errors)
+    print "Total: %d   Failed: %d  Errors: %d" % (total, failures, errors)
+
+if __name__=="__main__":
+    if len(sys.argv)==2 and sys.argv[1]=="test":
+        import doctest
+        doctest.testmod()
+    else:
+        main()
