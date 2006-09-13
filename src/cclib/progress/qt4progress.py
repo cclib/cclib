@@ -9,7 +9,7 @@ from PyQt4 import QtGui,QtCore
 
 class Qt4Progress(QtGui.QProgressDialog):
 
-    def __init__(self, parent):
+    def __init__(self, title, parent=None):
 
         QtGui.QProgressDialog.__init__(self, parent)
 
@@ -18,8 +18,8 @@ class Qt4Progress(QtGui.QProgressDialog):
         self.oldprogress = 0
         self.progress = 0
         self.calls = 0
-
-        self.setWindowTitle("Progress...")
+        self.loop=QtCore.QEventLoop(self)
+        self.setWindowTitle(title)
 
     def initialize(self, nstep, text=None):
 
@@ -35,5 +35,5 @@ class Qt4Progress(QtGui.QProgressDialog):
 
         self.setLabelText(text)
         self.setValue(step)
+        self.loop.processEvents(QtCore.QEventLoop.ExcludeUserInputEvents)
 
-        return
