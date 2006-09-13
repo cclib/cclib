@@ -10,8 +10,9 @@ import gamessparser
 import gaussianparser
 import jaguarparser
 import gamessukparser
+import logging
 
-def ccopen(filename):
+def ccopen(filename,progress=None,loglevel=logging.INFO,logname="Log"):
     """Guess the identity of a particular log file and return an instance of it.
     
     Returns: one of ADF, GAMESS, GAMESS UK, Gaussian, Jaguar, or
@@ -38,7 +39,7 @@ def ccopen(filename):
     inputfile.close() # Need to close before creating an instance
     
     if filetype: # Create an instance of the chosen class
-        filetype = apply(filetype, [filename])
+        filetype = apply(filetype, [filename,progress,loglevel])
         
     return filetype
 
