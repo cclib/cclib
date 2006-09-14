@@ -33,7 +33,8 @@ class Qt4Progress(QtGui.QProgressDialog):
 
     def update(self, step, text=None):
 
-        self.setLabelText(text)
+        if text:
+            self.setLabelText(text)
         self.setValue(step)
         self.loop.processEvents(QtCore.QEventLoop.ExcludeUserInputEvents)
 
