@@ -1,3 +1,22 @@
+Changes since cclib-0.5:
+
+Features
+	* New parser: GAMESS-UK parser
+	* API addition: the .clean() method
+	  The .clean() method of a parser clears all of the parsed
+	  attributes. This is useful if you need to reparse during
+	  the course of a calculation.
+	* Function rename: guesstype() has been renamed to ccopen()
+
+Bugfixes
+	* ccget: Passing multiple filenames now works on Windows too
+	* ADF parser: The following bugs have been fixed
+	  Problem with parsing SFOs in certain log files
+	  Handling of molecules with orbitals of E symmetry
+	  Couldn't find the HOMO in log files from new versions of ADF
+	* Gaussian parser: The following bugs have been fixed
+	  SCF values was not extracting the dEnergy value
+
 Changes since cclib-0.5b:
 
 Features

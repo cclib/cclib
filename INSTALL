@@ -7,14 +7,17 @@ Before you install cclib, you need to make sure that you have the following:
 *   Numeric
 
 Python is an open-source programming language available from http://www.python.org and it is included in many Linux distributions. In Debian it is installed as follows: (as root)
-	apt-get install python
+	
+	apt-get install python python-dev
 
 The Numeric extension to Python brings scientific computing to Python. It is available at http://sourceforge.net/project/showfiles.php?group_id=1369&package_id=1351 (copy and paste this address into your browser). Depending on the version of Python installed, Windows users should install either Numeric-24.2.win32-py2.3.exe or Numeric-24.2.win32-py2.4.exe. Linux users are recommended to find a binary package for their distribution rather than compiling it themselves. In Debian it is installed as follows: (as root)
+	
 	apt-get install python-numeric python-numeric-ext
 
 (Note to experienced Python users: we are aware that Numpy has replaced Numeric but until it becomes more widely available as binary packages for Linux distributions, we will stick with the lowest common demoninator, Numeric. However, if a volunteer is interested in maintaining a Numpy-based branch, we would welcome this.)
 
 To test whether Python is on the PATH, open a command prompt window and type:
+
 	python
 
 If Python is not on the PATH and you use Windows, add the full path to the directory containing it to the end of the PATH variable under Control Panel/System/Advanced Settings/Environment Variables. If you use Linux and Python is not on the PATH, put/edit the appropriate line in your .bashrc or similar startup file.
@@ -50,7 +53,13 @@ To test, trying importing cclib at the Python prompt. You should see something s
 	  History is saved to ~/.pyhistory.
 	>>> import cclib
 	>>> cclib.__version__
-	'0.5'
+	'0.6'
+
+To run the unit tests, change directory into INSTALLDIR/test and run the following command:
+
+	python testall.py
+
+This tests the program using the example data files included in the INSTALLDIR/data directory.
 
 === What next? ===
 
@@ -58,7 +67,5 @@ To test, trying importing cclib at the Python prompt. You should see something s
 	http://cclib.sourceforge.net/wiki/index.php/Using_cclib
 * Read the list and specifications of the extracted data at:
 	http://cclib.sourceforge.net/wiki/index.php/Parsed_Data
-* Test the program using the example data files included in the distribution in the data directory.
 * Send any questions to the cclib-users mailing list at:
 	https://lists.sourceforge.net/lists/listinfo/cclib-users.
-	
