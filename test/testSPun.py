@@ -33,6 +33,11 @@ class GaussianSPunTest(GenericSPunTest):
     def setUp(self):
         self.data = data[0]
 
+    def testatomnos(self):
+        """Does atomnos have the right dimension (20)?"""
+        size = len(self.data.atomnos)
+        self.assertEquals(size, 20)
+
 class GamessUSSPunTest(GenericSPunTest):
     def setUp(self):
         self.data = data[1]
