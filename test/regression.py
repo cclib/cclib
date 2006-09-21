@@ -25,6 +25,15 @@ def testGaussian_basicGaussian03_dvb_gopt_out(logfile):
     """
     assert len(logfile.homos)==1
 
+def testGaussian_basicGaussian03_dvb_un_sp_out(logfile):
+    """Example regression test for Gaussian/basicGaussian03/dvb_un_sp.out
+
+    Note: the name of the test must match the full path to the datafile
+    exactly, except that all periods are replaced by underscores, and path
+    separators are also replaced by underscores.
+    """
+    assert hasattr(logfile,"atomnos")
+
 def testGaussian_Gaussian03_Mo4OSibdt2_opt_log(logfile):
     """
     The following file had no atomcoords as it did not contain any
