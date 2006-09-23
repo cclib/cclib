@@ -184,7 +184,7 @@ class ADF(logfileparser.Logfile):
                     scftst = max(SCFconv, min(oldscftst, grdmax/30, 10**(-accint)))
                     self.scftargets.append([scftst*10, scftst])
                         
-                while line.find("SCF CONVERGED") == -1:
+                while line.find("SCF CONVERGED") == -1 and line.find("SCF not fully converged, result acceptable") == -1:
                     if line[4:12] == "SCF test":
                         if not hasattr(self, "scfvalues"):
                             self.logger.info("Creating attribute scfvalues")
@@ -195,7 +195,11 @@ class ADF(logfileparser.Logfile):
                     try:
                         line = inputfile.next()
                     except StopIteration: #EOF reached?
+                        self.logger.warning("SCF did not converge, so attributes may be missing")
                         break            
+
+                if line.find("SCF not fully converged, result acceptable") == -1:
+                    self.logger.warning("SCF not fully converged, results acceptable")
 
                 if hasattr(self, "scfvalues"):
                     self.scfvalues.append(newlist)
