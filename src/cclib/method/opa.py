@@ -9,6 +9,12 @@ import Numeric
 import random # For sometimes running the progress updater
 from calculationmethod import Method
 
+def func(x):
+    if x==1:
+        return 1
+    else:
+        return x+func(x-1)
+
 class OPA(Method):
     """The overlap population analysis"""
     def __init__(self, *args):
@@ -67,55 +73,56 @@ class OPA(Method):
                     indices[index].append(i)
 
         #determine number of steps, and whether process involves beta orbitals
-        nstep = nmocoeffs
         nfrag = len(indices) #nfrag
+        nstep = func(nfrag - 1)
         self.logger.info("Creating attribute results: array[4]")
         if unrestricted:
-            self.results = Numeric.ones([2, nmocoeffs, nfrag, nfrag], "f")
-            nstep += nmocoeffs
+            results = Numeric.zeros([2, nfrag, nfrag, nmocoeffs], "f")
+            nstep *= 2
         else:
-            self.results=Numeric.ones([1, nmocoeffs, nfrag, nfrag], "f")
+            results=Numeric.zeros([1, nfrag, nfrag, nmocoeffs], "f")
+
+        if hasattr(self.parser, "aooverlaps"):
+            overlap = self.parser.aooverlaps
+        elif hasattr(self.parser,"fooverlaps"):
+            overlap = self.parser.fooverlaps
 
         #intialize progress if available
         if self.progress:
             self.progress.initialize(nstep)
 
+        size = len(self.parser.mocoeffs[0])
         step = 0
+
+        preresults = []
+        two = Numeric.array([2.0]*nmocoeffs,"f")
         for spin in range(len(self.parser.mocoeffs)):
 
-            for i in range(nmocoeffs):
 
-                if self.progress and random.random() < fupdate:
-                    self.progress.update(step, "Overlap Population Analysis")
+            # OP_{AB,i} = \sum_{a in A} \sum_{b in B} 2 c_{ai} c_{bi} S_{ab}
 
-                # OP_{AB,i} = \sum_{a in A} \sum_{b in B} 2 c_{ai} c_{bi} S_{ab}
-                #       = \sum_{a in A} c_{ai} \sum_{b in B} c_{bi} S_{ab}
-                #       = \sum_{a in A} c_{ai} \sub_{b in B} C_{Bi}
-                #          where C_{Bi} = C(i) times S(a)
+            for A in range(len(indices)-1):
 
-                ci = self.parser.mocoeffs[spin][i]
+                for B in range(A+1, len(indices)):
 
-                if hasattr(self.parser, "aooverlaps"):
-                    temp = Numeric.multiply(ci, self.parser.aooverlaps)
-                elif hasattr(self.parser,"fooverlaps"):
-                    temp = Numeric.multiply(ci, self.parser.fooverlaps)
+                    if self.progress: #usually only a handful of updates, so remove random part
+                        self.progress.update(step, "Overlap Population Analysis")
 
-                for A in range(len(indices)-1):
+                    for a in indices[A]:
 
-                    for B in range(A+1, len(indices)):
+                        ca = self.parser.mocoeffs[spin,:,a]
 
-                        tempb = 0
                         for b in indices[B]:
-                            tempb += temp[:, b]
+                            
+                            cb = self.parser.mocoeffs[spin,:,b]
+                            temp = ca * cb * two *overlap[a,b]
+                            results[spin,A,B] = Numeric.add(results[spin,A,B],temp)
+                            results[spin,B,A] = Numeric.add(results[spin,B,A],temp)
 
-                        tempresult = 0
-                        for a in indices[A]:
-                            tempresult += ci[a] * tempb[a]
+                    step += 1
 
-                        self.results[spin][i][A][B] = 2 * tempresult
-                        self.results[spin][i][B][A] = 2 * tempresult
-
-                step += 1
+        temparray2 = Numeric.swapaxes(results,2,3)
+        self.results = Numeric.swapaxes(temparray2,1,2)
 
         if self.progress:
             self.progress.update(nstep, "Done")
