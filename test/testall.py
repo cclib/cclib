@@ -1,10 +1,10 @@
 import unittest
 import os
-from cclib.parser import ADF, GAMESS, Gaussian, Jaguar, GAMESSUK
+from cclib.parser import ADF, GAMESS, Gaussian, Jaguar, GAMESSUK, Molpro
 
 def getfile(parser,*location):
     """Returns a parsed logfile."""
-    if parser.__name__ in ["GAMESS", "ADF", "Jaguar", "Gaussian"]:
+    if parser.__name__ in ["GAMESS", "ADF", "Jaguar", "Gaussian", "Molpro"]:
         fullpath = ("..","data",parser.__name__) + location
     elif parser.__name__=="GAMESSUK":
         fullpath = ("..","data","GAMESS-UK") + location
