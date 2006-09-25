@@ -58,7 +58,7 @@ def convertor(value, fromunits, tounits):
                   "bohr_to_Angstrom": lambda x: x*0.529177,
                   "nm_to_cm-1": lambda x: 1e7/x,
                   "cm-1_to_nm": lambda x: 1e7/x,
-                  "au_to_cm-1": lambda x: x*219474.6}
+                  "hartree_to_cm-1": lambda x: x*219474.6}
 
     return _convertor["%s_to_%s" % (fromunits, tounits)] (value)
 
