@@ -12,7 +12,7 @@ _allowedargs = ['aonames','aooveralps','atomcoords','atomnos',
                 'fonames','fooverlaps','gbasis','geotargets','geovalues',
                 'homos','mocoeffs','moenergies','mosyms','natom','nbasis',
                 'nmo','scfenergies','scftargets','scfvalues',
-                'vibfreqs','vibirs','vibramans','vibsyms']
+                'vibfreqs','vibirs','vibramans','vibsyms','hessian']
 
 def moreusage():
     """More detailed usage information"""

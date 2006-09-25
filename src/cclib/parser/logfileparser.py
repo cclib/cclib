@@ -13,7 +13,7 @@ class Logfile(object):
     """Abstract class for logfile objects.
 
     Subclasses:
-        ADF, GAMESS, Gaussian, Jaguar
+        ADF, GAMESS, Gaussian, Jaguar, Molpro
     
     Attributes:
         aonames -- "Ru_3p" (list)

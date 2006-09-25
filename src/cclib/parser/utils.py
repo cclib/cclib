@@ -10,6 +10,7 @@ import gamessparser
 import gaussianparser
 import jaguarparser
 import gamessukparser
+import molproparser
 import logging
 
 def ccopen(filename,progress=None,loglevel=logging.INFO,logname="Log"):
@@ -36,6 +37,9 @@ def ccopen(filename,progress=None,loglevel=logging.INFO,logname="Log"):
         elif line.find("Jaguar") >= 0:
             filetype = jaguarparser.Jaguar
             break
+        elif line.find("PROGRAM SYSTEM MOLPRO") >= 0:
+            filetype = molproparser.Molpro
+            break
     inputfile.close() # Need to close before creating an instance
     
     if filetype: # Create an instance of the chosen class
@@ -53,7 +57,8 @@ def convertor(value, fromunits, tounits):
                   "hartree_to_eV": lambda x: x*27.2114,
                   "bohr_to_Angstrom": lambda x: x*0.529177,
                   "nm_to_cm-1": lambda x: 1e7/x,
-                  "cm-1_to_nm": lambda x: 1e7/x}
+                  "cm-1_to_nm": lambda x: 1e7/x,
+                  "au_to_cm-1": lambda x: x*219474.6}
 
     return _convertor["%s_to_%s" % (fromunits, tounits)] (value)
 
