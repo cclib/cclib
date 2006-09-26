@@ -1,0 +1,13 @@
+ADF/ADF2004.01/Mo5Obdt2-opt-c2v.adfout
+ADF/ADF2005.01/Os3.out
+ADF/ADF2005.01/Os3(CO)12-D3h.out
+GAMESS/GAMESS-US/bv6010sup1molecule_4.inp.cml_.log
+GAMESS/PCGAMESS/aomixgamess.log
+GAMESS-UK/GAMESS-UK6.0/dscf_4.out
+GAMESS-UK/GAMESS-UK6.0/duhf_1.out
+GAMESS-UK/GAMESS-UK7.0/mg10.out
+GAMESS-UK/GAMESS-UK7.0/pyridine2_21m10r.out
+GAMESS-UK/GAMESS-UK7.0/mg10.out
+GAMESS-UK/GAMESS-UK7.0/pyridine.out
+Gaussian/Gaussian03/Mo4OSibdt2-opt.log
+Gaussian/Gaussian98/oo-LAN.out
