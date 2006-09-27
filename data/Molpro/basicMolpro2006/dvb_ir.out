@@ -1,7 +1,4 @@
 
- Primary working directories:    /scratch/bounouar
- Secondary working directories:  /scratch/bounouar
- 
  CPU=P4 600.000 MHz
  mxmblk= 64  mxmbln= 64  ncache=  16384  mindgm= 33  mindgv= 33  mindgc= 65  mindgl= 65  mindgr=  1  noblas=0  nroll=2  minvec=7
  default implementation of scratch files=df  
@@ -733,7 +730,7 @@
 
  PROGRAM * HESSIAN
 
- *** Long output written to logfile /home/bounouar/src/cclib/data/Molpro/basicMolpro2006/dvb_ir.log ***
+ *** Long output written to logfile ./dvb_ir.log ***
 
 
  Computing numerical hessian using default procedure for command KS-SCF

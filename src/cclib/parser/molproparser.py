@@ -136,23 +136,30 @@ class Molpro(logfileparser.Logfile):
                     line.strip().split()[1:]
                     hess.extend([map(float,line.strip().split()[1:])])
                     line = inputfile.next()
-                line = 0
-                while (line==0) or (len(hess[0]) > 1):
+                lig = 0
+                while (lig==0) or (len(hess[0]) > 1):
                     tmp.append(hess.pop(0))
-                    line += 1
+                    lig += 1
                 k = 5
                 while len(hess) != 0:
                     tmp[k] += hess.pop(0)
                     k += 1
-                    if (len(tmp[k-1]) == line): break
-                    if k >= line: k = len(tmp[-1])
+                    if (len(tmp[k-1]) == lig): break
+                    if k >= lig: k = len(tmp[-1])
                 for l in tmp: self.hessian += l
+            if line[1:14] == "Atomic Masses" and hasattr(self,"hessian"):
+                self.logger.info("Creating attribute amass")
+                line = inputfile.next()
+                self.amass = map(float, line.strip().split()[2:])
+                while line.strip():
+                    line = inputfile.next()
+                    self.amass += map(float, line.strip().split()[2:])
 
         inputfile.close()
 
         if self.progress:
             self.progress.update(nstep, "Done")
-        _toarray = ['atomcoords','scftargets', 'vibfreqs', 'vibirs', 'hessian']
+        _toarray = ['atomcoords','scftargets','vibfreqs','vibirs','hessian','amass']
         _normalise = ['vibsyms','mosyms']
         for attr in _toarray:
             if hasattr(self, attr):
