@@ -382,7 +382,6 @@ class Gaussian(logfileparser.Logfile):
                         if not hasattr(self, "vibramans"):
                             self.vibramans = []
                             self.logger.info("Creating attribute vibramans[]")
-                        ## line = inputfile.next()
                         self.vibramans.extend(map(self.float, line[15:].split())) # Adding Raman intensities
                     line = inputfile.next()
                     while len(line[:15].split()) > 0:
