@@ -1,4 +1,6 @@
 ADF/ADF2004.01/Mo5Obdt2-opt-c2v.adfout
+ADF/ADF2004.01/Mo5Obdt2-sp.adfout
+ADF/ADF2004.01/Mo4mdt3-1_102.adfout
 ADF/ADF2005.01/Os3.out
 ADF/ADF2005.01/Os3(CO)12-D3h.out
 GAMESS/GAMESS-US/bv6010sup1molecule_4.inp.cml_.log
