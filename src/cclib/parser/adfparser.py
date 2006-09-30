@@ -337,7 +337,8 @@ class ADF(logfileparser.Logfile):
 #Extracting orbital symmetries and energies, homos
                 self.logger.info("Creating attribute mosyms[[]]")
                 self.mosyms = [[]]
-                
+                symlist = {}
+
                 self.logger.info("Creating attribute moenergies[[]]")
                 self.moenergies = [[]]
                 
@@ -355,9 +356,21 @@ class ADF(logfileparser.Logfile):
                 while line.strip():
                     info = line.split()
                     if len(info) == 5: #this is restricted
-                        for repeat in range(multiple.get(info[0][0], 1)): # i.e. add E's twice, T's thrice
+                        count = multiple.get(info[0][0],1)
+                        for repeat in range(count): # i.e. add E's twice, T's thrice
                             self.mosyms[0].append(self.normalisesym(info[0]))
                             self.moenergies[0].append(utils.convertor(float(info[3]), 'hartree', 'eV'))
+
+                            sym = info[0]
+                            if count > 1: # add additional sym label
+                                sym += ":%i"%(repeat+1)
+
+                            try:
+                                symlist[sym][0].append(len(self.moenergies[0])-1)
+                            except KeyError:
+                                symlist[sym]=[[]]
+                                symlist[sym][0].append(len(self.moenergies[0])-1)
+
                         if info[2] == '0.00' and not hasattr(self, 'homos'):
                             self.logger.info("Creating attribute homos[]")
                             self.homos = [len(self.moenergies[0]) - 2]
@@ -366,17 +379,40 @@ class ADF(logfileparser.Logfile):
                         if len(self.moenergies) < 2: #if we don't have space, create it
                             self.moenergies.append([])
                             self.mosyms.append([])
+                        count = multiple.get(info[0][0], 1)
                         if info[2] == 'A':
-                            for repeat in range(multiple.get(info[0][0], 1)): # i.e. add E's twice, T's thrice
+                            for repeat in range(count): # i.e. add E's twice, T's thrice
                                 self.mosyms[0].append(self.normalisesym(info[0]))
                                 self.moenergies[0].append(utils.convertor(float(info[4]), 'hartree', 'eV'))
+                                
+                                sym = info[0]
+                                if count > 1: #add additional sym label
+                                    sym += ":%i"%(repeat+1)
+                                
+                                try:
+                                    symlist[sym][0].append(len(self.moenergies[0])-1)
+                                except KeyError:
+                                    symlist[sym]=[[],[]]
+                                    symlist[sym][0].append(len(self.moenergies[0])-1)
+
                             if info[3] == '0.00' and homoa == None:
                                 homoa = len(self.moenergies[0]) - 2
                                 
                         if info[2] == 'B':
-                            for repeat in range(multiple.get(info[0][0], 1)): # i.e. add E's twice, T's thrice
+                            for repeat in range(count): # i.e. add E's twice, T's thrice
                                 self.mosyms[1].append(self.normalisesym(info[0]))
                                 self.moenergies[1].append(utils.convertor(float(info[4]), 'hartree', 'eV'))
+
+                                sym = info[0]
+                                if count > 1: #add additional sym label
+                                    sym += ":%i"%(repeat+1)
+                                
+                                try:
+                                    symlist[sym][1].append(len(self.moenergies[1])-1)
+                                except KeyError:
+                                    symlist[sym]=[[],[]]
+                                    symlist[sym][1].append(len(self.moenergies[1])-1)
+
                             if info[3] == '0.00' and homob == None:
                                 homob = len(self.moenergies[1]) - 2
                                 
@@ -544,7 +580,7 @@ class ADF(logfileparser.Logfile):
                 inputfile.next()
                 inputfile.next()
                 inputfile.next()
-  
+
                 self.logger.info("Creating attribute mocoeffs: array[]")
                 
                 line = inputfile.next()
@@ -556,12 +592,13 @@ class ADF(logfileparser.Logfile):
                     #get rid of two blank lines and symmetry label
                     inputfile.next()
                     inputfile.next()
-                    sym = inputfile.next()
-                    #print sym
+                    line = inputfile.next()
+                    sym = line.split()[1]
                     
                 else:
                     beta = 0
                     self.mocoeffs = Numeric.zeros((1, self.nbasis, self.nbasis), "float")
+                    sym = line.split()[1]
                     
                 #get rid of 12 lines of text
                 for i in range(10):
@@ -572,10 +609,14 @@ class ADF(logfileparser.Logfile):
                     base = 0
                     
                     if spin == 1:
-                        #read spin, blank, blank, symlabel, blank, text, underline, blank
-                        for i in range(8):
-                            line = inputfile.next()
-                                
+                        #read spin, blank, blank, blank, symlabel, text, underline, blank
+                        for i in range(4):
+                            inputfile.next()
+                        line = inputfile.next()
+                        sym = line.split()[1]
+                        for i in range(3):
+                            inputfile.next()
+                        
                     while symoffset + base < self.nbasis:
                 
                         line = inputfile.next()
@@ -589,10 +630,16 @@ class ADF(logfileparser.Logfile):
                         #get rid of unneeded lines
                         line = inputfile.next()
                         info = line.split()
-                        if len(info) > 1: #ie was previous line info about occupation numbers?
+                        if info[0] == "occup:":
                             inputfile.next()
+                        elif info[0] == "===":
+                            sym = line.split()[1]
+                            inputfile.next()
+
+                        aolist = symlist[sym][spin]
                           
                         row = 0
+                        oldindex = 0
                         line = inputfile.next()
                         while len(line) > 5:
                            
@@ -605,11 +652,10 @@ class ADF(logfileparser.Logfile):
                             cols = line.split()
                             for i in range(len(cols[1:])):
                                 #self.mocoeffs[spin,row+symoffset,i+symoffset+base]=float(cols[i+1])
-                                self.mocoeffs[spin, i + symoffset + base, row + symoffset] = float(cols[i + 1])
-                            
+                                self.mocoeffs[spin, aolist[i+base], row + symoffset] = float(cols[i + 1])
+                                
                             line = inputfile.next()
                             row += 1
-                          
                         base += len(cols[1:])
                         
                         
