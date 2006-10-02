@@ -636,7 +636,10 @@ class ADF(logfileparser.Logfile):
                             sym = line.split()[1]
                             inputfile.next()
 
-                        aolist = symlist[sym][spin]
+                        if nosymflag:
+                            aolist = range(len(self.moenergies[spin]))
+                        else:
+                            aolist = symlist[sym][spin]
                           
                         row = 0
                         oldindex = 0
