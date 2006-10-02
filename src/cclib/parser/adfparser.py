@@ -373,7 +373,7 @@ class ADF(logfileparser.Logfile):
 
                         if info[2] == '0.00' and not hasattr(self, 'homos'):
                             self.logger.info("Creating attribute homos[]")
-                            self.homos = [len(self.moenergies[0]) - 2]
+                            self.homos = [len(self.moenergies[0]) - (count + 1)] #count, because need to handle degenerate cases
                         line = inputfile.next()
                     elif len(info) == 6: #this is unrestricted
                         if len(self.moenergies) < 2: #if we don't have space, create it
@@ -396,7 +396,7 @@ class ADF(logfileparser.Logfile):
                                     symlist[sym][0].append(len(self.moenergies[0])-1)
 
                             if info[3] == '0.00' and homoa == None:
-                                homoa = len(self.moenergies[0]) - 2
+                                homoa = len(self.moenergies[0]) - (count + 1) #count because degenerate cases need to be handled
                                 
                         if info[2] == 'B':
                             for repeat in range(count): # i.e. add E's twice, T's thrice
@@ -414,7 +414,7 @@ class ADF(logfileparser.Logfile):
                                     symlist[sym][1].append(len(self.moenergies[1])-1)
 
                             if info[3] == '0.00' and homob == None:
-                                homob = len(self.moenergies[1]) - 2
+                                homob = len(self.moenergies[1]) - (count + 1)
                                 
                         line = inputfile.next()
                         
