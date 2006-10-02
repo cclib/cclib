@@ -31,7 +31,7 @@ def ccopen(filename,progress=None,loglevel=logging.INFO,logname="Log"):
         elif line.find("G A M E S S - U K") >= 0:
             filetype = gamessukparser.GAMESSUK
             break
-        elif line.find("Gaussian") >= 0:
+        elif line.find("Gaussian, Inc.") >= 0:
             filetype = gaussianparser.Gaussian
             break
         elif line.find("Jaguar") >= 0:
