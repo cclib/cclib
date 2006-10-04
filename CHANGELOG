@@ -7,6 +7,8 @@ Features
 	  attributes. This is useful if you need to reparse during
 	  the course of a calculation.
 	* Function rename: guesstype() has been renamed to ccopen()
+	* Speed up: Calculation of Overlap Density of States has
+	  been sped up by two orders of magnitude
 
 Bugfixes
 	* ccget: Passing multiple filenames now works on Windows too
@@ -14,8 +16,13 @@ Bugfixes
 	  Problem with parsing SFOs in certain log files
 	  Handling of molecules with orbitals of E symmetry
 	  Couldn't find the HOMO in log files from new versions of ADF
+	  Parser used to miss attributes if SCF not converged
+	  For a symmetrical molecule, mocoeffs were in the wrong order and
+	  the homo was not identified correctly if degenerate
 	* Gaussian parser: The following bugs have been fixed
 	  SCF values was not extracting the dEnergy value
+	  Was extracting Depolar P instead of Raman activity
+	* ccopen: Minor problems fixed with identification of log files
 
 Changes since cclib-0.5b:
 
