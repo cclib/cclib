@@ -56,6 +56,22 @@ class ADF(logfileparser.Logfile):
                 ans = ans.replace(ans[0]*2, ans[0]) + "'"
         return ans
         
+    def normalisedegenerates(self, label, num):
+        """Generate a string used for matching degenerate orbital labels
+
+        To normalise:
+        (1) if label is E or T, return label:num
+        (2) if label is P or D, look up in dict, and return answer
+        """
+
+        ndict = { 'P': {0:"P:x", 1:"P:y", 2:"P:z"},\
+                  'D': {0:"D:z2", 1:"D:x2-y2", 2:"D:xy", 3:"D:xz", 4:"D:yz"}}
+                  
+        if label == 'P' or label == 'D':
+            return ndict[label][num]
+
+        else:
+            return "%s:%i"%(label,num+1)
 
     def parse(self, fupdate=0.05, cupdate=0.002):
         """Extract information from the logfile."""
@@ -351,7 +367,7 @@ class ADF(logfileparser.Logfile):
                 homoa = None
                 homob = None
 
-                multiple = {'E':2, 'T':3}
+                multiple = {'E':2, 'T':3, 'P':3, 'D':5}
   
                 while line.strip():
                     info = line.split()
@@ -363,7 +379,7 @@ class ADF(logfileparser.Logfile):
 
                             sym = info[0]
                             if count > 1: # add additional sym label
-                                sym += ":%i"%(repeat+1)
+                                sym = self.normalisedegenerates(info[0],repeat)
 
                             try:
                                 symlist[sym][0].append(len(self.moenergies[0])-1)
@@ -387,7 +403,7 @@ class ADF(logfileparser.Logfile):
                                 
                                 sym = info[0]
                                 if count > 1: #add additional sym label
-                                    sym += ":%i"%(repeat+1)
+                                    sym = self.normalisedegenerates(info[0],repeat)
                                 
                                 try:
                                     symlist[sym][0].append(len(self.moenergies[0])-1)
@@ -405,7 +421,7 @@ class ADF(logfileparser.Logfile):
 
                                 sym = info[0]
                                 if count > 1: #add additional sym label
-                                    sym += ":%i"%(repeat+1)
+                                    sym = self.normalisedegenerates(info[0],repeat)
                                 
                                 try:
                                     symlist[sym][1].append(len(self.moenergies[1])-1)
