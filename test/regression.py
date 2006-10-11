@@ -32,7 +32,7 @@ def testGaussian_basicGaussian03_dvb_un_sp_out(logfile):
     exactly, except that all periods are replaced by underscores, and path
     separators are also replaced by underscores.
     """
-    assert hasattr(logfile,"atomnos")
+    assert len(logfile.atomnos) == 20 and logfile.atomcoords.shape == (1,20,3)
 
 def testGaussian_Gaussian03_Mo4OSibdt2_opt_log(logfile):
     """

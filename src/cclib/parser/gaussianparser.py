@@ -88,6 +88,33 @@ class Gaussian(logfileparser.Logfile):
             if line[1:23] == "Optimization completed":
                 optfinished = True
             
+            if line.find("Input orientation") > -1:
+# Extract the atomic numbers and coordinates in the event standard orientation isn't available
+
+                if self.progress and random.random() < cupdate:
+                    step = inputfile.tell()
+                    if step != oldstep:
+                        self.progress.update(step, "Attributes")
+                        oldstep = step
+                        
+                inputcoords = []
+                inputatoms = []
+                
+                hyphens = inputfile.next()
+                colmNames = inputfile.next()
+                colmNames = inputfile.next()
+                hyphens = inputfile.next()
+                
+                atomnos = []
+                atomcoords = []
+                line = inputfile.next()
+                while line != hyphens:
+                    broken = line.split()
+                    inputatoms.append(int(broken[1]))
+                    atomcoords.append(map(float, broken[3:6]))
+                    line = inputfile.next()
+                inputcoords.append(atomcoords)
+
             if not optfinished and line[25:45] == "Standard orientation":
 # Extract the atomic numbers and coordinates of the atoms
                 if self.progress and random.random() < cupdate:
@@ -584,6 +611,13 @@ class Gaussian(logfileparser.Logfile):
 
         if hasattr(self, "scfvalues"):
             self.scfvalues = [Numeric.array(x, "f") for x in self.scfvalues]
+
+        if not hasattr(self,"atomcoords"):
+            self.logger.info("Creating attribute atomnos[]")
+            self.atomnos = Numeric.array(inputatoms, 'i')
+            self.logger.info("Creating attribute atomcoords[]")
+            self.atomcoords = Numeric.array(inputcoords, 'f')
+        
 
         self.parsed = True
 
