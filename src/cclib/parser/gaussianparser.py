@@ -597,7 +597,31 @@ class Gaussian(logfileparser.Logfile):
                             self.mocoeffs[1, base:base + len(part) / 10, i] = temp
                         else:
                             self.mocoeffs[0, base:base + len(part) / 10, i] = temp
-                 
+
+            if line.find("Pseudopotential Parameters") > -1:
+#parse pseudopotential charges
+
+                dashes = inputfile.next()
+                label1 = inputfile.next()
+                label2 = inputfile.next()
+                dashes = inputfile.next()
+
+                line = inputfile.next()
+                if line.find("Centers:") < 0:
+                    break
+
+                centers = line.split()[1:]
+                
+                self.logger.info("Creating attribute coreelectrons[]")
+                self.coreelectrons = Numeric.zeros(self.natom)
+
+                for center in centers:
+                    while line[:10].find(center) < 0:
+                        line = inputfile.next()
+                    
+                    info = line.split()
+                    self.coreelectrons[int(center)-1] = int(info[1]) - int(info[2])
+
         inputfile.close()
 
         if self.progress:
@@ -617,7 +641,10 @@ class Gaussian(logfileparser.Logfile):
             self.atomnos = Numeric.array(inputatoms, 'i')
             self.logger.info("Creating attribute atomcoords[]")
             self.atomcoords = Numeric.array(inputcoords, 'f')
-        
+
+        if not hasattr(self,"coreelectrons"):
+            self.logger.info("Creating attribute coreelectrons[]")
+            self.coreelectrons = Numeric.zeros(self.natom)
 
         self.parsed = True
 
