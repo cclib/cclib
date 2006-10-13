@@ -26,21 +26,26 @@ def testGaussian_basicGaussian03_dvb_gopt_out(logfile):
     assert len(logfile.homos)==1
 
 def testGaussian_basicGaussian03_dvb_un_sp_out(logfile):
-    """Example regression test for Gaussian/basicGaussian03/dvb_un_sp.out
-
-    Note: the name of the test must match the full path to the datafile
-    exactly, except that all periods are replaced by underscores, and path
-    separators are also replaced by underscores.
     """
-    assert len(logfile.atomnos) == 20 and logfile.atomcoords.shape == (1,20,3)
+    This file had no atomcoords at all at all, due to only having an Input
+    Orientation section and no Standard Orientation.
+    """
+    assert len(logfile.atomnos) == 20
+    assert logfile.atomcoords.shape == (1,20,3)
 
 def testGaussian_Gaussian03_Mo4OSibdt2_opt_log(logfile):
     """
-    The following file had no atomcoords as it did not contain any
+    This file had no atomcoords as it did not contain any
     "Input orientation" sections, only "Standard orientation" sections
     """
     assert hasattr(logfile,"atomcoords")
-    
+
+def testGaussian_basicGaussian03_dvb_raman_out(logfile):
+    """
+    Was extracting the "Depolar P" instead of the "Raman activity". Oops!
+    """
+    assert logfile.vibramans[1] - 2.6872 < 0.0001
+
 # Edit the following variable definitions to add new parsers
 # or new datafiles
 
@@ -103,6 +108,8 @@ def main():
                     try:
                         a.logger.setLevel(logging.ERROR)
                         a.parse()
+                    except KeyboardInterrupt:
+                        sys.exit(1)
                     except:
                         print "parse error"
                         errors += 1
