@@ -608,7 +608,7 @@ class Gaussian(logfileparser.Logfile):
 
                 line = inputfile.next()
                 if line.find("Centers:") < 0:
-                    break
+                    continue
 
                 centers = line.split()[1:]
                 
