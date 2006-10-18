@@ -1,0 +1,86 @@
+Job dvb_un_sp started on rubidium at Fri Jul 15 22:33:15 2005
+jobid: rubidium-0-42d89c1b 
+Jaguar version 6.0, release  11
+ Running on   2 processors
+Molecular Point Group: C2h     
+Point Group used: C1 (symmetry turned off)
+pre (input checking) done.
+onee (1-electron integrals) done.
+hfig (HF initial guess) done.
+probe (project orbitals) done.
+grid (grid generation) done.
+rwr (Q operators) done.
+scf type: UDFT=Becke_3_Parameter/HF+Slater+Becke88+VWN+LYP (B3LYP)
+  
+       i  u  d  i  g
+       t  p  i  c  r                                 RMS    maximum
+       e  d  i  u  i                       energy  density   DIIS  
+       r  t  s  t  d       total energy    change  change    error 
+  
+etot   1  N  N  5  M    -385.28768935588           2.4E-03  1.5E-01
+etot   2  Y  Y  6  M    -385.94678807255  6.6E-01  6.0E-03  1.0E-01
+etot   3  Y  Y  6  M    -384.59249991420 -1.4E+00  1.8E-03  2.3E-01
+etot   4  N  Y  2  U    -384.75868460195  1.7E-01  3.2E-03  2.3E-01
+etot   5  Y  Y  6  M    -384.96691259180  2.1E-01  2.6E-03  2.4E-01
+etot   6  N  Y  2  U    -385.16308987824  2.0E-01  1.7E-03  2.4E-01
+etot   7  Y  Y  6  M    -385.27644960032  1.1E-01  5.0E-02  2.4E-01
+etot   8  N  Y  2  U    -386.07215585835  8.0E-01  4.9E-02  5.3E-02
+etot   9  Y  Y  6  M    -385.23053387361 -8.4E-01  4.9E-03  2.4E-01
+etot  10  N  Y  2  U    -385.09246949882 -1.4E-01  1.1E-02  2.5E-01
+etot  11  N  Y  2  U    -385.62703896174  5.3E-01  1.5E-02  2.1E-01
+etot  12  Y  Y  6  M    -385.91477431476  2.9E-01  1.3E-02  1.3E-01
+etot  13  N  Y  2  U    -386.00977362754  9.5E-02  1.0E-02  7.5E-02
+etot  14  Y  Y  6  M    -386.11132198346  1.0E-01  5.6E-03  5.4E-02
+etot  15  N  Y  2  U    -386.14897835300  3.8E-02  6.4E-03  3.7E-02
+etot  16  Y  Y  6  M    -386.17295940914  2.4E-02  7.1E-03  2.4E-02
+etot  17  N  Y  2  U    -386.19218724953  1.9E-02  8.0E-03  1.9E-02
+etot  18  Y  Y  6  M    -386.21374166747  2.2E-02  1.2E-02  1.8E-02
+etot  19  N  Y  2  U    -386.24138506396  2.8E-02  1.2E-02  1.7E-02
+etot  20  Y  Y  6  M    -386.27544194268  3.4E-02  1.0E-02  1.7E-02
+etot  21  N  Y  2  U    -386.30849795911  3.3E-02  8.3E-03  1.6E-02
+etot  22  Y  Y  6  M    -386.36777617645  5.9E-02  8.9E-03  3.4E-02
+etot  23  N  Y  2  U    -386.48551765223  1.2E-01  6.4E-03  5.0E-02
+etot  24  Y  Y  6  M    -386.58031185284  9.5E-02  3.3E-03  4.1E-02
+etot  25  N  Y  2  U    -386.62921561827  4.9E-02  1.5E-03  2.7E-02
+etot  26  Y  Y  6  M    -386.64611237122  1.7E-02  7.3E-04  1.6E-02
+etot  27  N  Y  2  U    -386.65232381935  6.2E-03  3.9E-04  9.7E-03
+etot  28  Y  Y  6  M    -386.65434992017  2.0E-03  2.1E-04  5.7E-03
+etot  29  Y  Y  6  M    -386.65513981842  7.9E-04  1.3E-04  4.2E-03
+etot  30  N  Y  2  U    -386.65561573399  4.8E-04  8.4E-05  4.3E-03
+etot  31  Y  Y  6  M    -386.65590459268  2.9E-04  6.2E-05  4.4E-03
+etot  32  Y  Y  6  M    -386.65614347202  2.4E-04  5.0E-05  4.4E-03
+etot  33  Y  Y  6  M    -386.65635745047  2.1E-04  4.6E-05  4.4E-03
+etot  34  Y  Y  6  M    -386.65655670010  2.0E-04  5.2E-05  4.5E-03
+etot  35  N  Y  2  U    -386.65681043479  2.5E-04  5.7E-05  5.5E-03
+etot  36  Y  Y  6  M    -386.65716441781  3.5E-04  6.7E-05  7.2E-03
+etot  37  Y  Y  6  M    -386.65767722185  5.1E-04  8.6E-05  9.5E-03
+etot  38  Y  Y  6  M    -386.65847674097  8.0E-04  1.1E-04  1.2E-02
+etot  39  Y  Y  6  M    -386.65974860744  1.3E-03  1.6E-04  1.6E-02
+etot  40  N  Y  2  U    -386.66213705495  2.4E-03  1.7E-04  2.1E-02
+etot  41  Y  Y  6  M    -386.66544606557  3.3E-03  2.1E-04  2.7E-02
+etot  42  Y  Y  6  M    -386.67044691083  5.0E-03  2.5E-04  3.2E-02
+etot  43  N  Y  2  U    -386.67712190743  6.7E-03  3.5E-04  3.8E-02
+etot  44  Y  Y  6  M    -386.68800771088  1.1E-02  3.9E-04  4.5E-02
+etot  45  N  Y  2  U    -386.70307600428  1.5E-02  3.3E-04  5.0E-02
+etot  46  Y  Y  6  M    -386.71380238225  1.1E-02  3.1E-04  4.8E-02
+etot  47  N  Y  2  U    -386.72274013383  8.9E-03  2.8E-04  4.4E-02
+etot  48  Y  Y  6  M    -386.72999354736  7.3E-03  2.6E-04  4.0E-02
+etot  49  N  Y  2  U    -386.73708752290  7.1E-03  2.8E-04  3.5E-02
+etot  50  Y  Y  6  M    -386.74545122558  8.4E-03  2.5E-04  3.1E-02
+etot  51  N  Y  2  U    -386.75258409930  7.1E-03  2.5E-04  3.0E-02
+etot  52  Y  Y  6  M    -386.75959149783  7.0E-03  2.1E-04  3.2E-02
+etot  53  N  Y  2  U    -386.76447612211  4.9E-03  1.9E-04  3.3E-02
+etot  54  Y  Y  6  M    -386.76953408330  5.1E-03  3.4E-04  3.2E-02
+etot  55  N  Y  2  U    -386.77893897538  9.4E-03  2.5E-04  2.4E-02
+etot  56  Y  Y  6  M    -386.78422003560  5.3E-03  2.3E-04  1.8E-02
+etot  57  N  Y  2  U    -386.78710879066  2.9E-03  1.4E-04  1.1E-02
+etot  58  Y  Y  6  M    -386.78822030133  1.1E-03  7.2E-05  7.2E-03
+etot  59  Y  Y  6  M    -386.78866667378  4.5E-04  5.4E-05  5.4E-03
+etot  60  Y  Y  6  M    -386.78890210763  2.4E-04  3.7E-05  4.1E-03
+etot  61  Y  Y  6  M    -386.78902146728  1.2E-04  2.7E-05  3.0E-03
+etot  62  N  Y  2  U    -386.78908172070  6.0E-05  3.0E-05  2.3E-03
+etot  63  Y  N  6  M    -386.78911546134  3.4E-05  0.0E+00  0.0E+00
+scf (UDFT) done.
+ch (properties) done.
+post (output conversion) done.
+Job dvb_un_sp completed on rubidium at Fri Jul 15 22:45:18 2005
