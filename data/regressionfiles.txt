@@ -1,3 +1,4 @@
+ADF/ADF2004.01/Fe-ox3-final.out
 ADF/ADF2004.01/Mo5Obdt2-opt-c2v.adfout
 ADF/ADF2004.01/Mo5Obdt2-sp.adfout
 ADF/ADF2004.01/Mo4mdt3-1_102.adfout
