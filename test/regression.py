@@ -46,6 +46,12 @@ def testGaussian_basicGaussian03_dvb_raman_out(logfile):
     """
     assert logfile.vibramans[1] - 2.6872 < 0.0001
 
+def testADF_ADF2004_01_Fe_ox3_final_out(logfile):
+    """
+    Make sure HOMOS are correct
+    """
+    assert logfile.homos[0]==59 and logfile.homos[1]==54
+
 # Edit the following variable definitions to add new parsers
 # or new datafiles
 
@@ -64,7 +70,7 @@ filenames = [glob(os.path.join(data, "Gaussian", "basicGaussian03", "*.out")) +
              glob(os.path.join(data, "GAMESS", "PCGAMESS", "*.log")),
              
              glob(os.path.join(data, "ADF", "basicADF2004.01", "*.adfout")) +
-             glob(os.path.join(data, "ADF", "ADF2004.01", "*.adfout")),
+             glob(os.path.join(data, "ADF", "ADF2004.01", "*out")),
              
              glob(os.path.join(data, "GAMESS-UK", "basicGAMESS-UK", "*.out")),
              
