@@ -116,7 +116,10 @@ class ADF(logfileparser.Logfile):
                   
                     if line.find("INPUT FILE") >= 0:
                         line2 = inputfile.next()
-                    if line2.find("Create") < 0:
+                    else:
+                        line2 = None
+
+                    if line2 and line2.find("Create") < 0:
                         break
                             
                     line = inputfile.next()
@@ -271,7 +274,7 @@ class ADF(logfileparser.Logfile):
                 # calculate the scftarget...note that it changes with time
                 accint = float(line.split()[-1])
             
-            if line[1:37] == 'Orbital Energies, per Irrep and Spin' and not hasattr(self, "mosyms") and nosymflag and not unrestrictedflag:
+            if line.find('Orbital Energies, per Irrep and Spin') > 0 and not hasattr(self, "mosyms") and nosymflag and not unrestrictedflag:
 #Extracting orbital symmetries and energies, homos for nosym case
 #Should only be for restricted case because there is a better text block for unrestricted and nosym
                 
@@ -294,7 +297,7 @@ class ADF(logfileparser.Logfile):
                 
                     homoA = None
 
-                    while len(line) > 3:
+                    while len(line) > 10:
                         info = line.split()
                         self.mosyms[0].append('A')
                         self.moenergies[0].append(utils.convertor(float(info[2]), 'hartree', 'eV'))
