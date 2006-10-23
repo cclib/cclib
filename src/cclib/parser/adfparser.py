@@ -323,7 +323,7 @@ class ADF(logfileparser.Logfile):
                 underline = inputfile.next()
                 line = inputfile.next()
 
-                homoa = None
+                homoa = 0
                 homob = None
 
                 while len(line) > 5:
@@ -331,13 +331,13 @@ class ADF(logfileparser.Logfile):
                     if info[2] == 'A': 
                         self.mosyms[0].append('A')
                         self.moenergies[0].append(utils.convertor(float(info[4]), 'hartree', 'eV'))
-                        if info[3] == '0.00' and not homoa:
-                            homoa = len(self.moenergies[0]) - 2
+                        if info[3] != '0.00':
+                            homoa = len(self.moenergies[0]) - 1
                     elif info[2] == 'B':
                         self.mosyms[1].append('A')
                         self.moenergies[1].append(utils.convertor(float(info[4]), 'hartree', 'eV'))
-                        if info[3] == '0.00' and not homob:
-                            homob = len(self.moenergies[0]) - 2
+                        if info[3] != '0.00':
+                            homob = len(self.moenergies[1]) - 1
                     else:
                         print "Error reading line: %s" % line
 
