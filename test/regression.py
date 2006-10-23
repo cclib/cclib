@@ -70,9 +70,12 @@ filenames = [glob(os.path.join(data, "Gaussian", "basicGaussian03", "*.out")) +
              glob(os.path.join(data, "GAMESS", "PCGAMESS", "*.log")),
              
              glob(os.path.join(data, "ADF", "basicADF2004.01", "*.adfout")) +
-             glob(os.path.join(data, "ADF", "ADF2004.01", "*out")),
+             glob(os.path.join(data, "ADF", "ADF2004.01", "*.*out")) +
+             glob(os.path.join(data, "ADF", "ADF2005.01", "*.out")),
              
-             glob(os.path.join(data, "GAMESS-UK", "basicGAMESS-UK", "*.out")),
+             glob(os.path.join(data, "GAMESS-UK", "basicGAMESS-UK", "*.out")) +
+             glob(os.path.join(data, "GAMESS-UK", "GAMESS-UK6.0", "*.out")) +
+             glob(os.path.join(data, "GAMESS-UK", "GAMESS-UK7.0", "*.out")),
              
              glob(os.path.join(data, "Jaguar", "basicJaguar4.2", "*.out")) +
              glob(os.path.join(data, "Jaguar", "basicJaguar6.5", "*.out")),
@@ -96,8 +99,39 @@ def normalisefilename(filename):
             ans.append("_")
     return "".join(ans)
 
+def flatten(seq):
+    """Taken from the web."""
+    res = []
+    for item in seq:
+        if (isinstance(item, (tuple, list))):
+            res.extend(flatten(item))
+        else:
+            res.append(item)
+    return res
+
 def main():
-    print
+    # Print a warning if you haven't downloaded all of the regression test files
+    # or an error if all of the regression test files are not included in filenames[]
+    regfile = open(os.path.join("..", "data", "regressionfiles.txt"), "r")
+    regfilenames = [os.sep.join(x.strip().split("/")) for x in regfile.readlines()]
+    regfile.close()
+    missing = 0
+    for x in regfilenames:
+        if not os.path.isfile(os.path.join("..", "data", x)):
+            missing += 1
+        elif os.path.join("..", "data", x) not in flatten(filenames):
+            print "\nERROR: The regression file %s is present, but not included in " \
+                  "the 'filenames' variable.\n\nPlease add a new glob statement." % x
+            sys.exit(1)       
+    if missing > 0:
+        print "\nWARNING: You are missing %d regression file(s).\n" \
+              "         Run wget.sh in the ../data directory to update.\n" % missing
+        try:
+            raw_input("(Press ENTER to continue or CTRL+C to exit)")
+        except KeyboardInterrupt:
+            print "\n"
+            sys.exit(0)
+    
     failures = errors = total = 0
     for i in range(len(names)):
         print "Are the %s files ccopened and parsed correctly?" % names[i]
