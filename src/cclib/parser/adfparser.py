@@ -278,6 +278,12 @@ class ADF(logfileparser.Logfile):
 #Extracting orbital symmetries and energies, homos for nosym case
 #Should only be for restricted case because there is a better text block for unrestricted and nosym
                 
+                self.logger.info("Creating attribute mosyms[[]]")
+                self.mosyms = [[]]
+
+                self.logger.info("Creating attribute moenergies[[]]")
+                self.moenergies = [[]]
+                 
                 underline = inputfile.next()
                 header = inputfile.next()
                 underline = inputfile.next()
@@ -285,30 +291,38 @@ class ADF(logfileparser.Logfile):
                 line = inputfile.next()
 
                 info = line.split()
+
                 if not info[0] == '1':
-                    self.logger.error("MO info up to #%s is missing" % info[0])
-                
-                else:
-                    self.logger.info("Creating attribute mosyms[[]]")
-                    self.mosyms = [[]]
+                    self.logger.warning("MO info up to #%s is missing" % info[0])
+ 
+                #handle case where MO information up to a certain orbital are missing
+                while int(info[0]) != len(self.moenergies[0]):
+                    self.moenergies[0].append(99999)
+                    self.mosyms[0].append('A')
+          
+                homoA = None
 
-                    self.logger.info("Creating attribute moenergies[[]]")
-                    self.moenergies = [[]]
-                
-                    homoA = None
+                while len(line) > 10:
+                    info = line.split()
+                    self.mosyms[0].append('A')
+                    self.moenergies[0].append(utils.convertor(float(info[2]), 'hartree', 'eV'))
+                    if info[1] == '0.000' and not hasattr(self, 'homos'):
+                        self.logger.info("Creating attribute homos[]")
+                        self.homos = [len(self.moenergies[0]) - 2]
+                    line = inputfile.next()
 
-                    while len(line) > 10:
-                        info = line.split()
-                        self.mosyms[0].append('A')
-                        self.moenergies[0].append(utils.convertor(float(info[2]), 'hartree', 'eV'))
-                        if info[1] == '0.000' and not hasattr(self, 'homos'):
-                            self.logger.info("Creating attribute homos[]")
-                            self.homos = [len(self.moenergies[0]) - 2]
-                        line = inputfile.next()
+                i = len(self.moenergies[0])
+                if i < self.nbasis:
+                    self.logger.warning("MO info past #%s is missing" % i)
 
-                    temp = Numeric.array(self.moenergies, "f")
-                    self.moenergies = temp
-                    self.homos = Numeric.array(self.homos, "i")
+                #handle case where MO info is missing
+                while len(self.moenergies[0]) < self.nbasis:
+                    self.moenergies[0].append(99999)
+                    self.mosyms[0].append('A')
+
+                temp = Numeric.array(self.moenergies, "f")
+                self.moenergies = temp
+                self.homos = Numeric.array(self.homos, "i")
 
             if line[1:29] == 'Orbital Energies, both Spins' and not hasattr(self, "mosyms") and nosymflag and unrestrictedflag:
 #Extracting orbital symmetries and energies, homos for nosym case
