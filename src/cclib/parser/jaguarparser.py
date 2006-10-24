@@ -104,7 +104,7 @@ class Jaguar(logfileparser.Logfile):
                 temp = line.strip().split()
                 self.scfenergies.append(utils.convertor(float(temp[temp.index("hartrees") - 1]), "hartree", "eV"))
 
-            if line[2:14] == "new geometry" or line[1:21] == "Symmetrized geometry":
+            if line[2:14] == "new geometry" or line[1:21] == "Symmetrized geometry" or line.find("Input geometry") > 0:
 # Get the atom coordinates
                 if not hasattr(self, "atomcoords"):
                     self.logger.info("Creating attributes: atomcoords, atomnos, natom")
@@ -159,6 +159,13 @@ class Jaguar(logfileparser.Logfile):
                 if not hasattr(self, "geotargets"):
                     self.geotargets = geotargets
 
+            if line.find("number of occupied orbitals") > 0:
+# Get number of MOs
+                occs = int(line.split()[-1])
+                line = inputfile.next()
+                virts = int(line.split()[-1])
+                self.nmo = occs + virts
+                
             if line[2:33] == "Orbital energies/symmetry label":
 # Get MO Energies and symmetrys
                 if not hasattr(self,"moenergies"):
@@ -173,7 +180,80 @@ class Jaguar(logfileparser.Logfile):
                         self.mosyms[0].append(self.normalisesym(temp[i+1]))
                     line = inputfile.next()
                 self.moenergies = Numeric.array(self.moenergies, "f")
+
+            if line.find("Orbital energies:") > 0:
+# Get MO Energies
+# Jaguar 6.0
+                if not hasattr(self,"moenergies"):
+                    self.logger.info("Creating attribute moenergies")
+                    self.moenergies = [[]]
+                    line = inputfile.next()
+                    while line.strip():
+                        temp = line.strip().split()
+                        for i in range(len(temp)):
+                            self.moenergies[0].append(utils.convertor(float(temp[i]), "hartree", "eV"))
+                        line = inputfile.next()
+                    self.moenergies = Numeric.array(self.moenergies, "f")
             
+            if line.find("Occupied + virtual Orbitals- final wvfn") > 0:
+                
+                blank = inputfile.next()
+                stars = inputfile.next()
+                blank = inputfile.next()
+                blank = inputfile.next()
+                
+                if not hasattr(self,"mocoeffs"):
+                    self.logger.info("Creating mocoeffs")
+                    self.mocoeffs = Numeric.zeros((1,self.nmo, self.nbasis),"d")
+                
+                aonames = []
+                lastatom = "X"
+
+                offset = 0
+
+                for k in range(0,self.nmo,5):
+
+                    line = inputfile.next()
+                    eigens = inputfile.next()
+                    line = inputfile.next()
+
+                    for i in range(self.nbasis):
+
+                        info = line.split()
+
+                        if not hasattr(self,"aonames"):
+                            if lastatom != info[1]:
+                                scount = 1
+                                pcount = 3
+                                dcount = 6 #six d orbitals in Jaguar
+
+                            if info[2] == 'S':
+                                aonames.append("%s_%i%s"%(info[1], scount, info[2]))
+                                scount += 1
+                        
+                            if info[2] == 'X' or info[2] == 'Y' or info[2] == 'Z':
+                                aonames.append("%s_%iP%s"%(info[1], pcount / 3, info[2]))
+                                pcount += 1
+                        
+                            if info[2] == 'XX' or info[2] == 'YY' or info[2] == 'ZZ' or \
+                               info[2] == 'XY' or info[2] == 'XZ' or info[2] == 'YZ':
+
+                                aonames.append("%s_%iD%s"%(info[1], dcount / 6, info[2]))
+                                dcount += 1
+
+                            lastatom = info[1]
+
+                        for j in range(len(info[3:])):
+                            self.mocoeffs[0,j+k,i] = float(info[3+j])
+
+                        line = inputfile.next()
+
+                    if not hasattr(self,"aonames"):
+                        self.aonames = aonames
+
+                    offset += 5
+                            
+                            
             if line[2:6] == "olap":
                 if line[6]=="-":
                     continue # avoid "olap-dev"
