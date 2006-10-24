@@ -252,54 +252,70 @@ class Jaguar(logfileparser.Logfile):
                 
                 if not hasattr(self,"mocoeffs"):
                     self.logger.info("Creating mocoeffs")
-                    self.mocoeffs = Numeric.zeros((1,self.nmo, self.nbasis),"d")
+                    if unrestrictedflag:
+                        spin = 2
+                    else:
+                        spin = 1
+
+                    self.mocoeffs = Numeric.zeros((spin,self.nmo, self.nbasis),"d")
                 
                 aonames = []
                 lastatom = "X"
 
                 offset = 0
 
-                for k in range(0,self.nmo,5):
+                for s in range(spin):
 
-                    line = inputfile.next()
-                    eigens = inputfile.next()
-                    line = inputfile.next()
+                    if s == 1: #beta case
+                        stars = inputfile.next()
+                        blank = inputfile.next()
+                        title = inputfile.next()
+                        blank = inputfile.next()
+                        stars = inputfile.next()
+                        blank = inputfile.next()
+                        blank = inputfile.next()
 
-                    for i in range(self.nbasis):
+                    for k in range(0,self.nmo,5):
 
-                        info = line.split()
-
-                        if not hasattr(self,"aonames"):
-                            if lastatom != info[1]:
-                                scount = 1
-                                pcount = 3
-                                dcount = 6 #six d orbitals in Jaguar
-
-                            if info[2] == 'S':
-                                aonames.append("%s_%i%s"%(info[1], scount, info[2]))
-                                scount += 1
-                        
-                            if info[2] == 'X' or info[2] == 'Y' or info[2] == 'Z':
-                                aonames.append("%s_%iP%s"%(info[1], pcount / 3, info[2]))
-                                pcount += 1
-                        
-                            if info[2] == 'XX' or info[2] == 'YY' or info[2] == 'ZZ' or \
-                               info[2] == 'XY' or info[2] == 'XZ' or info[2] == 'YZ':
-
-                                aonames.append("%s_%iD%s"%(info[1], dcount / 6, info[2]))
-                                dcount += 1
-
-                            lastatom = info[1]
-
-                        for j in range(len(info[3:])):
-                            self.mocoeffs[0,j+k,i] = float(info[3+j])
-
+                        numbers = inputfile.next()
+                        eigens = inputfile.next()
                         line = inputfile.next()
 
-                    if not hasattr(self,"aonames"):
-                        self.aonames = aonames
+                        for i in range(self.nbasis):
 
-                    offset += 5
+                            info = line.split()
+
+                            if not hasattr(self,"aonames"):
+                                if lastatom != info[1]:
+                                    scount = 1
+                                    pcount = 3
+                                    dcount = 6 #six d orbitals in Jaguar
+
+                                if info[2] == 'S':
+                                    aonames.append("%s_%i%s"%(info[1], scount, info[2]))
+                                    scount += 1
+                            
+                                if info[2] == 'X' or info[2] == 'Y' or info[2] == 'Z':
+                                    aonames.append("%s_%iP%s"%(info[1], pcount / 3, info[2]))
+                                    pcount += 1
+                            
+                                if info[2] == 'XX' or info[2] == 'YY' or info[2] == 'ZZ' or \
+                                   info[2] == 'XY' or info[2] == 'XZ' or info[2] == 'YZ':
+
+                                    aonames.append("%s_%iD%s"%(info[1], dcount / 6, info[2]))
+                                    dcount += 1
+
+                                lastatom = info[1]
+
+                            for j in range(len(info[3:])):
+                                self.mocoeffs[s,j+k,i] = float(info[3+j])
+
+                            line = inputfile.next()
+
+                        if not hasattr(self,"aonames"):
+                            self.aonames = aonames
+
+                        offset += 5
                             
                             
             if line[2:6] == "olap":
