@@ -165,6 +165,24 @@ class Jaguar(logfileparser.Logfile):
                 line = inputfile.next()
                 virts = int(line.split()[-1])
                 self.nmo = occs + virts
+                self.homos = Numeric.array([occs-1])
+
+                unrestrictedflag = False
+
+            if line.find("number of alpha occupied orb") > 0:
+# Get number of MOs for an unrestricted calc
+
+                aoccs = int(line.split()[-1])
+                line = inputfile.next()
+                avirts = int(line.split()[-1])
+                line = inputfile.next()
+                boccs = int(line.split()[-1])
+                line = inputfile.next()
+                bvirt = int(line.split()[-1])
+
+                self.nmo = aoccs + avirts
+                self.homos = Numeric.array([aoccs-1,boccs-1])
+                unrestrictedflag = True
                 
             if line[2:33] == "Orbital energies/symmetry label":
 # Get MO Energies and symmetrys
@@ -181,7 +199,7 @@ class Jaguar(logfileparser.Logfile):
                     line = inputfile.next()
                 self.moenergies = Numeric.array(self.moenergies, "f")
 
-            if line.find("Orbital energies:") > 0:
+            if line.find("Orbital energies:") == 2:
 # Get MO Energies
 # Jaguar 6.0
                 if not hasattr(self,"moenergies"):
@@ -194,6 +212,36 @@ class Jaguar(logfileparser.Logfile):
                             self.moenergies[0].append(utils.convertor(float(temp[i]), "hartree", "eV"))
                         line = inputfile.next()
                     self.moenergies = Numeric.array(self.moenergies, "f")
+
+            if line.find("Alpha Orbital energies:") == 2:
+# Get alpha MO Energies
+# Jaguar 6.0
+                if not hasattr(self,"moenergies"):
+                    self.logger.info("Creating attribute moenergies")
+                    self.moenergies = [[],[]]
+                    line = inputfile.next()
+                    while line.strip():
+                        temp = line.strip().split()
+                        for i in range(len(temp)):
+                            self.moenergies[0].append(utils.convertor(float(temp[i]), "hartree", "eV"))
+                        line = inputfile.next()
+
+                    blank = inputfile.next()
+                    homo = inputfile.next()
+                    lumo = inputfile.next()
+                    blank = inputfile.next()
+                    title = inputfile.next()
+
+                    line = inputfile.next()
+                    while line.strip():
+                        temp = line.strip().split()
+                        for i in range(len(temp)):
+                            self.moenergies[1].append(utils.convertor(float(temp[i]), "hartree", "eV"))
+                        line = inputfile.next()
+
+                    self.moenergies = Numeric.array(self.moenergies, "f")
+
+
             
             if line.find("Occupied + virtual Orbitals- final wvfn") > 0:
                 
