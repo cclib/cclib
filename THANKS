@@ -1,13 +1,11 @@
-The developers of cclib would like the thank the following:
+The developers of cclib would like the thank the following (in alphabetical order):
 
+Nuno Bandeira -- for bug reporting
 Avril Coghlan -- for designing the cclib logo
+Abhishek Dey -- for bug reporting
+Ian Hovell -- for bug reporting
 Rob Paton -- for creating and running Jaguar test jobs
-Joe Townsend -- for giving me multiple GAMESS files to test on
 Jen Schwartz -- for helping create and run Jaguar 6.0 test jobs
-
-Bug reporters:
-Nuno Bandeira
-Ian Hovell
-Adam Swanson
-Abhishek Dey
-Samuel Wilson
+Adam Swanson -- for bug reporting
+Joe Townsend -- for giving multiple GAMESS files to test on
+Samuel Wilson -- for bug reporting
