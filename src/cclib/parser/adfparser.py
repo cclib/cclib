@@ -143,9 +143,10 @@ class ADF(logfileparser.Logfile):
                         self.progress.update(step, "Attributes")
                         oldstep = step
                 
-                self.logger.info("Creating attribute atomnos[], atomcoords[]")
+                self.logger.info("Creating attribute atomnos[], atomcoords[], coreelectrons[]")
                 self.atomnos = []
                 self.atomcoords = []
+                self.coreelectrons = []
                 
                 underline = inputfile.next()  #clear pointless lines
                 label1 = inputfile.next()     # 
@@ -157,6 +158,7 @@ class ADF(logfileparser.Logfile):
                     element = info[1].split('.')[0]
                     self.atomnos.append(self.table.number[element])
                     atomcoords.append(map(float, info[2:5]))
+                    self.coreelectrons.append(int(float(info[5]) - float(info[6])))
                     line = inputfile.next()
                 self.atomcoords.append(atomcoords)
                 
@@ -715,6 +717,10 @@ class ADF(logfileparser.Logfile):
             self.nmo = len(self.moenergies[0])
         if hasattr(self,"atomcoords"):
             self.atomcoords = Numeric.array(self.atomcoords, "f")
+        if not hasattr(self,"coreelectrons"):
+            self.coreelectrons = [0]*self.natom
+
+        self.coreelectrons = Numeric.array(self.coreelectrons, "i")
 
         self.parsed = True
 
