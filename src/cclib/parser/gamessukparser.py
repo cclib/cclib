@@ -452,6 +452,9 @@ class GAMESSUK(logfileparser.Logfile):
         if hasattr(self, "scfvalues"):
             self.scfvalues = [Numeric.array(x, "f") for x in self.scfvalues]
 
+        if not hasattr(self,"coreelectrons"):
+            self.coreelectrons = Numeric.zeros(self.natom,"i")
+
              
 if __name__ == "__main__":
     import doctest
