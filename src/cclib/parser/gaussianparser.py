@@ -88,7 +88,7 @@ class Gaussian(logfileparser.Logfile):
             if line[1:23] == "Optimization completed":
                 optfinished = True
             
-            if line.find("Input orientation") > -1:
+            if line.find("Input orientation") > -1 or line.find("Z-Matrix orientation") > -1:
 # Extract the atomic numbers and coordinates in the event standard orientation isn't available
 
                 if self.progress and random.random() < cupdate:
