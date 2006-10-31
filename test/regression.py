@@ -78,6 +78,7 @@ filenames = [glob(os.path.join(data, "Gaussian", "basicGaussian03", "*.out")) +
              glob(os.path.join(data, "GAMESS-UK", "GAMESS-UK7.0", "*.out")),
              
              glob(os.path.join(data, "Jaguar", "basicJaguar4.2", "*.out")) +
+             glob(os.path.join(data, "Jaguar", "basicJaguar6.0", "*.out")) +
              glob(os.path.join(data, "Jaguar", "basicJaguar6.5", "*.out")),
              ]
 
