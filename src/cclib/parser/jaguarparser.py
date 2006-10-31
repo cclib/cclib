@@ -394,6 +394,9 @@ class Jaguar(logfileparser.Logfile):
             self.scfenergies = Numeric.array(self.scfenergies, "f")
         if hasattr(self, "atomcoords"):
             self.atomcoords = Numeric.array(self.atomcoords, "f")
+        if not hasattr(self,"coreelectrons"):
+            self.coreelectrons = Numeric.array([0]*self.natom,"i")
+
         self.parsed = True
         
 if __name__ == "__main__":
