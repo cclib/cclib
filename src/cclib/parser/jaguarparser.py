@@ -257,7 +257,7 @@ class Jaguar(logfileparser.Logfile):
                     else:
                         spin = 1
 
-                    self.mocoeffs = Numeric.zeros((spin,self.nmo, self.nbasis),"d")
+                    self.mocoeffs = Numeric.zeros((spin,self.nmo, self.nbasis),"f")
                 
                 aonames = []
                 lastatom = "X"
@@ -322,7 +322,7 @@ class Jaguar(logfileparser.Logfile):
                 if line[6]=="-":
                     continue # avoid "olap-dev"
                 self.logger.info("Creating attribute aooverlaps")
-                self.aooverlaps = Numeric.zeros((self.nbasis, self.nbasis), "d")
+                self.aooverlaps = Numeric.zeros((self.nbasis, self.nbasis), "f")
 
                 for i in range(0, self.nbasis, 5):
                     blank = inputfile.next()
@@ -382,6 +382,9 @@ class Jaguar(logfileparser.Logfile):
                     self.vibirs = Numeric.array(self.vibirs)
 
         inputfile.close()
+
+        if self.progress:
+            self.progress.update(nstep,"Done")
 
         if hasattr(self, "scfvalues"):
             self.scfvalues = [Numeric.array(x, "f") for x in self.scfvalues]
