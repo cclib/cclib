@@ -509,6 +509,8 @@ class GAMESS(logfileparser.Logfile):
         if not hasattr(self, "nmo"):
             self.logger.info("Creating attribute nmo with default value")
             self.nmo = self.nbasis
+        if not hasattr(self,"coreelectrons"):
+            self.coreelectrons = Numeric.zeros(self.natom, "i")
 
         self.parsed = True
 
