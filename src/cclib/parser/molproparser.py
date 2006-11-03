@@ -29,7 +29,7 @@ class Molpro(logfileparser.Logfile):
 
     def parse(self, fupdate=0.05, cupdate=0.002):
         """Extract information from the logfile."""
-        inputfile = open(self.filename,"r")
+        inputfile = utils.openlogfile(self.filename)
         if self.progress:
             inputfile.seek(0,2) #go to end of file
             nstep=inputfile.tell()

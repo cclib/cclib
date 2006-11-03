@@ -75,7 +75,7 @@ class ADF(logfileparser.Logfile):
 
     def parse(self, fupdate=0.05, cupdate=0.002):
         """Extract information from the logfile."""
-        inputfile = open(self.filename, "r")
+        inputfile = utils.openlogfile(self.filename)
         
         if self.progress:
             

@@ -11,7 +11,34 @@ import gaussianparser
 import jaguarparser
 import gamessukparser
 import molproparser
+
+import os
+import bz2 # New in Python 2.3
+import gzip
+import zipfile
 import logging
+import StringIO
+
+def openlogfile(filename):
+    """Return a file object given a filename.
+
+    Given the filename of a log file or a gzipped, zipped, or bzipped
+    log file, this function returns a file object that allows access
+    to the data in the file.
+    """
+    extension = os.path.splitext(filename)[1]
+    if extension == ".gz":
+        fileobject = gzip.open(filename, "r")
+    elif extension == ".zip":
+        zip = zipfile.ZipFile(filename, "r")
+        assert (len(zip.namelist()) == 1,
+                "ERROR: Zip file contains more than 1 file")
+        fileobject = StringIO.StringIO(zip.read(zip.namelist()[0]))
+    elif extension in ['.bz', '.bz2']:
+        fileobject = bz2.BZ2File(filename, "r")
+    else:
+        fileobject = open(filename, "r")
+    return fileobject
 
 def ccopen(filename,progress=None,loglevel=logging.INFO,logname="Log"):
     """Guess the identity of a particular log file and return an instance of it.
@@ -20,7 +47,7 @@ def ccopen(filename,progress=None,loglevel=logging.INFO,logname="Log"):
              None (if it cannot figure it out).
     """
     filetype = None
-    inputfile = open(filename, "r")
+    inputfile = openlogfile(filename)
     for line in inputfile:
         if line.find("Amsterdam Density Functional") >= 0:
             filetype = adfparser.ADF

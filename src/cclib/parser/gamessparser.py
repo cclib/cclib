@@ -76,7 +76,7 @@ class GAMESS(logfileparser.Logfile):
     
     def parse(self):
         """Extract information from the logfile."""
-        inputfile = open(self.filename, "r")
+        inputfile = utils.openlogfile(self.filename)
         
         if self.progress:
             

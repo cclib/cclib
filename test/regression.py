@@ -33,7 +33,7 @@ def testGaussian_basicGaussian03_dvb_un_sp_out(logfile):
     assert len(logfile.atomnos) == 20
     assert logfile.atomcoords.shape == (1,20,3)
 
-def testGaussian_Gaussian03_Mo4OSibdt2_opt_log(logfile):
+def testGaussian_Gaussian03_Mo4OSibdt2_opt_log_bz2(logfile):
     """
     This file had no atomcoords as it did not contain any
     "Input orientation" sections, only "Standard orientation" sections
@@ -46,7 +46,7 @@ def testGaussian_basicGaussian03_dvb_raman_out(logfile):
     """
     assert logfile.vibramans[1] - 2.6872 < 0.0001
 
-def testADF_ADF2004_01_Fe_ox3_final_out(logfile):
+def testADF_ADF2004_01_Fe_ox3_final_out_gz(logfile):
     """
     Make sure HOMOS are correct
     """
@@ -61,21 +61,21 @@ dummyfiles = [ Gaussian(""), GAMESS(""), ADF(""), GAMESSUK(""), Jaguar("") ]
 
 filenames = [glob(os.path.join(data, "Gaussian", "basicGaussian03", "*.out")) +  
              glob(os.path.join(data, "Gaussian", "basicGaussian03", "*.log")) +
-             glob(os.path.join(data, "Gaussian", "Gaussian03", "*.log")) +
-             glob(os.path.join(data, "Gaussian", "Gaussian98", "*.out")),
+             glob(os.path.join(data, "Gaussian", "Gaussian03", "*.bz2")) +
+             glob(os.path.join(data, "Gaussian", "Gaussian98", "*.bz2")),
              
              glob(os.path.join(data, "GAMESS", "basicGAMESS-US", "*.out")) +
              glob(os.path.join(data, "GAMESS", "basicPCGAMESS", "*.out")) +
-             glob(os.path.join(data, "GAMESS", "GAMESS-US", "*.log")) +
-             glob(os.path.join(data, "GAMESS", "PCGAMESS", "*.log")),
+             glob(os.path.join(data, "GAMESS", "GAMESS-US", "*.bz2")) +
+             glob(os.path.join(data, "GAMESS", "PCGAMESS", "*.*.bz2")),
              
              glob(os.path.join(data, "ADF", "basicADF2004.01", "*.adfout")) +
-             glob(os.path.join(data, "ADF", "ADF2004.01", "*.*out")) +
-             glob(os.path.join(data, "ADF", "ADF2005.01", "*.out")),
+             glob(os.path.join(data, "ADF", "ADF2004.01", "*.gz")) +
+             glob(os.path.join(data, "ADF", "ADF2005.01", "*.zip")),
              
              glob(os.path.join(data, "GAMESS-UK", "basicGAMESS-UK", "*.out")) +
-             glob(os.path.join(data, "GAMESS-UK", "GAMESS-UK6.0", "*.out")) +
-             glob(os.path.join(data, "GAMESS-UK", "GAMESS-UK7.0", "*.out")),
+             glob(os.path.join(data, "GAMESS-UK", "GAMESS-UK6.0", "*.out.gz")) +
+             glob(os.path.join(data, "GAMESS-UK", "GAMESS-UK7.0", "*.out.gz")),
              
              glob(os.path.join(data, "Jaguar", "basicJaguar4.2", "*.out")) +
              glob(os.path.join(data, "Jaguar", "basicJaguar6.0", "*.out")) +
