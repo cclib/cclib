@@ -1,4 +1,4 @@
-"""cclib -- parsers and algorithms for computational chemistry
+"""parsers and algorithms for computational chemistry
 
 cclib is a Python library that provides parsers for computational
 chemistry log files. It also provides a platform to implement
