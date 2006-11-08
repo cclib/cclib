@@ -52,6 +52,17 @@ def testADF_ADF2004_01_Fe_ox3_final_out_gz(logfile):
     """
     assert logfile.homos[0]==59 and logfile.homos[1]==54
 
+def testGaussian_Gaussian98_water_zmatrix_nosym_log_gz(logfile):
+    """
+    This file had no atomcoords as it did not contain either an
+    "Input orientation" or "Standard orientation section". As
+    a result it failed to parse. Fixed in r400.
+
+    This file is missing natom.
+    """
+    assert len(logfile.atomcoords)==1
+    assert natom == 3
+
 # Edit the following variable definitions to add new parsers
 # or new datafiles
 
@@ -62,7 +73,8 @@ dummyfiles = [ Gaussian(""), GAMESS(""), ADF(""), GAMESSUK(""), Jaguar("") ]
 filenames = [glob(os.path.join(data, "Gaussian", "basicGaussian03", "*.out")) +  
              glob(os.path.join(data, "Gaussian", "basicGaussian03", "*.log")) +
              glob(os.path.join(data, "Gaussian", "Gaussian03", "*.bz2")) +
-             glob(os.path.join(data, "Gaussian", "Gaussian98", "*.bz2")),
+             glob(os.path.join(data, "Gaussian", "Gaussian98", "*.bz2")) +
+             glob(os.path.join(data, "Gaussian", "Gaussian98", "*.gz")),
              
              glob(os.path.join(data, "GAMESS", "basicGAMESS-US", "*.out")) +
              glob(os.path.join(data, "GAMESS", "basicPCGAMESS", "*.out")) +
