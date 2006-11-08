@@ -61,7 +61,7 @@ def testGaussian_Gaussian98_water_zmatrix_nosym_log_gz(logfile):
     This file is missing natom.
     """
     assert len(logfile.atomcoords)==1
-    assert natom == 3
+    assert logfile.natom == 3
 
 # Edit the following variable definitions to add new parsers
 # or new datafiles

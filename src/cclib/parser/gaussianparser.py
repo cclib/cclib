@@ -114,6 +114,11 @@ class Gaussian(logfileparser.Logfile):
                     atomcoords.append(map(float, broken[3:6]))
                     line = inputfile.next()
                 inputcoords.append(atomcoords)
+                if not hasattr(self, "natom"):
+                    self.atomnos = Numeric.array(inputatoms, 'i')
+                    self.logger.info("Creating attribute atomnos[]")
+                    self.natom = len(self.atomnos)
+                    self.logger.info("Creating attribute natom: %d" % self.natom)                
 
             if not optfinished and line[25:45] == "Standard orientation":
 # Extract the atomic numbers and coordinates of the atoms
@@ -637,8 +642,6 @@ class Gaussian(logfileparser.Logfile):
             self.scfvalues = [Numeric.array(x, "f") for x in self.scfvalues]
 
         if not hasattr(self,"atomcoords"):
-            self.logger.info("Creating attribute atomnos[]")
-            self.atomnos = Numeric.array(inputatoms, 'i')
             self.logger.info("Creating attribute atomcoords[]")
             self.atomcoords = Numeric.array(inputcoords, 'f')
 
