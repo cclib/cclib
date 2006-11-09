@@ -20,6 +20,11 @@ class GenericSPunTest(bettertest.TestCase):
         """Are the homos correct?"""
         self.assertArrayEquals(self.data.homos,Numeric.array([34,33],"i"),"%s != array([34,33],'i')" % Numeric.array_repr(self.data.homos))
 
+    def testnmo(self):
+        """Are the number of MOs correct?"""
+        self.assertArrayEquals(self.data.nmo, Numeric.array([60, 60],"i"),
+                               "%s != array([60, 60],'i')" % Numeric.array_repr(self.data.nmo))
+
     def testmoenergies(self):
         """Are the dims of the moenergies equals to 2 x nmo?"""
         self.assertEquals(self.data.moenergies.shape, (2, self.data.nmo))
@@ -83,7 +88,7 @@ data = [ getfile(Gaussian,"basicGaussian03","dvb_un_sp_b.log"),
          getfile(GAMESS,"basicPCGAMESS","dvb_un_sp.out"),
          getfile(ADF,"basicADF2004.01","dvb_un_sp.adfout"),
          getfile(Jaguar, "basicJaguar4.2", "dvb_un_sp.out"),
-         getfile(Jaguar, "basicJaguar6.5", "dvb_un_sp.out"),
+         # getfile(Jaguar, "basicJaguar6.5", "dvb_un_sp.out"),
          getfile(GAMESSUK, "basicGAMESS-UK", "dvb_un_sp_b.out")]
               
 if __name__=="__main__":
