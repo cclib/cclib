@@ -122,8 +122,8 @@ class MolproGeoOptTest(GenericGeoOptTest):
     def setUp(self):
         self.data = data[7]
 
-names = [ "Gaussian", "PCGamess", "GAMESS", "ADF", "Jaguar4.2",
-          "Jaguar6.5", "GAMESS UK", "Molpro" ]
+names = [ "Gaussian", "PCGamess", "GAMESS", "ADF", "Jaguar 4.2",
+          "Jaguar 6.5", "GAMESS UK", "Molpro" ]
 tests = [ GaussianGeoOptTest, PCGamessGeoOptTest,
           GamessUSGeoOptTest, ADFGeoOptTest,
           Jaguar42GeoOptTest, Jaguar65GeoOptTest,

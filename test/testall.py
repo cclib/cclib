@@ -42,20 +42,40 @@ def importName(modulename, name):
     
 
 if __name__=="__main__":
-    total = errors = failures = 0
+    perpackage = {}
+    errors = []
     for module in [ "testGeoOpt", "testSP", "testSPun", "testBasis" ]:
-        names = importName(module, "names") # i.e. from testGeoOpt import names
-        tests = importName(module, "tests") # i.e. from testGeoOpt import tests
-        for name,test in zip(names,tests):
-            print "\n**** Testing %s (%s) ****" % (name, module)
-            myunittest = unittest.makeSuite(test)
-            a = unittest.TextTestRunner(verbosity=2).run(myunittest)
-            total += a.testsRun
-            errors += len(a.errors)
-            failures += len(a.failures)
+        try:
+            names = importName(module, "names") # i.e. from testGeoOpt import names
+        except: # Parsing failed
+            errors.append("ERROR: no tests run for %s as parsing failed." % module)
+        else:
+            tests = importName(module, "tests") # i.e. from testGeoOpt import tests
+            for name,test in zip(names,tests):
+                print "\n**** Testing %s (%s) ****" % (name, module)
+                myunittest = unittest.makeSuite(test)
+                a = unittest.TextTestRunner(verbosity=2).run(myunittest)
+                l = perpackage.setdefault(name, [0, 0, 0])
+                l[0] += a.testsRun
+                l[1] += len(a.errors)
+                l[2] += len(a.failures)
+
+    print "\n\n********* SUMMARY PER PACKAGE ****************"
+    names = perpackage.keys()
+    names.sort()
+    total = [0, 0, 0]
+    print " "*14, "\t".join(["Total", "Passed", "Failed", "Errors"])
+    for name in names:
+        l = perpackage[name]
+        print name.ljust(15), "%3d\t%3d\t%3d\t%3d" % (l[0], l[0]-l[1]-l[2], l[2], l[1])
+        for i in range(3):
+            total[i] += l[i]
 
     print "\n\n********* SUMMARY OF EVERYTHING **************"
-    print "TOTAL: %d\tPASSED: %d\tFAILED: %d\tERRORS: %d" % (total,total-(errors+failures),failures,errors)
+    print "TOTAL: %d\tPASSED: %d\tFAILED: %d\tERRORS: %d" % (total[0],total[0]-(total[1]+total[2]),total[2],total[1])
+
+    if errors:
+        print "\n".join(errors)
 
     print "\n\n*** Visual tests ***"
-    visualtests()
+    visualtests()    
