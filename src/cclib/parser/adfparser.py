@@ -713,8 +713,14 @@ class ADF(logfileparser.Logfile):
             self.scfvalues = [Numeric.array(x, "f") for x in self.scfvalues]
         if hasattr(self,"scftargets"):
             self.scftargets = Numeric.array(self.scftargets, "f")
+
         if hasattr(self,"moenergies"):
-            self.nmo = len(self.moenergies[0])
+            size = len(self.moenergies[0])
+            if len(self.moenergies) == 0:
+                self.nmo = Numeric.array([size],"i")
+            else:
+                self.nmo = Numeric.array([size,size],"i")
+
         if hasattr(self,"atomcoords"):
             self.atomcoords = Numeric.array(self.atomcoords, "f")
         if not hasattr(self,"coreelectrons"):
