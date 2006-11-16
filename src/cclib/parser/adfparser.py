@@ -716,7 +716,7 @@ class ADF(logfileparser.Logfile):
 
         if hasattr(self,"moenergies"):
             size = len(self.moenergies[0])
-            if len(self.moenergies) == 0:
+            if len(self.moenergies) == 1:
                 self.nmo = Numeric.array([size],"i")
             else:
                 self.nmo = Numeric.array([size,size],"i")
