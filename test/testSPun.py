@@ -8,13 +8,16 @@ from cclib.parser import ADF, GAMESS, Gaussian, Jaguar, GAMESSUK
 
 class GenericSPunTest(bettertest.TestCase):
     """Restricted single point calculations with MO coeffs and overlap info."""
+
     def testdimaooverlaps(self):
         """Are the dims of the overlap matrix consistent with nbasis?"""
-        self.assertEquals(self.data.aooverlaps.shape,(self.data.nbasis,self.data.nbasis))
+        self.assertEquals(self.data.aooverlaps.shape,
+                          (self.data.nbasis, self.data.nbasis))
 
     def testdimmocoeffs(self):
-        """Are the dimensions of mocoeffs equal to 2 x nmo x nbasis?"""
-        self.assertEquals(self.data.mocoeffs.shape,(2,self.data.nmo,self.data.nbasis))
+        """Are the dimensions of mocoeffs equal to 2 x max(nmo) x nbasis?"""
+        self.assertEquals(self.data.mocoeffs.shape,
+                          (2, max(self.data.nmo), self.data.nbasis))
 
     def testhomos(self):
         """Are the homos correct?"""
@@ -26,13 +29,14 @@ class GenericSPunTest(bettertest.TestCase):
                                "%s != array([60, 60],'i')" % Numeric.array_repr(self.data.nmo))
 
     def testmoenergies(self):
-        """Are the dims of the moenergies equals to 2 x nmo?"""
-        self.assertEquals(self.data.moenergies.shape, (2, self.data.nmo))
+        """Are the dims of the moenergies equals to 2 x max(nmo)?"""
+        self.assertEquals(self.data.moenergies.shape, (2, max(self.data.nmo)))
 
     def testmosyms(self):
         """Are the dims of the mosyms equals to 2 x nmo?"""
-        shape = (len(self.data.mosyms), len(self.data.mosyms[0]))
-        self.assertEquals(shape, (2, self.data.nmo))
+        shape = Numeric.array((len(self.data.mosyms[0]), len(self.data.mosyms[1])), "i")
+        self.assertArrayEquals(shape, self.data.nmo,
+                               "%s != %s" % (shape, self.data.nmo))
         
 class GaussianSPunTest(GenericSPunTest):
     def setUp(self):
@@ -70,12 +74,7 @@ class Jaguar65SPunTest(GenericSPunTest):
         
 class GamessUKSPunTest(GenericSPunTest):
     def setUp(self):
-        self.data = data[6]
-
-    def testdimmocoeffs(self):
-        """Are the dimensions of mocoeffs equal to 2 x (max(homos)+6) x nbasis?"""
-        self.assertEquals(self.data.mocoeffs.shape,(2,max(self.data.homos)+6,self.data.nbasis))
-
+        self.data = data[5]
 
 names = [ "Gaussian", "PCGamess", "GAMESS", "ADF", "Jaguar 4.2",
           "Jaguar 6.5", "GAMESS UK"]
