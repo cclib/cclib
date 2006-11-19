@@ -335,7 +335,8 @@ class GAMESSUK(logfileparser.Logfile):
                         for j in range(multiple[temp[0]]):
                             mosyms.append(self.normalisesym(temp)) # add twice for 'e', etc.
                     line = inputfile.next()
-                assert len(mosyms) == self.nmo, "mosyms: %d but nmo: %d" % (len(mosyms), self.nmo)
+                print len(mosyms), self.nmo
+                assert len(mosyms) == self.nmo[0], "mosyms: %d but nmo: %d" % (len(mosyms), self.nmo)
                 if betamosyms:
                     # Only append if beta (otherwise with IPRINT SCF
                     # it will add mosyms for every step of a geo opt)
@@ -358,7 +359,7 @@ class GAMESSUK(logfileparser.Logfile):
                 minus = inputfile.next()
 
                 
-                mocoeffs = Numeric.zeros( (1, self.nmo, self.nbasis), "f")
+                mocoeffs = Numeric.zeros( (1, self.nmo[0], self.nbasis), "f")
                 blank = inputfile.next()
                 blank = inputfile.next()
                 evalues = inputfile.next()
@@ -367,7 +368,7 @@ class GAMESSUK(logfileparser.Logfile):
                 oldatomname = "DUMMY VALUE"
 
                 mo = 0
-                while mo < self.nmo:
+                while mo < self.nmo[0]:
                     blank = inputfile.next()
                     blank = inputfile.next()
                     nums = inputfile.next()
@@ -401,6 +402,8 @@ class GAMESSUK(logfileparser.Logfile):
                 mocoeffs = mocoeffs[:, 0:(mo+len(temp)), :]
                 if betamocoeffs:
                     # Add space for the beta mocoeffs
+                    # (assumes that the number of beta mocoeffs for which
+                    #  information is available is <= alpha mocoeffs)
                     self.mocoeffs = Numeric.resize(self.mocoeffs, (2, self.mocoeffs.shape[1], self.mocoeffs.shape[2]))
                     # Set the beta mocoeffs all to zero (as there may be more alpha than beta)
                     self.mocoeffs[1, :, :] = Numeric.zeros( (self.mocoeffs.shape[1], self.mocoeffs.shape[2]), "f")
@@ -431,24 +434,27 @@ class GAMESSUK(logfileparser.Logfile):
                     temp = line.strip().split()
                     moenergies.append(utils.convertor(float(temp[2]), "hartree", "eV"))
                     line = inputfile.next()
-                self.nmo = len(moenergies)
+                
                 if betamoenergies:
                     self.moenergies.append(moenergies)
+                    self.nmo.append(len(moenergies))
                     betamoenergies = False
                 elif scftype=='gvb':
                     self.moenergies = [moenergies, moenergies]
+                    self.nmo = [len(moenergies), len(moenergies)]
                 else:
+                    self.nmo = [len(moenergies)]
                     self.moenergies = [moenergies]
                 
         if self.progress:
             self.progress.update(nstep, "Done")
 
-        _toarray = ['atomcoords', 'geotargets', 'geovalues', 'moenergies', 'scftargets',
-                    'scfenergies', 'vibfreqs', 'vibirs']
+        _toarray = ['atomcoords', 'geotargets', 'geovalues', 'moenergies',
+                    'scftargets', 'scfenergies', 'vibfreqs', 'vibirs']
         for attr in _toarray:
             if hasattr(self, attr):
                 setattr(self, attr, Numeric.array(getattr(self, attr), 'f'))
-
+        self.nmo = Numeric.array(self.nmo, "i")
         if hasattr(self, "scfvalues"):
             self.scfvalues = [Numeric.array(x, "f") for x in self.scfvalues]
 
