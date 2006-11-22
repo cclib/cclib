@@ -1,18 +1,26 @@
+Changes since cclib-0.6.0:
+
+Bugfixes:
+	* cclib: The "import cclib.parsers" statement failed due to
+	references to Molpro and Jaguar parsers which are not present
+	* Gaussian parser: Failed to parse single point calculations
+	where the input coords are a z-matrix, and symmetry is turned off.
+
 Changes since cclib-0.6b:
 
 Features
-  * ADF parser: If some MO eigenvalues are not present, the parser
-    does not fail, but uses values of 99999 instead and A symmetry
+	* ADF parser: If some MO eigenvalues are not present, the parser
+	does not fail, but uses values of 99999 instead and A symmetry
 
 Bugfixes
-  * ADF parser: The following bugs have been fixed
-    P/D orbitals for single atoms not handled correctly
-    Problem parsing homos in unrestricted calculations
-    Problem skipping the Create sections in certain calculations  
-  * Gaussian parser: The following bugs have been fixed
-    Parser failed if standard orientation not found
-  * ccget: aooverlaps not included when using --list option
-  
+	* ADF parser: The following bugs have been fixed
+	P/D orbitals for single atoms not handled correctly
+	Problem parsing homos in unrestricted calculations
+	Problem skipping the Create sections in certain calculations  
+	* Gaussian parser: The following bugs have been fixed
+	Parser failed if standard orientation not found
+	* ccget: aooverlaps not included when using --list option
+
 Changes since cclib-0.5:
 
 Features
