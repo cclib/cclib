@@ -365,12 +365,12 @@ class GAMESS(logfileparser.Logfile):
                 self.mosyms = [[]]
                 if not hasattr(self, "nmo"):
                     self.logger.info("Creating attribute nmo with default value")
-                    self.nmo = Numeric.array([self.nbasis], 'i')
+                    self.nmo = self.nbasis
                 if not hasattr(self, "mocoeffs"):
                     self.logger.info("Creating attribute mocoeffs")
-                self.mocoeffs = Numeric.zeros((1, self.nmo[0], self.nbasis), "f")
+                self.mocoeffs = Numeric.zeros((1, self.nmo, self.nbasis), "f")
                 line = inputfile.next()
-                for base in range(0, self.nmo[0], 5):
+                for base in range(0, self.nmo, 5):
                     blank = inputfile.next()
                     line = inputfile.next() # Eigenvector no
                     line = inputfile.next()
@@ -402,12 +402,12 @@ class GAMESS(logfileparser.Logfile):
 #
 #                      1          2          3          4          5
 
-                    self.mocoeffs.resize((2, self.nmo[0], self.nbasis))
+                    self.mocoeffs.resize((2, self.nmo, self.nbasis))
                     self.moenergies.append([])
                     self.mosyms.append([])
                     for i in range(5):
                         line = inputfile.next()
-                    for base in range(0, self.nmo[0], 5):
+                    for base in range(0, self.nmo, 5):
                         blank = inputfile.next()
                         line = inputfile.next() # Eigenvector no
                         line = inputfile.next()
@@ -458,14 +458,14 @@ class GAMESS(logfileparser.Logfile):
                 # Note that this line is present if ISPHER=1, e.g. for C_bigbasis
                 if not hasattr(self, "nmo"):
                     self.logger.info("Creating attribute nmo")
-                self.nmo = Numeric.array([int(line.strip().split()[-1])], 'i')
+                self.nmo = int(line.strip().split()[-1])
                 
             elif line.find("TOTAL NUMBER OF MOS IN VARIATION SPACE") == 1:
                 # Note that this line is not always present, so by default
                 # NBsUse is set equal to NBasis (see below).
                 if not hasattr(self, "nmo"):
                     self.logger.info("Creating attribute nmo")
-                self.nmo = Numeric.array([int(line.split()[-1])], 'i')
+                self.nmo = int(line.split()[-1])
 
             elif line.find("OVERLAP MATRIX") == 0 or line.find("OVERLAP MATRIX") == 1:
                 # The first is for PC-GAMESS, the second for GAMESS
@@ -508,9 +508,7 @@ class GAMESS(logfileparser.Logfile):
             self.atomcoords = Numeric.array(self.atomcoords, "f")
         if not hasattr(self, "nmo"):
             self.logger.info("Creating attribute nmo with default value")
-            self.nmo = Numeric.array([self.nbasis], 'i')
-        if len(self.homos)==2:
-            self.nmo = Numeric.array([self.nmo[0], self.nmo[0]], 'i')
+            self.nmo = self.nbasis
         if not hasattr(self,"coreelectrons"):
             self.coreelectrons = Numeric.zeros(self.natom, "i")
 

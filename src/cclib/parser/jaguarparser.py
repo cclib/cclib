@@ -164,7 +164,7 @@ class Jaguar(logfileparser.Logfile):
                 occs = int(line.split()[-1])
                 line = inputfile.next()
                 virts = int(line.split()[-1])
-                self.nmo = Numeric.array([occs + virts],"i")
+                self.nmo = occs + virts
                 self.homos = Numeric.array([occs-1])
 
                 unrestrictedflag = False
@@ -178,12 +178,9 @@ class Jaguar(logfileparser.Logfile):
                 line = inputfile.next()
                 boccs = int(line.split()[-1])
                 line = inputfile.next()
-                bvirts = int(line.split()[-1])
+                bvirt = int(line.split()[-1])
 
-                anmo = aoccs + avirts
-                bnmo = boccs + bvirts
-                self.nmo = Numeric.array([anmo,bnmo],"i")
-
+                self.nmo = aoccs + avirts
                 self.homos = Numeric.array([aoccs-1,boccs-1])
                 unrestrictedflag = True
                 
@@ -260,7 +257,7 @@ class Jaguar(logfileparser.Logfile):
                     else:
                         spin = 1
 
-                    self.mocoeffs = Numeric.zeros((spin,self.nbasis, self.nbasis),"f")
+                    self.mocoeffs = Numeric.zeros((spin,self.nmo, self.nbasis),"f")
                 
                 aonames = []
                 lastatom = "X"
@@ -278,7 +275,7 @@ class Jaguar(logfileparser.Logfile):
                         blank = inputfile.next()
                         blank = inputfile.next()
 
-                    for k in range(0,self.nmo[s],5):
+                    for k in range(0,self.nmo,5):
 
                         numbers = inputfile.next()
                         eigens = inputfile.next()

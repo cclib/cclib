@@ -40,11 +40,6 @@ class GenericGeoOptTest(bettertest.TestCase):
     def testnbasis(self):
         """Is the number of basis set functions equal to 60?"""
         self.assertEquals(self.data.nbasis,60)
-        
-    def testnmo(self):
-        """Are the number of MOs correct?"""
-        self.assertArrayEquals(self.data.nmo, Numeric.array([60],"i"),
-                               "%s != array([60],'i')" % Numeric.array_repr(self.data.nmo))
 
     def testscfenergy(self):
         """Is the SCF energy within 40eV of -10365"""

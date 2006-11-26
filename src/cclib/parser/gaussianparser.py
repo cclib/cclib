@@ -513,10 +513,10 @@ class Gaussian(logfileparser.Logfile):
 # Extract the number of linearly-independent basis sets
                 nmo = int(line.split('=')[1].split()[0])
                 if hasattr(self, "nmo"):
-                    assert nmo == self.nmo[0]
+                    assert nmo == self.nmo
                 else:
-                    self.nmo = Numeric.array([nmo], 'i')
-                    self.logger.info("Creating attribute nmo[]")
+                    self.nmo = nmo
+                    self.logger.info("Creating attribute nmo: %d" % self.nmo)
 
             if line[7:22] == "basis functions, ":
 # For AM1 calculations, set nbasis by a second method
@@ -648,9 +648,6 @@ class Gaussian(logfileparser.Logfile):
         if not hasattr(self,"coreelectrons"):
             self.logger.info("Creating attribute coreelectrons[]")
             self.coreelectrons = Numeric.zeros(self.natom)
-
-        if len(self.homos)==2:
-            self.nmo = Numeric.array([self.nmo[0], self.nmo[0]], 'i')
 
         self.parsed = True
 
