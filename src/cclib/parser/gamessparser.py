@@ -260,6 +260,8 @@ class GAMESS(logfileparser.Logfile):
                 self.logger.info("Creating attributes vibfreqs, vibirs")
                 self.vibfreqs = []
                 self.vibirs = []
+                self.logger.info("Creating attributes vibcarts")                
+                self.vibcarts = []
 
                 # Need to get past the list of atomic weights
                 hyphens = inputfile.next()
@@ -298,14 +300,27 @@ class GAMESS(logfileparser.Logfile):
                         line = inputfile.next()
                     assert line == blank
 
-                    # Skip XYZ data for each atom plus
-                    # the Sayvetz stuff at the end
-                    for j in range(numAtom * 3 + 10):
+                    # Extract the Cartesian displacement vectors
+                    p = [ [], [], [], [], [] ]
+                    for j in range(numAtom):
+                        q = [ [], [], [], [], [] ]
+                        for k in range(3): # x, y, z
+                            line = inputfile.next()[21:]
+                            broken = map(float, line.split())
+                            for l in range(len(broken)):
+                                q[l].append(broken[l])
+                        for k in range(len(broken)):
+                            p[k].append(q[k])
+                    self.vibcarts.extend(p[:len(broken)])
+
+                    # Skip the Sayvetz stuff at the end
+                    for j in range(10):
                         line = inputfile.next()
                     blank = inputfile.next()
                     freqNo = inputfile.next()
                 self.vibfreqs = Numeric.array(self.vibfreqs, "f")
                 self.vibirs = Numeric.array(self.vibirs, "f")
+                self.vibcarts = Numeric.array(self.vibcarts, "f")
 
             if line[5:21] == "ATOMIC BASIS SET":
                 if not hasattr(self, "gbasis"):
