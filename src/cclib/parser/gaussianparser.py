@@ -392,9 +392,9 @@ class Gaussian(logfileparser.Logfile):
                 self.vibsyms = []
                 self.vibirs = []
                 self.vibfreqs = []
-                self.logger.info("Creating attribute vibsyms[]")
-                self.logger.info("Creating attribute vibfreqs[]")
-                self.logger.info("Creating attribute vibirs[]")                
+                self.vibcarts = []
+                self.logger.info("Creating attribute vibsyms[], vibfreqs[]")
+                self.logger.info("Creating attribute vibirs[], vibcarts[]")                
                 line = inputfile.next()
                 while len(line[:15].split()) > 0:
                     # Get past the three/four line title of the columns
@@ -409,18 +409,28 @@ class Gaussian(logfileparser.Logfile):
                     line = inputfile.next()
                     line = inputfile.next()
                     self.vibirs.extend(map(self.float, line[15:].split())) # Adding IR intensities
-                    line = inputfile.next()
+                    line = inputfile.next() # Either the header or a Raman line
                     if line.find("Raman") >= 0:
                         if not hasattr(self, "vibramans"):
                             self.vibramans = []
                             self.logger.info("Creating attribute vibramans[]")
                         self.vibramans.extend(map(self.float, line[15:].split())) # Adding Raman intensities
-                    line = inputfile.next()
+                        line = inputfile.next() # Depolar (P)
+                        line = inputfile.next() # Depolar (U)
+                        line = inputfile.next() # Header
+                    line = inputfile.next() # First line of cartesian displacement vectors
+                    p = [[], [], []]
                     while len(line[:15].split()) > 0:
+                        # Store the cartesian displacement vectors
+                        broken = map(float, line.strip().split()[2:])
+                        for i in range(0, len(broken), 3):
+                            p[i/3].append(broken[i:i+3])
                         line = inputfile.next()
+                    self.vibcarts.append(p[0:len(broken)/3])
                     line = inputfile.next() # Should be the line with symmetries
                 self.vibfreqs = Numeric.array(self.vibfreqs, "f")
                 self.vibirs = Numeric.array(self.vibirs, "f")
+                self.vibcarts = Numeric.array(self.vibcarts, "f")
                 if hasattr(self, "vibramans"):
                     self.vibramans = Numeric.array(self.vibramans, "f")
                     
