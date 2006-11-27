@@ -426,7 +426,7 @@ class Gaussian(logfileparser.Logfile):
                         for i in range(0, len(broken), 3):
                             p[i/3].append(broken[i:i+3])
                         line = inputfile.next()
-                    self.vibcarts.append(p[0:len(broken)/3])
+                    self.vibcarts.extend(p[0:len(broken)/3])
                     line = inputfile.next() # Should be the line with symmetries
                 self.vibfreqs = Numeric.array(self.vibfreqs, "f")
                 self.vibirs = Numeric.array(self.vibirs, "f")
