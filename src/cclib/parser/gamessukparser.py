@@ -228,6 +228,35 @@ class GAMESSUK(logfileparser.Logfile):
                     self.vibirs.append(float(temp[-2]))
                     line = inputfile.next()
 
+            if line[44:73] == "normalised normal coordinates":
+                if not hasattr(self, "vibcarts"):
+                    self.logger.info("Creating attribute vibcarts")
+                self.vibcarts = []
+                equals = inputfile.next()
+                blank = inputfile.next()
+                blank = inputfile.next()
+                freqnum = inputfile.next()
+                while freqnum.find("=")<0:
+                    blank = inputfile.next()
+                    equals = inputfile.next()
+                    freqs = inputfile.next()
+                    equals = inputfile.next()
+                    blank = inputfile.next()
+                    header = inputfile.next()
+                    equals = inputfile.next()
+                    p = [ [] for x in range(9) ]
+                    for i in range(len(self.atomnos)):
+                        brokenx = map(float, inputfile.next()[25:].split())
+                        brokeny = map(float, inputfile.next()[25:].split())            
+                        brokenz = map(float, inputfile.next()[25:].split())
+                        for j,x in enumerate(zip(brokenx, brokeny, brokenz)):
+                            p[j].append(x)
+                    self.vibcarts.extend(p)
+            
+                    blank = inputfile.next()
+                    blank = inputfile.next()
+                    freqnum = inputfile.next()                    
+                            
             if line[3:11] == "SCF TYPE":
                 scftype = line.split()[-2]
                 assert scftype in ['rhf', 'uhf', 'gvb'], "%s not one of 'rhf', 'uhf' or 'gvb'" % scftype
@@ -450,7 +479,7 @@ class GAMESSUK(logfileparser.Logfile):
             self.progress.update(nstep, "Done")
 
         _toarray = ['atomcoords', 'geotargets', 'geovalues', 'moenergies', 'scftargets',
-                    'scfenergies', 'vibfreqs', 'vibirs']
+                    'scfenergies', 'vibcarts', 'vibfreqs', 'vibirs']
         for attr in _toarray:
             if hasattr(self, attr):
                 setattr(self, attr, Numeric.array(getattr(self, attr), 'f'))
