@@ -113,7 +113,7 @@ class GAMESSUK(logfileparser.Logfile):
                 if not hasattr(self, "atomcoords"):
                     self.logger.info("Creating attribute atomcoords[], atomnos[]")
                     self.atomcoords = []
-                    self.atomnos = []
+                self.atomnos = []
                 
                 stop = " "*9 + "*"*79
                 line = inputfile.next()
@@ -125,15 +125,21 @@ class GAMESSUK(logfileparser.Logfile):
                 empty = inputfile.next()
 
                 atomcoords = []
-                line = inputfile.next()
-                while not line.startswith(stop):
-                    line = inputfile.next()
-                    atomcoords.append(map(float,line.split()[3:6]))
+                empty = inputfile.next()
+                while not empty.startswith(stop):
+                    line = inputfile.next().split() # the coordinate data
+                    atomcoords.append(map(float,line[3:6]))
+                    self.atomnos.append(int(round(float(line[2]))))
                     while line!=empty:
                         line = inputfile.next()
-                    line = inputfile.next()
-
+                    # at this point, line is an empty line, right after
+                    # 1 or more lines containing basis set information
+                    empty = inputfile.next()
+                    # empty is either a row of asterisks or the empty line
+                    # before the row of coordinate data
+                
                 self.atomcoords.append(atomcoords)
+                self.atomnos = Numeric.array(self.atomnos, "i")
 
             if line[40:59] == "nuclear coordinates":
                 # We need not remember the first geometry in the geo-opt as this will
