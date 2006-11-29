@@ -392,9 +392,9 @@ class Gaussian(logfileparser.Logfile):
                 self.vibsyms = []
                 self.vibirs = []
                 self.vibfreqs = []
-                self.vibcarts = []
+                self.vibdisps = []
                 self.logger.info("Creating attribute vibsyms[], vibfreqs[]")
-                self.logger.info("Creating attribute vibirs[], vibcarts[]")                
+                self.logger.info("Creating attribute vibirs[], vibdisps[]")                
                 line = inputfile.next()
                 while len(line[:15].split()) > 0:
                     # Get past the three/four line title of the columns
@@ -426,11 +426,11 @@ class Gaussian(logfileparser.Logfile):
                         for i in range(0, len(broken), 3):
                             p[i/3].append(broken[i:i+3])
                         line = inputfile.next()
-                    self.vibcarts.extend(p[0:len(broken)/3])
+                    self.vibdisps.extend(p[0:len(broken)/3])
                     line = inputfile.next() # Should be the line with symmetries
                 self.vibfreqs = Numeric.array(self.vibfreqs, "f")
                 self.vibirs = Numeric.array(self.vibirs, "f")
-                self.vibcarts = Numeric.array(self.vibcarts, "f")
+                self.vibdisps = Numeric.array(self.vibdisps, "f")
                 if hasattr(self, "vibramans"):
                     self.vibramans = Numeric.array(self.vibramans, "f")
                     

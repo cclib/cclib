@@ -6,10 +6,10 @@ from cclib.parser import ADF, GAMESS, Gaussian, Jaguar, GAMESSUK
 class GenericVibTest(unittest.TestCase):
     """Vibrational frequency calculations."""
 
-    def testvibcarts(self):
-        """Are the dimensions of vibcarts consistent with 3N-6 x N x 3"""
+    def testvibdisps(self):
+        """Are the dimensions of vibdisps consistent with 3N-6 x N x 3"""
         numvib = 3*len(self.data.atomnos) - 6
-        self.assertEqual(self.data.vibcarts.shape,
+        self.assertEqual(self.data.vibdisps.shape,
                         (numvib, len(self.data.atomnos), 3))
 
 class GaussianVibTest(GenericVibTest):

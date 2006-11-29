@@ -229,9 +229,9 @@ class GAMESSUK(logfileparser.Logfile):
                     line = inputfile.next()
 
             if line[44:73] == "normalised normal coordinates":
-                if not hasattr(self, "vibcarts"):
-                    self.logger.info("Creating attribute vibcarts")
-                self.vibcarts = []
+                if not hasattr(self, "vibdisps"):
+                    self.logger.info("Creating attribute vibdisps")
+                self.vibdisps = []
                 equals = inputfile.next()
                 blank = inputfile.next()
                 blank = inputfile.next()
@@ -251,7 +251,7 @@ class GAMESSUK(logfileparser.Logfile):
                         brokenz = map(float, inputfile.next()[25:].split())
                         for j,x in enumerate(zip(brokenx, brokeny, brokenz)):
                             p[j].append(x)
-                    self.vibcarts.extend(p)
+                    self.vibdisps.extend(p)
             
                     blank = inputfile.next()
                     blank = inputfile.next()
@@ -479,7 +479,7 @@ class GAMESSUK(logfileparser.Logfile):
             self.progress.update(nstep, "Done")
 
         _toarray = ['atomcoords', 'geotargets', 'geovalues', 'moenergies', 'scftargets',
-                    'scfenergies', 'vibcarts', 'vibfreqs', 'vibirs']
+                    'scfenergies', 'vibdisps', 'vibfreqs', 'vibirs']
         for attr in _toarray:
             if hasattr(self, attr):
                 setattr(self, attr, Numeric.array(getattr(self, attr), 'f'))

@@ -260,8 +260,8 @@ class GAMESS(logfileparser.Logfile):
                 self.logger.info("Creating attributes vibfreqs, vibirs")
                 self.vibfreqs = []
                 self.vibirs = []
-                self.logger.info("Creating attributes vibcarts")                
-                self.vibcarts = []
+                self.logger.info("Creating attributes vibdisps")                
+                self.vibdisps = []
 
                 # Need to get past the list of atomic weights
                 hyphens = inputfile.next()
@@ -311,7 +311,7 @@ class GAMESS(logfileparser.Logfile):
                                 q[l].append(broken[l])
                         for k in range(len(broken)):
                             p[k].append(q[k])
-                    self.vibcarts.extend(p[:len(broken)])
+                    self.vibdisps.extend(p[:len(broken)])
 
                     # Skip the Sayvetz stuff at the end
                     for j in range(10):
@@ -320,7 +320,7 @@ class GAMESS(logfileparser.Logfile):
                     freqNo = inputfile.next()
                 self.vibfreqs = Numeric.array(self.vibfreqs, "f")
                 self.vibirs = Numeric.array(self.vibirs, "f")
-                self.vibcarts = Numeric.array(self.vibcarts, "f")
+                self.vibdisps = Numeric.array(self.vibdisps, "f")
 
             if line[5:21] == "ATOMIC BASIS SET":
                 if not hasattr(self, "gbasis"):
