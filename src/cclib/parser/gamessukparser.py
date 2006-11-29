@@ -227,6 +227,10 @@ class GAMESSUK(logfileparser.Logfile):
                     self.vibfreqs.append(float(temp[1]))
                     self.vibirs.append(float(temp[-2]))
                     line = inputfile.next()
+                # Use the length of the vibdisps to figure out
+                # how many rotations and translations to remove
+                self.vibfreqs = self.vibfreqs[-len(self.vibdisps):]
+                self.vibirs = self.vibirs[-len(self.vibdisps):]
 
             if line[44:73] == "normalised normal coordinates":
                 if not hasattr(self, "vibdisps"):
