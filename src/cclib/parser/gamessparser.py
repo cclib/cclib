@@ -257,28 +257,42 @@ class GAMESS(logfileparser.Logfile):
 # RAMAN INTENSITY:       12.675       1.828       0.000       0.000       0.000
 #  DEPOLARIZATION:        0.750       0.750       0.124       0.009       0.750
 
+# If PC-GAMESS has not reached the stationary point we have
+# MODES 1 TO 5 ARE TAKEN AS ROTATIONS AND TRANSLATIONS.
+#
+#     FREQUENCIES IN CM**-1, IR INTENSITIES IN DEBYE**2/AMU-ANGSTROM**2
+#
+#     *******************************************************
+#     * THIS IS NOT A STATIONARY POINT ON THE MOLECULAR PES *
+#     *     THE VIBRATIONAL ANALYSIS IS NOT VALID !!!       *
+#     *******************************************************
+#
+#                          1           2           3           4           5
+
                 self.logger.info("Creating attributes vibfreqs, vibirs")
                 self.vibfreqs = []
                 self.vibirs = []
                 self.logger.info("Creating attributes vibdisps")                
                 self.vibdisps = []
 
-                # Need to get past the list of atomic weights
-                hyphens = inputfile.next()
-                blank = inputfile.next()
-                line = inputfile.next()
-                blank = inputfile.next()
-                line = inputfile.next()
-                numAtom = 0
-                while line.strip():
-                    numAtom += 1
+                # Need to get to the modes line
+                warning = False
+                while line.find("MODES") == -1:
                     line = inputfile.next()
+                    if line.find("THIS IS NOT A STATIONARY POINT")>=0:
+                        warning = True
+                numrots = int(line.split()[3]) # either 5 or 6
+                blank = inputfile.next()
 
-                line = inputfile.next()
-                while line.find("FREQUENCIES IN CM**-1") == -1:
-                    line = inputfile.next()
+                line = inputfile.next() # FREQUENCIES, etc.
                 while line != blank:
                     line = inputfile.next()
+                if warning: # Get past the second warning
+                    line = inputfile.next()
+                    while line!= blank:
+                        line = inputfile.next()
+                    self.logger.warning("This is not a stationary point on the molecular"
+                                        "PES. The vibrational analysis is not valid.")
                 
                 freqNo = inputfile.next()
                 while freqNo.find("SAYVETZ") == -1:
@@ -302,7 +316,7 @@ class GAMESS(logfileparser.Logfile):
 
                     # Extract the Cartesian displacement vectors
                     p = [ [], [], [], [], [] ]
-                    for j in range(numAtom):
+                    for j in range(len(self.atomnos)):
                         q = [ [], [], [], [], [] ]
                         for k in range(3): # x, y, z
                             line = inputfile.next()[21:]
@@ -318,9 +332,10 @@ class GAMESS(logfileparser.Logfile):
                         line = inputfile.next()
                     blank = inputfile.next()
                     freqNo = inputfile.next()
-                self.vibfreqs = Numeric.array(self.vibfreqs, "f")
-                self.vibirs = Numeric.array(self.vibirs, "f")
-                self.vibdisps = Numeric.array(self.vibdisps, "f")
+                # Exclude rotations and translations
+                self.vibfreqs = Numeric.array(self.vibfreqs[numrots:], "f")
+                self.vibirs = Numeric.array(self.vibirs[numrots:], "f")
+                self.vibdisps = Numeric.array(self.vibdisps[numrots:], "f")
 
             if line[5:21] == "ATOMIC BASIS SET":
                 if not hasattr(self, "gbasis"):

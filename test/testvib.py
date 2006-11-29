@@ -12,10 +12,22 @@ class GenericVibTest(unittest.TestCase):
         self.assertEqual(self.data.vibdisps.shape,
                         (numvib, len(self.data.atomnos), 3))
 
+    def testlengths(self):
+        """Are the lengths of vibfreqs and vibirs correct?"""
+        numvib = 3*len(self.data.atomnos) - 6
+        self.assertEqual(len(self.data.vibfreqs), numvib)
+        self.assertEqual(len(self.data.vibirs), numvib)
+
+
 class GaussianVibTest(GenericVibTest):
     def setUp(self):
         self.data = data[0]
 
+    def testvibsyms(self):
+        """Is the length of vibsyms correct?"""
+        numvib = 3*len(self.data.atomnos) - 6        
+        self.assertEqual(len(self.data.vibsyms), numvib)
+       
 class GamessUSVibTest(GenericVibTest):
     def setUp(self):
         self.data = data[1]
@@ -32,9 +44,20 @@ class Jaguar42VibTest(GenericVibTest):
     def setUp(self):
         self.data = data[4]
 
+    def testvibsyms(self):
+            """Is the length of vibsyms correct?"""
+            numvib = 3*len(self.data.atomnos) - 6        
+            self.assertEqual(len(self.data.vibsyms), numvib)
+
 class Jaguar65VibTest(GenericVibTest):
     def setUp(self):
         self.data = data[4]
+
+    def testvibsyms(self):
+            """Is the length of vibsyms correct?"""
+            numvib = 3*len(self.data.atomnos) - 6        
+            self.assertEqual(len(self.data.vibsyms), numvib)
+       
 
 class GamessUKVibTest(GenericVibTest):
     def setUp(self):
