@@ -5,31 +5,35 @@ and licensed under the LGPL (http://www.gnu.org/copyleft/lgpl.html).
 
 __revision__ = "$Revision$"
 
-import pyopenbabel as pob
 import openbabel as ob
 
 def makeopenbabel(atomcoords, atomnos):
-    """Create a list of pyopenbabel molecules.
+    """Create an Open Babel molecule.
 
-    >>> import Numeric
+    >>> import Numeric, openbabel
     >>> atomnos = Numeric.array([1,8,1],"i")
-    >>> a = Numeric.array([[-1,1,0],[0,0,0],[1,1,0]],"f")
-    >>> pyOBmol = pyopenbabel(a,atomnos)
-    >>> print pyOBmol.write("inchi").strip()
+    >>> coords = Numeric.array([[-1.,1.,0.],[0.,0.,0.],[1.,1.,0.]])
+    >>> obmol = makeopenbabel(coords, atomnos)
+    >>> obconversion = openbabel.OBConversion()
+    >>> formatok = obconversion.SetOutFormat("inchi")
+    >>> print obconversion.WriteString(obmol).strip()
     InChI=1/H2O/h1H2
     """
 # The only thing missing is charge, but this is also missing
 # from cclib...things to do
     obmol = ob.OBMol()
-    for coords, atomno in zip(atomcoords, atomnos):
+    for i in range(len(atomnos)):
+        # Note that list(atomcoords[i]) is not equivalent!!!
+        coords = atomcoords[i].tolist()
+        atomno = atomnos[i]
         obatom = ob.OBAtom()
         obatom.SetAtomicNum(atomno)
         obatom.SetVector(*coords)
         obmol.AddAtom(obatom)
     obmol.ConnectTheDots()
     obmol.PerceiveBondOrders()
-    return pob.Molecule(obmol)
+    return obmol
 
 if __name__ == "__main__":
-    import doctest, cclib2openbabel
-    doctest.testmod(cclib2openbabel)
+    import doctest
+    doctest.testmod()
