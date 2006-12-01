@@ -304,7 +304,7 @@ class Gaussian(logfileparser.Logfile):
                         self.progress.update(step, "Eigenvalues")
                         oldstep = step
                         
-                self.logger.info("Creating attribute moenergies[[]]")
+                self.logger.info("Creating attribute moenergies")
                 self.moenergies = [[]]
                 HOMO = -2
                 while line.find('Alpha') == 1:
@@ -346,7 +346,8 @@ class Gaussian(logfileparser.Logfile):
                         self.moenergies[1].append(utils.convertor(self.float(x), "hartree", "eV"))
                         i += 1
                     line = inputfile.next()
-                self.moenergies = Numeric.array(self.moenergies, "f")                    
+                self.moenergies = [Numeric.array(x, "f") for x in self.moenergies]
+                
             if line[1:14] == "AO basis set ":
                 ## Gaussian Rev <= B.0.3
                 self.logger.info("Creating attribute gbasis")

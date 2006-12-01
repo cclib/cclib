@@ -53,6 +53,11 @@ class GenericGeoOptTest(bettertest.TestCase):
         """Is the number of evalues equal to 60?"""
         self.assertEquals(60,len(self.data.moenergies[0]))
 
+    def testtypemoenergies(self):
+        """Is moenergies a list containing one Numeric array?"""
+        self.assertEquals(type(self.data.moenergies), type([]))
+        self.assertEquals(type(self.data.moenergies[0]), type(Numeric.array([])))
+
     def testsymlabels(self):
         """Are all the symmetry labels either Ag/u or Bg/u?"""
         sumwronglabels = sum([x not in ['Ag','Bu','Au','Bg'] for x in self.data.mosyms[0]])

@@ -488,8 +488,10 @@ class GAMESSUK(logfileparser.Logfile):
             if hasattr(self, attr):
                 setattr(self, attr, Numeric.array(getattr(self, attr), 'f'))
 
-        if hasattr(self, "scfvalues"):
-            self.scfvalues = [Numeric.array(x, "f") for x in self.scfvalues]
+        _tolistofarrays = ['scfvalues', 'moenergies']
+        for attr in _tolistofarrays:
+            if hasattr(self, attr):
+                setattr(self, attr, [Numeric.array(x, "f") for x in getattr(self, attr)])
 
         if not hasattr(self,"coreelectrons"):
             self.coreelectrons = Numeric.zeros(self.natom,"i")

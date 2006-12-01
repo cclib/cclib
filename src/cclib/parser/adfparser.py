@@ -316,17 +316,7 @@ class ADF(logfileparser.Logfile):
                         self.homos = [len(self.moenergies[0]) - 2]
                     line = inputfile.next()
 
-                i = len(self.moenergies[0])
-                if i < self.nbasis:
-                    self.logger.warning("MO info past #%s is missing" % i)
-
-                #handle case where MO info is missing
-                while len(self.moenergies[0]) < self.nbasis:
-                    self.moenergies[0].append(99999)
-                    self.mosyms[0].append('A')
-
-                temp = Numeric.array(self.moenergies, "f")
-                self.moenergies = temp
+                self.moenergies = [Numeric.array(self.moenergies[0], "f")]
                 self.homos = Numeric.array(self.homos, "i")
 
             if line[1:29] == 'Orbital Energies, both Spins' and not hasattr(self, "mosyms") and nosymflag and unrestrictedflag:
@@ -365,8 +355,7 @@ class ADF(logfileparser.Logfile):
 
                     line = inputfile.next()
 
-                temp = Numeric.array(self.moenergies, "f")
-                self.moenergies = temp
+                self.moenergies = [Numeric.array(x, "f") for x in moenergies]
                 self.logger.info("Creating attribute homos[]")
                 self.homos = Numeric.array([homoa, homob], "i")
 
@@ -463,14 +452,7 @@ class ADF(logfileparser.Logfile):
                     self.logger.info("Creating attribute homos[]")
                     self.homos = [homoa, homob]
     
-#                tempa=Numeric.array(self.moenergies[0],"f")
-#                tempb=Numeric.array(self.moenergies[1],"f")
-#                self.moenergies=[tempa,tempb]
-#              elif len(info)==5:
-#                self.moenergies=[
-
-                temp = Numeric.array(self.moenergies, "f")
-                self.moenergies = temp
+                self.moenergies = [Numeric.array(x, "f") for x in self.moenergies]
                 self.homos = Numeric.array(self.homos, "i")
   
             if line[1:24] == "List of All Frequencies":

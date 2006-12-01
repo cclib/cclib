@@ -453,7 +453,7 @@ class GAMESS(logfileparser.Logfile):
                                 j += 1
                     line = inputfile.next()
                 assert line.find("END OF") >= 0
-                self.moenergies = Numeric.array(self.moenergies, "f")
+                self.moenergies = [Numeric.array(x, "f") for x in self.moenergies]
 
             if line.find("NUMBER OF OCCUPIED ORBITALS") >= 0:
                 if not hasattr(self," homos"):
