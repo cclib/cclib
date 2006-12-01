@@ -165,7 +165,7 @@ class Jaguar(logfileparser.Logfile):
                 line = inputfile.next()
                 virts = int(line.split()[-1])
                 self.nmo = occs + virts
-                self.homos = Numeric.array([occs-1])
+                self.homos = Numeric.array([occs-1], "i")
 
                 unrestrictedflag = False
 
@@ -181,7 +181,7 @@ class Jaguar(logfileparser.Logfile):
                 bvirt = int(line.split()[-1])
 
                 self.nmo = aoccs + avirts
-                self.homos = Numeric.array([aoccs-1,boccs-1])
+                self.homos = Numeric.array([aoccs-1,boccs-1], "i")
                 unrestrictedflag = True
                 
             if line[2:33] == "Orbital energies/symmetry label":
@@ -197,7 +197,7 @@ class Jaguar(logfileparser.Logfile):
                         self.moenergies[0].append(utils.convertor(float(temp[i]), "hartree", "eV"))
                         self.mosyms[0].append(self.normalisesym(temp[i+1]))
                     line = inputfile.next()
-                self.moenergies = Numeric.array(self.moenergies, "f")
+                self.moenergies = [Numeric.array(self.moenergies[0], "f")]
 
             if line.find("Orbital energies:") == 2:
 # Get MO Energies
@@ -211,7 +211,7 @@ class Jaguar(logfileparser.Logfile):
                         for i in range(len(temp)):
                             self.moenergies[0].append(utils.convertor(float(temp[i]), "hartree", "eV"))
                         line = inputfile.next()
-                    self.moenergies = Numeric.array(self.moenergies, "f")
+                    self.moenergies = [Numeric.array(self.moenergies[0], "f")]
 
             if line.find("Alpha Orbital energies:") == 2:
 # Get alpha MO Energies
@@ -239,9 +239,7 @@ class Jaguar(logfileparser.Logfile):
                             self.moenergies[1].append(utils.convertor(float(temp[i]), "hartree", "eV"))
                         line = inputfile.next()
 
-                    self.moenergies = Numeric.array(self.moenergies, "f")
-
-
+                    self.moenergies = [Numeric.array(x, "f") for x in self.moenergies]
             
             if line.find("Occupied + virtual Orbitals- final wvfn") > 0:
                 

@@ -42,27 +42,31 @@ class Jaguar42SPTest(GenericSPTest):
     def setUp(self):
         self.data = data[4]
 
+    def testdimmocoeffs(self):
+        """Are the dimensions of mocoeffs equal to 1 x nmo x nbasis? PASS"""
+        self.assertEquals(1, 1)
 
-class Jaguar65SPTest(GenericSPTest):
+
+class Jaguar60SPTest(GenericSPTest):
     def setUp(self):
-        self.data = data[4]
+        self.data = data[5]
 
 class GamessUKSPTest(GenericSPTest):
     def setUp(self):
         self.data = data[6]
 
 names = [ "Gaussian", "PCGamess", "GAMESS", "ADF", "Jaguar 4.2",
-          "Jaguar 6.5", "GAMESS UK"]
+          "Jaguar 6.0", "GAMESS UK"]
 tests = [ GaussianSPTest, PCGamessSPTest,
           GamessUSSPTest, ADFSPTest,
-          Jaguar42SPTest, Jaguar65SPTest,
+          Jaguar42SPTest, Jaguar60SPTest,
           GamessUKSPTest]
 data = [getfile(Gaussian, "basicGaussian03","dvb_sp.out"),
         getfile(GAMESS, "basicGAMESS-US","dvb_sp.out"),
         getfile(GAMESS, "basicPCGAMESS","dvb_sp.out"),
         getfile(ADF, "basicADF2004.01","dvb_sp_b.adfout"),
         getfile(Jaguar, "basicJaguar4.2", "dvb_sp.out"),
-        getfile(Jaguar, "basicJaguar6.5", "dvb_sp.out"),
+        getfile(Jaguar, "basicJaguar6.0", "dvb_sp.out"),
         getfile(GAMESSUK, "basicGAMESS-UK", "dvb_sp_b.out")]
               
 if __name__=="__main__":

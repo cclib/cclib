@@ -22,7 +22,9 @@ class GenericSPunTest(bettertest.TestCase):
 
     def testmoenergies(self):
         """Are the dims of the moenergies equals to 2 x nmo?"""
-        self.assertEquals(self.data.moenergies.shape, (2, self.data.nmo))
+        self.assertEquals(len(self.data.moenergies), 2)
+        self.assertEquals(len(self.data.moenergies[0]), self.data.nmo)
+        self.assertEquals(len(self.data.moenergies[1]), self.data.nmo)
 
     def testmosyms(self):
         """Are the dims of the mosyms equals to 2 x nmo?"""

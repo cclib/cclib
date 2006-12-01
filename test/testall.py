@@ -25,9 +25,9 @@ def visualtests():
 
     print "\n\nMO energies of optimised dvb"
     print "    ","".join(["%8s" % x for x in ['Gaussian','PCGAMESS','GAMESS-US','ADF','Jaguar']])
-    print "HOMO", "  ".join(["%+2.4f" % x.moenergies[0,x.homos[0]] for x in logfiles])
-    print "LUMO", "  ".join(["%+2.4f" % x.moenergies[0,x.homos[0]+1] for x in logfiles])
-    print "H-L  ", "  ".join(["%2.4f" % (x.moenergies[0,x.homos[0]+1]-x.moenergies[0,x.homos[0]],) for x in logfiles])
+    print "HOMO", "  ".join(["%+2.4f" % x.moenergies[0][x.homos[0]] for x in logfiles])
+    print "LUMO", "  ".join(["%+2.4f" % x.moenergies[0][x.homos[0]+1] for x in logfiles])
+    print "H-L  ", "  ".join(["%2.4f" % (x.moenergies[0][x.homos[0]+1]-x.moenergies[0][x.homos[0]],) for x in logfiles])
 
 def importName(modulename, name):
     """Import from a module whose name is determined at run-time.
