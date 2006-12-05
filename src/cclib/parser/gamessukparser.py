@@ -397,7 +397,7 @@ class GAMESSUK(logfileparser.Logfile):
                 minus = inputfile.next()
 
                 
-                mocoeffs = Numeric.zeros( (1, self.nmo, self.nbasis), "f")
+                mocoeffs = Numeric.zeros( (self.nmo, self.nbasis), "f")
                 blank = inputfile.next()
                 blank = inputfile.next()
                 evalues = inputfile.next()
@@ -426,7 +426,7 @@ class GAMESSUK(logfileparser.Logfile):
                             name = "%s_%d%s" % (atomname, aonum, pg[2].upper())
                             aonames.append(name) 
                         temp = map(float, line[19:].split())
-                        mocoeffs[0, mo:(mo+len(temp)), basis] = temp
+                        mocoeffs[mo:(mo+len(temp)), basis] = temp
                     if not self.aonames:
                         self.aonames = aonames
 
@@ -437,17 +437,11 @@ class GAMESSUK(logfileparser.Logfile):
                     if evalues[:17].strip(): # i.e. if these aren't evalues
                         break # Not all the MOs are present
                     mo += len(temp)
-                mocoeffs = mocoeffs[:, 0:(mo+len(temp)), :]
+                mocoeffs = mocoeffs[0:(mo+len(temp)), :] # In case some aren't present
                 if betamocoeffs:
-                    # Add space for the beta mocoeffs
-                    self.mocoeffs = Numeric.resize(self.mocoeffs, (2, self.mocoeffs.shape[1], self.mocoeffs.shape[2]))
-                    # Set the beta mocoeffs all to zero (as there may be more alpha than beta)
-                    self.mocoeffs[1, :, :] = Numeric.zeros( (self.mocoeffs.shape[1], self.mocoeffs.shape[2]), "f")
-                    # Set the beta mocoeffs to those just extracted
-                    self.mocoeffs[1, :mocoeffs.shape[1], :mocoeffs.shape[2]] = mocoeffs[0, :, :]
-                    betamocoeffs = False
+                    self.mocoeffs.append(mocoeffs)
                 else:
-                    self.mocoeffs = mocoeffs
+                    self.mocoeffs = [mocoeffs]
 
             if line[7:12] == "irrep":
                 ########## eigenvalues ###########

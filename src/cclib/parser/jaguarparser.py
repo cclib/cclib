@@ -255,7 +255,8 @@ class Jaguar(logfileparser.Logfile):
                     else:
                         spin = 1
 
-                    self.mocoeffs = Numeric.zeros((spin,self.nmo, self.nbasis),"f")
+                    self.mocoeffs = []
+                    
                 
                 aonames = []
                 lastatom = "X"
@@ -263,6 +264,7 @@ class Jaguar(logfileparser.Logfile):
                 offset = 0
 
                 for s in range(spin):
+                    mocoeffs = Numeric.zeros((self.nmo, self.nbasis), "f")
 
                     if s == 1: #beta case
                         stars = inputfile.next()
@@ -306,7 +308,7 @@ class Jaguar(logfileparser.Logfile):
                                 lastatom = info[1]
 
                             for j in range(len(info[3:])):
-                                self.mocoeffs[s,j+k,i] = float(info[3+j])
+                                mocoeffs[j+k,i] = float(info[3+j])
 
                             line = inputfile.next()
 
@@ -314,6 +316,7 @@ class Jaguar(logfileparser.Logfile):
                             self.aonames = aonames
 
                         offset += 5
+                    self.mocoeffs.append(mocoeffs)
                             
                             
             if line[2:6] == "olap":
