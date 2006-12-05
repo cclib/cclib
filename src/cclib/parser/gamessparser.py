@@ -398,7 +398,7 @@ class GAMESS(logfileparser.Logfile):
                     self.nmo = self.nbasis
                 if not hasattr(self, "mocoeffs"):
                     self.logger.info("Creating attribute mocoeffs")
-                self.mocoeffs = Numeric.zeros((1, self.nmo, self.nbasis), "f")
+                self.mocoeffs = [Numeric.zeros((self.nmo, self.nbasis), "f")]
                 line = inputfile.next()
                 for base in range(0, self.nmo, 5):
                     blank = inputfile.next()
@@ -416,7 +416,7 @@ class GAMESS(logfileparser.Logfile):
                         temp = line[15:] # Strip off the crud at the start
                         j = 0
                         while j*11+4 < len(temp):
-                            self.mocoeffs[0, base+j, i] = float(temp[j * 11:(j + 1) * 11])
+                            self.mocoeffs[0][base+j, i] = float(temp[j * 11:(j + 1) * 11])
                             j += 1
                 line = inputfile.next()
                 if line.find("END OF RHF") == -1: # implies unrestricted
@@ -432,7 +432,7 @@ class GAMESS(logfileparser.Logfile):
 #
 #                      1          2          3          4          5
 
-                    self.mocoeffs.resize((2, self.nmo, self.nbasis))
+                    self.mocoeffs.append(Numeric.zeros((self.nmo, self.nbasis), "f"))
                     self.moenergies.append([])
                     self.mosyms.append([])
                     for i in range(5):
@@ -449,7 +449,7 @@ class GAMESS(logfileparser.Logfile):
                             temp = line[15:] # Strip off the crud at the start
                             j = 0
                             while j * 11 + 4 < len(temp):
-                                self.mocoeffs[1, base+j, i] = float(temp[j * 11:(j + 1) * 11])
+                                self.mocoeffs[1][base+j, i] = float(temp[j * 11:(j + 1) * 11])
                                 j += 1
                     line = inputfile.next()
                 assert line.find("END OF") >= 0

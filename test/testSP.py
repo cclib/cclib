@@ -15,7 +15,10 @@ class GenericSPTest(unittest.TestCase):
     
     def testdimmocoeffs(self):
         """Are the dimensions of mocoeffs equal to 1 x nmo x nbasis?"""
-        self.assertEquals(self.data.mocoeffs.shape,(1,self.data.nmo,self.data.nbasis))
+        self.assertEquals(type(self.data.mocoeffs), type([]))
+        self.assertEquals(len(self.data.mocoeffs), 1)
+        self.assertEquals(self.data.mocoeffs[0].shape,
+                          (self.data.nmo, self.data.nbasis))
 
 class GaussianSPTest(GenericSPTest):
     def setUp(self):

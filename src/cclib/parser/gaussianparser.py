@@ -573,13 +573,13 @@ class Gaussian(logfileparser.Logfile):
             if line[5:35] == "Molecular Orbital Coefficients" or line[5:41] == "Alpha Molecular Orbital Coefficients" or line[5:40] == "Beta Molecular Orbital Coefficients":
                 if line[5:40] == "Beta Molecular Orbital Coefficients":
                     beta = True
-                    # Need to add an extra dimension to self.mocoeffs
-                    self.mocoeffs = Numeric.resize(self.mocoeffs, (2, nmo, nbasis))
+                    # Need to add an extra array to self.mocoeffs
+                    self.mocoeffs.append(Numeric.zeros((nmo, nbasis), "float"))
                 else:
                     beta = False
-                    self.logger.info("Creating attributes aonames[], mocoeffs[][]")
+                    self.logger.info("Creating attributes aonames[], mocoeffs[]")
                     self.aonames = []
-                    self.mocoeffs = Numeric.zeros((1, nmo, nbasis), "float")
+                    self.mocoeffs = [Numeric.zeros((nmo, nbasis), "float")]
 
                 base = 0
                 for base in range(0, nmo, 5):
@@ -610,9 +610,9 @@ class Gaussian(logfileparser.Logfile):
                         for j in range(0, len(part), 10):
                             temp.append(float(part[j:j+10]))
                         if beta:
-                            self.mocoeffs[1, base:base + len(part) / 10, i] = temp
+                            self.mocoeffs[1][base:base + len(part) / 10, i] = temp
                         else:
-                            self.mocoeffs[0, base:base + len(part) / 10, i] = temp
+                            self.mocoeffs[0][base:base + len(part) / 10, i] = temp
 
             if line.find("Pseudopotential Parameters") > -1:
 #parse pseudopotential charges

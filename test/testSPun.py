@@ -14,7 +14,12 @@ class GenericSPunTest(bettertest.TestCase):
 
     def testdimmocoeffs(self):
         """Are the dimensions of mocoeffs equal to 2 x nmo x nbasis?"""
-        self.assertEquals(self.data.mocoeffs.shape,(2,self.data.nmo,self.data.nbasis))
+        self.assertEquals(type(self.data.mocoeffs), type([]))
+        self.assertEquals(len(self.data.mocoeffs), 2)
+        self.assertEquals(self.data.mocoeffs[0].shape,
+                          (self.data.nmo, self.data.nbasis))
+        self.assertEquals(self.data.mocoeffs[1].shape,
+                          (self.data.nmo, self.data.nbasis))
 
     def testhomos(self):
         """Are the homos correct?"""
