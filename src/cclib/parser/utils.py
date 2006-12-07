@@ -10,7 +10,6 @@ import gamessparser
 import gaussianparser
 import jaguarparser
 import gamessukparser
-import molproparser
 
 import os
 import bz2 # New in Python 2.3
@@ -63,9 +62,6 @@ def ccopen(filename,progress=None,loglevel=logging.INFO,logname="Log"):
             break
         elif line.find("Jaguar") >= 0:
             filetype = jaguarparser.Jaguar
-            break
-        elif line.find("PROGRAM SYSTEM MOLPRO") >= 0:
-            filetype = molproparser.Molpro
             break
     inputfile.close() # Need to close before creating an instance
     

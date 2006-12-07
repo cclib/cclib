@@ -17,7 +17,6 @@ from gamessparser import GAMESS
 from adfparser import ADF
 from jaguarparser import Jaguar
 from gamessukparser import GAMESSUK
-from molproparser import Molpro
 
 # This allow users to type:
 #         from cclib.parser import ccopen
