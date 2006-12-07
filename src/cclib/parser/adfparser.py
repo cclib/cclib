@@ -165,6 +165,26 @@ class ADF(logfileparser.Logfile):
                 self.natom = len(self.atomnos)
                 self.logger.info("Creating attribute natom: %d" % self.natom)
                 
+            if line[1:10] == "FRAGMENTS":
+                header = inputfile.next()
+
+                self.frags = []
+                self.fragnames = []
+
+                line = inputfile.next()
+                while len(line) > 2: #ensure that we are reading no blank lines
+                    info = line.split()
+                    
+                    if len(info) == 7: #fragment name is listed here
+                        self.fragnames.append("%s_%s"%(info[1],info[0]))
+                        self.frags.append([])
+                        self.frags[-1].append(int(info[2]) - 1)
+
+                    elif len(info) == 5: #add atoms into last fragment
+                        self.frags[-1].append(int(info[0]) - 1)
+
+                    line = inputfile.next()
+
             if line[1:22] == "S C F   U P D A T E S":
 # find targets for SCF convergence
 
