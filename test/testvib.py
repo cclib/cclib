@@ -44,6 +44,10 @@ class PCGamessVibTest(GenericVibTest):
     def setUp(self):
         self.data = data[2]
 
+    def testirintens(self):
+        """Is the maximum IR intensity 135 +/- 5 km mol-1?"""
+        self.assertInside(max(self.data.vibirs), 135, 5)     
+
 class ADFVibTest(GenericVibTest):
     def setUp(self):
         self.data = data[3]
@@ -65,11 +69,11 @@ class Jaguar65VibTest(GenericVibTest):
             """Is the length of vibsyms correct?"""
             numvib = 3*len(self.data.atomnos) - 6        
             self.assertEqual(len(self.data.vibsyms), numvib)
-       
 
 class GamessUKVibTest(GenericVibTest):
     def setUp(self):
         self.data = data[6]
+   
 
 names = [ "Gaussian", "PCGamess", "GAMESS", "ADF", "Jaguar 4.2",
           "Jaguar 6.5", "GAMESS UK"]

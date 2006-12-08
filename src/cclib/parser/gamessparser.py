@@ -301,8 +301,8 @@ class GAMESS(logfileparser.Logfile):
                     line = inputfile.next()
                     if line.find("REDUCED") >= 0: # skip the reduced mass (not always present)
                         line = inputfile.next()
-                    irIntensity = line.strip().split()
-                    self.vibirs.extend(map(float, irIntensity[2:]))
+                    irIntensity = map(float, line.strip().split()[2:])
+                    self.vibirs.extend([utils.convertor(x, "Debye^2/amu-Angstrom^2", "km/mol") for x in irIntensity])
                     line = inputfile.next()
                     if line.find("RAMAN") >= 0:
                         if not hasattr(self,"vibramans"):
