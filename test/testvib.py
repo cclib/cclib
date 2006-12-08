@@ -2,8 +2,9 @@ import os, unittest
 from Numeric import array
 from testall import getfile
 from cclib.parser import ADF, GAMESS, Gaussian, Jaguar, GAMESSUK
+import bettertest
 
-class GenericVibTest(unittest.TestCase):
+class GenericVibTest(bettertest.TestCase):
     """Vibrational frequency calculations."""
 
     def testvibdisps(self):
@@ -18,6 +19,13 @@ class GenericVibTest(unittest.TestCase):
         self.assertEqual(len(self.data.vibfreqs), numvib)
         self.assertEqual(len(self.data.vibirs), numvib)
 
+    def testfreqval(self):
+        """Is the highest freq value 3630 +/- 200 cm-1?"""
+        self.assertInside(self.data.vibfreqs[-1], 3630, 200)
+
+    def testirintens(self):
+        """Is the maximum IR intensity 100 +/- 10 km mol-1?"""
+        self.assertInside(max(self.data.vibirs), 100, 10)
 
 class GaussianVibTest(GenericVibTest):
     def setUp(self):
