@@ -474,6 +474,33 @@ class ADF(logfileparser.Logfile):
     
                 self.moenergies = [Numeric.array(x, "f") for x in self.moenergies]
                 self.homos = Numeric.array(self.homos, "i")
+
+            if line[1:28] == "Vibrations and Normal Modes":
+                # Section on extracting vibdisps
+                # Also contains vibfreqs, but these are extracted in the
+                # following section (see below)
+                self.logger.info("Creating attribute vibdisps")
+                self.vibdisps = []
+                equals = inputfile.next()
+                blank = inputfile.next()
+                header = inputfile.next()
+                header = inputfile.next()
+                blank = inputfile.next()
+                blank = inputfile.next()
+
+                freqs = inputfile.next()
+                while freqs.strip()!="":
+                    minus = inputfile.next()
+                    p = [ [], [], [] ]
+                    for i in range(len(self.atomnos)):
+                        broken = map(float, inputfile.next().split()[1:])
+                        for j in range(0, len(broken), 3):
+                            p[j/3].append(broken[j:j+3])
+                    self.vibdisps.extend(p[:(len(broken)/3)])
+                    blank = inputfile.next()
+                    blank = inputfile.next()
+                    freqs = inputfile.next()
+                self.vibdisps = Numeric.array(self.vibdisps, "f")
   
             if line[1:24] == "List of All Frequencies":
 # Start of the IR/Raman frequency section
