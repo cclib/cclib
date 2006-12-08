@@ -347,7 +347,7 @@ class ADF(logfileparser.Logfile):
                 self.mosyms = [[], []]
 
                 self.logger.info("Creating attribute moenergies[[]]")
-                self.moenergies = [[], []]
+                moenergies = [[], []]
 
                 underline = inputfile.next()
                 blank = inputfile.next()
@@ -362,14 +362,14 @@ class ADF(logfileparser.Logfile):
                     info = line.split()
                     if info[2] == 'A': 
                         self.mosyms[0].append('A')
-                        self.moenergies[0].append(utils.convertor(float(info[4]), 'hartree', 'eV'))
+                        moenergies[0].append(utils.convertor(float(info[4]), 'hartree', 'eV'))
                         if info[3] != '0.00':
-                            homoa = len(self.moenergies[0]) - 1
+                            homoa = len(moenergies[0]) - 1
                     elif info[2] == 'B':
                         self.mosyms[1].append('A')
-                        self.moenergies[1].append(utils.convertor(float(info[4]), 'hartree', 'eV'))
+                        moenergies[1].append(utils.convertor(float(info[4]), 'hartree', 'eV'))
                         if info[3] != '0.00':
-                            homob = len(self.moenergies[1]) - 1
+                            homob = len(moenergies[1]) - 1
                     else:
                         print "Error reading line: %s" % line
 
@@ -677,7 +677,8 @@ class ADF(logfileparser.Logfile):
                             inputfile.next()
 
                         if nosymflag:
-                            aolist = range(len(self.moenergies[spin]))
+                            #aolist = range(len(self.moenergies[spin]))
+                            aolist = range(self.nbasis)
                         else:
                             aolist = symlist[sym][spin]
                           
