@@ -345,8 +345,9 @@ class Jaguar(logfileparser.Logfile):
 
             if line[2:23] == "start of program freq":
 # IR stuff
-                self.logger.info("Creating attribute: vibfreqs")
+                self.logger.info("Creating attribute: vibfreqs, vibdisps")
                 self.vibfreqs = []
+                self.vibdisps = []
                 blank = inputfile.next()
                 line = inputfile.next()
                 line = inputfile.next()
@@ -375,10 +376,23 @@ class Jaguar(logfileparser.Logfile):
                         if forceconstants:
                             forceconst = inputfile.next()
                     line = inputfile.next()
-                    while line.strip(): # Read the cartesian displacements
-                        line = inputfile.next()
+
+                    q = [ [] for i in range(7) ] # Hold up to 7 lists of triplets
+                    ## while line.strip(): # Read the cartesian displacements
+                    for x in range(len(self.atomnos)):
+                        p = [ [] for i in range(7) ] # Hold up to 7 triplets
+                        for i in range(3):
+                            broken = map(float, line.strip().split()[2:])
+                            for j in range(len(broken)):
+                                p[j].append(broken[j])
+                            line = inputfile.next()
+                        for i in range(len(broken)):
+                            q[i].append(p[i])
+
+                    self.vibdisps.extend(q[:len(broken)])
                     freqs = inputfile.next()
                 self.vibfreqs = Numeric.array(self.vibfreqs)
+                self.vibdisps = Numeric.array(self.vibdisps)
                 if hasattr(self, "vibirs"):
                     self.vibirs = Numeric.array(self.vibirs)
 
