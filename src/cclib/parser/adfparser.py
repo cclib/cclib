@@ -655,7 +655,8 @@ class ADF(logfileparser.Logfile):
                 
                 if line.find("***** SPIN 1 *****") > 0:
                     beta = 1
-                    self.mocoeffs = Numeric.zeros((2, self.nbasis, self.nbasis), "float")
+                    self.mocoeffs = [Numeric.zeros((self.nbasis, self.nbasis), "float")
+                                     for x in range(2)]
                     
                     #get rid of two blank lines and symmetry label
                     inputfile.next()
@@ -665,7 +666,7 @@ class ADF(logfileparser.Logfile):
                     
                 else:
                     beta = 0
-                    self.mocoeffs = Numeric.zeros((1, self.nbasis, self.nbasis), "float")
+                    self.mocoeffs = [Numeric.zeros((self.nbasis, self.nbasis), "float")]
                     sym = line.split()[1]
                     
                 #get rid of 12 lines of text
@@ -724,7 +725,7 @@ class ADF(logfileparser.Logfile):
                             cols = line.split()
                             for i in range(len(cols[1:])):
                                 #self.mocoeffs[spin,row+symoffset,i+symoffset+base]=float(cols[i+1])
-                                self.mocoeffs[spin, aolist[i+base], row + symoffset] = float(cols[i + 1])
+                                self.mocoeffs[spin][aolist[i+base], row + symoffset] = float(cols[i + 1])
                                 
                             line = inputfile.next()
                             row += 1
