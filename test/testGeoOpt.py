@@ -28,6 +28,12 @@ class GenericGeoOptTest(bettertest.TestCase):
                         mindist = min(mindist,dist)
         self.assert_(abs(mindist-1.34)<0.03,"Mindist is %f (not 1.34)" % mindist)
 
+    def testatomnos(self):
+        """Are the atomnos correct?"""
+        self.assertEquals(self.data.atomnos.shape, (20,) )
+        self.assertEquals(sum(self.data.atomnos==6) + sum(self.data.atomnos==1),
+                          20)        
+
     def testatomcoords_more(self):
         """Are atomcoords consistent with geovalues?"""
         coords = self.data.atomcoords

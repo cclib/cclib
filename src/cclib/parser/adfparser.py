@@ -164,6 +164,7 @@ class ADF(logfileparser.Logfile):
                 
                 self.natom = len(self.atomnos)
                 self.logger.info("Creating attribute natom: %d" % self.natom)
+                self.atomnos = Numeric.array(self.atomnos, "i")
                 
             if line[1:10] == "FRAGMENTS":
                 header = inputfile.next()
@@ -735,18 +736,15 @@ class ADF(logfileparser.Logfile):
         if self.progress:
             self.progress.update(nstep, "Done")
 
-        if hasattr(self,"geovalues"):
-            self.geovalues = Numeric.array(self.geovalues, "f")
-        if hasattr(self,"scfenergies"):
-            self.scfenergies = Numeric.array(self.scfenergies, "f")
+        _toarray = ['geovalues', 'scfenergies', 'scftargets', 'atomcoords']
+        for attr in _toarray:
+            if hasattr(self, attr):
+                setattr(self, attr, Numeric.array(getattr(self, attr), 'f'))
+
         if hasattr(self,"scfvalues"):
             self.scfvalues = [Numeric.array(x, "f") for x in self.scfvalues]
-        if hasattr(self,"scftargets"):
-            self.scftargets = Numeric.array(self.scftargets, "f")
         if hasattr(self,"moenergies"):
             self.nmo = len(self.moenergies[0])
-        if hasattr(self,"atomcoords"):
-            self.atomcoords = Numeric.array(self.atomcoords, "f")
         if not hasattr(self,"coreelectrons"):
             self.coreelectrons = [0]*self.natom
 
