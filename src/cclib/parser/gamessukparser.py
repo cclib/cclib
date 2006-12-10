@@ -260,6 +260,24 @@ class GAMESSUK(logfileparser.Logfile):
                     blank = inputfile.next()
                     blank = inputfile.next()
                     freqnum = inputfile.next()                    
+
+            if line[26:36] == "raman data":
+                self.logger.info("Creating attribute vibramans")
+                self.vibramans = []
+
+                stars = inputfile.next()
+                blank = inputfile.next()
+                header = inputfile.next()
+
+                blank = inputfile.next()
+                line = inputfile.next()
+                while line[1]!="*":
+                    self.vibramans.append(float(line.split()[3]))
+                    blank = inputfile.next()
+                    line = inputfile.next()
+                # Use the length of the vibdisps to figure out
+                # how many rotations and translations to remove
+                self.vibramans = self.vibramans[-len(self.vibdisps):]
                             
             if line[3:11] == "SCF TYPE":
                 scftype = line.split()[-2]
@@ -477,7 +495,7 @@ class GAMESSUK(logfileparser.Logfile):
             self.progress.update(nstep, "Done")
 
         _toarray = ['atomcoords', 'geotargets', 'geovalues', 'moenergies', 'scftargets',
-                    'scfenergies', 'vibdisps', 'vibfreqs', 'vibirs']
+                    'scfenergies', 'vibdisps', 'vibfreqs', 'vibirs', 'vibramans']
         for attr in _toarray:
             if hasattr(self, attr):
                 setattr(self, attr, Numeric.array(getattr(self, attr), 'f'))

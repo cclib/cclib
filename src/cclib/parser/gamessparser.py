@@ -336,6 +336,8 @@ class GAMESS(logfileparser.Logfile):
                 self.vibfreqs = Numeric.array(self.vibfreqs[numrots:], "f")
                 self.vibirs = Numeric.array(self.vibirs[numrots:], "f")
                 self.vibdisps = Numeric.array(self.vibdisps[numrots:], "f")
+                if hasattr(self, "vibramans"):
+                    self.vibramans = Numeric.array(self.vibramans[numrots:], "f")
 
             if line[5:21] == "ATOMIC BASIS SET":
                 if not hasattr(self, "gbasis"):
