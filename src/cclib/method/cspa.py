@@ -70,7 +70,8 @@ class CSPA(Population):
                 submocoeffs = self.parser.mocoeffs[spin][i]
                 scale = Numeric.innerproduct(submocoeffs, submocoeffs)
                 tempcoeffs = Numeric.multiply(submocoeffs, submocoeffs)
-                self.aoresults[spin][i] = Numeric.divide(tempcoeffs, scale)
+                tempvec = tempcoeffs/scale
+                self.aoresults[spin][i] = Numeric.divide(tempcoeffs, scale).astype("f")
 
                 step += 1
 
