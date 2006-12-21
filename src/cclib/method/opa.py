@@ -76,12 +76,11 @@ class OPA(Method):
         nfrag = len(indices) #nfrag
         nstep = func(nfrag - 1)
         self.logger.info("Creating attribute results: array[4]")
+        results= [ Numeric.zeros([nfrag, nfrag, nmocoeffs], "f") ]
         if unrestricted:
-            results = Numeric.zeros([2, nfrag, nfrag, nmocoeffs], "f")
+            results.append(Numeric.zeros([nfrag, nfrag, nmocoeffs], "f"))
             nstep *= 2
-        else:
-            results=Numeric.zeros([1, nfrag, nfrag, nmocoeffs], "f")
-
+            
         if hasattr(self.parser, "aooverlaps"):
             overlap = self.parser.aooverlaps
         elif hasattr(self.parser,"fooverlaps"):
@@ -110,19 +109,22 @@ class OPA(Method):
 
                     for a in indices[A]:
 
-                        ca = self.parser.mocoeffs[spin,:,a]
+                        ca = self.parser.mocoeffs[spin][:,a]
 
                         for b in indices[B]:
                             
-                            cb = self.parser.mocoeffs[spin,:,b]
+                            cb = self.parser.mocoeffs[spin][:,b]
                             temp = ca * cb * two *overlap[a,b]
-                            results[spin,A,B] = Numeric.add(results[spin,A,B],temp)
-                            results[spin,B,A] = Numeric.add(results[spin,B,A],temp)
+                            results[spin][A,B] = Numeric.add(results[spin][A,B],temp)
+                            results[spin][B,A] = Numeric.add(results[spin][B,A],temp)
 
                     step += 1
 
-        temparray2 = Numeric.swapaxes(results,2,3)
-        self.results = Numeric.swapaxes(temparray2,1,2)
+        temparray2 = Numeric.swapaxes(results[0],1,2)
+        self.results = [ Numeric.swapaxes(temparray2,0,1) ]
+        if unrestricted:
+            temparray2 = Numeric.swapaxes(results[1],1,2)
+            self.results.append(Numeric.swapaxes(temparray2, 0, 1))
 
         if self.progress:
             self.progress.update(nstep, "Done")
