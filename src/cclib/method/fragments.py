@@ -48,9 +48,9 @@ class FragmentAnalysis(Method):
             #assign fonames based on fragment name and MO number
             for i in range(fragments[j].nbasis):
                 if hasattr(fragments[j],"name"):
-                    self.fonames.append("%s_%i"%(fragments[j].name,i))
+                    self.fonames.append("%s_%i"%(fragments[j].name,i+1))
                 else:
-                    self.fonames.append("noname%i_%i"%(j,i))
+                    self.fonames.append("noname%i_%i"%(j,i+1))
 
         nBasis = self.parser.nbasis
         nAlpha = self.parser.homos[0] + 1
