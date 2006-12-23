@@ -42,9 +42,11 @@ class FragmentAnalysis(Method):
         for j in range(len(fragments)):
             nFragBasis += fragments[j].nbasis
             nFragAlpha += fragments[j].homos[0] + 1
-            if unrestricted:
-                nFragBeta += fragments[j].homos[0] + 1 #assume restricted fragments
-            
+            if unrestricted and len(fragments[j].homos) == 1:
+                nFragBeta += fragments[j].homos[0] + 1 #assume restricted fragment
+            elif unrestricted and len(fragments[j].homos) == 2:
+                nFragBeta += fragments[j].homos[1] + 1 #assume unrestricted fragment
+             
             #assign fonames based on fragment name and MO number
             for i in range(fragments[j].nbasis):
                 if hasattr(fragments[j],"name"):
@@ -69,32 +71,39 @@ class FragmentAnalysis(Method):
             self.logger.error("Beta electrons don't match")
             return
 
-        blockMatrix = Numeric.zeros((nBasis,nBasis),"float")
-        pos = 0
-
-        #build up block-diagonal matrix from fragment mocoeffs
-        #need to switch ordering from [mo,ao] to [ao,mo]
-        for i in range(len(fragments)):
-            size = fragments[i].nbasis
-            blockMatrix[pos:pos+size,pos:pos+size] = Numeric.transpose(fragments[i].mocoeffs[0])
-            pos += size
-        
-        #invert and mutliply to result in fragment MOs as basis
-        iBlockMatrix = LinearAlgebra.inverse(blockMatrix) 
-        self.mocoeffs = [Numeric.transpose(Numeric.matrixmultiply(iBlockMatrix, Numeric.transpose(self.parser.mocoeffs[0])))]
-        if unrestricted:
-            self.mocoeffs.append(Numeric.transpose(Numeric.matrixmultiply(iBlockMatrix, \
-                                    Numeric.transpose(self.parser.mocoeffs[1]))))
-        
+        self.mocoeffs = []
         self.logger.info("Creating mocoeffs in new fragment MO basis: mocoeffs[]")
 
-        if hasattr(self.parser, "aooverlaps"):
-            tempMatrix = Numeric.matrixmultiply(self.parser.aooverlaps, blockMatrix)
-            tBlockMatrix = Numeric.transpose(blockMatrix)
-            self.fooverlaps = Numeric.matrixmultiply(tBlockMatrix, tempMatrix)
-            self.logger.info("Creating fooverlaps: array[x,y]")
-        else:
-            self.logger.warning("Overlap matrix missing")
+        for spin in range(len(self.parser.mocoeffs)):
+            blockMatrix = Numeric.zeros((nBasis,nBasis),"float")
+            pos = 0
+
+#build up block-diagonal matrix from fragment mocoeffs
+            #need to switch ordering from [mo,ao] to [ao,mo]
+            for i in range(len(fragments)):
+                size = fragments[i].nbasis
+                if len(fragments[i].mocoeffs) == 1:
+                    blockMatrix[pos:pos+size,pos:pos+size] = Numeric.transpose(fragments[i].mocoeffs[0])
+                else:
+                    blockMatrix[pos:pos+size,pos:pos+size] = Numeric.transpose(fragments[i].mocoeffs[spin])
+                pos += size
+            
+#invert and mutliply to result in fragment MOs as basis
+            iBlockMatrix = LinearAlgebra.inverse(blockMatrix) 
+            results = Numeric.transpose(Numeric.matrixmultiply(iBlockMatrix, Numeric.transpose(self.parser.mocoeffs[spin])))
+            self.mocoeffs.append(results)
+            
+            if hasattr(self.parser, "aooverlaps"):
+                tempMatrix = Numeric.matrixmultiply(self.parser.aooverlaps, blockMatrix)
+                tBlockMatrix = Numeric.transpose(blockMatrix)
+                if spin == 0:
+                    self.fooverlaps = Numeric.matrixmultiply(tBlockMatrix, tempMatrix)
+                    self.logger.info("Creating fooverlaps: array[x,y]")
+                elif spin == 1:
+                    self.fooverlaps2 = Numeric.matrixmultiply(tBlockMatrix, tempMatrix)
+                    self.logger.info("Creating fooverlaps (beta): array[x,y]")
+            else:
+                self.logger.warning("Overlap matrix missing")
 
         self.parsed = True
         self.nbasis = nBasis
