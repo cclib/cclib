@@ -88,6 +88,14 @@ class FragmentAnalysis(Method):
         
         self.logger.info("Creating mocoeffs in new fragment MO basis: mocoeffs[]")
 
+        if hasattr(self.parser, "aooverlaps"):
+            tempMatrix = Numeric.matrixmultiply(self.parser.aooverlaps, blockMatrix)
+            tBlockMatrix = Numeric.transpose(blockMatrix)
+            self.fooverlaps = Numeric.matrixmultiply(tBlockMatrix, tempMatrix)
+            self.logger.info("Creating fooverlaps: array[x,y]")
+        else:
+            self.logger.warning("Overlap matrix missing")
+
         self.parsed = True
         self.nbasis = nBasis
         self.homos = self.parser.homos

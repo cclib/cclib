@@ -86,7 +86,7 @@ class MPA(Population):
                 elif hasattr(self.parser, "fooverlaps"):
                     temp = Numeric.matrixmultiply(ci, self.parser.fooverlaps)
 
-                self.aoresults[spin][i] = Numeric.multiply(ci, temp)
+                self.aoresults[spin][i] = Numeric.multiply(ci, temp).astype("f")
 
                 step += 1
 
