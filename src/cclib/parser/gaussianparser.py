@@ -236,6 +236,16 @@ class Gaussian(logfileparser.Logfile):
                     self.scfenergies = []
                 self.scfenergies.append(utils.convertor(self.float(line.split()[4]), "hartree", "eV"))
 
+            if line[29:32] == "MP2":
+                # Total energy after second order Moller-Plesset correction
+                # Exmaple output line:
+                #  E2 =    -0.9505918144D+00 EUMP2 =    -0.28670924198852D+03
+                # where EUMP2 = SCF energy + E2
+                if not hasattr(self, "mp2energies"):
+                    self.logger.info("Creating attribute mp2energies[]")
+                    self.mp2energies = []
+                self.mp2energies.append(utils.convertor(self.float(line.split()[5]), "hartree", "eV"))
+
             if line[49:59] == 'Converged?':
 # Extract Geometry convergence information
                 if not hasattr(self, "geotargets"):
