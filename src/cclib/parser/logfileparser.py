@@ -65,7 +65,7 @@ class Logfile(object):
                          'etenergies', 'etoscs', 'etrotats', 'etsecs', 'etsyms',
                          'fonames', 'fooverlaps',
                          'geotargets', 'geovalues', 'homos', 'mocoeffs',
-                         'moenergies', 'mosyms', ,'mp2energies', 'natom', 'nbasis', 'nmo',
+                         'moenergies', 'mosyms', 'mp2energies', 'natom', 'nbasis', 'nmo',
                          'scfenergies', 'scftargets', 'scfvalues',
                          'vibfreqs', 'vibirs', 'vibramans', 'vibsyms']
 
