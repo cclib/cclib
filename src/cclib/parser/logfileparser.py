@@ -30,6 +30,7 @@ class Logfile(object):
         mocoeffs -- molecular orbital coefficients (array[3])
         moenergies -- orbital energies (array[2], eV)
         mosyms -- orbital symmetries (list[2])
+        mp2energies -- second order Moller Plesset electronic energy of the molecule (array[1], eV)
         natom -- number of atoms (integer)
         nbasis -- number of basis functions (integer)
         nmo -- number of linearly-independent basis functions (integer)
@@ -64,7 +65,7 @@ class Logfile(object):
                          'etenergies', 'etoscs', 'etrotats', 'etsecs', 'etsyms',
                          'fonames', 'fooverlaps',
                          'geotargets', 'geovalues', 'homos', 'mocoeffs',
-                         'moenergies', 'mosyms', 'natom', 'nbasis', 'nmo',
+                         'moenergies', 'mosyms', ,'mp2energies', 'natom', 'nbasis', 'nmo',
                          'scfenergies', 'scftargets', 'scfvalues',
                          'vibfreqs', 'vibirs', 'vibramans', 'vibsyms']
 
