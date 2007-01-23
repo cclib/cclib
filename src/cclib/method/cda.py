@@ -34,16 +34,15 @@ class CDA(FragmentAnalysis):
         bdonations = []
         repulsions = []
 
-        unrestricted = ( len(self.mocoeffs) == 2)
+        if len(self.mocoeffs) == 2:
+            occs = 1
+        else:
+            occs = 2
 
         for spin in range(len(self.mocoeffs)):
 
             size = len(self.mocoeffs[spin])
             homo = self.parser.homos[spin]
-            if unrestricted:
-                occs = 1
-            else:
-                occs = 2
 
             if len(fragments[0].homos) == 2:
                 homoa = fragments[0].homos[spin]
@@ -61,9 +60,6 @@ class CDA(FragmentAnalysis):
             donations.append(Numeric.zeros(size, "f"))
             bdonations.append(Numeric.zeros(size, "f"))
             repulsions.append(Numeric.zeros(size, "f"))
-
-            print "       d       b       r"
-            print "---------------------------"
 
             for i in range(self.parser.homos[spin] + 1):
 
@@ -84,14 +80,12 @@ class CDA(FragmentAnalysis):
                         repulsions[spin][i] += occs * self.mocoeffs[spin][i,k] \
                                                 * self.mocoeffs[spin][i, m] * self.fooverlaps[k][m]
 
-                print "%2i: %7.3f %7.3f %7.3f"%(i,2*donations[spin][i], 2*bdonations[spin][i], \
-                                                2*repulsions[spin][i])
-                    
 
-            print "---------------------------"
-            print "T:  %7.3f %7.3f %7.3f"%(reduce(Numeric.add, donations[0])*2, \
-                        reduce(Numeric.add, bdonations[0])*2, reduce(Numeric.add, repulsions[0])*2)
+        self.donations = donations
+        self.bdonations = bdonations
+        self.repulsions = repulsions
 
+        return True
             
 if __name__ == "__main__":
     import doctest, cda
@@ -105,4 +99,19 @@ if __name__ == "__main__":
     parser1.parse(); parser2.parse(); parser3.parse()
     fa = CDA(parser1)
     fa.calculate([parser2, parser3])
+
+    print "       d       b       r"
+    print "---------------------------"
+
+    spin = 0
+    for i in range(len(fa.donations[0])):
+
+        print "%2i: %7.3f %7.3f %7.3f"%(i,2*fa.donations[spin][i], 2*fa.bdonations[spin][i], \
+                                        2*fa.repulsions[spin][i])
+            
+
+    print "---------------------------"
+    print "T:  %7.3f %7.3f %7.3f"%(reduce(Numeric.add, fa.donations[0])*2, \
+                reduce(Numeric.add, fa.bdonations[0])*2, reduce(Numeric.add, fa.repulsions[0])*2)
+
 
