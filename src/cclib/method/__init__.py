@@ -11,3 +11,4 @@ from mpa import MPA
 from opa import OPA
 from mbo import MBO
 from fragments import FragmentAnalysis
+from cda import CDA
