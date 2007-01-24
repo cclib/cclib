@@ -1,0 +1,440 @@
+ Entering Gaussian System, Link 0=../g98/g98
+ Input=mp5.com
+ Output=mp5.log
+ Initial command:
+ /home/vmware/Tools/g98/g98/l1.exe /home/vmware/Tools/g98/runs/Gau-26666.inp -scrdir=/home/vmware/Tools/g98/runs/
+ Entering Link 1 = /home/vmware/Tools/g98/g98/l1.exe PID=     26667.
+  
+ Copyright (c) 1988,1990,1992,1993,1995,1998 Gaussian, Inc.
+                  All Rights Reserved.
+  
+ This is part of the Gaussian(R) 98 program.  It is based on
+ the Gaussian 94(TM) system (copyright 1995 Gaussian, Inc.),
+ the Gaussian 92(TM) system (copyright 1992 Gaussian, Inc.),
+ the Gaussian 90(TM) system (copyright 1990 Gaussian, Inc.),
+ the Gaussian 88(TM) system (copyright 1988 Gaussian, Inc.),
+ the Gaussian 86(TM) system (copyright 1986 Carnegie Mellon
+ University), and the Gaussian 82(TM) system (copyright 1983
+ Carnegie Mellon University). Gaussian is a federally registered
+ trademark of Gaussian, Inc.
+  
+ This software contains proprietary and confidential information,
+ including trade secrets, belonging to Gaussian, Inc.
+  
+ This software is provided under written license and may be
+ used, copied, transmitted, or stored only in accord with that
+ written license.
+  
+ The following legend is applicable only to US Government
+ contracts under DFARS:
+  
+                    RESTRICTED RIGHTS LEGEND
+  
+ Use, duplication or disclosure by the US Government is subject
+ to restrictions as set forth in subparagraph (c)(1)(ii) of the
+ Rights in Technical Data and Computer Software clause at DFARS
+ 252.227-7013.
+  
+ Gaussian, Inc.
+ Carnegie Office Park, Building 6, Pittsburgh, PA 15106 USA
+  
+ The following legend is applicable only to US Government
+ contracts under FAR:
+  
+                    RESTRICTED RIGHTS LEGEND
+  
+ Use, reproduction and disclosure by the US Government is subject
+ to restrictions as set forth in subparagraph (c) of the
+ Commercial Computer Software - Restricted Rights clause at FAR
+ 52.227-19.
+  
+ Gaussian, Inc.
+ Carnegie Office Park, Building 6, Pittsburgh, PA 15106 USA
+  
+  
+ ---------------------------------------------------------------
+ Warning -- This program may not be used in any manner that
+ competes with the business of Gaussian, Inc. or will provide
+ assistance to any competitor of Gaussian, Inc.  The licensee
+ of this program is prohibited from giving any competitor of
+ Gaussian, Inc. access to this program.  By using this program,
+ the user acknowledges that Gaussian, Inc. is engaged in the
+ business of creating and licensing software in the field of
+ computational chemistry and represents and warrants to the
+ licensee that it is not a competitor of Gaussian, Inc. and that
+ it will not use this program in any manner prohibited above.
+ ---------------------------------------------------------------
+  
+
+ Cite this work as:
+ Gaussian 98, Revision A.11.3,
+ M. J. Frisch, G. W. Trucks, H. B. Schlegel, G. E. Scuseria, 
+ M. A. Robb, J. R. Cheeseman, V. G. Zakrzewski, J. A. Montgomery, Jr., 
+ R. E. Stratmann, J. C. Burant, S. Dapprich, J. M. Millam, 
+ A. D. Daniels, K. N. Kudin, M. C. Strain, O. Farkas, J. Tomasi, 
+ V. Barone, M. Cossi, R. Cammi, B. Mennucci, C. Pomelli, C. Adamo, 
+ S. Clifford, J. Ochterski, G. A. Petersson, P. Y. Ayala, Q. Cui, 
+ K. Morokuma, N. Rega, P. Salvador, J. J. Dannenberg, D. K. Malick, 
+ A. D. Rabuck, K. Raghavachari, J. B. Foresman, J. Cioslowski, 
+ J. V. Ortiz, A. G. Baboul, B. B. Stefanov, G. Liu, A. Liashenko, 
+ P. Piskorz, I. Komaromi, R. Gomperts, R. L. Martin, D. J. Fox, 
+ T. Keith, M. A. Al-Laham, C. Y. Peng, A. Nanayakkara, M. Challacombe, 
+ P. M. W. Gill, B. Johnson, W. Chen, M. W. Wong, J. L. Andres, 
+ C. Gonzalez, M. Head-Gordon, E. S. Replogle, and J. A. Pople, 
+ Gaussian, Inc., Pittsburgh PA, 2002.
+
+ ***********************************************
+ Gaussian 98:  x86-Linux-G98RevA.11.3 5-Feb-2002
+                   24-Jan-2007 
+ ***********************************************
+ %chk=mp2.chk
+ -------------
+ #P MP5/STO-3G
+ -------------
+ 1/38=1/1;
+ 2/17=6,18=5,40=1/2;
+ 3/11=2,25=1,30=1/1,2,3;
+ 4/7=2/1;
+ 5/5=2,38=4/2;
+ 8/6=5,10=1/1,4;
+ 9/5=5/16,15;
+ 6/7=2,8=2,9=2,10=2/1;
+ 99/5=1,9=1/99;
+ Leave Link    1 at Wed Jan 24 03:07:51 2007, MaxMem=          0 cpu:       0.1
+ (Enter /home/vmware/Tools/g98/g98/l101.exe)
+ -----
+ Water
+ -----
+ Symbolic Z-matrix:
+ Charge =  0 Multiplicity = 1
+ O
+ H                    1    R1
+ H                    1    R1       2    A1
+       Variables:
+  R1                    0.99                     
+  A1                  106.                       
+ Leave Link  101 at Wed Jan 24 03:07:51 2007, MaxMem=    6291456 cpu:       0.1
+ (Enter /home/vmware/Tools/g98/g98/l202.exe)
+ ------------------------------------------------------------------------
+                         Z-MATRIX (ANGSTROMS AND DEGREES)
+ CD Cent Atom  N1     Length/X     N2    Alpha/Y     N3     Beta/Z      J
+ ------------------------------------------------------------------------
+   1   1  O 
+   2   2  H     1   0.990000(  1)
+   3   3  H     1   0.990000(  2)   2  106.000(  3)
+ ------------------------------------------------------------------------
+                         Z-Matrix orientation:                         
+ ---------------------------------------------------------------------
+ Center     Atomic     Atomic              Coordinates (Angstroms)
+ Number     Number      Type              X           Y           Z
+ ---------------------------------------------------------------------
+    1          8             0        0.000000    0.000000    0.000000
+    2          1             0        0.000000    0.000000    0.990000
+    3          1             0        0.951649    0.000000   -0.272881
+ ---------------------------------------------------------------------
+                    Distance matrix (angstroms):
+                    1          2          3
+     1  O    0.000000
+     2  H    0.990000   0.000000
+     3  H    0.990000   1.581298   0.000000
+                           Interatomic angles:
+       H2-O1-H3=106.    
+ Stoichiometry    H2O
+ Framework group  C2V[C2(O),SGV(H2)]
+ Deg. of freedom    2
+ Full point group                 C2V     NOp   4
+ Largest Abelian subgroup         C2V     NOp   4
+ Largest concise Abelian subgroup C2      NOp   2
+                         Standard orientation:                         
+ ---------------------------------------------------------------------
+ Center     Atomic     Atomic              Coordinates (Angstroms)
+ Number     Number      Type              X           Y           Z
+ ---------------------------------------------------------------------
+    1          8             0        0.000000    0.000000    0.119159
+    2          1             0        0.000000    0.790649   -0.476637
+    3          1             0        0.000000   -0.790649   -0.476637
+ ---------------------------------------------------------------------
+ Rotational constants (GHZ):    795.3368035    401.0832199    266.6256330
+ Isotopes: O-16,H-1,H-1
+ Leave Link  202 at Wed Jan 24 03:07:52 2007, MaxMem=    6291456 cpu:       0.1
+ (Enter /home/vmware/Tools/g98/g98/l301.exe)
+ Standard basis: STO-3G (5D, 7F)
+ There are     4 symmetry adapted basis functions of A1  symmetry.
+ There are     0 symmetry adapted basis functions of A2  symmetry.
+ There are     1 symmetry adapted basis functions of B1  symmetry.
+ There are     2 symmetry adapted basis functions of B2  symmetry.
+ Crude estimate of integral set expansion from redundant integrals=1.296.
+ Integral buffers will be    262144 words long.
+ Raffenetti 2 integral format.
+ Two-electron integral symmetry is turned on.
+     7 basis functions       21 primitive gaussians
+     5 alpha electrons        5 beta electrons
+       nuclear repulsion energy         8.8870069045 Hartrees.
+ Leave Link  301 at Wed Jan 24 03:07:52 2007, MaxMem=    6291456 cpu:       0.0
+ (Enter /home/vmware/Tools/g98/g98/l302.exe)
+ One-electron integrals computed using PRISM.
+ One-electron integral symmetry used in STVInt
+ NBasis=     7 RedAO= T  NBF=     4     0     1     2
+ NBsUse=     7 1.00D-04 NBFU=     4     0     1     2
+ Leave Link  302 at Wed Jan 24 03:07:52 2007, MaxMem=    6291456 cpu:       0.1
+ (Enter /home/vmware/Tools/g98/g98/l303.exe)
+ DipDrv:  MaxL=1.
+ Leave Link  303 at Wed Jan 24 03:07:52 2007, MaxMem=    6291456 cpu:       0.1
+ (Enter /home/vmware/Tools/g98/g98/l401.exe)
+ Projected INDO Guess.
+ Initial guess orbital symmetries:
+   Alpha Orbitals:
+       Occupied  (A1) (A1) (B2) (A1) (B1)
+       Virtual   (A1) (B2)
+   Beta Orbitals:
+       Occupied  (A1) (A1) (B2) (A1) (B1)
+       Virtual   (A1) (B2)
+ <S**2> of initial guess= 0.0000
+ Leave Link  401 at Wed Jan 24 03:07:52 2007, MaxMem=    6291456 cpu:       0.1
+ (Enter /home/vmware/Tools/g98/g98/l502.exe)
+ IExCor=   0 DFT=F Ex=HF Corr=None ScaHFX= 1.0000
+ ScaDFX=  0.0000  0.0000  0.0000  0.0000
+ IRadAn=      0 IRanWt=     -1 IRanGd=            0 ICorTp=0
+ Using DIIS extrapolation.
+ UHF open shell SCF:
+ Requested convergence on RMS density matrix=1.00D-08 within  64 cycles.
+ Requested convergence on MAX density matrix=1.00D-06.
+ Integral symmetry usage will be decided dynamically.
+ Keep R1 and R2 integrals in memory in canonical form, NReq=      406751.
+ IEnd=      5925 IEndB=      5925 NGot=   6291456 MDV=   6289392
+ LenX=   6289392
+ Symmetry not used in FoFDir.
+ MinBra= 0 MaxBra= 1 Meth= 1.
+ IRaf=       0 NMat=   1 IRICut=       1 DoRegI=T DoRafI=F ISym2E= 0 JSym2E=0.
+
+ Cycle   1  Pass 1  IDiag 1:
+ E=-0.837827388442861D+02
+ DIIS: error= 7.34D-01 at cycle   1.
+ T= 3000. Gap= 0.938 NK=0 IS=    1 IE=    7
+          NO(<0.9)=   0  NV(>0.1)=   0   5.00e < EF 0.00e >EF  Err=0.0D+00
+ T= 3000. Gap= 0.938 NK=0 IS=    1 IE=    7
+          NO(<0.9)=   0  NV(>0.1)=   0   5.00e < EF 0.00e >EF  Err=0.0D+00
+ RMSDP=1.80D-02 MaxDP=3.86D-02
+
+ Cycle   2  Pass 1  IDiag 1:
+ E=-0.838509588298633D+02 Delta-E=       -0.068219985577
+ DIIS: error= 2.50D-02 at cycle   2.
+ Coeff: 0.353D-01-0.104D+01
+ T= 2700. Gap= 0.964 NK=0 IS=    1 IE=    7
+          NO(<0.9)=   0  NV(>0.1)=   0   5.00e < EF 0.00e >EF  Err=3.0D-12
+ T= 2700. Gap= 0.964 NK=0 IS=    1 IE=    7
+          NO(<0.9)=   0  NV(>0.1)=   0   5.00e < EF 0.00e >EF  Err=3.0D-12
+ RMSDP=3.61D-03 MaxDP=1.26D-02
+
+ Cycle   3  Pass 1  IDiag 1:
+ E=-0.838512990337113D+02 Delta-E=       -0.000340203848
+ DIIS: error= 2.65D-03 at cycle   3.
+ Coeff:-0.671D-02 0.222D+00-0.121D+01
+ T= 2400. Gap= 0.959 NK=0 IS=    1 IE=    7
+          NO(<0.9)=   0  NV(>0.1)=   0   5.00e < EF 0.00e >EF  Err=1.6D-13
+ T= 2400. Gap= 0.959 NK=0 IS=    1 IE=    7
+          NO(<0.9)=   0  NV(>0.1)=   0   5.00e < EF 0.00e >EF  Err=1.6D-13
+ RMSDP=1.32D-03 MaxDP=4.93D-03
+
+ Cycle   4  Pass 1  IDiag 1:
+ E=-0.838513323956002D+02 Delta-E=       -0.000033361889
+ DIIS: error= 8.41D-04 at cycle   4.
+ Coeff:-0.116D-02 0.296D-01 0.196D+00-0.122D+01
+ RMSDP=4.69D-04 MaxDP=1.43D-03
+
+ Cycle   5  Pass 1  IDiag 1:
+ E=-0.838513355670052D+02 Delta-E=       -0.000003171405
+ DIIS: error= 1.48D-04 at cycle   5.
+ Coeff: 0.733D-03-0.210D-01-0.339D-01 0.522D+00-0.147D+01
+ RMSDP=9.51D-05 MaxDP=2.98D-04
+
+ Cycle   6  Pass 1  IDiag 1:
+ E=-0.838513356970882D+02 Delta-E=       -0.000000130083
+ DIIS: error= 8.02D-07 at cycle   6.
+ Coeff:-0.211D-07 0.609D-05-0.259D-03-0.186D-03 0.382D-02-0.100D+01
+ RMSDP=2.73D-07 MaxDP=1.21D-06
+
+ Cycle   7  Pass 1  IDiag 1:
+ E=-0.838513356970895D+02 Delta-E=       -0.000000000001
+ DIIS: error= 1.35D-09 at cycle   7.
+ Coeff:-0.312D-10 0.618D-08 0.564D-06-0.582D-05 0.197D-04-0.150D-02
+ Coeff:-0.999D+00
+ RMSDP=3.38D-10 MaxDP=1.18D-09
+
+ SCF Done:  E(UHF) =  -74.9643287926     A.U. after    7 cycles
+             Convg  =    0.3375D-09             -V/T =  2.0060
+             S**2   =   0.0000
+ KE= 7.451686043666D+01 PE=-1.963570311389D+02 EE= 3.798883500519D+01
+ Annihilation of the first spin contaminant:
+ S**2 before annihilation     0.0000,   after     0.0000
+ Leave Link  502 at Wed Jan 24 03:07:52 2007, MaxMem=    6291456 cpu:       0.0
+ (Enter /home/vmware/Tools/g98/g98/l801.exe)
+ Range of M.O.s used for correlation:     2     7
+ NBasis=     7 NAE=     5 NBE=     5 NFC=     1 NFV=     0
+ NROrb=      6 NOA=     4 NOB=     4 NVA=     2 NVB=     2
+ Leave Link  801 at Wed Jan 24 03:07:52 2007, MaxMem=    6291456 cpu:       0.0
+ (Enter /home/vmware/Tools/g98/g98/l804.exe)
+ Open-shell transformation, MDV=     6291456 ITran=5 ISComp=1.
+ Compute canonical integrals, LenV=     6290153.
+ Symmetry not used in FoFDir.
+ MinBra= 0 MaxBra= 1 Meth= 1.
+ IRaf=       0 NMat=   1 IRICut=       1 DoRegI=T DoRafI=F ISym2E= 0 JSym2E=0.
+ Compute canonical integrals, LenV=     6290153.
+ Spin components of T(2) and E(2):
+     alpha-alpha T2 =       0.4074383202D-03 E2=     -0.1088543076D-02
+     alpha-beta  T2 =       0.1385761601D-01 E2=     -0.3577624372D-01
+     beta-beta   T2 =       0.4074383202D-03 E2=     -0.1088543076D-02
+ ANorm=    0.1007309532D+01
+ E2=       -0.3795332987D-01 EUMP2=       -0.75002282122438D+02
+ (S**2,0)=  0.00000D+00           (S**2,1)=  0.00000D+00
+ E(PUHF)=      -0.74964328793D+02        E(PMP2)=      -0.75002282122D+02
+ Leave Link  804 at Wed Jan 24 03:07:53 2007, MaxMem=    6291456 cpu:       0.1
+ (Enter /home/vmware/Tools/g98/g98/l916.exe)
+ CIDS:  MDV=   6291456.
+ Using original routines for 1st iteration, S=F.
+ Using DO4UQ or CC4UQ for 2nd and later iterations.
+ MP4(SDTQ)
+ =========
+ E(PMP3)=      -0.75012800924D+02
+ MP4(D)= -0.33926709D-02
+ MP4(S)= -0.11250845D-03
+ MP4(R+Q)=  0.29245518D-03
+ Time for triples=        0.00 seconds.
+ MP4(T)=   -0.54396750D-04
+ E3=       -0.10518801D-01        EUMP3=      -0.75012800924D+02
+ E4(DQ)=   -0.31002157D-02        UMP4(DQ)=   -0.75015901139D+02
+ E4(SDQ)=  -0.32127241D-02        UMP4(SDQ)=  -0.75016013648D+02
+ E4(SDTQ)= -0.32671209D-02        UMP4(SDTQ)= -0.75016068045D+02
+ VARIATIONAL ENERGIES WITH THE FIRST-ORDER WAVEFUNCTION:
+ E(VAR1)=  -0.75012100001D+02     E(CISD,4)=  -0.75015749233D+02
+ Largest amplitude= 5.85D-02
+
+ S**2, projected HF & approx projected MPn energies after annihilation of
+ unwanted spin states (see manual for definitions):
+
+ spins       (S**2,0) (S**2,1)    PUHF        PMP2        PMP3        PMP4
+ annihilated
+ s+1         0.00000  0.00000  -74.964329  -75.002282  -75.012801  -75.016068
+ s+1,s+2     0.00000  0.00000  -74.964329  -75.002282  -75.012801  -75.016068
+
+ Leave Link  916 at Wed Jan 24 03:07:53 2007, MaxMem=    6291456 cpu:       0.0
+ (Enter /home/vmware/Tools/g98/g98/l915.exe)
+ UMP5:  MDV=   6291456.
+ MP5 
+ ===
+ Saving the triples amplitudes on disk, using         96 words of disk space.
+ Time for triples=        0.00 seconds.
+ Disk space used for TT scratch files  :          512 words
+ E5TTaaa =   0.00000000D+00
+ E5TTaab =  -0.78022439D-05
+ E5TTabb =  -0.78022439D-05
+ E5TTbbb =   0.00000000D+00
+ E5TT     =  -0.15604488D-04
+ E5TQ2    =   0.24222270D-05
+ EQQ2     =  -0.15475484D-04
+ EMP5QQ(I)      =   0.81450512089D-04
+ Time for triples=        0.07 seconds.
+ EMP5DT         =  -0.23132080332D-04
+ EMP5(ST+TQ(I)) =   0.15255821975D-04
+ EMP5DQ         =   0.16609380307D-03
+ EMP5DD         =  -0.12245544701D-02
+ EMP5SS         =  -0.30897096663D-04
+ EMP5SD         =  -0.60439976647D-04
+ DEMP5 =  -0.11048812312D-02 MP5 =  -0.75017172926D+02
+ Pade Approximates from MP energies 
+ [1,0] =  -0.75016833987D+02
+ [1,1] =  -0.75017539990D+02
+ [2,1] =  -0.75017799231D+02
+ Leave Link  915 at Wed Jan 24 03:07:54 2007, MaxMem=    6291456 cpu:       0.1
+ (Enter /home/vmware/Tools/g98/g98/l601.exe)
+ Copying SCF densities to generalized density rwf, ISCF=1 IROHF=0.
+
+ **********************************************************************
+
+            Population analysis using the SCF density.
+
+ **********************************************************************
+
+ Orbital Symmetries:
+   Alpha Orbitals:
+       Occupied  (A1) (A1) (B2) (A1) (B1)
+       Virtual   (A1) (B2)
+   Beta Orbitals:
+       Occupied  (A1) (A1) (B2) (A1) (B1)
+       Virtual   (A1) (B2)
+  The electronic state is 1-A1.
+ Alpha  occ. eigenvalues --  -20.24375  -1.25064  -0.60317  -0.44547  -0.38821
+ Alpha virt. eigenvalues --    0.57075   0.70859
+  Beta  occ. eigenvalues --  -20.24375  -1.25064  -0.60317  -0.44547  -0.38821
+  Beta virt. eigenvalues --    0.57075   0.70859
+          Condensed to atoms (all electrons):
+              1          2          3
+  1  O    7.824444   0.257385   0.257385
+  2  H    0.257385   0.614637  -0.041629
+  3  H    0.257385  -0.041629   0.614637
+ Total atomic charges:
+              1
+  1  O   -0.339215
+  2  H    0.169607
+  3  H    0.169607
+ Sum of Mulliken charges=   0.00000
+ Atomic charges with hydrogens summed into heavy atoms:
+              1
+  1  O    0.000000
+  2  H    0.000000
+  3  H    0.000000
+ Sum of Mulliken charges=   0.00000
+          Atomic-Atomic Spin Densities.
+              1          2          3
+  1  O    0.000000   0.000000   0.000000
+  2  H    0.000000   0.000000   0.000000
+  3  H    0.000000   0.000000   0.000000
+ Total atomic spin densities:
+              1
+  1  O    0.000000
+  2  H    0.000000
+  3  H    0.000000
+ Sum of Mulliken spin densities=   0.00000
+ Isotropic Fermi contact couplings:
+              1
+  1  O    0.000000
+  2  H    0.000000
+  3  H    0.000000
+ Electronic spatial extent (au):  <R**2>=    18.2650
+ Charge=     0.0000 electrons
+ Dipole moment (Debye):
+    X=     0.0000    Y=     0.0000    Z=    -1.6735  Tot=     1.6735
+ Quadrupole moment (Debye-Ang):
+   XX=    -6.1214   YY=    -4.2950   ZZ=    -5.4176
+   XY=     0.0000   XZ=     0.0000   YZ=     0.0000
+ Octapole moment (Debye-Ang**2):
+  XXX=     0.0000  YYY=     0.0000  ZZZ=    -0.1457  XYY=     0.0000
+  XXY=     0.0000  XXZ=     0.0136  XZZ=     0.0000  YZZ=     0.0000
+  YYZ=    -0.5848  XYZ=     0.0000
+ Hexadecapole moment (Debye-Ang**3):
+ XXXX=    -3.2615 YYYY=    -6.8265 ZZZZ=    -4.9966 XXXY=     0.0000
+ XXXZ=     0.0000 YYYX=     0.0000 YYYZ=     0.0000 ZZZX=     0.0000
+ ZZZY=     0.0000 XXYY=    -1.8585 XXZZ=    -1.4123 YYZZ=    -1.7504
+ XXYZ=     0.0000 YYXZ=     0.0000 ZZXY=     0.0000
+ N-N= 8.887006904524D+00 E-N=-1.963570311281D+02  KE= 7.451686043666D+01
+ Symmetry A1   KE= 3.328448520406D+01
+ Symmetry A2   KE= 0.000000000000D+00
+ Symmetry B1   KE= 2.528731226009D+00
+ Symmetry B2   KE= 1.445213788258D+00
+ Leave Link  601 at Wed Jan 24 03:07:54 2007, MaxMem=    6291456 cpu:       0.2
+ (Enter /home/vmware/Tools/g98/g98/l9999.exe)
+ 1\1\GINC-VMWARE-BAVM\SP\UMP5-FC\STO-3G\H2O1\VMWARE\24-Jan-2007\0\\#P M
+ P5/STO-3G\\Water\\0,1\O\H,1,0.99\H,1,0.99,2,106.\\Version=x86-Linux-G9
+ 8RevA.11.3\State=1-A1\HF=-74.9643288\MP2=-75.0022821\MP3=-75.0128009\M
+ P4D=-75.0161936\MP4DQ=-75.0159011\MP4SDTQ=-75.016068\MP5=-75.0171729\P
+ UHF=-74.9643288\PMP2-0=-75.0022821\PMP3-0=-75.0128009\S2=0.\S2-1=0.\S2
+ A=0.\RMSD=3.375e-10\PG=C02V [C2(O1),SGV(H2)]\\@
+
+
+ FOR THE NATURE OF THE CHEMICAL BOND
+ IS THE PROBLEM AT THE HEART OF ALL CHEMISTRY.
+
+                     -- BRYCE CRAWFORD, JR., 1953
+ Job cpu time:  0 days  0 hours  0 minutes  1.9 seconds.
+ File lengths (MBytes):  RWF=   58 Int=    0 D2E=    0 Chk=    5 Scr=    1
+ Normal termination of Gaussian 98.
