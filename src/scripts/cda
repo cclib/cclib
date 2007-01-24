@@ -1,0 +1,46 @@
+#!/usr/bin/env python
+import os
+import sys
+import glob
+import getopt
+import logging
+import Numeric
+
+from cclib.parser import ccopen
+from cclib.method import CDA
+
+if __name__ == "__main__":
+
+    parser1 = ccopen(sys.argv[1], None, logging.ERROR)
+    parser2 = ccopen(sys.argv[2], None, logging.ERROR)
+    parser3 = ccopen(sys.argv[3], None, logging.ERROR)
+
+    parser1.parse(); parser2.parse(); parser3.parse()
+    fa = CDA(parser1, None, logging.ERROR)
+    fa.calculate([parser2, parser3])
+
+    if len(parser1.homos) == 2:
+        print "ALPHA SPIN:"
+        print "==========="
+
+    print "       d       b       r"
+    print "---------------------------"
+
+    for spin in range(len(parser1.homos)):
+
+        if spin == 1:
+            print "BETA SPIN:"
+            print "=========="
+
+        for i in range(len(fa.donations[0])):
+
+            print "%2i: %7.3f %7.3f %7.3f"%(i,2*fa.donations[spin][i], 2*fa.bdonations[spin][i], \
+                                            2*fa.repulsions[spin][i])
+                
+
+        print "---------------------------"
+        print "T:  %7.3f %7.3f %7.3f"%(reduce(Numeric.add, fa.donations[0])*2, \
+                    reduce(Numeric.add, fa.bdonations[0])*2, \
+                    reduce(Numeric.add, fa.repulsions[0])*2)
+
+
