@@ -31,6 +31,6 @@ setup(name="cclib",
       classifiers=filter(None, classifiers.split("\n")),
       license="LGPL",
       platforms=["Any."],
-      scripts=["src/scripts/ccget"],
+      scripts=["src/scripts/ccget", "src/scripts/cda"],
       package_dir = {'cclib':'src/cclib'},
       packages=['cclib','cclib.parser','cclib.progress','cclib.method','cclib.bridge'])
