@@ -59,18 +59,37 @@ class FragmentAnalysis(Method):
         if unrestricted:
             nBeta = self.parser.homos[1] + 1
 
+#check to make sure calcs have the right properties
         if nBasis != nFragBasis:
             self.logger.error("Basis functions don't match")
-            return
+            return False
 
         if nAlpha != nFragAlpha:
             self.logger.error("Alpha electrons don't match")
-            return
+            return False
 
         if unrestricted and nBeta != nFragBeta:
             self.logger.error("Beta electrons don't match")
-            return
+            return False
 
+        if len(self.parser.atomcoords) != 1:
+            self.logger.warning("Molecule calc appears to be an optimization")
+
+        for frag in fragments:
+            if len(frag.atomcoords) != 1:
+                self.logger.warning("One or more fragment appears to be an optimization")
+                break
+
+        last = 0
+        for frag in fragments:
+            size = frag.natom
+            if self.parser.atomcoords[0][last:last+size].tolist() != frag.atomcoords[0].tolist():
+                self.logger.error("Atom coordinates aren't aligned")
+                return False
+
+            last += size
+
+#and let's begin!
         self.mocoeffs = []
         self.logger.info("Creating mocoeffs in new fragment MO basis: mocoeffs[]")
 
@@ -108,3 +127,5 @@ class FragmentAnalysis(Method):
         self.parsed = True
         self.nbasis = nBasis
         self.homos = self.parser.homos
+
+        return True

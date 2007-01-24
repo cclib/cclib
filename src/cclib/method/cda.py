@@ -27,7 +27,10 @@ class CDA(FragmentAnalysis):
     def calculate(self, fragments, cupdate=0.05):
         """Perform a charge decomposition analysis."""
     
-        super(CDA, self).calculate(fragments, cupdate)
+        retval = super(CDA, self).calculate(fragments, cupdate)
+        if not retval:
+            return False
+
         #at this point, there should be a mocoeffs and fooverlaps in analogy to a parser
 
         donations = []

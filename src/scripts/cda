@@ -17,35 +17,38 @@ if __name__ == "__main__":
 
     parser1.parse(); parser2.parse(); parser3.parse()
     fa = CDA(parser1, None, logging.ERROR)
-    fa.calculate([parser2, parser3])
+    retval = fa.calculate([parser2, parser3])
 
-    print "Charge decomposition analysis of %s\n"%(sys.argv[1])
+    if retval:
 
-    if len(parser1.homos) == 2:
-        print "ALPHA SPIN:"
-        print "==========="
+        print "Charge decomposition analysis of %s\n"%(sys.argv[1])
 
-    print " MO#      d       b       r"
-    print "-----------------------------"
+        if len(parser1.homos) == 2:
+            print "ALPHA SPIN:"
+            print "==========="
 
-    for spin in range(len(parser1.homos)):
-
-        if spin == 1:
-            print "\nBETA SPIN:"
-            print "=========="
-
-        for i in range(len(fa.donations[spin])):
-
-            print "%4i: %7.3f %7.3f %7.3f"%(i+1,2*fa.donations[spin][i], 2*fa.bdonations[spin][i], \
-                                            2*fa.repulsions[spin][i])
-
-            if i == parser1.homos[spin]:
-                print "------ HOMO - LUMO gap ------"
-                
-
+        print " MO#      d       b       r"
         print "-----------------------------"
-        print " T:   %7.3f %7.3f %7.3f"%(reduce(Numeric.add, fa.donations[spin])*2, \
-                    reduce(Numeric.add, fa.bdonations[spin])*2, \
-                    reduce(Numeric.add, fa.repulsions[spin])*2)
+
+        for spin in range(len(parser1.homos)):
+
+            if spin == 1:
+                print "\nBETA SPIN:"
+                print "=========="
+
+            for i in range(len(fa.donations[spin])):
+
+                print "%4i: %7.3f %7.3f %7.3f"%(i+1,2*fa.donations[spin][i], \
+                                                    2*fa.bdonations[spin][i], \
+                                                    2*fa.repulsions[spin][i])
+
+                if i == parser1.homos[spin]:
+                    print "------ HOMO - LUMO gap ------"
+                    
+
+            print "-----------------------------"
+            print " T:   %7.3f %7.3f %7.3f"%(reduce(Numeric.add, fa.donations[spin])*2, \
+                        reduce(Numeric.add, fa.bdonations[spin])*2, \
+                        reduce(Numeric.add, fa.repulsions[spin])*2)
 
 
