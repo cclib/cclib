@@ -34,12 +34,12 @@ class Logfile(object):
         natom -- number of atoms (integer)
         nbasis -- number of basis functions (integer)
         nmo -- number of linearly-independent basis functions (integer)
-        scfenergies -- the electronic energy of the molecule (array[1], a.u.)
+        scfenergies -- the electronic energy of the molecule (array[1], eV)
         scftargets -- targets for convergence of the SCF (array[1])
         scfvalues -- current values for convergence of the SCF (array[2], same units as scftargets)
         vibfreqs -- vibrational frequencies (array, 1/cm)
-        vibirs -- IR intensity (array, ??)
-        vibramans -- Raman intensity (array, ??)
+        vibirs -- IR intensity (array, km/m)
+        vibramans -- Raman intensity (array, A^4/Da)
         vibsyms -- symmetry of vibrations (list)
     (1) The term 'array' currently refers to a Numeric array
     (2) The number of dimensions of an array is given in square brackets
