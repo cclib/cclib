@@ -236,15 +236,49 @@ class Gaussian(logfileparser.Logfile):
                     self.scfenergies = []
                 self.scfenergies.append(utils.convertor(self.float(line.split()[4]), "hartree", "eV"))
 
-            if line[29:32] == "MP2":
-                # Total energy after second order Moller-Plesset correction
-                # Exmaple output line:
+            # Total energies after Moller-Plesset corrections
+            # Second order correction is always first, so its first occurance
+            #   triggers creation of mpenergies (list of lists of energies)
+            # Further corrections are appended as found
+            if "EUMP2" in line[27:34]:
+                # Example output line:
                 #  E2 =    -0.9505918144D+00 EUMP2 =    -0.28670924198852D+03
-                # where EUMP2 = SCF energy + E2
-                if not hasattr(self, "mp2energies"):
-                    self.logger.info("Creating attribute mp2energies[]")
-                    self.mp2energies = []
-                self.mp2energies.append(utils.convertor(self.float(line.split()[5]), "hartree", "eV"))
+                # Warning! this output line is subtly different for MP3/4/5 runs
+                if not hasattr(self, "mpenergies"):
+                    self.logger.info("Creating attribute mpenergies[]")
+                    self.mpenergies = [[]]
+                mp2energy = self.float(line.split("=")[2])
+                self.mpenergies[0].append(utils.convertor(mp2energy, "hartree", "eV"))
+            if line[34:39] == "EUMP3":
+                # Example output line:
+                #  E3=       -0.10518801D-01     EUMP3=      -0.75012800924D+02
+                if len(self.mpenergies) == 1:
+                  self.mpenergies.append([])
+                mp3energy = self.float(line.split("=")[2])
+                self.mpenergies[1].append(utils.convertor(mp3energy, "hartree", "eV"))
+            if line[34:42] == "UMP4(DQ)":
+                # Example output lines:
+                #  E4(DQ)=   -0.31002157D-02        UMP4(DQ)=   -0.75015901139D+02
+                #  E4(SDQ)=  -0.32127241D-02        UMP4(SDQ)=  -0.75016013648D+02
+                #  E4(SDTQ)= -0.32671209D-02        UMP4(SDTQ)= -0.75016068045D+02
+                # Energy for most substitutions is used only (SDTQ by default)
+                mp4energy = self.float(line.split("=")[2])
+                line = inputfile.next()
+                if line[34:43] == "UMP4(SDQ)":
+                  mp4energy = self.float(line.split("=")[2])
+                  line = inputfile.next()
+                  if line[34:44] == "UMP4(SDTQ)":
+                    mp4energy = self.float(line.split("=")[2])
+                if len(self.mpenergies) == 2:
+                  self.mpenergies.append([])
+                self.mpenergies[2].append(utils.convertor(mp4energy, "hartree", "eV"))
+            if line[29:32] == "MP5":
+                # Example output line:
+                #  DEMP5 =  -0.11048812312D-02 MP5 =  -0.75017172926D+02
+                if len(self.mpenergies) == 3:
+                  self.mpenergies.append([])
+                mp5energy = self.float(line.split("=")[2])
+                self.mpenergies[3].append(utils.convertor(mp5energy, "hartree", "eV"))
 
             if line[49:59] == 'Converged?':
 # Extract Geometry convergence information

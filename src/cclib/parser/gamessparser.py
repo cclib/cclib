@@ -125,8 +125,9 @@ class GAMESS(logfileparser.Logfile):
                 temp = line.split()
                 self.scfenergies.append(utils.convertor(float(temp[temp.index("IS") + 1]), "hartree", "eV"))
 
+            # Total energies after Moller-Plesset corrections
+            # GAMESS presently supports only second order corrections (MP2)
             if line.find("RESULTS OF MOLLER-PLESSET 2ND ORDER CORRECTION ARE") >= 0:
-                # Total energy after second order Moller-Plesset correction
                 # Output looks something like this:
                 # RESULTS OF MOLLER-PLESSET 2ND ORDER CORRECTION ARE
                 #         E(0)=      -285.7568061536
@@ -134,15 +135,15 @@ class GAMESS(logfileparser.Logfile):
                 #         E(2)=        -0.9679419329
                 #       E(MP2)=      -286.7247480864
                 # where E(MP2) = E(0) + E(2)
-                if not hasattr(self, "mp2energies"):
-                    self.logger.info("Creating attribute mp2energies[]")
-                    self.mp2energies = []
+                if not hasattr(self, "mpenergies"):
+                    self.logger.info("Creating attribute mpenergies[]")
+                    self.mpenergies = [[]]
                 E0 = inputfile.next()
                 E1 = inputfile.next()
                 E2 = inputfile.next()
                 EMP2 = inputfile.next()
                 temp = EMP2.split()
-                self.mp2energies.append(utils.convertor(float(temp[1]), "hartree", "eV"))
+                self.mpenergies[0].append(utils.convertor(float(temp[1]), "hartree", "eV"))
 
             if line.find("MAXIMUM GRADIENT") > 0:
                 if not hasattr(self, "geovalues"):
