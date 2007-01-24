@@ -34,7 +34,7 @@ if __name__ == "__main__":
             print "\nBETA SPIN:"
             print "=========="
 
-        for i in range(len(fa.donations[0])):
+        for i in range(len(fa.donations[spin])):
 
             print "%4i: %7.3f %7.3f %7.3f"%(i+1,2*fa.donations[spin][i], 2*fa.bdonations[spin][i], \
                                             2*fa.repulsions[spin][i])
@@ -44,8 +44,8 @@ if __name__ == "__main__":
                 
 
         print "-----------------------------"
-        print " T:   %7.3f %7.3f %7.3f"%(reduce(Numeric.add, fa.donations[0])*2, \
-                    reduce(Numeric.add, fa.bdonations[0])*2, \
-                    reduce(Numeric.add, fa.repulsions[0])*2)
+        print " T:   %7.3f %7.3f %7.3f"%(reduce(Numeric.add, fa.donations[spin])*2, \
+                    reduce(Numeric.add, fa.bdonations[spin])*2, \
+                    reduce(Numeric.add, fa.repulsions[spin])*2)
 
 
