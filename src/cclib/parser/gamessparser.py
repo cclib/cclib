@@ -137,13 +137,14 @@ class GAMESS(logfileparser.Logfile):
                 # where E(MP2) = E(0) + E(2)
                 if not hasattr(self, "mpenergies"):
                     self.logger.info("Creating attribute mpenergies[]")
-                    self.mpenergies = [[]]
+                    self.mpenergies = []
                 E0 = inputfile.next()
                 E1 = inputfile.next()
                 E2 = inputfile.next()
                 EMP2 = inputfile.next()
-                temp = EMP2.split()
-                self.mpenergies[0].append(utils.convertor(float(temp[1]), "hartree", "eV"))
+                self.mpenergies.append([])
+                mp2energy = float(EMP2.split()[1])
+                self.mpenergies[-1].append(utils.convertor(mp2energy, "hartree", "eV"))
 
             if line.find("MAXIMUM GRADIENT") > 0:
                 if not hasattr(self, "geovalues"):
