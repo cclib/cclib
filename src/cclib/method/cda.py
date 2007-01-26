@@ -42,6 +42,16 @@ class CDA(FragmentAnalysis):
         else:
             occs = 2
 
+#intialize progress if available
+        nstep = self.parser.homos[0]
+        if len(self.parser.homos) == 2:
+            nstep += self.parser.homos[1]
+
+        if self.progress:
+            self.progress.initialize(nstep)
+
+#begin method
+        step = 0
         for spin in range(len(self.mocoeffs)):
 
             size = len(self.mocoeffs[spin])
@@ -83,6 +93,12 @@ class CDA(FragmentAnalysis):
                         repulsions[spin][i] += occs * self.mocoeffs[spin][i,k] \
                                                 * self.mocoeffs[spin][i, m] * self.fooverlaps[k][m]
 
+                step += 1
+                if self.progress and random.random() < cupdate:
+                    self.progress.update(step, "Charge Decomposition Analysis...")
+
+        if self.progress:
+            self.progress.update(nstep, "Done.")
 
         self.donations = donations
         self.bdonations = bdonations
