@@ -1,5 +1,5 @@
 import os, unittest
-from Numeric import array, compress
+from Numeric import alltrue, array, resize
 from testall import getfile
 from cclib.parser import ADF, GAMESS, Gaussian, Jaguar, GAMESSUK
 import bettertest
@@ -11,6 +11,14 @@ class GenericMPTest(bettertest.TestCase):
         """Are the dimensions of mpenergies correct?"""
         self.assertEqual(self.data.mpenergies.shape, (len(self.data.scfenergies),
                                                       self.level-1))
+
+    def testchange(self):
+        """Are Moller-Plesset corrections negative?"""
+        if self.level == 2:
+          corrections = self.data.mpenergies[:,0] - self.data.scfenergies
+        else:
+          corrections = self.data.mpenergies[:,self.level-2] - self.data.mpenergies[:,self.level-3]
+        self.failUnless(alltrue(corrections < 0.0))
 
 class GAMESSMP2Test(GenericMPTest):
     def setUp(self):
