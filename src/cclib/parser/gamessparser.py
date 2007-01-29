@@ -551,6 +551,12 @@ class GAMESS(logfileparser.Logfile):
         if self.progress:
             self.progress.update(nstep, "Done")
             
+        _toarray = ['geovalues', 'scfenergies', 'scftargets', 'atomcoords',
+                     'etenergies', 'etoscs', 'mpenergies']
+        for attr in _toarray:
+            if hasattr(self, attr):
+                setattr(self, attr, Numeric.array(getattr(self, attr), 'f'))
+
         if not hasattr(self, "geotargets"):
             self.logger.info("Creating attribute geotargets[] with default values")
             opttol = 1e-4

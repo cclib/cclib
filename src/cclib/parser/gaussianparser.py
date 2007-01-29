@@ -683,7 +683,7 @@ class Gaussian(logfileparser.Logfile):
             self.progress.update(nstep, "Done")
             
         _toarray = ['geovalues', 'scfenergies', 'scftargets', 'atomcoords',
-                     'etenergies', 'etoscs']
+                     'etenergies', 'etoscs', 'mpenergies']
         for attr in _toarray:
             if hasattr(self, attr):
                 setattr(self, attr, Numeric.array(getattr(self, attr), 'f'))
