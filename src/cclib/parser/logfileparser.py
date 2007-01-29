@@ -16,11 +16,13 @@ class Logfile(object):
         ADF, GAMESS, GAMESSUK, Gaussian, Jaguar
     
     Attributes:
-        aonames -- "Ru_3p" (list)
+        aonames -- atomic orbital names (list)
         aooverlaps -- atomic orbital overlap matrix (array[2])
-        atomnos -- atomic numbers (array)
+        atomcoords -- atom coordinates (array[3], angstroms)
+        atomnos -- atomic numbers (array[1])
+        coreelectrons -- number of core electrons in an atom's pseudopotential (array[1])
         etenergies -- energy of electronic transitions (array[1], 1/cm)
-        etoscs -- oscillator strength of electronic transition (array[1], ??)
+        etoscs -- oscillator strength of electronic transition (array[1])
         etrotats -- rotatory strength of electronic transitions (array[1], ??)
         etsecs -- singly-excited configurations comprising each electronic transition (??)
         etsyms -- symmetry of electronic transition (list)
@@ -61,7 +63,7 @@ class Logfile(object):
         self.logname  = logname
         self.table = utils.PeriodicTable()
 
-        self.attrlist = ['aonames', 'aooverlaps', 'atomcoords', 'atomnos',
+        self.attrlist = ['aonames', 'aooverlaps', 'atomcoords', 'atomnos', 'coreelectrons',
                          'etenergies', 'etoscs', 'etrotats', 'etsecs', 'etsyms',
                          'fonames', 'fooverlaps',
                          'geotargets', 'geovalues', 'homos', 'mocoeffs',
