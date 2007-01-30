@@ -64,11 +64,17 @@ class Volume(object):
                   Numeric.arange(self.data.shape[1]),
                   Numeric.arange(self.data.shape[0]))
         v = VtkData(RectilinearGrid(*ranges), "Test",
-                    PointData(Scalars(self.data.flat)))
-        outputfile = open(filename, "w")
-        outputfile.write(v.to_string())
-        outputfile.close()
+                    PointData(Scalars(self.data.flat, "from cclib", "default")))
+        v.tofile(filename)
 
+    def integrate(self):
+        boxvol = self.spacing[0]*self.spacing[1]*self.spacing[2]*convertor(1, "Angstrom", "bohr")**3
+        return sum(self.data.flat)*boxvol
+
+    def integrate_square(self):
+        boxvol = self.spacing[0]*self.spacing[1]*self.spacing[2]*convertor(1, "Angstrom", "bohr")**3
+        return sum(self.data.flat**2)*boxvol
+        
     def writeascube(self, filename):
         # Remember that the units are bohr, not Angstroms
         convert = lambda x : convertor(x, "Angstrom", "bohr")
@@ -158,12 +164,12 @@ def wavefunction(coords, mocoeffs, gbasis, volume):
 
     for bs in range(len(bfs)):
         data = Numeric.zeros( wavefn.data.shape, "d")
-        for i in range(wavefn.data.shape[0]):
-            for j in range(wavefn.data.shape[1]):
-                for k in range(wavefn.data.shape[2]):
-                    data[i, j, k] = bfs[bs].amp(x[i], y[j], z[k])
-        data = data * mocoeffs[bs]
-        wavefn.data += data
+        for i,xval in enumerate(x):
+            for j,yval in enumerate(y):
+                for k,zval in enumerate(z):
+                    data[i, j, k] = bfs[bs].amp(xval,yval,zval)
+        Numeric.multiply(data, mocoeffs[bs], data)
+        Numeric.add(wavefn.data, data, wavefn.data)
     
     return wavefn
 
@@ -189,17 +195,18 @@ def electrondensity(coords, mocoeffs, gbasis, volume):
     y = Numeric.arange(density.origin[1], density.topcorner[1]+density.spacing[1], density.spacing[1]) / conversion
     z = Numeric.arange(density.origin[2], density.topcorner[2]+density.spacing[2], density.spacing[2]) / conversion
 
-    for mocoeff in mocoeffs:
-        sumofsquares = sum(mocoeffs**2)
+    sumofsquares = sum(mocoeffs[0]**2) # Note that this is an array of sums, not just a single figure
+    if len(mocoeffs) == 2:
+        sumofsquares += sum(mocoeffs[1]**2)
         
-        for bs in range(len(bfs)):
-            data = Numeric.zeros( density.data.shape, "d")
-            for i in range(density.data.shape[0]):
-                for j in range(density.data.shape[1]):
-                    for k in range(density.data.shape[2]):
-                        data[i, j, k] = bfs[bs].amp(x[i], y[j], z[k])**2
-            data = data * sumofsquares[bs]
-            density.data += data
+    for bs in range(len(bfs)):
+        data = Numeric.zeros( density.data.shape, "d")
+        for i in range(density.data.shape[0]):
+            for j in range(density.data.shape[1]):
+                for k in range(density.data.shape[2]):
+                    data[i, j, k] = bfs[bs].amp(x[i], y[j], z[k])**2
+        Numeric.multiply(data, sumofsquares[bs], data)
+        Numeric.add(density.data, data, density.data)
         
     if len(mocoeffs) == 1:
         density.data = density.data*2 # doubly-occupied
@@ -220,9 +227,17 @@ if __name__=="__main__":
     b.logger.setLevel(logging.ERROR)
     b.parse()
 
-    vol = Volume( (-2.5,-5,-1.5), (2.5, 5, 1.5), spacing=(0.25,0.25,0.25) )
-    homowavefn = wavefunction(b.atomcoords[0], b.mocoeffs[0][b.homos[0]], a.gbasis, vol)
-    homowavefn.write("homo.vtk", "VTK")
-    homowavefn.write("homo.cub", "Cube")
-    # density = electrondensity(b.atomcoords[0], b.mocoeffs[0,0:(b.homos[0]+1)], a.gbasis, vol)
-    # density.write("cubefile.vtk")
+    vol = Volume( (-3.5,-6,-2.0), (3.5, 6, 2.0), spacing=(0.5,0.5,0.5) )
+    vol = Volume( (-3.5,-6,-2.0), (3.5, 6, 2.0), spacing=(0.2,0.2,0.2) )
+    #homowavefn = wavefunction(b.atomcoords[0], b.mocoeffs[0][b.homos[0]], a.gbasis, vol)
+    #homowavefn.write("homo.vtk", "VTK")
+    #homowavefn.write("homo.cub", "Cube")
+
+    # print "If you integrate the HOMO you get",homowavefn.integrate()
+    # print "If you integrate the square of the HOMO you get", homowavefn.integrate_square()
+
+    occupiedcoeffs = [b.mocoeffs[0][0:(b.homos[0]+1)]] # Would be of length(2) for unres
+    density = electrondensity(b.atomcoords[0], occupiedcoeffs, a.gbasis, vol)
+    density.write("cubefile.vtk", "VTK")
+
+    print "If you integrate the density you get",density.integrate()
