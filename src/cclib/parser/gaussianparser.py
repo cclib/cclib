@@ -46,7 +46,7 @@ class Gaussian(logfileparser.Logfile):
         ans = label.replace("U", "u").replace("G", "g") 
         return ans
 
-    def parse(self, fupdate=0.05, cupdate=0.002):
+    def extract(self, fupdate=0.05, cupdate=0.002):
         """Extract information from the logfile."""
         inputfile = utils.openlogfile(self.filename)
         

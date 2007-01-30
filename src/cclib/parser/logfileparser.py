@@ -78,6 +78,13 @@ class Logfile(object):
         handler.setFormatter(logging.Formatter("[%(name)s %(levelname)s] %(message)s"))
         self.logger.addHandler(handler)
 
+    def parse(self, fupdate=0.05, cupdate=0.02):
+        """Parse the logfile, using the assumed extract method of the child."""
+        if hasattr(self, "extract"):
+          self.extract(fupdate=fupdate, cupdate=cupdate)
+        else:
+          self.logger.info("Method parse() was called from generaic LogFile class.")
+
     def clean(self):
         """Delete all of the parsed attributes."""
         for attr in self.attrlist:

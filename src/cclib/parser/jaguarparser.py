@@ -44,7 +44,7 @@ class Jaguar(logfileparser.Logfile):
         ans = label.split("/")[0].replace("pp", '"').replace("p", "'")
         return ans
 
-    def parse(self, fupdate=0.05, cupdate=0.002):
+    def extract(self, fupdate=0.05, cupdate=0.002):
         """Extract information from the logfile."""
         inputfile = utils.openlogfile(self.filename)
         

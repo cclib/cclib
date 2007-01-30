@@ -73,7 +73,7 @@ class ADF(logfileparser.Logfile):
         else:
             return "%s:%i"%(label,num+1)
 
-    def parse(self, fupdate=0.05, cupdate=0.002):
+    def extract(self, fupdate=0.05, cupdate=0.002):
         """Extract information from the logfile."""
         inputfile = utils.openlogfile(self.filename)
         

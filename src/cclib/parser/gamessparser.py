@@ -74,7 +74,7 @@ class GAMESS(logfileparser.Logfile):
             
         return ans
     
-    def parse(self):
+    def extract(self, fupdate=0.05, cupdate=0.002):
         """Extract information from the logfile."""
         inputfile = utils.openlogfile(self.filename)
         
@@ -92,7 +92,7 @@ class GAMESS(logfileparser.Logfile):
             
         for line in inputfile:
             
-            if self.progress and random.random() < 0.05:
+            if self.progress and random.random() < cupdate:
                 
                 step = inputfile.tell()
                 if step != oldstep:
