@@ -494,12 +494,6 @@ class GAMESSUK(logfileparser.Logfile):
         if self.progress:
             self.progress.update(nstep, "Done")
 
-        _toarray = ['atomcoords', 'geotargets', 'geovalues', 'moenergies', 'scftargets',
-                    'scfenergies', 'vibdisps', 'vibfreqs', 'vibirs', 'vibramans']
-        for attr in _toarray:
-            if hasattr(self, attr):
-                setattr(self, attr, Numeric.array(getattr(self, attr), 'f'))
-
         _tolistofarrays = ['scfvalues', 'moenergies']
         for attr in _tolistofarrays:
             if hasattr(self, attr):

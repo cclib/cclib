@@ -137,16 +137,20 @@ class Jaguar(logfileparser.Logfile):
                     self.scftargets.append([5E-5])
 
             if line[2:28] == "geometry optimization step":
+                gopt_step = int(line.split()[-1])
 # Get Geometry Opt convergence information
                 if not hasattr(self, "geovalues"):
                     self.geovalues = []
                     geotargets = Numeric.zeros(4, "f")
                     i = 0
-                    self.logger.info("Creating attributs: geovalues,geotargets")
+                    self.logger.info("Creating attributes: geovalues,geotargets")
                 blank = inputfile.next()
                 blank = inputfile.next()
                 line = inputfile.next()
                 values = []
+                if gopt_step == 1:
+                  # The first optimization step does not produce an energy change
+                  values.append(0.0)
                 while line != blank:
                     if line[41] == "(":
                         # A new geo convergence value
@@ -403,12 +407,6 @@ class Jaguar(logfileparser.Logfile):
 
         if hasattr(self, "scfvalues"):
             self.scfvalues = [Numeric.array(x, "f") for x in self.scfvalues]
-        if hasattr(self, "scftargets"):
-            self.scftargets = Numeric.array(self.scftargets, "f")
-        if hasattr(self, "scfenergies"):
-            self.scfenergies = Numeric.array(self.scfenergies, "f")
-        if hasattr(self, "atomcoords"):
-            self.atomcoords = Numeric.array(self.atomcoords, "f")
         if not hasattr(self,"coreelectrons"):
             self.coreelectrons = Numeric.array([0]*self.natom,"i")
 

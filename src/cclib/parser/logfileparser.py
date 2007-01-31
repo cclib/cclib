@@ -71,6 +71,11 @@ class Logfile(object):
                          'scfenergies', 'scftargets', 'scfvalues',
                          'vibfreqs', 'vibirs', 'vibramans', 'vibsyms']
 
+        self._toarray = ['atomcoords', 'etenergies', 'etoscs',
+                         'geotargets', 'geovalues', 'mpenergies',
+                         'scfenergies', 'scftargets',
+                         'vibdisps', 'vibfreqs', 'vibirs', 'vibramans']
+
         # Set up the logger
         self.logger = logging.getLogger('%s %s' % (self.logname,self.filename))
         self.logger.setLevel(self.loglevel)
@@ -81,7 +86,16 @@ class Logfile(object):
     def parse(self, fupdate=0.05, cupdate=0.02):
         """Parse the logfile, using the assumed extract method of the child."""
         if hasattr(self, "extract"):
+
+          # This method does the actual parsing of text        
           self.extract(fupdate=fupdate, cupdate=cupdate)
+
+          # Make sure array attributes are arrays
+          for attr in self._toarray:
+            if hasattr(self, attr):
+              if type(getattr(self, attr)) is not Numeric.arraytype:
+                setattr(self, attr, Numeric.array(getattr(self, attr), 'f'))
+
         else:
           self.logger.info("Method parse() was called from generaic LogFile class.")
 
