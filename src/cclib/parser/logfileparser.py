@@ -110,6 +110,7 @@ class Logfile(object):
         for attr in self.attrlist:
             if hasattr(self, attr):
                 delattr(self, attr)
+        self.parsed = False
 
     def normalisesym(self,symlabel):
         """Standardise the symmetry labels between parsers.
