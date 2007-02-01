@@ -682,9 +682,6 @@ class Gaussian(logfileparser.Logfile):
         if self.progress:
             self.progress.update(nstep, "Done")
             
-        if hasattr(self, "scfvalues"):
-            self.scfvalues = [Numeric.array(x, "f") for x in self.scfvalues]
-
         if not hasattr(self,"atomcoords"):
             self.logger.info("Creating attribute atomcoords[]")
             self.atomcoords = Numeric.array(inputcoords, 'f')

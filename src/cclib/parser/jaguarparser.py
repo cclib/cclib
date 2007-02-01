@@ -405,8 +405,6 @@ class Jaguar(logfileparser.Logfile):
         if self.progress:
             self.progress.update(nstep,"Done")
 
-        if hasattr(self, "scfvalues"):
-            self.scfvalues = [Numeric.array(x, "f") for x in self.scfvalues]
         if not hasattr(self,"coreelectrons"):
             self.coreelectrons = Numeric.array([0]*self.natom,"i")
 

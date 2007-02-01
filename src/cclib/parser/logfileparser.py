@@ -75,6 +75,7 @@ class Logfile(object):
                          'geotargets', 'geovalues', 'mpenergies',
                          'scfenergies', 'scftargets',
                          'vibdisps', 'vibfreqs', 'vibirs', 'vibramans']
+        self._tolistofarrays = ['moenergies', 'scfvalues']
 
         # Set up the logger
         self.logger = logging.getLogger('%s %s' % (self.logname,self.filename))
@@ -90,12 +91,17 @@ class Logfile(object):
           # This method does the actual parsing of text        
           self.extract(fupdate=fupdate, cupdate=cupdate)
 
-          # Make sure array attributes are arrays
+          # Make sure selected attributes are arrays
           for attr in self._toarray:
             if hasattr(self, attr):
               if type(getattr(self, attr)) is not Numeric.arraytype:
                 setattr(self, attr, Numeric.array(getattr(self, attr), 'f'))
 
+          # Make sure selected attrbutes are lsits of arrays
+          for attr in self._tolistofarrays:
+            if hasattr(self, attr):
+              if not Numeric.alltrue([type(x) is Numeric.arraytype for x in getattr(self, attr)]):
+                setattr(self, attr, [Numeric.array(x, 'f') for x in getattr(self, attr)])
         else:
           self.logger.info("Method parse() was called from generaic LogFile class.")
 

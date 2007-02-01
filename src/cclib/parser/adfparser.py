@@ -737,8 +737,6 @@ class ADF(logfileparser.Logfile):
         if self.progress:
             self.progress.update(nstep, "Done")
 
-        if hasattr(self,"scfvalues"):
-            self.scfvalues = [Numeric.array(x, "f") for x in self.scfvalues]
         if hasattr(self,"moenergies"):
             self.nmo = len(self.moenergies[0])
         if not hasattr(self,"coreelectrons"):

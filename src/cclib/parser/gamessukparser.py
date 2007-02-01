@@ -494,11 +494,6 @@ class GAMESSUK(logfileparser.Logfile):
         if self.progress:
             self.progress.update(nstep, "Done")
 
-        _tolistofarrays = ['scfvalues', 'moenergies']
-        for attr in _tolistofarrays:
-            if hasattr(self, attr):
-                setattr(self, attr, [Numeric.array(x, "f") for x in getattr(self, attr)])
-
         if not hasattr(self,"coreelectrons"):
             self.coreelectrons = Numeric.zeros(self.natom,"i")
 

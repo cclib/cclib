@@ -555,8 +555,6 @@ class GAMESS(logfileparser.Logfile):
             self.logger.info("Creating attribute geotargets[] with default values")
             opttol = 1e-4
             self.geotargets = Numeric.array([opttol, 3. / opttol])
-        if hasattr(self, "scfvalues"):
-            self.scfvalues = [Numeric.array(x, "f") for x in self.scfvalues]
         if hasattr(self,"geovalues"): self.geovalues = Numeric.array(self.geovalues, "f")
         if not hasattr(self, "nmo"):
             self.logger.info("Creating attribute nmo with default value")
