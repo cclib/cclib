@@ -43,10 +43,14 @@ def ccopen(filename,progress=None,loglevel=logging.INFO,logname="Log"):
     """Guess the identity of a particular log file and return an instance of it.
     
     Returns: one of ADF, GAMESS, GAMESS UK, Gaussian, Jaguar, or
-             None (if it cannot figure it out).
+             None (if it cannot figure it out or the file does not exist).
     """
     filetype = None
-    inputfile = openlogfile(filename)
+    try:
+      inputfile = openlogfile(filename)
+    except IOError, (errno, strerror):
+      print "I/O error %s (%s): %s" %(errno, filename, strerror)
+      return None
     for line in inputfile:
         if line.find("Amsterdam Density Functional") >= 0:
             filetype = adfparser.ADF
