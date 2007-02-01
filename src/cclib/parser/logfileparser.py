@@ -86,24 +86,25 @@ class Logfile(object):
 
     def parse(self, fupdate=0.05, cupdate=0.02):
         """Parse the logfile, using the assumed extract method of the child."""
-        if hasattr(self, "extract"):
+        try:
+            # This method does the actual parsing of text,
+            #  and should be defined in a subclass.
+            self.extract(fupdate=fupdate, cupdate=cupdate)
+        except AttributeError:
+            self.logger.info("Method parse() was called from generic LogFile class.")
+            return
 
-          # This method does the actual parsing of text        
-          self.extract(fupdate=fupdate, cupdate=cupdate)
-
-          # Make sure selected attributes are arrays
-          for attr in self._toarray:
+        # Make sure selected attributes are arrays
+        for attr in self._toarray:
             if hasattr(self, attr):
-              if type(getattr(self, attr)) is not Numeric.arraytype:
-                setattr(self, attr, Numeric.array(getattr(self, attr), 'f'))
+                if type(getattr(self, attr)) is not Numeric.arraytype:
+                    setattr(self, attr, Numeric.array(getattr(self, attr), 'f'))
 
-          # Make sure selected attrbutes are lsits of arrays
-          for attr in self._tolistofarrays:
+        # Make sure selected attrbutes are lsits of arrays
+        for attr in self._tolistofarrays:
             if hasattr(self, attr):
-              if not Numeric.alltrue([type(x) is Numeric.arraytype for x in getattr(self, attr)]):
-                setattr(self, attr, [Numeric.array(x, 'f') for x in getattr(self, attr)])
-        else:
-          self.logger.info("Method parse() was called from generaic LogFile class.")
+                if not Numeric.alltrue([type(x) is Numeric.arraytype for x in getattr(self, attr)]):
+                    setattr(self, attr, [Numeric.array(x, 'f') for x in getattr(self, attr)])
 
     def clean(self):
         """Delete all of the parsed attributes."""
