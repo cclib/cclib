@@ -405,10 +405,6 @@ class Jaguar(logfileparser.Logfile):
         if self.progress:
             self.progress.update(nstep,"Done")
 
-        if not hasattr(self,"coreelectrons"):
-            self.coreelectrons = Numeric.array([0]*self.natom,"i")
-
-        self.parsed = True
         
 if __name__ == "__main__":
     import doctest, jaguarparser

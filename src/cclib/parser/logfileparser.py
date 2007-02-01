@@ -71,7 +71,7 @@ class Logfile(object):
                          'scfenergies', 'scftargets', 'scfvalues',
                          'vibfreqs', 'vibirs', 'vibramans', 'vibsyms']
 
-        self._toarray = ['atomcoords', 'etenergies', 'etoscs',
+        self._toarray = ['atomcoords', 'etenergies', 'coreelectrons', 'etoscs',
                          'geotargets', 'geovalues', 'mpenergies',
                          'scfenergies', 'scftargets',
                          'vibdisps', 'vibfreqs', 'vibirs', 'vibramans']
@@ -86,10 +86,13 @@ class Logfile(object):
 
     def parse(self, fupdate=0.05, cupdate=0.02):
         """Parse the logfile, using the assumed extract method of the child."""
+
         try:
+
             # This method does the actual parsing of text,
-            #  and should be defined in a subclass.
+            #  and should be defined by a subclass.
             self.extract(fupdate=fupdate, cupdate=cupdate)
+
         except AttributeError:
             self.logger.info("Method parse() was called from generic LogFile class.")
             return
@@ -105,6 +108,17 @@ class Logfile(object):
             if hasattr(self, attr):
                 if not Numeric.alltrue([type(x) is Numeric.arraytype for x in getattr(self, attr)]):
                     setattr(self, attr, [Numeric.array(x, 'f') for x in getattr(self, attr)])
+
+        # Set nmo if not set already - to nbasis
+        if not hasattr(self, "nmo"):
+            self.nmo = self.nbasis
+
+        # Creating deafult coreelectrons array
+        if not hasattr(self, "coreelectrons"):
+            self.logger.info("Creating attribute coreelectrons[]")
+            self.coreelectrons = Numeric.zeros(self.natom)
+        
+        self.parsed = True
 
     def clean(self):
         """Delete all of the parsed attributes."""

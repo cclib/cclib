@@ -737,15 +737,6 @@ class ADF(logfileparser.Logfile):
         if self.progress:
             self.progress.update(nstep, "Done")
 
-        if hasattr(self,"moenergies"):
-            self.nmo = len(self.moenergies[0])
-        if not hasattr(self,"coreelectrons"):
-            self.coreelectrons = [0]*self.natom
-
-        self.coreelectrons = Numeric.array(self.coreelectrons, "i")
-
-        self.parsed = True
-
         
 if __name__ == "__main__":
     import doctest, adfparser

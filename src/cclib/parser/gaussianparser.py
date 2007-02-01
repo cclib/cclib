@@ -686,12 +686,6 @@ class Gaussian(logfileparser.Logfile):
             self.logger.info("Creating attribute atomcoords[]")
             self.atomcoords = Numeric.array(inputcoords, 'f')
 
-        if not hasattr(self,"coreelectrons"):
-            self.logger.info("Creating attribute coreelectrons[]")
-            self.coreelectrons = Numeric.zeros(self.natom)
-
-        self.parsed = True
-
 if __name__ == "__main__":
     import doctest, gaussianparser
     doctest.testmod(gaussianparser, verbose=False)

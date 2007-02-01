@@ -494,9 +494,6 @@ class GAMESSUK(logfileparser.Logfile):
         if self.progress:
             self.progress.update(nstep, "Done")
 
-        if not hasattr(self,"coreelectrons"):
-            self.coreelectrons = Numeric.zeros(self.natom,"i")
-
              
 if __name__ == "__main__":
     import doctest
