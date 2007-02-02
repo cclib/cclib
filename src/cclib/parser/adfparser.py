@@ -73,17 +73,10 @@ class ADF(logfileparser.Logfile):
         else:
             return "%s:%i"%(label,num+1)
 
-    def extract(self, fupdate=0.05, cupdate=0.002):
-        """Extract information from the logfile."""
-        inputfile = utils.openlogfile(self.filename)
+    def extract(self, inputfile, fupdate=0.05, cupdate=0.002):
+        """Extract information from the file object inputfile."""
         
-        if self.progress:
-            
-            inputfile.seek(0, 2) #go to end of file
-            nstep = inputfile.tell()
-            inputfile.seek(0)
-            self.progress.initialize(nstep)
-            oldstep = 0
+        oldstep = 0
             
         # Used to avoid extracting the final geometry twice in a GeoOpt
         NOTFOUND, GETLAST, NOMORE = range(3)
@@ -731,12 +724,6 @@ class ADF(logfileparser.Logfile):
                             row += 1
                         base += len(cols[1:])
                         
-                        
-        inputfile.close()
-
-        if self.progress:
-            self.progress.update(nstep, "Done")
-
         
 if __name__ == "__main__":
     import doctest, adfparser

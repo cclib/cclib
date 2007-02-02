@@ -42,17 +42,10 @@ class GAMESSUK(logfileparser.Logfile):
         
         return ans
 
-    def extract(self, fupdate=0.05, cupdate=0.002):
-        """Extract information from the logfile."""
-        inputfile = utils.openlogfile(self.filename)
-        
-        if self.progress:
-            
-            inputfile.seek(0, 2) #go to end of file
-            nstep = inputfile.tell()
-            inputfile.seek(0)
-            self.progress.initialize(nstep)
-            oldstep = 0
+    def extract(self, inputfile, fupdate=0.05, cupdate=0.002):
+        """Extract information from the file object inputfile."""
+
+        oldstep = 0
 
         firstnuccoords = True
         # This will be used to detect the first set of "nuclear coordinates" in
@@ -491,9 +484,6 @@ class GAMESSUK(logfileparser.Logfile):
                 else:
                     self.moenergies = [moenergies]
                 
-        if self.progress:
-            self.progress.update(nstep, "Done")
-
              
 if __name__ == "__main__":
     import doctest

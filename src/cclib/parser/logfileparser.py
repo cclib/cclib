@@ -87,15 +87,27 @@ class Logfile(object):
     def parse(self, fupdate=0.05, cupdate=0.02):
         """Parse the logfile, using the assumed extract method of the child."""
 
-        try:
+        # Open the file object
+        inputfile = utils.openlogfile(self.filename)
 
+        # Intialize self.progress
+        if self.progress:
+            inputfile.seek(0,2)
+            nstep = inputfile.tell()
+            inputfile.seek(0)
+            self.progress.initialize(nstep)
+
+        try:
             # This method does the actual parsing of text,
             #  and should be defined by a subclass.
-            self.extract(fupdate=fupdate, cupdate=cupdate)
+            self.extract(inputfile, fupdate=fupdate, cupdate=cupdate)
 
         except AttributeError:
             self.logger.info("Method parse() was called from generic LogFile class.")
             return
+
+        # Close file object
+        inputfile.close()
 
         # Make sure selected attributes are arrays
         for attr in self._toarray:
@@ -103,7 +115,7 @@ class Logfile(object):
                 if type(getattr(self, attr)) is not Numeric.arraytype:
                     setattr(self, attr, Numeric.array(getattr(self, attr), 'f'))
 
-        # Make sure selected attrbutes are lsits of arrays
+        # Make sure selected attrbutes are lists of arrays
         for attr in self._tolistofarrays:
             if hasattr(self, attr):
                 if not Numeric.alltrue([type(x) is Numeric.arraytype for x in getattr(self, attr)]):
@@ -117,6 +129,10 @@ class Logfile(object):
         if not hasattr(self, "coreelectrons"):
             self.logger.info("Creating attribute coreelectrons[]")
             self.coreelectrons = Numeric.zeros(self.natom)
+
+        # Update self.progress as done
+        if self.progress:
+            self.progress.update(nstep, "Done")
         
         self.parsed = True
 

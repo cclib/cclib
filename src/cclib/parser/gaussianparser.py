@@ -46,17 +46,10 @@ class Gaussian(logfileparser.Logfile):
         ans = label.replace("U", "u").replace("G", "g") 
         return ans
 
-    def extract(self, fupdate=0.05, cupdate=0.002):
-        """Extract information from the logfile."""
-        inputfile = utils.openlogfile(self.filename)
+    def extract(self, inputfile, fupdate=0.05, cupdate=0.002):
+        """Extract information from the file object inputfile."""
         
-        if self.progress:
-            
-            inputfile.seek(0, 2) #go to end of file
-            nstep = inputfile.tell()
-            inputfile.seek(0)
-            self.progress.initialize(nstep)
-            oldstep = 0
+        oldstep = 0
             
         optfinished = False # Flag that indicates whether it has reached the end of a geoopt
         
@@ -677,11 +670,6 @@ class Gaussian(logfileparser.Logfile):
                     info = line.split()
                     self.coreelectrons[int(center)-1] = int(info[1]) - int(info[2])
 
-        inputfile.close()
-
-        if self.progress:
-            self.progress.update(nstep, "Done")
-            
         if not hasattr(self,"atomcoords"):
             self.logger.info("Creating attribute atomcoords[]")
             self.atomcoords = Numeric.array(inputcoords, 'f')

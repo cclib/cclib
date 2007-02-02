@@ -74,18 +74,10 @@ class GAMESS(logfileparser.Logfile):
             
         return ans
     
-    def extract(self, fupdate=0.05, cupdate=0.002):
-        """Extract information from the logfile."""
-        inputfile = utils.openlogfile(self.filename)
+    def extract(self, inputfile, fupdate=0.05, cupdate=0.002):
+        """Extract information from the file object inputfile."""
         
-        if self.progress:
-            
-            inputfile.seek(0, 2) #go to end of file
-            nstep = inputfile.tell()
-            inputfile.seek(0)
-            self.progress.initialize(nstep)
-            oldstep = 0
-
+        oldstep = 0
 
         firststdorient = True # Used to decide whether to wipe the atomcoords clean
         geooptfinished = False # Used to avoid extracting the final geometry twice
@@ -546,11 +538,6 @@ class GAMESS(logfileparser.Logfile):
                     base += 5
                 self.aonames = self.normalise_aonames(aonames)
 
-        inputfile.close()
-
-        if self.progress:
-            self.progress.update(nstep, "Done")
-            
         if not hasattr(self, "geotargets"):
             self.logger.info("Creating attribute geotargets[] with default values")
             opttol = 1e-4

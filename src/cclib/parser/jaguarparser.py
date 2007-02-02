@@ -44,17 +44,10 @@ class Jaguar(logfileparser.Logfile):
         ans = label.split("/")[0].replace("pp", '"').replace("p", "'")
         return ans
 
-    def extract(self, fupdate=0.05, cupdate=0.002):
-        """Extract information from the logfile."""
-        inputfile = utils.openlogfile(self.filename)
-        
-        if self.progress:
-            
-            inputfile.seek(0, 2) #go to end of file
-            nstep = inputfile.tell()
-            inputfile.seek(0)
-            self.progress.initialize(nstep)
-            oldstep = 0
+    def extract(self, inputfile, fupdate=0.05, cupdate=0.002):
+        """Extract information from the file object inputfile."""
+
+        oldstep = 0
 
         geoopt = False # Is this a GeoOpt? Needed for SCF targets/values.
             
@@ -399,11 +392,6 @@ class Jaguar(logfileparser.Logfile):
                 self.vibdisps = Numeric.array(self.vibdisps)
                 if hasattr(self, "vibirs"):
                     self.vibirs = Numeric.array(self.vibirs)
-
-        inputfile.close()
-
-        if self.progress:
-            self.progress.update(nstep,"Done")
 
         
 if __name__ == "__main__":
