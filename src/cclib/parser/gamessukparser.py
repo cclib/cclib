@@ -7,7 +7,6 @@ __revision__ = "$Revision$"
 
 import re
 import Numeric
-import random # For sometimes running the progress updater
 import utils
 import logfileparser
 
@@ -56,12 +55,7 @@ class GAMESSUK(logfileparser.Logfile):
 
         for line in inputfile:
             
-            if self.progress and random.random() < cupdate:
-                
-                step = inputfile.tell()
-                if step != oldstep:
-                    self.progress.update(step, "Unsupported Information")
-                    oldstep = step
+            self.updateprogress(inputfile, "Unsupported Information", cupdate)
 
             if line[1:22] == "total number of atoms":
                 if not hasattr(self, "natom"):

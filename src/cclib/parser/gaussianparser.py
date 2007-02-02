@@ -7,7 +7,6 @@ __revision__ = "$Revision$"
 
 import re
 import Numeric
-import random # For sometimes running the progress updater
 import utils
 import logfileparser
 
@@ -49,26 +48,16 @@ class Gaussian(logfileparser.Logfile):
     def extract(self, inputfile, fupdate=0.05, cupdate=0.002):
         """Extract information from the file object inputfile."""
         
-        oldstep = 0
-            
         optfinished = False # Flag that indicates whether it has reached the end of a geoopt
         
         for line in inputfile:
             
-            if self.progress and random.random() < cupdate:
+            self.updateprogress(inputfile, "Unsupported Information", cupdate)
                 
-                step = inputfile.tell()
-                if step != oldstep:
-                    self.progress.update(step, "Unsupported Information")
-                    oldstep = step
-                
+            # Find the number of atoms
             if line[1:8] == "NAtoms=":
-# Find the number of atoms
-                if self.progress and random.random() < fupdate:
-                    step = inputfile.tell()
-                    if step != oldstep:
-                        self.progress.update(step, "Attributes")
-                        oldstep = step
+
+                self.updateprogress(inputfile, "Attributes", fupdate)
                         
                 natom = int(line.split()[1])
                 if hasattr(self, "natom"):
@@ -84,11 +73,7 @@ class Gaussian(logfileparser.Logfile):
             if line.find("Input orientation") > -1 or line.find("Z-Matrix orientation") > -1:
 # Extract the atomic numbers and coordinates in the event standard orientation isn't available
 
-                if self.progress and random.random() < cupdate:
-                    step = inputfile.tell()
-                    if step != oldstep:
-                        self.progress.update(step, "Attributes")
-                        oldstep = step
+                self.updateprogress(inputfile, "Attributes", cupdate)
                         
                 inputcoords = []
                 inputatoms = []
@@ -113,13 +98,10 @@ class Gaussian(logfileparser.Logfile):
                     self.natom = len(self.atomnos)
                     self.logger.info("Creating attribute natom: %d" % self.natom)                
 
+            # Extract the atomic numbers and coordinates of the atoms
             if not optfinished and line[25:45] == "Standard orientation":
-# Extract the atomic numbers and coordinates of the atoms
-                if self.progress and random.random() < cupdate:
-                    step = inputfile.tell()
-                    if step != oldstep:
-                        self.progress.update(step, "Attributes")
-                        oldstep = step
+
+                self.updateprogress(inputfile, "Attributes", cupdate)
                         
                 if not hasattr(self, "atomcoords"):
                     self.logger.info("Creating attribute atomcoords[]")
@@ -172,11 +154,7 @@ class Gaussian(logfileparser.Logfile):
                 line = inputfile.next()
                 while line.find("SCF Done") == -1:
                 
-                    if self.progress and random.random() < fupdate:
-                        step = inputfile.tell()
-                        if step != oldstep:
-                            self.progress.update(step, "QM Convergence")
-                            oldstep = step                
+                    self.updateprogress(inputfile, "QM convergence", fupdate)
                           
                     if line.find(' E=') == 0:
                         self.logger.debug(line)
@@ -288,13 +266,10 @@ class Gaussian(logfileparser.Logfile):
                     self.geotargets[i] = self.float(parts[3])
                 self.geovalues.append(newlist)
 
+            # Extracting orbital symmetries
             if line[1:19] == 'Orbital symmetries' and not hasattr(self, "mosyms"):
-# Extracting orbital symmetries
-                if self.progress and random.random() < fupdate:
-                    step = inputfile.tell()
-                    if step != oldstep:
-                        self.progress.update(step, "MO Symmetries")
-                        oldstep = step
+
+                self.updateprogress(inputfile, "MO Symmetries", fupdate)
                         
                 self.logger.info("Creating attribute mosyms[[]]")
                 self.mosyms = [[]]
@@ -328,13 +303,10 @@ class Gaussian(logfileparser.Logfile):
                             i += 1
                         line = inputfile.next()
 
+            # Extract the alpha electron eigenvalues
             if line[1:6] == "Alpha" and line.find("eigenvalues") >= 0:
-# Extract the alpha electron eigenvalues
-                if self.progress and random.random() < fupdate:
-                    step = inputfile.tell()
-                    if step != oldstep:
-                        self.progress.update(step, "Eigenvalues")
-                        oldstep = step
+
+                self.updateprogress(inputfile, "Eigenvalues", fupdate)
                         
                 self.logger.info("Creating attribute moenergies")
                 self.moenergies = [[]]
@@ -414,13 +386,10 @@ class Gaussian(logfileparser.Logfile):
                     self.gbasis.append(gbasis)
                     line = inputfile.next() # i.e. "20 0" or blank line
 
+            # Start of the IR/Raman frequency section
             if line[1:14] == "Harmonic freq":
-# Start of the IR/Raman frequency section
-                if self.progress and random.random() < fupdate:
-                    step = inputfile.tell()
-                    if step != oldstep:
-                        self.progress.update(step, "Frequency Information")
-                        oldstep = step
+
+                self.updateprogress(inputfile, "Frequency Information", fupdate)
                         
                 self.vibsyms = []
                 self.vibirs = []
@@ -584,11 +553,7 @@ class Gaussian(logfileparser.Logfile):
                 colmNames = inputfile.next()
                 while base < self.nbasis:
                      
-                    if self.progress and random.random() < fupdate:
-                        step = inputfile.tell()
-                        if step != oldstep:
-                            self.progress.update(step, "Overlap")
-                            oldstep = step
+                    self.updateprogress(inputfile, "Overlap", fupdate)
                             
                     for i in range(self.nbasis-base): # Fewer lines this time
                         line = inputfile.next()
@@ -616,11 +581,7 @@ class Gaussian(logfileparser.Logfile):
                 base = 0
                 for base in range(0, nmo, 5):
                     
-                    if self.progress:
-                        step = inputfile.tell()
-                        if step != oldstep and random.random() < fupdate:
-                            self.progress.update(step, "Coefficients")
-                            oldstep = step
+                    self.updateprogress(inputfile, "Coefficients", fupdate)
                              
                     colmNames = inputfile.next()
                     symmetries = inputfile.next()

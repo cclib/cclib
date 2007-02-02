@@ -6,7 +6,6 @@ and licensed under the LGPL (http://www.gnu.org/copyleft/lgpl.html).
 __revision__ = "$Revision$"
 
 import Numeric
-import random # For sometimes running the progress updater
 import utils
 import logfileparser
 
@@ -91,21 +90,13 @@ class ADF(logfileparser.Logfile):
         
         for line in inputfile:
             
-            if self.progress and random.random() < cupdate:
-                step = inputfile.tell()
-                if step != oldstep:
-                    self.progress.update(step, "Unsupported Information")
-                    oldstep = step
+            self.updateprogress(inputfile, "Unsupported Information", cupdate)
                 
             if line.find("INPUT FILE") >= 0:
 #check to make sure we aren't parsing Create jobs
                 while line:
                 
-                    if self.progress and random.random() < fupdate:
-                        step = inputfile.tell()
-                        #if step!=oldstep:
-                        self.progress.update(step, "Unsupported Information")
-                        oldstep = step
+                    self.updateprogress(inputfile, "Unsupported Information", fupdate)
                   
                     if line.find("INPUT FILE") >= 0:
                         line2 = inputfile.next()
@@ -130,11 +121,7 @@ class ADF(logfileparser.Logfile):
             if line[1:6] == "ATOMS":
 # Find the number of atoms and their atomic numbers
 # Also extract the starting coordinates (for a GeoOpt anyway)
-                if self.progress and random.random() < cupdate:
-                    step = inputfile.tell()
-                    if step != oldstep:
-                        self.progress.update(step, "Attributes")
-                        oldstep = step
+                self.updateprogress(inputfile, "Attributes", cupdate)
                 
                 self.logger.info("Creating attribute atomnos[], atomcoords[], coreelectrons[]")
                 self.atomnos = []
@@ -197,11 +184,7 @@ class ADF(logfileparser.Logfile):
               
             if line[1:11] == "CYCLE    1":
               
-                if self.progress and random.random() < fupdate:
-                    step = inputfile.tell()
-                    if step != oldstep:
-                        self.progress.update(step, "QM Convergence")
-                        oldstep = step
+                self.updateprogress(inputfile, "QM convergence", fupdate)
               
                 newlist = []
                 line = inputfile.next()
@@ -498,11 +481,7 @@ class ADF(logfileparser.Logfile):
   
             if line[1:24] == "List of All Frequencies":
 # Start of the IR/Raman frequency section
-                if self.progress and random.random() < fupdate:
-                    step = inputfile.tell()
-                    if step != oldstep:
-                        self.progress.update(step, "Frequency Information")
-                        oldstep = step
+                self.updateprogress(inputfile, "Frequency information", fupdate)
                          
 #                 self.vibsyms = [] # Need to look into this a bit more
                 self.vibirs = []
@@ -611,11 +590,7 @@ class ADF(logfileparser.Logfile):
                           
                         for i in range(nosymrep - base):
                         
-                            if self.progress:
-                                step = inputfile.tell()
-                                if step != oldstep and random.random() < fupdate:
-                                    self.progress.update(step, "Overlap")
-                                    oldstep = step
+                            self.updateprogress(inputfile, "Overlap", fupdate)
                                 
                             line = inputfile.next()
                             parts = line.split()[1:]
@@ -709,11 +684,7 @@ class ADF(logfileparser.Logfile):
                         line = inputfile.next()
                         while len(line) > 5:
                            
-                            if self.progress:
-                                step = inputfile.tell()
-                                if step != oldstep and random.random() < fupdate:
-                                    self.progress.update(step, "Coefficients")
-                                    oldstep = step
+                            self.updateprogress(inputfile, "Coefficients", fupdate)
             
                             cols = line.split()
                             for i in range(len(cols[1:])):

@@ -5,7 +5,7 @@ and licensed under the LGPL (http://www.gnu.org/copyleft/lgpl.html).
 
 __revision__ = "$Revision$"
 
-import logging, sys
+import logging, random, sys
 import Numeric
 import utils
 
@@ -96,12 +96,12 @@ class Logfile(object):
             nstep = inputfile.tell()
             inputfile.seek(0)
             self.progress.initialize(nstep)
+            self.progress.step = 0
 
         try:
             # This method does the actual parsing of text,
             #  and should be defined by a subclass.
             self.extract(inputfile, fupdate=fupdate, cupdate=cupdate)
-
         except AttributeError:
             self.logger.info("Method parse() was called from generic LogFile class.")
             return
@@ -135,6 +135,15 @@ class Logfile(object):
             self.progress.update(nstep, "Done")
         
         self.parsed = True
+
+    def updateprogress(self, inputfile, msg, xupdate=0.05):
+        """Update progress."""
+        
+        if self.progress and random.random() < xupdate:
+            newstep = inputfile.tell()
+            if newstep != self.progress.step:
+                self.progress.update(newstep, msg)
+                self.progress.step = newstep
 
     def clean(self):
         """Delete all of the parsed attributes."""
