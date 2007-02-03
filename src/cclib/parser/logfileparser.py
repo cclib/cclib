@@ -84,6 +84,16 @@ class Logfile(object):
         handler.setFormatter(logging.Formatter("[%(name)s %(levelname)s] %(message)s"))
         self.logger.addHandler(handler)
 
+    def __setattr__(self, name, value):
+
+        if hasattr(self, "logger") and not hasattr(self, name) and name in self.attrlist:
+            if type(value) in [Numeric.arraytype, list]:
+              self.logger.info("Creating attribute %s[]" %name)
+            else:
+              self.logger.info("Creating attribute %s: %s" %(name, str(value)))
+
+        object.__setattr__(self, name, value)
+        
     def parse(self, fupdate=0.05, cupdate=0.02):
         """Parse the logfile, using the assumed extract method of the child."""
 
@@ -127,7 +137,6 @@ class Logfile(object):
 
         # Creating deafult coreelectrons array
         if not hasattr(self, "coreelectrons"):
-            self.logger.info("Creating attribute coreelectrons[]")
             self.coreelectrons = Numeric.zeros(self.natom)
 
         # Update self.progress as done
