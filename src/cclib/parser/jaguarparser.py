@@ -7,6 +7,7 @@ __revision__ = "$Revision$"
 
 import re
 import Numeric
+import random # For sometimes running the progress updater
 import utils
 import logfileparser
 
@@ -52,7 +53,12 @@ class Jaguar(logfileparser.Logfile):
             
         for line in inputfile:
             
-            self.updateprogress(inputfile, "Unsupported Information", cupdate)
+            if self.progress and random.random() < cupdate:
+                
+                step = inputfile.tell()
+                if step != oldstep:
+                    self.progress.update(step, "Unsupported Information")
+                    oldstep = step
 
             if line[0:4] == "etot":
 # Get SCF convergence information
@@ -231,7 +237,30 @@ class Jaguar(logfileparser.Logfile):
                         line = inputfile.next()
 
                     self.moenergies = [Numeric.array(x, "f") for x in self.moenergies]
-            
+
+            if line.find("Gaussian Functions - Shell information")>0:
+                self.logger.info("Creating gbasis")
+                shell = ['', 'S', 'P', 'D']
+                self.gbasis = []
+                while line.find("-"*5)<0:
+                    line = inputfile.next()
+                line = inputfile.next()
+                gbasis = []
+                while line.strip():
+                    broken = line.split()
+                    if int(broken[1])==1 and gbasis:
+                        self.gbasis.append(gbasis)
+                        gbasis = []
+                    angmom = shell[int(broken[4])]
+                    nGTOs = int(broken[2])
+                    GTOs = [(float(broken[6]),float(broken[7]))]
+                    for GTO in range(nGTOs-1):
+                        broken = inputfile.next().split()
+                        GTOs.append((float(broken[6]),float(broken[7])))
+                    gbasis.append((angmom,GTOs))
+                    line = inputfile.next()
+                self.gbasis.append(gbasis)
+                                    
             if line.find("Occupied + virtual Orbitals- final wvfn") > 0:
                 
                 blank = inputfile.next()

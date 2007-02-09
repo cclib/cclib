@@ -15,6 +15,14 @@ class GenericBasisTest(unittest.TestCase):
             for fns in atom:
                 self.assert_(fns[0] in ['S', 'P'],
                              "%s not one of S or P" % fns[0])
+
+    def testsizeofbasis(self):
+        """Test the basis set size."""
+        total = 0
+        for atom in self.data.gbasis:
+            for fns in atom:
+                total += 1
+        self.assertEquals(self.data.nbasis, total)
     
     def testcoeffs(self):
         """Test the coeffs of the basis sets."""
@@ -69,8 +77,8 @@ tests = [ GaussianBasisTest, PCGamessBasisTest,
 data = [getfile(Gaussian, "basicGaussian03","dvb_sp_basis.log"),
         getfile(GAMESS, "basicGAMESS-US","dvb_sp.out"),
         getfile(GAMESS, "basicPCGAMESS","dvb_sp.out"),
-        getfile(Jaguar, "basicJaguar4.2", "dvb_sp.out"),
-        getfile(Jaguar, "basicJaguar6.5", "dvb_sp.out"),
+        getfile(Jaguar, "basicJaguar4.2", "dvb_sp_b.out"),
+        getfile(Jaguar, "basicJaguar6.5", "dvb_sp_b.out"),
         getfile(GAMESSUK, "basicGAMESS-UK", "dvb_sp.out")]
               
 if __name__=="__main__":
