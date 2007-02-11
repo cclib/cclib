@@ -19,9 +19,10 @@ class GenericBasisTest(unittest.TestCase):
     def testsizeofbasis(self):
         """Test the basis set size."""
         total = 0
+        multiple = {'S':1, 'P':3}
         for atom in self.data.gbasis:
             for fns in atom:
-                total += 1
+                total += multiple[fns[0]] # Add 3 for P
         self.assertEquals(self.data.nbasis, total)
     
     def testcoeffs(self):
