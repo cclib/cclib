@@ -49,11 +49,7 @@ class GamessUSBasisTest(GenericBasisTest):
     def setUp(self):
         self.data = data[1]
 
-    def testgbasis(self):
-        """Is gbasis the right length?"""
-        self.assertEquals(self.data.natom/2, len(self.data.gbasis))
-
-class PCGamessBasisTest(GamessUSBasisTest):
+class PCGamessBasisTest(GenericBasisTest):
     def setUp(self):
         self.data = data[2]
 
@@ -65,7 +61,7 @@ class Jaguar65BasisTest(GenericBasisTest):
     def setUp(self):
         self.data = data[4]
 
-class GamessUKBasisTest(GamessUSBasisTest):
+class GamessUKBasisTest(GenericBasisTest):
     def setUp(self):
         self.data = data[5]
 

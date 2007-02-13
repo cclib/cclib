@@ -355,11 +355,18 @@ class GAMESS(logfileparser.Logfile):
                     line = inputfile.next()
                 blank = inputfile.next()
                 atomname = inputfile.next()
+                # shellcounter stores the shell no of the last shell
+                # in the previous set of primitives
+                shellcounter = 1
                 while line.find("TOTAL NUMBER")<0:
-                    gbasis = [] # Stores basis sets on one atom
                     blank = inputfile.next()
                     line = inputfile.next()
+                    shellno = int(line.split()[0])
+                    shellgap = shellno - shellcounter
+                    gbasis = [] # Stores basis sets on one atom
+                    shellsize = 0
                     while len(line.split())!=1 and line.find("TOTAL NUMBER")<0:
+                        shellsize += 1
                         coeff = {}
                         # coefficients and symmetries for a block of rows
                         while line.strip():
@@ -390,7 +397,11 @@ class GAMESS(logfileparser.Logfile):
                         line = inputfile.next()
 # either the start of the next block or the start of a new atom or
 # the end of the basis function section
-                    self.gbasis.append(gbasis)
+                    
+                    numtoadd = 1 + (shellgap / shellsize)
+                    shellcounter = shellno + shellsize
+                    for x in range(numtoadd):
+                        self.gbasis.append(gbasis)
 
             if line.find("EIGENVECTORS") == 10 or line.find("MOLECULAR OBRITALS") == 10:
                 # The details returned come from the *final* report of evalues and
