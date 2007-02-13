@@ -21,32 +21,62 @@ class GenericMPTest(bettertest.TestCase):
         self.failUnless(alltrue(corrections < 0.0))
 
 class GAMESSMP2Test(GenericMPTest):
+    def testsizeandshape(self):
+        """Are the dimensions of mpenergies correct (MP2)?"""
+        GenericMPTest.testsizeandshape(self)
+    def testchange(self):
+        """Are Moller-Plesset (MP2) corrections negative?"""
+        GenericMPTest.testchange(self)
     def setUp(self):
         self.data = data[0]
         self.level = 2
 
 class GaussianMP2Test(GenericMPTest):
+    def testsizeandshape(self):
+        """Are the dimensions of mpenergies correct (MP2)?"""
+        GenericMPTest.testsizeandshape(self)
+    def testchange(self):
+        """Are Moller-Plesset (MP2) corrections negative?"""
+        GenericMPTest.testchange(self)
     def setUp(self):
         self.data = data[1]
         self.level = 2
 
 class GaussianMP3Test(GenericMPTest):
+    def testsizeandshape(self):
+        """Are the dimensions of mpenergies correct (MP3)?"""
+        GenericMPTest.testsizeandshape(self)
+    def testchange(self):
+        """Are Moller-Plesset (MP3) corrections negative?"""
+        GenericMPTest.testchange(self)
     def setUp(self):
         self.data = data[2]
         self.level = 3
 
 class GaussianMP4Test(GenericMPTest):
+    def testsizeandshape(self):
+        """Are the dimensions of mpenergies correct (MP4)?"""
+        GenericMPTest.testsizeandshape(self)
+    def testchange(self):
+        """Are Moller-Plesset (MP4) corrections negative?"""
+        GenericMPTest.testchange(self)
     def setUp(self):
         self.data = data[3]
         self.level = 4
 
 class GaussianMP5Test(GenericMPTest):
+    def testsizeandshape(self):
+        """Are the dimensions of mpenergies correct (MP5)?"""
+        GenericMPTest.testsizeandshape(self)
+    def testchange(self):
+        """Are Moller-Plesset (MP5) corrections negative?"""
+        GenericMPTest.testchange(self)
     def setUp(self):
         self.data = data[4]
         self.level = 5
 
-names = [ "GAMESS MP2",
-          "Gaussian MP2", "Gaussian MP3", "Gaussian MP4", "Gaussian MP5" ]
+names = [ "GAMESS",
+          "Gaussian", "Gaussian", "Gaussian", "Gaussian" ]
 tests = [ GAMESSMP2Test, 
           GaussianMP2Test, GaussianMP3Test, GaussianMP4Test, GaussianMP5Test ]
 data = [getfile(GAMESS, "basicGAMESS-US", "water_mp2.out"),
