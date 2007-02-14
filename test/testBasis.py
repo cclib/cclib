@@ -1,7 +1,7 @@
 import os, unittest
 from Numeric import array
 from testall import getfile
-from cclib.parser import ADF, GAMESS, Gaussian, Jaguar, GAMESSUK
+from cclib.parser import ADF, GAMESS, Gaussian, GAMESSUK
 
 class GenericBasisTest(unittest.TestCase):
     """Some type of calculation so long as it has basis set information."""
@@ -53,29 +53,17 @@ class PCGamessBasisTest(GenericBasisTest):
     def setUp(self):
         self.data = data[2]
 
-class Jaguar42BasisTest(GenericBasisTest):
+class GamessUKBasisTest(GenericBasisTest):
     def setUp(self):
         self.data = data[3]
 
-class Jaguar65BasisTest(GenericBasisTest):
-    def setUp(self):
-        self.data = data[4]
-
-class GamessUKBasisTest(GenericBasisTest):
-    def setUp(self):
-        self.data = data[5]
-
-names = [ "Gaussian", "PCGamess", "GAMESS", "Jaguar 4.2",
-          "Jaguar 6.5", "GAMESS UK"]
+names = [ "Gaussian", "PCGamess", "GAMESS", "GAMESS UK"]
 tests = [ GaussianBasisTest, PCGamessBasisTest,
           GamessUSBasisTest, 
-          Jaguar42BasisTest, Jaguar65BasisTest,
           GamessUKBasisTest]
 data = [getfile(Gaussian, "basicGaussian03","dvb_sp_basis.log"),
         getfile(GAMESS, "basicGAMESS-US","dvb_sp.out"),
         getfile(GAMESS, "basicPCGAMESS","dvb_sp.out"),
-        getfile(Jaguar, "basicJaguar4.2", "dvb_sp_b.out"),
-        getfile(Jaguar, "basicJaguar6.5", "dvb_sp_b.out"),
         getfile(GAMESSUK, "basicGAMESS-UK", "dvb_sp.out")]
               
 if __name__=="__main__":
