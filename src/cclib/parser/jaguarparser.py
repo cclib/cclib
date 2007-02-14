@@ -101,6 +101,8 @@ class Jaguar(logfileparser.Logfile):
 # Get the atom coordinates
                 if not hasattr(self, "atomcoords"):
                     self.logger.info("Creating attributes: atomcoords, atomnos, natom")
+                if not hasattr(self, "atomcoords") or line[1:21] == "Symmetrized geometry":
+                    # Wipe the "Input geometry" if "Symmetrized geometry" present
                     self.atomcoords = []
                 p = re.compile("(\D+)\d+") # One/more letters followed by a number
                 atomcoords = []
