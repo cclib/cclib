@@ -349,7 +349,7 @@ class GAMESS(logfileparser.Logfile):
             if line[5:21] == "ATOMIC BASIS SET":
                 if not hasattr(self, "gbasis"):
                     self.logger.info("Creating attribute gbasis")
-                    self.gbasis = []
+                self.gbasis = []
                 line = inputfile.next()
                 while line.find("SHELL")<0:
                     line = inputfile.next()

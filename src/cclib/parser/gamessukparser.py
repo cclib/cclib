@@ -310,12 +310,18 @@ class GAMESSUK(logfileparser.Logfile):
                 blank = inputfile.next()
                 atomname = inputfile.next()
                 basisregexp = re.compile("\d*(\D+)") # Get everything after any digits
+                shellcounter = 1
                 while line!=equals:
                     gbasis = [] # Stores basis sets on one atom
                     blank = inputfile.next()
                     blank = inputfile.next()
                     line = inputfile.next()
+                    shellno = int(line.split()[0])
+                    shellgap = shellno - shellcounter
+                    shellsize = 0
                     while len(line.split())!=1 and line!=equals:
+                        if line.split():
+                            shellsize += 1
                         coeff = {}
                         # coefficients and symmetries for a block of rows
                         while line.strip() and line!=equals:
@@ -343,7 +349,10 @@ class GAMESSUK(logfileparser.Logfile):
                         line = inputfile.next()
 # either the start of the next block or the start of a new atom or
 # the end of the basis function section (signified by a line of equals)
-                    self.gbasis.append(gbasis)
+                    numtoadd = 1 + (shellgap / shellsize)
+                    shellcounter = shellno + shellsize
+                    for x in range(numtoadd):
+                        self.gbasis.append(gbasis)
 
             if line[50:70] == "----- beta set -----":
                 betamosyms = True
