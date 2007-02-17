@@ -38,17 +38,17 @@ if __name__ == "__main__":
 
             for i in range(len(fa.donations[spin])):
 
-                print "%4i: %7.3f %7.3f %7.3f"%(i+1,2*fa.donations[spin][i], \
-                                                    2*fa.bdonations[spin][i], \
-                                                    2*fa.repulsions[spin][i])
+                print "%4i: %7.3f %7.3f %7.3f"%(i+1,fa.donations[spin][i], \
+                                                    fa.bdonations[spin][i], \
+                                                    fa.repulsions[spin][i])
 
                 if i == parser1.homos[spin]:
                     print "------ HOMO - LUMO gap ------"
                     
 
             print "-----------------------------"
-            print " T:   %7.3f %7.3f %7.3f"%(reduce(Numeric.add, fa.donations[spin])*2, \
-                        reduce(Numeric.add, fa.bdonations[spin])*2, \
-                        reduce(Numeric.add, fa.repulsions[spin])*2)
+            print " T:   %7.3f %7.3f %7.3f"%(reduce(Numeric.add, fa.donations[spin]), \
+                        reduce(Numeric.add, fa.bdonations[spin]), \
+                        reduce(Numeric.add, fa.repulsions[spin]))
 
 

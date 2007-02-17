@@ -79,18 +79,18 @@ class CDA(FragmentAnalysis):
 #calculate donation for each MO
                 for k in range(0, homoa + 1):
                     for n in range(offset + homob + 1, self.parser.nbasis):
-                        donations[spin][i] += occs * self.mocoeffs[spin][i,k] \
+                        donations[spin][i] += 2 * occs * self.mocoeffs[spin][i,k] \
                                                 * self.mocoeffs[spin][i,n] * self.fooverlaps[k][n]
 
                 for l in range(offset, offset + homob + 1):
                     for m in range(homoa + 1, offset):
-                        bdonations[spin][i] += occs * self.mocoeffs[spin][i,l] \
+                        bdonations[spin][i] += 2 * occs * self.mocoeffs[spin][i,l] \
                                                 * self.mocoeffs[spin][i,m] * self.fooverlaps[l][m]
 
 
                 for k in range(0, homoa + 1):
                     for m in range(offset, offset+homob + 1):
-                        repulsions[spin][i] += occs * self.mocoeffs[spin][i,k] \
+                        repulsions[spin][i] += 2 * occs * self.mocoeffs[spin][i,k] \
                                                 * self.mocoeffs[spin][i, m] * self.fooverlaps[k][m]
 
                 step += 1

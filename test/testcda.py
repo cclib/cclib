@@ -24,12 +24,12 @@ print "---------------------------"
 spin = 0
 for i in range(len(fa.donations[0])):
 
-    print "%2i: %7.3f %7.3f %7.3f"%(i,2*fa.donations[spin][i], 2*fa.bdonations[spin][i], \
-                                    2*fa.repulsions[spin][i])
+    print "%2i: %7.3f %7.3f %7.3f"%(i,fa.donations[spin][i], fa.bdonations[spin][i], \
+                                    fa.repulsions[spin][i])
         
 
 print "---------------------------"
-print "T:  %7.3f %7.3f %7.3f"%(reduce(Numeric.add, fa.donations[0])*2, \
-            reduce(Numeric.add, fa.bdonations[0])*2, reduce(Numeric.add, fa.repulsions[0])*2)
+print "T:  %7.3f %7.3f %7.3f"%(reduce(Numeric.add, fa.donations[0]), \
+            reduce(Numeric.add, fa.bdonations[0]), reduce(Numeric.add, fa.repulsions[0]))
 
 
