@@ -105,32 +105,3 @@ class CDA(FragmentAnalysis):
         self.repulsions = repulsions
 
         return True
-            
-if __name__ == "__main__":
-    import doctest, cda
-    doctest.testmod(cda, verbose=False)
-
-    from cclib.parser import ccopen
-    parser1 = ccopen("../../../data/Gaussian/CDA/BH3CO-sp.log")
-    parser2 = ccopen("../../../data/Gaussian/CDA/BH3.log")
-    parser3 = ccopen("../../../data/Gaussian/CDA/CO.log")
-
-    parser1.parse(); parser2.parse(); parser3.parse()
-    fa = CDA(parser1)
-    fa.calculate([parser2, parser3])
-
-    print "       d       b       r"
-    print "---------------------------"
-
-    spin = 0
-    for i in range(len(fa.donations[0])):
-
-        print "%2i: %7.3f %7.3f %7.3f"%(i,2*fa.donations[spin][i], 2*fa.bdonations[spin][i], \
-                                        2*fa.repulsions[spin][i])
-            
-
-    print "---------------------------"
-    print "T:  %7.3f %7.3f %7.3f"%(reduce(Numeric.add, fa.donations[0])*2, \
-                reduce(Numeric.add, fa.bdonations[0])*2, reduce(Numeric.add, fa.repulsions[0])*2)
-
-

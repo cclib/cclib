@@ -15,75 +15,59 @@ class GenericMPTest(bettertest.TestCase):
     def testchange(self):
         """Are Moller-Plesset corrections negative?"""
         if self.level == 2:
-          corrections = self.data.mpenergies[:,0] - self.data.scfenergies
+            corrections = self.data.mpenergies[:,0] - self.data.scfenergies
         else:
-          corrections = self.data.mpenergies[:,self.level-2] - self.data.mpenergies[:,self.level-3]
+            corrections = self.data.mpenergies[:,self.level-2] - self.data.mpenergies[:,self.level-3]
         self.failUnless(alltrue(corrections < 0.0))
 
 class GAMESSMP2Test(GenericMPTest):
-    def testsizeandshape(self):
-        """Are the dimensions of mpenergies correct (MP2)?"""
-        GenericMPTest.testsizeandshape(self)
-    def testchange(self):
-        """Are Moller-Plesset (MP2) corrections negative?"""
-        GenericMPTest.testchange(self)
     def setUp(self):
         self.data = data[0]
         self.level = 2
 
 class GaussianMP2Test(GenericMPTest):
-    def testsizeandshape(self):
-        """Are the dimensions of mpenergies correct (MP2)?"""
-        GenericMPTest.testsizeandshape(self)
-    def testchange(self):
-        """Are Moller-Plesset (MP2) corrections negative?"""
-        GenericMPTest.testchange(self)
     def setUp(self):
         self.data = data[1]
         self.level = 2
 
 class GaussianMP3Test(GenericMPTest):
-    def testsizeandshape(self):
-        """Are the dimensions of mpenergies correct (MP3)?"""
-        GenericMPTest.testsizeandshape(self)
-    def testchange(self):
-        """Are Moller-Plesset (MP3) corrections negative?"""
-        GenericMPTest.testchange(self)
     def setUp(self):
         self.data = data[2]
         self.level = 3
 
 class GaussianMP4Test(GenericMPTest):
-    def testsizeandshape(self):
-        """Are the dimensions of mpenergies correct (MP4)?"""
-        GenericMPTest.testsizeandshape(self)
-    def testchange(self):
-        """Are Moller-Plesset (MP4) corrections negative?"""
-        GenericMPTest.testchange(self)
     def setUp(self):
         self.data = data[3]
         self.level = 4
 
 class GaussianMP5Test(GenericMPTest):
-    def testsizeandshape(self):
-        """Are the dimensions of mpenergies correct (MP5)?"""
-        GenericMPTest.testsizeandshape(self)
-    def testchange(self):
-        """Are Moller-Plesset (MP5) corrections negative?"""
-        GenericMPTest.testchange(self)
     def setUp(self):
         self.data = data[4]
         self.level = 5
 
+class GAMESSUKMP2Test(GenericMPTest):
+    def setUp(self):
+        self.data = data[5]
+        self.level = 2
+
+class GAMESSUKMP3Test(GenericMPTest):
+    def setUp(self):
+        self.data = data[6]
+        self.level = 3
+
 names = [ "GAMESS",
-          "Gaussian", "Gaussian", "Gaussian", "Gaussian" ]
+          "Gaussian", "Gaussian", "Gaussian", "Gaussian",
+          "GAMESS-UK", "GAMESS-UK" ]
 tests = [ GAMESSMP2Test, 
-          GaussianMP2Test, GaussianMP3Test, GaussianMP4Test, GaussianMP5Test ]
+          GaussianMP2Test, GaussianMP3Test, GaussianMP4Test, GaussianMP5Test,
+          GAMESSUKMP2Test, GAMESSUKMP3Test ]
 data = [getfile(GAMESS, "basicGAMESS-US", "water_mp2.out"),
         getfile(Gaussian, "basicGaussian03","water_mp2.log"),
         getfile(Gaussian, "basicGaussian03","water_mp3.log"),
         getfile(Gaussian, "basicGaussian03","water_mp4.log"),
         getfile(Gaussian, "basicGaussian03","water_mp5.log"),
+        getfile(GAMESSUK, "basicGAMESS-UK","water_mp2.out"),
+        getfile(GAMESSUK, "basicGAMESS-UK","water_mp3.out"),
         ]
               
 if __name__=="__main__":
