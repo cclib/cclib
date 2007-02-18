@@ -292,12 +292,32 @@ class GAMESSUK(logfileparser.Logfile):
                     line = inputfile.next()
                 self.scfvalues.append(scfvalues)   
 
-            if line[10:22] == "total energy":
+            if line[10:22] == "total energy" and len(line.split()) == 3:
                 if not hasattr(self, "scfenergies"):
                     self.logger.info("Creating attribute scfenergies")
                     self.scfenergies = []
                 scfenergy = utils.convertor(float(line.split()[-1]), "hartree", "eV")
                 self.scfenergies.append(scfenergy)
+            
+            # Total energies after Moller-Plesset corrections
+            # Second order correction is always first, so its first occurance
+            #   triggers creation of mpenergies (list of lists of energies)
+            # Further corrections are appended as found
+            # Note: GAMESS-UK sometimes prints only the corrections,
+            #   so they must be added to the last value of scfenergies
+            if line[10:32] == "mp2 correlation energy" or \
+               line[10:42] == "second order perturbation energy":
+                if not hasattr(self, "mpenergies"):
+                    self.logger.info("Creating attribute mpenergies")
+                    self.mpenergies = []
+                self.mpenergies.append([])
+                mp2correction = self.float(line.split()[-1])
+                mp2energy = self.scfenergies[-1] + mp2correction
+                self.mpenergies[-1].append(utils.convertor(mp2energy, "hartree", "eV"))
+            if line[10:41] == "third order perturbation energy":
+                mp3correction = self.float(line.split()[-1])
+                mp3energy = mp2energy + mp3correction
+                self.mpenergies[-1].append(utils.convertor(mp3energy, "hartree", "eV"))
 
             if line[40:59] == "molecular basis set":
                 if not hasattr(self, "gbasis"):
