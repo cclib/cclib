@@ -136,7 +136,7 @@ class Jaguar(logfileparser.Logfile):
 # Get Geometry Opt convergence information
                 if not hasattr(self, "geovalues"):
                     self.geovalues = []
-                    geotargets = Numeric.zeros(4, "f")
+                    geotargets = Numeric.zeros(4, "d")
                     i = 0
                     self.logger.info("Creating attributes: geovalues,geotargets")
                 blank = inputfile.next()
@@ -196,7 +196,7 @@ class Jaguar(logfileparser.Logfile):
                         self.moenergies[0].append(utils.convertor(float(temp[i]), "hartree", "eV"))
                         self.mosyms[0].append(self.normalisesym(temp[i+1]))
                     line = inputfile.next()
-                self.moenergies = [Numeric.array(self.moenergies[0], "f")]
+                self.moenergies = [Numeric.array(self.moenergies[0], "d")]
 
             if line.find("Orbital energies:") == 2:
 # Get MO Energies
@@ -210,7 +210,7 @@ class Jaguar(logfileparser.Logfile):
                         for i in range(len(temp)):
                             self.moenergies[0].append(utils.convertor(float(temp[i]), "hartree", "eV"))
                         line = inputfile.next()
-                    self.moenergies = [Numeric.array(self.moenergies[0], "f")]
+                    self.moenergies = [Numeric.array(self.moenergies[0], "d")]
 
             if line.find("Alpha Orbital energies:") == 2:
 # Get alpha MO Energies
@@ -238,7 +238,7 @@ class Jaguar(logfileparser.Logfile):
                             self.moenergies[1].append(utils.convertor(float(temp[i]), "hartree", "eV"))
                         line = inputfile.next()
 
-                    self.moenergies = [Numeric.array(x, "f") for x in self.moenergies]
+                    self.moenergies = [Numeric.array(x, "d") for x in self.moenergies]
 
             if line.find("Occupied + virtual Orbitals- final wvfn") > 0:
                 
@@ -263,7 +263,7 @@ class Jaguar(logfileparser.Logfile):
                 offset = 0
 
                 for s in range(spin):
-                    mocoeffs = Numeric.zeros((self.nmo, self.nbasis), "f")
+                    mocoeffs = Numeric.zeros((self.nmo, self.nbasis), "d")
 
                     if s == 1: #beta case
                         stars = inputfile.next()
@@ -322,7 +322,7 @@ class Jaguar(logfileparser.Logfile):
                 if line[6]=="-":
                     continue # avoid "olap-dev"
                 self.logger.info("Creating attribute aooverlaps")
-                self.aooverlaps = Numeric.zeros((self.nbasis, self.nbasis), "f")
+                self.aooverlaps = Numeric.zeros((self.nbasis, self.nbasis), "d")
 
                 for i in range(0, self.nbasis, 5):
                     blank = inputfile.next()
@@ -390,10 +390,10 @@ class Jaguar(logfileparser.Logfile):
 
                     self.vibdisps.extend(q[:len(broken)])
                     freqs = inputfile.next()
-                self.vibfreqs = Numeric.array(self.vibfreqs)
-                self.vibdisps = Numeric.array(self.vibdisps)
+                self.vibfreqs = Numeric.array(self.vibfreqs, "d")
+                self.vibdisps = Numeric.array(self.vibdisps, "d")
                 if hasattr(self, "vibirs"):
-                    self.vibirs = Numeric.array(self.vibirs)
+                    self.vibirs = Numeric.array(self.vibirs, "d")
 
         
 if __name__ == "__main__":

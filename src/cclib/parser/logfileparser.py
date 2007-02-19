@@ -113,13 +113,13 @@ class Logfile(object):
         for attr in self._toarray:
             if hasattr(self, attr):
                 if type(getattr(self, attr)) is not Numeric.arraytype:
-                    setattr(self, attr, Numeric.array(getattr(self, attr), 'f'))
+                    setattr(self, attr, Numeric.array(getattr(self, attr), 'd'))
 
         # Make sure selected attrbutes are lists of arrays
         for attr in self._tolistofarrays:
             if hasattr(self, attr):
                 if not Numeric.alltrue([type(x) is Numeric.arraytype for x in getattr(self, attr)]):
-                    setattr(self, attr, [Numeric.array(x, 'f') for x in getattr(self, attr)])
+                    setattr(self, attr, [Numeric.array(x, 'd') for x in getattr(self, attr)])
 
         # Set nmo if not set already - to nbasis
         if not hasattr(self, "nmo"):
@@ -128,7 +128,7 @@ class Logfile(object):
         # Creating deafult coreelectrons array
         if not hasattr(self, "coreelectrons"):
             self.logger.info("Creating attribute coreelectrons[]")
-            self.coreelectrons = Numeric.zeros(self.natom)
+            self.coreelectrons = Numeric.zeros(self.natom, "i")
 
         # Update self.progress as done
         if self.progress:

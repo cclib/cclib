@@ -51,10 +51,10 @@ class Density(Method):
         #determine number of steps, and whether process involves beta orbitals
         nstep = self.parser.homos[0] + 1
         if unrestricted:
-            self.density = Numeric.zeros([2, size, size], "f")
+            self.density = Numeric.zeros([2, size, size], "d")
             nstep += self.parser.homos[1] + 1
         else:
-            self.density = Numeric.zeros([1, size, size], "f")
+            self.density = Numeric.zeros([1, size, size], "d")
 
         #intialize progress if available
         if self.progress:

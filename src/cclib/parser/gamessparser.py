@@ -98,7 +98,7 @@ class GAMESS(logfileparser.Logfile):
                                 opttol = float(temp[i + 2])
                             else:
                                 opttol = float(x.split('=')[1])
-                            self.geotargets = Numeric.array([opttol, 3. / opttol])
+                            self.geotargets = Numeric.array([opttol, 3. / opttol], "d")
                             
             if line.find("FINAL") == 1:
                 if not hasattr(self, "scfenergies"):
@@ -340,11 +340,11 @@ class GAMESS(logfileparser.Logfile):
                     blank = inputfile.next()
                     freqNo = inputfile.next()
                 # Exclude rotations and translations
-                self.vibfreqs = Numeric.array(self.vibfreqs[numrots:], "f")
-                self.vibirs = Numeric.array(self.vibirs[numrots:], "f")
-                self.vibdisps = Numeric.array(self.vibdisps[numrots:], "f")
+                self.vibfreqs = Numeric.array(self.vibfreqs[numrots:], "d")
+                self.vibirs = Numeric.array(self.vibirs[numrots:], "d")
+                self.vibdisps = Numeric.array(self.vibdisps[numrots:], "d")
                 if hasattr(self, "vibramans"):
-                    self.vibramans = Numeric.array(self.vibramans[numrots:], "f")
+                    self.vibramans = Numeric.array(self.vibramans[numrots:], "d")
 
             if line[5:21] == "ATOMIC BASIS SET":
                 if not hasattr(self, "gbasis"):
@@ -418,7 +418,7 @@ class GAMESS(logfileparser.Logfile):
                     self.nmo = self.nbasis
                 if not hasattr(self, "mocoeffs"):
                     self.logger.info("Creating attribute mocoeffs")
-                self.mocoeffs = [Numeric.zeros((self.nmo, self.nbasis), "f")]
+                self.mocoeffs = [Numeric.zeros((self.nmo, self.nbasis), "d")]
                 line = inputfile.next()
                 for base in range(0, self.nmo, 5):
                     blank = inputfile.next()
@@ -452,7 +452,7 @@ class GAMESS(logfileparser.Logfile):
 #
 #                      1          2          3          4          5
 
-                    self.mocoeffs.append(Numeric.zeros((self.nmo, self.nbasis), "f"))
+                    self.mocoeffs.append(Numeric.zeros((self.nmo, self.nbasis), "d"))
                     self.moenergies.append([])
                     self.mosyms.append([])
                     for i in range(5):
@@ -473,7 +473,7 @@ class GAMESS(logfileparser.Logfile):
                                 j += 1
                     line = inputfile.next()
                 assert line.find("END OF") >= 0
-                self.moenergies = [Numeric.array(x, "f") for x in self.moenergies]
+                self.moenergies = [Numeric.array(x, "d") for x in self.moenergies]
 
             if line.find("NUMBER OF OCCUPIED ORBITALS") >= 0:
                 if not hasattr(self," homos"):
@@ -522,7 +522,7 @@ class GAMESS(logfileparser.Logfile):
                 # Read 1-electron overlap matrix
                 if not hasattr(self, "aooverlaps"):
                     self.logger.info("Creating attribute aooverlaps, aonames")
-                    self.aooverlaps = Numeric.zeros((self.nbasis, self.nbasis), "f")
+                    self.aooverlaps = Numeric.zeros((self.nbasis, self.nbasis), "d")
                     self.aonames = []
                 else:
                     self.logger.info("Reading additional aooverlaps...")
@@ -546,8 +546,8 @@ class GAMESS(logfileparser.Logfile):
         if not hasattr(self, "geotargets"):
             self.logger.info("Creating attribute geotargets[] with default values")
             opttol = 1e-4
-            self.geotargets = Numeric.array([opttol, 3. / opttol])
-        if hasattr(self,"geovalues"): self.geovalues = Numeric.array(self.geovalues, "f")
+            self.geotargets = Numeric.array([opttol, 3. / opttol], "d")
+        if hasattr(self,"geovalues"): self.geovalues = Numeric.array(self.geovalues, "d")
 
         
 if __name__ == "__main__":

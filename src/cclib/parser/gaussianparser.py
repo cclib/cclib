@@ -184,7 +184,7 @@ class Gaussian(logfileparser.Logfile):
 # Extract SCF convergence information (AM1 calcs)
                         
                 self.logger.info("Creating attributes scftargets, scfvalues")
-                self.scftargets = Numeric.array([1E-7], "f") # This is the target value for the rms
+                self.scftargets = Numeric.array([1E-7], "d") # This is the target value for the rms
                 self.scfvalues = [[]]
                 line = inputfile.next()
                 while line.find(" Energy") == -1:
@@ -251,7 +251,7 @@ class Gaussian(logfileparser.Logfile):
                 if not hasattr(self, "geotargets"):
                     self.logger.info("Creating attributes geotargets[], geovalues[[]]")
                     self.geovalues = []
-                    self.geotargets = Numeric.array([0.0, 0.0, 0.0, 0.0], "f")
+                    self.geotargets = Numeric.array([0.0, 0.0, 0.0, 0.0], "d")
                 newlist = [0]*4
                 for i in range(4):
                     line = inputfile.next()
@@ -350,7 +350,7 @@ class Gaussian(logfileparser.Logfile):
                         self.moenergies[1].append(utils.convertor(self.float(x), "hartree", "eV"))
                         i += 1
                     line = inputfile.next()
-                self.moenergies = [Numeric.array(x, "f") for x in self.moenergies]
+                self.moenergies = [Numeric.array(x, "d") for x in self.moenergies]
                 
             if line[1:14] == "AO basis set ":
                 ## Gaussian Rev <= B.0.3
@@ -430,11 +430,11 @@ class Gaussian(logfileparser.Logfile):
                         line = inputfile.next()
                     self.vibdisps.extend(p[0:len(broken)/3])
                     line = inputfile.next() # Should be the line with symmetries
-                self.vibfreqs = Numeric.array(self.vibfreqs, "f")
-                self.vibirs = Numeric.array(self.vibirs, "f")
-                self.vibdisps = Numeric.array(self.vibdisps, "f")
+                self.vibfreqs = Numeric.array(self.vibfreqs, "d")
+                self.vibirs = Numeric.array(self.vibirs, "d")
+                self.vibdisps = Numeric.array(self.vibdisps, "d")
                 if hasattr(self, "vibramans"):
-                    self.vibramans = Numeric.array(self.vibramans, "f")
+                    self.vibramans = Numeric.array(self.vibramans, "d")
                     
             if line[1:14] == "Excited State":
 # Extract the electronic transitions
@@ -505,7 +505,7 @@ class Gaussian(logfileparser.Logfile):
                     line = inputfile.next()
                     temp = line.strip().split()
                     parts = line.strip().split()                
-                self.etrotats = Numeric.array(self.etrotats, "f")
+                self.etrotats = Numeric.array(self.etrotats, "d")
 
             if line[1:7] == "NBasis" or line[4:10] == "NBasis":
 # Extract the number of basis sets
@@ -547,7 +547,7 @@ class Gaussian(logfileparser.Logfile):
                 #  *** Overlap ***
                 #  ****** Overlap ******
                 self.logger.info("Creating attribute aooverlaps[x, y]")
-                self.aooverlaps = Numeric.zeros( (self.nbasis, self.nbasis), "float")
+                self.aooverlaps = Numeric.zeros( (self.nbasis, self.nbasis), "d")
                 # Overlap integrals for basis fn#1 are in aooverlaps[0]
                 base = 0
                 colmNames = inputfile.next()
@@ -564,19 +564,19 @@ class Gaussian(logfileparser.Logfile):
                             self.aooverlaps[i+base, base+j] = k
                     base += 5
                     colmNames = inputfile.next()
-                self.aooverlaps = Numeric.array(self.aooverlaps, "f")                    
+                self.aooverlaps = Numeric.array(self.aooverlaps, "d")                    
 
 
             if line[5:35] == "Molecular Orbital Coefficients" or line[5:41] == "Alpha Molecular Orbital Coefficients" or line[5:40] == "Beta Molecular Orbital Coefficients":
                 if line[5:40] == "Beta Molecular Orbital Coefficients":
                     beta = True
                     # Need to add an extra array to self.mocoeffs
-                    self.mocoeffs.append(Numeric.zeros((nmo, nbasis), "float"))
+                    self.mocoeffs.append(Numeric.zeros((nmo, nbasis), "d"))
                 else:
                     beta = False
                     self.logger.info("Creating attributes aonames[], mocoeffs[]")
                     self.aonames = []
-                    self.mocoeffs = [Numeric.zeros((nmo, nbasis), "float")]
+                    self.mocoeffs = [Numeric.zeros((nmo, nbasis), "d")]
 
                 base = 0
                 for base in range(0, nmo, 5):
@@ -622,7 +622,7 @@ class Gaussian(logfileparser.Logfile):
                 centers = line.split()[1:]
                 
                 self.logger.info("Creating attribute coreelectrons[]")
-                self.coreelectrons = Numeric.zeros(self.natom)
+                self.coreelectrons = Numeric.zeros(self.natom, "i")
 
                 for center in centers:
                     while line[:10].find(center) < 0:
@@ -633,7 +633,7 @@ class Gaussian(logfileparser.Logfile):
 
         if not hasattr(self,"atomcoords"):
             self.logger.info("Creating attribute atomcoords[]")
-            self.atomcoords = Numeric.array(inputcoords, 'f')
+            self.atomcoords = Numeric.array(inputcoords, 'd')
 
 if __name__ == "__main__":
     import doctest, gaussianparser

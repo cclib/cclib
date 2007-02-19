@@ -253,7 +253,7 @@ class ADF(logfileparser.Logfile):
                 if not hasattr(self, "geotargets"):
                     self.logger.info("Creating attributes geotargets[], geovalues[[]]")
                     self.geovalues = []
-                    self.geotargets = Numeric.array([0.0, 0.0, 0.0, 0.0, 0.0], "f")
+                    self.geotargets = Numeric.array([0.0, 0.0, 0.0, 0.0, 0.0], "d")
                 if not hasattr(self, "scfenergies"):
                     self.logger.info("Creating attribute scfenergies[]")
                     self.scfenergies = []
@@ -313,7 +313,7 @@ class ADF(logfileparser.Logfile):
                         self.homos = [len(self.moenergies[0]) - 2]
                     line = inputfile.next()
 
-                self.moenergies = [Numeric.array(self.moenergies[0], "f")]
+                self.moenergies = [Numeric.array(self.moenergies[0], "d")]
                 self.homos = Numeric.array(self.homos, "i")
 
             if line[1:29] == 'Orbital Energies, both Spins' and not hasattr(self, "mosyms") and nosymflag and unrestrictedflag:
@@ -352,7 +352,7 @@ class ADF(logfileparser.Logfile):
 
                     line = inputfile.next()
 
-                self.moenergies = [Numeric.array(x, "f") for x in moenergies]
+                self.moenergies = [Numeric.array(x, "d") for x in moenergies]
                 self.logger.info("Creating attribute homos[]")
                 self.homos = Numeric.array([homoa, homob], "i")
 
@@ -449,7 +449,7 @@ class ADF(logfileparser.Logfile):
                     self.logger.info("Creating attribute homos[]")
                     self.homos = [homoa, homob]
     
-                self.moenergies = [Numeric.array(x, "f") for x in self.moenergies]
+                self.moenergies = [Numeric.array(x, "d") for x in self.moenergies]
                 self.homos = Numeric.array(self.homos, "i")
 
             if line[1:28] == "Vibrations and Normal Modes":
@@ -477,7 +477,7 @@ class ADF(logfileparser.Logfile):
                     blank = inputfile.next()
                     blank = inputfile.next()
                     freqs = inputfile.next()
-                self.vibdisps = Numeric.array(self.vibdisps, "f")
+                self.vibdisps = Numeric.array(self.vibdisps, "d")
   
             if line[1:24] == "List of All Frequencies":
 # Start of the IR/Raman frequency section
@@ -496,10 +496,10 @@ class ADF(logfileparser.Logfile):
                     self.vibfreqs.append(float(temp[0]))                    
                     self.vibirs.append(float(temp[2])) # or is it temp[1]?
                     line = inputfile.next().strip()
-                self.vibfreqs = Numeric.array(self.vibfreqs, "f")
-                self.vibirs = Numeric.array(self.vibirs, "f")
+                self.vibfreqs = Numeric.array(self.vibfreqs, "d")
+                self.vibirs = Numeric.array(self.vibirs, "d")
                 if hasattr(self, "vibramans"):
-                    self.vibramans = Numeric.array(self.vibramans, "f")
+                    self.vibramans = Numeric.array(self.vibramans, "d")
 
 
 #******************************************************************************************************************8
@@ -571,7 +571,7 @@ class ADF(logfileparser.Logfile):
 #Extract overlap matrix
 
                 self.logger.info("Creating attribute fooverlaps[x, y]")
-                self.fooverlaps = Numeric.zeros((self.nbasis, self.nbasis), "float")
+                self.fooverlaps = Numeric.zeros((self.nbasis, self.nbasis), "d")
                 
                 symoffset = 0
                 
@@ -623,7 +623,7 @@ class ADF(logfileparser.Logfile):
                 
                 if line.find("***** SPIN 1 *****") > 0:
                     beta = 1
-                    self.mocoeffs = [Numeric.zeros((self.nbasis, self.nbasis), "float")
+                    self.mocoeffs = [Numeric.zeros((self.nbasis, self.nbasis), "d")
                                      for x in range(2)]
                     
                     #get rid of two blank lines and symmetry label
@@ -634,7 +634,7 @@ class ADF(logfileparser.Logfile):
                     
                 else:
                     beta = 0
-                    self.mocoeffs = [Numeric.zeros((self.nbasis, self.nbasis), "float")]
+                    self.mocoeffs = [Numeric.zeros((self.nbasis, self.nbasis), "d")]
                     sym = line.split()[1]
                     
                 #get rid of 12 lines of text

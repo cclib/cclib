@@ -57,10 +57,10 @@ class MPA(Population):
         nstep = nmocoeffs
         self.logger.info("Creating attribute aoresults: array[3]")
         if unrestricted:
-            self.aoresults = Numeric.zeros([2, nmocoeffs, nbasis], "f")
+            self.aoresults = Numeric.zeros([2, nmocoeffs, nbasis], "d")
             nstep += nmocoeffs
         else:
-            self.aoresults = Numeric.zeros([1, nmocoeffs, nbasis], "f")
+            self.aoresults = Numeric.zeros([1, nmocoeffs, nbasis], "d")
 
         #intialize progress if available
         if self.progress:
@@ -86,7 +86,7 @@ class MPA(Population):
                 elif hasattr(self.parser, "fooverlaps"):
                     temp = Numeric.matrixmultiply(ci, self.parser.fooverlaps)
 
-                self.aoresults[spin][i] = Numeric.multiply(ci, temp).astype("f")
+                self.aoresults[spin][i] = Numeric.multiply(ci, temp).astype("d")
 
                 step += 1
 
@@ -102,7 +102,7 @@ class MPA(Population):
 #create array for mulliken charges
         self.logger.info("Creating fragcharges: array[1]")
         size = len(self.fragresults[0][0])
-        self.fragcharges = Numeric.zeros([size], "f")
+        self.fragcharges = Numeric.zeros([size], "d")
         
         for spin in range(len(self.fragresults)):
 

@@ -50,10 +50,10 @@ class CSPA(Population):
         #determine number of steps, and whether process involves beta orbitals
         nstep = nmocoeffs
         if unrestricted:
-            self.aoresults = Numeric.zeros([2, nmocoeffs, nbasis], "f")
+            self.aoresults = Numeric.zeros([2, nmocoeffs, nbasis], "d")
             nstep += nmocoeffs
         else:
-            self.aoresults = Numeric.zeros([1, nmocoeffs, nbasis], "f")
+            self.aoresults = Numeric.zeros([1, nmocoeffs, nbasis], "d")
 
         #intialize progress if available
         if self.progress:
@@ -71,7 +71,7 @@ class CSPA(Population):
                 scale = Numeric.innerproduct(submocoeffs, submocoeffs)
                 tempcoeffs = Numeric.multiply(submocoeffs, submocoeffs)
                 tempvec = tempcoeffs/scale
-                self.aoresults[spin][i] = Numeric.divide(tempcoeffs, scale).astype("f")
+                self.aoresults[spin][i] = Numeric.divide(tempcoeffs, scale).astype("d")
 
                 step += 1
 
@@ -87,7 +87,7 @@ class CSPA(Population):
 #create array for mulliken charges
         self.logger.info("Creating fragcharges: array[1]")
         size = len(self.fragresults[0][0])
-        self.fragcharges = Numeric.zeros([size], "f")
+        self.fragcharges = Numeric.zeros([size], "d")
         
         for spin in range(len(self.fragresults)):
 

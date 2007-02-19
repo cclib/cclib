@@ -76,9 +76,9 @@ class OPA(Method):
         nfrag = len(indices) #nfrag
         nstep = func(nfrag - 1)
         self.logger.info("Creating attribute results: array[4]")
-        results= [ Numeric.zeros([nfrag, nfrag, nmocoeffs], "f") ]
+        results= [ Numeric.zeros([nfrag, nfrag, nmocoeffs], "d") ]
         if unrestricted:
-            results.append(Numeric.zeros([nfrag, nfrag, nmocoeffs], "f"))
+            results.append(Numeric.zeros([nfrag, nfrag, nmocoeffs], "d"))
             nstep *= 2
             
         if hasattr(self.parser, "aooverlaps"):
@@ -94,7 +94,7 @@ class OPA(Method):
         step = 0
 
         preresults = []
-        two = Numeric.array([2.0]*nmocoeffs,"f")
+        two = Numeric.array([2.0]*nmocoeffs,"d")
         for spin in range(len(self.parser.mocoeffs)):
 
 

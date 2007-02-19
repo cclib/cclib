@@ -94,7 +94,7 @@ class FragmentAnalysis(Method):
         self.logger.info("Creating mocoeffs in new fragment MO basis: mocoeffs[]")
 
         for spin in range(len(self.parser.mocoeffs)):
-            blockMatrix = Numeric.zeros((nBasis,nBasis),"float")
+            blockMatrix = Numeric.zeros((nBasis,nBasis), "d")
             pos = 0
 
 #build up block-diagonal matrix from fragment mocoeffs

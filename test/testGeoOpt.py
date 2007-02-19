@@ -30,6 +30,7 @@ class GenericGeoOptTest(bettertest.TestCase):
 
     def testatomnos(self):
         """Are the atomnos correct?"""
+        self.assertEquals(self.data.atomnos.typecode(), 'i')
         self.assertEquals(self.data.atomnos.shape, (20,) )
         self.assertEquals(sum(self.data.atomnos==6) + sum(self.data.atomnos==1),
                           20)        

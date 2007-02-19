@@ -70,9 +70,9 @@ class CDA(FragmentAnalysis):
             offset = fragments[0].nbasis
 
             self.logger.info("Creating donations, bdonations, and repulsions: array[]")
-            donations.append(Numeric.zeros(size, "f"))
-            bdonations.append(Numeric.zeros(size, "f"))
-            repulsions.append(Numeric.zeros(size, "f"))
+            donations.append(Numeric.zeros(size, "d"))
+            bdonations.append(Numeric.zeros(size, "d"))
+            repulsions.append(Numeric.zeros(size, "d"))
 
             for i in range(self.parser.homos[spin] + 1):
 

@@ -31,7 +31,7 @@ class Population(Method):
 #create array for mulliken charges
         self.logger.info("Creating atomcharges: array[1]")
         size = len(self.atomresults[0][0])
-        self.atomcharges = Numeric.zeros([size], "f")
+        self.atomcharges = Numeric.zeros([size], "d")
         
         for spin in range(len(self.atomresults)):
 
@@ -79,9 +79,9 @@ class Population(Method):
         
 #build results Numeric array[3]
         if len(self.aoresults) == 2:
-            results = Numeric.zeros([2, nmocoeffs, natoms], "f")
+            results = Numeric.zeros([2, nmocoeffs, natoms], "d")
         else:
-            results = Numeric.zeros([1, nmocoeffs, natoms], "f")
+            results = Numeric.zeros([1, nmocoeffs, natoms], "d")
         
 #for each spin, splice Numeric array at ao index, and add to correct result row
         for spin in range(len(results)):

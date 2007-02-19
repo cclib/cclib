@@ -79,10 +79,10 @@ class MBO(Density):
         PS.append(Numeric.matrixmultiply(self.density[0], overlaps))
         nstep = size**2 #approximately quadratic in size
         if unrestricted:
-            self.fragresults = Numeric.zeros([2, size, size], "f")
+            self.fragresults = Numeric.zeros([2, size, size], "d")
             PS.append(Numeric.matrixmultiply(self.density[1], overlaps))
         else:
-            self.fragresults = Numeric.zeros([1, size, size], "f")
+            self.fragresults = Numeric.zeros([1, size, size], "d")
 
         #intialize progress if available
         if self.progress:

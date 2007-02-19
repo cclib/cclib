@@ -431,7 +431,7 @@ class GAMESSUK(logfileparser.Logfile):
                 minus = inputfile.next()
 
                 
-                mocoeffs = Numeric.zeros( (self.nmo, self.nbasis), "f")
+                mocoeffs = Numeric.zeros( (self.nmo, self.nbasis), "d")
                 blank = inputfile.next()
                 blank = inputfile.next()
                 evalues = inputfile.next()
