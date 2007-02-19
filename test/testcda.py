@@ -18,18 +18,29 @@ parser3 = getfile(Gaussian, os.path.join("CDA","CO.log"))
 fa = CDA(parser1)
 fa.calculate([parser2, parser3])
 
-print "       d       b       r"
-print "---------------------------"
+def printResults():
+    print "       d       b       r"
+    print "---------------------------"
 
-spin = 0
-for i in range(len(fa.donations[0])):
+    spin = 0
+    for i in range(len(fa.donations[0])):
 
-    print "%2i: %7.3f %7.3f %7.3f"%(i,fa.donations[spin][i], fa.bdonations[spin][i], \
-                                    fa.repulsions[spin][i])
-        
+        print "%2i: %7.3f %7.3f %7.3f"%(i,fa.donations[spin][i], fa.bdonations[spin][i], \
+                                        fa.repulsions[spin][i])
+            
 
-print "---------------------------"
-print "T:  %7.3f %7.3f %7.3f"%(reduce(Numeric.add, fa.donations[0]), \
-            reduce(Numeric.add, fa.bdonations[0]), reduce(Numeric.add, fa.repulsions[0]))
+    print "---------------------------"
+    print "T:  %7.3f %7.3f %7.3f"%(reduce(Numeric.add, fa.donations[0]), \
+                reduce(Numeric.add, fa.bdonations[0]), reduce(Numeric.add, fa.repulsions[0]))
+
+donation = reduce(Numeric.add, fa.donations[0])
+bdonation = reduce(Numeric.add, fa.bdonations[0])
+repulsion = reduce(Numeric.add, fa.repulsions[0])
+
+print donation, bdonation, repulsion
+
+assert "%.3f" % donation == "0.181"
+assert "%.3f" % bdonation == "0.471"
+assert "%.3f" % repulsion == "-0.334"
 
 
