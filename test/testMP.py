@@ -4,56 +4,79 @@ from testall import getfile
 from cclib.parser import ADF, GAMESS, Gaussian, Jaguar, GAMESSUK
 import bettertest
 
-class GenericMPTest(bettertest.TestCase):
-    """MPx calculations."""
-
+class GenericMP2Test(bettertest.TestCase):
+    """MP2 calculations."""
+    level = 2
     def testsizeandshape(self):
-        """Are the dimensions of mpenergies correct?"""
+        """(MP2) Are the dimensions of mpenergies correct?"""
         self.assertEqual(self.data.mpenergies.shape, (len(self.data.scfenergies),
                                                       self.level-1))
 
     def testchange(self):
-        """Are Moller-Plesset corrections negative?"""
+        """(MP2) Are Moller-Plesset corrections negative?"""
         if self.level == 2:
             corrections = self.data.mpenergies[:,0] - self.data.scfenergies
         else:
             corrections = self.data.mpenergies[:,self.level-2] - self.data.mpenergies[:,self.level-3]
         self.failUnless(alltrue(corrections < 0.0))
 
-class GAMESSMP2Test(GenericMPTest):
+class GenericMP3Test(GenericMP2Test):
+    """MP3 calculations."""
+    level = 3
+    def testsizeandshape(self):
+        """(MP3) Are the dimensions of mpenergies correct?"""
+        super(GenericMP3Test,self).testsizeandshape()
+    def testchange(self):
+        """(MP3) Are Moller-Plesset corrections negative?"""
+        super(GenericMP3Test,self).testchange()
+
+class GenericMP4Test(GenericMP2Test):
+    """MP4 calculations."""
+    level = 4
+    def testsizeandshape(self):
+        """(MP4) Are the dimensions of mpenergies correct?"""
+        super(GenericMP4Test,self).testsizeandshape()
+    def testchange(self):
+        """(MP4) Are Moller-Plesset corrections negative?"""
+        super(GenericMP4Test,self).testchange()
+
+class GenericMP5Test(GenericMP2Test):
+    """MP5 calculations."""
+    level = 5
+    def testsizeandshape(self):
+        """(MP5) Are the dimensions of mpenergies correct?"""
+        super(GenericMP5Test,self).testsizeandshape()
+    def testchange(self):
+        """(MP5) Are Moller-Plesset corrections negative?"""
+        super(GenericMP5Test,self).testchange()
+
+class GAMESSMP2Test(GenericMP2Test):
     def setUp(self):
         self.data = data[0]
-        self.level = 2
-
-class GaussianMP2Test(GenericMPTest):
+        
+class GaussianMP2Test(GenericMP2Test):
     def setUp(self):
         self.data = data[1]
-        self.level = 2
-
-class GaussianMP3Test(GenericMPTest):
+        
+class GaussianMP3Test(GenericMP3Test):
     def setUp(self):
         self.data = data[2]
-        self.level = 3
 
-class GaussianMP4Test(GenericMPTest):
+class GaussianMP4Test(GenericMP4Test):
     def setUp(self):
         self.data = data[3]
-        self.level = 4
 
-class GaussianMP5Test(GenericMPTest):
+class GaussianMP5Test(GenericMP5Test):
     def setUp(self):
         self.data = data[4]
-        self.level = 5
 
-class GAMESSUKMP2Test(GenericMPTest):
+class GAMESSUKMP2Test(GenericMP2Test):
     def setUp(self):
         self.data = data[5]
-        self.level = 2
 
-class GAMESSUKMP3Test(GenericMPTest):
+class GAMESSUKMP3Test(GenericMP3Test):
     def setUp(self):
         self.data = data[6]
-        self.level = 3
 
 names = [ "GAMESS",
           "Gaussian", "Gaussian", "Gaussian", "Gaussian",
