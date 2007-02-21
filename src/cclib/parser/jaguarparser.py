@@ -132,31 +132,29 @@ class Jaguar(logfileparser.Logfile):
                     self.scftargets.append([5E-5])
 
             if line[2:28] == "geometry optimization step":
-                gopt_step = int(line.split()[-1])
 # Get Geometry Opt convergence information
                 if not hasattr(self, "geovalues"):
                     self.geovalues = []
-                    geotargets = Numeric.zeros(4, "d")
-                    i = 0
+                    self.geotargets = Numeric.zeros(5, "d")
                     self.logger.info("Creating attributes: geovalues,geotargets")
+                gopt_step = int(line.split()[-1])
                 blank = inputfile.next()
                 blank = inputfile.next()
                 line = inputfile.next()
                 values = []
+                target_index = 0                
                 if gopt_step == 1:
-                  # The first optimization step does not produce an energy change
-                  values.append(0.0)
+                    # The first optimization step does not produce an energy change
+                    values.append(0.0)
+                    target_index = 1
                 while line != blank:
                     if line[41] == "(":
                         # A new geo convergence value
                         values.append(float(line[26:37]))
-                        if not hasattr(self,"geotargets"):
-                            geotargets[i] = float(line[43:54])
-                            i += 1
+                        self.geotargets[target_index] = float(line[43:54])
+                        target_index += 1
                     line = inputfile.next()
                 self.geovalues.append(values)
-                if not hasattr(self, "geotargets"):
-                    self.geotargets = geotargets
 
             if line.find("number of occupied orbitals") > 0:
 # Get number of MOs
