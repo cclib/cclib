@@ -177,6 +177,7 @@ class Jaguar(logfileparser.Logfile):
                 line = inputfile.next()
                 bvirt = int(line.split()[-1])
 
+                print aoccs, avirts
                 self.nmo = aoccs + avirts
                 self.homos = Numeric.array([aoccs-1,boccs-1], "i")
                 unrestrictedflag = True

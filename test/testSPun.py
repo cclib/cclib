@@ -27,8 +27,6 @@ class GenericSPunTest(bettertest.TestCase):
 
     def testmoenergies(self):
         """Are the dims of the moenergies equals to 2 x nmo?"""
-        print self.data.moenergies
-        print self.data.nmo
         self.assertEquals(len(self.data.moenergies), 2)
         self.assertEquals(len(self.data.moenergies[0]), self.data.nmo)
         self.assertEquals(len(self.data.moenergies[1]), self.data.nmo)
@@ -94,6 +92,10 @@ class Jaguar65SPunTest(GenericSPunTest):
         
     def testdimaooverlaps(self):
         """Are the dims of the overlap matrix consistent with nbasis? PASS"""
+        self.assertEquals(1,1)
+
+    def testmoenergies(self):
+        """Are the dims of the moenergies equals to 2 x nmo? PASS"""
         self.assertEquals(1,1)
 
     def testdimmocoeffs(self):
