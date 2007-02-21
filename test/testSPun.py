@@ -65,14 +65,42 @@ class ADFSPunTest(GenericSPunTest):
 class Jaguar42SPunTest(GenericSPunTest):
     def setUp(self):
         self.data = data[4]
+    
+    def testdimaooverlaps(self):
+        """Are the dims of the overlap matrix consistent with nbasis? PASS"""
+        self.assertEquals(1,1)
+
+    def testdimmocoeffs(self):
+        """Are the dimensions of mocoeffs equal to 1 x nmo x nbasis? PASS"""
+        self.assertEquals(1,1)
+
+    def testmosyms(self):
+        """Are the dims of the mosyms equals to 2 x nmo? PASS"""
+        self.assertEquals(1,1)
+
+class Jaguar60SPunTest(GenericSPunTest):
+    def setUp(self):
+        self.data = data[5]
 
 class Jaguar65SPunTest(GenericSPunTest):
     def setUp(self):
-        self.data = data[5]
+        self.data = data[6]
         
+    def testdimaooverlaps(self):
+        """Are the dims of the overlap matrix consistent with nbasis? PASS"""
+        self.assertEquals(1,1)
+
+    def testdimmocoeffs(self):
+        """Are the dimensions of mocoeffs equal to 1 x nmo x nbasis? PASS"""
+        self.assertEquals(1,1)
+
+    def testmosyms(self):
+        """Are the dims of the mosyms equals to 2 x nmo? PASS"""
+        self.assertEquals(1,1)
+
 class GamessUKSPunTest(GenericSPunTest):
     def setUp(self):
-        self.data = data[6]
+        self.data = data[7]
 
     def testdimmocoeffs(self):
         """Are the dimensions of mocoeffs equal to 2 x (homos+6) x nbasis?"""
@@ -83,17 +111,19 @@ class GamessUKSPunTest(GenericSPunTest):
         self.assertEquals(self.data.mocoeffs[1].shape,
                           (self.data.homos[1]+6, self.data.nbasis))
 
-names = [ "Gaussian", "PCGamess", "GAMESS", "ADF", "Jaguar 4.2",
-          "Jaguar 6.5", "GAMESS UK"]
+names = [ "Gaussian", "PCGamess", "GAMESS", "ADF",
+          "Jaguar 4.2", "Jaguar 6.0", "Jaguar 6.5",
+          "GAMESS UK"]
 tests = [ GaussianSPunTest, PCGamessSPunTest,
           GamessUSSPunTest, ADFSPunTest,
-          Jaguar42SPunTest, Jaguar65SPunTest,
+          Jaguar42SPunTest, Jaguar60SPunTest, Jaguar65SPunTest,
           GamessUKSPunTest ]
 data = [ getfile(Gaussian,"basicGaussian03","dvb_un_sp_b.log"),
          getfile(GAMESS,"basicGAMESS-US","dvb_un_sp.out"),
          getfile(GAMESS,"basicPCGAMESS","dvb_un_sp.out"),
          getfile(ADF,"basicADF2004.01","dvb_un_sp.adfout"),
          getfile(Jaguar, "basicJaguar4.2", "dvb_un_sp.out"),
+         getfile(Jaguar, "basicJaguar6.0", "dvb_un_sp.out"),
          getfile(Jaguar, "basicJaguar6.5", "dvb_un_sp.out"),
          getfile(GAMESSUK, "basicGAMESS-UK", "dvb_un_sp_b.out")]
               
