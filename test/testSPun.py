@@ -95,9 +95,11 @@ class Jaguar65SPunTest(GenericSPunTest):
         self.assertEquals(1,1)
 
     def testmoenergies(self):
-        """Are the dims of the moenergies equals to 2 x nmo? PASS"""
-        self.assertEquals(1,1)
-
+        """Are the dims of the moenergies equals to 2 x homos+11"""
+        self.assertEquals(len(self.data.moenergies), 2)
+        self.assertEquals(len(self.data.moenergies[0]), self.data.homos[0]+11)
+        self.assertEquals(len(self.data.moenergies[1]), self.data.homos[1]+11)
+        
     def testdimmocoeffs(self):
         """Are the dimensions of mocoeffs equal to 1 x nmo x nbasis? PASS"""
         self.assertEquals(1,1)
