@@ -5,20 +5,29 @@ and licensed under the LGPL (http://www.gnu.org/copyleft/lgpl.html).
 
 __revision__ = "$Revision: 1 $"
 
-import Numeric
 import os
+import Numeric
+import logging
+import unittest
+
 from testall import getfile
-from cclib.parser import Gaussian
 from cclib.method import CDA
+from cclib.parser import Gaussian
 
-parser1 = getfile(Gaussian, os.path.join("CDA","BH3CO-sp.log"))
-parser2 = getfile(Gaussian, os.path.join("CDA","BH3.log"))
-parser3 = getfile(Gaussian, os.path.join("CDA","CO.log"))
+def main(log=True):
+    parser1 = getfile(Gaussian, os.path.join("CDA","BH3CO-sp.log"))
+    parser2 = getfile(Gaussian, os.path.join("CDA","BH3.log"))
+    parser3 = getfile(Gaussian, os.path.join("CDA","CO.log"))
+    fa = CDA(parser1)
+    if not log:
+        fa.logger.setLevel(logging.ERROR)
+    fa.calculate([parser2, parser3])
 
-fa = CDA(parser1)
-fa.calculate([parser2, parser3])
+    return fa
 
 def printResults():
+    fa = main()
+
     print "       d       b       r"
     print "---------------------------"
 
@@ -32,15 +41,24 @@ def printResults():
     print "---------------------------"
     print "T:  %7.3f %7.3f %7.3f"%(reduce(Numeric.add, fa.donations[0]), \
                 reduce(Numeric.add, fa.bdonations[0]), reduce(Numeric.add, fa.repulsions[0]))
+    print "\n\n"
 
-donation = reduce(Numeric.add, fa.donations[0])
-bdonation = reduce(Numeric.add, fa.bdonations[0])
-repulsion = reduce(Numeric.add, fa.repulsions[0])
+class CDATest(unittest.TestCase):
+    def runTest(self):
+        """Testing CDA results against Frenking's code"""
+        fa = main(log=False)
+        
+        donation = reduce(Numeric.add, fa.donations[0])
+        bdonation = reduce(Numeric.add, fa.bdonations[0])
+        repulsion = reduce(Numeric.add, fa.repulsions[0])
 
-print donation, bdonation, repulsion
+        self.assertAlmostEqual(donation, 0.181, 3)
+        self.assertAlmostEqual(bdonation, 0.471, 3)
+        self.assertAlmostEqual(repulsion, -0.334, 3)
 
-assert "%.3f" % donation == "0.181"
-assert "%.3f" % bdonation == "0.471"
-assert "%.3f" % repulsion == "-0.334"
-
-
+def suite():
+    return unittest.TestLoader().loadTestsFromTestCase(CDATest)
+        
+if __name__ == "__main__":
+    printResults()
+    unittest.TextTestRunner(verbosity=2).run(suite())
