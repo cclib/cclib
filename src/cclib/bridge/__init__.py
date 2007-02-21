@@ -7,7 +7,6 @@ __revision__ = "$Revision$"
 
 try:
     import openbabel
-    import pyopenbabel
 except ImportError:
     pass
 else:
