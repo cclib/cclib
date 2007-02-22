@@ -19,7 +19,12 @@ class TestCase(unittest.TestCase):
 
     def assertArrayEquals(self,first,second,msg=None):
         """Fails unless two Numeric arrays are identical."""
-        if not (first.shape==second.shape and
-                first.typecode()==second.typecode() and
-                Numeric.alltrue(first==second)):
-            raise self.failureException, (msg or 'These two arrays are not identical')
+        errormsg = None
+        if not first.shape==second.shape:
+            errormsg = "Shapes are different: %s != %s" % (first.shape, second.shape)
+        if not first.typecode()==second.typecode():
+            errormsg = "Typecodes are differnts: %s != %s" % (first.typecode(), second.typecode())
+        if not Numeric.alltrue(first==second):
+            errormsg = "Not equal: %s != %s" % (first, second)
+        if errormsg:
+            raise self.failureException, (msg or errormsg)

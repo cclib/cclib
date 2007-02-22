@@ -72,11 +72,12 @@ class Logfile(object):
                          'scfenergies', 'scftargets', 'scfvalues',
                          'vibfreqs', 'vibirs', 'vibramans', 'vibsyms']
 
-        self._toarray = ['atomcoords', 'ccenergies', 'coreelectrons',
-                         'etenergies', 'etoscs',
-                         'geotargets', 'geovalues', 'mpenergies',
-                         'scfenergies', 'scftargets',
-                         'vibdisps', 'vibfreqs', 'vibirs', 'vibramans']
+        self._tofloatarray = ['atomcoords', 'ccenergies',
+                              'etenergies', 'etoscs',
+                              'geotargets', 'geovalues', 'mpenergies',
+                              'scfenergies', 'scftargets',
+                              'vibdisps', 'vibfreqs', 'vibirs', 'vibramans']
+        self._tointarray = ['atomnos', 'coreelectrons', 'homos']
         self._tolistofarrays = ['moenergies', 'scfvalues']
 
         # Set up the logger
@@ -112,10 +113,15 @@ class Logfile(object):
         inputfile.close()
 
         # Make sure selected attributes are arrays
-        for attr in self._toarray:
+        for attr in self._tofloatarray:
             if hasattr(self, attr):
                 if type(getattr(self, attr)) is not Numeric.arraytype:
                     setattr(self, attr, Numeric.array(getattr(self, attr), 'd'))
+        for attr in self._tointarray:
+            if hasattr(self, attr):
+                if type(getattr(self, attr)) is not Numeric.arraytype:
+                    setattr(self, attr, Numeric.array(getattr(self, attr), 'i'))
+
 
         # Make sure selected attrbutes are lists of arrays
         for attr in self._tolistofarrays:

@@ -80,7 +80,7 @@ class GAMESSUKMP3Test(GenericMP3Test):
 
 names = [ "GAMESS",
           "Gaussian", "Gaussian", "Gaussian", "Gaussian",
-          "GAMESS-UK", "GAMESS-UK" ]
+          "GAMESS UK", "GAMESS UK" ]
 tests = [ GAMESSMP2Test, 
           GaussianMP2Test, GaussianMP3Test, GaussianMP4Test, GaussianMP5Test,
           GAMESSUKMP2Test, GAMESSUKMP3Test ]
