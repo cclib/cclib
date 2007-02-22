@@ -132,6 +132,25 @@ class GAMESS(logfileparser.Logfile):
                 mp2energy = float(EMP2.split()[1])
                 self.mpenergies[-1].append(utils.convertor(mp2energy, "hartree", "eV"))
 
+            # Total energies after Coupled Cluster calculations
+            # Only the highest level result is gathered
+            if line[12:23] == "CCD ENERGY":
+                if not hasattr(self, ccenergy):
+                    self.ccenergy = []
+                ccenergy = float(line.split()[2])
+                self.ccenergy.append(utils.convertor(ccenergy, "hartree", "eV"))
+            if line[8:23] == "CCSD    ENERGY:":
+                if not hasattr(self, ccenergy):
+                    self.ccenergy = []
+                ccenergy = float(line.split()[2])
+                line = inputfile.next()
+                if line[8:23] == "CCSD[T] ENERGY:":
+                    ccenergy = float(line.split()[2])
+                    line = inputfile.next()
+                    if line[8:23] == "CCSD(T) ENERGY:":
+                        ccenergy = float(line.split()[2])
+                self.ccenergy.append(utils.convertor(ccenergy, "hartree", "eV"))
+
             if line.find("MAXIMUM GRADIENT") > 0:
                 if not hasattr(self, "geovalues"):
                     self.logger.info("Creating attribute geovalues[]")

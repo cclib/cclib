@@ -63,7 +63,8 @@ class Logfile(object):
         self.logname  = logname
         self.table = utils.PeriodicTable()
 
-        self.attrlist = ['aonames', 'aooverlaps', 'atomcoords', 'atomnos', 'coreelectrons',
+        self.attrlist = ['aonames', 'aooverlaps', 'atomcoords', 'atomnos',
+                         'ccenergies', 'coreelectrons',
                          'etenergies', 'etoscs', 'etrotats', 'etsecs', 'etsyms',
                          'fonames', 'fooverlaps',
                          'geotargets', 'geovalues', 'homos', 'mocoeffs',
@@ -71,7 +72,8 @@ class Logfile(object):
                          'scfenergies', 'scftargets', 'scfvalues',
                          'vibfreqs', 'vibirs', 'vibramans', 'vibsyms']
 
-        self._toarray = ['atomcoords', 'etenergies', 'coreelectrons', 'etoscs',
+        self._toarray = ['atomcoords', 'ccenergies', 'coreelectrons',
+                         'etenergies', 'etoscs',
                          'geotargets', 'geovalues', 'mpenergies',
                          'scfenergies', 'scftargets',
                          'vibdisps', 'vibfreqs', 'vibirs', 'vibramans']
