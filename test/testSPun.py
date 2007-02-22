@@ -75,7 +75,7 @@ class Jaguar42SPunTest(GenericSPunTest):
         self.assertEquals(1,1)
 
     def testmosyms(self):
-        """Are the dims of the mosyms equals to 2 x nmo? PASS"""
+        """Are the dims of the mosyms equal to 2 x nmo? PASS"""
         self.assertEquals(1,1)
 
 class Jaguar60SPunTest(GenericSPunTest):
@@ -83,7 +83,7 @@ class Jaguar60SPunTest(GenericSPunTest):
         self.data = data[5]
 
     def testmosyms(self):
-        """Are the dims of the mosyms equals to 2 x nmo? PASS"""
+        """Are the dims of the mosyms equal to 2 x nmo? PASS"""
         self.assertEquals(1,1)
         
 class Jaguar65SPunTest(GenericSPunTest):
@@ -95,7 +95,7 @@ class Jaguar65SPunTest(GenericSPunTest):
         self.assertEquals(1,1)
 
     def testmoenergies(self):
-        """Are the dims of the moenergies equals to 2 x homos+11"""
+        """Are the dims of the moenergies equal to 2 x homos+11?"""
         self.assertEquals(len(self.data.moenergies), 2)
         self.assertEquals(len(self.data.moenergies[0]), self.data.homos[0]+11)
         self.assertEquals(len(self.data.moenergies[1]), self.data.homos[1]+11)
@@ -105,7 +105,7 @@ class Jaguar65SPunTest(GenericSPunTest):
         self.assertEquals(1,1)
 
     def testmosyms(self):
-        """Are the dims of the mosyms equals to 2 x nmo? PASS"""
+        """Are the dims of the mosyms equal to 2 x nmo? PASS"""
         self.assertEquals(1,1)
 
 class GamessUKSPunTest(GenericSPunTest):
