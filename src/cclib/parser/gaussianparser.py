@@ -49,6 +49,7 @@ class Gaussian(logfileparser.Logfile):
         """Extract information from the file object inputfile."""
         
         optfinished = False # Flag that indicates whether it has reached the end of a geoopt
+        coupledcluster = False # Flag for identifying Coupled Cluster runs
         
         for line in inputfile:
             
@@ -245,6 +246,26 @@ class Gaussian(logfileparser.Logfile):
                 #  DEMP5 =  -0.11048812312D-02 MP5 =  -0.75017172926D+02
                 mp5energy = self.float(line.split("=")[2])
                 self.mpenergies[-1].append(utils.convertor(mp5energy, "hartree", "eV"))
+
+            # Total energies after Coupled Cluster corrections
+            # Second order MBPT energies (MP2) are also calculated for these runs,
+            #  but the output is the same as when parsing for mpenergies.
+            # First turn on flag for Coupled Cluster runs
+            if line[1:23] == "Coupled Cluster theory" or \
+               line[1:8] == "CCSD(T)":
+                coupledcluster = True
+                if not hasattr(self, "ccenergies"):
+                    self.ccenergies = []
+            # Now read the consecutive correlated energies,
+            #  but append only the last one to ccenergies.
+            # Only the highest level energy is appended - ex. CCSD(T), not CCSD.
+            if coupledcluster and line[27:35] == "E(CORR)=":
+                ccenergy = self.float(line.split()[3])
+            if coupledcluster and line[1:9] == "CCSD(T)=":
+                ccenergy = self.float(line.split()[1])
+            # Append when leaving link 913
+            if line[1:16] == "Leave Link  913":
+                self.ccenergies.append(utils.convertor(ccenergy, "hartree", "eV"))
 
             if line[49:59] == 'Converged?':
 # Extract Geometry convergence information

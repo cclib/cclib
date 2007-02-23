@@ -128,20 +128,17 @@ class GAMESS(logfileparser.Logfile):
                 E1 = inputfile.next()
                 E2 = inputfile.next()
                 EMP2 = inputfile.next()
-                self.mpenergies.append([])
-                mp2energy = float(EMP2.split()[1])
-                self.mpenergies[-1].append(utils.convertor(mp2energy, "hartree", "eV"))
 
             # Total energies after Coupled Cluster calculations
-            # Only the highest level result is gathered
-            if line[12:23] == "CCD ENERGY":
-                if not hasattr(self, ccenergy):
-                    self.ccenergy = []
+            # Only the highest Coupled Cluster level result is gathered
+            if line[12:23] == "CCD ENERGY:":
+                if not hasattr(self, "ccenergies"):
+                    self.ccenergies = []
                 ccenergy = float(line.split()[2])
-                self.ccenergy.append(utils.convertor(ccenergy, "hartree", "eV"))
+                self.ccenergies.append(utils.convertor(ccenergy, "hartree", "eV"))
             if line[8:23] == "CCSD    ENERGY:":
-                if not hasattr(self, ccenergy):
-                    self.ccenergy = []
+                if not hasattr(self, "ccenergies"):
+                    self.ccenergies = []
                 ccenergy = float(line.split()[2])
                 line = inputfile.next()
                 if line[8:23] == "CCSD[T] ENERGY:":
@@ -149,7 +146,15 @@ class GAMESS(logfileparser.Logfile):
                     line = inputfile.next()
                     if line[8:23] == "CCSD(T) ENERGY:":
                         ccenergy = float(line.split()[2])
-                self.ccenergy.append(utils.convertor(ccenergy, "hartree", "eV"))
+                self.ccenergies.append(utils.convertor(ccenergy, "hartree", "eV"))
+            # Also collect MP2 energies, which are always calculated before CC
+            if line [8:23] == "MBPT(2) ENERGY:":
+                if not hasattr(self, "mpenergies"):
+                    self.logger.info("Creating attribute mpenergies[]")
+                    self.mpenergies = []
+                self.mpenergies.append([])
+                mp2energy = float(line.split()[2])
+                self.mpenergies[-1].append(utils.convertor(mp2energy, "hartree", "eV"))
 
             if line.find("MAXIMUM GRADIENT") > 0:
                 if not hasattr(self, "geovalues"):
