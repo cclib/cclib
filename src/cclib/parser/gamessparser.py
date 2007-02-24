@@ -300,6 +300,8 @@ class GAMESS(logfileparser.Logfile):
 #
 #                          1           2           3           4           5
 
+# MODES 2 TO 7 ARE TAKEN AS ROTATIONS AND TRANSLATIONS.
+
                 self.logger.info("Creating attributes vibfreqs, vibirs")
                 self.vibfreqs = []
                 self.vibirs = []
@@ -312,7 +314,8 @@ class GAMESS(logfileparser.Logfile):
                     line = inputfile.next()
                     if line.find("THIS IS NOT A STATIONARY POINT")>=0:
                         warning = True
-                numrots = int(line.split()[3]) # either 5 or 6
+                startrot = int(line.split()[1])
+                endrot = int(line.split()[3])
                 blank = inputfile.next()
 
                 line = inputfile.next() # FREQUENCIES, etc.
@@ -327,8 +330,16 @@ class GAMESS(logfileparser.Logfile):
                 
                 freqNo = inputfile.next()
                 while freqNo.find("SAYVETZ") == -1:
-                    freq = inputfile.next().strip().split()
-                    self.vibfreqs.extend(map(float, freq[1:]))
+                    freq = inputfile.next().strip().split()[1:]
+# May include imaginary frequencies
+#       FREQUENCY:       825.18 I    111.53       12.62       10.70        0.89
+                    newfreq = []
+                    for i, x in enumerate(freq):
+                        if x!="I":
+                            newfreq.append(float(x))
+                        else:
+                            newfreq[-1] = -newfreq[-1]
+                    self.vibfreqs.extend(newfreq)
                     line = inputfile.next()
                     if line.find("REDUCED") >= 0: # skip the reduced mass (not always present)
                         line = inputfile.next()
@@ -364,11 +375,11 @@ class GAMESS(logfileparser.Logfile):
                     blank = inputfile.next()
                     freqNo = inputfile.next()
                 # Exclude rotations and translations
-                self.vibfreqs = Numeric.array(self.vibfreqs[numrots:], "d")
-                self.vibirs = Numeric.array(self.vibirs[numrots:], "d")
-                self.vibdisps = Numeric.array(self.vibdisps[numrots:], "d")
+                self.vibfreqs = Numeric.array(self.vibfreqs[:startrot-1]+self.vibfreqs[endrot:], "d")
+                self.vibirs = Numeric.array(self.vibirs[:startrot-1]+self.vibirs[endrot:], "d")
+                self.vibdisps = Numeric.array(self.vibdisps[:startrot-1]+self.vibdisps[endrot:], "d")
                 if hasattr(self, "vibramans"):
-                    self.vibramans = Numeric.array(self.vibramans[numrots:], "d")
+                    self.vibramans = Numeric.array(self.vibramans[:startrot-1]+self.vibramans[endrot:], "d")
 
             if line[5:21] == "ATOMIC BASIS SET":
                 if not hasattr(self, "gbasis"):
@@ -463,9 +474,11 @@ class GAMESS(logfileparser.Logfile):
                             self.mocoeffs[0][base+j, i] = float(temp[j * 11:(j + 1) * 11])
                             j += 1
                 line = inputfile.next()
-                if line.find("END OF RHF") == -1: # implies unrestricted
+                if line.find("END OF") == -1: # implies unrestricted
 # If it's restricted we have
 #  ...... END OF RHF CALCULATION ......
+#                or
+#  ...... END OF DFT CALCULATION ......
 # If it's unrestricted we have...
 #
 #  ----- BETA SET ----- 
