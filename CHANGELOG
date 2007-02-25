@@ -1,3 +1,33 @@
+Changes since cclib-0.6.1:
+
+Features:
+	* ccopen: Can handle log files which have been compressed into .zip,
+	.bz2 or .gz files.
+	* API addition: 'gbasis' holds the Gaussian basis set
+	* API addition: 'coreelectrons' contains the number of core electrons
+	in each atom's pseudopotential
+	* API addition: 'mpenergies' holds the Moller-Plesset corrected
+	molecular electronic energies
+	* API addition: 'vibdisps' holds the Cartesian displacement vectors
+	* API change: 'mocoeffs' is now a list of rank 2 arrays, rather than a
+	rank 3 array
+	* API change: 'moenergies' is now a list of rank 1 arrays, rather than
+	rank 2 array
+	* GAMESS-UK parser: added 'vibramans'
+	* New method: Charge Decomposition Analysis (CDA)
+	* New method: Ability to calculate the electron density or
+	wavefunction
+
+Bugfixes:
+	* GAMESS parser:
+		Failed to parse frequency calculation with imaginary frequencies
+		Rotations and translations now not included in frequencies
+		Failed to parse a DFT calculation
+	* GAMESS-UK parser:
+		'atomnos' not being extracted
+		Rotations and translations now not included in frequencies
+	* bridge to OpenBabel: No longer dependent on pyopenbabel
+
 Changes since cclib-0.6.0:
 
 Bugfixes:

@@ -53,7 +53,7 @@ To test, trying importing cclib at the Python prompt. You should see something s
 	  History is saved to ~/.pyhistory.
 	>>> import cclib
 	>>> cclib.__version__
-	'0.6'
+	'0.7'
 
 To run the unit tests, change directory into INSTALLDIR/test and run the following command:
 
