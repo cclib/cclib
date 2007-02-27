@@ -27,13 +27,25 @@ class GaussianCoreTest(GenericCoreTest):
 class ADFCoreTest(GenericCoreTest):
     def setUp(self):
         self.data = data[1]
-        self.coredict = {'Mo': 36}
+        self.coredict = {'Mo': 28, 'O':0, 'Cl':10}
 
+class GAMESSUKCoreTest(GenericCoreTest):
+    def setUp(self):
+        self.data = data[2]
+        self.coredict = {'Mo': 28, 'O':0, 'Cl':10}
 
-names = [ "Gaussian", "ADF" ]
-tests = [ GaussianCoreTest, ADFCoreTest ]
-data = [getfile(Gaussian, "basicGaussian03","Mo4OCl4-sp.log"),
-        getfile(ADF, "basicADF2004.01","mo_sp.adfout"),
+class GAMESSCoreTest(GenericCoreTest):
+    def setUp(self):
+        self.data = data[3]
+        self.coredict = {'Mo': 28, 'O':0, 'Cl':10}
+
+names = [ "Gaussian", "ADF", "GAMESS-UK", "GAMESS" ]
+tests = [ GaussianCoreTest, ADFCoreTest, GAMESSUKCoreTest,
+          GAMESSCoreTest ]
+data = [getfile(Gaussian, "basicGaussian03", "Mo4OCl4-sp.log"),
+        getfile(ADF, "basicADF2004.01", "MoOCl4-sp.adfout"),
+        getfile(GAMESSUK, "basicGAMESS-UK", "MoOCl4-sp.out"),
+        getfile(GAMESS, "basicGAMESS-US", "dvb_gopt_a.out"),        
         ]
               
 if __name__=="__main__":
