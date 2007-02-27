@@ -193,7 +193,25 @@ class GAMESSUK(logfileparser.Logfile):
                     for j in range(self.nbasis):
                         temp = map(float, inputfile.next().split()[1:])
                         self.aooverlaps[j,(0+i):(len(temp)+i)] = temp
-                
+
+            if line[18:43] == 'EFFECTIVE CORE POTENTIALS':
+                self.logger.info("Creating attribute coreelectrons")
+                self.coreelectrons = Numeric.zeros(self.natom, 'i')
+                asterisk = inputfile.next()
+                line = inputfile.next()
+                while line[15:46]!="*"*31:
+                    if line.find("for atoms ...")>=0:
+                        atomindex = []
+                        line = inputfile.next()
+                        while line.find("core charge")<0:
+                            broken = line.split()
+                            atomindex.extend([int(x.split("-")[0]) for x in broken])
+                            line = inputfile.next()
+                        charge = float(line.split()[4])
+                        for idx in atomindex:
+                            self.coreelectrons[idx-1] = self.atomnos[idx-1] - charge
+                    line = inputfile.next()
+                                
             if line[3:27] == "Wavefunction convergence":
                 self.logger.info("Creating attribute scftargets")
                 scftarget = float(line.split()[-2])
