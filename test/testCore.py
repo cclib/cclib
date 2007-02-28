@@ -10,6 +10,7 @@ import bettertest
 
 class GenericCoreTest(bettertest.TestCase):
     """Core electrons"""
+    coredict = {'Mo': 28, 'O':0, 'Cl':10}
     def testcorrect(self):
         """Is coreelectrons equal to what it should be?"""
         pt = PeriodicTable()
@@ -22,22 +23,20 @@ class GenericCoreTest(bettertest.TestCase):
 class GaussianCoreTest(GenericCoreTest):
     def setUp(self):
         self.data = data[0]
-        self.coredict = {'Mo': 28, 'O':0, 'Cl':10}
 
 class ADFCoreTest(GenericCoreTest):
     def setUp(self):
         self.data = data[1]
-        self.coredict = {'Mo': 28, 'O':0, 'Cl':10}
+        self.coredict = {'Mo': 28, 'O':0, 'Cl':0}
 
 class GAMESSUKCoreTest(GenericCoreTest):
     def setUp(self):
         self.data = data[2]
-        self.coredict = {'Mo': 28, 'O':0, 'Cl':10}
 
 class GAMESSCoreTest(GenericCoreTest):
     def setUp(self):
         self.data = data[3]
-        self.coredict = {'Mo': 28, 'O':0, 'Cl':10}
+
 
 names = [ "Gaussian", "ADF", "GAMESS-UK", "GAMESS" ]
 tests = [ GaussianCoreTest, ADFCoreTest, GAMESSUKCoreTest,
