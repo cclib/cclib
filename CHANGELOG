@@ -14,7 +14,11 @@ Features:
 	* API change: 'moenergies' is now a list of rank 1 arrays, rather than
 	rank 2 array
 	* GAMESS-UK parser: added 'vibramans'
-	* New method: Charge Decomposition Analysis (CDA)
+	* New method: Charge Decomposition Analysis (CDA) for studying
+    electron donation, back donation, and repulsion between fragments
+    in a molecule
+    * New method: Fragment Analysis for studing bonding interactions 
+    between two or more fragments in a molecule
 	* New method: Ability to calculate the electron density or
 	wavefunction
 
