@@ -97,7 +97,7 @@ class PCGAMESSMP4SDTQTest(GenericMP4Test):
 names = [ "GAMESS",
           "Gaussian", "Gaussian", "Gaussian", "Gaussian",
           "GAMESS UK", "GAMESS UK",
-          "PC GAMESS", "PC GAMESS", "PC GAMESS", "PC GAMESS" ]
+          "PCGamess", "PCGamess", "PCGamess", "PCGamess" ]
 tests = [ GAMESSMP2Test, 
           GaussianMP2Test, GaussianMP3Test, GaussianMP4Test, GaussianMP5Test,
           GAMESSUKMP2Test, GAMESSUKMP3Test, PCGAMESSMP2Test, PCGAMESSMP3Test,

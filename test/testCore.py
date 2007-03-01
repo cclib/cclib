@@ -38,7 +38,7 @@ class GAMESSCoreTest(GenericCoreTest):
         self.data = data[3]
 
 
-names = [ "Gaussian", "ADF", "GAMESS-UK", "GAMESS" ]
+names = [ "Gaussian", "ADF", "GAMESS UK", "GAMESS" ]
 tests = [ GaussianCoreTest, ADFCoreTest, GAMESSUKCoreTest,
           GAMESSCoreTest ]
 data = [getfile(Gaussian, "basicGaussian03", "Mo4OCl4-sp.log"),
