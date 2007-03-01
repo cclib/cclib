@@ -44,7 +44,7 @@ tests = [ GaussianCoreTest, ADFCoreTest, GAMESSUKCoreTest,
 data = [getfile(Gaussian, "basicGaussian03", "Mo4OCl4-sp.log"),
         getfile(ADF, "basicADF2004.01", "MoOCl4-sp.adfout"),
         getfile(GAMESSUK, "basicGAMESS-UK", "MoOCl4-sp.out"),
-        getfile(GAMESS, "basicGAMESS-US", "dvb_gopt_a.out"),        
+        getfile(GAMESS, "basicGAMESS-US", "MoOCl4-sp.out"),        
         ]
               
 if __name__=="__main__":

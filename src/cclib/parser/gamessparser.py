@@ -580,6 +580,30 @@ class GAMESS(logfileparser.Logfile):
                     base += 5
                 self.aonames = self.normalise_aonames(aonames)
 
+            # ECP Pseudopotential information
+            if "ECP POTENTIALS" in line:
+                if not hasattr(self, "coreelectrons"):
+                    self.coreelectrons = [0]*self.natom
+                dashes = inputfile.next()
+                blank = inputfile.next()
+                header = inputfile.next()
+                while header.split()[0] == "PARAMETERS":
+                    name = header[17:25]
+                    atomnum = int(header[34:40])
+                    # The pseudopotnetial is given explicitely
+                    if header[40:50] == "WITH ZCORE":
+                      zcore = int(header[50:55])
+                      lmax = int(header[63:67])
+                      self.coreelectrons[atomnum-1] = zcore
+                    # The pseudopotnetial is copied from another atom
+                    if header[40:55] == "ARE THE SAME AS":
+                      atomcopy = int(header[60:])
+                      self.coreelectrons[atomnum-1] = self.coreelectrons[atomcopy-1]
+                    line = inputfile.next()
+                    while line.split() <> []:
+                        line = inputfile.next()
+                    header = inputfile.next()
+
         if not hasattr(self, "geotargets"):
             self.logger.info("Creating attribute geotargets[] with default values")
             opttol = 1e-4
