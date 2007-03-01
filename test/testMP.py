@@ -78,12 +78,30 @@ class GAMESSUKMP3Test(GenericMP3Test):
     def setUp(self):
         self.data = data[6]
 
+class PCGAMESSMP2Test(GenericMP2Test):
+    def setUp(self):
+        self.data = data[7]
+
+class PCGAMESSMP3Test(GenericMP3Test):
+    def setUp(self):
+        self.data = data[8]
+
+class PCGAMESSMP4Test(GenericMP4Test):
+    def setUp(self):
+        self.data = data[9]
+
+class PCGAMESSMP4SDTQTest(GenericMP4Test):
+    def setUp(self):
+        self.data = data[10]
+
 names = [ "GAMESS",
           "Gaussian", "Gaussian", "Gaussian", "Gaussian",
-          "GAMESS UK", "GAMESS UK" ]
+          "GAMESS UK", "GAMESS UK",
+          "PC GAMESS", "PC GAMESS", "PC GAMESS", "PC GAMESS" ]
 tests = [ GAMESSMP2Test, 
           GaussianMP2Test, GaussianMP3Test, GaussianMP4Test, GaussianMP5Test,
-          GAMESSUKMP2Test, GAMESSUKMP3Test ]
+          GAMESSUKMP2Test, GAMESSUKMP3Test, PCGAMESSMP2Test, PCGAMESSMP3Test,
+          PCGAMESSMP4Test, PCGAMESSMP4SDTQTest]
 data = [getfile(GAMESS, "basicGAMESS-US", "water_mp2.out"),
         getfile(Gaussian, "basicGaussian03","water_mp2.log"),
         getfile(Gaussian, "basicGaussian03","water_mp3.log"),
@@ -91,6 +109,10 @@ data = [getfile(GAMESS, "basicGAMESS-US", "water_mp2.out"),
         getfile(Gaussian, "basicGaussian03","water_mp5.log"),
         getfile(GAMESSUK, "basicGAMESS-UK","water_mp2.out"),
         getfile(GAMESSUK, "basicGAMESS-UK","water_mp3.out"),
+        getfile(GAMESS, "basicPCGAMESS", "water_mp2.out"),
+        getfile(GAMESS, "basicPCGAMESS", "water_mp3.out"),
+        getfile(GAMESS, "basicPCGAMESS", "water_mp4.out"),
+        getfile(GAMESS, "basicPCGAMESS", "water_mp4_sdtq.out"),
         ]
               
 if __name__=="__main__":
