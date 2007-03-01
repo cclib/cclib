@@ -80,7 +80,7 @@ class GAMESS(logfileparser.Logfile):
 
         firststdorient = True # Used to decide whether to wipe the atomcoords clean
         geooptfinished = False # Used to avoid extracting the final geometry twice
-            
+
         for line in inputfile:
             
             self.updateprogress(inputfile, "Unsupported Information", cupdate)
@@ -112,8 +112,7 @@ class GAMESS(logfileparser.Logfile):
                 self.scfenergies.append(utils.convertor(float(temp[temp.index("IS") + 1]), "hartree", "eV"))
 
             # Total energies after Moller-Plesset corrections
-            # GAMESS presently supports only second order corrections (MP2)
-            if line.find("RESULTS OF MOLLER-PLESSET 2ND ORDER CORRECTION ARE") >= 0:
+            if line.find("RESULTS OF MOLLER-PLESSET") >= 0:
                 # Output looks something like this:
                 # RESULTS OF MOLLER-PLESSET 2ND ORDER CORRECTION ARE
                 #         E(0)=      -285.7568061536
@@ -124,12 +123,29 @@ class GAMESS(logfileparser.Logfile):
                 if not hasattr(self, "mpenergies"):
                     self.logger.info("Creating attribute mpenergies[]")
                     self.mpenergies = []
-                E0 = inputfile.next()
-                E1 = inputfile.next()
-                E2 = inputfile.next()
-                EMP2 = inputfile.next()
-                mp2energy = float(EMP2.split()[1])
-                self.mpenergies.append([utils.convertor(mp2energy, "hartree", "eV")])
+                # Each iteration has a new print-out
+                self.mpenergies.append([])
+                # GAMESS-US presently supports only second order corrections (MP2)
+                # PC GAMESS also has higher levels (3rd and 4th), with different output
+                # Only the highest level MP4 energy is gathered (SDQ or SDTQ)
+                mplevel = int(line[27:28])
+                while line.strip() <> "..... DONE WITH MP%i ENERGY ....." %mplevel:
+                    line = inputfile.next()
+                    if len(line.split()) > 0:
+                        # Only up to MP2 correction
+                        if line.split()[0] == "E(MP2)=":
+                            mp2energy = float(line.split()[1])
+                            self.mpenergies[-1].append(utils.convertor(mp2energy, "hartree", "eV"))
+                        # MP2 before higher order calculations
+                        if line.split()[0] == "E(MP2)":
+                            mp2energy = float(line.split()[2])
+                            self.mpenergies[-1].append(utils.convertor(mp2energy, "hartree", "eV"))
+                        if line.split()[0] == "E(MP3)":
+                            mp3energy = float(line.split()[2])
+                            self.mpenergies[-1].append(utils.convertor(mp3energy, "hartree", "eV"))
+                        if line.split()[0] in ["E(MP4-SDQ)", "E(MP4-SDTQ)"]:
+                            mp4energy = float(line.split()[2])
+                            self.mpenergies[-1].append(utils.convertor(mp4energy, "hartree", "eV"))
 
             # Total energies after Coupled Cluster calculations
             # Only the highest Coupled Cluster level result is gathered

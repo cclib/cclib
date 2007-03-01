@@ -30,15 +30,25 @@ class GenericMP3Test(GenericMP2Test):
         """(MP3) Are Moller-Plesset corrections negative?"""
         super(GenericMP3Test,self).testchange()
 
-class GenericMP4Test(GenericMP2Test):
-    """MP4 calculations."""
+class GenericMP4SDQTest(GenericMP2Test):
+    """MP4(SDQ) calculations."""
     level = 4
     def testsizeandshape(self):
-        """(MP4) Are the dimensions of mpenergies correct?"""
-        super(GenericMP4Test,self).testsizeandshape()
+        """(MP4-SDQ) Are the dimensions of mpenergies correct?"""
+        super(GenericMP4SDQTest,self).testsizeandshape()
     def testchange(self):
-        """(MP4) Are Moller-Plesset corrections negative?"""
-        super(GenericMP4Test,self).testchange()
+        """(MP4-SDQ) Are Moller-Plesset corrections negative?"""
+        super(GenericMP4SDQTest,self).testchange()
+
+class GenericMP4SDTQTest(GenericMP2Test):
+    """MP4(SDTQ) calculations."""
+    level = 4
+    def testsizeandshape(self):
+        """(MP4-SDTQ) Are the dimensions of mpenergies correct?"""
+        super(GenericMP4SDTQTest,self).testsizeandshape()
+    def testchange(self):
+        """(MP4-SDTQ) Are Moller-Plesset corrections negative?"""
+        super(GenericMP4SDTQTest,self).testchange()
 
 class GenericMP5Test(GenericMP2Test):
     """MP5 calculations."""
@@ -62,7 +72,7 @@ class GaussianMP3Test(GenericMP3Test):
     def setUp(self):
         self.data = data[2]
 
-class GaussianMP4Test(GenericMP4Test):
+class GaussianMP4SDTQTest(GenericMP4SDTQTest):
     def setUp(self):
         self.data = data[3]
 
@@ -86,11 +96,11 @@ class PCGAMESSMP3Test(GenericMP3Test):
     def setUp(self):
         self.data = data[8]
 
-class PCGAMESSMP4Test(GenericMP4Test):
+class PCGAMESSMP4SDQTest(GenericMP4SDQTest):
     def setUp(self):
         self.data = data[9]
 
-class PCGAMESSMP4SDTQTest(GenericMP4Test):
+class PCGAMESSMP4SDTQTest(GenericMP4SDTQTest):
     def setUp(self):
         self.data = data[10]
 
@@ -99,9 +109,9 @@ names = [ "GAMESS",
           "GAMESS UK", "GAMESS UK",
           "PCGamess", "PCGamess", "PCGamess", "PCGamess" ]
 tests = [ GAMESSMP2Test, 
-          GaussianMP2Test, GaussianMP3Test, GaussianMP4Test, GaussianMP5Test,
+          GaussianMP2Test, GaussianMP3Test, GaussianMP4SDTQTest, GaussianMP5Test,
           GAMESSUKMP2Test, GAMESSUKMP3Test, PCGAMESSMP2Test, PCGAMESSMP3Test,
-          PCGAMESSMP4Test, PCGAMESSMP4SDTQTest]
+          PCGAMESSMP4SDQTest, PCGAMESSMP4SDTQTest]
 data = [getfile(GAMESS, "basicGAMESS-US", "water_mp2.out"),
         getfile(Gaussian, "basicGaussian03","water_mp2.log"),
         getfile(Gaussian, "basicGaussian03","water_mp3.log"),
