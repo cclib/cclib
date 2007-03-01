@@ -264,7 +264,7 @@ class Gaussian(logfileparser.Logfile):
             if coupledcluster and line[1:9] == "CCSD(T)=":
                 ccenergy = self.float(line.split()[1])
             # Append when leaving link 913
-            if line[1:16] == "Leave Link  913":
+            if coupledcluster and line[1:16] == "Leave Link  913":
                 self.ccenergies.append(utils.convertor(ccenergy, "hartree", "eV"))
 
             if line[49:59] == 'Converged?':
