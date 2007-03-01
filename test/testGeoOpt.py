@@ -70,6 +70,11 @@ class GenericGeoOptTest(bettertest.TestCase):
         sumwronglabels = sum([x not in ['Ag','Bu','Au','Bg'] for x in self.data.mosyms[0]])
         self.assertEquals(sumwronglabels,0)
 
+    def testcoreelectrons(self):
+        """Are the coreelectrons all 0?"""
+        ans = Numeric.zeros(self.data.natom, 'i')
+        self.assertArrayEquals(self.data.coreelectrons, ans)
+
     def testscfvaluetype(self):
         """Do the scf values have the right type?"""
         self.assertEquals(type(self.data.scfvalues),type([]))
