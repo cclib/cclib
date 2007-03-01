@@ -107,13 +107,14 @@ class Logfile(object):
             self.progress.initialize(nstep)
             self.progress.step = 0
 
-        try:
-            # This method does the actual parsing of text,
-            #  and should be defined by a subclass.
-            self.extract(inputfile, fupdate=fupdate, cupdate=cupdate)
-        except AttributeError:
+        # Check if parser is generic and return if so
+        if self.__class__.__name__ == "LogFile":
             self.logger.info("Method parse() was called from generic LogFile class.")
             return
+
+        # This method does the actual parsing of text,
+        #  and should be defined by a subclass.
+        self.extract(inputfile, fupdate=fupdate, cupdate=cupdate)
 
         # Close file object
         inputfile.close()
