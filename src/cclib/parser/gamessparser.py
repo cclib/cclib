@@ -128,6 +128,8 @@ class GAMESS(logfileparser.Logfile):
                 E1 = inputfile.next()
                 E2 = inputfile.next()
                 EMP2 = inputfile.next()
+                mp2energy = float(EMP2.split()[1])
+                self.mpenergies.append([utils.convertor(mp2energy, "hartree", "eV")])
 
             # Total energies after Coupled Cluster calculations
             # Only the highest Coupled Cluster level result is gathered
