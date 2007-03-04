@@ -1,0 +1,12 @@
+ $contrl scftyp=rhf cityp=cis runtyp=energy exetyp=run
+         units=angs coord=zmt $end
+ $basis  gbasis=n31 ngauss=6 ndfunc=1 npfunc=1 $end
+ $cis    nstate=5 $end
+ $data
+water
+C1 1
+ O
+ H 1 0.99
+ H 1 0.99 2 106.0
+ $end
+ 
