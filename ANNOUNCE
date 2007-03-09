@@ -12,11 +12,13 @@ Among other data, cclib extracts:
 
 (For a complete list see http://cclib.sf.net/wiki/index.php/Parsed_Data).
 
-cclib also provides some calculation methods for interpreting some electronic properties of molecules using analyses such as:
+cclib also provides some calculation methods for interpreting the electronic properties of molecules using analyses such as:
 
     * Mulliken population analysis
     * Overlap population analysis
     * Calculation of Mayer's bond orders. 
+
+(For a complete list see http://cclib.sf.net/wiki/index.php/Calculation_Methods).
 
 For information on how to use cclib, see
       http://cclib.sf.net/wiki/index.php/Using_cclib.
