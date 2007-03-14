@@ -1,5 +1,4 @@
 import os, unittest
-from Numeric import alltrue, array, resize
 from testall import getfile
 from cclib.parser import Gaussian, GAMESS
 import bettertest
