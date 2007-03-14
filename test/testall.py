@@ -45,7 +45,7 @@ if __name__=="__main__":
     perpackage = {}
     errors = []
     for module in [ "testGeoOpt", "testSP", "testSPun", "testBasis",
-                    "testvib", "testMP", "testCore" ]:
+                    "testvib", "testMP", "testCI", "testCore" ]:
         try:
             names = importName(module, "names") # i.e. from testGeoOpt import names
         except: # Parsing failed

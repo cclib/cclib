@@ -174,6 +174,21 @@ class GAMESS(logfileparser.Logfile):
                 mp2energy = float(line.split()[2])
                 self.mpenergies[-1].append(utils.convertor(mp2energy, "hartree", "eV"))
 
+            # etenergies (used only for CIS runs now)
+            if "EXCITATION ENERGIES" in line:
+                if not hasattr(self, "etenergies"):
+                    self.logger.info("Creating attribute etenergies[]")
+                    self.etenergies = []
+                header = inputfile.next()
+                dashes = inputfile.next()
+                line = inputfile.next()
+                while len(line.split()) > 0:
+                    # Take hartree value with more numbers, and convert.
+                    # Note that the values listed after this are also less exact!
+                    etenergy = float(line.split()[1])
+                    self.etenergies.append(utils.convertor(etenergy, "hartree", "eV"))
+                    line = inputfile.next()
+
             if line.find("MAXIMUM GRADIENT") > 0:
                 if not hasattr(self, "geovalues"):
                     self.logger.info("Creating attribute geovalues[]")
