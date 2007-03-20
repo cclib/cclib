@@ -610,90 +610,58 @@ class ADF(logfileparser.Logfile):
                     base = 0
                         
             if line[48:67] == "SFO MO coefficients":
-#extract MO coefficients              
-                #read stars and three blank lines
-                inputfile.next()
-                inputfile.next()
-                inputfile.next()
-                inputfile.next()
 
                 self.logger.info("Creating attribute mocoeffs: array[]")
-                
-                line = inputfile.next()
-                
-                if line.find("***** SPIN 1 *****") > 0:
-                    beta = 1
-                    self.mocoeffs = [Numeric.zeros((self.nbasis, self.nbasis), "d")
-                                     for x in range(2)]
-                    
-                    #get rid of two blank lines and symmetry label
-                    inputfile.next()
-                    inputfile.next()
-                    line = inputfile.next()
-                    sym = line.split()[1]
-                    
-                else:
-                    beta = 0
-                    self.mocoeffs = [Numeric.zeros((self.nbasis, self.nbasis), "d")]
-                    sym = line.split()[1]
-                    
-                #get rid of 12 lines of text
-                for i in range(10):
-                    inputfile.next()
-                  
-                for spin in range(beta + 1):
-                    symoffset = 0
-                    base = 0
-                    
-                    if spin == 1:
-                        #read spin, blank, blank, blank, symlabel, text, underline, blank
-                        for i in range(4):
-                            inputfile.next()
-                        line = inputfile.next()
-                        sym = line.split()[1]
-                        for i in range(3):
-                            inputfile.next()
-                        
-                    while symoffset + base < self.nbasis:
-                
-                        line = inputfile.next()
-                        if len(line) < 3:
-                            symoffset += base
-                            base = 0
-                            #print symoffset
-                            
-                        monumbers = line.split()
-                        #print monumbers
-                        #get rid of unneeded lines
-                        line = inputfile.next()
-                        info = line.split()
-                        if info[0] == "occup:":
-                            inputfile.next()
-                        elif info[0] == "===":
-                            sym = line.split()[1]
-                            inputfile.next()
+                self.mocoeffs = [Numeric.zeros((self.nbasis, self.nbasis), "d")]
+                spin = 0
+                symoffset = 0
+                lastrow = 0
 
+                # Section ends with "1" at beggining of a line.
+                while line[0] != "1":
+                    line = inputfile.next()
+
+                    # If spin is specified, then there will be two coefficient matrices. 
+                    if line.strip() == "***** SPIN 1 *****":
+                        self.mocoeffs = [Numeric.zeros((self.nbasis, self.nbasis), "d"),
+                                         Numeric.zeros((self.nbasis, self.nbasis), "d")]
+
+                    # Bump up the spin.
+                    if line.strip() == "***** SPIN 2 *****":
+                        spin = 1
+                        symoffset = 0
+                        lastrow = 0
+                    
+                    # Next symmetry.
+                    if line.strip()[:4] == "=== ":
+                        sym = line.split()[1]
                         if nosymflag:
-                            #aolist = range(len(self.moenergies[spin]))
                             aolist = range(self.nbasis)
                         else:
                             aolist = symlist[sym][spin]
-                          
-                        row = 0
-                        oldindex = 0
+                        # Add to the symmetry offset of AO ordering.
+                        symoffset += lastrow
+
+                    # Blocks with coefficient always start with "MOs :".
+                    if line[1:6] == "MOs :":
+                        # Next line has the MO index contributed to.
+                        monumbers = [int(n) for n in line[6:].split()]
+                        occup = inputfile.next()
+                        label = inputfile.next()
                         line = inputfile.next()
-                        while len(line) > 5:
-                           
+                        # The table can end with a blank line or "1".
+                        row = 0
+                        while not line.strip() in ["", "1"]:
                             self.updateprogress(inputfile, "Coefficients", fupdate)
-            
-                            cols = line.split()
-                            for i in range(len(cols[1:])):
-                                #self.mocoeffs[spin,row+symoffset,i+symoffset+base]=float(cols[i+1])
-                                self.mocoeffs[spin][aolist[i+base], row + symoffset] = float(cols[i + 1])
-                                
-                            line = inputfile.next()
                             row += 1
-                        base += len(cols[1:])
+                            coeffs = [float(x) for x in line.split()[1:]]
+                            moindices = [aolist[n-1] for n in monumbers]
+                            # The AO index is 1 less than the row.
+                            aoindex = symoffset + row - 1
+                            for i in range(len(monumbers)):
+                                self.mocoeffs[spin][moindices[i],aoindex] = coeffs[i]
+                            line = inputfile.next()
+                        lastrow = row
                         
         
 if __name__ == "__main__":
