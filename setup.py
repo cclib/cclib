@@ -22,7 +22,7 @@ Topic :: Scientific/Engineering :: Chemistry
 doclines = __doc__.split("\n")
 
 setup(name="cclib",
-      version="0.7b",
+      version="0.7",
       author="cclib development team",
       author_email="cclib-users@lists.sourceforge.net",
       url="http://cclib.sf.net",
