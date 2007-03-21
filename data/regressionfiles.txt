@@ -4,6 +4,9 @@ ADF/ADF2004.01/Mo5Obdt2-sp.adfout.gz
 ADF/ADF2004.01/Mo4mdt3-1_102.adfout.gz
 ADF/ADF2005.01/Os3.zip
 ADF/ADF2005.01/Os3(CO)12-D3h.zip
+ADF/ADF2006.01/HgMeBr_zso_orig.out
+ADF/ADF2006.01/Frags_NiCO4_orig.out
+ADF/ADF2006.01/Au2.out
 GAMESS/GAMESS-US/bv6010sup1molecule_4.inp.cml_.log.bz2
 GAMESS/PCGAMESS/aomixgamess.log.bz2
 GAMESS-UK/GAMESS-UK6.0/dscf_4.out.gz

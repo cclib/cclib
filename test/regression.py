@@ -83,8 +83,9 @@ filenames = [glob(os.path.join(data, "Gaussian", "basicGaussian03", "*.out")) +
              
              glob(os.path.join(data, "ADF", "basicADF2004.01", "*.adfout")) +
              glob(os.path.join(data, "ADF", "ADF2004.01", "*.gz")) +
-             glob(os.path.join(data, "ADF", "ADF2005.01", "*.zip")),
-             
+             glob(os.path.join(data, "ADF", "ADF2005.01", "*.zip")) +
+             glob(os.path.join(data, "ADF", "ADF2006.01", "*.out")),
+                          
              glob(os.path.join(data, "GAMESS-UK", "basicGAMESS-UK", "*.out")) +
              glob(os.path.join(data, "GAMESS-UK", "GAMESS-UK6.0", "*.out.gz")) +
              glob(os.path.join(data, "GAMESS-UK", "GAMESS-UK7.0", "*.out.gz")),
@@ -113,7 +114,8 @@ def normalisefilename(filename):
     return "".join(ans)
 
 def flatten(seq):
-    """Taken from the web."""
+    """Converts a list of lists [of lists] to a single flattened list."""
+    # Taken from the web.
     res = []
     for item in seq:
         if (isinstance(item, (tuple, list))):
