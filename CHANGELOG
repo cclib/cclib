@@ -1,6 +1,7 @@
 Changes since cclib-0.6.1:
 
 Features:
+	* New parser: cclib can now parse Jaguar files
 	* ccopen: Can handle log files which have been compressed into .zip,
 	.bz2 or .gz files.
 	* API addition: 'gbasis' holds the Gaussian basis set
