@@ -261,7 +261,7 @@ class Jaguar(logfileparser.Logfile):
                 offset = 0
 
                 for s in range(spin):
-                    mocoeffs = Numeric.zeros((self.nmo, self.nbasis), "d")
+                    mocoeffs = Numeric.zeros((len(self.moenergies[s]), self.nbasis), "d")
 
                     if s == 1: #beta case
                         stars = inputfile.next()
@@ -272,7 +272,7 @@ class Jaguar(logfileparser.Logfile):
                         blank = inputfile.next()
                         blank = inputfile.next()
 
-                    for k in range(0,self.nmo,5):
+                    for k in range(0,len(self.moenergies[s]),5):
 
                         numbers = inputfile.next()
                         eigens = inputfile.next()
