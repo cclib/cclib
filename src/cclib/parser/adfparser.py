@@ -55,7 +55,7 @@ class ADF(logfileparser.Logfile):
                 ans = ans.replace(ans[0]*2, ans[0]) + "'"
         return ans
         
-    def normalisedegenerates(self, label, num):
+    def normalisedegenerates(self, label, num, ndict=None):
         """Generate a string used for matching degenerate orbital labels
 
         To normalise:
@@ -63,12 +63,15 @@ class ADF(logfileparser.Logfile):
         (2) if label is P or D, look up in dict, and return answer
         """
 
-        ndict = { 'P': {0:"P:x", 1:"P:y", 2:"P:z"},\
-                  'D': {0:"D:z2", 1:"D:x2-y2", 2:"D:xy", 3:"D:xz", 4:"D:yz"}}
-                  
-        if label == 'P' or label == 'D':
-            return ndict[label][num]
+        if not ndict:
+          ndict = { 'P': {0:"P:x", 1:"P:y", 2:"P:z"},\
+                    'D': {0:"D:z2", 1:"D:x2-y2", 2:"D:xy", 3:"D:xz", 4:"D:yz"}}
 
+        if ndict.has_key(label):
+            if ndict[label].has_key(num):
+                return ndict[label][num]
+            else:
+                return "%s:%i"%(label,num+1)
         else:
             return "%s:%i"%(label,num+1)
 
@@ -113,6 +116,16 @@ class ADF(logfileparser.Logfile):
                 if info[1] == "NOSYM":
                     nosymflag = True
 
+            # Use this to read the subspecies of irreducible representations.
+            # It will be a list, with each element representing one irrep.
+            if line.strip() == "Irreducible Representations, including subspecies":
+                dashes = inputfile.next()
+                irreps = []
+                line = inputfile.next()
+                while line.strip() != "":
+                    irreps.append(line.split())
+                    line = inputfile.next()
+                        
             if line[4:13] == 'Molecule:':
                 info = line.split()
                 if info[1] == 'UNrestricted':
@@ -375,19 +388,29 @@ class ADF(logfileparser.Logfile):
                 homoa = None
                 homob = None
 
-                multiple = {'E':2, 'T':3, 'P':3, 'D':5}
+                #multiple = {'E':2, 'T':3, 'P':3, 'D':5}
+                # The above is set if there are no special irreps
+                names = [irrep[0].split(':')[0] for irrep in irreps]
+                counts = [len(irrep) for irrep in irreps]
+                multiple = dict(zip(names, counts))
+                irrepspecies = {}
+                for n in range(len(names)):
+                    indices = range(counts[n])
+                    subspecies = irreps[n]
+                    irrepspecies[names[n]] = dict(zip(indices, subspecies))
   
                 while line.strip():
                     info = line.split()
                     if len(info) == 5: #this is restricted
-                        count = multiple.get(info[0][0],1)
+                        #count = multiple.get(info[0][0],1)
+                        count = multiple.get(info[0],1)
                         for repeat in range(count): # i.e. add E's twice, T's thrice
                             self.mosyms[0].append(self.normalisesym(info[0]))
                             self.moenergies[0].append(utils.convertor(float(info[3]), 'hartree', 'eV'))
 
                             sym = info[0]
                             if count > 1: # add additional sym label
-                                sym = self.normalisedegenerates(info[0],repeat)
+                                sym = self.normalisedegenerates(info[0],repeat,ndict=irrepspecies)
 
                             try:
                                 symlist[sym][0].append(len(self.moenergies[0])-1)
@@ -662,7 +685,7 @@ class ADF(logfileparser.Logfile):
                                 self.mocoeffs[spin][moindices[i],aoindex] = coeffs[i]
                             line = inputfile.next()
                         lastrow = row
-                        
+                     
         
 if __name__ == "__main__":
     import doctest, adfparser
