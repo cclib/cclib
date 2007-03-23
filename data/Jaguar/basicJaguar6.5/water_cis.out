@@ -1,0 +1,224 @@
+Job water_cis started on krypton at Fri Mar 23 16:34:02 2007
+jobid: krypton-0-4603f368
+
+  +--------------------------------------------------------------------+
+  |  Jaguar version 6.5, release 112                                   |
+  |                                                                    |
+  |  Copyright (c) 2005 Schrodinger,  LLC.                             |
+  |  All Rights Reserved.                                              |
+  |                                                                    |
+  |  Use of this program should be acknowledged in publications as:    |
+  |  Jaguar, version 6.5, Schrodinger, LLC, New York, NY, 2005.        |
+  +--------------------------------------------------------------------+
+   
+  start of program pre
+  Job name: water_cis
+  Executables used: /local/cclib/bin/jaguar-v65112/bin/Linux-x86
+  Temporary files : /var/tmp/cclib/water_cis
+  
+  
+  basis set:             sto-3g          
+  net molecular charge:    0
+  multiplicity:            1
+  
+  number of basis functions....            7
+  no dealiasing set available for atom            1
+  switch to all-analytic calculation
+  
+ Input geometry:
+                                   angstroms
+  atom               x                 y                 z
+  O1            0.0000000000      0.0000000000      0.0000000000 
+  H1            0.0000000000      0.0000000000      0.9900000000 
+  H2            0.9516490790      0.0000000000     -0.2728809823 
+   
+  principal moments of inertia:
+        amu*angstrom^2:        0.63543        1.26004        1.89546
+                g*cm^2: 1.05515331E-40 2.09233949E-40 3.14749281E-40
+   
+  rotational constants:
+               cm^(-1):    26.52958024    13.37869620     8.89367385
+                   GHz:   795.33680710   401.08322189   266.62563427
+   
+  Z-matrix: (angstroms and degrees) 
+ O1
+ H1    O1  r1
+ H2    O1  r1    H1  a1
+  
+  Z-variables: (angstroms and degrees) 
+  r1 =    0.99
+  a1 =  106.0
+  
+  Molecular weight:      18.01 amu
+   
+  Stoichiometry: H2O
+  Molecular Point Group: C2v     
+  Point Group used: C1 (symmetry turned off)
+  
+  nuclear repulsion energy.......       8.887006905 hartrees
+ 
+ Non-default options chosen:
+   Electronic excitation energies will be calculated by CIS
+   Molecular symmetry not used
+  
+  end of program pre
+   
+   
+  start of program onee
+  smallest eigenvalue of S:    3.639E-01
+  number of canonical orbitals.....            7
+  end of program onee
+   
+   
+  start of program hfig
+  initial wavefunction generated automatically from atomic wavefunctions
+ 
+  Irreducible     Total no   No of occupied orbitals 
+  representation  orbitals   Shell_1  Shell_2    ...
+  No Symm            7          5
+  ------------------------
+  Orbital occupation/shell    1.000
+ 
+  end of program hfig
+   
+   
+  start of program probe
+  end of program probe
+   
+   
+  start of program scf 
+ number of electrons..........         10
+ number of alpha electrons....          5
+ number of beta electrons.....          5
+ number of orbitals, total....          7
+ number of doubly-occ'd orbs..          5
+ number of open shell orbs....          0
+ number of occupied orbitals..          5
+ number of virtual orbitals...          2
+ number of hamiltonians.......          1
+ number of shells.............          1
+ SCF type: HF
+  
+       i  u  d  i  g                   
+       t  p  i  c  r                                 RMS    maximum
+       e  d  i  u  i                       energy  density   DIIS  
+       r  t  s  t  d       total energy    change  change    error 
+  
+etot   1  N  N  0  N     -74.82220839383           4.1E-02  2.1E-01
+etot   2  Y  Y  0  N     -74.95412462356  1.3E-01  1.5E-02  5.1E-02
+etot   3  N  Y  0  N     -74.96411883697  1.0E-02  2.3E-03  8.1E-03
+etot   4  Y  Y  0  N     -74.96431449743  2.0E-04  6.6E-04  1.3E-03
+etot   5  N  N  0  N     -74.96432861178  1.4E-05  0.0E+00  0.0E+00
+  
+  
+ Energy components, in hartrees:
+   (A)  Nuclear repulsion............       8.88700690452
+   (E)  Total one-electron terms.....    -121.83970239152
+   (I)  Total two-electron terms.....      37.98836687521
+   (L)  Electronic energy............     -83.85133551630  (E+I)
+   (N)  Total energy.................     -74.96432861178  (A+L)
+  
+ SCFE: SCF energy: HF       -74.96432861178 hartrees   iterations:   5
+  
+ 
+ HOMO energy:    -0.38826
+ LUMO energy:     0.57070
+ 
+  Orbital energies: 
+  -20.24386   -1.25066   -0.60316   -0.44556   -0.38826    0.57070
+    0.70862
+ 
+  end of program scf 
+   
+   
+   start of program cis
+ Energy convergence criterion:       0.1000E-04
+ Wavefunction convergence criterion: 0.1000E-01
+ Entering Diagonalization
+                   CI size =          10
+ Number of initial guesses =          10
+     Maximum subspace size =          11
+   Number of roots to find =           5
+ Diagonalization vectors stored in core
+ The maximum subspace size of          11 has been reached
+ ----------------------------------------
+ Restarting
+ No expansion vectors left
+ ----------------------------------------
+ Restarting
+ ----------------------------------------------------------------------------
+  
+  Excited State   1:    12.2284 eV    101.39 nm
+  
+  orbitals in
+   excitation    CI coeff.
+  ------------   ---------
+     5 =>   6     1.00000
+  
+  Transition dipole moment (debye):
+     X=     0.0000     Y=     0.2692     Z=     0.0000  Tot=     0.2692
+  
+  Oscillator strength, f=     0.0034
+ ----------------------------------------------------------------------------
+  
+  Excited State   2:    14.2469 eV     87.03 nm
+  
+  orbitals in
+   excitation    CI coeff.
+  ------------   ---------
+     5 =>   7     1.00000
+  
+  Transition dipole moment (debye):
+     X=     0.0000     Y=     0.0000     Z=     0.0000  Tot=     0.0000
+  
+  Oscillator strength, f=     0.0000
+ ----------------------------------------------------------------------------
+  
+  Excited State   3:    15.8630 eV     78.16 nm
+  
+  orbitals in
+   excitation    CI coeff.
+  ------------   ---------
+     4 =>   6    -0.96694
+     3 =>   7     0.24754
+  
+  Transition dipole moment (debye):
+     X=     0.8823     Y=     0.0000     Z=     0.6648  Tot=     1.1047
+  
+  Oscillator strength, f=     0.0734
+ ----------------------------------------------------------------------------
+  
+  Excited State   4:    18.1603 eV     68.27 nm
+  
+  orbitals in
+   excitation    CI coeff.
+  ------------   ---------
+     3 =>   6    -0.44018
+     4 =>   7     0.89789
+  
+  Transition dipole moment (debye):
+     X=     0.5153     Y=     0.0000     Z=    -0.6838  Tot=     0.8562
+  
+  Oscillator strength, f=     0.0505
+ ----------------------------------------------------------------------------
+  
+  Excited State   5:    21.0605 eV     58.87 nm
+  
+  orbitals in
+   excitation    CI coeff.
+  ------------   ---------
+     3 =>   6    -0.89695
+     4 =>   7    -0.43945
+  
+  Transition dipole moment (debye):
+     X=    -2.3462     Y=     0.0000     Z=     3.1135  Tot=     3.8985
+  
+  Oscillator strength, f=     1.2138
+ ----------------------------------------------------------------------------
+  
+  end of program cis
+ Total cpu seconds     user:       2.630   user+sys:       3.350
+  
+ Total elapsed time:    9 seconds
+
+Job water_cis completed on krypton at Fri Mar 23 16:34:11 2007

@@ -403,6 +403,21 @@ class Jaguar(logfileparser.Logfile):
                 self.vibdisps = Numeric.array(self.vibdisps, "d")
                 if hasattr(self, "vibirs"):
                     self.vibirs = Numeric.array(self.vibirs, "d")
+                    
+            # Parse excited state output (for CIS calculations).
+            if line[2:15] == "Excited State":
+                if not hasattr(self, "etenergies"):
+                    self.etenergies = []
+                    self.logger.info("Creating attribute: etenergies")
+                if not hasattr(self, "etoscs"):
+                    self.etoscs = []
+                    self.logger.info("Creating attribute: etoscs")
+                etenergy = float(line.split()[3])
+                self.etenergies.append(etenergy)
+                while line[2:21] != "Oscillator strength":
+                    line = inputfile.next()
+                strength = float(line.split()[-1])
+                self.etoscs.append(strength)
 
         
 if __name__ == "__main__":
