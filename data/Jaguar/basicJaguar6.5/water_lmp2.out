@@ -1,0 +1,189 @@
+Job water_mp2 started on krypton at Fri Mar 23 15:41:22 2007
+jobid: krypton-0-4603e711
+
+  +--------------------------------------------------------------------+
+  |  Jaguar version 6.5, release 112                                   |
+  |                                                                    |
+  |  Copyright (c) 2005 Schrodinger,  LLC.                             |
+  |  All Rights Reserved.                                              |
+  |                                                                    |
+  |  Use of this program should be acknowledged in publications as:    |
+  |  Jaguar, version 6.5, Schrodinger, LLC, New York, NY, 2005.        |
+  +--------------------------------------------------------------------+
+   
+  start of program pre
+  Job name: water_mp2
+  Executables used: /local/cclib/bin/jaguar-v65112/bin/Linux-x86
+  Temporary files : /var/tmp/cclib/water_mp2
+  
+  
+  basis set:             3-21g           
+  net molecular charge:    0
+  multiplicity:            1
+  
+  number of basis functions....           13
+  
+ Input geometry:
+                                   angstroms
+  atom               x                 y                 z
+  O1            0.0000000000      0.0000000000      0.0000000000 
+  H1            0.0000000000      0.0000000000      0.9900000000 
+  H2            0.9516490790      0.0000000000     -0.2728809823 
+   
+  principal moments of inertia:
+        amu*angstrom^2:        0.63543        1.26004        1.89546
+                g*cm^2: 1.05515331E-40 2.09233949E-40 3.14749281E-40
+   
+  rotational constants:
+               cm^(-1):    26.52958024    13.37869620     8.89367385
+                   GHz:   795.33680710   401.08322189   266.62563427
+   
+  Z-matrix: (angstroms and degrees) 
+ O1
+ H1    O1  r1
+ H2    O1  r1    H1  a1
+  
+  Z-variables: (angstroms and degrees) 
+  r1 =    0.99
+  a1 =  106.0
+  
+  Molecular weight:      18.01 amu
+   
+  Stoichiometry: H2O
+  Molecular Point Group: C2v     
+  Point Group used: C1 (symmetry turned off)
+  
+  nuclear repulsion energy.......       8.887006905 hartrees
+ 
+ Non-default options chosen:
+   Post-SCF correlation type: LMP2            
+   LMP2 energy will be computed with 2e frozen core for Li-Ne
+      and 10e frozen core for Na-Ar
+   Molecular symmetry not used
+  
+  end of program pre
+   
+   
+  start of program onee
+  smallest eigenvalue of S:    1.149E-01
+  number of canonical orbitals.....           13
+  end of program onee
+   
+   
+  start of program hfig
+  initial wavefunction generated automatically from atomic wavefunctions
+ 
+  Irreducible     Total no   No of occupied orbitals 
+  representation  orbitals   Shell_1  Shell_2    ...
+  No Symm           13          5
+  ------------------------
+  Orbital occupation/shell    1.000
+ 
+  end of program hfig
+   
+   
+  start of program probe
+  end of program probe
+   
+   
+  start of program grid
+   
+  number of gridpoints: 
+     atom         O1        H1        H2     total
+  grid # 1       105        74        74       253
+  grid # 2       117        95        95       307
+  grid # 3       236       208       208       652
+  grid # 4       434       226       226       886
+   
+  end of program grid
+   
+   
+  start of program rwr
+  end of program rwr
+   
+   
+  start of program scf 
+ number of electrons..........         10
+ number of alpha electrons....          5
+ number of beta electrons.....          5
+ number of orbitals, total....         13
+ number of doubly-occ'd orbs..          5
+ number of open shell orbs....          0
+ number of occupied orbitals..          5
+ number of virtual orbitals...          8
+ number of hamiltonians.......          1
+ number of shells.............          1
+ SCF type: HF
+  
+       i  u  d  i  g                   
+       t  p  i  c  r                                 RMS    maximum
+       e  d  i  u  i                       energy  density   DIIS  
+       r  t  s  t  d       total energy    change  change    error 
+  
+etot   1  N  N  5  M     -75.41375094235           2.6E-02  1.7E-01
+etot   2  Y  Y  6  M     -75.57757846835  1.6E-01  6.4E-03  3.8E-02
+etot   3  N  Y  2  U     -75.58466511424  7.1E-03  1.0E-03  1.2E-02
+etot   4  Y  Y  6  M     -75.58487519295  2.1E-04  3.5E-04  4.4E-03
+etot   5  Y  Y  6  M     -75.58492541700  5.0E-05  1.6E-04  5.0E-04
+etot   6  N  N  2  U     -75.58496554071  4.0E-05  0.0E+00  0.0E+00
+  
+  
+ Energy components, in hartrees:
+   (A)  Nuclear repulsion............       8.88700690452
+   (E)  Total one-electron terms.....    -122.09716097598
+   (I)  Total two-electron terms.....      37.62518853074
+   (J)    Coulomb....................      46.56169935786
+   (K)    Exchange...................      -8.93651082712
+   (L)  Electronic energy............     -84.47197244524  (E+I)
+   (N)  Total energy.................     -75.58496554071  (A+L)
+  
+ SCFE: SCF energy: HF       -75.58496554071 hartrees   iterations:   6
+  
+ 
+ HOMO energy:    -0.47737
+ LUMO energy:     0.25315
+ 
+  Orbital energies: 
+  -20.43362   -1.31189   -0.67056   -0.52995   -0.47737    0.25315
+    0.35134    1.18613    1.25896    1.78261    1.87282    2.02241
+    3.09165
+ 
+  end of program scf 
+   
+   
+  start of program local
+
+ Localized doubly occupied orbitals 
+  orbitals    2 through    5
+  using Mulliken Atomic Population Localization
+  end of program local
+   
+   
+  start of program lmp2
+  number of orbitals, total.......           13
+  number of frozen core orbitals..            1
+  number of valence mp2 orbitals..            4
+  number of occupied orbitals.....            5
+  number of virtual orbitals......            8
+  number of exchange hamiltonians.           16
+  
+ Iteration    LMP2 Energy Correction     Delta C
+   
+     1          -0.13006261408
+     2          -0.12110384675           0.00721789674
+     3          -0.12271616040           0.00278766518
+     4          -0.12277577687           0.00028566383
+     5          -0.12277760743           0.00005362015
+ -----------  LMP2 Converged ---------
+   
+ Hartree-Fock energy.....     -75.58496554071
+ LMP2 Energy Correction..      -0.12277760743
+ Total LMP2 Energy.......     -75.70774314814
+   
+  end of program lmp2
+   
+ Total cpu seconds     user:       1.460   user+sys:       1.870
+  
+ Total elapsed time:    7 seconds
+
+Job water_mp2 completed on krypton at Fri Mar 23 15:41:29 2007

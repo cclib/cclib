@@ -104,14 +104,20 @@ class PCGAMESSMP4SDTQTest(GenericMP4SDTQTest):
     def setUp(self):
         self.data = data[10]
 
+class Jaguar65LMP2Test(GenericMP2Test):
+    def setUp(self):
+        self.data = data[11]
+
 names = [ "GAMESS",
           "Gaussian", "Gaussian", "Gaussian", "Gaussian",
           "GAMESS UK", "GAMESS UK",
-          "PCGamess", "PCGamess", "PCGamess", "PCGamess" ]
+          "PCGamess", "PCGamess", "PCGamess", "PCGamess",
+          "Jaguar6.5" ]
 tests = [ GAMESSMP2Test, 
           GaussianMP2Test, GaussianMP3Test, GaussianMP4SDTQTest, GaussianMP5Test,
           GAMESSUKMP2Test, GAMESSUKMP3Test, PCGAMESSMP2Test, PCGAMESSMP3Test,
-          PCGAMESSMP4SDQTest, PCGAMESSMP4SDTQTest]
+          PCGAMESSMP4SDQTest, PCGAMESSMP4SDTQTest,
+          Jaguar65LMP2Test ]
 data = [getfile(GAMESS, "basicGAMESS-US", "water_mp2.out"),
         getfile(Gaussian, "basicGaussian03","water_mp2.log"),
         getfile(Gaussian, "basicGaussian03","water_mp3.log"),
@@ -123,6 +129,7 @@ data = [getfile(GAMESS, "basicGAMESS-US", "water_mp2.out"),
         getfile(GAMESS, "basicPCGAMESS", "water_mp3.out"),
         getfile(GAMESS, "basicPCGAMESS", "water_mp4.out"),
         getfile(GAMESS, "basicPCGAMESS", "water_mp4_sdtq.out"),
+        getfile(Jaguar, "basicJaguar6.5", "water_lmp2.out"),
         ]
               
 if __name__=="__main__":

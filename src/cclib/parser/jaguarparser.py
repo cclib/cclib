@@ -89,13 +89,24 @@ class Jaguar(logfileparser.Logfile):
                     line = inputfile.next()
                 self.scfvalues.append(values)
 
-            if line[1:5] == "SCFE":
-# Get the energy of the molecule
+            # Hartree-Fock energy after SCF
+            if line[1:18] == "SCFE: SCF energy:":
                 if not hasattr(self, "scfenergies"):
                     self.logger.info("Creating attribute scfenergies")
                     self.scfenergies = []
                 temp = line.strip().split()
-                self.scfenergies.append(utils.convertor(float(temp[temp.index("hartrees") - 1]), "hartree", "eV"))
+                scfenergy = float(temp[temp.index("hartrees") - 1])
+                scfenergy = utils.convertor(scfenergy, "hartree", "eV")
+                self.scfenergies.append(scfenergy)
+
+            # Energy after LMP2 correction
+            if line[1:18] == "Total LMP2 Energy":
+                if not hasattr(self, "mpenergies"):
+                    self.logger.info("Creating attribute mpenergies")
+                    self.mpenergies = [[]]
+                lmp2energy = float(line.split()[-1])
+                lmp2energy = utils.convertor(lmp2energy, "hartree", "eV")
+                self.mpenergies[-1].append(lmp2energy)
 
             if line[2:14] == "new geometry" or line[1:21] == "Symmetrized geometry" or line.find("Input geometry") > 0:
 # Get the atom coordinates
