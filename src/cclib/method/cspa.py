@@ -44,16 +44,17 @@ class CSPA(Population):
 
         self.logger.info("Creating attribute aoresults: array[3]")
         unrestricted = (len(self.parser.mocoeffs)==2)
-        nmocoeffs = len(self.parser.mocoeffs[0])
         nbasis = self.parser.nbasis
 
         #determine number of steps, and whether process involves beta orbitals
-        nstep = nmocoeffs
+        self.aoresults = []
+        alpha = len(self.parser.mocoeffs[0])
+        self.aoresults.append(Numeric.zeros([alpha, nbasis], "d"))
+        nstep = alpha
         if unrestricted:
-            self.aoresults = Numeric.zeros([2, nmocoeffs, nbasis], "d")
-            nstep += nmocoeffs
-        else:
-            self.aoresults = Numeric.zeros([1, nmocoeffs, nbasis], "d")
+            beta = len(self.parser.mocoeffs[1])
+            self.aoresults.append(Numeric.zeros([beta, nbasis], "d"))
+            nstep += beta
 
         #intialize progress if available
         if self.progress:
@@ -62,7 +63,7 @@ class CSPA(Population):
         step = 0
         for spin in range(len(self.parser.mocoeffs)):
 
-            for i in range(nmocoeffs):
+            for i in range(len(self.parser.mocoeffs[spin])):
 
                 if self.progress and random.random() < fupdate:
                     self.progress.update(step, "C^2 Population Analysis")
