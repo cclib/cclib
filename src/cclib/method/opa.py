@@ -44,10 +44,6 @@ class OPA(Method):
             self.logger.error("Missing mocoeffs, aooverlaps/fooverlaps or nbasis")
             return False #let the caller of function know we didn't finish
 
-        unrestricted = (len(self.parser.mocoeffs) == 2)
-        nmocoeffs = len(self.parser.mocoeffs[0])
-        nbasis = self.parser.nbasis
-
         if not indices:
 #build list of groups of orbitals in each atom for atomresults
             if hasattr(self.parser, "aonames"):
@@ -75,10 +71,15 @@ class OPA(Method):
         #determine number of steps, and whether process involves beta orbitals
         nfrag = len(indices) #nfrag
         nstep = func(nfrag - 1)
+        unrestricted = (len(self.parser.mocoeffs) == 2)
+        alpha = len(self.parser.mocoeffs[0])
+        nbasis = self.parser.nbasis
+
         self.logger.info("Creating attribute results: array[4]")
-        results= [ Numeric.zeros([nfrag, nfrag, nmocoeffs], "d") ]
+        results= [ Numeric.zeros([nfrag, nfrag, alpha], "d") ]
         if unrestricted:
-            results.append(Numeric.zeros([nfrag, nfrag, nmocoeffs], "d"))
+            beta = len(self.parser.mocoeffs[1])
+            results.append(Numeric.zeros([nfrag, nfrag, beta], "d"))
             nstep *= 2
             
         if hasattr(self.parser, "aooverlaps"):
@@ -94,8 +95,8 @@ class OPA(Method):
         step = 0
 
         preresults = []
-        two = Numeric.array([2.0]*nmocoeffs,"d")
         for spin in range(len(self.parser.mocoeffs)):
+            two = Numeric.array([2.0]*len(self.parser.mocoeffs[spin]),"d")
 
 
             # OP_{AB,i} = \sum_{a in A} \sum_{b in B} 2 c_{ai} c_{bi} S_{ab}
