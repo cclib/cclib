@@ -78,10 +78,13 @@ class Population(Method):
         nmocoeffs = len(self.aoresults[0])
         
 #build results Numeric array[3]
+        alpha = len(self.aoresults[0])
+        results = []
+        results.append(Numeric.zeros([alpha, natoms], "d"))
+
         if len(self.aoresults) == 2:
-            results = Numeric.zeros([2, nmocoeffs, natoms], "d")
-        else:
-            results = Numeric.zeros([1, nmocoeffs, natoms], "d")
+            beta = len(self.aoresults[1])
+            results.append(Numeric.zeros([beta, natoms], "d"))
         
 #for each spin, splice Numeric array at ao index, and add to correct result row
         for spin in range(len(results)):
@@ -90,10 +93,10 @@ class Population(Method):
 
                 for j in range(len(indices[i])): #for each group
                 
-                    temp = self.aoresults[spin, :, indices[i][j]]
-                    results[spin, :, i] = Numeric.add(results[spin, :, i], temp)
+                    temp = self.aoresults[spin][:, indices[i][j]]
+                    results[spin][:, i] = Numeric.add(results[spin][:, i], temp)
 
-        self.logger.info("Saving partitioned results in fragresults: array[3]")
+        self.logger.info("Saving partitioned results in fragresults: [array[2]]")
         self.fragresults = results
 
         return True

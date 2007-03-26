@@ -50,17 +50,18 @@ class MPA(Population):
 #end attribute checks
 
         unrestricted = (len(self.parser.mocoeffs) == 2)
-        nmocoeffs = len(self.parser.mocoeffs[0])
         nbasis = self.parser.nbasis
 
         #determine number of steps, and whether process involves beta orbitals
-        nstep = nmocoeffs
-        self.logger.info("Creating attribute aoresults: array[3]")
+        self.logger.info("Creating attribute aoresults: [array[2]]")
+        alpha = len(self.parser.mocoeffs[0])
+        self.aoresults = [ Numeric.zeros([alpha, nbasis], "d") ]
+        nstep = alpha
+
         if unrestricted:
-            self.aoresults = Numeric.zeros([2, nmocoeffs, nbasis], "d")
-            nstep += nmocoeffs
-        else:
-            self.aoresults = Numeric.zeros([1, nmocoeffs, nbasis], "d")
+            beta = len(self.parser.mocoeffs[1])
+            self.aoresults.append(Numeric.zeros([beta, nbasis], "d"))
+            nstep += beta
 
         #intialize progress if available
         if self.progress:
@@ -69,7 +70,7 @@ class MPA(Population):
         step = 0
         for spin in range(len(self.parser.mocoeffs)):
 
-            for i in range(nmocoeffs):
+            for i in range(len(self.parser.mocoeffs[spin])):
 
                 if self.progress and random.random() < fupdate:
                     self.progress.update(step, "Mulliken Population Analysis")
