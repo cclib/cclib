@@ -405,6 +405,7 @@ class Jaguar(logfileparser.Logfile):
                     self.vibirs = Numeric.array(self.vibirs, "d")
                     
             # Parse excited state output (for CIS calculations).
+            # Jaguar calculates only singlet states.
             if line[2:15] == "Excited State":
                 if not hasattr(self, "etenergies"):
                     self.etenergies = []
@@ -412,9 +413,30 @@ class Jaguar(logfileparser.Logfile):
                 if not hasattr(self, "etoscs"):
                     self.etoscs = []
                     self.logger.info("Creating attribute: etoscs")
+                if not hasattr(self, "etsecs"):
+                    self.etsecs = []
+                    self.etsyms = []
+                    self.logger.info("Creating attribute: etsecs")
+                    self.logger.info("Creating attribute: etsyms")
                 etenergy = float(line.split()[3])
+                etenergy = utils.convertor(etenergy, "eV", "cm-1")
                 self.etenergies.append(etenergy)
-                while line[2:21] != "Oscillator strength":
+                # Skip 4 lines
+                for i in range(5):
+                    line = inputfile.next()
+                self.etsecs.append([])
+                # Jaguar calculates only singlet states.
+                self.etsyms.append('Singlet-A')
+                while line.strip() != "":
+                    fromMO = int(line.split()[0])-1
+                    toMO = int(line.split()[2])-1
+                    # Jaguar multiplies the coefficients times sqrt(2),
+                    #  and changes the sign.
+                    coeff = - float(line.split()[-1]) / Numeric.sqrt(2.0)
+                    self.etsecs[-1].append([(fromMO,0),(toMO,0),coeff])
+                    line = inputfile.next()
+                # Skip 3 lines
+                for i in range(4):
                     line = inputfile.next()
                 strength = float(line.split()[-1])
                 self.etoscs.append(strength)

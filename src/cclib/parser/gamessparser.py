@@ -186,7 +186,7 @@ class GAMESS(logfileparser.Logfile):
                     # Take hartree value with more numbers, and convert.
                     # Note that the values listed after this are also less exact!
                     etenergy = float(line.split()[1])
-                    self.etenergies.append(utils.convertor(etenergy, "hartree", "eV"))
+                    self.etenergies.append(utils.convertor(etenergy, "hartree", "cm-1"))
                     line = inputfile.next()
 
             # etsecs (used only for CIS runs for now)
@@ -194,7 +194,17 @@ class GAMESS(logfileparser.Logfile):
                 if not hasattr(self, 'etsecs'):
                     self.logger.info("Creating attribute etsecs[]")
                     self.etsecs = []
+                if not hasattr(self, 'etsyms'):
+                    self.logger.info("Creating attribute etsyms[]")
+                    self.etsyms = []
                 statenumber = int(line.split()[2])
+                spin = int(float(line.split()[7]))
+                if spin == 0:
+                    sym = "Singlet"
+                if spin == 1:
+                    sym = "Triplet"
+                sym += '-' + line.split()[-1]
+                self.etsyms.append(sym)
                 # skip 5 lines
                 for i in range(5):
                     line = inputfile.next()
