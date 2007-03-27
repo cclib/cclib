@@ -51,7 +51,6 @@ class GenericCISWaterTest(GenericCISTest):
         triplets = [self.data.etenergies[i] for i in indices1]
         # All programs do singlets.
         singletdiff = singlets[:4] - self.etenergies0
-        print singletdiff
         self.failUnless(alltrue(singletdiff < 50))
         # Not all programs do triplets (i.e. Jaguar).
         if len(triplets) >= 4:
@@ -59,7 +58,7 @@ class GenericCISWaterTest(GenericCISTest):
             self.failUnless(alltrue(tripletdiff < 50))
 
     def testetsecsvalues(self):
-        """ Are etsecs correct and coefficients within 0.0001 of the correct values?"""
+        """ Are etsecs correct and coefficients within 0.0005 of the correct values?"""
         indices0 = [i for i in range(self.nstates) if self.data.etsyms[i][0] == "S"]
         indices1 = [i for i in range(self.nstates) if self.data.etsyms[i][0] == "T"]
         singlets = [self.data.etsecs[i] for i in indices0]
@@ -71,7 +70,7 @@ class GenericCISWaterTest(GenericCISTest):
                 for s in singlets[i]:
                     if s[0][0] == exc[0] and s[1][0] == exc[1]:
                         found = True
-                        self.assertInside(s[2], exc[2], 0.0001)
+                        self.assertInside(s[2], exc[2], 0.0005)
         if not found:
             self.fail("Excitation %i->%s not found" %(exc[0], exc[1]))
 
