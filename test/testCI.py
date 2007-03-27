@@ -17,11 +17,17 @@ class GaussianCISTest(GenericCISTest):
     def setUp(self):
         self.data = data[0]
         self.nstates = 10
+    def testetsecs(self):
+        """ Are there nstate elements in etsecs?"""
+        self.assertEqual(len(self.data.etsecs), self.nstates)
 
 class GAMESSCISTest(GenericCISTest):
     def setUp(self):
         self.data = data[1]
         self.nstates = 10
+    def testetsecs(self):
+        """ Are there nstate elements in etsecs?"""
+        self.assertEqual(len(self.data.etsecs), self.nstates)
 
 class Jaguar65CISTest(GenericCISTest):
     def setUp(self):

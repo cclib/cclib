@@ -189,6 +189,30 @@ class GAMESS(logfileparser.Logfile):
                     self.etenergies.append(utils.convertor(etenergy, "hartree", "eV"))
                     line = inputfile.next()
 
+            # etsecs (used only for CIS runs for now)
+            if line[1:14] == "EXCITED STATE":
+                if not hasattr(self, 'etsecs'):
+                    self.logger.info("Creating attribute etsecs[]")
+                    self.etsecs = []
+                statenumber = int(line.split()[2])
+                # skip 5 lines
+                for i in range(5):
+                    line = inputfile.next()
+                line = inputfile.next()
+                CIScontribs = []
+                while line.strip()[0] != "-":
+                    MOtype = line.split()[0]
+                    if MOtype == "ALPHA":
+                        MOtype = 0
+                    if MOtype == "BETA":
+                        MOtype = 1
+                    fromMO = int(line.split()[1])-1
+                    toMO = int(line.split()[2])-1
+                    coeff = float(line.split()[3])
+                    CIScontribs.append([(fromMO,MOtype),(toMO,MOtype),coeff])
+                    line = inputfile.next()
+                self.etsecs.append(CIScontribs)
+
             if line.find("MAXIMUM GRADIENT") > 0:
                 if not hasattr(self, "geovalues"):
                     self.logger.info("Creating attribute geovalues[]")
