@@ -540,7 +540,13 @@ class ADF(logfileparser.Logfile):
                 blank = inputfile.next()
                 note = inputfile.next()
                 symoffset = 0
-                blank = inputfile.next(); blank = inputfile.next(); blank = inputfile.next()
+
+                blank = inputfile.next() 
+                blank = inputfile.next()
+                if len(blank) > 2: #fix for ADF2006.01 as it has another note
+                    blank = inputfile.next()
+                    blank = inputfile.next()
+                blank = inputfile.next()
                 
                 nosymreps = []
                 while len(self.fonames) < self.nbasis:
