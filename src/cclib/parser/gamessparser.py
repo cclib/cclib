@@ -222,6 +222,18 @@ class GAMESS(logfileparser.Logfile):
                     CIScontribs.append([(fromMO,MOtype),(toMO,MOtype),coeff])
                     line = inputfile.next()
                 self.etsecs.append(CIScontribs)
+                
+            # etoscs (used only for CIS runs now)
+            if line[1:50] == "TRANSITION FROM THE GROUND STATE TO EXCITED STATE":
+                if not hasattr(self, "etoscs"):
+                    self.logger.info("Creating attribute etoscs[]")
+                    self.etoscs = []
+                statenumber = int(line.split()[-1])
+                # skip 7 lines
+                for i in range(8):
+                    line = inputfile.next()
+                strength = float(line.split()[3])
+                self.etoscs.append(strength)
 
             if line.find("MAXIMUM GRADIENT") > 0:
                 if not hasattr(self, "geovalues"):

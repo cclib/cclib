@@ -9,10 +9,12 @@ class GenericCITest(bettertest.TestCase):
     nstates = 0
     
     def testnumberofstates(self):
-        """ Are there nstate elements in etenergies/etsecs/etsyms?"""
+        """ Are there nstate elements in etenergies/etsecs/etsyms/etoscs?"""
         self.assertEqual(len(self.data.etenergies), self.nstates)
         self.assertEqual(len(self.data.etsecs), self.nstates)
         self.assertEqual(len(self.data.etsyms), self.nstates)
+        self.assertEqual(len(self.data.etoscs), self.nstates)
+
     
     def testetenergies(self):
         """ Are transition energies positive and rising?"""
