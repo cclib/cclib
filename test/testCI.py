@@ -70,9 +70,20 @@ class GenericCISWaterTest(GenericCISTest):
                 for s in singlets[i]:
                     if s[0][0] == exc[0] and s[1][0] == exc[1]:
                         found = True
-                        self.assertInside(s[2], exc[2], 0.0005)
+                        self.assertInside(abs(s[2]), abs(exc[2]), 0.0005)
         if not found:
-            self.fail("Excitation %i->%s not found" %(exc[0], exc[1]))
+            self.fail("Excitation %i->%s not found (singlet state %i)" %(exc[0], exc[1], i))
+        # Not all programs do triplets (i.e. Jaguar).
+        if len(triplets) >= 4:
+            found = False
+            for i in range(4):
+                for exc in self.etsecs1[i]:
+                    for s in triplets[i]:
+                        if s[0][0] == exc[0] and s[1][0] == exc[1]:
+                            found = True
+                            self.assertInside(abs(s[2]), abs(exc[2]), 0.0005)
+            if not found:
+                self.fail("Excitation %i->%s not found (triplet state %i)" %(exc[0], exc[1], i))
 
 class GaussianCISTest(GenericCISWaterTest):
     def setUp(self):
