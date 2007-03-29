@@ -80,6 +80,7 @@ class GAMESS(logfileparser.Logfile):
 
         firststdorient = True # Used to decide whether to wipe the atomcoords clean
         geooptfinished = False # Used to avoid extracting the final geometry twice
+        cihamtyp = "none" # Type of CI Hamiltonian: saps or dets.
 
         for line in inputfile:
             
@@ -189,6 +190,13 @@ class GAMESS(logfileparser.Logfile):
                     self.etenergies.append(utils.convertor(etenergy, "hartree", "cm-1"))
                     line = inputfile.next()
 
+            # Detect the CI hamiltonian type, if applicable.
+            # Should always be detected if CIS is done.
+            if line[8:64] == "RESULTS FROM SPIN-ADAPTED ANTISYMMETRIZED PRODUCT (SAPS)":
+                cihamtyp = "saps"
+            if line[8:64] == "RESULTS FROM DETERMINANT BASED ATOMIC ORBITAL CI-SINGLES":
+                cihamtyp = "dets"
+
             # etsecs (used only for CIS runs for now)
             if line[1:14] == "EXCITED STATE":
                 if not hasattr(self, 'etsecs'):
@@ -211,14 +219,14 @@ class GAMESS(logfileparser.Logfile):
                 line = inputfile.next()
                 CIScontribs = []
                 while line.strip()[0] != "-":
-                    MOtype = line.split()[0]
-                    if MOtype == "ALPHA":
-                        MOtype = 0
-                    if MOtype == "BETA":
-                        MOtype = 1
-                    fromMO = int(line.split()[1])-1
-                    toMO = int(line.split()[2])-1
-                    coeff = float(line.split()[3])
+                    MOtype = 0
+                    # alpha/beta are specified for hamtyp=dets
+                    if cihamtyp == "dets":
+                        if line.split()[0] == "BETA":
+                            MOtype = 1
+                    fromMO = int(line.split()[-3])-1
+                    toMO = int(line.split()[-2])-1
+                    coeff = float(line.split()[-1])
                     CIScontribs.append([(fromMO,MOtype),(toMO,MOtype),coeff])
                     line = inputfile.next()
                 self.etsecs.append(CIScontribs)

@@ -1,8 +1,3 @@
-----------------------------------------------
-Script that runs GAMESS version 27 Jun 2005 R3
-Also handles revisions CAMM and EDS
-Written by Karol Langner
-----------------------------------------------
 ----- GAMESS execution script -----
 This job is running on host slim
 under operating system Linux at pon mar 5 18:46:14 CET 2007

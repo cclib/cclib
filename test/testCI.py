@@ -33,9 +33,12 @@ class GenericCISWaterTest(GenericCISTest):
     etenergies1 = array([82085.34,  98999.11, 104077.89, 113978.37])
     # First four singlet/triplet state excitation orbitals and coefficients.
     # Tuples: (from MO, to MO, coefficient) - don't need spin indices.
-    # Based on output in GAMESS test.
+    # Based on output in GAMESS test (using the "dets" algorithm).
     # Note that only coefficients larger than 0.1 are included here, as
     #   the Gaussian test does not contain smaller ones.
+    # The simple example of water should yield the same first 4 states in all programs.
+    # Note that the GAMESS test "water_cis_dets" calculates also triplet states,
+    #  but the resulting transition dipoles and oscillator strengths are not correct.
     etsecs0 = [ [(4, 5, -0.70710678)],
                 [(4, 6, -0.70710678)],
                 [(3, 5,  0.68368723)],
@@ -95,7 +98,7 @@ class GaussianCISTest(GenericCISWaterTest):
 class GAMESSCISTest(GenericCISWaterTest):
     def setUp(self):
         self.data = data[1]
-        self.nstates = 10
+        self.nstates = 5
 
 class Jaguar65CISTest(GenericCISWaterTest):
     def setUp(self):
@@ -105,7 +108,7 @@ class Jaguar65CISTest(GenericCISWaterTest):
 names = [ "Gaussian", "GAMESS", "Jaguar" ]
 tests = [ GaussianCISTest, GAMESSCISTest, Jaguar65CISTest ]
 data = [getfile(Gaussian, "basicGaussian03", "water_cis.log"),
-        getfile(GAMESS, "basicGAMESS-US", "water_cis.out"),
+        getfile(GAMESS, "basicGAMESS-US", "water_cis_saps.out"),
         getfile(Jaguar, "basicJaguar6.5", "water_cis.out")
         ]
               
