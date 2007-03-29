@@ -227,6 +227,11 @@ class GAMESS(logfileparser.Logfile):
                     fromMO = int(line.split()[-3])-1
                     toMO = int(line.split()[-2])-1
                     coeff = float(line.split()[-1])
+                    # With the SAPS hamiltonian, the coefficients are multiplied
+                    #   by sqrt(2) so that they normalize to 1.
+                    # With DETS, both alpha and beta excitations are printed.
+                    if cihamtyp == "saps":
+                        coeff /= Numeric.sqrt(2.0)
                     CIScontribs.append([(fromMO,MOtype),(toMO,MOtype),coeff])
                     line = inputfile.next()
                 self.etsecs.append(CIScontribs)
