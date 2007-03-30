@@ -1,3 +1,4 @@
+ADF/ADF2004.01/Au2-fixed.adfout.gz
 ADF/ADF2004.01/Fe-ox3-final.out.gz
 ADF/ADF2004.01/Mo5Obdt2-opt-c2v.adfout.gz
 ADF/ADF2004.01/Mo5Obdt2-sp.adfout.gz
