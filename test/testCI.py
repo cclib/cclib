@@ -105,7 +105,7 @@ class Jaguar65CISTest(GenericCISWaterTest):
         self.data = data[2]
         self.nstates = 5
 
-names = [ "Gaussian", "GAMESS", "Jaguar" ]
+names = [ "Gaussian", "GAMESS", "Jaguar 6.5" ]
 tests = [ GaussianCISTest, GAMESSCISTest, Jaguar65CISTest ]
 data = [getfile(Gaussian, "basicGaussian03", "water_cis.log"),
         getfile(GAMESS, "basicGAMESS-US", "water_cis_saps.out"),

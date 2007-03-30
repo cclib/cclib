@@ -112,7 +112,7 @@ names = [ "GAMESS",
           "Gaussian", "Gaussian", "Gaussian", "Gaussian",
           "GAMESS UK", "GAMESS UK",
           "PCGamess", "PCGamess", "PCGamess", "PCGamess",
-          "Jaguar6.5" ]
+          "Jaguar 6.5" ]
 tests = [ GAMESSMP2Test, 
           GaussianMP2Test, GaussianMP3Test, GaussianMP4SDTQTest, GaussianMP5Test,
           GAMESSUKMP2Test, GAMESSUKMP3Test, PCGAMESSMP2Test, PCGAMESSMP3Test,
