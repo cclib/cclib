@@ -25,6 +25,13 @@ def testGaussian_basicGaussian03_dvb_gopt_out(logfile):
     """
     assert len(logfile.homos)==1
 
+def testGaussian_Gaussian03_chn1_log_gz(logfile):
+    """
+    This file failed to parse, due to the use of 'pop=regular'. We have
+    decided that mocoeffs should not be defined for such calculations.
+    """
+    assert not hasattr(logfile, "mocoeffs")
+
 def testGaussian_basicGaussian03_dvb_un_sp_out(logfile):
     """
     This file had no atomcoords at all at all, due to only having an Input
@@ -73,6 +80,7 @@ dummyfiles = [ Gaussian(""), GAMESS(""), ADF(""), GAMESSUK(""), Jaguar("") ]
 filenames = [glob(os.path.join(data, "Gaussian", "basicGaussian03", "*.out")) +  
              glob(os.path.join(data, "Gaussian", "basicGaussian03", "*.log")) +
              glob(os.path.join(data, "Gaussian", "Gaussian03", "*.bz2")) +
+             glob(os.path.join(data, "Gaussian", "Gaussian03", "*.gz")) +
              glob(os.path.join(data, "Gaussian", "Gaussian98", "*.bz2")) +
              glob(os.path.join(data, "Gaussian", "Gaussian98", "*.gz")),
              

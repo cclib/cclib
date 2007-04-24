@@ -602,16 +602,20 @@ class Gaussian(logfileparser.Logfile):
                     self.mocoeffs = [Numeric.zeros((nmo, nbasis), "d")]
 
                 base = 0
+                popregular = False
                 for base in range(0, nmo, 5):
                     
                     self.updateprogress(inputfile, "Coefficients", fupdate)
                              
-                    colmNames = inputfile.next()
+                    colmNames = inputfile.next()   
+                    if base==0 and int(colmNames.split()[0])!=1:
+                        # Implies that this is a POP=REGULAR calculation
+                        # and so, only aonames (not mocoeffs) will be extracted
+                        popregular = True
                     symmetries = inputfile.next()
                     eigenvalues = inputfile.next()
                     for i in range(nbasis):
-                    
-                    
+                                       
                         line = inputfile.next()
                         if base == 0 and not beta: # Just do this the first time 'round
                             # Changed below from :12 to :11 to deal with Elmar Neumann's example
@@ -629,7 +633,12 @@ class Gaussian(logfileparser.Logfile):
                             self.mocoeffs[1][base:base + len(part) / 10, i] = temp
                         else:
                             self.mocoeffs[0][base:base + len(part) / 10, i] = temp
-
+                    if popregular:
+                        # We now have aonames, so no need to continue
+                        break
+                if popregular:
+                    delattr(self, "mocoeffs")
+                    
             if line.find("Pseudopotential Parameters") > -1:
 #parse pseudopotential charges
 
