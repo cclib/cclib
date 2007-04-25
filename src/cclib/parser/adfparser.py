@@ -136,7 +136,6 @@ class ADF(logfileparser.Logfile):
 # Also extract the starting coordinates (for a GeoOpt anyway)
                 self.updateprogress(inputfile, "Attributes", cupdate)
                 
-                self.logger.info("Creating attribute atomnos[], atomcoords[], coreelectrons[]")
                 self.atomnos = []
                 self.atomcoords = []
                 self.coreelectrons = []
@@ -156,7 +155,6 @@ class ADF(logfileparser.Logfile):
                 self.atomcoords.append(atomcoords)
                 
                 self.natom = len(self.atomnos)
-                self.logger.info("Creating attribute natom: %d" % self.natom)
                 self.atomnos = Numeric.array(self.atomnos, "i")
                 
             if line[1:10] == "FRAGMENTS":
@@ -183,7 +181,6 @@ class ADF(logfileparser.Logfile):
 # find targets for SCF convergence
 
                 if not hasattr(self,"scftargets"):
-                    self.logger.info("Creating attribute scftargets[]")
                     self.scftargets = []
 
                 #underline, blank, nr
@@ -218,7 +215,6 @@ class ADF(logfileparser.Logfile):
                 while line.find("SCF CONVERGED") == -1 and line.find("SCF not fully converged, result acceptable") == -1 and line.find("SCF NOT CONVERGED") == -1:
                     if line[4:12] == "SCF test":
                         if not hasattr(self, "scfvalues"):
-                            self.logger.info("Creating attribute scfvalues")
                             self.scfvalues = []
                                                 
                         info = line.split()
@@ -244,7 +240,6 @@ class ADF(logfileparser.Logfile):
             if line[1:24] == "Coordinates (Cartesian)" and finalgeometry in [NOTFOUND, GETLAST]:
                 # Get the coordinates from each step of the GeoOpt
                 if not hasattr(self, "atomcoords"):
-                    self.logger.info("Creating attribute atomcoords")
                     self.atomcoords = []
                 equals = inputfile.next()
                 blank = inputfile.next()
@@ -264,11 +259,9 @@ class ADF(logfileparser.Logfile):
             if line[1:27] == 'Geometry Convergence Tests':
 # Extract Geometry convergence information
                 if not hasattr(self, "geotargets"):
-                    self.logger.info("Creating attributes geotargets[], geovalues[[]]")
                     self.geovalues = []
                     self.geotargets = Numeric.array([0.0, 0.0, 0.0, 0.0, 0.0], "d")
                 if not hasattr(self, "scfenergies"):
-                    self.logger.info("Creating attribute scfenergies[]")
                     self.scfenergies = []
                 equals = inputfile.next()
                 blank = inputfile.next()
@@ -293,10 +286,8 @@ class ADF(logfileparser.Logfile):
 #Extracting orbital symmetries and energies, homos for nosym case
 #Should only be for restricted case because there is a better text block for unrestricted and nosym
                 
-                self.logger.info("Creating attribute mosyms[[]]")
                 self.mosyms = [[]]
 
-                self.logger.info("Creating attribute moenergies[[]]")
                 self.moenergies = [[]]
                  
                 underline = inputfile.next()
@@ -322,7 +313,6 @@ class ADF(logfileparser.Logfile):
                     self.mosyms[0].append('A')
                     self.moenergies[0].append(utils.convertor(float(info[2]), 'hartree', 'eV'))
                     if info[1] == '0.000' and not hasattr(self, 'homos'):
-                        self.logger.info("Creating attribute homos[]")
                         self.homos = [len(self.moenergies[0]) - 2]
                     line = inputfile.next()
 
@@ -333,10 +323,8 @@ class ADF(logfileparser.Logfile):
 #Extracting orbital symmetries and energies, homos for nosym case
 #should only be here if unrestricted and nosym
 
-                self.logger.info("Creating attribute mosymms[[]]")
                 self.mosyms = [[], []]
 
-                self.logger.info("Creating attribute moenergies[[]]")
                 moenergies = [[], []]
 
                 underline = inputfile.next()
@@ -366,17 +354,14 @@ class ADF(logfileparser.Logfile):
                     line = inputfile.next()
 
                 self.moenergies = [Numeric.array(x, "d") for x in moenergies]
-                self.logger.info("Creating attribute homos[]")
                 self.homos = Numeric.array([homoa, homob], "i")
 
 
             if line[1:29] == 'Orbital Energies, all Irreps' and not hasattr(self, "mosyms"):
 #Extracting orbital symmetries and energies, homos
-                self.logger.info("Creating attribute mosyms[[]]")
                 self.mosyms = [[]]
                 symlist = {}
 
-                self.logger.info("Creating attribute moenergies[[]]")
                 self.moenergies = [[]]
                 
                 underline = inputfile.next()
@@ -419,7 +404,6 @@ class ADF(logfileparser.Logfile):
                                 symlist[sym][0].append(len(self.moenergies[0])-1)
 
                         if info[2] == '0.00' and not hasattr(self, 'homos'):
-                            self.logger.info("Creating attribute homos[]")
                             self.homos = [len(self.moenergies[0]) - (count + 1)] #count, because need to handle degenerate cases
                         line = inputfile.next()
                     elif len(info) == 6: #this is unrestricted
@@ -469,7 +453,6 @@ class ADF(logfileparser.Logfile):
                         print "Error", info
       
                 if len(info) == 6: #still unrestricted, despite being out of loop
-                    self.logger.info("Creating attribute homos[]")
                     self.homos = [homoa, homob]
     
                 self.moenergies = [Numeric.array(x, "d") for x in self.moenergies]
@@ -479,7 +462,6 @@ class ADF(logfileparser.Logfile):
                 # Section on extracting vibdisps
                 # Also contains vibfreqs, but these are extracted in the
                 # following section (see below)
-                self.logger.info("Creating attribute vibdisps")
                 self.vibdisps = []
                 equals = inputfile.next()
                 blank = inputfile.next()
@@ -509,8 +491,6 @@ class ADF(logfileparser.Logfile):
 #                 self.vibsyms = [] # Need to look into this a bit more
                 self.vibirs = []
                 self.vibfreqs = []
-#                 self.logger.info("Creating attribute vibsyms[]")
-                self.logger.info("Creating attribute vibfreqs[], vibirs[]")
                 for i in range(8):
                     line = inputfile.next()
                 line = inputfile.next().strip()
@@ -530,11 +510,9 @@ class ADF(logfileparser.Logfile):
             if line[1:49] == "Total nr. of (C)SFOs (summation over all irreps)":
 # Extract the number of basis sets
                 self.nbasis = int(line.split(":")[1].split()[0])
-                self.logger.info("Creating attribute nbasis: %i" % self.nbasis)
                    
    # now that we're here, let's extract aonames
    
-                self.logger.info("Creating attribute fonames[]")
                 self.fonames = []
                    
                 blank = inputfile.next()
@@ -599,7 +577,6 @@ class ADF(logfileparser.Logfile):
             if line[1:32] == "S F O   P O P U L A T I O N S ,":
 #Extract overlap matrix
 
-                self.logger.info("Creating attribute fooverlaps[x, y]")
                 self.fooverlaps = Numeric.zeros((self.nbasis, self.nbasis), "d")
                 
                 symoffset = 0
@@ -640,7 +617,6 @@ class ADF(logfileparser.Logfile):
                         
             if line[48:67] == "SFO MO coefficients":
 
-                self.logger.info("Creating attribute mocoeffs: array[]")
                 self.mocoeffs = [Numeric.zeros((self.nbasis, self.nbasis), "d")]
                 spin = 0
                 symoffset = 0

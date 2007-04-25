@@ -64,7 +64,6 @@ class Jaguar(logfileparser.Logfile):
 # Get SCF convergence information
                 if not hasattr(self, "scfvalues"):
                     self.scfvalues = []
-                    self.logger.info("Creating attribute: scfvalues,scftargets")
                     self.scftargets = [[5E-5, 5E-6]]
                 values = []
                 while line[0:4] == "etot":
@@ -92,7 +91,6 @@ class Jaguar(logfileparser.Logfile):
             # Hartree-Fock energy after SCF
             if line[1:18] == "SCFE: SCF energy:":
                 if not hasattr(self, "scfenergies"):
-                    self.logger.info("Creating attribute scfenergies")
                     self.scfenergies = []
                 temp = line.strip().split()
                 scfenergy = float(temp[temp.index("hartrees") - 1])
@@ -102,7 +100,6 @@ class Jaguar(logfileparser.Logfile):
             # Energy after LMP2 correction
             if line[1:18] == "Total LMP2 Energy":
                 if not hasattr(self, "mpenergies"):
-                    self.logger.info("Creating attribute mpenergies")
                     self.mpenergies = [[]]
                 lmp2energy = float(line.split()[-1])
                 lmp2energy = utils.convertor(lmp2energy, "hartree", "eV")
@@ -110,8 +107,6 @@ class Jaguar(logfileparser.Logfile):
 
             if line[2:14] == "new geometry" or line[1:21] == "Symmetrized geometry" or line.find("Input geometry") > 0:
 # Get the atom coordinates
-                if not hasattr(self, "atomcoords"):
-                    self.logger.info("Creating attributes: atomcoords, atomnos, natom")
                 if not hasattr(self, "atomcoords") or line[1:21] == "Symmetrized geometry":
                     # Wipe the "Input geometry" if "Symmetrized geometry" present
                     self.atomcoords = []
@@ -147,7 +142,6 @@ class Jaguar(logfileparser.Logfile):
                 if not hasattr(self, "geovalues"):
                     self.geovalues = []
                     self.geotargets = Numeric.zeros(5, "d")
-                    self.logger.info("Creating attributes: geovalues,geotargets")
                 gopt_step = int(line.split()[-1])
                 blank = inputfile.next()
                 blank = inputfile.next()
@@ -194,8 +188,6 @@ class Jaguar(logfileparser.Logfile):
                 
             if line[2:33] == "Orbital energies/symmetry label":
 # Get MO Energies and symmetrys
-                if not hasattr(self,"moenergies"):
-                    self.logger.info("Creating attributes: moenergies, mosyms")
                 self.mosyms = [[]]
                 self.moenergies = [[]]
                 line = inputfile.next()
@@ -211,7 +203,6 @@ class Jaguar(logfileparser.Logfile):
 # Get MO Energies
 # Jaguar 6.0
                 if not hasattr(self,"moenergies"):
-                    self.logger.info("Creating attribute moenergies")
                     self.moenergies = [[]]
                     line = inputfile.next()
                     while line.strip():
@@ -225,7 +216,6 @@ class Jaguar(logfileparser.Logfile):
 # Get alpha MO Energies
 # Jaguar 6.0
                 if not hasattr(self,"moenergies"):
-                    self.logger.info("Creating attribute moenergies")
                     self.moenergies = [[],[]]
                     line = inputfile.next()
                     while line.strip():
@@ -257,7 +247,6 @@ class Jaguar(logfileparser.Logfile):
                 blank = inputfile.next()
                 
                 if not hasattr(self,"mocoeffs"):
-                    self.logger.info("Creating mocoeffs")
                     if unrestrictedflag:
                         spin = 2
                     else:
@@ -330,7 +319,6 @@ class Jaguar(logfileparser.Logfile):
             if line[2:6] == "olap":
                 if line[6]=="-":
                     continue # avoid "olap-dev"
-                self.logger.info("Creating attribute aooverlaps")
                 self.aooverlaps = Numeric.zeros((self.nbasis, self.nbasis), "d")
 
                 for i in range(0, self.nbasis, 5):
@@ -342,18 +330,13 @@ class Jaguar(logfileparser.Logfile):
                         self.aooverlaps[i:(i+len(temp)), j] = temp
                 
             if line[1:28] == "number of occupied orbitals":
-                if not hasattr(self, "homos"):
-                    self.logger.info("Creating attribute: homos")
                 self.homos = Numeric.array([float(line.strip().split()[-1])-1], "i")
 
             if line[2:27] == "number of basis functions":
-                if not hasattr(self, "nbasis"):
-                    self.logger.info("Creating attribute: nbasis")
                 self.nbasis = int(line.strip().split()[-1])
 
             if line[2:23] == "start of program freq":
 # IR stuff
-                self.logger.info("Creating attribute: vibfreqs, vibdisps")
                 self.vibfreqs = []
                 self.vibdisps = []
                 blank = inputfile.next()
@@ -374,7 +357,6 @@ class Jaguar(logfileparser.Logfile):
                     temp = inputfile.next().strip().split()
                     if temp[0] == "symmetries": # May go straight from frequencies to reduced mass
                         if not hasattr(self, "vibsyms"):
-                            self.logger.info("Creating attributes: vibsyms, vibirs")
                             self.vibsyms = []
                             self.vibirs = []
                         self.vibsyms.extend(map(self.normalisesym, temp[1:]))
@@ -409,15 +391,11 @@ class Jaguar(logfileparser.Logfile):
             if line[2:15] == "Excited State":
                 if not hasattr(self, "etenergies"):
                     self.etenergies = []
-                    self.logger.info("Creating attribute: etenergies")
                 if not hasattr(self, "etoscs"):
                     self.etoscs = []
-                    self.logger.info("Creating attribute: etoscs")
                 if not hasattr(self, "etsecs"):
                     self.etsecs = []
                     self.etsyms = []
-                    self.logger.info("Creating attribute: etsecs")
-                    self.logger.info("Creating attribute: etsyms")
                 etenergy = float(line.split()[3])
                 etenergy = utils.convertor(etenergy, "eV", "cm-1")
                 self.etenergies.append(etenergy)

@@ -66,7 +66,6 @@ class Gaussian(logfileparser.Logfile):
                 else:
                     # I wonder whether this code will ever be executed
                     self.natom = natom
-                    self.logger.info("Creating attribute natom: %d" % self.natom)                    
             
             if line[1:23] == "Optimization completed":
                 optfinished = True
@@ -95,9 +94,7 @@ class Gaussian(logfileparser.Logfile):
                 inputcoords.append(atomcoords)
                 if not hasattr(self, "natom"):
                     self.atomnos = Numeric.array(inputatoms, 'i')
-                    self.logger.info("Creating attribute atomnos[]")
                     self.natom = len(self.atomnos)
-                    self.logger.info("Creating attribute natom: %d" % self.natom)                
 
             # Extract the atomic numbers and coordinates of the atoms
             if not optfinished and line[25:45] == "Standard orientation":
@@ -105,7 +102,6 @@ class Gaussian(logfileparser.Logfile):
                 self.updateprogress(inputfile, "Attributes", cupdate)
                         
                 if not hasattr(self, "atomcoords"):
-                    self.logger.info("Creating attribute atomcoords[]")
                     self.atomcoords = []
                 
                 hyphens = inputfile.next()
@@ -124,14 +120,11 @@ class Gaussian(logfileparser.Logfile):
                 self.atomcoords.append(atomcoords)
                 if not hasattr(self, "natom"):
                     self.atomnos = Numeric.array(atomnos, 'i')
-                    self.logger.info("Creating attribute atomnos[]")
                     self.natom = len(self.atomnos)
-                    self.logger.info("Creating attribute natom: %d" % self.natom)
 
             if line[1:44] == 'Requested convergence on RMS density matrix':
 # Find the targets for SCF convergence (QM calcs)                
                 if not hasattr(self, "scftargets"):
-                    self.logger.info("Creating attribute scftargets[]")
                     self.scftargets = []
                 scftargets = []
                 # The RMS density matrix
@@ -149,7 +142,6 @@ class Gaussian(logfileparser.Logfile):
 # Extract SCF convergence information (QM calcs)
                         
                 if not hasattr(self, "scfvalues"):
-                    self.logger.info("Creating attribute scfvalues")
                     self.scfvalues = []
                 scfvalues = []
                 line = inputfile.next()
@@ -184,7 +176,6 @@ class Gaussian(logfileparser.Logfile):
             if line[1:4] == 'It=':
 # Extract SCF convergence information (AM1 calcs)
                         
-                self.logger.info("Creating attributes scftargets, scfvalues")
                 self.scftargets = Numeric.array([1E-7], "d") # This is the target value for the rms
                 self.scfvalues = [[]]
                 line = inputfile.next()
@@ -204,7 +195,6 @@ class Gaussian(logfileparser.Logfile):
 # Note: this needs to follow the section where 'SCF Done' is used to terminate
 # a loop when extracting SCF convergence information
                 if not hasattr(self, "scfenergies"):
-                    self.logger.info("Creating attribute scfenergies[]")
                     self.scfenergies = []
                 self.scfenergies.append(utils.convertor(self.float(line.split()[4]), "hartree", "eV"))
 
@@ -217,7 +207,6 @@ class Gaussian(logfileparser.Logfile):
                 #  E2 =    -0.9505918144D+00 EUMP2 =    -0.28670924198852D+03
                 # Warning! this output line is subtly different for MP3/4/5 runs
                 if not hasattr(self, "mpenergies"):
-                    self.logger.info("Creating attribute mpenergies[]")
                     self.mpenergies = []
                 self.mpenergies.append([])
                 mp2energy = self.float(line.split("=")[2])
@@ -270,7 +259,6 @@ class Gaussian(logfileparser.Logfile):
             if line[49:59] == 'Converged?':
 # Extract Geometry convergence information
                 if not hasattr(self, "geotargets"):
-                    self.logger.info("Creating attributes geotargets[], geovalues[[]]")
                     self.geovalues = []
                     self.geotargets = Numeric.array([0.0, 0.0, 0.0, 0.0], "d")
                 newlist = [0]*4
@@ -292,7 +280,6 @@ class Gaussian(logfileparser.Logfile):
 
                 self.updateprogress(inputfile, "MO Symmetries", fupdate)
                         
-                self.logger.info("Creating attribute mosyms[[]]")
                 self.mosyms = [[]]
                 line = inputfile.next()
                 unres = False
@@ -303,7 +290,6 @@ class Gaussian(logfileparser.Logfile):
                 while len(line) > 18 and line[17] == '(':
                     if line.find('Virtual') >= 0:
                         self.homos = Numeric.array([i-1], "i") # 'HOMO' indexes the HOMO in the arrays
-                        self.logger.info("Creating attribute homos[]")
                     parts = line[17:].split()
                     for x in parts:
                         self.mosyms[0].append(self.normalisesym(x.strip('()')))
@@ -329,7 +315,6 @@ class Gaussian(logfileparser.Logfile):
 
                 self.updateprogress(inputfile, "Eigenvalues", fupdate)
                         
-                self.logger.info("Creating attribute moenergies")
                 self.moenergies = [[]]
                 HOMO = -2
                 while line.find('Alpha') == 1:
@@ -340,7 +325,6 @@ class Gaussian(logfileparser.Logfile):
                         if hasattr(self, "homos"):
                             assert HOMO == self.homos[0]
                         else:
-                            self.logger.info("Creating attribute homos[]")
                             self.homos = Numeric.array([HOMO], "i")
                     part = line[28:]
                     i = 0
@@ -375,7 +359,6 @@ class Gaussian(logfileparser.Logfile):
                 
             if line[1:14] == "AO basis set ":
                 ## Gaussian Rev <= B.0.3
-                self.logger.info("Creating attribute gbasis")
                 self.gbasis = []
 # AO basis set in the form of general basis input:
 #  1 0
@@ -416,8 +399,6 @@ class Gaussian(logfileparser.Logfile):
                 self.vibirs = []
                 self.vibfreqs = []
                 self.vibdisps = []
-                self.logger.info("Creating attribute vibsyms[], vibfreqs[]")
-                self.logger.info("Creating attribute vibirs[], vibdisps[]")                
                 line = inputfile.next()
                 while len(line[:15].split()) > 0:
                     # Get past the three/four line title of the columns
@@ -436,7 +417,6 @@ class Gaussian(logfileparser.Logfile):
                     if line.find("Raman") >= 0:
                         if not hasattr(self, "vibramans"):
                             self.vibramans = []
-                            self.logger.info("Creating attribute vibramans[]")
                         self.vibramans.extend(map(self.float, line[15:].split())) # Adding Raman intensities
                         line = inputfile.next() # Depolar (P)
                         line = inputfile.next() # Depolar (U)
@@ -464,7 +444,6 @@ class Gaussian(logfileparser.Logfile):
                     self.etoscs = []
                     self.etsyms = []
                     self.etsecs = []
-                    self.logger.info("Creating attributes etenergies[], etoscs[], etsyms[], etsecs[]")
                 # Need to deal with lines like:
                 # (restricted calc)
                 # Excited State   1:   Singlet-BU     5.3351 eV  232.39 nm  f=0.1695
@@ -511,7 +490,6 @@ class Gaussian(logfileparser.Logfile):
             if line[1:52] == "<0|r|b> * <b|rxdel|0>  (Au), Rotatory Strengths (R)":
 # Extract circular dichroism data
                 self.etrotats = []
-                self.logger.info("Creating attribute etrotats[]")
                 inputfile.next()
                 inputfile.next()
                 line = inputfile.next()
@@ -542,7 +520,6 @@ class Gaussian(logfileparser.Logfile):
                     assert nbasis == self.nbasis
                 else:
                     self.nbasis = nbasis
-                    self.logger.info("Creating attribute nbasis: %d" % self.nbasis)
                     
             if line[1:7] == "NBsUse":
 # Extract the number of linearly-independent basis sets
@@ -551,7 +528,6 @@ class Gaussian(logfileparser.Logfile):
                     assert nmo == self.nmo
                 else:
                     self.nmo = nmo
-                    self.logger.info("Creating attribute nmo: %d" % self.nmo)
 
             if line[7:22] == "basis functions, ":
 # For AM1 calculations, set nbasis by a second method
@@ -561,7 +537,6 @@ class Gaussian(logfileparser.Logfile):
                     assert nbasis == self.nbasis
                 else:
                     self.nbasis = nbasis
-                    self.logger.info("Creating attribute nbasis: %d" % self.nbasis)
 
             if line[1:4] == "***" and (line[5:12] == "Overlap"
                                      or line[8:15] == "Overlap"):
@@ -569,7 +544,6 @@ class Gaussian(logfileparser.Logfile):
                 # Has to deal with lines such as:
                 #  *** Overlap ***
                 #  ****** Overlap ******
-                self.logger.info("Creating attribute aooverlaps[x, y]")
                 self.aooverlaps = Numeric.zeros( (self.nbasis, self.nbasis), "d")
                 # Overlap integrals for basis fn#1 are in aooverlaps[0]
                 base = 0
@@ -599,7 +573,6 @@ class Gaussian(logfileparser.Logfile):
                     self.mocoeffs.append(Numeric.zeros((nmo, nbasis), "d"))
                 else:
                     beta = False
-                    self.logger.info("Creating attribute aonames[]")
                     self.aonames = []
                     mocoeffs = [Numeric.zeros((nmo, nbasis), "d")]
 
@@ -639,7 +612,6 @@ class Gaussian(logfileparser.Logfile):
                         # We now have aonames, so no need to continue
                         break
                 if not popregular and not beta:
-                    self.logger.info("Creating attribute mocoeffs[][]")
                     self.mocoeffs = mocoeffs
                     
                     
@@ -657,7 +629,6 @@ class Gaussian(logfileparser.Logfile):
 
                 centers = line.split()[1:]
                 
-                self.logger.info("Creating attribute coreelectrons[]")
                 self.coreelectrons = Numeric.zeros(self.natom, "i")
 
                 for center in centers:
@@ -668,7 +639,6 @@ class Gaussian(logfileparser.Logfile):
                     self.coreelectrons[int(center)-1] = int(info[1]) - int(info[2])
 
         if not hasattr(self,"atomcoords"):
-            self.logger.info("Creating attribute atomcoords[]")
             self.atomcoords = Numeric.array(inputcoords, 'd')
 
 if __name__ == "__main__":

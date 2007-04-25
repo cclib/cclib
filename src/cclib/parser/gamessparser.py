@@ -91,7 +91,6 @@ class GAMESS(logfileparser.Logfile):
                 #           OPTTOL = 1.000E-04          RMIN   = 1.500E-03
                 # INPUT CARD> $STATPT OPTTOL=0.0001 NSTEP=100 $END
                 if not hasattr(self, "geotargets"):
-                    self.logger.info("Creating attribute geotargets[]")
                     temp = line.split()
                     for i, x in enumerate(temp):
                         if x.find("OPTTOL") >= 0:
@@ -103,7 +102,6 @@ class GAMESS(logfileparser.Logfile):
                             
             if line.find("FINAL") == 1:
                 if not hasattr(self, "scfenergies"):
-                    self.logger.info("Creating attribute scfenergies[]")
                     self.scfenergies = []
 # Has to deal with such lines as:
 #  FINAL R-B3LYP ENERGY IS     -382.0507446475 AFTER  10 ITERATIONS
@@ -122,7 +120,6 @@ class GAMESS(logfileparser.Logfile):
                 #       E(MP2)=      -286.7247480864
                 # where E(MP2) = E(0) + E(2)
                 if not hasattr(self, "mpenergies"):
-                    self.logger.info("Creating attribute mpenergies[]")
                     self.mpenergies = []
                 # Each iteration has a new print-out
                 self.mpenergies.append([])
@@ -169,7 +166,6 @@ class GAMESS(logfileparser.Logfile):
             # Also collect MP2 energies, which are always calculated before CC
             if line [8:23] == "MBPT(2) ENERGY:":
                 if not hasattr(self, "mpenergies"):
-                    self.logger.info("Creating attribute mpenergies[]")
                     self.mpenergies = []
                 self.mpenergies.append([])
                 mp2energy = float(line.split()[2])
@@ -178,7 +174,6 @@ class GAMESS(logfileparser.Logfile):
             # etenergies (used only for CIS runs now)
             if "EXCITATION ENERGIES" in line:
                 if not hasattr(self, "etenergies"):
-                    self.logger.info("Creating attribute etenergies[]")
                     self.etenergies = []
                 header = inputfile.next()
                 dashes = inputfile.next()
@@ -200,10 +195,8 @@ class GAMESS(logfileparser.Logfile):
             # etsecs (used only for CIS runs for now)
             if line[1:14] == "EXCITED STATE":
                 if not hasattr(self, 'etsecs'):
-                    self.logger.info("Creating attribute etsecs[]")
                     self.etsecs = []
                 if not hasattr(self, 'etsyms'):
-                    self.logger.info("Creating attribute etsyms[]")
                     self.etsyms = []
                 statenumber = int(line.split()[2])
                 spin = int(float(line.split()[7]))
@@ -239,7 +232,6 @@ class GAMESS(logfileparser.Logfile):
             # etoscs (used only for CIS runs now)
             if line[1:50] == "TRANSITION FROM THE GROUND STATE TO EXCITED STATE":
                 if not hasattr(self, "etoscs"):
-                    self.logger.info("Creating attribute etoscs[]")
                     self.etoscs = []
                 statenumber = int(line.split()[-1])
                 # skip 7 lines
@@ -250,7 +242,6 @@ class GAMESS(logfileparser.Logfile):
 
             if line.find("MAXIMUM GRADIENT") > 0:
                 if not hasattr(self, "geovalues"):
-                    self.logger.info("Creating attribute geovalues[]")
                     self.geovalues = []
                 temp = line.strip().split()
                 self.geovalues.append([float(temp[3]), float(temp[7])])
@@ -260,7 +251,6 @@ class GAMESS(logfileparser.Logfile):
                 # SP calcs, but which should be overwritten by the standard orientation
                 # values, which is the only information available for all geoopt cycles.
                 if not hasattr(self, "atomcoords"):
-                    self.logger.info("Creating attribute atomcoords, atomnos")
                     self.atomcoords = []
                     self.atomnos = []
                 line = inputfile.next()
@@ -323,12 +313,10 @@ class GAMESS(logfileparser.Logfile):
                     line = inputfile.next()
 
                 if not hasattr(self, "scftargets"):
-                    self.logger.info("Creating attribute scftargets")
                     self.scftargets = []
                 self.scftargets.append([scftarget])
 
                 if not hasattr(self,"scfvalues"):
-                    self.logger.info("Creating attribute scfvalues")
                     self.scfvalues = []
                 line = inputfile.next()
                 values = []
@@ -394,10 +382,8 @@ class GAMESS(logfileparser.Logfile):
 
 # MODES 2 TO 7 ARE TAKEN AS ROTATIONS AND TRANSLATIONS.
 
-                self.logger.info("Creating attributes vibfreqs, vibirs")
                 self.vibfreqs = []
                 self.vibirs = []
-                self.logger.info("Creating attributes vibdisps")                
                 self.vibdisps = []
 
                 # Need to get to the modes line
@@ -440,7 +426,6 @@ class GAMESS(logfileparser.Logfile):
                     line = inputfile.next()
                     if line.find("RAMAN") >= 0:
                         if not hasattr(self,"vibramans"):
-                            self.logger.info("Creating attribute vibramans")
                             self.vibramans = []
                         ramanIntensity = line.strip().split()
                         self.vibramans.extend(map(float, ramanIntensity[2:]))
@@ -474,8 +459,6 @@ class GAMESS(logfileparser.Logfile):
                     self.vibramans = Numeric.array(self.vibramans[:startrot-1]+self.vibramans[endrot:], "d")
 
             if line[5:21] == "ATOMIC BASIS SET":
-                if not hasattr(self, "gbasis"):
-                    self.logger.info("Creating attribute gbasis")
                 self.gbasis = []
                 line = inputfile.next()
                 while line.find("SHELL")<0:
@@ -536,15 +519,10 @@ class GAMESS(logfileparser.Logfile):
                 # This is fine for GeoOpt and SP, but may be weird for TD and Freq(?)
                 
                 # Take the last one of either in the file
-                if not hasattr(self, "moenergies"):
-                    self.logger.info("Creating attributes moenergies, mosyms")
                 self.moenergies = [[]]
                 self.mosyms = [[]]
                 if not hasattr(self, "nmo"):
-                    self.logger.info("Creating attribute nmo with default value")
                     self.nmo = self.nbasis
-                if not hasattr(self, "mocoeffs"):
-                    self.logger.info("Creating attribute mocoeffs")
                 self.mocoeffs = [Numeric.zeros((self.nmo, self.nbasis), "d")]
                 line = inputfile.next()
                 for base in range(0, self.nmo, 5):
@@ -605,8 +583,6 @@ class GAMESS(logfileparser.Logfile):
                 self.moenergies = [Numeric.array(x, "d") for x in self.moenergies]
 
             if line.find("NUMBER OF OCCUPIED ORBITALS") >= 0:
-                if not hasattr(self," homos"):
-                    self.logger.info("Creating attribute homos")
                 homos = [int(line.split()[-1])-1]
                 line = inputfile.next()
                 homos.append(int(line.split()[-1])-1)
@@ -624,33 +600,26 @@ class GAMESS(logfileparser.Logfile):
                     self.homos = Numeric.resize(self.homos, [1])
 
             if line.find("TOTAL NUMBER OF ATOMS") == 1:
-                self.logger.info("Creating attribute natom")
                 self.natom = int(line.split()[-1])
                 
             if line.find("NUMBER OF CARTESIAN GAUSSIAN BASIS") == 1 or line.find("TOTAL NUMBER OF BASIS FUNCTIONS") == 1:
                 # The first is from Julien's Example and the second is from Alexander's
                 # I think it happens if you use a polar basis function instead of a cartesian one
-                self.logger.info("Creating attribute nbasis")
                 self.nbasis = int(line.strip().split()[-1])
                     
             elif line.find("SPHERICAL HARMONICS KEPT IN THE VARIATION SPACE") >= 0:
                 # Note that this line is present if ISPHER=1, e.g. for C_bigbasis
-                if not hasattr(self, "nmo"):
-                    self.logger.info("Creating attribute nmo")
                 self.nmo = int(line.strip().split()[-1])
                 
             elif line.find("TOTAL NUMBER OF MOS IN VARIATION SPACE") == 1:
                 # Note that this line is not always present, so by default
                 # NBsUse is set equal to NBasis (see below).
-                if not hasattr(self, "nmo"):
-                    self.logger.info("Creating attribute nmo")
                 self.nmo = int(line.split()[-1])
 
             elif line.find("OVERLAP MATRIX") == 0 or line.find("OVERLAP MATRIX") == 1:
                 # The first is for PC-GAMESS, the second for GAMESS
                 # Read 1-electron overlap matrix
                 if not hasattr(self, "aooverlaps"):
-                    self.logger.info("Creating attribute aooverlaps, aonames")
                     self.aooverlaps = Numeric.zeros((self.nbasis, self.nbasis), "d")
                     self.aonames = []
                 else:
@@ -697,7 +666,6 @@ class GAMESS(logfileparser.Logfile):
                     header = inputfile.next()
 
         if not hasattr(self, "geotargets"):
-            self.logger.info("Creating attribute geotargets[] with default values")
             opttol = 1e-4
             self.geotargets = Numeric.array([opttol, 3. / opttol], "d")
         if hasattr(self,"geovalues"): self.geovalues = Numeric.array(self.geovalues, "d")

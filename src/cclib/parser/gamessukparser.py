@@ -60,26 +60,21 @@ class GAMESSUK(logfileparser.Logfile):
             if line[1:22] == "total number of atoms":
                 if not hasattr(self, "natom"):
                     self.natom = int(line.split()[-1])
-                    self.logger.info("Creating attribute natom: %d" % self.natom)
 
             if line[3:44] == "convergence threshold in optimization run":
                 # Assuming that this is only found in the case of OPTXYZ
                 # (i.e. an optimization in Cartesian coordinates)
-                if not hasattr(self, "geotargets"):
-                    self.logger.info("Creating attributes geotargets")
                 self.geotargets = [float(line.split()[-2])]
 
             if line[32:61] == "largest component of gradient":
                 # This is the geotarget in the case of OPTXYZ
                 if not hasattr(self, "geovalues"):
-                    self.logger.info("Creating attribute geovalues")
                     self.geovalues = []
                 self.geovalues.append([float(line.split()[4])])
 
             if line[37:49] == "convergence?":
                 # Get the geovalues and geotargets for OPTIMIZE
                 if not hasattr(self, "geovalues"):
-                    self.logger.info("Creating attribute geotargets, geovalues")
                     self.geovalues = []
                     self.geotargets = []
                 geotargets = []
@@ -98,7 +93,6 @@ class GAMESSUK(logfileparser.Logfile):
                 # Only one set of atomcoords is taken from this section
                 # For geo-opts, more coordinates are taken from the "nuclear coordinates"
                 if not hasattr(self, "atomcoords"):
-                    self.logger.info("Creating attribute atomcoords[], atomnos[]")
                     self.atomcoords = []
                 self.atomnos = []
                 
@@ -137,7 +131,6 @@ class GAMESSUK(logfileparser.Logfile):
                     firstnuccoords = False
                     continue
                 if not hasattr(self, "atomcoords"):
-                    self.logger.info("Creating attribute atomcoords[], atomnos[]")
                     self.atomcoords = []
                     self.atomnos = []
                     
@@ -162,14 +155,11 @@ class GAMESSUK(logfileparser.Logfile):
                     self.atomnos = atomnos
 
             if line[1:32] == "total number of basis functions":
-                self.logger.info("Creating attribute nbasis")
                 self.nbasis = int(line.split()[-1])
                 while line.find("multiplicity")<0:
                     line = inputfile.next()
                 multiplicity = int(line.split()[-1])
 
-                if not hasattr(self, "homos"):
-                    self.logger.info("Creating attribute homos")
                 alpha = int(inputfile.next().split()[-1])-1
                 beta = int(inputfile.next().split()[-1])-1
                 if multiplicity==1:
@@ -178,7 +168,6 @@ class GAMESSUK(logfileparser.Logfile):
                     self.homos = Numeric.array([alpha,beta], "i")
 
             if line[37:69] == "s-matrix over gaussian basis set":
-                self.logger.info("Creating attribute aooverlaps")
                 self.aooverlaps = Numeric.zeros((self.nbasis, self.nbasis), "d")
 
                 minus = inputfile.next()
@@ -195,7 +184,6 @@ class GAMESSUK(logfileparser.Logfile):
                         self.aooverlaps[j,(0+i):(len(temp)+i)] = temp
 
             if line[18:43] == 'EFFECTIVE CORE POTENTIALS':
-                self.logger.info("Creating attribute coreelectrons")
                 self.coreelectrons = Numeric.zeros(self.natom, 'i')
                 asterisk = inputfile.next()
                 line = inputfile.next()
@@ -213,13 +201,11 @@ class GAMESSUK(logfileparser.Logfile):
                     line = inputfile.next()
                                 
             if line[3:27] == "Wavefunction convergence":
-                self.logger.info("Creating attribute scftargets")
                 scftarget = float(line.split()[-2])
                 self.scftargets = []
 
             if line[11:22] == "normal mode":
                 if not hasattr(self, "vibfreqs"):
-                    self.logger.info("Creating attributes vibfreqs, vibirs")
                     self.vibfreqs = []
                     self.vibirs = []
                 
@@ -238,8 +224,6 @@ class GAMESSUK(logfileparser.Logfile):
                 self.vibirs = self.vibirs[-len(self.vibdisps):]
 
             if line[44:73] == "normalised normal coordinates":
-                if not hasattr(self, "vibdisps"):
-                    self.logger.info("Creating attribute vibdisps")
                 self.vibdisps = []
                 equals = inputfile.next()
                 blank = inputfile.next()
@@ -267,7 +251,6 @@ class GAMESSUK(logfileparser.Logfile):
                     freqnum = inputfile.next()                    
 
             if line[26:36] == "raman data":
-                self.logger.info("Creating attribute vibramans")
                 self.vibramans = []
 
                 stars = inputfile.next()
@@ -290,7 +273,6 @@ class GAMESSUK(logfileparser.Logfile):
 
             if line[15:31] == "convergence data":
                 if not hasattr(self, "scfvalues"):
-                    self.logger.info("Creating attribute scfvalues")
                     self.scfvalues = []
                 self.scftargets.append([scftarget]) # Assuming it does not change over time
                 while line[1:10] != "="*9:
@@ -312,7 +294,6 @@ class GAMESSUK(logfileparser.Logfile):
 
             if line[10:22] == "total energy" and len(line.split()) == 3:
                 if not hasattr(self, "scfenergies"):
-                    self.logger.info("Creating attribute scfenergies")
                     self.scfenergies = []
                 scfenergy = utils.convertor(float(line.split()[-1]), "hartree", "eV")
                 self.scfenergies.append(scfenergy)
@@ -326,7 +307,6 @@ class GAMESSUK(logfileparser.Logfile):
             if line[10:32] == "mp2 correlation energy" or \
                line[10:42] == "second order perturbation energy":
                 if not hasattr(self, "mpenergies"):
-                    self.logger.info("Creating attribute mpenergies")
                     self.mpenergies = []
                 self.mpenergies.append([])
                 mp2correction = self.float(line.split()[-1])
@@ -338,8 +318,6 @@ class GAMESSUK(logfileparser.Logfile):
                 self.mpenergies[-1].append(utils.convertor(mp3energy, "hartree", "eV"))
 
             if line[40:59] == "molecular basis set":
-                if not hasattr(self, "gbasis"):
-                    self.logger.info("Creating attribute gbasis")
                 self.gbasis = []
                 line = inputfile.next()
                 while line.find("contraction coefficients")<0:
@@ -401,7 +379,6 @@ class GAMESSUK(logfileparser.Logfile):
                     
             if line[31:50] == "SYMMETRY ASSIGNMENT":
                 if not hasattr(self, "mosyms"):
-                    self.logger.info("Creating attribute mosyms")
                     self.mosyms = []
 
                 multiple = {'a':1, 'b':1, 'e':2, 't':3, 'g':4, 'h':5}
@@ -442,8 +419,6 @@ class GAMESSUK(logfileparser.Logfile):
 # Mocoeffs...can get evalues from here too
 # (only if using FORMAT HIGH though will they all be present)                
                 if not hasattr(self, "mocoeffs"):
-                    self.logger.info("Creating attribute mocoeffs")
-                    self.logger.info("Creating attribute aonames")
                     self.aonames = []
                     aonames = []
                 minus = inputfile.next()
@@ -500,7 +475,6 @@ class GAMESSUK(logfileparser.Logfile):
                 # This section appears once at the start of a geo-opt and once at the end
                 # unless IPRINT SCF is used (when it appears at every step in addition)
                 if not hasattr(self, "moenergies"):
-                    self.logger.info("Creating attribute moenergies, nmo")
                     self.moenergies = []
 
                 equals = inputfile.next()
