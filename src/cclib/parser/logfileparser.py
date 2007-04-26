@@ -5,7 +5,7 @@ and licensed under the LGPL (http://www.gnu.org/copyleft/lgpl.html).
 
 __revision__ = "$Revision$"
 
-import logging, random, sys
+import inspect, logging, random, sys
 import Numeric
 import utils
 
@@ -63,42 +63,82 @@ class Logfile(object):
 
         Typically called by subclasses in their own __init__ methods.
         """
-        self.filename = filename
-        self.progress = progress
-        self.parsed = False
-        self.loglevel = loglevel
-        self.logname  = logname
-        self.table = utils.PeriodicTable()
 
-        self.attrlist = ['aonames', 'aooverlaps', 'atomcoords', 'atomnos',
+        # Names of all supported attributes.
+        self._attrlist = ['aonames', 'aooverlaps', 'atomcoords', 'atomnos',
                          'ccenergies', 'coreelectrons',
                          'etenergies', 'etoscs', 'etrotats', 'etsecs', 'etsyms',
-                         'fonames', 'fooverlaps',
-                         'geotargets', 'geovalues', 'homos', 'mocoeffs',
-                         'moenergies', 'mosyms', 'mpenergies', 'natom', 'nbasis', 'nmo',
+                         'fonames', 'fooverlaps', 'fragnames', 'frags',
+                         'gbasis', 'geotargets', 'geovalues',
+                         'hessian', 'homos',
+                         'mocoeffs', 'moenergies', 'mosyms', 'mpenergies',
+                         'natom', 'nbasis', 'nmo',
                          'scfenergies', 'scftargets', 'scfvalues',
-                         'vibfreqs', 'vibirs', 'vibramans', 'vibsyms']
+                         'vibdisps', 'vibfreqs', 'vibirs', 'vibramans', 'vibsyms']
 
-        self._tofloatarray = ['atomcoords', 'ccenergies',
-                              'etenergies', 'etoscs',
-                              'geotargets', 'geovalues', 'mpenergies',
-                              'scfenergies', 'scftargets',
-                              'vibdisps', 'vibfreqs', 'vibirs', 'vibramans']
+        # The expected types for all attributes.
+        self._attrtypes = { "aonames":        list,
+                            "aooverlaps":     Numeric.arraytype,
+                            "atomcoords":     Numeric.arraytype,
+                            "atomnos":        Numeric.arraytype,
+                            "coreelectrons":  Numeric.arraytype,
+                            "etenergies":     Numeric.arraytype,
+                            "etoscs":         Numeric.arraytype,
+                            "etrotats":       Numeric.arraytype,
+                            "etsecs":         list,
+                            "etsyms":         list,
+                            'gbasis':         list,
+                            "geotargets":     Numeric.arraytype,
+                            "geovalues":      Numeric.arraytype,
+                            "hessian":        Numeric.arraytype,
+                            "homos":          Numeric.arraytype,
+                            "mocoeffs":       list,
+                            "moenergies":     list,
+                            "mosyms":         list,
+                            "mpenergies":     Numeric.arraytype,
+                            "natom":          int,
+                            "nbasis":         int,
+                            "nmo":            int,
+                            "scfenergies":    Numeric.arraytype,
+                            "scftargets":     Numeric.arraytype,
+                            "scfvalues":      list,
+                            "vibdisps":       Numeric.arraytype,
+                            "vibfreqs":       Numeric.arraytype,
+                            "vibirs":         Numeric.arraytype,
+                            "vibramans":      Numeric.arraytype,
+                            "vibsyms":        list,
+                          }
+
+        # Arrays are double precision by default, these will be integer arrays.
         self._tointarray = ['atomnos', 'coreelectrons', 'homos']
+
+        # Attributes that should be lists of arrays.
         self._tolistofarrays = ['moenergies', 'scfvalues']
 
+        self.filename = filename
+        
+        # Progress indicator.
+        self.progress = progress
+        
         # Set up the logger
+        self.loglevel = loglevel
+        self.logname  = logname
         self.logger = logging.getLogger('%s %s' % (self.logname,self.filename))
         self.logger.setLevel(self.loglevel)
         handler = logging.StreamHandler(sys.stdout)
         handler.setFormatter(logging.Formatter("[%(name)s %(levelname)s] %(message)s"))
         self.logger.addHandler(handler)
 
+        # Periodic table of elements.
+        self.table = utils.PeriodicTable()
+
+        self.parsed = False
+
     def __setattr__(self, name, value):
 
         if hasattr(self, "logger"):
             # Only call logger.info if attribute is new and in list.
-            if not hasattr(self, name) and name in self.attrlist:
+            if not hasattr(self, name) and name in self._attrlist:
                 if type(value) in [Numeric.arraytype, list]:
                     self.logger.info("Creating attribute %s[]" %name)
                 else:
@@ -109,21 +149,32 @@ class Logfile(object):
     def parse(self, fupdate=0.05, cupdate=0.02):
         """Parse the logfile, using the assumed extract method of the child."""
 
-        # Open the file object
+        # Update list of attributes to keep after parsing.
+        _nodelete = list(set(self.__dict__.keys() + self._attrlist))
+
+        # Check that the sub-class has an extract() method.
+        if not hasattr(self, "extract"):
+            raise AttributeError, "Class %s has no extract() method." %self.__class__.__name__
+            return -1
+        # Check that extract() is callable.
+        if not callable(self.extract):
+            raise AttributeError, "Method %s._extract not callable." %self.__class__.__name__
+            return -1
+        # Check that extract() takes arguments (in the future specify how many).
+        if not inspect.getargspec(self.extract):
+            raise AttributeError, "Method %s._extract takes wrong number of arguments." %self.__class__.__name__
+            return -1
+
+        # Open the file object.
         inputfile = utils.openlogfile(self.filename)
 
-        # Intialize self.progress
+        # Intialize self.progress.
         if self.progress:
             inputfile.seek(0,2)
             nstep = inputfile.tell()
             inputfile.seek(0)
             self.progress.initialize(nstep)
             self.progress.step = 0
-
-        # Check if parser is generic and return if so
-        if self.__class__.__name__ == "LogFile":
-            self.logger.info("Method parse() was called from generic LogFile class.")
-            return
 
         # This method does the actual parsing of text,
         #  and should be defined by a subclass.
@@ -132,33 +183,49 @@ class Logfile(object):
         # Close file object
         inputfile.close()
 
-        # Make sure selected attributes are arrays
-        for attr in self._tofloatarray:
+        # Make sure all attributes have correct type (including arrays).
+        for attr in self._attrlist:
             if hasattr(self, attr):
-                if type(getattr(self, attr)) is not Numeric.arraytype:
-                    setattr(self, attr, Numeric.array(getattr(self, attr), 'd'))
-        for attr in self._tointarray:
-            if hasattr(self, attr):
-                if type(getattr(self, attr)) is not Numeric.arraytype:
-                    setattr(self, attr, Numeric.array(getattr(self, attr), 'i'))
+                atype = self._attrtypes.get(attr, None)
+                if atype and type(getattr(self, attr)) is not atype:
+                    if atype is Numeric.arraytype:
+                        try:
+                            precision = 'd'
+                            if attr in self._tointarray:
+                                precision = 'i'
+                            setattr(self, attr, Numeric.array(getattr(self, attr), precision))
+                        except TypeError:
+                            self.logger.info("Attribute %s cannot be converted to an array" %(attr))
+                    else:                    
+                        try:
+                            setattr(self, attr, atype(getattr(self, attr)))
+                        except ValueError:
+                            self.logger.info("Attribute %s cannot be converted to type '%s'" %(attr, atype))
 
-
-        # Make sure selected attrbutes are lists of arrays
+        # Make sure selected attrbutes are lists of arrays.
         for attr in self._tolistofarrays:
             if hasattr(self, attr):
                 if not Numeric.alltrue([type(x) is Numeric.arraytype for x in getattr(self, attr)]):
-                    setattr(self, attr, [Numeric.array(x, 'd') for x in getattr(self, attr)])
+                    try:
+                        setattr(self, attr, [Numeric.array(x, 'd') for x in getattr(self, attr)])
+                    except ValueError:
+                        self.logger.info("Elements of attribute %s cannot be converted to arrays." %attr)
 
-        # Set nmo if not set already - to nbasis
+        # Set nmo if not set already - to nbasis.
         if not hasattr(self, "nmo"):
             self.nmo = self.nbasis
 
-        # Creating deafult coreelectrons array
+        # Creating deafult coreelectrons array.
         if not hasattr(self, "coreelectrons"):
             self.logger.info("Creating attribute coreelectrons[]")
             self.coreelectrons = Numeric.zeros(self.natom, "i")
 
-        # Update self.progress as done
+        # Delete temporary attributes (set during parsing and not in attrlist).
+        for attr in self.__dict__.keys():
+            if not attr in _nodelete:
+                self.__delattr__(attr)
+
+        # Update self.progress as done.
         if self.progress:
             self.progress.update(nstep, "Done")
         
@@ -175,7 +242,7 @@ class Logfile(object):
 
     def clean(self):
         """Delete all of the parsed attributes."""
-        for attr in self.attrlist:
+        for attr in self._attrlist:
             if hasattr(self, attr):
                 delattr(self, attr)
         self.parsed = False
