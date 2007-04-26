@@ -18,6 +18,9 @@ class Gaussian(logfileparser.Logfile):
         # Call the __init__ method of the superclass
         super(Gaussian, self).__init__(logname="Gaussian", *args)
         
+        self.optfinished = False # Flag that indicates whether it has reached the end of a geoopt
+        self.coupledcluster = False # Flag for identifying Coupled Cluster runs
+        
     def __str__(self):
         """Return a string representation of the object."""
         return "Gaussian log file %s" % (self.filename)
@@ -45,601 +48,596 @@ class Gaussian(logfileparser.Logfile):
         ans = label.replace("U", "u").replace("G", "g") 
         return ans
 
-    def extract(self, inputfile):
+    def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
         
-        optfinished = False # Flag that indicates whether it has reached the end of a geoopt
-        coupledcluster = False # Flag for identifying Coupled Cluster runs
+        # Find the number of atoms
+        if line[1:8] == "NAtoms=":
+
+            self.updateprogress(inputfile, "Attributes", self.fupdate)
+                    
+            natom = int(line.split()[1])
+            if hasattr(self, "natom"):
+                assert self.natom == natom
+            else:
+                # I wonder whether this code will ever be executed
+                self.natom = natom
         
-        for line in inputfile:
+        if line[1:23] == "Optimization completed":
+            self.optfinished = True
+        
+        if line.find("Input orientation") > -1 or line.find("Z-Matrix orientation") > -1:
+        # Extract the atomic numbers and coordinates in the event standard orientation isn't available
+
+            self.updateprogress(inputfile, "Attributes", self.cupdate)
+                    
+            self.inputcoords = []
+            self.inputatoms = []
             
-            self.updateprogress(inputfile, "Unsupported Information", self.cupdate)
-                
-            # Find the number of atoms
-            if line[1:8] == "NAtoms=":
-
-                self.updateprogress(inputfile, "Attributes", self.fupdate)
-                        
-                natom = int(line.split()[1])
-                if hasattr(self, "natom"):
-                    assert self.natom == natom
-                else:
-                    # I wonder whether this code will ever be executed
-                    self.natom = natom
+            hyphens = inputfile.next()
+            colmNames = inputfile.next()
+            colmNames = inputfile.next()
+            hyphens = inputfile.next()
             
-            if line[1:23] == "Optimization completed":
-                optfinished = True
+            atomnos = []
+            atomcoords = []
+            line = inputfile.next()
+            while line != hyphens:
+                broken = line.split()
+                self.inputatoms.append(int(broken[1]))
+                atomcoords.append(map(float, broken[3:6]))
+                line = inputfile.next()
+            self.inputcoords.append(atomcoords)
+            if not hasattr(self, "natom"):
+                self.atomnos = Numeric.array(self.inputatoms, 'i')
+                self.natom = len(self.atomnos)
+
+        # Extract the atomic numbers and coordinates of the atoms
+        if not self.optfinished and line[25:45] == "Standard orientation":
+
+            self.updateprogress(inputfile, "Attributes", self.cupdate)
+                    
+            if not hasattr(self, "atomcoords"):
+                self.atomcoords = []
             
-            if line.find("Input orientation") > -1 or line.find("Z-Matrix orientation") > -1:
-# Extract the atomic numbers and coordinates in the event standard orientation isn't available
-
-                self.updateprogress(inputfile, "Attributes", self.cupdate)
-                        
-                inputcoords = []
-                inputatoms = []
-                
-                hyphens = inputfile.next()
-                colmNames = inputfile.next()
-                colmNames = inputfile.next()
-                hyphens = inputfile.next()
-                
-                atomnos = []
-                atomcoords = []
+            hyphens = inputfile.next()
+            colmNames = inputfile.next()
+            colmNames = inputfile.next()
+            hyphens = inputfile.next()
+            
+            atomnos = []
+            atomcoords = []
+            line = inputfile.next()
+            while line != hyphens:
+                broken = line.split()
+                atomnos.append(int(broken[1]))
+                atomcoords.append(map(float, broken[3:6]))
                 line = inputfile.next()
-                while line != hyphens:
-                    broken = line.split()
-                    inputatoms.append(int(broken[1]))
-                    atomcoords.append(map(float, broken[3:6]))
-                    line = inputfile.next()
-                inputcoords.append(atomcoords)
-                if not hasattr(self, "natom"):
-                    self.atomnos = Numeric.array(inputatoms, 'i')
-                    self.natom = len(self.atomnos)
+            self.atomcoords.append(atomcoords)
+            if not hasattr(self, "natom"):
+                self.atomnos = Numeric.array(atomnos, 'i')
+                self.natom = len(self.atomnos)
 
-            # Extract the atomic numbers and coordinates of the atoms
-            if not optfinished and line[25:45] == "Standard orientation":
-
-                self.updateprogress(inputfile, "Attributes", self.cupdate)
-                        
-                if not hasattr(self, "atomcoords"):
-                    self.atomcoords = []
-                
-                hyphens = inputfile.next()
-                colmNames = inputfile.next()
-                colmNames = inputfile.next()
-                hyphens = inputfile.next()
-                
-                atomnos = []
-                atomcoords = []
-                line = inputfile.next()
-                while line != hyphens:
-                    broken = line.split()
-                    atomnos.append(int(broken[1]))
-                    atomcoords.append(map(float, broken[3:6]))
-                    line = inputfile.next()
-                self.atomcoords.append(atomcoords)
-                if not hasattr(self, "natom"):
-                    self.atomnos = Numeric.array(atomnos, 'i')
-                    self.natom = len(self.atomnos)
-
-            if line[1:44] == 'Requested convergence on RMS density matrix':
-# Find the targets for SCF convergence (QM calcs)                
-                if not hasattr(self, "scftargets"):
-                    self.scftargets = []
-                scftargets = []
-                # The RMS density matrix
-                scftargets.append(self.float(line.split('=')[1].split()[0]))
-                line = inputfile.next()
-                # The MAX density matrix
+        if line[1:44] == 'Requested convergence on RMS density matrix':
+        # Find the targets for SCF convergence (QM calcs)                
+            if not hasattr(self, "scftargets"):
+                self.scftargets = []
+            scftargets = []
+            # The RMS density matrix
+            scftargets.append(self.float(line.split('=')[1].split()[0]))
+            line = inputfile.next()
+            # The MAX density matrix
+            scftargets.append(self.float(line.strip().split('=')[1][:-1]))
+            line = inputfile.next()
+            # For G03, there's also the energy (not for G98)
+            if line[1:10] == "Requested":
                 scftargets.append(self.float(line.strip().split('=')[1][:-1]))
-                line = inputfile.next()
-                # For G03, there's also the energy (not for G98)
-                if line[1:10] == "Requested":
-                    scftargets.append(self.float(line.strip().split('=')[1][:-1]))
-                self.scftargets.append(scftargets)
+            self.scftargets.append(scftargets)
 
-            if line[1:10] == 'Cycle   1':
-# Extract SCF convergence information (QM calcs)
-                        
-                if not hasattr(self, "scfvalues"):
-                    self.scfvalues = []
-                scfvalues = []
-                line = inputfile.next()
-                while line.find("SCF Done") == -1:
-                
-                    self.updateprogress(inputfile, "QM convergence", self.fupdate)
-                          
-                    if line.find(' E=') == 0:
-                        self.logger.debug(line)
-                    if line.find(" RMSDP") == 0:
-#  RMSDP=3.74D-06 MaxDP=7.27D-05 DE=-1.73D-07 OVMax= 3.67D-05
-# or
-#  RMSDP=1.13D-05 MaxDP=1.08D-04              OVMax= 1.66D-04
-                        parts = line.split()
-                        newlist = [self.float(x.split('=')[1]) for x in parts[0:2]]
-                        energy = 1.0
-                        if len(parts) > 4:
-                            energy = parts[2].split('=')[1]
-                            if energy == "":
-                                energy = self.float(parts[3])
-                            else:
-                                energy = self.float(energy)
-                        if len(self.scftargets[0]) == 3: # Only add the energy if it's a target criteria
-                            newlist.append(energy)
-                        scfvalues.append(newlist)
-                    try:
-                        line = inputfile.next()
-                    except StopIteration: # May be interupted by EOF
-                        break
-                self.scfvalues.append(scfvalues)
-
-            if line[1:4] == 'It=':
-# Extract SCF convergence information (AM1 calcs)
-                        
-                self.scftargets = Numeric.array([1E-7], "d") # This is the target value for the rms
-                self.scfvalues = [[]]
-                line = inputfile.next()
-                while line.find(" Energy") == -1:
-                
-                    if self.progress:
-                        step = inputfile.tell()
-                        if step != oldstep:
-                            self.progress.update(step, "AM1 Convergence")
-                            oldstep = step
-                            
-                    parts = line.strip().split()
-                    self.scfvalues[0].append(self.float(parts[-1][:-1]))
-                    line = inputfile.next()
-
-            if line[1:9] == 'SCF Done':
-# Note: this needs to follow the section where 'SCF Done' is used to terminate
-# a loop when extracting SCF convergence information
-                if not hasattr(self, "scfenergies"):
-                    self.scfenergies = []
-                self.scfenergies.append(utils.convertor(self.float(line.split()[4]), "hartree", "eV"))
-
-            # Total energies after Moller-Plesset corrections
-            # Second order correction is always first, so its first occurance
-            #   triggers creation of mpenergies (list of lists of energies)
-            # Further corrections are appended as found
-            if "EUMP2" in line[27:34]:
-                # Example output line:
-                #  E2 =    -0.9505918144D+00 EUMP2 =    -0.28670924198852D+03
-                # Warning! this output line is subtly different for MP3/4/5 runs
-                if not hasattr(self, "mpenergies"):
-                    self.mpenergies = []
-                self.mpenergies.append([])
-                mp2energy = self.float(line.split("=")[2])
-                self.mpenergies[-1].append(utils.convertor(mp2energy, "hartree", "eV"))
-            if line[34:39] == "EUMP3":
-                # Example output line:
-                #  E3=       -0.10518801D-01     EUMP3=      -0.75012800924D+02
-                mp3energy = self.float(line.split("=")[2])
-                self.mpenergies[-1].append(utils.convertor(mp3energy, "hartree", "eV"))
-            if line[34:42] == "UMP4(DQ)":
-                # Example output lines:
-                #  E4(DQ)=   -0.31002157D-02        UMP4(DQ)=   -0.75015901139D+02
-                #  E4(SDQ)=  -0.32127241D-02        UMP4(SDQ)=  -0.75016013648D+02
-                #  E4(SDTQ)= -0.32671209D-02        UMP4(SDTQ)= -0.75016068045D+02
-                # Energy for most substitutions is used only (SDTQ by default)
-                mp4energy = self.float(line.split("=")[2])
-                line = inputfile.next()
-                if line[34:43] == "UMP4(SDQ)":
-                  mp4energy = self.float(line.split("=")[2])
-                  line = inputfile.next()
-                  if line[34:44] == "UMP4(SDTQ)":
-                    mp4energy = self.float(line.split("=")[2])
-                self.mpenergies[-1].append(utils.convertor(mp4energy, "hartree", "eV"))
-            if line[29:32] == "MP5":
-                # Example output line:
-                #  DEMP5 =  -0.11048812312D-02 MP5 =  -0.75017172926D+02
-                mp5energy = self.float(line.split("=")[2])
-                self.mpenergies[-1].append(utils.convertor(mp5energy, "hartree", "eV"))
-
-            # Total energies after Coupled Cluster corrections
-            # Second order MBPT energies (MP2) are also calculated for these runs,
-            #  but the output is the same as when parsing for mpenergies.
-            # First turn on flag for Coupled Cluster runs
-            if line[1:23] == "Coupled Cluster theory" or \
-               line[1:8] == "CCSD(T)":
-                coupledcluster = True
-                if not hasattr(self, "ccenergies"):
-                    self.ccenergies = []
-            # Now read the consecutive correlated energies,
-            #  but append only the last one to ccenergies.
-            # Only the highest level energy is appended - ex. CCSD(T), not CCSD.
-            if coupledcluster and line[27:35] == "E(CORR)=":
-                ccenergy = self.float(line.split()[3])
-            if coupledcluster and line[1:9] == "CCSD(T)=":
-                ccenergy = self.float(line.split()[1])
-            # Append when leaving link 913
-            if coupledcluster and line[1:16] == "Leave Link  913":
-                self.ccenergies.append(utils.convertor(ccenergy, "hartree", "eV"))
-
-            if line[49:59] == 'Converged?':
-# Extract Geometry convergence information
-                if not hasattr(self, "geotargets"):
-                    self.geovalues = []
-                    self.geotargets = Numeric.array([0.0, 0.0, 0.0, 0.0], "d")
-                newlist = [0]*4
-                for i in range(4):
-                    line = inputfile.next()
+        if line[1:10] == 'Cycle   1':
+        # Extract SCF convergence information (QM calcs)
+                    
+            if not hasattr(self, "scfvalues"):
+                self.scfvalues = []
+            scfvalues = []
+            line = inputfile.next()
+            while line.find("SCF Done") == -1:
+            
+                self.updateprogress(inputfile, "QM convergence", self.fupdate)
+                      
+                if line.find(' E=') == 0:
                     self.logger.debug(line)
+                if line.find(" RMSDP") == 0:
+                #  RMSDP=3.74D-06 MaxDP=7.27D-05 DE=-1.73D-07 OVMax= 3.67D-05
+                # or
+                #  RMSDP=1.13D-05 MaxDP=1.08D-04              OVMax= 1.66D-04
                     parts = line.split()
-                    try:
-                        value = self.float(parts[2])
-                    except ValueError:
-                        self.logger.error("Problem parsing the value for geometry optimisation: %s is not a number." % parts[2])
-                    else:
-                        newlist[i] = value
-                    self.geotargets[i] = self.float(parts[3])
-                self.geovalues.append(newlist)
-
-            # Extracting orbital symmetries
-            if line[1:19] == 'Orbital symmetries' and not hasattr(self, "mosyms"):
-
-                self.updateprogress(inputfile, "MO Symmetries", self.fupdate)
-                        
-                self.mosyms = [[]]
-                line = inputfile.next()
-                unres = False
-                if line.find("Alpha Orbitals") == 1:
-                    unres = True
+                    newlist = [self.float(x.split('=')[1]) for x in parts[0:2]]
+                    energy = 1.0
+                    if len(parts) > 4:
+                        energy = parts[2].split('=')[1]
+                        if energy == "":
+                            energy = self.float(parts[3])
+                        else:
+                            energy = self.float(energy)
+                    if len(self.scftargets[0]) == 3: # Only add the energy if it's a target criteria
+                        newlist.append(energy)
+                    scfvalues.append(newlist)
+                try:
                     line = inputfile.next()
+                except StopIteration: # May be interupted by EOF
+                    break
+            self.scfvalues.append(scfvalues)
+
+        if line[1:4] == 'It=':
+        # Extract SCF convergence information (AM1 calcs)
+                    
+            self.scftargets = Numeric.array([1E-7], "d") # This is the target value for the rms
+            self.scfvalues = [[]]
+            line = inputfile.next()
+            while line.find(" Energy") == -1:
+            
+                if self.progress:
+                    step = inputfile.tell()
+                    if step != oldstep:
+                        self.progress.update(step, "AM1 Convergence")
+                        oldstep = step
+                        
+                parts = line.strip().split()
+                self.scfvalues[0].append(self.float(parts[-1][:-1]))
+                line = inputfile.next()
+
+        if line[1:9] == 'SCF Done':
+        # Note: this needs to follow the section where 'SCF Done' is used to terminate
+        # a loop when extracting SCF convergence information
+            if not hasattr(self, "scfenergies"):
+                self.scfenergies = []
+            self.scfenergies.append(utils.convertor(self.float(line.split()[4]), "hartree", "eV"))
+
+        # Total energies after Moller-Plesset corrections
+        # Second order correction is always first, so its first occurance
+        #   triggers creation of mpenergies (list of lists of energies)
+        # Further corrections are appended as found
+        if "EUMP2" in line[27:34]:
+            # Example output line:
+            #  E2 =    -0.9505918144D+00 EUMP2 =    -0.28670924198852D+03
+            # Warning! this output line is subtly different for MP3/4/5 runs
+            if not hasattr(self, "mpenergies"):
+                self.mpenergies = []
+            self.mpenergies.append([])
+            mp2energy = self.float(line.split("=")[2])
+            self.mpenergies[-1].append(utils.convertor(mp2energy, "hartree", "eV"))
+        if line[34:39] == "EUMP3":
+            # Example output line:
+            #  E3=       -0.10518801D-01     EUMP3=      -0.75012800924D+02
+            mp3energy = self.float(line.split("=")[2])
+            self.mpenergies[-1].append(utils.convertor(mp3energy, "hartree", "eV"))
+        if line[34:42] == "UMP4(DQ)":
+            # Example output lines:
+            #  E4(DQ)=   -0.31002157D-02        UMP4(DQ)=   -0.75015901139D+02
+            #  E4(SDQ)=  -0.32127241D-02        UMP4(SDQ)=  -0.75016013648D+02
+            #  E4(SDTQ)= -0.32671209D-02        UMP4(SDTQ)= -0.75016068045D+02
+            # Energy for most substitutions is used only (SDTQ by default)
+            mp4energy = self.float(line.split("=")[2])
+            line = inputfile.next()
+            if line[34:43] == "UMP4(SDQ)":
+              mp4energy = self.float(line.split("=")[2])
+              line = inputfile.next()
+              if line[34:44] == "UMP4(SDTQ)":
+                mp4energy = self.float(line.split("=")[2])
+            self.mpenergies[-1].append(utils.convertor(mp4energy, "hartree", "eV"))
+        if line[29:32] == "MP5":
+            # Example output line:
+            #  DEMP5 =  -0.11048812312D-02 MP5 =  -0.75017172926D+02
+            mp5energy = self.float(line.split("=")[2])
+            self.mpenergies[-1].append(utils.convertor(mp5energy, "hartree", "eV"))
+
+        # Total energies after Coupled Cluster corrections
+        # Second order MBPT energies (MP2) are also calculated for these runs,
+        #  but the output is the same as when parsing for mpenergies.
+        # First turn on flag for Coupled Cluster runs
+        if line[1:23] == "Coupled Cluster theory" or \
+           line[1:8] == "CCSD(T)":
+            self.coupledcluster = True
+            if not hasattr(self, "ccenergies"):
+                self.ccenergies = []
+        # Now read the consecutive correlated energies,
+        #  but append only the last one to ccenergies.
+        # Only the highest level energy is appended - ex. CCSD(T), not CCSD.
+        if self.coupledcluster and line[27:35] == "E(CORR)=":
+            self.ccenergy = self.float(line.split()[3])
+        if self.coupledcluster and line[1:9] == "CCSD(T)=":
+            self.ccenergy = self.float(line.split()[1])
+        # Append when leaving link 913
+        if self.coupledcluster and line[1:16] == "Leave Link  913":
+            self.ccenergies.append(utils.convertor(self.ccenergy, "hartree", "eV"))
+
+        if line[49:59] == 'Converged?':
+        # Extract Geometry convergence information
+            if not hasattr(self, "geotargets"):
+                self.geovalues = []
+                self.geotargets = Numeric.array([0.0, 0.0, 0.0, 0.0], "d")
+            newlist = [0]*4
+            for i in range(4):
+                line = inputfile.next()
+                self.logger.debug(line)
+                parts = line.split()
+                try:
+                    value = self.float(parts[2])
+                except ValueError:
+                    self.logger.error("Problem parsing the value for geometry optimisation: %s is not a number." % parts[2])
+                else:
+                    newlist[i] = value
+                self.geotargets[i] = self.float(parts[3])
+            self.geovalues.append(newlist)
+
+        # Extracting orbital symmetries
+        if line[1:19] == 'Orbital symmetries' and not hasattr(self, "mosyms"):
+
+            self.updateprogress(inputfile, "MO Symmetries", self.fupdate)
+                    
+            self.mosyms = [[]]
+            line = inputfile.next()
+            unres = False
+            if line.find("Alpha Orbitals") == 1:
+                unres = True
+                line = inputfile.next()
+            i = 0
+            while len(line) > 18 and line[17] == '(':
+                if line.find('Virtual') >= 0:
+                    self.homos = Numeric.array([i-1], "i") # 'HOMO' indexes the HOMO in the arrays
+                parts = line[17:].split()
+                for x in parts:
+                    self.mosyms[0].append(self.normalisesym(x.strip('()')))
+                    i += 1 
+                line = inputfile.next()
+            if unres:
+                line = inputfile.next()
+                # Repeat with beta orbital information
                 i = 0
+                self.mosyms.append([])
                 while len(line) > 18 and line[17] == '(':
-                    if line.find('Virtual') >= 0:
-                        self.homos = Numeric.array([i-1], "i") # 'HOMO' indexes the HOMO in the arrays
+                    if line.find('Virtual')>=0:
+                        self.homos.resize([2]) # Extend the array to two elements
+                        self.homos[1] = i-1 # 'HOMO' indexes the HOMO in the arrays
                     parts = line[17:].split()
                     for x in parts:
-                        self.mosyms[0].append(self.normalisesym(x.strip('()')))
-                        i += 1 
-                    line = inputfile.next()
-                if unres:
-                    line = inputfile.next()
-                    # Repeat with beta orbital information
-                    i = 0
-                    self.mosyms.append([])
-                    while len(line) > 18 and line[17] == '(':
-                        if line.find('Virtual')>=0:
-                            self.homos.resize([2]) # Extend the array to two elements
-                            self.homos[1] = i-1 # 'HOMO' indexes the HOMO in the arrays
-                        parts = line[17:].split()
-                        for x in parts:
-                            self.mosyms[1].append(self.normalisesym(x.strip('()')))
-                            i += 1
-                        line = inputfile.next()
-
-            # Extract the alpha electron eigenvalues
-            if line[1:6] == "Alpha" and line.find("eigenvalues") >= 0:
-
-                self.updateprogress(inputfile, "Eigenvalues", self.fupdate)
-                        
-                self.moenergies = [[]]
-                HOMO = -2
-                while line.find('Alpha') == 1:
-                    if line.split()[1] == "virt." and HOMO == -2:
-                        # If there aren't any symmetries,
-                        # this is a good way to find the HOMO
-                        HOMO = len(self.moenergies[0])-1
-                        if hasattr(self, "homos"):
-                            assert HOMO == self.homos[0]
-                        else:
-                            self.homos = Numeric.array([HOMO], "i")
-                    part = line[28:]
-                    i = 0
-                    while i*10+4 < len(part):
-                        x = part[i*10:(i+1)*10]
-                        self.moenergies[0].append(utils.convertor(self.float(x), "hartree", "eV"))
-                        i += 1
-                    line = inputfile.next()            
-                if line.find('Beta') == 2:
-                    self.moenergies.append([])
-                HOMO = -2
-                while line.find('Beta') == 2:
-                    if line.split()[1] == "virt." and HOMO == -2:
-                        # If there aren't any symmetries,
-                        # this is a good way to find the HOMO
-                        HOMO = len(self.moenergies[1])-1
-                        if len(self.homos) == 2:
-                            # It already has a self.homos (with the Alpha value)
-                            # but does it already have a Beta value?
-                            assert HOMO == self.homos[1]
-                        else:
-                            self.homos.resize([2])
-                            self.homos[1] = HOMO
-                    part = line[28:]
-                    i = 0
-                    while i*10+4 < len(part):
-                        x = part[i*10:(i+1)*10]
-                        self.moenergies[1].append(utils.convertor(self.float(x), "hartree", "eV"))
+                        self.mosyms[1].append(self.normalisesym(x.strip('()')))
                         i += 1
                     line = inputfile.next()
-                self.moenergies = [Numeric.array(x, "d") for x in self.moenergies]
-                
-            if line[1:14] == "AO basis set ":
-                ## Gaussian Rev <= B.0.3
-                self.gbasis = []
-# AO basis set in the form of general basis input:
-#  1 0
-# S   3 1.00       0.000000000000
-#      0.7161683735D+02  0.1543289673D+00
-#      0.1304509632D+02  0.5353281423D+00
-#      0.3530512160D+01  0.4446345422D+00
-# SP   3 1.00       0.000000000000
-#      0.2941249355D+01 -0.9996722919D-01  0.1559162750D+00
-#      0.6834830964D+00  0.3995128261D+00  0.6076837186D+00
-#      0.2222899159D+00  0.7001154689D+00  0.3919573931D+00
-                line = inputfile.next()
-                while line.strip():
-                    gbasis = []
-                    line = inputfile.next()
-                    while line.find("*")<0:
-                        temp = line.split()
-                        symtype = temp[0]
-                        numgau = int(temp[1])
-                        gau = []
-                        for i in range(numgau):
-                            temp = map(self.float, inputfile.next().split())
-                            gau.append(temp)
-                            
-                        for i,x in enumerate(symtype):
-                            newgau = [(z[0],z[i+1]) for z in gau]
-                            gbasis.append( (x,newgau) )
-                        line = inputfile.next() # i.e. "****" or "SP ...."
-                    self.gbasis.append(gbasis)
-                    line = inputfile.next() # i.e. "20 0" or blank line
 
-            # Start of the IR/Raman frequency section
-            if line[1:14] == "Harmonic freq":
+        # Extract the alpha electron eigenvalues
+        if line[1:6] == "Alpha" and line.find("eigenvalues") >= 0:
 
-                self.updateprogress(inputfile, "Frequency Information", self.fupdate)
-                        
-                self.vibsyms = []
-                self.vibirs = []
-                self.vibfreqs = []
-                self.vibdisps = []
-                line = inputfile.next()
-                while len(line[:15].split()) > 0:
-                    # Get past the three/four line title of the columns
-                    line = inputfile.next()
-                line = inputfile.next() # The line with symmetries
-                while len(line[:15].split()) == 0:
-                    self.logger.debug(line)
-                    self.vibsyms.extend(line.split()) # Adding new symmetry
-                    line = inputfile.next()
-                    self.vibfreqs.extend(map(self.float, line[15:].split())) # Adding new frequencies
-                    line = inputfile.next()
-                    line = inputfile.next()
-                    line = inputfile.next()
-                    self.vibirs.extend(map(self.float, line[15:].split())) # Adding IR intensities
-                    line = inputfile.next() # Either the header or a Raman line
-                    if line.find("Raman") >= 0:
-                        if not hasattr(self, "vibramans"):
-                            self.vibramans = []
-                        self.vibramans.extend(map(self.float, line[15:].split())) # Adding Raman intensities
-                        line = inputfile.next() # Depolar (P)
-                        line = inputfile.next() # Depolar (U)
-                        line = inputfile.next() # Header
-                    line = inputfile.next() # First line of cartesian displacement vectors
-                    p = [[], [], []]
-                    while len(line[:15].split()) > 0:
-                        # Store the cartesian displacement vectors
-                        broken = map(float, line.strip().split()[2:])
-                        for i in range(0, len(broken), 3):
-                            p[i/3].append(broken[i:i+3])
-                        line = inputfile.next()
-                    self.vibdisps.extend(p[0:len(broken)/3])
-                    line = inputfile.next() # Should be the line with symmetries
-                self.vibfreqs = Numeric.array(self.vibfreqs, "d")
-                self.vibirs = Numeric.array(self.vibirs, "d")
-                self.vibdisps = Numeric.array(self.vibdisps, "d")
-                if hasattr(self, "vibramans"):
-                    self.vibramans = Numeric.array(self.vibramans, "d")
+            self.updateprogress(inputfile, "Eigenvalues", self.fupdate)
                     
-            if line[1:14] == "Excited State":
-# Extract the electronic transitions
-                if not hasattr(self, "etenergies"):
-                    self.etenergies = []
-                    self.etoscs = []
-                    self.etsyms = []
-                    self.etsecs = []
-                # Need to deal with lines like:
-                # (restricted calc)
-                # Excited State   1:   Singlet-BU     5.3351 eV  232.39 nm  f=0.1695
-                # (unrestricted calc) (first excited state is 2!)
-                # Excited State   2:   ?Spin  -A      0.1222 eV 10148.75 nm  f=0.0000
-                parts = line[36:].split()
-                self.etenergies.append(utils.convertor(self.float(parts[0]), "eV", "cm-1"))
-                self.etoscs.append(self.float(parts[4].split("=")[1]))
-                self.etsyms.append(line[21:36].strip())
-                
-                line = inputfile.next()
-
-                p = re.compile("(\d+)")
-                CIScontrib = []
-                while line.find(" ->") >= 0: # This is a contribution to the transition
-                    parts = line.split("->")
-                    self.logger.debug(parts)
-                    # Has to deal with lines like:
-                    #       32 -> 38         0.04990
-                    #      35A -> 45A        0.01921
-                    frommoindex = 0 # For restricted or alpha unrestricted
-                    fromMO = parts[0].strip()
-                    if fromMO[-1] == "B":
-                        frommoindex = 1 # For beta unrestricted
-                    fromMO = int(p.match(fromMO).group())-1 # subtract 1 so that it is an index into moenergies
-                    
-                    t = parts[1].split()
-                    tomoindex = 0
-                    toMO = t[0]
-                    if toMO[-1] == "B":
-                        tomoindex = 1
-                    toMO = int(p.match(toMO).group())-1 # subtract 1 so that it is an index into moenergies
-
-                    percent = self.float(t[1])
-                    # Changed: parse the actual coefficient
-                    #sqr = percent**2*2 # The fractional contribution of this CI
-                    #if percent < 0:
-                    #    sqr = -sqr
-                    #CIScontrib.append([(fromMO, frommoindex), (toMO, tomoindex), sqr])
-                    CIScontrib.append([(fromMO, frommoindex), (toMO, tomoindex), percent])
-                    line = inputfile.next()
-                self.etsecs.append(CIScontrib)
-
-            if line[1:52] == "<0|r|b> * <b|rxdel|0>  (Au), Rotatory Strengths (R)":
-# Extract circular dichroism data
-                self.etrotats = []
-                inputfile.next()
-                inputfile.next()
-                line = inputfile.next()
-                parts = line.strip().split()
-                while len(parts) == 5:
-                    try:
-                        R = self.float(parts[-1])
-                    except ValueError:
-                        # nan or -nan if there is no first excited state
-                        # (for unrestricted calculations)
-                        pass
+            self.moenergies = [[]]
+            HOMO = -2
+            while line.find('Alpha') == 1:
+                if line.split()[1] == "virt." and HOMO == -2:
+                    # If there aren't any symmetries,
+                    # this is a good way to find the HOMO
+                    HOMO = len(self.moenergies[0])-1
+                    if hasattr(self, "homos"):
+                        assert HOMO == self.homos[0]
                     else:
-                        self.etrotats.append(R)
-                    line = inputfile.next()
-                    temp = line.strip().split()
-                    parts = line.strip().split()                
-                self.etrotats = Numeric.array(self.etrotats, "d")
-
-            if line[1:7] == "NBasis" or line[4:10] == "NBasis":
-# Extract the number of basis sets
-                nbasis = int(line.split('=')[1].split()[0])
-                # Has to deal with lines like:
-                #  NBasis =   434 NAE=    97 NBE=    97 NFC=    34 NFV=     0
-                #     NBasis = 148  MinDer = 0  MaxDer = 0
-                # Although the former is in every file, it doesn't occur before
-                # the overlap matrix is printed
-                if hasattr(self, "nbasis"):
-                    assert nbasis == self.nbasis
-                else:
-                    self.nbasis = nbasis
-                    
-            if line[1:7] == "NBsUse":
-# Extract the number of linearly-independent basis sets
-                nmo = int(line.split('=')[1].split()[0])
-                if hasattr(self, "nmo"):
-                    assert nmo == self.nmo
-                else:
-                    self.nmo = nmo
-
-            if line[7:22] == "basis functions, ":
-# For AM1 calculations, set nbasis by a second method
-# (nmo may not always be explicitly stated)
-                nbasis = int(line.split()[0])
-                if hasattr(self, "nbasis"):
-                    assert nbasis == self.nbasis
-                else:
-                    self.nbasis = nbasis
-
-            if line[1:4] == "***" and (line[5:12] == "Overlap"
-                                     or line[8:15] == "Overlap"):
-# Extract the molecular orbital overlap matrix
-                # Has to deal with lines such as:
-                #  *** Overlap ***
-                #  ****** Overlap ******
-                self.aooverlaps = Numeric.zeros( (self.nbasis, self.nbasis), "d")
-                # Overlap integrals for basis fn#1 are in aooverlaps[0]
-                base = 0
-                colmNames = inputfile.next()
-                while base < self.nbasis:
-                     
-                    self.updateprogress(inputfile, "Overlap", self.fupdate)
-                            
-                    for i in range(self.nbasis-base): # Fewer lines this time
-                        line = inputfile.next()
-                        parts = line.split()
-                        for j in range(len(parts)-1): # Some lines are longer than others
-                            k = float(parts[j+1].replace("D", "E"))
-                            self.aooverlaps[base+j, i+base] = k
-                            self.aooverlaps[i+base, base+j] = k
-                    base += 5
-                    colmNames = inputfile.next()
-                self.aooverlaps = Numeric.array(self.aooverlaps, "d")                    
-
-
-            if line[5:35] == "Molecular Orbital Coefficients" or line[5:41] == "Alpha Molecular Orbital Coefficients" or line[5:40] == "Beta Molecular Orbital Coefficients":
-                if line[5:40] == "Beta Molecular Orbital Coefficients":
-                    beta = True
-                    if popregular:
-                        continue # Not going to extract mocoeffs
-                    # Need to add an extra array to self.mocoeffs
-                    self.mocoeffs.append(Numeric.zeros((nmo, nbasis), "d"))
-                else:
-                    beta = False
-                    self.aonames = []
-                    mocoeffs = [Numeric.zeros((nmo, nbasis), "d")]
-
-                base = 0
-                popregular = False
-                for base in range(0, nmo, 5):
-                    
-                    self.updateprogress(inputfile, "Coefficients", self.fupdate)
-                             
-                    colmNames = inputfile.next()   
-                    if base==0 and int(colmNames.split()[0])!=1:
-                        # Implies that this is a POP=REGULAR calculation
-                        # and so, only aonames (not mocoeffs) will be extracted
-                        popregular = True
-                    symmetries = inputfile.next()
-                    eigenvalues = inputfile.next()
-                    for i in range(nbasis):
-                                       
-                        line = inputfile.next()
-                        if base == 0 and not beta: # Just do this the first time 'round
-                            # Changed below from :12 to :11 to deal with Elmar Neumann's example
-                            parts = line[:11].split()
-                            if len(parts) > 1: # New atom
-                                atomname = "%s%s" % (parts[2], parts[1])
-                            orbital = line[11:20].strip()
-                            self.aonames.append("%s_%s" % (atomname, orbital))
-
-                        part = line[21:].replace("D", "E").rstrip()
-                        temp = [] 
-                        for j in range(0, len(part), 10):
-                            temp.append(float(part[j:j+10]))
-                        if beta:
-                            self.mocoeffs[1][base:base + len(part) / 10, i] = temp
-                        else:
-                            mocoeffs[0][base:base + len(part) / 10, i] = temp
-                    if popregular:
-                        # We now have aonames, so no need to continue
-                        break
-                if not popregular and not beta:
-                    self.mocoeffs = mocoeffs
-                    
-                    
-            if line.find("Pseudopotential Parameters") > -1:
-#parse pseudopotential charges
-
-                dashes = inputfile.next()
-                label1 = inputfile.next()
-                label2 = inputfile.next()
-                dashes = inputfile.next()
-
+                        self.homos = Numeric.array([HOMO], "i")
+                part = line[28:]
+                i = 0
+                while i*10+4 < len(part):
+                    x = part[i*10:(i+1)*10]
+                    self.moenergies[0].append(utils.convertor(self.float(x), "hartree", "eV"))
+                    i += 1
+                line = inputfile.next()            
+            if line.find('Beta') == 2:
+                self.moenergies.append([])
+            HOMO = -2
+            while line.find('Beta') == 2:
+                if line.split()[1] == "virt." and HOMO == -2:
+                    # If there aren't any symmetries,
+                    # this is a good way to find the HOMO
+                    HOMO = len(self.moenergies[1])-1
+                    if len(self.homos) == 2:
+                        # It already has a self.homos (with the Alpha value)
+                        # but does it already have a Beta value?
+                        assert HOMO == self.homos[1]
+                    else:
+                        self.homos.resize([2])
+                        self.homos[1] = HOMO
+                part = line[28:]
+                i = 0
+                while i*10+4 < len(part):
+                    x = part[i*10:(i+1)*10]
+                    self.moenergies[1].append(utils.convertor(self.float(x), "hartree", "eV"))
+                    i += 1
                 line = inputfile.next()
-                if line.find("Centers:") < 0:
-                    continue
+            self.moenergies = [Numeric.array(x, "d") for x in self.moenergies]
+            
+        if line[1:14] == "AO basis set ":
+            ## Gaussian Rev <= B.0.3
+            self.gbasis = []
+            # AO basis set in the form of general basis input:
+            #  1 0
+            # S   3 1.00       0.000000000000
+            #      0.7161683735D+02  0.1543289673D+00
+            #      0.1304509632D+02  0.5353281423D+00
+            #      0.3530512160D+01  0.4446345422D+00
+            # SP   3 1.00       0.000000000000
+            #      0.2941249355D+01 -0.9996722919D-01  0.1559162750D+00
+            #      0.6834830964D+00  0.3995128261D+00  0.6076837186D+00
+            #      0.2222899159D+00  0.7001154689D+00  0.3919573931D+00
+            line = inputfile.next()
+            while line.strip():
+                gbasis = []
+                line = inputfile.next()
+                while line.find("*")<0:
+                    temp = line.split()
+                    symtype = temp[0]
+                    numgau = int(temp[1])
+                    gau = []
+                    for i in range(numgau):
+                        temp = map(self.float, inputfile.next().split())
+                        gau.append(temp)
+                        
+                    for i,x in enumerate(symtype):
+                        newgau = [(z[0],z[i+1]) for z in gau]
+                        gbasis.append( (x,newgau) )
+                    line = inputfile.next() # i.e. "****" or "SP ...."
+                self.gbasis.append(gbasis)
+                line = inputfile.next() # i.e. "20 0" or blank line
 
-                centers = line.split()[1:]
-                
-                self.coreelectrons = Numeric.zeros(self.natom, "i")
+        # Start of the IR/Raman frequency section
+        if line[1:14] == "Harmonic freq":
 
-                for center in centers:
-                    while line[:10].find(center) < 0:
-                        line = inputfile.next()
+            self.updateprogress(inputfile, "Frequency Information", self.fupdate)
                     
-                    info = line.split()
-                    self.coreelectrons[int(center)-1] = int(info[1]) - int(info[2])
+            self.vibsyms = []
+            self.vibirs = []
+            self.vibfreqs = []
+            self.vibdisps = []
+            line = inputfile.next()
+            while len(line[:15].split()) > 0:
+                # Get past the three/four line title of the columns
+                line = inputfile.next()
+            line = inputfile.next() # The line with symmetries
+            while len(line[:15].split()) == 0:
+                self.logger.debug(line)
+                self.vibsyms.extend(line.split()) # Adding new symmetry
+                line = inputfile.next()
+                self.vibfreqs.extend(map(self.float, line[15:].split())) # Adding new frequencies
+                line = inputfile.next()
+                line = inputfile.next()
+                line = inputfile.next()
+                self.vibirs.extend(map(self.float, line[15:].split())) # Adding IR intensities
+                line = inputfile.next() # Either the header or a Raman line
+                if line.find("Raman") >= 0:
+                    if not hasattr(self, "vibramans"):
+                        self.vibramans = []
+                    self.vibramans.extend(map(self.float, line[15:].split())) # Adding Raman intensities
+                    line = inputfile.next() # Depolar (P)
+                    line = inputfile.next() # Depolar (U)
+                    line = inputfile.next() # Header
+                line = inputfile.next() # First line of cartesian displacement vectors
+                p = [[], [], []]
+                while len(line[:15].split()) > 0:
+                    # Store the cartesian displacement vectors
+                    broken = map(float, line.strip().split()[2:])
+                    for i in range(0, len(broken), 3):
+                        p[i/3].append(broken[i:i+3])
+                    line = inputfile.next()
+                self.vibdisps.extend(p[0:len(broken)/3])
+                line = inputfile.next() # Should be the line with symmetries
+            self.vibfreqs = Numeric.array(self.vibfreqs, "d")
+            self.vibirs = Numeric.array(self.vibirs, "d")
+            self.vibdisps = Numeric.array(self.vibdisps, "d")
+            if hasattr(self, "vibramans"):
+                self.vibramans = Numeric.array(self.vibramans, "d")
+                
+        if line[1:14] == "Excited State":
+        # Extract the electronic transitions
+            if not hasattr(self, "etenergies"):
+                self.etenergies = []
+                self.etoscs = []
+                self.etsyms = []
+                self.etsecs = []
+            # Need to deal with lines like:
+            # (restricted calc)
+            # Excited State   1:   Singlet-BU     5.3351 eV  232.39 nm  f=0.1695
+            # (unrestricted calc) (first excited state is 2!)
+            # Excited State   2:   ?Spin  -A      0.1222 eV 10148.75 nm  f=0.0000
+            parts = line[36:].split()
+            self.etenergies.append(utils.convertor(self.float(parts[0]), "eV", "cm-1"))
+            self.etoscs.append(self.float(parts[4].split("=")[1]))
+            self.etsyms.append(line[21:36].strip())
+            
+            line = inputfile.next()
 
-        if not hasattr(self,"atomcoords"):
-            self.atomcoords = Numeric.array(inputcoords, 'd')
+            p = re.compile("(\d+)")
+            CIScontrib = []
+            while line.find(" ->") >= 0: # This is a contribution to the transition
+                parts = line.split("->")
+                self.logger.debug(parts)
+                # Has to deal with lines like:
+                #       32 -> 38         0.04990
+                #      35A -> 45A        0.01921
+                frommoindex = 0 # For restricted or alpha unrestricted
+                fromMO = parts[0].strip()
+                if fromMO[-1] == "B":
+                    frommoindex = 1 # For beta unrestricted
+                fromMO = int(p.match(fromMO).group())-1 # subtract 1 so that it is an index into moenergies
+                
+                t = parts[1].split()
+                tomoindex = 0
+                toMO = t[0]
+                if toMO[-1] == "B":
+                    tomoindex = 1
+                toMO = int(p.match(toMO).group())-1 # subtract 1 so that it is an index into moenergies
+
+                percent = self.float(t[1])
+                # Changed: parse the actual coefficient
+                #sqr = percent**2*2 # The fractional contribution of this CI
+                #if percent < 0:
+                #    sqr = -sqr
+                #CIScontrib.append([(fromMO, frommoindex), (toMO, tomoindex), sqr])
+                CIScontrib.append([(fromMO, frommoindex), (toMO, tomoindex), percent])
+                line = inputfile.next()
+            self.etsecs.append(CIScontrib)
+
+        if line[1:52] == "<0|r|b> * <b|rxdel|0>  (Au), Rotatory Strengths (R)":
+        # Extract circular dichroism data
+            self.etrotats = []
+            inputfile.next()
+            inputfile.next()
+            line = inputfile.next()
+            parts = line.strip().split()
+            while len(parts) == 5:
+                try:
+                    R = self.float(parts[-1])
+                except ValueError:
+                    # nan or -nan if there is no first excited state
+                    # (for unrestricted calculations)
+                    pass
+                else:
+                    self.etrotats.append(R)
+                line = inputfile.next()
+                temp = line.strip().split()
+                parts = line.strip().split()                
+            self.etrotats = Numeric.array(self.etrotats, "d")
+
+        if line[1:7] == "NBasis" or line[4:10] == "NBasis":
+        # Extract the number of basis sets
+            nbasis = int(line.split('=')[1].split()[0])
+            # Has to deal with lines like:
+            #  NBasis =   434 NAE=    97 NBE=    97 NFC=    34 NFV=     0
+            #     NBasis = 148  MinDer = 0  MaxDer = 0
+            # Although the former is in every file, it doesn't occur before
+            # the overlap matrix is printed
+            if hasattr(self, "nbasis"):
+                assert nbasis == self.nbasis
+            else:
+                self.nbasis = nbasis
+                
+        if line[1:7] == "NBsUse":
+        # Extract the number of linearly-independent basis sets
+            nmo = int(line.split('=')[1].split()[0])
+            if hasattr(self, "nmo"):
+                assert nmo == self.nmo
+            else:
+                self.nmo = nmo
+
+        if line[7:22] == "basis functions, ":
+        # For AM1 calculations, set nbasis by a second method
+        # (nmo may not always be explicitly stated)
+            nbasis = int(line.split()[0])
+            if hasattr(self, "nbasis"):
+                assert nbasis == self.nbasis
+            else:
+                self.nbasis = nbasis
+
+        if line[1:4] == "***" and (line[5:12] == "Overlap"
+                                 or line[8:15] == "Overlap"):
+            # Extract the molecular orbital overlap matrix
+            # Has to deal with lines such as:
+            #  *** Overlap ***
+            #  ****** Overlap ******
+            self.aooverlaps = Numeric.zeros( (self.nbasis, self.nbasis), "d")
+            # Overlap integrals for basis fn#1 are in aooverlaps[0]
+            base = 0
+            colmNames = inputfile.next()
+            while base < self.nbasis:
+                 
+                self.updateprogress(inputfile, "Overlap", self.fupdate)
+                        
+                for i in range(self.nbasis-base): # Fewer lines this time
+                    line = inputfile.next()
+                    parts = line.split()
+                    for j in range(len(parts)-1): # Some lines are longer than others
+                        k = float(parts[j+1].replace("D", "E"))
+                        self.aooverlaps[base+j, i+base] = k
+                        self.aooverlaps[i+base, base+j] = k
+                base += 5
+                colmNames = inputfile.next()
+            self.aooverlaps = Numeric.array(self.aooverlaps, "d")                    
+
+
+        if line[5:35] == "Molecular Orbital Coefficients" or line[5:41] == "Alpha Molecular Orbital Coefficients" or line[5:40] == "Beta Molecular Orbital Coefficients":
+            if line[5:40] == "Beta Molecular Orbital Coefficients":
+                beta = True
+                if self.popregular:
+                    return
+                    # This was continue before refactoring the parsers.
+                    #continue # Not going to extract mocoeffs
+                # Need to add an extra array to self.mocoeffs
+                self.mocoeffs.append(Numeric.zeros((self.nmo, self.nbasis), "d"))
+            else:
+                beta = False
+                self.aonames = []
+                mocoeffs = [Numeric.zeros((self.nmo, self.nbasis), "d")]
+
+            base = 0
+            self.popregular = False
+            for base in range(0, self.nmo, 5):
+                
+                self.updateprogress(inputfile, "Coefficients", self.fupdate)
+                         
+                colmNames = inputfile.next()   
+                if base==0 and int(colmNames.split()[0])!=1:
+                    # Implies that this is a POP=REGULAR calculation
+                    # and so, only aonames (not mocoeffs) will be extracted
+                    self.popregular = True
+                symmetries = inputfile.next()
+                eigenvalues = inputfile.next()
+                for i in range(self.nbasis):
+                                   
+                    line = inputfile.next()
+                    if base == 0 and not beta: # Just do this the first time 'round
+                        # Changed below from :12 to :11 to deal with Elmar Neumann's example
+                        parts = line[:11].split()
+                        if len(parts) > 1: # New atom
+                            atomname = "%s%s" % (parts[2], parts[1])
+                        orbital = line[11:20].strip()
+                        self.aonames.append("%s_%s" % (atomname, orbital))
+
+                    part = line[21:].replace("D", "E").rstrip()
+                    temp = [] 
+                    for j in range(0, len(part), 10):
+                        temp.append(float(part[j:j+10]))
+                    if beta:
+                        self.mocoeffs[1][base:base + len(part) / 10, i] = temp
+                    else:
+                        mocoeffs[0][base:base + len(part) / 10, i] = temp
+                if self.popregular:
+                    # We now have aonames, so no need to continue
+                    break
+            if not self.popregular and not beta:
+                self.mocoeffs = mocoeffs
+                
+                
+        if line.find("Pseudopotential Parameters") > -1:
+        #parse pseudopotential charges
+
+            dashes = inputfile.next()
+            label1 = inputfile.next()
+            label2 = inputfile.next()
+            dashes = inputfile.next()
+
+            line = inputfile.next()
+            if line.find("Centers:") < 0:
+                return
+                # This was continue before parser refactoring.
+                # continue
+
+            centers = line.split()[1:]
+            
+            self.coreelectrons = Numeric.zeros(self.natom, "i")
+
+            for center in centers:
+                while line[:10].find(center) < 0:
+                    line = inputfile.next()
+                
+                info = line.split()
+                self.coreelectrons[int(center)-1] = int(info[1]) - int(info[2])
+
 
 if __name__ == "__main__":
     import doctest, gaussianparser

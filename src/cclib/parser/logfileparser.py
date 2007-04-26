@@ -182,9 +182,14 @@ class Logfile(object):
             if cupdate:
                 self.cupdate = cupdate
 
-        # This method does the actual parsing of text,
-        #  and should be defined by a subclass.
-        self.extract(inputfile)
+        # Loop over lines in the file object.
+        for line in inputfile:
+
+            self.updateprogress(inputfile, "Unsupported information", cupdate)
+
+            # This call should check if the line begins a section of extracted data.
+            # If it does, it parses some lines and sets the relevant attributes.
+            self.extract(inputfile, line)
 
         # Close file object
         inputfile.close()
@@ -216,6 +221,11 @@ class Logfile(object):
                         setattr(self, attr, [Numeric.array(x, 'd') for x in getattr(self, attr)])
                     except ValueError:
                         self.logger.info("Elements of attribute %s cannot be converted to arrays." %attr)
+
+        # If atomcoords were not parsed, but some input coordinates were ("inputcoords").
+        # This is originally from the Gaussian parser, a regression fix.
+        if not hasattr(self, "atomcoords") and hasattr(self, "inputcoords"):
+            self.atomcoords = Numeric.array(self.inputcoords, 'd')
 
         # Set nmo if not set already - to nbasis.
         if not hasattr(self, "nmo"):
