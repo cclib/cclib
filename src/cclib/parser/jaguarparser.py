@@ -44,7 +44,7 @@ class Jaguar(logfileparser.Logfile):
         ans = label.split("/")[0].replace("pp", '"').replace("p", "'")
         return ans
 
-    def extract(self, inputfile, fupdate=0.05, cupdate=0.002):
+    def extract(self, inputfile):
         """Extract information from the file object inputfile."""
 
         oldstep = 0
@@ -53,7 +53,7 @@ class Jaguar(logfileparser.Logfile):
             
         for line in inputfile:
             
-            if self.progress and random.random() < cupdate:
+            if self.progress and random.random() < self.cupdate:
                 
                 step = inputfile.tell()
                 if step != oldstep:

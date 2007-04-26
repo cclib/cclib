@@ -75,7 +75,7 @@ class ADF(logfileparser.Logfile):
         else:
             return "%s:%i"%(label,num+1)
 
-    def extract(self, inputfile, fupdate=0.05, cupdate=0.002):
+    def extract(self, inputfile):
         """Extract information from the file object inputfile."""
         
         oldstep = 0
@@ -93,13 +93,13 @@ class ADF(logfileparser.Logfile):
         
         for line in inputfile:
             
-            self.updateprogress(inputfile, "Unsupported Information", cupdate)
+            self.updateprogress(inputfile, "Unsupported Information", self.cupdate)
                 
             if line.find("INPUT FILE") >= 0:
 #check to make sure we aren't parsing Create jobs
                 while line:
                 
-                    self.updateprogress(inputfile, "Unsupported Information", fupdate)
+                    self.updateprogress(inputfile, "Unsupported Information", self.fupdate)
                   
                     if line.find("INPUT FILE") >= 0:
                         line2 = inputfile.next()
@@ -134,7 +134,7 @@ class ADF(logfileparser.Logfile):
             if line[1:6] == "ATOMS":
 # Find the number of atoms and their atomic numbers
 # Also extract the starting coordinates (for a GeoOpt anyway)
-                self.updateprogress(inputfile, "Attributes", cupdate)
+                self.updateprogress(inputfile, "Attributes", self.cupdate)
                 
                 self.atomnos = []
                 self.atomcoords = []
@@ -194,7 +194,7 @@ class ADF(logfileparser.Logfile):
               
             if line[1:11] == "CYCLE    1":
               
-                self.updateprogress(inputfile, "QM convergence", fupdate)
+                self.updateprogress(inputfile, "QM convergence", self.fupdate)
               
                 newlist = []
                 line = inputfile.next()
@@ -486,7 +486,7 @@ class ADF(logfileparser.Logfile):
   
             if line[1:24] == "List of All Frequencies":
 # Start of the IR/Raman frequency section
-                self.updateprogress(inputfile, "Frequency information", fupdate)
+                self.updateprogress(inputfile, "Frequency information", self.fupdate)
                          
 #                 self.vibsyms = [] # Need to look into this a bit more
                 self.vibirs = []
@@ -596,7 +596,7 @@ class ADF(logfileparser.Logfile):
                           
                         for i in range(nosymrep - base):
                         
-                            self.updateprogress(inputfile, "Overlap", fupdate)
+                            self.updateprogress(inputfile, "Overlap", self.fupdate)
                                 
                             line = inputfile.next()
                             parts = line.split()[1:]
@@ -657,7 +657,7 @@ class ADF(logfileparser.Logfile):
                         # The table can end with a blank line or "1".
                         row = 0
                         while not line.strip() in ["", "1"]:
-                            self.updateprogress(inputfile, "Coefficients", fupdate)
+                            self.updateprogress(inputfile, "Coefficients", self.fupdate)
                             row += 1
                             coeffs = [float(x) for x in line.split()[1:]]
                             moindices = [aolist[n-1] for n in monumbers]

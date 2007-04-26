@@ -73,7 +73,7 @@ class GAMESS(logfileparser.Logfile):
             
         return ans
     
-    def extract(self, inputfile, fupdate=0.05, cupdate=0.002):
+    def extract(self, inputfile):
         """Extract information from the file object inputfile."""
         
         oldstep = 0
@@ -84,7 +84,7 @@ class GAMESS(logfileparser.Logfile):
 
         for line in inputfile:
             
-            self.updateprogress(inputfile, "Unsupported Information", cupdate)
+            self.updateprogress(inputfile, "Unsupported Information", self.cupdate)
 
             if line.find("OPTTOL") >= 0:
                 # Two possibilities:

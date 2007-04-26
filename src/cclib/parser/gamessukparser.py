@@ -41,7 +41,7 @@ class GAMESSUK(logfileparser.Logfile):
         
         return ans
 
-    def extract(self, inputfile, fupdate=0.05, cupdate=0.002):
+    def extract(self, inputfile):
         """Extract information from the file object inputfile."""
 
         oldstep = 0
@@ -55,7 +55,7 @@ class GAMESSUK(logfileparser.Logfile):
 
         for line in inputfile:
             
-            self.updateprogress(inputfile, "Unsupported Information", cupdate)
+            self.updateprogress(inputfile, "Unsupported Information", self.cupdate)
 
             if line[1:22] == "total number of atoms":
                 if not hasattr(self, "natom"):

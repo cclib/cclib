@@ -57,8 +57,8 @@ class Logfile(object):
     """
 
     
-    def __init__(self,filename,progress=None,
-                 loglevel=logging.INFO,logname="Log"):
+    def __init__(self, filename, progress=None, fupdate=0.05, cupdate=0.002, 
+                                 loglevel=logging.INFO, logname="Log"):
         """Initialise the Logfile object.
 
         Typically called by subclasses in their own __init__ methods.
@@ -119,6 +119,8 @@ class Logfile(object):
         
         # Progress indicator.
         self.progress = progress
+        self.fupdate = fupdate
+        self.cupdate = cupdate
         
         # Set up the logger
         self.loglevel = loglevel
@@ -146,7 +148,7 @@ class Logfile(object):
 
         object.__setattr__(self, name, value)
 
-    def parse(self, fupdate=0.05, cupdate=0.02):
+    def parse(self, fupdate=None, cupdate=None):
         """Parse the logfile, using the assumed extract method of the child."""
 
         # Update list of attributes to keep after parsing.
@@ -175,10 +177,14 @@ class Logfile(object):
             inputfile.seek(0)
             self.progress.initialize(nstep)
             self.progress.step = 0
+            if fupdate:
+                self.fupdate = fupdate
+            if cupdate:
+                self.cupdate = cupdate
 
         # This method does the actual parsing of text,
         #  and should be defined by a subclass.
-        self.extract(inputfile, fupdate=fupdate, cupdate=cupdate)
+        self.extract(inputfile)
 
         # Close file object
         inputfile.close()

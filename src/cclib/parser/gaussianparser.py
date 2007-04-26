@@ -45,7 +45,7 @@ class Gaussian(logfileparser.Logfile):
         ans = label.replace("U", "u").replace("G", "g") 
         return ans
 
-    def extract(self, inputfile, fupdate=0.05, cupdate=0.002):
+    def extract(self, inputfile):
         """Extract information from the file object inputfile."""
         
         optfinished = False # Flag that indicates whether it has reached the end of a geoopt
@@ -53,12 +53,12 @@ class Gaussian(logfileparser.Logfile):
         
         for line in inputfile:
             
-            self.updateprogress(inputfile, "Unsupported Information", cupdate)
+            self.updateprogress(inputfile, "Unsupported Information", self.cupdate)
                 
             # Find the number of atoms
             if line[1:8] == "NAtoms=":
 
-                self.updateprogress(inputfile, "Attributes", fupdate)
+                self.updateprogress(inputfile, "Attributes", self.fupdate)
                         
                 natom = int(line.split()[1])
                 if hasattr(self, "natom"):
@@ -73,7 +73,7 @@ class Gaussian(logfileparser.Logfile):
             if line.find("Input orientation") > -1 or line.find("Z-Matrix orientation") > -1:
 # Extract the atomic numbers and coordinates in the event standard orientation isn't available
 
-                self.updateprogress(inputfile, "Attributes", cupdate)
+                self.updateprogress(inputfile, "Attributes", self.cupdate)
                         
                 inputcoords = []
                 inputatoms = []
@@ -99,7 +99,7 @@ class Gaussian(logfileparser.Logfile):
             # Extract the atomic numbers and coordinates of the atoms
             if not optfinished and line[25:45] == "Standard orientation":
 
-                self.updateprogress(inputfile, "Attributes", cupdate)
+                self.updateprogress(inputfile, "Attributes", self.cupdate)
                         
                 if not hasattr(self, "atomcoords"):
                     self.atomcoords = []
@@ -147,7 +147,7 @@ class Gaussian(logfileparser.Logfile):
                 line = inputfile.next()
                 while line.find("SCF Done") == -1:
                 
-                    self.updateprogress(inputfile, "QM convergence", fupdate)
+                    self.updateprogress(inputfile, "QM convergence", self.fupdate)
                           
                     if line.find(' E=') == 0:
                         self.logger.debug(line)
@@ -278,7 +278,7 @@ class Gaussian(logfileparser.Logfile):
             # Extracting orbital symmetries
             if line[1:19] == 'Orbital symmetries' and not hasattr(self, "mosyms"):
 
-                self.updateprogress(inputfile, "MO Symmetries", fupdate)
+                self.updateprogress(inputfile, "MO Symmetries", self.fupdate)
                         
                 self.mosyms = [[]]
                 line = inputfile.next()
@@ -313,7 +313,7 @@ class Gaussian(logfileparser.Logfile):
             # Extract the alpha electron eigenvalues
             if line[1:6] == "Alpha" and line.find("eigenvalues") >= 0:
 
-                self.updateprogress(inputfile, "Eigenvalues", fupdate)
+                self.updateprogress(inputfile, "Eigenvalues", self.fupdate)
                         
                 self.moenergies = [[]]
                 HOMO = -2
@@ -393,7 +393,7 @@ class Gaussian(logfileparser.Logfile):
             # Start of the IR/Raman frequency section
             if line[1:14] == "Harmonic freq":
 
-                self.updateprogress(inputfile, "Frequency Information", fupdate)
+                self.updateprogress(inputfile, "Frequency Information", self.fupdate)
                         
                 self.vibsyms = []
                 self.vibirs = []
@@ -550,7 +550,7 @@ class Gaussian(logfileparser.Logfile):
                 colmNames = inputfile.next()
                 while base < self.nbasis:
                      
-                    self.updateprogress(inputfile, "Overlap", fupdate)
+                    self.updateprogress(inputfile, "Overlap", self.fupdate)
                             
                     for i in range(self.nbasis-base): # Fewer lines this time
                         line = inputfile.next()
@@ -580,7 +580,7 @@ class Gaussian(logfileparser.Logfile):
                 popregular = False
                 for base in range(0, nmo, 5):
                     
-                    self.updateprogress(inputfile, "Coefficients", fupdate)
+                    self.updateprogress(inputfile, "Coefficients", self.fupdate)
                              
                     colmNames = inputfile.next()   
                     if base==0 and int(colmNames.split()[0])!=1:
