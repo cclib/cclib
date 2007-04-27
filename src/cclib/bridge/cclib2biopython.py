@@ -20,7 +20,7 @@ def makebiopython(atomcoords, atomnos):
     >>> a = Numeric.array([[-1,1,0],[0,0,0],[1,1,0]],"f")
     >>> b = Numeric.array([[1.1,2,0],[1,1,0],[2,1,0]],"f")
     >>> si = Superimposer()
-    >>> si.set_atoms(biopython(a,atomnos),biopython(b,atomnos))
+    >>> si.set_atoms(makebiopython(a,atomnos),makebiopython(b,atomnos))
     >>> print si.rms
     0.29337859596
     """
@@ -31,5 +31,5 @@ def makebiopython(atomcoords, atomnos):
     return bioatoms
 
 if __name__ == "__main__":
-    import doctest, biopython
-    doctest.testmod(biopython)
+    import doctest
+    doctest.testmod()

@@ -14,10 +14,10 @@ def makepyquante(atomcoords, atomnos):
     >>> from PyQuante.hartree_fock import hf
     >>> atomnos = numpy.array([1,8,1],"i")
     >>> a = numpy.array([[-1,1,0],[0,0,0],[1,1,0]],"f")
-    >>> pyqmol = pyquante(a,atomnos)
+    >>> pyqmol = makepyquante(a,atomnos)
     >>> en,orbe,orbs = hf(pyqmol)
-    >>> print en
-    -73.8001234204
+    >>> print int(en * 10) / 10. # Should be around -73.8
+    -73.8
     """
 # The only thing missing is charge, but this is also missing
 # from cclib...things to do
