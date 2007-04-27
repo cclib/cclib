@@ -187,9 +187,12 @@ class Logfile(object):
 
             self.updateprogress(inputfile, "Unsupported information", cupdate)
 
-            # This call should check if the line begins a section of extracted data.
-            # If it does, it parses some lines and sets the relevant attributes.
-            self.extract(inputfile, line)
+            # Do not look at lines that consist of whitespace.
+            if line.strip() != "":
+            
+                # This call should check if the line begins a section of extracted data.
+                # If it does, it parses some lines and sets the relevant attributes.
+                self.extract(inputfile, line)
 
         # Close file object
         inputfile.close()
