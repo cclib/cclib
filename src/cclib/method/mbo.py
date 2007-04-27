@@ -5,9 +5,16 @@ and licensed under the LGPL (http://www.gnu.org/copyleft/lgpl.html).
 
 __revision__ = "$Revision$"
 
-import Numeric
 import random # For sometimes running the progress updater
+
+# If numpy is not installed, try to import Numeric instead.
+try:
+    import numpy
+except ImportError:
+    import Numeric as numpy
+
 from density import Density
+
 
 class MBO(Density):
     """Calculate the density matrix"""
@@ -76,13 +83,13 @@ class MBO(Density):
 
         #determine number of steps, and whether process involves beta orbitals
         PS = []
-        PS.append(Numeric.matrixmultiply(self.density[0], overlaps))
+        PS.append(numpy.dot(self.density[0], overlaps))
         nstep = size**2 #approximately quadratic in size
         if unrestricted:
-            self.fragresults = Numeric.zeros([2, size, size], "d")
-            PS.append(Numeric.matrixmultiply(self.density[1], overlaps))
+            self.fragresults = numpy.zeros([2, size, size], "d")
+            PS.append(numpy.dot(self.density[1], overlaps))
         else:
-            self.fragresults = Numeric.zeros([1, size, size], "d")
+            self.fragresults = numpy.zeros([1, size, size], "d")
 
         #intialize progress if available
         if self.progress:

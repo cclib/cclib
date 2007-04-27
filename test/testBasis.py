@@ -1,7 +1,8 @@
 import os, unittest
-from Numeric import array
+
 from testall import getfile
 from cclib.parser import ADF, GAMESS, Gaussian, GAMESSUK
+
 
 class GenericBasisTest(unittest.TestCase):
     """Some type of calculation so long as it has basis set information."""

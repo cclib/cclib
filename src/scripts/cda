@@ -4,10 +4,16 @@ import sys
 import glob
 import getopt
 import logging
-import Numeric
+
+# If numpy is not installed, try to import Numeric instead.
+try:
+    import numpy
+except ImportError:
+    import Numeric as numpy
 
 from cclib.parser import ccopen
 from cclib.method import CDA
+
 
 if __name__ == "__main__":
 
@@ -47,8 +53,8 @@ if __name__ == "__main__":
                     
 
             print "-----------------------------"
-            print " T:   %7.3f %7.3f %7.3f"%(reduce(Numeric.add, fa.donations[spin]), \
-                        reduce(Numeric.add, fa.bdonations[spin]), \
-                        reduce(Numeric.add, fa.repulsions[spin]))
+            print " T:   %7.3f %7.3f %7.3f"%(reduce(numpy.add, fa.donations[spin]), \
+                        reduce(numpy.add, fa.bdonations[spin]), \
+                        reduce(numpy.add, fa.repulsions[spin]))
 
 

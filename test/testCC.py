@@ -1,5 +1,11 @@
 import os, unittest
-from Numeric import alltrue
+
+# If numpy is not installed, try to import Numeric instead.
+try:
+    import numpy
+except ImportError:
+    import Numeric as numpy
+
 from testall import getfile
 from cclib.parser import GAMESS, Gaussian
 import bettertest
@@ -8,7 +14,7 @@ class GenericCCTest(bettertest.TestCase):
     """Coupled-Cluster calculations."""
     def testsign(self):
         corrections = self.data.ccenergies - self.data.scfenergies
-        self.failUnless(alltrue(corrections < 0.0))
+        self.failUnless(numpy.alltrue(corrections < 0.0))
 
 class GenericCCDTest(GenericCCTest):
     """CCD calculations."""

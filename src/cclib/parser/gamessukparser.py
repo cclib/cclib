@@ -5,10 +5,18 @@ and licensed under the LGPL (http://www.gnu.org/copyleft/lgpl.html).
 
 __revision__ = "$Revision$"
 
+
 import re
-import Numeric
+
+# If numpy is not installed, try to import Numeric instead.
+try:
+    import numpy
+except ImportError:
+    import Numeric as numpy
+
 import utils
 import logfileparser
+
 
 class GAMESSUK(logfileparser.Logfile):
     """A GAMESS UK log file"""
@@ -114,7 +122,7 @@ class GAMESSUK(logfileparser.Logfile):
                 # before the row of coordinate data
             
             self.atomcoords.append(atomcoords)
-            self.atomnos = Numeric.array(self.atomnos, "i")
+            self.atomnos = numpy.array(self.atomnos, "i")
 
         if line[40:59] == "nuclear coordinates":
             # We need not remember the first geometry in the geo-opt as this will
@@ -141,13 +149,13 @@ class GAMESSUK(logfileparser.Logfile):
             while line != equals:
                 temp = line.strip().split()
                 atomcoords.append([utils.convertor(float(x), "bohr", "Angstrom") for x in temp[0:3]])
-                if not self.atomnos:
+                if not hasattr(self, "atomnos") or len(self.atomnos) == 0:
                     atomnos.append(int(float(temp[3])))
                     
                 line = inputfile.next()
 
             self.atomcoords.append(atomcoords)
-            if not self.atomnos:
+            if not hasattr(self, "atomnos") or len(self.atomnos) == 0:
                 self.atomnos = atomnos
 
         if line[1:32] == "total number of basis functions":
@@ -159,12 +167,12 @@ class GAMESSUK(logfileparser.Logfile):
             alpha = int(inputfile.next().split()[-1])-1
             beta = int(inputfile.next().split()[-1])-1
             if multiplicity==1:
-                self.homos = Numeric.array([alpha], "i")
+                self.homos = numpy.array([alpha], "i")
             else:
-                self.homos = Numeric.array([alpha,beta], "i")
+                self.homos = numpy.array([alpha,beta], "i")
 
         if line[37:69] == "s-matrix over gaussian basis set":
-            self.aooverlaps = Numeric.zeros((self.nbasis, self.nbasis), "d")
+            self.aooverlaps = numpy.zeros((self.nbasis, self.nbasis), "d")
 
             minus = inputfile.next()
             blank = inputfile.next()
@@ -180,7 +188,7 @@ class GAMESSUK(logfileparser.Logfile):
                     self.aooverlaps[j,(0+i):(len(temp)+i)] = temp
 
         if line[18:43] == 'EFFECTIVE CORE POTENTIALS':
-            self.coreelectrons = Numeric.zeros(self.natom, 'i')
+            self.coreelectrons = numpy.zeros(self.natom, 'i')
             asterisk = inputfile.next()
             line = inputfile.next()
             while line[15:46]!="*"*31:
@@ -420,7 +428,7 @@ class GAMESSUK(logfileparser.Logfile):
             minus = inputfile.next()
 
             
-            mocoeffs = Numeric.zeros( (self.nmo, self.nbasis), "d")
+            mocoeffs = numpy.zeros( (self.nmo, self.nbasis), "d")
             blank = inputfile.next()
             blank = inputfile.next()
             evalues = inputfile.next()

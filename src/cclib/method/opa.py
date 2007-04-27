@@ -5,9 +5,16 @@ and licensed under the LGPL (http://www.gnu.org/copyleft/lgpl.html).
 
 __revision__ = "$Revision$"
 
-import Numeric
 import random # For sometimes running the progress updater
+
+# If numpy is not installed, try to import Numeric instead.
+try:
+    import numpy
+except ImportError:
+    import Numeric as numpy
+
 from calculationmethod import Method
+
 
 def func(x):
     if x==1:
@@ -76,10 +83,10 @@ class OPA(Method):
         nbasis = self.parser.nbasis
 
         self.logger.info("Creating attribute results: array[4]")
-        results= [ Numeric.zeros([nfrag, nfrag, alpha], "d") ]
+        results= [ numpy.zeros([nfrag, nfrag, alpha], "d") ]
         if unrestricted:
             beta = len(self.parser.mocoeffs[1])
-            results.append(Numeric.zeros([nfrag, nfrag, beta], "d"))
+            results.append(numpy.zeros([nfrag, nfrag, beta], "d"))
             nstep *= 2
             
         if hasattr(self.parser, "aooverlaps"):
@@ -96,7 +103,7 @@ class OPA(Method):
 
         preresults = []
         for spin in range(len(self.parser.mocoeffs)):
-            two = Numeric.array([2.0]*len(self.parser.mocoeffs[spin]),"d")
+            two = numpy.array([2.0]*len(self.parser.mocoeffs[spin]),"d")
 
 
             # OP_{AB,i} = \sum_{a in A} \sum_{b in B} 2 c_{ai} c_{bi} S_{ab}
@@ -116,16 +123,16 @@ class OPA(Method):
                             
                             cb = self.parser.mocoeffs[spin][:,b]
                             temp = ca * cb * two *overlap[a,b]
-                            results[spin][A,B] = Numeric.add(results[spin][A,B],temp)
-                            results[spin][B,A] = Numeric.add(results[spin][B,A],temp)
+                            results[spin][A,B] = numpy.add(results[spin][A,B],temp)
+                            results[spin][B,A] = numpy.add(results[spin][B,A],temp)
 
                     step += 1
 
-        temparray2 = Numeric.swapaxes(results[0],1,2)
-        self.results = [ Numeric.swapaxes(temparray2,0,1) ]
+        temparray2 = numpy.swapaxes(results[0],1,2)
+        self.results = [ numpy.swapaxes(temparray2,0,1) ]
         if unrestricted:
-            temparray2 = Numeric.swapaxes(results[1],1,2)
-            self.results.append(Numeric.swapaxes(temparray2, 0, 1))
+            temparray2 = numpy.swapaxes(results[1],1,2)
+            self.results.append(numpy.swapaxes(temparray2, 0, 1))
 
         if self.progress:
             self.progress.update(nstep, "Done")

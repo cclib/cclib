@@ -6,7 +6,14 @@ and licensed under the LGPL (http://www.gnu.org/copyleft/lgpl.html).
 __revision__ = "$Revision$"
 
 import inspect, logging, random, sys
-import Numeric
+
+# If numpy is not installed, try to import Numeric instead.
+try:
+    import numpy
+except ImportError:
+    import Numeric as numpy
+    numpy.ndarray = numpy.arraytype
+
 import utils
 
 class Logfile(object):
@@ -50,7 +57,7 @@ class Logfile(object):
         vibirs -- IR intensities (array[1], km/mol)
         vibramans -- Raman intensities (array[1], A^4/Da)
         vibsyms -- symmetries of vibrations (list)
-    (1) The term 'array' currently refers to a Numeric array
+    (1) The term 'array' refers to a numpy array
     (2) The number of dimensions of an array is given in square brackets
     (3) Python indexes arrays/lists starting at zero. So if homos==[10], then
         the 11th molecular orbital is the HOMO
@@ -78,34 +85,34 @@ class Logfile(object):
 
         # The expected types for all attributes.
         self._attrtypes = { "aonames":        list,
-                            "aooverlaps":     Numeric.arraytype,
-                            "atomcoords":     Numeric.arraytype,
-                            "atomnos":        Numeric.arraytype,
-                            "coreelectrons":  Numeric.arraytype,
-                            "etenergies":     Numeric.arraytype,
-                            "etoscs":         Numeric.arraytype,
-                            "etrotats":       Numeric.arraytype,
+                            "aooverlaps":     numpy.ndarray,
+                            "atomcoords":     numpy.ndarray,
+                            "atomnos":        numpy.ndarray,
+                            "coreelectrons":  numpy.ndarray,
+                            "etenergies":     numpy.ndarray,
+                            "etoscs":         numpy.ndarray,
+                            "etrotats":       numpy.ndarray,
                             "etsecs":         list,
                             "etsyms":         list,
                             'gbasis':         list,
-                            "geotargets":     Numeric.arraytype,
-                            "geovalues":      Numeric.arraytype,
-                            "hessian":        Numeric.arraytype,
-                            "homos":          Numeric.arraytype,
+                            "geotargets":     numpy.ndarray,
+                            "geovalues":      numpy.ndarray,
+                            "hessian":        numpy.ndarray,
+                            "homos":          numpy.ndarray,
                             "mocoeffs":       list,
                             "moenergies":     list,
                             "mosyms":         list,
-                            "mpenergies":     Numeric.arraytype,
+                            "mpenergies":     numpy.ndarray,
                             "natom":          int,
                             "nbasis":         int,
                             "nmo":            int,
-                            "scfenergies":    Numeric.arraytype,
-                            "scftargets":     Numeric.arraytype,
+                            "scfenergies":    numpy.ndarray,
+                            "scftargets":     numpy.ndarray,
                             "scfvalues":      list,
-                            "vibdisps":       Numeric.arraytype,
-                            "vibfreqs":       Numeric.arraytype,
-                            "vibirs":         Numeric.arraytype,
-                            "vibramans":      Numeric.arraytype,
+                            "vibdisps":       numpy.ndarray,
+                            "vibfreqs":       numpy.ndarray,
+                            "vibirs":         numpy.ndarray,
+                            "vibramans":      numpy.ndarray,
                             "vibsyms":        list,
                           }
 
@@ -141,7 +148,7 @@ class Logfile(object):
         if hasattr(self, "logger"):
             # Only call logger.info if attribute is new and in list.
             if not hasattr(self, name) and name in self._attrlist:
-                if type(value) in [Numeric.arraytype, list]:
+                if type(value) in [numpy.ndarray, list]:
                     self.logger.info("Creating attribute %s[]" %name)
                 else:
                     self.logger.info("Creating attribute %s: %s" %(name, str(value)))
@@ -202,12 +209,12 @@ class Logfile(object):
             if hasattr(self, attr):
                 atype = self._attrtypes.get(attr, None)
                 if atype and type(getattr(self, attr)) is not atype:
-                    if atype is Numeric.arraytype:
+                    if atype is numpy.ndarray:
                         try:
                             precision = 'd'
                             if attr in self._tointarray:
                                 precision = 'i'
-                            setattr(self, attr, Numeric.array(getattr(self, attr), precision))
+                            setattr(self, attr, numpy.array(getattr(self, attr), precision))
                         except TypeError:
                             self.logger.info("Attribute %s cannot be converted to an array" %(attr))
                     else:                    
@@ -219,16 +226,16 @@ class Logfile(object):
         # Make sure selected attrbutes are lists of arrays.
         for attr in self._tolistofarrays:
             if hasattr(self, attr):
-                if not Numeric.alltrue([type(x) is Numeric.arraytype for x in getattr(self, attr)]):
+                if not numpy.alltrue([type(x) is numpy.ndarray for x in getattr(self, attr)]):
                     try:
-                        setattr(self, attr, [Numeric.array(x, 'd') for x in getattr(self, attr)])
+                        setattr(self, attr, [numpy.array(x, 'd') for x in getattr(self, attr)])
                     except ValueError:
                         self.logger.info("Elements of attribute %s cannot be converted to arrays." %attr)
 
         # If atomcoords were not parsed, but some input coordinates were ("inputcoords").
         # This is originally from the Gaussian parser, a regression fix.
         if not hasattr(self, "atomcoords") and hasattr(self, "inputcoords"):
-            self.atomcoords = Numeric.array(self.inputcoords, 'd')
+            self.atomcoords = numpy.array(self.inputcoords, 'd')
 
         # Set nmo if not set already - to nbasis.
         if not hasattr(self, "nmo"):
@@ -237,7 +244,7 @@ class Logfile(object):
         # Creating deafult coreelectrons array.
         if not hasattr(self, "coreelectrons"):
             self.logger.info("Creating attribute coreelectrons[]")
-            self.coreelectrons = Numeric.zeros(self.natom, "i")
+            self.coreelectrons = numpy.zeros(self.natom, "i")
 
         # Delete temporary attributes (set during parsing and not in attrlist).
         for attr in self.__dict__.keys():

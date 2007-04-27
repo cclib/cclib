@@ -5,7 +5,12 @@ and licensed under the LGPL (http://www.gnu.org/copyleft/lgpl.html).
 
 __revision__ = "$Revision$"
 
-import Numeric
+# If numpy is not installed, try to import Numeric instead.
+try:
+    import numpy
+except ImportError:
+    import Numeric as numpy
+
 import utils
 import logfileparser
 
@@ -149,7 +154,7 @@ class ADF(logfileparser.Logfile):
             self.atomcoords.append(atomcoords)
             
             self.natom = len(self.atomnos)
-            self.atomnos = Numeric.array(self.atomnos, "i")
+            self.atomnos = numpy.array(self.atomnos, "i")
             
         if line[1:10] == "FRAGMENTS":
             header = inputfile.next()
@@ -254,7 +259,7 @@ class ADF(logfileparser.Logfile):
         # Extract Geometry convergence information
             if not hasattr(self, "geotargets"):
                 self.geovalues = []
-                self.geotargets = Numeric.array([0.0, 0.0, 0.0, 0.0, 0.0], "d")
+                self.geotargets = numpy.array([0.0, 0.0, 0.0, 0.0, 0.0], "d")
             if not hasattr(self, "scfenergies"):
                 self.scfenergies = []
             equals = inputfile.next()
@@ -310,8 +315,8 @@ class ADF(logfileparser.Logfile):
                     self.homos = [len(self.moenergies[0]) - 2]
                 line = inputfile.next()
 
-            self.moenergies = [Numeric.array(self.moenergies[0], "d")]
-            self.homos = Numeric.array(self.homos, "i")
+            self.moenergies = [numpy.array(self.moenergies[0], "d")]
+            self.homos = numpy.array(self.homos, "i")
 
         if line[1:29] == 'Orbital Energies, both Spins' and not hasattr(self, "mosyms") and self.nosymflag and self.unrestrictedflag:
         #Extracting orbital symmetries and energies, homos for nosym case
@@ -347,8 +352,8 @@ class ADF(logfileparser.Logfile):
 
                 line = inputfile.next()
 
-            self.moenergies = [Numeric.array(x, "d") for x in moenergies]
-            self.homos = Numeric.array([homoa, homob], "i")
+            self.moenergies = [numpy.array(x, "d") for x in moenergies]
+            self.homos = numpy.array([homoa, homob], "i")
 
 
         if line[1:29] == 'Orbital Energies, all Irreps' and not hasattr(self, "mosyms"):
@@ -449,8 +454,8 @@ class ADF(logfileparser.Logfile):
             if len(info) == 6: #still unrestricted, despite being out of loop
                 self.homos = [homoa, homob]
     
-            self.moenergies = [Numeric.array(x, "d") for x in self.moenergies]
-            self.homos = Numeric.array(self.homos, "i")
+            self.moenergies = [numpy.array(x, "d") for x in self.moenergies]
+            self.homos = numpy.array(self.homos, "i")
 
         if line[1:28] == "Vibrations and Normal Modes":
             # Section on extracting vibdisps
@@ -476,7 +481,7 @@ class ADF(logfileparser.Logfile):
                 blank = inputfile.next()
                 blank = inputfile.next()
                 freqs = inputfile.next()
-            self.vibdisps = Numeric.array(self.vibdisps, "d")
+            self.vibdisps = numpy.array(self.vibdisps, "d")
   
         if line[1:24] == "List of All Frequencies":
         # Start of the IR/Raman frequency section
@@ -493,10 +498,10 @@ class ADF(logfileparser.Logfile):
                 self.vibfreqs.append(float(temp[0]))                    
                 self.vibirs.append(float(temp[2])) # or is it temp[1]?
                 line = inputfile.next().strip()
-            self.vibfreqs = Numeric.array(self.vibfreqs, "d")
-            self.vibirs = Numeric.array(self.vibirs, "d")
+            self.vibfreqs = numpy.array(self.vibfreqs, "d")
+            self.vibirs = numpy.array(self.vibirs, "d")
             if hasattr(self, "vibramans"):
-                self.vibramans = Numeric.array(self.vibramans, "d")
+                self.vibramans = numpy.array(self.vibramans, "d")
 
 
         #******************************************************************************************************************8
@@ -571,7 +576,7 @@ class ADF(logfileparser.Logfile):
         if line[1:32] == "S F O   P O P U L A T I O N S ,":
         #Extract overlap matrix
 
-            self.fooverlaps = Numeric.zeros((self.nbasis, self.nbasis), "d")
+            self.fooverlaps = numpy.zeros((self.nbasis, self.nbasis), "d")
             
             symoffset = 0
             
@@ -611,7 +616,7 @@ class ADF(logfileparser.Logfile):
                     
         if line[48:67] == "SFO MO coefficients":
 
-            self.mocoeffs = [Numeric.zeros((self.nbasis, self.nbasis), "d")]
+            self.mocoeffs = [numpy.zeros((self.nbasis, self.nbasis), "d")]
             spin = 0
             symoffset = 0
             lastrow = 0
@@ -622,8 +627,8 @@ class ADF(logfileparser.Logfile):
 
                 # If spin is specified, then there will be two coefficient matrices. 
                 if line.strip() == "***** SPIN 1 *****":
-                    self.mocoeffs = [Numeric.zeros((self.nbasis, self.nbasis), "d"),
-                                     Numeric.zeros((self.nbasis, self.nbasis), "d")]
+                    self.mocoeffs = [numpy.zeros((self.nbasis, self.nbasis), "d"),
+                                     numpy.zeros((self.nbasis, self.nbasis), "d")]
 
                 # Bump up the spin.
                 if line.strip() == "***** SPIN 2 *****":

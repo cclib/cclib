@@ -1,5 +1,11 @@
 import os, unittest
-from Numeric import alltrue, array, resize
+
+# If numpy is not installed, try to import Numeric instead.
+try:
+    import numpy
+except ImportError:
+    import Numeric as numpy
+
 from testall import getfile
 from cclib.parser import ADF, GAMESS, Gaussian, Jaguar, GAMESSUK
 import bettertest
@@ -18,7 +24,7 @@ class GenericMP2Test(bettertest.TestCase):
             corrections = self.data.mpenergies[:,0] - self.data.scfenergies
         else:
             corrections = self.data.mpenergies[:,self.level-2] - self.data.mpenergies[:,self.level-3]
-        self.failUnless(alltrue(corrections < 0.0))
+        self.failUnless(numpy.alltrue(corrections < 0.0))
 
 class GenericMP3Test(GenericMP2Test):
     """MP3 calculations."""

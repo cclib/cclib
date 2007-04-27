@@ -1,5 +1,5 @@
 import os, unittest
-from Numeric import array
+
 from testall import getfile
 from cclib.parser import ADF, GAMESS, Gaussian, Jaguar, GAMESSUK
 

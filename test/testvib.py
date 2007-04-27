@@ -1,8 +1,9 @@
 import os, unittest
-from Numeric import array, compress
+
 from testall import getfile
 from cclib.parser import ADF, GAMESS, Gaussian, Jaguar, GAMESSUK
 import bettertest
+
 
 class GenericVibTest(bettertest.TestCase):
     """Vibrational frequency calculations."""

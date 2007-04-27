@@ -6,13 +6,19 @@ and licensed under the LGPL (http://www.gnu.org/copyleft/lgpl.html).
 __revision__ = "$Revision: 1 $"
 
 import os
-import Numeric
 import logging
 import unittest
+
+# If numpy is not installed, try to import Numeric instead.
+try:
+    import numpy
+except ImportError:
+    import Numeric as numpy
 
 from testall import getfile
 from cclib.method import CDA
 from cclib.parser import Gaussian
+
 
 def main(log=True):
     parser1 = getfile(Gaussian, os.path.join("CDA","BH3CO-sp.log"))
@@ -39,8 +45,8 @@ def printResults():
             
 
     print "---------------------------"
-    print "T:  %7.3f %7.3f %7.3f"%(reduce(Numeric.add, fa.donations[0]), \
-                reduce(Numeric.add, fa.bdonations[0]), reduce(Numeric.add, fa.repulsions[0]))
+    print "T:  %7.3f %7.3f %7.3f"%(reduce(numpy.add, fa.donations[0]), \
+                reduce(numpy.add, fa.bdonations[0]), reduce(numpy.add, fa.repulsions[0]))
     print "\n\n"
 
 class CDATest(unittest.TestCase):
@@ -48,9 +54,9 @@ class CDATest(unittest.TestCase):
         """Testing CDA results against Frenking's code"""
         fa = main(log=False)
         
-        donation = reduce(Numeric.add, fa.donations[0])
-        bdonation = reduce(Numeric.add, fa.bdonations[0])
-        repulsion = reduce(Numeric.add, fa.repulsions[0])
+        donation = reduce(numpy.add, fa.donations[0])
+        bdonation = reduce(numpy.add, fa.bdonations[0])
+        repulsion = reduce(numpy.add, fa.repulsions[0])
 
         self.assertAlmostEqual(donation, 0.181, 3)
         self.assertAlmostEqual(bdonation, 0.471, 3)

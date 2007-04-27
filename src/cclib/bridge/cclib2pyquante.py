@@ -10,10 +10,10 @@ from PyQuante.Molecule import Molecule
 def makepyquante(atomcoords, atomnos):
     """Create a PyQuante Molecule.
 
-    >>> import Numeric
+    >>> import numpy
     >>> from PyQuante.hartree_fock import hf
-    >>> atomnos = Numeric.array([1,8,1],"i")
-    >>> a = Numeric.array([[-1,1,0],[0,0,0],[1,1,0]],"f")
+    >>> atomnos = numpy.array([1,8,1],"i")
+    >>> a = numpy.array([[-1,1,0],[0,0,0],[1,1,0]],"f")
     >>> pyqmol = pyquante(a,atomnos)
     >>> en,orbe,orbs = hf(pyqmol)
     >>> print en

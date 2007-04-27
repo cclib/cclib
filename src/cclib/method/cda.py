@@ -5,9 +5,16 @@ and licensed under the LGPL (http://www.gnu.org/copyleft/lgpl.html).
 
 __revision__ = "$Revision: 453 $"
 
-import Numeric
 import random # For sometimes running the progress updater
+
+# If numpy is not installed, try to import Numeric instead.
+try:
+    import numpy
+except ImportError:
+    import Numeric as numpy
+
 from fragments import FragmentAnalysis
+
 
 class CDA(FragmentAnalysis):
     """The Charge decomposition analysis"""
@@ -70,9 +77,9 @@ class CDA(FragmentAnalysis):
             offset = fragments[0].nbasis
 
             self.logger.info("Creating donations, bdonations, and repulsions: array[]")
-            donations.append(Numeric.zeros(size, "d"))
-            bdonations.append(Numeric.zeros(size, "d"))
-            repulsions.append(Numeric.zeros(size, "d"))
+            donations.append(numpy.zeros(size, "d"))
+            bdonations.append(numpy.zeros(size, "d"))
+            repulsions.append(numpy.zeros(size, "d"))
 
             for i in range(self.parser.homos[spin] + 1):
 

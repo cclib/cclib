@@ -6,7 +6,13 @@ and licensed under the LGPL (http://www.gnu.org/copyleft/lgpl.html).
 __revision__ = "$Revision$"
 
 import re
-import Numeric
+
+# If numpy is not installed, try to import Numeric instead.
+try:
+    import numpy
+except ImportError:
+    import Numeric as numpy
+
 import utils
 import logfileparser
 
@@ -89,7 +95,7 @@ class Gaussian(logfileparser.Logfile):
                 line = inputfile.next()
             self.inputcoords.append(atomcoords)
             if not hasattr(self, "natom"):
-                self.atomnos = Numeric.array(self.inputatoms, 'i')
+                self.atomnos = numpy.array(self.inputatoms, 'i')
                 self.natom = len(self.atomnos)
 
         # Extract the atomic numbers and coordinates of the atoms
@@ -115,7 +121,7 @@ class Gaussian(logfileparser.Logfile):
                 line = inputfile.next()
             self.atomcoords.append(atomcoords)
             if not hasattr(self, "natom"):
-                self.atomnos = Numeric.array(atomnos, 'i')
+                self.atomnos = numpy.array(atomnos, 'i')
                 self.natom = len(self.atomnos)
 
         if line[1:44] == 'Requested convergence on RMS density matrix':
@@ -172,7 +178,7 @@ class Gaussian(logfileparser.Logfile):
         if line[1:4] == 'It=':
         # Extract SCF convergence information (AM1 calcs)
                     
-            self.scftargets = Numeric.array([1E-7], "d") # This is the target value for the rms
+            self.scftargets = numpy.array([1E-7], "d") # This is the target value for the rms
             self.scfvalues = [[]]
             line = inputfile.next()
             while line.find(" Energy") == -1:
@@ -256,7 +262,7 @@ class Gaussian(logfileparser.Logfile):
         # Extract Geometry convergence information
             if not hasattr(self, "geotargets"):
                 self.geovalues = []
-                self.geotargets = Numeric.array([0.0, 0.0, 0.0, 0.0], "d")
+                self.geotargets = numpy.array([0.0, 0.0, 0.0, 0.0], "d")
             newlist = [0]*4
             for i in range(4):
                 line = inputfile.next()
@@ -285,7 +291,7 @@ class Gaussian(logfileparser.Logfile):
             i = 0
             while len(line) > 18 and line[17] == '(':
                 if line.find('Virtual') >= 0:
-                    self.homos = Numeric.array([i-1], "i") # 'HOMO' indexes the HOMO in the arrays
+                    self.homos = numpy.array([i-1], "i") # 'HOMO' indexes the HOMO in the arrays
                 parts = line[17:].split()
                 for x in parts:
                     self.mosyms[0].append(self.normalisesym(x.strip('()')))
@@ -321,7 +327,7 @@ class Gaussian(logfileparser.Logfile):
                     if hasattr(self, "homos"):
                         assert HOMO == self.homos[0]
                     else:
-                        self.homos = Numeric.array([HOMO], "i")
+                        self.homos = numpy.array([HOMO], "i")
                 part = line[28:]
                 i = 0
                 while i*10+4 < len(part):
@@ -351,7 +357,7 @@ class Gaussian(logfileparser.Logfile):
                     self.moenergies[1].append(utils.convertor(self.float(x), "hartree", "eV"))
                     i += 1
                 line = inputfile.next()
-            self.moenergies = [Numeric.array(x, "d") for x in self.moenergies]
+            self.moenergies = [numpy.array(x, "d") for x in self.moenergies]
             
         if line[1:14] == "AO basis set ":
             ## Gaussian Rev <= B.0.3
@@ -427,11 +433,11 @@ class Gaussian(logfileparser.Logfile):
                     line = inputfile.next()
                 self.vibdisps.extend(p[0:len(broken)/3])
                 line = inputfile.next() # Should be the line with symmetries
-            self.vibfreqs = Numeric.array(self.vibfreqs, "d")
-            self.vibirs = Numeric.array(self.vibirs, "d")
-            self.vibdisps = Numeric.array(self.vibdisps, "d")
+            self.vibfreqs = numpy.array(self.vibfreqs, "d")
+            self.vibirs = numpy.array(self.vibirs, "d")
+            self.vibdisps = numpy.array(self.vibdisps, "d")
             if hasattr(self, "vibramans"):
-                self.vibramans = Numeric.array(self.vibramans, "d")
+                self.vibramans = numpy.array(self.vibramans, "d")
                 
         if line[1:14] == "Excited State":
         # Extract the electronic transitions
@@ -502,7 +508,7 @@ class Gaussian(logfileparser.Logfile):
                 line = inputfile.next()
                 temp = line.strip().split()
                 parts = line.strip().split()                
-            self.etrotats = Numeric.array(self.etrotats, "d")
+            self.etrotats = numpy.array(self.etrotats, "d")
 
         if line[1:7] == "NBasis" or line[4:10] == "NBasis":
         # Extract the number of basis sets
@@ -540,7 +546,7 @@ class Gaussian(logfileparser.Logfile):
             # Has to deal with lines such as:
             #  *** Overlap ***
             #  ****** Overlap ******
-            self.aooverlaps = Numeric.zeros( (self.nbasis, self.nbasis), "d")
+            self.aooverlaps = numpy.zeros( (self.nbasis, self.nbasis), "d")
             # Overlap integrals for basis fn#1 are in aooverlaps[0]
             base = 0
             colmNames = inputfile.next()
@@ -557,7 +563,7 @@ class Gaussian(logfileparser.Logfile):
                         self.aooverlaps[i+base, base+j] = k
                 base += 5
                 colmNames = inputfile.next()
-            self.aooverlaps = Numeric.array(self.aooverlaps, "d")                    
+            self.aooverlaps = numpy.array(self.aooverlaps, "d")                    
 
 
         if line[5:35] == "Molecular Orbital Coefficients" or line[5:41] == "Alpha Molecular Orbital Coefficients" or line[5:40] == "Beta Molecular Orbital Coefficients":
@@ -568,11 +574,11 @@ class Gaussian(logfileparser.Logfile):
                     # This was continue before refactoring the parsers.
                     #continue # Not going to extract mocoeffs
                 # Need to add an extra array to self.mocoeffs
-                self.mocoeffs.append(Numeric.zeros((self.nmo, self.nbasis), "d"))
+                self.mocoeffs.append(numpy.zeros((self.nmo, self.nbasis), "d"))
             else:
                 beta = False
                 self.aonames = []
-                mocoeffs = [Numeric.zeros((self.nmo, self.nbasis), "d")]
+                mocoeffs = [numpy.zeros((self.nmo, self.nbasis), "d")]
 
             base = 0
             self.popregular = False
@@ -629,7 +635,7 @@ class Gaussian(logfileparser.Logfile):
 
             centers = line.split()[1:]
             
-            self.coreelectrons = Numeric.zeros(self.natom, "i")
+            self.coreelectrons = numpy.zeros(self.natom, "i")
 
             for center in centers:
                 while line[:10].find(center) < 0:

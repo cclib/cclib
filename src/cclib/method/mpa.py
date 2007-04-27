@@ -5,9 +5,16 @@ and licensed under the LGPL (http://www.gnu.org/copyleft/lgpl.html).
 
 __revision__ = "$Revision$"
 
-import Numeric
 import random # For sometimes running the progress updater
+
+# If numpy is not installed, try to import Numeric instead.
+try:
+    import numpy
+except ImportError:
+    import Numeric as numpy
+
 from population import Population
+
 
 class MPA(Population):
     """The Mulliken population analysis"""
@@ -55,12 +62,12 @@ class MPA(Population):
         #determine number of steps, and whether process involves beta orbitals
         self.logger.info("Creating attribute aoresults: [array[2]]")
         alpha = len(self.parser.mocoeffs[0])
-        self.aoresults = [ Numeric.zeros([alpha, nbasis], "d") ]
+        self.aoresults = [ numpy.zeros([alpha, nbasis], "d") ]
         nstep = alpha
 
         if unrestricted:
             beta = len(self.parser.mocoeffs[1])
-            self.aoresults.append(Numeric.zeros([beta, nbasis], "d"))
+            self.aoresults.append(numpy.zeros([beta, nbasis], "d"))
             nstep += beta
 
         #intialize progress if available
@@ -83,11 +90,11 @@ class MPA(Population):
 
                 ci = self.parser.mocoeffs[spin][i]
                 if hasattr(self.parser, "aooverlaps"):
-                    temp = Numeric.matrixmultiply(ci, self.parser.aooverlaps)
+                    temp = numpy.dot(ci, self.parser.aooverlaps)
                 elif hasattr(self.parser, "fooverlaps"):
-                    temp = Numeric.matrixmultiply(ci, self.parser.fooverlaps)
+                    temp = numpy.dot(ci, self.parser.fooverlaps)
 
-                self.aoresults[spin][i] = Numeric.multiply(ci, temp).astype("d")
+                self.aoresults[spin][i] = numpy.dot(ci, temp).astype("d")
 
                 step += 1
 
@@ -103,17 +110,17 @@ class MPA(Population):
 #create array for mulliken charges
         self.logger.info("Creating fragcharges: array[1]")
         size = len(self.fragresults[0][0])
-        self.fragcharges = Numeric.zeros([size], "d")
+        self.fragcharges = numpy.zeros([size], "d")
         
         for spin in range(len(self.fragresults)):
 
             for i in range(self.parser.homos[spin] + 1):
 
-                temp = Numeric.reshape(self.fragresults[spin][i], (size,))
-                self.fragcharges = Numeric.add(self.fragcharges, temp)
+                temp = numpy.reshape(self.fragresults[spin][i], (size,))
+                self.fragcharges = numpy.add(self.fragcharges, temp)
         
         if not unrestricted:
-            self.fragcharges = Numeric.multiply(self.fragcharges, 2)
+            self.fragcharges = numpy.multiply(self.fragcharges, 2)
 
         return True
 

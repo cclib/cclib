@@ -6,7 +6,13 @@ and licensed under the LGPL (http://www.gnu.org/copyleft/lgpl.html).
 __revision__ = "$Revision$"
 
 import re
-import Numeric
+
+# If numpy is not installed, try to import Numeric instead.
+try:
+    import numpy
+except ImportError:
+    import Numeric as numpy
+
 import utils
 import logfileparser
 
@@ -92,7 +98,7 @@ class GAMESS(logfileparser.Logfile):
                             opttol = float(temp[i + 2])
                         else:
                             opttol = float(x.split('=')[1])
-                        self.geotargets = Numeric.array([opttol, 3. / opttol], "d")
+                        self.geotargets = numpy.array([opttol, 3. / opttol], "d")
                         
         if line.find("FINAL") == 1:
             if not hasattr(self, "scfenergies"):
@@ -218,7 +224,7 @@ class GAMESS(logfileparser.Logfile):
                 #   by sqrt(2) so that they normalize to 1.
                 # With DETS, both alpha and beta excitations are printed.
                 if self.cihamtyp == "saps":
-                    coeff /= Numeric.sqrt(2.0)
+                    coeff /= numpy.sqrt(2.0)
                 CIScontribs.append([(fromMO,MOtype),(toMO,MOtype),coeff])
                 line = inputfile.next()
             self.etsecs.append(CIScontribs)
@@ -256,7 +262,7 @@ class GAMESS(logfileparser.Logfile):
                 atomcoords.append([utils.convertor(float(x), "bohr", "Angstrom") for x in temp[2:5]])
                 atomnos.append(int(round(float(temp[1])))) # Don't use the atom name as this is arbitary
                 line = inputfile.next()
-            self.atomnos = Numeric.array(atomnos, "i")
+            self.atomnos = numpy.array(atomnos, "i")
             self.atomcoords.append(atomcoords)
 
         if line[12:40] == "EQUILIBRIUM GEOMETRY LOCATED":
@@ -446,11 +452,11 @@ class GAMESS(logfileparser.Logfile):
                 blank = inputfile.next()
                 freqNo = inputfile.next()
             # Exclude rotations and translations
-            self.vibfreqs = Numeric.array(self.vibfreqs[:startrot-1]+self.vibfreqs[endrot:], "d")
-            self.vibirs = Numeric.array(self.vibirs[:startrot-1]+self.vibirs[endrot:], "d")
-            self.vibdisps = Numeric.array(self.vibdisps[:startrot-1]+self.vibdisps[endrot:], "d")
+            self.vibfreqs = numpy.array(self.vibfreqs[:startrot-1]+self.vibfreqs[endrot:], "d")
+            self.vibirs = numpy.array(self.vibirs[:startrot-1]+self.vibirs[endrot:], "d")
+            self.vibdisps = numpy.array(self.vibdisps[:startrot-1]+self.vibdisps[endrot:], "d")
             if hasattr(self, "vibramans"):
-                self.vibramans = Numeric.array(self.vibramans[:startrot-1]+self.vibramans[endrot:], "d")
+                self.vibramans = numpy.array(self.vibramans[:startrot-1]+self.vibramans[endrot:], "d")
 
         if line[5:21] == "ATOMIC BASIS SET":
             self.gbasis = []
@@ -517,7 +523,7 @@ class GAMESS(logfileparser.Logfile):
             self.mosyms = [[]]
             if not hasattr(self, "nmo"):
                 self.nmo = self.nbasis
-            self.mocoeffs = [Numeric.zeros((self.nmo, self.nbasis), "d")]
+            self.mocoeffs = [numpy.zeros((self.nmo, self.nbasis), "d")]
             line = inputfile.next()
             for base in range(0, self.nmo, 5):
                 blank = inputfile.next()
@@ -553,7 +559,7 @@ class GAMESS(logfileparser.Logfile):
             #
             #                      1          2          3          4          5
 
-                self.mocoeffs.append(Numeric.zeros((self.nmo, self.nbasis), "d"))
+                self.mocoeffs.append(numpy.zeros((self.nmo, self.nbasis), "d"))
                 self.moenergies.append([])
                 self.mosyms.append([])
                 for i in range(5):
@@ -574,7 +580,7 @@ class GAMESS(logfileparser.Logfile):
                             j += 1
                 line = inputfile.next()
             assert line.find("END OF") >= 0
-            self.moenergies = [Numeric.array(x, "d") for x in self.moenergies]
+            self.moenergies = [numpy.array(x, "d") for x in self.moenergies]
 
         if line.find("NUMBER OF OCCUPIED ORBITALS") >= 0:
             homos = [int(line.split()[-1])-1]
@@ -586,12 +592,12 @@ class GAMESS(logfileparser.Logfile):
             # which either is followed by "ALPHA" or "BOTH"
             # at which point we can say for certain that it is an
             # un/restricted calculations
-            self.homos = Numeric.array(homos, "i")
+            self.homos = numpy.array(homos, "i")
 
         if line.find("SYMMETRIES FOR INITIAL GUESS ORBITALS FOLLOW") >= 0:
             # Not unrestricted, so lop off the second index
             if line.find("BOTH SET(S)") >= 0:
-                self.homos = Numeric.resize(self.homos, [1])
+                self.homos = numpy.resize(self.homos, [1])
 
         if line.find("TOTAL NUMBER OF ATOMS") == 1:
             self.natom = int(line.split()[-1])
@@ -614,7 +620,7 @@ class GAMESS(logfileparser.Logfile):
             # The first is for PC-GAMESS, the second for GAMESS
             # Read 1-electron overlap matrix
             if not hasattr(self, "aooverlaps"):
-                self.aooverlaps = Numeric.zeros((self.nbasis, self.nbasis), "d")
+                self.aooverlaps = numpy.zeros((self.nbasis, self.nbasis), "d")
                 self.aonames = []
             else:
                 self.logger.info("Reading additional aooverlaps...")
@@ -662,8 +668,8 @@ class GAMESS(logfileparser.Logfile):
         # This was used before refactoring the parser, geotargets was set here after parsing.
         #if not hasattr(self, "geotargets"):
         #    opttol = 1e-4
-        #    self.geotargets = Numeric.array([opttol, 3. / opttol], "d")
-        #if hasattr(self,"geovalues"): self.geovalues = Numeric.array(self.geovalues, "d")
+        #    self.geotargets = numpy.array([opttol, 3. / opttol], "d")
+        #if hasattr(self,"geovalues"): self.geovalues = numpy.array(self.geovalues, "d")
 
         
 if __name__ == "__main__":

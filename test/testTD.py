@@ -1,8 +1,15 @@
 import os, unittest
-from Numeric import alltrue, array, resize
+
+# If numpy is not installed, try to import Numeric instead.
+try:
+    import numpy
+except ImportError:
+    import Numeric as numpy
+
 from testall import getfile
 from cclib.parser import ADF, GAMESS, Gaussian, Jaguar, GAMESSUK
 import bettertest
+
 
 class GenericTDTest(bettertest.TestCase):
     """Time-dependent HF or DFT calculations."""

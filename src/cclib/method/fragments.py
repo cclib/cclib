@@ -5,10 +5,19 @@ and licensed under the LGPL (http://www.gnu.org/copyleft/lgpl.html).
 
 __revision__ = "$Revision: 238 $"
 
-import Numeric
-import LinearAlgebra
 import random # For sometimes running the progress updater
+
+# If numpy is not installed, try to import Numeric instead.
+try:
+    import numpy
+    numpy.inv = numpy.linalg.inv
+except ImportError:
+    import Numeric as numpy
+    import LinearAlgebra
+    numpy.inv = LinearAlgebra.inverse
+
 from calculationmethod import *
+
 
 class FragmentAnalysis(Method):
     """Convert a molecule's basis functions from atomic-based to fragment MO-based"""
@@ -94,7 +103,7 @@ class FragmentAnalysis(Method):
         self.logger.info("Creating mocoeffs in new fragment MO basis: mocoeffs[]")
 
         for spin in range(len(self.parser.mocoeffs)):
-            blockMatrix = Numeric.zeros((nBasis,nBasis), "d")
+            blockMatrix = numpy.zeros((nBasis,nBasis), "d")
             pos = 0
 
 #build up block-diagonal matrix from fragment mocoeffs
@@ -102,24 +111,24 @@ class FragmentAnalysis(Method):
             for i in range(len(fragments)):
                 size = fragments[i].nbasis
                 if len(fragments[i].mocoeffs) == 1:
-                    blockMatrix[pos:pos+size,pos:pos+size] = Numeric.transpose(fragments[i].mocoeffs[0])
+                    blockMatrix[pos:pos+size,pos:pos+size] = numpy.transpose(fragments[i].mocoeffs[0])
                 else:
-                    blockMatrix[pos:pos+size,pos:pos+size] = Numeric.transpose(fragments[i].mocoeffs[spin])
+                    blockMatrix[pos:pos+size,pos:pos+size] = numpy.transpose(fragments[i].mocoeffs[spin])
                 pos += size
             
 #invert and mutliply to result in fragment MOs as basis
-            iBlockMatrix = LinearAlgebra.inverse(blockMatrix) 
-            results = Numeric.transpose(Numeric.matrixmultiply(iBlockMatrix, Numeric.transpose(self.parser.mocoeffs[spin])))
+            iBlockMatrix = numpy.inv(blockMatrix) 
+            results = numpy.transpose(numpy.dot(iBlockMatrix, numpy.transpose(self.parser.mocoeffs[spin])))
             self.mocoeffs.append(results)
             
             if hasattr(self.parser, "aooverlaps"):
-                tempMatrix = Numeric.matrixmultiply(self.parser.aooverlaps, blockMatrix)
-                tBlockMatrix = Numeric.transpose(blockMatrix)
+                tempMatrix = numpy.dot(self.parser.aooverlaps, blockMatrix)
+                tBlockMatrix = numpy.transpose(blockMatrix)
                 if spin == 0:
-                    self.fooverlaps = Numeric.matrixmultiply(tBlockMatrix, tempMatrix)
+                    self.fooverlaps = numpy.dot(tBlockMatrix, tempMatrix)
                     self.logger.info("Creating fooverlaps: array[x,y]")
                 elif spin == 1:
-                    self.fooverlaps2 = Numeric.matrixmultiply(tBlockMatrix, tempMatrix)
+                    self.fooverlaps2 = numpy.dot(tBlockMatrix, tempMatrix)
                     self.logger.info("Creating fooverlaps (beta): array[x,y]")
             else:
                 self.logger.warning("Overlap matrix missing")

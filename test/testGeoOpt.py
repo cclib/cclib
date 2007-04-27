@@ -1,16 +1,22 @@
 import os
 import math
-import Numeric
 import unittest
-import bettertest
 
+# If numpy is not installed, try to import Numeric instead.
+try:
+    import numpy
+except ImportError:
+    import Numeric as numpy
+
+import bettertest
 from testall import getfile
 from cclib.parser import ADF, GAMESS, Gaussian, Jaguar, GAMESSUK
+
 
 class GenericGeoOptTest(bettertest.TestCase):
     def testhomos(self):
         """Is the index of the homo equal to 34?"""
-        self.assertArrayEquals(self.data.homos,Numeric.array([34],"i"),"%s != array([34],'i')" % Numeric.array_repr(self.data.homos))
+        self.assertArrayEquals(self.data.homos, numpy.array([34],"i"),"%s != array([34],'i')" % numpy.array_repr(self.data.homos))
 
     def testatomcoords(self):
         """Are atomcoords consistent with natom and Angstroms?"""
@@ -30,7 +36,9 @@ class GenericGeoOptTest(bettertest.TestCase):
 
     def testatomnos(self):
         """Are the atomnos correct?"""
-        self.assertEquals(self.data.atomnos.typecode(), 'i')
+        self.failUnless(numpy.alltrue([isinstance(atomno,int) for atomno in self.data.atomnos]))
+        # This will work only for numpy
+        #self.assertEquals(self.data.atomnos.dtype.char, 'i')
         self.assertEquals(self.data.atomnos.shape, (20,) )
         self.assertEquals(sum(self.data.atomnos==6) + sum(self.data.atomnos==1),
                           20)        
@@ -61,9 +69,9 @@ class GenericGeoOptTest(bettertest.TestCase):
         self.assertEquals(60,len(self.data.moenergies[0]))
 
     def testtypemoenergies(self):
-        """Is moenergies a list containing one Numeric array?"""
+        """Is moenergies a list containing one numpy array?"""
         self.assertEquals(type(self.data.moenergies), type([]))
-        self.assertEquals(type(self.data.moenergies[0]), type(Numeric.array([])))
+        self.assertEquals(type(self.data.moenergies[0]), type(numpy.array([])))
 
     def testsymlabels(self):
         """Are all the symmetry labels either Ag/u or Bg/u?"""
@@ -72,13 +80,13 @@ class GenericGeoOptTest(bettertest.TestCase):
 
     def testcoreelectrons(self):
         """Are the coreelectrons all 0?"""
-        ans = Numeric.zeros(self.data.natom, 'i')
+        ans = numpy.zeros(self.data.natom, 'i')
         self.assertArrayEquals(self.data.coreelectrons, ans)
 
     def testscfvaluetype(self):
         """Do the scf values have the right type?"""
         self.assertEquals(type(self.data.scfvalues),type([]))
-        self.assertEquals(type(self.data.scfvalues[0]),type(Numeric.array([])))
+        self.assertEquals(type(self.data.scfvalues[0]),type(numpy.array([])))
 
     def testgeotargets(self):
         """Do the geo targets have the right dimensions?"""

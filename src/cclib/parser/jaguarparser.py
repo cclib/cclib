@@ -6,8 +6,14 @@ and licensed under the LGPL (http://www.gnu.org/copyleft/lgpl.html).
 __revision__ = "$Revision$"
 
 import re
-import Numeric
 import random # For sometimes running the progress updater
+
+# If numpy is not installed, try to import Numeric instead.
+try:
+    import numpy
+except ImportError:
+    import Numeric as numpy
+
 import utils
 import logfileparser
 
@@ -112,7 +118,7 @@ class Jaguar(logfileparser.Logfile):
                 atomcoords.append(map(float, temp[1:]))
                 line = inputfile.next()
             self.atomcoords.append(atomcoords)
-            self.atomnos = Numeric.array(atomnos, "i")
+            self.atomnos = numpy.array(atomnos, "i")
             self.natom = len(atomcoords)
 
         if line[2:24] == "start of program geopt":
@@ -130,7 +136,7 @@ class Jaguar(logfileparser.Logfile):
         # Get Geometry Opt convergence information
             if not hasattr(self, "geovalues"):
                 self.geovalues = []
-                self.geotargets = Numeric.zeros(5, "d")
+                self.geotargets = numpy.zeros(5, "d")
             gopt_step = int(line.split()[-1])
             blank = inputfile.next()
             blank = inputfile.next()
@@ -156,7 +162,7 @@ class Jaguar(logfileparser.Logfile):
             line = inputfile.next()
             virts = int(line.split()[-1])
             self.nmo = occs + virts
-            self.homos = Numeric.array([occs-1], "i")
+            self.homos = numpy.array([occs-1], "i")
 
             self.unrestrictedflag = False
 
@@ -172,7 +178,7 @@ class Jaguar(logfileparser.Logfile):
             bvirt = int(line.split()[-1])
 
             self.nmo = aoccs + avirts
-            self.homos = Numeric.array([aoccs-1,boccs-1], "i")
+            self.homos = numpy.array([aoccs-1,boccs-1], "i")
             self.unrestrictedflag = True
             
         if line[2:33] == "Orbital energies/symmetry label":
@@ -186,7 +192,7 @@ class Jaguar(logfileparser.Logfile):
                     self.moenergies[0].append(utils.convertor(float(temp[i]), "hartree", "eV"))
                     self.mosyms[0].append(self.normalisesym(temp[i+1]))
                 line = inputfile.next()
-            self.moenergies = [Numeric.array(self.moenergies[0], "d")]
+            self.moenergies = [numpy.array(self.moenergies[0], "d")]
 
         if line.find("Orbital energies:") == 2:
         # Get MO Energies
@@ -199,7 +205,7 @@ class Jaguar(logfileparser.Logfile):
                     for i in range(len(temp)):
                         self.moenergies[0].append(utils.convertor(float(temp[i]), "hartree", "eV"))
                     line = inputfile.next()
-                self.moenergies = [Numeric.array(self.moenergies[0], "d")]
+                self.moenergies = [numpy.array(self.moenergies[0], "d")]
 
         if line.find("Alpha Orbital energies:") == 2:
         # Get alpha MO Energies
@@ -226,7 +232,7 @@ class Jaguar(logfileparser.Logfile):
                         self.moenergies[1].append(utils.convertor(float(temp[i]), "hartree", "eV"))
                     line = inputfile.next()
 
-                self.moenergies = [Numeric.array(x, "d") for x in self.moenergies]
+                self.moenergies = [numpy.array(x, "d") for x in self.moenergies]
 
         if line.find("Occupied + virtual Orbitals- final wvfn") > 0:
             
@@ -250,7 +256,7 @@ class Jaguar(logfileparser.Logfile):
             offset = 0
 
             for s in range(spin):
-                mocoeffs = Numeric.zeros((len(self.moenergies[s]), self.nbasis), "d")
+                mocoeffs = numpy.zeros((len(self.moenergies[s]), self.nbasis), "d")
 
                 if s == 1: #beta case
                     stars = inputfile.next()
@@ -310,7 +316,7 @@ class Jaguar(logfileparser.Logfile):
                 return
                 # This was continue (in loop) before parser refactoring.
                 # continue # avoid "olap-dev"
-            self.aooverlaps = Numeric.zeros((self.nbasis, self.nbasis), "d")
+            self.aooverlaps = numpy.zeros((self.nbasis, self.nbasis), "d")
 
             for i in range(0, self.nbasis, 5):
                 blank = inputfile.next()
@@ -321,7 +327,7 @@ class Jaguar(logfileparser.Logfile):
                     self.aooverlaps[i:(i+len(temp)), j] = temp
             
         if line[1:28] == "number of occupied orbitals":
-            self.homos = Numeric.array([float(line.strip().split()[-1])-1], "i")
+            self.homos = numpy.array([float(line.strip().split()[-1])-1], "i")
 
         if line[2:27] == "number of basis functions":
             self.nbasis = int(line.strip().split()[-1])
@@ -372,10 +378,10 @@ class Jaguar(logfileparser.Logfile):
 
                 self.vibdisps.extend(q[:len(broken)])
                 freqs = inputfile.next()
-            self.vibfreqs = Numeric.array(self.vibfreqs, "d")
-            self.vibdisps = Numeric.array(self.vibdisps, "d")
+            self.vibfreqs = numpy.array(self.vibfreqs, "d")
+            self.vibdisps = numpy.array(self.vibdisps, "d")
             if hasattr(self, "vibirs"):
-                self.vibirs = Numeric.array(self.vibirs, "d")
+                self.vibirs = numpy.array(self.vibirs, "d")
                 
         # Parse excited state output (for CIS calculations).
         # Jaguar calculates only singlet states.
@@ -401,7 +407,7 @@ class Jaguar(logfileparser.Logfile):
                 toMO = int(line.split()[2])-1
                 # Jaguar multiplies the coefficients times sqrt(2),
                 #  and changes the sign.
-                coeff = - float(line.split()[-1]) / Numeric.sqrt(2.0)
+                coeff = - float(line.split()[-1]) / numpy.sqrt(2.0)
                 self.etsecs[-1].append([(fromMO,0),(toMO,0),coeff])
                 line = inputfile.next()
             # Skip 3 lines

@@ -1,8 +1,14 @@
-import Numeric
 import copy     # Needed for copying objects
+
+# If numpy is not installed, try to import Numeric instead.
+try:
+    import numpy
+except ImportError:
+    import Numeric as numpy
 
 from cclib.bridge import makepyquante
 from cclib.parser.utils import convertor
+
 
 try:
     from PyQuante.CGBF import CGBF
@@ -26,7 +32,7 @@ class Volume(object):
        spacing -- the distance between the points in the cube
 
     Attributes:   
-       data -- a Numeric array of values for each point in the volume
+       data -- a numpy array of values for each point in the volume
                (set to zero at initialisation)
        numpts -- the numbers of points in the (x,y,z) directions
 
@@ -38,7 +44,7 @@ class Volume(object):
         self.numpts = []
         for i in range(3):
             self.numpts.append(int((self.topcorner[i]-self.origin[i])/self.spacing[i]                                   + 1) )
-        self.data = Numeric.zeros( tuple(self.numpts), "d")
+        self.data = numpy.zeros( tuple(self.numpts), "d")
 
     def __str__(self):
         """Return a string representation."""
@@ -60,9 +66,9 @@ class Volume(object):
     def writeasvtk(self, filename):
         if not module_pyvtk:
             raise Exception, "You need to have pyvtk installed"
-        ranges = (Numeric.arange(self.data.shape[2]),
-                  Numeric.arange(self.data.shape[1]),
-                  Numeric.arange(self.data.shape[0]))
+        ranges = (numpy.arange(self.data.shape[2]),
+                  numpy.arange(self.data.shape[1]),
+                  numpy.arange(self.data.shape[0]))
         v = VtkData(RectilinearGrid(*ranges), "Test",
                     PointData(Scalars(self.data.flat, "from cclib", "default")))
         v.tofile(filename)
@@ -160,21 +166,21 @@ def wavefunction(coords, mocoeffs, gbasis, volume):
     bfs = getbfs(coords, gbasis)
     
     wavefn = copy.copy(volume)
-    wavefn.data = Numeric.zeros( wavefn.data.shape, "d")
+    wavefn.data = numpy.zeros( wavefn.data.shape, "d")
 
     conversion = convertor(1,"bohr","Angstrom")
-    x = Numeric.arange(wavefn.origin[0], wavefn.topcorner[0]+wavefn.spacing[0], wavefn.spacing[0]) / conversion
-    y = Numeric.arange(wavefn.origin[1], wavefn.topcorner[1]+wavefn.spacing[1], wavefn.spacing[1]) / conversion
-    z = Numeric.arange(wavefn.origin[2], wavefn.topcorner[2]+wavefn.spacing[2], wavefn.spacing[2]) / conversion
+    x = numpy.arange(wavefn.origin[0], wavefn.topcorner[0]+wavefn.spacing[0], wavefn.spacing[0]) / conversion
+    y = numpy.arange(wavefn.origin[1], wavefn.topcorner[1]+wavefn.spacing[1], wavefn.spacing[1]) / conversion
+    z = numpy.arange(wavefn.origin[2], wavefn.topcorner[2]+wavefn.spacing[2], wavefn.spacing[2]) / conversion
 
     for bs in range(len(bfs)):
-        data = Numeric.zeros( wavefn.data.shape, "d")
+        data = numpy.zeros( wavefn.data.shape, "d")
         for i,xval in enumerate(x):
             for j,yval in enumerate(y):
                 for k,zval in enumerate(z):
                     data[i, j, k] = bfs[bs].amp(xval,yval,zval)
-        Numeric.multiply(data, mocoeffs[bs], data)
-        Numeric.add(wavefn.data, data, wavefn.data)
+        numpy.multiply(data, mocoeffs[bs], data)
+        numpy.add(wavefn.data, data, wavefn.data)
     
     return wavefn
 
@@ -187,32 +193,32 @@ def electrondensity(coords, mocoeffslist, gbasis, volume):
         gbasis -- gbasis from a parser object
         volume -- a template Volume object (will not be altered)
 
-    Note: mocoeffs is a list of Numeric arrays. The list will be of length 1
+    Note: mocoeffs is a list of numpy arrays. The list will be of length 1
           for restricted calculations, and length 2 for unrestricted.
     """
     bfs = getbfs(coords, gbasis)
     
     density = copy.copy(volume)
-    density.data = Numeric.zeros( density.data.shape, "d")
+    density.data = numpy.zeros( density.data.shape, "d")
 
     conversion = convertor(1,"bohr","Angstrom")
-    x = Numeric.arange(density.origin[0], density.topcorner[0]+density.spacing[0], density.spacing[0]) / conversion
-    y = Numeric.arange(density.origin[1], density.topcorner[1]+density.spacing[1], density.spacing[1]) / conversion
-    z = Numeric.arange(density.origin[2], density.topcorner[2]+density.spacing[2], density.spacing[2]) / conversion
+    x = numpy.arange(density.origin[0], density.topcorner[0]+density.spacing[0], density.spacing[0]) / conversion
+    y = numpy.arange(density.origin[1], density.topcorner[1]+density.spacing[1], density.spacing[1]) / conversion
+    z = numpy.arange(density.origin[2], density.topcorner[2]+density.spacing[2], density.spacing[2]) / conversion
 
     for mocoeffs in mocoeffslist:
         for mocoeff in mocoeffs:
-            wavefn = Numeric.zeros( density.data.shape, "d")
+            wavefn = numpy.zeros( density.data.shape, "d")
             for bs in range(len(bfs)):
-                data = Numeric.zeros( density.data.shape, "d")
+                data = numpy.zeros( density.data.shape, "d")
                 for i,xval in enumerate(x):
                     for j,yval in enumerate(y):
                         tmp = []
                         for k,zval in enumerate(z):
                             tmp.append(bfs[bs].amp(xval, yval, zval))
                         data[i,j,:] = tmp
-                Numeric.multiply(data, mocoeff[bs], data)
-                Numeric.add(wavefn, data, wavefn)
+                numpy.multiply(data, mocoeff[bs], data)
+                numpy.add(wavefn, data, wavefn)
             density.data += wavefn**2
         
     if len(mocoeffslist) == 1:

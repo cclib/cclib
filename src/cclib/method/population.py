@@ -5,10 +5,16 @@ and licensed under the LGPL (http://www.gnu.org/copyleft/lgpl.html).
 
 __revision__ = "$Revision$"
 
-import Numeric
 import logging
 
+# If numpy is not installed, try to import Numeric instead.
+try:
+    import numpy
+except ImportError:
+    import Numeric as numpy
+
 from calculationmethod import Method
+
 
 class Population(Method):
     """A base class for all population-type methods"""
@@ -31,17 +37,17 @@ class Population(Method):
 #create array for mulliken charges
         self.logger.info("Creating atomcharges: array[1]")
         size = len(self.atomresults[0][0])
-        self.atomcharges = Numeric.zeros([size], "d")
+        self.atomcharges = numpy.zeros([size], "d")
         
         for spin in range(len(self.atomresults)):
 
             for i in range(self.parser.homos[spin]+1):
 
-                temp = Numeric.reshape(self.atomresults[spin][i], (size,))
-                self.atomcharges = Numeric.add(self.atomcharges, temp)
+                temp = numpy.reshape(self.atomresults[spin][i], (size,))
+                self.atomcharges = numpy.add(self.atomcharges, temp)
         
         if not unrestricted:
-            self.atomcharges = Numeric.multiply(self.atomcharges, 2)
+            self.atomcharges = numpy.multiply(self.atomcharges, 2)
 
         return True
 
@@ -77,16 +83,16 @@ class Population(Method):
         natoms = len(indices)
         nmocoeffs = len(self.aoresults[0])
         
-#build results Numeric array[3]
+#build results numpy array[3]
         alpha = len(self.aoresults[0])
         results = []
-        results.append(Numeric.zeros([alpha, natoms], "d"))
+        results.append(numpy.zeros([alpha, natoms], "d"))
 
         if len(self.aoresults) == 2:
             beta = len(self.aoresults[1])
-            results.append(Numeric.zeros([beta, natoms], "d"))
+            results.append(numpy.zeros([beta, natoms], "d"))
         
-#for each spin, splice Numeric array at ao index, and add to correct result row
+#for each spin, splice numpy array at ao index, and add to correct result row
         for spin in range(len(results)):
 
             for i in range(natoms): #number of groups
@@ -94,7 +100,7 @@ class Population(Method):
                 for j in range(len(indices[i])): #for each group
                 
                     temp = self.aoresults[spin][:, indices[i][j]]
-                    results[spin][:, i] = Numeric.add(results[spin][:, i], temp)
+                    results[spin][:, i] = numpy.add(results[spin][:, i], temp)
 
         self.logger.info("Saving partitioned results in fragresults: [array[2]]")
         self.fragresults = results

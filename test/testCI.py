@@ -1,8 +1,15 @@
 import os, unittest
-from Numeric import alltrue, array
+
+# If numpy is not installed, try to import Numeric instead.
+try:
+    import numpy
+except ImportError:
+    import Numeric as numpy
+
 from testall import getfile
 from cclib.parser import Gaussian, GAMESS, Jaguar
 import bettertest
+
 
 class GenericCITest(bettertest.TestCase):
     """CI calculations."""
@@ -18,9 +25,9 @@ class GenericCITest(bettertest.TestCase):
     
     def testetenergies(self):
         """ Are transition energies positive and rising?"""
-        self.failUnless(alltrue(self.data.etenergies > 0.0))
+        self.failUnless(numpy.alltrue(self.data.etenergies > 0.0))
         changes = self.data.etenergies[1:] - self.data.etenergies[:-1]
-        self.failUnless(alltrue(changes > 0.0))
+        self.failUnless(numpy.alltrue(changes > 0.0))
 
 class GenericCISTest(GenericCITest):
     """CIS calculations."""
@@ -29,8 +36,8 @@ class GenericCISWaterTest(GenericCISTest):
     """CIS(RHF) calculations of water (STO-3G)."""
     # First four singlet/triplet state excitation energies [cm-1].
     # Based on output in GAMESS test.
-    etenergies0 = array([98614.56, 114906.59, 127948.12, 146480.64])
-    etenergies1 = array([82085.34,  98999.11, 104077.89, 113978.37])
+    etenergies0 = numpy.array([98614.56, 114906.59, 127948.12, 146480.64])
+    etenergies1 = numpy.array([82085.34,  98999.11, 104077.89, 113978.37])
     # First four singlet/triplet state excitation orbitals and coefficients.
     # Tuples: (from MO, to MO, coefficient) - don't need spin indices.
     # Based on output in GAMESS test (using the "dets" algorithm).
@@ -56,11 +63,11 @@ class GenericCISWaterTest(GenericCISTest):
         triplets = [self.data.etenergies[i] for i in indices1]
         # All programs do singlets.
         singletdiff = singlets[:4] - self.etenergies0
-        self.failUnless(alltrue(singletdiff < 50))
+        self.failUnless(numpy.alltrue(singletdiff < 50))
         # Not all programs do triplets (i.e. Jaguar).
         if len(triplets) >= 4:
             tripletdiff = triplets[:4] - self.etenergies1
-            self.failUnless(alltrue(tripletdiff < 50))
+            self.failUnless(numpy.alltrue(tripletdiff < 50))
 
     def testetsecsvalues(self):
         """ Are etsecs correct and coefficients within 0.0005 of the correct values?"""

@@ -5,10 +5,17 @@ and licensed under the LGPL (http://www.gnu.org/copyleft/lgpl.html).
 
 __revision__ = "$Revision$"
 
-import Numeric
 import random # For sometimes running the progress updater
+
+# If numpy is not installed, try to import Numeric instead.
+try:
+    import numpy
+except ImportError:
+    import Numeric as numpy
+
 import logging
 from calculationmethod import Method
+
 
 class Density(Method):
     """Calculate the density matrix"""
@@ -51,10 +58,10 @@ class Density(Method):
         #determine number of steps, and whether process involves beta orbitals
         nstep = self.parser.homos[0] + 1
         if unrestricted:
-            self.density = Numeric.zeros([2, size, size], "d")
+            self.density = numpy.zeros([2, size, size], "d")
             nstep += self.parser.homos[1] + 1
         else:
-            self.density = Numeric.zeros([1, size, size], "d")
+            self.density = numpy.zeros([1, size, size], "d")
 
         #intialize progress if available
         if self.progress:
@@ -68,17 +75,17 @@ class Density(Method):
                 if self.progress and random.random() < fupdate:
                     self.progress.update(step, "Density Matrix")
 
-                col = Numeric.reshape(self.parser.mocoeffs[spin][i], (size, 1))
-                colt = Numeric.reshape(col, (1, size))
+                col = numpy.reshape(self.parser.mocoeffs[spin][i], (size, 1))
+                colt = numpy.reshape(col, (1, size))
 
-                tempdensity = Numeric.matrixmultiply(col, colt)
-                self.density[spin] = Numeric.add(self.density[spin],
+                tempdensity = numpy.dot(col, colt)
+                self.density[spin] = numpy.add(self.density[spin],
                                                  tempdensity)
 
                 step += 1
 
         if not unrestricted: #multiply by two to account for second electron
-            self.density[0] = Numeric.add(self.density[0], self.density[0])
+            self.density[0] = numpy.add(self.density[0], self.density[0])
 
         if self.progress:
             self.progress.update(nstep, "Done")

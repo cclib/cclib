@@ -1,10 +1,16 @@
 import os
 import unittest
 import bettertest
-import Numeric
+
+# If numpy is not installed, try to import Numeric instead.
+try:
+    import numpy
+except ImportError:
+    import Numeric as numpy
 
 from testall import getfile
 from cclib.parser import ADF, GAMESS, Gaussian, Jaguar, GAMESSUK
+
 
 class GenericSPunTest(bettertest.TestCase):
     """Restricted single point calculations with MO coeffs and overlap info."""
@@ -23,7 +29,7 @@ class GenericSPunTest(bettertest.TestCase):
 
     def testhomos(self):
         """Are the homos correct?"""
-        self.assertArrayEquals(self.data.homos,Numeric.array([34,33],"i"),"%s != array([34,33],'i')" % Numeric.array_repr(self.data.homos))
+        self.assertArrayEquals(self.data.homos, numpy.array([34,33],"i"),"%s != array([34,33],'i')" % numpy.array_repr(self.data.homos))
 
     def testmoenergies(self):
         """Are the dims of the moenergies equals to 2 x nmo?"""

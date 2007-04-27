@@ -1,6 +1,11 @@
 import os
-import Numeric
 import unittest
+
+# If numpy is not installed, try to import Numeric instead.
+try:
+    import numpy
+except ImportError:
+    import Numeric as numpy
 
 from testall import getfile
 from cclib.parser import ADF, GAMESS, Gaussian, Jaguar, GAMESSUK
@@ -17,7 +22,7 @@ class GenericCoreTest(bettertest.TestCase):
         ans = []
         for x in self.data.atomnos:
             ans.append(self.coredict[pt.element[x]])
-        ans = Numeric.array(ans, "i")
+        ans = numpy.array(ans, "i")
         self.assertArrayEquals(self.data.coreelectrons, ans)
 
 class GaussianCoreTest(GenericCoreTest):
