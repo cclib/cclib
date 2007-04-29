@@ -121,6 +121,11 @@ class Jaguar(logfileparser.Logfile):
             self.atomnos = numpy.array(atomnos, "i")
             self.natom = len(atomcoords)
 
+        # Extract charge and multiplicity
+        if line[2:22] == "net molecular charge":
+            self.charge = int(line.split()[-1])
+            self.mult = int(inputfile.next().split()[-1])
+
         if line[2:24] == "start of program geopt":
             if not self.geoopt:
                 # Need to keep only the RMS density change info

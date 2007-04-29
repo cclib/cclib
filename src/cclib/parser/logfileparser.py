@@ -73,12 +73,12 @@ class Logfile(object):
 
         # Names of all supported attributes.
         self._attrlist = ['aonames', 'aooverlaps', 'atomcoords', 'atomnos',
-                         'ccenergies', 'coreelectrons',
+                         'ccenergies', 'charge', 'coreelectrons',
                          'etenergies', 'etoscs', 'etrotats', 'etsecs', 'etsyms',
                          'fonames', 'fooverlaps', 'fragnames', 'frags',
                          'gbasis', 'geotargets', 'geovalues',
                          'hessian', 'homos',
-                         'mocoeffs', 'moenergies', 'mosyms', 'mpenergies',
+                         'mocoeffs', 'moenergies', 'mosyms', 'mpenergies', 'mult',
                          'natom', 'nbasis', 'nmo',
                          'scfenergies', 'scftargets', 'scfvalues',
                          'vibdisps', 'vibfreqs', 'vibirs', 'vibramans', 'vibsyms']
@@ -88,6 +88,7 @@ class Logfile(object):
                             "aooverlaps":     numpy.ndarray,
                             "atomcoords":     numpy.ndarray,
                             "atomnos":        numpy.ndarray,
+                            "charge":         int,
                             "coreelectrons":  numpy.ndarray,
                             "etenergies":     numpy.ndarray,
                             "etoscs":         numpy.ndarray,
@@ -103,6 +104,7 @@ class Logfile(object):
                             "moenergies":     list,
                             "mosyms":         list,
                             "mpenergies":     numpy.ndarray,
+                            "mult":           int,
                             "natom":          int,
                             "nbasis":         int,
                             "nmo":            int,

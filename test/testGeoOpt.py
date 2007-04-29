@@ -34,6 +34,11 @@ class GenericGeoOptTest(bettertest.TestCase):
                         mindist = min(mindist,dist)
         self.assert_(abs(mindist-1.34)<0.03,"Mindist is %f (not 1.34)" % mindist)
 
+    def testcharge_and_mult(self):
+        """Are the charge and multiplicity correct?"""
+        self.assertEquals(self.data.charge, 0)
+        self.assertEquals(self.data.mult, 1)
+
     def testatomnos(self):
         """Are the atomnos correct?"""
         self.failUnless(numpy.alltrue([isinstance(atomno,int) for atomno in self.data.atomnos]))

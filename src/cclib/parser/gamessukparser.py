@@ -160,13 +160,14 @@ class GAMESSUK(logfileparser.Logfile):
 
         if line[1:32] == "total number of basis functions":
             self.nbasis = int(line.split()[-1])
-            while line.find("multiplicity")<0:
+            while line.find("charge of molecule")<0:
                 line = inputfile.next()
-            multiplicity = int(line.split()[-1])
+            self.charge = int(line.split()[-1])
+            self.mult = int(inputfile.next().split()[-1])
 
             alpha = int(inputfile.next().split()[-1])-1
             beta = int(inputfile.next().split()[-1])-1
-            if multiplicity==1:
+            if self.mult==1:
                 self.homos = numpy.array([alpha], "i")
             else:
                 self.homos = numpy.array([alpha,beta], "i")

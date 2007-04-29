@@ -7,10 +7,12 @@ import logging
 
 from cclib.parser import ccopen
 
-_allowedargs = ['aonames','aooverlaps','atomcoords','atomnos','coreelectrons',
+_allowedargs = ['aonames','aooverlaps','atomcoords','atomnos',
+		'charge','coreelectrons',
                 'etenergies','etoscs','etrotats','etsecs','etsyms',
                 'fonames','fooverlaps','gbasis','geotargets','geovalues',
                 'homos','mocoeffs','moenergies','mosyms','mpenergies',
+		'mult',
                 'natom','nbasis',
                 'nmo','scfenergies','scftargets','scfvalues', 'vibdisps',
                 'vibfreqs','vibirs','vibramans','vibsyms','hessian']

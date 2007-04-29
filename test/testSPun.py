@@ -27,6 +27,11 @@ class GenericSPunTest(bettertest.TestCase):
         self.assertEquals(self.data.mocoeffs[1].shape,
                           (self.data.nmo, self.data.nbasis))
 
+    def testcharge_and_mult(self):
+        """Are the charge and multiplicity correct?"""
+        self.assertEquals(self.data.charge, 1)
+        self.assertEquals(self.data.mult, 2)
+
     def testhomos(self):
         """Are the homos correct?"""
         self.assertArrayEquals(self.data.homos, numpy.array([34,33],"i"),"%s != array([34,33],'i')" % numpy.array_repr(self.data.homos))

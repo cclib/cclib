@@ -171,6 +171,11 @@ class GAMESS(logfileparser.Logfile):
             mp2energy = float(line.split()[2])
             self.mpenergies[-1].append(utils.convertor(mp2energy, "hartree", "eV"))
 
+        # Extract charge and multiplicity
+        if line[1:19] == "CHARGE OF MOLECULE":
+            self.charge = int(line.split()[-1])
+            self.mult = int(inputfile.next().split()[-1])
+
         # etenergies (used only for CIS runs now)
         if "EXCITATION ENERGIES" in line:
             if not hasattr(self, "etenergies"):

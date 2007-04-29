@@ -277,6 +277,12 @@ class Gaussian(logfileparser.Logfile):
                 self.geotargets[i] = self.float(parts[3])
             self.geovalues.append(newlist)
 
+        # Extract charge and multiplicity
+        if line[1:7] == 'Charge' and line.find("Multiplicity")>=0:
+            broken = line.split()
+            self.charge = int(broken[2])
+            self.mult = int(broken[-1])
+
         # Extracting orbital symmetries
         if line[1:19] == 'Orbital symmetries' and not hasattr(self, "mosyms"):
 

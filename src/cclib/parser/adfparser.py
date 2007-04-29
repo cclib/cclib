@@ -176,6 +176,17 @@ class ADF(logfileparser.Logfile):
 
                 line = inputfile.next()
 
+        # Extract charge
+        if line[1:11] == "Net Charge":
+            self.charge = int(line.split()[2])
+            line = inputfile.next()
+            if len(line.strip()):
+                #  Spin polar: 1 (Spin_A minus Spin_B electrons)
+                self.mult = int(line.split()[2]) + 1
+                 # (Not sure about this for higher multiplicities)
+            else:
+                self.mult = 1
+
         if line[1:22] == "S C F   U P D A T E S":
         # find targets for SCF convergence
 
