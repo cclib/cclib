@@ -7,7 +7,7 @@ __revision__ = "$Revision$"
 
 import inspect, logging, random, sys
 
-# If numpy is not installed, try to import Numeric instead.
+# If NumPy is not installed, try to import Numeric instead.
 try:
     import numpy
 except ImportError:
@@ -16,10 +16,11 @@ except ImportError:
 
 import utils
 
+
 class Logfile(object):
     """Abstract class for logfile objects.
 
-    Subclasses:
+    Subclasses defined by cclib:
         ADF, GAMESS, GAMESSUK, Gaussian, Jaguar
     
     Attributes:
@@ -27,6 +28,7 @@ class Logfile(object):
         aooverlaps -- atomic orbital overlap matrix (array[2])
         atomcoords -- atom coordinates (array[3], angstroms)
         atomnos -- atomic numbers (array[1])
+        charge -- net charge of the system (integer)
         ccenergies -- molecular energies with Coupled-Cluster corrections (array[2], eV)
         coreelectrons -- number of core electrons in atom pseudopotentials (array[1])
         etenergies -- energies of electronic transitions (array[1], 1/cm)
@@ -46,6 +48,7 @@ class Logfile(object):
         moenergies -- molecular orbital energies (list of arrays[1], eV)
         mosyms -- orbital symmetries (list of lists)
         mpenergies -- molecular electronic energies with Möller-Plesset corrections (array[2], eV)
+        mult -- multiplicity of the system (integer)
         natom -- number of atoms (integer)
         nbasis -- number of basis functions (integer)
         nmo -- number of molecular orbitals (integer)
@@ -63,7 +66,6 @@ class Logfile(object):
         the 11th molecular orbital is the HOMO
     """
 
-    
     def __init__(self, filename, progress=None, fupdate=0.05, cupdate=0.002, 
                                  loglevel=logging.INFO, logname="Log"):
         """Initialise the Logfile object.
@@ -73,15 +75,15 @@ class Logfile(object):
 
         # Names of all supported attributes.
         self._attrlist = ['aonames', 'aooverlaps', 'atomcoords', 'atomnos',
-                         'ccenergies', 'charge', 'coreelectrons',
-                         'etenergies', 'etoscs', 'etrotats', 'etsecs', 'etsyms',
-                         'fonames', 'fooverlaps', 'fragnames', 'frags',
-                         'gbasis', 'geotargets', 'geovalues',
-                         'hessian', 'homos',
-                         'mocoeffs', 'moenergies', 'mosyms', 'mpenergies', 'mult',
-                         'natom', 'nbasis', 'nmo',
-                         'scfenergies', 'scftargets', 'scfvalues',
-                         'vibdisps', 'vibfreqs', 'vibirs', 'vibramans', 'vibsyms']
+                          'ccenergies', 'charge', 'coreelectrons',
+                          'etenergies', 'etoscs', 'etrotats', 'etsecs', 'etsyms',
+                          'fonames', 'fooverlaps', 'fragnames', 'frags',
+                          'gbasis', 'geotargets', 'geovalues',
+                          'hessian', 'homos',
+                          'mocoeffs', 'moenergies', 'mosyms', 'mpenergies', 'mult',
+                          'natom', 'nbasis', 'nmo',
+                          'scfenergies', 'scftargets', 'scfvalues',
+                          'vibdisps', 'vibfreqs', 'vibirs', 'vibramans', 'vibsyms']
 
         # The expected types for all attributes.
         self._attrtypes = { "aonames":        list,
@@ -163,16 +165,15 @@ class Logfile(object):
         # Update list of attributes to keep after parsing.
         _nodelete = list(set(self.__dict__.keys() + self._attrlist))
 
-        # Check that the sub-class has an extract() method.
+        # Check that the sub-class has an extract attribute,
+        #  that is callable with the proper number of arguemnts.
         if not hasattr(self, "extract"):
             raise AttributeError, "Class %s has no extract() method." %self.__class__.__name__
             return -1
-        # Check that extract() is callable.
         if not callable(self.extract):
             raise AttributeError, "Method %s._extract not callable." %self.__class__.__name__
             return -1
-        # Check that extract() takes arguments (in the future specify how many).
-        if not inspect.getargspec(self.extract):
+        if len(inspect.getargspec(self.extract)[0]) != 3:
             raise AttributeError, "Method %s._extract takes wrong number of arguments." %self.__class__.__name__
             return -1
 
