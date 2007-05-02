@@ -5,7 +5,9 @@ and licensed under the LGPL (http://www.gnu.org/copyleft/lgpl.html).
 
 __revision__ = "$Revision$"
 
+
 import sys
+
 
 class TextProgress:
 

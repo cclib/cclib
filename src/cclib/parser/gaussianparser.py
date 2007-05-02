@@ -5,6 +5,7 @@ and licensed under the LGPL (http://www.gnu.org/copyleft/lgpl.html).
 
 __revision__ = "$Revision$"
 
+
 import re
 
 # If numpy is not installed, try to import Numeric instead.
@@ -16,6 +17,7 @@ except ImportError:
 import utils
 import logfileparser
 
+
 class Gaussian(logfileparser.Logfile):
     """A Gaussian 98/03 log file"""
     SCFRMS, SCFMAX, SCFENERGY = range(3) # Used to index self.scftargets[]
@@ -23,9 +25,6 @@ class Gaussian(logfileparser.Logfile):
 
         # Call the __init__ method of the superclass
         super(Gaussian, self).__init__(logname="Gaussian", *args)
-        
-        self.optfinished = False # Flag that indicates whether it has reached the end of a geoopt
-        self.coupledcluster = False # Flag for identifying Coupled Cluster runs
         
     def __str__(self):
         """Return a string representation of the object."""
@@ -53,6 +52,11 @@ class Gaussian(logfileparser.Logfile):
 
         ans = label.replace("U", "u").replace("G", "g") 
         return ans
+
+    def before_parsing(self):
+
+        self.optfinished = False # Flag that indicates whether it has reached the end of a geoopt
+        self.coupledcluster = False # Flag for identifying Coupled Cluster runs
 
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""

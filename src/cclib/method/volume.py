@@ -6,10 +6,6 @@ try:
 except ImportError:
     import Numeric as numpy
 
-from cclib.bridge import makepyquante
-from cclib.parser.utils import convertor
-
-
 try:
     from PyQuante.CGBF import CGBF
     module_pyq = True
@@ -22,6 +18,10 @@ try:
     module_pyvtk = True
 except:
     module_pyvtk = False
+
+from cclib.bridge import makepyquante
+from cclib.parser.utils import convertor
+
 
 class Volume(object):
     """Represent a volume in space.

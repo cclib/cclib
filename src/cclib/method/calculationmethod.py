@@ -5,7 +5,8 @@ and licensed under the LGPL (http://www.gnu.org/copyleft/lgpl.html).
 
 __revision__ = "$Revision$"
 
-import logging, sys
+import logging
+import sys
 
 class Method(object):
     """Abstract class for logfile objects.

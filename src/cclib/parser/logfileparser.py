@@ -5,7 +5,10 @@ and licensed under the LGPL (http://www.gnu.org/copyleft/lgpl.html).
 
 __revision__ = "$Revision$"
 
-import inspect, logging, random, sys
+import sys
+import logging
+import inspect
+import random
 
 # If NumPy is not installed, try to import Numeric instead.
 try:
@@ -191,6 +194,10 @@ class Logfile(object):
                 self.fupdate = fupdate
             if cupdate:
                 self.cupdate = cupdate
+
+        # Maybe the sub-class has something to do before parsing.
+        if hasattr(self, "before_parsing"):
+            self.before_parsing()
 
         # Loop over lines in the file object.
         for line in inputfile:

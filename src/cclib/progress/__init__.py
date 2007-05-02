@@ -5,7 +5,7 @@ and licensed under the LGPL (http://www.gnu.org/copyleft/lgpl.html).
 
 __revision__ = "$Revision$"
 
-from textprogress import TextProgress
+
 import sys
 
 if 'qt' in sys.modules.keys():
@@ -13,3 +13,4 @@ if 'qt' in sys.modules.keys():
 if 'PyQt4' in sys.modules.keys():
     from qt4progress import Qt4Progress
 
+from textprogress import TextProgress

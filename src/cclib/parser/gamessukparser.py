@@ -26,13 +26,6 @@ class GAMESSUK(logfileparser.Logfile):
         # Call the __init__ method of the superclass
         super(GAMESSUK, self).__init__(logname="GAMESSUK", *args)
         
-        # This will be used to detect the first set of "nuclear coordinates" in
-        # a geometry-optimization
-        self.firstnuccoords = True
-
-        # used for determining whether to add a second mosyms, etc.
-        self.betamosyms = self.betamoenergies = self.betamocoeffs = False
-
     def __str__(self):
         """Return a string representation of the object."""
         return "GAMESS UK log file %s" % (self.filename)
@@ -55,6 +48,15 @@ class GAMESSUK(logfileparser.Logfile):
         ans = label[0].upper() + label[1:]
         
         return ans
+
+    def before_parsing(self):
+
+        # This will be used to detect the first set of "nuclear coordinates" in
+        # a geometry-optimization
+        self.firstnuccoords = True
+
+        # used for determining whether to add a second mosyms, etc.
+        self.betamosyms = self.betamoenergies = self.betamocoeffs = False
 
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""

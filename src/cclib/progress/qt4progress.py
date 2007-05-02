@@ -5,7 +5,9 @@ and licensed under the LGPL (http://www.gnu.org/copyleft/lgpl.html).
 
 __revision__ = "$Revision: 238 $"
 
+
 from PyQt4 import QtGui,QtCore
+
 
 class Qt4Progress(QtGui.QProgressDialog):
 

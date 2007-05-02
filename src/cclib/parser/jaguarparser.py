@@ -5,8 +5,8 @@ and licensed under the LGPL (http://www.gnu.org/copyleft/lgpl.html).
 
 __revision__ = "$Revision$"
 
+
 import re
-import random # For sometimes running the progress updater
 
 # If numpy is not installed, try to import Numeric instead.
 try:
@@ -17,6 +17,7 @@ except ImportError:
 import utils
 import logfileparser
 
+
 class Jaguar(logfileparser.Logfile):
     """A Jaguar output file"""
 
@@ -25,8 +26,6 @@ class Jaguar(logfileparser.Logfile):
         # Call the __init__ method of the superclass
         super(Jaguar, self).__init__(logname="Jaguar", *args)
         
-        self.geoopt = False # Is this a GeoOpt? Needed for SCF targets/values.
-
     def __str__(self):
         """Return a string representation of the object."""
         return "Jaguar output file %s" % (self.filename)
@@ -51,6 +50,10 @@ class Jaguar(logfileparser.Logfile):
         """
         ans = label.split("/")[0].replace("pp", '"').replace("p", "'")
         return ans
+
+    def before_parsing(self):
+
+        self.geoopt = False # Is this a GeoOpt? Needed for SCF targets/values.
 
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""

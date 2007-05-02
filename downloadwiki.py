@@ -1,4 +1,5 @@
 import urllib
+
 from BeautifulSoup import BeautifulSoup
 
 wiki = "http://cclib.sourceforge.net/wiki"

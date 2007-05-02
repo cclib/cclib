@@ -5,11 +5,6 @@ and licensed under the LGPL (http://www.gnu.org/copyleft/lgpl.html).
 
 __revision__ = "$Revision$"
 
-import adfparser
-import gamessparser
-import gaussianparser
-import jaguarparser
-import gamessukparser
 
 import os
 import bz2 # New in Python 2.3
@@ -17,6 +12,13 @@ import gzip
 import zipfile
 import logging
 import StringIO
+
+import adfparser
+import gamessparser
+import gaussianparser
+import jaguarparser
+import gamessukparser
+
 
 def openlogfile(filename):
     """Return a file object given a filename.

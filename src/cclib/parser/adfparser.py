@@ -5,6 +5,7 @@ and licensed under the LGPL (http://www.gnu.org/copyleft/lgpl.html).
 
 __revision__ = "$Revision$"
 
+
 # If numpy is not installed, try to import Numeric instead.
 try:
     import numpy
@@ -14,25 +15,14 @@ except ImportError:
 import utils
 import logfileparser
 
+
 class ADF(logfileparser.Logfile):
     """An ADF log file"""
-    SCFCNV, SCFCNV2 = range(2) #used to index self.scftargets[]
-    maxelem, norm = range(2) # used to index scf.values
+
     def __init__(self, *args):
 
         # Call the __init__ method of the superclass
         super(ADF, self).__init__(logname="ADF", *args)
-        
-        # Used to avoid extracting the final geometry twice in a GeoOpt
-        self.NOTFOUND, self.GETLAST, self.NOMORE = range(3)
-        self.finalgeometry = self.NOTFOUND 
-        
-        # Used for calculating the scftarget (variables names taken from the ADF manual)
-        self.accint = self.SCFconv = self.sconv2 = None
-        
-        # keep track of nosym and unrestricted case to parse Energies since it doens't have an all Irreps section
-        self.nosymflag = False
-        self.unrestrictedflag = False
         
     def __str__(self):
         """Return a string representation of the object."""
@@ -90,6 +80,22 @@ class ADF(logfileparser.Logfile):
                 return "%s:%i"%(label,num+1)
         else:
             return "%s:%i"%(label,num+1)
+
+    def before_parsing(self):
+
+        # Used to avoid extracting the final geometry twice in a GeoOpt
+        self.NOTFOUND, self.GETLAST, self.NOMORE = range(3)
+        self.finalgeometry = self.NOTFOUND 
+        
+        # Used for calculating the scftarget (variables names taken from the ADF manual)
+        self.accint = self.SCFconv = self.sconv2 = None
+        
+        # keep track of nosym and unrestricted case to parse Energies since it doens't have an all Irreps section
+        self.nosymflag = False
+        self.unrestrictedflag = False
+
+        SCFCNV, SCFCNV2 = range(2) #used to index self.scftargets[]
+        maxelem, norm = range(2) # used to index scf.values
 
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""

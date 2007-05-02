@@ -5,6 +5,7 @@ and licensed under the LGPL (http://www.gnu.org/copyleft/lgpl.html).
 
 __revision__ = "$Revision$"
 
+
 import re
 
 # If numpy is not installed, try to import Numeric instead.
@@ -16,6 +17,7 @@ except ImportError:
 import utils
 import logfileparser
 
+
 class GAMESS(logfileparser.Logfile):
     """A GAMESS log file."""
     SCFRMS, SCFMAX, SCFENERGY = range(3) # Used to index self.scftargets[]
@@ -23,10 +25,6 @@ class GAMESS(logfileparser.Logfile):
 
         # Call the __init__ method of the superclass
         super(GAMESS, self).__init__(logname="GAMESS", *args)
-
-        self.firststdorient = True # Used to decide whether to wipe the atomcoords clean
-        self.geooptfinished = False # Used to avoid extracting the final geometry twice
-        self.cihamtyp = "none" # Type of CI Hamiltonian: saps or dets.
 
     def __str__(self):
         """Return a string representation of the object."""
@@ -82,6 +80,12 @@ class GAMESS(logfileparser.Logfile):
             ans.append(aoname)
             
         return ans
+
+    def before_parsing(self):
+
+        self.firststdorient = True # Used to decide whether to wipe the atomcoords clean
+        self.geooptfinished = False # Used to avoid extracting the final geometry twice
+        self.cihamtyp = "none" # Type of CI Hamiltonian: saps or dets.
     
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""

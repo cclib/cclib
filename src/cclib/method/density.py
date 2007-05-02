@@ -6,6 +6,7 @@ and licensed under the LGPL (http://www.gnu.org/copyleft/lgpl.html).
 __revision__ = "$Revision$"
 
 import random # For sometimes running the progress updater
+import logging
 
 # If numpy is not installed, try to import Numeric instead.
 try:
@@ -13,7 +14,6 @@ try:
 except ImportError:
     import Numeric as numpy
 
-import logging
 from calculationmethod import Method
 
 
