@@ -50,7 +50,7 @@ class Logfile(object):
         mocoeffs -- molecular orbital coefficients (list of arrays[2])
         moenergies -- molecular orbital energies (list of arrays[1], eV)
         mosyms -- orbital symmetries (list of lists)
-        mpenergies -- molecular electronic energies with Möller-Plesset corrections (array[2], eV)
+        mpenergies -- molecular electronic energies with Mï¿½ller-Plesset corrections (array[2], eV)
         mult -- multiplicity of the system (integer)
         natom -- number of atoms (integer)
         nbasis -- number of basis functions (integer)
@@ -130,20 +130,24 @@ class Logfile(object):
         self._tolistofarrays = ['moenergies', 'scfvalues']
 
         self.filename = filename
-        
+
         # Progress indicator.
         self.progress = progress
         self.fupdate = fupdate
         self.cupdate = cupdate
-        
-        # Set up the logger
+
+        # Setup the logger.
+        # Note that calling logging.getLogger() with one name always returns the same instance.
+        # Presently in cclib, all parser instances of the same class use the same logger.
+        # This means that care needs to be taken not to duplicate handlers.
         self.loglevel = loglevel
         self.logname  = logname
         self.logger = logging.getLogger('%s %s' % (self.logname,self.filename))
         self.logger.setLevel(self.loglevel)
-        handler = logging.StreamHandler(sys.stdout)
-        handler.setFormatter(logging.Formatter("[%(name)s %(levelname)s] %(message)s"))
-        self.logger.addHandler(handler)
+        if len(self.logger.handlers) == 0:
+                handler = logging.StreamHandler(sys.stdout)
+                handler.setFormatter(logging.Formatter("[%(name)s %(levelname)s] %(message)s"))
+                self.logger.addHandler(handler)
 
         # Periodic table of elements.
         self.table = utils.PeriodicTable()
@@ -165,9 +169,6 @@ class Logfile(object):
     def parse(self, fupdate=None, cupdate=None):
         """Parse the logfile, using the assumed extract method of the child."""
 
-        # Update list of attributes to keep after parsing.
-        _nodelete = list(set(self.__dict__.keys() + self._attrlist))
-
         # Check that the sub-class has an extract attribute,
         #  that is callable with the proper number of arguemnts.
         if not hasattr(self, "extract"):
@@ -179,6 +180,9 @@ class Logfile(object):
         if len(inspect.getargspec(self.extract)[0]) != 3:
             raise AttributeError, "Method %s._extract takes wrong number of arguments." %self.__class__.__name__
             return -1
+
+        # Create list of attributes to keep after parsing.
+        _nodelete = list(set(self.__dict__.keys() + self._attrlist))
 
         # Open the file object.
         inputfile = utils.openlogfile(self.filename)
@@ -206,7 +210,7 @@ class Logfile(object):
 
             # Do not look at lines that consist of whitespace.
             if line.strip() != "":
-            
+
                 # This call should check if the line begins a section of extracted data.
                 # If it does, it parses some lines and sets the relevant attributes.
                 self.extract(inputfile, line)
@@ -227,7 +231,7 @@ class Logfile(object):
                             setattr(self, attr, numpy.array(getattr(self, attr), precision))
                         except TypeError:
                             self.logger.info("Attribute %s cannot be converted to an array" %(attr))
-                    else:                    
+                    else:
                         try:
                             setattr(self, attr, atype(getattr(self, attr)))
                         except ValueError:
@@ -264,12 +268,12 @@ class Logfile(object):
         # Update self.progress as done.
         if self.progress:
             self.progress.update(nstep, "Done")
-        
+
         self.parsed = True
 
     def updateprogress(self, inputfile, msg, xupdate=0.05):
         """Update progress."""
-        
+
         if self.progress and random.random() < xupdate:
             newstep = inputfile.tell()
             if newstep != self.progress.step:
@@ -291,7 +295,7 @@ class Logfile(object):
         as an error by unit tests.
         """
         return "ERROR: This should be overwritten by this subclass"
-    
+
     def float(self,number):
         """Convert a string to a float avoiding the problem with Ds.
 
