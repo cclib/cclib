@@ -28,7 +28,6 @@ class TestCase(unittest.TestCase):
         if not first.shape == second.shape:
             errormsg = "Shapes are different: %s != %s" % (first.shape, second.shape)
         # If NumPy was not imported, assume Numeric was.
-        print dir()
         try:
             type1 = first.dtype
             type2 = second.dtype

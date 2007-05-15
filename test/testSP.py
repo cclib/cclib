@@ -83,5 +83,5 @@ if __name__=="__main__":
         errors += len(a.errors)
         failures += len(a.failures)
 
-    print "\n\n********* SUMMARY OF SP **************"
+    print "\n\n********* SUMMARY OF SP TEST **************"
     print "TOTAL: %d\tPASSED: %d\tFAILED: %d\tERRORS: %d" % (total,total-(errors+failures),failures,errors)

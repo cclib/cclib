@@ -23,6 +23,8 @@ class GenericCoreTest(bettertest.TestCase):
         for x in self.data.atomnos:
             ans.append(self.coredict[pt.element[x]])
         ans = numpy.array(ans, "i")
+        print ans
+        print self.data.coreelectrons
         self.assertArrayEquals(self.data.coreelectrons, ans)
 
 class GaussianCoreTest(GenericCoreTest):
@@ -63,5 +65,5 @@ if __name__=="__main__":
         errors += len(a.errors)
         failures += len(a.failures)
 
-    print "\n\n********* SUMMARY OF MP TEST **************"
+    print "\n\n********* SUMMARY OF CORE TEST **************"
     print "TOTAL: %d\tPASSED: %d\tFAILED: %d\tERRORS: %d" % (total,total-(errors+failures),failures,errors)
