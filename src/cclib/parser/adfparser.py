@@ -318,7 +318,7 @@ class ADF(logfileparser.Logfile):
                 self.logger.warning("MO info up to #%s is missing" % info[0])
  
             #handle case where MO information up to a certain orbital are missing
-            while int(info[0]) != len(self.moenergies[0]):
+            while int(info[0]) - 1 != len(self.moenergies[0]):
                 self.moenergies[0].append(99999)
                 self.mosyms[0].append('A')
         

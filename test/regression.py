@@ -53,6 +53,12 @@ def testGaussian_basicGaussian03_dvb_raman_out(logfile):
     """
     assert logfile.vibramans[1] - 2.6872 < 0.0001
 
+def testADF_basicADF2004_01_dvb_sp_c_adfout(logfile):
+    """
+    Had homo[0] as 35, when it should be 34
+    """
+    assert logfile.homos[0] == 34
+    4
 def testADF_ADF2004_01_Fe_ox3_final_out_gz(logfile):
     """
     Make sure HOMOS are correct
