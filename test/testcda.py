@@ -3,7 +3,7 @@ cclib (http://cclib.sf.net) is (c) 2006, the cclib development team
 and licensed under the LGPL (http://www.gnu.org/copyleft/lgpl.html).
 """
 
-__revision__ = "$Revision: 1 $"
+__revision__ = "$Rev$"
 
 import os
 import logging
@@ -62,9 +62,10 @@ class CDATest(unittest.TestCase):
         self.assertAlmostEqual(bdonation, 0.471, 3)
         self.assertAlmostEqual(repulsion, -0.334, 3)
 
-def suite():
-    return unittest.TestLoader().loadTestsFromTestCase(CDATest)
+
+tests = [CDATest]
+
         
 if __name__ == "__main__":
     printResults()
-    unittest.TextTestRunner(verbosity=2).run(suite())
+    unittest.TextTestRunner(verbosity=2).run(unittest.makeSuite(CDATest))
