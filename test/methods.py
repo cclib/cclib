@@ -1,7 +1,9 @@
+__revision__ = "$Rev$"
+
 import sys
 import unittest
 
-testmodules = ['testcda']
+testmodules = ['testMPA', 'testcda']
 
 def importname(modulename, name):
     """Import from a module whose name is determined at runtime.

@@ -94,7 +94,7 @@ class MPA(Population):
                 elif hasattr(self.parser, "fooverlaps"):
                     temp = numpy.dot(ci, self.parser.fooverlaps)
 
-                self.aoresults[spin][i] = numpy.dot(ci, temp).astype("d")
+                self.aoresults[spin][i] = numpy.multiply(ci, temp).astype("d")
 
                 step += 1
 

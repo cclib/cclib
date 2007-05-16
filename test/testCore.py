@@ -1,3 +1,5 @@
+__revision__ = "$Rev$"
+
 import os
 import unittest
 
@@ -23,8 +25,6 @@ class GenericCoreTest(bettertest.TestCase):
         for x in self.data.atomnos:
             ans.append(self.coredict[pt.element[x]])
         ans = numpy.array(ans, "i")
-        print ans
-        print self.data.coreelectrons
         self.assertArrayEquals(self.data.coreelectrons, ans)
 
 class GaussianCoreTest(GenericCoreTest):
