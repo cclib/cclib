@@ -8,6 +8,7 @@ __revision__ = "$Revision$"
 from density import Density
 from cspa import CSPA
 from mpa import MPA
+from lpa import LPA
 from opa import OPA
 from mbo import MBO
 from fragments import FragmentAnalysis
