@@ -1,3 +1,5 @@
+__revision__ = "$Revision$"
+
 import os
 import unittest
 import bettertest

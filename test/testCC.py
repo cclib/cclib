@@ -1,3 +1,5 @@
+__revision__ = "$Revision$"
+
 import os, unittest
 
 # If numpy is not installed, try to import Numeric instead.
