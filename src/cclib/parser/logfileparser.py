@@ -51,7 +51,7 @@ class Logfile(object):
         mocoeffs -- molecular orbital coefficients (list of arrays[2])
         moenergies -- molecular orbital energies (list of arrays[1], eV)
         mosyms -- orbital symmetries (list of lists)
-        mpenergies -- molecular electronic energies with M�ller-Plesset corrections (array[2], eV)
+        mpenergies -- molecular electronic energies with Moller-Plesset corrections (array[2], eV)
         mult -- multiplicity of the system (integer)
         natom -- number of atoms (integer)
         nbasis -- number of basis functions (integer)
@@ -211,12 +211,9 @@ class Logfile(object):
 
             self.updateprogress(inputfile, "Unsupported information", cupdate)
 
-            # Do not look at lines that consist of whitespace.
-            if line.strip() != "":
-
-                # This call should check if the line begins a section of extracted data.
-                # If it does, it parses some lines and sets the relevant attributes.
-                self.extract(inputfile, line)
+            # This call should check if the line begins a section of extracted data.
+            # If it does, it parses some lines and sets the relevant attributes.
+            self.extract(inputfile, line)
 
         # Close file object
         inputfile.close()
@@ -260,7 +257,6 @@ class Logfile(object):
 
         # Creating deafult coreelectrons array.
         if not hasattr(self, "coreelectrons"):
-            self.logger.info("Creating attribute coreelectrons[]")
             self.coreelectrons = numpy.zeros(self.natom, "i")
 
         # Delete temporary attributes (set during parsing and not in attrlist).
