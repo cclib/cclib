@@ -260,6 +260,13 @@ class Jaguar(logfileparser.Logfile):
             
             aonames = []
             lastatom = "X"
+            
+            readatombasis = False
+            if not hasattr(self, "atombasis"):
+                self.atombasis = []
+                for i in range(self.natom):
+                    self.atombasis.append([])
+                readatombasis = True
 
             offset = 0
 
@@ -284,6 +291,16 @@ class Jaguar(logfileparser.Logfile):
                     for i in range(self.nbasis):
 
                         info = line.split()
+                        
+                        # Fill atombasis only first time around.
+                        if readatombasis and k == 0:
+                            orbno = int(info[0])
+                            atom = info[1]
+                            if atom[1].isalpha():
+                                atomno = int(atom[2:])
+                            else:
+                                atomno = int(atom[1:])
+                            self.atombasis[atomno-1].append(orbno-1)
 
                         if not hasattr(self,"aonames"):
                             if lastatom != info[1]:
