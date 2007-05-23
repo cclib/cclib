@@ -29,6 +29,7 @@ class Logfile(object):
     Attributes:
         aonames -- atomic orbital names (list)
         aooverlaps -- atomic orbital overlap matrix (array[2])
+        atombasis -- indices of atomic orbitals on each atom (list of lists)
         atomcoords -- atom coordinates (array[3], angstroms)
         atomnos -- atomic numbers (array[1])
         charge -- net charge of the system (integer)
@@ -77,7 +78,8 @@ class Logfile(object):
         """
 
         # Names of all supported attributes.
-        self._attrlist = ['aonames', 'aooverlaps', 'atomcoords', 'atomnos',
+        self._attrlist = ['aonames', 'aooverlaps', 'atombasis',
+                          'atomcoords', 'atomnos',
                           'ccenergies', 'charge', 'coreelectrons',
                           'etenergies', 'etoscs', 'etrotats', 'etsecs', 'etsyms',
                           'fonames', 'fooverlaps', 'fragnames', 'frags',
@@ -91,6 +93,7 @@ class Logfile(object):
         # The expected types for all attributes.
         self._attrtypes = { "aonames":        list,
                             "aooverlaps":     numpy.ndarray,
+                            "atombasis":      list,
                             "atomcoords":     numpy.ndarray,
                             "atomnos":        numpy.ndarray,
                             "charge":         int,

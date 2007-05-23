@@ -588,6 +588,7 @@ class Gaussian(logfileparser.Logfile):
             else:
                 beta = False
                 self.aonames = []
+                self.atombasis = []
                 mocoeffs = [numpy.zeros((self.nmo, self.nbasis), "d")]
 
             base = 0
@@ -610,9 +611,13 @@ class Gaussian(logfileparser.Logfile):
                         # Changed below from :12 to :11 to deal with Elmar Neumann's example
                         parts = line[:11].split()
                         if len(parts) > 1: # New atom
+                            if i>0:
+                                self.atombasis.append(atombasis)
+                            atombasis = []
                             atomname = "%s%s" % (parts[2], parts[1])
                         orbital = line[11:20].strip()
                         self.aonames.append("%s_%s" % (atomname, orbital))
+                        atombasis.append(i)
 
                     part = line[21:].replace("D", "E").rstrip()
                     temp = [] 
@@ -622,6 +627,8 @@ class Gaussian(logfileparser.Logfile):
                         self.mocoeffs[1][base:base + len(part) / 10, i] = temp
                     else:
                         mocoeffs[0][base:base + len(part) / 10, i] = temp
+                if base == 0 and not beta: # Do the last update of atombasis
+                    self.atombasis.append(atombasis)
                 if self.popregular:
                     # We now have aonames, so no need to continue
                     break
