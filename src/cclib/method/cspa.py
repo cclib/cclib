@@ -18,7 +18,7 @@ from population import Population
 
 
 class CSPA(Population):
-    """The C-squared population analysis"""
+    """The C-squared population analysis."""
     def __init__(self, *args):
 
         # Call the __init__ method of the superclass
@@ -33,12 +33,12 @@ class CSPA(Population):
         return 'CSPA("%s")' % (self.parser)
     
     def calculate(self, indices=None, fupdate=0.05):
-        """Perform a C^2 population analysis given the results of a parser"""
+        """Perform a C^2 population analysis given the results of a parser."""
     
         if not self.parser.parsed:
             self.parser.parse()
 
-#do we have the needed info in the parser?
+        # Do we have the needed info in the parser?
         if not hasattr(self.parser, "mocoeffs"):
             self.logger.error("Missing mocoeffs")
             return False
@@ -48,13 +48,13 @@ class CSPA(Population):
         if not hasattr(self.parser, "homos"):
             self.logger.error("Missing homos")
             return False
-#end attributes check
+        # End attributes check.
 
         self.logger.info("Creating attribute aoresults: array[3]")
         unrestricted = (len(self.parser.mocoeffs)==2)
         nbasis = self.parser.nbasis
 
-        #determine number of steps, and whether process involves beta orbitals
+        # Determine number of steps, and whether process involves beta orbitals.
         self.aoresults = []
         alpha = len(self.parser.mocoeffs[0])
         self.aoresults.append(numpy.zeros([alpha, nbasis], "d"))
@@ -64,7 +64,7 @@ class CSPA(Population):
             self.aoresults.append(numpy.zeros([beta, nbasis], "d"))
             nstep += beta
 
-        #intialize progress if available
+        # Intialize progress if available.
         if self.progress:
             self.progress.initialize(nstep)
 
@@ -93,7 +93,6 @@ class CSPA(Population):
             self.logger.error("Error in partitioning results")
             return False
 
-#create array for mulliken charges
         self.logger.info("Creating fragcharges: array[1]")
         size = len(self.fragresults[0][0])
         self.fragcharges = numpy.zeros([size], "d")

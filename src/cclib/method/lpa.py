@@ -12,6 +12,9 @@ try:
     import numpy
 except ImportError:
     import Numeric as numpy
+    import LinearAlgebra as linalg
+    linalg.eig = lambda S: linalg.eigenvalues(S), linalg.eigenvectors(S)
+    numpy.linalg = linalg
 
 from population import Population
 
@@ -20,7 +23,7 @@ class LPA(Population):
     """The Lowdin population analysis"""
     def __init__(self, *args):
 
-        # Call the __init__ method of the superclass
+        # Call the __init__ method of the superclass.
         super(LPA, self).__init__(logname="LPA", *args)
 
     def __str__(self):
@@ -31,8 +34,13 @@ class LPA(Population):
         """Return a representation of the object."""
         return 'LPA("%s")' % (self.parser)
 
-    def calculate(self, indices=None, fupdate=0.05, x=0.5):
-        """Perform a Lowdin population analysis."""
+    def calculate(self, indices=None, x=0.5, fupdate=0.05):
+        """Perform a calculation of Lowdin population analysis.
+        
+        Keyword arguments:
+        indices - list of lists containing atomic orbital indices of fragments
+        x - overlap matrix exponent in wavefunxtion projection (x=0.5 for Lowdin)
+        """
 
         if not self.parser.parsed:
             self.parser.parse()
@@ -88,6 +96,7 @@ class LPA(Population):
                 # Find roots of diagonal elements, and transform backwards using eigevectors.
                 # We need two matrices here, one for S^x, another for S^(1-x).
                 # We don't need to invert U, since S is symmetrical.
+                # Note: this will probably break with Numeric now
                 eigenvalues, U = numpy.linalg.eig(S)
                 UI = U.transpose()
                 Sdiagroot1 = numpy.identity(len(S))*numpy.power(eigenvalues, x)

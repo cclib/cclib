@@ -17,11 +17,11 @@ from calculationmethod import Method
 
 
 class Population(Method):
-    """A base class for all population-type methods"""
+    """A base class for all population-type methods."""
     def __init__(self, parser, progress=None, \
                  loglevel=logging.INFO, logname="Log"):
 
-        # Call the __init__ method of the superclass
+        # Call the __init__ method of the superclass.
         super(Population, self).__init__(parser, progress, loglevel, logname)
         self.fragresults = None
         
@@ -33,31 +33,14 @@ class Population(Method):
         """Return a representation of the object."""
         return "Population"
     
-
-#create array for mulliken charges
-        self.logger.info("Creating atomcharges: array[1]")
-        size = len(self.atomresults[0][0])
-        self.atomcharges = numpy.zeros([size], "d")
-        
-        for spin in range(len(self.atomresults)):
-
-            for i in range(self.parser.homos[spin]+1):
-
-                temp = numpy.reshape(self.atomresults[spin][i], (size,))
-                self.atomcharges = numpy.add(self.atomcharges, temp)
-        
-        if not unrestricted:
-            self.atomcharges = numpy.multiply(self.atomcharges, 2)
-
-        return True
-
     def partition(self, indices=None):
 
         if not hasattr(self, "aoresults"):
             self.calculate()
 
         if not indices:
-#build list of groups of orbitals in each atom for atomresults
+
+            # Build list of groups of orbitals in each atom for atomresults.
             if hasattr(self.parser, "aonames"):
                 names = self.parser.aonames
             elif hasattr(self.parser, "fonames"):
@@ -83,7 +66,7 @@ class Population(Method):
         natoms = len(indices)
         nmocoeffs = len(self.aoresults[0])
         
-#build results numpy array[3]
+        # Build results numpy array[3].
         alpha = len(self.aoresults[0])
         results = []
         results.append(numpy.zeros([alpha, natoms], "d"))
@@ -92,12 +75,13 @@ class Population(Method):
             beta = len(self.aoresults[1])
             results.append(numpy.zeros([beta, natoms], "d"))
         
-#for each spin, splice numpy array at ao index, and add to correct result row
+        # For each spin, splice numpy array at ao index,
+        #   and add to correct result row.
         for spin in range(len(results)):
 
-            for i in range(natoms): #number of groups
+            for i in range(natoms): # Number of groups.
 
-                for j in range(len(indices[i])): #for each group
+                for j in range(len(indices[i])): # For each group.
                 
                     temp = self.aoresults[spin][:, indices[i][j]]
                     results[spin][:, i] = numpy.add(results[spin][:, i], temp)

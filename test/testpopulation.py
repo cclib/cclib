@@ -17,7 +17,7 @@ except ImportError:
 
 import bettertest
 from testall import getfile
-from cclib.method import MPA, CSPA
+from cclib.method import MPA, LPA, CSPA
 from cclib.parser import Gaussian
 
 
@@ -29,8 +29,21 @@ class GaussianMPATest(bettertest.TestCase):
         self.analysis.logger.setLevel(0)
         self.analysis.calculate()
     def testsum(self):
-        """Do the MPA charges sum up to the total formal charge?"""
-        formalcharge = sum(self.data.atomnos)
+        """Do the Mulliken charges sum up to the total formal charge?"""
+        formalcharge = sum(self.data.atomnos) - self.data.charge
+        totalpopulation = sum(self.analysis.fragcharges)
+        self.assertInside(totalpopulation, formalcharge, 0.001)
+
+class GaussianLPATest(bettertest.TestCase):
+    """Lowdin Population Analysis test"""
+    def setUp(self):
+        self.data = getfile(Gaussian, "basicGaussian03", "dvb_sp.out")
+        self.analysis = LPA(self.data)
+        self.analysis.logger.setLevel(0)
+        self.analysis.calculate()
+    def testsum(self):
+        """Do the Lowdin charges sum up to the total formal charge?"""
+        formalcharge = sum(self.data.atomnos) - self.data.charge
         totalpopulation = sum(self.analysis.fragcharges)
         self.assertInside(totalpopulation, formalcharge, 0.001)
 
@@ -43,12 +56,12 @@ class GaussianCSPATest(bettertest.TestCase):
         self.analysis.calculate()
     def testsum(self):
         """Do the CSPA charges sum up to the total formal charge?"""
-        formalcharge = sum(self.data.atomnos)
+        formalcharge = sum(self.data.atomnos) - self.data.charge
         totalpopulation = sum(self.analysis.fragcharges)
         self.assertInside(totalpopulation, formalcharge, 0.001)
 
 
-tests = [GaussianMPATest, GaussianCSPATest]
+tests = [GaussianMPATest, GaussianLPATest, GaussianCSPATest]
 
        
 if __name__ == "__main__":

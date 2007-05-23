@@ -5,7 +5,7 @@ and licensed under the LGPL (http://www.gnu.org/copyleft/lgpl.html).
 
 __revision__ = "$Revision$"
 
-import random # For sometimes running the progress updater
+import random # For sometimes running the progress updater.
 
 # If numpy is not installed, try to import Numeric instead.
 try:
@@ -20,7 +20,7 @@ class MPA(Population):
     """The Mulliken population analysis"""
     def __init__(self, *args):
 
-        # Call the __init__ method of the superclass
+        # Call the __init__ method of the superclass.
         super(MPA, self).__init__(logname="MPA", *args)
         
     def __str__(self):
@@ -37,7 +37,7 @@ class MPA(Population):
         if not self.parser.parsed:
             self.parser.parse()
 
-#do we have the needed info in the parser?
+        # Do we have the needed info in the parser?
         if not hasattr(self.parser,"mocoeffs"):
             self.logger.error("Missing mocoeffs")
             return False
@@ -54,12 +54,12 @@ class MPA(Population):
         if not hasattr(self.parser, "homos"):
             self.logger.error("Missing homos")
             return False
-#end attribute checks
+        # End attribute checks.
 
         unrestricted = (len(self.parser.mocoeffs) == 2)
         nbasis = self.parser.nbasis
 
-        #determine number of steps, and whether process involves beta orbitals
+        # Determine number of steps, and whether process involves beta orbitals.
         self.logger.info("Creating attribute aoresults: [array[2]]")
         alpha = len(self.parser.mocoeffs[0])
         self.aoresults = [ numpy.zeros([alpha, nbasis], "d") ]
@@ -70,7 +70,7 @@ class MPA(Population):
             self.aoresults.append(numpy.zeros([beta, nbasis], "d"))
             nstep += beta
 
-        #intialize progress if available
+        # Intialize progress if available.
         if self.progress:
             self.progress.initialize(nstep)
 
@@ -107,7 +107,7 @@ class MPA(Population):
             self.logger.error("Error in partitioning results")
             return False
 
-#create array for mulliken charges
+        # Create array for mulliken charges.
         self.logger.info("Creating fragcharges: array[1]")
         size = len(self.fragresults[0][0])
         self.fragcharges = numpy.zeros([size], "d")
