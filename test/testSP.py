@@ -54,6 +54,16 @@ class PCGamessSPTest(GenericSPTest):
     def setUp(self):
         self.data = data[2]
 
+    def testatombasis(self):
+        """Are the indices in atombasis the right amount and unique?"""
+        all = []
+        for atom in self.data.atombasis:
+            all += atom
+        # Test if there are as many indices as atomic orbitals.
+        self.assertEquals(len(all), self.data.nbasis)
+        # Check if all are different (every orbital indexed once).
+        self.assertEquals(len(set(all)), len(all))
+
 class ADFSPTest(GenericSPTest):
     def setUp(self):
         self.data = data[3]
@@ -88,6 +98,17 @@ class Jaguar60SPTest(GenericSPTest):
 class GamessUKSPTest(GenericSPTest):
     def setUp(self):
         self.data = data[6]
+
+    def testatombasis(self):
+        """Are the indices in atombasis the right amount and unique?"""
+        all = []
+        for atom in self.data.atombasis:
+            all += atom
+        # Test if there are as many indices as atomic orbitals.
+        self.assertEquals(len(all), self.data.nbasis)
+        # Check if all are different (every orbital indexed once).
+        self.assertEquals(len(set(all)), len(all))
+
 
 names = [ "Gaussian", "PCGamess", "GAMESS", "ADF", "Jaguar 4.2",
           "Jaguar 6.0", "GAMESS UK"]
