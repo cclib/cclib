@@ -430,8 +430,14 @@ class GAMESSUK(logfileparser.Logfile):
                 aonames = []
             minus = inputfile.next()
 
-            
             mocoeffs = numpy.zeros( (self.nmo, self.nbasis), "d")
+            readatombasis = False
+            if not hasattr(self, "atombasis"):
+                self.atombasis = []
+                for i in range(self.natom):
+                    self.atombasis.append([])
+                readatombasis = True
+
             blank = inputfile.next()
             blank = inputfile.next()
             evalues = inputfile.next()
@@ -448,6 +454,11 @@ class GAMESSUK(logfileparser.Logfile):
                 blank = inputfile.next()
                 for basis in range(self.nbasis):
                     line = inputfile.next()
+                    # Fill atombasis only first time around.
+                    if readatombasis:
+                        orbno = int(line.split()[0])-1
+                        atomno = int(line.split()[1])-1
+                        self.atombasis[atomno].append(orbno)
                     if not self.aonames:
                         pg = p.match(line[:18].strip()).groups()
                         atomname = "%s%s%s" % (pg[1][0].upper(), pg[1][1:], pg[0])
@@ -461,6 +472,8 @@ class GAMESSUK(logfileparser.Logfile):
                         aonames.append(name) 
                     temp = map(float, line[19:].split())
                     mocoeffs[mo:(mo+len(temp)), basis] = temp
+                # Fill atombasis only first time around.
+                readatombasis = False
                 if not self.aonames:
                     self.aonames = aonames
 
