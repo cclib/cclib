@@ -7,6 +7,7 @@ from cclib.parser import ADF, GAMESS, Gaussian, Jaguar, GAMESSUK
 
 class GenericSPTest(unittest.TestCase):
     """Restricted single point calculations with MO coeffs and overlap info."""
+    nbasisdict = {1:1, 6:5} # STO-3G, H has 1, C has 3
     def testdimaooverlaps(self):
         """Are the dims of the overlap matrix consistent with nbasis?"""
         self.assertEquals(self.data.aooverlaps.shape,(self.data.nbasis,self.data.nbasis))
@@ -22,47 +23,29 @@ class GenericSPTest(unittest.TestCase):
         self.assertEquals(self.data.mocoeffs[0].shape,
                           (self.data.nmo, self.data.nbasis))
 
-class GaussianSPTest(GenericSPTest):
-    def setUp(self):
-        self.data = data[0]
-
     def testatombasis(self):
         """Are the indices in atombasis the right amount and unique?"""
         all = []
-        for atom in self.data.atombasis:
+        for i,atom in enumerate(self.data.atombasis):
+            self.assertEquals(len(atom), self.nbasisdict[self.data.atomnos[i]])
             all += atom
         # Test if there are as many indices as atomic orbitals.
         self.assertEquals(len(all), self.data.nbasis)
         # Check if all are different (every orbital indexed once).
         self.assertEquals(len(set(all)), len(all))
+        
+
+class GaussianSPTest(GenericSPTest):
+    def setUp(self):
+        self.data = data[0]
 
 class GamessUSSPTest(GenericSPTest):
     def setUp(self):
         self.data = data[1]
 
-    def testatombasis(self):
-        """Are the indices in atombasis the right amount and unique?"""
-        all = []
-        for atom in self.data.atombasis:
-            all += atom
-        # Test if there are as many indices as atomic orbitals.
-        self.assertEquals(len(all), self.data.nbasis)
-        # Check if all are different (every orbital indexed once).
-        self.assertEquals(len(set(all)), len(all))
-
 class PCGamessSPTest(GenericSPTest):
     def setUp(self):
         self.data = data[2]
-
-    def testatombasis(self):
-        """Are the indices in atombasis the right amount and unique?"""
-        all = []
-        for atom in self.data.atombasis:
-            all += atom
-        # Test if there are as many indices as atomic orbitals.
-        self.assertEquals(len(all), self.data.nbasis)
-        # Check if all are different (every orbital indexed once).
-        self.assertEquals(len(set(all)), len(all))
 
 class ADFSPTest(GenericSPTest):
     def setUp(self):
@@ -81,33 +64,19 @@ class Jaguar42SPTest(GenericSPTest):
         """Are the dimensions of mocoeffs equal to 1 x nmo x nbasis? PASS"""
         self.assertEquals(1, 1)
 
+    def testatombasis(self):
+        """Are the indices in atombasis the right amount and unique? PASS"""
+       
+
 class Jaguar60SPTest(GenericSPTest):
+    nbasisdict = {1:5, 6:15} # 6-31G(d,p)
     def setUp(self):
         self.data = data[5]
 
-    def testatombasis(self):
-        """Are the indices in atombasis the right amount and unique?"""
-        all = []
-        for atom in self.data.atombasis:
-            all += atom
-        # Test if there are as many indices as atomic orbitals.
-        self.assertEquals(len(all), self.data.nbasis)
-        # Check if all are different (every orbital indexed once).
-        self.assertEquals(len(set(all)), len(all))
 
 class GamessUKSPTest(GenericSPTest):
     def setUp(self):
         self.data = data[6]
-
-    def testatombasis(self):
-        """Are the indices in atombasis the right amount and unique?"""
-        all = []
-        for atom in self.data.atombasis:
-            all += atom
-        # Test if there are as many indices as atomic orbitals.
-        self.assertEquals(len(all), self.data.nbasis)
-        # Check if all are different (every orbital indexed once).
-        self.assertEquals(len(set(all)), len(all))
 
 
 names = [ "Gaussian", "PCGamess", "GAMESS", "ADF", "Jaguar 4.2",
