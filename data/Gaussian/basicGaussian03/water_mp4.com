@@ -1,4 +1,3 @@
-%chk=mp2.chk
 #P MP4/STO-3G
 
 Water
