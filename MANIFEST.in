@@ -1,0 +1,10 @@
+include ANNOUNCE CHANGELOG INSTALL LICENSE README THANKS
+include logo_for_ccl.svg
+include downloadwiki.py
+include data/*
+include data/*/basic*/*
+recursive-include src/cclib *.py
+recursive-include test *.py
+graft src/scripts
+prune build
+prune dist

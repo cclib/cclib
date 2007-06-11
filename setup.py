@@ -22,6 +22,8 @@ Topic :: Scientific/Engineering :: Chemistry
 Topic :: Software Development :: Libraries :: Python Modules
 """
 
+programs = ['ADF', 'GAMESS', 'GAMESS-UK', 'Gaussian', 'Jaguar']
+
 def setup_cclib():
 
     # If setuptools is installed, use the more advanced setup function.
@@ -29,6 +31,25 @@ def setup_cclib():
         from setuptools import setup
     except ImportError:
         from distutils.core import setup
+
+
+    # Setup the list of packages.
+    cclib_packages = ['cclib',
+                      'cclib.parser', 'cclib.progress', 'cclib.method', 'cclib.bridge',
+                      'cclib.test']
+
+    # Setup the list of data files.
+    import os
+    data_prefix = 'lib/python2.5/site-packages/cclib/data'
+    cclib_datafiles = [(data_prefix, ['data/regressionfiles.txt', 'data/wget.sh'])]
+    for program in programs:
+        data_dirs = os.listdir('data/%s' %program)
+        for data_dir in data_dirs:
+            if data_dir[:5] == 'basic':
+                dest = '%s/%s/%s' %(data_prefix, program, data_dir)
+                path = 'data/%s/%s' %(program, data_dir)
+                newfiles = ['%s/%s' %(path,fname) for fname in os.listdir(path) if fname[0] != '.']
+                cclib_datafiles.append((dest, newfiles))
 
     setup(
         name = "cclib",
@@ -44,8 +65,9 @@ def setup_cclib():
         classifiers = filter(None, classifiers.split("\n")),
         platforms = ["Any."],
         scripts = ["src/scripts/ccget", "src/scripts/cda"],
-        package_dir = {'cclib':'src/cclib'},
-        packages = ['cclib', 'cclib.parser', 'cclib.progress', 'cclib.method', 'cclib.bridge'] )
+        package_dir = {'cclib':'src/cclib', 'cclib.test':'test'},
+        packages = cclib_packages,
+        data_files = cclib_datafiles )
 
 if __name__ == '__main__':
     setup_cclib()
