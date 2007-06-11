@@ -5,7 +5,6 @@ import unittest
 
 from cclib.parser import ADF, GAMESS, Gaussian, Jaguar, GAMESSUK
 
-
 def getfile(parser,*location):
     """Returns a parsed logfile."""
     if parser.__name__ in ["GAMESS", "ADF", "Jaguar", "Gaussian"]:
@@ -45,11 +44,20 @@ def importName(modulename, name):
     return getattr(module, name)
     
 
-if __name__=="__main__":
+test_modules = [ "testSP", "testSPun", "testBasis", "testCore",
+                 "testMP", "testCC", "testCI", "testTD",
+                 "testGeoOpt", "testvib" ]
+
+def testall():
+    # Make sure we are in the test directory of this script,
+    #   so that getfile() can access the data files.
+    curdir = os.path.abspath(os.curdir)
+    destdir = os.path.dirname(__file__)
+    if destdir:
+        os.chdir(destdir)
     perpackage = {}
     errors = []
-    for module in [ "testGeoOpt", "testSP", "testSPun", "testBasis",
-                    "testvib", "testMP", "testCI", "testCore" ]:
+    for module in test_modules:
         try:
             names = importName(module, "names") # i.e. from testGeoOpt import names
         except: # Parsing failed
@@ -83,4 +91,11 @@ if __name__=="__main__":
         print "\n".join(errors)
 
     print "\n\n*** Visual tests ***"
-    visualtests()    
+    visualtests()
+    
+    # Return to the directory we started from.
+    if destdir:
+        os.chdir(curdir)
+
+if __name__ == "__main__":
+    testall()

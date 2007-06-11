@@ -9,5 +9,10 @@ __version__ = "0.7"
 import parser
 import progress
 import method
+import bridge
 
-
+# The test module can be imported if it was installed with cclib.
+try:
+    import test
+except:
+    pass
