@@ -2,12 +2,11 @@ __revision__ = "$Revision$"
 
 import os, unittest
 
-from testall import getfile
-from cclib.parser import ADF, GAMESS, Gaussian, Jaguar, GAMESSUK
 import bettertest
+from testall import gettestdata
 
 
-class GenericVibTest(bettertest.TestCase):
+class GenericIRTest(bettertest.TestCase):
     """Vibrational frequency calculations."""
 
     def testvibdisps(self):
@@ -37,52 +36,52 @@ class GenericVibTest(bettertest.TestCase):
 ##        self.assertEqual(max(abs(Cvibdisps).flat), 1.0)
         
 
-class GaussianVibTest(GenericVibTest):
+class ADFIRTest(GenericIRTest):
     def setUp(self):
-        self.data = data[0]
+        self.data = testdata[self.__class__.__name__]["data"]
+    
+class GamessUKIRTest(GenericIRTest):
+    def setUp(self):
+        self.data = testdata[self.__class__.__name__]["data"]
+
+class GamessUSIRTest(GenericIRTest):
+    def setUp(self):
+        self.data = testdata[self.__class__.__name__]["data"]
+
+class GaussianIRTest(GenericIRTest):
+    def setUp(self):
+        self.data = testdata[self.__class__.__name__]["data"]
 
     def testvibsyms(self):
         """Is the length of vibsyms correct?"""
         numvib = 3*len(self.data.atomnos) - 6        
         self.assertEqual(len(self.data.vibsyms), numvib)
        
-class GamessUSVibTest(GenericVibTest):
+class Jaguar42IRTest(GenericIRTest):
     def setUp(self):
-        self.data = data[1]
+        self.data = testdata[self.__class__.__name__]["data"]
 
-class PCGamessVibTest(GenericVibTest):
+    def testvibsyms(self):
+            """Is the length of vibsyms correct?"""
+            numvib = 3*len(self.data.atomnos) - 6        
+            self.assertEqual(len(self.data.vibsyms), numvib)
+
+class Jaguar65IRTest(GenericIRTest):
     def setUp(self):
-        self.data = data[2]
+        self.data = testdata[self.__class__.__name__]["data"]
+
+    def testvibsyms(self):
+            """Is the length of vibsyms correct?"""
+            numvib = 3*len(self.data.atomnos) - 6        
+            self.assertEqual(len(self.data.vibsyms), numvib)
+
+class PCGamessIRTest(GenericIRTest):
+    def setUp(self):
+        self.data = testdata[self.__class__.__name__]["data"]
 
     def testirintens(self):
         """Is the maximum IR intensity 135 +/- 5 km mol-1?"""
         self.assertInside(max(self.data.vibirs), 135, 5)     
-
-class ADFVibTest(GenericVibTest):
-    def setUp(self):
-        self.data = data[3]
-    
-class Jaguar42VibTest(GenericVibTest):
-    def setUp(self):
-        self.data = data[4]
-
-    def testvibsyms(self):
-            """Is the length of vibsyms correct?"""
-            numvib = 3*len(self.data.atomnos) - 6        
-            self.assertEqual(len(self.data.vibsyms), numvib)
-
-class Jaguar65VibTest(GenericVibTest):
-    def setUp(self):
-        self.data = data[4]
-
-    def testvibsyms(self):
-            """Is the length of vibsyms correct?"""
-            numvib = 3*len(self.data.atomnos) - 6        
-            self.assertEqual(len(self.data.vibsyms), numvib)
-
-class GamessUKVibTest(GenericVibTest):
-    def setUp(self):
-        self.data = data[6]
 
 class GenericRamanTest(bettertest.TestCase):
     """Raman calculations."""
@@ -96,48 +95,32 @@ class GenericRamanTest(bettertest.TestCase):
         """Is the maximum Raman intensity 575 +/- 5 A**4/amu?"""
         self.assertInside(max(self.data.vibramans), 575, 5)
 
+class GamessUKRamanTest(GenericRamanTest):
+    def setUp(self):
+        self.data = testdata[self.__class__.__name__]["data"]
+
 class GaussianRamanTest(GenericRamanTest):
     def setUp(self):
-        self.data = data[7]
+        self.data = testdata[self.__class__.__name__]["data"]
 
     def testramanintens(self):
         """Is the maximum Raman intensity 1066 +/- 5 A**4/amu?"""
         self.assertInside(max(self.data.vibramans), 1066, 5)
 
-class GamessUKRamanTest(GenericRamanTest):
-    def setUp(self):
-        self.data = data[8]
-
 class PCGamessRamanTest(GenericRamanTest):
     def setUp(self):
-        self.data = data[9]
+        self.data = testdata[self.__class__.__name__]["data"]
 
-names = [ "Gaussian", "PCGamess", "GAMESS", "ADF", "Jaguar 4.2",
-          "Jaguar 6.5", "GAMESS UK",
-          "Gaussian", "GAMESS UK", "PCGamess"]
-tests = [ GaussianVibTest, PCGamessVibTest,
-          GamessUSVibTest, ADFVibTest,
-          Jaguar42VibTest, Jaguar65VibTest,
-          GamessUKVibTest,
-          GaussianRamanTest, GamessUKRamanTest,
-          PCGamessRamanTest ]
-data = [getfile(Gaussian, "basicGaussian03","dvb_ir.out"),
-        getfile(GAMESS, "basicGAMESS-US","dvb_ir.out"),
-        getfile(GAMESS, "basicPCGAMESS","dvb_ir.out"),
-        getfile(ADF, "basicADF2004.01","dvb_ir.adfout"),
-        getfile(Jaguar, "basicJaguar4.2", "dvb_ir.out"),
-        getfile(Jaguar, "basicJaguar6.5", "dvb_ir.out"),
-        getfile(GAMESSUK, "basicGAMESS-UK", "dvb_ir.out"),
-        getfile(Gaussian, "basicGaussian03", "dvb_raman.out"),
-        getfile(GAMESSUK, "basicGAMESS-UK","dvb_raman.out"),
-        getfile(GAMESS, "basicPCGAMESS","dvb_raman.out"),
-        ]
-              
+
+# Load test data using information in file.
+testdata = gettestdata(module="vib")
+
 if __name__=="__main__":
     total = errors = failures = 0
-
-    for name,test in zip(names,tests):
-        print "\n**** Testing %s vibrations ****" % name
+    for test in testdata:
+        module = testdata[test]["module"]
+        print "\n**** test%s for %s ****" %(module, '/'.join(testdata[test]["location"]))
+        test = eval(test)
         myunittest = unittest.makeSuite(test)
         a = unittest.TextTestRunner(verbosity=2).run(myunittest)
         total += a.testsRun

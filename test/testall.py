@@ -5,6 +5,12 @@ import unittest
 
 from cclib.parser import ADF, GAMESS, Gaussian, Jaguar, GAMESSUK
 
+
+test_modules = [ "testSP", "testSPun", "testBasis", "testCore",
+                 "testMP", "testCC", "testCI", "testTD",
+                 "testGeoOpt", "testvib" ]
+
+
 def getfile(parser,*location):
     """Returns a parsed logfile."""
     if parser.__name__ in ["GAMESS", "ADF", "Jaguar", "Gaussian"]:
@@ -15,6 +21,23 @@ def getfile(parser,*location):
     logfile.logger.setLevel(0)
     logfile.parse()
     return logfile
+
+def gettestdata(module=None):
+    """Returns a dict of test files from a given module."""
+    lines = open('testdata').readlines()
+    lines = [line.split() for line in lines if line.strip()]
+    if module:
+        lines = [line for line in lines if line[0] == module]
+    testdata = {}
+    for line in lines:
+        test = {}
+        test["module"] = line[0]
+        test["parser"] = line[1]
+        test["location"] = line[3:]
+        test["data"] = getfile(eval(line[1]), *line[3:])
+        testclass = line[2]
+        testdata[testclass] = test
+    return testdata
 
 def visualtests():
     """These are not formal tests -- but they should be eyeballed."""
@@ -44,10 +67,6 @@ def importName(modulename, name):
     return getattr(module, name)
     
 
-test_modules = [ "testSP", "testSPun", "testBasis", "testCore",
-                 "testMP", "testCC", "testCI", "testTD",
-                 "testGeoOpt", "testvib" ]
-
 def testall():
     # Make sure we are in the test directory of this script,
     #   so that getfile() can access the data files.
@@ -59,19 +78,25 @@ def testall():
     errors = []
     for module in test_modules:
         try:
-            names = importName(module, "names") # i.e. from testGeoOpt import names
+            testdata = importName(module, "testdata") # i.e. from testGeoOpt import testdata
         except: # Parsing failed
-            errors.append("ERROR: no tests run for %s as parsing failed." % module)
+            errors.append("ERROR: no tests run for %s as parsing failed." %module)
         else:
-            tests = importName(module, "tests") # i.e. from testGeoOpt import tests
-            for name,test in zip(names,tests):
-                print "\n**** Testing %s (%s) ****" % (name, module)
-                myunittest = unittest.makeSuite(test)
-                a = unittest.TextTestRunner(verbosity=2).run(myunittest)
-                l = perpackage.setdefault(name, [0, 0, 0])
-                l[0] += a.testsRun
-                l[1] += len(a.errors)
-                l[2] += len(a.failures)
+            for name in testdata:
+                path = '/'.join(testdata[name]["location"])
+                program = testdata[name]["location"][0][5:]
+                print "\n**** test%s for %s ****" %(module, path)
+                try:
+                    test = importName(module, name)
+                except:
+                    error.append("ERROR: could not import %s from %s." %(name, module))
+                else:
+                    myunittest = unittest.makeSuite(test)
+                    a = unittest.TextTestRunner(verbosity=2).run(myunittest)
+                    l = perpackage.setdefault(program, [0, 0, 0])
+                    l[0] += a.testsRun
+                    l[1] += len(a.errors)
+                    l[2] += len(a.failures)
 
     print "\n\n********* SUMMARY PER PACKAGE ****************"
     names = perpackage.keys()

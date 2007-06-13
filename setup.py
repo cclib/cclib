@@ -40,8 +40,12 @@ def setup_cclib():
 
     # Setup the list of data files.
     import os
-    data_prefix = 'lib/python2.5/site-packages/cclib/data'
-    cclib_datafiles = [(data_prefix, ['data/regressionfiles.txt', 'data/wget.sh'])]
+    cclib_prefix = 'lib/python2.5/site-packages/cclib'
+    test_prefix = cclib_prefix + '/test'
+    data_prefix = cclib_prefix + '/data'
+    cclib_datafiles = [ (cclib_prefix, ['ANNOUNCE', 'CHANGELOG', 'INSTALL', 'LICENSE', 'README', 'THANKS']),
+                        (test_prefix, ['test/testdata']),
+                        (data_prefix, ['data/regressionfiles.txt', 'data/wget.sh'])]
     for program in programs:
         data_dirs = os.listdir('data/%s' %program)
         for data_dir in data_dirs:

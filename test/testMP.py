@@ -8,13 +8,14 @@ try:
 except ImportError:
     import Numeric as numpy
 
-from testall import getfile
-from cclib.parser import ADF, GAMESS, Gaussian, Jaguar, GAMESSUK
 import bettertest
+from testall import gettestdata
+
 
 class GenericMP2Test(bettertest.TestCase):
     """MP2 calculations."""
     level = 2
+    
     def testsizeandshape(self):
         """(MP2) Are the dimensions of mpenergies correct?"""
         self.assertEqual(self.data.mpenergies.shape, (len(self.data.scfenergies),
@@ -31,6 +32,7 @@ class GenericMP2Test(bettertest.TestCase):
 class GenericMP3Test(GenericMP2Test):
     """MP3 calculations."""
     level = 3
+    
     def testsizeandshape(self):
         """(MP3) Are the dimensions of mpenergies correct?"""
         super(GenericMP3Test,self).testsizeandshape()
@@ -41,6 +43,7 @@ class GenericMP3Test(GenericMP2Test):
 class GenericMP4SDQTest(GenericMP2Test):
     """MP4(SDQ) calculations."""
     level = 4
+    
     def testsizeandshape(self):
         """(MP4-SDQ) Are the dimensions of mpenergies correct?"""
         super(GenericMP4SDQTest,self).testsizeandshape()
@@ -51,6 +54,7 @@ class GenericMP4SDQTest(GenericMP2Test):
 class GenericMP4SDTQTest(GenericMP2Test):
     """MP4(SDTQ) calculations."""
     level = 4
+    
     def testsizeandshape(self):
         """(MP4-SDTQ) Are the dimensions of mpenergies correct?"""
         super(GenericMP4SDTQTest,self).testsizeandshape()
@@ -61,6 +65,7 @@ class GenericMP4SDTQTest(GenericMP2Test):
 class GenericMP5Test(GenericMP2Test):
     """MP5 calculations."""
     level = 5
+    
     def testsizeandshape(self):
         """(MP5) Are the dimensions of mpenergies correct?"""
         super(GenericMP5Test,self).testsizeandshape()
@@ -68,83 +73,64 @@ class GenericMP5Test(GenericMP2Test):
         """(MP5) Are Moller-Plesset corrections negative?"""
         super(GenericMP5Test,self).testchange()
 
-class GAMESSMP2Test(GenericMP2Test):
-    def setUp(self):
-        self.data = data[0]
-        
-class GaussianMP2Test(GenericMP2Test):
-    def setUp(self):
-        self.data = data[1]
-        
-class GaussianMP3Test(GenericMP3Test):
-    def setUp(self):
-        self.data = data[2]
-
-class GaussianMP4SDTQTest(GenericMP4SDTQTest):
-    def setUp(self):
-        self.data = data[3]
-
-class GaussianMP5Test(GenericMP5Test):
-    def setUp(self):
-        self.data = data[4]
-
 class GAMESSUKMP2Test(GenericMP2Test):
     def setUp(self):
-        self.data = data[5]
+        self.data = testdata[self.__class__.__name__]["data"]
 
 class GAMESSUKMP3Test(GenericMP3Test):
     def setUp(self):
-        self.data = data[6]
+        self.data = testdata[self.__class__.__name__]["data"]
 
-class PCGAMESSMP2Test(GenericMP2Test):
+class GAMESSUSMP2Test(GenericMP2Test):
     def setUp(self):
-        self.data = data[7]
+        self.data = testdata[self.__class__.__name__]["data"]
+        
+class GaussianMP2Test(GenericMP2Test):
+    def setUp(self):
+        self.data = testdata[self.__class__.__name__]["data"]
+        
+class GaussianMP3Test(GenericMP3Test):
+    def setUp(self):
+        self.data = testdata[self.__class__.__name__]["data"]
 
-class PCGAMESSMP3Test(GenericMP3Test):
+class GaussianMP4SDTQTest(GenericMP4SDTQTest):
     def setUp(self):
-        self.data = data[8]
+        self.data = testdata[self.__class__.__name__]["data"]
 
-class PCGAMESSMP4SDQTest(GenericMP4SDQTest):
+class GaussianMP5Test(GenericMP5Test):
     def setUp(self):
-        self.data = data[9]
-
-class PCGAMESSMP4SDTQTest(GenericMP4SDTQTest):
-    def setUp(self):
-        self.data = data[10]
+        self.data = testdata[self.__class__.__name__]["data"]
 
 class Jaguar65LMP2Test(GenericMP2Test):
     def setUp(self):
-        self.data = data[11]
+        self.data = testdata[self.__class__.__name__]["data"]
 
-names = [ "GAMESS",
-          "Gaussian", "Gaussian", "Gaussian", "Gaussian",
-          "GAMESS UK", "GAMESS UK",
-          "PCGamess", "PCGamess", "PCGamess", "PCGamess",
-          "Jaguar 6.5" ]
-tests = [ GAMESSMP2Test, 
-          GaussianMP2Test, GaussianMP3Test, GaussianMP4SDTQTest, GaussianMP5Test,
-          GAMESSUKMP2Test, GAMESSUKMP3Test, PCGAMESSMP2Test, PCGAMESSMP3Test,
-          PCGAMESSMP4SDQTest, PCGAMESSMP4SDTQTest,
-          Jaguar65LMP2Test ]
-data = [getfile(GAMESS, "basicGAMESS-US", "water_mp2.out"),
-        getfile(Gaussian, "basicGaussian03","water_mp2.log"),
-        getfile(Gaussian, "basicGaussian03","water_mp3.log"),
-        getfile(Gaussian, "basicGaussian03","water_mp4.log"),
-        getfile(Gaussian, "basicGaussian03","water_mp5.log"),
-        getfile(GAMESSUK, "basicGAMESS-UK","water_mp2.out"),
-        getfile(GAMESSUK, "basicGAMESS-UK","water_mp3.out"),
-        getfile(GAMESS, "basicPCGAMESS", "water_mp2.out"),
-        getfile(GAMESS, "basicPCGAMESS", "water_mp3.out"),
-        getfile(GAMESS, "basicPCGAMESS", "water_mp4.out"),
-        getfile(GAMESS, "basicPCGAMESS", "water_mp4_sdtq.out"),
-        getfile(Jaguar, "basicJaguar6.5", "water_lmp2.out"),
-        ]
+class PCGAMESSMP2Test(GenericMP2Test):
+    def setUp(self):
+        self.data = testdata[self.__class__.__name__]["data"]
+
+class PCGAMESSMP3Test(GenericMP3Test):
+    def setUp(self):
+        self.data = testdata[self.__class__.__name__]["data"]
+
+class PCGAMESSMP4SDQTest(GenericMP4SDQTest):
+    def setUp(self):
+        self.data = testdata[self.__class__.__name__]["data"]
+
+class PCGAMESSMP4SDTQTest(GenericMP4SDTQTest):
+    def setUp(self):
+        self.data = testdata[self.__class__.__name__]["data"]
+
+
+# Load test data using information in file.
+testdata = gettestdata(module="MP")
               
 if __name__=="__main__":
     total = errors = failures = 0
-
-    for name,test in zip(names,tests):
-        print "\n**** Testing %s ****" % name
+    for test in testdata:
+        module = testdata[test]["module"]
+        print "\n**** test%s for %s ****" %(module, '/'.join(testdata[test]["location"]))
+        test = eval(test)
         myunittest = unittest.makeSuite(test)
         a = unittest.TextTestRunner(verbosity=2).run(myunittest)
         total += a.testsRun

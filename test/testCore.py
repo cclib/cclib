@@ -9,11 +9,11 @@ try:
 except ImportError:
     import Numeric as numpy
 
-from testall import getfile
-from cclib.parser import ADF, GAMESS, Gaussian, Jaguar, GAMESSUK
 from cclib.parser.utils import PeriodicTable
 
 import bettertest
+from testall import gettestdata
+
 
 class GenericCoreTest(bettertest.TestCase):
     """Core electrons"""
@@ -27,38 +27,33 @@ class GenericCoreTest(bettertest.TestCase):
         ans = numpy.array(ans, "i")
         self.assertArrayEquals(self.data.coreelectrons, ans)
 
-class GaussianCoreTest(GenericCoreTest):
-    def setUp(self):
-        self.data = data[0]
-
 class ADFCoreTest(GenericCoreTest):
     def setUp(self):
-        self.data = data[1]
+        self.data = testdata[self.__class__.__name__]["data"]
         self.coredict = {'Mo': 28, 'O':0, 'Cl':0}
 
 class GAMESSUKCoreTest(GenericCoreTest):
     def setUp(self):
-        self.data = data[2]
+        self.data = testdata[self.__class__.__name__]["data"]
 
-class GAMESSCoreTest(GenericCoreTest):
+class GAMESSUSCoreTest(GenericCoreTest):
     def setUp(self):
-        self.data = data[3]
+        self.data = testdata[self.__class__.__name__]["data"]
+
+class GaussianCoreTest(GenericCoreTest):
+    def setUp(self):
+        self.data = testdata[self.__class__.__name__]["data"]
 
 
-names = [ "Gaussian", "ADF", "GAMESS UK", "GAMESS" ]
-tests = [ GaussianCoreTest, ADFCoreTest, GAMESSUKCoreTest,
-          GAMESSCoreTest ]
-data = [getfile(Gaussian, "basicGaussian03", "Mo4OCl4-sp.log"),
-        getfile(ADF, "basicADF2004.01", "MoOCl4-sp.adfout"),
-        getfile(GAMESSUK, "basicGAMESS-UK", "MoOCl4-sp.out"),
-        getfile(GAMESS, "basicGAMESS-US", "MoOCl4-sp.out"),        
-        ]
-              
+ # Load test data using information in file.
+testdata = gettestdata(module="Core")
+           
 if __name__=="__main__":
     total = errors = failures = 0
-
-    for name,test in zip(names,tests):
-        print "\n**** Testing %s ****" % name
+    for test in testdata:
+        module = testdata[test]["module"]
+        print "\n**** test%s for %s ****" %(module, '/'.join(testdata[test]["location"]))
+        test = eval(test)
         myunittest = unittest.makeSuite(test)
         a = unittest.TextTestRunner(verbosity=2).run(myunittest)
         total += a.testsRun

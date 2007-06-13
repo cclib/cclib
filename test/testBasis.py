@@ -2,12 +2,13 @@ __revision__ = "$Revision$"
 
 import os, unittest
 
-from testall import getfile
-from cclib.parser import ADF, GAMESS, Gaussian, GAMESSUK
+import bettertest
+from testall import gettestdata
 
 
-class GenericBasisTest(unittest.TestCase):
-    """Some type of calculation so long as it has basis set information."""
+class GenericBasisTest(bettertest.TestCase):
+    """Any type of calculation that has basis set information."""
+
     def testgbasis(self):
         """Is gbasis the right length?"""
         self.assertEquals(self.data.natom, len(self.data.gbasis))
@@ -44,36 +45,32 @@ class GenericBasisTest(unittest.TestCase):
                 self.assertAlmostEqual(s_coeffs[0][1], -0.1000, 4)
                 self.assertAlmostEqual(p_coeffs[0][1], 0.1559, 4)
 
-class GaussianBasisTest(GenericBasisTest):
+class GamessUKBasisTest(GenericBasisTest):
     def setUp(self):
-        self.data = data[0]
+        self.data = testdata[self.__class__.__name__]["data"]
 
 class GamessUSBasisTest(GenericBasisTest):
     def setUp(self):
-        self.data = data[1]
+        self.data = testdata[self.__class__.__name__]["data"]
+
+class GaussianBasisTest(GenericBasisTest):
+    def setUp(self):
+        self.data = testdata[self.__class__.__name__]["data"]
 
 class PCGamessBasisTest(GenericBasisTest):
     def setUp(self):
-        self.data = data[2]
+        self.data = testdata[self.__class__.__name__]["data"]
 
-class GamessUKBasisTest(GenericBasisTest):
-    def setUp(self):
-        self.data = data[3]
 
-names = [ "Gaussian", "PCGamess", "GAMESS", "GAMESS UK"]
-tests = [ GaussianBasisTest, PCGamessBasisTest,
-          GamessUSBasisTest, 
-          GamessUKBasisTest]
-data = [getfile(Gaussian, "basicGaussian03","dvb_sp_basis.log"),
-        getfile(GAMESS, "basicGAMESS-US","dvb_sp.out"),
-        getfile(GAMESS, "basicPCGAMESS","dvb_sp.out"),
-        getfile(GAMESSUK, "basicGAMESS-UK", "dvb_sp.out")]
+# Load test data using information in file.
+testdata = gettestdata(module="Basis")
               
 if __name__=="__main__":
     total = errors = failures = 0
-
-    for name,test in zip(names,tests):
-        print "\n**** Testing %s for Gbasis ****" % name
+    for test in testdata:
+        module = testdata[test]["module"]
+        print "\n**** test%s for %s ****" %(module, '/'.join(testdata[test]["location"]))
+        test = eval(test)
         myunittest = unittest.makeSuite(test)
         a = unittest.TextTestRunner(verbosity=2).run(myunittest)
         total += a.testsRun

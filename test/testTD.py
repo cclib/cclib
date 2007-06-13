@@ -8,9 +8,8 @@ try:
 except ImportError:
     import Numeric as numpy
 
-from testall import getfile
-from cclib.parser import ADF, GAMESS, Gaussian, Jaguar, GAMESSUK
 import bettertest
+from testall import gettestdata
 
 
 class GenericTDTest(bettertest.TestCase):
@@ -37,7 +36,7 @@ class GenericTDTest(bettertest.TestCase):
 
 class GaussianTDDFTTest(GenericTDTest):
     def setUp(self):
-        self.data = data[0]
+        self.data = testdata[self.__class__.__name__]["data"]
         self.number = 24
     
     def testsyms(self):
@@ -47,15 +46,16 @@ class GaussianTDDFTTest(GenericTDTest):
         self.assertEqual(len(singlets), self.number/2)
         self.assertEqual(len(triplets), self.number/2)
 
-names = [ "Gaussian" ]
-tests = [ GaussianTDDFTTest ]
-data = [ getfile(Gaussian, "basicGaussian03","CO_TD_delta.log") ]
+
+# Load test data using information in file.
+testdata = gettestdata(module="TD")
               
 if __name__=="__main__":
     total = errors = failures = 0
-
-    for name,test in zip(names,tests):
-        print "\n**** Testing %s ****" % name
+    for test in testdata:
+        module = testdata[test]["module"]
+        print "\n**** test%s for %s ****" %(module, '/'.join(testdata[test]["location"]))
+        test = eval(test)
         myunittest = unittest.makeSuite(test)
         a = unittest.TextTestRunner(verbosity=2).run(myunittest)
         total += a.testsRun

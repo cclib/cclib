@@ -8,9 +8,8 @@ try:
 except ImportError:
     import Numeric as numpy
 
-from testall import getfile
-from cclib.parser import Gaussian, GAMESS, Jaguar
 import bettertest
+from testall import gettestdata
 
 
 class GenericCITest(bettertest.TestCase):
@@ -99,33 +98,30 @@ class GenericCISWaterTest(GenericCISTest):
             if not found:
                 self.fail("Excitation %i->%s not found (triplet state %i)" %(exc[0], exc[1], i))
 
+class GAMESSUSCISTest(GenericCISWaterTest):
+    def setUp(self):
+        self.data = testdata[self.__class__.__name__]["data"]
+        self.nstates = 5
+
 class GaussianCISTest(GenericCISWaterTest):
     def setUp(self):
-        self.data = data[0]
+        self.data = testdata[self.__class__.__name__]["data"]
         self.nstates = 10
-
-class GAMESSCISTest(GenericCISWaterTest):
-    def setUp(self):
-        self.data = data[1]
-        self.nstates = 5
 
 class Jaguar65CISTest(GenericCISWaterTest):
     def setUp(self):
-        self.data = data[2]
+        self.data = testdata[self.__class__.__name__]["data"]
         self.nstates = 5
 
-names = [ "Gaussian", "GAMESS", "Jaguar 6.5" ]
-tests = [ GaussianCISTest, GAMESSCISTest, Jaguar65CISTest ]
-data = [getfile(Gaussian, "basicGaussian03", "water_cis.log"),
-        getfile(GAMESS, "basicGAMESS-US", "water_cis_saps.out"),
-        getfile(Jaguar, "basicJaguar6.5", "water_cis.out")
-        ]
-              
+# Load test data using information in file.
+testdata = gettestdata(module="CI")
+             
 if __name__=="__main__":
     total = errors = failures = 0
-
-    for name,test in zip(names,tests):
-        print "\n**** Testing %s ****" % name
+    for test in testdata:
+        module = testdata[test]["module"]
+        print "\n**** test%s for %s ****" %(module, '/'.join(testdata[test]["location"]))
+        test = eval(test)
         myunittest = unittest.makeSuite(test)
         a = unittest.TextTestRunner(verbosity=2).run(myunittest)
         total += a.testsRun

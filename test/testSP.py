@@ -2,12 +2,15 @@ __revision__ = "$Revision$"
 
 import os, unittest
 
-from testall import getfile
-from cclib.parser import ADF, GAMESS, Gaussian, Jaguar, GAMESSUK
+import bettertest
+from testall import gettestdata
 
-class GenericSPTest(unittest.TestCase):
+
+class GenericSPTest(bettertest.TestCase):
     """Restricted single point calculations with MO coeffs and overlap info."""
+
     nbasisdict = {1:1, 6:5} # STO-3G, H has 1, C has 3
+
     def testdimaooverlaps(self):
         """Are the dims of the overlap matrix consistent with nbasis?"""
         self.assertEquals(self.data.aooverlaps.shape,(self.data.nbasis,self.data.nbasis))
@@ -33,32 +36,31 @@ class GenericSPTest(unittest.TestCase):
         self.assertEquals(len(all), self.data.nbasis)
         # Check if all are different (every orbital indexed once).
         self.assertEquals(len(set(all)), len(all))
-        
-
-class GaussianSPTest(GenericSPTest):
-    def setUp(self):
-        self.data = data[0]
-
-class GamessUSSPTest(GenericSPTest):
-    def setUp(self):
-        self.data = data[1]
-
-class PCGamessSPTest(GenericSPTest):
-    def setUp(self):
-        self.data = data[2]
 
 class ADFSPTest(GenericSPTest):
     def setUp(self):
-        self.data = data[3]
+        self.data = testdata[self.__class__.__name__]["data"]
     
     def testdimaooverlaps(self):
         """Are the dims of the overlap matrix consistent with nbasis?"""
         #ADF uses fooverlaps
         self.assertEquals(self.data.fooverlaps.shape,(self.data.nbasis,self.data.nbasis))
 
+class GamessUKSPTest(GenericSPTest):
+    def setUp(self):
+        self.data = testdata[self.__class__.__name__]["data"]
+
+class GamessUSSPTest(GenericSPTest):
+    def setUp(self):
+        self.data = testdata[self.__class__.__name__]["data"]
+
+class GaussianSPTest(GenericSPTest):
+    def setUp(self):
+        self.data = testdata[self.__class__.__name__]["data"]
+
 class Jaguar42SPTest(GenericSPTest):
     def setUp(self):
-        self.data = data[4]
+        self.data = testdata[self.__class__.__name__]["data"]
 
     def testdimmocoeffs(self):
         """Are the dimensions of mocoeffs equal to 1 x nmo x nbasis? PASS"""
@@ -67,37 +69,25 @@ class Jaguar42SPTest(GenericSPTest):
     def testatombasis(self):
         """Are the indices in atombasis the right amount and unique? PASS"""
        
-
 class Jaguar60SPTest(GenericSPTest):
+    def setUp(self):
+        self.data = testdata[self.__class__.__name__]["data"]
     nbasisdict = {1:5, 6:15} # 6-31G(d,p)
+
+class PCGamessSPTest(GenericSPTest):
     def setUp(self):
-        self.data = data[5]
+        self.data = testdata[self.__class__.__name__]["data"]
 
 
-class GamessUKSPTest(GenericSPTest):
-    def setUp(self):
-        self.data = data[6]
+# Load test data using information in file.
+testdata = gettestdata(module="SP")
 
-
-names = [ "Gaussian", "PCGamess", "GAMESS", "ADF", "Jaguar 4.2",
-          "Jaguar 6.0", "GAMESS UK"]
-tests = [ GaussianSPTest, PCGamessSPTest,
-          GamessUSSPTest, ADFSPTest,
-          Jaguar42SPTest, Jaguar60SPTest,
-          GamessUKSPTest]
-data = [getfile(Gaussian, "basicGaussian03","dvb_sp.out"),
-        getfile(GAMESS, "basicGAMESS-US","dvb_sp.out"),
-        getfile(GAMESS, "basicPCGAMESS","dvb_sp.out"),
-        getfile(ADF, "basicADF2004.01","dvb_sp_b.adfout"),
-        getfile(Jaguar, "basicJaguar4.2", "dvb_sp.out"),
-        getfile(Jaguar, "basicJaguar6.0", "dvb_sp.out"),
-        getfile(GAMESSUK, "basicGAMESS-UK", "dvb_sp_b.out")]
-              
 if __name__=="__main__":
     total = errors = failures = 0
-
-    for name,test in zip(names,tests):
-        print "\n**** Testing %s SP ****" % name
+    for test in testdata:
+        module = testdata[test]["module"]
+        print "\n**** test%s for %s ****" %(module, '/'.join(testdata[test]["location"]))
+        test = eval(test)
         myunittest = unittest.makeSuite(test)
         a = unittest.TextTestRunner(verbosity=2).run(myunittest)
         total += a.testsRun

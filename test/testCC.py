@@ -8,12 +8,13 @@ try:
 except ImportError:
     import Numeric as numpy
 
-from testall import getfile
-from cclib.parser import GAMESS, Gaussian
 import bettertest
+from testall import gettestdata
+
 
 class GenericCCTest(bettertest.TestCase):
     """Coupled-Cluster calculations."""
+
     def testsign(self):
         corrections = self.data.ccenergies - self.data.scfenergies
         self.failUnless(numpy.alltrue(corrections < 0.0))
@@ -36,47 +37,40 @@ class GenericCCSDTTest(GenericCCTest):
         """CCSD(T): Are the Coupled-Cluster correction negative?"""
         super(GenericCCSDTTest, self).testsign()
 
+class GAMESSUSCCDTest(GenericCCDTest):
+    def setUp(self):
+        self.data = testdata[self.__class__.__name__]["data"]
+
+class GAMESSUSCCSDTest(GenericCCSDTest):
+    def setUp(self):
+        self.data = testdata[self.__class__.__name__]["data"]
+
+class GAMESSUSCCSDTTest(GenericCCSDTTest):
+    def setUp(self):
+        self.data = testdata[self.__class__.__name__]["data"]
+
 class GaussianCCDTest(GenericCCDTest):
     def setUp(self):
-        self.data = data[0]
+        self.data = testdata[self.__class__.__name__]["data"]
 
 class GaussianCCSDTest(GenericCCSDTest):
     def setUp(self):
-        self.data = data[1]
+        self.data = testdata[self.__class__.__name__]["data"]
 
 class GaussianCCSDTTest(GenericCCSDTTest):
     def setUp(self):
-        self.data = data[2]
+        self.data = testdata[self.__class__.__name__]["data"]
 
-class GAMESSCCDTest(GenericCCDTest):
-    def setUp(self):
-        self.data = data[3]
-
-class GAMESSCCSDTest(GenericCCSDTest):
-    def setUp(self):
-        self.data = data[4]
-
-class GAMESSCCSDTTest(GenericCCSDTTest):
-    def setUp(self):
-        self.data = data[5]
-
-names = [ "Gaussian", "Gaussian", "Gaussian",
-          "GAMESS", "GAMESS", "GAMESS" ]
-tests = [ GaussianCCDTest, GaussianCCSDTest, GaussianCCSDTTest,
-          GAMESSCCDTest, GAMESSCCSDTest, GAMESSCCSDTTest ]
-data = [getfile(Gaussian, "basicGaussian03","water_ccd.log"),
-        getfile(Gaussian, "basicGaussian03","water_ccsd.log"),
-        getfile(Gaussian, "basicGaussian03","water_ccsd(t).log"),
-        getfile(GAMESS, "basicGAMESS-US","water_ccd.out"),
-        getfile(GAMESS, "basicGAMESS-US","water_ccsd.out"),
-        getfile(GAMESS, "basicGAMESS-US","water_ccsd(t).out"),
-        ]
               
+# Load test data using information in file.
+testdata = gettestdata(module="CC")
+
 if __name__=="__main__":
     total = errors = failures = 0
-
-    for name,test in zip(names,tests):
-        print "\n**** Testing %s ****" % name
+    for test in testdata:
+        module = testdata[test]["module"]
+        print "\n**** test%s for %s ****" %(module, '/'.join(testdata[test]["location"]))
+        test = eval(test)
         myunittest = unittest.makeSuite(test)
         a = unittest.TextTestRunner(verbosity=2).run(myunittest)
         total += a.testsRun

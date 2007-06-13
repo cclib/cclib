@@ -11,11 +11,12 @@ except ImportError:
     import Numeric as numpy
 
 import bettertest
-from testall import getfile
-from cclib.parser import ADF, GAMESS, Gaussian, Jaguar, GAMESSUK
+from testall import gettestdata
 
 
 class GenericGeoOptTest(bettertest.TestCase):
+    """Geometry optimizations."""
+
     def testhomos(self):
         """Is the index of the homo equal to 34?"""
         self.assertArrayEquals(self.data.homos, numpy.array([34],"i"),"%s != array([34],'i')" % numpy.array_repr(self.data.homos))
@@ -107,21 +108,9 @@ class GenericGeoOptTest(bettertest.TestCase):
         """Do the scf targets have the right dimensions?"""
         self.assertEquals(self.data.scftargets.shape,(len(self.data.scfvalues),len(self.data.scfvalues[0][0])))
 
-class GaussianGeoOptTest(GenericGeoOptTest):
-    def setUp(self):
-        self.data = data[0]
-
-class PCGamessGeoOptTest(GenericGeoOptTest):
-    def setUp(self):
-        self.data = data[1]
-
-class GamessUSGeoOptTest(GenericGeoOptTest):
-    def setUp(self):
-        self.data = data[2]
-
 class ADFGeoOptTest(GenericGeoOptTest):
     def setUp(self):
-        self.data = data[3]
+        self.data = testdata[self.__class__.__name__]["data"]
 
     def testscfvaluedim(self):
         """Do the scf values have the right dimensions?"""
@@ -138,36 +127,40 @@ class ADFGeoOptTest(GenericGeoOptTest):
         """Is the SCF energy within 1eV of -140eV"""
         self.assertInside(self.data.scfenergies[-1],-140,1,"Final scf energy: %f not -140+-1eV" % self.data.scfenergies[-1])
 
+class GamessUKGeoOptTest(GenericGeoOptTest):
+    def setUp(self):
+        self.data = testdata[self.__class__.__name__]["data"]
+
+class GamessUSGeoOptTest(GenericGeoOptTest):
+    def setUp(self):
+        self.data = testdata[self.__class__.__name__]["data"]
+
+class GaussianGeoOptTest(GenericGeoOptTest):
+    def setUp(self):
+        self.data = testdata[self.__class__.__name__]["data"]
+
 class Jaguar42GeoOptTest(GenericGeoOptTest):
     def setUp(self):
-        self.data = data[4]
+        self.data = testdata[self.__class__.__name__]["data"]
 
 class Jaguar65GeoOptTest(GenericGeoOptTest):
     def setUp(self):
-        self.data = data[5]
+        self.data = testdata[self.__class__.__name__]["data"]
         
-class GamessUKGeoOptTest(GenericGeoOptTest):
+class PCGamessGeoOptTest(GenericGeoOptTest):
     def setUp(self):
-        self.data = data[6]
-        
-names = [ "Gaussian", "PCGamess", "GAMESS", "ADF", "Jaguar 4.2",
-          "Jaguar 6.5", "GAMESS UK" ]
-tests = [ GaussianGeoOptTest, PCGamessGeoOptTest,
-          GamessUSGeoOptTest, ADFGeoOptTest,
-          Jaguar42GeoOptTest, Jaguar65GeoOptTest,
-          GamessUKGeoOptTest ]
-data = [ getfile(Gaussian,"basicGaussian03","dvb_gopt.out"),
-         getfile(GAMESS,"basicPCGAMESS","dvb_gopt_b.out"),
-         getfile(GAMESS,"basicGAMESS-US","dvb_gopt_a.out"),
-         getfile(ADF,"basicADF2004.01","dvb_gopt_b.adfout"),
-         getfile(Jaguar,"basicJaguar4.2","dvb_gopt_b.out"),
-         getfile(Jaguar,"basicJaguar6.5","dvb_gopt_b.out"),
-         getfile(GAMESSUK,"basicGAMESS-UK","dvb_gopt_d.out")]         
+        self.data = testdata[self.__class__.__name__]["data"]
+
+
+# Load test data using information in file.
+testdata = gettestdata(module="GeoOpt")
 
 if __name__=="__main__":
     total = errors = failures = 0
-    for name,test in zip(names,tests):
-        print "\n**** Testing %s Geo Opt ****" % name
+    for test in testdata:
+        module = testdata[test]["module"]
+        print "\n**** test%s for %s ****" %(module, '/'.join(testdata[test]["location"]))
+        test = eval(test)
         myunittest = unittest.makeSuite(test)
         a = unittest.TextTestRunner(verbosity=2).run(myunittest)
         total += a.testsRun
