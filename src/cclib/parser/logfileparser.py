@@ -130,7 +130,7 @@ class Logfile(object):
         self._tointarray = ['atomnos', 'coreelectrons', 'homos']
 
         # Attributes that should be lists of arrays.
-        self._tolistofarrays = ['moenergies', 'scfvalues']
+        self._tolistofarrays = ['mocoeffs', 'moenergies', 'scfvalues']
 
         self.filename = filename
 
