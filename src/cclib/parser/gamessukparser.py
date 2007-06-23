@@ -456,8 +456,8 @@ class GAMESSUK(logfileparser.Logfile):
                     line = inputfile.next()
                     # Fill atombasis only first time around.
                     if readatombasis:
-                        orbno = int(line.split()[0])-1
-                        atomno = int(line.split()[1])-1
+                        orbno = int(line[1:5])-1
+                        atomno = int(line[6:9])-1
                         self.atombasis[atomno].append(orbno)
                     if not self.aonames:
                         pg = p.match(line[:18].strip()).groups()
