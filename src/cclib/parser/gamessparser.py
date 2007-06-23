@@ -524,74 +524,41 @@ class GAMESS(logfileparser.Logfile):
 
         if line.find("EIGENVECTORS") == 10 or line.find("MOLECULAR OBRITALS") == 10:
             # The details returned come from the *final* report of evalues and
-            #   the last list of symmetries in the log file.
-            # Should be followed by lines like this:
-            #           ------------
-            #           EIGENVECTORS
-            #           ------------
-            # 
-            #                       1          2          3          4          5
-            #                   -10.0162   -10.0161   -10.0039   -10.0039   -10.0029
-            #                      BU         AG         BU         AG         AG  
-            #     1  C  1  S    0.699293   0.699290  -0.027566   0.027799   0.002412
-            #     2  C  1  S    0.031569   0.031361   0.004097  -0.004054  -0.000605
-            #     3  C  1  X    0.000908   0.000632  -0.004163   0.004132   0.000619
-            #     4  C  1  Y   -0.000019   0.000033   0.000668  -0.000651   0.005256
-            #     5  C  1  Z    0.000000   0.000000   0.000000   0.000000   0.000000
-            #     6  C  2  S   -0.699293   0.699290   0.027566   0.027799   0.002412
-            #     7  C  2  S   -0.031569   0.031361  -0.004097  -0.004054  -0.000605
-            #     8  C  2  X    0.000908  -0.000632  -0.004163  -0.004132  -0.000619
-            #     9  C  2  Y   -0.000019  -0.000033   0.000668   0.000651  -0.005256
-            #    10  C  2  Z    0.000000   0.000000   0.000000   0.000000   0.000000
-            #    11  C  3  S   -0.018967  -0.019439   0.011799  -0.014884  -0.452328
-            #    12  C  3  S   -0.007748  -0.006932   0.000680  -0.000695  -0.024917
-            #    13  C  3  X    0.002628   0.002997   0.000018   0.000061  -0.003608
-            # and so forth... with blanks lines between blocks of 5 orbitals each.
-            #
-            # This is fine for GeoOpt and SP, but may be weird for TD and Freq.
-
-            # This is the stuff that we can read from these blocks.
+            # the last list of symmetries in the log file
+            # This is fine for GeoOpt and SP, but may be weird for TD and Freq(?)
+            
+            # Take the last one of either in the file
             self.moenergies = [[]]
             self.mosyms = [[]]
             if not hasattr(self, "nmo"):
                 self.nmo = self.nbasis
             self.mocoeffs = [numpy.zeros((self.nmo, self.nbasis), "d")]
-            readatombasis = False
-            if not hasattr(self, "atombasis"):
-                self.atombasis = []
-                for i in range(self.natom):
-                    self.atombasis.append([])
-                readatombasis = True
-
-            dashes = inputfile.next()
+            line = inputfile.next()
             for base in range(0, self.nmo, 5):
                 blank = inputfile.next()
-                line = inputfile.next() # Eigenvector numbers.
-                line = inputfile.next() # Eigenvalues for these orbitals (in hartrees).
+                line = inputfile.next() # Eigenvector no
+                line = inputfile.next()
                 self.moenergies[0].extend([utils.convertor(float(x), "hartree", "eV") for x in line.split()])
-                line = inputfile.next() # Orbital symmetries.
+                line = inputfile.next()
                 self.mosyms[0].extend(map(self.normalisesym, line.split()))
-                
-                # Now we have nbasis lines with 5 coefficient each.
                 for i in range(self.nbasis):
                     line = inputfile.next()
-                    orbno = int(line.split()[0])-1
-                    atomno = int(line.split()[2])-1
-                    # Fill atombasis only first time around.
-                    if readatombasis and base == 0:
-                        self.atombasis[atomno].append(orbno)
-                    coeffs = line[15:] # Strip off the crud at the start.
+                    # if base==0: # Just do this the first time 'round
+                        # atomno=int(line.split()[2])-1
+                        # atomorb[atomno].append(int(line.split()[0])-1)
+                        # What's the story with the previous line?
+                    temp = line[15:] # Strip off the crud at the start
                     j = 0
-                    while j*11+4 < len(coeffs):
-                        self.mocoeffs[0][base+j, i] = float(coeffs[j * 11:(j + 1) * 11])
+                    while j*11+4 < len(temp):
+                        self.mocoeffs[0][base+j, i] = float(temp[j * 11:(j + 1) * 11])
                         j += 1
-
             line = inputfile.next()
-            # If it's restricted we have:
+            if line.find("END OF") == -1: # implies unrestricted
+            # If it's restricted we have
             #  ...... END OF RHF CALCULATION ......
             #                or
             #  ...... END OF DFT CALCULATION ......
-            # If it's unrestricted we have:
+            # If it's unrestricted we have...
             #
             #  ----- BETA SET ----- 
             #
@@ -600,8 +567,7 @@ class GAMESS(logfileparser.Logfile):
             #          ------------
             #
             #                      1          2          3          4          5
-            # ... and so forth.
-            if not "END OF" in line:
+
                 self.mocoeffs.append(numpy.zeros((self.nmo, self.nbasis), "d"))
                 self.moenergies.append([])
                 self.mosyms.append([])
