@@ -12,6 +12,7 @@ GAMESS/GAMESS-US/bv6010sup1molecule_4.inp.cml_.log.bz2
 GAMESS/GAMESS-US/ex.out.gz
 GAMESS/GAMESS-US/exam01.out.gz
 GAMESS/PCGAMESS/aomixgamess.log.bz2
+GAMESS/PCGAMESS/d2d_sp.out.gz
 GAMESS/WinGAMESS/WinGAMESS.log.gz
 GAMESS-UK/GAMESS-UK6.0/dscf_4.out.gz
 GAMESS-UK/GAMESS-UK6.0/duhf_1.out.gz
