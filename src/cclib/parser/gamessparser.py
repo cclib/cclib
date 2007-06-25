@@ -59,26 +59,32 @@ class GAMESS(logfileparser.Logfile):
 
         We want this to work even if there are 1000+ atoms. Our only assumption
         is that all of the relevant information is in the first 17 characters
-        of the line.
+        of the line. Also, we assume that if the second number is not present,
+        it is the same as the last occurence of that number.
         
         >>> t = GAMESS("dummyfile")
         >>> data = ['    5  C  1  S   ', '    6  C  1  S   ',\
                     '    7  C  1  S   ', '   56  C  1XXXX  ',\
-                    '  100  C  2  S   ', '    1  SI  1  S  ' ]
+                    '  100  C  2  S   ', '    1  SI  1  S  ',\
+                    '   19  C   1 YZ  ', '   20  C    XXX  ']
         >>> print t.normalise_aonames(data)
-        ['C1_S', 'C1_S', 'C1_S', 'C1_XXXX', 'C2_S', 'Si1_S']
+        ['C1_S', 'C1_S', 'C1_S', 'C1_XXXX', 'C2_S', 'Si1_S', 'C1_YZ', 'C1_XXX']
         """
         p = re.compile("(\d+)\s*([A-Z][A-Z]?)\s*(\d+)\s*([A-Z]+)")
         ans = []
         oldatom = "0"
         for line in listoflines:
             m = p.search(line.strip())
-            assert m, "Cannot pick out the aoname from this information: %s" % line
-            g = m.groups()
-            aoname = "%s%s_%s" % (g[1].capitalize(), g[2], g[3])
-            oldatom = g[2]
-            ans.append(aoname)
-            
+            if m:
+                g = m.groups()
+                aoname = "%s%s_%s" % (g[1].capitalize(), g[2], g[3])
+                oldatom = g[2]
+                ans.append(aoname)
+            else:
+                g = [x.strip() for x in line.split()]
+                aoname = "%s%s_%s" % (g[1].capitalize(), oldatom, g[2])
+                ans.append(aoname)
+                
         return ans
 
     def before_parsing(self):
@@ -550,6 +556,13 @@ class GAMESS(logfileparser.Logfile):
             # Warning! There are subtle differences between GAMESS-US and PC-GAMES
             #   in the formatting of the first four columns.
             #
+            # Watch out for F orbitals...
+            #   19  C   1 YZ   0.000000   0.000000   0.000000   0.000000   0.000000
+            #   20  C    XXX   0.000000   0.000000   0.000000   0.000000   0.002249
+            #   21  C    YYY   0.000000   0.000000  -0.025555   0.000000   0.000000
+            #   22  C    ZZZ   0.000000   0.000000   0.000000   0.002249   0.000000
+            #   23  C    XXY   0.000000   0.000000   0.001343   0.000000   0.000000            
+            #
             # This is fine for GeoOpt and SP, but may be weird for TD and Freq.
 
             # This is the stuff that we can read from these blocks.
@@ -689,6 +702,7 @@ class GAMESS(logfileparser.Logfile):
                         self.aooverlaps[base+j-4, i+base] = float(temp[j])
                         self.aooverlaps[i+base, base+j-4] = float(temp[j])
                 base += 5
+
             self.aonames = self.normalise_aonames(aonames)
 
         # ECP Pseudopotential information
