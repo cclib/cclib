@@ -7,7 +7,7 @@ import logging
 
 from cclib.parser import ccopen
 
-_allowedargs = ['aonames','aooverlaps','atomcoords','atomnos',
+_allowedargs = ['aonames','aooverlaps','atombasis','atomcoords','atomnos',
 		'charge','coreelectrons',
                 'etenergies','etoscs','etrotats','etsecs','etsyms',
                 'fonames','fooverlaps','gbasis','geotargets','geovalues',
