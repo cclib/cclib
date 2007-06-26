@@ -87,14 +87,17 @@ class Jaguar42SPunTest(GenericSPunTest):
     def setUp(self):
         self.data = testdata[self.__class__.__name__]["data"]
     
+    # Data file does not contain enough information. Can we make a new one?
     def testdimaooverlaps(self):
         """Are the dims of the overlap matrix consistent with nbasis? PASS"""
         self.assertEquals(1,1)
 
+    # Data file does not contain enough information. Can we make a new one?
     def testdimmocoeffs(self):
         """Are the dimensions of mocoeffs equal to 1 x nmo x nbasis? PASS"""
         self.assertEquals(1,1)
 
+    # Why is this test passed?
     def testmosyms(self):
         """Are the dims of the mosyms equal to 2 x nmo? PASS"""
         self.assertEquals(1,1)
@@ -103,6 +106,7 @@ class Jaguar60SPunTest(GenericSPunTest):
     def setUp(self):
         self.data = testdata[self.__class__.__name__]["data"]
 
+    # Why is this test passed?
     def testmosyms(self):
         """Are the dims of the mosyms equal to 2 x nmo? PASS"""
         self.assertEquals(1,1)
@@ -111,20 +115,24 @@ class Jaguar65SPunTest(GenericSPunTest):
     def setUp(self):
         self.data = testdata[self.__class__.__name__]["data"]
         
+    # Data file does not contain enough information. Can we make a new one?
     def testdimaooverlaps(self):
         """Are the dims of the overlap matrix consistent with nbasis? PASS"""
         self.assertEquals(1,1)
 
+    # Why is this test passed?
     def testmoenergies(self):
         """Are the dims of the moenergies equal to 2 x homos+11?"""
         self.assertEquals(len(self.data.moenergies), 2)
         self.assertEquals(len(self.data.moenergies[0]), self.data.homos[0]+11)
         self.assertEquals(len(self.data.moenergies[1]), self.data.homos[1]+11)
         
+    # Data file does not contain enough information. Can we make a new one?
     def testdimmocoeffs(self):
         """Are the dimensions of mocoeffs equal to 1 x nmo x nbasis? PASS"""
         self.assertEquals(1,1)
 
+    # Why is this test passed?
     def testmosyms(self):
         """Are the dims of the mosyms equal to 2 x nmo? PASS"""
         self.assertEquals(1,1)

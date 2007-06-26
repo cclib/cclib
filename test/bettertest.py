@@ -42,3 +42,9 @@ class TestCase(unittest.TestCase):
             errormsg = "Not equal: %s != %s" % (first, second)
         if errormsg:
             raise self.failureException, (msg or errormsg)
+
+    def run(self,result=None):
+        if "PASS" in self._testMethodDoc:
+            print self._testMethodDoc
+        else:
+            unittest.TestCase.run(self, result=result)

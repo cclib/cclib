@@ -43,7 +43,7 @@ class ADFSPTest(GenericSPTest):
     
     def testdimaooverlaps(self):
         """Are the dims of the overlap matrix consistent with nbasis?"""
-        #ADF uses fooverlaps
+        # ADF uses fooverlaps.
         self.assertEquals(self.data.fooverlaps.shape,(self.data.nbasis,self.data.nbasis))
 
 class GamessUKSPTest(GenericSPTest):
@@ -62,12 +62,15 @@ class Jaguar42SPTest(GenericSPTest):
     def setUp(self):
         self.data = testdata[self.__class__.__name__]["data"]
 
+    # Data file does not contain enough information. Can we make a new one?
     def testdimmocoeffs(self):
         """Are the dimensions of mocoeffs equal to 1 x nmo x nbasis? PASS"""
         self.assertEquals(1, 1)
 
+    # Data file does not contain enough information. Can we make a new one?
     def testatombasis(self):
         """Are the indices in atombasis the right amount and unique? PASS"""
+        self.assertEquals(1, 1)
        
 class Jaguar60SPTest(GenericSPTest):
     def setUp(self):
