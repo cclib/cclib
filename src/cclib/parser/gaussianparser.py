@@ -42,14 +42,20 @@ class Gaussian(logfileparser.Logfile):
         (2) replace any G or U by their lowercase equivalent
 
         >>> sym = Gaussian("dummyfile").normalisesym
-        >>> labels = ['A1', 'AG', 'A1G', "SG", "PI", "PHI", "DLTA"]
+        >>> labels = ['A1', 'AG', 'A1G', "SG", "PI", "PHI", "DLTA", 'DLTU', 'SGG']
         >>> map(sym, labels)
-        ['A1', 'Ag', 'A1g', 'sigma', 'pi', 'phi', 'delta']
+        ['A1', 'Ag', 'A1g', 'sigma', 'pi', 'phi', 'delta', 'delta.u', 'sigma.g']
         """
-        _greek = {'SG':'sigma', 'PI':'pi', 'PHI':'phi', 'DLTA':'delta'}
-        if label in _greek:
-            return _greek[label]
-
+        # note: DLT must come after DLTA
+        greek = [('SG', 'sigma'), ('PI', 'pi'), ('PHI', 'phi'),
+                 ('DLTA', 'delta'), ('DLT', 'delta')]
+        for k,v in greek:
+            if label.startswith(k):
+                tmp = label[len(k):]
+                label = v
+                if tmp:
+                    label = v + "." + tmp
+        
         ans = label.replace("U", "u").replace("G", "g") 
         return ans
 
