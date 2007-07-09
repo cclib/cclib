@@ -1,13 +1,10 @@
 __revision__ = "$Revision$"
 
-import os, unittest
-
 import bettertest
-from testall import gettestdata
 
 
 class GenericIRTest(bettertest.TestCase):
-    """Vibrational frequency calculations."""
+    """Generic vibrational frequency unittest."""
 
     def testvibdisps(self):
         """Are the dimensions of vibdisps consistent with 3N-6 x N x 3"""
@@ -37,20 +34,16 @@ class GenericIRTest(bettertest.TestCase):
         
 
 class ADFIRTest(GenericIRTest):
-    def setUp(self):
-        self.data = testdata[self.__class__.__name__]["data"]
+    """ADF vibrational frequency unittest."""
     
 class GamessUKIRTest(GenericIRTest):
-    def setUp(self):
-        self.data = testdata[self.__class__.__name__]["data"]
+    """GAMeSS-UK vibrational frequency unittest."""
 
 class GamessUSIRTest(GenericIRTest):
-    def setUp(self):
-        self.data = testdata[self.__class__.__name__]["data"]
+    """GAMESS-US vibrational frequency unittest."""
 
 class GaussianIRTest(GenericIRTest):
-    def setUp(self):
-        self.data = testdata[self.__class__.__name__]["data"]
+    """Gaussian vibrational frequency unittest."""
 
     def testvibsyms(self):
         """Is the length of vibsyms correct?"""
@@ -58,8 +51,7 @@ class GaussianIRTest(GenericIRTest):
         self.assertEqual(len(self.data.vibsyms), numvib)
        
 class Jaguar42IRTest(GenericIRTest):
-    def setUp(self):
-        self.data = testdata[self.__class__.__name__]["data"]
+    """Jaguar4.2 vibrational frequency unittest."""
 
     def testvibsyms(self):
             """Is the length of vibsyms correct?"""
@@ -67,24 +59,25 @@ class Jaguar42IRTest(GenericIRTest):
             self.assertEqual(len(self.data.vibsyms), numvib)
 
 class Jaguar65IRTest(GenericIRTest):
-    def setUp(self):
-        self.data = testdata[self.__class__.__name__]["data"]
+    """Jaguar6.5 vibrational frequency unittest."""
 
     def testvibsyms(self):
             """Is the length of vibsyms correct?"""
             numvib = 3*len(self.data.atomnos) - 6        
             self.assertEqual(len(self.data.vibsyms), numvib)
 
+class MolproIRTest(GenericIRTest):
+    """Molpro vibrational frequency unittest."""
+
 class PCGamessIRTest(GenericIRTest):
-    def setUp(self):
-        self.data = testdata[self.__class__.__name__]["data"]
+    """PC-GAMESS vibrational frequency unittest."""
 
     def testirintens(self):
         """Is the maximum IR intensity 135 +/- 5 km mol-1?"""
         self.assertInside(max(self.data.vibirs), 135, 5)     
 
 class GenericRamanTest(bettertest.TestCase):
-    """Raman calculations."""
+    """Generic Raman unittest."""
 
     def testlengths(self):
         """Is the length of vibramans correct?"""
@@ -96,36 +89,23 @@ class GenericRamanTest(bettertest.TestCase):
         self.assertInside(max(self.data.vibramans), 575, 5)
 
 class GamessUKRamanTest(GenericRamanTest):
-    def setUp(self):
-        self.data = testdata[self.__class__.__name__]["data"]
+    """GAMESS-UK Raman unittest."""
 
 class GaussianRamanTest(GenericRamanTest):
-    def setUp(self):
-        self.data = testdata[self.__class__.__name__]["data"]
+    """Gaussian Raman unittest."""
 
     def testramanintens(self):
         """Is the maximum Raman intensity 1066 +/- 5 A**4/amu?"""
         self.assertInside(max(self.data.vibramans), 1066, 5)
 
+class MolproRamanTest(GenericRamanTest):
+    """Molpro Raman unittest."""
+
 class PCGamessRamanTest(GenericRamanTest):
-    def setUp(self):
-        self.data = testdata[self.__class__.__name__]["data"]
+    """PC-GAMESS Raman unittest."""
 
-
-# Load test data using information in file.
-testdata = gettestdata(module="vib")
 
 if __name__=="__main__":
-    total = errors = failures = 0
-    for test in testdata:
-        module = testdata[test]["module"]
-        print "\n**** test%s for %s ****" %(module, '/'.join(testdata[test]["location"]))
-        test = eval(test)
-        myunittest = unittest.makeSuite(test)
-        a = unittest.TextTestRunner(verbosity=2).run(myunittest)
-        total += a.testsRun
-        errors += len(a.errors)
-        failures += len(a.failures)
 
-    print "\n\n********* SUMMARY OF VIB TEST **************"
-    print "TOTAL: %d\tPASSED: %d\tFAILED: %d\tERRORS: %d" % (total,total-(errors+failures),failures,errors)
+    from testall import testmodule
+    testmodule("vib")

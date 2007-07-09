@@ -1,8 +1,5 @@
 __revision__ = "$Revision$"
 
-import os
-import unittest
-
 # If numpy is not installed, try to import Numeric instead.
 try:
     import numpy
@@ -10,11 +7,11 @@ except ImportError:
     import Numeric as numpy
 
 import bettertest
-from testall import gettestdata
 
 
 class GenericSPunTest(bettertest.TestCase):
-    """Restricted single point calculations with MO coeffs and overlap info."""
+    """Unrestricted single point unittest."""
+
     def testdimaooverlaps(self):
         """Are the dims of the overlap matrix consistent with nbasis?"""
         self.assertEquals(self.data.aooverlaps.shape,(self.data.nbasis,self.data.nbasis))
@@ -49,8 +46,7 @@ class GenericSPunTest(bettertest.TestCase):
         self.assertEquals(shape, (2, self.data.nmo))
         
 class ADFSPunTest(GenericSPunTest):
-    def setUp(self):
-        self.data = testdata[self.__class__.__name__]["data"]
+    """ADF unrestricted single point unittest."""
 
     def testdimaooverlaps(self):
         """Are the dims of the overlap matrix consistent with nbasis?"""
@@ -58,8 +54,7 @@ class ADFSPunTest(GenericSPunTest):
         self.assertEquals(self.data.fooverlaps.shape,(self.data.nbasis,self.data.nbasis))
 
 class GamessUKSPunTest(GenericSPunTest):
-    def setUp(self):
-        self.data = testdata[self.__class__.__name__]["data"]
+    """GAMESS-UK unrestricted single point unittest."""
 
     def testdimmocoeffs(self):
         """Are the dimensions of mocoeffs equal to 2 x (homos+6) x nbasis?"""
@@ -71,12 +66,10 @@ class GamessUKSPunTest(GenericSPunTest):
                           (self.data.homos[1]+6, self.data.nbasis))
 
 class GamessUSSPunTest(GenericSPunTest):
-    def setUp(self):
-        self.data = testdata[self.__class__.__name__]["data"]
+    """GAMESS-US unrestricted single point unittest."""
 
 class GaussianSPunTest(GenericSPunTest):
-    def setUp(self):
-        self.data = testdata[self.__class__.__name__]["data"]
+    """Gaussian unrestricted single point unittest."""
 
     def testatomnos(self):
         """Does atomnos have the right dimension (20)?"""
@@ -84,8 +77,7 @@ class GaussianSPunTest(GenericSPunTest):
         self.assertEquals(size, 20)
 
 class Jaguar42SPunTest(GenericSPunTest):
-    def setUp(self):
-        self.data = testdata[self.__class__.__name__]["data"]
+    """Jaguar4.2 unrestricted single point unittest."""
     
     # Data file does not contain enough information. Can we make a new one?
     def testdimaooverlaps(self):
@@ -103,8 +95,7 @@ class Jaguar42SPunTest(GenericSPunTest):
         self.assertEquals(1,1)
 
 class Jaguar60SPunTest(GenericSPunTest):
-    def setUp(self):
-        self.data = testdata[self.__class__.__name__]["data"]
+    """Jaguar6.0 unrestricted single point unittest."""
 
     # Why is this test passed?
     def testmosyms(self):
@@ -112,8 +103,7 @@ class Jaguar60SPunTest(GenericSPunTest):
         self.assertEquals(1,1)
         
 class Jaguar65SPunTest(GenericSPunTest):
-    def setUp(self):
-        self.data = testdata[self.__class__.__name__]["data"]
+    """Jaguar6.5 unrestricted single point unittest."""
         
     # Data file does not contain enough information. Can we make a new one?
     def testdimaooverlaps(self):
@@ -137,25 +127,14 @@ class Jaguar65SPunTest(GenericSPunTest):
         """Are the dims of the mosyms equal to 2 x nmo? PASS"""
         self.assertEquals(1,1)
 
+class MolproSPunTest(GenericSPunTest):
+    """Molpro unrestricted single point unittest."""
+
 class PCGamessSPunTest(GenericSPunTest):
-    def setUp(self):
-        self.data = testdata[self.__class__.__name__]["data"]
+    """PC-GAMESS unrestricted single point unittest."""
 
-
-# Load test data using information in file.
-testdata = gettestdata(module="SPun")
               
 if __name__=="__main__":
-    total = errors = failures = 0
-    for test in testdata:
-        module = testdata[test]["module"]
-        print "\n**** test%s for %s ****" %(module, '/'.join(testdata[test]["location"]))
-        test = eval(test)
-        myunittest = unittest.makeSuite(test)
-        a = unittest.TextTestRunner(verbosity=2).run(myunittest)
-        total += a.testsRun
-        errors += len(a.errors)
-        failures += len(a.failures)
 
-    print "\n\n********* SUMMARY OF SPUN TEST **************"
-    print "TOTAL: %d\tPASSED: %d\tFAILED: %d\tERRORS: %d" % (total,total-(errors+failures),failures,errors)
+    from testall import testmodule
+    testmodule("SPun")

@@ -12,11 +12,12 @@ __revision__ = "$Revision$"
 # they can use:
 #         from cclib.parser import Gaussian
 
-from gaussianparser import Gaussian
-from gamessparser import GAMESS
 from adfparser import ADF
-from jaguarparser import Jaguar
+from gamessparser import GAMESS
 from gamessukparser import GAMESSUK
+from gaussianparser import Gaussian
+from jaguarparser import Jaguar
+from molproparser import Molpro
 
 # This allow users to type:
 #         from cclib.parser import ccopen

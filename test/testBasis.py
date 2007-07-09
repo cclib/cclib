@@ -1,13 +1,10 @@
 __revision__ = "$Revision$"
 
-import os, unittest
-
 import bettertest
-from testall import gettestdata
 
 
 class GenericBasisTest(bettertest.TestCase):
-    """Any type of calculation that has basis set information."""
+    """Basis set unittest."""
 
     def testgbasis(self):
         """Is gbasis the right length?"""
@@ -46,36 +43,22 @@ class GenericBasisTest(bettertest.TestCase):
                 self.assertAlmostEqual(p_coeffs[0][1], 0.1559, 4)
 
 class GamessUKBasisTest(GenericBasisTest):
-    def setUp(self):
-        self.data = testdata[self.__class__.__name__]["data"]
+    """GAMESS-UK basis set unittest."""
 
 class GamessUSBasisTest(GenericBasisTest):
-    def setUp(self):
-        self.data = testdata[self.__class__.__name__]["data"]
+    """GAMESS-US basis set unittest."""
 
 class GaussianBasisTest(GenericBasisTest):
-    def setUp(self):
-        self.data = testdata[self.__class__.__name__]["data"]
+    """Gaussian basis set unittest."""
+
+class MolproBasisTest(GenericBasisTest):
+    """Molpro basis set unittest."""
 
 class PCGamessBasisTest(GenericBasisTest):
-    def setUp(self):
-        self.data = testdata[self.__class__.__name__]["data"]
+    """PC-GAMESS basis set unittest."""
 
-
-# Load test data using information in file.
-testdata = gettestdata(module="Basis")
               
 if __name__=="__main__":
-    total = errors = failures = 0
-    for test in testdata:
-        module = testdata[test]["module"]
-        print "\n**** test%s for %s ****" %(module, '/'.join(testdata[test]["location"]))
-        test = eval(test)
-        myunittest = unittest.makeSuite(test)
-        a = unittest.TextTestRunner(verbosity=2).run(myunittest)
-        total += a.testsRun
-        errors += len(a.errors)
-        failures += len(a.failures)
 
-    print "\n\n********* SUMMARY OF BASIS TEST **************"
-    print "TOTAL: %d\tPASSED: %d\tFAILED: %d\tERRORS: %d" % (total,total-(errors+failures),failures,errors)
+    from testall import testmodule
+    testmodule("Basis")

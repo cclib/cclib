@@ -1,7 +1,5 @@
 __revision__ = "$Revision$"
 
-import os, unittest
-
 # If numpy is not installed, try to import Numeric instead.
 try:
     import numpy
@@ -9,11 +7,11 @@ except ImportError:
     import Numeric as numpy
 
 import bettertest
-from testall import gettestdata
 
 
 class GenericTDTest(bettertest.TestCase):
-    """Time-dependent HF or DFT calculations."""
+    """Time-dependent HF/DFT unittest."""
+
     def testenergiesnumber(self):
         """Is the length of etenergies correct?"""
         self.assertEqual(len(self.data.etenergies), self.number)
@@ -35,9 +33,9 @@ class GenericTDTest(bettertest.TestCase):
         self.assertEqual(len(self.data.etsyms), self.number)
 
 class GaussianTDDFTTest(GenericTDTest):
-    def setUp(self):
-        self.data = testdata[self.__class__.__name__]["data"]
-        self.number = 24
+    """Gaussian time-dependent HF/DFT unittest."""
+
+    number = 24
     
     def testsyms(self):
         """Is etsyms populated by singlets and triplets 50/50?"""
@@ -47,20 +45,7 @@ class GaussianTDDFTTest(GenericTDTest):
         self.assertEqual(len(triplets), self.number/2)
 
 
-# Load test data using information in file.
-testdata = gettestdata(module="TD")
-              
 if __name__=="__main__":
-    total = errors = failures = 0
-    for test in testdata:
-        module = testdata[test]["module"]
-        print "\n**** test%s for %s ****" %(module, '/'.join(testdata[test]["location"]))
-        test = eval(test)
-        myunittest = unittest.makeSuite(test)
-        a = unittest.TextTestRunner(verbosity=2).run(myunittest)
-        total += a.testsRun
-        errors += len(a.errors)
-        failures += len(a.failures)
 
-    print "\n\n********* SUMMARY OF TD TEST **************"
-    print "TOTAL: %d\tPASSED: %d\tFAILED: %d\tERRORS: %d" % (total,total-(errors+failures),failures,errors)
+    from testall import testmodule
+    testmodule("TD")

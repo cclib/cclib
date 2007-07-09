@@ -3,17 +3,17 @@ __revision__ = "$Revision$"
 import os
 import unittest
 
-from cclib.parser import ADF, GAMESS, Gaussian, Jaguar, GAMESSUK
+from cclib.parser import ADF, GAMESS, GAMESSUK, Gaussian, Jaguar, Molpro
 
 
-test_modules = [ "testSP", "testSPun", "testBasis", "testCore",
-                 "testMP", "testCC", "testCI", "testTD",
-                 "testGeoOpt", "testvib" ]
+test_modules = [ "SP", "SPun", "GeoOpt", "Basis", "Core",
+                 "MP", "CC", "CI", "TD",
+                 "vib" ]
 
 
-def getfile(parser,*location):
+def getfile(parser, *location):
     """Returns a parsed logfile."""
-    if parser.__name__ in ["GAMESS", "ADF", "Jaguar", "Gaussian"]:
+    if parser.__name__ in ["ADF", "GAMESS", "Gaussian", "Jaguar", "Molpro"]:
         fullpath = ("..","data",parser.__name__) + location
     elif parser.__name__=="GAMESSUK":
         fullpath = ("..","data","GAMESS-UK") + location
@@ -34,7 +34,8 @@ def gettestdata(module=None):
         test["module"] = line[0]
         test["parser"] = line[1]
         test["location"] = line[3:]
-        test["data"] = getfile(eval(line[1]), *line[3:])
+        # The file is parsed bettertest.TestCase.run().
+        #test["data"] = getfile(eval(line[1]), *line[3:])
         testclass = line[2]
         testdata[testclass] = test
     return testdata
@@ -65,38 +66,65 @@ def importName(modulename, name):
     except ImportError:
         return None
     return getattr(module, name)
-    
+
+def testmodule(module):
+    """Run all the unittests in a module."""
+
+    testdata = gettestdata(module=module)    
+    total = errors = failures = 0
+    for test in testdata:
+
+        print "\n**** test%s for %s ****" %(module, '/'.join(testdata[test]["location"]))
+        test = importName("test%s" %module, test)
+        parser = testdata[test.__name__]["parser"]
+        location = testdata[test.__name__]["location"]
+        test.data = getfile(eval(parser), *location)
+        myunittest = unittest.makeSuite(test)
+
+        a = unittest.TextTestRunner(verbosity=2).run(myunittest)
+        total += a.testsRun
+        errors += len(a.errors)
+        failures += len(a.failures)
+
+    print "\n\n********* SUMMARY OF %s TEST **************" %module.upper()
+    print "TOTAL: %d\tPASSED: %d\tFAILED: %d\tERRORS: %d" % (total,total-(errors+failures),failures,errors)
+
 
 def testall():
+    """Run all unittests in all modules."""
+
     # Make sure we are in the test directory of this script,
     #   so that getfile() can access the data files.
     curdir = os.path.abspath(os.curdir)
     destdir = os.path.dirname(__file__)
     if destdir:
         os.chdir(destdir)
+
     perpackage = {}
     errors = []
     for module in test_modules:
-        try:
-            testdata = importName(module, "testdata") # i.e. from testGeoOpt import testdata
-        except: # Parsing failed
-            errors.append("ERROR: no tests run for %s as parsing failed." %module)
-        else:
-            for name in testdata:
-                path = '/'.join(testdata[name]["location"])
-                program = testdata[name]["location"][0][5:]
-                print "\n**** test%s for %s ****" %(module, path)
-                try:
-                    test = importName(module, name)
-                except:
-                    error.append("ERROR: could not import %s from %s." %(name, module))
-                else:
-                    myunittest = unittest.makeSuite(test)
-                    a = unittest.TextTestRunner(verbosity=2).run(myunittest)
-                    l = perpackage.setdefault(program, [0, 0, 0])
-                    l[0] += a.testsRun
-                    l[1] += len(a.errors)
-                    l[2] += len(a.failures)
+
+        testdata = gettestdata(module)
+        for name in testdata:
+
+            path = '/'.join(testdata[name]["location"])
+            program = testdata[name]["location"][0][5:]
+            print "\n**** test%s for %s ****" %(module, path)
+
+            try:
+                test = importName("test%s" %module, name)
+            except:
+                error.append("ERROR: could not import %s from %s." %(name, module))
+            else:
+                parser = testdata[test.__name__]["parser"]
+                location = testdata[test.__name__]["location"]
+                test.data = getfile(eval(parser), *location)
+                myunittest = unittest.makeSuite(test)
+                a = unittest.TextTestRunner(verbosity=2).run(myunittest)
+                l = perpackage.setdefault(program, [0, 0, 0])
+                l[0] += a.testsRun
+                l[1] += len(a.errors)
+                l[2] += len(a.failures)
 
     print "\n\n********* SUMMARY PER PACKAGE ****************"
     names = perpackage.keys()
@@ -121,6 +149,7 @@ def testall():
     # Return to the directory we started from.
     if destdir:
         os.chdir(curdir)
+
 
 if __name__ == "__main__":
     testall()

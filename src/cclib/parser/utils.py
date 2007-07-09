@@ -7,7 +7,7 @@ __revision__ = "$Revision$"
 
 
 import os
-import bz2 # New in Python 2.3
+import bz2 # New in Python 2.3.
 import gzip
 import zipfile
 import logging
@@ -15,9 +15,10 @@ import StringIO
 
 import adfparser
 import gamessparser
+import gamessukparser
 import gaussianparser
 import jaguarparser
-import gamessukparser
+import molproparser
 
 
 def openlogfile(filename):
@@ -57,9 +58,13 @@ def ccopen(filename,progress=None,loglevel=logging.INFO,logname="Log"):
         if line.find("Amsterdam Density Functional") >= 0:
             filetype = adfparser.ADF
             break
+        # Don't break as it may be a GAMESS-UK file.
         elif line.find("GAMESS") >= 0:
             filetype = gamessparser.GAMESS
-            # don't break as it may be a GAMESS-UK file
+        # This can break, since it is non - GAMESS-UK specific.
+        elif line.find("GAMESS VERSION") >= 0:
+            filetype = gamessparser.GAMESS
+            break
         elif line.find("G A M E S S - U K") >= 0:
             filetype = gamessukparser.GAMESSUK
             break
@@ -68,6 +73,9 @@ def ccopen(filename,progress=None,loglevel=logging.INFO,logname="Log"):
             break
         elif line.find("Jaguar") >= 0:
             filetype = jaguarparser.Jaguar
+            break
+        elif line.find("PROGRAM SYSTEM MOLPRO") >= 0:
+            filetype = moplroparser.Molpro
             break
     inputfile.close() # Need to close before creating an instance
     

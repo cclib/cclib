@@ -1,7 +1,5 @@
 __revision__ = "$Revision$"
 
-import os, unittest
-
 # If numpy is not installed, try to import Numeric instead.
 try:
     import numpy
@@ -9,12 +7,10 @@ except ImportError:
     import Numeric as numpy
 
 import bettertest
-from testall import gettestdata
 
 
 class GenericCITest(bettertest.TestCase):
-    """CI calculations."""
-    nstates = 0
+    """CI unittest."""
     
     def testnumberofstates(self):
         """ Are there nstate elements in etenergies/etsecs/etsyms/etoscs?"""
@@ -22,7 +18,6 @@ class GenericCITest(bettertest.TestCase):
         self.assertEqual(len(self.data.etsecs), self.nstates)
         self.assertEqual(len(self.data.etsyms), self.nstates)
         self.assertEqual(len(self.data.etoscs), self.nstates)
-
     
     def testetenergies(self):
         """ Are transition energies positive and rising?"""
@@ -31,14 +26,16 @@ class GenericCITest(bettertest.TestCase):
         self.failUnless(numpy.alltrue(changes > 0.0))
 
 class GenericCISTest(GenericCITest):
-    """CIS calculations."""
+    """CIS unittest."""
     
 class GenericCISWaterTest(GenericCISTest):
-    """CIS(RHF) calculations of water (STO-3G)."""
+    """CIS(RHF)/STO-3G water unittest."""
+
     # First four singlet/triplet state excitation energies [cm-1].
     # Based on output in GAMESS test.
     etenergies0 = numpy.array([98614.56, 114906.59, 127948.12, 146480.64])
     etenergies1 = numpy.array([82085.34,  98999.11, 104077.89, 113978.37])
+
     # First four singlet/triplet state excitation orbitals and coefficients.
     # Tuples: (from MO, to MO, coefficient) - don't need spin indices.
     # Based on output in GAMESS test (using the "dets" algorithm).
@@ -99,34 +96,22 @@ class GenericCISWaterTest(GenericCISTest):
                 self.fail("Excitation %i->%s not found (triplet state %i)" %(exc[0], exc[1], i))
 
 class GAMESSUSCISTest(GenericCISWaterTest):
-    def setUp(self):
-        self.data = testdata[self.__class__.__name__]["data"]
-        self.nstates = 5
+    """GAMESS-US CIS(RHF)/STO-3G water unittest."""
+
+    nstates = 5
 
 class GaussianCISTest(GenericCISWaterTest):
-    def setUp(self):
-        self.data = testdata[self.__class__.__name__]["data"]
-        self.nstates = 10
+    """Gaussian CIS(RHF)/STO-3G water unittest."""
+
+    nstates = 10
 
 class Jaguar65CISTest(GenericCISWaterTest):
-    def setUp(self):
-        self.data = testdata[self.__class__.__name__]["data"]
-        self.nstates = 5
+    """Jaguar 6.5 CIS(RHF)/STO-3G water unittest."""
 
-# Load test data using information in file.
-testdata = gettestdata(module="CI")
+    nstates = 5
+
              
 if __name__=="__main__":
-    total = errors = failures = 0
-    for test in testdata:
-        module = testdata[test]["module"]
-        print "\n**** test%s for %s ****" %(module, '/'.join(testdata[test]["location"]))
-        test = eval(test)
-        myunittest = unittest.makeSuite(test)
-        a = unittest.TextTestRunner(verbosity=2).run(myunittest)
-        total += a.testsRun
-        errors += len(a.errors)
-        failures += len(a.failures)
 
-    print "\n\n********* SUMMARY OF CI TEST **************"
-    print "TOTAL: %d\tPASSED: %d\tFAILED: %d\tERRORS: %d" % (total,total-(errors+failures),failures,errors)
+    from testall import testmodule
+    testmodule("CI")

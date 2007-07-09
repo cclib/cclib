@@ -1,8 +1,6 @@
 __revision__ = "$Revision$"
 
-import os
 import math
-import unittest
 
 # If numpy is not installed, try to import Numeric instead.
 try:
@@ -11,11 +9,10 @@ except ImportError:
     import Numeric as numpy
 
 import bettertest
-from testall import gettestdata
 
 
 class GenericGeoOptTest(bettertest.TestCase):
-    """Geometry optimizations."""
+    """Geometry optimization unittest."""
 
     def testhomos(self):
         """Is the index of the homo equal to 34?"""
@@ -109,13 +106,12 @@ class GenericGeoOptTest(bettertest.TestCase):
         self.assertEquals(self.data.scftargets.shape,(len(self.data.scfvalues),len(self.data.scfvalues[0][0])))
 
 class ADFGeoOptTest(GenericGeoOptTest):
-    def setUp(self):
-        self.data = testdata[self.__class__.__name__]["data"]
+    """ADF geometry optimization unittest."""
 
     def testscfvaluedim(self):
         """Do the scf values have the right dimensions?"""
         # ADF calculations have one more SCF cycle after the geometry is converged
-        # with a tighter SCF convergence cutoff
+        # with a tighter SCF convergence cut-off.
         self.assertEquals(len(self.data.scfvalues),len(self.data.geovalues)+1)
 
     def testatomcoords_more(self):
@@ -128,44 +124,28 @@ class ADFGeoOptTest(GenericGeoOptTest):
         self.assertInside(self.data.scfenergies[-1],-140,1,"Final scf energy: %f not -140+-1eV" % self.data.scfenergies[-1])
 
 class GamessUKGeoOptTest(GenericGeoOptTest):
-    def setUp(self):
-        self.data = testdata[self.__class__.__name__]["data"]
+    """GAMESS-UK geometry optimization unittest."""
 
 class GamessUSGeoOptTest(GenericGeoOptTest):
-    def setUp(self):
-        self.data = testdata[self.__class__.__name__]["data"]
+    """GAMESS-US geometry optimization unittest."""
 
 class GaussianGeoOptTest(GenericGeoOptTest):
-    def setUp(self):
-        self.data = testdata[self.__class__.__name__]["data"]
+    """Gaussian geometry optimization unittest."""
 
 class Jaguar42GeoOptTest(GenericGeoOptTest):
-    def setUp(self):
-        self.data = testdata[self.__class__.__name__]["data"]
+    """Jaguar4.2  geometry optimization unittest."""
 
 class Jaguar65GeoOptTest(GenericGeoOptTest):
-    def setUp(self):
-        self.data = testdata[self.__class__.__name__]["data"]
-        
+    """Jaguar6.5 geometry optimization unittest."""
+
+class MolproGeoOptTest(GenericGeoOptTest):
+    """Molpro geometry optimization unittest."""
+
 class PCGamessGeoOptTest(GenericGeoOptTest):
-    def setUp(self):
-        self.data = testdata[self.__class__.__name__]["data"]
+    """PC-GAMESS geometry optimization unittest."""
 
-
-# Load test data using information in file.
-testdata = gettestdata(module="GeoOpt")
 
 if __name__=="__main__":
-    total = errors = failures = 0
-    for test in testdata:
-        module = testdata[test]["module"]
-        print "\n**** test%s for %s ****" %(module, '/'.join(testdata[test]["location"]))
-        test = eval(test)
-        myunittest = unittest.makeSuite(test)
-        a = unittest.TextTestRunner(verbosity=2).run(myunittest)
-        total += a.testsRun
-        errors += len(a.errors)
-        failures += len(a.failures)
-    
-    print "\n\n********* SUMMARY OF GEOOPT TEST **************"
-    print "TOTAL: %d\tPASSED: %d\tFAILED: %d\tERRORS: %d" % (total,total-(errors+failures),failures,errors)
+
+    from testall import testmodule
+    testmodule("GeoOpt")

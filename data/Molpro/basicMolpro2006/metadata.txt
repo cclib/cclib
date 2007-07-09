@@ -1,0 +1,23 @@
+dvb_spks: single-point DFT (10 virtual orbitals printed)
+Linux 2.6.5-7.283-sn2 #1 SMP ia64
+*****
+dvb_sphf: single-point RHF (all virtual orbitals printed)
+Linux 2.6.5-7.283-sn2 #1 SMP ia64
+*****
+dvb_sphf_un: single-point UHF (all virtual orbitals printed)
+Linux 2.6.5-7.283-sn2 #1 SMP ia64
+*****
+C_bigbasis(_cart): single-point HF (all virtual orbitals printed)
+Linux 2.6.5-7.283-sn2 #1 SMP ia64
+*****
+dvb_gopt: geometry optimization with DFT (all virtual orbitals printed)
+Linux 2.6.5-7.283-sn2 #1 SMP ia64
+*****
+h2o_mpN: single-point MPN
+Linux 2.6.5-7.283-sn2 #1 SMP ia64
+*****
+h2o_ccd, h2o_ccsd, h2occsd(t): single-point CCD, CCSD, CCSD(T)
+Linux 2.6.5-7.283-sn2 #1 SMP ia64
+*****
+dvb_ir
+Linux 2.6.5-7.283-sn2 #1 SMP ia64

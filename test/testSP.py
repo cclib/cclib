@@ -1,15 +1,12 @@
 __revision__ = "$Revision$"
 
-import os, unittest
-
 import bettertest
-from testall import gettestdata
 
 
 class GenericSPTest(bettertest.TestCase):
-    """Restricted single point calculations with MO coeffs and overlap info."""
+    """Restricted single point unittest."""
 
-    nbasisdict = {1:1, 6:5} # STO-3G, H has 1, C has 3
+    nbasisdict = {1:1, 6:5} # STO-3G, H has 1, C has 3.
 
     def testdimaooverlaps(self):
         """Are the dims of the overlap matrix consistent with nbasis?"""
@@ -38,29 +35,24 @@ class GenericSPTest(bettertest.TestCase):
         self.assertEquals(len(set(all)), len(all))
 
 class ADFSPTest(GenericSPTest):
-    def setUp(self):
-        self.data = testdata[self.__class__.__name__]["data"]
-    
+    """ADF restricted single point unittest."""
+
     def testdimaooverlaps(self):
         """Are the dims of the overlap matrix consistent with nbasis?"""
         # ADF uses fooverlaps.
         self.assertEquals(self.data.fooverlaps.shape,(self.data.nbasis,self.data.nbasis))
 
 class GamessUKSPTest(GenericSPTest):
-    def setUp(self):
-        self.data = testdata[self.__class__.__name__]["data"]
+    """GAMESS-UK restricted single point unittest."""
 
 class GamessUSSPTest(GenericSPTest):
-    def setUp(self):
-        self.data = testdata[self.__class__.__name__]["data"]
+    """GAMESS-US restricted single point unittest."""
 
 class GaussianSPTest(GenericSPTest):
-    def setUp(self):
-        self.data = testdata[self.__class__.__name__]["data"]
+    """Gaussian restricted single point unittest."""
 
 class Jaguar42SPTest(GenericSPTest):
-    def setUp(self):
-        self.data = testdata[self.__class__.__name__]["data"]
+    """Jaguar4.2 restricted single point unittest."""
 
     # Data file does not contain enough information. Can we make a new one?
     def testdimmocoeffs(self):
@@ -73,29 +65,18 @@ class Jaguar42SPTest(GenericSPTest):
         self.assertEquals(1, 1)
        
 class Jaguar60SPTest(GenericSPTest):
-    def setUp(self):
-        self.data = testdata[self.__class__.__name__]["data"]
+    """Jaguar6.0 restricted single point unittest."""
+
     nbasisdict = {1:5, 6:15} # 6-31G(d,p)
 
+class MolproSPTest(GenericSPTest):
+    """Molpro restricted single point unittest."""
+
 class PCGamessSPTest(GenericSPTest):
-    def setUp(self):
-        self.data = testdata[self.__class__.__name__]["data"]
+    """PC-GAMESS restricted single point unittest."""
 
-
-# Load test data using information in file.
-testdata = gettestdata(module="SP")
 
 if __name__=="__main__":
-    total = errors = failures = 0
-    for test in testdata:
-        module = testdata[test]["module"]
-        print "\n**** test%s for %s ****" %(module, '/'.join(testdata[test]["location"]))
-        test = eval(test)
-        myunittest = unittest.makeSuite(test)
-        a = unittest.TextTestRunner(verbosity=2).run(myunittest)
-        total += a.testsRun
-        errors += len(a.errors)
-        failures += len(a.failures)
 
-    print "\n\n********* SUMMARY OF SP TEST **************"
-    print "TOTAL: %d\tPASSED: %d\tFAILED: %d\tERRORS: %d" % (total,total-(errors+failures),failures,errors)
+    from testall import testmodule
+    testmodule("SP")

@@ -2,13 +2,17 @@ Basis     GAMESSUK    GamessUKBasisTest   basicGAMESS-UK        dvb_sp.out
 Basis     GAMESS      GamessUSBasisTest   basicGAMESS-US        dvb_sp.out
 Basis     Gaussian    GaussianBasisTest   basicGaussian03       dvb_sp_basis.log
 Basis     GAMESS      PCGamessBasisTest   basicPCGAMESS         dvb_sp.out
+Basis     Molpro      MolproBasisTest     basicMolpro2006       dvb_sphf.out
 
 CC        GAMESS      GAMESSUSCCDTest     basicGAMESS-US        water_ccd.out
 CC        GAMESS      GAMESSUSCCSDTest    basicGAMESS-US        water_ccsd.out
-CC        GAMESS      GAMESSUSCCSDTTest   basicGAMESS-US        water_ccsd(t).out
+CC        GAMESS      GAMESSUSCCSDTest    basicGAMESS-US        water_ccsd(t).out
 CC        Gaussian    GaussianCCDTest     basicGaussian03       water_ccd.log
 CC        Gaussian    GaussianCCSDTest    basicGaussian03       water_ccsd.log
-CC        Gaussian    GaussianCCSDTTest   basicGaussian03       water_ccsd(t).log
+CC        Gaussian    GaussianCCSDTest    basicGaussian03       water_ccsd(t).log
+CC        Molpro      MolproCCDTest       basicMolpro2006       h2o_ccd.out
+CC        Molpro      MolproCCSDTest      basicMolpro2006       h2o_ccsd.out
+CC        Molpro      MolproCCSDTest      basicMolpro2006       h2o_ccsd(t).out
 
 CI        GAMESS      GAMESSUSCISTest     basicGAMESS-US        water_cis_saps.out
 CI        Gaussian    GaussianCISTest     basicGaussian03       water_cis.log
@@ -26,6 +30,7 @@ GeoOpt    Gaussian    GaussianGeoOptTest  basicGaussian03       dvb_gopt.out
 GeoOpt    Jaguar      Jaguar42GeoOptTest  basicJaguar4.2        dvb_gopt_b.out
 GeoOpt    Jaguar      Jaguar65GeoOptTest  basicJaguar6.5        dvb_gopt_b.out
 GeoOpt    GAMESS      PCGamessGeoOptTest  basicPCGAMESS         dvb_gopt_b.out
+GeoOpt    Molpro      MolproGeoOptTest    basicMolpro2006       dvb_gopt.log
 
 MP        GAMESSUK    GAMESSUKMP2Test     basicGAMESS-UK        water_mp2.out
 MP        GAMESSUK    GAMESSUKMP3Test     basicGAMESS-UK        water_mp3.out
@@ -39,6 +44,9 @@ MP        GAMESS      PCGAMESSMP2Test     basicPCGAMESS         water_mp2.out
 MP        GAMESS      PCGAMESSMP3Test     basicPCGAMESS         water_mp3.out
 MP        GAMESS      PCGAMESSMP4SDQTest  basicPCGAMESS         water_mp4.out
 MP        GAMESS      PCGAMESSMP4SDTQTest basicPCGAMESS         water_mp4_sdtq.out
+MP        Molpro      MolproMP2Test       basicMolpro2006       h2o_mp2.out
+MP        Molpro      MolproMP3Test       basicMolpro2006       h2o_mp3.out
+MP        Molpro      MolproMP4SDTQTest   basicMolpro2006       h2o_mp4.out
 
 SP        ADF         ADFSPTest           basicADF2004.01       dvb_sp_b.adfout
 SP        GAMESSUK    GamessUKSPTest      basicGAMESS-UK        dvb_sp_b.out
@@ -47,6 +55,7 @@ SP        Gaussian    GaussianSPTest      basicGaussian03       dvb_sp.out
 SP        Jaguar      Jaguar42SPTest      basicJaguar4.2        dvb_sp.out
 SP        Jaguar      Jaguar60SPTest      basicJaguar6.0        dvb_sp.out
 SP        GAMESS      PCGamessSPTest      basicPCGAMESS         dvb_sp.out
+SP        Molpro      MolproSPTest        basicMolpro2006       dvb_sphf.out
 
 SPun      ADF         ADFSPunTest         basicADF2004.01       dvb_un_sp.adfout
 SPun      GAMESSUK    GamessUKSPunTest    basicGAMESS-UK        dvb_un_sp_b.out
@@ -56,6 +65,7 @@ SPun      Jaguar      Jaguar42SPunTest    basicJaguar4.2        dvb_un_sp.out
 SPun      Jaguar      Jaguar60SPunTest    basicJaguar6.0        dvb_un_sp.out
 SPun      Jaguar      Jaguar65SPunTest    basicJaguar6.5        dvb_un_sp.out
 SPun      GAMESS      PCGamessSPunTest    basicPCGAMESS         dvb_un_sp.out
+SPun      Molpro      MolproSPunTest      basicMolpro2006       dvb_sphf_un.out
 
 TD        Gaussian    GaussianTDDFTTest   basicGaussian03       CO_TD_delta.log
 
@@ -69,3 +79,4 @@ vib       GAMESS      PCGamessIRTest      basicPCGAMESS         dvb_ir.out
 vib       GAMESSUK    GamessUKRamanTest   basicGAMESS-UK        dvb_raman.out
 vib       Gaussian    GaussianRamanTest   basicGaussian03       dvb_raman.out
 vib       GAMESS      PCGamessRamanTest   basicPCGAMESS         dvb_raman.out
+vib       Molpro      MolproIRTest        basicMolpro2006       dvb_ir.log

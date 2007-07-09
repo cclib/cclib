@@ -8,9 +8,13 @@ try:
 except ImportError:
     import Numeric as numpy
 
+from cclib.parser import ADF, GAMESS, GAMESSUK, Gaussian, Jaguar, Molpro
+from testall import getfile
+
 
 class TestCase(unittest.TestCase):
-    """Create a class with extra 'asserts' for testing numerical data.
+    """Create a class with extra 'asserts' for testing numerical data,
+        and a special run() method for loading cclib test files on run-time.
 
     It is not possible to test equality of numpy arrays using assertEquals().
     Instead, use assertArrayEquals() as defined below. For the original solution see:
@@ -19,13 +23,15 @@ class TestCase(unittest.TestCase):
     Also, for testing near equality of floats use assertInside.
     (Taken from Python Cookbook 2nd Ed. Recipe 8.11)
     """
-    def assertInside(self,first,second,error,msg=None):
+    
+    def assertInside(self, first, second, error, msg=None):
         """Fail if the second number isn't within a certain error of the first."""
         if not (second-error) < first < (second+error):
             raise self.failureException, (msg or '%r != %r (+-%r)' % (first,second,error))
 
-    def assertArrayEquals(self,first,second,msg=None):
+    def assertArrayEquals(self, first, second, msg=None):
         """Fails unless two numpy arrays are identical."""
+        
         errormsg = None
         if not first.shape == second.shape:
             errormsg = "Shapes are different: %s != %s" % (first.shape, second.shape)
@@ -43,7 +49,10 @@ class TestCase(unittest.TestCase):
         if errormsg:
             raise self.failureException, (msg or errormsg)
 
-    def run(self,result=None):
+    def run(self, result=None):
+        """Custom run method for cclib."""
+        
+        # Skip (pass) the test under some conditions.
         if "PASS" in self._testMethodDoc:
             print self._testMethodDoc
         else:
