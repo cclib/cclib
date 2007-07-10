@@ -1,6 +1,8 @@
  $contrl scftyp=rhf mplevl=2
          runtyp=energy exetyp=run
-         units=angs coord=zmt $end
+         units=angs coord=zmt
+         nprint=9 $end
+ $mp2    mp2prp=.t. $end
  $basis  gbasis=sto ngauss=3 $end
  $data
 water

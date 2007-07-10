@@ -553,12 +553,20 @@ class GAMESS(logfileparser.Logfile):
 
             dashes = inputfile.next()
             for base in range(0, self.nmo, 5):
-                blank = inputfile.next()
-                line = inputfile.next() # Eigenvector numbers.
-                line = inputfile.next() # Eigenvalues for these orbitals (in hartrees).
+
+                line = inputfile.next()
+                numbers = inputfile.next() # Eigenvector numbers.
+
+                # Eigenvalues for these orbitals (in hartrees).
+                # Sometimes there are some blank lines before it.
+                while not line.strip():
+                    line = inputfile.next()
                 self.moenergies[0].extend([utils.convertor(float(x), "hartree", "eV") for x in line.split()])
-                line = inputfile.next() # Orbital symmetries.
-                self.mosyms[0].extend(map(self.normalisesym, line.split()))
+
+                # Orbital symmetries.
+                line = inputfile.next()
+                if line.strip():
+                    self.mosyms[0].extend(map(self.normalisesym, line.split()))
                 
                 # Now we have nbasis lines.
                 # Going to use the same method as for normalise_aonames()
@@ -592,10 +600,11 @@ class GAMESS(logfileparser.Logfile):
                         j += 1
 
             line = inputfile.next()
-            # If it's restricted we have:
-            #  ...... END OF RHF CALCULATION ......
-            #                or
-            #  ...... END OF DFT CALCULATION ......
+            # If it's restricted and no more properties:
+            #  ...... END OF RHF/DFT CALCULATION ......
+            # If there are more properties (DENSITY MATRIX):
+            #               --------------
+            #
             # If it's unrestricted we have:
             #
             #  ----- BETA SET ----- 
@@ -606,11 +615,12 @@ class GAMESS(logfileparser.Logfile):
             #
             #                      1          2          3          4          5
             # ... and so forth.
-            if not "END OF" in line:
+            line = inputfile.next()
+            if line[2:22] == "----- BETA SET -----":
                 self.mocoeffs.append(numpy.zeros((self.nmo, self.nbasis), "d"))
                 self.moenergies.append([])
                 self.mosyms.append([])
-                for i in range(5):
+                for i in range(4):
                     line = inputfile.next()
                 for base in range(0, self.nmo, 5):
                     blank = inputfile.next()
@@ -627,7 +637,6 @@ class GAMESS(logfileparser.Logfile):
                             self.mocoeffs[1][base+j, i] = float(temp[j * 11:(j + 1) * 11])
                             j += 1
                 line = inputfile.next()
-            assert line.find("END OF") >= 0
             self.moenergies = [numpy.array(x, "d") for x in self.moenergies]
 
         if line.find("NUMBER OF OCCUPIED ORBITALS") >= 0:
