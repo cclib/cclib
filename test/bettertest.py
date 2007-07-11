@@ -52,8 +52,16 @@ class TestCase(unittest.TestCase):
     def run(self, result=None):
         """Custom run method for cclib."""
         
-        # Skip (pass) the test under some conditions.
-        if "PASS" in self._testMethodDoc:
-            print self._testMethodDoc
-        else:
-            unittest.TestCase.run(self, result=result)
+        # Skip (pass) the test run under some conditions.
+        # In Python 2.4, the document string is in _TestCase__testMethodDoc.
+        # In Python 2.5, the document string is in _testMethodDoc.
+        if hasattr(self, "_TestCase__testMethodDoc"):
+            if "PASS" in self._TestCase__testMethodDoc:
+                print self._TestCase__testMethodDoc
+                return
+        if hasattr(self, "_testMethodDoc"):
+            if "PASS" in self._testMethodDoc:
+                print self._testMethodDoc
+                return
+
+        unittest.TestCase.run(self, result=result)
