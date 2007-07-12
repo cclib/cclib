@@ -19,14 +19,10 @@ except ImportError:
 
 import utils
 
+class cclibData(object):
+    """Class for objects containing data from cclib parsers and methods.
 
-class Logfile(object):
-    """Abstract class for logfile objects.
-
-    Subclasses defined by cclib:
-        ADF, GAMESS, GAMESSUK, Gaussian, Jaguar, Molpro
-    
-    Attributes:
+    Description of cclib attributes:
         aonames -- atomic orbital names (list)
         aooverlaps -- atomic orbital overlap matrix (array[2])
         atombasis -- indices of atomic orbitals on each atom (list of lists)
@@ -66,15 +62,14 @@ class Logfile(object):
         vibsyms -- symmetries of vibrations (list)
     (1) The term 'array' refers to a numpy array
     (2) The number of dimensions of an array is given in square brackets
-    (3) Python indexes arrays/lists starting at zero. So if homos==[10], then
-        the 11th molecular orbital is the HOMO
+    (3) Python indexes arrays/lists starting at zero, so if homos==[10], then
+            the 11th molecular orbital is the HOMO
     """
 
-    def __init__(self, filename, progress=None, fupdate=0.05, cupdate=0.002, 
-                                 loglevel=logging.INFO, logname="Log"):
-        """Initialise the Logfile object.
-
-        Typically called by subclasses in their own __init__ methods.
+    def __init__(self):
+        """Initialize the cclibData object.
+        
+        Normally called in the parse() method of a Logfile subclass.
         """
 
         # Names of all supported attributes.
@@ -90,7 +85,7 @@ class Logfile(object):
                           'scfenergies', 'scftargets', 'scfvalues',
                           'vibdisps', 'vibfreqs', 'vibirs', 'vibramans', 'vibsyms']
 
-        # The expected types for all attributes.
+        # The expected types for all supported attributes.
         self._attrtypes = { "aonames":        list,
                             "aooverlaps":     numpy.ndarray,
                             "atombasis":      list,
@@ -126,11 +121,48 @@ class Logfile(object):
                             "vibsyms":        list,
                           }
 
-        # Arrays are double precision by default, these will be integer arrays.
-        self._tointarray = ['atomnos', 'coreelectrons', 'homos']
+        # Arrays are double precision by default, but these will be integer arrays.
+        self._intarrays = ['atomnos', 'coreelectrons', 'homos']
 
-        # Attributes that should be lists of arrays.
-        self._tolistofarrays = ['mocoeffs', 'moenergies', 'scfvalues']
+        # Attributes that should be lists of arrays (double precision).
+        self._listsofarrays = ['mocoeffs', 'moenergies', 'scfvalues']
+
+    def __setattr__(self, name, value):
+        
+        # If possible, make sure the attribute has the correct type (including arrays).
+        atype = getattr(self, "_attrtypes", {}).get(name, None)
+        if atype and (type(value) is not atype):
+            if atype is numpy.ndarray:
+                precision = 'd'
+                if name in getattr(self, "_intarrays", []):
+                    precision = 'i'
+                value = numpy.array(value, precision)
+            else:
+                value = atype(value)
+        
+        # Make sure selected attrbutes are lists of arrays.
+        if name in getattr(self, "_listsofarrays", []):
+            if not numpy.alltrue([type(v) is numpy.ndarray for v in value]):
+                value = [numpy.array(v, 'd') for v in value]
+
+        # Set the actual attribute.
+        object.__setattr__(self, name, value)
+
+
+class Logfile(object):
+    """Abstract class for logfile objects.
+
+    Subclasses defined by cclib:
+        ADF, GAMESS, GAMESSUK, Gaussian, Jaguar, Molpro
+    
+    """
+
+    def __init__(self, filename, progress=None, fupdate=0.05, cupdate=0.002, 
+                                 loglevel=logging.INFO, logname="Log", datatype=cclibData):
+        """Initialise the Logfile object.
+
+        Typically called by subclasses in their own __init__() methods.
+        """
 
         self.filename = filename
 
@@ -139,10 +171,10 @@ class Logfile(object):
         self.fupdate = fupdate
         self.cupdate = cupdate
 
-        # Setup the logger.
+        # Set up the logger.
         # Note that calling logging.getLogger() with one name always returns the same instance.
-        # Presently in cclib, all parser instances of the same class use the same logger.
-        # This means that care needs to be taken not to duplicate handlers.
+        # Presently in cclib, all parser instances of the same class use the same logger,
+        #   which means that care needs to be taken not to duplicate handlers.
         self.loglevel = loglevel
         self.logname  = logname
         self.logger = logging.getLogger('%s %s' % (self.logname,self.filename))
@@ -155,18 +187,25 @@ class Logfile(object):
         # Periodic table of elements.
         self.table = utils.PeriodicTable()
 
+        # This is the class that will be used in the data object returned by parse(),
+        #   and should normally be cclibData or a subclass.
+        self.datatype = datatype
+
         self.parsed = False
 
     def __setattr__(self, name, value):
 
-        if hasattr(self, "logger"):
-            # Only call logger.info if attribute is new and in list.
-            if not hasattr(self, name) and name in self._attrlist:
+        # Send info to logger if the attribute is in the list self._attrlist.
+        if name in getattr(self, "_attrlist", {}) and hasattr(self, "logger"):
+                    
+            # Call logger.info() only if the attribute is new.
+            if not hasattr(self, name):
                 if type(value) in [numpy.ndarray, list]:
                     self.logger.info("Creating attribute %s[]" %name)
                 else:
                     self.logger.info("Creating attribute %s: %s" %(name, str(value)))
 
+        # Set the attribute.
         object.__setattr__(self, name, value)
 
     def parse(self, fupdate=None, cupdate=None):
@@ -184,8 +223,8 @@ class Logfile(object):
             raise AttributeError, "Method %s._extract takes wrong number of arguments." %self.__class__.__name__
             return -1
 
-        # Create list of attributes to keep after parsing.
-        _nodelete = list(set(self.__dict__.keys() + self._attrlist))
+        # Save the current list of attributes to keep after parsing.
+        _nodelete = list(set(self.__dict__.keys()))
 
         # Open the file object.
         inputfile = utils.openlogfile(self.filename)
@@ -206,45 +245,30 @@ class Logfile(object):
         if hasattr(self, "before_parsing"):
             self.before_parsing()
 
-        # Loop over lines in the file object.
+        # Initialize the cclibData object that will be returned.
+        # This is normally cclibData, but can be changed by passing
+        #   the datatype argument to __init__().
+        data = self.datatype()
+        
+        # Copy the attribute list, so that the parser knows what to expect,
+        #   specifically in __setattr__().
+        # The class self.datatype (normally cclibData) must have this attribute.
+        self._attrlist = data._attrlist
+        
+        # Loop over lines in the file object and call extract().
+        # This is where the actual parsing is done.
         for line in inputfile:
 
             self.updateprogress(inputfile, "Unsupported information", cupdate)
 
             # This call should check if the line begins a section of extracted data.
-            # If it does, it parses some lines and sets the relevant attributes.
+            # If it does, it parses some lines and sets the relevant attributes (to self).
+            # Any attributes can be freely set and used across calls, however only those
+            #   in data._attrlist will be moved to final data object that is returned.
             self.extract(inputfile, line)
 
-        # Close file object
+        # Close input file object.
         inputfile.close()
-
-        # Make sure all attributes have correct type (including arrays).
-        for attr in self._attrlist:
-            if hasattr(self, attr):
-                atype = self._attrtypes.get(attr, None)
-                if atype and type(getattr(self, attr)) is not atype:
-                    if atype is numpy.ndarray:
-                        try:
-                            precision = 'd'
-                            if attr in self._tointarray:
-                                precision = 'i'
-                            setattr(self, attr, numpy.array(getattr(self, attr), precision))
-                        except TypeError:
-                            self.logger.info("Attribute %s cannot be converted to an array" %(attr))
-                    else:
-                        try:
-                            setattr(self, attr, atype(getattr(self, attr)))
-                        except ValueError:
-                            self.logger.info("Attribute %s cannot be converted to type '%s'" %(attr, atype))
-
-        # Make sure selected attrbutes are lists of arrays.
-        for attr in self._tolistofarrays:
-            if hasattr(self, attr):
-                if not numpy.alltrue([type(x) is numpy.ndarray for x in getattr(self, attr)]):
-                    try:
-                        setattr(self, attr, [numpy.array(x, 'd') for x in getattr(self, attr)])
-                    except ValueError:
-                        self.logger.info("Elements of attribute %s cannot be converted to arrays." %attr)
 
         # If atomcoords were not parsed, but some input coordinates were ("inputcoords").
         # This is originally from the Gaussian parser, a regression fix.
@@ -259,6 +283,13 @@ class Logfile(object):
         if not hasattr(self, "coreelectrons"):
             self.coreelectrons = numpy.zeros(self.natom, "i")
 
+        # Move all cclib attributes to the cclibData object.
+        # To be moved, an attribute must be in data._attrlist.
+        # The attribute type is checked in cclibData.__setattr__().
+        for attr in data._attrlist:
+            if hasattr(self, attr):
+                setattr(data, attr, getattr(self, attr))
+
         # Delete temporary attributes (set during parsing and not in attrlist).
         for attr in self.__dict__.keys():
             if not attr in _nodelete:
@@ -269,6 +300,9 @@ class Logfile(object):
             self.progress.update(nstep, "Done")
 
         self.parsed = True
+        
+        # Return the cclibData object that was generated.
+        return data
 
     def updateprogress(self, inputfile, msg, xupdate=0.05):
         """Update progress."""

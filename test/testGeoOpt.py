@@ -67,7 +67,7 @@ class GenericGeoOptTest(bettertest.TestCase):
 
     def testnormalisesym(self):
         """Did this subclass overwrite normalisesym?"""
-        self.assertNotEquals(self.data.normalisesym("A"),"ERROR: This should be overwritten by this subclass")
+        self.assertNotEquals(self.logfile.normalisesym("A"),"ERROR: This should be overwritten by this subclass")
 
     def testlengthmoenergies(self):
         """Is the number of evalues equal to 60?"""

@@ -19,8 +19,8 @@ def getfile(parser, *location):
         fullpath = ("..","data","GAMESS-UK") + location
     logfile = parser(os.path.join(*fullpath))
     logfile.logger.setLevel(0)
-    logfile.parse()
-    return logfile
+    data = logfile.parse()
+    return data, logfile
 
 def gettestdata(module=None):
     """Returns a dict of test files from a given module."""
@@ -34,27 +34,25 @@ def gettestdata(module=None):
         test["module"] = line[0]
         test["parser"] = line[1]
         test["location"] = line[3:]
-        # The file is parsed bettertest.TestCase.run().
-        #test["data"] = getfile(eval(line[1]), *line[3:])
         testclass = line[2]
         testdata[testclass] = test
     return testdata
 
 def visualtests():
     """These are not formal tests -- but they should be eyeballed."""
-    logfiles = [ getfile(Gaussian,"basicGaussian03","dvb_gopt.out"),
-                 getfile(GAMESS,"basicPCGAMESS","dvb_gopt_a.out"),
-                 getfile(GAMESS,"basicGAMESS-US","dvb_gopt_a.out"),
-                 getfile(ADF,"basicADF2004.01","dvb_gopt.adfout"),
-                 getfile(Jaguar,"basicJaguar4.2", "dvb_gopt.out"),
-                 getfile(Jaguar,"basicJaguar6.5", "dvb_gopt.out"),
+    output = [ getfile(Gaussian,"basicGaussian03","dvb_gopt.out")[0],
+               getfile(GAMESS,"basicPCGAMESS","dvb_gopt_a.out")[0],
+               getfile(GAMESS,"basicGAMESS-US","dvb_gopt_a.out")[0],
+               getfile(ADF,"basicADF2004.01","dvb_gopt.adfout")[0],
+               getfile(Jaguar,"basicJaguar4.2", "dvb_gopt.out")[0],
+               getfile(Jaguar,"basicJaguar6.5", "dvb_gopt.out")[0],
                  ]
 
     print "\n\nMO energies of optimised dvb"
     print "    ","".join(["%-10s" % x for x in ['Gaussian','PC-GAMESS','GAMESS-US','ADF','Jaguar4.2','Jaguar6.5']])
-    print "HOMO", "   ".join(["%+7.4f" % x.moenergies[0][x.homos[0]] for x in logfiles])
-    print "LUMO", "   ".join(["%+7.4f" % x.moenergies[0][x.homos[0]+1] for x in logfiles])
-    print "H-L ", "   ".join(["%7.4f" % (x.moenergies[0][x.homos[0]+1]-x.moenergies[0][x.homos[0]],) for x in logfiles])
+    print "HOMO", "   ".join(["%+7.4f" % x.moenergies[0][x.homos[0]] for x in output])
+    print "LUMO", "   ".join(["%+7.4f" % x.moenergies[0][x.homos[0]+1] for x in output])
+    print "H-L ", "   ".join(["%7.4f" % (x.moenergies[0][x.homos[0]+1]-x.moenergies[0][x.homos[0]],) for x in output])
 
 def importName(modulename, name):
     """Import from a module whose name is determined at run-time.
@@ -78,7 +76,7 @@ def testmodule(module):
         test = importName("test%s" %module, test)
         parser = testdata[test.__name__]["parser"]
         location = testdata[test.__name__]["location"]
-        test.data = getfile(eval(parser), *location)
+        test.data, test.logfile = getfile(eval(parser), *location)
         myunittest = unittest.makeSuite(test)
 
         a = unittest.TextTestRunner(verbosity=2).run(myunittest)
@@ -118,7 +116,7 @@ def testall():
             else:
                 parser = testdata[test.__name__]["parser"]
                 location = testdata[test.__name__]["location"]
-                test.data = getfile(eval(parser), *location)
+                test.data, test.logfile = getfile(eval(parser), *location)
                 myunittest = unittest.makeSuite(test)
                 a = unittest.TextTestRunner(verbosity=2).run(myunittest)
                 l = perpackage.setdefault(program, [0, 0, 0])
