@@ -77,17 +77,17 @@ def main():
             sys.exit()
               
         log.logger.setLevel(logging.ERROR)
-        log.parse()
+        data = log.parse()
         if showattr:
             print "cclib can parse the following attributes from %s:" % filename
             for x in _allowedargs:
-                if hasattr(log,x):
+                if hasattr(data,x):
                     print "  %s" % x
         else:
             invalid = False
             for attr in attrnames:
-                if hasattr(log,attr):
-                    print "%s:\n%s" % (attr,getattr(log,attr))
+                if hasattr(data,attr):
+                    print "%s:\n%s" % (attr,getattr(data,attr))
                 else:
                     invalid = True
             if invalid:

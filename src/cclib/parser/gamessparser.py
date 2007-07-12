@@ -63,19 +63,14 @@ class GAMESS(logfileparser.Logfile):
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
         
-        if line.find("OPTTOL") >= 0:
-            # Two possibilities:
-            #           OPTTOL = 1.000E-04          RMIN   = 1.500E-03
-            # INPUT CARD> $STATPT OPTTOL=0.0001 NSTEP=100 $END
+        # We are looking for this line:
+        #           PARAMETERS CONTROLLING GEOMETRY SEARCH ARE
+        #           ...
+        #           OPTTOL = 1.000E-04          RMIN   = 1.500E-03
+        if line[10:18] == "OPTTOL =":
             if not hasattr(self, "geotargets"):
-                temp = line.split()
-                for i, x in enumerate(temp):
-                    if x.find("OPTTOL") >= 0:
-                        if x == "OPTTOL":
-                            opttol = float(temp[i + 2])
-                        else:
-                            opttol = float(x.split('=')[1])
-                        self.geotargets = numpy.array([opttol, 3. / opttol], "d")
+                opttol = float(line.split()[2])
+                self.geotargets = numpy.array([opttol, 3. / opttol], "d")
                         
         if line.find("FINAL") == 1:
             if not hasattr(self, "scfenergies"):
@@ -222,11 +217,30 @@ class GAMESS(logfileparser.Logfile):
             strength = float(line.split()[3])
             self.etoscs.append(strength)
 
-        if line.find("MAXIMUM GRADIENT") > 0:
+        # Maximum and RMS gradients.
+        if "MAXIMUM GRADIENT" in line or "RMS GRADIENT" in line:
+
             if not hasattr(self, "geovalues"):
                 self.geovalues = []
-            temp = line.strip().split()
-            self.geovalues.append([float(temp[3]), float(temp[7])])
+
+            parts = line.split()
+
+            # Newer versions (around 2006) have both maximum and RMS on one line:
+            #       MAXIMUM GRADIENT =  0.0531540    RMS GRADIENT = 0.0189223
+            if len(parts) == 8:
+                maximum = float(parts[3])
+                rms = float(parts[7])
+            
+            # In older versions of GAMESS, this spanned two lines, like this:
+            #       MAXIMUM GRADIENT =    0.057578167
+            #           RMS GRADIENT =    0.027589766
+            if len(parts) == 4:
+                maximum = float(parts[3])
+                line = inputfile.next()
+                parts = line.split()
+                rms = float(parts[3])
+
+            self.geovalues.append([maximum, rms])
 
         if line[11:50] == "ATOMIC                      COORDINATES":
             # This is the input orientation, which is the only data available for
@@ -273,25 +287,24 @@ class GAMESS(logfileparser.Logfile):
                 line = inputfile.next()
             self.atomcoords.append(atomcoords)
         
+        # This is the section with the SCF information.
         if line.rstrip()[-15:] == "SCF CALCULATION":
-            # This is the section with the SCF information
+
             line = inputfile.next()
-            while line.find("ITER EX") < 0:
-                if line.find("DENSITY CONV=") >= 0 or line.find("DENSITY MATRIX CONV=") >= 0:
-        # Needs to deal with lines like:
-        # (GAMESS VERSION = 12 DEC 2003)
-        #     DENSITY MATRIX CONV=  2.00E-05  DFT GRID SWITCH THRESHOLD=  3.00E-04
-        # (GAMESS VERSION = 22 FEB 2006)
-        #           DENSITY MATRIX CONV=  1.00E-05
-        # (PC GAMESS version 6.2, Not DFT?)
-        #     DENSITY CONV=  1.00E-05
-                    index = line.find("DENSITY CONV=")
-                    if index < 0:
-                        index = line.find("DENSITY MATRIX CONV=")
-                        index += len("DENSITY MATRIX CONV=")
-                    else:
-                        index += len("DENSITY CONV=")
-                    scftarget = float(line[index:].split()[0])
+
+            while not "ITER EX" in line:
+
+                # Deal with the various versions:
+                #   (GAMESS VERSION = 12 DEC 2003)
+                #     DENSITY MATRIX CONV=  2.00E-05  DFT GRID SWITCH THRESHOLD=  3.00E-04
+                #   (GAMESS VERSION = 22 FEB 2006)
+                #     DENSITY MATRIX CONV=  1.00E-05
+                #   (PC GAMESS version 6.2, Not DFT?)
+                #     DENSITY CONV=  1.00E-05
+                if "DENSITY CONV" in line or "DENSITY MATRIX CONV" in line:
+
+                    scftarget = float(line.split()[-1])
+
                 line = inputfile.next()
 
             if not hasattr(self, "scftargets"):
