@@ -19,135 +19,7 @@ except ImportError:
 
 import utils
 
-class cclibData(object):
-    """Class for objects containing data from cclib parsers and methods.
-
-    Description of cclib attributes:
-        aonames -- atomic orbital names (list)
-        aooverlaps -- atomic orbital overlap matrix (array[2])
-        atombasis -- indices of atomic orbitals on each atom (list of lists)
-        atomcoords -- atom coordinates (array[3], angstroms)
-        atomnos -- atomic numbers (array[1])
-        charge -- net charge of the system (integer)
-        ccenergies -- molecular energies with Coupled-Cluster corrections (array[2], eV)
-        coreelectrons -- number of core electrons in atom pseudopotentials (array[1])
-        etenergies -- energies of electronic transitions (array[1], 1/cm)
-        etoscs -- oscillator strengths of electronic transitions (array[1])
-        etrotats -- rotatory strengths of electronic transitions (array[1], ??)
-        etsecs -- singly-excited configurations for electronic transitions (list of lists)
-        etsyms -- symmetries of electronic transitions (list)
-        fonames -- fragment orbital names (list)
-        fooverlaps -- fragment orbital overlap matrix (array[2])
-        fragnames -- names of fragments (list)
-        frags -- indices of atoms in a fragment (list of lists)
-        gbasis -- coefficients and exponents of Gaussian basis functions (PyQuante format)
-        geotargets -- targets for convergence of geometry optimization (array[1])
-        geovalues -- current values for convergence of geometry optmization (array[1])
-        homos -- molecular orbital indices of HOMO(s) (array[1])
-        mocoeffs -- molecular orbital coefficients (list of arrays[2])
-        moenergies -- molecular orbital energies (list of arrays[1], eV)
-        mosyms -- orbital symmetries (list of lists)
-        mpenergies -- molecular electronic energies with Moller-Plesset corrections (array[2], eV)
-        mult -- multiplicity of the system (integer)
-        natom -- number of atoms (integer)
-        nbasis -- number of basis functions (integer)
-        nmo -- number of molecular orbitals (integer)
-        scfenergies -- molecular electronic energies after SCF (Hartree-Fock, DFT) (array[1], eV)
-        scftargets -- targets for convergence of the SCF (array[2])
-        scfvalues -- current values for convergence of the SCF (list of arrays[2])
-        vibdisps -- cartesian displacement vectors (array[3], delta angstrom)
-        vibfreqs -- vibrational frequencies (array[1], 1/cm)
-        vibirs -- IR intensities (array[1], km/mol)
-        vibramans -- Raman intensities (array[1], A^4/Da)
-        vibsyms -- symmetries of vibrations (list)
-    (1) The term 'array' refers to a numpy array
-    (2) The number of dimensions of an array is given in square brackets
-    (3) Python indexes arrays/lists starting at zero, so if homos==[10], then
-            the 11th molecular orbital is the HOMO
-    """
-
-    def __init__(self):
-        """Initialize the cclibData object.
-        
-        Normally called in the parse() method of a Logfile subclass.
-        """
-
-        # Names of all supported attributes.
-        self._attrlist = ['aonames', 'aooverlaps', 'atombasis',
-                          'atomcoords', 'atomnos',
-                          'ccenergies', 'charge', 'coreelectrons',
-                          'etenergies', 'etoscs', 'etrotats', 'etsecs', 'etsyms',
-                          'fonames', 'fooverlaps', 'fragnames', 'frags',
-                          'gbasis', 'geotargets', 'geovalues',
-                          'hessian', 'homos',
-                          'mocoeffs', 'moenergies', 'mosyms', 'mpenergies', 'mult',
-                          'natom', 'nbasis', 'nmo',
-                          'scfenergies', 'scftargets', 'scfvalues',
-                          'vibdisps', 'vibfreqs', 'vibirs', 'vibramans', 'vibsyms']
-
-        # The expected types for all supported attributes.
-        self._attrtypes = { "aonames":        list,
-                            "aooverlaps":     numpy.ndarray,
-                            "atombasis":      list,
-                            "atomcoords":     numpy.ndarray,
-                            "atomnos":        numpy.ndarray,
-                            "charge":         int,
-                            "coreelectrons":  numpy.ndarray,
-                            "etenergies":     numpy.ndarray,
-                            "etoscs":         numpy.ndarray,
-                            "etrotats":       numpy.ndarray,
-                            "etsecs":         list,
-                            "etsyms":         list,
-                            'gbasis':         list,
-                            "geotargets":     numpy.ndarray,
-                            "geovalues":      numpy.ndarray,
-                            "hessian":        numpy.ndarray,
-                            "homos":          numpy.ndarray,
-                            "mocoeffs":       list,
-                            "moenergies":     list,
-                            "mosyms":         list,
-                            "mpenergies":     numpy.ndarray,
-                            "mult":           int,
-                            "natom":          int,
-                            "nbasis":         int,
-                            "nmo":            int,
-                            "scfenergies":    numpy.ndarray,
-                            "scftargets":     numpy.ndarray,
-                            "scfvalues":      list,
-                            "vibdisps":       numpy.ndarray,
-                            "vibfreqs":       numpy.ndarray,
-                            "vibirs":         numpy.ndarray,
-                            "vibramans":      numpy.ndarray,
-                            "vibsyms":        list,
-                          }
-
-        # Arrays are double precision by default, but these will be integer arrays.
-        self._intarrays = ['atomnos', 'coreelectrons', 'homos']
-
-        # Attributes that should be lists of arrays (double precision).
-        self._listsofarrays = ['mocoeffs', 'moenergies', 'scfvalues']
-
-    def __setattr__(self, name, value):
-        
-        # If possible, make sure the attribute has the correct type (including arrays).
-        atype = getattr(self, "_attrtypes", {}).get(name, None)
-        if atype and (type(value) is not atype):
-            if atype is numpy.ndarray:
-                precision = 'd'
-                if name in getattr(self, "_intarrays", []):
-                    precision = 'i'
-                value = numpy.array(value, precision)
-            else:
-                value = atype(value)
-        
-        # Make sure selected attrbutes are lists of arrays.
-        if name in getattr(self, "_listsofarrays", []):
-            if not numpy.alltrue([type(v) is numpy.ndarray for v in value]):
-                value = [numpy.array(v, 'd') for v in value]
-
-        # Set the actual attribute.
-        object.__setattr__(self, name, value)
-
+from cclib.data import ccData
 
 class Logfile(object):
     """Abstract class for logfile objects.
@@ -158,7 +30,7 @@ class Logfile(object):
     """
 
     def __init__(self, filename, progress=None, fupdate=0.05, cupdate=0.002, 
-                                 loglevel=logging.INFO, logname="Log", datatype=cclibData):
+                                 loglevel=logging.INFO, logname="Log", datatype=ccData):
         """Initialise the Logfile object.
 
         Typically called by subclasses in their own __init__() methods.
@@ -188,7 +60,7 @@ class Logfile(object):
         self.table = utils.PeriodicTable()
 
         # This is the class that will be used in the data object returned by parse(),
-        #   and should normally be cclibData or a subclass.
+        #   and should normally be ccData or a subclass.
         self.datatype = datatype
 
         self.parsed = False
@@ -245,14 +117,14 @@ class Logfile(object):
         if hasattr(self, "before_parsing"):
             self.before_parsing()
 
-        # Initialize the cclibData object that will be returned.
-        # This is normally cclibData, but can be changed by passing
+        # Initialize the ccData object that will be returned.
+        # This is normally ccData, but can be changed by passing
         #   the datatype argument to __init__().
         data = self.datatype()
         
         # Copy the attribute list, so that the parser knows what to expect,
         #   specifically in __setattr__().
-        # The class self.datatype (normally cclibData) must have this attribute.
+        # The class self.datatype (normally ccData) must have this attribute.
         self._attrlist = data._attrlist
         
         # Loop over lines in the file object and call extract().
@@ -283,12 +155,12 @@ class Logfile(object):
         if not hasattr(self, "coreelectrons"):
             self.coreelectrons = numpy.zeros(self.natom, "i")
 
-        # Move all cclib attributes to the cclibData object.
+        # Move all cclib attributes to the ccData object.
         # To be moved, an attribute must be in data._attrlist.
-        # The attribute type is checked in cclibData.__setattr__().
         for attr in data._attrlist:
             if hasattr(self, attr):
                 setattr(data, attr, getattr(self, attr))
+        data.arrayify()
 
         # Delete temporary attributes (set during parsing and not in attrlist).
         for attr in self.__dict__.keys():
@@ -301,7 +173,8 @@ class Logfile(object):
 
         self.parsed = True
         
-        # Return the cclibData object that was generated.
+        # Return the ccData object that was generated.
+
         return data
 
     def updateprogress(self, inputfile, msg, xupdate=0.05):
@@ -342,5 +215,5 @@ class Logfile(object):
         return float(number)
 
 if __name__=="__main__":
-    import doctest,logfileparser
-    doctest.testmod(logfileparser,verbose=False)
+    import doctest
+    doctest.testmod()
