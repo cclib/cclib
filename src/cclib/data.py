@@ -185,3 +185,21 @@ class ccData(object):
                     setattr(self, k, [numpy.array(x, precision)
                                       for x in getattr(self, k)])
                 
+def readjson(text = "", filename = None):
+    """Read a file or a string in JSON format represent a ccData object"""
+    if not simplejson:
+        raise ImportError, "simplejson module not found"
+    if filename:
+        inputfile = open(filename, "r")
+        text = inputfile.read()
+        inputfile.close()
+
+    json = simplejson.loads(text)
+    data = ccData()
+    validattrs = [x for x in json if x in data._attrtypes]
+    notvalidattrs = [x for x in json if x not in data._attrtypes]
+
+    for k in validattrs:
+        setattr(data, k, json[k])
+    data.arrayify()
+    return data
