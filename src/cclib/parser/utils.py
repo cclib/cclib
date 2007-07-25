@@ -45,7 +45,7 @@ def openlogfile(filename):
 def ccopen(filename,progress=None,loglevel=logging.INFO,logname="Log"):
     """Guess the identity of a particular log file and return an instance of it.
     
-    Returns: one of ADF, GAMESS, GAMESS UK, Gaussian, Jaguar, or
+    Returns: one of ADF, GAMESS, GAMESS UK, Gaussian, Jaguar, Turbomole, or
              None (if it cannot figure it out or the file does not exist).
     """
     filetype = None
@@ -76,6 +76,9 @@ def ccopen(filename,progress=None,loglevel=logging.INFO,logname="Log"):
             break
         elif line.find("PROGRAM SYSTEM MOLPRO") >= 0:
             filetype = moplroparser.Molpro
+            break
+        elif line.find("Turbomole") >= 0:
+            filetype = turbomoleparser.Turbomole
             break
     inputfile.close() # Need to close before creating an instance
     

@@ -24,7 +24,7 @@ class Logfile(object):
     """Abstract class for logfile objects.
 
     Subclasses defined by cclib:
-        ADF, GAMESS, GAMESSUK, Gaussian, Jaguar, Molpro
+        ADF, GAMESS, GAMESSUK, Gaussian, Jaguar, Molpro, Turbomole
     
     Attributes:
         aonames -- atomic orbital names (list)
