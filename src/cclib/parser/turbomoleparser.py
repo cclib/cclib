@@ -131,8 +131,7 @@ class Turbomole(logfileparser.Logfile):
             self.atomnos = []
             atomcoords = []
             atomnos = []
-            angstrom = inputfile.next()
-            title = inputfile.next()
+
             line = inputfile.next()
 
             while line[0] != "$":
@@ -140,6 +139,7 @@ class Turbomole(logfileparser.Logfile):
                 atsym=temp[3].capitalize()
                 atomnos.append(self.table.number[atsym])
                 atomcoords.append(map(float, temp[0:3]))
+                print 'read line ' + str(line)
                 line = inputfile.next()
             self.atomcoords.append(atomcoords)
             self.atomnos = numpy.array(atomnos, "i")
