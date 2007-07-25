@@ -1,0 +1,46 @@
+#!/bin/sh
+
+if [ $# -ne 1 ] ; then
+	mfile="turbo.out"
+else
+	mfile=$1.out
+fi
+
+echo "#CCLIB Turbomole" > $mfile
+
+if [ -e basis ] ; then
+        echo "#CCLIB basis" >> $mfile
+        cat basis >> $mfile
+fi
+
+if [ -e control ] ; then
+	echo "#CCLIB control" >> $mfile
+	cat control >> $mfile
+fi
+
+if [ -e job.last ] ; then
+        echo "#CCLIB job.last" >> $mfile
+        cat job.last >> $mfile
+fi
+
+if [ -e coord ] ; then
+        echo "#CCLIB coord" >> $mfile
+        cat coord >> $mfile
+fi
+
+if [ -e gradient ] ; then
+        echo "#CCLIB gradientt" >> $mfile
+        cat gradient >> $mfile
+fi
+
+if [ -e mos ] ; then
+        echo "#CCLIB mos" >> $mfile
+        cat mos >> $mfile
+fi
+
+if [ -e aoforce.out ] ; then
+        echo "#CCLIB aoforce" >> $mfile
+        cat aoforce.out >> $mfile
+fi
+
+
