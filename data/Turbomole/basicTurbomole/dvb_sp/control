@@ -1,6 +1,8 @@
 $operating system unix
 $title
 $symmetry c1
+$intsdebug cao
+$scforbitalorder on
 $redundant    file=coord
 $coord    file=coord
 $user-defined bonds    file=coord
@@ -64,11 +66,11 @@ $dft
 $scfconv   6
 $scfdamp   start=0.700  step=0.050  min=0.050
 $last step     dscf
-$last SCF energy change = -.13852053E-06
+$last SCF energy change = -382.34575
 $dipole from dscf
-  x    -0.00000000098042    y    -0.00002375939221    z    -0.00000000453110    a.u.
-   | dipole | =    0.0000603908  debye
+  x    -0.00000000028088    y    -0.00001793479871    z    -0.00000000563911    a.u.
+   | dipole | =    0.0000455861  debye
 $maximum norm of cartesian gradient = 0.73909788E-04
 $maximum norm of internal gradient = 0.11733791E-03
-$orbital_max_rnorm 0.29411194062008E-04
+$orbital_max_rnorm 0.81051421482666E-05
 $end
