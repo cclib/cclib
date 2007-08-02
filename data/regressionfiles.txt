@@ -24,6 +24,7 @@ GAMESS-UK/GAMESS-UK7.0/mg10.out.gz
 GAMESS-UK/GAMESS-UK7.0/pyridine.out.gz
 Gaussian/Gaussian03/Mo4OSibdt2-opt.log.bz2
 Gaussian/Gaussian03/chn1.log.gz
+Gaussian/Gaussian03/tms_nmr.log.gz
 Gaussian/Gaussian98/oo-LAN.out.bz2
 Gaussian/Gaussian98/water_zmatrix_nosym.log.gz
 Gaussian/Gaussian98/test_H2.log.gz
