@@ -76,6 +76,9 @@ class PCGamessIRTest(GenericIRTest):
         """Is the maximum IR intensity 135 +/- 5 km mol-1?"""
         self.assertInside(max(self.data.vibirs), 135, 5)     
 
+class TurbomoleIRTest(GenericIRTest):
+    """Turbomole vibrational frequency unittest."""
+
 class GenericRamanTest(bettertest.TestCase):
     """Generic Raman unittest."""
 

@@ -144,6 +144,8 @@ class MolproGeoOptTest(GenericGeoOptTest):
 class PCGamessGeoOptTest(GenericGeoOptTest):
     """PC-GAMESS geometry optimization unittest."""
 
+class TurbomoleGeoOptTest(GenericGeoOptTest):
+    """Turbomole geometry optimization unittest."""
 
 if __name__=="__main__":
 

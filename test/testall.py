@@ -3,7 +3,7 @@ __revision__ = "$Revision$"
 import os
 import unittest
 
-from cclib.parser import ADF, GAMESS, GAMESSUK, Gaussian, Jaguar, Molpro
+from cclib.parser import ADF, GAMESS, GAMESSUK, Gaussian, Jaguar, Molpro, Turbomole
 
 
 test_modules = [ "SP", "SPun", "GeoOpt", "Basis", "Core",
@@ -13,7 +13,8 @@ test_modules = [ "SP", "SPun", "GeoOpt", "Basis", "Core",
 
 def getfile(parser, *location):
     """Returns a parsed logfile."""
-    if parser.__name__ in ["ADF", "GAMESS", "Gaussian", "Jaguar", "Molpro"]:
+    if parser.__name__ in ["ADF", "GAMESS", "Gaussian", "Jaguar", "Molpro",
+                           "Turbomole"]:
         fullpath = ("..","data",parser.__name__) + location
     elif parser.__name__=="GAMESSUK":
         fullpath = ("..","data","GAMESS-UK") + location
