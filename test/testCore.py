@@ -1,10 +1,6 @@
 __revision__ = "$Revision$"
 
-# If numpy is not installed, try to import Numeric instead.
-try:
-    import numpy
-except ImportError:
-    import Numeric as numpy
+import numpy
 
 from cclib.parser.utils import PeriodicTable
 import bettertest

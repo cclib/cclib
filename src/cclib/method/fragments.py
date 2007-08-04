@@ -7,14 +7,8 @@ __revision__ = "$Revision: 238 $"
 
 import random # For sometimes running the progress updater
 
-# If numpy is not installed, try to import Numeric instead.
-try:
-    import numpy
-    numpy.inv = numpy.linalg.inv
-except ImportError:
-    import Numeric as numpy
-    import LinearAlgebra
-    numpy.inv = LinearAlgebra.inverse
+import numpy
+numpy.inv = numpy.linalg.inv
 
 from calculationmethod import *
 

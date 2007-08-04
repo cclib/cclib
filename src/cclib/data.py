@@ -2,12 +2,7 @@
 cclib (http://cclib.sf.net) is (c) 2007, the cclib development team
 and licensed under the LGPL (http://www.gnu.org/copyleft/lgpl.html).
 """
-# If NumPy is not installed, try to import Numeric instead.
-try:
-    import numpy
-except ImportError:
-    import Numeric as numpy
-    numpy.ndarray = numpy.arraytype
+import numpy
 
 try:
     import simplejson

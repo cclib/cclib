@@ -7,11 +7,7 @@ __revision__ = "$Revision: 453 $"
 
 import random # For sometimes running the progress updater
 
-# If numpy is not installed, try to import Numeric instead.
-try:
-    import numpy
-except ImportError:
-    import Numeric as numpy
+import numpy
 
 from fragments import FragmentAnalysis
 

@@ -8,11 +8,7 @@ __revision__ = "$Revision: 661 $"
 
 import re
 
-# If numpy is not installed, try to import Numeric instead.
-try:
-    import numpy
-except ImportError:
-    import Numeric as numpy
+import numpy
 
 import utils
 import logfileparser
@@ -434,7 +430,7 @@ class Molpro(logfileparser.Logfile):
                 if not line.strip():
                     line = inputfile.next()
                     if not line.strip(): break
-                    else: self.vibsyms += self.normalisesym(line.split()[1::2])
+                    else: self.vibsyms += [self.normalisesym(label) for label in line.split()[1::2]]
                     
         if line[1:20] == "Normal Modes of low" and hasattr(self,"vibfreqs"):
             

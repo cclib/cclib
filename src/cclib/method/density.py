@@ -8,11 +8,7 @@ __revision__ = "$Revision$"
 import random # For sometimes running the progress updater
 import logging
 
-# If numpy is not installed, try to import Numeric instead.
-try:
-    import numpy
-except ImportError:
-    import Numeric as numpy
+import numpy
 
 from calculationmethod import Method
 

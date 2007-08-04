@@ -4,7 +4,7 @@
 
 Before you install cclib, you need to make sure that you have the following:
 *   Python (at least version 2.3)
-*   NumPy (Numeric should still work, but is not recommended).
+*   NumPy (at least version 1.0 is recommended).
 
 Python is an open-source programming language available from http://www.python.org and it is included in many Linux distributions. In Debian it is installed as follows: (as root)
 	
@@ -14,7 +14,7 @@ NumPy (Numerical Python) adds a fast array facility to Python and is available f
 	
 	apt-get install python-numpy
 
-Note: Numeric (the old version of Numerical Python) should still workwork with cclib, but is not recommended. It is not supported by the Numerical Python developers and will not be supported by cclib in the future.
+Note: Numeric (the old version of Numerical Python) is not supported by the Numerical Python developers and will not be supported by cclib.
 
 To test whether Python is on the PATH, open a command prompt window and type:
 

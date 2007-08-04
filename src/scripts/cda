@@ -5,11 +5,7 @@ import glob
 import getopt
 import logging
 
-# If numpy is not installed, try to import Numeric instead.
-try:
-    import numpy
-except ImportError:
-    import Numeric as numpy
+import numpy
 
 from cclib.parser import ccopen
 from cclib.method import CDA

@@ -2,11 +2,7 @@ __revision__ = "$Revision$"
 
 import unittest
 
-# If numpy is not installed, try to import Numeric instead.
-try:
-    import numpy
-except ImportError:
-    import Numeric as numpy
+import numpy
 
 from cclib.parser import ADF, GAMESS, GAMESSUK, Gaussian, Jaguar, Molpro
 from testall import getfile

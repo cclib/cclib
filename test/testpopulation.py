@@ -9,11 +9,7 @@ import os
 import logging
 import unittest
 
-# If numpy is not installed, try to import Numeric instead.
-try:
-    import numpy
-except ImportError:
-    import Numeric as numpy
+import numpy
 
 import bettertest
 from testall import getfile

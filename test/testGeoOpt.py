@@ -2,11 +2,7 @@ __revision__ = "$Revision$"
 
 import math
 
-# If numpy is not installed, try to import Numeric instead.
-try:
-    import numpy
-except ImportError:
-    import Numeric as numpy
+import numpy
 
 import bettertest
 

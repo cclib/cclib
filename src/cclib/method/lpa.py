@@ -7,14 +7,7 @@ __revision__ = "$Revision$"
 
 import random
 
-# If NumPy is not installed, try to import Numeric instead.
-try:
-    import numpy
-except ImportError:
-    import Numeric as numpy
-    import LinearAlgebra as linalg
-    linalg.eig = lambda S: linalg.eigenvalues(S), linalg.eigenvectors(S)
-    numpy.linalg = linalg
+import numpy
 
 from population import Population
 
@@ -96,7 +89,6 @@ class LPA(Population):
                 # Find roots of diagonal elements, and transform backwards using eigevectors.
                 # We need two matrices here, one for S^x, another for S^(1-x).
                 # We don't need to invert U, since S is symmetrical.
-                # Note: this will probably break with Numeric now
                 eigenvalues, U = numpy.linalg.eig(S)
                 UI = U.transpose()
                 Sdiagroot1 = numpy.identity(len(S))*numpy.power(eigenvalues, x)

@@ -10,9 +10,9 @@ import openbabel as ob
 def makeopenbabel(atomcoords, atomnos):
     """Create an Open Babel molecule.
 
-    >>> import Numeric, openbabel
-    >>> atomnos = Numeric.array([1,8,1],"i")
-    >>> coords = Numeric.array([[-1.,1.,0.],[0.,0.,0.],[1.,1.,0.]])
+    >>> import numpy, openbabel
+    >>> atomnos = numpy.array([1,8,1],"i")
+    >>> coords = numpy.array([[-1.,1.,0.],[0.,0.,0.],[1.,1.,0.]])
     >>> obmol = makeopenbabel(coords, atomnos)
     >>> obconversion = openbabel.OBConversion()
     >>> formatok = obconversion.SetOutFormat("inchi")
