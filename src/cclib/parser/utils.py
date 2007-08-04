@@ -45,7 +45,7 @@ def openlogfile(filename):
 def ccopen(filename,progress=None,loglevel=logging.INFO,logname="Log"):
     """Guess the identity of a particular log file and return an instance of it.
     
-    Returns: one of ADF, GAMESS, GAMESS UK, Gaussian, Jaguar, or
+    Returns: one of ADF, GAMESS, GAMESS UK, Gaussian, Jaguar, Molpro, or
              None (if it cannot figure it out or the file does not exist).
     """
     filetype = None
@@ -75,8 +75,12 @@ def ccopen(filename,progress=None,loglevel=logging.INFO,logname="Log"):
             filetype = jaguarparser.Jaguar
             break
         elif line.find("PROGRAM SYSTEM MOLPRO") >= 0:
-            filetype = moplroparser.Molpro
+            filetype = molproparser.Molpro
             break
+        # Molpro log files don't have the line above. Set this only if
+        #   nothing else is detected, and notice it can be overwritten.
+        elif line[0:8] == "1PROGRAM" and not filetype:
+            filetype = molproparser.Molpro
     inputfile.close() # Need to close before creating an instance
     
     if filetype: # Create an instance of the chosen class

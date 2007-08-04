@@ -30,7 +30,7 @@ GeoOpt    Gaussian    GaussianGeoOptTest  basicGaussian03       dvb_gopt.out
 GeoOpt    Jaguar      Jaguar42GeoOptTest  basicJaguar4.2        dvb_gopt_b.out
 GeoOpt    Jaguar      Jaguar65GeoOptTest  basicJaguar6.5        dvb_gopt_b.out
 GeoOpt    GAMESS      PCGamessGeoOptTest  basicPCGAMESS         dvb_gopt_b.out
-GeoOpt    Molpro      MolproGeoOptTest    basicMolpro2006       dvb_gopt.log
+GeoOpt    Molpro      MolproGeoOptTest    basicMolpro2006       dvb_gopt.out
 
 MP        GAMESSUK    GAMESSUKMP2Test     basicGAMESS-UK        water_mp2.out
 MP        GAMESSUK    GAMESSUKMP3Test     basicGAMESS-UK        water_mp3.out
@@ -79,4 +79,4 @@ vib       GAMESS      PCGamessIRTest      basicPCGAMESS         dvb_ir.out
 vib       GAMESSUK    GamessUKRamanTest   basicGAMESS-UK        dvb_raman.out
 vib       Gaussian    GaussianRamanTest   basicGaussian03       dvb_raman.out
 vib       GAMESS      PCGamessRamanTest   basicPCGAMESS         dvb_raman.out
-vib       Molpro      MolproIRTest        basicMolpro2006       dvb_ir.log
+vib       Molpro      MolproIRTest        basicMolpro2006       dvb_ir.out

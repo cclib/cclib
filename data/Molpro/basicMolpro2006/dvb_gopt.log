@@ -1,5 +1,3 @@
-
- Running default procedure: KS-SCF000
 1PROGRAM * ALASKA (Gradient of the energy)     Author: R. Lindh
 
  Orbitals from record         2100.2
@@ -69,6 +67,8 @@
  Convergence:                0.00000000  (line search)     0.20171740     0.20127947  (total)
 
  Geometry written to block  2 of record 700
+
+ Running procedure=RUNDFT
 
 
  Recomputing integrals since geometry changed
@@ -359,8 +359,8 @@
 
  Memory used in sort:       2.23 MW
 
- SORT1 READ    1684116. AND WROTE     774317. INTEGRALS IN    3 RECORDS. CPU TIME:     0.11 SEC, REAL TIME:     0.17 SEC
- SORT2 READ     774317. AND WROTE    1675365. INTEGRALS IN   22 RECORDS. CPU TIME:     0.16 SEC, REAL TIME:     0.20 SEC
+ SORT1 READ    1684116. AND WROTE     774317. INTEGRALS IN    3 RECORDS. CPU TIME:     0.11 SEC, REAL TIME:     0.18 SEC
+ SORT2 READ     774317. AND WROTE    1675365. INTEGRALS IN   22 RECORDS. CPU TIME:     0.18 SEC, REAL TIME:     0.24 SEC
 
  Node minimum:    1675365.  Node maximum:    1675365. integrals
 
@@ -432,13 +432,13 @@
                                          1200     1210     1080     1600      129      960     1650     1300     1700     1800   
                                           H0       H01     AOSYM     SMH      P2S    ABASIS   MOLCAS    ERIS     OPER     GRID   
  
-              2       5        0.59       700     1000     1800     1801     2100   
-                                         GEOM     BASIS    GRID     GRID      RKS  
+              2       6        0.67       200      700     1000     1800     1801     2100   
+                                        OPTIONS   GEOM     BASIS    GRID     GRID      RKS  
  
  PROGRAMS   *        TOTAL        KS        KS       INT
- CPU TIMES  *        58.58     19.58     18.37      2.44
- REAL TIME  *        75.38 SEC
- DISK USED  *        24.28 MB      
+ CPU TIMES  *        59.51     19.78     18.66      2.46
+ REAL TIME  *        78.01 SEC
+ DISK USED  *        24.37 MB      
  **********************************************************************************************************************************
 1PROGRAM * ALASKA (Gradient of the energy)     Author: R. Lindh
 
@@ -509,6 +509,8 @@
  Convergence:                0.00000000  (line search)     0.06687650     0.03963339  (total)
 
  Geometry written to block  3 of record 700
+
+ Running procedure=RUNDFT
 
 
  Recomputing integrals since geometry changed
@@ -799,8 +801,8 @@
 
  Memory used in sort:       2.23 MW
 
- SORT1 READ    1681362. AND WROTE     772579. INTEGRALS IN    3 RECORDS. CPU TIME:     0.11 SEC, REAL TIME:     0.17 SEC
- SORT2 READ     772579. AND WROTE    1675365. INTEGRALS IN   22 RECORDS. CPU TIME:     0.16 SEC, REAL TIME:     0.19 SEC
+ SORT1 READ    1681362. AND WROTE     772579. INTEGRALS IN    3 RECORDS. CPU TIME:     0.11 SEC, REAL TIME:     0.18 SEC
+ SORT2 READ     772579. AND WROTE    1675365. INTEGRALS IN   22 RECORDS. CPU TIME:     0.20 SEC, REAL TIME:     0.26 SEC
 
  Node minimum:    1675365.  Node maximum:    1675365. integrals
 
@@ -872,13 +874,13 @@
                                          1200     1210     1080     1600      129      960     1650     1300     1700     1800   
                                           H0       H01     AOSYM     SMH      P2S    ABASIS   MOLCAS    ERIS     OPER     GRID   
  
-              2       5        0.59       700     1000     1800     1801     2100   
-                                         GEOM     BASIS    GRID     GRID      RKS  
+              2       6        0.67       200      700     1000     1800     1801     2100   
+                                        OPTIONS   GEOM     BASIS    GRID     GRID      RKS  
  
- PROGRAMS   *        TOTAL        KS        KS       INT
- CPU TIMES  *        97.08     19.44     18.37      2.44
- REAL TIME  *       124.45 SEC
- DISK USED  *        24.28 MB      
+ PROGRAMS   *        TOTAL        KS        KS        KS       INT
+ CPU TIMES  *        99.67     19.79     19.78     18.66      2.46
+ REAL TIME  *       129.68 SEC
+ DISK USED  *        24.37 MB      
  **********************************************************************************************************************************
 1PROGRAM * ALASKA (Gradient of the energy)     Author: R. Lindh
 
@@ -949,6 +951,8 @@
  Convergence:                0.00000000  (line search)     0.02016307     0.01069889  (total)
 
  Geometry written to block  4 of record 700
+
+ Running procedure=RUNDFT
 
 
  Recomputing integrals since geometry changed
@@ -1239,8 +1243,8 @@
 
  Memory used in sort:       2.23 MW
 
- SORT1 READ    1681850. AND WROTE     772886. INTEGRALS IN    3 RECORDS. CPU TIME:     0.11 SEC, REAL TIME:     0.18 SEC
- SORT2 READ     772886. AND WROTE    1675365. INTEGRALS IN   22 RECORDS. CPU TIME:     0.16 SEC, REAL TIME:     0.20 SEC
+ SORT1 READ    1681850. AND WROTE     772886. INTEGRALS IN    3 RECORDS. CPU TIME:     0.11 SEC, REAL TIME:     0.43 SEC
+ SORT2 READ     772886. AND WROTE    1675365. INTEGRALS IN   22 RECORDS. CPU TIME:     0.19 SEC, REAL TIME:     0.25 SEC
 
  Node minimum:    1675365.  Node maximum:    1675365. integrals
 
@@ -1311,13 +1315,13 @@
                                          1200     1210     1080     1600      129      960     1650     1300     1700     1800   
                                           H0       H01     AOSYM     SMH      P2S    ABASIS   MOLCAS    ERIS     OPER     GRID   
  
-              2       5        0.59       700     1000     1800     1801     2100   
-                                         GEOM     BASIS    GRID     GRID      RKS  
+              2       6        0.67       200      700     1000     1800     1801     2100   
+                                        OPTIONS   GEOM     BASIS    GRID     GRID      RKS  
  
- PROGRAMS   *        TOTAL        KS        KS       INT
- CPU TIMES  *       133.83     17.85     18.37      2.44
- REAL TIME  *       170.71 SEC
- DISK USED  *        24.28 MB      
+ PROGRAMS   *        TOTAL        KS        KS        KS        KS       INT
+ CPU TIMES  *       138.33     17.98     19.79     19.78     18.66      2.46
+ REAL TIME  *       179.05 SEC
+ DISK USED  *        24.37 MB      
  **********************************************************************************************************************************
 1PROGRAM * ALASKA (Gradient of the energy)     Author: R. Lindh
 
@@ -1388,6 +1392,8 @@
  Convergence:                0.00000000  (line search)     0.00443525     0.00363023  (total)
 
  Geometry written to block  5 of record 700
+
+ Running procedure=RUNDFT
 
 
  Recomputing integrals since geometry changed
@@ -1678,8 +1684,8 @@
 
  Memory used in sort:       2.23 MW
 
- SORT1 READ    1682434. AND WROTE     773230. INTEGRALS IN    3 RECORDS. CPU TIME:     0.12 SEC, REAL TIME:     0.18 SEC
- SORT2 READ     773230. AND WROTE    1675365. INTEGRALS IN   22 RECORDS. CPU TIME:     0.15 SEC, REAL TIME:     0.26 SEC
+ SORT1 READ    1682434. AND WROTE     773230. INTEGRALS IN    3 RECORDS. CPU TIME:     0.12 SEC, REAL TIME:     0.28 SEC
+ SORT2 READ     773230. AND WROTE    1675365. INTEGRALS IN   22 RECORDS. CPU TIME:     0.20 SEC, REAL TIME:     0.25 SEC
 
  Node minimum:    1675365.  Node maximum:    1675365. integrals
 
@@ -1750,13 +1756,13 @@
                                          1200     1210     1080     1600      129      960     1650     1300     1700     1800   
                                           H0       H01     AOSYM     SMH      P2S    ABASIS   MOLCAS    ERIS     OPER     GRID   
  
-              2       5        0.59       700     1000     1800     1801     2100   
-                                         GEOM     BASIS    GRID     GRID      RKS  
+              2       6        0.67       200      700     1000     1800     1801     2100   
+                                        OPTIONS   GEOM     BASIS    GRID     GRID      RKS  
  
- PROGRAMS   *        TOTAL        KS        KS       INT
- CPU TIMES  *       170.42     17.87     18.37      2.44
- REAL TIME  *       217.14 SEC
- DISK USED  *        24.28 MB      
+ PROGRAMS   *        TOTAL        KS        KS        KS        KS        KS       INT
+ CPU TIMES  *       177.15     18.09     17.98     19.79     19.78     18.66      2.46
+ REAL TIME  *       228.56 SEC
+ DISK USED  *        24.37 MB      
  **********************************************************************************************************************************
 1PROGRAM * ALASKA (Gradient of the energy)     Author: R. Lindh
 
@@ -1827,6 +1833,8 @@
  Convergence:                0.00000000  (line search)     0.00140452     0.00121031  (total)
 
  Geometry written to block  6 of record 700
+
+ Running procedure=RUNDFT
 
 
  Recomputing integrals since geometry changed
@@ -2117,8 +2125,8 @@
 
  Memory used in sort:       2.23 MW
 
- SORT1 READ    1682670. AND WROTE     773364. INTEGRALS IN    3 RECORDS. CPU TIME:     0.11 SEC, REAL TIME:     0.17 SEC
- SORT2 READ     773364. AND WROTE    1675365. INTEGRALS IN   22 RECORDS. CPU TIME:     0.16 SEC, REAL TIME:     0.19 SEC
+ SORT1 READ    1682670. AND WROTE     773364. INTEGRALS IN    3 RECORDS. CPU TIME:     0.11 SEC, REAL TIME:     0.18 SEC
+ SORT2 READ     773364. AND WROTE    1675365. INTEGRALS IN   22 RECORDS. CPU TIME:     0.20 SEC, REAL TIME:     0.24 SEC
 
  Node minimum:    1675365.  Node maximum:    1675365. integrals
 
@@ -2187,13 +2195,13 @@
                                          1200     1210     1080     1600      129      960     1650     1300     1700     1800   
                                           H0       H01     AOSYM     SMH      P2S    ABASIS   MOLCAS    ERIS     OPER     GRID   
  
-              2       5        0.59       700     1000     1800     1801     2100   
-                                         GEOM     BASIS    GRID     GRID      RKS  
+              2       6        0.67       200      700     1000     1800     1801     2100   
+                                        OPTIONS   GEOM     BASIS    GRID     GRID      RKS  
  
- PROGRAMS   *        TOTAL        KS        KS       INT
- CPU TIMES  *       204.04     14.85     18.37      2.44
- REAL TIME  *       259.19 SEC
- DISK USED  *        24.28 MB      
+ PROGRAMS   *        TOTAL        KS        KS        KS        KS        KS        KS       INT
+ CPU TIMES  *       212.90     15.06     18.09     17.98     19.79     19.78     18.66      2.46
+ REAL TIME  *       273.35 SEC
+ DISK USED  *        24.37 MB      
  **********************************************************************************************************************************
 1PROGRAM * ALASKA (Gradient of the energy)     Author: R. Lindh
 
@@ -2264,6 +2272,8 @@
  Convergence:                0.00000000  (line search)     0.00024526     0.00022306  (total)
 
  Geometry written to block  7 of record 700
+
+ Running procedure=RUNDFT
 
 
  Recomputing integrals since geometry changed
@@ -2555,7 +2565,7 @@
  Memory used in sort:       2.23 MW
 
  SORT1 READ    1682670. AND WROTE     773366. INTEGRALS IN    3 RECORDS. CPU TIME:     0.11 SEC, REAL TIME:     0.17 SEC
- SORT2 READ     773366. AND WROTE    1675365. INTEGRALS IN   22 RECORDS. CPU TIME:     0.15 SEC, REAL TIME:     0.29 SEC
+ SORT2 READ     773366. AND WROTE    1675365. INTEGRALS IN   22 RECORDS. CPU TIME:     0.20 SEC, REAL TIME:     0.25 SEC
 
  Node minimum:    1675365.  Node maximum:    1675365. integrals
 
@@ -2575,7 +2585,7 @@
  Functional: LYP                       Factor:  0.8100
  Functional: VWN5                      Factor:  0.1900
  
- Computed new grid on record 1800.1 in CPU time    1.4
+ Computed new grid on record 1800.1 in CPU time    1.5
    52452 words reserved for DFT integration
 
  PROGRAM * RKS-SCF (Restricted closed shell Kohn-Sham)     Authors: W. Meyer, H.-J. Werner, P.J. Knowles, 1993
@@ -2623,11 +2633,11 @@
                                          1200     1210     1080     1600      129      960     1650     1300     1700     1800   
                                           H0       H01     AOSYM     SMH      P2S    ABASIS   MOLCAS    ERIS     OPER     GRID   
  
-              2       5        0.59       700     1000     1800     1801     2100   
-                                         GEOM     BASIS    GRID     GRID      RKS  
+              2       6        0.67       200      700     1000     1800     1801     2100   
+                                        OPTIONS   GEOM     BASIS    GRID     GRID      RKS  
  
- PROGRAMS   *        TOTAL        KS        KS       INT
- CPU TIMES  *       236.14     13.24     18.37      2.44
- REAL TIME  *       298.67 SEC
- DISK USED  *        24.28 MB      
+ PROGRAMS   *        TOTAL        KS        KS        KS        KS        KS        KS        KS       INT
+ CPU TIMES  *       246.97     13.42     15.06     18.09     17.98     19.79     19.78     18.66      2.46
+ REAL TIME  *       315.39 SEC
+ DISK USED  *        24.37 MB      
  **********************************************************************************************************************************

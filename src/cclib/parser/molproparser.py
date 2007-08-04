@@ -20,7 +20,7 @@ import logfileparser
 
 class Molpro(logfileparser.Logfile):
     """Molpro file parser"""
-    SCFMAX,SCFENERGY = range(2) # Used to index self.scftargets[]
+
     def __init__(self,*args):
         # Call the __init__ method of the superclass
         super(Molpro, self).__init__(logname="Molpro",*args)
@@ -41,6 +41,7 @@ class Molpro(logfileparser.Logfile):
     def before_parsing(self):
         
         self.electronorbitals = ""
+        self.insidescf = False
 
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
@@ -139,26 +140,7 @@ class Molpro(logfileparser.Logfile):
                     element = self.table.element[self.atomnos[funcatom-1]]
                     aoname = "%s%i_%s" %(element, funcatom, functype)
                     self.aonames.append(aoname)
-                        
-        # Use this information instead of 'SETTING ...', in case the defaults are standard.
-        if line[1:20] == "NUMBER OF ELECTRONS":
-            
-            spinup = int(line.split()[3][:-1])
-            spindown = int(line.split()[4][:-1])
-            # Nuclear charges (atomnos) should be parsed by now.
-            nuclear = numpy.sum(self.atomnos)
-            self.charge = nuclear - spinup - spindown
-            self.mult = spinup - spindown + 1
-    
-        if line[1:23] == "CONVERGENCE THRESHOLDS":
-            
-            if not hasattr(self, "scftargets"):
-                self.scftargets = []
-            # The MAX density matrix
-            # The MAX Energy
-            scftargets = map(float, line.split()[2::2])
-            self.scftargets.append(scftargets)
-            
+
         if line[1:23] == "NUMBER OF CONTRACTIONS":
             
             nbasis = int(line.split()[3])
@@ -167,13 +149,93 @@ class Molpro(logfileparser.Logfile):
             else:
                 self.nbasis = nbasis
 
-        # RHF/UHF and DFT (RKS) energies
+        # This is used to signalize whether we are inside an SCF calculation.
+        if line[1:8] == "PROGRAM" and line[14:18] == "-SCF":
+
+            self.insidescf = True
+
+        # Use this information instead of 'SETTING ...', in case the defaults are standard.
+        # Note that this is sometimes printed in each geometry optimization step.
+        if line[1:20] == "NUMBER OF ELECTRONS":
+            
+            spinup = int(line.split()[3][:-1])
+            spindown = int(line.split()[4][:-1])
+            # Nuclear charges (atomnos) should be parsed by now.
+            nuclear = numpy.sum(self.atomnos)
+            charge = nuclear - spinup - spindown
+            mult = spinup - spindown + 1
+            
+            # Copy charge, or assert for exceptions if already exists.
+            if not hasattr(self, "charge"):
+                self.charge = charge
+            else:
+                assert self.charge == charge
+            
+            # Copy multiplicity, or assert for exceptions if already exists.
+            if not hasattr(self, "mult"):
+                self.mult = mult
+            else:
+                assert self.mult == mult
+        
+        # Convergenve thresholds for SCF cycle, should be contained in a line such as:
+        #   CONVERGENCE THRESHOLDS:    1.00E-05 (Density)    1.40E-07 (Energy)
+        if self.insidescf and line[1:24] == "CONVERGENCE THRESHOLDS:":
+
+            if not hasattr(self, "scftargets"):
+                self.scftargets = []
+
+            scftargets = map(float, line.split()[2::2])
+            self.scftargets.append(scftargets)
+            # Usually two criteria, but save the names this just in case.
+            self.scftargetnames = line.split()[3::2]
+
+        # Read in the print out of the SCF cycle - for scfvalues. For RHF looks like:
+        # ITERATION    DDIFF          GRAD             ENERGY        2-EL.EN.            DIPOLE MOMENTS         DIIS
+        #     1      0.000D+00      0.000D+00      -379.71523700   1159.621171   0.000000   0.000000   0.000000    0
+        #     2      0.000D+00      0.898D-02      -379.74469736   1162.389787   0.000000   0.000000   0.000000    1
+        #     3      0.817D-02      0.144D-02      -379.74635529   1162.041033   0.000000   0.000000   0.000000    2
+        #     4      0.213D-02      0.571D-03      -379.74658063   1162.159929   0.000000   0.000000   0.000000    3
+        #     5      0.799D-03      0.166D-03      -379.74660889   1162.144256   0.000000   0.000000   0.000000    4
+        if self.insidescf and line[1:10] == "ITERATION":
+        
+            if not hasattr(self, "scfvalues"):
+                self.scfvalues = []
+        
+            line = inputfile.next()
+            energy = 0.0
+            scfvalues = []
+            while line.strip() != "":
+                if line.split()[0].isdigit():
+                
+                    ddiff = float(line.split()[1].replace('D','E'))
+                    newenergy = float(line.split()[3])
+                    ediff = newenergy - energy
+                    energy = newenergy
+
+                    # The convergence thresholds must have been read above.
+                    # Presently, we recognize MAX DENSITY and MAX ENERGY thresholds.
+                    numtargets = len(self.scftargetnames)
+                    values = [numpy.nan]*numtargets
+                    for n,name in zip(range(numtargets),self.scftargetnames):
+                        if "ENERGY" in name.upper():
+                            values[n] = ediff
+                        elif "DENSITY" in name.upper():
+                            values[n] = ddiff
+                    scfvalues.append(values)
+
+                line = inputfile.next()
+            self.scfvalues.append(numpy.array(scfvalues))
+
+        # SCF result - RHF/UHF and DFT (RKS) energies.
         if line[1:5] in ["!RHF", "!UHF", "!RKS"] and line[16:22] == "ENERGY":
             
             if not hasattr(self, "scfenergies"):
                 self.scfenergies = []
             scfenergy = float(line.split()[4])
             self.scfenergies.append(utils.convertor(scfenergy, "hartree", "eV"))
+            
+            # We are now done with SCF cycle (after a few lines).
+            self.insidescf = False
 
         # MP2 energies.
         if line[1:5] == "!MP2":
