@@ -356,15 +356,20 @@ class Molpro(logfileparser.Logfile):
                     line = inputfile.next()
             line = inputfile.next()
             
-            # The energies and coefficients for each MO follow.
+            # Create empty moenergies and mocoeffs if they don't exist.
             if not hasattr(self, "moenergies"):
                 self.moenergies = [[]]
-            else:
-                self.moenergies.append([])
-            if not hasattr(self, "mocoeffs"):
+                self.mocoeffs = [[]]
+            # Do the same if they exist and are being read again (spin=0),
+            #   this means only the last print-out of these data are saved,
+            #   which consistent with current cclib practices.
+            elif len(self.moenergies) == 1 and spin == 0:
+                self.moenergies = [[]]
                 self.mocoeffs = [[]]
             else:
+                self.moenergies.append([])
                 self.mocoeffs.append([])
+                
             line = inputfile.next()
             while len(line.split()) >= 10:
                 coeffs = []
