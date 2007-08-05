@@ -1,3 +1,11 @@
+# This list defines which data files are used for which unittests.
+# Description of columns:
+#   column 1: test module
+#   column 2: parser class
+#   column 3: unittest class
+#   column 4: subdirectory containing the data file(s)
+#   column 5 and further: data files to be used in the unittest
+
 Basis     GAMESSUK    GamessUKBasisTest   basicGAMESS-UK        dvb_sp.out
 Basis     GAMESS      GamessUSBasisTest   basicGAMESS-US        dvb_sp.out
 Basis     Gaussian    GaussianBasisTest   basicGaussian03       dvb_sp_basis.log
@@ -30,7 +38,7 @@ GeoOpt    Gaussian    GaussianGeoOptTest  basicGaussian03       dvb_gopt.out
 GeoOpt    Jaguar      Jaguar42GeoOptTest  basicJaguar4.2        dvb_gopt_b.out
 GeoOpt    Jaguar      Jaguar65GeoOptTest  basicJaguar6.5        dvb_gopt_b.out
 GeoOpt    GAMESS      PCGamessGeoOptTest  basicPCGAMESS         dvb_gopt_b.out
-GeoOpt    Molpro      MolproGeoOptTest    basicMolpro2006       dvb_gopt.out
+GeoOpt    Molpro      MolproGeoOptTest    basicMolpro2006       dvb_gopt.out          dvb_gopt.log
 
 MP        GAMESSUK    GAMESSUKMP2Test     basicGAMESS-UK        water_mp2.out
 MP        GAMESSUK    GAMESSUKMP3Test     basicGAMESS-UK        water_mp3.out

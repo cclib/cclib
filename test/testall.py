@@ -6,28 +6,57 @@ import unittest
 from cclib.parser import ADF, GAMESS, GAMESSUK, Gaussian, Jaguar, Molpro
 
 
-test_modules = [ "SP", "SPun", "GeoOpt", "Basis", "Core",
-                 "MP", "CC", "CI", "TD",
-                 "vib" ]
+# The modules to be included in the global test testall().
+test_modules = [ "SP", "SPun", "GeoOpt", "Basis", "Core",   # Basic calculations.
+                 "MP", "CC", "CI", "TD",                    # Post-SCF calculations.
+                 "vib" ]                                    # Other property calculations.
 
 
 def getfile(parser, *location):
-    """Returns a parsed logfile."""
-    if parser.__name__ in ["ADF", "GAMESS", "Gaussian", "Jaguar", "Molpro"]:
-        fullpath = ("..","data",parser.__name__) + location
-    elif parser.__name__=="GAMESSUK":
-        fullpath = ("..","data","GAMESS-UK") + location
-    logfile = parser(os.path.join(*fullpath))
+    """Returns a parsed logfile.
+    
+    Inputs:
+        parser - a logfile parser class (subclass of LogFile)
+        *location - subdirectory and data filename(s)
+    
+    Outputs:
+        data - the resulting data object
+        logfile - the parser object used for parsing
+    """
+
+    # GAMESS-UK files are in the GAMESS path.
+    if parser.__name__=="GAMESSUK":
+        location = ("..", "data", "GAMESS-UK") + location
+    else:
+        location = ("..", "data", parser.__name__) + location
+
+    # Now construct the proper full path(s).
+    # Multiple paths will be in a list only if more than one data file given.
+    # Presently, location contains only one subdirectory (basic*),
+    #   so this is easy since there are normally 5 elements in location.
+    if len(location) == 5:
+        filename = os.path.join(*location)
+    else:
+        filename = [os.path.join(*(location[:4]+location[n:n+1])) for n in range(4,len(location))]
+
+    logfile = parser(filename)
     logfile.logger.setLevel(0)
     data = logfile.parse()
+    
     return data, logfile
 
 def gettestdata(module=None):
-    """Returns a dict of test files from a given module."""
+    """Returns a dict of test files for a given module."""
+
     lines = open('testdata').readlines()
-    lines = [line.split() for line in lines if line.strip()]
+
+    # Remove blank lines and those starting with '#'.
+    lines = [line.split() for line in lines if (line.strip() and line[0] != '#')]
+    
+    # Filter for lines only for the given module.
     if module:
         lines = [line for line in lines if line[0] == module]
+
     testdata = {}
     for line in lines:
         test = {}
@@ -36,17 +65,19 @@ def gettestdata(module=None):
         test["location"] = line[3:]
         testclass = line[2]
         testdata[testclass] = test
+
     return testdata
 
 def visualtests():
     """These are not formal tests -- but they should be eyeballed."""
+    
     output = [ getfile(Gaussian,"basicGaussian03","dvb_gopt.out")[0],
                getfile(GAMESS,"basicPCGAMESS","dvb_gopt_a.out")[0],
                getfile(GAMESS,"basicGAMESS-US","dvb_gopt_a.out")[0],
                getfile(ADF,"basicADF2004.01","dvb_gopt.adfout")[0],
                getfile(Jaguar,"basicJaguar4.2", "dvb_gopt.out")[0],
                getfile(Jaguar,"basicJaguar6.5", "dvb_gopt.out")[0],
-                 ]
+             ]
 
     print "\n\nMO energies of optimised dvb"
     print "    ","".join(["%-10s" % x for x in ['Gaussian','PC-GAMESS','GAMESS-US','ADF','Jaguar4.2','Jaguar6.5']])
@@ -57,25 +88,35 @@ def visualtests():
 def importName(modulename, name):
     """Import from a module whose name is determined at run-time.
 
-    Taken from Python Cookbook 2nd ed O'Reilly Recipe 16.3
+    Taken from Python Cookbook 2nd ed O'Reilly Recipe 16.3.
+    Additionally, also returns None if module does not habe attribute name.
+    
+    Inputs:
+        modulename - name of the module
+        name - name to be imported
     """
+
     try:
         module = __import__(modulename, globals(), locals(), [name])
     except ImportError:
         return None
-    return getattr(module, name)
+
+    return getattr(module, name, None)
 
 def testmodule(module):
-    """Run all the unittests in a module."""
+    """Run all the unittests in a given module."""
 
     testdata = gettestdata(module=module)    
     total = errors = failures = 0
-    for test in testdata:
+    testnames = testdata.keys()
+    testnames.sort()
+    for name in testnames:
 
-        print "\n**** test%s for %s ****" %(module, '/'.join(testdata[test]["location"]))
-        test = importName("test%s" %module, test)
-        parser = testdata[test.__name__]["parser"]
-        location = testdata[test.__name__]["location"]
+        test = importName("test%s" %module, name)
+        parser = testdata[name]["parser"]
+        location = testdata[name]["location"]
+
+        print "\n**** test%s: %s ****" %(module, test.__doc__)
         test.data, test.logfile = getfile(eval(parser), *location)
         myunittest = unittest.makeSuite(test)
 
@@ -103,19 +144,21 @@ def testall():
     for module in test_modules:
 
         testdata = gettestdata(module)
-        for name in testdata:
+        testnames = testdata.keys()
+        testnames.sort()
+        for name in testnames:
 
             path = '/'.join(testdata[name]["location"])
             program = testdata[name]["location"][0][5:]
-            print "\n**** test%s for %s ****" %(module, path)
 
             try:
                 test = importName("test%s" %module, name)
             except:
                 error.append("ERROR: could not import %s from %s." %(name, module))
             else:
-                parser = testdata[test.__name__]["parser"]
-                location = testdata[test.__name__]["location"]
+                print "\n**** test%s: %s ****" %(module, test.__doc__)
+                parser = testdata[name]["parser"]
+                location = testdata[name]["location"]
                 test.data, test.logfile = getfile(eval(parser), *location)
                 myunittest = unittest.makeSuite(test)
                 a = unittest.TextTestRunner(verbosity=2).run(myunittest)

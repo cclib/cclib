@@ -29,9 +29,13 @@ class Logfile(object):
                                  loglevel=logging.INFO, logname="Log", datatype=ccData):
         """Initialise the Logfile object.
 
-        Typically called by subclasses in their own __init__() methods.
+        This should be called by a ubclass in its own __init__ method.
+
+        Inputs:
+          filename - the location of a single logfile, or a list of logfiles
         """
 
+        # Set the filename, or list of filenames.
         self.filename = filename
 
         # Progress indicator.
@@ -58,8 +62,6 @@ class Logfile(object):
         # This is the class that will be used in the data object returned by parse(),
         #   and should normally be ccData or a subclass.
         self.datatype = datatype
-
-        self.parsed = False
 
     def __setattr__(self, name, value):
 
@@ -92,9 +94,11 @@ class Logfile(object):
             return -1
 
         # Save the current list of attributes to keep after parsing.
+        # The dict of self should be the same after parsing.
         _nodelete = list(set(self.__dict__.keys()))
 
-        # Open the file object.
+        # Initiate the FileInput object for the input files.
+        # Remember that self.filename can be a list of files.
         inputfile = utils.openlogfile(self.filename)
 
         # Intialize self.progress.
@@ -156,9 +160,14 @@ class Logfile(object):
         for attr in data._attrlist:
             if hasattr(self, attr):
                 setattr(data, attr, getattr(self, attr))
+                
+        # Now make sure that the cclib attributes in the data object
+        #   are all the correct type (including arrays and lists of arrays).
         data.arrayify()
 
-        # Delete temporary attributes (set during parsing and not in attrlist).
+        # Delete all temporary attributes (including cclib attributes).
+        # All attributes should have been moved to a data object,
+        #   which will be returned.
         for attr in self.__dict__.keys():
             if not attr in _nodelete:
                 self.__delattr__(attr)
@@ -167,10 +176,7 @@ class Logfile(object):
         if self.progress:
             self.progress.update(nstep, "Done")
 
-        self.parsed = True
-        
         # Return the ccData object that was generated.
-
         return data
 
     def updateprogress(self, inputfile, msg, xupdate=0.05):
@@ -181,13 +187,6 @@ class Logfile(object):
             if newstep != self.progress.step:
                 self.progress.update(newstep, msg)
                 self.progress.step = newstep
-
-    def clean(self):
-        """Delete all of the parsed attributes."""
-        for attr in self._attrlist:
-            if hasattr(self, attr):
-                delattr(self, attr)
-        self.parsed = False
 
     def normalisesym(self,symlabel):
         """Standardise the symmetry labels between parsers.
