@@ -111,7 +111,8 @@ class Turbomole(logfileparser.Logfile):
             self.nbasis=nmo
             self.nmo=nmo
         if line[3:9]=="nshell":
-            homos=int(line[11:])
+            temp=line.split('=')
+            homos=int(temp[1])
 
         if line == "$basis\n":
             self.basis_lib=[]
@@ -139,7 +140,6 @@ class Turbomole(logfileparser.Logfile):
                 atsym=temp[3].capitalize()
                 atomnos.append(self.table.number[atsym])
                 atomcoords.append(map(float, temp[0:3]))
-                print 'read line ' + str(line)
                 line = inputfile.next()
             self.atomcoords.append(atomcoords)
             self.atomnos = numpy.array(atomnos, "i")
@@ -150,8 +150,13 @@ class Turbomole(logfileparser.Logfile):
             while line[0]!="$":
                 temp=line.split()
                 at=temp[0]
-                atlist=self.atlist(temp[1])
-                
+                atnosstr=temp[1]
+                while temp[1][len(temp[1])-1] == ',':
+                    line = inputfile.next()
+                    temp=line.split()
+                    atnosstr=atnosstr+temp[0]
+                atlist=self.atlist(atnosstr)
+
                 line = inputfile.next()
 
                 temp=line.split()
