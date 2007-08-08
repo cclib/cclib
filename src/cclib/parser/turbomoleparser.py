@@ -189,28 +189,72 @@ class Turbomole(logfileparser.Logfile):
                         pa=a.capitalize()
 
                         basis=self.basis_lib[i]
+
+                        s_counter=1
+                        p_counter=2
+                        d_counter=3
+                        f_counter=4
+                        g_counter=5
+                        
                         for j in range(0, len(basis.symmetries), 1):
                             if basis.symmetries[j]=='s':
                                 self.aonames.append("%s%d_%d%s" % \
-                                              (pa, counter, j+1, "S"))
+                                              (pa, counter, s_counter, "S"))
+                                s_counter=s_counter+1
                             elif basis.symmetries[j]=='p':
                                 self.aonames.append("%s%d_%d%s" % \
-                                              (pa, counter, j-1, "PX"))
+                                              (pa, counter, p_counter, "PX"))
                                 self.aonames.append("%s%d_%d%s" % \
-                                              (pa, counter, j-1, "PY"))
+                                              (pa, counter, p_counter, "PY"))
                                 self.aonames.append("%s%d_%d%s" % \
-                                              (pa, counter, j-1, "PZ"))
+                                              (pa, counter, p_counter, "PZ"))
+                                p_counter=p_counter+1
                             elif basis.symmetries[j]=='d':
                                 self.aonames.append("%s%d_%d%s" % \
-                                                    (pa, counter, j-2, "D 0"))
+                                         (pa, counter, d_counter, "D 0"))
                                 self.aonames.append("%s%d_%d%s" % \
-                                                   (pa, counter, j-2, "D+1"))
+                                         (pa, counter, d_counter, "D+1"))
                                 self.aonames.append("%s%d_%d%s" % \
-                                                   (pa, counter, j-2, "D-1"))
+                                         (pa, counter, d_counter, "D-1"))
                                 self.aonames.append("%s%d_%d%s" % \
-                                                    (pa, counter, j-2, "D+2"))
+                                         (pa, counter, d_counter, "D+2"))
                                 self.aonames.append("%s%d_%d%s" % \
-                                                    (pa, counter, j-2, "D-2"))
+                                         (pa, counter, d_counter, "D-2"))
+                                d_counter=d_counter+1
+                            elif basis.symmetries[j]=='f':
+                                 self.aonames.append("%s%d_%d%s" % \
+                                       (pa, counter, f_counter, "F 0"))
+                                 self.aonames.append("%s%d_%d%s" % \
+                                       (pa, counter, f_counter, "F+1"))
+                                 self.aonames.append("%s%d_%d%s" % \
+                                       (pa, counter, f_counter, "F-1"))
+                                 self.aonames.append("%s%d_%d%s" % \
+                                       (pa, counter, f_counter, "F+2"))
+                                 self.aonames.append("%s%d_%d%s" % \
+                                       (pa, counter, f_counter, "F-2"))
+                                 self.aonames.append("%s%d_%d%s" % \
+                                       (pa, counter, f_counter, "F+3"))
+                                 self.aonames.append("%s%d_%d%s" % \
+                                        (pa, counter, f_counter, "F-3"))
+                            elif basis.symmetries[j]=='g':
+                                self.aonames.append("%s%d_%d%s" % \
+                                       (pa, counter, f_counter, "G 0"))
+                                self.aonames.append("%s%d_%d%s" % \
+                                       (pa, counter, f_counter, "G+1"))
+                                self.aonames.append("%s%d_%d%s" % \
+                                       (pa, counter, f_counter, "G-1"))
+                                self.aonames.append("%s%d_%d%s" % \
+                                        (pa, counter, g_counter, "G+2"))
+                                self.aonames.append("%s%d_%d%s" % \
+                                         (pa, counter, g_counter, "G-2"))
+                                self.aonames.append("%s%d_%d%s" % \
+                                         (pa, counter, g_counter, "G+3"))
+                                self.aonames.append("%s%d_%d%s" % \
+                                          (pa, counter, g_counter, "G-3"))
+                                self.aonames.append("%s%d_%d%s" % \
+                                          (pa, counter, g_counter, "G+4"))
+                                self.aonames.append("%s%d_%d%s" % \
+                                          (pa, counter, g_counter, "G-4"))
                         break
                 counter=counter+1
                 
