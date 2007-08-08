@@ -1,4 +1,4 @@
-#P MP3/STO-3G
+#P MP3/STO-3G Density Pop=(Full,NaturalOrbitals)
 
 Water
 

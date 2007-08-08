@@ -1,4 +1,4 @@
-#P CIS(50-50,NStates=5)/STO-3G
+#P CIS(50-50,NStates=5)/STO-3G Density Pop=(Full,NaturalOrbitals)
 
 Water
 

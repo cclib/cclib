@@ -401,6 +401,7 @@ class Gaussian(logfileparser.Logfile):
                     i += 1
                 line = inputfile.next()
             self.moenergies = [numpy.array(x, "d") for x in self.moenergies]
+            print line
             
         if line[1:14] == "AO basis set ":
             ## Gaussian Rev <= B.0.3
@@ -667,7 +668,9 @@ class Gaussian(logfileparser.Logfile):
                 colmNames = inputfile.next()
             self.aooverlaps = numpy.array(self.aooverlaps, "d")                    
 
-
+        # Molecular orbital coefficients (mocoeffs).
+        # Essentially only produced for SCF calculations.
+        # This is also the place where aonames and atombasis are parsed.
         if line[5:35] == "Molecular Orbital Coefficients" or line[5:41] == "Alpha Molecular Orbital Coefficients" or line[5:40] == "Beta Molecular Orbital Coefficients":
 
             if line[5:40] == "Beta Molecular Orbital Coefficients":
@@ -727,7 +730,70 @@ class Gaussian(logfileparser.Logfile):
                     break
             if not self.popregular and not beta:
                 self.mocoeffs = mocoeffs
+
+        # Natural Orbital Coefficients (nocoeffs) - alternative for mocoeffs.
+        # Most extensively formed after CI calculations, but not only.
+        # Like for mocoeffs, this is also where aonames and atombasis are parsed.
+        if line[5:33] == "Natural Orbital Coefficients":
+
+            self.aonames = []
+            self.atombasis = []
+            nocoeffs = numpy.zeros((self.nmo, self.nbasis), "d")
+
+            base = 0
+            self.popregular = False
+            for base in range(0, self.nmo, 5):
                 
+                self.updateprogress(inputfile, "Coefficients", self.fupdate)
+                         
+                colmNames = inputfile.next()   
+                if base==0 and int(colmNames.split()[0])!=1:
+                    # Implies that this is a POP=REGULAR calculation
+                    # and so, only aonames (not mocoeffs) will be extracted
+                    self.popregular = True
+
+                # No symmetry line for natural orbitals.
+                # symmetries = inputfile.next()
+                eigenvalues = inputfile.next()
+
+                for i in range(self.nbasis):
+                                   
+                    line = inputfile.next()
+
+                    # Just do this the first time 'round.
+                    if base == 0:
+
+                        # Changed below from :12 to :11 to deal with Elmar Neumann's example.
+                        parts = line[:11].split()
+                        # New atom.
+                        if len(parts) > 1:
+                            if i>0:
+                                self.atombasis.append(atombasis)
+                            atombasis = []
+                            atomname = "%s%s" % (parts[2], parts[1])
+                        orbital = line[11:20].strip()
+                        self.aonames.append("%s_%s" % (atomname, orbital))
+                        atombasis.append(i)
+
+                    part = line[21:].replace("D", "E").rstrip()
+                    temp = [] 
+
+                    for j in range(0, len(part), 10):
+                        temp.append(float(part[j:j+10]))
+
+                    nocoeffs[base:base + len(part) / 10, i] = temp
+
+                # Do the last update of atombasis.
+                if base == 0:
+                    self.atombasis.append(atombasis)
+
+                # We now have aonames, so no need to continue.
+                if self.popregular:
+                    break
+
+            if not self.popregular:
+                self.nocoeffs = nocoeffs
+
         # Pseudopotential charges.
         if line.find("Pseudopotential Parameters") > -1:
 

@@ -22,7 +22,7 @@ class GenericMP2Test(bettertest.TestCase):
         else:
             corrections = self.data.mpenergies[:,self.level-2] - self.data.mpenergies[:,self.level-3]
         self.failUnless(numpy.alltrue(corrections < 0.0))
-
+        
 class GenericMP3Test(GenericMP2Test):
     """Generic MP3 unittest."""
 
@@ -83,12 +83,27 @@ class GAMESSUKMP3Test(GenericMP3Test):
 
 class GAMESSUSMP2Test(GenericMP2Test):
     """GAMESS-US MP2 unittest."""
-        
+
 class GaussianMP2Test(GenericMP2Test):
     """Gaussian MP2 unittest."""
         
+    def testnocoeffs(self):
+        """(MP2) Are Natural Orbital coefficients the right size?"""
+        self.assertEquals(self.data.nocoeffs.shape, (self.data.nmo, self.data.nbasis))
+        
 class GaussianMP3Test(GenericMP3Test):
     """Gaussian MP3 unittest."""
+        
+    def testnocoeffs(self):
+        """(MP2) Are Natural Orbital coefficients the right size?"""
+        self.assertEquals(self.data.nocoeffs.shape, (self.data.nmo, self.data.nbasis))
+
+class GaussianMP4SDQTest(GenericMP4SDQTest):
+    """Gaussian MP4-SDQ unittest."""
+        
+    def testnocoeffs(self):
+        """(MP2) Are Natural Orbital coefficients the right size?"""
+        self.assertEquals(self.data.nocoeffs.shape, (self.data.nmo, self.data.nbasis))
 
 class GaussianMP4SDTQTest(GenericMP4SDTQTest):
     """Gaussian MP4-SDTQ unittest."""

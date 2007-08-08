@@ -1,4 +1,4 @@
-#P MP5/STO-3G
+#P MP5/STO-3G Pop=Full
 
 Water
 

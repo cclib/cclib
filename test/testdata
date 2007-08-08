@@ -45,6 +45,7 @@ MP        GAMESSUK    GAMESSUKMP3Test     basicGAMESS-UK        water_mp3.out
 MP        GAMESS      GAMESSUSMP2Test     basicGAMESS-US        water_mp2.out
 MP        Gaussian    GaussianMP2Test     basicGaussian03       water_mp2.log
 MP        Gaussian    GaussianMP3Test     basicGaussian03       water_mp3.log
+MP        Gaussian    GaussianMP4SDQTest  basicGaussian03       water_mp4sdq.log
 MP        Gaussian    GaussianMP4SDTQTest basicGaussian03       water_mp4.log
 MP        Gaussian    GaussianMP5Test     basicGaussian03       water_mp5.log
 MP        Jaguar      Jaguar65LMP2Test    basicJaguar6.5        water_lmp2.out

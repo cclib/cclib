@@ -42,6 +42,7 @@ class ccData(object):
         natom -- number of atoms (integer)
         nbasis -- number of basis functions (integer)
         nmo -- number of molecular orbitals (integer)
+        nocoeffs -- natural orbital coefficients (array[2])
         scfenergies -- molecular electronic energies after SCF (Hartree-Fock, DFT) (array[1], eV)
         scftargets -- targets for convergence of the SCF (array[2])
         scfvalues -- current values for convergence of the SCF (list of arrays[2])
@@ -71,7 +72,7 @@ class ccData(object):
                           'gbasis', 'geotargets', 'geovalues',
                           'hessian', 'homos',
                           'mocoeffs', 'moenergies', 'mosyms', 'mpenergies', 'mult',
-                          'natom', 'nbasis', 'nmo',
+                          'natom', 'nbasis', 'nmo', 'nocoeffs',
                           'scfenergies', 'scftargets', 'scfvalues',
                           'vibdisps', 'vibfreqs', 'vibirs', 'vibramans', 'vibsyms']
 
@@ -101,6 +102,7 @@ class ccData(object):
                             "natom":          int,
                             "nbasis":         int,
                             "nmo":            int,
+                            "nocoeffs":       numpy.ndarray,
                             "scfenergies":    numpy.ndarray,
                             "scftargets":     numpy.ndarray,
                             "scfvalues":      list,

@@ -2,8 +2,8 @@
  Input=water_mp5.com
  Output=water_mp5.log
  Initial command:
- /opt/gaussian-2003-B.03/g03/l1.exe /scratch/langner/g03-scratch-P8Kl0E/Gau-24157.inp -scrdir=/scratch/langner/g03-scratch-P8Kl0E/
- Entering Link 1 = /opt/gaussian-2003-B.03/g03/l1.exe PID=     24158.
+ /opt/gaussian-2003-B.03/g03/l1.exe /scratch/langner/g03-scratch-6PZdfd/Gau-5452.inp -scrdir=/scratch/langner/g03-scratch-6PZdfd/
+ Entering Link 1 = /opt/gaussian-2003-B.03/g03/l1.exe PID=      5453.
   
  Copyright (c) 1988,1990,1992,1993,1995,1998,2003, Gaussian, Inc.
                   All Rights Reserved.
@@ -90,12 +90,11 @@
  
  *********************************************
  Gaussian 03:  x86-Linux-G03RevB.03 4-May-2003
-                  10-Jun-2007 
+                   7-Aug-2007 
  *********************************************
- %chk=mp2.chk
- -------------
- #P MP5/STO-3G
- -------------
+ ----------------------
+ #P MP5/STO-3G Pop=Full
+ ----------------------
  1/38=1/1;
  2/17=6,18=5,40=1/2;
  3/6=3,11=2,16=1,25=1,30=1/1,2,3;
@@ -103,9 +102,9 @@
  5/5=2,38=5/2;
  8/6=5,10=1/1,4;
  9/5=5/16,15;
- 6/7=2,8=2,9=2,10=2/1;
+ 6/7=3/1;
  99/5=1,9=1/99;
- Leave Link    1 at Sun Jun 10 20:17:25 2007, MaxMem=          0 cpu:       0.1
+ Leave Link    1 at Tue Aug  7 11:44:33 2007, MaxMem=          0 cpu:       0.1
  (Enter /opt/gaussian-2003-B.03/g03/l101.exe)
  -----
  Water
@@ -128,7 +127,7 @@
  AtZEff=   0.0000000   0.0000000   0.0000000
  AtQMom=   0.0000000   0.0000000   0.0000000
  AtGFac=   0.0000000   2.7928460   2.7928460
- Leave Link  101 at Sun Jun 10 20:17:25 2007, MaxMem=    6291456 cpu:       0.1
+ Leave Link  101 at Tue Aug  7 11:44:33 2007, MaxMem=    6291456 cpu:       0.1
  (Enter /opt/gaussian-2003-B.03/g03/l202.exe)
                           Input orientation:                          
  ---------------------------------------------------------------------
@@ -160,7 +159,7 @@
     3          1             0        0.000000   -0.790649   -0.476637
  ---------------------------------------------------------------------
  Rotational constants (GHZ):    795.3366986    401.0831670    266.6255978
- Leave Link  202 at Sun Jun 10 20:17:26 2007, MaxMem=    6291456 cpu:       0.1
+ Leave Link  202 at Tue Aug  7 11:44:33 2007, MaxMem=    6291456 cpu:       0.1
  (Enter /opt/gaussian-2003-B.03/g03/l301.exe)
  Standard basis: STO-3G (5D, 7F)
  There are     4 symmetry adapted basis functions of A1  symmetry.
@@ -177,7 +176,7 @@
  ScaDFX=  1.000000  1.000000  1.000000  1.000000
  IRadAn=      0 IRanWt=     -1 IRanGd=            0 ICorTp=0
  NAtoms=    3 NActive=    3 NUniq=    2 SFac= 2.76E+00 NAtFMM=   60 Big=F
- Leave Link  301 at Sun Jun 10 20:17:26 2007, MaxMem=    6291456 cpu:       0.0
+ Leave Link  301 at Tue Aug  7 11:44:33 2007, MaxMem=    6291456 cpu:       0.0
  (Enter /opt/gaussian-2003-B.03/g03/l302.exe)
  NPDir=0 NMtPBC=     1 NCelOv=     1 NCel=       1 NClECP=     1 NCelD=      1
          NCelK=      1 NCelE2=     1 NClLst=     1 CellRange=     0.0.
@@ -185,10 +184,10 @@
  One-electron integral symmetry used in STVInt
  NBasis=     7 RedAO= T  NBF=     4     0     1     2
  NBsUse=     7 1.00E-06 NBFU=     4     0     1     2
- Leave Link  302 at Sun Jun 10 20:17:26 2007, MaxMem=    6291456 cpu:       0.1
+ Leave Link  302 at Tue Aug  7 11:44:33 2007, MaxMem=    6291456 cpu:       0.1
  (Enter /opt/gaussian-2003-B.03/g03/l303.exe)
  DipDrv:  MaxL=1.
- Leave Link  303 at Sun Jun 10 20:17:27 2007, MaxMem=    6291456 cpu:       0.0
+ Leave Link  303 at Tue Aug  7 11:44:34 2007, MaxMem=    6291456 cpu:       0.0
  (Enter /opt/gaussian-2003-B.03/g03/l401.exe)
  Harris functional with IExCor=  205 diagonalized for initial guess.
  ExpMin= 1.69E-01 ExpMax= 1.31E+02 ExpMxC= 1.31E+02 IAcc=1 IRadAn=         1 AccDes= 1.00E-06
@@ -204,7 +203,7 @@
        Virtual   (A1) (B2)
  The electronic state of the initial guess is 1-A1.
  <S**2> of initial guess= 0.0000
- Leave Link  401 at Sun Jun 10 20:17:27 2007, MaxMem=    6291456 cpu:       0.0
+ Leave Link  401 at Tue Aug  7 11:44:34 2007, MaxMem=    6291456 cpu:       0.0
  (Enter /opt/gaussian-2003-B.03/g03/l502.exe)
  UHF open shell SCF:
  Requested convergence on RMS density matrix=1.00E-08 within 128 cycles.
@@ -317,7 +316,7 @@
  KE= 7.451686028026E+01 PE=-1.963570297588E+02 EE= 3.798883446619E+01
  Annihilation of the first spin contaminant:
  S**2 before annihilation     0.0000,   after     0.0000
- Leave Link  502 at Sun Jun 10 20:17:29 2007, MaxMem=    6291456 cpu:       0.1
+ Leave Link  502 at Tue Aug  7 11:44:34 2007, MaxMem=    6291456 cpu:       0.0
  (Enter /opt/gaussian-2003-B.03/g03/l801.exe)
  ExpMin= 1.69E-01 ExpMax= 1.31E+02 ExpMxC= 1.31E+02 IAcc=1 IRadAn=         1 AccDes= 1.00E-06
  HarFok:  IExCor= 205 AccDes= 1.00E-06 IRadAn=         1 IDoV=1
@@ -329,7 +328,7 @@
  Range of M.O.s used for correlation:     2     7
  NBasis=     7 NAE=     5 NBE=     5 NFC=     1 NFV=     0
  NROrb=      6 NOA=     4 NOB=     4 NVA=     2 NVB=     2
- Leave Link  801 at Sun Jun 10 20:17:30 2007, MaxMem=    6291456 cpu:       0.1
+ Leave Link  801 at Tue Aug  7 11:44:34 2007, MaxMem=    6291456 cpu:       0.1
  (Enter /opt/gaussian-2003-B.03/g03/l804.exe)
  Open-shell transformation, MDV=     6291456 ITran=5 ISComp=1.
  Compute canonical integrals, LenV=     6290153.
@@ -345,7 +344,7 @@
  E2=       -0.3795333653E-01 EUMP2=       -0.75002282127823E+02
  (S**2,0)=  0.00000E+00           (S**2,1)=  0.00000E+00
  E(PUHF)=      -0.74964328791E+02        E(PMP2)=      -0.75002282128E+02
- Leave Link  804 at Sun Jun 10 20:17:30 2007, MaxMem=    6291456 cpu:       0.1
+ Leave Link  804 at Tue Aug  7 11:44:34 2007, MaxMem=    6291456 cpu:       0.1
  (Enter /opt/gaussian-2003-B.03/g03/l916.exe)
  CIDS:  MDV=   6291456.
  Using original routines for 1st iteration, S=F.
@@ -356,7 +355,7 @@
  MP4(D)= -0.33926718E-02
  MP4(S)= -0.11250849E-03
  MP4(R+Q)=  0.29245531E-03
- Time for triples=        0.01 seconds.
+ Time for triples=        0.00 seconds.
  MP4(T)=   -0.54396765E-04
  E3=       -0.10518804E-01        EUMP3=      -0.75012800931E+02
  E4(DQ)=   -0.31002165E-02        UMP4(DQ)=   -0.75015901148E+02
@@ -374,7 +373,7 @@
  s+1         0.00000  0.00000  -74.964329  -75.002282  -75.012801  -75.016068
  s+1,s+2     0.00000  0.00000  -74.964329  -75.002282  -75.012801  -75.016068
 
- Leave Link  916 at Sun Jun 10 20:17:31 2007, MaxMem=    6291456 cpu:       0.0
+ Leave Link  916 at Tue Aug  7 11:44:35 2007, MaxMem=    6291456 cpu:       0.0
  (Enter /opt/gaussian-2003-B.03/g03/l915.exe)
  UMP5:  MDV=   6291456.
  MP5 
@@ -402,7 +401,7 @@
  [1,0] =  -0.75016833995E+02
  [1,1] =  -0.75017539999E+02
  [2,1] =  -0.75017799240E+02
- Leave Link  915 at Sun Jun 10 20:17:32 2007, MaxMem=    6291456 cpu:       0.2
+ Leave Link  915 at Tue Aug  7 11:44:35 2007, MaxMem=    6291456 cpu:       0.2
  (Enter /opt/gaussian-2003-B.03/g03/l601.exe)
  Copying SCF densities to generalized density rwf, ISCF=1 IROHF=0.
 
@@ -424,6 +423,93 @@
  Alpha virt. eigenvalues --    0.57075   0.70859
   Beta  occ. eigenvalues --  -20.24375  -1.25064  -0.60317  -0.44547  -0.38821
   Beta virt. eigenvalues --    0.57075   0.70859
+     Alpha Molecular Orbital Coefficients
+                           1         2         3         4         5
+                        (A1)--O   (A1)--O   (B2)--O   (A1)--O   (B1)--O
+     EIGENVALUES --   -20.24375  -1.25064  -0.60317  -0.44547  -0.38821
+   1 1   O  1S          0.99420  -0.23422   0.00000  -0.10046   0.00000
+   2        2S          0.02592   0.84588   0.00000   0.52140   0.00000
+   3        2PX         0.00000   0.00000   0.00000   0.00000   1.00000
+   4        2PY         0.00000   0.00000   0.60331   0.00000   0.00000
+   5        2PZ        -0.00399  -0.11705   0.00000   0.77427   0.00000
+   6 2   H  1S         -0.00563   0.15645   0.44638  -0.28906   0.00000
+   7 3   H  1S         -0.00563   0.15645  -0.44638  -0.28906   0.00000
+                           6         7
+                        (A1)--V   (B2)--V
+     EIGENVALUES --     0.57075   0.70859
+   1 1   O  1S         -0.12835   0.00000
+   2        2S          0.83253   0.00000
+   3        2PX         0.00000   0.00000
+   4        2PY         0.00000   0.97648
+   5        2PZ        -0.73263   0.00000
+   6 2   H  1S         -0.77580  -0.80892
+   7 3   H  1S         -0.77580   0.80892
+     Beta Molecular Orbital Coefficients.
+                           1         2         3         4         5
+                        (A1)--O   (A1)--O   (B2)--O   (A1)--O   (B1)--O
+     EIGENVALUES --   -20.24375  -1.25064  -0.60317  -0.44547  -0.38821
+   1 1   O  1S          0.99420  -0.23422   0.00000  -0.10046   0.00000
+   2        2S          0.02592   0.84588   0.00000   0.52140   0.00000
+   3        2PX         0.00000   0.00000   0.00000   0.00000   1.00000
+   4        2PY         0.00000   0.00000   0.60331   0.00000   0.00000
+   5        2PZ        -0.00399  -0.11705   0.00000   0.77427   0.00000
+   6 2   H  1S         -0.00563   0.15645   0.44638  -0.28906   0.00000
+   7 3   H  1S         -0.00563   0.15645  -0.44638  -0.28906   0.00000
+                           6         7
+                        (A1)--V   (B2)--V
+     EIGENVALUES --     0.57075   0.70859
+   1 1   O  1S         -0.12835   0.00000
+   2        2S          0.83253   0.00000
+   3        2PX         0.00000   0.00000
+   4        2PY         0.00000   0.97648
+   5        2PZ        -0.73263   0.00000
+   6 2   H  1S         -0.77580  -0.80892
+   7 3   H  1S         -0.77580   0.80892
+     ALPHA DENSITY MATRIX.
+                           1         2         3         4         5
+   1 1   O  1S          1.05339
+   2        2S         -0.22473   0.98804
+   3        2PX         0.00000   0.00000   1.00000
+   4        2PY         0.00000   0.00000   0.00000   0.36398
+   5        2PZ        -0.05434   0.30459   0.00000   0.00000   0.61321
+   6 2   H  1S         -0.01320  -0.01852   0.00000   0.26930  -0.24210
+   7 3   H  1S         -0.01320  -0.01852   0.00000  -0.26930  -0.24210
+                           6         7
+   6 2   H  1S          0.30732
+   7 3   H  1S         -0.09119   0.30732
+     BETA DENSITY MATRIX.
+                           1         2         3         4         5
+   1 1   O  1S          1.05339
+   2        2S         -0.22473   0.98804
+   3        2PX         0.00000   0.00000   1.00000
+   4        2PY         0.00000   0.00000   0.00000   0.36398
+   5        2PZ        -0.05434   0.30459   0.00000   0.00000   0.61321
+   6 2   H  1S         -0.01320  -0.01852   0.00000   0.26930  -0.24210
+   7 3   H  1S         -0.01320  -0.01852   0.00000  -0.26930  -0.24210
+                           6         7
+   6 2   H  1S          0.30732
+   7 3   H  1S         -0.09119   0.30732
+    Full Mulliken population analysis:
+                           1         2         3         4         5
+   1 1   O  1S          2.10678
+   2        2S         -0.10639   1.97608
+   3        2PX         0.00000   0.00000   2.00000
+   4        2PY         0.00000   0.00000   0.00000   0.72795
+   5        2PZ         0.00000   0.00000   0.00000   0.00000   1.22641
+   6 2   H  1S         -0.00132  -0.01680   0.00000   0.16424   0.11126
+   7 3   H  1S         -0.00132  -0.01680   0.00000   0.16424   0.11126
+                           6         7
+   6 2   H  1S          0.61464
+   7 3   H  1S         -0.04163   0.61464
+     Gross orbital populations:
+                         TOTAL     ALPHA     BETA      SPIN
+   1 1   O  1S          1.99775   0.99888   0.99888   0.00000
+   2        2S          1.83608   0.91804   0.91804   0.00000
+   3        2PX         2.00000   1.00000   1.00000   0.00000
+   4        2PY         1.05644   0.52822   0.52822   0.00000
+   5        2PZ         1.44894   0.72447   0.72447   0.00000
+   6 2   H  1S          0.83039   0.41520   0.41520   0.00000
+   7 3   H  1S          0.83039   0.41520   0.41520   0.00000
           Condensed to atoms (all electrons):
               1          2          3
      1  O    7.824444   0.257385   0.257385
@@ -476,19 +562,36 @@
  Symmetry A2   KE= 0.000000000000E+00
  Symmetry B1   KE= 5.057462452019E+00
  Symmetry B2   KE= 2.890427493411E+00
- Leave Link  601 at Sun Jun 10 20:17:32 2007, MaxMem=    6291456 cpu:       0.0
+ Orbital energies and kinetic energies (alpha):
+                           1         2
+       1  (A1)--O     -20.24375  28.65991
+       2  (A1)--O      -1.25064   2.38005
+       3  (B2)--O      -0.60317   1.44521
+       4  (A1)--O      -0.44547   2.24453
+       5  (B1)--O      -0.38821   2.52873
+       6  (A1)--V       0.57075   2.70019
+       7  (B2)--V       0.70859   2.74596
+ Orbital energies and kinetic energies (beta):
+                           1         2
+       1  (A1)--O     -20.24375  28.65991
+       2  (A1)--O      -1.25064   2.38005
+       3  (B2)--O      -0.60317   1.44521
+       4  (A1)--O      -0.44547   2.24453
+       5  (B1)--O      -0.38821   2.52873
+       6  (A1)--V       0.57075   2.70019
+       7  (B2)--V       0.70859   2.74596
+ Total kinetic energy from orbitals= 7.451686028026E+01
+ Leave Link  601 at Tue Aug  7 11:44:35 2007, MaxMem=    6291456 cpu:       0.0
  (Enter /opt/gaussian-2003-B.03/g03/l9999.exe)
- 1\1\GINC-PUFFIN\SP\UMP5-FC\STO-3G\H2O1\LANGNER\10-Jun-2007\0\\#P MP5/S
- TO-3G\\Water\\0,1\O\H,1,0.99\H,1,0.99,2,106.\\Version=x86-Linux-G03Rev
- B.03\State=1-A1\HF=-74.9643288\MP2=-75.0022821\MP3=-75.0128009\MP4D=-7
- 5.0161936\MP4DQ=-75.0159011\MP4SDTQ=-75.0160681\MP5=-75.0171729\PUHF=-
- 74.9643288\PMP2-0=-75.0022821\PMP3-0=-75.0128009\S2=0.\S2-1=0.\S2A=0.\
- RMSD=2.621e-10\PG=C02V [C2(O1),SGV(H2)]\\@
+ 1\1\GINC-PUFFIN\SP\UMP5-FC\STO-3G\H2O1\LANGNER\07-Aug-2007\0\\#P MP5/S
+ TO-3G POP=FULL\\Water\\0,1\O\H,1,0.99\H,1,0.99,2,106.\\Version=x86-Lin
+ ux-G03RevB.03\State=1-A1\HF=-74.9643288\MP2=-75.0022821\MP3=-75.012800
+ 9\MP4D=-75.0161936\MP4DQ=-75.0159011\MP4SDTQ=-75.0160681\MP5=-75.01717
+ 29\PUHF=-74.9643288\PMP2-0=-75.0022821\PMP3-0=-75.0128009\S2=0.\S2-1=0
+ .\S2A=0.\RMSD=2.621e-10\PG=C02V [C2(O1),SGV(H2)]\\@
 
 
- NO HUMAN INVESTIGATION CAN BECOME REAL SCIENCE
- WITHOUT GOING THROUGH MATHEMATICAL PEOPLE.
- -- LEONARDO DA VINCI, IN "PENSIERI" CA. 1492
+ OPTIMIST - A PESSIMIST WHO LACKS EXPERIENCE
  Job cpu time:  0 days  0 hours  0 minutes  1.7 seconds.
  File lengths (MBytes):  RWF=     60 Int=      0 D2E=      0 Chk=      7 Scr=      1
- Normal termination of Gaussian 03 at Sun Jun 10 20:17:40 2007.
+ Normal termination of Gaussian 03 at Tue Aug  7 11:44:35 2007.

@@ -648,6 +648,38 @@ class GAMESS(logfileparser.Logfile):
                 line = inputfile.next()
             self.moenergies = [numpy.array(x, "d") for x in self.moenergies]
 
+        # Natural orbitals - presently support only CIS.
+        # Looks basically the same as eigenvectors, without symmetry labels.
+        if line[10:30] == "CIS NATURAL ORBITALS":
+
+            self.nocoeffs = numpy.zeros((self.nmo, self.nbasis), "d")
+
+            dashes = inputfile.next()
+            for base in range(0, self.nmo, 5):
+
+                blank = inputfile.next()
+                numbers = inputfile.next() # Eigenvector numbers.
+
+                # Eigenvalues for these natural orbitals (not in hartrees!).
+                # Sometimes there are some blank lines before it.
+                line = inputfile.next()
+                while not line.strip():
+                    line = inputfile.next()
+                eigenvalues = line
+
+                # Orbital symemtry labels are normally here for MO coefficients.
+                line = inputfile.next()
+                
+                # Now we have nbasis lines with the coefficients.
+                for i in range(self.nbasis):
+
+                    line = inputfile.next()
+                    coeffs = line[15:]
+                    j = 0
+                    while j*11+4 < len(coeffs):
+                        self.nocoeffs[base+j, i] = float(coeffs[j * 11:(j + 1) * 11])
+                        j += 1
+
         if line.find("NUMBER OF OCCUPIED ORBITALS") >= 0:
             homos = [int(line.split()[-1])-1]
             line = inputfile.next()
