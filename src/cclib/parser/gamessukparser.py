@@ -175,7 +175,8 @@ class GAMESSUK(logfileparser.Logfile):
 
             minus = inputfile.next()
             blank = inputfile.next()
-            for i in range(0,self.nbasis,12):
+            i = 0
+            while i < self.nbasis:
                 blank = inputfile.next()
                 blank = inputfile.next()
                 header = inputfile.next()
@@ -185,6 +186,8 @@ class GAMESSUK(logfileparser.Logfile):
                 for j in range(self.nbasis):
                     temp = map(float, inputfile.next().split()[1:])
                     self.aooverlaps[j,(0+i):(len(temp)+i)] = temp
+                    
+                i += len(temp)
 
         if line[18:43] == 'EFFECTIVE CORE POTENTIALS':
             self.coreelectrons = numpy.zeros(self.natom, 'i')
