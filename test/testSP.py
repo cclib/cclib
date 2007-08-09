@@ -23,6 +23,12 @@ class GenericSPTest(bettertest.TestCase):
         self.assertEquals(self.data.mocoeffs[0].shape,
                           (self.data.nmo, self.data.nbasis))
 
+    def testaooverlaps(self):
+        """Are the first row and colm of the overlap matrix identical?"""
+        self.assertEquals(sum(self.data.aooverlaps[0,:] -
+                              self.data.aooverlaps[:,0]),
+                          0)
+
     def testatombasis(self):
         """Are the indices in atombasis the right amount and unique?"""
         all = []
