@@ -428,4 +428,3 @@ class Turbomole(logfileparser.Logfile):
                     del self.vibsyms[i]
                 else:
                     i=i+1
-                print str(i) + ' ' + str(self.vibfreqs)
