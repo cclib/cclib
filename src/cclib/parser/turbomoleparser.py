@@ -16,7 +16,6 @@ except ImportError:
 import utils
 import logfileparser
 
-
 class AtomBasis:
     def __init__(self, atname, basis_name, inputfile):
         self.symmetries=[]
@@ -126,7 +125,25 @@ class Turbomole(logfileparser.Logfile):
                     line = inputfile.next()
                 self.basis_lib.append(AtomBasis(temp[0], temp[1], inputfile))
                 line = inputfile.next()
+        if line == "$ecp\n":
+            self.ecp_lib=[]
+            
+            line = inputfile.next()
+            line = inputfile.next()
+            
+            while line[0] != '*' and line[0] != '$':
+                fields=line.split()
+                atname=fields[0]
+                ecpname=fields[1]
+                line = inputfile.next()
+                line = inputfile.next()
+                fields=line.split()
+                ncore = int(fields[2])
 
+                while line[0] != '*':
+                    line = inputfile.next()
+                self.ecp_lib.append([atname, ecpname, ncore])
+        
         if line == "$coord\n":
             self.atomcoords = []
             self.atomnos = []
@@ -162,32 +179,41 @@ class Turbomole(logfileparser.Logfile):
 
                 temp=line.split()
                 basisname=temp[2]
-
+                ecpname=''
                 line = inputfile.next()
                 while(line.find('jbas')!=-1 or line.find('ecp')!=-1 or
                       line.find('jkbas')!=-1):
+                    if line.find('ecp')!=-1:
+                        temp=line.split()
+                        ecpname=temp[2]
                     line = inputfile.next()
 
-                self.atomlist.append( (at, basisname, atlist))
+                self.atomlist.append( (at, basisname, ecpname, atlist))
 
         if line[3:10]=="natoms=":
             self.natom=int(line[10:])
             basistable=[]
 
-            self.atomlist
             for i in range(0, self.natom, 1):
                 for j in range(0, len(self.atomlist), 1):
-                    for k in range(0, len(self.atomlist[j][2]), 1):
-                        if(self.atomlist[j][2][k]==i):
+                    for k in range(0, len(self.atomlist[j][3]), 1):
+                        if self.atomlist[j][3][k]==i:
                             basistable.append((self.atomlist[j][0],
-                                                   self.atomlist[j][1]))
+                                                   self.atomlist[j][1],
+                                               self.atomlist[j][2]))
             self.aonames=[]
             counter=1
-            for a, b in basistable:
+            for a, b, c in basistable:
+                ncore=0
+                if len(c) > 0:
+                    for i in range(0, len(self.ecp_lib), 1):
+                        if self.ecp_lib[i][0]==a and \
+                           self.ecp_lib[i][1]==c:
+                            ncore=self.ecp_lib[i][2]
+                           
                 for i in range(0, len(self.basis_lib), 1):
                     if self.basis_lib[i].atname==a and self.basis_lib[i].basis_name==b:
                         pa=a.capitalize()
-
                         basis=self.basis_lib[i]
 
                         s_counter=1
@@ -195,7 +221,29 @@ class Turbomole(logfileparser.Logfile):
                         d_counter=3
                         f_counter=4
                         g_counter=5
-                        
+# this is a really ugly piece of code to assign the right labels to
+# basis functions on atoms with an ecp
+                        if ncore == 2:
+                            s_counter=2
+                        elif ncore == 10:
+                            s_counter=3
+                            p_counter=3
+                        elif ncore == 18:
+                            s_counter=4
+                            p_counter=4
+                        elif ncore == 28:
+                            s_counter=4
+                            p_counter=4
+                            d_counter=4
+                        elif ncore == 36:
+                            s_counter=5
+                            p_counter=5
+                            d_counter=5
+                        elif ncore == 46:
+                            s_counter=5
+                            p_counter=5
+                            d_counter=6
+                            
                         for j in range(0, len(basis.symmetries), 1):
                             if basis.symmetries[j]=='s':
                                 self.aonames.append("%s%d_%d%s" % \
@@ -311,3 +359,73 @@ class Turbomole(logfileparser.Logfile):
                     mocoeffs[i][j]=moarray[i][j]
 
             self.mocoeffs.append(mocoeffs)
+
+        if line[26:49] == "a o f o r c e - program":
+            self.vibirs = []
+            self.vibfreqs = []
+            self.vibsyms = []
+            self.vibdisps = []
+
+            while line[3:31] != "****  force : all done  ****":
+                if line[5:14] == "frequency":
+                    temp=line.split()
+
+                    freqs = [self.float(f) for f in temp[1:]]
+                    self.vibfreqs.extend(freqs)
+                            
+                    line=inputfile.next()
+                    line=inputfile.next()
+
+                    syms=line.split()
+                    self.vibsyms.extend(syms[1:])
+
+                    line=inputfile.next()
+                    line=inputfile.next()
+                    line=inputfile.next()
+                    line=inputfile.next()
+
+                    temp=line.split()
+                    irs = [self.float(f) for f in temp[2:]]
+                    self.vibirs.extend(irs)
+
+                    line=inputfile.next()
+                    line=inputfile.next()
+                    line=inputfile.next()
+                    line=inputfile.next()
+
+                    x=[]
+                    y=[]
+                    z=[]
+
+                    line=inputfile.next()
+                    while len(line) > 1:
+                        temp=line.split()
+                        x.append(map(float, temp[3:]))
+
+                        line=inputfile.next()
+                        temp=line.split()
+                        y.append(map(float, temp[1:]))
+
+                        line=inputfile.next()
+                        temp=line.split()
+                        z.append(map(float, temp[1:]))
+                        line=inputfile.next()
+                    
+                    for i in range(0, len(x[0]), 1):
+                        disp=[]
+                        for j in range(0, len(x), 1):
+                            disp.append( [x[j][i], y[j][i], z[j][i]])
+                        self.vibdisps.append(disp)
+
+                line=inputfile.next()
+
+            i=0
+            while i<len(self.vibfreqs):
+                if self.vibfreqs[i]==0.0:
+                    del self.vibfreqs[i]
+                    del self.vibdisps[i]
+                    del self.vibirs[i]
+                    del self.vibsyms[i]
+                else:
+                    i=i+1
+                print str(i) + ' ' + str(self.vibfreqs)
