@@ -57,6 +57,7 @@ SP        Jaguar      Jaguar42SPTest      basicJaguar4.2        dvb_sp.out
 SP        Jaguar      Jaguar60SPTest      basicJaguar6.0        dvb_sp.out
 SP        GAMESS      PCGamessSPTest      basicPCGAMESS         dvb_sp.out
 SP        Molpro      MolproSPTest        basicMolpro2006       dvb_sphf.out
+SP        Turbomole   TurbomoleSPTest     basicTurbomole        dvb_sp/turbo.out
 
 SPun      ADF         ADFSPunTest         basicADF2004.01       dvb_un_sp.adfout
 SPun      GAMESSUK    GamessUKSPunTest    basicGAMESS-UK        dvb_un_sp_b.out

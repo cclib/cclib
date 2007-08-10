@@ -72,6 +72,9 @@ class Jaguar60SPTest(GenericSPTest):
 class MolproSPTest(GenericSPTest):
     """Molpro restricted single point unittest."""
 
+class TurbomoleSPTest(GenericSPTest):
+    """Turbomole restricted single point unittest."""
+
 class PCGamessSPTest(GenericSPTest):
     """PC-GAMESS restricted single point unittest."""
 

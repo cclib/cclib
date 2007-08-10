@@ -19,6 +19,7 @@ import gamessukparser
 import gaussianparser
 import jaguarparser
 import molproparser
+import turbomoleparser
 
 
 def openlogfile(filename):
