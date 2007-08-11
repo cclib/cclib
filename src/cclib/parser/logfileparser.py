@@ -113,10 +113,6 @@ class Logfile(object):
             if cupdate:
                 self.cupdate = cupdate
 
-        # Maybe the sub-class has something to do before parsing.
-        if hasattr(self, "before_parsing"):
-            self.before_parsing()
-
         # Initialize the ccData object that will be returned.
         # This is normally ccData, but can be changed by passing
         #   the datatype argument to __init__().
@@ -127,6 +123,10 @@ class Logfile(object):
         # The class self.datatype (normally ccData) must have this attribute.
         self._attrlist = data._attrlist
         
+        # Maybe the sub-class has something to do before parsing.
+        if hasattr(self, "before_parsing"):
+            self.before_parsing()
+
         # Loop over lines in the file object and call extract().
         # This is where the actual parsing is done.
         for line in inputfile:
@@ -141,6 +141,10 @@ class Logfile(object):
 
         # Close input file object.
         inputfile.close()
+
+        # Maybe the sub-class has something to do after parsing.
+        if hasattr(self, "after_parsing"):
+            self.after_parsing()
 
         # If atomcoords were not parsed, but some input coordinates were ("inputcoords").
         # This is originally from the Gaussian parser, a regression fix.

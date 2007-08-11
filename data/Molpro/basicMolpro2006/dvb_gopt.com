@@ -1,5 +1,6 @@
 ***, divinylbenzene geom opt
 gprint,basis,orbital
+gthresh,thrgrad=0.0002
 basis=sto-3g
 geometry={nosym,angstrom;
  x1

@@ -401,7 +401,6 @@ class Gaussian(logfileparser.Logfile):
                     i += 1
                 line = inputfile.next()
             self.moenergies = [numpy.array(x, "d") for x in self.moenergies]
-            print line
             
         if line[1:14] == "AO basis set ":
             ## Gaussian Rev <= B.0.3
