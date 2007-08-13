@@ -410,7 +410,9 @@ class Turbomole(logfileparser.Logfile):
                         temp=line.split()
                         z.append(map(float, temp[1:]))
                         line=inputfile.next()
-                    
+
+# build xyz vectors for each mode
+
                     for i in range(0, len(x[0]), 1):
                         disp=[]
                         for j in range(0, len(x), 1):
@@ -420,6 +422,7 @@ class Turbomole(logfileparser.Logfile):
                 line=inputfile.next()
 
             i=0
+# delete all frequencies that correspond to translations or rotations
             while i<len(self.vibfreqs):
                 if self.vibfreqs[i]==0.0:
                     del self.vibfreqs[i]
