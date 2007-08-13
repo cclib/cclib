@@ -152,7 +152,7 @@ class Logfile(object):
             self.atomcoords = numpy.array(self.inputcoords, 'd')
 
         # Set nmo if not set already - to nbasis.
-        if not hasattr(self, "nmo"):
+        if not hasattr(self, "nmo") and hasattr(self, "nbasis"):
             self.nmo = self.nbasis
 
         # Creating deafult coreelectrons array.
