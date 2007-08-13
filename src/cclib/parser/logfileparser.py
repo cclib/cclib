@@ -156,7 +156,7 @@ class Logfile(object):
             self.nmo = self.nbasis
 
         # Creating deafult coreelectrons array.
-        if not hasattr(self, "coreelectrons"):
+        if not hasattr(self, "coreelectrons") and hasattr(self, "natom"):
             self.coreelectrons = numpy.zeros(self.natom, "i")
 
         # Move all cclib attributes to the ccData object.
