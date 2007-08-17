@@ -10,6 +10,9 @@ import bettertest
 class GenericGeoOptTest(bettertest.TestCase):
     """Geometry optimization unittest."""
 
+    extracoords = 0
+    extrascfs = 0
+
     def testhomos(self):
         """Is the index of the homo equal to 34?"""
         self.assertArrayEquals(self.data.homos, numpy.array([34],"i"),"%s != array([34],'i')" % numpy.array_repr(self.data.homos))
@@ -17,7 +20,7 @@ class GenericGeoOptTest(bettertest.TestCase):
     def testatomcoords(self):
         """Are atomcoords consistent with natom and Angstroms?"""
         coords = self.data.atomcoords
-        self.assertEquals(self.data.natom,len(coords[0]),"natom  is %d but len(atomcoords[0]) is %d" % (self.data.natom,len(coords[0])))
+        self.assertEquals(self.data.natom,len(coords[0]),"natom is %d but len(atomcoords[0]) is %d" % (self.data.natom,len(coords[0])))
 
         # Find the minimum distance between two C atoms
         mindist = 999
@@ -41,13 +44,12 @@ class GenericGeoOptTest(bettertest.TestCase):
         # This will work only for numpy
         #self.assertEquals(self.data.atomnos.dtype.char, 'i')
         self.assertEquals(self.data.atomnos.shape, (20,) )
-        self.assertEquals(sum(self.data.atomnos==6) + sum(self.data.atomnos==1),
-                          20)        
+        self.assertEquals(sum(self.data.atomnos==6) + sum(self.data.atomnos==1), 20)        
 
     def testatomcoords_more(self):
         """Are atomcoords consistent with geovalues?"""
         coords = self.data.atomcoords
-        self.assertEquals(len(self.data.geovalues),len(coords),"len(atomcoords) is %d but len(geovalues) is %d" % (len(coords),len(self.data.geovalues)))
+        self.assertEquals(len(self.data.geovalues),len(coords)-self.extracoords,"len(atomcoords) is %d but len(geovalues) is %d" % (len(coords),len(self.data.geovalues)))
         
     def testnatom(self):
         """Is the number of atoms equal to 20?"""
@@ -95,7 +97,7 @@ class GenericGeoOptTest(bettertest.TestCase):
     
     def testscfvaluedim(self):
         """Do the scf values have the right dimensions?"""
-        self.assertEquals(len(self.data.scfvalues),len(self.data.geovalues))
+        self.assertEquals(len(self.data.scfvalues)-self.extrascfs,len(self.data.geovalues))
 
     def testscftargetdim(self):
         """Do the scf targets have the right dimensions?"""
@@ -104,17 +106,9 @@ class GenericGeoOptTest(bettertest.TestCase):
 class ADFGeoOptTest(GenericGeoOptTest):
     """ADF geometry optimization unittest."""
 
-    def testscfvaluedim(self):
-        """Do the scf values have the right dimensions?"""
-        # ADF calculations have one more SCF cycle after the geometry is converged
-        # with a tighter SCF convergence cut-off.
-        self.assertEquals(len(self.data.scfvalues),len(self.data.geovalues)+1)
+    extracoords = 1
+    extrascfs = 1
 
-    def testatomcoords_more(self):
-        """Are atomcoords consistent with geovalues?"""
-        coords = self.data.atomcoords
-        self.assertEquals(len(self.data.geovalues),len(coords)-1,"len(atomcoords)-1 is %d but len(geovalues) is %d" % (len(coords)-1,len(self.data.geovalues)))
-    
     def testscfenergy(self):
         """Is the SCF energy within 1eV of -140eV"""
         self.assertInside(self.data.scfenergies[-1],-140,1,"Final scf energy: %f not -140+-1eV" % self.data.scfenergies[-1])
@@ -136,6 +130,9 @@ class Jaguar65GeoOptTest(GenericGeoOptTest):
 
 class MolproGeoOptTest(GenericGeoOptTest):
     """Molpro geometry optimization unittest."""
+    
+    extracoords = 1
+    extrascfs = 2
 
 class PCGamessGeoOptTest(GenericGeoOptTest):
     """PC-GAMESS geometry optimization unittest."""
