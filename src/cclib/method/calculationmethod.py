@@ -8,27 +8,30 @@ __revision__ = "$Revision$"
 import logging
 import sys
 
+
 class Method(object):
     """Abstract class for logfile objects.
 
-    Subclasses:
-        Density
+    Subclasses defined by cclib:
+        Density, Fragments, OPA, Population
     
     Attributes:
+        data - ccData source data object
     """
-    def __init__(self, parser, progress=None,
+    def __init__(self, data, progress=None,
                  loglevel=logging.INFO, logname="Log"):
         """Initialise the Logfile object.
 
         Typically called by subclasses in their own __init__ methods.
         """
-        self.parser = parser
+
+        self.data = data
         self.progress = progress
         self.loglevel = loglevel
         self.logname = logname
 
-        # Set up the logger
-        self.logger = logging.getLogger('%s %s' % (self.logname, self.parser))
+        # Set up the logger.
+        self.logger = logging.getLogger('%s %s' % (self.logname, self.data))
         self.logger.setLevel(self.loglevel)
         handler = logging.StreamHandler(sys.stdout)
         handler.setFormatter(logging.Formatter(

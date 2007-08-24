@@ -15,20 +15,20 @@ from calculationmethod import *
 
 class FragmentAnalysis(Method):
     """Convert a molecule's basis functions from atomic-based to fragment MO-based"""
-    def __init__(self, parser, progress=None, loglevel=logging.INFO,
+    def __init__(self, data, progress=None, loglevel=logging.INFO,
                  logname="FragmentAnalysis of"):
 
-        # Call the __init__ method of the superclass
-        super(FragmentAnalysis, self).__init__(parser, progress, loglevel, logname)
+        # Call the __init__ method of the superclass.
+        super(FragmentAnalysis, self).__init__(data, progress, loglevel, logname)
         self.parsed = False
         
     def __str__(self):
         """Return a string representation of the object."""
-        return "Fragment molecule basis of" % (self.parser)
+        return "Fragment molecule basis of" % (self.data)
 
     def __repr__(self):
         """Return a representation of the object."""
-        return 'Fragment molecular basis("%s")' % (self.parser)
+        return 'Fragment molecular basis("%s")' % (self.data)
 
     def calculate(self, fragments, cupdate=0.05):
 
@@ -37,11 +37,11 @@ class FragmentAnalysis(Method):
         nFragBeta = 0
         self.fonames = []
 
-        unrestricted = ( len(self.parser.mocoeffs) == 2 )
+        unrestricted = ( len(self.data.mocoeffs) == 2 )
 
         self.logger.info("Creating attribute fonames[]")
 
-#collect basis info on the fragments
+        # Collect basis info on the fragments.
         for j in range(len(fragments)):
             nFragBasis += fragments[j].nbasis
             nFragAlpha += fragments[j].homos[0] + 1
@@ -57,12 +57,12 @@ class FragmentAnalysis(Method):
                 else:
                     self.fonames.append("noname%i_%i"%(j,i+1))
 
-        nBasis = self.parser.nbasis
-        nAlpha = self.parser.homos[0] + 1
+        nBasis = self.data.nbasis
+        nAlpha = self.data.homos[0] + 1
         if unrestricted:
-            nBeta = self.parser.homos[1] + 1
+            nBeta = self.data.homos[1] + 1
 
-#check to make sure calcs have the right properties
+        # Check to make sure calcs have the right properties.
         if nBasis != nFragBasis:
             self.logger.error("Basis functions don't match")
             return False
@@ -75,7 +75,7 @@ class FragmentAnalysis(Method):
             self.logger.error("Beta electrons don't match")
             return False
 
-        if len(self.parser.atomcoords) != 1:
+        if len(self.data.atomcoords) != 1:
             self.logger.warning("Molecule calc appears to be an optimization")
 
         for frag in fragments:
@@ -86,22 +86,22 @@ class FragmentAnalysis(Method):
         last = 0
         for frag in fragments:
             size = frag.natom
-            if self.parser.atomcoords[0][last:last+size].tolist() != frag.atomcoords[0].tolist():
+            if self.data.atomcoords[0][last:last+size].tolist() != frag.atomcoords[0].tolist():
                 self.logger.error("Atom coordinates aren't aligned")
                 return False
 
             last += size
 
-#and let's begin!
+        # And let's begin!
         self.mocoeffs = []
         self.logger.info("Creating mocoeffs in new fragment MO basis: mocoeffs[]")
 
-        for spin in range(len(self.parser.mocoeffs)):
+        for spin in range(len(self.data.mocoeffs)):
             blockMatrix = numpy.zeros((nBasis,nBasis), "d")
             pos = 0
 
-#build up block-diagonal matrix from fragment mocoeffs
-            #need to switch ordering from [mo,ao] to [ao,mo]
+            # Build up block-diagonal matrix from fragment mocoeffs.
+            # Need to switch ordering from [mo,ao] to [ao,mo].
             for i in range(len(fragments)):
                 size = fragments[i].nbasis
                 if len(fragments[i].mocoeffs) == 1:
@@ -110,13 +110,13 @@ class FragmentAnalysis(Method):
                     blockMatrix[pos:pos+size,pos:pos+size] = numpy.transpose(fragments[i].mocoeffs[spin])
                 pos += size
             
-#invert and mutliply to result in fragment MOs as basis
+            # Invert and mutliply to result in fragment MOs as basis.
             iBlockMatrix = numpy.inv(blockMatrix) 
-            results = numpy.transpose(numpy.dot(iBlockMatrix, numpy.transpose(self.parser.mocoeffs[spin])))
+            results = numpy.transpose(numpy.dot(iBlockMatrix, numpy.transpose(self.data.mocoeffs[spin])))
             self.mocoeffs.append(results)
             
-            if hasattr(self.parser, "aooverlaps"):
-                tempMatrix = numpy.dot(self.parser.aooverlaps, blockMatrix)
+            if hasattr(self.data, "aooverlaps"):
+                tempMatrix = numpy.dot(self.data.aooverlaps, blockMatrix)
                 tBlockMatrix = numpy.transpose(blockMatrix)
                 if spin == 0:
                     self.fooverlaps = numpy.dot(tBlockMatrix, tempMatrix)
@@ -129,6 +129,6 @@ class FragmentAnalysis(Method):
 
         self.parsed = True
         self.nbasis = nBasis
-        self.homos = self.parser.homos
+        self.homos = self.data.homos
 
         return True

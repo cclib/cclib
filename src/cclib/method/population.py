@@ -14,11 +14,12 @@ from calculationmethod import Method
 
 class Population(Method):
     """A base class for all population-type methods."""
-    def __init__(self, parser, progress=None, \
+    
+    def __init__(self, data, progress=None, \
                  loglevel=logging.INFO, logname="Log"):
 
         # Call the __init__ method of the superclass.
-        super(Population, self).__init__(parser, progress, loglevel, logname)
+        super(Population, self).__init__(data, progress, loglevel, logname)
         self.fragresults = None
         
     def __str__(self):
@@ -37,10 +38,10 @@ class Population(Method):
         if not indices:
 
             # Build list of groups of orbitals in each atom for atomresults.
-            if hasattr(self.parser, "aonames"):
-                names = self.parser.aonames
-            elif hasattr(self.parser, "fonames"):
-                names = self.parser.fonames
+            if hasattr(self.data, "aonames"):
+                names = self.data.aonames
+            elif hasattr(self.data, "fonames"):
+                names = self.data.fonames
 
             atoms = []
             indices = []
@@ -86,6 +87,7 @@ class Population(Method):
         self.fragresults = results
 
         return True
+
 
 if __name__ == "__main__":
     import doctest, population

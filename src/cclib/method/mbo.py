@@ -13,44 +13,43 @@ from density import Density
 
 
 class MBO(Density):
-    """Calculate the density matrix"""
+    """Calculate the density matrix."""
+
     def __init__(self, *args):
 
-        # Call the __init__ method of the superclass
+        # Call the __init__ method of the superclass.
         super(MBO, self).__init__(logname="MBO", *args)
         
     def __str__(self):
         """Return a string representation of the object."""
-        return "Mayer's bond order of" % (self.parser)
+        return "Mayer's bond order of" % (self.data)
 
     def __repr__(self):
         """Return a representation of the object."""
-        return 'Mayer\'s bond order("%s")' % (self.parser)
+        return 'Mayer\'s bond order("%s")' % (self.data)
     
     def calculate(self, indices=None, fupdate=0.05):
-        """Calculate Mayer's bond orders given the results of a parser"""
+        """Calculate Mayer's bond orders."""
     
-        if not self.parser.parsed:
-            self.parser.parse()
-
         retval = super(MBO, self).calculate(fupdate)
         if not retval: #making density didn't work
             return False
 
-        #do we have the needed info in the parser?
-        if not (hasattr(self.parser, "aooverlaps")
-                or hasattr(self.parser, "fooverlaps")):
+        # Do we have the needed info in the ccData object?
+        if not (hasattr(self.data, "aooverlaps")
+                or hasattr(self.data, "fooverlaps")):
             self.logger.error("Missing overlap matrix")
             return False #let the caller of function know we didn't finish
 
         if not indices:
-#build list of groups of orbitals in each atom for atomresults
-            if hasattr(self.parser, "aonames"):
-                names = self.parser.aonames
-                overlaps = self.parser.aooverlaps
-            elif hasattr(self.parser, "fonames"):
-                names = self.parser.fonames
-                overlaps = self.parser.fooverlaps
+
+            # Build list of groups of orbitals in each atom for atomresults.
+            if hasattr(self.data, "aonames"):
+                names = self.data.aonames
+                overlaps = self.data.aooverlaps
+            elif hasattr(self.data, "fonames"):
+                names = self.data.fonames
+                overlaps = self.data.fooverlaps
             else:
                 self.logger.error("Missing aonames or fonames")
                 return False
@@ -71,23 +70,22 @@ class MBO(Density):
                     indices.append([i])
                 else:
                     indices[index].append(i)
-#done building list
 
         self.logger.info("Creating attribute fragresults: array[3]")
         size = len(indices)
-        unrestricted = (len(self.parser.mocoeffs) == 2)
 
-        #determine number of steps, and whether process involves beta orbitals
+        # Determine number of steps, and whether process involves beta orbitals.
         PS = []
         PS.append(numpy.dot(self.density[0], overlaps))
         nstep = size**2 #approximately quadratic in size
+        unrestricted = (len(self.data.mocoeffs) == 2)
         if unrestricted:
             self.fragresults = numpy.zeros([2, size, size], "d")
             PS.append(numpy.dot(self.density[1], overlaps))
         else:
             self.fragresults = numpy.zeros([1, size, size], "d")
 
-        #intialize progress if available
+        # Intialize progress if available.
         if self.progress:
             self.progress.initialize(nstep)
 

@@ -13,7 +13,8 @@ from population import Population
 
 
 class MPA(Population):
-    """The Mulliken population analysis"""
+    """The Mulliken population analysis."""
+    
     def __init__(self, *args):
 
         # Call the __init__ method of the superclass.
@@ -21,48 +22,40 @@ class MPA(Population):
         
     def __str__(self):
         """Return a string representation of the object."""
-        return "MPA of" % (self.parser)
+        return "MPA of" % (self.data)
 
     def __repr__(self):
         """Return a representation of the object."""
-        return 'MPA("%s")' % (self.parser)
+        return 'MPA("%s")' % (self.data)
     
     def calculate(self, indices=None, fupdate=0.05):
         """Perform a Mulliken population analysis."""
     
-        if not self.parser.parsed:
-            self.parser.parse()
-
-        # Do we have the needed info in the parser?
-        if not hasattr(self.parser,"mocoeffs"):
+        # Do we have the needed attributes in the data object?
+        if not hasattr(self.data, "mocoeffs"):
             self.logger.error("Missing mocoeffs")
             return False
-
-        if not (hasattr(self.parser, "aooverlaps") \
-                    or hasattr(self.parser, "fooverlaps") ):
+        if not (hasattr(self.data, "aooverlaps") \
+             or hasattr(self.data, "fooverlaps") ):
             self.logger.error("Missing overlap matrix")
             return False
-
-        if not hasattr(self.parser, "nbasis"):
+        if not hasattr(self.data, "nbasis"):
             self.logger.error("Missing nbasis")
             return False
-
-        if not hasattr(self.parser, "homos"):
+        if not hasattr(self.data, "homos"):
             self.logger.error("Missing homos")
             return False
-        # End attribute checks.
 
-        unrestricted = (len(self.parser.mocoeffs) == 2)
-        nbasis = self.parser.nbasis
 
         # Determine number of steps, and whether process involves beta orbitals.
         self.logger.info("Creating attribute aoresults: [array[2]]")
-        alpha = len(self.parser.mocoeffs[0])
+        nbasis = self.data.nbasis
+        alpha = len(self.data.mocoeffs[0])
         self.aoresults = [ numpy.zeros([alpha, nbasis], "d") ]
         nstep = alpha
-
+        unrestricted = (len(self.data.mocoeffs) == 2)
         if unrestricted:
-            beta = len(self.parser.mocoeffs[1])
+            beta = len(self.data.mocoeffs[1])
             self.aoresults.append(numpy.zeros([beta, nbasis], "d"))
             nstep += beta
 
@@ -71,9 +64,9 @@ class MPA(Population):
             self.progress.initialize(nstep)
 
         step = 0
-        for spin in range(len(self.parser.mocoeffs)):
+        for spin in range(len(self.data.mocoeffs)):
 
-            for i in range(len(self.parser.mocoeffs[spin])):
+            for i in range(len(self.data.mocoeffs[spin])):
 
                 if self.progress and random.random() < fupdate:
                     self.progress.update(step, "Mulliken Population Analysis")
@@ -84,11 +77,11 @@ class MPA(Population):
                 # X = C(i) * [C(i) \cdot S]
                 # C(i) is 1xn and S is nxn, result of matrix mult is 1xn
 
-                ci = self.parser.mocoeffs[spin][i]
-                if hasattr(self.parser, "aooverlaps"):
-                    temp = numpy.dot(ci, self.parser.aooverlaps)
-                elif hasattr(self.parser, "fooverlaps"):
-                    temp = numpy.dot(ci, self.parser.fooverlaps)
+                ci = self.data.mocoeffs[spin][i]
+                if hasattr(self.data, "aooverlaps"):
+                    temp = numpy.dot(ci, self.data.aooverlaps)
+                elif hasattr(self.data, "fooverlaps"):
+                    temp = numpy.dot(ci, self.data.fooverlaps)
 
                 self.aoresults[spin][i] = numpy.multiply(ci, temp).astype("d")
 
@@ -110,7 +103,7 @@ class MPA(Population):
         
         for spin in range(len(self.fragresults)):
 
-            for i in range(self.parser.homos[spin] + 1):
+            for i in range(self.data.homos[spin] + 1):
 
                 temp = numpy.reshape(self.fragresults[spin][i], (size,))
                 self.fragcharges = numpy.add(self.fragcharges, temp)

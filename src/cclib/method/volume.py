@@ -40,7 +40,9 @@ class Volume(object):
        numpts -- the numbers of points in the (x,y,z) directions
 
     """
+    
     def __init__(self, origin, topcorner, spacing):
+    
         self.origin = origin
         self.spacing = spacing
         self.topcorner = topcorner
@@ -229,7 +231,9 @@ def electrondensity(coords, mocoeffslist, gbasis, volume):
     
     return density
 
+
 if __name__=="__main__":
+
     try:
         import psyco
         psyco.full()

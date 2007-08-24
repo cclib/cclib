@@ -18,41 +18,44 @@ def func(x):
     else:
         return x+func(x-1)
 
+
 class OPA(Method):
-    """The overlap population analysis"""
+    """The overlap population analysis."""
+    
     def __init__(self, *args):
 
-        # Call the __init__ method of the superclass
+        # Call the __init__ method of the superclass.
         super(OPA, self).__init__(logname="OPA", *args)
         
     def __str__(self):
         """Return a string representation of the object."""
-        return "OPA of" % (self.parser)
+        return "OPA of" % (self.data)
 
     def __repr__(self):
         """Return a representation of the object."""
-        return 'OPA("%s")' % (self.parser)
+        return 'OPA("%s")' % (self.data)
     
     def calculate(self, indices=None, fupdate=0.05):
         """Perform an overlap population analysis given the results of a parser"""
     
-        if not self.parser.parsed:
-            self.parser.parse()
+        if not self.data.parsed:
+            self.data.parse()
 
-        #do we have the needed info in the parser?
-        if not hasattr(self.parser, "mocoeffs") \
-          and not ( hasattr(self.parser, "aooverlaps") \
-                    or hasattr(self.parser, "fooverlaps") ) \
-          and not hasattr(self.parser, "nbasis"):
+        # Do we have the needed info in the ccData object?
+        if not hasattr(self.data, "mocoeffs") \
+          and not ( hasattr(self.data, "aooverlaps") \
+                    or hasattr(self.data, "fooverlaps") ) \
+          and not hasattr(self.data, "nbasis"):
             self.logger.error("Missing mocoeffs, aooverlaps/fooverlaps or nbasis")
             return False #let the caller of function know we didn't finish
 
         if not indices:
-#build list of groups of orbitals in each atom for atomresults
-            if hasattr(self.parser, "aonames"):
-                names = self.parser.aonames
-            elif hasattr(self.parser, "foonames"):
-                names = self.parser.fonames
+
+            # Build list of groups of orbitals in each atom for atomresults.
+            if hasattr(self.data, "aonames"):
+                names = self.data.aonames
+            elif hasattr(self.data, "foonames"):
+                names = self.data.fonames
 
             atoms = []
             indices = []
@@ -71,35 +74,35 @@ class OPA(Method):
                 else:
                     indices[index].append(i)
 
-        #determine number of steps, and whether process involves beta orbitals
+        # Determine number of steps, and whether process involves beta orbitals.
         nfrag = len(indices) #nfrag
         nstep = func(nfrag - 1)
-        unrestricted = (len(self.parser.mocoeffs) == 2)
-        alpha = len(self.parser.mocoeffs[0])
-        nbasis = self.parser.nbasis
+        unrestricted = (len(self.data.mocoeffs) == 2)
+        alpha = len(self.data.mocoeffs[0])
+        nbasis = self.data.nbasis
 
         self.logger.info("Creating attribute results: array[4]")
         results= [ numpy.zeros([nfrag, nfrag, alpha], "d") ]
         if unrestricted:
-            beta = len(self.parser.mocoeffs[1])
+            beta = len(self.data.mocoeffs[1])
             results.append(numpy.zeros([nfrag, nfrag, beta], "d"))
             nstep *= 2
             
-        if hasattr(self.parser, "aooverlaps"):
-            overlap = self.parser.aooverlaps
-        elif hasattr(self.parser,"fooverlaps"):
-            overlap = self.parser.fooverlaps
+        if hasattr(self.data, "aooverlaps"):
+            overlap = self.data.aooverlaps
+        elif hasattr(self.data,"fooverlaps"):
+            overlap = self.data.fooverlaps
 
         #intialize progress if available
         if self.progress:
             self.progress.initialize(nstep)
 
-        size = len(self.parser.mocoeffs[0])
+        size = len(self.data.mocoeffs[0])
         step = 0
 
         preresults = []
-        for spin in range(len(self.parser.mocoeffs)):
-            two = numpy.array([2.0]*len(self.parser.mocoeffs[spin]),"d")
+        for spin in range(len(self.data.mocoeffs)):
+            two = numpy.array([2.0]*len(self.data.mocoeffs[spin]),"d")
 
 
             # OP_{AB,i} = \sum_{a in A} \sum_{b in B} 2 c_{ai} c_{bi} S_{ab}
@@ -113,11 +116,11 @@ class OPA(Method):
 
                     for a in indices[A]:
 
-                        ca = self.parser.mocoeffs[spin][:,a]
+                        ca = self.data.mocoeffs[spin][:,a]
 
                         for b in indices[B]:
                             
-                            cb = self.parser.mocoeffs[spin][:,b]
+                            cb = self.data.mocoeffs[spin][:,b]
                             temp = ca * cb * two *overlap[a,b]
                             results[spin][A,B] = numpy.add(results[spin][A,B],temp)
                             results[spin][B,A] = numpy.add(results[spin][B,A],temp)
@@ -134,6 +137,7 @@ class OPA(Method):
             self.progress.update(nstep, "Done")
 
         return True
+
 
 if __name__ == "__main__":
     import doctest, opa
