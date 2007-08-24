@@ -351,7 +351,7 @@ class Molpro(logfileparser.Logfile):
                     self.atombasis.append([])
                 self.aonames = []
                 aonum = 0
-                while line.strip() != "":
+                while line.strip():
                     for s in line.split():
                         if s.isdigit():
                             atomno = int(s)
@@ -364,9 +364,12 @@ class Molpro(logfileparser.Logfile):
                             self.aonames.append(aoname)
                     line = inputfile.next()
             else:
-                while line.strip() != "":
+                while line.strip():
                     line = inputfile.next()
-            line = inputfile.next()
+
+            # Now there can be one or two blank lines.
+            while not line.strip():
+                line = inputfile.next()
             
             # Create empty moenergies and mocoeffs if they don't exist.
             if not hasattr(self, "moenergies"):
@@ -382,15 +385,17 @@ class Molpro(logfileparser.Logfile):
                 self.moenergies.append([])
                 self.mocoeffs.append([])
                 
-            line = inputfile.next()
-            while len(line.split()) >= 10:
+            while line.strip():
                 coeffs = []
                 while line.strip() != "":
-                    if len(line.split()) > 10:
+                    if line[:30].strip():
                         moenergy = float(line.split()[2])
                         moenergy = utils.convertor(moenergy, "hartree", "eV")
                         self.moenergies[spin].append(moenergy)
-                    coeffs += [float(s) for s in line[31:].split()]
+                    line = line[31:]
+                    # Each line has 10 coefficients in 10.6f format.
+                    num = len(line)/10
+                    coeffs += [float(line[10*i:10*(i+1)]) for i in range(num)]
                     line = inputfile.next()
                 self.mocoeffs[spin].append(coeffs)
                 line = inputfile.next()
