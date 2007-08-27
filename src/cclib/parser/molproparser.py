@@ -330,7 +330,6 @@ class Molpro(logfileparser.Logfile):
         #   by FOR POSITIVE SPIN or FOR NEGATIVE SPIN.
         # For examples, see data/Molpro/basicMolpro2006/dvb_sp*.
         if line[1:18] == "ELECTRON ORBITALS" or self.electronorbitals:
-            
             # Detect if we are reading beta (negative spin) orbitals.
             spin = 0
             if line[19:36] == "FOR NEGATIVE SPIN" or self.electronorbitals[19:36] == "FOR NEGATIVE SPIN":
@@ -385,7 +384,7 @@ class Molpro(logfileparser.Logfile):
                 self.moenergies.append([])
                 self.mocoeffs.append([])
                 
-            while line.strip():
+            while line.strip() and not "ORBITALS" in line:
                 coeffs = []
                 while line.strip() != "":
                     if line[:30].strip():
@@ -406,7 +405,7 @@ class Molpro(logfileparser.Logfile):
             else:
                 self.electronorbitals = ""
 
-        # Is the MATROP program was called appropriately,
+        # If the MATROP program was called appropriately,
         #   the atomic obital overlap matrix S is printed.
         # The matrix is printed straight-out, ten elements in each row, both halves.
         # Note that is the entire matrix is not printed, then aooverlaps
