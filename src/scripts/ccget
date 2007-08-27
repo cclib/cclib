@@ -8,12 +8,12 @@ import logging
 from cclib.parser import ccopen
 
 _allowedargs = ['aonames','aooverlaps','atombasis','atomcoords','atomnos',
-		'charge','coreelectrons',
+		'ccenergies', 'charge','coreelectrons',
                 'etenergies','etoscs','etrotats','etsecs','etsyms',
-                'fonames','fooverlaps','gbasis','geotargets','geovalues',
+                'fonames','fooverlaps','fragnames','frags',
+                'gbasis','geotargets','geovalues',
                 'hessian','homos',
-                'mocoeffs','moenergies','mosyms','mpenergies',
-		'mult',
+                'mocoeffs','moenergies','mosyms','mpenergies','mult',
                 'natom','nbasis', 'nmo', 'nocoeffs',
                 'scfenergies','scftargets','scfvalues',
                 'vibdisps', 'vibfreqs','vibirs','vibramans','vibsyms']
