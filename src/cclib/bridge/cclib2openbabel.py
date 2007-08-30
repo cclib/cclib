@@ -7,7 +7,7 @@ __revision__ = "$Revision$"
 
 import openbabel as ob
 
-def makeopenbabel(atomcoords, atomnos):
+def makeopenbabel(atomcoords, atomnos, charge=0, mult=1):
     """Create an Open Babel molecule.
 
     >>> import numpy, openbabel
@@ -19,8 +19,6 @@ def makeopenbabel(atomcoords, atomnos):
     >>> print obconversion.WriteString(obmol).strip()
     InChI=1/H2O/h1H2
     """
-# The only thing missing is charge, but this is also missing
-# from cclib...things to do
     obmol = ob.OBMol()
     for i in range(len(atomnos)):
         # Note that list(atomcoords[i]) is not equivalent!!!
@@ -32,6 +30,8 @@ def makeopenbabel(atomcoords, atomnos):
         obmol.AddAtom(obatom)
     obmol.ConnectTheDots()
     obmol.PerceiveBondOrders()
+    obmol.SetTotalSpinMultiplicity(mult)
+    obmol.SetTotalCharge(charge)
     return obmol
 
 if __name__ == "__main__":

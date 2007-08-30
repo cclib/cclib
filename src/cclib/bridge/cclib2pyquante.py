@@ -7,7 +7,7 @@ __revision__ = "$Revision$"
 
 from PyQuante.Molecule import Molecule
 
-def makepyquante(atomcoords, atomnos):
+def makepyquante(atomcoords, atomnos, charge=0, mult=1):
     """Create a PyQuante Molecule.
 
     >>> import numpy
@@ -19,11 +19,9 @@ def makepyquante(atomcoords, atomnos):
     >>> print int(en * 10) / 10. # Should be around -73.8
     -73.8
     """
-# The only thing missing is charge, but this is also missing
-# from cclib...things to do
-
-    return Molecule("notitle", zip(atomnos, atomcoords), units = "Angstrom")
+    return Molecule("notitle", zip(atomnos, atomcoords), units="Angstrom",
+                    charge=charge, multiplicity=mult)
 
 if __name__ == "__main__":
-    import doctest, cclib2pyquante
-    doctest.testmod(cclib2pyquante)
+    import doctest
+    doctest.testmod()
