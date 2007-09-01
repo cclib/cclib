@@ -8,7 +8,10 @@ __revision__ = "$Revision$"
 
 import os
 import sys
-import bz2 # New in Python 2.3.
+try:
+  import bz2 # New in Python 2.3.
+except ImportError, detail:
+  print "Not all cclib features will work:", detail
 import gzip
 import zipfile
 import fileinput
@@ -48,6 +51,9 @@ def openlogfile(filename):
             fileobject = StringIO.StringIO(zip.read(zip.namelist()[0]))
 
         elif extension in ['.bz', '.bz2']:
+            # Module 'bz2' is not always importable.
+            assert ('bz2' in sys.modules.keys(),
+                    "ERROR: module bz2 cannot be imported")
             fileobject = bz2.BZ2File(filename, "r")
 
         else:
