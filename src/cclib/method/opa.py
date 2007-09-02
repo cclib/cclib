@@ -38,9 +38,6 @@ class OPA(Method):
     def calculate(self, indices=None, fupdate=0.05):
         """Perform an overlap population analysis given the results of a parser"""
     
-        if not self.data.parsed:
-            self.data.parse()
-
         # Do we have the needed info in the ccData object?
         if not hasattr(self.data, "mocoeffs") \
           and not ( hasattr(self.data, "aooverlaps") \
