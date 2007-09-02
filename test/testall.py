@@ -1,6 +1,7 @@
 __revision__ = "$Revision$"
 
 import os
+import sys
 import unittest
 
 from cclib.parser import ADF, GAMESS, GAMESSUK, Gaussian, Jaguar, Molpro
@@ -129,7 +130,7 @@ def testmodule(module):
     print "TOTAL: %d\tPASSED: %d\tFAILED: %d\tERRORS: %d" % (total,total-(errors+failures),failures,errors)
 
 
-def testall():
+def testall(parser = None):
     """Run all unittests in all modules."""
 
     # Make sure we are in the test directory of this script,
@@ -144,6 +145,11 @@ def testall():
     for module in test_modules:
 
         testdata = gettestdata(module)
+        
+        if parser:
+            testdata = dict([ (x,y) for x,y in testdata.iteritems()
+                              if y['parser']==parser ])
+                
         testnames = testdata.keys()
         testnames.sort()
         for name in testnames:
@@ -193,4 +199,7 @@ def testall():
 
 
 if __name__ == "__main__":
-    testall()
+    parser = None
+    if len(sys.argv)==2:
+        parser = sys.argv[1]
+    testall(parser)
