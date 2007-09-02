@@ -75,18 +75,18 @@ class Volume(object):
                   numpy.arange(self.data.shape[1]),
                   numpy.arange(self.data.shape[0]))
         v = VtkData(RectilinearGrid(*ranges), "Test",
-                    PointData(Scalars(self.data.flat, "from cclib", "default")))
+                    PointData(Scalars(self.data.ravel(), "from cclib", "default")))
         v.tofile(filename)
 
     def integrate(self):
         boxvol = (self.spacing[0] * self.spacing[1] * self.spacing[2] *
                   convertor(1, "Angstrom", "bohr")**3)
-        return sum(self.data.flat) * boxvol
+        return sum(self.data.ravel()) * boxvol
 
     def integrate_square(self):
         boxvol = (self.spacing[0] * self.spacing[1] * self.spacing[2] *
                   convertor(1, "Angstrom", "bohr")**3)
-        return sum(self.data.flat**2) * boxvol
+        return sum(self.data.ravel()**2) * boxvol
 
     def writeascube(self, filename):
         # Remember that the units are bohr, not Angstroms
@@ -244,20 +244,21 @@ if __name__=="__main__":
     import logging
     a = ccopen("../../../data/Gaussian/basicGaussian03/dvb_sp_basis.log")
     a.logger.setLevel(logging.ERROR)
-    a.parse()
+    c = a.parse()
     
     b = ccopen("../../../data/Gaussian/basicGaussian03/dvb_sp.out")
     b.logger.setLevel(logging.ERROR)
-    b.parse()
+    d = b.parse()
 
     vol = Volume( (-3.0,-6,-2.0), (3.0, 6, 2.0), spacing=(0.25,0.25,0.25) )
-    wavefn = wavefunction(b.atomcoords[0], b.mocoeffs[0][b.homos[0]], a.gbasis, vol)
+    wavefn = wavefunction(d.atomcoords[0], d.mocoeffs[0][d.homos[0]],
+                          c.gbasis, vol)
     assert abs(wavefn.integrate())<1E-6 # not necessarily true for all wavefns
     assert abs(wavefn.integrate_square() - 1.00)<1E-3 #   true for all wavefns
     print wavefn.integrate(), wavefn.integrate_square()
 
     vol = Volume( (-3.0,-6,-2.0), (3.0, 6, 2.0), spacing=(0.25,0.25,0.25) )
-    frontierorbs = [b.mocoeffs[0][(b.homos[0]-3):(b.homos[0]+1)]]
-    density = electrondensity(b.atomcoords[0], frontierorbs, a.gbasis, vol)
+    frontierorbs = [d.mocoeffs[0][(d.homos[0]-3):(d.homos[0]+1)]]
+    density = electrondensity(d.atomcoords[0], frontierorbs, c.gbasis, vol)
     assert abs(density.integrate()-8.00)<1E-2
     print "Combined Density of 4 Frontier orbitals=",density.integrate()
