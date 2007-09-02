@@ -71,7 +71,7 @@ def openlogfile(filename):
         
         return fileobject
 
-def ccopen(filename, progress=None, loglevel=logging.INFO, logname="Log"):
+def ccopen(filename, progress=None, loglevel=logging.INFO):
     """Guess the identity of a particular log file and return an instance of it.
     
     Inputs:

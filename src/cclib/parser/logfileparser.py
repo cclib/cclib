@@ -25,8 +25,10 @@ class Logfile(object):
     
     """
 
-    def __init__(self, filename, progress=None, fupdate=0.05, cupdate=0.002, 
-                                 loglevel=logging.INFO, logname="Log", datatype=ccData):
+    def __init__(self, filename, progress=None,
+                                 loglevel=logging.INFO, logname="Log",
+                                 fupdate=0.05, cupdate=0.002, 
+                                 datatype=ccData):
         """Initialise the Logfile object.
 
         This should be called by a ubclass in its own __init__ method.
