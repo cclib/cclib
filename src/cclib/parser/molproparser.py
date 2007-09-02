@@ -394,7 +394,14 @@ class Molpro(logfileparser.Logfile):
                     line = line[31:]
                     # Each line has 10 coefficients in 10.6f format.
                     num = len(line)/10
-                    coeffs += [float(line[10*i:10*(i+1)]) for i in range(num)]
+                    for i in range(num):
+                        try:
+                            coeff = float(line[10*i:10*(i+1)])
+                        # Molpro prints stars when coefficients are huge.
+                        except ValueError, detail:
+                            self.logger.error("Set coefficient to zero: %s" %detail)
+                            coeff = 0.0
+                        coeffs.append(coeff)
                     line = inputfile.next()
                 self.mocoeffs[spin].append(coeffs)
                 line = inputfile.next()
