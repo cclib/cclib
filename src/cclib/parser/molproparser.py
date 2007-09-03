@@ -399,7 +399,7 @@ class Molpro(logfileparser.Logfile):
                             coeff = float(line[10*i:10*(i+1)])
                         # Molpro prints stars when coefficients are huge.
                         except ValueError, detail:
-                            self.logger.error("Set coefficient to zero: %s" %detail)
+                            self.logger.warn("Set coefficient to zero: %s" %detail)
                             coeff = 0.0
                         coeffs.append(coeff)
                     line = inputfile.next()
