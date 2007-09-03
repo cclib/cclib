@@ -138,5 +138,5 @@ class PCGAMESSMP4SDTQTest(GenericMP4SDTQTest):
               
 if __name__=="__main__":
 
-    from testall import testmodule
-    testmodule("MP")
+    from testall import testall
+    testall(modules=["MP"])

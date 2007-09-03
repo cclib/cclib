@@ -84,5 +84,5 @@ class PCGamessSPTest(GenericSPTest):
 
 if __name__=="__main__":
 
-    from testall import testmodule
-    testmodule("SP")
+    from testall import testall
+    testall(modules=["SP"])

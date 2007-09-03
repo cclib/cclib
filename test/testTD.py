@@ -43,5 +43,5 @@ class GaussianTDDFTTest(GenericTDTest):
 
 if __name__=="__main__":
 
-    from testall import testmodule
-    testmodule("TD")
+    from testall import testall
+    testall(modules=["TD"])

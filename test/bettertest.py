@@ -5,7 +5,6 @@ import unittest
 import numpy
 
 from cclib.parser import ADF, GAMESS, GAMESSUK, Gaussian, Jaguar, Molpro
-from testall import getfile
 
 
 class TestCase(unittest.TestCase):
@@ -19,7 +18,7 @@ class TestCase(unittest.TestCase):
     Also, for testing near equality of floats use assertInside.
     (Taken from Python Cookbook 2nd Ed. Recipe 8.11)
     """
-    
+
     def assertInside(self, first, second, error, msg=None):
         """Fail if the second number isn't within a certain error of the first."""
         if not (second-error) < first < (second+error):
@@ -48,16 +47,27 @@ class TestCase(unittest.TestCase):
     def run(self, result=None):
         """Custom run method for cclib."""
         
-        # Skip (pass) the test run under some conditions.
+        # Skip the actuall call to run() if we want to skip the test,
+        #   for any reason (feature not implemented, etc.).
+        # Still, increment the total, and append to a new "skipped" attribute.
         # In Python 2.4, the document string is in _TestCase__testMethodDoc.
         # In Python 2.5, the document string is in _testMethodDoc.
         if hasattr(self, "_TestCase__testMethodDoc"):
             if "PASS" in self._TestCase__testMethodDoc:
                 print self._TestCase__testMethodDoc
+                result.testsRun += 1
+                if not hasattr(result, "skipped"):
+                    result.skipped = []
+                result.skipped.append(self._testMethodDoc)
                 return
         if hasattr(self, "_testMethodDoc"):
             if "PASS" in self._testMethodDoc:
                 print self._testMethodDoc
+                result.testsRun += 1
+                if not hasattr(result, "skipped"):
+                    result.skipped = []
+                result.skipped.append(self._testMethodDoc)
                 return
 
+        # If test not skipped, run the test now.
         unittest.TestCase.run(self, result=result)

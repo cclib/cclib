@@ -117,5 +117,5 @@ class Jaguar65CISTest(GenericCISWaterTest):
              
 if __name__=="__main__":
 
-    from testall import testmodule
-    testmodule("CI")
+    from testall import testall
+    testall(modules=["CI"])

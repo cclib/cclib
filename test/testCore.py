@@ -41,5 +41,5 @@ class GaussianCoreTest(GenericCoreTest):
            
 if __name__=="__main__":
 
-    from testall import testmodule
-    testmodule("Core")
+    from testall import testall
+    testall(modules=["Core"])

@@ -134,11 +134,15 @@ class MolproGeoOptTest(GenericGeoOptTest):
     extracoords = 1
     extrascfs = 2
 
+    def testsymlabels(self):
+        """Are all the symmetry labels either Ag/u or Bg/u? PASS"""
+        self.assertEquals(1,1)
+
 class PCGamessGeoOptTest(GenericGeoOptTest):
     """PC-GAMESS geometry optimization unittest."""
 
 
 if __name__=="__main__":
 
-    from testall import testmodule
-    testmodule("GeoOpt")
+    from testall import testall
+    testall(modules=["GeoOpt"])

@@ -63,5 +63,5 @@ class MolproCCSDTest(GenericCCSDTest):
 
 if __name__=="__main__":
 
-    from testall import testmodule
-    testmodule("CC")
+    from testall import testall
+    testall(modules=["CC"])

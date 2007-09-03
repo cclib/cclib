@@ -104,33 +104,7 @@ def importName(modulename, name):
 
     return getattr(module, name, None)
 
-def testmodule(module):
-    """Run all the unittests in a given module."""
-
-    testdata = gettestdata(module=module)    
-    total = errors = failures = 0
-    testnames = testdata.keys()
-    testnames.sort()
-    for name in testnames:
-
-        test = importName("test%s" %module, name)
-        parser = testdata[name]["parser"]
-        location = testdata[name]["location"]
-
-        print "\n**** test%s: %s ****" %(module, test.__doc__)
-        test.data, test.logfile = getfile(eval(parser), *location)
-        myunittest = unittest.makeSuite(test)
-
-        a = unittest.TextTestRunner(verbosity=2).run(myunittest)
-        total += a.testsRun
-        errors += len(a.errors)
-        failures += len(a.failures)
-
-    print "\n\n********* SUMMARY OF %s TEST **************" %module.upper()
-    print "TOTAL: %d\tPASSED: %d\tFAILED: %d\tERRORS: %d" % (total,total-(errors+failures),failures,errors)
-
-
-def testall(parser = None):
+def testall(parserchoice=None, modules=test_modules):
     """Run all unittests in all modules."""
 
     # Make sure we are in the test directory of this script,
@@ -142,13 +116,14 @@ def testall(parser = None):
 
     perpackage = {}
     errors = []
-    for module in test_modules:
+    
+    for module in modules:
 
         testdata = gettestdata(module)
         
-        if parser:
+        if parserchoice:
             testdata = dict([ (x,y) for x,y in testdata.iteritems()
-                              if y['parser']==parser ])
+                              if y['parser']==parserchoice ])
                 
         testnames = testdata.keys()
         testnames.sort()
@@ -160,7 +135,7 @@ def testall(parser = None):
             try:
                 test = importName("test%s" %module, name)
             except:
-                error.append("ERROR: could not import %s from %s." %(name, module))
+                errors.append("ERROR: could not import %s from %s." %(name, module))
             else:
                 print "\n**** test%s: %s ****" %(module, test.__doc__)
                 parser = testdata[name]["parser"]
@@ -168,24 +143,27 @@ def testall(parser = None):
                 test.data, test.logfile = getfile(eval(parser), *location)
                 myunittest = unittest.makeSuite(test)
                 a = unittest.TextTestRunner(verbosity=2).run(myunittest)
-                l = perpackage.setdefault(program, [0, 0, 0])
+                l = perpackage.setdefault(program, [0, 0, 0, 0])
                 l[0] += a.testsRun
                 l[1] += len(a.errors)
                 l[2] += len(a.failures)
+                if hasattr(a, "skipped"):
+                    l[3] += len(a.skipped)
 
     print "\n\n********* SUMMARY PER PACKAGE ****************"
     names = perpackage.keys()
     names.sort()
-    total = [0, 0, 0]
-    print " "*14, "\t".join(["Total", "Passed", "Failed", "Errors"])
+    total = [0, 0, 0, 0]
+    print " "*14, "\t".join(["Total", "Passed", "Failed", "Errors", "Skipped"])
     for name in names:
         l = perpackage[name]
-        print name.ljust(15), "%3d\t%3d\t%3d\t%3d" % (l[0], l[0]-l[1]-l[2], l[2], l[1])
-        for i in range(3):
+        print name.ljust(15), "%3d\t%3d\t%3d\t%3d\t%3d" % (l[0], l[0]-l[1]-l[2]-l[3], l[2], l[1], l[3])
+        for i in range(4):
             total[i] += l[i]
 
     print "\n\n********* SUMMARY OF EVERYTHING **************"
-    print "TOTAL: %d\tPASSED: %d\tFAILED: %d\tERRORS: %d" % (total[0],total[0]-(total[1]+total[2]),total[2],total[1])
+    print "TOTAL: %d\tPASSED: %d\tFAILED: %d\tERRORS: %d\tSKIPPED: %d" \
+            %(total[0], total[0]-(total[1]+total[2]+total[3]), total[2], total[1], total[3])
 
     if errors:
         print "\n".join(errors)

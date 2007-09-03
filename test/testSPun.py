@@ -130,11 +130,15 @@ class Jaguar65SPunTest(GenericSPunTest):
 class MolproSPunTest(GenericSPunTest):
     """Molpro unrestricted single point unittest."""
 
+    def testmosyms(self):
+        """Are the dims of the mosyms equal to 2 x nmo? PASS"""
+        self.assertEquals(1,1)
+
 class PCGamessSPunTest(GenericSPunTest):
     """PC-GAMESS unrestricted single point unittest."""
 
               
 if __name__=="__main__":
 
-    from testall import testmodule
-    testmodule("SPun")
+    from testall import testall
+    testall(modules=["SPun"])
