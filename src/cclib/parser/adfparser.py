@@ -102,12 +102,23 @@ class ADF(logfileparser.Logfile):
 
                 self.updateprogress(inputfile, "Unsupported Information", self.fupdate)
 
+                if line.find("INPUT FILE") >=0 and hasattr(self,"scftargets"):
+                #does this file contain multiple calculations?
+                #if so, print a warning and skip to end of file
+                    self.logger.warning("Skipping remaining calculations")
+                    inputfile.seek(0,2)
+                    break
+
                 if line.find("INPUT FILE") >= 0:
                     line2 = inputfile.next()
                 else:
                     line2 = None
 
-                if line2 and line2.find("Create") < 0:
+                if line2 and len(line2) <= 2:
+                #make sure that it's not blank like in the NiCO4 regression
+                    line2 = inputfile.next()
+
+                if line2 and (line2.find("Create") < 0 and line2.find("create") < 0):
                     break
 
                 line = inputfile.next()
