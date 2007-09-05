@@ -36,6 +36,7 @@ GeoOpt    GAMESSUK    GamessUKGeoOptTest  basicGAMESS-UK        dvb_gopt_d.out
 GeoOpt    GAMESS      GamessUSGeoOptTest  basicGAMESS-US        dvb_gopt_a.out
 GeoOpt    Gaussian    GaussianGeoOptTest  basicGaussian03       dvb_gopt.out
 GeoOpt    Jaguar      Jaguar42GeoOptTest  basicJaguar4.2        dvb_gopt_b.out
+GeoOpt    Jaguar      Jaguar60GeoOptTest  basicJaguar6.0        dvb_gopt.out
 GeoOpt    Jaguar      Jaguar65GeoOptTest  basicJaguar6.5        dvb_gopt_b.out
 GeoOpt    GAMESS      PCGamessGeoOptTest  basicPCGAMESS         dvb_gopt_b.out
 GeoOpt    Molpro      MolproGeoOptTest    basicMolpro2006       dvb_gopt.out          dvb_gopt.log
