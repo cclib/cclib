@@ -537,6 +537,7 @@ class ADF(logfileparser.Logfile):
         # now that we're here, let's extract aonames
 
             self.fonames = []
+            self.start_indeces = {}
 
             blank = inputfile.next()
             note = inputfile.next()
@@ -552,7 +553,8 @@ class ADF(logfileparser.Logfile):
             self.nosymreps = []
             while len(self.fonames) < self.nbasis:
 
-                sym = inputfile.next()
+                symline = inputfile.next()
+                sym = symline.split()[1]
                 line = inputfile.next()
                 num = int(line.split(':')[1].split()[0])
                 self.nosymreps.append(num)
@@ -567,6 +569,10 @@ class ADF(logfileparser.Logfile):
                     info = line.split()
 
                     #index0 index1 occ2 energy3/4 fragname5 coeff6 orbnum7 orbname8 fragname9
+                    if not sym in self.start_indeces.keys():
+                    #have we already set the start index for this symmetry?
+                        self.start_indeces[sym] = int(info[1])
+
                     orbname = info[8]
                     orbital = info[7] + orbname.replace(":", "")
 
@@ -703,9 +709,16 @@ class ADF(logfileparser.Logfile):
                     # The table can end with a blank line or "1".
                     row = 0
                     while not line.strip() in ["", "1"]:
+                        info = line.split()
+
+                        if int(info[0]) < self.start_indeces[sym]:
+                        #check to make sure we aren't parsing CFs
+                            line = inputfile.next()
+                            continue
+
                         self.updateprogress(inputfile, "Coefficients", self.fupdate)
                         row += 1
-                        coeffs = [float(x) for x in line.split()[1:]]
+                        coeffs = [float(x) for x in info[1:]]
                         moindices = [aolist[n-1] for n in monumbers]
                         # The AO index is 1 less than the row.
                         aoindex = symoffset + row - 1
