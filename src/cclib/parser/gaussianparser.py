@@ -321,7 +321,7 @@ class Gaussian(logfileparser.Logfile):
             self.mult = int(broken[-1])
 
         # Orbital symmetries.
-        if line[1:19] == 'Orbital symmetries' and not hasattr(self, "mosyms"):
+        if line[1:20] == 'Orbital symmetries:' and not hasattr(self, "mosyms"):
 
             self.updateprogress(inputfile, "MO Symmetries", self.fupdate)
                     
