@@ -106,8 +106,8 @@ class Molpro(logfileparser.Logfile):
                 #   note that Molpro prints all components, and we want to add
                 #   only one to gbasis, with the proper code (S,P,D,F,G).
                 # Warning! The function types differ for cartesian/spherical functions.
-                # Skip the first printed function type, however.
-                if (functype_.strip() and line[3] != '1') or line.strip() == "":
+                # Skip the first printed function type, however (line[3] != '1').
+                if (functype_.strip() and line[1:4] != '  1') or line.strip() == "":
                     funcbasis = None
                     if functype in ['1s', 's']:
                         funcbasis = 'S'
@@ -120,6 +120,7 @@ class Molpro(logfileparser.Logfile):
                     if functype in ['xxxx', '5g0']:
                         funcbasis = 'G'
                     if funcbasis:
+
                         # The function is split into as many columns as there are.
                         for i in range(len(coefficients[0])):
                             func = (funcbasis, [])
@@ -134,7 +135,7 @@ class Molpro(logfileparser.Logfile):
                     functype = functype_.strip()
                     funcatom = int(funcatom_.strip())
 
-                # Add exponents nad coefficients to lists.
+                # Add exponents and coefficients to lists.
                 if line.strip():
                     funcexp = float(funcexp)
                     funccoeffs = [float(s) for s in funccoeffs.split()]
