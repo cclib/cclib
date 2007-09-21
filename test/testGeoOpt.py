@@ -145,6 +145,13 @@ class ADFGeoOptTest(GenericGeoOptTest):
 class GamessUKGeoOptTest(GenericGeoOptTest):
     """GAMESS-UK geometry optimization unittest."""
 
+    def testdimmocoeffs(self):
+        """Are the dimensions of mocoeffs equal to 1 x (homo+5) x nbasis?"""
+        self.assertEquals(type(self.data.mocoeffs), type([]))
+        self.assertEquals(len(self.data.mocoeffs), 1)
+        self.assertEquals(self.data.mocoeffs[0].shape,
+                          (self.data.homos[0]+1+5, self.data.nbasis))
+        
 class GamessUSGeoOptTest(GenericGeoOptTest):
     """GAMESS-US geometry optimization unittest."""
 

@@ -124,11 +124,6 @@ class ADFSPTest(GenericSPTest):
 class GamessUKSPTest(GenericSPTest):
     """GAMESS-UK restricted single point unittest."""
 
-    # GAMESS-UK prints only 5 virtual MOs by default. Can we re-run with full output?
-    def testlengthmoenergies(self):
-        """Is the number of evalues equal to the number of occ. MOs + 5?"""
-        self.assertEquals(len(self.data.moenergies[0]), self.data.homos[0]+6)
-
 class GamessUSSPTest(GenericSPTest):
     """GAMESS-US restricted single point unittest."""
 
