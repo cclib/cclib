@@ -2,8 +2,15 @@ Change since cclib-0.7:
 
 Features:
 	* New parser: cclib can now parse Molpro files
+	* Separation of parser and data: Parsed data now returned as a ccData
+	object which can be pickled, and converted to and from JSON
+	* NumPy support: Dropped Numeric support in favour of NumPy
+	* API addition: 'charge' for molecular charge
+	* API addition: 'mult' for spin multiplicity
+	* API addition: 'atombasis' for indices of atom orbitals on each atom
 
 Bugfixes:
+	* Several parsing errors were fixed.
 
 Changes since cclib-0.6.1:
 
