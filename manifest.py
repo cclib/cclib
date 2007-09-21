@@ -8,6 +8,7 @@ files = ['THANKS','README','INSTALL','ANNOUNCE','CHANGELOG','LICENSE',
 
 source = os.path.join('src','cclib')
 files.append(os.path.join(source,"__init__.py"))
+files.append(os.path.join(source,"data.py"))
 files.append(os.path.join("src","scripts","ccget"))
 files.append(os.path.join("src","scripts","cda"))
 
@@ -26,6 +27,7 @@ for folder in folders:
 files.extend(glob.glob(os.path.join("test", "test*.py")))
 for name in ['bettertest', 'methods']:
     files.append(os.path.join("test", "%s.py" % name))
+files.append(os.path.join("test", "testdata"))
 
 for file in files:
     if not os.path.isfile(file):

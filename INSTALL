@@ -3,18 +3,18 @@
 === Requirements ===
 
 Before you install cclib, you need to make sure that you have the following:
-*   Python (at least version 2.3)
+*   Python (at least version 2.4)
 *   NumPy (at least version 1.0 is recommended).
 
 Python is an open-source programming language available from http://www.python.org and it is included in many Linux distributions. In Debian it is installed as follows: (as root)
 	
 	apt-get install python python-dev
 
-NumPy (Numerical Python) adds a fast array facility to Python and is available from http://www.numpy.org. Windows users should use the most recent NumPy installation for the Python version they have (2.3, 2.4, 2.5). Linux users are recommended to find a binary package for their distribution. In Debian it is installed as follows: (as root)
+NumPy (Numerical Python) adds a fast array facility to Python and is available from http://www.numpy.org. Windows users should use the most recent NumPy installation for the Python version they have (2.4, 2.5). Linux users are recommended to find a binary package for their distribution. In Debian it is installed as follows: (as root)
 	
 	apt-get install python-numpy
 
-Note: Numeric (the old version of Numerical Python) is not supported by the Numerical Python developers and will not be supported by cclib.
+Note: Numeric (the old version of Numerical Python) is not supported by the Numerical Python developers and is not supported by cclib.
 
 To test whether Python is on the PATH, open a command prompt window and type:
 
@@ -44,14 +44,14 @@ Extract the cclib tar file or zip file at an appropriate location, which we will
 To test, trying importing cclib at the Python prompt. You should see something similar to the following:
 
 	$ python
-	Python 2.3.5 (#2, Sep  4 2005, 22:01:42)
+	Python 2.4.1
 	[GCC 3.3.5 (Debian 1:3.3.5-13)] on linux2
 	Type "help", "copyright", "credits" or "license" for more information.
 	  Press ESC for command-line completion (twice for guesses).
 	  History is saved to ~/.pyhistory.
 	>>> import cclib
 	>>> cclib.__version__
-	'0.7'
+	'0.8'
 
 To run the unit tests, change directory into INSTALLDIR/test and run the following command:
 
