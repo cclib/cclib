@@ -52,22 +52,17 @@ class TestCase(unittest.TestCase):
         # Still, increment the total, and append to a new "skipped" attribute.
         # In Python 2.4, the document string is in _TestCase__testMethodDoc.
         # In Python 2.5, the document string is in _testMethodDoc.
-        if hasattr(self, "_TestCase__testMethodDoc"):
-            if "PASS" in self._TestCase__testMethodDoc:
-                print self._TestCase__testMethodDoc
-                result.testsRun += 1
-                if not hasattr(result, "skipped"):
-                    result.skipped = []
-                result.skipped.append(self._testMethodDoc)
-                return
-        if hasattr(self, "_testMethodDoc"):
-            if "PASS" in self._testMethodDoc:
-                print self._testMethodDoc
-                result.testsRun += 1
-                if not hasattr(result, "skipped"):
-                    result.skipped = []
-                result.skipped.append(self._testMethodDoc)
-                return
-
+        try:
+            doc = self._testMethodDoc
+        except AttributeError:
+            doc = self._TestCase__testMethodDoc
+        if "PASS" in doc:
+            print doc
+            result.testsRun += 1
+            if not hasattr(result, "skipped"):
+                result.skipped = []
+            result.skipped.append(doc)
+            return
+        
         # If test not skipped, run the test now.
         unittest.TestCase.run(self, result=result)
