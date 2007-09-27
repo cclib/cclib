@@ -429,19 +429,23 @@ class Gaussian(logfileparser.Logfile):
 
             self.moenergies = [numpy.array(x, "d") for x in self.moenergies]
             
+        # Gaussian Rev <= B.0.3 (?)
+        # AO basis set in the form of general basis input:
+        #  1 0
+        # S   3 1.00       0.000000000000
+        #      0.7161683735D+02  0.1543289673D+00
+        #      0.1304509632D+02  0.5353281423D+00
+        #      0.3530512160D+01  0.4446345422D+00
+        # SP   3 1.00       0.000000000000
+        #      0.2941249355D+01 -0.9996722919D-01  0.1559162750D+00
+        #      0.6834830964D+00  0.3995128261D+00  0.6076837186D+00
+        #      0.2222899159D+00  0.7001154689D+00  0.3919573931D+00
         if line[1:14] == "AO basis set ":
-            ## Gaussian Rev <= B.0.3
+        
+            # For counterpoise fragment calcualtions, skip these lines.
+            if self.counterpoise != 0: return
+        
             self.gbasis = []
-            # AO basis set in the form of general basis input:
-            #  1 0
-            # S   3 1.00       0.000000000000
-            #      0.7161683735D+02  0.1543289673D+00
-            #      0.1304509632D+02  0.5353281423D+00
-            #      0.3530512160D+01  0.4446345422D+00
-            # SP   3 1.00       0.000000000000
-            #      0.2941249355D+01 -0.9996722919D-01  0.1559162750D+00
-            #      0.6834830964D+00  0.3995128261D+00  0.6076837186D+00
-            #      0.2222899159D+00  0.7001154689D+00  0.3919573931D+00
             line = inputfile.next()
             while line.strip():
                 gbasis = []
