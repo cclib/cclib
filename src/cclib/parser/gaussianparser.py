@@ -63,6 +63,8 @@ class Gaussian(logfileparser.Logfile):
         self.optfinished = False
         # Flag for identifying Coupled Cluster runs.
         self.coupledcluster = False
+        # Fragment number for counterpoise calculations (normally zero).
+        self.counterpoise = 0
 
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
@@ -86,6 +88,10 @@ class Gaussian(logfileparser.Logfile):
         # Extract the atomic numbers and coordinates from the input orientation,
         #   in the event the standard orientation isn't available.
         if line.find("Input orientation") > -1 or line.find("Z-Matrix orientation") > -1:
+
+            # If this is a counterpoise calculation, this output means that
+            #   the supermolecule is now being considered, so we can set:
+            self.counterpoise = 0
 
             self.updateprogress(inputfile, "Attributes", self.cupdate)
                     
@@ -115,7 +121,11 @@ class Gaussian(logfileparser.Logfile):
         if not self.optfinished and line[25:45] == "Standard orientation":
 
             self.updateprogress(inputfile, "Attributes", self.cupdate)
-                    
+
+            # If this is a counterpoise calculation, this output means that
+            #   the supermolecule is now being considered, so we can set:
+            self.counterpoise = 0
+
             if not hasattr(self, "atomcoords"):
                 self.atomcoords = []
             
@@ -314,14 +324,23 @@ class Gaussian(logfileparser.Logfile):
             self.geovalues.append(newlist)
 
         # Charge and multiplicity.
+        # If counterpoise correction is used, multiple lines match.
+        # The first one contains charge/multiplicity of the whole molecule.:
+        #   Charge =  0 Multiplicity = 1 in supermolecule
+        #   Charge =  0 Multiplicity = 1 in fragment  1.
+        #   Charge =  0 Multiplicity = 1 in fragment  2.
         if line[1:7] == 'Charge' and line.find("Multiplicity")>=0:
 
-            broken = line.split()
-            self.charge = int(broken[2])
-            self.mult = int(broken[-1])
+            parts = line.split()
+            if len(parts) == 6 or parts[-1] == 'supermolecule':
+                self.charge = int(parts[2])
+                self.mult = int(parts[5])
 
         # Orbital symmetries.
         if line[1:20] == 'Orbital symmetries:' and not hasattr(self, "mosyms"):
+
+            # For counterpoise fragments, skip these lines.
+            if self.counterpoise != 0: return
 
             self.updateprogress(inputfile, "MO Symmetries", self.fupdate)
                     
@@ -358,19 +377,24 @@ class Gaussian(logfileparser.Logfile):
         # Alpha/Beta electron eigenvalues.
         if line[1:6] == "Alpha" and line.find("eigenvalues") >= 0:
 
+            # For counterpoise fragments, skip these lines.
+            if self.counterpoise != 0: return
+
             self.updateprogress(inputfile, "Eigenvalues", self.fupdate)
-                    
             self.moenergies = [[]]
             HOMO = -2
+
             while line.find('Alpha') == 1:
                 if line.split()[1] == "virt." and HOMO == -2:
-                    # If there aren't any symmetries,
-                    # this is a good way to find the HOMO
+
+                    # If there aren't any symmetries, this is a good way to find the HOMO.
+                    # Also, check for consistency if homos was already parsed.
                     HOMO = len(self.moenergies[0])-1
                     if hasattr(self, "homos"):
                         assert HOMO == self.homos[0]
                     else:
                         self.homos = numpy.array([HOMO], "i")
+
                 part = line[28:]
                 i = 0
                 while i*10+4 < len(part):
@@ -378,21 +402,23 @@ class Gaussian(logfileparser.Logfile):
                     self.moenergies[0].append(utils.convertor(self.float(x), "hartree", "eV"))
                     i += 1
                 line = inputfile.next()            
+
             if line.find('Beta') == 2:
                 self.moenergies.append([])
+
             HOMO = -2
             while line.find('Beta') == 2:
                 if line.split()[1] == "virt." and HOMO == -2:
-                    # If there aren't any symmetries,
-                    # this is a good way to find the HOMO
+
+                    # If there aren't any symmetries, this is a good way to find the HOMO.
+                    # Also, check for consistency if homos was already parsed.
                     HOMO = len(self.moenergies[1])-1
                     if len(self.homos) == 2:
-                        # It already has a self.homos (with the Alpha value)
-                        # but does it already have a Beta value?
                         assert HOMO == self.homos[1]
                     else:
                         self.homos.resize([2])
                         self.homos[1] = HOMO
+
                 part = line[28:]
                 i = 0
                 while i*10+4 < len(part):
@@ -400,6 +426,7 @@ class Gaussian(logfileparser.Logfile):
                     self.moenergies[1].append(utils.convertor(self.float(x), "hartree", "eV"))
                     i += 1
                 line = inputfile.next()
+
             self.moenergies = [numpy.array(x, "d") for x in self.moenergies]
             
         if line[1:14] == "AO basis set ":
@@ -609,14 +636,19 @@ class Gaussian(logfileparser.Logfile):
             self.etrotats = numpy.array(self.etrotats, "d")
 
         # Number of basis sets functions.
+        # Has to deal with lines like:
+        #  NBasis =   434 NAE=    97 NBE=    97 NFC=    34 NFV=     0
+        # and...
+        #  NBasis = 148  MinDer = 0  MaxDer = 0
+        # Although the former is in every file, it doesn't occur before
+        #   the overlap matrix is printed.
         if line[1:7] == "NBasis" or line[4:10] == "NBasis":
 
+            # For counterpoise fragment, skip these lines.
+            if self.counterpoise != 0: return
+
+            # If nbasis was already parsed, check if it changed.
             nbasis = int(line.split('=')[1].split()[0])
-            # Has to deal with lines like:
-            #  NBasis =   434 NAE=    97 NBE=    97 NFC=    34 NFV=     0
-            #     NBasis = 148  MinDer = 0  MaxDer = 0
-            # Although the former is in every file, it doesn't occur before
-            # the overlap matrix is printed
             if hasattr(self, "nbasis"):
                 assert nbasis == self.nbasis
             else:
@@ -625,6 +657,10 @@ class Gaussian(logfileparser.Logfile):
         # Number of linearly-independent basis sets.
         if line[1:7] == "NBsUse":
 
+            # For counterpoise fragment, skip these lines.
+            if self.counterpoise != 0: return
+
+            # If nmo was already parsed, check if it changed.
             nmo = int(line.split('=')[1].split()[0])
             if hasattr(self, "nmo"):
                 assert nmo == self.nmo
@@ -817,6 +853,14 @@ class Gaussian(logfileparser.Logfile):
                 
                 info = line.split()
                 self.coreelectrons[int(center)-1] = int(info[1]) - int(info[2])
+
+        # This will be printed for counterpoise calcualtions only.
+        # To prevent crashing, we need to know which fragment is being considered.
+        # Other information is also printed in lines that start like this.
+        if line[1:14] == 'Counterpoise:':
+        
+            if line[42:50] == "fragment":
+                self.counterpoise = int(line[51:54])
 
 
 if __name__ == "__main__":
