@@ -2,28 +2,25 @@ Change since cclib-0.7:
 
 Features:
 	* New parser: cclib can now parse Molpro files
-        * Parser refactoring: put outermost loop over lines in LogFile.parse()
 	* Separation of parser and data objects: Parsed data is now returned
-        as a ccData object that can be pickled, and converted to and from JSON
-        * Parsers: multiple files can be parsed with one parse command
+	as a ccData object that can be pickled, and converted to and from JSON
+	* Parsers: multiple files can be parsed with one parse command
 	* NumPy support: Dropped Numeric support in favour of NumPy
 	* API addition: 'charge' for molecular charge
 	* API addition: 'mult' for spin multiplicity
 	* API addition: 'atombasis' for indices of atom orbitals on each atom
-        * API addition: 'nocoeffs' for Natural Orbital (NO) coefficients
-        * GAMESS-US parser: added 'etoscs' (CIS calculations)
-        * Jaguar parser: added 'mpenergies' (LMP2 calcualtions)
-        * Jaguar parser: added 'etenergies' and 'etoscs' (CIS calculations)
-        * New method: Lowdin Population Analysis (LPA)
-        * Tests: unittests can be run from the Python interpreter, and for
-        a single parser; the number of "passed" tests is also counted and shown
-        * Installation and distribution: use setuptools if possible, generate
-        the MANIFEST file autmatically by providing MANIFEST.in
+	* API addition: 'nocoeffs' for Natural Orbital (NO) coefficients
+	* GAMESS-US parser: added 'etoscs' (CIS calculations)
+	* Jaguar parser: added 'mpenergies' (LMP2 calcualtions)
+	* Jaguar parser: added 'etenergies' and 'etoscs' (CIS calculations)
+	* New method: Lowdin Population Analysis (LPA)
+	* Tests: unittests can be run from the Python interpreter, and for
+	a single parser; the number of "passed" tests is also counted and shown
 
 Bugfixes:
 	* Several parsing errors were fixed
-        * Fixed some methods to work with different numbers of alpha and beta
-        MO coefficients in mocoeffs (MPA, CSPA, OPA)
+	* Fixed some methods to work with different numbers of alpha and beta
+	MO coefficients in mocoeffs (MPA, CSPA, OPA)
 
 Changes since cclib-0.6.1:
 
