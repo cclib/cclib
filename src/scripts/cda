@@ -17,22 +17,22 @@ if __name__ == "__main__":
     parser2 = ccopen(sys.argv[2], None, logging.ERROR)
     parser3 = ccopen(sys.argv[3], None, logging.ERROR)
 
-    parser1.parse(); parser2.parse(); parser3.parse()
-    fa = CDA(parser1, None, logging.ERROR)
-    retval = fa.calculate([parser2, parser3])
+    data1 = parser1.parse(); data2 = parser2.parse(); data3 = parser3.parse()
+    fa = CDA(data1, None, logging.ERROR)
+    retval = fa.calculate([data2, data3])
 
     if retval:
 
         print "Charge decomposition analysis of %s\n"%(sys.argv[1])
 
-        if len(parser1.homos) == 2:
+        if len(data1.homos) == 2:
             print "ALPHA SPIN:"
             print "==========="
 
         print " MO#      d       b       r"
         print "-----------------------------"
 
-        for spin in range(len(parser1.homos)):
+        for spin in range(len(data1.homos)):
 
             if spin == 1:
                 print "\nBETA SPIN:"
@@ -44,7 +44,7 @@ if __name__ == "__main__":
                                                     fa.bdonations[spin][i], \
                                                     fa.repulsions[spin][i])
 
-                if i == parser1.homos[spin]:
+                if i == data1.homos[spin]:
                     print "------ HOMO - LUMO gap ------"
                     
 
