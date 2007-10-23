@@ -4,7 +4,7 @@ import os
 import sys
 import unittest
 
-from cclib.parser import ADF, GAMESS, GAMESSUK, Gaussian, Jaguar, Molpro
+from cclib.parser import ADF, GAMESS, GAMESSUK, Gaussian, Jaguar, Molpro, ORCA
 
 
 # The modules to be included in the global test testall().

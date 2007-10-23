@@ -44,6 +44,7 @@ GeoOpt    Jaguar      Jaguar60GeoOptTest    basicJaguar6.0        dvb_gopt.out
 GeoOpt    Jaguar      Jaguar65GeoOptTest    basicJaguar6.5        dvb_gopt_b.out
 GeoOpt    GAMESS      PCGamessGeoOptTest    basicPCGAMESS         dvb_gopt_b.out
 GeoOpt    Molpro      MolproGeoOptTest      basicMolpro2006       dvb_gopt.out          dvb_gopt.log
+GeoOpt    ORCA        OrcaGeoOptTest        basicORCA2.6          dvb_gopt.out
 
 MP        GAMESSUK    GAMESSUKMP2Test       basicGAMESS-UK        water_mp2.out
 MP        GAMESSUK    GAMESSUKMP3Test       basicGAMESS-UK        water_mp3.out
@@ -70,6 +71,7 @@ SP        Jaguar      Jaguar42SPTest        basicJaguar4.2        dvb_sp.out
 SP        Jaguar      Jaguar60SPTest        basicJaguar6.0        dvb_sp.out
 SP        GAMESS      PCGamessSPTest        basicPCGAMESS         dvb_sp.out
 SP        Molpro      MolproSPTest          basicMolpro2006       dvb_sphf.out
+SP        ORCA        OrcaSPTest            basicORCA2.6          dvb_sp.out
                                             
 SPun      ADF         ADFSPunTest           basicADF2004.01       dvb_un_sp.adfout
 SPun      GAMESSUK    GamessUKSPunTest      basicGAMESS-UK        dvb_un_sp_b.out
@@ -80,8 +82,10 @@ SPun      Jaguar      Jaguar60SPunTest      basicJaguar6.0        dvb_un_sp.out
 SPun      Jaguar      Jaguar65SPunTest      basicJaguar6.5        dvb_un_sp.out
 SPun      GAMESS      PCGamessSPunTest      basicPCGAMESS         dvb_un_sp.out
 SPun      Molpro      MolproSPunTest        basicMolpro2006       dvb_sphf_un.out
+SPun      ORCA        OrcaSPunTest          basicORCA2.6          dvb_un_sp.out
 
 TD        Gaussian    GaussianTDDFTTest     basicGaussian03       CO_TD_delta.log
+TD        ORCA        OrcaTDDFTTest         basicORCA2.6          dvb_td.out
 
 vib       ADF         ADFIRTest             basicADF2004.01       dvb_ir.adfout
 vib       GAMESSUK    GamessUKIRTest        basicGAMESS-UK        dvb_ir.out
@@ -93,4 +97,6 @@ vib       GAMESS      PCGamessIRTest        basicPCGAMESS         dvb_ir.out
 vib       GAMESSUK    GamessUKRamanTest     basicGAMESS-UK        dvb_raman.out
 vib       Gaussian    GaussianRamanTest     basicGaussian03       dvb_raman.out
 vib       GAMESS      PCGamessRamanTest     basicPCGAMESS         dvb_raman.out
-vib       Molpro      MolproIRTest          basicMolpro2006       dvb_ir.out
+vib       Molpro      MolproIRTest          basicMolpro2006       dvb_ir.log
+vib       ORCA        OrcaIRTest            basicORCA2.6          dvb_ir.out
+vib       ORCA        OrcaRamanTest         basicORCA2.6          dvb_raman.out

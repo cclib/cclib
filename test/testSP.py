@@ -167,6 +167,9 @@ class MolproSPTest(GenericSPTest):
         """Are all the symmetry labels either Ag/u or Bg/u? PASS"""
         self.assertEquals(1,1)
 
+class OrcaSPTest(GenericSPTest):
+    """ORCA restricted single point unittest."""
+
 class PCGamessSPTest(GenericSPTest):
     """PC-GAMESS restricted single point unittest."""
 

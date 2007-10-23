@@ -24,6 +24,7 @@ import gamessukparser
 import gaussianparser
 import jaguarparser
 import molproparser
+import orcaparser
 
 
 def openlogfile(filename):
@@ -77,8 +78,9 @@ def ccopen(filename, progress=None, loglevel=logging.INFO):
     Inputs:
       filename - the location of a single logfile, or a list of logfiles
 
-    Outputs: one of ADF, GAMESS, GAMESS UK, Gaussian, Jaguar, Molpro, or
-             None (if it cannot figure it out or the file does not exist).
+    Returns:
+      one of ADF, GAMESS, GAMESS UK, Gaussian, Jaguar, Molpro, ORCA, or
+        None (if it cannot figure it out or the file does not exist).
     """
 
     filetype = None
@@ -128,8 +130,11 @@ def ccopen(filename, progress=None, loglevel=logging.INFO):
         elif line[0:8] == "1PROGRAM" and not filetype:
             filetype = molproparser.Molpro
 
-    # Need to close before creating an instance.
-    inputfile.close()
+        elif line.find("O   R   C   A") >= 0:
+            filetype = orcaparser.ORCA
+            break
+
+    inputfile.close() # Need to close before creating an instance
     
     if filetype: # Create an instance of the chosen class
         filetype = apply(filetype, [filename, progress, loglevel])

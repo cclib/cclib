@@ -216,6 +216,15 @@ class MolproGeoOptTest(GenericGeoOptTest):
         """Are all the symmetry labels either Ag/u or Bg/u? PASS"""
         self.assertEquals(1,1)
 
+class OrcaGeoOptTest(GenericGeoOptTest):
+    """ORCA geometry optimization unittest."""
+    def testnbasis(self):
+        """Is the number of basis set functions equal to 110 (3-21G)?"""
+        self.assertEquals(self.data.nbasis,110)
+    def testlengthmoenergies(self):
+        """Is the number of evalues equal to 110 (3-21G)?"""
+        self.assertEquals(110,len(self.data.moenergies[0]))
+
 class PCGamessGeoOptTest(GenericGeoOptTest):
     """PC-GAMESS geometry optimization unittest."""
 

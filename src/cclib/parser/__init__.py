@@ -18,6 +18,7 @@ from gamessukparser import GAMESSUK
 from gaussianparser import Gaussian
 from jaguarparser import Jaguar
 from molproparser import Molpro
+from orcaparser import ORCA
 
 # This allow users to type:
 #         from cclib.parser import ccopen

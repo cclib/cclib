@@ -69,6 +69,9 @@ class Jaguar65IRTest(GenericIRTest):
 class MolproIRTest(GenericIRTest):
     """Molpro vibrational frequency unittest."""
 
+class OrcaIRTest(GenericIRTest):
+    """ORCA vibrational frequency unittest."""
+
 class PCGamessIRTest(GenericIRTest):
     """PC-GAMESS vibrational frequency unittest."""
 
@@ -101,6 +104,9 @@ class GaussianRamanTest(GenericRamanTest):
 class MolproRamanTest(GenericRamanTest):
     """Molpro Raman unittest."""
 
+class OrcaRamanTest(GenericRamanTest):
+    """ORCA Raman unittest."""
+    
 class PCGamessRamanTest(GenericRamanTest):
     """PC-GAMESS Raman unittest."""
 

@@ -40,6 +40,10 @@ class GaussianTDDFTTest(GenericTDTest):
         self.assertEqual(len(singlets), self.number/2)
         self.assertEqual(len(triplets), self.number/2)
 
+class OrcaTDDFTTest(GenericTDTest):
+    """ORCA time-dependent HF/DFT unittest."""
+
+    number = 24
 
 if __name__=="__main__":
 

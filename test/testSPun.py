@@ -134,6 +134,9 @@ class MolproSPunTest(GenericSPunTest):
         """Are the dims of the mosyms equal to 2 x nmo? PASS"""
         self.assertEquals(1,1)
 
+class OrcaSPunTest(GenericSPunTest):
+    """ORCA unrestricted single point unittest."""
+    
 class PCGamessSPunTest(GenericSPunTest):
     """PC-GAMESS unrestricted single point unittest."""
 
