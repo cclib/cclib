@@ -29,8 +29,8 @@ if __name__ == "__main__":
             print "ALPHA SPIN:"
             print "==========="
 
-        print " MO#      d       b       r"
-        print "-----------------------------"
+        print " MO#      d       b       r       s"
+        print "-------------------------------------"
 
         for spin in range(len(data1.homos)):
 
@@ -40,17 +40,19 @@ if __name__ == "__main__":
 
             for i in range(len(fa.donations[spin])):
 
-                print "%4i: %7.3f %7.3f %7.3f"%(i+1,fa.donations[spin][i], \
+                print "%4i: %7.3f %7.3f %7.3f %7.3f"%(i+1,fa.donations[spin][i], \
                                                     fa.bdonations[spin][i], \
-                                                    fa.repulsions[spin][i])
+                                                    fa.repulsions[spin][i], \
+                                                    fa.residuals[spin][i])
 
                 if i == data1.homos[spin]:
                     print "------ HOMO - LUMO gap ------"
                     
 
-            print "-----------------------------"
-            print " T:   %7.3f %7.3f %7.3f"%(reduce(numpy.add, fa.donations[spin]), \
+            print "-------------------------------------"
+            print " T:   %7.3f %7.3f %7.3f %7.3f"%(reduce(numpy.add, fa.donations[spin]), \
                         reduce(numpy.add, fa.bdonations[spin]), \
-                        reduce(numpy.add, fa.repulsions[spin]))
+                        reduce(numpy.add, fa.repulsions[spin]), \
+                        reduce(numpy.add, fa.residuals[spin]))
 
 

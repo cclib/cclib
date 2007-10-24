@@ -46,6 +46,7 @@ class CDA(FragmentAnalysis):
         donations = []
         bdonations = []
         repulsions = []
+        residuals = []
 
         if len(self.mocoeffs) == 2:
             occs = 1
@@ -82,6 +83,7 @@ class CDA(FragmentAnalysis):
             donations.append(numpy.zeros(size, "d"))
             bdonations.append(numpy.zeros(size, "d"))
             repulsions.append(numpy.zeros(size, "d"))
+            residuals.append(numpy.zeros(size, "d"))
 
             for i in range(self.data.homos[spin] + 1):
 
@@ -96,11 +98,15 @@ class CDA(FragmentAnalysis):
                         bdonations[spin][i] += 2 * occs * self.mocoeffs[spin][i,l] \
                                                 * self.mocoeffs[spin][i,m] * self.fooverlaps[l][m]
 
-
                 for k in range(0, homoa + 1):
                     for m in range(offset, offset+homob + 1):
                         repulsions[spin][i] += 2 * occs * self.mocoeffs[spin][i,k] \
                                                 * self.mocoeffs[spin][i, m] * self.fooverlaps[k][m]
+
+                for m in range(homoa + 1, offset):
+                    for n in range(offset + homob + 1, self.data.nbasis):
+                        residuals[spin][i] += 2 * occs * self.mocoeffs[spin][i,m] \
+                                                * self.mocoeffs[spin][i, n] * self.fooverlaps[m][n]
 
                 step += 1
                 if self.progress and random.random() < cupdate:
@@ -112,5 +118,6 @@ class CDA(FragmentAnalysis):
         self.donations = donations
         self.bdonations = bdonations
         self.repulsions = repulsions
+        self.residuals = residuals
 
         return True
