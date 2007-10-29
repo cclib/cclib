@@ -50,16 +50,8 @@ class GaussianIRTest(GenericIRTest):
         numvib = 3*len(self.data.atomnos) - 6        
         self.assertEqual(len(self.data.vibsyms), numvib)
        
-class Jaguar42IRTest(GenericIRTest):
-    """Jaguar4.2 vibrational frequency unittest."""
-
-    def testvibsyms(self):
-            """Is the length of vibsyms correct?"""
-            numvib = 3*len(self.data.atomnos) - 6        
-            self.assertEqual(len(self.data.vibsyms), numvib)
-
-class Jaguar65IRTest(GenericIRTest):
-    """Jaguar6.5 vibrational frequency unittest."""
+class JaguarIRTest(GenericIRTest):
+    """Jaguar vibrational frequency unittest."""
 
     def testvibsyms(self):
             """Is the length of vibsyms correct?"""

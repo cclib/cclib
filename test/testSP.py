@@ -130,8 +130,8 @@ class GamessUSSPTest(GenericSPTest):
 class GaussianSPTest(GenericSPTest):
     """Gaussian restricted single point unittest."""
 
-class Jaguar42SPTest(GenericSPTest):
-    """Jaguar4.2 restricted single point unittest."""
+class JaguarSPTest(GenericSPTest):
+    """Jaguar restricted single point unittest."""
 
     # Data file does not contain enough information. Can we make a new one?
     def testatombasis(self):
@@ -146,18 +146,6 @@ class Jaguar42SPTest(GenericSPTest):
     # Data file does not contain enough information. Can we make a new one?
     def testdimmocoeffs(self):
         """Are the dimensions of mocoeffs equal to 1 x nmo x nbasis? PASS"""
-        self.assertEquals(1, 1)
-
-class Jaguar60SPTest(GenericSPTest):
-    """Jaguar6.0 restricted single point unittest."""
-
-    # This particular test was done using 6-31G**.
-    nbasisdict = {1:5, 6:15}
-    b3lyp_energy = -10532
-
-    # Data file does not contain enough information. Can we make a new one?
-    def testsymlabels(self):
-        """Are all the symmetry labels either Ag/u or Bg/u? PASS"""
         self.assertEquals(1, 1)
 
 class MolproSPTest(GenericSPTest):

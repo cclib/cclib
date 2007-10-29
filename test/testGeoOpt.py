@@ -168,33 +168,8 @@ class GaussianGeoOptTest(GenericGeoOptTest):
         """Are the dimensions of mocoeffs equal to 1 x nmo x nbasis? PASS"""
         self.assertEquals(1, 1)
 
-class Jaguar42GeoOptTest(GenericGeoOptTest):
-    """Jaguar4.2  geometry optimization unittest."""
-
-    # Data file does not contain enough information. Can we make a new one?
-    def testatombasis(self):
-        """Are the indices in atombasis the right amount and unique? PASS"""
-        self.assertEquals(1, 1)
-       
-    # Data file does not contain enough information. Can we make a new one?
-    def testdimmocoeffs(self):
-        """Are the dimensions of mocoeffs equal to 1 x nmo x nbasis? PASS"""
-        self.assertEquals(1, 1)
-
-class Jaguar60GeoOptTest(GenericGeoOptTest):
-    """Jaguar6.0 geometry optimization unittest."""
-
-    # This particular test was done using 6-31G**.
-    nbasisdict = {1:5, 6:15}
-    b3lyp_energy = -10532
-
-    # Data file does not contain enough information. Can we make a new one?
-    def testsymlabels(self):
-        """Are all the symmetry labels either Ag/u or Bg/u? PASS"""
-        self.assertEquals(1, 1)
-
-class Jaguar65GeoOptTest(GenericGeoOptTest):
-    """Jaguar6.5 geometry optimization unittest."""
+class JaguarGeoOptTest(GenericGeoOptTest):
+    """Jaguar geometry optimization unittest."""
 
     # Data file does not contain enough information. Can we make a new one?
     def testatombasis(self):

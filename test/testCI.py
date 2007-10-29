@@ -109,8 +109,8 @@ class GaussianCISTest(GenericCISWaterTest):
         """(MP2) Are Natural Orbital coefficients the right size?"""
         self.assertEquals(self.data.nocoeffs.shape, (self.data.nmo, self.data.nbasis))
 
-class Jaguar65CISTest(GenericCISWaterTest):
-    """Jaguar 6.5 CIS(RHF)/STO-3G water unittest."""
+class JaguarCISTest(GenericCISWaterTest):
+    """Jaguar CIS(RHF)/STO-3G water unittest."""
 
     nstates = 5
 

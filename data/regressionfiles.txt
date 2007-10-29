@@ -30,5 +30,17 @@ Gaussian/Gaussian98/oo-LAN.out.bz2
 Gaussian/Gaussian98/water_zmatrix_nosym.log.gz
 Gaussian/Gaussian98/test_H2.log.gz
 Gaussian/Gaussian98/test_Cu2.log.gz
+Jaguar/Jaguar4.2/dvb_gopt_b.out.bz2
+Jaguar/Jaguar4.2/dvb_gopt.out.bz2
+Jaguar/Jaguar4.2/dvb_ir.out.bz2
+Jaguar/Jaguar4.2/dvb_sp_b.out.bz2
+Jaguar/Jaguar4.2/dvb_sp.out.bz2
+Jaguar/Jaguar4.2/dvb_un_sp.out.bz2
+Jaguar/Jaguar6.0/dvb_gopt.log.bz2
+Jaguar/Jaguar6.0/dvb_gopt.out.bz2
+Jaguar/Jaguar6.0/dvb_sp.log.bz2
+Jaguar/Jaguar6.0/dvb_sp.out.bz2
+Jaguar/Jaguar6.0/dvb_un_sp.log.bz2
+Jaguar/Jaguar6.0/dvb_un_sp.out.bz2
 Molpro/Molpro2006/C_bigbasis_cart.out.bz2
 Molpro/Molpro2006/thymine.scf.out.bz2

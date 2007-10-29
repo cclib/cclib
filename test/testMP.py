@@ -111,8 +111,8 @@ class GaussianMP4SDTQTest(GenericMP4SDTQTest):
 class GaussianMP5Test(GenericMP5Test):
     """Gaussian MP5 unittest."""
 
-class Jaguar65LMP2Test(GenericMP2Test):
-    """Jaguar6.5 MP2 unittest."""
+class JaguarLMP2Test(GenericMP2Test):
+    """Jaguar LMP2 unittest."""
 
 class MolproMP2Test(GenericMP2Test):
     """Molpro MP2 unittest."""

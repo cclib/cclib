@@ -76,34 +76,8 @@ class GaussianSPunTest(GenericSPunTest):
         size = len(self.data.atomnos)
         self.assertEquals(size, 20)
 
-class Jaguar42SPunTest(GenericSPunTest):
-    """Jaguar4.2 unrestricted single point unittest."""
-    
-    # Data file does not contain enough information. Can we make a new one?
-    def testdimaooverlaps(self):
-        """Are the dims of the overlap matrix consistent with nbasis? PASS"""
-        self.assertEquals(1,1)
-
-    # Data file does not contain enough information. Can we make a new one?
-    def testdimmocoeffs(self):
-        """Are the dimensions of mocoeffs equal to 1 x nmo x nbasis? PASS"""
-        self.assertEquals(1,1)
-
-    # Why is this test passed?
-    def testmosyms(self):
-        """Are the dims of the mosyms equal to 2 x nmo? PASS"""
-        self.assertEquals(1,1)
-
-class Jaguar60SPunTest(GenericSPunTest):
-    """Jaguar6.0 unrestricted single point unittest."""
-
-    # Why is this test passed?
-    def testmosyms(self):
-        """Are the dims of the mosyms equal to 2 x nmo? PASS"""
-        self.assertEquals(1,1)
-        
-class Jaguar65SPunTest(GenericSPunTest):
-    """Jaguar6.5 unrestricted single point unittest."""
+class JaguarSPunTest(GenericSPunTest):
+    """Jaguar unrestricted single point unittest."""
         
     # Data file does not contain enough information. Can we make a new one?
     def testdimaooverlaps(self):
