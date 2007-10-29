@@ -102,8 +102,9 @@ filenames = [glob(os.path.join(data, "Gaussian", "basicGaussian03", "*.out")) +
              glob(os.path.join(data, "GAMESS", "PCGAMESS", "*.*.gz")) +             
              glob(os.path.join(data, "GAMESS", "WinGAMESS", "*.gz")),
              
-             glob(os.path.join(data, "ADF", "basicADF2004.01", "*.adfout")) +
+             glob(os.path.join(data, "ADF", "basicADF2006.01", "*.adfout")) +
              glob(os.path.join(data, "ADF", "ADF2004.01", "*.gz")) +
+             glob(os.path.join(data, "ADF", "ADF2004.01", "*.bz2")) +
              glob(os.path.join(data, "ADF", "ADF2005.01", "*.zip")) +
              glob(os.path.join(data, "ADF", "ADF2006.01", "*.out")),
                           

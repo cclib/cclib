@@ -1,3 +1,15 @@
+ADF/ADF2004.01/dvb_gopt.adfout.bz2
+ADF/ADF2004.01/dvb_gopt_b.adfout.bz2
+ADF/ADF2004.01/dvb_ir.adfout.bz2
+ADF/ADF2004.01/dvb_sp.adfout.bz2
+ADF/ADF2004.01/dvb_sp_b.adfout.bz2
+ADF/ADF2004.01/dvb_sp_c.adfout.bz2
+ADF/ADF2004.01/dvb_sp_d.adfout.bz2
+ADF/ADF2004.01/dvb_un_sp.adfout.bz2
+ADF/ADF2004.01/dvb_un_sp_c.adfout.bz2
+ADF/ADF2004.01/MoOCl4-sp.adfout.bz2
+ADF/ADF2004.01/mo_sp.adfout.bz2
+ADF/ADF2004.01/NH3.adfout.bz2
 ADF/ADF2004.01/Au2-fixed.adfout.gz
 ADF/ADF2004.01/Fe-ox3-final.out.gz
 ADF/ADF2004.01/Mo5Obdt2-opt-c2v.adfout.gz

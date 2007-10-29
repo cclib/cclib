@@ -1,23 +1,15 @@
 #!/bin/bash
-#PBS -l nodes=1:ppn=1,mem=600mb,walltime=7:00:00
-#PBS -m ae -M adamlt@stanford.edu
-
-cd $PBS_O_WORKDIR
 
 export NSCM=1
 export SCM_MACHINEFILE=$PWD/machine
-export SCM_TMPDIR=$PBS_O_WORKDIR
-sort $PBS_NODEFILE | uniq > $SCM_MACHINEFILE
 
-$ADFBIN/adf  << eor > dvb_sp_c.adfout
-title 1,4-divinyl-benzene, SZ, BLYP, nosym
+$ADFBIN/adf  << eor > dvb_sp_b.adfout
+title 1,4-divinyl-benzene, SZ, BLYP
 
 Basis
   TYPE SZ
   CORE None
 End
-
-symmetry NOSYM
 
 charge 0 0
 atoms
@@ -47,6 +39,10 @@ XC
  GGA Blyp
 end
 
+PRINT Smat
+EPRINT 
+  SCF Eigvec
+End
 end input
 
 eor
