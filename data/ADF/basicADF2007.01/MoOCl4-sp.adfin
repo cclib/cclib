@@ -1,10 +1,4 @@
-#!/bin/bash
-
-export NSCM=1
-export SCM_MACHINEFILE=$PWD/machine
-export SCM_TMPDIR=$PBS_O_WORKDIR
-
-$ADFBIN/adf  << eor 
+$ADFBIN/adf  << eor > /dev/null
   create Mo  $ADFRESOURCES/DZ/Mo.3d
 
 XC
@@ -16,7 +10,7 @@ eor
 
 mv TAPE21 Mo.t21
 
-$ADFBIN/adf  << eor >& /dev/null 
+$ADFBIN/adf  << eor > /dev/null 
   create O $ADFRESOURCES/DZ/O
 
 XC
@@ -28,7 +22,7 @@ eor
 
 mv TAPE21 O.t21
 
-$ADFBIN/adf  << eor >& /dev/null 
+$ADFBIN/adf  << eor > /dev/null 
   create Cl $ADFRESOURCES/DZ/Cl
 
 XC
@@ -115,6 +109,5 @@ END
 end input
 eor
 
-rm logfile 
 mv TAPE21 MoOCl4-sp.t21
 

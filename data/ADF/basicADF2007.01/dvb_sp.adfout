@@ -1,5 +1,7 @@
+
+
 (INPUT FILE)
-Create H  file=/usr/local/adf2006.01/atomicdata/SZ/H
+Create H  file=/usr/local/adf2007.01/atomicdata/SZ/H
 XC
  GGA Blyp
 End
@@ -8,9 +10,9 @@ End Input
  *******************************************************************************
  *                                                                             *
  *  -------------------------------------                                      *
- *   Amsterdam Density Functional  (ADF)         2006.01   June 30, 2006       *
+ *   Amsterdam Density Functional  (ADF)         2007.01   August 20, 2007     *
  *  -------------------------------------                                      *
- *                                               Build 200609192153            *
+ *                                               Build 200708191746            *
  *                                                                             *
  *                                                                             *
  *                              =================                              *
@@ -25,10 +27,12 @@ End Input
  *                                                                             *
  *   Scientific publications using ADF results must be properly referenced     *
  *   See the User Manuals (or the web site) for recommended citations          *
+ *   The terms and conditions of the End User License Agreement apply to       *
+ *   the use of ADF, http://www.scm.com/Sales/LicAgreement.html                *
  *                                                                             *
  ******************************  hp_itan2_linux  *******************************
  
- ADF 2006.01  RunTime: Oct29-2007 00:54:43
+ ADF 2007.01  RunTime: Oct30-2007 02:56:17
  Hydrogen (SZ)
 
 
@@ -37,7 +41,7 @@ End Input
  A T T A C H E D   F I L E S
  ===========================
   
- CREATE - Data File:    /usr/local/adf2006.01/atomicdata/SZ/H
+ CREATE - Data File:    /usr/local/adf2007.01/atomicdata/SZ/H
                         Hydrogen (SZ)
 
 
@@ -105,12 +109,12 @@ End Input
  ================================
   
 
+ Atom Type    1  (H)
+ ==============
+
  Valence Basis Sets:   1
  -----------------------
    1 S    1.240000
-
- Frozen Core Shells
- ------------------
 
  Charge Fitting Sets (for the computation of the Coulomb Potential):  11
  -----------------------------------------------------------------------
@@ -125,6 +129,31 @@ End Input
    3 D    2.500000
    4 F    3.000000
    5 G    4.000000
+
+
+ BAS: List of all Elementary Cartesian Basis Functions
+ =====================================================
+
+ The numbering in the list below (to the right of the function characteristics) is referred
+ to in print-outs of MO eigenvectors and Mulliken populations in the BAS representation
+ (as contrasted to the SFO representation).
+
+ Notes:
+ 1. The functions are characterized by a polynomial prefactor (powers of x,y,z and r) and
+    an exponential decay factor alpha.
+ 2. Since the basis sets are specific for an atom TYPE, the individual functions occur on
+    all atoms of that type.
+ 3. The word 'Core' in the left margin signals that it is a Core Function (CF) : not a
+    degree of freedom in the valence set, but only used to ensure orthogonalization of
+    the other valence basis functions on the frozen Core Orbitals.
+
+
+ (power of) X  Y  Z  R     Alpha  on Atom
+            ==========     =====     ==========
+
+ H                                    1
+                                  ---------------------------------------------------------------------------
+            0  0  0  0     1.240      1
 
 
  BAS: List of all Elementary Cartesian Basis Functions
@@ -288,14 +317,14 @@ End Input
  CYCLE    1
  orbitals (Q,E):
  ---------------
- S :1...1            ( 1.00    -0.1216)   
+ S :1...1            ( 1.00    -0.1216)
 
  CYCLE    2
  d-Pmat  mean:  0.00E+00
  imax=      1:  0.00E+00
  orbitals (Q,E):
  ---------------
- S :1...1            ( 1.00    -0.1216)   
+ S :1...1            ( 1.00    -0.1216)
 
  SCF CONVERGED
 
@@ -399,7 +428,7 @@ End Input
  No memory problems found
  ========================
  
- Maximum number of active allocate calls:          73
+ Maximum number of active allocate calls:         255
  
  *******************************************************************************
 
@@ -412,36 +441,34 @@ End Input
  Timing Statistics
  =================
   
- Total Used :                     CPU=        0.23      System=        0.30     Elapsed=        0.53
+ Total Used :                     CPU=        0.25      System=        0.32     Elapsed=        0.98
 
  Calls  Section                     ( Mean, Percentage )
  ---------------------------------------------------------------------------------------------------
-     3  ><      ................      0.00    1.68             0.00    0.33             0.00    0.85
-     1  INIT    ................      0.01    2.94             0.00    0.99             0.01    1.78
-     1  GEOMET  ................      0.04   19.33             0.28   95.72             0.33   62.32
-     1  INPUTA  ................      0.01    2.52             0.00    0.33             0.01    1.35
-     1  MAINSY  ................      0.01    3.78             0.00    0.00             0.01    1.62
-     1  SYMFIT  ................      0.00    0.84             0.00    0.00             0.00    0.25
-     1  CORORT  ................      0.00    0.00             0.00    0.00             0.00    0.15
-     1  SYMORB  ................      0.00    0.84             0.00    0.00             0.00    0.31
-     1  FITINT  ................      0.01    3.36             0.00    0.66             0.01    1.92
-     1  CLSMAT  ................      0.00    0.84             0.00    0.00             0.00    0.21
-     1  ORTHON  ................      0.00    0.84             0.00    0.00             0.00    0.47
-     1  CRTP12  ................      0.01    2.52             0.00    0.00             0.01    1.05
-     1  ETALOW  ................      0.00    0.42             0.00    0.00             0.00    0.27
-     1  GENPT   ................      0.03   11.34             0.00    0.00             0.03    4.98
-     1  PTCOR   ................      0.01    2.52             0.00    0.00             0.01    1.07
-     1  PTBAS   ................      0.00    1.26             0.00    0.00             0.00    0.55
-     3  FOCKY   ................      0.02   29.41             0.00    0.66             0.02   13.23
-     3  FOCKTR  ................      0.00    1.68             0.00    0.00             0.00    0.81
-     3  FOCKNM  ................      0.00    0.00             0.00    0.00             0.00    0.03
-     3  SDIIS   ................      0.00    1.68             0.00    0.00             0.00    0.71
-     3  EMERGE  ................      0.00    3.36             0.00    0.33             0.00    1.64
-     1  COREPS  ................      0.01    3.78             0.00    0.33             0.01    1.86
-     1  POPAN   ................      0.00    1.68             0.00    0.00             0.00    0.79
-     1  DEBYE   ................      0.00    0.84             0.00    0.00             0.00    0.34
-     1  QMPOT   ................      0.00    1.26             0.00    0.00             0.00    0.43
-     1  EXIT PROCEDURE .........      0.00    1.26             0.00    0.66             0.01    1.01
+     3  ><      ................      0.00    0.40             0.00    0.00             0.00    0.77
+     1  INIT    ................      0.01    2.78             0.00    0.93             0.08    8.05
+     1  GEOMET  ................      0.04   17.86             0.29   93.21             0.43   43.67
+     1  INPUTA  ................      0.01    2.78             0.00    0.00             0.01    0.73
+     1  MAINSY  ................      0.02    6.35             0.00    0.62             0.04    4.20
+     1  SYMFIT  ................      0.00    0.40             0.00    0.00             0.00    0.13
+     1  CORORT  ................      0.00    0.00             0.00    0.00             0.00    0.34
+     1  SYMORB  ................      0.00    0.79             0.00    0.00             0.05    5.03
+     1  FITINT  ................      0.02    8.33             0.00    0.31             0.03    3.19
+     1  CLSMAT  ................      0.00    0.40             0.00    0.00             0.02    1.57
+     1  ORTHON  ................      0.00    0.79             0.00    0.00             0.00    0.43
+     1  ETALOW  ................      0.00    0.40             0.00    0.00             0.00    0.14
+     1  GENPT   ................      0.03   11.11             0.00    0.62             0.03    3.46
+     1  PTBAS   ................      0.01    3.17             0.00    0.00             0.02    1.53
+     3  FOCKY   ................      0.02   24.21             0.00    1.85             0.04   12.59
+     3  FOCKTR  ................      0.00    1.59             0.00    0.00             0.00    0.62
+     3  FOCKNM  ................      0.00    0.00             0.00    0.00             0.00    0.02
+     3  SDIIS   ................      0.00    1.98             0.00    0.31             0.00    1.38
+     3  EMERGE  ................      0.00    3.57             0.00    0.62             0.01    2.08
+     1  COREPS  ................      0.01    4.76             0.00    0.31             0.02    2.34
+     1  POPAN   ................      0.01    3.17             0.00    0.00             0.01    1.04
+     1  DEBYE   ................      0.00    0.40             0.00    0.00             0.00    0.36
+     1  QMPOT   ................      0.01    3.17             0.00    0.62             0.01    0.97
+     1  EXIT PROCEDURE .........      0.00    1.59             0.00    0.62             0.05    5.31
 
 
  Currently Open Files (EXIT00)
@@ -457,46 +484,46 @@ End Input
  =======================
  Memory available:                    536870912
  Number of records fitting in memory:    129055
- Input :   4.7% of                          644  *4k bytes
- Output:  14.0% of                          705  *4k bytes
+ Input :   3.7% of                          813  *4k bytes
+ Output:  15.2% of                          824  *4k bytes
  Records from serial files evicted:           0
                     others evicted:           0
- Hash table lookups:       3571 with          0 conflicts (  0.00%)
+ Hash table lookups:       4317 with          0 conflicts (  0.00%)
 
  ***************************************************************************************************
  (LOGFILE)
- <Oct29-2007> <00:54:43>  ADF 2006.01  RunTime: Oct29-2007 00:54:43
- <Oct29-2007> <00:54:43>  Hydrogen (SZ)
- <Oct29-2007> <00:54:44>  RunType   : CREATE
- <Oct29-2007> <00:54:44>  Net Charge: 0 (Nuclei minus Electrons)
- <Oct29-2007> <00:54:44>  Symmetry  : ATOM
- <Oct29-2007> <00:54:44>  >>>> CORORT
- <Oct29-2007> <00:54:44>  >>>> FITINT
- <Oct29-2007> <00:54:44>  >>>> CLSMAT
- <Oct29-2007> <00:54:44>  >>>> ORTHON
- <Oct29-2007> <00:54:44>  >>>> CRTP12
- <Oct29-2007> <00:54:44>  >>>> GENPT
- <Oct29-2007> <00:54:44>  Acc.Num.Int.=  10.000
- <Oct29-2007> <00:54:44>  Block Length=  34
- <Oct29-2007> <00:54:44>  >>>> PTCOR
- <Oct29-2007> <00:54:44>  >>>> PTBAS
- <Oct29-2007> <00:54:44>  >>>> CYCLE
- <Oct29-2007> <00:54:44>    1
- <Oct29-2007> <00:54:44>    2  ErrMat   0.00000000  MaxEl  0.00000000
- <Oct29-2007> <00:54:44>  SCF converged
- <Oct29-2007> <00:54:44>    3  ErrMat   0.00000000  MaxEl  0.00000000
- <Oct29-2007> <00:54:44>   Solutions with partially occupied orbitals may not be
- <Oct29-2007> <00:54:44>   lowest in energy. You might consider lowering the
- <Oct29-2007> <00:54:44>   symmetry in the input and explicitly specifying integer
- <Oct29-2007> <00:54:44>   occupations. In that case always check that you obtain
- <Oct29-2007> <00:54:44>   an aufbau solution.
- <Oct29-2007> <00:54:44>  >>>> COREPS
- <Oct29-2007> <00:54:44>  >>>> POPAN
- <Oct29-2007> <00:54:44>  >>>> DEBYE
- <Oct29-2007> <00:54:44>  NORMAL TERMINATION
- <Oct29-2007> <00:54:44>  END
+ <Oct30-2007> <02:56:17>  ADF 2007.01  RunTime: Oct30-2007 02:56:17
+ <Oct30-2007> <02:56:17>  Hydrogen (SZ)
+ <Oct30-2007> <02:56:18>  RunType   : CREATE
+ <Oct30-2007> <02:56:18>  Net Charge: 0 (Nuclei minus Electrons)
+ <Oct30-2007> <02:56:18>  Symmetry  : ATOM
+ <Oct30-2007> <02:56:18>  >>>> CORORT
+ <Oct30-2007> <02:56:18>  >>>> FITINT
+ <Oct30-2007> <02:56:18>  >>>> CLSMAT
+ <Oct30-2007> <02:56:18>  >>>> ORTHON
+ <Oct30-2007> <02:56:18>  >>>> GENPT
+ <Oct30-2007> <02:56:18>  Acc.Num.Int.=  10.000
+ <Oct30-2007> <02:56:18>  Block Length=  34
+ <Oct30-2007> <02:56:18>  >>>> PTBAS
+ <Oct30-2007> <02:56:18>  >>>> CYCLE
+ <Oct30-2007> <02:56:18>    1
+ <Oct30-2007> <02:56:18>    2  ErrMat   0.00000000  MaxEl  0.00000000
+ <Oct30-2007> <02:56:18>  SCF converged
+ <Oct30-2007> <02:56:18>    3  ErrMat   0.00000000  MaxEl  0.00000000
+ <Oct30-2007> <02:56:18>   Solutions with partially occupied orbitals may not be
+ <Oct30-2007> <02:56:18>   lowest in energy. You might consider lowering the
+ <Oct30-2007> <02:56:18>   symmetry in the input and explicitly specifying integer
+ <Oct30-2007> <02:56:18>   occupations. In that case always check that you obtain
+ <Oct30-2007> <02:56:18>   an aufbau solution.
+ <Oct30-2007> <02:56:18>  >>>> COREPS
+ <Oct30-2007> <02:56:18>  >>>> POPAN
+ <Oct30-2007> <02:56:18>  >>>> DEBYE
+ <Oct30-2007> <02:56:18>  NORMAL TERMINATION
+ <Oct30-2007> <02:56:18>  END
+
+
 (INPUT FILE)
-Create C  file=/usr/local/adf2006.01/atomicdata/SZ/C
+Create C  file=/usr/local/adf2007.01/atomicdata/SZ/C
 XC
  GGA Blyp
 End
@@ -505,9 +532,9 @@ End Input
  *******************************************************************************
  *                                                                             *
  *  -------------------------------------                                      *
- *   Amsterdam Density Functional  (ADF)         2006.01   June 30, 2006       *
+ *   Amsterdam Density Functional  (ADF)         2007.01   August 20, 2007     *
  *  -------------------------------------                                      *
- *                                               Build 200609192153            *
+ *                                               Build 200708191746            *
  *                                                                             *
  *                                                                             *
  *                              =================                              *
@@ -522,10 +549,12 @@ End Input
  *                                                                             *
  *   Scientific publications using ADF results must be properly referenced     *
  *   See the User Manuals (or the web site) for recommended citations          *
+ *   The terms and conditions of the End User License Agreement apply to       *
+ *   the use of ADF, http://www.scm.com/Sales/LicAgreement.html                *
  *                                                                             *
  ******************************  hp_itan2_linux  *******************************
  
- ADF 2006.01  RunTime: Oct29-2007 00:54:44
+ ADF 2007.01  RunTime: Oct30-2007 02:56:19
  Carbon (SZ)
 
 
@@ -534,7 +563,7 @@ End Input
  A T T A C H E D   F I L E S
  ===========================
   
- CREATE - Data File:    /usr/local/adf2006.01/atomicdata/SZ/C
+ CREATE - Data File:    /usr/local/adf2007.01/atomicdata/SZ/C
                         Carbon (SZ)
 
 
@@ -602,14 +631,14 @@ End Input
  ================================
   
 
+ Atom Type    1  (C)
+ ==============
+
  Valence Basis Sets:   3
  -----------------------
    1 S    5.670000
    2 S    1.720000
    2 P    1.720000
-
- Frozen Core Shells
- ------------------
 
  Charge Fitting Sets (for the computation of the Coulomb Potential):  22
  -----------------------------------------------------------------------
@@ -635,6 +664,35 @@ End Input
    4 F    5.400000
    4 F    3.550000
    5 G    4.500000
+
+
+ BAS: List of all Elementary Cartesian Basis Functions
+ =====================================================
+
+ The numbering in the list below (to the right of the function characteristics) is referred
+ to in print-outs of MO eigenvectors and Mulliken populations in the BAS representation
+ (as contrasted to the SFO representation).
+
+ Notes:
+ 1. The functions are characterized by a polynomial prefactor (powers of x,y,z and r) and
+    an exponential decay factor alpha.
+ 2. Since the basis sets are specific for an atom TYPE, the individual functions occur on
+    all atoms of that type.
+ 3. The word 'Core' in the left margin signals that it is a Core Function (CF) : not a
+    degree of freedom in the valence set, but only used to ensure orthogonalization of
+    the other valence basis functions on the frozen Core Orbitals.
+
+
+ (power of) X  Y  Z  R     Alpha  on Atom
+            ==========     =====     ==========
+
+ C                                    1
+                                  ---------------------------------------------------------------------------
+            0  0  0  0     5.670      1
+            0  0  0  1     1.720      2
+            1  0  0  0     1.720      3
+            0  1  0  0     1.720      4
+            0  0  1  0     1.720      5
 
 
  BAS: List of all Elementary Cartesian Basis Functions
@@ -802,16 +860,16 @@ End Input
  CYCLE    1
  orbitals (Q,E):
  ---------------
- S :1...2            ( 2.00   -17.2281)  ( 2.00    -3.3737)   
- P :1...1            ( 2.00    -3.0741)   
+ S :1...2            ( 2.00   -17.2281)  ( 2.00    -3.3737)
+ P :1...1            ( 2.00    -3.0741)
 
  CYCLE    2
- d-Pmat  mean:  0.27E-15
- imax=      2: -0.89E-15
+ d-Pmat  mean:  0.89E-16
+ imax=      1: -0.44E-15
  orbitals (Q,E):
  ---------------
- S :1...2            ( 2.00    -9.7601)  ( 2.00    -0.3637)   
- P :1...1            ( 2.00    -0.0244)   
+ S :1...2            ( 2.00    -9.7601)  ( 2.00    -0.3637)
+ P :1...1            ( 2.00    -0.0244)
 
  SCF CONVERGED
 
@@ -833,16 +891,16 @@ End Input
                         Occup              E (au)              E (eV)       Diff (eV) with prev. cycle
                         -----      --------------------        ------       --------------------------
  S
-               1        2.000     -0.97601381783323E+01      -265.587               3.96E-12
-               2        2.000     -0.36369143932923E+00        -9.897               3.60E-12
+               1        2.000     -0.97601381783327E+01      -265.587               5.80E-13
+               2        2.000     -0.36369143932961E+00        -9.897               5.72E-13
  P
-               1        2.000     -0.24432272454957E-01        -0.665               3.58E-12
+               1        2.000     -0.24432272455335E-01        -0.665               5.58E-13
 
 
  Partially Occupied:
-               1 P                -0.24432272454957E-01
+               1 P                -0.24432272455335E-01
   
- HOMO :        2 S                -0.36369143932923E+00
+ HOMO :        2 S                -0.36369143932961E+00
   
 
 
@@ -851,9 +909,9 @@ End Input
 
  Irrep        no.  (spin)   Occup              E (au)                E (eV)
  ---------------------------------------------------------------------------
- S             1             2.00       -0.97601381783323E+01      -265.5869
- S             2             2.00       -0.36369143932923E+00        -9.8965
- P             1             2.00       -0.24432272454957E-01        -0.6648
+ S             1             2.00       -0.97601381783327E+01      -265.5869
+ S             2             2.00       -0.36369143932961E+00        -9.8965
+ P             1             2.00       -0.24432272455335E-01        -0.6648
 
 
  Orbital Energies of the Core Orbitals:
@@ -930,7 +988,7 @@ End Input
  No memory problems found
  ========================
  
- Maximum number of active allocate calls:          73
+ Maximum number of active allocate calls:         291
  
  *******************************************************************************
 
@@ -943,36 +1001,34 @@ End Input
  Timing Statistics
  =================
   
- Total Used :                     CPU=        0.26      System=        0.30     Elapsed=        0.57
+ Total Used :                     CPU=        0.31      System=        0.29     Elapsed=        0.92
 
  Calls  Section                     ( Mean, Percentage )
  ---------------------------------------------------------------------------------------------------
-     3  ><      ................      0.00    1.11             0.00    0.32             0.00    0.79
-     1  INIT    ................      0.01    2.95             0.00    0.32             0.01    1.70
-     1  GEOMET  ................      0.04   15.50             0.29   94.84             0.33   57.57
-     1  INPUTA  ................      0.01    2.58             0.00    0.00             0.01    1.36
-     1  MAINSY  ................      0.01    4.80             0.00    0.32             0.01    2.29
-     1  SYMFIT  ................      0.00    0.37             0.00    0.00             0.00    0.27
-     1  CORORT  ................      0.00    0.37             0.00    0.00             0.00    0.15
-     1  SYMORB  ................      0.00    1.85             0.00    0.00             0.00    0.76
-     1  FITINT  ................      0.01    3.69             0.00    0.32             0.01    1.81
-     1  CLSMAT  ................      0.00    0.37             0.00    0.00             0.00    0.21
-     1  ORTHON  ................      0.00    1.48             0.00    0.00             0.00    0.72
-     1  CRTP12  ................      0.01    2.21             0.00    0.00             0.01    0.99
-     1  ETALOW  ................      0.00    1.11             0.00    0.00             0.00    0.51
-     1  GENPT   ................      0.03    9.59             0.00    1.29             0.03    5.15
-     1  PTCOR   ................      0.00    1.85             0.00    0.32             0.01    1.03
-     1  PTBAS   ................      0.00    1.11             0.00    0.00             0.00    0.57
-     3  FOCKY   ................      0.03   31.00             0.00    0.97             0.03   14.82
-     3  FOCKTR  ................      0.00    1.85             0.00    0.00             0.00    0.88
-     3  FOCKNM  ................      0.00    0.00             0.00    0.00             0.00    0.03
-     3  SDIIS   ................      0.00    1.48             0.00    0.00             0.00    0.71
-     3  EMERGE  ................      0.01    7.01             0.00    0.00             0.01    3.22
-     1  COREPS  ................      0.01    3.69             0.00    0.32             0.01    1.88
-     1  POPAN   ................      0.00    1.48             0.00    0.32             0.01    0.91
-     1  DEBYE   ................      0.00    0.74             0.00    0.00             0.00    0.32
-     1  QMPOT   ................      0.00    0.37             0.00    0.32             0.00    0.40
-     1  EXIT PROCEDURE .........      0.00    1.48             0.00    0.32             0.01    0.95
+     3  ><      ................      0.00    0.31             0.00    0.00             0.00    0.76
+     1  INIT    ................      0.01    3.74             0.00    0.68             0.07    7.49
+     1  GEOMET  ................      0.05   15.58             0.26   92.15             0.41   44.57
+     1  INPUTA  ................      0.01    2.49             0.00    0.34             0.01    0.92
+     1  MAINSY  ................      0.02    5.61             0.00    0.68             0.05    5.49
+     1  SYMFIT  ................      0.00    0.31             0.00    0.00             0.00    0.14
+     1  CORORT  ................      0.00    0.00             0.00    0.00             0.00    0.34
+     1  SYMORB  ................      0.00    1.56             0.00    0.00             0.01    1.47
+     1  FITINT  ................      0.02    7.48             0.00    0.68             0.03    3.71
+     1  CLSMAT  ................      0.00    0.31             0.00    0.34             0.00    0.37
+     1  ORTHON  ................      0.00    1.56             0.00    0.00             0.01    0.84
+     1  ETALOW  ................      0.00    0.62             0.00    0.00             0.00    0.30
+     1  GENPT   ................      0.03    8.41             0.00    1.37             0.04    4.02
+     1  PTBAS   ................      0.01    3.12             0.00    0.00             0.01    1.29
+     3  FOCKY   ................      0.03   28.66             0.00    1.37             0.04   11.60
+     3  FOCKTR  ................      0.00    1.25             0.00    0.00             0.00    0.50
+     3  FOCKNM  ................      0.00    0.00             0.00    0.00             0.00    0.02
+     3  SDIIS   ................      0.00    1.87             0.00    0.00             0.00    1.08
+     3  EMERGE  ................      0.01    4.98             0.00    0.34             0.01    2.82
+     1  COREPS  ................      0.01    3.74             0.00    0.00             0.02    2.09
+     1  POPAN   ................      0.01    3.12             0.00    0.68             0.01    1.52
+     1  DEBYE   ................      0.00    0.93             0.00    0.00             0.00    0.43
+     1  QMPOT   ................      0.01    3.12             0.00    1.02             0.01    1.46
+     1  EXIT PROCEDURE .........      0.00    1.25             0.00    0.34             0.06    6.78
 
 
  Currently Open Files (EXIT00)
@@ -988,74 +1044,72 @@ End Input
  =======================
  Memory available:                    536870912
  Number of records fitting in memory:    129055
- Input :   3.5% of                          856  *4k bytes
- Output:  13.2% of                          797  *4k bytes
+ Input :   2.8% of                         1057  *4k bytes
+ Output:  14.5% of                          947  *4k bytes
  Records from serial files evicted:           0
                     others evicted:           0
- Hash table lookups:       4445 with          0 conflicts (  0.00%)
+ Hash table lookups:       5368 with          0 conflicts (  0.00%)
 
  ***************************************************************************************************
  (LOGFILE)
- <Oct29-2007> <00:54:43>  ADF 2006.01  RunTime: Oct29-2007 00:54:43
- <Oct29-2007> <00:54:43>  Hydrogen (SZ)
- <Oct29-2007> <00:54:44>  RunType   : CREATE
- <Oct29-2007> <00:54:44>  Net Charge: 0 (Nuclei minus Electrons)
- <Oct29-2007> <00:54:44>  Symmetry  : ATOM
- <Oct29-2007> <00:54:44>  >>>> CORORT
- <Oct29-2007> <00:54:44>  >>>> FITINT
- <Oct29-2007> <00:54:44>  >>>> CLSMAT
- <Oct29-2007> <00:54:44>  >>>> ORTHON
- <Oct29-2007> <00:54:44>  >>>> CRTP12
- <Oct29-2007> <00:54:44>  >>>> GENPT
- <Oct29-2007> <00:54:44>  Acc.Num.Int.=  10.000
- <Oct29-2007> <00:54:44>  Block Length=  34
- <Oct29-2007> <00:54:44>  >>>> PTCOR
- <Oct29-2007> <00:54:44>  >>>> PTBAS
- <Oct29-2007> <00:54:44>  >>>> CYCLE
- <Oct29-2007> <00:54:44>    1
- <Oct29-2007> <00:54:44>    2  ErrMat   0.00000000  MaxEl  0.00000000
- <Oct29-2007> <00:54:44>  SCF converged
- <Oct29-2007> <00:54:44>    3  ErrMat   0.00000000  MaxEl  0.00000000
- <Oct29-2007> <00:54:44>   Solutions with partially occupied orbitals may not be
- <Oct29-2007> <00:54:44>   lowest in energy. You might consider lowering the
- <Oct29-2007> <00:54:44>   symmetry in the input and explicitly specifying integer
- <Oct29-2007> <00:54:44>   occupations. In that case always check that you obtain
- <Oct29-2007> <00:54:44>   an aufbau solution.
- <Oct29-2007> <00:54:44>  >>>> COREPS
- <Oct29-2007> <00:54:44>  >>>> POPAN
- <Oct29-2007> <00:54:44>  >>>> DEBYE
- <Oct29-2007> <00:54:44>  NORMAL TERMINATION
- <Oct29-2007> <00:54:44>  END
- <Oct29-2007> <00:54:44>  ADF 2006.01  RunTime: Oct29-2007 00:54:44
- <Oct29-2007> <00:54:44>  Carbon (SZ)
- <Oct29-2007> <00:54:45>  RunType   : CREATE
- <Oct29-2007> <00:54:45>  Net Charge: 0 (Nuclei minus Electrons)
- <Oct29-2007> <00:54:45>  Symmetry  : ATOM
- <Oct29-2007> <00:54:45>  >>>> CORORT
- <Oct29-2007> <00:54:45>  >>>> FITINT
- <Oct29-2007> <00:54:45>  >>>> CLSMAT
- <Oct29-2007> <00:54:45>  >>>> ORTHON
- <Oct29-2007> <00:54:45>  >>>> CRTP12
- <Oct29-2007> <00:54:45>  >>>> GENPT
- <Oct29-2007> <00:54:45>  Acc.Num.Int.=  10.000
- <Oct29-2007> <00:54:45>  Block Length=  48
- <Oct29-2007> <00:54:45>  >>>> PTCOR
- <Oct29-2007> <00:54:45>  >>>> PTBAS
- <Oct29-2007> <00:54:45>  >>>> CYCLE
- <Oct29-2007> <00:54:45>    1
- <Oct29-2007> <00:54:45>    2  ErrMat   0.00000000  MaxEl  0.00000000
- <Oct29-2007> <00:54:45>  SCF converged
- <Oct29-2007> <00:54:45>    3  ErrMat   0.00000000  MaxEl  0.00000000
- <Oct29-2007> <00:54:45>   Solutions with partially occupied orbitals may not be
- <Oct29-2007> <00:54:45>   lowest in energy. You might consider lowering the
- <Oct29-2007> <00:54:45>   symmetry in the input and explicitly specifying integer
- <Oct29-2007> <00:54:45>   occupations. In that case always check that you obtain
- <Oct29-2007> <00:54:45>   an aufbau solution.
- <Oct29-2007> <00:54:45>  >>>> COREPS
- <Oct29-2007> <00:54:45>  >>>> POPAN
- <Oct29-2007> <00:54:45>  >>>> DEBYE
- <Oct29-2007> <00:54:45>  NORMAL TERMINATION
- <Oct29-2007> <00:54:45>  END
+ <Oct30-2007> <02:56:17>  ADF 2007.01  RunTime: Oct30-2007 02:56:17
+ <Oct30-2007> <02:56:17>  Hydrogen (SZ)
+ <Oct30-2007> <02:56:18>  RunType   : CREATE
+ <Oct30-2007> <02:56:18>  Net Charge: 0 (Nuclei minus Electrons)
+ <Oct30-2007> <02:56:18>  Symmetry  : ATOM
+ <Oct30-2007> <02:56:18>  >>>> CORORT
+ <Oct30-2007> <02:56:18>  >>>> FITINT
+ <Oct30-2007> <02:56:18>  >>>> CLSMAT
+ <Oct30-2007> <02:56:18>  >>>> ORTHON
+ <Oct30-2007> <02:56:18>  >>>> GENPT
+ <Oct30-2007> <02:56:18>  Acc.Num.Int.=  10.000
+ <Oct30-2007> <02:56:18>  Block Length=  34
+ <Oct30-2007> <02:56:18>  >>>> PTBAS
+ <Oct30-2007> <02:56:18>  >>>> CYCLE
+ <Oct30-2007> <02:56:18>    1
+ <Oct30-2007> <02:56:18>    2  ErrMat   0.00000000  MaxEl  0.00000000
+ <Oct30-2007> <02:56:18>  SCF converged
+ <Oct30-2007> <02:56:18>    3  ErrMat   0.00000000  MaxEl  0.00000000
+ <Oct30-2007> <02:56:18>   Solutions with partially occupied orbitals may not be
+ <Oct30-2007> <02:56:18>   lowest in energy. You might consider lowering the
+ <Oct30-2007> <02:56:18>   symmetry in the input and explicitly specifying integer
+ <Oct30-2007> <02:56:18>   occupations. In that case always check that you obtain
+ <Oct30-2007> <02:56:18>   an aufbau solution.
+ <Oct30-2007> <02:56:18>  >>>> COREPS
+ <Oct30-2007> <02:56:18>  >>>> POPAN
+ <Oct30-2007> <02:56:18>  >>>> DEBYE
+ <Oct30-2007> <02:56:18>  NORMAL TERMINATION
+ <Oct30-2007> <02:56:18>  END
+ <Oct30-2007> <02:56:19>  ADF 2007.01  RunTime: Oct30-2007 02:56:19
+ <Oct30-2007> <02:56:19>  Carbon (SZ)
+ <Oct30-2007> <02:56:19>  RunType   : CREATE
+ <Oct30-2007> <02:56:19>  Net Charge: 0 (Nuclei minus Electrons)
+ <Oct30-2007> <02:56:19>  Symmetry  : ATOM
+ <Oct30-2007> <02:56:19>  >>>> CORORT
+ <Oct30-2007> <02:56:19>  >>>> FITINT
+ <Oct30-2007> <02:56:19>  >>>> CLSMAT
+ <Oct30-2007> <02:56:19>  >>>> ORTHON
+ <Oct30-2007> <02:56:19>  >>>> GENPT
+ <Oct30-2007> <02:56:19>  Acc.Num.Int.=  10.000
+ <Oct30-2007> <02:56:20>  Block Length=  48
+ <Oct30-2007> <02:56:20>  >>>> PTBAS
+ <Oct30-2007> <02:56:20>  >>>> CYCLE
+ <Oct30-2007> <02:56:20>    1
+ <Oct30-2007> <02:56:20>    2  ErrMat   0.00000000  MaxEl  0.00000000
+ <Oct30-2007> <02:56:20>  SCF converged
+ <Oct30-2007> <02:56:20>    3  ErrMat   0.00000000  MaxEl  0.00000000
+ <Oct30-2007> <02:56:20>   Solutions with partially occupied orbitals may not be
+ <Oct30-2007> <02:56:20>   lowest in energy. You might consider lowering the
+ <Oct30-2007> <02:56:20>   symmetry in the input and explicitly specifying integer
+ <Oct30-2007> <02:56:20>   occupations. In that case always check that you obtain
+ <Oct30-2007> <02:56:20>   an aufbau solution.
+ <Oct30-2007> <02:56:20>  >>>> COREPS
+ <Oct30-2007> <02:56:20>  >>>> POPAN
+ <Oct30-2007> <02:56:20>  >>>> DEBYE
+ <Oct30-2007> <02:56:20>  NORMAL TERMINATION
+ <Oct30-2007> <02:56:20>  END
+
+
 (INPUT FILE)
 title 1,4-divinyl-benzene, SZ, BLYP
 
@@ -1096,9 +1150,9 @@ end input
  *******************************************************************************
  *                                                                             *
  *  -------------------------------------                                      *
- *   Amsterdam Density Functional  (ADF)         2006.01   June 30, 2006       *
+ *   Amsterdam Density Functional  (ADF)         2007.01   August 20, 2007     *
  *  -------------------------------------                                      *
- *                                               Build 200609192153            *
+ *                                               Build 200708191746            *
  *                                                                             *
  *                                                                             *
  *                              =================                              *
@@ -1113,10 +1167,12 @@ end input
  *                                                                             *
  *   Scientific publications using ADF results must be properly referenced     *
  *   See the User Manuals (or the web site) for recommended citations          *
+ *   The terms and conditions of the End User License Agreement apply to       *
+ *   the use of ADF, http://www.scm.com/Sales/LicAgreement.html                *
  *                                                                             *
  ******************************  hp_itan2_linux  *******************************
  
- ADF 2006.01  RunTime: Oct29-2007 00:54:45
+ ADF 2007.01  RunTime: Oct30-2007 02:56:20
  1,4-divinyl-benzene, SZ, BLYP
 
 
@@ -1153,11 +1209,11 @@ end input
  ----------------
  C:
          file : t21.C
-         jobid: ADF 2006.01  RunTime: Oct29-2007 00:54:44
+         jobid: ADF 2007.01  RunTime: Oct30-2007 02:56:19
          title: Carbon (SZ)
  H:
          file : t21.H
-         jobid: ADF 2006.01  RunTime: Oct29-2007 00:54:43
+         jobid: ADF 2007.01  RunTime: Oct30-2007 02:56:17
          title: Hydrogen (SZ)
 
 
@@ -1201,28 +1257,28 @@ end input
 
 
  FRAGMENTS
- =========             Atoms in this Fragment     Cart. coord.s (Angstrom)
-                       -------------------------------------------------------
-    1  C                   1  C            -1.275568     0.692949     0.000000
-    2  C                   2  C            -1.211011    -0.742036     0.000000
-    3  C                   3  C             0.032360    -1.415271     0.000000
-    4  C                   4  C             1.275568    -0.692949     0.000000
-    5  C                   5  C             1.211011     0.742036     0.000000
-    6  C                   9  C             2.571440    -1.457016     0.000000
-    7  C                  10  C             3.824633    -0.930233     0.000000
-    8  C                  14  C            -2.571440     1.457016     0.000000
-    9  C                  16  C            -3.824633     0.930233     0.000000
-   10  C                  19  C            -0.032360     1.415271     0.000000
-   11  H                   6  H            -2.143529    -1.330976     0.000000
-   12  H                   7  H             0.053320    -2.519080     0.000000
-   13  H                   8  H             2.143529     1.330976     0.000000
-   14  H                  11  H             4.012223     0.154429     0.000000
-   15  H                  12  H             2.455501    -2.556634     0.000000
-   16  H                  13  H             4.714807    -1.577980     0.000000
-   17  H                  15  H            -2.455501     2.556634     0.000000
-   18  H                  17  H            -4.012223    -0.154429     0.000000
-   19  H                  18  H            -4.714807     1.577980     0.000000
-   20  H                  20  H            -0.053320     2.519080     0.000000
+ =========                                     Atoms in this Fragment     Cart. coord.s (Angstrom)
+                                               -------------------------------------------------------
+    1  C                                                 1  C           -1.2756    0.6929    0.0000
+    2  C                                                 2  C           -1.2110   -0.7420    0.0000
+    3  C                                                 3  C            0.0324   -1.4153    0.0000
+    4  C                                                 4  C            1.2756   -0.6929    0.0000
+    5  C                                                 5  C            1.2110    0.7420    0.0000
+    6  C                                                 9  C            2.5714   -1.4570    0.0000
+    7  C                                                10  C            3.8246   -0.9302    0.0000
+    8  C                                                14  C           -2.5714    1.4570    0.0000
+    9  C                                                16  C           -3.8246    0.9302    0.0000
+   10  C                                                19  C           -0.0324    1.4153    0.0000
+   11  H                                                 6  H           -2.1435   -1.3310    0.0000
+   12  H                                                 7  H            0.0533   -2.5191    0.0000
+   13  H                                                 8  H            2.1435    1.3310    0.0000
+   14  H                                                11  H            4.0122    0.1544    0.0000
+   15  H                                                12  H            2.4555   -2.5566    0.0000
+   16  H                                                13  H            4.7148   -1.5780    0.0000
+   17  H                                                15  H           -2.4555    2.5566    0.0000
+   18  H                                                17  H           -4.0122   -0.1544    0.0000
+   19  H                                                18  H           -4.7148    1.5780    0.0000
+   20  H                                                20  H           -0.0533    2.5191    0.0000
 
 
  Interatomic Distance Matrix (Angstrom)
@@ -1320,7 +1376,6 @@ end input
  functions that participate in the description of the SFOs depend on the irrep. The indices of the
  involved functions are printed below for each irrep.
  (The complete list of primitive basis functions is printed in another section)
-
 
  Total nr. of (C)SFOs (summation over all irreps) :    60
 
@@ -1729,146 +1784,146 @@ end input
  CYCLE    1
  orbitals (Q,E):
  ---------------
- A.g :6...25         ( 2.00    -0.7173)  ( 2.00    -0.6430)  ( 2.00    -0.5182)  ( 2.00    -0.4892)   
-                     ( 2.00    -0.4461)  ( 2.00    -0.3979)  ( 2.00    -0.3450)  ( 2.00    -0.2985)   
-                     ( 2.00    -0.2423)  ( 2.00    -0.2368)  ( 0.00     0.2791)  ( 0.00     0.3228)   
-                     ( 0.00     0.3460)  ( 0.00     0.3713)  ( 0.00     0.4059)  ( 0.00     0.4538)   
-                     ( 0.00     0.5009)  ( 0.00     0.5561)  ( 0.00     0.5930)  ( 0.00     0.6843)   
- B.g :1...5          ( 2.00    -0.2201)  ( 2.00    -0.1604)  ( 2.00    -0.1245)  ( 0.00     0.0638)   
-                     ( 0.00     0.2144)   
- A.u :1...5          ( 2.00    -0.2710)  ( 2.00    -0.1780)  ( 0.00     0.0052)  ( 0.00     0.0538)   
-                     ( 0.00     0.1342)   
- B.u :6...25         ( 2.00    -0.6708)  ( 2.00    -0.6198)  ( 2.00    -0.5920)  ( 2.00    -0.4683)   
-                     ( 2.00    -0.3815)  ( 2.00    -0.3542)  ( 2.00    -0.3407)  ( 2.00    -0.3181)   
-                     ( 2.00    -0.2975)  ( 2.00    -0.2623)  ( 0.00     0.2869)  ( 0.00     0.3224)   
-                     ( 0.00     0.3485)  ( 0.00     0.3656)  ( 0.00     0.3835)  ( 0.00     0.4691)   
-                     ( 0.00     0.5174)  ( 0.00     0.5426)  ( 0.00     0.6213)  ( 0.00     0.7013)   
+ A.g :6...25         ( 2.00    -0.7173)  ( 2.00    -0.6430)  ( 2.00    -0.5182)  ( 2.00    -0.4892)
+                     ( 2.00    -0.4461)  ( 2.00    -0.3979)  ( 2.00    -0.3450)  ( 2.00    -0.2985)
+                     ( 2.00    -0.2423)  ( 2.00    -0.2368)  ( 0.00     0.2791)  ( 0.00     0.3228)
+                     ( 0.00     0.3460)  ( 0.00     0.3713)  ( 0.00     0.4059)  ( 0.00     0.4538)
+                     ( 0.00     0.5009)  ( 0.00     0.5561)  ( 0.00     0.5930)  ( 0.00     0.6843)
+ B.g :1...5          ( 2.00    -0.2201)  ( 2.00    -0.1604)  ( 2.00    -0.1245)  ( 0.00     0.0638)
+                     ( 0.00     0.2144)
+ A.u :1...5          ( 2.00    -0.2710)  ( 2.00    -0.1780)  ( 0.00     0.0052)  ( 0.00     0.0538)
+                     ( 0.00     0.1342)
+ B.u :6...25         ( 2.00    -0.6708)  ( 2.00    -0.6198)  ( 2.00    -0.5920)  ( 2.00    -0.4683)
+                     ( 2.00    -0.3815)  ( 2.00    -0.3542)  ( 2.00    -0.3407)  ( 2.00    -0.3181)
+                     ( 2.00    -0.2975)  ( 2.00    -0.2623)  ( 0.00     0.2869)  ( 0.00     0.3224)
+                     ( 0.00     0.3485)  ( 0.00     0.3656)  ( 0.00     0.3835)  ( 0.00     0.4691)
+                     ( 0.00     0.5174)  ( 0.00     0.5426)  ( 0.00     0.6213)  ( 0.00     0.7013)
 
  CYCLE    2
  d-Pmat  mean:  0.56E-02
  imax=     45: -0.35E-01
  orbitals (Q,E):
  ---------------
- A.g :6...16         ( 2.00    -0.7202)  ( 2.00    -0.6413)  ( 2.00    -0.5197)  ( 2.00    -0.4915)   
-                     ( 2.00    -0.4472)  ( 2.00    -0.3983)  ( 2.00    -0.3431)  ( 2.00    -0.2978)   
-                     ( 2.00    -0.2450)  ( 2.00    -0.2397)  ( 0.00     0.2775)   
- B.g :1...4          ( 2.00    -0.2213)  ( 2.00    -0.1615)  ( 2.00    -0.1247)  ( 0.00     0.0647)   
- A.u :1...3          ( 2.00    -0.2732)  ( 2.00    -0.1761)  ( 0.00     0.0047)   
- B.u :6...16         ( 2.00    -0.6719)  ( 2.00    -0.6214)  ( 2.00    -0.5927)  ( 2.00    -0.4687)   
-                     ( 2.00    -0.3817)  ( 2.00    -0.3555)  ( 2.00    -0.3415)  ( 2.00    -0.3197)   
-                     ( 2.00    -0.2986)  ( 2.00    -0.2637)  ( 0.00     0.2862)   
+ A.g :6...16         ( 2.00    -0.7202)  ( 2.00    -0.6413)  ( 2.00    -0.5197)  ( 2.00    -0.4915)
+                     ( 2.00    -0.4472)  ( 2.00    -0.3983)  ( 2.00    -0.3431)  ( 2.00    -0.2978)
+                     ( 2.00    -0.2450)  ( 2.00    -0.2397)  ( 0.00     0.2775)
+ B.g :1...4          ( 2.00    -0.2213)  ( 2.00    -0.1615)  ( 2.00    -0.1247)  ( 0.00     0.0647)
+ A.u :1...3          ( 2.00    -0.2732)  ( 2.00    -0.1761)  ( 0.00     0.0047)
+ B.u :6...16         ( 2.00    -0.6719)  ( 2.00    -0.6214)  ( 2.00    -0.5927)  ( 2.00    -0.4687)
+                     ( 2.00    -0.3817)  ( 2.00    -0.3555)  ( 2.00    -0.3415)  ( 2.00    -0.3197)
+                     ( 2.00    -0.2986)  ( 2.00    -0.2637)  ( 0.00     0.2862)
 
  CYCLE    3
  d-Pmat  mean:  0.54E-02
  imax=     40: -0.25E-01
  orbitals (Q,E):
  ---------------
- A.g :6...16         ( 2.00    -0.7194)  ( 2.00    -0.6363)  ( 2.00    -0.5206)  ( 2.00    -0.4920)   
-                     ( 2.00    -0.4474)  ( 2.00    -0.3966)  ( 2.00    -0.3411)  ( 2.00    -0.2974)   
-                     ( 2.00    -0.2462)  ( 2.00    -0.2414)  ( 0.00     0.2776)   
- B.g :1...4          ( 2.00    -0.2171)  ( 2.00    -0.1589)  ( 2.00    -0.1229)  ( 0.00     0.0673)   
- A.u :1...3          ( 2.00    -0.2702)  ( 2.00    -0.1705)  ( 0.00     0.0048)   
- B.u :6...16         ( 2.00    -0.6691)  ( 2.00    -0.6208)  ( 2.00    -0.5917)  ( 2.00    -0.4691)   
-                     ( 2.00    -0.3800)  ( 2.00    -0.3565)  ( 2.00    -0.3419)  ( 2.00    -0.3201)   
-                     ( 2.00    -0.2974)  ( 2.00    -0.2642)  ( 0.00     0.2876)   
+ A.g :6...16         ( 2.00    -0.7194)  ( 2.00    -0.6363)  ( 2.00    -0.5206)  ( 2.00    -0.4920)
+                     ( 2.00    -0.4474)  ( 2.00    -0.3966)  ( 2.00    -0.3411)  ( 2.00    -0.2974)
+                     ( 2.00    -0.2462)  ( 2.00    -0.2414)  ( 0.00     0.2776)
+ B.g :1...4          ( 2.00    -0.2171)  ( 2.00    -0.1589)  ( 2.00    -0.1229)  ( 0.00     0.0673)
+ A.u :1...3          ( 2.00    -0.2702)  ( 2.00    -0.1705)  ( 0.00     0.0048)
+ B.u :6...16         ( 2.00    -0.6691)  ( 2.00    -0.6208)  ( 2.00    -0.5917)  ( 2.00    -0.4691)
+                     ( 2.00    -0.3800)  ( 2.00    -0.3565)  ( 2.00    -0.3419)  ( 2.00    -0.3201)
+                     ( 2.00    -0.2974)  ( 2.00    -0.2642)  ( 0.00     0.2876)
 
  CYCLE    4
  d-Pmat  mean:  0.69E-02
  imax=     45: -0.39E-01
  orbitals (Q,E):
  ---------------
- A.g :6...16         ( 2.00    -0.7190)  ( 2.00    -0.6372)  ( 2.00    -0.5203)  ( 2.00    -0.4919)   
-                     ( 2.00    -0.4474)  ( 2.00    -0.3971)  ( 2.00    -0.3408)  ( 2.00    -0.2973)   
-                     ( 2.00    -0.2466)  ( 2.00    -0.2414)  ( 0.00     0.2769)   
- B.g :1...4          ( 2.00    -0.2174)  ( 2.00    -0.1598)  ( 2.00    -0.1212)  ( 0.00     0.0663)   
- A.u :1...3          ( 2.00    -0.2699)  ( 2.00    -0.1715)  ( 0.00     0.0064)   
- B.u :6...16         ( 2.00    -0.6696)  ( 2.00    -0.6216)  ( 2.00    -0.5904)  ( 2.00    -0.4693)   
-                     ( 2.00    -0.3805)  ( 2.00    -0.3566)  ( 2.00    -0.3407)  ( 2.00    -0.3209)   
-                     ( 2.00    -0.2976)  ( 2.00    -0.2643)  ( 0.00     0.2870)   
+ A.g :6...16         ( 2.00    -0.7190)  ( 2.00    -0.6372)  ( 2.00    -0.5203)  ( 2.00    -0.4919)
+                     ( 2.00    -0.4474)  ( 2.00    -0.3971)  ( 2.00    -0.3408)  ( 2.00    -0.2973)
+                     ( 2.00    -0.2466)  ( 2.00    -0.2414)  ( 0.00     0.2769)
+ B.g :1...4          ( 2.00    -0.2174)  ( 2.00    -0.1598)  ( 2.00    -0.1212)  ( 0.00     0.0663)
+ A.u :1...3          ( 2.00    -0.2699)  ( 2.00    -0.1715)  ( 0.00     0.0064)
+ B.u :6...16         ( 2.00    -0.6696)  ( 2.00    -0.6216)  ( 2.00    -0.5904)  ( 2.00    -0.4693)
+                     ( 2.00    -0.3805)  ( 2.00    -0.3566)  ( 2.00    -0.3407)  ( 2.00    -0.3209)
+                     ( 2.00    -0.2976)  ( 2.00    -0.2643)  ( 0.00     0.2870)
 
  CYCLE    5
  d-Pmat  mean:  0.29E-02
- imax=     20:  0.11E-01
+ imax=      5:  0.11E-01
  orbitals (Q,E):
  ---------------
- A.g :6...16         ( 2.00    -0.7196)  ( 2.00    -0.6371)  ( 2.00    -0.5206)  ( 2.00    -0.4921)   
-                     ( 2.00    -0.4473)  ( 2.00    -0.3971)  ( 2.00    -0.3409)  ( 2.00    -0.2973)   
-                     ( 2.00    -0.2468)  ( 2.00    -0.2418)  ( 0.00     0.2768)   
- B.g :1...4          ( 2.00    -0.2182)  ( 2.00    -0.1589)  ( 2.00    -0.1222)  ( 0.00     0.0665)   
- A.u :1...3          ( 2.00    -0.2705)  ( 2.00    -0.1713)  ( 0.00     0.0055)   
- B.u :6...16         ( 2.00    -0.6703)  ( 2.00    -0.6209)  ( 2.00    -0.5912)  ( 2.00    -0.4694)   
-                     ( 2.00    -0.3806)  ( 2.00    -0.3565)  ( 2.00    -0.3414)  ( 2.00    -0.3203)   
-                     ( 2.00    -0.2979)  ( 2.00    -0.2648)  ( 0.00     0.2870)   
+ A.g :6...16         ( 2.00    -0.7196)  ( 2.00    -0.6371)  ( 2.00    -0.5206)  ( 2.00    -0.4921)
+                     ( 2.00    -0.4473)  ( 2.00    -0.3971)  ( 2.00    -0.3409)  ( 2.00    -0.2973)
+                     ( 2.00    -0.2468)  ( 2.00    -0.2418)  ( 0.00     0.2768)
+ B.g :1...4          ( 2.00    -0.2182)  ( 2.00    -0.1589)  ( 2.00    -0.1222)  ( 0.00     0.0665)
+ A.u :1...3          ( 2.00    -0.2705)  ( 2.00    -0.1713)  ( 0.00     0.0055)
+ B.u :6...16         ( 2.00    -0.6703)  ( 2.00    -0.6209)  ( 2.00    -0.5912)  ( 2.00    -0.4694)
+                     ( 2.00    -0.3806)  ( 2.00    -0.3565)  ( 2.00    -0.3414)  ( 2.00    -0.3203)
+                     ( 2.00    -0.2979)  ( 2.00    -0.2648)  ( 0.00     0.2870)
 
  CYCLE    6
  d-Pmat  mean:  0.38E-03
  imax=     50:  0.10E-02
  orbitals (Q,E):
  ---------------
- A.g :6...16         ( 2.00    -0.7200)  ( 2.00    -0.6369)  ( 2.00    -0.5207)  ( 2.00    -0.4924)   
-                     ( 2.00    -0.4475)  ( 2.00    -0.3971)  ( 2.00    -0.3407)  ( 2.00    -0.2972)   
-                     ( 2.00    -0.2470)  ( 2.00    -0.2420)  ( 0.00     0.2768)   
- B.g :1...4          ( 2.00    -0.2181)  ( 2.00    -0.1595)  ( 2.00    -0.1222)  ( 0.00     0.0667)   
- A.u :1...3          ( 2.00    -0.2708)  ( 2.00    -0.1710)  ( 0.00     0.0055)   
- B.u :6...16         ( 2.00    -0.6702)  ( 2.00    -0.6214)  ( 2.00    -0.5912)  ( 2.00    -0.4693)   
-                     ( 2.00    -0.3806)  ( 2.00    -0.3567)  ( 2.00    -0.3415)  ( 2.00    -0.3207)   
-                     ( 2.00    -0.2979)  ( 2.00    -0.2647)  ( 0.00     0.2870)   
+ A.g :6...16         ( 2.00    -0.7200)  ( 2.00    -0.6369)  ( 2.00    -0.5207)  ( 2.00    -0.4924)
+                     ( 2.00    -0.4475)  ( 2.00    -0.3971)  ( 2.00    -0.3407)  ( 2.00    -0.2972)
+                     ( 2.00    -0.2470)  ( 2.00    -0.2420)  ( 0.00     0.2768)
+ B.g :1...4          ( 2.00    -0.2181)  ( 2.00    -0.1595)  ( 2.00    -0.1222)  ( 0.00     0.0667)
+ A.u :1...3          ( 2.00    -0.2708)  ( 2.00    -0.1710)  ( 0.00     0.0055)
+ B.u :6...16         ( 2.00    -0.6702)  ( 2.00    -0.6214)  ( 2.00    -0.5912)  ( 2.00    -0.4693)
+                     ( 2.00    -0.3806)  ( 2.00    -0.3567)  ( 2.00    -0.3415)  ( 2.00    -0.3207)
+                     ( 2.00    -0.2979)  ( 2.00    -0.2647)  ( 0.00     0.2870)
 
  CYCLE    7
  d-Pmat  mean:  0.32E-04
  imax=     45:  0.14E-03
  orbitals (Q,E):
  ---------------
- A.g :6...16         ( 2.00    -0.7199)  ( 2.00    -0.6369)  ( 2.00    -0.5207)  ( 2.00    -0.4924)   
-                     ( 2.00    -0.4475)  ( 2.00    -0.3971)  ( 2.00    -0.3407)  ( 2.00    -0.2972)   
-                     ( 2.00    -0.2470)  ( 2.00    -0.2420)  ( 0.00     0.2768)   
- B.g :1...4          ( 2.00    -0.2181)  ( 2.00    -0.1594)  ( 2.00    -0.1222)  ( 0.00     0.0667)   
- A.u :1...3          ( 2.00    -0.2708)  ( 2.00    -0.1710)  ( 0.00     0.0055)   
- B.u :6...16         ( 2.00    -0.6702)  ( 2.00    -0.6214)  ( 2.00    -0.5912)  ( 2.00    -0.4693)   
-                     ( 2.00    -0.3806)  ( 2.00    -0.3567)  ( 2.00    -0.3415)  ( 2.00    -0.3207)   
-                     ( 2.00    -0.2979)  ( 2.00    -0.2647)  ( 0.00     0.2870)   
+ A.g :6...16         ( 2.00    -0.7199)  ( 2.00    -0.6369)  ( 2.00    -0.5207)  ( 2.00    -0.4924)
+                     ( 2.00    -0.4475)  ( 2.00    -0.3971)  ( 2.00    -0.3407)  ( 2.00    -0.2972)
+                     ( 2.00    -0.2470)  ( 2.00    -0.2420)  ( 0.00     0.2768)
+ B.g :1...4          ( 2.00    -0.2181)  ( 2.00    -0.1594)  ( 2.00    -0.1222)  ( 0.00     0.0667)
+ A.u :1...3          ( 2.00    -0.2708)  ( 2.00    -0.1710)  ( 0.00     0.0055)
+ B.u :6...16         ( 2.00    -0.6702)  ( 2.00    -0.6214)  ( 2.00    -0.5912)  ( 2.00    -0.4693)
+                     ( 2.00    -0.3806)  ( 2.00    -0.3567)  ( 2.00    -0.3415)  ( 2.00    -0.3207)
+                     ( 2.00    -0.2979)  ( 2.00    -0.2647)  ( 0.00     0.2870)
 
  CYCLE    8
  d-Pmat  mean:  0.10E-04
  imax=     25: -0.55E-04
  orbitals (Q,E):
  ---------------
- A.g :6...16         ( 2.00    -0.7199)  ( 2.00    -0.6369)  ( 2.00    -0.5207)  ( 2.00    -0.4924)   
-                     ( 2.00    -0.4475)  ( 2.00    -0.3971)  ( 2.00    -0.3407)  ( 2.00    -0.2972)   
-                     ( 2.00    -0.2470)  ( 2.00    -0.2420)  ( 0.00     0.2768)   
- B.g :1...4          ( 2.00    -0.2181)  ( 2.00    -0.1594)  ( 2.00    -0.1222)  ( 0.00     0.0667)   
- A.u :1...3          ( 2.00    -0.2708)  ( 2.00    -0.1710)  ( 0.00     0.0055)   
- B.u :6...16         ( 2.00    -0.6702)  ( 2.00    -0.6214)  ( 2.00    -0.5912)  ( 2.00    -0.4693)   
-                     ( 2.00    -0.3806)  ( 2.00    -0.3567)  ( 2.00    -0.3415)  ( 2.00    -0.3207)   
-                     ( 2.00    -0.2979)  ( 2.00    -0.2647)  ( 0.00     0.2870)   
+ A.g :6...16         ( 2.00    -0.7199)  ( 2.00    -0.6369)  ( 2.00    -0.5207)  ( 2.00    -0.4924)
+                     ( 2.00    -0.4475)  ( 2.00    -0.3971)  ( 2.00    -0.3407)  ( 2.00    -0.2972)
+                     ( 2.00    -0.2470)  ( 2.00    -0.2420)  ( 0.00     0.2768)
+ B.g :1...4          ( 2.00    -0.2181)  ( 2.00    -0.1594)  ( 2.00    -0.1222)  ( 0.00     0.0667)
+ A.u :1...3          ( 2.00    -0.2708)  ( 2.00    -0.1710)  ( 0.00     0.0055)
+ B.u :6...16         ( 2.00    -0.6702)  ( 2.00    -0.6214)  ( 2.00    -0.5912)  ( 2.00    -0.4693)
+                     ( 2.00    -0.3806)  ( 2.00    -0.3567)  ( 2.00    -0.3415)  ( 2.00    -0.3207)
+                     ( 2.00    -0.2979)  ( 2.00    -0.2647)  ( 0.00     0.2870)
 
  CYCLE    9
  d-Pmat  mean:  0.33E-05
  imax=     25:  0.12E-04
  orbitals (Q,E):
  ---------------
- A.g :6...16         ( 2.00    -0.7199)  ( 2.00    -0.6369)  ( 2.00    -0.5207)  ( 2.00    -0.4924)   
-                     ( 2.00    -0.4475)  ( 2.00    -0.3971)  ( 2.00    -0.3407)  ( 2.00    -0.2972)   
-                     ( 2.00    -0.2470)  ( 2.00    -0.2420)  ( 0.00     0.2768)   
- B.g :1...4          ( 2.00    -0.2181)  ( 2.00    -0.1594)  ( 2.00    -0.1222)  ( 0.00     0.0667)   
- A.u :1...3          ( 2.00    -0.2708)  ( 2.00    -0.1710)  ( 0.00     0.0055)   
- B.u :6...16         ( 2.00    -0.6702)  ( 2.00    -0.6214)  ( 2.00    -0.5912)  ( 2.00    -0.4693)   
-                     ( 2.00    -0.3806)  ( 2.00    -0.3567)  ( 2.00    -0.3415)  ( 2.00    -0.3207)   
-                     ( 2.00    -0.2979)  ( 2.00    -0.2647)  ( 0.00     0.2870)   
+ A.g :6...16         ( 2.00    -0.7199)  ( 2.00    -0.6369)  ( 2.00    -0.5207)  ( 2.00    -0.4924)
+                     ( 2.00    -0.4475)  ( 2.00    -0.3971)  ( 2.00    -0.3407)  ( 2.00    -0.2972)
+                     ( 2.00    -0.2470)  ( 2.00    -0.2420)  ( 0.00     0.2768)
+ B.g :1...4          ( 2.00    -0.2181)  ( 2.00    -0.1594)  ( 2.00    -0.1222)  ( 0.00     0.0667)
+ A.u :1...3          ( 2.00    -0.2708)  ( 2.00    -0.1710)  ( 0.00     0.0055)
+ B.u :6...16         ( 2.00    -0.6702)  ( 2.00    -0.6214)  ( 2.00    -0.5912)  ( 2.00    -0.4693)
+                     ( 2.00    -0.3806)  ( 2.00    -0.3567)  ( 2.00    -0.3415)  ( 2.00    -0.3207)
+                     ( 2.00    -0.2979)  ( 2.00    -0.2647)  ( 0.00     0.2870)
 
  CYCLE   10
  d-Pmat  mean:  0.29E-06
- imax=     52: -0.10E-05
+ imax=     60: -0.10E-05
  orbitals (Q,E):
  ---------------
- A.g :6...16         ( 2.00    -0.7199)  ( 2.00    -0.6369)  ( 2.00    -0.5207)  ( 2.00    -0.4924)   
-                     ( 2.00    -0.4475)  ( 2.00    -0.3971)  ( 2.00    -0.3407)  ( 2.00    -0.2972)   
-                     ( 2.00    -0.2470)  ( 2.00    -0.2420)  ( 0.00     0.2768)   
- B.g :1...4          ( 2.00    -0.2181)  ( 2.00    -0.1594)  ( 2.00    -0.1222)  ( 0.00     0.0667)   
- A.u :1...3          ( 2.00    -0.2708)  ( 2.00    -0.1710)  ( 0.00     0.0055)   
- B.u :6...16         ( 2.00    -0.6702)  ( 2.00    -0.6214)  ( 2.00    -0.5912)  ( 2.00    -0.4693)   
-                     ( 2.00    -0.3806)  ( 2.00    -0.3567)  ( 2.00    -0.3415)  ( 2.00    -0.3207)   
-                     ( 2.00    -0.2979)  ( 2.00    -0.2647)  ( 0.00     0.2870)   
+ A.g :6...16         ( 2.00    -0.7199)  ( 2.00    -0.6369)  ( 2.00    -0.5207)  ( 2.00    -0.4924)
+                     ( 2.00    -0.4475)  ( 2.00    -0.3971)  ( 2.00    -0.3407)  ( 2.00    -0.2972)
+                     ( 2.00    -0.2470)  ( 2.00    -0.2420)  ( 0.00     0.2768)
+ B.g :1...4          ( 2.00    -0.2181)  ( 2.00    -0.1594)  ( 2.00    -0.1222)  ( 0.00     0.0667)
+ A.u :1...3          ( 2.00    -0.2708)  ( 2.00    -0.1710)  ( 0.00     0.0055)
+ B.u :6...16         ( 2.00    -0.6702)  ( 2.00    -0.6214)  ( 2.00    -0.5912)  ( 2.00    -0.4693)
+                     ( 2.00    -0.3806)  ( 2.00    -0.3567)  ( 2.00    -0.3415)  ( 2.00    -0.3207)
+                     ( 2.00    -0.2979)  ( 2.00    -0.2647)  ( 0.00     0.2870)
 
  SCF CONVERGED
 
@@ -1890,62 +1945,62 @@ end input
                         Occup              E (au)              E (eV)       Diff (eV) with prev. cycle
                         -----      --------------------        ------       --------------------------
  A.g
-               6        2.000     -0.71993255198132E+00       -19.590               3.15E-06
-               7        2.000     -0.63692418309473E+00       -17.332               2.15E-06
-               8        2.000     -0.52067985829399E+00       -14.168               2.26E-06
-               9        2.000     -0.49239230092788E+00       -13.399               2.26E-06
-              10        2.000     -0.44751591928453E+00       -12.178               1.84E-06
-              11        2.000     -0.39712828688910E+00       -10.806               1.88E-06
-              12        2.000     -0.34071101327484E+00        -9.271               1.28E-06
-              13        2.000     -0.29724325983262E+00        -8.088               1.21E-06
-              14        2.000     -0.24697729236886E+00        -6.721               2.48E-06
-              15        2.000     -0.24199255689539E+00        -6.585               2.20E-06
-              16        0.000      0.27678369297168E+00         7.532
-              17        0.000      0.32347267482597E+00         8.802
-              18        0.000      0.34325833330548E+00         9.341
-              19        0.000      0.36573015943240E+00         9.952
-              20        0.000      0.40394161153646E+00        10.992
-              21        0.000      0.44818744432267E+00        12.196
-              22        0.000      0.49828651795159E+00        13.559
-              23        0.000      0.55455099681490E+00        15.090
-              24        0.000      0.59126860191395E+00        16.089
-              25        0.000      0.67685256700256E+00        18.418
+               6        2.000     -0.71993255211990E+00       -19.590               3.15E-06
+               7        2.000     -0.63692418317384E+00       -17.332               2.15E-06
+               8        2.000     -0.52067985839204E+00       -14.168               2.26E-06
+               9        2.000     -0.49239230100931E+00       -13.399               2.26E-06
+              10        2.000     -0.44751591939424E+00       -12.178               1.84E-06
+              11        2.000     -0.39712828697931E+00       -10.806               1.88E-06
+              12        2.000     -0.34071101335215E+00        -9.271               1.28E-06
+              13        2.000     -0.29724325989822E+00        -8.088               1.21E-06
+              14        2.000     -0.24697729249694E+00        -6.721               2.48E-06
+              15        2.000     -0.24199255700317E+00        -6.585               2.20E-06
+              16        0.000      0.27678369280186E+00         7.532
+              17        0.000      0.32347267469379E+00         8.802
+              18        0.000      0.34325833312536E+00         9.341
+              19        0.000      0.36573015933704E+00         9.952
+              20        0.000      0.40394161143942E+00        10.992
+              21        0.000      0.44818744420711E+00        12.196
+              22        0.000      0.49828651777463E+00        13.559
+              23        0.000      0.55455099669545E+00        15.090
+              24        0.000      0.59126860184181E+00        16.089
+              25        0.000      0.67685256688855E+00        18.418
  B.g
-               1        2.000     -0.21808710811453E+00        -5.934               2.81E-06
-               2        2.000     -0.15943104555232E+00        -4.338               2.89E-06
-               3        2.000     -0.12219313840592E+00        -3.325               2.46E-06
-               4        0.000      0.66721626002259E-01         1.816
-               5        0.000      0.20840485487808E+00         5.671
+               1        2.000     -0.21808710818945E+00        -5.934               2.81E-06
+               2        2.000     -0.15943104569697E+00        -4.338               2.89E-06
+               3        2.000     -0.12219313848899E+00        -3.325               2.46E-06
+               4        0.000      0.66721625941454E-01         1.816
+               5        0.000      0.20840485477029E+00         5.671
  A.u
-               1        2.000     -0.27078787903951E+00        -7.369               2.98E-06
-               2        2.000     -0.17103889153352E+00        -4.654               2.33E-06
-               3        0.000      0.54764484091968E-02         0.149
-               4        0.000      0.52135897269598E-01         1.419
-               5        0.000      0.13118724640204E+00         3.570
+               1        2.000     -0.27078787915475E+00        -7.369               2.98E-06
+               2        2.000     -0.17103889160769E+00        -4.654               2.33E-06
+               3        0.000      0.54764483191356E-02         0.149
+               4        0.000      0.52135897160351E-01         1.419
+               5        0.000      0.13118724631599E+00         3.570
  B.u
-               6        2.000     -0.67018944726880E+00       -18.237               2.71E-06
-               7        2.000     -0.62140136902026E+00       -16.909               2.67E-06
-               8        2.000     -0.59122139614872E+00       -16.088               2.18E-06
-               9        2.000     -0.46931830575639E+00       -12.771               1.82E-06
-              10        2.000     -0.38055348733982E+00       -10.355               1.93E-06
-              11        2.000     -0.35667559656829E+00        -9.706               1.52E-06
-              12        2.000     -0.34145994110563E+00        -9.292               1.73E-06
-              13        2.000     -0.32069461015159E+00        -8.727               2.02E-06
-              14        2.000     -0.29788906227745E+00        -8.106               2.54E-06
-              15        2.000     -0.26465755796296E+00        -7.202               1.66E-06
-              16        0.000      0.28696121266380E+00         7.809
-              17        0.000      0.31680461290512E+00         8.621
-              18        0.000      0.34575696836041E+00         9.409
-              19        0.000      0.36404789458143E+00         9.906
-              20        0.000      0.38331000138574E+00        10.430
-              21        0.000      0.46492127331579E+00        12.651
-              22        0.000      0.51308989038130E+00        13.962
-              23        0.000      0.54100926903806E+00        14.722
-              24        0.000      0.62005300469255E+00        16.873
-              25        0.000      0.69157762882825E+00        18.819
+               6        2.000     -0.67018944734248E+00       -18.237               2.71E-06
+               7        2.000     -0.62140136917365E+00       -16.909               2.67E-06
+               8        2.000     -0.59122139622297E+00       -16.088               2.18E-06
+               9        2.000     -0.46931830581687E+00       -12.771               1.82E-06
+              10        2.000     -0.38055348741961E+00       -10.355               1.93E-06
+              11        2.000     -0.35667559667631E+00        -9.706               1.52E-06
+              12        2.000     -0.34145994121351E+00        -9.292               1.73E-06
+              13        2.000     -0.32069461029258E+00        -8.727               2.02E-06
+              14        2.000     -0.29788906236238E+00        -8.106               2.54E-06
+              15        2.000     -0.26465755802105E+00        -7.202               1.66E-06
+              16        0.000      0.28696121249441E+00         7.809
+              17        0.000      0.31680461276694E+00         8.621
+              18        0.000      0.34575696812725E+00         9.409
+              19        0.000      0.36404789451461E+00         9.906
+              20        0.000      0.38331000131347E+00        10.430
+              21        0.000      0.46492127318865E+00        12.651
+              22        0.000      0.51308989024731E+00        13.962
+              23        0.000      0.54100926894935E+00        14.722
+              24        0.000      0.62005300458623E+00        16.873
+              25        0.000      0.69157762869380E+00        18.819
   
- HOMO :        3 B.g              -0.12219313840592E+00
- LUMO :        3 A.u               0.54764484091968E-02
+ HOMO :        3 B.g              -0.12219313848899E+00
+ LUMO :        3 A.u               0.54764483191356E-02
   
 
 
@@ -1954,66 +2009,66 @@ end input
 
  Irrep        no.  (spin)   Occup              E (au)                E (eV)
  ---------------------------------------------------------------------------
- B.u           1             2.00       -0.99078002415008E+01      -269.6050
- A.g           1             2.00       -0.99077735552595E+01      -269.6042
- B.u           2             2.00       -0.98962969175552E+01      -269.2919
- A.g           2             2.00       -0.98962962216121E+01      -269.2919
- B.u           3             2.00       -0.98952656901631E+01      -269.2639
- A.g           3             2.00       -0.98952562587487E+01      -269.2636
- B.u           4             2.00       -0.98947142197031E+01      -269.2489
- A.g           4             2.00       -0.98946532312109E+01      -269.2472
- B.u           5             2.00       -0.98814451042513E+01      -268.8878
- A.g           5             2.00       -0.98814450950657E+01      -268.8878
- A.g           6             2.00       -0.71993255198132E+00       -19.5904
- B.u           6             2.00       -0.67018944726880E+00       -18.2368
- A.g           7             2.00       -0.63692418309473E+00       -17.3316
- B.u           7             2.00       -0.62140136902026E+00       -16.9092
- B.u           8             2.00       -0.59122139614872E+00       -16.0880
- A.g           8             2.00       -0.52067985829399E+00       -14.1684
- A.g           9             2.00       -0.49239230092788E+00       -13.3987
- B.u           9             2.00       -0.46931830575639E+00       -12.7708
- A.g          10             2.00       -0.44751591928453E+00       -12.1775
- A.g          11             2.00       -0.39712828688910E+00       -10.8064
- B.u          10             2.00       -0.38055348733982E+00       -10.3554
- B.u          11             2.00       -0.35667559656829E+00        -9.7056
- B.u          12             2.00       -0.34145994110563E+00        -9.2916
- A.g          12             2.00       -0.34071101327484E+00        -9.2712
- B.u          13             2.00       -0.32069461015159E+00        -8.7265
- B.u          14             2.00       -0.29788906227745E+00        -8.1060
- A.g          13             2.00       -0.29724325983262E+00        -8.0884
- A.u           1             2.00       -0.27078787903951E+00        -7.3685
- B.u          15             2.00       -0.26465755796296E+00        -7.2017
- A.g          14             2.00       -0.24697729236886E+00        -6.7206
- A.g          15             2.00       -0.24199255689539E+00        -6.5850
- B.g           1             2.00       -0.21808710811453E+00        -5.9345
- A.u           2             2.00       -0.17103889153352E+00        -4.6542
- B.g           2             2.00       -0.15943104555232E+00        -4.3383
- B.g           3             2.00       -0.12219313840592E+00        -3.3250
- A.u           3             0.00        0.54764484091968E-02         0.1490
- A.u           4             0.00        0.52135897269598E-01         1.4187
- B.g           4             0.00        0.66721626002259E-01         1.8156
- A.u           5             0.00        0.13118724640204E+00         3.5698
- B.g           5             0.00        0.20840485487808E+00         5.6710
- A.g          16             0.00        0.27678369297168E+00         7.5317
- B.u          16             0.00        0.28696121266380E+00         7.8086
- B.u          17             0.00        0.31680461290512E+00         8.6207
- A.g          17             0.00        0.32347267482597E+00         8.8021
- A.g          18             0.00        0.34325833330548E+00         9.3405
- B.u          18             0.00        0.34575696836041E+00         9.4085
- B.u          19             0.00        0.36404789458143E+00         9.9062
- A.g          19             0.00        0.36573015943240E+00         9.9520
- B.u          20             0.00        0.38331000138574E+00        10.4304
- A.g          20             0.00        0.40394161153646E+00        10.9918
- A.g          21             0.00        0.44818744432267E+00        12.1958
- B.u          21             0.00        0.46492127331579E+00        12.6512
- A.g          22             0.00        0.49828651795159E+00        13.5591
- B.u          22             0.00        0.51308989038130E+00        13.9619
- B.u          23             0.00        0.54100926903806E+00        14.7216
- A.g          23             0.00        0.55455099681490E+00        15.0901
- A.g          24             0.00        0.59126860191395E+00        16.0892
- B.u          24             0.00        0.62005300469255E+00        16.8725
- A.g          25             0.00        0.67685256700256E+00        18.4181
- B.u          25             0.00        0.69157762882825E+00        18.8188
+ B.u           1             2.00       -0.99078002415597E+01      -269.6050
+ A.g           1             2.00       -0.99077735553184E+01      -269.6042
+ B.u           2             2.00       -0.98962969175597E+01      -269.2919
+ A.g           2             2.00       -0.98962962216165E+01      -269.2919
+ B.u           3             2.00       -0.98952656903453E+01      -269.2639
+ A.g           3             2.00       -0.98952562589264E+01      -269.2636
+ B.u           4             2.00       -0.98947142197700E+01      -269.2489
+ A.g           4             2.00       -0.98946532312824E+01      -269.2472
+ B.u           5             2.00       -0.98814451043363E+01      -268.8878
+ A.g           5             2.00       -0.98814450951507E+01      -268.8878
+ A.g           6             2.00       -0.71993255211990E+00       -19.5904
+ B.u           6             2.00       -0.67018944734248E+00       -18.2368
+ A.g           7             2.00       -0.63692418317384E+00       -17.3316
+ B.u           7             2.00       -0.62140136917365E+00       -16.9092
+ B.u           8             2.00       -0.59122139622297E+00       -16.0880
+ A.g           8             2.00       -0.52067985839204E+00       -14.1684
+ A.g           9             2.00       -0.49239230100931E+00       -13.3987
+ B.u           9             2.00       -0.46931830581687E+00       -12.7708
+ A.g          10             2.00       -0.44751591939424E+00       -12.1775
+ A.g          11             2.00       -0.39712828697931E+00       -10.8064
+ B.u          10             2.00       -0.38055348741961E+00       -10.3554
+ B.u          11             2.00       -0.35667559667631E+00        -9.7056
+ B.u          12             2.00       -0.34145994121351E+00        -9.2916
+ A.g          12             2.00       -0.34071101335215E+00        -9.2712
+ B.u          13             2.00       -0.32069461029258E+00        -8.7265
+ B.u          14             2.00       -0.29788906236238E+00        -8.1060
+ A.g          13             2.00       -0.29724325989822E+00        -8.0884
+ A.u           1             2.00       -0.27078787915475E+00        -7.3685
+ B.u          15             2.00       -0.26465755802105E+00        -7.2017
+ A.g          14             2.00       -0.24697729249694E+00        -6.7206
+ A.g          15             2.00       -0.24199255700317E+00        -6.5850
+ B.g           1             2.00       -0.21808710818945E+00        -5.9345
+ A.u           2             2.00       -0.17103889160769E+00        -4.6542
+ B.g           2             2.00       -0.15943104569697E+00        -4.3383
+ B.g           3             2.00       -0.12219313848899E+00        -3.3250
+ A.u           3             0.00        0.54764483191356E-02         0.1490
+ A.u           4             0.00        0.52135897160351E-01         1.4187
+ B.g           4             0.00        0.66721625941454E-01         1.8156
+ A.u           5             0.00        0.13118724631599E+00         3.5698
+ B.g           5             0.00        0.20840485477029E+00         5.6710
+ A.g          16             0.00        0.27678369280186E+00         7.5317
+ B.u          16             0.00        0.28696121249441E+00         7.8086
+ B.u          17             0.00        0.31680461276694E+00         8.6207
+ A.g          17             0.00        0.32347267469379E+00         8.8021
+ A.g          18             0.00        0.34325833312536E+00         9.3405
+ B.u          18             0.00        0.34575696812725E+00         9.4085
+ B.u          19             0.00        0.36404789451461E+00         9.9062
+ A.g          19             0.00        0.36573015933704E+00         9.9520
+ B.u          20             0.00        0.38331000131347E+00        10.4304
+ A.g          20             0.00        0.40394161143942E+00        10.9918
+ A.g          21             0.00        0.44818744420711E+00        12.1958
+ B.u          21             0.00        0.46492127318865E+00        12.6512
+ A.g          22             0.00        0.49828651777463E+00        13.5591
+ B.u          22             0.00        0.51308989024731E+00        13.9619
+ B.u          23             0.00        0.54100926894935E+00        14.7216
+ A.g          23             0.00        0.55455099669545E+00        15.0901
+ A.g          24             0.00        0.59126860184181E+00        16.0892
+ B.u          24             0.00        0.62005300458623E+00        16.8725
+ A.g          25             0.00        0.67685256688855E+00        18.4181
+ B.u          25             0.00        0.69157762869380E+00        18.8188
 
 
  Orbital Energies of the Core Orbitals:
@@ -2027,7 +2082,7 @@ end input
  Fit test: (difference of exact and fit density, squared integrated, result summed over spins)
          Sum-of-Fragments:                             0.00000491585956
          Orthogonalized Fragments:                     0.00058986956776
-         SCF:                                          0.00019290949425
+         SCF:                                          0.00019290949424
 
 
 
@@ -2245,22 +2300,22 @@ end input
 
    atom        charge        dip-x     dip-y     dip-z      quad-xx   quad-xy   quad-xz   quad-yy   quad-yz   quad-zz
  --------------------------------------------------------------------------------------------------------------------
-    1 C     -0.027915    -0.030401  0.006875  0.000000    -0.275963 -0.069187  0.000000 -0.322160  0.000000  0.598123
-    2 C      0.525211    -0.493476 -0.264783  0.000000    -0.032289  0.677572  0.000000 -0.358028  0.000000  0.390317
+    1 C     -0.027915    -0.030400  0.006875  0.000000    -0.275963 -0.069187  0.000000 -0.322160  0.000000  0.598123
+    2 C      0.525211    -0.493476 -0.264783  0.000000    -0.032289  0.677572  0.000000 -0.358028  0.000000  0.390316
     3 C      0.525199     0.049780 -0.555273  0.000000    -0.580224  0.008829  0.000000  0.188302  0.000000  0.391922
-    4 C     -0.027915     0.030401 -0.006875  0.000000    -0.275963 -0.069187  0.000000 -0.322160  0.000000  0.598123
-    5 C      0.525211     0.493476  0.264783  0.000000    -0.032289  0.677572  0.000000 -0.358028  0.000000  0.390317
+    4 C     -0.027915     0.030400 -0.006875  0.000000    -0.275963 -0.069187  0.000000 -0.322160  0.000000  0.598123
+    5 C      0.525211     0.493476  0.264783  0.000000    -0.032289  0.677572  0.000000 -0.358028  0.000000  0.390316
     6 H     -0.516830    -0.583600 -0.370242  0.000000    -0.223760 -0.573667  0.000000  0.046891  0.000000  0.176869
     7 H     -0.517409     0.012982 -0.690542  0.000000     0.228403  0.026481  0.000000 -0.405127  0.000000  0.176724
     8 H     -0.516830     0.583600  0.370242  0.000000    -0.223760 -0.573667  0.000000  0.046891  0.000000  0.176869
-    9 C      0.522242    -0.213865 -0.569354  0.000000    -0.582806 -0.109418  0.000000  0.252946  0.000000  0.329860
-   10 C      1.065872     0.613878  0.269442  0.000000    -0.362898 -0.599963  0.000000  0.253435  0.000000  0.109463
+    9 C      0.522242    -0.213865 -0.569354  0.000000    -0.582807 -0.109418  0.000000  0.252946  0.000000  0.329861
+   10 C      1.065872     0.613878  0.269442  0.000000    -0.362898 -0.599963  0.000000  0.253436  0.000000  0.109463
    11 H     -0.529348     0.112663  0.700319  0.000000     0.206542 -0.199803  0.000000 -0.394795  0.000000  0.188253
    12 H     -0.520605    -0.071291 -0.686417  0.000000     0.227355 -0.133395  0.000000 -0.402085  0.000000  0.174730
    13 H     -0.526417     0.567520 -0.425356  0.000000    -0.184648  0.608899  0.000000 -0.003106  0.000000  0.187754
-   14 C      0.522242     0.213865  0.569354  0.000000    -0.582806 -0.109418  0.000000  0.252946  0.000000  0.329860
+   14 C      0.522242     0.213865  0.569354  0.000000    -0.582807 -0.109418  0.000000  0.252946  0.000000  0.329861
    15 H     -0.520605     0.071291  0.686417  0.000000     0.227355 -0.133395  0.000000 -0.402085  0.000000  0.174730
-   16 C      1.065872    -0.613878 -0.269442  0.000000    -0.362898 -0.599963  0.000000  0.253435  0.000000  0.109463
+   16 C      1.065872    -0.613878 -0.269442  0.000000    -0.362898 -0.599963  0.000000  0.253436  0.000000  0.109463
    17 H     -0.529348    -0.112663 -0.700319  0.000000     0.206542 -0.199803  0.000000 -0.394795  0.000000  0.188253
    18 H     -0.526417    -0.567520  0.425356  0.000000    -0.184648  0.608899  0.000000 -0.003106  0.000000  0.187754
    19 C      0.525199    -0.049780  0.555273  0.000000    -0.580224  0.008829  0.000000  0.188302  0.000000  0.391922
@@ -2277,24 +2332,24 @@ end input
         Atom    Level:     MDC-m        MDC-d        MDC-q
  ---------------------------------------------------------
      1     C           -0.027915    -0.185628     0.028269
-     2     C            0.525211     0.101454    -0.025508
-     3     C            0.525199     0.106715    -0.045884
+     2     C            0.525211     0.101454    -0.025507
+     3     C            0.525199     0.106715    -0.045883
      4     C           -0.027915    -0.185628     0.028269
-     5     C            0.525211     0.101454    -0.025508
+     5     C            0.525211     0.101454    -0.025507
      6     H           -0.516830    -0.053600     0.025344
      7     H           -0.517409    -0.040239     0.041960
      8     H           -0.516830    -0.053600     0.025344
-     9     C            0.522242     0.034390    -0.028679
+     9     C            0.522242     0.034391    -0.028679
     10     C            1.065872     0.348082    -0.156072
     11     H           -0.529348    -0.136539     0.062624
     12     H           -0.520605    -0.052467     0.035935
     13     H           -0.526417    -0.122169     0.062010
-    14     C            0.522242     0.034390    -0.028679
+    14     C            0.522242     0.034391    -0.028679
     15     H           -0.520605    -0.052467     0.035935
     16     C            1.065872     0.348082    -0.156072
     17     H           -0.529348    -0.136539     0.062624
     18     H           -0.526417    -0.122169     0.062010
-    19     C            0.525199     0.106715    -0.045884
+    19     C            0.525199     0.106715    -0.045883
     20     H           -0.517409    -0.040239     0.041960
 
  ------------------------------------------------ 
@@ -2325,10 +2380,10 @@ end input
                                  x         y         z              xx        xy        xz        yy        yz        zz
 ------------------------------------------------------------------------------------------------------------------------
 MDC-m         0.0000        0.0000    0.0000    0.0000        -22.7497    1.8804    0.0000  -18.4424    0.0000   41.1921
-MDC-d         0.0000        0.0000    0.0000    0.0000         -0.6251   -1.1861    0.0000   -2.0766    0.0000    2.7016
-MDC-q         0.0000        0.0000    0.0000    0.0000          0.3493    0.3798    0.0000    2.0411    0.0000   -2.3903
+MDC-d         0.0000        0.0000    0.0000    0.0000         -0.6251   -1.1861    0.0000   -2.0765    0.0000    2.7017
+MDC-q         0.0000        0.0000    0.0000    0.0000          0.3492    0.3798    0.0000    2.0411    0.0000   -2.3903
  
-Fit.Dens.     0.0000        0.0000    0.0000    0.0000          0.3493    0.0161    0.0000    2.0411    0.0000   -2.3903
+Fit.Dens.     0.0000        0.0000    0.0000    0.0000          0.3492    0.0161    0.0000    2.0411    0.0000   -2.3903
 
 
 
@@ -2348,7 +2403,7 @@ Fit.Dens.     0.0000        0.0000    0.0000    0.0000          0.3493    0.0161
  =========================================
   
       quad-xx        quad-xy        quad-xz        quad-yy        quad-yz        quad-zz
-      3.21543550     0.00141079     0.00000000     3.36500960     0.00000000    -6.58044510
+      3.21543551     0.00141077     0.00000000     3.36500959     0.00000000    -6.58044510
 
  This molecular quadrupole moment is calculated with analytic integration
 1
@@ -2613,55 +2668,55 @@ on the meaning of the various terms.
                                   --------------------     -----------       ----------      -----------
 
 Pauli Repulsion
-  Kinetic (Delta T^0):              34.222611280298636        931.2446         21475.02         89851.45
-  Delta V^Pauli Coulomb:           -14.742715180415557       -401.1697         -9251.19        -38706.99
-  Delta V^Pauli LDA-XC:             -3.859663985110043       -105.0268         -2421.98        -10133.55
-  Delta V^Pauli GGA-Exchange:        0.344898911897653          9.3852           216.43           905.53
-  Delta V^Pauli GGA-Correlation:    -0.346864602048191         -9.4387          -217.66          -910.69
+  Kinetic (Delta T^0):              34.222611280298622        931.2446         21475.02         89851.45
+  Delta V^Pauli Coulomb:           -14.742715180415615       -401.1697         -9251.19        -38706.99
+  Delta V^Pauli LDA-XC:             -3.859663985110056       -105.0268         -2421.98        -10133.55
+  Delta V^Pauli GGA-Exchange:        0.344898911897650          9.3852           216.43           905.53
+  Delta V^Pauli GGA-Correlation:    -0.346864602048192         -9.4387          -217.66          -910.69
                                   --------------------     -----------       ----------      -----------
-  Total Pauli Repulsion:            15.618266424622501        424.9947          9800.61         41005.75
+  Total Pauli Repulsion:            15.618266424622409        424.9947          9800.61         41005.75
  (Total Pauli Repulsion =
   Delta E^Pauli in BB paper)
 
 Steric Interaction
-  Pauli Repulsion (Delta E^Pauli):  15.618266424622501        424.9947          9800.61         41005.75
-  Electrostatic Interaction:        -2.633549082632855        -71.6625         -1652.58         -6914.38
+  Pauli Repulsion (Delta E^Pauli):  15.618266424622409        424.9947          9800.61         41005.75
+  Electrostatic Interaction:        -2.633549082632857        -71.6625         -1652.58         -6914.38
  (Electrostatic Interaction =
   Delta V_elstat in the BB paper)
                                   --------------------     -----------       ----------      -----------
-  Total Steric Interaction:         12.984717341989645        353.3321          8148.03         34091.37
+  Total Steric Interaction:         12.984717341989551        353.3321          8148.03         34091.37
  (Total Steric Interaction =
   Delta E^0 in the BB paper)
 
 Orbital Interactions
-  A.g:                              -8.256734549564284       -224.6772         -5181.18        -21678.05
-  B.g:                              -0.810301490799300        -22.0494          -508.47         -2127.45
-  A.u:                              -0.724021817559210        -19.7016          -454.33         -1900.92
-  B.u:                              -8.356611375574836       -227.3950         -5243.85        -21940.28
+  A.g:                              -8.256734549528950       -224.6772         -5181.18        -21678.05
+  B.g:                              -0.810301490862104        -22.0494          -508.47         -2127.45
+  A.u:                              -0.724021817566762        -19.7016          -454.33         -1900.92
+  B.u:                              -8.356611375541126       -227.3950         -5243.85        -21940.28
                                   --------------------     -----------       ----------      -----------
-  Total Orbital Interactions:      -18.147669233497627       -493.8232        -11387.84        -47646.70
+  Total Orbital Interactions:      -18.147669233498945       -493.8232        -11387.84        -47646.70
 
 Alternative Decomposition Orb.Int.
-  Kinetic:                         -46.665399488820682      -1269.8301        -29282.98       -122519.99
-  Coulomb:                          25.782340850102745        701.5732         16178.66         67691.53
-  XC:                                2.735389405220201         74.4337          1716.48          7181.76
+  Kinetic:                         -46.665399489960834      -1269.8301        -29282.98       -122519.99
+  Coulomb:                          25.782340851078946        701.5732         16178.66         67691.53
+  XC:                                2.735389405382877         74.4337          1716.48          7181.76
                                   --------------------     -----------       ----------      -----------
-  Total Orbital Interactions:      -18.147669233497737       -493.8232        -11387.84        -47646.70
+  Total Orbital Interactions:      -18.147669233499013       -493.8232        -11387.84        -47646.70
 
-  Residu (E=Steric+OrbInt+Res):      0.000001819171313          0.0000             0.00             0.00
+  Residu (E=Steric+OrbInt+Res):      0.000001819171374          0.0000             0.00             0.00
 
-Total Bonding Energy:               -5.162950072336669       -140.4910         -3239.80        -13555.32
+Total Bonding Energy:               -5.162950072338020       -140.4910         -3239.80        -13555.32
 
 
 Summary of Bonding Energy (energy terms are taken from the energy decomposition above)
 ======================================================================================
 
-  Electrostatic Energy:             -2.633549082632855        -71.6625         -1652.58         -6914.38
-  Kinetic Energy:                  -12.442788208522046       -338.5855         -7807.97        -32668.54
-  Coulomb (Steric+OrbInt) Energy:   11.039627488858500        300.4035          6927.47         28984.54
-  XC Energy:                        -1.126240270040380        -30.6466          -706.73         -2956.94
+  Electrostatic Energy:             -2.633549082632857        -71.6625         -1652.58         -6914.38
+  Kinetic Energy:                  -12.442788209662211       -338.5855         -7807.97        -32668.54
+  Coulomb (Steric+OrbInt) Energy:   11.039627489834704        300.4035          6927.47         28984.54
+  XC Energy:                        -1.126240269877722        -30.6466          -706.73         -2956.94
                                   --------------------     -----------       ----------      -----------
-  Total Bonding Energy:             -5.162950072336782       -140.4910         -3239.80        -13555.32
+  Total Bonding Energy:             -5.162950072338086       -140.4910         -3239.80        -13555.32
 
 
 Correction terms (incorporated in energies above; only for test purposes):
@@ -2680,12 +2735,12 @@ The energy terms below are (parts of) the Total Energy of the fragments from whi
  is built.
 
 Exchange and Correlation
-  Exchange LDA:                    -48.333519973101232      -1315.2220        -30329.74       -126899.64
+  Exchange LDA:                    -48.333519973101225      -1315.2220        -30329.74       -126899.64
   Exchange GGA:                     -6.411194889977201       -174.4575         -4023.09        -16832.59
   Correlation LDA:                   0.000000000000000          0.0000             0.00             0.00
   Correlation GGA:                  -1.946490813819888        -52.9667         -1221.44         -5110.51
                                   --------------------     -----------       ----------      -----------
-  Total XC:                        -56.691205676898321      -1542.6462        -35574.27       -148842.74
+  Total XC:                        -56.691205676898313      -1542.6462        -35574.27       -148842.74
 1
 
 
@@ -2708,110 +2763,110 @@ Exchange and Correlation
  column           1                     2                     3                     4
  row
     1    1.00003661461439E+00
-    2   -1.19423653183388E-03  1.02672082257557E+00
-    3    1.61252610407094E-03 -3.20130616061387E-02  1.03585855701835E+00
-    4   -8.76000614071283E-04  1.73910124955408E-02 -2.39025517966708E-02  1.00484417063360E+00
-    5    1.68762880334896E-03 -4.65016901148777E-02  8.24556335663904E-03 -6.67207746133093E-02
-    6   -4.65016901148776E-02  4.13197112643091E-01 -9.71408641003306E-02  3.65288073982769E-01
-    7    2.23299874550176E-03 -6.41305333247531E-02  3.00266507398319E-01  2.62116846916941E-02
-    8    6.69276295645929E-02 -3.68471696576464E-01  2.62116846916950E-02 -3.51069806308370E-01
-    9    1.68407086514181E-03 -4.64185364986806E-02  6.04618797310497E-02  2.89781180630353E-02
-   10   -4.64185364986806E-02  4.13286653297515E-01 -3.60122273768092E-01 -1.14966950603702E-01
-   11    5.48518305667627E-02 -2.74145093984126E-01  1.84049210692109E-01  2.85931241350633E-01
-   12    3.80208313080567E-02 -2.53551650957354E-01  2.85931241350633E-01 -1.33568504509996E-01
-   13    1.33674105545527E-03 -3.69128728620518E-02 -4.92895858389997E-02  2.90629656427830E-02
-   14   -3.69128728620519E-02  3.21765751961941E-01  2.94863080904911E-01 -1.73890523465019E-01
-   15   -4.93567138126683E-02  2.97107193879406E-01  1.93690560724824E-01 -2.17277497000241E-01
-   16    2.91004812377356E-02 -1.75144683672435E-01 -2.17277497000241E-01 -4.65967129699716E-02
-   17    9.07329466471287E-05 -2.83524304607527E-03 -4.34112771897350E-03  4.03417580605775E-04
-   18   -2.83524304607542E-03  5.35808371851625E-02  7.01411462295765E-02 -6.50260166797356E-03
-   19   -4.34719943688391E-03  7.03774531505082E-02  8.97194182795146E-02 -1.00177746493879E-02
-   20    4.05349956059682E-04 -6.57780833934431E-03 -1.00177746493881E-02 -1.74203970954867E-02
-   21    7.26166291979746E-03 -1.03224597709007E-01 -3.40401796642445E-02 -1.02659498296051E-01
-   22    7.33449639646680E-03 -1.04043822267540E-01  6.80877721249039E-02  8.51520962023402E-02
-   23    1.62645075501462E-03 -2.84598695087069E-02 -3.39529635039253E-02 -1.06100121903607E-02
-   24    6.80335818450976E-03 -9.45394277394333E-02 -6.01784801762688E-02  9.53305140933072E-02
-   25    3.58576990526322E-04 -7.33298248648489E-03 -9.22799724245534E-03  2.37224079679239E-03
+    2   -1.19423653183338E-03  1.02672082257557E+00
+    3    1.61252610407082E-03 -3.20130616061383E-02  1.03585855701835E+00
+    4   -8.76000614071210E-04  1.73910124955406E-02 -2.39025517966704E-02  1.00484417063361E+00
+    5    1.68762880334809E-03 -4.65016901148773E-02  8.24556335663883E-03 -6.67207746133091E-02
+    6   -4.65016901148773E-02  4.13197112643091E-01 -9.71408641003305E-02  3.65288073982769E-01
+    7    2.23299874550155E-03 -6.41305333247525E-02  3.00266507398320E-01  2.62116846916943E-02
+    8    6.69276295645925E-02 -3.68471696576464E-01  2.62116846916943E-02 -3.51069806308371E-01
+    9    1.68407086514213E-03 -4.64185364986800E-02  6.04618797310494E-02  2.89781180630350E-02
+   10   -4.64185364986801E-02  4.13286653297515E-01 -3.60122273768092E-01 -1.14966950603702E-01
+   11    5.48518305667621E-02 -2.74145093984126E-01  1.84049210692108E-01  2.85931241350633E-01
+   12    3.80208313080562E-02 -2.53551650957354E-01  2.85931241350634E-01 -1.33568504509996E-01
+   13    1.33674105545710E-03 -3.69128728620513E-02 -4.92895858389994E-02  2.90629656427825E-02
+   14   -3.69128728620513E-02  3.21765751961942E-01  2.94863080904911E-01 -1.73890523465020E-01
+   15   -4.93567138126677E-02  2.97107193879405E-01  1.93690560724824E-01 -2.17277497000241E-01
+   16    2.91004812377352E-02 -1.75144683672435E-01 -2.17277497000241E-01 -4.65967129699720E-02
+   17    9.07329466464230E-05 -2.83524304607541E-03 -4.34112771897326E-03  4.03417580606107E-04
+   18   -2.83524304607538E-03  5.35808371851628E-02  7.01411462295765E-02 -6.50260166797361E-03
+   19   -4.34719943688373E-03  7.03774531505087E-02  8.97194182795148E-02 -1.00177746493882E-02
+   20    4.05349956059493E-04 -6.57780833934425E-03 -1.00177746493883E-02 -1.74203970954871E-02
+   21    7.26166291979745E-03 -1.03224597709007E-01 -3.40401796642447E-02 -1.02659498296050E-01
+   22    7.33449639646654E-03 -1.04043822267540E-01  6.80877721249043E-02  8.51520962023405E-02
+   23    1.62645075501443E-03 -2.84598695087068E-02 -3.39529635039257E-02 -1.06100121903598E-02
+   24    6.80335818450991E-03 -9.45394277394332E-02 -6.01784801762694E-02  9.53305140933081E-02
+   25    3.58576990526348E-04 -7.33298248648470E-03 -9.22799724245582E-03  2.37224079679194E-03
 
  column           5                     6                     7                     8
  row
-    5    1.00004324482974E+00
-    6   -1.39940063254851E-03  1.03043070842673E+00
-    7    1.83411407507729E-03 -3.51862546687043E-02  1.03737778079593E+00
-    8    1.12383675442582E-03 -2.15600582235394E-02  2.87030117219310E-02  1.00812165656640E+00
-    9    1.78568291242065E-03 -4.90155103573811E-02  6.46016697692987E-02 -2.85746609217284E-02
-   10   -4.90155103573811E-02  4.27195375409271E-01 -3.70433053781379E-01  1.03973756311129E-01
-   11   -5.92010595243266E-02  2.88974570015529E-01 -2.02687867395561E-01  2.80699546005722E-01
-   12    3.84594989999632E-02 -2.53068744766112E-01  2.80699546005722E-01  1.62556638877883E-01
-   13    8.76536622042982E-05 -2.76242534177544E-03 -1.99101995117034E-03  3.44741205113101E-03
-   14   -2.76242534177541E-03  5.41445041283504E-02  3.07258972137303E-02 -5.63268145063172E-02
-   15   -2.31194641155384E-03  4.00577931195568E-02  4.99883596592985E-03 -4.52297288940448E-02
-   16    3.50807536194324E-03 -5.80907815569803E-02 -4.52297288940445E-02  5.85600436748235E-02
-   17    2.16479884538091E-05 -7.24812995998001E-04 -9.24055931581382E-04  5.95638411896376E-04
-   18   -7.24812995998016E-04  1.77052247937043E-02  2.01692999725331E-02 -1.30692351044487E-02
-   19   -9.38667439965961E-04  2.07148962868794E-02  2.16545282576148E-02 -1.73054307810778E-02
-   20    5.96184487441800E-04 -1.30896256621552E-02 -1.73054307810791E-02  6.10506490262962E-03
-   21    7.24185733686062E-02 -4.85158218038457E-01 -3.87645998264129E-01 -2.44871247567855E-01
-   22    7.60026912092829E-03 -1.07071758472643E-01  7.21757818406125E-02 -8.52953401925700E-02
-   23    1.63615859704950E-03 -2.86098959904431E-02 -3.49591254041486E-02  7.42529001943495E-03
-   24    4.86899204118824E-04 -1.01152764173301E-02 -6.86177132047435E-04  7.98641978772566E-03
-   25    8.57512927597103E-05 -1.94667004741719E-03 -2.05939160243944E-03  1.39171964075975E-03
+    5    1.00004324482973E+00
+    6   -1.39940063254840E-03  1.03043070842673E+00
+    7    1.83411407507723E-03 -3.51862546687043E-02  1.03737778079593E+00
+    8    1.12383675442601E-03 -2.15600582235395E-02  2.87030117219308E-02  1.00812165656640E+00
+    9    1.78568291242003E-03 -4.90155103573807E-02  6.46016697692982E-02 -2.85746609217282E-02
+   10   -4.90155103573806E-02  4.27195375409271E-01 -3.70433053781380E-01  1.03973756311129E-01
+   11   -5.92010595243264E-02  2.88974570015529E-01 -2.02687867395561E-01  2.80699546005721E-01
+   12    3.84594989999630E-02 -2.53068744766113E-01  2.80699546005723E-01  1.62556638877883E-01
+   13    8.76536622038646E-05 -2.76242534177541E-03 -1.99101995117036E-03  3.44741205113107E-03
+   14   -2.76242534177520E-03  5.41445041283501E-02  3.07258972137306E-02 -5.63268145063170E-02
+   15   -2.31194641155365E-03  4.00577931195566E-02  4.99883596593003E-03 -4.52297288940445E-02
+   16    3.50807536194324E-03 -5.80907815569808E-02 -4.52297288940457E-02  5.85600436748237E-02
+   17    2.16479884523472E-05 -7.24812995997811E-04 -9.24055931581371E-04  5.95638411896347E-04
+   18   -7.24812995998141E-04  1.77052247937041E-02  2.01692999725334E-02 -1.30692351044485E-02
+   19   -9.38667439965989E-04  2.07148962868797E-02  2.16545282576149E-02 -1.73054307810773E-02
+   20    5.96184487441821E-04 -1.30896256621551E-02 -1.73054307810780E-02  6.10506490262918E-03
+   21    7.24185733686057E-02 -4.85158218038457E-01 -3.87645998264129E-01 -2.44871247567855E-01
+   22    7.60026912092803E-03 -1.07071758472644E-01  7.21757818406126E-02 -8.52953401925706E-02
+   23    1.63615859704941E-03 -2.86098959904427E-02 -3.49591254041485E-02  7.42529001943498E-03
+   24    4.86899204118707E-04 -1.01152764173302E-02 -6.86177132047065E-04  7.98641978772601E-03
+   25    8.57512927597425E-05 -1.94667004741716E-03 -2.05939160243927E-03  1.39171964076000E-03
 
  column           9                    10                    11                    12
  row
     9    1.00004431898837E+00
-   10   -1.43249070384924E-03  1.03101663291482E+00
-   11   -5.03356342418276E-05  9.60677196479783E-04  9.90356205744750E-01
-   12    2.20143891869304E-03 -4.20154071860164E-02 -1.49915654293952E-03  1.05588783561313E+00
-   13    9.84460249205876E-05 -3.08265100468710E-03  4.49249403133633E-03  3.71913436127210E-05
-   14   -3.08265100468696E-03  5.87860065097616E-02 -7.02966298695553E-02 -2.09946752881208E-03
-   15   -4.69688387177981E-03  7.62877889892697E-02 -9.15458995399730E-02 -1.67879865747044E-03
-   16    1.88273854036210E-04 -4.50946113486680E-03 -1.67879865747085E-03  2.24220315535994E-02
-   17    3.60547003418401E-06 -1.32635738478251E-04  1.48504819737665E-04  3.72719804790954E-05
-   18   -1.32635738478186E-04  4.16191623799503E-03 -4.15254682687568E-03 -1.15561795315989E-03
-   19   -1.98171934696442E-04  5.84951499647631E-03 -6.06093768303445E-03 -1.72094376022576E-03
-   20   -7.06855081128102E-06  1.23662326154542E-04 -1.72094376022580E-03  9.84037401909075E-04
-   21    7.64981247941441E-03 -1.07588155730136E-01 -1.11543525807602E-01  1.35917791425621E-02
-   22    7.22553592613417E-02 -4.84617314608294E-01  8.68422715364631E-03 -4.57979942472400E-01
-   23    1.49124689487058E-04 -3.39889203039221E-03 -2.40421254080127E-04  1.49621728849196E-03
-   24    2.46092109778877E-03 -4.08744762702432E-02  4.49934204476137E-02 -2.06467538375366E-02
-   25    3.20624555939022E-05 -7.74494859819169E-04  8.12118406088608E-04  3.41106038663100E-05
+   10   -1.43249070384899E-03  1.03101663291482E+00
+   11   -5.03356342417083E-05  9.60677196479699E-04  9.90356205744750E-01
+   12    2.20143891869310E-03 -4.20154071860166E-02 -1.49915654293907E-03  1.05588783561313E+00
+   13    9.84460249219950E-05 -3.08265100468687E-03  4.49249403133607E-03  3.71913436125666E-05
+   14   -3.08265100468673E-03  5.87860065097618E-02 -7.02966298695559E-02 -2.09946752881140E-03
+   15   -4.69688387177963E-03  7.62877889892699E-02 -9.15458995399722E-02 -1.67879865746956E-03
+   16    1.88273854035988E-04 -4.50946113486649E-03 -1.67879865747107E-03  2.24220315535992E-02
+   17    3.60547003373778E-06 -1.32635738478558E-04  1.48504819737780E-04  3.72719804789221E-05
+   18   -1.32635738478281E-04  4.16191623799486E-03 -4.15254682687564E-03 -1.15561795315991E-03
+   19   -1.98171934696540E-04  5.84951499647653E-03 -6.06093768303494E-03 -1.72094376022603E-03
+   20   -7.06855081118466E-06  1.23662326154253E-04 -1.72094376022593E-03  9.84037401909153E-04
+   21    7.64981247941419E-03 -1.07588155730136E-01 -1.11543525807601E-01  1.35917791425621E-02
+   22    7.22553592613409E-02 -4.84617314608295E-01  8.68422715364573E-03 -4.57979942472401E-01
+   23    1.49124689486963E-04 -3.39889203039213E-03 -2.40421254080702E-04  1.49621728849188E-03
+   24    2.46092109778868E-03 -4.08744762702435E-02  4.49934204476134E-02 -2.06467538375368E-02
+   25    3.20624555939092E-05 -7.74494859819039E-04  8.12118406089012E-04  3.41106038661746E-05
 
  column          13                    14                    15                    16
  row
    13    1.00000001058036E+00
-   14   -4.57902830600793E-07  1.00001920390280E+00
-   15   -6.20720542729653E-07  2.56028386211573E-05  1.00003335204074E+00
-   16    3.51709455810936E-07 -1.45069476701343E-05 -2.05415951773252E-05  1.00000873802177E+00
-   17    1.90658563512261E-03 -5.12916736518399E-02  7.33503655399359E-02  3.08330645771355E-02
-   18   -5.12916736518397E-02  3.88095886888077E-01 -3.62348130463598E-01 -1.52315931683798E-01
-   19   -7.33504763197254E-02  3.62353005505195E-01 -2.48227451925408E-01 -2.00494306914194E-01
-   20   -3.08330232300559E-02  1.52314112139497E-01 -2.00494306914194E-01  1.44455204534781E-01
-   21    1.81041588147888E-03 -3.14042565515696E-02 -6.74803840874364E-03  3.84004763998185E-02
-   22    2.18412883586194E-03 -3.68788081600492E-02 -4.24122416220612E-02 -1.70611662525451E-02
-   23    7.46817926465689E-03 -1.01605153563192E-01  8.10602672422660E-02  9.06758760292302E-02
-   24    7.18429961648444E-02 -4.80364998803874E-01 -4.84447338686787E-02 -4.59310006363268E-01
-   25    7.71137733009961E-03 -1.04214079443793E-01  1.24366660287111E-01 -7.01856196767919E-03
+   14   -4.57902830248644E-07  1.00001920390280E+00
+   15   -6.20720542965142E-07  2.56028386218712E-05  1.00003335204073E+00
+   16    3.51709455871652E-07 -1.45069476699122E-05 -2.05415951767664E-05  1.00000873802177E+00
+   17    1.90658563512200E-03 -5.12916736518393E-02  7.33503655399355E-02  3.08330645771356E-02
+   18   -5.12916736518395E-02  3.88095886888077E-01 -3.62348130463597E-01 -1.52315931683800E-01
+   19   -7.33504763197250E-02  3.62353005505196E-01 -2.48227451925408E-01 -2.00494306914194E-01
+   20   -3.08330232300555E-02  1.52314112139497E-01 -2.00494306914194E-01  1.44455204534782E-01
+   21    1.81041588147911E-03 -3.14042565515690E-02 -6.74803840874285E-03  3.84004763998194E-02
+   22    2.18412883586207E-03 -3.68788081600503E-02 -4.24122416220631E-02 -1.70611662525451E-02
+   23    7.46817926465685E-03 -1.01605153563192E-01  8.10602672422662E-02  9.06758760292306E-02
+   24    7.18429961648437E-02 -4.80364998803874E-01 -4.84447338686793E-02 -4.59310006363269E-01
+   25    7.71137733009938E-03 -1.04214079443792E-01  1.24366660287111E-01 -7.01856196767905E-03
 
  column          17                    18                    19                    20
  row
    17    1.00000000004428E+00
-   18   -2.06882621624216E-09  1.00000009588749E+00
-   19   -3.17855336062073E-09  1.46426186752036E-07  1.00000022276310E+00
-   20    7.73092411214451E-10 -3.56139977903368E-08 -5.68188209528961E-08  1.00000000297330E+00
-   21    1.79700202560808E-03 -3.09801270375309E-02 -2.33474568635032E-02  3.13268051598048E-02
-   22    1.16813956087189E-04 -2.63040540744581E-03 -3.16542999293268E-03 -1.02969546050103E-03
-   23    7.26000848112015E-02 -4.83072732241893E-01  7.90015523960592E-02  4.56798548745467E-01
-   24    8.06623236081575E-03 -1.07985330024163E-01 -8.29368791003784E-02 -9.85155687006603E-02
-   25    7.25788053945765E-02 -4.82996138010262E-01  3.74805437431784E-01 -2.72732213756289E-01
+   18   -2.06882619022131E-09  1.00000009588749E+00
+   19   -3.17855355057295E-09  1.46426187369597E-07  1.00000022276310E+00
+   20    7.73092709424258E-10 -3.56139980284276E-08 -5.68188206311049E-08  1.00000000297330E+00
+   21    1.79700202560802E-03 -3.09801270375308E-02 -2.33474568635037E-02  3.13268051598048E-02
+   22    1.16813956087987E-04 -2.63040540744600E-03 -3.16542999293281E-03 -1.02969546050112E-03
+   23    7.26000848112009E-02 -4.83072732241894E-01  7.90015523960593E-02  4.56798548745467E-01
+   24    8.06623236081515E-03 -1.07985330024162E-01 -8.29368791003788E-02 -9.85155687006600E-02
+   25    7.25788053945758E-02 -4.82996138010261E-01  3.74805437431783E-01 -2.72732213756288E-01
 
  column          21                    22                    23                    24
  row
    21    1.00043512303022E+00
-   22    5.41025797265363E-02  1.00044122035321E+00
-   23    8.54842150307183E-02  1.60122282852952E-03  1.00000092715777E+00
-   24    4.84742421718288E-03  6.18508422070727E-02  1.72714756631119E-02  1.00000668247178E+00
-   25    4.22905673789064E-03  8.09892163463825E-04  1.47422585864741E-01  5.57643681996945E-02
+   22    5.41025797265357E-02  1.00044122035321E+00
+   23    8.54842150307182E-02  1.60122282852994E-03  1.00000092715777E+00
+   24    4.84742421718259E-03  6.18508422070730E-02  1.72714756631109E-02  1.00000668247178E+00
+   25    4.22905673789074E-03  8.09892163463722E-04  1.47422585864742E-01  5.57643681996940E-02
 
  column          25
  row
@@ -2939,110 +2994,110 @@ Exchange and Correlation
  column           1                     2                     3                     4
  row
     1    9.99963385385608E-01
-    2    1.19423653183368E-03  9.73279177424424E-01
-    3   -1.61252610407095E-03  3.20130616061382E-02  9.64141442981649E-01
-    4    8.76000614071281E-04 -1.73910124955408E-02  2.39025517966705E-02  9.95155829366394E-01
-    5    1.46794015576154E-03 -3.96998202833426E-02 -2.23299874550173E-03 -6.69276295645931E-02
-    6   -3.96998202833423E-02  2.89875600132458E-01  6.41305333247527E-02  3.68471696576464E-01
-    7   -8.24556335663911E-03  9.71408641003306E-02  9.49203992965227E-02  2.13000216499261E-02
-    8    6.67207746133096E-02 -3.65288073982771E-01  2.13000216499267E-02 -3.07704876922323E-01
-    9   -1.46085183620457E-03  3.95125390835172E-02 -5.48518305667624E-02 -3.80208313080566E-02
-   10    3.95125390835173E-02 -2.88510252924568E-01  2.74145093984127E-01  2.53551650957354E-01
-   11   -6.04618797310500E-02  3.60122273768092E-01 -2.09899850334530E-01 -1.73220217385369E-01
-   12   -2.89781180630352E-02  1.14966950603702E-01 -1.73220217385369E-01 -4.03322884283403E-03
-   13   -1.33545083640766E-03  3.68629443032837E-02  4.93567138126682E-02 -2.91004812377356E-02
-   14    3.68629443032836E-02 -3.20025524884859E-01 -2.97107193879405E-01  1.75144683672435E-01
-   15    4.92895858390000E-02 -2.94863080904911E-01 -1.96485840194498E-01  2.19036819213669E-01
-   16   -2.90629656427828E-02  1.73890523465020E-01  2.19036819213669E-01  4.59662238688585E-02
-   17   -9.06346680119916E-05  2.83113471749408E-03  4.34719943688400E-03 -4.05349956059470E-04
-   18    2.83113471749420E-03 -5.34172185543562E-02 -7.03774531505085E-02  6.57780833934433E-03
-   19    4.34112771897334E-03 -7.01411462295773E-02 -9.00571848254827E-02  1.01339642111697E-02
-   20   -4.03417580605905E-04  6.50260166797393E-03  1.01339642111695E-02  1.74107315232055E-02
-   21    6.41999011511100E-03 -8.62588213376916E-02 -5.57481617694538E-02 -1.06710356958042E-01
-   22   -6.48901126231967E-03  8.70079700021483E-02 -5.96114097782602E-02 -1.05640144609677E-01
-   23   -1.61266311168153E-03  2.81106177280934E-02  3.44235294798919E-02  1.05620887400240E-02
-   24   -6.77174165620972E-03  9.37628926040900E-02  6.09676689148875E-02 -9.60178598134764E-02
-   25   -3.57425149657951E-04  7.30176399009850E-03  9.26792620688383E-03 -2.38737771948200E-03
+    2    1.19423653183361E-03  9.73279177424424E-01
+    3   -1.61252610407071E-03  3.20130616061378E-02  9.64141442981650E-01
+    4    8.76000614071517E-04 -1.73910124955412E-02  2.39025517966708E-02  9.95155829366394E-01
+    5    1.46794015576179E-03 -3.96998202833419E-02 -2.23299874550188E-03 -6.69276295645925E-02
+    6   -3.96998202833418E-02  2.89875600132457E-01  6.41305333247533E-02  3.68471696576464E-01
+    7   -8.24556335663900E-03  9.71408641003307E-02  9.49203992965235E-02  2.13000216499270E-02
+    8    6.67207746133093E-02 -3.65288073982771E-01  2.13000216499267E-02 -3.07704876922323E-01
+    9   -1.46085183620474E-03  3.95125390835169E-02 -5.48518305667620E-02 -3.80208313080563E-02
+   10    3.95125390835171E-02 -2.88510252924568E-01  2.74145093984127E-01  2.53551650957355E-01
+   11   -6.04618797310493E-02  3.60122273768092E-01 -2.09899850334530E-01 -1.73220217385370E-01
+   12   -2.89781180630359E-02  1.14966950603704E-01 -1.73220217385371E-01 -4.03322884283394E-03
+   13   -1.33545083640661E-03  3.68629443032832E-02  4.93567138126678E-02 -2.91004812377353E-02
+   14    3.68629443032833E-02 -3.20025524884859E-01 -2.97107193879405E-01  1.75144683672435E-01
+   15    4.92895858389995E-02 -2.94863080904911E-01 -1.96485840194498E-01  2.19036819213668E-01
+   16   -2.90629656427825E-02  1.73890523465020E-01  2.19036819213668E-01  4.59662238688586E-02
+   17   -9.06346680136715E-05  2.83113471749382E-03  4.34719943688374E-03 -4.05349956059587E-04
+   18    2.83113471749385E-03 -5.34172185543558E-02 -7.03774531505083E-02  6.57780833934444E-03
+   19    4.34112771897327E-03 -7.01411462295771E-02 -9.00571848254823E-02  1.01339642111693E-02
+   20   -4.03417580605840E-04  6.50260166797368E-03  1.01339642111696E-02  1.74107315232056E-02
+   21    6.41999011511064E-03 -8.62588213376915E-02 -5.57481617694546E-02 -1.06710356958043E-01
+   22   -6.48901126231886E-03  8.70079700021465E-02 -5.96114097782592E-02 -1.05640144609677E-01
+   23   -1.61266311168147E-03  2.81106177280933E-02  3.44235294798914E-02  1.05620887400241E-02
+   24   -6.77174165620969E-03  9.37628926040897E-02  6.09676689148876E-02 -9.60178598134765E-02
+   25   -3.57425149657868E-04  7.30176399009841E-03  9.26792620688406E-03 -2.38737771948234E-03
 
  column           5                     6                     7                     8
  row
     5    9.99956755170266E-01
-    6    1.39940063254843E-03  9.69569291573266E-01
-    7   -1.83411407507712E-03  3.51862546687047E-02  9.62622219204068E-01
-    8   -1.12383675442589E-03  2.15600582235399E-02 -2.87030117219310E-02  9.91878343433600E-01
-    9    1.54879372004992E-03 -4.17070098969647E-02  5.92010595243264E-02 -3.84594989999635E-02
-   10   -4.17070098969648E-02  2.96856022274731E-01 -2.88974570015529E-01  2.53068744766114E-01
-   11   -6.46016697692987E-02  3.70433053781379E-01 -2.16454760849542E-01  1.70513884745726E-01
-   12    2.85746609217286E-02 -1.03973756311129E-01  1.70513884745726E-01  7.31512483130608E-03
-   13   -8.18342087480796E-05  2.54979228185408E-03  2.31194641155394E-03 -3.50807536194334E-03
-   14    2.54979228185422E-03 -4.75744302451770E-02 -4.00577931195565E-02  5.80907815569803E-02
-   15    1.99101995117038E-03 -3.07258972137306E-02 -1.81026350536221E-02  4.79944606627355E-02
-   16   -3.44741205113103E-03  5.63268145063174E-02  4.79944606627363E-02 -5.75602170687118E-02
-   17   -2.14166818840134E-05  7.15361933921029E-04  9.38667439966083E-04 -5.96184487441538E-04
-   18    7.15361933920926E-04 -1.73423467425208E-02 -2.07148962868797E-02  1.30896256621555E-02
-   19    9.24055931581363E-04 -2.01692999725336E-02 -2.24718930302160E-02  1.73383829907123E-02
-   20   -5.95638411896427E-04  1.30692351044488E-02  1.73383829907124E-02 -6.04194896638674E-03
-   21    7.21185292542221E-02 -4.78609554196141E-01 -3.95003864606166E-01 -2.49418203401275E-01
-   22    6.72522234131299E-03 -8.94937303615534E-02  6.45265229727864E-02 -1.06842644682293E-01
-   23   -1.62187748384483E-03  2.82485798399488E-02  3.54413223144994E-02 -7.34253043921297E-03
-   24   -2.70914033456690E-04  5.29968351542812E-03  6.40830927807101E-03 -1.08183673029416E-02
-   25   -8.27356435555838E-05  1.86676655777594E-03  2.16727128941808E-03 -1.40693802530205E-03
+    6    1.39940063254864E-03  9.69569291573267E-01
+    7   -1.83411407507737E-03  3.51862546687054E-02  9.62622219204066E-01
+    8   -1.12383675442619E-03  2.15600582235401E-02 -2.87030117219314E-02  9.91878343433599E-01
+    9    1.54879372005001E-03 -4.17070098969645E-02  5.92010595243257E-02 -3.84594989999631E-02
+   10   -4.17070098969645E-02  2.96856022274732E-01 -2.88974570015529E-01  2.53068744766113E-01
+   11   -6.46016697692981E-02  3.70433053781379E-01 -2.16454760849541E-01  1.70513884745727E-01
+   12    2.85746609217288E-02 -1.03973756311130E-01  1.70513884745724E-01  7.31512483130452E-03
+   13   -8.18342087483193E-05  2.54979228185397E-03  2.31194641155383E-03 -3.50807536194303E-03
+   14    2.54979228185388E-03 -4.75744302451766E-02 -4.00577931195562E-02  5.80907815569803E-02
+   15    1.99101995117023E-03 -3.07258972137301E-02 -1.81026350536221E-02  4.79944606627364E-02
+   16   -3.44741205113102E-03  5.63268145063172E-02  4.79944606627367E-02 -5.75602170687119E-02
+   17   -2.14166818838288E-05  7.15361933921216E-04  9.38667439965871E-04 -5.96184487441822E-04
+   18    7.15361933920798E-04 -1.73423467425207E-02 -2.07148962868799E-02  1.30896256621550E-02
+   19    9.24055931581310E-04 -2.01692999725336E-02 -2.24718930302160E-02  1.73383829907123E-02
+   20   -5.95638411896435E-04  1.30692351044489E-02  1.73383829907126E-02 -6.04194896638680E-03
+   21    7.21185292542217E-02 -4.78609554196142E-01 -3.95003864606164E-01 -2.49418203401275E-01
+   22    6.72522234131250E-03 -8.94937303615528E-02  6.45265229727877E-02 -1.06842644682292E-01
+   23   -1.62187748384494E-03  2.82485798399488E-02  3.54413223145000E-02 -7.34253043921346E-03
+   24   -2.70914033456819E-04  5.29968351542836E-03  6.40830927807017E-03 -1.08183673029417E-02
+   25   -8.27356435555676E-05  1.86676655777578E-03  2.16727128941814E-03 -1.40693802530186E-03
 
  column           9                    10                    11                    12
  row
     9    9.99955681011627E-01
-   10    1.43249070384897E-03  9.68983367085182E-01
-   11    5.03356342416507E-05 -9.60677196480140E-04  1.00964379425525E+00
-   12   -2.20143891869341E-03  4.20154071860162E-02  1.49915654293900E-03  9.44112164386869E-01
-   13    9.30406038388748E-05 -2.88454866609476E-03  4.69688387177982E-03 -1.88273854035802E-04
-   14   -2.88454866609467E-03  5.26225690530662E-02 -7.62877889892698E-02  4.50946113486672E-03
-   15   -4.49249403133609E-03  7.02966298695556E-02 -9.65487327345810E-02  5.40440424451400E-03
-   16   -3.71913436127786E-05  2.09946752881164E-03  5.40440424451419E-03  1.60267220057928E-02
-   17    2.64055505033600E-06 -9.49196239155104E-05  1.98171934696501E-04  7.06855081129509E-06
-   18   -9.49196239157023E-05  2.82217352936444E-03 -5.84951499647625E-03 -1.23662326154116E-04
-   19   -1.48504819737653E-04  4.15254682687597E-03 -8.12861111562364E-03 -3.02314311506068E-04
-   20   -3.72719804789405E-05  1.15561795315980E-03 -3.02314311505917E-04  3.86493143661773E-04
-   21    6.78137659696994E-03 -9.01311906815020E-02 -1.25384694375265E-01 -4.41306445614410E-03
-   22    7.19498556534606E-02 -4.77957621246163E-01  8.87569618305006E-03 -4.66772033594129E-01
-   23   -6.94073106956427E-06  1.49181781256443E-04  4.26584452008278E-03  9.14521615979126E-05
-   24    2.40401703311239E-03 -3.95118082859811E-02  4.59642491536414E-02 -2.21966954908748E-02
-   25    2.50288439362881E-05 -5.92450638925875E-04  1.02135705494242E-03 -9.78215137360170E-05
+   10    1.43249070384972E-03  9.68983367085182E-01
+   11    5.03356342419707E-05 -9.60677196480591E-04  1.00964379425525E+00
+   12   -2.20143891869337E-03  4.20154071860163E-02  1.49915654294055E-03  9.44112164386873E-01
+   13    9.30406038397499E-05 -2.88454866609450E-03  4.69688387177949E-03 -1.88273854035758E-04
+   14   -2.88454866609441E-03  5.26225690530660E-02 -7.62877889892695E-02  4.50946113486594E-03
+   15   -4.49249403133623E-03  7.02966298695560E-02 -9.65487327345808E-02  5.40440424451356E-03
+   16   -3.71913436126208E-05  2.09946752881168E-03  5.40440424451392E-03  1.60267220057941E-02
+   17    2.64055505026984E-06 -9.49196239152855E-05  1.98171934696486E-04  7.06855081104136E-06
+   18   -9.49196239156179E-05  2.82217352936443E-03 -5.84951499647611E-03 -1.23662326154749E-04
+   19   -1.48504819737583E-04  4.15254682687577E-03 -8.12861111562363E-03 -3.02314311506234E-04
+   20   -3.72719804787848E-05  1.15561795315957E-03 -3.02314311506111E-04  3.86493143661781E-04
+   21    6.78137659696996E-03 -9.01311906815024E-02 -1.25384694375265E-01 -4.41306445614166E-03
+   22    7.19498556534599E-02 -4.77957621246163E-01  8.87569618304962E-03 -4.66772033594132E-01
+   23   -6.94073106946938E-06  1.49181781256642E-04  4.26584452008276E-03  9.14521615980889E-05
+   24    2.40401703311228E-03 -3.95118082859809E-02  4.59642491536411E-02 -2.21966954908756E-02
+   25    2.50288439363651E-05 -5.92450638925903E-04  1.02135705494230E-03 -9.78215137358584E-05
 
  column          13                    14                    15                    16
  row
-   13    9.99999989419645E-01
-   14    4.57902830514056E-07  9.99980796097197E-01
-   15    6.20720543354587E-07 -2.56028386212250E-05  9.99966647959266E-01
-   16   -3.51709455703383E-07  1.45069476699955E-05  2.05415951767770E-05  9.99991261978226E-01
-   17    1.90658396749378E-03 -5.12915983109955E-02  7.33504763197252E-02  3.08330232300558E-02
-   18   -5.12915983109956E-02  3.88092537571481E-01 -3.62353005505196E-01 -1.52314112139498E-01
-   19   -7.33503655399362E-02  3.62348130463598E-01 -2.48234483391440E-01 -2.00491519201023E-01
-   20   -3.08330645771362E-02  1.52315931683799E-01 -2.00491519201024E-01  1.44454601614652E-01
-   21   -1.75721321806844E-03  3.01263155788334E-02  5.03260871709828E-03 -3.83546197338823E-02
-   22    2.13633432514103E-03 -3.57252581144024E-02 -4.15581860733408E-02 -1.83549252442425E-02
-   23    7.46760578953844E-03 -1.01589387954987E-01  8.10814623741313E-02  9.06716825425302E-02
-   24    7.18419115359304E-02 -4.80335563931840E-01 -4.84132647442822E-02 -4.59335132190513E-01
-   25    7.71133935762003E-03 -1.04212990124305E-01  1.24368045531762E-01 -7.01913897419138E-03
+   13    9.99999989419648E-01
+   14    4.57902831322438E-07  9.99980796097197E-01
+   15    6.20720542434099E-07 -2.56028386217333E-05  9.99966647959265E-01
+   16   -3.51709455487410E-07  1.45069476702245E-05  2.05415951765206E-05  9.99991261978227E-01
+   17    1.90658396749263E-03 -5.12915983109951E-02  7.33504763197251E-02  3.08330232300560E-02
+   18   -5.12915983109953E-02  3.88092537571481E-01 -3.62353005505196E-01 -1.52314112139498E-01
+   19   -7.33503655399352E-02  3.62348130463597E-01 -2.48234483391440E-01 -2.00491519201023E-01
+   20   -3.08330645771356E-02  1.52315931683800E-01 -2.00491519201023E-01  1.44454601614652E-01
+   21   -1.75721321806854E-03  3.01263155788332E-02  5.03260871709822E-03 -3.83546197338823E-02
+   22    2.13633432514052E-03 -3.57252581144018E-02 -4.15581860733409E-02 -1.83549252442428E-02
+   23    7.46760578953914E-03 -1.01589387954986E-01  8.10814623741317E-02  9.06716825425301E-02
+   24    7.18419115359296E-02 -4.80335563931840E-01 -4.84132647442822E-02 -4.59335132190513E-01
+   25    7.71133935762001E-03 -1.04212990124306E-01  1.24368045531761E-01 -7.01913897419170E-03
 
  column          17                    18                    19                    20
  row
    17    9.99999999955720E-01
-   18    2.06882611215875E-09  9.99999904112509E-01
-   19    3.17855363644176E-09 -1.46426187293269E-07  9.99999777236905E-01
-   20   -7.73092447697854E-10  3.56139977946736E-08  5.68188203041095E-08  9.99999997026705E-01
-   21   -1.79396646969214E-03  3.08997096448899E-02  2.32380573557806E-02 -3.13341509870330E-02
-   22    9.85154194942436E-05 -2.17147526978145E-03 -2.70174039094970E-03 -1.44213227241810E-03
-   23    7.26000452390987E-02 -4.83071597632123E-01  7.90031077060646E-02  4.56798394778657E-01
-   24    8.06603800829551E-03 -1.07979883941790E-01 -8.29303379219645E-02 -9.85192005051987E-02
-   25    7.25788016809655E-02 -4.82996028735994E-01  3.74805582237945E-01 -2.72732256288902E-01
+   18    2.06882633420336E-09  9.99999904112508E-01
+   19    3.17855365812580E-09 -1.46426187348780E-07  9.99999777236905E-01
+   20   -7.73092354402257E-10  3.56139979421251E-08  5.68188207083001E-08  9.99999997026704E-01
+   21   -1.79396646969184E-03  3.08997096448903E-02  2.32380573557806E-02 -3.13341509870331E-02
+   22    9.85154194943346E-05 -2.17147526978119E-03 -2.70174039094947E-03 -1.44213227241812E-03
+   23    7.26000452390981E-02 -4.83071597632123E-01  7.90031077060646E-02  4.56798394778657E-01
+   24    8.06603800829500E-03 -1.07979883941790E-01 -8.29303379219638E-02 -9.85192005051984E-02
+   25    7.25788016809647E-02 -4.82996028735995E-01  3.74805582237945E-01 -2.72732256288902E-01
 
  column          21                    22                    23                    24
  row
    21    9.99564876969782E-01
-   22    5.08723711835467E-02  9.99558779646792E-01
-   23   -8.54200560222768E-02 -1.16501975660474E-04  9.99999072842228E-01
-   24   -3.31037168626778E-03  6.15984424526540E-02  1.72516155492404E-02  9.99993317528219E-01
-   25   -4.20762543525788E-03  7.39387645094302E-04  1.47422255128434E-01  5.57632677931046E-02
+   22    5.08723711835451E-02  9.99558779646794E-01
+   23   -8.54200560222768E-02 -1.16501975660658E-04  9.99999072842228E-01
+   24   -3.31037168626718E-03  6.15984424526539E-02  1.72516155492404E-02  9.99993317528219E-01
+   25   -4.20762543525807E-03  7.39387645093973E-04  1.47422255128435E-01  5.57632677931051E-02
 
  column          25
  row
@@ -3408,7 +3463,7 @@ Exchange and Correlation
  No memory problems found
  ========================
  
- Maximum number of active allocate calls:         181
+ Maximum number of active allocate calls:         919
  
  *******************************************************************************
 
@@ -3421,45 +3476,43 @@ Exchange and Correlation
  Timing Statistics
  =================
   
- Total Used :                     CPU=       24.48      System=        0.70     Elapsed=       25.41
+ Total Used :                     CPU=       25.32      System=        0.88     Elapsed=       29.13
 
  Calls  Section                     ( Mean, Percentage )
  ---------------------------------------------------------------------------------------------------
-     3  ><      ................      0.00    0.04             0.00    0.00             0.00    0.03
-     1  INIT    ................      0.01    0.04             0.00    0.42             0.01    0.05
-     1  GEOMET  ................      0.06    0.24             0.27   39.00             0.34    1.36
-     1  FRAGM   ................      0.08    0.33             0.01    0.84             0.09    0.35
-     1  INPUTA  ................      0.00    0.01             0.00    0.00             0.00    0.01
-     1  MAINSY  ................      0.02    0.07             0.00    0.28             0.02    0.07
-     1  SYMFIT  ................      0.01    0.06             0.00    0.00             0.01    0.05
-     1  CORORT  ................      0.00    0.00             0.00    0.00             0.00    0.00
-     1  SYMORB  ................      0.02    0.06             0.00    0.00             0.02    0.06
-     1  FITINT  ................      1.94    7.93             0.00    0.56             1.99    7.84
-     1  CLSMAT  ................      0.01    0.06             0.00    0.00             0.01    0.06
-     1  ORTHON  ................      0.03    0.13             0.00    0.28             0.03    0.13
-     1  ATDEN   ................      0.02    0.08             0.00    0.14             0.02    0.08
-     1  CRTP12  ................      0.01    0.04             0.00    0.00             0.01    0.04
-     1  ETALOW  ................      0.00    0.02             0.00    0.00             0.00    0.02
-     1  GENPT   ................      1.94    7.94             0.26   37.19             2.27    8.92
-     1  PTCOR   ................      0.06    0.24             0.00    0.00             0.06    0.23
-     1  PTBAS   ................      0.09    0.35             0.00    0.14             0.09    0.34
-    11  FOCKY   ................      1.30   58.44             0.00    6.55             1.31   56.81
-    11  FOCKTR  ................      0.00    0.14             0.00    0.00             0.00    0.14
+     3  ><      ................      0.00    0.00             0.00    0.00             0.00    0.02
+     1  INIT    ................      0.01    0.03             0.01    0.67             0.08    0.29
+     1  GEOMET  ................      0.07    0.26             0.28   31.74             0.43    1.48
+     1  FRAGM   ................      0.08    0.31             0.00    0.33             0.11    0.37
+     1  INPUTA  ................      0.00    0.00             0.00    0.00             0.00    0.01
+     1  ATDEN   ................      0.02    0.07             0.00    0.11             0.02    0.07
+     1  MAINSY  ................      0.03    0.13             0.00    0.56             0.05    0.18
+     1  SYMFIT  ................      0.01    0.05             0.00    0.00             0.01    0.05
+     1  CORORT  ................      0.00    0.00             0.00    0.11             0.00    0.01
+     1  SYMORB  ................      0.01    0.05             0.00    0.00             0.02    0.07
+     1  FITINT  ................      1.97    7.79             0.00    0.33             2.04    7.02
+     1  CLSMAT  ................      0.01    0.05             0.00    0.00             0.02    0.06
+     1  ORTHON  ................      0.03    0.13             0.00    0.11             0.04    0.12
+     1  ETALOW  ................      0.00    0.02             0.00    0.00             0.00    0.01
+     1  GENPT   ................      1.66    6.54             0.28   32.29             1.97    6.75
+     1  PTBAS   ................      0.15    0.57             0.00    0.00             0.15    0.51
+    11  FOCKY   ................      1.33   57.98             0.01    9.69             1.52   57.57
+    11  FOCKTR  ................      0.00    0.12             0.00    0.00             0.00    0.10
     11  FOCKNM  ................      0.00    0.00             0.00    0.00             0.00    0.00
-    11  SDIIS   ................      0.00    0.16             0.00    0.14             0.00    0.16
-    11  EMERGE  ................      0.01    0.67             0.00    0.97             0.02    0.68
-     1  COREPS  ................      1.29    5.27             0.00    0.56             1.30    5.11
-     1  TOTEN   ................      4.12   16.84             0.05    7.10             4.19   16.48
-     1  POPAN   ................      0.01    0.04             0.00    0.00             0.01    0.04
-     1  DEBYE   ................      0.05    0.19             0.00    0.00             0.05    0.18
+    11  SDIIS   ................      0.00    0.15             0.00    0.22             0.01    0.29
+    11  EMERGE  ................      0.02    0.69             0.00    0.33             0.02    0.68
+     1  COREPS  ................      1.30    5.14             0.01    0.78             1.48    5.09
+     1  TOTEN   ................      4.80   18.97             0.16   18.15             5.22   17.91
+     1  POPAN   ................      0.00    0.02             0.01    0.78             0.01    0.05
+     1  DEBYE   ................      0.06    0.23             0.00    0.00             0.06    0.20
      1  INPUTE  ................      0.00    0.01             0.00    0.00             0.00    0.01
-     1  SYMORE  ................      0.01    0.03             0.00    0.00             0.01    0.03
+     1  SYMORE  ................      0.00    0.02             0.00    0.00             0.01    0.02
      2  METS    ................      0.00    0.02             0.00    0.00             0.00    0.02
-     1  CETS    ................      0.01    0.04             0.00    0.14             0.01    0.04
-     1  ELNRGY  ................      0.10    0.41             0.03    4.46             0.13    0.52
-     1  POPUL   ................      0.02    0.09             0.00    0.56             0.03    0.10
-     1  QMPOT   ................      0.00    0.01             0.00    0.00             0.00    0.02
-     1  EXIT PROCEDURE .........      0.00    0.02             0.00    0.70             0.01    0.04
+     1  CETS    ................      0.01    0.02             0.00    0.45             0.01    0.03
+     1  ELNRGY  ................      0.12    0.47             0.02    2.23             0.15    0.51
+     1  POPUL   ................      0.02    0.09             0.01    0.67             0.06    0.21
+     1  QMPOT   ................      0.00    0.02             0.00    0.11             0.01    0.02
+     1  EXIT PROCEDURE .........      0.01    0.05             0.00    0.33             0.07    0.24
 
 
  Currently Open Files (EXIT00)
@@ -3475,114 +3528,108 @@ Exchange and Correlation
  =======================
  Memory available:                    536870912
  Number of records fitting in memory:    129055
- Input :   0.7% of                        32105  *4k bytes
- Output:   3.5% of                         7553  *4k bytes
+ Input :   0.3% of                        40844  *4k bytes
+ Output:   3.8% of                         7623  *4k bytes
  Records from serial files evicted:           0
                     others evicted:           0
- Hash table lookups:     110782 with          0 conflicts (  0.00%)
+ Hash table lookups:     136949 with          0 conflicts (  0.00%)
 
  ***************************************************************************************************
  (LOGFILE)
- <Oct29-2007> <00:54:43>  ADF 2006.01  RunTime: Oct29-2007 00:54:43
- <Oct29-2007> <00:54:43>  Hydrogen (SZ)
- <Oct29-2007> <00:54:44>  RunType   : CREATE
- <Oct29-2007> <00:54:44>  Net Charge: 0 (Nuclei minus Electrons)
- <Oct29-2007> <00:54:44>  Symmetry  : ATOM
- <Oct29-2007> <00:54:44>  >>>> CORORT
- <Oct29-2007> <00:54:44>  >>>> FITINT
- <Oct29-2007> <00:54:44>  >>>> CLSMAT
- <Oct29-2007> <00:54:44>  >>>> ORTHON
- <Oct29-2007> <00:54:44>  >>>> CRTP12
- <Oct29-2007> <00:54:44>  >>>> GENPT
- <Oct29-2007> <00:54:44>  Acc.Num.Int.=  10.000
- <Oct29-2007> <00:54:44>  Block Length=  34
- <Oct29-2007> <00:54:44>  >>>> PTCOR
- <Oct29-2007> <00:54:44>  >>>> PTBAS
- <Oct29-2007> <00:54:44>  >>>> CYCLE
- <Oct29-2007> <00:54:44>    1
- <Oct29-2007> <00:54:44>    2  ErrMat   0.00000000  MaxEl  0.00000000
- <Oct29-2007> <00:54:44>  SCF converged
- <Oct29-2007> <00:54:44>    3  ErrMat   0.00000000  MaxEl  0.00000000
- <Oct29-2007> <00:54:44>   Solutions with partially occupied orbitals may not be
- <Oct29-2007> <00:54:44>   lowest in energy. You might consider lowering the
- <Oct29-2007> <00:54:44>   symmetry in the input and explicitly specifying integer
- <Oct29-2007> <00:54:44>   occupations. In that case always check that you obtain
- <Oct29-2007> <00:54:44>   an aufbau solution.
- <Oct29-2007> <00:54:44>  >>>> COREPS
- <Oct29-2007> <00:54:44>  >>>> POPAN
- <Oct29-2007> <00:54:44>  >>>> DEBYE
- <Oct29-2007> <00:54:44>  NORMAL TERMINATION
- <Oct29-2007> <00:54:44>  END
- <Oct29-2007> <00:54:44>  ADF 2006.01  RunTime: Oct29-2007 00:54:44
- <Oct29-2007> <00:54:44>  Carbon (SZ)
- <Oct29-2007> <00:54:45>  RunType   : CREATE
- <Oct29-2007> <00:54:45>  Net Charge: 0 (Nuclei minus Electrons)
- <Oct29-2007> <00:54:45>  Symmetry  : ATOM
- <Oct29-2007> <00:54:45>  >>>> CORORT
- <Oct29-2007> <00:54:45>  >>>> FITINT
- <Oct29-2007> <00:54:45>  >>>> CLSMAT
- <Oct29-2007> <00:54:45>  >>>> ORTHON
- <Oct29-2007> <00:54:45>  >>>> CRTP12
- <Oct29-2007> <00:54:45>  >>>> GENPT
- <Oct29-2007> <00:54:45>  Acc.Num.Int.=  10.000
- <Oct29-2007> <00:54:45>  Block Length=  48
- <Oct29-2007> <00:54:45>  >>>> PTCOR
- <Oct29-2007> <00:54:45>  >>>> PTBAS
- <Oct29-2007> <00:54:45>  >>>> CYCLE
- <Oct29-2007> <00:54:45>    1
- <Oct29-2007> <00:54:45>    2  ErrMat   0.00000000  MaxEl  0.00000000
- <Oct29-2007> <00:54:45>  SCF converged
- <Oct29-2007> <00:54:45>    3  ErrMat   0.00000000  MaxEl  0.00000000
- <Oct29-2007> <00:54:45>   Solutions with partially occupied orbitals may not be
- <Oct29-2007> <00:54:45>   lowest in energy. You might consider lowering the
- <Oct29-2007> <00:54:45>   symmetry in the input and explicitly specifying integer
- <Oct29-2007> <00:54:45>   occupations. In that case always check that you obtain
- <Oct29-2007> <00:54:45>   an aufbau solution.
- <Oct29-2007> <00:54:45>  >>>> COREPS
- <Oct29-2007> <00:54:45>  >>>> POPAN
- <Oct29-2007> <00:54:45>  >>>> DEBYE
- <Oct29-2007> <00:54:45>  NORMAL TERMINATION
- <Oct29-2007> <00:54:45>  END
- <Oct29-2007> <00:54:45>  ADF 2006.01  RunTime: Oct29-2007 00:54:45
- <Oct29-2007> <00:54:45>  1,4-divinyl-benzene, SZ, BLYP
- <Oct29-2007> <00:54:46>  RunType   : SINGLE POINT
- <Oct29-2007> <00:54:46>  Net Charge: 0 (Nuclei minus Electrons)
- <Oct29-2007> <00:54:46>  Symmetry  : C(2H)
- <Oct29-2007> <00:54:46>  >>>> FRAGM
- <Oct29-2007> <00:54:46>  >>>> CORORT
- <Oct29-2007> <00:54:46>  >>>> FITINT
- <Oct29-2007> <00:54:48>  >>>> CLSMAT
- <Oct29-2007> <00:54:48>  >>>> ORTHON
- <Oct29-2007> <00:54:48>  >>>> CRTP12
- <Oct29-2007> <00:54:48>  >>>> GENPT
- <Oct29-2007> <00:54:48>  Acc.Num.Int.=   4.000
- <Oct29-2007> <00:54:50>  Block Length= 128
- <Oct29-2007> <00:54:50>  >>>> PTCOR
- <Oct29-2007> <00:54:50>  >>>> PTBAS
- <Oct29-2007> <00:54:50>  >>>> CYCLE
- <Oct29-2007> <00:54:51>    1
- <Oct29-2007> <00:54:52>    2  ErrMat   0.12986353  MaxEl -0.03469603
- <Oct29-2007> <00:54:54>    3  ErrMat   0.07273735  MaxEl  0.01573354
- <Oct29-2007> <00:54:55>    4  ErrMat   0.05838854  MaxEl -0.02651593
- <Oct29-2007> <00:54:56>    5  ErrMat   0.02967363  MaxEl -0.00642682
- <Oct29-2007> <00:54:58>    6  ErrMat   0.00378822  MaxEl  0.00090415
- <Oct29-2007> <00:54:59>    7  ErrMat   0.00027062  MaxEl  0.00008331
- <Oct29-2007> <00:55:01>    8  ErrMat   0.00010644  MaxEl  0.00003630
- <Oct29-2007> <00:55:02>    9  ErrMat   0.00002982  MaxEl -0.00000880
- <Oct29-2007> <00:55:03>   10  ErrMat   0.00000225  MaxEl  0.00000066
- <Oct29-2007> <00:55:04>  SCF converged
- <Oct29-2007> <00:55:05>   11  ErrMat   0.00000071  MaxEl  0.00000024
- <Oct29-2007> <00:55:05>  >>>> COREPS
- <Oct29-2007> <00:55:06>  >>>> TOTEN
- <Oct29-2007> <00:55:10>  >>>> POPAN
- <Oct29-2007> <00:55:10>  >>>> DEBYE
- <Oct29-2007> <00:55:10>  >>>> AMETS
- <Oct29-2007> <00:55:11>   Bond Energy LDA      -5.63065041 a.u.
- <Oct29-2007> <00:55:11>   Bond Energy LDA    -153.21779341 eV
- <Oct29-2007> <00:55:11>           + GGA-X      -4.80722179 a.u.
- <Oct29-2007> <00:55:11>           + GGA-X    -130.81116073 eV
- <Oct29-2007> <00:55:11>          + GGA-XC      -5.16295007 a.u.
- <Oct29-2007> <00:55:11>          + GGA-XC    -140.49101970 eV
- <Oct29-2007> <00:55:11>  >>>> POPUL
- <Oct29-2007> <00:55:11>  NORMAL TERMINATION
- <Oct29-2007> <00:55:11>  END
+ <Oct30-2007> <02:56:17>  ADF 2007.01  RunTime: Oct30-2007 02:56:17
+ <Oct30-2007> <02:56:17>  Hydrogen (SZ)
+ <Oct30-2007> <02:56:18>  RunType   : CREATE
+ <Oct30-2007> <02:56:18>  Net Charge: 0 (Nuclei minus Electrons)
+ <Oct30-2007> <02:56:18>  Symmetry  : ATOM
+ <Oct30-2007> <02:56:18>  >>>> CORORT
+ <Oct30-2007> <02:56:18>  >>>> FITINT
+ <Oct30-2007> <02:56:18>  >>>> CLSMAT
+ <Oct30-2007> <02:56:18>  >>>> ORTHON
+ <Oct30-2007> <02:56:18>  >>>> GENPT
+ <Oct30-2007> <02:56:18>  Acc.Num.Int.=  10.000
+ <Oct30-2007> <02:56:18>  Block Length=  34
+ <Oct30-2007> <02:56:18>  >>>> PTBAS
+ <Oct30-2007> <02:56:18>  >>>> CYCLE
+ <Oct30-2007> <02:56:18>    1
+ <Oct30-2007> <02:56:18>    2  ErrMat   0.00000000  MaxEl  0.00000000
+ <Oct30-2007> <02:56:18>  SCF converged
+ <Oct30-2007> <02:56:18>    3  ErrMat   0.00000000  MaxEl  0.00000000
+ <Oct30-2007> <02:56:18>   Solutions with partially occupied orbitals may not be
+ <Oct30-2007> <02:56:18>   lowest in energy. You might consider lowering the
+ <Oct30-2007> <02:56:18>   symmetry in the input and explicitly specifying integer
+ <Oct30-2007> <02:56:18>   occupations. In that case always check that you obtain
+ <Oct30-2007> <02:56:18>   an aufbau solution.
+ <Oct30-2007> <02:56:18>  >>>> COREPS
+ <Oct30-2007> <02:56:18>  >>>> POPAN
+ <Oct30-2007> <02:56:18>  >>>> DEBYE
+ <Oct30-2007> <02:56:18>  NORMAL TERMINATION
+ <Oct30-2007> <02:56:18>  END
+ <Oct30-2007> <02:56:19>  ADF 2007.01  RunTime: Oct30-2007 02:56:19
+ <Oct30-2007> <02:56:19>  Carbon (SZ)
+ <Oct30-2007> <02:56:19>  RunType   : CREATE
+ <Oct30-2007> <02:56:19>  Net Charge: 0 (Nuclei minus Electrons)
+ <Oct30-2007> <02:56:19>  Symmetry  : ATOM
+ <Oct30-2007> <02:56:19>  >>>> CORORT
+ <Oct30-2007> <02:56:19>  >>>> FITINT
+ <Oct30-2007> <02:56:19>  >>>> CLSMAT
+ <Oct30-2007> <02:56:19>  >>>> ORTHON
+ <Oct30-2007> <02:56:19>  >>>> GENPT
+ <Oct30-2007> <02:56:19>  Acc.Num.Int.=  10.000
+ <Oct30-2007> <02:56:20>  Block Length=  48
+ <Oct30-2007> <02:56:20>  >>>> PTBAS
+ <Oct30-2007> <02:56:20>  >>>> CYCLE
+ <Oct30-2007> <02:56:20>    1
+ <Oct30-2007> <02:56:20>    2  ErrMat   0.00000000  MaxEl  0.00000000
+ <Oct30-2007> <02:56:20>  SCF converged
+ <Oct30-2007> <02:56:20>    3  ErrMat   0.00000000  MaxEl  0.00000000
+ <Oct30-2007> <02:56:20>   Solutions with partially occupied orbitals may not be
+ <Oct30-2007> <02:56:20>   lowest in energy. You might consider lowering the
+ <Oct30-2007> <02:56:20>   symmetry in the input and explicitly specifying integer
+ <Oct30-2007> <02:56:20>   occupations. In that case always check that you obtain
+ <Oct30-2007> <02:56:20>   an aufbau solution.
+ <Oct30-2007> <02:56:20>  >>>> COREPS
+ <Oct30-2007> <02:56:20>  >>>> POPAN
+ <Oct30-2007> <02:56:20>  >>>> DEBYE
+ <Oct30-2007> <02:56:20>  NORMAL TERMINATION
+ <Oct30-2007> <02:56:20>  END
+ <Oct30-2007> <02:56:20>  ADF 2007.01  RunTime: Oct30-2007 02:56:20
+ <Oct30-2007> <02:56:20>  1,4-divinyl-benzene, SZ, BLYP
+ <Oct30-2007> <02:56:21>  RunType   : SINGLE POINT
+ <Oct30-2007> <02:56:21>  Net Charge: 0 (Nuclei minus Electrons)
+ <Oct30-2007> <02:56:21>  Symmetry  : C(2H)
+ <Oct30-2007> <02:56:21>  >>>> FRAGM
+ <Oct30-2007> <02:56:21>  >>>> CORORT
+ <Oct30-2007> <02:56:21>  >>>> FITINT
+ <Oct30-2007> <02:56:23>  >>>> CLSMAT
+ <Oct30-2007> <02:56:23>  >>>> ORTHON
+ <Oct30-2007> <02:56:23>  >>>> GENPT
+ <Oct30-2007> <02:56:23>  Acc.Num.Int.=   4.000
+ <Oct30-2007> <02:56:25>  Block Length= 128
+ <Oct30-2007> <02:56:25>  >>>> PTBAS
+ <Oct30-2007> <02:56:25>  >>>> CYCLE
+ <Oct30-2007> <02:56:26>    1
+ <Oct30-2007> <02:56:27>    2  ErrMat   0.12986353  MaxEl -0.03469604
+ <Oct30-2007> <02:56:29>    3  ErrMat   0.07273735  MaxEl  0.01573354
+ <Oct30-2007> <02:56:30>    4  ErrMat   0.05838854  MaxEl -0.02651593
+ <Oct30-2007> <02:56:32>    5  ErrMat   0.02967363  MaxEl -0.00642682
+ <Oct30-2007> <02:56:33>    6  ErrMat   0.00378822  MaxEl  0.00090415
+ <Oct30-2007> <02:56:35>    7  ErrMat   0.00027062  MaxEl  0.00008331
+ <Oct30-2007> <02:56:36>    8  ErrMat   0.00010644  MaxEl  0.00003630
+ <Oct30-2007> <02:56:37>    9  ErrMat   0.00002982  MaxEl -0.00000880
+ <Oct30-2007> <02:56:40>   10  ErrMat   0.00000225  MaxEl  0.00000066
+ <Oct30-2007> <02:56:40>  SCF converged
+ <Oct30-2007> <02:56:42>   11  ErrMat   0.00000071  MaxEl  0.00000024
+ <Oct30-2007> <02:56:42>  >>>> COREPS
+ <Oct30-2007> <02:56:44>  >>>> TOTEN
+ <Oct30-2007> <02:56:49>  >>>> POPAN
+ <Oct30-2007> <02:56:49>  >>>> DEBYE
+ <Oct30-2007> <02:56:49>  >>>> AMETS
+ <Oct30-2007> <02:56:49>   Bond Energy LDA      -5.63065041 a.u.
+ <Oct30-2007> <02:56:49>   Bond Energy LDA    -153.21779341 eV
+ <Oct30-2007> <02:56:49>           + GGA-X      -4.80722179 a.u.
+ <Oct30-2007> <02:56:49>           + GGA-X    -130.81116073 eV
+ <Oct30-2007> <02:56:49>          + GGA-XC      -5.16295007 a.u.
+ <Oct30-2007> <02:56:49>          + GGA-XC    -140.49101970 eV
+ <Oct30-2007> <02:56:49>  >>>> POPUL
+ <Oct30-2007> <02:56:49>  NORMAL TERMINATION
+ <Oct30-2007> <02:56:49>  END

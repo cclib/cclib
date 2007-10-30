@@ -30,12 +30,12 @@ CI        GAMESS      GAMESSUSCISTest       basicGAMESS-US        water_cis_saps
 CI        Gaussian    GaussianCISTest       basicGaussian03       water_cis.log
 CI        Jaguar      JaguarCISTest         basicJaguar6.5        water_cis.out
                                            
-Core      ADF         ADFCoreTest           basicADF2006.01       MoOCl4-sp.adfout
+Core      ADF         ADFCoreTest           basicADF2007.01       MoOCl4-sp.adfout
 Core      GAMESSUK    GAMESSUKCoreTest      basicGAMESS-UK        MoOCl4-sp.out
 Core      GAMESS      GAMESSUSCoreTest      basicGAMESS-US        MoOCl4-sp.out
 Core      Gaussian    GaussianCoreTest      basicGaussian03       Mo4OCl4-sp.log
                                            
-GeoOpt    ADF         ADFGeoOptTest         basicADF2006.01       dvb_gopt_b.adfout
+GeoOpt    ADF         ADFGeoOptTest         basicADF2007.01       dvb_gopt_b.adfout
 GeoOpt    GAMESSUK    GamessUKGeoOptTest    basicGAMESS-UK        dvb_gopt_d.out
 GeoOpt    GAMESS      GamessUSGeoOptTest    basicGAMESS-US        dvb_gopt_a.out
 GeoOpt    Gaussian    GaussianGeoOptTest    basicGaussian03       dvb_gopt.out
@@ -61,7 +61,7 @@ MP        Molpro      MolproMP2Test         basicMolpro2006       h2o_mp2.out
 MP        Molpro      MolproMP3Test         basicMolpro2006       h2o_mp3.out
 MP        Molpro      MolproMP4SDTQTest     basicMolpro2006       h2o_mp4.out
 
-SP        ADF         ADFSPTest             basicADF2006.01       dvb_sp_b.adfout
+SP        ADF         ADFSPTest             basicADF2007.01       dvb_sp_b.adfout
 SP        GAMESSUK    GamessUKSPTest        basicGAMESS-UK        dvb_sp_b.out
 SP        GAMESS      GamessUSSPTest        basicGAMESS-US        dvb_sp.out
 SP        Gaussian    GaussianSPTest        basicGaussian03       dvb_sp.out
@@ -70,7 +70,7 @@ SP        GAMESS      PCGamessSPTest        basicPCGAMESS         dvb_sp.out
 SP        Molpro      MolproSPTest          basicMolpro2006       dvb_sphf.out
 SP        ORCA        OrcaSPTest            basicORCA2.6          dvb_sp.out
                                             
-SPun      ADF         ADFSPunTest           basicADF2006.01       dvb_un_sp.adfout
+SPun      ADF         ADFSPunTest           basicADF2007.01       dvb_un_sp.adfout
 SPun      GAMESSUK    GamessUKSPunTest      basicGAMESS-UK        dvb_un_sp_b.out
 SPun      GAMESS      GamessUSSPunTest      basicGAMESS-US        dvb_un_sp.out
 SPun      Gaussian    GaussianSPunTest      basicGaussian03       dvb_un_sp_b.log
@@ -82,7 +82,7 @@ SPun      ORCA        OrcaSPunTest          basicORCA2.6          dvb_un_sp.out
 TD        Gaussian    GaussianTDDFTTest     basicGaussian03       CO_TD_delta.log
 TD        ORCA        OrcaTDDFTTest         basicORCA2.6          dvb_td.out
 
-vib       ADF         ADFIRTest             basicADF2006.01       dvb_ir.adfout
+vib       ADF         ADFIRTest             basicADF2007.01       dvb_ir.adfout
 vib       GAMESSUK    GamessUKIRTest        basicGAMESS-UK        dvb_ir.out
 vib       GAMESS      GamessUSIRTest        basicGAMESS-US        dvb_ir.out
 vib       Gaussian    GaussianIRTest        basicGaussian03       dvb_ir.out

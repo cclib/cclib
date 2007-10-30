@@ -1,9 +1,3 @@
-#!/bin/bash
-
-export NSCM=1
-export SCM_MACHINEFILE=$PWD/machine
-export SCM_TMPDIR=$PBS_O_WORKDIR
-
 $ADFBIN/adf  << eor > mo_sp.adfout
 title Mo, triple zeta, large frozen core
 

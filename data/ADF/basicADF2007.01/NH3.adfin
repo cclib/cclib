@@ -1,9 +1,4 @@
-#!/bin/bash
-
-export NSCM=1
-export SCM_MACHINEFILE=$PWD/machine
-
-$ADFBIN/adf  << eor >& /dev/null 
+$ADFBIN/adf  << eor > /dev/null 
   create N $ADFRESOURCES/TZP/N
 
 XC
@@ -15,7 +10,7 @@ eor
 
 mv TAPE21 N.t21
 
-$ADFBIN/adf  << eor >& /dev/null 
+$ADFBIN/adf  << eor > /dev/null 
   create H $ADFRESOURCES/TZP/H
 
 XC
@@ -94,6 +89,4 @@ END
 end input
 eor
 
-rm logfile 
 mv TAPE21 NH3.t21
-
