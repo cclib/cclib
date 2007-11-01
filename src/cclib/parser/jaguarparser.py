@@ -17,10 +17,10 @@ import logfileparser
 class Jaguar(logfileparser.Logfile):
     """A Jaguar output file"""
 
-    def __init__(self, *args):
+    def __init__(self, *args, **kwargs):
 
         # Call the __init__ method of the superclass
-        super(Jaguar, self).__init__(logname="Jaguar", *args)
+        super(Jaguar, self).__init__(logname="Jaguar", *args, **kwargs)
         
     def __str__(self):
         """Return a string representation of the object."""

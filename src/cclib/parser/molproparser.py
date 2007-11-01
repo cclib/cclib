@@ -17,9 +17,9 @@ import logfileparser
 class Molpro(logfileparser.Logfile):
     """Molpro file parser"""
 
-    def __init__(self,*args):
+    def __init__(self, *args, **kwargs):
         # Call the __init__ method of the superclass
-        super(Molpro, self).__init__(logname="Molpro",*args)
+        super(Molpro, self).__init__(logname="Molpro", *args, **kwargs)
 
     def __str__(self):
         """Return a string representation of the object."""

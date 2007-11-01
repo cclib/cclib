@@ -17,10 +17,10 @@ import logfileparser
 class GAMESS(logfileparser.Logfile):
     """A GAMESS log file."""
     SCFRMS, SCFMAX, SCFENERGY = range(3) # Used to index self.scftargets[]
-    def __init__(self, *args):
+    def __init__(self, *args, **kwargs):
 
         # Call the __init__ method of the superclass
-        super(GAMESS, self).__init__(logname="GAMESS", *args)
+        super(GAMESS, self).__init__(logname="GAMESS", *args, **kwargs)
 
     def __str__(self):
         """Return a string representation of the object."""
