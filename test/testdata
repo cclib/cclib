@@ -91,6 +91,6 @@ vib       GAMESS      PCGamessIRTest        basicPCGAMESS         dvb_ir.out
 vib       GAMESSUK    GamessUKRamanTest     basicGAMESS-UK        dvb_raman.out
 vib       Gaussian    GaussianRamanTest     basicGaussian03       dvb_raman.out
 vib       GAMESS      PCGamessRamanTest     basicPCGAMESS         dvb_raman.out
-vib       Molpro      MolproIRTest          basicMolpro2006       dvb_ir.log
+vib       Molpro      MolproIRTest          basicMolpro2006       dvb_ir.out            dvb_ir.log
 vib       ORCA        OrcaIRTest            basicORCA2.6          dvb_ir.out
 vib       ORCA        OrcaRamanTest         basicORCA2.6          dvb_raman.out
