@@ -257,6 +257,16 @@ class ADF(logfileparser.Logfile):
             if hasattr(self, "scfvalues"):
                 self.scfvalues.append(newlist)
 
+        # Parse SCF energy for SP calcs from bonding energy decomposition section.
+        # It seems ADF does not print it earlier for SP calcualtions.
+        # If it does (does it?), parse that instead.
+        # Check that scfenergies does not exist, becuase gopt runs also print this,
+        #   repeating the values in the last "Geometry Convergence Tests" section.
+        if "Total Bonding Energy:" in line:
+            if not hasattr(self, "scfenergies"):
+                energy = utils.convertor(float(line.split()[3]), "hartree", "eV")
+                self.scfenergies = [energy]            
+
         if line[51:65] == "Final Geometry":
             self.finalgeometry = self.GETLAST
 

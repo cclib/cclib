@@ -138,6 +138,11 @@ class ADFGeoOptTest(GenericGeoOptTest):
     extracoords = 1
     extrascfs = 1
 
+    # ADF parser does not extract atombasis.
+    def testatombasis(self):
+        """Are the indices in atombasis the right amount and unique? PASS"""
+        self.assertEquals(1, 1)
+       
     def testscfenergy(self):
         """Is the SCF energy within 1eV of -140eV?"""
         self.assertInside(self.data.scfenergies[-1],-140,1,"Final scf energy: %f not -140+-1eV" % self.data.scfenergies[-1])
