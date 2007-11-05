@@ -1,21 +1,23 @@
-Job water_cis started on krypton at Fri Mar 23 16:34:02 2007
-jobid: krypton-0-4603f368
+Job water_cis started on puffin at Fri Nov  2 20:33:26 2007
+jobid: puffin-0-472b7b80
 
   +--------------------------------------------------------------------+
-  |  Jaguar version 6.5, release 112                                   |
+  |  Jaguar version 7.0, release 207                                   |
   |                                                                    |
-  |  Copyright (c) 2005 Schrodinger,  LLC.                             |
+  |  Copyright (c) 2007 Schrodinger,  LLC.                             |
   |  All Rights Reserved.                                              |
   |                                                                    |
   |  Use of this program should be acknowledged in publications as:    |
-  |  Jaguar, version 6.5, Schrodinger, LLC, New York, NY, 2005.        |
+  |  Jaguar, version 7.0, Schrodinger, LLC, New York, NY, 2007.        |
   +--------------------------------------------------------------------+
    
   start of program pre
   Job name: water_cis
-  Executables used: /local/cclib/bin/jaguar-v65112/bin/Linux-x86
-  Temporary files : /var/tmp/cclib/water_cis
+  Executables used: /home/cclib/bin/jaguar-v70207/bin/Linux-x86
+  Temporary files : /scratch/cclib/water_cis
   
+  
+  Dynamic memory assumed available (MB):     757
   
   basis set:             sto-3g          
   net molecular charge:    0
@@ -34,11 +36,11 @@ jobid: krypton-0-4603f368
    
   principal moments of inertia:
         amu*angstrom^2:        0.63543        1.26004        1.89546
-                g*cm^2: 1.05515331E-40 2.09233949E-40 3.14749281E-40
+                g*cm^2: 1.05515246E-40 2.09233781E-40 3.14749027E-40
    
   rotational constants:
-               cm^(-1):    26.52958024    13.37869620     8.89367385
-                   GHz:   795.33680710   401.08322189   266.62563427
+               cm^(-1):    26.52957683    13.37869448     8.89367270
+                   GHz:   795.33670471   401.08317026   266.62559994
    
   Z-matrix: (angstroms and degrees) 
  O1
@@ -46,8 +48,8 @@ jobid: krypton-0-4603f368
  H2    O1  r1    H1  a1
   
   Z-variables: (angstroms and degrees) 
-  r1 =    0.99
-  a1 =  106.0
+  r1 =     0.99
+  a1 =   106.0
   
   Molecular weight:      18.01 amu
    
@@ -55,7 +57,7 @@ jobid: krypton-0-4603f368
   Molecular Point Group: C2v     
   Point Group used: C1 (symmetry turned off)
   
-  nuclear repulsion energy.......       8.887006905 hartrees
+  nuclear repulsion energy.......       8.887006263 hartrees
  
  Non-default options chosen:
    Electronic excitation energies will be calculated by CIS
@@ -86,7 +88,7 @@ jobid: krypton-0-4603f368
   end of program probe
    
    
-  start of program scf 
+  start of program scf
  number of electrons..........         10
  number of alpha electrons....          5
  number of beta electrons.....          5
@@ -104,31 +106,32 @@ jobid: krypton-0-4603f368
        e  d  i  u  i                       energy  density   DIIS  
        r  t  s  t  d       total energy    change  change    error 
   
-etot   1  N  N  0  N     -74.82220839383           4.1E-02  2.1E-01
-etot   2  Y  Y  0  N     -74.95412462356  1.3E-01  1.5E-02  5.1E-02
-etot   3  N  Y  0  N     -74.96411883697  1.0E-02  2.3E-03  8.1E-03
-etot   4  Y  Y  0  N     -74.96431449743  2.0E-04  6.6E-04  1.3E-03
-etot   5  N  N  0  N     -74.96432861178  1.4E-05  0.0E+00  0.0E+00
+etot   1  N  N  0  N     -74.82220838828           4.1E-02  2.1E-01
+etot   2  Y  Y  0  N     -74.95412462180  1.3E-01  1.5E-02  5.1E-02
+etot   3  N  Y  0  N     -74.96411883574  1.0E-02  2.3E-03  8.1E-03
+etot   4  Y  Y  0  N     -74.96431449624  2.0E-04  6.6E-04  1.3E-03
+etot   5  N  Y  0  N     -74.96432861059  1.4E-05  7.6E-05  1.9E-04
+etot   6  Y  N  0  N     -74.96432878100  1.7E-07  0.0E+00  0.0E+00
   
   
  Energy components, in hartrees:
-   (A)  Nuclear repulsion............       8.88700690452
-   (E)  Total one-electron terms.....    -121.83970239152
-   (I)  Total two-electron terms.....      37.98836687521
-   (L)  Electronic energy............     -83.85133551630  (E+I)
-   (N)  Total energy.................     -74.96432861178  (A+L)
+   (A)  Nuclear repulsion............       8.88700626299
+   (E)  Total one-electron terms.....    -121.84017336186
+   (I)  Total two-electron terms.....      37.98883831787
+   (L)  Electronic energy............     -83.85133504399  (E+I)
+   (N)  Total energy.................     -74.96432878100  (A+L)
   
- SCFE: SCF energy: HF       -74.96432861178 hartrees   iterations:   5
+ SCFE: SCF energy: HF       -74.96432878100 hartrees   iterations:   6
   
  
- HOMO energy:    -0.38826
- LUMO energy:     0.57070
+ HOMO energy:    -0.38821
+ LUMO energy:     0.57075
  
   Orbital energies: 
-  -20.24386   -1.25066   -0.60316   -0.44556   -0.38826    0.57070
-    0.70862
+  -20.24375   -1.25064   -0.60317   -0.44547   -0.38821    0.57075
+    0.70859
  
-  end of program scf 
+  end of program scf
    
    
    start of program cis
@@ -148,7 +151,7 @@ etot   5  N  N  0  N     -74.96432861178  1.4E-05  0.0E+00  0.0E+00
  Restarting
  ----------------------------------------------------------------------------
   
-  Excited State   1:    12.2284 eV    101.39 nm
+  Excited State   1:    12.2266 eV       101.40 nm
   
   orbitals in
    excitation    CI coeff.
@@ -156,17 +159,17 @@ etot   5  N  N  0  N     -74.96432861178  1.4E-05  0.0E+00  0.0E+00
      5 =>   6     1.00000
   
   Transition dipole moment (debye):
-     X=     0.0000     Y=     0.2692     Z=     0.0000  Tot=     0.2692
+     X=     0.0000     Y=     0.2689     Z=     0.0000  Tot=     0.2689
   
   Oscillator strength, f=     0.0034
  ----------------------------------------------------------------------------
   
-  Excited State   2:    14.2469 eV     87.03 nm
+  Excited State   2:    14.2466 eV        87.03 nm
   
   orbitals in
    excitation    CI coeff.
   ------------   ---------
-     5 =>   7     1.00000
+     5 =>   7    -1.00000
   
   Transition dipole moment (debye):
      X=     0.0000     Y=     0.0000     Z=     0.0000  Tot=     0.0000
@@ -174,27 +177,27 @@ etot   5  N  N  0  N     -74.96432861178  1.4E-05  0.0E+00  0.0E+00
   Oscillator strength, f=     0.0000
  ----------------------------------------------------------------------------
   
-  Excited State   3:    15.8630 eV     78.16 nm
+  Excited State   3:    15.8632 eV        78.16 nm
   
   orbitals in
    excitation    CI coeff.
   ------------   ---------
-     4 =>   6    -0.96694
-     3 =>   7     0.24754
+     4 =>   6     0.96689
+     3 =>   7    -0.24771
   
   Transition dipole moment (debye):
-     X=     0.8823     Y=     0.0000     Z=     0.6648  Tot=     1.1047
+     X=    -0.8829     Y=     0.0000     Z=    -0.6653  Tot=     1.1055
   
-  Oscillator strength, f=     0.0734
+  Oscillator strength, f=     0.0735
  ----------------------------------------------------------------------------
   
-  Excited State   4:    18.1603 eV     68.27 nm
+  Excited State   4:    18.1604 eV        68.27 nm
   
   orbitals in
    excitation    CI coeff.
   ------------   ---------
-     3 =>   6    -0.44018
-     4 =>   7     0.89789
+     3 =>   6    -0.44058
+     4 =>   7     0.89770
   
   Transition dipole moment (debye):
      X=     0.5153     Y=     0.0000     Z=    -0.6838  Tot=     0.8562
@@ -202,23 +205,24 @@ etot   5  N  N  0  N     -74.96432861178  1.4E-05  0.0E+00  0.0E+00
   Oscillator strength, f=     0.0505
  ----------------------------------------------------------------------------
   
-  Excited State   5:    21.0605 eV     58.87 nm
+  Excited State   5:    21.0594 eV        58.87 nm
   
   orbitals in
    excitation    CI coeff.
   ------------   ---------
-     3 =>   6    -0.89695
-     4 =>   7    -0.43945
+     3 =>   6     0.89675
+     4 =>   7     0.43986
   
   Transition dipole moment (debye):
-     X=    -2.3462     Y=     0.0000     Z=     3.1135  Tot=     3.8985
+     X=     2.3462     Y=     0.0000     Z=    -3.1135  Tot=     3.8985
   
   Oscillator strength, f=     1.2138
  ----------------------------------------------------------------------------
   
   end of program cis
- Total cpu seconds     user:       2.630   user+sys:       3.350
+   
+ Total cpu seconds     user:       2.250   user+sys:       2.600
   
- Total elapsed time:    9 seconds
+ Total elapsed time:    13 seconds
 
-Job water_cis completed on krypton at Fri Mar 23 16:34:11 2007
+Job water_cis completed on puffin at Fri Nov  2 20:33:39 2007

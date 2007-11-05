@@ -1,11 +1,8 @@
-../../Gaussian/basicGaussian03/dvb_sp.out
-
-entry_name: dvb_sp-1
+entry_name: dvb_sp
 &gen
 idft=22111
 igeopt=-1
 basis=sto-3g
-ip1=2
 ip11=2
 ip18=2
 ip19=2

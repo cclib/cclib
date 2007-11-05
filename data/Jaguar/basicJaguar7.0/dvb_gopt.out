@@ -1,25 +1,25 @@
-Job dvb_gopt started on a-gle at Sun Aug  6 09:13:29 2006
-jobid: a-gle-0-44d5a4a8
+Job dvb_gopt started on puffin at Fri Nov  2 20:32:14 2007
+jobid: puffin-0-472b7b39
 
   +--------------------------------------------------------------------+
-  |  Jaguar version 6.5, release 112                                   |
+  |  Jaguar version 7.0, release 207                                   |
   |                                                                    |
-  |  Copyright (c) 2005 Schrodinger,  LLC.                             |
+  |  Copyright (c) 2007 Schrodinger,  LLC.                             |
   |  All Rights Reserved.                                              |
   |                                                                    |
   |  Use of this program should be acknowledged in publications as:    |
-  |  Jaguar, version 6.5, Schrodinger, LLC, New York, NY, 2005.        |
+  |  Jaguar, version 7.0, Schrodinger, LLC, New York, NY, 2007.        |
   +--------------------------------------------------------------------+
    
   start of program pre
   Job name: dvb_gopt
-  Executables used: /usr/glea/schrodinger_new/jaguar-v65112/bin/Linux-x86
-  Temporary files : /var/tmp/no228/dvb_gopt
+  Executables used: /home/cclib/bin/jaguar-v70207/bin/Linux-x86
+  Temporary files : /scratch/cclib/dvb_gopt
   
   Input file comments:
-   ../../Gaussian/basicGaussian03/dvb_sp.out
-   
-   entry_name: dvb_sp
+   entry_name: dvb_gopt
+  
+  Dynamic memory assumed available (MB):     757
   
   basis set:             sto-3g          
   net molecular charge:    0
@@ -55,11 +55,11 @@ jobid: a-gle-0-44d5a4a8
    
   principal moments of inertia:
         amu*angstrom^2:      109.23594      737.84464      847.08058
-                g*cm^2: 1.81390671E-38 1.22522068E-37 1.40661135E-37
+                g*cm^2: 1.81390525E-38 1.22521969E-37 1.40661022E-37
    
   rotational constants:
-               cm^(-1):     0.15432312     0.02284713     0.01990086
-                   GHz:     4.62649076     0.68493968     0.59661275
+               cm^(-1):     0.15432310     0.02284713     0.01990086
+                   GHz:     4.62649016     0.68493959     0.59661267
    
   Molecular weight:     130.08 amu
    
@@ -146,9 +146,9 @@ Maximum geometric degrees of freedom:      54
  C1      -C19     -C5      -H8      : 180.000000
  C2      -C1      -C14     -H15     : 180.000000
  C2      -C1      -C14     -C16     :   0.000000
- C2      -C1      -C19     -C5      :   0.000001
+ C2      -C1      -C19     -C5      :   0.000000
  C2      -C1      -C19     -H20     : 180.000000
- C2      -C3      -C4      -C5      :   0.000001
+ C2      -C3      -C4      -C5      :   0.000000
  C2      -C3      -C4      -C9      : 180.000000
  C3      -C2      -C1      -C14     : 180.000000
  C3      -C2      -C1      -C19     :   0.000000
@@ -179,7 +179,7 @@ Maximum geometric degrees of freedom:      54
  H15     -C14     -C16     -H18     :   0.000000
  C16     -C14     -C1      -C19     : 180.000000
  
-  nuclear repulsion energy.......     445.899347663 hartrees
+  nuclear repulsion energy.......     445.899315474 hartrees
  
  Non-default options chosen:
    SCF calculation type: DFT             
@@ -224,29 +224,23 @@ Maximum geometric degrees of freedom:      54
   grid # 1         0         0         0      2430      2430         0         0      2430
   grid # 2         0         0         0       756       756         0         0       756
   grid # 3         0         0         0      3001      3001         0         0      3001
-  grid # 4         0         0         0      3756      3756         0         0      3033
-  grid # 5         0         0         0       426       426         0         0       464
    
   number of gridpoints: 
      atom         C9       C10       H11       H12       H13       C14       H15       C16
   grid # 1      2430      2430      2430         0      2430         0      2430         0
   grid # 2       756       756       756         0       756         0       756         0
   grid # 3      3001      3001      3001         0      3001         0      3001         0
-  grid # 4      3756      3756      3033         0      3033         0      3033         0
-  grid # 5       426       426       464         0       464         0       464         0
    
   number of gridpoints: 
      atom        H17       H18       C19       H20     total
   grid # 1         0         0      2430      2430     24300
   grid # 2         0         0       756       756      7560
   grid # 3         0         0      3001      3001     30010
-  grid # 4         0         0      3756      3033     33945
-  grid # 5         0         0       426       464      4450
    
   end of program grid
    
    
-  start of program scf 
+  start of program scf
  number of electrons..........         70
  number of alpha electrons....         35
  number of beta electrons.....         35
@@ -264,25 +258,25 @@ Maximum geometric degrees of freedom:      54
        e  d  i  u  i                       energy  density   DIIS  
        r  t  s  t  d       total energy    change  change    error 
   
-etot   1  N  N  0  N    -382.08751881733           2.3E-03  1.4E-01
-etot   2  Y  Y  0  N    -382.27486018708  1.9E-01  1.4E-03  5.7E-02
-etot   3  N  Y  0  N    -382.30454770440  3.0E-02  4.8E-04  1.1E-02
-etot   4  Y  Y  0  N    -382.30788053888  3.3E-03  1.3E-04  5.1E-03
-etot   5  Y  Y  0  N    -382.30829549203  4.1E-04  1.2E-05  2.3E-04
-etot   6  N  Y  0  N    -382.30825830033 -3.7E-05  3.6E-06  1.6E-04
-etot   7  Y  N  0  N    -382.30825865550  3.6E-07  0.0E+00  0.0E+00
+etot   1  N  N  0  N    -382.08751877606           2.3E-03  1.4E-01
+etot   2  Y  Y  0  N    -382.27486017815  1.9E-01  1.4E-03  5.7E-02
+etot   3  N  Y  0  N    -382.30454770453  3.0E-02  4.8E-04  1.1E-02
+etot   4  Y  Y  0  N    -382.30788053861  3.3E-03  1.3E-04  5.1E-03
+etot   5  Y  Y  0  N    -382.30829549183  4.1E-04  1.2E-05  2.3E-04
+etot   6  N  Y  0  N    -382.30825830022 -3.7E-05  3.6E-06  1.6E-04
+etot   7  N  N  0  N    -382.30825872880  4.3E-07  0.0E+00  0.0E+00
   
   
  Energy components, in hartrees:
-   (A)  Nuclear repulsion............     445.89934766251
-   (E)  Total one-electron terms.....   -1400.56643717961
-   (I)  Total two-electron terms.....     572.35883086160
-   (J)    Coulomb....................     630.20247668100
-   (K)    Exchange+Correlation.......     -57.84364581940
-   (L)  Electronic energy............    -828.20760631801  (E+I)
-   (N)  Total energy.................    -382.30825865550  (A+L)
+   (A)  Nuclear repulsion............     445.89931547414
+   (E)  Total one-electron terms.....   -1400.56637472144
+   (I)  Total two-electron terms.....     572.35880051850
+   (J)    Coulomb....................     630.20244572772
+   (K)    Exchange+Correlation.......     -57.84364520921
+   (L)  Electronic energy............    -828.20757420294  (E+I)
+   (N)  Total energy.................    -382.30825872880  (A+L)
   
- SCFE: SCF energy: DFT      -382.30825865550 hartrees   iterations:   7
+ SCFE: SCF energy: DFT      -382.30825872880 hartrees   iterations:   7
   
  
  HOMO energy:    -0.15309
@@ -302,7 +296,7 @@ etot   7  Y  N  0  N    -382.30825865550  3.6E-07  0.0E+00  0.0E+00
     0.33221 Ag         0.34072 Bu         0.37934 Bu         0.38145 Ag     
     0.41098 Ag     
  
-  end of program scf 
+  end of program scf
    
    
   start of program cutabab2
@@ -319,26 +313,26 @@ etot   7  Y  N  0  N    -382.30825865550  3.6E-07  0.0E+00  0.0E+00
    
  atom  label           x              y              z
  ---- --------   -------------  -------------  -------------
-    1 C1          1.217218E-04  -1.275178E-04   0.000000E+00
-    2 C2         -2.858515E-04  -2.368544E-04   0.000000E+00
-    3 C3         -1.867396E-04   5.444780E-05   0.000000E+00
-    4 C4         -1.217218E-04   1.275178E-04   0.000000E+00
-    5 C5          2.858515E-04   2.368544E-04   0.000000E+00
-    6 H6         -4.133937E-05  -2.054616E-05   0.000000E+00
-    7 H7         -3.368413E-05  -2.996421E-05   0.000000E+00
-    8 H8          4.133937E-05   2.054616E-05   0.000000E+00
-    9 C9         -1.163012E-04   6.779679E-05   0.000000E+00
-   10 C10         6.915979E-05   1.038235E-04   0.000000E+00
-   11 H11         3.540308E-05   2.593685E-05   0.000000E+00
-   12 H12        -3.353337E-05   8.620646E-05   0.000000E+00
-   13 H13        -1.739906E-05   6.812236E-05   0.000000E+00
-   14 C14         1.163012E-04  -6.779679E-05   0.000000E+00
-   15 H15         3.353337E-05  -8.620646E-05   0.000000E+00
-   16 C16        -6.915979E-05  -1.038235E-04   0.000000E+00
-   17 H17        -3.540308E-05  -2.593685E-05   0.000000E+00
-   18 H18         1.739906E-05  -6.812236E-05   0.000000E+00
-   19 C19         1.867396E-04  -5.444780E-05   0.000000E+00
-   20 H20         3.368413E-05   2.996421E-05   0.000000E+00
+    1 C1          1.217212E-04  -1.274899E-04   0.000000E+00
+    2 C2         -2.858263E-04  -2.368199E-04   0.000000E+00
+    3 C3         -1.867009E-04   5.443013E-05   0.000000E+00
+    4 C4         -1.217212E-04   1.274899E-04   0.000000E+00
+    5 C5          2.858263E-04   2.368199E-04   0.000000E+00
+    6 H6         -4.129028E-05  -2.050641E-05   0.000000E+00
+    7 H7         -3.362341E-05  -2.998549E-05   0.000000E+00
+    8 H8          4.129028E-05   2.050641E-05   0.000000E+00
+    9 C9         -1.162566E-04   6.782779E-05   0.000000E+00
+   10 C10         6.911627E-05   1.037681E-04   0.000000E+00
+   11 H11         3.534055E-05   2.594381E-05   0.000000E+00
+   12 H12        -3.347157E-05   8.619496E-05   0.000000E+00
+   13 H13        -1.738116E-05   6.806249E-05   0.000000E+00
+   14 C14         1.162566E-04  -6.782779E-05   0.000000E+00
+   15 H15         3.347157E-05  -8.619496E-05   0.000000E+00
+   16 C16        -6.911627E-05  -1.037681E-04   0.000000E+00
+   17 H17        -3.534055E-05  -2.594381E-05   0.000000E+00
+   18 H18         1.738116E-05  -6.806249E-05   0.000000E+00
+   19 C19         1.867009E-04  -5.443013E-05   0.000000E+00
+   20 H20         3.362341E-05   2.998549E-05   0.000000E+00
  -------------   -------------  -------------  -------------
      total        0.000000E+00   0.000000E+00   0.000000E+00
    
@@ -348,14 +342,14 @@ etot   7  Y  N  0  N    -382.30825865550  3.6E-07  0.0E+00  0.0E+00
   start of program geopt   1
   
   geometry optimization step  1
-  energy:            -382.30825865550 hartrees
+  energy:            -382.30825872880 hartrees
   
-  gradient maximum:        3.9860E-04 *  (  4.5000E-04 )
-  gradient rms:            1.5823E-04 *  (  3.0000E-04 )
+  gradient maximum:        3.9849E-04 *  (  4.5000E-04 )
+  gradient rms:            1.5818E-04 *  (  3.0000E-04 )
   step size:   0.00275  trust radius:   0.30000
-  displacement maximum:    1.0021E-03 *  (  1.8000E-03 )
-  displacement rms:        3.5529E-04 *  (  1.2000E-03 )
-  predicted energy change:    -1.6417E-06    geom step:   2.7520E-03    full step:   2.7520E-03
+  displacement maximum:    1.0019E-03 *  (  1.8000E-03 )
+  displacement rms:        3.5519E-04 *  (  1.2000E-03 )
+  predicted energy change:    -1.6408E-06    geom step:   2.7513E-03    full step:   2.7513E-03
   
   ********************************************************
   **           Geometry optimization complete           **
@@ -390,11 +384,11 @@ etot   7  Y  N  0  N    -382.30825865550  3.6E-07  0.0E+00  0.0E+00
    
   principal moments of inertia:
         amu*angstrom^2:      109.23594      737.84464      847.08058
-                g*cm^2: 1.81390671E-38 1.22522068E-37 1.40661135E-37
+                g*cm^2: 1.81390525E-38 1.22521969E-37 1.40661022E-37
    
   rotational constants:
-               cm^(-1):     0.15432312     0.02284713     0.01990086
-                   GHz:     4.62649076     0.68493968     0.59661275
+               cm^(-1):     0.15432310     0.02284713     0.01990086
+                   GHz:     4.62649016     0.68493959     0.59661267
    
  
   bond lengths (angstroms):
@@ -438,9 +432,9 @@ etot   7  Y  N  0  N    -382.30825865550  3.6E-07  0.0E+00  0.0E+00
  C1      -C19     -C5      -H8      : 180.000000
  C2      -C1      -C14     -H15     : 180.000000
  C2      -C1      -C14     -C16     :   0.000000
- C2      -C1      -C19     -C5      :   0.000001
+ C2      -C1      -C19     -C5      :   0.000000
  C2      -C1      -C19     -H20     : 180.000000
- C2      -C3      -C4      -C5      :   0.000001
+ C2      -C3      -C4      -C5      :   0.000000
  C2      -C3      -C4      -C9      : 180.000000
  C3      -C2      -C1      -C14     : 180.000000
  C3      -C2      -C1      -C19     :   0.000000
@@ -471,15 +465,15 @@ etot   7  Y  N  0  N    -382.30825865550  3.6E-07  0.0E+00  0.0E+00
  H15     -C14     -C16     -H18     :   0.000000
  C16     -C14     -C1      -C19     : 180.000000
  
-  nuclear repulsion energy.......     445.899347663 hartrees
+  nuclear repulsion energy.......     445.899315474 hartrees
   -------------------------------------------------
  /  end of geometry optimization iteration   1   /
  -------------------------------------------------
    
   end of program geopt
    
- Total cpu seconds     user:      39.360   user+sys:      40.580
+ Total cpu seconds     user:      29.650   user+sys:      30.970
   
- Total elapsed time:    44 seconds
+ Total elapsed time:    115 seconds
 
-Job dvb_gopt completed on a-gle at Sun Aug  6 09:14:13 2006
+Job dvb_gopt completed on puffin at Fri Nov  2 20:34:09 2007

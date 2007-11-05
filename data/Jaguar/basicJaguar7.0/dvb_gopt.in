@@ -1,6 +1,4 @@
-../../Gaussian/basicGaussian03/dvb_sp.out
-
-entry_name: dvb_sp
+entry_name: dvb_gopt
 &gen
 idft=22111
 igeopt=1

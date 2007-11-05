@@ -1,6 +1,4 @@
-../../Gaussian/basicGaussian03/dvb_sp.out
-
-entry_name: dvb_sp-1
+entry_name: dvb_ir
 &gen
 idft=22111
 ifreq=1

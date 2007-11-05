@@ -184,59 +184,62 @@ class Jaguar(logfileparser.Logfile):
             self.nmo = aoccs + avirts
             self.homos = numpy.array([aoccs-1,boccs-1], "i")
             self.unrestrictedflag = True
+
+        # MO energies and symmetries.
+        # Jaguar 7.0: provides energies and symmetries for both
+        #   restricted and unrestricted calculations, like this:
+        #     Alpha Orbital energies/symmetry label: 
+        #     -10.25358 Bu  -10.25353 Ag  -10.21931 Bu  -10.21927 Ag     
+        #     -10.21792 Bu  -10.21782 Ag  -10.21773 Bu  -10.21772 Ag     
+        #     ...
+        # Jaguar 6.5: prints both only for restricted calculations,
+        #   so for unrestricted calculations the output it looks like this:
+        #     Alpha Orbital energies: 
+        #     -10.25358  -10.25353  -10.21931  -10.21927  -10.21792  -10.21782
+        #     -10.21773  -10.21772  -10.21537  -10.21537   -1.02078   -0.96193
+        #     ...
+        # Presence of 'Orbital energies' is enough to catch all versions.
+        if "Orbital energies" in line:
+
+            # Parsing results is identical for restricted/unrestricted
+            #   calculations, just assert later that alpha/beta order is OK.
+            spin = int(line[2:6] == "Beta")
+
+            # Check if symmetries are printed also.
+            issyms = "symmetry label" in line
+
+            if not hasattr(self, "moenergies"):
+                self.moenergies = []
+            if issyms and not hasattr(self, "mosyms"):
+                    self.mosyms = []
             
-        if line[2:33] == "Orbital energies/symmetry label":
-        # Get MO Energies and symmetrys
-            self.mosyms = [[]]
-            self.moenergies = [[]]
+            # Grow moeneriges/mosyms and make sure they are empty when
+            #   parsed multiple times - currently cclib returns only
+            #   the final output (ex. in a geomtry optimization).
+            if len(self.moenergies) < spin+1:
+                self.moenergies.append([])
+            self.moenergies[spin] = []
+            if issyms:
+                if len(self.mosyms) < spin+1:
+                    self.mosyms.append([])
+                self.mosyms[spin] = []
+            
+            line = inputfile.next().split()
+            while len(line) > 0:
+                if issyms:
+                    energies = [float(line[2*i]) for i in range(len(line)/2)]
+                    syms = [line[2*i+1] for i in range(len(line)/2)]
+                else:
+                    energies = [float(e) for e in line]
+                energies = [utils.convertor(e, "hartree", "eV") for e in energies]
+                self.moenergies[spin].extend(energies)
+                if issyms:
+                    syms = [self.normalisesym(s) for s in syms]
+                    self.mosyms[spin].extend(syms)
+                line = inputfile.next().split()
+            
+            # There should always be an extra blank line after all this.
             line = inputfile.next()
-            while line.strip():
-                temp = line.strip().split()
-                for i in range(0, len(temp), 2):
-                    self.moenergies[0].append(utils.convertor(float(temp[i]), "hartree", "eV"))
-                    self.mosyms[0].append(self.normalisesym(temp[i+1]))
-                line = inputfile.next()
-            self.moenergies = [numpy.array(self.moenergies[0], "d")]
-
-        if line.find("Orbital energies:") == 2:
-        # Get MO Energies
-        # Jaguar 6.0
-            if not hasattr(self,"moenergies"):
-                self.moenergies = [[]]
-                line = inputfile.next()
-                while line.strip():
-                    temp = line.strip().split()
-                    for i in range(len(temp)):
-                        self.moenergies[0].append(utils.convertor(float(temp[i]), "hartree", "eV"))
-                    line = inputfile.next()
-                self.moenergies = [numpy.array(self.moenergies[0], "d")]
-
-        if line.find("Alpha Orbital energies:") == 2:
-        # Get alpha MO Energies
-        # Jaguar 6.0
-            if not hasattr(self,"moenergies"):
-                self.moenergies = [[],[]]
-                line = inputfile.next()
-                while line.strip():
-                    temp = line.strip().split()
-                    for i in range(len(temp)):
-                        self.moenergies[0].append(utils.convertor(float(temp[i]), "hartree", "eV"))
-                    line = inputfile.next()
-
-                blank = inputfile.next()
-                homo = inputfile.next()
-                lumo = inputfile.next()
-                blank = inputfile.next()
-                title = inputfile.next()
-
-                line = inputfile.next()
-                while line.strip():
-                    temp = line.strip().split()
-                    for i in range(len(temp)):
-                        self.moenergies[1].append(utils.convertor(float(temp[i]), "hartree", "eV"))
-                    line = inputfile.next()
-
-                self.moenergies = [numpy.array(x, "d") for x in self.moenergies]
 
         if line.find("Occupied + virtual Orbitals- final wvfn") > 0:
             
@@ -353,52 +356,78 @@ class Jaguar(logfileparser.Logfile):
         if line[2:27] == "number of basis functions":
             self.nbasis = int(line.strip().split()[-1])
 
+        # IR output looks like this:
+        #   frequencies        72.45   113.25   176.88   183.76   267.60   312.06
+        #   symmetries       Au       Bg       Au       Bu       Ag       Bg      
+        #   intensities         0.07     0.00     0.28     0.52     0.00     0.00
+        #   reduc. mass         1.90     0.74     1.06     1.42     1.19     0.85
+        #   force const         0.01     0.01     0.02     0.03     0.05     0.05
+        #   C1       X     0.00000  0.00000  0.00000 -0.05707 -0.06716  0.00000
+        #   C1       Y     0.00000  0.00000  0.00000  0.00909 -0.02529  0.00000
+        #   C1       Z     0.04792 -0.06032 -0.01192  0.00000  0.00000  0.11613
+        #   C2       X     0.00000  0.00000  0.00000 -0.06094 -0.04635  0.00000
+        #   ... etc. ...
+        # This is a complete ouput, some files will not have intensities,
+        #   and older Jaguar versions sometimes skip the symmetries.
         if line[2:23] == "start of program freq":
-        # IR stuff
+
             self.vibfreqs = []
             self.vibdisps = []
+            forceconstants = False
+            intensities = False
             blank = inputfile.next()
             line = inputfile.next()
-            line = inputfile.next()
-            forceconstants = False
-            if line.find("force constants")>=0:
-                forceconstants = True
-                # Could handle this differently if a problem in future
-            line = inputfile.next()
             while line.strip():
+                if "force const" in line:
+                    forceconstants = True
+                if "intensities" in line:
+                    intensities = True
                 line = inputfile.next()
-            
             freqs = inputfile.next()
+            
+            # The last block has an extra blank line after it - catch it.
             while freqs.strip():
-                temp = freqs.strip().split()
-                self.vibfreqs.extend(map(float, temp[1:]))
-                temp = inputfile.next().strip().split()
-                if temp[0] == "symmetries": # May go straight from frequencies to reduced mass
+
+                # Number of modes (columns printed in this block).
+                nmodes = len(freqs.split())-1
+
+                # Append the frequencies.
+                self.vibfreqs.extend(map(float, freqs.split()[1:]))
+                line = inputfile.next().split()
+                
+                # May skip symmetries (older Jaguar versions).
+                if line[0] == "symmetries":
                     if not hasattr(self, "vibsyms"):
                         self.vibsyms = []
+                    self.vibsyms.extend(map(self.normalisesym, line[1:]))
+                    line = inputfile.next().split()                                
+                if intensities:
+                    if not hasattr(self, "vibirs"):
                         self.vibirs = []
-                    self.vibsyms.extend(map(self.normalisesym, temp[1:]))
-                    temp = inputfile.next().strip().split()                                
-                    self.vibirs.extend(map(float, temp[1:]))
-                    reducedmass = inputfile.next()
-                    if forceconstants:
-                        forceconst = inputfile.next()
-                line = inputfile.next()
+                    self.vibirs.extend(map(float, line[1:]))
+                    line = inputfile.next().split()                                
+                if forceconstants:
+                    line = inputfile.next()
 
-                q = [ [] for i in range(7) ] # Hold up to 7 lists of triplets
-                ## while line.strip(): # Read the cartesian displacements
-                for x in range(len(self.atomnos)):
-                    p = [ [] for i in range(7) ] # Hold up to 7 triplets
+                # Start parsing the displacements.
+                # Variable 'q' holds up to 7 lists of triplets.
+                q = [ [] for i in range(7) ]
+                for n in range(self.natom):
+                    # Variable 'p' holds up to 7 triplets.
+                    p = [ [] for i in range(7) ]
                     for i in range(3):
-                        broken = map(float, line.strip().split()[2:])
-                        for j in range(len(broken)):
-                            p[j].append(broken[j])
                         line = inputfile.next()
-                    for i in range(len(broken)):
+                        disps = [float(disp) for disp in line.split()[2:]]
+                        for j in range(nmodes):
+                            p[j].append(disps[j])
+                    for i in range(nmodes):
                         q[i].append(p[i])
 
-                self.vibdisps.extend(q[:len(broken)])
+                self.vibdisps.extend(q[:nmodes])
+                blank = inputfile.next()
                 freqs = inputfile.next()
+
+            # Convert new data to arrays.
             self.vibfreqs = numpy.array(self.vibfreqs, "d")
             self.vibdisps = numpy.array(self.vibdisps, "d")
             if hasattr(self, "vibirs"):

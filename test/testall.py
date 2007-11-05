@@ -76,12 +76,12 @@ def visualtests():
                getfile(GAMESS,"basicPCGAMESS","dvb_gopt_a.out")[0],
                getfile(GAMESS,"basicGAMESS-US","dvb_gopt_a.out")[0],
                getfile(ADF,"basicADF2007.01","dvb_gopt.adfout")[0],
-               getfile(Jaguar,"basicJaguar6.5", "dvb_gopt.out")[0],
+               getfile(Jaguar,"basicJaguar7.0", "dvb_gopt.out")[0],
                getfile(Molpro,"basicMolpro2006", "dvb_gopt.out", "dvb_gopt.out")[0],
              ]
 
     print "\n\nMO energies of optimised dvb"
-    print "      ", "".join(["%-12s" % x for x in ['Gaussian03','PC-GAMESS','GAMESS-US','ADF2007.01','Jaguar6.5','Molpro2006']])
+    print "      ", "".join(["%-12s" % x for x in ['Gaussian03','PC-GAMESS','GAMESS-US','ADF2007.01','Jaguar7.0','Molpro2006']])
     print "HOMO", "   ".join(["%+9.4f" % x.moenergies[0][x.homos[0]] for x in output])
     print "LUMO", "   ".join(["%+9.4f" % x.moenergies[0][x.homos[0]+1] for x in output])
     print "H-L ", "   ".join(["%9.4f" % (x.moenergies[0][x.homos[0]+1]-x.moenergies[0][x.homos[0]],) for x in output])

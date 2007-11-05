@@ -106,7 +106,8 @@ filenames = [glob(os.path.join(data, "Gaussian", "basicGaussian03", "*.out")) +
              glob(os.path.join(data, "ADF", "ADF2004.01", "*.gz")) +
              glob(os.path.join(data, "ADF", "ADF2004.01", "*.bz2")) +
              glob(os.path.join(data, "ADF", "ADF2005.01", "*.zip")) +
-             glob(os.path.join(data, "ADF", "ADF2006.01", "*.out")),
+             glob(os.path.join(data, "ADF", "ADF2006.01", "*.out")) +
+             glob(os.path.join(data, "ADF", "ADF2006.01", "*.bz2")),
                           
              glob(os.path.join(data, "GAMESS-UK", "basicGAMESS-UK", "*.out")) +
              glob(os.path.join(data, "GAMESS-UK", "GAMESS-UK6.0", "*.out.gz")) +
@@ -114,7 +115,8 @@ filenames = [glob(os.path.join(data, "Gaussian", "basicGaussian03", "*.out")) +
              
              glob(os.path.join(data, "Jaguar", "Jaguar4.2", "*.bz2")) +
              glob(os.path.join(data, "Jaguar", "Jaguar6.0", "*.bz2")) +
-             glob(os.path.join(data, "Jaguar", "basicJaguar6.5", "*.out")),
+             glob(os.path.join(data, "Jaguar", "Jaguar6.5", "*.bz2")) +
+             glob(os.path.join(data, "Jaguar", "basicJaguar7.0", "*.out")),
 
              glob(os.path.join(data, "Molpro", "basicMolpro2006", "*.out")) +
              glob(os.path.join(data, "Molpro", "Molpro2006", "*.bz2")),

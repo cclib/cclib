@@ -1,13 +1,14 @@
-../../Gaussian/basicGaussian03/dvb_sp.out
-
-entry_name: dvb_sp-1
+entry_name: dvb_un_sp
 &gen
 idft=22111
+ifreq=1
 igeopt=-1
-basis=sto-3g
+inhess=2
+iuhf=1
+molchg=1
+multip=2
+basis=STO-3G
 ip11=2
-ip18=2
-ip19=2
 &
 &zmat
 C1      0.2694810000000  -1.4100870000000   0.0000000000000
