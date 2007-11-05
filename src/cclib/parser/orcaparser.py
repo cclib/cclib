@@ -84,6 +84,61 @@ class ORCA(logfileparser.Logfile):
                 line = inputfile.next()
                 self.geotargets[i] = float(line.split()[-2])
 
+        # Read in scfvalues.
+        if line [:14] == "SCF ITERATIONS":
+            if not hasattr(self, "scfvalues"):
+                self.scfvalues = []
+            dashes = inputfile.next()
+            line = inputfile.next().split()
+            assert line[1] == "Energy"
+            assert line[2] == "Delta-E"
+            assert line[3] == "Max-DP"
+            self.scfvalues.append([])
+            while line != []:
+                if line[0].isdigit():
+                    energy = float(line[1])
+                    deltaE = float(line[2])
+                    maxDP = float(line[3])
+                    rmsDP = float(line[4])
+                    self.scfvalues[-1].append([deltaE, maxDP, rmsDP])
+                line = inputfile.next().split()
+
+        # Read in values for last SCF iteration and scftargets.
+        if line[:15] == "SCF CONVERGENCE":
+            if not hasattr(self, "scfvalues"):
+                self.scfvalues = []
+            if not hasattr(self, "scftargets"):
+                self.scftargets = []
+            dashes = inputfile.next()
+            blank = inputfile.next()
+            line = inputfile.next()
+            assert line[:29].strip() == "Last Energy change"
+            deltaE_value = float(line[33:46])
+            deltaE_target = float(line[60:72])
+            line = inputfile.next()
+            assert line[:29].strip() == "Last MAX-Density change"
+            maxDP_value = float(line[33:46])
+            maxDP_target = float(line[60:72])
+            line = inputfile.next()
+            assert line[:29].strip() == "Last RMS-Density change"
+            rmsDP_value = float(line[33:46])
+            rmsDP_target = float(line[60:72])
+            line = inputfile.next()
+            assert line[:29].strip() == "Last DIIS Error"
+            self.scfvalues[-1].append([deltaE_value,maxDP_value,rmsDP_value])
+            self.scftargets.append([deltaE_target,maxDP_target,rmsDP_target])                    
+
+        # Read in SCF energy, at least in SP calculation.
+        if line [:16] == "TOTAL SCF ENERGY":
+            if not hasattr(self, "scfenergies"):
+                self.scfenergies = []
+            dashes = inputfile.next()
+            blank = inputfile.next()
+            line = inputfile.next()
+            if line[:12] == "Total Energy":
+                energy = float(line[50:67])
+                self.scfenergies.append(energy)
+
         if line[33:53] == "Geometry convergence":
 #get geometry convergence criteria
             if not hasattr(self, "geovalues"):
@@ -216,12 +271,17 @@ class ORCA(logfileparser.Logfile):
                     broken = line.split()
                     self.aooverlaps[j, i:i+size] = map(float, broken[1:size+1])
 
+        # Molecular orbital coefficients.
+        # This is also where atombasis is parsed.
         if line[0:18] == "MOLECULAR ORBITALS":
-#parser the molecular orbital coefficients
+
             dashses = inputfile.next()
 
             mocoeffs = [ numpy.zeros((self.nbasis, self.nbasis), "d") ]
             self.aonames = []
+            self.atombasis = []
+            for n in range(self.natom):
+                self.atombasis.append([])
 
             for spin in range(len(self.moenergies)):
 
@@ -244,10 +304,11 @@ class ORCA(logfileparser.Logfile):
                         #only need this on the first time through
                         if spin == 0 and i == 0:
                             atomname = line[3:5].split()[0]
-                            num = int(line[0:3]) + 1
+                            num = int(line[0:3])
                             orbital = broken[1].upper()
                             
-                            self.aonames.append("%s%i_%s"%(atomname, num, orbital))
+                            self.aonames.append("%s%i_%s"%(atomname, num+1, orbital))
+                            self.atombasis[num].append(j)
 
                         temp = []
                         vals = line[16:-1] #-1 to remove the last blank space

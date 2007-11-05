@@ -163,6 +163,12 @@ class MolproSPTest(GenericSPTest):
 class OrcaSPTest(GenericSPTest):
     """ORCA restricted single point unittest."""
 
+    # This was run in 3-21G; H has 2, C has 9.
+    nbasisdict = {1:2, 6:9}
+    
+    # Approximate B3LYP energy of dvb after SCF in 3-21G.
+    b3lyp_energy = -10470
+
 class PCGamessSPTest(GenericSPTest):
     """PC-GAMESS restricted single point unittest."""
 

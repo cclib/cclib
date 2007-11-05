@@ -22,7 +22,7 @@ Topic :: Scientific/Engineering :: Chemistry
 Topic :: Software Development :: Libraries :: Python Modules
 """
 
-programs = ['ADF', 'GAMESS', 'GAMESS-UK', 'Gaussian', 'Jaguar', 'Molpro']
+programs = ['ADF', 'GAMESS', 'GAMESS-UK', 'Gaussian', 'Jaguar', 'Molpro', 'ORCA']
 
 def setup_cclib():
 
