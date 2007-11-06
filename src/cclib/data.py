@@ -2,12 +2,19 @@
 cclib (http://cclib.sf.net) is (c) 2007, the cclib development team
 and licensed under the LGPL (http://www.gnu.org/copyleft/lgpl.html).
 """
+
+
+import cPickle as pickle
+import os
+import sys
+
 import numpy
 
 try:
     import simplejson
 except ImportError:
     simplejson = None
+
 
 class ccData(object):
     """Class for objects containing data from cclib parsers and methods.
@@ -57,10 +64,13 @@ class ccData(object):
             the 11th molecular orbital is the HOMO
     """
 
-    def __init__(self):
+    def __init__(self, attributes=None):
         """Initialize the cclibData object.
         
         Normally called in the parse() method of a Logfile subclass.
+        
+        Inputs:
+            attributes - dictionary of attributes to load
         """
 
         # Names of all supported attributes.
@@ -118,50 +128,13 @@ class ccData(object):
 
         # Attributes that should be lists of arrays (double precision).
         self._listsofarrays = ['mocoeffs', 'moenergies', 'scfvalues']
-
-##    def __setattr__(self, name, value):
-##        
-##        # If possible, make sure the attribute has the correct type (including arrays).
-##        atype = getattr(self, "_attrtypes", {}).get(name, None)
-##        if atype and (type(value) is not atype):
-##            if atype is numpy.ndarray:
-##                precision = 'd'
-##                if name in getattr(self, "_intarrays", []):
-##                    precision = 'i'
-##                value = numpy.array(value, precision)
-##            else:
-##                value = atype(value)
-##        
-##        # Make sure selected attrbutes are lists of arrays.
-##        if name in getattr(self, "_listsofarrays", []):
-##            if not numpy.alltrue([type(v) is numpy.ndarray for v in value]):
-##                value = [numpy.array(v, 'd') for v in value]
-##
-##        # Set the actual attribute.
-##        object.__setattr__(self, name, value)
-
-    def writejson(self, filename = None):
-        """Write the object as JSON"""
-        if not simplejson:
-            raise ImportError, "simplejson module not found"
-
-        self.listify()
-        answer = {}
-        for k, v in self._attrtypes.iteritems():
-            if hasattr(self, k):
-                answer[k] = getattr(self, k)
-        self.arrayify()
         
-        json = simplejson.dumps(answer)
-        if filename:
-            outputfile = open(filename, "w")
-            print >> outputfile, json
-            outputfile.close()
-        else:
-            return json
-
+        if attributes:
+            self.setattributes(attributes)
+        
     def listify(self):
-        """Convert all array attributes to lists"""
+        """Converts all attributes that are arrays or lists of arrays to lists."""
+        
         for k, v in self._attrtypes.iteritems():
             if hasattr(self, k):
                 if v == numpy.ndarray:
@@ -170,7 +143,8 @@ class ccData(object):
                     setattr(self, k, [x.tolist() for x in getattr(self, k)])
     
     def arrayify(self):
-        """Convert all array attributes to arrays"""
+        """Converts appropriate attributes to arrays or lists of arrays."""
+        
         for k, v in self._attrtypes.iteritems():
             if hasattr(self, k):
                 precision = 'd'
@@ -181,22 +155,132 @@ class ccData(object):
                 elif v == list and k in self._listsofarrays:
                     setattr(self, k, [numpy.array(x, precision)
                                       for x in getattr(self, k)])
-                
-def readjson(text = "", filename = None):
-    """Read a file or a string in JSON format represent a ccData object"""
+
+    def getattributes(self):
+        """Returns a dictionary of existing data attributes."""
+    
+        attributes = {}
+        for attr in self._attrlist:
+            if hasattr(self, attr):
+                attributes[attr] = getattr(self,attr)
+        return attributes
+
+    def setattributes(self, attributes):
+        """Sets data attributes given in a dictionary.
+        
+        Inputs:
+            attributes - dictionary of attributes to set
+        Outputs:
+            invalid - list of attributes names that were not set, which
+                      means they are not specified in self._attrlist
+        """
+    
+        if type(attributes) is not dict:
+            raise TypeError, "attributes must be in a dictionary"
+    
+        valid = [a for a in attributes if a in self._attrlist]
+        invalid = [a for a in attributes if a not in self._attrlist]
+    
+        for attr in valid:
+            setattr(self, attr, attributes[attr])
+        self.arrayify()
+        return invalid
+
+    def writepickle(self, outfile=sys.stdout, protocol=0, listify=False, binary=False):
+        """Returns pickled represenntation of data attributes in a dictionary.
+        
+        Inputs:
+            outfile - output file name or file object, sys.stdout by default
+            protocol - protocol (int) passed to pickle
+            listify - flag (bool) to convert all attributes to lists
+            binary - flag to write in binary mode (only if outfile is a file name)
+        """
+    
+        if listify:
+            self.listify()
+            
+        if type(outfile) is str:
+            stream = open(outfile, "w"+"b"*binary)
+            print >>stream, pickle.dumps(self.getattributes(), protocol=protocol)
+            stream.close()
+        elif type(outfile) is file:
+            print >>outfile, pickle.dumps(self.getattributes(), protocol=protocol)
+        else:
+            raise TypeError, "outfile must be a file name or file object"
+        
+        if listify:
+            self.arrayify()
+
+    def writejson(self, outfile=sys.stdout, binary=False):
+        """Returns JSON representation of data attributes in a dictionary.
+        
+        Inputs:
+            outfile - output file name or file object, stdout by default
+            binary - flag to write in binary mode (only if outfile is a file name)
+        """
+
+        if not simplejson:
+            raise ImportError, "simplejson module not found"
+
+        # JSON does not understand numpy arrays, so listify them first.
+        self.listify()
+
+        if type(outfile) is str:
+            stream = open(outfile, "w"+"b"*binary)
+            print >>stream, simplejson.dumps(self.getattributes())
+            stream.close()
+        elif type(outfile) is file:
+            print >>outfile, simplejson.dumps(self.getattributes())
+        else:
+            raise TypeError, "outfile must be a file name or file object"
+
+        # Change all neccesary attributes back to arrays.
+        self.arrayify()
+
+
+def readpickle(indata=sys.stdin, binary=False):
+    """Read pickle data and return a corresponding ccData object.
+    
+    Inputs:
+        indata - raw pickle string, file name or file object, sys.stdin by default
+        binary - flag to read in binary mode (only if outfile is a file name)
+    """
+    
+    if type(indata) is str:
+        if os.path.exists(indata):
+            stream = open(indata,'r'+'b'*binary)
+            attributes = pickle.loads(stream.read())
+            stream.close()
+        else:
+            attributes = pickle.loads(indata)
+    elif type(indata) is file:
+        attributes = pickle.loads(indata.read())
+    else:
+        raise TypeError, "indata must be a string or file object"
+
+    return ccData(attributes=attributes)
+
+def readjson(indata=sys.stdin, binary=False):
+    """Read JSON data and return a corresponding ccData object.
+    
+    Inputs:
+        indata - raw JSON string, file name or file object, sys.stdin by default
+        binary - flag to read in binary mode (only if outfile is a file name)
+    """
+    
     if not simplejson:
         raise ImportError, "simplejson module not found"
-    if filename:
-        inputfile = open(filename, "r")
-        text = inputfile.read()
-        inputfile.close()
 
-    json = simplejson.loads(text)
-    data = ccData()
-    validattrs = [x for x in json if x in data._attrtypes]
-    notvalidattrs = [x for x in json if x not in data._attrtypes]
+    if type(indata) is str:
+        if os.path.exists(indata):
+            stream = open(indata,'r'+'b'*binary)
+            attributes = simplejson.loads(stream.read())
+            stream.close()
+        else:
+            attributes = simplejson.loads(indata)
+    elif type(indata) is file:
+        attributes = simplejson.loads(indata.read())
+    else:
+        raise TypeError, "indata must be a string or file object"
 
-    for k in validattrs:
-        setattr(data, k, json[k])
-    data.arrayify()
-    return data
+    return ccData(attributes=attributes)
