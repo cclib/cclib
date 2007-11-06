@@ -17,7 +17,6 @@ from cclib.parser import ccopen
 from cclib.parser import Gaussian, GAMESS, GAMESSUK, Jaguar, ADF, Molpro
 
 # Regression tests
-
 def testGaussian_basicGaussian03_dvb_gopt_out(logfile):
     """Example regression test for Gaussian/basicGaussian03/dvb_gopt.out
 
@@ -26,6 +25,16 @@ def testGaussian_basicGaussian03_dvb_gopt_out(logfile):
     separators are also replaced by underscores.
     """
     assert len(logfile.homos)==1
+
+def testGaussian_Gaussian98_C_bigmult_log_gz(logfile):
+    """
+    This file failed first becuase it had a double digit multiplicity.
+    Then it failed because it had no alpha virtual orbitals.
+    """
+    assert logfile.charge == -3
+    assert logfile.mult == 10
+    assert logfile.homos[0] == 8
+    assert logfile.homos[1] == -1 # No occupied beta orbitals
 
 def testGaussian_Gaussian03_chn1_log_gz(logfile):
     """

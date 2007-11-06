@@ -331,10 +331,12 @@ class Gaussian(logfileparser.Logfile):
         #   Charge =  0 Multiplicity = 1 in fragment  2.
         if line[1:7] == 'Charge' and line.find("Multiplicity")>=0:
 
-            parts = line.split()
-            if len(parts) == 6 or parts[-1] == 'supermolecule':
-                self.charge = int(parts[2])
-                self.mult = int(parts[5])
+            regex = ".*=(.*)Mul.*=\s*(\d+).*"
+            match = re.match(regex, line)
+            assert match, "Something unusual about the line: '%s'" % line
+            
+            self.charge = int(match.groups()[0])
+            self.mult = int(match.groups()[1])
 
         # Orbital symmetries.
         if line[1:20] == 'Orbital symmetries:' and not hasattr(self, "mosyms"):
@@ -401,7 +403,13 @@ class Gaussian(logfileparser.Logfile):
                     x = part[i*10:(i+1)*10]
                     self.moenergies[0].append(utils.convertor(self.float(x), "hartree", "eV"))
                     i += 1
-                line = inputfile.next()            
+                line = inputfile.next()
+            # If, at this point, self.homos is unset, then there were not
+            # any alpha virtual orbitals
+            if not hasattr(self, "homos"):
+                HOMO = len(self.moenergies[0])-1
+                self.homos = numpy.array([HOMO], "i")
+            
 
             if line.find('Beta') == 2:
                 self.moenergies.append([])
