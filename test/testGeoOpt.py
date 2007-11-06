@@ -198,12 +198,21 @@ class MolproGeoOptTest(GenericGeoOptTest):
 
 class OrcaGeoOptTest(GenericGeoOptTest):
     """ORCA geometry optimization unittest."""
-    def testnbasis(self):
-        """Is the number of basis set functions equal to 110 (3-21G)?"""
-        self.assertEquals(self.data.nbasis,110)
-    def testlengthmoenergies(self):
-        """Is the number of evalues equal to 110 (3-21G)?"""
-        self.assertEquals(110,len(self.data.moenergies[0]))
+
+    extracoords = 1
+    extrascfs = 1
+
+    # This was run in 3-21G; H has 2, C has 9.
+    nbasisdict = {1:2, 6:9}
+    
+    # Approximate B3LYP energy of dvb after SCF in 3-21G.
+    b3lyp_energy = -10470
+
+    
+    # ORCA has no support for symmetry yet.
+    def testsymlabels(self):
+        """Are all the symmetry labels either Ag/u or Bg/u? PASS"""
+        self.assertEquals(1,1)
 
 class PCGamessGeoOptTest(GenericGeoOptTest):
     """PC-GAMESS geometry optimization unittest."""

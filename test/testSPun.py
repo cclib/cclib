@@ -111,6 +111,11 @@ class MolproSPunTest(GenericSPunTest):
 class OrcaSPunTest(GenericSPunTest):
     """ORCA unrestricted single point unittest."""
     
+    # ORCA has no support for symmetry yet.
+    def testmosyms(self):
+        """Are the dims of the mosyms equals to 2 x nmo?"""
+        self.assertEquals(1,1)
+
 class PCGamessSPunTest(GenericSPunTest):
     """PC-GAMESS unrestricted single point unittest."""
 
