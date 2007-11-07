@@ -148,15 +148,25 @@ class GAMESS(logfileparser.Logfile):
         if "EXCITATION ENERGIES" in line:
             if not hasattr(self, "etenergies"):
                 self.etenergies = []
-            header = inputfile.next()
+            header = inputfile.next().rstrip()
+            get_etosc = False
+            if header.endswith("OSC. STR."):
+                # water_cis_dets.out does not have the oscillator strength
+                # in this table...it is extracted from a different section below
+                get_etosc = True
+                self.etoscs = []
             dashes = inputfile.next()
             line = inputfile.next()
-            while len(line.split()) > 0:
+            broken = line.split()
+            while len(broken) > 0:
                 # Take hartree value with more numbers, and convert.
                 # Note that the values listed after this are also less exact!
-                etenergy = float(line.split()[1])
+                etenergy = float(broken[1])
                 self.etenergies.append(utils.convertor(etenergy, "hartree", "cm-1"))
-                line = inputfile.next()
+                if get_etosc:
+                    etosc = float(broken[-1])
+                    self.etoscs.append(etosc)
+                broken = inputfile.next().split()
 
         # Detect the CI hamiltonian type, if applicable.
         # Should always be detected if CIS is done.

@@ -25,7 +25,13 @@ def testGaussian_basicGaussian03_dvb_gopt_out(logfile):
     separators are also replaced by underscores.
     """
     assert len(logfile.homos)==1
-
+    
+def testGAMESS_basicPCGAMESS_dvb_td_out(logfile):
+    """
+    Previously, etoscs was not extracted for this TD DFT calculation.
+    """
+    assert len(logfile.etoscs) == 5
+    
 def testGaussian_Gaussian98_C_bigmult_log_gz(logfile):
     """
     This file failed first becuase it had a double digit multiplicity.
