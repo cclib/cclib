@@ -145,7 +145,7 @@ class GAMESS(logfileparser.Logfile):
             self.mult = int(inputfile.next().split()[-1])
 
         # etenergies (used only for CIS runs now)
-        if "EXCITATION ENERGIES" in line:
+        if "EXCITATION ENERGIES" in line and line.find("DONE WITH") < 0:
             if not hasattr(self, "etenergies"):
                 self.etenergies = []
             header = inputfile.next().rstrip()
@@ -211,7 +211,7 @@ class GAMESS(logfileparser.Logfile):
                 CIScontribs.append([(fromMO,MOtype),(toMO,MOtype),coeff])
                 line = inputfile.next()
             self.etsecs.append(CIScontribs)
-            
+
         # etoscs (used only for CIS runs now)
         if line[1:50] == "TRANSITION FROM THE GROUND STATE TO EXCITED STATE":
             if not hasattr(self, "etoscs"):
@@ -223,6 +223,35 @@ class GAMESS(logfileparser.Logfile):
             strength = float(line.split()[3])
             self.etoscs.append(strength)
 
+        # TD-DFT for GAMESS-US
+        if line[10:29] == "SINGLET EXCITATIONS":
+            self.etenergies = []
+            self.etoscs = []
+            self.etsecs = []
+            self.etsyms = []
+            minus = inputfile.next()
+            blank = inputfile.next()
+            line = inputfile.next()
+            # Loop starts on the STATE line
+            while line.find("STATE") >= 0:
+                broken = line.split()
+                self.etenergies.append(utils.convertor(float(broken[-2]), "eV", "cm-1"))
+                broken = inputfile.next().split()
+                self.etoscs.append(float(broken[-1]))
+                broken = inputfile.next().split()
+                self.etsyms.append(broken[-1])
+                header = inputfile.next()
+                minus = inputfile.next()
+                CIScontribs = []
+                line = inputfile.next()
+                while line.strip():
+                    broken = line.split()
+                    fromMO, toMO = [int(broken[x]) - 1 for x in [2, 4]]
+                    CIScontribs.append([(fromMO, 0), (toMO, 0), float(broken[1])])
+                    line = inputfile.next()
+                self.etsecs.append(CIScontribs)
+                line = inputfile.next()
+         
         # Maximum and RMS gradients.
         if "MAXIMUM GRADIENT" in line or "RMS GRADIENT" in line:
 
