@@ -616,11 +616,10 @@ class Gaussian(logfileparser.Logfile):
                 toMO = int(p.match(toMO).group())-1 # subtract 1 so that it is an index into moenergies
 
                 percent = self.float(t[1])
-                # Changed: parse the actual coefficient
-                #sqr = percent**2*2 # The fractional contribution of this CI
-                #if percent < 0:
-                #    sqr = -sqr
-                #CIScontrib.append([(fromMO, frommoindex), (toMO, tomoindex), sqr])
+                if len(self.homos)==1:
+                    # For restricted calculations, the following has the
+                    # effect of including each transition twice
+                    percent *= numpy.sqrt(2)
                 CIScontrib.append([(fromMO, frommoindex), (toMO, tomoindex), percent])
                 line = inputfile.next()
             self.etsecs.append(CIScontrib)

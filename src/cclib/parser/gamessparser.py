@@ -206,8 +206,8 @@ class GAMESS(logfileparser.Logfile):
                 # With the SAPS hamiltonian, the coefficients are multiplied
                 #   by sqrt(2) so that they normalize to 1.
                 # With DETS, both alpha and beta excitations are printed.
-                if self.cihamtyp == "saps":
-                    coeff /= numpy.sqrt(2.0)
+                # if self.cihamtyp == "saps":
+                #    coeff /= numpy.sqrt(2.0)
                 CIScontribs.append([(fromMO,MOtype),(toMO,MOtype),coeff])
                 line = inputfile.next()
             self.etsecs.append(CIScontribs)
