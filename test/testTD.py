@@ -31,6 +31,14 @@ class GenericTDTest(bettertest.TestCase):
         """Is the length of etsyms correct?"""
         self.assertEqual(len(self.data.etsyms), self.number)
 
+class GenericTDTesttrp(GenericTDTest):
+    """Time-dependent HF/DFT (triplet) unittest."""
+    
+    def testoscs(self):
+        """Triplet excitations should be disallowed."""
+        self.assertEqual(len(self.data.etoscs), self.number)
+        self.assertInside(max(self.data.etoscs), 0.0, 0.01)
+
 class GaussianTDDFTTest(GenericTDTest):
     """Gaussian time-dependent HF/DFT unittest."""
     number = 5
@@ -42,6 +50,10 @@ class GaussianTDDFTTest(GenericTDTest):
 class GAMESSUSTDDFTTest(GenericTDTest):
     """GAMESS time-dependent HF/DFT unittest."""
     number = 10
+
+class GAMESSUSTDDFTtrpTest(GenericTDTest):
+    """GAMESS TD DFT (restricted) triplet unittest."""
+    number = 5
 
 class PCGamessTDDFTTest(GenericTDTest):
     """PC-GAMESS time-dependent HF/DFT unittest."""

@@ -224,11 +224,11 @@ class GAMESS(logfileparser.Logfile):
             self.etoscs.append(strength)
 
         # TD-DFT for GAMESS-US
-        if line[10:29] == "SINGLET EXCITATIONS":
+        if line[14:29] == "LET EXCITATIONS": # TRIPLET and SINGLET
             self.etenergies = []
             self.etoscs = []
             self.etsecs = []
-            self.etsyms = []
+            etsyms = []
             minus = inputfile.next()
             blank = inputfile.next()
             line = inputfile.next()
@@ -238,9 +238,10 @@ class GAMESS(logfileparser.Logfile):
                 self.etenergies.append(utils.convertor(float(broken[-2]), "eV", "cm-1"))
                 broken = inputfile.next().split()
                 self.etoscs.append(float(broken[-1]))
-                broken = inputfile.next().split()
-                self.etsyms.append(broken[-1])
-                header = inputfile.next()
+                sym = inputfile.next() # Not always present
+                if sym.find("SYMMETRY")>=0:
+                    etsyms.append(sym.split()[-1])
+                    header = inputfile.next()
                 minus = inputfile.next()
                 CIScontribs = []
                 line = inputfile.next()
@@ -251,6 +252,8 @@ class GAMESS(logfileparser.Logfile):
                     line = inputfile.next()
                 self.etsecs.append(CIScontribs)
                 line = inputfile.next()
+            if etsyms: # Not always present
+                self.etsyms = etsyms
          
         # Maximum and RMS gradients.
         if "MAXIMUM GRADIENT" in line or "RMS GRADIENT" in line:
