@@ -84,6 +84,7 @@ TDun      Gaussian    GaussianTDDFTunTest   basicGaussian03       CO_TD_delta.lo
 TD        GAMESS      GAMESSUSTDDFTTest     basicGAMESS-US        dvb_td.out
 TD        GAMESS      GAMESSUSTDDFTtrpTest  basicGAMESS-US        dvb_td_trplet.out
 TD        GAMESS      PCGamessTDDFTTest     basicPCGAMESS         dvb_td.out
+TD        GAMESS      PCGamessTDDFTtrpTest  basicPCGAMESS         dvb_td_trplet.out
 TD        ORCA        OrcaTDDFTTest         basicORCA2.6          dvb_td.out
 
 vib       ADF         ADFIRTest             basicADF2007.01       dvb_ir.adfout

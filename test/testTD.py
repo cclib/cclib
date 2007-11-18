@@ -31,14 +31,6 @@ class GenericTDTest(bettertest.TestCase):
         """Is the length of etsyms correct?"""
         self.assertEqual(len(self.data.etsyms), self.number)
 
-class GenericTDTesttrp(GenericTDTest):
-    """Time-dependent HF/DFT (triplet) unittest."""
-    
-    def testoscs(self):
-        """Triplet excitations should be disallowed."""
-        self.assertEqual(len(self.data.etoscs), self.number)
-        self.assertInside(max(self.data.etoscs), 0.0, 0.01)
-
 class GaussianTDDFTTest(GenericTDTest):
     """Gaussian time-dependent HF/DFT unittest."""
     number = 5
@@ -51,17 +43,39 @@ class GAMESSUSTDDFTTest(GenericTDTest):
     """GAMESS time-dependent HF/DFT unittest."""
     number = 10
 
-class GAMESSUSTDDFTtrpTest(GenericTDTest):
-    """GAMESS TD DFT (restricted) triplet unittest."""
-    number = 5
-
 class PCGamessTDDFTTest(GenericTDTest):
     """PC-GAMESS time-dependent HF/DFT unittest."""
     number = 5
-
+    
 class OrcaTDDFTTest(GenericTDTest):
     """ORCA time-dependent HF/DFT unittest."""
     number = 24
+
+class GenericTDTesttrp(GenericTDTest):
+    """Time-dependent HF/DFT (triplet) unittest."""
+
+    def testenergies(self):
+        """Is the l_max reasonable?"""
+        self.assertEqual(len(self.data.etenergies), self.number)
+        idx_lambdamax = [i for i, x in enumerate(self.data.etoscs)
+                         if x==max(self.data.etoscs)][0]
+        self.assertInside(self.data.etenergies[idx_lambdamax], 24500, 100)
+    
+    def testoscs(self):
+        """Triplet excitations should be disallowed."""
+        self.assertEqual(len(self.data.etoscs), self.number)
+        self.assertInside(max(self.data.etoscs), 0.0, 0.01)
+
+class GAMESSUSTDDFTtrpTest(GenericTDTesttrp):
+    """GAMESS TD DFT (restricted) triplet unittest."""
+    number = 5
+    def testsymsnumber(self):
+        """Is the length of etsyms correct? PASS"""
+        pass
+
+class PCGamessTDDFTtrpTest(GenericTDTesttrp):
+    """PC-GAMESS TD DFT (restricted) triplet unittest."""
+    number = 5
 
 if __name__=="__main__":
 
