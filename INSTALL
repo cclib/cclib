@@ -34,13 +34,6 @@ To test, try importing NumPy at the Python prompt. You should see something simi
 
 (To exit, press CTRL+Z in Windows or CTRL+D in Linux)
 
-=== JSON support ===
-
-Reading and writing cclib objects to/from JSON format is supported if one of the following packages is installed:
-*   simplejson (http://cheeseshop.python.org/pypi/simplejson)
-*   python-cjson (http://cheeseshop.python.org/pypi/python-cjson)
-*   python-json (http://cheeseshop.python.org/pypi/python-json)
-
 === Installing cclib ===
 
 Extract the cclib tar file or zip file at an appropriate location, which we will call INSTALLDIR. Open a command prompt and change directory to INSTALLDIR. Next, run the following commands:
