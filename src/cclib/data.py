@@ -151,13 +151,21 @@ class ccData(object):
                     setattr(self, k, [numpy.array(x, precision)
                                       for x in getattr(self, k)])
 
-    def getattributes(self):
-        """Returns a dictionary of existing data attributes."""
+    def getattributes(self, tolists=False):
+        """Returns a dictionary of existing data attributes.
+        
+        Inputs:
+            tolists - flag to convert attributes to lists where applicable
+        """
     
+        if tolists:
+            self.listify()
         attributes = {}
         for attr in self._attrlist:
             if hasattr(self, attr):
                 attributes[attr] = getattr(self,attr)
+        if tolists:
+            self.arrayofy()
         return attributes
 
     def setattributes(self, attributes):
