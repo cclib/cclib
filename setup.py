@@ -26,12 +26,14 @@ programs = ['ADF', 'GAMESS', 'GAMESS-UK', 'Gaussian', 'Jaguar', 'Molpro', 'ORCA'
 
 def setup_cclib():
 
-    # If setuptools is installed, use the more advanced setup function.
-    try:
-        from setuptools import setup
-    except ImportError:
-        from distutils.core import setup
+    import os
+    import sys
 
+    # Import from setuptools only if requested.
+    if 'egg' in sys.argv:
+        sys.argv.pop(sys.argv.index('egg'))
+        from setuptools import setup
+    from distutils.core import setup
 
     # Setup the list of packages.
     cclib_packages = ['cclib',
@@ -39,9 +41,7 @@ def setup_cclib():
                       'cclib.test']
 
     # Setup the list of data files.
-    import os
-    import sys
-    cclib_prefix = '%s/lib/python%i.%i/site-packages/cclib' %(sys.prefix, sys.version_info[0], sys.version_info[1])
+    cclib_prefix = 'lib/python%i.%i/site-packages/cclib' %(sys.version_info[0], sys.version_info[1])
     test_prefix = cclib_prefix + '/test'
     data_prefix = cclib_prefix + '/data'
     cclib_datafiles = [ (cclib_prefix, ['ANNOUNCE', 'CHANGELOG', 'INSTALL', 'LICENSE', 'README', 'THANKS']),
