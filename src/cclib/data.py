@@ -10,10 +10,11 @@ import sys
 
 import numpy
 
-try:
-    import simplejson
-except ImportError:
-    simplejson = None
+
+# These modules are supported for read/write to JSON format by calling load_json.
+json_support = [ ('simplejson','dumps', 'loads'),
+                 ('cjson', 'encode', 'decode'),
+                 ('json', 'write', 'read') ]
 
 
 class ccData(object):
@@ -211,32 +212,50 @@ class ccData(object):
         if listify:
             self.arrayify()
 
-    def writejson(self, outfile=sys.stdout, binary=False):
+    def writejson(self, outfile=sys.stdout, module=None, binary=False):
         """Returns JSON representation of data attributes in a dictionary.
         
         Inputs:
             outfile - output file name or file object, stdout by default
+            module - optional name of JSON support module
             binary - flag to write in binary mode (only if outfile is a file name)
         """
 
-        if not simplejson:
-            raise ImportError, "simplejson module not found"
+        support = load_json(module)
+        if not support:
+            raise ImportError, "No JSON support module found"
+        module, encoder, decoder = support
 
         # JSON does not understand numpy arrays, so listify them first.
         self.listify()
 
         if type(outfile) is str:
             stream = open(outfile, "w"+"b"*binary)
-            print >>stream, simplejson.dumps(self.getattributes())
+            print >>stream, encoder(self.getattributes())
             stream.close()
         elif type(outfile) is file:
-            print >>outfile, simplejson.dumps(self.getattributes())
+            print >>outfile, encoder(self.getattributes())
         else:
             raise TypeError, "outfile must be a file name or file object"
 
         # Change all neccesary attributes back to arrays.
         self.arrayify()
 
+
+def load_json(module=None):
+    """Load a JSON support module."""
+    
+    imported = None
+    for support in json_support:
+        if not module or module == support[0]:
+            try:
+                exec "import %s" %support[0]
+                module = eval(support[0])
+                encode = getattr(module, support[1])
+                decode = getattr(module, support[2])
+                return module, encode, decode
+            except ImportError:
+                pass
 
 def readpickle(indata=sys.stdin, binary=False):
     """Read pickle data and return a corresponding ccData object.
@@ -260,26 +279,29 @@ def readpickle(indata=sys.stdin, binary=False):
 
     return ccData(attributes=attributes)
 
-def readjson(indata=sys.stdin, binary=False):
+def readjson(indata=sys.stdin, module=None, binary=False):
     """Read JSON data and return a corresponding ccData object.
     
     Inputs:
         indata - raw JSON string, file name or file object, sys.stdin by default
+        module - optional name of JSON support module
         binary - flag to read in binary mode (only if outfile is a file name)
     """
     
-    if not simplejson:
-        raise ImportError, "simplejson module not found"
+    support = load_json(module)
+    if not support:
+        raise ImportError, "No JSON support module found"
+    module, encoder, decoder = support
 
     if type(indata) is str:
         if os.path.exists(indata):
             stream = open(indata,'r'+'b'*binary)
-            attributes = simplejson.loads(stream.read())
+            attributes = decoder(stream.read())
             stream.close()
         else:
-            attributes = simplejson.loads(indata)
+            attributes = decoder(indata)
     elif type(indata) is file:
-        attributes = simplejson.loads(indata.read())
+        attributes = decoder(indata.read())
     else:
         raise TypeError, "indata must be a string or file object"
 
