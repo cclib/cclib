@@ -26,6 +26,17 @@ class GenericTDTest(bettertest.TestCase):
         lowestEtrans = self.data.etsecs[1]
         sumofsec = sum([z*z for (x, y, z) in lowestEtrans])
         self.assertInside(sumofsec, 1.0, 0.16)
+
+    def testsecs_transition(self):
+        """Is the lowest E transition from the HOMO or to the LUMO?"""
+        idx_minenergy = [i for i, x in enumerate(self.data.etenergies)
+                         if x==min(self.data.etenergies)][0]
+        sec = self.data.etsecs[idx_minenergy]
+        t = [(c*c, s, e) for (s, e, c) in sec]
+        t.sort()
+        t.reverse()        
+        self.assert_(t[0][1][0]==self.data.homos[0] or
+                    t[0][2][0]==self.data.homos[0]+1, t[0])
         
     def testsymsnumber(self):
         """Is the length of etsyms correct?"""
@@ -49,7 +60,11 @@ class PCGamessTDDFTTest(GenericTDTest):
     
 class OrcaTDDFTTest(GenericTDTest):
     """ORCA time-dependent HF/DFT unittest."""
-    number = 24
+    number = 10
+    def testoscs(self):
+        """Is the maximum of eotscs in the right range?"""
+        self.assertEqual(len(self.data.etoscs), self.number)
+        self.assertInside(max(self.data.etoscs), 1.1, 0.1)
 
 class GenericTDTesttrp(GenericTDTest):
     """Time-dependent HF/DFT (triplet) unittest."""

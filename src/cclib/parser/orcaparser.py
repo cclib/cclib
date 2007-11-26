@@ -318,6 +318,50 @@ class ORCA(logfileparser.Logfile):
 
             self.mocoeffs = mocoeffs
 
+        if line[0:18] == "TD-DFT/TDA EXCITED":
+            sym = "Triplet" # Could be singlets or triplets
+            if line.find("SINGLETS") >= 0:
+                sym = "Singlet"
+                self.etsecs = []
+                self.etenergies = []
+                self.etsyms = []
+            lookup = {'a':0, 'b':1}
+            line = inputfile.next()
+            while line.find("STATE") < 0:
+                line = inputfile.next()
+            # Contains STATE or is blank
+            while line.find("STATE") >= 0:
+                broken = line.split()
+                self.etenergies.append(float(broken[-2]))
+                self.etsyms.append(sym)
+                line = inputfile.next()
+                sec = []
+                # Contains SEC or is blank
+                while line.strip():
+                    start = line[0:8].strip()
+                    start = (int(start[:-1]), lookup[start[-1]])
+                    end = line[10:17].strip()
+                    end = (int(end[:-1]), lookup[end[-1]])
+                    contrib = float(line[35:47].strip())
+                    sec.append([start, end, contrib])
+                    line = inputfile.next()
+                self.etsecs.append(sec)
+                line = inputfile.next()
+
+        if line[25:44] == "ABSORPTION SPECTRUM":
+            minus = inputfile.next()
+            header = inputfile.next()
+            header = inputfile.next()
+            minus = inputfile.next()
+            self.etoscs = []
+            for x in self.etsyms:                
+                osc = inputfile.next().split()[3]
+                if osc == "spin": # "spin forbidden"    
+                    osc = 0
+                else:
+                    osc = float(osc)
+                self.etoscs.append(osc)
+                
         if line[0:23] == "VIBRATIONAL FREQUENCIES":
 #parse the vibrational frequencies
             dashes = inputfile.next()
