@@ -27,5 +27,5 @@
   basis
     *    library sto-3g
   end
-  task scf
+  task dft
 
