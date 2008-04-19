@@ -24,7 +24,9 @@ import gamessukparser
 import gaussianparser
 import jaguarparser
 import molproparser
+import nwchemparser
 import orcaparser
+
 
 
 def openlogfile(filename):
@@ -79,7 +81,7 @@ def ccopen(filename, progress=None, loglevel=logging.INFO):
       filename - the location of a single logfile, or a list of logfiles
 
     Returns:
-      one of ADF, GAMESS, GAMESS UK, Gaussian, Jaguar, Molpro, ORCA, or
+      one of ADF, GAMESS, GAMESS UK, Gaussian, Jaguar, Molpro, NWChem, ORCA, or
         None (if it cannot figure it out or the file does not exist).
     """
 
@@ -129,6 +131,10 @@ def ccopen(filename, progress=None, loglevel=logging.INFO):
         #   since it does not break the loop.
         elif line[0:8] == "1PROGRAM" and not filetype:
             filetype = molproparser.Molpro
+
+        elif line.find("Northwest Computational Chemistry Package") >= 0:
+            filetype = nwchemparser.NWChem
+            break
 
         elif line.find("O   R   C   A") >= 0:
             filetype = orcaparser.ORCA

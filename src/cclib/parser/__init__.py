@@ -19,6 +19,7 @@ from gaussianparser import Gaussian
 from jaguarparser import Jaguar
 from molproparser import Molpro
 from orcaparser import ORCA
+from nwchemparser import NWChem
 
 # This allow users to type:
 #         from cclib.parser import ccopen

@@ -68,6 +68,8 @@ SP        Gaussian    GaussianSPTest        basicGaussian03       dvb_sp.out
 SP        Jaguar      JaguarSPTest          basicJaguar7.0        dvb_sp.out
 SP        GAMESS      PCGamessSPTest        basicPCGAMESS         dvb_sp.out
 SP        Molpro      MolproSPTest          basicMolpro2006       dvb_sphf.out
+SP        NWChem      NWChemSPHFTest        basicNWChem5.1        dvb_sphf.out
+SP        NWChem      NWChemSPKSTest        basicNWChem5.1        dvb_spks.out
 SP        ORCA        OrcaSPTest            basicORCA2.6          dvb_sp.out
                                             
 SPun      ADF         ADFSPunTest           basicADF2007.01       dvb_un_sp.adfout
