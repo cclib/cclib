@@ -142,8 +142,12 @@ class Jaguar(logfileparser.Logfile):
                 self.geovalues = []
                 self.geotargets = numpy.zeros(5, "d")
             gopt_step = int(line.split()[-1])
-            blank = inputfile.next()
-            blank = inputfile.next()
+            energy = inputfile.next()
+            # quick hack for messages of the sort:
+            #   ** restarting optimization from step    2 **
+            # as found in regression file ptnh3_2_H2O_2_2plus.out
+            if inputfile.next().strip():
+                blank = inputfile.next()
             line = inputfile.next()
             values = []
             target_index = 0                
@@ -151,8 +155,8 @@ class Jaguar(logfileparser.Logfile):
                 # The first optimization step does not produce an energy change
                 values.append(0.0)
                 target_index = 1
-            while line != blank:
-                if line[41] == "(":
+            while line.strip():
+                if len(line) > 40 and line[41] == "(":
                     # A new geo convergence value
                     values.append(float(line[26:37]))
                     self.geotargets[target_index] = float(line[43:54])

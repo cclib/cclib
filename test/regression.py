@@ -131,6 +131,7 @@ filenames = [glob(os.path.join(data, "Gaussian", "basicGaussian03", "*.out")) +
              glob(os.path.join(data, "Jaguar", "Jaguar4.2", "*.bz2")) +
              glob(os.path.join(data, "Jaguar", "Jaguar6.0", "*.bz2")) +
              glob(os.path.join(data, "Jaguar", "Jaguar6.5", "*.bz2")) +
+             glob(os.path.join(data, "Jaguar", "Jaguar7.0", "*.bz2")) +
              glob(os.path.join(data, "Jaguar", "basicJaguar7.0", "*.out")),
 
              glob(os.path.join(data, "Molpro", "basicMolpro2006", "*.out")) +
