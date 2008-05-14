@@ -15,6 +15,7 @@ ADF/ADF2004.01/Fe-ox3-final.out.gz
 ADF/ADF2004.01/Mo5Obdt2-opt-c2v.adfout.gz
 ADF/ADF2004.01/Mo5Obdt2-sp.adfout.gz
 ADF/ADF2004.01/Mo4mdt3-1_102.adfout.gz
+ADF/ADF2004.01/WH6-opt.adfout.bz2
 ADF/ADF2005.01/Os3.zip
 ADF/ADF2005.01/Os3(CO)12-D3h.zip
 ADF/ADF2006.01/dvb_gopt.adfout.bz2

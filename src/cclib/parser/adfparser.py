@@ -443,7 +443,8 @@ class ADF(logfileparser.Logfile):
                     if len(self.moenergies) < 2: #if we don't have space, create it
                         self.moenergies.append([])
                         self.mosyms.append([])
-                    count = multiple.get(info[0][0], 1)
+#                    count = multiple.get(info[0][0], 1)
+                    count = multiple.get(info[0], 1)
                     if info[2] == 'A':
                         for repeat in range(count): # i.e. add E's twice, T's thrice
                             self.mosyms[0].append(self.normalisesym(info[0]))
