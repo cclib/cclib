@@ -58,6 +58,5 @@ Jaguar/Jaguar6.5/dvb_gopt.out.bz2
 Jaguar/Jaguar6.5/dvb_ir.out.bz2
 Jaguar/Jaguar6.5/dvb_sp.out.bz2
 Jaguar/Jaguar6.5/dvb_un_sp.out.bz2
-Jaguar/Jaguar7.0/ptnh3_2_H2O_2_2plus.out.bz2
 Molpro/Molpro2006/C_bigbasis_cart.out.bz2
 Molpro/Molpro2006/thymine.scf.out.bz2
