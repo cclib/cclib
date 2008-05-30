@@ -531,7 +531,7 @@ class Gaussian(logfileparser.Logfile):
                             for n in range(N):
                                 disps.append([])
                         for n in range(N):
-                            disps[n].append(numbers[n:n+3])
+                            disps[n].append(numbers[3*n:3*n+3])
                     self.vibdisps.extend(disps)
                 
                 line = inputfile.next()
