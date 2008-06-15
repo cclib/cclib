@@ -1,6 +1,6 @@
-cclib 0.8 is now available for download from http://cclib.sf.net.
+cclib 0.9b is now available for download from http://cclib.sf.net.
 
-cclib is an open source library, written in Python, for parsing and interpreting the results of computational chemistry packages. It currently parses output files from ADF, GAMESS (US), GAMESS-UK, Gaussian, Jaguar, Molpro and PC GAMESS.
+cclib is an open source library, written in Python, for parsing and interpreting the results of computational chemistry packages. It currently parses output files from ADF, GAMESS (US), GAMESS-UK, Gaussian, Jaguar, Molpro, ORCA and PC GAMESS.
 
 Among other data, cclib extracts:
 
