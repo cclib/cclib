@@ -459,9 +459,7 @@ class Jaguar(logfileparser.Logfile):
             while line.strip() != "":
                 fromMO = int(line.split()[0])-1
                 toMO = int(line.split()[2])-1
-                # Jaguar multiplies the coefficients times sqrt(2),
-                #  and changes the sign.
-                coeff = - float(line.split()[-1]) / numpy.sqrt(2.0)
+                coeff = float(line.split()[-1])
                 self.etsecs[-1].append([(fromMO,0),(toMO,0),coeff])
                 line = inputfile.next()
             # Skip 3 lines
