@@ -27,6 +27,9 @@ For information on how to use cclib, see
 If you need help, find a bug, want new features or have any questions, please send an email to our mailing list:
 	https://lists.sourceforge.net/lists/listinfo/cclib-users
 
+If your published work uses cclib, please support its development by citing the following article:
+    N. M. O'Boyle, A. L. Tenderholt, K. M. Langner, cclib: a library for package-independent computational chemistry algorithms, J. Comp. Chem. 29 (5), 839-845 (2008)
+
 Regards,
 
  The cclib development team
