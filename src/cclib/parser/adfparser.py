@@ -738,6 +738,125 @@ class ADF(logfileparser.Logfile):
                         line = inputfile.next()
                     lastrow = row
 
+        if line[4:53] == "Final excitation energies from Davidson algorithm":
+
+            # move forward in file past some various algorthm info
+
+            # *   Final excitation energies from Davidson algorithm                    *
+            # *                                                                        *
+            # **************************************************************************
+
+            #     Number of loops in Davidson routine     =   20                    
+            #     Number of matrix-vector multiplications =   24                    
+            #     Type of excitations = SINGLET-SINGLET 
+
+            inputfile.next(); inputfile.next(); inputfile.next()
+            inputfile.next(); inputfile.next(); inputfile.next()
+            inputfile.next(); inputfile.next()
+
+            symm = self.normalisesym(inputfile.next().split()[1])
+
+            # move forward in file past some more txt and header info
+
+            # Excitation energies E in a.u. and eV, dE wrt prev. cycle,
+            # oscillator strengths f in a.u.
+
+            # no.  E/a.u.        E/eV      f           dE/a.u.
+            # -----------------------------------------------------
+
+            inputfile.next(); inputfile.next(); inputfile.next()
+            inputfile.next(); inputfile.next(); inputfile.next()
+
+            # now start parsing etenergies and etoscs
+
+            etenergies = []
+            etoscs = []
+            etsyms = []
+
+            line = inputfile.next()
+            while len(line) > 2:
+                info = line.split()
+                etenergies.append(utils.convertor(float(info[2]), "eV", "cm-1"))
+                etoscs.append(float(info[3]))
+                etsyms.append(symm)
+                line = inputfile.next()
+
+            # move past next section
+            while line[1:53] != "Major MO -> MO transitions for the above excitations":
+                line = inputfile.next()
+
+            # move past headers
+
+            #  Excitation  Occupied to virtual  Contribution                         
+            #   Nr.          orbitals           weight        contribibutions to      
+            #                                   (sum=1) transition dipole moment   
+            #                                             x       y       z       
+
+            inputfile.next(), inputfile.next(), inputfile.next()
+            inputfile.next(), inputfile.next(), inputfile.next()
+
+            # before we start handeling transitions, we need
+            # to create mosyms with indices
+            # only restricted calcs are possible in ADF
+
+            counts = {}
+            syms = []
+            for mosym in self.mosyms[0]:
+                if counts.keys().count(mosym) == 0:
+                    counts[mosym] = 1
+                else:
+                    counts[mosym] += 1
+
+                syms.append(str(counts[mosym]) + mosym)
+
+            import re
+            etsecs = []
+            printed_warning = False 
+
+            for i in range(len(etenergies)):
+                etsec = []
+                line = inputfile.next()
+                info = line.split()
+                while len(info) > 0:
+
+                    match = re.search('[^0-9]', info[1])
+                    index1 = int(info[1][:match.start(0)])
+                    text = info[1][match.start(0):]
+                    symtext = text[0].upper() + text[1:]
+                    sym1 = str(index1) + self.normalisesym(symtext)
+
+                    match = re.search('[^0-9]', info[3])
+                    index2 = int(info[3][:match.start(0)])
+                    text = info[3][match.start(0):]
+                    symtext = text[0].upper() + text[1:]
+                    sym2 = str(index2) + self.normalisesym(symtext)
+
+                    try:
+                        index1 = syms.index(sym1)
+                    except ValueError:
+                        if not printed_warning:
+                            self.logger.warning("Etsecs are not accurate!")
+                            printed_warning = True
+
+                    try:
+                        index2 = syms.index(sym2)
+                    except ValueError:
+                        if not printed_warning:
+                            self.logger.warning("Etsecs are not accurate!")
+                            printed_warning = True
+
+                    etsec.append([(index1, 0), (index2, 0), float(info[4])])
+
+                    line = inputfile.next()
+                    info = line.split()
+
+                etsecs.append(etsec)
+
+
+            self.etenergies = etenergies
+            self.etoscs = etoscs
+            self.etsyms = etsyms
+            self.etsecs = etsecs
 
 if __name__ == "__main__":
     import doctest, adfparser
