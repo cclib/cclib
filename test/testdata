@@ -79,6 +79,7 @@ SPun      GAMESS      PCGamessSPunTest      basicPCGAMESS         dvb_un_sp.out
 SPun      Molpro      MolproSPunTest        basicMolpro2006       dvb_sphf_un.out
 SPun      ORCA        OrcaSPunTest          basicORCA2.6          dvb_un_sp.out
 
+TD        ADF         ADFTDDFTTest          basicADF2007.01       dvb_td.adfout
 TD        Gaussian    GaussianTDDFTTest     basicGaussian03       dvb_td.out
 TDun      Gaussian    GaussianTDDFTunTest   basicGaussian03       CO_TD_delta.log
 TD        GAMESS      GAMESSUSTDDFTTest     basicGAMESS-US        dvb_td.out

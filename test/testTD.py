@@ -42,6 +42,19 @@ class GenericTDTest(bettertest.TestCase):
         """Is the length of etsyms correct?"""
         self.assertEqual(len(self.data.etsyms), self.number)
 
+class ADFTDDFTTest(GenericTDTest):
+    """ADF time-dependent DFT unittest."""
+    number = 5
+
+    def testsecs(self):
+        """Is the sum of etsecs close to 1?"""
+        self.assertEqual(len(self.data.etsecs), self.number)
+        lowestEtrans = self.data.etsecs[1]
+
+        #ADF squares the etsecs
+        sumofsec = sum([z for (x, y, z) in lowestEtrans])
+        self.assertInside(sumofsec, 1.0, 0.16)
+
 class GaussianTDDFTTest(GenericTDTest):
     """Gaussian time-dependent HF/DFT unittest."""
     number = 5
