@@ -49,6 +49,10 @@ class ADF(logfileparser.Logfile):
                 return label.lower()
 
         ans = label.replace(".", "")
+        if ans[1:3] == "''":
+            temp = ans[0] + '"'
+            ans = temp
+
         l = len(ans)
         if l > 1 and ans[0] == ans[1]: # Python only tests the second condition if the first is true
             if l > 2 and ans[1] == ans[2]:
@@ -853,10 +857,25 @@ class ADF(logfileparser.Logfile):
                 etsecs.append(etsec)
 
 
-            self.etenergies = etenergies
-            self.etoscs = etoscs
-            self.etsyms = etsyms
-            self.etsecs = etsecs
+            if not hasattr(self, "etenergies"):
+                self.etenergies = etenergies
+            else:
+                self.etenergies += etenergies
+
+            if not hasattr(self, "etoscs"):
+                self.etoscs = etoscs
+            else:
+                self.etoscs += etoscs
+
+            if not hasattr(self, "etsyms"):
+                self.etsyms = etsyms
+            else:
+                self.etsyms += etsyms
+
+            if not hasattr(self, "etsecs"):
+                self.etsecs = etsecs
+            else:
+                self.etsecs += etsecs
 
 if __name__ == "__main__":
     import doctest, adfparser
