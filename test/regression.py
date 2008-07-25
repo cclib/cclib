@@ -25,7 +25,7 @@ def testGaussian_basicGaussian03_dvb_gopt_out(logfile):
     separators are also replaced by underscores.
     """
     assert len(logfile.homos)==1
-    
+
 def testGAMESS_basicPCGAMESS_dvb_td_out(logfile):
     """
     Previously, etoscs was not extracted for this TD DFT calculation.
@@ -113,6 +113,7 @@ filenames = [glob(os.path.join(data, "Gaussian", "basicGaussian03", "*.out")) +
              glob(os.path.join(data, "GAMESS", "GAMESS-US", "*.out")) +
              glob(os.path.join(data, "GAMESS", "GAMESS-US", "*.bz2")) +
              glob(os.path.join(data, "GAMESS", "GAMESS-US", "*.gz")) +
+             glob(os.path.join(data, "GAMESS", "GAMESS-US", "*.zip")) +
              glob(os.path.join(data, "GAMESS", "PCGAMESS", "*.*.bz2")) +
              glob(os.path.join(data, "GAMESS", "PCGAMESS", "*.*.gz")) +             
              glob(os.path.join(data, "GAMESS", "WinGAMESS", "*.gz")),

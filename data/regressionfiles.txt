@@ -27,6 +27,7 @@ GAMESS/GAMESS-US/ex.out.gz
 GAMESS/GAMESS-US/exam01.out.gz
 GAMESS/GAMESS-US/exam02_27JUN2005R3.log.gz
 GAMESS/GAMESS-US/water_mp2_nprint9.out
+GAMESS/GAMESS-US/zolm_dft3a.log.zip
 GAMESS/PCGAMESS/aomixgamess.log.bz2
 GAMESS/PCGAMESS/d2d_sp.out.gz
 GAMESS/WinGAMESS/WinGAMESS.log.gz
