@@ -606,6 +606,10 @@ class GAMESS(logfileparser.Logfile):
             for base in range(0, self.nmo, 5):
 
                 line = inputfile.next()
+                # Make sure that this section does not end prematurely - checked by regression test 2CO.ccsd.aug-cc-pVDZ.out.
+                if line.strip() != "":
+                    break;
+                
                 numbers = inputfile.next() # Eigenvector numbers.
 
                 # Eigenvalues for these orbitals (in hartrees).
