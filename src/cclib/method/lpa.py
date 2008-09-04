@@ -68,6 +68,22 @@ class LPA(Population):
         if self.progress:
             self.progress.initialize(nstep)
 
+        if hasattr(self.data, "aooverlaps"):
+            S = self.data.aooverlaps
+        elif hasattr(self.data, "fooverlaps"):
+            S = self.data.fooverlaps
+
+        # Get eigenvalues and matrix of eigenvectors for transformation decomposition (U).
+        # Find roots of diagonal elements, and transform backwards using eigevectors.
+        # We need two matrices here, one for S^x, another for S^(1-x).
+        # We don't need to invert U, since S is symmetrical.
+        eigenvalues, U = numpy.linalg.eig(S)
+        UI = U.transpose()
+        Sdiagroot1 = numpy.identity(len(S))*numpy.power(eigenvalues, x)
+        Sdiagroot2 = numpy.identity(len(S))*numpy.power(eigenvalues, 1-x)
+        Sroot1 = numpy.dot(U, numpy.dot(Sdiagroot1, UI))
+        Sroot2 = numpy.dot(U, numpy.dot(Sdiagroot2, UI))
+
         step = 0
         for spin in range(len(self.data.mocoeffs)):
 
@@ -77,21 +93,6 @@ class LPA(Population):
                     self.progress.update(step, "Lowdin Population Analysis")
 
                 ci = self.data.mocoeffs[spin][i]
-                if hasattr(self.data, "aooverlaps"):
-                    S = self.data.aooverlaps
-                elif hasattr(self.data, "fooverlaps"):
-                    S = self.data.fooverlaps
-
-                # Get eigenvalues and matrix of eigenvectors for transformation decomposition (U).
-                # Find roots of diagonal elements, and transform backwards using eigevectors.
-                # We need two matrices here, one for S^x, another for S^(1-x).
-                # We don't need to invert U, since S is symmetrical.
-                eigenvalues, U = numpy.linalg.eig(S)
-                UI = U.transpose()
-                Sdiagroot1 = numpy.identity(len(S))*numpy.power(eigenvalues, x)
-                Sdiagroot2 = numpy.identity(len(S))*numpy.power(eigenvalues, 1-x)
-                Sroot1 = numpy.dot(U, numpy.dot(Sdiagroot1, UI))
-                Sroot2 = numpy.dot(U, numpy.dot(Sdiagroot2, UI))
 
                 temp1 = numpy.dot(ci, Sroot1)
                 temp2 = numpy.dot(ci, Sroot2)
