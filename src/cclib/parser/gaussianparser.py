@@ -487,7 +487,7 @@ class Gaussian(logfileparser.Logfile):
             while line.strip() != "":
 
                 # Lines with symmetries and symm. indices begin with whitespace.
-                if line[1:15].strip() == "" and not line[21].isdigit():
+                if line[1:15].strip() == "" and not line[15:22].strip().isdigit():
 
                     if not hasattr(self, 'vibsyms'):
                         self.vibsyms = []

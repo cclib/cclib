@@ -93,6 +93,12 @@ def testGaussian_Gaussian98_water_zmatrix_nosym_log_gz(logfile):
     assert len(logfile.atomcoords)==1
     assert logfile.natom == 3
 
+def testGaussian_Gaussian03_anthracene_log_gz(logfile):
+    """
+    This file exposed a bug in extracting the vibsyms.
+    """
+    assert len(logfile.vibsyms)==len(logfile.vibfreqs)
+
 # Edit the following variable definitions to add new parsers
 # or new datafiles
 
