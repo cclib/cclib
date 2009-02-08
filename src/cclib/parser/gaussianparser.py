@@ -75,10 +75,7 @@ class Gaussian(logfileparser.Logfile):
             self.updateprogress(inputfile, "Attributes", self.fupdate)
                     
             natom = int(line.split()[1])
-            if hasattr(self, "natom"):
-                assert self.natom == natom
-            else:
-                # I wonder whether this code will ever be executed.
+            if not hasattr(self, "natom"):
                 self.natom = natom
 
         # Catch message about completed optimization.

@@ -110,6 +110,7 @@ dummyfiles = [ Gaussian(""), GAMESS(""), ADF(""), GAMESSUK(""), Jaguar(""),
 filenames = [glob(os.path.join(data, "Gaussian", "basicGaussian03", "*.out")) +  
              glob(os.path.join(data, "Gaussian", "basicGaussian03", "*.log")) +
              glob(os.path.join(data, "Gaussian", "Gaussian03", "*.bz2")) +
+             glob(os.path.join(data, "Gaussian", "Gaussian03", "*.zip")) +
              glob(os.path.join(data, "Gaussian", "Gaussian03", "*.gz")) +
              glob(os.path.join(data, "Gaussian", "Gaussian98", "*.bz2")) +
              glob(os.path.join(data, "Gaussian", "Gaussian98", "*.gz")),
