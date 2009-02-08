@@ -7,7 +7,7 @@ __revision__ = "$Revision$"
 
 try:
     import openbabel
-except ImportError:
+except Exception:
     pass
 else:
     from cclib2openbabel import makeopenbabel
