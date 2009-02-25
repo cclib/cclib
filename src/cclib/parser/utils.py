@@ -38,7 +38,7 @@ def openlogfile(filename):
     """
 
     # If there is a single string argument given.
-    if type(filename) == str:
+    if type(filename) in [str, unicode]:
     
         extension = os.path.splitext(filename)[1]
         
