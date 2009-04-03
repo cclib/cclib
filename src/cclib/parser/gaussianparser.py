@@ -7,7 +7,6 @@ __revision__ = "$Revision$"
 
 
 import re
-
 import numpy
 
 import utils
@@ -851,16 +850,19 @@ class Gaussian(logfileparser.Logfile):
                 # This was continue before parser refactoring.
                 # continue
 
-            centers = line.split()[1:]
+            centers = map(int, line.split()[1:])
+            centers.sort() # Not always in increasing order
             
             self.coreelectrons = numpy.zeros(self.natom, "i")
 
             for center in centers:
-                while line[:10].find(center) < 0:
+                line = inputfile.next()
+                front = line[:10].strip()
+                while not (front and int(front) == center):
                     line = inputfile.next()
-                
+                    front = line[:10].strip()
                 info = line.split()
-                self.coreelectrons[int(center)-1] = int(info[1]) - int(info[2])
+                self.coreelectrons[center-1] = int(info[1]) - int(info[2])
 
         # This will be printed for counterpoise calcualtions only.
         # To prevent crashing, we need to know which fragment is being considered.

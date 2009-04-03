@@ -26,6 +26,17 @@ def testGaussian_basicGaussian03_dvb_gopt_out(logfile):
     """
     assert len(logfile.homos)==1
 
+def testGaussian_Gaussian03_mendes_zip(logfile):
+    """
+    Previously, failed to extract coreelectrons.
+    """
+    centers = [9, 10, 11, 27]
+    for i, x in enumerate(logfile.coreelectrons):
+        if i in centers:
+            assert x == 10
+        else:
+            assert x == 0
+
 def testGAMESS_basicPCGAMESS_dvb_td_out(logfile):
     """
     Previously, etoscs was not extracted for this TD DFT calculation.

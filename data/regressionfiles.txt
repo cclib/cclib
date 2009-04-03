@@ -44,6 +44,7 @@ Gaussian/Gaussian03/H2FAs--AsH2F.opt-mp2-cp.log.bz2
 Gaussian/Gaussian03/Mo4OSibdt2-opt.log.bz2
 Gaussian/Gaussian03/chn1.log.gz
 Gaussian/Gaussian03/tms_nmr.log.gz
+Gaussian/Gaussian03/mendes.zip
 Gaussian/Gaussian98/oo-LAN.out.bz2
 Gaussian/Gaussian98/water_zmatrix_nosym.log.gz
 Gaussian/Gaussian98/test_H2.log.gz
