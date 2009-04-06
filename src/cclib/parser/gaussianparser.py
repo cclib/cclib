@@ -736,6 +736,11 @@ class Gaussian(logfileparser.Logfile):
                 self.updateprogress(inputfile, "Coefficients", self.fupdate)
                          
                 colmNames = inputfile.next()   
+
+                if not colmNames.split():
+                    self.logger.warning("Molecular coefficients header found but no coefficients.")
+                    break;
+
                 if base==0 and int(colmNames.split()[0])!=1:
                     # Implies that this is a POP=REGULAR calculation
                     # and so, only aonames (not mocoeffs) will be extracted
