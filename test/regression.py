@@ -117,6 +117,13 @@ def testGaussian_Gaussian03_dvb_gopt_symmfollow_log_bz2(logfile):
     """
     assert len(logfile.atomcoords)==len(logfile.geovalues)
 
+def testGaussian_Gaussian03_cyclopropenyl_rhf_g03_cut_log_bz2(logfile):
+    """
+    Not using symmetry at all (option nosymm) means standard orientation is not printed.
+    In this case inputcoords are copied by the parser, which up till now stored the last coordinates.
+    """
+    assert len(logfile.atomcoords)==len(logfile.geovalues)
+
 # Edit the following variable definitions to add new parsers
 # or new datafiles
 

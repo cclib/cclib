@@ -83,15 +83,16 @@ class Gaussian(logfileparser.Logfile):
         
         # Extract the atomic numbers and coordinates from the input orientation,
         #   in the event the standard orientation isn't available.
-        if line.find("Input orientation") > -1 or line.find("Z-Matrix orientation") > -1:
+        if not self.optfinished and line.find("Input orientation") > -1 or line.find("Z-Matrix orientation") > -1:
 
             # If this is a counterpoise calculation, this output means that
             #   the supermolecule is now being considered, so we can set:
             self.counterpoise = 0
 
             self.updateprogress(inputfile, "Attributes", self.cupdate)
-                    
-            self.inputcoords = []
+            
+            if not hasattr(self, "inputcoords"):
+                self.inputcoords = []
             self.inputatoms = []
             
             hyphens = inputfile.next()
