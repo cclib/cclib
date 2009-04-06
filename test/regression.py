@@ -110,6 +110,13 @@ def testGaussian_Gaussian03_anthracene_log_gz(logfile):
     """
     assert len(logfile.vibsyms)==len(logfile.vibfreqs)
 
+def testGaussian_Gaussian03_dvb_gopt_symmfollow_log_bz2(logfile):
+    """
+    Non-standard treatment of symmetry and thus non-standard printing of Standard orientation.
+    The formatting of Standard orientation is a bit different, causing only the first coordinates to be read.
+    """
+    assert len(logfile.atomcoords)==len(logfile.geovalues)
+
 # Edit the following variable definitions to add new parsers
 # or new datafiles
 

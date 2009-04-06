@@ -114,7 +114,7 @@ class Gaussian(logfileparser.Logfile):
                 self.natom = len(self.atomnos)
 
         # Extract the atomic numbers and coordinates of the atoms.
-        if not self.optfinished and line[25:45] == "Standard orientation":
+        if not self.optfinished and line.strip() == "Standard orientation:":
 
             self.updateprogress(inputfile, "Attributes", self.cupdate)
 
@@ -136,7 +136,7 @@ class Gaussian(logfileparser.Logfile):
             while line != hyphens:
                 broken = line.split()
                 atomnos.append(int(broken[1]))
-                atomcoords.append(map(float, broken[3:6]))
+                atomcoords.append(map(float, broken[-3:]))
                 line = inputfile.next()
             self.atomcoords.append(atomcoords)
             if not hasattr(self, "natom"):
