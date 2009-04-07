@@ -612,11 +612,16 @@ class GAMESS(logfileparser.Logfile):
                 
                 numbers = inputfile.next() # Eigenvector numbers.
 
-                # Eigenvalues for these orbitals (in hartrees).
-                # Sometimes there are some blank lines before it.
+                # Sometimes there are some blank lines here.
                 while not line.strip():
                     line = inputfile.next()
-                self.moenergies[0].extend([utils.convertor(float(x), "hartree", "eV") for x in line.split()])
+
+                # Eigenvalues for these orbitals (in hartrees).
+                try:
+                    self.moenergies[0].extend([utils.convertor(float(x), "hartree", "eV") for x in line.split()])
+                except:
+                    self.logger.warning('MO section found but could not be parsed!')
+                    break;
 
                 # Orbital symmetries.
                 line = inputfile.next()

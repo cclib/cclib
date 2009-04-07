@@ -24,6 +24,7 @@ ADF/ADF2006.01/Frags_NiCO4_orig.out
 ADF/ADF2006.01/Au2.out
 GAMESS/GAMESS-US/2CO.ccsd.aug-cc-pVDZ.out
 GAMESS/GAMESS-US/bv6010sup1molecule_4.inp.cml_.log.bz2
+GAMESS/GAMESS-US/cyclopentadienyl.rhf.gms.out.cut.bz2
 GAMESS/GAMESS-US/ex.out.gz
 GAMESS/GAMESS-US/exam01.out.gz
 GAMESS/GAMESS-US/exam02_27JUN2005R3.log.gz
