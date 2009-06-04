@@ -219,8 +219,9 @@ class Gaussian(logfileparser.Logfile):
                         self.progress.update(step, "AM1 Convergence")
                         oldstep = step
                         
-                parts = line.strip().split()
-                self.scfvalues[0].append(self.float(parts[-1][:-1]))
+                if line[1:4] == "It=":
+                    parts = line.strip().split()
+                    self.scfvalues[0].append(self.float(parts[-1][:-1]))
                 line = inputfile.next()
 
         # Note: this needs to follow the section where 'SCF Done' is used

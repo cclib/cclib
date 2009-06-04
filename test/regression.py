@@ -26,6 +26,12 @@ def testGaussian_basicGaussian03_dvb_gopt_out(logfile):
     """
     assert len(logfile.homos)==1
 
+def testGaussian_Gaussian03_AM1_SP_out_gz(logfile):
+    """
+    Previously, caused scfvalue parsing to fail.
+    """
+    assert len(logfile.scfvalues[0])==12
+
 def testGaussian_Gaussian03_mendes_zip(logfile):
     """
     Previously, failed to extract coreelectrons.
