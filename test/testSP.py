@@ -20,7 +20,7 @@ class GenericSPTest(bettertest.TestCase):
 
     def testatomnos(self):
         """Are the atomnos correct?"""
-        self.failUnless(numpy.alltrue([isinstance(atomno,int) for atomno in self.data.atomnos]))
+        self.failUnless(numpy.alltrue([numpy.issubdtype(atomno,int) for atomno in self.data.atomnos]))
         # This will work only for numpy
         #self.assertEquals(self.data.atomnos.dtype.char, 'i')
         self.assertEquals(self.data.atomnos.shape, (20,) )
