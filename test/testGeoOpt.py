@@ -175,7 +175,7 @@ class GaussianGeoOptTest(GenericGeoOptTest):
 
     def testgrads(self):
         """Do the grads have the right dimensions?"""
-        self.assertEquals(self.data.grads.shape,(len(self.data.geovalues),self.data.atomnos))
+        self.assertEquals(self.data.grads.shape,(len(self.data.geovalues),self.data.natom,3))
 
 class JaguarGeoOptTest(GenericGeoOptTest):
     """Jaguar geometry optimization unittest."""
