@@ -131,7 +131,7 @@ class GenericGeoOptTest(bettertest.TestCase):
     def testgeotargets(self):
         """Do the geo targets have the right dimensions?"""
         self.assertEquals(self.data.geotargets.shape,(len(self.data.geovalues[0]),))
-    
+
 class ADFGeoOptTest(GenericGeoOptTest):
     """ADF geometry optimization unittest."""
 
@@ -172,6 +172,10 @@ class GaussianGeoOptTest(GenericGeoOptTest):
     def testdimmocoeffs(self):
         """Are the dimensions of mocoeffs equal to 1 x nmo x nbasis? PASS"""
         self.assertEquals(1, 1)
+
+    def testgrads(self):
+        """Do the grads have the right dimensions?"""
+        self.assertEquals(self.data.grads.shape,(len(self.data.geovalues),self.data.atomnos))
 
 class JaguarGeoOptTest(GenericGeoOptTest):
     """Jaguar geometry optimization unittest."""
