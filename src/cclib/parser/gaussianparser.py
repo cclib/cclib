@@ -321,6 +321,42 @@ class Gaussian(logfileparser.Logfile):
 
             self.geovalues.append(newlist)
 
+        # Gradients.
+        # Read in the cartesian energy gradients (forces) from a block like this:
+        # -------------------------------------------------------------------
+        # Center     Atomic                   Forces (Hartrees/Bohr)
+        # Number     Number              X              Y              Z
+        # -------------------------------------------------------------------
+        # 1          1          -0.012534744   -0.021754635   -0.008346094
+        # 2          6           0.018984731    0.032948887   -0.038003451
+        # 3          1          -0.002133484   -0.006226040    0.023174772
+        # 4          1          -0.004316502   -0.004968213    0.023174772
+        # ------------------------------------------------------------------
+        #
+        # Then optimization is done in internal coordinates, Gaussian also
+        # print the forces in internal coordinates, which can be produced from 
+        # the above. This block looks like this:
+        # Variable       Old X    -DE/DX   Delta X   Delta X   Delta X     New X
+        #                                 (Linear)    (Quad)   (Total)
+        #   ch        2.05980   0.01260   0.00000   0.01134   0.01134   2.07114
+        #   hch        1.75406   0.09547   0.00000   0.24861   0.24861   2.00267
+        #   hchh       2.09614   0.01261   0.00000   0.16875   0.16875   2.26489
+        #         Item               Value     Threshold  Converged?
+        if line[37:43] == "Forces":
+
+            if not hasattr(self, "grads"):
+                self.grads = []
+
+            header = inputfile.next()
+            dashes = inputfile.next()
+            line = inputfile.next()
+            forces = []
+            while line != dashes:
+                n,nuclear,Fx,Fy,Fz = line.split()
+                forces.append([float(Fx),float(Fy),float(Fz)])
+                line = inputfile.next()
+            self.grads.append(forces)                
+
         # Charge and multiplicity.
         # If counterpoise correction is used, multiple lines match.
         # The first one contains charge/multiplicity of the whole molecule.:
