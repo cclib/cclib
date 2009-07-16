@@ -748,7 +748,8 @@ class GAMESS(logfileparser.Logfile):
             if line.find("BOTH SET(S)") >= 0:
                 self.homos = numpy.resize(self.homos, [1])
 
-        if line.find("TOTAL NUMBER OF ATOMS") == 1:
+        # Set the total number of atoms, only once.
+        if line.find("TOTAL NUMBER OF ATOMS") == 1 and not hasattr(self,"natom"):
             self.natom = int(line.split()[-1])
             
         if line.find("NUMBER OF CARTESIAN GAUSSIAN BASIS") == 1 or line.find("TOTAL NUMBER OF BASIS FUNCTIONS") == 1:
