@@ -17,6 +17,7 @@ import zipfile
 import fileinput
 import logging
 import StringIO
+import urllib
 
 import adfparser
 import gamessparser
@@ -33,12 +34,18 @@ def openlogfile(filename):
     Given the filename of a log file or a gzipped, zipped, or bzipped
     log file, this function returns a regular Python file object.
     
+    Given an address starting with http://, this function retrieves the url
+    and returns a file object using a temporary file.
+
     Given a list of filenames, this function returns a FileInput object,
     which can be used for seamless iteration without concatenation.
     """
 
     # If there is a single string argument given.
     if type(filename) in [str, unicode]:
+
+        if r"http://" in filename:
+            filename,messages = urllib.urlretrieve(filename)
     
         extension = os.path.splitext(filename)[1]
         
