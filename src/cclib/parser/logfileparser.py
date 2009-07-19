@@ -26,7 +26,7 @@ class Logfile(object):
     """
 
     def __init__(self, filename, progress=None,
-                                 loglevel=logging.INFO, logname="Log",
+                                 loglevel=logging.INFO, logname="Log", stream=sys.stdout,
                                  fupdate=0.05, cupdate=0.002, 
                                  datatype=ccData):
         """Initialise the Logfile object.
@@ -54,7 +54,7 @@ class Logfile(object):
         self.logger = logging.getLogger('%s %s' % (self.logname,self.filename))
         self.logger.setLevel(self.loglevel)
         if len(self.logger.handlers) == 0:
-                handler = logging.StreamHandler(sys.stdout)
+                handler = logging.StreamHandler(stream)
                 handler.setFormatter(logging.Formatter("[%(name)s %(levelname)s] %(message)s"))
                 self.logger.addHandler(handler)
 
