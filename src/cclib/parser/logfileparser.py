@@ -25,20 +25,33 @@ class Logfile(object):
     
     """
 
-    def __init__(self, filename, progress=None,
-                                 loglevel=logging.INFO, logname="Log", stream=sys.stdout,
-                                 fupdate=0.05, cupdate=0.002, 
-                                 datatype=ccData):
+    def __init__(self, source, progress=None,
+                       loglevel=logging.INFO, logname="Log", logstream=sys.stdout,
+                       fupdate=0.05, cupdate=0.002, 
+                       datatype=ccData):
         """Initialise the Logfile object.
 
         This should be called by a ubclass in its own __init__ method.
 
         Inputs:
-          filename - the location of a single logfile, or a list of logfiles
+            source - a single logfile, a list of logfiles, or input stream
         """
 
-        # Set the filename, or list of filenames.
-        self.filename = filename
+        # Set the filename to source if it is a string or a list of filenames.
+        # In the case of an input stream, set some arbitrary name and the stream.
+        # Elsewise, raise an Exception.
+        if type(source) is str:
+            self.filename = source
+            self.isstream = False
+        elif type(source) is list and all([type(s) is str for s in source]):
+            self.filename = source
+            self.isstream = False
+        elif hasattr(source, "read"):
+            self.filename = "stream %s" %str(type(source))
+            self.isstream = True
+            self.stream = source
+        else:
+            raise ValueError
 
         # Progress indicator.
         self.progress = progress
@@ -54,7 +67,7 @@ class Logfile(object):
         self.logger = logging.getLogger('%s %s' % (self.logname,self.filename))
         self.logger.setLevel(self.loglevel)
         if len(self.logger.handlers) == 0:
-                handler = logging.StreamHandler(stream)
+                handler = logging.StreamHandler(logstream)
                 handler.setFormatter(logging.Formatter("[%(name)s %(levelname)s] %(message)s"))
                 self.logger.addHandler(handler)
 
@@ -101,7 +114,10 @@ class Logfile(object):
 
         # Initiate the FileInput object for the input files.
         # Remember that self.filename can be a list of files.
-        inputfile = utils.openlogfile(self.filename)
+        if not self.isstream:
+            inputfile = utils.openlogfile(self.filename)
+        else:
+            inputfile = self.stream
 
         # Intialize self.progress.
         if self.progress:
@@ -142,7 +158,8 @@ class Logfile(object):
             self.extract(inputfile, line)
 
         # Close input file object.
-        inputfile.close()
+        if not self.isstream:
+            inputfile.close()
 
         # Maybe the sub-class has something to do after parsing.
         if hasattr(self, "after_parsing"):

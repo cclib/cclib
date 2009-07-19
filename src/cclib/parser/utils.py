@@ -79,11 +79,11 @@ def openlogfile(filename):
         
         return fileobject
 
-def ccopen(filename, *args, **kargs):
+def ccopen(source, *args, **kargs):
     """Guess the identity of a particular log file and return an instance of it.
     
     Inputs:
-      filename - the location of a single logfile, or a list of logfiles
+      source - a single logfile, a list of logfiles, or an input stream
 
     Returns:
       one of ADF, GAMESS, GAMESS UK, Gaussian, Jaguar, Molpro, ORCA, or
@@ -93,11 +93,18 @@ def ccopen(filename, *args, **kargs):
     filetype = None
 
     # Try to open the logfile(s), using openlogfile.
-    try:
-      inputfile = openlogfile(filename)
-    except IOError, (errno, strerror):
-      print "I/O error %s (%s): %s" %(errno, filename, strerror)
-      return None
+    if type(source) is str or type(source) is list and all([type(s) is str for s in source]):
+        try:
+            inputfile = openlogfile(source)
+        except IOError, (errno, strerror):
+            print "I/O error %s (%s): %s" %(errno, filename, strerror)
+            return None
+        isstream = False
+    elif hasattr(source, "read"):
+        inputfile = source
+        isstream = True
+    else:
+        raise ValueError
 
     # Read through the logfile(s) and search for a clue.
     for line in inputfile:
@@ -141,11 +148,13 @@ def ccopen(filename, *args, **kargs):
             filetype = orcaparser.ORCA
             break
 
-    inputfile.close() # Need to close before creating an instance
+    # Need to close file before creating a instance.
+    if not isstream:
+        inputfile.close()
     
     # Return an instance of the chosen class.
     try:
-        return filetype(filename, *args, **kargs)
+        return filetype(source, *args, **kargs)
     except TypeError:
         print "Log file type not identified."
         raise
