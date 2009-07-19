@@ -79,7 +79,7 @@ def openlogfile(filename):
         
         return fileobject
 
-def ccopen(filename, progress=None, loglevel=logging.INFO):
+def ccopen(filename, *args, **kargs):
     """Guess the identity of a particular log file and return an instance of it.
     
     Inputs:
@@ -143,11 +143,13 @@ def ccopen(filename, progress=None, loglevel=logging.INFO):
 
     inputfile.close() # Need to close before creating an instance
     
-    if filetype: # Create an instance of the chosen class
-        filetype = apply(filetype, [filename, progress, loglevel])
+    # Return an instance of the chosen class.
+    try:
+        return filetype(filename, *args, **kargs)
+    except TypeError:
+        print "Log file type not identified."
+        raise
         
-    return filetype
-
 def convertor(value, fromunits, tounits):
     """Convert from one set of units to another.
 
