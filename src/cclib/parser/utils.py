@@ -18,6 +18,7 @@ import fileinput
 import logging
 import StringIO
 import urllib
+import types
 
 import adfparser
 import gamessparser
@@ -93,7 +94,8 @@ def ccopen(source, *args, **kargs):
     filetype = None
 
     # Try to open the logfile(s), using openlogfile.
-    if type(source) is str or type(source) is list and all([type(s) is str for s in source]):
+    if isinstance(source,types.StringTypes) or \
+       isinstance(source,list) and all([isinstance(s,types.StringTypes) for s in source]):
         try:
             inputfile = openlogfile(source)
         except IOError, (errno, strerror):

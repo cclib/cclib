@@ -10,6 +10,7 @@ import sys
 import logging
 import inspect
 import random
+import types
 
 import numpy
 
@@ -40,10 +41,10 @@ class Logfile(object):
         # Set the filename to source if it is a string or a list of filenames.
         # In the case of an input stream, set some arbitrary name and the stream.
         # Elsewise, raise an Exception.
-        if type(source) is str:
+        if isinstance(source,types.StringTypes):
             self.filename = source
             self.isstream = False
-        elif type(source) is list and all([type(s) is str for s in source]):
+        elif isinstance(source,list) and all([isinstance(s,types.StringTypes) for s in source]):
             self.filename = source
             self.isstream = False
         elif hasattr(source, "read"):
