@@ -8,11 +8,7 @@ __revision__ = "$Revision: 668 $"
 
 import re
 
-# If numpy is not installed, try to import Numeric instead.
-try:
-    import numpy
-except ImportError:
-    import Numeric as numpy
+import numpy
 
 import logfileparser
 import utils
