@@ -8,8 +8,8 @@ __revision__ = "$Revision$"
 
 import numpy
 
-import utils
 import logfileparser
+import utils
 
 
 class ADF(logfileparser.Logfile):

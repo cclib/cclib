@@ -6,10 +6,10 @@ and licensed under the LGPL (http://www.gnu.org/copyleft/lgpl.html).
 __revision__ = "$Revision$"
 
 
-import sys
-import logging
 import inspect
+import logging
 import random
+import sys
 import types
 
 import numpy

@@ -7,6 +7,7 @@ __revision__ = "$Revision$"
 
 
 import re
+
 import numpy
 
 import utils

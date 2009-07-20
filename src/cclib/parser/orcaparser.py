@@ -14,8 +14,9 @@ try:
 except ImportError:
     import Numeric as numpy
 
-import utils
 import logfileparser
+import utils
+
 
 class ORCA(logfileparser.Logfile):
     """An ORCA log file."""

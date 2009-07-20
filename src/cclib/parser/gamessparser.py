@@ -10,8 +10,8 @@ import re
 
 import numpy
 
-import utils
 import logfileparser
+import utils
 
 
 class GAMESS(logfileparser.Logfile):
