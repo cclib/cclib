@@ -6,11 +6,6 @@ and licensed under the LGPL (http://www.gnu.org/copyleft/lgpl.html).
 __revision__ = "$Revision$"
 
 
-import logging
-import os
-import sys
-
-
 def convertor(value, fromunits, tounits):
     """Convert from one set of units to another.
 

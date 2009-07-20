@@ -38,7 +38,7 @@ def ccopen(source, *args, **kargs):
         try:
             inputfile = logfileparser.openlogfile(source)
         except IOError, (errno, strerror):
-            print "I/O error %s (%s): %s" %(errno, filename, strerror)
+            print "I/O error %s (%s): %s" %(errno, source, strerror)
             return None
         isstream = False
     elif hasattr(source, "read"):
