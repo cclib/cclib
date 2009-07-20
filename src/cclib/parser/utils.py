@@ -6,17 +6,9 @@ and licensed under the LGPL (http://www.gnu.org/copyleft/lgpl.html).
 __revision__ = "$Revision$"
 
 
-import StringIO
-try:
-  import bz2 # New in Python 2.3.
-except ImportError, detail:
-  print "Not all cclib features will work:", detail
-import fileinput
-import gzip
 import logging
 import os
 import sys
-import zipfile
 
 
 def convertor(value, fromunits, tounits):

@@ -6,13 +6,22 @@ and licensed under the LGPL (http://www.gnu.org/copyleft/lgpl.html).
 __revision__ = "$Revision$"
 
 
+import StringIO
+
+try:
+  import bz2 # New in Python 2.3.
+except ImportError, detail:
+  print "Not all cclib features will work:", detail
 import fileinput
+import gzip
 import inspect
 import logging
 import os
 import random
 import sys
 import types
+import urllib
+import zipfile
 
 import numpy
 

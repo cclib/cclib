@@ -7,7 +7,8 @@ __revision__ = "$Revision: 860 $"
 
 
 import types
-import urllib
+
+import logfileparser
 
 import adfparser
 import gamessparser
@@ -35,7 +36,7 @@ def ccopen(source, *args, **kargs):
     if isinstance(source,types.StringTypes) or \
        isinstance(source,list) and all([isinstance(s,types.StringTypes) for s in source]):
         try:
-            inputfile = openlogfile(source)
+            inputfile = logfileparser.openlogfile(source)
         except IOError, (errno, strerror):
             print "I/O error %s (%s): %s" %(errno, filename, strerror)
             return None
