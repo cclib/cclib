@@ -6,161 +6,19 @@ and licensed under the LGPL (http://www.gnu.org/copyleft/lgpl.html).
 __revision__ = "$Revision$"
 
 
-import os
-import sys
+import StringIO
 try:
   import bz2 # New in Python 2.3.
 except ImportError, detail:
   print "Not all cclib features will work:", detail
-import gzip
-import zipfile
 import fileinput
+import gzip
 import logging
-import StringIO
-import urllib
-import types
-
-import adfparser
-import gamessparser
-import gamessukparser
-import gaussianparser
-import jaguarparser
-import molproparser
-import orcaparser
+import os
+import sys
+import zipfile
 
 
-def openlogfile(filename):
-    """Return a file object given a filename.
-
-    Given the filename of a log file or a gzipped, zipped, or bzipped
-    log file, this function returns a regular Python file object.
-    
-    Given an address starting with http://, this function retrieves the url
-    and returns a file object using a temporary file.
-
-    Given a list of filenames, this function returns a FileInput object,
-    which can be used for seamless iteration without concatenation.
-    """
-
-    # If there is a single string argument given.
-    if type(filename) in [str, unicode]:
-
-        if r"http://" in filename:
-            filename,messages = urllib.urlretrieve(filename)
-    
-        extension = os.path.splitext(filename)[1]
-        
-        if extension == ".gz":
-            fileobject = gzip.open(filename, "r")
-
-        elif extension == ".zip":
-            zip = zipfile.ZipFile(filename, "r")
-            assert (len(zip.namelist()) == 1,
-                    "ERROR: Zip file contains more than 1 file")
-            fileobject = StringIO.StringIO(zip.read(zip.namelist()[0]))
-
-        elif extension in ['.bz', '.bz2']:
-            # Module 'bz2' is not always importable.
-            assert ('bz2' in sys.modules.keys(),
-                    "ERROR: module bz2 cannot be imported")
-            fileobject = bz2.BZ2File(filename, "r")
-
-        else:
-            fileobject = open(filename, "r")
-
-        return fileobject
-    
-    elif hasattr(filename, "__iter__"):
-    
-        # Compression (gzip and bzip) is supported as of Python 2.5.
-        if sys.version_info[0] >= 2 and sys.version_info[1] >= 5:
-            fileobject = fileinput.input(filename, openhook=fileinput.hook_compressed)
-        else:
-            fileobject = fileinput.input(filename)
-        
-        return fileobject
-
-def ccopen(source, *args, **kargs):
-    """Guess the identity of a particular log file and return an instance of it.
-    
-    Inputs:
-      source - a single logfile, a list of logfiles, or an input stream
-
-    Returns:
-      one of ADF, GAMESS, GAMESS UK, Gaussian, Jaguar, Molpro, ORCA, or
-        None (if it cannot figure it out or the file does not exist).
-    """
-
-    filetype = None
-
-    # Try to open the logfile(s), using openlogfile.
-    if isinstance(source,types.StringTypes) or \
-       isinstance(source,list) and all([isinstance(s,types.StringTypes) for s in source]):
-        try:
-            inputfile = openlogfile(source)
-        except IOError, (errno, strerror):
-            print "I/O error %s (%s): %s" %(errno, filename, strerror)
-            return None
-        isstream = False
-    elif hasattr(source, "read"):
-        inputfile = source
-        isstream = True
-    else:
-        raise ValueError
-
-    # Read through the logfile(s) and search for a clue.
-    for line in inputfile:
-
-        if line.find("Amsterdam Density Functional") >= 0:
-            filetype = adfparser.ADF
-            break
-
-        # Don't break in this case as it may be a GAMESS-UK file.
-        elif line.find("GAMESS") >= 0:
-            filetype = gamessparser.GAMESS
-
-        # This can break, since it is non-GAMESS-UK specific.
-        elif line.find("GAMESS VERSION") >= 0:
-            filetype = gamessparser.GAMESS
-            break
-
-        elif line.find("G A M E S S - U K") >= 0:
-            filetype = gamessukparser.GAMESSUK
-            break
-
-        elif line.find("Gaussian, Inc.") >= 0:
-            filetype = gaussianparser.Gaussian
-            break
-
-        elif line.find("Jaguar") >= 0:
-            filetype = jaguarparser.Jaguar
-            break
-
-        elif line.find("PROGRAM SYSTEM MOLPRO") >= 0:
-            filetype = molproparser.Molpro
-            break
-
-        # Molpro log files don't have the line above. Set this only if
-        #   nothing else is detected, and notice it can be overwritten,
-        #   since it does not break the loop.
-        elif line[0:8] == "1PROGRAM" and not filetype:
-            filetype = molproparser.Molpro
-
-        elif line.find("O   R   C   A") >= 0:
-            filetype = orcaparser.ORCA
-            break
-
-    # Need to close file before creating a instance.
-    if not isstream:
-        inputfile.close()
-    
-    # Return an instance of the chosen class.
-    try:
-        return filetype(source, *args, **kargs)
-    except TypeError:
-        print "Log file type not identified."
-        raise
-        
 def convertor(value, fromunits, tounits):
     """Convert from one set of units to another.
 
@@ -180,6 +38,7 @@ def convertor(value, fromunits, tounits):
                   "Debye^2/amu-Angstrom^2_to_km/mol": lambda x: x*42.255}
 
     return _convertor["%s_to_%s" % (fromunits, tounits)] (value)
+
 
 class PeriodicTable(object):
     """Allows conversion between element name and atomic no.
@@ -218,6 +77,7 @@ class PeriodicTable(object):
         self.number = {}
         for i in range(1, len(self.element)):
             self.number[self.element[i]] = i
+
 
 if __name__ == "__main__":
     import doctest, utils

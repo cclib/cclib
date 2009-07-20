@@ -6,8 +6,10 @@ and licensed under the LGPL (http://www.gnu.org/copyleft/lgpl.html).
 __revision__ = "$Revision$"
 
 
+import fileinput
 import inspect
 import logging
+import os
 import random
 import sys
 import types
@@ -16,6 +18,58 @@ import numpy
 
 import utils
 from cclib.data import ccData
+
+
+def openlogfile(filename):
+    """Return a file object given a filename.
+
+    Given the filename of a log file or a gzipped, zipped, or bzipped
+    log file, this function returns a regular Python file object.
+    
+    Given an address starting with http://, this function retrieves the url
+    and returns a file object using a temporary file.
+
+    Given a list of filenames, this function returns a FileInput object,
+    which can be used for seamless iteration without concatenation.
+    """
+
+    # If there is a single string argument given.
+    if type(filename) in [str, unicode]:
+
+        if r"http://" in filename:
+            filename,messages = urllib.urlretrieve(filename)
+    
+        extension = os.path.splitext(filename)[1]
+        
+        if extension == ".gz":
+            fileobject = gzip.open(filename, "r")
+
+        elif extension == ".zip":
+            zip = zipfile.ZipFile(filename, "r")
+            assert (len(zip.namelist()) == 1,
+                    "ERROR: Zip file contains more than 1 file")
+            fileobject = StringIO.StringIO(zip.read(zip.namelist()[0]))
+
+        elif extension in ['.bz', '.bz2']:
+            # Module 'bz2' is not always importable.
+            assert ('bz2' in sys.modules.keys(),
+                    "ERROR: module bz2 cannot be imported")
+            fileobject = bz2.BZ2File(filename, "r")
+
+        else:
+            fileobject = open(filename, "r")
+
+        return fileobject
+    
+    elif hasattr(filename, "__iter__"):
+    
+        # Compression (gzip and bzip) is supported as of Python 2.5.
+        if sys.version_info[0] >= 2 and sys.version_info[1] >= 5:
+            fileobject = fileinput.input(filename, openhook=fileinput.hook_compressed)
+        else:
+            fileobject = fileinput.input(filename)
+        
+        return fileobject
 
 
 class Logfile(object):
@@ -116,7 +170,7 @@ class Logfile(object):
         # Initiate the FileInput object for the input files.
         # Remember that self.filename can be a list of files.
         if not self.isstream:
-            inputfile = utils.openlogfile(self.filename)
+            inputfile = openlogfile(self.filename)
         else:
             inputfile = self.stream
 
