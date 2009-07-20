@@ -58,12 +58,18 @@ class Gaussian(logfileparser.Logfile):
 
         # Used to index self.scftargets[].
         SCFRMS, SCFMAX, SCFENERGY = range(3)
+
         # Flag that indicates whether it has reached the end of a geoopt.
         self.optfinished = False
+
         # Flag for identifying Coupled Cluster runs.
         self.coupledcluster = False
+
         # Fragment number for counterpoise calculations (normally zero).
         self.counterpoise = 0
+
+        # Flag for identifying ONIOM calculations.
+        self.oniom = False
 
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
@@ -416,6 +422,9 @@ class Gaussian(logfileparser.Logfile):
             # For counterpoise fragments, skip these lines.
             if self.counterpoise != 0: return
 
+            # For ONIOM calcs, ignore this section in order to bypass assertion failure.
+            if self.oniom: return
+
             self.updateprogress(inputfile, "Eigenvalues", self.fupdate)
             self.moenergies = [[]]
             HOMO = -2
@@ -692,6 +701,9 @@ class Gaussian(logfileparser.Logfile):
             # For counterpoise fragment, skip these lines.
             if self.counterpoise != 0: return
 
+            # For ONIOM calcs, ignore this section in order to bypass assertion failure.
+            if self.oniom: return
+
             # If nbasis was already parsed, check if it changed.
             nbasis = int(line.split('=')[1].split()[0])
             if hasattr(self, "nbasis"):
@@ -704,6 +716,9 @@ class Gaussian(logfileparser.Logfile):
 
             # For counterpoise fragment, skip these lines.
             if self.counterpoise != 0: return
+
+            # For ONIOM calcs, ignore this section in order to bypass assertion failure.
+            if self.oniom: return
 
             # If nmo was already parsed, check if it changed.
             nmo = int(line.split('=')[1].split()[0])
@@ -915,6 +930,10 @@ class Gaussian(logfileparser.Logfile):
             if line[42:50] == "fragment":
                 self.counterpoise = int(line[51:54])
 
+        # This will be printed only during ONIOM calcs; use it to set a flag
+        # that will allow assertion failures to be bypassed in the code.
+        if line[1:7] == "ONIOM:":
+            self.oniom = True
 
 if __name__ == "__main__":
     import doctest, gaussianparser
