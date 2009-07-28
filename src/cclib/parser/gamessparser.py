@@ -326,7 +326,8 @@ class GAMESS(logfileparser.Logfile):
             self.atomcoords.append(atomcoords)
         
         # This is the section with the SCF information.
-        if line.rstrip()[-15:] == "SCF CALCULATION":
+        # The space at the start of the search string is to differentiate from MCSCF.
+        if line.rstrip()[-16:] == " SCF CALCULATION":
 
             line = inputfile.next()
 
