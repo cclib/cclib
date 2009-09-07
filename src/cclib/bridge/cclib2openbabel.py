@@ -23,7 +23,7 @@ def makeopenbabel(atomcoords, atomnos, charge=0, mult=1):
     for i in range(len(atomnos)):
         # Note that list(atomcoords[i]) is not equivalent!!!
         coords = atomcoords[i].tolist()
-        atomno = atomnos[i]
+        atomno = int(atomnos[i])
         obatom = ob.OBAtom()
         obatom.SetAtomicNum(atomno)
         obatom.SetVector(*coords)
