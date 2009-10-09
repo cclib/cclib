@@ -631,10 +631,13 @@ class Gaussian(logfileparser.Logfile):
             # Excited State   1:   Singlet-BU     5.3351 eV  232.39 nm  f=0.1695
             # (unrestricted calc) (first excited state is 2!)
             # Excited State   2:   ?Spin  -A      0.1222 eV 10148.75 nm  f=0.0000
-            parts = line[36:].split()
-            self.etenergies.append(utils.convertor(self.float(parts[0]), "eV", "cm-1"))
-            self.etoscs.append(self.float(parts[4].split("=")[1]))
-            self.etsyms.append(line[21:36].strip())
+            # (Gaussian 09 ZINDO)
+            # Excited State   1:      Singlet-?Sym    2.5938 eV  478.01 nm  f=0.0000  <S**2>=0.000
+            p = re.compile(":(?P<sym>.*?)(?P<energy>-?\d*\.\d*) eV")
+            groups = p.search(line).groups()
+            self.etenergies.append(utils.convertor(self.float(groups[1]), "eV", "cm-1"))
+            self.etoscs.append(self.float(line.split("f=")[-1].split()[0]))
+            self.etsyms.append(groups[0].strip())
             
             line = inputfile.next()
 
