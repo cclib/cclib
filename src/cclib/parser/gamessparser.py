@@ -55,6 +55,7 @@ class GAMESS(logfileparser.Logfile):
         self.firststdorient = True # Used to decide whether to wipe the atomcoords clean
         self.geooptfinished = False # Used to avoid extracting the final geometry twice
         self.cihamtyp = "none" # Type of CI Hamiltonian: saps or dets.
+        self.scftype = "none" # Type of SCF calculation: BLYP, RHF, ROHF, etc.
     
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
@@ -325,47 +326,83 @@ class GAMESS(logfileparser.Logfile):
                 line = inputfile.next()
             self.atomcoords.append(atomcoords)
         
-        # This is the section with the SCF information.
+        # Section with SCF information.
+        #
         # The space at the start of the search string is to differentiate from MCSCF.
+        # Everything before the search string is stored as the type of SCF.
+        # SCF types may include: BLYP, RHF, ROHF, UHF, etc.
+        #
+        # For example, in exam17 the section looks like this (note that this is GVB):
+        #          ------------------------
+        #          ROHF-GVB SCF CALCULATION
+        #          ------------------------
+        # GVB STEP WILL USE    119875 WORDS OF MEMORY.
+        #
+        #     MAXIT=  30   NPUNCH= 2   SQCDF TOL=1.0000E-05
+        #     NUCLEAR ENERGY=        6.1597411978
+        #     EXTRAP=T   DAMP=F   SHIFT=F   RSTRCT=F   DIIS=F  SOSCF=F
+        #
+        # ITER EX     TOTAL ENERGY       E CHANGE        SQCDF       DIIS ERROR
+        #   0  0      -38.298939963   -38.298939963   0.131784454   0.000000000
+        #   1  1      -38.332044339    -0.033104376   0.026019716   0.000000000
+        # ... and will be terminated by a blank line.
         if line.rstrip()[-16:] == " SCF CALCULATION":
 
-            line = inputfile.next()
+            # Remember the type of SCF.
+            self.scftype = line.strip()[:-16]
 
-            while not "ITER EX" in line:
+            dashes = inputfile.next()
 
-                # Deal with the various versions:
+            while line [:5] != " ITER":
+
+                # GVB uses SQCDF for checking convergence (for example in exam17).
+                if "GVB" in self.scftype and "SQCDF TOL=" in line:
+                    scftarget = float(line.split("=")[-1])
+
+                # Normally however the density is used as the convergence criterium.
+                # Deal with various versions:
                 #   (GAMESS VERSION = 12 DEC 2003)
                 #     DENSITY MATRIX CONV=  2.00E-05  DFT GRID SWITCH THRESHOLD=  3.00E-04
                 #   (GAMESS VERSION = 22 FEB 2006)
                 #     DENSITY MATRIX CONV=  1.00E-05
                 #   (PC GAMESS version 6.2, Not DFT?)
                 #     DENSITY CONV=  1.00E-05
-                if "DENSITY CONV" in line or "DENSITY MATRIX CONV" in line:
-
+                elif "DENSITY CONV" in line or "DENSITY MATRIX CONV" in line:
                     scftarget = float(line.split()[-1])
 
                 line = inputfile.next()
 
             if not hasattr(self, "scftargets"):
                 self.scftargets = []
+
             self.scftargets.append([scftarget])
 
             if not hasattr(self,"scfvalues"):
                 self.scfvalues = []
+
             line = inputfile.next()
+
+            # Normally the iteration print in 6 columns.
+            # For ROHF, however, it is 5 columns, thus this extra parameter.
+            if "ROHF" in self.scftype:
+                valcol = 4
+            else:
+                valcol = 5
+
+            # SCF iterations are terminated by a blank line.
+            # The first four characters usually contains the step number.
+            # However, lines can also contain messages, including:
+            #   * * *   INITIATING DIIS PROCEDURE   * * *
+            #   CONVERGED TO SWOFF, SO DFT CALCULATION IS NOW SWITCHED ON
+            #   DFT CODE IS SWITCHING BACK TO THE FINER GRID
             values = []
             while line.strip():
-            # The SCF information is terminated by a blank line                    
                 try:
                     temp = int(line[0:4])
                 except ValueError:
-            # Occurs for:
-            #  * * *   INITIATING DIIS PROCEDURE   * * *
-            #  CONVERGED TO SWOFF, SO DFT CALCULATION IS NOW SWITCHED ON
-            #  DFT CODE IS SWITCHING BACK TO THE FINER GRID
                     pass
                 else:
-                    values.append([float(line.split()[5])])
+                    values.append([float(line.split()[valcol])])
                 line = inputfile.next()
             self.scfvalues.append(values)
 
