@@ -59,7 +59,10 @@ class GAMESS(logfileparser.Logfile):
     
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
-        
+
+        if line [1:12] == "INPUT CARD>":
+            return
+
         # We are looking for this line:
         #           PARAMETERS CONTROLLING GEOMETRY SEARCH ARE
         #           ...
@@ -278,6 +281,13 @@ class GAMESS(logfileparser.Logfile):
                 line = inputfile.next()
                 parts = line.split()
                 rms = float(parts[3])
+
+
+            # FMO also prints two final one- and two-body gradients (see exam37):
+            #   (1) MAXIMUM GRADIENT =  0.0531540    RMS GRADIENT = 0.0189223
+            if len(parts) == 9:
+                maximum = float(parts[4])
+                rms = float(parts[8])
 
             self.geovalues.append([maximum, rms])
 
@@ -673,6 +683,10 @@ class GAMESS(logfileparser.Logfile):
                 oldatom ='0'
                 for i in range(self.nbasis):
                     line = inputfile.next()
+
+                    # If line is empty, break (ex. for FMO in exam37).
+                    if not line.strip(): break
+
                     # Fill atombasis and aonames only first time around
                     if readatombasis and base == 0:
                         aonames = []
@@ -781,13 +795,29 @@ class GAMESS(logfileparser.Logfile):
             homos.append(int(line.split()[-1])-1)
             self.homos = numpy.array(homos, "i")
 
+        
         if line.find("SYMMETRIES FOR INITIAL GUESS ORBITALS FOLLOW") >= 0:
-            # Not unrestricted, so lop off the second index
+            # Not unrestricted, so lop off the second index.
+            # In case the search string above was not used (ex. FMO in exam38),
+            #   we can try to use the next line which should also contain the
+            #   number of occupied orbitals.
             if line.find("BOTH SET(S)") >= 0:
+                nextline = inputfile.next()
+                if "ORBITALS ARE OCCUPIED" in nextline:
+                    homos = int(nextline.split()[0])-1
+                    if hasattr(self,"homos"):
+                        try:
+                            assert self.homos[0] == homos
+                        except AssertionError:
+                            self.logger.warning("Number of occupied orbitals not consistent. This is normal for ECP and FMO jobs.")
+                    else:
+                        self.homos = [homos]
                 self.homos = numpy.resize(self.homos, [1])
 
         # Set the total number of atoms, only once.
-        if line.find("TOTAL NUMBER OF ATOMS") == 1 and not hasattr(self,"natom"):
+        # Normally GAMESS print TOTAL NUMBER OF ATOMS, however in some cases
+        #   this is slightly different (ex. lower case for FMO in exam37).
+        if not hasattr(self,"natom") and "NUMBER OF ATOMS" in line.upper():
             self.natom = int(line.split()[-1])
             
         if line.find("NUMBER OF CARTESIAN GAUSSIAN BASIS") == 1 or line.find("TOTAL NUMBER OF BASIS FUNCTIONS") == 1:
