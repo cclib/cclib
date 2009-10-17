@@ -769,16 +769,16 @@ class GAMESS(logfileparser.Logfile):
                         self.nocoeffs[base+j, i] = float(coeffs[j * 11:(j + 1) * 11])
                         j += 1
 
-        if line.find("NUMBER OF OCCUPIED ORBITALS") >= 0:
+        # We cannot trust this self.homos until we come to the phrase:
+        #   SYMMETRIES FOR INITAL GUESS ORBITALS FOLLOW
+        # which either is followed by "ALPHA" or "BOTH" at which point we can say
+        # for certain that it is an un/restricted calculations.
+        # Note that MCSCF calcs also print this search string, so make sure
+        #   that self.homos does not exist yet.
+        if line[1:28] == "NUMBER OF OCCUPIED ORBITALS" and not hasattr(self,'homos'):
             homos = [int(line.split()[-1])-1]
             line = inputfile.next()
             homos.append(int(line.split()[-1])-1)
-            # Note that we cannot trust this self.homos until we come to
-            # a line that contains the phrase:
-            # "SYMMETRIES FOR INITAL GUESS ORBITALS FOLLOW"
-            # which either is followed by "ALPHA" or "BOTH"
-            # at which point we can say for certain that it is an
-            # un/restricted calculations
             self.homos = numpy.array(homos, "i")
 
         if line.find("SYMMETRIES FOR INITIAL GUESS ORBITALS FOLLOW") >= 0:
