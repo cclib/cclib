@@ -330,7 +330,8 @@ class GAMESS(logfileparser.Logfile):
 
             atomcoords = []
             line = inputfile.next()                
-            while line.strip():
+
+            for i in range(self.natom):
                 temp = line.strip().split()
                 atomcoords.append(map(float, temp[2:5]))
                 line = inputfile.next()
