@@ -28,6 +28,7 @@ GAMESS/GAMESS-US/cyclopentadienyl.rhf.gms.out.cut.bz2
 GAMESS/GAMESS-US/ex.out.gz
 GAMESS/GAMESS-US/exam01.out.gz
 GAMESS/GAMESS-US/exam02_27JUN2005R3.log.gz
+GAMESS/GAMESS-US/exam17.log.bz2
 GAMESS/GAMESS-US/lif.r=5.6.mcscf.accd.4x4.out.bz2
 GAMESS/GAMESS-US/water_mp2_nprint9.out
 GAMESS/GAMESS-US/zolm_dft3a.log.zip
