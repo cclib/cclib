@@ -9,15 +9,19 @@ __revision__ = "$Revision$"
 import StringIO
 
 try:
-  import bz2 # New in Python 2.3.
+    import bz2 # New in Python 2.3.
 except ImportError, detail:
-  print "Not all cclib features will work:", detail
+    print "Not all cclib features will work:", detail
 import fileinput
 import gzip
 import inspect
 import logging
 import os
 import random
+try:
+    set # Standard type from Python 2.4+.
+except NameError:
+    from sets import Set as set
 import sys
 import types
 import urllib
