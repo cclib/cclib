@@ -72,6 +72,16 @@ class Gaussian(logfileparser.Logfile):
         # Flag for identifying ONIOM calculations.
         self.oniom = False
 
+    def after_parsing(self):
+
+        # Correct the percent values in the etsecs in the case of
+        # a restricted calculation. The following has the
+        # effect of including each transition twice.
+        if hasattr(self, "etsecs") and len(self.homos) == 1:
+            new_etsecs = [[(x[0], x[1], x[2] * numpy.sqrt(2)) for x in etsec]
+                          for etsec in self.etsecs]
+            self.etsecs = new_etsecs
+            
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
         
@@ -663,10 +673,8 @@ class Gaussian(logfileparser.Logfile):
                 toMO = int(p.match(toMO).group())-1 # subtract 1 so that it is an index into moenergies
 
                 percent = self.float(t[1])
-                if len(self.homos)==1:
-                    # For restricted calculations, the following has the
-                    # effect of including each transition twice
-                    percent *= numpy.sqrt(2)
+                # For restricted calculations, the percentage will be corrected
+                # after parsing (see after_parsing() above).
                 CIScontrib.append([(fromMO, frommoindex), (toMO, tomoindex), percent])
                 line = inputfile.next()
             self.etsecs.append(CIScontrib)

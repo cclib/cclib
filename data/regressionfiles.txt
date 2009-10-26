@@ -51,6 +51,7 @@ Gaussian/Gaussian03/neoprene.zip
 Gaussian/Gaussian03/H2FAs--AsH2F.opt-mp2-cp.log.bz2
 Gaussian/Gaussian03/Mo4OSibdt2-opt.log.bz2
 Gaussian/Gaussian03/chn1.log.gz
+Gaussian/Gaussian03/anth1.zip
 Gaussian/Gaussian03/tms_nmr.log.gz
 Gaussian/Gaussian03/mendes.zip
 Gaussian/Gaussian03/cyclopropenyl.rhf.g03.cut.log.bz2
