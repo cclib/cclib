@@ -59,14 +59,12 @@ def openlogfile(filename):
 
         elif extension == ".zip":
             zip = zipfile.ZipFile(filename, "r")
-            assert (len(zip.namelist()) == 1,
-                    "ERROR: Zip file contains more than 1 file")
+            assert len(zip.namelist()) == 1, "ERROR: Zip file contains more than 1 file"
             fileobject = StringIO.StringIO(zip.read(zip.namelist()[0]))
 
         elif extension in ['.bz', '.bz2']:
             # Module 'bz2' is not always importable.
-            assert ('bz2' in sys.modules.keys(),
-                    "ERROR: module bz2 cannot be imported")
+            assert 'bz2' in sys.modules.keys(), "ERROR: module bz2 cannot be imported"
             fileobject = bz2.BZ2File(filename, "r")
 
         else:
