@@ -502,7 +502,7 @@ class Gaussian(logfileparser.Logfile):
         #      0.2941249355D+01 -0.9996722919D-01  0.1559162750D+00
         #      0.6834830964D+00  0.3995128261D+00  0.6076837186D+00
         #      0.2222899159D+00  0.7001154689D+00  0.3919573931D+00
-        if line[1:14] == "AO basis set ":
+        if line[1:16] == "AO basis set in":
         
             # For counterpoise fragment calcualtions, skip these lines.
             if self.counterpoise != 0: return
