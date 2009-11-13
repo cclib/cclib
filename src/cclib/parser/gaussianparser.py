@@ -679,17 +679,39 @@ class Gaussian(logfileparser.Logfile):
                 line = inputfile.next()
             self.etsecs.append(CIScontrib)
 
-        # Circular dichroism data.
-        if line[1:52] == "<0|r|b> * <b|rxdel|0>  (Au), Rotatory Strengths (R)":
+# Circular dichroism data (different for G03 vs G09)
+
+# G03
+
+## <0|r|b> * <b|rxdel|0>  (Au), Rotatory Strengths (R) in
+## cgs (10**-40 erg-esu-cm/Gauss)
+##       state          X           Y           Z     R(length)
+##         1         0.0006      0.0096     -0.0082     -0.4568
+##         2         0.0251     -0.0025      0.0002     -5.3846
+##         3         0.0168      0.4204     -0.3707    -15.6580
+##         4         0.0721      0.9196     -0.9775     -3.3553
+
+# G09
+
+## 1/2[<0|r|b>*<b|rxdel|0> + (<0|rxdel|b>*<b|r|0>)*]
+## Rotatory Strengths (R) in cgs (10**-40 erg-esu-cm/Gauss)
+##       state          XX          YY          ZZ     R(length)     R(au)
+##         1        -0.3893     -6.7546      5.7736     -0.4568     -0.0010
+##         2       -17.7437      1.7335     -0.1435     -5.3845     -0.0114
+##         3       -11.8655   -297.2604    262.1519    -15.6580     -0.0332
+
+        if (line[1:52] == "<0|r|b> * <b|rxdel|0>  (Au), Rotatory Strengths (R)" or
+            line[1:50] == "1/2[<0|r|b>*<b|rxdel|0> + (<0|rxdel|b>*<b|r|0>)*]"):
 
             self.etrotats = []
-            inputfile.next()
-            inputfile.next()
+            inputfile.next() # Units
+            headers = inputfile.next() # Headers
+            Ncolms = len(headers.split())
             line = inputfile.next()
             parts = line.strip().split()
-            while len(parts) == 5:
+            while len(parts) == Ncolms:
                 try:
-                    R = self.float(parts[-1])
+                    R = self.float(parts[4])
                 except ValueError:
                     # nan or -nan if there is no first excited state
                     # (for unrestricted calculations)

@@ -26,6 +26,20 @@ def testGaussian_basicGaussian03_dvb_gopt_out(logfile):
     """
     assert len(logfile.homos)==1
 
+def testGaussian_Gaussian09_OPT_td_g09_zip(logfile):
+    """
+    Previously, couldn't find etrotats as G09 has different output than G03
+    """
+    assert len(logfile.etrotats) == 10
+    assert logfile.etrotats[0] == -0.4568
+
+def testGaussian_Gaussian09_OPT_td_zip(logfile):
+    """
+    Working fine - adding to ensure that CD is parsed correctly
+    """
+    assert len(logfile.etrotats) == 10
+    assert logfile.etrotats[0] == -0.4568
+
 def testGaussian_Gaussian09_534_out_zip(logfile):
     """
     Previously, caused etenergies parsing to fail
