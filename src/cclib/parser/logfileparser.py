@@ -10,12 +10,13 @@ import StringIO
 
 try:
     import bz2 # New in Python 2.3.
-except ImportError, detail:
-    print "Not all cclib features will work:", detail
+except ImportError:
+    bz2 = None
 import fileinput
 import gzip
 import inspect
 import logging
+logging.logMultiprocessing =  0 # To avoid a problem with Avogadro
 import os
 import random
 try:
@@ -24,13 +25,12 @@ except NameError:
     from sets import Set as set
 import sys
 import types
-import urllib
 import zipfile
 
 import numpy
 
 import utils
-from cclib.data import ccData
+from data import ccData
 
 
 def openlogfile(filename):
@@ -49,9 +49,6 @@ def openlogfile(filename):
     # If there is a single string argument given.
     if type(filename) in [str, unicode]:
 
-        if r"http://" in filename:
-            filename,messages = urllib.urlretrieve(filename)
-    
         extension = os.path.splitext(filename)[1]
         
         if extension == ".gz":
@@ -64,7 +61,7 @@ def openlogfile(filename):
 
         elif extension in ['.bz', '.bz2']:
             # Module 'bz2' is not always importable.
-            assert 'bz2' in sys.modules.keys(), "ERROR: module bz2 cannot be imported"
+            assert bz2 != None, "ERROR: module bz2 cannot be imported"
             fileobject = bz2.BZ2File(filename, "r")
 
         else:
