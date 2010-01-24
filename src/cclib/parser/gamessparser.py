@@ -428,6 +428,18 @@ class GAMESS(logfileparser.Logfile):
         #       FREQUENCY:        52.49       41.45       17.61        9.23       10.61  
         #    REDUCED MASS:      3.92418     3.77048     5.43419     6.44636     5.50693
         #    IR INTENSITY:      0.00013     0.00001     0.00004     0.00000     0.00003
+
+        # ...or in the case of a numerical Hessian job...
+
+        # MODES 1 TO 5 ARE TAKEN AS ROTATIONS AND TRANSLATIONS.
+        #
+        #     FREQUENCIES IN CM**-1, IR INTENSITIES IN DEBYE**2/AMU-ANGSTROM**2,
+        #     REDUCED MASSES IN AMU.
+        #
+        #                          1           2           3           4           5
+        #       FREQUENCY:         0.05        0.03        0.03       30.89       30.94  
+        #    REDUCED MASS:      8.50125     8.50137     8.50136     1.06709     1.06709
+
         
         # whereas PC-GAMESS has...
         # MODES 1 TO 6 ARE TAKEN AS ROTATIONS AND TRANSLATIONS.
@@ -503,9 +515,11 @@ class GAMESS(logfileparser.Logfile):
                 line = inputfile.next()
                 if line.find("REDUCED") >= 0: # skip the reduced mass (not always present)
                     line = inputfile.next()
-                irIntensity = map(float, line.strip().split()[2:])
-                self.vibirs.extend([utils.convertor(x, "Debye^2/amu-Angstrom^2", "km/mol") for x in irIntensity])
-                line = inputfile.next()
+                if line.find("IR INTENSITY") >= 0:
+                    # Not present if a numerical Hessian calculation
+                    irIntensity = map(float, line.strip().split()[2:])
+                    self.vibirs.extend([utils.convertor(x, "Debye^2/amu-Angstrom^2", "km/mol") for x in irIntensity])
+                    line = inputfile.next()
                 if line.find("RAMAN") >= 0:
                     if not hasattr(self,"vibramans"):
                         self.vibramans = []

@@ -22,6 +22,7 @@ ADF/ADF2006.01/dvb_gopt.adfout.bz2
 ADF/ADF2006.01/HgMeBr_zso_orig.out
 ADF/ADF2006.01/Frags_NiCO4_orig.out
 ADF/ADF2006.01/Au2.out
+GAMESS/GAMESS-US/Bug2935847.zip
 GAMESS/GAMESS-US/2CO.ccsd.aug-cc-pVDZ.out
 GAMESS/GAMESS-US/bv6010sup1molecule_4.inp.cml_.log.bz2
 GAMESS/GAMESS-US/cyclopentadienyl.rhf.gms.out.cut.bz2
