@@ -124,7 +124,7 @@ class GAMESS(logfileparser.Logfile):
                 self.ccenergies = []
             ccenergy = float(line.split()[2])
             self.ccenergies.append(utils.convertor(ccenergy, "hartree", "eV"))
-        if line[8:23] == "CCSD    ENERGY:":
+        if line.find("CCSD") >= 0 and line.split()[0:2] == ["CCSD", "ENERGY:"]:
             if not hasattr(self, "ccenergies"):
                 self.ccenergies = []
             ccenergy = float(line.split()[2])

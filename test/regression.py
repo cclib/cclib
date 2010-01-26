@@ -21,10 +21,28 @@ def testGaussian_basicGaussian03_dvb_gopt_out(logfile):
     """Example regression test for Gaussian/basicGaussian03/dvb_gopt.out
 
     Note: the name of the test must match the full path to the datafile
-    exactly, except that all periods are replaced by underscores, and path
-    separators are also replaced by underscores.
+    exactly, except that all periods, hyphens, path separators and
+    parentheses are replaced by underscores.
     """
     assert len(logfile.homos)==1
+
+def testGAMESS_GAMESS_US_open_shell_ccsd_test_log_gz(logfile):
+    """Parse ccenergies from open shell CCSD calculations"""
+    assert hasattr(logfile, "ccenergies")
+    assert len(logfile.ccenergies) == 1
+    assert abs(logfile.ccenergies[0] + 3501.50) < 0.01
+def testGAMESS_basicGAMESS_US_water_ccd_out(logfile):
+    """Keep parsing ccenergies correctly"""
+    assert len(logfile.ccenergies) == 1
+    assert abs(logfile.ccenergies[0] + 2074.22) < 0.01
+def testGAMESS_basicGAMESS_US_water_ccsd_out(logfile):
+    """Keep parsing ccenergies correctly"""
+    assert len(logfile.ccenergies) == 1
+    assert abs(logfile.ccenergies[0] + 2074.24) < 0.01
+def testGAMESS_basicGAMESS_US_water_ccsd_t__out(logfile):
+    """Keep parsing ccenergies correctly"""
+    assert len(logfile.ccenergies) == 1
+    assert abs(logfile.ccenergies[0] + 2074.32) < 0.01
 
 def testGaussian_Gaussian09_OPT_td_g09_zip(logfile):
     """
