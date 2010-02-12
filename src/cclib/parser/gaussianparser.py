@@ -348,7 +348,10 @@ class Gaussian(logfileparser.Logfile):
         # 2          6           0.018984731    0.032948887   -0.038003451
         # 3          1          -0.002133484   -0.006226040    0.023174772
         # 4          1          -0.004316502   -0.004968213    0.023174772
+        #           -2          -0.001830728   -0.000743108   -0.000196625
         # ------------------------------------------------------------------
+        #
+        # The "-2" line is for a dummy atom
         #
         # Then optimization is done in internal coordinates, Gaussian also
         # print the forces in internal coordinates, which can be produced from 
@@ -369,7 +372,8 @@ class Gaussian(logfileparser.Logfile):
             line = inputfile.next()
             forces = []
             while line != dashes:
-                n,nuclear,Fx,Fy,Fz = line.split()
+                broken = line.split()
+                Fx, Fy, Fz = broken[-3:]
                 forces.append([float(Fx),float(Fy),float(Fz)])
                 line = inputfile.next()
             self.grads.append(forces)                
