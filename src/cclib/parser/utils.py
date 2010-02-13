@@ -125,7 +125,7 @@ def ccopen(filename, progress=None, loglevel=logging.INFO, logname="Log"):
 
         # Note: Turbomole output files don't have "Turbomole" in them,
         #   but you can put it in there.
-        elif line.find("Turbomole") >= 0:
+        elif line.find("Turbomole") >=0 or line.find("TURBOMOLE") >= 0:
             filetype = turbomoleparser.Turbomole
             break
 

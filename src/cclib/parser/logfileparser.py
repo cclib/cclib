@@ -14,7 +14,7 @@ import random
 import numpy
 
 import utils
-from cclib.data import ccData
+from data import ccData
 
 
 class Logfile(object):
