@@ -368,7 +368,7 @@ class Turbomole(logfileparser.Logfile):
 
             while line[3:31] != "****  force : all done  ****":
                 if line[5:14] == "frequency":
-                    temp=line.split()
+                    temp=line.replace("i","-").split()
 
                     freqs = [self.float(f) for f in temp[1:]]
                     self.vibfreqs.extend(freqs)
