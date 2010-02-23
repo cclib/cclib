@@ -8,7 +8,6 @@ files = ['THANKS','README','INSTALL','ANNOUNCE','CHANGELOG','LICENSE',
 
 source = os.path.join('src','cclib')
 files.append(os.path.join(source,"__init__.py"))
-files.append(os.path.join(source,"data.py"))
 files.append(os.path.join("src","scripts","ccget"))
 files.append(os.path.join("src","scripts","cda"))
 
