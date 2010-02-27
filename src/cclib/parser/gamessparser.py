@@ -83,7 +83,8 @@ class GAMESS(logfileparser.Logfile):
             self.scfenergies.append(utils.convertor(float(temp[temp.index("IS") + 1]), "hartree", "eV"))
 
         # Total energies after Moller-Plesset corrections
-        if line.find("RESULTS OF MOLLER-PLESSET") >= 0:
+        if (line.find("RESULTS OF MOLLER-PLESSET") >= 0 or
+            line.startswith(" DISTRIBUTED DATA MP")):
             # Output looks something like this:
             # RESULTS OF MOLLER-PLESSET 2ND ORDER CORRECTION ARE
             #         E(0)=      -285.7568061536
@@ -91,15 +92,27 @@ class GAMESS(logfileparser.Logfile):
             #         E(2)=        -0.9679419329
             #       E(MP2)=      -286.7247480864
             # where E(MP2) = E(0) + E(2)
+            #
+            # with GAMESS-US 12 Jan 2009 (R3) the preceding text is different:
+            ##      DIRECT 4-INDEX TRANSFORMATION 
+            ##      SCHWARZ INEQUALITY TEST SKIPPED          0 INTEGRAL BLOCKS
+            ##                     E(SCF)=       -76.0088477471
+            ##                       E(2)=        -0.1403745370
+            ##                     E(MP2)=       -76.1492222841            
             if not hasattr(self, "mpenergies"):
                 self.mpenergies = []
             # Each iteration has a new print-out
             self.mpenergies.append([])
+            if line.startswith(" DISTRIBUTED DATA MP"):
+                mplevel = int(line[20:21])
+                while line.find("SCHWARZ INEQUALITY TEST SKIPPED") < 0:
+                    line = inputfile.next()
+            else:
+                mplevel = int(line[27:28])
             # GAMESS-US presently supports only second order corrections (MP2)
             # PC GAMESS also has higher levels (3rd and 4th), with different output
-            # Only the highest level MP4 energy is gathered (SDQ or SDTQ)
-            mplevel = int(line[27:28])
-            while line.strip() <> "..... DONE WITH MP%i ENERGY ....." %mplevel:
+            # Only the highest level MP4 energy is gathered (SDQ or SDTQ)            
+            while line.strip() != "..... DONE WITH MP%i ENERGY ....." %mplevel:
                 line = inputfile.next()
                 if len(line.split()) > 0:
                     # Only up to MP2 correction
