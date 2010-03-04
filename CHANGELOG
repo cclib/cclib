@@ -1,10 +1,15 @@
 Change since cclib-0.9:
 
 Features:
-	* ?
+	* Handle PBC calculations from Gaussian
+	* Updates to handle Gaussian09
+	* Support TDDFT calculations from ADF
+	* A number of improvements for GAMESS support
+	* ccopen now supports any file-like object with a read() method, so it
+	can parse across HTTP
 
 Bugfixes:
-	* Various parsing errors were fixed.
+	* Many many additional files parsed thanks to bugs reported by users
 
 Change since cclib-0.8:
 
