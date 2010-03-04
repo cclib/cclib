@@ -16,6 +16,8 @@ for folder in folders:
     files.extend(glob.glob(os.path.join(source,folder,'*.py')))
 
 # Include data files
+files.append(os.path.join("data", "regressionfiles.txt"))
+files.append(os.path.join("data", "wget.sh"))
 folders = glob.glob(os.path.join('data', '*'))
 for folder in folders:
     basicfolders = glob.glob(os.path.join(folder, 'basic*'))
