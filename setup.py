@@ -58,7 +58,7 @@ def setup_cclib():
 
     setup(
         name = "cclib",
-        version = "1.0a",
+        version = "1.0b",
         url = "http://cclib.sf.net",
         author = "cclib development team",
         author_email = "cclib-users@lists.sourceforge.net",
