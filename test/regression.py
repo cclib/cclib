@@ -25,7 +25,17 @@ def testGaussian_basicGaussian03_dvb_gopt_out(logfile):
     parentheses are replaced by underscores.
     """
     assert len(logfile.homos)==1
-    
+
+def testGAMESS_GAMESS_US_N2_UMP2_zip(logfile):
+    """Check that the new format for GAMESS MP2 is parsed"""
+    assert hasattr(logfile, "mpenergies")
+    assert len(logfile.mpenergies) == 1
+    assert abs(logfile.mpenergies[0] + 2975.97) < 0.01
+def testGAMESS_GAMESS_US_N2_ROMP2_zip(logfile):
+    """Check that the new format for GAMESS MP2 is parsed"""
+    assert hasattr(logfile, "mpenergies")
+    assert len(logfile.mpenergies) == 1
+    assert abs(logfile.mpenergies[0] + 2975.97) < 0.01    
 def testGAMESS_GAMESS_US_paulo_h2o_mp2_zip(logfile):
     """Check that the new format for GAMESS MP2 is parsed"""
     assert hasattr(logfile, "mpenergies")

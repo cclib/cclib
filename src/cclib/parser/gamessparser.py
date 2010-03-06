@@ -84,7 +84,7 @@ class GAMESS(logfileparser.Logfile):
 
         # Total energies after Moller-Plesset corrections
         if (line.find("RESULTS OF MOLLER-PLESSET") >= 0 or
-            line.startswith(" DISTRIBUTED DATA MP")):
+            line[6:37] == "SCHWARZ INEQUALITY TEST SKIPPED"):
             # Output looks something like this:
             # RESULTS OF MOLLER-PLESSET 2ND ORDER CORRECTION ARE
             #         E(0)=      -285.7568061536
@@ -103,16 +103,10 @@ class GAMESS(logfileparser.Logfile):
                 self.mpenergies = []
             # Each iteration has a new print-out
             self.mpenergies.append([])
-            if line.startswith(" DISTRIBUTED DATA MP"):
-                mplevel = int(line[20:21])
-                while line.find("SCHWARZ INEQUALITY TEST SKIPPED") < 0:
-                    line = inputfile.next()
-            else:
-                mplevel = int(line[27:28])
             # GAMESS-US presently supports only second order corrections (MP2)
             # PC GAMESS also has higher levels (3rd and 4th), with different output
             # Only the highest level MP4 energy is gathered (SDQ or SDTQ)            
-            while line.strip() != "..... DONE WITH MP%i ENERGY ....." %mplevel:
+            while re.search("DONE WITH MP(\d) ENERGY", line) is None:
                 line = inputfile.next()
                 if len(line.split()) > 0:
                     # Only up to MP2 correction
