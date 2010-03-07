@@ -4,7 +4,7 @@ and licensed under the LGPL (http://www.gnu.org/copyleft/lgpl.html).
 """
 
 __revision__ = "$Revision$"
-__version__ = "1.0b"
+__version__ = "1.0"
 
 import parser
 import progress
