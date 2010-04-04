@@ -367,6 +367,18 @@ class Turbomole(logfileparser.Logfile):
             self.vibdisps = []
 
             while line[3:31] != "****  force : all done  ****":
+                if line[12:26] == "ATOMIC WEIGHTS":
+#begin parsing atomic weights
+                   self.vibmasses=[]
+                   line=inputfile.next() # lines =======
+                   line=inputfile.next() # notes
+                   line=inputfile.next() # start reading
+                   temp=line.split()
+                   while(len(temp) > 0):
+                        self.vibmasses.append(float(temp[2]))
+                        line=inputfile.next()
+                        temp=line.split()
+
                 if line[5:14] == "frequency":
                     temp=line.replace("i","-").split()
 

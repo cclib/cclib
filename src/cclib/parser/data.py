@@ -51,6 +51,7 @@ class ccData(object):
         vibdisps -- cartesian displacement vectors (array[3], delta angstrom)
         vibfreqs -- vibrational frequencies (array[1], 1/cm)
         vibirs -- IR intensities (array[1], km/mol)
+        vibmasses -- atomic masses used in frequency calculations (array[1], amu)
         vibramans -- Raman intensities (array[1], A^4/Da)
         vibsyms -- symmetries of vibrations (list)
     (1) The term 'array' refers to a numpy array
@@ -79,7 +80,7 @@ class ccData(object):
                           'mocoeffs', 'moenergies', 'mosyms', 'mpenergies', 'mult',
                           'natom', 'nbasis', 'nmo', 'nocoeffs',
                           'scfenergies', 'scftargets', 'scfvalues',
-                          'vibdisps', 'vibfreqs', 'vibirs', 'vibramans', 'vibsyms']
+                          'vibdisps', 'vibfreqs', 'vibirs', 'vibmasses', 'vibramans', 'vibsyms']
 
         # The expected types for all supported attributes.
         self._attrtypes = { "aonames":        list,
@@ -115,6 +116,7 @@ class ccData(object):
                             "vibdisps":       numpy.ndarray,
                             "vibfreqs":       numpy.ndarray,
                             "vibirs":         numpy.ndarray,
+                            "vibmasses":      numpy.ndarray,
                             "vibramans":      numpy.ndarray,
                             "vibsyms":        list,
                           }
