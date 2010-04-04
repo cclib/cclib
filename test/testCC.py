@@ -1,10 +1,6 @@
 __revision__ = "$Revision$"
 
-# If numpy is not installed, try to import Numeric instead.
-try:
-    import numpy
-except ImportError:
-    import Numeric as numpy
+import numpy
 
 import bettertest
 
@@ -67,5 +63,5 @@ class MolproCCSDTest(GenericCCSDTest):
 
 if __name__=="__main__":
 
-    from testall import testmodule
-    testmodule("CC")
+    from testall import testall
+    testall(modules=["CC"])

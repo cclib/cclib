@@ -11,7 +11,7 @@ soup = BeautifulSoup(allpages)
 hrefs = []
 for anchor in soup('table')[2]('a'):
     hrefs.append(anchor['href'].split("/")[-1])
-print hrefs
+print 'Pages to download:\n', ', '.join(hrefs)
 
 params = urllib.urlencode({"action":"submit",
                            "pages":"\n".join(hrefs)})

@@ -6,23 +6,19 @@ and licensed under the LGPL (http://www.gnu.org/copyleft/lgpl.html).
 __revision__ = "$Revision$"
 
 
-# If numpy is not installed, try to import Numeric instead.
-try:
-    import numpy
-except ImportError:
-    import Numeric as numpy
+import numpy
 
-import utils
 import logfileparser
+import utils
 
 
 class ADF(logfileparser.Logfile):
     """An ADF log file"""
 
-    def __init__(self, *args):
+    def __init__(self, *args, **kwargs):
 
         # Call the __init__ method of the superclass
-        super(ADF, self).__init__(logname="ADF", *args)
+        super(ADF, self).__init__(logname="ADF", *args, **kwargs)
 
     def __str__(self):
         """Return a string representation of the object."""
@@ -53,6 +49,10 @@ class ADF(logfileparser.Logfile):
                 return label.lower()
 
         ans = label.replace(".", "")
+        if ans[1:3] == "''":
+            temp = ans[0] + '"'
+            ans = temp
+
         l = len(ans)
         if l > 1 and ans[0] == ans[1]: # Python only tests the second condition if the first is true
             if l > 2 and ans[1] == ans[2]:
@@ -106,12 +106,23 @@ class ADF(logfileparser.Logfile):
 
                 self.updateprogress(inputfile, "Unsupported Information", self.fupdate)
 
+                if line.find("INPUT FILE") >=0 and hasattr(self,"scftargets"):
+                #does this file contain multiple calculations?
+                #if so, print a warning and skip to end of file
+                    self.logger.warning("Skipping remaining calculations")
+                    inputfile.seek(0,2)
+                    break
+
                 if line.find("INPUT FILE") >= 0:
                     line2 = inputfile.next()
                 else:
                     line2 = None
 
-                if line2 and line2.find("Create") < 0:
+                if line2 and len(line2) <= 2:
+                #make sure that it's not blank like in the NiCO4 regression
+                    line2 = inputfile.next()
+
+                if line2 and (line2.find("Create") < 0 and line2.find("create") < 0):
                     break
 
                 line = inputfile.next()
@@ -249,6 +260,16 @@ class ADF(logfileparser.Logfile):
 
             if hasattr(self, "scfvalues"):
                 self.scfvalues.append(newlist)
+
+        # Parse SCF energy for SP calcs from bonding energy decomposition section.
+        # It seems ADF does not print it earlier for SP calcualtions.
+        # If it does (does it?), parse that instead.
+        # Check that scfenergies does not exist, becuase gopt runs also print this,
+        #   repeating the values in the last "Geometry Convergence Tests" section.
+        if "Total Bonding Energy:" in line:
+            if not hasattr(self, "scfenergies"):
+                energy = utils.convertor(float(line.split()[3]), "hartree", "eV")
+                self.scfenergies = [energy]            
 
         if line[51:65] == "Final Geometry":
             self.finalgeometry = self.GETLAST
@@ -426,7 +447,8 @@ class ADF(logfileparser.Logfile):
                     if len(self.moenergies) < 2: #if we don't have space, create it
                         self.moenergies.append([])
                         self.mosyms.append([])
-                    count = multiple.get(info[0][0], 1)
+#                    count = multiple.get(info[0][0], 1)
+                    count = multiple.get(info[0], 1)
                     if info[2] == 'A':
                         for repeat in range(count): # i.e. add E's twice, T's thrice
                             self.mosyms[0].append(self.normalisesym(info[0]))
@@ -530,6 +552,7 @@ class ADF(logfileparser.Logfile):
         # now that we're here, let's extract aonames
 
             self.fonames = []
+            self.start_indeces = {}
 
             blank = inputfile.next()
             note = inputfile.next()
@@ -545,7 +568,8 @@ class ADF(logfileparser.Logfile):
             self.nosymreps = []
             while len(self.fonames) < self.nbasis:
 
-                sym = inputfile.next()
+                symline = inputfile.next()
+                sym = symline.split()[1]
                 line = inputfile.next()
                 num = int(line.split(':')[1].split()[0])
                 self.nosymreps.append(num)
@@ -560,6 +584,10 @@ class ADF(logfileparser.Logfile):
                     info = line.split()
 
                     #index0 index1 occ2 energy3/4 fragname5 coeff6 orbnum7 orbname8 fragname9
+                    if not sym in self.start_indeces.keys():
+                    #have we already set the start index for this symmetry?
+                        self.start_indeces[sym] = int(info[1])
+
                     orbname = info[8]
                     orbital = info[7] + orbname.replace(":", "")
 
@@ -696,9 +724,16 @@ class ADF(logfileparser.Logfile):
                     # The table can end with a blank line or "1".
                     row = 0
                     while not line.strip() in ["", "1"]:
+                        info = line.split()
+
+                        if int(info[0]) < self.start_indeces[sym]:
+                        #check to make sure we aren't parsing CFs
+                            line = inputfile.next()
+                            continue
+
                         self.updateprogress(inputfile, "Coefficients", self.fupdate)
                         row += 1
-                        coeffs = [float(x) for x in line.split()[1:]]
+                        coeffs = [float(x) for x in info[1:]]
                         moindices = [aolist[n-1] for n in monumbers]
                         # The AO index is 1 less than the row.
                         aoindex = symoffset + row - 1
@@ -707,6 +742,140 @@ class ADF(logfileparser.Logfile):
                         line = inputfile.next()
                     lastrow = row
 
+        if line[4:53] == "Final excitation energies from Davidson algorithm":
+
+            # move forward in file past some various algorthm info
+
+            # *   Final excitation energies from Davidson algorithm                    *
+            # *                                                                        *
+            # **************************************************************************
+
+            #     Number of loops in Davidson routine     =   20                    
+            #     Number of matrix-vector multiplications =   24                    
+            #     Type of excitations = SINGLET-SINGLET 
+
+            inputfile.next(); inputfile.next(); inputfile.next()
+            inputfile.next(); inputfile.next(); inputfile.next()
+            inputfile.next(); inputfile.next()
+
+            symm = self.normalisesym(inputfile.next().split()[1])
+
+            # move forward in file past some more txt and header info
+
+            # Excitation energies E in a.u. and eV, dE wrt prev. cycle,
+            # oscillator strengths f in a.u.
+
+            # no.  E/a.u.        E/eV      f           dE/a.u.
+            # -----------------------------------------------------
+
+            inputfile.next(); inputfile.next(); inputfile.next()
+            inputfile.next(); inputfile.next(); inputfile.next()
+
+            # now start parsing etenergies and etoscs
+
+            etenergies = []
+            etoscs = []
+            etsyms = []
+
+            line = inputfile.next()
+            while len(line) > 2:
+                info = line.split()
+                etenergies.append(utils.convertor(float(info[2]), "eV", "cm-1"))
+                etoscs.append(float(info[3]))
+                etsyms.append(symm)
+                line = inputfile.next()
+
+            # move past next section
+            while line[1:53] != "Major MO -> MO transitions for the above excitations":
+                line = inputfile.next()
+
+            # move past headers
+
+            #  Excitation  Occupied to virtual  Contribution                         
+            #   Nr.          orbitals           weight        contribibutions to      
+            #                                   (sum=1) transition dipole moment   
+            #                                             x       y       z       
+
+            inputfile.next(), inputfile.next(), inputfile.next()
+            inputfile.next(), inputfile.next(), inputfile.next()
+
+            # before we start handeling transitions, we need
+            # to create mosyms with indices
+            # only restricted calcs are possible in ADF
+
+            counts = {}
+            syms = []
+            for mosym in self.mosyms[0]:
+                if counts.keys().count(mosym) == 0:
+                    counts[mosym] = 1
+                else:
+                    counts[mosym] += 1
+
+                syms.append(str(counts[mosym]) + mosym)
+
+            import re
+            etsecs = []
+            printed_warning = False 
+
+            for i in range(len(etenergies)):
+                etsec = []
+                line = inputfile.next()
+                info = line.split()
+                while len(info) > 0:
+
+                    match = re.search('[^0-9]', info[1])
+                    index1 = int(info[1][:match.start(0)])
+                    text = info[1][match.start(0):]
+                    symtext = text[0].upper() + text[1:]
+                    sym1 = str(index1) + self.normalisesym(symtext)
+
+                    match = re.search('[^0-9]', info[3])
+                    index2 = int(info[3][:match.start(0)])
+                    text = info[3][match.start(0):]
+                    symtext = text[0].upper() + text[1:]
+                    sym2 = str(index2) + self.normalisesym(symtext)
+
+                    try:
+                        index1 = syms.index(sym1)
+                    except ValueError:
+                        if not printed_warning:
+                            self.logger.warning("Etsecs are not accurate!")
+                            printed_warning = True
+
+                    try:
+                        index2 = syms.index(sym2)
+                    except ValueError:
+                        if not printed_warning:
+                            self.logger.warning("Etsecs are not accurate!")
+                            printed_warning = True
+
+                    etsec.append([(index1, 0), (index2, 0), float(info[4])])
+
+                    line = inputfile.next()
+                    info = line.split()
+
+                etsecs.append(etsec)
+
+
+            if not hasattr(self, "etenergies"):
+                self.etenergies = etenergies
+            else:
+                self.etenergies += etenergies
+
+            if not hasattr(self, "etoscs"):
+                self.etoscs = etoscs
+            else:
+                self.etoscs += etoscs
+
+            if not hasattr(self, "etsyms"):
+                self.etsyms = etsyms
+            else:
+                self.etsyms += etsyms
+
+            if not hasattr(self, "etsecs"):
+                self.etsecs = etsecs
+            else:
+                self.etsecs += etsecs
 
 if __name__ == "__main__":
     import doctest, adfparser

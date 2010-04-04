@@ -1,9 +1,79 @@
 ----- GAMESS execution script -----
 This job is running on host slim
-under operating system Linux at pon mar 5 18:46:14 CET 2007
+under operating system Linux at Tue Aug 7 01:37:51 EDT 2007
 Available scratch disk space (Kbyte units) at beginning of the job is
 Filesystem            Size  Used Avail Use% Mounted on
-/dev/hda6              20G   11G  8,2G  57% /home
+/dev/hda5              20G   16G  3.7G  81% /home
+cp water_cis_dets.inp /home/langner/tmp/gms-water_cis_dets/water_cis_dets.F05
+unset echo
+setenv ERICFMT /home/langner/apps/gamess/gamess-2005.06.27.r3/ericfmt.dat
+setenv MCPPATH /home/langner/apps/gamess/gamess-2005.06.27.r3/mcpdata
+setenv EXTBAS /dev/null
+setenv IRCDATA /home/langner/tmp/python/cclib/trunk/data/GAMESS/basicGAMESS-US/water_cis_dets.irc
+setenv INPUT /home/langner/tmp/gms-water_cis_dets/water_cis_dets.F05
+setenv PUNCH /home/langner/tmp/python/cclib/trunk/data/GAMESS/basicGAMESS-US/water_cis_dets.dat
+setenv AOINTS /home/langner/tmp/gms-water_cis_dets/water_cis_dets.F08
+setenv MOINTS /home/langner/tmp/gms-water_cis_dets/water_cis_dets.F09
+setenv DICTNRY /home/langner/tmp/gms-water_cis_dets/water_cis_dets.F10
+setenv DRTFILE /home/langner/tmp/gms-water_cis_dets/water_cis_dets.F11
+setenv CIVECTR /home/langner/tmp/gms-water_cis_dets/water_cis_dets.F12
+setenv CASINTS /home/langner/tmp/gms-water_cis_dets/water_cis_dets.F13
+setenv CIINTS /home/langner/tmp/gms-water_cis_dets/water_cis_dets.F14
+setenv WORK15 /home/langner/tmp/gms-water_cis_dets/water_cis_dets.F15
+setenv WORK16 /home/langner/tmp/gms-water_cis_dets/water_cis_dets.F16
+setenv CSFSAVE /home/langner/tmp/gms-water_cis_dets/water_cis_dets.F17
+setenv FOCKDER /home/langner/tmp/gms-water_cis_dets/water_cis_dets.F18
+setenv WORK19 /home/langner/tmp/gms-water_cis_dets/water_cis_dets.F19
+setenv DASORT /home/langner/tmp/gms-water_cis_dets/water_cis_dets.F20
+setenv DFTINTS /home/langner/tmp/gms-water_cis_dets/water_cis_dets.F21
+setenv DFTGRID /home/langner/tmp/gms-water_cis_dets/water_cis_dets.F22
+setenv JKFILE /home/langner/tmp/gms-water_cis_dets/water_cis_dets.F23
+setenv ORDINT /home/langner/tmp/gms-water_cis_dets/water_cis_dets.F24
+setenv EFPIND /home/langner/tmp/gms-water_cis_dets/water_cis_dets.F25
+setenv PCMDATA /home/langner/tmp/gms-water_cis_dets/water_cis_dets.F26
+setenv PCMINTS /home/langner/tmp/gms-water_cis_dets/water_cis_dets.F27
+setenv SVPWRK1 /home/langner/tmp/gms-water_cis_dets/water_cis_dets.F26
+setenv SVPWRK2 /home/langner/tmp/gms-water_cis_dets/water_cis_dets.F27
+setenv MLTPL /home/langner/tmp/gms-water_cis_dets/water_cis_dets.F28
+setenv MLTPLT /home/langner/tmp/gms-water_cis_dets/water_cis_dets.F29
+setenv DAFL30 /home/langner/tmp/gms-water_cis_dets/water_cis_dets.F30
+setenv SOINTX /home/langner/tmp/gms-water_cis_dets/water_cis_dets.F31
+setenv SOINTY /home/langner/tmp/gms-water_cis_dets/water_cis_dets.F32
+setenv SOINTZ /home/langner/tmp/gms-water_cis_dets/water_cis_dets.F33
+setenv SORESC /home/langner/tmp/gms-water_cis_dets/water_cis_dets.F34
+setenv SIMEN /home/langner/tmp/python/cclib/trunk/data/GAMESS/basicGAMESS-US/water_cis_dets.simen
+setenv SIMCOR /home/langner/tmp/python/cclib/trunk/data/GAMESS/basicGAMESS-US/water_cis_dets.simcor
+setenv GCILIST /home/langner/tmp/gms-water_cis_dets/water_cis_dets.F37
+setenv HESSIAN /home/langner/tmp/gms-water_cis_dets/water_cis_dets.F38
+setenv SOCCDAT /home/langner/tmp/gms-water_cis_dets/water_cis_dets.F40
+setenv AABB41 /home/langner/tmp/gms-water_cis_dets/water_cis_dets.F41
+setenv BBAA42 /home/langner/tmp/gms-water_cis_dets/water_cis_dets.F42
+setenv BBBB43 /home/langner/tmp/gms-water_cis_dets/water_cis_dets.F43
+setenv MCQD50 /home/langner/tmp/gms-water_cis_dets/water_cis_dets.F50
+setenv MCQD51 /home/langner/tmp/gms-water_cis_dets/water_cis_dets.F51
+setenv MCQD52 /home/langner/tmp/gms-water_cis_dets/water_cis_dets.F52
+setenv MCQD53 /home/langner/tmp/gms-water_cis_dets/water_cis_dets.F53
+setenv MCQD54 /home/langner/tmp/gms-water_cis_dets/water_cis_dets.F54
+setenv MCQD55 /home/langner/tmp/gms-water_cis_dets/water_cis_dets.F55
+setenv MCQD56 /home/langner/tmp/gms-water_cis_dets/water_cis_dets.F56
+setenv MCQD57 /home/langner/tmp/gms-water_cis_dets/water_cis_dets.F57
+setenv MCQD58 /home/langner/tmp/gms-water_cis_dets/water_cis_dets.F58
+setenv MCQD59 /home/langner/tmp/gms-water_cis_dets/water_cis_dets.F59
+setenv MCQD60 /home/langner/tmp/gms-water_cis_dets/water_cis_dets.F60
+setenv MCQD61 /home/langner/tmp/gms-water_cis_dets/water_cis_dets.F61
+setenv MCQD62 /home/langner/tmp/gms-water_cis_dets/water_cis_dets.F62
+setenv MCQD63 /home/langner/tmp/gms-water_cis_dets/water_cis_dets.F63
+setenv MCQD64 /home/langner/tmp/gms-water_cis_dets/water_cis_dets.F64
+setenv NMRINT1 /home/langner/tmp/gms-water_cis_dets/water_cis_dets.F61
+setenv NMRINT2 /home/langner/tmp/gms-water_cis_dets/water_cis_dets.F62
+setenv NMRINT3 /home/langner/tmp/gms-water_cis_dets/water_cis_dets.F63
+setenv NMRINT4 /home/langner/tmp/gms-water_cis_dets/water_cis_dets.F64
+setenv NMRINT5 /home/langner/tmp/gms-water_cis_dets/water_cis_dets.F65
+setenv NMRINT6 /home/langner/tmp/gms-water_cis_dets/water_cis_dets.F66
+setenv DCPHFH2 /home/langner/tmp/gms-water_cis_dets/water_cis_dets.F67
+setenv DCPHF21 /home/langner/tmp/gms-water_cis_dets/water_cis_dets.F68
+setenv GVVPT /home/langner/tmp/gms-water_cis_dets/water_cis_dets.F69
+unset echo
 
 Hostlist information:
 nodes=1
@@ -11,10 +81,11 @@ cpus=1
 hostlist=slim
 
 GAMESS and DDI executables found. Commencing calculation.
+/home/langner/apps/gamess/gamess-2005.06.27.r3/ddi/ddikick.slim.x /home/langner/apps/gamess/gamess-2005.06.27.r3/gamess.00.slim.x water_cis_dets -ddi 1 1 slim -scr /home/langner/tmp/gms-water_cis_dets
 
  Distributed Data Interface kickoff program.
  Initiating 1 compute processes on 1 nodes to run the following command:
- /home/langner/apps/gamess/gamess-2005.06.27.r3/gamess.00.slim.x water_cis 
+ /home/langner/apps/gamess/gamess-2005.06.27.r3/gamess.00.slim.x water_cis_dets 
 
           ******************************************************
           *         GAMESS VERSION = 27 JUN 2005 (R3)          *
@@ -57,13 +128,13 @@ GAMESS and DDI executables found. Commencing calculation.
      UNIVERSITY OF CALIFORNIA - SANTA BARBARA: BERNARD KIRTMAN
      INSTITUTE FOR MOLECULAR SCIENCE: KAZUYA ISHIMURA AND SHIGERU NAGASE
      UNIVERSITY OF NOTRE DAME: DAN CHIPMAN
- EXECUTION OF GAMESS BEGUN Mon Mar  5 18:46:14 2007
+ EXECUTION OF GAMESS BEGUN Tue Aug  7 01:37:54 2007
 
             ECHO OF THE FIRST FEW INPUT CARDS -
  INPUT CARD> $contrl scftyp=rhf cityp=cis runtyp=energy exetyp=run                          
  INPUT CARD>         units=angs coord=zmt $end                                              
  INPUT CARD> $basis  gbasis=sto ngauss=3 $end                                               
- INPUT CARD> $cis    hamtyp=dets nstate=10 $end                                             
+ INPUT CARD> $cis    hamtyp=dets nstate=10 istate=1 cisprp=.t. $end                         
  INPUT CARD> $data                                                                          
  INPUT CARD>water                                                                           
  INPUT CARD>C1 1                                                                            
@@ -208,7 +279,7 @@ GAMESS and DDI executables found. Commencing calculation.
      HAMTYP = DETS      SAP MULT =        1
      DIAGZN = DAVID     MXVEC    =       80
      NDAVIT =       50  DAVCVG   = 1.00E-05
-     CISPRP =        F  NGSVEC   =       20
+     CISPRP =        T  NGSVEC   =       20
      MNMEDG =        F  MNMEOP   =        F
      CHFSLV = CONJG     RDCISV   =        F
      DGAPRX =        T
@@ -262,7 +333,7 @@ GAMESS and DDI executables found. Commencing calculation.
      5 ORBITALS ARE OCCUPIED (    1 CORE ORBITALS).
      2=A        3=A        4=A        5=A        6=A        7=A   
  ...... END OF INITIAL ORBITAL SELECTION ......
- STEP CPU TIME =     0.01 TOTAL CPU TIME =        0.0 (    0.0 MIN)
+ STEP CPU TIME =     0.00 TOTAL CPU TIME =        0.0 (    0.0 MIN)
  TOTAL WALL CLOCK TIME=        0.0 SECONDS, CPU UTILIZATION IS 100.00%
 
                     ----------------------
@@ -292,8 +363,8 @@ GAMESS and DDI executables found. Commencing calculation.
  TOTAL NUMBER OF NONZERO TWO-ELECTRON INTEGRALS =                 228
           1 INTEGRAL RECORDS WERE STORED ON DISK FILE  8.
   ...... END OF TWO-ELECTRON INTEGRALS .....
- STEP CPU TIME =     0.14 TOTAL CPU TIME =        0.2 (    0.0 MIN)
- TOTAL WALL CLOCK TIME=        0.3 SECONDS, CPU UTILIZATION IS  53.12%
+ STEP CPU TIME =     0.07 TOTAL CPU TIME =        0.1 (    0.0 MIN)
+ TOTAL WALL CLOCK TIME=        1.3 SECONDS, CPU UTILIZATION IS   7.03%
 
           --------------------------
                  RHF SCF CALCULATION
@@ -354,8 +425,8 @@ GAMESS and DDI executables found. Commencing calculation.
     6  H  2  S   -0.775801  -0.808916
     7  H  3  S   -0.775801   0.808916
  ...... END OF RHF CALCULATION ......
- STEP CPU TIME =     0.01 TOTAL CPU TIME =        0.2 (    0.0 MIN)
- TOTAL WALL CLOCK TIME=        0.3 SECONDS, CPU UTILIZATION IS  56.25%
+ STEP CPU TIME =     0.01 TOTAL CPU TIME =        0.1 (    0.0 MIN)
+ TOTAL WALL CLOCK TIME=        1.3 SECONDS, CPU UTILIZATION IS   7.81%
 
      -------------------------------------------------
      SCF PROPERTIES...FOR THE UNPERTURBED WAVEFUNCTION
@@ -419,17 +490,17 @@ GAMESS and DDI executables found. Commencing calculation.
          DX          DY          DZ         /D/  (DEBYE)
      0.000000    1.673510    0.000000    1.673510
  ...... END OF PROPERTY EVALUATION ......
- STEP CPU TIME =     0.02 TOTAL CPU TIME =        0.2 (    0.0 MIN)
- TOTAL WALL CLOCK TIME=        0.3 SECONDS, CPU UTILIZATION IS  62.50%
+ STEP CPU TIME =     0.01 TOTAL CPU TIME =        0.1 (    0.0 MIN)
+ TOTAL WALL CLOCK TIME=        1.3 SECONDS, CPU UTILIZATION IS   8.59%
 
  MXVEC CANNOT BE BIGGER THAN THE NUMBER OF CIS CONFIGS
  SETTING MXVEC = NCFG
 
 
-          ---------------------------------------------
-             ATOMIC ORBITAL BASIS CI-SINGLES ENERGY
-             PROGRAM WRITTEN BY SIMON P. WEBB
-          ---------------------------------------------
+          ---------------------------------------------------
+          ATOMIC ORBITAL BASIS CI-SINGLES ENERGY + PROPERTIES
+          PROGRAM WRITTEN BY SIMON P. WEBB
+          ---------------------------------------------------
 
  # CORE ORBITALS      =    1
  # OCCUPIED ORBITALS  =    4
@@ -491,8 +562,8 @@ GAMESS and DDI executables found. Commencing calculation.
                    SINGLE EXCITATION              COEFFICENT
             FROM SPIN ORB     TO SPIN ORB
        -----------------------------------------------------
-       ALPHA       5                6           -0.70710678
-       BETA        5                6           -0.70710678
+       ALPHA       5                6            0.70710678
+       BETA        5                6            0.70710678
        -----------------------------------------------------
 
 
@@ -616,7 +687,7 @@ GAMESS and DDI executables found. Commencing calculation.
    1A     0.6674149075    18.1613    418.8092     146480.64      68.27
    3A     0.7049723405    19.1833    442.3769     154723.54      64.63
 
- -CIS- ENERGY                  TOOK      0.010 SECONDS
+ -CIS- ENERGY                  TOOK      0.000 SECONDS
 
   ---------------------------------------------------------------------
                     CIS TRANSITION DIPOLE MOMENTS AND
@@ -642,8 +713,8 @@ GAMESS and DDI executables found. Commencing calculation.
  STATE ENERGIES =        -74.9643287925      -74.5150077880
  TRANSITION ENERGY =  2.9564E+15 [1/SEC] =    98614.56 [1/CM] =     12.23 [EV]
                             X           Y           Z           NORM
- TRANSITION DIPOLE =    0.000000    0.000000   -0.074820    0.074820 E*BOHR
- TRANSITION DIPOLE =    0.000000    0.000000   -0.190175    0.190175 DEBYE
+ TRANSITION DIPOLE =    0.000000    0.000000    0.074820    0.074820 E*BOHR
+ TRANSITION DIPOLE =    0.000000    0.000000    0.190175    0.190175 DEBYE
  OSCILLATOR STRENGTH =    0.001677
  EINSTEIN COEFFICIENTS: A=  1.0878E+07 1/SEC; B=  2.2719E+06 SEC/G
 
@@ -667,7 +738,7 @@ GAMESS and DDI executables found. Commencing calculation.
  TRANSITION DIPOLE =    0.000000    0.000000    0.000000    0.000000 E*BOHR
  TRANSITION DIPOLE =    0.000000    0.000000    0.000000    0.000000 DEBYE
  OSCILLATOR STRENGTH =    0.000000
- EINSTEIN COEFFICIENTS: A=  4.5357E-22 1/SEC; B=  8.0585E-23 SEC/G
+ EINSTEIN COEFFICIENTS: A=  4.7795E-22 1/SEC; B=  8.4917E-23 SEC/G
 
  TRANSITION FROM THE GROUND STATE TO EXCITED STATE  5
 
@@ -689,7 +760,7 @@ GAMESS and DDI executables found. Commencing calculation.
  TRANSITION DIPOLE =    0.000000    0.000000    0.000000    0.000000 E*BOHR
  TRANSITION DIPOLE =    0.000000    0.000000    0.000000    0.000000 DEBYE
  OSCILLATOR STRENGTH =    0.000000
- EINSTEIN COEFFICIENTS: A=  1.0460E-20 1/SEC; B=  1.3810E-21 SEC/G
+ EINSTEIN COEFFICIENTS: A=  3.6168E-21 1/SEC; B=  4.7750E-22 SEC/G
 
  TRANSITION FROM THE GROUND STATE TO EXCITED STATE  7
 
@@ -749,8 +820,8 @@ GAMESS and DDI executables found. Commencing calculation.
  STATE ENERGIES =        -74.5903204612      -74.5150077880
  TRANSITION ENERGY =  4.9553E+14 [1/SEC] =    16529.22 [1/CM] =        2.05 [EV]
                             X           Y           Z           NORM
- TRANSITION DIPOLE =    0.000000   -0.678353    0.000000    0.678353 E*BOHR
- TRANSITION DIPOLE =    0.000000   -1.724215    0.000000    1.724215 DEBYE
+ TRANSITION DIPOLE =    0.000000    0.678353    0.000000    0.678353 E*BOHR
+ TRANSITION DIPOLE =    0.000000    1.724215    0.000000    1.724215 DEBYE
  OSCILLATOR STRENGTH =    0.023104
  EINSTEIN COEFFICIENTS: A=  4.2106E+06 1/SEC; B=  1.8675E+08 SEC/G
 
@@ -785,7 +856,7 @@ GAMESS and DDI executables found. Commencing calculation.
  TRANSITION DIPOLE =    0.000000    0.000000    0.000000    0.000000 E*BOHR
  TRANSITION DIPOLE =    0.000000    0.000000    0.000000    0.000000 DEBYE
  OSCILLATOR STRENGTH =    0.000000
- EINSTEIN COEFFICIENTS: A=  1.5036E-22 1/SEC; B=  9.2839E-22 SEC/G
+ EINSTEIN COEFFICIENTS: A=  7.2627E-23 1/SEC; B=  4.4843E-22 SEC/G
 
  TRANSITION BETWEEN EXCITED STATES   1  AND   6
 
@@ -818,7 +889,7 @@ GAMESS and DDI executables found. Commencing calculation.
  TRANSITION DIPOLE =    0.000000    0.000000    0.000000    0.000000 E*BOHR
  TRANSITION DIPOLE =    0.000000    0.000000    0.000000    0.000000 DEBYE
  OSCILLATOR STRENGTH =    0.000000
- EINSTEIN COEFFICIENTS: A=  5.9721E-21 1/SEC; B=  7.0286E-21 SEC/G
+ EINSTEIN COEFFICIENTS: A=  5.7850E-21 1/SEC; B=  6.8085E-21 SEC/G
 
  TRANSITION BETWEEN EXCITED STATES   1  AND   9
 
@@ -856,8 +927,8 @@ GAMESS and DDI executables found. Commencing calculation.
  STATE ENERGIES =        -74.5150077880      -74.5132556738
  TRANSITION ENERGY =  1.1528E+13 [1/SEC] =      384.54 [1/CM] =        0.05 [EV]
                             X           Y           Z           NORM
- TRANSITION DIPOLE =    0.000000    0.000000    0.046148    0.046148 E*BOHR
- TRANSITION DIPOLE =    0.000000    0.000000    0.117298    0.117298 DEBYE
+ TRANSITION DIPOLE =    0.000000    0.000000   -0.046148    0.046148 E*BOHR
+ TRANSITION DIPOLE =    0.000000    0.000000   -0.117298    0.117298 DEBYE
  OSCILLATOR STRENGTH =    0.000002
  EINSTEIN COEFFICIENTS: A=  2.4537E-01 1/SEC; B=  8.6431E+05 SEC/G
 
@@ -867,8 +938,8 @@ GAMESS and DDI executables found. Commencing calculation.
  STATE ENERGIES =        -74.5150077880      -74.4901150383
  TRANSITION ENERGY =  1.6379E+14 [1/SEC] =     5463.33 [1/CM] =        0.68 [EV]
                             X           Y           Z           NORM
- TRANSITION DIPOLE =   -0.541838    0.000000    0.000000    0.541838 E*BOHR
- TRANSITION DIPOLE =   -1.377225    0.000000    0.000000    1.377225 DEBYE
+ TRANSITION DIPOLE =    0.541838    0.000000    0.000000    0.541838 E*BOHR
+ TRANSITION DIPOLE =    1.377225    0.000000    0.000000    1.377225 DEBYE
  OSCILLATOR STRENGTH =    0.004872
  EINSTEIN COEFFICIENTS: A=  9.7003E+04 1/SEC; B=  1.1915E+08 SEC/G
 
@@ -881,7 +952,7 @@ GAMESS and DDI executables found. Commencing calculation.
  TRANSITION DIPOLE =    0.000000    0.000000    0.000000    0.000000 E*BOHR
  TRANSITION DIPOLE =    0.000000    0.000000    0.000000    0.000000 DEBYE
  OSCILLATOR STRENGTH =    0.000000
- EINSTEIN COEFFICIENTS: A=  8.6801E-24 1/SEC; B=  4.7941E-22 SEC/G
+ EINSTEIN COEFFICIENTS: A=  4.2808E-24 1/SEC; B=  2.3643E-22 SEC/G
 
  TRANSITION BETWEEN EXCITED STATES   2  AND   6
 
@@ -889,8 +960,8 @@ GAMESS and DDI executables found. Commencing calculation.
  STATE ENERGIES =        -74.5150077880      -74.4407758359
  TRANSITION ENERGY =  4.8842E+14 [1/SEC] =    16292.03 [1/CM] =        2.02 [EV]
                             X           Y           Z           NORM
- TRANSITION DIPOLE =    0.541838    0.000000    0.000000    0.541838 E*BOHR
- TRANSITION DIPOLE =    1.377225    0.000000    0.000000    1.377225 DEBYE
+ TRANSITION DIPOLE =   -0.541838    0.000000    0.000000    0.541838 E*BOHR
+ TRANSITION DIPOLE =   -1.377225    0.000000    0.000000    1.377225 DEBYE
  OSCILLATOR STRENGTH =    0.014529
  EINSTEIN COEFFICIENTS: A=  2.5724E+06 1/SEC; B=  1.1915E+08 SEC/G
 
@@ -900,8 +971,8 @@ GAMESS and DDI executables found. Commencing calculation.
  STATE ENERGIES =        -74.5150077880      -74.3813542595
  TRANSITION ENERGY =  8.7940E+14 [1/SEC] =    29333.56 [1/CM] =        3.64 [EV]
                             X           Y           Z           NORM
- TRANSITION DIPOLE =    0.000000    0.000000   -0.096700    0.096700 E*BOHR
- TRANSITION DIPOLE =    0.000000    0.000000   -0.245788    0.245788 DEBYE
+ TRANSITION DIPOLE =    0.000000    0.000000    0.096700    0.096700 E*BOHR
+ TRANSITION DIPOLE =    0.000000    0.000000    0.245788    0.245788 DEBYE
  OSCILLATOR STRENGTH =    0.000833
  EINSTEIN COEFFICIENTS: A=  4.7821E+05 1/SEC; B=  3.7950E+06 SEC/G
 
@@ -914,7 +985,7 @@ GAMESS and DDI executables found. Commencing calculation.
  TRANSITION DIPOLE =    0.000000    0.000000    0.000000    0.000000 E*BOHR
  TRANSITION DIPOLE =    0.000000    0.000000    0.000000    0.000000 DEBYE
  OSCILLATOR STRENGTH =    0.000000
- EINSTEIN COEFFICIENTS: A=  1.0714E-21 1/SEC; B=  3.6489E-21 SEC/G
+ EINSTEIN COEFFICIENTS: A=  1.0261E-21 1/SEC; B=  3.4947E-21 SEC/G
 
  TRANSITION BETWEEN EXCITED STATES   2  AND   9
 
@@ -933,8 +1004,8 @@ GAMESS and DDI executables found. Commencing calculation.
  STATE ENERGIES =        -74.5150077880      -74.2593564521
  TRANSITION ENERGY =  1.6821E+15 [1/SEC] =    56108.98 [1/CM] =        6.96 [EV]
                             X           Y           Z           NORM
- TRANSITION DIPOLE =    0.000000    0.000000    0.067746    0.067746 E*BOHR
- TRANSITION DIPOLE =    0.000000    0.000000    0.172195    0.172195 DEBYE
+ TRANSITION DIPOLE =    0.000000    0.000000   -0.067746    0.067746 E*BOHR
+ TRANSITION DIPOLE =    0.000000    0.000000   -0.172195    0.172195 DEBYE
  OSCILLATOR STRENGTH =    0.000782
  EINSTEIN COEFFICIENTS: A=  1.6426E+06 1/SEC; B=  1.8626E+06 SEC/G
 
@@ -955,7 +1026,7 @@ GAMESS and DDI executables found. Commencing calculation.
  TRANSITION DIPOLE =    0.000000    0.000000    0.000000    0.000000 E*BOHR
  TRANSITION DIPOLE =    0.000000    0.000000    0.000000    0.000000 DEBYE
  OSCILLATOR STRENGTH =    0.000000
- EINSTEIN COEFFICIENTS: A=  3.7826E-25 1/SEC; B=  5.7836E-22 SEC/G
+ EINSTEIN COEFFICIENTS: A=  3.6282E-25 1/SEC; B=  5.5474E-22 SEC/G
 
  TRANSITION BETWEEN EXCITED STATES   3  AND   5
 
@@ -977,7 +1048,7 @@ GAMESS and DDI executables found. Commencing calculation.
  TRANSITION DIPOLE =    0.000000    0.000000    0.000000    0.000000 E*BOHR
  TRANSITION DIPOLE =    0.000000    0.000000    0.000000    0.000000 DEBYE
  OSCILLATOR STRENGTH =    0.000000
- EINSTEIN COEFFICIENTS: A=  1.5483E-23 1/SEC; B=  7.7044E-22 SEC/G
+ EINSTEIN COEFFICIENTS: A=  1.3473E-23 1/SEC; B=  6.7044E-22 SEC/G
 
  TRANSITION BETWEEN EXCITED STATES   3  AND   7
 
@@ -1062,7 +1133,7 @@ GAMESS and DDI executables found. Commencing calculation.
  TRANSITION DIPOLE =    0.000000    0.000000    0.000000    0.000000 E*BOHR
  TRANSITION DIPOLE =    0.000000    0.000000    0.000000    0.000000 DEBYE
  OSCILLATOR STRENGTH =    0.000000
- EINSTEIN COEFFICIENTS: A=  5.9556E-23 1/SEC; B=  8.7708E-22 SEC/G
+ EINSTEIN COEFFICIENTS: A=  5.5779E-23 1/SEC; B=  8.2145E-22 SEC/G
 
  TRANSITION BETWEEN EXCITED STATES   4  AND   8
 
@@ -1095,7 +1166,7 @@ GAMESS and DDI executables found. Commencing calculation.
  TRANSITION DIPOLE =    0.000000    0.000000    0.000000    0.000000 E*BOHR
  TRANSITION DIPOLE =    0.000000    0.000000    0.000000    0.000000 DEBYE
  OSCILLATOR STRENGTH =    0.000000
- EINSTEIN COEFFICIENTS: A=  3.3709E-22 1/SEC; B=  5.1976E-22 SEC/G
+ EINSTEIN COEFFICIENTS: A=  2.0727E-22 1/SEC; B=  3.1959E-22 SEC/G
 
  EXPECTATION VALUE DIPOLE MOMENT FOR EXCITED STATE  5
 
@@ -1177,7 +1248,7 @@ GAMESS and DDI executables found. Commencing calculation.
  TRANSITION DIPOLE =    0.000000    0.000000    0.000000    0.000000 E*BOHR
  TRANSITION DIPOLE =    0.000000    0.000000    0.000000    0.000000 DEBYE
  OSCILLATOR STRENGTH =    0.000000
- EINSTEIN COEFFICIENTS: A=  1.0525E-23 1/SEC; B=  9.5038E-22 SEC/G
+ EINSTEIN COEFFICIENTS: A=  9.4376E-24 1/SEC; B=  8.5223E-22 SEC/G
 
  TRANSITION BETWEEN EXCITED STATES   6  AND   8
 
@@ -1210,7 +1281,7 @@ GAMESS and DDI executables found. Commencing calculation.
  TRANSITION DIPOLE =    0.000000    0.000000    0.000000    0.000000 E*BOHR
  TRANSITION DIPOLE =    0.000000    0.000000    0.000000    0.000000 DEBYE
  OSCILLATOR STRENGTH =    0.000000
- EINSTEIN COEFFICIENTS: A=  1.6606E-22 1/SEC; B=  5.2692E-22 SEC/G
+ EINSTEIN COEFFICIENTS: A=  1.0744E-22 1/SEC; B=  3.4091E-22 SEC/G
 
  EXPECTATION VALUE DIPOLE MOMENT FOR EXCITED STATE  7
 
@@ -1309,11 +1380,29 @@ GAMESS and DDI executables found. Commencing calculation.
                             X           Y           Z           NORM
       STATE DIPOLE =    0.000000    0.522707    0.000000    0.522707 E*BOHR
       STATE DIPOLE =    0.000000    1.328598    0.000000    1.328598 DEBYE
+ -CIS- LAGRANGIAN              TOOK      0.010 SECONDS
+
+     -------------------------------------------------------------
+       SOLVE THE COUPLED-PERTURBED HARTREE-FOCK EQUATIONS IN THE
+                          ATOMIC-ORBITAL BASIS
+     -------------------------------------------------------------
+
+ PRECONDITIONED CONJUGATE GRADIENT SOLVER     CONV. TOLERANCE=5.00E-05
+ ITER    RESPONSE ERROR        IMPROVED
+   1       1.76890E-01             1
+   2       3.43982E-02             1
+   3       6.17060E-03             1
+   4       4.14598E-05             1
+ THE CPHF HAS CONVERGED AFTER  4 ITERATIONS.
+ IT REQUIRED     4 FOCK-LIKE BUILDS TO FIND THE   1 SYMMETRY UNIQUE RESPONSES.
+
+ -CIS- CPHF EQUATIONS          TOOK      0.000 SECONDS
+ -CIS- ENERGY WEIGHTED DENSITY TOOK      0.000 SECONDS
 
  CIS NATURAL ORBITAL OCCUPATION NUMBERS FOR EXCITED STATE    1 ARE
-  2.0000 2.0000 2.0000 2.0000 1.0000 1.0000 0.0000
- THERE ARE     9.0000 ELECTRONS IN PRINCIPAL CIS NATURAL ORBITALS.
- THERE ARE     1.0000 ELECTRONS IN SECONDARY CIS NATURAL ORBITALS.
+  2.0158 2.0036 2.0000 2.0000 1.0000 0.9964-0.0158
+ THERE ARE     9.0194 ELECTRONS IN PRINCIPAL CIS NATURAL ORBITALS.
+ THERE ARE     0.9806 ELECTRONS IN SECONDARY CIS NATURAL ORBITALS.
 
           --------------------
           CIS NATURAL ORBITALS
@@ -1321,38 +1410,38 @@ GAMESS and DDI executables found. Commencing calculation.
 
                       1          2          3          4          5
 
-                    2.0000     2.0000     2.0000     2.0000     1.0000
+                    2.0158     2.0036     2.0000     2.0000     1.0000
 
-    1  O  1  S   -0.006190  -0.195401   0.967496   0.281286   0.049595
-    2  O  1  S    0.027727   0.977735   0.016578  -0.176158  -0.321692
-    3  O  1  X    0.602917  -0.018953   0.002942  -0.010017   0.000000
-    4  O  1  Y   -0.024792  -0.428152   0.154638  -0.636682  -0.283090
-    5  O  1  Z    0.000000   0.000000   0.000000   0.000000   0.922329
-    6  H  2  S    0.438179  -0.090295   0.064249  -0.320993   0.299773
-    7  H  3  S   -0.454000  -0.062250   0.059895  -0.306169   0.299773
+    1  O  1  S    0.000000  -0.157316   0.861706   0.532468   0.000000
+    2  O  1  S    0.000000   0.754402   0.225360  -0.536584   0.000000
+    3  O  1  X   -0.687074   0.000000   0.000000   0.000000   0.000000
+    4  O  1  Y    0.000000  -0.713072   0.163339  -0.370404   0.000000
+    5  O  1  Z    0.000000   0.000000   0.000000   0.000000   1.000000
+    6  H  2  S   -0.373296  -0.160298   0.092011  -0.238030   0.000000
+    7  H  3  S    0.373296  -0.160298   0.092011  -0.238030   0.000000
 
                       6          7
 
-                    1.0000     0.0000
+                    0.9964    -0.0158
 
-    1  O  1  S   -0.118381   0.000000
-    2  O  1  S    0.767863   0.000000
-    3  O  1  X    0.000000  -0.976485
-    4  O  1  Y    0.675722   0.000000
-    5  O  1  Z    0.386405   0.000000
-    6  H  2  S   -0.715544   0.808916
-    7  H  3  S   -0.715544  -0.808916
+    1  O  1  S   -0.138039   0.000000
+    2  O  1  S    0.879379   0.000000
+    3  O  1  X    0.000000   0.919472
+    4  O  1  Y    0.691083   0.000000
+    5  O  1  Z    0.000000   0.000000
+    6  H  2  S   -0.786837  -0.845131
+    7  H  3  S   -0.786837   0.845131
 
  THE CIS NATURAL ORBITALS HAVE BEEN PUNCHED.
 
- ..... DONE WITH CIS ENERGY .....
+ .... DONE WITH CIS ENERGY + 1-PARTICLE DENSITY ....
 
- STEP CPU TIME =     0.02 TOTAL CPU TIME =        0.2 (    0.0 MIN)
- TOTAL WALL CLOCK TIME=        0.3 SECONDS, CPU UTILIZATION IS  68.75%
+ STEP CPU TIME =     0.01 TOTAL CPU TIME =        0.1 (    0.0 MIN)
+ TOTAL WALL CLOCK TIME=        1.3 SECONDS, CPU UTILIZATION IS   9.38%
 
      -----------------------------------------------------------
      CIS PROPERTIES...FOR THE WAVEFUNCTION OF EXCITED STATE    1
-                (USING THE EXPECTATION VALUE DENSITY)
+              (USING THE RESPONSE (OR RELAXED) DENSITY)
      -----------------------------------------------------------
 
           -----------------
@@ -1361,19 +1450,19 @@ GAMESS and DDI executables found. Commencing calculation.
 
          WAVEFUNCTION NORMALIZATION =       1.0000000000
 
-                ONE ELECTRON ENERGY =    -119.7240495636
-                TWO ELECTRON ENERGY =      36.2467221939
+                ONE ELECTRON ENERGY =    -120.4049045298
+                TWO ELECTRON ENERGY =      36.9275771601
            NUCLEAR REPULSION ENERGY =       8.8870069086
                                       ------------------
                        TOTAL ENERGY =     -74.5903204612
 
- ELECTRON-ELECTRON POTENTIAL ENERGY =      36.2467221939
-  NUCLEUS-ELECTRON POTENTIAL ENERGY =    -194.4123652818
+ ELECTRON-ELECTRON POTENTIAL ENERGY =      36.9275771601
+  NUCLEUS-ELECTRON POTENTIAL ENERGY =    -195.4060503478
    NUCLEUS-NUCLEUS POTENTIAL ENERGY =       8.8870069086
                                       ------------------
-             TOTAL POTENTIAL ENERGY =    -149.2786361794
-               TOTAL KINETIC ENERGY =      74.6883157182
-                 VIRIAL RATIO (V/T) =       1.9986879439
+             TOTAL POTENTIAL ENERGY =    -149.5914662791
+               TOTAL KINETIC ENERGY =      75.0011458180
+                 VIRIAL RATIO (V/T) =       1.9945224123
 
           ---------------------------------------
           MULLIKEN AND LOWDIN POPULATION ANALYSES
@@ -1381,28 +1470,28 @@ GAMESS and DDI executables found. Commencing calculation.
 
                ----- POPULATIONS IN EACH AO -----
                              MULLIKEN      LOWDIN
-              1  O  1  S      1.99888     1.99805
-              2  O  1  S      1.91804     1.84872
-              3  O  1  X      1.05644     1.08303
-              4  O  1  Y      1.72447     1.73065
+              1  O  1  S      1.99883     1.99766
+              2  O  1  S      1.88419     1.81777
+              3  O  1  X      1.26105     1.26089
+              4  O  1  Y      1.77352     1.77646
               5  O  1  Z      1.00000     1.00000
-              6  H  2  S      1.15109     1.16978
-              7  H  3  S      1.15109     1.16978
+              6  H  2  S      1.04121     1.07361
+              7  H  3  S      1.04121     1.07361
 
           ----- MULLIKEN ATOMIC OVERLAP POPULATIONS -----
           (OFF-DIAGONAL ELEMENTS NEED TO BE MULTIPLIED BY 2)
 
              1           2           3
 
-    1    8.0201711
-    2   -0.1611725   1.2165032
-    3   -0.1611725   0.0957563   1.2165032
+    1    8.2130928
+    2   -0.1477554   1.0682150
+    3   -0.1477554   0.1207493   1.0682150
 
           TOTAL MULLIKEN AND LOWDIN ATOMIC POPULATIONS
        ATOM         MULL.POP.    CHARGE          LOW.POP.     CHARGE
-    1 O             7.697826    0.302174         7.660447    0.339553
-    2 H             1.151087   -0.151087         1.169776   -0.169776
-    3 H             1.151087   -0.151087         1.169776   -0.169776
+    1 O             7.917582    0.082418         7.852789    0.147211
+    2 H             1.041209   -0.041209         1.073606   -0.073606
+    3 H             1.041209   -0.041209         1.073606   -0.073606
 
           ---------------------
           ELECTROSTATIC MOMENTS
@@ -1411,28 +1500,29 @@ GAMESS and DDI executables found. Commencing calculation.
  POINT   1           X           Y           Z (BOHR)    CHARGE
                  0.000000    0.000000    0.000000        0.00 (A.U.)
          DX          DY          DZ         /D/  (DEBYE)
-     0.000000   -0.764898    0.000000    0.764898
+     0.000000   -0.053669    0.000000    0.053669
  ...... END OF PROPERTY EVALUATION ......
- STEP CPU TIME =     0.01 TOTAL CPU TIME =        0.2 (    0.0 MIN)
- TOTAL WALL CLOCK TIME=        0.3 SECONDS, CPU UTILIZATION IS  71.87%
+ STEP CPU TIME =     0.00 TOTAL CPU TIME =        0.1 (    0.0 MIN)
+ TOTAL WALL CLOCK TIME=        1.3 SECONDS, CPU UTILIZATION IS   9.38%
  440000 WORDS OF DYNAMIC MEMORY USED
- EXECUTION OF GAMESS TERMINATED NORMALLY Mon Mar  5 18:46:14 2007
+ EXECUTION OF GAMESS TERMINATED NORMALLY Tue Aug  7 01:37:54 2007
  DDI: 920 bytes (0.0 MB / 0 MWords) used by master data server.
 
  ----------------------------------------
  CPU timing information for all processes
  ========================================
- 0: 0.220966 + 0.024996 = 0.245962
+ 0: 0.112007 + 0.044002 = 0.156009
  ----------------------------------------
  ddikick.x: exited gracefully.
+unset echo
 ----- accounting info -----
-pon mar  5 18:46:17 CET 2007
+Tue Aug  7 01:37:57 EDT 2007
 Files used on the master node slim were:
--rw-r--r--  1 langner langner     217 2007-03-05 18:46 /home/langner/tmp/gms-water_cis/water_cis.F05
--rw-r--r--  1 langner langner  180012 2007-03-05 18:46 /home/langner/tmp/gms-water_cis/water_cis.F08
--rw-r--r--  1 langner langner 1243584 2007-03-05 18:46 /home/langner/tmp/gms-water_cis/water_cis.F10
--rw-r--r--  1 langner langner    1360 2007-03-05 18:46 /home/langner/tmp/gms-water_cis/water_cis.F12
-Removing scratch catalog /home/langner/tmp/gms-water_cis...
-removed directory: `/home/langner/tmp/gms-water_cis'
+-rw-r--r-- 1 langner langner     237 2007-08-07 01:37 /home/langner/tmp/gms-water_cis_dets/water_cis_dets.F05
+-rw-r--r-- 1 langner langner  180012 2007-08-07 01:37 /home/langner/tmp/gms-water_cis_dets/water_cis_dets.F08
+-rw-r--r-- 1 langner langner 1276304 2007-08-07 01:37 /home/langner/tmp/gms-water_cis_dets/water_cis_dets.F10
+-rw-r--r-- 1 langner langner    1360 2007-08-07 01:37 /home/langner/tmp/gms-water_cis_dets/water_cis_dets.F12
+Removing scratch catalog /home/langner/tmp/gms-water_cis_dets...
+removed directory: `/home/langner/tmp/gms-water_cis_dets'
 Finished with calculation.
-0.0u 0.0s 0:03.35 1.7% 0+0k 0+0io 0pf+0w
+0.0u 0.0s 0:06.21 1.1% 0+0k 0+0io 10pf+0w

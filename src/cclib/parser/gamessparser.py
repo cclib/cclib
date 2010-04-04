@@ -8,23 +8,19 @@ __revision__ = "$Revision$"
 
 import re
 
-# If numpy is not installed, try to import Numeric instead.
-try:
-    import numpy
-except ImportError:
-    import Numeric as numpy
+import numpy
 
-import utils
 import logfileparser
+import utils
 
 
 class GAMESS(logfileparser.Logfile):
     """A GAMESS log file."""
     SCFRMS, SCFMAX, SCFENERGY = range(3) # Used to index self.scftargets[]
-    def __init__(self, *args):
+    def __init__(self, *args, **kwargs):
 
         # Call the __init__ method of the superclass
-        super(GAMESS, self).__init__(logname="GAMESS", *args)
+        super(GAMESS, self).__init__(logname="GAMESS", *args, **kwargs)
 
     def __str__(self):
         """Return a string representation of the object."""
@@ -59,23 +55,22 @@ class GAMESS(logfileparser.Logfile):
         self.firststdorient = True # Used to decide whether to wipe the atomcoords clean
         self.geooptfinished = False # Used to avoid extracting the final geometry twice
         self.cihamtyp = "none" # Type of CI Hamiltonian: saps or dets.
+        self.scftype = "none" # Type of SCF calculation: BLYP, RHF, ROHF, etc.
     
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
-        
-        if line.find("OPTTOL") >= 0:
-            # Two possibilities:
-            #           OPTTOL = 1.000E-04          RMIN   = 1.500E-03
-            # INPUT CARD> $STATPT OPTTOL=0.0001 NSTEP=100 $END
+
+        if line [1:12] == "INPUT CARD>":
+            return
+
+        # We are looking for this line:
+        #           PARAMETERS CONTROLLING GEOMETRY SEARCH ARE
+        #           ...
+        #           OPTTOL = 1.000E-04          RMIN   = 1.500E-03
+        if line[10:18] == "OPTTOL =":
             if not hasattr(self, "geotargets"):
-                temp = line.split()
-                for i, x in enumerate(temp):
-                    if x.find("OPTTOL") >= 0:
-                        if x == "OPTTOL":
-                            opttol = float(temp[i + 2])
-                        else:
-                            opttol = float(x.split('=')[1])
-                        self.geotargets = numpy.array([opttol, 3. / opttol], "d")
+                opttol = float(line.split()[2])
+                self.geotargets = numpy.array([opttol, 3. / opttol], "d")
                         
         if line.find("FINAL") == 1:
             if not hasattr(self, "scfenergies"):
@@ -88,7 +83,8 @@ class GAMESS(logfileparser.Logfile):
             self.scfenergies.append(utils.convertor(float(temp[temp.index("IS") + 1]), "hartree", "eV"))
 
         # Total energies after Moller-Plesset corrections
-        if line.find("RESULTS OF MOLLER-PLESSET") >= 0:
+        if (line.find("RESULTS OF MOLLER-PLESSET") >= 0 or
+            line[6:37] == "SCHWARZ INEQUALITY TEST SKIPPED"):
             # Output looks something like this:
             # RESULTS OF MOLLER-PLESSET 2ND ORDER CORRECTION ARE
             #         E(0)=      -285.7568061536
@@ -96,15 +92,21 @@ class GAMESS(logfileparser.Logfile):
             #         E(2)=        -0.9679419329
             #       E(MP2)=      -286.7247480864
             # where E(MP2) = E(0) + E(2)
+            #
+            # with GAMESS-US 12 Jan 2009 (R3) the preceding text is different:
+            ##      DIRECT 4-INDEX TRANSFORMATION 
+            ##      SCHWARZ INEQUALITY TEST SKIPPED          0 INTEGRAL BLOCKS
+            ##                     E(SCF)=       -76.0088477471
+            ##                       E(2)=        -0.1403745370
+            ##                     E(MP2)=       -76.1492222841            
             if not hasattr(self, "mpenergies"):
                 self.mpenergies = []
             # Each iteration has a new print-out
             self.mpenergies.append([])
             # GAMESS-US presently supports only second order corrections (MP2)
             # PC GAMESS also has higher levels (3rd and 4th), with different output
-            # Only the highest level MP4 energy is gathered (SDQ or SDTQ)
-            mplevel = int(line[27:28])
-            while line.strip() <> "..... DONE WITH MP%i ENERGY ....." %mplevel:
+            # Only the highest level MP4 energy is gathered (SDQ or SDTQ)            
+            while re.search("DONE WITH MP(\d) ENERGY", line) is None:
                 line = inputfile.next()
                 if len(line.split()) > 0:
                     # Only up to MP2 correction
@@ -129,7 +131,7 @@ class GAMESS(logfileparser.Logfile):
                 self.ccenergies = []
             ccenergy = float(line.split()[2])
             self.ccenergies.append(utils.convertor(ccenergy, "hartree", "eV"))
-        if line[8:23] == "CCSD    ENERGY:":
+        if line.find("CCSD") >= 0 and line.split()[0:2] == ["CCSD", "ENERGY:"]:
             if not hasattr(self, "ccenergies"):
                 self.ccenergies = []
             ccenergy = float(line.split()[2])
@@ -154,18 +156,28 @@ class GAMESS(logfileparser.Logfile):
             self.mult = int(inputfile.next().split()[-1])
 
         # etenergies (used only for CIS runs now)
-        if "EXCITATION ENERGIES" in line:
+        if "EXCITATION ENERGIES" in line and line.find("DONE WITH") < 0:
             if not hasattr(self, "etenergies"):
                 self.etenergies = []
-            header = inputfile.next()
+            header = inputfile.next().rstrip()
+            get_etosc = False
+            if header.endswith("OSC. STR."):
+                # water_cis_dets.out does not have the oscillator strength
+                # in this table...it is extracted from a different section below
+                get_etosc = True
+                self.etoscs = []
             dashes = inputfile.next()
             line = inputfile.next()
-            while len(line.split()) > 0:
+            broken = line.split()
+            while len(broken) > 0:
                 # Take hartree value with more numbers, and convert.
                 # Note that the values listed after this are also less exact!
-                etenergy = float(line.split()[1])
+                etenergy = float(broken[1])
                 self.etenergies.append(utils.convertor(etenergy, "hartree", "cm-1"))
-                line = inputfile.next()
+                if get_etosc:
+                    etosc = float(broken[-1])
+                    self.etoscs.append(etosc)
+                broken = inputfile.next().split()
 
         # Detect the CI hamiltonian type, if applicable.
         # Should always be detected if CIS is done.
@@ -205,12 +217,12 @@ class GAMESS(logfileparser.Logfile):
                 # With the SAPS hamiltonian, the coefficients are multiplied
                 #   by sqrt(2) so that they normalize to 1.
                 # With DETS, both alpha and beta excitations are printed.
-                if self.cihamtyp == "saps":
-                    coeff /= numpy.sqrt(2.0)
+                # if self.cihamtyp == "saps":
+                #    coeff /= numpy.sqrt(2.0)
                 CIScontribs.append([(fromMO,MOtype),(toMO,MOtype),coeff])
                 line = inputfile.next()
             self.etsecs.append(CIScontribs)
-            
+
         # etoscs (used only for CIS runs now)
         if line[1:50] == "TRANSITION FROM THE GROUND STATE TO EXCITED STATE":
             if not hasattr(self, "etoscs"):
@@ -222,11 +234,69 @@ class GAMESS(logfileparser.Logfile):
             strength = float(line.split()[3])
             self.etoscs.append(strength)
 
-        if line.find("MAXIMUM GRADIENT") > 0:
+        # TD-DFT for GAMESS-US
+        if line[14:29] == "LET EXCITATIONS": # TRIPLET and SINGLET
+            self.etenergies = []
+            self.etoscs = []
+            self.etsecs = []
+            etsyms = []
+            minus = inputfile.next()
+            blank = inputfile.next()
+            line = inputfile.next()
+            # Loop starts on the STATE line
+            while line.find("STATE") >= 0:
+                broken = line.split()
+                self.etenergies.append(utils.convertor(float(broken[-2]), "eV", "cm-1"))
+                broken = inputfile.next().split()
+                self.etoscs.append(float(broken[-1]))
+                sym = inputfile.next() # Not always present
+                if sym.find("SYMMETRY")>=0:
+                    etsyms.append(sym.split()[-1])
+                    header = inputfile.next()
+                minus = inputfile.next()
+                CIScontribs = []
+                line = inputfile.next()
+                while line.strip():
+                    broken = line.split()
+                    fromMO, toMO = [int(broken[x]) - 1 for x in [2, 4]]
+                    CIScontribs.append([(fromMO, 0), (toMO, 0), float(broken[1])])
+                    line = inputfile.next()
+                self.etsecs.append(CIScontribs)
+                line = inputfile.next()
+            if etsyms: # Not always present
+                self.etsyms = etsyms
+         
+        # Maximum and RMS gradients.
+        if "MAXIMUM GRADIENT" in line or "RMS GRADIENT" in line:
+
             if not hasattr(self, "geovalues"):
                 self.geovalues = []
-            temp = line.strip().split()
-            self.geovalues.append([float(temp[3]), float(temp[7])])
+
+            parts = line.split()
+
+            # Newer versions (around 2006) have both maximum and RMS on one line:
+            #       MAXIMUM GRADIENT =  0.0531540    RMS GRADIENT = 0.0189223
+            if len(parts) == 8:
+                maximum = float(parts[3])
+                rms = float(parts[7])
+            
+            # In older versions of GAMESS, this spanned two lines, like this:
+            #       MAXIMUM GRADIENT =    0.057578167
+            #           RMS GRADIENT =    0.027589766
+            if len(parts) == 4:
+                maximum = float(parts[3])
+                line = inputfile.next()
+                parts = line.split()
+                rms = float(parts[3])
+
+
+            # FMO also prints two final one- and two-body gradients (see exam37):
+            #   (1) MAXIMUM GRADIENT =  0.0531540    RMS GRADIENT = 0.0189223
+            if len(parts) == 9:
+                maximum = float(parts[4])
+                rms = float(parts[8])
+
+            self.geovalues.append([maximum, rms])
 
         if line[11:50] == "ATOMIC                      COORDINATES":
             # This is the input orientation, which is the only data available for
@@ -267,53 +337,90 @@ class GAMESS(logfileparser.Logfile):
 
             atomcoords = []
             line = inputfile.next()                
-            while line.strip():
+
+            for i in range(self.natom):
                 temp = line.strip().split()
                 atomcoords.append(map(float, temp[2:5]))
                 line = inputfile.next()
             self.atomcoords.append(atomcoords)
         
-        if line.rstrip()[-15:] == "SCF CALCULATION":
-            # This is the section with the SCF information
-            line = inputfile.next()
-            while line.find("ITER EX") < 0:
-                if line.find("DENSITY CONV=") >= 0 or line.find("DENSITY MATRIX CONV=") >= 0:
-        # Needs to deal with lines like:
-        # (GAMESS VERSION = 12 DEC 2003)
-        #     DENSITY MATRIX CONV=  2.00E-05  DFT GRID SWITCH THRESHOLD=  3.00E-04
-        # (GAMESS VERSION = 22 FEB 2006)
-        #           DENSITY MATRIX CONV=  1.00E-05
-        # (PC GAMESS version 6.2, Not DFT?)
-        #     DENSITY CONV=  1.00E-05
-                    index = line.find("DENSITY CONV=")
-                    if index < 0:
-                        index = line.find("DENSITY MATRIX CONV=")
-                        index += len("DENSITY MATRIX CONV=")
-                    else:
-                        index += len("DENSITY CONV=")
-                    scftarget = float(line[index:].split()[0])
+        # Section with SCF information.
+        #
+        # The space at the start of the search string is to differentiate from MCSCF.
+        # Everything before the search string is stored as the type of SCF.
+        # SCF types may include: BLYP, RHF, ROHF, UHF, etc.
+        #
+        # For example, in exam17 the section looks like this (note that this is GVB):
+        #          ------------------------
+        #          ROHF-GVB SCF CALCULATION
+        #          ------------------------
+        # GVB STEP WILL USE    119875 WORDS OF MEMORY.
+        #
+        #     MAXIT=  30   NPUNCH= 2   SQCDF TOL=1.0000E-05
+        #     NUCLEAR ENERGY=        6.1597411978
+        #     EXTRAP=T   DAMP=F   SHIFT=F   RSTRCT=F   DIIS=F  SOSCF=F
+        #
+        # ITER EX     TOTAL ENERGY       E CHANGE        SQCDF       DIIS ERROR
+        #   0  0      -38.298939963   -38.298939963   0.131784454   0.000000000
+        #   1  1      -38.332044339    -0.033104376   0.026019716   0.000000000
+        # ... and will be terminated by a blank line.
+        if line.rstrip()[-16:] == " SCF CALCULATION":
+
+            # Remember the type of SCF.
+            self.scftype = line.strip()[:-16]
+
+            dashes = inputfile.next()
+
+            while line [:5] != " ITER":
+
+                # GVB uses SQCDF for checking convergence (for example in exam17).
+                if "GVB" in self.scftype and "SQCDF TOL=" in line:
+                    scftarget = float(line.split("=")[-1])
+
+                # Normally however the density is used as the convergence criterium.
+                # Deal with various versions:
+                #   (GAMESS VERSION = 12 DEC 2003)
+                #     DENSITY MATRIX CONV=  2.00E-05  DFT GRID SWITCH THRESHOLD=  3.00E-04
+                #   (GAMESS VERSION = 22 FEB 2006)
+                #     DENSITY MATRIX CONV=  1.00E-05
+                #   (PC GAMESS version 6.2, Not DFT?)
+                #     DENSITY CONV=  1.00E-05
+                elif "DENSITY CONV" in line or "DENSITY MATRIX CONV" in line:
+                    scftarget = float(line.split()[-1])
+
                 line = inputfile.next()
 
             if not hasattr(self, "scftargets"):
                 self.scftargets = []
+
             self.scftargets.append([scftarget])
 
             if not hasattr(self,"scfvalues"):
                 self.scfvalues = []
+
             line = inputfile.next()
+
+            # Normally the iteration print in 6 columns.
+            # For ROHF, however, it is 5 columns, thus this extra parameter.
+            if "ROHF" in self.scftype:
+                valcol = 4
+            else:
+                valcol = 5
+
+            # SCF iterations are terminated by a blank line.
+            # The first four characters usually contains the step number.
+            # However, lines can also contain messages, including:
+            #   * * *   INITIATING DIIS PROCEDURE   * * *
+            #   CONVERGED TO SWOFF, SO DFT CALCULATION IS NOW SWITCHED ON
+            #   DFT CODE IS SWITCHING BACK TO THE FINER GRID
             values = []
             while line.strip():
-            # The SCF information is terminated by a blank line                    
                 try:
                     temp = int(line[0:4])
                 except ValueError:
-            # Occurs for:
-            #  * * *   INITIATING DIIS PROCEDURE   * * *
-            #  CONVERGED TO SWOFF, SO DFT CALCULATION IS NOW SWITCHED ON
-            #  DFT CODE IS SWITCHING BACK TO THE FINER GRID
                     pass
                 else:
-                    values.append([float(line.split()[5])])
+                    values.append([float(line.split()[valcol])])
                 line = inputfile.next()
             self.scfvalues.append(values)
 
@@ -328,6 +435,18 @@ class GAMESS(logfileparser.Logfile):
         #       FREQUENCY:        52.49       41.45       17.61        9.23       10.61  
         #    REDUCED MASS:      3.92418     3.77048     5.43419     6.44636     5.50693
         #    IR INTENSITY:      0.00013     0.00001     0.00004     0.00000     0.00003
+
+        # ...or in the case of a numerical Hessian job...
+
+        # MODES 1 TO 5 ARE TAKEN AS ROTATIONS AND TRANSLATIONS.
+        #
+        #     FREQUENCIES IN CM**-1, IR INTENSITIES IN DEBYE**2/AMU-ANGSTROM**2,
+        #     REDUCED MASSES IN AMU.
+        #
+        #                          1           2           3           4           5
+        #       FREQUENCY:         0.05        0.03        0.03       30.89       30.94  
+        #    REDUCED MASS:      8.50125     8.50137     8.50136     1.06709     1.06709
+
         
         # whereas PC-GAMESS has...
         # MODES 1 TO 6 ARE TAKEN AS ROTATIONS AND TRANSLATIONS.
@@ -403,9 +522,11 @@ class GAMESS(logfileparser.Logfile):
                 line = inputfile.next()
                 if line.find("REDUCED") >= 0: # skip the reduced mass (not always present)
                     line = inputfile.next()
-                irIntensity = map(float, line.strip().split()[2:])
-                self.vibirs.extend([utils.convertor(x, "Debye^2/amu-Angstrom^2", "km/mol") for x in irIntensity])
-                line = inputfile.next()
+                if line.find("IR INTENSITY") >= 0:
+                    # Not present if a numerical Hessian calculation
+                    irIntensity = map(float, line.strip().split()[2:])
+                    self.vibirs.extend([utils.convertor(x, "Debye^2/amu-Angstrom^2", "km/mol") for x in irIntensity])
+                    line = inputfile.next()
                 if line.find("RAMAN") >= 0:
                     if not hasattr(self,"vibramans"):
                         self.vibramans = []
@@ -555,13 +676,22 @@ class GAMESS(logfileparser.Logfile):
             for base in range(0, self.nmo, 5):
 
                 line = inputfile.next()
+                # Make sure that this section does not end prematurely - checked by regression test 2CO.ccsd.aug-cc-pVDZ.out.
+                if line.strip() != "":
+                    break;
+                
                 numbers = inputfile.next() # Eigenvector numbers.
 
-                # Eigenvalues for these orbitals (in hartrees).
-                # Sometimes there are some blank lines before it.
+                # Sometimes there are some blank lines here.
                 while not line.strip():
                     line = inputfile.next()
-                self.moenergies[0].extend([utils.convertor(float(x), "hartree", "eV") for x in line.split()])
+
+                # Eigenvalues for these orbitals (in hartrees).
+                try:
+                    self.moenergies[0].extend([utils.convertor(float(x), "hartree", "eV") for x in line.split()])
+                except:
+                    self.logger.warning('MO section found but could not be parsed!')
+                    break;
 
                 # Orbital symmetries.
                 line = inputfile.next()
@@ -575,6 +705,10 @@ class GAMESS(logfileparser.Logfile):
                 oldatom ='0'
                 for i in range(self.nbasis):
                     line = inputfile.next()
+
+                    # If line is empty, break (ex. for FMO in exam37).
+                    if not line.strip(): break
+
                     # Fill atombasis and aonames only first time around
                     if readatombasis and base == 0:
                         aonames = []
@@ -639,24 +773,73 @@ class GAMESS(logfileparser.Logfile):
                 line = inputfile.next()
             self.moenergies = [numpy.array(x, "d") for x in self.moenergies]
 
-        if line.find("NUMBER OF OCCUPIED ORBITALS") >= 0:
+        # Natural orbitals - presently support only CIS.
+        # Looks basically the same as eigenvectors, without symmetry labels.
+        if line[10:30] == "CIS NATURAL ORBITALS":
+
+            self.nocoeffs = numpy.zeros((self.nmo, self.nbasis), "d")
+
+            dashes = inputfile.next()
+            for base in range(0, self.nmo, 5):
+
+                blank = inputfile.next()
+                numbers = inputfile.next() # Eigenvector numbers.
+
+                # Eigenvalues for these natural orbitals (not in hartrees!).
+                # Sometimes there are some blank lines before it.
+                line = inputfile.next()
+                while not line.strip():
+                    line = inputfile.next()
+                eigenvalues = line
+
+                # Orbital symemtry labels are normally here for MO coefficients.
+                line = inputfile.next()
+                
+                # Now we have nbasis lines with the coefficients.
+                for i in range(self.nbasis):
+
+                    line = inputfile.next()
+                    coeffs = line[15:]
+                    j = 0
+                    while j*11+4 < len(coeffs):
+                        self.nocoeffs[base+j, i] = float(coeffs[j * 11:(j + 1) * 11])
+                        j += 1
+
+        # We cannot trust this self.homos until we come to the phrase:
+        #   SYMMETRIES FOR INITAL GUESS ORBITALS FOLLOW
+        # which either is followed by "ALPHA" or "BOTH" at which point we can say
+        # for certain that it is an un/restricted calculations.
+        # Note that MCSCF calcs also print this search string, so make sure
+        #   that self.homos does not exist yet.
+        if line[1:28] == "NUMBER OF OCCUPIED ORBITALS" and not hasattr(self,'homos'):
             homos = [int(line.split()[-1])-1]
             line = inputfile.next()
             homos.append(int(line.split()[-1])-1)
-            # Note that we cannot trust this self.homos until we come to
-            # a line that contains the phrase:
-            # "SYMMETRIES FOR INITAL GUESS ORBITALS FOLLOW"
-            # which either is followed by "ALPHA" or "BOTH"
-            # at which point we can say for certain that it is an
-            # un/restricted calculations
             self.homos = numpy.array(homos, "i")
 
+        
         if line.find("SYMMETRIES FOR INITIAL GUESS ORBITALS FOLLOW") >= 0:
-            # Not unrestricted, so lop off the second index
+            # Not unrestricted, so lop off the second index.
+            # In case the search string above was not used (ex. FMO in exam38),
+            #   we can try to use the next line which should also contain the
+            #   number of occupied orbitals.
             if line.find("BOTH SET(S)") >= 0:
+                nextline = inputfile.next()
+                if "ORBITALS ARE OCCUPIED" in nextline:
+                    homos = int(nextline.split()[0])-1
+                    if hasattr(self,"homos"):
+                        try:
+                            assert self.homos[0] == homos
+                        except AssertionError:
+                            self.logger.warning("Number of occupied orbitals not consistent. This is normal for ECP and FMO jobs.")
+                    else:
+                        self.homos = [homos]
                 self.homos = numpy.resize(self.homos, [1])
 
-        if line.find("TOTAL NUMBER OF ATOMS") == 1:
+        # Set the total number of atoms, only once.
+        # Normally GAMESS print TOTAL NUMBER OF ATOMS, however in some cases
+        #   this is slightly different (ex. lower case for FMO in exam37).
+        if not hasattr(self,"natom") and "NUMBER OF ATOMS" in line.upper():
             self.natom = int(line.split()[-1])
             
         if line.find("NUMBER OF CARTESIAN GAUSSIAN BASIS") == 1 or line.find("TOTAL NUMBER OF BASIS FUNCTIONS") == 1:

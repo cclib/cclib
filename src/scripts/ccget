@@ -8,14 +8,15 @@ import logging
 from cclib.parser import ccopen
 
 _allowedargs = ['aonames','aooverlaps','atombasis','atomcoords','atomnos',
-		'charge','coreelectrons',
+		'ccenergies', 'charge','coreelectrons',
                 'etenergies','etoscs','etrotats','etsecs','etsyms',
-                'fonames','fooverlaps','gbasis','geotargets','geovalues',
-                'homos','mocoeffs','moenergies','mosyms','mpenergies',
-		'mult',
-                'natom','nbasis',
-                'nmo','scfenergies','scftargets','scfvalues', 'vibdisps',
-                'vibfreqs','vibirs','vibramans','vibsyms','hessian']
+                'fonames','fooverlaps','fragnames','frags',
+                'gbasis','geotargets','geovalues',
+                'hessian','homos',
+                'mocoeffs','moenergies','mosyms','mpenergies','mult',
+                'natom','nbasis', 'nmo', 'nocoeffs',
+                'scfenergies','scftargets','scfvalues',
+                'vibdisps', 'vibfreqs','vibirs','vibramans','vibsyms']
 
 def moreusage():
     """More detailed usage information"""
@@ -77,17 +78,17 @@ def main():
             sys.exit()
               
         log.logger.setLevel(logging.ERROR)
-        log.parse()
+        data = log.parse()
         if showattr:
             print "cclib can parse the following attributes from %s:" % filename
             for x in _allowedargs:
-                if hasattr(log,x):
+                if hasattr(data,x):
                     print "  %s" % x
         else:
             invalid = False
             for attr in attrnames:
-                if hasattr(log,attr):
-                    print "%s:\n%s" % (attr,getattr(log,attr))
+                if hasattr(data,attr):
+                    print "%s:\n%s" % (attr,getattr(data,attr))
                 else:
                     invalid = True
             if invalid:

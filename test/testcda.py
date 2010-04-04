@@ -21,13 +21,13 @@ from cclib.parser import Gaussian
 
 
 def main(log=True):
-    parser1 = getfile(Gaussian, os.path.join("CDA","BH3CO-sp.log"))
-    parser2 = getfile(Gaussian, os.path.join("CDA","BH3.log"))
-    parser3 = getfile(Gaussian, os.path.join("CDA","CO.log"))
-    fa = CDA(parser1)
+    data1, logfile1 = getfile(Gaussian, "CDA", "BH3CO-sp.log")
+    data2, logfile2 = getfile(Gaussian, "CDA", "BH3.log")
+    data3, logfile3 = getfile(Gaussian, "CDA", "CO.log")
+    fa = CDA(data1)
     if not log:
         fa.logger.setLevel(logging.ERROR)
-    fa.calculate([parser2, parser3])
+    fa.calculate([data2, data3])
 
     return fa
 

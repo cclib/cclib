@@ -1,5 +1,6 @@
 ***, divinylbenzene geom opt
 gprint,basis,orbital
+gthresh,thrgrad=0.0002
 basis=sto-3g
 geometry={nosym,angstrom;
  x1
@@ -42,6 +43,8 @@ hcc18=      109.471
 hc20=       1.095900
 hcc20=      126.000
 
+optg,procedure=rundft
+rundft={ks,b3lyp}
 ks,b3lyp;
 orbprint,9999
-optg
+

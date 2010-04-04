@@ -14,11 +14,11 @@ def makebiopython(atomcoords, atomnos):
     This creates a list of BioPython Atoms suitable for use
     by Bio.PDB.Superimposer, for example.
 
-    >>> import Numeric
+    >>> import numpy
     >>> from Bio.PDB.Superimposer import Superimposer
-    >>> atomnos = Numeric.array([1,8,1],"i")
-    >>> a = Numeric.array([[-1,1,0],[0,0,0],[1,1,0]],"f")
-    >>> b = Numeric.array([[1.1,2,0],[1,1,0],[2,1,0]],"f")
+    >>> atomnos = numpy.array([1,8,1],"i")
+    >>> a = numpy.array([[-1,1,0],[0,0,0],[1,1,0]],"f")
+    >>> b = numpy.array([[1.1,2,0],[1,1,0],[2,1,0]],"f")
     >>> si = Superimposer()
     >>> si.set_atoms(makebiopython(a,atomnos),makebiopython(b,atomnos))
     >>> print si.rms

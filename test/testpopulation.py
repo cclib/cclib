@@ -9,11 +9,7 @@ import os
 import logging
 import unittest
 
-# If numpy is not installed, try to import Numeric instead.
-try:
-    import numpy
-except ImportError:
-    import Numeric as numpy
+import numpy
 
 import bettertest
 from testall import getfile
@@ -24,7 +20,7 @@ from cclib.parser import Gaussian
 class GaussianMPATest(bettertest.TestCase):
     """Mulliken Population Analysis test"""
     def setUp(self):
-        self.data = getfile(Gaussian, "basicGaussian03", "dvb_sp.out")
+        self.data, self.logfile = getfile(Gaussian, "basicGaussian03", "dvb_sp.out")
         self.analysis = MPA(self.data)
         self.analysis.logger.setLevel(0)
         self.analysis.calculate()
@@ -37,7 +33,7 @@ class GaussianMPATest(bettertest.TestCase):
 class GaussianLPATest(bettertest.TestCase):
     """Lowdin Population Analysis test"""
     def setUp(self):
-        self.data = getfile(Gaussian, "basicGaussian03", "dvb_sp.out")
+        self.data, self.logfile = getfile(Gaussian, "basicGaussian03", "dvb_sp.out")
         self.analysis = LPA(self.data)
         self.analysis.logger.setLevel(0)
         self.analysis.calculate()
@@ -50,7 +46,7 @@ class GaussianLPATest(bettertest.TestCase):
 class GaussianCSPATest(bettertest.TestCase):
     """C-squared Population Analysis test"""
     def setUp(self):
-        self.data = getfile(Gaussian, "basicGaussian03", "dvb_sp.out")
+        self.data, self.logfile = getfile(Gaussian, "basicGaussian03", "dvb_sp.out")
         self.analysis = CSPA(self.data)
         self.analysis.logger.setLevel(0)
         self.analysis.calculate()

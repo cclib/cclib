@@ -1,0 +1,15 @@
+#water
+
+! MP2 STO-3G
+
+%output
+  PrintLevel		Normal
+  Print[ P_MOs ]  	1
+  Print[ P_Overlap ] 	1
+end
+
+* internal 0 1
+O  0  0  0   0.00   0.00   0.00
+H  1  0  0   0.99   0.00   0.00
+H  1  2  0   0.99  106.0   0.00
+*

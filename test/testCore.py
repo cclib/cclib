@@ -1,10 +1,6 @@
 __revision__ = "$Revision$"
 
-# If numpy is not installed, try to import Numeric instead.
-try:
-    import numpy
-except ImportError:
-    import Numeric as numpy
+import numpy
 
 from cclib.parser.utils import PeriodicTable
 import bettertest
@@ -45,5 +41,5 @@ class GaussianCoreTest(GenericCoreTest):
            
 if __name__=="__main__":
 
-    from testall import testmodule
-    testmodule("Core")
+    from testall import testall
+    testall(modules=["Core"])

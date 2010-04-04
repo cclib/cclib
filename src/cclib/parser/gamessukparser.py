@@ -8,23 +8,19 @@ __revision__ = "$Revision$"
 
 import re
 
-# If numpy is not installed, try to import Numeric instead.
-try:
-    import numpy
-except ImportError:
-    import Numeric as numpy
+import numpy
 
-import utils
 import logfileparser
+import utils
 
 
 class GAMESSUK(logfileparser.Logfile):
     """A GAMESS UK log file"""
     SCFRMS, SCFMAX, SCFENERGY = range(3) # Used to index self.scftargets[]
-    def __init__(self, *args):
+    def __init__(self, *args, **kwargs):
 
         # Call the __init__ method of the superclass
-        super(GAMESSUK, self).__init__(logname="GAMESSUK", *args)
+        super(GAMESSUK, self).__init__(logname="GAMESSUK", *args, **kwargs)
         
     def __str__(self):
         """Return a string representation of the object."""
@@ -179,7 +175,8 @@ class GAMESSUK(logfileparser.Logfile):
 
             minus = inputfile.next()
             blank = inputfile.next()
-            for i in range(0,self.nbasis,12):
+            i = 0
+            while i < self.nbasis:
                 blank = inputfile.next()
                 blank = inputfile.next()
                 header = inputfile.next()
@@ -189,6 +186,8 @@ class GAMESSUK(logfileparser.Logfile):
                 for j in range(self.nbasis):
                     temp = map(float, inputfile.next().split()[1:])
                     self.aooverlaps[j,(0+i):(len(temp)+i)] = temp
+                    
+                i += len(temp)
 
         if line[18:43] == 'EFFECTIVE CORE POTENTIALS':
             self.coreelectrons = numpy.zeros(self.natom, 'i')

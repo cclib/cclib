@@ -6,10 +6,26 @@ and licensed under the LGPL (http://www.gnu.org/copyleft/lgpl.html).
 __revision__ = "$Revision$"
 
 
-import sys
-import logging
+import StringIO
+
+try:
+    import bz2 # New in Python 2.3.
+except ImportError:
+    bz2 = None
+import fileinput
+import gzip
 import inspect
+import logging
+logging.logMultiprocessing =  0 # To avoid a problem with Avogadro
+import os
 import random
+try:
+    set # Standard type from Python 2.4+.
+except NameError:
+    from sets import Set as set
+import sys
+import types
+import zipfile
 
 import numpy
 
@@ -17,26 +33,88 @@ import utils
 from data import ccData
 
 
+def openlogfile(filename):
+    """Return a file object given a filename.
+
+    Given the filename of a log file or a gzipped, zipped, or bzipped
+    log file, this function returns a regular Python file object.
+    
+    Given an address starting with http://, this function retrieves the url
+    and returns a file object using a temporary file.
+
+    Given a list of filenames, this function returns a FileInput object,
+    which can be used for seamless iteration without concatenation.
+    """
+
+    # If there is a single string argument given.
+    if type(filename) in [str, unicode]:
+
+        extension = os.path.splitext(filename)[1]
+        
+        if extension == ".gz":
+            fileobject = gzip.open(filename, "r")
+
+        elif extension == ".zip":
+            zip = zipfile.ZipFile(filename, "r")
+            assert len(zip.namelist()) == 1, "ERROR: Zip file contains more than 1 file"
+            fileobject = StringIO.StringIO(zip.read(zip.namelist()[0]))
+
+        elif extension in ['.bz', '.bz2']:
+            # Module 'bz2' is not always importable.
+            assert bz2 != None, "ERROR: module bz2 cannot be imported"
+            fileobject = bz2.BZ2File(filename, "r")
+
+        else:
+            fileobject = open(filename, "r")
+
+        return fileobject
+    
+    elif hasattr(filename, "__iter__"):
+    
+        # Compression (gzip and bzip) is supported as of Python 2.5.
+        if sys.version_info[0] >= 2 and sys.version_info[1] >= 5:
+            fileobject = fileinput.input(filename, openhook=fileinput.hook_compressed)
+        else:
+            fileobject = fileinput.input(filename)
+        
+        return fileobject
+
+
 class Logfile(object):
     """Abstract class for logfile objects.
 
     Subclasses defined by cclib:
-        ADF, GAMESS, GAMESSUK, Gaussian, Jaguar, Molpro, Turbomole
+        ADF, GAMESS, GAMESSUK, Gaussian, Jaguar, Molpro, ORCA
     
     """
 
-    def __init__(self, filename, progress=None, fupdate=0.05, cupdate=0.002, 
-                                 loglevel=logging.INFO, logname="Log", datatype=ccData):
+    def __init__(self, source, progress=None,
+                       loglevel=logging.INFO, logname="Log", logstream=sys.stdout,
+                       fupdate=0.05, cupdate=0.002, 
+                       datatype=ccData):
         """Initialise the Logfile object.
 
         This should be called by a ubclass in its own __init__ method.
 
         Inputs:
-          filename - the location of a single logfile, or a list of logfiles
+            source - a single logfile, a list of logfiles, or input stream
         """
 
-        # Set the filename, or list of filenames.
-        self.filename = filename
+        # Set the filename to source if it is a string or a list of filenames.
+        # In the case of an input stream, set some arbitrary name and the stream.
+        # Elsewise, raise an Exception.
+        if isinstance(source,types.StringTypes):
+            self.filename = source
+            self.isstream = False
+        elif isinstance(source,list) and all([isinstance(s,types.StringTypes) for s in source]):
+            self.filename = source
+            self.isstream = False
+        elif hasattr(source, "read"):
+            self.filename = "stream %s" %str(type(source))
+            self.isstream = True
+            self.stream = source
+        else:
+            raise ValueError
 
         # Progress indicator.
         self.progress = progress
@@ -52,7 +130,7 @@ class Logfile(object):
         self.logger = logging.getLogger('%s %s' % (self.logname,self.filename))
         self.logger.setLevel(self.loglevel)
         if len(self.logger.handlers) == 0:
-                handler = logging.StreamHandler(sys.stdout)
+                handler = logging.StreamHandler(logstream)
                 handler.setFormatter(logging.Formatter("[%(name)s %(levelname)s] %(message)s"))
                 self.logger.addHandler(handler)
 
@@ -99,7 +177,10 @@ class Logfile(object):
 
         # Initiate the FileInput object for the input files.
         # Remember that self.filename can be a list of files.
-        inputfile = utils.openlogfile(self.filename)
+        if not self.isstream:
+            inputfile = openlogfile(self.filename)
+        else:
+            inputfile = self.stream
 
         # Intialize self.progress.
         if self.progress:
@@ -140,7 +221,8 @@ class Logfile(object):
             self.extract(inputfile, line)
 
         # Close input file object.
-        inputfile.close()
+        if not self.isstream:
+            inputfile.close()
 
         # Maybe the sub-class has something to do after parsing.
         if hasattr(self, "after_parsing"):

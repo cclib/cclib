@@ -50,16 +50,8 @@ class GaussianIRTest(GenericIRTest):
         numvib = 3*len(self.data.atomnos) - 6        
         self.assertEqual(len(self.data.vibsyms), numvib)
        
-class Jaguar42IRTest(GenericIRTest):
-    """Jaguar4.2 vibrational frequency unittest."""
-
-    def testvibsyms(self):
-            """Is the length of vibsyms correct?"""
-            numvib = 3*len(self.data.atomnos) - 6        
-            self.assertEqual(len(self.data.vibsyms), numvib)
-
-class Jaguar65IRTest(GenericIRTest):
-    """Jaguar6.5 vibrational frequency unittest."""
+class JaguarIRTest(GenericIRTest):
+    """Jaguar vibrational frequency unittest."""
 
     def testvibsyms(self):
             """Is the length of vibsyms correct?"""
@@ -68,6 +60,9 @@ class Jaguar65IRTest(GenericIRTest):
 
 class MolproIRTest(GenericIRTest):
     """Molpro vibrational frequency unittest."""
+
+class OrcaIRTest(GenericIRTest):
+    """ORCA vibrational frequency unittest."""
 
 class PCGamessIRTest(GenericIRTest):
     """PC-GAMESS vibrational frequency unittest."""
@@ -104,11 +99,14 @@ class GaussianRamanTest(GenericRamanTest):
 class MolproRamanTest(GenericRamanTest):
     """Molpro Raman unittest."""
 
+class OrcaRamanTest(GenericRamanTest):
+    """ORCA Raman unittest."""
+    
 class PCGamessRamanTest(GenericRamanTest):
     """PC-GAMESS Raman unittest."""
 
 
 if __name__=="__main__":
 
-    from testall import testmodule
-    testmodule("vib")
+    from testall import testall
+    testall(modules=["vib"])

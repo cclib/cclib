@@ -5,11 +5,7 @@ import glob
 import getopt
 import logging
 
-# If numpy is not installed, try to import Numeric instead.
-try:
-    import numpy
-except ImportError:
-    import Numeric as numpy
+import numpy
 
 from cclib.parser import ccopen
 from cclib.method import CDA
@@ -21,22 +17,22 @@ if __name__ == "__main__":
     parser2 = ccopen(sys.argv[2], None, logging.ERROR)
     parser3 = ccopen(sys.argv[3], None, logging.ERROR)
 
-    parser1.parse(); parser2.parse(); parser3.parse()
-    fa = CDA(parser1, None, logging.ERROR)
-    retval = fa.calculate([parser2, parser3])
+    data1 = parser1.parse(); data2 = parser2.parse(); data3 = parser3.parse()
+    fa = CDA(data1, None, logging.ERROR)
+    retval = fa.calculate([data2, data3])
 
     if retval:
 
         print "Charge decomposition analysis of %s\n"%(sys.argv[1])
 
-        if len(parser1.homos) == 2:
+        if len(data1.homos) == 2:
             print "ALPHA SPIN:"
             print "==========="
 
-        print " MO#      d       b       r"
-        print "-----------------------------"
+        print " MO#      d       b       r       s"
+        print "-------------------------------------"
 
-        for spin in range(len(parser1.homos)):
+        for spin in range(len(data1.homos)):
 
             if spin == 1:
                 print "\nBETA SPIN:"
@@ -44,17 +40,19 @@ if __name__ == "__main__":
 
             for i in range(len(fa.donations[spin])):
 
-                print "%4i: %7.3f %7.3f %7.3f"%(i+1,fa.donations[spin][i], \
+                print "%4i: %7.3f %7.3f %7.3f %7.3f"%(i+1,fa.donations[spin][i], \
                                                     fa.bdonations[spin][i], \
-                                                    fa.repulsions[spin][i])
+                                                    fa.repulsions[spin][i], \
+                                                    fa.residuals[spin][i])
 
-                if i == parser1.homos[spin]:
+                if i == data1.homos[spin]:
                     print "------ HOMO - LUMO gap ------"
                     
 
-            print "-----------------------------"
-            print " T:   %7.3f %7.3f %7.3f"%(reduce(numpy.add, fa.donations[spin]), \
+            print "-------------------------------------"
+            print " T:   %7.3f %7.3f %7.3f %7.3f"%(reduce(numpy.add, fa.donations[spin]), \
                         reduce(numpy.add, fa.bdonations[spin]), \
-                        reduce(numpy.add, fa.repulsions[spin]))
+                        reduce(numpy.add, fa.repulsions[spin]), \
+                        reduce(numpy.add, fa.residuals[spin]))
 
 

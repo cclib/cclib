@@ -3,7 +3,7 @@ water_mp*
 **********
 uname -a:
 Linux puffin 2.6.17.13 #3 SMP PREEMPT Thu Dec 21 11:03:18 CET 2006 i686 Intel(R) Pentium(R) 4 CPU 3.20GHz GenuineIntel GNU/Linux
-
+Note: Density can currently be formed only for MP2, MP3, and MP4(SDQ).
 **********
 
 Gaussian 03, Revision B.04
