@@ -594,43 +594,6 @@ class Gaussian(logfileparser.Logfile):
                 
                 line = inputfile.next()
 
-# Below is the old code for the IR/Raman frequency block, can probably be removed.
-#            while len(line[:15].split()) == 0:
-#                self.logger.debug(line)
-#                self.vibsyms.extend(line.split()) # Adding new symmetry
-#                line = inputfile.next()
-#                # Read in frequencies.
-#                freqs = [self.float(f) for f in line.split()[2:]]
-#                self.vibfreqs.extend(freqs)
-#                line = inputfile.next()
-#                line = inputfile.next()
-#                line = inputfile.next()
-#                irs = [self.float(f) for f in line.split()[3:]]
-#                self.vibirs.extend(irs)
-#                line = inputfile.next() # Either the header or a Raman line
-#                if line.find("Raman") >= 0:
-#                    if not hasattr(self, "vibramans"):
-#                        self.vibramans = []
-#                    ramans = [self.float(f) for f in line.split()[3:]]
-#                    self.vibramans.extend(ramans)
-#                    line = inputfile.next() # Depolar (P)
-#                    line = inputfile.next() # Depolar (U)
-#                    line = inputfile.next() # Header
-#                line = inputfile.next() # First line of cartesian displacement vectors
-#                p = [[], [], []]
-#                while len(line[:15].split()) > 0:
-#                    # Store the cartesian displacement vectors
-#                    broken = map(float, line.strip().split()[2:])
-#                    for i in range(0, len(broken), 3):
-#                        p[i/3].append(broken[i:i+3])
-#                    line = inputfile.next()
-#                self.vibdisps.extend(p[0:len(broken)/3])
-#                line = inputfile.next() # Should be the line with symmetries
-#            self.vibfreqs = numpy.array(self.vibfreqs, "d")
-#            self.vibirs = numpy.array(self.vibirs, "d")
-#            self.vibdisps = numpy.array(self.vibdisps, "d")
-#            if hasattr(self, "vibramans"):
-#                self.vibramans = numpy.array(self.vibramans, "d")
                 
         # Electronic transitions.
         if line[1:14] == "Excited State":
