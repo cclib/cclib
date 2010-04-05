@@ -162,6 +162,26 @@ class Turbomole(logfileparser.Logfile):
             self.atomcoords.append(atomcoords)
             self.atomnos = numpy.array(atomnos, "i")
 
+        if line[14:32] == "atomic coordinates":
+            atomcoords = []
+            atomnos = []
+
+            line = inputfile.next()
+           
+            while len(line) > 2:
+                temp = line.split()
+                atsym = temp[3].capitalize()
+                atomnos.append(self.table.number[atsym])
+                atomcoords.append([utils.convertor(float(x), "bohr", "Angstrom")
+                                    for x in temp[0:3]])
+                line = inputfile.next()
+
+            if not hasattr(self,"atomcoords"):
+                self.atomcoords = []
+
+            self.atomcoords.append(atomcoords)
+            self.atomnos = numpy.array(atomnos, "i")
+
         if line == "$atoms\n":
             line = inputfile.next()
             self.atomlist=[]
@@ -366,80 +386,95 @@ class Turbomole(logfileparser.Logfile):
             self.vibsyms = []
             self.vibdisps = []
 
-            while line[3:31] != "****  force : all done  ****":
-                if line[12:26] == "ATOMIC WEIGHTS":
+#            while line[3:31] != "****  force : all done  ****":
+
+        if line[12:26] == "ATOMIC WEIGHTS":
 #begin parsing atomic weights
-                   self.vibmasses=[]
-                   line=inputfile.next() # lines =======
-                   line=inputfile.next() # notes
-                   line=inputfile.next() # start reading
-                   temp=line.split()
-                   while(len(temp) > 0):
-                        self.vibmasses.append(float(temp[2]))
-                        line=inputfile.next()
-                        temp=line.split()
+           self.vibmasses=[]
+           line=inputfile.next() # lines =======
+           line=inputfile.next() # notes
+           line=inputfile.next() # start reading
+           temp=line.split()
+           while(len(temp) > 0):
+                self.vibmasses.append(float(temp[2]))
+                line=inputfile.next()
+                temp=line.split()
 
-                if line[5:14] == "frequency":
-                    temp=line.replace("i","-").split()
+        if line[5:14] == "frequency":
+            if not hasattr(self,"vibfreqs"):
+                self.vibfreqs = []
+                self.vibfreqs = []
+                self.vibsyms = []
+                self.vibdisps = []
+                self.vibirs = []
 
-                    freqs = [self.float(f) for f in temp[1:]]
-                    self.vibfreqs.extend(freqs)
-                            
-                    line=inputfile.next()
-                    line=inputfile.next()
+            temp=line.replace("i","-").split()
 
-                    syms=line.split()
-                    self.vibsyms.extend(syms[1:])
+            freqs = [self.float(f) for f in temp[1:]]
+            self.vibfreqs.extend(freqs)
+                    
+            line=inputfile.next()
+            line=inputfile.next()
 
-                    line=inputfile.next()
-                    line=inputfile.next()
-                    line=inputfile.next()
-                    line=inputfile.next()
+            syms=line.split()
+            self.vibsyms.extend(syms[1:])
 
-                    temp=line.split()
-                    irs = [self.float(f) for f in temp[2:]]
-                    self.vibirs.extend(irs)
+            line=inputfile.next()
+            line=inputfile.next()
+            line=inputfile.next()
+            line=inputfile.next()
 
-                    line=inputfile.next()
-                    line=inputfile.next()
-                    line=inputfile.next()
-                    line=inputfile.next()
+            temp=line.split()
+            irs = [self.float(f) for f in temp[2:]]
+            self.vibirs.extend(irs)
 
-                    x=[]
-                    y=[]
-                    z=[]
+            line=inputfile.next()
+            line=inputfile.next()
+            line=inputfile.next()
+            line=inputfile.next()
 
-                    line=inputfile.next()
-                    while len(line) > 1:
-                        temp=line.split()
-                        x.append(map(float, temp[3:]))
+            x=[]
+            y=[]
+            z=[]
 
-                        line=inputfile.next()
-                        temp=line.split()
-                        y.append(map(float, temp[1:]))
+            line=inputfile.next()
+            while len(line) > 1:
+                temp=line.split()
+                x.append(map(float, temp[3:]))
 
-                        line=inputfile.next()
-                        temp=line.split()
-                        z.append(map(float, temp[1:]))
-                        line=inputfile.next()
+                line=inputfile.next()
+                temp=line.split()
+                y.append(map(float, temp[1:]))
+
+                line=inputfile.next()
+                temp=line.split()
+                z.append(map(float, temp[1:]))
+                line=inputfile.next()
 
 # build xyz vectors for each mode
 
-                    for i in range(0, len(x[0]), 1):
-                        disp=[]
-                        for j in range(0, len(x), 1):
-                            disp.append( [x[j][i], y[j][i], z[j][i]])
-                        self.vibdisps.append(disp)
+            for i in range(0, len(x[0]), 1):
+                disp=[]
+                for j in range(0, len(x), 1):
+                    disp.append( [x[j][i], y[j][i], z[j][i]])
+                self.vibdisps.append(disp)
 
-                line=inputfile.next()
+#        line=inputfile.next()
 
-            i=0
-# delete all frequencies that correspond to translations or rotations
-            while i<len(self.vibfreqs):
+    def after_parsing(self):
+
+        # delete all frequencies that correspond to translations or rotations
+        
+        if hasattr(self,"vibfreqs"):
+            i = 0
+            while i < len(self.vibfreqs):
                 if self.vibfreqs[i]==0.0:
                     del self.vibfreqs[i]
                     del self.vibdisps[i]
                     del self.vibirs[i]
                     del self.vibsyms[i]
-                else:
-                    i=i+1
+                    i -= 1
+                i += 1
+
+#EOF
+
