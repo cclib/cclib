@@ -594,6 +594,18 @@ class Gaussian(logfileparser.Logfile):
                 
                 line = inputfile.next()
 
+        if line.find("Thermochemistry") > 0:
+            if not hasattr(self, "vibmasses"):
+                self.vibmasses = []
+            line = inputfile.next()
+            temps = inputfile.next()
+         
+            line = inputfile.next()
+            while line.find("Molecular") < 0:
+           
+                info = line.split()
+                self.vibmasses.append(float(info[-1]))
+                line = inputfile.next()
                 
         # Electronic transitions.
         if line[1:14] == "Excited State":

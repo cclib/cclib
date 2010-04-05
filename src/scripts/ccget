@@ -16,7 +16,7 @@ _allowedargs = ['aonames','aooverlaps','atombasis','atomcoords','atomnos',
                 'mocoeffs','moenergies','mosyms','mpenergies','mult',
                 'natom','nbasis', 'nmo', 'nocoeffs',
                 'scfenergies','scftargets','scfvalues',
-                'vibdisps', 'vibfreqs','vibirs','vibramans','vibsyms']
+                'vibdisps', 'vibfreqs','vibirs', 'vibmasses', 'vibramans','vibsyms']
 
 def moreusage():
     """More detailed usage information"""
