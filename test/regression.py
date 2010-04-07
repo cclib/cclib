@@ -197,6 +197,7 @@ filenames = [glob(os.path.join(data, "Gaussian", "basicGaussian03", "*.out")) +
              glob(os.path.join(data, "Gaussian", "basicGaussian03", "*.log")) +
              glob(os.path.join(data, "Gaussian", "basicGaussian09", "*.log")) +
              glob(os.path.join(data, "Gaussian", "Gaussian09", "*.zip")) +
+             glob(os.path.join(data, "Gaussian", "Gaussian03", "*.out")) +
              glob(os.path.join(data, "Gaussian", "Gaussian03", "*.bz2")) +
              glob(os.path.join(data, "Gaussian", "Gaussian03", "*.zip")) +
              glob(os.path.join(data, "Gaussian", "Gaussian03", "*.gz")) +
