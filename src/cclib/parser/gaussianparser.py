@@ -249,7 +249,14 @@ class Gaussian(logfileparser.Logfile):
                 self.scfenergies = []
 
             self.scfenergies.append(utils.convertor(self.float(line.split()[4]), "hartree", "eV"))
-
+        # gmagoon 5/27/09: added scfenergies reading for PM3 case
+        # Example line: " Energy=   -0.077520562724 NIter=  14."
+        # See regression Gaussian03/QVGXLLKOCUKJST-UHFFFAOYAJmult3Fixed.out
+        if line[1:8] == 'Energy=':
+            if not hasattr(self, "scfenergies"):
+                self.scfenergies = []
+            self.scfenergies.append(utils.convertor(self.float(line.split()[1]), "hartree", "eV"))
+        
         # Total energies after Moller-Plesset corrections.
         # Second order correction is always first, so its first occurance
         #   triggers creation of mpenergies (list of lists of energies).
@@ -423,8 +430,22 @@ class Gaussian(logfileparser.Logfile):
                 self.mosyms.append([])
                 while len(line) > 18 and line[17] == '(':
                     if line.find('Virtual')>=0:
-                        self.homos.resize([2]) # Extend the array to two elements
-                        self.homos[1] = i-1 # 'HOMO' indexes the HOMO in the arrays
+                        # Here we consider beta
+                        # If there was also an alpha virtual orbital,
+                        #  we will store two indices in the array
+                        # Otherwise there is no alpha virtual orbital,
+                        #  only beta virtual orbitals, and we initialize
+                        #  the array with one element. See the regression
+                        #  QVGXLLKOCUKJST-UHFFFAOYAJmult3Fixed.out
+                        #  donated by Gregory Magoon (gmagoon).
+                        if (hasattr(self, "homos")):
+                            # Extend the array to two elements
+                            # 'HOMO' indexes the HOMO in the arrays
+                            self.homos.resize([2])
+                            self.homos[1] = i-1
+                        else:
+                            # 'HOMO' indexes the HOMO in the arrays
+                            self.homos = numpy.array([i-1], "i")
                     parts = line[17:].split()
                     for x in parts:
                         self.mosyms[1].append(self.normalisesym(x.strip('()')))
