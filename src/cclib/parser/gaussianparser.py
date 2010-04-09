@@ -131,6 +131,42 @@ class Gaussian(logfileparser.Logfile):
                 self.atomnos = numpy.array(self.inputatoms, 'i')
                 self.natom = len(self.atomnos)
 
+        # Extract the atomic masses.
+        # Typical section:
+        #                    Isotopes and Nuclear Properties:
+        #(Nuclear quadrupole moments (NQMom) in fm**2, nuclear magnetic moments (NMagM)
+        # in nuclear magnetons)
+        #
+        #  Atom         1           2           3           4           5           6           7           8           9          10
+        # IAtWgt=          12          12          12          12          12           1           1           1          12          12
+        # AtmWgt=  12.0000000  12.0000000  12.0000000  12.0000000  12.0000000   1.0078250   1.0078250   1.0078250  12.0000000  12.0000000
+        # NucSpn=           0           0           0           0           0           1           1           1           0           0
+        # AtZEff=  -3.6000000  -3.6000000  -3.6000000  -3.6000000  -3.6000000  -1.0000000  -1.0000000  -1.0000000  -3.6000000  -3.6000000
+        # NQMom=    0.0000000   0.0000000   0.0000000   0.0000000   0.0000000   0.0000000   0.0000000   0.0000000   0.0000000   0.0000000
+        # NMagM=    0.0000000   0.0000000   0.0000000   0.0000000   0.0000000   2.7928460   2.7928460   2.7928460   0.0000000   0.0000000
+        # ... with blank lines dividing blocks of ten.
+        # This is generally parsed before coordinates, so atomnos is not defined.
+        if line.strip() == "Isotopes and Nuclear Properties:":
+
+            if not hasattr(self, "atommasses"):
+                self.atommasses = []
+
+            comment = inputfile.next()
+            comment = inputfile.next()
+
+            line = inputfile.next()
+            while line.strip() == "":
+                Atom = inputfile.next()
+                IAtWgt = inputfile.next()
+                AtmWgt = inputfile.next()
+                NucSpn = inputfile.next()
+                AtZEff = inputfile.next()
+                NQMom = inputfile.next()
+                NMagM = inputfile.next()
+                line = inputfile.next()
+
+                self.atommasses.extend(map(float,AtmWgt.split()[1:]))
+
         # Extract the atomic numbers and coordinates of the atoms.
         if not self.optfinished and line.strip() == "Standard orientation:":
 
