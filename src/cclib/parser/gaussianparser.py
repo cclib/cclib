@@ -144,28 +144,19 @@ class Gaussian(logfileparser.Logfile):
         # AtZEff=  -3.6000000  -3.6000000  -3.6000000  -3.6000000  -3.6000000  -1.0000000  -1.0000000  -1.0000000  -3.6000000  -3.6000000
         # NQMom=    0.0000000   0.0000000   0.0000000   0.0000000   0.0000000   0.0000000   0.0000000   0.0000000   0.0000000   0.0000000
         # NMagM=    0.0000000   0.0000000   0.0000000   0.0000000   0.0000000   2.7928460   2.7928460   2.7928460   0.0000000   0.0000000
-        # ... with blank lines dividing blocks of ten.
+        # ... with blank lines dividing blocks of ten, and Leave Link 101 at the end.
         # This is generally parsed before coordinates, so atomnos is not defined.
+        # Note that in Gaussian03 the comments are not there yet and the labels are different.
         if line.strip() == "Isotopes and Nuclear Properties:":
 
             if not hasattr(self, "atommasses"):
                 self.atommasses = []
 
-            comment = inputfile.next()
-            comment = inputfile.next()
-
             line = inputfile.next()
-            while line.strip() == "":
-                Atom = inputfile.next()
-                IAtWgt = inputfile.next()
-                AtmWgt = inputfile.next()
-                NucSpn = inputfile.next()
-                AtZEff = inputfile.next()
-                NQMom = inputfile.next()
-                NMagM = inputfile.next()
+            while line[1:16] != "Leave Link  101":
+                if line[1:8] == "AtmWgt=":
+                    self.atommasses.extend(map(float,line.split()[1:]))
                 line = inputfile.next()
-
-                self.atommasses.extend(map(float,AtmWgt.split()[1:]))
 
         # Extract the atomic numbers and coordinates of the atoms.
         if not self.optfinished and line.strip() == "Standard orientation:":
