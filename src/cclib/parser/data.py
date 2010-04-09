@@ -19,6 +19,7 @@ class ccData(object):
         aooverlaps -- atomic orbital overlap matrix (array[2])
         atombasis -- indices of atomic orbitals on each atom (list of lists)
         atomcoords -- atom coordinates (array[3], angstroms)
+        atommasses -- atom masses (array[1], daltons)
         atomnos -- atomic numbers (array[1])
         charge -- net charge of the system (integer)
         ccenergies -- molecular energies with Coupled-Cluster corrections (array[2], eV)
@@ -71,7 +72,7 @@ class ccData(object):
 
         # Names of all supported attributes.
         self._attrlist = ['aonames', 'aooverlaps', 'atombasis',
-                          'atomcoords', 'atomnos',
+                          'atomcoords', 'atommasses', 'atomnos',
                           'ccenergies', 'charge', 'coreelectrons',
                           'etenergies', 'etoscs', 'etrotats', 'etsecs', 'etsyms',
                           'fonames', 'fooverlaps', 'fragnames', 'frags',
@@ -87,6 +88,7 @@ class ccData(object):
                             "aooverlaps":     numpy.ndarray,
                             "atombasis":      list,
                             "atomcoords":     numpy.ndarray,
+                            "atommasses":     numpy.ndarray,
                             "atomnos":        numpy.ndarray,
                             "charge":         int,
                             "coreelectrons":  numpy.ndarray,
