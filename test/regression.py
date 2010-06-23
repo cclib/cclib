@@ -26,6 +26,11 @@ def testGaussian_basicGaussian03_dvb_gopt_out(logfile):
     """
     assert len(logfile.homos)==1
 
+def testGaussian_basicGaussian09_dvb_gopt_log(logfile):
+    """Check that the atomnos is being parsed correctly"""
+    assert hasattr(logfile, "atomnos"), "has not atomnos"
+    assert len(logfile.atomnos) == logfile.natom == 20
+    
 def testGAMESS_GAMESS_US_N2_UMP2_zip(logfile):
     """Check that the new format for GAMESS MP2 is parsed"""
     assert hasattr(logfile, "mpenergies")

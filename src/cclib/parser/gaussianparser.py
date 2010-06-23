@@ -127,7 +127,7 @@ class Gaussian(logfileparser.Logfile):
 
             self.inputcoords.append(atomcoords)
 
-            if not hasattr(self, "natom"):
+            if not hasattr(self, "atomnos"):
                 self.atomnos = numpy.array(self.inputatoms, 'i')
                 self.natom = len(self.atomnos)
 
