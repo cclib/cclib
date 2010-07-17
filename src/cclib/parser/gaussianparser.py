@@ -6,6 +6,7 @@ and licensed under the LGPL (http://www.gnu.org/copyleft/lgpl.html).
 __revision__ = "$Revision$"
 
 
+print "custom file"
 import re
 
 import numpy
@@ -584,6 +585,26 @@ class Gaussian(logfileparser.Logfile):
                     for n in range(self.natom):
                         line = inputfile.next()
                         numbers = [float(s) for s in line[10:].split()]
+                        N = len(numbers) / 3
+                        if not disps:
+                            for n in range(N):
+                                disps.append([])
+                        for n in range(N):
+                            disps[n].append(numbers[3*n:3*n+3])
+                    self.vibdisps.extend(disps)
+                
+                # Gaussian 09
+                # Block with displacement should start with this.
+                # Remember, it is possible to have less than three columns!
+                # There should be as many lines as there are atoms.
+                if line[2:31] == "Atom  AN      X      Y      Z":
+                
+                    if not hasattr(self, 'vibdisps'):
+                        self.vibdisps = []
+                    disps = []
+                    for n in range(self.natom):
+                        line = inputfile.next()
+                        numbers = [float(s) for s in line[12:].split()]
                         N = len(numbers) / 3
                         if not disps:
                             for n in range(N):
