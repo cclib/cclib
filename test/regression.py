@@ -26,6 +26,14 @@ def testGaussian_basicGaussian03_dvb_gopt_out(logfile):
     """
     assert len(logfile.homos)==1
 
+def testGaussian_Gaussian03_orbgs_log_bz2(logfile):
+    """Check that the pseudopotential is being parsed correctly"""
+    assert hasattr(logfile, "coreelectrons"), "has not coreelectrons"
+    assert logfile.coreelectrons[0] == 28
+    assert logfile.coreelectrons[15] == 10
+    assert logfile.coreelectrons[20] == 10
+    assert logfile.coreelectrons[23] == 10
+
 def testGaussian_basicGaussian09_dvb_gopt_log(logfile):
     """Check that the atomnos is being parsed correctly"""
     assert hasattr(logfile, "atomnos"), "has not atomnos"

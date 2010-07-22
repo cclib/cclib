@@ -66,6 +66,7 @@ Gaussian/Gaussian03/cyclopropenyl.rhf.g03.cut.log.bz2
 Gaussian/Gaussian03/dvb_gopt_symmfollow.log.bz2
 Gaussian/Gaussian03/maheshkumar.log.gz
 Gaussian/Gaussian03/borane-opt.log.bz2
+Gaussian/Gaussian03/orbgs.log.bz2
 Gaussian/Gaussian98/oo-LAN.out.bz2
 Gaussian/Gaussian98/water_zmatrix_nosym.log.gz
 Gaussian/Gaussian98/test_H2.log.gz

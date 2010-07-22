@@ -990,19 +990,34 @@ class Gaussian(logfileparser.Logfile):
                 # This was continue before parser refactoring.
                 # continue
 
-            centers = map(int, line.split()[1:])
+# Needs to handle code like the following:
+#
+#  Center     Atomic      Valence      Angular      Power                                                       Coordinates
+#  Number     Number     Electrons     Momentum     of R      Exponent        Coefficient                X           Y           Z
+# ===================================================================================================================================
+# Centers:   1
+# Centers:  16
+# Centers:  21 24
+#    1         44           16                                                                      -4.012684 -0.696698  0.006750
+#                                      F and up 
+#                                                     0      554.3796303       -0.05152700                
+
+            centers = []
+            while line.find("Centers:") >= 0:
+                centers.extend(map(int, line.split()[1:]))
+                line = inputfile.next()
             centers.sort() # Not always in increasing order
             
             self.coreelectrons = numpy.zeros(self.natom, "i")
 
             for center in centers:
-                line = inputfile.next()
                 front = line[:10].strip()
                 while not (front and int(front) == center):
                     line = inputfile.next()
                     front = line[:10].strip()
                 info = line.split()
                 self.coreelectrons[center-1] = int(info[1]) - int(info[2])
+                line = inputfile.next()
 
         # This will be printed for counterpoise calcualtions only.
         # To prevent crashing, we need to know which fragment is being considered.
