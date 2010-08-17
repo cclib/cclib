@@ -885,9 +885,11 @@ class Gaussian(logfileparser.Logfile):
                 for i in range(self.nbasis):
                                    
                     line = inputfile.next()
+                    if i==0:
+                        # Find location of the start of the basis function name
+                        start_of_basis_fn_name = line.find(line.split()[3]) - 1
                     if base == 0 and not beta: # Just do this the first time 'round
-                        # Changed below from :12 to :11 to deal with Elmar Neumann's example
-                        parts = line[:11].split()
+                        parts = line[:start_of_basis_fn_name].split()
                         if len(parts) > 1: # New atom
                             if i>0:
                                 self.atombasis.append(atombasis)
