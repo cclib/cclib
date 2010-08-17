@@ -895,7 +895,7 @@ class Gaussian(logfileparser.Logfile):
                                 self.atombasis.append(atombasis)
                             atombasis = []
                             atomname = "%s%s" % (parts[2], parts[1])
-                        orbital = line[11:20].strip()
+                        orbital = line[start_of_basis_fn_name:20].strip()
                         self.aonames.append("%s_%s" % (atomname, orbital))
                         atombasis.append(i)
 

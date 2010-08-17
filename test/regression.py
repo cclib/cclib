@@ -27,38 +27,22 @@ def testGaussian_basicGaussian03_dvb_gopt_out(logfile):
     """
     assert len(logfile.homos)==1
 
-def direct_test_1000BasisFunctions():
+def testnoparseGaussian_Gaussian09_coeffs_zip(filename):
     """This is a test for a Gaussian file with more than 999 basis functions.
 
-    The log file is too big, so it's a direct test of the section of the code
-    that is causing the problems."""
+    The log file is too big, so we are just including a section. Before
+    parsing, we set some attributes of the parser so that it all goes
+    smoothly."""
 
-    log = """
-    Molecular Orbital Coefficients
-                          1         2         3         4         5
-                       (BU)--O   (AG)--O   (BU)--O   (AG)--O   (BU)--O
-    EIGENVALUES --  -372.66755-235.72701 -46.03921 -40.79270 -40.79111
-    1 1   Mn 1S        0.00000   0.47278   0.00000   0.00000   0.00000
-    2        2S        0.00000   0.40732   0.00000   0.00000   0.00000
-    3        3S        0.00000   0.21455   0.00000   0.00000   0.00000
-    4        4S        0.00000   0.01534   0.00000  -0.00002   0.00000
-    """
-##    log = """
-##     Molecular Orbital Coefficients
-##                           1         2         3         4         5
-##                        (BU)--O   (AG)--O   (BU)--O   (AG)--O   (BU)--O
-##     EIGENVALUES --   -10.02021 -10.02016 -10.00812 -10.00811 -10.00679
-##   1 1   C  1S          0.69929   0.69929  -0.02805   0.02825   0.02753
-##   2        2S          0.03157   0.03136   0.00413  -0.00407  -0.00789
-##   3        2PX        -0.00005   0.00001   0.00078  -0.00077   0.00203
-##   4        2PY         0.00091   0.00064  -0.00413   0.00410  -0.00284
-##   """
-    d = Gaussian(StringIO(log))
+    d = Gaussian(filename)
     d.logger.setLevel(logging.ERROR)
     d.nmo = 5
-    d.nbasis  = 4
+    d.nbasis  = 1128
+    
     logfile = d.parse()
-    assert logfile.mocoeffs[0].shape == (5, 4)
+    assert logfile.mocoeffs[0].shape == (5, 1128)
+    assert logfile.aonames[-1] == "Ga71_19D-2"
+    assert logfile.aonames[0] == "Mn1_1S"
 
 def testGaussian_Gaussian03_orbgs_log_bz2(logfile):
     """Check that the pseudopotential is being parsed correctly"""
@@ -336,59 +320,65 @@ def main():
 
     failures = errors = total = 0
 
-    # Try any direct tests
-    print "Run the direct tests:"
-    for x in globals():
-        if x.startswith("direct_test"):
-            total += 1
-            print "  %s..."  % x,
-            try:
-                eval(x)() # Run the test
-            except AssertionError:
-                print "test failed"
-                failures += 1
-            except:
-                print "parse error"
-                errors += 1
-            else:
-                print "test passed"
-    print
-    
     for i in range(len(names)):
         print "Are the %s files ccopened and parsed correctly?" % names[i]
         for filename in filenames[i]:
             total += 1
             print "  %s..."  % filename,
-            try:
-                a  = ccopen(filename)
-            except:
-                errors += 1
-                print "ccopen error"
+
+            # Check for tests
+            test_this = test_noparse = False
+            fnname = "test" + normalisefilename("_".join(filename.split(os.sep)[2:]))
+            if fnname in globals(): # If there is a test that matches...
+                test_this = True
             else:
-                if type(a) == type(dummyfiles[i]):
-                    try:
-                        a.logger.setLevel(logging.ERROR)
-                        data = a.parse()
-                    except KeyboardInterrupt:
-                        sys.exit(1)
-                    except:
-                        print "parse error"
-                        errors += 1
-                    else:    
-                        fnname = "test" + normalisefilename("_".join(filename.split(os.sep)[2:]))
-                        if fnname in globals(): # If there is a test that matches...
-                            try:
-                                eval(fnname)(data) # Run the test
-                            except AssertionError:
-                                print "test failed"
-                                failures += 1
-                            else:
-                                print "parsed and tested"
-                        else:
-                            print "parsed"
+                fnname = "testnoparse" + normalisefilename("_".join(filename.split(os.sep)[2:]))
+                if fnname in globals(): # If there is a test that matches...
+                    test_noparse = True
+
+            if test_noparse == False: # The usual case
+                try:
+                    a  = ccopen(filename)
+                except:
+                    errors += 1
+                    print "ccopen error"
                 else:
-                    print "ccopen failed"
+                    if type(a) == type(dummyfiles[i]):
+                        try:
+                            a.logger.setLevel(logging.ERROR)
+                            data = a.parse()
+                        except KeyboardInterrupt:
+                            sys.exit(1)
+                        except:
+                            print "parse error"
+                            errors += 1
+                        else:
+                            if test_this:
+                                try:
+                                    eval(fnname)(data) # Run the test
+                                except AssertionError:
+                                    print "test failed"
+                                    failures += 1
+                                else:
+                                    print "parsed and tested"
+                            else:
+                                print "parsed"
+                    else:
+                        print "ccopen failed"
+                        failures += 1
+
+            else: # Run the 'noparse' tests (fragments of files)
+                try:
+                    eval(fnname)(filename) # Run the test
+                except AssertionError:
+                    print "test failed"
                     failures += 1
+                except:
+                    print "parse error"
+                    errors += 1
+                else:
+                    print "test passed"                
+                
         print
             
     print "Total: %d   Failed: %d  Errors: %d" % (total, failures, errors)
