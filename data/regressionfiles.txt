@@ -53,6 +53,7 @@ Gaussian/Gaussian09/coeffs.zip
 Gaussian/Gaussian09/OPT_td.zip
 Gaussian/Gaussian09/OPT_td_g09.zip
 Gaussian/Gaussian09/534.out.zip
+Gaussian/Gaussian09/Ru2bpyen2_H2_freq3.log.bz2
 Gaussian/Gaussian03/QVGXLLKOCUKJST-UHFFFAOYAJmult3Fixed.out
 Gaussian/Gaussian03/AM1_SP.out.gz
 Gaussian/Gaussian03/anthracene.log.gz

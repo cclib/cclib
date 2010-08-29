@@ -184,9 +184,14 @@ class Gaussian(logfileparser.Logfile):
                 atomcoords.append(map(float, broken[-3:]))
                 line = inputfile.next()
             self.atomcoords.append(atomcoords)
+
             if not hasattr(self, "natom"):
                 self.atomnos = numpy.array(atomnos, 'i')
                 self.natom = len(self.atomnos)
+
+            # make sure atomnos is added for the case where natom has already been set
+            elif not hasattr(self, "atomnos"):
+                self.atomnos = numpy.array(atomnos, 'i')
 
         # Find the targets for SCF convergence (QM calcs).
         if line[1:44] == 'Requested convergence on RMS density matrix':

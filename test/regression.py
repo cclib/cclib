@@ -112,6 +112,12 @@ def testGaussian_Gaussian09_534_out_zip(logfile):
     assert logfile.etsyms[0] == "Singlet-?Sym"
     assert logfile.etenergies[0] == 20920.55328
 
+def testGaussian_Gaussian09_Ru2bpyen2_H2_freq3_log_bz2(logfile):
+    """
+    atomnos wans't added to the gaussian parser before
+    """
+    assert len(logfile.atomnos) == 69
+
 def testGaussian_Gaussian03_AM1_SP_out_gz(logfile):
     """
     Previously, caused scfvalue parsing to fail.
@@ -228,6 +234,7 @@ filenames = [glob(os.path.join(data, "Gaussian", "basicGaussian03", "*.out")) +
              glob(os.path.join(data, "Gaussian", "basicGaussian03", "*.log")) +
              glob(os.path.join(data, "Gaussian", "basicGaussian09", "*.log")) +
              glob(os.path.join(data, "Gaussian", "Gaussian09", "*.zip")) +
+             glob(os.path.join(data, "Gaussian", "Gaussian09", "*.bz2")) +
              glob(os.path.join(data, "Gaussian", "Gaussian03", "*.out")) +
              glob(os.path.join(data, "Gaussian", "Gaussian03", "*.bz2")) +
              glob(os.path.join(data, "Gaussian", "Gaussian03", "*.zip")) +
