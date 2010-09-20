@@ -620,7 +620,7 @@ class ADF(logfileparser.Logfile):
         if line[1:32] == "S F O   P O P U L A T I O N S ,":
         #Extract overlap matrix
 
-            self.fooverlaps = numpy.zeros((self.nbasis, self.nbasis), "d")
+#            self.fooverlaps = numpy.zeros((self.nbasis, self.nbasis), "d")
 
             symoffset = 0
 
@@ -629,9 +629,21 @@ class ADF(logfileparser.Logfile):
                 line = inputfile.next()
                 while line.find('===') < 10: #look for the symmetry labels
                     line = inputfile.next()
+
                 #blank blank text blank col row
-                for i in range(6):
-                    inputfile.next()
+
+                blank = inputfile.next()
+                blank = inputfile.next()
+                text = inputfile.next()
+
+                if text[13:20] != "Overlap": # verify this has overlap info
+                    break
+
+                col = inputfile.next()
+                row = inputfile.next()
+
+                if not hasattr(self,"fooverlaps"): # make sure there is a matrix to store this
+                    self.fooverlaps = numpy.zeros((self.nbasis, self.nbasis), "d")
 
                 base = 0
                 while base < nosymrep: #have we read all the columns?
