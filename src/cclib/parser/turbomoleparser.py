@@ -331,6 +331,17 @@ class Turbomole(logfileparser.Logfile):
             temp = line.split()
             occs = int(temp[1][2:])
             self.homos = numpy.array([occs-1], "i")
+
+        if line == "$alpha shells\n":
+            line = inputfile.next()
+            temp = line.split()
+            occ_a = int(temp[1][2:])
+            line = inputfile.next() # should be $beta shells
+            line = inputfile.next() # the beta occs
+            temp = line.split()
+            occ_b = int(temp[1][2:])
+            self.homos = numpy.array([occ_a-1,occ_b-1], "i")
+
         if line[12:24]=="OVERLAP(CAO)":
             line = inputfile.next()
             line = inputfile.next()
@@ -348,37 +359,57 @@ class Turbomole(logfileparser.Logfile):
                     self.aooverlaps[j][i]=overlaparray[counter]
                     counter=counter+1
 
-        if line[0:6] == "$scfmo" and line.find("scfconv")>-1:
+        if ( line[0:6] == "$scfmo" or line[0:12] == "$uhfmo_alpha" ) and line.find("scfconv")  > -1:
+            if line[0:12] == "$uhfmo_alpha":
+                unrestricted = 1
+            else:
+                unrestricted = 0
+
             self.moenergies=[]
             self.mocoeffs=[]
-            moarray=[]
-            title = inputfile.next()
-            while(title[0] == "#"):
+
+            for spin in range(unrestricted + 1): # make sure we cover all instances
                 title = inputfile.next()
-            mocoeffs = numpy.zeros((self.nbasis, self.nbasis), "d")
-
-            while(title[0] != '$'):
-                temp=title.split()
-
-                orb_symm=temp[1]
-                orb_en=float(temp[2][20:].replace("D", "E"))
-
-                self.moenergies.append(orb_en)
-                single_mo = []
-                
-                while(len(single_mo)<self.nbasis):
+                while(title[0] == "#"):
                     title = inputfile.next()
-                    lines_coeffs=self.split_molines(title)
-                    single_mo.extend(lines_coeffs)
+
+                mocoeffs = numpy.zeros((self.nbasis, self.nbasis), "d")
+                moenergies = []
+                moarray=[]
+
+                if spin == 1 and title[0:11] == "$uhfmo_beta":
+                    title = inputfile.next()
+                    while title[0] == "#":
+                        title = inputfile.next()
+
+                while(title[0] != '$'):
+                    temp=title.split()
+
+                    orb_symm=temp[1]
+                    energy = float(temp[2][11:].replace("D", "E"))
+                    orb_en= utils.convertor(energy,"hartree","eV")
+
+                    moenergies.append(orb_en)
+                    single_mo = []
                     
-                moarray.append(single_mo)
-                title = inputfile.next()
+                    while(len(single_mo)<self.nbasis):
+                        title = inputfile.next()
+                        lines_coeffs=self.split_molines(title)
+                        single_mo.extend(lines_coeffs)
+                        
+                    moarray.append(single_mo)
+                    title = inputfile.next()
 
-            for i in range(0, len(moarray), 1):
-                for j in range(0, self.nbasis, 1):
-                    mocoeffs[i][j]=moarray[i][j]
+                for i in range(0, len(moarray), 1):
+                    for j in range(0, self.nbasis, 1):
+                        try:
+                            mocoeffs[i][j]=moarray[i][j]
+                        except IndexError:
+                            print "Index Error in mocoeffs.", spin, i, j
+                            break
 
-            self.mocoeffs.append(mocoeffs)
+                self.mocoeffs.append(mocoeffs)
+                self.moenergies.append(moenergies)
 
         if line[26:49] == "a o f o r c e - program":
             self.vibirs = []
