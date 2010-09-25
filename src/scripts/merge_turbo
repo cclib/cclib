@@ -38,6 +38,11 @@ if [ -e mos ] ; then
         cat mos >> $mfile
 fi
 
+if [ -e alpha ] && [ -e beta ]; then
+	echo "#CCLIB mos" >> $mfile
+	cat alpha beta >> $mfile
+fi
+
 if [ -e aoforce.out ] ; then
         echo "#CCLIB aoforce" >> $mfile
         cat aoforce.out >> $mfile
