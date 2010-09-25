@@ -359,8 +359,14 @@ class Turbomole(logfileparser.Logfile):
                     self.aooverlaps[j][i]=overlaparray[counter]
                     counter=counter+1
 
-        if ( line[0:6] == "$scfmo" or line[0:12] == "$uhfmo_alpha" ) and line.find("scfconv")  > -1:
-            if line[0:12] == "$uhfmo_alpha":
+        if ( line[0:6] == "$scfmo" or line[0:12] == "$uhfmo_alpha" ) and line.find("scf") > 0:
+            temp = line.split()
+
+            if temp[1][0:7] == "scfdump":
+#                self.logger.warning("SCF not converged?")
+                print "SCF not converged?!"
+
+            if line[0:12] == "$uhfmo_alpha": # if unrestricted, create flag saying so
                 unrestricted = 1
             else:
                 unrestricted = 0
@@ -386,8 +392,13 @@ class Turbomole(logfileparser.Logfile):
                     temp=title.split()
 
                     orb_symm=temp[1]
-                    energy = float(temp[2][11:].replace("D", "E"))
-                    orb_en= utils.convertor(energy,"hartree","eV")
+
+                    try:
+                        energy = float(temp[2][11:].replace("D", "E"))
+                    except ValueError:
+                        print spin, ": ", title
+
+                    orb_en = utils.convertor(energy,"hartree","eV")
 
                     moenergies.append(orb_en)
                     single_mo = []
