@@ -1,51 +1,76 @@
-#!/bin/sh
+#!/usr/bin/env python
 
-if [ $# -ne 1 ] ; then
-	mfile="turbo.out"
-else
-	mfile=$1.out
-fi
+import sys
+import os
 
-echo "#CCLIB Turbomole" > $mfile
+if len(sys.argv) == 2:
+    mfile = sys.argv[1] + ".out"
+else:
+    mfile = "turbo.out"
 
-if [ -e basis ] ; then
-        echo "#CCLIB basis" >> $mfile
-        cat basis >> $mfile
-fi
+file = open(mfile,"w")
+file.write("#CCLIB Turbomole\n")
 
-if [ -e control ] ; then
-	echo "#CCLIB control" >> $mfile
-	cat control >> $mfile
-fi
+if os.path.exists("basis"):
+    file.write("#CCLIB basis\n")
+    bfile = open("basis","r")
+    data = bfile.read()
+    file.write(data)
+    bfile.close()
 
-if [ -e job.last ] ; then
-        echo "#CCLIB job.last" >> $mfile
-        cat job.last >> $mfile
-fi
+if os.path.exists("control"):
+    file.write("#CCLIB control\n")
+    bfile = open("control","r")
+    data = bfile.read()
+    file.write(data)
+    bfile.close()
 
-if [ -e coord ] ; then
-        echo "#CCLIB coord" >> $mfile
-        cat coord >> $mfile
-fi
+if os.path.exists("job.last"):
+    file.write("#CCLIB job.last\n")
+    bfile = open("job.last","r")
+    data = bfile.read()
+    file.write(data)
+    bfile.close()
 
-if [ -e gradient ] ; then
-        echo "#CCLIB gradientt" >> $mfile
-        cat gradient >> $mfile
-fi
+if os.path.exists("coord"):
+    file.write("#CCLIB coord\n")
+    bfile = open("coord","r")
+    data = bfile.read()
+    file.write(data)
+    bfile.close()
 
-if [ -e mos ] ; then
-        echo "#CCLIB mos" >> $mfile
-        cat mos >> $mfile
-fi
-
-if [ -e alpha ] && [ -e beta ]; then
-	echo "#CCLIB mos" >> $mfile
-	cat alpha beta >> $mfile
-fi
-
-if [ -e aoforce.out ] ; then
-        echo "#CCLIB aoforce" >> $mfile
-        cat aoforce.out >> $mfile
-fi
+if os.path.exists("gradient"):
+    file.write("#CCLIB gradient\n")
+    bfile = open("gradient","r")
+    data = bfile.read()
+    file.write(data)
+    bfile.close()
 
 
+if os.path.exists("mos"):
+    file.write("#CCLIB mos\n")
+    bfile = open("mos","r")
+    data = bfile.read()
+    file.write(data)
+    bfile.close()
+
+if os.path.exists("alpha") and os.path.exists("beta"):
+    file.write("#CCLIB mos\n")
+    bfile = open("alpha","r")
+    data = bfile.read()
+    file.write(data)
+    bfile.close()
+
+    bfile = open("beta","r")
+    data = bfile.read()
+    file.write(data)
+    bfile.close()
+
+if os.path.exists("aoforce.out"):
+    file.write("#CCLIB aoforce.out\n")
+    bfile = open("aoforce.out","r")
+    data = bfile.read()
+    file.write(data)
+    bfile.close()
+
+#eof
