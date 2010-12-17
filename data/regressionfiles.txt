@@ -43,6 +43,7 @@ GAMESS/GAMESS-US/water_mp2_nprint9.out
 GAMESS/GAMESS-US/zolm_dft3a.log.zip
 GAMESS/PCGAMESS/aomixgamess.log.bz2
 GAMESS/PCGAMESS/d2d_sp.out.gz
+GAMESS/PCGAMESS/firefly-FailStationary.out.gz
 GAMESS/WinGAMESS/WinGAMESS.log.gz
 GAMESS-UK/GAMESS-UK6.0/dscf_4.out.gz
 GAMESS-UK/GAMESS-UK6.0/duhf_1.out.gz
