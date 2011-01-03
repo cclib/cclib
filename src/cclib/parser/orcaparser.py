@@ -82,7 +82,7 @@ class ORCA(logfileparser.Logfile):
                 self.geotargets[i] = float(line.split()[-2])
 
         # Read in scfvalues.
-        if line [:14] == "SCF ITERATIONS":
+        if "SCF ITERATIONS" in line:
             if not hasattr(self, "scfvalues"):
                 self.scfvalues = []
             dashes = inputfile.next()
@@ -91,17 +91,29 @@ class ORCA(logfileparser.Logfile):
             assert line[2] == "Delta-E"
             assert line[3] == "Max-DP"
             self.scfvalues.append([])
-            while line != []:
-                if line[0].isdigit():
+            # Keep track of converger (NR, DIIS, SOSCF, etc.).
+            diis_active = True
+            while not line == []:
+                if 'Newton-Raphson' in line:
+                    diis_active = False
+                elif 'SOSCF' in line:
+                    diis_active = False
+                elif line[0].isdigit() and diis_active:
                     energy = float(line[1])
                     deltaE = float(line[2])
                     maxDP = float(line[3])
                     rmsDP = float(line[4])
                     self.scfvalues[-1].append([deltaE, maxDP, rmsDP])
+                elif line[0].isdigit() and not diis_active:
+                    energy = float(line[1])
+                    deltaE = float(line[2])
+                    maxDP = float(line[5])
+                    rmsDP = float(line[6])
+                    self.scfvalues[-1].append([deltaE, maxDP, rmsDP])
                 line = inputfile.next().split()
 
         # Read in values for last SCF iteration and scftargets.
-        if line[:15] == "SCF CONVERGENCE":
+        if "SCF CONVERGENCE" in line:
             if not hasattr(self, "scfvalues"):
                 self.scfvalues = []
             if not hasattr(self, "scftargets"):
@@ -109,24 +121,25 @@ class ORCA(logfileparser.Logfile):
             dashes = inputfile.next()
             blank = inputfile.next()
             line = inputfile.next()
-            assert line[:29].strip() == "Last Energy change"
-            deltaE_value = float(line[33:46])
-            deltaE_target = float(line[60:72])
+            assert "Last Energy change" in line
+            deltaE_value = float(line.split()[4])
+            deltaE_target = float(line.split()[7])
             line = inputfile.next()
-            assert line[:29].strip() == "Last MAX-Density change"
-            maxDP_value = float(line[33:46])
-            maxDP_target = float(line[60:72])
+            assert "Last MAX-Density change" in line
+            maxDP_value = float(line.split()[4])
+            maxDP_target = float(line.split()[7])
             line = inputfile.next()
-            assert line[:29].strip() == "Last RMS-Density change"
-            rmsDP_value = float(line[33:46])
-            rmsDP_target = float(line[60:72])
+            assert "Last RMS-Density change" in line
+            rmsDP_value = float(line.split()[4])
+            rmsDP_target = float(line.split()[7])
             line = inputfile.next()
-            assert line[:29].strip() == "Last DIIS Error"
+            # Non-DIIS convergers do not contain this line.
+            # assert "Last DIIS Error" in line
             self.scfvalues[-1].append([deltaE_value,maxDP_value,rmsDP_value])
-            self.scftargets.append([deltaE_target,maxDP_target,rmsDP_target])                    
+            self.scftargets.append([deltaE_target,maxDP_target,rmsDP_target])                
 
         # Read in SCF energy, at least in SP calculation.
-        if line [:16] == "TOTAL SCF ENERGY":
+        if "TOTAL SCF ENERGY" in line:
             if not hasattr(self, "scfenergies"):
                 self.scfenergies = []
             dashes = inputfile.next()
