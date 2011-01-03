@@ -15,7 +15,7 @@ from glob import glob
 from StringIO import StringIO
 
 from cclib.parser import ccopen
-from cclib.parser import Gaussian, GAMESS, GAMESSUK, Jaguar, ADF, Molpro
+from cclib.parser import Gaussian, GAMESS, GAMESSUK, Jaguar, ADF, Molpro, ORCA
 
 # Regression tests
 def testGaussian_basicGaussian03_dvb_gopt_out(logfile):
@@ -226,9 +226,9 @@ def testGaussian_Gaussian03_cyclopropenyl_rhf_g03_cut_log_bz2(logfile):
 # or new datafiles
 
 data = os.path.join("..","data")
-names = [ "Gaussian", "GAMESS", "ADF", "GAMESS UK", "Jaguar", "Molpro" ]
+names = [ "Gaussian", "GAMESS", "ADF", "GAMESS UK", "Jaguar", "Molpro", "ORCA" ]
 dummyfiles = [ Gaussian(""), GAMESS(""), ADF(""), GAMESSUK(""), Jaguar(""),
-               Molpro("") ]
+               Molpro(""), ORCA("") ]
 
 filenames = [glob(os.path.join(data, "Gaussian", "basicGaussian03", "*.out")) +  
              glob(os.path.join(data, "Gaussian", "basicGaussian03", "*.log")) +
@@ -272,6 +272,8 @@ filenames = [glob(os.path.join(data, "Gaussian", "basicGaussian03", "*.out")) +
 
              glob(os.path.join(data, "Molpro", "basicMolpro2006", "*.out")) +
              glob(os.path.join(data, "Molpro", "Molpro2006", "*.bz2")),
+
+             glob(os.path.join(data, "ORCA", "ORCA2.8", "*.out")),
              ]
 
 def normalisefilename(filename):

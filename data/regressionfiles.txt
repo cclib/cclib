@@ -91,3 +91,4 @@ Jaguar/Jaguar6.5/dvb_sp.out.bz2
 Jaguar/Jaguar6.5/dvb_un_sp.out.bz2
 Molpro/Molpro2006/C_bigbasis_cart.out.bz2
 Molpro/Molpro2006/thymine.scf.out.bz2
+ORCA/ORCA2.8/co.out
