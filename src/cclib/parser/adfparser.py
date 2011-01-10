@@ -150,9 +150,11 @@ class ADF(logfileparser.Logfile):
         if line[1:6] == "ATOMS":
         # Find the number of atoms and their atomic numbers
         # Also extract the starting coordinates (for a GeoOpt anyway)
+        # and the atommasses (previously called vibmasses)
             self.updateprogress(inputfile, "Attributes", self.cupdate)
 
             self.atomnos = []
+            self.atommasses = []
             self.atomcoords = []
             self.coreelectrons = []
 
@@ -167,6 +169,7 @@ class ADF(logfileparser.Logfile):
                 self.atomnos.append(self.table.number[element])
                 atomcoords.append(map(float, info[2:5]))
                 self.coreelectrons.append(int(float(info[5]) - float(info[6])))
+                self.atommasses.append(float(info[7]))
                 line = inputfile.next()
             self.atomcoords.append(atomcoords)
 
