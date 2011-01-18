@@ -73,4 +73,6 @@ if os.path.exists("aoforce.out"):
     file.write(data)
     bfile.close()
 
+file.close()
+
 #eof

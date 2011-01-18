@@ -58,7 +58,7 @@ def setup_cclib():
 
     setup(
         name = "cclib",
-        version = "1.0",
+        version = "1.0-TMsvn",
         url = "http://cclib.sf.net",
         author = "cclib development team",
         author_email = "cclib-users@lists.sourceforge.net",
@@ -69,7 +69,7 @@ def setup_cclib():
         long_description = "\n".join(doclines[2:]),      
         classifiers = filter(None, classifiers.split("\n")),
         platforms = ["Any."],
-        scripts = ["src/scripts/ccget", "src/scripts/cda"],
+        scripts = ["src/scripts/ccget", "src/scripts/cda", "src/scripts/merge_turbo"],
         package_dir = {'cclib':'src/cclib', 'cclib.test':'test'},
         packages = cclib_packages,
         data_files = cclib_datafiles )
