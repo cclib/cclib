@@ -22,6 +22,7 @@ ADF/ADF2006.01/dvb_gopt.adfout.bz2
 ADF/ADF2006.01/HgMeBr_zso_orig.out
 ADF/ADF2006.01/Frags_NiCO4_orig.out
 ADF/ADF2006.01/Au2.out
+ADF/ADF2009.01/JOCRUP-sp3-adf09.out
 GAMESS/GAMESS-US/N2-ROMP2.zip
 GAMESS/GAMESS-US/N2-UMP2.zip
 GAMESS/GAMESS-US/paulo_h2o-mp2.zip
@@ -42,6 +43,7 @@ GAMESS/GAMESS-US/water_mp2_nprint9.out
 GAMESS/GAMESS-US/zolm_dft3a.log.zip
 GAMESS/PCGAMESS/aomixgamess.log.bz2
 GAMESS/PCGAMESS/d2d_sp.out.gz
+GAMESS/PCGAMESS/firefly-FailStationary.out.gz
 GAMESS/WinGAMESS/WinGAMESS.log.gz
 GAMESS-UK/GAMESS-UK6.0/dscf_4.out.gz
 GAMESS-UK/GAMESS-UK6.0/duhf_1.out.gz
@@ -49,9 +51,12 @@ GAMESS-UK/GAMESS-UK7.0/mg10.out.gz
 GAMESS-UK/GAMESS-UK7.0/pyridine2_21m10r.out.gz
 GAMESS-UK/GAMESS-UK7.0/mg10.out.gz
 GAMESS-UK/GAMESS-UK7.0/pyridine.out.gz
+Gaussian/Gaussian09/coeffs.zip
 Gaussian/Gaussian09/OPT_td.zip
 Gaussian/Gaussian09/OPT_td_g09.zip
 Gaussian/Gaussian09/534.out.zip
+Gaussian/Gaussian09/Ru2bpyen2_H2_freq3.log.bz2
+Gaussian/Gaussian03/QVGXLLKOCUKJST-UHFFFAOYAJmult3Fixed.out
 Gaussian/Gaussian03/AM1_SP.out.gz
 Gaussian/Gaussian03/anthracene.log.gz
 Gaussian/Gaussian03/neoprene.zip
@@ -64,6 +69,8 @@ Gaussian/Gaussian03/mendes.zip
 Gaussian/Gaussian03/cyclopropenyl.rhf.g03.cut.log.bz2
 Gaussian/Gaussian03/dvb_gopt_symmfollow.log.bz2
 Gaussian/Gaussian03/maheshkumar.log.gz
+Gaussian/Gaussian03/borane-opt.log.bz2
+Gaussian/Gaussian03/orbgs.log.bz2
 Gaussian/Gaussian98/oo-LAN.out.bz2
 Gaussian/Gaussian98/water_zmatrix_nosym.log.gz
 Gaussian/Gaussian98/test_H2.log.gz
@@ -84,3 +91,4 @@ Jaguar/Jaguar6.5/dvb_sp.out.bz2
 Jaguar/Jaguar6.5/dvb_un_sp.out.bz2
 Molpro/Molpro2006/C_bigbasis_cart.out.bz2
 Molpro/Molpro2006/thymine.scf.out.bz2
+ORCA/ORCA2.8/co.out

@@ -19,6 +19,7 @@ class ccData(object):
         aooverlaps -- atomic orbital overlap matrix (array[2])
         atombasis -- indices of atomic orbitals on each atom (list of lists)
         atomcoords -- atom coordinates (array[3], angstroms)
+        atommasses -- atom masses (array[1], daltons)
         atomnos -- atomic numbers (array[1])
         charge -- net charge of the system (integer)
         ccenergies -- molecular energies with Coupled-Cluster corrections (array[2], eV)
@@ -35,6 +36,7 @@ class ccData(object):
         gbasis -- coefficients and exponents of Gaussian basis functions (PyQuante format)
         geotargets -- targets for convergence of geometry optimization (array[1])
         geovalues -- current values for convergence of geometry optmization (array[1])
+        hessian -- elements of the force constant matrix (array[1])
         homos -- molecular orbital indices of HOMO(s) (array[1])
         mocoeffs -- molecular orbital coefficients (list of arrays[2])
         moenergies -- molecular orbital energies (list of arrays[1], eV)
@@ -71,7 +73,7 @@ class ccData(object):
 
         # Names of all supported attributes.
         self._attrlist = ['aonames', 'aooverlaps', 'atombasis',
-                          'atomcoords', 'atomnos',
+                          'atomcoords', 'atommasses', 'atomnos',
                           'ccenergies', 'charge', 'coreelectrons',
                           'etenergies', 'etoscs', 'etrotats', 'etsecs', 'etsyms',
                           'fonames', 'fooverlaps', 'fragnames', 'frags',
@@ -87,6 +89,7 @@ class ccData(object):
                             "aooverlaps":     numpy.ndarray,
                             "atombasis":      list,
                             "atomcoords":     numpy.ndarray,
+                            "atommasses":     numpy.ndarray,
                             "atomnos":        numpy.ndarray,
                             "charge":         int,
                             "coreelectrons":  numpy.ndarray,

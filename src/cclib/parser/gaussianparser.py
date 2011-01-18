@@ -128,9 +128,36 @@ class Gaussian(logfileparser.Logfile):
 
             self.inputcoords.append(atomcoords)
 
-            if not hasattr(self, "natom"):
+            if not hasattr(self, "atomnos"):
                 self.atomnos = numpy.array(self.inputatoms, 'i')
                 self.natom = len(self.atomnos)
+
+        # Extract the atomic masses.
+        # Typical section:
+        #                    Isotopes and Nuclear Properties:
+        #(Nuclear quadrupole moments (NQMom) in fm**2, nuclear magnetic moments (NMagM)
+        # in nuclear magnetons)
+        #
+        #  Atom         1           2           3           4           5           6           7           8           9          10
+        # IAtWgt=          12          12          12          12          12           1           1           1          12          12
+        # AtmWgt=  12.0000000  12.0000000  12.0000000  12.0000000  12.0000000   1.0078250   1.0078250   1.0078250  12.0000000  12.0000000
+        # NucSpn=           0           0           0           0           0           1           1           1           0           0
+        # AtZEff=  -3.6000000  -3.6000000  -3.6000000  -3.6000000  -3.6000000  -1.0000000  -1.0000000  -1.0000000  -3.6000000  -3.6000000
+        # NQMom=    0.0000000   0.0000000   0.0000000   0.0000000   0.0000000   0.0000000   0.0000000   0.0000000   0.0000000   0.0000000
+        # NMagM=    0.0000000   0.0000000   0.0000000   0.0000000   0.0000000   2.7928460   2.7928460   2.7928460   0.0000000   0.0000000
+        # ... with blank lines dividing blocks of ten, and Leave Link 101 at the end.
+        # This is generally parsed before coordinates, so atomnos is not defined.
+        # Note that in Gaussian03 the comments are not there yet and the labels are different.
+        if line.strip() == "Isotopes and Nuclear Properties:":
+
+            if not hasattr(self, "atommasses"):
+                self.atommasses = []
+
+            line = inputfile.next()
+            while line[1:16] != "Leave Link  101":
+                if line[1:8] == "AtmWgt=":
+                    self.atommasses.extend(map(float,line.split()[1:]))
+                line = inputfile.next()
 
         # Extract the atomic numbers and coordinates of the atoms.
         if not self.optfinished and line.strip() == "Standard orientation:":
@@ -158,9 +185,14 @@ class Gaussian(logfileparser.Logfile):
                 atomcoords.append(map(float, broken[-3:]))
                 line = inputfile.next()
             self.atomcoords.append(atomcoords)
+
             if not hasattr(self, "natom"):
                 self.atomnos = numpy.array(atomnos, 'i')
                 self.natom = len(self.atomnos)
+
+            # make sure atomnos is added for the case where natom has already been set
+            elif not hasattr(self, "atomnos"):
+                self.atomnos = numpy.array(atomnos, 'i')
 
         # Find the targets for SCF convergence (QM calcs).
         if line[1:44] == 'Requested convergence on RMS density matrix':
@@ -250,7 +282,14 @@ class Gaussian(logfileparser.Logfile):
                 self.scfenergies = []
 
             self.scfenergies.append(utils.convertor(self.float(line.split()[4]), "hartree", "eV"))
-
+        # gmagoon 5/27/09: added scfenergies reading for PM3 case
+        # Example line: " Energy=   -0.077520562724 NIter=  14."
+        # See regression Gaussian03/QVGXLLKOCUKJST-UHFFFAOYAJmult3Fixed.out
+        if line[1:8] == 'Energy=':
+            if not hasattr(self, "scfenergies"):
+                self.scfenergies = []
+            self.scfenergies.append(utils.convertor(self.float(line.split()[1]), "hartree", "eV"))
+        
         # Total energies after Moller-Plesset corrections.
         # Second order correction is always first, so its first occurance
         #   triggers creation of mpenergies (list of lists of energies).
@@ -424,8 +463,22 @@ class Gaussian(logfileparser.Logfile):
                 self.mosyms.append([])
                 while len(line) > 18 and line[17] == '(':
                     if line.find('Virtual')>=0:
-                        self.homos.resize([2]) # Extend the array to two elements
-                        self.homos[1] = i-1 # 'HOMO' indexes the HOMO in the arrays
+                        # Here we consider beta
+                        # If there was also an alpha virtual orbital,
+                        #  we will store two indices in the array
+                        # Otherwise there is no alpha virtual orbital,
+                        #  only beta virtual orbitals, and we initialize
+                        #  the array with one element. See the regression
+                        #  QVGXLLKOCUKJST-UHFFFAOYAJmult3Fixed.out
+                        #  donated by Gregory Magoon (gmagoon).
+                        if (hasattr(self, "homos")):
+                            # Extend the array to two elements
+                            # 'HOMO' indexes the HOMO in the arrays
+                            self.homos.resize([2])
+                            self.homos[1] = i-1
+                        else:
+                            # 'HOMO' indexes the HOMO in the arrays
+                            self.homos = numpy.array([i-1], "i")
                     parts = line[17:].split()
                     for x in parts:
                         self.mosyms[1].append(self.normalisesym(x.strip('()')))
@@ -754,12 +807,8 @@ class Gaussian(logfileparser.Logfile):
             # For ONIOM calcs, ignore this section in order to bypass assertion failure.
             if self.oniom: return
 
-            # If nmo was already parsed, check if it changed.
             nmo = int(line.split('=')[1].split()[0])
-            if hasattr(self, "nmo"):
-                assert nmo == self.nmo
-            else:
-                self.nmo = nmo
+            self.nmo = nmo
 
         # For AM1 calculations, set nbasis by a second method,
         #   as nmo may not always be explicitly stated.
@@ -837,15 +886,17 @@ class Gaussian(logfileparser.Logfile):
                 for i in range(self.nbasis):
                                    
                     line = inputfile.next()
+                    if i==0:
+                        # Find location of the start of the basis function name
+                        start_of_basis_fn_name = line.find(line.split()[3]) - 1
                     if base == 0 and not beta: # Just do this the first time 'round
-                        # Changed below from :12 to :11 to deal with Elmar Neumann's example
-                        parts = line[:11].split()
+                        parts = line[:start_of_basis_fn_name].split()
                         if len(parts) > 1: # New atom
                             if i>0:
                                 self.atombasis.append(atombasis)
                             atombasis = []
                             atomname = "%s%s" % (parts[2], parts[1])
-                        orbital = line[11:20].strip()
+                        orbital = line[start_of_basis_fn_name:20].strip()
                         self.aonames.append("%s_%s" % (atomname, orbital))
                         atombasis.append(i)
 
@@ -942,19 +993,34 @@ class Gaussian(logfileparser.Logfile):
                 # This was continue before parser refactoring.
                 # continue
 
-            centers = map(int, line.split()[1:])
+# Needs to handle code like the following:
+#
+#  Center     Atomic      Valence      Angular      Power                                                       Coordinates
+#  Number     Number     Electrons     Momentum     of R      Exponent        Coefficient                X           Y           Z
+# ===================================================================================================================================
+# Centers:   1
+# Centers:  16
+# Centers:  21 24
+#    1         44           16                                                                      -4.012684 -0.696698  0.006750
+#                                      F and up 
+#                                                     0      554.3796303       -0.05152700                
+
+            centers = []
+            while line.find("Centers:") >= 0:
+                centers.extend(map(int, line.split()[1:]))
+                line = inputfile.next()
             centers.sort() # Not always in increasing order
             
             self.coreelectrons = numpy.zeros(self.natom, "i")
 
             for center in centers:
-                line = inputfile.next()
                 front = line[:10].strip()
                 while not (front and int(front) == center):
                     line = inputfile.next()
                     front = line[:10].strip()
                 info = line.split()
                 self.coreelectrons[center-1] = int(info[1]) - int(info[2])
+                line = inputfile.next()
 
         # This will be printed for counterpoise calcualtions only.
         # To prevent crashing, we need to know which fragment is being considered.

@@ -269,10 +269,20 @@ class GAMESS(logfileparser.Logfile):
         # Maximum and RMS gradients.
         if "MAXIMUM GRADIENT" in line or "RMS GRADIENT" in line:
 
+            parts = line.split()
+
+            # Avoid parsing the following...
+            
+            ## YOU SHOULD RESTART "OPTIMIZE" RUNS WITH THE COORDINATES
+            ## WHOSE ENERGY IS LOWEST.  RESTART "SADPOINT" RUNS WITH THE
+            ## COORDINATES WHOSE RMS GRADIENT IS SMALLEST.  THESE ARE NOT
+            ## ALWAYS THE LAST POINT COMPUTED!            
+
+            if parts[0] not in ["MAXIMUM", "RMS", "(1)"]:
+                return
+
             if not hasattr(self, "geovalues"):
                 self.geovalues = []
-
-            parts = line.split()
 
             # Newer versions (around 2006) have both maximum and RMS on one line:
             #       MAXIMUM GRADIENT =  0.0531540    RMS GRADIENT = 0.0189223

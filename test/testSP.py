@@ -24,7 +24,7 @@ class GenericSPTest(bettertest.TestCase):
         # This will work only for numpy
         #self.assertEquals(self.data.atomnos.dtype.char, 'i')
         self.assertEquals(self.data.atomnos.shape, (20,) )
-        self.assertEquals(sum(self.data.atomnos==6) + sum(self.data.atomnos==1), 20)        
+        self.assertEquals(sum(self.data.atomnos==6) + sum(self.data.atomnos==1), 20)
 
     def testatomcoords(self):
         """Are the dimensions of atomcoords 1 x natom x 3?"""
@@ -134,6 +134,14 @@ class GamessUSSPTest(GenericSPTest):
 
 class GaussianSPTest(GenericSPTest):
     """Gaussian restricted single point unittest."""
+
+    # Molecular mass of DVB in mD.
+    molecularmass = 130078.25
+
+    def testatommasses(self):
+        """Do the atom masses sum up to the molecular mass (130078.25+-0.1mD)?"""
+        mm = 1000*sum(self.data.atommasses)
+        self.assertInside(mm, 130078.25, 0.1, "Molecule mass: %f not 130078 +- 0.1mD" %mm)
 
 class JaguarSPTest(GenericSPTest):
     """Jaguar restricted single point unittest."""

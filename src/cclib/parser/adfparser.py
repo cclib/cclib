@@ -150,10 +150,11 @@ class ADF(logfileparser.Logfile):
         if line[1:6] == "ATOMS":
         # Find the number of atoms and their atomic numbers
         # Also extract the starting coordinates (for a GeoOpt anyway)
-        # and the masses used in vibrations?
+        # and the atommasses (previously called vibmasses)
             self.updateprogress(inputfile, "Attributes", self.cupdate)
 
             self.atomnos = []
+            self.atommasses = []
             self.atomcoords = []
             self.coreelectrons = []
             self.vibmasses = []
@@ -169,7 +170,7 @@ class ADF(logfileparser.Logfile):
                 self.atomnos.append(self.table.number[element])
                 atomcoords.append(map(float, info[2:5]))
                 self.coreelectrons.append(int(float(info[5]) - float(info[6])))
-                self.vibmasses.append(float(info[7]))
+                self.atommasses.append(float(info[7]))
                 line = inputfile.next()
             self.atomcoords.append(atomcoords)
 
@@ -623,7 +624,7 @@ class ADF(logfileparser.Logfile):
         if line[1:32] == "S F O   P O P U L A T I O N S ,":
         #Extract overlap matrix
 
-            self.fooverlaps = numpy.zeros((self.nbasis, self.nbasis), "d")
+#            self.fooverlaps = numpy.zeros((self.nbasis, self.nbasis), "d")
 
             symoffset = 0
 
@@ -632,9 +633,21 @@ class ADF(logfileparser.Logfile):
                 line = inputfile.next()
                 while line.find('===') < 10: #look for the symmetry labels
                     line = inputfile.next()
+
                 #blank blank text blank col row
-                for i in range(6):
-                    inputfile.next()
+
+                blank = inputfile.next()
+                blank = inputfile.next()
+                text = inputfile.next()
+
+                if text[13:20] != "Overlap": # verify this has overlap info
+                    break
+
+                col = inputfile.next()
+                row = inputfile.next()
+
+                if not hasattr(self,"fooverlaps"): # make sure there is a matrix to store this
+                    self.fooverlaps = numpy.zeros((self.nbasis, self.nbasis), "d")
 
                 base = 0
                 while base < nosymrep: #have we read all the columns?

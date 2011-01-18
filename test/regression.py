@@ -12,9 +12,10 @@ import sys
 import logging
 
 from glob import glob
+from StringIO import StringIO
 
 from cclib.parser import ccopen
-from cclib.parser import Gaussian, GAMESS, GAMESSUK, Jaguar, ADF, Molpro
+from cclib.parser import Gaussian, GAMESS, GAMESSUK, Jaguar, ADF, Molpro, ORCA
 
 # Regression tests
 def testGaussian_basicGaussian03_dvb_gopt_out(logfile):
@@ -26,6 +27,36 @@ def testGaussian_basicGaussian03_dvb_gopt_out(logfile):
     """
     assert len(logfile.homos)==1
 
+def testnoparseGaussian_Gaussian09_coeffs_zip(filename):
+    """This is a test for a Gaussian file with more than 999 basis functions.
+
+    The log file is too big, so we are just including a section. Before
+    parsing, we set some attributes of the parser so that it all goes
+    smoothly."""
+
+    d = Gaussian(filename)
+    d.logger.setLevel(logging.ERROR)
+    d.nmo = 5
+    d.nbasis  = 1128
+    
+    logfile = d.parse()
+    assert logfile.mocoeffs[0].shape == (5, 1128)
+    assert logfile.aonames[-1] == "Ga71_19D-2"
+    assert logfile.aonames[0] == "Mn1_1S"
+
+def testGaussian_Gaussian03_orbgs_log_bz2(logfile):
+    """Check that the pseudopotential is being parsed correctly"""
+    assert hasattr(logfile, "coreelectrons"), "has not coreelectrons"
+    assert logfile.coreelectrons[0] == 28
+    assert logfile.coreelectrons[15] == 10
+    assert logfile.coreelectrons[20] == 10
+    assert logfile.coreelectrons[23] == 10
+
+def testGaussian_basicGaussian09_dvb_gopt_log(logfile):
+    """Check that the atomnos is being parsed correctly"""
+    assert hasattr(logfile, "atomnos"), "has not atomnos"
+    assert len(logfile.atomnos) == logfile.natom == 20
+    
 def testGAMESS_GAMESS_US_N2_UMP2_zip(logfile):
     """Check that the new format for GAMESS MP2 is parsed"""
     assert hasattr(logfile, "mpenergies")
@@ -80,6 +111,12 @@ def testGaussian_Gaussian09_534_out_zip(logfile):
     """
     assert logfile.etsyms[0] == "Singlet-?Sym"
     assert logfile.etenergies[0] == 20920.55328
+
+def testGaussian_Gaussian09_Ru2bpyen2_H2_freq3_log_bz2(logfile):
+    """
+    atomnos wans't added to the gaussian parser before
+    """
+    assert len(logfile.atomnos) == 69
 
 def testGaussian_Gaussian03_AM1_SP_out_gz(logfile):
     """
@@ -189,14 +226,16 @@ def testGaussian_Gaussian03_cyclopropenyl_rhf_g03_cut_log_bz2(logfile):
 # or new datafiles
 
 data = os.path.join("..","data")
-names = [ "Gaussian", "GAMESS", "ADF", "GAMESS UK", "Jaguar", "Molpro" ]
+names = [ "Gaussian", "GAMESS", "ADF", "GAMESS UK", "Jaguar", "Molpro", "ORCA" ]
 dummyfiles = [ Gaussian(""), GAMESS(""), ADF(""), GAMESSUK(""), Jaguar(""),
-               Molpro("") ]
+               Molpro(""), ORCA("") ]
 
 filenames = [glob(os.path.join(data, "Gaussian", "basicGaussian03", "*.out")) +  
              glob(os.path.join(data, "Gaussian", "basicGaussian03", "*.log")) +
              glob(os.path.join(data, "Gaussian", "basicGaussian09", "*.log")) +
              glob(os.path.join(data, "Gaussian", "Gaussian09", "*.zip")) +
+             glob(os.path.join(data, "Gaussian", "Gaussian09", "*.bz2")) +
+             glob(os.path.join(data, "Gaussian", "Gaussian03", "*.out")) +
              glob(os.path.join(data, "Gaussian", "Gaussian03", "*.bz2")) +
              glob(os.path.join(data, "Gaussian", "Gaussian03", "*.zip")) +
              glob(os.path.join(data, "Gaussian", "Gaussian03", "*.gz")) +
@@ -218,7 +257,8 @@ filenames = [glob(os.path.join(data, "Gaussian", "basicGaussian03", "*.out")) +
              glob(os.path.join(data, "ADF", "ADF2004.01", "*.bz2")) +
              glob(os.path.join(data, "ADF", "ADF2005.01", "*.zip")) +
              glob(os.path.join(data, "ADF", "ADF2006.01", "*.out")) +
-             glob(os.path.join(data, "ADF", "ADF2006.01", "*.bz2")),
+             glob(os.path.join(data, "ADF", "ADF2006.01", "*.bz2")) +
+             glob(os.path.join(data, "ADF", "ADF2009.01", "*.out")),
                           
              glob(os.path.join(data, "GAMESS-UK", "basicGAMESS-UK", "*.out")) +
              glob(os.path.join(data, "GAMESS-UK", "GAMESS-UK6.0", "*.out.gz")) +
@@ -232,6 +272,8 @@ filenames = [glob(os.path.join(data, "Gaussian", "basicGaussian03", "*.out")) +
 
              glob(os.path.join(data, "Molpro", "basicMolpro2006", "*.out")) +
              glob(os.path.join(data, "Molpro", "Molpro2006", "*.bz2")),
+
+             glob(os.path.join(data, "ORCA", "ORCA2.8", "*.out")),
              ]
 
 def normalisefilename(filename):
@@ -285,45 +327,70 @@ def main():
         except KeyboardInterrupt:
             print "\n"
             sys.exit(0)
-    
+
     failures = errors = total = 0
+
     for i in range(len(names)):
         print "Are the %s files ccopened and parsed correctly?" % names[i]
         for filename in filenames[i]:
             total += 1
             print "  %s..."  % filename,
-            try:
-                a  = ccopen(filename)
-            except:
-                errors += 1
-                print "ccopen error"
-            else:
-                if type(a) == type(dummyfiles[i]):
-                    try:
-                        a.logger.setLevel(logging.ERROR)
-                        data = a.parse()
-                    except KeyboardInterrupt:
-                        sys.exit(1)
-                    except:
-                        print "parse error"
-                        errors += 1
-                    else:    
-                        fnname = "test" + normalisefilename("_".join(filename.split(os.sep)[2:]))
-                        if fnname in globals(): # If there is a test that matches...
-                            try:
-                                eval(fnname)(data) # Run the test
-                            except AssertionError:
-                                print "test failed"
-                                failures += 1
-                            else:
-                                print "parsed and tested"
-                        else:
-                            print "parsed"
-                else:
-                    print "ccopen failed"
-                    failures += 1
-        print
 
+            # Check for tests
+            test_this = test_noparse = False
+            fnname = "test" + normalisefilename("_".join(filename.split(os.sep)[2:]))
+            if fnname in globals(): # If there is a test that matches...
+                test_this = True
+            else:
+                fnname = "testnoparse" + normalisefilename("_".join(filename.split(os.sep)[2:]))
+                if fnname in globals(): # If there is a test that matches...
+                    test_noparse = True
+
+            if test_noparse == False: # The usual case
+                try:
+                    a  = ccopen(filename)
+                except:
+                    errors += 1
+                    print "ccopen error"
+                else:
+                    if type(a) == type(dummyfiles[i]):
+                        try:
+                            a.logger.setLevel(logging.ERROR)
+                            data = a.parse()
+                        except KeyboardInterrupt:
+                            sys.exit(1)
+                        except:
+                            print "parse error"
+                            errors += 1
+                        else:
+                            if test_this:
+                                try:
+                                    eval(fnname)(data) # Run the test
+                                except AssertionError:
+                                    print "test failed"
+                                    failures += 1
+                                else:
+                                    print "parsed and tested"
+                            else:
+                                print "parsed"
+                    else:
+                        print "ccopen failed"
+                        failures += 1
+
+            else: # Run the 'noparse' tests (fragments of files)
+                try:
+                    eval(fnname)(filename) # Run the test
+                except AssertionError:
+                    print "test failed"
+                    failures += 1
+                except:
+                    print "parse error"
+                    errors += 1
+                else:
+                    print "test passed"                
+                
+        print
+            
     print "Total: %d   Failed: %d  Errors: %d" % (total, failures, errors)
 
 if __name__=="__main__":
