@@ -1,6 +1,6 @@
-cclib 1.0 is now available for download from http://cclib.sf.net.
+cclib 1.0.1 is now available for download from http://cclib.sf.net.
 
-cclib is an open source library, written in Python, for parsing and interpreting the results of computational chemistry packages. It currently parses output files from ADF, GAMESS (US), GAMESS-UK, Gaussian, Jaguar, Molpro, ORCA and PC GAMESS.
+cclib is an open source library, written in Python, for parsing and interpreting the results of computational chemistry packages. It currently parses output files from ADF, Firefly, GAMESS (US), GAMESS-UK, Gaussian, Jaguar, Molpro and ORCA.
 
 Among other data, cclib extracts:
 
@@ -11,7 +11,7 @@ Among other data, cclib extracts:
     * information on vibrational modes
     * the results of a TD-DFT calculation 
 
-(For a complete list see http://cclib.sf.net/wiki/index.php/Parsed_Data).
+(For a complete list see http://sourceforge.net/apps/mediawiki/cclib/index.php?title=Parsed_Data).
 
 cclib also provides some calculation methods for interpreting the electronic properties of molecules using analyses such as:
 
@@ -19,10 +19,10 @@ cclib also provides some calculation methods for interpreting the electronic pro
     * Overlap population analysis
     * Calculation of Mayer's bond orders. 
 
-(For a complete list see http://cclib.sf.net/wiki/index.php/Calculation_Methods).
+(For a complete list see http://sourceforge.net/apps/mediawiki/cclib/index.php?title=Calculation_Methods).
 
 For information on how to use cclib, see
-      http://cclib.sf.net/wiki/index.php/Using_cclib.
+      http://sourceforge.net/apps/mediawiki/cclib/index.php?title=Using_cclib.
 
 If you need help, find a bug, want new features or have any questions, please send an email to our mailing list:
 	https://lists.sourceforge.net/lists/listinfo/cclib-users

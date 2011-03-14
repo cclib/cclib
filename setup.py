@@ -10,7 +10,7 @@ doclines = __doc__.split("\n")
 
 # Chosen from http://www.python.org/pypi?:action=list_classifiers
 classifiers = """\
-Development Status :: 4 - Beta
+Development Status :: 5 - Production/Stable
 Environment :: Console
 Intended Audience :: Science/Research
 Intended Audience :: Developers
@@ -58,7 +58,7 @@ def setup_cclib():
 
     setup(
         name = "cclib",
-        version = "1.0.1b",
+        version = "1.0.1",
         url = "http://cclib.sf.net",
         author = "cclib development team",
         author_email = "cclib-users@lists.sourceforge.net",

@@ -1,3 +1,21 @@
+Changes since cclib-1.0:
+
+Features:
+	* New attribute atommasses - atomic masses in Dalton
+	* Added support for Gaussian geometry optimisations that change
+	the number of linearly independent basis functions over the
+	course of the calculation
+
+
+Bugfixes:
+	* Handle triplet PM3 calculations in Gaussian03 (Greg Magoon)
+	* Some Gaussian09 calculations were missing atomnos (Marius Retegan)
+	* Handle multiple pseudopotentials in Gaussian03 (Tiago Silva)
+	* Handle Gaussian calculations with >999 basis functions
+	* ADF versions > 2007 no longer print overlap info by default
+	* Handle parsing Firefly calculations that fail
+	* Fix parsing of ORCA calculation (Marius Retegan)
+
 Change since cclib-0.9:
 
 Features:
