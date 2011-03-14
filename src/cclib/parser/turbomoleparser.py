@@ -182,22 +182,25 @@ class Turbomole(logfileparser.Logfile):
             self.atomcoords.append(atomcoords)
             self.atomnos = numpy.array(atomnos, "i")
 
-        if line == "$atoms\n":
+        if line[0:6] == "$atoms":
+            print "parsing atoms"
             line = inputfile.next()
             self.atomlist=[]
             while line[0]!="$":
                 temp=line.split()
                 at=temp[0]
                 atnosstr=temp[1]
-                while temp[1][len(temp[1])-1] == ',':
+                while atnosstr[-1] == ",":
                     line = inputfile.next()
                     temp=line.split()
                     atnosstr=atnosstr+temp[0]
+#                print "Debug:", atnosstr
                 atlist=self.atlist(atnosstr)
 
                 line = inputfile.next()
 
                 temp=line.split()
+#                print "Debug basisname (temp):",temp
                 basisname=temp[2]
                 ecpname=''
                 line = inputfile.next()
@@ -210,8 +213,12 @@ class Turbomole(logfileparser.Logfile):
 
                 self.atomlist.append( (at, basisname, ecpname, atlist))
 
-        if line[3:10]=="natoms=":
+# I have no idea what this does, so "comment" out
+#        if line[3:10]=="natoms=":
+        if 0:
+
             self.natom=int(line[10:])
+
             basistable=[]
 
             for i in range(0, self.natom, 1):
