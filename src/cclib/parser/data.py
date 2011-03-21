@@ -50,6 +50,7 @@ class ccData(object):
         scfenergies -- molecular electronic energies after SCF (Hartree-Fock, DFT) (array[1], eV)
         scftargets -- targets for convergence of the SCF (array[2])
         scfvalues -- current values for convergence of the SCF (list of arrays[2])
+        vibanharms -- vibrational anharmonicity constants (array[2], 1/cm)
         vibdisps -- cartesian displacement vectors (array[3], delta angstrom)
         vibfreqs -- vibrational frequencies (array[1], 1/cm)
         vibirs -- IR intensities (array[1], km/mol)
@@ -81,7 +82,8 @@ class ccData(object):
                           'mocoeffs', 'moenergies', 'mosyms', 'mpenergies', 'mult',
                           'natom', 'nbasis', 'nmo', 'nocoeffs',
                           'scfenergies', 'scftargets', 'scfvalues',
-                          'vibdisps', 'vibfreqs', 'vibirs', 'vibramans', 'vibsyms']
+                          'vibanharms', 'vibdisps', 'vibfreqs', 'vibirs',
+                          'vibramans', 'vibsyms']
 
         # The expected types for all supported attributes.
         self._attrtypes = { "aonames":        list,
@@ -115,6 +117,7 @@ class ccData(object):
                             "scfenergies":    numpy.ndarray,
                             "scftargets":     numpy.ndarray,
                             "scfvalues":      list,
+                            "vibanharms":     numpy.ndarray,
                             "vibdisps":       numpy.ndarray,
                             "vibfreqs":       numpy.ndarray,
                             "vibirs":         numpy.ndarray,

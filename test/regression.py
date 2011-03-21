@@ -27,6 +27,15 @@ def testGaussian_basicGaussian03_dvb_gopt_out(logfile):
     """
     assert len(logfile.homos)==1
 
+def testGaussian_Gaussian09_25DMF_HRANH_zip(logfile):
+    """Check that the anharmonicities are being parsed correctly"""
+    assert hasattr(logfile, "vibanharms"), "Does not have vibanharms"
+    anharms = logfile.vibanharms
+    N = len(logfile.vibfreqs)
+    assert 39 == N == anharms.shape[0] == anharms.shape[1]
+    assert abs(anharms[0][0] + 43.341) < 0.01
+    assert abs(anharms[N-1][N-1] + 36.481) < 0.01 
+
 def testnoparseGaussian_Gaussian09_coeffs_zip(filename):
     """This is a test for a Gaussian file with more than 999 basis functions.
 

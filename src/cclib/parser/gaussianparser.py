@@ -593,9 +593,17 @@ class Gaussian(logfileparser.Logfile):
         if line[1:14] == "Harmonic freq":
 
             self.updateprogress(inputfile, "Frequency Information", self.fupdate)
+            removeold = False
 
             # The whole block should not have any blank lines.
             while line.strip() != "":
+
+                # The line with indices
+                if line[1:15].strip() == "" and line[15:22].strip().isdigit():
+                    freqbase = int(line[15:22])
+                    if freqbase == 1 and hasattr(self, 'vibfreqs'):
+                        # This is a reparse of this information
+                        removeold = True
 
                 # Lines with symmetries and symm. indices begin with whitespace.
                 if line[1:15].strip() == "" and not line[15:22].strip().isdigit():
@@ -609,6 +617,21 @@ class Gaussian(logfileparser.Logfile):
                 
                     if not hasattr(self, 'vibfreqs'):
                         self.vibfreqs = []
+                        
+                    if removeold: # This is a reparse, so throw away the old info
+                        if hasattr(self, "vibsyms"):
+                            # We have already parsed the vibsyms so don't throw away!
+                            self.vibsyms = self.vibsyms[-len(line[15:].split()):]
+                        if hasattr(self, "vibirs"):
+                            self.vibirs = []
+                        if hasattr(self, 'vibfreqs'):
+                            self.vibfreqs = []
+                        if hasattr(self, 'vibramans'):
+                            self.vibramans = []
+                        if hasattr(self, 'vibdisps'):
+                            self.vibdisps = []
+                        removeold = False
+                        
                     freqs = [self.float(f) for f in line[15:].split()]
                     self.vibfreqs.extend(freqs)
             
@@ -982,6 +1005,25 @@ class Gaussian(logfileparser.Logfile):
 
             if not self.popregular:
                 self.nocoeffs = nocoeffs
+
+        # For FREQ=Anharm, extract anharmonicity constants
+        if line[1:40] == "X matrix of Anharmonic Constants (cm-1)":
+            Nvibs = len(self.vibfreqs)
+            self.vibanharms = numpy.zeros( (Nvibs, Nvibs), "d")
+
+            base = 0
+            colmNames = inputfile.next()
+            while base < Nvibs:
+                 
+                for i in range(Nvibs-base): # Fewer lines this time
+                    line = inputfile.next()
+                    parts = line.split()
+                    for j in range(len(parts)-1): # Some lines are longer than others
+                        k = float(parts[j+1].replace("D", "E"))
+                        self.vibanharms[base+j, i+base] = k
+                        self.vibanharms[i+base, base+j] = k
+                base += 5
+                colmNames = inputfile.next()
 
         # Pseudopotential charges.
         if line.find("Pseudopotential Parameters") > -1:
