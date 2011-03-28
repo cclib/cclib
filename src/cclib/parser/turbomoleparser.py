@@ -113,7 +113,8 @@ class Turbomole(logfileparser.Logfile):
             temp=line.split('=')
             homos=int(temp[1])
 
-        if line == "$basis\n":
+        if line[0:6] == "$basis":
+            print "Found basis"
             self.basis_lib=[]
             line = inputfile.next()
             line = inputfile.next()
@@ -144,13 +145,21 @@ class Turbomole(logfileparser.Logfile):
                     line = inputfile.next()
                 self.ecp_lib.append([atname, ecpname, ncore])
         
-        if line == "$coord\n":
+        if line[0:6] == "$coord":
+            if line[0:11] == "$coordinate":
+#                print "Breaking"
+                return
+
+#            print "Found coords"
             self.atomcoords = []
             self.atomnos = []
             atomcoords = []
             atomnos = []
 
             line = inputfile.next()
+            if line[0:5] == "$user":
+#                print "Breaking"
+                return
 
             while line[0] != "$":
                 temp = line.split()
@@ -214,8 +223,8 @@ class Turbomole(logfileparser.Logfile):
                 self.atomlist.append( (at, basisname, ecpname, atlist))
 
 # I have no idea what this does, so "comment" out
-#        if line[3:10]=="natoms=":
-        if 0:
+        if line[3:10]=="natoms=":
+#        if 0:
 
             self.natom=int(line[10:])
 
@@ -411,7 +420,7 @@ class Turbomole(logfileparser.Logfile):
                     single_mo = []
                     
                     while(len(single_mo)<self.nbasis):
-                        self.updateprogress(inputfile, "Coefficients", self.fupdate)
+                        self.updateprogress(inputfile, "Coefficients", self.cupdate)
                         title = inputfile.next()
                         lines_coeffs=self.split_molines(title)
                         single_mo.extend(lines_coeffs)
