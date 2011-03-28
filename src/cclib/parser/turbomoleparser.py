@@ -386,7 +386,7 @@ class Turbomole(logfileparser.Logfile):
                 while(title[0] == "#"):
                     title = inputfile.next()
 
-                mocoeffs = numpy.zeros((self.nbasis, self.nbasis), "d")
+#                mocoeffs = numpy.zeros((self.nbasis, self.nbasis), "d")
                 moenergies = []
                 moarray=[]
 
@@ -411,6 +411,7 @@ class Turbomole(logfileparser.Logfile):
                     single_mo = []
                     
                     while(len(single_mo)<self.nbasis):
+                        self.updateprogress(inputfile, "Coefficients", self.fupdate)
                         title = inputfile.next()
                         lines_coeffs=self.split_molines(title)
                         single_mo.extend(lines_coeffs)
@@ -418,14 +419,15 @@ class Turbomole(logfileparser.Logfile):
                     moarray.append(single_mo)
                     title = inputfile.next()
 
-                for i in range(0, len(moarray), 1):
-                    for j in range(0, self.nbasis, 1):
-                        try:
-                            mocoeffs[i][j]=moarray[i][j]
-                        except IndexError:
-                            print "Index Error in mocoeffs.", spin, i, j
-                            break
+#                for i in range(0, len(moarray), 1):
+#                    for j in range(0, self.nbasis, 1):
+#                        try:
+#                            mocoeffs[i][j]=moarray[i][j]
+#                        except IndexError:
+#                            print "Index Error in mocoeffs.", spin, i, j
+#                            break
 
+                mocoeffs = numpy.array(moarray,"d")
                 self.mocoeffs.append(mocoeffs)
                 self.moenergies.append(moenergies)
 
