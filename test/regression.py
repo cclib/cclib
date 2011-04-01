@@ -12,7 +12,7 @@ import sys
 import logging
 
 from glob import glob
-from StringIO import StringIO
+from io import StringIO
 
 from cclib.parser import ccopen
 from cclib.parser import Gaussian, GAMESS, GAMESSUK, Jaguar, ADF, Molpro, ORCA
@@ -325,25 +325,25 @@ def main():
         if not os.path.isfile(os.path.join("..", "data", x)):
             missing += 1
         elif os.path.join("..", "data", x) not in flatten(filenames):
-            print "\nERROR: The regression file %s is present, but not included in " \
-                  "the 'filenames' variable.\n\nPlease add a new glob statement." % x
+            print("\nERROR: The regression file %s is present, but not included in " \
+                  "the 'filenames' variable.\n\nPlease add a new glob statement." % x)
             sys.exit(1)       
     if missing > 0:
-        print "\nWARNING: You are missing %d regression file(s).\n" \
-              "         Run wget.sh in the ../data directory to update.\n" % missing
+        print("\nWARNING: You are missing %d regression file(s).\n" \
+              "         Run wget.sh in the ../data directory to update.\n" % missing)
         try:
             raw_input("(Press ENTER to continue or CTRL+C to exit)")
         except KeyboardInterrupt:
-            print "\n"
+            print("\n")
             sys.exit(0)
 
     failures = errors = total = 0
 
     for i in range(len(names)):
-        print "Are the %s files ccopened and parsed correctly?" % names[i]
+        print("Are the %s files ccopened and parsed correctly?" % names[i])
         for filename in filenames[i]:
             total += 1
-            print "  %s..."  % filename,
+            print("  %s..."  % filename, end=" ")
 
             # Check for tests
             test_this = test_noparse = False
@@ -360,7 +360,7 @@ def main():
                     a  = ccopen(filename)
                 except:
                     errors += 1
-                    print "ccopen error"
+                    print("ccopen error")
                 else:
                     if type(a) == type(dummyfiles[i]):
                         try:
@@ -369,38 +369,38 @@ def main():
                         except KeyboardInterrupt:
                             sys.exit(1)
                         except:
-                            print "parse error"
+                            print("parse error")
                             errors += 1
                         else:
                             if test_this:
                                 try:
                                     eval(fnname)(data) # Run the test
                                 except AssertionError:
-                                    print "test failed"
+                                    print("test failed")
                                     failures += 1
                                 else:
-                                    print "parsed and tested"
+                                    print("parsed and tested")
                             else:
-                                print "parsed"
+                                print("parsed")
                     else:
-                        print "ccopen failed"
+                        print("ccopen failed")
                         failures += 1
 
             else: # Run the 'noparse' tests (fragments of files)
                 try:
                     eval(fnname)(filename) # Run the test
                 except AssertionError:
-                    print "test failed"
+                    print("test failed")
                     failures += 1
                 except:
-                    print "parse error"
+                    print("parse error")
                     errors += 1
                 else:
-                    print "test passed"                
+                    print("test passed"                )
                 
         print
             
-    print "Total: %d   Failed: %d  Errors: %d" % (total, failures, errors)
+    print("Total: %d   Failed: %d  Errors: %d" % (total, failures, errors))
 
 if __name__=="__main__":
     if len(sys.argv)==2 and sys.argv[1]=="test":
