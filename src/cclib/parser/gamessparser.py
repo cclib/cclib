@@ -153,13 +153,13 @@ class GAMESS(logfileparser.Logfile):
         # Extract charge and multiplicity
         if line[1:19] == "CHARGE OF MOLECULE":
             self.charge = int(line.split()[-1])
-            self.mult = int(inputfile.next().split()[-1])
+            self.mult = int(next(inputfile).split()[-1])
 
         # etenergies (used only for CIS runs now)
         if "EXCITATION ENERGIES" in line and line.find("DONE WITH") < 0:
             if not hasattr(self, "etenergies"):
                 self.etenergies = []
-            header = inputfile.next().rstrip()
+            header = next(inputfile).rstrip()
             get_etosc = False
             if header.endswith("OSC. STR."):
                 # water_cis_dets.out does not have the oscillator strength
@@ -177,7 +177,7 @@ class GAMESS(logfileparser.Logfile):
                 if get_etosc:
                     etosc = float(broken[-1])
                     self.etoscs.append(etosc)
-                broken = inputfile.next().split()
+                broken = next(inputfile).split()
 
         # Detect the CI hamiltonian type, if applicable.
         # Should always be detected if CIS is done.
@@ -247,7 +247,7 @@ class GAMESS(logfileparser.Logfile):
             while line.find("STATE") >= 0:
                 broken = line.split()
                 self.etenergies.append(utils.convertor(float(broken[-2]), "eV", "cm-1"))
-                broken = inputfile.next().split()
+                broken = next(inputfile).split()
                 self.etoscs.append(float(broken[-1]))
                 sym = next(inputfile) # Not always present
                 if sym.find("SYMMETRY")>=0:
@@ -519,7 +519,7 @@ class GAMESS(logfileparser.Logfile):
             
             freqNo = next(inputfile)
             while freqNo.find("SAYVETZ") == -1:
-                freq = inputfile.next().strip().split()[1:]
+                freq = next(inputfile).strip().split()[1:]
             # May include imaginary frequencies
             #       FREQUENCY:       825.18 I    111.53       12.62       10.70        0.89
                 newfreq = []
@@ -551,7 +551,7 @@ class GAMESS(logfileparser.Logfile):
                 for j in range(len(self.atomnos)):
                     q = [ [], [], [], [], [] ]
                     for k in range(3): # x, y, z
-                        line = inputfile.next()[21:]
+                        line = next(inputfile)[21:]
                         broken = list(map(float, line.split()))
                         for l in range(len(broken)):
                             q[l].append(broken[l])
@@ -621,7 +621,7 @@ class GAMESS(logfileparser.Logfile):
                 # either the start of the next block or the start of a new atom or
                 # the end of the basis function section
                 
-                numtoadd = 1 + (shellgap / shellsize)
+                numtoadd = 1 + (shellgap // shellsize)
                 shellcounter = shellno + shellsize
                 for x in range(numtoadd):
                     self.gbasis.append(gbasis)

@@ -37,12 +37,12 @@ class myBZ2File(bz2.BZ2File):
     """Return string instead of bytes"""
     def __next__(self):
         line = super().__next__()
-        return line.decode("ascii")
+        return line.decode("ascii", "replace")
 class myGzipFile(gzip.GzipFile):
     """Return string instead of bytes"""
     def __next__(self):
         line = super().__next__()
-        return line.decode("ascii")
+        return line.decode("ascii", "replace")
 
 def openlogfile(filename):
     """Return a file object given a filename.
