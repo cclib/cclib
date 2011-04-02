@@ -108,7 +108,7 @@ class GAMESSUK(logfileparser.Logfile):
             atomcoords = []
             empty = next(inputfile)
             while not empty.startswith(stop):
-                line = inputfile.next().split() # the coordinate data
+                line = next(inputfile).split() # the coordinate data
                 atomcoords.append(list(map(float,line[3:6])))
                 self.atomnos.append(int(round(float(line[2]))))
                 while line!=empty:
@@ -161,10 +161,10 @@ class GAMESSUK(logfileparser.Logfile):
             while line.find("charge of molecule")<0:
                 line = next(inputfile)
             self.charge = int(line.split()[-1])
-            self.mult = int(inputfile.next().split()[-1])
+            self.mult = int(next(inputfile).split()[-1])
 
-            alpha = int(inputfile.next().split()[-1])-1
-            beta = int(inputfile.next().split()[-1])-1
+            alpha = int(next(inputfile).split()[-1])-1
+            beta = int(next(inputfile).split()[-1])-1
             if self.mult==1:
                 self.homos = numpy.array([alpha], "i")
             else:
@@ -184,7 +184,7 @@ class GAMESSUK(logfileparser.Logfile):
                 blank = next(inputfile)
 
                 for j in range(self.nbasis):
-                    temp = list(map(float, inputfile.next().split()[1:]))
+                    temp = list(map(float, next(inputfile).split()[1:]))
                     self.aooverlaps[j,(0+i):(len(temp)+i)] = temp
                     
                 i += len(temp)
@@ -245,9 +245,9 @@ class GAMESSUK(logfileparser.Logfile):
                 equals = next(inputfile)
                 p = [ [] for x in range(9) ]
                 for i in range(len(self.atomnos)):
-                    brokenx = list(map(float, inputfile.next()[25:].split()))
-                    brokeny = list(map(float, inputfile.next()[25:].split()))            
-                    brokenz = list(map(float, inputfile.next()[25:].split()))
+                    brokenx = list(map(float, next(inputfile)[25:].split()))
+                    brokeny = list(map(float, next(inputfile)[25:].split()))            
+                    brokenz = list(map(float, next(inputfile)[25:].split()))
                     for j,x in enumerate(list(zip(brokenx, brokeny, brokenz))):
                         p[j].append(x)
                 self.vibdisps.extend(p)
@@ -371,7 +371,7 @@ class GAMESSUK(logfileparser.Logfile):
                     line = next(inputfile)
                     # either the start of the next block or the start of a new atom or
                     # the end of the basis function section (signified by a line of equals)
-                numtoadd = 1 + (shellgap / shellsize)
+                numtoadd = 1 + (shellgap // shellsize)
                 shellcounter = shellno + shellsize
                 for x in range(numtoadd):
                     self.gbasis.append(gbasis)

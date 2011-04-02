@@ -86,7 +86,7 @@ class ORCA(logfileparser.Logfile):
             if not hasattr(self, "scfvalues"):
                 self.scfvalues = []
             dashes = next(inputfile)
-            line = inputfile.next().split()
+            line = next(inputfile).split()
             assert line[1] == "Energy"
             assert line[2] == "Delta-E"
             assert line[3] == "Max-DP"
@@ -110,7 +110,7 @@ class ORCA(logfileparser.Logfile):
                     maxDP = float(line[5])
                     rmsDP = float(line[6])
                     self.scfvalues[-1].append([deltaE, maxDP, rmsDP])
-                line = inputfile.next().split()
+                line = next(inputfile).split()
 
         # Read in values for last SCF iteration and scftargets.
         if "SCF CONVERGENCE" in line:
@@ -365,7 +365,7 @@ class ORCA(logfileparser.Logfile):
             minus = next(inputfile)
             self.etoscs = []
             for x in self.etsyms:                
-                osc = inputfile.next().split()[3]
+                osc = next(inputfile).split()[3]
                 if osc == "spin": # "spin forbidden"    
                     osc = 0
                 else:

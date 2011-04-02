@@ -394,7 +394,7 @@ class Molpro(logfileparser.Logfile):
                         self.moenergies[spin].append(moenergy)
                     line = line[31:]
                     # Each line has 10 coefficients in 10.6f format.
-                    num = len(line)/10
+                    num = len(line)//10
                     for i in range(num):
                         try:
                             coeff = float(line[10*i:10*(i+1)])
@@ -561,7 +561,7 @@ class Molpro(logfileparser.Logfile):
                         vibdisps[i][0].append(disp)
                     for i in range(self.natom*3 - 1):
                         line = next(inputfile)
-                        iatom = (i+1)/3
+                        iatom = (i+1)//3
                         for i in range(nmodes):
                             disp = float(line.split()[i+1])
                             vibdisps[i][iatom].append(disp)

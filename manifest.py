@@ -32,6 +32,6 @@ files.append(os.path.join("test", "testdata"))
 
 for file in files:
     if not os.path.isfile(file):
-        print "%s does not exist" % file
+        print("%s does not exist" % file)
 
-print >> open("MANIFEST","w"), "\n".join(files)
+print("\n".join(files), file=open("MANIFEST", "w"))

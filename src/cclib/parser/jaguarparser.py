@@ -123,7 +123,7 @@ class Jaguar(logfileparser.Logfile):
         # Extract charge and multiplicity
         if line[2:22] == "net molecular charge":
             self.charge = int(line.split()[-1])
-            self.mult = int(inputfile.next().split()[-1])
+            self.mult = int(next(inputfile).split()[-1])
 
         if line[2:24] == "start of program geopt":
             if not self.geoopt:
@@ -146,7 +146,7 @@ class Jaguar(logfileparser.Logfile):
             # quick hack for messages of the sort:
             #   ** restarting optimization from step    2 **
             # as found in regression file ptnh3_2_H2O_2_2plus.out
-            if inputfile.next().strip():
+            if next(inputfile).strip():
                 blank = next(inputfile)
             line = next(inputfile)
             values = []
@@ -228,11 +228,11 @@ class Jaguar(logfileparser.Logfile):
                     self.mosyms.append([])
                 self.mosyms[spin] = []
             
-            line = inputfile.next().split()
+            line = next(inputfile).split()
             while len(line) > 0:
                 if issyms:
-                    energies = [float(line[2*i]) for i in range(len(line)/2)]
-                    syms = [line[2*i+1] for i in range(len(line)/2)]
+                    energies = [float(line[2*i]) for i in range(len(line)//2)]
+                    syms = [line[2*i+1] for i in range(len(line)//2)]
                 else:
                     energies = [float(e) for e in line]
                 energies = [utils.convertor(e, "hartree", "eV") for e in energies]
@@ -240,7 +240,7 @@ class Jaguar(logfileparser.Logfile):
                 if issyms:
                     syms = [self.normalisesym(s) for s in syms]
                     self.mosyms[spin].extend(syms)
-                line = inputfile.next().split()
+                line = next(inputfile).split()
             
             # There should always be an extra blank line after all this.
             line = next(inputfile)
@@ -350,7 +350,7 @@ class Jaguar(logfileparser.Logfile):
                 blank = next(inputfile)
                 header = next(inputfile)
                 for j in range(i, self.nbasis):
-                    temp = list(map(float, inputfile.next().split()[1:]))
+                    temp = list(map(float, next(inputfile).split()[1:]))
                     self.aooverlaps[j, i:(i+len(temp))] = temp
                     self.aooverlaps[i:(i+len(temp)), j] = temp
             
@@ -397,19 +397,19 @@ class Jaguar(logfileparser.Logfile):
 
                 # Append the frequencies.
                 self.vibfreqs.extend(list(map(float, freqs.split()[1:])))
-                line = inputfile.next().split()
+                line = next(inputfile).split()
                 
                 # May skip symmetries (older Jaguar versions).
                 if line[0] == "symmetries":
                     if not hasattr(self, "vibsyms"):
                         self.vibsyms = []
                     self.vibsyms.extend(list(map(self.normalisesym, line[1:])))
-                    line = inputfile.next().split()                                
+                    line = next(inputfile).split()                                
                 if intensities:
                     if not hasattr(self, "vibirs"):
                         self.vibirs = []
                     self.vibirs.extend(list(map(float, line[1:])))
-                    line = inputfile.next().split()                                
+                    line = next(inputfile).split()                                
                 if forceconstants:
                     line = next(inputfile)
 

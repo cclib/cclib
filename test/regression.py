@@ -282,6 +282,7 @@ filenames = [glob(os.path.join(data, "Gaussian", "basicGaussian03", "*.out")) +
              glob(os.path.join(data, "Molpro", "basicMolpro2006", "*.out")) +
              glob(os.path.join(data, "Molpro", "Molpro2006", "*.bz2")),
 
+             glob(os.path.join(data, "ORCA", "basicORCA2.6", "*.out")) +
              glob(os.path.join(data, "ORCA", "ORCA2.8", "*.out")),
              ]
 
