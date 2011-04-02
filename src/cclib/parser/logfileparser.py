@@ -33,6 +33,16 @@ import numpy
 from . import utils
 from .data import ccData
 
+class myBZ2File(bz2.BZ2File):
+    """Return string instead of bytes"""
+    def __next__(self):
+        line = super().__next__()
+        return line.decode("ascii")
+class myGzipFile(gzip.GzipFile):
+    """Return string instead of bytes"""
+    def __next__(self):
+        line = super().__next__()
+        return line.decode("ascii")
 
 def openlogfile(filename):
     """Return a file object given a filename.
@@ -53,7 +63,7 @@ def openlogfile(filename):
         extension = os.path.splitext(filename)[1]
         
         if extension == ".gz":
-            fileobject = gzip.open(filename, "r")
+            fileobject = myGzipFile(filename, "r")
 
         elif extension == ".zip":
             zip = zipfile.ZipFile(filename, "r")
@@ -63,7 +73,7 @@ def openlogfile(filename):
         elif extension in ['.bz', '.bz2']:
             # Module 'bz2' is not always importable.
             assert bz2 != None, "ERROR: module bz2 cannot be imported"
-            fileobject = bz2.BZ2File(filename, "r")
+            fileobject = myBZ2File(filename, "r")
 
         else:
             fileobject = open(filename, "r")
