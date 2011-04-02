@@ -306,13 +306,13 @@ class ADF(logfileparser.Logfile):
             equals = next(inputfile)
             blank = next(inputfile)
             line = next(inputfile)
-            temp = inputfile.next().strip().split()
+            temp = next(inputfile).strip().split()
             self.scfenergies.append(utils.convertor(float(temp[-1]), "hartree", "eV"))
             for i in range(6):
                 line = next(inputfile)
             values = []
             for i in range(5):
-                temp = inputfile.next().split()
+                temp = next(inputfile).split()
                 self.geotargets[i] = float(temp[-3])
                 values.append(float(temp[-4]))
             self.geovalues.append(values)
@@ -516,10 +516,10 @@ class ADF(logfileparser.Logfile):
                 minus = next(inputfile)
                 p = [ [], [], [] ]
                 for i in range(len(self.atomnos)):
-                    broken = list(map(float, inputfile.next().split()[1:]))
+                    broken = list(map(float, next(inputfile).split()[1:]))
                     for j in range(0, len(broken), 3):
-                        p[j/3].append(broken[j:j+3])
-                self.vibdisps.extend(p[:(len(broken)/3)])
+                        p[j//3].append(broken[j:j+3])
+                self.vibdisps.extend(p[:(len(broken)//3)])
                 blank = next(inputfile)
                 blank = next(inputfile)
                 freqs = next(inputfile)
@@ -534,12 +534,12 @@ class ADF(logfileparser.Logfile):
             self.vibfreqs = []
             for i in range(8):
                 line = next(inputfile)
-            line = inputfile.next().strip()
+            line = next(inputfile).strip()
             while line:
                 temp = line.split()
                 self.vibfreqs.append(float(temp[0]))                    
                 self.vibirs.append(float(temp[2])) # or is it temp[1]?
-                line = inputfile.next().strip()
+                line = next(inputfile).strip()
             self.vibfreqs = numpy.array(self.vibfreqs, "d")
             self.vibirs = numpy.array(self.vibirs, "d")
             if hasattr(self, "vibramans"):
@@ -773,7 +773,7 @@ class ADF(logfileparser.Logfile):
             next(inputfile); next(inputfile); next(inputfile)
             next(inputfile); next(inputfile)
 
-            symm = self.normalisesym(inputfile.next().split()[1])
+            symm = self.normalisesym(next(inputfile).split()[1])
 
             # move forward in file past some more txt and header info
 
