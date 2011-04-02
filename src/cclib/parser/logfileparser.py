@@ -6,7 +6,8 @@ and licensed under the LGPL (http://www.gnu.org/copyleft/lgpl.html).
 __revision__ = "$Revision$"
 
 
-import StringIO
+import io
+import collections
 
 try:
     import bz2 # New in Python 2.3.
@@ -29,8 +30,8 @@ import zipfile
 
 import numpy
 
-import utils
-from data import ccData
+from . import utils
+from .data import ccData
 
 
 def openlogfile(filename):
@@ -47,7 +48,7 @@ def openlogfile(filename):
     """
 
     # If there is a single string argument given.
-    if type(filename) in [str, unicode]:
+    if type(filename) in [str, str]:
 
         extension = os.path.splitext(filename)[1]
         
@@ -57,7 +58,7 @@ def openlogfile(filename):
         elif extension == ".zip":
             zip = zipfile.ZipFile(filename, "r")
             assert len(zip.namelist()) == 1, "ERROR: Zip file contains more than 1 file"
-            fileobject = StringIO.StringIO(zip.read(zip.namelist()[0]))
+            fileobject = io.StringIO(zip.read(zip.namelist()[0]).decode("ascii"))
 
         elif extension in ['.bz', '.bz2']:
             # Module 'bz2' is not always importable.
@@ -103,10 +104,10 @@ class Logfile(object):
         # Set the filename to source if it is a string or a list of filenames.
         # In the case of an input stream, set some arbitrary name and the stream.
         # Elsewise, raise an Exception.
-        if isinstance(source,types.StringTypes):
+        if isinstance(source,str):
             self.filename = source
             self.isstream = False
-        elif isinstance(source,list) and all([isinstance(s,types.StringTypes) for s in source]):
+        elif isinstance(source,list) and all([isinstance(s,str) for s in source]):
             self.filename = source
             self.isstream = False
         elif hasattr(source, "read"):
@@ -162,13 +163,13 @@ class Logfile(object):
         # Check that the sub-class has an extract attribute,
         #  that is callable with the proper number of arguemnts.
         if not hasattr(self, "extract"):
-            raise AttributeError, "Class %s has no extract() method." %self.__class__.__name__
+            raise AttributeError("Class %s has no extract() method." %self.__class__.__name__)
             return -1
-        if not callable(self.extract):
-            raise AttributeError, "Method %s._extract not callable." %self.__class__.__name__
+        if not isinstance(self.extract, collections.Callable):
+            raise AttributeError("Method %s._extract not callable." %self.__class__.__name__)
             return -1
         if len(inspect.getargspec(self.extract)[0]) != 3:
-            raise AttributeError, "Method %s._extract takes wrong number of arguments." %self.__class__.__name__
+            raise AttributeError("Method %s._extract takes wrong number of arguments." %self.__class__.__name__)
             return -1
 
         # Save the current list of attributes to keep after parsing.
@@ -254,7 +255,7 @@ class Logfile(object):
         # Delete all temporary attributes (including cclib attributes).
         # All attributes should have been moved to a data object,
         #   which will be returned.
-        for attr in self.__dict__.keys():
+        for attr in list(self.__dict__.keys()):
             if not attr in _nodelete:
                 self.__delattr__(attr)
 

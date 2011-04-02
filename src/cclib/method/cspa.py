@@ -9,7 +9,7 @@ import random # For sometimes running the progress updater
 
 import numpy
 
-from population import Population
+from .population import Population
 
 
 class CSPA(Population):

@@ -8,15 +8,15 @@ __revision__ = "$Revision: 860 $"
 
 import types
 
-import logfileparser
+from . import logfileparser
 
-import adfparser
-import gamessparser
-import gamessukparser
-import gaussianparser
-import jaguarparser
-import molproparser
-import orcaparser
+from . import adfparser
+from . import gamessparser
+from . import gamessukparser
+from . import gaussianparser
+from . import jaguarparser
+from . import molproparser
+from . import orcaparser
 
 
 def ccopen(source, *args, **kargs):
@@ -33,12 +33,13 @@ def ccopen(source, *args, **kargs):
     filetype = None
 
     # Try to open the logfile(s), using openlogfile.
-    if isinstance(source,types.StringTypes) or \
-       isinstance(source,list) and all([isinstance(s,types.StringTypes) for s in source]):
+    if isinstance(source,str) or \
+       isinstance(source,list) and all([isinstance(s,str) for s in source]):
         try:
             inputfile = logfileparser.openlogfile(source)
-        except IOError, (errno, strerror):
-            print "I/O error %s (%s): %s" %(errno, source, strerror)
+        except IOError as xxx_todo_changeme:
+            (errno, strerror) = xxx_todo_changeme.args
+            print(("I/O error %s (%s): %s" %(errno, source, strerror)))
             return None
         isstream = False
     elif hasattr(source, "read"):
@@ -97,5 +98,5 @@ def ccopen(source, *args, **kargs):
     try:
         return filetype(source, *args, **kargs)
     except TypeError:
-        print "Log file type not identified."
+        print("Log file type not identified.")
         raise

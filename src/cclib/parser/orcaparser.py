@@ -10,8 +10,8 @@ import re
 
 import numpy
 
-import logfileparser
-import utils
+from . import logfileparser
+from . import utils
 
 
 class ORCA(logfileparser.Logfile):
@@ -46,7 +46,7 @@ class ORCA(logfileparser.Logfile):
     def before_parsing(self):
 
         # Used to index self.scftargets[].
-        SCFRMS, SCFMAX, SCFENERGY = range(3)
+        SCFRMS, SCFMAX, SCFENERGY = list(range(3))
         # Flag that indicates whether it has reached the end of a geoopt.
         self.optfinished = False
         # Flag for identifying Coupled Cluster runs.
@@ -67,25 +67,25 @@ class ORCA(logfileparser.Logfile):
         if line[1:13] == "Total Charge":
 #get charge and multiplicity info
             self.charge = int(line.split()[-1])
-            line = inputfile.next()
+            line = next(inputfile)
             self.mult = int(line.split()[-1])
 
         if line[25:50] == "Geometry Optimization Run":
 #get geotarget info
-            line = inputfile.next()
+            line = next(inputfile)
             while line[0:23] != "Convergence Tolerances:":
-                line = inputfile.next()
+                line = next(inputfile)
 
             self.geotargets = numpy.zeros((5,), "d")
             for i in range(5):
-                line = inputfile.next()
+                line = next(inputfile)
                 self.geotargets[i] = float(line.split()[-2])
 
         # Read in scfvalues.
         if "SCF ITERATIONS" in line:
             if not hasattr(self, "scfvalues"):
                 self.scfvalues = []
-            dashes = inputfile.next()
+            dashes = next(inputfile)
             line = inputfile.next().split()
             assert line[1] == "Energy"
             assert line[2] == "Delta-E"
@@ -118,21 +118,21 @@ class ORCA(logfileparser.Logfile):
                 self.scfvalues = []
             if not hasattr(self, "scftargets"):
                 self.scftargets = []
-            dashes = inputfile.next()
-            blank = inputfile.next()
-            line = inputfile.next()
+            dashes = next(inputfile)
+            blank = next(inputfile)
+            line = next(inputfile)
             assert "Last Energy change" in line
             deltaE_value = float(line.split()[4])
             deltaE_target = float(line.split()[7])
-            line = inputfile.next()
+            line = next(inputfile)
             assert "Last MAX-Density change" in line
             maxDP_value = float(line.split()[4])
             maxDP_target = float(line.split()[7])
-            line = inputfile.next()
+            line = next(inputfile)
             assert "Last RMS-Density change" in line
             rmsDP_value = float(line.split()[4])
             rmsDP_target = float(line.split()[7])
-            line = inputfile.next()
+            line = next(inputfile)
             # Non-DIIS convergers do not contain this line.
             # assert "Last DIIS Error" in line
             self.scfvalues[-1].append([deltaE_value,maxDP_value,rmsDP_value])
@@ -142,9 +142,9 @@ class ORCA(logfileparser.Logfile):
         if "TOTAL SCF ENERGY" in line:
             if not hasattr(self, "scfenergies"):
                 self.scfenergies = []
-            dashes = inputfile.next()
-            blank = inputfile.next()
-            line = inputfile.next()
+            dashes = next(inputfile)
+            blank = next(inputfile)
+            line = next(inputfile)
             if line[:12] == "Total Energy":
                 energy = float(line[50:67])
                 self.scfenergies.append(energy)
@@ -155,36 +155,36 @@ class ORCA(logfileparser.Logfile):
                 self.geovalues = [ ]
             
             newlist = []
-            headers = inputfile.next()
-            dashes = inputfile.next()
+            headers = next(inputfile)
+            dashes = next(inputfile)
             
             #check if energy change is present (steps > 1)
-            line = inputfile.next()
+            line = next(inputfile)
             if line.find("Energy change") > 0:
                 newlist.append(float(line.split()[2]))
-                line = inputfile.next()
+                line = next(inputfile)
             else:
                 newlist.append(0.0)
 
             #get rest of info
             for i in range(4):
                 newlist.append(float(line.split()[2]))
-                line = inputfile.next()
+                line = next(inputfile)
             
             self.geovalues.append(newlist)
 
         if line[0:21] == "CARTESIAN COORDINATES" and not hasattr(self, "atomcoords"):
 #if not an optimization, determine structure used
-            dashes = inputfile.next()
+            dashes = next(inputfile)
             
             atomnos = []
             atomcoords = []
-            line = inputfile.next()
+            line = next(inputfile)
             while len(line) > 1:
                 broken = line.split()
                 atomnos.append(self.table.number[broken[0]])
-                atomcoords.append(map(float, broken[1:4]))
-                line = inputfile.next()
+                atomcoords.append(list(map(float, broken[1:4])))
+                line = next(inputfile)
 
             self.atomcoords = [atomcoords]
             if not hasattr(self, "atomnos"):
@@ -193,10 +193,10 @@ class ORCA(logfileparser.Logfile):
                 
         if line[26:53] == "GEOMETRY OPTIMIZATION CYCLE":
 #parse geometry coords
-            stars = inputfile.next()
-            dashes = inputfile.next()
-            text = inputfile.next()
-            dashes = inputfile.next()
+            stars = next(inputfile)
+            dashes = next(inputfile)
+            text = next(inputfile)
+            dashes = next(inputfile)
            
             if not hasattr(self,"atomcoords"):
                 self.atomcoords = []
@@ -204,88 +204,88 @@ class ORCA(logfileparser.Logfile):
             atomnos = []
             atomcoords = []
             for i in range(self.natom):
-                line = inputfile.next()
+                line = next(inputfile)
                 broken = line.split()
                 atomnos.append(self.table.number[broken[0]])
-                atomcoords.append(map(float, broken[1:4]))
+                atomcoords.append(list(map(float, broken[1:4])))
             
             self.atomcoords.append(atomcoords)
             if not hasattr(self, "atomnos"):
                 self.atomnos = numpy.array(atomnos,'i')
 
         if line[21:68] == "FINAL ENERGY EVALUATION AT THE STATIONARY POINT":
-            text = inputfile.next()
+            text = next(inputfile)
             broken = text.split()
             assert int(broken[2]) == len(self.atomcoords)
-            stars = inputfile.next()
-            dashes = inputfile.next()
-            text = inputfile.next()
-            dashes = inputfile.next()
+            stars = next(inputfile)
+            dashes = next(inputfile)
+            text = next(inputfile)
+            dashes = next(inputfile)
 
             atomcoords = []
             for i in range(self.natom):
-                line = inputfile.next()
+                line = next(inputfile)
                 broken = line.split()
-                atomcoords.append(map(float, broken[1:4]))
+                atomcoords.append(list(map(float, broken[1:4])))
 
             self.atomcoords.append(atomcoords)
 
         if line[0:16] == "ORBITAL ENERGIES":
 #parser orbial energy information
-            dashes = inputfile.next()
-            text = inputfile.next()
-            text = inputfile.next()
+            dashes = next(inputfile)
+            text = next(inputfile)
+            text = next(inputfile)
 
             self.moenergies = [[]]
             self.homos = [[0]]
 
-            line = inputfile.next()
+            line = next(inputfile)
             while len(line) > 20: #restricted calcs are terminated by ------
                 info = line.split()
                 self.moenergies[0].append(float(info[3]))
                 if float(info[1]) > 0.00: #might be 1 or 2, depending on restricted-ness
                     self.homos[0] = int(info[0])
-                line = inputfile.next()
+                line = next(inputfile)
 
-            line = inputfile.next()
+            line = next(inputfile)
 
             #handle beta orbitals
             if line[17:35] == "SPIN DOWN ORBITALS":
-                text = inputfile.next()
+                text = next(inputfile)
 
                 self.moenergies.append([])
                 self.homos.append(0)
 
-                line = inputfile.next()
+                line = next(inputfile)
                 while len(line) > 20: #actually terminated by ------
                     info = line.split()
                     self.moenergies[1].append(float(info[3]))
                     if float(info[1]) == 1.00:
                         self.homos[1] = int(info[0])
-                    line = inputfile.next()
+                    line = next(inputfile)
 
         if line[1:32] == "# of contracted basis functions":
             self.nbasis = int(line.split()[-1])
 
         if line[0:14] == "OVERLAP MATRIX":
 #parser the overlap matrix
-            dashes = inputfile.next()
+            dashes = next(inputfile)
 
             self.aooverlaps = numpy.zeros( (self.nbasis, self.nbasis), "d")
             for i in range(0, self.nbasis, 6):
-                header = inputfile.next()
+                header = next(inputfile)
                 size = len(header.split())
 
                 for j in range(self.nbasis):
-                    line = inputfile.next()
+                    line = next(inputfile)
                     broken = line.split()
-                    self.aooverlaps[j, i:i+size] = map(float, broken[1:size+1])
+                    self.aooverlaps[j, i:i+size] = list(map(float, broken[1:size+1]))
 
         # Molecular orbital coefficients.
         # This is also where atombasis is parsed.
         if line[0:18] == "MOLECULAR ORBITALS":
 
-            dashses = inputfile.next()
+            dashses = next(inputfile)
 
             mocoeffs = [ numpy.zeros((self.nbasis, self.nbasis), "d") ]
             self.aonames = []
@@ -296,19 +296,19 @@ class ORCA(logfileparser.Logfile):
             for spin in range(len(self.moenergies)):
 
                 if spin == 1:
-                    blank = inputfile.next()
+                    blank = next(inputfile)
                     mocoeffs.append(numpy.zeros((self.nbasis, self.nbasis), "d"))
 
                 for i in range(0, self.nbasis, 6):
-                    numbers = inputfile.next()
-                    energies = inputfile.next()
-                    occs = inputfile.next()
-                    dashes = inputfile.next()
+                    numbers = next(inputfile)
+                    energies = next(inputfile)
+                    occs = next(inputfile)
+                    dashes = next(inputfile)
                     broken = dashes.split()
                     size = len(broken)
 
                     for j in range(self.nbasis):
-                        line = inputfile.next()
+                        line = next(inputfile)
                         broken = line.split()
 
                         #only need this on the first time through
@@ -336,15 +336,15 @@ class ORCA(logfileparser.Logfile):
                 self.etenergies = []
                 self.etsyms = []
             lookup = {'a':0, 'b':1}
-            line = inputfile.next()
+            line = next(inputfile)
             while line.find("STATE") < 0:
-                line = inputfile.next()
+                line = next(inputfile)
             # Contains STATE or is blank
             while line.find("STATE") >= 0:
                 broken = line.split()
                 self.etenergies.append(float(broken[-2]))
                 self.etsyms.append(sym)
-                line = inputfile.next()
+                line = next(inputfile)
                 sec = []
                 # Contains SEC or is blank
                 while line.strip():
@@ -354,15 +354,15 @@ class ORCA(logfileparser.Logfile):
                     end = (int(end[:-1]), lookup[end[-1]])
                     contrib = float(line[35:47].strip())
                     sec.append([start, end, contrib])
-                    line = inputfile.next()
+                    line = next(inputfile)
                 self.etsecs.append(sec)
-                line = inputfile.next()
+                line = next(inputfile)
 
         if line[25:44] == "ABSORPTION SPECTRUM":
-            minus = inputfile.next()
-            header = inputfile.next()
-            header = inputfile.next()
-            minus = inputfile.next()
+            minus = next(inputfile)
+            header = next(inputfile)
+            header = next(inputfile)
+            minus = next(inputfile)
             self.etoscs = []
             for x in self.etsyms:                
                 osc = inputfile.next().split()[3]
@@ -374,44 +374,44 @@ class ORCA(logfileparser.Logfile):
                 
         if line[0:23] == "VIBRATIONAL FREQUENCIES":
 #parse the vibrational frequencies
-            dashes = inputfile.next()
-            blank = inputfile.next()
+            dashes = next(inputfile)
+            blank = next(inputfile)
 
             self.vibfreqs = numpy.zeros((3 * self.natom,),"d")
 
             for i in range(3 * self.natom):
-                line = inputfile.next()
+                line = next(inputfile)
                 self.vibfreqs[i] = float(line.split()[1])
 
         if line[0:11] == "IR SPECTRUM":
 #parse ir intensities
-            dashes = inputfile.next()
-            blank = inputfile.next()
-            header = inputfile.next()
-            dashes = inputfile.next()
+            dashes = next(inputfile)
+            blank = next(inputfile)
+            header = next(inputfile)
+            dashes = next(inputfile)
 
             self.vibirs = numpy.zeros((3 * self.natom,),"d")
 
-            line = inputfile.next()
+            line = next(inputfile)
             while len(line) > 2:
                 num = int(line[0:4])
                 self.vibirs[num] = float(line.split()[2])
-                line = inputfile.next()
+                line = next(inputfile)
 
         if line[0:14] == "RAMAN SPECTRUM":
 #parser raman intensities
-            dashes = inputfile.next()
-            blank = inputfile.next()
-            header = inputfile.next()
-            dashes = inputfile.next()
+            dashes = next(inputfile)
+            blank = next(inputfile)
+            header = next(inputfile)
+            dashes = next(inputfile)
 
             self.vibramans = numpy.zeros((3 * self.natom,),"d")
 
-            line = inputfile.next()
+            line = next(inputfile)
             while len(line) > 2:
                 num = int(line[0:4])
                 self.vibramans[num] = float(line.split()[2])
-                line = inputfile.next()
+                line = next(inputfile)
 
 
 

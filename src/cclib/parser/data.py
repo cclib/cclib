@@ -4,7 +4,7 @@ and licensed under the LGPL (http://www.gnu.org/copyleft/lgpl.html).
 """
 
 
-import cPickle as pickle
+import pickle as pickle
 import os
 import sys
 
@@ -137,7 +137,7 @@ class ccData(object):
     def listify(self):
         """Converts all attributes that are arrays or lists of arrays to lists."""
         
-        for k, v in self._attrtypes.iteritems():
+        for k, v in list(self._attrtypes.items()):
             if hasattr(self, k):
                 if v == numpy.ndarray:
                     setattr(self, k, getattr(self, k).tolist())
@@ -147,7 +147,7 @@ class ccData(object):
     def arrayify(self):
         """Converts appropriate attributes to arrays or lists of arrays."""
         
-        for k, v in self._attrtypes.iteritems():
+        for k, v in list(self._attrtypes.items()):
             if hasattr(self, k):
                 precision = 'd'
                 if k in self._intarrays:
@@ -186,7 +186,7 @@ class ccData(object):
         """
     
         if type(attributes) is not dict:
-            raise TypeError, "attributes must be in a dictionary"
+            raise TypeError("attributes must be in a dictionary")
     
         valid = [a for a in attributes if a in self._attrlist]
         invalid = [a for a in attributes if a not in self._attrlist]

@@ -9,7 +9,7 @@ import random # For sometimes running the progress updater
 
 import numpy
 
-from fragments import FragmentAnalysis
+from .fragments import FragmentAnalysis
 
 
 class CDA(FragmentAnalysis):
