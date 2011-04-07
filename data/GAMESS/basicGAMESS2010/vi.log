@@ -1,0 +1,9 @@
+----- GAMESS execution script -----
+This job is running on host venus
+under operating system Linux at Do 7. Apr 09:55:25 CEST 2011
+Available scratch disk space (Kbyte units) at beginning of the job is
+Dateisystem          1K‐Blöcke   Benutzt Verfügbar Ben% Eingehängt auf
+/dev/sda4             40313996  17931020  20335092  47% /
+Input file vi.inp does not exist.
+This job expected the input file to be in directory /home/xaverw/rechnungen/gamess/dvb-cclib
+Please fix your file name problem, and resubmit.
