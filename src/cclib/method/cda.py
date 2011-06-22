@@ -77,6 +77,12 @@ class CDA(FragmentAnalysis):
             else:
                 homob = fragments[1].homos[0]
 
+            print "handling spin unrestricted"
+            if spin == 0:
+                fooverlaps = self.fooverlaps
+            elif spin == 1 and hasattr(self, "fooverlaps2"):
+                fooverlaps = self.fooverlaps2
+
             offset = fragments[0].nbasis
 
             self.logger.info("Creating donations, bdonations, and repulsions: array[]")
@@ -91,22 +97,22 @@ class CDA(FragmentAnalysis):
                 for k in range(0, homoa + 1):
                     for n in range(offset + homob + 1, self.data.nbasis):
                         donations[spin][i] += 2 * occs * self.mocoeffs[spin][i,k] \
-                                                * self.mocoeffs[spin][i,n] * self.fooverlaps[k][n]
+                                                * self.mocoeffs[spin][i,n] * fooverlaps[k][n]
 
                 for l in range(offset, offset + homob + 1):
                     for m in range(homoa + 1, offset):
                         bdonations[spin][i] += 2 * occs * self.mocoeffs[spin][i,l] \
-                                                * self.mocoeffs[spin][i,m] * self.fooverlaps[l][m]
+                                                * self.mocoeffs[spin][i,m] * fooverlaps[l][m]
 
                 for k in range(0, homoa + 1):
                     for m in range(offset, offset+homob + 1):
                         repulsions[spin][i] += 2 * occs * self.mocoeffs[spin][i,k] \
-                                                * self.mocoeffs[spin][i, m] * self.fooverlaps[k][m]
+                                                * self.mocoeffs[spin][i, m] * fooverlaps[k][m]
 
                 for m in range(homoa + 1, offset):
                     for n in range(offset + homob + 1, self.data.nbasis):
                         residuals[spin][i] += 2 * occs * self.mocoeffs[spin][i,m] \
-                                                * self.mocoeffs[spin][i, n] * self.fooverlaps[m][n]
+                                                * self.mocoeffs[spin][i, n] * fooverlaps[m][n]
 
                 step += 1
                 if self.progress and random.random() < cupdate:
