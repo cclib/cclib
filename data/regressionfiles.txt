@@ -51,6 +51,7 @@ GAMESS-UK/GAMESS-UK7.0/mg10.out.gz
 GAMESS-UK/GAMESS-UK7.0/pyridine2_21m10r.out.gz
 GAMESS-UK/GAMESS-UK7.0/mg10.out.gz
 GAMESS-UK/GAMESS-UK7.0/pyridine.out.gz
+Gaussian/Gaussian09/di-iodophenyl.log.gz
 Gaussian/Gaussian09/coeffs.zip
 Gaussian/Gaussian09/OPT_td.zip
 Gaussian/Gaussian09/OPT_td_g09.zip
