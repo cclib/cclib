@@ -508,13 +508,20 @@ class Gaussian(logfileparser.Logfile):
                     else:
                         self.homos = numpy.array([HOMO], "i")
 
+                # Convert to floats and append to moenergies, but sometimes Gaussian
+                #  doesn't print correctly so test for ValueError (bug 1756789).
                 part = line[28:]
                 i = 0
                 while i*10+4 < len(part):
-                    x = part[i*10:(i+1)*10]
-                    self.moenergies[0].append(utils.convertor(self.float(x), "hartree", "eV"))
+                    s = part[i*10:(i+1)*10]
+                    try:
+                        x = self.float(s)
+                    except ValueError:
+                        x = numpy.nan
+                    self.moenergies[0].append(utils.convertor(x, "hartree", "eV"))
                     i += 1
                 line = inputfile.next()
+
             # If, at this point, self.homos is unset, then there were not
             # any alpha virtual orbitals
             if not hasattr(self, "homos"):
