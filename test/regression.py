@@ -27,6 +27,15 @@ def testGaussian_basicGaussian03_dvb_gopt_out(logfile):
     """
     assert len(logfile.homos)==1
 
+def testGaussian_Gaussian03_DCV4T_C60_start_zip(logfile):
+    """This is a test for a very large Gaussian file with > 99 atoms
+
+    The log file is too big, so we are just including the start. Previously
+    parsing failed in the pseudopotential section"""
+
+    assert len(logfile.coreelectrons) == 102
+    assert logfile.coreelectrons[101] == 2
+
 def testGaussian_Gaussian09_25DMF_HRANH_zip(logfile):
     """Check that the anharmonicities are being parsed correctly"""
     assert hasattr(logfile, "vibanharms"), "Does not have vibanharms"

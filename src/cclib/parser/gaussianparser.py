@@ -1054,13 +1054,16 @@ class Gaussian(logfileparser.Logfile):
 # Centers:   1
 # Centers:  16
 # Centers:  21 24
+# Centers:  99100101102
 #    1         44           16                                                                      -4.012684 -0.696698  0.006750
 #                                      F and up 
 #                                                     0      554.3796303       -0.05152700                
 
             centers = []
             while line.find("Centers:") >= 0:
-                centers.extend(map(int, line.split()[1:]))
+                temp = line[10:]
+                for i in range(0, len(temp)-3, 3):
+                    centers.append(int(temp[i:i+3]))
                 line = inputfile.next()
             centers.sort() # Not always in increasing order
             
