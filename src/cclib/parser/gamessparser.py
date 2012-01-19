@@ -434,8 +434,11 @@ class GAMESS(logfileparser.Logfile):
                 line = inputfile.next()
             self.scfvalues.append(values)
 
-        if line.find("NORMAL COORDINATE ANALYSIS IN THE HARMONIC APPROXIMATION") >= 0:
-        # GAMESS has...
+        # Extract normal coordinate analysis, including vibrational frequencies (vibfreq),
+        # IT intensities (vibirs) and displacements (vibdisps).
+        #
+        # This section typically looks like the following in GAMESS-US:
+        #
         # MODES 1 TO 6 ARE TAKEN AS ROTATIONS AND TRANSLATIONS.
         #
         #     FREQUENCIES IN CM**-1, IR INTENSITIES IN DEBYE**2/AMU-ANGSTROM**2,
@@ -445,9 +448,9 @@ class GAMESS(logfileparser.Logfile):
         #       FREQUENCY:        52.49       41.45       17.61        9.23       10.61  
         #    REDUCED MASS:      3.92418     3.77048     5.43419     6.44636     5.50693
         #    IR INTENSITY:      0.00013     0.00001     0.00004     0.00000     0.00003
-
+        #
         # ...or in the case of a numerical Hessian job...
-
+        #
         # MODES 1 TO 5 ARE TAKEN AS ROTATIONS AND TRANSLATIONS.
         #
         #     FREQUENCIES IN CM**-1, IR INTENSITIES IN DEBYE**2/AMU-ANGSTROM**2,
@@ -456,8 +459,7 @@ class GAMESS(logfileparser.Logfile):
         #                          1           2           3           4           5
         #       FREQUENCY:         0.05        0.03        0.03       30.89       30.94  
         #    REDUCED MASS:      8.50125     8.50137     8.50136     1.06709     1.06709
-
-        
+        #       
         # whereas PC-GAMESS has...
         # MODES 1 TO 6 ARE TAKEN AS ROTATIONS AND TRANSLATIONS.
         #
@@ -466,7 +468,7 @@ class GAMESS(logfileparser.Logfile):
         #                          1           2           3           4           5
         #       FREQUENCY:         5.89        1.46        0.01        0.01        0.01  
         #    IR INTENSITY:      0.00000     0.00000     0.00000     0.00000     0.00000
-        
+        #
         # If Raman is present we have (for PC-GAMESS)...
         # MODES 1 TO 6 ARE TAKEN AS ROTATIONS AND TRANSLATIONS.
         #
@@ -478,35 +480,35 @@ class GAMESS(logfileparser.Logfile):
         #    IR INTENSITY:      0.00000     0.00000     0.00000     0.00000     0.00000
         # RAMAN INTENSITY:       12.675       1.828       0.000       0.000       0.000
         #  DEPOLARIZATION:        0.750       0.750       0.124       0.009       0.750
-
-        # If PC-GAMESS has not reached the stationary point we have
-        # MODES 1 TO 5 ARE TAKEN AS ROTATIONS AND TRANSLATIONS.
         #
-        #     FREQUENCIES IN CM**-1, IR INTENSITIES IN DEBYE**2/AMU-ANGSTROM**2
+        # If GAMESS-US or PC-GAMESS has not reached the stationary point we have
+        # and additional warning, repeated twice, like so (see n_water.log for an example):
         #
         #     *******************************************************
         #     * THIS IS NOT A STATIONARY POINT ON THE MOLECULAR PES *
         #     *     THE VIBRATIONAL ANALYSIS IS NOT VALID !!!       *
         #     *******************************************************
         #
-        #                          1           2           3           4           5
-        
-        # MODES 2 TO 7 ARE TAKEN AS ROTATIONS AND TRANSLATIONS.
-
+        if line.find("NORMAL COORDINATE ANALYSIS IN THE HARMONIC APPROXIMATION") >= 0:
+ 
             self.vibfreqs = []
             self.vibirs = []
             self.vibdisps = []
 
             # Need to get to the modes line
+            # Also, pass warning to logger if it is there
             warning = False
             while line.find("MODES") == -1:
                 line = inputfile.next()
                 if line.find("THIS IS NOT A STATIONARY POINT")>=0:
                     warning = True
+                    self.logger.warning("This is not a stationary point on the molecular"
+                                        "PES. The vibrational analysis is not valid.")
             startrot = int(line.split()[1])
             endrot = int(line.split()[3])
             blank = inputfile.next()
 
+            # This is to skip the output associated with symmetry analysis, fixes bug #3476063
             line = inputfile.next()
             if "ANALYZING SYMMETRY OF NORMAL MODES" in line:
                 blank = inputfile.next()
@@ -514,21 +516,21 @@ class GAMESS(logfileparser.Logfile):
                 while line != blank:
                     line = inputfile.next()
 
-            line = inputfile.next() # FREQUENCIES, etc.
+            # Skip over FREQUENCIES, etc. and get past the second warning
+            line = inputfile.next()
             while line != blank:
                 line = inputfile.next()
-            if warning: # Get past the second warning
+            if warning:
                 line = inputfile.next()
                 while line!= blank:
                     line = inputfile.next()
-                self.logger.warning("This is not a stationary point on the molecular"
-                                    "PES. The vibrational analysis is not valid.")
             
             freqNo = inputfile.next()
             while freqNo.find("SAYVETZ") == -1:
+
+                # Note: there may be imaginary frequencies like this:
+                #       FREQUENCY:       825.18 I    111.53       12.62       10.70        0.89
                 freq = inputfile.next().strip().split()[1:]
-           # May include imaginary frequencies
-            #       FREQUENCY:       825.18 I    111.53       12.62       10.70        0.89
                 newfreq = []
                 for i, x in enumerate(freq):
                     if x!="I":
@@ -537,12 +539,17 @@ class GAMESS(logfileparser.Logfile):
                         newfreq[-1] = -newfreq[-1]
                 self.vibfreqs.extend(newfreq)
                 line = inputfile.next()
-                if line.find("SYMMETRY") >= 0: # skip the symmetry (not always present)
+
+                # Skip the symmetry (appears in newer versions), fixes bug #3476063
+                if line.find("SYMMETRY") >= 0:
                     line = inputfile.next()
-                if line.find("REDUCED") >= 0: # skip the reduced mass (not always present)
+
+                # Skip the reduced mass (not always present)
+                if line.find("REDUCED") >= 0:
                     line = inputfile.next()
+
+                # Not present if a numerical Hessian calculation
                 if line.find("IR INTENSITY") >= 0:
-                    # Not present if a numerical Hessian calculation
                     irIntensity = map(float, line.strip().split()[2:])
                     self.vibirs.extend([utils.convertor(x, "Debye^2/amu-Angstrom^2", "km/mol") for x in irIntensity])
                     line = inputfile.next()
@@ -573,6 +580,7 @@ class GAMESS(logfileparser.Logfile):
                     line = inputfile.next()
                 blank = inputfile.next()
                 freqNo = inputfile.next()
+
             # Exclude rotations and translations
             self.vibfreqs = numpy.array(self.vibfreqs[:startrot-1]+self.vibfreqs[endrot:], "d")
             self.vibirs = numpy.array(self.vibirs[:startrot-1]+self.vibirs[endrot:], "d")
