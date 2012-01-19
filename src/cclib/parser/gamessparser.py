@@ -507,6 +507,13 @@ class GAMESS(logfileparser.Logfile):
             endrot = int(line.split()[3])
             blank = inputfile.next()
 
+            line = inputfile.next()
+            if "ANALYZING SYMMETRY OF NORMAL MODES" in line:
+                blank = inputfile.next()
+                line = inputfile.next()
+                while line != blank:
+                    line = inputfile.next()
+
             line = inputfile.next() # FREQUENCIES, etc.
             while line != blank:
                 line = inputfile.next()
@@ -520,7 +527,7 @@ class GAMESS(logfileparser.Logfile):
             freqNo = inputfile.next()
             while freqNo.find("SAYVETZ") == -1:
                 freq = inputfile.next().strip().split()[1:]
-            # May include imaginary frequencies
+           # May include imaginary frequencies
             #       FREQUENCY:       825.18 I    111.53       12.62       10.70        0.89
                 newfreq = []
                 for i, x in enumerate(freq):
@@ -530,6 +537,8 @@ class GAMESS(logfileparser.Logfile):
                         newfreq[-1] = -newfreq[-1]
                 self.vibfreqs.extend(newfreq)
                 line = inputfile.next()
+                if line.find("SYMMETRY") >= 0: # skip the symmetry (not always present)
+                    line = inputfile.next()
                 if line.find("REDUCED") >= 0: # skip the reduced mass (not always present)
                     line = inputfile.next()
                 if line.find("IR INTENSITY") >= 0:
