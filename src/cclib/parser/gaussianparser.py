@@ -858,6 +858,9 @@ class Gaussian(logfileparser.Logfile):
         # Has to deal with lines such as:
         #   *** Overlap ***
         #   ****** Overlap ******
+        # Note that Gaussian sometimes drops basis functions,
+        #  causing the overlap matrix as parsed below to not be
+        #  symmetric (which is a problem for population analyses, etc.)
         if line[1:4] == "***" and (line[5:12] == "Overlap"
                                  or line[8:15] == "Overlap"):
 
