@@ -730,6 +730,9 @@ class GAMESS(logfileparser.Logfile):
                 # to extract basis set information.
                 p = re.compile("(\d+)\s*([A-Z][A-Z]?)\s*(\d+)\s*([A-Z]+)")
                 oldatom ='0'
+                i_atom = 0 # counter to keep track of n_atoms > 99
+                flag_w = True # flag necessary to keep from adding 100's at wrong time
+
                 for i in range(self.nbasis):
                     line = inputfile.next()
 
@@ -743,9 +746,22 @@ class GAMESS(logfileparser.Logfile):
                         m = p.search(start)
                         if m:
                             g = m.groups()
-                            aoname = "%s%s_%s" % (g[1].capitalize(), g[2], g[3])
-                            oldatom = g[2]
-                            atomno = int(g[2])-1
+                            g2 = int(g[2]) # atom index in GAMESS file; changes to 0 after 99
+
+                            # Check if we have moved to a hundred
+                            # if so, increment the counter and add it to the parsed value
+                            # There will be subsequent 0's as that atoms AO's are parsed
+                            # so wait until the next atom is parsed before resetting flag
+                            if g2 == 0 and flag_w:
+                                i_atom = i_atom + 100
+                                flag_w = False # handle subsequent AO's
+                            if g2 !=0:
+                                flag_w = True # reset flag 
+                            g2 = g2 + i_atom
+
+                            aoname = "%s%i_%s" % (g[1].capitalize(), g2, g[3])
+                            oldatom = str(g2)
+                            atomno = g2-1
                             orbno = int(g[0])-1
                         else: # For F orbitals, as shown above
                             g = [x.strip() for x in line.split()]
@@ -935,5 +951,16 @@ class GAMESS(logfileparser.Logfile):
 
         
 if __name__ == "__main__":
-    import doctest, gamessparser
-    doctest.testmod(gamessparser, verbose=False)
+    import doctest, gamessparser, sys
+    if len(sys.argv) == 1:
+        doctest.testmod(gamessparser, verbose=False)
+
+    if len(sys.argv) >= 2:
+        parser = gamessparser.GAMESS(sys.argv[1])
+        data = parser.parse()
+
+    if len(sys.argv) > 2:
+        for i in range(len(sys.argv[2:])):
+            if hasattr(data, sys.argv[2 + i]):
+                print getattr(data, sys.argv[2 + i])
+
