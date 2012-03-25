@@ -45,6 +45,7 @@ GAMESS/GAMESS-US/zolm_dft3a.log.zip
 GAMESS/PCGAMESS/aomixgamess.log.bz2
 GAMESS/PCGAMESS/d2d_sp.out.gz
 GAMESS/PCGAMESS/firefly-FailStationary.out.gz
+GAMESS/PCGAMESS/triazole_tddft_c1_b3lyp_631Gdp_sp.out.gz
 GAMESS/WinGAMESS/WinGAMESS.log.gz
 GAMESS-UK/GAMESS-UK6.0/dscf_4.out.gz
 GAMESS-UK/GAMESS-UK6.0/duhf_1.out.gz
