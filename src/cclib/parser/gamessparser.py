@@ -890,6 +890,13 @@ class GAMESS(logfileparser.Logfile):
             # I think it happens if you use a polar basis function instead of a cartesian one
             self.nbasis = int(line.strip().split()[-1])
                 
+        elif line.find("TOTAL NUMBER OF CONTAMINANTS DROPPED") >= 0:
+            number = int(line.split()[-1])
+            if hasattr(self, "nmo"):
+                self.nmo -= number
+            else:
+                self.nmo = self.nbasis - number
+
         elif line.find("SPHERICAL HARMONICS KEPT IN THE VARIATION SPACE") >= 0:
             # Note that this line is present if ISPHER=1, e.g. for C_bigbasis
             self.nmo = int(line.strip().split()[-1])
