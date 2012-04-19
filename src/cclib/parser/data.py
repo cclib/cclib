@@ -10,10 +10,6 @@
 
 __revision__ = "$Revision$"
 
-import cPickle as pickle
-import os
-import sys
-
 import numpy
 
 
