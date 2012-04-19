@@ -179,7 +179,7 @@ class ccData(object):
             if hasattr(self, attr):
                 attributes[attr] = getattr(self,attr)
         if tolists:
-            self.arrayofy()
+            self.arrayify()
         return attributes
 
     def setattributes(self, attributes):
