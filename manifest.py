@@ -10,6 +10,8 @@
 
 """Create MANIFEST"""
 
+__revision__ = "$Revision$"
+
 import glob
 import os
 
