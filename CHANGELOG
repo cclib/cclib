@@ -6,7 +6,6 @@ Features:
 	the number of linearly independent basis functions over the
 	course of the calculation
 
-
 Bugfixes:
 	* Handle triplet PM3 calculations in Gaussian03 (Greg Magoon)
 	* Some Gaussian09 calculations were missing atomnos (Marius Retegan)
@@ -15,6 +14,7 @@ Bugfixes:
 	* ADF versions > 2007 no longer print overlap info by default
 	* Handle parsing Firefly calculations that fail
 	* Fix parsing of ORCA calculation (Marius Retegan)
+	* Add more explicit license notices, and allow LGPL versions after 2.1
 
 Change since cclib-0.9:
 
