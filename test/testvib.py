@@ -45,12 +45,15 @@ class GenericIRTest(bettertest.TestCase):
 
 class ADFIRTest(GenericIRTest):
     """ADF vibrational frequency unittest."""
+
     
 class GamessUKIRTest(GenericIRTest):
     """GAMeSS-UK vibrational frequency unittest."""
 
+
 class GamessUSIRTest(GenericIRTest):
     """GAMESS-US vibrational frequency unittest."""
+
 
 class GaussianIRTest(GenericIRTest):
     """Gaussian vibrational frequency unittest."""
@@ -59,6 +62,7 @@ class GaussianIRTest(GenericIRTest):
         """Is the length of vibsyms correct?"""
         numvib = 3*len(self.data.atomnos) - 6        
         self.assertEqual(len(self.data.vibsyms), numvib)
+
        
 class JaguarIRTest(GenericIRTest):
     """Jaguar vibrational frequency unittest."""
@@ -68,11 +72,14 @@ class JaguarIRTest(GenericIRTest):
             numvib = 3*len(self.data.atomnos) - 6        
             self.assertEqual(len(self.data.vibsyms), numvib)
 
+
 class MolproIRTest(GenericIRTest):
     """Molpro vibrational frequency unittest."""
 
+
 class OrcaIRTest(GenericIRTest):
     """ORCA vibrational frequency unittest."""
+
 
 class PCGamessIRTest(GenericIRTest):
     """PC-GAMESS vibrational frequency unittest."""
@@ -80,6 +87,7 @@ class PCGamessIRTest(GenericIRTest):
     def testirintens(self):
         """Is the maximum IR intensity 135 +/- 5 km mol-1?"""
         self.assertInside(max(self.data.vibirs), 135, 5)     
+
 
 class GenericRamanTest(bettertest.TestCase):
     """Generic Raman unittest."""
@@ -93,8 +101,10 @@ class GenericRamanTest(bettertest.TestCase):
         """Is the maximum Raman intensity 575 +/- 5 A**4/amu?"""
         self.assertInside(max(self.data.vibramans), 575, 5)
 
+
 class GamessUKRamanTest(GenericRamanTest):
     """GAMESS-UK Raman unittest."""
+
 
 class GaussianRamanTest(GenericRamanTest):
     """Gaussian Raman unittest."""
@@ -103,11 +113,14 @@ class GaussianRamanTest(GenericRamanTest):
         """Is the maximum Raman intensity 1066 +/- 5 A**4/amu?"""
         self.assertInside(max(self.data.vibramans), 1066, 5)
 
+
 class MolproRamanTest(GenericRamanTest):
     """Molpro Raman unittest."""
 
+
 class OrcaRamanTest(GenericRamanTest):
     """ORCA Raman unittest."""
+
     
 class PCGamessRamanTest(GenericRamanTest):
     """PC-GAMESS Raman unittest."""

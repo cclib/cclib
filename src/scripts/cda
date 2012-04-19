@@ -65,5 +65,3 @@ if __name__ == "__main__":
                         reduce(numpy.add, fa.bdonations[spin]), \
                         reduce(numpy.add, fa.repulsions[spin]), \
                         reduce(numpy.add, fa.residuals[spin]))
-
-

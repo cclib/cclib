@@ -8,7 +8,6 @@
 # received a copy of the license along with cclib. You can also access
 # the full license online at http://www.gnu.org/copyleft/lgpl.html.
 
-
 __revision__ = "$Revision$"
 
 import copy
@@ -121,6 +120,7 @@ class Volume(object):
         outputfile.write("\n".join(ans))
         outputfile.close()
 
+
 def scinotation(num):
    """Write in scientific notation
 
@@ -139,6 +139,7 @@ def scinotation(num):
    else:
        sign="+"
    return ("%sE%s%s" % (broken[0],sign,broken[1][-2:])).rjust(12)                
+
 
 def getbfs(coords, gbasis):
     """Convenience function for both wavefunction and density based on PyQuante Ints.py."""
@@ -164,6 +165,7 @@ def getbfs(coords, gbasis):
                 bfs.append(bf)
 
     return bfs
+
 
 def wavefunction(coords, mocoeffs, gbasis, volume):
     """Calculate the magnitude of the wavefunction at every point in a volume.
@@ -194,6 +196,7 @@ def wavefunction(coords, mocoeffs, gbasis, volume):
         numpy.add(wavefn.data, data, wavefn.data)
     
     return wavefn
+
 
 def electrondensity(coords, mocoeffslist, gbasis, volume):
     """Calculate the magnitude of the electron density at every point in a volume.

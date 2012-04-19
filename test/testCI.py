@@ -31,8 +31,10 @@ class GenericCITest(bettertest.TestCase):
         changes = self.data.etenergies[1:] - self.data.etenergies[:-1]
         self.failUnless(numpy.alltrue(changes > 0.0))
 
+
 class GenericCISTest(GenericCITest):
     """CIS unittest."""
+
     
 class GenericCISWaterTest(GenericCISTest):
     """CIS(RHF)/STO-3G water unittest."""
@@ -108,6 +110,7 @@ class GenericCISWaterTest(GenericCISTest):
                     if not found:
                         self.fail("Excitation %i->%s not found (triplet state %i)" %(exc[0], exc[1], i))
 
+
 class GAMESSUSCISTest(GenericCISWaterTest):
     """GAMESS-US CIS(RHF)/STO-3G water unittest."""
 
@@ -117,6 +120,7 @@ class GAMESSUSCISTest(GenericCISWaterTest):
         """(MP2) Are Natural Orbital coefficients the right size?"""
         self.assertEquals(self.data.nocoeffs.shape, (self.data.nmo, self.data.nbasis))
 
+
 class GaussianCISTest(GenericCISWaterTest):
     """Gaussian CIS(RHF)/STO-3G water unittest."""
 
@@ -125,6 +129,7 @@ class GaussianCISTest(GenericCISWaterTest):
     def testnocoeffs(self):
         """(MP2) Are Natural Orbital coefficients the right size?"""
         self.assertEquals(self.data.nocoeffs.shape, (self.data.nmo, self.data.nbasis))
+
 
 class JaguarCISTest(GenericCISWaterTest):
     """Jaguar CIS(RHF)/STO-3G water unittest."""

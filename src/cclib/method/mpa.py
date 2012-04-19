@@ -8,7 +8,6 @@
 # received a copy of the license along with cclib. You can also access
 # the full license online at http://www.gnu.org/copyleft/lgpl.html.
 
-
 __revision__ = "$Revision$"
 
 import random
@@ -123,6 +122,7 @@ class MPA(Population):
             self.fragcharges = numpy.multiply(self.fragcharges, 2)
 
         return True
+
 
 if __name__ == "__main__":
     import doctest, mpa

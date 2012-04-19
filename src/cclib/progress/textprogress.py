@@ -8,9 +8,7 @@
 # received a copy of the license along with cclib. You can also access
 # the full license online at http://www.gnu.org/copyleft/lgpl.html.
 
-
 __revision__ = "$Revision$"
-
 
 import sys
 
@@ -37,7 +35,7 @@ class TextProgress:
         self.progress = int(step * 100 / self.nstep)
 
         if self.progress/2 >= self.oldprogress/2+1 or self.text != text:
-# just went through at least an interval of ten, ie. from 39 to 41, so update
+        # just went through at least an interval of ten, ie. from 39 to 41, so update
 
             mystr = "\r["
             prog = self.progress / 10
@@ -55,6 +53,5 @@ class TextProgress:
 
             if self.progress >= 100 and text == "Done":
                 print " "
-
 
         return

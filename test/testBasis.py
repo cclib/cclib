@@ -60,6 +60,7 @@ class GenericBasisTest(bettertest.TestCase):
                 self.assertAlmostEqual(s_coeffs[0][1], -0.1000, 4)
                 self.assertAlmostEqual(p_coeffs[0][1], 0.1559, 4)
 
+
 class GenericBigBasisTest(GenericBasisTest):
     """Big basis set unittest."""
     
@@ -68,33 +69,42 @@ class GenericBigBasisTest(GenericBasisTest):
         """Are the basis set coefficients correct? PASS"""
         self.assertEqual(1, 1)
 
+
 class GamessUKBasisTest(GenericBasisTest):
     """GAMESS-UK basis set unittest."""
+
 
 class GamessUSBasisTest(GenericBasisTest):
     """GAMESS-US basis set unittest."""
 
+
 class GamessUSBigBasisTest(GenericBigBasisTest):
     """GAMESS-US big basis set unittest."""
 
+
 class GaussianBasisTest(GenericBasisTest):
     """Gaussian basis set unittest."""
+
 
 class GaussianBigBasisTest(GenericBigBasisTest):
     """Gaussian big basis set unittest."""
     
     spherical = True
 
+
 class MolproBasisTest(GenericBasisTest):
     """Molpro basis set unittest."""
+
 
 class MolproBigBasisTest(GenericBigBasisTest):
     """Molpro big basis set unittest."""
 
     spherical = True
 
+
 class PCGamessBasisTest(GenericBasisTest):
     """PC-GAMESS basis set unittest."""
+
 
 class PCGamessBigBasisTest(GenericBigBasisTest):
     """PC-GAMESS big basis set unittest."""

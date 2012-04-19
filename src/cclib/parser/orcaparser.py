@@ -8,9 +8,7 @@
 # received a copy of the license along with cclib. You can also access
 # the full license online at http://www.gnu.org/copyleft/lgpl.html.
 
-
 __revision__ = "$Revision: 668 $"
-
 
 import re
 
@@ -418,7 +416,6 @@ class ORCA(logfileparser.Logfile):
                 num = int(line[0:4])
                 self.vibramans[num] = float(line.split()[2])
                 line = inputfile.next()
-
 
 
 if __name__ == "__main__":

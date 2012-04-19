@@ -38,6 +38,7 @@ class GenericTDunTest(bettertest.TestCase):
         """Is the length of etsyms correct?"""
         self.assertEqual(len(self.data.etsyms), self.number)
 
+
 class GaussianTDDFTunTest(GenericTDunTest):
     """Gaussian time-dependent HF/DFT unittest."""
 
@@ -49,6 +50,7 @@ class GaussianTDDFTunTest(GenericTDunTest):
         triplets = [sym for sym in self.data.etsyms if "Triplet" in sym]
         self.assertEqual(len(singlets), self.number/2)
         self.assertEqual(len(triplets), self.number/2)
+
 
 if __name__=="__main__":
 

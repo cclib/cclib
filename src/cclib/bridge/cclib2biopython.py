@@ -8,11 +8,11 @@
 # received a copy of the license along with cclib. You can also access
 # the full license online at http://www.gnu.org/copyleft/lgpl.html.
 
-
 __revision__ = "$Revision$"
 
 from Bio.PDB.Atom import Atom
 from cclib.parser.utils import PeriodicTable
+
 
 def makebiopython(atomcoords, atomnos):
     """Create a list of BioPython Atoms.
@@ -35,6 +35,7 @@ def makebiopython(atomcoords, atomnos):
     for coords, atomno in zip(atomcoords, atomnos):
         bioatoms.append(Atom(pt.element[atomno], coords, 0, 0, 0, 0, 0))
     return bioatoms
+
 
 if __name__ == "__main__":
     import doctest

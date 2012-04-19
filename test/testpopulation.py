@@ -35,6 +35,7 @@ class GaussianMPATest(bettertest.TestCase):
         totalpopulation = sum(self.analysis.fragcharges)
         self.assertInside(totalpopulation, formalcharge, 0.001)
 
+
 class GaussianLPATest(bettertest.TestCase):
     """Lowdin Population Analysis test"""
     def setUp(self):
@@ -47,6 +48,7 @@ class GaussianLPATest(bettertest.TestCase):
         formalcharge = sum(self.data.atomnos) - self.data.charge
         totalpopulation = sum(self.analysis.fragcharges)
         self.assertInside(totalpopulation, formalcharge, 0.001)
+
 
 class GaussianCSPATest(bettertest.TestCase):
     """C-squared Population Analysis test"""

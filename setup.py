@@ -35,6 +35,7 @@ Topic :: Software Development :: Libraries :: Python Modules
 
 programs = ['ADF', 'GAMESS', 'GAMESS-UK', 'Gaussian', 'Jaguar', 'Molpro', 'ORCA']
 
+
 def setup_cclib():
 
     import os
@@ -84,6 +85,7 @@ def setup_cclib():
         package_dir = {'cclib':'src/cclib', 'cclib.test':'test'},
         packages = cclib_packages,
         data_files = cclib_datafiles )
+
 
 if __name__ == '__main__':
     setup_cclib()

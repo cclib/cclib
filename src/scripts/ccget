@@ -30,6 +30,7 @@ _allowedargs = ['aonames','aooverlaps','atombasis','atomcoords','atommasses','at
                 'scfenergies','scftargets','scfvalues',
                 'vibdisps', 'vibfreqs','vibirs','vibramans','vibsyms']
 
+
 def moreusage():
     """More detailed usage information"""
     print """Usage:  ccget <attribute> [<attribute>] <compchemlogfile> [<compchemlogfile>]
@@ -37,6 +38,7 @@ def moreusage():
      from each of the compchemlogfiles.
 For a list of attributes available in a file, type:
      ccget --list <compchemlogfile>   [or -l]"""
+
 
 def usage():
     """Display usage information"""
@@ -106,6 +108,7 @@ def main():
             if invalid:
                 print
                 moreusage()
+
 
 if __name__ == "__main__":
     main()

@@ -28,20 +28,24 @@ class GenericCoreTest(bettertest.TestCase):
         ans = numpy.array(ans, "i")
         self.assertArrayEquals(self.data.coreelectrons, ans)
 
+
 class ADFCoreTest(GenericCoreTest):
     """ADF core electrons unittest."""
 
     coredict = {'Mo': 28, 'O':0, 'Cl':0}
+
 
 class GAMESSUKCoreTest(GenericCoreTest):
     """GAMESS-UK core electrons unittest."""
 
     coredict = {'Mo': 28, 'O':0, 'Cl':10}
 
+
 class GAMESSUSCoreTest(GenericCoreTest):
     """GAMESS-US core electrons unittest."""
 
     coredict = {'Mo': 28, 'O':0, 'Cl':10}
+
 
 class GaussianCoreTest(GenericCoreTest):
     """Gaussian core electrons unittest."""

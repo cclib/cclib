@@ -19,7 +19,7 @@ from cclib.parser import ADF, GAMESS, GAMESSUK, Gaussian, Jaguar, Molpro
 
 class TestCase(unittest.TestCase):
     """Create a class with extra 'asserts' for testing numerical data,
-        and a special run() method for loading cclib test files on run-time.
+    and a special run() method for loading cclib test files on run-time.
 
     It is not possible to test equality of numpy arrays using assertEquals().
     Instead, use assertArrayEquals() as defined below. For the original solution see:

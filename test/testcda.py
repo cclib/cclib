@@ -8,7 +8,7 @@
 # received a copy of the license along with cclib. You can also access
 # the full license online at http://www.gnu.org/copyleft/lgpl.html.
 
-__revision__ = "$Rev$"
+__revision__ = "$Revision$"
 
 import os
 import logging
@@ -36,6 +36,7 @@ def main(log=True):
 
     return fa
 
+
 def printResults():
     fa = main()
 
@@ -53,6 +54,7 @@ def printResults():
     print "T:  %7.3f %7.3f %7.3f"%(reduce(numpy.add, fa.donations[0]), \
                 reduce(numpy.add, fa.bdonations[0]), reduce(numpy.add, fa.repulsions[0]))
     print "\n\n"
+
 
 class CDATest(unittest.TestCase):
     def runTest(self):

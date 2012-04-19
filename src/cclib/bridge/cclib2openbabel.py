@@ -8,10 +8,10 @@
 # received a copy of the license along with cclib. You can also access
 # the full license online at http://www.gnu.org/copyleft/lgpl.html.
 
-
 __revision__ = "$Revision$"
 
 import openbabel as ob
+
 
 def makeopenbabel(atomcoords, atomnos, charge=0, mult=1):
     """Create an Open Babel molecule.
@@ -39,6 +39,7 @@ def makeopenbabel(atomcoords, atomnos, charge=0, mult=1):
     obmol.SetTotalSpinMultiplicity(mult)
     obmol.SetTotalCharge(charge)
     return obmol
+
 
 if __name__ == "__main__":
     import doctest

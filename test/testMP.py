@@ -32,6 +32,7 @@ class GenericMP2Test(bettertest.TestCase):
         else:
             corrections = self.data.mpenergies[:,self.level-2] - self.data.mpenergies[:,self.level-3]
         self.failUnless(numpy.alltrue(corrections < 0.0))
+
         
 class GenericMP3Test(GenericMP2Test):
     """Generic MP3 unittest."""
@@ -46,6 +47,7 @@ class GenericMP3Test(GenericMP2Test):
         """(MP3) Are Moller-Plesset corrections negative?"""
         super(GenericMP3Test,self).testchange()
 
+
 class GenericMP4SDQTest(GenericMP2Test):
     """Generic MP4(SDQ) unittest."""
 
@@ -58,6 +60,7 @@ class GenericMP4SDQTest(GenericMP2Test):
     def testchange(self):
         """(MP4-SDQ) Are Moller-Plesset corrections negative?"""
         super(GenericMP4SDQTest,self).testchange()
+
 
 class GenericMP4SDTQTest(GenericMP2Test):
     """Generic MP4(SDTQ) unittest."""
@@ -72,6 +75,7 @@ class GenericMP4SDTQTest(GenericMP2Test):
         """(MP4-SDTQ) Are Moller-Plesset corrections negative?"""
         super(GenericMP4SDTQTest,self).testchange()
 
+
 class GenericMP5Test(GenericMP2Test):
     """Generic MP5 unittest."""
 
@@ -85,14 +89,18 @@ class GenericMP5Test(GenericMP2Test):
         """(MP5) Are Moller-Plesset corrections negative?"""
         super(GenericMP5Test,self).testchange()
 
+
 class GAMESSUKMP2Test(GenericMP2Test):
     """GAMESS-UK MP2 unittest."""
+
 
 class GAMESSUKMP3Test(GenericMP3Test):
     """GAMESS-UK MP3 unittest."""
 
+
 class GAMESSUSMP2Test(GenericMP2Test):
     """GAMESS-US MP2 unittest."""
+
 
 class GaussianMP2Test(GenericMP2Test):
     """Gaussian MP2 unittest."""
@@ -100,6 +108,7 @@ class GaussianMP2Test(GenericMP2Test):
     def testnocoeffs(self):
         """(MP2) Are Natural Orbital coefficients the right size?"""
         self.assertEquals(self.data.nocoeffs.shape, (self.data.nmo, self.data.nbasis))
+
         
 class GaussianMP3Test(GenericMP3Test):
     """Gaussian MP3 unittest."""
@@ -108,6 +117,7 @@ class GaussianMP3Test(GenericMP3Test):
         """(MP2) Are Natural Orbital coefficients the right size?"""
         self.assertEquals(self.data.nocoeffs.shape, (self.data.nmo, self.data.nbasis))
 
+
 class GaussianMP4SDQTest(GenericMP4SDQTest):
     """Gaussian MP4-SDQ unittest."""
         
@@ -115,32 +125,42 @@ class GaussianMP4SDQTest(GenericMP4SDQTest):
         """(MP2) Are Natural Orbital coefficients the right size?"""
         self.assertEquals(self.data.nocoeffs.shape, (self.data.nmo, self.data.nbasis))
 
+
 class GaussianMP4SDTQTest(GenericMP4SDTQTest):
     """Gaussian MP4-SDTQ unittest."""
+
 
 class GaussianMP5Test(GenericMP5Test):
     """Gaussian MP5 unittest."""
 
+
 class JaguarLMP2Test(GenericMP2Test):
     """Jaguar LMP2 unittest."""
+
 
 class MolproMP2Test(GenericMP2Test):
     """Molpro MP2 unittest."""
 
+
 class MolproMP3Test(GenericMP3Test):
     """Molpro MP3 unittest."""
+
 
 class MolproMP4SDTQTest(GenericMP4SDTQTest):
     """Molpro MP4-SDTQ unittest."""
 
+
 class PCGAMESSMP2Test(GenericMP2Test):
     """PC-GAMESS MP2 unittest."""
+
 
 class PCGAMESSMP3Test(GenericMP3Test):
     """PC-GAMESS MP3 unittest."""
 
+
 class PCGAMESSMP4SDQTest(GenericMP4SDQTest):
     """PC-GAMESS MP4-SDQ unittest."""
+
 
 class PCGAMESSMP4SDTQTest(GenericMP4SDTQTest):
     """PC-GAMESS MP4-SDTQ unittest."""

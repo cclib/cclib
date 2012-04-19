@@ -8,8 +8,7 @@
 # received a copy of the license along with cclib. You can also access
 # the full license online at http://www.gnu.org/copyleft/lgpl.html.
 
-"""
-A combined test framework for regression, ccopen and parsing which is
+"""A combined test framework for regression, ccopen and parsing which is
 designed to make it easy to add new tests or datafiles.
 
 To run the doctest, just use "python regression.py test".
@@ -26,6 +25,7 @@ from StringIO import StringIO
 
 from cclib.parser import ccopen
 from cclib.parser import Gaussian, GAMESS, GAMESSUK, Jaguar, ADF, Molpro, ORCA
+
 
 # Regression tests
 def testGaussian_basicGaussian03_dvb_gopt_out(logfile):
@@ -250,6 +250,7 @@ def testGaussian_Gaussian03_cyclopropenyl_rhf_g03_cut_log_bz2(logfile):
     """
     assert len(logfile.atomcoords)==len(logfile.geovalues)
 
+
 # Edit the following variable definitions to add new parsers
 # or new datafiles
 
@@ -305,6 +306,7 @@ filenames = [glob(os.path.join(data, "Gaussian", "basicGaussian03", "*.out")) +
              glob(os.path.join(data, "ORCA", "ORCA2.8", "*.out")),
              ]
 
+
 def normalisefilename(filename):
     """Replace all non-alphanumeric symbols by _
 
@@ -323,6 +325,7 @@ def normalisefilename(filename):
             ans.append("_")
     return "".join(ans)
 
+
 def flatten(seq):
     """Converts a list of lists [of lists] to a single flattened list."""
     # Taken from the web.
@@ -333,6 +336,7 @@ def flatten(seq):
         else:
             res.append(item)
     return res
+
 
 def main():
     # Print a warning if you haven't downloaded all of the regression test files
@@ -421,6 +425,7 @@ def main():
         print
             
     print "Total: %d   Failed: %d  Errors: %d" % (total, failures, errors)
+
 
 if __name__=="__main__":
     if len(sys.argv)==2 and sys.argv[1]=="test":

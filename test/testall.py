@@ -56,6 +56,7 @@ def getfile(parser, *location):
     
     return data, logfile
 
+
 def gettestdata(module=None):
     """Returns a dict of test files for a given module."""
 
@@ -79,6 +80,7 @@ def gettestdata(module=None):
 
     return testdata
 
+
 def visualtests():
     """These are not formal tests -- but they should be eyeballed."""
     
@@ -95,6 +97,7 @@ def visualtests():
     print "HOMO", "   ".join(["%+9.4f" % x.moenergies[0][x.homos[0]] for x in output])
     print "LUMO", "   ".join(["%+9.4f" % x.moenergies[0][x.homos[0]+1] for x in output])
     print "H-L ", "   ".join(["%9.4f" % (x.moenergies[0][x.homos[0]+1]-x.moenergies[0][x.homos[0]],) for x in output])
+
 
 def importName(modulename, name):
     """Import from a module whose name is determined at run-time.
@@ -113,6 +116,7 @@ def importName(modulename, name):
         return None
 
     return getattr(module, name, None)
+
 
 def testall(parserchoice=None, modules=test_modules):
     """Run all unittests in all modules."""

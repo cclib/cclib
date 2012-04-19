@@ -13,7 +13,9 @@ __revision__ = "$Rev$"
 import sys
 import unittest
 
+
 testmodules = ['testpopulation', 'testcda']
+
 
 def importname(modulename, name):
     """Import from a module whose name is determined at runtime.
@@ -24,6 +26,7 @@ def importname(modulename, name):
     if not module:
         raise ImportError
     return getattr(module, name)
+
 
 if __name__=="__main__":
     fullsuite = unittest.TestSuite()

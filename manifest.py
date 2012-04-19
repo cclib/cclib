@@ -13,6 +13,7 @@
 import glob
 import os
 
+
 files = ['THANKS','README','INSTALL','ANNOUNCE','CHANGELOG','LICENSE',
          'setup.py']
 

@@ -142,6 +142,7 @@ class GenericGeoOptTest(bettertest.TestCase):
         """Do the geo targets have the right dimensions?"""
         self.assertEquals(self.data.geotargets.shape,(len(self.data.geovalues[0]),))
 
+
 class ADFGeoOptTest(GenericGeoOptTest):
     """ADF geometry optimization unittest."""
 
@@ -157,6 +158,7 @@ class ADFGeoOptTest(GenericGeoOptTest):
         """Is the SCF energy within 1eV of -140eV?"""
         self.assertInside(self.data.scfenergies[-1],-140,1,"Final scf energy: %f not -140+-1eV" % self.data.scfenergies[-1])
 
+
 class GamessUKGeoOptTest(GenericGeoOptTest):
     """GAMESS-UK geometry optimization unittest."""
 
@@ -166,9 +168,11 @@ class GamessUKGeoOptTest(GenericGeoOptTest):
         self.assertEquals(len(self.data.mocoeffs), 1)
         self.assertEquals(self.data.mocoeffs[0].shape,
                           (self.data.homos[0]+1+5, self.data.nbasis))
+
         
 class GamessUSGeoOptTest(GenericGeoOptTest):
     """GAMESS-US geometry optimization unittest."""
+
 
 class GaussianGeoOptTest(GenericGeoOptTest):
     """Gaussian geometry optimization unittest."""
@@ -187,6 +191,7 @@ class GaussianGeoOptTest(GenericGeoOptTest):
         """Do the grads have the right dimensions?"""
         self.assertEquals(self.data.grads.shape,(len(self.data.geovalues),self.data.natom,3))
 
+
 class JaguarGeoOptTest(GenericGeoOptTest):
     """Jaguar geometry optimization unittest."""
 
@@ -200,6 +205,7 @@ class JaguarGeoOptTest(GenericGeoOptTest):
         """Are the dimensions of mocoeffs equal to 1 x nmo x nbasis? PASS"""
         self.assertEquals(1, 1)
 
+
 class MolproGeoOptTest(GenericGeoOptTest):
     """Molpro geometry optimization unittest."""
     
@@ -209,6 +215,7 @@ class MolproGeoOptTest(GenericGeoOptTest):
     def testsymlabels(self):
         """Are all the symmetry labels either Ag/u or Bg/u? PASS"""
         self.assertEquals(1,1)
+
 
 class OrcaGeoOptTest(GenericGeoOptTest):
     """ORCA geometry optimization unittest."""
@@ -227,6 +234,7 @@ class OrcaGeoOptTest(GenericGeoOptTest):
     def testsymlabels(self):
         """Are all the symmetry labels either Ag/u or Bg/u? PASS"""
         self.assertEquals(1,1)
+
 
 class PCGamessGeoOptTest(GenericGeoOptTest):
     """PC-GAMESS geometry optimization unittest."""

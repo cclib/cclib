@@ -52,6 +52,7 @@ class GenericTDTest(bettertest.TestCase):
         """Is the length of etsyms correct?"""
         self.assertEqual(len(self.data.etsyms), self.number)
 
+
 class ADFTDDFTTest(GenericTDTest):
     """ADF time-dependent DFT unittest."""
     number = 5
@@ -65,6 +66,7 @@ class ADFTDDFTTest(GenericTDTest):
         sumofsec = sum([z for (x, y, z) in lowestEtrans])
         self.assertInside(sumofsec, 1.0, 0.16)
 
+
 class GaussianTDDFTTest(GenericTDTest):
     """Gaussian time-dependent HF/DFT unittest."""
     number = 5
@@ -73,13 +75,16 @@ class GaussianTDDFTTest(GenericTDTest):
         """Is the length of etrotats correct?"""
         self.assertEqual(len(self.data.etrotats), self.number)
 
+
 class GAMESSUSTDDFTTest(GenericTDTest):
     """GAMESS time-dependent HF/DFT unittest."""
     number = 10
 
+
 class PCGamessTDDFTTest(GenericTDTest):
     """PC-GAMESS time-dependent HF/DFT unittest."""
     number = 5
+
     
 class OrcaTDDFTTest(GenericTDTest):
     """ORCA time-dependent HF/DFT unittest."""
@@ -88,6 +93,7 @@ class OrcaTDDFTTest(GenericTDTest):
         """Is the maximum of eotscs in the right range?"""
         self.assertEqual(len(self.data.etoscs), self.number)
         self.assertInside(max(self.data.etoscs), 1.1, 0.1)
+
 
 class GenericTDTesttrp(GenericTDTest):
     """Time-dependent HF/DFT (triplet) unittest."""
@@ -104,6 +110,7 @@ class GenericTDTesttrp(GenericTDTest):
         self.assertEqual(len(self.data.etoscs), self.number)
         self.assertInside(max(self.data.etoscs), 0.0, 0.01)
 
+
 class GAMESSUSTDDFTtrpTest(GenericTDTesttrp):
     """GAMESS TD DFT (restricted) triplet unittest."""
     number = 5
@@ -111,9 +118,11 @@ class GAMESSUSTDDFTtrpTest(GenericTDTesttrp):
         """Is the length of etsyms correct? PASS"""
         pass
 
+
 class PCGamessTDDFTtrpTest(GenericTDTesttrp):
     """PC-GAMESS TD DFT (restricted) triplet unittest."""
     number = 5
+
 
 if __name__=="__main__":
 

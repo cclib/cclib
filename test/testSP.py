@@ -124,6 +124,7 @@ class GenericSPTest(bettertest.TestCase):
                               self.data.aooverlaps[:,0]),
                           0)
 
+
 class ADFSPTest(GenericSPTest):
     """ADF restricted single point unittest."""
 
@@ -136,11 +137,14 @@ class ADFSPTest(GenericSPTest):
         """Is the SCF energy within 1eV of -140eV?"""
         self.assertInside(self.data.scfenergies[-1],-140,1,"Final scf energy: %f not -140+-1eV" % self.data.scfenergies[-1])
 
+
 class GamessUKSPTest(GenericSPTest):
     """GAMESS-UK restricted single point unittest."""
 
+
 class GamessUSSPTest(GenericSPTest):
     """GAMESS-US restricted single point unittest."""
+
 
 class GaussianSPTest(GenericSPTest):
     """Gaussian restricted single point unittest."""
@@ -152,6 +156,7 @@ class GaussianSPTest(GenericSPTest):
         """Do the atom masses sum up to the molecular mass (130078.25+-0.1mD)?"""
         mm = 1000*sum(self.data.atommasses)
         self.assertInside(mm, 130078.25, 0.1, "Molecule mass: %f not 130078 +- 0.1mD" %mm)
+
 
 class JaguarSPTest(GenericSPTest):
     """Jaguar restricted single point unittest."""
@@ -171,12 +176,14 @@ class JaguarSPTest(GenericSPTest):
         """Are the dimensions of mocoeffs equal to 1 x nmo x nbasis? PASS"""
         self.assertEquals(1, 1)
 
+
 class MolproSPTest(GenericSPTest):
     """Molpro restricted single point unittest."""
 
     def testsymlabels(self):
         """Are all the symmetry labels either Ag/u or Bg/u? PASS"""
         self.assertEquals(1,1)
+
 
 class OrcaSPTest(GenericSPTest):
     """ORCA restricted single point unittest."""
@@ -191,6 +198,7 @@ class OrcaSPTest(GenericSPTest):
     def testsymlabels(self):
         """Are all the symmetry labels either Ag/u or Bg/u? PASS"""
         self.assertEquals(1,1)
+
 
 class PCGamessSPTest(GenericSPTest):
     """PC-GAMESS restricted single point unittest."""
