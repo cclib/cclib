@@ -15,9 +15,9 @@ import urllib
 from BeautifulSoup import BeautifulSoup
 
 
-wiki = "http://cclib.sourceforge.net/wiki"
+wiki = "http://sourceforge.net/apps/mediawiki/cclib"
 # http://openbabel.sourceforge.net/w/index.php?title=Special:Export&action=submit&pages=FAQ
-allpages = urllib.urlopen(wiki + "/index.php/Special:Allpages").read()
+allpages = urllib.urlopen(wiki + "/index.php?title=Special:AllPages").read()
 
 soup = BeautifulSoup(allpages)
 
