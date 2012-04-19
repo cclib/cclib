@@ -43,8 +43,8 @@ for name in ['bettertest', 'methods']:
     files.append(os.path.join("test", "%s.py" % name))
 files.append(os.path.join("test", "testdata"))
 
-for file in files:
-    if not os.path.isfile(file):
-        print "%s does not exist" % file
+for f in files:
+    if not os.path.isfile(f):
+        print "%s does not exist" % f
 
 print >> open("MANIFEST","w"), "\n".join(files)
