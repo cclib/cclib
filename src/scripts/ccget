@@ -22,11 +22,14 @@ from cclib.parser import ccopen
 _allowedargs = ['aonames','aooverlaps','atombasis','atomcoords','atommasses','atomnos',
                 'ccenergies', 'charge','coreelectrons',
                 'etenergies','etoscs','etrotats','etsecs','etsyms',
+                'enthalpy', 'entropy', 'freeenergy', 'temperature',
                 'fonames','fooverlaps','fragnames','frags',
                 'gbasis','geotargets','geovalues',
                 'hessian','homos',
                 'mocoeffs','moenergies','mosyms','mpenergies','mult',
                 'natom','nbasis', 'nmo', 'nocoeffs',
+                'optdone',
+                'scancoords', 'scanenergies', 'scannames', 'scanparm',
                 'scfenergies','scftargets','scfvalues',
                 'vibdisps', 'vibfreqs','vibirs','vibramans','vibsyms']
 

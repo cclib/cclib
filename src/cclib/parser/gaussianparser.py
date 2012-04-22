@@ -66,7 +66,7 @@ class Gaussian(logfileparser.Logfile):
 
         # Flag that indicates whether it has reached the end of a geoopt.
         self.optfinished = False
-
+        
         # Flag for identifying Coupled Cluster runs.
         self.coupledcluster = False
 
@@ -85,9 +85,71 @@ class Gaussian(logfileparser.Logfile):
             new_etsecs = [[(x[0], x[1], x[2] * numpy.sqrt(2)) for x in etsec]
                           for etsec in self.etsecs]
             self.etsecs = new_etsecs
+        if hasattr(self, "scanenergies"):
+            self.scancoords = []
+            self.scancoords = self.atomcoords
+        if (hasattr(self, 'enthaply') and hasattr(self, 'temperature') 
+                and hasattr(self, 'freeenergy')):
+            self.entropy = (self.enthaply - self.freeenergy)/self.temperature
             
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
+
+        #Extract PES scan data
+        #Summary of the potential surface scan:
+        #  N       A          SCF
+        #----  ---------  -----------
+        #   1   109.0000    -76.43373
+        #   2   119.0000    -76.43011
+        #   3   129.0000    -76.42311
+        #   4   139.0000    -76.41398
+        #   5   149.0000    -76.40420
+        #   6   159.0000    -76.39541
+        #   7   169.0000    -76.38916
+        #   8   179.0000    -76.38664
+        #   9   189.0000    -76.38833
+        #  10   199.0000    -76.39391
+        #  11   209.0000    -76.40231
+        #----  ---------  -----------
+        if "Summary of the potential surface scan:" in line:
+            scanenergies = []
+            scanparm = []
+            colmnames = inputfile.next()
+            hyphens = inputfile.next()
+            line = inputfile.next()
+            while line != hyphens:
+                broken=line.split()
+                scanenergies.append(float(broken[-1]))
+                scanparm.append(map(float,broken[1:-1]))
+                line = inputfile.next()
+            if not hasattr(self, "scanenergies"):
+                self.scanenergies = []
+                self.scanenergies = scanenergies
+            if not hasattr(self, "scanparm"):
+                self.scanparm = []
+                self.scanparm = scanparm
+            if not hasattr(self, "scannames"):
+                self.scannames = colmnames.split()[1:-1]
+
+        #Extract Thermochemistry
+        #Temperature   298.150 Kelvin.  Pressure   1.00000 Atm.
+        #Zero-point correction=                           0.342233 (Hartree/
+        #Thermal correction to Energy=                    0.
+        #Thermal correction to Enthalpy=                  0.
+        #Thermal correction to Gibbs Free Energy=         0.302940
+        #Sum of electronic and zero-point Energies=           -563.649744
+        #Sum of electronic and thermal Energies=              -563.636699
+        #Sum of electronic and thermal Enthalpies=            -563.635755
+        #Sum of electronic and thermal Free Energies=         -563.689037
+        if "Sum of electronic and thermal Enthalpies" in line:
+            if not hasattr(self, 'enthaply'):
+                self.enthaply = float(line.split()[6])
+        if "Sum of electronic and thermal Free Energies=" in line:
+            if not hasattr(self, 'freeenergy'):
+                self.freeenergy = float(line.split()[7])
+        if line[1:12] == "Temperature":
+            if not hasattr(self, 'temperature'):
+                self.temperature = float(line.split()[1])
         
         # Number of atoms.
         if line[1:8] == "NAtoms=":
@@ -101,6 +163,7 @@ class Gaussian(logfileparser.Logfile):
         # Catch message about completed optimization.
         if line[1:23] == "Optimization completed":
             self.optfinished = True
+            self.optdone = True
         
         # Extract the atomic numbers and coordinates from the input orientation,
         #   in the event the standard orientation isn't available.

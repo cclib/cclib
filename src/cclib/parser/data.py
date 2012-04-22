@@ -59,6 +59,15 @@ class ccData(object):
         vibirs -- IR intensities (array[1], km/mol)
         vibramans -- Raman intensities (array[1], A^4/Da)
         vibsyms -- symmetries of vibrations (list)
+        scannames -- Names of varaibles scanned (list)
+        scanenergies -- energies of potential energy surface (list)
+        scanparm -- values of parameters in potential energy surface (list of tuples)
+        scancoords -- Geometries of each scan step (array[3], angstroms)
+        enthaply -- Sum of electronic and thermal Enthalpie (float hartree/particle)
+        freeenergy -- Sum of electronic and thermal Free Energies (float hartree/particle)
+        temp -- Tempature used for Thermochemistry (float kelvin)
+        entropy -- Entropy (float hartree/particle)
+        optdone -- Stores if an optimisation job has completed (boolean)
     (1) The term 'array' refers to a numpy array
     (2) The number of dimensions of an array is given in square brackets
     (3) Python indexes arrays/lists starting at zero, so if homos==[10], then
@@ -86,7 +95,8 @@ class ccData(object):
                           'natom', 'nbasis', 'nmo', 'nocoeffs',
                           'scfenergies', 'scftargets', 'scfvalues',
                           'vibanharms', 'vibdisps', 'vibfreqs', 'vibirs',
-                          'vibramans', 'vibsyms']
+                          'vibramans', 'vibsyms', 'scannames', 'scanenergies', 'scanparm',
+                          'scancoords', 'enthaply', 'freeenergy', 'temp', 'entropy', 'optdone']
 
         # The expected types for all supported attributes.
         self._attrtypes = { "aonames":        list,
@@ -126,6 +136,15 @@ class ccData(object):
                             "vibirs":         numpy.ndarray,
                             "vibramans":      numpy.ndarray,
                             "vibsyms":        list,
+                            "scannames":      list,
+                            "scanenergies":   list,
+                            "scanparm":       list,
+                            "scancoords":     numpy.ndarray,
+                            "enthaply":       float,
+                            "freeenergy":     float,
+                            "temperature":    float,
+                            "entropy":        float,
+                            "optdone":        bool
                           }
 
         # Arrays are double precision by default, but these will be integer arrays.
