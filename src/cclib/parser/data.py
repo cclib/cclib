@@ -65,7 +65,7 @@ class ccData(object):
         scancoords -- Geometries of each scan step (array[3], angstroms)
         enthaply -- Sum of electronic and thermal Enthalpie (float hartree/particle)
         freeenergy -- Sum of electronic and thermal Free Energies (float hartree/particle)
-        temp -- Tempature used for Thermochemistry (float kelvin)
+        temperature -- Tempature used for Thermochemistry (float kelvin)
         entropy -- Entropy (float hartree/particle)
         optdone -- Stores if an optimisation job has completed (boolean)
     (1) The term 'array' refers to a numpy array
@@ -96,7 +96,8 @@ class ccData(object):
                           'scfenergies', 'scftargets', 'scfvalues',
                           'vibanharms', 'vibdisps', 'vibfreqs', 'vibirs',
                           'vibramans', 'vibsyms', 'scannames', 'scanenergies', 'scanparm',
-                          'scancoords', 'enthaply', 'freeenergy', 'temp', 'entropy', 'optdone']
+                          'scancoords', 'enthaply', 'freeenergy', 'temperature', 'entropy', 
+                          'optdone']
 
         # The expected types for all supported attributes.
         self._attrtypes = { "aonames":        list,
