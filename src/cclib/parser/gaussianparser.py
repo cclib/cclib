@@ -492,12 +492,14 @@ class Gaussian(logfileparser.Logfile):
         #   Charge =  0 Multiplicity = 1 in fragment  2.
         if line[1:7] == 'Charge' and line.find("Multiplicity")>=0:
 
-            regex = ".*=(.*)Mul.*=\s*(\d+).*"
+            regex = ".*=(.*)Mul.*=\s*-?(\d+).*"
             match = re.match(regex, line)
             assert match, "Something unusual about the line: '%s'" % line
             
-            self.charge = int(match.groups()[0])
-            self.mult = int(match.groups()[1])
+            if not hasattr(self, "charge"):
+                self.charge = int(match.groups()[0])
+            if not hasattr(self, "mult"):
+                self.mult = int(match.groups()[1])
 
         # Orbital symmetries.
         if line[1:20] == 'Orbital symmetries:' and not hasattr(self, "mosyms"):
