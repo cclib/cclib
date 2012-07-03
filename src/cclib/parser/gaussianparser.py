@@ -911,7 +911,10 @@ class Gaussian(logfileparser.Logfile):
             if self.oniom: return
 
             nmo = int(line.split('=')[1].split()[0])
-            self.nmo = nmo
+            if hasattr(self, "nmo"):
+                assert nmo == self.nmo
+            else:
+                self.nmo = nmo
 
         # For AM1 calculations, set nbasis by a second method,
         #   as nmo may not always be explicitly stated.
@@ -956,6 +959,9 @@ class Gaussian(logfileparser.Logfile):
         # Essentially only produced for SCF calculations.
         # This is also the place where aonames and atombasis are parsed.
         if line[5:35] == "Molecular Orbital Coefficients" or line[5:41] == "Alpha Molecular Orbital Coefficients" or line[5:40] == "Beta Molecular Orbital Coefficients":
+
+            # If counterpoise fragment, return without parsing orbital info
+            if self.counterpoise != 0: return
 
             if line[5:40] == "Beta Molecular Orbital Coefficients":
                 beta = True
@@ -1014,6 +1020,7 @@ class Gaussian(logfileparser.Logfile):
                         self.mocoeffs[1][base:base + len(part) / 10, i] = temp
                     else:
                         mocoeffs[0][base:base + len(part) / 10, i] = temp
+
                 if base == 0 and not beta: # Do the last update of atombasis
                     self.atombasis.append(atombasis)
                 if self.popregular:
