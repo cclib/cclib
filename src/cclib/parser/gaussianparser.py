@@ -70,7 +70,8 @@ class Gaussian(logfileparser.Logfile):
         # Flag for identifying Coupled Cluster runs.
         self.coupledcluster = False
 
-        # Fragment number for counterpoise calculations (normally zero).
+        # Fragment number for counterpoise or fragment guess calculations 
+        # (normally zero).
         self.counterpoise = 0
 
         # Flag for identifying ONIOM calculations.
@@ -935,6 +936,9 @@ class Gaussian(logfileparser.Logfile):
         #  symmetric (which is a problem for population analyses, etc.)
         if line[1:4] == "***" and (line[5:12] == "Overlap"
                                  or line[8:15] == "Overlap"):
+
+            # Ensure that this is the main calc and not a fragment
+            if self.counterpoise != 0: return
 
             self.aooverlaps = numpy.zeros( (self.nbasis, self.nbasis), "d")
             # Overlap integrals for basis fn#1 are in aooverlaps[0]
