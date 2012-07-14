@@ -419,5 +419,18 @@ class ORCA(logfileparser.Logfile):
 
 
 if __name__ == "__main__":
+    import sys
     import doctest, orcaparser
-    doctest.testmod(orcaparser, verbose=False)
+
+    if len(sys.argv) == 1:
+        doctest.testmod(orcaparser, verbose=False)
+
+    if len(sys.argv) == 2:
+        parser = orcaparser.ORCA(sys.argv[1])
+        data = parser.parse()
+
+    if len(sys.argv) > 2:
+        for i in range(len(sys.argv[2:])):
+            if hasattr(data, sys.argv[2 + i]):
+                print getattr(data, sys.argv[2 + i])
+
