@@ -19,7 +19,7 @@ import logging
 from cclib.parser import ccopen
 
 
-_allowedargs = ['aonames','aooverlaps','atombasis','atomcoords','atommasses','atomnos',
+_allowedargs = ['aonames','aooverlaps','atombasis','atomcharges','atomcoords','atommasses','atomnos',
                 'ccenergies', 'charge','coreelectrons',
                 'etenergies','etoscs','etrotats','etsecs','etsyms',
                 'enthalpy', 'entropy', 'freeenergy', 'temperature',

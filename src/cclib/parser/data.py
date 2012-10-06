@@ -20,6 +20,7 @@ class ccData(object):
         aonames -- atomic orbital names (list)
         aooverlaps -- atomic orbital overlap matrix (array[2])
         atombasis -- indices of atomic orbitals on each atom (list of lists)
+        atomcharges -- atom partial charges (dict of arrays[1])
         atomcoords -- atom coordinates (array[3], angstroms)
         atommasses -- atom masses (array[1], daltons)
         atomnos -- atomic numbers (array[1])
@@ -85,7 +86,7 @@ class ccData(object):
 
         # Names of all supported attributes.
         self._attrlist = ['aonames', 'aooverlaps', 'atombasis',
-                          'atomcoords', 'atommasses', 'atomnos',
+                          'atomcharges', 'atomcoords', 'atommasses', 'atomnos',
                           'ccenergies', 'charge', 'coreelectrons',
                           'etenergies', 'etoscs', 'etrotats', 'etsecs', 'etsyms',
                           'fonames', 'fooverlaps', 'fragnames', 'frags',
@@ -103,6 +104,7 @@ class ccData(object):
         self._attrtypes = { "aonames":        list,
                             "aooverlaps":     numpy.ndarray,
                             "atombasis":      list,
+                            "atomcharges":    dict,
                             "atomcoords":     numpy.ndarray,
                             "atommasses":     numpy.ndarray,
                             "atomnos":        numpy.ndarray,
@@ -160,7 +162,7 @@ class ccData(object):
         self._listsofarrays = ['mocoeffs', 'moenergies', 'scfvalues']
         
         # Attributes that should be dictionaries of arrays (double precision).
-        self._dictsofarrays = []
+        self._dictsofarrays = ["atomcharges"]
 
         if attributes:
             self.setattributes(attributes)

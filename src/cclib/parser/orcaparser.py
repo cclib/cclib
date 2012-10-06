@@ -417,6 +417,53 @@ class ORCA(logfileparser.Logfile):
                 self.vibramans[num] = float(line.split()[2])
                 line = inputfile.next()
 
+        # ORCA will print atomic charges along with the spin populations,
+        #   so care must be taken about choosing the proper column.
+        # Here is an example for Mulliken charges:
+        # --------------------------------------------
+        # MULLIKEN ATOMIC CHARGES AND SPIN POPULATIONS
+        # --------------------------------------------
+        #    0 H :    0.126447    0.002622
+        #    1 C :   -0.613018   -0.029484
+        #    2 H :    0.189146    0.015452
+        #    3 H :    0.320041    0.037434
+        # ...
+        # Sum of atomic charges         :   -0.0000000
+        # Sum of atomic spin populations:    1.0000000
+        if line[:23] == "MULLIKEN ATOMIC CHARGES":
+
+            if not hasattr(self, "atomcharges"):
+                self.atomcharges = { }
+            if not self.atomcharges.has_key("mulliken"):
+                self.atomcharges["mulliken"] = []
+
+            dashes = inputfile.next()
+
+            charges = []
+            line = inputfile.next()
+            while line[:21] != "Sum of atomic charges":
+                charges.append(float(line[8:20]))
+                line = inputfile.next()
+            self.atomcharges["mulliken"].append(charges)
+            
+        # Things are the same for Lowdin populations, except that the sums
+        #   are not printed (there is a blank line at the end).
+        if line[:22] == "LOEWDIN ATOMIC CHARGES":
+
+            if not hasattr(self, "atomcharges"):
+                self.atomcharges = { }
+            if not self.atomcharges.has_key("lowdin"):
+                self.atomcharges["lowdin"] = []
+
+            dashes = inputfile.next()
+
+            charges = []
+            line = inputfile.next()
+            while line.strip():
+                charges.append(float(line[8:20]))
+                line = inputfile.next()
+            self.atomcharges["lowdin"].append(charges)
+
 
 if __name__ == "__main__":
     import sys
