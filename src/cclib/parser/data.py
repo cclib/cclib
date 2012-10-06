@@ -161,33 +161,33 @@ class ccData(object):
             self.setattributes(attributes)
         
     def listify(self):
-        """Converts all attributes that are arrays or lists of arrays to lists."""
+        """Converts all attributes that are arrays or lists/dicts of arrays to lists."""
         
-        for k, v in self._attrtypes.iteritems():
-            if hasattr(self, k):
-                if v == numpy.ndarray:
-                    setattr(self, k, getattr(self, k).tolist())
-                elif v == list and k in self._listsofarrays:
-                    setattr(self, k, [x.tolist() for x in getattr(self, k)])
-                elif v == dict and k in self._dictsofarrays:
-                    setattr(self, k, dict([(key,val.tolist()) for key,val in getattr(self, k).iteritems()]))
+        attrlist = [k for k in self._attrlist if hasattr(self, k)]
+        for k in attrlist:
+            v = self._attrtypes[k]
+            if v == numpy.ndarray:
+                setattr(self, k, getattr(self, k).tolist())
+            elif v == list and k in self._listsofarrays:
+                setattr(self, k, [x.tolist() for x in getattr(self, k)])
+            elif v == dict and k in self._dictsofarrays:
+                setattr(self, k, dict([(key,val.tolist()) for key,val in getattr(self, k).iteritems()]))
     
     def arrayify(self):
-        """Converts appropriate attributes to arrays or lists of arrays."""
+        """Converts appropriate attributes to arrays or lists/dicts of arrays."""
         
-        for k, v in self._attrtypes.iteritems():
-            if hasattr(self, k):
-                precision = 'd'
-                if k in self._intarrays:
-                    precision = 'i'
-                if v == numpy.ndarray:
-                    setattr(self, k, numpy.array(getattr(self, k), precision))
-                elif v == list and k in self._listsofarrays:
-                    setattr(self, k, [numpy.array(x, precision)
-                                for x in getattr(self, k)])
-                elif v == dict and k in self._dictsofarrays:
-                    setattr(self, k, dict([(key,numpy.array(val, precision))
-                                for key,val in getattr(self, k).iteritems()]))
+        attrlist = [k for k in self._attrlist if hasattr(self, k)]
+        for k in attrlist:
+            v = self._attrtypes[k]
+            precision = 'd'
+            if k in self._intarrays:
+                precision = 'i'
+            if v == numpy.ndarray:
+                setattr(self, k, numpy.array(getattr(self, k), precision))
+            elif v == list and k in self._listsofarrays:
+                setattr(self, k, [numpy.array(x, precision) for x in getattr(self, k)])
+            elif v == dict and k in self._dictsofarrays:
+                setattr(self, k, dict([(key,numpy.array(val, precision)) for key,val in getattr(self, k).iteritems()]))
 
     def getattributes(self, tolists=False):
         """Returns a dictionary of existing data attributes.
