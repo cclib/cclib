@@ -960,6 +960,28 @@ class GAMESS(logfileparser.Logfile):
         #    self.geotargets = numpy.array([opttol, 3. / opttol], "d")
         #if hasattr(self,"geovalues"): self.geovalues = numpy.array(self.geovalues, "d")
 
+        # This is quite simple to parse, but some files seem to print certain
+        #   lines twice, repeating the populations without charges.
+        if "TOTAL MULLIKEN AND LOWDIN ATOMIC POPULATIONS" in line:
+            if not hasattr(self, "atomcharges"):
+                self.atomcharges = {}
+            header = inputfile.next()
+            line = inputfile.next()
+            double = line.strip()
+            if double:
+                header = inputfile.next()
+                skip = inputfile.next()
+                line = inputfile.next()
+            mulliken, lowdin = [], []
+            while line.strip():
+                mulliken.append(float(line.split()[3]))
+                lowdin.append(float(line.split()[5]))
+                line = inputfile.next()
+                if line.strip() and double:
+                    line = inputfile.next()
+            self.atomcharges["mulliken"] = mulliken
+            self.atomcharges["lowdin"] = lowdin
+
         
 if __name__ == "__main__":
     import doctest, gamessparser, sys
