@@ -1174,6 +1174,17 @@ class Gaussian(logfileparser.Logfile):
         if line[1:7] == "ONIOM:":
             self.oniom = True
 
+        if line[1:24] == "Mulliken atomic charges":
+            if not hasattr(self, "atomcharges"):
+                self.atomcharges = {}
+            ones = inputfile.next()
+            charges = []
+            line = inputfile.next()
+            while not "Sum of Mulliken" in line:
+                charges.append(float(line.split()[2]))
+                line = inputfile.next()
+            self.atomcharges["mulliken"] = charges
+
 
 if __name__ == "__main__":
     import doctest, gaussianparser, sys
