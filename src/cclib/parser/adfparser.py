@@ -896,6 +896,19 @@ class ADF(logfileparser.Logfile):
             else:
                 self.etsecs += etsecs
 
+        if "M U L L I K E N   P O P U L A T I O N S" in line:
+            if not hasattr(self, "atomcharges"):
+                self.atomcharges = {}
+            while line[1:5] != "Atom":
+                line = inputfile.next()
+            dashes = inputfile.next()
+            mulliken = []
+            line = inputfile.next()
+            while line.strip():
+                mulliken.append(float(line.split()[2]))
+                line = inputfile.next()
+            self.atomcharges["mulliken"] = mulliken
+
 
 if __name__ == "__main__":
     import doctest, adfparser
