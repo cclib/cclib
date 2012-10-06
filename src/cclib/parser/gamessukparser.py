@@ -521,7 +521,22 @@ class GAMESSUK(logfileparser.Logfile):
                 self.moenergies = [moenergies, moenergies]
             else:
                 self.moenergies = [moenergies]
-                
+
+        if line[10:49] == "mulliken and lowdin population analyses":
+            if not hasattr(self, "atomcharges"):
+                self.atomcharges = {}
+            while not "total gross population on atoms" in line:
+                line = inputfile.next()
+            blank = inputfile.next()
+            mulliken, lowdin = [], []
+            line = inputfile.next()
+            while line.strip():
+                mulliken.append(float(line.split()[3]))
+                lowdin.append(float(line.split()[4]))
+                line = inputfile.next()
+            self.atomcharges["mulliken"] = mulliken
+            self.atomcharges["lowdin"] = lowdin
+
              
 if __name__ == "__main__":
     import doctest
