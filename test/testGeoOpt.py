@@ -45,6 +45,12 @@ class GenericGeoOptTest(bettertest.TestCase):
         self.assertEquals(self.data.atomnos.shape, (20,) )
         self.assertEquals(sum(self.data.atomnos==6) + sum(self.data.atomnos==1), 20)        
 
+    def testatomcharges(self):
+        """Are all atomcharges consistent with natom and do they sum to zero?"""
+        for type,charges in self.data.atomcharges.iteritems():
+            self.assertEquals(self.data.natom, len(charges))
+            self.assertInside(sum(charges), 0, 0.0001)
+
     def testatomcoords(self):
         """Are atomcoords consistent with natom and Angstroms?"""
         coords = self.data.atomcoords

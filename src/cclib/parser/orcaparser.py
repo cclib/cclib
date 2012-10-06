@@ -419,6 +419,9 @@ class ORCA(logfileparser.Logfile):
 
         # ORCA will print atomic charges along with the spin populations,
         #   so care must be taken about choosing the proper column.
+        # Population analyses are performed usually only at the end
+        #   of a geometry optimization or other run, so we want to
+        #   leave just the final atom charges.
         # Here is an example for Mulliken charges:
         # --------------------------------------------
         # MULLIKEN ATOMIC CHARGES AND SPIN POPULATIONS
@@ -434,8 +437,6 @@ class ORCA(logfileparser.Logfile):
 
             if not hasattr(self, "atomcharges"):
                 self.atomcharges = { }
-            if not self.atomcharges.has_key("mulliken"):
-                self.atomcharges["mulliken"] = []
 
             dashes = inputfile.next()
 
@@ -444,7 +445,7 @@ class ORCA(logfileparser.Logfile):
             while line[:21] != "Sum of atomic charges":
                 charges.append(float(line[8:20]))
                 line = inputfile.next()
-            self.atomcharges["mulliken"].append(charges)
+            self.atomcharges["mulliken"] = charges
             
         # Things are the same for Lowdin populations, except that the sums
         #   are not printed (there is a blank line at the end).
@@ -452,8 +453,6 @@ class ORCA(logfileparser.Logfile):
 
             if not hasattr(self, "atomcharges"):
                 self.atomcharges = { }
-            if not self.atomcharges.has_key("lowdin"):
-                self.atomcharges["lowdin"] = []
 
             dashes = inputfile.next()
 
@@ -462,7 +461,7 @@ class ORCA(logfileparser.Logfile):
             while line.strip():
                 charges.append(float(line[8:20]))
                 line = inputfile.next()
-            self.atomcharges["lowdin"].append(charges)
+            self.atomcharges["lowdin"] = charges
 
 
 if __name__ == "__main__":
