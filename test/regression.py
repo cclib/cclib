@@ -347,9 +347,10 @@ def flatten(seq):
     return res
 
 
-def main():
-    # Print a warning if you haven't downloaded all of the regression test files
-    # or an error if all of the regression test files are not included in filenames[]
+def main(which=[]):
+
+    # Print a warning if you haven't downloaded all of the regression test files,
+    # or an error if not all of the regression test files are included in filenames.
     regfile = open(os.path.join("..", "data", "regressionfiles.txt"), "r")
     regfilenames = [os.sep.join(x.strip().split("/")) for x in regfile.readlines()]
     regfile.close()
@@ -371,8 +372,12 @@ def main():
             sys.exit(0)
 
     failures = errors = total = 0
+    for i,name in enumerate(names):
 
-    for i in range(len(names)):
+        # Continue to next iteration if we are limiting the regression.
+        if which and not name in which:
+            continue;
+
         print "Are the %s files ccopened and parsed correctly?" % names[i]
         for filename in filenames[i]:
             total += 1
@@ -437,8 +442,12 @@ def main():
 
 
 if __name__=="__main__":
-    if len(sys.argv)==2 and sys.argv[1]=="test":
+
+    # If 'test' is passed as the first argument, do a doctest on this module.
+    # Otherwise, any arguments are used to limit the test to the packages/parsers
+    #   passed as arguments. Not arguments implies all parsers.
+    if len(sys.argv) == 2 and sys.argv[1] == "test":
         import doctest
         doctest.testmod()
     else:
-        main()
+        main(sys.argv[1:])
