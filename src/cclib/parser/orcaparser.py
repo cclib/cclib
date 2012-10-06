@@ -435,33 +435,53 @@ class ORCA(logfileparser.Logfile):
         # Sum of atomic spin populations:    1.0000000
         if line[:23] == "MULLIKEN ATOMIC CHARGES":
 
+            has_spins = "AND SPIN POPULATIONS" in line
+
             if not hasattr(self, "atomcharges"):
                 self.atomcharges = { }
+            if has_spins and not hasattr(self, "atomspins"):
+                self.atomspins = {}
 
             dashes = inputfile.next()
 
             charges = []
+            if has_spins:
+                spins = []
             line = inputfile.next()
             while line[:21] != "Sum of atomic charges":
                 charges.append(float(line[8:20]))
+                if has_spins:
+                    spins.append(float(line[20:]))
                 line = inputfile.next()
             self.atomcharges["mulliken"] = charges
+            if has_spins:
+                self.atomspins["mulliken"] = spins
             
         # Things are the same for Lowdin populations, except that the sums
         #   are not printed (there is a blank line at the end).
         if line[:22] == "LOEWDIN ATOMIC CHARGES":
 
+            has_spins = "AND SPIN POPULATIONS" in line
+
             if not hasattr(self, "atomcharges"):
                 self.atomcharges = { }
+            if has_spins and not hasattr(self, "atomspins"):
+                self.atomspins = {}
 
             dashes = inputfile.next()
 
             charges = []
+            if has_spins:
+                spins = []
             line = inputfile.next()
             while line.strip():
                 charges.append(float(line[8:20]))
+                if has_spins:
+                    spins.append(float(line[20:]))
                 line = inputfile.next()
             self.atomcharges["lowdin"] = charges
+            if has_spins:
+                self.atomspins["lowdin"] = spins
 
 
 if __name__ == "__main__":

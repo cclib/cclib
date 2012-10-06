@@ -20,10 +20,11 @@ class ccData(object):
         aonames -- atomic orbital names (list)
         aooverlaps -- atomic orbital overlap matrix (array[2])
         atombasis -- indices of atomic orbitals on each atom (list of lists)
-        atomcharges -- atom partial charges (dict of arrays[1])
+        atomcharges -- atomic partial charges (dict of arrays[1])
         atomcoords -- atom coordinates (array[3], angstroms)
         atommasses -- atom masses (array[1], daltons)
         atomnos -- atomic numbers (array[1])
+        atomspins -- atomic spin densities (dict of arrays[1])
         charge -- net charge of the system (integer)
         ccenergies -- molecular energies with Coupled-Cluster corrections (array[2], eV)
         coreelectrons -- number of core electrons in atom pseudopotentials (array[1])
@@ -86,7 +87,7 @@ class ccData(object):
 
         # Names of all supported attributes.
         self._attrlist = ['aonames', 'aooverlaps', 'atombasis',
-                          'atomcharges', 'atomcoords', 'atommasses', 'atomnos',
+                          'atomcharges', 'atomcoords', 'atommasses', 'atomnos', 'atomspins',
                           'ccenergies', 'charge', 'coreelectrons',
                           'etenergies', 'etoscs', 'etrotats', 'etsecs', 'etsyms',
                           'fonames', 'fooverlaps', 'fragnames', 'frags',
@@ -108,6 +109,7 @@ class ccData(object):
                             "atomcoords":     numpy.ndarray,
                             "atommasses":     numpy.ndarray,
                             "atomnos":        numpy.ndarray,
+                            "atomspins":      dict,
                             "ccenergies":     numpy.ndarray,
                             "charge":         int,
                             "coreelectrons":  numpy.ndarray,
@@ -162,7 +164,7 @@ class ccData(object):
         self._listsofarrays = ['mocoeffs', 'moenergies', 'scfvalues']
         
         # Attributes that should be dictionaries of arrays (double precision).
-        self._dictsofarrays = ["atomcharges"]
+        self._dictsofarrays = ["atomcharges", "atomspins"]
 
         if attributes:
             self.setattributes(attributes)

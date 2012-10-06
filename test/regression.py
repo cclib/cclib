@@ -250,6 +250,14 @@ def testGaussian_Gaussian03_cyclopropenyl_rhf_g03_cut_log_bz2(logfile):
     """
     assert len(logfile.atomcoords)==len(logfile.geovalues)
 
+def testORCA_ORCA2_9_job_out_gz(logfile):
+    """
+    First output file and request to parse atomic spin densities.
+    Make sure that the sum of such densities is one in this case (or reasonaby close),
+        but remember that this attribute is a dictionary, so we must iterate.
+    """
+    assert all([abs(sum(v)-1.0)<0.0001 for k,v in logfile.atomspins.iteritems()])
+
 
 # Edit the following variable definitions to add new parsers
 # or new datafiles
@@ -303,7 +311,8 @@ filenames = [glob(os.path.join(data, "Gaussian", "basicGaussian03", "*.out")) +
              glob(os.path.join(data, "Molpro", "basicMolpro2006", "*.out")) +
              glob(os.path.join(data, "Molpro", "Molpro2006", "*.bz2")),
 
-             glob(os.path.join(data, "ORCA", "ORCA2.8", "*.out")),
+             glob(os.path.join(data, "ORCA", "ORCA2.8", "*.out")) +
+             glob(os.path.join(data, "ORCA", "ORCA2.9", "*.out.gz")),
              ]
 
 
