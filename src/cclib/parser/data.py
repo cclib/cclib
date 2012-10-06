@@ -154,6 +154,9 @@ class ccData(object):
         # Attributes that should be lists of arrays (double precision).
         self._listsofarrays = ['mocoeffs', 'moenergies', 'scfvalues']
         
+        # Attributes that should be dictionaries of arrays (double precision).
+        self._dictsofarrays = []
+
         if attributes:
             self.setattributes(attributes)
         
@@ -166,6 +169,8 @@ class ccData(object):
                     setattr(self, k, getattr(self, k).tolist())
                 elif v == list and k in self._listsofarrays:
                     setattr(self, k, [x.tolist() for x in getattr(self, k)])
+                elif v == dict and k in self._dictsofarrays:
+                    setattr(self, k, dict([(key,val.tolist()) for key,val in getattr(self, k).iteritems()]))
     
     def arrayify(self):
         """Converts appropriate attributes to arrays or lists of arrays."""
@@ -179,7 +184,10 @@ class ccData(object):
                     setattr(self, k, numpy.array(getattr(self, k), precision))
                 elif v == list and k in self._listsofarrays:
                     setattr(self, k, [numpy.array(x, precision)
-                                      for x in getattr(self, k)])
+                                for x in getattr(self, k)])
+                elif v == dict and k in self._dictsofarrays:
+                    setattr(self, k, dict([(key,numpy.array(val, precision))
+                                for key,val in getattr(self, k).iteritems()]))
 
     def getattributes(self, tolists=False):
         """Returns a dictionary of existing data attributes.
