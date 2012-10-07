@@ -962,16 +962,29 @@ class GAMESS(logfileparser.Logfile):
 
         # This is quite simple to parse, but some files seem to print certain
         #   lines twice, repeating the populations without charges.
+        # Now, unrestricted calculations are bit tricky, since GAMESS-US prints
+        #   populations for both alpha and beta orbitals in the same format
+        #   and with the same title, but it still prints the charges only
+        #   at the very end. So, check for the number of columns in the header.
         if "TOTAL MULLIKEN AND LOWDIN ATOMIC POPULATIONS" in line:
+
             if not hasattr(self, "atomcharges"):
                 self.atomcharges = {}
+
             header = inputfile.next()
             line = inputfile.next()
+
             double = line.strip()
             if double:
                 header = inputfile.next()
                 skip = inputfile.next()
                 line = inputfile.next()
+
+            # Only go further if the header had five columns, which should
+            #   be the case when both populations and charges are printed.
+            if not header.split() == 5:
+                return
+            
             mulliken, lowdin = [], []
             while line.strip():
                 mulliken.append(float(line.split()[3]))
