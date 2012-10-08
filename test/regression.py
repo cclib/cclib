@@ -88,6 +88,12 @@ def testGAMESS_GAMESS_US_paulo_h2o_mp2_zip(logfile):
     assert abs(logfile.mpenergies[0] + 2072.13) < 0.01
 
 
+def testGaussian_Gaussian09_dvb_lowdin_log_gz(logfile):
+    """Check if both Mulliken and Lowdin charges are parsed"""
+
+    assert "mulliken" in logfile.atomcharges
+    assert "lowdin" in logfile.atomcharges
+
 def testGaussian_basicGaussian03_dvb_gopt_out(logfile):
     """Example regression test for Gaussian/basicGaussian03/dvb_gopt.out
 
