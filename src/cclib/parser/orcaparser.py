@@ -10,12 +10,9 @@
 
 __revision__ = "$Revision$"
 
-import re
-
 import numpy
 
 import logfileparser
-import utils
 
 
 class ORCA(logfileparser.Logfile):
@@ -139,8 +136,8 @@ class ORCA(logfileparser.Logfile):
             line = inputfile.next()
             # Non-DIIS convergers do not contain this line.
             # assert "Last DIIS Error" in line
-            self.scfvalues[-1].append([deltaE_value,maxDP_value,rmsDP_value])
-            self.scftargets.append([deltaE_target,maxDP_target,rmsDP_target])                
+            self.scfvalues[-1].append([deltaE_value, maxDP_value, rmsDP_value])
+            self.scftargets.append([deltaE_target, maxDP_target, rmsDP_target])                
 
         # Read in SCF energy, at least in SP calculation.
         if "TOTAL SCF ENERGY" in line:

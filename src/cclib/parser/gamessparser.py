@@ -223,7 +223,7 @@ class GAMESS(logfileparser.Logfile):
                 # With DETS, both alpha and beta excitations are printed.
                 # if self.cihamtyp == "saps":
                 #    coeff /= numpy.sqrt(2.0)
-                CIScontribs.append([(fromMO,MOtype),(toMO,MOtype),coeff])
+                CIScontribs.append([(fromMO,MOtype), (toMO,MOtype), coeff])
                 line = inputfile.next()
             self.etsecs.append(CIScontribs)
 
@@ -526,7 +526,7 @@ class GAMESS(logfileparser.Logfile):
                 line = inputfile.next()
             if warning:
                 line = inputfile.next()
-                while line!= blank:
+                while line != blank:
                     line = inputfile.next()
             
             freqNo = inputfile.next()
@@ -537,7 +537,7 @@ class GAMESS(logfileparser.Logfile):
                 freq = inputfile.next().strip().split()[1:]
                 newfreq = []
                 for i, x in enumerate(freq):
-                    if x!="I":
+                    if x != "I":
                         newfreq.append(float(x))
                     else:
                         newfreq[-1] = -newfreq[-1]
@@ -733,7 +733,7 @@ class GAMESS(logfileparser.Logfile):
                 # Going to use the same method as for normalise_aonames()
                 # to extract basis set information.
                 p = re.compile("(\d+)\s*([A-Z][A-Z]?)\s*(\d+)\s*([A-Z]+)")
-                oldatom ='0'
+                oldatom = '0'
                 i_atom = 0 # counter to keep track of n_atoms > 99
                 flag_w = True # flag necessary to keep from adding 100's at wrong time
 
@@ -759,7 +759,7 @@ class GAMESS(logfileparser.Logfile):
                             if g2 == 0 and flag_w:
                                 i_atom = i_atom + 100
                                 flag_w = False # handle subsequent AO's
-                            if g2 !=0:
+                            if g2 != 0:
                                 flag_w = True # reset flag 
                             g2 = g2 + i_atom
 
@@ -942,13 +942,13 @@ class GAMESS(logfileparser.Logfile):
                 atomnum = int(header[34:40])
                 # The pseudopotnetial is given explicitely
                 if header[40:50] == "WITH ZCORE":
-                  zcore = int(header[50:55])
-                  lmax = int(header[63:67])
-                  self.coreelectrons[atomnum-1] = zcore
+                    zcore = int(header[50:55])
+                    lmax = int(header[63:67])
+                    self.coreelectrons[atomnum-1] = zcore
                 # The pseudopotnetial is copied from another atom
                 if header[40:55] == "ARE THE SAME AS":
-                  atomcopy = int(header[60:])
-                  self.coreelectrons[atomnum-1] = self.coreelectrons[atomcopy-1]
+                    atomcopy = int(header[60:])
+                    self.coreelectrons[atomnum-1] = self.coreelectrons[atomcopy-1]
                 line = inputfile.next()
                 while line.split() <> []:
                     line = inputfile.next()

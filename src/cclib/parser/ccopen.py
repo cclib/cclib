@@ -37,12 +37,12 @@ def ccopen(source, *args, **kargs):
     filetype = None
 
     # Try to open the logfile(s), using openlogfile.
-    if isinstance(source,types.StringTypes) or \
-       isinstance(source,list) and all([isinstance(s,types.StringTypes) for s in source]):
+    if isinstance(source, types.StringTypes) or \
+       isinstance(source, list) and all([isinstance(s, types.StringTypes) for s in source]):
         try:
             inputfile = logfileparser.openlogfile(source)
         except IOError, (errno, strerror):
-            print "I/O error %s (%s): %s" %(errno, source, strerror)
+            print "I/O error %s (%s): %s" % (errno, source, strerror)
             return None
         isstream = False
     elif hasattr(source, "read"):

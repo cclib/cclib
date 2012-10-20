@@ -49,7 +49,7 @@ class Gaussian(logfileparser.Logfile):
         # note: DLT must come after DLTA
         greek = [('SG', 'sigma'), ('PI', 'pi'), ('PHI', 'phi'),
                  ('DLTA', 'delta'), ('DLT', 'delta')]
-        for k,v in greek:
+        for k, v in greek:
             if label.startswith(k):
                 tmp = label[len(k):]
                 label = v
@@ -119,9 +119,9 @@ class Gaussian(logfileparser.Logfile):
             hyphens = inputfile.next()
             line = inputfile.next()
             while line != hyphens:
-                broken=line.split()
+                broken = line.split()
                 scanenergies.append(float(broken[-1]))
-                scanparm.append(map(float,broken[1:-1]))
+                scanparm.append(map(float, broken[1:-1]))
                 line = inputfile.next()
             if not hasattr(self, "scanenergies"):
                 self.scanenergies = []
@@ -223,7 +223,7 @@ class Gaussian(logfileparser.Logfile):
             line = inputfile.next()
             while line[1:16] != "Leave Link  101":
                 if line[1:8] == "AtmWgt=":
-                    self.atommasses.extend(map(float,line.split()[1:]))
+                    self.atommasses.extend(map(float, line.split()[1:]))
                 line = inputfile.next()
 
         # Extract the atomic numbers and coordinates of the atoms.
@@ -481,7 +481,7 @@ class Gaussian(logfileparser.Logfile):
             while line != dashes:
                 broken = line.split()
                 Fx, Fy, Fz = broken[-3:]
-                forces.append([float(Fx),float(Fy),float(Fz)])
+                forces.append([float(Fx), float(Fy), float(Fz)])
                 line = inputfile.next()
             self.grads.append(forces)                
 
@@ -655,9 +655,9 @@ class Gaussian(logfileparser.Logfile):
                         temp = map(self.float, inputfile.next().split())
                         gau.append(temp)
                         
-                    for i,x in enumerate(symtype):
-                        newgau = [(z[0],z[i+1]) for z in gau]
-                        gbasis.append( (x,newgau) )
+                    for i, x in enumerate(symtype):
+                        newgau = [(z[0], z[i+1]) for z in gau]
+                        gbasis.append((x, newgau))
                     line = inputfile.next() # i.e. "****" or "SP ...."
                 self.gbasis.append(gbasis)
                 line = inputfile.next() # i.e. "20 0" or blank line
@@ -993,7 +993,7 @@ class Gaussian(logfileparser.Logfile):
                     self.logger.warning("Molecular coefficients header found but no coefficients.")
                     break;
 
-                if base==0 and int(colmNames.split()[0])!=1:
+                if base == 0 and int(colmNames.split()[0]) != 1:
                     # Implies that this is a POP=REGULAR calculation
                     # and so, only aonames (not mocoeffs) will be extracted
                     self.popregular = True
@@ -1002,13 +1002,13 @@ class Gaussian(logfileparser.Logfile):
                 for i in range(self.nbasis):
                                    
                     line = inputfile.next()
-                    if i==0:
+                    if i == 0:
                         # Find location of the start of the basis function name
                         start_of_basis_fn_name = line.find(line.split()[3]) - 1
                     if base == 0 and not beta: # Just do this the first time 'round
                         parts = line[:start_of_basis_fn_name].split()
                         if len(parts) > 1: # New atom
-                            if i>0:
+                            if i > 0:
                                 self.atombasis.append(atombasis)
                             atombasis = []
                             atomname = "%s%s" % (parts[2], parts[1])
@@ -1049,7 +1049,7 @@ class Gaussian(logfileparser.Logfile):
                 self.updateprogress(inputfile, "Coefficients", self.fupdate)
                          
                 colmNames = inputfile.next()   
-                if base==0 and int(colmNames.split()[0])!=1:
+                if base == 0 and int(colmNames.split()[0]) != 1:
                     # Implies that this is a POP=REGULAR calculation
                     # and so, only aonames (not mocoeffs) will be extracted
                     self.popregular = True
@@ -1069,7 +1069,7 @@ class Gaussian(logfileparser.Logfile):
                         parts = line[:11].split()
                         # New atom.
                         if len(parts) > 1:
-                            if i>0:
+                            if i > 0:
                                 self.atombasis.append(atombasis)
                             atombasis = []
                             atomname = "%s%s" % (parts[2], parts[1])

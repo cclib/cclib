@@ -107,14 +107,14 @@ class Logfile(object):
         # Set the filename to source if it is a string or a list of filenames.
         # In the case of an input stream, set some arbitrary name and the stream.
         # Elsewise, raise an Exception.
-        if isinstance(source,types.StringTypes):
+        if isinstance(source, types.StringTypes):
             self.filename = source
             self.isstream = False
-        elif isinstance(source,list) and all([isinstance(s,types.StringTypes) for s in source]):
+        elif isinstance(source, list) and all([isinstance(s, types.StringTypes) for s in source]):
             self.filename = source
             self.isstream = False
         elif hasattr(source, "read"):
-            self.filename = "stream %s" %str(type(source))
+            self.filename = "stream %s" % str(type(source))
             self.isstream = True
             self.stream = source
         else:
@@ -131,12 +131,12 @@ class Logfile(object):
         #   which means that care needs to be taken not to duplicate handlers.
         self.loglevel = loglevel
         self.logname  = logname
-        self.logger = logging.getLogger('%s %s' % (self.logname,self.filename))
+        self.logger = logging.getLogger('%s %s' % (self.logname, self.filename))
         self.logger.setLevel(self.loglevel)
         if len(self.logger.handlers) == 0:
-                handler = logging.StreamHandler(logstream)
-                handler.setFormatter(logging.Formatter("[%(name)s %(levelname)s] %(message)s"))
-                self.logger.addHandler(handler)
+            handler = logging.StreamHandler(logstream)
+            handler.setFormatter(logging.Formatter("[%(name)s %(levelname)s] %(message)s"))
+            self.logger.addHandler(handler)
 
         # Periodic table of elements.
         self.table = utils.PeriodicTable()
@@ -166,14 +166,11 @@ class Logfile(object):
         # Check that the sub-class has an extract attribute,
         #  that is callable with the proper number of arguemnts.
         if not hasattr(self, "extract"):
-            raise AttributeError, "Class %s has no extract() method." %self.__class__.__name__
-            return -1
+            raise AttributeError, "Class %s has no extract() method." % self.__class__.__name__
         if not callable(self.extract):
-            raise AttributeError, "Method %s._extract not callable." %self.__class__.__name__
-            return -1
+            raise AttributeError, "Method %s._extract not callable." % self.__class__.__name__
         if len(inspect.getargspec(self.extract)[0]) != 3:
-            raise AttributeError, "Method %s._extract takes wrong number of arguments." %self.__class__.__name__
-            return -1
+            raise AttributeError, "Method %s._extract takes wrong number of arguments." % self.__class__.__name__
 
         # Save the current list of attributes to keep after parsing.
         # The dict of self should be the same after parsing.
@@ -188,7 +185,7 @@ class Logfile(object):
 
         # Intialize self.progress.
         if self.progress:
-            inputfile.seek(0,2)
+            inputfile.seek(0, 2)
             nstep = inputfile.tell()
             inputfile.seek(0)
             self.progress.initialize(nstep)
@@ -209,8 +206,7 @@ class Logfile(object):
         self._attrlist = data._attrlist
         
         # Maybe the sub-class has something to do before parsing.
-        if hasattr(self, "before_parsing"):
-            self.before_parsing()
+        self.before_parsing()
 
         # Loop over lines in the file object and call extract().
         # This is where the actual parsing is done.
@@ -229,8 +225,7 @@ class Logfile(object):
             inputfile.close()
 
         # Maybe the sub-class has something to do after parsing.
-        if hasattr(self, "after_parsing"):
-            self.after_parsing()
+        self.after_parsing()
 
         # If atomcoords were not parsed, but some input coordinates were ("inputcoords").
         # This is originally from the Gaussian parser, a regression fix.
@@ -269,6 +264,14 @@ class Logfile(object):
         # Return the ccData object that was generated.
         return data
 
+    def before_parsing(self):
+
+        pass
+
+    def after_parsing(self):
+
+        pass
+
     def updateprogress(self, inputfile, msg, xupdate=0.05):
         """Update progress."""
 
@@ -278,7 +281,7 @@ class Logfile(object):
                 self.progress.update(newstep, msg)
                 self.progress.step = newstep
 
-    def normalisesym(self,symlabel):
+    def normalisesym(self, symlabel):
         """Standardise the symmetry labels between parsers.
 
         This method should be overwritten by individual parsers, and should
@@ -287,7 +290,7 @@ class Logfile(object):
         """
         return "ERROR: This should be overwritten by this subclass"
 
-    def float(self,number):
+    def float(self, number):
         """Convert a string to a float avoiding the problem with Ds.
 
         >>> t = Logfile("dummyfile")
@@ -300,6 +303,6 @@ class Logfile(object):
         return float(number)
 
 
-if __name__=="__main__":
+if __name__ == "__main__":
     import doctest
     doctest.testmod()

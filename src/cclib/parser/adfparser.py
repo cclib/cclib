@@ -74,16 +74,16 @@ class ADF(logfileparser.Logfile):
         """
 
         if not ndict:
-          ndict = { 'P': {0:"P:x", 1:"P:y", 2:"P:z"},\
+          ndict = { 'P': {0:"P:x", 1:"P:y", 2:"P:z"}, \
                     'D': {0:"D:z2", 1:"D:x2-y2", 2:"D:xy", 3:"D:xz", 4:"D:yz"}}
 
         if ndict.has_key(label):
             if ndict[label].has_key(num):
                 return ndict[label][num]
             else:
-                return "%s:%i"%(label,num+1)
+                return "%s:%i" % (label, num+1)
         else:
-            return "%s:%i"%(label,num+1)
+            return "%s:%i" % (label, num+1)
 
     def before_parsing(self):
 
@@ -114,7 +114,7 @@ class ADF(logfileparser.Logfile):
                 #does this file contain multiple calculations?
                 #if so, print a warning and skip to end of file
                     self.logger.warning("Skipping remaining calculations")
-                    inputfile.seek(0,2)
+                    inputfile.seek(0, 2)
                     break
 
                 if line.find("INPUT FILE") >= 0:
@@ -191,7 +191,7 @@ class ADF(logfileparser.Logfile):
                 info = line.split()
 
                 if len(info) == 7: #fragment name is listed here
-                    self.fragnames.append("%s_%s"%(info[1],info[0]))
+                    self.fragnames.append("%s_%s" % (info[1], info[0]))
                     self.frags.append([])
                     self.frags[-1].append(int(info[2]) - 1)
 
@@ -432,19 +432,19 @@ class ADF(logfileparser.Logfile):
                 info = line.split()
                 if len(info) == 5: #this is restricted
                     #count = multiple.get(info[0][0],1)
-                    count = multiple.get(info[0],1)
+                    count = multiple.get(info[0], 1)
                     for repeat in range(count): # i.e. add E's twice, T's thrice
                         self.mosyms[0].append(self.normalisesym(info[0]))
                         self.moenergies[0].append(utils.convertor(float(info[3]), 'hartree', 'eV'))
 
                         sym = info[0]
                         if count > 1: # add additional sym label
-                            sym = self.normalisedegenerates(info[0],repeat,ndict=irrepspecies)
+                            sym = self.normalisedegenerates(info[0], repeat, ndict=irrepspecies)
 
                         try:
                             self.symlist[sym][0].append(len(self.moenergies[0])-1)
                         except KeyError:
-                            self.symlist[sym]=[[]]
+                            self.symlist[sym] = [[]]
                             self.symlist[sym][0].append(len(self.moenergies[0])-1)
 
                     if info[2] == '0.00' and not hasattr(self, 'homos'):
@@ -463,12 +463,12 @@ class ADF(logfileparser.Logfile):
 
                             sym = info[0]
                             if count > 1: #add additional sym label
-                                sym = self.normalisedegenerates(info[0],repeat)
+                                sym = self.normalisedegenerates(info[0], repeat)
 
                             try:
                                 self.symlist[sym][0].append(len(self.moenergies[0])-1)
                             except KeyError:
-                                self.symlist[sym]=[[],[]]
+                                self.symlist[sym] = [[], []]
                                 self.symlist[sym][0].append(len(self.moenergies[0])-1)
 
                         if info[3] == '0.00' and homoa == None:
@@ -481,12 +481,12 @@ class ADF(logfileparser.Logfile):
 
                             sym = info[0]
                             if count > 1: #add additional sym label
-                                sym = self.normalisedegenerates(info[0],repeat)
+                                sym = self.normalisedegenerates(info[0], repeat)
 
                             try:
                                 self.symlist[sym][1].append(len(self.moenergies[1])-1)
                             except KeyError:
-                                self.symlist[sym]=[[],[]]
+                                self.symlist[sym] = [[], []]
                                 self.symlist[sym][1].append(len(self.moenergies[1])-1)
 
                         if info[3] == '0.00' and homob == None:
@@ -757,7 +757,7 @@ class ADF(logfileparser.Logfile):
                         # The AO index is 1 less than the row.
                         aoindex = symoffset + row - 1
                         for i in range(len(monumbers)):
-                            self.mocoeffs[spin][moindices[i],aoindex] = coeffs[i]
+                            self.mocoeffs[spin][moindices[i], aoindex] = coeffs[i]
                         line = inputfile.next()
                     lastrow = row
 
@@ -771,11 +771,10 @@ class ADF(logfileparser.Logfile):
 
             #     Number of loops in Davidson routine     =   20                    
             #     Number of matrix-vector multiplications =   24                    
-            #     Type of excitations = SINGLET-SINGLET 
+            #     Type of excitations = SINGLET-SINGLET
 
-            inputfile.next(); inputfile.next(); inputfile.next()
-            inputfile.next(); inputfile.next(); inputfile.next()
-            inputfile.next(); inputfile.next()
+            for i in range(8):
+                inputfile.next()
 
             symm = self.normalisesym(inputfile.next().split()[1])
 
@@ -787,8 +786,8 @@ class ADF(logfileparser.Logfile):
             # no.  E/a.u.        E/eV      f           dE/a.u.
             # -----------------------------------------------------
 
-            inputfile.next(); inputfile.next(); inputfile.next()
-            inputfile.next(); inputfile.next(); inputfile.next()
+            for i in range(6):
+                inputfile.next()
 
             # now start parsing etenergies and etoscs
 
@@ -815,8 +814,8 @@ class ADF(logfileparser.Logfile):
             #                                   (sum=1) transition dipole moment   
             #                                             x       y       z       
 
-            inputfile.next(), inputfile.next(), inputfile.next()
-            inputfile.next(), inputfile.next(), inputfile.next()
+            for i in range(6):
+                inputfile.next()
 
             # before we start handeling transitions, we need
             # to create mosyms with indices

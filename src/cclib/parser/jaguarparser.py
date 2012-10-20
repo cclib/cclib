@@ -190,7 +190,7 @@ class Jaguar(logfileparser.Logfile):
             bvirt = int(line.split()[-1])
 
             self.nmo = aoccs + avirts
-            self.homos = numpy.array([aoccs-1,boccs-1], "i")
+            self.homos = numpy.array([aoccs-1, boccs-1], "i")
             self.unrestrictedflag = True
 
         # MO energies and symmetries.
@@ -219,7 +219,7 @@ class Jaguar(logfileparser.Logfile):
             if not hasattr(self, "moenergies"):
                 self.moenergies = []
             if issyms and not hasattr(self, "mosyms"):
-                    self.mosyms = []
+                self.mosyms = []
             
             # Grow moeneriges/mosyms and make sure they are empty when
             #   parsed multiple times - currently cclib returns only
@@ -289,7 +289,7 @@ class Jaguar(logfileparser.Logfile):
                     blank = inputfile.next()
                     blank = inputfile.next()
 
-                for k in range(0,len(self.moenergies[s]),5):
+                for k in range(0, len(self.moenergies[s]), 5):
 
                     numbers = inputfile.next()
                     eigens = inputfile.next()
@@ -332,7 +332,7 @@ class Jaguar(logfileparser.Logfile):
                             lastatom = info[1]
 
                         for j in range(len(info[3:])):
-                            mocoeffs[j+k,i] = float(info[3+j])
+                            mocoeffs[j+k, i] = float(info[3+j])
 
                         line = inputfile.next()
 
@@ -344,7 +344,7 @@ class Jaguar(logfileparser.Logfile):
                         
                         
         if line[2:6] == "olap":
-            if line[6]=="-":
+            if line[6] == "-":
                 return
                 # This was continue (in loop) before parser refactoring.
                 # continue # avoid "olap-dev"
@@ -464,7 +464,7 @@ class Jaguar(logfileparser.Logfile):
                 fromMO = int(line.split()[0])-1
                 toMO = int(line.split()[2])-1
                 coeff = float(line.split()[-1])
-                self.etsecs[-1].append([(fromMO,0),(toMO,0),coeff])
+                self.etsecs[-1].append([(fromMO, 0), (toMO, 0), coeff])
                 line = inputfile.next()
             # Skip 3 lines
             for i in range(4):

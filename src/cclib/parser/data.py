@@ -183,7 +183,9 @@ class ccData(object):
             elif v == list and k in self._listsofarrays:
                 setattr(self, k, [x.tolist() for x in getattr(self, k)])
             elif v == dict and k in self._dictsofarrays:
-                setattr(self, k, dict([(key,val.tolist()) for key,val in getattr(self, k).iteritems()]))
+                items = getattr(self, k).iteritems()
+                pairs = [(key, val.tolist()) for key, val in items]
+                setattr(self, k, dict(pairs))
     
     def arrayify(self):
         """Converts appropriate attributes to arrays or lists/dicts of arrays."""
@@ -199,7 +201,9 @@ class ccData(object):
             elif v == list and k in self._listsofarrays:
                 setattr(self, k, [numpy.array(x, precision) for x in getattr(self, k)])
             elif v == dict and k in self._dictsofarrays:
-                setattr(self, k, dict([(key,numpy.array(val, precision)) for key,val in getattr(self, k).iteritems()]))
+                items = getattr(self, k).iteritems()
+                pairs = [(key, numpy.array(val, precision)) for key, val in items]
+                setattr(self, k, dict(pairs))
 
     def getattributes(self, tolists=False):
         """Returns a dictionary of existing data attributes.
@@ -213,7 +217,7 @@ class ccData(object):
         attributes = {}
         for attr in self._attrlist:
             if hasattr(self, attr):
-                attributes[attr] = getattr(self,attr)
+                attributes[attr] = getattr(self, attr)
         if tolists:
             self.arrayify()
         return attributes

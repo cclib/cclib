@@ -113,9 +113,9 @@ class GAMESSUK(logfileparser.Logfile):
             empty = inputfile.next()
             while not empty.startswith(stop):
                 line = inputfile.next().split() # the coordinate data
-                atomcoords.append(map(float,line[3:6]))
+                atomcoords.append(map(float, line[3:6]))
                 self.atomnos.append(int(round(float(line[2]))))
-                while line!=empty:
+                while line != empty:
                     line = inputfile.next()
                 # at this point, line is an empty line, right after
                 # 1 or more lines containing basis set information
@@ -169,10 +169,10 @@ class GAMESSUK(logfileparser.Logfile):
 
             alpha = int(inputfile.next().split()[-1])-1
             beta = int(inputfile.next().split()[-1])-1
-            if self.mult==1:
+            if self.mult == 1:
                 self.homos = numpy.array([alpha], "i")
             else:
-                self.homos = numpy.array([alpha,beta], "i")
+                self.homos = numpy.array([alpha, beta], "i")
 
         if line[37:69] == "s-matrix over gaussian basis set":
             self.aooverlaps = numpy.zeros((self.nbasis, self.nbasis), "d")
@@ -197,7 +197,7 @@ class GAMESSUK(logfileparser.Logfile):
             self.coreelectrons = numpy.zeros(self.natom, 'i')
             asterisk = inputfile.next()
             line = inputfile.next()
-            while line[15:46]!="*"*31:
+            while line[15:46] != "*"*31:
                 if line.find("for atoms ...")>=0:
                     atomindex = []
                     line = inputfile.next()
@@ -223,7 +223,7 @@ class GAMESSUK(logfileparser.Logfile):
             xyz = inputfile.next()
             equals = inputfile.next()
             line = inputfile.next()
-            while line!=equals:
+            while line != equals:
                 temp = line.split()
                 self.vibfreqs.append(float(temp[1]))
                 self.vibirs.append(float(temp[-2]))
@@ -252,7 +252,7 @@ class GAMESSUK(logfileparser.Logfile):
                     brokenx = map(float, inputfile.next()[25:].split())
                     brokeny = map(float, inputfile.next()[25:].split())            
                     brokenz = map(float, inputfile.next()[25:].split())
-                    for j,x in enumerate(zip(brokenx, brokeny, brokenz)):
+                    for j, x in enumerate(zip(brokenx, brokeny, brokenz)):
                         p[j].append(x)
                 self.vibdisps.extend(p)
         
@@ -269,7 +269,7 @@ class GAMESSUK(logfileparser.Logfile):
 
             blank = inputfile.next()
             line = inputfile.next()
-            while line[1]!="*":
+            while line[1] != "*":
                 self.vibramans.append(float(line.split()[3]))
                 blank = inputfile.next()
                 line = inputfile.next()
@@ -289,14 +289,14 @@ class GAMESSUK(logfileparser.Logfile):
                 line = inputfile.next()
             line = inputfile.next()
             tester = line.find("tester") # Can be in a different place depending
-            assert tester>=0
+            assert tester >= 0
             while line[1:10] != "="*9: # May be two or three lines (unres)
                 line = inputfile.next()
             
             scfvalues = []
             line = inputfile.next()
             while line.strip():
-                if line[2:6]!="****":
+                if line[2:6] != "****":
             # e.g. **** recalulation of fock matrix on iteration  4 (examples/chap12/pyridine.out)
                     scfvalues.append([float(line[tester-5:tester+6])])
                 line = inputfile.next()
@@ -337,7 +337,7 @@ class GAMESSUK(logfileparser.Logfile):
             atomname = inputfile.next()
             basisregexp = re.compile("\d*(\D+)") # Get everything after any digits
             shellcounter = 1
-            while line!=equals:
+            while line != equals:
                 gbasis = [] # Stores basis sets on one atom
                 blank = inputfile.next()
                 blank = inputfile.next()
@@ -370,7 +370,7 @@ class GAMESSUK(logfileparser.Logfile):
                             gbasis.append( ('P', coeff['P']))
                         else:
                             gbasis.append( (sym.upper(), coeff[sym.upper()]))
-                    if line==equals:
+                    if line == equals:
                         continue
                     line = inputfile.next()
                     # either the start of the next block or the start of a new atom or
@@ -402,11 +402,11 @@ class GAMESSUK(logfileparser.Logfile):
             line = inputfile.next()
             while line != equals:
                 temp = line[25:30].strip()
-                if temp[-1]=='?':
+                if temp[-1] == '?':
                     # e.g. e? or t? or g? (see example/chap12/na7mg_uhf.out)
                     # for two As, an A and an E, and two Es of the same energy respectively.
                     t = line[91:].strip().split()
-                    for i in range(1,len(t),2):
+                    for i in range(1, len(t), 2):
                         for j in range(multiple[t[i][0]]): # add twice for 'e', etc.
                             mosyms.append(self.normalisesym(t[i]))
                 else:
@@ -419,7 +419,7 @@ class GAMESSUK(logfileparser.Logfile):
                 # it will add mosyms for every step of a geo opt)
                 self.mosyms.append(mosyms)
                 self.betamosyms = False
-            elif self.scftype=='gvb':
+            elif self.scftype == 'gvb':
                 # gvb has alpha and beta orbitals but they are identical
                 self.mosysms = [mosyms, mosyms]
             else:
@@ -465,7 +465,7 @@ class GAMESSUK(logfileparser.Logfile):
                     if not self.aonames:
                         pg = p.match(line[:18].strip()).groups()
                         atomname = "%s%s%s" % (pg[1][0].upper(), pg[1][1:], pg[0])
-                        if atomname!=oldatomname:
+                        if atomname != oldatomname:
                             aonum = 1
                         oldatomname = atomname
                         name = "%s_%d%s" % (atomname, aonum, pg[2].upper())
@@ -481,7 +481,7 @@ class GAMESSUK(logfileparser.Logfile):
                     self.aonames = aonames
 
                 line = inputfile.next() # blank line
-                while line==blank:
+                while line == blank:
                     line = inputfile.next()
                 evalues = line
                 if evalues[:17].strip(): # i.e. if these aren't evalues
@@ -517,7 +517,7 @@ class GAMESSUK(logfileparser.Logfile):
             if self.betamoenergies:
                 self.moenergies.append(moenergies)
                 self.betamoenergies = False
-            elif self.scftype=='gvb':
+            elif self.scftype == 'gvb':
                 self.moenergies = [moenergies, moenergies]
             else:
                 self.moenergies = [moenergies]
