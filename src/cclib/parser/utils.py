@@ -19,7 +19,9 @@ def convertor(value, fromunits, tounits):
     """
     
     _convertor = {"eV_to_cm-1": lambda x: x*8065.6,
+                  "eV_to_kJmol-1": lambda x: x*96.48538,
                   "hartree_to_eV": lambda x: x*27.2113845,
+                  "Hartree_to_ kJmol-1": lambda x: x*2625.5002,
                   "bohr_to_Angstrom": lambda x: x*0.529177,
                   "Angstrom_to_bohr": lambda x: x*1.889716,
                   "nm_to_cm-1": lambda x: 1e7/x,
