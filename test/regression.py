@@ -250,6 +250,22 @@ def testGaussian_Gaussian09_Ru2bpyen2_H2_freq3_log_bz2(logfile):
     assert len(logfile.atomnos) == 69
 
 
+def testORCA_ORCA2_8_co_cosmo_out_gz(logfile):
+    """This is related to bug 3184890.
+
+    The scfenergies were not being parsed correctly for this geometry
+    optimization run, for two reasons.
+    First, the printing of SCF total energies is different inside
+    geometry optimization steps than for single point calculations,
+    which also affects unit tests.
+    However, this logfile uses a setting that causes an SCF run to
+    terminate prematurely when a set maximum number of cycles is reached.
+    In this case, the last energy reported should probably be used,
+    and the number of values in scfenergies preserved.
+    """
+    assert hasattr(logfile, "scfenergies") and len(logfile.scfenergies) == 4
+
+
 def testORCA_ORCA2_9_job_out_gz(logfile):
     """
     First output file and request to parse atomic spin densities.
@@ -335,6 +351,7 @@ filenames = [glob(os.path.join(data, "Gaussian", "basicGaussian03", "*.out")) +
              glob(os.path.join(data, "ORCA", "basicORCA2.8", "*.out")) +
              glob(os.path.join(data, "ORCA", "basicORCA2.9", "*.out")) +
              glob(os.path.join(data, "ORCA", "ORCA2.8", "*.out")) +
+             glob(os.path.join(data, "ORCA", "ORCA2.8", "*.out.gz")) +
              glob(os.path.join(data, "ORCA", "ORCA2.9", "*.out.gz")),
              ]
 
