@@ -151,11 +151,31 @@ class ORCA(logfileparser.Logfile):
         #       *           SCF CONVERGED AFTER   9 CYCLES          *
         #       *****************************************************
         if "SCF CONVERGED AFTER" in line:
+
             while line[:20] != "Total Energy       :":
                 line = inputfile.next()
+
             if not hasattr(self, "scfenergies"):
                 self.scfenergies = []
+
             energy = float(line.split()[5])
+            self.scfenergies.append(energy)
+
+        # Sometimes the SCF does not converge, but does not halt the
+        # the run (like in bug 3184890). In this this case, we should
+        # remain consistent and use the energy from the last reported
+        # SCF cycle. In this case, ORCA print a banner like this:
+        #
+        #       *****************************************************
+        #       *                     ERROR                         *
+        #       *           SCF NOT CONVERGED AFTER   8 CYCLES      *
+        #       *****************************************************
+        if "SCF NOT CONVERGED AFTER" in line:
+
+            if not hasattr(self, "scfenergies"):
+                self.scfenergies = []
+
+            energy = self.scfvalues[-1][-1][0]
             self.scfenergies.append(energy)
 
         if line[33:53] == "Geometry convergence":
