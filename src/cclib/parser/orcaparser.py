@@ -48,8 +48,11 @@ class ORCA(logfileparser.Logfile):
 
         # Used to index self.scftargets[].
         SCFRMS, SCFMAX, SCFENERGY = range(3)
-        # Flag that indicates whether it has reached the end of a geoopt.
-        self.optfinished = False
+
+        # A geometry optimization is started only when
+        # we parse a cycle (so it will be larger than zero().
+        self.gopt_cycle = 0
+
         # Flag for identifying Coupled Cluster runs.
         self.coupledcluster = False
 
@@ -139,16 +142,21 @@ class ORCA(logfileparser.Logfile):
             self.scfvalues[-1].append([deltaE_value, maxDP_value, rmsDP_value])
             self.scftargets.append([deltaE_target, maxDP_target, rmsDP_target])                
 
-        # Read in SCF energy, at least in SP calculation.
-        if "TOTAL SCF ENERGY" in line:
+        # SCF energies are printed differently in single point calculations
+        # and in the inner steps of geometry optimizations. However, there is
+        # always a banner announcing the convergence, like this:
+        #
+        #       *****************************************************
+        #       *                     SUCCESS                       *
+        #       *           SCF CONVERGED AFTER   9 CYCLES          *
+        #       *****************************************************
+        if "SCF CONVERGED AFTER" in line:
+            while line[:20] != "Total Energy       :":
+                line = inputfile.next()
             if not hasattr(self, "scfenergies"):
                 self.scfenergies = []
-            dashes = inputfile.next()
-            blank = inputfile.next()
-            line = inputfile.next()
-            if line[:12] == "Total Energy":
-                energy = float(line[50:67])
-                self.scfenergies.append(energy)
+            energy = float(line.split()[5])
+            self.scfenergies.append(energy)
 
         if line[33:53] == "Geometry convergence":
 #get geometry convergence criteria
@@ -191,8 +199,19 @@ class ORCA(logfileparser.Logfile):
             if not hasattr(self, "atomnos"):
                 self.atomnos = atomnos
                 self.natom = len(atomnos)
-                
-        if line[26:53] == "GEOMETRY OPTIMIZATION CYCLE":
+
+        # There's always a banner announcing the next geometry optimization cycle,
+        # which looks something like this:
+        #
+        #    *************************************************************
+        #    *                GEOMETRY OPTIMIZATION CYCLE   2            *
+        #    *************************************************************
+        if "GEOMETRY OPTIMIZATION CYCLE" in line:
+
+            # Keep track of the current cycle jsut in case, because some things
+            # are printed differently inside the first/last and other cycles.
+            self.gopt_cycle = int(line.split()[4])
+
 #parse geometry coords
             stars = inputfile.next()
             dashes = inputfile.next()
