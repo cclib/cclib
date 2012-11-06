@@ -46,15 +46,9 @@ class ORCA(logfileparser.Logfile):
 
     def before_parsing(self):
 
-        # Used to index self.scftargets[].
-        SCFRMS, SCFMAX, SCFENERGY = range(3)
-
         # A geometry optimization is started only when
         # we parse a cycle (so it will be larger than zero().
         self.gopt_cycle = 0
-
-        # Flag for identifying Coupled Cluster runs.
-        self.coupledcluster = False
 
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
@@ -62,42 +56,58 @@ class ORCA(logfileparser.Logfile):
         if line[0:15] == "Number of atoms":
 
             natom = int(line.split()[-1])
+
+            # This assert will probably never be executed.
             if hasattr(self, "natom"):
-                # I wonder whether this code will ever be executed.
                 assert self.natom == natom
             else:
                 self.natom = natom
 
         if line[1:13] == "Total Charge":
-#get charge and multiplicity info
-            self.charge = int(line.split()[-1])
+
+            charge = int(line.split()[-1])
             line = inputfile.next()
-            self.mult = int(line.split()[-1])
+            mult = int(line.split()[-1])
 
-        if line[25:50] == "Geometry Optimization Run":
-#get geotarget info
-            line = inputfile.next()
-            while line[0:23] != "Convergence Tolerances:":
-                line = inputfile.next()
+            self.charge = charge
+            self.mult = mult
 
-            self.geotargets = numpy.zeros((5,), "d")
-            for i in range(5):
-                line = inputfile.next()
-                self.geotargets[i] = float(line.split()[-2])
-
-        # Read in scfvalues.
+        # Here is how a typical SCF convergence output looks like:
+        #
+        # --------------
+        # SCF ITERATIONS
+        # --------------
+        # ITER       Energy         Delta-E        Max-DP      RMS-DP      [F,P]     Damp
+        #                ***  Starting incremental Fock matrix formation  ***
+        #   0   -384.5203638934   0.000000000000 0.03375012  0.00223249  0.1351565 0.7000
+        #   1   -384.5792776162  -0.058913722842 0.02841696  0.00175952  0.0734529 0.7000
+        #                                ***Turning on DIIS***
+        #   2   -384.6074211837  -0.028143567475 0.04968025  0.00326114  0.0310435 0.0000
+        #   3   -384.6479682063  -0.040547022616 0.02097477  0.00121132  0.0361982 0.0000
+        #   4   -384.6571124353  -0.009144228947 0.00576471  0.00035160  0.0061205 0.0000
+        #   5   -384.6574659959  -0.000353560584 0.00191156  0.00010160  0.0025838 0.0000
+        #   6   -384.6574990782  -0.000033082375 0.00052492  0.00003800  0.0002061 0.0000
+        #   7   -384.6575005762  -0.000001497987 0.00020257  0.00001146  0.0001652 0.0000
+        #   8   -384.6575007321  -0.000000155848 0.00008572  0.00000435  0.0000745 0.0000
+        #          **** Energy Check signals convergence ****
         if "SCF ITERATIONS" in line:
-            if not hasattr(self, "scfvalues"):
-                self.scfvalues = []
+
             dashes = inputfile.next()
             line = inputfile.next().split()
+
             assert line[1] == "Energy"
             assert line[2] == "Delta-E"
             assert line[3] == "Max-DP"
+
+            if not hasattr(self, "scfvalues"):
+                self.scfvalues = []
+
             self.scfvalues.append([])
-            # Keep track of converger (NR, DIIS, SOSCF, etc.).
+
+            # Try to keep track of the converger (NR, DIIS, SOSCF, etc.).
             diis_active = True
             while not line == []:
+
                 if 'Newton-Raphson' in line:
                     diis_active = False
                 elif 'SOSCF' in line:
@@ -178,8 +188,19 @@ class ORCA(logfileparser.Logfile):
             energy = self.scfvalues[-1][-1][0]
             self.scfenergies.append(energy)
 
+        if line[25:50] == "Geometry Optimization Run":
+
+            line = inputfile.next()
+            while line[0:23] != "Convergence Tolerances:":
+                line = inputfile.next()
+
+            self.geotargets = numpy.zeros((5,), "d")
+            for i in range(5):
+                line = inputfile.next()
+                self.geotargets[i] = float(line.split()[-2])
+
+        #get geometry convergence criteria
         if line[33:53] == "Geometry convergence":
-#get geometry convergence criteria
             if not hasattr(self, "geovalues"):
                 self.geovalues = [ ]
             
@@ -202,8 +223,8 @@ class ORCA(logfileparser.Logfile):
             
             self.geovalues.append(newlist)
 
+        #if not an optimization, determine structure used
         if line[0:21] == "CARTESIAN COORDINATES" and not hasattr(self, "atomcoords"):
-#if not an optimization, determine structure used
             dashes = inputfile.next()
             
             atomnos = []
@@ -232,7 +253,7 @@ class ORCA(logfileparser.Logfile):
             # are printed differently inside the first/last and other cycles.
             self.gopt_cycle = int(line.split()[4])
 
-#parse geometry coords
+            #parse geometry coords
             stars = inputfile.next()
             dashes = inputfile.next()
             text = inputfile.next()
@@ -271,7 +292,6 @@ class ORCA(logfileparser.Logfile):
             self.atomcoords.append(atomcoords)
 
         if line[0:16] == "ORBITAL ENERGIES":
-#parser orbial energy information
             dashes = inputfile.next()
             text = inputfile.next()
             text = inputfile.next()
@@ -308,7 +328,6 @@ class ORCA(logfileparser.Logfile):
             self.nbasis = int(line.split()[-1])
 
         if line[0:14] == "OVERLAP MATRIX":
-#parser the overlap matrix
             dashes = inputfile.next()
 
             self.aooverlaps = numpy.zeros( (self.nbasis, self.nbasis), "d")
@@ -413,7 +432,6 @@ class ORCA(logfileparser.Logfile):
                 self.etoscs.append(osc)
                 
         if line[0:23] == "VIBRATIONAL FREQUENCIES":
-#parse the vibrational frequencies
             dashes = inputfile.next()
             blank = inputfile.next()
 
@@ -424,7 +442,6 @@ class ORCA(logfileparser.Logfile):
                 self.vibfreqs[i] = float(line.split()[1])
 
         if line[0:11] == "IR SPECTRUM":
-#parse ir intensities
             dashes = inputfile.next()
             blank = inputfile.next()
             header = inputfile.next()
@@ -439,7 +456,6 @@ class ORCA(logfileparser.Logfile):
                 line = inputfile.next()
 
         if line[0:14] == "RAMAN SPECTRUM":
-#parser raman intensities
             dashes = inputfile.next()
             blank = inputfile.next()
             header = inputfile.next()
