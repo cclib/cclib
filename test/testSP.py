@@ -40,7 +40,7 @@ class GenericSPTest(bettertest.TestCase):
         """Are all atomcharges consistent with natom and do they sum to zero?"""
         for type,charges in self.data.atomcharges.iteritems():
             self.assertEquals(len(charges),self.data.natom)
-            self.assertInside(sum(charges), 0.0, 0.0001)
+            self.assertInside(sum(charges), 0.0, 0.001)
 
     def testatomcoords(self):
         """Are the dimensions of atomcoords 1 x natom x 3?"""
