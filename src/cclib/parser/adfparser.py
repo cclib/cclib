@@ -269,22 +269,27 @@ class ADF(logfileparser.Logfile):
                 self.scfvalues.append(newlist)
 
         # Parse SCF energy for SP calcs from bonding energy decomposition section.
-        # It seems ADF does not print it earlier for SP calcualtions.
-        # If it does (does it?), parse that instead.
-        # Check that scfenergies does not exist, becuase gopt runs also print this,
-        #   repeating the values in the last "Geometry Convergence Tests" section.
-        if "Total Bonding Energy:" in line:
+        # It seems ADF does not print it earlier for SP calculations.
+        # Geometry optimization runs also print this, and we want to parse it
+        # for them, too, even if it repeats the last "Geometry Convergence Tests"
+        # section (but it's usually a bit different).
+        if line[:21] == "Total Bonding Energy:":
+
             if not hasattr(self, "scfenergies"):
-                energy = utils.convertor(float(line.split()[3]), "hartree", "eV")
-                self.scfenergies = [energy]            
+                self.scfenergies = []
+
+            energy = utils.convertor(float(line.split()[3]), "hartree", "eV")
+            self.scfenergies.append(energy)
 
         if line[51:65] == "Final Geometry":
             self.finalgeometry = self.GETLAST
 
+        # Get the coordinates from each step of the GeoOpt.
         if line[1:24] == "Coordinates (Cartesian)" and self.finalgeometry in [self.NOTFOUND, self.GETLAST]:
-            # Get the coordinates from each step of the GeoOpt
+
             if not hasattr(self, "atomcoords"):
                 self.atomcoords = []
+
             equals = inputfile.next()
             blank = inputfile.next()
             title = inputfile.next()
@@ -300,25 +305,32 @@ class ADF(logfileparser.Logfile):
             if self.finalgeometry == self.GETLAST: # Don't get any more coordinates
                 self.finalgeometry = self.NOMORE
 
+        # Extract Geometry convergence information.
         if line[1:27] == 'Geometry Convergence Tests':
-        # Extract Geometry convergence information
+
             if not hasattr(self, "geotargets"):
                 self.geovalues = []
                 self.geotargets = numpy.array([0.0, 0.0, 0.0, 0.0, 0.0], "d")
+
             if not hasattr(self, "scfenergies"):
                 self.scfenergies = []
+
             equals = inputfile.next()
             blank = inputfile.next()
             line = inputfile.next()
             temp = inputfile.next().strip().split()
             self.scfenergies.append(utils.convertor(float(temp[-1]), "hartree", "eV"))
+
             for i in range(6):
                 line = inputfile.next()
+
             values = []
+
             for i in range(5):
                 temp = inputfile.next().split()
                 self.geotargets[i] = float(temp[-3])
                 values.append(float(temp[-4]))
+
             self.geovalues.append(values)
 
         if line[1:27] == 'General Accuracy Parameter':
