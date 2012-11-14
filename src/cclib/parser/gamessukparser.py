@@ -522,18 +522,43 @@ class GAMESSUK(logfileparser.Logfile):
             else:
                 self.moenergies = [moenergies]
 
+        # Net atomic charges are not printed at all, it seems,
+        # but you can get at them from nuclear charges and
+        # electron populations, which are printed like so:
+        #
+        #  ---------------------------------------
+        #  mulliken and lowdin population analyses  
+        #  ---------------------------------------
+        #
+        # ----- total gross population in aos ------
+        #
+        # 1  1  c s         1.99066     1.98479
+        # 2  1  c s         1.14685     1.04816
+        # ...
+        #
+        #  ----- total gross population on atoms ----
+        #
+        # 1  c            6.0     6.00446     5.99625
+        # 2  c            6.0     6.00446     5.99625
+        # 3  c            6.0     6.07671     6.04399
+        # ...
         if line[10:49] == "mulliken and lowdin population analyses":
+
             if not hasattr(self, "atomcharges"):
                 self.atomcharges = {}
+
             while not "total gross population on atoms" in line:
                 line = inputfile.next()
+
             blank = inputfile.next()
-            mulliken, lowdin = [], []
             line = inputfile.next()
+            mulliken, lowdin = [], []
             while line.strip():
-                mulliken.append(float(line.split()[3]))
-                lowdin.append(float(line.split()[4]))
+                nuclear = float(line.split()[2])
+                mulliken.append(nuclear - float(line.split()[3]))
+                lowdin.append(nuclear - float(line.split()[4]))
                 line = inputfile.next()
+
             self.atomcharges["mulliken"] = mulliken
             self.atomcharges["lowdin"] = lowdin
 
