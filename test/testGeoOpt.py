@@ -117,7 +117,7 @@ class GenericGeoOptTest(bettertest.TestCase):
 
     def testscfenergydim(self):
         """Is the number of SCF energies consistent with atomcoords?"""
-        self.assertEquals(self.data.scfenergies.shape[0], self.data.atomcoords.shape[0])
+        self.assertEquals(self.data.scfenergies.shape[0] - self.extrascfs, self.data.atomcoords.shape[0] - self.extracoords)
 
     def testscftargetdim(self):
         """Do the scf targets have the right dimensions?"""
@@ -218,7 +218,11 @@ class JaguarGeoOptTest(GenericGeoOptTest):
 
 class MolproGeoOptTest(GenericGeoOptTest):
     """Molpro geometry optimization unittest."""
-    
+
+    # Note that these extra coordianates and energies will be available only
+    # if the appropriate output is parsed, and Molpro often saves the initial
+    # SCF run and subsequent geometry optimization to separate files, which
+    # both need to be given to the cclib parser (as a list).
     extracoords = 1
     extrascfs = 2
 
