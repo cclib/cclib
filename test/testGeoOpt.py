@@ -59,7 +59,7 @@ class GenericGeoOptTest(bettertest.TestCase):
 
     def testatomcoords(self):
         """Are atomcoords consistent with natom and Angstroms?"""
-        natom = len(self.data.coords[0])
+        natom = len(self.data.atomcoords[0])
         ref = self.data.natom
         msg = "natom is %d but len(atomcoords[0]) is %d" % (ref, natom)
         self.assertEquals(natom, ref, msg)
@@ -71,7 +71,9 @@ class GenericGeoOptTest(bettertest.TestCase):
                 for j in range(i+1,self.data.natom):
                     if self.data.atomnos[j]==6:
                         # Find the distance in the final iteration
-                        dist = math.sqrt(sum((coords[-1][i]-coords[-1][j])**2))
+                        final_x = self.data.atomcoords[-1][i]
+                        final_y = self.data.atomcoords[-1][j]
+                        dist = math.sqrt(sum((final_x - final_y)**2))
                         mindist = min(mindist,dist)
         self.assert_(abs(mindist-1.34)<0.03,"Mindist is %f (not 1.34)" % mindist)
 
@@ -159,7 +161,7 @@ class GenericGeoOptTest(bettertest.TestCase):
     def testgeovalues_atomcoords(self):
         """Are atomcoords consistent with geovalues?"""
         count_geovalues = len(self.data.geovalues)
-        count_coords = len(coords) - self.extracoords
+        count_coords = len(self.data.atomcoords) - self.extracoords
         msg = "len(atomcoords) is %d but len(geovalues) is %d" % (count_coords, count_geovalues)
         self.assertEquals(count_geovalues, count_coords, msg)
         
