@@ -91,6 +91,7 @@ TD        ORCA        OrcaTDDFTTest         basicORCA2.6          dvb_td.out
 vib       ADF         ADFIRTest             basicADF2007.01       dvb_ir.adfout
 vib       GAMESSUK    GamessUKIRTest        basicGAMESS-UK        dvb_ir.out
 vib       GAMESS      GamessUSIRTest        basicGAMESS-US        dvb_ir.out
+vib       GAMESS      GamessUSIRimgTest     basicGAMESS-US        nh3_ts_ir.out
 vib       Gaussian    GaussianIRTest        basicGaussian03       dvb_ir.out
 vib       Jaguar      JaguarIRTest          basicJaguar7.0        dvb_ir.out
 vib       GAMESS      PCGamessIRTest        basicPCGAMESS         dvb_ir.out

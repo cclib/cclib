@@ -36,6 +36,27 @@ class GenericIRTest(bettertest.TestCase):
         """Is the maximum IR intensity 100 +/- 10 km mol-1?"""
         self.assertInside(max(self.data.vibirs), 100, 10)
 
+
+class GenericIRimgTest(bettertest.TestCase):
+    """Generic imaginary vibrational frequency unittest."""
+
+    def testvibdisps(self):
+        """Are the dimensions of vibdisps consistent with 3N-6 x N x 3"""
+        numvib = 3*len(self.data.atomnos) - 6
+        self.assertEqual(self.data.vibdisps.shape,
+                        (numvib, len(self.data.atomnos), 3))
+
+    def testlengths(self):
+        """Are the lengths of vibfreqs and vibirs correct?"""
+        numvib = 3*len(self.data.atomnos) - 6
+        self.assertEqual(len(self.data.vibfreqs), numvib)
+        self.assertEqual(len(self.data.vibirs), numvib)
+
+    def testfreqval(self):
+        """Is the lowest freq value negative?"""
+        self.assertTrue(self.data.vibfreqs[0] < 0)
+
+
 ##    def testmaxvibdisps(self):
 ##        """What is the maximum value of displacement for a H vs a C?"""
 ##        Cvibdisps = compress(self.data.atomnos==6, self.data.vibdisps, 1)
@@ -124,6 +145,10 @@ class OrcaRamanTest(GenericRamanTest):
     
 class PCGamessRamanTest(GenericRamanTest):
     """PC-GAMESS Raman unittest."""
+
+
+class GamessUSIRimgTest(GenericIRimgTest):
+    """GAMESS-US imaginary vibrational frequency unittest."""
 
 
 if __name__=="__main__":
