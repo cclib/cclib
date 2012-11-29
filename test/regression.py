@@ -61,6 +61,17 @@ def testGAMESS_basicPCGAMESS_dvb_td_out(logfile):
     assert len(logfile.data.etoscs) == 5
 
 
+def testGAMESS_GAMESS_US_C_bigbasis_2006_02_22_r3_out_gz(logfile):
+    """Make sure the unit test passes on this old version."""
+    import testall
+    import testBasis
+    test = testall.importName("testBasis", "GamessUSBigBasisTest")
+    test.logfile = logfile
+    test.data = logfile.data
+    myunittest = testall.unittest.makeSuite(test)
+    testall.unittest.TextTestRunner(stream=open(os.devnull, 'w')).run(myunittest)
+    
+
 def testGAMESS_GAMESS_US_N2_UMP2_zip(logfile):
     """Check that the new format for GAMESS MP2 is parsed."""
     assert hasattr(logfile.data, "mpenergies")
