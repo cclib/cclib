@@ -70,7 +70,16 @@ def testGAMESS_GAMESS_US_C_bigbasis_2006_02_22_r3_out_gz(logfile):
     test.data = logfile.data
     myunittest = testall.unittest.makeSuite(test)
     testall.unittest.TextTestRunner(stream=open(os.devnull, 'w')).run(myunittest)
-    
+
+def testGAMESS_GAMESS_US_MoOCl4_sp_2005_06_27_r3_out_bz2(logfile):
+    """Make sure the unit test passes on this old version."""
+    import testall
+    import testBasis
+    test = testall.importName("testCore", "GAMESSUSCoreTest")
+    test.logfile = logfile
+    test.data = logfile.data
+    myunittest = testall.unittest.makeSuite(test)
+    testall.unittest.TextTestRunner(stream=open(os.devnull, 'w')).run(myunittest)
 
 def testGAMESS_GAMESS_US_N2_UMP2_zip(logfile):
     """Check that the new format for GAMESS MP2 is parsed."""
