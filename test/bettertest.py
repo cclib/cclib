@@ -67,7 +67,7 @@ class TestCase(unittest.TestCase):
         except AttributeError:
             doc = self._TestCase__testMethodDoc
         if "PASS" in doc:
-            print doc
+            result.stream.writeln(doc)
             result.testsRun += 1
             if not hasattr(result, "skipped"):
                 result.skipped = []
