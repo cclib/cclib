@@ -31,19 +31,17 @@ from cclib.parser import ADF, GAMESS, GAMESSUK, Gaussian, Jaguar, Molpro, ORCA
 # of the logfile, with some characters changed according to normalisefilename().
 
 def testADF_basicADF2004_01_dvb_sp_c_adfout(logfile):
-    """Had homo[0] as 35, when it should be 34"""
+    """Had homo[0] as 35, when it should be 34."""
     assert logfile.data.homos[0] == 34
 
 
 def testADF_ADF2004_01_Fe_ox3_final_out_gz(logfile):
-    """
-    Make sure HOMOS are correct
-    """
+    """Make sure HOMOS are correct."""
     assert logfile.data.homos[0]==59 and logfile.data.homos[1]==54
 
 
 def testGAMESS_basicGAMESS_US_water_ccd_out(logfile):
-    """Keep parsing ccenergies correctly"""
+    """Keep parsing ccenergies correctly."""
     assert len(logfile.data.ccenergies) == 1
     assert abs(logfile.data.ccenergies[0] + 2074.22) < 0.01
 
@@ -53,7 +51,7 @@ def testGAMESS_basicGAMESS_US_water_ccsd_out(logfile):
     assert abs(logfile.data.ccenergies[0] + 2074.24) < 0.01
 
 def testGAMESS_basicGAMESS_US_water_ccsd_t__out(logfile):
-    """Keep parsing ccenergies correctly"""
+    """Keep parsing ccenergies correctly."""
     assert len(logfile.data.ccenergies) == 1
     assert abs(logfile.data.ccenergies[0] + 2074.32) < 0.01
 
@@ -64,33 +62,32 @@ def testGAMESS_basicPCGAMESS_dvb_td_out(logfile):
 
 
 def testGAMESS_GAMESS_US_N2_UMP2_zip(logfile):
-    """Check that the new format for GAMESS MP2 is parsed"""
+    """Check that the new format for GAMESS MP2 is parsed."""
     assert hasattr(logfile.data, "mpenergies")
     assert len(logfile.data.mpenergies) == 1
     assert abs(logfile.data.mpenergies[0] + 2975.97) < 0.01
 
 def testGAMESS_GAMESS_US_N2_ROMP2_zip(logfile):
-    """Check that the new format for GAMESS MP2 is parsed"""
+    """Check that the new format for GAMESS MP2 is parsed."""
     assert hasattr(logfile.data, "mpenergies")
     assert len(logfile.data.mpenergies) == 1
     assert abs(logfile.data.mpenergies[0] + 2975.97) < 0.01    
 
 def testGAMESS_GAMESS_US_open_shell_ccsd_test_log_gz(logfile):
-    """Parse ccenergies from open shell CCSD calculations"""
+    """Parse ccenergies from open shell CCSD calculations."""
     assert hasattr(logfile.data, "ccenergies")
     assert len(logfile.data.ccenergies) == 1
     assert abs(logfile.data.ccenergies[0] + 3501.50) < 0.01
 
 def testGAMESS_GAMESS_US_paulo_h2o_mp2_zip(logfile):
-    """Check that the new format for GAMESS MP2 is parsed"""
+    """Check that the new format for GAMESS MP2 is parsed."""
     assert hasattr(logfile.data, "mpenergies")
     assert len(logfile.data.mpenergies) == 1
     assert abs(logfile.data.mpenergies[0] + 2072.13) < 0.01
 
 
 def testGaussian_Gaussian09_dvb_lowdin_log_gz(logfile):
-    """Check if both Mulliken and Lowdin charges are parsed"""
-
+    """Check if both Mulliken and Lowdin charges are parsed."""
     assert "mulliken" in logfile.data.atomcharges
     assert "lowdin" in logfile.data.atomcharges
 
@@ -99,28 +96,26 @@ def testGaussian_basicGaussian03_dvb_gopt_out(logfile):
 
     Note: the name of the test must match the full path to the datafile
     exactly, except that all periods, hyphens, path separators and
-    parentheses are replaced by underscores.
+    parentheses, which should be2 replaced by underscores.
     """
     assert len(logfile.data.homos)==1
 
 def testGaussian_basicGaussian03_dvb_raman_out(logfile):
-    """
-    Was extracting the "Depolar P" instead of the "Raman activity". Oops!
-    """
+    """Was extracting the "Depolar P" instead of the "Raman activity". Oops!"""
     assert logfile.data.vibramans[1] - 2.6872 < 0.0001
 
 def testGaussian_basicGaussian03_dvb_un_sp_out(logfile):
     """
-    This file had no atomcoords at all at all, due to only having an Input
-    Orientation section and no Standard Orientation.
+    This file had no atomcoords at all at all, due to only having an
+    Input Orientation section and no Standard Orientation.
     """
     assert len(logfile.data.atomnos) == 20
-    assert logfile.data.atomcoords.shape == (1,20,3)
+    assert logfile.data.atomcoords.shape == (1, 20, 3)
 
 
 def testGaussian_basicGaussian09_dvb_gopt_log(logfile):
-    """Check that the atomnos is being parsed correctly"""
-    assert hasattr(logfile.data, "atomnos"), "has not atomnos"
+    """Check that the atomnos is being parsed correctly."""
+    assert hasattr(logfile.data, "atomnos"), "Missing atomnos"
     assert len(logfile.data.atomnos) == logfile.data.natom == 20
 
 
@@ -135,61 +130,58 @@ def testGaussian_Gaussian98_C_bigmult_log_gz(logfile):
     assert logfile.data.homos[1] == -1 # No occupied beta orbitals
 
 def testGaussian_Gaussian98_water_zmatrix_nosym_log_gz(logfile):
-    """
-    This file had no atomcoords as it did not contain either an
-    "Input orientation" or "Standard orientation section". As
-    a result it failed to parse. Fixed in r400.
+    """This file is missing natom.
 
-    This file is missing natom.
+    This file had no atomcoords as it did not contain either an
+    "Input orientation" or "Standard orientation section".
+    As a result it failed to parse. Fixed in r400.
     """
     assert len(logfile.data.atomcoords)==1
     assert logfile.data.natom == 3
 
 
 def testGaussian_Gaussian03_AM1_SP_out_gz(logfile):
-    """
-    Previously, caused scfvalue parsing to fail.
-    """
+    """Previously, caused scfvalue parsing to fail."""
     assert len(logfile.data.scfvalues[0])==12
 
 def testGaussian_Gaussian03_anthracene_log_gz(logfile):
-    """This file exposed a bug in extracting the vibsyms"""
-    assert len(logfile.data.vibsyms)==len(logfile.data.vibfreqs)
+    """This file exposed a bug in extracting the vibsyms."""
+    assert len(logfile.data.vibsyms) == len(logfile.data.vibfreqs)
 
 def testGaussian_Gaussian03_chn1_log_gz(logfile):
     """
-    This file failed to parse, due to the use of 'pop=regular'. We have
-    decided that mocoeffs should not be defined for such calculations.
+    This file failed to parse, due to the use of 'pop=regular'.
+    We have decided that mocoeffs should not be defined for such calculations.
     """
     assert not hasattr(logfile.data, "mocoeffs")
 
 def testGaussian_Gaussian03_cyclopropenyl_rhf_g03_cut_log_bz2(logfile):
     """
-    Not using symmetry at all (option nosymm) means standard orientation is not printed.
-    In this case inputcoords are copied by the parser, which up till now stored the last coordinates.
+    Not using symmetry at all (option nosymm) means standard orientation
+    is not printed. In this case inputcoords are copied by the parser,
+    which up till now stored the last coordinates.
     """
     assert len(logfile.data.atomcoords)==len(logfile.data.geovalues)
 
 def testGaussian_Gaussian03_DCV4T_C60_start_zip(logfile):
-    """This is a test for a very large Gaussian file with > 99 atoms
+    """This is a test for a very large Gaussian file with > 99 atoms.
 
-    The log file is too big, so we are just including the start. Previously
-    parsing failed in the pseudopotential section"""
-
+    The log file is too big, so we are just including the start.
+    Previously, parsing failed in the pseudopotential section.
+    """
     assert len(logfile.data.coreelectrons) == 102
     assert logfile.data.coreelectrons[101] == 2
 
 def testGaussian_Gaussian03_dvb_gopt_symmfollow_log_bz2(logfile):
+    """Non-standard treatment of symmetry.
+
+    In this case the Standard orientation is also printed non-standard,
+    which caused only the first coordinates to be read previously.
     """
-    Non-standard treatment of symmetry and thus non-standard printing of Standard orientation.
-    The formatting of Standard orientation is a bit different, causing only the first coordinates to be read.
-    """
-    assert len(logfile.data.atomcoords)==len(logfile.data.geovalues)
+    assert len(logfile.data.atomcoords) == len(logfile.data.geovalues)
 
 def testGaussian_Gaussian03_mendes_zip(logfile):
-    """
-    Previously, failed to extract coreelectrons.
-    """
+    """Previously, failed to extract coreelectrons."""
     centers = [9, 10, 11, 27]
     for i, x in enumerate(logfile.data.coreelectrons):
         if i in centers:
@@ -200,13 +192,13 @@ def testGaussian_Gaussian03_mendes_zip(logfile):
 def testGaussian_Gaussian03_Mo4OSibdt2_opt_log_bz2(logfile):
     """
     This file had no atomcoords as it did not contain any
-    "Input orientation" sections, only "Standard orientation" sections
+    "Input orientation" sections, only "Standard orientation".
     """
     assert hasattr(logfile.data, "atomcoords")
 
 def testGaussian_Gaussian03_orbgs_log_bz2(logfile):
-    """Check that the pseudopotential is being parsed correctly"""
-    assert hasattr(logfile.data, "coreelectrons"), "has not coreelectrons"
+    """Check that the pseudopotential is being parsed correctly."""
+    assert hasattr(logfile.data, "coreelectrons"), "Missing coreelectrons"
     assert logfile.data.coreelectrons[0] == 28
     assert logfile.data.coreelectrons[15] == 10
     assert logfile.data.coreelectrons[20] == 10
@@ -214,8 +206,8 @@ def testGaussian_Gaussian03_orbgs_log_bz2(logfile):
 
 
 def testGaussian_Gaussian09_25DMF_HRANH_zip(logfile):
-    """Check that the anharmonicities are being parsed correctly"""
-    assert hasattr(logfile.data, "vibanharms"), "Does not have vibanharms"
+    """Check that the anharmonicities are being parsed correctly."""
+    assert hasattr(logfile.data, "vibanharms"), "Missing vibanharms"
     anharms = logfile.data.vibanharms
     N = len(logfile.data.vibfreqs)
     assert 39 == N == anharms.shape[0] == anharms.shape[1]
@@ -223,30 +215,22 @@ def testGaussian_Gaussian09_25DMF_HRANH_zip(logfile):
     assert abs(anharms[N-1][N-1] + 36.481) < 0.01 
     
 def testGaussian_Gaussian09_534_out_zip(logfile):
-    """
-    Previously, caused etenergies parsing to fail
-    """
+    """Previously, caused etenergies parsing to fail."""
     assert logfile.data.etsyms[0] == "Singlet-?Sym"
     assert logfile.data.etenergies[0] == 20920.55328
 
 def testGaussian_Gaussian09_OPT_td_g09_zip(logfile):
-    """
-    Previously, couldn't find etrotats as G09 has different output than G03
-    """
+    """Couldn't find etrotats as G09 has different output than G03."""
     assert len(logfile.data.etrotats) == 10
     assert logfile.data.etrotats[0] == -0.4568
 
 def testGaussian_Gaussian09_OPT_td_zip(logfile):
-    """
-    Working fine - adding to ensure that CD is parsed correctly
-    """
+    """Working fine - adding to ensure that CD is parsed correctly."""
     assert len(logfile.data.etrotats) == 10
     assert logfile.data.etrotats[0] == -0.4568
 
 def testGaussian_Gaussian09_Ru2bpyen2_H2_freq3_log_bz2(logfile):
-    """
-    atomnos wans't added to the gaussian parser before
-    """
+    """Here atomnos wans't added to the gaussian parser before."""
     assert len(logfile.data.atomnos) == 69
 
 
@@ -267,12 +251,12 @@ def testORCA_ORCA2_8_co_cosmo_out_gz(logfile):
 
 
 def testORCA_ORCA2_9_job_out_gz(logfile):
-    """
-    First output file and request to parse atomic spin densities.
+    """First output file and request to parse atomic spin densities.
+
     Make sure that the sum of such densities is one in this case (or reasonaby close),
     but remember that this attribute is a dictionary, so we must iterate.
     """
-    assert all([abs(sum(v)-1.0)<0.0001 for k,v in logfile.data.atomspins.iteritems()])
+    assert all([abs(sum(v)-1.0) < 0.0001 for k,v in logfile.data.atomspins.iteritems()])
 
 
 # These regression tests are for logfiles that are not to be parsed
@@ -282,8 +266,8 @@ def testnoparseGaussian_Gaussian09_coeffs_zip(filename):
     """This is a test for a Gaussian file with more than 999 basis functions.
 
     The log file is too big, so we are just including a section. Before
-    parsing, we set some attributes of the parser so that it all goes
-    smoothly."""
+    parsing, we set some attributes of the parser so that it all goes smoothly.
+    """
 
     d = Gaussian(filename)
     d.logger.setLevel(logging.ERROR)
@@ -296,12 +280,11 @@ def testnoparseGaussian_Gaussian09_coeffs_zip(filename):
     assert logfile.data.aonames[0] == "Mn1_1S"
 
 
-# Edit the following variable definitions to add new parsers or new datafiles.
+# Edit the following variable definitions to add new parsers or new datafile patterns.
 
-data = os.path.join("..","data")
-names = [ "Gaussian", "GAMESS", "ADF", "GAMESS UK", "Jaguar", "Molpro", "ORCA" ]
-dummyfiles = [ Gaussian(""), GAMESS(""), ADF(""), GAMESSUK(""), Jaguar(""),
-               Molpro(""), ORCA("") ]
+data = os.path.join("..", "data")
+names = [ "Gaussian", "GAMESS", "ADF", "GAMESSUK", "Jaguar", "Molpro", "ORCA" ]
+dummyfiles = [eval(n)("") for n in names]
 
 filenames = [glob(os.path.join(data, "Gaussian", "basicGaussian03", "*.out")) +  
              glob(os.path.join(data, "Gaussian", "basicGaussian03", "*.log")) +
@@ -357,7 +340,7 @@ filenames = [glob(os.path.join(data, "Gaussian", "basicGaussian03", "*.out")) +
 
 
 def normalisefilename(filename):
-    """Replace all non-alphanumeric symbols by _
+    """Replace all non-alphanumeric symbols by underscores.
 
     >>> import regression
     >>> for x in [ "Gaussian_Gaussian03_Mo4OSibdt2-opt.log" ]:
@@ -376,8 +359,10 @@ def normalisefilename(filename):
 
 
 def flatten(seq):
-    """Converts a list of lists [of lists] to a single flattened list"""
-    # Taken from the web.
+    """Converts a list of lists [of lists] to a single flattened list.
+
+    Taken from the web.
+    """
     res = []
     for item in seq:
         if (isinstance(item, (tuple, list))):
@@ -394,6 +379,7 @@ def main(which=[]):
     regfile = open(os.path.join("..", "data", "regressionfiles.txt"), "r")
     regfilenames = [os.sep.join(x.strip().split("/")) for x in regfile.readlines()]
     regfile.close()
+
     missing = 0
     for x in regfilenames:
         if not os.path.isfile(os.path.join("..", "data", x)):
@@ -402,6 +388,7 @@ def main(which=[]):
             print "\nERROR: The regression file %s is present, but not included in " \
                   "the 'filenames' variable.\n\nPlease add a new glob statement." % x
             sys.exit(1)       
+
     if missing > 0:
         print "\nWARNING: You are missing %d regression file(s).\n" \
               "         Run wget.sh in the ../data directory to update.\n" % missing
@@ -412,36 +399,39 @@ def main(which=[]):
             sys.exit(0)
 
     failures = errors = total = 0
-    for i,name in enumerate(names):
+    for iname,name in enumerate(names):
 
         # Continue to next iteration if we are limiting the regression and the current
         #   name was not explicitely chosen (that is, passed as an argument).
-        if which and not name in which:
+        if len(which) > 0 and not name in which:
             continue;
 
-        print "Are the %s files ccopened and parsed correctly?" % names[i]
-        for filename in filenames[i]:
+        print "Are the %s files ccopened and parsed correctly?" % names[iname]
+        for fname in filenames[iname]:
             total += 1
-            print "  %s..."  % filename,
+            print "  %s..."  % fname,
 
-            # Check for tests
+            # Check if there is a test (needs to be an appropriately named function).
+            # If not, there can also be a test that does not assume the file is
+            # correctly parsed (for fragments, for example), and these test need
+            # to be additionaly prepended with 'testnoparse'.
             test_this = test_noparse = False
-            fnname = "test" + normalisefilename("_".join(filename.split(os.sep)[2:]))
-            if fnname in globals(): # If there is a test that matches...
-                test_this = True
-            else:
-                fnname = "testnoparse" + normalisefilename("_".join(filename.split(os.sep)[2:]))
-                if fnname in globals(): # If there is a test that matches...
-                    test_noparse = True
+            fname_norm = normalisefilename("_".join(fname.split(os.sep)[2:]))
 
-            if test_noparse == False: # The usual case
+            funcname = "test" + fname_norm
+            test_this = funcname in globals()
+
+            funcname_noparse = "testnoparse" + fname_norm
+            test_noparse = not test_this and funcname_noparse in globals()
+
+            if not test_noparse:
                 try:
-                    logfile  = ccopen(filename)
+                    logfile  = ccopen(fname)
                 except:
                     errors += 1
                     print "ccopen error"
                 else:
-                    if type(logfile) == type(dummyfiles[i]):
+                    if type(logfile) == type(dummyfiles[iname]):
                         try:
                             logfile.logger.setLevel(logging.ERROR)
                             logfile.data = logfile.parse()
@@ -453,7 +443,7 @@ def main(which=[]):
                         else:
                             if test_this:
                                 try:
-                                    eval(fnname)(logfile) # Run the test
+                                    eval(funcname)(logfile)
                                 except AssertionError:
                                     print "test failed"
                                     failures += 1
@@ -464,10 +454,9 @@ def main(which=[]):
                     else:
                         print "ccopen failed"
                         failures += 1
-
-            else: # Run the 'noparse' tests (fragments of files)
+            else:
                 try:
-                    eval(fnname)(filename) # Run the test
+                    eval(funcname_noparse)(filename)
                 except AssertionError:
                     print "test failed"
                     failures += 1
