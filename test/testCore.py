@@ -44,6 +44,8 @@ class GAMESSUKCoreTest(GenericCoreTest):
 class GAMESSUSCoreTest(GenericCoreTest):
     """GAMESS-US core electrons unittest."""
 
+    old_tests = ["GAMESS/GAMESS-US/C_bigbasis_2006.02.22.r3.out.gz"]
+
     coredict = {'Mo': 28, 'O':0, 'Cl':10}
 
 

@@ -18,13 +18,76 @@ __revision__ = "$Revision$"
 
 import os
 import sys
+import inspect
 import logging
+import unittest
 
 from glob import glob
 from StringIO import StringIO
 
 from cclib.parser import ccopen
 from cclib.parser import ADF, GAMESS, GAMESSUK, Gaussian, Jaguar, Molpro, ORCA
+
+from cclib.test.testall import test_modules
+
+
+# Edit the following variable definitions to add new parsers or new datafile patterns.
+
+data = os.path.join("..", "data")
+parsers = [ "Gaussian", "GAMESS", "ADF", "GAMESSUK", "Jaguar", "Molpro", "ORCA" ]
+dummyfiles = [eval(n)("") for n in parsers]
+
+filenames = [glob(os.path.join(data, "Gaussian", "basicGaussian03", "*.out")) +  
+             glob(os.path.join(data, "Gaussian", "basicGaussian03", "*.log")) +
+             glob(os.path.join(data, "Gaussian", "basicGaussian09", "*.log")) +
+             glob(os.path.join(data, "Gaussian", "Gaussian09", "*.gz")) +
+             glob(os.path.join(data, "Gaussian", "Gaussian09", "*.zip")) +
+             glob(os.path.join(data, "Gaussian", "Gaussian09", "*.bz2")) +
+             glob(os.path.join(data, "Gaussian", "Gaussian03", "*.out")) +
+             glob(os.path.join(data, "Gaussian", "Gaussian03", "*.bz2")) +
+             glob(os.path.join(data, "Gaussian", "Gaussian03", "*.zip")) +
+             glob(os.path.join(data, "Gaussian", "Gaussian03", "*.gz")) +
+             glob(os.path.join(data, "Gaussian", "Gaussian98", "*.bz2")) +
+             glob(os.path.join(data, "Gaussian", "Gaussian98", "*.gz")),
+             
+             glob(os.path.join(data, "GAMESS", "basicGAMESS-US", "*.out")) +
+             glob(os.path.join(data, "GAMESS", "basicPCGAMESS", "*.out")) +
+             glob(os.path.join(data, "GAMESS", "GAMESS-US", "*.out")) +
+             glob(os.path.join(data, "GAMESS", "GAMESS-US", "*.bz2")) +
+             glob(os.path.join(data, "GAMESS", "GAMESS-US", "*.gz")) +
+             glob(os.path.join(data, "GAMESS", "GAMESS-US", "*.zip")) +
+             glob(os.path.join(data, "GAMESS", "PCGAMESS", "*.*.bz2")) +
+             glob(os.path.join(data, "GAMESS", "PCGAMESS", "*.*.gz")) +             
+             glob(os.path.join(data, "GAMESS", "WinGAMESS", "*.gz")),
+             
+             glob(os.path.join(data, "ADF", "basicADF2006.01", "*.adfout")) +
+             glob(os.path.join(data, "ADF", "ADF2004.01", "*.gz")) +
+             glob(os.path.join(data, "ADF", "ADF2004.01", "*.bz2")) +
+             glob(os.path.join(data, "ADF", "ADF2005.01", "*.zip")) +
+             glob(os.path.join(data, "ADF", "ADF2006.01", "*.out")) +
+             glob(os.path.join(data, "ADF", "ADF2006.01", "*.bz2")) +
+             glob(os.path.join(data, "ADF", "ADF2009.01", "*.out")),
+                          
+             glob(os.path.join(data, "GAMESS-UK", "basicGAMESS-UK", "*.out")) +
+             glob(os.path.join(data, "GAMESS-UK", "GAMESS-UK6.0", "*.out.gz")) +
+             glob(os.path.join(data, "GAMESS-UK", "GAMESS-UK7.0", "*.out.gz")),
+             
+             glob(os.path.join(data, "Jaguar", "Jaguar4.2", "*.bz2")) +
+             glob(os.path.join(data, "Jaguar", "Jaguar6.0", "*.bz2")) +
+             glob(os.path.join(data, "Jaguar", "Jaguar6.5", "*.bz2")) +
+             glob(os.path.join(data, "Jaguar", "Jaguar7.0", "*.bz2")) +
+             glob(os.path.join(data, "Jaguar", "basicJaguar7.0", "*.out")),
+
+             glob(os.path.join(data, "Molpro", "basicMolpro2006", "*.out")) +
+             glob(os.path.join(data, "Molpro", "Molpro2006", "*.bz2")),
+
+             glob(os.path.join(data, "ORCA", "basicORCA2.6", "*.out")) +
+             glob(os.path.join(data, "ORCA", "basicORCA2.8", "*.out")) +
+             glob(os.path.join(data, "ORCA", "basicORCA2.9", "*.out")) +
+             glob(os.path.join(data, "ORCA", "ORCA2.8", "*.out")) +
+             glob(os.path.join(data, "ORCA", "ORCA2.8", "*.out.gz")) +
+             glob(os.path.join(data, "ORCA", "ORCA2.9", "*.out.gz")),
+             ]
 
 
 # The regression test functions defined below should be named according to the path
@@ -60,26 +123,6 @@ def testGAMESS_basicPCGAMESS_dvb_td_out(logfile):
     """Previously, etoscs was not extracted for this TD DFT calculation."""
     assert len(logfile.data.etoscs) == 5
 
-
-def testGAMESS_GAMESS_US_C_bigbasis_2006_02_22_r3_out_gz(logfile):
-    """Make sure the unit test passes on this old version."""
-    import testall
-    import testBasis
-    test = testall.importName("testBasis", "GamessUSBigBasisTest")
-    test.logfile = logfile
-    test.data = logfile.data
-    myunittest = testall.unittest.makeSuite(test)
-    testall.unittest.TextTestRunner(stream=open(os.devnull, 'w')).run(myunittest)
-
-def testGAMESS_GAMESS_US_MoOCl4_sp_2005_06_27_r3_out_bz2(logfile):
-    """Make sure the unit test passes on this old version."""
-    import testall
-    import testBasis
-    test = testall.importName("testCore", "GAMESSUSCoreTest")
-    test.logfile = logfile
-    test.data = logfile.data
-    myunittest = testall.unittest.makeSuite(test)
-    testall.unittest.TextTestRunner(stream=open(os.devnull, 'w')).run(myunittest)
 
 def testGAMESS_GAMESS_US_N2_UMP2_zip(logfile):
     """Check that the new format for GAMESS MP2 is parsed."""
@@ -300,63 +343,18 @@ def testnoparseGaussian_Gaussian09_coeffs_zip(filename):
     assert logfile.data.aonames[0] == "Mn1_1S"
 
 
-# Edit the following variable definitions to add new parsers or new datafile patterns.
+def flatten(seq):
+    """Converts a list of lists [of lists] to a single flattened list.
 
-data = os.path.join("..", "data")
-names = [ "Gaussian", "GAMESS", "ADF", "GAMESSUK", "Jaguar", "Molpro", "ORCA" ]
-dummyfiles = [eval(n)("") for n in names]
-
-filenames = [glob(os.path.join(data, "Gaussian", "basicGaussian03", "*.out")) +  
-             glob(os.path.join(data, "Gaussian", "basicGaussian03", "*.log")) +
-             glob(os.path.join(data, "Gaussian", "basicGaussian09", "*.log")) +
-             glob(os.path.join(data, "Gaussian", "Gaussian09", "*.gz")) +
-             glob(os.path.join(data, "Gaussian", "Gaussian09", "*.zip")) +
-             glob(os.path.join(data, "Gaussian", "Gaussian09", "*.bz2")) +
-             glob(os.path.join(data, "Gaussian", "Gaussian03", "*.out")) +
-             glob(os.path.join(data, "Gaussian", "Gaussian03", "*.bz2")) +
-             glob(os.path.join(data, "Gaussian", "Gaussian03", "*.zip")) +
-             glob(os.path.join(data, "Gaussian", "Gaussian03", "*.gz")) +
-             glob(os.path.join(data, "Gaussian", "Gaussian98", "*.bz2")) +
-             glob(os.path.join(data, "Gaussian", "Gaussian98", "*.gz")),
-             
-             glob(os.path.join(data, "GAMESS", "basicGAMESS-US", "*.out")) +
-             glob(os.path.join(data, "GAMESS", "basicPCGAMESS", "*.out")) +
-             glob(os.path.join(data, "GAMESS", "GAMESS-US", "*.out")) +
-             glob(os.path.join(data, "GAMESS", "GAMESS-US", "*.bz2")) +
-             glob(os.path.join(data, "GAMESS", "GAMESS-US", "*.gz")) +
-             glob(os.path.join(data, "GAMESS", "GAMESS-US", "*.zip")) +
-             glob(os.path.join(data, "GAMESS", "PCGAMESS", "*.*.bz2")) +
-             glob(os.path.join(data, "GAMESS", "PCGAMESS", "*.*.gz")) +             
-             glob(os.path.join(data, "GAMESS", "WinGAMESS", "*.gz")),
-             
-             glob(os.path.join(data, "ADF", "basicADF2006.01", "*.adfout")) +
-             glob(os.path.join(data, "ADF", "ADF2004.01", "*.gz")) +
-             glob(os.path.join(data, "ADF", "ADF2004.01", "*.bz2")) +
-             glob(os.path.join(data, "ADF", "ADF2005.01", "*.zip")) +
-             glob(os.path.join(data, "ADF", "ADF2006.01", "*.out")) +
-             glob(os.path.join(data, "ADF", "ADF2006.01", "*.bz2")) +
-             glob(os.path.join(data, "ADF", "ADF2009.01", "*.out")),
-                          
-             glob(os.path.join(data, "GAMESS-UK", "basicGAMESS-UK", "*.out")) +
-             glob(os.path.join(data, "GAMESS-UK", "GAMESS-UK6.0", "*.out.gz")) +
-             glob(os.path.join(data, "GAMESS-UK", "GAMESS-UK7.0", "*.out.gz")),
-             
-             glob(os.path.join(data, "Jaguar", "Jaguar4.2", "*.bz2")) +
-             glob(os.path.join(data, "Jaguar", "Jaguar6.0", "*.bz2")) +
-             glob(os.path.join(data, "Jaguar", "Jaguar6.5", "*.bz2")) +
-             glob(os.path.join(data, "Jaguar", "Jaguar7.0", "*.bz2")) +
-             glob(os.path.join(data, "Jaguar", "basicJaguar7.0", "*.out")),
-
-             glob(os.path.join(data, "Molpro", "basicMolpro2006", "*.out")) +
-             glob(os.path.join(data, "Molpro", "Molpro2006", "*.bz2")),
-
-             glob(os.path.join(data, "ORCA", "basicORCA2.6", "*.out")) +
-             glob(os.path.join(data, "ORCA", "basicORCA2.8", "*.out")) +
-             glob(os.path.join(data, "ORCA", "basicORCA2.9", "*.out")) +
-             glob(os.path.join(data, "ORCA", "ORCA2.8", "*.out")) +
-             glob(os.path.join(data, "ORCA", "ORCA2.8", "*.out.gz")) +
-             glob(os.path.join(data, "ORCA", "ORCA2.9", "*.out.gz")),
-             ]
+    Taken from the web.
+    """
+    res = []
+    for item in seq:
+        if (isinstance(item, (tuple, list))):
+            res.extend(flatten(item))
+        else:
+            res.append(item)
+    return res
 
 
 def normalisefilename(filename):
@@ -378,18 +376,21 @@ def normalisefilename(filename):
     return "".join(ans)
 
 
-def flatten(seq):
-    """Converts a list of lists [of lists] to a single flattened list.
+def make_regression_from_old_unittest(filename, module_name, test_name):
+    """Return a regression test function from an old unit test logfile.
 
-    Taken from the web.
+    When using this, take precaution to ensure that test_name is
+    a valid unit test class within module_name.
     """
-    res = []
-    for item in seq:
-        if (isinstance(item, (tuple, list))):
-            res.extend(flatten(item))
-        else:
-            res.append(item)
-    return res
+
+    def old_unit_test(logfile):
+        test_class = getattr(__import__(module_name), test_name)
+        test_class.logfile = logfile
+        test_class.data = logfile.data
+        devnull = open(os.devnull, 'w')
+        unittest.TextTestRunner(stream=devnull).run(unittest.makeSuite(test_class))
+
+    return old_unit_test
 
 
 def main(which=[]):
@@ -418,15 +419,30 @@ def main(which=[]):
             print "\n"
             sys.exit(0)
 
+    # When a unit test is removed or replaced by a newer version, the old logfile
+    # typically becomes a regression, and normally we still want to run the unit test
+    # within the regression suite. To this end, add the logfile location to a list
+    # called 'old_tests' in the appropriate unit test class, in which case the
+    # following code will find it and create the becessary regression test function.
+    for mod in test_modules:
+        mod_name = "test" + mod
+        tests = inspect.getmembers(__import__(mod_name), inspect.isclass)
+        tests = [tc for tc in tests if tc[0][-4:] == "Test"]
+        for test_name, test_class in tests:
+            for old in getattr(test_class, "old_tests", []):
+                funcname = "test" + normalisefilename(old)
+                func = make_regression_from_old_unittest(old, mod_name, test_name)
+                globals()[funcname] = func
+
     failures = errors = total = 0
-    for iname,name in enumerate(names):
+    for iname, name in enumerate(parsers):
 
         # Continue to next iteration if we are limiting the regression and the current
         #   name was not explicitely chosen (that is, passed as an argument).
         if len(which) > 0 and not name in which:
             continue;
 
-        print "Are the %s files ccopened and parsed correctly?" % names[iname]
+        print "Are the %s files ccopened and parsed correctly?" % name
         for fname in filenames[iname]:
             total += 1
             print "  %s..."  % fname,
