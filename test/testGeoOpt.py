@@ -211,6 +211,8 @@ class GamessUKGeoOptTest(GenericGeoOptTest):
 class GamessUSGeoOptTest(GenericGeoOptTest):
     """GAMESS-US geometry optimization unittest."""
 
+    old_tests = ["GAMESS/GAMESS-US/dvb_gopt_a_2006.02.22.r2.out.gz"]
+
 
 class GaussianGeoOptTest(GenericGeoOptTest):
     """Gaussian geometry optimization unittest."""
