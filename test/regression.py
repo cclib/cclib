@@ -148,6 +148,20 @@ def testGAMESS_GAMESS_US_paulo_h2o_mp2_zip(logfile):
     assert len(logfile.data.mpenergies) == 1
     assert abs(logfile.data.mpenergies[0] + 2072.13) < 0.01
 
+def testGAMESS_WinGAMESS_dvb_td_trplet_2007_03_24_r1_out_gz(logfile):
+    """Do some basic checks for this old unit test that was failing.
+
+    The unit tests are not run automatically on this old unit logfile,
+    because we know the output has etsecs whose sum is way off.
+    So, perform a subset of the basic assertions for GenericTDTesttrp.
+    """
+    number = 5
+    assert len(logfile.data.etenergies) == number
+    idx_lambdamax = [i for i, x in enumerate(logfile.data.etoscs) if x == max(logfile.data.etoscs)][0]
+    assert abs(logfile.data.etenergies[idx_lambdamax] - 24500) < 100
+    assert len(logfile.data.etoscs) == number
+    assert abs(max(logfile.data.etoscs) - 0.0) < 0.01
+    assert len(logfile.data.etsecs) == number
 
 def testGaussian_Gaussian09_dvb_lowdin_log_gz(logfile):
     """Check if both Mulliken and Lowdin charges are parsed."""

@@ -119,7 +119,7 @@ class GAMESSUSTDDFTtrpTest(GenericTDTesttrp):
 
     number = 5
 
-    old_tests = ["GAMESS/WinGAMESS/dvb_td_trplet_2007.03.24.r1.out.gz"]
+    #old_tests = ["GAMESS/WinGAMESS/dvb_td_trplet_2007.03.24.r1.out.gz"]
 
     def testsymsnumber(self):
         """Is the length of etsyms correct? PASS"""
