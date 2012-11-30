@@ -78,7 +78,10 @@ class GaussianTDDFTTest(GenericTDTest):
 
 class GAMESSUSTDDFTTest(GenericTDTest):
     """GAMESS time-dependent HF/DFT unittest."""
+
     number = 10
+
+    old_tests = ["GAMESS/WinGAMESS/dvb_td_2007.03.24.r1.out.gz"]
 
 
 class PCGamessTDDFTTest(GenericTDTest):
@@ -113,7 +116,11 @@ class GenericTDTesttrp(GenericTDTest):
 
 class GAMESSUSTDDFTtrpTest(GenericTDTesttrp):
     """GAMESS TD DFT (restricted) triplet unittest."""
+
     number = 5
+
+    old_tests = ["GAMESS/WinGAMESS/dvb_td_trplet_2007.03.24.r1.out.gz"]
+
     def testsymsnumber(self):
         """Is the length of etsyms correct? PASS"""
         pass

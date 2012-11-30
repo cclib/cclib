@@ -51,6 +51,8 @@ GAMESS/PCGAMESS/d2d_sp.out.gz
 GAMESS/PCGAMESS/firefly-FailStationary.out.gz
 GAMESS/PCGAMESS/triazole_tddft_c1_b3lyp_631Gdp_sp.out.gz
 GAMESS/WinGAMESS/WinGAMESS.log.gz
+GAMESS/WinGAMESS/dvb_td_2007.03.24.r1.out.gz
+GAMESS/WinGAMESS/dvb_td_trplet_2007.03.24.r1.out.gz
 GAMESS-UK/GAMESS-UK6.0/dscf_4.out.gz
 GAMESS-UK/GAMESS-UK6.0/duhf_1.out.gz
 GAMESS-UK/GAMESS-UK7.0/mg10.out.gz

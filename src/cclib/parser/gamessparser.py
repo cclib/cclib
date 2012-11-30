@@ -238,36 +238,103 @@ class GAMESS(logfileparser.Logfile):
             strength = float(line.split()[3])
             self.etoscs.append(strength)
 
-        # TD-DFT for GAMESS-US
-        if line[14:29] == "LET EXCITATIONS": # TRIPLET and SINGLET
+        # TD-DFT for GAMESS-US.
+        # The format for excitations has changed a bit between 2007 and 2012.
+        # Original format parser was written for:
+        #
+        #          -------------------
+        #          TRIPLET EXCITATIONS
+        #          -------------------
+        #
+        # STATE #   1  ENERGY =    3.027228 EV
+        # OSCILLATOR STRENGTH =    0.000000
+        #        DRF    COEF       OCC      VIR
+        #        ---    ----       ---      ---
+        #         35 -1.105383     35  ->   36
+        #         69 -0.389181     34  ->   37
+        #        103 -0.405078     33  ->   38
+        #        137  0.252485     32  ->   39
+        #        168 -0.158406     28  ->   40
+        #
+        # STATE #   2  ENERGY =    4.227763 EV
+        # ...
+        #
+        # Here is the corresponding 2012 version:
+        #
+        #          -------------------
+        #          TRIPLET EXCITATIONS
+        #          -------------------
+        #
+        # STATE #   1  ENERGY =    3.027297 EV
+        # OSCILLATOR STRENGTH =    0.000000
+        # LAMBDA DIAGNOSTIC   =    0.925 (RYDBERG/CHARGE TRANSFER CHARACTER)
+        # SYMMETRY OF STATE   =    A   
+        #                 EXCITATION  DE-EXCITATION
+        #     OCC     VIR  AMPLITUDE      AMPLITUDE
+        #      I       A     X(I->A)        Y(A->I)
+        #     ---     ---   --------       --------
+        #     35      36   -0.929190      -0.176167
+        #     34      37   -0.279823      -0.109414
+        # ...
+        #
+        # We discern these two by the presence of the arrow in the old version.
+        #
+        # The "LET EXCITATIONS" pattern used below catches both
+        # singlet and triplet excitations output.
+        if line[14:29] == "LET EXCITATIONS":
+
             self.etenergies = []
             self.etoscs = []
             self.etsecs = []
             etsyms = []
-            minus = inputfile.next()
-            blank = inputfile.next()
+
+            minuses = inputfile.next()
+            blanks = inputfile.next()
+
+            # Loop while states are still being printed.
             line = inputfile.next()
-            # Loop starts on the STATE line
-            while line.find("STATE") >= 0:
-                broken = line.split()
-                self.etenergies.append(utils.convertor(float(broken[-2]), "eV", "cm-1"))
-                broken = inputfile.next().split()
-                self.etoscs.append(float(broken[-1]))
-                sym = inputfile.next() # Not always present
-                if sym.find("SYMMETRY")>=0:
-                    etsyms.append(sym.split()[-1])
-                    header = inputfile.next()
-                minus = inputfile.next()
+            while line[1:6] == "STATE":
+
+                etenergy = utils.convertor(float(line.split()[-2]), "eV", "cm-1")
+                etoscs = float(inputfile.next().split()[-1])
+                self.etenergies.append(etenergy)
+                self.etoscs.append(etoscs)
+
+                # Symmetry is not always present, especially in old versions.
+                # Newer versions, on the other hand, can also provide a line
+                # with lambda diagnostic and some extra headers.
+                line = inputfile.next()
+                if "LAMBDA DIAGNOSTIC" in line:
+                    line = inputfile.next()
+                if "SYMMETRY" in line:
+                    etsyms.append(line.split()[-1])
+                    line = inputfile.next()
+                if "EXCITATION" in line and "DE-EXCITATION" in line:
+                    line = inputfile.next()
+                if line.count("AMPLITUDE") == 2:
+                    line = inputfile.next()
+
+                minuses = inputfile.next()
                 CIScontribs = []
                 line = inputfile.next()
                 while line.strip():
-                    broken = line.split()
-                    fromMO, toMO = [int(broken[x]) - 1 for x in [2, 4]]
-                    CIScontribs.append([(fromMO, 0), (toMO, 0), float(broken[1])])
+                    cols = line.split()
+                    if "->" in line:
+                        i_occ_vir = [2, 4]
+                        i_coeff = 1
+                        
+                    else:
+                        i_occ_vir = [0, 1]
+                        i_coeff = 2
+                    fromMO, toMO = [int(cols[i]) - 1 for i in i_occ_vir]
+                    coeff = float(cols[i_coeff])
+                    CIScontribs.append([(fromMO, 0), (toMO, 0), coeff])
                     line = inputfile.next()
                 self.etsecs.append(CIScontribs)
                 line = inputfile.next()
-            if etsyms: # Not always present
+
+            # The symmetries are not always present.
+            if etsyms:
                 self.etsyms = etsyms
          
         # Maximum and RMS gradients.
