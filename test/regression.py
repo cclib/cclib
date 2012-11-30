@@ -388,12 +388,12 @@ def make_regression_from_old_unittest(filename, module_name, test_name):
         test_class.logfile = logfile
         test_class.data = logfile.data
         devnull = open(os.devnull, 'w')
-        unittest.TextTestRunner(stream=devnull).run(unittest.makeSuite(test_class))
+        return unittest.TextTestRunner(stream=devnull).run(unittest.makeSuite(test_class))
 
     return old_unit_test
 
 
-def main(which=[]):
+def main(which=[], traceback=False):
 
     # Print a warning if you haven't downloaded all of the regression test files,
     # or an error if not all of the regression test files are included in filenames.
@@ -479,7 +479,15 @@ def main(which=[]):
                         else:
                             if test_this:
                                 try:
-                                    eval(funcname)(logfile)
+                                    res = eval(funcname)(logfile)
+                                    if res and len(res.failures) > 0:
+                                        failures += len(res.failures)
+                                        print "%i test(s) failed" % len(res.failures)
+                                        if traceback:
+                                            for f in res.failures:
+                                                print "Failure for", f[0]
+                                                print f[1]
+                                        continue
                                 except AssertionError:
                                     print "test failed"
                                     failures += 1
@@ -505,6 +513,8 @@ def main(which=[]):
         print
             
     print "Total: %d   Failed: %d  Errors: %d" % (total, failures, errors)
+    if not traceback and failures + errors > 0:
+        print "\nFor more information on failures/errors, add 'traceback' as argument."
 
 
 if __name__=="__main__":
@@ -516,4 +526,5 @@ if __name__=="__main__":
         import doctest
         doctest.testmod()
     else:
-        main(sys.argv[1:])
+        traceback = "traceback" in sys.argv or "tb" in sys.argv
+        main(sys.argv[1:], traceback)
