@@ -36,7 +36,29 @@ from cclib.test.testall import parsers, test_modules
 data = os.path.join("..", "data")
 dummyfiles = [eval(n)("") for n in parsers]
 
-filenames = [glob(os.path.join(data, "Gaussian", "basicGaussian03", "*.out")) +  
+filenames = [glob(os.path.join(data, "ADF", "basicADF2006.01", "*.adfout")) +
+             glob(os.path.join(data, "ADF", "ADF2004.01", "*.gz")) +
+             glob(os.path.join(data, "ADF", "ADF2004.01", "*.bz2")) +
+             glob(os.path.join(data, "ADF", "ADF2005.01", "*.zip")) +
+             glob(os.path.join(data, "ADF", "ADF2006.01", "*.out")) +
+             glob(os.path.join(data, "ADF", "ADF2006.01", "*.bz2")) +
+             glob(os.path.join(data, "ADF", "ADF2009.01", "*.out")),
+                          
+             glob(os.path.join(data, "GAMESS", "basicGAMESS-US", "*.out")) +
+             glob(os.path.join(data, "GAMESS", "basicPCGAMESS", "*.out")) +
+             glob(os.path.join(data, "GAMESS", "GAMESS-US", "*.out")) +
+             glob(os.path.join(data, "GAMESS", "GAMESS-US", "*.bz2")) +
+             glob(os.path.join(data, "GAMESS", "GAMESS-US", "*.gz")) +
+             glob(os.path.join(data, "GAMESS", "GAMESS-US", "*.zip")) +
+             glob(os.path.join(data, "GAMESS", "PCGAMESS", "*.*.bz2")) +
+             glob(os.path.join(data, "GAMESS", "PCGAMESS", "*.*.gz")) +             
+             glob(os.path.join(data, "GAMESS", "WinGAMESS", "*.gz")),
+             
+             glob(os.path.join(data, "GAMESS-UK", "basicGAMESS-UK", "*.out")) +
+             glob(os.path.join(data, "GAMESS-UK", "GAMESS-UK6.0", "*.out.gz")) +
+             glob(os.path.join(data, "GAMESS-UK", "GAMESS-UK7.0", "*.out.gz")),
+             
+             glob(os.path.join(data, "Gaussian", "basicGaussian03", "*.out")) +  
              glob(os.path.join(data, "Gaussian", "basicGaussian03", "*.log")) +
              glob(os.path.join(data, "Gaussian", "basicGaussian09", "*.log")) +
              glob(os.path.join(data, "Gaussian", "Gaussian09", "*.gz")) +
@@ -48,28 +70,6 @@ filenames = [glob(os.path.join(data, "Gaussian", "basicGaussian03", "*.out")) +
              glob(os.path.join(data, "Gaussian", "Gaussian03", "*.gz")) +
              glob(os.path.join(data, "Gaussian", "Gaussian98", "*.bz2")) +
              glob(os.path.join(data, "Gaussian", "Gaussian98", "*.gz")),
-             
-             glob(os.path.join(data, "GAMESS", "basicGAMESS-US", "*.out")) +
-             glob(os.path.join(data, "GAMESS", "basicPCGAMESS", "*.out")) +
-             glob(os.path.join(data, "GAMESS", "GAMESS-US", "*.out")) +
-             glob(os.path.join(data, "GAMESS", "GAMESS-US", "*.bz2")) +
-             glob(os.path.join(data, "GAMESS", "GAMESS-US", "*.gz")) +
-             glob(os.path.join(data, "GAMESS", "GAMESS-US", "*.zip")) +
-             glob(os.path.join(data, "GAMESS", "PCGAMESS", "*.*.bz2")) +
-             glob(os.path.join(data, "GAMESS", "PCGAMESS", "*.*.gz")) +             
-             glob(os.path.join(data, "GAMESS", "WinGAMESS", "*.gz")),
-             
-             glob(os.path.join(data, "ADF", "basicADF2006.01", "*.adfout")) +
-             glob(os.path.join(data, "ADF", "ADF2004.01", "*.gz")) +
-             glob(os.path.join(data, "ADF", "ADF2004.01", "*.bz2")) +
-             glob(os.path.join(data, "ADF", "ADF2005.01", "*.zip")) +
-             glob(os.path.join(data, "ADF", "ADF2006.01", "*.out")) +
-             glob(os.path.join(data, "ADF", "ADF2006.01", "*.bz2")) +
-             glob(os.path.join(data, "ADF", "ADF2009.01", "*.out")),
-                          
-             glob(os.path.join(data, "GAMESS-UK", "basicGAMESS-UK", "*.out")) +
-             glob(os.path.join(data, "GAMESS-UK", "GAMESS-UK6.0", "*.out.gz")) +
-             glob(os.path.join(data, "GAMESS-UK", "GAMESS-UK7.0", "*.out.gz")),
              
              glob(os.path.join(data, "Jaguar", "Jaguar4.2", "*.bz2")) +
              glob(os.path.join(data, "Jaguar", "Jaguar6.0", "*.bz2")) +
@@ -85,7 +85,7 @@ filenames = [glob(os.path.join(data, "Gaussian", "basicGaussian03", "*.out")) +
              glob(os.path.join(data, "ORCA", "basicORCA2.9", "*.out")) +
              glob(os.path.join(data, "ORCA", "ORCA2.8", "*.out")) +
              glob(os.path.join(data, "ORCA", "ORCA2.8", "*.out.gz")) +
-             glob(os.path.join(data, "ORCA", "ORCA2.9", "*.out.gz")),
+             glob(os.path.join(data, "ORCA", "ORCA2.9", "*.out.gz"))
              ]
 
 
