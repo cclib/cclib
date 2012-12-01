@@ -456,7 +456,9 @@ def main(which=[], traceback=False):
             continue;
 
         print "Are the %s files ccopened and parsed correctly?" % name
-        for fname in filenames[iname]:
+        current_filenames = filenames[iname]
+        current_filenames.sort()
+        for fname in current_filenames:
             total += 1
             print "  %s..."  % fname,
 
