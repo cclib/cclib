@@ -28,13 +28,12 @@ from StringIO import StringIO
 from cclib.parser import ccopen
 from cclib.parser import ADF, GAMESS, GAMESSUK, Gaussian, Jaguar, Molpro, ORCA
 
-from cclib.test.testall import test_modules
+from cclib.test.testall import parsers, test_modules
 
 
 # Edit the following variable definitions to add new parsers or new datafile patterns.
 
 data = os.path.join("..", "data")
-parsers = [ "Gaussian", "GAMESS", "ADF", "GAMESSUK", "Jaguar", "Molpro", "ORCA" ]
 dummyfiles = [eval(n)("") for n in parsers]
 
 filenames = [glob(os.path.join(data, "Gaussian", "basicGaussian03", "*.out")) +  

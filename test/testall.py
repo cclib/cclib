@@ -17,6 +17,9 @@ import unittest
 from cclib.parser import ADF, GAMESS, GAMESSUK, Gaussian, Jaguar, Molpro, ORCA
 
 
+# All supported parsers.
+parsers = [ "Gaussian", "GAMESS", "ADF", "GAMESSUK", "Jaguar", "Molpro", "ORCA" ]
+
 # The modules to be included in the global test testall().
 test_modules = [ "SP", "SPun", "GeoOpt", "Basis", "Core",   # Basic calculations.
                  "MP", "CC", "CI", "TD", "TDun",            # Post-SCF calculations.
@@ -118,7 +121,7 @@ def importName(modulename, name):
     return getattr(module, name, None)
 
 
-def testall(parserchoice=None, modules=test_modules):
+def testall(parserchoice=parsers, modules=test_modules):
     """Run all unittests in all modules."""
 
     # Make sure we are in the test directory of this script,
@@ -137,7 +140,7 @@ def testall(parserchoice=None, modules=test_modules):
         
         if parserchoice:
             testdata = dict([ (x,y) for x,y in testdata.iteritems()
-                              if y['parser']==parserchoice ])
+                              if y['parser'] in parserchoice ])
                 
         testnames = testdata.keys()
         testnames.sort()
@@ -191,7 +194,6 @@ def testall(parserchoice=None, modules=test_modules):
 
 
 if __name__ == "__main__":
-    parser = None
-    if len(sys.argv)==2:
-        parser = sys.argv[1]
-    testall(parser)
+    chosen_parsers = [p for p in parsers if p in sys.argv] or parsers
+    chosen_modules = [m for m in test_modules if m in sys.argv] or test_modules
+    testall(chosen_parsers, chosen_modules)
