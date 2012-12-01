@@ -81,6 +81,8 @@ class GamessUKSPunTest(GenericSPunTest):
 class GamessUSSPunTest(GenericSPunTest):
     """GAMESS-US unrestricted single point unittest."""
 
+    old_tests = ["GAMESS/GAMESS-US/dvb_un_sp_2006.02.22.r2.out.gz"]
+
 
 class GaussianSPunTest(GenericSPunTest):
     """Gaussian unrestricted single point unittest."""
