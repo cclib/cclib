@@ -1,134 +1,81 @@
------ GAMESS execution script -----
-This job is running on host slim
-under operating system Linux at Tue Aug 7 01:53:59 EDT 2007
+----- GAMESS execution script 'rungms' -----
+This job is running on host fwnc7111
+under operating system Linux at Sat Dec 1 00:01:03 CET 2012
 Available scratch disk space (Kbyte units) at beginning of the job is
-Filesystem            Size  Used Avail Use% Mounted on
-/dev/hda5              20G   16G  3.7G  81% /home
-cp water_mp2.inp /home/langner/tmp/gms-water_mp2/water_mp2.F05
-unset echo
-setenv ERICFMT /home/langner/apps/gamess/gamess-2005.06.27.r3/ericfmt.dat
-setenv MCPPATH /home/langner/apps/gamess/gamess-2005.06.27.r3/mcpdata
-setenv EXTBAS /dev/null
-setenv IRCDATA /home/langner/tmp/python/cclib/trunk/data/GAMESS/basicGAMESS-US/water_mp2.irc
-setenv INPUT /home/langner/tmp/gms-water_mp2/water_mp2.F05
-setenv PUNCH /home/langner/tmp/python/cclib/trunk/data/GAMESS/basicGAMESS-US/water_mp2.dat
-setenv AOINTS /home/langner/tmp/gms-water_mp2/water_mp2.F08
-setenv MOINTS /home/langner/tmp/gms-water_mp2/water_mp2.F09
-setenv DICTNRY /home/langner/tmp/gms-water_mp2/water_mp2.F10
-setenv DRTFILE /home/langner/tmp/gms-water_mp2/water_mp2.F11
-setenv CIVECTR /home/langner/tmp/gms-water_mp2/water_mp2.F12
-setenv CASINTS /home/langner/tmp/gms-water_mp2/water_mp2.F13
-setenv CIINTS /home/langner/tmp/gms-water_mp2/water_mp2.F14
-setenv WORK15 /home/langner/tmp/gms-water_mp2/water_mp2.F15
-setenv WORK16 /home/langner/tmp/gms-water_mp2/water_mp2.F16
-setenv CSFSAVE /home/langner/tmp/gms-water_mp2/water_mp2.F17
-setenv FOCKDER /home/langner/tmp/gms-water_mp2/water_mp2.F18
-setenv WORK19 /home/langner/tmp/gms-water_mp2/water_mp2.F19
-setenv DASORT /home/langner/tmp/gms-water_mp2/water_mp2.F20
-setenv DFTINTS /home/langner/tmp/gms-water_mp2/water_mp2.F21
-setenv DFTGRID /home/langner/tmp/gms-water_mp2/water_mp2.F22
-setenv JKFILE /home/langner/tmp/gms-water_mp2/water_mp2.F23
-setenv ORDINT /home/langner/tmp/gms-water_mp2/water_mp2.F24
-setenv EFPIND /home/langner/tmp/gms-water_mp2/water_mp2.F25
-setenv PCMDATA /home/langner/tmp/gms-water_mp2/water_mp2.F26
-setenv PCMINTS /home/langner/tmp/gms-water_mp2/water_mp2.F27
-setenv SVPWRK1 /home/langner/tmp/gms-water_mp2/water_mp2.F26
-setenv SVPWRK2 /home/langner/tmp/gms-water_mp2/water_mp2.F27
-setenv MLTPL /home/langner/tmp/gms-water_mp2/water_mp2.F28
-setenv MLTPLT /home/langner/tmp/gms-water_mp2/water_mp2.F29
-setenv DAFL30 /home/langner/tmp/gms-water_mp2/water_mp2.F30
-setenv SOINTX /home/langner/tmp/gms-water_mp2/water_mp2.F31
-setenv SOINTY /home/langner/tmp/gms-water_mp2/water_mp2.F32
-setenv SOINTZ /home/langner/tmp/gms-water_mp2/water_mp2.F33
-setenv SORESC /home/langner/tmp/gms-water_mp2/water_mp2.F34
-setenv SIMEN /home/langner/tmp/python/cclib/trunk/data/GAMESS/basicGAMESS-US/water_mp2.simen
-setenv SIMCOR /home/langner/tmp/python/cclib/trunk/data/GAMESS/basicGAMESS-US/water_mp2.simcor
-setenv GCILIST /home/langner/tmp/gms-water_mp2/water_mp2.F37
-setenv HESSIAN /home/langner/tmp/gms-water_mp2/water_mp2.F38
-setenv SOCCDAT /home/langner/tmp/gms-water_mp2/water_mp2.F40
-setenv AABB41 /home/langner/tmp/gms-water_mp2/water_mp2.F41
-setenv BBAA42 /home/langner/tmp/gms-water_mp2/water_mp2.F42
-setenv BBBB43 /home/langner/tmp/gms-water_mp2/water_mp2.F43
-setenv MCQD50 /home/langner/tmp/gms-water_mp2/water_mp2.F50
-setenv MCQD51 /home/langner/tmp/gms-water_mp2/water_mp2.F51
-setenv MCQD52 /home/langner/tmp/gms-water_mp2/water_mp2.F52
-setenv MCQD53 /home/langner/tmp/gms-water_mp2/water_mp2.F53
-setenv MCQD54 /home/langner/tmp/gms-water_mp2/water_mp2.F54
-setenv MCQD55 /home/langner/tmp/gms-water_mp2/water_mp2.F55
-setenv MCQD56 /home/langner/tmp/gms-water_mp2/water_mp2.F56
-setenv MCQD57 /home/langner/tmp/gms-water_mp2/water_mp2.F57
-setenv MCQD58 /home/langner/tmp/gms-water_mp2/water_mp2.F58
-setenv MCQD59 /home/langner/tmp/gms-water_mp2/water_mp2.F59
-setenv MCQD60 /home/langner/tmp/gms-water_mp2/water_mp2.F60
-setenv MCQD61 /home/langner/tmp/gms-water_mp2/water_mp2.F61
-setenv MCQD62 /home/langner/tmp/gms-water_mp2/water_mp2.F62
-setenv MCQD63 /home/langner/tmp/gms-water_mp2/water_mp2.F63
-setenv MCQD64 /home/langner/tmp/gms-water_mp2/water_mp2.F64
-setenv NMRINT1 /home/langner/tmp/gms-water_mp2/water_mp2.F61
-setenv NMRINT2 /home/langner/tmp/gms-water_mp2/water_mp2.F62
-setenv NMRINT3 /home/langner/tmp/gms-water_mp2/water_mp2.F63
-setenv NMRINT4 /home/langner/tmp/gms-water_mp2/water_mp2.F64
-setenv NMRINT5 /home/langner/tmp/gms-water_mp2/water_mp2.F65
-setenv NMRINT6 /home/langner/tmp/gms-water_mp2/water_mp2.F66
-setenv DCPHFH2 /home/langner/tmp/gms-water_mp2/water_mp2.F67
-setenv DCPHF21 /home/langner/tmp/gms-water_mp2/water_mp2.F68
-setenv GVVPT /home/langner/tmp/gms-water_mp2/water_mp2.F69
-unset echo
-
-Hostlist information:
-nodes=1
-cpus=1
-hostlist=slim
-
-GAMESS and DDI executables found. Commencing calculation.
-/home/langner/apps/gamess/gamess-2005.06.27.r3/ddi/ddikick.slim.x /home/langner/apps/gamess/gamess-2005.06.27.r3/gamess.00.slim.x water_mp2 -ddi 1 1 slim -scr /home/langner/tmp/gms-water_mp2
+Filesystem           1K-blocks      Used Available Use% Mounted on
+/dev/mapper/vg1-home 309637120 256368024  50124456  84% /home
+GAMESS temporary binary files will be written to /home/kml
+GAMESS supplementary output files will be written to /home/kml/tmp/cclib-gamess2012
+Copying input file water_mp2.inp to your run's scratch directory...
 
  Distributed Data Interface kickoff program.
  Initiating 1 compute processes on 1 nodes to run the following command:
- /home/langner/apps/gamess/gamess-2005.06.27.r3/gamess.00.slim.x water_mp2 
+ /usr/local/src/gamess-2012.05.01.r1/gamess.fwnc7111.x water_mp2 
 
           ******************************************************
-          *         GAMESS VERSION = 27 JUN 2005 (R3)          *
+          *         GAMESS VERSION =  1 MAY 2012 (R1)          *
           *             FROM IOWA STATE UNIVERSITY             *
           * M.W.SCHMIDT, K.K.BALDRIDGE, J.A.BOATZ, S.T.ELBERT, *
           *   M.S.GORDON, J.H.JENSEN, S.KOSEKI, N.MATSUNAGA,   *
           *          K.A.NGUYEN, S.J.SU, T.L.WINDUS,           *
           *       TOGETHER WITH M.DUPUIS, J.A.MONTGOMERY       *
           *         J.COMPUT.CHEM.  14, 1347-1363(1993)        *
-          ******************* PC-UNIX VERSION ******************
+          **************** 64 BIT LINUX VERSION ****************
 
-     SINCE 1993, STUDENTS AND POSTDOCS WORKING AT IOWA STATE UNIVERSITY
-     AND ALSO IN THEIR VARIOUS JOBS AFTER LEAVING ISU HAVE MADE IMPORTANT
-     CONTRIBUTIONS TO THE CODE:
-     IVANA ADAMOVIC, CHRISTINE AIKENS, YURI ALEXEEV, POOJA ARORA, ROB BELL,
-     PRADIPTA BANDYOPADHYAY, BRETT BODE, GALINA CHABAN, WEI CHEN,
-     CHEOL HO CHOI, PAUL DAY, TIM DUDLEY, DMITRI FEDOROV, GRAHAM FLETCHER,
-     MARK FREITAG, KURT GLAESEMANN, GRANT MERRILL, HEATHER NETZLOFF,
-     BOSILJKA NJEGIC, RYAN OLSON, MIKE PAK, JIM SHOEMAKER, JIE SONG,
-     TETSUYA TAKETSUGU, SIMON WEBB.
+  SINCE 1993, STUDENTS AND POSTDOCS WORKING AT IOWA STATE UNIVERSITY
+  AND ALSO IN THEIR VARIOUS JOBS AFTER LEAVING ISU HAVE MADE IMPORTANT
+  CONTRIBUTIONS TO THE CODE:
+     IVANA ADAMOVIC, CHRISTINE AIKENS, YURI ALEXEEV, POOJA ARORA,
+     ANDREY ASADCHEV, ROB BELL, PRADIPTA BANDYOPADHYAY, JONATHAN BENTZ,
+     BRETT BODE, GALINA CHABAN, WEI CHEN, CHEOL HO CHOI, PAUL DAY,
+     ALBERT DEFUSCO, TIM DUDLEY, DMITRI FEDOROV, GRAHAM FLETCHER,
+     MARK FREITAG, KURT GLAESEMANN, DAN KEMP, GRANT MERRILL,
+     NORIYUKI MINEZAWA, JONATHAN MULLIN, TAKESHI NAGATA,
+     SEAN NEDD, HEATHER NETZLOFF, BOSILJKA NJEGIC, RYAN OLSON, MIKE PAK,
+     JIM SHOEMAKER, LYUDMILA SLIPCHENKO, SAROM SOK, JIE SONG,
+     TETSUYA TAKETSUGU, SIMON WEBB, SOOHAENG YOO, FEDERICO ZAHARIEV
 
-     ADDITIONAL CODE HAS BEEN PROVIDED BY COLLABORATORS IN OTHER GROUPS:
-     IOWA STATE UNIVERSITY: JOE IVANIC, KLAUS RUEDENBERG
-     UNIVERSITY OF TOKYO: KIMIHIKO HIRAO, HARUYUKI NAKANO, TAKAHITO
-          NAKAJIMA, TAKAO TSUNEDA, MUNEAKI KAMIYA, SUSUMU YANAGISAWA,
-          KIYOSHI YAGI
-     UNIVERSITY OF SOUTHERN DENMARK: FRANK JENSEN
+  ADDITIONAL CODE HAS BEEN PROVIDED BY COLLABORATORS IN OTHER GROUPS:
+     IOWA STATE UNIVERSITY:
+          JOE IVANIC, LAIMUTIS BYTAUTAS, KLAUS RUEDENBERG
+     UNIVERSITY OF TOKYO: KIMIHIKO HIRAO, TAKAHITO NAKAJIMA,
+          TAKAO TSUNEDA, MUNEAKI KAMIYA, SUSUMU YANAGISAWA,
+          KIYOSHI YAGI, MAHITO CHIBA, SEIKEN TOKURA, NAOAKI KAWAKAMI
+     UNIVERSITY OF AARHUS: FRANK JENSEN
      UNIVERSITY OF IOWA: VISVALDAS KAIRYS, HUI LI
      NATIONAL INST. OF STANDARDS AND TECHNOLOGY: WALT STEVENS, DAVID GARMER
      UNIVERSITY OF PISA: BENEDETTA MENNUCCI, JACOPO TOMASI
      UNIVERSITY OF MEMPHIS: HENRY KURTZ, PRAKASHAN KORAMBATH
-     UNIVERSITY OF ALBERTA: MARIUSZ KLOBUKOWSKI
+     UNIVERSITY OF ALBERTA: TOBY ZENG, MARIUSZ KLOBUKOWSKI
      UNIVERSITY OF NEW ENGLAND: MARK SPACKMAN
      MIE UNIVERSITY: HIROAKI UMEDA
      MICHIGAN STATE UNIVERSITY:
-          KAROL KOWALSKI, MARTA WLOCH, PIOTR PIECUCH
+          KAROL KOWALSKI, MARTA WLOCH, JEFFREY GOUR, JESSE LUTZ, PIOTR PIECUCH
      UNIVERSITY OF SILESIA: MONIKA MUSIAL, STANISLAW KUCHARSKI
      FACULTES UNIVERSITAIRES NOTRE-DAME DE LA PAIX:
           OLIVIER QUINET, BENOIT CHAMPAGNE
      UNIVERSITY OF CALIFORNIA - SANTA BARBARA: BERNARD KIRTMAN
-     INSTITUTE FOR MOLECULAR SCIENCE: KAZUYA ISHIMURA AND SHIGERU NAGASE
+     INSTITUTE FOR MOLECULAR SCIENCE:
+          KAZUYA ISHIMURA, MICHIO KATOUDA, AND SHIGERU NAGASE
      UNIVERSITY OF NOTRE DAME: DAN CHIPMAN
- EXECUTION OF GAMESS BEGUN Tue Aug  7 01:54:02 2007
+     KYUSHU UNIVERSITY:
+          HARUYUKI NAKANO,
+          FENG LONG GU, JACEK KORCHOWIEC, MARCIN MAKOWSKI, AND YURIKO AOKI,
+          HIROTOSHI MORI AND EISAKU MIYOSHI
+     PENNSYLVANIA STATE UNIVERSITY:
+          TZVETELIN IORDANOV, CHET SWALINA, JONATHAN SKONE,
+          SHARON HAMMES-SCHIFFER
+     WASEDA UNIVERSITY:
+          MASATO KOBAYASHI, TOMOKO AKAMA, TSUGUKI TOUMA,
+          TAKESHI YOSHIKAWA, YASUHIRO IKABATA, HIROMI NAKAI
+     UNIVERSITY OF NEBRASKA:
+          PEIFENG SU, DEJUN SI, NANDUN THELLAMUREGE, YALI WANG, HUI LI
+     UNIVERSITY OF ZURICH:
+          ROBERTO PEVERATI, KIM BALDRIDGE
+     N. COPERNICUS UNIVERSITY AND JACKSON STATE UNIVERSITY:
+          MARIA BARYSZ
+
+ EXECUTION OF GAMESS BEGUN Sat Dec  1 00:01:03 2012
 
             ECHO OF THE FIRST FEW INPUT CARDS -
  INPUT CARD> $contrl scftyp=rhf mplevl=2                                                    
@@ -145,15 +92,13 @@ GAMESS and DDI executables found. Commencing calculation.
  INPUT CARD> $end                                                                           
  INPUT CARD>                                                                                
  INPUT CARD>                                                                                
-
- ..... DONE SETTING UP THE RUN .....
     1000000 WORDS OF MEMORY AVAILABLE
 
      BASIS OPTIONS
      -------------
      GBASIS=STO          IGAUSS=       3      POLAR=NONE    
      NDFUNC=       0     NFFUNC=       0     DIFFSP=       F
-     NPFUNC=       0      DIFFS=       F
+     NPFUNC=       0      DIFFS=       F     BASNAM=        
 
 
      RUN TITLE
@@ -180,11 +125,11 @@ GAMESS and DDI executables found. Commencing calculation.
           INTERNUCLEAR DISTANCES (ANGS.)
           ------------------------------
 
-                    O              H              H         
+                1 O          2 H          3 H     
 
-  1  O               0.0000000      0.9900000 *    0.9900000 *  
-  2  H               0.9900000 *    0.0000000      1.5812983 *  
-  3  H               0.9900000 *    1.5812983 *    0.0000000    
+   1 O       0.0000000    0.9900000 *  0.9900000 *
+   2 H       0.9900000 *  0.0000000    1.5812983 *
+   3 H       0.9900000 *  1.5812983 *  0.0000000  
 
   * ... LESS THAN  3.000
 
@@ -232,6 +177,7 @@ GAMESS and DDI executables found. Commencing calculation.
      ---------------
  SCFTYP=RHF          RUNTYP=ENERGY       EXETYP=RUN     
  MPLEVL=       2     CITYP =NONE         CCTYP =NONE         VBTYP =NONE    
+ DFTTYP=NONE         TDDFT =NONE    
  MULT  =       1     ICHARG=       0     NZVAR =       0     COORD =ZMT     
  PP    =NONE         RELWFN=NONE         LOCAL =NONE         NUMGRD=       F
  ISPHER=      -1     NOSYM =       0     MAXIT =      30     UNITS =ANGS    
@@ -246,8 +192,9 @@ GAMESS and DDI executables found. Commencing calculation.
  DISTRIBUTED MEMDDI=           0 MILLION WORDS IN AGGREGATE,
  MEMDDI DISTRIBUTED OVER   1 PROCESSORS IS           0 WORDS/PROCESSOR.
  TOTAL MEMORY REQUESTED ON EACH PROCESSOR=     1000000 WORDS.
- TIMLIM=      525600.00 MINUTES, OR   365.00 DAYS.
- PARALL= F  BALTYP=  NXTVAL  KDIAG=    0  COREFL= F
+ TIMLIM=      525600.00 MINUTES, OR     365.0 DAYS.
+ PARALL= F  BALTYP=  DLB     KDIAG=    0  COREFL= F
+ MXSEQ2=     300 MXSEQ3=     150
 
           ----------------
           PROPERTIES INPUT
@@ -260,13 +207,14 @@ GAMESS and DDI executables found. Commencing calculation.
  IEMINT=       0   IEFINT=       0                     IEDINT=       0
                                                        MORB  =       0
           EXTRAPOLATION IN EFFECT
+ ORBITAL PRINTING OPTION: NPREO=     1     7     2     1
 
      -------------------------------
      INTEGRAL TRANSFORMATION OPTIONS
      -------------------------------
-     NWORD  =       0     CUTOFF = 1.0E-09
-     MPTRAN =       0     DIRTRF =       F
-     AOINTS =DUP     
+     NWORD  =            0
+     CUTOFF = 1.0E-09     MPTRAN =       0
+     DIRTRF =       F     AOINTS =DUP     
 
           ----------------------
           INTEGRAL INPUT OPTIONS
@@ -278,9 +226,10 @@ GAMESS and DDI executables found. Commencing calculation.
           -----------------------
           NACORE =        1  NBCORE =        1
           LMOMP2 =        F  AOINTS = DUP     
-          METHOD =        2  NWORD  =          0
+          METHOD =        2  NWORD  =               0
           MP2PRP =        T  OSPT   = NONE    
           CUTOFF = 1.00E-09  CPHFBS = BASISAO 
+          CODE   = IMS     
 
           NUMBER OF CORE -A-  ORBITALS =     1
           NUMBER OF CORE -B-  ORBITALS =     1
@@ -306,15 +255,15 @@ GAMESS and DDI executables found. Commencing calculation.
  A   =    7
 
  ..... DONE SETTING UP THE RUN .....
- STEP CPU TIME =     0.02 TOTAL CPU TIME =        0.0 (    0.0 MIN)
- TOTAL WALL CLOCK TIME=        0.0 SECONDS, CPU UTILIZATION IS 100.00%
+ STEP CPU TIME =     0.00 TOTAL CPU TIME =        0.0 (    0.0 MIN)
+ TOTAL WALL CLOCK TIME=        0.1 SECONDS, CPU UTILIZATION IS   0.00%
 
           ********************
           1 ELECTRON INTEGRALS
           ********************
  ...... END OF ONE-ELECTRON INTEGRALS ......
- STEP CPU TIME =     0.01 TOTAL CPU TIME =        0.0 (    0.0 MIN)
- TOTAL WALL CLOCK TIME=        0.0 SECONDS, CPU UTILIZATION IS 100.00%
+ STEP CPU TIME =     0.00 TOTAL CPU TIME =        0.0 (    0.0 MIN)
+ TOTAL WALL CLOCK TIME=        0.1 SECONDS, CPU UTILIZATION IS   0.00%
 
           -------------
           GUESS OPTIONS
@@ -332,7 +281,7 @@ GAMESS and DDI executables found. Commencing calculation.
      2=A        3=A        4=A        5=A        6=A        7=A   
  ...... END OF INITIAL ORBITAL SELECTION ......
  STEP CPU TIME =     0.00 TOTAL CPU TIME =        0.0 (    0.0 MIN)
- TOTAL WALL CLOCK TIME=        0.0 SECONDS, CPU UTILIZATION IS 100.00%
+ TOTAL WALL CLOCK TIME=        0.1 SECONDS, CPU UTILIZATION IS   0.00%
 
                     ----------------------
                     AO INTEGRAL TECHNOLOGY
@@ -361,8 +310,8 @@ GAMESS and DDI executables found. Commencing calculation.
  TOTAL NUMBER OF NONZERO TWO-ELECTRON INTEGRALS =                 228
           1 INTEGRAL RECORDS WERE STORED ON DISK FILE  8.
   ...... END OF TWO-ELECTRON INTEGRALS .....
- STEP CPU TIME =     0.14 TOTAL CPU TIME =        0.2 (    0.0 MIN)
- TOTAL WALL CLOCK TIME=        0.0 SECONDS, CPU UTILIZATION IS 100.00%
+ STEP CPU TIME =     0.02 TOTAL CPU TIME =        0.0 (    0.0 MIN)
+ TOTAL WALL CLOCK TIME=        0.1 SECONDS, CPU UTILIZATION IS  28.57%
 
           --------------------------
                  RHF SCF CALCULATION
@@ -372,7 +321,7 @@ GAMESS and DDI executables found. Commencing calculation.
      MAXIT =   30     NPUNCH=    2
      EXTRAP=T  DAMP=F  SHIFT=F  RSTRCT=F  DIIS=F  DEM=F  SOSCF=F
      DENSITY MATRIX CONV=  1.00E-06
-     MEMORY REQUIRED FOR RHF STEP=     30441 WORDS.
+     MEMORY REQUIRED FOR RHF ITERS=     30441 WORDS.
 
  ITER EX DEM     TOTAL ENERGY        E CHANGE  DENSITY CHANGE    DIIS ERROR
    1  0  0      -74.7981539269   -74.7981539269   0.585814622   0.000000000
@@ -385,9 +334,9 @@ GAMESS and DDI executables found. Commencing calculation.
    8  2  0      -74.9643287911    -0.0000000069   0.000045747   0.000000000
    9  3  0      -74.9643287923    -0.0000000011   0.000017697   0.000000000
   10  4  0      -74.9643287925    -0.0000000002   0.000007301   0.000000000
-  11  5  0      -74.9643287925     0.0000000000   0.000003237   0.000000000
-  12  6  0      -74.9643287925     0.0000000000   0.000001437   0.000000000
-  13  7  0      -74.9643287925     0.0000000000   0.000000639   0.000000000
+  11  5  0      -74.9643287925    -0.0000000000   0.000003237   0.000000000
+  12  6  0      -74.9643287925    -0.0000000000   0.000001437   0.000000000
+  13  7  0      -74.9643287925    -0.0000000000   0.000000639   0.000000000
 
           -----------------
           DENSITY CONVERGED
@@ -406,9 +355,9 @@ GAMESS and DDI executables found. Commencing calculation.
                      A          A          A          A          A   
     1  O  1  S    0.994203  -0.234218   0.000000   0.100458   0.000000
     2  O  1  S    0.025916   0.845882   0.000000  -0.521395   0.000000
-    3  O  1  X    0.000000   0.000000   0.603305   0.000000   0.000000
+    3  O  1  X   -0.000000  -0.000000   0.603305  -0.000000   0.000000
     4  O  1  Y    0.003993   0.117048   0.000000   0.774267   0.000000
-    5  O  1  Z    0.000000   0.000000   0.000000   0.000000   1.000000
+    5  O  1  Z   -0.000000  -0.000000   0.000000  -0.000000   1.000000
     6  H  2  S   -0.005627   0.156449   0.446377   0.289064   0.000000
     7  H  3  S   -0.005627   0.156449  -0.446377   0.289064   0.000000
 
@@ -423,49 +372,12 @@ GAMESS and DDI executables found. Commencing calculation.
     6  H  2  S   -0.775801  -0.808916
     7  H  3  S   -0.775801   0.808916
  ...... END OF RHF CALCULATION ......
- STEP CPU TIME =     0.00 TOTAL CPU TIME =        0.2 (    0.0 MIN)
- TOTAL WALL CLOCK TIME=        1.3 SECONDS, CPU UTILIZATION IS  13.28%
+ STEP CPU TIME =     0.01 TOTAL CPU TIME =        0.0 (    0.0 MIN)
+ TOTAL WALL CLOCK TIME=        0.1 SECONDS, CPU UTILIZATION IS  37.50%
 
- ----------------   ----------------------------------------------------
- RHF-MP2 GRADIENT   PROGRAM WRITTEN BY A.MARQUEZ, S.MALUENDES, M.DUPUIS,
-                    AND S.P.WEBB
- ----------------   ----------------------------------------------------
-
- # CORE ORBITALS      =    1
- # OCCUPIED ORBITALS  =    4
- # MOLECULAR ORBITALS =    7
- # BASIS FUNCTIONS    =    7
-
- MEMORY REQUIREMENTS FOR MP2 TRANSFORMATION
-  MINIMUM=     30396 WORDS, USING 1 ORBITAL PER PASS
-  MAXIMUM=     31008 WORDS, USING ONLY 1 AO INTEGRAL PASS
- EACH ADDITIONAL       204 WORDS REDUCES PASS COUNT BY 1.
-
- MP2 ENERGY/GRADIENT TEI TRANSFORMATION
- # OF WORDS AVAILABLE      =    1000000
- # OF WORDS USED           =      31017
- # OF ORBITALS/PASS        =          4
- # OF INTEGRAL PASSES      =          1
- THRESHOLD FOR KEEPING TRANSFORMED 2E- INTEGRALS =  1.000E-09
-
- PASS #   1 TOOK      0.00 SECONDS.
-
- RESULTS OF MOLLER-PLESSET 2ND ORDER CORRECTION ARE
-               E(0)=       -74.9643287925
-               E(1)=         0.0
-               E(2)=        -0.0379533247
-             E(MP2)=       -75.0022821173
-
- DONE WITH -MP2- GRADIENT TEI TRANFORMATION
-          0 NON-ZERO [IJ|AB] INTEGRALS WRITTEN TO FILE 15
-         63 NON-ZERO [AI|BJ] INTEGRALS WRITTEN TO FILE  9
- ..... DONE WITH MP2 ENERGY .....
- STEP CPU TIME =     0.00 TOTAL CPU TIME =        0.2 (    0.0 MIN)
- TOTAL WALL CLOCK TIME=        1.3 SECONDS, CPU UTILIZATION IS  13.28%
-
-     -------------------------------------------------
-     SCF PROPERTIES...FOR THE UNPERTURBED WAVEFUNCTION
-     -------------------------------------------------
+     ----------------------------------------------------------------
+     PROPERTY VALUES FOR THE RHF   SELF-CONSISTENT FIELD WAVEFUNCTION
+     ----------------------------------------------------------------
 
           -----------------
           ENERGY COMPONENTS
@@ -500,7 +412,7 @@ GAMESS and DDI executables found. Commencing calculation.
                (K,V1,2)=     69.4593977875   -176.4390799391     30.9468054838
            PI PART(1+2)=     -7.8184589445
                (K,V1,2)=      5.0574624520    -19.9179511408      7.0420297443
-  SIGMA SKELETON, ERROR=    -67.1458697593      0.0000000000
+  SIGMA SKELETON, ERROR=    -67.1458697593     -0.0000000000
              MIXED PART= 0.00000E+00 0.00000E+00 0.00000E+00 0.00000E+00
  ...... END OF PI ENERGY ANALYSIS ......
 
@@ -508,7 +420,7 @@ GAMESS and DDI executables found. Commencing calculation.
           MULLIKEN AND LOWDIN POPULATION ANALYSES
           ---------------------------------------
 
-     MULLIKEN ATOMIC POPULATION IN EACH MOLECULAR ORBITAL
+     ATOMIC MULLIKEN POPULATION IN EACH MOLECULAR ORBITAL
 
                       1          2          3          4          5
 
@@ -553,52 +465,75 @@ GAMESS and DDI executables found. Commencing calculation.
 
                        TOTAL       BONDED        FREE
       ATOM            VALENCE     VALENCE     VALENCE
-    1 O                 1.917       1.917       0.000
+    1 O                 1.917       1.917      -0.000
     2 H                 0.971       0.971       0.000
-    3 H                 0.971       0.971       0.000
+    3 H                 0.971       0.971      -0.000
 
           ---------------------
           ELECTROSTATIC MOMENTS
           ---------------------
 
  POINT   1           X           Y           Z (BOHR)    CHARGE
-                 0.000000    0.000000    0.000000        0.00 (A.U.)
+                 0.000000    0.000000    0.000000       -0.00 (A.U.)
          DX          DY          DZ         /D/  (DEBYE)
      0.000000    1.673510    0.000000    1.673510
  ...... END OF PROPERTY EVALUATION ......
- STEP CPU TIME =     0.02 TOTAL CPU TIME =        0.2 (    0.0 MIN)
- TOTAL WALL CLOCK TIME=        1.3 SECONDS, CPU UTILIZATION IS  14.84%
+ STEP CPU TIME =     0.00 TOTAL CPU TIME =        0.0 (    0.0 MIN)
+ TOTAL WALL CLOCK TIME=        0.1 SECONDS, CPU UTILIZATION IS  37.50%
 
-          ---------------------
-          CPHF FOR MP2 GRADIENT
-          ---------------------
+ -------------------------------   -----------------------------
+ MP2 ENERGY GRADIENT CALCULATION   PROGRAM WRITTEN BY K.ISHIMURA
+ -------------------------------   -----------------------------
+ NUMBER OF OCCUPIED ORBITALS            =    5
+ NUMBER OF VIRTUAL ORBITALS             =    2
+ NUMBER OF ACTIVE OCCUPIED ORBITALS     =    4
+ NUMBER OF ACTIVE VIRTUAL ORBITALS      =    2
+ NUMBER OF BASIS FUNCTIONS              =    7
+ NUMBER OF BASIS SHELLS                 =    4
+ AO INTEGRAL THRESHOLD                  = 1.00E-09
+ HALF-TRANSFORMED INTEGRAL THRESHOLD    = 1.00E-09
+   REQUIRED DISK =         0 MBYTES/PROCESSOR
 
- -MP2- LAGRANGIAN     TOOK =      0.000 SECONDS
+ MAXIMUM MEMORY USED DURING MP2 GRADIENT=       14690 WORDS, OR       1 MWORDS.
+ BEGINNING    1ST SHELL LOOP...
+ .... DONE WITH 1ST THREE INDEX TRANSFORMATIONS ....
+ STEP CPU TIME =     0.00 TOTAL CPU TIME =        0.0 (    0.0 MIN)
+ TOTAL WALL CLOCK TIME=        0.1 SECONDS, CPU UTILIZATION IS  33.33%
 
- ..... SOLVING CPHF IN THE AO BASIS .....
- MAXIMUM Z-VECTOR ERROR= 6.168491E-04
- ..... INITIATING DIIS PROCEDURE .....
- MAXIMUM Z-VECTOR ERROR= 2.737392E-04
- MAXIMUM Z-VECTOR ERROR= 2.122715E-04
- MAXIMUM Z-VECTOR ERROR= 4.967095E-06
- MAXIMUM Z-VECTOR ERROR= 8.156584E-07
- MAXIMUM Z-VECTOR ERROR= 1.758642E-11
- .....   6 CPHF DIIS ITERATIONS CARRIED OUT .....
-
- -MP2- CPHF EQUATIONS TOOK =      0.000 SECONDS
- -MP2- W2(OCC,OCC)    TOOK =      0.000 SECONDS
- ..... DONE WITH MP2 CPHF AND DENSITY .....
- STEP CPU TIME =     0.01 TOTAL CPU TIME =        0.2 (    0.0 MIN)
- TOTAL WALL CLOCK TIME=        1.3 SECONDS, CPU UTILIZATION IS  15.63%
+ RESULTS OF MOLLER-PLESSET 2ND ORDER CORRECTION ARE
+               E(0)=       -74.9643287925
+               E(1)=         0.0
+               E(2)=        -0.0379533247
+             E(MP2)=       -75.0022821173
+ .... DONE WITH 4TH INDEX TRANSFORMATION AND ENERGY ....
+ STEP CPU TIME =     0.00 TOTAL CPU TIME =        0.0 (    0.0 MIN)
+ TOTAL WALL CLOCK TIME=        0.1 SECONDS, CPU UTILIZATION IS  33.33%
+ .... DONE WITH 1ST THREE INDEX TRANSFORMATIONS FOR GRADIENT ....
+ STEP CPU TIME =     0.00 TOTAL CPU TIME =        0.0 (    0.0 MIN)
+ TOTAL WALL CLOCK TIME=        0.1 SECONDS, CPU UTILIZATION IS  33.33%
+ .... DONE WITH 4TH INDEX TRANSFORMATION FOR GRADIENT ....
+ STEP CPU TIME =     0.00 TOTAL CPU TIME =        0.0 (    0.0 MIN)
+ TOTAL WALL CLOCK TIME=        0.1 SECONDS, CPU UTILIZATION IS  33.33%
+ CYCLE  1  Z-VECTOR ERROR= -0.753735E-03
+ CYCLE  2  Z-VECTOR ERROR=  0.953587E-04
+ CYCLE  3  Z-VECTOR ERROR= -0.580159E-07
+ CYCLE  4  Z-VECTOR ERROR=  0.111271E-17
+ .... DONE WITH RESPONSE EQUATIONS AND DENSITY ....
+ STEP CPU TIME =     0.00 TOTAL CPU TIME =        0.0 (    0.0 MIN)
+ TOTAL WALL CLOCK TIME=        0.1 SECONDS, CPU UTILIZATION IS  33.33%
 
  MP2 NATURAL ORBITAL OCCUPATION NUMBERS ARE
   2.0000 1.9990 1.9984 1.9878 1.9857 0.0151 0.0141
  THERE ARE     9.9708 ELECTRONS IN PRINCIPAL MP2 NATURAL ORBITALS.
  THERE ARE     0.0292 ELECTRONS IN SECONDARY MP2 NATURAL ORBITALS.
  THE MP2 NATURAL ORBITALS HAVE BEEN PUNCHED.
+ ..... DONE WITH MP2 ENERGY .....
+ STEP CPU TIME =     0.00 TOTAL CPU TIME =        0.0 (    0.0 MIN)
+ TOTAL WALL CLOCK TIME=        0.1 SECONDS, CPU UTILIZATION IS  33.33%
 
      -------------------------------------------------
      MP2 PROPERTIES...FOR THE FIRST ORDER WAVEFUNCTION
+          USING THE RESPONSE (OR RELAXED) DENSITY
      -------------------------------------------------
 
           -----------------
@@ -621,36 +556,9 @@ GAMESS and DDI executables found. Commencing calculation.
                TOTAL KINETIC ENERGY =      74.5372468738
                  VIRIAL RATIO (V/T) =       2.0062389646
 
-  ...... PI ENERGY ANALYSIS ......
-
- ENERGY ANALYSIS:
-            FOCK ENERGY=    -45.8245470597
-          BARE H ENERGY=   -121.7630269691
-     ELECTRONIC ENERGY =    -83.7937870144
-         KINETIC ENERGY=     74.5372468738
-          N-N REPULSION=      8.8870069086
-           TOTAL ENERGY=    -74.9067801058
-        SIGMA PART(1+2)=    -75.9793308427
-               (K,V1,2)=     69.4823736626   -176.3925199845     30.9308154792
-           PI PART(1+2)=     -7.8144561717
-               (K,V1,2)=      5.0548732112    -19.9077538584      7.0384244756
-  SIGMA SKELETON, ERROR=    -67.0923239341      0.0000000000
-             MIXED PART= 0.00000E+00 0.00000E+00 0.00000E+00 0.00000E+00
- ...... END OF PI ENERGY ANALYSIS ......
-
           ---------------------------------------
           MULLIKEN AND LOWDIN POPULATION ANALYSES
           ---------------------------------------
-
-     MULLIKEN ATOMIC POPULATION IN EACH MOLECULAR ORBITAL
-
-                      1          2          3          4          5
-
-                  2.000000   2.000000   2.000000   2.000000   2.000000
-
-    1             2.001247   1.630155   1.056438   1.651375   2.000000
-    2            -0.000623   0.184922   0.471781   0.174313   0.000000
-    3            -0.000623   0.184922   0.471781   0.174313   0.000000
 
                ----- POPULATIONS IN EACH AO -----
                              MULLIKEN      LOWDIN
@@ -696,32 +604,26 @@ GAMESS and DDI executables found. Commencing calculation.
           ---------------------
 
  POINT   1           X           Y           Z (BOHR)    CHARGE
-                 0.000000    0.000000    0.000000        0.00 (A.U.)
+                 0.000000    0.000000    0.000000       -0.00 (A.U.)
          DX          DY          DZ         /D/  (DEBYE)
      0.000000    1.599447    0.000000    1.599447
  ...... END OF PROPERTY EVALUATION ......
- STEP CPU TIME =     0.01 TOTAL CPU TIME =        0.2 (    0.0 MIN)
- TOTAL WALL CLOCK TIME=        1.3 SECONDS, CPU UTILIZATION IS  16.41%
- 440000 WORDS OF DYNAMIC MEMORY USED
- EXECUTION OF GAMESS TERMINATED NORMALLY Tue Aug  7 01:54:02 2007
- DDI: 920 bytes (0.0 MB / 0 MWords) used by master data server.
+ STEP CPU TIME =     0.01 TOTAL CPU TIME =        0.0 (    0.0 MIN)
+ TOTAL WALL CLOCK TIME=        0.1 SECONDS, CPU UTILIZATION IS  40.00%
+               580000  WORDS OF DYNAMIC MEMORY USED
+ EXECUTION OF GAMESS TERMINATED NORMALLY Sat Dec  1 00:01:03 2012
+ DDI: 263624 bytes (0.3 MB / 0 MWords) used by master data server.
 
  ----------------------------------------
  CPU timing information for all processes
  ========================================
- 0: 0.188011 + 0.044002 = 0.232013
+ 0: 0.32 + 0.16 = 0.48
  ----------------------------------------
  ddikick.x: exited gracefully.
-unset echo
 ----- accounting info -----
-Tue Aug  7 01:54:05 EDT 2007
-Files used on the master node slim were:
--rw-r--r-- 1 langner langner     216 2007-08-07 01:53 /home/langner/tmp/gms-water_mp2/water_mp2.F05
--rw-r--r-- 1 langner langner  180012 2007-08-07 01:54 /home/langner/tmp/gms-water_mp2/water_mp2.F08
--rw-r--r-- 1 langner langner     828 2007-08-07 01:54 /home/langner/tmp/gms-water_mp2/water_mp2.F09
--rw-r--r-- 1 langner langner 1439904 2007-08-07 01:54 /home/langner/tmp/gms-water_mp2/water_mp2.F10
--rw-r--r-- 1 langner langner       0 2007-08-07 01:54 /home/langner/tmp/gms-water_mp2/water_mp2.F16
-Removing scratch catalog /home/langner/tmp/gms-water_mp2...
-removed directory: `/home/langner/tmp/gms-water_mp2'
-Finished with calculation.
-0.0u 0.0s 0:06.25 1.2% 0+0k 0+0io 10pf+0w
+Files used on the master node fwnc7111 were:
+-rw-r--r-- 1 kml kml     216 Dec  1 00:01 /home/kml/water_mp2.F05
+-rw-r--r-- 1 kml kml  180016 Dec  1 00:01 /home/kml/water_mp2.F08
+-rw-r--r-- 1 kml kml 1374240 Dec  1 00:01 /home/kml/water_mp2.F10
+Sat Dec  1 00:01:06 CET 2012
+0.0u 0.0s 0:03.15 0.3% 0+0k 0+16io 0pf+0w

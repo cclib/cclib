@@ -101,6 +101,8 @@ class GAMESSUKMP3Test(GenericMP3Test):
 class GAMESSUSMP2Test(GenericMP2Test):
     """GAMESS-US MP2 unittest."""
 
+    old_tests = ["GAMESS/GAMESS-US/water_mp2_2005.06.27.r3.out.gz"]
+
 
 class GaussianMP2Test(GenericMP2Test):
     """Gaussian MP2 unittest."""
