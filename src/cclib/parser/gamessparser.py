@@ -531,7 +531,8 @@ class GAMESS(logfileparser.Logfile):
         #       FREQUENCY:         0.05        0.03        0.03       30.89       30.94  
         #    REDUCED MASS:      8.50125     8.50137     8.50136     1.06709     1.06709
         #       
-        # whereas PC-GAMESS has...
+        # ...whereas PC-GAMESS has...
+        #
         # MODES 1 TO 6 ARE TAKEN AS ROTATIONS AND TRANSLATIONS.
         #
         #     FREQUENCIES IN CM**-1, IR INTENSITIES IN DEBYE**2/AMU-ANGSTROM**2
@@ -541,6 +542,7 @@ class GAMESS(logfileparser.Logfile):
         #    IR INTENSITY:      0.00000     0.00000     0.00000     0.00000     0.00000
         #
         # If Raman is present we have (for PC-GAMESS)...
+        #
         # MODES 1 TO 6 ARE TAKEN AS ROTATIONS AND TRANSLATIONS.
         #
         #     FREQUENCIES IN CM**-1, IR INTENSITIES IN DEBYE**2/AMU-ANGSTROM**2
@@ -560,70 +562,94 @@ class GAMESS(logfileparser.Logfile):
         #     *     THE VIBRATIONAL ANALYSIS IS NOT VALID !!!       *
         #     *******************************************************
         #
-        if line.find("NORMAL COORDINATE ANALYSIS IN THE HARMONIC APPROXIMATION") >= 0:
+        # There can also be additional warnings about the selection of modes, for example:
+        #
+        # * * * WARNING, MODE 6 HAS BEEN CHOSEN AS A VIBRATION
+        #          WHILE MODE12 IS ASSUMED TO BE A TRANSLATION/ROTATION.
+        # PLEASE VERIFY THE PROGRAM'S DECISION MANUALLY!
+        #
+        if "NORMAL COORDINATE ANALYSIS IN THE HARMONIC APPROXIMATION" in line:
  
             self.vibfreqs = []
             self.vibirs = []
             self.vibdisps = []
 
-            # Need to get to the modes line
-            # Also, pass warning to logger if it is there
-            warning = False
-            while line.find("MODES") == -1:
+            # Need to get to the modes line, which is often preceeded by
+            # a list of atomic weights and some possible warnings.
+            # Pass the warnings to the logger if they are there.
+            while not "MODES" in line:
                 line = inputfile.next()
-                if line.find("THIS IS NOT A STATIONARY POINT")>=0:
-                    warning = True
-                    self.logger.warning("This is not a stationary point on the molecular"
-                                        "PES. The vibrational analysis is not valid.")
+                if "THIS IS NOT A STATIONARY POINT" in line:
+                    msg = "\n   This is not a stationary point on the molecular PES"
+                    msg += "\n   The vibrational analysis is not valid!!!"
+                    self.logger.warning(msg)
+                if "* * * WARNING, MODE" in line:
+                    line1 = line.strip()
+                    line2 = inputfile.next().strip()
+                    line3 = inputfile.next().strip()
+                    self.logger.warning("\n   " + "\n   ".join((line1,line2,line3)))
+
+            # In at least one case (regression zolm_dft3a.log) for older version of GAMESS-US,
+            # the header concerning the range of nodes is formatted wrong and can look like so:
+            # MODES 9 TO14 ARE TAKEN AS ROTATIONS AND TRANSLATIONS.
+            #  ... although it's unclear whether this happens for all two-digit values.
             startrot = int(line.split()[1])
-            endrot = int(line.split()[3])
+            if len(line.split()[2]) == 2:
+                endrot = int(line.split()[3])
+            else:
+                endrot = int(line.split()[2][2:])
+
             blank = inputfile.next()
 
-            # This is to skip the output associated with symmetry analysis, fixes bug #3476063
             line = inputfile.next()
+
+            # This is to skip the output associated with symmetry analysis, fixes bug #3476063.
             if "ANALYZING SYMMETRY OF NORMAL MODES" in line:
                 blank = inputfile.next()
                 line = inputfile.next()
                 while line != blank:
                     line = inputfile.next()
 
-            # Skip over FREQUENCIES, etc. and get past the second warning
+            # Skip over FREQUENCIES, etc., and get past the possibly second warning.
             line = inputfile.next()
             while line != blank:
                 line = inputfile.next()
-            if warning:
-                line = inputfile.next()
+            line = inputfile.next()
+            if "*****" in line:
                 while line != blank:
                     line = inputfile.next()
+                line = inputfile.next()
             
-            freqNo = inputfile.next()
-            while freqNo.find("SAYVETZ") == -1:
+            while not "SAYVETZ" in line:
 
-                # Note: there may be imaginary frequencies like this:
+                # Note: there may be imaginary frequencies like this (which we make negative):
                 #       FREQUENCY:       825.18 I    111.53       12.62       10.70        0.89
-                freq = inputfile.next().strip().split()[1:]
-                newfreq = []
-                for i, x in enumerate(freq):
-                    if x != "I":
-                        newfreq.append(float(x))
+                #
+                # A note for debuggers: some of these frequencies will be removed later,
+                # assumed to be translations or rotations (see startrot/endrot above).
+                for col in inputfile.next().split()[1:]:
+                    if col == "I":
+                        self.vibfreqs[-1] *= -1
                     else:
-                        newfreq[-1] = -newfreq[-1]
-                self.vibfreqs.extend(newfreq)
+                        self.vibfreqs.append(float(col))
+
                 line = inputfile.next()
 
-                # Skip the symmetry (appears in newer versions), fixes bug #3476063
+                # Skip the symmetry (appears in newer versions), fixes bug #3476063.
                 if line.find("SYMMETRY") >= 0:
                     line = inputfile.next()
 
-                # Skip the reduced mass (not always present)
+                # Skip the reduced mass (not always present).
                 if line.find("REDUCED") >= 0:
                     line = inputfile.next()
 
-                # Not present if a numerical Hessian calculation
+                # Not present in numerical Hessian calculations.
                 if line.find("IR INTENSITY") >= 0:
                     irIntensity = map(float, line.strip().split()[2:])
                     self.vibirs.extend([utils.convertor(x, "Debye^2/amu-Angstrom^2", "km/mol") for x in irIntensity])
                     line = inputfile.next()
+
+                # Read in Raman vibrational intensities if present.
                 if line.find("RAMAN") >= 0:
                     if not hasattr(self,"vibramans"):
                         self.vibramans = []
@@ -631,28 +657,30 @@ class GAMESS(logfileparser.Logfile):
                     self.vibramans.extend(map(float, ramanIntensity[2:]))
                     depolar = inputfile.next()
                     line = inputfile.next()
+
+                # This line seems always to be blank.
                 assert line == blank
 
-                # Extract the Cartesian displacement vectors
+                # Extract the Cartesian displacement vectors.
                 p = [ [], [], [], [], [] ]
-                for j in range(len(self.atomnos)):
+                for j in range(self.natom):
                     q = [ [], [], [], [], [] ]
-                    for k in range(3): # x, y, z
-                        line = inputfile.next()[21:]
-                        broken = map(float, line.split())
-                        for l in range(len(broken)):
-                            q[l].append(broken[l])
-                    for k in range(len(broken)):
+                    for coord in ['x', 'y', 'z']:
+                        cols = map(float, inputfile.next()[21:].split())
+                        for i, val in enumerate(cols):
+                            q[i].append(val)
+                    for k in range(len(cols)):
                         p[k].append(q[k])
-                self.vibdisps.extend(p[:len(broken)])
+                self.vibdisps.extend(p[:len(cols)])
 
-                # Skip the Sayvetz stuff at the end
+                # Skip the Sayvetz stuff at the end.
                 for j in range(10):
                     line = inputfile.next()
-                blank = inputfile.next()
-                freqNo = inputfile.next()
 
-            # Exclude rotations and translations
+                blank = inputfile.next()
+                line = inputfile.next()
+
+            # Exclude rotations and translations.
             self.vibfreqs = numpy.array(self.vibfreqs[:startrot-1]+self.vibfreqs[endrot:], "d")
             self.vibirs = numpy.array(self.vibirs[:startrot-1]+self.vibirs[endrot:], "d")
             self.vibdisps = numpy.array(self.vibdisps[:startrot-1]+self.vibdisps[endrot:], "d")
