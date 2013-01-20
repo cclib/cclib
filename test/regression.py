@@ -176,9 +176,16 @@ def testGaussian_basicGaussian03_dvb_gopt_out(logfile):
     """
     assert len(logfile.data.homos)==1
 
+def testGaussian_basicGaussian09_dvb_raman_log(logfile):
+    """Was not extracting vibdisps"""
+    assert hasattr(logfile.data, "vibdisps")
+    assert len(logfile.data.vibdisps) == 54
+
 def testGaussian_basicGaussian03_dvb_raman_out(logfile):
     """Was extracting the "Depolar P" instead of the "Raman activity". Oops!"""
     assert logfile.data.vibramans[1] - 2.6872 < 0.0001
+    assert hasattr(logfile.data, "vibdisps")
+    assert len(logfile.data.vibdisps) == 54
 
 def testGaussian_basicGaussian03_dvb_un_sp_out(logfile):
     """

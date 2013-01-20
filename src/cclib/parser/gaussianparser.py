@@ -727,10 +727,7 @@ class Gaussian(logfileparser.Logfile):
                     self.vibramans.extend(ramans)
                 
                 # Block with displacement should start with this.
-                # Remember, it is possible to have less than three columns!
-                # There should be as many lines as there are atoms.
-                if line[1:29] == "Atom AN      X      Y      Z":
-                
+                if line.strip().split()[0:3] == ["Atom", "AN", "X"]:
                     if not hasattr(self, 'vibdisps'):
                         self.vibdisps = []
                     disps = []
