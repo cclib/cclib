@@ -162,6 +162,26 @@ def testGAMESS_WinGAMESS_dvb_td_trplet_2007_03_24_r1_out_gz(logfile):
     assert abs(max(logfile.data.etoscs) - 0.0) < 0.01
     assert len(logfile.data.etsecs) == number
 
+def testGaussian_Gaussian09_Dahlgren_TS_zip(logfile):
+    """Failed to parse ccenergies for a variety of reasons"""
+    assert hasattr(logfile.data, "ccenergies")
+    assert abs(logfile.data.ccenergies[0] - (-11819.96506609)) < 0.001
+
+def testGaussian_basicGaussian03_water_ccd_log(logfile):
+    """Ensure that ccenergies continues to be parsed correctly"""
+    assert hasattr(logfile.data, "ccenergies")
+    assert abs(logfile.data.ccenergies[0] - (-2041.32671705)) < 0.001
+def testGaussian_basicGaussian03_water_ccsd_log(logfile):
+    """Ensure that ccenergies continues to be parsed correctly"""
+    assert hasattr(logfile.data, "ccenergies")
+    assert abs(logfile.data.ccenergies[0] - (-2041.33503383)) < 0.001
+def testGaussian_basicGaussian03_water_ccsd_t__log(logfile):
+    """Ensure that ccenergies continues to be parsed correctly"""
+    assert hasattr(logfile.data, "ccenergies")
+    assert abs(logfile.data.ccenergies[0] - (-2041.3371232)) < 0.001
+
+    ##### ADD TESTS FOR THE OTHERS ######
+
 def testGaussian_Gaussian09_dvb_lowdin_log_gz(logfile):
     """Check if both Mulliken and Lowdin charges are parsed."""
     assert "mulliken" in logfile.data.atomcharges

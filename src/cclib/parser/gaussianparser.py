@@ -404,24 +404,22 @@ class Gaussian(logfileparser.Logfile):
 
         # Total energies after Coupled Cluster corrections.
         # Second order MBPT energies (MP2) are also calculated for these runs,
-        #  but the output is the same as when parsing for mpenergies.
-        # First turn on flag for Coupled Cluster runs.
-        if line[1:23] == "Coupled Cluster theory" or line[1:8] == "CCSD(T)":
-
-            self.coupledcluster = True
-            if not hasattr(self, "ccenergies"):
-                self.ccenergies = []
-
-        # Now read the consecutive correlated energies when ,
-        #  but append only the last one to ccenergies.
+        # but the output is the same as when parsing for mpenergies.
+        # Read the consecutive correlated energies
+        # but append only the last one to ccenergies.
         # Only the highest level energy is appended - ex. CCSD(T), not CCSD.
-        if self.coupledcluster and line[27:35] == "E(CORR)=":
+        if line[1:10] == "DE(Corr)=" and line[27:35] == "E(CORR)=":
             self.ccenergy = self.float(line.split()[3])
-        if self.coupledcluster and line[1:9] == "CCSD(T)=":
-            self.ccenergy = self.float(line.split()[1])
-        # Append when leaving link 913
-        if self.coupledcluster and line[1:16] == "Leave Link  913":
-            self.ccenergies.append(utils.convertor(self.ccenergy, "hartree", "eV"))
+        if line[1:10] == "T5(CCSD)=":
+            line = inputfile.next()
+            if line[1:9] == "CCSD(T)=":
+                self.ccenergy = self.float(line.split()[1])
+        if line[12:53] == "Population analysis using the SCF density":
+            if hasattr(self, "ccenergy"):
+                if not hasattr(self, "ccenergies"):
+                    self.ccenergies = []
+                self.ccenergies.append(utils.convertor(self.ccenergy, "hartree", "eV"))
+                del self.ccenergy
 
         # Geometry convergence information.
         if line[49:59] == 'Converged?':
