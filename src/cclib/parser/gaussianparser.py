@@ -266,6 +266,10 @@ class Gaussian(logfileparser.Logfile):
 
             if not hasattr(self, "scftargets"):
                 self.scftargets = []
+            # The following can happen with ONIOM which are mixed SCF
+            # and semi-empirical
+            if type(self.scftargets) == type(numpy.array([])):
+                self.scftargets = []
 
             scftargets = []
             # The RMS density matrix.
@@ -961,6 +965,8 @@ class Gaussian(logfileparser.Logfile):
 
             # If counterpoise fragment, return without parsing orbital info
             if self.counterpoise != 0: return
+            # Skip this for ONIOM calcs
+            if self.oniom: return
 
             if line[5:40] == "Beta Molecular Orbital Coefficients":
                 beta = True
