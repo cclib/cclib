@@ -92,7 +92,7 @@ class Logfile(object):
     
     """
 
-    def __init__(self, source, progress=None,
+    def __init__(self, source, callback=None,
                        loglevel=logging.INFO, logname="Log", logstream=sys.stdout,
                        fupdate=0.05, cupdate=0.002, 
                        datatype=ccData):
@@ -120,8 +120,8 @@ class Logfile(object):
         else:
             raise ValueError
 
-        # Progress indicator.
-        self.progress = progress
+        # Callback function and update intervals.
+        self.callback = callback
         self.fupdate = fupdate
         self.cupdate = cupdate
 
@@ -183,13 +183,11 @@ class Logfile(object):
         else:
             inputfile = self.stream
 
-        # Intialize self.progress.
-        if self.progress:
+        # Intialize values for self.callback.
+        if self.callback:
             inputfile.seek(0, 2)
-            nstep = inputfile.tell()
+            self.nstep = inputfile.tell()
             inputfile.seek(0)
-            self.progress.initialize(nstep)
-            self.progress.step = 0
             if fupdate:
                 self.fupdate = fupdate
             if cupdate:
@@ -258,8 +256,8 @@ class Logfile(object):
                 self.__delattr__(attr)
 
         # Update self.progress as done.
-        if self.progress:
-            self.progress.update(nstep, "Done")
+        if self.callback:
+            self.callback(100, "Done")
 
         # Return the ccData object that was generated.
         return data
@@ -273,13 +271,11 @@ class Logfile(object):
         pass
 
     def updateprogress(self, inputfile, msg, xupdate=0.05):
-        """Update progress."""
+        """Update progress. Calls callback function with percent completed."""
 
-        if self.progress and random.random() < xupdate:
+        if self.callback and random.random() < xupdate:
             newstep = inputfile.tell()
-            if newstep != self.progress.step:
-                self.progress.update(newstep, msg)
-                self.progress.step = newstep
+            self.callback(newstep * 100.0 / self.nstep, msg)
 
     def normalisesym(self, symlabel):
         """Standardise the symmetry labels between parsers.

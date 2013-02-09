@@ -21,25 +21,22 @@ class TextProgress:
         self.text = None
         self.oldprogress = 0
         self.progress = 0
-        self.calls = 0
 
     def initialize(self, nstep, text=None):
 
         self.nstep = float(nstep)
         self.text = text
 
-        #sys.stdout.write("\n")
-
     def update(self, step, text=None):
-
-        self.progress = int(step * 100 / self.nstep)
+        """ Update the text display. Step is out of 100. """
+        self.progress = step
 
         if self.progress/2 >= self.oldprogress/2+1 or self.text != text:
         # just went through at least an interval of ten, ie. from 39 to 41, so update
 
             mystr = "\r["
-            prog = self.progress / 10
-            mystr += prog*"="+(10-prog)*"-"
+            prog = int(self.progress / 10)
+            mystr += prog * "=" + (10-prog) * "-"
             mystr += "] %3i" % self.progress + "%"
 
             if text:
@@ -51,7 +48,17 @@ class TextProgress:
             sys.stdout.flush()
             self.oldprogress = self.progress
 
-            if self.progress >= 100 and text == "Done":
+            if self.progress == 100 and text == "Done":
                 print " "
 
         return
+
+if __name__ == "__main__":
+    # A simple example
+
+    import logging
+    from cclib.parser import ccopen
+
+    progress = TextProgress()
+    parser = ccopen(sys.argv[1], progress.update, loglevel=logging.CRITICAL)
+    data = parser.parse()

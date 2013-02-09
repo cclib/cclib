@@ -10,37 +10,39 @@
 
 __revision__ = "$Revision$"
 
-from PyQt4 import QtGui,QtCore
+from PyQt4 import QtGui, QtCore
 
 
 class Qt4Progress(QtGui.QProgressDialog):
 
     def __init__(self, title, parent=None):
 
-        QtGui.QProgressDialog.__init__(self, parent)
+        QtGui.QProgressDialog.__init__(self, title, QtCore.QString(), 0, 100, parent)
 
         self.nstep = 0
         self.text = None
-        self.oldprogress = 0
-        self.progress = 0
-        self.calls = 0
-        self.loop=QtCore.QEventLoop(self)
+        self.loop = QtCore.QEventLoop(self)
         self.setWindowTitle(title)
-
-    def initialize(self, nstep, text=None):
-
-        self.nstep = nstep
-        self.text = text
-        self.setRange(0,nstep)
-        if text:
-            self.setLabelText(text)
-        self.setValue(1)
-        #sys.stdout.write("\n")
+        self.setRange(0, 100)
+        self.setLabelText("Parsing...")
 
     def update(self, step, text=None):
 
         if text:
             self.setLabelText(text)
         self.setValue(step)
-        self.loop.processEvents(QtCore.QEventLoop.ExcludeUserInputEvents)
+        self.loop.processEvents(QtCore.QEventLoop.AllEvents)
+
+if __name__ == "__main__":
+    """ An example of the Qt4 progress use. """
+
+    import sys, logging
+    from cclib.parser import ccopen
+
+    app = QtGui.QApplication(sys.argv)
+    dialog = Qt4Progress("Parsing %s..." % sys.argv[1])
+    parser = ccopen(sys.argv[1], dialog.update, loglevel=logging.CRITICAL)
+    data = parser.parse()
+
+    sys.exit(app.exec_())
 
