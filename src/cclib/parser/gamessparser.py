@@ -411,6 +411,9 @@ class GAMESS(logfileparser.Logfile):
             # The input orientation will be overwritten if this is a geometry optimisation
             # We assume that a previous Input Orientation has been found and
             # used to extract the atomnos
+            if self.progress:
+                self.updateprogress(inputfile, "Coordinates")
+
             if self.firststdorient:
                 self.firststdorient = False
                 # Wipes out the single input coordinate at the start of the file
