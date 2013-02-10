@@ -1,3 +1,39 @@
+Changes since cclib-1.0.1:
+
+Features:
+	* Add progress info for all parsers
+	* Support ONIOM calculations in Gaussian (Karen Hemelsoet)
+	* New attribute atomcharges extracts Mulliken and Lowdin atomic
+	charges if present
+	* New attribute atomspins extracts Mulliken and Lowdin atomic spin
+	densities if present
+	* New thermodynamic attributes: freeenergy, temperature, enthalpy
+	(Edward	Holland)
+	* Extract PES information: scanenergies, scancoords, scanparm, scannames
+	(Edward Holland)
+
+Bugfixes:
+	* Handle coupled cluster energies in Gaussian 09 (Björn Dahlgren)
+	* Vibrational displacement vectors missing for Gaussian 09 (Björn
+	Dahlgren)
+	* Fix problem parsing vibrational frequencies in some GAMESS-US files
+	* Fix missing final scfenergy in ADF geometry optimisations
+	* Fix missing final scfenergy for ORCA where a specific number of SCF
+	cycles has been specified
+	* ORCA scfenergies not parsed if COSMO solvent effects included
+	* Allow spin unrestricted calculations to use the fragment MO overlaps
+	correctly for the MPA and CDA calculations
+	* Handle Gaussian MO energies that are printed as a row of asterisks
+	(Jerome Kieffer)
+	* Add more explicit license notices, and allow LGPL versions after 2.1
+	* Support Firefly calculations where nmo != nbasis (Pavel Solntsev)
+	* Fix problem parsing vibrational frequency information in recent
+	GAMESS (US) files (Chengju Wang)
+	* Apply patch from Chengju Wang to handle GAMESS calculations with more
+	than 99 atoms
+	* Handle Gaussian files with more than 99 atoms having pseudopotentials
+	(Björn Baumeier)
+
 Changes since cclib-1.0:
 
 Features:
@@ -14,7 +50,6 @@ Bugfixes:
 	* ADF versions > 2007 no longer print overlap info by default
 	* Handle parsing Firefly calculations that fail
 	* Fix parsing of ORCA calculation (Marius Retegan)
-	* Add more explicit license notices, and allow LGPL versions after 2.1
 
 Change since cclib-0.9:
 
