@@ -1,7 +1,7 @@
 # This file is part of cclib (http://cclib.sf.net), a library for parsing
 # and interpreting the results of computational chemistry packages.
 #
-# Copyright (C) 2006, the cclib development team
+# Copyright (C) 2006-2013 the cclib development team
 #
 # The library is free software, distributed under the terms of
 # the GNU Lesser General Public version 2.1 or later. You should have
@@ -9,7 +9,7 @@
 # the full license online at http://www.gnu.org/copyleft/lgpl.html.
 
 __revision__ = "$Revision$"
-__version__ = "1.0.1"
+__version__ = "1.1"
 
 import parser
 import progress
