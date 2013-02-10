@@ -332,6 +332,9 @@ class ORCA(logfileparser.Logfile):
 
             self.aooverlaps = numpy.zeros( (self.nbasis, self.nbasis), "d")
             for i in range(0, self.nbasis, 6):
+                if self.progress:
+                    self.updateprogress(inputfile, "Overlap")
+
                 header = inputfile.next()
                 size = len(header.split())
 
@@ -359,6 +362,9 @@ class ORCA(logfileparser.Logfile):
                     mocoeffs.append(numpy.zeros((self.nbasis, self.nbasis), "d"))
 
                 for i in range(0, self.nbasis, 6):
+                    if self.progress:
+                        self.updateprogress(inputfile, "Coefficients")
+
                     numbers = inputfile.next()
                     energies = inputfile.next()
                     occs = inputfile.next()
