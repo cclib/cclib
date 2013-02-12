@@ -3,48 +3,52 @@
 #include <Python.h>
 #include "cclib.h"
 
-PyObject* getModuleByName(const char* name) {
-    PyObject *moduleName, *parserModule;
+PyObject* ccopen(const char* filename) {
 
-    moduleName = PyString_FromString(name);
-    if( !moduleName )
-        return NULL;
+    PyGILState_STATE gstate;
+    gstate = PyGILState_Ensure();
 
-    parserModule = PyImport_Import(moduleName);
-    Py_DECREF(moduleName);
-
-    return parserModule;
-}
-
-PyObject* getParserModule(const char* name) {
-    return getModuleByName("cclib.parser");
-}
-
-PyObject* getMethodModule(const char* name) {
-    return getModuleByName("cclib.method");
-}
-
-PyObject* ccopen(PyObject* parserModule, const char* filename) {
-
-    PyObject *ccopenFunction, *filenameObject, *parserObject = NULL;
+    PyObject *parserModule, *ccopenFunction, *filenameObject, *parserObject = NULL;
     PyObject *args;
 
-    if ( !parserModule )
+    if (!filename) {
+        printf("Invalid filename.\n");
         return NULL;
+    }
+
+    parserModule = PyImport_ImportModule("cclib.parser");
+    if ( !parserModule ) {
+        printf("cclib.parser not imported.\n");
+        PyGILState_Release(gstate);
+        return NULL;
+
+    }
 
     ccopenFunction = PyObject_GetAttrString(parserModule, "ccopen");
     if ( ccopenFunction && PyCallable_Check(ccopenFunction)) {
-    
-        filenameObject = PyString_FromString(filename);
-        if (!filenameObject)
+    	filenameObject = PyString_FromString(filename);
+        if (!filenameObject) {
+            printf("There's a problem with %s.\n", filename);
+            Py_DECREF(ccopenFunction);
+            Py_DECREF(parserModule);
+            PyGILState_Release(gstate);
             return NULL;
+        }
 
         args = PyTuple_New(1);
         PyTuple_SetItem(args, 0, filenameObject);
         parserObject = PyObject_CallObject(ccopenFunction, args);
+        Py_DECREF(args);
 
     }
 
+    else {
+        printf("There is a problem with ccopen.\n");
+
+    }
+
+    PyGILState_Release(gstate);
+    printf("Returning parser object.\n");
     return parserObject;
 }
 

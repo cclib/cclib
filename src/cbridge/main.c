@@ -3,21 +3,23 @@
 
 int main(int argc, char* argv[]) {
 
-    PyObject *parserModule;
-    PyObject *parserObject;
-    PyObject *name, *text, *args;
-
+    PyObject *parserObject, *parseFunction, *args, *dataObject;
+    
     Py_Initialize();
 
-    parserModule = getParserModule();
-    parserObject = ccopen(parserModule, argv[1]);
+    parserObject = ccopen(argv[1]);
+    if(!parserObject)
+        printf("cclib parser object not created.\n");
 
-    name = PyObject_GetAttrString(parserObject, "parse");
-    args = PyTuple_New(0);
-    text = PyObject_CallObject(name, args);
-//    printf( "%s\n", PyString_AsString(text));
+    parseFunction = PyObject_GetAttrString(parserObject, "parse");
+    if( parseFunction && PyCallable_Check(parseFunction)) {
+        args = PyTuple_New(0);
+        dataObject = PyObject_CallObject(parseFunction, args);
+    }
 
     Py_Finalize();
+
+    printf("Exiting.\n");
     return 0;
 }
 
