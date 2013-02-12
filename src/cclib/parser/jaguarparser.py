@@ -290,6 +290,8 @@ class Jaguar(logfileparser.Logfile):
                     blank = inputfile.next()
 
                 for k in range(0, len(self.moenergies[s]), 5):
+                    if self.progress:
+                        self.updateprogress(inputfile, "Coefficients")
 
                     numbers = inputfile.next()
                     eigens = inputfile.next()
@@ -351,6 +353,9 @@ class Jaguar(logfileparser.Logfile):
             self.aooverlaps = numpy.zeros((self.nbasis, self.nbasis), "d")
 
             for i in range(0, self.nbasis, 5):
+                if self.progress:
+                    self.updateprogress(inputfile, "Overlap")
+
                 blank = inputfile.next()
                 header = inputfile.next()
                 for j in range(i, self.nbasis):

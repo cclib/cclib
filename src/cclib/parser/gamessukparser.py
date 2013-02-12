@@ -131,6 +131,9 @@ class GAMESSUK(logfileparser.Logfile):
             # be recorded already, in the "molecular geometry" section
             # (note: single-point calculations have no "nuclear coordinates" only
             # "molecular geometry")
+            if self.progress:
+                self.updateprogress(inputfile, "Coordinates")
+
             if self.firstnuccoords:
                 self.firstnuccoords = False
                 return
@@ -181,6 +184,9 @@ class GAMESSUK(logfileparser.Logfile):
             blank = inputfile.next()
             i = 0
             while i < self.nbasis:
+                if self.progress:
+                    self.updateprogress(inputfile, "Overlap")
+
                 blank = inputfile.next()
                 blank = inputfile.next()
                 header = inputfile.next()
@@ -450,6 +456,9 @@ class GAMESSUK(logfileparser.Logfile):
 
             mo = 0
             while mo < self.nmo:
+                if self.progress:
+                    self.updateprogress(inputfile, "Coefficients")
+
                 blank = inputfile.next()
                 blank = inputfile.next()
                 nums = inputfile.next()
