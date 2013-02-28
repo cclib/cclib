@@ -1,9 +1,14 @@
-"""
-cclib (http://cclib.sf.net) is (c) 2006, the cclib development team
-and licensed under the LGPL (http://www.gnu.org/copyleft/lgpl.html).
-"""
+# This file is part of cclib (http://cclib.sf.net), a library for parsing
+# and interpreting the results of computational chemistry packages.
+#
+# Copyright (C) 2007, the cclib development team
+#
+# The library is free software, distributed under the terms of
+# the GNU Lesser General Public version 2.1 or later. You should have
+# received a copy of the license along with cclib. You can also access
+# the full license online at http://www.gnu.org/copyleft/lgpl.html.
 
-__revision__ = "$Rev$"
+__revision__ = "$Revision$"
 
 import os
 import logging
@@ -31,6 +36,7 @@ def main(log=True):
 
     return fa
 
+
 def printResults():
     fa = main()
 
@@ -48,6 +54,7 @@ def printResults():
     print "T:  %7.3f %7.3f %7.3f"%(reduce(numpy.add, fa.donations[0]), \
                 reduce(numpy.add, fa.bdonations[0]), reduce(numpy.add, fa.repulsions[0]))
     print "\n\n"
+
 
 class CDATest(unittest.TestCase):
     def runTest(self):

@@ -1,3 +1,13 @@
+# This file is part of cclib (http://cclib.sf.net), a library for parsing
+# and interpreting the results of computational chemistry packages.
+#
+# Copyright (C) 2007, the cclib development team
+#
+# The library is free software, distributed under the terms of
+# the GNU Lesser General Public version 2.1 or later. You should have
+# received a copy of the license along with cclib. You can also access
+# the full license online at http://www.gnu.org/copyleft/lgpl.html.
+
 __revision__ = "$Revision$"
 
 import numpy
@@ -21,8 +31,10 @@ class GenericCITest(bettertest.TestCase):
         changes = self.data.etenergies[1:] - self.data.etenergies[:-1]
         self.failUnless(numpy.alltrue(changes > 0.0))
 
+
 class GenericCISTest(GenericCITest):
     """CIS unittest."""
+
     
 class GenericCISWaterTest(GenericCISTest):
     """CIS(RHF)/STO-3G water unittest."""
@@ -98,6 +110,7 @@ class GenericCISWaterTest(GenericCISTest):
                     if not found:
                         self.fail("Excitation %i->%s not found (triplet state %i)" %(exc[0], exc[1], i))
 
+
 class GAMESSUSCISTest(GenericCISWaterTest):
     """GAMESS-US CIS(RHF)/STO-3G water unittest."""
 
@@ -107,6 +120,7 @@ class GAMESSUSCISTest(GenericCISWaterTest):
         """(MP2) Are Natural Orbital coefficients the right size?"""
         self.assertEquals(self.data.nocoeffs.shape, (self.data.nmo, self.data.nbasis))
 
+
 class GaussianCISTest(GenericCISWaterTest):
     """Gaussian CIS(RHF)/STO-3G water unittest."""
 
@@ -115,6 +129,7 @@ class GaussianCISTest(GenericCISWaterTest):
     def testnocoeffs(self):
         """(MP2) Are Natural Orbital coefficients the right size?"""
         self.assertEquals(self.data.nocoeffs.shape, (self.data.nmo, self.data.nbasis))
+
 
 class JaguarCISTest(GenericCISWaterTest):
     """Jaguar CIS(RHF)/STO-3G water unittest."""

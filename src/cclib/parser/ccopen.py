@@ -1,12 +1,14 @@
-"""
-cclib (http://cclib.sf.net) is (c) 2006, the cclib development team
-and licensed under the LGPL (http://www.gnu.org/copyleft/lgpl.html).
-"""
+# This file is part of cclib (http://cclib.sf.net), a library for parsing
+# and interpreting the results of computational chemistry packages.
+#
+# Copyright (C) 2009, the cclib development team
+#
+# The library is free software, distributed under the terms of
+# the GNU Lesser General Public version 2.1 or later. You should have
+# received a copy of the license along with cclib. You can also access
+# the full license online at http://www.gnu.org/copyleft/lgpl.html.
 
-__revision__ = "$Revision: 860 $"
-
-
-import types
+__revision__ = "$Revision$"
 
 from . import logfileparser
 
@@ -17,6 +19,7 @@ from . import gaussianparser
 from . import jaguarparser
 from . import molproparser
 from . import orcaparser
+
 
 
 def ccopen(source, *args, **kargs):
@@ -33,13 +36,13 @@ def ccopen(source, *args, **kargs):
     filetype = None
 
     # Try to open the logfile(s), using openlogfile.
-    if isinstance(source,str) or \
-       isinstance(source,list) and all([isinstance(s,str) for s in source]):
+    if isinstance(source, str) or \
+       isinstance(source, list) and all([isinstance(s, str) for s in source]):
         try:
             inputfile = logfileparser.openlogfile(source)
-        except IOError as xxx_todo_changeme:
-            (errno, strerror) = xxx_todo_changeme.args
-            print(("I/O error %s (%s): %s" %(errno, source, strerror)))
+        except IOError as error:
+            (errno, strerror) = error.args
+            print("I/O error %s (%s): %s" % (errno, source, strerror))
             return None
         isstream = False
     elif hasattr(source, "read"):

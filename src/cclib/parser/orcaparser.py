@@ -1,17 +1,18 @@
-"""
-cclib (http://cclib.sf.net) is (c) 2006, the cclib development team
-and licensed under the LGPL (http://www.gnu.org/copyleft/lgpl.html).
-"""
+# This file is part of cclib (http://cclib.sf.net), a library for parsing
+# and interpreting the results of computational chemistry packages.
+#
+# Copyright (C) 2007, the cclib development team
+#
+# The library is free software, distributed under the terms of
+# the GNU Lesser General Public version 2.1 or later. You should have
+# received a copy of the license along with cclib. You can also access
+# the full license online at http://www.gnu.org/copyleft/lgpl.html.
 
-__revision__ = "$Revision: 668 $"
-
-
-import re
+__revision__ = "$Revision$"
 
 import numpy
 
 from . import logfileparser
-from . import utils
 
 
 class ORCA(logfileparser.Logfile):
@@ -45,12 +46,9 @@ class ORCA(logfileparser.Logfile):
 
     def before_parsing(self):
 
-        # Used to index self.scftargets[].
-        SCFRMS, SCFMAX, SCFENERGY = list(range(3))
-        # Flag that indicates whether it has reached the end of a geoopt.
-        self.optfinished = False
-        # Flag for identifying Coupled Cluster runs.
-        self.coupledcluster = False
+        # A geometry optimization is started only when
+        # we parse a cycle (so it will be larger than zero().
+        self.gopt_cycle = 0
 
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
@@ -58,42 +56,58 @@ class ORCA(logfileparser.Logfile):
         if line[0:15] == "Number of atoms":
 
             natom = int(line.split()[-1])
+
+            # This assert will probably never be executed.
             if hasattr(self, "natom"):
-                # I wonder whether this code will ever be executed.
                 assert self.natom == natom
             else:
                 self.natom = natom
 
         if line[1:13] == "Total Charge":
-#get charge and multiplicity info
-            self.charge = int(line.split()[-1])
+
+            charge = int(line.split()[-1])
             line = next(inputfile)
-            self.mult = int(line.split()[-1])
+            mult = int(line.split()[-1])
 
-        if line[25:50] == "Geometry Optimization Run":
-#get geotarget info
-            line = next(inputfile)
-            while line[0:23] != "Convergence Tolerances:":
-                line = next(inputfile)
+            self.charge = charge
+            self.mult = mult
 
-            self.geotargets = numpy.zeros((5,), "d")
-            for i in range(5):
-                line = next(inputfile)
-                self.geotargets[i] = float(line.split()[-2])
-
-        # Read in scfvalues.
+        # Here is how a typical SCF convergence output looks like:
+        #
+        # --------------
+        # SCF ITERATIONS
+        # --------------
+        # ITER       Energy         Delta-E        Max-DP      RMS-DP      [F,P]     Damp
+        #                ***  Starting incremental Fock matrix formation  ***
+        #   0   -384.5203638934   0.000000000000 0.03375012  0.00223249  0.1351565 0.7000
+        #   1   -384.5792776162  -0.058913722842 0.02841696  0.00175952  0.0734529 0.7000
+        #                                ***Turning on DIIS***
+        #   2   -384.6074211837  -0.028143567475 0.04968025  0.00326114  0.0310435 0.0000
+        #   3   -384.6479682063  -0.040547022616 0.02097477  0.00121132  0.0361982 0.0000
+        #   4   -384.6571124353  -0.009144228947 0.00576471  0.00035160  0.0061205 0.0000
+        #   5   -384.6574659959  -0.000353560584 0.00191156  0.00010160  0.0025838 0.0000
+        #   6   -384.6574990782  -0.000033082375 0.00052492  0.00003800  0.0002061 0.0000
+        #   7   -384.6575005762  -0.000001497987 0.00020257  0.00001146  0.0001652 0.0000
+        #   8   -384.6575007321  -0.000000155848 0.00008572  0.00000435  0.0000745 0.0000
+        #          **** Energy Check signals convergence ****
         if "SCF ITERATIONS" in line:
-            if not hasattr(self, "scfvalues"):
-                self.scfvalues = []
+
             dashes = next(inputfile)
             line = next(inputfile).split()
+
             assert line[1] == "Energy"
             assert line[2] == "Delta-E"
             assert line[3] == "Max-DP"
+
+            if not hasattr(self, "scfvalues"):
+                self.scfvalues = []
+
             self.scfvalues.append([])
-            # Keep track of converger (NR, DIIS, SOSCF, etc.).
+
+            # Try to keep track of the converger (NR, DIIS, SOSCF, etc.).
             diis_active = True
             while not line == []:
+
                 if 'Newton-Raphson' in line:
                     diis_active = False
                 elif 'SOSCF' in line:
@@ -135,22 +149,58 @@ class ORCA(logfileparser.Logfile):
             line = next(inputfile)
             # Non-DIIS convergers do not contain this line.
             # assert "Last DIIS Error" in line
-            self.scfvalues[-1].append([deltaE_value,maxDP_value,rmsDP_value])
-            self.scftargets.append([deltaE_target,maxDP_target,rmsDP_target])                
+            self.scfvalues[-1].append([deltaE_value, maxDP_value, rmsDP_value])
+            self.scftargets.append([deltaE_target, maxDP_target, rmsDP_target])                
 
-        # Read in SCF energy, at least in SP calculation.
-        if "TOTAL SCF ENERGY" in line:
+        # SCF energies are printed differently in single point calculations
+        # and in the inner steps of geometry optimizations. However, there is
+        # always a banner announcing the convergence, like this:
+        #
+        #       *****************************************************
+        #       *                     SUCCESS                       *
+        #       *           SCF CONVERGED AFTER   9 CYCLES          *
+        #       *****************************************************
+        if "SCF CONVERGED AFTER" in line:
+
+            while line[:20] != "Total Energy       :":
+                line = next(inputfile)
+
             if not hasattr(self, "scfenergies"):
                 self.scfenergies = []
-            dashes = next(inputfile)
-            blank = next(inputfile)
-            line = next(inputfile)
-            if line[:12] == "Total Energy":
-                energy = float(line[50:67])
-                self.scfenergies.append(energy)
 
+            energy = float(line.split()[5])
+            self.scfenergies.append(energy)
+
+        # Sometimes the SCF does not converge, but does not halt the
+        # the run (like in bug 3184890). In this this case, we should
+        # remain consistent and use the energy from the last reported
+        # SCF cycle. In this case, ORCA print a banner like this:
+        #
+        #       *****************************************************
+        #       *                     ERROR                         *
+        #       *           SCF NOT CONVERGED AFTER   8 CYCLES      *
+        #       *****************************************************
+        if "SCF NOT CONVERGED AFTER" in line:
+
+            if not hasattr(self, "scfenergies"):
+                self.scfenergies = []
+
+            energy = self.scfvalues[-1][-1][0]
+            self.scfenergies.append(energy)
+
+        if line[25:50] == "Geometry Optimization Run":
+
+            line = next(inputfile)
+            while line[0:23] != "Convergence Tolerances:":
+                line = next(inputfile)
+
+            self.geotargets = numpy.zeros((5,), "d")
+            for i in range(5):
+                line = next(inputfile)
+                self.geotargets[i] = float(line.split()[-2])
+
+        #get geometry convergence criteria
         if line[33:53] == "Geometry convergence":
-#get geometry convergence criteria
             if not hasattr(self, "geovalues"):
                 self.geovalues = [ ]
             
@@ -173,8 +223,8 @@ class ORCA(logfileparser.Logfile):
             
             self.geovalues.append(newlist)
 
+        #if not an optimization, determine structure used
         if line[0:21] == "CARTESIAN COORDINATES" and not hasattr(self, "atomcoords"):
-#if not an optimization, determine structure used
             dashes = next(inputfile)
             
             atomnos = []
@@ -190,9 +240,20 @@ class ORCA(logfileparser.Logfile):
             if not hasattr(self, "atomnos"):
                 self.atomnos = atomnos
                 self.natom = len(atomnos)
-                
-        if line[26:53] == "GEOMETRY OPTIMIZATION CYCLE":
-#parse geometry coords
+
+        # There's always a banner announcing the next geometry optimization cycle,
+        # which looks something like this:
+        #
+        #    *************************************************************
+        #    *                GEOMETRY OPTIMIZATION CYCLE   2            *
+        #    *************************************************************
+        if "GEOMETRY OPTIMIZATION CYCLE" in line:
+
+            # Keep track of the current cycle jsut in case, because some things
+            # are printed differently inside the first/last and other cycles.
+            self.gopt_cycle = int(line.split()[4])
+
+            #parse geometry coords
             stars = next(inputfile)
             dashes = next(inputfile)
             text = next(inputfile)
@@ -231,7 +292,6 @@ class ORCA(logfileparser.Logfile):
             self.atomcoords.append(atomcoords)
 
         if line[0:16] == "ORBITAL ENERGIES":
-#parser orbial energy information
             dashes = next(inputfile)
             text = next(inputfile)
             text = next(inputfile)
@@ -268,11 +328,13 @@ class ORCA(logfileparser.Logfile):
             self.nbasis = int(line.split()[-1])
 
         if line[0:14] == "OVERLAP MATRIX":
-#parser the overlap matrix
             dashes = next(inputfile)
 
             self.aooverlaps = numpy.zeros( (self.nbasis, self.nbasis), "d")
             for i in range(0, self.nbasis, 6):
+                if self.progress:
+                    self.updateprogress(inputfile, "Overlap")
+
                 header = next(inputfile)
                 size = len(header.split())
 
@@ -300,6 +362,9 @@ class ORCA(logfileparser.Logfile):
                     mocoeffs.append(numpy.zeros((self.nbasis, self.nbasis), "d"))
 
                 for i in range(0, self.nbasis, 6):
+                    if self.progress:
+                        self.updateprogress(inputfile, "Coefficients")
+
                     numbers = next(inputfile)
                     energies = next(inputfile)
                     occs = next(inputfile)
@@ -373,7 +438,6 @@ class ORCA(logfileparser.Logfile):
                 self.etoscs.append(osc)
                 
         if line[0:23] == "VIBRATIONAL FREQUENCIES":
-#parse the vibrational frequencies
             dashes = next(inputfile)
             blank = next(inputfile)
 
@@ -384,7 +448,6 @@ class ORCA(logfileparser.Logfile):
                 self.vibfreqs[i] = float(line.split()[1])
 
         if line[0:11] == "IR SPECTRUM":
-#parse ir intensities
             dashes = next(inputfile)
             blank = next(inputfile)
             header = next(inputfile)
@@ -399,7 +462,6 @@ class ORCA(logfileparser.Logfile):
                 line = next(inputfile)
 
         if line[0:14] == "RAMAN SPECTRUM":
-#parser raman intensities
             dashes = next(inputfile)
             blank = next(inputfile)
             header = next(inputfile)
@@ -413,8 +475,86 @@ class ORCA(logfileparser.Logfile):
                 self.vibramans[num] = float(line.split()[2])
                 line = next(inputfile)
 
+        # ORCA will print atomic charges along with the spin populations,
+        #   so care must be taken about choosing the proper column.
+        # Population analyses are performed usually only at the end
+        #   of a geometry optimization or other run, so we want to
+        #   leave just the final atom charges.
+        # Here is an example for Mulliken charges:
+        # --------------------------------------------
+        # MULLIKEN ATOMIC CHARGES AND SPIN POPULATIONS
+        # --------------------------------------------
+        #    0 H :    0.126447    0.002622
+        #    1 C :   -0.613018   -0.029484
+        #    2 H :    0.189146    0.015452
+        #    3 H :    0.320041    0.037434
+        # ...
+        # Sum of atomic charges         :   -0.0000000
+        # Sum of atomic spin populations:    1.0000000
+        if line[:23] == "MULLIKEN ATOMIC CHARGES":
+
+            has_spins = "AND SPIN POPULATIONS" in line
+
+            if not hasattr(self, "atomcharges"):
+                self.atomcharges = { }
+            if has_spins and not hasattr(self, "atomspins"):
+                self.atomspins = {}
+
+            dashes = next(inputfile)
+
+            charges = []
+            if has_spins:
+                spins = []
+            line = next(inputfile)
+            while line[:21] != "Sum of atomic charges":
+                charges.append(float(line[8:20]))
+                if has_spins:
+                    spins.append(float(line[20:]))
+                line = next(inputfile)
+            self.atomcharges["mulliken"] = charges
+            if has_spins:
+                self.atomspins["mulliken"] = spins
+            
+        # Things are the same for Lowdin populations, except that the sums
+        #   are not printed (there is a blank line at the end).
+        if line[:22] == "LOEWDIN ATOMIC CHARGES":
+
+            has_spins = "AND SPIN POPULATIONS" in line
+
+            if not hasattr(self, "atomcharges"):
+                self.atomcharges = { }
+            if has_spins and not hasattr(self, "atomspins"):
+                self.atomspins = {}
+
+            dashes = next(inputfile)
+
+            charges = []
+            if has_spins:
+                spins = []
+            line = next(inputfile)
+            while line.strip():
+                charges.append(float(line[8:20]))
+                if has_spins:
+                    spins.append(float(line[20:]))
+                line = next(inputfile)
+            self.atomcharges["lowdin"] = charges
+            if has_spins:
+                self.atomspins["lowdin"] = spins
 
 
 if __name__ == "__main__":
+    import sys
     import doctest, orcaparser
-    doctest.testmod(orcaparser, verbose=False)
+
+    if len(sys.argv) == 1:
+        doctest.testmod(orcaparser, verbose=False)
+
+    if len(sys.argv) == 2:
+        parser = orcaparser.ORCA(sys.argv[1])
+        data = parser.parse()
+
+    if len(sys.argv) > 2:
+        for i in range(len(sys.argv[2:])):
+            if hasattr(data, sys.argv[2 + i]):
+                print(getattr(data, sys.argv[2 + i]))
+

@@ -1,3 +1,13 @@
+# This file is part of cclib (http://cclib.sf.net), a library for parsing
+# and interpreting the results of computational chemistry packages.
+#
+# Copyright (C) 2007, the cclib development team
+#
+# The library is free software, distributed under the terms of
+# the GNU Lesser General Public version 2.1 or later. You should have
+# received a copy of the license along with cclib. You can also access
+# the full license online at http://www.gnu.org/copyleft/lgpl.html.
+
 __revision__ = "$Revision$"
 
 import numpy
@@ -42,6 +52,7 @@ class GenericTDTest(bettertest.TestCase):
         """Is the length of etsyms correct?"""
         self.assertEqual(len(self.data.etsyms), self.number)
 
+
 class ADFTDDFTTest(GenericTDTest):
     """ADF time-dependent DFT unittest."""
     number = 5
@@ -55,6 +66,7 @@ class ADFTDDFTTest(GenericTDTest):
         sumofsec = sum([z for (x, y, z) in lowestEtrans])
         self.assertInside(sumofsec, 1.0, 0.16)
 
+
 class GaussianTDDFTTest(GenericTDTest):
     """Gaussian time-dependent HF/DFT unittest."""
     number = 5
@@ -63,13 +75,19 @@ class GaussianTDDFTTest(GenericTDTest):
         """Is the length of etrotats correct?"""
         self.assertEqual(len(self.data.etrotats), self.number)
 
+
 class GAMESSUSTDDFTTest(GenericTDTest):
     """GAMESS time-dependent HF/DFT unittest."""
+
     number = 10
+
+    old_tests = ["GAMESS/WinGAMESS/dvb_td_2007.03.24.r1.out.gz"]
+
 
 class PCGamessTDDFTTest(GenericTDTest):
     """PC-GAMESS time-dependent HF/DFT unittest."""
     number = 5
+
     
 class OrcaTDDFTTest(GenericTDTest):
     """ORCA time-dependent HF/DFT unittest."""
@@ -78,6 +96,7 @@ class OrcaTDDFTTest(GenericTDTest):
         """Is the maximum of eotscs in the right range?"""
         self.assertEqual(len(self.data.etoscs), self.number)
         self.assertInside(max(self.data.etoscs), 1.1, 0.1)
+
 
 class GenericTDTesttrp(GenericTDTest):
     """Time-dependent HF/DFT (triplet) unittest."""
@@ -94,16 +113,23 @@ class GenericTDTesttrp(GenericTDTest):
         self.assertEqual(len(self.data.etoscs), self.number)
         self.assertInside(max(self.data.etoscs), 0.0, 0.01)
 
+
 class GAMESSUSTDDFTtrpTest(GenericTDTesttrp):
     """GAMESS TD DFT (restricted) triplet unittest."""
+
     number = 5
+
+    #old_tests = ["GAMESS/WinGAMESS/dvb_td_trplet_2007.03.24.r1.out.gz"]
+
     def testsymsnumber(self):
         """Is the length of etsyms correct? PASS"""
         pass
 
+
 class PCGamessTDDFTtrpTest(GenericTDTesttrp):
     """PC-GAMESS TD DFT (restricted) triplet unittest."""
     number = 5
+
 
 if __name__=="__main__":
 

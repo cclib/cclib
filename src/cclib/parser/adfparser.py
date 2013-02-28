@@ -1,10 +1,14 @@
-"""
-cclib (http://cclib.sf.net) is (c) 2006, the cclib development team
-and licensed under the LGPL (http://www.gnu.org/copyleft/lgpl.html).
-"""
+# This file is part of cclib (http://cclib.sf.net), a library for parsing
+# and interpreting the results of computational chemistry packages.
+#
+# Copyright (C) 2006, the cclib development team
+#
+# The library is free software, distributed under the terms of
+# the GNU Lesser General Public version 2.1 or later. You should have
+# received a copy of the license along with cclib. You can also access
+# the full license online at http://www.gnu.org/copyleft/lgpl.html.
 
 __revision__ = "$Revision$"
-
 
 import numpy
 
@@ -70,16 +74,16 @@ class ADF(logfileparser.Logfile):
         """
 
         if not ndict:
-          ndict = { 'P': {0:"P:x", 1:"P:y", 2:"P:z"},\
+          ndict = { 'P': {0:"P:x", 1:"P:y", 2:"P:z"}, \
                     'D': {0:"D:z2", 1:"D:x2-y2", 2:"D:xy", 3:"D:xz", 4:"D:yz"}}
 
         if label in ndict:
             if num in ndict[label]:
                 return ndict[label][num]
             else:
-                return "%s:%i"%(label,num+1)
+                return "%s:%i" % (label, num+1)
         else:
-            return "%s:%i"%(label,num+1)
+            return "%s:%i" % (label, num+1)
 
     def before_parsing(self):
 
@@ -110,7 +114,7 @@ class ADF(logfileparser.Logfile):
                 #does this file contain multiple calculations?
                 #if so, print a warning and skip to end of file
                     self.logger.warning("Skipping remaining calculations")
-                    inputfile.seek(0,2)
+                    inputfile.seek(0, 2)
                     break
 
                 if line.find("INPUT FILE") >= 0:
@@ -187,7 +191,7 @@ class ADF(logfileparser.Logfile):
                 info = line.split()
 
                 if len(info) == 7: #fragment name is listed here
-                    self.fragnames.append("%s_%s"%(info[1],info[0]))
+                    self.fragnames.append("%s_%s" % (info[1], info[0]))
                     self.frags.append([])
                     self.frags[-1].append(int(info[2]) - 1)
 
@@ -265,20 +269,24 @@ class ADF(logfileparser.Logfile):
                 self.scfvalues.append(newlist)
 
         # Parse SCF energy for SP calcs from bonding energy decomposition section.
-        # It seems ADF does not print it earlier for SP calcualtions.
-        # If it does (does it?), parse that instead.
-        # Check that scfenergies does not exist, becuase gopt runs also print this,
-        #   repeating the values in the last "Geometry Convergence Tests" section.
-        if "Total Bonding Energy:" in line:
+        # It seems ADF does not print it earlier for SP calculations.
+        # Geometry optimization runs also print this, and we want to parse it
+        # for them, too, even if it repeats the last "Geometry Convergence Tests"
+        # section (but it's usually a bit different).
+        if line[:21] == "Total Bonding Energy:":
+
             if not hasattr(self, "scfenergies"):
-                energy = utils.convertor(float(line.split()[3]), "hartree", "eV")
-                self.scfenergies = [energy]            
+                self.scfenergies = []
+
+            energy = utils.convertor(float(line.split()[3]), "hartree", "eV")
+            self.scfenergies.append(energy)
 
         if line[51:65] == "Final Geometry":
             self.finalgeometry = self.GETLAST
 
+        # Get the coordinates from each step of the GeoOpt.
         if line[1:24] == "Coordinates (Cartesian)" and self.finalgeometry in [self.NOTFOUND, self.GETLAST]:
-            # Get the coordinates from each step of the GeoOpt
+
             if not hasattr(self, "atomcoords"):
                 self.atomcoords = []
             equals = next(inputfile)
@@ -296,11 +304,13 @@ class ADF(logfileparser.Logfile):
             if self.finalgeometry == self.GETLAST: # Don't get any more coordinates
                 self.finalgeometry = self.NOMORE
 
+        # Extract Geometry convergence information.
         if line[1:27] == 'Geometry Convergence Tests':
-        # Extract Geometry convergence information
+
             if not hasattr(self, "geotargets"):
                 self.geovalues = []
                 self.geotargets = numpy.array([0.0, 0.0, 0.0, 0.0, 0.0], "d")
+
             if not hasattr(self, "scfenergies"):
                 self.scfenergies = []
             equals = next(inputfile)
@@ -308,13 +318,17 @@ class ADF(logfileparser.Logfile):
             line = next(inputfile)
             temp = next(inputfile).strip().split()
             self.scfenergies.append(utils.convertor(float(temp[-1]), "hartree", "eV"))
+
             for i in range(6):
                 line = next(inputfile)
+
             values = []
+
             for i in range(5):
                 temp = next(inputfile).split()
                 self.geotargets[i] = float(temp[-3])
                 values.append(float(temp[-4]))
+
             self.geovalues.append(values)
 
         if line[1:27] == 'General Accuracy Parameter':
@@ -428,19 +442,19 @@ class ADF(logfileparser.Logfile):
                 info = line.split()
                 if len(info) == 5: #this is restricted
                     #count = multiple.get(info[0][0],1)
-                    count = multiple.get(info[0],1)
+                    count = multiple.get(info[0], 1)
                     for repeat in range(count): # i.e. add E's twice, T's thrice
                         self.mosyms[0].append(self.normalisesym(info[0]))
                         self.moenergies[0].append(utils.convertor(float(info[3]), 'hartree', 'eV'))
 
                         sym = info[0]
                         if count > 1: # add additional sym label
-                            sym = self.normalisedegenerates(info[0],repeat,ndict=irrepspecies)
+                            sym = self.normalisedegenerates(info[0], repeat, ndict=irrepspecies)
 
                         try:
                             self.symlist[sym][0].append(len(self.moenergies[0])-1)
                         except KeyError:
-                            self.symlist[sym]=[[]]
+                            self.symlist[sym] = [[]]
                             self.symlist[sym][0].append(len(self.moenergies[0])-1)
 
                     if info[2] == '0.00' and not hasattr(self, 'homos'):
@@ -459,12 +473,12 @@ class ADF(logfileparser.Logfile):
 
                             sym = info[0]
                             if count > 1: #add additional sym label
-                                sym = self.normalisedegenerates(info[0],repeat)
+                                sym = self.normalisedegenerates(info[0], repeat)
 
                             try:
                                 self.symlist[sym][0].append(len(self.moenergies[0])-1)
                             except KeyError:
-                                self.symlist[sym]=[[],[]]
+                                self.symlist[sym] = [[], []]
                                 self.symlist[sym][0].append(len(self.moenergies[0])-1)
 
                         if info[3] == '0.00' and homoa == None:
@@ -477,12 +491,12 @@ class ADF(logfileparser.Logfile):
 
                             sym = info[0]
                             if count > 1: #add additional sym label
-                                sym = self.normalisedegenerates(info[0],repeat)
+                                sym = self.normalisedegenerates(info[0], repeat)
 
                             try:
                                 self.symlist[sym][1].append(len(self.moenergies[1])-1)
                             except KeyError:
-                                self.symlist[sym]=[[],[]]
+                                self.symlist[sym] = [[], []]
                                 self.symlist[sym][1].append(len(self.moenergies[1])-1)
 
                         if info[3] == '0.00' and homob == None:
@@ -753,7 +767,7 @@ class ADF(logfileparser.Logfile):
                         # The AO index is 1 less than the row.
                         aoindex = symoffset + row - 1
                         for i in range(len(monumbers)):
-                            self.mocoeffs[spin][moindices[i],aoindex] = coeffs[i]
+                            self.mocoeffs[spin][moindices[i], aoindex] = coeffs[i]
                         line = next(inputfile)
                     lastrow = row
 
@@ -767,11 +781,10 @@ class ADF(logfileparser.Logfile):
 
             #     Number of loops in Davidson routine     =   20                    
             #     Number of matrix-vector multiplications =   24                    
-            #     Type of excitations = SINGLET-SINGLET 
+            #     Type of excitations = SINGLET-SINGLET
 
-            next(inputfile); next(inputfile); next(inputfile)
-            next(inputfile); next(inputfile); next(inputfile)
-            next(inputfile); next(inputfile)
+            for i in range(8):
+                next(inputfile)
 
             symm = self.normalisesym(next(inputfile).split()[1])
 
@@ -783,8 +796,8 @@ class ADF(logfileparser.Logfile):
             # no.  E/a.u.        E/eV      f           dE/a.u.
             # -----------------------------------------------------
 
-            next(inputfile); next(inputfile); next(inputfile)
-            next(inputfile); next(inputfile); next(inputfile)
+            for i in range(6):
+                next(inputfile)
 
             # now start parsing etenergies and etoscs
 
@@ -811,8 +824,8 @@ class ADF(logfileparser.Logfile):
             #                                   (sum=1) transition dipole moment   
             #                                             x       y       z       
 
-            next(inputfile), next(inputfile), next(inputfile)
-            next(inputfile), next(inputfile), next(inputfile)
+            for i in range(6):
+                next(inputfile)
 
             # before we start handeling transitions, we need
             # to create mosyms with indices
@@ -891,6 +904,20 @@ class ADF(logfileparser.Logfile):
                 self.etsecs = etsecs
             else:
                 self.etsecs += etsecs
+
+        if "M U L L I K E N   P O P U L A T I O N S" in line:
+            if not hasattr(self, "atomcharges"):
+                self.atomcharges = {}
+            while line[1:5] != "Atom":
+                line = next(inputfile)
+            dashes = next(inputfile)
+            mulliken = []
+            line = next(inputfile)
+            while line.strip():
+                mulliken.append(float(line.split()[2]))
+                line = next(inputfile)
+            self.atomcharges["mulliken"] = mulliken
+
 
 if __name__ == "__main__":
     import doctest, adfparser

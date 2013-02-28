@@ -1,10 +1,23 @@
 #!/usr/bin/env python
+#
+# This file is part of cclib (http://cclib.sf.net), a library for parsing
+# and interpreting the results of computational chemistry packages.
+#
+# Copyright (C) 2006-2013, the cclib development team
+#
+# The library is free software, distributed under the terms of
+# the GNU Lesser General Public version 2.1 or later. You should have
+# received a copy of the license along with cclib. You can also access
+# the full license online at http://www.gnu.org/copyleft/lgpl.html.
+
 """cclib: parsers and algorithms for computational chemistry
 
 cclib is a Python library that provides parsers for computational
 chemistry log files. It also provides a platform to implement
 algorithms in a package-independent manner.
 """
+
+__revision__ = "$Revision$"
 
 doclines = __doc__.split("\n")
 
@@ -23,6 +36,7 @@ Topic :: Software Development :: Libraries :: Python Modules
 """
 
 programs = ['ADF', 'GAMESS', 'GAMESS-UK', 'Gaussian', 'Jaguar', 'Molpro', 'ORCA']
+
 
 def setup_cclib():
 
@@ -58,7 +72,7 @@ def setup_cclib():
 
     setup(
         name = "cclib",
-        version = "1.0.1",
+        version = "1.1",
         url = "http://cclib.sf.net",
         author = "cclib development team",
         author_email = "cclib-users@lists.sourceforge.net",
@@ -73,6 +87,7 @@ def setup_cclib():
         package_dir = {'cclib':'src/cclib', 'cclib.test':'test'},
         packages = cclib_packages,
         data_files = cclib_datafiles )
+
 
 if __name__ == '__main__':
     setup_cclib()

@@ -1,7 +1,12 @@
-"""
-cclib (http://cclib.sf.net) is (c) 2006, the cclib development team
-and licensed under the LGPL (http://www.gnu.org/copyleft/lgpl.html).
-"""
+# This file is part of cclib (http://cclib.sf.net), a library for parsing
+# and interpreting the results of computational chemistry packages.
+#
+# Copyright (C) 2006, the cclib development team
+#
+# The library is free software, distributed under the terms of
+# the GNU Lesser General Public version 2.1 or later. You should have
+# received a copy of the license along with cclib. You can also access
+# the full license online at http://www.gnu.org/copyleft/lgpl.html.
 
 __revision__ = "$Revision$"
 
@@ -14,7 +19,9 @@ def convertor(value, fromunits, tounits):
     """
     
     _convertor = {"eV_to_cm-1": lambda x: x*8065.6,
+                  "eV_to_kJmol-1": lambda x: x*96.48538,
                   "hartree_to_eV": lambda x: x*27.2113845,
+                  "Hartree_to_ kJmol-1": lambda x: x*2625.5002,
                   "bohr_to_Angstrom": lambda x: x*0.529177,
                   "Angstrom_to_bohr": lambda x: x*1.889716,
                   "nm_to_cm-1": lambda x: 1e7/x,

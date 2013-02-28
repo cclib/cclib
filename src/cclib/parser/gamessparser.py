@@ -1,10 +1,14 @@
-"""
-cclib (http://cclib.sf.net) is (c) 2006, the cclib development team
-and licensed under the LGPL (http://www.gnu.org/copyleft/lgpl.html).
-"""
+# This file is part of cclib (http://cclib.sf.net), a library for parsing
+# and interpreting the results of computational chemistry packages.
+#
+# Copyright (C) 2006, the cclib development team
+#
+# The library is free software, distributed under the terms of
+# the GNU Lesser General Public version 2.1 or later. You should have
+# received a copy of the license along with cclib. You can also access
+# the full license online at http://www.gnu.org/copyleft/lgpl.html.
 
 __revision__ = "$Revision$"
-
 
 import re
 
@@ -234,36 +238,106 @@ class GAMESS(logfileparser.Logfile):
             strength = float(line.split()[3])
             self.etoscs.append(strength)
 
-        # TD-DFT for GAMESS-US
-        if line[14:29] == "LET EXCITATIONS": # TRIPLET and SINGLET
+        # TD-DFT for GAMESS-US.
+        # The format for excitations has changed a bit between 2007 and 2012.
+        # Original format parser was written for:
+        #
+        #          -------------------
+        #          TRIPLET EXCITATIONS
+        #          -------------------
+        #
+        # STATE #   1  ENERGY =    3.027228 EV
+        # OSCILLATOR STRENGTH =    0.000000
+        #        DRF    COEF       OCC      VIR
+        #        ---    ----       ---      ---
+        #         35 -1.105383     35  ->   36
+        #         69 -0.389181     34  ->   37
+        #        103 -0.405078     33  ->   38
+        #        137  0.252485     32  ->   39
+        #        168 -0.158406     28  ->   40
+        #
+        # STATE #   2  ENERGY =    4.227763 EV
+        # ...
+        #
+        # Here is the corresponding 2012 version:
+        #
+        #          -------------------
+        #          TRIPLET EXCITATIONS
+        #          -------------------
+        #
+        # STATE #   1  ENERGY =    3.027297 EV
+        # OSCILLATOR STRENGTH =    0.000000
+        # LAMBDA DIAGNOSTIC   =    0.925 (RYDBERG/CHARGE TRANSFER CHARACTER)
+        # SYMMETRY OF STATE   =    A   
+        #                 EXCITATION  DE-EXCITATION
+        #     OCC     VIR  AMPLITUDE      AMPLITUDE
+        #      I       A     X(I->A)        Y(A->I)
+        #     ---     ---   --------       --------
+        #     35      36   -0.929190      -0.176167
+        #     34      37   -0.279823      -0.109414
+        # ...
+        #
+        # We discern these two by the presence of the arrow in the old version.
+        #
+        # The "LET EXCITATIONS" pattern used below catches both
+        # singlet and triplet excitations output.
+        if line[14:29] == "LET EXCITATIONS":
+
             self.etenergies = []
             self.etoscs = []
             self.etsecs = []
             etsyms = []
-            minus = next(inputfile)
-            blank = next(inputfile)
+
+            minuses = next(inputfile)
+            blanks = next(inputfile)
+
+            # Loop while states are still being printed.
             line = next(inputfile)
-            # Loop starts on the STATE line
-            while line.find("STATE") >= 0:
-                broken = line.split()
-                self.etenergies.append(utils.convertor(float(broken[-2]), "eV", "cm-1"))
-                broken = next(inputfile).split()
-                self.etoscs.append(float(broken[-1]))
-                sym = next(inputfile) # Not always present
-                if sym.find("SYMMETRY")>=0:
-                    etsyms.append(sym.split()[-1])
-                    header = next(inputfile)
-                minus = next(inputfile)
+            while line[1:6] == "STATE":
+
+                if self.progress:
+                    self.updateprogress(inputfile, "Excited States")
+
+                etenergy = utils.convertor(float(line.split()[-2]), "eV", "cm-1")
+                etoscs = float(next(inputfile).split()[-1])
+                self.etenergies.append(etenergy)
+                self.etoscs.append(etoscs)
+
+                # Symmetry is not always present, especially in old versions.
+                # Newer versions, on the other hand, can also provide a line
+                # with lambda diagnostic and some extra headers.
+                line = next(inputfile)
+                if "LAMBDA DIAGNOSTIC" in line:
+                    line = next(inputfile)
+                if "SYMMETRY" in line:
+                    etsyms.append(line.split()[-1])
+                    line = next(inputfile)
+                if "EXCITATION" in line and "DE-EXCITATION" in line:
+                    line = next(inputfile)
+                if line.count("AMPLITUDE") == 2:
+                    line = next(inputfile)
+
+                minuses = next(inputfile)
                 CIScontribs = []
                 line = next(inputfile)
                 while line.strip():
-                    broken = line.split()
-                    fromMO, toMO = [int(broken[x]) - 1 for x in [2, 4]]
-                    CIScontribs.append([(fromMO, 0), (toMO, 0), float(broken[1])])
+                    cols = line.split()
+                    if "->" in line:
+                        i_occ_vir = [2, 4]
+                        i_coeff = 1
+                        
+                    else:
+                        i_occ_vir = [0, 1]
+                        i_coeff = 2
+                    fromMO, toMO = [int(cols[i]) - 1 for i in i_occ_vir]
+                    coeff = float(cols[i_coeff])
+                    CIScontribs.append([(fromMO, 0), (toMO, 0), coeff])
                     line = next(inputfile)
                 self.etsecs.append(CIScontribs)
                 line = next(inputfile)
-            if etsyms: # Not always present
+
+            # The symmetries are not always present.
+            if etsyms:
                 self.etsyms = etsyms
          
         # Maximum and RMS gradients.
@@ -337,6 +411,9 @@ class GAMESS(logfileparser.Logfile):
             # The input orientation will be overwritten if this is a geometry optimisation
             # We assume that a previous Input Orientation has been found and
             # used to extract the atomnos
+            if self.progress:
+                self.updateprogress(inputfile, "Coordinates")
+
             if self.firststdorient:
                 self.firststdorient = False
                 # Wipes out the single input coordinate at the start of the file
@@ -382,6 +459,9 @@ class GAMESS(logfileparser.Logfile):
             dashes = next(inputfile)
 
             while line [:5] != " ITER":
+
+                if self.progress:
+                    self.updateprogress(inputfile, "Attributes")
 
                 # GVB uses SQCDF for checking convergence (for example in exam17).
                 if "GVB" in self.scftype and "SQCDF TOL=" in line:
@@ -434,8 +514,11 @@ class GAMESS(logfileparser.Logfile):
                 line = next(inputfile)
             self.scfvalues.append(values)
 
-        if line.find("NORMAL COORDINATE ANALYSIS IN THE HARMONIC APPROXIMATION") >= 0:
-        # GAMESS has...
+        # Extract normal coordinate analysis, including vibrational frequencies (vibfreq),
+        # IT intensities (vibirs) and displacements (vibdisps).
+        #
+        # This section typically looks like the following in GAMESS-US:
+        #
         # MODES 1 TO 6 ARE TAKEN AS ROTATIONS AND TRANSLATIONS.
         #
         #     FREQUENCIES IN CM**-1, IR INTENSITIES IN DEBYE**2/AMU-ANGSTROM**2,
@@ -445,9 +528,9 @@ class GAMESS(logfileparser.Logfile):
         #       FREQUENCY:        52.49       41.45       17.61        9.23       10.61  
         #    REDUCED MASS:      3.92418     3.77048     5.43419     6.44636     5.50693
         #    IR INTENSITY:      0.00013     0.00001     0.00004     0.00000     0.00003
-
+        #
         # ...or in the case of a numerical Hessian job...
-
+        #
         # MODES 1 TO 5 ARE TAKEN AS ROTATIONS AND TRANSLATIONS.
         #
         #     FREQUENCIES IN CM**-1, IR INTENSITIES IN DEBYE**2/AMU-ANGSTROM**2,
@@ -456,9 +539,9 @@ class GAMESS(logfileparser.Logfile):
         #                          1           2           3           4           5
         #       FREQUENCY:         0.05        0.03        0.03       30.89       30.94  
         #    REDUCED MASS:      8.50125     8.50137     8.50136     1.06709     1.06709
-
-        
-        # whereas PC-GAMESS has...
+        #       
+        # ...whereas PC-GAMESS has...
+        #
         # MODES 1 TO 6 ARE TAKEN AS ROTATIONS AND TRANSLATIONS.
         #
         #     FREQUENCIES IN CM**-1, IR INTENSITIES IN DEBYE**2/AMU-ANGSTROM**2
@@ -466,8 +549,9 @@ class GAMESS(logfileparser.Logfile):
         #                          1           2           3           4           5
         #       FREQUENCY:         5.89        1.46        0.01        0.01        0.01  
         #    IR INTENSITY:      0.00000     0.00000     0.00000     0.00000     0.00000
-        
+        #
         # If Raman is present we have (for PC-GAMESS)...
+        #
         # MODES 1 TO 6 ARE TAKEN AS ROTATIONS AND TRANSLATIONS.
         #
         #     FREQUENCIES IN CM**-1, IR INTENSITIES IN DEBYE**2/AMU-ANGSTROM**2
@@ -478,65 +562,108 @@ class GAMESS(logfileparser.Logfile):
         #    IR INTENSITY:      0.00000     0.00000     0.00000     0.00000     0.00000
         # RAMAN INTENSITY:       12.675       1.828       0.000       0.000       0.000
         #  DEPOLARIZATION:        0.750       0.750       0.124       0.009       0.750
-
-        # If PC-GAMESS has not reached the stationary point we have
-        # MODES 1 TO 5 ARE TAKEN AS ROTATIONS AND TRANSLATIONS.
         #
-        #     FREQUENCIES IN CM**-1, IR INTENSITIES IN DEBYE**2/AMU-ANGSTROM**2
+        # If GAMESS-US or PC-GAMESS has not reached the stationary point we have
+        # and additional warning, repeated twice, like so (see n_water.log for an example):
         #
         #     *******************************************************
         #     * THIS IS NOT A STATIONARY POINT ON THE MOLECULAR PES *
         #     *     THE VIBRATIONAL ANALYSIS IS NOT VALID !!!       *
         #     *******************************************************
         #
-        #                          1           2           3           4           5
-        
-        # MODES 2 TO 7 ARE TAKEN AS ROTATIONS AND TRANSLATIONS.
+        # There can also be additional warnings about the selection of modes, for example:
+        #
+        # * * * WARNING, MODE 6 HAS BEEN CHOSEN AS A VIBRATION
+        #          WHILE MODE12 IS ASSUMED TO BE A TRANSLATION/ROTATION.
+        # PLEASE VERIFY THE PROGRAM'S DECISION MANUALLY!
+        #
+        if "NORMAL COORDINATE ANALYSIS IN THE HARMONIC APPROXIMATION" in line:
 
             self.vibfreqs = []
             self.vibirs = []
             self.vibdisps = []
 
-            # Need to get to the modes line
-            warning = False
-            while line.find("MODES") == -1:
+            # Need to get to the modes line, which is often preceeded by
+            # a list of atomic weights and some possible warnings.
+            # Pass the warnings to the logger if they are there.
+            while not "MODES" in line:
+                if self.progress:
+                    self.updateprogress(inputfile, "Frequency Information")
+
                 line = next(inputfile)
-                if line.find("THIS IS NOT A STATIONARY POINT")>=0:
-                    warning = True
+                if "THIS IS NOT A STATIONARY POINT" in line:
+                    msg = "\n   This is not a stationary point on the molecular PES"
+                    msg += "\n   The vibrational analysis is not valid!!!"
+                    self.logger.warning(msg)
+                if "* * * WARNING, MODE" in line:
+                    line1 = line.strip()
+                    line2 = next(inputfile).strip()
+                    line3 = next(inputfile).strip()
+                    self.logger.warning("\n   " + "\n   ".join((line1,line2,line3)))
+
+            # In at least one case (regression zolm_dft3a.log) for older version of GAMESS-US,
+            # the header concerning the range of nodes is formatted wrong and can look like so:
+            # MODES 9 TO14 ARE TAKEN AS ROTATIONS AND TRANSLATIONS.
+            #  ... although it's unclear whether this happens for all two-digit values.
             startrot = int(line.split()[1])
-            endrot = int(line.split()[3])
+            if len(line.split()[2]) == 2:
+                endrot = int(line.split()[3])
+            else:
+                endrot = int(line.split()[2][2:])
+
             blank = next(inputfile)
 
-            line = next(inputfile) # FREQUENCIES, etc.
+            line = next(inputfile)
+
+            # This is to skip the output associated with symmetry analysis, fixes bug #3476063.
+            if "ANALYZING SYMMETRY OF NORMAL MODES" in line:
+                blank = next(inputfile)
+                line = next(inputfile)
+                while line != blank:
+                    line = next(inputfile)
+
+            # Skip over FREQUENCIES, etc., and get past the possibly second warning.
+            line = next(inputfile)
             while line != blank:
                 line = next(inputfile)
-            if warning: # Get past the second warning
-                line = next(inputfile)
-                while line!= blank:
+            line = next(inputfile)
+            if "*****" in line:
+                while line != blank:
                     line = next(inputfile)
-                self.logger.warning("This is not a stationary point on the molecular"
-                                    "PES. The vibrational analysis is not valid.")
+                line = next(inputfile)
             
-            freqNo = next(inputfile)
-            while freqNo.find("SAYVETZ") == -1:
-                freq = next(inputfile).strip().split()[1:]
-            # May include imaginary frequencies
-            #       FREQUENCY:       825.18 I    111.53       12.62       10.70        0.89
-                newfreq = []
-                for i, x in enumerate(freq):
-                    if x!="I":
-                        newfreq.append(float(x))
+            while not "SAYVETZ" in line:
+                if self.progress:
+                    self.updateprogress(inputfile, "Frequency Information")
+
+                # Note: there may be imaginary frequencies like this (which we make negative):
+                #       FREQUENCY:       825.18 I    111.53       12.62       10.70        0.89
+                #
+                # A note for debuggers: some of these frequencies will be removed later,
+                # assumed to be translations or rotations (see startrot/endrot above).
+                for col in next(inputfile).split()[1:]:
+                    if col == "I":
+                        self.vibfreqs[-1] *= -1
                     else:
-                        newfreq[-1] = -newfreq[-1]
-                self.vibfreqs.extend(newfreq)
+                        self.vibfreqs.append(float(col))
+
                 line = next(inputfile)
-                if line.find("REDUCED") >= 0: # skip the reduced mass (not always present)
+
+                # Skip the symmetry (appears in newer versions), fixes bug #3476063.
+                if line.find("SYMMETRY") >= 0:
                     line = next(inputfile)
+
+                # Skip the reduced mass (not always present).
+                if line.find("REDUCED") >= 0:
+                    line = next(inputfile)
+
+                # Not present in numerical Hessian calculations.
                 if line.find("IR INTENSITY") >= 0:
-                    # Not present if a numerical Hessian calculation
-                    irIntensity = list(map(float, line.strip().split()[2:]))
+                    irIntensity = map(float, line.strip().split()[2:])
                     self.vibirs.extend([utils.convertor(x, "Debye^2/amu-Angstrom^2", "km/mol") for x in irIntensity])
                     line = next(inputfile)
+
+                # Read in Raman vibrational intensities if present.
                 if line.find("RAMAN") >= 0:
                     if not hasattr(self,"vibramans"):
                         self.vibramans = []
@@ -544,27 +671,31 @@ class GAMESS(logfileparser.Logfile):
                     self.vibramans.extend(list(map(float, ramanIntensity[2:])))
                     depolar = next(inputfile)
                     line = next(inputfile)
+
+                # This line seems always to be blank.
                 assert line == blank
 
-                # Extract the Cartesian displacement vectors
+                # Extract the Cartesian displacement vectors.
                 p = [ [], [], [], [], [] ]
-                for j in range(len(self.atomnos)):
+                for j in range(self.natom):
                     q = [ [], [], [], [], [] ]
-                    for k in range(3): # x, y, z
+                    for coord in "xyz":
                         line = next(inputfile)[21:]
-                        broken = list(map(float, line.split()))
-                        for l in range(len(broken)):
-                            q[l].append(broken[l])
-                    for k in range(len(broken)):
+                        cols = list(map(float, line.split()))
+                        for i, val in enumerate(cols):
+                            q[i].append(val)
+                    for k in range(len(cols)):
                         p[k].append(q[k])
-                self.vibdisps.extend(p[:len(broken)])
+                self.vibdisps.extend(p[:len(cols)])
 
-                # Skip the Sayvetz stuff at the end
+                # Skip the Sayvetz stuff at the end.
                 for j in range(10):
                     line = next(inputfile)
+                
                 blank = next(inputfile)
-                freqNo = next(inputfile)
-            # Exclude rotations and translations
+                line = next(inputfile)
+            
+            # Exclude rotations and translations.
             self.vibfreqs = numpy.array(self.vibfreqs[:startrot-1]+self.vibfreqs[endrot:], "d")
             self.vibirs = numpy.array(self.vibirs[:startrot-1]+self.vibirs[endrot:], "d")
             self.vibdisps = numpy.array(self.vibdisps[:startrot-1]+self.vibdisps[endrot:], "d")
@@ -685,6 +816,9 @@ class GAMESS(logfileparser.Logfile):
             dashes = next(inputfile)
             for base in range(0, self.nmo, 5):
 
+                if self.progress:
+                    self.updateprogress(inputfile, "Coefficients")
+
                 line = next(inputfile)
                 # Make sure that this section does not end prematurely - checked by regression test 2CO.ccsd.aug-cc-pVDZ.out.
                 if line.strip() != "":
@@ -712,7 +846,10 @@ class GAMESS(logfileparser.Logfile):
                 # Going to use the same method as for normalise_aonames()
                 # to extract basis set information.
                 p = re.compile("(\d+)\s*([A-Z][A-Z]?)\s*(\d+)\s*([A-Z]+)")
-                oldatom ='0'
+                oldatom = '0'
+                i_atom = 0 # counter to keep track of n_atoms > 99
+                flag_w = True # flag necessary to keep from adding 100's at wrong time
+
                 for i in range(self.nbasis):
                     line = next(inputfile)
 
@@ -726,9 +863,22 @@ class GAMESS(logfileparser.Logfile):
                         m = p.search(start)
                         if m:
                             g = m.groups()
-                            aoname = "%s%s_%s" % (g[1].capitalize(), g[2], g[3])
-                            oldatom = g[2]
-                            atomno = int(g[2])-1
+                            g2 = int(g[2]) # atom index in GAMESS file; changes to 0 after 99
+
+                            # Check if we have moved to a hundred
+                            # if so, increment the counter and add it to the parsed value
+                            # There will be subsequent 0's as that atoms AO's are parsed
+                            # so wait until the next atom is parsed before resetting flag
+                            if g2 == 0 and flag_w:
+                                i_atom = i_atom + 100
+                                flag_w = False # handle subsequent AO's
+                            if g2 != 0:
+                                flag_w = True # reset flag 
+                            g2 = g2 + i_atom
+
+                            aoname = "%s%i_%s" % (g[1].capitalize(), g2, g[3])
+                            oldatom = str(g2)
+                            atomno = g2-1
                             orbno = int(g[0])-1
                         else: # For F orbitals, as shown above
                             g = [x.strip() for x in line.split()]
@@ -767,6 +917,9 @@ class GAMESS(logfileparser.Logfile):
                 for i in range(4):
                     line = next(inputfile)
                 for base in range(0, self.nmo, 5):
+                    if self.progress:
+                        self.updateprogress(inputfile, "Coefficients")
+
                     blank = next(inputfile)
                     line = next(inputfile) # Eigenvector no
                     line = next(inputfile)
@@ -857,6 +1010,13 @@ class GAMESS(logfileparser.Logfile):
             # I think it happens if you use a polar basis function instead of a cartesian one
             self.nbasis = int(line.strip().split()[-1])
                 
+        elif line.find("TOTAL NUMBER OF CONTAMINANTS DROPPED") >= 0:
+            number = int(line.split()[-1])
+            if hasattr(self, "nmo"):
+                self.nmo -= number
+            else:
+                self.nmo = self.nbasis - number
+
         elif line.find("SPHERICAL HARMONICS KEPT IN THE VARIATION SPACE") >= 0:
             # Note that this line is present if ISPHER=1, e.g. for C_bigbasis
             self.nmo = int(line.strip().split()[-1])
@@ -875,6 +1035,9 @@ class GAMESS(logfileparser.Logfile):
                 self.logger.info("Reading additional aooverlaps...")
             base = 0
             while base < self.nbasis:
+                if self.progress:
+                    self.updateprogress(inputfile, "Overlap")
+
                 blank = next(inputfile)
                 line = next(inputfile) # Basis fn number
                 blank = next(inputfile)
@@ -916,7 +1079,53 @@ class GAMESS(logfileparser.Logfile):
         #    self.geotargets = numpy.array([opttol, 3. / opttol], "d")
         #if hasattr(self,"geovalues"): self.geovalues = numpy.array(self.geovalues, "d")
 
+        # This is quite simple to parse, but some files seem to print certain
+        #   lines twice, repeating the populations without charges.
+        # Now, unrestricted calculations are bit tricky, since GAMESS-US prints
+        #   populations for both alpha and beta orbitals in the same format
+        #   and with the same title, but it still prints the charges only
+        #   at the very end. So, check for the number of columns in the header.
+        if "TOTAL MULLIKEN AND LOWDIN ATOMIC POPULATIONS" in line:
+
+            if not hasattr(self, "atomcharges"):
+                self.atomcharges = {}
+
+            header = next(inputfile)
+            line = next(inputfile)
+
+            double = line.strip()
+            if double:
+                header = next(inputfile)
+                skip = next(inputfile)
+                line = next(inputfile)
+
+            # Only go further if the header had five columns, which should
+            #   be the case when both populations and charges are printed.
+            if not header.split() == 5:
+                return
+            
+            mulliken, lowdin = [], []
+            while line.strip():
+                mulliken.append(float(line.split()[3]))
+                lowdin.append(float(line.split()[5]))
+                line = next(inputfile)
+                if line.strip() and double:
+                    line = next(inputfile)
+            self.atomcharges["mulliken"] = mulliken
+            self.atomcharges["lowdin"] = lowdin
+
         
 if __name__ == "__main__":
-    import doctest, gamessparser
-    doctest.testmod(gamessparser, verbose=False)
+    import doctest, gamessparser, sys
+    if len(sys.argv) == 1:
+        doctest.testmod(gamessparser, verbose=False)
+
+    if len(sys.argv) >= 2:
+        parser = gamessparser.GAMESS(sys.argv[1])
+        data = parser.parse()
+
+    if len(sys.argv) > 2:
+        for i in range(len(sys.argv[2:])):
+            if hasattr(data, sys.argv[2 + i]):
+                print(getattr(data, sys.argv[2 + i]))
+

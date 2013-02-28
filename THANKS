@@ -1,21 +1,28 @@
 The developers of cclib would like the thank the following (in alphabetical order) who have contributed in some way to cclib:
 
 Nuno Bandeira -- for bug reporting
+Björn Baumeier -- for bug reporting
 Dermot Brougham -- for bug reporting
 Avril Coghlan -- for designing the cclib logo
+Björn Dahlgren -- for bug reporting
 Yafei Dai -- for bug reporting
 Abhishek Dey -- for bug reporting
 Christos Garoufalis -- for bug reporting
+Edward Holland -- for patches
+Karen Hemelsoet -- for bug reporting
 Ian Hovell -- for bug reporting
 csjacky -- for bug reporting
+Jerome Kieffer -- for bug reporting
 Greg Magoon -- for bug reporting and patches
 Rob Paton -- for creating and running Jaguar test jobs
 Marius Retegan -- for bug reporting
 Jen Schwartz -- for helping create and run Jaguar 6.0 test jobs
 Tiago Silva -- for bug reporting
+Pavel Solntsev -- for bug reporting
 Ben Stein -- for patches
 Adam Swanson -- for bug reporting
 Joe Townsend -- for giving multiple GAMESS files to test on
+Chengju Wang -- for bug reporting
 Samuel Wilson -- for bug reporting
 
 Please let us know if we have omitted someone from this list.

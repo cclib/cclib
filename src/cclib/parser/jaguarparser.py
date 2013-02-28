@@ -1,10 +1,14 @@
-"""
-cclib (http://cclib.sf.net) is (c) 2006, the cclib development team
-and licensed under the LGPL (http://www.gnu.org/copyleft/lgpl.html).
-"""
+# This file is part of cclib (http://cclib.sf.net), a library for parsing
+# and interpreting the results of computational chemistry packages.
+#
+# Copyright (C) 2006, the cclib development team
+#
+# The library is free software, distributed under the terms of
+# the GNU Lesser General Public version 2.1 or later. You should have
+# received a copy of the license along with cclib. You can also access
+# the full license online at http://www.gnu.org/copyleft/lgpl.html.
 
 __revision__ = "$Revision$"
-
 
 import re
 
@@ -186,7 +190,7 @@ class Jaguar(logfileparser.Logfile):
             bvirt = int(line.split()[-1])
 
             self.nmo = aoccs + avirts
-            self.homos = numpy.array([aoccs-1,boccs-1], "i")
+            self.homos = numpy.array([aoccs-1, boccs-1], "i")
             self.unrestrictedflag = True
 
         # MO energies and symmetries.
@@ -286,6 +290,8 @@ class Jaguar(logfileparser.Logfile):
                     blank = next(inputfile)
 
                 for k in range(0,len(self.moenergies[s]),5):
+                    if self.progress:
+                        self.updateprogress(inputfile, "Coefficients")
 
                     numbers = next(inputfile)
                     eigens = next(inputfile)
@@ -328,7 +334,7 @@ class Jaguar(logfileparser.Logfile):
                             lastatom = info[1]
 
                         for j in range(len(info[3:])):
-                            mocoeffs[j+k,i] = float(info[3+j])
+                            mocoeffs[j+k, i] = float(info[3+j])
 
                         line = next(inputfile)
 
@@ -340,13 +346,16 @@ class Jaguar(logfileparser.Logfile):
                         
                         
         if line[2:6] == "olap":
-            if line[6]=="-":
+            if line[6] == "-":
                 return
                 # This was continue (in loop) before parser refactoring.
                 # continue # avoid "olap-dev"
             self.aooverlaps = numpy.zeros((self.nbasis, self.nbasis), "d")
 
             for i in range(0, self.nbasis, 5):
+                if self.progress:
+                    self.updateprogress(inputfile, "Overlap")
+
                 blank = next(inputfile)
                 header = next(inputfile)
                 for j in range(i, self.nbasis):
@@ -460,7 +469,7 @@ class Jaguar(logfileparser.Logfile):
                 fromMO = int(line.split()[0])-1
                 toMO = int(line.split()[2])-1
                 coeff = float(line.split()[-1])
-                self.etsecs[-1].append([(fromMO,0),(toMO,0),coeff])
+                self.etsecs[-1].append([(fromMO, 0), (toMO, 0), coeff])
                 line = next(inputfile)
             # Skip 3 lines
             for i in range(4):

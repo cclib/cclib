@@ -1,12 +1,14 @@
-"""
-cclib (http://cclib.sf.net) is (c) 2006, the cclib development team
-and licensed under the LGPL (http://www.gnu.org/copyleft/lgpl.html).
-"""
+# This file is part of cclib (http://cclib.sf.net), a library for parsing
+# and interpreting the results of computational chemistry packages.
+#
+# Copyright (C) 2007, the cclib development team
+#
+# The library is free software, distributed under the terms of
+# the GNU Lesser General Public version 2.1 or later. You should have
+# received a copy of the license along with cclib. You can also access
+# the full license online at http://www.gnu.org/copyleft/lgpl.html.
 
-__revision__ = "$Revision: 661 $"
-
-
-import re
+__revision__ = "$Revision$"
 
 import numpy
 
@@ -68,7 +70,7 @@ class Molpro(logfileparser.Logfile):
             line = next(inputfile)
             while line.strip():
                 temp = line.strip().split()
-                atomcoords.append([utils.convertor(float(x),"bohr","Angstrom") for x in temp[3:6]]) #bohrs to angs
+                atomcoords.append([utils.convertor(float(x), "bohr", "Angstrom") for x in temp[3:6]]) #bohrs to angs
                 atomnos.append(int(round(float(temp[2]))))
                 line = next(inputfile)
                 
@@ -125,7 +127,7 @@ class Molpro(logfileparser.Logfile):
                         for i in range(len(coefficients[0])):
                             func = (funcbasis, [])
                             for j in range(len(exponents)):
-                                func[1].append((exponents[j],coefficients[j][i]))
+                                func[1].append((exponents[j], coefficients[j][i]))
                             self.gbasis[funcatom-1].append(func)
 
                 # If it is a new type, set up the variables for the next shell(s).
@@ -147,7 +149,7 @@ class Molpro(logfileparser.Logfile):
                     funcnr = int(funcnr.split('.')[0])
                     self.atombasis[funcatom-1].append(funcnr-1)
                     element = self.table.element[self.atomnos[funcatom-1]]
-                    aoname = "%s%i_%s" %(element, funcatom, functype)
+                    aoname = "%s%i_%s" % (element, funcatom, functype)
                     self.aonames.append(aoname)
 
         if line[1:23] == "NUMBER OF CONTRACTIONS":
@@ -225,7 +227,7 @@ class Molpro(logfileparser.Logfile):
                     # Presently, we recognize MAX DENSITY and MAX ENERGY thresholds.
                     numtargets = len(self.scftargetnames)
                     values = [numpy.nan]*numtargets
-                    for n,name in zip(list(range(numtargets)),self.scftargetnames):
+                    for n, name in zip(list(range(numtargets)),self.scftargetnames):
                         if "ENERGY" in name.upper():
                             values[n] = ediff
                         elif "DENSITY" in name.upper():
@@ -360,7 +362,7 @@ class Molpro(logfileparser.Logfile):
                         else:
                             functype = s
                             element = self.table.element[self.atomnos[atomno-1]]
-                            aoname = "%s%i_%s" %(element, atomno, functype)
+                            aoname = "%s%i_%s" % (element, atomno, functype)
                             self.aonames.append(aoname)
                     line = next(inputfile)
             else:
@@ -613,7 +615,7 @@ class Molpro(logfileparser.Logfile):
                 except: 
                     line = next(inputfile)
                 line.strip().split()[1:]
-                hess.extend([list(map(float,line.strip().split()[1:]))])
+                hess.extend([list(map(float, line.strip().split()[1:]))])
                 line = next(inputfile)
             lig = 0
             

@@ -1,3 +1,13 @@
+# This file is part of cclib (http://cclib.sf.net), a library for parsing
+# and interpreting the results of computational chemistry packages.
+#
+# Copyright (C) 2006, the cclib development team
+#
+# The library is free software, distributed under the terms of
+# the GNU Lesser General Public version 2.1 or later. You should have
+# received a copy of the license along with cclib. You can also access
+# the full license online at http://www.gnu.org/copyleft/lgpl.html.
+
 __revision__ = "$Revision$"
 
 import bettertest
@@ -50,6 +60,7 @@ class GenericBasisTest(bettertest.TestCase):
                 self.assertAlmostEqual(s_coeffs[0][1], -0.1000, 4)
                 self.assertAlmostEqual(p_coeffs[0][1], 0.1559, 4)
 
+
 class GenericBigBasisTest(GenericBasisTest):
     """Big basis set unittest."""
     
@@ -58,33 +69,43 @@ class GenericBigBasisTest(GenericBasisTest):
         """Are the basis set coefficients correct? PASS"""
         self.assertEqual(1, 1)
 
+
 class GamessUKBasisTest(GenericBasisTest):
     """GAMESS-UK basis set unittest."""
+
 
 class GamessUSBasisTest(GenericBasisTest):
     """GAMESS-US basis set unittest."""
 
+
 class GamessUSBigBasisTest(GenericBigBasisTest):
     """GAMESS-US big basis set unittest."""
 
+    old_tests = ["GAMESS/GAMESS-US/MoOCl4-sp_2005.06.27.r3.out.bz2"]
+
 class GaussianBasisTest(GenericBasisTest):
     """Gaussian basis set unittest."""
+
 
 class GaussianBigBasisTest(GenericBigBasisTest):
     """Gaussian big basis set unittest."""
     
     spherical = True
 
+
 class MolproBasisTest(GenericBasisTest):
     """Molpro basis set unittest."""
+
 
 class MolproBigBasisTest(GenericBigBasisTest):
     """Molpro big basis set unittest."""
 
     spherical = True
 
+
 class PCGamessBasisTest(GenericBasisTest):
     """PC-GAMESS basis set unittest."""
+
 
 class PCGamessBigBasisTest(GenericBigBasisTest):
     """PC-GAMESS big basis set unittest."""

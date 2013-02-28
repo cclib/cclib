@@ -1,7 +1,20 @@
+# This file is part of cclib (http://cclib.sf.net), a library for parsing
+# and interpreting the results of computational chemistry packages.
+#
+# Copyright (C) 2006, the cclib development team
+#
+# The library is free software, distributed under the terms of
+# the GNU Lesser General Public version 2.1 or later. You should have
+# received a copy of the license along with cclib. You can also access
+# the full license online at http://www.gnu.org/copyleft/lgpl.html.
+
 """Create MANIFEST"""
+
+__revision__ = "$Revision$"
 
 import glob
 import os
+
 
 files = ['THANKS','README','INSTALL','ANNOUNCE','CHANGELOG','LICENSE',
          'setup.py']
@@ -25,13 +38,15 @@ for folder in folders:
         files.extend(glob.glob(os.path.join(basicfolder, "*")))
 
 # Include test scripts
+files.extend(glob.glob(os.path.join("test", "regression.py")))
 files.extend(glob.glob(os.path.join("test", "test*.py")))
+files.append(os.path.join("test", "__init__.py"))
 for name in ['bettertest', 'methods']:
     files.append(os.path.join("test", "%s.py" % name))
 files.append(os.path.join("test", "testdata"))
 
-for file in files:
-    if not os.path.isfile(file):
-        print("%s does not exist" % file)
+for f in files:
+    if not os.path.isfile(f):
+        print "%s does not exist" % f
 
 print("\n".join(files), file=open("MANIFEST", "w"))

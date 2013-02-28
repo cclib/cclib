@@ -1,10 +1,14 @@
-"""
-cclib (http://cclib.sf.net) is (c) 2006, the cclib development team
-and licensed under the LGPL (http://www.gnu.org/copyleft/lgpl.html).
-"""
+# This file is part of cclib (http://cclib.sf.net), a library for parsing
+# and interpreting the results of computational chemistry packages.
+#
+# Copyright (C) 2006, the cclib development team
+#
+# The library is free software, distributed under the terms of
+# the GNU Lesser General Public version 2.1 or later. You should have
+# received a copy of the license along with cclib. You can also access
+# the full license online at http://www.gnu.org/copyleft/lgpl.html.
 
 __revision__ = "$Revision$"
-
 
 import re
 
@@ -127,6 +131,9 @@ class GAMESSUK(logfileparser.Logfile):
             # be recorded already, in the "molecular geometry" section
             # (note: single-point calculations have no "nuclear coordinates" only
             # "molecular geometry")
+            if self.progress:
+                self.updateprogress(inputfile, "Coordinates")
+
             if self.firstnuccoords:
                 self.firstnuccoords = False
                 return
@@ -165,10 +172,10 @@ class GAMESSUK(logfileparser.Logfile):
 
             alpha = int(next(inputfile).split()[-1])-1
             beta = int(next(inputfile).split()[-1])-1
-            if self.mult==1:
+            if self.mult == 1:
                 self.homos = numpy.array([alpha], "i")
             else:
-                self.homos = numpy.array([alpha,beta], "i")
+                self.homos = numpy.array([alpha, beta], "i")
 
         if line[37:69] == "s-matrix over gaussian basis set":
             self.aooverlaps = numpy.zeros((self.nbasis, self.nbasis), "d")
@@ -177,6 +184,9 @@ class GAMESSUK(logfileparser.Logfile):
             blank = next(inputfile)
             i = 0
             while i < self.nbasis:
+                if self.progress:
+                    self.updateprogress(inputfile, "Overlap")
+
                 blank = next(inputfile)
                 blank = next(inputfile)
                 header = next(inputfile)
@@ -193,7 +203,7 @@ class GAMESSUK(logfileparser.Logfile):
             self.coreelectrons = numpy.zeros(self.natom, 'i')
             asterisk = next(inputfile)
             line = next(inputfile)
-            while line[15:46]!="*"*31:
+            while line[15:46] != "*"*31:
                 if line.find("for atoms ...")>=0:
                     atomindex = []
                     line = next(inputfile)
@@ -285,14 +295,14 @@ class GAMESSUK(logfileparser.Logfile):
                 line = next(inputfile)
             line = next(inputfile)
             tester = line.find("tester") # Can be in a different place depending
-            assert tester>=0
+            assert tester >= 0
             while line[1:10] != "="*9: # May be two or three lines (unres)
                 line = next(inputfile)
             
             scfvalues = []
             line = next(inputfile)
             while line.strip():
-                if line[2:6]!="****":
+                if line[2:6] != "****":
             # e.g. **** recalulation of fock matrix on iteration  4 (examples/chap12/pyridine.out)
                     scfvalues.append([float(line[tester-5:tester+6])])
                 line = next(inputfile)
@@ -333,7 +343,7 @@ class GAMESSUK(logfileparser.Logfile):
             atomname = next(inputfile)
             basisregexp = re.compile("\d*(\D+)") # Get everything after any digits
             shellcounter = 1
-            while line!=equals:
+            while line != equals:
                 gbasis = [] # Stores basis sets on one atom
                 blank = next(inputfile)
                 blank = next(inputfile)
@@ -366,7 +376,7 @@ class GAMESSUK(logfileparser.Logfile):
                             gbasis.append( ('P', coeff['P']))
                         else:
                             gbasis.append( (sym.upper(), coeff[sym.upper()]))
-                    if line==equals:
+                    if line == equals:
                         continue
                     line = next(inputfile)
                     # either the start of the next block or the start of a new atom or
@@ -398,11 +408,11 @@ class GAMESSUK(logfileparser.Logfile):
             line = next(inputfile)
             while line != equals:
                 temp = line[25:30].strip()
-                if temp[-1]=='?':
+                if temp[-1] == '?':
                     # e.g. e? or t? or g? (see example/chap12/na7mg_uhf.out)
                     # for two As, an A and an E, and two Es of the same energy respectively.
                     t = line[91:].strip().split()
-                    for i in range(1,len(t),2):
+                    for i in range(1, len(t), 2):
                         for j in range(multiple[t[i][0]]): # add twice for 'e', etc.
                             mosyms.append(self.normalisesym(t[i]))
                 else:
@@ -415,7 +425,7 @@ class GAMESSUK(logfileparser.Logfile):
                 # it will add mosyms for every step of a geo opt)
                 self.mosyms.append(mosyms)
                 self.betamosyms = False
-            elif self.scftype=='gvb':
+            elif self.scftype == 'gvb':
                 # gvb has alpha and beta orbitals but they are identical
                 self.mosysms = [mosyms, mosyms]
             else:
@@ -446,6 +456,9 @@ class GAMESSUK(logfileparser.Logfile):
 
             mo = 0
             while mo < self.nmo:
+                if self.progress:
+                    self.updateprogress(inputfile, "Coefficients")
+
                 blank = next(inputfile)
                 blank = next(inputfile)
                 nums = next(inputfile)
@@ -461,7 +474,7 @@ class GAMESSUK(logfileparser.Logfile):
                     if not self.aonames:
                         pg = p.match(line[:18].strip()).groups()
                         atomname = "%s%s%s" % (pg[1][0].upper(), pg[1][1:], pg[0])
-                        if atomname!=oldatomname:
+                        if atomname != oldatomname:
                             aonum = 1
                         oldatomname = atomname
                         name = "%s_%d%s" % (atomname, aonum, pg[2].upper())
@@ -477,7 +490,7 @@ class GAMESSUK(logfileparser.Logfile):
                     self.aonames = aonames
 
                 line = next(inputfile) # blank line
-                while line==blank:
+                while line == blank:
                     line = next(inputfile)
                 evalues = line
                 if evalues[:17].strip(): # i.e. if these aren't evalues
@@ -513,11 +526,51 @@ class GAMESSUK(logfileparser.Logfile):
             if self.betamoenergies:
                 self.moenergies.append(moenergies)
                 self.betamoenergies = False
-            elif self.scftype=='gvb':
+            elif self.scftype == 'gvb':
                 self.moenergies = [moenergies, moenergies]
             else:
                 self.moenergies = [moenergies]
                 
+        # Net atomic charges are not printed at all, it seems,
+        # but you can get at them from nuclear charges and
+        # electron populations, which are printed like so:
+        #
+        #  ---------------------------------------
+        #  mulliken and lowdin population analyses  
+        #  ---------------------------------------
+        #
+        # ----- total gross population in aos ------
+        #
+        # 1  1  c s         1.99066     1.98479
+        # 2  1  c s         1.14685     1.04816
+        # ...
+        #
+        #  ----- total gross population on atoms ----
+        #
+        # 1  c            6.0     6.00446     5.99625
+        # 2  c            6.0     6.00446     5.99625
+        # 3  c            6.0     6.07671     6.04399
+        # ...
+        if line[10:49] == "mulliken and lowdin population analyses":
+
+            if not hasattr(self, "atomcharges"):
+                self.atomcharges = {}
+
+            while not "total gross population on atoms" in line:
+                line = next(inputfile)
+
+            blank = next(inputfile)
+            line = next(inputfile)
+            mulliken, lowdin = [], []
+            while line.strip():
+                nuclear = float(line.split()[2])
+                mulliken.append(nuclear - float(line.split()[3]))
+                lowdin.append(nuclear - float(line.split()[4]))
+                line = next(inputfile)
+
+            self.atomcharges["mulliken"] = mulliken
+            self.atomcharges["lowdin"] = lowdin
+
              
 if __name__ == "__main__":
     import doctest
