@@ -12,8 +12,8 @@ __revision__ = "$Revision$"
 
 import numpy
 
-import logfileparser
-import utils
+from . import logfileparser
+from . import utils
 
 
 class ADF(logfileparser.Logfile):
@@ -77,8 +77,8 @@ class ADF(logfileparser.Logfile):
           ndict = { 'P': {0:"P:x", 1:"P:y", 2:"P:z"}, \
                     'D': {0:"D:z2", 1:"D:x2-y2", 2:"D:xy", 3:"D:xz", 4:"D:yz"}}
 
-        if ndict.has_key(label):
-            if ndict[label].has_key(num):
+        if label in ndict:
+            if num in ndict[label]:
                 return ndict[label][num]
             else:
                 return "%s:%i" % (label, num+1)
@@ -88,7 +88,7 @@ class ADF(logfileparser.Logfile):
     def before_parsing(self):
 
         # Used to avoid extracting the final geometry twice in a GeoOpt
-        self.NOTFOUND, self.GETLAST, self.NOMORE = range(3)
+        self.NOTFOUND, self.GETLAST, self.NOMORE = list(range(3))
         self.finalgeometry = self.NOTFOUND 
 
         # Used for calculating the scftarget (variables names taken from the ADF manual)
@@ -98,8 +98,8 @@ class ADF(logfileparser.Logfile):
         self.nosymflag = False
         self.unrestrictedflag = False
 
-        SCFCNV, SCFCNV2 = range(2) #used to index self.scftargets[]
-        maxelem, norm = range(2) # used to index scf.values
+        SCFCNV, SCFCNV2 = list(range(2)) #used to index self.scftargets[]
+        maxelem, norm = list(range(2)) # used to index scf.values
 
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
@@ -118,18 +118,18 @@ class ADF(logfileparser.Logfile):
                     break
 
                 if line.find("INPUT FILE") >= 0:
-                    line2 = inputfile.next()
+                    line2 = next(inputfile)
                 else:
                     line2 = None
 
                 if line2 and len(line2) <= 2:
                 #make sure that it's not blank like in the NiCO4 regression
-                    line2 = inputfile.next()
+                    line2 = next(inputfile)
 
                 if line2 and (line2.find("Create") < 0 and line2.find("create") < 0):
                     break
 
-                line = inputfile.next()
+                line = next(inputfile)
 
         if line[1:10] == "Symmetry:":
             info = line.split()
@@ -139,12 +139,12 @@ class ADF(logfileparser.Logfile):
         # Use this to read the subspecies of irreducible representations.
         # It will be a list, with each element representing one irrep.
         if line.strip() == "Irreducible Representations, including subspecies":
-            dashes = inputfile.next()
+            dashes = next(inputfile)
             self.irreps = []
-            line = inputfile.next()
+            line = next(inputfile)
             while line.strip() != "":
                 self.irreps.append(line.split())
-                line = inputfile.next()
+                line = next(inputfile)
 
         if line[4:13] == 'Molecule:':
             info = line.split()
@@ -162,31 +162,31 @@ class ADF(logfileparser.Logfile):
             self.atomcoords = []
             self.coreelectrons = []
 
-            underline = inputfile.next()  #clear pointless lines
-            label1 = inputfile.next()     # 
-            label2 = inputfile.next()     #
-            line = inputfile.next()
+            underline = next(inputfile)  #clear pointless lines
+            label1 = next(inputfile)     # 
+            label2 = next(inputfile)     #
+            line = next(inputfile)
             atomcoords = []
             while len(line)>2: #ensure that we are reading no blank lines
                 info = line.split()
                 element = info[1].split('.')[0]
                 self.atomnos.append(self.table.number[element])
-                atomcoords.append(map(float, info[2:5]))
+                atomcoords.append(list(map(float, info[2:5])))
                 self.coreelectrons.append(int(float(info[5]) - float(info[6])))
                 self.atommasses.append(float(info[7]))
-                line = inputfile.next()
+                line = next(inputfile)
             self.atomcoords.append(atomcoords)
 
             self.natom = len(self.atomnos)
             self.atomnos = numpy.array(self.atomnos, "i")
 
         if line[1:10] == "FRAGMENTS":
-            header = inputfile.next()
+            header = next(inputfile)
 
             self.frags = []
             self.fragnames = []
 
-            line = inputfile.next()
+            line = next(inputfile)
             while len(line) > 2: #ensure that we are reading no blank lines
                 info = line.split()
 
@@ -198,12 +198,12 @@ class ADF(logfileparser.Logfile):
                 elif len(info) == 5: #add atoms into last fragment
                     self.frags[-1].append(int(info[0]) - 1)
 
-                line = inputfile.next()
+                line = next(inputfile)
 
         # Extract charge
         if line[1:11] == "Net Charge":
             self.charge = int(line.split()[2])
-            line = inputfile.next()
+            line = next(inputfile)
             if len(line.strip()):
                 #  Spin polar: 1 (Spin_A minus Spin_B electrons)
                 self.mult = int(line.split()[2]) + 1
@@ -219,11 +219,11 @@ class ADF(logfileparser.Logfile):
 
             #underline, blank, nr
             for i in range(3):
-                inputfile.next()
+                next(inputfile)
 
-            line = inputfile.next()
+            line = next(inputfile)
             self.SCFconv = float(line.split()[-1])
-            line = inputfile.next()
+            line = next(inputfile)
             self.sconv2 = float(line.split()[-1])
 
         if line[1:11] == "CYCLE    1":
@@ -231,7 +231,7 @@ class ADF(logfileparser.Logfile):
             self.updateprogress(inputfile, "QM convergence", self.fupdate)
 
             newlist = []
-            line = inputfile.next()
+            line = next(inputfile)
 
             if not hasattr(self,"geovalues"):
                 # This is the first SCF cycle
@@ -254,7 +254,7 @@ class ADF(logfileparser.Logfile):
                     info = line.split()
                     newlist.append([float(info[4]), abs(float(info[6]))])
                 try:
-                    line = inputfile.next()
+                    line = next(inputfile)
                 except StopIteration: #EOF reached?
                     self.logger.warning("SCF did not converge, so attributes may be missing")
                     break            
@@ -289,18 +289,17 @@ class ADF(logfileparser.Logfile):
 
             if not hasattr(self, "atomcoords"):
                 self.atomcoords = []
-
-            equals = inputfile.next()
-            blank = inputfile.next()
-            title = inputfile.next()
-            title = inputfile.next()
-            hyphens = inputfile.next()
+            equals = next(inputfile)
+            blank = next(inputfile)
+            title = next(inputfile)
+            title = next(inputfile)
+            hyphens = next(inputfile)
 
             atomcoords = []
-            line = inputfile.next()
+            line = next(inputfile)
             while line != hyphens:
-                atomcoords.append(map(float, line.split()[5:8]))
-                line = inputfile.next()
+                atomcoords.append(list(map(float, line.split()[5:8])))
+                line = next(inputfile)
             self.atomcoords.append(atomcoords)
             if self.finalgeometry == self.GETLAST: # Don't get any more coordinates
                 self.finalgeometry = self.NOMORE
@@ -314,20 +313,19 @@ class ADF(logfileparser.Logfile):
 
             if not hasattr(self, "scfenergies"):
                 self.scfenergies = []
-
-            equals = inputfile.next()
-            blank = inputfile.next()
-            line = inputfile.next()
-            temp = inputfile.next().strip().split()
+            equals = next(inputfile)
+            blank = next(inputfile)
+            line = next(inputfile)
+            temp = next(inputfile).strip().split()
             self.scfenergies.append(utils.convertor(float(temp[-1]), "hartree", "eV"))
 
             for i in range(6):
-                line = inputfile.next()
+                line = next(inputfile)
 
             values = []
 
             for i in range(5):
-                temp = inputfile.next().split()
+                temp = next(inputfile).split()
                 self.geotargets[i] = float(temp[-3])
                 values.append(float(temp[-4]))
 
@@ -346,11 +344,11 @@ class ADF(logfileparser.Logfile):
 
             self.moenergies = [[]]
 
-            underline = inputfile.next()
-            header = inputfile.next()
-            underline = inputfile.next()
-            label = inputfile.next()
-            line = inputfile.next()
+            underline = next(inputfile)
+            header = next(inputfile)
+            underline = next(inputfile)
+            label = next(inputfile)
+            line = next(inputfile)
 
             info = line.split()
 
@@ -370,7 +368,7 @@ class ADF(logfileparser.Logfile):
                 self.moenergies[0].append(utils.convertor(float(info[2]), 'hartree', 'eV'))
                 if info[1] == '0.000' and not hasattr(self, 'homos'):
                     self.homos = [len(self.moenergies[0]) - 2]
-                line = inputfile.next()
+                line = next(inputfile)
 
             self.moenergies = [numpy.array(self.moenergies[0], "d")]
             self.homos = numpy.array(self.homos, "i")
@@ -383,11 +381,11 @@ class ADF(logfileparser.Logfile):
 
             moenergies = [[], []]
 
-            underline = inputfile.next()
-            blank = inputfile.next()
-            header = inputfile.next()
-            underline = inputfile.next()
-            line = inputfile.next()
+            underline = next(inputfile)
+            blank = next(inputfile)
+            header = next(inputfile)
+            underline = next(inputfile)
+            line = next(inputfile)
 
             homoa = 0
             homob = None
@@ -405,9 +403,9 @@ class ADF(logfileparser.Logfile):
                     if info[3] != '0.00':
                         homob = len(moenergies[1]) - 1
                 else:
-                    print "Error reading line: %s" % line
+                    print(("Error reading line: %s" % line))
 
-                line = inputfile.next()
+                line = next(inputfile)
 
             self.moenergies = [numpy.array(x, "d") for x in moenergies]
             self.homos = numpy.array([homoa, homob], "i")
@@ -420,11 +418,11 @@ class ADF(logfileparser.Logfile):
 
             self.moenergies = [[]]
 
-            underline = inputfile.next()
-            blank = inputfile.next()
-            header = inputfile.next()
-            underline2 = inputfile.next()
-            line = inputfile.next()
+            underline = next(inputfile)
+            blank = next(inputfile)
+            header = next(inputfile)
+            underline2 = next(inputfile)
+            line = next(inputfile)
 
             homoa = None
             homob = None
@@ -433,12 +431,12 @@ class ADF(logfileparser.Logfile):
             # The above is set if there are no special irreps
             names = [irrep[0].split(':')[0] for irrep in self.irreps]
             counts = [len(irrep) for irrep in self.irreps]
-            multiple = dict(zip(names, counts))
+            multiple = dict(list(zip(names, counts)))
             irrepspecies = {}
             for n in range(len(names)):
-                indices = range(counts[n])
+                indices = list(range(counts[n]))
                 subspecies = self.irreps[n]
-                irrepspecies[names[n]] = dict(zip(indices, subspecies))
+                irrepspecies[names[n]] = dict(list(zip(indices, subspecies)))
 
             while line.strip():
                 info = line.split()
@@ -461,7 +459,7 @@ class ADF(logfileparser.Logfile):
 
                     if info[2] == '0.00' and not hasattr(self, 'homos'):
                         self.homos = [len(self.moenergies[0]) - (count + 1)] #count, because need to handle degenerate cases
-                    line = inputfile.next()
+                    line = next(inputfile)
                 elif len(info) == 6: #this is unrestricted
                     if len(self.moenergies) < 2: #if we don't have space, create it
                         self.moenergies.append([])
@@ -504,10 +502,10 @@ class ADF(logfileparser.Logfile):
                         if info[3] == '0.00' and homob == None:
                             homob = len(self.moenergies[1]) - (count + 1)
 
-                    line = inputfile.next()
+                    line = next(inputfile)
 
                 else: #different number of lines
-                    print "Error", info
+                    print(("Error", info))
 
             if len(info) == 6: #still unrestricted, despite being out of loop
                 self.homos = [homoa, homob]
@@ -520,25 +518,25 @@ class ADF(logfileparser.Logfile):
             # Also contains vibfreqs, but these are extracted in the
             # following section (see below)
             self.vibdisps = []
-            equals = inputfile.next()
-            blank = inputfile.next()
-            header = inputfile.next()
-            header = inputfile.next()
-            blank = inputfile.next()
-            blank = inputfile.next()
+            equals = next(inputfile)
+            blank = next(inputfile)
+            header = next(inputfile)
+            header = next(inputfile)
+            blank = next(inputfile)
+            blank = next(inputfile)
 
-            freqs = inputfile.next()
+            freqs = next(inputfile)
             while freqs.strip()!="":
-                minus = inputfile.next()
+                minus = next(inputfile)
                 p = [ [], [], [] ]
                 for i in range(len(self.atomnos)):
-                    broken = map(float, inputfile.next().split()[1:])
+                    broken = list(map(float, next(inputfile).split()[1:]))
                     for j in range(0, len(broken), 3):
-                        p[j/3].append(broken[j:j+3])
-                self.vibdisps.extend(p[:(len(broken)/3)])
-                blank = inputfile.next()
-                blank = inputfile.next()
-                freqs = inputfile.next()
+                        p[j//3].append(broken[j:j+3])
+                self.vibdisps.extend(p[:(len(broken)//3)])
+                blank = next(inputfile)
+                blank = next(inputfile)
+                freqs = next(inputfile)
             self.vibdisps = numpy.array(self.vibdisps, "d")
 
         if line[1:24] == "List of All Frequencies":
@@ -549,13 +547,13 @@ class ADF(logfileparser.Logfile):
             self.vibirs = []
             self.vibfreqs = []
             for i in range(8):
-                line = inputfile.next()
-            line = inputfile.next().strip()
+                line = next(inputfile)
+            line = next(inputfile).strip()
             while line:
                 temp = line.split()
                 self.vibfreqs.append(float(temp[0]))                    
                 self.vibirs.append(float(temp[2])) # or is it temp[1]?
-                line = inputfile.next().strip()
+                line = next(inputfile).strip()
             self.vibfreqs = numpy.array(self.vibfreqs, "d")
             self.vibirs = numpy.array(self.vibirs, "d")
             if hasattr(self, "vibramans"):
@@ -573,37 +571,37 @@ class ADF(logfileparser.Logfile):
             self.fonames = []
             self.start_indeces = {}
 
-            blank = inputfile.next()
-            note = inputfile.next()
+            blank = next(inputfile)
+            note = next(inputfile)
             symoffset = 0
 
-            blank = inputfile.next() 
-            blank = inputfile.next()
+            blank = next(inputfile) 
+            blank = next(inputfile)
             if len(blank) > 2: #fix for ADF2006.01 as it has another note
-                blank = inputfile.next()
-                blank = inputfile.next()
-            blank = inputfile.next()
+                blank = next(inputfile)
+                blank = next(inputfile)
+            blank = next(inputfile)
 
             self.nosymreps = []
             while len(self.fonames) < self.nbasis:
 
-                symline = inputfile.next()
+                symline = next(inputfile)
                 sym = symline.split()[1]
-                line = inputfile.next()
+                line = next(inputfile)
                 num = int(line.split(':')[1].split()[0])
                 self.nosymreps.append(num)
 
                 #read until line "--------..." is found
                 while line.find('-----') < 0:
-                    line = inputfile.next()
+                    line = next(inputfile)
 
-                line = inputfile.next() # the start of the first SFO
+                line = next(inputfile) # the start of the first SFO
 
                 while len(self.fonames) < symoffset + num:
                     info = line.split()
 
                     #index0 index1 occ2 energy3/4 fragname5 coeff6 orbnum7 orbname8 fragname9
-                    if not sym in self.start_indeces.keys():
+                    if not sym in list(self.start_indeces.keys()):
                     #have we already set the start index for this symmetry?
                         self.start_indeces[sym] = int(info[1])
 
@@ -615,7 +613,7 @@ class ADF(logfileparser.Logfile):
 
                     coeff = float(info[6])
 
-                    line = inputfile.next()
+                    line = next(inputfile)
                     while line.strip() and not line[:7].strip(): # while it's the same SFO
                         # i.e. while not completely blank, but blank at the start
                         info = line[43:].split()
@@ -626,7 +624,7 @@ class ADF(logfileparser.Logfile):
                                 orbital += '-' + info[-3] + info[-2].replace(":", "")
                             else:
                                 orbital += '+' + info[-3] + info[-2].replace(":", "")
-                        line = inputfile.next()
+                        line = next(inputfile)
                     # At this point, we are either at the start of the next SFO or at
                     # a blank line...the end
 
@@ -634,7 +632,7 @@ class ADF(logfileparser.Logfile):
                 symoffset += num
 
                 # blankline blankline
-                inputfile.next(); inputfile.next()
+                next(inputfile); next(inputfile)
 
         if line[1:32] == "S F O   P O P U L A T I O N S ,":
         #Extract overlap matrix
@@ -645,21 +643,21 @@ class ADF(logfileparser.Logfile):
 
             for nosymrep in self.nosymreps:
 
-                line = inputfile.next()
+                line = next(inputfile)
                 while line.find('===') < 10: #look for the symmetry labels
-                    line = inputfile.next()
+                    line = next(inputfile)
 
                 #blank blank text blank col row
 
-                blank = inputfile.next()
-                blank = inputfile.next()
-                text = inputfile.next()
+                blank = next(inputfile)
+                blank = next(inputfile)
+                text = next(inputfile)
 
                 if text[13:20] != "Overlap": # verify this has overlap info
                     break
 
-                col = inputfile.next()
-                row = inputfile.next()
+                col = next(inputfile)
+                row = next(inputfile)
 
                 if not hasattr(self,"fooverlaps"): # make sure there is a matrix to store this
                     self.fooverlaps = numpy.zeros((self.nbasis, self.nbasis), "d")
@@ -670,7 +668,7 @@ class ADF(logfileparser.Logfile):
                     for i in range(nosymrep - base):
 
                         self.updateprogress(inputfile, "Overlap", self.fupdate)
-                        line = inputfile.next()
+                        line = next(inputfile)
                         parts = line.split()[1:]
                         for j in range(len(parts)):
                             k = float(parts[j])
@@ -679,7 +677,7 @@ class ADF(logfileparser.Logfile):
 
                     #blank, blank, column
                     for i in range(3):
-                        inputfile.next()
+                        next(inputfile)
 
                     base += 4
 
@@ -722,7 +720,7 @@ class ADF(logfileparser.Logfile):
 
             # Section ends with "1" at beggining of a line.
             while line[0] != "1":
-                line = inputfile.next()
+                line = next(inputfile)
 
                 # If spin is specified, then there will be two coefficient matrices. 
                 if line.strip() == "***** SPIN 1 *****":
@@ -739,7 +737,7 @@ class ADF(logfileparser.Logfile):
                 if line.strip()[:4] == "=== ":
                     sym = line.split()[1]
                     if self.nosymflag:
-                        aolist = range(self.nbasis)
+                        aolist = list(range(self.nbasis))
                     else:
                         aolist = self.symlist[sym][spin]
                     # Add to the symmetry offset of AO ordering.
@@ -749,9 +747,9 @@ class ADF(logfileparser.Logfile):
                 if line[1:6] == "MOs :":
                     # Next line has the MO index contributed to.
                     monumbers = [int(n) for n in line[6:].split()]
-                    occup = inputfile.next()
-                    label = inputfile.next()
-                    line = inputfile.next()
+                    occup = next(inputfile)
+                    label = next(inputfile)
+                    line = next(inputfile)
                     # The table can end with a blank line or "1".
                     row = 0
                     while not line.strip() in ["", "1"]:
@@ -759,7 +757,7 @@ class ADF(logfileparser.Logfile):
 
                         if int(info[0]) < self.start_indeces[sym]:
                         #check to make sure we aren't parsing CFs
-                            line = inputfile.next()
+                            line = next(inputfile)
                             continue
 
                         self.updateprogress(inputfile, "Coefficients", self.fupdate)
@@ -770,7 +768,7 @@ class ADF(logfileparser.Logfile):
                         aoindex = symoffset + row - 1
                         for i in range(len(monumbers)):
                             self.mocoeffs[spin][moindices[i], aoindex] = coeffs[i]
-                        line = inputfile.next()
+                        line = next(inputfile)
                     lastrow = row
 
         if line[4:53] == "Final excitation energies from Davidson algorithm":
@@ -786,9 +784,9 @@ class ADF(logfileparser.Logfile):
             #     Type of excitations = SINGLET-SINGLET
 
             for i in range(8):
-                inputfile.next()
+                next(inputfile)
 
-            symm = self.normalisesym(inputfile.next().split()[1])
+            symm = self.normalisesym(next(inputfile).split()[1])
 
             # move forward in file past some more txt and header info
 
@@ -799,7 +797,7 @@ class ADF(logfileparser.Logfile):
             # -----------------------------------------------------
 
             for i in range(6):
-                inputfile.next()
+                next(inputfile)
 
             # now start parsing etenergies and etoscs
 
@@ -807,17 +805,17 @@ class ADF(logfileparser.Logfile):
             etoscs = []
             etsyms = []
 
-            line = inputfile.next()
+            line = next(inputfile)
             while len(line) > 2:
                 info = line.split()
                 etenergies.append(utils.convertor(float(info[2]), "eV", "cm-1"))
                 etoscs.append(float(info[3]))
                 etsyms.append(symm)
-                line = inputfile.next()
+                line = next(inputfile)
 
             # move past next section
             while line[1:53] != "Major MO -> MO transitions for the above excitations":
-                line = inputfile.next()
+                line = next(inputfile)
 
             # move past headers
 
@@ -827,7 +825,7 @@ class ADF(logfileparser.Logfile):
             #                                             x       y       z       
 
             for i in range(6):
-                inputfile.next()
+                next(inputfile)
 
             # before we start handeling transitions, we need
             # to create mosyms with indices
@@ -836,7 +834,7 @@ class ADF(logfileparser.Logfile):
             counts = {}
             syms = []
             for mosym in self.mosyms[0]:
-                if counts.keys().count(mosym) == 0:
+                if list(counts.keys()).count(mosym) == 0:
                     counts[mosym] = 1
                 else:
                     counts[mosym] += 1
@@ -849,7 +847,7 @@ class ADF(logfileparser.Logfile):
 
             for i in range(len(etenergies)):
                 etsec = []
-                line = inputfile.next()
+                line = next(inputfile)
                 info = line.split()
                 while len(info) > 0:
 
@@ -881,7 +879,7 @@ class ADF(logfileparser.Logfile):
 
                     etsec.append([(index1, 0), (index2, 0), float(info[4])])
 
-                    line = inputfile.next()
+                    line = next(inputfile)
                     info = line.split()
 
                 etsecs.append(etsec)
@@ -911,13 +909,13 @@ class ADF(logfileparser.Logfile):
             if not hasattr(self, "atomcharges"):
                 self.atomcharges = {}
             while line[1:5] != "Atom":
-                line = inputfile.next()
-            dashes = inputfile.next()
+                line = next(inputfile)
+            dashes = next(inputfile)
             mulliken = []
-            line = inputfile.next()
+            line = next(inputfile)
             while line.strip():
                 mulliken.append(float(line.split()[2]))
-                line = inputfile.next()
+                line = next(inputfile)
             self.atomcharges["mulliken"] = mulliken
 
 

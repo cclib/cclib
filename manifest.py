@@ -49,4 +49,4 @@ for f in files:
     if not os.path.isfile(f):
         print "%s does not exist" % f
 
-print >> open("MANIFEST","w"), "\n".join(files)
+print("\n".join(files), file=open("MANIFEST", "w"))

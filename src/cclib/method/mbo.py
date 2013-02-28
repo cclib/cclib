@@ -14,7 +14,7 @@ import random # For sometimes running the progress updater
 
 import numpy
 
-from density import Density
+from .density import Density
 
 
 class MBO(Density):

@@ -75,7 +75,7 @@ class Volume(object):
 
     def writeasvtk(self, filename):
         if not module_pyvtk:
-            raise Exception, "You need to have pyvtk installed"
+            raise Exception("You need to have pyvtk installed")
         ranges = (numpy.arange(self.data.shape[2]),
                   numpy.arange(self.data.shape[1]),
                   numpy.arange(self.data.shape[0]))
@@ -120,7 +120,6 @@ class Volume(object):
         outputfile.write("\n".join(ans))
         outputfile.close()
 
-
 def scinotation(num):
    """Write in scientific notation
 
@@ -139,7 +138,6 @@ def scinotation(num):
    else:
        sign="+"
    return ("%sE%s%s" % (broken[0],sign,broken[1][-2:])).rjust(12)                
-
 
 def getbfs(coords, gbasis):
     """Convenience function for both wavefunction and density based on PyQuante Ints.py."""
@@ -165,7 +163,6 @@ def getbfs(coords, gbasis):
                 bfs.append(bf)
 
     return bfs
-
 
 def wavefunction(coords, mocoeffs, gbasis, volume):
     """Calculate the magnitude of the wavefunction at every point in a volume.
@@ -196,7 +193,6 @@ def wavefunction(coords, mocoeffs, gbasis, volume):
         numpy.add(wavefn.data, data, wavefn.data)
     
     return wavefn
-
 
 def electrondensity(coords, mocoeffslist, gbasis, volume):
     """Calculate the magnitude of the electron density at every point in a volume.
@@ -264,10 +260,10 @@ if __name__=="__main__":
                           c.gbasis, vol)
     assert abs(wavefn.integrate())<1E-6 # not necessarily true for all wavefns
     assert abs(wavefn.integrate_square() - 1.00)<1E-3 #   true for all wavefns
-    print wavefn.integrate(), wavefn.integrate_square()
+    print(wavefn.integrate(), wavefn.integrate_square())
 
     vol = Volume( (-3.0,-6,-2.0), (3.0, 6, 2.0), spacing=(0.25,0.25,0.25) )
     frontierorbs = [d.mocoeffs[0][(d.homos[0]-3):(d.homos[0]+1)]]
     density = electrondensity(d.atomcoords[0], frontierorbs, c.gbasis, vol)
     assert abs(density.integrate()-8.00)<1E-2
-    print "Combined Density of 4 Frontier orbitals=",density.integrate()
+    print("Combined Density of 4 Frontier orbitals=",density.integrate())

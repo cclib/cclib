@@ -12,9 +12,10 @@ __revision__ = "$Revision$"
 
 import sys
 
-if 'qt' in sys.modules.keys():
-    from qtprogress import QtProgress
-if 'PyQt4' in sys.modules.keys():
-    from qt4progress import Qt4Progress
+if 'qt' in list(sys.modules.keys()):
+    from .qtprogress import QtProgress
+if 'PyQt4' in list(sys.modules.keys()):
+    from .qt4progress import Qt4Progress
 
-from textprogress import TextProgress
+from .textprogress import TextProgress
+

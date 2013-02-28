@@ -14,7 +14,7 @@ import logging
 
 import numpy
 
-from calculationmethod import Method
+from .calculationmethod import Method
 
 
 class Population(Method):

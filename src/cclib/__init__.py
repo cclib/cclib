@@ -11,10 +11,10 @@
 __revision__ = "$Revision$"
 __version__ = "1.1"
 
-import parser
-import progress
-import method
-import bridge
+from . import parser
+from . import progress
+from . import method
+from . import bridge
 
 # The test module can be imported if it was installed with cclib.
 try:

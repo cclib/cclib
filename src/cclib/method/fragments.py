@@ -15,7 +15,7 @@ import random # For sometimes running the progress updater
 import numpy
 numpy.inv = numpy.linalg.inv
 
-from calculationmethod import *
+from .calculationmethod import *
 
 
 class FragmentAnalysis(Method):

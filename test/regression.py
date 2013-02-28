@@ -23,13 +23,14 @@ import logging
 import unittest
 
 from glob import glob
-from StringIO import StringIO
+from io import StringIO
 
 from cclib.parser import ccopen
 from cclib.parser import ADF, GAMESS, GAMESSUK, Gaussian, Jaguar, Molpro, ORCA
 
-from cclib.test.testall import parsers, test_modules
-
+import testall
+parsers = testall.parsers
+test_modules = testall.test_modules
 
 # Edit the following variable definitions to add new parsers or new datafile patterns.
 
@@ -359,7 +360,7 @@ def testORCA_ORCA2_9_job_out_gz(logfile):
     Make sure that the sum of such densities is one in this case (or reasonaby close),
     but remember that this attribute is a dictionary, so we must iterate.
     """
-    assert all([abs(sum(v)-1.0) < 0.0001 for k,v in logfile.data.atomspins.iteritems()])
+    assert all([abs(sum(v)-1.0) < 0.0001 for k,v in logfile.data.atomspins.items()])
 
 
 # These regression tests are for logfiles that are not to be parsed
@@ -395,7 +396,6 @@ def flatten(seq):
         else:
             res.append(item)
     return res
-
 
 def normalisefilename(filename):
     """Replace all non-alphanumeric symbols by underscores.
@@ -446,17 +446,17 @@ def main(which=[], traceback=False):
         if not os.path.isfile(os.path.join("..", "data", x)):
             missing += 1
         elif os.path.join("..", "data", x) not in flatten(filenames):
-            print "\nERROR: The regression file %s is present, but not included in " \
-                  "the 'filenames' variable.\n\nPlease add a new glob statement." % x
+            print("\nERROR: The regression file %s is present, but not included in " \
+                  "the 'filenames' variable.\n\nPlease add a new glob statement." % x)
             sys.exit(1)       
 
     if missing > 0:
-        print "\nWARNING: You are missing %d regression file(s).\n" \
-              "         Run wget.sh in the ../data directory to update.\n" % missing
+        print("\nWARNING: You are missing %d regression file(s).\n" \
+              "         Run wget.sh in the ../data directory to update.\n" % missing)
         try:
-            raw_input("(Press ENTER to continue or CTRL+C to exit)")
+            input("(Press ENTER to continue or CTRL+C to exit)")
         except KeyboardInterrupt:
-            print "\n"
+            print("\n")
             sys.exit(0)
 
     # When a unit test is removed or replaced by a newer version, the old logfile
@@ -482,12 +482,12 @@ def main(which=[], traceback=False):
         if len(which) > 0 and not name in which:
             continue;
 
-        print "Are the %s files ccopened and parsed correctly?" % name
+        print("Are the %s files ccopened and parsed correctly?" % name)
         current_filenames = filenames[iname]
         current_filenames.sort()
         for fname in current_filenames:
             total += 1
-            print "  %s..."  % fname,
+            print("  %s..."  % fname, end=" ")
 
             # Check if there is a test (needs to be an appropriately named function).
             # If not, there can also be a test that does not assume the file is
@@ -507,7 +507,7 @@ def main(which=[], traceback=False):
                     logfile  = ccopen(fname)
                 except:
                     errors += 1
-                    print "ccopen error"
+                    print("ccopen error")
                 else:
                     if type(logfile) == type(dummyfiles[iname]):
                         try:
@@ -516,7 +516,7 @@ def main(which=[], traceback=False):
                         except KeyboardInterrupt:
                             sys.exit(1)
                         except:
-                            print "parse error"
+                            print("parse error")
                             errors += 1
                         else:
                             if test_this:
@@ -524,39 +524,39 @@ def main(which=[], traceback=False):
                                     res = eval(funcname)(logfile)
                                     if res and len(res.failures) > 0:
                                         failures += len(res.failures)
-                                        print "%i test(s) failed" % len(res.failures)
+                                        print("%i test(s) failed" % len(res.failures))
                                         if traceback:
                                             for f in res.failures:
-                                                print "Failure for", f[0]
-                                                print f[1]
+                                                print("Failure for", f[0])
+                                                print(f[1])
                                         continue
                                 except AssertionError:
-                                    print "test failed"
+                                    print("test failed")
                                     failures += 1
                                 else:
-                                    print "parsed and tested"
+                                    print("parsed and tested")
                             else:
-                                print "parsed"
+                                print("parsed")
                     else:
-                        print "ccopen failed"
+                        print("ccopen failed")
                         failures += 1
             else:
                 try:
                     eval(funcname_noparse)(filename)
                 except AssertionError:
-                    print "test failed"
+                    print("test failed")
                     failures += 1
                 except:
-                    print "parse error"
+                    print("parse error")
                     errors += 1
                 else:
-                    print "test passed"                
+                    print("test passed")
                 
         print
             
-    print "Total: %d   Failed: %d  Errors: %d" % (total, failures, errors)
+    print("Total: %d   Failed: %d  Errors: %d" % (total, failures, errors))
     if not traceback and failures + errors > 0:
-        print "\nFor more information on failures/errors, add 'traceback' as argument."
+        print("\nFor more information on failures/errors, add 'traceback' as argument.")
 
 
 if __name__=="__main__":

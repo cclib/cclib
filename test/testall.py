@@ -19,6 +19,7 @@ from cclib.parser import ADF, GAMESS, GAMESSUK, Gaussian, Jaguar, Molpro, ORCA
 
 # All supported parsers.
 parsers = [ "ADF", "GAMESS", "GAMESSUK", "Gaussian", "Jaguar", "Molpro", "ORCA" ]
+parsers = [ "ADF", "GAMESS", "GAMESSUK", "Gaussian", "Jaguar", "Molpro", "ORCA" ]
 
 # The modules to be included in the global test testall().
 test_modules = [ "SP", "SPun", "GeoOpt", "Basis", "Core",   # Basic calculations.
@@ -95,11 +96,11 @@ def visualtests():
                getfile(Molpro,"basicMolpro2006", "dvb_gopt.out", "dvb_gopt.out")[0],
              ]
 
-    print "\n\nMO energies of optimised dvb"
-    print "      ", "".join(["%-12s" % x for x in ['Gaussian03','PC-GAMESS','GAMESS-US','ADF2007.01','Jaguar7.0','Molpro2006']])
-    print "HOMO", "   ".join(["%+9.4f" % x.moenergies[0][x.homos[0]] for x in output])
-    print "LUMO", "   ".join(["%+9.4f" % x.moenergies[0][x.homos[0]+1] for x in output])
-    print "H-L ", "   ".join(["%9.4f" % (x.moenergies[0][x.homos[0]+1]-x.moenergies[0][x.homos[0]],) for x in output])
+    print("\n\nMO energies of optimised dvb")
+    print("      ", "".join(["%-12s" % x for x in ['Gaussian03','PC-GAMESS','GAMESS-US','ADF2007.01','Jaguar7.0','Molpro2006']]))
+    print("HOMO", "   ".join(["%+9.4f" % x.moenergies[0][x.homos[0]] for x in output]))
+    print("LUMO", "   ".join(["%+9.4f" % x.moenergies[0][x.homos[0]+1] for x in output]))
+    print("H-L ", "   ".join(["%9.4f" % (x.moenergies[0][x.homos[0]+1]-x.moenergies[0][x.homos[0]],) for x in output]))
 
 
 def importName(modulename, name):
@@ -154,7 +155,7 @@ def testall(parserchoice=parsers, modules=test_modules):
             except:
                 errors.append("ERROR: could not import %s from %s." %(name, module))
             else:
-                print "\n**** test%s: %s ****" %(module, test.__doc__)
+                print("\n**** test%s: %s ****" %(module, test.__doc__))
                 parser = testdata[name]["parser"]
                 location = testdata[name]["location"]
                 test.data, test.logfile = getfile(eval(parser), *location)
@@ -167,25 +168,25 @@ def testall(parserchoice=parsers, modules=test_modules):
                 if hasattr(a, "skipped"):
                     l[3] += len(a.skipped)
 
-    print "\n\n********* SUMMARY PER PACKAGE ****************"
+    print("\n\n********* SUMMARY PER PACKAGE ****************")
     names = perpackage.keys()
     names.sort()
     total = [0, 0, 0, 0]
-    print " "*14, "\t".join(["Total", "Passed", "Failed", "Errors", "Skipped"])
+    print(" "*14, "\t".join(["Total", "Passed", "Failed", "Errors", "Skipped"]))
     for name in names:
         l = perpackage[name]
-        print name.ljust(15), "%3d\t%3d\t%3d\t%3d\t%3d" % (l[0], l[0]-l[1]-l[2]-l[3], l[2], l[1], l[3])
+        print(name.ljust(15), "%3d\t%3d\t%3d\t%3d\t%3d" % (l[0], l[0]-l[1]-l[2]-l[3], l[2], l[1], l[3]))
         for i in range(4):
             total[i] += l[i]
 
-    print "\n\n********* SUMMARY OF EVERYTHING **************"
-    print "TOTAL: %d\tPASSED: %d\tFAILED: %d\tERRORS: %d\tSKIPPED: %d" \
-            %(total[0], total[0]-(total[1]+total[2]+total[3]), total[2], total[1], total[3])
+    print("\n\n********* SUMMARY OF EVERYTHING **************")
+    print("TOTAL: %d\tPASSED: %d\tFAILED: %d\tERRORS: %d\tSKIPPED: %d" \
+            %(total[0], total[0]-(total[1]+total[2]+total[3]), total[2], total[1], total[3]))
 
     if errors:
-        print "\n".join(errors)
+        print("\n".join(errors))
 
-    print "\n\n*** Visual tests ***"
+    print("\n\n*** Visual tests ***")
     visualtests()
     
     # Return to the directory we started from.

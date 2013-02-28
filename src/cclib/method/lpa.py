@@ -14,7 +14,7 @@ import random
 
 import numpy
 
-from population import Population
+from .population import Population
 
 
 class LPA(Population):

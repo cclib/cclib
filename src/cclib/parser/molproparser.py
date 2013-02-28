@@ -12,8 +12,8 @@ __revision__ = "$Revision$"
 
 import numpy
 
-import logfileparser
-import utils
+from . import logfileparser
+from . import utils
 
 
 class Molpro(logfileparser.Logfile):
@@ -61,19 +61,18 @@ class Molpro(logfileparser.Logfile):
             if not hasattr(self,"atomcoords"):
                 self.atomcoords = []
                 self.atomnos = []
-            line = inputfile.next()
-            line = inputfile.next()
-            line = inputfile.next()
+            line = next(inputfile)
+            line = next(inputfile)
+            line = next(inputfile)
             atomcoords = []
             atomnos = []
             
-            line = inputfile.next()
+            line = next(inputfile)
             while line.strip():
-                columns = line.strip().split()
-                coords = [utils.convertor(float(x), "bohr", "Angstrom") for x in columns[3:6]] #bohrs to angs
-                atomcoords.append(coords)
-                atomnos.append(int(round(float(columns[2]))))
-                line = inputfile.next()
+                temp = line.strip().split()
+                atomcoords.append([utils.convertor(float(x), "bohr", "Angstrom") for x in temp[3:6]]) #bohrs to angs
+                atomnos.append(int(round(float(temp[2]))))
+                line = next(inputfile)
                 
             self.atomnos = numpy.array(atomnos, "i")
             self.atomcoords.append(atomcoords)
@@ -83,9 +82,9 @@ class Molpro(logfileparser.Logfile):
         # This is always the first place this information is printed, so no attribute check is needed.
         if line[1:11] == "BASIS DATA":
             
-            blank = inputfile.next()
-            header = inputfile.next()
-            blank = inputfile.next()
+            blank = next(inputfile)
+            header = next(inputfile)
+            blank = next(inputfile)
             self.aonames = []
             self.atombasis = []
             self.gbasis = []
@@ -95,7 +94,7 @@ class Molpro(logfileparser.Logfile):
             
             line = "dummy"
             while line.strip() != "":
-                line = inputfile.next()
+                line = next(inputfile)
                 funcnr = line[1:6]
                 funcsym = line[7:9]
                 funcatom_ = line[11:14]
@@ -196,7 +195,7 @@ class Molpro(logfileparser.Logfile):
             if not hasattr(self, "scftargets"):
                 self.scftargets = []
 
-            scftargets = map(float, line.split()[2::2])
+            scftargets = list(map(float, line.split()[2::2]))
             self.scftargets.append(scftargets)
             # Usually two criteria, but save the names this just in case.
             self.scftargetnames = line.split()[3::2]
@@ -213,7 +212,7 @@ class Molpro(logfileparser.Logfile):
             if not hasattr(self, "scfvalues"):
                 self.scfvalues = []
         
-            line = inputfile.next()
+            line = next(inputfile)
             energy = 0.0
             scfvalues = []
             while line.strip() != "":
@@ -228,14 +227,14 @@ class Molpro(logfileparser.Logfile):
                     # Presently, we recognize MAX DENSITY and MAX ENERGY thresholds.
                     numtargets = len(self.scftargetnames)
                     values = [numpy.nan]*numtargets
-                    for n, name in zip(range(numtargets), self.scftargetnames):
+                    for n, name in zip(list(range(numtargets)),self.scftargetnames):
                         if "ENERGY" in name.upper():
                             values[n] = ediff
                         elif "DENSITY" in name.upper():
                             values[n] = ddiff
                     scfvalues.append(values)
 
-                line = inputfile.next()
+                line = next(inputfile)
             self.scfvalues.append(numpy.array(scfvalues))
 
         # SCF result - RHF/UHF and DFT (RKS) energies.
@@ -272,11 +271,11 @@ class Molpro(logfileparser.Logfile):
         
             mp3energy = float(line.split()[2])
             mp2energy = utils.convertor(mp3energy, "hartree", "eV")
-            line = inputfile.next()
+            line = next(inputfile)
             self.mpenergies[-1].append(mp2energy)
             if line[1:9] == "MP4(DQ):":
                 mp4energy = float(line.split()[2])
-                line = inputfile.next()
+                line = next(inputfile)
                 if line[1:10] == "MP4(SDQ):":
                     mp4energy = float(line.split()[2])
                 mp4energy = utils.convertor(mp4energy, "hartree", "eV")
@@ -292,7 +291,7 @@ class Molpro(logfileparser.Logfile):
                 if line[1:5] == "!CCD" or line[1:6] == "!CCSD" or line[1:9] == "!CCSD(T)":
                     ccenergy = float(line.split()[-1])
                     ccenergy = utils.convertor(ccenergy, "hartree", "eV")
-                line = inputfile.next()
+                line = next(inputfile)
             self.ccenergies.append(ccenergy)
 
         # Read the occupancy (index of HOMO s).
@@ -303,7 +302,7 @@ class Molpro(logfileparser.Logfile):
             self.homos = [int(line.split()[-1])-1]
         if line[1:23] == "Final alpha occupancy:":
             self.homos = [int(line.split()[-1])-1]
-            line = inputfile.next()
+            line = next(inputfile)
             self.homos.append(int(line.split()[-1])-1)
 
         # From this block atombasis, moenergies, and mocoeffs can be parsed.
@@ -340,14 +339,14 @@ class Molpro(logfileparser.Logfile):
                 spin = 1
             
             if not self.electronorbitals:
-                dashes = inputfile.next()
-            blank = inputfile.next()
-            blank = inputfile.next()
-            headers = inputfile.next()
-            blank = inputfile.next()
+                dashes = next(inputfile)
+            blank = next(inputfile)
+            blank = next(inputfile)
+            headers = next(inputfile)
+            blank = next(inputfile)
             
             # Parse the list of atomic orbitals if atombasis or aonames is missing.
-            line = inputfile.next()
+            line = next(inputfile)
             if not hasattr(self, "atombasis") or not hasattr(self, "aonames"):
                 self.atombasis = []
                 for i in range(self.natom):
@@ -365,14 +364,14 @@ class Molpro(logfileparser.Logfile):
                             element = self.table.element[self.atomnos[atomno-1]]
                             aoname = "%s%i_%s" % (element, atomno, functype)
                             self.aonames.append(aoname)
-                    line = inputfile.next()
+                    line = next(inputfile)
             else:
                 while line.strip():
-                    line = inputfile.next()
+                    line = next(inputfile)
 
             # Now there can be one or two blank lines.
             while not line.strip():
-                line = inputfile.next()
+                line = next(inputfile)
             
             # Create empty moenergies and mocoeffs if they don't exist.
             if not hasattr(self, "moenergies"):
@@ -397,18 +396,18 @@ class Molpro(logfileparser.Logfile):
                         self.moenergies[spin].append(moenergy)
                     line = line[31:]
                     # Each line has 10 coefficients in 10.6f format.
-                    num = len(line)/10
+                    num = len(line)//10
                     for i in range(num):
                         try:
                             coeff = float(line[10*i:10*(i+1)])
                         # Molpro prints stars when coefficients are huge.
-                        except ValueError, detail:
+                        except ValueError as detail:
                             self.logger.warn("Set coefficient to zero: %s" %detail)
                             coeff = 0.0
                         coeffs.append(coeff)
-                    line = inputfile.next()
+                    line = next(inputfile)
                 self.mocoeffs[spin].append(coeffs)
-                line = inputfile.next()
+                line = next(inputfile)
             
             # Check if last line begins the next ELECTRON ORBITALS section.
             if line[1:18] == "ELECTRON ORBITALS":
@@ -423,11 +422,11 @@ class Molpro(logfileparser.Logfile):
         #   will not have dimensions nbasis x nbasis.
         if line[1:9] == "MATRIX S":
         
-            blank = inputfile.next()
-            symblocklabel = inputfile.next()
+            blank = next(inputfile)
+            symblocklabel = next(inputfile)
             if not hasattr(self, "aooverlaps"):
                 self.aooverlaps = [[]]
-            line = inputfile.next()
+            line = next(inputfile)
             while line.strip() != "":
                 elements = [float(s) for s in line.split()]
                 if len(self.aooverlaps[-1]) + len(elements) <= self.nbasis:
@@ -437,7 +436,7 @@ class Molpro(logfileparser.Logfile):
                     self.aooverlaps[-1] += elements[:-n]
                     self.aooverlaps.append([])
                     self.aooverlaps[-1] += elements[-n:]
-                line = inputfile.next()
+                line = next(inputfile)
 
         # Thresholds are printed only if the defaults are changed with GTHRESH.
         # In that case, we can fill geotargets with non-default values.
@@ -456,8 +455,8 @@ class Molpro(logfileparser.Logfile):
         #   THRORTH =  1.00D-08  GRID    =  1.00D-06  GRIDMAX =  1.00D-03  DTMAX   =  0.00D+00
         if line [1:12] == "THRESHOLDS":
 
-            blank = inputfile.next()
-            line = inputfile.next()
+            blank = next(inputfile)
+            line = next(inputfile)
             while line.strip():
 
                 if "OPTENERG" in line:
@@ -469,7 +468,7 @@ class Molpro(logfileparser.Logfile):
                 if "OPTSTEP" in line:
                     start = line.find("OPTSTEP")
                     optstep = line[start+10:start+20]
-                line = inputfile.next()
+                line = next(inputfile)
 
             self.geotargets = [optenerg, optgrad, optstep]
 
@@ -485,8 +484,8 @@ class Molpro(logfileparser.Logfile):
         #      6  -382.05069206  -382.05069209    -0.00000003  0.00011350  0.00022306  0.00001312  0.00013321  0.00024526  0.00001443
         if line[1:30] == "END OF GEOMETRY OPTIMIZATION.":
             
-            blank = inputfile.next()
-            headers = inputfile.next()
+            blank = next(inputfile)
+            headers = next(inputfile)
 
             # Although criteria can be changed, the printed format should not change.
             # In case it does, retrieve the columns for each parameter.
@@ -495,7 +494,7 @@ class Molpro(logfileparser.Logfile):
             index_THRGRAD = headers.index('GRADMAX')
             index_THRSTEP = headers.index('STEPMAX')
 
-            line = inputfile.next()
+            line = next(inputfile)
             self.geovalues = []            
             while line.strip() != "":
                 
@@ -505,7 +504,7 @@ class Molpro(logfileparser.Logfile):
                 geovalues.append(float(line[index_THRGRAD]))
                 geovalues.append(float(line[index_THRSTEP]))
                 self.geovalues.append(geovalues)
-                line = inputfile.next()
+                line = next(inputfile)
 
         # This block should look like this:
         #   Normal Modes
@@ -531,22 +530,22 @@ class Molpro(logfileparser.Logfile):
             else:
                 islow = False
 
-            blank = inputfile.next()
+            blank = next(inputfile)
 
             # Each portion of five modes is followed by a single blank line.
             # The whole block is followed by an additional blank line.
-            line = inputfile.next()
+            line = next(inputfile)
             while line.strip():
 
                 if line[1:25].isspace():
-                    numbers = map(int, line.split()[::2])
+                    numbers = list(map(int, line.split()[::2]))
                     vibsyms = line.split()[1::2]
 
                 if line[1:12] == "Wavenumbers":
-                    vibfreqs = map(float, line.strip().split()[2:])
+                    vibfreqs = list(map(float, line.strip().split()[2:]))
                     
                 if line[1:21] == "Intensities [km/mol]":
-                    vibirs = map(float, line.strip().split()[2:])
+                    vibirs = list(map(float, line.strip().split()[2:]))
 
                 # There should always by 3xnatom displacement rows.
                 if line[1:11].isspace() and line[13:25].strip().isdigit():
@@ -563,13 +562,13 @@ class Molpro(logfileparser.Logfile):
                         disp = float(line.split()[i+1])
                         vibdisps[i][0].append(disp)
                     for i in range(self.natom*3 - 1):
-                        line = inputfile.next()
-                        iatom = (i+1)/3
+                        line = next(inputfile)
+                        iatom = (i+1)//3
                         for i in range(nmodes):
                             disp = float(line.split()[i+1])
                             vibdisps[i][iatom].append(disp)
 
-                line = inputfile.next()
+                line = next(inputfile)
                 if not line.strip():
             
                     if not hasattr(self, "vibfreqs"):
@@ -601,23 +600,23 @@ class Molpro(logfileparser.Logfile):
                             vibdisps = [vibdisps[i] for i in range(len(vibdisps)) if nonzero[i]]
                             self.vibdisps = vibdisps + self.vibdisps
 
-                    line = inputfile.next()
+                    line = next(inputfile)
             
         if line[1:16] == "Force Constants":
             
             self.logger.info("Creating attribute hessian")
             self.hessian = []
-            line = inputfile.next()
+            line = next(inputfile)
             hess = []
             tmp = []
             
             while line.strip():
-                try: map(float, line.strip().split()[2:])
+                try: list(map(float, line.strip().split()[2:]))
                 except: 
-                    line = inputfile.next()
+                    line = next(inputfile)
                 line.strip().split()[1:]
-                hess.extend([map(float, line.strip().split()[1:])])
-                line = inputfile.next()
+                hess.extend([list(map(float, line.strip().split()[1:]))])
+                line = next(inputfile)
             lig = 0
             
             while (lig==0) or (len(hess[0]) > 1):
@@ -634,12 +633,12 @@ class Molpro(logfileparser.Logfile):
             
         if line[1:14] == "Atomic Masses" and hasattr(self,"hessian"):
             
-            line = inputfile.next()
-            self.amass = map(float, line.strip().split()[2:])
+            line = next(inputfile)
+            self.amass = list(map(float, line.strip().split()[2:]))
             
             while line.strip():
-                line = inputfile.next()
-                self.amass += map(float, line.strip().split()[2:])        
+                line = next(inputfile)
+                self.amass += list(map(float, line.strip().split()[2:]))        
 
 
 if __name__ == "__main__":

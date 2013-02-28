@@ -15,16 +15,16 @@ try:
 except Exception:
     pass
 else:
-    from cclib2openbabel import makeopenbabel
+    from .cclib2openbabel import makeopenbabel
 
 try:
     import PyQuante
 except ImportError:
     pass
 else:
-    from cclib2pyquante import makepyquante
+    from .cclib2pyquante import makepyquante
 
 try:
-    from cclib2biopython import makebiopython
+    from .cclib2biopython import makebiopython
 except ImportError:
     pass    

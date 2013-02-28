@@ -12,7 +12,6 @@ __revision__ = "$Revision$"
 
 from PyQuante.Molecule import Molecule
 
-
 def makepyquante(atomcoords, atomnos, charge=0, mult=1):
     """Create a PyQuante Molecule.
 
@@ -25,9 +24,8 @@ def makepyquante(atomcoords, atomnos, charge=0, mult=1):
     >>> print int(en * 10) / 10. # Should be around -73.8
     -73.8
     """
-    return Molecule("notitle", zip(atomnos, atomcoords), units="Angstrom",
+    return Molecule("notitle", list(zip(atomnos, atomcoords)), units="Angstrom",
                     charge=charge, multiplicity=mult)
-
 
 if __name__ == "__main__":
     import doctest

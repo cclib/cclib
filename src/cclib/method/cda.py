@@ -14,7 +14,7 @@ import random # For sometimes running the progress updater
 
 import numpy
 
-from fragments import FragmentAnalysis
+from .fragments import FragmentAnalysis
 
 
 class CDA(FragmentAnalysis):
@@ -82,7 +82,7 @@ class CDA(FragmentAnalysis):
             else:
                 homob = fragments[1].homos[0]
 
-            print "handling spin unrestricted"
+            print("handling spin unrestricted")
             if spin == 0:
                 fooverlaps = self.fooverlaps
             elif spin == 1 and hasattr(self, "fooverlaps2"):

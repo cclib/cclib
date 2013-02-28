@@ -52,6 +52,6 @@ class TextProgress:
             self.oldprogress = self.progress
 
             if self.progress >= 100 and text == "Done":
-                print " "
+                print(" ")
 
         return

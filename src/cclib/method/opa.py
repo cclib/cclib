@@ -14,7 +14,7 @@ import random
 
 import numpy
 
-from calculationmethod import Method
+from .calculationmethod import Method
 
 
 def func(x):
