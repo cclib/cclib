@@ -447,6 +447,44 @@ class ORCA(logfileparser.Logfile):
                 line = inputfile.next()
                 self.vibfreqs[i] = float(line.split()[1])
 
+        if line[0:12] == "NORMAL MODES":
+            """ Format:
+            NORMAL MODES
+            ------------
+
+            These modes are the cartesian displacements weighted by the diagonal matrix
+            M(i,i)=1/sqrt(m[i]) where m[i] is the mass of the displaced atom
+            Thus, these vectors are normalized but *not* orthogonal
+
+                              0          1          2          3          4          5    
+                  0       0.000000   0.000000   0.000000   0.000000   0.000000   0.000000
+                  1       0.000000   0.000000   0.000000   0.000000   0.000000   0.000000
+                  2       0.000000   0.000000   0.000000   0.000000   0.000000   0.000000
+            ...
+            """
+
+            print "Parsing modes"
+
+            self.vibdisps = numpy.zeros(( 3 * self.natom, self.natom, 3), "d")
+
+            dashes = inputfile.next()
+            blank = inputfile.next()
+            text = inputfile.next()
+            text = inputfile.next()
+            text = inputfile.next()
+            blank = inputfile.next()
+
+            for mode in range(0, 3 * self.natom, 6):
+                header = inputfile.next()
+                for atom in range(self.natom):
+                    x = inputfile.next().split()[1:]
+                    y = inputfile.next().split()[1:]
+                    z = inputfile.next().split()[1:]
+
+                    self.vibdisps[mode:mode + 6, atom, 0] = x
+                    self.vibdisps[mode:mode + 6, atom, 1] = y
+                    self.vibdisps[mode:mode + 6, atom, 2] = z
+
         if line[0:11] == "IR SPECTRUM":
             dashes = inputfile.next()
             blank = inputfile.next()
