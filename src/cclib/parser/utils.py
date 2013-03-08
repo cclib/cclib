@@ -19,6 +19,7 @@ def convertor(value, fromunits, tounits):
     """
     
     _convertor = {"eV_to_cm-1": lambda x: x*8065.6,
+                  "cm-1_to_eV": lambda x: x / 8065.6, 
                   "eV_to_kJmol-1": lambda x: x*96.48538,
                   "hartree_to_eV": lambda x: x*27.2113845,
                   "Hartree_to_ kJmol-1": lambda x: x*2625.5002,
@@ -26,6 +27,8 @@ def convertor(value, fromunits, tounits):
                   "Angstrom_to_bohr": lambda x: x*1.889716,
                   "nm_to_cm-1": lambda x: 1e7/x,
                   "cm-1_to_nm": lambda x: 1e7/x,
+                  "nm_to_eV": lambda x: 1240.0 / x,
+                  "eV_to_nm": lambda x: 1240.0 / x,
                   "hartree_to_cm-1": lambda x: x*219474.6,
                   # Taken from GAMESS docs, "Further information",
                   # "Molecular Properties and Conversion Factors"
