@@ -72,6 +72,7 @@ Gaussian/Gaussian09/coeffs.zip
 Gaussian/Gaussian09/OPT_td.zip
 Gaussian/Gaussian09/OPT_td_g09.zip
 Gaussian/Gaussian09/534.out.zip
+Gaussian/Gaussian09/guessIndo_modified_ALT.out.gz
 Gaussian/Gaussian09/Ru2bpyen2_H2_freq3.log.bz2
 Gaussian/Gaussian09/25DMF_HRANH.zip
 Gaussian/Gaussian03/ortho_prod_freq.log.gz
