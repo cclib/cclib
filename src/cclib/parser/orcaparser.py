@@ -425,7 +425,8 @@ class ORCA(logfileparser.Logfile):
                 self.etsecs.append(sec)
                 line = inputfile.next()
 
-        if line[25:44] == "ABSORPTION SPECTRUM":
+        if line[25:44] == "ABSORPTION SPECTRUM" \
+                        or line[9:59] == "ABSORPTION SPECTRUM VIA TRANSITION ELECTRIC DIPOLE":
             minus = inputfile.next()
             header = inputfile.next()
             header = inputfile.next()
