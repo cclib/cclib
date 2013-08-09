@@ -612,26 +612,12 @@ class GAMESS(logfileparser.Logfile):
                 endrot = int(line.split()[2][2:])
 
             blank = next(inputfile)
-
             line = next(inputfile)
 
-            # This is to skip the output associated with symmetry analysis, fixes bug #3476063.
-            if "ANALYZING SYMMETRY OF NORMAL MODES" in line:
-                blank = next(inputfile)
+            # Continue down to the first frequencies
+            while not line.strip() or not line.startswith("                          1"):
                 line = next(inputfile)
-                while line != blank:
-                    line = next(inputfile)
 
-            # Skip over FREQUENCIES, etc., and get past the possibly second warning.
-            line = next(inputfile)
-            while line != blank:
-                line = next(inputfile)
-            line = next(inputfile)
-            if "*****" in line:
-                while line != blank:
-                    line = next(inputfile)
-                line = next(inputfile)
-            
             while not "SAYVETZ" in line:
                 if self.progress:
                     self.updateprogress(inputfile, "Frequency Information")

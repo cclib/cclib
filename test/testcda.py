@@ -40,20 +40,20 @@ def main(log=True):
 def printResults():
     fa = main()
 
-    print "       d       b       r"
-    print "---------------------------"
+    print("       d       b       r")
+    print("---------------------------")
 
     spin = 0
     for i in range(len(fa.donations[0])):
 
-        print "%2i: %7.3f %7.3f %7.3f"%(i,fa.donations[spin][i], fa.bdonations[spin][i], \
-                                        fa.repulsions[spin][i])
+        print("%2i: %7.3f %7.3f %7.3f"%(i,fa.donations[spin][i], fa.bdonations[spin][i], \
+                                        fa.repulsions[spin][i]))
             
 
-    print "---------------------------"
-    print "T:  %7.3f %7.3f %7.3f"%(reduce(numpy.add, fa.donations[0]), \
-                reduce(numpy.add, fa.bdonations[0]), reduce(numpy.add, fa.repulsions[0]))
-    print "\n\n"
+    print("---------------------------")
+    print("T:  %7.3f %7.3f %7.3f"%(reduce(numpy.add, fa.donations[0]), \
+                reduce(numpy.add, fa.bdonations[0]), reduce(numpy.add, fa.repulsions[0])))
+    print("\n\n")
 
 
 class CDATest(unittest.TestCase):

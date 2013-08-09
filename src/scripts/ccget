@@ -37,17 +37,17 @@ _allowedargs = ['aonames','aooverlaps','atombasis','atomcharges','atomcoords',
 
 def moreusage():
     """More detailed usage information"""
-    print """Usage:  ccget <attribute> [<attribute>] <compchemlogfile> [<compchemlogfile>]
+    print("""Usage:  ccget <attribute> [<attribute>] <compchemlogfile> [<compchemlogfile>]
      where <attribute> is one of the attributes to be parsed by cclib
      from each of the compchemlogfiles.
 For a list of attributes available in a file, type:
-     ccget --list <compchemlogfile>   [or -l]"""
+     ccget --list <compchemlogfile>   [or -l]""")
 
 
 def usage():
     """Display usage information"""
-    print """Usage:  ccget <attribute> [<attribute>] <compchemlogfile> [<compchemlogfile>]
-Try     ccget --help    for more information"""
+    print("""Usage:  ccget <attribute> [<attribute>] <compchemlogfile> [<compchemlogfile>]
+Try     ccget --help    for more information""")
 
 
 def main():
@@ -83,30 +83,30 @@ def main():
             if wildcardmatches:
                 filenames.extend(wildcardmatches)
             else:
-                print "%s is neither a filename nor an attribute name." % arg
+                print("%s is neither a filename nor an attribute name." % arg)
                 usage()
                 sys.exit(1)
     
     for filename in filenames:
-        print "Attempting to parse %s" % filename
+        print("Attempting to parse %s" % filename)
         log = ccopen(filename)
         if log==None:
-            print "Cannot figure out what type of computation chemistry output file '%s' is.\nReport this to the cclib development team if you think this is an error." % filename
+            print("Cannot figure out what type of computation chemistry output file '%s' is.\nReport this to the cclib development team if you think this is an error." % filename)
             usage()
             sys.exit()
               
         log.logger.setLevel(logging.ERROR)
         data = log.parse()
         if showattr:
-            print "cclib can parse the following attributes from %s:" % filename
+            print("cclib can parse the following attributes from %s:" % filename)
             for x in _allowedargs:
                 if hasattr(data,x):
-                    print "  %s" % x
+                    print("  %s" % x)
         else:
             invalid = False
             for attr in attrnames:
                 if hasattr(data,attr):
-                    print "%s:\n%s" % (attr,getattr(data,attr))
+                    print("%s:\n%s" % (attr,getattr(data,attr)))
                 else:
                     invalid = True
             if invalid:
