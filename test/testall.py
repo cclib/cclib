@@ -140,11 +140,10 @@ def testall(parserchoice=parsers, modules=test_modules):
         testdata = gettestdata(module)
         
         if parserchoice:
-            testdata = dict([ (x,y) for x,y in testdata.iteritems()
+            testdata = dict([ (x,y) for x,y in testdata.items()
                               if y['parser'] in parserchoice ])
                 
-        testnames = testdata.keys()
-        testnames.sort()
+        testnames = sorted(testdata.keys())
         for name in testnames:
 
             path = '/'.join(testdata[name]["location"])
@@ -169,8 +168,7 @@ def testall(parserchoice=parsers, modules=test_modules):
                     l[3] += len(a.skipped)
 
     print("\n\n********* SUMMARY PER PACKAGE ****************")
-    names = perpackage.keys()
-    names.sort()
+    names = sorted(perpackage.keys())
     total = [0, 0, 0, 0]
     print(" "*14, "\t".join(["Total", "Passed", "Failed", "Errors", "Skipped"]))
     for name in names:
