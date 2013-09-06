@@ -86,7 +86,8 @@ filenames = [glob(os.path.join(data, "ADF", "basicADF2006.01", "*.adfout")) +
              glob(os.path.join(data, "ORCA", "basicORCA2.9", "*.out")) +
              glob(os.path.join(data, "ORCA", "ORCA2.8", "*.out")) +
              glob(os.path.join(data, "ORCA", "ORCA2.8", "*.out.gz")) +
-             glob(os.path.join(data, "ORCA", "ORCA2.9", "*.out.gz"))
+             glob(os.path.join(data, "ORCA", "ORCA2.9", "*.out.gz")) +
+             glob(os.path.join(data, "ORCA", "ORCA2.9", "*.out.bz2"))
              ]
 
 

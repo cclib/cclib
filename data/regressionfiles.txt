@@ -115,3 +115,4 @@ Molpro/Molpro2006/thymine.scf.out.bz2
 ORCA/ORCA2.8/co.out
 ORCA/ORCA2.8/co_cosmo.out.gz
 ORCA/ORCA2.9/job.out.gz
+ORCA/ORCA2.9/PCB_1_122.out.bz2

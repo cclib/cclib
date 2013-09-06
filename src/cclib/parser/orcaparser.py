@@ -324,8 +324,18 @@ class ORCA(logfileparser.Logfile):
                         self.homos[1] = int(info[0])
                     line = next(inputfile)
 
+        # So nbasis was parsed at first with the first pattern, but it turns out that
+        # semiempirical methods (at least AM1 as reported by Julien Idé) do not use this.
+        # For this reason, also check for the second patterns, and use it as an assert
+        # if nbasis was already parsed. Regression PCB_1_122.out covers this test case.
         if line[1:32] == "# of contracted basis functions":
             self.nbasis = int(line.split()[-1])
+        if line[1:27] == "Basis Dimension        Dim":
+            nbasis = int(line.split()[-1])
+            if hasattr(self, 'nbasis'):
+                assert nbasis == self.nbasis
+            else:
+                self.nbasis = nbasis
 
         if line[0:14] == "OVERLAP MATRIX":
             dashes = next(inputfile)
