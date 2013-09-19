@@ -1065,12 +1065,11 @@ class GAMESS(logfileparser.Logfile):
         #    self.geotargets = numpy.array([opttol, 3. / opttol], "d")
         #if hasattr(self,"geovalues"): self.geovalues = numpy.array(self.geovalues, "d")
 
-        # This is quite simple to parse, but some files seem to print certain
-        #   lines twice, repeating the populations without charges.
-        # Now, unrestricted calculations are bit tricky, since GAMESS-US prints
-        #   populations for both alpha and beta orbitals in the same format
-        #   and with the same title, but it still prints the charges only
-        #   at the very end. So, check for the number of columns in the header.
+        # This is quite simple to parse, but some files seem to print certain lines twice,
+        # repeating the populations without charges, but not in proper order.
+        # The unrestricted calculations are a bit tricky, since GAMESS-US prints populations
+        # for both alpha and beta orbitals in the same format and with the same title,
+        # but it still prints the charges only at the very end.
         if "TOTAL MULLIKEN AND LOWDIN ATOMIC POPULATIONS" in line:
 
             if not hasattr(self, "atomcharges"):
@@ -1079,24 +1078,27 @@ class GAMESS(logfileparser.Logfile):
             header = next(inputfile)
             line = next(inputfile)
 
-            double = line.strip()
-            if double:
+            # It seems that when population are printed twice (without charges),
+            # there is a blank line along the way (after the first header),
+            # so let's get a flag out of that circumstance.
+            doubles_printed = line.strip() == ""
+            if doubles_printed:
+                title = next(inputfile)
                 header = next(inputfile)
-                skip = next(inputfile)
                 line = next(inputfile)
 
             # Only go further if the header had five columns, which should
-            #   be the case when both populations and charges are printed.
-            if not header.split() == 5:
+            # be the case when both populations and charges are printed.
+            # This is pertinent for both double printing and unrestricted output.
+            if not len(header.split()) == 5:
                 return
-            
             mulliken, lowdin = [], []
             while line.strip():
+                if line.strip() and doubles_printed:
+                    line = next(inputfile)
                 mulliken.append(float(line.split()[3]))
                 lowdin.append(float(line.split()[5]))
                 line = next(inputfile)
-                if line.strip() and double:
-                    line = next(inputfile)
             self.atomcharges["mulliken"] = mulliken
             self.atomcharges["lowdin"] = lowdin
 
