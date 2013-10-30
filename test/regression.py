@@ -164,6 +164,11 @@ def testGAMESS_WinGAMESS_dvb_td_trplet_2007_03_24_r1_out_gz(logfile):
     assert abs(max(logfile.data.etoscs) - 0.0) < 0.01
     assert len(logfile.data.etsecs) == number
 
+def testGaussian_Gaussian09_irc_point_log_bz2(logfile):
+    """Failed to parse vibfreqs except for 10, 11"""
+    assert hasattr(logfile.data, "vibfreqs")
+    assert len(logfile.data.vibfreqs) == 11
+
 def testGaussian_Gaussian09_Dahlgren_TS_zip(logfile):
     """Failed to parse ccenergies for a variety of reasons"""
     assert hasattr(logfile.data, "ccenergies")
