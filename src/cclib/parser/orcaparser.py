@@ -72,59 +72,22 @@ class ORCA(logfileparser.Logfile):
             self.charge = charge
             self.mult = mult
 
-        # Here is how a typical SCF convergence output looks like:
+        # SCF convergence output begins with
         #
         # --------------
         # SCF ITERATIONS
         # --------------
-        # ITER       Energy         Delta-E        Max-DP      RMS-DP      [F,P]     Damp
-        #                ***  Starting incremental Fock matrix formation  ***
-        #   0   -384.5203638934   0.000000000000 0.03375012  0.00223249  0.1351565 0.7000
-        #   1   -384.5792776162  -0.058913722842 0.02841696  0.00175952  0.0734529 0.7000
-        #                                ***Turning on DIIS***
-        #   2   -384.6074211837  -0.028143567475 0.04968025  0.00326114  0.0310435 0.0000
-        #   3   -384.6479682063  -0.040547022616 0.02097477  0.00121132  0.0361982 0.0000
-        #   4   -384.6571124353  -0.009144228947 0.00576471  0.00035160  0.0061205 0.0000
-        #   5   -384.6574659959  -0.000353560584 0.00191156  0.00010160  0.0025838 0.0000
-        #   6   -384.6574990782  -0.000033082375 0.00052492  0.00003800  0.0002061 0.0000
-        #   7   -384.6575005762  -0.000001497987 0.00020257  0.00001146  0.0001652 0.0000
-        #   8   -384.6575007321  -0.000000155848 0.00008572  0.00000435  0.0000745 0.0000
-        #          **** Energy Check signals convergence ****
+        # 
+        # However, there are two common formats which need to be handled.
+        # These are seperate functions.
+
         if "SCF ITERATIONS" in line:
 
             dashes = next(inputfile)
             line = next(inputfile).split()
 
-            assert line[1] == "Energy"
-            assert line[2] == "Delta-E"
-            assert line[3] == "Max-DP"
-
-            if not hasattr(self, "scfvalues"):
-                self.scfvalues = []
-
-            self.scfvalues.append([])
-
-            # Try to keep track of the converger (NR, DIIS, SOSCF, etc.).
-            diis_active = True
-            while not line == []:
-
-                if 'Newton-Raphson' in line:
-                    diis_active = False
-                elif 'SOSCF' in line:
-                    diis_active = False
-                elif line[0].isdigit() and diis_active:
-                    energy = float(line[1])
-                    deltaE = float(line[2])
-                    maxDP = float(line[3])
-                    rmsDP = float(line[4])
-                    self.scfvalues[-1].append([deltaE, maxDP, rmsDP])
-                elif line[0].isdigit() and not diis_active:
-                    energy = float(line[1])
-                    deltaE = float(line[2])
-                    maxDP = float(line[5])
-                    rmsDP = float(line[6])
-                    self.scfvalues[-1].append([deltaE, maxDP, rmsDP])
-                line = next(inputfile).split()
+            if line[1] == "Energy":
+                self.parse_scf_condensed_format(inputfile, line)
 
         # Read in values for last SCF iteration and scftargets.
         if "SCF CONVERGENCE" in line:
@@ -600,6 +563,53 @@ class ORCA(logfileparser.Logfile):
             if has_spins:
                 self.atomspins["lowdin"] = spins
 
+    def parse_scf_condensed_format(self, inputfile, line):
+        """ Parse the SCF convergence information in condensed format """
+
+        # This is what it looks like
+        # ITER       Energy         Delta-E        Max-DP      RMS-DP      [F,P]     Damp
+        #                ***  Starting incremental Fock matrix formation  ***
+        #   0   -384.5203638934   0.000000000000 0.03375012  0.00223249  0.1351565 0.7000
+        #   1   -384.5792776162  -0.058913722842 0.02841696  0.00175952  0.0734529 0.7000
+        #                                ***Turning on DIIS***
+        #   2   -384.6074211837  -0.028143567475 0.04968025  0.00326114  0.0310435 0.0000
+        #   3   -384.6479682063  -0.040547022616 0.02097477  0.00121132  0.0361982 0.0000
+        #   4   -384.6571124353  -0.009144228947 0.00576471  0.00035160  0.0061205 0.0000
+        #   5   -384.6574659959  -0.000353560584 0.00191156  0.00010160  0.0025838 0.0000
+        #   6   -384.6574990782  -0.000033082375 0.00052492  0.00003800  0.0002061 0.0000
+        #   7   -384.6575005762  -0.000001497987 0.00020257  0.00001146  0.0001652 0.0000
+        #   8   -384.6575007321  -0.000000155848 0.00008572  0.00000435  0.0000745 0.0000
+        #          **** Energy Check signals convergence ****
+
+        assert line[2] == "Delta-E"
+        assert line[3] == "Max-DP"
+
+        if not hasattr(self, "scfvalues"):
+            self.scfvalues = []
+
+        self.scfvalues.append([])
+
+        # Try to keep track of the converger (NR, DIIS, SOSCF, etc.).
+        diis_active = True
+        while not line == []:
+
+            if 'Newton-Raphson' in line:
+                diis_active = False
+            elif 'SOSCF' in line:
+                diis_active = False
+            elif line[0].isdigit() and diis_active:
+                energy = float(line[1])
+                deltaE = float(line[2])
+                maxDP = float(line[3])
+                rmsDP = float(line[4])
+                self.scfvalues[-1].append([deltaE, maxDP, rmsDP])
+            elif line[0].isdigit() and not diis_active:
+                energy = float(line[1])
+                deltaE = float(line[2])
+                maxDP = float(line[5])
+                rmsDP = float(line[6])
+                self.scfvalues[-1].append([deltaE, maxDP, rmsDP])
+            line = next(inputfile).split()
 
 if __name__ == "__main__":
     import sys
