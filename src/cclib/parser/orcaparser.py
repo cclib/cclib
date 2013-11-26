@@ -88,6 +88,8 @@ class ORCA(logfileparser.Logfile):
 
             if line[1] == "Energy":
                 self.parse_scf_condensed_format(inputfile, line)
+            elif line[1] == "Starting":
+                self.parse_scf_expanded_format(inputfile, line)
 
         # Read in values for last SCF iteration and scftargets.
         if "SCF CONVERGENCE" in line:
@@ -610,6 +612,77 @@ class ORCA(logfileparser.Logfile):
                 rmsDP = float(line[6])
                 self.scfvalues[-1].append([deltaE, maxDP, rmsDP])
             line = next(inputfile).split()
+
+    def parse_scf_expanded_format(self, inputfile, line):
+        """ Parse SCF convergence when in expanded format. """
+
+
+# The following is an example of the format
+# -----------------------------------------
+#
+#               ***  Starting incremental Fock matrix formation  ***
+#
+#                         ----------------------------
+#                         !        ITERATION     0   !
+#                         ----------------------------
+#   Total Energy        :    -377.960836651297 Eh
+#   Energy Change       :    -377.960836651297 Eh
+#   MAX-DP              :       0.100175793695
+#   RMS-DP              :       0.004437973661
+#   Actual Damping      :       0.7000
+#   Actual Level Shift  :       0.2500 Eh
+#   Int. Num. El.       :    43.99982197 (UP=   21.99991099 DN=   21.99991099)
+#   Exchange            :   -34.27550826
+#   Correlation         :    -2.02540957
+#
+#
+#                         ----------------------------
+#                         !        ITERATION     1   !
+#                         ----------------------------
+#   Total Energy        :    -378.118458080109 Eh
+#   Energy Change       :      -0.157621428812 Eh
+#   MAX-DP              :       0.053240648588
+#   RMS-DP              :       0.002375092508
+#   Actual Damping      :       0.7000
+#   Actual Level Shift  :       0.2500 Eh
+#   Int. Num. El.       :    43.99994143 (UP=   21.99997071 DN=   21.99997071)
+#   Exchange            :   -34.00291075
+#   Correlation         :    -2.01607243
+#
+#                               ***Turning on DIIS***
+#
+#                         ----------------------------
+#                         !        ITERATION     2   !
+#                         ----------------------------
+# ....
+#
+        if not hasattr(self, "scfvalues"):
+            self.scfvalues = []
+
+        self.scfvalues.append([])
+
+        line = "Foo" # dummy argument to enter loop
+        while line.find("******") < 0:
+            line = next(inputfile)
+            info = line.split()
+            if len(info) > 1 and info[1] == "ITERATION":
+                dashes = next(inputfile)
+                energy_line = next(inputfile).split()
+                energy = float(energy_line[3])
+                deltaE_line = next(inputfile).split()
+                deltaE = float(deltaE_line[3])
+                if energy == deltaE:
+                    deltaE = 0
+                maxDP_line = next(inputfile).split()
+                maxDP = float(maxDP_line[2])
+                rmsDP_line = next(inputfile).split()
+                rmsDP = float(rmsDP_line[2])
+                self.scfvalues[-1].append([deltaE, maxDP, rmsDP])
+
+        return
+
+    # end of parse_scf_expanded_format
+
 
 if __name__ == "__main__":
     import sys
