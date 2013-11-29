@@ -1190,6 +1190,17 @@ class Gaussian(logfileparser.Logfile):
             else:
                 self.atomcharges["lowdin"] = charges
 
+        if line.strip() == "Natural Population":
+            line1 = next(inputfile)
+            line2 = next(inputfile)
+            if line1.split()[0] == 'Natural' and line2.split()[2] == 'Charge':
+                dashes = next(inputfile)
+                charges = []
+                for i in range(self.natom):
+                    nline = next(inputfile)
+                    charges.append(float(nline.split()[2]))
+                self.atomcharges["natural"] = charges
+
 
 
 if __name__ == "__main__":
