@@ -457,6 +457,51 @@ class ORCA(logfileparser.Logfile):
                 line = next(inputfile)
                 self.vibfreqs[i] = float(line.split()[1])
 
+            if numpy.any(self.vibfreqs[0:6] != 0):
+                msg = "Modes corresponding to rotations/translations "
+                msg += "may be non-zero."
+                self.logger.warning(msg)
+
+            self.vibfreqs = self.vibfreqs[6:]
+
+        if line[0:12] == "NORMAL MODES":
+            """ Format:
+            NORMAL MODES
+            ------------
+
+            These modes are the cartesian displacements weighted by the diagonal matrix
+            M(i,i)=1/sqrt(m[i]) where m[i] is the mass of the displaced atom
+            Thus, these vectors are normalized but *not* orthogonal
+
+                              0          1          2          3          4          5    
+                  0       0.000000   0.000000   0.000000   0.000000   0.000000   0.000000
+                  1       0.000000   0.000000   0.000000   0.000000   0.000000   0.000000
+                  2       0.000000   0.000000   0.000000   0.000000   0.000000   0.000000
+            ...
+            """
+
+            self.vibdisps = numpy.zeros(( 3 * self.natom, self.natom, 3), "d")
+
+            dashes = next(inputfile)
+            blank = next(inputfile)
+            text = next(inputfile)
+            text = next(inputfile)
+            text = next(inputfile)
+            blank = next(inputfile)
+
+            for mode in range(0, 3 * self.natom, 6):
+                header = next(inputfile)
+                for atom in range(self.natom):
+                    x = next(inputfile).split()[1:]
+                    y = next(inputfile).split()[1:]
+                    z = next(inputfile).split()[1:]
+
+                    self.vibdisps[mode:mode + 6, atom, 0] = x
+                    self.vibdisps[mode:mode + 6, atom, 1] = y
+                    self.vibdisps[mode:mode + 6, atom, 2] = z
+
+            self.vibdisps = self.vibdisps[6:]
+
         if line[0:11] == "IR SPECTRUM":
             dashes = next(inputfile)
             blank = next(inputfile)
@@ -471,6 +516,8 @@ class ORCA(logfileparser.Logfile):
                 self.vibirs[num] = float(line.split()[2])
                 line = next(inputfile)
 
+            self.vibirs = self.vibirs[6:]
+
         if line[0:14] == "RAMAN SPECTRUM":
             dashes = next(inputfile)
             blank = next(inputfile)
@@ -484,6 +531,8 @@ class ORCA(logfileparser.Logfile):
                 num = int(line[0:4])
                 self.vibramans[num] = float(line.split()[2])
                 line = next(inputfile)
+
+            self.vibramans = self.vibramans[6:]
 
         # ORCA will print atomic charges along with the spin populations,
         #   so care must be taken about choosing the proper column.
