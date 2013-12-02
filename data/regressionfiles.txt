@@ -65,6 +65,7 @@ GAMESS-UK/GAMESS-UK7.0/mg10.out.gz
 GAMESS-UK/GAMESS-UK7.0/pyridine2_21m10r.out.gz
 GAMESS-UK/GAMESS-UK7.0/mg10.out.gz
 GAMESS-UK/GAMESS-UK7.0/pyridine.out.gz
+Gaussian/Gaussian09/irc_point.log.bz2
 Gaussian/Gaussian09/Dahlgren_TS.zip
 Gaussian/Gaussian09/dvb_lowdin.log.gz
 Gaussian/Gaussian03/DCV4T+C60_start.zip
