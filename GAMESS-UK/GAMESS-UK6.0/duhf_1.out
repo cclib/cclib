@@ -1,0 +1,2693 @@
+[YOU HAVE NEW MAIL]
+        MA_INIT - 4Mw allocated
+1
+
+                                   ****************************************************************
+                                   *                                                              *
+                                   *               ===  G A M E S S - U K    ===                  *
+                                   *                                                              *
+                                   * Generalised Atomic and Molecular Electronic Structure System *
+                                   *                                                              *
+                                   *               ===  RS-6000 version  6.0 ===                  *
+                                   *                                                              *
+                                   ****************************************************************
+
+                                        Hostname  : tcisp110.hpc.dl.ac.uk                       
+                                        GAMESS-UK Executable: /homea/wab/Gamess_UK/bin/gamess_scf                                   
+                                        job name   wab     
+                                        date    Jul  1 1995
+                                        time       04:15:22
+                                        acct          10040
+
+                                        job time specified         60 minutes
+
+                                        main store requested   1000000 real*8  words
+
+
+
+                                        TCGMSG/GA-Tools parallel implementation - node information:
+                                        ----------------------------------------------------------
+
+                                        node     pid   hostname     user           version
+
+                                        root   10706   tcisp110.hpc wab          RS-6000 version 6.0           
+request 1000000 objects of size 8 bytes
+allocated - offset 36877192 bytes
+ mem offset 4647436
+
+
+                    ******************************************************************************************
+                    *                                                                                        *
+                    *    h2co+ - tzvp basis - direct-uhf                                                     *
+                    *                                                                                        *
+                    ******************************************************************************************
+
+
+
+ ---------------------------------------------------------------------------------------------------------------------------------
+
+                                        *****************
+                                        symbolic z-matrix
+                                        *****************
+
+ ------------------------------------------------------------------------
+                              input z-matrix
+ ------------------------------------------------------------------------
+
+ c                                                                               
+ o 1 co                                                                          
+ h 1 ch 2 hco                                                                    
+ h 1 ch 2 hco 3 180.0                                                            
+
+ ========================================================================
+ name            input  type     hessian         minima
+                 value                       -1-         -2-
+ ------------------------------------------------------------------------
+                              variables
+ ------------------------------------------------------------------------
+ co           1.203000     0     .000000    1.203000    1.203000
+ ch           1.099000     0     .000000    1.099000    1.099000
+ hco        121.800000     0     .000000  121.800000  121.800000
+
+
+ ========================================================================
+                         z-matrix (angstroms and degrees)
+ cd cent atom  n1      length      n2     alpha      n3      beta       j
+ ------------------------------------------------------------------------
+  1   1   c 
+  2   2   o     1   1.203000 (  1)
+  3   3   h     1   1.099000 (  2)  2  121.800 (  4)
+  4   4   h     1   1.099000 (  3)  2  121.800 (  5)  3  180.000 (  6)  0
+ ========================================================================
+
+                              coordinates (a.u.) - prior to orientation
+ ------------------------------------------------------------------------
+                 atom                x              y              z
+
+              1  c                 .000000        .000000        .000000
+              2  o                 .000000        .000000       2.273341
+              3  h                1.765065        .000000      -1.094387
+              4  h               -1.765065        .000000      -1.094387
+
+ ------------------------------------------------------------------------
+
+  opening ed3                                                                                                                                 
+ ---------------------
+ this is a startup job
+ ---------------------
+    dump file on ed3  starting at block     1
+ scratch file on ed7  starting at block     1
+
+ ---------------------------------------------------------------------------------------------------------------------------------
+
+                                        ******************
+                                        molecular symmetry
+                                        ******************
+
+ molecular point group    cnv     
+ order of principal axis   2
+
+ symmetry points :
+
+ point 1 :     .0000000    .0000000    .0000000
+ point 2 :     .0000000    .0000000   1.0000000
+ point 3 :     .0000000   1.0000000    .0000000
+
+ directional parameter - parallel
+
+
+ ---------------------------------------------------------------------------------------------------------------------------------
+
+                                        ******************
+                                        molecular geometry
+                                        ******************
+
+ *************************************
+ * basis selected is tzvp            *
+ *************************************
+
+         *******************************************************************************
+         *                                                                             *
+         *     atom   atomic                coordinates                 number of      *
+         *            charge       x             y              z       shells         *
+         *                                                                             *
+         *******************************************************************************
+         *                                                                             *
+         *                                                                             *
+         *    c         6.0    .0000000       .0000000       .9998722       9          *
+         *                                                                s   s   s    *
+         *                                                                s   s   p    *
+         *                                                                p   p   d    *
+         *                                                                             *
+         *                                                                             *
+         *    o         8.0    .0000000       .0000000     -1.2734689       9          *
+         *                                                                s   s   s    *
+         *                                                                s   s   p    *
+         *                                                                p   p   d    *
+         *                                                                             *
+         *                                                                             *
+         *    h         1.0    .0000000      1.7650653      2.0942591       4          *
+         *                                                                s   s   s    *
+         *                                                                p            *
+         *                                                                             *
+         *                                                                             *
+         *    h         1.0    .0000000     -1.7650653      2.0942591       4          *
+         *                                                                s   s   s    *
+         *                                                                p            *
+         *                                                                             *
+         *******************************************************************************
+
+
+                                        *******************
+                                        molecular basis set
+                                        *******************
+
+
+                                        ==============================
+                                        contracted primitive functions
+                                        ==============================
+
+ atom        shell   type  prim       exponents            contraction coefficients
+ =================================================================================================================
+
+ c       
+
+
+                 1   s        1     9471.000000        .530969  (     .000776  )
+                 1   s        2     1398.000000       1.013191  (     .006218  )
+                 1   s        3      307.500000       1.757155  (     .033575  )
+                 1   s        4       84.540000       2.668159  (     .134278  )
+                 1   s        5       26.910000       3.314939  (     .393668  )
+                 1   s        6        9.409000       2.083539  (     .544169  )
+
+
+                 2   s        7        9.409000        .949841  (     .248075  )
+                 2   s        8        3.500000       1.427698  (     .782844  )
+
+
+                 3   s        9        1.068000        .748753  (    1.000000  )
+
+
+                 4   s       10         .400200        .358606  (    1.000000  )
+
+
+                 5   s       11         .135100        .158819  (    1.000000  )
+
+
+                 6   p       12       25.370000       1.322498  (     .016295  )
+                 6   p       13        5.776000       1.303140  (     .102098  )
+                 6   p       14        1.787000       1.001995  (     .340228  )
+                 6   p       15         .657700        .564191  (     .668269  )
+
+
+                 7   p       16         .248000        .249462  (    1.000000  )
+
+
+                 8   p       17         .091060        .071302  (    1.000000  )
+
+
+                 9   d       18         .720000        .926278  (    1.000000  )
+
+ o       
+
+
+                10   s       19    18050.000000        .840163  (     .000757  )
+                10   s       20     2660.000000       1.601303  (     .006066  )
+                10   s       21      585.700000       2.781646  (     .032782  )
+                10   s       22      160.900000       4.269726  (     .132609  )
+                10   s       23       51.160000       5.410311  (     .396839  )
+                10   s       24       17.900000       3.365171  (     .542572  )
+
+
+                11   s       25       17.900000       1.628030  (     .262490  )
+                11   s       26        6.639000       2.269241  (     .769828  )
+
+
+                12   s       27        2.077000       1.233069  (    1.000000  )
+
+
+                13   s       28         .773600        .587892  (    1.000000  )
+
+
+                14   s       29         .255800        .256351  (    1.000000  )
+
+
+                15   p       30       49.830000       3.086979  (     .016358  )
+                15   p       31       11.490000       3.209947  (     .106453  )
+                15   p       32        3.609000       2.476707  (     .349302  )
+                15   p       33        1.321000       1.326645  (     .657183  )
+
+
+                16   p       34         .482100        .572613  (    1.000000  )
+
+
+                17   p       35         .165100        .150011  (    1.000000  )
+
+
+                18   d       36        1.280000       2.535286  (    1.000000  )
+
+ h       
+
+
+                23   s       37       33.640000        .252601  (     .025374  )
+                23   s       38        5.058000        .455952  (     .189684  )
+                23   s       39        1.147000        .673739  (     .852933  )
+
+
+                24   s       40         .321100        .304012  (    1.000000  )
+
+
+                25   s       41         .101300        .127973  (    1.000000  )
+
+
+                26   p       42        1.000000       1.425411  (    1.000000  )
+ =================================================================================================================
+
+ total number of shells                  26
+ total number of basis functions         52
+ number of electrons                     15
+ charge of molecule                       1
+ state multiplicity                       2
+ number of occupied orbitals (alpha)      8
+ number of occupied orbitals (beta )      7
+ total number of atoms                    4
+
+
+ **************************************************** 
+ *            JOB OPTIONS in EFFECT                 * 
+ **************************************************** 
+ * RUN TYPE                                optimize *
+ * SCF TYPE                                uhf      *
+ * Molecular orbital starting point        atoms    *
+ * Route   a-vectors to section                   1 *
+ * Route   b-vectors to section                   2 *
+ **************************************************** 
+ * Direct-scf *** compute integrals each iteration ** 
+ **************************************************** 
+ * prefactor tolerance    .10E-07 to iter    3     **
+ *                        .10E-07 to iter    6     **
+ *                        .10E-07 to iter  999     **
+ * delta density used when delta <=     .10E-07    **
+ * delta factor for tolerance           .10E+00    **
+ * integral magnitudes analysed (t/f)  F           **
+ **************************************************** 
+
+ ****************************************************** 
+ *        SCF CONVERGENCE CONTROLS in EFFECT          * 
+ ****************************************************** 
+ * Wavefunction convergence                    1.0e-7 *
+ * Level shifting                                     *
+ * Level shifter =    1.000 to cycle  5 then     .300 *
+ * Beta hamiltonian :-                                *
+ * Occupied-occupied orbital mixing                   *
+ * Level shifter =    1.000 to cycle  5 then     .300 *
+ * Commence diis treatment at threshold of     .10000 *
+ * Finish diis when residuum less than    .100000E-13 *
+ ****************************************************** 
+
+ ********************************************************** 
+ *          optimisation options in effect                * 
+ ********************************************************** 
+ * optimization procedure invoked                         *
+ ********************************************************** 
+
+ **************************************************** 
+ * 2-electron integral options                      * 
+ **************************************************** 
+ * prefactor tolerance for integrals        1.0e-20 *
+ * integral cutoff                          1.0e- 9 *
+ * starting shells                    1   1   1   1 *
+ * generate integrals in non-supermatrix form       *
+ ****************************************************
+
+
+ ---------------------------------------------------------------------------------------------------------------------------------
+
+
+                                        ===============================
+                                        bond lengths in bohr (angstrom)
+                                        ===============================
+
+
+  1--2  2.2733412   1--3  2.0768096   1--4  2.0768096
+       (1.2030000)       (1.0990000)       (1.0990000)
+
+
+                                        ===========
+                                        bond angles
+                                        ===========
+
+
+  2--1--3  121.800000   2--1--4  121.800000   3--1--4  116.400000
+
+
+                                        ===============
+                                        dihedral angles
+                                        ===============
+
+     --- none ---
+  opening ed7                                                                                                                                 
+
+                                        *****************
+                                        vector generation
+                                        *****************
+
+
+ point group used for symmetry adaption: C2v
+
+ ==============================
+ irrep  no. of symmetry adapted
+        basis functions
+ ==============================
+   1          27
+   2           9
+   3          13
+   4           3
+ =============================
+
+
+ initial guess orbitals generated by superposition of atomic densities
+
+
+ ***** total atomic energy     -113.45425690 *** 
+
+ ---------------------------------------------------------------------------------------------------------------------------------
+
+
+
+                                        *********************
+                                        geometry optimization
+                                        *********************
+
+ number of parameters         3
+ max. no. of calculations     5
+ max. no. of iterations       5
+
+ use function evaluation only for line searches
+
+ input control parameters
+ =========================
+ line search termination criterion             .600000
+ parameter convergence precision               .003000
+ line search restriction distance              .200000
+
+
+
+
+ =================================================================================================================================
+
+
+          ***************
+ commence new calculation  -  point  1 at      .94 seconds
+          ***************
+
+
+ ========================================================================
+                         z-matrix (angstroms and degrees)
+ cd cent atom  n1      length      n2     alpha      n3      beta       j
+ ------------------------------------------------------------------------
+  1   1   c 
+  2   2   o     1   1.203000 (  1)
+  3   3   h     1   1.099000 (  2)  2  121.800 (  4)
+  4   4   h     1   1.099000 (  3)  2  121.800 (  5)  3  180.000 (  6)  0
+ ========================================================================
+
+ =============================================
+ variable           value              hessian
+ =============================================
+ co             1.2030000 angs         .000000
+ ch             1.0990000 angs         .000000
+ hco          121.8000000 degs         .000000
+ =============================================
+
+
+
+ ---------------------------------------------------------------------------------------------------------------------------------
+
+     *************************
+     dlnmxd =     -.2906831576
+ p: set chunk size 8
+
+ commence 2-electron integral evaluation at     1.05 seconds
+
+ end of 2-electron integral evaluation at     3.27 seconds
+
+
+
+ ---------------------------------------------------------------------------------------------------------------------------------
+
+                                        **********************
+                                        direct uhf calculation
+                                        **********************
+
+
+
+
+ output section 171 to block   211
+ section length                 26
+
+
+ ----- nuclear energy ----- =      31.383708836176
+
+               convergence data
+               ================
+
+ maximum number of iterations =     50
+ method of convergence        =      5
+ convergence criterion        =1.0e- 7
+ punch out option             =      0
+
+     *************************
+     dlnmxd =      .0929063830
+     using full density matrix
+     dlnmxd =      .0929063830
+     dlntol =    18.4206807440
+     *************************
+ p: set chunk size 8
+
+ commence 2-electron integral evaluation at     3.42 seconds
+
+ end of 2-electron integral evaluation at     7.20 seconds
+
+ =======================================================================================================
+   cycle          total     electronic        e conv.         tester     virtual damping            diis
+                 energy         energy                                     shift
+                                                                      -a-   -b- 
+ =======================================================================================================
+   1   1  -113.42141396  -144.80512280  -144.80512280      .12693240  1.00  1.00   1.000      .000000000
+
+     *************************
+     dlnmxd =    -2.6111479642
+     using full density matrix
+     dlnmxd =      .1576951133
+     dlntol =    18.4206807440
+     *************************
+ p: set chunk size 8
+
+ commence 2-electron integral evaluation at     7.29 seconds
+
+ end of 2-electron integral evaluation at    11.06 seconds
+
+ =======================================================================================================
+   cycle          total     electronic        e conv.         tester     virtual damping            diis
+                 energy         energy                                     shift
+                                                                      -a-   -b- 
+ =======================================================================================================
+   2   2  -113.50807110  -144.89177994     -.08665714      .07446795  1.00  1.00   1.000      .000000000
+
+     *************************
+     dlnmxd =    -3.1303741525
+     using full density matrix
+     dlnmxd =      .1763091870
+     dlntol =    18.4206807440
+     *************************
+ p: set chunk size 8
+
+ commence 2-electron integral evaluation at    11.20 seconds
+
+ end of 2-electron integral evaluation at    14.96 seconds
+
+ =======================================================================================================
+   cycle          total     electronic        e conv.         tester     virtual damping            diis
+                 energy         energy                                     shift
+                                                                      -a-   -b- 
+ =======================================================================================================
+   3   3  -113.52451401  -144.90822285     -.01644291      .05512600  1.00  1.00    .000      .000000000
+
+     *************************
+     dlnmxd =    -3.1134586168
+     using full density matrix
+     dlnmxd =      .2009963428
+     dlntol =    18.4206807440
+     *************************
+ p: set chunk size 8
+
+ commence 2-electron integral evaluation at    15.06 seconds
+
+ end of 2-electron integral evaluation at    18.81 seconds
+
+ =======================================================================================================
+   cycle          total     electronic        e conv.         tester     virtual damping            diis
+                 energy         energy                                     shift
+                                                                      -a-   -b- 
+ =======================================================================================================
+   4   4  -113.53597550  -144.91968433     -.01146148      .05973501  1.00  1.00    .000      .000000000
+
+     *************************
+     dlnmxd =    -3.6832911799
+     using full density matrix
+     dlnmxd =      .2213502631
+     dlntol =    18.4206807440
+     *************************
+ p: set chunk size 8
+
+ commence 2-electron integral evaluation at    18.92 seconds
+
+ end of 2-electron integral evaluation at    22.67 seconds
+
+ =======================================================================================================
+   cycle          total     electronic        e conv.         tester     virtual damping            diis
+                 energy         energy                                     shift
+                                                                      -a-   -b- 
+ =======================================================================================================
+   5   5  -113.54268181  -144.92639065     -.00670631      .05249325  1.00  1.00    .000      .000000000
+
+     *************************
+     dlnmxd =    -4.4353137213
+     using full density matrix
+     dlnmxd =      .2303957934
+     dlntol =    18.4206807440
+     *************************
+ p: set chunk size 8
+
+ commence 2-electron integral evaluation at    22.81 seconds
+
+ end of 2-electron integral evaluation at    26.57 seconds
+
+ =======================================================================================================
+   cycle          total     electronic        e conv.         tester     virtual damping            diis
+                 energy         energy                                     shift
+                                                                      -a-   -b- 
+ =======================================================================================================
+   6   1  -113.54742274  -144.93113157     -.00474093      .06177257   .00   .00    .000      .010354562
+
+     *************************
+     dlnmxd =    -3.2039325856
+     using full density matrix
+     dlnmxd =      .2481657503
+     dlntol =    18.4206807440
+     *************************
+ p: set chunk size 8
+
+ commence 2-electron integral evaluation at    26.68 seconds
+
+ end of 2-electron integral evaluation at    30.41 seconds
+
+ =======================================================================================================
+   cycle          total     electronic        e conv.         tester     virtual damping            diis
+                 energy         energy                                     shift
+                                                                      -a-   -b- 
+ =======================================================================================================
+   7   2  -113.56005076  -144.94375960     -.01262803      .01080042   .00   .00    .000      .000949230
+
+     *************************
+     dlnmxd =    -4.9582823436
+     using full density matrix
+     dlnmxd =      .2505533519
+     dlntol =    18.4206807440
+     *************************
+ p: set chunk size 8
+
+ commence 2-electron integral evaluation at    30.54 seconds
+
+ end of 2-electron integral evaluation at    34.24 seconds
+
+ =======================================================================================================
+   cycle          total     electronic        e conv.         tester     virtual damping            diis
+                 energy         energy                                     shift
+                                                                      -a-   -b- 
+ =======================================================================================================
+   8   3  -113.56037040  -144.94407924     -.00031964      .00568954   .00   .00    .000      .000286943
+
+     *************************
+     dlnmxd =    -5.2993167173
+     using full density matrix
+     dlnmxd =      .2516899168
+     dlntol =    18.4206807440
+     *************************
+ p: set chunk size 8
+
+ commence 2-electron integral evaluation at    34.38 seconds
+
+ end of 2-electron integral evaluation at    38.11 seconds
+
+ =======================================================================================================
+   cycle          total     electronic        e conv.         tester     virtual damping            diis
+                 energy         energy                                     shift
+                                                                      -a-   -b- 
+ =======================================================================================================
+   9   4  -113.56047192  -144.94418076     -.00010152      .00400711   .00   .00    .000      .000081909
+
+     *************************
+     dlnmxd =    -5.2270017965
+     using full density matrix
+     dlnmxd =      .2516361611
+     dlntol =    18.4206807440
+     *************************
+ p: set chunk size 8
+
+ commence 2-electron integral evaluation at    38.23 seconds
+
+ end of 2-electron integral evaluation at    41.98 seconds
+
+ =======================================================================================================
+   cycle          total     electronic        e conv.         tester     virtual damping            diis
+                 energy         energy                                     shift
+                                                                      -a-   -b- 
+ =======================================================================================================
+  10   5  -113.56052799  -144.94423682     -.00005607      .00239033   .00   .00    .000      .000029002
+
+     *************************
+     dlnmxd =    -5.3671900183
+     using full density matrix
+     dlnmxd =      .2516708778
+     dlntol =    18.4206807440
+     *************************
+ p: set chunk size 8
+
+ commence 2-electron integral evaluation at    42.14 seconds
+
+ end of 2-electron integral evaluation at    45.89 seconds
+
+ =======================================================================================================
+   cycle          total     electronic        e conv.         tester     virtual damping            diis
+                 energy         energy                                     shift
+                                                                      -a-   -b- 
+ =======================================================================================================
+  11   6  -113.56055607  -144.94426491     -.00002809      .00116603   .00   .00    .000      .000008395
+
+     *************************
+     dlnmxd =    -5.8535519119
+     using full density matrix
+     dlnmxd =      .2521086019
+     dlntol =    18.4206807440
+     *************************
+ p: set chunk size 8
+
+ commence 2-electron integral evaluation at    46.01 seconds
+
+ end of 2-electron integral evaluation at    49.80 seconds
+
+ =======================================================================================================
+   cycle          total     electronic        e conv.         tester     virtual damping            diis
+                 energy         energy                                     shift
+                                                                      -a-   -b- 
+ =======================================================================================================
+  12   7  -113.56056456  -144.94427340     -.00000849      .00042797   .00   .00    .000      .000001111
+
+     *************************
+     dlnmxd =    -6.6495958347
+     using full density matrix
+     dlnmxd =      .2523402706
+     dlntol =    18.4206807440
+     *************************
+ p: set chunk size 8
+
+ commence 2-electron integral evaluation at    49.88 seconds
+
+ end of 2-electron integral evaluation at    53.65 seconds
+
+ =======================================================================================================
+   cycle          total     electronic        e conv.         tester     virtual damping            diis
+                 energy         energy                                     shift
+                                                                      -a-   -b- 
+ =======================================================================================================
+  13   8  -113.56056592  -144.94427476     -.00000136      .00012534   .00   .00    .000      .000000090
+
+     *************************
+     dlnmxd =    -8.1375469172
+     using full density matrix
+     dlnmxd =      .2523464628
+     dlntol =    18.4206807440
+     *************************
+ p: set chunk size 8
+
+ commence 2-electron integral evaluation at    53.77 seconds
+
+ end of 2-electron integral evaluation at    57.53 seconds
+
+ =======================================================================================================
+   cycle          total     electronic        e conv.         tester     virtual damping            diis
+                 energy         energy                                     shift
+                                                                      -a-   -b- 
+ =======================================================================================================
+  14   9  -113.56056600  -144.94427483     -.00000008      .00004016   .00   .00    .000      .000000005
+
+     *************************
+     dlnmxd =    -9.7159540745
+     using full density matrix
+     dlnmxd =      .2522995996
+     dlntol =    18.4206807440
+     *************************
+ p: set chunk size 8
+
+ commence 2-electron integral evaluation at    57.64 seconds
+
+ end of 2-electron integral evaluation at    61.40 seconds
+
+ =======================================================================================================
+   cycle          total     electronic        e conv.         tester     virtual damping            diis
+                 energy         energy                                     shift
+                                                                      -a-   -b- 
+ =======================================================================================================
+  15  10  -113.56056600  -144.94427484      .00000000      .00000786   .00   .00    .000      .000000000
+
+     *************************
+     dlnmxd =   -11.7669293069
+     using full density matrix
+     dlnmxd =      .2522947197
+     dlntol =    18.4206807440
+     *************************
+ p: set chunk size 8
+
+ commence 2-electron integral evaluation at    61.54 seconds
+
+ end of 2-electron integral evaluation at    65.31 seconds
+
+ =======================================================================================================
+   cycle          total     electronic        e conv.         tester     virtual damping            diis
+                 energy         energy                                     shift
+                                                                      -a-   -b- 
+ =======================================================================================================
+  16  11  -113.56056600  -144.94427484      .00000000      .00000203   .00   .00    .000      .000000000
+
+     *************************
+     dlnmxd =   -12.7609880519
+     using full density matrix
+     dlnmxd =      .2522945110
+     dlntol =    18.4206807440
+     *************************
+ p: set chunk size 8
+
+ commence 2-electron integral evaluation at    65.44 seconds
+
+ end of 2-electron integral evaluation at    69.17 seconds
+
+ =======================================================================================================
+   cycle          total     electronic        e conv.         tester     virtual damping            diis
+                 energy         energy                                     shift
+                                                                      -a-   -b- 
+ =======================================================================================================
+  17  12  -113.56056600  -144.94427484      .00000000      .00000054   .00   .00    .000      .000000000
+
+     *************************
+     dlnmxd =   -15.0447140457
+     using full density matrix
+     dlnmxd =      .2522944815
+     dlntol =    18.4206807440
+     *************************
+ p: set chunk size 8
+
+ commence 2-electron integral evaluation at    69.32 seconds
+
+ end of 2-electron integral evaluation at    73.09 seconds
+
+ =======================================================================================================
+   cycle          total     electronic        e conv.         tester     virtual damping            diis
+                 energy         energy                                     shift
+                                                                      -a-   -b- 
+ =======================================================================================================
+  18  13  -113.56056600  -144.94427484      .00000000      .00000015   .00   .00    .000      .000000000
+
+     *************************
+     dlnmxd =   -15.5484857280
+     using full density matrix
+     dlnmxd =      .2522943442
+     dlntol =    18.4206807440
+     *************************
+ p: set chunk size 8
+
+ commence 2-electron integral evaluation at    73.23 seconds
+
+ end of 2-electron integral evaluation at    77.01 seconds
+
+ =======================================================================================================
+   cycle          total     electronic        e conv.         tester     virtual damping            diis
+                 energy         energy                                     shift
+                                                                      -a-   -b- 
+ =======================================================================================================
+  19  14  -113.56056600  -144.94427484      .00000000      .00000004   .00   .00    .000      .000000000
+
+                    ---------------
+                    energy converged
+                    ---------------
+
+
+                    --------------
+                    final energies   after  19 cycles at    77.09 seconds
+                    --------------
+
+                    electronic energy   -144.9442748367
+                    nuclear energy        31.3837088362
+                    total energy        -113.5605660005
+
+
+          -----------------
+          spin sz   =  .500
+          s-squared =  .788
+          -----------------
+
+
+ ---------------------------------------------------------------------------------------------------------------------------------
+
+
+                                                  ----- alpha set -----
+
+ ===============================================
+ m.o.  irrep  orbital energy   orbital occupancy
+ ===============================================
+
+   1      1    -21.05710739           1.0000000
+   2      1    -11.69393053           1.0000000
+   3      1     -1.88482086           1.0000000
+   4      1     -1.23546522           1.0000000
+   5      3     -1.13609240           1.0000000
+   6      1     -1.06207212           1.0000000
+   7      2      -.99375789           1.0000000
+   8      3      -.88386406           1.0000000
+   9      2      -.21229293            .0000000
+  10      1      -.07677903            .0000000
+  11      1      -.02779879            .0000000
+  12      3      -.00645926            .0000000
+  13      2       .06168621            .0000000
+  14      3       .06935414            .0000000
+  15      1       .15833468            .0000000
+  16      1       .26104285            .0000000
+  17      3       .32559612            .0000000
+  18      1       .32623987            .0000000
+  19      2       .33924260            .0000000
+  20      1       .37828153            .0000000
+  21      3       .44782463            .0000000
+  22      1       .87449392            .0000000
+  23      3      1.05877238            .0000000
+  24      1      1.06449891            .0000000
+  25      2      1.09978538            .0000000
+  26      4      1.16628360            .0000000
+  27      2      1.38230485            .0000000
+  28      1      1.41324422            .0000000
+  29      1      1.54931665            .0000000
+  30      3      1.56402718            .0000000
+  31      3      1.88881037            .0000000
+  32      1      2.08746051            .0000000
+  33      2      2.14444285            .0000000
+  34      1      2.17821605            .0000000
+  35      4      2.20036820            .0000000
+  36      1      2.22383754            .0000000
+  37      2      2.35944638            .0000000
+  38      3      2.39565347            .0000000
+  39      3      2.46341450            .0000000
+  40      1      2.66590062            .0000000
+  41      4      2.75982673            .0000000
+  42      1      2.87530647            .0000000
+  43      3      3.12591080            .0000000
+  44      2      3.26897902            .0000000
+  45      1      3.27967294            .0000000
+  46      1      3.43821530            .0000000
+  47      3      3.66979914            .0000000
+  48      1      4.25850069            .0000000
+  49      1      4.49738028            .0000000
+  50      1      7.35706460            .0000000
+  51      1     25.89220986            .0000000
+  52      1     47.03154113            .0000000
+
+ ===============================================
+
+
+ ===========================================================================
+                               SYMMETRY ASSIGNMENT
+ ===========================================================================
+ E level    m.o.     symmetry    orbital energy    degeneracy     occupancy
+ ===========================================================================
+    1      1 -  1      1 a1       -21.05710739          1         1.00000000
+    2      2 -  2      2 a1       -11.69393053          1         1.00000000
+    3      3 -  3      3 a1        -1.88482086          1         1.00000000
+    4      4 -  4      4 a1        -1.23546522          1         1.00000000
+    5      5 -  5      1 b2        -1.13609240          1         1.00000000
+    6      6 -  6      5 a1        -1.06207212          1         1.00000000
+    7      7 -  7      1 b1         -.99375789          1         1.00000000
+    8      8 -  8      2 b2         -.88386406          1         1.00000000
+    9      9 -  9      2 b1         -.21229293          1          .00000000
+   10     10 - 10      6 a1         -.07677903          1          .00000000
+   11     11 - 11      7 a1         -.02779879          1          .00000000
+   12     12 - 12      3 b2         -.00645926          1          .00000000
+   13     13 - 13      3 b1          .06168621          1          .00000000
+   14     14 - 14      4 b2          .06935414          1          .00000000
+   15     15 - 15      8 a1          .15833468          1          .00000000
+   16     16 - 16      9 a1          .26104285          1          .00000000
+   17     17 - 17      5 b2          .32559612          1          .00000000
+   18     18 - 18     10 a1          .32623987          1          .00000000
+   19     19 - 19      4 b1          .33924260          1          .00000000
+   20     20 - 20     11 a1          .37828153          1          .00000000
+   21     21 - 21      6 b2          .44782463          1          .00000000
+   22     22 - 22     12 a1          .87449392          1          .00000000
+   23     23 - 23      7 b2         1.05877238          1          .00000000
+   24     24 - 24     13 a1         1.06449891          1          .00000000
+   25     25 - 25      5 b1         1.09978538          1          .00000000
+   26     26 - 26      1 a2         1.16628360          1          .00000000
+   27     27 - 27      6 b1         1.38230485          1          .00000000
+   28     28 - 28     14 a1         1.41324422          1          .00000000
+   29     29 - 29     15 a1         1.54931665          1          .00000000
+   30     30 - 30      8 b2         1.56402718          1          .00000000
+   31     31 - 31      9 b2         1.88881037          1          .00000000
+   32     32 - 32     16 a1         2.08746051          1          .00000000
+   33     33 - 33      7 b1         2.14444285          1          .00000000
+   34     34 - 34     17 a1         2.17821605          1          .00000000
+   35     35 - 35      2 a2         2.20036820          1          .00000000
+   36     36 - 36     18 a1         2.22383754          1          .00000000
+   37     37 - 37      8 b1         2.35944638          1          .00000000
+   38     38 - 38     10 b2         2.39565347          1          .00000000
+   39     39 - 39     11 b2         2.46341450          1          .00000000
+   40     40 - 40     19 a1         2.66590062          1          .00000000
+   41     41 - 41      3 a2         2.75982673          1          .00000000
+   42     42 - 42     20 a1         2.87530647          1          .00000000
+   43     43 - 43     12 b2         3.12591080          1          .00000000
+   44     44 - 44      9 b1         3.26897902          1          .00000000
+   45     45 - 45     21 a1         3.27967294          1          .00000000
+   46     46 - 46     22 a1         3.43821530          1          .00000000
+   47     47 - 47     13 b2         3.66979914          1          .00000000
+   48     48 - 48     23 a1         4.25850069          1          .00000000
+   49     49 - 49     24 a1         4.49738028          1          .00000000
+   50     50 - 50     25 a1         7.35706460          1          .00000000
+   51     51 - 51     26 a1        25.89220986          1          .00000000
+   52     52 - 52     27 a1        47.03154113          1          .00000000
+ ===========================================================================
+
+ ---------------------------------------------------------------------------
+               Number of orbitals belonging to irreps of this group
+ ---------------------------------------------------------------------------
+  27 a1     3 a2     9 b1    13 b2   
+ ---------------------------------------------------------------------------
+
+  Symmetry assignment was successfull.
+ Degeneracy criterium used was .500E-05 a.u.
+
+
+                                                  ============
+                                                  eigenvectors
+                                                  ============
+
+
+                -21.0571 -11.6939  -1.8848  -1.2355  -1.1361  -1.0621   -.9938   -.8839   -.2123   -.0768   -.0278   -.0065
+
+
+                    1        2        3        4        5        6        7        8        9       10       11       12
+
+
+    1  1  c s      .0000   -.5759    .0545    .0992    .0000    .0142    .0000    .0000    .0000    .0493    .0214    .0000
+    2  1  c s      .0002   -.4556    .0877    .1641    .0000    .0228    .0000    .0000    .0000    .0892    .0363    .0000
+    3  1  c s      .0003   -.0402   -.0828   -.0439    .0000   -.0022    .0000    .0000    .0000   -.5538   -.0220    .0000
+    4  1  c s     -.0016   -.0181   -.0836   -.4924    .0000   -.0646    .0000    .0000    .0000   1.0292   -.0737    .0000
+    5  1  c s     -.0008    .0020   -.0330   -.1666    .0000   -.0725    .0000    .0000    .0000  -2.3125   -.6126    .0000
+    6  1  c x      .0000    .0000    .0000    .0000    .0000    .0000   -.1785    .0000    .3837    .0000    .0000    .0000
+    7  1  c y      .0000    .0000    .0000    .0000   -.2430    .0000    .0000   -.3123    .0000    .0000    .0000   -.2812
+    8  1  c z      .0003    .0015    .1422   -.0656    .0000   -.3317    .0000    .0000    .0000   -.1393    .0176    .0000
+    9  1  c x      .0000    .0000    .0000    .0000    .0000    .0000   -.1313    .0000    .4084    .0000    .0000    .0000
+   10  1  c y      .0000    .0000    .0000    .0000   -.1569    .0000    .0000   -.2017    .0000    .0000    .0000   -.5033
+   11  1  c z      .0006   -.0003    .0262   -.0312    .0000   -.1851    .0000    .0000    .0000   -.1235    .0212    .0000
+   12  1  c x      .0000    .0000    .0000    .0000    .0000    .0000   -.0032    .0000    .5320    .0000    .0000    .0000
+   13  1  c y      .0000    .0000    .0000    .0000   -.0181    .0000    .0000   -.0400    .0000    .0000    .0000   -.4904
+   14  1  c z      .0002    .0002   -.0063   -.0207    .0000    .0139    .0000    .0000    .0000   -.6644   1.5289    .0000
+   15  1  c xx     .0003    .0072   -.0082    .0254    .0000   -.0018    .0000    .0000    .0000   -.2582   -.0249    .0000
+   16  1  c yy     .0004    .0067   -.0090   -.0084    .0000   -.0304    .0000    .0000    .0000   -.2239   -.0405    .0000
+   17  1  c zz     .0001    .0059   -.0531   -.0031    .0000    .0341    .0000    .0000    .0000   -.2527    .0441    .0000
+   18  1  c xy     .0000    .0000    .0000    .0000    .0000    .0000    .0000    .0000    .0000    .0000    .0000    .0000
+   19  1  c xz     .0000    .0000    .0000    .0000    .0000    .0000    .0463    .0000    .0207    .0000    .0000    .0000
+   20  1  c yz     .0000    .0000    .0000    .0000    .0174    .0000    .0000   -.0502    .0000    .0000    .0000    .0213
+   21  2  o s     -.5489    .0002    .1202   -.0520    .0000    .0280    .0000    .0000    .0000    .0058   -.0328    .0000
+   22  2  o s     -.4784    .0004    .2071   -.0918    .0000    .0506    .0000    .0000    .0000    .0122   -.0933    .0000
+   23  2  o s     -.0352   -.0034   -.0034   -.0078    .0000   -.0071    .0000    .0000    .0000   -.0442    .9262    .0000
+   24  2  o s     -.0383    .0064   -.7150    .3563    .0000   -.1704    .0000    .0000    .0000    .0482  -1.7878    .0000
+   25  2  o s      .0033   -.0006   -.2597    .2288    .0000   -.2173    .0000    .0000    .0000   -.0865   1.4277    .0000
+   26  2  o x      .0000    .0000    .0000    .0000    .0000    .0000   -.4933    .0000   -.2417    .0000    .0000    .0000
+   27  2  o y      .0000    .0000    .0000    .0000   -.4571    .0000    .0000    .3370    .0000    .0000    .0000    .0423
+   28  2  o z     -.0020   -.0007   -.1131   -.2280    .0000    .3995    .0000    .0000    .0000    .0403    .0630    .0000
+   29  2  o x      .0000    .0000    .0000    .0000    .0000    .0000   -.3940    .0000   -.1917    .0000    .0000    .0000
+   30  2  o y      .0000    .0000    .0000    .0000   -.3491    .0000    .0000    .2743    .0000    .0000    .0000    .0352
+   31  2  o z      .0014    .0002   -.0786   -.1433    .0000    .2661    .0000    .0000    .0000    .0148    .0722    .0000
+   32  2  o x      .0000    .0000    .0000    .0000    .0000    .0000   -.1396    .0000   -.3318    .0000    .0000    .0000
+   33  2  o y      .0000    .0000    .0000    .0000   -.0807    .0000    .0000    .1233    .0000    .0000    .0000    .1388
+   34  2  o z      .0001   -.0002   -.0031   -.0300    .0000    .0547    .0000    .0000    .0000    .1332    .1412    .0000
+   35  2  o xx     .0117   -.0017    .0512   -.0209    .0000   -.0007    .0000    .0000    .0000   -.0202    .4340    .0000
+   36  2  o yy     .0111   -.0016    .0339   -.0099    .0000   -.0081    .0000    .0000    .0000   -.0150    .4388    .0000
+   37  2  o zz     .0118   -.0018    .0265   -.0445    .0000    .0383    .0000    .0000    .0000   -.0209    .4392    .0000
+   38  2  o xy     .0000    .0000    .0000    .0000    .0000    .0000    .0000    .0000    .0000    .0000    .0000    .0000
+   39  2  o xz     .0000    .0000    .0000    .0000    .0000    .0000   -.0321    .0000    .0126    .0000    .0000    .0000
+   40  2  o yz     .0000    .0000    .0000    .0000   -.0269    .0000    .0000    .0028    .0000    .0000    .0000   -.0136
+   41  3  h s      .0000   -.0005   -.0115   -.0976   -.0694   -.0844    .0000   -.1414    .0000    .0332    .0131    .0245
+   42  3  h s      .0001   -.0002   -.0145   -.1277   -.0720   -.1078    .0000   -.2318    .0000   -.0187    .0214   -.1180
+   43  3  h s      .0000   -.0003    .0062    .0095   -.0017   -.0240    .0000   -.0420    .0000   1.5446   -.2237   1.7002
+   44  3  h x      .0000    .0000    .0000    .0000    .0000    .0000   -.0031    .0000    .0218    .0000    .0000    .0000
+   45  3  h y      .0000    .0003    .0024    .0149    .0100    .0118    .0000    .0121    .0000    .0229   -.0082    .0127
+   46  3  h z      .0000    .0002    .0042    .0086    .0067    .0016    .0000    .0114    .0000    .0055    .0139    .0120
+   47  4  h s      .0000   -.0005   -.0115   -.0976    .0694   -.0844    .0000    .1414    .0000    .0332    .0131   -.0245
+   48  4  h s      .0001   -.0002   -.0145   -.1277    .0720   -.1078    .0000    .2318    .0000   -.0187    .0214    .1180
+   49  4  h s      .0000   -.0003    .0062    .0095    .0017   -.0240    .0000    .0420    .0000   1.5446   -.2237  -1.7002
+   50  4  h x      .0000    .0000    .0000    .0000    .0000    .0000   -.0031    .0000    .0218    .0000    .0000    .0000
+   51  4  h y      .0000   -.0003   -.0024   -.0149    .0100   -.0118    .0000    .0121    .0000   -.0229    .0082    .0127
+   52  4  h z      .0000    .0002    .0042    .0086   -.0067    .0016    .0000   -.0114    .0000    .0055    .0139   -.0120
+
+
+                   .0617
+
+
+                   13
+
+
+    1  1  c s      .0000
+    2  1  c s      .0000
+    3  1  c s      .0000
+    4  1  c s      .0000
+    5  1  c s      .0000
+    6  1  c x     -.3032
+    7  1  c y      .0000
+    8  1  c z      .0000
+    9  1  c x     -.8341
+   10  1  c y      .0000
+   11  1  c z      .0000
+   12  1  c x     1.3246
+   13  1  c y      .0000
+   14  1  c z      .0000
+   15  1  c xx     .0000
+   16  1  c yy     .0000
+   17  1  c zz     .0000
+   18  1  c xy     .0000
+   19  1  c xz     .0161
+   20  1  c yz     .0000
+   21  2  o s      .0000
+   22  2  o s      .0000
+   23  2  o s      .0000
+   24  2  o s      .0000
+   25  2  o s      .0000
+   26  2  o x      .0168
+   27  2  o y      .0000
+   28  2  o z      .0000
+   29  2  o x      .0423
+   30  2  o y      .0000
+   31  2  o z      .0000
+   32  2  o x     -.0214
+   33  2  o y      .0000
+   34  2  o z      .0000
+   35  2  o xx     .0000
+   36  2  o yy     .0000
+   37  2  o zz     .0000
+   38  2  o xy     .0000
+   39  2  o xz    -.0181
+   40  2  o yz     .0000
+   41  3  h s      .0000
+   42  3  h s      .0000
+   43  3  h s      .0000
+   44  3  h x     -.0003
+   45  3  h y      .0000
+   46  3  h z      .0000
+   47  4  h s      .0000
+   48  4  h s      .0000
+   49  4  h s      .0000
+   50  4  h x     -.0003
+   51  4  h y      .0000
+   52  4  h z      .0000
+
+
+ ---------------------------------------------------------------------------------------------------------------------------------
+
+
+                                                  ----- beta set -----
+
+ ===============================================
+ m.o.  irrep  orbital energy   orbital occupancy
+ ===============================================
+
+   1      1    -21.00988373           1.0000000
+   2      1    -11.70180763           1.0000000
+   3      1     -1.75552452           1.0000000
+   4      1     -1.19312292           1.0000000
+   5      1     -1.01778360           1.0000000
+   6      3      -.97588839           1.0000000
+   7      2      -.91786243           1.0000000
+   8      3      -.26340336            .0000000
+   9      2      -.21148156            .0000000
+  10      1      -.07498936            .0000000
+  11      1      -.02282179            .0000000
+  12      3      -.00175130            .0000000
+  13      2       .05018790            .0000000
+  14      3       .10608114            .0000000
+  15      1       .16877797            .0000000
+  16      1       .26628567            .0000000
+  17      1       .33301225            .0000000
+  18      3       .34339920            .0000000
+  19      2       .35921116            .0000000
+  20      1       .39178609            .0000000
+  21      3       .52855863            .0000000
+  22      1       .89562423            .0000000
+  23      3      1.06588593            .0000000
+  24      1      1.07410726            .0000000
+  25      2      1.08361802            .0000000
+  26      4      1.16223855            .0000000
+  27      2      1.38025911            .0000000
+  28      1      1.40703776            .0000000
+  29      1      1.54892372            .0000000
+  30      3      1.57902309            .0000000
+  31      3      1.91823374            .0000000
+  32      1      2.09573801            .0000000
+  33      2      2.15598228            .0000000
+  34      1      2.19811290            .0000000
+  35      4      2.21785347            .0000000
+  36      1      2.25338990            .0000000
+  37      2      2.40417213            .0000000
+  38      3      2.47589079            .0000000
+  39      3      2.56193063            .0000000
+  40      1      2.76548941            .0000000
+  41      4      2.88149534            .0000000
+  42      1      2.89990341            .0000000
+  43      3      3.16044523            .0000000
+  44      2      3.29588895            .0000000
+  45      1      3.29976072            .0000000
+  46      1      3.46586728            .0000000
+  47      3      3.72242984            .0000000
+  48      1      4.29302255            .0000000
+  49      1      4.49425981            .0000000
+  50      1      7.39486052            .0000000
+  51      1     25.88798723            .0000000
+  52      1     47.05562683            .0000000
+
+ ===============================================
+
+
+ ===========================================================================
+                               SYMMETRY ASSIGNMENT
+ ===========================================================================
+ E level    m.o.     symmetry    orbital energy    degeneracy     occupancy
+ ===========================================================================
+    1      1 -  1      1 a1       -21.00988373          1         1.00000000
+    2      2 -  2      2 a1       -11.70180763          1         1.00000000
+    3      3 -  3      3 a1        -1.75552452          1         1.00000000
+    4      4 -  4      4 a1        -1.19312292          1         1.00000000
+    5      5 -  5      5 a1        -1.01778360          1         1.00000000
+    6      6 -  6      1 b2         -.97588839          1         1.00000000
+    7      7 -  7      1 b1         -.91786243          1         1.00000000
+    8      8 -  8      2 b2         -.26340336          1          .00000000
+    9      9 -  9      2 b1         -.21148156          1          .00000000
+   10     10 - 10      6 a1         -.07498936          1          .00000000
+   11     11 - 11      7 a1         -.02282179          1          .00000000
+   12     12 - 12      3 b2         -.00175130          1          .00000000
+   13     13 - 13      3 b1          .05018790          1          .00000000
+   14     14 - 14      4 b2          .10608114          1          .00000000
+   15     15 - 15      8 a1          .16877797          1          .00000000
+   16     16 - 16      9 a1          .26628567          1          .00000000
+   17     17 - 17     10 a1          .33301225          1          .00000000
+   18     18 - 18      5 b2          .34339920          1          .00000000
+   19     19 - 19      4 b1          .35921116          1          .00000000
+   20     20 - 20     11 a1          .39178609          1          .00000000
+   21     21 - 21      6 b2          .52855863          1          .00000000
+   22     22 - 22     12 a1          .89562423          1          .00000000
+   23     23 - 23      7 b2         1.06588593          1          .00000000
+   24     24 - 24     13 a1         1.07410726          1          .00000000
+   25     25 - 25      5 b1         1.08361802          1          .00000000
+   26     26 - 26      1 a2         1.16223855          1          .00000000
+   27     27 - 27      6 b1         1.38025911          1          .00000000
+   28     28 - 28     14 a1         1.40703776          1          .00000000
+   29     29 - 29     15 a1         1.54892372          1          .00000000
+   30     30 - 30      8 b2         1.57902309          1          .00000000
+   31     31 - 31      9 b2         1.91823374          1          .00000000
+   32     32 - 32     16 a1         2.09573801          1          .00000000
+   33     33 - 33      7 b1         2.15598228          1          .00000000
+   34     34 - 34     17 a1         2.19811290          1          .00000000
+   35     35 - 35      2 a2         2.21785347          1          .00000000
+   36     36 - 36     18 a1         2.25338990          1          .00000000
+   37     37 - 37      8 b1         2.40417213          1          .00000000
+   38     38 - 38     10 b2         2.47589079          1          .00000000
+   39     39 - 39     11 b2         2.56193063          1          .00000000
+   40     40 - 40     19 a1         2.76548941          1          .00000000
+   41     41 - 41      3 a2         2.88149534          1          .00000000
+   42     42 - 42     20 a1         2.89990341          1          .00000000
+   43     43 - 43     12 b2         3.16044523          1          .00000000
+   44     44 - 44      9 b1         3.29588895          1          .00000000
+   45     45 - 45     21 a1         3.29976072          1          .00000000
+   46     46 - 46     22 a1         3.46586728          1          .00000000
+   47     47 - 47     13 b2         3.72242984          1          .00000000
+   48     48 - 48     23 a1         4.29302255          1          .00000000
+   49     49 - 49     24 a1         4.49425981          1          .00000000
+   50     50 - 50     25 a1         7.39486052          1          .00000000
+   51     51 - 51     26 a1        25.88798723          1          .00000000
+   52     52 - 52     27 a1        47.05562683          1          .00000000
+ ===========================================================================
+
+ ---------------------------------------------------------------------------
+               Number of orbitals belonging to irreps of this group
+ ---------------------------------------------------------------------------
+  27 a1     3 a2     9 b1    13 b2   
+ ---------------------------------------------------------------------------
+
+  Symmetry assignment was successfull.
+ Degeneracy criterium used was .500E-05 a.u.
+
+
+                                                  ============
+                                                  eigenvectors
+                                                  ============
+
+
+                -21.0099 -11.7018  -1.7555  -1.1931  -1.0178   -.9759   -.9179   -.2634   -.2115   -.0750   -.0228   -.0018
+
+
+                    1        2        3        4        5        6        7        8        9       10       11       12
+
+
+    1  1  c s      .0000    .5758   -.0690   -.0958    .0058    .0000    .0000    .0000    .0000    .0475    .0188    .0000
+    2  1  c s     -.0002    .4553   -.1121   -.1591    .0081    .0000    .0000    .0000    .0000    .0863    .0318    .0000
+    3  1  c s     -.0005    .0406    .0899    .0359    .0224    .0000    .0000    .0000    .0000   -.5542   -.0229    .0000
+    4  1  c s      .0019    .0188    .1688    .5009   -.0659    .0000    .0000    .0000    .0000   1.0351   -.0510    .0000
+    5  1  c s      .0006   -.0021    .0795    .1731   -.0805    .0000    .0000    .0000    .0000  -2.2694   -.5971    .0000
+    6  1  c x      .0000    .0000    .0000    .0000    .0000    .0000   -.2565    .0000   -.3740    .0000    .0000    .0000
+    7  1  c y      .0000    .0000    .0000    .0000    .0000    .4187    .0000    .0270    .0000    .0000    .0000   -.2696
+    8  1  c z     -.0001   -.0016   -.1671    .1329   -.3319    .0000    .0000    .0000    .0000   -.1368    .0054    .0000
+    9  1  c x      .0000    .0000    .0000    .0000    .0000    .0000   -.2044    .0000   -.4121    .0000    .0000    .0000
+   10  1  c y      .0000    .0000    .0000    .0000    .0000    .3033    .0000   -.0055    .0000    .0000    .0000   -.5162
+   11  1  c z     -.0003    .0003   -.0548    .0745   -.1837    .0000    .0000    .0000    .0000   -.1173    .0122    .0000
+   12  1  c x      .0000    .0000    .0000    .0000    .0000    .0000   -.0157    .0000   -.4937    .0000    .0000    .0000
+   13  1  c y      .0000    .0000    .0000    .0000    .0000    .0546    .0000   -.3129    .0000    .0000    .0000    .0525
+   14  1  c z     -.0004   -.0003    .0125    .0174    .0155    .0000    .0000    .0000    .0000   -.6717   1.5519    .0000
+   15  1  c xx    -.0004   -.0072    .0077   -.0226    .0053    .0000    .0000    .0000    .0000   -.2603   -.0275    .0000
+   16  1  c yy    -.0004   -.0069    .0056    .0104   -.0181    .0000    .0000    .0000    .0000   -.2217   -.0425    .0000
+   17  1  c zz    -.0006   -.0061    .0571   -.0097    .0420    .0000    .0000    .0000    .0000   -.2522    .0454    .0000
+   18  1  c xy     .0000    .0000    .0000    .0000    .0000    .0000    .0000    .0000    .0000    .0000    .0000    .0000
+   19  1  c xz     .0000    .0000    .0000    .0000    .0000    .0000    .0544    .0000   -.0298    .0000    .0000    .0000
+   20  1  c yz     .0000    .0000    .0000    .0000    .0000    .0027    .0000    .0748    .0000    .0000    .0000    .0108
+   21  2  o s      .5499   -.0002   -.1074    .0595    .0379    .0000    .0000    .0000    .0000    .0064   -.0327    .0000
+   22  2  o s      .4794   -.0004   -.1840    .1039    .0675    .0000    .0000    .0000    .0000    .0133   -.0932    .0000
+   23  2  o s      .0316    .0032    .0005    .0168    .0018    .0000    .0000    .0000    .0000   -.0512    .9460    .0000
+   24  2  o s      .0395   -.0062    .6225   -.4104   -.2466    .0000    .0000    .0000    .0000    .0625  -1.8472    .0000
+   25  2  o s     -.0034    .0007    .2163   -.2279   -.2531    .0000    .0000    .0000    .0000   -.1109   1.4584    .0000
+   26  2  o x      .0000    .0000    .0000    .0000    .0000    .0000   -.4231    .0000    .2921    .0000    .0000    .0000
+   27  2  o y      .0000    .0000    .0000    .0000    .0000    .1111    .0000   -.3858    .0000    .0000    .0000    .0548
+   28  2  o z      .0019    .0007    .1336    .1612    .4050    .0000    .0000    .0000    .0000    .0380    .0580    .0000
+   29  2  o x      .0000    .0000    .0000    .0000    .0000    .0000   -.3477    .0000    .2381    .0000    .0000    .0000
+   30  2  o y      .0000    .0000    .0000    .0000    .0000    .0853    .0000   -.3396    .0000    .0000    .0000    .0480
+   31  2  o z     -.0009   -.0002    .0814    .1037    .2735    .0000    .0000    .0000    .0000    .0112    .0705    .0000
+   32  2  o x      .0000    .0000    .0000    .0000    .0000    .0000   -.1496    .0000    .4013    .0000    .0000    .0000
+   33  2  o y      .0000    .0000    .0000    .0000    .0000    .0118    .0000   -.3168    .0000    .0000    .0000    .1254
+   34  2  o z     -.0001    .0002   -.0073    .0412    .0801    .0000    .0000    .0000    .0000    .1329    .1190    .0000
+   35  2  o xx    -.0117    .0017   -.0363    .0231    .0034    .0000    .0000    .0000    .0000   -.0232    .4466    .0000
+   36  2  o yy    -.0127    .0015   -.0572    .0340    .0101    .0000    .0000    .0000    .0000   -.0184    .4432    .0000
+   37  2  o zz    -.0113    .0017   -.0051    .0343    .0388    .0000    .0000    .0000    .0000   -.0245    .4544    .0000
+   38  2  o xy     .0000    .0000    .0000    .0000    .0000    .0000    .0000    .0000    .0000    .0000    .0000    .0000
+   39  2  o xz     .0000    .0000    .0000    .0000    .0000    .0000   -.0333    .0000   -.0082    .0000    .0000    .0000
+   40  2  o yz     .0000    .0000    .0000    .0000    .0000    .0188    .0000   -.0162    .0000    .0000    .0000   -.0093
+   41  3  h s      .0000    .0004    .0173    .0947   -.0665    .1264    .0000    .0818    .0000    .0329    .0122    .0149
+   42  3  h s     -.0001    .0001    .0214    .1143   -.0764    .1474    .0000    .2114    .0000   -.0364    .0077   -.1586
+   43  3  h s      .0001    .0004   -.0131   -.0050   -.0242    .0110    .0000    .4462    .0000   1.5477   -.2176   1.2461
+   44  3  h x      .0000    .0000    .0000    .0000    .0000    .0000   -.0044    .0000   -.0191    .0000    .0000    .0000
+   45  3  h y      .0000   -.0003   -.0035   -.0141    .0092   -.0137    .0000   -.0006    .0000    .0216   -.0079    .0105
+   46  3  h z      .0000   -.0002   -.0051   -.0074    .0001   -.0127    .0000    .0014    .0000    .0051    .0127    .0077
+   47  4  h s      .0000    .0004    .0173    .0947   -.0665   -.1264    .0000   -.0818    .0000    .0329    .0122   -.0149
+   48  4  h s     -.0001    .0001    .0214    .1143   -.0764   -.1474    .0000   -.2114    .0000   -.0364    .0077    .1586
+   49  4  h s      .0001    .0004   -.0131   -.0050   -.0242   -.0110    .0000   -.4462    .0000   1.5477   -.2176  -1.2461
+   50  4  h x      .0000    .0000    .0000    .0000    .0000    .0000   -.0044    .0000   -.0191    .0000    .0000    .0000
+   51  4  h y      .0000    .0003    .0035    .0141   -.0092   -.0137    .0000   -.0006    .0000   -.0216    .0079    .0105
+   52  4  h z      .0000   -.0002   -.0051   -.0074    .0001    .0127    .0000   -.0014    .0000    .0051    .0127   -.0077
+
+
+ end of direct-uhf at    77.24 seconds
+
+ ---------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+ ======================
+ gradient of the energy
+ ======================
+
+
+ atom       1              2              3              4
+
+
+   e/x       .0000000       .0000000       .0000000       .0000000
+   e/y       .0000000       .0000000      -.0012369       .0012369
+   e/z      -.0171552      -.0061754       .0116653       .0116653
+
+
+
+
+
+
+ ========================================================================
+                    internal coordinate forces (hartrees/bohr or /radian)
+ cent atom n1      length      n2      alpha       n3       beta        j
+ ------------------------------------------------------------------------
+  1   c 
+  2   o     1    .006175 (  1)
+  3   h     1    .005096 (  2)  2    .021944 (  4)
+  4   h     1    .005096 (  3)  2    .021944 (  5)  3    .000000 (  6)  0
+ ========================================================================
+
+
+                                        =====================
+                                        force constant matrix
+                                        =====================
+
+
+
+                   .4695    .6910   1.0566
+
+
+                    1        2        3
+
+
+    1             1.0566    .0000    .0000
+    2              .0000    .6910    .0000
+    3              .0000    .0000    .4695
+
+ gradients in x-space
+   .6175435E-02   .1019171E-01   .4388738E-01
+
+ step in x-space
+  -.5844510E-02  -.1474885E-01  -.9347603E-01
+
+ current position in x-space
+   .2273341E+01   .2076810E+01   .2125811E+01
+
+                    information on convergence
+                    ==========================
+
+         maximum step     .09347603  convergence?      .00300000 no  
+         average step     .03160425  convergence?      .00200000 no  
+     maximum gradient     .04388738  convergence?      .00075000 no  
+     average gradient     .01515882  convergence?      .00050000 no  
+
+     estimated energy lowering    -.4288826141E-02
+
+ linear search  1 function call    0   1 step   .0000000E+00 function  -.1135606E+03 approximate derivative  -.4288826E-02
+
+
+
+ =================================================================================================================================
+
+
+          ***************
+ commence new calculation  -  point  2 at    83.52 seconds
+          ***************
+
+
+ ========================================================================
+                         z-matrix (angstroms and degrees)
+ cd cent atom  n1      length      n2     alpha      n3      beta       j
+ ------------------------------------------------------------------------
+  1   1   c 
+  2   2   o     1   1.199907 (  1)
+  3   3   h     1   1.091195 (  2)  2  116.444 (  4)
+  4   4   h     1   1.091195 (  3)  2  116.444 (  5)  3  180.000 (  6)  0
+ ========================================================================
+
+ =============================================
+ variable           value              hessian
+ =============================================
+ co             1.1999072 angs         .000000
+ ch             1.0911952 angs         .000000
+ hco          116.4442180 degs         .000000
+ =============================================
+
+ p: set chunk size 8
+ p: set chunk size 8
+ p: set chunk size 8
+ p: set chunk size 8
+ p: set chunk size 8
+ p: set chunk size 8
+ p: set chunk size 8
+ p: set chunk size 8
+ p: set chunk size 8
+ p: set chunk size 8
+ p: set chunk size 8
+ p: set chunk size 8
+ p: set chunk size 8
+ p: set chunk size 8
+ p: set chunk size 8
+
+
+                    --------------
+                    final energies   after  15 cycles at   142.00 seconds
+                    --------------
+
+                    electronic energy   -145.1660335119
+                    nuclear energy        31.6042637248
+                    total energy        -113.5617697870
+
+
+          -----------------
+          spin sz   =  .500
+          s-squared =  .787
+          -----------------
+
+ linear search  1 function call    1   2 step   .1000000E+01 function  -.1135618E+03 approximate derivative   .1881253E-02
+
+
+
+ ======================
+ gradient of the energy
+ ======================
+
+
+ atom       1              2              3              4
+
+
+   e/x       .0000000       .0000000       .0000000       .0000000
+   e/y       .0000000       .0000000       .0026197      -.0026197
+   e/z      -.0006121       .0086997      -.0040438      -.0040438
+
+
+
+
+
+
+ ========================================================================
+                    internal coordinate forces (hartrees/bohr or /radian)
+ cent atom n1      length      n2      alpha       n3       beta        j
+ ------------------------------------------------------------------------
+  1   c 
+  2   o     1   -.008700 (  1)
+  3   h     1    .000545 (  2)  2   -.009872 (  4)
+  4   h     1    .000545 (  3)  2   -.009872 (  5)  3    .000000 (  6)  0
+ ========================================================================
+
+ =========================
+ linear search....complete....f=  -.1135618E+03 x=   .1000000E+01 gradx=   .1880308E-02 esth=   .6170079E-02
+ =========================
+
+                                        =====================
+                                        force constant matrix
+                                        =====================
+
+
+                   .6526    .6851   1.1028
+
+
+                    1        2        3
+
+
+    1             1.0836    .0073    .0902
+    2              .0073    .6802   -.0104
+    3              .0902   -.0104    .6767
+
+                    ------------------
+                    lowest eigenvector
+                    ------------------
+
+      .194952    -.390817    -.899586
+
+ *********************************************************************************************************************************
+
+ control parameters for line search no.  2
+ =========================================
+ line search termination criterion                 .600000
+ parameter convergence precision                   .003000
+ line search termination restriction distance      .200000
+
+
+ gradients in x-space
+  -.8699655E-02   .1089618E-02  -.1974339E-01
+
+ step in x-space
+   .5671786E-02  -.1227897E-02   .2840004E-01
+
+ current position in x-space
+   .2267497E+01   .2062061E+01   .2032335E+01
+
+                    information on convergence
+                    ==========================
+
+         maximum step     .02840004  convergence?      .00300000 no  
+         average step     .00966229  convergence?      .00200000 no  
+     maximum gradient     .01974339  convergence?      .00075000 no  
+     average gradient     .00720087  convergence?      .00050000 no  
+
+     estimated energy lowering    -.6113934615E-03
+
+ linear search  2 function call    0   2 step   .0000000E+00 function  -.1135618E+03 approximate derivative  -.6113935E-03
+
+
+
+ =================================================================================================================================
+
+
+          ***************
+ commence new calculation  -  point  3 at   148.31 seconds
+          ***************
+
+
+ ========================================================================
+                         z-matrix (angstroms and degrees)
+ cd cent atom  n1      length      n2     alpha      n3      beta       j
+ ------------------------------------------------------------------------
+  1   1   c 
+  2   2   o     1   1.202909 (  1)
+  3   3   h     1   1.090545 (  2)  2  118.071 (  4)
+  4   4   h     1   1.090545 (  3)  2  118.071 (  5)  3  180.000 (  6)  0
+ ========================================================================
+
+ =============================================
+ variable           value              hessian
+ =============================================
+ co             1.2029086 angs        1.083597
+ ch             1.0905455 angs         .680228
+ hco          118.0714204 degs         .676718
+ =============================================
+
+ p: set chunk size 8
+ p: set chunk size 8
+ p: set chunk size 8
+ p: set chunk size 8
+ p: set chunk size 8
+ p: set chunk size 8
+ p: set chunk size 8
+ p: set chunk size 8
+ p: set chunk size 8
+ p: set chunk size 8
+ p: set chunk size 8
+ p: set chunk size 8
+ p: set chunk size 8
+ p: set chunk size 8
+
+
+                    --------------
+                    final energies   after  14 cycles at   202.98 seconds
+                    --------------
+
+                    electronic energy   -145.0792711749
+                    nuclear energy        31.5171916449
+                    total energy        -113.5620795300
+
+
+          -----------------
+          spin sz   =  .500
+          s-squared =  .787
+          -----------------
+
+ linear search  2 function call    1   3 step   .1000000E+01 function  -.1135621E+03 approximate derivative  -.8092398E-05
+
+
+
+ ======================
+ gradient of the energy
+ ======================
+
+
+ atom       1              2              3              4
+
+
+   e/x       .0000000       .0000000       .0000000       .0000000
+   e/y       .0000000       .0000000       .0001828      -.0001828
+   e/z      -.0015849       .0014394       .0000727       .0000727
+
+
+
+
+
+
+ ========================================================================
+                    internal coordinate forces (hartrees/bohr or /radian)
+ cent atom n1      length      n2      alpha       n3       beta        j
+ ------------------------------------------------------------------------
+  1   c 
+  2   o     1   -.001439 (  1)
+  3   h     1    .000196 (  2)  2   -.000045 (  4)
+  4   h     1    .000196 (  3)  2   -.000045 (  5)  3    .000000 (  6)  0
+ ========================================================================
+
+ =========================
+ linear search....complete....f=  -.1135621E+03 x=   .1000000E+01 gradx=  -.1120176E-04 esth=   .6033011E-03
+ =========================
+
+                                        =====================
+                                        force constant matrix
+                                        =====================
+
+
+                   .6767    .6785   1.0542
+
+
+                    1        2        3
+
+
+    1             1.0476    .0143    .0470
+    2              .0143    .6791    .0019
+    3              .0470    .0019    .6827
+
+                    ------------------
+                    lowest eigenvector
+                    ------------------
+
+      .123902     .046746    -.991193
+
+ *********************************************************************************************************************************
+
+ control parameters for line search no.  3
+ =========================================
+ line search termination criterion                 .600000
+ parameter convergence precision                   .003000
+ line search termination restriction distance      .200000
+
+
+ gradients in x-space
+  -.1439410E-02   .3910330E-03  -.9005566E-04
+
+ step in x-space
+   .1380513E-02  -.6050420E-03   .3847812E-04
+
+ current position in x-space
+   .2273168E+01   .2060833E+01   .2060735E+01
+
+                    information on convergence
+                    ==========================
+
+         maximum step     .00138051  convergence?      .00300000 yes 
+         average step     .00050259  convergence?      .00200000 yes 
+     maximum gradient     .00143941  convergence?      .00075000 no  
+     average gradient     .00049810  convergence?      .00050000 yes 
+
+     estimated energy lowering    -.2227180254E-05
+
+ linear search  3 function call    0   3 step   .0000000E+00 function  -.1135621E+03 gradient  -.2227180E-05
+
+
+
+ =================================================================================================================================
+
+
+          ***************
+ commence new calculation  -  point  4 at   209.32 seconds
+          ***************
+
+
+ ========================================================================
+                         z-matrix (angstroms and degrees)
+ cd cent atom  n1      length      n2     alpha      n3      beta       j
+ ------------------------------------------------------------------------
+  1   1   c 
+  2   2   o     1   1.203639 (  1)
+  3   3   h     1   1.090225 (  2)  2  118.074 (  4)
+  4   4   h     1   1.090225 (  3)  2  118.074 (  5)  3  180.000 (  6)  0
+ ========================================================================
+
+ =============================================
+ variable           value              hessian
+ =============================================
+ co             1.2036391 angs        1.047631
+ ch             1.0902253 angs         .679099
+ hco          118.0736250 degs         .682706
+ =============================================
+
+ p: set chunk size 8
+ p: set chunk size 8
+ p: set chunk size 8
+ p: set chunk size 8
+ p: set chunk size 8
+ p: set chunk size 8
+ p: set chunk size 8
+ p: set chunk size 8
+ p: set chunk size 8
+ p: set chunk size 8
+ p: set chunk size 8
+ p: set chunk size 8
+
+
+                    --------------
+                    final energies   after  12 cycles at   256.26 seconds
+                    --------------
+
+                    electronic energy   -145.0673990324
+                    nuclear energy        31.5053184363
+                    total energy        -113.5620805961
+
+
+          -----------------
+          spin sz   =  .500
+          s-squared =  .787
+          -----------------
+
+
+
+ ======================
+ gradient of the energy
+ ======================
+
+
+ atom       1              2              3              4
+
+
+   e/x       .0000000       .0000000       .0000000       .0000000
+   e/y       .0000000       .0000000       .0000065      -.0000065
+   e/z      -.0004379       .0003870       .0000254       .0000254
+
+
+
+
+
+
+ ========================================================================
+                    internal coordinate forces (hartrees/bohr or /radian)
+ cent atom n1      length      n2      alpha       n3       beta        j
+ ------------------------------------------------------------------------
+  1   c 
+  2   o     1   -.000387 (  1)
+  3   h     1    .000018 (  2)  2    .000040 (  4)
+  4   h     1    .000018 (  3)  2    .000040 (  5)  3    .000000 (  6)  0
+ ========================================================================
+
+ linear search  3 function call    1   4 step   .1000000E+01 function  -.1135621E+03 gradient  -.5526955E-06
+
+ =========================
+ linear search....complete....f=  -.1135621E+03 x=   .1000000E+01 gradx=  -.5526955E-06 esth=   .1674485E-05
+ =========================
+
+                                        =====================
+                                        force constant matrix
+                                        =====================
+
+
+                   .6118    .7031    .8461
+
+
+                    1        2        3
+
+
+    1              .7787    .0436    .0955
+    2              .0436    .6859   -.0183
+    3              .0955   -.0183    .6963
+
+                    ------------------
+                    lowest eigenvector
+                    ------------------
+
+      .526482    -.482470    -.700028
+
+ *********************************************************************************************************************************
+
+ control parameters for line search no.  4
+ =========================================
+ line search termination criterion                 .600000
+ parameter convergence precision                   .003000
+ line search termination restriction distance      .200000
+
+
+ gradients in x-space
+  -.3870361E-03   .3545885E-04   .7970186E-04
+
+ step in x-space
+   .5252147E-03  -.9010845E-04  -.1888982E-03
+
+ current position in x-space
+   .2274549E+01   .2060228E+01   .2060774E+01
+
+                    information on convergence
+                    ==========================
+
+         maximum step     .00052521  convergence?      .00300000 yes 
+         average step     .00018846  convergence?      .00200000 yes 
+     maximum gradient     .00038704  convergence?      .00075000 yes 
+     average gradient     .00013225  convergence?      .00050000 yes 
+
+     estimated energy lowering    -.2215277097E-06
+
+
+                                        **********************
+                                        optimization converged
+                                        **********************
+
+
+
+ end of optimization at   262.57 seconds
+
+1
+ =================================================================================================================
+
+                         s u m m a r y   o f   s e a r c h     i n f o r m a t i o n
+
+ =================================================================================================================
+   line    function gradient      function value     position         gmax         grms         comments
+ searches     calls    calls
+ =================================================================================================================
+         0        1        1    -.1135605660E+03   .00000E+00   .43887E-01   .15159E-01       Initialisation         
+         1        2        2    -.1135617698E+03   .10000E+01   .19743E-01   .72009E-02  Line search for minimum     
+         2        3        3    -.1135620795E+03   .10000E+01   .14394E-02   .49810E-03  Line search for minimum     
+         3        4        4    -.1135620806E+03   .10000E+01   .38704E-03   .13225E-03  Line search for minimum     
+ =================================================================================================================
+
+
+                                        **********************
+                                        geometry of last point
+                                        **********************
+
+
+
+                                        ===============================
+                                        bond lengths in bohr (angstrom)
+                                        ===============================
+
+
+  1--2  2.2745490   1--3  2.0602278   1--4  2.0602278
+       (1.2036391)       (1.0902253)       (1.0902253)
+
+
+                                        ===========
+                                        bond angles
+                                        ===========
+
+
+  2--1--3  118.073625   2--1--4  118.073625   3--1--4  123.852750
+
+
+                                        ===============
+                                        dihedral angles
+                                        ===============
+
+     --- none ---
+
+
+ ========================================================================
+                         z-matrix (angstroms and degrees)
+ cd cent atom  n1      length      n2     alpha      n3      beta       j
+ ------------------------------------------------------------------------
+  1   1   c 
+  2   2   o     1   1.203639 (  1)
+  3   3   h     1   1.090225 (  2)  2  118.074 (  4)
+  4   4   h     1   1.090225 (  3)  2  118.074 (  5)  3  180.000 (  6)  0
+ ========================================================================
+
+ =============================================
+ variable           value              hessian
+ =============================================
+ co             1.2036391 angs         .778743
+ ch             1.0902253 angs         .685950
+ hco          118.0736250 degs         .696274
+ =============================================
+
+
+                                        ===================
+                                        nuclear coordinates
+                                        ===================
+
+                       atom             x              y              z            chg
+                 1  c                 .000000        .000000       1.016080       6.000000
+                 2  o                 .000000        .000000      -1.258469       8.000000
+                 3  h                 .000000       1.817829       1.985635       1.000000
+                 4  h                 .000000      -1.817829       1.985635       1.000000
+
+
+ =================================================================================================================================
+
+                         h2co+ - tzvp basis - direct-uhf                                                 
+                         ================================================================================
+
+
+                     nuclear energy    =      31.505318436336
+                     electronic energy =    -145.067399032415
+                     total energy      =    -113.562080596079
+
+
+
+          =================
+          spin sz   =  .500
+          s-squared =  .787
+          =================
+
+
+          *********
+          alpha set
+          *********
+
+
+ ===============================================
+ m.o.  irrep  orbital energy   orbital occupancy
+ ===============================================
+
+   1      1    -21.05595859           1.0000000
+   2      1    -11.69316379           1.0000000
+   3      1     -1.88600285           1.0000000
+   4      1     -1.23570638           1.0000000
+   5      3     -1.14356528           1.0000000
+   6      1     -1.05501565           1.0000000
+   7      2      -.99387090           1.0000000
+   8      3      -.89256129           1.0000000
+   9      2      -.21241842            .0000000
+  10      1      -.07750448            .0000000
+  11      1      -.02548437            .0000000
+  12      3      -.00772137            .0000000
+  13      2       .06146145            .0000000
+  14      3       .07540755            .0000000
+  15      1       .14314181            .0000000
+  16      1       .26199353            .0000000
+  17      1       .31580828            .0000000
+  18      2       .33886535            .0000000
+  19      3       .34731917            .0000000
+  20      1       .38704797            .0000000
+  21      3       .45526241            .0000000
+  22      1       .87333114            .0000000
+  23      3      1.05899795            .0000000
+  24      1      1.07126210            .0000000
+  25      2      1.10125020            .0000000
+  26      4      1.15525230            .0000000
+  27      2      1.39489088            .0000000
+  28      1      1.40696054            .0000000
+  29      3      1.54533680            .0000000
+  30      1      1.54764952            .0000000
+  31      3      1.89512692            .0000000
+  32      1      2.08220970            .0000000
+  33      2      2.11306113            .0000000
+  34      1      2.17022983            .0000000
+  35      4      2.23940882            .0000000
+  36      1      2.24883002            .0000000
+  37      2      2.35973652            .0000000
+  38      3      2.41212305            .0000000
+  39      3      2.46411922            .0000000
+  40      1      2.66384255            .0000000
+  41      4      2.76757515            .0000000
+  42      1      2.82922012            .0000000
+  43      3      3.17012407            .0000000
+  44      2      3.26151931            .0000000
+  45      1      3.31952997            .0000000
+  46      1      3.48556170            .0000000
+  47      3      3.62734274            .0000000
+  48      1      4.26045475            .0000000
+  49      1      4.49193203            .0000000
+  50      1      7.36306354            .0000000
+  51      1     25.89203512            .0000000
+  52      1     47.03115864            .0000000
+
+ ===============================================
+
+
+          ==================
+          molecular orbitals
+          ==================
+
+
+                -21.0560 -11.6932  -1.8860  -1.2357  -1.1436  -1.0550   -.9939   -.8926   -.2124   -.0775   -.0255   -.0077
+
+
+                    1        2        3        4        5        6        7        8        9       10       11       12
+
+
+    1  1  c s      .0000    .5759    .0547   -.0991    .0000   -.0178    .0000    .0000    .0000    .0480   -.0237    .0000
+    2  1  c s     -.0002    .4556    .0880   -.1639    .0000   -.0287    .0000    .0000    .0000    .0869   -.0409    .0000
+    3  1  c s     -.0003    .0403   -.0832    .0446    .0000    .0056    .0000    .0000    .0000   -.5425    .0727    .0000
+    4  1  c s      .0015    .0180   -.0834    .4905    .0000    .0789    .0000    .0000    .0000   1.0085   -.0339    .0000
+    5  1  c s      .0009   -.0020   -.0325    .1643    .0000    .0842    .0000    .0000    .0000  -2.2350    .8045    .0000
+    6  1  c x      .0000    .0000    .0000    .0000    .0000    .0000   -.1785    .0000   -.3846    .0000    .0000    .0000
+    7  1  c y      .0000    .0000    .0000    .0000    .2516    .0000    .0000   -.3094    .0000    .0000    .0000   -.2731
+    8  1  c z     -.0003   -.0015    .1417    .0556    .0000    .3330    .0000    .0000    .0000   -.1413   -.0131    .0000
+    9  1  c x      .0000    .0000    .0000    .0000    .0000    .0000   -.1318    .0000   -.4095    .0000    .0000    .0000
+   10  1  c y      .0000    .0000    .0000    .0000    .1638    .0000    .0000   -.1937    .0000    .0000    .0000   -.4873
+   11  1  c z     -.0006    .0003    .0263    .0257    .0000    .1846    .0000    .0000    .0000   -.1381   -.0074    .0000
+   12  1  c x      .0000    .0000    .0000    .0000    .0000    .0000   -.0030    .0000   -.5283    .0000    .0000    .0000
+   13  1  c y      .0000    .0000    .0000    .0000    .0179    .0000    .0000   -.0362    .0000    .0000    .0000   -.4793
+   14  1  c z     -.0002   -.0002   -.0060    .0201    .0000   -.0120    .0000    .0000    .0000   -.6883  -1.4471    .0000
+   15  1  c xx    -.0003   -.0072   -.0083   -.0250    .0000    .0023    .0000    .0000    .0000   -.2528    .0462    .0000
+   16  1  c yy    -.0004   -.0067   -.0090    .0104    .0000    .0341    .0000    .0000    .0000   -.2131    .0627    .0000
+   17  1  c zz    -.0001   -.0059   -.0529    .0011    .0000   -.0363    .0000    .0000    .0000   -.2530   -.0216    .0000
+   18  1  c xy     .0000    .0000    .0000    .0000    .0000    .0000    .0000    .0000    .0000    .0000    .0000    .0000
+   19  1  c xz     .0000    .0000    .0000    .0000    .0000    .0000    .0465    .0000   -.0195    .0000    .0000    .0000
+   20  1  c yz     .0000    .0000    .0000    .0000   -.0166    .0000    .0000   -.0475    .0000    .0000    .0000    .0208
+   21  2  o s      .5489   -.0002    .1200    .0535    .0000   -.0258    .0000    .0000    .0000    .0087    .0312    .0000
+   22  2  o s      .4784   -.0004    .2069    .0946    .0000   -.0467    .0000    .0000    .0000    .0189    .0892    .0000
+   23  2  o s      .0352    .0033   -.0025    .0069    .0000    .0077    .0000    .0000    .0000   -.0856   -.8930    .0000
+   24  2  o s      .0383   -.0062   -.7158   -.3643    .0000    .1548    .0000    .0000    .0000    .1183   1.7267    .0000
+   25  2  o s     -.0034    .0006   -.2598   -.2369    .0000    .2065    .0000    .0000    .0000   -.1729  -1.3725    .0000
+   26  2  o x      .0000    .0000    .0000    .0000    .0000    .0000   -.4928    .0000    .2423    .0000    .0000    .0000
+   27  2  o y      .0000    .0000    .0000    .0000    .4467    .0000    .0000    .3525    .0000    .0000    .0000    .0324
+   28  2  o z      .0019    .0007   -.1132    .2356    .0000   -.3965    .0000    .0000    .0000    .0316   -.0639    .0000
+   29  2  o x      .0000    .0000    .0000    .0000    .0000    .0000   -.3937    .0000    .1938    .0000    .0000    .0000
+   30  2  o y      .0000    .0000    .0000    .0000    .3401    .0000    .0000    .2867    .0000    .0000    .0000    .0253
+   31  2  o z     -.0013   -.0002   -.0790    .1486    .0000   -.2652    .0000    .0000    .0000    .0055   -.0677    .0000
+   32  2  o x      .0000    .0000    .0000    .0000    .0000    .0000   -.1403    .0000    .3287    .0000    .0000    .0000
+   33  2  o y      .0000    .0000    .0000    .0000    .0779    .0000    .0000    .1249    .0000    .0000    .0000    .1207
+   34  2  o z     -.0001    .0001   -.0033    .0306    .0000   -.0561    .0000    .0000    .0000    .1101   -.1428    .0000
+   35  2  o xx    -.0117    .0017    .0517    .0208    .0000    .0017    .0000    .0000    .0000   -.0391   -.4190    .0000
+   36  2  o yy    -.0111    .0016    .0342    .0095    .0000    .0089    .0000    .0000    .0000   -.0336   -.4238    .0000
+   37  2  o zz    -.0118    .0018    .0270    .0455    .0000   -.0364    .0000    .0000    .0000   -.0402   -.4226    .0000
+   38  2  o xy     .0000    .0000    .0000    .0000    .0000    .0000    .0000    .0000    .0000    .0000    .0000    .0000
+   39  2  o xz     .0000    .0000    .0000    .0000    .0000    .0000   -.0320    .0000   -.0125    .0000    .0000    .0000
+   40  2  o yz     .0000    .0000    .0000    .0000    .0265    .0000    .0000    .0036    .0000    .0000    .0000   -.0133
+   41  3  h s      .0000    .0005   -.0129    .0960    .0743    .0855    .0000   -.1397    .0000    .0362   -.0072    .0212
+   42  3  h s     -.0001    .0002   -.0159    .1257    .0743    .1109    .0000   -.2259    .0000   -.0041    .0166   -.1325
+   43  3  h s      .0000    .0003    .0061   -.0097    .0019    .0231    .0000   -.0400    .0000   1.5221    .0299   1.6871
+   44  3  h x      .0000    .0000    .0000    .0000    .0000    .0000   -.0032    .0000   -.0218    .0000    .0000    .0000
+   45  3  h y      .0000   -.0003    .0033   -.0152   -.0105   -.0117    .0000    .0137    .0000    .0238    .0057    .0139
+   46  3  h z      .0000   -.0002    .0042   -.0072   -.0061   -.0002    .0000    .0103    .0000    .0025   -.0149    .0106
+   47  4  h s      .0000    .0005   -.0129    .0960   -.0743    .0855    .0000    .1397    .0000    .0362   -.0072   -.0212
+   48  4  h s     -.0001    .0002   -.0159    .1257   -.0743    .1109    .0000    .2259    .0000   -.0041    .0166    .1325
+   49  4  h s      .0000    .0003    .0061   -.0097   -.0019    .0231    .0000    .0400    .0000   1.5221    .0299  -1.6871
+   50  4  h x      .0000    .0000    .0000    .0000    .0000    .0000   -.0032    .0000   -.0218    .0000    .0000    .0000
+   51  4  h y      .0000    .0003   -.0033    .0152   -.0105    .0117    .0000    .0137    .0000   -.0238   -.0057    .0139
+   52  4  h z      .0000   -.0002    .0042   -.0072    .0061   -.0002    .0000   -.0103    .0000    .0025   -.0149   -.0106
+
+
+                   .0615
+
+
+                   13
+
+
+    1  1  c s      .0000
+    2  1  c s      .0000
+    3  1  c s      .0000
+    4  1  c s      .0000
+    5  1  c s      .0000
+    6  1  c x     -.3021
+    7  1  c y      .0000
+    8  1  c z      .0000
+    9  1  c x     -.8335
+   10  1  c y      .0000
+   11  1  c z      .0000
+   12  1  c x     1.3244
+   13  1  c y      .0000
+   14  1  c z      .0000
+   15  1  c xx     .0000
+   16  1  c yy     .0000
+   17  1  c zz     .0000
+   18  1  c xy     .0000
+   19  1  c xz     .0167
+   20  1  c yz     .0000
+   21  2  o s      .0000
+   22  2  o s      .0000
+   23  2  o s      .0000
+   24  2  o s      .0000
+   25  2  o s      .0000
+   26  2  o x      .0159
+   27  2  o y      .0000
+   28  2  o z      .0000
+   29  2  o x      .0406
+   30  2  o y      .0000
+   31  2  o z      .0000
+   32  2  o x     -.0192
+   33  2  o y      .0000
+   34  2  o z      .0000
+   35  2  o xx     .0000
+   36  2  o yy     .0000
+   37  2  o zz     .0000
+   38  2  o xy     .0000
+   39  2  o xz    -.0180
+   40  2  o yz     .0000
+   41  3  h s      .0000
+   42  3  h s      .0000
+   43  3  h s      .0000
+   44  3  h x     -.0002
+   45  3  h y      .0000
+   46  3  h z      .0000
+   47  4  h s      .0000
+   48  4  h s      .0000
+   49  4  h s      .0000
+   50  4  h x     -.0002
+   51  4  h y      .0000
+   52  4  h z      .0000
+
+
+          ********
+          beta set
+          ********
+
+
+ ===============================================
+ m.o.  irrep  orbital energy   orbital occupancy
+ ===============================================
+
+   1      1    -21.00842091           1.0000000
+   2      1    -11.70064162           1.0000000
+   3      1     -1.75618716           1.0000000
+   4      1     -1.19158148           1.0000000
+   5      1     -1.01245626           1.0000000
+   6      3      -.99159300           1.0000000
+   7      2      -.91749198           1.0000000
+   8      3      -.25862411            .0000000
+   9      2      -.21125685            .0000000
+  10      1      -.07589965            .0000000
+  11      1      -.02073800            .0000000
+  12      3      -.00388090            .0000000
+  13      2       .05005313            .0000000
+  14      3       .11129456            .0000000
+  15      1       .15316324            .0000000
+  16      1       .26731919            .0000000
+  17      1       .32136463            .0000000
+  18      2       .35896754            .0000000
+  19      3       .36376199            .0000000
+  20      1       .40116119            .0000000
+  21      3       .53651293            .0000000
+  22      1       .89427138            .0000000
+  23      3      1.06920430            .0000000
+  24      1      1.08069242            .0000000
+  25      2      1.08496336            .0000000
+  26      4      1.15119149            .0000000
+  27      2      1.39254012            .0000000
+  28      1      1.40121271            .0000000
+  29      1      1.54820228            .0000000
+  30      3      1.55761711            .0000000
+  31      3      1.92522007            .0000000
+  32      1      2.09009642            .0000000
+  33      2      2.12355397            .0000000
+  34      1      2.18997033            .0000000
+  35      4      2.25880184            .0000000
+  36      1      2.27749369            .0000000
+  37      2      2.40480708            .0000000
+  38      3      2.48788563            .0000000
+  39      3      2.56765709            .0000000
+  40      1      2.76024185            .0000000
+  41      1      2.85939344            .0000000
+  42      4      2.88764302            .0000000
+  43      3      3.19834313            .0000000
+  44      2      3.28889537            .0000000
+  45      1      3.33745916            .0000000
+  46      1      3.51321758            .0000000
+  47      3      3.68464471            .0000000
+  48      1      4.29566295            .0000000
+  49      1      4.48847525            .0000000
+  50      1      7.40107108            .0000000
+  51      1     25.88805010            .0000000
+  52      1     47.05540471            .0000000
+
+ ===============================================
+
+
+          ==================
+          molecular orbitals
+          ==================
+
+
+                -21.0084 -11.7006  -1.7562  -1.1916  -1.0125   -.9916   -.9175   -.2586   -.2113   -.0759   -.0207   -.0039
+
+
+                    1        2        3        4        5        6        7        8        9       10       11       12
+
+
+    1  1  c s      .0000   -.5758    .0693   -.0957    .0089    .0000    .0000    .0000    .0000   -.0466   -.0209    .0000
+    2  1  c s      .0002   -.4553    .1126   -.1589    .0132    .0000    .0000    .0000    .0000   -.0848   -.0362    .0000
+    3  1  c s      .0005   -.0406   -.0898    .0375    .0201    .0000    .0000    .0000    .0000    .5435    .0659    .0000
+    4  1  c s     -.0018   -.0187   -.1699    .4965   -.0795    .0000    .0000    .0000    .0000  -1.0133   -.0384    .0000
+    5  1  c s     -.0007    .0020   -.0789    .1707   -.0916    .0000    .0000    .0000    .0000   2.2003    .7603    .0000
+    6  1  c x      .0000    .0000    .0000    .0000    .0000    .0000   -.2569    .0000    .3742    .0000    .0000    .0000
+    7  1  c y      .0000    .0000    .0000    .0000    .0000   -.4171    .0000   -.0313    .0000    .0000    .0000    .2652
+    8  1  c z      .0001    .0016    .1666    .1240   -.3349    .0000    .0000    .0000    .0000    .1379   -.0015    .0000
+    9  1  c x      .0000    .0000    .0000    .0000    .0000    .0000   -.2054    .0000    .4127    .0000    .0000    .0000
+   10  1  c y      .0000    .0000    .0000    .0000    .0000   -.3000    .0000    .0069    .0000    .0000    .0000    .4973
+   11  1  c z      .0003   -.0003    .0547    .0682   -.1829    .0000    .0000    .0000    .0000    .1337    .0037    .0000
+   12  1  c x      .0000    .0000    .0000    .0000    .0000    .0000   -.0156    .0000    .4910    .0000    .0000    .0000
+   13  1  c y      .0000    .0000    .0000    .0000    .0000   -.0522    .0000    .3628    .0000    .0000    .0000   -.0003
+   14  1  c z      .0004    .0002   -.0116    .0169    .0141    .0000    .0000    .0000    .0000    .6836  -1.4748    .0000
+   15  1  c xx     .0004    .0072   -.0075   -.0216    .0049    .0000    .0000    .0000    .0000    .2552    .0452    .0000
+   16  1  c yy     .0004    .0069   -.0054    .0129   -.0212    .0000    .0000    .0000    .0000    .2112    .0611    .0000
+   17  1  c zz     .0005    .0061   -.0566   -.0116    .0443    .0000    .0000    .0000    .0000    .2525   -.0265    .0000
+   18  1  c xy     .0000    .0000    .0000    .0000    .0000    .0000    .0000    .0000    .0000    .0000    .0000    .0000
+   19  1  c xz     .0000    .0000    .0000    .0000    .0000    .0000    .0548    .0000    .0288    .0000    .0000    .0000
+   20  1  c yz     .0000    .0000    .0000    .0000    .0000   -.0014    .0000   -.0730    .0000    .0000    .0000   -.0122
+   21  2  o s     -.5499    .0002    .1071    .0613    .0358    .0000    .0000    .0000    .0000   -.0090    .0311    .0000
+   22  2  o s     -.4794    .0004    .1834    .1071    .0638    .0000    .0000    .0000    .0000   -.0193    .0891    .0000
+   23  2  o s     -.0316   -.0032    .0009    .0161    .0012    .0000    .0000    .0000    .0000    .0852   -.9117    .0000
+   24  2  o s     -.0395    .0060   -.6233   -.4201   -.2319    .0000    .0000    .0000    .0000   -.1198   1.7828    .0000
+   25  2  o s      .0034   -.0006   -.2158   -.2378   -.2421    .0000    .0000    .0000    .0000    .1881  -1.3985    .0000
+   26  2  o x      .0000    .0000    .0000    .0000    .0000    .0000   -.4220    .0000   -.2928    .0000    .0000    .0000
+   27  2  o y      .0000    .0000    .0000    .0000    .0000   -.1072    .0000    .3893    .0000    .0000    .0000   -.0478
+   28  2  o z     -.0018   -.0007   -.1338    .1680    .4034    .0000    .0000    .0000    .0000   -.0303   -.0588    .0000
+   29  2  o x      .0000    .0000    .0000    .0000    .0000    .0000   -.3469    .0000   -.2401    .0000    .0000    .0000
+   30  2  o y      .0000    .0000    .0000    .0000    .0000   -.0812    .0000    .3427    .0000    .0000    .0000   -.0396
+   31  2  o z      .0009    .0002   -.0819    .1084    .2737    .0000    .0000    .0000    .0000   -.0024   -.0653    .0000
+   32  2  o x      .0000    .0000    .0000    .0000    .0000    .0000   -.1505    .0000   -.3997    .0000    .0000    .0000
+   33  2  o y      .0000    .0000    .0000    .0000    .0000   -.0115    .0000    .3211    .0000    .0000    .0000   -.1134
+   34  2  o z      .0001   -.0002    .0070    .0423    .0813    .0000    .0000    .0000    .0000   -.1116   -.1188    .0000
+   35  2  o xx     .0117   -.0016    .0369    .0230    .0025    .0000    .0000    .0000    .0000    .0388   -.4310    .0000
+   36  2  o yy     .0127   -.0015    .0578    .0344    .0088    .0000    .0000    .0000    .0000    .0332   -.4278    .0000
+   37  2  o zz     .0112   -.0017    .0057    .0351    .0375    .0000    .0000    .0000    .0000    .0408   -.4371    .0000
+   38  2  o xy     .0000    .0000    .0000    .0000    .0000    .0000    .0000    .0000    .0000    .0000    .0000    .0000
+   39  2  o xz     .0000    .0000    .0000    .0000    .0000    .0000   -.0332    .0000    .0081    .0000    .0000    .0000
+   40  2  o yz     .0000    .0000    .0000    .0000    .0000   -.0183    .0000    .0160    .0000    .0000    .0000    .0094
+   41  3  h s      .0000   -.0004   -.0191    .0938   -.0676   -.1294    .0000   -.0791    .0000   -.0360   -.0063   -.0140
+   42  3  h s      .0001   -.0002   -.0227    .1147   -.0795   -.1463    .0000   -.2094    .0000    .0196    .0286    .1655
+   43  3  h s     -.0001   -.0003    .0128   -.0052   -.0236   -.0096    .0000   -.4805    .0000  -1.5241    .0411  -1.2804
+   44  3  h x      .0000    .0000    .0000    .0000    .0000    .0000   -.0045    .0000    .0191    .0000    .0000    .0000
+   45  3  h y      .0000    .0003    .0045   -.0143    .0089    .0148    .0000    .0020    .0000   -.0224    .0058   -.0120
+   46  3  h z      .0000    .0002    .0051   -.0063   -.0009    .0118    .0000   -.0020    .0000   -.0024   -.0137   -.0071
+   47  4  h s      .0000   -.0004   -.0191    .0938   -.0676    .1294    .0000    .0791    .0000   -.0360   -.0063    .0140
+   48  4  h s      .0001   -.0002   -.0227    .1147   -.0795    .1463    .0000    .2094    .0000    .0196    .0286   -.1655
+   49  4  h s     -.0001   -.0003    .0128   -.0052   -.0236    .0096    .0000    .4805    .0000  -1.5241    .0411   1.2804
+   50  4  h x      .0000    .0000    .0000    .0000    .0000    .0000   -.0045    .0000    .0191    .0000    .0000    .0000
+   51  4  h y      .0000   -.0003   -.0045    .0143   -.0089    .0148    .0000    .0020    .0000    .0224   -.0058   -.0120
+   52  4  h z      .0000    .0002    .0051   -.0063   -.0009   -.0118    .0000    .0020    .0000   -.0024   -.0137    .0071
+
+ ---------------------------------------------------------------------------------------------------------------------------------
+
+                                        *********************
+                                        wavefunction analysis
+                                        *********************
+
+ commence analysis at    262.62 seconds
+
+uhf    vectors restored from section   1 of dumpfile starting at block     1 of ed3 
+
+ header block information :
+ vectors created under acct.    10040
+ uhf    vectors created by  gamess   program at 04:15:22 on Jul  1   in the job wab     
+ with the title: h2co+ - tzvp basis - direct-uhf                                                 
+
+uhf    vectors restored from section   2 of dumpfile starting at block     1 of ed3 
+
+ header block information :
+ vectors created under acct.    10040
+ uhf    vectors created by  gamess   program at 04:15:22 on Jul  1   in the job wab     
+ with the title: h2co+ - tzvp basis - direct-uhf                                                 
+
+
+
+
+                 dipole moments
+
+           nuclear      electronic           total
+
+ x        .0000000        .0000000        .0000000
+ y        .0000000        .0000000        .0000000
+ z        .0000000       1.1885865       1.1885865
+
+ total dipole moment =        1.1885865 (a.u.)
+                              3.0208883 (debye)
+
+
+ ---------------------------------------------------------------------------------------------------------------------------------
+
+          ---------------------------------------
+          mulliken and lowdin population analyses             alpha electrons
+          ---------------------------------------
+
+          ----- total gross population in aos ------
+
+              1  1  c s        .55725      .53470
+              2  1  c s        .41173      .39800
+              3  1  c s        .06892      .13095
+              4  1  c s        .39674      .16190
+              5  1  c s        .14332      .12540
+              6  1  c x        .07096      .06203
+              7  1  c y        .30930      .26276
+              8  1  c z        .27234      .24116
+              9  1  c x        .07104      .07349
+             10  1  c y        .23020      .23195
+             11  1  c z        .10656      .16588
+             12  1  c x        .00124      .02149
+             13  1  c y        .02317      .05948
+             14  1  c z        .00449      .04422
+             15       rr       .01939      .16321
+             16     xx-yy      .00417      .00460
+             17     zz-rr      .01371      .02758
+             18  1  c xy       .00000      .00000
+             19  1  c xz       .01347      .02161
+             20  1  c yz       .02068      .04264
+             21  2  o s        .53361      .52466
+             22  2  o s        .43205      .41164
+             23  2  o s        .02188      .17386
+             24  2  o s        .75151      .24913
+             25  2  o s        .31093      .21257
+             26  2  o x        .39447      .36957
+             27  2  o y        .50034      .47655
+             28  2  o z        .38161      .34761
+             29  2  o x        .35178      .33391
+             30  2  o y        .39354      .37654
+             31  2  o z        .27781      .30929
+             32  2  o x        .09385      .11450
+             33  2  o y        .06039      .09878
+             34  2  o z        .03044      .09993
+             35       rr      -.09670      .24022
+             36     xx-yy      .00016      .00016
+             37     zz-rr      .00517      .00697
+             38  2  o xy       .00000      .00000
+             39  2  o xz       .00278      .00226
+             40  2  o yz       .00218      .00317
+             41  3  h s        .14139      .14221
+             42  3  h s        .24465      .20527
+             43  3  h s        .01127      .06990
+             44  3  h x        .00021      .00057
+             45  3  h y        .00692      .01467
+             46  3  h z        .00234      .00519
+             47  4  h s        .14139      .14221
+             48  4  h s        .24465      .20527
+             49  4  h s        .01127      .06990
+             50  4  h x        .00021      .00057
+             51  4  h y        .00692      .01467
+             52  4  h z        .00234      .00519
+
+          ----- condensed to atoms -----
+
+
+          ----- total gross population on atoms ----
+
+              1  c            6.0     2.73867     2.77307
+              2  o            8.0     4.44778     4.35131
+              3  h            1.0      .40677      .43781
+              4  h            1.0      .40677      .43781
+
+
+ ---------------------------------------------------------------------------------------------------------------------------------
+
+          ---------------------------------------
+          mulliken and lowdin population analyses              beta electrons
+          ---------------------------------------
+
+          ----- total gross population in aos ------
+
+              1  1  c s        .55790      .53596
+              2  1  c s        .41050      .39815
+              3  1  c s        .07105      .13580
+              4  1  c s        .43599      .17019
+              5  1  c s        .17179      .13201
+              6  1  c x        .13264      .11859
+              7  1  c y        .33408      .28104
+              8  1  c z        .30344      .26455
+              9  1  c x        .13383      .12555
+             10  1  c y        .27918      .24321
+             11  1  c z        .13259      .17446
+             12  1  c x        .00752      .03558
+             13  1  c y        .03357      .06078
+             14  1  c z        .00299      .04767
+             15       rr       .01728      .17014
+             16     xx-yy      .00331      .00303
+             17     zz-rr      .01384      .02419
+             18  1  c xy       .00000      .00000
+             19  1  c xz       .01497      .02035
+             20  1  c yz       .00011      .00061
+             21  2  o s        .53344      .52355
+             22  2  o s        .43383      .41121
+             23  2  o s        .01407      .16418
+             24  2  o s        .71362      .23721
+             25  2  o s        .30695      .22017
+             26  2  o x        .30332      .28120
+             27  2  o y        .02412      .01999
+             28  2  o z        .36035      .32861
+             29  2  o x        .29804      .28851
+             30  2  o y        .03135      .03269
+             31  2  o z        .26936      .30967
+             32  2  o x        .10511      .12370
+             33  2  o y        .00556      .02940
+             34  2  o z        .04396      .10926
+             35       rr      -.09890      .23091
+             36     xx-yy      .00021      .00022
+             37     zz-rr      .00542      .00744
+             38  2  o xy       .00000      .00000
+             39  2  o xz       .00369      .00365
+             40  2  o yz       .00223      .00384
+             41  3  h s        .11041      .10913
+             42  3  h s        .17063      .16635
+             43  3  h s        .00332      .06560
+             44  3  h x        .00044      .00143
+             45  3  h y        .00635      .01684
+             46  3  h z        .00270      .00702
+             47  4  h s        .11041      .10913
+             48  4  h s        .17063      .16635
+             49  4  h s        .00332      .06560
+             50  4  h x        .00044      .00143
+             51  4  h y        .00635      .01684
+             52  4  h z        .00270      .00702
+
+          ----- condensed to atoms -----
+
+
+          ----- total gross population on atoms ----
+
+              1  c            6.0     3.05657     2.94187
+              2  o            8.0     3.35573     3.32540
+              3  h            1.0      .29385      .36637
+              4  h            1.0      .29385      .36637
+
+          ----- aos spin population ------
+
+              1  1  c s       -.00065     -.00125
+              2  1  c s        .00124     -.00016
+              3  1  c s       -.00212     -.00485
+              4  1  c s       -.03925     -.00829
+              5  1  c s       -.02847     -.00660
+              6  1  c x       -.06168     -.05656
+              7  1  c y       -.02478     -.01827
+              8  1  c z       -.03110     -.02339
+              9  1  c x       -.06279     -.05206
+             10  1  c y       -.04898     -.01126
+             11  1  c z       -.02603     -.00859
+             12  1  c x       -.00628     -.01409
+             13  1  c y       -.01040     -.00130
+             14  1  c z        .00150     -.00345
+             15       rr       .00210     -.00693
+             16     xx-yy      .00085      .00157
+             17     zz-rr     -.00013      .00339
+             18  1  c xy       .00000      .00000
+             19  1  c xz      -.00151      .00126
+             20  1  c yz       .02057      .04203
+             21  2  o s        .00017      .00111
+             22  2  o s       -.00178      .00042
+             23  2  o s        .00781      .00969
+             24  2  o s        .03789      .01192
+             25  2  o s        .00398     -.00760
+             26  2  o x        .09114      .08837
+             27  2  o y        .47622      .45655
+             28  2  o z        .02126      .01900
+             29  2  o x        .05373      .04540
+             30  2  o y        .36219      .34385
+             31  2  o z        .00845     -.00037
+             32  2  o x       -.01125     -.00920
+             33  2  o y        .05483      .06938
+             34  2  o z       -.01352     -.00933
+             35       rr       .00220      .00931
+             36     xx-yy     -.00006     -.00006
+             37     zz-rr     -.00025     -.00047
+             38  2  o xy       .00000      .00000
+             39  2  o xz      -.00091     -.00139
+             40  2  o yz      -.00005     -.00068
+             41  3  h s        .03099      .03308
+             42  3  h s        .07402      .03892
+             43  3  h s        .00795      .00430
+             44  3  h x       -.00023     -.00086
+             45  3  h y        .00056     -.00217
+             46  3  h z       -.00036     -.00182
+             47  4  h s        .03099      .03308
+             48  4  h s        .07402      .03892
+             49  4  h s        .00795      .00430
+             50  4  h x       -.00023     -.00086
+             51  4  h y        .00056     -.00217
+             52  4  h z       -.00036     -.00182
+
+          ----- atomic spin population -----
+
+              1  c            6.0     -.31790     -.16880
+              2  o            8.0     1.09205     1.02591
+              3  h            1.0      .11293      .07144
+              4  h            1.0      .11293      .07144
+
+
+ ---------------------------------------------------------------------------------------------------------------------------------
+
+          ---------------------------------------
+          mulliken and lowdin population analyses               all electrons
+          ---------------------------------------
+
+          ----- total gross population in aos ------
+
+              1  1  c s       1.11515     1.07066
+              2  1  c s        .82223      .79615
+              3  1  c s        .13997      .26675
+              4  1  c s        .83273      .33210
+              5  1  c s        .31510      .25741
+              6  1  c x        .20359      .18062
+              7  1  c y        .64339      .54380
+              8  1  c z        .57579      .50572
+              9  1  c x        .20487      .19904
+             10  1  c y        .50939      .47517
+             11  1  c z        .23914      .34034
+             12  1  c x        .00876      .05708
+             13  1  c y        .05674      .12026
+             14  1  c z        .00748      .09189
+             15       rr       .03667      .33335
+             16     xx-yy      .00748      .00763
+             17     zz-rr      .02755      .05177
+             18  1  c xy       .00000      .00000
+             19  1  c xz       .02844      .04196
+             20  1  c yz       .02079      .04325
+             21  2  o s       1.06705     1.04822
+             22  2  o s        .86589      .82285
+             23  2  o s        .03595      .33804
+             24  2  o s       1.46514      .48633
+             25  2  o s        .61788      .43274
+             26  2  o x        .69779      .65077
+             27  2  o y        .52446      .49654
+             28  2  o z        .74195      .67621
+             29  2  o x        .64982      .62242
+             30  2  o y        .42489      .40924
+             31  2  o z        .54716      .61896
+             32  2  o x        .19896      .23820
+             33  2  o y        .06594      .12818
+             34  2  o z        .07440      .20919
+             35       rr      -.19560      .47112
+             36     xx-yy      .00037      .00037
+             37     zz-rr      .01059      .01441
+             38  2  o xy       .00000      .00000
+             39  2  o xz       .00647      .00590
+             40  2  o yz       .00441      .00701
+             41  3  h s        .25180      .25134
+             42  3  h s        .41529      .37161
+             43  3  h s        .01459      .13551
+             44  3  h x        .00064      .00200
+             45  3  h y        .01327      .03151
+             46  3  h z        .00503      .01221
+             47  4  h s        .25180      .25134
+             48  4  h s        .41529      .37161
+             49  4  h s        .01459      .13551
+             50  4  h x        .00064      .00200
+             51  4  h y        .01327      .03151
+             52  4  h z        .00503      .01221
+
+          ----- condensed to atoms -----
+
+
+          ----- total gross population on atoms ----
+
+              1  c            6.0     5.79524     5.71494
+              2  o            8.0     7.80351     7.67671
+              3  h            1.0      .70062      .80417
+              4  h            1.0      .70062      .80417
+
+
+ ---------------------------------------------------------------------------------------------------------------------------------
+
+          -------------------
+          atomic spin density
+          -------------------
+
+              1  c            6.0     -.19182
+              2  o            8.0      .29325
+              3  h            1.0      .07834
+              4  h            1.0      .07834
+
+
+          ----- spinfree UHF natural orbital occupations -----
+
+               2.0000000     1.9999993     1.9996162     1.9993253     1.9983181     1.9971341     1.9868893     1.0000000
+
+                .0131107      .0028659      .0016819      .0006747      .0003838      .0000007      .0000000      .0000000
+
+                .0000000      .0000000      .0000000      .0000000      .0000000      .0000000      .0000000      .0000000
+
+                .0000000      .0000000      .0000000      .0000000      .0000000      .0000000      .0000000      .0000000
+
+                .0000000      .0000000      .0000000      .0000000      .0000000      .0000000      .0000000      .0000000
+
+                .0000000      .0000000      .0000000      .0000000      .0000000      .0000000      .0000000      .0000000
+
+                .0000000      .0000000      .0000000      .0000000
+
+
+
+
+ end of wavefunction analysis at   262.95 seconds.
+
+ ---------------------------------------------------------------------------------------------------------------------------------
+
+
+
+ ************************************************************
+ ************************************************************
+ *                                                          *
+ *     job  option  complete at    262.95          seconds  *
+ *                                                          *
+ ************************************************************
+ ************************************************************
+
+
+
+
+ end of  G A M E S S   program at    262.95 seconds
+
+
+
+ ******************************************************************************
+ gamess timing analysis
+ task                         cpu (seconds)   percent  wall (seconds)   percent
+ ******************************************************************************
+ input                                  .22       .08            1.18       .42
+ vector generation                      .66       .25             .96       .34
+ 1e-integral evaluation                 .27       .10             .38       .14
+ 2e-integral evaluation              228.31     86.85          231.29     82.40
+ scf                                   7.82      2.97           18.60      6.63
+ 1e-integral derivatives               1.13       .43            1.31       .47
+ 2e-integral derivatives              23.89      9.09           24.54      8.74
+ wave-function analysis                 .33       .13             .85       .30
+ other                                  .26       .10            1.58       .56
+ ******************************************************************************
+ Total                               262.89                    280.68
+ ******************************************************************************
+
+ matrix operations (seconds)
+ ===========================
+ diagonalisation (jacobi)       .00
+ orthogonalisation (orfog)      .00
+ fock-build (dbuild)            .00
+ DIIS (mult2 etc)              1.02
+ q*hq (mult2)                  2.00
+ ===========================
+
+
+ ---------------interval timings-----------------
+ -----------------node  0  ------------------
+ entire          262.890      280.905      1
+ nxtval            1.180        1.826   3631
+ --------------- timing tree -----------------
+ node= 0
+ entire                          262.89  280.91
+
+
+ *summary of dumpfile on ed3  at block       1
+ *
+ *current length=     306 blocks
+ *
+ *maximum length=   99999 blocks
+ *
+ *section type   block  length
+ *      1    3     247      12
+ *      2    3     259      12
+ *    190   90     271       3
+ *    205    5     205       3
+ *    206    6     208       3
+ *    207    7     275       3
+ *    208    8     278      12
+ *    209    9     290       1
+ *    210   10     291       3
+ *    211   11     294      12
+ *    212   12     306       1
+ *    213   13     127       1
+ *    244   44     125       1
+ *    253   53     159       2
+ *    303  103     126       1
+ *    408  101       7      12
+ *    420  100      73      52
+ *    467  167     237      10
+ *    471  171     211      26
+ *    489   80     195      10
+ *    490   51     179       1
+ *    491    1      59      14
+ *    492    2     161      18
+ *    493   15       6       1
+ *    494   16     274       1
+ *    495   17     188       7
+ *    496   18      19      40
+ *    497   19     180       8
+ *    501   21       2       4
+ *    502   22     132      12
+ *    503   22     144      15
+ *    504   23     128       4
+
+ file positions
+ lfn   block  length
+ ===================
+
+ ed3        6       6
+ ed7       32      32
+
+ *%*%*%*%*%*%*%*%*%*%*%*%*%*%*%*%*%*%*%*%*%*%*%*%*%*%*%*%*%
+   SHORT TOTAL NODE TIMINGS   (seconds)        
+ *%*%*%*%*%*%*%*%*%*%*%*%*%*%*%*%*%*%*%*%*%*%*%*%*%*%*%*%*%
+       total             280.7700
+        ggop                .0000
+ *%*%*%*%*%*%*%*%*%*%*%*%*%*%*%*%*%*%*%*%*%*%*%*%*%*%*%*%*%
+                           open     find      get      put  
+ *%*%*%*%*%*%*%*%*%*%*%*%*%*%*%*%*%*%*%*%*%*%*%*%*%*%*%*%*%
+ srm  disk                   .00      .00      .00      .00
+ virt. disk                  .00      .00      .00      .00
+ cfs disk (node 0     )      .02      .00     9.29     2.35
+ cfs disk (# files    )      .00      .00      .00      .00
+ cfs disk (single file)      .00      .00      .00      .00
+ node memory                 .00      .00      .00      .00
+ Sortfile                    .00      .00      .00      .00
+ *%*%*%*%*%*%*%*%*%*%*%*%*%*%*%*%*%*%*%*%*%*%*%*%*%*%*%*%*%
+
+ test q
+ allocate
+ test q(iq)
+ test qq(ivoff+iq)
