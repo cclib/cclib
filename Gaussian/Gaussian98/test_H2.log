@@ -1,0 +1,682 @@
+ Entering Gaussian System, Link 0=/usr/local/g98-A.11.4/g98/g98
+ Input=water_test.com
+ Output=water_test.log
+ Initial command:
+ /usr/local/g98-A.11.4/g98/l1.exe /scratch/langner/g98-water_test.com-25475/Gau-2056.inp -scrdir=/scratch/langner/g98-water_test.com-25475/
+ Entering Link 1 = /usr/local/g98-A.11.4/g98/l1.exe PID=     22303.
+  
+ Copyright (c) 1988,1990,1992,1993,1995,1998 Gaussian, Inc.
+                  All Rights Reserved.
+  
+ This is part of the Gaussian(R) 98 program.  It is based on
+ the Gaussian 94(TM) system (copyright 1995 Gaussian, Inc.),
+ the Gaussian 92(TM) system (copyright 1992 Gaussian, Inc.),
+ the Gaussian 90(TM) system (copyright 1990 Gaussian, Inc.),
+ the Gaussian 88(TM) system (copyright 1988 Gaussian, Inc.),
+ the Gaussian 86(TM) system (copyright 1986 Carnegie Mellon
+ University), and the Gaussian 82(TM) system (copyright 1983
+ Carnegie Mellon University). Gaussian is a federally registered
+ trademark of Gaussian, Inc.
+  
+ This software contains proprietary and confidential information,
+ including trade secrets, belonging to Gaussian, Inc.
+  
+ This software is provided under written license and may be
+ used, copied, transmitted, or stored only in accord with that
+ written license.
+  
+ The following legend is applicable only to US Government
+ contracts under DFARS:
+  
+                    RESTRICTED RIGHTS LEGEND
+  
+ Use, duplication or disclosure by the US Government is subject
+ to restrictions as set forth in subparagraph (c)(1)(ii) of the
+ Rights in Technical Data and Computer Software clause at DFARS
+ 252.227-7013.
+  
+ Gaussian, Inc.
+ Carnegie Office Park, Building 6, Pittsburgh, PA 15106 USA
+  
+ The following legend is applicable only to US Government
+ contracts under FAR:
+  
+                    RESTRICTED RIGHTS LEGEND
+  
+ Use, reproduction and disclosure by the US Government is subject
+ to restrictions as set forth in subparagraph (c) of the
+ Commercial Computer Software - Restricted Rights clause at FAR
+ 52.227-19.
+  
+ Gaussian, Inc.
+ Carnegie Office Park, Building 6, Pittsburgh, PA 15106 USA
+  
+  
+ ---------------------------------------------------------------
+ Warning -- This program may not be used in any manner that
+ competes with the business of Gaussian, Inc. or will provide
+ assistance to any competitor of Gaussian, Inc.  The licensee
+ of this program is prohibited from giving any competitor of
+ Gaussian, Inc. access to this program.  By using this program,
+ the user acknowledges that Gaussian, Inc. is engaged in the
+ business of creating and licensing software in the field of
+ computational chemistry and represents and warrants to the
+ licensee that it is not a competitor of Gaussian, Inc. and that
+ it will not use this program in any manner prohibited above.
+ ---------------------------------------------------------------
+  
+
+ Cite this work as:
+ Gaussian 98, Revision A.11.4,
+ M. J. Frisch, G. W. Trucks, H. B. Schlegel, G. E. Scuseria, 
+ M. A. Robb, J. R. Cheeseman, V. G. Zakrzewski, J. A. Montgomery, Jr., 
+ R. E. Stratmann, J. C. Burant, S. Dapprich, J. M. Millam, 
+ A. D. Daniels, K. N. Kudin, M. C. Strain, O. Farkas, J. Tomasi, 
+ V. Barone, M. Cossi, R. Cammi, B. Mennucci, C. Pomelli, C. Adamo, 
+ S. Clifford, J. Ochterski, G. A. Petersson, P. Y. Ayala, Q. Cui, 
+ K. Morokuma, N. Rega, P. Salvador, J. J. Dannenberg, D. K. Malick, 
+ A. D. Rabuck, K. Raghavachari, J. B. Foresman, J. Cioslowski, 
+ J. V. Ortiz, A. G. Baboul, B. B. Stefanov, G. Liu, A. Liashenko, 
+ P. Piskorz, I. Komaromi, R. Gomperts, R. L. Martin, D. J. Fox, 
+ T. Keith, M. A. Al-Laham, C. Y. Peng, A. Nanayakkara, M. Challacombe, 
+ P. M. W. Gill, B. Johnson, W. Chen, M. W. Wong, J. L. Andres, 
+ C. Gonzalez, M. Head-Gordon, E. S. Replogle, and J. A. Pople, 
+ Gaussian, Inc., Pittsburgh PA, 2002.
+
+ ***********************************************
+ Gaussian 98:  x86-Linux-G98RevA.11.4 7-May-2002
+                    1-Jun-2007 
+ ***********************************************
+ Default route:  MAXDISK=15GB
+ ---------------------------------------------------------------
+ #P STO-3G SCF(MaxCycle=500,conver=8) Pop=(NPA) Freq IOP(7/33=1)
+ ---------------------------------------------------------------
+ 1/10=4,30=1,38=1/1,3;
+ 2/17=6,18=5,40=1/2;
+ 3/11=9,25=1,30=1/1,2,3;
+ 4//1;
+ 5/5=2,6=8,7=500,38=4/2;
+ 8/6=4,11=11,27=2013265920/1;
+ 10/13=10/2;
+ 11/6=2,8=1,9=11,15=111,16=11/1,2,10;
+ 10/6=1/2;
+ 6/7=2,8=2,9=2,10=2,18=1,28=1,40=-1/1,7;
+ 7/8=1,10=1,25=1,33=1/1,2,3,16;
+ 1/10=4,30=1/3;
+ 99//99;
+ Leave Link    1 at Fri Jun  1 18:23:09 2007, MaxMem=          0 cpu:       0.1
+ (Enter /usr/local/g98-A.11.4/g98/l101.exe)
+ ----
+ Test
+ ----
+ Symbolic Z-matrix:
+ Charge =  0 Multiplicity = 1
+ H
+ H                    1    R1
+       Variables:
+  R1                    2.5                      
+ Leave Link  101 at Fri Jun  1 18:23:09 2007, MaxMem=   52428800 cpu:       0.1
+ (Enter /usr/local/g98-A.11.4/g98/l103.exe)
+
+ GradGradGradGradGradGradGradGradGradGradGradGradGradGradGradGradGradGrad
+ Berny optimization.
+ Initialization pass.
+                       ----------------------------
+                       !    Initial Parameters    !
+                       ! (Angstroms and Degrees)  !
+ ----------------------                            ----------------------
+ !      Name          Value   Derivative information (Atomic Units)     !
+ ------------------------------------------------------------------------
+ !       R1          2.5      calculate D2E/DX2 analytically            !
+ ------------------------------------------------------------------------
+ Trust Radius=3.00D-01 FncErr=1.00D-07 GrdErr=1.00D-07
+ Number of steps in this run=  20 maximum allowed number of steps= 100.
+ GradGradGradGradGradGradGradGradGradGradGradGradGradGradGradGradGradGrad
+
+ Leave Link  103 at Fri Jun  1 18:23:09 2007, MaxMem=   52428800 cpu:       0.0
+ (Enter /usr/local/g98-A.11.4/g98/l202.exe)
+ ------------------------------------------------------------------------
+                         Z-MATRIX (ANGSTROMS AND DEGREES)
+ CD Cent Atom  N1     Length/X     N2    Alpha/Y     N3     Beta/Z      J
+ ------------------------------------------------------------------------
+   1   1  H 
+   2   2  H     1   2.500000(  1)
+ ------------------------------------------------------------------------
+                         Z-Matrix orientation:                         
+ ---------------------------------------------------------------------
+ Center     Atomic     Atomic              Coordinates (Angstroms)
+ Number     Number      Type              X           Y           Z
+ ---------------------------------------------------------------------
+    1          1             0        0.000000    0.000000    0.000000
+    2          1             0        0.000000    0.000000    2.500000
+ ---------------------------------------------------------------------
+ Stoichiometry    H2
+ Framework group  D*H[C*(H.H)]
+ Deg. of freedom    1
+ Full point group                 D*H     NOp   8
+ Largest Abelian subgroup         D2H     NOp   8
+ Largest concise Abelian subgroup C2      NOp   2
+                         Standard orientation:                         
+ ---------------------------------------------------------------------
+ Center     Atomic     Atomic              Coordinates (Angstroms)
+ Number     Number      Type              X           Y           Z
+ ---------------------------------------------------------------------
+    1          1             0        0.000000    0.000000    1.250000
+    2          1             0        0.000000    0.000000   -1.250000
+ ---------------------------------------------------------------------
+ Rotational constants (GHZ):      0.0000000    160.4656534    160.4656534
+ Isotopes: H-1,H-1
+ Leave Link  202 at Fri Jun  1 18:23:09 2007, MaxMem=   52428800 cpu:       0.1
+ (Enter /usr/local/g98-A.11.4/g98/l301.exe)
+ Standard basis: STO-3G (5D, 7F)
+ There are     1 symmetry adapted basis functions of AG  symmetry.
+ There are     0 symmetry adapted basis functions of B1G symmetry.
+ There are     0 symmetry adapted basis functions of B2G symmetry.
+ There are     0 symmetry adapted basis functions of B3G symmetry.
+ There are     0 symmetry adapted basis functions of AU  symmetry.
+ There are     1 symmetry adapted basis functions of B1U symmetry.
+ There are     0 symmetry adapted basis functions of B2U symmetry.
+ There are     0 symmetry adapted basis functions of B3U symmetry.
+ Crude estimate of integral set expansion from redundant integrals=1.000.
+ Integral buffers will be    262144 words long.
+ Raffenetti 1 integral format.
+ Two-electron integral symmetry is turned on.
+     2 basis functions        6 primitive gaussians
+     1 alpha electrons        1 beta electrons
+       nuclear repulsion energy         0.2116708996 Hartrees.
+ Leave Link  301 at Fri Jun  1 18:23:09 2007, MaxMem=   52428800 cpu:       0.0
+ (Enter /usr/local/g98-A.11.4/g98/l302.exe)
+ One-electron integrals computed using PRISM.
+ One-electron integral symmetry used in STVInt
+ NBasis=     2 RedAO= T  NBF=     1     0     0     0     0     1     0     0
+ NBsUse=     2 1.00D-04 NBFU=     1     0     0     0     0     1     0     0
+ Leave Link  302 at Fri Jun  1 18:23:10 2007, MaxMem=   52428800 cpu:       1.1
+ (Enter /usr/local/g98-A.11.4/g98/l303.exe)
+ DipDrv:  MaxL=1.
+ Leave Link  303 at Fri Jun  1 18:23:11 2007, MaxMem=   52428800 cpu:       0.9
+ (Enter /usr/local/g98-A.11.4/g98/l401.exe)
+ Projected INDO Guess.
+ Initial guess orbital symmetries:
+       Occupied  (SGG)
+       Virtual   (SGU)
+ Leave Link  401 at Fri Jun  1 18:23:13 2007, MaxMem=   52428800 cpu:       1.1
+ (Enter /usr/local/g98-A.11.4/g98/l502.exe)
+ IExCor=   0 DFT=F Ex=HF Corr=None ScaHFX= 1.0000
+ ScaDFX=  0.0000  0.0000  0.0000  0.0000
+ IRadAn=      0 IRanWt=     -1 IRanGd=            0 ICorTp=0
+ Using DIIS extrapolation.
+ Closed shell SCF:
+ Requested convergence on RMS density matrix=1.00D-08 within 500 cycles.
+ Requested convergence on MAX density matrix=1.00D-06.
+ Integral symmetry usage will be decided dynamically.
+ Keep R1 integrals in memory in canonical form, NReq=      653152.
+ IEnd=    253132 IEndB=    253132 NGot=  52428800 MDV=  52427111
+ LenX=  52427111
+ Symmetry not used in FoFDir.
+ MinBra= 0 MaxBra= 0 Meth= 1.
+ IRaf=       0 NMat=   1 IRICut=       1 DoRegI=T DoRafI=F ISym2E= 0 JSym2E=0.
+
+ Cycle   1  Pass 1  IDiag 1:
+ E=-0.914614521883084D+00
+ DIIS: error= 0.00D+00 at cycle   1.
+ RMSDP=0.00D+00 MaxDP=0.00D+00
+
+ SCF Done:  E(RHF) = -0.702943622283     A.U. after    1 cycles
+             Convg  =    0.0000D+00             -V/T =  1.4922
+             S**2   =   0.0000
+ KE= 1.428024947912D+00 PE=-2.828319575316D+00 EE= 4.856801055207D-01
+ Leave Link  502 at Fri Jun  1 18:23:13 2007, MaxMem=   52428800 cpu:       0.0
+ (Enter /usr/local/g98-A.11.4/g98/l801.exe)
+ Range of M.O.s used for correlation:     1     2
+ NBasis=     2 NAE=     1 NBE=     1 NFC=     0 NFV=     0
+ NROrb=      2 NOA=     1 NOB=     1 NVA=     1 NVB=     1
+ Leave Link  801 at Fri Jun  1 18:23:13 2007, MaxMem=   52428800 cpu:       0.0
+ (Enter /usr/local/g98-A.11.4/g98/l1002.exe)
+ Minotr:  Closed-shell wavefunction.
+          Direct CPHF calculation.
+          Solving linear equations simultaneously.
+          Using symmetry in CPHF.
+          Requested convergence is 1.0D-08 RMS, and 1.0D-07 maximum.
+          Secondary convergence is 1.0D-12 RMS, and 1.0D-12 maximum.
+          Differentiating once with respect to electric field.
+                with respect to dipole field.
+          NewPWx=F KeepS1=T KeepF1=T KeepIn=T MapXYZ=F.
+          MDV=      52428800
+          Using IRadAn=       2.
+          Store integrals in memory, NReq=      410059.
+ Symmetry not used in FoFDir.
+ MinBra= 0 MaxBra= 0 Meth= 1.
+ IRaf=       0 NMat=   1 IRICut=       1 DoRegI=T DoRafI=F ISym2E= 0 JSym2E=0.
+          There are   3 degrees of freedom in the 1st order CPHF.
+   1 vectors were produced by pass  0.
+ AX will form   1 AO Fock derivatives at one time.
+ Inv2:  IOpt= 1 Iter= 1 AM= 0.00D+00 Conv= 1.00D-12.
+ Inverted reduced A of dimension   1 with in-core refinement.
+ Leave Link 1002 at Fri Jun  1 18:23:13 2007, MaxMem=   52428800 cpu:       0.0
+ (Enter /usr/local/g98-A.11.4/g98/l1101.exe)
+ Using compressed storage.
+ Will process   2 atoms per pass.
+ Leave Link 1101 at Fri Jun  1 18:23:14 2007, MaxMem=   52428800 cpu:       1.2
+ (Enter /usr/local/g98-A.11.4/g98/l1102.exe)
+ Use density number 0.
+ Leave Link 1102 at Fri Jun  1 18:23:15 2007, MaxMem=   52428800 cpu:       0.9
+ (Enter /usr/local/g98-A.11.4/g98/l1110.exe)
+ Forming Gx(P) for the SCF density.
+ Integral derivatives from FoFDir, PRISM(SPDF).
+ Do as many integral derivatives as possible in FoFDir.
+ G2DrvN: MDV=  52428800.
+ G2DrvN: will do    2 atoms at a time, making    1 passes doing MaxLOS=1.
+ Petite list used in FoFDir.
+ MinBra= 0 MaxBra= 0 Meth= 1.
+ IRaf=       0 NMat=   1 IRICut=       1 DoRegI=T DoRafI=F ISym2E= 1 JSym2E=1.
+ FoFDir used for L=0 through L=1.
+ Leave Link 1110 at Fri Jun  1 18:23:15 2007, MaxMem=   52428800 cpu:       0.0
+ (Enter /usr/local/g98-A.11.4/g98/l1002.exe)
+ Minotr:  Closed-shell wavefunction.
+          Direct CPHF calculation.
+          Solving linear equations simultaneously.
+          Using symmetry in CPHF.
+          Requested convergence is 1.0D-08 RMS, and 1.0D-07 maximum.
+          Secondary convergence is 1.0D-12 RMS, and 1.0D-12 maximum.
+          Differentiating once with respect to electric field.
+                with respect to dipole field.
+          Differentiating once with respect to nuclear coordinates.
+          NewPWx=T KeepS1=F KeepF1=F KeepIn=F MapXYZ=F.
+          MDV=      52428800
+          Using IRadAn=       2.
+          Store integrals in memory, NReq=      410078.
+ Symmetry not used in FoFDir.
+ MinBra= 0 MaxBra= 0 Meth= 1.
+ IRaf=       0 NMat=   1 IRICut=       1 DoRegI=T DoRafI=F ISym2E= 0 JSym2E=0.
+          There are   6 degrees of freedom in the 1st order CPHF.
+   1 vectors were produced by pass  0.
+ AX will form   1 AO Fock derivatives at one time.
+ Inv2:  IOpt= 1 Iter= 1 AM= 0.00D+00 Conv= 1.00D-12.
+ Inverted reduced A of dimension   1 with in-core refinement.
+ Leave Link 1002 at Fri Jun  1 18:23:16 2007, MaxMem=   52428800 cpu:       0.9
+ (Enter /usr/local/g98-A.11.4/g98/l601.exe)
+ Copying SCF densities to generalized density rwf, ISCF=0 IROHF=0.
+
+ **********************************************************************
+
+            Population analysis using the SCF density.
+
+ **********************************************************************
+
+ Orbital Symmetries:
+       Occupied  (SGG)
+       Virtual   (SGU)
+  The electronic state is 1-SGG.
+ Alpha  occ. eigenvalues --   -0.21447
+ Alpha virt. eigenvalues --    0.04995
+          Condensed to atoms (all electrons):
+              1          2
+  1  H    0.952818   0.047182
+  2  H    0.047182   0.952818
+ Total atomic charges:
+              1
+  1  H    0.000000
+  2  H    0.000000
+ Sum of Mulliken charges=   0.00000
+ Atomic charges with hydrogens summed into heavy atoms:
+              1
+  1  H    0.000000
+  2  H    0.000000
+ Sum of Mulliken charges=   0.00000
+ Electronic spatial extent (au):  <R**2>=    14.7403
+ Charge=     0.0000 electrons
+ Dipole moment (Debye):
+    X=     0.0000    Y=     0.0000    Z=     0.0000  Tot=     0.0000
+ Quadrupole moment (Debye-Ang):
+   XX=    -1.8088   YY=    -1.8088   ZZ=    -1.1985
+   XY=     0.0000   XZ=     0.0000   YZ=     0.0000
+ Octapole moment (Debye-Ang**2):
+  XXX=     0.0000  YYY=     0.0000  ZZZ=     0.0000  XYY=     0.0000
+  XXY=     0.0000  XXZ=     0.0000  XZZ=     0.0000  YZZ=     0.0000
+  YYZ=     0.0000  XYZ=     0.0000
+ Hexadecapole moment (Debye-Ang**3):
+ XXXX=    -1.4970 YYYY=    -1.4970 ZZZZ=   -16.1517 XXXY=     0.0000
+ XXXZ=     0.0000 YYYX=     0.0000 YYYZ=     0.0000 ZZZX=     0.0000
+ ZZZY=     0.0000 XXYY=    -0.4990 XXZZ=    -3.1159 YYZZ=    -3.1159
+ XXYZ=     0.0000 YYXZ=     0.0000 ZZXY=     0.0000
+ N-N= 2.116708996000D-01 E-N=-2.828319575316D+00  KE= 1.428024947912D+00
+ Symmetry AG   KE= 1.428024947912D+00
+ Symmetry B1G  KE= 0.000000000000D+00
+ Symmetry B2G  KE= 0.000000000000D+00
+ Symmetry B3G  KE= 0.000000000000D+00
+ Symmetry AU   KE= 0.000000000000D+00
+ Symmetry B1U  KE= 0.000000000000D+00
+ Symmetry B2U  KE= 0.000000000000D+00
+ Symmetry B3U  KE= 0.000000000000D+00
+  Exact polarizability:   0.000   0.000   0.000   0.000   0.000  36.208
+ Approx polarizability:   0.000   0.000   0.000   0.000   0.000  84.616
+ Leave Link  601 at Fri Jun  1 18:23:17 2007, MaxMem=   52428800 cpu:       0.9
+ (Enter /usr/local/g98-A.11.4/g98/l607.exe)
+ ******************************Gaussian NBO Version 3.1******************************
+             N A T U R A L   A T O M I C   O R B I T A L   A N D
+          N A T U R A L   B O N D   O R B I T A L   A N A L Y S I S
+ ******************************Gaussian NBO Version 3.1******************************
+       /RESON  / : Allow strongly delocalized NBO set
+
+ Analyzing the SCF density
+
+ Job title: Test                                                            
+
+ Storage needed:        32 in NPA (  52428800 available)
+
+
+ NATURAL POPULATIONS:  Natural atomic orbital occupancies 
+                                                          
+  NAO Atom No lang   Type(AO)    Occupancy      Energy    
+ ---------------------------------------------------------
+   1    H  1  s      Val( 1s)     1.00000      -0.08226
+
+   2    H  2  s      Val( 1s)     1.00000      -0.08226
+
+
+ Summary of Natural Population Analysis:                  
+                                                          
+                                       Natural Population 
+               Natural   -----------------------------------------------
+    Atom No    Charge        Core      Valence    Rydberg      Total
+ -----------------------------------------------------------------------
+      H  1    0.00000      0.00000     1.00000    0.00000     1.00000
+      H  2    0.00000      0.00000     1.00000    0.00000     1.00000
+ =======================================================================
+   * Total *  0.00000      0.00000     2.00000    0.00000     2.00000
+
+                                 Natural Population      
+ --------------------------------------------------------
+   Valence                    2.00000 (100.0000% of   2)
+   Natural Minimal Basis      2.00000 (100.0000% of   2)
+   Natural Rydberg Basis      0.00000 (  0.0000% of   2)
+ --------------------------------------------------------
+
+    Atom No         Natural Electron Configuration
+ ----------------------------------------------------------------------------
+      H  1            1s( 1.00)
+      H  2            1s( 1.00)
+
+
+ NBO analysis skipped by request.
+ Leave Link  607 at Fri Jun  1 18:23:18 2007, MaxMem=   52428800 cpu:       0.9
+ (Enter /usr/local/g98-A.11.4/g98/l701.exe)
+ Compute integral second derivatives.
+ ... and contract with generalized density number  0.
+ Use density number 0.
+ Entering DenBas...
+ Calculate overlap and kinetic energy integrals
+    NBasis =   2  MinDer = 2  MaxDer = 2
+ Requested accuracy = 0.1000D-12
+ PRISM was handed 52428087 working-precision words and     3 shell-pairs
+ Entering DenBas...
+ Calculate potential energy integrals
+    NBasis =   2  MinDer = 2  MaxDer = 2
+ Requested accuracy = 0.1000D-12
+ PRISM was handed 52428069 working-precision words and     3 shell-pairs
+ Hessian after L701:
+             1             2             3             4             5
+   1  0.273600D-01
+   2  0.000000D+00  0.273600D-01
+   3  0.000000D+00  0.000000D+00 -0.926198D-01
+   4 -0.273600D-01  0.000000D+00  0.000000D+00  0.273600D-01
+   5  0.000000D+00 -0.273600D-01  0.000000D+00  0.000000D+00  0.273600D-01
+   6  0.000000D+00  0.000000D+00  0.926198D-01  0.000000D+00  0.000000D+00
+             6
+   6 -0.926198D-01
+ Leave Link  701 at Fri Jun  1 18:23:20 2007, MaxMem=   52428800 cpu:       1.3
+ (Enter /usr/local/g98-A.11.4/g98/l702.exe)
+ L702 exits ... SP integral derivatives will be done elsewhere.
+ Leave Link  702 at Fri Jun  1 18:23:20 2007, MaxMem=   52428800 cpu:       0.0
+ (Enter /usr/local/g98-A.11.4/g98/l703.exe)
+ Compute integral second derivatives.
+ Integral derivatives from FoFDir, PRISM(SPDF).
+ ICntrl=12127.
+ Petite list used in FoFDir.
+ MinBra= 0 MaxBra= 0 Meth= 1.
+ IRaf=       0 NMat=   1 IRICut=       1 DoRegI=T DoRafI=F ISym2E= 1 JSym2E=1.
+ PRISM was handed 52428062 working-precision words and     3 shell-pairs
+ Force constants at end of L703 
+             1             2             3             4             5
+   1  0.137444D-01
+   2  0.000000D+00  0.137444D-01
+   3  0.000000D+00  0.000000D+00 -0.378029D-01
+   4 -0.137444D-01  0.000000D+00  0.000000D+00  0.137444D-01
+   5  0.000000D+00 -0.137444D-01  0.000000D+00  0.000000D+00  0.137444D-01
+   6  0.000000D+00  0.000000D+00  0.378029D-01  0.000000D+00  0.000000D+00
+             6
+   6 -0.378029D-01
+ Leave Link  703 at Fri Jun  1 18:23:20 2007, MaxMem=   52428800 cpu:       0.1
+ (Enter /usr/local/g98-A.11.4/g98/l716.exe)
+ FrcOut:
+ IF    =    20 IFX   =    26 IFXYZ =    32
+ IFFX  =    38 IFFFX =    59 IFLen =     6
+ IFFLen=    21 IFFFLn=     0 IEDerv=    59
+ LEDer1=    28 LE1N2=      0 LEDer3=    82
+ IFroze=   169 ICStrt=   200
+ Dipole        = 9.86076132D-32 0.00000000D+00 0.00000000D+00
+ DipoleDeriv   = 4.44089210D-16 0.00000000D+00 5.31042835D-33
+                 0.00000000D+00 4.44089210D-16 0.00000000D+00
+                 0.00000000D+00 0.00000000D+00 3.08869539D-16
+                 4.44089210D-16 0.00000000D+00-8.32077534D-33
+                 0.00000000D+00 4.44089210D-16 0.00000000D+00
+                -1.35498856D-17 0.00000000D+00 5.29001900D-16
+ Polarizability= 1.35748300D-31 0.00000000D+00 0.00000000D+00
+                -2.21701120D-15 0.00000000D+00 3.62077363D+01
+ PolarDeriv    =-9.38553508D-16-2.92312911D-49-5.84625821D-49
+                 7.66412411D+00-4.77398978D-33-4.30267586D-16
+                -2.92312911D-49-4.69276754D-16-1.16925164D-48
+                -4.77398978D-33 7.66412411D+00-7.79677447D-17
+                 4.30841493D-34-4.77398978D-33-9.54797955D-33
+                -8.66151885D-16-7.79677447D-17 1.54431653D+01
+                 9.38553508D-16 2.92312911D-49 5.84625821D-49
+                -7.66412411D+00 4.77398978D-33 4.30267586D-16
+                 2.92312911D-49 4.69276754D-16 1.16925164D-48
+                 4.77398978D-33-7.66412411D+00 7.79677447D-17
+                -4.30841493D-34 4.77398978D-33 9.54797955D-33
+                 8.66151885D-16 7.79677447D-17-1.54431653D+01
+ HyperPolar    = 1.62445425D-62 0.00000000D+00 0.00000000D+00
+                 0.00000000D+00-1.60976645D-46 0.00000000D+00
+                 0.00000000D+00 9.22426276D-31 0.00000000D+00
+                 1.27883017D-14
+ Full mass-weighted force constant matrix:
+ Low frequencies ----1407.9574   -0.0001    0.0001    0.0001  848.9648  848.9648
+ ******    1 imaginary frequencies (negative Signs) ****** 
+ Dipole derivatives wrt mode  1:  2.97993D-16  0.00000D+00 -4.84122D-15
+ Polarizability derivatives wrt mode  1:
+             1             2             3
+   1  0.000000D+00
+   2  0.000000D+00  0.000000D+00
+   3  0.000000D+00  0.000000D+00  0.609202D+01
+ AK= 2.03D+00 GK= 6.09D+00 Act= 4.45D+02 Depol= 3.33D-01
+ Harmonic frequencies (cm**-1), IR intensities (KM/Mole),
+ Raman scattering activities (A**4/AMU), Raman depolarization ratios,
+ reduced masses (AMU), force constants (mDyne/A) and normal coordinates:
+                           1
+                          SGG
+       Frequencies --- -1407.9574
+    Reduced masses ---     1.0078
+   Force constants ---     1.1771
+    IR Intensities ---     0.0000
+  Raman Activities ---   445.3520
+   Depolarizations ---     0.3333
+ Coord Atom Element:
+   1     1     1          0.00000
+   2     1     1          0.00000
+   3     1     1          0.70711
+   1     2     1          0.00000
+   2     2     1          0.00000
+   3     2     1         -0.70711
+ Harmonic frequencies (cm**-1), IR intensities (KM/Mole),
+ Raman scattering activities (A**4/AMU), Raman depolarization ratios,
+ reduced masses (AMU), force constants (mDyne/A) and normal coordinates:
+                     1
+                    SGG
+ Frequencies -- -1407.9574
+ Red. masses --     1.0078
+ Frc consts  --     1.1771
+ IR Inten    --     0.0000
+ Raman Activ --   445.3520
+ Depolar     --     0.3333
+ Atom AN      X      Y      Z
+   1   1     0.00   0.00   0.71
+   2   1     0.00   0.00  -0.71
+
+ -------------------
+ - Thermochemistry -
+ -------------------
+ Temperature   298.150 Kelvin.  Pressure   1.00000 Atm.
+ Atom  1 has atomic number  1 and mass   1.00783
+ Atom  2 has atomic number  1 and mass   1.00783
+ Molecular mass:     2.01565 amu.
+ Principal axes and moments of inertia in atomic units:
+                           1         2         3
+     EIGENVALUES --     0.00000  11.24690  11.24690
+           X            0.00000   1.00000   0.00000
+           Y            0.00000   0.00000   1.00000
+           Z            1.00000   0.00000   0.00000
+ THIS MOLECULE IS A PROLATE SYMMETRIC TOP.
+ ROTATIONAL SYMMETRY NUMBER  2.
+ ROTATIONAL TEMPERATURE (KELVIN)      7.70109
+ ROTATIONAL CONSTANT (GHZ)          160.465653
+    1 IMAGINARY FREQUENCIES IGNORED.
+ Zero-point vibrational energy          0.0 (Joules/Mol)
+                                    0.00000 (Kcal/Mol)
+ VIBRATIONAL TEMPERATURES: 
+          (KELVIN)
+ 
+ Zero-point correction=                           0.000000 (Hartree/Particle)
+ Thermal correction to Energy=                    0.002360
+ Thermal correction to Enthalpy=                  0.003305
+ Thermal correction to Gibbs Free Energy=        -0.013779
+ Sum of electronic and zero-point Energies=             -0.702944
+ Sum of electronic and thermal Energies=                -0.700583
+ Sum of electronic and thermal Enthalpies=              -0.699639
+ Sum of electronic and thermal Free Energies=           -0.716723
+ 
+                     E (Thermal)             CV                S
+                      KCAL/MOL        CAL/MOL-KELVIN    CAL/MOL-KELVIN
+ TOTAL                    1.481              4.968             35.956
+ ELECTRONIC               0.000              0.000              0.000
+ TRANSLATIONAL            0.889              2.981             28.080
+ ROTATIONAL               0.592              1.987              7.876
+ VIBRATIONAL              0.000              0.000              0.000
+                       Q            LOG10(Q)             LN(Q)
+ TOTAL BOT       0.217739D+07          6.337936         14.593636
+ TOTAL V=0       0.217739D+07          6.337936         14.593636
+ VIB (BOT)       0.100000D+01          0.000000          0.000000
+ VIB (V=0)       0.100000D+01          0.000000          0.000000
+ ELECTRONIC      0.100000D+01          0.000000          0.000000
+ TRANSLATIONAL   0.112482D+06          5.051083         11.630549
+ ROTATIONAL      0.193576D+02          1.286852          2.963087
+ ***** Axes restored to original set *****
+ -------------------------------------------------------------------
+ Center     Atomic                   Forces (Hartrees/Bohr)
+ Number     Number              X              Y              Z
+ -------------------------------------------------------------------
+    1          1           0.000000000    0.000000000    0.064932895
+    2          1           0.000000000    0.000000000   -0.064932895
+ -------------------------------------------------------------------
+ Cartesian Forces:  Max     0.064932895 RMS     0.037489024
+ FROM PUTF, CONTENTS OF FORCE 
+   1   -0.6493289496D-01
+ ------------------------------------------------------------------------
+           Internal Coordinate Forces (Hartree/Bohr or radian)
+ Cent Atom N1     Length/X     N2     Alpha/Y      N3      Beta/Z       J
+ ------------------------------------------------------------------------
+   1  H 
+   2  H     1  -0.064933(   1)
+ ------------------------------------------------------------------------
+ Internal  Forces:  Max     0.064932895 RMS     0.064932895
+ Force constants in Cartesian coordinates: 
+             1             2             3             4             5
+   1  0.137444D-01
+   2  0.000000D+00  0.137444D-01
+   3  0.000000D+00  0.000000D+00 -0.378029D-01
+   4 -0.137444D-01  0.000000D+00  0.000000D+00  0.137444D-01
+   5  0.000000D+00 -0.137444D-01  0.000000D+00  0.000000D+00  0.137444D-01
+   6  0.000000D+00  0.000000D+00  0.378029D-01  0.000000D+00  0.000000D+00
+             6
+   6 -0.378029D-01
+ FCInt: Cartesian first derivatives:
+            1            2
+   1 0.833063D-17-0.833063D-17
+   2 0.795172D-17-0.795172D-17
+   3 0.649329D-01-0.649329D-01
+ FCInt: Cartesian force constants:
+             1             2             3             4             5
+   1  0.137444D-01
+   2 -0.107975D-32  0.137444D-01
+   3 -0.830068D-17 -0.526499D-17 -0.378029D-01
+   4 -0.137444D-01  0.114572D-32  0.869168D-17  0.137444D-01
+   5  0.112165D-32 -0.137444D-01  0.526499D-17 -0.116940D-32  0.137444D-01
+   6  0.869168D-17  0.526499D-17  0.378029D-01 -0.908268D-17 -0.526499D-17
+             6
+   6 -0.378029D-01
+ Internal force constants: 
+             1
+   1 -0.378029D-01
+ FROM PUTFF, CONTENTS OF FRCNST 
+             1
+   1 -0.378029D-01
+ Force constants in internal coordinates: 
+             1
+   1 -0.378029D-01
+ Final forces over variables, Energy=-7.02943622D-01:
+ -6.49328950D-02
+ Leave Link  716 at Fri Jun  1 18:23:20 2007, MaxMem=   52428800 cpu:       0.0
+ (Enter /usr/local/g98-A.11.4/g98/l103.exe)
+
+ GradGradGradGradGradGradGradGradGradGradGradGradGradGradGradGradGradGrad
+ Berny optimization.
+ Search for a local minimum.
+ Step number   1 out of a maximum of  20
+ All quantities printed in internal units (Hartrees-Bohrs-Radians)
+ Second derivative matrix not updated -- analytic derivatives used.
+ The second derivative matrix:
+                          R1
+           R1          -0.03780
+     Eigenvalues ---   -0.03780
+ Eigenvalue   1 out of range, new value =    0.037803 Eigenvector:
+                           1
+           R1           1.00000
+ Quadratic step=1.718D+00 exceeds max=3.000D-01 adjusted using Lamda=-1.786D-01.
+ Angle between NR and scaled steps=   0.00 degrees.
+ Angle between quadratic step and forces=   0.00 degrees.
+ Linear search not attempted -- first point.
+ Variable       Old X    -DE/DX   Delta X   Delta X   Delta X     New X
+                                 (Linear)    (Quad)   (Total)
+    R1        4.72431  -0.06493   0.00000  -0.30001  -0.30001   4.42430
+         Item               Value     Threshold  Converged?
+ Maximum Force            0.064933     0.000450     NO 
+ RMS     Force            0.064933     0.000300     NO 
+ Maximum Displacement     0.300014     0.001800     NO 
+ RMS     Displacement     0.300014     0.001200     NO 
+ Predicted change in Energy=-1.701291D-03
+ GradGradGradGradGradGradGradGradGradGradGradGradGradGradGradGradGradGrad
+
+ Leave Link  103 at Fri Jun  1 18:23:20 2007, MaxMem=   52428800 cpu:       0.1
+ (Enter /usr/local/g98-A.11.4/g98/l9999.exe)
+
+ Test job not archived.
+ 1\1\GINC-UKLAD\Freq\RHF\STO-3G\H2\LANGNER\01-Jun-2007\1\\#P STO-3G SCF
+ (MAXCYCLE=500,CONVER=8) POP=(NPA) FREQ IOP(7/33=1)\\Test\\0,1\H\H,1,R1
+ \\R1=2.5\\Version=x86-Linux-G98RevA.11.4\State=1-SGG\HF=-0.7029436\RMS
+ D=0.000e+00\RMSF=3.749e-02\Dipole=0.,0.,0.\DipoleDeriv=0.,0.,0.,0.,0.,
+ 0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.\Polar=0.,0.,0.,0.,0.,36.2077363
+ \PolarDeriv=0.,0.,0.,-7.6641241,0.,0.,0.,0.,0.,0.,-7.6641241,0.,0.,0.,
+ 0.,0.,0.,-15.4431653,0.,0.,0.,7.6641241,0.,0.,0.,0.,0.,0.,7.6641241,0.
+ ,0.,0.,0.,0.,0.,15.4431653\HyperPolar=0.,0.,0.,0.,0.,0.,0.,0.,0.,0.\PG
+ =D*H [C*(H1.H1)]\NImag=1\\0.01374440,0.,0.01374440,0.,0.,-0.03780294,-
+ 0.01374440,0.,0.,0.01374440,0.,-0.01374440,0.,0.,0.01374440,0.,0.,0.03
+ 780294,0.,0.,-0.03780294\\0.,0.,-0.06493289,0.,0.,0.06493289\\\@
+
+
+ LET US PLACE AT THE END OF EVERY CHAPTER.....THE
+ TWO LETTERS USED BY THE ROMAN JUDGES WHEN THEY DID
+ NOT UNDERSTAND A PLEADING.
+ N. L. -NON LIQUET- IT IS NOT CLEAR.
+                                              -- VOLTAIRE
+ Job cpu time:  0 days  0 hours  0 minutes 11.3 seconds.
+ File lengths (MBytes):  RWF=   10 Int=    0 D2E=    0 Chk=    5 Scr=    1
+ Normal termination of Gaussian 98.

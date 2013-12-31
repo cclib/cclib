@@ -1,0 +1,336 @@
+ Entering Link 1 = C:\G03W\l1.exe PID=      4432.
+  
+ Copyright (c) 1988,1990,1992,1993,1995,1998,2003, Gaussian, Inc.
+                  All Rights Reserved.
+  
+ This is the Gaussian(R) 03 program.  It is based on the
+ the Gaussian(R) 98 system (copyright 1998, Gaussian, Inc.),
+ the Gaussian(R) 94 system (copyright 1995, Gaussian, Inc.),
+ the Gaussian 92(TM) system (copyright 1992, Gaussian, Inc.),
+ the Gaussian 90(TM) system (copyright 1990, Gaussian, Inc.),
+ the Gaussian 88(TM) system (copyright 1988, Gaussian, Inc.),
+ the Gaussian 86(TM) system (copyright 1986, Carnegie Mellon
+ University), and the Gaussian 82(TM) system (copyright 1983,
+ Carnegie Mellon University). Gaussian is a federally registered
+ trademark of Gaussian, Inc.
+  
+ This software contains proprietary and confidential information,
+ including trade secrets, belonging to Gaussian, Inc.
+  
+ This software is provided under written license and may be
+ used, copied, transmitted, or stored only in accord with that
+ written license.
+  
+ The following legend is applicable only to US Government
+ contracts under DFARS:
+  
+                    RESTRICTED RIGHTS LEGEND
+  
+ Use, duplication or disclosure by the US Government is subject
+ to restrictions as set forth in subparagraph (c)(1)(ii) of the
+ Rights in Technical Data and Computer Software clause at DFARS
+ 252.227-7013.
+  
+ Gaussian, Inc.
+ Carnegie Office Park, Building 6, Pittsburgh, PA 15106 USA
+  
+ The following legend is applicable only to US Government
+ contracts under FAR:
+  
+                    RESTRICTED RIGHTS LEGEND
+  
+ Use, reproduction and disclosure by the US Government is subject
+ to restrictions as set forth in subparagraph (c) of the
+ Commercial Computer Software - Restricted Rights clause at FAR
+ 52.227-19.
+  
+ Gaussian, Inc.
+ Carnegie Office Park, Building 6, Pittsburgh, PA 15106 USA
+  
+  
+ ---------------------------------------------------------------
+ Warning -- This program may not be used in any manner that
+ competes with the business of Gaussian, Inc. or will provide
+ assistance to any competitor of Gaussian, Inc.  The licensee
+ of this program is prohibited from giving any competitor of
+ Gaussian, Inc. access to this program.  By using this program,
+ the user acknowledges that Gaussian, Inc. is engaged in the
+ business of creating and licensing software in the field of
+ computational chemistry and represents and warrants to the
+ licensee that it is not a competitor of Gaussian, Inc. and that
+ it will not use this program in any manner prohibited above.
+ ---------------------------------------------------------------
+  
+
+ Cite this work as:
+ Gaussian 03, Revision B.05,
+ M. J. Frisch, G. W. Trucks, H. B. Schlegel, G. E. Scuseria, 
+ M. A. Robb, J. R. Cheeseman, J. A. Montgomery, Jr., T. Vreven, 
+ K. N. Kudin, J. C. Burant, J. M. Millam, S. S. Iyengar, J. Tomasi, 
+ V. Barone, B. Mennucci, M. Cossi, G. Scalmani, N. Rega, 
+ G. A. Petersson, H. Nakatsuji, M. Hada, M. Ehara, K. Toyota, 
+ R. Fukuda, J. Hasegawa, M. Ishida, T. Nakajima, Y. Honda, O. Kitao, 
+ H. Nakai, M. Klene, X. Li, J. E. Knox, H. P. Hratchian, J. B. Cross, 
+ C. Adamo, J. Jaramillo, R. Gomperts, R. E. Stratmann, O. Yazyev, 
+ A. J. Austin, R. Cammi, C. Pomelli, J. W. Ochterski, P. Y. Ayala, 
+ K. Morokuma, G. A. Voth, P. Salvador, J. J. Dannenberg, 
+ V. G. Zakrzewski, S. Dapprich, A. D. Daniels, M. C. Strain, 
+ O. Farkas, D. K. Malick, A. D. Rabuck, K. Raghavachari, 
+ J. B. Foresman, J. V. Ortiz, Q. Cui, A. G. Baboul, S. Clifford, 
+ J. Cioslowski, B. B. Stefanov, G. Liu, A. Liashenko, P. Piskorz, 
+ I. Komaromi, R. L. Martin, D. J. Fox, T. Keith, M. A. Al-Laham, 
+ C. Y. Peng, A. Nanayakkara, M. Challacombe, P. M. W. Gill, 
+ B. Johnson, W. Chen, M. W. Wong, C. Gonzalez, and J. A. Pople, 
+ Gaussian, Inc., Pittsburgh PA, 2003.
+ 
+ **********************************************
+ Gaussian 03:  x86-Win32-G03RevB.05  8-Nov-2003
+                  22-Jun-2009 
+ **********************************************
+ %chk=C:\Users\User1\Documents\NetBeansProjects\RMGdev\build\classes\Gaussianfile
+ s\RMGrunCHKfile.chk
+ %mem=6MW
+ %nproc=1
+ Will use up to    1 processors via shared memory.
+ Default route:  MaxDisk=2000MB
+ ----------
+ # pm3 freq
+ ----------
+ 1/10=4,30=1,38=1/1,3;
+ 2/17=6,18=5,40=1/2;
+ 3/5=2,11=9,12=1,16=1,25=1,30=1/1;
+ 4/5=3,11=1,20=7,22=2,24=3,35=1/1,2;
+ 6/7=2,8=2,9=2,10=2/1;
+ 7/8=1,25=1/16;
+ 1/10=4,30=1/3;
+ 99//99;
+ ---------------
+ InChI=1/O/mult3
+ ---------------
+ Symbolic Z-matrix:
+ Charge =  0 Multiplicity = 3
+ O                     0.        0.        0. 
+ 
+
+ GradGradGradGradGradGradGradGradGradGradGradGradGradGradGradGradGradGrad
+ Berny optimization.
+ Initialization pass.
+ Trust Radius=3.00D-01 FncErr=1.00D-07 GrdErr=1.00D-07
+ Number of steps in this run=   2 maximum allowed number of steps=   2.
+ GradGradGradGradGradGradGradGradGradGradGradGradGradGradGradGradGradGrad
+
+                          Input orientation:                          
+ ---------------------------------------------------------------------
+ Center     Atomic     Atomic              Coordinates (Angstroms)
+ Number     Number      Type              X           Y           Z
+ ---------------------------------------------------------------------
+    1          8             0        0.000000    0.000000    0.000000
+ ---------------------------------------------------------------------
+ Stoichiometry    O(3)
+ Framework group  OH[O(O)]
+ Deg. of freedom     0
+ Full point group                 OH      NOp  48
+ Largest Abelian subgroup         D2H     NOp   8
+ Largest concise Abelian subgroup C1      NOp   1
+                         Standard orientation:                         
+ ---------------------------------------------------------------------
+ Center     Atomic     Atomic              Coordinates (Angstroms)
+ Number     Number      Type              X           Y           Z
+ ---------------------------------------------------------------------
+    1          8             0        0.000000    0.000000    0.000000
+ ---------------------------------------------------------------------
+ Standard basis: VSTO-3G (5D, 7F)
+ There are     1 symmetry adapted basis functions of AG  symmetry.
+ There are     0 symmetry adapted basis functions of B1G symmetry.
+ There are     0 symmetry adapted basis functions of B2G symmetry.
+ There are     0 symmetry adapted basis functions of B3G symmetry.
+ There are     0 symmetry adapted basis functions of AU  symmetry.
+ There are     1 symmetry adapted basis functions of B1U symmetry.
+ There are     1 symmetry adapted basis functions of B2U symmetry.
+ There are     1 symmetry adapted basis functions of B3U symmetry.
+ Integral buffers will be    262144 words long.
+ Raffenetti 2 integral format.
+ Two-electron integral symmetry is turned on.
+     4 basis functions,    12 primitive gaussians,     4 cartesian basis functions
+     4 alpha electrons        2 beta electrons
+       nuclear repulsion energy         0.0000000000 Hartrees.
+ NAtoms=    1 NActive=    1 NUniq=    1 SFac= 1.00D+00 NAtFMM=   60 Big=F
+ Simple Huckel Guess.
+ Initial guess orbital symmetries:
+ Alpha Orbitals:
+       Occupied  (A1G) (T1U) (T1U) (T1U)
+ Beta  Orbitals:
+       Occupied  (A1G) (T1U)
+       Virtual   (T1U) (T1U)
+ <S**2> of initial guess= 2.0000
+ UHF-PM3 calculation of energy, first and second derivatives.
+ MO and density RWFs will be updated without deorthogonalization.
+ Numerical evaluation of force-constants.
+ Step-Size= 0.018897 bohr.
+ UHF calculation:       4 alpha electrons,       2 beta electrons.
+ NNHCO=    0.
+ References:
+  O: (PM3): J. J. P. STEWART, J. COMP. CHEM.     10, 209 (1989).
+ Ext34=T Pulay=F Camp-King=F BShift= 0.00D+00
+ It=  1 PL= 0.000D+00 DiagD=TT ESCF=      2.582672 Diff=-0.175D+01 RMSDP= 0.433D+00.
+ It=  2 PL= 0.000D+00 DiagD=FF ESCF=      2.582672 Diff= 0.000D+00 RMSDP= 0.000D+00.
+ SE2nd ... symmetry will be used.
+ SE2nd: IAtom=  1 IXYZ=1 IS=1.
+ Skip step-back as it is equivalent to step-up.
+ SE2nd: IAtom=  1 IXYZ=2 IS=1.
+ Skip step-back as it is equivalent to step-up.
+ SE2nd: IAtom=  1 IXYZ=3 IS=1.
+ Skip step-back as it is equivalent to step-up.
+ Maximum difference in off-diagonal FC elements:
+ I=  3 J=  2 Difference=    0.0000000000D+00
+ Max difference between analytic and numerical forces:
+ I=  0 Difference=    0.0000000000D+00
+ Energy=    0.094913308498 NIter=   3.
+ Dipole moment=       0.000000       0.000000       0.000000
+
+ **********************************************************************
+
+            Population analysis using the SCF density.
+
+ **********************************************************************
+
+ Orbital symmetries:
+ Alpha Orbitals:
+       Occupied  (A1G) (T1U) (T1U) (T1U)
+ Beta  Orbitals:
+       Occupied  (A1G) (T1U)
+       Virtual   (T1U) (T1U)
+ Unable to determine electronic state:  partially filled degenerate orbitals.
+ Alpha  occ. eigenvalues --   -1.12214  -0.56083  -0.56083  -0.51497
+  Beta  occ. eigenvalues --   -1.07848  -0.46911
+  Beta virt. eigenvalues --   -0.03612  -0.03612
+          Condensed to atoms (all electrons):
+              1
+     1  O    6.000000
+ Mulliken atomic charges:
+              1
+     1  O    0.000000
+ Sum of Mulliken charges=   0.00000
+ Atomic charges with hydrogens summed into heavy atoms:
+              1
+     1  O    0.000000
+ Sum of Mulliken charges=   0.00000
+          Atomic-Atomic Spin Densities.
+              1
+     1  O    2.000000
+ Mulliken atomic spin densities:
+              1
+     1  O    2.000000
+ Sum of Mulliken spin densities=   2.00000
+ APT atomic charges:
+              1
+     1  O    0.000000
+ Sum of APT charges=   0.00000
+ APT Atomic charges with hydrogens summed into heavy atoms:
+              1
+     1  O    0.000000
+ Sum of APT charges=   0.00000
+ Full mass-weighted force constant matrix:
+ Low frequencies ---    0.0000    0.0000    0.0000
+ Diagonal vibrational polarizability:
+        0.0000000       0.0000000       0.0000000
+ Harmonic frequencies (cm**-1), IR intensities (KM/Mole), Raman scattering
+ activities (A**4/AMU), depolarization ratios for plane and unpolarized
+ incident light, reduced masses (AMU), force constants (mDyne/A),
+ and normal coordinates:
+
+ -------------------
+ - Thermochemistry -
+ -------------------
+ Temperature   298.150 Kelvin.  Pressure   1.00000 Atm.
+ Atom  1 has atomic number  8 and mass  15.99491
+ Molecular mass:    15.99491 amu.
+ Zero-point vibrational energy          0.0 (Joules/Mol)
+                                    0.00000 (Kcal/Mol)
+ Vibrational temperatures: 
+          (Kelvin)
+ 
+ Zero-point correction=                           0.000000 (Hartree/Particle)
+ Thermal correction to Energy=                    0.001416
+ Thermal correction to Enthalpy=                  0.002360
+ Thermal correction to Gibbs Free Energy=        -0.014952
+ Sum of electronic and zero-point Energies=              0.094913
+ Sum of electronic and thermal Energies=                 0.096330
+ Sum of electronic and thermal Enthalpies=               0.097274
+ Sum of electronic and thermal Free Energies=            0.079961
+ 
+                     E (Thermal)             CV                S
+                      KCal/Mol        Cal/Mol-Kelvin    Cal/Mol-Kelvin
+ Total                    0.889              2.981             36.438
+ Electronic               0.000              0.000              2.183
+ Translational            0.889              2.981             34.255
+ Rotational               0.000              0.000              0.000
+ Vibrational              0.000              0.000              0.000
+                       Q            Log10(Q)             Ln(Q)
+ Total Bot       0.754309D+07          6.877549         15.836143
+ Total V=0       0.754309D+07          6.877549         15.836143
+ Vib (Bot)       0.100000D+01          0.000000          0.000000
+ Vib (V=0)       0.100000D+01          0.000000          0.000000
+ Electronic      0.300000D+01          0.477121          1.098612
+ Translational   0.251436D+07          6.400428         14.737530
+ Rotational      0.100000D+01          0.000000          0.000000
+ ***** Axes restored to original set *****
+ -------------------------------------------------------------------
+ Center     Atomic                   Forces (Hartrees/Bohr)
+ Number     Number              X              Y              Z
+ -------------------------------------------------------------------
+    1          8           0.000000000    0.000000000    0.000000000
+ -------------------------------------------------------------------
+ Cartesian Forces:  Max     0.000000000 RMS     0.000000000
+ ------------------------------------------------------------------------
+           Internal Coordinate Forces (Hartree/Bohr or radian)
+ Cent Atom N1     Length/X     N2     Alpha/Y      N3      Beta/Z       J
+ ------------------------------------------------------------------------
+   1  O         0.000000(   1)      0.000000(   2)      0.000000(   3)
+ ------------------------------------------------------------------------
+ Internal  Forces:  Max     0.000000000 RMS     0.000000000
+
+ GradGradGradGradGradGradGradGradGradGradGradGradGradGradGradGradGradGrad
+ Berny optimization.
+ Search for a local minimum.
+ Step number   1 out of a maximum of   2
+ All quantities printed in internal units (Hartrees-Bohrs-Radians)
+ Second derivative matrix not updated -- analytic derivatives used.
+ The second derivative matrix:
+                          X1        Y1        Z1
+           X1           0.00000
+           Y1           0.00000   0.00000
+           Z1           0.00000   0.00000   0.00000
+     Eigenvalues --- 
+ Angle between quadratic step and forces=  90.00 degrees.
+ Linear search not attempted -- first point.
+ TrRot=  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000
+ Variable       Old X    -DE/DX   Delta X   Delta X   Delta X     New X
+                                 (Linear)    (Quad)   (Total)
+    X1        0.00000   0.00000   0.00000   0.00000   0.00000   0.00000
+    Y1        0.00000   0.00000   0.00000   0.00000   0.00000   0.00000
+    Z1        0.00000   0.00000   0.00000   0.00000   0.00000   0.00000
+         Item               Value     Threshold  Converged?
+ Maximum Force            0.000000     0.000450     YES
+ RMS     Force            0.000000     0.000300     YES
+ Maximum Displacement     0.000000     0.001800     YES
+ RMS     Displacement     0.000000     0.001200     YES
+ Predicted change in Energy= 0.000000D+00
+ Optimization completed.
+    -- Stationary point found.
+ GradGradGradGradGradGradGradGradGradGradGradGradGradGradGradGradGradGrad
+
+ 1|1|UNPC-UNK|Freq|UPM3|ZDO|O1(3)|PCUSER|22-Jun-2009|0||# PM3 FREQ||InC
+ hI=1/O/mult3||0,3|O,0.,0.,0.||Version=x86-Win32-G03RevB.05|HF=0.094913
+ 3|S2=0.|S2-1=0.|S2A=0.|RMSD=0.000e+000|RMSF=0.000e+000|Dipole=0.,0.,0.
+ |DipoleDeriv=0.,0.,0.,0.,0.,0.,0.,0.,0.|PG=OH [O(O1)]|NImag=0||0.,0.,0
+ .,0.,0.,0.||0.,0.,0.|||@
+
+
+ AN OPTIMIST IS A GUY
+ THAT HAS NEVER HAD
+ MUCH EXPERIENCE
+   (CERTAIN MAXIMS OF ARCHY  -- DON MARQUIS)
+ Job cpu time:  0 days  0 hours  0 minutes  2.0 seconds.
+ File lengths (MBytes):  RWF=     11 Int=      0 D2E=      0 Chk=     11 Scr=      1
+ Normal termination of Gaussian 03 at Mon Jun 22 17:33:37 2009.

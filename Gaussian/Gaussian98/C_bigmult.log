@@ -1,0 +1,252 @@
+ Entering Gaussian System, Link 0=g98
+ Input=C.gjf
+ Output=C.log
+ Initial command:
+ /home/user/Tools/g98/g98/l1.exe /home/user/Tools/g98/Gau-4208.inp -scrdir=/home/user/Tools/g98/
+ Entering Link 1 = /home/user/Tools/g98/g98/l1.exe PID=      4209.
+  
+ Copyright (c) 1988,1990,1992,1993,1995,1998 Gaussian, Inc.
+                  All Rights Reserved.
+  
+ This is part of the Gaussian(R) 98 program.  It is based on
+ the Gaussian 94(TM) system (copyright 1995 Gaussian, Inc.),
+ the Gaussian 92(TM) system (copyright 1992 Gaussian, Inc.),
+ the Gaussian 90(TM) system (copyright 1990 Gaussian, Inc.),
+ the Gaussian 88(TM) system (copyright 1988 Gaussian, Inc.),
+ the Gaussian 86(TM) system (copyright 1986 Carnegie Mellon
+ University), and the Gaussian 82(TM) system (copyright 1983
+ Carnegie Mellon University). Gaussian is a federally registered
+ trademark of Gaussian, Inc.
+  
+ This software contains proprietary and confidential information,
+ including trade secrets, belonging to Gaussian, Inc.
+  
+ This software is provided under written license and may be
+ used, copied, transmitted, or stored only in accord with that
+ written license.
+  
+ The following legend is applicable only to US Government
+ contracts under DFARS:
+  
+                    RESTRICTED RIGHTS LEGEND
+  
+ Use, duplication or disclosure by the US Government is subject
+ to restrictions as set forth in subparagraph (c)(1)(ii) of the
+ Rights in Technical Data and Computer Software clause at DFARS
+ 252.227-7013.
+  
+ Gaussian, Inc.
+ Carnegie Office Park, Building 6, Pittsburgh, PA 15106 USA
+  
+ The following legend is applicable only to US Government
+ contracts under FAR:
+  
+                    RESTRICTED RIGHTS LEGEND
+  
+ Use, reproduction and disclosure by the US Government is subject
+ to restrictions as set forth in subparagraph (c) of the
+ Commercial Computer Software - Restricted Rights clause at FAR
+ 52.227-19.
+  
+ Gaussian, Inc.
+ Carnegie Office Park, Building 6, Pittsburgh, PA 15106 USA
+  
+  
+ ---------------------------------------------------------------
+ Warning -- This program may not be used in any manner that
+ competes with the business of Gaussian, Inc. or will provide
+ assistance to any competitor of Gaussian, Inc.  The licensee
+ of this program is prohibited from giving any competitor of
+ Gaussian, Inc. access to this program.  By using this program,
+ the user acknowledges that Gaussian, Inc. is engaged in the
+ business of creating and licensing software in the field of
+ computational chemistry and represents and warrants to the
+ licensee that it is not a competitor of Gaussian, Inc. and that
+ it will not use this program in any manner prohibited above.
+ ---------------------------------------------------------------
+  
+
+ Cite this work as:
+ Gaussian 98, Revision A.11.3,
+ M. J. Frisch, G. W. Trucks, H. B. Schlegel, G. E. Scuseria, 
+ M. A. Robb, J. R. Cheeseman, V. G. Zakrzewski, J. A. Montgomery, Jr., 
+ R. E. Stratmann, J. C. Burant, S. Dapprich, J. M. Millam, 
+ A. D. Daniels, K. N. Kudin, M. C. Strain, O. Farkas, J. Tomasi, 
+ V. Barone, M. Cossi, R. Cammi, B. Mennucci, C. Pomelli, C. Adamo, 
+ S. Clifford, J. Ochterski, G. A. Petersson, P. Y. Ayala, Q. Cui, 
+ K. Morokuma, N. Rega, P. Salvador, J. J. Dannenberg, D. K. Malick, 
+ A. D. Rabuck, K. Raghavachari, J. B. Foresman, J. Cioslowski, 
+ J. V. Ortiz, A. G. Baboul, B. B. Stefanov, G. Liu, A. Liashenko, 
+ P. Piskorz, I. Komaromi, R. Gomperts, R. L. Martin, D. J. Fox, 
+ T. Keith, M. A. Al-Laham, C. Y. Peng, A. Nanayakkara, M. Challacombe, 
+ P. M. W. Gill, B. Johnson, W. Chen, M. W. Wong, J. L. Andres, 
+ C. Gonzalez, M. Head-Gordon, E. S. Replogle, and J. A. Pople, 
+ Gaussian, Inc., Pittsburgh PA, 2002.
+
+ ***********************************************
+ Gaussian 98:  x86-Linux-G98RevA.11.3 5-Feb-2002
+                   29-Oct-2007 
+ ***********************************************
+ -----------
+ #p HF/3-21G
+ -----------
+ 1/38=1/1;
+ 2/17=6,18=5,40=1/2;
+ 3/5=5,11=9,25=1,30=1/1,2,3;
+ 4//1;
+ 5/5=2,32=1,38=4/2;
+ 6/7=2,8=2,9=2,10=2,28=1/1;
+ 99/5=1,9=1/99;
+ Leave Link    1 at Mon Oct 29 09:56:26 2007, MaxMem=          0 cpu:       0.1
+ (Enter /home/user/Tools/g98/g98/l101.exe)
+ -------------------
+ Title card required
+ -------------------
+ Symbolic Z-matrix:
+ Charge = -3 Multiplicity =10
+ C                     0.        0.        0. 
+ Leave Link  101 at Mon Oct 29 09:56:27 2007, MaxMem=    6291456 cpu:       0.0
+ (Enter /home/user/Tools/g98/g98/l202.exe)
+ ------------------------------------------------------------------------
+                         Z-MATRIX (ANGSTROMS AND DEGREES)
+ CD Cent Atom  N1     Length/X     N2    Alpha/Y     N3     Beta/Z      J
+ ------------------------------------------------------------------------
+   1   1  C     0   0.000000          0.000000          0.000000
+ ------------------------------------------------------------------------
+                         Z-Matrix orientation:                         
+ ---------------------------------------------------------------------
+ Center     Atomic     Atomic              Coordinates (Angstroms)
+ Number     Number      Type              X           Y           Z
+ ---------------------------------------------------------------------
+    1          6             0        0.000000    0.000000    0.000000
+ ---------------------------------------------------------------------
+ Symmetry turned off:
+ Atomic calculation.
+ Stoichiometry    C(3-,10)
+ Framework group  KH  
+ Deg. of freedom    0
+ Full point group                 KH      NOp   1
+ Leave Link  202 at Mon Oct 29 09:56:27 2007, MaxMem=    6291456 cpu:       0.0
+ (Enter /home/user/Tools/g98/g98/l301.exe)
+ Standard basis: 3-21G (6D, 7F)
+ Integral buffers will be    262144 words long.
+ Raffenetti 2 integral format.
+ Two-electron integral symmetry is turned off.
+     9 basis functions       15 primitive gaussians
+     9 alpha electrons        0 beta electrons
+       nuclear repulsion energy         0.0000000000 Hartrees.
+ Leave Link  301 at Mon Oct 29 09:56:27 2007, MaxMem=    6291456 cpu:       0.0
+ (Enter /home/user/Tools/g98/g98/l302.exe)
+ One-electron integrals computed using PRISM.
+ NBasis=     9 RedAO= T  NBF=     9
+ NBsUse=     9 1.00D-04 NBFU=     9
+ Leave Link  302 at Mon Oct 29 09:56:27 2007, MaxMem=    6291456 cpu:       0.2
+ (Enter /home/user/Tools/g98/g98/l303.exe)
+ DipDrv:  MaxL=1.
+ Leave Link  303 at Mon Oct 29 09:56:27 2007, MaxMem=    6291456 cpu:       0.1
+ (Enter /home/user/Tools/g98/g98/l401.exe)
+ Projected INDO Guess.
+ <S**2> of initial guess=24.7500
+ Leave Link  401 at Mon Oct 29 09:56:27 2007, MaxMem=    6291456 cpu:       0.2
+ (Enter /home/user/Tools/g98/g98/l502.exe)
+ Warning!  Cutoffs for single-point calculations used.
+ IExCor=   0 DFT=F Ex=HF Corr=None ScaHFX= 1.0000
+ ScaDFX=  0.0000  0.0000  0.0000  0.0000
+ IRadAn=      0 IRanWt=     -1 IRanGd=            0 ICorTp=0
+ Using DIIS extrapolation.
+ UHF open shell SCF:
+ Requested convergence on RMS density matrix=1.00D-04 within  64 cycles.
+ Requested convergence on MAX density matrix=1.00D-02.
+ Requested convergence on             energy=5.00D-05.
+ Two-electron integral symmetry not used.
+ Keep R1 and R2 integrals in memory in canonical form, NReq=      407994.
+ IEnd=      5910 IEndB=      5910 NGot=   6291456 MDV=   6288149
+ LenX=   6288149
+ Symmetry not used in FoFDir.
+ MinBra= 0 MaxBra= 1 Meth= 1.
+ IRaf=       0 NMat=   1 IRICut=       1 DoRegI=T DoRafI=F ISym2E= 0 JSym2E=0.
+
+ Cycle   1  Pass 1  IDiag 1:
+ E=-0.230464838950796D+02
+ DIIS: error= 6.86D-16 at cycle   1.
+ RMSDP=1.17D-16 MaxDP=4.44D-16
+
+ Cycle   2  Pass 1  IDiag 1:
+ E=-0.230464838950796D+02 Delta-E=        0.000000000000
+ DIIS: error= 3.44D-15 at cycle   2.
+ RMSDP=3.27D-16 MaxDP=1.78D-15
+
+ SCF Done:  E(UHF) =  -23.0464838951     A.U. after    2 cycles
+             Convg  =    0.3266D-15             -V/T =  1.7361
+             S**2   =  24.7500
+ KE= 3.130903341063D+01 PE=-7.324348744977D+01 EE= 1.888797014406D+01
+ Annihilation of the first spin contaminant:
+ S**2 before annihilation    24.7500,   after    24.7500
+ Leave Link  502 at Mon Oct 29 09:56:27 2007, MaxMem=    6291456 cpu:       0.1
+ (Enter /home/user/Tools/g98/g98/l601.exe)
+ Copying SCF densities to generalized density rwf, ISCF=1 IROHF=0.
+
+ **********************************************************************
+
+            Population analysis using the SCF density.
+
+ **********************************************************************
+
+ Alpha  occ. eigenvalues --  -11.75728   0.11813   0.58635   0.58635   0.58635
+ Alpha  occ. eigenvalues --    1.35582   1.35582   1.35582   1.65410
+  Beta virt. eigenvalues --   -7.96678   1.21514   1.40777   1.40777   1.40777
+  Beta virt. eigenvalues --    2.37698   2.37698   2.37698   2.73369
+          Condensed to atoms (all electrons):
+              1
+  1  C    9.000000
+ Total atomic charges:
+              1
+  1  C   -3.000000
+ Sum of Mulliken charges=  -3.00000
+ Atomic charges with hydrogens summed into heavy atoms:
+              1
+  1  C   -3.000000
+ Sum of Mulliken charges=  -3.00000
+          Atomic-Atomic Spin Densities.
+              1
+  1  C    9.000000
+ Total atomic spin densities:
+              1
+  1  C    9.000000
+ Sum of Mulliken spin densities=   9.00000
+                       Isotropic Fermi Contact Couplings
+     Atom                 a.u.       MegaHertz       Gauss      10(-4) cm-1
+   1  C(13)             48.54245    6063.40005    2163.57250    2022.53255
+ Electronic spatial extent (au):  <R**2>=    33.8507
+ Charge=    -3.0000 electrons
+ Dipole moment (Debye):
+    X=     0.0000    Y=     0.0000    Z=     0.0000  Tot=     0.0000
+ Quadrupole moment (Debye-Ang):
+   XX=   -15.1769   YY=   -15.1769   ZZ=   -15.1769
+   XY=     0.0000   XZ=     0.0000   YZ=     0.0000
+ Octapole moment (Debye-Ang**2):
+  XXX=     0.0000  YYY=     0.0000  ZZZ=     0.0000  XYY=     0.0000
+  XXY=     0.0000  XXZ=     0.0000  XZZ=     0.0000  YZZ=     0.0000
+  YYZ=     0.0000  XYZ=     0.0000
+ Hexadecapole moment (Debye-Ang**3):
+ XXXX=   -21.0724 YYYY=   -21.0724 ZZZZ=   -21.0724 XXXY=     0.0000
+ XXXZ=     0.0000 YYYX=     0.0000 YYYZ=     0.0000 ZZZX=     0.0000
+ ZZZY=     0.0000 XXYY=    -7.0241 XXZZ=    -7.0241 YYZZ=    -7.0241
+ XXYZ=     0.0000 YYXZ=     0.0000 ZZXY=     0.0000
+ N-N= 0.000000000000D+00 E-N=-7.324348744977D+01  KE= 3.130903341063D+01
+ Leave Link  601 at Mon Oct 29 09:56:28 2007, MaxMem=    6291456 cpu:       0.1
+ (Enter /home/user/Tools/g98/g98/l9999.exe)
+ 1\1\GINC-DEBIAN\SP\UHF\3-21G\C1(3-,10)\USER\29-Oct-2007\0\\#P HF/3-21G
+ \\Title card required\\-3,10\C,0,0.,0.,0.\\Version=x86-Linux-G98RevA.1
+ 1.3\HF=-23.0464839\S2=24.75\S2-1=0.\S2A=24.75\RMSD=3.266e-16\Dipole=0.
+ ,0.,0.\PG=KH\\@
+
+
+ THERE IS NO SUBJECT, HOWEVER COMPLEX,
+ WHICH, IF STUDIED WITH PATIENCE AND INTELLIGIENCE
+ WILL NOT BECOME
+ MORE COMPLEX
+                        QUOTED BY D. GORDON ROHMAN
+ Job cpu time:  0 days  0 hours  0 minutes  1.3 seconds.
+ File lengths (MBytes):  RWF=    6 Int=    0 D2E=    0 Chk=    5 Scr=    1
+ Normal termination of Gaussian 98.
