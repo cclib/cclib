@@ -27,6 +27,13 @@ test_modules = [ "SP", "SPun", "GeoOpt", "Basis", "Core",   # Basic calculations
                  "vib" ]                                    # Other property calculations.
 
 
+def get_program_dir(parser_name):
+    """In one case the directory is names differently than the parser."""
+    if parser_name == "GAMESSUK":
+        return "GAMESS-UK"
+    else:
+        return parser_name
+
 def getfile(parser, *location):
     """Returns a parsed logfile.
     
@@ -39,11 +46,7 @@ def getfile(parser, *location):
         logfile - the parser object used for parsing
     """
 
-    # GAMESS-UK files are in the GAMESS path.
-    if parser.__name__=="GAMESSUK":
-        location = ("..", "data", "GAMESS-UK") + location
-    else:
-        location = ("..", "data", parser.__name__) + location
+    location = os.path.join(("..", "data", get_program_dir(parser.__name__)) + location)
 
     # Now construct the proper full path(s).
     # Multiple paths will be in a list only if more than one data file given.

@@ -34,63 +34,13 @@ test_modules = testall.test_modules
 
 # Edit the following variable definitions to add new parsers or new datafile patterns.
 
-data = os.path.join("..", "data")
 dummyfiles = [eval(n)("") for n in parsers]
 
-filenames = [glob(os.path.join(data, "ADF", "basicADF2006.01", "*.adfout")) +
-             glob(os.path.join(data, "ADF", "ADF2004.01", "*.gz")) +
-             glob(os.path.join(data, "ADF", "ADF2004.01", "*.bz2")) +
-             glob(os.path.join(data, "ADF", "ADF2005.01", "*.zip")) +
-             glob(os.path.join(data, "ADF", "ADF2006.01", "*.out")) +
-             glob(os.path.join(data, "ADF", "ADF2006.01", "*.bz2")) +
-             glob(os.path.join(data, "ADF", "ADF2009.01", "*.out")),
-                          
-             glob(os.path.join(data, "GAMESS", "basicGAMESS-US", "*.out")) +
-             glob(os.path.join(data, "GAMESS", "basicPCGAMESS", "*.out")) +
-             glob(os.path.join(data, "GAMESS", "GAMESS-US", "*.out")) +
-             glob(os.path.join(data, "GAMESS", "GAMESS-US", "*.bz2")) +
-             glob(os.path.join(data, "GAMESS", "GAMESS-US", "*.gz")) +
-             glob(os.path.join(data, "GAMESS", "GAMESS-US", "*.zip")) +
-             glob(os.path.join(data, "GAMESS", "PCGAMESS", "*.*.bz2")) +
-             glob(os.path.join(data, "GAMESS", "PCGAMESS", "*.*.gz")) +             
-             glob(os.path.join(data, "GAMESS", "WinGAMESS", "*.gz")),
-             
-             glob(os.path.join(data, "GAMESS-UK", "basicGAMESS-UK", "*.out")) +
-             glob(os.path.join(data, "GAMESS-UK", "GAMESS-UK6.0", "*.out.gz")) +
-             glob(os.path.join(data, "GAMESS-UK", "GAMESS-UK7.0", "*.out.gz")),
-             
-             glob(os.path.join(data, "Gaussian", "basicGaussian03", "*.out")) +  
-             glob(os.path.join(data, "Gaussian", "basicGaussian03", "*.log")) +
-             glob(os.path.join(data, "Gaussian", "basicGaussian09", "*.log")) +
-             glob(os.path.join(data, "Gaussian", "Gaussian09", "*.gz")) +
-             glob(os.path.join(data, "Gaussian", "Gaussian09", "*.zip")) +
-             glob(os.path.join(data, "Gaussian", "Gaussian09", "*.bz2")) +
-             glob(os.path.join(data, "Gaussian", "Gaussian03", "*.out")) +
-             glob(os.path.join(data, "Gaussian", "Gaussian03", "*.bz2")) +
-             glob(os.path.join(data, "Gaussian", "Gaussian03", "*.zip")) +
-             glob(os.path.join(data, "Gaussian", "Gaussian03", "*.gz")) +
-             glob(os.path.join(data, "Gaussian", "Gaussian98", "*.bz2")) +
-             glob(os.path.join(data, "Gaussian", "Gaussian98", "*.gz")),
-             
-             glob(os.path.join(data, "Jaguar", "Jaguar4.2", "*.bz2")) +
-             glob(os.path.join(data, "Jaguar", "Jaguar6.0", "*.bz2")) +
-             glob(os.path.join(data, "Jaguar", "Jaguar6.5", "*.bz2")) +
-             glob(os.path.join(data, "Jaguar", "Jaguar7.0", "*.bz2")) +
-             glob(os.path.join(data, "Jaguar", "basicJaguar7.0", "*.out")),
-
-             glob(os.path.join(data, "Molpro", "basicMolpro2006", "*.out")) +
-             glob(os.path.join(data, "Molpro", "Molpro2006", "*.bz2")),
-
-             glob(os.path.join(data, "ORCA", "basicORCA2.6", "*.out")) +
-             glob(os.path.join(data, "ORCA", "basicORCA2.8", "*.out")) +
-             glob(os.path.join(data, "ORCA", "basicORCA2.9", "*.out")) +
-             glob(os.path.join(data, "ORCA", "ORCA2.8", "*.out")) +
-             glob(os.path.join(data, "ORCA", "ORCA2.8", "*.out.gz")) +
-             glob(os.path.join(data, "ORCA", "ORCA2.9", "*.out")) +
-             glob(os.path.join(data, "ORCA", "ORCA2.9", "*.out.gz")) +
-             glob(os.path.join(data, "ORCA", "ORCA2.9", "*.out.bz2"))
-             ]
-
+# It would be nice to fix the structure of this nested list,
+# because in its current form it is not amenable to tweaks.
+regdir = os.path.join("..", "data", "regression")
+programs = [os.path.join(regdir,testall.get_program_dir(p)) for p in parsers]
+filenames = [[os.path.join(p,version,fn) for version in os.listdir(p) for fn in os.listdir(os.path.join(p,version))] for p in programs]
 
 # The regression test functions defined below should be named according to the path
 # of the logfile, with some characters changed according to normalisefilename().
@@ -448,18 +398,20 @@ def main(which=[], traceback=False):
     regfilenames = [os.sep.join(x.strip().split("/")) for x in regfile.readlines()]
     regfile.close()
 
-    missing = 0
+    missing = []
     for x in regfilenames:
-        if not os.path.isfile(os.path.join("..", "data", x)):
-            missing += 1
-        elif os.path.join("..", "data", x) not in flatten(filenames):
+        if not os.path.isfile(os.path.join("..", "data", "regression", x)):
+            missing.append(x)
+        elif os.path.join("..", "data", "regression", x) not in flatten(filenames):
             print("\nERROR: The regression file %s is present, but not included in " \
                   "the 'filenames' variable.\n\nPlease add a new glob statement." % x)
             sys.exit(1)       
 
-    if missing > 0:
+    if len(missing) > 0:
         print("\nWARNING: You are missing %d regression file(s).\n" \
-              "         Run wget.sh in the ../data directory to update.\n" % missing)
+              "         Run wget.sh in the ../data directory to update.\n" % len(missing))
+        print("Missing files:")
+        print("\n".join(missing))
         try:
             input("(Press ENTER to continue or CTRL+C to exit)")
         except KeyboardInterrupt:
