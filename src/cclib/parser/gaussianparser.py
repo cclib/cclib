@@ -481,11 +481,15 @@ class Gaussian(logfileparser.Logfile):
             line = next(inputfile)
             forces = []
             while line != dashes:
-                broken = line.split()
-                Fx, Fy, Fz = broken[-3:]
-                forces.append([float(Fx), float(Fy), float(Fz)])
+                tmpforces = []
+                for N in range(3): # Fx, Fy, Fz
+                    force = line[23+N*15:38+N*15]
+                    if force.startswith("*"):
+                        force = "NaN"
+                    tmpforces.append(float(force))
+                forces.append(tmpforces)
                 line = next(inputfile)
-            self.grads.append(forces)                
+            self.grads.append(forces)
 
         # Charge and multiplicity.
         # If counterpoise correction is used, multiple lines match.
