@@ -65,6 +65,7 @@ GAMESS-UK/GAMESS-UK7.0/mg10.out
 GAMESS-UK/GAMESS-UK7.0/pyridine2_21m10r.out
 GAMESS-UK/GAMESS-UK7.0/mg10.out
 GAMESS-UK/GAMESS-UK7.0/pyridine.out
+Gaussian/Gaussian09/encaps1.log
 Gaussian/Gaussian09/irc_point.log
 Gaussian/Gaussian09/Dahlgren_TS.log
 Gaussian/Gaussian09/dvb_lowdin.log
