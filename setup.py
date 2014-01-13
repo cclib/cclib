@@ -60,7 +60,7 @@ def setup_cclib():
     data_prefix = cclib_prefix + '/data'
     cclib_datafiles = [ (cclib_prefix, ['ANNOUNCE', 'CHANGELOG', 'INSTALL', 'LICENSE', 'README', 'THANKS']),
                         (test_prefix, ['test/testdata']),
-                        (data_prefix, ['data/regressionfiles.txt', 'data/wget.sh'])]
+                        (data_prefix, ['data/regressionfiles.txt', 'data/regression_download.sh'])]
     for program in programs:
         data_dirs = os.listdir('data/%s' %program)
         for data_dir in data_dirs:
