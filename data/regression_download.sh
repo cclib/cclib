@@ -1,12 +1,17 @@
 #!/bin/bash
 
 if [ -d regression/.git ]; then
-    echo "Updating regression files..."
-    cd regression
-    git pull
-    cd ..
+    if [ -e regression/README.md ] && [ `head -1 regression/README.md` == "cclib-data" ]; then
+        echo "Updating regression files..."
+        cd regression
+        git pull
+        cd ..
+    else
+        echo "The repository in regression/ does not seem to contain cclib-data."
+        echo "Please remove it and run this script again."
+    fi
 else
     echo "Downloading repository of regression files..."
-    git clone git@github.com:langner/cclib-data.git regression
+    git clone https://github.com/cclib/cclib-data.git regression
 fi
 
