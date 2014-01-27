@@ -14,8 +14,6 @@ designed to make it easy to add new tests or datafiles.
 To run the doctest, just use "python regression.py test".
 """
 
-__revision__ = "$Revision$"
-
 import os
 import sys
 import inspect
