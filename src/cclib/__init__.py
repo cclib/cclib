@@ -18,6 +18,6 @@ from . import bridge
 
 # The test module can be imported if it was installed with cclib.
 try:
-    import test
-except:
+    from . import test
+except ImportError:
     pass

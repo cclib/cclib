@@ -55,7 +55,7 @@ def setup_cclib():
                       'cclib.test']
 
     # Setup the list of data files.
-    cclib_prefix = 'lib/python%i.%i/site-packages/cclib' %(sys.version_info[0], sys.version_info[1])
+    cclib_prefix = 'lib/python%i.%i/dist-packages/cclib' %(sys.version_info[0], sys.version_info[1])
     test_prefix = cclib_prefix + '/test'
     data_prefix = cclib_prefix + '/data'
     cclib_datafiles = [ (cclib_prefix, ['ANNOUNCE', 'CHANGELOG', 'INSTALL', 'LICENSE', 'README', 'THANKS']),
