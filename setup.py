@@ -17,8 +17,6 @@ chemistry log files. It also provides a platform to implement
 algorithms in a package-independent manner.
 """
 
-__revision__ = "$Revision$"
-
 doclines = __doc__.split("\n")
 
 # Chosen from http://www.python.org/pypi?:action=list_classifiers

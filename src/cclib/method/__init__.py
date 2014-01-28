@@ -8,8 +8,6 @@
 # received a copy of the license along with cclib. You can also access
 # the full license online at http://www.gnu.org/copyleft/lgpl.html.
 
-__revision__ = "$Revision$"
-
 from .density import Density
 from .cspa import CSPA
 from .mpa import MPA
