@@ -1,44 +1,132 @@
-"""
-cclib (http://cclib.sf.net) is (c) 2006, the cclib development team
-and licensed under the LGPL (http://www.gnu.org/copyleft/lgpl.html).
-"""
+# This file is part of cclib (http://cclib.sf.net), a library for parsing
+# and interpreting the results of computational chemistry packages.
+#
+# Copyright (C) 2006, the cclib development team
+#
+# The library is free software, distributed under the terms of
+# the GNU Lesser General Public version 2.1 or later. You should have
+# received a copy of the license along with cclib. You can also access
+# the full license online at http://www.gnu.org/copyleft/lgpl.html.
 
-__revision__ = "$Revision$"
+import io
+import collections
 
-
-import sys
-import logging
+try:
+    import bz2 # New in Python 2.3.
+except ImportError:
+    bz2 = None
+import fileinput
+import gzip
 import inspect
+import logging
+logging.logMultiprocessing =  0 # To avoid a problem with Avogadro
+import os
 import random
+try:
+    set # Standard type from Python 2.4+.
+except NameError:
+    from sets import Set as set
+import sys
+import zipfile
 
 import numpy
 
-import utils
-from cclib.data import ccData
+from . import utils
+from .data import ccData
+
+class myBZ2File(bz2.BZ2File):
+    """Return string instead of bytes"""
+    def __next__(self):
+        line = super().__next__()
+        return line.decode("ascii", "replace")
+class myGzipFile(gzip.GzipFile):
+    """Return string instead of bytes"""
+    def __next__(self):
+        line = super().__next__()
+        return line.decode("ascii", "replace")
+
+def openlogfile(filename):
+    """Return a file object given a filename.
+
+    Given the filename of a log file or a gzipped, zipped, or bzipped
+    log file, this function returns a regular Python file object.
+    
+    Given an address starting with http://, this function retrieves the url
+    and returns a file object using a temporary file.
+
+    Given a list of filenames, this function returns a FileInput object,
+    which can be used for seamless iteration without concatenation.
+    """
+
+    # If there is a single string argument given.
+    if type(filename) in [str, str]:
+
+        extension = os.path.splitext(filename)[1]
+        
+        if extension == ".gz":
+            fileobject = myGzipFile(filename, "r")
+
+        elif extension == ".zip":
+            zip = zipfile.ZipFile(filename, "r")
+            assert len(zip.namelist()) == 1, "ERROR: Zip file contains more than 1 file"
+            fileobject = io.StringIO(zip.read(zip.namelist()[0]).decode("ascii"))
+
+        elif extension in ['.bz', '.bz2']:
+            # Module 'bz2' is not always importable.
+            assert bz2 != None, "ERROR: module bz2 cannot be imported"
+            fileobject = myBZ2File(filename, "r")
+
+        else:
+            fileobject = open(filename, "r")
+
+        return fileobject
+    
+    elif hasattr(filename, "__iter__"):
+    
+        # Compression (gzip and bzip) is supported as of Python 2.5.
+        if sys.version_info[0] >= 2 and sys.version_info[1] >= 5:
+            fileobject = fileinput.input(filename, openhook=fileinput.hook_compressed)
+        else:
+            fileobject = fileinput.input(filename)
+        
+        return fileobject
 
 
 class Logfile(object):
     """Abstract class for logfile objects.
 
     Subclasses defined by cclib:
-        ADF, GAMESS, GAMESSUK, Gaussian, Jaguar, Molpro, NWChem, ORCA
+        ADF, GAMESS, GAMESSUK, Gaussian, Jaguar, Molpro, ORCA
     
     """
 
-    def __init__(self, filename, progress=None,
-                                 loglevel=logging.INFO, logname="Log",
-                                 fupdate=0.05, cupdate=0.002, 
-                                 datatype=ccData):
+    def __init__(self, source, progress=None,
+                       loglevel=logging.INFO, logname="Log", logstream=sys.stdout,
+                       fupdate=0.05, cupdate=0.002, 
+                       datatype=ccData):
         """Initialise the Logfile object.
 
         This should be called by a ubclass in its own __init__ method.
 
         Inputs:
-          filename - the location of a single logfile, or a list of logfiles
+            source - a single logfile, a list of logfiles, or input stream
         """
 
-        # Set the filename, or list of filenames.
-        self.filename = filename
+        # Set the filename to source if it is a string or a list of filenames.
+        # In the case of an input stream, set some arbitrary name and the stream.
+        # Elsewise, raise an Exception.
+        if isinstance(source, str):
+            self.filename = source
+            self.isstream = False
+        elif isinstance(source, list) and all([isinstance(s, str) for s in source]):
+            self.filename = source
+            self.isstream = False
+        elif hasattr(source, "read"):
+            self.filename = "stream %s" % str(type(source))
+            self.isstream = True
+            self.stream = source
+        else:
+            raise ValueError
 
         # Progress indicator.
         self.progress = progress
@@ -51,12 +139,12 @@ class Logfile(object):
         #   which means that care needs to be taken not to duplicate handlers.
         self.loglevel = loglevel
         self.logname  = logname
-        self.logger = logging.getLogger('%s %s' % (self.logname,self.filename))
+        self.logger = logging.getLogger('%s %s' % (self.logname, self.filename))
         self.logger.setLevel(self.loglevel)
         if len(self.logger.handlers) == 0:
-                handler = logging.StreamHandler(sys.stdout)
-                handler.setFormatter(logging.Formatter("[%(name)s %(levelname)s] %(message)s"))
-                self.logger.addHandler(handler)
+            handler = logging.StreamHandler(logstream)
+            handler.setFormatter(logging.Formatter("[%(name)s %(levelname)s] %(message)s"))
+            self.logger.addHandler(handler)
 
         # Periodic table of elements.
         self.table = utils.PeriodicTable()
@@ -86,14 +174,11 @@ class Logfile(object):
         # Check that the sub-class has an extract attribute,
         #  that is callable with the proper number of arguemnts.
         if not hasattr(self, "extract"):
-            raise AttributeError, "Class %s has no extract() method." %self.__class__.__name__
-            return -1
+            raise AttributeError("Class %s has no extract() method." %self.__class__.__name__)
         if not callable(self.extract):
-            raise AttributeError, "Method %s._extract not callable." %self.__class__.__name__
-            return -1
+            raise AttributeError("Method %s._extract not callable." %self.__class__.__name__)
         if len(inspect.getargspec(self.extract)[0]) != 3:
-            raise AttributeError, "Method %s._extract takes wrong number of arguments." %self.__class__.__name__
-            return -1
+            raise AttributeError("Method %s._extract takes wrong number of arguments." %self.__class__.__name__)
 
         # Save the current list of attributes to keep after parsing.
         # The dict of self should be the same after parsing.
@@ -101,11 +186,14 @@ class Logfile(object):
 
         # Initiate the FileInput object for the input files.
         # Remember that self.filename can be a list of files.
-        inputfile = utils.openlogfile(self.filename)
+        if not self.isstream:
+            inputfile = openlogfile(self.filename)
+        else:
+            inputfile = self.stream
 
         # Intialize self.progress.
         if self.progress:
-            inputfile.seek(0,2)
+            inputfile.seek(0, 2)
             nstep = inputfile.tell()
             inputfile.seek(0)
             self.progress.initialize(nstep)
@@ -126,8 +214,7 @@ class Logfile(object):
         self._attrlist = data._attrlist
         
         # Maybe the sub-class has something to do before parsing.
-        if hasattr(self, "before_parsing"):
-            self.before_parsing()
+        self.before_parsing()
 
         # Loop over lines in the file object and call extract().
         # This is where the actual parsing is done.
@@ -142,11 +229,11 @@ class Logfile(object):
             self.extract(inputfile, line)
 
         # Close input file object.
-        inputfile.close()
+        if not self.isstream:
+            inputfile.close()
 
         # Maybe the sub-class has something to do after parsing.
-        if hasattr(self, "after_parsing"):
-            self.after_parsing()
+        self.after_parsing()
 
         # If atomcoords were not parsed, but some input coordinates were ("inputcoords").
         # This is originally from the Gaussian parser, a regression fix.
@@ -174,7 +261,7 @@ class Logfile(object):
         # Delete all temporary attributes (including cclib attributes).
         # All attributes should have been moved to a data object,
         #   which will be returned.
-        for attr in self.__dict__.keys():
+        for attr in list(self.__dict__.keys()):
             if not attr in _nodelete:
                 self.__delattr__(attr)
 
@@ -185,6 +272,14 @@ class Logfile(object):
         # Return the ccData object that was generated.
         return data
 
+    def before_parsing(self):
+
+        pass
+
+    def after_parsing(self):
+
+        pass
+
     def updateprogress(self, inputfile, msg, xupdate=0.05):
         """Update progress."""
 
@@ -194,7 +289,7 @@ class Logfile(object):
                 self.progress.update(newstep, msg)
                 self.progress.step = newstep
 
-    def normalisesym(self,symlabel):
+    def normalisesym(self, symlabel):
         """Standardise the symmetry labels between parsers.
 
         This method should be overwritten by individual parsers, and should
@@ -203,7 +298,7 @@ class Logfile(object):
         """
         return "ERROR: This should be overwritten by this subclass"
 
-    def float(self,number):
+    def float(self, number):
         """Convert a string to a float avoiding the problem with Ds.
 
         >>> t = Logfile("dummyfile")
@@ -215,6 +310,7 @@ class Logfile(object):
         number = number.replace("D","E")
         return float(number)
 
-if __name__=="__main__":
+
+if __name__ == "__main__":
     import doctest
     doctest.testmod()

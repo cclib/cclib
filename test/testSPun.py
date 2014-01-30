@@ -1,4 +1,12 @@
-__revision__ = "$Revision$"
+# This file is part of cclib (http://cclib.sf.net), a library for parsing
+# and interpreting the results of computational chemistry packages.
+#
+# Copyright (C) 2006, the cclib development team
+#
+# The library is free software, distributed under the terms of
+# the GNU Lesser General Public version 2.1 or later. You should have
+# received a copy of the license along with cclib. You can also access
+# the full license online at http://www.gnu.org/copyleft/lgpl.html.
 
 # If numpy is not installed, try to import Numeric instead.
 try:
@@ -44,6 +52,7 @@ class GenericSPunTest(bettertest.TestCase):
         """Are the dims of the mosyms equals to 2 x nmo?"""
         shape = (len(self.data.mosyms), len(self.data.mosyms[0]))
         self.assertEquals(shape, (2, self.data.nmo))
+
         
 class ADFSPunTest(GenericSPunTest):
     """ADF unrestricted single point unittest."""
@@ -52,6 +61,7 @@ class ADFSPunTest(GenericSPunTest):
         """Are the dims of the overlap matrix consistent with nbasis?"""
         #ADF uses fooverlaps
         self.assertEquals(self.data.fooverlaps.shape,(self.data.nbasis,self.data.nbasis))
+
 
 class GamessUKSPunTest(GenericSPunTest):
     """GAMESS-UK unrestricted single point unittest."""
@@ -65,8 +75,12 @@ class GamessUKSPunTest(GenericSPunTest):
         self.assertEquals(self.data.mocoeffs[1].shape,
                           (self.data.homos[1]+6, self.data.nbasis))
 
+
 class GamessUSSPunTest(GenericSPunTest):
     """GAMESS-US unrestricted single point unittest."""
+
+    old_tests = ["GAMESS/GAMESS-US/dvb_un_sp_2006.02.22.r2.out.gz"]
+
 
 class GaussianSPunTest(GenericSPunTest):
     """Gaussian unrestricted single point unittest."""
@@ -75,6 +89,7 @@ class GaussianSPunTest(GenericSPunTest):
         """Does atomnos have the right dimension (20)?"""
         size = len(self.data.atomnos)
         self.assertEquals(size, 20)
+
 
 class JaguarSPunTest(GenericSPunTest):
     """Jaguar unrestricted single point unittest."""
@@ -101,12 +116,14 @@ class JaguarSPunTest(GenericSPunTest):
         """Are the dims of the mosyms equal to 2 x nmo? PASS"""
         self.assertEquals(1,1)
 
+
 class MolproSPunTest(GenericSPunTest):
     """Molpro unrestricted single point unittest."""
 
     def testmosyms(self):
         """Are the dims of the mosyms equal to 2 x nmo? PASS"""
         self.assertEquals(1,1)
+
 
 class OrcaSPunTest(GenericSPunTest):
     """ORCA unrestricted single point unittest."""
@@ -115,6 +132,7 @@ class OrcaSPunTest(GenericSPunTest):
     def testmosyms(self):
         """Are the dims of the mosyms equals to 2 x nmo?"""
         self.assertEquals(1,1)
+
 
 class PCGamessSPunTest(GenericSPunTest):
     """PC-GAMESS unrestricted single point unittest."""

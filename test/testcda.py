@@ -1,9 +1,12 @@
-"""
-cclib (http://cclib.sf.net) is (c) 2006, the cclib development team
-and licensed under the LGPL (http://www.gnu.org/copyleft/lgpl.html).
-"""
-
-__revision__ = "$Rev$"
+# This file is part of cclib (http://cclib.sf.net), a library for parsing
+# and interpreting the results of computational chemistry packages.
+#
+# Copyright (C) 2007, the cclib development team
+#
+# The library is free software, distributed under the terms of
+# the GNU Lesser General Public version 2.1 or later. You should have
+# received a copy of the license along with cclib. You can also access
+# the full license online at http://www.gnu.org/copyleft/lgpl.html.
 
 import os
 import logging
@@ -31,23 +34,25 @@ def main(log=True):
 
     return fa
 
+
 def printResults():
     fa = main()
 
-    print "       d       b       r"
-    print "---------------------------"
+    print("       d       b       r")
+    print("---------------------------")
 
     spin = 0
     for i in range(len(fa.donations[0])):
 
-        print "%2i: %7.3f %7.3f %7.3f"%(i,fa.donations[spin][i], fa.bdonations[spin][i], \
-                                        fa.repulsions[spin][i])
+        print("%2i: %7.3f %7.3f %7.3f"%(i,fa.donations[spin][i], fa.bdonations[spin][i], \
+                                        fa.repulsions[spin][i]))
             
 
-    print "---------------------------"
-    print "T:  %7.3f %7.3f %7.3f"%(reduce(numpy.add, fa.donations[0]), \
-                reduce(numpy.add, fa.bdonations[0]), reduce(numpy.add, fa.repulsions[0]))
-    print "\n\n"
+    print("---------------------------")
+    print("T:  %7.3f %7.3f %7.3f"%(reduce(numpy.add, fa.donations[0]), \
+                reduce(numpy.add, fa.bdonations[0]), reduce(numpy.add, fa.repulsions[0])))
+    print("\n\n")
+
 
 class CDATest(unittest.TestCase):
     def runTest(self):

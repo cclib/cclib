@@ -1,4 +1,12 @@
-__revision__ = "$Revision$"
+# This file is part of cclib (http://cclib.sf.net), a library for parsing
+# and interpreting the results of computational chemistry packages.
+#
+# Copyright (C) 2006, the cclib development team
+#
+# The library is free software, distributed under the terms of
+# the GNU Lesser General Public version 2.1 or later. You should have
+# received a copy of the license along with cclib. You can also access
+# the full license online at http://www.gnu.org/copyleft/lgpl.html.
 
 import sys
 import numpy
@@ -21,11 +29,18 @@ class GenericSPTest(bettertest.TestCase):
 
     def testatomnos(self):
         """Are the atomnos correct?"""
-        self.failUnless(numpy.alltrue([isinstance(atomno,int) for atomno in self.data.atomnos]))
+        self.failUnless(numpy.alltrue([numpy.issubdtype(atomno,int) for atomno in self.data.atomnos]))
         # This will work only for numpy
         #self.assertEquals(self.data.atomnos.dtype.char, 'i')
         self.assertEquals(self.data.atomnos.shape, (20,) )
-        self.assertEquals(sum(self.data.atomnos==6) + sum(self.data.atomnos==1), 20)        
+        self.assertEquals(sum(self.data.atomnos==6) + sum(self.data.atomnos==1), 20)
+
+    def testatomcharges(self):
+        """Are atomcharges (at least Mulliken) consistent with natom and sum to zero?"""
+        for type in set(['mulliken'] + list(self.data.atomcharges.keys())):
+            charges = self.data.atomcharges[type]
+            self.assertEquals(len(charges), self.data.natom)
+            self.assertInside(sum(charges), 0.0, 0.001)
 
     def testatomcoords(self):
         """Are the dimensions of atomcoords 1 x natom x 3?"""
@@ -115,6 +130,7 @@ class GenericSPTest(bettertest.TestCase):
                               self.data.aooverlaps[:,0]),
                           0)
 
+
 class ADFSPTest(GenericSPTest):
     """ADF restricted single point unittest."""
 
@@ -127,14 +143,28 @@ class ADFSPTest(GenericSPTest):
         """Is the SCF energy within 1eV of -140eV?"""
         self.assertInside(self.data.scfenergies[-1],-140,1,"Final scf energy: %f not -140+-1eV" % self.data.scfenergies[-1])
 
+
 class GamessUKSPTest(GenericSPTest):
     """GAMESS-UK restricted single point unittest."""
+
 
 class GamessUSSPTest(GenericSPTest):
     """GAMESS-US restricted single point unittest."""
 
+    old_tests = ["GAMESS/GAMESS-US/dvb_sp_2006.02.22.r2.out.gz"]
+
+
 class GaussianSPTest(GenericSPTest):
     """Gaussian restricted single point unittest."""
+
+    # Molecular mass of DVB in mD.
+    molecularmass = 130078.25
+
+    def testatommasses(self):
+        """Do the atom masses sum up to the molecular mass (130078.25+-0.1mD)?"""
+        mm = 1000*sum(self.data.atommasses)
+        self.assertInside(mm, 130078.25, 0.1, "Molecule mass: %f not 130078 +- 0.1mD" %mm)
+
 
 class JaguarSPTest(GenericSPTest):
     """Jaguar restricted single point unittest."""
@@ -154,12 +184,14 @@ class JaguarSPTest(GenericSPTest):
         """Are the dimensions of mocoeffs equal to 1 x nmo x nbasis? PASS"""
         self.assertEquals(1, 1)
 
+
 class MolproSPTest(GenericSPTest):
     """Molpro restricted single point unittest."""
 
     def testsymlabels(self):
         """Are all the symmetry labels either Ag/u or Bg/u? PASS"""
         self.assertEquals(1,1)
+
 
 class OrcaSPTest(GenericSPTest):
     """ORCA restricted single point unittest."""
@@ -174,6 +206,7 @@ class OrcaSPTest(GenericSPTest):
     def testsymlabels(self):
         """Are all the symmetry labels either Ag/u or Bg/u? PASS"""
         self.assertEquals(1,1)
+
 
 class PCGamessSPTest(GenericSPTest):
     """PC-GAMESS restricted single point unittest."""

@@ -5,6 +5,11 @@
 %basis basis _3_21G 
 end
 
+%output
+  PrintLevel		Normal
+  Print[ P_MOs ]  	1
+end
+
 * xyz 0 1
  C     -1.275568      0.692949      0.000000
  C     -1.211011     -0.742036      0.000000

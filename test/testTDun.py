@@ -1,4 +1,12 @@
-__revision__ = "$Revision: 772 $"
+# This file is part of cclib (http://cclib.sf.net), a library for parsing
+# and interpreting the results of computational chemistry packages.
+#
+# Copyright (C) 2007, the cclib development team
+#
+# The library is free software, distributed under the terms of
+# the GNU Lesser General Public version 2.1 or later. You should have
+# received a copy of the license along with cclib. You can also access
+# the full license online at http://www.gnu.org/copyleft/lgpl.html.
 
 import numpy
 
@@ -28,6 +36,7 @@ class GenericTDunTest(bettertest.TestCase):
         """Is the length of etsyms correct?"""
         self.assertEqual(len(self.data.etsyms), self.number)
 
+
 class GaussianTDDFTunTest(GenericTDunTest):
     """Gaussian time-dependent HF/DFT unittest."""
 
@@ -39,6 +48,7 @@ class GaussianTDDFTunTest(GenericTDunTest):
         triplets = [sym for sym in self.data.etsyms if "Triplet" in sym]
         self.assertEqual(len(singlets), self.number/2)
         self.assertEqual(len(triplets), self.number/2)
+
 
 if __name__=="__main__":
 

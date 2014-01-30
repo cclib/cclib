@@ -1,4 +1,12 @@
-__revision__ = "$Revision$"
+# This file is part of cclib (http://cclib.sf.net), a library for parsing
+# and interpreting the results of computational chemistry packages.
+#
+# Copyright (C) 2007, the cclib development team
+#
+# The library is free software, distributed under the terms of
+# the GNU Lesser General Public version 2.1 or later. You should have
+# received a copy of the license along with cclib. You can also access
+# the full license online at http://www.gnu.org/copyleft/lgpl.html.
 
 import numpy
 
@@ -22,6 +30,7 @@ class GenericMP2Test(bettertest.TestCase):
         else:
             corrections = self.data.mpenergies[:,self.level-2] - self.data.mpenergies[:,self.level-3]
         self.failUnless(numpy.alltrue(corrections < 0.0))
+
         
 class GenericMP3Test(GenericMP2Test):
     """Generic MP3 unittest."""
@@ -36,6 +45,7 @@ class GenericMP3Test(GenericMP2Test):
         """(MP3) Are Moller-Plesset corrections negative?"""
         super(GenericMP3Test,self).testchange()
 
+
 class GenericMP4SDQTest(GenericMP2Test):
     """Generic MP4(SDQ) unittest."""
 
@@ -48,6 +58,7 @@ class GenericMP4SDQTest(GenericMP2Test):
     def testchange(self):
         """(MP4-SDQ) Are Moller-Plesset corrections negative?"""
         super(GenericMP4SDQTest,self).testchange()
+
 
 class GenericMP4SDTQTest(GenericMP2Test):
     """Generic MP4(SDTQ) unittest."""
@@ -62,6 +73,7 @@ class GenericMP4SDTQTest(GenericMP2Test):
         """(MP4-SDTQ) Are Moller-Plesset corrections negative?"""
         super(GenericMP4SDTQTest,self).testchange()
 
+
 class GenericMP5Test(GenericMP2Test):
     """Generic MP5 unittest."""
 
@@ -75,14 +87,20 @@ class GenericMP5Test(GenericMP2Test):
         """(MP5) Are Moller-Plesset corrections negative?"""
         super(GenericMP5Test,self).testchange()
 
+
 class GAMESSUKMP2Test(GenericMP2Test):
     """GAMESS-UK MP2 unittest."""
+
 
 class GAMESSUKMP3Test(GenericMP3Test):
     """GAMESS-UK MP3 unittest."""
 
+
 class GAMESSUSMP2Test(GenericMP2Test):
     """GAMESS-US MP2 unittest."""
+
+    old_tests = ["GAMESS/GAMESS-US/water_mp2_2005.06.27.r3.out.gz"]
+
 
 class GaussianMP2Test(GenericMP2Test):
     """Gaussian MP2 unittest."""
@@ -90,6 +108,7 @@ class GaussianMP2Test(GenericMP2Test):
     def testnocoeffs(self):
         """(MP2) Are Natural Orbital coefficients the right size?"""
         self.assertEquals(self.data.nocoeffs.shape, (self.data.nmo, self.data.nbasis))
+
         
 class GaussianMP3Test(GenericMP3Test):
     """Gaussian MP3 unittest."""
@@ -98,6 +117,7 @@ class GaussianMP3Test(GenericMP3Test):
         """(MP2) Are Natural Orbital coefficients the right size?"""
         self.assertEquals(self.data.nocoeffs.shape, (self.data.nmo, self.data.nbasis))
 
+
 class GaussianMP4SDQTest(GenericMP4SDQTest):
     """Gaussian MP4-SDQ unittest."""
         
@@ -105,32 +125,42 @@ class GaussianMP4SDQTest(GenericMP4SDQTest):
         """(MP2) Are Natural Orbital coefficients the right size?"""
         self.assertEquals(self.data.nocoeffs.shape, (self.data.nmo, self.data.nbasis))
 
+
 class GaussianMP4SDTQTest(GenericMP4SDTQTest):
     """Gaussian MP4-SDTQ unittest."""
+
 
 class GaussianMP5Test(GenericMP5Test):
     """Gaussian MP5 unittest."""
 
+
 class JaguarLMP2Test(GenericMP2Test):
     """Jaguar LMP2 unittest."""
+
 
 class MolproMP2Test(GenericMP2Test):
     """Molpro MP2 unittest."""
 
+
 class MolproMP3Test(GenericMP3Test):
     """Molpro MP3 unittest."""
+
 
 class MolproMP4SDTQTest(GenericMP4SDTQTest):
     """Molpro MP4-SDTQ unittest."""
 
+
 class PCGAMESSMP2Test(GenericMP2Test):
     """PC-GAMESS MP2 unittest."""
+
 
 class PCGAMESSMP3Test(GenericMP3Test):
     """PC-GAMESS MP3 unittest."""
 
+
 class PCGAMESSMP4SDQTest(GenericMP4SDQTest):
     """PC-GAMESS MP4-SDQ unittest."""
+
 
 class PCGAMESSMP4SDTQTest(GenericMP4SDTQTest):
     """PC-GAMESS MP4-SDTQ unittest."""

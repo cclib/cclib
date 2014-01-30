@@ -1,15 +1,18 @@
-"""
-cclib (http://cclib.sf.net) is (c) 2006, the cclib development team
-and licensed under the LGPL (http://www.gnu.org/copyleft/lgpl.html).
-"""
-
-__revision__ = "$Revision$"
+# This file is part of cclib (http://cclib.sf.net), a library for parsing
+# and interpreting the results of computational chemistry packages.
+#
+# Copyright (C) 2006, the cclib development team
+#
+# The library is free software, distributed under the terms of
+# the GNU Lesser General Public version 2.1 or later. You should have
+# received a copy of the license along with cclib. You can also access
+# the full license online at http://www.gnu.org/copyleft/lgpl.html.
 
 import random
 
 import numpy
 
-from population import Population
+from .population import Population
 
 
 class MPA(Population):
@@ -80,6 +83,11 @@ class MPA(Population):
                 ci = self.data.mocoeffs[spin][i]
                 if hasattr(self.data, "aooverlaps"):
                     temp = numpy.dot(ci, self.data.aooverlaps)
+
+                #handle spin-unrestricted beta case
+                elif hasattr(self.data, "fooverlaps2") and spin == 1:
+                    temp = numpy.dot(ci, self.data.fooverlaps2)
+
                 elif hasattr(self.data, "fooverlaps"):
                     temp = numpy.dot(ci, self.data.fooverlaps)
 
@@ -112,6 +120,7 @@ class MPA(Population):
             self.fragcharges = numpy.multiply(self.fragcharges, 2)
 
         return True
+
 
 if __name__ == "__main__":
     import doctest, mpa

@@ -1,15 +1,24 @@
-__revision__ = "$Revision$"
+# This file is part of cclib (http://cclib.sf.net), a library for parsing
+# and interpreting the results of computational chemistry packages.
+#
+# Copyright (C) 2006, the cclib development team
+#
+# The library is free software, distributed under the terms of
+# the GNU Lesser General Public version 2.1 or later. You should have
+# received a copy of the license along with cclib. You can also access
+# the full license online at http://www.gnu.org/copyleft/lgpl.html.
 
 import unittest
 
 import numpy
 
-from cclib.parser import ADF, GAMESS, GAMESSUK, Gaussian, Jaguar, Molpro
+# from cclib.parser import ADF, GAMESS, GAMESSUK, Gaussian, Jaguar, Molpro
+from cclib.parser import Gaussian
 
 
 class TestCase(unittest.TestCase):
     """Create a class with extra 'asserts' for testing numerical data,
-        and a special run() method for loading cclib test files on run-time.
+    and a special run() method for loading cclib test files on run-time.
 
     It is not possible to test equality of numpy arrays using assertEquals().
     Instead, use assertArrayEquals() as defined below. For the original solution see:
@@ -22,7 +31,7 @@ class TestCase(unittest.TestCase):
     def assertInside(self, first, second, error, msg=None):
         """Fail if the second number isn't within a certain error of the first."""
         if not (second-error) < first < (second+error):
-            raise self.failureException, (msg or '%r != %r (+-%r)' % (first,second,error))
+            raise self.failureException(msg or '%r != %r (+-%r)' % (first,second,error))
 
     def assertArrayEquals(self, first, second, msg=None):
         """Fails unless two numpy arrays are identical."""
@@ -42,7 +51,7 @@ class TestCase(unittest.TestCase):
         if not numpy.alltrue(first == second):
             errormsg = "Not equal: %s != %s" % (first, second)
         if errormsg:
-            raise self.failureException, (msg or errormsg)
+            raise self.failureException(msg or errormsg)
 
     def run(self, result=None):
         """Custom run method for cclib."""
@@ -57,7 +66,7 @@ class TestCase(unittest.TestCase):
         except AttributeError:
             doc = self._TestCase__testMethodDoc
         if "PASS" in doc:
-            print doc
+            result.stream.writeln(doc)
             result.testsRun += 1
             if not hasattr(result, "skipped"):
                 result.skipped = []

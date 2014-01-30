@@ -1,10 +1,21 @@
+# This file is part of cclib (http://cclib.sf.net), a library for parsing
+# and interpreting the results of computational chemistry packages.
+#
+# Copyright (C) 2006, the cclib development team
+#
+# The library is free software, distributed under the terms of
+# the GNU Lesser General Public version 2.1 or later. You should have
+# received a copy of the license along with cclib. You can also access
+# the full license online at http://www.gnu.org/copyleft/lgpl.html.
+
 import urllib
 
 from BeautifulSoup import BeautifulSoup
 
-wiki = "http://cclib.sourceforge.net/wiki"
+
+wiki = "http://sourceforge.net/apps/mediawiki/cclib"
 # http://openbabel.sourceforge.net/w/index.php?title=Special:Export&action=submit&pages=FAQ
-allpages = urllib.urlopen(wiki + "/index.php/Special:Allpages").read()
+allpages = urllib.urlopen(wiki + "/index.php?title=Special:AllPages").read()
 
 soup = BeautifulSoup(allpages)
 

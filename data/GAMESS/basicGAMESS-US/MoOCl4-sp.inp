@@ -1,8 +1,7 @@
- $contrl coord=unique units=angs
-         scftyp=rhf runtyp=energy nprint=3
+ $contrl coord=unique units=angs nprint=3
+         runtyp=energy scftyp=rhf dfttyp=b3lyp 
          icharg=-2 mult=1
          pp=read $end
- $dft dfttyp=b3lyp $end
  $data
 Mo4OCl4 - 6-31(d) for O; LANL2DZ ECP for Mo & Cl
 C1 1

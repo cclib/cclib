@@ -62,8 +62,8 @@ This tests the program using the example data files included in the INSTALLDIR/d
 === What next? ===
 
 * Read the tutorial at:
-	http://cclib.sourceforge.net/wiki/index.php/Using_cclib
+	http://sourceforge.net/apps/mediawiki/cclib/index.php?title=Using_cclib
 * Read the list and specifications of the extracted data at:
-	http://cclib.sourceforge.net/wiki/index.php/Parsed_Data
+	http://sourceforge.net/apps/mediawiki/cclib/index.php?title=Parsed_Data
 * Send any questions to the cclib-users mailing list at:
 	https://lists.sourceforge.net/lists/listinfo/cclib-users.

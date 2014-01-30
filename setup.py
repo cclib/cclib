@@ -1,4 +1,15 @@
 #!/usr/bin/env python
+#
+# This file is part of cclib (http://cclib.sf.net), a library for parsing
+# and interpreting the results of computational chemistry packages.
+#
+# Copyright (C) 2006-2013, the cclib development team
+#
+# The library is free software, distributed under the terms of
+# the GNU Lesser General Public version 2.1 or later. You should have
+# received a copy of the license along with cclib. You can also access
+# the full license online at http://www.gnu.org/copyleft/lgpl.html.
+
 """cclib: parsers and algorithms for computational chemistry
 
 cclib is a Python library that provides parsers for computational
@@ -10,7 +21,7 @@ doclines = __doc__.split("\n")
 
 # Chosen from http://www.python.org/pypi?:action=list_classifiers
 classifiers = """\
-Development Status :: 4 - Beta
+Development Status :: 5 - Production/Stable
 Environment :: Console
 Intended Audience :: Science/Research
 Intended Audience :: Developers
@@ -23,6 +34,7 @@ Topic :: Software Development :: Libraries :: Python Modules
 """
 
 programs = ['ADF', 'GAMESS', 'GAMESS-UK', 'Gaussian', 'Jaguar', 'Molpro', 'ORCA']
+
 
 def setup_cclib():
 
@@ -46,7 +58,7 @@ def setup_cclib():
     data_prefix = cclib_prefix + '/data'
     cclib_datafiles = [ (cclib_prefix, ['ANNOUNCE', 'CHANGELOG', 'INSTALL', 'LICENSE', 'README', 'THANKS']),
                         (test_prefix, ['test/testdata']),
-                        (data_prefix, ['data/regressionfiles.txt', 'data/wget.sh'])]
+                        (data_prefix, ['data/regressionfiles.txt', 'data/regression_download.sh'])]
     for program in programs:
         data_dirs = os.listdir('data/%s' %program)
         for data_dir in data_dirs:
@@ -58,7 +70,7 @@ def setup_cclib():
 
     setup(
         name = "cclib",
-        version = "0.8",
+        version = "1.1",
         url = "http://cclib.sf.net",
         author = "cclib development team",
         author_email = "cclib-users@lists.sourceforge.net",
@@ -73,6 +85,7 @@ def setup_cclib():
         package_dir = {'cclib':'src/cclib', 'cclib.test':'test'},
         packages = cclib_packages,
         data_files = cclib_datafiles )
+
 
 if __name__ == '__main__':
     setup_cclib()
