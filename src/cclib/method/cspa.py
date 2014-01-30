@@ -8,13 +8,11 @@
 # received a copy of the license along with cclib. You can also access
 # the full license online at http://www.gnu.org/copyleft/lgpl.html.
 
-__revision__ = "$Revision$"
-
 import random # For sometimes running the progress updater
 
 import numpy
 
-from population import Population
+from .population import Population
 
 
 class CSPA(Population):
