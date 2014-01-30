@@ -1,0 +1,5 @@
+%chk=PhCCCC.chk
+%mem=900MB
+%nproc=1
+#p b3lyp/sto-3g guess=read freq geom=allcheck
+

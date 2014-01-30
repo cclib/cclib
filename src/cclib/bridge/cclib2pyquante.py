@@ -1,29 +1,30 @@
-"""
-cclib (http://cclib.sf.net) is (c) 2006, the cclib development team
-and licensed under the LGPL (http://www.gnu.org/copyleft/lgpl.html).
-"""
-
-__revision__ = "$Revision$"
+# This file is part of cclib (http://cclib.sf.net), a library for parsing
+# and interpreting the results of computational chemistry packages.
+#
+# Copyright (C) 2006, the cclib development team
+#
+# The library is free software, distributed under the terms of
+# the GNU Lesser General Public version 2.1 or later. You should have
+# received a copy of the license along with cclib. You can also access
+# the full license online at http://www.gnu.org/copyleft/lgpl.html.
 
 from PyQuante.Molecule import Molecule
 
-def makepyquante(atomcoords, atomnos):
+def makepyquante(atomcoords, atomnos, charge=0, mult=1):
     """Create a PyQuante Molecule.
 
-    >>> import Numeric
+    >>> import numpy
     >>> from PyQuante.hartree_fock import hf
-    >>> atomnos = Numeric.array([1,8,1],"i")
-    >>> a = Numeric.array([[-1,1,0],[0,0,0],[1,1,0]],"f")
-    >>> pyqmol = pyquante(a,atomnos)
+    >>> atomnos = numpy.array([1,8,1],"i")
+    >>> a = numpy.array([[-1,1,0],[0,0,0],[1,1,0]],"f")
+    >>> pyqmol = makepyquante(a,atomnos)
     >>> en,orbe,orbs = hf(pyqmol)
-    >>> print en
-    -73.8001234204
+    >>> print int(en * 10) / 10. # Should be around -73.8
+    -73.8
     """
-# The only thing missing is charge, but this is also missing
-# from cclib...things to do
-
-    return Molecule("notitle", zip(atomnos, atomcoords), units = "Angstrom")
+    return Molecule("notitle", list(zip(atomnos, atomcoords)), units="Angstrom",
+                    charge=charge, multiplicity=mult)
 
 if __name__ == "__main__":
-    import doctest, cclib2pyquante
-    doctest.testmod(cclib2pyquante)
+    import doctest
+    doctest.testmod()

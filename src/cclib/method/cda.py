@@ -1,61 +1,74 @@
-"""
-cclib (http://cclib.sf.net) is (c) 2006, the cclib development team
-and licensed under the LGPL (http://www.gnu.org/copyleft/lgpl.html).
-"""
+# This file is part of cclib (http://cclib.sf.net), a library for parsing
+# and interpreting the results of computational chemistry packages.
+#
+# Copyright (C) 2007, the cclib development team
+#
+# The library is free software, distributed under the terms of
+# the GNU Lesser General Public version 2.1 or later. You should have
+# received a copy of the license along with cclib. You can also access
+# the full license online at http://www.gnu.org/copyleft/lgpl.html.
 
-__revision__ = "$Revision: 453 $"
-
-import Numeric
 import random # For sometimes running the progress updater
-from fragments import FragmentAnalysis
+
+import numpy
+
+from .fragments import FragmentAnalysis
+
 
 class CDA(FragmentAnalysis):
-    """The Charge decomposition analysis"""
+    """Charge Decomposition Analysis (CDA)"""
+    
     def __init__(self, *args):
-
-        # Call the __init__ method of the superclass
+    
+        # Call the __init__ method of the superclass.
         super(FragmentAnalysis, self).__init__(logname="CDA", *args)
         
     def __str__(self):
         """Return a string representation of the object."""
-        return "CDA of" % (self.parser)
+        return "CDA of" % (self.data)
 
     def __repr__(self):
         """Return a representation of the object."""
-        return 'CDA("%s")' % (self.parser)
+        return 'CDA("%s")' % (self.data)
     
     def calculate(self, fragments, cupdate=0.05):
-        """Perform a charge decomposition analysis."""
+        """Perform the charge decomposition analysis.
+        
+        Inputs:
+            fragments - list of ccData data objects
+        """
     
+
         retval = super(CDA, self).calculate(fragments, cupdate)
         if not retval:
             return False
 
-        #at this point, there should be a mocoeffs and fooverlaps in analogy to a parser
+        # At this point, there should be a mocoeffs and fooverlaps
+        #   in analogy to a ccData object.
 
         donations = []
         bdonations = []
         repulsions = []
+        residuals = []
 
         if len(self.mocoeffs) == 2:
             occs = 1
         else:
             occs = 2
 
-#intialize progress if available
-        nstep = self.parser.homos[0]
-        if len(self.parser.homos) == 2:
-            nstep += self.parser.homos[1]
-
+        # Intialize progress if available.
+        nstep = self.data.homos[0]
+        if len(self.data.homos) == 2:
+            nstep += self.data.homos[1]
         if self.progress:
             self.progress.initialize(nstep)
 
-#begin method
+        # Begin the actual method.
         step = 0
         for spin in range(len(self.mocoeffs)):
 
             size = len(self.mocoeffs[spin])
-            homo = self.parser.homos[spin]
+            homo = self.data.homos[spin]
 
             if len(fragments[0].homos) == 2:
                 homoa = fragments[0].homos[spin]
@@ -67,31 +80,42 @@ class CDA(FragmentAnalysis):
             else:
                 homob = fragments[1].homos[0]
 
+            print("handling spin unrestricted")
+            if spin == 0:
+                fooverlaps = self.fooverlaps
+            elif spin == 1 and hasattr(self, "fooverlaps2"):
+                fooverlaps = self.fooverlaps2
+
             offset = fragments[0].nbasis
 
             self.logger.info("Creating donations, bdonations, and repulsions: array[]")
-            donations.append(Numeric.zeros(size, "f"))
-            bdonations.append(Numeric.zeros(size, "f"))
-            repulsions.append(Numeric.zeros(size, "f"))
+            donations.append(numpy.zeros(size, "d"))
+            bdonations.append(numpy.zeros(size, "d"))
+            repulsions.append(numpy.zeros(size, "d"))
+            residuals.append(numpy.zeros(size, "d"))
 
-            for i in range(self.parser.homos[spin] + 1):
+            for i in range(self.data.homos[spin] + 1):
 
-#calculate donation for each MO
+                # Calculate donation for each MO.
                 for k in range(0, homoa + 1):
-                    for n in range(offset + homob + 1, self.parser.nbasis):
-                        donations[spin][i] += occs * self.mocoeffs[spin][i,k] \
-                                                * self.mocoeffs[spin][i,n] * self.fooverlaps[k][n]
+                    for n in range(offset + homob + 1, self.data.nbasis):
+                        donations[spin][i] += 2 * occs * self.mocoeffs[spin][i,k] \
+                                                * self.mocoeffs[spin][i,n] * fooverlaps[k][n]
 
                 for l in range(offset, offset + homob + 1):
                     for m in range(homoa + 1, offset):
-                        bdonations[spin][i] += occs * self.mocoeffs[spin][i,l] \
-                                                * self.mocoeffs[spin][i,m] * self.fooverlaps[l][m]
-
+                        bdonations[spin][i] += 2 * occs * self.mocoeffs[spin][i,l] \
+                                                * self.mocoeffs[spin][i,m] * fooverlaps[l][m]
 
                 for k in range(0, homoa + 1):
                     for m in range(offset, offset+homob + 1):
-                        repulsions[spin][i] += occs * self.mocoeffs[spin][i,k] \
-                                                * self.mocoeffs[spin][i, m] * self.fooverlaps[k][m]
+                        repulsions[spin][i] += 2 * occs * self.mocoeffs[spin][i,k] \
+                                                * self.mocoeffs[spin][i, m] * fooverlaps[k][m]
+
+                for m in range(homoa + 1, offset):
+                    for n in range(offset + homob + 1, self.data.nbasis):
+                        residuals[spin][i] += 2 * occs * self.mocoeffs[spin][i,m] \
+                                                * self.mocoeffs[spin][i, n] * fooverlaps[m][n]
 
                 step += 1
                 if self.progress and random.random() < cupdate:
@@ -103,34 +127,6 @@ class CDA(FragmentAnalysis):
         self.donations = donations
         self.bdonations = bdonations
         self.repulsions = repulsions
+        self.residuals = residuals
 
         return True
-            
-if __name__ == "__main__":
-    import doctest, cda
-    doctest.testmod(cda, verbose=False)
-
-    from cclib.parser import ccopen
-    parser1 = ccopen("../../../data/Gaussian/CDA/BH3CO-sp.log")
-    parser2 = ccopen("../../../data/Gaussian/CDA/BH3.log")
-    parser3 = ccopen("../../../data/Gaussian/CDA/CO.log")
-
-    parser1.parse(); parser2.parse(); parser3.parse()
-    fa = CDA(parser1)
-    fa.calculate([parser2, parser3])
-
-    print "       d       b       r"
-    print "---------------------------"
-
-    spin = 0
-    for i in range(len(fa.donations[0])):
-
-        print "%2i: %7.3f %7.3f %7.3f"%(i,2*fa.donations[spin][i], 2*fa.bdonations[spin][i], \
-                                        2*fa.repulsions[spin][i])
-            
-
-    print "---------------------------"
-    print "T:  %7.3f %7.3f %7.3f"%(reduce(Numeric.add, fa.donations[0])*2, \
-                reduce(Numeric.add, fa.bdonations[0])*2, reduce(Numeric.add, fa.repulsions[0])*2)
-
-

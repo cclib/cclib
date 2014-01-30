@@ -1,3 +1,140 @@
+Changes since cclib-1.0.1:
+
+Features:
+	* Add progress info for all parsers
+	* Support ONIOM calculations in Gaussian (Karen Hemelsoet)
+	* New attribute atomcharges extracts Mulliken and Lowdin atomic
+	charges if present
+	* New attribute atomspins extracts Mulliken and Lowdin atomic spin
+	densities if present
+	* New thermodynamic attributes: freeenergy, temperature, enthalpy
+	(Edward	Holland)
+	* Extract PES information: scanenergies, scancoords, scanparm, scannames
+	(Edward Holland)
+
+Bugfixes:
+	* Handle coupled cluster energies in Gaussian 09 (Björn Dahlgren)
+	* Vibrational displacement vectors missing for Gaussian 09 (Björn
+	Dahlgren)
+	* Fix problem parsing vibrational frequencies in some GAMESS-US files
+	* Fix missing final scfenergy in ADF geometry optimisations
+	* Fix missing final scfenergy for ORCA where a specific number of SCF
+	cycles has been specified
+	* ORCA scfenergies not parsed if COSMO solvent effects included
+	* Allow spin unrestricted calculations to use the fragment MO overlaps
+	correctly for the MPA and CDA calculations
+	* Handle Gaussian MO energies that are printed as a row of asterisks
+	(Jerome Kieffer)
+	* Add more explicit license notices, and allow LGPL versions after 2.1
+	* Support Firefly calculations where nmo != nbasis (Pavel Solntsev)
+	* Fix problem parsing vibrational frequency information in recent
+	GAMESS (US) files (Chengju Wang)
+	* Apply patch from Chengju Wang to handle GAMESS calculations with more
+	than 99 atoms
+	* Handle Gaussian files with more than 99 atoms having pseudopotentials
+	(Björn Baumeier)
+
+Changes since cclib-1.0:
+
+Features:
+	* New attribute atommasses - atomic masses in Dalton
+	* Added support for Gaussian geometry optimisations that change
+	the number of linearly independent basis functions over the
+	course of the calculation
+
+Bugfixes:
+	* Handle triplet PM3 calculations in Gaussian03 (Greg Magoon)
+	* Some Gaussian09 calculations were missing atomnos (Marius Retegan)
+	* Handle multiple pseudopotentials in Gaussian03 (Tiago Silva)
+	* Handle Gaussian calculations with >999 basis functions
+	* ADF versions > 2007 no longer print overlap info by default
+	* Handle parsing Firefly calculations that fail
+	* Fix parsing of ORCA calculation (Marius Retegan)
+
+Change since cclib-0.9:
+
+Features:
+	* Handle PBC calculations from Gaussian
+	* Updates to handle Gaussian09
+	* Support TDDFT calculations from ADF
+	* A number of improvements for GAMESS support
+	* ccopen now supports any file-like object with a read() method, so it
+	can parse across HTTP
+
+Bugfixes:
+	* Many many additional files parsed thanks to bugs reported by users
+
+Change since cclib-0.8:
+
+Features:
+	* New parser: cclib can now parse ORCA files
+	* Added option to use setuptools instead of distutils.core for installing
+	* Improved handling of CI and TD-DFT data: TD-DFT data extracted from
+	GAMESS and etsecs standardised across all parsers
+	* Test suite changed to include output from only the newest program versions
+
+Bugfixes:
+	* A small number of parsing errors were fixed
+
+Change since cclib-0.7:
+
+Features:
+	* New parser: cclib can now parse Molpro files
+	* Separation of parser and data objects: Parsed data is now returned
+	as a ccData object that can be pickled, and converted to and from JSON
+	* Parsers: multiple files can be parsed with one parse command
+	* NumPy support: Dropped Numeric support in favour of NumPy
+	* API addition: 'charge' for molecular charge
+	* API addition: 'mult' for spin multiplicity
+	* API addition: 'atombasis' for indices of atom orbitals on each atom
+	* API addition: 'nocoeffs' for Natural Orbital (NO) coefficients
+	* GAMESS-US parser: added 'etoscs' (CIS calculations)
+	* Jaguar parser: added 'mpenergies' (LMP2 calcualtions)
+	* Jaguar parser: added 'etenergies' and 'etoscs' (CIS calculations)
+	* New method: Lowdin Population Analysis (LPA)
+	* Tests: unittests can be run from the Python interpreter, and for
+	a single parser; the number of "passed" tests is also counted and shown
+
+Bugfixes:
+	* Several parsing errors were fixed
+	* Fixed some methods to work with different numbers of alpha and beta
+	MO coefficients in mocoeffs (MPA, CSPA, OPA)
+
+Changes since cclib-0.6.1:
+
+Features:
+	* New parser: cclib can now parse Jaguar files
+	* ccopen: Can handle log files which have been compressed into .zip,
+	.bz2 or .gz files.
+	* API addition: 'gbasis' holds the Gaussian basis set
+	* API addition: 'coreelectrons' contains the number of core electrons
+	in each atom's pseudopotential
+	* API addition: 'mpenergies' holds the Moller-Plesset corrected
+	molecular electronic energies
+	* API addition: 'vibdisps' holds the Cartesian displacement vectors
+	* API change: 'mocoeffs' is now a list of rank 2 arrays, rather than a
+	rank 3 array
+	* API change: 'moenergies' is now a list of rank 1 arrays, rather than
+	rank 2 array
+	* GAMESS-UK parser: added 'vibramans'
+	* New method: Charge Decomposition Analysis (CDA) for studying
+	electron donation, back donation, and repulsion between fragments
+	in a molecule
+	* New method: Fragment Analysis for studing bonding interactions 
+	between two or more fragments in a molecule
+	* New method: Ability to calculate the electron density or
+	wavefunction
+
+Bugfixes:
+	* GAMESS parser:
+		Failed to parse frequency calculation with imaginary frequencies
+		Rotations and translations now not included in frequencies
+		Failed to parse a DFT calculation
+	* GAMESS-UK parser:
+		'atomnos' not being extracted
+		Rotations and translations now not included in frequencies
+	* bridge to OpenBabel: No longer dependent on pyopenbabel
+
 Changes since cclib-0.6.0:
 
 Bugfixes:

@@ -1,0 +1,4 @@
+%chk=PhCCCC.chk
+%mem=6GB
+%nproc=8
+#p b3lyp/sto-3g guess=read geom=allcheck td(nstates=5) iop(9/40=2)

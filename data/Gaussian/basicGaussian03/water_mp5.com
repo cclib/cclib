@@ -1,5 +1,4 @@
-%chk=mp2.chk
-#P MP5/STO-3G
+#P MP5/STO-3G Pop=Full
 
 Water
 

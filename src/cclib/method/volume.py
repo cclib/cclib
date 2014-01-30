@@ -1,8 +1,16 @@
-import Numeric
-import copy     # Needed for copying objects
+# This file is part of cclib (http://cclib.sf.net), a library for parsing
+# and interpreting the results of computational chemistry packages.
+#
+# Copyright (C) 2006, the cclib development team
+#
+# The library is free software, distributed under the terms of
+# the GNU Lesser General Public version 2.1 or later. You should have
+# received a copy of the license along with cclib. You can also access
+# the full license online at http://www.gnu.org/copyleft/lgpl.html.
 
-from cclib.bridge import makepyquante
-from cclib.parser.utils import convertor
+import copy
+
+import numpy
 
 try:
     from PyQuante.CGBF import CGBF
@@ -17,6 +25,10 @@ try:
 except:
     module_pyvtk = False
 
+from cclib.bridge import makepyquante
+from cclib.parser.utils import convertor
+
+
 class Volume(object):
     """Represent a volume in space.
 
@@ -26,19 +38,21 @@ class Volume(object):
        spacing -- the distance between the points in the cube
 
     Attributes:   
-       data -- a Numeric array of values for each point in the volume
+       data -- a numpy array of values for each point in the volume
                (set to zero at initialisation)
        numpts -- the numbers of points in the (x,y,z) directions
 
     """
+    
     def __init__(self, origin, topcorner, spacing):
+    
         self.origin = origin
         self.spacing = spacing
         self.topcorner = topcorner
         self.numpts = []
         for i in range(3):
-            self.numpts.append( (self.topcorner[i]-self.origin[i])/self.spacing[i] + 1 )
-        self.data = Numeric.zeros( tuple(self.numpts), "d")
+            self.numpts.append(int((self.topcorner[i]-self.origin[i])/self.spacing[i]                                   + 1) )
+        self.data = numpy.zeros( tuple(self.numpts), "d")
 
     def __str__(self):
         """Return a string representation."""
@@ -59,22 +73,24 @@ class Volume(object):
 
     def writeasvtk(self, filename):
         if not module_pyvtk:
-            raise Error, "You need to have pyvtk installed"
-        ranges = (Numeric.arange(self.data.shape[2]),
-                  Numeric.arange(self.data.shape[1]),
-                  Numeric.arange(self.data.shape[0]))
+            raise Exception("You need to have pyvtk installed")
+        ranges = (numpy.arange(self.data.shape[2]),
+                  numpy.arange(self.data.shape[1]),
+                  numpy.arange(self.data.shape[0]))
         v = VtkData(RectilinearGrid(*ranges), "Test",
-                    PointData(Scalars(self.data.flat, "from cclib", "default")))
+                    PointData(Scalars(self.data.ravel(), "from cclib", "default")))
         v.tofile(filename)
 
     def integrate(self):
-        boxvol = self.spacing[0]*self.spacing[1]*self.spacing[2]*convertor(1, "Angstrom", "bohr")**3
-        return sum(self.data.flat)*boxvol
+        boxvol = (self.spacing[0] * self.spacing[1] * self.spacing[2] *
+                  convertor(1, "Angstrom", "bohr")**3)
+        return sum(self.data.ravel()) * boxvol
 
     def integrate_square(self):
-        boxvol = self.spacing[0]*self.spacing[1]*self.spacing[2]*convertor(1, "Angstrom", "bohr")**3
-        return sum(self.data.flat**2)*boxvol
-        
+        boxvol = (self.spacing[0] * self.spacing[1] * self.spacing[2] *
+                  convertor(1, "Angstrom", "bohr")**3)
+        return sum(self.data.ravel()**2) * boxvol
+
     def writeascube(self, filename):
         # Remember that the units are bohr, not Angstroms
         convert = lambda x : convertor(x, "Angstrom", "bohr")
@@ -89,12 +105,15 @@ class Volume(object):
         ans.append(format % (self.data.shape[2], 0.0, 0.0, convert(self.spacing[2])))
         line = []
         for i in range(self.data.shape[0]):
-           for j in range(self.data.shape[1]):
-               for k in range(self.data.shape[2]):
+            for j in range(self.data.shape[1]):
+                for k in range(self.data.shape[2]):
                     line.append(scinotation(self.data[i][j][k]))
                     if len(line)==6:
                         ans.append(" ".join(line))
                         line = []
+                if line:
+                    ans.append(" ".join(line))
+                    line = []
         outputfile = open(filename, "w")
         outputfile.write("\n".join(ans))
         outputfile.close()
@@ -155,25 +174,25 @@ def wavefunction(coords, mocoeffs, gbasis, volume):
     bfs = getbfs(coords, gbasis)
     
     wavefn = copy.copy(volume)
-    wavefn.data = Numeric.zeros( wavefn.data.shape, "d")
+    wavefn.data = numpy.zeros( wavefn.data.shape, "d")
 
     conversion = convertor(1,"bohr","Angstrom")
-    x = Numeric.arange(wavefn.origin[0], wavefn.topcorner[0]+wavefn.spacing[0], wavefn.spacing[0]) / conversion
-    y = Numeric.arange(wavefn.origin[1], wavefn.topcorner[1]+wavefn.spacing[1], wavefn.spacing[1]) / conversion
-    z = Numeric.arange(wavefn.origin[2], wavefn.topcorner[2]+wavefn.spacing[2], wavefn.spacing[2]) / conversion
+    x = numpy.arange(wavefn.origin[0], wavefn.topcorner[0]+wavefn.spacing[0], wavefn.spacing[0]) / conversion
+    y = numpy.arange(wavefn.origin[1], wavefn.topcorner[1]+wavefn.spacing[1], wavefn.spacing[1]) / conversion
+    z = numpy.arange(wavefn.origin[2], wavefn.topcorner[2]+wavefn.spacing[2], wavefn.spacing[2]) / conversion
 
     for bs in range(len(bfs)):
-        data = Numeric.zeros( wavefn.data.shape, "d")
+        data = numpy.zeros( wavefn.data.shape, "d")
         for i,xval in enumerate(x):
             for j,yval in enumerate(y):
                 for k,zval in enumerate(z):
                     data[i, j, k] = bfs[bs].amp(xval,yval,zval)
-        Numeric.multiply(data, mocoeffs[bs], data)
-        Numeric.add(wavefn.data, data, wavefn.data)
+        numpy.multiply(data, mocoeffs[bs], data)
+        numpy.add(wavefn.data, data, wavefn.data)
     
     return wavefn
 
-def electrondensity(coords, mocoeffs, gbasis, volume):
+def electrondensity(coords, mocoeffslist, gbasis, volume):
     """Calculate the magnitude of the electron density at every point in a volume.
     
     Attributes:
@@ -182,62 +201,67 @@ def electrondensity(coords, mocoeffs, gbasis, volume):
         gbasis -- gbasis from a parser object
         volume -- a template Volume object (will not be altered)
 
-    Note: mocoeffs is a list of Numeric arrays. The list will be of length 1
+    Note: mocoeffs is a list of numpy arrays. The list will be of length 1
           for restricted calculations, and length 2 for unrestricted.
     """
     bfs = getbfs(coords, gbasis)
     
     density = copy.copy(volume)
-    density.data = Numeric.zeros( density.data.shape, "d")
+    density.data = numpy.zeros( density.data.shape, "d")
 
     conversion = convertor(1,"bohr","Angstrom")
-    x = Numeric.arange(density.origin[0], density.topcorner[0]+density.spacing[0], density.spacing[0]) / conversion
-    y = Numeric.arange(density.origin[1], density.topcorner[1]+density.spacing[1], density.spacing[1]) / conversion
-    z = Numeric.arange(density.origin[2], density.topcorner[2]+density.spacing[2], density.spacing[2]) / conversion
+    x = numpy.arange(density.origin[0], density.topcorner[0]+density.spacing[0], density.spacing[0]) / conversion
+    y = numpy.arange(density.origin[1], density.topcorner[1]+density.spacing[1], density.spacing[1]) / conversion
+    z = numpy.arange(density.origin[2], density.topcorner[2]+density.spacing[2], density.spacing[2]) / conversion
 
-    sumofsquares = sum(mocoeffs[0]**2) # Note that this is an array of sums, not just a single figure
-    if len(mocoeffs) == 2:
-        sumofsquares += sum(mocoeffs[1]**2)
+    for mocoeffs in mocoeffslist:
+        for mocoeff in mocoeffs:
+            wavefn = numpy.zeros( density.data.shape, "d")
+            for bs in range(len(bfs)):
+                data = numpy.zeros( density.data.shape, "d")
+                for i,xval in enumerate(x):
+                    for j,yval in enumerate(y):
+                        tmp = []
+                        for k,zval in enumerate(z):
+                            tmp.append(bfs[bs].amp(xval, yval, zval))
+                        data[i,j,:] = tmp
+                numpy.multiply(data, mocoeff[bs], data)
+                numpy.add(wavefn, data, wavefn)
+            density.data += wavefn**2
         
-    for bs in range(len(bfs)):
-        data = Numeric.zeros( density.data.shape, "d")
-        for i in range(density.data.shape[0]):
-            for j in range(density.data.shape[1]):
-                for k in range(density.data.shape[2]):
-                    data[i, j, k] = bfs[bs].amp(x[i], y[j], z[k])**2
-        Numeric.multiply(data, sumofsquares[bs], data)
-        Numeric.add(density.data, data, density.data)
-        
-    if len(mocoeffs) == 1:
-        density.data = density.data*2 # doubly-occupied
+    if len(mocoeffslist) == 1:
+        density.data = density.data*2. # doubly-occupied
     
     return density
 
+
 if __name__=="__main__":
-    import psyco
-    psyco.full() # Down from 3.5 to 1.5
+
+    try:
+        import psyco
+        psyco.full()
+    except ImportError:
+        pass
 
     from cclib.parser import ccopen
     import logging
     a = ccopen("../../../data/Gaussian/basicGaussian03/dvb_sp_basis.log")
     a.logger.setLevel(logging.ERROR)
-    a.parse()
+    c = a.parse()
     
     b = ccopen("../../../data/Gaussian/basicGaussian03/dvb_sp.out")
     b.logger.setLevel(logging.ERROR)
-    b.parse()
+    d = b.parse()
 
-    vol = Volume( (-3.5,-6,-2.0), (3.5, 6, 2.0), spacing=(0.5,0.5,0.5) )
-    vol = Volume( (-3.5,-6,-2.0), (3.5, 6, 2.0), spacing=(0.2,0.2,0.2) )
-    #homowavefn = wavefunction(b.atomcoords[0], b.mocoeffs[0][b.homos[0]], a.gbasis, vol)
-    #homowavefn.write("homo.vtk", "VTK")
-    #homowavefn.write("homo.cub", "Cube")
+    vol = Volume( (-3.0,-6,-2.0), (3.0, 6, 2.0), spacing=(0.25,0.25,0.25) )
+    wavefn = wavefunction(d.atomcoords[0], d.mocoeffs[0][d.homos[0]],
+                          c.gbasis, vol)
+    assert abs(wavefn.integrate())<1E-6 # not necessarily true for all wavefns
+    assert abs(wavefn.integrate_square() - 1.00)<1E-3 #   true for all wavefns
+    print(wavefn.integrate(), wavefn.integrate_square())
 
-    # print "If you integrate the HOMO you get",homowavefn.integrate()
-    # print "If you integrate the square of the HOMO you get", homowavefn.integrate_square()
-
-    occupiedcoeffs = [b.mocoeffs[0][0:(b.homos[0]+1)]] # Would be of length(2) for unres
-    density = electrondensity(b.atomcoords[0], occupiedcoeffs, a.gbasis, vol)
-    density.write("cubefile.vtk", "VTK")
-
-    print "If you integrate the density you get",density.integrate()
+    vol = Volume( (-3.0,-6,-2.0), (3.0, 6, 2.0), spacing=(0.25,0.25,0.25) )
+    frontierorbs = [d.mocoeffs[0][(d.homos[0]-3):(d.homos[0]+1)]]
+    density = electrondensity(d.atomcoords[0], frontierorbs, c.gbasis, vol)
+    assert abs(density.integrate()-8.00)<1E-2
+    print("Combined Density of 4 Frontier orbitals=",density.integrate())

@@ -1,0 +1,13 @@
+&zmat
+O1
+H1 O1 r1
+H2 O1 r1 H1 a1
+&end
+&zvar
+r1=0.99 a1=106.0
+&end
+&gen
+isymm=0
+mp2=3
+basis=3-21g
+&end

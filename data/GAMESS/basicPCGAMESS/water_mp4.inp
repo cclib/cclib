@@ -1,0 +1,13 @@
+ $contrl scftyp=rhf mplevl=4
+         runtyp=energy exetyp=run
+         units=angs coord=zmt $end
+ $basis  gbasis=sto ngauss=3 $end
+ $data
+water
+C1 1
+ O
+ H 1 0.99
+ H 1 0.99 2 106.0
+ $end
+ 
+ 

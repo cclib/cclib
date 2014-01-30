@@ -1,68 +1,87 @@
------ GAMESS execution script -----
-This job is running on host slim
-under operating system Linux at ¶ro sty 24 22:49:59 CET 2007
+----- GAMESS execution script 'rungms' -----
+This job is running on host fwnc7111
+under operating system Linux at Sat Dec 1 00:01:03 CET 2012
 Available scratch disk space (Kbyte units) at beginning of the job is
-Filesystem            Size  Used Avail Use% Mounted on
-/dev/hda6              20G   11G  8,7G  55% /home
-
-Hostlist information:
-nodes=1
-cpus=1
-hostlist=slim
-
-GAMESS and DDI executables found. Commencing calculation.
+Filesystem           1K-blocks      Used Available Use% Mounted on
+/dev/mapper/vg1-home 309637120 256368024  50124456  84% /home
+GAMESS temporary binary files will be written to /home/kml
+GAMESS supplementary output files will be written to /home/kml/tmp/cclib-gamess2012
+Copying input file water_mp2.inp to your run's scratch directory...
 
  Distributed Data Interface kickoff program.
  Initiating 1 compute processes on 1 nodes to run the following command:
- /home/langner/apps/gamess/gamess-2005.06.27.r3/gamess.00.slim.x water_mp2 
+ /usr/local/src/gamess-2012.05.01.r1/gamess.fwnc7111.x water_mp2 
 
           ******************************************************
-          *         GAMESS VERSION = 27 JUN 2005 (R3)          *
+          *         GAMESS VERSION =  1 MAY 2012 (R1)          *
           *             FROM IOWA STATE UNIVERSITY             *
           * M.W.SCHMIDT, K.K.BALDRIDGE, J.A.BOATZ, S.T.ELBERT, *
           *   M.S.GORDON, J.H.JENSEN, S.KOSEKI, N.MATSUNAGA,   *
           *          K.A.NGUYEN, S.J.SU, T.L.WINDUS,           *
           *       TOGETHER WITH M.DUPUIS, J.A.MONTGOMERY       *
           *         J.COMPUT.CHEM.  14, 1347-1363(1993)        *
-          ******************* PC-UNIX VERSION ******************
+          **************** 64 BIT LINUX VERSION ****************
 
-     SINCE 1993, STUDENTS AND POSTDOCS WORKING AT IOWA STATE UNIVERSITY
-     AND ALSO IN THEIR VARIOUS JOBS AFTER LEAVING ISU HAVE MADE IMPORTANT
-     CONTRIBUTIONS TO THE CODE:
-     IVANA ADAMOVIC, CHRISTINE AIKENS, YURI ALEXEEV, POOJA ARORA, ROB BELL,
-     PRADIPTA BANDYOPADHYAY, BRETT BODE, GALINA CHABAN, WEI CHEN,
-     CHEOL HO CHOI, PAUL DAY, TIM DUDLEY, DMITRI FEDOROV, GRAHAM FLETCHER,
-     MARK FREITAG, KURT GLAESEMANN, GRANT MERRILL, HEATHER NETZLOFF,
-     BOSILJKA NJEGIC, RYAN OLSON, MIKE PAK, JIM SHOEMAKER, JIE SONG,
-     TETSUYA TAKETSUGU, SIMON WEBB.
+  SINCE 1993, STUDENTS AND POSTDOCS WORKING AT IOWA STATE UNIVERSITY
+  AND ALSO IN THEIR VARIOUS JOBS AFTER LEAVING ISU HAVE MADE IMPORTANT
+  CONTRIBUTIONS TO THE CODE:
+     IVANA ADAMOVIC, CHRISTINE AIKENS, YURI ALEXEEV, POOJA ARORA,
+     ANDREY ASADCHEV, ROB BELL, PRADIPTA BANDYOPADHYAY, JONATHAN BENTZ,
+     BRETT BODE, GALINA CHABAN, WEI CHEN, CHEOL HO CHOI, PAUL DAY,
+     ALBERT DEFUSCO, TIM DUDLEY, DMITRI FEDOROV, GRAHAM FLETCHER,
+     MARK FREITAG, KURT GLAESEMANN, DAN KEMP, GRANT MERRILL,
+     NORIYUKI MINEZAWA, JONATHAN MULLIN, TAKESHI NAGATA,
+     SEAN NEDD, HEATHER NETZLOFF, BOSILJKA NJEGIC, RYAN OLSON, MIKE PAK,
+     JIM SHOEMAKER, LYUDMILA SLIPCHENKO, SAROM SOK, JIE SONG,
+     TETSUYA TAKETSUGU, SIMON WEBB, SOOHAENG YOO, FEDERICO ZAHARIEV
 
-     ADDITIONAL CODE HAS BEEN PROVIDED BY COLLABORATORS IN OTHER GROUPS:
-     IOWA STATE UNIVERSITY: JOE IVANIC, KLAUS RUEDENBERG
-     UNIVERSITY OF TOKYO: KIMIHIKO HIRAO, HARUYUKI NAKANO, TAKAHITO
-          NAKAJIMA, TAKAO TSUNEDA, MUNEAKI KAMIYA, SUSUMU YANAGISAWA,
-          KIYOSHI YAGI
-     UNIVERSITY OF SOUTHERN DENMARK: FRANK JENSEN
+  ADDITIONAL CODE HAS BEEN PROVIDED BY COLLABORATORS IN OTHER GROUPS:
+     IOWA STATE UNIVERSITY:
+          JOE IVANIC, LAIMUTIS BYTAUTAS, KLAUS RUEDENBERG
+     UNIVERSITY OF TOKYO: KIMIHIKO HIRAO, TAKAHITO NAKAJIMA,
+          TAKAO TSUNEDA, MUNEAKI KAMIYA, SUSUMU YANAGISAWA,
+          KIYOSHI YAGI, MAHITO CHIBA, SEIKEN TOKURA, NAOAKI KAWAKAMI
+     UNIVERSITY OF AARHUS: FRANK JENSEN
      UNIVERSITY OF IOWA: VISVALDAS KAIRYS, HUI LI
      NATIONAL INST. OF STANDARDS AND TECHNOLOGY: WALT STEVENS, DAVID GARMER
      UNIVERSITY OF PISA: BENEDETTA MENNUCCI, JACOPO TOMASI
      UNIVERSITY OF MEMPHIS: HENRY KURTZ, PRAKASHAN KORAMBATH
-     UNIVERSITY OF ALBERTA: MARIUSZ KLOBUKOWSKI
+     UNIVERSITY OF ALBERTA: TOBY ZENG, MARIUSZ KLOBUKOWSKI
      UNIVERSITY OF NEW ENGLAND: MARK SPACKMAN
      MIE UNIVERSITY: HIROAKI UMEDA
      MICHIGAN STATE UNIVERSITY:
-          KAROL KOWALSKI, MARTA WLOCH, PIOTR PIECUCH
+          KAROL KOWALSKI, MARTA WLOCH, JEFFREY GOUR, JESSE LUTZ, PIOTR PIECUCH
      UNIVERSITY OF SILESIA: MONIKA MUSIAL, STANISLAW KUCHARSKI
      FACULTES UNIVERSITAIRES NOTRE-DAME DE LA PAIX:
           OLIVIER QUINET, BENOIT CHAMPAGNE
      UNIVERSITY OF CALIFORNIA - SANTA BARBARA: BERNARD KIRTMAN
-     INSTITUTE FOR MOLECULAR SCIENCE: KAZUYA ISHIMURA AND SHIGERU NAGASE
+     INSTITUTE FOR MOLECULAR SCIENCE:
+          KAZUYA ISHIMURA, MICHIO KATOUDA, AND SHIGERU NAGASE
      UNIVERSITY OF NOTRE DAME: DAN CHIPMAN
- EXECUTION OF GAMESS BEGUN Wed Jan 24 22:49:59 2007
+     KYUSHU UNIVERSITY:
+          HARUYUKI NAKANO,
+          FENG LONG GU, JACEK KORCHOWIEC, MARCIN MAKOWSKI, AND YURIKO AOKI,
+          HIROTOSHI MORI AND EISAKU MIYOSHI
+     PENNSYLVANIA STATE UNIVERSITY:
+          TZVETELIN IORDANOV, CHET SWALINA, JONATHAN SKONE,
+          SHARON HAMMES-SCHIFFER
+     WASEDA UNIVERSITY:
+          MASATO KOBAYASHI, TOMOKO AKAMA, TSUGUKI TOUMA,
+          TAKESHI YOSHIKAWA, YASUHIRO IKABATA, HIROMI NAKAI
+     UNIVERSITY OF NEBRASKA:
+          PEIFENG SU, DEJUN SI, NANDUN THELLAMUREGE, YALI WANG, HUI LI
+     UNIVERSITY OF ZURICH:
+          ROBERTO PEVERATI, KIM BALDRIDGE
+     N. COPERNICUS UNIVERSITY AND JACKSON STATE UNIVERSITY:
+          MARIA BARYSZ
+
+ EXECUTION OF GAMESS BEGUN Sat Dec  1 00:01:03 2012
 
             ECHO OF THE FIRST FEW INPUT CARDS -
  INPUT CARD> $contrl scftyp=rhf mplevl=2                                                    
  INPUT CARD>         runtyp=energy exetyp=run                                               
  INPUT CARD>         units=angs coord=zmt $end                                              
+ INPUT CARD> $mp2    mp2prp=.t. $end                                                        
  INPUT CARD> $basis  gbasis=sto ngauss=3 $end                                               
  INPUT CARD> $data                                                                          
  INPUT CARD>water                                                                           
@@ -73,15 +92,13 @@ GAMESS and DDI executables found. Commencing calculation.
  INPUT CARD> $end                                                                           
  INPUT CARD>                                                                                
  INPUT CARD>                                                                                
-
- ..... DONE SETTING UP THE RUN .....
     1000000 WORDS OF MEMORY AVAILABLE
 
      BASIS OPTIONS
      -------------
      GBASIS=STO          IGAUSS=       3      POLAR=NONE    
      NDFUNC=       0     NFFUNC=       0     DIFFSP=       F
-     NPFUNC=       0      DIFFS=       F
+     NPFUNC=       0      DIFFS=       F     BASNAM=        
 
 
      RUN TITLE
@@ -108,11 +125,11 @@ GAMESS and DDI executables found. Commencing calculation.
           INTERNUCLEAR DISTANCES (ANGS.)
           ------------------------------
 
-                    O              H              H         
+                1 O          2 H          3 H     
 
-  1  O               0.0000000      0.9900000 *    0.9900000 *  
-  2  H               0.9900000 *    0.0000000      1.5812983 *  
-  3  H               0.9900000 *    1.5812983 *    0.0000000    
+   1 O       0.0000000    0.9900000 *  0.9900000 *
+   2 H       0.9900000 *  0.0000000    1.5812983 *
+   3 H       0.9900000 *  1.5812983 *  0.0000000  
 
   * ... LESS THAN  3.000
 
@@ -160,6 +177,7 @@ GAMESS and DDI executables found. Commencing calculation.
      ---------------
  SCFTYP=RHF          RUNTYP=ENERGY       EXETYP=RUN     
  MPLEVL=       2     CITYP =NONE         CCTYP =NONE         VBTYP =NONE    
+ DFTTYP=NONE         TDDFT =NONE    
  MULT  =       1     ICHARG=       0     NZVAR =       0     COORD =ZMT     
  PP    =NONE         RELWFN=NONE         LOCAL =NONE         NUMGRD=       F
  ISPHER=      -1     NOSYM =       0     MAXIT =      30     UNITS =ANGS    
@@ -174,8 +192,9 @@ GAMESS and DDI executables found. Commencing calculation.
  DISTRIBUTED MEMDDI=           0 MILLION WORDS IN AGGREGATE,
  MEMDDI DISTRIBUTED OVER   1 PROCESSORS IS           0 WORDS/PROCESSOR.
  TOTAL MEMORY REQUESTED ON EACH PROCESSOR=     1000000 WORDS.
- TIMLIM=      525600.00 MINUTES, OR   365.00 DAYS.
- PARALL= F  BALTYP=  NXTVAL  KDIAG=    0  COREFL= F
+ TIMLIM=      525600.00 MINUTES, OR     365.0 DAYS.
+ PARALL= F  BALTYP=  DLB     KDIAG=    0  COREFL= F
+ MXSEQ2=     300 MXSEQ3=     150
 
           ----------------
           PROPERTIES INPUT
@@ -188,13 +207,14 @@ GAMESS and DDI executables found. Commencing calculation.
  IEMINT=       0   IEFINT=       0                     IEDINT=       0
                                                        MORB  =       0
           EXTRAPOLATION IN EFFECT
+ ORBITAL PRINTING OPTION: NPREO=     1     7     2     1
 
      -------------------------------
      INTEGRAL TRANSFORMATION OPTIONS
      -------------------------------
-     NWORD  =       0     CUTOFF = 1.0E-09
-     MPTRAN =       0     DIRTRF =       F
-     AOINTS =DUP     
+     NWORD  =            0
+     CUTOFF = 1.0E-09     MPTRAN =       0
+     DIRTRF =       F     AOINTS =DUP     
 
           ----------------------
           INTEGRAL INPUT OPTIONS
@@ -206,9 +226,10 @@ GAMESS and DDI executables found. Commencing calculation.
           -----------------------
           NACORE =        1  NBCORE =        1
           LMOMP2 =        F  AOINTS = DUP     
-          METHOD =        2  NWORD  =          0
-          MP2PRP =        F  OSPT   = NONE    
+          METHOD =        2  NWORD  =               0
+          MP2PRP =        T  OSPT   = NONE    
           CUTOFF = 1.00E-09  CPHFBS = BASISAO 
+          CODE   = IMS     
 
           NUMBER OF CORE -A-  ORBITALS =     1
           NUMBER OF CORE -B-  ORBITALS =     1
@@ -234,15 +255,15 @@ GAMESS and DDI executables found. Commencing calculation.
  A   =    7
 
  ..... DONE SETTING UP THE RUN .....
- STEP CPU TIME =     0.02 TOTAL CPU TIME =        0.0 (    0.0 MIN)
- TOTAL WALL CLOCK TIME=        0.0 SECONDS, CPU UTILIZATION IS 100.00%
+ STEP CPU TIME =     0.00 TOTAL CPU TIME =        0.0 (    0.0 MIN)
+ TOTAL WALL CLOCK TIME=        0.1 SECONDS, CPU UTILIZATION IS   0.00%
 
           ********************
           1 ELECTRON INTEGRALS
           ********************
  ...... END OF ONE-ELECTRON INTEGRALS ......
  STEP CPU TIME =     0.00 TOTAL CPU TIME =        0.0 (    0.0 MIN)
- TOTAL WALL CLOCK TIME=        0.0 SECONDS, CPU UTILIZATION IS 100.00%
+ TOTAL WALL CLOCK TIME=        0.1 SECONDS, CPU UTILIZATION IS   0.00%
 
           -------------
           GUESS OPTIONS
@@ -260,7 +281,7 @@ GAMESS and DDI executables found. Commencing calculation.
      2=A        3=A        4=A        5=A        6=A        7=A   
  ...... END OF INITIAL ORBITAL SELECTION ......
  STEP CPU TIME =     0.00 TOTAL CPU TIME =        0.0 (    0.0 MIN)
- TOTAL WALL CLOCK TIME=        0.0 SECONDS, CPU UTILIZATION IS 100.00%
+ TOTAL WALL CLOCK TIME=        0.1 SECONDS, CPU UTILIZATION IS   0.00%
 
                     ----------------------
                     AO INTEGRAL TECHNOLOGY
@@ -289,8 +310,8 @@ GAMESS and DDI executables found. Commencing calculation.
  TOTAL NUMBER OF NONZERO TWO-ELECTRON INTEGRALS =                 228
           1 INTEGRAL RECORDS WERE STORED ON DISK FILE  8.
   ...... END OF TWO-ELECTRON INTEGRALS .....
- STEP CPU TIME =     0.16 TOTAL CPU TIME =        0.2 (    0.0 MIN)
- TOTAL WALL CLOCK TIME=        0.0 SECONDS, CPU UTILIZATION IS 100.00%
+ STEP CPU TIME =     0.02 TOTAL CPU TIME =        0.0 (    0.0 MIN)
+ TOTAL WALL CLOCK TIME=        0.1 SECONDS, CPU UTILIZATION IS  28.57%
 
           --------------------------
                  RHF SCF CALCULATION
@@ -300,7 +321,7 @@ GAMESS and DDI executables found. Commencing calculation.
      MAXIT =   30     NPUNCH=    2
      EXTRAP=T  DAMP=F  SHIFT=F  RSTRCT=F  DIIS=F  DEM=F  SOSCF=F
      DENSITY MATRIX CONV=  1.00E-06
-     MEMORY REQUIRED FOR RHF STEP=     30441 WORDS.
+     MEMORY REQUIRED FOR RHF ITERS=     30441 WORDS.
 
  ITER EX DEM     TOTAL ENERGY        E CHANGE  DENSITY CHANGE    DIIS ERROR
    1  0  0      -74.7981539269   -74.7981539269   0.585814622   0.000000000
@@ -313,9 +334,9 @@ GAMESS and DDI executables found. Commencing calculation.
    8  2  0      -74.9643287911    -0.0000000069   0.000045747   0.000000000
    9  3  0      -74.9643287923    -0.0000000011   0.000017697   0.000000000
   10  4  0      -74.9643287925    -0.0000000002   0.000007301   0.000000000
-  11  5  0      -74.9643287925     0.0000000000   0.000003237   0.000000000
-  12  6  0      -74.9643287925     0.0000000000   0.000001437   0.000000000
-  13  7  0      -74.9643287925     0.0000000000   0.000000639   0.000000000
+  11  5  0      -74.9643287925    -0.0000000000   0.000003237   0.000000000
+  12  6  0      -74.9643287925    -0.0000000000   0.000001437   0.000000000
+  13  7  0      -74.9643287925    -0.0000000000   0.000000639   0.000000000
 
           -----------------
           DENSITY CONVERGED
@@ -334,9 +355,9 @@ GAMESS and DDI executables found. Commencing calculation.
                      A          A          A          A          A   
     1  O  1  S    0.994203  -0.234218   0.000000   0.100458   0.000000
     2  O  1  S    0.025916   0.845882   0.000000  -0.521395   0.000000
-    3  O  1  X    0.000000   0.000000   0.603305   0.000000   0.000000
+    3  O  1  X   -0.000000  -0.000000   0.603305  -0.000000   0.000000
     4  O  1  Y    0.003993   0.117048   0.000000   0.774267   0.000000
-    5  O  1  Z    0.000000   0.000000   0.000000   0.000000   1.000000
+    5  O  1  Z   -0.000000  -0.000000   0.000000  -0.000000   1.000000
     6  H  2  S   -0.005627   0.156449   0.446377   0.289064   0.000000
     7  H  3  S   -0.005627   0.156449  -0.446377   0.289064   0.000000
 
@@ -351,36 +372,12 @@ GAMESS and DDI executables found. Commencing calculation.
     6  H  2  S   -0.775801  -0.808916
     7  H  3  S   -0.775801   0.808916
  ...... END OF RHF CALCULATION ......
- STEP CPU TIME =     0.01 TOTAL CPU TIME =        0.2 (    0.0 MIN)
- TOTAL WALL CLOCK TIME=        0.0 SECONDS, CPU UTILIZATION IS 100.00%
+ STEP CPU TIME =     0.01 TOTAL CPU TIME =        0.0 (    0.0 MIN)
+ TOTAL WALL CLOCK TIME=        0.1 SECONDS, CPU UTILIZATION IS  37.50%
 
- --------------------------   ----------------------------------------------
- RHF-MP2 ENERGY CALCULATION   PROGRAM WRITTEN BY M.DUPUIS,C.DANIEL,A.MARQUEZ
- --------------------------   ----------------------------------------------
- NCORE=    1   NOCC=    5   NMOS=    7   NAOS=    7
-
- MEMORY REQUIREMENTS FOR SEGMENTED MP2 TRANSFORMATION
-   MINIMUM=     30413 WORDS, USING 1 MOLECULAR ORBITAL PER PASS
-   MAXIMUM=     31001 WORDS, MAKING ONLY 1 INTEGRAL PASS
- CHOOSING THE SEGMENTED MP2 TRANSFORMATION...
-   NUMBER OF MOS/PASS =    4
-   NUMBER OF PASSES   =    1
-   MEMORY USED =      31001 WORDS.
- PASS #   1 TOOK        0.00 SECONDS.
- DONE WITH PARTIAL TRANSFORMATION (PQ|RS) TO (IA|JB)
-
- RESULTS OF MOLLER-PLESSET 2ND ORDER CORRECTION ARE
-               E(0)=       -74.9643287925
-               E(1)=         0.0
-               E(2)=        -0.0379533247
-             E(MP2)=       -75.0022821173
- ..... DONE WITH MP2 ENERGY .....
- STEP CPU TIME =     0.00 TOTAL CPU TIME =        0.2 (    0.0 MIN)
- TOTAL WALL CLOCK TIME=        0.0 SECONDS, CPU UTILIZATION IS 100.00%
-
-     -------------------------------------------------
-     SCF PROPERTIES...FOR THE UNPERTURBED WAVEFUNCTION
-     -------------------------------------------------
+     ----------------------------------------------------------------
+     PROPERTY VALUES FOR THE RHF   SELF-CONSISTENT FIELD WAVEFUNCTION
+     ----------------------------------------------------------------
 
           -----------------
           ENERGY COMPONENTS
@@ -389,18 +386,18 @@ GAMESS and DDI executables found. Commencing calculation.
          WAVEFUNCTION NORMALIZATION =       1.0000000000
 
                 ONE ELECTRON ENERGY =    -121.8401708405
-                TWO ELECTRON ENERGY =      37.9508818146
+                TWO ELECTRON ENERGY =      37.9888351394
            NUCLEAR REPULSION ENERGY =       8.8870069086
                                       ------------------
-                       TOTAL ENERGY =     -75.0022821173
+                       TOTAL ENERGY =     -74.9643287925
 
- ELECTRON-ELECTRON POTENTIAL ENERGY =      37.9508818146
+ ELECTRON-ELECTRON POTENTIAL ENERGY =      37.9888351394
   NUCLEUS-ELECTRON POTENTIAL ENERGY =    -196.3570310799
    NUCLEUS-NUCLEUS POTENTIAL ENERGY =       8.8870069086
                                       ------------------
-             TOTAL POTENTIAL ENERGY =    -149.5191423568
+             TOTAL POTENTIAL ENERGY =    -149.4811890320
                TOTAL KINETIC ENERGY =      74.5168602395
-                 VIRIAL RATIO (V/T) =       2.0065142556
+                 VIRIAL RATIO (V/T) =       2.0060049303
 
   ...... PI ENERGY ANALYSIS ......
 
@@ -415,7 +412,7 @@ GAMESS and DDI executables found. Commencing calculation.
                (K,V1,2)=     69.4593977875   -176.4390799391     30.9468054838
            PI PART(1+2)=     -7.8184589445
                (K,V1,2)=      5.0574624520    -19.9179511408      7.0420297443
-  SIGMA SKELETON, ERROR=    -67.1458697593      0.0000000000
+  SIGMA SKELETON, ERROR=    -67.1458697593     -0.0000000000
              MIXED PART= 0.00000E+00 0.00000E+00 0.00000E+00 0.00000E+00
  ...... END OF PI ENERGY ANALYSIS ......
 
@@ -423,7 +420,7 @@ GAMESS and DDI executables found. Commencing calculation.
           MULLIKEN AND LOWDIN POPULATION ANALYSES
           ---------------------------------------
 
-     MULLIKEN ATOMIC POPULATION IN EACH MOLECULAR ORBITAL
+     ATOMIC MULLIKEN POPULATION IN EACH MOLECULAR ORBITAL
 
                       1          2          3          4          5
 
@@ -468,38 +465,165 @@ GAMESS and DDI executables found. Commencing calculation.
 
                        TOTAL       BONDED        FREE
       ATOM            VALENCE     VALENCE     VALENCE
-    1 O                 1.917       1.917       0.000
+    1 O                 1.917       1.917      -0.000
     2 H                 0.971       0.971       0.000
-    3 H                 0.971       0.971       0.000
+    3 H                 0.971       0.971      -0.000
 
           ---------------------
           ELECTROSTATIC MOMENTS
           ---------------------
 
  POINT   1           X           Y           Z (BOHR)    CHARGE
-                 0.000000    0.000000    0.000000        0.00 (A.U.)
+                 0.000000    0.000000    0.000000       -0.00 (A.U.)
          DX          DY          DZ         /D/  (DEBYE)
      0.000000    1.673510    0.000000    1.673510
  ...... END OF PROPERTY EVALUATION ......
- STEP CPU TIME =     0.01 TOTAL CPU TIME =        0.2 (    0.0 MIN)
- TOTAL WALL CLOCK TIME=        0.0 SECONDS, CPU UTILIZATION IS 100.00%
- 440000 WORDS OF DYNAMIC MEMORY USED
- EXECUTION OF GAMESS TERMINATED NORMALLY Wed Jan 24 22:49:59 2007
- DDI: 920 bytes (0.0 MB / 0 MWords) used by master data server.
+ STEP CPU TIME =     0.00 TOTAL CPU TIME =        0.0 (    0.0 MIN)
+ TOTAL WALL CLOCK TIME=        0.1 SECONDS, CPU UTILIZATION IS  37.50%
+
+ -------------------------------   -----------------------------
+ MP2 ENERGY GRADIENT CALCULATION   PROGRAM WRITTEN BY K.ISHIMURA
+ -------------------------------   -----------------------------
+ NUMBER OF OCCUPIED ORBITALS            =    5
+ NUMBER OF VIRTUAL ORBITALS             =    2
+ NUMBER OF ACTIVE OCCUPIED ORBITALS     =    4
+ NUMBER OF ACTIVE VIRTUAL ORBITALS      =    2
+ NUMBER OF BASIS FUNCTIONS              =    7
+ NUMBER OF BASIS SHELLS                 =    4
+ AO INTEGRAL THRESHOLD                  = 1.00E-09
+ HALF-TRANSFORMED INTEGRAL THRESHOLD    = 1.00E-09
+   REQUIRED DISK =         0 MBYTES/PROCESSOR
+
+ MAXIMUM MEMORY USED DURING MP2 GRADIENT=       14690 WORDS, OR       1 MWORDS.
+ BEGINNING    1ST SHELL LOOP...
+ .... DONE WITH 1ST THREE INDEX TRANSFORMATIONS ....
+ STEP CPU TIME =     0.00 TOTAL CPU TIME =        0.0 (    0.0 MIN)
+ TOTAL WALL CLOCK TIME=        0.1 SECONDS, CPU UTILIZATION IS  33.33%
+
+ RESULTS OF MOLLER-PLESSET 2ND ORDER CORRECTION ARE
+               E(0)=       -74.9643287925
+               E(1)=         0.0
+               E(2)=        -0.0379533247
+             E(MP2)=       -75.0022821173
+ .... DONE WITH 4TH INDEX TRANSFORMATION AND ENERGY ....
+ STEP CPU TIME =     0.00 TOTAL CPU TIME =        0.0 (    0.0 MIN)
+ TOTAL WALL CLOCK TIME=        0.1 SECONDS, CPU UTILIZATION IS  33.33%
+ .... DONE WITH 1ST THREE INDEX TRANSFORMATIONS FOR GRADIENT ....
+ STEP CPU TIME =     0.00 TOTAL CPU TIME =        0.0 (    0.0 MIN)
+ TOTAL WALL CLOCK TIME=        0.1 SECONDS, CPU UTILIZATION IS  33.33%
+ .... DONE WITH 4TH INDEX TRANSFORMATION FOR GRADIENT ....
+ STEP CPU TIME =     0.00 TOTAL CPU TIME =        0.0 (    0.0 MIN)
+ TOTAL WALL CLOCK TIME=        0.1 SECONDS, CPU UTILIZATION IS  33.33%
+ CYCLE  1  Z-VECTOR ERROR= -0.753735E-03
+ CYCLE  2  Z-VECTOR ERROR=  0.953587E-04
+ CYCLE  3  Z-VECTOR ERROR= -0.580159E-07
+ CYCLE  4  Z-VECTOR ERROR=  0.111271E-17
+ .... DONE WITH RESPONSE EQUATIONS AND DENSITY ....
+ STEP CPU TIME =     0.00 TOTAL CPU TIME =        0.0 (    0.0 MIN)
+ TOTAL WALL CLOCK TIME=        0.1 SECONDS, CPU UTILIZATION IS  33.33%
+
+ MP2 NATURAL ORBITAL OCCUPATION NUMBERS ARE
+  2.0000 1.9990 1.9984 1.9878 1.9857 0.0151 0.0141
+ THERE ARE     9.9708 ELECTRONS IN PRINCIPAL MP2 NATURAL ORBITALS.
+ THERE ARE     0.0292 ELECTRONS IN SECONDARY MP2 NATURAL ORBITALS.
+ THE MP2 NATURAL ORBITALS HAVE BEEN PUNCHED.
+ ..... DONE WITH MP2 ENERGY .....
+ STEP CPU TIME =     0.00 TOTAL CPU TIME =        0.0 (    0.0 MIN)
+ TOTAL WALL CLOCK TIME=        0.1 SECONDS, CPU UTILIZATION IS  33.33%
+
+     -------------------------------------------------
+     MP2 PROPERTIES...FOR THE FIRST ORDER WAVEFUNCTION
+          USING THE RESPONSE (OR RELAXED) DENSITY
+     -------------------------------------------------
+
+          -----------------
+          ENERGY COMPONENTS
+          -----------------
+
+         WAVEFUNCTION NORMALIZATION =       1.0000000000
+
+                ONE ELECTRON ENERGY =    -121.7630269691
+                TWO ELECTRON ENERGY =      37.8737379433
+           NUCLEAR REPULSION ENERGY =       8.8870069086
+                                      ------------------
+                       TOTAL ENERGY =     -75.0022821173
+
+ ELECTRON-ELECTRON POTENTIAL ENERGY =      37.8737379433
+  NUCLEUS-ELECTRON POTENTIAL ENERGY =    -196.3002738429
+   NUCLEUS-NUCLEUS POTENTIAL ENERGY =       8.8870069086
+                                      ------------------
+             TOTAL POTENTIAL ENERGY =    -149.5395289911
+               TOTAL KINETIC ENERGY =      74.5372468738
+                 VIRIAL RATIO (V/T) =       2.0062389646
+
+          ---------------------------------------
+          MULLIKEN AND LOWDIN POPULATION ANALYSES
+          ---------------------------------------
+
+               ----- POPULATIONS IN EACH AO -----
+                             MULLIKEN      LOWDIN
+              1  O  1  S      1.99782     1.99619
+              2  O  1  S      1.84194     1.70460
+              3  O  1  X      1.05406     1.08051
+              4  O  1  Y      1.42710     1.44088
+              5  O  1  Z      1.99898     1.99898
+              6  H  2  S      0.84006     0.88942
+              7  H  3  S      0.84006     0.88942
+
+          ----- MULLIKEN ATOMIC OVERLAP POPULATIONS -----
+          (OFF-DIAGONAL ELEMENTS NEED TO BE MULTIPLIED BY 2)
+
+             1           2           3
+
+    1    7.8363628
+    2    0.2417630   0.6382746
+    3    0.2417630  -0.0399819   0.6382746
+
+          TOTAL MULLIKEN AND LOWDIN ATOMIC POPULATIONS
+       ATOM         MULL.POP.    CHARGE          LOW.POP.     CHARGE
+    1 O             8.319889   -0.319889         8.221155   -0.221155
+    2 H             0.840056    0.159944         0.889422    0.110578
+    3 H             0.840056    0.159944         0.889422    0.110578
+
+          -------------------------------
+          BOND ORDER AND VALENCE ANALYSIS     BOND ORDER THRESHOLD=0.050
+          -------------------------------
+
+                   BOND                       BOND                       BOND
+  ATOM PAIR DIST  ORDER      ATOM PAIR DIST  ORDER      ATOM PAIR DIST  ORDER
+    1   2  0.990  0.935        1   3  0.990  0.935
+
+                       TOTAL       BONDED        FREE
+      ATOM            VALENCE     VALENCE     VALENCE
+    1 O                 1.929       1.870       0.060
+    2 H                 0.974       0.946       0.028
+    3 H                 0.974       0.946       0.028
+
+          ---------------------
+          ELECTROSTATIC MOMENTS
+          ---------------------
+
+ POINT   1           X           Y           Z (BOHR)    CHARGE
+                 0.000000    0.000000    0.000000       -0.00 (A.U.)
+         DX          DY          DZ         /D/  (DEBYE)
+     0.000000    1.599447    0.000000    1.599447
+ ...... END OF PROPERTY EVALUATION ......
+ STEP CPU TIME =     0.01 TOTAL CPU TIME =        0.0 (    0.0 MIN)
+ TOTAL WALL CLOCK TIME=        0.1 SECONDS, CPU UTILIZATION IS  40.00%
+               580000  WORDS OF DYNAMIC MEMORY USED
+ EXECUTION OF GAMESS TERMINATED NORMALLY Sat Dec  1 00:01:03 2012
+ DDI: 263624 bytes (0.3 MB / 0 MWords) used by master data server.
 
  ----------------------------------------
  CPU timing information for all processes
  ========================================
- 0: 0.198969 + 0.017997 = 0.216966
+ 0: 0.32 + 0.16 = 0.48
  ----------------------------------------
  ddikick.x: exited gracefully.
 ----- accounting info -----
-¶ro sty 24 22:50:02 CET 2007
-Files used on the master node slim were:
--rw-r--r--  1 langner langner     191 2007-01-24 22:49 /home/langner/tmp/gms-water_mp2/water_mp2.F05
--rw-r--r--  1 langner langner  180012 2007-01-24 22:49 /home/langner/tmp/gms-water_mp2/water_mp2.F08
--rw-r--r--  1 langner langner 1145424 2007-01-24 22:49 /home/langner/tmp/gms-water_mp2/water_mp2.F10
-Removing scratch catalog /home/langner/tmp/gms-water_mp2...
-removed directory: `/home/langner/tmp/gms-water_mp2'
-Finished with calculation.
-0.0u 0.0s 0:03.31 2.1% 0+0k 0+0io 0pf+0w
+Files used on the master node fwnc7111 were:
+-rw-r--r-- 1 kml kml     216 Dec  1 00:01 /home/kml/water_mp2.F05
+-rw-r--r-- 1 kml kml  180016 Dec  1 00:01 /home/kml/water_mp2.F08
+-rw-r--r-- 1 kml kml 1374240 Dec  1 00:01 /home/kml/water_mp2.F10
+Sat Dec  1 00:01:06 CET 2012
+0.0u 0.0s 0:03.15 0.3% 0+0k 0+16io 0pf+0w

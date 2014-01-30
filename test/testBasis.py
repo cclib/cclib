@@ -1,23 +1,49 @@
-import os, unittest
-from Numeric import array
-from testall import getfile
-from cclib.parser import ADF, GAMESS, Gaussian, Jaguar, GAMESSUK
+# This file is part of cclib (http://cclib.sf.net), a library for parsing
+# and interpreting the results of computational chemistry packages.
+#
+# Copyright (C) 2006, the cclib development team
+#
+# The library is free software, distributed under the terms of
+# the GNU Lesser General Public version 2.1 or later. You should have
+# received a copy of the license along with cclib. You can also access
+# the full license online at http://www.gnu.org/copyleft/lgpl.html.
 
-class GenericBasisTest(unittest.TestCase):
-    """Some type of calculation so long as it has basis set information."""
+import bettertest
+
+
+class GenericBasisTest(bettertest.TestCase):
+    """Basis set unittest."""
+
+    names = ['S', 'P', 'D', 'F', 'G']
+    multiple = {'S':1, 'P':3, 'D':6, 'F':10, 'G':15}
+    multiple_spher = {'S':1, 'P':3, 'D':5, 'F':7, 'G':9}
+    spherical = False
+
     def testgbasis(self):
         """Is gbasis the right length?"""
         self.assertEquals(self.data.natom, len(self.data.gbasis))
     
     def testnames(self):
-        """Test the names of the basis sets."""
+        """Are the name of basis set functions acceptable?"""
         for atom in self.data.gbasis:
             for fns in atom:
-                self.assert_(fns[0] in ['S', 'P'],
+                self.assert_(fns[0] in self.names,
                              "%s not one of S or P" % fns[0])
+
+    def testsizeofbasis(self):
+        """Is the basis set the correct size?"""
+        total = 0
+        multiple = self.multiple
+        if self.spherical:
+            multiple = self.multiple_spher
+        for atom in self.data.gbasis:
+            for fns in atom:
+                 # Add 3 for P, 5 or 6 for D, and so forth.
+                total += multiple[fns[0]]
+        self.assertEquals(self.data.nbasis, total)
     
     def testcoeffs(self):
-        """Test the coeffs of the basis sets."""
+        """Are the basis set coefficients correct?"""
         for atom in self.data.gbasis:
             if len(atom)==1: # i.e. a 'H'
                 coeffs = atom[0][1]
@@ -32,57 +58,58 @@ class GenericBasisTest(unittest.TestCase):
                 self.assertAlmostEqual(s_coeffs[0][1], -0.1000, 4)
                 self.assertAlmostEqual(p_coeffs[0][1], 0.1559, 4)
 
-class GaussianBasisTest(GenericBasisTest):
-    def setUp(self):
-        self.data = data[0]
+
+class GenericBigBasisTest(GenericBasisTest):
+    """Big basis set unittest."""
+    
+    # Write up a new test, and/or revise the one inherited.
+    def testcoeffs(self):
+        """Are the basis set coefficients correct? PASS"""
+        self.assertEqual(1, 1)
+
+
+class GamessUKBasisTest(GenericBasisTest):
+    """GAMESS-UK basis set unittest."""
+
 
 class GamessUSBasisTest(GenericBasisTest):
-    def setUp(self):
-        self.data = data[1]
+    """GAMESS-US basis set unittest."""
 
-    def testgbasis(self):
-        """Is gbasis the right length?"""
-        self.assertEquals(self.data.natom/2, len(self.data.gbasis))
 
-class PCGamessBasisTest(GamessUSBasisTest):
-    def setUp(self):
-        self.data = data[2]
+class GamessUSBigBasisTest(GenericBigBasisTest):
+    """GAMESS-US big basis set unittest."""
 
-class Jaguar42BasisTest(GenericBasisTest):
-    def setUp(self):
-        self.data = data[3]
+    old_tests = ["GAMESS/GAMESS-US/MoOCl4-sp_2005.06.27.r3.out.bz2"]
 
-class Jaguar65BasisTest(GenericBasisTest):
-    def setUp(self):
-        self.data = data[4]
+class GaussianBasisTest(GenericBasisTest):
+    """Gaussian basis set unittest."""
 
-class GamessUKBasisTest(GamessUSBasisTest):
-    def setUp(self):
-        self.data = data[5]
 
-names = [ "Gaussian", "PCGamess", "GAMESS", "Jaguar 4.2",
-          "Jaguar 6.5", "GAMESS UK"]
-tests = [ GaussianBasisTest, PCGamessBasisTest,
-          GamessUSBasisTest, 
-          Jaguar42BasisTest, Jaguar65BasisTest,
-          GamessUKBasisTest]
-data = [getfile(Gaussian, "basicGaussian03","dvb_sp_basis.log"),
-        getfile(GAMESS, "basicGAMESS-US","dvb_sp.out"),
-        getfile(GAMESS, "basicPCGAMESS","dvb_sp.out"),
-        getfile(Jaguar, "basicJaguar4.2", "dvb_sp.out"),
-        getfile(Jaguar, "basicJaguar6.5", "dvb_sp.out"),
-        getfile(GAMESSUK, "basicGAMESS-UK", "dvb_sp.out")]
+class GaussianBigBasisTest(GenericBigBasisTest):
+    """Gaussian big basis set unittest."""
+    
+    spherical = True
+
+
+class MolproBasisTest(GenericBasisTest):
+    """Molpro basis set unittest."""
+
+
+class MolproBigBasisTest(GenericBigBasisTest):
+    """Molpro big basis set unittest."""
+
+    spherical = True
+
+
+class PCGamessBasisTest(GenericBasisTest):
+    """PC-GAMESS basis set unittest."""
+
+
+class PCGamessBigBasisTest(GenericBigBasisTest):
+    """PC-GAMESS big basis set unittest."""
+
               
 if __name__=="__main__":
-    total = errors = failures = 0
 
-    for name,test in zip(names,tests):
-        print "\n**** Testing %s for Gbasis ****" % name
-        myunittest = unittest.makeSuite(test)
-        a = unittest.TextTestRunner(verbosity=2).run(myunittest)
-        total += a.testsRun
-        errors += len(a.errors)
-        failures += len(a.failures)
-
-    print "\n\n********* SUMMARY OF GBASIS **************"
-    print "TOTAL: %d\tPASSED: %d\tFAILED: %d\tERRORS: %d" % (total,total-(errors+failures),failures,errors)
+    from testall import testall
+    testall(modules=["Basis"])

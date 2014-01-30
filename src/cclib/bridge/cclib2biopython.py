@@ -1,12 +1,16 @@
-"""
-cclib (http://cclib.sf.net) is (c) 2006, the cclib development team
-and licensed under the LGPL (http://www.gnu.org/copyleft/lgpl.html).
-"""
-
-__revision__ = "$Revision$"
+# This file is part of cclib (http://cclib.sf.net), a library for parsing
+# and interpreting the results of computational chemistry packages.
+#
+# Copyright (C) 2006, the cclib development team
+#
+# The library is free software, distributed under the terms of
+# the GNU Lesser General Public version 2.1 or later. You should have
+# received a copy of the license along with cclib. You can also access
+# the full license online at http://www.gnu.org/copyleft/lgpl.html.
 
 from Bio.PDB.Atom import Atom
 from cclib.parser.utils import PeriodicTable
+
 
 def makebiopython(atomcoords, atomnos):
     """Create a list of BioPython Atoms.
@@ -14,13 +18,13 @@ def makebiopython(atomcoords, atomnos):
     This creates a list of BioPython Atoms suitable for use
     by Bio.PDB.Superimposer, for example.
 
-    >>> import Numeric
+    >>> import numpy
     >>> from Bio.PDB.Superimposer import Superimposer
-    >>> atomnos = Numeric.array([1,8,1],"i")
-    >>> a = Numeric.array([[-1,1,0],[0,0,0],[1,1,0]],"f")
-    >>> b = Numeric.array([[1.1,2,0],[1,1,0],[2,1,0]],"f")
+    >>> atomnos = numpy.array([1,8,1],"i")
+    >>> a = numpy.array([[-1,1,0],[0,0,0],[1,1,0]],"f")
+    >>> b = numpy.array([[1.1,2,0],[1,1,0],[2,1,0]],"f")
     >>> si = Superimposer()
-    >>> si.set_atoms(biopython(a,atomnos),biopython(b,atomnos))
+    >>> si.set_atoms(makebiopython(a,atomnos),makebiopython(b,atomnos))
     >>> print si.rms
     0.29337859596
     """
@@ -30,6 +34,7 @@ def makebiopython(atomcoords, atomnos):
         bioatoms.append(Atom(pt.element[atomno], coords, 0, 0, 0, 0, 0))
     return bioatoms
 
+
 if __name__ == "__main__":
-    import doctest, biopython
-    doctest.testmod(biopython)
+    import doctest
+    doctest.testmod()
