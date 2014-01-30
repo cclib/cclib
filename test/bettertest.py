@@ -8,13 +8,12 @@
 # received a copy of the license along with cclib. You can also access
 # the full license online at http://www.gnu.org/copyleft/lgpl.html.
 
-__revision__ = "$Revision$"
-
 import unittest
 
 import numpy
 
-from cclib.parser import ADF, GAMESS, GAMESSUK, Gaussian, Jaguar, Molpro
+# from cclib.parser import ADF, GAMESS, GAMESSUK, Gaussian, Jaguar, Molpro
+from cclib.parser import Gaussian
 
 
 class TestCase(unittest.TestCase):
@@ -32,7 +31,7 @@ class TestCase(unittest.TestCase):
     def assertInside(self, first, second, error, msg=None):
         """Fail if the second number isn't within a certain error of the first."""
         if not (second-error) < first < (second+error):
-            raise self.failureException, (msg or '%r != %r (+-%r)' % (first,second,error))
+            raise self.failureException(msg or '%r != %r (+-%r)' % (first,second,error))
 
     def assertArrayEquals(self, first, second, msg=None):
         """Fails unless two numpy arrays are identical."""
@@ -52,7 +51,7 @@ class TestCase(unittest.TestCase):
         if not numpy.alltrue(first == second):
             errormsg = "Not equal: %s != %s" % (first, second)
         if errormsg:
-            raise self.failureException, (msg or errormsg)
+            raise self.failureException(msg or errormsg)
 
     def run(self, result=None):
         """Custom run method for cclib."""

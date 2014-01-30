@@ -3,3 +3,5 @@
 main
 *.out
 *.pyc
+__pycache__
+build

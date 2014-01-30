@@ -8,14 +8,12 @@
 # received a copy of the license along with cclib. You can also access
 # the full license online at http://www.gnu.org/copyleft/lgpl.html.
 
-__revision__ = "$Revision$"
-
 import re
 
 import numpy
 
-import logfileparser
-import utils
+from . import logfileparser
+from . import utils
 
 
 class Jaguar(logfileparser.Logfile):
@@ -83,7 +81,7 @@ class Jaguar(logfileparser.Logfile):
                     values.append([denergy, ddensity])
                 else:
                     values.append([ddensity])
-                line = inputfile.next()
+                line = next(inputfile)
             self.scfvalues.append(values)
 
         # Hartree-Fock energy after SCF
@@ -111,15 +109,15 @@ class Jaguar(logfileparser.Logfile):
             p = re.compile("(\D+)\d+") # One/more letters followed by a number
             atomcoords = []
             atomnos = []
-            angstrom = inputfile.next()
-            title = inputfile.next()
-            line = inputfile.next()
+            angstrom = next(inputfile)
+            title = next(inputfile)
+            line = next(inputfile)
             while line.strip():
                 temp = line.split()
                 element = p.findall(temp[0])[0]
                 atomnos.append(self.table.number[element])
-                atomcoords.append(map(float, temp[1:]))
-                line = inputfile.next()
+                atomcoords.append(list(map(float, temp[1:])))
+                line = next(inputfile)
             self.atomcoords.append(atomcoords)
             self.atomnos = numpy.array(atomnos, "i")
             self.natom = len(atomcoords)
@@ -127,7 +125,7 @@ class Jaguar(logfileparser.Logfile):
         # Extract charge and multiplicity
         if line[2:22] == "net molecular charge":
             self.charge = int(line.split()[-1])
-            self.mult = int(inputfile.next().split()[-1])
+            self.mult = int(next(inputfile).split()[-1])
 
         if line[2:24] == "start of program geopt":
             if not self.geoopt:
@@ -146,13 +144,13 @@ class Jaguar(logfileparser.Logfile):
                 self.geovalues = []
                 self.geotargets = numpy.zeros(5, "d")
             gopt_step = int(line.split()[-1])
-            energy = inputfile.next()
+            energy = next(inputfile)
             # quick hack for messages of the sort:
             #   ** restarting optimization from step    2 **
             # as found in regression file ptnh3_2_H2O_2_2plus.out
-            if inputfile.next().strip():
-                blank = inputfile.next()
-            line = inputfile.next()
+            if next(inputfile).strip():
+                blank = next(inputfile)
+            line = next(inputfile)
             values = []
             target_index = 0                
             if gopt_step == 1:
@@ -165,13 +163,13 @@ class Jaguar(logfileparser.Logfile):
                     values.append(float(line[26:37]))
                     self.geotargets[target_index] = float(line[43:54])
                     target_index += 1
-                line = inputfile.next()
+                line = next(inputfile)
             self.geovalues.append(values)
 
         if line.find("number of occupied orbitals") > 0:
         # Get number of MOs
             occs = int(line.split()[-1])
-            line = inputfile.next()
+            line = next(inputfile)
             virts = int(line.split()[-1])
             self.nmo = occs + virts
             self.homos = numpy.array([occs-1], "i")
@@ -182,11 +180,11 @@ class Jaguar(logfileparser.Logfile):
         # Get number of MOs for an unrestricted calc
 
             aoccs = int(line.split()[-1])
-            line = inputfile.next()
+            line = next(inputfile)
             avirts = int(line.split()[-1])
-            line = inputfile.next()
+            line = next(inputfile)
             boccs = int(line.split()[-1])
-            line = inputfile.next()
+            line = next(inputfile)
             bvirt = int(line.split()[-1])
 
             self.nmo = aoccs + avirts
@@ -219,7 +217,7 @@ class Jaguar(logfileparser.Logfile):
             if not hasattr(self, "moenergies"):
                 self.moenergies = []
             if issyms and not hasattr(self, "mosyms"):
-                self.mosyms = []
+                    self.mosyms = []
             
             # Grow moeneriges/mosyms and make sure they are empty when
             #   parsed multiple times - currently cclib returns only
@@ -232,11 +230,11 @@ class Jaguar(logfileparser.Logfile):
                     self.mosyms.append([])
                 self.mosyms[spin] = []
             
-            line = inputfile.next().split()
+            line = next(inputfile).split()
             while len(line) > 0:
                 if issyms:
-                    energies = [float(line[2*i]) for i in range(len(line)/2)]
-                    syms = [line[2*i+1] for i in range(len(line)/2)]
+                    energies = [float(line[2*i]) for i in range(len(line)//2)]
+                    syms = [line[2*i+1] for i in range(len(line)//2)]
                 else:
                     energies = [float(e) for e in line]
                 energies = [utils.convertor(e, "hartree", "eV") for e in energies]
@@ -244,17 +242,17 @@ class Jaguar(logfileparser.Logfile):
                 if issyms:
                     syms = [self.normalisesym(s) for s in syms]
                     self.mosyms[spin].extend(syms)
-                line = inputfile.next().split()
+                line = next(inputfile).split()
             
             # There should always be an extra blank line after all this.
-            line = inputfile.next()
+            line = next(inputfile)
 
         if line.find("Occupied + virtual Orbitals- final wvfn") > 0:
             
-            blank = inputfile.next()
-            stars = inputfile.next()
-            blank = inputfile.next()
-            blank = inputfile.next()
+            blank = next(inputfile)
+            stars = next(inputfile)
+            blank = next(inputfile)
+            blank = next(inputfile)
             
             if not hasattr(self,"mocoeffs"):
                 if self.unrestrictedflag:
@@ -281,21 +279,21 @@ class Jaguar(logfileparser.Logfile):
                 mocoeffs = numpy.zeros((len(self.moenergies[s]), self.nbasis), "d")
 
                 if s == 1: #beta case
-                    stars = inputfile.next()
-                    blank = inputfile.next()
-                    title = inputfile.next()
-                    blank = inputfile.next()
-                    stars = inputfile.next()
-                    blank = inputfile.next()
-                    blank = inputfile.next()
+                    stars = next(inputfile)
+                    blank = next(inputfile)
+                    title = next(inputfile)
+                    blank = next(inputfile)
+                    stars = next(inputfile)
+                    blank = next(inputfile)
+                    blank = next(inputfile)
 
-                for k in range(0, len(self.moenergies[s]), 5):
+                for k in range(0,len(self.moenergies[s]),5):
                     if self.progress:
                         self.updateprogress(inputfile, "Coefficients")
 
-                    numbers = inputfile.next()
-                    eigens = inputfile.next()
-                    line = inputfile.next()
+                    numbers = next(inputfile)
+                    eigens = next(inputfile)
+                    line = next(inputfile)
 
                     for i in range(self.nbasis):
 
@@ -336,7 +334,7 @@ class Jaguar(logfileparser.Logfile):
                         for j in range(len(info[3:])):
                             mocoeffs[j+k, i] = float(info[3+j])
 
-                        line = inputfile.next()
+                        line = next(inputfile)
 
                     if not hasattr(self,"aonames"):
                         self.aonames = aonames
@@ -356,10 +354,10 @@ class Jaguar(logfileparser.Logfile):
                 if self.progress:
                     self.updateprogress(inputfile, "Overlap")
 
-                blank = inputfile.next()
-                header = inputfile.next()
+                blank = next(inputfile)
+                header = next(inputfile)
                 for j in range(i, self.nbasis):
-                    temp = map(float, inputfile.next().split()[1:])
+                    temp = list(map(float, next(inputfile).split()[1:]))
                     self.aooverlaps[j, i:(i+len(temp))] = temp
                     self.aooverlaps[i:(i+len(temp)), j] = temp
             
@@ -388,15 +386,15 @@ class Jaguar(logfileparser.Logfile):
             self.vibdisps = []
             forceconstants = False
             intensities = False
-            blank = inputfile.next()
-            line = inputfile.next()
+            blank = next(inputfile)
+            line = next(inputfile)
             while line.strip():
                 if "force const" in line:
                     forceconstants = True
                 if "intensities" in line:
                     intensities = True
-                line = inputfile.next()
-            freqs = inputfile.next()
+                line = next(inputfile)
+            freqs = next(inputfile)
             
             # The last block has an extra blank line after it - catch it.
             while freqs.strip():
@@ -405,22 +403,22 @@ class Jaguar(logfileparser.Logfile):
                 nmodes = len(freqs.split())-1
 
                 # Append the frequencies.
-                self.vibfreqs.extend(map(float, freqs.split()[1:]))
-                line = inputfile.next().split()
+                self.vibfreqs.extend(list(map(float, freqs.split()[1:])))
+                line = next(inputfile).split()
                 
                 # May skip symmetries (older Jaguar versions).
                 if line[0] == "symmetries":
                     if not hasattr(self, "vibsyms"):
                         self.vibsyms = []
-                    self.vibsyms.extend(map(self.normalisesym, line[1:]))
-                    line = inputfile.next().split()                                
+                    self.vibsyms.extend(list(map(self.normalisesym, line[1:])))
+                    line = next(inputfile).split()                                
                 if intensities:
                     if not hasattr(self, "vibirs"):
                         self.vibirs = []
-                    self.vibirs.extend(map(float, line[1:]))
-                    line = inputfile.next().split()                                
+                    self.vibirs.extend(list(map(float, line[1:])))
+                    line = next(inputfile).split()                                
                 if forceconstants:
-                    line = inputfile.next()
+                    line = next(inputfile)
 
                 # Start parsing the displacements.
                 # Variable 'q' holds up to 7 lists of triplets.
@@ -429,7 +427,7 @@ class Jaguar(logfileparser.Logfile):
                     # Variable 'p' holds up to 7 triplets.
                     p = [ [] for i in range(7) ]
                     for i in range(3):
-                        line = inputfile.next()
+                        line = next(inputfile)
                         disps = [float(disp) for disp in line.split()[2:]]
                         for j in range(nmodes):
                             p[j].append(disps[j])
@@ -437,8 +435,8 @@ class Jaguar(logfileparser.Logfile):
                         q[i].append(p[i])
 
                 self.vibdisps.extend(q[:nmodes])
-                blank = inputfile.next()
-                freqs = inputfile.next()
+                blank = next(inputfile)
+                freqs = next(inputfile)
 
             # Convert new data to arrays.
             self.vibfreqs = numpy.array(self.vibfreqs, "d")
@@ -461,7 +459,7 @@ class Jaguar(logfileparser.Logfile):
             self.etenergies.append(etenergy)
             # Skip 4 lines
             for i in range(5):
-                line = inputfile.next()
+                line = next(inputfile)
             self.etsecs.append([])
             # Jaguar calculates only singlet states.
             self.etsyms.append('Singlet-A')
@@ -470,10 +468,10 @@ class Jaguar(logfileparser.Logfile):
                 toMO = int(line.split()[2])-1
                 coeff = float(line.split()[-1])
                 self.etsecs[-1].append([(fromMO, 0), (toMO, 0), coeff])
-                line = inputfile.next()
+                line = next(inputfile)
             # Skip 3 lines
             for i in range(4):
-                line = inputfile.next()
+                line = next(inputfile)
             strength = float(line.split()[-1])
             self.etoscs.append(strength)
 

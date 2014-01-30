@@ -10,8 +10,6 @@
 
 """Create MANIFEST"""
 
-__revision__ = "$Revision$"
-
 import glob
 import os
 
@@ -30,7 +28,7 @@ for folder in folders:
 
 # Include data files
 files.append(os.path.join("data", "regressionfiles.txt"))
-files.append(os.path.join("data", "wget.sh"))
+files.append(os.path.join("data", "regression_download.sh"))
 folders = glob.glob(os.path.join('data', '*'))
 for folder in folders:
     basicfolders = glob.glob(os.path.join(folder, 'basic*'))
@@ -47,6 +45,6 @@ files.append(os.path.join("test", "testdata"))
 
 for f in files:
     if not os.path.isfile(f):
-        print "%s does not exist" % f
+        print("%s does not exist" % f)
 
-print >> open("MANIFEST","w"), "\n".join(files)
+print("\n".join(files), file=open("MANIFEST", "w"))

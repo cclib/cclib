@@ -8,23 +8,21 @@
 # received a copy of the license along with cclib. You can also access
 # the full license online at http://www.gnu.org/copyleft/lgpl.html.
 
-__revision__ = "$Revision$"
-
 try:
     import openbabel
 except Exception:
     pass
 else:
-    from cclib2openbabel import makeopenbabel
+    from .cclib2openbabel import makeopenbabel
 
 try:
     import PyQuante
 except ImportError:
     pass
 else:
-    from cclib2pyquante import makepyquante
+    from .cclib2pyquante import makepyquante
 
 try:
-    from cclib2biopython import makebiopython
+    from .cclib2biopython import makebiopython
 except ImportError:
     pass    
