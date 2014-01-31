@@ -45,29 +45,29 @@ def setup_cclib():
     if 'egg' in sys.argv:
         sys.argv.pop(sys.argv.index('egg'))
         from setuptools import setup
+
     from distutils.core import setup
-    from distutils.sysconfig import get_python_lib
 
-    # Setup the list of packages.
-    cclib_packages = ['cclib',
-                      'cclib.parser', 'cclib.progress', 'cclib.method', 'cclib.bridge',
-                      'cclib.test']
+    # The list of packages to be installed.
+    cclib_packages = ['cclib', 'cclib.parser', 'cclib.progress', 'cclib.method', 'cclib.bridge',
+                      'cclib.data', 'cclib.test']
 
-    # Setup the list of data files.
-    cclib_prefix = get_python_lib()
-    test_prefix = cclib_prefix + '/test'
-    data_prefix = cclib_prefix + '/data'
-    cclib_datafiles = [ (cclib_prefix, ['ANNOUNCE', 'CHANGELOG', 'INSTALL', 'LICENSE', 'README', 'THANKS']),
-                        (test_prefix, ['test/testdata']),
-                        (data_prefix, ['data/regressionfiles.txt', 'data/regression_download.sh'])]
+    # Previously we used data_files for all data files, but that proved clusmy, because
+    # it was very hard to get the target directory for these files right, and cclib likes
+    # right in the package root directory. Using package_data proves to be much more natural.
+    package_data_test = [ 'testdata' ]
+    package_data_data = [ 'regression_download.sh', 'regressionfiles.txt' ]
     for program in programs:
         data_dirs = os.listdir('data/%s' %program)
         for data_dir in data_dirs:
             if data_dir[:5] == 'basic':
-                dest = '%s/%s/%s' %(data_prefix, program, data_dir)
-                path = 'data/%s/%s' %(program, data_dir)
-                newfiles = ['%s/%s' %(path,fname) for fname in os.listdir(path) if fname[0] != '.']
-                cclib_datafiles.append((dest, newfiles))
+                path = '%s/%s' %(program, data_dir)
+                newfiles = ['%s/%s' %(path,fname) for fname in os.listdir('data/'+path) if fname[0] != '.']
+                package_data_data.extend(newfiles)
+
+    # Some final generic files not related to the code can be installed with data_files.
+    share_prefix = 'share/cclib'
+    cclib_datafiles = [ (share_prefix, ['ANNOUNCE', 'CHANGELOG', 'INSTALL', 'LICENSE', 'README', 'THANKS']) ]
 
     setup(
         name = "cclib",
@@ -83,9 +83,11 @@ def setup_cclib():
         classifiers = filter(None, classifiers.split("\n")),
         platforms = ["Any."],
         scripts = ["src/scripts/ccget", "src/scripts/cda"],
-        package_dir = {'cclib':'src/cclib', 'cclib.test':'test'},
         packages = cclib_packages,
-        data_files = cclib_datafiles )
+        package_dir = {'cclib':'src/cclib', 'cclib.data':'data', 'cclib.test':'test'},
+        package_data = { 'cclib.data' : package_data_data, 'cclib.test' : package_data_test },
+        data_files = cclib_datafiles,
+    )
 
 
 if __name__ == '__main__':
