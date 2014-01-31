@@ -65,7 +65,8 @@ def getfile(parser, *location):
 def gettestdata(module=None):
     """Returns a dict of test files for a given module."""
 
-    lines = open('testdata').readlines()
+    testdatadir = os.path.dirname(os.path.realpath(sys.argv[0]))
+    lines = open(testdatadir+'/testdata').readlines()
 
     # Remove blank lines and those starting with '#'.
     lines = [line.split() for line in lines if (line.strip() and line[0] != '#')]
