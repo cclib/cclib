@@ -20,8 +20,7 @@ algorithms in a package-independent manner.
 doclines = __doc__.split("\n")
 
 # Chosen from http://www.python.org/pypi?:action=list_classifiers
-classifiers = """\
-Development Status :: 5 - Production/Stable
+classifiers = """Development Status :: 5 - Production/Stable
 Environment :: Console
 Intended Audience :: Science/Research
 Intended Audience :: Developers
@@ -30,8 +29,7 @@ Natural Language :: English
 Operating System :: OS Independent
 Programming Language :: Python
 Topic :: Scientific/Engineering :: Chemistry
-Topic :: Software Development :: Libraries :: Python Modules
-"""
+Topic :: Software Development :: Libraries :: Python Modules"""
 
 programs = ['ADF', 'GAMESS', 'GAMESS-UK', 'Gaussian', 'Jaguar', 'Molpro', 'ORCA']
 
@@ -80,7 +78,7 @@ def setup_cclib():
         license = "LGPL",
         description = doclines[0],
         long_description = "\n".join(doclines[2:]),      
-        classifiers = filter(None, classifiers.split("\n")),
+        classifiers = classifiers.split("\n"),
         platforms = ["Any."],
         scripts = ["src/scripts/ccget", "src/scripts/cda"],
         package_dir = {'cclib':'src/cclib', 'cclib.test':'test'},
