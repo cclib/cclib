@@ -61,7 +61,7 @@ if __name__ == "__main__":
                     
 
             print("-------------------------------------")
-            print(" T:   %7.3f %7.3f %7.3f %7.3f"%(reduce(numpy.add, fa.donations[spin]), \
-                        reduce(numpy.add, fa.bdonations[spin]), \
-                        reduce(numpy.add, fa.repulsions[spin]), \
-                        reduce(numpy.add, fa.residuals[spin])))
+            print(" T:   %7.3f %7.3f %7.3f %7.3f"%(fa.donations[spin].sum(), \
+                        fa.bdonations[spin].sum(), \
+                        fa.repulsions[spin].sum(), \
+                        fa.residuals[spin].sum()))
