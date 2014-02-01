@@ -49,8 +49,9 @@ def printResults():
             
 
     print("---------------------------")
-    print("T:  %7.3f %7.3f %7.3f"%(reduce(numpy.add, fa.donations[0]), \
-                reduce(numpy.add, fa.bdonations[0]), reduce(numpy.add, fa.repulsions[0])))
+    print("T:  %7.3f %7.3f %7.3f" % (fa.donations[0].sum(),
+                                        fa.bdonations[0].sum(),
+                                        fa.repulsions[0].sum()))
     print("\n\n")
 
 
@@ -59,9 +60,9 @@ class CDATest(unittest.TestCase):
         """Testing CDA results against Frenking's code"""
         fa = main(log=False)
         
-        donation = reduce(numpy.add, fa.donations[0])
-        bdonation = reduce(numpy.add, fa.bdonations[0])
-        repulsion = reduce(numpy.add, fa.repulsions[0])
+        donation = fa.donations[0].sum()
+        bdonation = fa.bdonations[0].sum()
+        repulsion = fa.repulsions[0].sum()
 
         self.assertAlmostEqual(donation, 0.181, 3)
         self.assertAlmostEqual(bdonation, 0.471, 3)
