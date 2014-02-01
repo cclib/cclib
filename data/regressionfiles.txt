@@ -78,6 +78,7 @@ Gaussian/Gaussian09/534.out
 Gaussian/Gaussian09/guessIndo_modified_ALT.out
 Gaussian/Gaussian09/Ru2bpyen2_H2_freq3.log
 Gaussian/Gaussian09/25DMF_HRANH.log
+Gaussian/Gaussian09/dvb_sp_terse.log
 Gaussian/Gaussian03/ortho_prod_freq.log
 Gaussian/Gaussian03/QVGXLLKOCUKJST-UHFFFAOYAJmult3Fixed.out
 Gaussian/Gaussian03/AM1_SP.out
