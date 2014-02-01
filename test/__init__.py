@@ -9,4 +9,4 @@
 # the full license online at http://www.gnu.org/copyleft/lgpl.html.
 
 # Convenience methods.
-from testall import testall
+from .testall import testall
