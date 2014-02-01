@@ -10,8 +10,8 @@ import re
 
 import numpy
 
-import utils
-import logfileparser
+from .import logfileparser
+from . import utils
 
 
 class NWChem(logfileparser.Logfile):
