@@ -100,4 +100,3 @@ def ccopen(source, *args, **kargs):
         return filetype(source, *args, **kargs)
     except TypeError:
         print("Log file type not identified.")
-        raise
