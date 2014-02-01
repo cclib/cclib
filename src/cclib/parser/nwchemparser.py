@@ -3,8 +3,6 @@ cclib (http://cclib.sf.net) is (c) 2006, the cclib development team
 and licensed under the LGPL (http://www.gnu.org/copyleft/lgpl.html).
 """
 
-__revision__ = "$Revision: 796 $"
-
 
 import re
 
@@ -52,17 +50,15 @@ class NWChem(logfileparser.Logfile):
 
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
-        
-        # Number of atoms (THIS IS FROM THE GAUSSIAN PARSER, PLEASE REPLACE)
-        if line[1:8] == "NAtoms=":
 
-            self.updateprogress(inputfile, "Attributes", self.fupdate)
-                    
-            natom = int(line.split()[1])
+        # If the geometry is printed in XYZ format, it will have the number of atoms.
+        if line[12:31] == "XYZ format geometry":
+
+            dashes = next(inputfile)
+            natom = int(next(inputfile).strip())
             if hasattr(self, "natom"):
                 assert self.natom == natom
             else:
-                # I wonder whether this code will ever be executed.
                 self.natom = natom
 
 if __name__ == "__main__":
