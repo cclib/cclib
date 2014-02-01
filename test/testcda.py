@@ -44,8 +44,10 @@ def printResults():
     spin = 0
     for i in range(len(fa.donations[0])):
 
-        print("%2i: %7.3f %7.3f %7.3f"%(i,fa.donations[spin][i], fa.bdonations[spin][i], \
-                                        fa.repulsions[spin][i]))
+        print("%2i: %7.3f %7.3f %7.3f" % (i,
+                                            fa.donations[spin][i],
+                                            fa.bdonations[spin][i],
+                                            fa.repulsions[spin][i]))
             
 
     print("---------------------------")
