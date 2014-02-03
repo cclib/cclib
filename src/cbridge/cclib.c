@@ -26,7 +26,7 @@ PyObject* ccopen(const char* filename) {
 
     ccopenFunction = PyObject_GetAttrString(parserModule, "ccopen");
     if ( ccopenFunction && PyCallable_Check(ccopenFunction)) {
-    	filenameObject = PyString_FromString(filename);
+        filenameObject = PyUnicode_FromString(filename);
         if (!filenameObject) {
             printf("There's a problem with %s.\n", filename);
             Py_DECREF(ccopenFunction);
