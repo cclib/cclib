@@ -12,7 +12,7 @@ import unittest
 
 import numpy
 
-# from cclib.parser import ADF, GAMESS, GAMESSUK, Gaussian, Jaguar, Molpro
+from cclib.parser import ADF, GAMESS, GAMESSUK, Gaussian, Jaguar, Molpro
 from cclib.parser import Gaussian
 
 
