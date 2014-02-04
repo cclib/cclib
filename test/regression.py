@@ -21,7 +21,7 @@ import logging
 import unittest
 
 from glob import glob
-from io import StringIO
+from StringIO import StringIO
 
 from cclib.parser import ccopen
 from cclib.parser import ADF, GAMESS, GAMESSUK, Gaussian, Jaguar, Molpro, ORCA
@@ -401,8 +401,8 @@ def main(which=[], traceback=False):
         if not os.path.isfile(os.path.join("..", "data", "regression", x)):
             missing.append(x)
         elif os.path.join("..", "data", "regression", x) not in flatten(filenames):
-            print("\nERROR: The regression file %s is present, but not included in " \
-                  "the 'filenames' variable.\n\nPlease add a new glob statement." % x)
+            print "\nERROR: The regression file %s is present, but not included in " \
+                  "the 'filenames' variable.\n\nPlease add a new glob statement." % x
             sys.exit(1)       
 
     if len(missing) > 0:
@@ -410,10 +410,11 @@ def main(which=[], traceback=False):
               "         Run wget.sh in the ../data directory to update.\n" % len(missing))
         print("Missing files:")
         print("\n".join(missing))
+
         try:
             input("(Press ENTER to continue or CTRL+C to exit)")
         except KeyboardInterrupt:
-            print("\n")
+            print "\n"
             sys.exit(0)
 
     # When a unit test is removed or replaced by a newer version, the old logfile
@@ -439,12 +440,12 @@ def main(which=[], traceback=False):
         if len(which) > 0 and not name in which:
             continue;
 
-        print("Are the %s files ccopened and parsed correctly?" % name)
+        print "Are the %s files ccopened and parsed correctly?" % name
         current_filenames = filenames[iname]
         current_filenames.sort()
         for fname in current_filenames:
             total += 1
-            print("  %s..."  % fname, end=" ")
+            print "  %s..."  % fname, end=" "
 
             # Check if there is a test (needs to be an appropriately named function).
             # If not, there can also be a test that does not assume the file is
@@ -464,7 +465,7 @@ def main(which=[], traceback=False):
                     logfile  = ccopen(fname)
                 except:
                     errors += 1
-                    print("ccopen error")
+                    print "ccopen error"
                 else:
                     if type(logfile) == type(dummyfiles[iname]):
                         try:
@@ -473,7 +474,7 @@ def main(which=[], traceback=False):
                         except KeyboardInterrupt:
                             sys.exit(1)
                         except:
-                            print("parse error")
+                            print "parse error"
                             errors += 1
                         else:
                             if test_this:
@@ -488,30 +489,30 @@ def main(which=[], traceback=False):
                                                 print(f[1])
                                         continue
                                 except AssertionError:
-                                    print("test failed")
+                                    print "test failed"
                                     failures += 1
                                 else:
-                                    print("parsed and tested")
+                                    print "parsed and tested"
                             else:
-                                print("parsed")
+                                print "parsed"
                     else:
-                        print("ccopen failed")
+                        print "ccopen failed"
                         failures += 1
             else:
                 try:
                     eval(funcname_noparse)(filename)
                 except AssertionError:
-                    print("test failed")
+                    print "test failed"
                     failures += 1
                 except:
-                    print("parse error")
+                    print "parse error"
                     errors += 1
                 else:
-                    print("test passed")
+                    print "test passed"                
                 
         print
             
-    print("Total: %d   Failed: %d  Errors: %d" % (total, failures, errors))
+    print "Total: %d   Failed: %d  Errors: %d" % (total, failures, errors)
     if not traceback and failures + errors > 0:
         print("\nFor more information on failures/errors, add 'traceback' as argument.")
 
