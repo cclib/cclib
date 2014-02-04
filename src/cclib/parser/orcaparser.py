@@ -8,8 +8,6 @@
 # received a copy of the license along with cclib. You can also access
 # the full license online at http://www.gnu.org/copyleft/lgpl.html.
 
-__revision__ = "$Revision$"
-
 import numpy
 
 import logfileparser
@@ -699,4 +697,3 @@ if __name__ == "__main__":
         for i in range(len(sys.argv[2:])):
             if hasattr(data, sys.argv[2 + i]):
                 print getattr(data, sys.argv[2 + i]) 
-

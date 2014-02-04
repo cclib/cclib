@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
 #
 # This file is part of cclib (http://cclib.sf.net), a library for parsing
 # and interpreting the results of computational chemistry packages.
@@ -51,17 +51,18 @@ if __name__ == "__main__":
 
             for i in range(len(fa.donations[spin])):
 
-                print "%4i: %7.3f %7.3f %7.3f %7.3f"%(i+1,fa.donations[spin][i], \
-                                                    fa.bdonations[spin][i], \
-                                                    fa.repulsions[spin][i], \
-                                                    fa.residuals[spin][i])
+                print "%4i: %7.3f %7.3f %7.3f %7.3f" % \
+                        (i+1,fa.donations[spin][i], \
+                        fa.bdonations[spin][i], \
+                        fa.repulsions[spin][i], \
+                        fa.residuals[spin][i])
 
                 if i == data1.homos[spin]:
                     print "------ HOMO - LUMO gap ------"
-                    
 
             print "-------------------------------------"
-            print " T:   %7.3f %7.3f %7.3f %7.3f"%(reduce(numpy.add, fa.donations[spin]), \
-                        reduce(numpy.add, fa.bdonations[spin]), \
-                        reduce(numpy.add, fa.repulsions[spin]), \
-                        reduce(numpy.add, fa.residuals[spin]))
+            print " T:   %7.3f %7.3f %7.3f %7.3f" % \
+                    (fa.donations[spin].sum(),
+                        fa.bdonations[spin].sum(),
+                        fa.repulsions[spin].sum(),
+                        fa.residuals[spin].sum())

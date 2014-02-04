@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
 #
 # This file is part of cclib (http://cclib.sf.net), a library for parsing
 # and interpreting the results of computational chemistry packages.
@@ -16,8 +16,6 @@ cclib is a Python library that provides parsers for computational
 chemistry log files. It also provides a platform to implement
 algorithms in a package-independent manner.
 """
-
-__revision__ = "$Revision$"
 
 doclines = __doc__.split("\n")
 
@@ -48,6 +46,7 @@ def setup_cclib():
         sys.argv.pop(sys.argv.index('egg'))
         from setuptools import setup
     from distutils.core import setup
+    from distutils.sysconfig import get_python_lib
 
     # Setup the list of packages.
     cclib_packages = ['cclib',
@@ -55,12 +54,12 @@ def setup_cclib():
                       'cclib.test']
 
     # Setup the list of data files.
-    cclib_prefix = 'lib/python%i.%i/site-packages/cclib' %(sys.version_info[0], sys.version_info[1])
+    cclib_prefix = get_python_lib()
     test_prefix = cclib_prefix + '/test'
     data_prefix = cclib_prefix + '/data'
     cclib_datafiles = [ (cclib_prefix, ['ANNOUNCE', 'CHANGELOG', 'INSTALL', 'LICENSE', 'README', 'THANKS']),
                         (test_prefix, ['test/testdata']),
-                        (data_prefix, ['data/regressionfiles.txt', 'data/wget.sh'])]
+                        (data_prefix, ['data/regressionfiles.txt', 'data/regression_download.sh'])]
     for program in programs:
         data_dirs = os.listdir('data/%s' %program)
         for data_dir in data_dirs:

@@ -1,1 +1,0 @@
-wget -x -N -nH -nv --cut-dirs=1 -R html -B http://cclib.sourceforge.net/data/ -i regressionfiles.txt

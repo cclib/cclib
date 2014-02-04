@@ -8,8 +8,6 @@
 # received a copy of the license along with cclib. You can also access
 # the full license online at http://www.gnu.org/copyleft/lgpl.html.
 
-__revision__ = "$Revision$"
-
 import os
 import sys
 import unittest
@@ -19,12 +17,20 @@ from cclib.parser import ADF, GAMESS, GAMESSUK, Gaussian, Jaguar, Molpro, ORCA
 
 # All supported parsers.
 parsers = [ "ADF", "GAMESS", "GAMESSUK", "Gaussian", "Jaguar", "Molpro", "ORCA" ]
+parsers = [ "ADF", "GAMESS", "GAMESSUK", "Gaussian", "Jaguar", "Molpro", "ORCA" ]
 
 # The modules to be included in the global test testall().
 test_modules = [ "SP", "SPun", "GeoOpt", "Basis", "Core",   # Basic calculations.
                  "MP", "CC", "CI", "TD", "TDun",            # Post-SCF calculations.
                  "vib" ]                                    # Other property calculations.
 
+
+def get_program_dir(parser_name):
+    """In one case the directory is names differently than the parser."""
+    if parser_name == "GAMESSUK":
+        return "GAMESS-UK"
+    else:
+        return parser_name
 
 def getfile(parser, *location):
     """Returns a parsed logfile.
@@ -38,11 +44,7 @@ def getfile(parser, *location):
         logfile - the parser object used for parsing
     """
 
-    # GAMESS-UK files are in the GAMESS path.
-    if parser.__name__=="GAMESSUK":
-        location = ("..", "data", "GAMESS-UK") + location
-    else:
-        location = ("..", "data", parser.__name__) + location
+    location = os.path.join(("..", "data", get_program_dir(parser.__name__)) + location)
 
     # Now construct the proper full path(s).
     # Multiple paths will be in a list only if more than one data file given.
@@ -63,7 +65,8 @@ def getfile(parser, *location):
 def gettestdata(module=None):
     """Returns a dict of test files for a given module."""
 
-    lines = open('testdata').readlines()
+    testdatadir = os.path.dirname(os.path.realpath(sys.argv[0]))
+    lines = open(testdatadir+'/testdata').readlines()
 
     # Remove blank lines and those starting with '#'.
     lines = [line.split() for line in lines if (line.strip() and line[0] != '#')]
@@ -139,11 +142,10 @@ def testall(parserchoice=parsers, modules=test_modules):
         testdata = gettestdata(module)
         
         if parserchoice:
-            testdata = dict([ (x,y) for x,y in testdata.iteritems()
+            testdata = dict([ (x,y) for x,y in testdata.items()
                               if y['parser'] in parserchoice ])
                 
-        testnames = testdata.keys()
-        testnames.sort()
+        testnames = sorted(testdata.keys())
         for name in testnames:
 
             path = '/'.join(testdata[name]["location"])
@@ -168,8 +170,7 @@ def testall(parserchoice=parsers, modules=test_modules):
                     l[3] += len(a.skipped)
 
     print "\n\n********* SUMMARY PER PACKAGE ****************"
-    names = perpackage.keys()
-    names.sort()
+    names = sorted(perpackage.keys())
     total = [0, 0, 0, 0]
     print " "*14, "\t".join(["Total", "Passed", "Failed", "Errors", "Skipped"])
     for name in names:

@@ -1,14 +1,12 @@
 # This file is part of cclib (http://cclib.sf.net), a library for parsing
 # and interpreting the results of computational chemistry packages.
 #
-# Copyright (C) 2007, the cclib development team
+# Copyright (C) 2007-2014, the cclib development team
 #
 # The library is free software, distributed under the terms of
 # the GNU Lesser General Public version 2.1 or later. You should have
 # received a copy of the license along with cclib. You can also access
 # the full license online at http://www.gnu.org/copyleft/lgpl.html.
-
-__revision__ = "$Revision$"
 
 import os
 import logging
@@ -46,13 +44,16 @@ def printResults():
     spin = 0
     for i in range(len(fa.donations[0])):
 
-        print "%2i: %7.3f %7.3f %7.3f"%(i,fa.donations[spin][i], fa.bdonations[spin][i], \
-                                        fa.repulsions[spin][i])
+        print "%2i: %7.3f %7.3f %7.3f" % (i,
+                                            fa.donations[spin][i],
+                                            fa.bdonations[spin][i],
+                                            fa.repulsions[spin][i])
             
 
     print "---------------------------"
-    print "T:  %7.3f %7.3f %7.3f"%(reduce(numpy.add, fa.donations[0]), \
-                reduce(numpy.add, fa.bdonations[0]), reduce(numpy.add, fa.repulsions[0]))
+    print "T:  %7.3f %7.3f %7.3f" % (fa.donations[0].sum(),
+                                        fa.bdonations[0].sum(),
+                                        fa.repulsions[0].sum())
     print "\n\n"
 
 
@@ -61,9 +62,9 @@ class CDATest(unittest.TestCase):
         """Testing CDA results against Frenking's code"""
         fa = main(log=False)
         
-        donation = reduce(numpy.add, fa.donations[0])
-        bdonation = reduce(numpy.add, fa.bdonations[0])
-        repulsion = reduce(numpy.add, fa.repulsions[0])
+        donation = fa.donations[0].sum()
+        bdonation = fa.bdonations[0].sum()
+        repulsion = fa.repulsions[0].sum()
 
         self.assertAlmostEqual(donation, 0.181, 3)
         self.assertAlmostEqual(bdonation, 0.471, 3)
