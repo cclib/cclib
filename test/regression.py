@@ -509,7 +509,7 @@ def main(which=[], traceback=False):
                 else:
                     print("test passed")
                 
-        print
+        print()
             
     print("Total: %d   Failed: %d  Errors: %d" % (total, failures, errors))
     if not traceback and failures + errors > 0:
