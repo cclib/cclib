@@ -46,6 +46,7 @@ def setup_cclib():
         sys.argv.pop(sys.argv.index('egg'))
         from setuptools import setup
     from distutils.core import setup
+    from distutils.sysconfig import get_python_lib
 
     # Setup the list of packages.
     cclib_packages = ['cclib',
@@ -53,7 +54,7 @@ def setup_cclib():
                       'cclib.test']
 
     # Setup the list of data files.
-    cclib_prefix = 'lib/python%i.%i/site-packages/cclib' %(sys.version_info[0], sys.version_info[1])
+    cclib_prefix = get_python_lib()
     test_prefix = cclib_prefix + '/test'
     data_prefix = cclib_prefix + '/data'
     cclib_datafiles = [ (cclib_prefix, ['ANNOUNCE', 'CHANGELOG', 'INSTALL', 'LICENSE', 'README', 'THANKS']),
