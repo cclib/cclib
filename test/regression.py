@@ -406,13 +406,13 @@ def main(which=[], traceback=False):
             sys.exit(1)       
 
     if len(missing) > 0:
-        print("\nWARNING: You are missing %d regression file(s).\n" \
-              "         Run wget.sh in the ../data directory to update.\n" % len(missing))
-        print("Missing files:")
-        print("\n".join(missing))
+        print "\nWARNING: You are missing %d regression file(s).\n" \
+              "         Run wget.sh in the ../data directory to update.\n" % len(missing)
+        print "Missing files:"
+        print "\n".join(missing)
 
         try:
-            input("(Press ENTER to continue or CTRL+C to exit)")
+            raw_input("(Press ENTER to continue or CTRL+C to exit)")
         except KeyboardInterrupt:
             print "\n"
             sys.exit(0)
@@ -445,7 +445,7 @@ def main(which=[], traceback=False):
         current_filenames.sort()
         for fname in current_filenames:
             total += 1
-            print "  %s..."  % fname, end=" "
+            print "  %s..."  % fname,
 
             # Check if there is a test (needs to be an appropriately named function).
             # If not, there can also be a test that does not assume the file is
@@ -482,11 +482,11 @@ def main(which=[], traceback=False):
                                     res = eval(funcname)(logfile)
                                     if res and len(res.failures) > 0:
                                         failures += len(res.failures)
-                                        print("%i test(s) failed" % len(res.failures))
+                                        print "%i test(s) failed" % len(res.failures)
                                         if traceback:
                                             for f in res.failures:
-                                                print("Failure for", f[0])
-                                                print(f[1])
+                                                print "Failure for", f[0]
+                                                print f[1]
                                         continue
                                 except AssertionError:
                                     print "test failed"
@@ -514,7 +514,7 @@ def main(which=[], traceback=False):
             
     print "Total: %d   Failed: %d  Errors: %d" % (total, failures, errors)
     if not traceback and failures + errors > 0:
-        print("\nFor more information on failures/errors, add 'traceback' as argument.")
+        print "\nFor more information on failures/errors, add 'traceback' as argument."
 
 
 if __name__=="__main__":

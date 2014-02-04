@@ -35,6 +35,6 @@ if __name__=="__main__":
                 test = unittest.TestLoader().loadTestsFromTestCase(test)
                 fullsuite.addTest(test)
         except ImportError:
-            print("%s failed!" % testmodule)
+            print "%s failed!" % testmodule
     unittest.TextTestRunner(verbosity=2).run(fullsuite)
         
