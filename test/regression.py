@@ -1,7 +1,7 @@
 # This file is part of cclib (http://cclib.sf.net), a library for parsing
 # and interpreting the results of computational chemistry packages.
 #
-# Copyright (C) 2006, the cclib development team
+# Copyright (C) 2006-2014, the cclib development team
 #
 # The library is free software, distributed under the terms of
 # the GNU Lesser General Public version 2.1 or later. You should have
@@ -509,7 +509,7 @@ def main(which=[], traceback=False):
                 else:
                     print("test passed")
                 
-        print
+        print()
             
     print("Total: %d   Failed: %d  Errors: %d" % (total, failures, errors))
     if not traceback and failures + errors > 0:
