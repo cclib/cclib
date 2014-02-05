@@ -1,7 +1,7 @@
 # This file is part of cclib (http://cclib.sf.net), a library for parsing
 # and interpreting the results of computational chemistry packages.
 #
-# Copyright (C) 2006, the cclib development team
+# Copyright (C) 2006-2014, the cclib development team
 #
 # The library is free software, distributed under the terms of
 # the GNU Lesser General Public version 2.1 or later. You should have
@@ -323,13 +323,22 @@ class Gaussian(logfileparser.Logfile):
 
             self.scfvalues.append(scfvalues)
 
-        # Extract SCF convergence information (AM1 calcs).
+        # Extract SCF convergence information (AM1, INDO and other semi-empirical calcs).
+        # The output (for AM1) looks like this:
+        # Ext34=T Pulay=F Camp-King=F BShift= 0.00D+00
+        # It=  1 PL= 0.103D+01 DiagD=T ESCF=     31.564733 Diff= 0.272D+02 RMSDP= 0.152D+00.
+        # It=  2 PL= 0.114D+00 DiagD=T ESCF=      7.265370 Diff=-0.243D+02 RMSDP= 0.589D-02.
+        # ...
+        # It= 11 PL= 0.184D-04 DiagD=F ESCF=      4.687669 Diff= 0.260D-05 RMSDP= 0.134D-05.
+        # It= 12 PL= 0.105D-04 DiagD=F ESCF=      4.687669 Diff=-0.686D-07 RMSDP= 0.215D-05.
+        # 4-point extrapolation.
+        # It= 13 PL= 0.110D-05 DiagD=F ESCF=      4.687669 Diff=-0.111D-06 RMSDP= 0.653D-07.
+        # Energy=    0.172272018655 NIter=  14.
         if line[1:4] == 'It=':
-                    
-            self.scftargets = numpy.array([1E-7], "d") # This is the target value for the rms
-            self.scfvalues = [[]]
 
-            line = next(inputfile)
+            scftargets = numpy.array([1E-7], "d") # This is the target value for the rms
+            scfvalues = [[]]
+
             while line.find(" Energy") == -1:
             
                 if self.progress:
@@ -340,8 +349,21 @@ class Gaussian(logfileparser.Logfile):
                         
                 if line[1:4] == "It=":
                     parts = line.strip().split()
-                    self.scfvalues[0].append(self.float(parts[-1][:-1]))
+                    scfvalues[0].append(self.float(parts[-1][:-1]))
+
                 line = next(inputfile)
+
+                # If an AM1 or INDO guess is used (Guess=INDO in the input, for example),
+                # this will be printed after a single iteration, so that is the line
+                # that should trigger a break from this loop. At least that's what we see
+                # for regression Gaussian/Gaussian09/guessIndo_modified_ALT.out
+                if line[:14] == " Initial guess":
+                    break
+
+            # Attach the attributes to the object Only after the energy is found .
+            if line.find(" Energy") == 0:
+                self.scftargets = scftargets
+                self.scfvalues = scfvalues
 
         # Note: this needs to follow the section where 'SCF Done' is used
         #   to terminate a loop when extracting SCF convergence information.
