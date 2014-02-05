@@ -8,8 +8,6 @@
 # received a copy of the license along with cclib. You can also access
 # the full license online at http://www.gnu.org/copyleft/lgpl.html.
 
-__revision__ = "$Rev$"
-
 import sys
 import unittest
 
@@ -37,6 +35,6 @@ if __name__=="__main__":
                 test = unittest.TestLoader().loadTestsFromTestCase(test)
                 fullsuite.addTest(test)
         except ImportError:
-            print "%s failed!" % testmodule
+            print("%s failed!" % testmodule)
     unittest.TextTestRunner(verbosity=2).run(fullsuite)
         

@@ -8,8 +8,6 @@
 # received a copy of the license along with cclib. You can also access
 # the full license online at http://www.gnu.org/copyleft/lgpl.html.
 
-__revision__ = "$Revision$"
-
 import os
 import sys
 import unittest
@@ -26,6 +24,13 @@ test_modules = [ "SP", "SPun", "GeoOpt", "Basis", "Core",   # Basic calculations
                  "vib" ]                                    # Other property calculations.
 
 
+def get_program_dir(parser_name):
+    """In one case the directory is names differently than the parser."""
+    if parser_name == "GAMESSUK":
+        return "GAMESS-UK"
+    else:
+        return parser_name
+
 def getfile(parser, *location):
     """Returns a parsed logfile.
     
@@ -38,11 +43,7 @@ def getfile(parser, *location):
         logfile - the parser object used for parsing
     """
 
-    # GAMESS-UK files are in the GAMESS path.
-    if parser.__name__=="GAMESSUK":
-        location = ("..", "data", "GAMESS-UK") + location
-    else:
-        location = ("..", "data", parser.__name__) + location
+    location = os.path.join(("..", "data", get_program_dir(parser.__name__)) + location)
 
     # Now construct the proper full path(s).
     # Multiple paths will be in a list only if more than one data file given.
@@ -63,7 +64,8 @@ def getfile(parser, *location):
 def gettestdata(module=None):
     """Returns a dict of test files for a given module."""
 
-    lines = open('testdata').readlines()
+    testdatadir = os.path.dirname(os.path.realpath(sys.argv[0]))
+    lines = open(testdatadir+'/testdata').readlines()
 
     # Remove blank lines and those starting with '#'.
     lines = [line.split() for line in lines if (line.strip() and line[0] != '#')]
@@ -95,11 +97,11 @@ def visualtests():
                getfile(Molpro,"basicMolpro2006", "dvb_gopt.out", "dvb_gopt.out")[0],
              ]
 
-    print "\n\nMO energies of optimised dvb"
-    print "      ", "".join(["%-12s" % x for x in ['Gaussian03','PC-GAMESS','GAMESS-US','ADF2007.01','Jaguar7.0','Molpro2006']])
-    print "HOMO", "   ".join(["%+9.4f" % x.moenergies[0][x.homos[0]] for x in output])
-    print "LUMO", "   ".join(["%+9.4f" % x.moenergies[0][x.homos[0]+1] for x in output])
-    print "H-L ", "   ".join(["%9.4f" % (x.moenergies[0][x.homos[0]+1]-x.moenergies[0][x.homos[0]],) for x in output])
+    print("\n\nMO energies of optimised dvb")
+    print("      ", "".join(["%-12s" % x for x in ['Gaussian03','PC-GAMESS','GAMESS-US','ADF2007.01','Jaguar7.0','Molpro2006']]))
+    print("HOMO", "   ".join(["%+9.4f" % x.moenergies[0][x.homos[0]] for x in output]))
+    print("LUMO", "   ".join(["%+9.4f" % x.moenergies[0][x.homos[0]+1] for x in output]))
+    print("H-L ", "   ".join(["%9.4f" % (x.moenergies[0][x.homos[0]+1]-x.moenergies[0][x.homos[0]],) for x in output]))
 
 
 def importName(modulename, name):
@@ -139,11 +141,10 @@ def testall(parserchoice=parsers, modules=test_modules):
         testdata = gettestdata(module)
         
         if parserchoice:
-            testdata = dict([ (x,y) for x,y in testdata.iteritems()
+            testdata = dict([ (x,y) for x,y in testdata.items()
                               if y['parser'] in parserchoice ])
                 
-        testnames = testdata.keys()
-        testnames.sort()
+        testnames = sorted(testdata.keys())
         for name in testnames:
 
             path = '/'.join(testdata[name]["location"])
@@ -154,7 +155,7 @@ def testall(parserchoice=parsers, modules=test_modules):
             except:
                 errors.append("ERROR: could not import %s from %s." %(name, module))
             else:
-                print "\n**** test%s: %s ****" %(module, test.__doc__)
+                print("\n**** test%s: %s ****" %(module, test.__doc__))
                 parser = testdata[name]["parser"]
                 location = testdata[name]["location"]
                 test.data, test.logfile = getfile(eval(parser), *location)
@@ -167,25 +168,24 @@ def testall(parserchoice=parsers, modules=test_modules):
                 if hasattr(a, "skipped"):
                     l[3] += len(a.skipped)
 
-    print "\n\n********* SUMMARY PER PACKAGE ****************"
-    names = perpackage.keys()
-    names.sort()
+    print("\n\n********* SUMMARY PER PACKAGE ****************")
+    names = sorted(perpackage.keys())
     total = [0, 0, 0, 0]
-    print " "*14, "\t".join(["Total", "Passed", "Failed", "Errors", "Skipped"])
+    print(" "*14, "\t".join(["Total", "Passed", "Failed", "Errors", "Skipped"]))
     for name in names:
         l = perpackage[name]
-        print name.ljust(15), "%3d\t%3d\t%3d\t%3d\t%3d" % (l[0], l[0]-l[1]-l[2]-l[3], l[2], l[1], l[3])
+        print(name.ljust(15), "%3d\t%3d\t%3d\t%3d\t%3d" % (l[0], l[0]-l[1]-l[2]-l[3], l[2], l[1], l[3]))
         for i in range(4):
             total[i] += l[i]
 
-    print "\n\n********* SUMMARY OF EVERYTHING **************"
-    print "TOTAL: %d\tPASSED: %d\tFAILED: %d\tERRORS: %d\tSKIPPED: %d" \
-            %(total[0], total[0]-(total[1]+total[2]+total[3]), total[2], total[1], total[3])
+    print("\n\n********* SUMMARY OF EVERYTHING **************")
+    print("TOTAL: %d\tPASSED: %d\tFAILED: %d\tERRORS: %d\tSKIPPED: %d" \
+            %(total[0], total[0]-(total[1]+total[2]+total[3]), total[2], total[1], total[3]))
 
     if errors:
-        print "\n".join(errors)
+        print("\n".join(errors))
 
-    print "\n\n*** Visual tests ***"
+    print("\n\n*** Visual tests ***")
     visualtests()
     
     # Return to the directory we started from.

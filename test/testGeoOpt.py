@@ -8,8 +8,6 @@
 # received a copy of the license along with cclib. You can also access
 # the full license online at http://www.gnu.org/copyleft/lgpl.html.
 
-__revision__ = "$Revision$"
-
 import math
 
 import numpy
@@ -53,7 +51,7 @@ class GenericGeoOptTest(bettertest.TestCase):
 
     def testatomcharges(self):
         """Are all atomcharges consistent with natom and do they sum to zero?"""
-        for type,charges in self.data.atomcharges.iteritems():
+        for type,charges in self.data.atomcharges.items():
             self.assertEquals(self.data.natom, len(charges))
             self.assertInside(sum(charges), 0, 0.001)
 
