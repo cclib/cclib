@@ -24,6 +24,9 @@
     H     4.9316453546   0.0711049543   0.0000000000
     H    -4.9316453546  -0.0711049543   0.0000000000
   end
+  dft
+    print "final vectors analysis"
+  end
   basis
     *    library sto-3g
   end
