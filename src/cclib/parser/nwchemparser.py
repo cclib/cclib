@@ -123,6 +123,20 @@ class NWChem(logfileparser.Logfile):
             energy = utils.convertor(energy, "hartree", "eV")
             self.scfenergies.append(energy)
 
+        if line.strip() == "Final eigenvalues":
+            if not hasattr(self, "moenergies"):
+                self.moenergies = []
+            dashes = next(inputfile)
+            blank = next(inputfile)
+            one = next(inputfile) # This has just a one for ROHF.
+
+            energies = []
+            line = next(inputfile)
+            while line.strip():
+                energies.append(utils.convertor(float(line.split()[1]), "hartree", "eV"))
+                line = next(inputfile)
+            self.moenergies.append(energies)
+
         if line.strip() == "Mulliken analysis of the total density":
 
             if not hasattr(self, "atomcharges"):
