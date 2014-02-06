@@ -123,17 +123,31 @@ class NWChem(logfileparser.Logfile):
             energy = utils.convertor(energy, "hartree", "eV")
             self.scfenergies.append(energy)
 
-        if line.strip() == "Final eigenvalues":
+        if "Final Molecular Orbital Analysis" in line:
             if not hasattr(self, "moenergies"):
                 self.moenergies = []
             dashes = next(inputfile)
             blank = next(inputfile)
-            one = next(inputfile) # This has just a one for ROHF.
 
             energies = []
             line = next(inputfile)
-            while line.strip():
-                energies.append(utils.convertor(float(line.split()[1]), "hartree", "eV"))
+            while line[:7] == " Vector":
+                nvector = int(line[7:12])
+                if len(energies) == 0 and nvector > 1:
+                    for i in range(1,nvector):
+                        energies.append(None)
+                energy = float(line[34:].replace('D','E'))
+                energy = utils.convertor(energy, "hartree", "eV")
+                energies.append(energy)
+                line = next(inputfile)
+                if "MO Center" in line:
+                    line = next(inputfile)
+                if "Bfn." in line:
+                    line = next(inputfile)
+                if "-----" in line:
+                    line = next(inputfile)
+                while line.strip():
+                    line = next(inputfile)
                 line = next(inputfile)
             self.moenergies.append(energies)
 
