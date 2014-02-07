@@ -114,6 +114,15 @@ class NWChem(logfileparser.Logfile):
                 if line[2:13] == "open shells":
                     unpaired = int(line.split()[-1])
                     self.mult = 2*unpaired + 1
+                if line[2:7] == "atoms":
+                    natom = int(line.split()[-1])
+                    if hasattr(self, 'natom'):
+                        assert self.natom == natom
+                    else:
+                        self.natom = natom
+                if line[2:11] == "functions":
+                    functions = int(line.split()[-1])
+                    self.nbasis = functions
                 line = next(inputfile)
 
         if "Total SCF energy" in line:
@@ -150,6 +159,30 @@ class NWChem(logfileparser.Logfile):
                     line = next(inputfile)
                 line = next(inputfile)
             self.moenergies.append(energies)
+            if hasattr(self, 'nmo'):
+                assert self.nmo == nmo
+            else:
+                self.nmo = nvector
+
+        if line.strip() == "Final MO vectors":
+
+            dashes = next(inputfile)
+            blank = next(inputfile)
+            blank = next(inputfile)
+
+            # the columns are MOs, columns AOs, but I'm guessing the order of this array
+            array_info = next(inputfile)
+            size = array_info.split('[')[1].split(']')[0]
+            nbasis = int(size.split(',')[0].split(':')[1])
+            nmo = int(size.split(',')[1].split(':')[1])
+            # This should be checked somehow!!!!!
+            #print(self.nbasis, self.nmo)
+            #assert self.nbasis == nbasis
+            #assert self.nmo == nmo
+            
+            blank = next(inputfile)
+            nmos = map(int,next(inputfile).split())
+            
 
         if line.strip() == "Mulliken analysis of the total density":
 
