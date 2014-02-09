@@ -94,7 +94,7 @@ class Gaussian(logfileparser.Logfile):
 
         if hasattr(self, 'atomcoords') and len(self.optdone) > 0:
             last_point = self.optdone[-1]
-            self.atomcoords = self.atomcoords[:last_point]
+            self.atomcoords = self.atomcoords[:last_point + 1]
             
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
@@ -166,7 +166,7 @@ class Gaussian(logfileparser.Logfile):
 
         # Catch message about completed optimization.
         if line[1:23] == "Optimization completed":
-            self.optdone.append(len(self.geovalues))
+            self.optdone.append(len(self.geovalues) - 1)
         
         # Extract the atomic numbers and coordinates from the input orientation,
         #   in the event the standard orientation isn't available.
