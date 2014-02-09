@@ -175,14 +175,33 @@ class NWChem(logfileparser.Logfile):
             size = array_info.split('[')[1].split(']')[0]
             nbasis = int(size.split(',')[0].split(':')[1])
             nmo = int(size.split(',')[1].split(':')[1])
-            # This should be checked somehow!!!!!
-            #print(self.nbasis, self.nmo)
-            #assert self.nbasis == nbasis
-            #assert self.nmo == nmo
+            if hasattr(self, 'nbasis'):
+                assert self.nbasis == nbasis
+            else:
+                self.nbasis = nbasis
+            if hasattr(self, 'nmo'):
+                assert self.nmo == nmo
+            else:
+                self.nmo = nmo
             
             blank = next(inputfile)
-            nmos = map(int,next(inputfile).split())
-            
+            mocoeffs = []
+            while len(mocoeffs) < self.nmo:
+                nmos = list(map(int,next(inputfile).split()))
+                assert len(mocoeffs) == nmos[0]-1
+                for n in nmos:
+                    mocoeffs.append([])
+                dashes = next(inputfile)
+                for nb in range(nbasis):                
+                    line = next(inputfile)
+                    index = int(line.split()[0])
+                    assert index == nb+1
+                    coefficients = list(map(float,line.split()[1:]))
+                    assert len(coefficients) == len(nmos)
+                    for i,c in enumerate(coefficients):
+                        mocoeffs[nmos[i]-1].append(c)
+                blank = next(inputfile)
+            self.mocoeffs = [mocoeffs]
 
         if line.strip() == "Mulliken analysis of the total density":
 
