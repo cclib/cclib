@@ -50,6 +50,7 @@ class ccData(object):
         nbasis -- number of basis functions (integer)
         nmo -- number of molecular orbitals (integer)
         nocoeffs -- natural orbital coefficients (array[2])
+        optdone -- indexes corresponding to energies/coords when optimizations have converged (list)
         scfenergies -- molecular electronic energies after SCF (Hartree-Fock, DFT) (array[1], eV)
         scftargets -- targets for convergence of the SCF (array[2])
         scfvalues -- current values for convergence of the SCF (list of arrays[2])
@@ -67,7 +68,6 @@ class ccData(object):
         freeenergy -- Sum of electronic and thermal Free Energies (float hartree/particle)
         temperature -- Tempature used for Thermochemistry (float kelvin)
         entropy -- Entropy (float hartree/particle)
-        optdone -- Stores if an optimisation job has completed (boolean)
     (1) The term 'array' refers to a numpy array
     (2) The number of dimensions of an array is given in square brackets
     (3) Python indexes arrays/lists starting at zero, so if homos==[10], then
@@ -137,7 +137,7 @@ class ccData(object):
                             "freeenergy":     float,
                             "temperature":    float,
                             "entropy":        float,
-                            "optdone":        bool
+                            "optdone":        list
                           }
         # Names of all supported attributes.
         self._attrlist = self._attrtypes.keys()
@@ -151,12 +151,11 @@ class ccData(object):
                           'gbasis', 'geotargets', 'geovalues', 'grads',
                           'hessian', 'homos',
                           'mocoeffs', 'moenergies', 'mosyms', 'mpenergies', 'mult',
-                          'natom', 'nbasis', 'nmo', 'nocoeffs',
+                          'natom', 'nbasis', 'nmo', 'nocoeffs', 'optdone',
                           'scfenergies', 'scftargets', 'scfvalues',
                           'vibanharms', 'vibdisps', 'vibfreqs', 'vibirs',
                           'vibramans', 'vibsyms', 'scannames', 'scanenergies', 'scanparm',
-                          'scancoords', 'enthaply', 'freeenergy', 'temperature', 'entropy', 
-                          'optdone']
+                          'scancoords', 'enthaply', 'freeenergy', 'temperature', 'entropy'] 
 
         # Arrays are double precision by default, but these will be integer arrays.
         self._intarrays = ['atomnos', 'coreelectrons', 'homos']
