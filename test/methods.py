@@ -8,6 +8,7 @@
 # received a copy of the license along with cclib. You can also access
 # the full license online at http://www.gnu.org/copyleft/lgpl.html.
 
+from __future__ import print_function
 import sys
 import unittest
 
