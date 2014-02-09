@@ -141,7 +141,6 @@ class NWChem(logfileparser.Logfile):
                 if "Spin multiplicity" in line:
                     self.set_scalar('mult', int(line.split()[-1]))
                 line = next(inputfile)
-            
 
         if "Total SCF energy" in line:
             if not hasattr(self, "scfenergies"):
@@ -158,8 +157,11 @@ class NWChem(logfileparser.Logfile):
 
             energies = []
             line = next(inputfile)
+            homo = 0
             while line[:7] == " Vector":
                 nvector = int(line[7:12])
+                if "Occ=2.0" in line:
+                    homo = nvector-1
                 if len(energies) == 0 and nvector > 1:
                     for i in range(1,nvector):
                         energies.append(None)
@@ -181,6 +183,9 @@ class NWChem(logfileparser.Logfile):
                 assert self.nmo == nmo
             else:
                 self.nmo = nvector
+            if not hasattr(self, 'homos'):
+                self.homos = []
+            self.homos.append(homo)
 
         if line.strip() == "Final MO vectors":
 
