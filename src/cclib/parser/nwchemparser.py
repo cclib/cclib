@@ -53,6 +53,13 @@ class NWChem(logfileparser.Logfile):
         # Set any global variables for the parser here
         pass
 
+    def set_scalar(self, name, value, check=True):
+        if hasattr(self, name):
+            if check:
+                assert getattr(self, name) == value
+        else:
+            setattr(self, name, value)
+
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
 
@@ -124,6 +131,17 @@ class NWChem(logfileparser.Logfile):
                     functions = int(line.split()[-1])
                     self.nbasis = functions
                 line = next(inputfile)
+
+        if line.strip() == "General Information":
+            while line.strip():
+                if "No. of atoms" in line:
+                    self.set_scalar('natom', int(line.split()[-1]))
+                if "Charge" in line:
+                    self.set_scalar('charge', int(line.split()[-1]))
+                if "Spin multiplicity" in line:
+                    self.set_scalar('mult', int(line.split()[-1]))
+                line = next(inputfile)
+            
 
         if "Total SCF energy" in line:
             if not hasattr(self, "scfenergies"):
