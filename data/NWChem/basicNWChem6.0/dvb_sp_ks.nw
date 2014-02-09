@@ -25,6 +25,7 @@
     H    -4.9316453546  -0.0711049543   0.0000000000
   end
   dft
+    xc b3lyp
     print "final vectors" "final vectors analysis"
   end
   basis

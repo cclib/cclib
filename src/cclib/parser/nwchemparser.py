@@ -142,7 +142,7 @@ class NWChem(logfileparser.Logfile):
                     self.set_scalar('mult', int(line.split()[-1]))
                 line = next(inputfile)
 
-        if "Total SCF energy" in line:
+        if "Total SCF energy" in line or "Total DFT energy" in line:
             if not hasattr(self, "scfenergies"):
                 self.scfenergies = []
             energy = float(line.split()[-1])
@@ -180,7 +180,7 @@ class NWChem(logfileparser.Logfile):
                 line = next(inputfile)
             self.moenergies.append(energies)
             if hasattr(self, 'nmo'):
-                assert self.nmo == nmo
+                assert self.nmo == nvector
             else:
                 self.nmo = nvector
             if not hasattr(self, 'homos'):
