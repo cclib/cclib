@@ -248,7 +248,6 @@ class ORCA(logfileparser.Logfile):
 
             text = next(inputfile)
             broken = text.split()
-            assert int(broken[2]) == len(self.atomcoords)
             stars = next(inputfile)
             dashes = next(inputfile)
             text = next(inputfile)
