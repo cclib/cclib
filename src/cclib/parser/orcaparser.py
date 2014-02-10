@@ -50,6 +50,9 @@ class ORCA(logfileparser.Logfile):
         # we parse a cycle (so it will be larger than zero().
         self.gopt_cycle = 0
 
+        # Keep track of when geometry optimizations finish
+        self.optdone = []
+
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
 
@@ -240,6 +243,9 @@ class ORCA(logfileparser.Logfile):
                 self.atomnos = numpy.array(atomnos,'i')
 
         if line[21:68] == "FINAL ENERGY EVALUATION AT THE STATIONARY POINT":
+            count = len(self.atomcoords)
+            self.optdone.append(count)
+
             text = next(inputfile)
             broken = text.split()
             assert int(broken[2]) == len(self.atomcoords)
