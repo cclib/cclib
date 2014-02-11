@@ -65,7 +65,7 @@ def setup_cclib():
         classifiers = filter(None, classifiers.split("\n")),
         platforms = ["Any."],
         packages = cclib_packages,
-        package_dir = {'cclib':'src/cclib', 'cclib.data':'data', 'cclib.test':'test'},
+        package_dir = { 'cclib':'src/cclib' },
         scripts = ["src/scripts/ccget", "src/scripts/cda"],
     )
 
