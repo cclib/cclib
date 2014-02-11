@@ -106,6 +106,66 @@ class NWChem(logfileparser.Logfile):
             else:
                 self.natom = natom
 
+        if line.strip() == """Basis "ao basis" -> "ao basis" (cartesian)""":
+            dashes = next(inputfile)
+            gbasis_dict = {}
+            line = next(inputfile)
+            while line.strip():
+                atomtype = line.split()[0]
+                gbasis_dict[atomtype] = []
+                dashes = next(inputfile)
+                labels = next(inputfile)
+                dashes = next(inputfile)
+                shells = []
+                line = next(inputfile)
+                while line.strip() and line.split()[0].isdigit():
+                    shell = None
+                    while line.strip():
+                        nshell, type, exp, coeff = line.split()
+                        nshell = int(nshell)
+                        assert len(shells) == nshell - 1
+                        if not shell:
+                            shell = (type, [])
+                        else:
+                            assert shell[0] == type
+                        exp = float(exp)
+                        coeff = float(coeff)
+                        shell[1].append((exp,coeff))
+                        line = next(inputfile)
+                    shells.append(shell)
+                    line = next(inputfile)
+                gbasis_dict[atomtype].append(shells)
+            gbasis = []
+            for i in range(self.natom):
+                atomtype = utils.PeriodicTable().element[self.atomnos[i]]
+                gbasis.append(gbasis_dict[atomtype])
+            if not hasattr(self, 'gbasis'):
+                self.gbasis = gbasis
+            else:
+                assert self.gbasis == gbasis
+
+        if line.strip() == """Summary of "ao basis" -> "ao basis" (cartesian)""":
+            dashes = next(inputfile)
+            headers = next(inputfile)
+            dashes = next(inputfile)
+            atombasis_dict = {}
+            line = next(inputfile)
+            while line.strip():
+                atomtype, desc, shells, funcs, types = line.split()
+                atombasis_dict[atomtype] = int(funcs)
+                line = next(inputfile)
+            atombasis = []
+            last = 0
+            for i in range(self.natom):
+                atomtype = utils.PeriodicTable().element[self.atomnos[i]]
+                nfuncs = atombasis_dict[atomtype]
+                atombasis.append(list(range(last,last+nfuncs)))
+                last = atombasis[-1][-1] + 1
+            if not hasattr(self, 'atombasis'):
+                self.atombasis = atombasis
+            else:
+                assert self.atombasis == atombasis
+
         if line.strip() == "NWChem SCF Module":
             dashes = next(inputfile)
             blank = next(inputfile)
