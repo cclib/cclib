@@ -156,7 +156,7 @@ class ORCA(logfileparser.Logfile):
             energy = self.scfvalues[-1][-1][0]
             self.scfenergies.append(energy)
 
-        if line[25:50] == "Geometry Optimization Run":
+        if line[25:50] == "Geometry Optimization Run" or line[28:48] == "Relaxed Surface Scan":
 
             line = next(inputfile)
             while line[0:23] != "Convergence Tolerances:":
