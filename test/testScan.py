@@ -47,8 +47,6 @@ class GaussianScanTest(GenericScanTest):
 class OrcaScanTest(GenericScanTest):
     """ORCA relaxed potential energy surface scan unittest."""
 
-    extra = -1
-
 
 if __name__=="__main__":
 
