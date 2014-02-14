@@ -94,6 +94,10 @@ class FragmentAnalysis(Method):
                     frag.atomcoords[0].tolist():
                 self.logger.error("Atom coordinates aren't aligned")
                 return False
+            if self.data.atomnos[last:last+size].tolist() != \
+                    frag.atomnos.tolist():
+                self.logger.error("Elements don't match")
+                return False
 
             last += size
 
