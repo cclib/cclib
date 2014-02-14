@@ -22,7 +22,7 @@ parsers = [ "ADF", "GAMESS", "GAMESSUK", "Gaussian", "Jaguar", "Molpro", "ORCA" 
 # The modules to be included in the global test testall().
 test_modules = [ "SP", "SPun", "GeoOpt", "Basis", "Core",   # Basic calculations.
                  "MP", "CC", "CI", "TD", "TDun",            # Post-SCF calculations.
-                 "vib" ]                                    # Other property calculations.
+                 "vib", "Scan" ]                            # Other property calculations.
 
 
 def get_program_dir(parser_name):
