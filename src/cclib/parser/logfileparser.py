@@ -77,7 +77,7 @@ def openlogfile(filename):
             fileobject = myBZ2File(filename, "r")
 
         else:
-            fileobject = open(filename, "r")
+            fileobject = io.open(filename, "r", errors='ignore')
 
         return fileobject
     
