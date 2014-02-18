@@ -192,15 +192,79 @@ class NWChem(logfileparser.Logfile):
                     self.nbasis = functions
                 line = next(inputfile)
 
+        # This section contains general parameters for DFT calculations.
         if line.strip() == "General Information":
             while line.strip():
+
                 if "No. of atoms" in line:
                     self.set_scalar('natom', int(line.split()[-1]))
                 if "Charge" in line:
                     self.set_scalar('charge', int(line.split()[-1]))
                 if "Spin multiplicity" in line:
                     self.set_scalar('mult', int(line.split()[-1]))
+
+                if "Convergence on energy requested" in line:
+                    target_energy = float(line.split()[-1].replace('D', 'E'))
+                if "Convergence on density requested" in line:
+                    target_density = float(line.split()[-1].replace('D', 'E'))
+                if "Convergence on gradient requested" in line:
+                    target_gradient = float(line.split()[-1].replace('D', 'E'))
+
                 line = next(inputfile)
+
+            if not hasattr(self, 'scftargets'):
+                self.scftargets = []
+            self.scftargets.append([target_energy, target_density, target_gradient])
+
+        # The default (only?) SCF algorithm is a preconditioned conjugate gradient method
+        # that always converges, so this should signal a start of the SCF cycle.
+        if line.strip() == "Quadratically convergent ROHF":
+
+            while not "Final" in line:
+
+                # Only the norm of the orbital gradient is used to test convergence.
+                if line[:22] == " Convergence threshold":
+                    target = float(line.split()[-1])
+                    if not hasattr(self, "scftargets"):
+                        self.scftargets = []
+                    self.scftargets.append([target])
+
+                    # This is critical for the stop condition of the section,
+                    # because the 'Final Fock-matrix accuracy' is along the way.
+                    # It would be prudent to find a more robust stop condition.
+                    while list(set(line.strip())) != ["-"]:
+                        line = next(inputfile)
+
+                if line.split() == ['iter', 'energy', 'gnorm', 'gmax', 'time']:
+                    values = []
+                    dashes = next(inputfile)
+                    line = next(inputfile)
+                    while line.strip():
+                        iter,energy,gnorm,gmax,time = line.split()
+                        gnorm = float(gnorm.replace('D','E'))
+                        values.append([gnorm])
+                        line = next(inputfile)
+                    if not hasattr(self, 'scfvalues'):
+                        self.scfvalues = []
+                    self.scfvalues.append(values)
+
+                line = next(inputfile)
+
+        # This appears to always be used to report SCF convergence for DFT
+        if line.split() == ['convergence', 'iter', 'energy', 'DeltaE', 'RMS-Dens', 'Diis-err', 'time']:
+            dashes = next(inputfile)
+            line = next(inputfile)
+            values = []
+            while line.strip():
+                iter,energy,deltaE,dens,diis,time = line[17:].split()
+                val_energy = float(deltaE.replace('D', 'E'))
+                val_density = float(dens.replace('D', 'E'))
+                val_gradient = float(diis.replace('D', 'E'))
+                values.append([val_energy, val_density, val_gradient])
+                line = next(inputfile)
+            if not hasattr(self, 'scfvalues'):
+                self.scfvalues = []
+            self.scfvalues.append(values)
 
         if "Total SCF energy" in line or "Total DFT energy" in line:
             if not hasattr(self, "scfenergies"):
