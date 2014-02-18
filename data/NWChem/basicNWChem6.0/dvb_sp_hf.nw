@@ -30,5 +30,8 @@
   basis
     *    library sto-3g
   end
-  task scf
+  property
+    mulliken
+  end
+  task scf property
 

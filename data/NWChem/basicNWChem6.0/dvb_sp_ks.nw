@@ -26,10 +26,14 @@
   end
   dft
     xc b3lyp
+    grid xfine
     print "final vectors" "final vectors analysis"
   end
   basis
     *    library sto-3g
   end
-  task dft
+  property
+    mulliken
+  end
+  task dft property
 
