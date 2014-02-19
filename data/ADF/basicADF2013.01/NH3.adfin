@@ -34,7 +34,6 @@ fragments
 end
 
 charge 0 0
-restricted
 
 symmetry C(3v) TOL=0.01
 
