@@ -369,6 +369,50 @@ class NWChem(logfileparser.Logfile):
                 line = next(inputfile)
             self.atomcharges['mulliken'] = charges
 
+        #          ----------------------------
+        #          Mulliken population analysis
+        #          ----------------------------
+        #
+        #          ----- Total      overlap population -----
+        #
+        #                               1              2              3              4              5              6              7
+        #
+        #    1   1 C  s            2.0694818227  -0.0535883400  -0.0000000000  -0.0000000000  -0.0000000000  -0.0000000000   0.0000039991
+        #    2   1 C  s           -0.0535883400   0.8281341291   0.0000000000  -0.0000000000   0.0000000000   0.0000039991  -0.0009906747
+        # ...
+        if line.strip() == "Mulliken population analysis":
+
+            dashes = next(inputfile)
+            blank = next(inputfile)
+            total_overlap_population = next(inputfile)
+            blank = next(inputfile)
+
+            overlaps = []
+            line= next(inputfile)
+            while all([c.isdigit() for c in line.split()]):
+
+                # There is always a line with the MO indices printed in thie block.
+                indices = [int(i)-1 for i in line.split()]
+                for i in indices:
+                    overlaps.append([])
+
+                # There is usually a blank line after the MO indices, but
+                # there are exceptions, so check if line is blank first.
+                line = next(inputfile)
+                if not line.strip():
+                    line = next(inputfile)
+
+                # Now we can iterate or atomic orbitals.
+                for nao in range(self.nbasis):
+                    data = list(map(float, line.split()[4:]))
+                    for i,d in enumerate(data):
+                        overlaps[indices[i]].append(d)
+                    line = next(inputfile)
+
+                line = next(inputfile)
+
+            self.aooverlaps = overlaps
+
 
 if __name__ == "__main__":
     import doctest, nwchemparser
