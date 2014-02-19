@@ -581,6 +581,15 @@ class Gaussian(logfileparser.Logfile):
                         i += 1
                     line = next(inputfile)
 
+            # Some calculations won't explicitely print the number of basis sets used,
+            # and will occasionally drop some without warning. We can infer the number,
+            # however, from the MO symmetries printed here. Specifically, this fixes
+            # regression Gaussian/Gaussian09/dvb_sp_terse.log (#23 on github).
+            if not hasattr(self, 'nmo'):
+                self.nmo = len(self.mosyms[-1])
+            else:
+                assert self.nmo == len(self.mosyms[-1])
+
         # Alpha/Beta electron eigenvalues.
         if line[1:6] == "Alpha" and line.find("eigenvalues") >= 0:
 
