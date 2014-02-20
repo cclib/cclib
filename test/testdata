@@ -34,7 +34,7 @@ CC        Molpro      MolproCCDTest         basicMolpro2012       h2o_ccd.out
 CC        Molpro      MolproCCSDTest        basicMolpro2006       h2o_ccsd.out
 CC        Molpro      MolproCCSDTest        basicMolpro2012       h2o_ccsd.out
 CC        Molpro      MolproCCSDTest        basicMolpro2006       h2o_ccsd(t).out
-CC        Molpro      MolproCCSDTest        basicMolpro2012       h2o_ccsd(t).out
+CC        Molpro      MolproCCSDTest        basicMolpro2012       h2o_ccsdt.out
 
 CI        GAMESS      GAMESSUSCISTest       basicGAMESS-US2012    water_cis_saps.out
 CI        Gaussian    GaussianCISTest       basicGaussian03       water_cis.log

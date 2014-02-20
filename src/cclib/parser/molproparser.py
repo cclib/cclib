@@ -494,9 +494,14 @@ class Molpro(logfileparser.Logfile):
             blank = next(inputfile)
             headers = next(inputfile)
 
+            # Newer version of Molpro (at least for 2012) print this differently,
+            # and this part needs to be fixed.
+            headers = headers.split()
+            if len(headers) != 10:
+                return
+
             # Although criteria can be changed, the printed format should not change.
             # In case it does, retrieve the columns for each parameter.
-            headers = headers.split()
             index_THRENERG = headers.index('DE')
             index_THRGRAD = headers.index('GRADMAX')
             index_THRSTEP = headers.index('STEPMAX')
