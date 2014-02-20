@@ -59,6 +59,8 @@ GeoOpt    GAMESS      PCGamessGeoOptTest    basicPCGAMESS         dvb_gopt_b.out
 GeoOpt    Molpro      MolproGeoOptTest      basicMolpro2006       dvb_gopt.out          dvb_gopt.log
 GeoOpt    Molpro      MolproGeoOptTest      basicMolpro2012       dvb_gopt.out          dvb_gopt.log
 GeoOpt    ORCA        OrcaGeoOptTest        basicORCA2.6          dvb_gopt.out
+GeoOpt    ORCA        OrcaGeoOptTest        basicORCA2.8          dvb_gopt.out
+GeoOpt    ORCA        OrcaGeoOptTest        basicORCA2.9          dvb_gopt.out
 
 MP        GAMESSUK    GAMESSUKMP2Test       basicGAMESS-UK        water_mp2.out
 MP        GAMESSUK    GAMESSUKMP3Test       basicGAMESS-UK        water_mp3.out
@@ -96,6 +98,8 @@ SP        GAMESS      PCGamessSPTest        basicPCGAMESS         dvb_sp.out
 SP        Molpro      MolproSPTest          basicMolpro2006       dvb_sphf.out
 SP        Molpro      MolproSPTest          basicMolpro2012       dvb_sphf.out
 SP        ORCA        OrcaSPTest            basicORCA2.6          dvb_sp.out
+SP        ORCA        OrcaSPTest            basicORCA2.8          dvb_sp.out
+SP        ORCA        OrcaSPTest            basicORCA2.9          dvb_sp.out
                                             
 SPun      ADF         ADFSPunTest           basicADF2007.01       dvb_un_sp.adfout
 SPun      ADF         ADFSPunTest           basicADF2013.01       dvb_un_sp.adfout
@@ -108,6 +112,8 @@ SPun      GAMESS      PCGamessSPunTest      basicPCGAMESS         dvb_un_sp.out
 SPun      Molpro      MolproSPunTest        basicMolpro2006       dvb_sphf_un.out
 SPun      Molpro      MolproSPunTest        basicMolpro2012       dvb_sphf_un.out
 SPun      ORCA        OrcaSPunTest          basicORCA2.6          dvb_un_sp.out
+SPun      ORCA        OrcaSPunTest          basicORCA2.8          dvb_sp_un.out
+SPun      ORCA        OrcaSPunTest          basicORCA2.9          dvb_sp_un.out
 
 TD        ADF         ADFTDDFTTest          basicADF2007.01       dvb_td.adfout
 TD        ADF         ADFTDDFTTest          basicADF2013.01       dvb_td.adfout
@@ -120,6 +126,8 @@ TD        GAMESS      GAMESSUSTDDFTtrpTest  basicGAMESS-US2012    dvb_td_trplet.
 TD        GAMESS      PCGamessTDDFTTest     basicPCGAMESS         dvb_td.out
 TD        GAMESS      PCGamessTDDFTtrpTest  basicPCGAMESS         dvb_td_trplet.out
 TD        ORCA        OrcaTDDFTTest         basicORCA2.6          dvb_td.out
+TD        ORCA        OrcaTDDFTTest         basicORCA2.8          dvb_td.out
+TD        ORCA        OrcaTDDFTTest         basicORCA2.9          dvb_td.out
 
 vib       ADF         ADFIRTest             basicADF2007.01       dvb_ir.adfout
 vib       ADF         ADFIRTest             basicADF2013.01       dvb_ir.adfout
@@ -137,4 +145,8 @@ vib       GAMESS      PCGamessRamanTest     basicPCGAMESS         dvb_raman.out
 vib       Molpro      MolproIRTest          basicMolpro2006       dvb_ir.out            dvb_ir.log
 vib       Molpro      MolproIRTest          basicMolpro2012       dvb_ir.out            dvb_ir.log
 vib       ORCA        OrcaIRTest            basicORCA2.6          dvb_ir.out
+vib       ORCA        OrcaIRTest            basicORCA2.8          dvb_ir.out
+vib       ORCA        OrcaIRTest            basicORCA2.9          dvb_ir.out
 vib       ORCA        OrcaRamanTest         basicORCA2.6          dvb_raman.out
+vib       ORCA        OrcaRamanTest         basicORCA2.8          dvb_raman.out
+vib       ORCA        OrcaRamanTest         basicORCA2.9          dvb_raman.out
