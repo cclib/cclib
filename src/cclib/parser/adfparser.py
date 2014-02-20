@@ -10,6 +10,8 @@
 
 from __future__ import print_function
 
+import re
+
 import numpy
 
 from . import logfileparser
@@ -771,40 +773,40 @@ class ADF(logfileparser.Logfile):
                         line = next(inputfile)
                     lastrow = row
 
+        # **************************************************************************
+        # *                                                                        *
+        # *   Final excitation energies from Davidson algorithm                    *
+        # *                                                                        *
+        # **************************************************************************
+        #
+        #     Number of loops in Davidson routine     =   20                    
+        #     Number of matrix-vector multiplications =   24                    
+        #     Type of excitations = SINGLET-SINGLET
+        #
+        # Symmetry B.u
+        #
+        # ... several blocks ...
+        #
+        # Normal termination of EXCITATION program part
         if line[4:53] == "Final excitation energies from Davidson algorithm":
 
-            # move forward in file past some various algorthm info
-
-            # *   Final excitation energies from Davidson algorithm                    *
-            # *                                                                        *
-            # **************************************************************************
-
-            #     Number of loops in Davidson routine     =   20                    
-            #     Number of matrix-vector multiplications =   24                    
-            #     Type of excitations = SINGLET-SINGLET
-
-            for i in range(8):
-                next(inputfile)
-
-            symm = self.normalisesym(next(inputfile).split()[1])
-
-            # move forward in file past some more txt and header info
+            while line[1:9] != "Symmetry" and "Normal termination" not in line:
+                line = next(inputfile)
+            symm = self.normalisesym(line.split()[1])
 
             # Excitation energies E in a.u. and eV, dE wrt prev. cycle,
             # oscillator strengths f in a.u.
-
+            #
             # no.  E/a.u.        E/eV      f           dE/a.u.
             # -----------------------------------------------------
-
-            for i in range(6):
-                next(inputfile)
-
-            # now start parsing etenergies and etoscs
-
+            #   1 0.17084      4.6488     0.16526E-01  0.28E-08
+            # ...
+            while line.split() != ['no.', 'E/a.u.', 'E/eV', 'f', 'dE/a.u.'] and "Normal termination" not in line:
+                line = next(inputfile)
+            dashes = next(inputfile)
             etenergies = []
             etoscs = []
             etsyms = []
-
             line = next(inputfile)
             while len(line) > 2:
                 info = line.split()
@@ -813,24 +815,26 @@ class ADF(logfileparser.Logfile):
                 etsyms.append(symm)
                 line = next(inputfile)
 
-            # move past next section
+            # There is another section before this, with transition dipole moments,
+            # but this should just skip past it.
             while line[1:53] != "Major MO -> MO transitions for the above excitations":
                 line = next(inputfile)
 
-            # move past headers
+            # Note that here, and later, the number of blank lines can vary between
+            # version of ADF (extra lines are seen in 2013.01 unit tests, for example).
+            blank = next(inputfile)
+            excitation_occupied = next(inputfile)
+            header = next(inputfile)
+            while not header.strip():
+                header = next(inputfile)
+            header2 = next(inputfile)
+            x_y_z = next(inputfile)
+            line = next(inputfile)
+            while not line.strip():
+                line = next(inputfile)
 
-            #  Excitation  Occupied to virtual  Contribution                         
-            #   Nr.          orbitals           weight        contribibutions to      
-            #                                   (sum=1) transition dipole moment   
-            #                                             x       y       z       
-
-            for i in range(6):
-                next(inputfile)
-
-            # before we start handeling transitions, we need
-            # to create mosyms with indices
-            # only restricted calcs are possible in ADF
-
+            # Before we start handeling transitions, we need to create mosyms
+            # with indices; only restricted calcs are possible in ADF.
             counts = {}
             syms = []
             for mosym in self.mosyms[0]:
@@ -838,16 +842,13 @@ class ADF(logfileparser.Logfile):
                     counts[mosym] = 1
                 else:
                     counts[mosym] += 1
-
                 syms.append(str(counts[mosym]) + mosym)
 
-            import re
             etsecs = []
             printed_warning = False 
-
             for i in range(len(etenergies)):
+
                 etsec = []
-                line = next(inputfile)
                 info = line.split()
                 while len(info) > 0:
 
@@ -884,6 +885,10 @@ class ADF(logfileparser.Logfile):
 
                 etsecs.append(etsec)
 
+                # Again, the number of blank lines between transition can vary.
+                line = next(inputfile)
+                while not line.strip():
+                    line = next(inputfile)
 
             if not hasattr(self, "etenergies"):
                 self.etenergies = etenergies
