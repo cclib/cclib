@@ -36,6 +36,10 @@ XC
  GGA Blyp
 end
 
+EPRINT
+    SFO eig ovl
+END
+
 end input
 
 eor

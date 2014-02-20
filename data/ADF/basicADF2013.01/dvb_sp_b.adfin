@@ -36,7 +36,8 @@ end
 
 PRINT Smat
 EPRINT 
-  SCF Eigvec, Err1
+  SCF eigvec, err1
+  SFO eig ovl
 End
 end input
 

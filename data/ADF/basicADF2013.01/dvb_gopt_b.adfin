@@ -35,7 +35,8 @@ XC
 end
 
 EPrint
- SCF Err1
+ SCF err1
+ SFO eig ovl
 End
 
 geometry
