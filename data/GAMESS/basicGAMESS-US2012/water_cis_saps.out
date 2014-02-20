@@ -1,134 +1,84 @@
------ GAMESS execution script -----
-This job is running on host slim
-under operating system Linux at czw mar 29 22:02:54 CEST 2007
+ openmpi/1.6.4_intel12.1 load complete.
+----- GAMESS execution script 'rungms' -----
+This job is running on host wn451
+under operating system Linux at Wed Feb 19 23:53:12 CET 2014
+PBS has assigned the following compute nodes to this run:
+wn451
 Available scratch disk space (Kbyte units) at beginning of the job is
 Filesystem            Size  Used Avail Use% Mounted on
-/dev/hda6              20G   11G  8,5G  56% /home
-cp water_cis_saps.inp /home/langner/tmp/gms-water_cis_saps/water_cis_saps.F05
+mds1@o2ib:/scratch    485T   73T  408T  16% /lustre
+GAMESS temporary binary files will be written to /lustre/scratch/tmp/pbs.6219543.nova
+GAMESS supplementary output files will be written to /home/langner/basicGAMESS-US2012
+Copying input file water_cis_saps.inp to your run's scratch directory...
+cp water_cis_saps.inp /lustre/scratch/tmp/pbs.6219543.nova/water_cis_saps.F05
 unset echo
-setenv ERICFMT /home/langner/apps/gamess/gamess-2005.06.27.r3/ericfmt.dat
-setenv MCPPATH /home/langner/apps/gamess/gamess-2005.06.27.r3/mcpdata
-setenv EXTBAS /dev/null
-setenv IRCDATA /home/langner/tmp/python/cclib/trunk/data/GAMESS/basicGAMESS-US/water_cis_saps.irc
-setenv INPUT /home/langner/tmp/gms-water_cis_saps/water_cis_saps.F05
-setenv PUNCH /home/langner/tmp/python/cclib/trunk/data/GAMESS/basicGAMESS-US/water_cis_saps.dat
-setenv AOINTS /home/langner/tmp/gms-water_cis_saps/water_cis_saps.F08
-setenv MOINTS /home/langner/tmp/gms-water_cis_saps/water_cis_saps.F09
-setenv DICTNRY /home/langner/tmp/gms-water_cis_saps/water_cis_saps.F10
-setenv DRTFILE /home/langner/tmp/gms-water_cis_saps/water_cis_saps.F11
-setenv CIVECTR /home/langner/tmp/gms-water_cis_saps/water_cis_saps.F12
-setenv CASINTS /home/langner/tmp/gms-water_cis_saps/water_cis_saps.F13
-setenv CIINTS /home/langner/tmp/gms-water_cis_saps/water_cis_saps.F14
-setenv WORK15 /home/langner/tmp/gms-water_cis_saps/water_cis_saps.F15
-setenv WORK16 /home/langner/tmp/gms-water_cis_saps/water_cis_saps.F16
-setenv CSFSAVE /home/langner/tmp/gms-water_cis_saps/water_cis_saps.F17
-setenv FOCKDER /home/langner/tmp/gms-water_cis_saps/water_cis_saps.F18
-setenv WORK19 /home/langner/tmp/gms-water_cis_saps/water_cis_saps.F19
-setenv DASORT /home/langner/tmp/gms-water_cis_saps/water_cis_saps.F20
-setenv DFTINTS /home/langner/tmp/gms-water_cis_saps/water_cis_saps.F21
-setenv DFTGRID /home/langner/tmp/gms-water_cis_saps/water_cis_saps.F22
-setenv JKFILE /home/langner/tmp/gms-water_cis_saps/water_cis_saps.F23
-setenv ORDINT /home/langner/tmp/gms-water_cis_saps/water_cis_saps.F24
-setenv EFPIND /home/langner/tmp/gms-water_cis_saps/water_cis_saps.F25
-setenv PCMDATA /home/langner/tmp/gms-water_cis_saps/water_cis_saps.F26
-setenv PCMINTS /home/langner/tmp/gms-water_cis_saps/water_cis_saps.F27
-setenv SVPWRK1 /home/langner/tmp/gms-water_cis_saps/water_cis_saps.F26
-setenv SVPWRK2 /home/langner/tmp/gms-water_cis_saps/water_cis_saps.F27
-setenv MLTPL /home/langner/tmp/gms-water_cis_saps/water_cis_saps.F28
-setenv MLTPLT /home/langner/tmp/gms-water_cis_saps/water_cis_saps.F29
-setenv DAFL30 /home/langner/tmp/gms-water_cis_saps/water_cis_saps.F30
-setenv SOINTX /home/langner/tmp/gms-water_cis_saps/water_cis_saps.F31
-setenv SOINTY /home/langner/tmp/gms-water_cis_saps/water_cis_saps.F32
-setenv SOINTZ /home/langner/tmp/gms-water_cis_saps/water_cis_saps.F33
-setenv SORESC /home/langner/tmp/gms-water_cis_saps/water_cis_saps.F34
-setenv SIMEN /home/langner/tmp/python/cclib/trunk/data/GAMESS/basicGAMESS-US/water_cis_saps.simen
-setenv SIMCOR /home/langner/tmp/python/cclib/trunk/data/GAMESS/basicGAMESS-US/water_cis_saps.simcor
-setenv GCILIST /home/langner/tmp/gms-water_cis_saps/water_cis_saps.F37
-setenv HESSIAN /home/langner/tmp/gms-water_cis_saps/water_cis_saps.F38
-setenv SOCCDAT /home/langner/tmp/gms-water_cis_saps/water_cis_saps.F40
-setenv AABB41 /home/langner/tmp/gms-water_cis_saps/water_cis_saps.F41
-setenv BBAA42 /home/langner/tmp/gms-water_cis_saps/water_cis_saps.F42
-setenv BBBB43 /home/langner/tmp/gms-water_cis_saps/water_cis_saps.F43
-setenv MCQD50 /home/langner/tmp/gms-water_cis_saps/water_cis_saps.F50
-setenv MCQD51 /home/langner/tmp/gms-water_cis_saps/water_cis_saps.F51
-setenv MCQD52 /home/langner/tmp/gms-water_cis_saps/water_cis_saps.F52
-setenv MCQD53 /home/langner/tmp/gms-water_cis_saps/water_cis_saps.F53
-setenv MCQD54 /home/langner/tmp/gms-water_cis_saps/water_cis_saps.F54
-setenv MCQD55 /home/langner/tmp/gms-water_cis_saps/water_cis_saps.F55
-setenv MCQD56 /home/langner/tmp/gms-water_cis_saps/water_cis_saps.F56
-setenv MCQD57 /home/langner/tmp/gms-water_cis_saps/water_cis_saps.F57
-setenv MCQD58 /home/langner/tmp/gms-water_cis_saps/water_cis_saps.F58
-setenv MCQD59 /home/langner/tmp/gms-water_cis_saps/water_cis_saps.F59
-setenv MCQD60 /home/langner/tmp/gms-water_cis_saps/water_cis_saps.F60
-setenv MCQD61 /home/langner/tmp/gms-water_cis_saps/water_cis_saps.F61
-setenv MCQD62 /home/langner/tmp/gms-water_cis_saps/water_cis_saps.F62
-setenv MCQD63 /home/langner/tmp/gms-water_cis_saps/water_cis_saps.F63
-setenv MCQD64 /home/langner/tmp/gms-water_cis_saps/water_cis_saps.F64
-setenv NMRINT1 /home/langner/tmp/gms-water_cis_saps/water_cis_saps.F61
-setenv NMRINT2 /home/langner/tmp/gms-water_cis_saps/water_cis_saps.F62
-setenv NMRINT3 /home/langner/tmp/gms-water_cis_saps/water_cis_saps.F63
-setenv NMRINT4 /home/langner/tmp/gms-water_cis_saps/water_cis_saps.F64
-setenv NMRINT5 /home/langner/tmp/gms-water_cis_saps/water_cis_saps.F65
-setenv NMRINT6 /home/langner/tmp/gms-water_cis_saps/water_cis_saps.F66
-setenv DCPHFH2 /home/langner/tmp/gms-water_cis_saps/water_cis_saps.F67
-setenv DCPHF21 /home/langner/tmp/gms-water_cis_saps/water_cis_saps.F68
-setenv GVVPT /home/langner/tmp/gms-water_cis_saps/water_cis_saps.F69
-unset echo
-
-Hostlist information:
-nodes=1
-cpus=1
-hostlist=slim
-
-GAMESS and DDI executables found. Commencing calculation.
-/home/langner/apps/gamess/gamess-2005.06.27.r3/ddi/ddikick.slim.x /home/langner/apps/gamess/gamess-2005.06.27.r3/gamess.00.slim.x water_cis_saps -ddi 1 1 slim -scr /home/langner/tmp/gms-water_cis_saps
-
- Distributed Data Interface kickoff program.
- Initiating 1 compute processes on 1 nodes to run the following command:
- /home/langner/apps/gamess/gamess-2005.06.27.r3/gamess.00.slim.x water_cis_saps 
-
+MPI kickoff will run GAMESS on 1 cores in all nodes.
+MPI will run 1 compute processes and 1 data servers.
+mpiexec -np 2 /usr/local/gamess/2012.05.01-R2-openmpi/gamess.00.x
           ******************************************************
-          *         GAMESS VERSION = 27 JUN 2005 (R3)          *
+          *         GAMESS VERSION =  1 MAY 2012 (R2)          *
           *             FROM IOWA STATE UNIVERSITY             *
           * M.W.SCHMIDT, K.K.BALDRIDGE, J.A.BOATZ, S.T.ELBERT, *
           *   M.S.GORDON, J.H.JENSEN, S.KOSEKI, N.MATSUNAGA,   *
           *          K.A.NGUYEN, S.J.SU, T.L.WINDUS,           *
           *       TOGETHER WITH M.DUPUIS, J.A.MONTGOMERY       *
           *         J.COMPUT.CHEM.  14, 1347-1363(1993)        *
-          ******************* PC-UNIX VERSION ******************
+          **************** 64 BIT LINUX VERSION ****************
 
-     SINCE 1993, STUDENTS AND POSTDOCS WORKING AT IOWA STATE UNIVERSITY
-     AND ALSO IN THEIR VARIOUS JOBS AFTER LEAVING ISU HAVE MADE IMPORTANT
-     CONTRIBUTIONS TO THE CODE:
-     IVANA ADAMOVIC, CHRISTINE AIKENS, YURI ALEXEEV, POOJA ARORA, ROB BELL,
-     PRADIPTA BANDYOPADHYAY, BRETT BODE, GALINA CHABAN, WEI CHEN,
-     CHEOL HO CHOI, PAUL DAY, TIM DUDLEY, DMITRI FEDOROV, GRAHAM FLETCHER,
-     MARK FREITAG, KURT GLAESEMANN, GRANT MERRILL, HEATHER NETZLOFF,
-     BOSILJKA NJEGIC, RYAN OLSON, MIKE PAK, JIM SHOEMAKER, JIE SONG,
-     TETSUYA TAKETSUGU, SIMON WEBB.
+  SINCE 1993, STUDENTS AND POSTDOCS WORKING AT IOWA STATE UNIVERSITY
+  AND ALSO IN THEIR VARIOUS JOBS AFTER LEAVING ISU HAVE MADE IMPORTANT
+  CONTRIBUTIONS TO THE CODE:
+     IVANA ADAMOVIC, CHRISTINE AIKENS, YURI ALEXEEV, POOJA ARORA,
+     ANDREY ASADCHEV, ROB BELL, PRADIPTA BANDYOPADHYAY, JONATHAN BENTZ,
+     BRETT BODE, GALINA CHABAN, WEI CHEN, CHEOL HO CHOI, PAUL DAY,
+     ALBERT DEFUSCO, TIM DUDLEY, DMITRI FEDOROV, GRAHAM FLETCHER,
+     MARK FREITAG, KURT GLAESEMANN, DAN KEMP, GRANT MERRILL,
+     NORIYUKI MINEZAWA, JONATHAN MULLIN, TAKESHI NAGATA,
+     SEAN NEDD, HEATHER NETZLOFF, BOSILJKA NJEGIC, RYAN OLSON, MIKE PAK,
+     JIM SHOEMAKER, LYUDMILA SLIPCHENKO, SAROM SOK, JIE SONG,
+     TETSUYA TAKETSUGU, SIMON WEBB, SOOHAENG YOO, FEDERICO ZAHARIEV
 
-     ADDITIONAL CODE HAS BEEN PROVIDED BY COLLABORATORS IN OTHER GROUPS:
-     IOWA STATE UNIVERSITY: JOE IVANIC, KLAUS RUEDENBERG
-     UNIVERSITY OF TOKYO: KIMIHIKO HIRAO, HARUYUKI NAKANO, TAKAHITO
-          NAKAJIMA, TAKAO TSUNEDA, MUNEAKI KAMIYA, SUSUMU YANAGISAWA,
-          KIYOSHI YAGI
-     UNIVERSITY OF SOUTHERN DENMARK: FRANK JENSEN
+  ADDITIONAL CODE HAS BEEN PROVIDED BY COLLABORATORS IN OTHER GROUPS:
+     IOWA STATE UNIVERSITY:
+          JOE IVANIC, LAIMUTIS BYTAUTAS, KLAUS RUEDENBERG
+     UNIVERSITY OF TOKYO: KIMIHIKO HIRAO, TAKAHITO NAKAJIMA,
+          TAKAO TSUNEDA, MUNEAKI KAMIYA, SUSUMU YANAGISAWA,
+          KIYOSHI YAGI, MAHITO CHIBA, SEIKEN TOKURA, NAOAKI KAWAKAMI
+     UNIVERSITY OF AARHUS: FRANK JENSEN
      UNIVERSITY OF IOWA: VISVALDAS KAIRYS, HUI LI
      NATIONAL INST. OF STANDARDS AND TECHNOLOGY: WALT STEVENS, DAVID GARMER
      UNIVERSITY OF PISA: BENEDETTA MENNUCCI, JACOPO TOMASI
      UNIVERSITY OF MEMPHIS: HENRY KURTZ, PRAKASHAN KORAMBATH
-     UNIVERSITY OF ALBERTA: MARIUSZ KLOBUKOWSKI
+     UNIVERSITY OF ALBERTA: TOBY ZENG, MARIUSZ KLOBUKOWSKI
      UNIVERSITY OF NEW ENGLAND: MARK SPACKMAN
      MIE UNIVERSITY: HIROAKI UMEDA
      MICHIGAN STATE UNIVERSITY:
-          KAROL KOWALSKI, MARTA WLOCH, PIOTR PIECUCH
+          KAROL KOWALSKI, MARTA WLOCH, JEFFREY GOUR, JESSE LUTZ, PIOTR PIECUCH
      UNIVERSITY OF SILESIA: MONIKA MUSIAL, STANISLAW KUCHARSKI
      FACULTES UNIVERSITAIRES NOTRE-DAME DE LA PAIX:
           OLIVIER QUINET, BENOIT CHAMPAGNE
      UNIVERSITY OF CALIFORNIA - SANTA BARBARA: BERNARD KIRTMAN
-     INSTITUTE FOR MOLECULAR SCIENCE: KAZUYA ISHIMURA AND SHIGERU NAGASE
+     INSTITUTE FOR MOLECULAR SCIENCE:
+          KAZUYA ISHIMURA, MICHIO KATOUDA, AND SHIGERU NAGASE
      UNIVERSITY OF NOTRE DAME: DAN CHIPMAN
- EXECUTION OF GAMESS BEGUN Thu Mar 29 22:02:54 2007
+     KYUSHU UNIVERSITY:
+          HARUYUKI NAKANO,
+          FENG LONG GU, JACEK KORCHOWIEC, MARCIN MAKOWSKI, AND YURIKO AOKI,
+          HIROTOSHI MORI AND EISAKU MIYOSHI
+     PENNSYLVANIA STATE UNIVERSITY:
+          TZVETELIN IORDANOV, CHET SWALINA, JONATHAN SKONE,
+          SHARON HAMMES-SCHIFFER
+     WASEDA UNIVERSITY:
+          MASATO KOBAYASHI, TOMOKO AKAMA, TSUGUKI TOUMA,
+          TAKESHI YOSHIKAWA, YASUHIRO IKABATA, HIROMI NAKAI
+     UNIVERSITY OF NEBRASKA:
+          PEIFENG SU, DEJUN SI, NANDUN THELLAMUREGE, YALI WANG, HUI LI
+     UNIVERSITY OF ZURICH:
+          ROBERTO PEVERATI, KIM BALDRIDGE
+     N. COPERNICUS UNIVERSITY AND JACKSON STATE UNIVERSITY:
+          MARIA BARYSZ
+
+ EXECUTION OF GAMESS BEGUN Wed Feb 19 23:53:14 2014
 
             ECHO OF THE FIRST FEW INPUT CARDS -
  INPUT CARD> $contrl scftyp=rhf cityp=cis runtyp=energy exetyp=run                          
@@ -143,15 +93,13 @@ GAMESS and DDI executables found. Commencing calculation.
  INPUT CARD> H 1 0.99 2 106.0                                                               
  INPUT CARD> $end                                                                           
  INPUT CARD>                                                                                
-
- ..... DONE SETTING UP THE RUN .....
     1000000 WORDS OF MEMORY AVAILABLE
 
      BASIS OPTIONS
      -------------
      GBASIS=STO          IGAUSS=       3      POLAR=NONE    
      NDFUNC=       0     NFFUNC=       0     DIFFSP=       F
-     NPFUNC=       0      DIFFS=       F
+     NPFUNC=       0      DIFFS=       F     BASNAM=        
 
 
      RUN TITLE
@@ -178,11 +126,11 @@ GAMESS and DDI executables found. Commencing calculation.
           INTERNUCLEAR DISTANCES (ANGS.)
           ------------------------------
 
-                    O              H              H         
+                1 O          2 H          3 H     
 
-  1  O               0.0000000      0.9900000 *    0.9900000 *  
-  2  H               0.9900000 *    0.0000000      1.5812983 *  
-  3  H               0.9900000 *    1.5812983 *    0.0000000    
+   1 O       0.0000000    0.9900000 *  0.9900000 *
+   2 H       0.9900000 *  0.0000000    1.5812983 *
+   3 H       0.9900000 *  1.5812983 *  0.0000000  
 
   * ... LESS THAN  3.000
 
@@ -230,6 +178,7 @@ GAMESS and DDI executables found. Commencing calculation.
      ---------------
  SCFTYP=RHF          RUNTYP=ENERGY       EXETYP=RUN     
  MPLEVL=       0     CITYP =CIS          CCTYP =NONE         VBTYP =NONE    
+ DFTTYP=NONE         TDDFT =NONE    
  MULT  =       1     ICHARG=       0     NZVAR =       0     COORD =ZMT     
  PP    =NONE         RELWFN=NONE         LOCAL =NONE         NUMGRD=       F
  ISPHER=      -1     NOSYM =       0     MAXIT =      30     UNITS =ANGS    
@@ -244,8 +193,9 @@ GAMESS and DDI executables found. Commencing calculation.
  DISTRIBUTED MEMDDI=           0 MILLION WORDS IN AGGREGATE,
  MEMDDI DISTRIBUTED OVER   1 PROCESSORS IS           0 WORDS/PROCESSOR.
  TOTAL MEMORY REQUESTED ON EACH PROCESSOR=     1000000 WORDS.
- TIMLIM=      525600.00 MINUTES, OR   365.00 DAYS.
- PARALL= F  BALTYP=  NXTVAL  KDIAG=    0  COREFL= F
+ TIMLIM=      525600.00 MINUTES, OR     365.0 DAYS.
+ PARALL= F  BALTYP=  DLB     KDIAG=    0  COREFL= F
+ MXSEQ2=     300 MXSEQ3=     150
 
           ----------------
           PROPERTIES INPUT
@@ -258,13 +208,14 @@ GAMESS and DDI executables found. Commencing calculation.
  IEMINT=       0   IEFINT=       0                     IEDINT=       0
                                                        MORB  =       0
           EXTRAPOLATION IN EFFECT
+ ORBITAL PRINTING OPTION: NPREO=     1     7     2     1
 
      -------------------------------
      INTEGRAL TRANSFORMATION OPTIONS
      -------------------------------
-     NWORD  =       0     CUTOFF = 1.0E-09
-     MPTRAN =       0     DIRTRF =       F
-     AOINTS =DUP     
+     NWORD  =            0
+     CUTOFF = 1.0E-09     MPTRAN =       0
+     DIRTRF =       F     AOINTS =DUP     
 
           ----------------------
           INTEGRAL INPUT OPTIONS
@@ -275,7 +226,7 @@ GAMESS and DDI executables found. Commencing calculation.
      CI-SINGLES CONTROL INFORMATION
      ------------------------------
      NACORE =        1  NBCORE   =        1
-     NSTATE =        5  ISTATE   =        1
+     NSTATE =        5  IROOT    =        1
      HAMTYP = SAPS      SAP MULT =        1
      DIAGZN = DAVID     MXVEC    =       40
      NDAVIT =       50  DAVCVG   = 1.00E-05
@@ -308,15 +259,15 @@ GAMESS and DDI executables found. Commencing calculation.
  A   =    7
 
  ..... DONE SETTING UP THE RUN .....
- STEP CPU TIME =     0.03 TOTAL CPU TIME =        0.0 (    0.0 MIN)
- TOTAL WALL CLOCK TIME=        0.0 SECONDS, CPU UTILIZATION IS 100.00%
+ STEP CPU TIME =     0.00 TOTAL CPU TIME =        0.0 (    0.0 MIN)
+ TOTAL WALL CLOCK TIME=        0.2 SECONDS, CPU UTILIZATION IS   0.00%
 
           ********************
           1 ELECTRON INTEGRALS
           ********************
  ...... END OF ONE-ELECTRON INTEGRALS ......
  STEP CPU TIME =     0.00 TOTAL CPU TIME =        0.0 (    0.0 MIN)
- TOTAL WALL CLOCK TIME=        0.0 SECONDS, CPU UTILIZATION IS 100.00%
+ TOTAL WALL CLOCK TIME=        0.2 SECONDS, CPU UTILIZATION IS   0.00%
 
           -------------
           GUESS OPTIONS
@@ -333,8 +284,8 @@ GAMESS and DDI executables found. Commencing calculation.
      5 ORBITALS ARE OCCUPIED (    1 CORE ORBITALS).
      2=A        3=A        4=A        5=A        6=A        7=A   
  ...... END OF INITIAL ORBITAL SELECTION ......
- STEP CPU TIME =     0.00 TOTAL CPU TIME =        0.0 (    0.0 MIN)
- TOTAL WALL CLOCK TIME=        0.0 SECONDS, CPU UTILIZATION IS 100.00%
+ STEP CPU TIME =     0.02 TOTAL CPU TIME =        0.0 (    0.0 MIN)
+ TOTAL WALL CLOCK TIME=        0.2 SECONDS, CPU UTILIZATION IS  10.53%
 
                     ----------------------
                     AO INTEGRAL TECHNOLOGY
@@ -363,8 +314,8 @@ GAMESS and DDI executables found. Commencing calculation.
  TOTAL NUMBER OF NONZERO TWO-ELECTRON INTEGRALS =                 228
           1 INTEGRAL RECORDS WERE STORED ON DISK FILE  8.
   ...... END OF TWO-ELECTRON INTEGRALS .....
- STEP CPU TIME =     0.15 TOTAL CPU TIME =        0.2 (    0.0 MIN)
- TOTAL WALL CLOCK TIME=        0.0 SECONDS, CPU UTILIZATION IS 100.00%
+ STEP CPU TIME =     0.00 TOTAL CPU TIME =        0.0 (    0.0 MIN)
+ TOTAL WALL CLOCK TIME=        0.2 SECONDS, CPU UTILIZATION IS  10.00%
 
           --------------------------
                  RHF SCF CALCULATION
@@ -374,7 +325,7 @@ GAMESS and DDI executables found. Commencing calculation.
      MAXIT =   30     NPUNCH=    2
      EXTRAP=T  DAMP=F  SHIFT=F  RSTRCT=F  DIIS=F  DEM=F  SOSCF=F
      DENSITY MATRIX CONV=  1.00E-06
-     MEMORY REQUIRED FOR RHF STEP=     30441 WORDS.
+     MEMORY REQUIRED FOR RHF ITERS=     30441 WORDS.
 
  ITER EX DEM     TOTAL ENERGY        E CHANGE  DENSITY CHANGE    DIIS ERROR
    1  0  0      -74.7981539269   -74.7981539269   0.585814622   0.000000000
@@ -425,12 +376,12 @@ GAMESS and DDI executables found. Commencing calculation.
     6  H  2  S   -0.775801  -0.808916
     7  H  3  S   -0.775801   0.808916
  ...... END OF RHF CALCULATION ......
- STEP CPU TIME =     0.00 TOTAL CPU TIME =        0.2 (    0.0 MIN)
- TOTAL WALL CLOCK TIME=        0.0 SECONDS, CPU UTILIZATION IS 100.00%
+ STEP CPU TIME =     0.00 TOTAL CPU TIME =        0.0 (    0.0 MIN)
+ TOTAL WALL CLOCK TIME=        0.2 SECONDS, CPU UTILIZATION IS   9.52%
 
-     -------------------------------------------------
-     SCF PROPERTIES...FOR THE UNPERTURBED WAVEFUNCTION
-     -------------------------------------------------
+     ----------------------------------------------------------------
+     PROPERTY VALUES FOR THE RHF   SELF-CONSISTENT FIELD WAVEFUNCTION
+     ----------------------------------------------------------------
 
           -----------------
           ENERGY COMPONENTS
@@ -451,6 +402,23 @@ GAMESS and DDI executables found. Commencing calculation.
              TOTAL POTENTIAL ENERGY =    -149.4811890320
                TOTAL KINETIC ENERGY =      74.5168602395
                  VIRIAL RATIO (V/T) =       2.0060049303
+
+  ...... PI ENERGY ANALYSIS ......
+
+ ENERGY ANALYSIS:
+            FOCK ENERGY=    -45.8625003844
+          BARE H ENERGY=   -121.8401708405
+     ELECTRONIC ENERGY =    -83.8513356124
+         KINETIC ENERGY=     74.5168602395
+          N-N REPULSION=      8.8870069086
+           TOTAL ENERGY=    -74.9643287039
+        SIGMA PART(1+2)=    -76.0328766679
+               (K,V1,2)=     69.4593977875   -176.4390799391     30.9468054838
+           PI PART(1+2)=     -7.8184589445
+               (K,V1,2)=      5.0574624520    -19.9179511408      7.0420297443
+  SIGMA SKELETON, ERROR=    -67.1458697593      0.0000000000
+             MIXED PART= 0.00000E+00 0.00000E+00 0.00000E+00 0.00000E+00
+ ...... END OF PI ENERGY ANALYSIS ......
 
           ---------------------------------------
           MULLIKEN AND LOWDIN POPULATION ANALYSES
@@ -490,8 +458,8 @@ GAMESS and DDI executables found. Commencing calculation.
          DX          DY          DZ         /D/  (DEBYE)
      0.000000    1.673510    0.000000    1.673510
  ...... END OF PROPERTY EVALUATION ......
- STEP CPU TIME =     0.03 TOTAL CPU TIME =        0.2 (    0.0 MIN)
- TOTAL WALL CLOCK TIME=        0.0 SECONDS, CPU UTILIZATION IS 100.00%
+ STEP CPU TIME =     0.01 TOTAL CPU TIME =        0.0 (    0.0 MIN)
+ TOTAL WALL CLOCK TIME=        0.2 SECONDS, CPU UTILIZATION IS  13.04%
 
  MXVEC CANNOT BE BIGGER THAN THE NUMBER OF CIS CONFIGS
  SETTING MXVEC = NCFG
@@ -519,7 +487,7 @@ GAMESS and DDI executables found. Commencing calculation.
 
  SINGLE BATCH ENERGY CALCULATION WILL BE PERFORMED
 
- UNIT VECTOR GUESS AT CIS COEFICIENTS ...
+ UNIT VECTOR GUESS AT CIS COEFFICIENTS ...
 
  USING IN MEMORY DIAGONALIZTION TO FIND CIS EIGENVALUES AND EIGENVECTORS ...
 
@@ -616,7 +584,7 @@ GAMESS and DDI executables found. Commencing calculation.
 
  STATE MULTIPLICITIES =   1  1
  STATE ENERGIES =        -74.9643287925      -74.5150077880
- TRANSITION ENERGY =  2.9564E+15 [1/SEC] =    98614.56 [1/CM] =     12.23 [EV]
+ EXCITATION ENERGY =  2.9564E+15 [1/SEC] =    98614.56 [1/CM] =     12.23 [EV]
                             X           Y           Z           NORM
  TRANSITION DIPOLE =    0.000000    0.000000    0.105812    0.105812 E*BOHR
  TRANSITION DIPOLE =    0.000000    0.000000    0.268948    0.268948 DEBYE
@@ -627,18 +595,18 @@ GAMESS and DDI executables found. Commencing calculation.
 
  STATE MULTIPLICITIES =   1  1
  STATE ENERGIES =        -74.9643287925      -74.4407758359
- TRANSITION ENERGY =  3.4448E+15 [1/SEC] =   114906.59 [1/CM] =     14.25 [EV]
+ EXCITATION ENERGY =  3.4448E+15 [1/SEC] =   114906.59 [1/CM] =     14.25 [EV]
                             X           Y           Z           NORM
  TRANSITION DIPOLE =    0.000000    0.000000    0.000000    0.000000 E*BOHR
  TRANSITION DIPOLE =    0.000000    0.000000    0.000000    0.000000 DEBYE
  OSCILLATOR STRENGTH =    0.000000
- EINSTEIN COEFFICIENTS: A=  9.7097E-22 1/SEC; B=  1.2819E-22 SEC/G
+ EINSTEIN COEFFICIENTS: A=  1.8566E-21 1/SEC; B=  2.4512E-22 SEC/G
 
  TRANSITION FROM THE GROUND STATE TO EXCITED STATE  3
 
  STATE MULTIPLICITIES =   1  1
  STATE ENERGIES =        -74.9643287925      -74.3813542595
- TRANSITION ENERGY =  3.8358E+15 [1/SEC] =   127948.12 [1/CM] =     15.86 [EV]
+ EXCITATION ENERGY =  3.8358E+15 [1/SEC] =   127948.12 [1/CM] =     15.86 [EV]
                             X           Y           Z           NORM
  TRANSITION DIPOLE =    0.000000    0.434939    0.000000    0.434939 E*BOHR
  TRANSITION DIPOLE =    0.000000    1.105514    0.000000    1.105514 DEBYE
@@ -649,7 +617,7 @@ GAMESS and DDI executables found. Commencing calculation.
 
  STATE MULTIPLICITIES =   1  1
  STATE ENERGIES =        -74.9643287925      -74.2969138850
- TRANSITION ENERGY =  4.3914E+15 [1/SEC] =   146480.64 [1/CM] =     18.16 [EV]
+ EXCITATION ENERGY =  4.3914E+15 [1/SEC] =   146480.64 [1/CM] =     18.16 [EV]
                             X           Y           Z           NORM
  TRANSITION DIPOLE =    0.336747    0.000000    0.000000    0.336747 E*BOHR
  TRANSITION DIPOLE =    0.855932    0.000000    0.000000    0.855932 DEBYE
@@ -660,7 +628,7 @@ GAMESS and DDI executables found. Commencing calculation.
 
  STATE MULTIPLICITIES =   1  1
  STATE ENERGIES =        -74.9643287925      -74.1904032965
- TRANSITION ENERGY =  5.0922E+15 [1/SEC] =   169857.01 [1/CM] =     21.06 [EV]
+ EXCITATION ENERGY =  5.0922E+15 [1/SEC] =   169857.01 [1/CM] =     21.06 [EV]
                             X           Y           Z           NORM
  TRANSITION DIPOLE =   -1.533912    0.000000    0.000000    1.533912 E*BOHR
  TRANSITION DIPOLE =   -3.898846    0.000000    0.000000    3.898846 DEBYE
@@ -675,7 +643,7 @@ GAMESS and DDI executables found. Commencing calculation.
       STATE DIPOLE =    0.000000   -0.300932    0.000000    0.300932 E*BOHR
       STATE DIPOLE =    0.000000   -0.764898    0.000000    0.764898 DEBYE
 
- TRANSITION BETWEEN EXCITED STATES   1  AND   2
+ TRANSITION BETWEEN EXCITED STATES   1 AND  2
 
  STATE MULTIPLICITIES=  1  1
  STATE ENERGIES =        -74.5150077880      -74.4407758359
@@ -686,7 +654,7 @@ GAMESS and DDI executables found. Commencing calculation.
  OSCILLATOR STRENGTH =    0.058116
  EINSTEIN COEFFICIENTS: A=  1.0290E+07 1/SEC; B=  4.7660E+08 SEC/G
 
- TRANSITION BETWEEN EXCITED STATES   1  AND   3
+ TRANSITION BETWEEN EXCITED STATES   1 AND  3
 
  STATE MULTIPLICITIES=  1  1
  STATE ENERGIES =        -74.5150077880      -74.3813542595
@@ -697,7 +665,7 @@ GAMESS and DDI executables found. Commencing calculation.
  OSCILLATOR STRENGTH =    0.003333
  EINSTEIN COEFFICIENTS: A=  1.9128E+06 1/SEC; B=  1.5180E+07 SEC/G
 
- TRANSITION BETWEEN EXCITED STATES   1  AND   4
+ TRANSITION BETWEEN EXCITED STATES   1 AND  4
 
  STATE MULTIPLICITIES=  1  1
  STATE ENERGIES =        -74.5150077880      -74.2969138850
@@ -706,9 +674,9 @@ GAMESS and DDI executables found. Commencing calculation.
  TRANSITION DIPOLE =    0.000000    0.000000    0.000000    0.000000 E*BOHR
  TRANSITION DIPOLE =    0.000000    0.000000    0.000000    0.000000 DEBYE
  OSCILLATOR STRENGTH =    0.000000
- EINSTEIN COEFFICIENTS: A=  1.0971E-21 1/SEC; B=  2.0038E-21 SEC/G
+ EINSTEIN COEFFICIENTS: A=  7.3441E-22 1/SEC; B=  1.3413E-21 SEC/G
 
- TRANSITION BETWEEN EXCITED STATES   1  AND   5
+ TRANSITION BETWEEN EXCITED STATES   1 AND  5
 
  STATE MULTIPLICITIES=  1  1
  STATE ENERGIES =        -74.5150077880      -74.1904032965
@@ -717,7 +685,7 @@ GAMESS and DDI executables found. Commencing calculation.
  TRANSITION DIPOLE =    0.000000    0.000000    0.000000    0.000000 E*BOHR
  TRANSITION DIPOLE =    0.000000    0.000000    0.000000    0.000000 DEBYE
  OSCILLATOR STRENGTH =    0.000000
- EINSTEIN COEFFICIENTS: A=  5.2617E-21 1/SEC; B=  2.9147E-21 SEC/G
+ EINSTEIN COEFFICIENTS: A=  3.9824E-21 1/SEC; B=  2.2061E-21 SEC/G
 
  EXPECTATION VALUE DIPOLE MOMENT FOR EXCITED STATE  2
 
@@ -727,7 +695,7 @@ GAMESS and DDI executables found. Commencing calculation.
       STATE DIPOLE =    0.000000   -0.005921    0.000000    0.005921 E*BOHR
       STATE DIPOLE =    0.000000   -0.015050    0.000000    0.015050 DEBYE
 
- TRANSITION BETWEEN EXCITED STATES   2  AND   3
+ TRANSITION BETWEEN EXCITED STATES   2 AND  3
 
  STATE MULTIPLICITIES=  1  1
  STATE ENERGIES =        -74.4407758359      -74.3813542595
@@ -736,9 +704,9 @@ GAMESS and DDI executables found. Commencing calculation.
  TRANSITION DIPOLE =    0.000000    0.000000    0.000000    0.000000 E*BOHR
  TRANSITION DIPOLE =    0.000000    0.000000    0.000000    0.000000 DEBYE
  OSCILLATOR STRENGTH =    0.000000
- EINSTEIN COEFFICIENTS: A=  3.7428E-23 1/SEC; B=  3.3798E-21 SEC/G
+ EINSTEIN COEFFICIENTS: A=  2.8044E-23 1/SEC; B=  2.5325E-21 SEC/G
 
- TRANSITION BETWEEN EXCITED STATES   2  AND   4
+ TRANSITION BETWEEN EXCITED STATES   2 AND  4
 
  STATE MULTIPLICITIES=  1  1
  STATE ENERGIES =        -74.4407758359      -74.2969138850
@@ -749,7 +717,7 @@ GAMESS and DDI executables found. Commencing calculation.
  OSCILLATOR STRENGTH =    0.001909
  EINSTEIN COEFFICIENTS: A=  1.2696E+06 1/SEC; B=  8.0788E+06 SEC/G
 
- TRANSITION BETWEEN EXCITED STATES   2  AND   5
+ TRANSITION BETWEEN EXCITED STATES   2 AND  5
 
  STATE MULTIPLICITIES=  1  1
  STATE ENERGIES =        -74.4407758359      -74.1904032965
@@ -768,7 +736,7 @@ GAMESS and DDI executables found. Commencing calculation.
       STATE DIPOLE =    0.000000   -0.376438    0.000000    0.376438 E*BOHR
       STATE DIPOLE =    0.000000   -0.956817    0.000000    0.956817 DEBYE
 
- TRANSITION BETWEEN EXCITED STATES   3  AND   4
+ TRANSITION BETWEEN EXCITED STATES   3 AND  4
 
  STATE MULTIPLICITIES=  1  1
  STATE ENERGIES =        -74.3813542595      -74.2969138850
@@ -779,7 +747,7 @@ GAMESS and DDI executables found. Commencing calculation.
  OSCILLATOR STRENGTH =    0.087840
  EINSTEIN COEFFICIENTS: A=  2.0124E+07 1/SEC; B=  6.3327E+08 SEC/G
 
- TRANSITION BETWEEN EXCITED STATES   3  AND   5
+ TRANSITION BETWEEN EXCITED STATES   3 AND  5
 
  STATE MULTIPLICITIES=  1  1
  STATE ENERGIES =        -74.3813542595      -74.1904032965
@@ -798,7 +766,7 @@ GAMESS and DDI executables found. Commencing calculation.
       STATE DIPOLE =    0.000000    0.003681    0.000000    0.003681 E*BOHR
       STATE DIPOLE =    0.000000    0.009356    0.000000    0.009356 DEBYE
 
- TRANSITION BETWEEN EXCITED STATES   4  AND   5
+ TRANSITION BETWEEN EXCITED STATES   4 AND  5
 
  STATE MULTIPLICITIES=  1  1
  STATE ENERGIES =        -74.2969138850      -74.1904032965
@@ -830,37 +798,37 @@ GAMESS and DDI executables found. Commencing calculation.
 
                     2.0000     2.0000     2.0000     2.0000     1.0000
 
-    1  O  1  S    0.026814   0.268618   0.866189   0.479825  -0.128350
-    2  O  1  S   -0.036773  -0.985441   0.093278  -0.083023   0.832524
-    3  O  1  X    0.602724  -0.023680  -0.011791   0.000859   0.000000
-    4  O  1  Y    0.021657   0.387258   0.284311  -0.618009   0.732624
-    5  O  1  Z    0.000000   0.000000   0.000000   0.000000   0.002238
-    6  H  2  S    0.451136   0.038456   0.122543  -0.295464  -0.775799
-    7  H  3  S   -0.440758   0.073497   0.139990  -0.296735  -0.775799
+    1  O  1  S   -0.006099  -0.070894  -1.000517   0.217468  -0.110136
+    2  O  1  S    0.953083   0.184841   0.181265  -0.112471   0.714378
+    3  O  1  X    0.105481  -0.592513   0.036894  -0.020458   0.000000
+    4  O  1  Y   -0.351734  -0.051569  -0.194175  -0.670168   0.628655
+    5  O  1  Z    0.000000   0.000000   0.000000   0.000000  -0.513508
+    6  H  2  S    0.031593  -0.439089  -0.028852  -0.335691  -0.665703
+    7  H  3  S   -0.124494   0.437694  -0.083447  -0.305418  -0.665703
 
                       6          7
 
                     1.0000     0.0000
 
-    1  O  1  S   -0.000287   0.000000
-    2  O  1  S    0.001863   0.000000
-    3  O  1  X    0.000000   0.976485
-    4  O  1  Y    0.001640   0.000000
-    5  O  1  Z   -0.999997   0.000000
-    6  H  2  S   -0.001737  -0.808916
-    7  H  3  S   -0.001737   0.808916
+    1  O  1  S   -0.065909   0.000000
+    2  O  1  S    0.427509   0.000000
+    3  O  1  X    0.000000  -0.976485
+    4  O  1  Y    0.376209   0.000000
+    5  O  1  Z    0.858085   0.000000
+    6  H  2  S   -0.398380   0.808916
+    7  H  3  S   -0.398380  -0.808916
 
  THE CIS NATURAL ORBITALS HAVE BEEN PUNCHED.
 
  ..... DONE WITH CIS ENERGY .....
 
- STEP CPU TIME =     0.00 TOTAL CPU TIME =        0.2 (    0.0 MIN)
- TOTAL WALL CLOCK TIME=        0.0 SECONDS, CPU UTILIZATION IS 100.00%
+ STEP CPU TIME =     0.01 TOTAL CPU TIME =        0.0 (    0.0 MIN)
+ TOTAL WALL CLOCK TIME=        0.2 SECONDS, CPU UTILIZATION IS  17.39%
 
-     -----------------------------------------------------------
-     CIS PROPERTIES...FOR THE WAVEFUNCTION OF EXCITED STATE    1
-                (USING THE EXPECTATION VALUE DENSITY)
-     -----------------------------------------------------------
+     -------------------------------------------------------------
+     CIS   PROPERTIES...FOR THE WAVEFUNCTION OF EXCITED STATE    1
+                 USING THE EXPECTATION VALUE DENSITY
+     -------------------------------------------------------------
 
           -----------------
           ENERGY COMPONENTS
@@ -920,27 +888,29 @@ GAMESS and DDI executables found. Commencing calculation.
          DX          DY          DZ         /D/  (DEBYE)
      0.000000   -0.764898    0.000000    0.764898
  ...... END OF PROPERTY EVALUATION ......
- STEP CPU TIME =     0.02 TOTAL CPU TIME =        0.2 (    0.0 MIN)
- TOTAL WALL CLOCK TIME=        0.3 SECONDS, CPU UTILIZATION IS  71.87%
- 440000 WORDS OF DYNAMIC MEMORY USED
- EXECUTION OF GAMESS TERMINATED NORMALLY Thu Mar 29 22:02:55 2007
- DDI: 920 bytes (0.0 MB / 0 MWords) used by master data server.
+ STEP CPU TIME =     0.00 TOTAL CPU TIME =        0.0 (    0.0 MIN)
+ TOTAL WALL CLOCK TIME=        0.2 SECONDS, CPU UTILIZATION IS  16.67%
+                580000  WORDS OF DYNAMIC MEMORY USED
+ EXECUTION OF GAMESS TERMINATED NORMALLY Wed Feb 19 23:53:14 2014
+ DDI: 263624 bytes (0.3 MB / 0 MWords) used by master data server.
 
  ----------------------------------------
  CPU timing information for all processes
  ========================================
- 0: 0.214967 + 0.024996 = 0.239963
+ 0: 0.22 + 0.41 = 0.64
+ 1: 0.08 + 0.12 = 0.21
  ----------------------------------------
- ddikick.x: exited gracefully.
+set exit_status=0
 unset echo
 ----- accounting info -----
-czw mar 29 22:02:58 CEST 2007
-Files used on the master node slim were:
--rw-r--r--  1 langner langner     216 2007-03-29 22:02 /home/langner/tmp/gms-water_cis_saps/water_cis_saps.F05
--rw-r--r--  1 langner langner  180012 2007-03-29 22:02 /home/langner/tmp/gms-water_cis_saps/water_cis_saps.F08
--rw-r--r--  1 langner langner 1243584 2007-03-29 22:02 /home/langner/tmp/gms-water_cis_saps/water_cis_saps.F10
--rw-r--r--  1 langner langner     360 2007-03-29 22:02 /home/langner/tmp/gms-water_cis_saps/water_cis_saps.F12
-Removing scratch catalog /home/langner/tmp/gms-water_cis_saps...
-removed directory: `/home/langner/tmp/gms-water_cis_saps'
-Finished with calculation.
-0.0u 0.0s 0:04.34 1.6% 0+0k 0+0io 4pf+0w
+Files used on the master node wn451 were:
+-rw------- 1 langner grant012     216 Feb 19 23:53 /lustre/scratch/tmp/pbs.6219543.nova/water_cis_saps.F05
+-rw------- 1 langner grant012  180016 Feb 19 23:53 /lustre/scratch/tmp/pbs.6219543.nova/water_cis_saps.F08
+-rw------- 1 langner grant012 1341520 Feb 19 23:53 /lustre/scratch/tmp/pbs.6219543.nova/water_cis_saps.F10
+-rw------- 1 langner grant012     360 Feb 19 23:53 /lustre/scratch/tmp/pbs.6219543.nova/water_cis_saps.F12
+-rw------- 1 langner grant012       6 Feb 19 23:53 /lustre/scratch/tmp/pbs.6219543.nova/water_cis_saps.nodes.mpd
+ls: No match.
+ls: No match.
+ls: No match.
+Wed Feb 19 23:53:16 CET 2014
+0.199u 0.162s 0:05.00 7.0%	0+0k 0+0io 68pf+0w

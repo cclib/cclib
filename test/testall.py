@@ -98,7 +98,7 @@ def visualtests():
     
     output = [ getfile(Gaussian,"basicGaussian03","dvb_gopt.out")[0],
                getfile(GAMESS,"basicPCGAMESS","dvb_gopt_a.out")[0],
-               getfile(GAMESS,"basicGAMESS-US","dvb_gopt_a.out")[0],
+               getfile(GAMESS,"basicGAMESS-US2012","dvb_gopt_a.out")[0],
                getfile(ADF,"basicADF2007.01","dvb_gopt.adfout")[0],
                getfile(Jaguar,"basicJaguar7.0", "dvb_gopt.out")[0],
                getfile(Molpro,"basicMolpro2006", "dvb_gopt.out", "dvb_gopt.out")[0],
