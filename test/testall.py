@@ -166,7 +166,7 @@ def testall(parserchoice=parsers, modules=test_modules):
                 except:
                     errors.append("ERROR: could not import %s from %s." %(name, module))
                 else:
-                    print("\n**** test%s: %s ****" %(module, test.__doc__))
+                    print("\n**** test%s (%s): %s ****" %(module, program, test.__doc__))
                     parser = test_instance["parser"]
                     location = test_instance["location"]
                     test.data, test.logfile = getfile(eval(parser), *location)

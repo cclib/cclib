@@ -124,6 +124,13 @@ Jaguar/Jaguar6.5/dvb_sp.out
 Jaguar/Jaguar6.5/dvb_un_sp.out
 Molpro/Molpro2006/C_bigbasis_cart.out
 Molpro/Molpro2006/thymine.scf.out
+ORCA/ORCA2.6/dvb_gopt.out
+ORCA/ORCA2.6/dvb_ir.out
+ORCA/ORCA2.6/dvb_raman.out
+ORCA/ORCA2.6/dvb_sp.out
+ORCA/ORCA2.6/dvb_td.out
+ORCA/ORCA2.6/dvb_un_sp.out
+ORCA/ORCA2.6/water_mp2.out
 ORCA/ORCA2.8/co.out
 ORCA/ORCA2.8/co_cosmo.out
 ORCA/ORCA2.9/job.out
