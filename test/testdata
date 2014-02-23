@@ -61,6 +61,7 @@ GeoOpt    Molpro      MolproGeoOptTest      basicMolpro2012       dvb_gopt.out  
 GeoOpt    ORCA        OrcaGeoOptTest        basicORCA2.6          dvb_gopt.out
 GeoOpt    ORCA        OrcaGeoOptTest        basicORCA2.8          dvb_gopt.out
 GeoOpt    ORCA        OrcaGeoOptTest        basicORCA2.9          dvb_gopt.out
+GeoOpt    ORCA        OrcaGeoOptTest        basicORCA3.0          dvb_gopt.out
 
 MP        GAMESSUK    GAMESSUKMP2Test       basicGAMESS-UK        water_mp2.out
 MP        GAMESSUK    GAMESSUKMP3Test       basicGAMESS-UK        water_mp3.out
@@ -100,6 +101,7 @@ SP        Molpro      MolproSPTest          basicMolpro2012       dvb_sphf.out
 SP        ORCA        OrcaSPTest            basicORCA2.6          dvb_sp.out
 SP        ORCA        OrcaSPTest            basicORCA2.8          dvb_sp.out
 SP        ORCA        OrcaSPTest            basicORCA2.9          dvb_sp.out
+SP        ORCA        OrcaSPTest            basicORCA3.0          dvb_sp.out
                                             
 SPun      ADF         ADFSPunTest           basicADF2007.01       dvb_un_sp.adfout
 SPun      ADF         ADFSPunTest           basicADF2013.01       dvb_un_sp.adfout
@@ -114,6 +116,7 @@ SPun      Molpro      MolproSPunTest        basicMolpro2012       dvb_sphf_un.ou
 SPun      ORCA        OrcaSPunTest          basicORCA2.6          dvb_un_sp.out
 SPun      ORCA        OrcaSPunTest          basicORCA2.8          dvb_sp_un.out
 SPun      ORCA        OrcaSPunTest          basicORCA2.9          dvb_sp_un.out
+SPun      ORCA        OrcaSPunTest          basicORCA3.0          dvb_sp_un.out
 
 TD        ADF         ADFTDDFTTest          basicADF2007.01       dvb_td.adfout
 TD        ADF         ADFTDDFTTest          basicADF2013.01       dvb_td.adfout
@@ -128,6 +131,7 @@ TD        GAMESS      PCGamessTDDFTtrpTest  basicPCGAMESS         dvb_td_trplet.
 TD        ORCA        OrcaTDDFTTest         basicORCA2.6          dvb_td.out
 TD        ORCA        OrcaTDDFTTest         basicORCA2.8          dvb_td.out
 TD        ORCA        OrcaTDDFTTest         basicORCA2.9          dvb_td.out
+TD        ORCA        OrcaTDDFTTest         basicORCA3.0          dvb_td.out
 
 vib       ADF         ADFIRTest             basicADF2007.01       dvb_ir.adfout
 vib       ADF         ADFIRTest             basicADF2013.01       dvb_ir.adfout
@@ -147,6 +151,8 @@ vib       Molpro      MolproIRTest          basicMolpro2012       dvb_ir.out    
 vib       ORCA        OrcaIRTest            basicORCA2.6          dvb_ir.out
 vib       ORCA        OrcaIRTest            basicORCA2.8          dvb_ir.out
 vib       ORCA        OrcaIRTest            basicORCA2.9          dvb_ir.out
+vib       ORCA        OrcaIRTest            basicORCA3.0          dvb_ir.out
 vib       ORCA        OrcaRamanTest         basicORCA2.6          dvb_raman.out
 vib       ORCA        OrcaRamanTest         basicORCA2.8          dvb_raman.out
 vib       ORCA        OrcaRamanTest         basicORCA2.9          dvb_raman.out
+vib       ORCA        OrcaRamanTest         basicORCA3.0          dvb_raman.out
