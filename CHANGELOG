@@ -13,8 +13,8 @@ Features:
 	(Edward Holland)
 
 Bugfixes:
-	* Handle coupled cluster energies in Gaussian 09 (Björn Dahlgren)
-	* Vibrational displacement vectors missing for Gaussian 09 (Björn
+	* Handle coupled cluster energies in Gaussian 09 (BjÃ¶rn Dahlgren)
+	* Vibrational displacement vectors missing for Gaussian 09 (BjÃ¶rn
 	Dahlgren)
 	* Fix problem parsing vibrational frequencies in some GAMESS-US files
 	* Fix missing final scfenergy in ADF geometry optimisations
@@ -32,7 +32,7 @@ Bugfixes:
 	* Apply patch from Chengju Wang to handle GAMESS calculations with more
 	than 99 atoms
 	* Handle Gaussian files with more than 99 atoms having pseudopotentials
-	(Björn Baumeier)
+	(BjÃ¶rn Baumeier)
 
 Changes since cclib-1.0:
 
