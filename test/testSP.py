@@ -16,7 +16,7 @@ import bettertest
 class GenericSPTest(bettertest.TestCase):
     """Restricted single point unittest."""
 
-    # In STO-3G, H has 1, C has 3.
+    # In STO-3G, H has 1, C has 5 (1 S and 4 SP).
     nbasisdict = {1:1, 6:5}
     
     # Approximate B3LYP energy of dvb after SCF in STO-3G.
