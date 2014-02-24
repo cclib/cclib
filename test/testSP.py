@@ -16,7 +16,7 @@ import bettertest
 class GenericSPTest(bettertest.TestCase):
     """Restricted single point unittest."""
 
-    # In STO-3G, H has 1, C has 3.
+    # In STO-3G, H has 1, C has 5 (1 S and 4 SP).
     nbasisdict = {1:1, 6:5}
     
     # Approximate B3LYP energy of dvb after SCF in STO-3G.
@@ -194,13 +194,7 @@ class MolproSPTest(GenericSPTest):
 
 class OrcaSPTest(GenericSPTest):
     """ORCA restricted single point unittest."""
-
-    # This was run in 3-21G; H has 2, C has 9.
-    nbasisdict = {1:2, 6:9}
     
-    # Approximate B3LYP energy of dvb after SCF in 3-21G.
-    b3lyp_energy = -10470
-
     # ORCA has no support for symmetry yet.
     def testsymlabels(self):
         """Are all the symmetry labels either Ag/u or Bg/u? PASS"""
