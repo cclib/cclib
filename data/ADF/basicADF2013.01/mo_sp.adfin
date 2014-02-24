@@ -1,0 +1,24 @@
+$ADFBIN/adf  << eor > mo_sp.adfout
+title Mo, triple zeta, large frozen core
+
+Basis
+  TYPE TZP
+End
+
+charge 0 0
+atoms
+Mo 0 0 0
+end
+
+XC
+ GGA Blyp
+end
+
+PRINT Smat
+EPRINT 
+  SCF Eigvec
+End
+end input
+
+eor
+
