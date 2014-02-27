@@ -398,7 +398,9 @@ class ORCA(logfileparser.Logfile):
                 self.etsecs.append(sec)
                 line = next(inputfile)
 
-        if line[25:44] == "ABSORPTION SPECTRUM":
+        if (line[25:44] == "ABSORPTION SPECTRUM" or \
+                line[9:28] == "ABSORPTION SPECTRUM") and not hasattr(self,
+                                                                    "etoscs"):
             minus = next(inputfile)
             header = next(inputfile)
             header = next(inputfile)
