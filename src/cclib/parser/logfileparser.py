@@ -124,9 +124,8 @@ class Logfile(object):
     
     """
 
-    def __init__(self, source, progress=None,
-                       loglevel=logging.INFO, logname="Log", logstream=sys.stdout,
-                       datatype=ccData):
+    def __init__(self, source, loglevel=logging.INFO, logname="Log",
+                    logstream=sys.stdout, datatype=ccData):
         """Initialise the Logfile object.
 
         This should be called by a ubclass in its own __init__ method.
@@ -150,9 +149,6 @@ class Logfile(object):
             self.stream = source
         else:
             raise ValueError
-
-        # Progress indicator.
-        self.progress = progress
 
         # Set up the logger.
         # Note that calling logging.getLogger() with one name always returns the same instance.
@@ -189,7 +185,7 @@ class Logfile(object):
         # Set the attribute.
         object.__setattr__(self, name, value)
 
-    def parse(self, fupdate=0.05, cupdate=0.002):
+    def parse(self, progress=None, fupdate=0.05, cupdate=0.002):
         """Parse the logfile, using the assumed extract method of the child."""
 
         # Check that the sub-class has an extract attribute,
@@ -212,14 +208,14 @@ class Logfile(object):
         else:
             inputfile = self.stream
 
-        # Intialize self.progress.
-        if self.progress:
+        # Intialize self.progress
+        if progress and not (isinstance(inputfile, myGzipFile) or
+                                isinstance(inputfile, myBZ2File)):
+            self.progress = progress
             self.progress.initialize(inputfile.size)
             self.progress.step = 0
-            if fupdate:
-                self.fupdate = fupdate
-            if cupdate:
-                self.cupdate = cupdate
+        self.fupdate = fupdate
+        self.cupdate = cupdate
 
         # Initialize the ccData object that will be returned.
         # This is normally ccData, but can be changed by passing
@@ -284,7 +280,7 @@ class Logfile(object):
                 self.__delattr__(attr)
 
         # Update self.progress as done.
-        if self.progress:
+        if hasattr(self, "progress"):
             self.progress.update(inputfile.size, "Done")
 
         # Return the ccData object that was generated.
@@ -301,7 +297,7 @@ class Logfile(object):
     def updateprogress(self, inputfile, msg, xupdate=0.05):
         """Update progress."""
 
-        if self.progress and random.random() < xupdate:
+        if hasattr(self, "progress") and random.random() < xupdate:
             newstep = inputfile.pos
             if newstep != self.progress.step:
                 self.progress.update(newstep, msg)
