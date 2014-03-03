@@ -69,6 +69,9 @@ class FileWrapper(object):
     def close(self):
         self.file.close()
 
+    def seek(self, pos, ref):
+        self.file.seek(pos, ref)
+
 def openlogfile(filename):
     """Return a file object given a filename.
 
