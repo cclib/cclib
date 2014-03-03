@@ -33,18 +33,19 @@ class TextProgress:
 
         self.progress = int(step * 100 / self.nstep)
 
-        if self.progress/2 >= self.oldprogress/2+1 or self.text != text:
-        # just went through at least an interval of ten, ie. from 39 to 41, so update
+        if self.progress/2 >= self.oldprogress/2 + 1 or self.text != text:
+        # just went through at least an interval of ten, ie. from 39 to 41,
+        # so update
 
             mystr = "\r["
             prog = int(self.progress / 10)
-            mystr += prog*"="+(10-prog)*"-"
+            mystr += prog * "=" + (10-prog) * "-"
             mystr += "] %3i" % self.progress + "%"
 
             if text:
                 mystr += "    "+text
 
-            sys.stdout.write("\r"+70*" ")
+            sys.stdout.write("\r" + 70 * " ")
             sys.stdout.flush()
             sys.stdout.write(mystr)
             sys.stdout.flush()
