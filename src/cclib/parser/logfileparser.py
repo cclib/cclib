@@ -126,7 +126,6 @@ class Logfile(object):
 
     def __init__(self, source, progress=None,
                        loglevel=logging.INFO, logname="Log", logstream=sys.stdout,
-                       fupdate=0.05, cupdate=0.002, 
                        datatype=ccData):
         """Initialise the Logfile object.
 
@@ -154,8 +153,6 @@ class Logfile(object):
 
         # Progress indicator.
         self.progress = progress
-        self.fupdate = fupdate
-        self.cupdate = cupdate
 
         # Set up the logger.
         # Note that calling logging.getLogger() with one name always returns the same instance.
@@ -192,7 +189,7 @@ class Logfile(object):
         # Set the attribute.
         object.__setattr__(self, name, value)
 
-    def parse(self, fupdate=None, cupdate=None):
+    def parse(self, fupdate=0.05, cupdate=0.002):
         """Parse the logfile, using the assumed extract method of the child."""
 
         # Check that the sub-class has an extract attribute,
