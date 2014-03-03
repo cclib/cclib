@@ -37,7 +37,7 @@ class TextProgress:
         # just went through at least an interval of ten, ie. from 39 to 41, so update
 
             mystr = "\r["
-            prog = self.progress / 10
+            prog = int(self.progress / 10)
             mystr += prog*"="+(10-prog)*"-"
             mystr += "] %3i" % self.progress + "%"
 
