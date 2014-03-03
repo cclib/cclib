@@ -217,10 +217,7 @@ class Logfile(object):
 
         # Intialize self.progress.
         if self.progress:
-            inputfile.seek(0, 2)
-            nstep = inputfile.tell()
-            inputfile.seek(0)
-            self.progress.initialize(nstep)
+            self.progress.initialize(inputfile.size)
             self.progress.step = 0
             if fupdate:
                 self.fupdate = fupdate
@@ -291,7 +288,7 @@ class Logfile(object):
 
         # Update self.progress as done.
         if self.progress:
-            self.progress.update(nstep, "Done")
+            self.progress.update(inputfile.size, "Done")
 
         # Return the ccData object that was generated.
         return data
@@ -308,7 +305,7 @@ class Logfile(object):
         """Update progress."""
 
         if self.progress and random.random() < xupdate:
-            newstep = inputfile.tell()
+            newstep = inputfile.pos
             if newstep != self.progress.step:
                 self.progress.update(newstep, msg)
                 self.progress.step = newstep
