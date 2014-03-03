@@ -342,11 +342,8 @@ class Gaussian(logfileparser.Logfile):
 
             while line.find(" Energy") == -1:
             
-                if self.progress:
-                    step = inputfile.tell()
-                    if step != oldstep:
-                        self.progress.update(step, "AM1 Convergence")
-                        oldstep = step
+                self.updateprogress(inputfile, step, "AM1 Convergence")
+
                         
                 if line[1:4] == "It=":
                     parts = line.strip().split()
