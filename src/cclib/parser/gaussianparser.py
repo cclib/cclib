@@ -342,7 +342,7 @@ class Gaussian(logfileparser.Logfile):
 
             while line.find(" Energy") == -1:
             
-                self.updateprogress(inputfile, step, "AM1 Convergence")
+                self.updateprogress(inputfile, "AM1 Convergence")
 
                         
                 if line[1:4] == "It=":
