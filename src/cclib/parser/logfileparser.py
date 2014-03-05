@@ -96,7 +96,7 @@ def openlogfile(filename):
         elif extension == ".zip":
             zip = zipfile.ZipFile(filename, "r")
             assert len(zip.namelist()) == 1, "ERROR: Zip file contains more than 1 file"
-            fileobject = io.StringIO(zip.read(zip.namelist()[0]).decode("ascii"))
+            fileobject = io.StringIO(zip.read(zip.namelist()[0]).decode("ascii", "ignore"))
 
         elif extension in ['.bz', '.bz2']:
             # Module 'bz2' is not always importable.

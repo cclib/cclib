@@ -24,3 +24,5 @@ from .orcaparser import ORCA
 # This allow users to type:
 #         from cclib.parser import ccopen
 from .ccopen import ccopen
+
+from .data import ccData

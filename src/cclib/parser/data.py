@@ -74,6 +74,91 @@ class ccData(object):
             the 11th molecular orbital is the HOMO
     """
 
+    # Names of all supported attributes.
+    _attrlist = [
+        'aonames', 'aooverlaps', 'atombasis', 'atomcharges', 'atomcoords',
+        'atommasses', 'atomnos', 'atomspins',
+        'ccenergies', 'charge', 'coreelectrons',
+        'etenergies', 'etoscs', 'etrotats', 'etsecs', 'etsyms',
+        'fonames', 'fooverlaps', 'fragnames', 'frags',
+        'gbasis', 'geotargets', 'geovalues', 'grads',
+        'hessian', 'homos',
+        'mocoeffs', 'moenergies', 'mosyms', 'mpenergies', 'mult',
+        'natom', 'nbasis', 'nmo', 'nocoeffs',
+        'scfenergies', 'scftargets', 'scfvalues',
+        'vibanharms', 'vibdisps', 'vibfreqs', 'vibirs',
+        'vibramans', 'vibsyms', 'scannames', 'scanenergies', 'scanparm',
+        'scancoords', 'enthaply', 'freeenergy', 'temperature', 'entropy', 
+        'optdone'
+    ]
+
+    # The expected types for all supported attributes in dectionary,
+    # and their names which can be extracted as the keys.
+    _attrtypes = {
+        "aonames":        list,
+        "aooverlaps":     numpy.ndarray,
+        "atombasis":      list,
+        "atomcharges":    dict,
+        "atomcoords":     numpy.ndarray,
+        "atommasses":     numpy.ndarray,
+        "atomnos":        numpy.ndarray,
+        "atomspins":      dict,
+        "ccenergies":     numpy.ndarray,
+        "charge":         int,
+        "coreelectrons":  numpy.ndarray,
+        "etenergies":     numpy.ndarray,
+        "etoscs":         numpy.ndarray,
+        "etrotats":       numpy.ndarray,
+        "etsecs":         list,
+        "etsyms":         list,
+        "fonames":        list,
+        "fooverlaps":     numpy.ndarray,
+        "fragnames":      list,
+        "frags":          list,
+        'gbasis':         list,
+        "geotargets":     numpy.ndarray,
+        "geovalues":      numpy.ndarray,
+        "grads":          numpy.ndarray,
+        "hessian":        numpy.ndarray,
+        "homos":          numpy.ndarray,
+        "mocoeffs":       list,
+        "moenergies":     list,
+        "mosyms":         list,
+        "mpenergies":     numpy.ndarray,
+        "mult":           int,
+        "natom":          int,
+        "nbasis":         int,
+        "nmo":            int,
+        "nocoeffs":       numpy.ndarray,
+        "scfenergies":    numpy.ndarray,
+        "scftargets":     numpy.ndarray,
+        "scfvalues":      list,
+        "vibanharms":     numpy.ndarray,
+        "vibdisps":       numpy.ndarray,
+        "vibfreqs":       numpy.ndarray,
+        "vibirs":         numpy.ndarray,
+        "vibramans":      numpy.ndarray,
+        "vibsyms":        list,
+        "scannames":      list,
+        "scanenergies":   list,
+        "scanparm":       list,
+        "scancoords":     numpy.ndarray,
+        "enthaply":       float,
+        "freeenergy":     float,
+        "temperature":    float,
+        "entropy":        float,
+        "optdone":        bool
+    }
+
+    # Arrays are double precision by default, but these will be integer arrays.
+    _intarrays = ['atomnos', 'coreelectrons', 'homos']
+
+    # Attributes that should be lists of arrays (double precision).
+    _listsofarrays = ['mocoeffs', 'moenergies', 'scfvalues']
+    
+    # Attributes that should be dictionaries of arrays (double precision).
+    _dictsofarrays = ["atomcharges", "atomspins"]
+
     def __init__(self, attributes=None):
         """Initialize the cclibData object.
         
@@ -82,90 +167,6 @@ class ccData(object):
         Inputs:
             attributes - dictionary of attributes to load
         """
-
-        # The expected types for all supported attributes in dectionary,
-        # and their names which can be extracted as the keys.
-        self._attrtypes = { "aonames":        list,
-                            "aooverlaps":     numpy.ndarray,
-                            "atombasis":      list,
-                            "atomcharges":    dict,
-                            "atomcoords":     numpy.ndarray,
-                            "atommasses":     numpy.ndarray,
-                            "atomnos":        numpy.ndarray,
-                            "atomspins":      dict,
-                            "ccenergies":     numpy.ndarray,
-                            "charge":         int,
-                            "coreelectrons":  numpy.ndarray,
-                            "etenergies":     numpy.ndarray,
-                            "etoscs":         numpy.ndarray,
-                            "etrotats":       numpy.ndarray,
-                            "etsecs":         list,
-                            "etsyms":         list,
-                            "fonames":        list,
-                            "fooverlaps":     numpy.ndarray,
-                            "fragnames":      list,
-                            "frags":          list,
-                            'gbasis':         list,
-                            "geotargets":     numpy.ndarray,
-                            "geovalues":      numpy.ndarray,
-                            "grads":          numpy.ndarray,
-                            "hessian":        numpy.ndarray,
-                            "homos":          numpy.ndarray,
-                            "mocoeffs":       list,
-                            "moenergies":     list,
-                            "mosyms":         list,
-                            "mpenergies":     numpy.ndarray,
-                            "mult":           int,
-                            "natom":          int,
-                            "nbasis":         int,
-                            "nmo":            int,
-                            "nocoeffs":       numpy.ndarray,
-                            "scfenergies":    numpy.ndarray,
-                            "scftargets":     numpy.ndarray,
-                            "scfvalues":      list,
-                            "vibanharms":     numpy.ndarray,
-                            "vibdisps":       numpy.ndarray,
-                            "vibfreqs":       numpy.ndarray,
-                            "vibirs":         numpy.ndarray,
-                            "vibramans":      numpy.ndarray,
-                            "vibsyms":        list,
-                            "scannames":      list,
-                            "scanenergies":   list,
-                            "scanparm":       list,
-                            "scancoords":     numpy.ndarray,
-                            "enthaply":       float,
-                            "freeenergy":     float,
-                            "temperature":    float,
-                            "entropy":        float,
-                            "optdone":        bool
-                          }
-        # Names of all supported attributes.
-        self._attrlist = self._attrtypes.keys()
-
-        # Names of all supported attributes.
-        self._attrlist = ['aonames', 'aooverlaps', 'atombasis',
-                          'atomcharges', 'atomcoords', 'atommasses', 'atomnos', 'atomspins',
-                          'ccenergies', 'charge', 'coreelectrons',
-                          'etenergies', 'etoscs', 'etrotats', 'etsecs', 'etsyms',
-                          'fonames', 'fooverlaps', 'fragnames', 'frags',
-                          'gbasis', 'geotargets', 'geovalues', 'grads',
-                          'hessian', 'homos',
-                          'mocoeffs', 'moenergies', 'mosyms', 'mpenergies', 'mult',
-                          'natom', 'nbasis', 'nmo', 'nocoeffs',
-                          'scfenergies', 'scftargets', 'scfvalues',
-                          'vibanharms', 'vibdisps', 'vibfreqs', 'vibirs',
-                          'vibramans', 'vibsyms', 'scannames', 'scanenergies', 'scanparm',
-                          'scancoords', 'enthaply', 'freeenergy', 'temperature', 'entropy', 
-                          'optdone']
-
-        # Arrays are double precision by default, but these will be integer arrays.
-        self._intarrays = ['atomnos', 'coreelectrons', 'homos']
-
-        # Attributes that should be lists of arrays (double precision).
-        self._listsofarrays = ['mocoeffs', 'moenergies', 'scfvalues']
-        
-        # Attributes that should be dictionaries of arrays (double precision).
-        self._dictsofarrays = ["atomcharges", "atomspins"]
 
         if attributes:
             self.setattributes(attributes)
