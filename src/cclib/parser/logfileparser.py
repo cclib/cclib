@@ -53,7 +53,8 @@ if int(sys.version[0]) == 2:
         def __init__(self, file):
             self.file = file
             self.pos = 0
-            self.size = self.file.seek(0, 2)
+            self.file.seek(0, 2)
+            self.size = self.file.tell()
             self.file.seek(0, 0)
 
         def next(self):
@@ -77,7 +78,8 @@ elif int(sys.version[0]) >= 3:
         def __init__(self, file):
             self.file = file
             self.pos = 0
-            self.size = self.file.seek(0, 2)
+            self.file.seek(0, 2)
+            self.size = self.file.tell()
             self.file.seek(0, 0)
 
         def __next__(self):
