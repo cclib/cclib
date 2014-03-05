@@ -39,38 +39,64 @@ class myBZ2File(bz2.BZ2File):
     def __next__(self):
         line = super().__next__()
         return line.decode("ascii", "replace")
+
 class myGzipFile(gzip.GzipFile):
     """Return string instead of bytes"""
     def __next__(self):
         line = super().__next__()
         return line.decode("ascii", "replace")
 
-class FileWrapper(object):
-    """Wrap a file object so that we can maintain position"""
+if int(sys.version[0]) == 2:
+    class FileWrapper(object):
+        """Wrap a file object so that we can maintain position"""
 
-    def __init__(self, file):
-        self.file = file
-        self.pos = 0
-        self.size = self.file.seek(0, 2)
-        self.file.seek(0, 0)
+        def __init__(self, file):
+            self.file = file
+            self.pos = 0
+            self.size = self.file.seek(0, 2)
+            self.file.seek(0, 0)
 
-    def __next__(self):
-        line = next(self.file)
-        self.pos += len(line)
-        return line
-
-    def __iter__(self):
-        line = next(self.file)
-        while line:
-            self.pos += len(line)
-            yield line
+        def next(self):
             line = next(self.file)
+            self.pos += len(line)
+            return line
 
-    def close(self):
-        self.file.close()
+        def __iter__(self):
+            return self
 
-    def seek(self, pos, ref):
-        self.file.seek(pos, ref)
+        def close(self):
+            self.file.close()
+
+        def seek(self, pos, ref):
+            self.file.seek(pos, ref)
+
+elif int(sys.version[0]) >= 3:
+    class FileWrapper(object):
+        """Wrap a file object so that we can maintain position"""
+
+        def __init__(self, file):
+            self.file = file
+            self.pos = 0
+            self.size = self.file.seek(0, 2)
+            self.file.seek(0, 0)
+
+        def __next__(self):
+            line = next(self.file)
+            self.pos += len(line)
+            return line
+
+        def __iter__(self):
+            line = next(self.file)
+            while line:
+                self.pos += len(line)
+                yield line
+                line = next(self.file)
+
+        def close(self):
+            self.file.close()
+
+        def seek(self, pos, ref):
+            self.file.seek(pos, ref)
 
 def openlogfile(filename):
     """Return a file object given a filename.
