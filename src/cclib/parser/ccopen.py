@@ -21,7 +21,6 @@ from . import molproparser
 from . import orcaparser
 
 
-
 def ccopen(source, *args, **kargs):
     """Guess the identity of a particular log file and return an instance of it.
     

@@ -30,8 +30,10 @@ msg_usage_long = """\
 Usage:  ccget <attribute> [<attribute>] <compchemlogfile> [<compchemlogfile>]
     where <attribute> is one of the attributes to be parsed by cclib
     from each of the compchemlogfiles.
-For a list of attributes available in a file, type:
-    ccget --list <compchemlogfile> [or -l]\
+For a list of attributes available in a file, use --list (or -l):
+    ccget --list <compchemlogfile>
+To parse multiple files as one input stream, use --multi (or -m):
+    ccget --multi <attr> [<attr>]  <cclogfile> <cclogfile> [<cclogfile>]\
 """
 
 
@@ -39,22 +41,32 @@ def main():
 
     # Parse the arguments, but print help information and exit if it fails.
     try:
-        opts, args = getopt.getopt(sys.argv[1:], "hl", ["help","list"])
+        opts, args = getopt.getopt(sys.argv[1:], "hlm", ["help", "list", "multi"])
     except getopt.GetoptError:
         print(msg_usage_long)
         sys.exit(2)
 
     showattr = False
+    multifile = False
     for o, a in opts:
         if o in ("-h", "--help"):
             print(msg_usage_long)
             sys.exit()
         if o in ("-l", "--list"):
             showattr = True
+        if o in ("-m", "--multi"):
+            multifile = True
 
     # We need at least one attribute and the filename, so two arguments, or
     # just one filename if we want to list attributes that can be extracted.
-    if (not showattr and len(args) < 2) or (showattr and len(args) != 1):
+    # In multifile mode, we generally want at least two filenames, so the
+    # expected number of arguments is a bit different.
+    if not multifile:
+        correct_number = (not showattr and len(args) > 1) or (showattr and len(args) == 1)
+    else:
+        correct_number = (not showattr and len(args) > 2) or (showattr and len(args) > 1)
+    if not correct_number:
+        print("The number of arguments does not seem to be correct.")
         print(msg_usage)
         sys.exit()
 
@@ -77,20 +89,43 @@ def main():
                 print(msg_usage)
                 sys.exit(1)
 
+    # Since there is some ambiguity to the correct number of arguments, also check
+    # that there is at least one filename to use (or two in multifile mode), and
+    # at least one attribute to parse if the -l option was not passed.
+    if len(filenames) == 0:
+        print("No logfiles given")
+        sys.exit(1)
+    if multifile and len(filenames) == 1:
+        print("Expecting at least two logfiles in multifile mode")
+        sys.exit(1)
+    if not showattr and len(attributes) == 0:
+        print("No attributes given")
+        sys.exit(1)
+
+    # This should be sufficient to correctly handle multiple files, that is to
+    # to run the loop below only once with all logfiles in the variable `filename`.
+    # Although, perhaps it would be clearer to abstract the contents of the loop
+    # into another function.
+    if multifile:
+        filenames = [filenames]
+
     # Now parse each file and print out the requested attributes.
     for filename in filenames:
 
-        print("Attempting to parse %s" % filename)
+        name = (not multifile)*filename or ", ".join(filename[:-1]) + " and " + filename[-1]
+
+        print("Attempting to parse %s" % name)
         log = ccopen(filename)
-        if log==None:
-            print("Cannot figure out what type of computation chemistry output file '%s' is.\nReport this to the cclib development team if you think this is an error." % filename)
+        if log == None:
+            print("Cannot figure out what type of computation chemistry output file '%s' is." % name)
+            print("Report this to the cclib development team if you think this is an error.")
             print(msg_usage)
             sys.exit()
               
         log.logger.setLevel(logging.ERROR)
         data = log.parse()
         if showattr:
-            print("cclib can parse the following attributes from %s:" % filename)
+            print("cclib can parse the following attributes from %s:" % name)
             for x in ccData._attrlist:
                 if hasattr(data,x):
                     print("  %s" % x)
