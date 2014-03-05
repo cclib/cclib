@@ -11,96 +11,87 @@
 # the full license online at http://www.gnu.org/copyleft/lgpl.html.
 
 from __future__ import print_function
+
+import getopt
+import glob
+import logging
 import os
 import sys
-import glob
-import getopt
-import logging
 
-from cclib.parser import ccopen
+from cclib.parser import ccData, ccopen
 
 
-_allowedargs = ['aonames','aooverlaps','atombasis','atomcharges','atomcoords',
-                'atommasses','atomnos','atomspins',
-                'ccenergies', 'charge','coreelectrons',
-                'etenergies','etoscs','etrotats','etsecs','etsyms',
-                'enthalpy', 'entropy', 'freeenergy', 'temperature',
-                'fonames','fooverlaps','fragnames','frags',
-                'gbasis','geotargets','geovalues', 'grads',
-                'hessian','homos',
-                'mocoeffs','moenergies','mosyms','mpenergies','mult',
-                'natom','nbasis', 'nmo', 'nocoeffs',
-                'optdone',
-                'scancoords', 'scanenergies', 'scannames', 'scanparm',
-                'scfenergies','scftargets','scfvalues',
-                'vibdisps', 'vibfreqs','vibirs','vibramans','vibsyms']
+msg_usage = """\
+Usage:  ccget <attribute> [<attribute>] <compchemlogfile> [<compchemlogfile>]
+Try     ccget --help for more information\
+"""
 
-
-def moreusage():
-    """More detailed usage information"""
-    print("""Usage:  ccget <attribute> [<attribute>] <compchemlogfile> [<compchemlogfile>]
-     where <attribute> is one of the attributes to be parsed by cclib
-     from each of the compchemlogfiles.
+msg_usage_long = """\
+Usage:  ccget <attribute> [<attribute>] <compchemlogfile> [<compchemlogfile>]
+    where <attribute> is one of the attributes to be parsed by cclib
+    from each of the compchemlogfiles.
 For a list of attributes available in a file, type:
-     ccget --list <compchemlogfile>   [or -l]""")
-
-
-def usage():
-    """Display usage information"""
-    print("""Usage:  ccget <attribute> [<attribute>] <compchemlogfile> [<compchemlogfile>]
-Try     ccget --help    for more information""")
+    ccget --list <compchemlogfile> [or -l]\
+"""
 
 
 def main():
+
+    # Parse the arguments, but print help information and exit if it fails.
     try:
         opts, args = getopt.getopt(sys.argv[1:], "hl", ["help","list"])
     except getopt.GetoptError:
-        # print help information and exit:
-        usage()
+        print(msg_usage_long)
         sys.exit(2)
+
     showattr = False
     for o, a in opts:
         if o in ("-h", "--help"):
-            moreusage()
+            print(msg_usage_long)
             sys.exit()
         if o in ("-l", "--list"):
             showattr = True
-    if (not showattr and len(args)<2) or (showattr and len(args)!=1): # Need at least one attribute and the filename
-        usage()
+
+    # We need at least one attribute and the filename, so two arguments, or
+    # just one filename if we want to list attributes that can be extracted.
+    if (not showattr and len(args) < 2) or (showattr and len(args) != 1):
+        print(msg_usage)
         sys.exit()
 
-    # Figure out which are the attribute names and which are the filenames
+    # Figure out which are the attribute names and which are the filenames.
+    # Note that in Linux, the shell expands wild cards, but not so in Windows,
+    # so try to do that here using glob.
     attrnames = []
     filenames = []
     for arg in args:
-        if arg in _allowedargs:
+        if arg in ccData._attrlist:
             attrnames.append(arg)
         elif os.path.isfile(arg):
             filenames.append(arg)
         else:
             wildcardmatches = glob.glob(arg)
-            # In Linux, the shell expands wild cards
-            # Not so, in Windows, so it has to be done manually
             if wildcardmatches:
                 filenames.extend(wildcardmatches)
             else:
                 print("%s is neither a filename nor an attribute name." % arg)
-                usage()
+                print(msg_usage)
                 sys.exit(1)
-    
+
+    # Now parse each file and print out the requested attributes.
     for filename in filenames:
+
         print("Attempting to parse %s" % filename)
         log = ccopen(filename)
         if log==None:
             print("Cannot figure out what type of computation chemistry output file '%s' is.\nReport this to the cclib development team if you think this is an error." % filename)
-            usage()
+            print(msg_usage)
             sys.exit()
               
         log.logger.setLevel(logging.ERROR)
         data = log.parse()
         if showattr:
             print("cclib can parse the following attributes from %s:" % filename)
-            for x in _allowedargs:
+            for x in ccData._attrlist:
                 if hasattr(data,x):
                     print("  %s" % x)
         else:
@@ -109,10 +100,10 @@ def main():
                 if hasattr(data,attr):
                     print("%s:\n%s" % (attr,getattr(data,attr)))
                 else:
+                    print("Could not parse %s from this file." % attr)
                     invalid = True
             if invalid:
-                print
-                moreusage()
+                print(msg_usage_long)
 
 
 if __name__ == "__main__":
