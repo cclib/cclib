@@ -62,7 +62,7 @@ def main():
     # In multifile mode, we generally want at least two filenames, so the
     # expected number of arguments is a bit different.
     if not multifile:
-        correct_number = (not showattr and len(args) > 1) or (showattr and len(args) == 1)
+        correct_number = (not showattr and len(args) > 1) or (showattr and len(args) > 0)
     else:
         correct_number = (not showattr and len(args) > 2) or (showattr and len(args) > 1)
     if not correct_number:
