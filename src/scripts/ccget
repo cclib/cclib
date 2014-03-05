@@ -98,7 +98,7 @@ def main():
     if multifile and len(filenames) == 1:
         print("Expecting at least two logfiles in multifile mode")
         sys.exit(1)
-    if not showattr and len(attributes) == 0:
+    if not showattr and len(attrnames) == 0:
         print("No attributes given")
         sys.exit(1)
 
