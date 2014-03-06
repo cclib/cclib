@@ -236,7 +236,8 @@ class Molpro(logfileparser.Logfile):
             self.scfvalues.append(numpy.array(scfvalues))
 
         # SCF result - RHF/UHF and DFT (RKS) energies.
-        if line[1:5] in ["!RHF", "!UHF", "!RKS"] and line[16:22] == "ENERGY":
+        if (line[1:5] in ["!RHF", "!UHF", "!RKS"] and
+            line[16:22].lower() == "energy"):
             
             if not hasattr(self, "scfenergies"):
                 self.scfenergies = []
