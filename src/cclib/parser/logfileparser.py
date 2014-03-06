@@ -39,11 +39,13 @@ class myBZ2File(bz2.BZ2File):
     def __next__(self):
         line = super().__next__()
         return line.decode("ascii", "replace")
+
 class myGzipFile(gzip.GzipFile):
     """Return string instead of bytes"""
     def __next__(self):
         line = super().__next__()
         return line.decode("ascii", "replace")
+
 
 class FileWrapper(object):
     """Wrap a file object so that we can maintain position"""
@@ -51,20 +53,20 @@ class FileWrapper(object):
     def __init__(self, file):
         self.file = file
         self.pos = 0
-        self.size = self.file.seek(0, 2)
+        self.file.seek(0, 2)
+        self.size = self.file.tell()
         self.file.seek(0, 0)
 
-    def __next__(self):
+    def next(self):
         line = next(self.file)
         self.pos += len(line)
         return line
 
+    def __next__(self):
+        return self.next()
+
     def __iter__(self):
-        line = next(self.file)
-        while line:
-            self.pos += len(line)
-            yield line
-            line = next(self.file)
+        return self
 
     def close(self):
         self.file.close()
