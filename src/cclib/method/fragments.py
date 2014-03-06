@@ -27,7 +27,7 @@ class FragmentAnalysis(Method):
         
     def __str__(self):
         """Return a string representation of the object."""
-        return "Fragment molecule basis of" % (self.data)
+        return "Fragment molecule basis of %s" % (self.data)
 
     def __repr__(self):
         """Return a representation of the object."""
