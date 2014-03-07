@@ -10,6 +10,8 @@
 
 from __future__ import print_function
 
+import re
+
 import numpy
 
 from . import logfileparser
@@ -241,10 +243,16 @@ class ADF(logfileparser.Logfile):
                 self.scftargets.append([self.SCFconv*10, self.SCFconv])
             else:
                 # This is an intermediate SCF cycle
-                oldscftst = self.scftargets[-1][1]
-                grdmax = self.geovalues[-1][1]
-                scftst = max(self.SCFconv, min(oldscftst, grdmax/30, 10**(-self.accint)))
-                self.scftargets.append([scftst*10, scftst])
+                # For 2013.01, this does not work, because fuzzy cell numerical intergration
+                # is used instead of Voronoi polyhedra in the main SCF (as it was in 2007.01)
+                # and the general accuracy parameter is not printed or parsed.
+                # Since self.accint will be None for the newer version, scftargets will
+                # not be formed correctly... needs to be fixed.
+                if self.accint:
+                    oldscftst = self.scftargets[-1][1]
+                    grdmax = self.geovalues[-1][1]
+                    scftst = max(self.SCFconv, min(oldscftst, grdmax/30, 10**(-self.accint)))
+                    self.scftargets.append([scftst*10, scftst])
 
             while line.find("SCF CONVERGED") == -1 and line.find("SCF not fully converged, result acceptable") == -1 and line.find("SCF NOT CONVERGED") == -1:
                 if line[4:12] == "SCF test":
@@ -304,7 +312,27 @@ class ADF(logfileparser.Logfile):
             if self.finalgeometry == self.GETLAST: # Don't get any more coordinates
                 self.finalgeometry = self.NOMORE
 
-        # Extract Geometry convergence information.
+        # There have been some changes in the format of the geometry convergence information,
+        # and this is how it is printed in older versions (2007.01 unit tests).
+        #
+        # ==========================
+        # Geometry Convergence Tests
+        # ==========================
+        #  
+        # Energy  old :         -5.14170647
+        #         new :         -5.15951374
+        #
+        # Convergence tests:
+        # (Energies in hartree, Gradients in hartree/angstr or radian, Lengths in angstrom, Angles in degrees)
+        #
+        #       Item               Value         Criterion    Conv.        Ratio
+        # -------------------------------------------------------------------------
+        # change in energy      -0.01780727     0.00100000    NO         0.00346330
+        # gradient max           0.03219530     0.01000000    NO         0.30402650
+        # gradient rms           0.00858685     0.00666667    NO         0.27221261
+        # cart. step max         0.07674971     0.01000000    NO         0.75559435
+        # cart. step rms         0.02132310     0.00666667    NO         0.55335378
+        #
         if line[1:27] == 'Geometry Convergence Tests':
 
             if not hasattr(self, "geotargets"):
@@ -313,23 +341,81 @@ class ADF(logfileparser.Logfile):
 
             if not hasattr(self, "scfenergies"):
                 self.scfenergies = []
+
             equals = next(inputfile)
             blank = next(inputfile)
-            line = next(inputfile)
-            temp = next(inputfile).strip().split()
-            self.scfenergies.append(utils.convertor(float(temp[-1]), "hartree", "eV"))
+            energies_old = next(inputfile)
+            energies_new = next(inputfile)
 
-            for i in range(6):
-                line = next(inputfile)
+            self.scfenergies.append(utils.convertor(float(energies_new.split()[-1]), "hartree", "eV"))
+
+            blank = next(inputfile)
+            convergence_tests = next(inputfile)
+            unit_comment = next(inputfile)
+            blank = next(inputfile)
+            header = next(inputfile)
+            dashes = next(inputfile)
 
             values = []
-
             for i in range(5):
                 temp = next(inputfile).split()
                 self.geotargets[i] = float(temp[-3])
                 values.append(float(temp[-4]))
 
             self.geovalues.append(values)
+
+        # Here is the corresponding geometry convergence info from the 2013.01 unit test.
+        # Note that the step number is given, which it will be prudent to use in an assertion.
+        #
+        #----------------------------------------------------------------------
+        #Geometry Convergence after Step   3       (Hartree/Angstrom,Angstrom)
+        #----------------------------------------------------------------------
+        #current energy                               -5.16274478 Hartree
+        #energy change                      -0.00237544     0.00100000    F
+        #constrained gradient max            0.00884999     0.00100000    F
+        #constrained gradient rms            0.00249569     0.00066667    F
+        #gradient max                        0.00884999
+        #gradient rms                        0.00249569
+        #cart. step max                      0.03331296     0.01000000    F
+        #cart. step rms                      0.00844037     0.00666667    F
+        if line[:31] == "Geometry Convergence after Step":
+
+            stepno = int(line.split()[4])
+
+            dashes = next(inputfile)
+            current_energy = next(inputfile)
+            energy_change = next(inputfile)
+            constrained_gradient_max = next(inputfile)
+            constrained_gradient_rms = next(inputfile)
+            gradient_max = next(inputfile)
+            gradient_rms = next(inputfile)
+            cart_step_max = next(inputfile)
+            cart_step_rms = next(inputfile)
+
+            if not hasattr(self, "scfenergies"):
+                self.scfenergies = []
+
+            energy = utils.convertor(float(current_energy.split()[-2]), "hartree", "eV")
+            self.scfenergies.append(energy)
+
+            if not hasattr(self, "geotargets"):
+                self.geotargets = numpy.array([0.0, 0.0, 0.0, 0.0, 0.0], "d")
+
+            self.geotargets[0] = float(energy_change.split()[-2])
+            self.geotargets[1] = float(constrained_gradient_max.split()[-2])
+            self.geotargets[2] = float(constrained_gradient_rms.split()[-2])
+            self.geotargets[3] = float(cart_step_max.split()[-2])
+            self.geotargets[4] = float(cart_step_rms.split()[-2])
+
+            if not hasattr(self, "geovalues"):
+                self.geovalues = []
+
+            self.geovalues.append([])
+            self.geovalues[-1].append(float(energy_change.split()[-3]))
+            self.geovalues[-1].append(float(constrained_gradient_max.split()[-3]))
+            self.geovalues[-1].append(float(constrained_gradient_rms.split()[-3]))
+            self.geovalues[-1].append(float(cart_step_max.split()[-3]))
+            self.geovalues[-1].append(float(cart_step_rms.split()[-3]))
 
         if line[1:27] == 'General Accuracy Parameter':
             # Need to know the accuracy of the integration grid to
@@ -771,40 +857,40 @@ class ADF(logfileparser.Logfile):
                         line = next(inputfile)
                     lastrow = row
 
+        # **************************************************************************
+        # *                                                                        *
+        # *   Final excitation energies from Davidson algorithm                    *
+        # *                                                                        *
+        # **************************************************************************
+        #
+        #     Number of loops in Davidson routine     =   20                    
+        #     Number of matrix-vector multiplications =   24                    
+        #     Type of excitations = SINGLET-SINGLET
+        #
+        # Symmetry B.u
+        #
+        # ... several blocks ...
+        #
+        # Normal termination of EXCITATION program part
         if line[4:53] == "Final excitation energies from Davidson algorithm":
 
-            # move forward in file past some various algorthm info
-
-            # *   Final excitation energies from Davidson algorithm                    *
-            # *                                                                        *
-            # **************************************************************************
-
-            #     Number of loops in Davidson routine     =   20                    
-            #     Number of matrix-vector multiplications =   24                    
-            #     Type of excitations = SINGLET-SINGLET
-
-            for i in range(8):
-                next(inputfile)
-
-            symm = self.normalisesym(next(inputfile).split()[1])
-
-            # move forward in file past some more txt and header info
+            while line[1:9] != "Symmetry" and "Normal termination" not in line:
+                line = next(inputfile)
+            symm = self.normalisesym(line.split()[1])
 
             # Excitation energies E in a.u. and eV, dE wrt prev. cycle,
             # oscillator strengths f in a.u.
-
+            #
             # no.  E/a.u.        E/eV      f           dE/a.u.
             # -----------------------------------------------------
-
-            for i in range(6):
-                next(inputfile)
-
-            # now start parsing etenergies and etoscs
-
+            #   1 0.17084      4.6488     0.16526E-01  0.28E-08
+            # ...
+            while line.split() != ['no.', 'E/a.u.', 'E/eV', 'f', 'dE/a.u.'] and "Normal termination" not in line:
+                line = next(inputfile)
+            dashes = next(inputfile)
             etenergies = []
             etoscs = []
             etsyms = []
-
             line = next(inputfile)
             while len(line) > 2:
                 info = line.split()
@@ -813,24 +899,26 @@ class ADF(logfileparser.Logfile):
                 etsyms.append(symm)
                 line = next(inputfile)
 
-            # move past next section
+            # There is another section before this, with transition dipole moments,
+            # but this should just skip past it.
             while line[1:53] != "Major MO -> MO transitions for the above excitations":
                 line = next(inputfile)
 
-            # move past headers
+            # Note that here, and later, the number of blank lines can vary between
+            # version of ADF (extra lines are seen in 2013.01 unit tests, for example).
+            blank = next(inputfile)
+            excitation_occupied = next(inputfile)
+            header = next(inputfile)
+            while not header.strip():
+                header = next(inputfile)
+            header2 = next(inputfile)
+            x_y_z = next(inputfile)
+            line = next(inputfile)
+            while not line.strip():
+                line = next(inputfile)
 
-            #  Excitation  Occupied to virtual  Contribution                         
-            #   Nr.          orbitals           weight        contribibutions to      
-            #                                   (sum=1) transition dipole moment   
-            #                                             x       y       z       
-
-            for i in range(6):
-                next(inputfile)
-
-            # before we start handeling transitions, we need
-            # to create mosyms with indices
-            # only restricted calcs are possible in ADF
-
+            # Before we start handeling transitions, we need to create mosyms
+            # with indices; only restricted calcs are possible in ADF.
             counts = {}
             syms = []
             for mosym in self.mosyms[0]:
@@ -838,16 +926,13 @@ class ADF(logfileparser.Logfile):
                     counts[mosym] = 1
                 else:
                     counts[mosym] += 1
-
                 syms.append(str(counts[mosym]) + mosym)
 
-            import re
             etsecs = []
             printed_warning = False 
-
             for i in range(len(etenergies)):
+
                 etsec = []
-                line = next(inputfile)
                 info = line.split()
                 while len(info) > 0:
 
@@ -884,6 +969,10 @@ class ADF(logfileparser.Logfile):
 
                 etsecs.append(etsec)
 
+                # Again, the number of blank lines between transition can vary.
+                line = next(inputfile)
+                while not line.strip():
+                    line = next(inputfile)
 
             if not hasattr(self, "etenergies"):
                 self.etenergies = etenergies

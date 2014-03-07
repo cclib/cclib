@@ -307,8 +307,7 @@ class ORCA(logfileparser.Logfile):
 
             self.aooverlaps = numpy.zeros( (self.nbasis, self.nbasis), "d")
             for i in range(0, self.nbasis, 6):
-                if self.progress:
-                    self.updateprogress(inputfile, "Overlap")
+                self.updateprogress(inputfile, "Overlap")
 
                 header = next(inputfile)
                 size = len(header.split())
@@ -337,8 +336,7 @@ class ORCA(logfileparser.Logfile):
                     mocoeffs.append(numpy.zeros((self.nbasis, self.nbasis), "d"))
 
                 for i in range(0, self.nbasis, 6):
-                    if self.progress:
-                        self.updateprogress(inputfile, "Coefficients")
+                    self.updateprogress(inputfile, "Coefficients")
 
                     numbers = next(inputfile)
                     energies = next(inputfile)
@@ -398,7 +396,9 @@ class ORCA(logfileparser.Logfile):
                 self.etsecs.append(sec)
                 line = next(inputfile)
 
-        if line[25:44] == "ABSORPTION SPECTRUM":
+        if (line[25:44] == "ABSORPTION SPECTRUM" or \
+                line[9:28] == "ABSORPTION SPECTRUM") and not hasattr(self,
+                                                                    "etoscs"):
             minus = next(inputfile)
             header = next(inputfile)
             header = next(inputfile)

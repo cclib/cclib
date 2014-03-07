@@ -342,11 +342,8 @@ class Gaussian(logfileparser.Logfile):
 
             while line.find(" Energy") == -1:
             
-                if self.progress:
-                    step = inputfile.tell()
-                    if step != oldstep:
-                        self.progress.update(step, "AM1 Convergence")
-                        oldstep = step
+                self.updateprogress(inputfile, "AM1 Convergence")
+
                         
                 if line[1:4] == "It=":
                     parts = line.strip().split()
@@ -580,6 +577,15 @@ class Gaussian(logfileparser.Logfile):
                         self.mosyms[1].append(self.normalisesym(x.strip('()')))
                         i += 1
                     line = next(inputfile)
+
+            # Some calculations won't explicitely print the number of basis sets used,
+            # and will occasionally drop some without warning. We can infer the number,
+            # however, from the MO symmetries printed here. Specifically, this fixes
+            # regression Gaussian/Gaussian09/dvb_sp_terse.log (#23 on github).
+            if not hasattr(self, 'nmo'):
+                self.nmo = len(self.mosyms[-1])
+            else:
+                assert self.nmo == len(self.mosyms[-1])
 
         # Alpha/Beta electron eigenvalues.
         if line[1:6] == "Alpha" and line.find("eigenvalues") >= 0:

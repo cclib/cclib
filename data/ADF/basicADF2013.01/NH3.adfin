@@ -1,0 +1,91 @@
+$ADFBIN/adf  << eor > /dev/null 
+  create N $ADFRESOURCES/TZP/N
+
+XC
+GGA Becke Perdew
+END
+
+end input
+eor
+
+mv TAPE21 N.t21
+
+$ADFBIN/adf  << eor > /dev/null 
+  create H $ADFRESOURCES/TZP/H
+
+XC
+GGA Becke Perdew
+END
+
+end input
+eor
+
+mv TAPE21 H.t21
+
+$ADFBIN/adf  << eor > NH3.adfout
+title NH3
+
+MAXMEMORYUSAGE 600MB
+
+
+fragments
+  N  N.t21
+  H  H.t21
+end
+
+charge 0 0
+
+symmetry C(3v) TOL=0.01
+
+atoms cartesian
+ N     0.000000     0.000000     0.000000
+ H     0.000000     0.000000     1.008000
+ H     0.950352     0.000000    -0.336000
+ H    -0.475176    -0.823029    -0.336000
+end
+
+scf
+ iterations 50
+:: converge 0.00000001
+:: mixing 0.100000000
+end
+
+::occupation keeporbital=150
+
+::EPRINT
+::   ORBPOPER -300.0 300.0
+::END
+
+
+integration  5.0
+
+XC
+GGA Becke Perdew
+END 
+
+::SOLVATION
+::   Solvent        epsilon=78.8 radius=1.4
+::   SurfaceType    esurf
+::  DivisionLevel  ND=4  min=0.5  Ofac=0.8
+::   ChargeUpdate   Method=conjugate-gradient corr
+::   SCF            Variational
+::   C-Matrix       POTENTIAL
+::   RADII
+::     Cu=1.72
+::     Cl=1.70
+::   SUBEND
+::END
+
+
+::geometry
+:: optimize
+:: converge E=0.0001 Grad=0.001
+:: step rad=0.04 angle=8.0
+:: iterations 60
+:: frequencies 
+::end
+
+end input
+eor
+
+mv TAPE21 NH3.t21
