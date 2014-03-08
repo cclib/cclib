@@ -250,20 +250,43 @@ class NWChem(logfileparser.Logfile):
 
                 line = next(inputfile)
 
-        # This appears to always be used to report SCF convergence for DFT
+        # This appears to always be used to report SCF convergence for DFT:
+        #   convergence    iter        energy       DeltaE   RMS-Dens  Diis-err    time
+        # ---------------- ----- ----------------- --------- --------- ---------  ------
+        # d= 0,ls=0.0,diis     1   -382.2544324446 -8.28D+02  1.42D-02  3.78D-01    23.2
+        # d= 0,ls=0.0,diis     2   -382.3017298534 -4.73D-02  6.99D-03  3.82D-02    39.3
+        # d= 0,ls=0.0,diis     3   -382.2954343173  6.30D-03  4.21D-03  7.95D-02    55.3
+        # ...
         if line.split() == ['convergence', 'iter', 'energy', 'DeltaE', 'RMS-Dens', 'Diis-err', 'time']:
             dashes = next(inputfile)
             line = next(inputfile)
             values = []
             while line.strip():
-                iter,energy,deltaE,dens,diis,time = line[17:].split()
-                val_energy = float(deltaE.replace('D', 'E'))
-                val_density = float(dens.replace('D', 'E'))
-                val_gradient = float(diis.replace('D', 'E'))
-                values.append([val_energy, val_density, val_gradient])
+
+                # Sometimes there are things in between iterations with fewer columns,
+                # and we want to skip those lines, most probably. An exception might
+                # unrestricted calcualtions, which show extra RMS density and DIIS
+                # errors, although it is not clear yet whether these are for the
+                # beta orbitals or somethine else. The iterations look like this in that case:
+                #   convergence    iter        energy       DeltaE   RMS-Dens  Diis-err    time
+                # ---------------- ----- ----------------- --------- --------- ---------  ------
+                # d= 0,ls=0.0,diis     1   -382.0243202601 -8.28D+02  7.77D-03  1.04D-01    30.0
+                #                                                     7.68D-03  1.02D-01
+                # d= 0,ls=0.0,diis     2   -382.0647539758 -4.04D-02  4.64D-03  1.95D-02    59.2
+                #                                                     5.39D-03  2.36D-02
+                # ...
+                if len(line[17:].split()) == 6:
+                    iter, energy, deltaE, dens, diis, time = line[17:].split()
+                    val_energy = float(deltaE.replace('D', 'E'))
+                    val_density = float(dens.replace('D', 'E'))
+                    val_gradient = float(diis.replace('D', 'E'))
+                    values.append([val_energy, val_density, val_gradient])
+
                 line = next(inputfile)
+
             if not hasattr(self, 'scfvalues'):
                 self.scfvalues = []
+
             self.scfvalues.append(values)
 
         if "Total SCF energy" in line or "Total DFT energy" in line:
