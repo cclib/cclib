@@ -1,13 +1,14 @@
 # This file is part of cclib (http://cclib.sf.net), a library for parsing
 # and interpreting the results of computational chemistry packages.
 #
-# Copyright (C) 2006, the cclib development team
+# Copyright (C) 2006-2014, the cclib development team
 #
 # The library is free software, distributed under the terms of
 # the GNU Lesser General Public version 2.1 or later. You should have
 # received a copy of the license along with cclib. You can also access
 # the full license online at http://www.gnu.org/copyleft/lgpl.html.
 
+from __future__ import print_function
 import re
 
 import numpy
@@ -293,8 +294,7 @@ class GAMESS(logfileparser.Logfile):
             line = next(inputfile)
             while line[1:6] == "STATE":
 
-                if self.progress:
-                    self.updateprogress(inputfile, "Excited States")
+                self.updateprogress(inputfile, "Excited States")
 
                 etenergy = utils.convertor(float(line.split()[-2]), "eV", "cm-1")
                 etoscs = float(next(inputfile).split()[-1])
@@ -409,8 +409,7 @@ class GAMESS(logfileparser.Logfile):
             # The input orientation will be overwritten if this is a geometry optimisation
             # We assume that a previous Input Orientation has been found and
             # used to extract the atomnos
-            if self.progress:
-                self.updateprogress(inputfile, "Coordinates")
+            self.updateprogress(inputfile, "Coordinates")
 
             if self.firststdorient:
                 self.firststdorient = False
@@ -458,8 +457,7 @@ class GAMESS(logfileparser.Logfile):
 
             while line [:5] != " ITER":
 
-                if self.progress:
-                    self.updateprogress(inputfile, "Attributes")
+                self.updateprogress(inputfile, "Attributes")
 
                 # GVB uses SQCDF for checking convergence (for example in exam17).
                 if "GVB" in self.scftype and "SQCDF TOL=" in line:
@@ -585,8 +583,7 @@ class GAMESS(logfileparser.Logfile):
             # a list of atomic weights and some possible warnings.
             # Pass the warnings to the logger if they are there.
             while not "MODES" in line:
-                if self.progress:
-                    self.updateprogress(inputfile, "Frequency Information")
+                self.updateprogress(inputfile, "Frequency Information")
 
                 line = next(inputfile)
                 if "THIS IS NOT A STATIONARY POINT" in line:
@@ -617,8 +614,7 @@ class GAMESS(logfileparser.Logfile):
                 line = next(inputfile)
 
             while not "SAYVETZ" in line:
-                if self.progress:
-                    self.updateprogress(inputfile, "Frequency Information")
+                self.updateprogress(inputfile, "Frequency Information")
 
                 # Note: there may be imaginary frequencies like this (which we make negative):
                 #       FREQUENCY:       825.18 I    111.53       12.62       10.70        0.89
@@ -800,8 +796,7 @@ class GAMESS(logfileparser.Logfile):
             dashes = next(inputfile)
             for base in range(0, self.nmo, 5):
 
-                if self.progress:
-                    self.updateprogress(inputfile, "Coefficients")
+                self.updateprogress(inputfile, "Coefficients")
 
                 line = next(inputfile)
                 # Make sure that this section does not end prematurely - checked by regression test 2CO.ccsd.aug-cc-pVDZ.out.
@@ -901,8 +896,7 @@ class GAMESS(logfileparser.Logfile):
                 for i in range(4):
                     line = next(inputfile)
                 for base in range(0, self.nmo, 5):
-                    if self.progress:
-                        self.updateprogress(inputfile, "Coefficients")
+                    self.updateprogress(inputfile, "Coefficients")
 
                     blank = next(inputfile)
                     line = next(inputfile) # Eigenvector no
@@ -1019,8 +1013,7 @@ class GAMESS(logfileparser.Logfile):
                 self.logger.info("Reading additional aooverlaps...")
             base = 0
             while base < self.nbasis:
-                if self.progress:
-                    self.updateprogress(inputfile, "Overlap")
+                self.updateprogress(inputfile, "Overlap")
 
                 blank = next(inputfile)
                 line = next(inputfile) # Basis fn number

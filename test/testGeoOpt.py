@@ -1,7 +1,7 @@
 # This file is part of cclib (http://cclib.sf.net), a library for parsing
 # and interpreting the results of computational chemistry packages.
 #
-# Copyright (C) 2006, the cclib development team
+# Copyright (C) 2006-2014, the cclib development team
 #
 # The library is free software, distributed under the terms of
 # the GNU Lesser General Public version 2.1 or later. You should have
@@ -265,13 +265,6 @@ class OrcaGeoOptTest(GenericGeoOptTest):
     extracoords = 1
     extrascfs = 1
 
-    # This was run in 3-21G; H has 2, C has 9.
-    nbasisdict = {1:2, 6:9}
-    
-    # Approximate B3LYP energy of dvb after SCF in 3-21G.
-    b3lyp_energy = -10470
-
-    
     # ORCA has no support for symmetry yet.
     def testsymlabels(self):
         """Are all the symmetry labels either Ag/u or Bg/u? PASS"""

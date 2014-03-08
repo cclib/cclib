@@ -1,7 +1,7 @@
 # This file is part of cclib (http://cclib.sf.net), a library for parsing
 # and interpreting the results of computational chemistry packages.
 #
-# Copyright (C) 2006, the cclib development team
+# Copyright (C) 2006-2014, the cclib development team
 #
 # The library is free software, distributed under the terms of
 # the GNU Lesser General Public version 2.1 or later. You should have
@@ -24,3 +24,5 @@ from .orcaparser import ORCA
 # This allow users to type:
 #         from cclib.parser import ccopen
 from .ccopen import ccopen
+
+from .data import ccData

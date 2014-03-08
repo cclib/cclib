@@ -1,9 +1,9 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 #
 # This file is part of cclib (http://cclib.sf.net), a library for parsing
 # and interpreting the results of computational chemistry packages.
 #
-# Copyright (C) 2006-2013, the cclib development team
+# Copyright (C) 2006-2014, the cclib development team
 #
 # The library is free software, distributed under the terms of
 # the GNU Lesser General Public version 2.1 or later. You should have
@@ -43,34 +43,16 @@ def setup_cclib():
     if 'egg' in sys.argv:
         sys.argv.pop(sys.argv.index('egg'))
         from setuptools import setup
+
     from distutils.core import setup
-    from distutils.sysconfig import get_python_lib
 
-    # Setup the list of packages.
-    cclib_packages = ['cclib',
-                      'cclib.parser', 'cclib.progress', 'cclib.method', 'cclib.bridge',
-                      'cclib.test']
-
-    # Setup the list of data files.
-    cclib_prefix = get_python_lib()
-    test_prefix = cclib_prefix + '/test'
-    data_prefix = cclib_prefix + '/data'
-    cclib_datafiles = [ (cclib_prefix, ['ANNOUNCE', 'CHANGELOG', 'INSTALL', 'LICENSE', 'README', 'THANKS']),
-                        (test_prefix, ['test/testdata']),
-                        (data_prefix, ['data/regressionfiles.txt', 'data/regression_download.sh'])]
-    for program in programs:
-        data_dirs = os.listdir('data/%s' %program)
-        for data_dir in data_dirs:
-            if data_dir[:5] == 'basic':
-                dest = '%s/%s/%s' %(data_prefix, program, data_dir)
-                path = 'data/%s/%s' %(program, data_dir)
-                newfiles = ['%s/%s' %(path,fname) for fname in os.listdir(path) if fname[0] != '.']
-                cclib_datafiles.append((dest, newfiles))
+    # The list of packages to be installed.
+    cclib_packages = ['cclib', 'cclib.parser', 'cclib.progress', 'cclib.method', 'cclib.bridge']
 
     setup(
         name = "cclib",
-        version = "1.1",
-        url = "http://cclib.sf.net",
+        version = "1.2b",
+        url = "http://cclib.github.io/",
         author = "cclib development team",
         author_email = "cclib-users@lists.sourceforge.net",
         maintainer = "cclib development team",
@@ -80,10 +62,10 @@ def setup_cclib():
         long_description = "\n".join(doclines[2:]),      
         classifiers = classifiers.split("\n"),
         platforms = ["Any."],
-        scripts = ["src/scripts/ccget", "src/scripts/cda"],
-        package_dir = {'cclib':'src/cclib', 'cclib.test':'test'},
         packages = cclib_packages,
-        data_files = cclib_datafiles )
+        package_dir = { 'cclib':'src/cclib' },
+        scripts = ["src/scripts/ccget", "src/scripts/cda"],
+    )
 
 
 if __name__ == '__main__':

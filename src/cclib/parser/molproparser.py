@@ -1,7 +1,7 @@
 # This file is part of cclib (http://cclib.sf.net), a library for parsing
 # and interpreting the results of computational chemistry packages.
 #
-# Copyright (C) 2007, the cclib development team
+# Copyright (C) 2007-2014, the cclib development team
 #
 # The library is free software, distributed under the terms of
 # the GNU Lesser General Public version 2.1 or later. You should have
@@ -236,7 +236,8 @@ class Molpro(logfileparser.Logfile):
             self.scfvalues.append(numpy.array(scfvalues))
 
         # SCF result - RHF/UHF and DFT (RKS) energies.
-        if line[1:5] in ["!RHF", "!UHF", "!RKS"] and line[16:22] == "ENERGY":
+        if (line[1:5] in ["!RHF", "!UHF", "!RKS"] and
+            line[16:22].lower() == "energy"):
             
             if not hasattr(self, "scfenergies"):
                 self.scfenergies = []
@@ -384,8 +385,17 @@ class Molpro(logfileparser.Logfile):
             else:
                 self.moenergies.append([])
                 self.mocoeffs.append([])
-                
-            while line.strip() and not "ORBITALS" in line:
+
+            # This loop will keep going until there is a double blank line, because
+            # there is a single line between each coefficient block. We can also check
+            # whether there are stars (there are, at the end), in case something goes wrong.
+            while line.strip() and (not "ORBITALS" in line) and (not set(line.strip()) == {'*'}):
+
+                # Newer version of Molpro (for example, 2012 test files) wil print some
+                # more things here, such as HOMO and LUMO, but these have less than 10 columns.
+                if len(line.split()) < 10 or "HOMO" in line or "LUMO" in line:
+                    break
+
                 coeffs = []
                 while line.strip() != "":
                     if line[:30].strip():
@@ -485,9 +495,14 @@ class Molpro(logfileparser.Logfile):
             blank = next(inputfile)
             headers = next(inputfile)
 
+            # Newer version of Molpro (at least for 2012) print this differently,
+            # and this part needs to be fixed.
+            headers = headers.split()
+            if len(headers) != 10:
+                return
+
             # Although criteria can be changed, the printed format should not change.
             # In case it does, retrieve the columns for each parameter.
-            headers = headers.split()
             index_THRENERG = headers.index('DE')
             index_THRGRAD = headers.index('GRADMAX')
             index_THRSTEP = headers.index('STEPMAX')

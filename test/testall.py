@@ -1,13 +1,14 @@
 # This file is part of cclib (http://cclib.sf.net), a library for parsing
 # and interpreting the results of computational chemistry packages.
 #
-# Copyright (C) 2006, the cclib development team
+# Copyright (C) 2006-2014, the cclib development team
 #
 # The library is free software, distributed under the terms of
 # the GNU Lesser General Public version 2.1 or later. You should have
 # received a copy of the license along with cclib. You can also access
 # the full license online at http://www.gnu.org/copyleft/lgpl.html.
 
+from __future__ import print_function
 import os
 import sys
 import unittest
@@ -16,7 +17,6 @@ from cclib.parser import ADF, GAMESS, GAMESSUK, Gaussian, Jaguar, Molpro, ORCA
 
 
 # All supported parsers.
-parsers = [ "ADF", "GAMESS", "GAMESSUK", "Gaussian", "Jaguar", "Molpro", "ORCA" ]
 parsers = [ "ADF", "GAMESS", "GAMESSUK", "Gaussian", "Jaguar", "Molpro", "ORCA" ]
 
 # The modules to be included in the global test testall().
@@ -75,6 +75,10 @@ def gettestdata(module=None):
     if module:
         lines = [line for line in lines if line[0] == module]
 
+    # This dictionary contains information needed to run unit tests, with one entry
+    # for each unit test class used. Since there may in principle be multiple tests
+    # for a test class (files from different program versions, for example), the values
+    # in this dictionary are themselves lists of dictionaries.
     testdata = {}
     for line in lines:
         test = {}
@@ -82,7 +86,9 @@ def gettestdata(module=None):
         test["parser"] = line[1]
         test["location"] = line[3:]
         testclass = line[2]
-        testdata[testclass] = test
+        if testclass not in testdata:
+            testdata[testclass] = []
+        testdata[testclass].append(test)
 
     return testdata
 
@@ -92,7 +98,7 @@ def visualtests():
     
     output = [ getfile(Gaussian,"basicGaussian03","dvb_gopt.out")[0],
                getfile(GAMESS,"basicPCGAMESS","dvb_gopt_a.out")[0],
-               getfile(GAMESS,"basicGAMESS-US","dvb_gopt_a.out")[0],
+               getfile(GAMESS,"basicGAMESS-US2012","dvb_gopt_a.out")[0],
                getfile(ADF,"basicADF2007.01","dvb_gopt.adfout")[0],
                getfile(Jaguar,"basicJaguar7.0", "dvb_gopt.out")[0],
                getfile(Molpro,"basicMolpro2006", "dvb_gopt.out", "dvb_gopt.out")[0],
@@ -140,34 +146,38 @@ def testall(parserchoice=parsers, modules=test_modules):
     for module in modules:
 
         testdata = gettestdata(module)
-        
+
+        # Filter the test data to use if a list of requested parsers is passed
+        # to this function, assuming that all unit tests for a given test class
+        # use the same parser (use the first unit test to check).
         if parserchoice:
-            testdata = dict([ (x,y) for x,y in testdata.items()
-                              if y['parser'] in parserchoice ])
+            testdata = dict([(x,y) for x,y in testdata.items() if y[0]['parser'] in parserchoice ])
                 
         testnames = sorted(testdata.keys())
         for name in testnames:
 
-            path = '/'.join(testdata[name]["location"])
-            program = testdata[name]["location"][0][5:]
+            for test_instance in testdata[name]:
 
-            try:
-                test = importName("test%s" %module, name)
-            except:
-                errors.append("ERROR: could not import %s from %s." %(name, module))
-            else:
-                print("\n**** test%s: %s ****" %(module, test.__doc__))
-                parser = testdata[name]["parser"]
-                location = testdata[name]["location"]
-                test.data, test.logfile = getfile(eval(parser), *location)
-                myunittest = unittest.makeSuite(test)
-                a = unittest.TextTestRunner(verbosity=2).run(myunittest)
-                l = perpackage.setdefault(program, [0, 0, 0, 0])
-                l[0] += a.testsRun
-                l[1] += len(a.errors)
-                l[2] += len(a.failures)
-                if hasattr(a, "skipped"):
-                    l[3] += len(a.skipped)
+                path = '/'.join(test_instance["location"])
+                program = test_instance["location"][0][5:]
+
+                try:
+                    test = importName("test%s" %module, name)
+                except:
+                    errors.append("ERROR: could not import %s from %s." %(name, module))
+                else:
+                    print("\n**** test%s (%s): %s ****" %(module, program, test.__doc__))
+                    parser = test_instance["parser"]
+                    location = test_instance["location"]
+                    test.data, test.logfile = getfile(eval(parser), *location)
+                    myunittest = unittest.makeSuite(test)
+                    a = unittest.TextTestRunner(verbosity=2).run(myunittest)
+                    l = perpackage.setdefault(program, [0, 0, 0, 0])
+                    l[0] += a.testsRun
+                    l[1] += len(a.errors)
+                    l[2] += len(a.failures)
+                    if hasattr(a, "skipped"):
+                        l[3] += len(a.skipped)
 
     print("\n\n********* SUMMARY PER PACKAGE ****************")
     names = sorted(perpackage.keys())

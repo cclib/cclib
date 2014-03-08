@@ -1,7 +1,7 @@
 # This file is part of cclib (http://cclib.sf.net), a library for parsing
 # and interpreting the results of computational chemistry packages.
 #
-# Copyright (C) 2006, the cclib development team
+# Copyright (C) 2006-2014, the cclib development team
 #
 # The library is free software, distributed under the terms of
 # the GNU Lesser General Public version 2.1 or later. You should have
@@ -129,8 +129,7 @@ class GAMESSUK(logfileparser.Logfile):
             # be recorded already, in the "molecular geometry" section
             # (note: single-point calculations have no "nuclear coordinates" only
             # "molecular geometry")
-            if self.progress:
-                self.updateprogress(inputfile, "Coordinates")
+            self.updateprogress(inputfile, "Coordinates")
 
             if self.firstnuccoords:
                 self.firstnuccoords = False
@@ -182,8 +181,7 @@ class GAMESSUK(logfileparser.Logfile):
             blank = next(inputfile)
             i = 0
             while i < self.nbasis:
-                if self.progress:
-                    self.updateprogress(inputfile, "Overlap")
+                self.updateprogress(inputfile, "Overlap")
 
                 blank = next(inputfile)
                 blank = next(inputfile)
@@ -454,8 +452,7 @@ class GAMESSUK(logfileparser.Logfile):
 
             mo = 0
             while mo < self.nmo:
-                if self.progress:
-                    self.updateprogress(inputfile, "Coefficients")
+                self.updateprogress(inputfile, "Coefficients")
 
                 blank = next(inputfile)
                 blank = next(inputfile)

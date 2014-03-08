@@ -1,12 +1,14 @@
 # This file is part of cclib (http://cclib.sf.net), a library for parsing
 # and interpreting the results of computational chemistry packages.
 #
-# Copyright (C) 2007, the cclib development team
+# Copyright (C) 2007-2014, the cclib development team
 #
 # The library is free software, distributed under the terms of
 # the GNU Lesser General Public version 2.1 or later. You should have
 # received a copy of the license along with cclib. You can also access
 # the full license online at http://www.gnu.org/copyleft/lgpl.html.
+
+from __future__ import print_function
 
 import numpy
 
@@ -305,8 +307,7 @@ class ORCA(logfileparser.Logfile):
 
             self.aooverlaps = numpy.zeros( (self.nbasis, self.nbasis), "d")
             for i in range(0, self.nbasis, 6):
-                if self.progress:
-                    self.updateprogress(inputfile, "Overlap")
+                self.updateprogress(inputfile, "Overlap")
 
                 header = next(inputfile)
                 size = len(header.split())
@@ -335,8 +336,7 @@ class ORCA(logfileparser.Logfile):
                     mocoeffs.append(numpy.zeros((self.nbasis, self.nbasis), "d"))
 
                 for i in range(0, self.nbasis, 6):
-                    if self.progress:
-                        self.updateprogress(inputfile, "Coefficients")
+                    self.updateprogress(inputfile, "Coefficients")
 
                     numbers = next(inputfile)
                     energies = next(inputfile)
@@ -396,7 +396,9 @@ class ORCA(logfileparser.Logfile):
                 self.etsecs.append(sec)
                 line = next(inputfile)
 
-        if line[25:44] == "ABSORPTION SPECTRUM":
+        if (line[25:44] == "ABSORPTION SPECTRUM" or \
+                line[9:28] == "ABSORPTION SPECTRUM") and not hasattr(self,
+                                                                    "etoscs"):
             minus = next(inputfile)
             header = next(inputfile)
             header = next(inputfile)

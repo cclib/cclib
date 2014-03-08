@@ -1,7 +1,7 @@
 # This file is part of cclib (http://cclib.sf.net), a library for parsing
 # and interpreting the results of computational chemistry packages.
 #
-# Copyright (C) 2006, the cclib development team
+# Copyright (C) 2006-2014, the cclib development team
 #
 # The library is free software, distributed under the terms of
 # the GNU Lesser General Public version 2.1 or later. You should have
@@ -9,6 +9,8 @@
 # the full license online at http://www.gnu.org/copyleft/lgpl.html.
 
 """Create MANIFEST"""
+
+from __future__ import print_function
 
 import glob
 import os
@@ -34,6 +36,7 @@ for folder in folders:
     basicfolders = glob.glob(os.path.join(folder, 'basic*'))
     for basicfolder in basicfolders:
         files.extend(glob.glob(os.path.join(basicfolder, "*")))
+files.extend(glob.glob(os.path.join("data", "Gaussian", "CDA", "*")))
 
 # Include test scripts
 files.extend(glob.glob(os.path.join("test", "regression.py")))

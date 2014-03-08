@@ -1,7 +1,7 @@
 # This file is part of cclib (http://cclib.sf.net), a library for parsing
 # and interpreting the results of computational chemistry packages.
 #
-# Copyright (C) 2006, the cclib development team
+# Copyright (C) 2006-2014, the cclib development team
 #
 # The library is free software, distributed under the terms of
 # the GNU Lesser General Public version 2.1 or later. You should have
@@ -14,6 +14,7 @@ designed to make it easy to add new tests or datafiles.
 To run the doctest, just use "python regression.py test".
 """
 
+from __future__ import print_function
 import os
 import sys
 import inspect
@@ -29,16 +30,6 @@ from cclib.parser import ADF, GAMESS, GAMESSUK, Gaussian, Jaguar, Molpro, ORCA
 import testall
 parsers = testall.parsers
 test_modules = testall.test_modules
-
-# Edit the following variable definitions to add new parsers or new datafile patterns.
-
-dummyfiles = [eval(n)("") for n in parsers]
-
-# It would be nice to fix the structure of this nested list,
-# because in its current form it is not amenable to tweaks.
-regdir = os.path.join("..", "data", "regression")
-programs = [os.path.join(regdir,testall.get_program_dir(p)) for p in parsers]
-filenames = [[os.path.join(p,version,fn) for version in os.listdir(p) for fn in os.listdir(os.path.join(p,version))] for p in programs]
 
 # The regression test functions defined below should be named according to the path
 # of the logfile, with some characters changed according to normalisefilename().
@@ -390,6 +381,20 @@ def make_regression_from_old_unittest(filename, module_name, test_name):
 
 def main(which=[], traceback=False):
 
+    dummyfiles = [eval(n)("") for n in parsers]
+
+    # It would be nice to fix the structure of this nested list,
+    # because in its current form it is not amenable to tweaks.
+    regdir = os.path.join("..", "data", "regression")
+    programs = [os.path.join(regdir,testall.get_program_dir(p)) for p in parsers]
+    try:
+        filenames = [[os.path.join(p,version,fn) for version in os.listdir(p) for fn in os.listdir(os.path.join(p,version))] for p in programs]
+    except OSError as e:
+        print(e)
+        print("\nERROR: At least one program direcory is missing.")
+        print("Run regression_download.sh in the ../data directory to update.")
+        sys.exit(1)
+
     # Print a warning if you haven't downloaded all of the regression test files,
     # or an error if not all of the regression test files are included in filenames.
     regfile = open(os.path.join("..", "data", "regressionfiles.txt"), "r")
@@ -401,20 +406,8 @@ def main(which=[], traceback=False):
         if not os.path.isfile(os.path.join("..", "data", "regression", x)):
             missing.append(x)
         elif os.path.join("..", "data", "regression", x) not in flatten(filenames):
-            print("\nERROR: The regression file %s is present, but not included in " \
-                  "the 'filenames' variable.\n\nPlease add a new glob statement." % x)
+            print("\nERROR: The regression file %s is on disk, but not in the 'filenames' list.\n" % x)
             sys.exit(1)       
-
-    if len(missing) > 0:
-        print("\nWARNING: You are missing %d regression file(s).\n" \
-              "         Run wget.sh in the ../data directory to update.\n" % len(missing))
-        print("Missing files:")
-        print("\n".join(missing))
-        try:
-            input("(Press ENTER to continue or CTRL+C to exit)")
-        except KeyboardInterrupt:
-            print("\n")
-            sys.exit(0)
 
     # When a unit test is removed or replaced by a newer version, the old logfile
     # typically becomes a regression, and normally we still want to run the unit test
@@ -509,11 +502,18 @@ def main(which=[], traceback=False):
                 else:
                     print("test passed")
                 
-        print
+        print()
             
     print("Total: %d   Failed: %d  Errors: %d" % (total, failures, errors))
     if not traceback and failures + errors > 0:
         print("\nFor more information on failures/errors, add 'traceback' as argument.")
+
+    # Show this warning at the end, so that it's easy to notice.
+    if len(missing) > 0:
+        print("\nWARNING: You are missing %d regression file(s)." % len(missing))
+        print("Run regression_download.sh in the ../data directory to update.")
+        print("Missing files:")
+        print("\n".join(missing))
 
 
 if __name__=="__main__":

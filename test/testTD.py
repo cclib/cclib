@@ -1,7 +1,7 @@
 # This file is part of cclib (http://cclib.sf.net), a library for parsing
 # and interpreting the results of computational chemistry packages.
 #
-# Copyright (C) 2007, the cclib development team
+# Copyright (C) 2007-2014, the cclib development team
 #
 # The library is free software, distributed under the terms of
 # the GNU Lesser General Public version 2.1 or later. You should have
@@ -90,10 +90,18 @@ class PCGamessTDDFTTest(GenericTDTest):
 class OrcaTDDFTTest(GenericTDTest):
     """ORCA time-dependent HF/DFT unittest."""
     number = 10
+
+    def testenergies(self):
+        """Is the l_max reasonable?"""
+        self.assertEqual(len(self.data.etenergies), self.number)
+        idx_lambdamax = [i for i, x in enumerate(self.data.etoscs)
+                         if x==max(self.data.etoscs)][0]
+        self.assertInside(self.data.etenergies[idx_lambdamax], 48000, 5000)
+
     def testoscs(self):
         """Is the maximum of eotscs in the right range?"""
         self.assertEqual(len(self.data.etoscs), self.number)
-        self.assertInside(max(self.data.etoscs), 1.1, 0.1)
+        self.assertInside(max(self.data.etoscs), 1.0, 0.1)
 
 
 class GenericTDTesttrp(GenericTDTest):

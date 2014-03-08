@@ -1,7 +1,7 @@
 # This file is part of cclib (http://cclib.sf.net), a library for parsing
 # and interpreting the results of computational chemistry packages.
 #
-# Copyright (C) 2006, the cclib development team
+# Copyright (C) 2006-2014, the cclib development team
 #
 # The library is free software, distributed under the terms of
 # the GNU Lesser General Public version 2.1 or later. You should have
@@ -288,8 +288,7 @@ class Jaguar(logfileparser.Logfile):
                     blank = next(inputfile)
 
                 for k in range(0,len(self.moenergies[s]),5):
-                    if self.progress:
-                        self.updateprogress(inputfile, "Coefficients")
+                    self.updateprogress(inputfile, "Coefficients")
 
                     numbers = next(inputfile)
                     eigens = next(inputfile)
@@ -351,8 +350,7 @@ class Jaguar(logfileparser.Logfile):
             self.aooverlaps = numpy.zeros((self.nbasis, self.nbasis), "d")
 
             for i in range(0, self.nbasis, 5):
-                if self.progress:
-                    self.updateprogress(inputfile, "Overlap")
+                self.updateprogress(inputfile, "Overlap")
 
                 blank = next(inputfile)
                 header = next(inputfile)
