@@ -10,11 +10,15 @@
 
 def convertor(value, fromunits, tounits):
     """Convert from one set of units to another.
+    Source: NIST 2010 CODATA, GAMESS-US docs and others
 
     >>> print "%.1f" % convertor(8, "eV", "cm-1")
     64524.8
     """
     _convertor = {
+        
+        # Taken taken from NIST 2010 CODATA reference
+        # Available at: http://physics.nist.gov/cuu/Constants/index.html
         "Angstrom_to_bohr": lambda x: x*1.889716,
         "bohr_to_Angstrom": lambda x: x*0.529177,
     
@@ -44,6 +48,7 @@ def convertor(value, fromunits, tounits):
         "kJmol-1_to_hartree": lambda x: x/2625.49963978,
         "kJmol-1_to_kcal":  lambda x: x/4.184,
         "nm_to_cm-1":       lambda x: 1e7/x,
+
         # Taken from GAMESS docs, "Further information",
         # "Molecular Properties and Conversion Factors"
         "Debye^2/amu-Angstrom^2_to_km/mol": lambda x: x*42.255}
