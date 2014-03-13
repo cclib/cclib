@@ -22,7 +22,8 @@ def convertor(value, fromunits, tounits):
         "cm-1_to_hartree":  lambda x: x/219474.6313708,
         "cm-1_to_kcal":     lambda x: x/349.7550112,
         "cm-1_to_kJmol-1":  lambda x: x/83.5934722814,
-
+        "cm-1_to_nm":       lambda x: 1e7/x,
+        
         "eV_to_cm-1":       lambda x: x*8065.54429,
         "eV_to_hartree":    lambda x: x/27.21138505,
         "eV_to_kcal":       lambda x: x*23.060548867,
@@ -42,6 +43,7 @@ def convertor(value, fromunits, tounits):
         "kJmol-1_to_eV":    lambda x: x/96.4853364596,
         "kJmol-1_to_hartree": lambda x: x/2625.49963978,
         "kJmol-1_to_kcal":  lambda x: x/4.184,
+        "nm_to_cm-1":       lambda x: 1e7/x,
         # Taken from GAMESS docs, "Further information",
         # "Molecular Properties and Conversion Factors"
         "Debye^2/amu-Angstrom^2_to_km/mol": lambda x: x*42.255}
