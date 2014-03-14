@@ -144,3 +144,6 @@ vib       ORCA        OrcaIRTest            basicORCA2.9          dvb_ir.out
 vib       ORCA        OrcaIRTest            basicORCA3.0          dvb_ir.out
 vib       ORCA        OrcaRamanTest         basicORCA2.9          dvb_raman.out
 vib       ORCA        OrcaRamanTest         basicORCA3.0          dvb_raman.out
+
+Scan      Gaussian     GaussianScanTest     basicGaussian09       dvb_scan.log
+Scan      ORCA         OrcaScanTest         basicORCA2.9          dvb_scan.out
