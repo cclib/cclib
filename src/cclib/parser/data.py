@@ -74,26 +74,7 @@ class ccData(object):
             the 11th molecular orbital is the HOMO
     """
 
-    # Names of all supported attributes.
-    _attrlist = [
-        'aonames', 'aooverlaps', 'atombasis', 'atomcharges', 'atomcoords',
-        'atommasses', 'atomnos', 'atomspins',
-        'ccenergies', 'charge', 'coreelectrons',
-        'etenergies', 'etoscs', 'etrotats', 'etsecs', 'etsyms',
-        'fonames', 'fooverlaps', 'fragnames', 'frags',
-        'gbasis', 'geotargets', 'geovalues', 'grads',
-        'hessian', 'homos',
-        'mocoeffs', 'moenergies', 'mosyms', 'mpenergies', 'mult',
-        'natom', 'nbasis', 'nmo', 'nocoeffs',
-        'scfenergies', 'scftargets', 'scfvalues',
-        'vibanharms', 'vibdisps', 'vibfreqs', 'vibirs',
-        'vibramans', 'vibsyms', 'scannames', 'scanenergies', 'scanparm',
-        'scancoords', 'enthaply', 'freeenergy', 'temperature', 'entropy', 
-        'optdone'
-    ]
-
-    # The expected types for all supported attributes in dectionary,
-    # and their names which can be extracted as the keys.
+    # The expected types for all supported attributes.
     _attrtypes = {
         "aonames":        list,
         "aooverlaps":     numpy.ndarray,
@@ -106,11 +87,14 @@ class ccData(object):
         "ccenergies":     numpy.ndarray,
         "charge":         int,
         "coreelectrons":  numpy.ndarray,
+        "enthaply":       float,
+        "entropy":        float,
         "etenergies":     numpy.ndarray,
         "etoscs":         numpy.ndarray,
         "etrotats":       numpy.ndarray,
         "etsecs":         list,
         "etsyms":         list,
+        "freeenergy":     float,
         "fonames":        list,
         "fooverlaps":     numpy.ndarray,
         "fragnames":      list,
@@ -130,25 +114,25 @@ class ccData(object):
         "nbasis":         int,
         "nmo":            int,
         "nocoeffs":       numpy.ndarray,
+        "optdone":        bool,
+        "scancoords":     numpy.ndarray,
+        "scanenergies":   list,
+        "scannames":      list,
+        "scanparm":       list,
         "scfenergies":    numpy.ndarray,
         "scftargets":     numpy.ndarray,
         "scfvalues":      list,
+        "temperature":    float,
         "vibanharms":     numpy.ndarray,
         "vibdisps":       numpy.ndarray,
         "vibfreqs":       numpy.ndarray,
         "vibirs":         numpy.ndarray,
         "vibramans":      numpy.ndarray,
         "vibsyms":        list,
-        "scannames":      list,
-        "scanenergies":   list,
-        "scanparm":       list,
-        "scancoords":     numpy.ndarray,
-        "enthaply":       float,
-        "freeenergy":     float,
-        "temperature":    float,
-        "entropy":        float,
-        "optdone":        bool
     }
+
+    # The name of all attributes can be generated from the dictionary above.
+    _attrlist = _attrtypes.keys()
 
     # Arrays are double precision by default, but these will be integer arrays.
     _intarrays = ['atomnos', 'coreelectrons', 'homos']
