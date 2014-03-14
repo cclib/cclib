@@ -223,5 +223,28 @@ class ccData(object):
     
         for attr in valid:
             setattr(self, attr, attributes[attr])
+
         self.arrayify()
+        self.typecheck()
+
         return invalid
+
+    def typecheck(self):
+        """Check the types of all attributes.
+
+        If an attribute does not match the expected type, then attempt to
+        convert; if that fails, only then raise a TypeError.
+        """
+
+        self.arrayify()
+        for attr in [a for a in self._attrlist if hasattr(self, a)]:
+
+            val = getattr(self, attr)
+            if type(val) == self._attrtypes[attr]:
+                continue
+
+            try:
+                val = self._attrtypes[attr](val)
+            except ValueError:
+                args = (attr, type(val), self._attrtypes[attr])
+                raise TypeError("attribute %s is %s instead of %s and could not be converted" % args)
