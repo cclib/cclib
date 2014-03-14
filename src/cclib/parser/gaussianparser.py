@@ -63,8 +63,8 @@ class Gaussian(logfileparser.Logfile):
         # Used to index self.scftargets[].
         SCFRMS, SCFMAX, SCFENERGY = list(range(3))
 
-        # Flag that indicates whether it has reached the end of a geoopt.
-        self.optfinished = False
+        # List to keep track of points of finished geometry optimizations
+        self.optdone = []
         
         # Flag for identifying Coupled Cluster runs.
         self.coupledcluster = False
@@ -91,6 +91,10 @@ class Gaussian(logfileparser.Logfile):
         if (hasattr(self, 'enthaply') and hasattr(self, 'temperature') 
                 and hasattr(self, 'freeenergy')):
             self.entropy = (self.enthaply - self.freeenergy)/self.temperature
+
+        if hasattr(self, 'atomcoords') and len(self.optdone) > 0:
+            last_point = self.optdone[-1]
+            self.atomcoords = self.atomcoords[:last_point + 1]
             
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
@@ -162,12 +166,11 @@ class Gaussian(logfileparser.Logfile):
 
         # Catch message about completed optimization.
         if line[1:23] == "Optimization completed":
-            self.optfinished = True
-            self.optdone = True
+            self.optdone.append(len(self.geovalues) - 1)
         
         # Extract the atomic numbers and coordinates from the input orientation,
         #   in the event the standard orientation isn't available.
-        if not self.optfinished and line.find("Input orientation") > -1 or line.find("Z-Matrix orientation") > -1:
+        if line.find("Input orientation") > -1 or line.find("Z-Matrix orientation") > -1:
 
             # If this is a counterpoise calculation, this output means that
             #   the supermolecule is now being considered, so we can set:
@@ -226,7 +229,7 @@ class Gaussian(logfileparser.Logfile):
                 line = next(inputfile)
 
         # Extract the atomic numbers and coordinates of the atoms.
-        if not self.optfinished and line.strip() == "Standard orientation:":
+        if line.strip() == "Standard orientation:":
 
             self.updateprogress(inputfile, "Attributes", self.cupdate)
 

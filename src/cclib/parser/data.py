@@ -53,7 +53,7 @@ class ccData(object):
         nbasis -- number of basis functions (integer)
         nmo -- number of molecular orbitals (integer)
         nocoeffs -- natural orbital coefficients (array[2])
-        optdone -- flag for completion of optimisation (boolean)
+        optdone -- indexes corresponding to energies/coords when optimizations have converged (list)
         scancoords -- geometries of each scan step (array[3], angstroms)
         scanenergies -- energies of potential energy surface (list)
         scannames -- names of varaibles scanned (list of strings)
@@ -151,7 +151,6 @@ class ccData(object):
         Inputs:
             attributes - dictionary of attributes to load
         """
-
         if attributes:
             self.setattributes(attributes)
         
