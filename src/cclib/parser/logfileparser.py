@@ -267,11 +267,9 @@ class Logfile(object):
         if not hasattr(self, "coreelectrons") and hasattr(self, "natom"):
             self.coreelectrons = numpy.zeros(self.natom, "i")
 
-        # Move all cclib attributes to the ccData object.
-        # To be moved, an attribute must be in data._attrlist.
-        for attr in data._attrlist:
-            if hasattr(self, attr):
-                setattr(data, attr, getattr(self, attr))
+        # Move all cclib attributes to the ccData object, but beware that
+        # in order to be moved an attribute must be in data._attrlist.
+        data.setattributes(self.__dict__)
                 
         # Now make sure that the cclib attributes in the data object
         #   are all the correct type (including arrays and lists of arrays).
