@@ -10,8 +10,6 @@
 
 import sys
 
-if 'qt' in list(sys.modules.keys()):
-    from .qtprogress import QtProgress
 if 'PyQt4' in list(sys.modules.keys()):
     from .qt4progress import Qt4Progress
 

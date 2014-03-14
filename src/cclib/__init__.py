@@ -8,7 +8,7 @@
 # received a copy of the license along with cclib. You can also access
 # the full license online at http://www.gnu.org/copyleft/lgpl.html.
 
-__version__ = "1.1"
+__version__ = "1.2b"
 
 from . import parser
 from . import progress

@@ -90,10 +90,18 @@ class PCGamessTDDFTTest(GenericTDTest):
 class OrcaTDDFTTest(GenericTDTest):
     """ORCA time-dependent HF/DFT unittest."""
     number = 10
+
+    def testenergies(self):
+        """Is the l_max reasonable?"""
+        self.assertEqual(len(self.data.etenergies), self.number)
+        idx_lambdamax = [i for i, x in enumerate(self.data.etoscs)
+                         if x==max(self.data.etoscs)][0]
+        self.assertInside(self.data.etenergies[idx_lambdamax], 48000, 5000)
+
     def testoscs(self):
         """Is the maximum of eotscs in the right range?"""
         self.assertEqual(len(self.data.etoscs), self.number)
-        self.assertInside(max(self.data.etoscs), 1.1, 0.1)
+        self.assertInside(max(self.data.etoscs), 1.0, 0.1)
 
 
 class GenericTDTesttrp(GenericTDTest):

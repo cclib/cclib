@@ -36,6 +36,7 @@ for folder in folders:
     basicfolders = glob.glob(os.path.join(folder, 'basic*'))
     for basicfolder in basicfolders:
         files.extend(glob.glob(os.path.join(basicfolder, "*")))
+files.extend(glob.glob(os.path.join("data", "Gaussian", "CDA", "*")))
 
 # Include test scripts
 files.extend(glob.glob(os.path.join("test", "regression.py")))

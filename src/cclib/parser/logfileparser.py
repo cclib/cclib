@@ -39,11 +39,40 @@ class myBZ2File(bz2.BZ2File):
     def __next__(self):
         line = super().__next__()
         return line.decode("ascii", "replace")
+
 class myGzipFile(gzip.GzipFile):
     """Return string instead of bytes"""
     def __next__(self):
         line = super().__next__()
         return line.decode("ascii", "replace")
+
+
+class FileWrapper(object):
+    """Wrap a file object so that we can maintain position"""
+
+    def __init__(self, file):
+        self.file = file
+        self.pos = 0
+        self.file.seek(0, 2)
+        self.size = self.file.tell()
+        self.file.seek(0, 0)
+
+    def next(self):
+        line = next(self.file)
+        self.pos += len(line)
+        return line
+
+    def __next__(self):
+        return self.next()
+
+    def __iter__(self):
+        return self
+
+    def close(self):
+        self.file.close()
+
+    def seek(self, pos, ref):
+        self.file.seek(pos, ref)
 
 def openlogfile(filename):
     """Return a file object given a filename.
@@ -69,7 +98,7 @@ def openlogfile(filename):
         elif extension == ".zip":
             zip = zipfile.ZipFile(filename, "r")
             assert len(zip.namelist()) == 1, "ERROR: Zip file contains more than 1 file"
-            fileobject = io.StringIO(zip.read(zip.namelist()[0]).decode("ascii"))
+            fileobject = io.StringIO(zip.read(zip.namelist()[0]).decode("ascii", "ignore"))
 
         elif extension in ['.bz', '.bz2']:
             # Module 'bz2' is not always importable.
@@ -77,7 +106,7 @@ def openlogfile(filename):
             fileobject = myBZ2File(filename, "r")
 
         else:
-            fileobject = open(filename, "r")
+            fileobject = FileWrapper(io.open(filename, "r", errors='ignore'))
 
         return fileobject
     
@@ -100,10 +129,8 @@ class Logfile(object):
     
     """
 
-    def __init__(self, source, progress=None,
-                       loglevel=logging.INFO, logname="Log", logstream=sys.stdout,
-                       fupdate=0.05, cupdate=0.002, 
-                       datatype=ccData):
+    def __init__(self, source, loglevel=logging.INFO, logname="Log",
+                    logstream=sys.stdout, datatype=ccData):
         """Initialise the Logfile object.
 
         This should be called by a ubclass in its own __init__ method.
@@ -127,11 +154,6 @@ class Logfile(object):
             self.stream = source
         else:
             raise ValueError
-
-        # Progress indicator.
-        self.progress = progress
-        self.fupdate = fupdate
-        self.cupdate = cupdate
 
         # Set up the logger.
         # Note that calling logging.getLogger() with one name always returns the same instance.
@@ -168,7 +190,7 @@ class Logfile(object):
         # Set the attribute.
         object.__setattr__(self, name, value)
 
-    def parse(self, fupdate=None, cupdate=None):
+    def parse(self, progress=None, fupdate=0.05, cupdate=0.002):
         """Parse the logfile, using the assumed extract method of the child."""
 
         # Check that the sub-class has an extract attribute,
@@ -191,17 +213,14 @@ class Logfile(object):
         else:
             inputfile = self.stream
 
-        # Intialize self.progress.
-        if self.progress:
-            inputfile.seek(0, 2)
-            nstep = inputfile.tell()
-            inputfile.seek(0)
-            self.progress.initialize(nstep)
+        # Intialize self.progress
+        if progress and not (isinstance(inputfile, myGzipFile) or
+                                isinstance(inputfile, myBZ2File)):
+            self.progress = progress
+            self.progress.initialize(inputfile.size)
             self.progress.step = 0
-            if fupdate:
-                self.fupdate = fupdate
-            if cupdate:
-                self.cupdate = cupdate
+        self.fupdate = fupdate
+        self.cupdate = cupdate
 
         # Initialize the ccData object that will be returned.
         # This is normally ccData, but can be changed by passing
@@ -248,11 +267,9 @@ class Logfile(object):
         if not hasattr(self, "coreelectrons") and hasattr(self, "natom"):
             self.coreelectrons = numpy.zeros(self.natom, "i")
 
-        # Move all cclib attributes to the ccData object.
-        # To be moved, an attribute must be in data._attrlist.
-        for attr in data._attrlist:
-            if hasattr(self, attr):
-                setattr(data, attr, getattr(self, attr))
+        # Move all cclib attributes to the ccData object, but beware that
+        # in order to be moved an attribute must be in data._attrlist.
+        data.setattributes(self.__dict__)
                 
         # Now make sure that the cclib attributes in the data object
         #   are all the correct type (including arrays and lists of arrays).
@@ -266,8 +283,8 @@ class Logfile(object):
                 self.__delattr__(attr)
 
         # Update self.progress as done.
-        if self.progress:
-            self.progress.update(nstep, "Done")
+        if hasattr(self, "progress"):
+            self.progress.update(inputfile.size, "Done")
 
         # Return the ccData object that was generated.
         return data
@@ -283,8 +300,8 @@ class Logfile(object):
     def updateprogress(self, inputfile, msg, xupdate=0.05):
         """Update progress."""
 
-        if self.progress and random.random() < xupdate:
-            newstep = inputfile.tell()
+        if hasattr(self, "progress") and random.random() < xupdate:
+            newstep = inputfile.pos
             if newstep != self.progress.step:
                 self.progress.update(newstep, msg)
                 self.progress.step = newstep

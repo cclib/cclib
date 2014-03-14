@@ -25,9 +25,9 @@ from cclib.method import CDA
 
 if __name__ == "__main__":
 
-    parser1 = ccopen(sys.argv[1], None, logging.ERROR)
-    parser2 = ccopen(sys.argv[2], None, logging.ERROR)
-    parser3 = ccopen(sys.argv[3], None, logging.ERROR)
+    parser1 = ccopen(sys.argv[1], logging.ERROR)
+    parser2 = ccopen(sys.argv[2], logging.ERROR)
+    parser3 = ccopen(sys.argv[3], logging.ERROR)
 
     data1 = parser1.parse(); data2 = parser2.parse(); data3 = parser3.parse()
     fa = CDA(data1, None, logging.ERROR)

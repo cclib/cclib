@@ -1,0 +1,113 @@
+$ADFBIN/adf  << eor > /dev/null
+  create Mo  $ADFRESOURCES/DZ/Mo.3d
+
+XC
+GGA Becke Perdew
+END
+
+end input
+eor
+
+mv TAPE21 Mo.t21
+
+$ADFBIN/adf  << eor > /dev/null 
+  create O $ADFRESOURCES/DZ/O
+
+XC
+GGA Becke Perdew
+END
+
+end input
+eor
+
+mv TAPE21 O.t21
+
+$ADFBIN/adf  << eor > /dev/null 
+  create Cl $ADFRESOURCES/DZ/Cl
+
+XC
+GGA Becke Perdew
+END
+
+end input
+eor
+
+mv TAPE21 Cl.t21
+
+$ADFBIN/adf  << eor > MoOCl4-sp.adfout
+title MoOCl4, sp bp86 with double zeta basis sets
+
+MAXMEMORYUSAGE 600MB
+
+
+fragments
+  Mo Mo.t21
+  O  O.t21
+  Cl  Cl.t21
+end
+
+charge 0 0
+unrestricted
+
+atoms cartesian
+ Mo        0.00000        0.00000        0.00000
+  O        0.00000        0.00000        1.69619
+ Cl       -1.59632       -1.59159       -0.59213
+ Cl       -1.59653        1.59164       -0.59132
+ Cl        1.59653       -1.59164       -0.59132
+ Cl        1.59632        1.59159       -0.59213
+end
+
+scf
+:: iterations 150
+:: converge 0.00000001
+:: mixing 0.100000000
+end
+
+::occupation keeporbital=150
+
+::EPRINT
+::   ORBPOPER -300.0 300.0
+::END
+
+PRINT Core
+
+EPRINT
+ATOMPOP none
+BASPOP none
+FRAGPOP none
+END
+
+integration  5.0
+
+XC
+GGA Becke Perdew
+END 
+
+::SOLVATION
+::   Solvent        epsilon=78.8 radius=1.4
+::   SurfaceType    esurf
+::  DivisionLevel  ND=4  min=0.5  Ofac=0.8
+::   ChargeUpdate   Method=conjugate-gradient corr
+::   SCF            Variational
+::   C-Matrix       POTENTIAL
+::   RADII
+::     Cu=1.72
+::     Cl=1.70
+::   SUBEND
+::END
+
+
+::geometry
+:: optimize
+:: converge E=0.0001 Grad=0.001
+:: step rad=0.04 angle=8.0
+:: iterations 60
+:: frequencies 
+::end
+
+end input
+eor
+
+mv TAPE21 MoOCl4-sp.t21
+
