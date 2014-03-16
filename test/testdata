@@ -19,6 +19,8 @@ Basis     Molpro      MolproBasisTest       basicMolpro2006       dvb_sphf.out
 Basis     Molpro      MolproBasisTest       basicMolpro2012       dvb_sphf.out
 Basis     Molpro      MolproBigBasisTest    basicMolpro2006       C_bigbasis.out
 Basis     Molpro      MolproBigBasisTest    basicMolpro2012       C_bigbasis.out
+Basis     NWChem      NWChemBasisTest       basicNWChem6.0        dvb_sp_hf.out
+Basis     NWChem      NWChemBasisTest       basicNWChem6.0        dvb_sp_ks.out
 
 CC        GAMESS      GAMESSUSCCDTest       basicGAMESS-US2012    water_ccd.out
 CC        GAMESS      GAMESSUSCCSDTest      basicGAMESS-US2012    water_ccsd.out
@@ -58,6 +60,8 @@ GeoOpt    Jaguar      JaguarGeoOptTest      basicJaguar7.0        dvb_gopt_b.out
 GeoOpt    GAMESS      PCGamessGeoOptTest    basicPCGAMESS         dvb_gopt_b.out
 GeoOpt    Molpro      MolproGeoOptTest      basicMolpro2006       dvb_gopt.out          dvb_gopt.log
 GeoOpt    Molpro      MolproGeoOptTest      basicMolpro2012       dvb_gopt.out          dvb_gopt.log
+GeoOpt    NWChem      NWChemGeoOptHFTest    basicNWChem6.0        dvb_gopt_hf.out
+GeoOpt    NWChem      NWChemGeoOptKSTest    basicNWChem6.0        dvb_gopt_ks.out
 GeoOpt    ORCA        OrcaGeoOptTest        basicORCA2.9          dvb_gopt.out
 GeoOpt    ORCA        OrcaGeoOptTest        basicORCA3.0          dvb_gopt.out
 
@@ -96,6 +100,8 @@ SP        Jaguar      JaguarSPTest          basicJaguar7.0        dvb_sp.out
 SP        GAMESS      PCGamessSPTest        basicPCGAMESS         dvb_sp.out
 SP        Molpro      MolproSPTest          basicMolpro2006       dvb_sphf.out
 SP        Molpro      MolproSPTest          basicMolpro2012       dvb_sphf.out
+SP        NWChem      NWChemSPHFTest        basicNWChem6.0        dvb_sp_hf.out
+SP        NWChem      NWChemSPKSTest        basicNWChem6.0        dvb_sp_ks.out
 SP        ORCA        OrcaSPTest            basicORCA2.9          dvb_sp.out
 SP        ORCA        OrcaSPTest            basicORCA3.0          dvb_sp.out
                                             
@@ -109,6 +115,7 @@ SPun      Jaguar      JaguarSPunTest        basicJaguar7.0        dvb_un_sp.out
 SPun      GAMESS      PCGamessSPunTest      basicPCGAMESS         dvb_un_sp.out
 SPun      Molpro      MolproSPunTest        basicMolpro2006       dvb_sphf_un.out
 SPun      Molpro      MolproSPunTest        basicMolpro2012       dvb_sphf_un.out
+SP        NWChem      NWChemSPKSTest        basicNWChem6.0        dvb_un_sp_ks.out
 SPun      ORCA        OrcaSPunTest          basicORCA2.9          dvb_sp_un.out
 SPun      ORCA        OrcaSPunTest          basicORCA3.0          dvb_sp_un.out
 

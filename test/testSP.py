@@ -8,6 +8,7 @@
 # received a copy of the license along with cclib. You can also access
 # the full license online at http://www.gnu.org/copyleft/lgpl.html.
 
+import sys
 import numpy
 
 import bettertest
@@ -204,8 +205,16 @@ class OrcaSPTest(GenericSPTest):
 class PCGamessSPTest(GenericSPTest):
     """PC-GAMESS restricted single point unittest."""
 
+class NWChemSPHFTest(GenericSPTest):
+    """NWChem restricted single point HF unittest."""
+
+class NWChemSPKSTest(GenericSPTest):
+    """NWChem restricted single point KS unittest."""
 
 if __name__=="__main__":
 
     from testall import testall
-    testall(modules=["SP"])
+    parser = None
+    if len(sys.argv)==2:
+        parser = sys.argv[1]
+    testall(parser, modules=["SP"])

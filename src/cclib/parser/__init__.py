@@ -13,12 +13,14 @@
 #         from cclib.parser.gaussianparser import Gaussian
 # they can use:
 #         from cclib.parser import Gaussian
+
 from .adfparser import ADF
 from .gamessparser import GAMESS
 from .gamessukparser import GAMESSUK
 from .gaussianparser import Gaussian
 from .jaguarparser import Jaguar
 from .molproparser import Molpro
+from .nwchemparser import NWChem
 from .orcaparser import ORCA
 
 # This allow users to type:

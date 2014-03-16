@@ -18,6 +18,7 @@ from . import gamessukparser
 from . import gaussianparser
 from . import jaguarparser
 from . import molproparser
+from . import nwchemparser
 from . import orcaparser
 
 
@@ -87,6 +88,10 @@ def ccopen(source, *args, **kargs):
         #   since it does not break the loop.
         elif line[0:8] == "1PROGRAM" and not filetype:
             filetype = molproparser.Molpro
+
+        elif line.find("Northwest Computational Chemistry Package") >= 0:
+            filetype = nwchemparser.NWChem
+            break
 
         elif line.find("O   R   C   A") >= 0:
             filetype = orcaparser.ORCA

@@ -274,6 +274,12 @@ class OrcaGeoOptTest(GenericGeoOptTest):
 class PCGamessGeoOptTest(GenericGeoOptTest):
     """PC-GAMESS geometry optimization unittest."""
 
+class NWChemGeoOptHFTest(GenericGeoOptTest):
+    """NWChem restricted single point HF unittest."""
+
+class NWChemGeoOptKSTest(GenericGeoOptTest):
+    """NWChem restricted single point KS unittest."""
+
 
 if __name__=="__main__":
 

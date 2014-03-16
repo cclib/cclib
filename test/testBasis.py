@@ -100,6 +100,9 @@ class MolproBigBasisTest(GenericBigBasisTest):
 
     spherical = True
 
+class NWChemBasisTest(GenericBasisTest):
+    """Molpro basis set unittest."""
+
 
 class PCGamessBasisTest(GenericBasisTest):
     """PC-GAMESS basis set unittest."""
