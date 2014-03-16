@@ -1,0 +1,254 @@
+ *******************************************************************************
+ ** Site#: 13181           For non-commercial use only        Version 13.326L **
+ *******************************************************************************
+ ** Cite this work as:                                                        **
+ **                                                                           **
+ ** (a) MOPAC2012, James J. P. Stewart, Stewart Computational Chemistry,      **
+ **  Version 13.326L web: HTTP://OpenMOPAC.net         Days remaining: 252    **
+ **                                                                           **
+ **                                 AND                                       **
+ **                                                                           **
+ ** (b) Maia, J.D.C., et al., J. Chem. Theory Comput. 2012, 8, 3072-3081.     **
+ **                DOI: 10.1021/ct3004645.                                    **
+ *******************************************************************************
+ **                                                                           **
+ **                                MOPAC2012                                  **
+ **                                                                           **
+ *******************************************************************************
+
+                            PM3 CALCULATION RESULTS
+
+
+ *******************************************************************************
+ *  CALCULATION DONE:                                Sat Mar 15 22:39:08 2014  *
+ *  PM3      - The PM3 Hamiltonian to be used
+ *  SINGLET  - SPIN STATE DEFINED AS A SINGLET
+ *
+ *
+ *
+ *                 CHARGE ON SYSTEM =     0
+ *
+ *
+ *
+ *  T=       - A TIME OF 172800.0 SECONDS REQUESTED
+ *  DUMP=N   - RESTART FILE WRITTEN EVERY  7200.000 SECONDS
+ *  AUX      - OUTPUT AUXILIARY INFORMATION
+ *  BONDS    - FINAL BOND-ORDER MATRIX TO BE PRINTED
+ *  LARGE    - EXPANDED OUTPUT TO BE PRINTED
+ *  MULLIK   - THE MULLIKEN ANALYSIS TO BE PERFORMED
+ *******************************************************************************
+ AUX LARGE CHARGE=0 SINGLET BONDS MULLIK PM3
+ Water PM3 optimization
+
+  ATOM    CHEMICAL      BOND LENGTH      BOND ANGLE     TWIST ANGLE 
+ NUMBER    SYMBOL       (ANGSTROMS)      (DEGREES)       (DEGREES) 
+   (I)                     NA:I           NB:NA:I       NC:NB:NA:I       NA    NB    NC 
+     1       O          0.00000000  *    0.0000000  *    0.0000000  *     0     0     0
+     2       H          0.95800000  *    0.0000000  *    0.0000000  *     1     0     0
+     3       H          0.95802000  *  104.4772060  *    0.0000000  *     1     2     0
+ 
+
+
+          CARTESIAN COORDINATES 
+
+    NO.       ATOM         X         Y         Z
+
+     1         O        0.0000    0.0000    0.0000
+     2         H        0.9580    0.0000    0.0000
+     3         H       -0.2395    0.9276    0.0000
+
+     ===================== shared-memory parallel CPU Section ======================
+     **                                                                           **
+     **  MOPAC calculations will run in shared-memory parallel CPUs               **
+     **                                                                           **
+     **  Number of Threads =  6                                                   **
+     **                                                                           **
+     **  For information on this work, see:                                       **
+     **                                                                           **
+     **  Maia, J.D.C., et al., J. Chem. Theory Comput. 2012, 8, 3072-3081.        **
+     **        DOI: 10.1021/ct3004645.                                            **
+     **                                                                           **
+     ===================== shared-memory parallel CPU Section ======================
+
+
+  H: (PM3): J. J. P. STEWART, J. COMP. CHEM. 10, 209 (1989).
+  O: (PM3): J. J. P. STEWART, J. COMP. CHEM. 10, 209 (1989).
+
+           Empirical Formula: H2 O  =     3 atoms
+
+
+
+      MOLECULAR POINT GROUP   :   C2v 
+
+
+ SINGLET STATE CALCULATION
+
+
+      RHF CALCULATION, NO. OF DOUBLY OCCUPIED LEVELS =    4
+
+      Geometry optimization using EF
+
+          DIAGONAL MATRIX USED AS START HESSIAN
+
+ CYCLE:     1 TIME:   0.000 TIME LEFT:  2.00D  GRAD.:    10.261 HEAT: -53.23196
+ CYCLE:     2 TIME:   0.000 TIME LEFT:  2.00D  GRAD.:     7.901 HEAT: -53.27871
+ CYCLE:     3 TIME:   0.000 TIME LEFT:  2.00D  GRAD.:     7.938 HEAT: -53.33366
+ CYCLE:     4 TIME:   0.000 TIME LEFT:  2.00D  GRAD.:     6.274 HEAT: -53.40990
+ CYCLE:     5 TIME:   0.000 TIME LEFT:  2.00D  GRAD.:     2.562 HEAT: -53.43004
+ CYCLE:     6 TIME:   0.008 TIME LEFT:  2.00D  GRAD.:     0.373 HEAT: -53.43275
+
+     RMS GRADIENT =  0.37303  IS LESS THAN CUTOFF =  1.00000
+
+
+
+ -------------------------------------------------------------------------------
+ AUX LARGE CHARGE=0 SINGLET BONDS MULLIK PM3
+ Water PM3 optimization
+
+
+
+     GEOMETRY OPTIMISED USING EIGENVECTOR FOLLOWING (EF).     
+     SCF FIELD WAS ACHIEVED                                   
+
+
+                              PM3 CALCULATION
+                                                       MOPAC2012 (Version: 13.326L)
+                                                       Sat Mar 15 22:39:08 2014
+                                                       No. of days left = 252
+
+
+
+
+          FINAL HEAT OF FORMATION =        -53.43275 KCAL/MOL =    -223.56261 KJ/MOL
+
+
+          TOTAL ENERGY            =       -324.90736 EV
+          ELECTRONIC ENERGY       =       -474.29742 EV  POINT GROUP:     C2v 
+          CORE-CORE REPULSION     =        149.39006 EV
+          COSMO AREA              =         42.43 SQUARE ANGSTROMS
+          COSMO VOLUME            =         25.14 CUBIC ANGSTROMS
+
+          GRADIENT NORM           =          0.37303
+          IONIZATION POTENTIAL    =         12.316283 EV
+          HOMO LUMO ENERGIES (EV) =        -12.316  4.060
+          NO. OF FILLED LEVELS    =          4
+          MOLECULAR WEIGHT        =         18.015
+
+          MOLECULAR DIMENSIONS (Angstroms)
+
+            Atom       Atom       Distance
+            H     3    H     2     1.53607
+            H     2    O     1     0.56068
+            O     1    H     2     0.00000
+
+
+          SCF CALCULATIONS        =          7
+ 
+          WALL-CLOCK TIME         =          0.008 SECONDS
+          COMPUTATION TIME        =          0.012 SECONDS
+
+
+
+
+  ATOM    CHEMICAL      BOND LENGTH      BOND ANGLE     TWIST ANGLE 
+ NUMBER    SYMBOL       (ANGSTROMS)      (DEGREES)       (DEGREES) 
+   (I)                     NA:I           NB:NA:I       NC:NB:NA:I       NA    NB    NC 
+     1       O          0.00356107  *    0.0035271  *    0.0000000  *     0     0     0
+     2       H          0.95070237  *    4.0672932  *  180.0000000  *     1     0     0
+     3       H          0.95112954  *  107.7393450  *    0.0000000  *     1     2     0
+
+                             CARTESIAN COORDINATES
+
+  NO. ATOM         X               Y               Z
+
+   1    O        0.003561071     0.003527064     0.000000000
+   2    H        0.954263444     0.003527064     0.000000000
+   3    H       -0.286235909     0.909432753     0.000000000
+
+
+           Empirical Formula: H2 O  =     3 atoms
+
+
+
+      MOLECULAR POINT GROUP   :   C2v 
+
+
+                  EIGENVALUES  
+ -36.82619 -17.58287 -14.52114 -12.31628   4.05962   5.33361
+
+
+              NET ATOMIC CHARGES AND DIPOLE CONTRIBUTIONS
+
+  ATOM NO.   TYPE          CHARGE      No. of ELECS.   s-Pop       p-Pop       
+    1          O          -0.358679        6.3587     1.76327     4.59541
+    2          H           0.179341        0.8207     0.82066
+    3          H           0.179338        0.8207     0.82066
+ DIPOLE           X         Y         Z       TOTAL
+ POINT-CHG.     0.569     0.780     0.000     0.966
+ HYBRID         0.456     0.624     0.000     0.772
+ SUM            1.025     1.404     0.000     1.738
+
+
+          ATOMIC ORBITAL ELECTRON POPULATIONS
+
+    Atom      s        px        py        pz   
+    1  O   1.76327   1.26177   1.33364   2.00000
+    2  H   0.82066
+    3  H   0.82066
+
+          BONDING CONTRIBUTION OF EACH M.O.
+
+  1.0295  1.9353  0.9066  0.0000 -1.9356 -1.9358
+
+
+
+
+
+                    BOND ORDERS AND VALENCIES
+
+
+                  O  1       H  2       H  3
+ ------------------------------------------
+     O    1   1.935675
+     H    2   0.967837   0.967837
+     H    3   0.967838   0.000000   0.967838
+
+
+
+
+ SELF-Q:    SELF OR INACTIVE CHARGE
+ ACTIV-Q:   CHARGE WHICH IS USED TO FORM BONDS
+ TOTAL-Q:   SELF-Q + ACTIV-Q
+ FREE-VA:   TOTAL-Q - VALENCE
+ STAT.PROM: TOTAL-Q - CORE CHARGE
+ MULL.PROM: -CHARGE (SEE ABOVE)
+
+       SELF-Q    ACTIV-Q   TOTAL-Q   VALENCE   FREE-VA STAT.PROM MULL.PROM
+
+
+   1   4.42300   1.93567   6.35868   1.93567   0.00000   0.35868   0.35868
+
+   2  -0.14718   0.96784   0.82066   0.96784   0.00000  -0.17934  -0.17934
+
+   3  -0.14718   0.96784   0.82066   0.96784  -0.00000  -0.17934  -0.17934
+
+ CLOSED SHELL
+
+
+
+           MULLIKEN POPULATION ANALYSIS
+
+
+
+        MULLIKEN POPULATIONS AND CHARGES
+
+      NO.  ATOM   POPULATION      CHARGE
+        1    O     6.374539     -0.374539
+        2    H     0.812711      0.187289
+        3    H     0.812750      0.187250
+
+
+
+ TOTAL JOB TIME:             0.01 SECONDS
+
+ == MOPAC DONE ==

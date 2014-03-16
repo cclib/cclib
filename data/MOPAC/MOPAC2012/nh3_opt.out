@@ -1,0 +1,251 @@
+ *******************************************************************************
+ ** Site#: 13181           For non-commercial use only        Version 13.326L **
+ *******************************************************************************
+ ** Cite this work as:                                                        **
+ **                                                                           **
+ ** (a) MOPAC2012, James J. P. Stewart, Stewart Computational Chemistry,      **
+ **  Version 13.326L web: HTTP://OpenMOPAC.net         Days remaining: 252    **
+ **                                                                           **
+ **                                 AND                                       **
+ **                                                                           **
+ ** (b) Maia, J.D.C., et al., J. Chem. Theory Comput. 2012, 8, 3072-3081.     **
+ **                DOI: 10.1021/ct3004645.                                    **
+ *******************************************************************************
+ **                                                                           **
+ **                                MOPAC2012                                  **
+ **                                                                           **
+ *******************************************************************************
+
+                            PM7 CALCULATION RESULTS
+
+
+ *******************************************************************************
+ *  CALCULATION DONE:                                Sat Mar 15 22:28:11 2014  *
+ *  PM7      - The PM7 Hamiltonian to be used
+ *  SINGLET  - SPIN STATE DEFINED AS A SINGLET
+ *
+ *
+ *
+ *                 CHARGE ON SYSTEM =     0
+ *
+ *
+ *
+ *  T=       - A TIME OF 172800.0 SECONDS REQUESTED
+ *  DUMP=N   - RESTART FILE WRITTEN EVERY  7200.000 SECONDS
+ *  AUX      - OUTPUT AUXILIARY INFORMATION
+ *  BONDS    - FINAL BOND-ORDER MATRIX TO BE PRINTED
+ *  LARGE    - EXPANDED OUTPUT TO BE PRINTED
+ *  MULLIK   - THE MULLIKEN ANALYSIS TO BE PERFORMED
+ *******************************************************************************
+ AUX LARGE CHARGE=0 SINGLET BONDS MULLIK PM7
+ Title
+
+  ATOM    CHEMICAL      BOND LENGTH      BOND ANGLE     TWIST ANGLE 
+ NUMBER    SYMBOL       (ANGSTROMS)      (DEGREES)       (DEGREES) 
+   (I)                     NA:I           NB:NA:I       NC:NB:NA:I       NA    NB    NC 
+     1       N          0.00000000       0.0000000       0.0000000        0     0     0
+     2       H          1.01210000       0.0000000       0.0000000        1     0     0
+     3       H          1.01210000     107.3700000       0.0000000        1     2     0
+     4       H          1.01210000     107.3700000     115.1900000        1     2     3
+ 
+
+
+          CARTESIAN COORDINATES 
+
+    NO.       ATOM         X         Y         Z
+
+     1         N        0.0000    0.0000    0.0000
+     2         H        1.0121    0.0000    0.0000
+     3         H       -0.3022    0.9659    0.0000
+     4         H       -0.3022   -0.4111   -0.8741
+
+     ===================== shared-memory parallel CPU Section ======================
+     **                                                                           **
+     **  MOPAC calculations will run in shared-memory parallel CPUs               **
+     **                                                                           **
+     **  Number of Threads =  6                                                   **
+     **                                                                           **
+     **  For information on this work, see:                                       **
+     **                                                                           **
+     **  Maia, J.D.C., et al., J. Chem. Theory Comput. 2012, 8, 3072-3081.        **
+     **        DOI: 10.1021/ct3004645.                                            **
+     **                                                                           **
+     ===================== shared-memory parallel CPU Section ======================
+
+
+ General Reference for PM7:
+ "Optimization of Parameters for Semiempirical Methods VI: More Modifications to the 
+ NDDO Approximations and Re-optimization of Parameters", J. J. P. Stewart, J. Mol. Mod., 1:32, 19 (2013)
+ http://www.springerlink.com/openurl.asp?genre=article&id=doi:10.1007/s00894-012-1667-x
+
+           Empirical Formula: H3 N  =     4 atoms
+
+
+
+      MOLECULAR POINT GROUP   :   C3v 
+
+
+ SINGLET STATE CALCULATION
+
+
+      RHF CALCULATION, NO. OF DOUBLY OCCUPIED LEVELS =    4
+
+
+ -------------------------------------------------------------------------------
+ AUX LARGE CHARGE=0 SINGLET BONDS MULLIK PM7
+ Title
+
+
+
+     NO PARAMETERS MARKED FOR OPTIMIZATION, SO 1SCF WAS USED  
+     SCF FIELD WAS ACHIEVED                                   
+
+
+                              PM7 CALCULATION
+                                                       MOPAC2012 (Version: 13.326L)
+                                                       Sat Mar 15 22:28:11 2014
+                                                       No. of days left = 252
+
+
+
+
+          FINAL HEAT OF FORMATION =         -3.84139 KCAL/MOL =     -16.07237 KJ/MOL
+
+
+          TOTAL ENERGY            =       -226.73474 EV
+          ELECTRONIC ENERGY       =       -412.96115 EV  POINT GROUP:     C3v 
+          CORE-CORE REPULSION     =        186.22642 EV
+          COSMO AREA              =         47.76 SQUARE ANGSTROMS
+          COSMO VOLUME            =         29.97 CUBIC ANGSTROMS
+
+          IONIZATION POTENTIAL    =         10.380736 EV
+          HOMO LUMO ENERGIES (EV) =        -10.381  4.529
+          NO. OF FILLED LEVELS    =          4
+          MOLECULAR WEIGHT        =         17.030
+
+          MOLECULAR DIMENSIONS (Angstroms)
+
+            Atom       Atom       Distance
+            H     4    H     3     1.63106
+            H     2    H     4     1.41252
+            H     2    N     1     0.37091
+
+
+          SCF CALCULATIONS        =          1
+ 
+          WALL-CLOCK TIME         =          0.016 SECONDS
+          COMPUTATION TIME        =          0.016 SECONDS
+
+
+
+
+  ATOM    CHEMICAL      BOND LENGTH      BOND ANGLE     TWIST ANGLE 
+ NUMBER    SYMBOL       (ANGSTROMS)      (DEGREES)       (DEGREES) 
+   (I)                     NA:I           NB:NA:I       NC:NB:NA:I       NA    NB    NC 
+     1       N          0.00000000       0.0000000       0.0000000        0     0     0
+     2       H          1.01210000       0.0000000       0.0000000        1     0     0
+     3       H          1.01210000     107.3700000       0.0000000        1     2     0
+     4       H          1.01210000     107.3700000     115.1900000        1     2     3
+
+                             CARTESIAN COORDINATES
+
+  NO. ATOM         X               Y               Z
+
+   1    N        0.000000000     0.000000000     0.000000000
+   2    H        1.012100000     0.000000000     0.000000000
+   3    H       -0.302153460     0.965944976     0.000000000
+   4    H       -0.302153460    -0.411126817    -0.874084914
+
+
+           Empirical Formula: H3 N  =     4 atoms
+
+
+
+      MOLECULAR POINT GROUP   :   C3v 
+
+
+                  EIGENVALUES  
+ -35.49096 -16.01743 -16.01734 -10.38074   4.52913   6.68883   6.68887
+
+
+              NET ATOMIC CHARGES AND DIPOLE CONTRIBUTIONS
+
+  ATOM NO.   TYPE          CHARGE      No. of ELECS.   s-Pop       p-Pop       
+    1          N          -0.700274        5.7003     1.64343     4.05685
+    2          H           0.233423        0.7666     0.76658
+    3          H           0.233425        0.7666     0.76657
+    4          H           0.233425        0.7666     0.76657
+ DIPOLE           X         Y         Z       TOTAL
+ POINT-CHG.     0.457     0.622    -0.980     1.248
+ HYBRID         0.414     0.563    -0.888     1.130
+ SUM            0.871     1.186    -1.868     2.378
+
+
+          ATOMIC ORBITAL ELECTRON POPULATIONS
+
+    Atom      s        px        py        pz   
+    1  N   1.64343   1.25695   1.31171   1.48819
+    2  H   0.76658
+    3  H   0.76657
+    4  H   0.76657
+
+          BONDING CONTRIBUTION OF EACH M.O.
+
+  1.3340  1.9587  1.9587  0.4117 -1.9088 -1.8771 -1.8771
+
+
+
+
+
+                    BOND ORDERS AND VALENCIES
+
+
+                  N  1       H  2       H  3       H  4
+ ------------------------------------------------------
+     N    1   2.826552
+     H    2   0.942185   0.945514
+     H    3   0.942184   0.001664   0.945513
+     H    4   0.942184   0.001664   0.001665   0.945513
+
+
+
+
+ SELF-Q:    SELF OR INACTIVE CHARGE
+ ACTIV-Q:   CHARGE WHICH IS USED TO FORM BONDS
+ TOTAL-Q:   SELF-Q + ACTIV-Q
+ FREE-VA:   TOTAL-Q - VALENCE
+ STAT.PROM: TOTAL-Q - CORE CHARGE
+ MULL.PROM: -CHARGE (SEE ABOVE)
+
+       SELF-Q    ACTIV-Q   TOTAL-Q   VALENCE   FREE-VA STAT.PROM MULL.PROM
+
+
+   1   2.87372   2.82655   5.70027   2.82655  -0.00000   0.70027   0.70027
+
+   2  -0.17894   0.94551   0.76658   0.94551  -0.00000  -0.23342  -0.23342
+
+   3  -0.17894   0.94551   0.76657   0.94551  -0.00000  -0.23343  -0.23343
+
+   4  -0.17894   0.94551   0.76657   0.94551  -0.00000  -0.23343  -0.23343
+
+ CLOSED SHELL
+
+
+
+           MULLIKEN POPULATION ANALYSIS
+
+
+
+        MULLIKEN POPULATIONS AND CHARGES
+
+      NO.  ATOM   POPULATION      CHARGE
+        1    N     5.884969     -0.884969
+        2    H     0.705012      0.294988
+        3    H     0.705009      0.294991
+        4    H     0.705009      0.294991
+
+
+
+ TOTAL JOB TIME:             0.01 SECONDS
+
+ == MOPAC DONE ==

@@ -1,0 +1,8 @@
+ AUX LARGE CHARGE=0 SINGLET BONDS MULLIK PM7
+Water PM7 optimization
+
+   O  0.000000  1    0.000000  1    0.000000  1        0       0       0   
+   H  0.958000  1    0.000000  1    0.000000  1        1       0       0   
+   H  0.958000  1  104.47700  1    0.000000  1        1       2       0   
+  
+

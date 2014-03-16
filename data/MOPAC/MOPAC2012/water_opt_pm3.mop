@@ -1,0 +1,8 @@
+ AUX LARGE CHARGE=0 SINGLET BONDS MULLIK PM3
+Water PM3 optimization
+
+   O  0.000000  1    0.000000  1    0.000000  1        0       0       0   
+   H  0.958000  1    0.000000  1    0.000000  1        1       0       0   
+   H  0.958020  1  104.477206  1    0.000000  1        1       2       0   
+  
+
