@@ -212,14 +212,15 @@ class OrcaSPTest(GenericSPTest):
         self.assertEquals(1,1)
 
 
-class PCGamessSPTest(GenericSPTest):
-    """PC-GAMESS restricted single point unittest."""
-
 class NWChemSPHFTest(GenericSPTest):
     """NWChem restricted single point HF unittest."""
 
 class NWChemSPKSTest(GenericSPTest):
     """NWChem restricted single point KS unittest."""
+
+
+class PCGamessSPTest(GenericSPTest):
+    """PC-GAMESS restricted single point unittest."""
 
 if __name__=="__main__":
 

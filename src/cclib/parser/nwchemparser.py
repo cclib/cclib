@@ -134,7 +134,7 @@ class NWChem(logfileparser.Logfile):
                         line = next(inputfile)
                     shells.append(shell)
                     line = next(inputfile)
-                gbasis_dict[atomtype].append(shells)
+                gbasis_dict[atomtype].extend(shells)
             gbasis = []
             for i in range(self.natom):
                 atomtype = utils.PeriodicTable().element[self.atomnos[i]]
