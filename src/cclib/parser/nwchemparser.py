@@ -64,8 +64,12 @@ class NWChem(logfileparser.Logfile):
         """Extract information from the file object inputfile."""
 
         # This is printed in the input module, so should always be the first coordinates,
-        # and contains many basic information we want to parse as well.
-        if line.strip() == 'Geometry "geometry" -> ""':
+        # and contains some basic information we want to parse as well. However, this is not
+        # the only place where the coordinates are printed during geometry optimization,
+        # since the gradients module has a separate coordinate printout, which happens
+        # alongside the coordinate gradients. This geometry printout happens at the
+        # beginning of each optimization step only.
+        if line.strip() == 'Geometry "geometry" -> ""' or line.strip() == 'Geometry "geometry" -> "geometry"':
 
             dashes = next(inputfile)
             blank = next(inputfile)
