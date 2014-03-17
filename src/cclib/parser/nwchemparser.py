@@ -106,6 +106,11 @@ class NWChem(logfileparser.Logfile):
             else:
                 self.natom = natom
 
+        # NWChem does not normally print the basis set for each atom, but rather
+        # chooses the concise option of printing Gaussian coefficients for each
+        # atom type/element only once. Therefore, we need to first parse those
+        # coefficients and afterwards build the appropriate gbasis attribute based
+        # on that and atom types/elements already parsed (atomnos).
         if line.strip() == """Basis "ao basis" -> "ao basis" (cartesian)""":
             dashes = next(inputfile)
             gbasis_dict = {}
@@ -144,6 +149,11 @@ class NWChem(logfileparser.Logfile):
             else:
                 assert self.gbasis == gbasis
 
+        # Normally the indexes of AOs assigned to specific atoms are also not printed,
+        # so we need to infer that. We could do that from the previous section,
+        # it might be worthwhile to take numbers from two different places, hence
+        # the code below, which builds atombasis based on the number of functions
+        # listed in this summary of the AO basis.
         if line.strip() == """Summary of "ao basis" -> "ao basis" (cartesian)""":
             dashes = next(inputfile)
             headers = next(inputfile)
@@ -166,6 +176,7 @@ class NWChem(logfileparser.Logfile):
             else:
                 assert self.atombasis == atombasis
 
+        # This section contains general parameters for Hartree-Fock calculations.
         if line.strip() == "NWChem SCF Module":
             dashes = next(inputfile)
             blank = next(inputfile)
@@ -192,7 +203,8 @@ class NWChem(logfileparser.Logfile):
                     self.nbasis = functions
                 line = next(inputfile)
 
-        # This section contains general parameters for DFT calculations.
+        # This section contains general parameters for DFT calculations, including
+        # SCF convergence targets.
         if line.strip() == "General Information":
             while line.strip():
 
@@ -216,8 +228,9 @@ class NWChem(logfileparser.Logfile):
                 self.scftargets = []
             self.scftargets.append([target_energy, target_density, target_gradient])
 
-        # The default (only?) SCF algorithm is a preconditioned conjugate gradient method
-        # that always converges, so this should signal a start of the SCF cycle.
+        # The default (only?) SCF algorithm for Hartree-Fock is a preconditioned conjugate
+        # gradient method that apparently "always" converges, so this header should reliably
+        # signal a start of the SCF cycle. The convergence targets are also printed here.
         if line.strip() == "Quadratically convergent ROHF":
 
             while not "Final" in line:
@@ -250,7 +263,8 @@ class NWChem(logfileparser.Logfile):
 
                 line = next(inputfile)
 
-        # This appears to always be used to report SCF convergence for DFT:
+        # The SCF for DFT does not use the same algorithm as Hartree-Fock, but always
+        # seems to use the following format to report SCF convergence:
         #   convergence    iter        energy       DeltaE   RMS-Dens  Diis-err    time
         # ---------------- ----- ----------------- --------- --------- ---------  ------
         # d= 0,ls=0.0,diis     1   -382.2544324446 -8.28D+02  1.42D-02  3.78D-01    23.2
@@ -289,6 +303,7 @@ class NWChem(logfileparser.Logfile):
 
             self.scfvalues.append(values)
 
+        # The line containing the final SCF energy seems to be always identifiable like this.
         if "Total SCF energy" in line or "Total DFT energy" in line:
             if not hasattr(self, "scfenergies"):
                 self.scfenergies = []
@@ -296,6 +311,11 @@ class NWChem(logfileparser.Logfile):
             energy = utils.convertor(energy, "hartree", "eV")
             self.scfenergies.append(energy)
 
+        # The same format is used for HF and DFT molecular orbital analysis. We want to parse
+        # the MO energies from this section, although it is printed already before this with
+        # less precision (might be useful to parse that if this is not available). Also, this
+        # section contains coefficients for the leading AO contributions, so it would also
+        # be good to parse and use those values if the full vectors are not printed.
         if "Final Molecular Orbital Analysis" in line:
             if not hasattr(self, "moenergies"):
                 self.moenergies = []
@@ -306,12 +326,16 @@ class NWChem(logfileparser.Logfile):
             line = next(inputfile)
             homo = 0
             while line[:7] == " Vector":
+
                 nvector = int(line[7:12])
                 if "Occ=2.0" in line:
                     homo = nvector-1
+
+                # If the printout does not start from the first MO, assume None for all previous orbitals.
                 if len(energies) == 0 and nvector > 1:
                     for i in range(1,nvector):
                         energies.append(None)
+
                 energy = float(line[34:].replace('D','E'))
                 energy = utils.convertor(energy, "hartree", "eV")
                 energies.append(energy)
@@ -325,22 +349,26 @@ class NWChem(logfileparser.Logfile):
                 while line.strip():
                     line = next(inputfile)
                 line = next(inputfile)
+
             self.moenergies.append(energies)
             if hasattr(self, 'nmo'):
                 assert self.nmo == nvector
             else:
                 self.nmo = nvector
+
             if not hasattr(self, 'homos'):
                 self.homos = []
             self.homos.append(homo)
 
+        # This is where the full MO vectors are printed, but a special directive is needed for it.
         if line.strip() == "Final MO vectors":
 
             dashes = next(inputfile)
             blank = next(inputfile)
             blank = next(inputfile)
 
-            # the columns are MOs, columns AOs, but I'm guessing the order of this array
+            # The columns are MOs, rows AOs, but I'm guessing the order of this array since no
+            # atom information is printed alongside the indices.
             array_info = next(inputfile)
             size = array_info.split('[')[1].split(']')[0]
             nbasis = int(size.split(',')[0].split(':')[1])
@@ -373,6 +401,15 @@ class NWChem(logfileparser.Logfile):
                 blank = next(inputfile)
             self.mocoeffs = [mocoeffs]
 
+        # The atomic Mulliken charges are typically printed like this:
+        #  Mulliken analysis of the total density
+        #  --------------------------------------
+        #
+        #    Atom       Charge   Shell Charges
+        # -----------   ------   -------------------------------------------------------
+        #    1 C    6     6.00   1.99  1.14  2.87
+        #    2 C    6     6.00   1.99  1.14  2.87
+        # ...
         if line.strip() == "Mulliken analysis of the total density":
 
             if not hasattr(self, "atomcharges"):
@@ -392,6 +429,7 @@ class NWChem(logfileparser.Logfile):
                 line = next(inputfile)
             self.atomcharges['mulliken'] = charges
 
+        # If the full overlap matrix is printed, it looks like this:
         #          ----------------------------
         #          Mulliken population analysis
         #          ----------------------------
