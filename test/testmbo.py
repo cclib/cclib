@@ -23,25 +23,31 @@ from testall import getfile
 from cclib.method import MBO
 from cclib.parser import Gaussian
 
-
-def main(log=True):
-    data, logfile = getfile(Gaussian, "basicGaussian09", "dvb_sp.out")
-    mbo = MBO(data)
-    if not log:
-        mbo.logger.setLevel(logging.ERROR)
-    mbo.calculate()
-
-    return mbo
-
-
 class MBOTest(unittest.TestCase):
     def test_mbo_sp(self):
         """Testing Mayer bond orders for restricted single point."""
-        mbo = main(log=False)
-        e_mbo = numpy.loadtxt("dvb_sp.mbo")
-        self.assertTrue(numpy.all(mbo.fragresults >= e_mbo - 0.25))
-        self.assertTrue(numpy.all(mbo.fragresults <= e_mbo + 0.25))
 
+        data, logfile = getfile(Gaussian, "basicGaussian09", "dvb_sp.out")
+        mbo = MBO(data)
+        mbo.logger.setLevel(logging.ERROR)
+        mbo.calculate()
+
+        e_mbo = numpy.loadtxt("dvb_sp.mbo")
+        self.assertTrue(numpy.all(mbo.fragresults[0] >= e_mbo - 0.25))
+        self.assertTrue(numpy.all(mbo.fragresults[0] <= e_mbo + 0.25))
+
+    def test_mbo_un_sp(self):
+        """Testing Mayer bond orders for unrestricted single point."""
+
+        data, logfile = getfile(Gaussian, "basicGaussian09", "dvb_un_sp.log")
+        mbo = MBO(data)
+        mbo.logger.setLevel(logging.ERROR)
+        mbo.calculate()
+
+        e_mbo = numpy.loadtxt("dvb_un_sp.mbo")
+        bond_orders = mbo.fragresults[0] + mbo.fragresults[1]
+        self.assertTrue(numpy.all(bond_orders >= e_mbo - 0.30))
+        self.assertTrue(numpy.all(bond_orders <= e_mbo + 0.30))
 
 if __name__ == "__main__":
     unittest.TextTestRunner(verbosity=2).run(unittest.makeSuite(MBOTest))
