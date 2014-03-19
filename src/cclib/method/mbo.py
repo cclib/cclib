@@ -107,9 +107,11 @@ class MBO(Density):
 
                     for b in indices[j]:
 
-                        tempsumA += 2 * PS[0][a][b] * PS[0][b][a]
                         if unrestricted:
+                            tempsumA += 2 * PS[0][a][b] * PS[0][b][a]
                             tempsumB += 2 * PS[1][a][b] * PS[1][b][a]
+                        else:
+                            tempsumA += PS[0][a][b] * PS[0][b][a]
 
                 self.fragresults[0][i, j] = tempsumA
                 self.fragresults[0][j, i] = tempsumA
