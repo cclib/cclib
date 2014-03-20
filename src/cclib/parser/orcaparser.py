@@ -136,6 +136,29 @@ class ORCA(logfileparser.Logfile):
             energy = float(line.split()[5])
             self.scfenergies.append(energy)
 
+            # The SCF convergence targets are also printed here, but apparently
+            # not all of them -- the RMS Density is missing. So, assume the previous
+            # value is still valid if it is not found. For additional certainty,
+            # make sure the other targets are unchanged, too (presumption).
+            line = next(inputfile)
+            if "Last Energy change" in line:
+                deltaE_value = float(line.split()[4])
+                deltaE_target = float(line.split()[7])
+                line = next(inputfile)
+                if "Last MAX-Density change" in line:
+                    maxDP_value = float(line.split()[4])
+                    maxDP_target = float(line.split()[7])
+                    if "Last RMS-Density change" in line:
+                        rmsDP_value = float(line.split()[4])
+                        rmsDP_target = float(line.split()[7])
+                    else:
+                        rmsDP_value = self.scfvalues[-1][-1][2]
+                        rmsDP_target = self.scftargets[-1][2]
+                        assert deltaE_target == self.scftargets[-1][0]
+                        assert maxDP_target == self.scftargets[-1][1]
+                    self.scfvalues[-1].append([deltaE_value, maxDP_value, rmsDP_value])
+                    self.scftargets.append([deltaE_target, maxDP_target, rmsDP_target])  
+
         # Sometimes the SCF does not converge, but does not halt the
         # the run (like in bug 3184890). In this this case, we should
         # remain consistent and use the energy from the last reported
