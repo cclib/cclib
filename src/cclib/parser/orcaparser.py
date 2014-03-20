@@ -401,6 +401,11 @@ class ORCA(logfileparser.Logfile):
                 self.etsecs.append(sec)
                 line = next(inputfile)
 
+        # This will parse etoscs for TD calculations, but note that ORCA generally
+        # prints two sets, one based on the length form of transition dipole moments,
+        # the other based on the velocity form. Although these should be identical
+        # in the basis set limit, in practice they are rarely the same. Here we will
+        # effectively parse just the spectrum based on the length-form.
         if (line[25:44] == "ABSORPTION SPECTRUM" or \
                 line[9:28] == "ABSORPTION SPECTRUM") and not hasattr(self,
                                                                     "etoscs"):
