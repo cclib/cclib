@@ -91,73 +91,65 @@ class ORCA(logfileparser.Logfile):
             elif line[1] == "Starting":
                 self.parse_scf_expanded_format(inputfile, line)
 
-        # Read in values for last SCF iteration and scftargets.
-        if "SCF CONVERGENCE" in line:
-            if not hasattr(self, "scfvalues"):
-                self.scfvalues = []
-            if not hasattr(self, "scftargets"):
-                self.scftargets = []
-            dashes = next(inputfile)
-            blank = next(inputfile)
-            line = next(inputfile)
-            assert "Last Energy change" in line
-            deltaE_value = float(line.split()[4])
-            deltaE_target = float(line.split()[7])
-            line = next(inputfile)
-            assert "Last MAX-Density change" in line
-            maxDP_value = float(line.split()[4])
-            maxDP_target = float(line.split()[7])
-            line = next(inputfile)
-            assert "Last RMS-Density change" in line
-            rmsDP_value = float(line.split()[4])
-            rmsDP_target = float(line.split()[7])
-            line = next(inputfile)
-            # Non-DIIS convergers do not contain this line.
-            # assert "Last DIIS Error" in line
-            self.scfvalues[-1].append([deltaE_value, maxDP_value, rmsDP_value])
-            self.scftargets.append([deltaE_target, maxDP_target, rmsDP_target])                
-
-        # SCF energies are printed differently in single point calculations
-        # and in the inner steps of geometry optimizations. However, there is
-        # always a banner announcing the convergence, like this:
+        # Information about the final iteration, which also includes the convergence
+        # targets and the convergence values, is printed separately, in a section like this:
         #
         #       *****************************************************
         #       *                     SUCCESS                       *
         #       *           SCF CONVERGED AFTER   9 CYCLES          *
         #       *****************************************************
+        #
+        # ...
+        #
+        # Total Energy       :         -382.04963064 Eh          -10396.09898 eV
+        #
+        # ...
+        #
+        # -------------------------   ----------------
+        # FINAL SINGLE POINT ENERGY     -382.049630637
+        # -------------------------   ----------------
+        #
+        # We cannot use this last message as a stop condition in general, because
+        # often there is vibrational output before it. So we use the 'Total Energy'
+        # line. However, what comes after that is different for single point calculations
+        # and in the inner steps of geometry optimizations.
         if "SCF CONVERGED AFTER" in line:
-
-            while line[:20] != "Total Energy       :":
-                line = next(inputfile)
 
             if not hasattr(self, "scfenergies"):
                 self.scfenergies = []
+            if not hasattr(self, "scfvalues"):
+                self.scfvalues = []
+            if not hasattr(self, "scftargets"):
+                self.scftargets = []
 
+            while not "Total Energy       :" in line:
+                line = next(inputfile)
             energy = float(line.split()[5])
             self.scfenergies.append(energy)
 
-            # The SCF convergence targets are also printed here, but apparently
-            # not all of them -- the RMS Density is missing. So, assume the previous
-            # value is still valid if it is not found. For additional certainty,
-            # make sure the other targets are unchanged, too (presumption).
-            line = next(inputfile)
-            if "Last Energy change" in line:
-                deltaE_value = float(line.split()[4])
-                deltaE_target = float(line.split()[7])
+            # The SCF convergence targets are always printed after this, but apparently
+            # not all of them always -- for example the RMS Density is missing for geometry
+            # optimization steps. So, assume the previous value is still valid if it is
+            # not found. For additional certainty, assert that the other targets are unchanged.
+            while not "Last Energy change" in line:
                 line = next(inputfile)
-                if "Last MAX-Density change" in line:
-                    maxDP_value = float(line.split()[4])
-                    maxDP_target = float(line.split()[7])
-                    if "Last RMS-Density change" in line:
-                        rmsDP_value = float(line.split()[4])
-                        rmsDP_target = float(line.split()[7])
-                    else:
-                        rmsDP_value = self.scfvalues[-1][-1][2]
-                        rmsDP_target = self.scftargets[-1][2]
-                        assert deltaE_target == self.scftargets[-1][0]
-                        assert maxDP_target == self.scftargets[-1][1]
-                    self.scfvalues[-1].append([deltaE_value, maxDP_value, rmsDP_value])
-                    self.scftargets.append([deltaE_target, maxDP_target, rmsDP_target])  
+            deltaE_value = float(line.split()[4])
+            deltaE_target = float(line.split()[7])
+            line = next(inputfile)
+            if "Last MAX-Density change" in line:
+                maxDP_value = float(line.split()[4])
+                maxDP_target = float(line.split()[7])
+                line = next(inputfile)
+                if "Last RMS-Density change" in line:
+                    rmsDP_value = float(line.split()[4])
+                    rmsDP_target = float(line.split()[7])
+                else:
+                    rmsDP_value = self.scfvalues[-1][-1][2]
+                    rmsDP_target = self.scftargets[-1][2]
+                    assert deltaE_target == self.scftargets[-1][0]
+                    assert maxDP_target == self.scftargets[-1][1]
+                self.scfvalues[-1].append([deltaE_value, maxDP_value, rmsDP_value])
+                self.scftargets.append([deltaE_target, maxDP_target, rmsDP_target])  
 
         # Sometimes the SCF does not converge, but does not halt the
         # the run (like in bug 3184890). In this this case, we should
