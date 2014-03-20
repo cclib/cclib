@@ -230,12 +230,20 @@ class GAMESS(logfileparser.Logfile):
         if line[1:50] == "TRANSITION FROM THE GROUND STATE TO EXCITED STATE":
             if not hasattr(self, "etoscs"):
                 self.etoscs = []
-            statenumber = int(line.split()[-1])
-            # skip 7 lines
-            for i in range(8):
-                line = next(inputfile)
-            strength = float(line.split()[3])
-            self.etoscs.append(strength)
+
+            # This was the suggested as a fix in issue #61, and it does allow
+            # the parser to finish without crashing. However, it seems that
+            # etoscs is shorter in this case than the other transition attributes,
+            # so that should be somehow corrected and tested for.
+            if "OPTICALLY" in line:
+                pass
+            else:
+                statenumber = int(line.split()[-1])
+                # skip 7 lines
+                for i in range(8):
+                    line = next(inputfile)
+                strength = float(line.split()[3])
+                self.etoscs.append(strength)
 
         # TD-DFT for GAMESS-US.
         # The format for excitations has changed a bit between 2007 and 2012.
