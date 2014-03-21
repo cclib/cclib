@@ -56,7 +56,7 @@ GeoOpt    Gaussian    GaussianGeoOptTest    basicGaussian03       dvb_gopt.out
 GeoOpt    Gaussian    GaussianGeoOptTest    basicGaussian09       dvb_gopt.out
 GeoOpt    Jaguar      JaguarGeoOptTest      basicJaguar7.0        dvb_gopt_b.out
 GeoOpt    GAMESS      PCGamessGeoOptTest    basicPCGAMESS         dvb_gopt_b.out
-GeoOpt    Molpro      MolproGeoOptTest      basicMolpro2006       dvb_gopt.out          dvb_gopt.log
+GeoOpt    Molpro      MolproGeoOptTest2006  basicMolpro2006       dvb_gopt.out          dvb_gopt.log
 GeoOpt    Molpro      MolproGeoOptTest      basicMolpro2012       dvb_gopt.out          dvb_gopt.log
 GeoOpt    ORCA        OrcaGeoOptTest        basicORCA2.9          dvb_gopt.out
 GeoOpt    ORCA        OrcaGeoOptTest        basicORCA3.0          dvb_gopt.out
@@ -94,7 +94,7 @@ SP        Gaussian    GaussianSPTest        basicGaussian03       dvb_sp.out
 SP        Gaussian    GaussianSPTest        basicGaussian09       dvb_sp.out
 SP        Jaguar      JaguarSPTest          basicJaguar7.0        dvb_sp.out
 SP        GAMESS      PCGamessSPTest        basicPCGAMESS         dvb_sp.out
-SP        Molpro      MolproSPTest          basicMolpro2006       dvb_sphf.out
+SP        Molpro      MolproSPTest2006      basicMolpro2006       dvb_sphf.out
 SP        Molpro      MolproSPTest          basicMolpro2012       dvb_sphf.out
 SP        ORCA        OrcaSPTest            basicORCA2.9          dvb_sp.out
 SP        ORCA        OrcaSPTest            basicORCA3.0          dvb_sp.out

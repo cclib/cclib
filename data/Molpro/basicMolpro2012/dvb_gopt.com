@@ -48,4 +48,4 @@ optg,procedure=rundft
 rundft={ks,b3lyp}
 ks,b3lyp;
 orbprint,9999
-
+pop
