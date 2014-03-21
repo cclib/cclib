@@ -481,24 +481,28 @@ class Molpro(logfileparser.Logfile):
             self.geotargets = [optenerg, optgrad, optstep]
 
         # The optimization history is the source for geovlues:
+        #
         #   END OF GEOMETRY OPTIMIZATION.    TOTAL CPU:       246.9 SEC
         #
         #     ITER.   ENERGY(OLD)    ENERGY(NEW)      DE          GRADMAX     GRADNORM    GRADRMS     STEPMAX     STEPLEN     STEPRMS
         #      1  -382.02936898  -382.04914450    -0.01977552  0.11354875  0.20127947  0.01183997  0.12972761  0.20171740  0.01186573
         #      2  -382.04914450  -382.05059234    -0.00144784  0.03299860  0.03963339  0.00233138  0.05577169  0.06687650  0.00393391
         #      3  -382.05059234  -382.05069136    -0.00009902  0.00694359  0.01069889  0.00062935  0.01654549  0.02016307  0.00118606
-        #      4  -382.05069136  -382.05069130     0.00000006  0.00295497  0.00363023  0.00021354  0.00234307  0.00443525  0.00026090
-        #      5  -382.05069130  -382.05069206    -0.00000075  0.00098220  0.00121031  0.00007119  0.00116863  0.00140452  0.00008262
-        #      6  -382.05069206  -382.05069209    -0.00000003  0.00011350  0.00022306  0.00001312  0.00013321  0.00024526  0.00001443
-        if line[1:30] == "END OF GEOMETRY OPTIMIZATION.":
+        # ...
+        #
+        # The above is an exerpt from Molpro 2006, but it is a little bit different
+        # for Molpro 2012, namely the 'END OF GEOMETRY OPTIMIZATION occurs after the
+        # actual history list. It seems there is a another consistent line before the
+        # history, but this might not be always true -- so this is a potential weak link.
+        if line[1:30] == "END OF GEOMETRY OPTIMIZATION." or line.strip() == "Quadratic Steepest Descent - Minimum Search":
             
             blank = next(inputfile)
             headers = next(inputfile)
 
-            # Newer version of Molpro (at least for 2012) print this differently,
-            # and this part needs to be fixed.
+            # Newer version of Molpro (at least for 2012) print and additional column
+            # with the timing information for each step. Otherwise, the history looks the same.
             headers = headers.split()
-            if len(headers) != 10:
+            if not len(headers) in (10,11):
                 return
 
             # Although criteria can be changed, the printed format should not change.
@@ -510,7 +514,7 @@ class Molpro(logfileparser.Logfile):
             line = next(inputfile)
             self.geovalues = []            
             while line.strip() != "":
-                
+
                 line = line.split()
                 geovalues = []
                 geovalues.append(float(line[index_THRENERG]))
@@ -518,6 +522,8 @@ class Molpro(logfileparser.Logfile):
                 geovalues.append(float(line[index_THRSTEP]))
                 self.geovalues.append(geovalues)
                 line = next(inputfile)
+                if line.strip() == "Freezing grid":
+                    line = next(inputfile)
 
         # This block should look like this:
         #   Normal Modes
