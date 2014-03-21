@@ -659,6 +659,40 @@ class Molpro(logfileparser.Logfile):
                 line = next(inputfile)
                 self.amass += list(map(float, line.strip().split()[2:]))        
 
+        #1PROGRAM * POP (Mulliken population analysis)
+        #
+        #
+        # Density matrix read from record         2100.2  Type=RHF/CHARGE (state 1.1)
+        # 
+        # Population analysis by basis function type
+        #
+        # Unique atom        s        p        d        f        g    Total    Charge
+        #   2  C       3.11797  2.88497  0.00000  0.00000  0.00000  6.00294  - 0.00294
+        #   3  C       3.14091  2.91892  0.00000  0.00000  0.00000  6.05984  - 0.05984
+        # ...
+        if line.strip() == "1PROGRAM * POP (Mulliken population analysis)":
+
+            blank = next(inputfile)
+            blank = next(inputfile)
+            density_source = next(inputfile)
+            blank = next(inputfile)
+            function_type_comment = next(inputfile)
+            blank = next(inputfile)
+
+            header = next(inputfile)
+            icharge = header.split().index('Charge')
+
+            charges = []
+            line = next(inputfile)
+            while line.strip():
+                cols = line.split()
+                charges.append(float(cols[icharge]+cols[icharge+1]))
+                line = next(inputfile)
+
+            if not hasattr(self, "atomcharges"):
+                self.atomcharges = {}
+            self.atomcharges['mulliken'] = charges
+
 
 if __name__ == "__main__":
     import doctest, molproparser

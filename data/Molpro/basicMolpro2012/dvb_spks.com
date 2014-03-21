@@ -45,6 +45,7 @@ hcc20=      126.000
 
 ks,b3lyp;
 orbprint,10
+pop
 {matrop
 load,s
 print,s}

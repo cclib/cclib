@@ -1,8 +1,8 @@
 
- Primary working directories    : /lustre/scratch/tmp/pbs.6225424.nova
- Secondary working directories  : /lustre/scratch/tmp/pbs.6225424.nova
+ Primary working directories    : /lustre/scratch/tmp/pbs.6489186.nova
+ Secondary working directories  : /lustre/scratch/tmp/pbs.6489186.nova
  Wavefunction directory         : /home/langner/wfu/
- Main file repository           : /lustre/scratch/tmp/pbs.6225424.nova/
+ Main file repository           : /lustre/scratch/tmp/pbs.6489186.nova/
 
  SHA1      : c18f7d37f9f045f75d4f3096db241dde02ddca0a
  ARCHNAME  : Linux/x86_64
@@ -12,7 +12,7 @@
  id        : dmwwroc
 
  Nodes     nprocs
- wn453        1
+ wn720        1
 
  Using customized tuning parameters: mindgm=20; mindgv=20; mindgc=6; mindgr=1; noblas=0; minvec=7
  default implementation of scratch files=df  
@@ -67,11 +67,11 @@
  rundft={ks,b3lyp}
  ks,b3lyp;
  orbprint,9999
- 
+ pop
 
- Variables initialized (774), CPU time= 0.01 sec
- Commands  initialized (547), CPU time= 0.00 sec, 516 directives.
- Default parameters read. Elapsed time= 0.08 sec
+ Variables initialized (774), CPU time= 0.00 sec
+ Commands  initialized (547), CPU time= 0.01 sec, 516 directives.
+ Default parameters read. Elapsed time= 1.00 sec
 
  Checking input...
  Passed
@@ -86,7 +86,7 @@
 
  **********************************************************************************************************************************
  LABEL *   divinylbenzene geom opt                                                       
- Linux-2.6.18-348.3.1.el5/wn453(x86_64) 64 bit serial version                            DATE: 20-Feb-14          TIME: 22:09:16  
+ Linux-2.6.18-348.3.1.el5/wn720(x86_64) 64 bit serial version                            DATE: 21-Mar-14          TIME: 06:14:03  
  **********************************************************************************************************************************
 
  SHA1:             c18f7d37f9f045f75d4f3096db241dde02ddca0a
@@ -435,8 +435,8 @@
 
  Memory used in sort:       2.23 MW
 
- SORT1 READ     1719389. AND WROTE      795052. INTEGRALS IN      3 RECORDS. CPU TIME:     0.03 SEC, REAL TIME:     0.07 SEC
- SORT2 READ      795052. AND WROTE     1675365. INTEGRALS IN     22 RECORDS. CPU TIME:     0.07 SEC, REAL TIME:     0.09 SEC
+ SORT1 READ     1719389. AND WROTE      795052. INTEGRALS IN      3 RECORDS. CPU TIME:     0.04 SEC, REAL TIME:     0.07 SEC
+ SORT2 READ      795052. AND WROTE     1675365. INTEGRALS IN     22 RECORDS. CPU TIME:     0.07 SEC, REAL TIME:     0.10 SEC
 
  FILE SIZES:   FILE 1:    13.7 MBYTE,  FILE 4:    12.6 MBYTE,   TOTAL:     26.3 MBYTE
 
@@ -451,8 +451,8 @@
                                            T        V       H0       H01     AOSYM     SMH    MOLCAS    ERIS     OPER   
 
  PROGRAMS   *        TOTAL       INT
- CPU TIMES  *         1.55      1.44
- REAL TIME  *         1.89 SEC
+ CPU TIMES  *         1.56      1.45
+ REAL TIME  *         3.39 SEC
  DISK USED  *        27.04 MB      
  **********************************************************************************************************************************
 
@@ -796,8 +796,8 @@
                                         OPTIONS   GEOM     BASIS   MCVARS    GRID      RKS  
 
  PROGRAMS   *        TOTAL        KS       INT
- CPU TIMES  *         8.82      7.27      1.44
- REAL TIME  *        12.29 SEC
+ CPU TIMES  *         8.96      7.40      1.45
+ REAL TIME  *        14.74 SEC
  DISK USED  *        27.04 MB      
  **********************************************************************************************************************************
 
@@ -811,14 +811,14 @@
  Quadratic Steepest Descent - Minimum Search
 
  ITER.   ENERGY(OLD)    ENERGY(NEW)      DE          GRADMAX     GRADNORM    GRADRMS     STEPMAX     STEPLEN     STEPRMS   CPU-time
-   1  -382.02936906  -382.04929131    -0.01992225  0.10954412  0.15375980  0.03729223  0.20032864  0.26275393  0.01545611     21.13
-   2  -382.04929131  -382.04869539     0.00059592  0.02258077  0.03512807  0.00851981  0.02765825  0.04100083  0.00241181     33.46
-   3  -382.04869539  -382.04801079     0.00068459  0.00757500  0.01151274  0.00279225  0.01170140  0.01562411  0.00091907     45.28
+   1  -382.02936906  -382.04929131    -0.01992225  0.10954412  0.15375980  0.03729223  0.20032864  0.26275393  0.01545611     21.12
+   2  -382.04929131  -382.04869539     0.00059592  0.02258077  0.03512807  0.00851981  0.02765825  0.04100083  0.00241181     33.19
+   3  -382.04869539  -382.04801079     0.00068459  0.00757500  0.01151274  0.00279225  0.01170140  0.01562411  0.00091907     44.77
  Freezing grid
-   4  -382.04801079  -382.04825935    -0.00024855  0.00324133  0.00575224  0.00139512  0.00263857  0.00415160  0.00024421     57.61
-   5  -382.04825935  -382.04837814    -0.00011879  0.00085907  0.00161483  0.00039165  0.00158828  0.00229397  0.00013494     67.92
-   6  -382.04837814  -382.04834596     0.00003217  0.00038057  0.00070689  0.00017145  0.00047314  0.00064556  0.00003797     78.22
-   7  -382.04834596  -382.04835616    -0.00001020  0.00026274  0.00042006  0.00010188  0.00019535  0.00035324  0.00002078     88.22
+   4  -382.04801079  -382.04825935    -0.00024855  0.00324133  0.00575224  0.00139512  0.00263857  0.00415160  0.00024421     56.82
+   5  -382.04825935  -382.04837814    -0.00011879  0.00085907  0.00161483  0.00039165  0.00158828  0.00229397  0.00013494     67.16
+   6  -382.04837814  -382.04834596     0.00003217  0.00038057  0.00070689  0.00017145  0.00047314  0.00064556  0.00003797     77.55
+   7  -382.04834596  -382.04835616    -0.00001020  0.00026274  0.00042006  0.00010188  0.00019535  0.00035324  0.00002078     87.64
 
  END OF GEOMETRY OPTIMIZATION.
 
@@ -884,8 +884,8 @@
                                         OPTIONS   GEOM     BASIS   MCVARS    GRID      RKS  
 
  PROGRAMS   *        TOTAL      OPTG        KS        KS        KS        KS        KS        KS        KS       INT
- CPU TIMES  *        88.33      5.41      5.75      5.76      7.51      7.06      7.63      7.65      7.27      1.44
- REAL TIME  *       121.20 SEC
+ CPU TIMES  *        87.75      5.47      5.83      5.76      7.45      6.99      7.50      7.46      7.40      1.45
+ REAL TIME  *       125.99 SEC
  DISK USED  *        27.19 MB      
  **********************************************************************************************************************************
 
@@ -894,6 +894,7 @@
  Functional: DIRAC(Automatically generated (new) DIRAC)                        Gradient terms: 0
  Functional: LYP(Automatically generated (new) LYP)                            Gradient terms: 1
  Functional: VWN5(Automatically generated (new) VWN5)                          Gradient terms: 0
+ Use grid at  1800.2
  
 
  Exact exchange will be calculated, factor:  0.2000
@@ -1387,8 +1388,54 @@
                                         OPTIONS   GEOM     BASIS   MCVARS    GRID      RKS      RKS  
 
  PROGRAMS   *        TOTAL        KS        KS        KS        KS        KS        KS        KS        KS        KS       INT
- CPU TIMES  *        89.33      0.99      5.41      5.75      5.76      7.51      7.06      7.63      7.65      7.27      1.44
- REAL TIME  *       123.00 SEC
+ CPU TIMES  *        88.77      1.01      5.47      5.83      5.76      7.45      6.99      7.50      7.46      7.40      1.45
+ REAL TIME  *       128.23 SEC
+ DISK USED  *        27.19 MB      
+ **********************************************************************************************************************************
+
+1PROGRAM * POP (Mulliken population analysis)
+
+ 
+ Density matrix read from record         2101.2  Type=RKS/CHARGE (state 1.1)
+ 
+ Population analysis by basis function type
+
+ Unique atom        s        p        d        f        g    Total    Charge
+   2  C       3.12421  2.88180  0.00000  0.00000  0.00000  6.00601  - 0.00601
+   3  C       3.14501  2.93137  0.00000  0.00000  0.00000  6.07638  - 0.07638
+   4  C       3.14305  2.93311  0.00000  0.00000  0.00000  6.07616  - 0.07616
+   5  C       3.12421  2.88180  0.00000  0.00000  0.00000  6.00601  - 0.00601
+   6  C       3.14501  2.93137  0.00000  0.00000  0.00000  6.07638  - 0.07638
+   7  C       3.14305  2.93311  0.00000  0.00000  0.00000  6.07616  - 0.07616
+   8  C       3.14852  2.92817  0.00000  0.00000  0.00000  6.07669  - 0.07669
+   9  C       3.14852  2.92817  0.00000  0.00000  0.00000  6.07669  - 0.07669
+  10  H       0.92107  0.00000  0.00000  0.00000  0.00000  0.92107  + 0.07893
+  11  H       0.92107  0.00000  0.00000  0.00000  0.00000  0.92107  + 0.07893
+  12  H       0.92233  0.00000  0.00000  0.00000  0.00000  0.92233  + 0.07767
+  13  H       0.92233  0.00000  0.00000  0.00000  0.00000  0.92233  + 0.07767
+  14  C       3.16784  2.98531  0.00000  0.00000  0.00000  6.15315  - 0.15315
+  15  C       3.16784  2.98531  0.00000  0.00000  0.00000  6.15315  - 0.15315
+  16  H       0.92266  0.00000  0.00000  0.00000  0.00000  0.92266  + 0.07734
+  17  H       0.92266  0.00000  0.00000  0.00000  0.00000  0.92266  + 0.07734
+  18  H       0.92155  0.00000  0.00000  0.00000  0.00000  0.92155  + 0.07845
+  19  H       0.92155  0.00000  0.00000  0.00000  0.00000  0.92155  + 0.07845
+  20  H       0.92401  0.00000  0.00000  0.00000  0.00000  0.92401  + 0.07599
+  21  H       0.92401  0.00000  0.00000  0.00000  0.00000  0.92401  + 0.07599
+
+
+ **********************************************************************************************************************************
+ DATASETS  * FILE   NREC   LENGTH (MB)   RECORD NAMES
+              1      20       13.79       500      610      700      900      950      970     1000      129      960     1100   
+                                          VAR    BASINP    GEOM    SYMINP    ZMAT    AOBASIS   BASIS     P2S    ABASIS      S 
+                                         1400     1410     1200     1210     1080     1600     1650     1300     1700     1800   
+                                           T        V       H0       H01     AOSYM     SMH    MOLCAS    ERIS     OPER     GRID   
+
+              2       7        1.05       200      700     1000      520     1800     2100     2101   
+                                        OPTIONS   GEOM     BASIS   MCVARS    GRID      RKS      RKS  
+
+ PROGRAMS   *        TOTAL       POP        KS        KS        KS        KS        KS        KS        KS        KS        KS
+ CPU TIMES  *        88.78      0.01      1.01      5.47      5.83      5.76      7.45      6.99      7.50      7.46      7.40
+ REAL TIME  *       128.24 SEC
  DISK USED  *        27.19 MB      
  **********************************************************************************************************************************
 

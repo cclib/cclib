@@ -358,8 +358,8 @@
 
  Memory used in sort:       2.23 MW
 
- SORT1 READ     1692779. AND WROTE      779623. INTEGRALS IN      3 RECORDS. CPU TIME:     0.04 SEC, REAL TIME:     0.07 SEC
- SORT2 READ      779623. AND WROTE     1675365. INTEGRALS IN     22 RECORDS. CPU TIME:     0.06 SEC, REAL TIME:     0.10 SEC
+ SORT1 READ     1692779. AND WROTE      779623. INTEGRALS IN      3 RECORDS. CPU TIME:     0.03 SEC, REAL TIME:     0.07 SEC
+ SORT2 READ      779623. AND WROTE     1675365. INTEGRALS IN     22 RECORDS. CPU TIME:     0.07 SEC, REAL TIME:     0.11 SEC
 
  FILE SIZES:   FILE 1:    13.7 MBYTE,  FILE 4:    12.6 MBYTE,   TOTAL:     26.3 MBYTE
 
@@ -380,7 +380,7 @@
  Functional: VWN5                      Factor:  0.1900
  
  Generated new metagrid on record  1800.2 with target accuracy 1.0D-06 and 90732 points in CPU time    1.2
- Computed new grid on record 1800.1 in CPU time    1.7
+ Computed new grid on record 1800.1 in CPU time    1.6
    52784 words reserved for DFT integration
 
  PROGRAM * RKS-SCF (Restricted closed shell Kohn-Sham)     Authors: W. Meyer, H.-J. Werner, P.J. Knowles, 1993
@@ -453,8 +453,8 @@
                                         OPTIONS   GEOM     BASIS   MCVARS    GRID      RKS  
 
  PROGRAMS   *        TOTAL        KS        KS       INT
- CPU TIMES  *        21.24      7.65      7.27      1.44
- REAL TIME  *        37.50 SEC
+ CPU TIMES  *        21.23      7.46      7.40      1.45
+ REAL TIME  *        33.06 SEC
  DISK USED  *        27.19 MB      
  **********************************************************************************************************************************
 
@@ -870,7 +870,7 @@
 
  Memory used in sort:       2.23 MW
 
- SORT1 READ     1698956. AND WROTE      783486. INTEGRALS IN      3 RECORDS. CPU TIME:     0.04 SEC, REAL TIME:     0.07 SEC
+ SORT1 READ     1698956. AND WROTE      783486. INTEGRALS IN      3 RECORDS. CPU TIME:     0.04 SEC, REAL TIME:     0.06 SEC
  SORT2 READ      783486. AND WROTE     1675365. INTEGRALS IN     22 RECORDS. CPU TIME:     0.06 SEC, REAL TIME:     0.10 SEC
 
  FILE SIZES:   FILE 1:    13.7 MBYTE,  FILE 4:    12.6 MBYTE,   TOTAL:     26.3 MBYTE
@@ -892,7 +892,7 @@
  Functional: VWN5                      Factor:  0.1900
  
  Generated new metagrid on record  1800.2 with target accuracy 1.0D-06 and 91028 points in CPU time    1.2
- Computed new grid on record 1800.1 in CPU time    1.7
+ Computed new grid on record 1800.1 in CPU time    1.6
    52784 words reserved for DFT integration
 
  PROGRAM * RKS-SCF (Restricted closed shell Kohn-Sham)     Authors: W. Meyer, H.-J. Werner, P.J. Knowles, 1993
@@ -965,12 +965,12 @@
                                         OPTIONS   GEOM     BASIS   MCVARS    GRID      RKS  
 
  PROGRAMS   *        TOTAL        KS        KS        KS       INT
- CPU TIMES  *        33.57      7.63      7.65      7.27      1.44
- REAL TIME  *        52.54 SEC
+ CPU TIMES  *        33.30      7.50      7.46      7.40      1.45
+ REAL TIME  *        50.93 SEC
  DISK USED  *        27.19 MB      
  **********************************************************************************************************************************
 
- PROGRESS OF GEOMETRY OPTIMIZATION.    TOTAL CPU:        33.5 SEC
+ PROGRESS OF GEOMETRY OPTIMIZATION.    TOTAL CPU:        33.2 SEC
    1  -382.02936906  -382.04929131    -0.01992225  0.10954412  0.15375980  0.03729223  0.20032864  0.26275393  0.01545611
    2  -382.04929131  -382.04869539     0.00059592  0.02258077  0.03512807  0.00851981  0.02765825  0.04100083  0.00241181
 
@@ -1383,8 +1383,8 @@
 
  Memory used in sort:       2.23 MW
 
- SORT1 READ     1702570. AND WROTE      785362. INTEGRALS IN      3 RECORDS. CPU TIME:     0.03 SEC, REAL TIME:     0.07 SEC
- SORT2 READ      785362. AND WROTE     1675365. INTEGRALS IN     22 RECORDS. CPU TIME:     0.06 SEC, REAL TIME:     0.10 SEC
+ SORT1 READ     1702570. AND WROTE      785362. INTEGRALS IN      3 RECORDS. CPU TIME:     0.03 SEC, REAL TIME:     0.06 SEC
+ SORT2 READ      785362. AND WROTE     1675365. INTEGRALS IN     22 RECORDS. CPU TIME:     0.07 SEC, REAL TIME:     0.11 SEC
 
  FILE SIZES:   FILE 1:    13.7 MBYTE,  FILE 4:    12.6 MBYTE,   TOTAL:     26.3 MBYTE
 
@@ -1405,7 +1405,7 @@
  Functional: VWN5                      Factor:  0.1900
  
  Generated new metagrid on record  1800.2 with target accuracy 1.0D-06 and 90352 points in CPU time    1.2
- Computed new grid on record 1800.1 in CPU time    1.7
+ Computed new grid on record 1800.1 in CPU time    1.6
    52784 words reserved for DFT integration
 
  PROGRAM * RKS-SCF (Restricted closed shell Kohn-Sham)     Authors: W. Meyer, H.-J. Werner, P.J. Knowles, 1993
@@ -1477,12 +1477,12 @@
                                         OPTIONS   GEOM     BASIS   MCVARS    GRID      RKS  
 
  PROGRAMS   *        TOTAL        KS        KS        KS        KS       INT
- CPU TIMES  *        45.39      7.06      7.63      7.65      7.27      1.44
- REAL TIME  *        66.71 SEC
+ CPU TIMES  *        44.88      6.99      7.50      7.46      7.40      1.45
+ REAL TIME  *        66.14 SEC
  DISK USED  *        27.19 MB      
  **********************************************************************************************************************************
 
- PROGRESS OF GEOMETRY OPTIMIZATION.    TOTAL CPU:        45.3 SEC
+ PROGRESS OF GEOMETRY OPTIMIZATION.    TOTAL CPU:        44.8 SEC
    1  -382.02936906  -382.04929131    -0.01992225  0.10954412  0.15375980  0.03729223  0.20032864  0.26275393  0.01545611
    2  -382.04929131  -382.04869539     0.00059592  0.02258077  0.03512807  0.00851981  0.02765825  0.04100083  0.00241181
    3  -382.04869539  -382.04801079     0.00068459  0.00757500  0.01151274  0.00279225  0.01170140  0.01562411  0.00091907
@@ -1896,8 +1896,8 @@
 
  Memory used in sort:       2.23 MW
 
- SORT1 READ     1701911. AND WROTE      784865. INTEGRALS IN      3 RECORDS. CPU TIME:     0.03 SEC, REAL TIME:     0.07 SEC
- SORT2 READ      784865. AND WROTE     1675365. INTEGRALS IN     22 RECORDS. CPU TIME:     0.07 SEC, REAL TIME:     0.11 SEC
+ SORT1 READ     1701911. AND WROTE      784865. INTEGRALS IN      3 RECORDS. CPU TIME:     0.04 SEC, REAL TIME:     0.07 SEC
+ SORT2 READ      784865. AND WROTE     1675365. INTEGRALS IN     22 RECORDS. CPU TIME:     0.06 SEC, REAL TIME:     0.10 SEC
 
  FILE SIZES:   FILE 1:    13.7 MBYTE,  FILE 4:    12.6 MBYTE,   TOTAL:     26.3 MBYTE
 
@@ -1918,7 +1918,7 @@
  Functional: VWN5                      Factor:  0.1900
  
  Generated new metagrid on record  1800.2 with target accuracy 1.0D-06 and 90480 points in CPU time    1.2
- Computed new grid on record 1800.1 in CPU time    1.7
+ Computed new grid on record 1800.1 in CPU time    1.6
    52784 words reserved for DFT integration
 
  PROGRAM * RKS-SCF (Restricted closed shell Kohn-Sham)     Authors: W. Meyer, H.-J. Werner, P.J. Knowles, 1993
@@ -1991,12 +1991,12 @@
                                         OPTIONS   GEOM     BASIS   MCVARS    GRID      RKS  
 
  PROGRAMS   *        TOTAL        KS        KS        KS        KS        KS       INT
- CPU TIMES  *        57.72      7.51      7.06      7.63      7.65      7.27      1.44
- REAL TIME  *        82.70 SEC
+ CPU TIMES  *        56.93      7.45      6.99      7.50      7.46      7.40      1.45
+ REAL TIME  *        82.96 SEC
  DISK USED  *        27.19 MB      
  **********************************************************************************************************************************
 
- PROGRESS OF GEOMETRY OPTIMIZATION.    TOTAL CPU:        57.6 SEC
+ PROGRESS OF GEOMETRY OPTIMIZATION.    TOTAL CPU:        56.8 SEC
    1  -382.02936906  -382.04929131    -0.01992225  0.10954412  0.15375980  0.03729223  0.20032864  0.26275393  0.01545611
    2  -382.04929131  -382.04869539     0.00059592  0.02258077  0.03512807  0.00851981  0.02765825  0.04100083  0.00241181
    3  -382.04869539  -382.04801079     0.00068459  0.00757500  0.01151274  0.00279225  0.01170140  0.01562411  0.00091907
@@ -2411,8 +2411,8 @@
 
  Memory used in sort:       2.23 MW
 
- SORT1 READ     1701137. AND WROTE      784530. INTEGRALS IN      3 RECORDS. CPU TIME:     0.04 SEC, REAL TIME:     0.07 SEC
- SORT2 READ      784530. AND WROTE     1675365. INTEGRALS IN     22 RECORDS. CPU TIME:     0.06 SEC, REAL TIME:     0.10 SEC
+ SORT1 READ     1701137. AND WROTE      784530. INTEGRALS IN      3 RECORDS. CPU TIME:     0.03 SEC, REAL TIME:     0.07 SEC
+ SORT2 READ      784530. AND WROTE     1675365. INTEGRALS IN     22 RECORDS. CPU TIME:     0.07 SEC, REAL TIME:     0.10 SEC
 
  FILE SIZES:   FILE 1:    13.7 MBYTE,  FILE 4:    12.6 MBYTE,   TOTAL:     26.3 MBYTE
 
@@ -2504,12 +2504,12 @@
                                         OPTIONS   GEOM     BASIS   MCVARS    GRID      RKS  
 
  PROGRAMS   *        TOTAL        KS        KS        KS        KS        KS        KS       INT
- CPU TIMES  *        68.03      5.76      7.51      7.06      7.63      7.65      7.27      1.44
- REAL TIME  *        95.47 SEC
+ CPU TIMES  *        67.27      5.76      7.45      6.99      7.50      7.46      7.40      1.45
+ REAL TIME  *        96.89 SEC
  DISK USED  *        27.19 MB      
  **********************************************************************************************************************************
 
- PROGRESS OF GEOMETRY OPTIMIZATION.    TOTAL CPU:        67.9 SEC
+ PROGRESS OF GEOMETRY OPTIMIZATION.    TOTAL CPU:        67.2 SEC
    1  -382.02936906  -382.04929131    -0.01992225  0.10954412  0.15375980  0.03729223  0.20032864  0.26275393  0.01545611
    2  -382.04929131  -382.04869539     0.00059592  0.02258077  0.03512807  0.00851981  0.02765825  0.04100083  0.00241181
    3  -382.04869539  -382.04801079     0.00068459  0.00757500  0.01151274  0.00279225  0.01170140  0.01562411  0.00091907
@@ -2925,8 +2925,8 @@
 
  Memory used in sort:       2.23 MW
 
- SORT1 READ     1701245. AND WROTE      784621. INTEGRALS IN      3 RECORDS. CPU TIME:     0.04 SEC, REAL TIME:     0.07 SEC
- SORT2 READ      784621. AND WROTE     1675365. INTEGRALS IN     22 RECORDS. CPU TIME:     0.07 SEC, REAL TIME:     0.11 SEC
+ SORT1 READ     1701245. AND WROTE      784621. INTEGRALS IN      3 RECORDS. CPU TIME:     0.04 SEC, REAL TIME:     0.06 SEC
+ SORT2 READ      784621. AND WROTE     1675365. INTEGRALS IN     22 RECORDS. CPU TIME:     0.06 SEC, REAL TIME:     0.11 SEC
 
  FILE SIZES:   FILE 1:    13.7 MBYTE,  FILE 4:    12.6 MBYTE,   TOTAL:     26.3 MBYTE
 
@@ -3018,12 +3018,12 @@
                                         OPTIONS   GEOM     BASIS   MCVARS    GRID      RKS  
 
  PROGRAMS   *        TOTAL        KS        KS        KS        KS        KS        KS        KS       INT
- CPU TIMES  *        78.33      5.75      5.76      7.51      7.06      7.63      7.65      7.27      1.44
- REAL TIME  *       108.33 SEC
+ CPU TIMES  *        77.66      5.83      5.76      7.45      6.99      7.50      7.46      7.40      1.45
+ REAL TIME  *       112.04 SEC
  DISK USED  *        27.19 MB      
  **********************************************************************************************************************************
 
- PROGRESS OF GEOMETRY OPTIMIZATION.    TOTAL CPU:        78.2 SEC
+ PROGRESS OF GEOMETRY OPTIMIZATION.    TOTAL CPU:        77.5 SEC
    1  -382.02936906  -382.04929131    -0.01992225  0.10954412  0.15375980  0.03729223  0.20032864  0.26275393  0.01545611
    2  -382.04929131  -382.04869539     0.00059592  0.02258077  0.03512807  0.00851981  0.02765825  0.04100083  0.00241181
    3  -382.04869539  -382.04801079     0.00068459  0.00757500  0.01151274  0.00279225  0.01170140  0.01562411  0.00091907
@@ -3440,8 +3440,8 @@
 
  Memory used in sort:       2.23 MW
 
- SORT1 READ     1701245. AND WROTE      784593. INTEGRALS IN      3 RECORDS. CPU TIME:     0.04 SEC, REAL TIME:     0.06 SEC
- SORT2 READ      784593. AND WROTE     1675365. INTEGRALS IN     22 RECORDS. CPU TIME:     0.07 SEC, REAL TIME:     0.10 SEC
+ SORT1 READ     1701245. AND WROTE      784593. INTEGRALS IN      3 RECORDS. CPU TIME:     0.04 SEC, REAL TIME:     0.07 SEC
+ SORT2 READ      784593. AND WROTE     1675365. INTEGRALS IN     22 RECORDS. CPU TIME:     0.08 SEC, REAL TIME:     0.10 SEC
 
  FILE SIZES:   FILE 1:    13.7 MBYTE,  FILE 4:    12.6 MBYTE,   TOTAL:     26.3 MBYTE
 
@@ -3532,12 +3532,12 @@
                                         OPTIONS   GEOM     BASIS   MCVARS    GRID      RKS  
 
  PROGRAMS   *        TOTAL        KS        KS        KS        KS        KS        KS        KS        KS       INT
- CPU TIMES  *        88.33      5.41      5.75      5.76      7.51      7.06      7.63      7.65      7.27      1.44
- REAL TIME  *       121.19 SEC
+ CPU TIMES  *        87.75      5.47      5.83      5.76      7.45      6.99      7.50      7.46      7.40      1.45
+ REAL TIME  *       125.98 SEC
  DISK USED  *        27.19 MB      
  **********************************************************************************************************************************
 
- PROGRESS OF GEOMETRY OPTIMIZATION.    TOTAL CPU:        88.2 SEC
+ PROGRESS OF GEOMETRY OPTIMIZATION.    TOTAL CPU:        87.6 SEC
    1  -382.02936906  -382.04929131    -0.01992225  0.10954412  0.15375980  0.03729223  0.20032864  0.26275393  0.01545611
    2  -382.04929131  -382.04869539     0.00059592  0.02258077  0.03512807  0.00851981  0.02765825  0.04100083  0.00241181
    3  -382.04869539  -382.04801079     0.00068459  0.00757500  0.01151274  0.00279225  0.01170140  0.01562411  0.00091907
