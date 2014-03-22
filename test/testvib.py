@@ -15,7 +15,7 @@ class GenericIRTest(bettertest.TestCase):
     """Generic vibrational frequency unittest."""
 
     # Unit tests should normally give this value for the largest IR intensity.
-    max_IT_intensity = 100
+    max_IR_intensity = 100
 
     def testvibdisps(self):
         """Are the dimensions of vibdisps consistent with 3N-6 x N x 3"""
@@ -35,7 +35,7 @@ class GenericIRTest(bettertest.TestCase):
 
     def testirintens(self):
         """Is the maximum IR intensity 100 +/- 10 km mol-1?"""
-        self.assertInside(max(self.data.vibirs), self.max_IT_intensity, 10)
+        self.assertInside(max(self.data.vibirs), self.max_IR_intensity, 10)
 
 
 class GenericIRimgTest(bettertest.TestCase):
@@ -107,7 +107,7 @@ class OrcaIRTest(GenericIRTest):
     # the basis set seems close enough to other programs. It would be nice
     # to determine whether this difference is algorithmic in nature,
     # but in the meanwhile we will expect to parse this value.
-    max_IT_intensity = 215
+    max_IR_intensity = 215
 
 class PCGamessIRTest(GenericIRTest):
     """PC-GAMESS vibrational frequency unittest."""
