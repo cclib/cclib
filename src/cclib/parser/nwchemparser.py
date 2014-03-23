@@ -320,6 +320,27 @@ class NWChem(logfileparser.Logfile):
         # less precision (might be useful to parse that if this is not available). Also, this
         # section contains coefficients for the leading AO contributions, so it would also
         # be good to parse and use those values if the full vectors are not printed.
+        # It normally looks something like this:
+        #                       ROHF Final Molecular Orbital Analysis
+        #                       -------------------------------------
+        #
+        # Vector    1  Occ=2.000000D+00  E=-1.104059D+01  Symmetry=bu
+        #              MO Center=  1.4D-17,  0.0D+00, -6.5D-37, r^2= 2.1D+00
+        #   Bfn.  Coefficient  Atom+Function         Bfn.  Coefficient  Atom+Function  
+        #  ----- ------------  ---------------      ----- ------------  ---------------
+        #     1      0.701483   1 C  s                 6     -0.701483   2 C  s         
+        #
+        # Vector    2  Occ=2.000000D+00  E=-1.104052D+01  Symmetry=ag
+        # ...
+        # Vector   12  Occ=2.000000D+00  E=-1.020253D+00  Symmetry=bu
+        #              MO Center= -1.4D-17, -5.6D-17,  2.9D-34, r^2= 7.9D+00
+        #   Bfn.  Coefficient  Atom+Function         Bfn.  Coefficient  Atom+Function  
+        #  ----- ------------  ---------------      ----- ------------  ---------------
+        #    36     -0.298699  11 C  s                41      0.298699  12 C  s         
+        #     2      0.270804   1 C  s                 7     -0.270804   2 C  s         
+        #    48     -0.213655  15 C  s                53      0.213655  16 C  s
+        # ...
+        #
         if "Final Molecular Orbital Analysis" in line:
             if not hasattr(self, "moenergies"):
                 self.moenergies = []
@@ -340,7 +361,7 @@ class NWChem(logfileparser.Logfile):
                     for i in range(1,nvector):
                         energies.append(None)
 
-                energy = float(line[34:].replace('D','E'))
+                energy = float(line[34:47].replace('D','E'))
                 energy = utils.convertor(energy, "hartree", "eV")
                 energies.append(energy)
                 line = next(inputfile)
