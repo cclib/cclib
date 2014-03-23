@@ -26,9 +26,5 @@
   basis
     *    library sto-3g
   end
-  scf
-    maxiter 20
-  end
-
   task scf optimize
 

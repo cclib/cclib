@@ -38,9 +38,9 @@ dvb_sp_ks.nw, len=12
            Job information
            ---------------
 
-    hostname      = silenziosa
+    hostname      = helena
     program       = nwchem
-    date          = Sun Mar 23 14:05:04 2014
+    date          = Sun Mar 23 18:13:01 2014
 
     compiled      = Thu_May_05_12:06:54_2011
     source        = /build/buildd/nwchem-6.0
@@ -507,12 +507,12 @@ dvb_sp_ks.nw, len=12
     36 au         37 au         38 bg         39 au         40 bg      
     41 ag         42 bu         43 bu         44 ag         45 bu      
 
-   Time after variat. SCF:      0.4
-   Time prior to 1st pass:      0.4
+   Time after variat. SCF:      0.5
+   Time prior to 1st pass:      0.5
 
  Integral file          = ./dvb.aoints.0
  Record size in doubles =  65536        No. of integs per rec  =  43688
- Max. records in memory =     19        Max. records in file   =  56155
+ Max. records in memory =     19        Max. records in file   = ******
  No. of bits per label  =      8        No. of bits per value  =     64
 
 
@@ -521,7 +521,7 @@ dvb_sp_ks.nw, len=12
 
  Grid_pts file          = ./dvb.gridpts.0
  Record size in doubles =  12289        No. of grid_pts per rec  =   3070
- Max. records in memory =    522        Max. recs in file   =    299476
+ Max. records in memory =    522        Max. recs in file   =  11646437
 
 
            Memory utilization after 1st SCF pass: 
@@ -530,14 +530,14 @@ dvb_sp_ks.nw, len=12
 
    convergence    iter        energy       DeltaE   RMS-Dens  Diis-err    time
  ---------------- ----- ----------------- --------- --------- ---------  ------
- d= 0,ls=0.0,diis     1   -382.2544334271 -8.28D+02  1.42D-02  3.78D-01     6.9
- d= 0,ls=0.0,diis     2   -382.3017314548 -4.73D-02  6.99D-03  3.82D-02    11.2
- d= 0,ls=0.0,diis     3   -382.2954335231  6.30D-03  4.21D-03  7.95D-02    15.4
- d= 0,ls=0.0,diis     4   -382.3080990145 -1.27D-02  5.18D-04  8.80D-04    19.6
- d= 0,ls=0.0,diis     5   -382.3082353932 -1.36D-04  1.18D-04  4.46D-05    23.8
- d= 0,ls=0.0,diis     6   -382.3082415308 -6.14D-06  3.18D-05  3.09D-06    28.0
- d= 0,ls=0.0,diis     7   -382.3082420075 -4.77D-07  7.08D-06  1.61D-07    32.3
- d= 0,ls=0.0,diis     8   -382.3082420363 -2.88D-08  5.88D-07  7.21D-10    36.5
+ d= 0,ls=0.0,diis     1   -382.2544334271 -8.28D+02  1.42D-02  3.78D-01     8.3
+ d= 0,ls=0.0,diis     2   -382.3017314548 -4.73D-02  6.99D-03  3.82D-02    13.3
+ d= 0,ls=0.0,diis     3   -382.2954335231  6.30D-03  4.21D-03  7.95D-02    18.2
+ d= 0,ls=0.0,diis     4   -382.3080990145 -1.27D-02  5.18D-04  8.80D-04    23.2
+ d= 0,ls=0.0,diis     5   -382.3082353932 -1.36D-04  1.18D-04  4.46D-05    28.2
+ d= 0,ls=0.0,diis     6   -382.3082415308 -6.14D-06  3.18D-05  3.09D-06    33.4
+ d= 0,ls=0.0,diis     7   -382.3082420075 -4.77D-07  7.08D-06  1.61D-07    38.6
+ d= 0,ls=0.0,diis     8   -382.3082420363 -2.88D-08  5.88D-07  7.21D-10    43.6
 
 
          Total DFT energy =     -382.308242036327
@@ -548,7 +548,7 @@ dvb_sp_ks.nw, len=12
 
  Numeric. integr. density =       70.000000232020
 
-     Total iterative time =     36.1s
+     Total iterative time =     43.1s
 
 
 
@@ -2626,7 +2626,7 @@ dvb_sp_ks.nw, len=12
     19  H       0.99371       -0.07301          0.99371           0.92070                -0.00000
     20  H       0.99371       -0.07301          0.99371           0.92070                -0.00000
 
- Task  times  cpu:       36.5s     wall:       37.5s
+ Task  times  cpu:       43.6s     wall:       44.4s
  Summary of allocated global arrays
 -----------------------------------
   No active global arrays
@@ -2693,4 +2693,4 @@ MA usage statistics:
     X. Long, B. Meng, T. Nakajima, S. Niu, L. Pollack, M. Rosing, G. Sandrone,
        M. Stave, H. Taylor, G. Thomas, J. H. van Lenthe, A. Wong, Z. Zhang.
 
- Total times  cpu:       36.6s     wall:       37.5s
+ Total times  cpu:       43.7s     wall:       44.5s

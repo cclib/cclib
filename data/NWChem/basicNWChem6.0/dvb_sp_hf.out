@@ -38,9 +38,9 @@ dvb_sp_hf.nw, len=12
            Job information
            ---------------
 
-    hostname      = silenziosa
+    hostname      = helena
     program       = nwchem
-    date          = Sun Mar 23 14:04:15 2014
+    date          = Sun Mar 23 18:12:15 2014
 
     compiled      = Thu_May_05_12:06:54_2011
     source        = /build/buildd/nwchem-6.0
@@ -433,7 +433,7 @@ dvb_sp_hf.nw, len=12
         bu         25
 
 
- Forming initial guess at       0.1s
+ Forming initial guess at       2.6s
 
 
       Superposition of Atomic Density Guess
@@ -471,7 +471,7 @@ dvb_sp_hf.nw, len=12
     41 ag         42 bu         43 bu         44 ag         45 bu      
 
 
- Starting SCF solution at       0.4s
+ Starting SCF solution at       3.1s
 
 
 
@@ -486,7 +486,7 @@ dvb_sp_hf.nw, len=12
 
  Integral file          = ./dvb.aoints.0
  Record size in doubles =  65536        No. of integs per rec  =  43688
- Max. records in memory =     19        Max. records in file   =  56155
+ Max. records in memory =     19        Max. records in file   = ******
  No. of bits per label  =      8        No. of bits per value  =     64
 
 
@@ -495,11 +495,11 @@ dvb_sp_hf.nw, len=12
 
               iter       energy          gnorm     gmax       time
              ----- ------------------- --------- --------- --------
-                 1     -379.7024515662  7.56D-01  1.81D-01      1.3
-                 2     -379.7670223805  1.53D-01  4.40D-02      1.4
-                 3     -379.7689559179  6.43D-03  2.31D-03      1.4
-                 4     -379.7689629831  3.37D-05  9.24D-06      1.4
-                 5     -379.7689629833  5.41D-08  1.95D-08      1.5
+                 1     -379.7024515662  7.56D-01  1.81D-01      1.8
+                 2     -379.7670223805  1.53D-01  4.40D-02      1.8
+                 3     -379.7689559179  6.43D-03  2.31D-03      1.8
+                 4     -379.7689629831  3.37D-05  9.24D-06      1.9
+                 5     -379.7689629833  5.41D-08  1.95D-08      2.0
 
 
        Final RHF  results 
@@ -510,7 +510,7 @@ dvb_sp_hf.nw, len=12
       Two-electron energy =    574.516284650306
  Nuclear repulsion energy =    445.937012167446
 
-        Time for solution =      1.1s
+        Time for solution =      1.5s
 
 
 
@@ -2686,7 +2686,7 @@ dvb_sp_hf.nw, len=12
     19  H       0.99622       -0.05768          0.99622           0.93854                -0.00000
     20  H       0.99622       -0.05768          0.99622           0.93854                -0.00000
 
- Task  times  cpu:        1.5s     wall:        1.6s
+ Task  times  cpu:        2.0s     wall:        3.0s
  Summary of allocated global arrays
 -----------------------------------
   No active global arrays
@@ -2753,4 +2753,4 @@ MA usage statistics:
     X. Long, B. Meng, T. Nakajima, S. Niu, L. Pollack, M. Rosing, G. Sandrone,
        M. Stave, H. Taylor, G. Thomas, J. H. van Lenthe, A. Wong, Z. Zhang.
 
- Total times  cpu:        1.6s     wall:        1.6s
+ Total times  cpu:        2.1s     wall:        4.7s

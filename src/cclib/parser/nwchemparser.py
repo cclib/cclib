@@ -218,6 +218,8 @@ class NWChem(logfileparser.Logfile):
                     self.set_scalar('charge', int(line.split()[-1]))
                 if "Spin multiplicity" in line:
                     self.set_scalar('mult', int(line.split()[-1]))
+                if "AO basis - number of function" in line:
+                    self.set_scalar('nbasis', int(line.split()[-1]))
 
                 if "Convergence on energy requested" in line:
                     target_energy = float(line.split()[-1].replace('D', 'E'))
@@ -315,6 +317,48 @@ class NWChem(logfileparser.Logfile):
             energy = utils.convertor(energy, "hartree", "eV")
             self.scfenergies.append(energy)
 
+        # The final MO orbitals are printed in a simple list, but apparently not for
+        # DFT calcs, and often this list does not contain all MOs, so make sure to
+        # parse them from the MO analysis below if possible. This section will be like this:
+        #
+        #       Symmetry analysis of molecular orbitals - final
+        #       -----------------------------------------------
+        #
+        #  Numbering of irreducible representations: 
+        #
+        #     1 ag          2 au          3 bg          4 bu      
+        #
+        #  Orbital symmetries:
+        #
+        #     1 bu          2 ag          3 bu          4 ag          5 bu      
+        #     6 ag          7 bu          8 ag          9 bu         10 ag 
+        # ...
+        if line.strip() == "Symmetry analysis of molecular orbitals - final":
+            dashes = next(inputfile)
+            blank = next(inputfile)
+            numbering = next(inputfile)
+            blank = next(inputfile)
+            reps = next(inputfile)
+            blank = next(inputfile)
+            symmetries = next(inputfile)
+            blank = next(inputfile)
+
+            if not hasattr(self, 'mosyms'):
+                self.mosyms = [[None]*self.nbasis]
+            line = next(inputfile)
+            while line.strip():
+                ncols = len(line.split())
+                assert ncols % 2 == 0
+                for i in range(ncols//2):
+                    index = int(line.split()[i*2]) - 1
+                    sym = line.split()[i*2+1]
+                    sym = sym[0].upper() + sym[1:]
+                    if self.mosyms[0][index]:
+                        if self.mosyms[0][index] != sym:
+                            self.logger.warning("Symmetry of MO %i has changed" % (index+1))
+                    self.mosyms[0][index] = sym
+                line = next(inputfile)
+
         # The same format is used for HF and DFT molecular orbital analysis. We want to parse
         # the MO energies from this section, although it is printed already before this with
         # less precision (might be useful to parse that if this is not available). Also, this
@@ -348,6 +392,7 @@ class NWChem(logfileparser.Logfile):
             blank = next(inputfile)
 
             energies = []
+            symmetries = [[None]*self.nbasis]
             line = next(inputfile)
             homo = 0
             while line[:7] == " Vector":
@@ -364,6 +409,13 @@ class NWChem(logfileparser.Logfile):
                 energy = float(line[34:47].replace('D','E'))
                 energy = utils.convertor(energy, "hartree", "eV")
                 energies.append(energy)
+
+                # When symmetry is not used, this part of the line is missing.
+                if line[47:58].strip() == "Symmetry=":
+                    sym = line[58:].strip()
+                    sym = sym[0].upper() + sym[1:]
+                    symmetries[0][nvector-1] = sym
+
                 line = next(inputfile)
                 if "MO Center" in line:
                     line = next(inputfile)
@@ -380,6 +432,17 @@ class NWChem(logfileparser.Logfile):
                 assert self.nmo == nvector
             else:
                 self.nmo = nvector
+
+            if any(symmetries):
+                if hasattr(self, 'mosyms'):
+                    for i,s in enumerate(self.mosyms[0]):
+                        if s:
+                            if symmetries[0][i]:
+                                assert s == symmetries[0][i]
+                        elif symmetries[0][i]:
+                            self.mosyms[0][i] = symmetries[0][i]
+                else:
+                    self.mosyms = symmetries
 
             if not hasattr(self, 'homos'):
                 self.homos = [homo]

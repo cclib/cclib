@@ -38,9 +38,9 @@ dvb_gopt_hf.nw, len=14
            Job information
            ---------------
 
-    hostname      = silenziosa
+    hostname      = helena
     program       = nwchem
-    date          = Sun Mar 23 14:30:12 2014
+    date          = Sun Mar 23 18:26:13 2014
 
     compiled      = Thu_May_05_12:06:54_2011
     source        = /build/buildd/nwchem-6.0
@@ -586,7 +586,7 @@ dvb_gopt_hf.nw, len=14
     41 ag         42 bu         43 bu         44 ag         45 bu      
 
 
- Starting SCF solution at       0.4s
+ Starting SCF solution at       0.5s
 
 
 
@@ -594,14 +594,14 @@ dvb_gopt_hf.nw, len=14
          Quadratically convergent ROHF
 
  Convergence threshold     :          1.000E-04
- Maximum no. of iterations :           20
+ Maximum no. of iterations :           30
  Final Fock-matrix accuracy:          1.000E-07
  ----------------------------------------------
 
 
  Integral file          = ./dvb.aoints.0
  Record size in doubles =  65536        No. of integs per rec  =  43688
- Max. records in memory =     19        Max. records in file   =  56153
+ Max. records in memory =     19        Max. records in file   = ******
  No. of bits per label  =      8        No. of bits per value  =     64
 
 
@@ -610,10 +610,10 @@ dvb_gopt_hf.nw, len=14
 
               iter       energy          gnorm     gmax       time
              ----- ------------------- --------- --------- --------
-                 1     -379.7024515662  7.56D-01  1.81D-01      1.3
-                 2     -379.7670218887  1.53D-01  4.40D-02      1.4
-                 3     -379.7689554263  6.43D-03  2.31D-03      1.4
-                 4     -379.7689624914  3.37D-05  9.24D-06      1.5
+                 1     -379.7024515662  7.56D-01  1.81D-01      1.7
+                 2     -379.7670218887  1.53D-01  4.40D-02      1.8
+                 3     -379.7689554263  6.43D-03  2.31D-03      1.8
+                 4     -379.7689624914  3.37D-05  9.24D-06      1.9
 
 
        Final RHF  results 
@@ -624,7 +624,7 @@ dvb_gopt_hf.nw, len=14
       Two-electron energy =    574.516209262951
  Nuclear repulsion energy =    445.937012167446
 
-        Time for solution =      1.1s
+        Time for solution =      1.4s
 
 
 
@@ -1122,14 +1122,14 @@ dvb_gopt_hf.nw, len=14
                  ----------------------------------------
                  |  Time  |  1-e(secs)   |  2-e(secs)   |
                  ----------------------------------------
-                 |  CPU   |       0.01   |       1.68   |
+                 |  CPU   |       0.02   |       2.18   |
                  ----------------------------------------
-                 |  WALL  |       0.01   |       1.70   |
+                 |  WALL  |       0.02   |       2.18   |
                  ----------------------------------------
 
 @ Step       Energy      Delta E   Gmax     Grms     Xrms     Xmax   Walltime
 @ ---- ---------------- -------- -------- -------- -------- -------- --------
-@    0    -379.76896249  0.0D+00  0.04567  0.01110  0.00000  0.00000      3.3
+@    0    -379.76896249  0.0D+00  0.04567  0.01110  0.00000  0.00000      4.2
                                                        ok       ok  
 
 
@@ -1270,7 +1270,7 @@ dvb_gopt_hf.nw, len=14
         bu         25
 
 
- Forming initial guess at       3.4s
+ Forming initial guess at       4.3s
 
 
  Loading old vectors from job with title :
@@ -1298,7 +1298,7 @@ Divinylbenzene in STO-3G basis set
     41 ag         42 bu         43 ag         44 bu         45 ag      
 
 
- Starting SCF solution at       3.4s
+ Starting SCF solution at       4.3s
 
 
 
@@ -1306,14 +1306,14 @@ Divinylbenzene in STO-3G basis set
          Quadratically convergent ROHF
 
  Convergence threshold     :          1.000E-04
- Maximum no. of iterations :           20
+ Maximum no. of iterations :           30
  Final Fock-matrix accuracy:          1.000E-07
  ----------------------------------------------
 
 
  Integral file          = ./dvb.aoints.0
  Record size in doubles =  65536        No. of integs per rec  =  43688
- Max. records in memory =     19        Max. records in file   =  56153
+ Max. records in memory =     19        Max. records in file   = ******
  No. of bits per label  =      8        No. of bits per value  =     64
 
 
@@ -1322,9 +1322,9 @@ Divinylbenzene in STO-3G basis set
 
               iter       energy          gnorm     gmax       time
              ----- ------------------- --------- --------- --------
-                 1     -379.7748618924  1.31D-01  2.55D-02      4.2
-                 2     -379.7762734276  4.43D-03  1.54D-03      4.3
-                 3     -379.7762753201  1.05D-05  2.95D-06      4.3
+                 1     -379.7748618924  1.31D-01  2.55D-02      5.5
+                 2     -379.7762734276  4.43D-03  1.54D-03      5.5
+                 3     -379.7762753201  1.05D-05  2.95D-06      5.6
 
 
        Final RHF  results 
@@ -1335,7 +1335,7 @@ Divinylbenzene in STO-3G basis set
       Two-electron energy =    582.747774721598
  Nuclear repulsion energy =    454.809778651575
 
-        Time for solution =      1.1s
+        Time for solution =      1.4s
 
 
 
@@ -1895,7 +1895,7 @@ Divinylbenzene in STO-3G basis set
         bu         25
 
 
- Forming initial guess at       4.6s
+ Forming initial guess at       5.8s
 
 
  Loading old vectors from job with title :
@@ -1923,7 +1923,7 @@ Divinylbenzene in STO-3G basis set
     41 ag         42 bu         43 bu         44 ag         45 ag      
 
 
- Starting SCF solution at       4.6s
+ Starting SCF solution at       5.8s
 
 
 
@@ -1931,14 +1931,14 @@ Divinylbenzene in STO-3G basis set
          Quadratically convergent ROHF
 
  Convergence threshold     :          1.000E-04
- Maximum no. of iterations :           20
+ Maximum no. of iterations :           30
  Final Fock-matrix accuracy:          1.000E-07
  ----------------------------------------------
 
 
  Integral file          = ./dvb.aoints.0
  Record size in doubles =  65536        No. of integs per rec  =  43688
- Max. records in memory =     19        Max. records in file   =  56153
+ Max. records in memory =     19        Max. records in file   = ******
  No. of bits per label  =      8        No. of bits per value  =     64
 
 
@@ -1947,9 +1947,9 @@ Divinylbenzene in STO-3G basis set
 
               iter       energy          gnorm     gmax       time
              ----- ------------------- --------- --------- --------
-                 1     -379.7777487689  3.88D-02  7.83D-03      5.4
-                 2     -379.7778715360  1.39D-03  4.68D-04      5.4
-                 3     -379.7778717202  3.65D-06  1.11D-06      5.5
+                 1     -379.7777487689  3.88D-02  7.83D-03      7.0
+                 2     -379.7778715360  1.39D-03  4.68D-04      7.0
+                 3     -379.7778717202  3.65D-06  1.11D-06      7.1
 
 
        Final RHF  results 
@@ -1960,7 +1960,7 @@ Divinylbenzene in STO-3G basis set
       Two-electron energy =    580.335330714531
  Nuclear repulsion energy =    452.205431843910
 
-        Time for solution =      1.1s
+        Time for solution =      1.4s
 
 
 
@@ -2458,14 +2458,14 @@ Divinylbenzene in STO-3G basis set
                  ----------------------------------------
                  |  Time  |  1-e(secs)   |  2-e(secs)   |
                  ----------------------------------------
-                 |  CPU   |       0.01   |       1.71   |
+                 |  CPU   |       0.02   |       2.23   |
                  ----------------------------------------
-                 |  WALL  |       0.01   |       1.73   |
+                 |  WALL  |       0.02   |       2.24   |
                  ----------------------------------------
 
   Step       Energy      Delta E   Gmax     Grms     Xrms     Xmax   Walltime
   ---- ---------------- -------- -------- -------- -------- -------- --------
-@    1    -379.77787172 -8.9D-03  0.00420  0.00083  0.04325  0.11704      7.5
+@    1    -379.77787172 -8.9D-03  0.00420  0.00083  0.04325  0.11704      9.6
                                                                     
 
 
@@ -2606,7 +2606,7 @@ Divinylbenzene in STO-3G basis set
         bu         25
 
 
- Forming initial guess at       7.5s
+ Forming initial guess at       9.6s
 
 
  Loading old vectors from job with title :
@@ -2634,7 +2634,7 @@ Divinylbenzene in STO-3G basis set
     41 ag         42 bu         43 bu         44 ag         45 ag      
 
 
- Starting SCF solution at       7.5s
+ Starting SCF solution at       9.6s
 
 
 
@@ -2642,14 +2642,14 @@ Divinylbenzene in STO-3G basis set
          Quadratically convergent ROHF
 
  Convergence threshold     :          1.000E-04
- Maximum no. of iterations :           20
+ Maximum no. of iterations :           30
  Final Fock-matrix accuracy:          1.000E-07
  ----------------------------------------------
 
 
  Integral file          = ./dvb.aoints.0
  Record size in doubles =  65536        No. of integs per rec  =  43688
- Max. records in memory =     19        Max. records in file   =  56153
+ Max. records in memory =     19        Max. records in file   = ******
  No. of bits per label  =      8        No. of bits per value  =     64
 
 
@@ -2658,9 +2658,9 @@ Divinylbenzene in STO-3G basis set
 
               iter       energy          gnorm     gmax       time
              ----- ------------------- --------- --------- --------
-                 1     -379.7779267502  1.14D-02  2.55D-03      8.3
-                 2     -379.7779382031  1.24D-04  3.33D-05      8.4
-                 3     -379.7779382052  2.94D-06  9.82D-07      8.4
+                 1     -379.7779267502  1.14D-02  2.55D-03     10.8
+                 2     -379.7779382031  1.24D-04  3.33D-05     10.8
+                 3     -379.7779382052  2.94D-06  9.82D-07     10.9
 
 
        Final RHF  results 
@@ -2671,7 +2671,7 @@ Divinylbenzene in STO-3G basis set
       Two-electron energy =    580.268934920393
  Nuclear repulsion energy =    452.144474548293
 
-        Time for solution =      1.1s
+        Time for solution =      1.4s
 
 
 
@@ -3231,7 +3231,7 @@ Divinylbenzene in STO-3G basis set
         bu         25
 
 
- Forming initial guess at       8.7s
+ Forming initial guess at      11.2s
 
 
  Loading old vectors from job with title :
@@ -3259,7 +3259,7 @@ Divinylbenzene in STO-3G basis set
     41 ag         42 bu         43 bu         44 ag         45 ag      
 
 
- Starting SCF solution at       8.7s
+ Starting SCF solution at      11.2s
 
 
 
@@ -3267,14 +3267,14 @@ Divinylbenzene in STO-3G basis set
          Quadratically convergent ROHF
 
  Convergence threshold     :          1.000E-04
- Maximum no. of iterations :           20
+ Maximum no. of iterations :           30
  Final Fock-matrix accuracy:          1.000E-07
  ----------------------------------------------
 
 
  Integral file          = ./dvb.aoints.0
  Record size in doubles =  65536        No. of integs per rec  =  43688
- Max. records in memory =     19        Max. records in file   =  56152
+ Max. records in memory =     19        Max. records in file   = ******
  No. of bits per label  =      8        No. of bits per value  =     64
 
 
@@ -3283,8 +3283,8 @@ Divinylbenzene in STO-3G basis set
 
               iter       energy          gnorm     gmax       time
              ----- ------------------- --------- --------- --------
-                 1     -379.7779457974  2.79D-03  6.27D-04      9.5
-                 2     -379.7779460162  2.12D-05  5.22D-06      9.5
+                 1     -379.7779457974  2.79D-03  6.27D-04     12.2
+                 2     -379.7779460162  2.12D-05  5.22D-06     12.3
 
 
        Final RHF  results 
@@ -3295,7 +3295,7 @@ Divinylbenzene in STO-3G basis set
       Two-electron energy =    580.285095116155
  Nuclear repulsion energy =    452.159276151931
 
-        Time for solution =      1.0s
+        Time for solution =      1.3s
 
 
 
@@ -3793,14 +3793,14 @@ Divinylbenzene in STO-3G basis set
                  ----------------------------------------
                  |  Time  |  1-e(secs)   |  2-e(secs)   |
                  ----------------------------------------
-                 |  CPU   |       0.01   |       1.71   |
+                 |  CPU   |       0.02   |       2.22   |
                  ----------------------------------------
-                 |  WALL  |       0.01   |       1.73   |
+                 |  WALL  |       0.02   |       2.22   |
                  ----------------------------------------
 
   Step       Energy      Delta E   Gmax     Grms     Xrms     Xmax   Walltime
   ---- ---------------- -------- -------- -------- -------- -------- --------
-@    2    -379.77794602 -7.4D-05  0.00118  0.00023  0.00440  0.01818     11.6
+@    2    -379.77794602 -7.4D-05  0.00118  0.00023  0.00440  0.01818     14.8
                                               ok                    
 
 
@@ -3941,7 +3941,7 @@ Divinylbenzene in STO-3G basis set
         bu         25
 
 
- Forming initial guess at      11.6s
+ Forming initial guess at      14.9s
 
 
  Loading old vectors from job with title :
@@ -3969,7 +3969,7 @@ Divinylbenzene in STO-3G basis set
     41 ag         42 bu         43 bu         44 ag         45 ag      
 
 
- Starting SCF solution at      11.6s
+ Starting SCF solution at      14.9s
 
 
 
@@ -3977,14 +3977,14 @@ Divinylbenzene in STO-3G basis set
          Quadratically convergent ROHF
 
  Convergence threshold     :          1.000E-04
- Maximum no. of iterations :           20
+ Maximum no. of iterations :           30
  Final Fock-matrix accuracy:          1.000E-07
  ----------------------------------------------
 
 
  Integral file          = ./dvb.aoints.0
  Record size in doubles =  65536        No. of integs per rec  =  43688
- Max. records in memory =     19        Max. records in file   =  56152
+ Max. records in memory =     19        Max. records in file   = ******
  No. of bits per label  =      8        No. of bits per value  =     64
 
 
@@ -3993,8 +3993,8 @@ Divinylbenzene in STO-3G basis set
 
               iter       energy          gnorm     gmax       time
              ----- ------------------- --------- --------- --------
-                 1     -379.7779543115  3.20D-03  7.92D-04     12.3
-                 2     -379.7779550129  2.03D-05  5.28D-06     12.4
+                 1     -379.7779543115  3.20D-03  7.92D-04     16.0
+                 2     -379.7779550129  2.03D-05  5.28D-06     16.0
 
 
        Final RHF  results 
@@ -4005,7 +4005,7 @@ Divinylbenzene in STO-3G basis set
       Two-electron energy =    580.252590912649
  Nuclear repulsion energy =    452.123207707393
 
-        Time for solution =      1.0s
+        Time for solution =      1.3s
 
 
 
@@ -4609,14 +4609,14 @@ Divinylbenzene in STO-3G basis set
                  ----------------------------------------
                  |  Time  |  1-e(secs)   |  2-e(secs)   |
                  ----------------------------------------
-                 |  CPU   |       0.01   |       1.71   |
+                 |  CPU   |       0.02   |       2.21   |
                  ----------------------------------------
-                 |  WALL  |       0.01   |       1.73   |
+                 |  WALL  |       0.02   |       2.21   |
                  ----------------------------------------
 
   Step       Energy      Delta E   Gmax     Grms     Xrms     Xmax   Walltime
   ---- ---------------- -------- -------- -------- -------- -------- --------
-@    3    -379.77795501 -9.0D-06  0.00004  0.00002  0.00110  0.00242     14.5
+@    3    -379.77795501 -9.0D-06  0.00004  0.00002  0.00110  0.00242     18.6
                                      ok       ok       ok           
 
 
@@ -4757,7 +4757,7 @@ Divinylbenzene in STO-3G basis set
         bu         25
 
 
- Forming initial guess at      14.6s
+ Forming initial guess at      18.7s
 
 
  Loading old vectors from job with title :
@@ -4785,7 +4785,7 @@ Divinylbenzene in STO-3G basis set
     41 ag         42 bu         43 bu         44 ag         45 ag      
 
 
- Starting SCF solution at      14.6s
+ Starting SCF solution at      18.7s
 
 
 
@@ -4793,14 +4793,14 @@ Divinylbenzene in STO-3G basis set
          Quadratically convergent ROHF
 
  Convergence threshold     :          1.000E-04
- Maximum no. of iterations :           20
+ Maximum no. of iterations :           30
  Final Fock-matrix accuracy:          1.000E-07
  ----------------------------------------------
 
 
  Integral file          = ./dvb.aoints.0
  Record size in doubles =  65536        No. of integs per rec  =  43688
- Max. records in memory =     19        Max. records in file   =  56152
+ Max. records in memory =     19        Max. records in file   = ******
  No. of bits per label  =      8        No. of bits per value  =     64
 
 
@@ -4809,8 +4809,8 @@ Divinylbenzene in STO-3G basis set
 
               iter       energy          gnorm     gmax       time
              ----- ------------------- --------- --------- --------
-                 1     -379.7779555176  5.35D-04  1.16D-04     15.2
-                 2     -379.7779551105  2.00D-05  5.28D-06     15.3
+                 1     -379.7779555176  5.35D-04  1.16D-04     19.7
+                 2     -379.7779551105  2.00D-05  5.28D-06     19.7
 
 
        Final RHF  results 
@@ -4821,7 +4821,7 @@ Divinylbenzene in STO-3G basis set
       Two-electron energy =    580.246505282101
  Nuclear repulsion energy =    452.117080421390
 
-        Time for solution =      1.0s
+        Time for solution =      1.3s
 
 
 
@@ -5425,14 +5425,14 @@ Divinylbenzene in STO-3G basis set
                  ----------------------------------------
                  |  Time  |  1-e(secs)   |  2-e(secs)   |
                  ----------------------------------------
-                 |  CPU   |       0.01   |       1.71   |
+                 |  CPU   |       0.02   |       2.21   |
                  ----------------------------------------
-                 |  WALL  |       0.01   |       1.73   |
+                 |  WALL  |       0.02   |       2.21   |
                  ----------------------------------------
 
   Step       Energy      Delta E   Gmax     Grms     Xrms     Xmax   Walltime
   ---- ---------------- -------- -------- -------- -------- -------- --------
-@    4    -379.77795511 -9.8D-08  0.00002  0.00001  0.00020  0.00046     17.4
+@    4    -379.77795511 -9.8D-08  0.00002  0.00001  0.00020  0.00046     22.4
                                      ok       ok       ok       ok  
 
 
@@ -5543,7 +5543,7 @@ Divinylbenzene in STO-3G basis set
 
   Step       Energy      Delta E   Gmax     Grms     Xrms     Xmax   Walltime
   ---- ---------------- -------- -------- -------- -------- -------- --------
-@    4    -379.77795511 -9.8D-08  0.00002  0.00001  0.00020  0.00046     17.4
+@    4    -379.77795511 -9.8D-08  0.00002  0.00001  0.00020  0.00046     22.4
                                      ok       ok       ok       ok  
 
 
@@ -5880,7 +5880,7 @@ Divinylbenzene in STO-3G basis set
 
 
 
- Task  times  cpu:       17.0s     wall:       17.4s
+ Task  times  cpu:       22.0s     wall:       22.3s
  Summary of allocated global arrays
 -----------------------------------
   No active global arrays
@@ -5947,4 +5947,4 @@ MA usage statistics:
     X. Long, B. Meng, T. Nakajima, S. Niu, L. Pollack, M. Rosing, G. Sandrone,
        M. Stave, H. Taylor, G. Thomas, J. H. van Lenthe, A. Wong, Z. Zhang.
 
- Total times  cpu:       17.1s     wall:       17.5s
+ Total times  cpu:       22.0s     wall:       22.4s
