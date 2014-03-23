@@ -140,22 +140,6 @@ class GenericGeoOptTest(bettertest.TestCase):
         dim_scfvalues = (len(self.data.scfvalues),len(self.data.scfvalues[0][0]))
         self.assertEquals(dim_scftargets, dim_scfvalues)
 
-    def testlengthmoenergies(self):
-        """Is the number of evalues equal to nmo?"""
-        self.assertEquals(len(self.data.moenergies[0]), self.data.nmo)
-
-    def testtypemoenergies(self):
-        """Is moenergies a list containing one numpy array?"""
-        self.assertEquals(type(self.data.moenergies), type([]))
-        self.assertEquals(type(self.data.moenergies[0]), type(numpy.array([])))
-
-    def testdimmocoeffs(self):
-        """Are the dimensions of mocoeffs equal to 1 x nmo x nbasis?"""
-        self.assertEquals(type(self.data.mocoeffs), type([]))
-        self.assertEquals(len(self.data.mocoeffs), 1)
-        self.assertEquals(self.data.mocoeffs[0].shape,
-                          (self.data.nmo, self.data.nbasis))
-
     def testgeovalues_atomcoords(self):
         """Are atomcoords consistent with geovalues?"""
         count_geovalues = len(self.data.geovalues)
@@ -198,13 +182,6 @@ class ADFGeoOptTest(GenericGeoOptTest):
 class GamessUKGeoOptTest(GenericGeoOptTest):
     """GAMESS-UK geometry optimization unittest."""
 
-    def testdimmocoeffs(self):
-        """Are the dimensions of mocoeffs equal to 1 x (homo+5) x nbasis?"""
-        self.assertEquals(type(self.data.mocoeffs), type([]))
-        self.assertEquals(len(self.data.mocoeffs), 1)
-        self.assertEquals(self.data.mocoeffs[0].shape,
-                          (self.data.homos[0]+1+5, self.data.nbasis))
-
         
 class GamessUSGeoOptTest(GenericGeoOptTest):
     """GAMESS-US geometry optimization unittest."""
@@ -219,11 +196,6 @@ class GaussianGeoOptTest(GenericGeoOptTest):
     def testatombasis(self):
         """Are the indices in atombasis the right amount and unique? PASS"""
         self.assertEquals(1, 1)
-       
-    # Data file does not contain enough information. Can we make a new one?
-    def testdimmocoeffs(self):
-        """Are the dimensions of mocoeffs equal to 1 x nmo x nbasis? PASS"""
-        self.assertEquals(1, 1)
 
     def testgrads(self):
         """Do the grads have the right dimensions?"""
@@ -236,11 +208,6 @@ class JaguarGeoOptTest(GenericGeoOptTest):
     # Data file does not contain enough information. Can we make a new one?
     def testatombasis(self):
         """Are the indices in atombasis the right amount and unique? PASS"""
-        self.assertEquals(1, 1)
-       
-    # Data file does not contain enough information. Can we make a new one?
-    def testdimmocoeffs(self):
-        """Are the dimensions of mocoeffs equal to 1 x nmo x nbasis? PASS"""
         self.assertEquals(1, 1)
 
 
