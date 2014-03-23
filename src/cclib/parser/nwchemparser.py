@@ -382,8 +382,9 @@ class NWChem(logfileparser.Logfile):
                 self.nmo = nvector
 
             if not hasattr(self, 'homos'):
-                self.homos = []
-            self.homos.append(homo)
+                self.homos = [homo]
+            else:
+                assert self.homos == [homo]
 
         # This is where the full MO vectors are printed, but a special directive is needed for it.
         if line.strip() == "Final MO vectors":
