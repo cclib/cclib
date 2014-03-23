@@ -1,8 +1,8 @@
 
- Primary working directories    : /lustre/scratch/tmp/pbs.6225433.nova
- Secondary working directories  : /lustre/scratch/tmp/pbs.6225433.nova
+ Primary working directories    : /lustre/scratch/tmp/pbs.6489172.nova
+ Secondary working directories  : /lustre/scratch/tmp/pbs.6489172.nova
  Wavefunction directory         : /home/langner/wfu/
- Main file repository           : /lustre/scratch/tmp/pbs.6225433.nova/
+ Main file repository           : /lustre/scratch/tmp/pbs.6489172.nova/
 
  SHA1      : c18f7d37f9f045f75d4f3096db241dde02ddca0a
  ARCHNAME  : Linux/x86_64
@@ -12,7 +12,7 @@
  id        : dmwwroc
 
  Nodes     nprocs
- wn453        1
+ wn719        1
 
  Using customized tuning parameters: mindgm=20; mindgv=20; mindgc=6; mindgr=1; noblas=0; minvec=7
  default implementation of scratch files=df  
@@ -64,13 +64,14 @@
  
  hf
  orbprint,9999
+ pop
  {matrop
  load,s
  print,s}
 
  Variables initialized (774), CPU time= 0.01 sec
- Commands  initialized (547), CPU time= 0.01 sec, 516 directives.
- Default parameters read. Elapsed time= 0.10 sec
+ Commands  initialized (547), CPU time= 0.00 sec, 516 directives.
+ Default parameters read. Elapsed time= 0.09 sec
 
  Checking input...
  Passed
@@ -85,7 +86,7 @@
 
  **********************************************************************************************************************************
  LABEL *   divinylbenzene sp scf                                                         
- Linux-2.6.18-348.3.1.el5/wn453(x86_64) 64 bit serial version                            DATE: 20-Feb-14          TIME: 22:14:26  
+ Linux-2.6.18-348.3.1.el5/wn719(x86_64) 64 bit serial version                            DATE: 21-Mar-14          TIME: 05:52:10  
  **********************************************************************************************************************************
 
  SHA1:             c18f7d37f9f045f75d4f3096db241dde02ddca0a
@@ -410,7 +411,7 @@
  Memory used in sort:       2.23 MW
 
  SORT1 READ     1719389. AND WROTE      795052. INTEGRALS IN      3 RECORDS. CPU TIME:     0.04 SEC, REAL TIME:     0.07 SEC
- SORT2 READ      795052. AND WROTE     1675365. INTEGRALS IN     22 RECORDS. CPU TIME:     0.06 SEC, REAL TIME:     0.10 SEC
+ SORT2 READ      795052. AND WROTE     1675365. INTEGRALS IN     22 RECORDS. CPU TIME:     0.05 SEC, REAL TIME:     0.09 SEC
 
  FILE SIZES:   FILE 1:    13.7 MBYTE,  FILE 4:    12.6 MBYTE,   TOTAL:     26.3 MBYTE
 
@@ -425,8 +426,8 @@
                                            T        V       H0       H01     AOSYM     SMH    MOLCAS    ERIS     OPER   
 
  PROGRAMS   *        TOTAL       INT
- CPU TIMES  *         1.57      1.46
- REAL TIME  *         1.89 SEC
+ CPU TIMES  *         1.52      1.42
+ REAL TIME  *         1.99 SEC
  DISK USED  *        26.78 MB      
  **********************************************************************************************************************************
 
@@ -924,8 +925,54 @@
                                          GEOM     BASIS   MCVARS     RHF  
 
  PROGRAMS   *        TOTAL        HF       INT
- CPU TIMES  *         1.85      0.28      1.46
- REAL TIME  *         2.23 SEC
+ CPU TIMES  *         1.80      0.28      1.42
+ REAL TIME  *         2.42 SEC
+ DISK USED  *        26.78 MB      
+ **********************************************************************************************************************************
+
+1PROGRAM * POP (Mulliken population analysis)
+
+ 
+ Density matrix read from record         2100.2  Type=RHF/CHARGE (state 1.1)
+ 
+ Population analysis by basis function type
+
+ Unique atom        s        p        d        f        g    Total    Charge
+   2  C       3.11797  2.88497  0.00000  0.00000  0.00000  6.00294  - 0.00294
+   3  C       3.14091  2.91892  0.00000  0.00000  0.00000  6.05984  - 0.05984
+   4  C       3.13961  2.92010  0.00000  0.00000  0.00000  6.05971  - 0.05971
+   5  C       3.11797  2.88497  0.00000  0.00000  0.00000  6.00294  - 0.00294
+   6  C       3.14091  2.91892  0.00000  0.00000  0.00000  6.05984  - 0.05984
+   7  C       3.13961  2.92010  0.00000  0.00000  0.00000  6.05971  - 0.05971
+   8  C       3.13511  2.92246  0.00000  0.00000  0.00000  6.05756  - 0.05756
+   9  C       3.13511  2.92246  0.00000  0.00000  0.00000  6.05756  - 0.05756
+  10  H       0.94177  0.00000  0.00000  0.00000  0.00000  0.94177  + 0.05823
+  11  H       0.94177  0.00000  0.00000  0.00000  0.00000  0.94177  + 0.05823
+  12  H       0.94377  0.00000  0.00000  0.00000  0.00000  0.94377  + 0.05623
+  13  H       0.94377  0.00000  0.00000  0.00000  0.00000  0.94377  + 0.05623
+  14  C       3.15749  2.96746  0.00000  0.00000  0.00000  6.12495  - 0.12495
+  15  C       3.15749  2.96746  0.00000  0.00000  0.00000  6.12495  - 0.12495
+  16  H       0.93798  0.00000  0.00000  0.00000  0.00000  0.93798  + 0.06202
+  17  H       0.93798  0.00000  0.00000  0.00000  0.00000  0.93798  + 0.06202
+  18  H       0.94105  0.00000  0.00000  0.00000  0.00000  0.94105  + 0.05895
+  19  H       0.94105  0.00000  0.00000  0.00000  0.00000  0.94105  + 0.05895
+  20  H       0.93043  0.00000  0.00000  0.00000  0.00000  0.93043  + 0.06957
+  21  H       0.93043  0.00000  0.00000  0.00000  0.00000  0.93043  + 0.06957
+
+
+ **********************************************************************************************************************************
+ DATASETS  * FILE   NREC   LENGTH (MB)   RECORD NAMES
+              1      19       10.93       500      610      700      900      950      970     1000      129      960     1100   
+                                          VAR    BASINP    GEOM    SYMINP    ZMAT    AOBASIS   BASIS     P2S    ABASIS      S 
+                                         1400     1410     1200     1210     1080     1600     1650     1300     1700   
+                                           T        V       H0       H01     AOSYM     SMH    MOLCAS    ERIS     OPER   
+
+              2       4        0.59       700     1000      520     2100   
+                                         GEOM     BASIS   MCVARS     RHF  
+
+ PROGRAMS   *        TOTAL       POP        HF       INT
+ CPU TIMES  *         1.80      0.00      0.28      1.42
+ REAL TIME  *         2.44 SEC
  DISK USED  *        26.78 MB      
  **********************************************************************************************************************************
 
@@ -1010,9 +1057,9 @@
               2       4        0.59       700     1000      520     2100   
                                          GEOM     BASIS   MCVARS     RHF  
 
- PROGRAMS   *        TOTAL    MATROP        HF       INT
- CPU TIMES  *         1.87      0.02      0.28      1.46
- REAL TIME  *         2.27 SEC
+ PROGRAMS   *        TOTAL    MATROP       POP        HF       INT
+ CPU TIMES  *         1.82      0.02      0.00      0.28      1.42
+ REAL TIME  *         2.47 SEC
  DISK USED  *        26.78 MB      
  **********************************************************************************************************************************
 

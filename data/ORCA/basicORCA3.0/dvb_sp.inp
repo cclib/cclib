@@ -2,6 +2,7 @@
 ! RKS STO-3G B3LYP UseSym
 %output
  PrintLevel Normal
+ Print[ P_Basis] 2
  Print[ P_MOs ] 1
  Print[ P_Overlap ] 1
 end 

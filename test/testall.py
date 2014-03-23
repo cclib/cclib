@@ -144,6 +144,7 @@ def testall(parserchoice=parsers, modules=test_modules):
     perpackage = {}
     errors = []
     
+    alltests = []
     for module in modules:
 
         testdata = gettestdata(module)
@@ -179,6 +180,7 @@ def testall(parserchoice=parsers, modules=test_modules):
                     l[2] += len(a.failures)
                     if hasattr(a, "skipped"):
                         l[3] += len(a.skipped)
+                    alltests.append(test)
 
     print("\n\n********* SUMMARY PER PACKAGE ****************")
     names = sorted(perpackage.keys())
@@ -204,8 +206,10 @@ def testall(parserchoice=parsers, modules=test_modules):
     if destdir:
         os.chdir(curdir)
 
+    return alltests
+
 
 if __name__ == "__main__":
     chosen_parsers = [p for p in parsers if p in sys.argv] or parsers
     chosen_modules = [m for m in test_modules if m in sys.argv] or test_modules
-    testall(chosen_parsers, chosen_modules)
+    tests = testall(chosen_parsers, chosen_modules)
