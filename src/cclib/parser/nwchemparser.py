@@ -490,7 +490,8 @@ class NWChem(logfileparser.Logfile):
                 blank = next(inputfile)
             self.mocoeffs = [mocoeffs]
 
-        # The atomic Mulliken charges are typically printed like this:
+        # For Hartree-Fock, the atomic Mulliken charges are typically printed like this:
+        #
         #  Mulliken analysis of the total density
         #  --------------------------------------
         #
@@ -519,6 +520,7 @@ class NWChem(logfileparser.Logfile):
             self.atomcharges['mulliken'] = charges
 
         # If the full overlap matrix is printed, it looks like this:
+        #
         #          ----------------------------
         #          Mulliken population analysis
         #          ----------------------------
@@ -530,6 +532,10 @@ class NWChem(logfileparser.Logfile):
         #    1   1 C  s            2.0694818227  -0.0535883400  -0.0000000000  -0.0000000000  -0.0000000000  -0.0000000000   0.0000039991
         #    2   1 C  s           -0.0535883400   0.8281341291   0.0000000000  -0.0000000000   0.0000000000   0.0000039991  -0.0009906747
         # ...
+        #
+        # Also, DFT does not seem to print the separate listing of Mulliken charges
+        # by default, but they are printed by this modules later on. They are also print
+        # for Hartree-Fock runs, though, so in that case make sure they are consistent.
         if line.strip() == "Mulliken population analysis":
 
             dashes = next(inputfile)
@@ -562,6 +568,31 @@ class NWChem(logfileparser.Logfile):
                 line = next(inputfile)
 
             self.aooverlaps = overlaps
+
+            # This header should be printed later, before the charges are print, which of course
+            # are just sums of the overlaps and could be calculated. But we just go ahead and
+            # parse them, make sure they're consistent with previously parsed values and
+            # use these since they are more precise (previous precision could have been just 0.01).
+            while "Total      gross population on atoms" not in line:
+                line = next(inputfile)
+            blank = next(inputfile)
+            charges = []
+            for i in range(self.natom):
+                line = next(inputfile)
+                iatom, element, ncharge, epop = line.split()
+                iatom = int(iatom)
+                ncharge = float(ncharge)
+                epop = float(epop)
+                assert iatom == (i+1)
+                charges.append(epop-ncharge)
+
+            if not hasattr(self, 'atomcharges'):
+                self.atomcharges = {}
+            if not "mulliken" in self.atomcharges:
+                self.atomcharges['mulliken'] = charges
+            else:
+                assert max(self.atomcharges['mulliken'] - numpy.array(charges)) < 0.01
+                self.atomcharges['mulliken'] = charges
 
 
 if __name__ == "__main__":
