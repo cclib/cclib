@@ -99,11 +99,6 @@ class GenericGeoOptTest(bettertest.TestCase):
         """Did this subclass overwrite normalisesym?"""
         self.assertNotEquals(self.logfile.normalisesym("A"),"ERROR: This should be overwritten by this subclass")
 
-    def testsymlabels(self):
-        """Are all the symmetry labels either Ag/u or Bg/u?"""
-        sumwronglabels = sum([x not in ['Ag','Bu','Au','Bg'] for x in self.data.mosyms[0]])
-        self.assertEquals(sumwronglabels,0)
-
     def testhomos(self):
         """Is the index of the HOMO equal to 34?"""
         ref = numpy.array([34], "i")
@@ -215,21 +210,12 @@ class MolproGeoOptTest(GenericGeoOptTest):
     extracoords = 1
     extrascfs = 2
 
-    def testsymlabels(self):
-        """Are all the symmetry labels either Ag/u or Bg/u? PASS"""
-        self.assertEquals(1,1)
-
 
 class OrcaGeoOptTest(GenericGeoOptTest):
     """ORCA geometry optimization unittest."""
 
     extracoords = 1
     extrascfs = 1
-
-    # ORCA has no support for symmetry yet.
-    def testsymlabels(self):
-        """Are all the symmetry labels either Ag/u or Bg/u? PASS"""
-        self.assertEquals(1,1)
 
 
 class PCGamessGeoOptTest(GenericGeoOptTest):
