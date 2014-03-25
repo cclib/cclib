@@ -79,17 +79,6 @@ class GenericGeoOptTest(bettertest.TestCase):
         count = sum([self.nbasisdict[n] for n in self.data.atomnos])
         self.assertEquals(self.data.nbasis, count)
 
-    def testatombasis(self):
-        """Are the indices in atombasis the right amount and unique?"""
-        all = []
-        for i,atom in enumerate(self.data.atombasis):
-            self.assertEquals(len(atom), self.nbasisdict[self.data.atomnos[i]])
-            all += atom
-        # Test if there are as many indices as atomic orbitals.
-        self.assertEquals(len(all), self.data.nbasis)
-        # Check if all are different (every orbital indexed once).
-        self.assertEquals(len(set(all)), len(all))
-
     def testcoreelectrons(self):
         """Are the coreelectrons all 0?"""
         ans = numpy.zeros(self.data.natom, 'i')
@@ -154,11 +143,6 @@ class ADFGeoOptTest(GenericGeoOptTest):
 
     extracoords = 1
     extrascfs = 1
-
-    # ADF parser does not extract atombasis.
-    def testatombasis(self):
-        """Are the indices in atombasis the right amount and unique? PASS"""
-        self.assertEquals(1, 1)
        
     def testscfenergy(self):
         """Is the SCF energy within 1eV of -140eV?"""
@@ -181,11 +165,6 @@ class GamessUSGeoOptTest(GenericGeoOptTest):
 class GaussianGeoOptTest(GenericGeoOptTest):
     """Gaussian geometry optimization unittest."""
 
-    # Data file does not contain enough information. Can we make a new one?
-    def testatombasis(self):
-        """Are the indices in atombasis the right amount and unique? PASS"""
-        self.assertEquals(1, 1)
-
     def testgrads(self):
         """Do the grads have the right dimensions?"""
         self.assertEquals(self.data.grads.shape,(len(self.data.geovalues),self.data.natom,3))
@@ -193,11 +172,6 @@ class GaussianGeoOptTest(GenericGeoOptTest):
 
 class JaguarGeoOptTest(GenericGeoOptTest):
     """Jaguar geometry optimization unittest."""
-
-    # Data file does not contain enough information. Can we make a new one?
-    def testatombasis(self):
-        """Are the indices in atombasis the right amount and unique? PASS"""
-        self.assertEquals(1, 1)
 
 
 class MolproGeoOptTest(GenericGeoOptTest):
