@@ -32,12 +32,13 @@ def get_program_dir(parser_name):
     else:
         return parser_name
 
-def getfile(parser, *location, stream=sys.stdout):
+def getfile(parser, *location, **kwds):
     """Returns a parsed logfile.
     
     Inputs:
         parser - a logfile parser class (subclass of LogFile)
         *location - subdirectory and data filename(s)
+        **kwds - accepts 'stream' keyword argument
     
     Outputs:
         data - the resulting data object
@@ -45,6 +46,7 @@ def getfile(parser, *location, stream=sys.stdout):
     """
 
     location = os.path.join(("..", "data", get_program_dir(parser.__name__)) + location)
+    stream = kwds.get('stream', sys.stdout)
 
     # Now construct the proper full path(s).
     # Multiple paths will be in a list only if more than one data file given.
