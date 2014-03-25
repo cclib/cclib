@@ -32,12 +32,13 @@ def get_program_dir(parser_name):
     else:
         return parser_name
 
-def getfile(parser, *location):
+def getfile(parser, *location, **kwds):
     """Returns a parsed logfile.
     
     Inputs:
         parser - a logfile parser class (subclass of LogFile)
         *location - subdirectory and data filename(s)
+        **kwds - accepts 'stream' keyword argument
     
     Outputs:
         data - the resulting data object
@@ -45,6 +46,7 @@ def getfile(parser, *location):
     """
 
     location = os.path.join(("..", "data", get_program_dir(parser.__name__)) + location)
+    stream = kwds.get('stream', sys.stdout)
 
     # Now construct the proper full path(s).
     # Multiple paths will be in a list only if more than one data file given.
@@ -55,7 +57,7 @@ def getfile(parser, *location):
     else:
         filename = [os.path.join(*(location[:4]+location[n:n+1])) for n in range(4,len(location))]
 
-    logfile = parser(filename)
+    logfile = parser(filename, logstream=stream)
     logfile.logger.setLevel(0)
     data = logfile.parse()
     
@@ -93,7 +95,7 @@ def gettestdata(module=None):
     return testdata
 
 
-def visualtests():
+def visualtests(stream=sys.stdout):
     """These are not formal tests -- but they should be eyeballed."""
     
     output = [ getfile(Gaussian,"basicGaussian03","dvb_gopt.out")[0],
@@ -104,11 +106,11 @@ def visualtests():
                getfile(Molpro,"basicMolpro2006", "dvb_gopt.out", "dvb_gopt.out")[0],
              ]
 
-    print("\n\nMO energies of optimised dvb")
-    print("      ", "".join(["%-12s" % x for x in ['Gaussian03','PC-GAMESS','GAMESS-US','ADF2007.01','Jaguar7.0','Molpro2006']]))
-    print("HOMO", "   ".join(["%+9.4f" % x.moenergies[0][x.homos[0]] for x in output]))
-    print("LUMO", "   ".join(["%+9.4f" % x.moenergies[0][x.homos[0]+1] for x in output]))
-    print("H-L ", "   ".join(["%9.4f" % (x.moenergies[0][x.homos[0]+1]-x.moenergies[0][x.homos[0]],) for x in output]))
+    print("\n\nMO energies of optimised dvb", file=stream)
+    print("      ", "".join(["%-12s" % x for x in ['Gaussian03','PC-GAMESS','GAMESS-US','ADF2007.01','Jaguar7.0','Molpro2006']]), file=stream)
+    print("HOMO", "   ".join(["%+9.4f" % x.moenergies[0][x.homos[0]] for x in output]), file=stream)
+    print("LUMO", "   ".join(["%+9.4f" % x.moenergies[0][x.homos[0]+1] for x in output]), file=stream)
+    print("H-L ", "   ".join(["%9.4f" % (x.moenergies[0][x.homos[0]+1]-x.moenergies[0][x.homos[0]],) for x in output]), file=stream)
 
 
 def importName(modulename, name):
@@ -130,7 +132,7 @@ def importName(modulename, name):
     return getattr(module, name, None)
 
 
-def testall(parserchoice=parsers, modules=test_modules):
+def testall(parserchoice=parsers, modules=test_modules, stream=sys.stdout):
     """Run all unittests in all modules."""
 
     # Make sure we are in the test directory of this script,
@@ -167,12 +169,12 @@ def testall(parserchoice=parsers, modules=test_modules):
                 except:
                     errors.append("ERROR: could not import %s from %s." %(name, module))
                 else:
-                    print("\n**** test%s (%s): %s ****" %(module, program, test.__doc__))
+                    print("\n**** test%s (%s): %s ****" %(module, program, test.__doc__), file=stream)
                     parser = test_instance["parser"]
                     location = test_instance["location"]
-                    test.data, test.logfile = getfile(eval(parser), *location)
+                    test.data, test.logfile = getfile(eval(parser), *location, stream=stream)
                     myunittest = unittest.makeSuite(test)
-                    a = unittest.TextTestRunner(verbosity=2).run(myunittest)
+                    a = unittest.TextTestRunner(stream=stream, verbosity=2).run(myunittest)
                     l = perpackage.setdefault(program, [0, 0, 0, 0])
                     l[0] += a.testsRun
                     l[1] += len(a.errors)
@@ -181,25 +183,25 @@ def testall(parserchoice=parsers, modules=test_modules):
                         l[3] += len(a.skipped)
                     alltests.append(test)
 
-    print("\n\n********* SUMMARY PER PACKAGE ****************")
+    print("\n\n********* SUMMARY PER PACKAGE ****************", file=stream)
     names = sorted(perpackage.keys())
     total = [0, 0, 0, 0]
-    print(" "*14, "\t".join(["Total", "Passed", "Failed", "Errors", "Skipped"]))
+    print(" "*14, "\t".join(["Total", "Passed", "Failed", "Errors", "Skipped"]), file=stream)
     for name in names:
         l = perpackage[name]
-        print(name.ljust(15), "%3d\t%3d\t%3d\t%3d\t%3d" % (l[0], l[0]-l[1]-l[2]-l[3], l[2], l[1], l[3]))
+        print(name.ljust(15), "%3d\t%3d\t%3d\t%3d\t%3d" % (l[0], l[0]-l[1]-l[2]-l[3], l[2], l[1], l[3]), file=stream)
         for i in range(4):
             total[i] += l[i]
 
-    print("\n\n********* SUMMARY OF EVERYTHING **************")
+    print("\n\n********* SUMMARY OF EVERYTHING **************", file=stream)
     print("TOTAL: %d\tPASSED: %d\tFAILED: %d\tERRORS: %d\tSKIPPED: %d" \
-            %(total[0], total[0]-(total[1]+total[2]+total[3]), total[2], total[1], total[3]))
+            %(total[0], total[0]-(total[1]+total[2]+total[3]), total[2], total[1], total[3]), file=stream)
 
     if errors:
         print("\n".join(errors))
 
-    print("\n\n*** Visual tests ***")
-    visualtests()
+    print("\n\n*** Visual tests ***", file=stream)
+    visualtests(stream=stream)
     
     # Return to the directory we started from.
     if destdir:
