@@ -47,13 +47,7 @@ class GenericGeoOptTest(bettertest.TestCase):
 
         count_C = sum(self.data.atomnos == 6)
         count_H = sum(self.data.atomnos == 1)
-        self.assertEquals(count_C + count_H, 20)        
-
-    def testatomcharges(self):
-        """Are all atomcharges consistent with natom and do they sum to zero?"""
-        for type,charges in self.data.atomcharges.items():
-            self.assertEquals(self.data.natom, len(charges))
-            self.assertInside(sum(charges), 0, 0.001)
+        self.assertEquals(count_C + count_H, 20)
 
     def testatomcoords(self):
         """Are atomcoords consistent with natom and Angstroms?"""
@@ -214,7 +208,7 @@ class JaguarGeoOptTest(GenericGeoOptTest):
 class MolproGeoOptTest(GenericGeoOptTest):
     """Molpro geometry optimization unittest."""
 
-    # Note that these extra coordianates and energies will be available only
+    # Note that these extra coordinates and energies will be available only
     # if the appropriate output is parsed, and Molpro often saves the initial
     # SCF run and subsequent geometry optimization to separate files, which
     # both need to be given to the cclib parser (as a list).
@@ -223,16 +217,6 @@ class MolproGeoOptTest(GenericGeoOptTest):
 
     def testsymlabels(self):
         """Are all the symmetry labels either Ag/u or Bg/u? PASS"""
-        self.assertEquals(1,1)
-
-class MolproGeoOptTest2006(MolproGeoOptTest):
-    """Molpro 2006 geometry optimization unittest."""
-
-    # Same situation as SP -- this is tested for in the 2012 logfiles, but
-    # the 2006 logfiles were created before atomcharges was an attribute and
-    # we don't have access to Molpro 2006 anymore.
-    def testatomcharges(self):
-        """Are all atomcharges consistent with natom and do they sum to zero? PASS"""
         self.assertEquals(1,1)
 
 
