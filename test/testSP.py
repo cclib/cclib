@@ -44,7 +44,8 @@ class GenericSPTest(bettertest.TestCase):
 
     def testatomcoords(self):
         """Are the dimensions of atomcoords 1 x natom x 3?"""
-        self.assertEquals(self.data.atomcoords.shape,(1,self.data.natom,3))
+        expected_shape = (1, self.data.natom, 3)
+        self.assertEquals(self.data.atomcoords.shape, expected_shape)
     
     def testcharge_and_mult(self):
         """Are the charge and multiplicity correct?"""

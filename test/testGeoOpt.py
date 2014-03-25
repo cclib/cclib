@@ -47,13 +47,7 @@ class GenericGeoOptTest(bettertest.TestCase):
 
         count_C = sum(self.data.atomnos == 6)
         count_H = sum(self.data.atomnos == 1)
-        self.assertEquals(count_C + count_H, 20)        
-
-    def testatomcharges(self):
-        """Are all atomcharges consistent with natom and do they sum to zero?"""
-        for type,charges in self.data.atomcharges.items():
-            self.assertEquals(self.data.natom, len(charges))
-            self.assertInside(sum(charges), 0, 0.001)
+        self.assertEquals(count_C + count_H, 20)
 
     def testatomcoords(self):
         """Are atomcoords consistent with natom and Angstroms?"""
@@ -85,17 +79,6 @@ class GenericGeoOptTest(bettertest.TestCase):
         count = sum([self.nbasisdict[n] for n in self.data.atomnos])
         self.assertEquals(self.data.nbasis, count)
 
-    def testatombasis(self):
-        """Are the indices in atombasis the right amount and unique?"""
-        all = []
-        for i,atom in enumerate(self.data.atombasis):
-            self.assertEquals(len(atom), self.nbasisdict[self.data.atomnos[i]])
-            all += atom
-        # Test if there are as many indices as atomic orbitals.
-        self.assertEquals(len(all), self.data.nbasis)
-        # Check if all are different (every orbital indexed once).
-        self.assertEquals(len(set(all)), len(all))
-
     def testcoreelectrons(self):
         """Are the coreelectrons all 0?"""
         ans = numpy.zeros(self.data.natom, 'i')
@@ -104,11 +87,6 @@ class GenericGeoOptTest(bettertest.TestCase):
     def testnormalisesym(self):
         """Did this subclass overwrite normalisesym?"""
         self.assertNotEquals(self.logfile.normalisesym("A"),"ERROR: This should be overwritten by this subclass")
-
-    def testsymlabels(self):
-        """Are all the symmetry labels either Ag/u or Bg/u?"""
-        sumwronglabels = sum([x not in ['Ag','Bu','Au','Bg'] for x in self.data.mosyms[0]])
-        self.assertEquals(sumwronglabels,0)
 
     def testhomos(self):
         """Is the index of the HOMO equal to 34?"""
@@ -140,22 +118,6 @@ class GenericGeoOptTest(bettertest.TestCase):
         dim_scfvalues = (len(self.data.scfvalues),len(self.data.scfvalues[0][0]))
         self.assertEquals(dim_scftargets, dim_scfvalues)
 
-    def testlengthmoenergies(self):
-        """Is the number of evalues equal to nmo?"""
-        self.assertEquals(len(self.data.moenergies[0]), self.data.nmo)
-
-    def testtypemoenergies(self):
-        """Is moenergies a list containing one numpy array?"""
-        self.assertEquals(type(self.data.moenergies), type([]))
-        self.assertEquals(type(self.data.moenergies[0]), type(numpy.array([])))
-
-    def testdimmocoeffs(self):
-        """Are the dimensions of mocoeffs equal to 1 x nmo x nbasis?"""
-        self.assertEquals(type(self.data.mocoeffs), type([]))
-        self.assertEquals(len(self.data.mocoeffs), 1)
-        self.assertEquals(self.data.mocoeffs[0].shape,
-                          (self.data.nmo, self.data.nbasis))
-
     def testgeovalues_atomcoords(self):
         """Are atomcoords consistent with geovalues?"""
         count_geovalues = len(self.data.geovalues)
@@ -181,11 +143,6 @@ class ADFGeoOptTest(GenericGeoOptTest):
 
     extracoords = 1
     extrascfs = 1
-
-    # ADF parser does not extract atombasis.
-    def testatombasis(self):
-        """Are the indices in atombasis the right amount and unique? PASS"""
-        self.assertEquals(1, 1)
        
     def testscfenergy(self):
         """Is the SCF energy within 1eV of -140eV?"""
@@ -198,13 +155,6 @@ class ADFGeoOptTest(GenericGeoOptTest):
 class GamessUKGeoOptTest(GenericGeoOptTest):
     """GAMESS-UK geometry optimization unittest."""
 
-    def testdimmocoeffs(self):
-        """Are the dimensions of mocoeffs equal to 1 x (homo+5) x nbasis?"""
-        self.assertEquals(type(self.data.mocoeffs), type([]))
-        self.assertEquals(len(self.data.mocoeffs), 1)
-        self.assertEquals(self.data.mocoeffs[0].shape,
-                          (self.data.homos[0]+1+5, self.data.nbasis))
-
         
 class GamessUSGeoOptTest(GenericGeoOptTest):
     """GAMESS-US geometry optimization unittest."""
@@ -215,16 +165,6 @@ class GamessUSGeoOptTest(GenericGeoOptTest):
 class GaussianGeoOptTest(GenericGeoOptTest):
     """Gaussian geometry optimization unittest."""
 
-    # Data file does not contain enough information. Can we make a new one?
-    def testatombasis(self):
-        """Are the indices in atombasis the right amount and unique? PASS"""
-        self.assertEquals(1, 1)
-       
-    # Data file does not contain enough information. Can we make a new one?
-    def testdimmocoeffs(self):
-        """Are the dimensions of mocoeffs equal to 1 x nmo x nbasis? PASS"""
-        self.assertEquals(1, 1)
-
     def testgrads(self):
         """Do the grads have the right dimensions?"""
         self.assertEquals(self.data.grads.shape,(len(self.data.geovalues),self.data.natom,3))
@@ -233,40 +173,16 @@ class GaussianGeoOptTest(GenericGeoOptTest):
 class JaguarGeoOptTest(GenericGeoOptTest):
     """Jaguar geometry optimization unittest."""
 
-    # Data file does not contain enough information. Can we make a new one?
-    def testatombasis(self):
-        """Are the indices in atombasis the right amount and unique? PASS"""
-        self.assertEquals(1, 1)
-       
-    # Data file does not contain enough information. Can we make a new one?
-    def testdimmocoeffs(self):
-        """Are the dimensions of mocoeffs equal to 1 x nmo x nbasis? PASS"""
-        self.assertEquals(1, 1)
-
 
 class MolproGeoOptTest(GenericGeoOptTest):
     """Molpro geometry optimization unittest."""
 
-    # Note that these extra coordianates and energies will be available only
+    # Note that these extra coordinates and energies will be available only
     # if the appropriate output is parsed, and Molpro often saves the initial
     # SCF run and subsequent geometry optimization to separate files, which
     # both need to be given to the cclib parser (as a list).
     extracoords = 1
     extrascfs = 2
-
-    def testsymlabels(self):
-        """Are all the symmetry labels either Ag/u or Bg/u? PASS"""
-        self.assertEquals(1,1)
-
-class MolproGeoOptTest2006(MolproGeoOptTest):
-    """Molpro 2006 geometry optimization unittest."""
-
-    # Same situation as SP -- this is tested for in the 2012 logfiles, but
-    # the 2006 logfiles were created before atomcharges was an attribute and
-    # we don't have access to Molpro 2006 anymore.
-    def testatomcharges(self):
-        """Are all atomcharges consistent with natom and do they sum to zero? PASS"""
-        self.assertEquals(1,1)
 
 
 class OrcaGeoOptTest(GenericGeoOptTest):
@@ -274,11 +190,6 @@ class OrcaGeoOptTest(GenericGeoOptTest):
 
     extracoords = 1
     extrascfs = 1
-
-    # ORCA has no support for symmetry yet.
-    def testsymlabels(self):
-        """Are all the symmetry labels either Ag/u or Bg/u? PASS"""
-        self.assertEquals(1,1)
 
 
 class PCGamessGeoOptTest(GenericGeoOptTest):
