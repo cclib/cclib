@@ -55,15 +55,48 @@ class NWChem(logfileparser.Logfile):
         pass
 
     def set_scalar(self, name, value, check=True):
-        """Set an attribute and perform a check if it already exists."""
+        """Set an attribute and perform a check when it already exists."""
         if check and hasattr(self, name):
             try:
                 assert getattr(self, name) == value
-            except AssertionError as e:
-                fmt = "Scalar %s changed value (%s -> %s) "
-                args = (name, getattr(self, name), value)
-                self.logger.warning(fmt % args + str(e))
+            except AssertionError:
+                self.logger.warning("Scalar %s changed value (%s -> %s)" % (name, getattr(self, name), value))
         setattr(self, name, value)
+
+    def skip_lines(self, inputfile, sequence):
+        """Read trivial line types and check they are what they are supposed to be.
+
+        This function will read len(sequence) lines and do certain checks on them,
+        when the elements of sequence have the appropriate values. Currently the
+        following elements trigger checks:
+            'blank' or 'b'      - the line should be blank
+            'dashes' or 'd'     - the line should contain only dashes (or spaces)
+            'equals' oe 'e'     - the line should contain only equal signs (or spaces)
+        """
+
+        lines = []
+        for expected in sequence:
+            line = next(inputfile)
+            if expected in ["blank", "b"]:
+                try:
+                    assert line.strip() == ""
+                except AssertionError:
+                    self.logger.warning("Line not blank as expected: " + line.strip('\n'))
+            elif expected in ['dashes', 'd']:
+                try:
+                    assert all([c == '-' for c in line.strip() if c != ' '])
+                except AssertionError:
+                    self.logger.warning("Line not all dashes as expected: " + line.strip('\n'))
+            elif expected in ['equals', 'e']:
+                try:
+                    assert all([c == '=' for c in line.strip() if c != ' '])
+                except AssertionError:
+                    self.logger.warning("Line not all equal signs as expected: " + line.strip('\n'))
+            lines.append(line)
+
+        return lines
+
+    skip_line = lambda self, inputfile, expected: self.skip_lines(inputfile, [expected])
 
     name2element = lambda self, lbl: "".join(itertools.takewhile(str.isalpha, lbl))
 
@@ -78,12 +111,7 @@ class NWChem(logfileparser.Logfile):
         # beginning of each optimization step only.
         if line.strip() == 'Geometry "geometry" -> ""' or line.strip() == 'Geometry "geometry" -> "geometry"':
 
-            dashes = next(inputfile)
-            blank = next(inputfile)
-            concerning_units = next(inputfile)
-            blank = next(inputfile)
-            header = next(inputfile)
-            dashes = next(inputfile)
+            self.skip_lines(inputfile, ['dashes', 'blank', 'units', 'blank', 'header', 'dashes'])
 
             if not hasattr(self, 'atomcoords'):
                 self.atomcoords = []
@@ -110,7 +138,7 @@ class NWChem(logfileparser.Logfile):
         # If the geometry is printed in XYZ format, it will have the number of atoms.
         if line[12:31] == "XYZ format geometry":
 
-            dashes = next(inputfile)
+            self.skip_line(inputfile, 'dashes')
             natom = int(next(inputfile).strip())
             self.set_scalar('natom', natom)
 
@@ -150,16 +178,14 @@ class NWChem(logfileparser.Logfile):
         # use the same basis set, but that might not be true, and this will probably
         # need to be considered in the future when such a logfile appears.
         if line.strip() == """Basis "ao basis" -> "ao basis" (cartesian)""":
-            dashes = next(inputfile)
+            self.skip_line(inputfile, 'dashes')
             gbasis_dict = {}
             line = next(inputfile)
             while line.strip():
                 atomname = line.split()[0]
                 atomelement = self.name2element(atomname)
                 gbasis_dict[atomelement] = []
-                dashes = next(inputfile)
-                labels = next(inputfile)
-                dashes = next(inputfile)
+                self.skip_lines(inputfile, ['d', 'labels', 'd'])
                 shells = []
                 line = next(inputfile)
                 while line.strip() and line.split()[0].isdigit():
@@ -196,9 +222,7 @@ class NWChem(logfileparser.Logfile):
         # we assume all atoms of the same element have the same basis sets, but
         # this will probably need to be revised later.
         if line.strip() == """Summary of "ao basis" -> "ao basis" (cartesian)""":
-            dashes = next(inputfile)
-            headers = next(inputfile)
-            dashes = next(inputfile)
+            self.skip_lines(inputfile, ['d', 'headers', 'd'])
             atombasis_dict = {}
             line = next(inputfile)
             while line.strip():
@@ -221,13 +245,7 @@ class NWChem(logfileparser.Logfile):
         # This section contains general parameters for Hartree-Fock calculations,
         # which do not contain the 'General Information' section like most jobs.
         if line.strip() == "NWChem SCF Module":
-            dashes = next(inputfile)
-            blank = next(inputfile)
-            blank = next(inputfile)
-            title = next(inputfile)
-            blank = next(inputfile)
-            blank = next(inputfile)
-            blank = next(inputfile)
+            self.skip_lines(inputfile, ['d', 'b', 'b', 'title', 'b', 'b', 'b'])
             line = next(inputfile)
             while line.strip():
                 if line[2:8] == "charge":
@@ -247,6 +265,7 @@ class NWChem(logfileparser.Logfile):
         # This section contains general parameters for DFT calculations, as well as
         # for the many-electron theory module.
         if line.strip() == "General Information":
+
             while line.strip():
 
                 if "No. of atoms" in line:
@@ -300,7 +319,7 @@ class NWChem(logfileparser.Logfile):
 
                 if line.split() == ['iter', 'energy', 'gnorm', 'gmax', 'time']:
                     values = []
-                    dashes = next(inputfile)
+                    self.skip_line(inputfile, 'dashes')
                     line = next(inputfile)
                     while line.strip():
                         iter,energy,gnorm,gmax,time = line.split()
@@ -322,7 +341,8 @@ class NWChem(logfileparser.Logfile):
         # d= 0,ls=0.0,diis     3   -382.2954343173  6.30D-03  4.21D-03  7.95D-02    55.3
         # ...
         if line.split() == ['convergence', 'iter', 'energy', 'DeltaE', 'RMS-Dens', 'Diis-err', 'time']:
-            dashes = next(inputfile)
+
+            self.skip_line(inputfile, 'dashes')
             line = next(inputfile)
             values = []
             while line.strip():
@@ -378,14 +398,8 @@ class NWChem(logfileparser.Logfile):
         #     6 ag          7 bu          8 ag          9 bu         10 ag 
         # ...
         if line.strip() == "Symmetry analysis of molecular orbitals - final":
-            dashes = next(inputfile)
-            blank = next(inputfile)
-            numbering = next(inputfile)
-            blank = next(inputfile)
-            reps = next(inputfile)
-            blank = next(inputfile)
-            symmetries = next(inputfile)
-            blank = next(inputfile)
+
+            self.skip_lines(inputfile, ['d', 'b', 'numbering', 'b', 'reps', 'b', 'syms', 'b'])
 
             if not hasattr(self, 'mosyms'):
                 self.mosyms = [[None]*self.nbasis]
@@ -430,10 +444,11 @@ class NWChem(logfileparser.Logfile):
         # ...
         #
         if "Final Molecular Orbital Analysis" in line:
+
+            self.skip_lines(inputfile, ['d', 'b'])
+
             if not hasattr(self, "moenergies"):
                 self.moenergies = []
-            dashes = next(inputfile)
-            blank = next(inputfile)
 
             energies = []
             symmetries = [[None]*self.nbasis]
@@ -493,9 +508,7 @@ class NWChem(logfileparser.Logfile):
         # This is where the full MO vectors are printed, but a special directive is needed for it.
         if line.strip() == "Final MO vectors":
 
-            dashes = next(inputfile)
-            blank = next(inputfile)
-            blank = next(inputfile)
+            self.skip_lines(inputfile, ['d', 'b', 'b'])
 
             # The columns are MOs, rows AOs, but I'm guessing the order of this array since no
             # atom information is printed alongside the indices.
@@ -506,14 +519,14 @@ class NWChem(logfileparser.Logfile):
             self.set_scalar('nbasis', nbasis)
             self.set_scalar('nmo', nmo)
             
-            blank = next(inputfile)
+            self.skip_line(inputfile, 'blank')
             mocoeffs = []
             while len(mocoeffs) < self.nmo:
                 nmos = list(map(int,next(inputfile).split()))
                 assert len(mocoeffs) == nmos[0]-1
                 for n in nmos:
                     mocoeffs.append([])
-                dashes = next(inputfile)
+                self.skip_line(inputfile, 'dashes')
                 for nb in range(nbasis):                
                     line = next(inputfile)
                     index = int(line.split()[0])
@@ -522,7 +535,7 @@ class NWChem(logfileparser.Logfile):
                     assert len(coefficients) == len(nmos)
                     for i,c in enumerate(coefficients):
                         mocoeffs[nmos[i]-1].append(c)
-                blank = next(inputfile)
+                self.skip_line(inputfile, 'blank')
             self.mocoeffs = [mocoeffs]
 
         # For Hartree-Fock, the atomic Mulliken charges are typically printed like this:
@@ -540,10 +553,7 @@ class NWChem(logfileparser.Logfile):
             if not hasattr(self, "atomcharges"):
                 self.atomcharges = {}
 
-            dashes = next(inputfile)
-            blank = next(inputfile)
-            header = next(inputfile)
-            dashes = next(inputfile)
+            self.skip_lines(inputfile, ['d', 'b', 'header', 'd'])
 
             charges = []
             line = next(inputfile)
@@ -573,10 +583,7 @@ class NWChem(logfileparser.Logfile):
         # for Hartree-Fock runs, though, so in that case make sure they are consistent.
         if line.strip() == "Mulliken population analysis":
 
-            dashes = next(inputfile)
-            blank = next(inputfile)
-            total_overlap_population = next(inputfile)
-            blank = next(inputfile)
+            self.skip_lines(inputfile, ['d', 'b', 'total_overlap_population', 'b'])
 
             overlaps = []
             line= next(inputfile)
@@ -610,7 +617,7 @@ class NWChem(logfileparser.Logfile):
             # use these since they are more precise (previous precision could have been just 0.01).
             while "Total      gross population on atoms" not in line:
                 line = next(inputfile)
-            blank = next(inputfile)
+            self.skip_line(inputfile, 'blank')
             charges = []
             for i in range(self.natom):
                 line = next(inputfile)
