@@ -55,11 +55,15 @@ class NWChem(logfileparser.Logfile):
         pass
 
     def set_scalar(self, name, value, check=True):
-        if hasattr(self, name):
-            if check:
+        """Set an attribute and perform a check if it already exists."""
+        if check and hasattr(self, name):
+            try:
                 assert getattr(self, name) == value
-        else:
-            setattr(self, name, value)
+            except AssertionError as e:
+                fmt = "Scalar %s changed value (%s -> %s) "
+                args = (name, getattr(self, name), value)
+                self.logger.warning(fmt % args + str(e))
+        setattr(self, name, value)
 
     name2element = lambda self, lbl: "".join(itertools.takewhile(str.isalpha, lbl))
 
@@ -108,10 +112,7 @@ class NWChem(logfileparser.Logfile):
 
             dashes = next(inputfile)
             natom = int(next(inputfile).strip())
-            if hasattr(self, "natom"):
-                assert self.natom == natom
-            else:
-                self.natom = natom
+            self.set_scalar('natom', natom)
 
         # NWChem does not normally print the basis set for each atom, but rather
         # chooses the concise option of printing Gaussian coefficients for each
@@ -230,19 +231,17 @@ class NWChem(logfileparser.Logfile):
             line = next(inputfile)
             while line.strip():
                 if line[2:8] == "charge":
-                    self.charge = int(float(line.split()[-1]))
+                    charge = int(float(line.split()[-1]))
+                    self.set_scalar('charge', charge)
                 if line[2:13] == "open shells":
                     unpaired = int(line.split()[-1])
-                    self.mult = 2*unpaired + 1
+                    self.set_scalar('mult', 2*unpaired + 1)
                 if line[2:7] == "atoms":
                     natom = int(line.split()[-1])
-                    if hasattr(self, 'natom'):
-                        assert self.natom == natom
-                    else:
-                        self.natom = natom
+                    self.set_scalar('natom', natom)
                 if line[2:11] == "functions":
-                    functions = int(line.split()[-1])
-                    self.nbasis = functions
+                    nfuncs = int(line.split()[-1])
+                    self.set_scalar("nbasis", nfuncs)
                 line = next(inputfile)
 
         # This section contains general parameters for DFT calculations, as well as
@@ -260,7 +259,8 @@ class NWChem(logfileparser.Logfile):
                         mult = 1
                     self.set_scalar('mult', int(mult))
                 if "AO basis - number of function" in line:
-                    self.set_scalar('nbasis', int(line.split()[-1]))
+                    nfuncs = int(line.split()[-1])
+                    self.set_scalar('nbasis', nfuncs)
 
                 # These will be present only in the DFT module.
                 if "Convergence on energy requested" in line:
@@ -472,10 +472,7 @@ class NWChem(logfileparser.Logfile):
                 line = next(inputfile)
 
             self.moenergies.append(energies)
-            if hasattr(self, 'nmo'):
-                assert self.nmo == nvector
-            else:
-                self.nmo = nvector
+            self.set_scalar('nmo', nvector)
 
             if any(symmetries):
                 if hasattr(self, 'mosyms'):
@@ -506,14 +503,8 @@ class NWChem(logfileparser.Logfile):
             size = array_info.split('[')[1].split(']')[0]
             nbasis = int(size.split(',')[0].split(':')[1])
             nmo = int(size.split(',')[1].split(':')[1])
-            if hasattr(self, 'nbasis'):
-                assert self.nbasis == nbasis
-            else:
-                self.nbasis = nbasis
-            if hasattr(self, 'nmo'):
-                assert self.nmo == nmo
-            else:
-                self.nmo = nmo
+            self.set_scalar('nbasis', nbasis)
+            self.set_scalar('nmo', nmo)
             
             blank = next(inputfile)
             mocoeffs = []
