@@ -9,6 +9,7 @@
 # the full license online at http://www.gnu.org/copyleft/lgpl.html.
 
 
+import itertools
 import re
 
 import numpy
@@ -59,6 +60,8 @@ class NWChem(logfileparser.Logfile):
                 assert getattr(self, name) == value
         else:
             setattr(self, name, value)
+
+    name2element = lambda self, lbl: "".join(itertools.takewhile(str.isalpha, lbl))
 
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
@@ -114,14 +117,45 @@ class NWChem(logfileparser.Logfile):
         # chooses the concise option of printing Gaussian coefficients for each
         # atom type/element only once. Therefore, we need to first parse those
         # coefficients and afterwards build the appropriate gbasis attribute based
-        # on that and atom types/elements already parsed (atomnos).
+        # on that and atom types/elements already parsed (atomnos). However, if atom
+        # are given different names (number after element, like H1 and H2), then NWChem
+        # generally prints the gaussian parameters for all unique names, like this:
+        #
+        #                      Basis "ao basis" -> "ao basis" (cartesian)
+        #                      -----
+        #  O (Oxygen)
+        #  ----------
+        #            Exponent  Coefficients 
+        #       -------------- ---------------------------------------------------------
+        #  1 S  1.30709320E+02  0.154329
+        #  1 S  2.38088610E+01  0.535328
+        # (...)
+        #
+        #  H1 (Hydrogen)
+        #  -------------
+        #            Exponent  Coefficients 
+        #       -------------- ---------------------------------------------------------
+        #  1 S  3.42525091E+00  0.154329
+        # (...)
+        #
+        #  H2 (Hydrogen)
+        #  -------------
+        #            Exponent  Coefficients 
+        #       -------------- ---------------------------------------------------------
+        #  1 S  3.42525091E+00  0.154329
+        # (...)
+        #
+        # This current parsing code below assumes all atoms of the same element
+        # use the same basis set, but that might not be true, and this will probably
+        # need to be considered in the future when such a logfile appears.
         if line.strip() == """Basis "ao basis" -> "ao basis" (cartesian)""":
             dashes = next(inputfile)
             gbasis_dict = {}
             line = next(inputfile)
             while line.strip():
-                atomtype = line.split()[0]
-                gbasis_dict[atomtype] = []
+                atomname = line.split()[0]
+                atomelement = self.name2element(atomname)
+                gbasis_dict[atomelement] = []
                 dashes = next(inputfile)
                 labels = next(inputfile)
                 dashes = next(inputfile)
@@ -143,7 +177,7 @@ class NWChem(logfileparser.Logfile):
                         line = next(inputfile)
                     shells.append(shell)
                     line = next(inputfile)
-                gbasis_dict[atomtype].extend(shells)
+                gbasis_dict[atomelement].extend(shells)
             gbasis = []
             for i in range(self.natom):
                 atomtype = utils.PeriodicTable().element[self.atomnos[i]]
@@ -157,7 +191,9 @@ class NWChem(logfileparser.Logfile):
         # so we need to infer that. We could do that from the previous section,
         # it might be worthwhile to take numbers from two different places, hence
         # the code below, which builds atombasis based on the number of functions
-        # listed in this summary of the AO basis.
+        # listed in this summary of the AO basis. Similar to previous section, here
+        # we assume all atoms of the same element have the same basis sets, but
+        # this will probably need to be revised later.
         if line.strip() == """Summary of "ao basis" -> "ao basis" (cartesian)""":
             dashes = next(inputfile)
             headers = next(inputfile)
@@ -165,14 +201,15 @@ class NWChem(logfileparser.Logfile):
             atombasis_dict = {}
             line = next(inputfile)
             while line.strip():
-                atomtype, desc, shells, funcs, types = line.split()
-                atombasis_dict[atomtype] = int(funcs)
+                atomname, desc, shells, funcs, types = line.split()
+                atomelement = self.name2element(atomname)
+                atombasis_dict[atomelement] = int(funcs)
                 line = next(inputfile)
             atombasis = []
             last = 0
             for i in range(self.natom):
-                atomtype = utils.PeriodicTable().element[self.atomnos[i]]
-                nfuncs = atombasis_dict[atomtype]
+                atomelement = utils.PeriodicTable().element[self.atomnos[i]]
+                nfuncs = atombasis_dict[atomelement]
                 atombasis.append(list(range(last,last+nfuncs)))
                 last = atombasis[-1][-1] + 1
             if not hasattr(self, 'atombasis'):
@@ -180,7 +217,8 @@ class NWChem(logfileparser.Logfile):
             else:
                 assert self.atombasis == atombasis
 
-        # This section contains general parameters for Hartree-Fock calculations.
+        # This section contains general parameters for Hartree-Fock calculations,
+        # which do not contain the 'General Information' section like most jobs.
         if line.strip() == "NWChem SCF Module":
             dashes = next(inputfile)
             blank = next(inputfile)
@@ -207,8 +245,8 @@ class NWChem(logfileparser.Logfile):
                     self.nbasis = functions
                 line = next(inputfile)
 
-        # This section contains general parameters for DFT calculations, including
-        # SCF convergence targets.
+        # This section contains general parameters for DFT calculations, as well as
+        # for the many-electron theory module.
         if line.strip() == "General Information":
             while line.strip():
 
@@ -217,10 +255,14 @@ class NWChem(logfileparser.Logfile):
                 if "Charge" in line:
                     self.set_scalar('charge', int(line.split()[-1]))
                 if "Spin multiplicity" in line:
-                    self.set_scalar('mult', int(line.split()[-1]))
+                    mult = line.split()[-1]
+                    if mult == "singlet":
+                        mult = 1
+                    self.set_scalar('mult', int(mult))
                 if "AO basis - number of function" in line:
                     self.set_scalar('nbasis', int(line.split()[-1]))
 
+                # These will be present only in the DFT module.
                 if "Convergence on energy requested" in line:
                     target_energy = float(line.split()[-1].replace('D', 'E'))
                 if "Convergence on density requested" in line:
@@ -230,9 +272,11 @@ class NWChem(logfileparser.Logfile):
 
                 line = next(inputfile)
 
-            if not hasattr(self, 'scftargets'):
-                self.scftargets = []
-            self.scftargets.append([target_energy, target_density, target_gradient])
+            # Pretty nasty temporary hack to set scftargets only in the SCF module.
+            if "target_energy" in dir() and "target_density" in dir() and "target_gradient" in dir():
+                if not hasattr(self, 'scftargets'):
+                    self.scftargets = []
+                self.scftargets.append([target_energy, target_density, target_gradient])
 
         # The default (only?) SCF algorithm for Hartree-Fock is a preconditioned conjugate
         # gradient method that apparently "always" converges, so this header should reliably
