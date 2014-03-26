@@ -638,6 +638,20 @@ class NWChem(logfileparser.Logfile):
                 assert max(self.atomcharges['mulliken'] - numpy.array(charges)) < 0.01
                 self.atomcharges['mulliken'] = charges
 
+        if "Total MP2 energy" in line:
+            mpenerg = float(line.split()[-1])
+            if not hasattr(self, "mpenergies"):
+                self.mpenergies = []
+            self.mpenergies.append([])
+            self.mpenergies[-1].append(utils.convertor(mpenerg, "hartree", "eV"))
+
+        if "CCSD(T) total energy / hartree" in line:
+            ccenerg = float(line.split()[-1])
+            if not hasattr(self, "ccenergies"):
+                self.ccenergies = []
+            self.ccenergies.append([])
+            self.ccenergies[-1].append(utils.convertor(ccenerg, "hartree", "eV"))
+
 
 if __name__ == "__main__":
     import doctest, nwchemparser
