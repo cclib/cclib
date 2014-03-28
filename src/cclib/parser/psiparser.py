@@ -71,21 +71,75 @@ class Psi(logfileparser.Logfile):
         if "SCF total energy" in line:
             self.scfenergies = [float(line.split()[-1])]
 
-        if line.strip() == "Orbital energies (a.u.):":
-            self.moenergies = []
-            blank = next(inputfile)
+        # This section, from which we parse molecular orbital symmetries and
+        # orbital energies, is quite similar for both Psi3 and Psi4, and in fact
+        # the format for orbtials is the same, although the headers and spacers
+        # are a bit different. Let's try to get both parsed with one code block.
+        #
+        # Here is how the block looks like for Psi4:
+        #
+        #	Orbital Energies (a.u.)
+        #	-----------------------
+        #
+        #	Doubly Occupied:                                                      
+        #
+        #	   1Bu   -11.040586     1Ag   -11.040524     2Bu   -11.031589  
+        #	   2Ag   -11.031589     3Bu   -11.028950     3Ag   -11.028820 
+        # (...)
+        #	  15Ag    -0.415620     1Bg    -0.376962     2Au    -0.315126  
+        #	   2Bg    -0.278361     3Bg    -0.222189  
+        #
+        #	Virtual:                                                              
+        #
+        #	   3Au     0.198995     4Au     0.268517     4Bg     0.308826  
+        #	   5Au     0.397078     5Bg     0.521759    16Ag     0.565017 
+        # (...)
+        #	  24Ag     0.990287    24Bu     1.027266    25Ag     1.107702  
+        #	  25Bu     1.124938
+        #
+        # The case is different in the trigger string.
+        if "orbital energies (a.u.)" in line.lower():
+
+            self.moenergies = [[]]
+            self.mosyms = []
+
+            # Psi4 has dashes under the trigger line, but Psi3 did not.
+            blank_or_dashes = next(inputfile)
+            if list(set(blank_or_dashes.strip())) == ["-"]:
+                blank = next(inputfile)
+
+            # Both versions have this case insensisitive substring.
             doubly = next(inputfile)
+            assert "doubly occupied" in doubly.lower()
+
+            # Psi4 now has a blank line, Psi3 does not.
             line = next(inputfile)
-            while line.strip():
-                for i in range(len(line.split())//2):
-                    self.moenergies.append(line.split()[i*2+1])
+            if not line.strip():
                 line = next(inputfile)
-            blank = next(inputfile)
-            blank = next(inputfile)
-            unoccupied = next(inputfile)
+
             while line.strip():
                 for i in range(len(line.split())//2):
-                    self.moenergies.append(line.split()[i*2+1])
+                    self.mosyms.append(line.split()[i*2][-2:])
+                    self.moenergies[0].append(line.split()[i*2+1])
+                line = next(inputfile)
+
+            # Different numbers of blank lines.
+            line = next(inputfile)
+            while not line.strip():
+                line = next(inputfile)
+
+            # The header for virtual orbitals is different for the two versions.
+            assert (("unoccupied orbitals" in line.lower()) or ("virtual" in line.lower()))
+
+            # Psi4 now has a blank line, Psi3 does not.
+            line = next(inputfile)
+            if not line.strip():
+                line = next(inputfile)
+
+            while line.strip():
+                for i in range(len(line.split())//2):
+                    self.mosyms.append(line.split()[i*2][-2:])
+                    self.moenergies[0].append(line.split()[i*2+1])
                 line = next(inputfile)
 
 
