@@ -56,20 +56,22 @@ class Psi(logfileparser.Logfile):
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
 
-        if line[2:16] == "charge       =":
-            self.charge = int(line.split()[-1])
+        #  ==> Geometry <==
 
-        if line[2:16] == "multiplicity =":
+        # At the beginning, in the geometry section, both Psi3 and Psi4 print
+        # charge and multiplicity, differing in some lower/upper characters.
+        if line[2:16].lower() == "charge       =":
+            self.charge = int(line.split()[-1])
+        if line[2:16].lower() == "multiplicity =":
             self.mult = int(line.split()[-1])
 
+        #  ==> Pre-Iterations <==
+
+        # A block called 'Calculation Information' prints these before starting SCF.
         if "Number of atoms" in line:
             self.natom = int(line.split()[-1])
-
         if "Number of atomic orbitals" in line:
             self.nbasis = int(line.split()[-1])
-
-        if "SCF total energy" in line:
-            self.scfenergies = [float(line.split()[-1])]
 
         # This section, from which we parse molecular orbital symmetries and
         # orbital energies, is quite similar for both Psi3 and Psi4, and in fact
@@ -101,7 +103,7 @@ class Psi(logfileparser.Logfile):
         if "orbital energies (a.u.)" in line.lower():
 
             self.moenergies = [[]]
-            self.mosyms = []
+            self.mosyms = [[]]
 
             # Psi4 has dashes under the trigger line, but Psi3 did not.
             blank_or_dashes = next(inputfile)
@@ -119,7 +121,7 @@ class Psi(logfileparser.Logfile):
 
             while line.strip():
                 for i in range(len(line.split())//2):
-                    self.mosyms.append(line.split()[i*2][-2:])
+                    self.mosyms[0].append(line.split()[i*2][-2:])
                     self.moenergies[0].append(line.split()[i*2+1])
                 line = next(inputfile)
 
@@ -138,9 +140,15 @@ class Psi(logfileparser.Logfile):
 
             while line.strip():
                 for i in range(len(line.split())//2):
-                    self.mosyms.append(line.split()[i*2][-2:])
+                    self.mosyms[0].append(line.split()[i*2][-2:])
                     self.moenergies[0].append(line.split()[i*2+1])
                 line = next(inputfile)
+
+        # Both Psi3 and Psi4 print the final SCF energy right after the orbital energies,
+        # but the label is different...
+        if "* SCF total energy" in line or "@RHF Final Energy:" in line:
+            e = float(line.split()[-1])
+            self.scfenergies = [utils.convertor(e, 'hartree', 'eV')]
 
 
 if __name__ == "__main__":
