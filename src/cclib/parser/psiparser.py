@@ -58,6 +58,24 @@ class Psi(logfileparser.Logfile):
 
         #  ==> Geometry <==
 
+        if "Geometry (in Angstrom)" in line:
+            assert line.split()[3] == "charge"
+            self.charge = int(line.split()[5].strip(','))
+            assert line.split()[6] == "multiplicity"
+            self.mult = int(line.split()[8].strip(':'))
+            blank = next(inputfile)
+            header = next(inputfile)
+            dashes = next(inputfile)
+            line = next(inputfile)
+            if not hasattr(self, 'atomcoords'):
+                self.atomcoords = []
+            coords = []
+            while line.strip():
+                el, x, y, z = line.split()
+                coords.append([float(x), float(y), float(z)])
+                line = next(inputfile)
+            self.atomcoords.append(coords)
+
         # At the beginning, in the geometry section, both Psi3 and Psi4 print
         # charge and multiplicity, differing in some lower/upper characters.
         if line[2:16].lower() == "charge       =":
@@ -198,6 +216,9 @@ class Psi(logfileparser.Logfile):
                     self.mosyms[0].append(line.split()[i*2][-2:])
                     self.moenergies[0].append(line.split()[i*2+1])
                 line = next(inputfile)
+
+            # The last orbital energy represented the HOMO.
+            self.homos = [len(self.moenergies[0])-1]
 
             # Different numbers of blank lines in Psi3 and Psi4.
             line = next(inputfile)
