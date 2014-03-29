@@ -65,6 +65,41 @@ class Psi(logfileparser.Logfile):
         if line[2:16].lower() == "multiplicity =":
             self.mult = int(line.split()[-1])
 
+        #  ==> Algorithm <==
+
+        # This is for Psi3, and might not be the only possible trigger for SCF parameters.
+        if line.strip() == "CSCF3.0: An SCF program written in C":
+            blank = next(inputfile)
+            authors = next(inputfile)
+            blank = next(inputfile)
+            dashes = next(inputfile)
+            blank = next(inputfile)
+            mult = next(inputfile)
+            mult_comment = next(inputfile)
+            blank = next(inputfile)
+            line = next(inputfile)
+            while line.strip():
+                if line.split()[0] == "convergence":
+                    conv = float(line.split()[-1])
+                line = next(inputfile)
+            if not hasattr(self, 'scftargets'):
+                self.scftargets = []
+            self.scftargets.append([conv])
+
+        # The printout for Psi4 has a more obvious trigger in this case.
+        if line.strip() == "==> Algorithm <==":
+            blank = next(inputfile)
+            line = next(inputfile)
+            if not hasattr(self, "scftargets"):
+                self.scftargets = []
+            while line.strip():
+                if "Energy threshold" in line:
+                    etarget = float(line.split()[-1])
+                if "Density threshold" in line:
+                    dtarget = float(line.split()[-1])
+                line = next(inputfile)
+            self.scftargets.append([etarget, dtarget])
+
         #  ==> Pre-Iterations <==
 
         # A block called 'Calculation Information' prints these before starting SCF.
@@ -72,6 +107,45 @@ class Psi(logfileparser.Logfile):
             self.natom = int(line.split()[-1])
         if "Number of atomic orbitals" in line:
             self.nbasis = int(line.split()[-1])
+
+        #  ==> Iterations <==
+
+        # Psi3 converges just the density elements, although it reports in the iterations
+        # changes in the energy as well as the DIIS error.
+        if line.strip() == "iter       total energy        delta E         delta P          diiser":
+            line = next(inputfile)
+            if not hasattr(self, 'scfvalues'):
+                self.scfvalues = []
+            self.scfvalues.append([])
+            while line.strip():
+                ddensity = float(line.split()[-3])
+                self.scfvalues[-1].append([ddensity])
+                line = next(inputfile)
+
+        # Psi4 converges both the SCF energy and density elements and reports both in the
+        # iterations printout. However, the default convergence scheme involves a density-fitted
+        # algorithm for efficiency, and this is often followed by a something with exact electron
+        # repulsion integrals. In that case, there are actually two convergence cycles performed,
+        # one for the density-fitted algorithm and one for the exact one, and the iterations are
+        # printed in two blocks separated by some set-up information.
+        if line.strip() == "==> Iterations <==":
+            if not hasattr(self, 'scfvalues'):
+                self.scfvalues = []
+            blank = next(inputfile)
+            header = next(inputfile)
+            assert header.strip() == "Total Energy        Delta E     RMS |[F,P]|"
+            blank = next(inputfile)
+            line = next(inputfile)
+            scfvalues = []
+            while line.strip() != "==> Post-Iterations <==":
+                if line.strip() and line.split()[0] in ["@DF-RHF", "@RHF", "@DF-RKS", "@RKS"]:
+                    denergy = float(line.split()[4])
+                    ddensity = float(line.split()[5])
+                    scfvalues.append([denergy, ddensity])
+                line = next(inputfile)
+            self.scfvalues.append(scfvalues)
+
+        #  ==> Post-Iterations <==
 
         # This section, from which we parse molecular orbital symmetries and
         # orbital energies, is quite similar for both Psi3 and Psi4, and in fact
@@ -125,7 +199,7 @@ class Psi(logfileparser.Logfile):
                     self.moenergies[0].append(line.split()[i*2+1])
                 line = next(inputfile)
 
-            # Different numbers of blank lines.
+            # Different numbers of blank lines in Psi3 and Psi4.
             line = next(inputfile)
             while not line.strip():
                 line = next(inputfile)
@@ -145,8 +219,8 @@ class Psi(logfileparser.Logfile):
                 line = next(inputfile)
 
         # Both Psi3 and Psi4 print the final SCF energy right after the orbital energies,
-        # but the label is different...
-        if "* SCF total energy" in line or "@RHF Final Energy:" in line:
+        # but the label is different. Psi4 also does DFT, and here the label is also different.
+        if "* SCF total energy" in line or "@RHF Final Energy:" in line or "@RKS Final Energy" in line:
             e = float(line.split()[-1])
             self.scfenergies = [utils.convertor(e, 'hartree', 'eV')]
 

@@ -223,7 +223,7 @@ class NWChemSPKSTest(GenericSPTest):
 
 
 class PsiSPHFTest(GenericSPTest):
-    """NWChem restricted single point HF unittest."""
+    """Psi restricted single point HF/KS unittest."""
 
 
 if __name__=="__main__":

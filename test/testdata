@@ -106,6 +106,7 @@ SP        ORCA        OrcaSPTest            basicORCA2.9          dvb_sp.out
 SP        ORCA        OrcaSPTest            basicORCA3.0          dvb_sp.out
 SP        Psi         PsiSPHFTest           basicPsi3             dvb_sp_hf.out
 SP        Psi         PsiSPHFTest           basicPsi4             dvb_sp_hf.out
+SP        Psi         PsiSPHFTest           basicPsi4             dvb_sp_ks.out
                                             
 SPun      ADF         ADFSPunTest           basicADF2007.01       dvb_un_sp.adfout
 SPun      ADF         ADFSPunTest           basicADF2013.01       dvb_un_sp.adfout
