@@ -201,6 +201,9 @@ class NWChemGeoOptHFTest(GenericGeoOptTest):
 class NWChemGeoOptKSTest(GenericGeoOptTest):
     """NWChem restricted single point KS unittest."""
 
+class PsiGeoOptTest(GenericGeoOptTest):
+    """Psi geometry optimization unittest."""
+
 
 if __name__=="__main__":
 

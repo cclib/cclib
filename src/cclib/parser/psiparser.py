@@ -58,15 +58,20 @@ class Psi(logfileparser.Logfile):
 
         #  ==> Geometry <==
 
-        if "Geometry (in Angstrom)" in line:
+        if "Geometry (in Angstrom), charge" in line:
             assert line.split()[3] == "charge"
             self.charge = int(line.split()[5].strip(','))
             assert line.split()[6] == "multiplicity"
             self.mult = int(line.split()[8].strip(':'))
             blank = next(inputfile)
-            header = next(inputfile)
-            dashes = next(inputfile)
             line = next(inputfile)
+
+            # Usually there is the header and dashes, but, for example, the coordinates
+            # printed when a geometry optimization finishes do not have it.
+            if line.split()[0] == "Center":
+                dashes = next(inputfile)
+                line = next(inputfile)
+
             if not hasattr(self, 'atomcoords'):
                 self.atomcoords = []
             coords = []
@@ -74,6 +79,7 @@ class Psi(logfileparser.Logfile):
                 el, x, y, z = line.split()
                 coords.append([float(x), float(y), float(z)])
                 line = next(inputfile)
+
             self.atomcoords.append(coords)
 
         # At the beginning, in the geometry section, both Psi3 and Psi4 print
