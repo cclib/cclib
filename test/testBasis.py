@@ -104,6 +104,9 @@ class MolproBigBasisTest(GenericBigBasisTest):
 class NWChemBasisTest(GenericBasisTest):
     """NWChem basis set unittest."""
 
+class NWChemBigBasisTest(GenericBigBasisTest):
+    """NWChem big basis set unittest."""
+
 
 class PCGamessBasisTest(GenericBasisTest):
     """PC-GAMESS basis set unittest."""
