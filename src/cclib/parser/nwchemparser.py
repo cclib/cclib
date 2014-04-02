@@ -373,8 +373,59 @@ class NWChem(logfileparser.Logfile):
 
             self.scfvalues.append(values)
 
+        # These triggers are supposed to catch the current step in a geometry optimization search
+        # and determine whether we are currently in the main (initial) SCF cycle of that step
+        # or in the subsequent line search. The step is printed between dashes like this:
+        #
+        #          --------
+        #          Step   0
+        #          --------
+        #
+        # and the summary lines that describe the main SCF cycle for the frsit step look like this:
+        #
+        #@ Step       Energy      Delta E   Gmax     Grms     Xrms     Xmax   Walltime
+        #@ ---- ---------------- -------- -------- -------- -------- -------- --------
+        #@    0    -379.76896249  0.0D+00  0.04567  0.01110  0.00000  0.00000      4.2
+        #                                                       ok       ok  
+        #
+        # However, for subsequent step the format is a bit different:
+        #
+        #  Step       Energy      Delta E   Gmax     Grms     Xrms     Xmax   Walltime
+        #  ---- ---------------- -------- -------- -------- -------- -------- --------
+        #@    2    -379.77794602 -7.4D-05  0.00118  0.00023  0.00440  0.01818     14.8
+        #                                              ok     
+        #
+        # There is also a summary of the line search (which we don't use now), like this:
+        #
+        # Line search: 
+        #     step= 1.00 grad=-1.8D-05 hess= 8.9D-06 energy=   -379.777955 mode=accept  
+        # new step= 1.00                   predicted energy=   -379.777955
+        #
+        if line[10:14] == "Step":
+            self.geostep = int(line.split()[-1])
+            self.skip_line(inputfile, 'dashes')
+            self.linesearch = False
+        if line[0] == "@" and line.split()[1] == "Step":
+            at_and_dashes = next(inputfile)
+            line = next(inputfile)
+            assert int(line.split()[1]) == self.geostep == 0
+            self.linesearch = True
+        if line[2:6] == "Step":
+            self.skip_line(inputfile, 'dashes')
+            line = next(inputfile)
+            assert int(line.split()[1]) == self.geostep
+            self.linesearch = True
+
         # The line containing the final SCF energy seems to be always identifiable like this.
         if "Total SCF energy" in line or "Total DFT energy" in line:
+
+            # NWChem often does a line search during geometry optimization steps, reporting
+            # the SCF information but not the coordinates (which are not necessarily 'intermediate'
+            # since the step size can become smaller). We want to skip these SCF cycles,
+            # unless the coordinates can also be extracted (possibly from the gradients?).
+            if hasattr(self, 'linesearch') and self.linesearch:
+                return
+
             if not hasattr(self, "scfenergies"):
                 self.scfenergies = []
             energy = float(line.split()[-1])

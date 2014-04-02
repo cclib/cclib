@@ -185,11 +185,16 @@ class MolproGeoOptTest(GenericGeoOptTest):
     extrascfs = 2
 
 
-class NWChemGeoOptHFTest(GenericGeoOptTest):
+class NWChemGeoOptTest(GenericGeoOptTest):
     """NWChem restricted single point HF unittest."""
 
-class NWChemGeoOptKSTest(GenericGeoOptTest):
-    """NWChem restricted single point KS unittest."""
+    # NWChem typically prints the coordinates in the input module, at the
+    # beginning of each geometry optimization step, and then again after
+    # the optimziation is finished, so the first and last coordinates
+    # are repeated. On the other hand, each optimization step often
+    # involves a line search which we don't parse (see parse code for details).
+    extracoords = 2
+    extrascfs = 0
 
 
 class OrcaGeoOptTest(GenericGeoOptTest):
