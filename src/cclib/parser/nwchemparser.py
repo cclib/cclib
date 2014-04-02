@@ -142,6 +142,24 @@ class NWChem(logfileparser.Logfile):
             natom = int(next(inputfile).strip())
             self.set_scalar('natom', natom)
 
+        if line.strip() == "NWChem Geometry Optimization":
+            self.skip_lines(inputfile, ['d', 'b', 'b', 'b', 'b', 'title', 'b', 'b'])
+            line = next(inputfile)
+            while line.strip():
+                if "maximum gradient threshold" in line:
+                    gmax = float(line.split()[-1])
+                if "rms gradient threshold" in line:
+                    grms = float(line.split()[-1])
+                if "maximum cartesian step threshold" in line:
+                    xmax = float(line.split()[-1])
+                if "rms cartesian step threshold" in line:
+                    xrms = float(line.split()[-1])
+                line = next(inputfile)
+            if not hasattr(self, 'geotargets'):
+                self.geotargets = [gmax, grms, xmax, xrms]
+            else:
+                assert self.geotargets == [gmax, grms, xmax, xrms]
+
         # NWChem does not normally print the basis set for each atom, but rather
         # chooses the concise option of printing Gaussian coefficients for each
         # atom type/element only once. Therefore, we need to first parse those
@@ -266,6 +284,9 @@ class NWChem(logfileparser.Logfile):
         # for the many-electron theory module.
         if line.strip() == "General Information":
 
+            if hasattr(self, 'linesearch') and self.linesearch:
+                return
+
             while line.strip():
 
                 if "No. of atoms" in line:
@@ -297,10 +318,19 @@ class NWChem(logfileparser.Logfile):
                     self.scftargets = []
                 self.scftargets.append([target_energy, target_density, target_gradient])
 
+        if line.strip() in ("The SCF is already converged", "The DFT is already converged"):
+            if self.linesearch:
+                return
+            self.scftargets.append(self.scftargets[-1])
+            self.scfvalues.append(self.scfvalues[-1])
+
         # The default (only?) SCF algorithm for Hartree-Fock is a preconditioned conjugate
         # gradient method that apparently "always" converges, so this header should reliably
         # signal a start of the SCF cycle. The convergence targets are also printed here.
         if line.strip() == "Quadratically convergent ROHF":
+
+            if hasattr(self, 'linesearch') and self.linesearch:
+                return
 
             while not "Final" in line:
 
@@ -341,6 +371,9 @@ class NWChem(logfileparser.Logfile):
         # d= 0,ls=0.0,diis     3   -382.2954343173  6.30D-03  4.21D-03  7.95D-02    55.3
         # ...
         if line.split() == ['convergence', 'iter', 'energy', 'DeltaE', 'RMS-Dens', 'Diis-err', 'time']:
+
+            if hasattr(self, 'linesearch') and self.linesearch:
+                return
 
             self.skip_line(inputfile, 'dashes')
             line = next(inputfile)
@@ -409,11 +442,28 @@ class NWChem(logfileparser.Logfile):
             at_and_dashes = next(inputfile)
             line = next(inputfile)
             assert int(line.split()[1]) == self.geostep == 0
+            gmax = float(line.split()[4])
+            grms = float(line.split()[5])
+            xrms = float(line.split()[6])
+            xmax = float(line.split()[7])
+            if not hasattr(self, 'geovalues'):
+                self.geovalues = []
+            self.geovalues.append([gmax, grms, xmax, xrms])
             self.linesearch = True
         if line[2:6] == "Step":
             self.skip_line(inputfile, 'dashes')
             line = next(inputfile)
             assert int(line.split()[1]) == self.geostep
+            if self.linesearch:
+                #print(line)
+                return
+            gmax = float(line.split()[4])
+            grms = float(line.split()[5])
+            xrms = float(line.split()[6])
+            xmax = float(line.split()[7])
+            if not hasattr(self, 'geovalues'):
+                self.geovalues = []
+            self.geovalues.append([gmax, grms, xmax, xrms])
             self.linesearch = True
 
         # The line containing the final SCF energy seems to be always identifiable like this.
