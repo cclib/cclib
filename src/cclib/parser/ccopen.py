@@ -20,6 +20,7 @@ from . import jaguarparser
 from . import molproparser
 from . import nwchemparser
 from . import orcaparser
+from . import psiparser
 
 
 def ccopen(source, *args, **kargs):
@@ -95,6 +96,10 @@ def ccopen(source, *args, **kargs):
 
         elif line.find("O   R   C   A") >= 0:
             filetype = orcaparser.ORCA
+            break
+
+        elif line.find("PSI") >= 0 and line.find("Ab Initio Electronic Structure") >= 0:
+            filetype = psiparser.Psi
             break
 
     # Need to close file before creating a instance.

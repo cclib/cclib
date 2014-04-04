@@ -222,6 +222,11 @@ class NWChemSPKSTest(GenericSPTest):
 class PCGamessSPTest(GenericSPTest):
     """PC-GAMESS restricted single point unittest."""
 
+
+class PsiSPHFTest(GenericSPTest):
+    """Psi restricted single point HF/KS unittest."""
+
+
 if __name__=="__main__":
 
     from testall import testall
