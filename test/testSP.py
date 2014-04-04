@@ -221,6 +221,11 @@ class NWChemSPHFTest(GenericSPTest):
 class NWChemSPKSTest(GenericSPTest):
     """NWChem restricted single point KS unittest."""
 
+
+class PsiSPHFTest(GenericSPTest):
+    """Psi restricted single point HF/KS unittest."""
+
+
 if __name__=="__main__":
 
     from testall import testall
