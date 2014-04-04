@@ -2,7 +2,6 @@
   title "Divinylbenzene in STO-3G basis set"
 
   geometry units angstroms
-    symmetry
     C    -1.4152533224   0.2302217854   0.0000000000
     C     1.4152533224  -0.2302217854   0.0000000000
     C    -0.4951331558   1.3144608674   0.0000000000
@@ -27,10 +26,8 @@
   basis
     *    library sto-3g
   end
-
   dft
     xc b3lyp
   end
-
   task dft optimize
 

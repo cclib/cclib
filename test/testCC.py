@@ -87,6 +87,10 @@ class MolproCCSDTTest(GenericCCSDTTest):
     """Molpro CCSD(T) unittest."""
 
 
+class NWChemCCSDTTest(GenericCCSDTTest):
+    """NWChem CCSD(T) unittest."""
+
+
 if __name__ == "__main__":
 
     from testall import testall

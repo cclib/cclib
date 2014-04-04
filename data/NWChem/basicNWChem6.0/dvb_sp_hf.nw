@@ -2,7 +2,6 @@
   title "Divinylbenzene in STO-3G basis set"
 
   geometry units angstroms
-    symmetry
     C    -1.4152533224   0.2302217854   0.0000000000
     C     1.4152533224  -0.2302217854   0.0000000000
     C    -0.4951331558   1.3144608674   0.0000000000
@@ -24,11 +23,11 @@
     H     4.9316453546   0.0711049543   0.0000000000
     H    -4.9316453546  -0.0711049543   0.0000000000
   end
-  scf
-    print "final vectors" "final vectors analysis"
-  end
   basis
     *    library sto-3g
+  end
+  scf
+    print "final vectors" "final vectors analysis"
   end
   property
     mulliken

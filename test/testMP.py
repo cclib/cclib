@@ -150,6 +150,10 @@ class MolproMP4SDTQTest(GenericMP4SDTQTest):
     """Molpro MP4-SDTQ unittest."""
 
 
+class NWChemMP2Test(GenericMP2Test):
+    """NWChem MP2 unittest."""
+
+
 class PCGAMESSMP2Test(GenericMP2Test):
     """PC-GAMESS MP2 unittest."""
 
