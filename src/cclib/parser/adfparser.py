@@ -228,6 +228,30 @@ class ADF(logfileparser.Logfile):
             line = next(inputfile)
             self.sconv2 = float(line.split()[-1])
 
+        # In ADF 2013, the default numerical integration method is fuzzy cells,
+        # although it used to be Voronoi polyhedra. Both methods apparently set
+        # the accint parameter, although the latter does so indirectly, based on
+        # a 'grid quality' setting. This is translated into accing using a
+        # dictionary with values taken from the documentation.
+        if "Numerical Integration : Voronoi Polyhedra (Te Velde)" in line:
+            self.integration_method = "voronoi_polyhedra"
+        if line[1:27] == 'General Accuracy Parameter':
+            # Need to know the accuracy of the integration grid to
+            # calculate the scftarget...note that it changes with time
+            self.accint = float(line.split()[-1])
+        if "Numerical Integration : Fuzzy Cells (Becke)" in line:
+            self.integration_method = 'fuzzy_cells'
+        if line[1:19] == "Becke grid quality":
+            self.grid_quality = line.split()[-1]
+            quality2accint = {
+                'BASIC' : 2.0,
+                'NORMAL' : 4.0,
+                'GOOD' : 6.0,
+                'VERYGOOD' : 8.0,
+                'EXCELLENT' : 10.0,
+            }
+            self.accint = quality2accint[self.grid_quality]
+
         if line[1:11] == "CYCLE    1":
 
             self.updateprogress(inputfile, "QM convergence", self.fupdate)
@@ -242,12 +266,11 @@ class ADF(logfileparser.Logfile):
                 # This is the final SCF cycle
                 self.scftargets.append([self.SCFconv*10, self.SCFconv])
             else:
-                # This is an intermediate SCF cycle
-                # For 2013.01, this does not work, because fuzzy cell numerical intergration
-                # is used instead of Voronoi polyhedra in the main SCF (as it was in 2007.01)
-                # and the general accuracy parameter is not printed or parsed.
-                # Since self.accint will be None for the newer version, scftargets will
-                # not be formed correctly... needs to be fixed.
+                # This is an intermediate SCF cycle in a geometry optimization,
+                # in which case the SCF convergence target needs to be derived
+                # from the accint parameter. For Voronoi polyhedra integration,
+                # accint is printed and parsed. For fuzzy cells, it can be inferred
+                # from the grid quality setting, as is done somewhere above.
                 if self.accint:
                     oldscftst = self.scftargets[-1][1]
                     grdmax = self.geovalues[-1][1]
@@ -416,11 +439,6 @@ class ADF(logfileparser.Logfile):
             self.geovalues[-1].append(float(constrained_gradient_rms.split()[-3]))
             self.geovalues[-1].append(float(cart_step_max.split()[-3]))
             self.geovalues[-1].append(float(cart_step_rms.split()[-3]))
-
-        if line[1:27] == 'General Accuracy Parameter':
-            # Need to know the accuracy of the integration grid to
-            # calculate the scftarget...note that it changes with time
-            self.accint = float(line.split()[-1])
 
         if line.find('Orbital Energies, per Irrep and Spin') > 0 and not hasattr(self, "mosyms") and self.nosymflag and not self.unrestrictedflag:
         #Extracting orbital symmetries and energies, homos for nosym case
