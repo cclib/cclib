@@ -26,6 +26,7 @@ set {
     guess sad
     reference rhf
     scf_type pk
+    print_mos true
 }
 
 energy('scf')

@@ -251,6 +251,64 @@ class Psi(logfileparser.Logfile):
             e = float(line.split()[-1])
             self.scfenergies = [utils.convertor(e, 'hartree', 'eV')]
 
+        #  ==> Molecular Orbitals <==
+        #
+        #                 1            2            3            4            5
+        #
+        #    1    0.7014827    0.7015412    0.0096801    0.0100168    0.0016438
+        #    2    0.0252630    0.0251793   -0.0037890   -0.0037346    0.0016447
+        # ...
+        #   59    0.0000133   -0.0000067    0.0000005   -0.0047455   -0.0047455
+        #   60    0.0000133    0.0000067    0.0000005    0.0047455   -0.0047455
+        #
+        # Ene   -11.0288198  -11.0286067  -11.0285837  -11.0174766  -11.0174764
+        # Sym            Ag           Bu           Ag           Bu           Ag
+        # Occ             2            2            2            2            2
+        #
+        #
+        #                11           12           13           14           15
+        #
+        #    1    0.1066946    0.1012709    0.0029709    0.0120562    0.1002765
+        #    2   -0.2753689   -0.2708037   -0.0102079   -0.0329973   -0.2790813
+        # ...
+        #
+        if line.strip() == "==> Molecular Orbitals <==":
+
+            if not hasattr(self, 'mocoeffs'):
+                self.mocoeffs = []
+
+            mocoeffs = []
+
+            blank = next(inputfile)
+            indices = next(inputfile)
+            while indices.strip():
+
+                indices = [int(i) for i in indices.split()]
+
+                if len(mocoeffs) < indices[-1]:
+                    for i in range(len(indices)):
+                        mocoeffs.append([])
+                else:
+                    assert len(mocoeffs) == indices[-1]
+
+                blank = next(inputfile)
+                line = next(inputfile)
+                while line.strip():
+                    iao = int(line.split()[0])
+                    coeffs = [float(c) for c in line.split()[1:]]
+                    for i,c in enumerate(coeffs):
+                        mocoeffs[indices[i]-1].append(c)
+                    line = next(inputfile)
+
+                energies = next(inputfile)
+                symmetries = next(inputfile)
+                occupancies = next(inputfile)
+
+                blank = next(inputfile)
+                blank = next(inputfile)
+                indices = next(inputfile)
+
+            self.mocoeffs.append(mocoeffs)
 
 if __name__ == "__main__":
     import doctest, psiparser
