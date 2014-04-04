@@ -523,7 +523,9 @@ class NWChem(logfileparser.Logfile):
         # less precision (might be useful to parse that if this is not available). Also, this
         # section contains coefficients for the leading AO contributions, so it would also
         # be good to parse and use those values if the full vectors are not printed.
-        # It normally looks something like this:
+        #
+        # The block looks something like this (two separate alpha/beta blocks in the unrestricted case):
+        #
         #                       ROHF Final Molecular Orbital Analysis
         #                       -------------------------------------
         #
@@ -544,21 +546,33 @@ class NWChem(logfileparser.Logfile):
         #    48     -0.213655  15 C  s                53      0.213655  16 C  s
         # ...
         #
-        if "Final Molecular Orbital Analysis" in line:
+        if "Final" in line and "Molecular Orbital Analysis" in line:
 
-            self.skip_lines(inputfile, ['d', 'b'])
+            # Unrestricted jobs have two such blocks, for alpha and beta orbitals, and
+            # we need to keep track of which one we're parsing (always alpha in restricted case). 
+            unrestricted = ("Alpha" in line) or ("Beta" in line)
+            alphabeta = int("Beta" in line)
+
+            self.skip_lines(inputfile, ['dashes', 'blank'])
 
             if not hasattr(self, "moenergies"):
                 self.moenergies = []
+            if not hasattr(self, 'mosyms'):
+                self.mosyms = []
+            if not hasattr(self, 'homos'):
+                self.homos = []
 
             energies = []
-            symmetries = [[None]*self.nbasis]
+            symmetries = [None]*self.nbasis
             line = next(inputfile)
             homo = 0
             while line[:7] == " Vector":
 
+                # Note: the vector count starts from 1 in NWChem.
                 nvector = int(line[7:12])
-                if "Occ=2.0" in line:
+
+                # A nonzero occupancy for SCF jobs means the orbital is occupied.
+                if ("Occ=2.0" in line) or ("Occ=1.0" in line):
                     homo = nvector-1
 
                 # If the printout does not start from the first MO, assume None for all previous orbitals.
@@ -574,7 +588,7 @@ class NWChem(logfileparser.Logfile):
                 if line[47:58].strip() == "Symmetry=":
                     sym = line[58:].strip()
                     sym = sym[0].upper() + sym[1:]
-                    symmetries[0][nvector-1] = sym
+                    symmetries[nvector-1] = sym
 
                 line = next(inputfile)
                 if "MO Center" in line:
@@ -591,53 +605,76 @@ class NWChem(logfileparser.Logfile):
             self.set_scalar('nmo', nvector)
 
             if any(symmetries):
-                if hasattr(self, 'mosyms'):
-                    for i,s in enumerate(self.mosyms[0]):
+                if len(self.mosyms) == alphabeta + 1:
+                    for i,s in enumerate(self.mosyms[alphabeta]):
                         if s:
-                            if symmetries[0][i]:
-                                assert s == symmetries[0][i]
-                        elif symmetries[0][i]:
-                            self.mosyms[0][i] = symmetries[0][i]
+                            if symmetries[i]:
+                                assert s == symmetries[i]
+                        elif symmetries[i]:
+                            self.mosyms[alphabeta][i] = symmetries[i]
                 else:
-                    self.mosyms = symmetries
+                    self.mosyms.append(symmetries)
 
-            if not hasattr(self, 'homos'):
-                self.homos = [homo]
+            if len(self.homos) == alphabeta + 1:
+                assert self.homos[alphabeta] == homo
             else:
-                assert self.homos == [homo]
+                self.homos.append(homo)
 
-        # This is where the full MO vectors are printed, but a special directive is needed for it.
+        # This is where the full MO vectors are printed, but a special directive is needed for it:
+        #
+        #                                 Final MO vectors
+        #                                 ----------------
+        #
+        #
+        # global array: alpha evecs[1:60,1:60],  handle: -995 
+        #
+        #            1           2           3           4           5           6  
+        #       ----------- ----------- ----------- ----------- ----------- -----------
+        #   1      -0.69930    -0.69930    -0.02746    -0.02769    -0.00313    -0.02871
+        #   2      -0.03156    -0.03135     0.00410     0.00406     0.00078     0.00816
+        #   3       0.00002    -0.00003     0.00067     0.00065    -0.00526    -0.00120
+        # ...
+        #
         if line.strip() == "Final MO vectors":
+
+            if not hasattr(self, 'mocoeffs'):
+                self.mocoeffs = []
 
             self.skip_lines(inputfile, ['d', 'b', 'b'])
 
-            # The columns are MOs, rows AOs, but I'm guessing the order of this array since no
-            # atom information is printed alongside the indices.
+            # The columns are MOs, rows AOs, but that's and educated guess since no
+            # atom information is printed alongside the indices. This next line gives
+            # the dimensions, which we can check. if set before this. Also, this line
+            # specifies whether we are dealing with alpha or beta vectors.
             array_info = next(inputfile)
-            size = array_info.split('[')[1].split(']')[0]
-            nbasis = int(size.split(',')[0].split(':')[1])
-            nmo = int(size.split(',')[1].split(':')[1])
-            self.set_scalar('nbasis', nbasis)
-            self.set_scalar('nmo', nmo)
+            while ("global array" in array_info):
+                alphabeta = int(line.split()[2] == "beta")
+                size = array_info.split('[')[1].split(']')[0]
+                nbasis = int(size.split(',')[0].split(':')[1])
+                nmo = int(size.split(',')[1].split(':')[1])
+                self.set_scalar('nbasis', nbasis)
+                self.set_scalar('nmo', nmo)
             
-            self.skip_line(inputfile, 'blank')
-            mocoeffs = []
-            while len(mocoeffs) < self.nmo:
-                nmos = list(map(int,next(inputfile).split()))
-                assert len(mocoeffs) == nmos[0]-1
-                for n in nmos:
-                    mocoeffs.append([])
-                self.skip_line(inputfile, 'dashes')
-                for nb in range(nbasis):                
-                    line = next(inputfile)
-                    index = int(line.split()[0])
-                    assert index == nb+1
-                    coefficients = list(map(float,line.split()[1:]))
-                    assert len(coefficients) == len(nmos)
-                    for i,c in enumerate(coefficients):
-                        mocoeffs[nmos[i]-1].append(c)
                 self.skip_line(inputfile, 'blank')
-            self.mocoeffs = [mocoeffs]
+                mocoeffs = []
+                while len(mocoeffs) < self.nmo:
+                    nmos = list(map(int,next(inputfile).split()))
+                    assert len(mocoeffs) == nmos[0]-1
+                    for n in nmos:
+                        mocoeffs.append([])
+                    self.skip_line(inputfile, 'dashes')
+                    for nb in range(nbasis):                
+                        line = next(inputfile)
+                        index = int(line.split()[0])
+                        assert index == nb+1
+                        coefficients = list(map(float,line.split()[1:]))
+                        assert len(coefficients) == len(nmos)
+                        for i,c in enumerate(coefficients):
+                            mocoeffs[nmos[i]-1].append(c)
+                    self.skip_line(inputfile, 'blank')
+                self.mocoeffs.append(mocoeffs)
+
+                array_info = next(inputfile)
 
         # For Hartree-Fock, the atomic Mulliken charges are typically printed like this:
         #
