@@ -85,31 +85,35 @@ class GAMESS(logfileparser.Logfile):
             temp = line.split()
             self.scfenergies.append(utils.convertor(float(temp[temp.index("IS") + 1]), "hartree", "eV"))
 
-        # Total energies after Moller-Plesset corrections
-        if (line.find("RESULTS OF MOLLER-PLESSET") >= 0 or
-            line[6:37] == "SCHWARZ INEQUALITY TEST SKIPPED"):
-            # Output looks something like this:
-            # RESULTS OF MOLLER-PLESSET 2ND ORDER CORRECTION ARE
-            #         E(0)=      -285.7568061536
-            #         E(1)=         0.0
-            #         E(2)=        -0.9679419329
-            #       E(MP2)=      -286.7247480864
-            # where E(MP2) = E(0) + E(2)
-            #
-            # with GAMESS-US 12 Jan 2009 (R3) the preceding text is different:
-            ##      DIRECT 4-INDEX TRANSFORMATION 
-            ##      SCHWARZ INEQUALITY TEST SKIPPED          0 INTEGRAL BLOCKS
-            ##                     E(SCF)=       -76.0088477471
-            ##                       E(2)=        -0.1403745370
-            ##                     E(MP2)=       -76.1492222841            
+        # For total energies after Moller-Plesset corrections, the output looks something like this:
+        #
+        # RESULTS OF MOLLER-PLESSET 2ND ORDER CORRECTION ARE
+        #         E(0)=      -285.7568061536
+        #         E(1)=         0.0
+        #         E(2)=        -0.9679419329
+        #       E(MP2)=      -286.7247480864
+        # where E(MP2) = E(0) + E(2)
+        #
+        # With GAMESS-US 12 Jan 2009 (R3), the preceding text is different:
+        #      DIRECT 4-INDEX TRANSFORMATION 
+        #      SCHWARZ INEQUALITY TEST SKIPPED          0 INTEGRAL BLOCKS
+        #                     E(SCF)=       -76.0088477471
+        #                       E(2)=        -0.1403745370
+        #                     E(MP2)=       -76.1492222841
+        #
+        if line.find("RESULTS OF MOLLER-PLESSET") >= 0 or line[6:37] == "SCHWARZ INEQUALITY TEST SKIPPED":
+       
             if not hasattr(self, "mpenergies"):
                 self.mpenergies = []
+
             # Each iteration has a new print-out
             self.mpenergies.append([])
+
             # GAMESS-US presently supports only second order corrections (MP2)
             # PC GAMESS also has higher levels (3rd and 4th), with different output
             # Only the highest level MP4 energy is gathered (SDQ or SDTQ)            
             while re.search("DONE WITH MP(\d) ENERGY", line) is None:
+
                 line = next(inputfile)
                 if len(line.split()) > 0:
                     # Only up to MP2 correction
@@ -155,21 +159,30 @@ class GAMESS(logfileparser.Logfile):
 
         # Extract charge and multiplicity
         if line[1:19] == "CHARGE OF MOLECULE":
-            self.charge = int(line.split()[-1])
-            self.mult = int(next(inputfile).split()[-1])
+
+            charge = int(line.split()[-1])
+            self.set_scalar('charge', charge)
+
+            line = next(inputfile)
+            mult = int(line.split()[-1])
+            self.set_scalar('mult', mult)
 
         # etenergies (used only for CIS runs now)
         if "EXCITATION ENERGIES" in line and line.find("DONE WITH") < 0:
+
             if not hasattr(self, "etenergies"):
                 self.etenergies = []
-            header = next(inputfile).rstrip()
+
             get_etosc = False
+            header = next(inputfile).rstrip()
             if header.endswith("OSC. STR."):
                 # water_cis_dets.out does not have the oscillator strength
                 # in this table...it is extracted from a different section below
                 get_etosc = True
                 self.etoscs = []
-            dashes = next(inputfile)
+
+            self.skip_line(inputfile, 'dashes')
+
             line = next(inputfile)
             broken = line.split()
             while len(broken) > 0:
@@ -295,8 +308,7 @@ class GAMESS(logfileparser.Logfile):
             self.etsecs = []
             etsyms = []
 
-            minuses = next(inputfile)
-            blanks = next(inputfile)
+            self.skip_lines(inputfile, ['d', 'b'])
 
             # Loop while states are still being printed.
             line = next(inputfile)
@@ -323,7 +335,8 @@ class GAMESS(logfileparser.Logfile):
                 if line.count("AMPLITUDE") == 2:
                     line = next(inputfile)
 
-                minuses = next(inputfile)
+                self.skip_line(inputfile, 'dashes')
+
                 CIScontribs = []
                 line = next(inputfile)
                 while line.strip():
@@ -424,8 +437,7 @@ class GAMESS(logfileparser.Logfile):
                 # Wipes out the single input coordinate at the start of the file
                 self.atomcoords = []
                 
-            line = next(inputfile)
-            hyphens = next(inputfile)
+            self.skip_lines(inputfile, ['line', '-'])
 
             atomcoords = []
             line = next(inputfile)                
@@ -461,7 +473,7 @@ class GAMESS(logfileparser.Logfile):
             # Remember the type of SCF.
             self.scftype = line.strip()[:-16]
 
-            dashes = next(inputfile)
+            self.skip_line(inputfile, 'dashes')
 
             while line [:5] != " ITER":
 
@@ -614,10 +626,10 @@ class GAMESS(logfileparser.Logfile):
             else:
                 endrot = int(line.split()[2][2:])
 
-            blank = next(inputfile)
-            line = next(inputfile)
+            self.skip_line(inputfile, 'blank')
 
             # Continue down to the first frequencies
+            line = next(inputfile)
             while not line.strip() or not line.startswith("                          1"):
                 line = next(inputfile)
 
@@ -661,7 +673,7 @@ class GAMESS(logfileparser.Logfile):
                     line = next(inputfile)
 
                 # This line seems always to be blank.
-                assert line == blank
+                assert line.strip() == ''
 
                 # Extract the Cartesian displacement vectors.
                 p = [ [], [], [], [], [] ]
@@ -680,7 +692,7 @@ class GAMESS(logfileparser.Logfile):
                 for j in range(10):
                     line = next(inputfile)
                 
-                blank = next(inputfile)
+                self.skip_line(inputfile, 'blank')
                 line = next(inputfile)
             
             # Exclude rotations and translations.
@@ -695,13 +707,16 @@ class GAMESS(logfileparser.Logfile):
             line = next(inputfile)
             while line.find("SHELL")<0:
                 line = next(inputfile)
-            blank = next(inputfile)
-            atomname = next(inputfile)
+
+            self.skip_lines(inputfile, ['blank', 'atomname'])
+
             # shellcounter stores the shell no of the last shell
             # in the previous set of primitives
             shellcounter = 1
             while line.find("TOTAL NUMBER")<0:
-                blank = next(inputfile)
+
+                self.skip_line(inputfile, 'blank')
+
                 line = next(inputfile)
                 shellno = int(line.split()[0])
                 shellgap = shellno - shellcounter
@@ -801,7 +816,8 @@ class GAMESS(logfileparser.Logfile):
                 self.aonames = []
                 readatombasis = True
 
-            dashes = next(inputfile)
+            self.skip_line(inputfile, 'dashes')
+
             for base in range(0, self.nmo, 5):
 
                 self.updateprogress(inputfile, "Coefficients")
@@ -928,11 +944,11 @@ class GAMESS(logfileparser.Logfile):
 
             self.nocoeffs = numpy.zeros((self.nmo, self.nbasis), "d")
 
-            dashes = next(inputfile)
+            self.skip_line(inputfile, 'dashes')
+
             for base in range(0, self.nmo, 5):
 
-                blank = next(inputfile)
-                numbers = next(inputfile) # Eigenvector numbers.
+                self.skip_lines(inputfile, ['blank', 'numbers'])
 
                 # Eigenvalues for these natural orbitals (not in hartrees!).
                 # Sometimes there are some blank lines before it.
@@ -989,28 +1005,32 @@ class GAMESS(logfileparser.Logfile):
         # Normally GAMESS print TOTAL NUMBER OF ATOMS, however in some cases
         #   this is slightly different (ex. lower case for FMO in exam37).
         if not hasattr(self,"natom") and "NUMBER OF ATOMS" in line.upper():
-            self.natom = int(line.split()[-1])
+            natom = int(line.split()[-1])
+            self.set_scalar('natom', natom)
             
+        # The first is from Julien's Example and the second is from Alexander's
+        # I think it happens if you use a polar basis function instead of a cartesian one
         if line.find("NUMBER OF CARTESIAN GAUSSIAN BASIS") == 1 or line.find("TOTAL NUMBER OF BASIS FUNCTIONS") == 1:
-            # The first is from Julien's Example and the second is from Alexander's
-            # I think it happens if you use a polar basis function instead of a cartesian one
-            self.nbasis = int(line.strip().split()[-1])
+            nbasis = int(line.strip().split()[-1])
+            self.set_scalar('nbasis', nbasis)
                 
         elif line.find("TOTAL NUMBER OF CONTAMINANTS DROPPED") >= 0:
-            number = int(line.split()[-1])
+            nmos_dropped = int(line.split()[-1])
             if hasattr(self, "nmo"):
-                self.nmo -= number
+                self.set_scalar('nmo', self.nmo - nmos_dropped)
             else:
-                self.nmo = self.nbasis - number
+                self.set_scalar('nmo', self.nbasis - nmos_dropped)
 
+        # Note that this line is present if ISPHER=1, e.g. for C_bigbasis
         elif line.find("SPHERICAL HARMONICS KEPT IN THE VARIATION SPACE") >= 0:
-            # Note that this line is present if ISPHER=1, e.g. for C_bigbasis
-            self.nmo = int(line.strip().split()[-1])
+            nmo = int(line.strip().split()[-1])
+            self.set_scalar('nmo', nmo)
             
+        # Note that this line is not always present, so by default
+        # NBsUse is set equal to NBasis (see below).
         elif line.find("TOTAL NUMBER OF MOS IN VARIATION SPACE") == 1:
-            # Note that this line is not always present, so by default
-            # NBsUse is set equal to NBasis (see below).
-            self.nmo = int(line.split()[-1])
+            nmo = int(line.split()[-1])
+            self.set_scalar('nmo', nmo)
 
         elif line.find("OVERLAP MATRIX") == 0 or line.find("OVERLAP MATRIX") == 1:
             # The first is for PC-GAMESS, the second for GAMESS
@@ -1023,9 +1043,8 @@ class GAMESS(logfileparser.Logfile):
             while base < self.nbasis:
                 self.updateprogress(inputfile, "Overlap")
 
-                blank = next(inputfile)
-                line = next(inputfile) # Basis fn number
-                blank = next(inputfile)
+                self.skip_lines(inputfile, ['b', 'basis_fn_number', 'b'])
+
                 for i in range(self.nbasis - base): # Fewer lines each time
                     line = next(inputfile)
                     temp = line.split()
@@ -1038,8 +1057,9 @@ class GAMESS(logfileparser.Logfile):
         if "ECP POTENTIALS" in line:
             if not hasattr(self, "coreelectrons"):
                 self.coreelectrons = [0]*self.natom
-            dashes = next(inputfile)
-            blank = next(inputfile)
+
+            self.skip_lines(inputfile, ['d', 'b'])
+
             header = next(inputfile)
             while header.split()[0] == "PARAMETERS":
                 name = header[17:25]
