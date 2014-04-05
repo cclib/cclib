@@ -381,7 +381,16 @@ def make_regression_from_old_unittest(filename, module_name, test_name):
 
 def main(which=[], traceback=False):
 
-    dummyfiles = [eval(n)("") for n in parsers]
+    # Print a warning if you haven't downloaded all of the regression test files,
+    # or an error if not all of the regression test files are included in filenames.
+    regfile = open(os.path.join("..", "data", "regressionfiles.txt"), "r")
+    regfilenames = [os.sep.join(x.strip().split("/")) for x in regfile.readlines()]
+    regfile.close()
+
+    missing = []
+    for x in regfilenames:
+        if not os.path.isfile(os.path.join("..", "data", "regression", x)):
+            missing.append(x)
 
     # It would be nice to fix the structure of this nested list,
     # because in its current form it is not amenable to tweaks.
@@ -395,19 +404,11 @@ def main(which=[], traceback=False):
         print("Run regression_download.sh in the ../data directory to update.")
         sys.exit(1)
 
-    # Print a warning if you haven't downloaded all of the regression test files,
-    # or an error if not all of the regression test files are included in filenames.
-    regfile = open(os.path.join("..", "data", "regressionfiles.txt"), "r")
-    regfilenames = [os.sep.join(x.strip().split("/")) for x in regfile.readlines()]
-    regfile.close()
-
-    missing = []
-    for x in regfilenames:
-        if not os.path.isfile(os.path.join("..", "data", "regression", x)):
-            missing.append(x)
-        elif os.path.join("..", "data", "regression", x) not in flatten(filenames):
-            print("\nERROR: The regression file %s is on disk, but not in the 'filenames' list.\n" % x)
-            sys.exit(1)       
+    not_registered = []
+    for path in flatten(filenames):
+        fn = '/'.join(path.split('/')[-3:])
+        if fn not in regfilenames:
+            not_registered.append(fn)
 
     # When a unit test is removed or replaced by a newer version, the old logfile
     # typically becomes a regression, and normally we still want to run the unit test
@@ -425,6 +426,7 @@ def main(which=[], traceback=False):
                 globals()[funcname] = func
 
     failures = errors = total = 0
+    dummyfiles = [eval(n)("") for n in parsers]
     for iname, name in enumerate(parsers):
 
         # Continue to next iteration if we are limiting the regression and the current
@@ -508,12 +510,16 @@ def main(which=[], traceback=False):
     if not traceback and failures + errors > 0:
         print("\nFor more information on failures/errors, add 'traceback' as argument.")
 
-    # Show this warning at the end, so that it's easy to notice.
+    # Show these warnings only now at the end, so that they're easy to notice.
     if len(missing) > 0:
         print("\nWARNING: You are missing %d regression file(s)." % len(missing))
         print("Run regression_download.sh in the ../data directory to update.")
         print("Missing files:")
         print("\n".join(missing))
+    if len(not_registered) > 0:
+        print("\nWARNING: Found %d files in regression directory that were not registered." % len(not_registered))
+        print("Although still test, please add these files to 'regressionfiles.txt':")
+        print("\n".join(not_registered))
 
 
 if __name__=="__main__":
