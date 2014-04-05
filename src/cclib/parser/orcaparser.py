@@ -59,36 +59,30 @@ class ORCA(logfileparser.Logfile):
         if line[0:15] == "Number of atoms":
 
             natom = int(line.split()[-1])
-
-            # This assert will probably never be executed.
-            if hasattr(self, "natom"):
-                assert self.natom == natom
-            else:
-                self.natom = natom
+            self.set_scalar('natom', natom)
 
         if line[1:13] == "Total Charge":
 
             charge = int(line.split()[-1])
+            self.set_scalar('charge', charge)
+
             line = next(inputfile)
+
             mult = int(line.split()[-1])
+            self.set_scalar('mult', mult)
 
-            self.charge = charge
-            self.mult = mult
-
-        # SCF convergence output begins with
+        # SCF convergence output begins with:
         #
         # --------------
         # SCF ITERATIONS
         # --------------
         # 
-        # However, there are two common formats which need to be handled.
-        # These are seperate functions.
-
+        # However, there are two common formats which need to be handled, implemented as separate functions.
         if "SCF ITERATIONS" in line:
 
-            dashes = next(inputfile)
-            line = next(inputfile).split()
+            self.skip_line(inputfile, 'dashes')
 
+            line = next(inputfile).split()
             if line[1] == "Energy":
                 self.parse_scf_condensed_format(inputfile, line)
             elif line[1] == "Starting":
@@ -172,8 +166,7 @@ class ORCA(logfileparser.Logfile):
                 self.geovalues = [ ]
             
             newlist = []
-            headers = next(inputfile)
-            dashes = next(inputfile)
+            self.skip_lines(inputfile, ['headers', 'd'])
             
             #check if energy change is present (steps > 1)
             line = next(inputfile)
@@ -192,7 +185,8 @@ class ORCA(logfileparser.Logfile):
 
         #if not an optimization, determine structure used
         if line[0:21] == "CARTESIAN COORDINATES" and not hasattr(self, "atomcoords"):
-            dashes = next(inputfile)
+
+            self.skip_line(inputfile, 'dashes')
             
             atomnos = []
             atomcoords = []
@@ -203,10 +197,10 @@ class ORCA(logfileparser.Logfile):
                 atomcoords.append(list(map(float, broken[1:4])))
                 line = next(inputfile)
 
-            self.atomcoords = [atomcoords]
             if not hasattr(self, "atomnos"):
                 self.atomnos = atomnos
-                self.natom = len(atomnos)
+                self.set_scalar('natom', len(atomnos))
+            self.atomcoords = [atomcoords]
 
         # There's always a banner announcing the next geometry optimization cycle,
         # which looks something like this:
@@ -220,11 +214,7 @@ class ORCA(logfileparser.Logfile):
             # are printed differently inside the first/last and other cycles.
             self.gopt_cycle = int(line.split()[4])
 
-            #parse geometry coords
-            stars = next(inputfile)
-            dashes = next(inputfile)
-            text = next(inputfile)
-            dashes = next(inputfile)
+            self.skip_lines(inputfile, ['s', 'd', 'text', 'd'])
            
             if not hasattr(self,"atomcoords"):
                 self.atomcoords = []
@@ -245,12 +235,7 @@ class ORCA(logfileparser.Logfile):
             count = len(self.atomcoords)
             self.optdone.append(count)
 
-            text = next(inputfile)
-            broken = text.split()
-            stars = next(inputfile)
-            dashes = next(inputfile)
-            text = next(inputfile)
-            dashes = next(inputfile)
+            self.skip_lines(inputfile, ['text', 's', 'd', 'text', 'd'])
 
             atomcoords = []
             for i in range(self.natom):
@@ -261,9 +246,8 @@ class ORCA(logfileparser.Logfile):
             self.atomcoords.append(atomcoords)
 
         if line[0:16] == "ORBITAL ENERGIES":
-            dashes = next(inputfile)
-            text = next(inputfile)
-            text = next(inputfile)
+
+            self.skip_lines(inputfile, ['d', 'text', 'text'])
 
             self.moenergies = [[]]
             self.homos = [[0]]
@@ -298,16 +282,13 @@ class ORCA(logfileparser.Logfile):
         # For this reason, also check for the second patterns, and use it as an assert
         # if nbasis was already parsed. Regression PCB_1_122.out covers this test case.
         if line[1:32] == "# of contracted basis functions":
-            self.nbasis = int(line.split()[-1])
+            self.set_scalar('nbasis', int(line.split()[-1]))
         if line[1:27] == "Basis Dimension        Dim":
-            nbasis = int(line.split()[-1])
-            if hasattr(self, 'nbasis'):
-                assert nbasis == self.nbasis
-            else:
-                self.nbasis = nbasis
+            self.set_scalar('nbasis', int(line.split()[-1]))
 
         if line[0:14] == "OVERLAP MATRIX":
-            dashes = next(inputfile)
+
+            self.skip_line(inputfile, 'dashes')
 
             self.aooverlaps = numpy.zeros( (self.nbasis, self.nbasis), "d")
             for i in range(0, self.nbasis, 6):
@@ -325,7 +306,7 @@ class ORCA(logfileparser.Logfile):
         # This is also where atombasis is parsed.
         if line[0:18] == "MOLECULAR ORBITALS":
 
-            dashses = next(inputfile)
+            self.skip_line(inputfile, 'dashes')
 
             mocoeffs = [ numpy.zeros((self.nbasis, self.nbasis), "d") ]
             self.aonames = []
@@ -336,15 +317,15 @@ class ORCA(logfileparser.Logfile):
             for spin in range(len(self.moenergies)):
 
                 if spin == 1:
-                    blank = next(inputfile)
+                    self.skip_line(inputfile, 'blank')
                     mocoeffs.append(numpy.zeros((self.nbasis, self.nbasis), "d"))
 
                 for i in range(0, self.nbasis, 6):
+
                     self.updateprogress(inputfile, "Coefficients")
 
-                    numbers = next(inputfile)
-                    energies = next(inputfile)
-                    occs = next(inputfile)
+                    self.skip_lines(inputfile, ['numbers', 'energies', 'occs'])
+
                     dashes = next(inputfile)
                     broken = dashes.split()
                     size = len(broken)
@@ -408,10 +389,9 @@ class ORCA(logfileparser.Logfile):
         if (line[25:44] == "ABSORPTION SPECTRUM" or \
                 line[9:28] == "ABSORPTION SPECTRUM") and not hasattr(self,
                                                                     "etoscs"):
-            minus = next(inputfile)
-            header = next(inputfile)
-            header = next(inputfile)
-            minus = next(inputfile)
+
+            self.skip_lines(inputfile, ['d', 'header', 'header', 'd'])
+
             self.etoscs = []
             for x in self.etsyms:                
                 osc = next(inputfile).split()[3]
@@ -422,8 +402,8 @@ class ORCA(logfileparser.Logfile):
                 self.etoscs.append(osc)
                 
         if line[0:23] == "VIBRATIONAL FREQUENCIES":
-            dashes = next(inputfile)
-            blank = next(inputfile)
+
+            self.skip_lines(inputfile, ['d', 'b'])
 
             self.vibfreqs = numpy.zeros((3 * self.natom,),"d")
 
@@ -456,12 +436,7 @@ class ORCA(logfileparser.Logfile):
 
             self.vibdisps = numpy.zeros(( 3 * self.natom, self.natom, 3), "d")
 
-            dashes = next(inputfile)
-            blank = next(inputfile)
-            text = next(inputfile)
-            text = next(inputfile)
-            text = next(inputfile)
-            blank = next(inputfile)
+            self.skip_lines(inputfile, ['d', 'b', 'text', 'text', 'text', 'b'])
 
             for mode in range(0, 3 * self.natom, 6):
                 header = next(inputfile)
@@ -477,10 +452,8 @@ class ORCA(logfileparser.Logfile):
             self.vibdisps = self.vibdisps[6:]
 
         if line[0:11] == "IR SPECTRUM":
-            dashes = next(inputfile)
-            blank = next(inputfile)
-            header = next(inputfile)
-            dashes = next(inputfile)
+
+            self.skip_lines(inputfile, ['d', 'b', 'header', 'd'])
 
             self.vibirs = numpy.zeros((3 * self.natom,),"d")
 
@@ -493,10 +466,8 @@ class ORCA(logfileparser.Logfile):
             self.vibirs = self.vibirs[6:]
 
         if line[0:14] == "RAMAN SPECTRUM":
-            dashes = next(inputfile)
-            blank = next(inputfile)
-            header = next(inputfile)
-            dashes = next(inputfile)
+
+            self.skip_lines(inputfile, ['d', 'b', 'header', 'd'])
 
             self.vibramans = numpy.zeros((3 * self.natom,),"d")
 
@@ -533,7 +504,7 @@ class ORCA(logfileparser.Logfile):
             if has_spins and not hasattr(self, "atomspins"):
                 self.atomspins = {}
 
-            dashes = next(inputfile)
+            self.skip_line(inputfile, 'dashes')
 
             charges = []
             if has_spins:
@@ -559,7 +530,7 @@ class ORCA(logfileparser.Logfile):
             if has_spins and not hasattr(self, "atomspins"):
                 self.atomspins = {}
 
-            dashes = next(inputfile)
+            self.skip_line(inputfile, 'dashes')
 
             charges = []
             if has_spins:

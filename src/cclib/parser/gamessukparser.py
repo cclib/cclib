@@ -60,8 +60,8 @@ class GAMESSUK(logfileparser.Logfile):
         """Extract information from the file object inputfile."""
 
         if line[1:22] == "total number of atoms":
-            if not hasattr(self, "natom"):
-                self.natom = int(line.split()[-1])
+            natom = int(line.split()[-1])
+            self.set_scalar('natom', natom)
 
         if line[3:44] == "convergence threshold in optimization run":
             # Assuming that this is only found in the case of OPTXYZ
@@ -139,16 +139,13 @@ class GAMESSUK(logfileparser.Logfile):
             if not hasattr(self, "atomcoords"):
                 self.atomcoords = []
                 self.atomnos = []
-                
-            asterisk = next(inputfile)
-            blank = next(inputfile)
-            colmname = next(inputfile)
-            equals = next(inputfile)
+
+            self.skip_lines(inputfile, ['s', 'b', 'colname', 'e'])
 
             atomcoords = []
             atomnos = []
             line = next(inputfile)
-            while line != equals:
+            while list(set(line.strip())) != ['=']:
                 temp = line.strip().split()
                 atomcoords.append([utils.convertor(float(x), "bohr", "Angstrom") for x in temp[0:3]])
                 if not hasattr(self, "atomnos") or len(self.atomnos) == 0:
@@ -161,11 +158,18 @@ class GAMESSUK(logfileparser.Logfile):
                 self.atomnos = atomnos
 
         if line[1:32] == "total number of basis functions":
-            self.nbasis = int(line.split()[-1])
+
+            nbasis = int(line.split()[-1])
+            self.set_scalar('nbasis', nbasis)
+
             while line.find("charge of molecule")<0:
                 line = next(inputfile)
-            self.charge = int(line.split()[-1])
-            self.mult = int(next(inputfile).split()[-1])
+
+            charge = int(line.split()[-1])
+            self.set_scalar('charge', charge)
+
+            mult = int(next(inputfile).split()[-1])
+            self.set_scalar('mult', mult)
 
             alpha = int(next(inputfile).split()[-1])-1
             beta = int(next(inputfile).split()[-1])-1
@@ -177,17 +181,13 @@ class GAMESSUK(logfileparser.Logfile):
         if line[37:69] == "s-matrix over gaussian basis set":
             self.aooverlaps = numpy.zeros((self.nbasis, self.nbasis), "d")
 
-            minus = next(inputfile)
-            blank = next(inputfile)
+            self.skip_lines(inputfile, ['d', 'b'])
+
             i = 0
             while i < self.nbasis:
                 self.updateprogress(inputfile, "Overlap")
 
-                blank = next(inputfile)
-                blank = next(inputfile)
-                header = next(inputfile)
-                blank = next(inputfile)
-                blank = next(inputfile)
+                self.skip_lines(inputfile, ['b', 'b', 'header', 'b', 'b'])
 
                 for j in range(self.nbasis):
                     temp = list(map(float, next(inputfile).split()[1:]))
@@ -196,8 +196,10 @@ class GAMESSUK(logfileparser.Logfile):
                 i += len(temp)
 
         if line[18:43] == 'EFFECTIVE CORE POTENTIALS':
+
+            self.skip_line(inputfile, 'stars')
+
             self.coreelectrons = numpy.zeros(self.natom, 'i')
-            asterisk = next(inputfile)
             line = next(inputfile)
             while line[15:46] != "*"*31:
                 if line.find("for atoms ...")>=0:
@@ -236,19 +238,15 @@ class GAMESSUK(logfileparser.Logfile):
             self.vibirs = self.vibirs[-len(self.vibdisps):]
 
         if line[44:73] == "normalised normal coordinates":
+
+            self.skip_lines(inputfile, ['e', 'b', 'b'])
+
             self.vibdisps = []
-            equals = next(inputfile)
-            blank = next(inputfile)
-            blank = next(inputfile)
             freqnum = next(inputfile)
             while freqnum.find("=")<0:
-                blank = next(inputfile)
-                equals = next(inputfile)
-                freqs = next(inputfile)
-                equals = next(inputfile)
-                blank = next(inputfile)
-                header = next(inputfile)
-                equals = next(inputfile)
+
+                self.skip_lines(inputfile, ['b', 'e', 'freqs', 'e', 'b', 'header', 'e'])
+
                 p = [ [] for x in range(9) ]
                 for i in range(len(self.atomnos)):
                     brokenx = list(map(float, next(inputfile)[25:].split()))
@@ -258,22 +256,19 @@ class GAMESSUK(logfileparser.Logfile):
                         p[j].append(x)
                 self.vibdisps.extend(p)
         
-                blank = next(inputfile)
-                blank = next(inputfile)
+                self.skip_lines(inputfile, ['b', 'b'])
+
                 freqnum = next(inputfile)                    
 
         if line[26:36] == "raman data":
             self.vibramans = []
 
-            stars = next(inputfile)
-            blank = next(inputfile)
-            header = next(inputfile)
+            self.skip_lines(inputfile, ['s', 'b', 'header', 'b'])
 
-            blank = next(inputfile)
             line = next(inputfile)
             while line[1]!="*":
                 self.vibramans.append(float(line.split()[3]))
-                blank = next(inputfile)
+                self.skip_line(inputfile, 'blank')
                 line = next(inputfile)
             # Use the length of the vibdisps to figure out
             # how many rotations and translations to remove
@@ -443,9 +438,7 @@ class GAMESSUK(logfileparser.Logfile):
                     self.atombasis.append([])
                 readatombasis = True
 
-            blank = next(inputfile)
-            blank = next(inputfile)
-            evalues = next(inputfile)
+            self.skip_lines(inputfile, ['b', 'b', 'evalues'])
 
             p = re.compile(r"\d+\s+(\d+)\s*(\w+) (\w+)")
             oldatomname = "DUMMY VALUE"
@@ -454,11 +447,8 @@ class GAMESSUK(logfileparser.Logfile):
             while mo < self.nmo:
                 self.updateprogress(inputfile, "Coefficients")
 
-                blank = next(inputfile)
-                blank = next(inputfile)
-                nums = next(inputfile)
-                blank = next(inputfile)
-                blank = next(inputfile)
+                self.skip_lines(inputfile, ['b', 'b', 'nums', 'b', 'b'])
+
                 for basis in range(self.nbasis):
                     line = next(inputfile)
                     # Fill atombasis only first time around.
@@ -485,7 +475,7 @@ class GAMESSUK(logfileparser.Logfile):
                     self.aonames = aonames
 
                 line = next(inputfile) # blank line
-                while line == blank:
+                while not line.strip():
                     line = next(inputfile)
                 evalues = line
                 if evalues[:17].strip(): # i.e. if these aren't evalues
@@ -554,7 +544,8 @@ class GAMESSUK(logfileparser.Logfile):
             while not "total gross population on atoms" in line:
                 line = next(inputfile)
 
-            blank = next(inputfile)
+            self.skip_line(inputfile, 'blank')
+
             line = next(inputfile)
             mulliken, lowdin = [], []
             while line.strip():

@@ -49,55 +49,6 @@ class NWChem(logfileparser.Logfile):
         # FIXME if necessary
         return label
 
-    def before_parsing(self):
-
-        # Set any global variables for the parser here
-        pass
-
-    def set_scalar(self, name, value, check=True):
-        """Set an attribute and perform a check when it already exists."""
-        if check and hasattr(self, name):
-            try:
-                assert getattr(self, name) == value
-            except AssertionError:
-                self.logger.warning("Scalar %s changed value (%s -> %s)" % (name, getattr(self, name), value))
-        setattr(self, name, value)
-
-    def skip_lines(self, inputfile, sequence):
-        """Read trivial line types and check they are what they are supposed to be.
-
-        This function will read len(sequence) lines and do certain checks on them,
-        when the elements of sequence have the appropriate values. Currently the
-        following elements trigger checks:
-            'blank' or 'b'      - the line should be blank
-            'dashes' or 'd'     - the line should contain only dashes (or spaces)
-            'equals' oe 'e'     - the line should contain only equal signs (or spaces)
-        """
-
-        lines = []
-        for expected in sequence:
-            line = next(inputfile)
-            if expected in ["blank", "b"]:
-                try:
-                    assert line.strip() == ""
-                except AssertionError:
-                    self.logger.warning("Line not blank as expected: " + line.strip('\n'))
-            elif expected in ['dashes', 'd']:
-                try:
-                    assert all([c == '-' for c in line.strip() if c != ' '])
-                except AssertionError:
-                    self.logger.warning("Line not all dashes as expected: " + line.strip('\n'))
-            elif expected in ['equals', 'e']:
-                try:
-                    assert all([c == '=' for c in line.strip() if c != ' '])
-                except AssertionError:
-                    self.logger.warning("Line not all equal signs as expected: " + line.strip('\n'))
-            lines.append(line)
-
-        return lines
-
-    skip_line = lambda self, inputfile, expected: self.skip_lines(inputfile, [expected])
-
     name2element = lambda self, lbl: "".join(itertools.takewhile(str.isalpha, lbl))
 
     def extract(self, inputfile, line):
