@@ -25,7 +25,7 @@ from glob import glob
 from io import StringIO
 
 from cclib.parser import ccopen
-from cclib.parser import ADF, GAMESS, GAMESSUK, Gaussian, Jaguar, Molpro, NWChem, ORCA
+from cclib.parser import ADF, GAMESS, GAMESSUK, Gaussian, Jaguar, Molpro, NWChem, ORCA, Psi
 
 import testall
 parsers = testall.parsers
