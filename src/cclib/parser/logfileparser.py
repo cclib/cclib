@@ -344,7 +344,8 @@ class Logfile(object):
         following elements trigger checks:
             'blank' or 'b'      - the line should be blank
             'dashes' or 'd'     - the line should contain only dashes (or spaces)
-            'equals' oe 'e'     - the line should contain only equal signs (or spaces)
+            'equals' or 'e'     - the line should contain only equal signs (or spaces)
+            'stars' or 's'      - the line should contain only stars (or spaces)
         """
 
         lines = []
@@ -365,6 +366,11 @@ class Logfile(object):
                     assert all([c == '=' for c in line.strip() if c != ' '])
                 except AssertionError:
                     self.logger.warning("Line not all equal signs as expected: " + line.strip('\n'))
+            elif expected in ['stars', 's']:
+                try:
+                    assert all([c == '*' for c in line.strip() if c != ' '])
+                except AssertionError:
+                    self.logger.warning("Line not all stars as expected: " + line.strip('\n'))
             lines.append(line)
 
         return lines
