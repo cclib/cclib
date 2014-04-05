@@ -59,12 +59,11 @@ class Molpro(logfileparser.Logfile):
             if not hasattr(self,"atomcoords"):
                 self.atomcoords = []
                 self.atomnos = []
-            line = next(inputfile)
-            line = next(inputfile)
-            line = next(inputfile)
             atomcoords = []
             atomnos = []
             
+            self.skip_lines(inputfile, ['line', 'line', 'line'])
+
             line = next(inputfile)
             while line.strip():
                 temp = line.strip().split()
@@ -74,15 +73,14 @@ class Molpro(logfileparser.Logfile):
                 
             self.atomnos = numpy.array(atomnos, "i")
             self.atomcoords.append(atomcoords)
-            self.natom = len(self.atomnos)
+            self.set_scalar('natom', len(self.atomnos))
         
         # Use BASIS DATA to parse input for aonames and atombasis.
         # This is always the first place this information is printed, so no attribute check is needed.
         if line[1:11] == "BASIS DATA":
             
-            blank = next(inputfile)
-            header = next(inputfile)
-            blank = next(inputfile)
+            self.skip_lines(inputfile, ['b', 'header', 'b'])
+
             self.aonames = []
             self.atombasis = []
             self.gbasis = []
@@ -153,10 +151,7 @@ class Molpro(logfileparser.Logfile):
         if line[1:23] == "NUMBER OF CONTRACTIONS":
             
             nbasis = int(line.split()[3])
-            if hasattr(self, "nbasis"):
-                assert nbasis == self.nbasis
-            else:
-                self.nbasis = nbasis
+            self.set_scalar('nbasis', nbasis)
 
         # This is used to signalize whether we are inside an SCF calculation.
         if line[1:8] == "PROGRAM" and line[14:18] == "-SCF":
@@ -171,20 +166,12 @@ class Molpro(logfileparser.Logfile):
             spindown = int(line.split()[4][:-1])
             # Nuclear charges (atomnos) should be parsed by now.
             nuclear = numpy.sum(self.atomnos)
+
             charge = nuclear - spinup - spindown
+            self.set_scalar('charge', charge)
+
             mult = spinup - spindown + 1
-            
-            # Copy charge, or assert for exceptions if already exists.
-            if not hasattr(self, "charge"):
-                self.charge = charge
-            else:
-                assert self.charge == charge
-            
-            # Copy multiplicity, or assert for exceptions if already exists.
-            if not hasattr(self, "mult"):
-                self.mult = mult
-            else:
-                assert self.mult == mult
+            self.set_scalar('mult', mult)
         
         # Convergenve thresholds for SCF cycle, should be contained in a line such as:
         #   CONVERGENCE THRESHOLDS:    1.00E-05 (Density)    1.40E-07 (Energy)
@@ -338,11 +325,8 @@ class Molpro(logfileparser.Logfile):
                 spin = 1
             
             if not self.electronorbitals:
-                dashes = next(inputfile)
-            blank = next(inputfile)
-            blank = next(inputfile)
-            headers = next(inputfile)
-            blank = next(inputfile)
+                self.skip_line(inputfile, 'equals')
+            self.skip_lines(inputfile, ['b', 'b', 'headers', 'b'])
             
             # Parse the list of atomic orbitals if atombasis or aonames is missing.
             line = next(inputfile)
@@ -430,10 +414,11 @@ class Molpro(logfileparser.Logfile):
         #   will not have dimensions nbasis x nbasis.
         if line[1:9] == "MATRIX S":
         
-            blank = next(inputfile)
-            symblocklabel = next(inputfile)
             if not hasattr(self, "aooverlaps"):
                 self.aooverlaps = [[]]
+
+            self.skip_lines(inputfile, ['b', 'symblocklabel'])
+
             line = next(inputfile)
             while line.strip() != "":
                 elements = [float(s) for s in line.split()]
@@ -463,7 +448,8 @@ class Molpro(logfileparser.Logfile):
         #   THRORTH =  1.00D-08  GRID    =  1.00D-06  GRIDMAX =  1.00D-03  DTMAX   =  0.00D+00
         if line [1:12] == "THRESHOLDS":
 
-            blank = next(inputfile)
+            self.skip_line(input, 'blank')
+
             line = next(inputfile)
             while line.strip():
 
@@ -496,12 +482,11 @@ class Molpro(logfileparser.Logfile):
         # history, but this might not be always true -- so this is a potential weak link.
         if line[1:30] == "END OF GEOMETRY OPTIMIZATION." or line.strip() == "Quadratic Steepest Descent - Minimum Search":
             
-            blank = next(inputfile)
-            headers = next(inputfile)
+            self.skip_line(inputfile, 'blank')
 
             # Newer version of Molpro (at least for 2012) print and additional column
             # with the timing information for each step. Otherwise, the history looks the same.
-            headers = headers.split()
+            headers = next(inputfile).split()
             if not len(headers) in (10,11):
                 return
 
@@ -549,7 +534,7 @@ class Molpro(logfileparser.Logfile):
             else:
                 islow = False
 
-            blank = next(inputfile)
+            self.skip_line(inputfile, 'blank')
 
             # Each portion of five modes is followed by a single blank line.
             # The whole block is followed by an additional blank line.
@@ -672,12 +657,7 @@ class Molpro(logfileparser.Logfile):
         # ...
         if line.strip() == "1PROGRAM * POP (Mulliken population analysis)":
 
-            blank = next(inputfile)
-            blank = next(inputfile)
-            density_source = next(inputfile)
-            blank = next(inputfile)
-            function_type_comment = next(inputfile)
-            blank = next(inputfile)
+            self.skip_lines(inputfile, ['b', 'b', 'density_source', 'b', 'func_type', 'b'])
 
             header = next(inputfile)
             icharge = header.split().index('Charge')
