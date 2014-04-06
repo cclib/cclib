@@ -57,7 +57,82 @@ class Jaguar(logfileparser.Logfile):
 
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
-            
+
+        # Extract charge and multiplicity
+        if line[2:22] == "net molecular charge":
+            self.set_scalar('charge', int(line.split()[-1]))
+            self.set_scalar('mult', int(next(inputfile).split()[-1]))
+
+        if line[2:14] == "new geometry" or line[1:21] == "Symmetrized geometry" or line.find("Input geometry") > 0:
+        # Get the atom coordinates
+            if not hasattr(self, "atomcoords") or line[1:21] == "Symmetrized geometry":
+                # Wipe the "Input geometry" if "Symmetrized geometry" present
+                self.atomcoords = []
+            p = re.compile("(\D+)\d+") # One/more letters followed by a number
+            atomcoords = []
+            atomnos = []
+            angstrom = next(inputfile)
+            title = next(inputfile)
+            line = next(inputfile)
+            while line.strip():
+                temp = line.split()
+                element = p.findall(temp[0])[0]
+                atomnos.append(self.table.number[element])
+                atomcoords.append(list(map(float, temp[1:])))
+                line = next(inputfile)
+            self.atomcoords.append(atomcoords)
+            self.atomnos = numpy.array(atomnos, "i")
+            self.set_scalar('natom', len(atomcoords))
+
+        # Hartree-Fock energy after SCF
+        if line[1:18] == "SCFE: SCF energy:":
+            if not hasattr(self, "scfenergies"):
+                self.scfenergies = []
+            temp = line.strip().split()
+            scfenergy = float(temp[temp.index("hartrees") - 1])
+            scfenergy = utils.convertor(scfenergy, "hartree", "eV")
+            self.scfenergies.append(scfenergy)
+
+        # Energy after LMP2 correction
+        if line[1:18] == "Total LMP2 Energy":
+            if not hasattr(self, "mpenergies"):
+                self.mpenergies = [[]]
+            lmp2energy = float(line.split()[-1])
+            lmp2energy = utils.convertor(lmp2energy, "hartree", "eV")
+            self.mpenergies[-1].append(lmp2energy)
+
+        if line.find("number of occupied orbitals") > 0:
+        # Get number of MOs
+            occs = int(line.split()[-1])
+            line = next(inputfile)
+            virts = int(line.split()[-1])
+            self.nmo = occs + virts
+            self.homos = numpy.array([occs-1], "i")
+
+            self.unrestrictedflag = False
+
+        if line[1:28] == "number of occupied orbitals":
+            self.homos = numpy.array([float(line.strip().split()[-1])-1], "i")
+
+        if line[2:27] == "number of basis functions":
+            nbasis = int(line.strip().split()[-1])
+            self.set_scalar('nbasis', nbasis)
+
+        if line.find("number of alpha occupied orb") > 0:
+        # Get number of MOs for an unrestricted calc
+
+            aoccs = int(line.split()[-1])
+            line = next(inputfile)
+            avirts = int(line.split()[-1])
+            line = next(inputfile)
+            boccs = int(line.split()[-1])
+            line = next(inputfile)
+            bvirt = int(line.split()[-1])
+
+            self.nmo = aoccs + avirts
+            self.homos = numpy.array([aoccs-1, boccs-1], "i")
+            self.unrestrictedflag = True
+
         if line[0:4] == "etot":
         # Get SCF convergence information
             if not hasattr(self, "scfvalues"):
@@ -85,113 +160,6 @@ class Jaguar(logfileparser.Logfile):
                     values.append([ddensity])
                 line = next(inputfile)
             self.scfvalues.append(values)
-
-        # Hartree-Fock energy after SCF
-        if line[1:18] == "SCFE: SCF energy:":
-            if not hasattr(self, "scfenergies"):
-                self.scfenergies = []
-            temp = line.strip().split()
-            scfenergy = float(temp[temp.index("hartrees") - 1])
-            scfenergy = utils.convertor(scfenergy, "hartree", "eV")
-            self.scfenergies.append(scfenergy)
-
-        # Energy after LMP2 correction
-        if line[1:18] == "Total LMP2 Energy":
-            if not hasattr(self, "mpenergies"):
-                self.mpenergies = [[]]
-            lmp2energy = float(line.split()[-1])
-            lmp2energy = utils.convertor(lmp2energy, "hartree", "eV")
-            self.mpenergies[-1].append(lmp2energy)
-
-        if line[2:14] == "new geometry" or line[1:21] == "Symmetrized geometry" or line.find("Input geometry") > 0:
-        # Get the atom coordinates
-            if not hasattr(self, "atomcoords") or line[1:21] == "Symmetrized geometry":
-                # Wipe the "Input geometry" if "Symmetrized geometry" present
-                self.atomcoords = []
-            p = re.compile("(\D+)\d+") # One/more letters followed by a number
-            atomcoords = []
-            atomnos = []
-            angstrom = next(inputfile)
-            title = next(inputfile)
-            line = next(inputfile)
-            while line.strip():
-                temp = line.split()
-                element = p.findall(temp[0])[0]
-                atomnos.append(self.table.number[element])
-                atomcoords.append(list(map(float, temp[1:])))
-                line = next(inputfile)
-            self.atomcoords.append(atomcoords)
-            self.atomnos = numpy.array(atomnos, "i")
-            self.set_scalar('natom', len(atomcoords))
-
-        # Extract charge and multiplicity
-        if line[2:22] == "net molecular charge":
-            self.set_scalar('charge', int(line.split()[-1]))
-            self.set_scalar('mult', int(next(inputfile).split()[-1]))
-
-        if line[2:24] == "start of program geopt":
-            if not self.geoopt:
-                # Need to keep only the RMS density change info
-                # if this is a geoopt
-                self.scftargets = [[self.scftargets[0][0]]]
-                if hasattr(self, "scfvalues"):
-                    self.scfvalues[0] = [[x[0]] for x in self.scfvalues[0]]
-                self.geoopt = True
-            else:
-                self.scftargets.append([5E-5])
-
-        if line[2:28] == "geometry optimization step":
-        # Get Geometry Opt convergence information
-            if not hasattr(self, "geovalues"):
-                self.geovalues = []
-                self.geotargets = numpy.zeros(5, "d")
-            gopt_step = int(line.split()[-1])
-            energy = next(inputfile)
-            # quick hack for messages of the sort:
-            #   ** restarting optimization from step    2 **
-            # as found in regression file ptnh3_2_H2O_2_2plus.out
-            if next(inputfile).strip():
-                blank = next(inputfile)
-            line = next(inputfile)
-            values = []
-            target_index = 0                
-            if gopt_step == 1:
-                # The first optimization step does not produce an energy change
-                values.append(0.0)
-                target_index = 1
-            while line.strip():
-                if len(line) > 40 and line[41] == "(":
-                    # A new geo convergence value
-                    values.append(float(line[26:37]))
-                    self.geotargets[target_index] = float(line[43:54])
-                    target_index += 1
-                line = next(inputfile)
-            self.geovalues.append(values)
-
-        if line.find("number of occupied orbitals") > 0:
-        # Get number of MOs
-            occs = int(line.split()[-1])
-            line = next(inputfile)
-            virts = int(line.split()[-1])
-            self.nmo = occs + virts
-            self.homos = numpy.array([occs-1], "i")
-
-            self.unrestrictedflag = False
-
-        if line.find("number of alpha occupied orb") > 0:
-        # Get number of MOs for an unrestricted calc
-
-            aoccs = int(line.split()[-1])
-            line = next(inputfile)
-            avirts = int(line.split()[-1])
-            line = next(inputfile)
-            boccs = int(line.split()[-1])
-            line = next(inputfile)
-            bvirt = int(line.split()[-1])
-
-            self.nmo = aoccs + avirts
-            self.homos = numpy.array([aoccs-1, boccs-1], "i")
-            self.unrestrictedflag = True
 
         # MO energies and symmetries.
         # Jaguar 7.0: provides energies and symmetries for both
@@ -349,12 +317,44 @@ class Jaguar(logfileparser.Logfile):
                     self.aooverlaps[j, i:(i+len(temp))] = temp
                     self.aooverlaps[i:(i+len(temp)), j] = temp
             
-        if line[1:28] == "number of occupied orbitals":
-            self.homos = numpy.array([float(line.strip().split()[-1])-1], "i")
+        if line[2:24] == "start of program geopt":
+            if not self.geoopt:
+                # Need to keep only the RMS density change info
+                # if this is a geooptz
+                self.scftargets = [[self.scftargets[0][0]]]
+                if hasattr(self, "scfvalues"):
+                    self.scfvalues[0] = [[x[0]] for x in self.scfvalues[0]]
+                self.geoopt = True
+            else:
+                self.scftargets.append([5E-5])
 
-        if line[2:27] == "number of basis functions":
-            nbasis = int(line.strip().split()[-1])
-            self.set_scalar('nbasis', nbasis)
+        if line[2:28] == "geometry optimization step":
+        # Get Geometry Opt convergence information
+            if not hasattr(self, "geovalues"):
+                self.geovalues = []
+                self.geotargets = numpy.zeros(5, "d")
+            gopt_step = int(line.split()[-1])
+            energy = next(inputfile)
+            # quick hack for messages of the sort:
+            #   ** restarting optimization from step    2 **
+            # as found in regression file ptnh3_2_H2O_2_2plus.out
+            if next(inputfile).strip():
+                blank = next(inputfile)
+            line = next(inputfile)
+            values = []
+            target_index = 0                
+            if gopt_step == 1:
+                # The first optimization step does not produce an energy change
+                values.append(0.0)
+                target_index = 1
+            while line.strip():
+                if len(line) > 40 and line[41] == "(":
+                    # A new geo convergence value
+                    values.append(float(line[26:37]))
+                    self.geotargets[target_index] = float(line[43:54])
+                    target_index += 1
+                line = next(inputfile)
+            self.geovalues.append(values)
 
         # IR output looks like this:
         #   frequencies        72.45   113.25   176.88   183.76   267.60   312.06
