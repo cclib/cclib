@@ -178,6 +178,8 @@ class GenericGeoOptTest(bettertest.TestCase):
     def testoptdone(self):
         """Has the geometry converged and set optdone to True?"""
         self.assertTrue(self.data.optdone)
+        temp = numpy.all(numpy.abs(self.data.geovalues) <= self.data.geotargets, axis=1)
+        self.assertTrue(temp[-1])
 
 class ADFGeoOptTest(GenericGeoOptTest):
     """ADF geometry optimization unittest."""
