@@ -8,24 +8,15 @@
 # received a copy of the license along with cclib. You can also access
 # the full license online at http://www.gnu.org/copyleft/lgpl.html.
 
-import io
-import collections
-
-try:
-    import bz2 # New in Python 2.3.
-except ImportError:
-    bz2 = None
+import bz2
 import fileinput
 import gzip
 import inspect
+import inspect
+import io
 import logging
-logging.logMultiprocessing =  0 # To avoid a problem with Avogadro
 import os
 import random
-try:
-    set # Standard type from Python 2.4+.
-except NameError:
-    from sets import Set as set
 import sys
 import zipfile
 
@@ -33,6 +24,11 @@ import numpy
 
 from . import utils
 from .data import ccData
+
+
+# This seems to avoid a problem with Avogadro.
+logging.logMultiprocessing =  0
+
 
 class myBZ2File(bz2.BZ2File):
     """Return string instead of bytes"""
@@ -73,6 +69,7 @@ class FileWrapper(object):
 
     def seek(self, pos, ref):
         self.file.seek(pos, ref)
+
 
 def openlogfile(filename):
     """Return a file object given a filename.
