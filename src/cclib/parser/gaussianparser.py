@@ -99,65 +99,6 @@ class Gaussian(logfileparser.Logfile):
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
 
-        #Extract PES scan data
-        #Summary of the potential surface scan:
-        #  N       A          SCF
-        #----  ---------  -----------
-        #   1   109.0000    -76.43373
-        #   2   119.0000    -76.43011
-        #   3   129.0000    -76.42311
-        #   4   139.0000    -76.41398
-        #   5   149.0000    -76.40420
-        #   6   159.0000    -76.39541
-        #   7   169.0000    -76.38916
-        #   8   179.0000    -76.38664
-        #   9   189.0000    -76.38833
-        #  10   199.0000    -76.39391
-        #  11   209.0000    -76.40231
-        #----  ---------  -----------
-        if "Summary of the potential surface scan:" in line:
-
-            scanenergies = []
-            scanparm = []
-
-            colmnames = next(inputfile)
-            self.skip_line(inputfile, 'dashes')
-
-            line = next(inputfile)
-            while line != hyphens:
-                broken = line.split()
-                scanenergies.append(float(broken[-1]))
-                scanparm.append(map(float, broken[1:-1]))
-                line = next(inputfile)
-            if not hasattr(self, "scanenergies"):
-                self.scanenergies = []
-                self.scanenergies = scanenergies
-            if not hasattr(self, "scanparm"):
-                self.scanparm = []
-                self.scanparm = scanparm
-            if not hasattr(self, "scannames"):
-                self.scannames = colmnames.split()[1:-1]
-
-        #Extract Thermochemistry
-        #Temperature   298.150 Kelvin.  Pressure   1.00000 Atm.
-        #Zero-point correction=                           0.342233 (Hartree/
-        #Thermal correction to Energy=                    0.
-        #Thermal correction to Enthalpy=                  0.
-        #Thermal correction to Gibbs Free Energy=         0.302940
-        #Sum of electronic and zero-point Energies=           -563.649744
-        #Sum of electronic and thermal Energies=              -563.636699
-        #Sum of electronic and thermal Enthalpies=            -563.635755
-        #Sum of electronic and thermal Free Energies=         -563.689037
-        if "Sum of electronic and thermal Enthalpies" in line:
-            if not hasattr(self, 'enthalpy'):
-                self.enthalpy = float(line.split()[6])
-        if "Sum of electronic and thermal Free Energies=" in line:
-            if not hasattr(self, 'freeenergy'):
-                self.freeenergy = float(line.split()[7])
-        if line[1:12] == "Temperature":
-            if not hasattr(self, 'temperature'):
-                self.temperature = float(line.split()[1])
-        
         # Number of atoms.
         if line[1:8] == "NAtoms=":
 
@@ -507,6 +448,45 @@ class Gaussian(logfileparser.Logfile):
                 forces.append(tmpforces)
                 line = next(inputfile)
             self.grads.append(forces)
+
+        #Extract PES scan data
+        #Summary of the potential surface scan:
+        #  N       A          SCF
+        #----  ---------  -----------
+        #   1   109.0000    -76.43373
+        #   2   119.0000    -76.43011
+        #   3   129.0000    -76.42311
+        #   4   139.0000    -76.41398
+        #   5   149.0000    -76.40420
+        #   6   159.0000    -76.39541
+        #   7   169.0000    -76.38916
+        #   8   179.0000    -76.38664
+        #   9   189.0000    -76.38833
+        #  10   199.0000    -76.39391
+        #  11   209.0000    -76.40231
+        #----  ---------  -----------
+        if "Summary of the potential surface scan:" in line:
+
+            scanenergies = []
+            scanparm = []
+
+            colmnames = next(inputfile)
+            self.skip_line(inputfile, 'dashes')
+
+            line = next(inputfile)
+            while line != hyphens:
+                broken = line.split()
+                scanenergies.append(float(broken[-1]))
+                scanparm.append(map(float, broken[1:-1]))
+                line = next(inputfile)
+            if not hasattr(self, "scanenergies"):
+                self.scanenergies = []
+                self.scanenergies = scanenergies
+            if not hasattr(self, "scanparm"):
+                self.scanparm = []
+                self.scanparm = scanparm
+            if not hasattr(self, "scannames"):
+                self.scannames = colmnames.split()[1:-1]
 
         # Charge and multiplicity.
         # If counterpoise correction is used, multiple lines match.
@@ -1184,6 +1164,25 @@ class Gaussian(logfileparser.Logfile):
                     charges.append(float(nline.split()[2]))
                 self.atomcharges["natural"] = charges
 
+        #Extract Thermochemistry
+        #Temperature   298.150 Kelvin.  Pressure   1.00000 Atm.
+        #Zero-point correction=                           0.342233 (Hartree/
+        #Thermal correction to Energy=                    0.
+        #Thermal correction to Enthalpy=                  0.
+        #Thermal correction to Gibbs Free Energy=         0.302940
+        #Sum of electronic and zero-point Energies=           -563.649744
+        #Sum of electronic and thermal Energies=              -563.636699
+        #Sum of electronic and thermal Enthalpies=            -563.635755
+        #Sum of electronic and thermal Free Energies=         -563.689037
+        if "Sum of electronic and thermal Enthalpies" in line:
+            if not hasattr(self, 'enthalpy'):
+                self.enthalpy = float(line.split()[6])
+        if "Sum of electronic and thermal Free Energies=" in line:
+            if not hasattr(self, 'freeenergy'):
+                self.freeenergy = float(line.split()[7])
+        if line[1:12] == "Temperature":
+            if not hasattr(self, 'temperature'):
+                self.temperature = float(line.split()[1])
 
 
 if __name__ == "__main__":
