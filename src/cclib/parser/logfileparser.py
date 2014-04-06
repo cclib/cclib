@@ -345,29 +345,40 @@ class Logfile(object):
             'stars' or 's'      - the line should contain only stars (or spaces)
         """
 
+        expected_characters = {
+            '-' : ['dashes', 'd'],
+            '=' : ['equals', 'e'],
+            '*' : ['stars', 's'],
+        }
+
         lines = []
         for expected in sequence:
+
+            # Read the line we want to skip.
             line = next(inputfile)
+
+            # Blank lines are perhaps the most common thing we want to check for.
             if expected in ["blank", "b"]:
                 try:
                     assert line.strip() == ""
                 except AssertionError:
+                    frame, fname, lno, funcname, funcline, index = inspect.getouterframes(inspect.currentframe())[1]
+                    parser = fname.split('/')[-1]
                     self.logger.warning("Line not blank as expected: " + line.strip('\n'))
-            elif expected in ['dashes', 'd']:
-                try:
-                    assert all([c == '-' for c in line.strip() if c != ' '])
-                except AssertionError:
-                    self.logger.warning("Line not all dashes as expected: " + line.strip('\n'))
-            elif expected in ['equals', 'e']:
-                try:
-                    assert all([c == '=' for c in line.strip() if c != ' '])
-                except AssertionError:
-                    self.logger.warning("Line not all equal signs as expected: " + line.strip('\n'))
-            elif expected in ['stars', 's']:
-                try:
-                    assert all([c == '*' for c in line.strip() if c != ' '])
-                except AssertionError:
-                    self.logger.warning("Line not all stars as expected: " + line.strip('\n'))
+
+            # All cases of heterogeneous lines can be dealt with by the same code.
+            for character, keys in expected_characters.items():
+                if expected in keys:
+                    try:
+                        assert all([c == character for c in line.strip() if c != ' '])
+                    except AssertionError:
+                        frame, fname, lno, funcname, funcline, index = inspect.getouterframes(inspect.currentframe())[1]
+                        parser = fname.split('/')[-1]
+                        msg = "In %s, line %i, line not all %s as expected: %s" % (parser, lno, keys[0], line.strip())
+                        self.logger.warning(msg)
+                        continue
+
+            # Save the skipped line, and we will return the whole list.
             lines.append(line)
 
         return lines

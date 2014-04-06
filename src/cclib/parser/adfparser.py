@@ -477,7 +477,7 @@ class ADF(logfileparser.Logfile):
             self.mosyms = [[], []]
             moenergies = [[], []]
 
-            self.skip_lines(inputfile, ['e', 'b', 'header', 'e'])
+            self.skip_lines(inputfile, ['d', 'b', 'header', 'd'])
 
             homoa = 0
             homob = None
@@ -511,7 +511,7 @@ class ADF(logfileparser.Logfile):
             self.mosyms = [[]]
             self.moenergies = [[]]
 
-            self.skip_lines(inputfile, ['e', 'b', 'header', 'e'])
+            self.skip_lines(inputfile, ['d', 'b', 'header', 'd'])
 
             homoa = None
             homob = None
