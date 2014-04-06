@@ -480,6 +480,9 @@ class Molpro(logfileparser.Logfile):
 
             self.geotargets = [optenerg, optgrad, optstep]
 
+        if line[1:30] == "END OF GEOMETRY OPTIMIZATION.":
+            self.optdone = True
+
         # The optimization history is the source for geovlues:
         #
         #   END OF GEOMETRY OPTIMIZATION.    TOTAL CPU:       246.9 SEC
