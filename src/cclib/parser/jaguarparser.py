@@ -166,6 +166,9 @@ class Jaguar(logfileparser.Logfile):
                 line = next(inputfile)
             self.geovalues.append(values)
 
+        if line[15:45] == "Geometry optimization complete":
+            self.optdone = True
+
         if line.find("number of occupied orbitals") > 0:
         # Get number of MOs
             occs = int(line.split()[-1])
