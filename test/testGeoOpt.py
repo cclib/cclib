@@ -237,7 +237,12 @@ class JaguarGeoOptTest(GenericGeoOptTest):
     def testatombasis(self):
         """Are the indices in atombasis the right amount and unique? PASS"""
         self.assertEquals(1, 1)
-       
+
+    # We did not print the atomic partial charges in the unit tests for this version.
+    def testatomcharges(self):
+        """Are all atomcharges consistent with natom and do they sum to zero? PASS"""
+        self.assertEquals(1, 1)
+
     # Data file does not contain enough information. Can we make a new one?
     def testdimmocoeffs(self):
         """Are the dimensions of mocoeffs equal to 1 x nmo x nbasis? PASS"""
