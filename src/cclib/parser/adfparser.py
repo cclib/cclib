@@ -406,6 +406,9 @@ class ADF(logfileparser.Logfile):
 
             stepno = int(line.split()[4])
 
+            if "** CONVERGED **" in line:
+                self.optdone = True
+
             dashes = next(inputfile)
             current_energy = next(inputfile)
             energy_change = next(inputfile)
