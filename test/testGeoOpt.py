@@ -263,6 +263,25 @@ class MolproGeoOptTest(GenericGeoOptTest):
         """Are all the symmetry labels either Ag/u or Bg/u? PASS"""
         self.assertEquals(1,1)
 
+    # Here is what the manual has to say about convergence:
+    # The standard MOLPRO convergency criterion requires the maximum component of the gradient
+    # to be less then $3 \cdot 10^{-4}$ [a.u.] and the maximum energy change to be less than
+    # $1 \cdot 10^{-6}$ [H] or the maximum component of the gradient to be less then
+    # $3 \cdot 10^{-4}$ [a.u.] and the maximum component of the step to be less then
+    # $3 \cdot 10^{-4}$ [a.u.].
+    #
+    # It is also possible to use the convergency criterion of (...)
+    #
+    # Source: https://www.molpro.net/info/2012.1/doc/manual/node592.html
+    def testoptdone(self):
+        """Has the geometry converged and set optdone to True?"""
+        self.assertTrue(self.data.optdone)
+        target_e, target_g, target_s = self.data.geotargets
+        value_e, value_g, value_s = self.data.geovalues[-1]
+        converged = (value_e < target_e and value_g < target_g) or (value_g < target_g and value_s < target_s)
+        self.assertTrue(converged)
+
+
 class MolproGeoOptTest2006(MolproGeoOptTest):
     """Molpro 2006 geometry optimization unittest."""
 
