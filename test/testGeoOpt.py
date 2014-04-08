@@ -137,6 +137,11 @@ class GenericGeoOptTest(bettertest.TestCase):
         dim_geovalues = (len(self.data.geovalues[0]), )
         self.assertEquals(dim_geotargets, dim_geovalues)
 
+    def testoptdone(self):
+        """Has the geometry converged and set optdone to True?"""
+        self.assertTrue(self.data.optdone)
+        temp = numpy.all(numpy.abs(self.data.geovalues) <= self.data.geotargets, axis=1)
+        self.assertTrue(temp[-1])
 
 class ADFGeoOptTest(GenericGeoOptTest):
     """ADF geometry optimization unittest."""
@@ -198,6 +203,38 @@ class MolproGeoOptTest(GenericGeoOptTest):
     # both need to be given to the cclib parser (as a list).
     extracoords = 1
     extrascfs = 2
+
+    def testsymlabels(self):
+        """Are all the symmetry labels either Ag/u or Bg/u? PASS"""
+        self.assertEquals(1,1)
+
+    # Here is what the manual has to say about convergence:
+    # The standard MOLPRO convergency criterion requires the maximum component of the gradient
+    # to be less then $3 \cdot 10^{-4}$ [a.u.] and the maximum energy change to be less than
+    # $1 \cdot 10^{-6}$ [H] or the maximum component of the gradient to be less then
+    # $3 \cdot 10^{-4}$ [a.u.] and the maximum component of the step to be less then
+    # $3 \cdot 10^{-4}$ [a.u.].
+    #
+    # It is also possible to use the convergency criterion of (...)
+    #
+    # Source: https://www.molpro.net/info/2012.1/doc/manual/node592.html
+    def testoptdone(self):
+        """Has the geometry converged and set optdone to True?"""
+        self.assertTrue(self.data.optdone)
+        target_e, target_g, target_s = self.data.geotargets
+        value_e, value_g, value_s = self.data.geovalues[-1]
+        converged = (value_e < target_e and value_g < target_g) or (value_g < target_g and value_s < target_s)
+        self.assertTrue(converged)
+
+class MolproGeoOptTest2006(MolproGeoOptTest):
+    """Molpro 2006 geometry optimization unittest."""
+
+    # Same situation as SP -- this is tested for in the 2012 logfiles, but
+    # the 2006 logfiles were created before atomcharges was an attribute and
+    # we don't have access to Molpro 2006 anymore.
+    def testatomcharges(self):
+        """Are all atomcharges consistent with natom and do they sum to zero? PASS"""
+        self.assertEquals(1,1)
 
 
 class NWChemGeoOptTest(GenericGeoOptTest):

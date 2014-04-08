@@ -56,7 +56,6 @@ class GAMESS(logfileparser.Logfile):
     def before_parsing(self):
 
         self.firststdorient = True # Used to decide whether to wipe the atomcoords clean
-        self.geooptfinished = False # Used to avoid extracting the final geometry twice
         self.cihamtyp = "none" # Type of CI Hamiltonian: saps or dets.
         self.scftype = "none" # Type of SCF calculation: BLYP, RHF, ROHF, etc.
     
@@ -422,9 +421,9 @@ class GAMESS(logfileparser.Logfile):
 
         if line[12:40] == "EQUILIBRIUM GEOMETRY LOCATED":
             # Prevent extraction of the final geometry twice
-            self.geooptfinished = True
+            self.optdone = True
         
-        if line[1:29] == "COORDINATES OF ALL ATOMS ARE" and not self.geooptfinished:
+        if line[1:29] == "COORDINATES OF ALL ATOMS ARE" and not self.optdone:
             # This is the standard orientation, which is the only coordinate
             # information available for all geometry optimisation cycles.
             # The input orientation will be overwritten if this is a geometry optimisation

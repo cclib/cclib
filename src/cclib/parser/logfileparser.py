@@ -172,6 +172,9 @@ class Logfile(object):
         #   and should normally be ccData or a subclass.
         self.datatype = datatype
 
+        # All parsers should have an optdone attribute; might as well set here
+        self.optdone = False
+
     def __setattr__(self, name, value):
 
         # Send info to logger if the attribute is in the list self._attrlist.

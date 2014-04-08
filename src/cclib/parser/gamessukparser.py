@@ -157,6 +157,9 @@ class GAMESSUK(logfileparser.Logfile):
             if not hasattr(self, "atomnos") or len(self.atomnos) == 0:
                 self.atomnos = atomnos
 
+        if line[40:62] == "optimization converged":
+            self.optdone = True
+
         if line[1:32] == "total number of basis functions":
 
             nbasis = int(line.split()[-1])

@@ -231,6 +231,9 @@ class ORCA(logfileparser.Logfile):
             if not hasattr(self, "atomnos"):
                 self.atomnos = numpy.array(atomnos,'i')
 
+        if line[31:61] == "THE OPTIMIZATION HAS CONVERGED":
+            self.optdone = True
+
         if line[21:68] == "FINAL ENERGY EVALUATION AT THE STATIONARY POINT":
             count = len(self.atomcoords)
             self.optdone.append(count)

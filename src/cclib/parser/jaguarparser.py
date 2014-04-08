@@ -101,6 +101,9 @@ class Jaguar(logfileparser.Logfile):
             lmp2energy = utils.convertor(lmp2energy, "hartree", "eV")
             self.mpenergies[-1].append(lmp2energy)
 
+        if line[15:45] == "Geometry optimization complete":
+            self.optdone = True
+
         if line.find("number of occupied orbitals") > 0:
         # Get number of MOs
             occs = int(line.split()[-1])
