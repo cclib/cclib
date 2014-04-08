@@ -1,0 +1,312 @@
+Job water_cis started on silenziosa at Tue Apr  8 11:54:06 2014
+jobid: silenziosa-0-53441b9e
+
+  +--------------------------------------------------------------------+
+  |  Jaguar version 8.3, release  13                                   |
+  |                                                                    |
+  |  Copyright Schrodinger, Inc.                                       |
+  |  All Rights Reserved.                                              |
+  |                                                                    |
+  |  The following have contributed to Jaguar (listed alphabetically): |
+  |  Mike Beachy, Art Bochevarov, Dale Braden, Yixiang Cao,            |
+  |  Chris Cortis, Rich Friesner, Bill Goddard, Hod Greeley,           |
+  |  Tom Hughes, Jean-Marc Langlois, Daniel Mainz, Rob Murphy,         |
+  |  Dean Philipp, Tom Pollard, Murco Ringnalda.                       |
+  |                                                                    |
+  |  Use of this program should be acknowledged in publications as:    |
+  |                                                                    |
+  |  Jaguar, version 8.3, Schrodinger, Inc., New York, NY, 2014.       |
+  |                                                                    |
+  |  A. D. Bochevarov, E. Harder, T. F. Hughes, J. R. Greenwood,       |
+  |  D. A. Braden, D. M. Philipp, D. Rinaldo, M. D. Halls,             |
+  |  J. Zhang, R. A. Friesner, "Jaguar: A High-Performance Quantum     |
+  |  Chemistry Software Program with Strengths in Life and Materials   |
+  |  Sciences", Int. J. Quantum Chem., 2013, 113(18), 2110-2142.       |
+  +--------------------------------------------------------------------+
+  
+  start of program pre
+  
+  Job name: water_cis
+  Executables used: /usr/local/lib/schrodinger2014-1/jaguar-v83013/bin/Linux-x86_64
+  Temporary files : /home/kml/water_cis
+  Maestro file (input):  water_cis.mae
+  Maestro file (output): water_cis.01.mae
+  
+  
+  basis set:             6-31g           
+  net molecular charge:    0
+  multiplicity:            1
+  
+  number of basis functions....           13
+  
+ Input geometry:
+                                   angstroms
+  atom               x                 y                 z
+  O1            0.0000000000      0.0000000000      0.0000000000 
+  H1            0.0000000000      0.0000000000      0.9900000000 
+  H2            0.9516490790      0.0000000000     -0.2728809823 
+   
+  principal moments of inertia:
+        amu*angstrom^2:        0.63543        1.26004        1.89546
+                g*cm^2: 1.05515246E-40 2.09233781E-40 3.14749027E-40
+   
+  rotational constants:
+               cm^(-1):     26.52957683     13.37869448      8.89367270
+                   GHz:    795.33670471    401.08317026    266.62559994
+   
+  Z-matrix: (angstroms and degrees) 
+ O1
+ H1    O1  r1
+ H2    O1  r1    H1  a1
+  
+  Z-variables: (angstroms and degrees) 
+  r1 =     0.99
+  a1 =   106.0
+  
+  Molecular weight:      18.01 amu
+   
+  Stoichiometry: H2O
+  Molecular Point Group: C2v     
+  Point Group used: C1 (symmetry turned off)
+  
+  nuclear repulsion energy.......       8.887006263 hartrees
+ 
+ Non-default options chosen:
+   Electronic excitation energies will be calculated by CIS
+   Molecular symmetry not used
+  
+ Temporary integer options set:
+     73=  2
+  
+  Peak memory usage:    479 Mb
+  
+  end of program pre
+   
+ Time(pre)  user:        0.0  user+sys:        0.0  wallclock:        0.2
+  
+  start of program onee
+  
+  smallest eigenvalue of S:    7.284E-02
+  number of canonical orbitals.....           13
+  Peak memory usage:    620 Mb
+  
+  end of program onee
+   
+ Time(onee)  user:        0.0  user+sys:        0.0  wallclock:        0.2
+  
+  start of program hfig
+  
+  initial wavefunction generated automatically from atomic wavefunctions
+ 
+  Irreducible     Total no   No of occupied orbitals 
+  representation  orbitals   Shell_1  Shell_2    ...
+  No Symm           13          5
+  ------------------------
+  Orbital occupation/shell    1.000
+ 
+  Peak memory usage:    560 Mb
+  
+  end of program hfig
+   
+ Time(hfig)  user:        0.0  user+sys:        0.0  wallclock:        0.1
+  
+  start of program probe
+  
+  Peak memory usage:    560 Mb
+  
+  end of program probe
+   
+ Time(probe)  user:        0.0  user+sys:        0.0  wallclock:        0.1
+  
+  start of program grid
+  
+  
+   grid     grid set  grid #  grid sym
+  ------    --------  ------  --------
+  coarse        0        0        1
+  medium        2        1        1
+  fine          0        0        1
+  ultrafine     4        2        1
+  charge        0        0        1
+  gradient      4        2        1
+  density       0        0        1
+  DFT-fine      0        0        1
+  DFT-med.      0        0        1
+  DFT-grad      0        0        1
+  DFT-der2      0        0        1
+  DFT-cphf      0        0        1
+  LMP2-enrg     4        2        1
+  LMP2-grad     2        1        1
+  DFT-cphf2     0        0        1
+  PBF-dens      0        0        1
+  plotting      0        0        1
+  
+   
+  number of gridpoints: 
+     atom        O1       H1       H2    total
+  grid # 1      113      117      117      347
+  grid # 2      414      455      455     1324
+   
+  Peak memory usage:    577 Mb
+  
+  end of program grid
+   
+ Time(grid)  user:        0.0  user+sys:        0.0  wallclock:        0.1
+  
+  start of program rwr
+  
+  Peak memory usage:    483 Mb
+  
+  end of program rwr
+   
+ Time(rwr)  user:        0.0  user+sys:        0.0  wallclock:        0.4
+  
+  start of program scf
+  
+ number of electrons..........         10
+ number of alpha electrons....          5
+ number of beta electrons.....          5
+ number of orbitals, total....         13
+ number of doubly-occ'd orbs..          5
+ number of open shell orbs....          0
+ number of occupied orbitals..          5
+ number of virtual orbitals...          8
+ number of hamiltonians.......          1
+ number of shells.............          1
+ SCF type: HF
+  
+       i  u  d  i  g                   
+       t  p  i  c  r                                 RMS    maximum
+       e  d  i  u  i                       energy  density   DIIS  
+       r  t  s  t  d       total energy    change  change    error 
+  
+etot    1  N  N  5  M     -75.77989865570           2.6E-02  2.1E-01
+etot    2  Y  Y  6  M     -75.97029549106  1.9E-01  7.6E-03  4.0E-02
+etot    3  N  Y  2  U     -75.98105549443  1.1E-02  1.7E-03  1.8E-02
+etot    4  Y  Y  6  M     -75.98184983574  7.9E-04  5.6E-04  4.7E-03
+etot    5  N  Y  2  U     -75.98196720268  1.2E-04  2.6E-04  9.1E-04
+etot    6  Y  Y  6  M     -75.98196772655  5.2E-07  5.6E-05  2.0E-04
+etot    7  Y  N  6  M     -75.98196659880 -1.1E-06  0.0E+00  0.0E+00
+  
+  
+ Energy components, in hartrees:
+   (A)  Nuclear repulsion............       8.88700626299
+   (E)  Total one-electron terms.....    -122.43767969152
+   (I)  Total two-electron terms.....      37.56870682973
+   (L)  Electronic energy............     -84.86897286179  (E+I)
+   (N)  Total energy.................     -75.98196659880  (A+L)
+  
+ SCFE: SCF energy: HF       -75.98196659880 hartrees   iterations:   7
+  
+ 
+ HOMO energy:    -0.49895
+ LUMO energy:     0.19620
+ 
+  Orbital energies (hartrees): 
+   -20.56574    -1.33795    -0.69460    -0.55290    -0.49895     0.19620
+     0.29065     1.05327     1.13688     1.16504     1.21725     1.37251
+     1.68922
+ 
+  Peak memory usage:    696 Mb
+  
+  end of program scf
+   
+ Time(scf)  user:        0.0  user+sys:        0.0  wallclock:        0.3
+  
+  start of program cis
+  
+ Energy convergence criterion:       0.1000E-04
+ Wavefunction convergence criterion: 0.1000E-01
+ Entering Diagonalization
+                   CI size =          40
+ Number of initial guesses =           5
+     Maximum subspace size =          41
+   Number of roots to find =           5
+ Diagonalization vectors stored in core
+ ----------------------------------------------------------------------------
+  
+  Excited State   1:     9.1842 eV       135.00 nm
+  
+  orbitals in
+   excitation    CI coeff.
+  ------------   ---------
+     5 =>   6     0.99186
+     5 =>   9    -0.10580
+  
+  Transition dipole moment (debye):
+     X=     0.0000     Y=     0.5939     Z=     0.0000  Tot=     0.5939
+  
+  Oscillator strength, f=     0.0123
+ ----------------------------------------------------------------------------
+  
+  Excited State   2:    11.0733 eV       111.97 nm
+  
+  orbitals in
+   excitation    CI coeff.
+  ------------   ---------
+     5 =>   7    -0.98594
+     5 =>   8    -0.10510
+     5 =>  12    -0.12972
+  
+  Transition dipole moment (debye):
+     X=     0.0000     Y=     0.0000     Z=     0.0000  Tot=     0.0000
+  
+  Oscillator strength, f=     0.0000
+ ----------------------------------------------------------------------------
+  
+  Excited State   3:    11.4290 eV       108.48 nm
+  
+  orbitals in
+   excitation    CI coeff.
+  ------------   ---------
+     4 =>   6    -0.98321
+     3 =>   7     0.13410
+  
+  Transition dipole moment (debye):
+     X=     1.3136     Y=     0.0000     Z=     0.9899  Tot=     1.6448
+  
+  Oscillator strength, f=     0.1173
+ ----------------------------------------------------------------------------
+  
+  Excited State   4:    13.4240 eV        92.36 nm
+  
+  orbitals in
+   excitation    CI coeff.
+  ------------   ---------
+     3 =>   6     0.19240
+     4 =>   7    -0.97090
+     4 =>  12    -0.11666
+  
+  Transition dipole moment (debye):
+     X=    -0.8428     Y=     0.0000     Z=     1.1184  Tot=     1.4004
+  
+  Oscillator strength, f=     0.0998
+ ----------------------------------------------------------------------------
+  
+  Excited State   5:    15.0064 eV        82.62 nm
+  
+  orbitals in
+   excitation    CI coeff.
+  ------------   ---------
+     3 =>   6    -0.97544
+     4 =>   7    -0.19481
+  
+  Transition dipole moment (debye):
+     X=    -1.8385     Y=     0.0000     Z=     2.4398  Tot=     3.0550
+  
+  Oscillator strength, f=     0.5311
+ ----------------------------------------------------------------------------
+  
+  Writing electronic absorption spectrum data to water_cis_uvv.spm
+
+  Peak memory usage:    673 Mb
+  
+  end of program cis
+   
+ Time(cis)  user:        0.0  user+sys:        0.0  wallclock:        0.8
+
+ Total cpu seconds     user:       0.000   user+sys:       0.000
+  
+ Total elapsed time:    4 seconds
+
+Job water_cis completed on silenziosa at Tue Apr  8 11:54:10 2014

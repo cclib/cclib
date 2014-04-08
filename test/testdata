@@ -44,6 +44,7 @@ CI        GAMESS      GAMESSUSCISTest       basicGAMESS-US2012    water_cis_saps
 CI        Gaussian    GaussianCISTest       basicGaussian03       water_cis.log
 CI        Gaussian    GaussianCISTest       basicGaussian09       water_cis.log
 CI        Jaguar      JaguarCISTest         basicJaguar7.0        water_cis.out
+CI        Jaguar      JaguarCISTest         basicJaguar8.3        water_cis.out
                                            
 Core      ADF         ADFCoreTest           basicADF2007.01       MoOCl4-sp.adfout
 Core      ADF         ADFCoreTest           basicADF2013.01       MoOCl4-sp.adfout
@@ -84,6 +85,7 @@ MP        Gaussian    GaussianMP4SDTQTest   basicGaussian09       water_mp4.log
 MP        Gaussian    GaussianMP5Test       basicGaussian03       water_mp5.log
 MP        Gaussian    GaussianMP5Test       basicGaussian09       water_mp5.log
 MP        Jaguar      JaguarLMP2Test        basicJaguar7.0        water_lmp2.out
+MP        Jaguar      JaguarLMP2Test        basicJaguar8.3        water_lmp2.out
 MP        GAMESS      PCGAMESSMP2Test       basicPCGAMESS         water_mp2.out
 MP        GAMESS      PCGAMESSMP3Test       basicPCGAMESS         water_mp3.out
 MP        GAMESS      PCGAMESSMP4SDQTest    basicPCGAMESS         water_mp4.out
