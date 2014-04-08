@@ -123,6 +123,8 @@ SPun      GAMESS      GamessUSSPunTest      basicGAMESS-US2012    dvb_un_sp.out
 SPun      Gaussian    GaussianSPunTest      basicGaussian03       dvb_un_sp_b.log
 SPun      Gaussian    GaussianSPunTest      basicGaussian09       dvb_un_sp_b.log
 SPun      Jaguar      JaguarSPunTest        basicJaguar7.0        dvb_un_sp.out
+SPun      Jaguar      JaguarSPunTest        basicJaguar8.3        dvb_un_sp_hf.out
+SPun      Jaguar      JaguarSPunTest        basicJaguar8.3        dvb_un_sp_ks.out
 SPun      GAMESS      PCGamessSPunTest      basicPCGAMESS         dvb_un_sp.out
 SPun      Molpro      MolproSPunTest        basicMolpro2006       dvb_sphf_un.out
 SPun      Molpro      MolproSPunTest        basicMolpro2012       dvb_sphf_un.out
