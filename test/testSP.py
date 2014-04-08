@@ -174,7 +174,12 @@ class JaguarSPTest(GenericSPTest):
     def testatombasis(self):
         """Are the indices in atombasis the right amount and unique? PASS"""
         self.assertEquals(1, 1)
-       
+
+    # We did not print the atomic partial charges in the unit tests for this version.
+    def testatomcharges(self):
+        """Are all atomcharges consistent with natom and do they sum to zero? PASS"""
+        self.assertEquals(1, 1)
+
     # Jaguar prints only 10 virtual MOs by default. Can we re-run with full output?
     def testlengthmoenergies(self):
         """Is the number of evalues equal to the number of occ. MOs + 10?"""
