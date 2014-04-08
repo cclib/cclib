@@ -334,6 +334,7 @@ class ADF(logfileparser.Logfile):
             self.atomcoords.append(atomcoords)
             if self.finalgeometry == self.GETLAST: # Don't get any more coordinates
                 self.finalgeometry = self.NOMORE
+                self.optdone = True
 
         # There have been some changes in the format of the geometry convergence information,
         # and this is how it is printed in older versions (2007.01 unit tests).
@@ -404,6 +405,9 @@ class ADF(logfileparser.Logfile):
         if line[:31] == "Geometry Convergence after Step":
 
             stepno = int(line.split()[4])
+
+            if "** CONVERGED **" in line:
+                self.optdone = True
 
             dashes = next(inputfile)
             current_energy = next(inputfile)

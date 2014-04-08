@@ -41,13 +41,16 @@ class Molpro(logfileparser.Logfile):
 
     def after_parsing(self):
     
-        # If optimization thresholds are default, they are normally not printed.
+        # If optimization thresholds are default, they are normally not printed and we need
+        # to set them to the default after parsing. Make sure to set them in the same order that
+        # they appear in the in the geometry optimization progress printed in the output,
+        # namely: energy difference, maximum gradient, maximum step.
         if not hasattr(self, "geotargets"):
             self.geotargets = []        
-            # Default THRGRAD (required accuracy of the optimized gradient).
-            self.geotargets.append(3E-4)
             # Default THRENERG (required accuracy of the optimized energy).
             self.geotargets.append(1E-6)
+            # Default THRGRAD (required accuracy of the optimized gradient).
+            self.geotargets.append(3E-4)
             # Default THRSTEP (convergence threshold for the geometry optimization step).
             self.geotargets.append(3E-4)
 
@@ -479,6 +482,9 @@ class Molpro(logfileparser.Logfile):
                 line = next(inputfile)
 
             self.geotargets = [optenerg, optgrad, optstep]
+
+        if line[1:30] == "END OF GEOMETRY OPTIMIZATION.":
+            self.optdone = True
 
         # The optimization history is the source for geovlues:
         #

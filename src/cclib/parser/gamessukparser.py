@@ -160,6 +160,9 @@ class GAMESSUK(logfileparser.Logfile):
             if not hasattr(self, "atomnos") or len(self.atomnos) == 0:
                 self.atomnos = atomnos
 
+        if line[40:62] == "optimization converged":
+            self.optdone = True
+
         if line[1:32] == "total number of basis functions":
             self.nbasis = int(line.split()[-1])
             while line.find("charge of molecule")<0:
