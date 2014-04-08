@@ -376,11 +376,15 @@ class Jaguar(logfileparser.Logfile):
 
             self.skip_line(inputfile, 'blank')
 
+            # Version 8.3 has two blank lines here, earlier versions just one.
+            line = next(inputfile)
+            if not line.strip():
+                line = next(inputfile)
+
             self.vibfreqs = []
             self.vibdisps = []
             forceconstants = False
             intensities = False
-            line = next(inputfile)
             while line.strip():
                 if "force const" in line:
                     forceconstants = True
@@ -388,9 +392,11 @@ class Jaguar(logfileparser.Logfile):
                     intensities = True
                 line = next(inputfile)
             
-            # The last block has an extra blank line after it - catch it.
+            # In older version, the last block had an extra blank line after it,
+            # which could be caught. This is not true in newer version (including 8.3),
+            # but in general it would be better to bound this loop more strictly.
             freqs = next(inputfile)
-            while freqs.strip():
+            while freqs.strip() and not "imaginary frequencies" in freqs:
 
                 # Number of modes (columns printed in this block).
                 nmodes = len(freqs.split())-1

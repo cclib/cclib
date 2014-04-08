@@ -155,6 +155,7 @@ vib       GAMESS      GamessUSIRimgTest     basicGAMESS-US2012    nh3_ts_ir.out
 vib       Gaussian    GaussianIRTest        basicGaussian03       dvb_ir.out
 vib       Gaussian    GaussianIRTest        basicGaussian09       dvb_ir.out
 vib       Jaguar      JaguarIRTest          basicJaguar7.0        dvb_ir.out
+vib       Jaguar      JaguarIRTest          basicJaguar8.3        dvb_ir.out
 vib       GAMESS      PCGamessIRTest        basicPCGAMESS         dvb_ir.out
 vib       GAMESSUK    GamessUKRamanTest     basicGAMESS-UK        dvb_raman.out
 vib       Gaussian    GaussianRamanTest     basicGaussian03       dvb_raman.out
