@@ -104,7 +104,7 @@ SP        GAMESSUK    GamessUKSPTest        basicGAMESS-UK        dvb_sp_b.out
 SP        GAMESS      GamessUSSPTest        basicGAMESS-US2012    dvb_sp.out
 SP        Gaussian    GaussianSPTest        basicGaussian03       dvb_sp.out
 SP        Gaussian    GaussianSPTest        basicGaussian09       dvb_sp.out
-SP        Jaguar      JaguarSPTest          basicJaguar7.0        dvb_sp.out
+SP        Jaguar      Jaguar7SPTest         basicJaguar7.0        dvb_sp.out
 SP        Jaguar      JaguarSPTest          basicJaguar8.3        dvb_sp_hf.out
 SP        Jaguar      JaguarSPTest          basicJaguar8.3        dvb_sp_ks.out
 SP        GAMESS      PCGamessSPTest        basicPCGAMESS         dvb_sp.out

@@ -167,7 +167,7 @@ class GaussianSPTest(GenericSPTest):
         self.assertInside(mm, 130078.25, 0.1, "Molecule mass: %f not 130078 +- 0.1mD" %mm)
 
 
-class JaguarSPTest(GenericSPTest):
+class Jaguar7SPTest(GenericSPTest):
     """Jaguar restricted single point unittest."""
 
     # Data file does not contain enough information. Can we make a new one?
@@ -189,6 +189,9 @@ class JaguarSPTest(GenericSPTest):
     def testdimmocoeffs(self):
         """Are the dimensions of mocoeffs equal to 1 x nmo x nbasis? PASS"""
         self.assertEquals(1, 1)
+
+class JaguarSPTest(GenericSPTest):
+    """Jaguar restricted single point unittest."""
 
 
 class MolproSPTest(GenericSPTest):
