@@ -22,6 +22,8 @@ Basis     Molpro      MolproBigBasisTest    basicMolpro2012       C_bigbasis.out
 Basis     NWChem      NWChemBasisTest       basicNWChem6.0        dvb_sp_hf.out
 Basis     NWChem      NWChemBasisTest       basicNWChem6.0        dvb_sp_ks.out
 Basis     NWChem      NWChemBigBasisTest    basicNWChem6.0        C_bigbasis.out
+Basis     Psi         PsiBasisTest          basicPsi4             dvb_sp_hf.out
+Basis     Psi         PsiBasisTest          basicPsi4             dvb_sp_ks.out
 
 CC        GAMESS      GAMESSUSCCDTest       basicGAMESS-US2012    water_ccd.out
 CC        GAMESS      GAMESSUSCCSDTest      basicGAMESS-US2012    water_ccsd.out

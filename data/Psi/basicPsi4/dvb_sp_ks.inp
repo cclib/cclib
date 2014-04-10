@@ -27,6 +27,7 @@ set {
     reference rks
     scf_type pk
     dft_functional b3lyp
+    print_basis true
     print_mos true
 }
 
