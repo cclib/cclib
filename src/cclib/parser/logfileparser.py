@@ -367,7 +367,8 @@ class Logfile(object):
                 except AssertionError:
                     frame, fname, lno, funcname, funcline, index = inspect.getouterframes(inspect.currentframe())[1]
                     parser = fname.split('/')[-1]
-                    self.logger.warning("Line not blank as expected: " + line.strip('\n'))
+                    msg = "In %s, line %i, line not blank as expected: %s" % (parser, lno, line.strip())
+                    self.logger.warning(msg)
 
             # All cases of heterogeneous lines can be dealt with by the same code.
             for character, keys in expected_characters.items():
