@@ -219,16 +219,13 @@ class Jaguar(logfileparser.Logfile):
             
             line = next(inputfile)
 
-        if line.find("Occupied + virtual Orbitals- final wvfn") > 0:
+        # The second string is in the version 8.3 unit test and the first one is not used
+        # since we did not test for mocoeffs before, but leave it in case it works for something.
+        if line.find("Occupied + virtual Orbitals- final wvfn") > 0 or line.find("occupied + virtual orbitals: final wave function") > 0:
 
             self.skip_lines(inputfile, ['b', 's', 'b', 'b'])
             
             if not hasattr(self,"mocoeffs"):
-                if self.unrestrictedflag:
-                    spin = 2
-                else:
-                    spin = 1
-
                 self.mocoeffs = []
 
             aonames = []
@@ -243,6 +240,7 @@ class Jaguar(logfileparser.Logfile):
 
             offset = 0
 
+            spin = 1 + int(self.unrestrictedflag)
             for s in range(spin):
                 mocoeffs = numpy.zeros((len(self.moenergies[s]), self.nbasis), "d")
 
@@ -252,7 +250,7 @@ class Jaguar(logfileparser.Logfile):
                 for k in range(0,len(self.moenergies[s]),5):
                     self.updateprogress(inputfile, "Coefficients")
 
-                    self.skip_lines(inputfile, ['numbers', 'eigens'])
+                    self.skip_lines(inputfile, ['numbers', 'eigens', 'oocupations'])
 
                     line = next(inputfile)
                     for i in range(self.nbasis):
