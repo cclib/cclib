@@ -186,6 +186,122 @@ class Psi(logfileparser.Logfile):
                 self.scftargets = []
             self.scftargets.append([etarget, dtarget])
 
+        # This section prints contraction information before the atomic basis set functions and
+        # is a good place to parse atombasis indices as well as atomnos. However, the section this line
+        # is in differs between HF and DFT outputs.
+        #
+        #  -Contraction Scheme:
+        #    Atom   Type   All Primitives // Shells:
+        #   ------ ------ --------------------------
+        #       1     C     6s 3p // 2s 1p 
+        #       2     C     6s 3p // 2s 1p 
+        #       3     C     6s 3p // 2s 1p 
+        # ...
+        if (self.section == "Primary Basis" or self.section == "DFT Potential") and line.strip() == "-Contraction Scheme:":
+
+            self.skip_lines(inputfile, ['headers', 'd'])
+
+            atomnos = []
+            atombasis = []
+            atombasis_pos = 0
+            line = next(inputfile)
+            while line.strip():
+
+                element = line.split()[1]
+                atomnos.append(self.table.number[element])
+
+                # To count the number of atomic orbitals for the atom, sum up the orbitals
+                # in each type of shell, times the numbers of shells. Currently, we assume
+                # the multiplier is a single digit and that there are only s and p shells,
+                # which will need to be extended later when considering larger basis sets,
+                # with corrections for the cartesian/spherical cases.
+                ao_count = 0
+                shells = line.split('//')[1].split()
+                for s in shells:
+                    count, type = s
+                    multiplier = 3*(type=='p') or 1
+                    ao_count += multiplier*int(count)
+
+                if len(atombasis) > 0:
+                    atombasis_pos = atombasis[-1][-1] + 1
+                atombasis.append(list(range(atombasis_pos, atombasis_pos+ao_count)))
+
+                line = next(inputfile)
+
+            self.set_scalar('natom', len(atomnos))
+
+            if not hasattr(self, 'atomnos'):
+                self.atomnos = atomnos
+            else:
+                assert self.atomnos == atomnos
+
+            self.atombasis = atombasis
+
+        # The atomic basis set is straightforward to parse, but there are some complications
+        # when symmetry is used, because in that case Psi4 only print the symmetry-unique atoms,
+        # and the list of symmetry-equivalent ones is not printed. Therefore, for simplicity here
+        # when an atomic is missing (atom indices are printed) assume the atomic orbitals of the
+        # last atom of the same element before it. This might not work if a mixture of basis sets
+        # is used somehow... but it should cover almost all cases for now.
+        #
+        #  ==> AO Basis Functions <==
+        #
+        #    [ STO-3G ]
+        #    spherical
+        #    ****
+        #    C   1
+        #    S   3 1.00
+        #                        71.61683700           2.70781445
+        #                        13.04509600           2.61888016
+        # ...
+        if (self.section == "AO Basis Functions") and (line.strip() == "==> AO Basis Functions <=="):
+
+            self.skip_lines(inputfile, ['b', 'basisname'])
+
+            line = next(inputfile)
+            spherical = line.strip() == "spherical"
+            if hasattr(self, 'spherical_basis'):
+                assert self.spherical_basis == spherical
+            else:
+                self.spherical_basis = spherical
+
+            gbasis = []
+            self.skip_line(inputfile, 'stars')
+            line = next(inputfile)
+            while line.strip():
+
+                element, index = line.split()
+                atomno = self.table.number[element]
+                index = int(index)
+
+                # This is the code that adds missing atoms when symmetry atoms are excluded
+                # from the basis set printout. Again, this will work only if all atoms of
+                # the same element use the same basis set.
+                while index > len(gbasis) + 1:
+
+                    missing_index = len(gbasis)
+                    missing_atomno = self.atomnos[missing_index]
+
+                    ngbasis = len(gbasis)
+                    last_same = ngbasis - self.atomnos[:ngbasis][::-1].index(missing_atomno) - 1
+                    gbasis.append(gbasis[last_same])
+
+                gbasis.append([])
+                line = next(inputfile)
+                while line.find("*") == -1:
+                    shell_type, nprimitives, smthg = line.split()
+                    nprimitives = int(nprimitives)
+                    primitives_lines = [next(inputfile) for i in range(nprimitives)]
+                    primitives = [map(float, pl.split()) for pl in primitives_lines]
+                    primitives = [tuple(p) for p in primitives]
+                    shell = [shell_type, primitives]                        
+                    gbasis[-1].append(shell)
+                    line = next(inputfile)
+
+                line = next(inputfile)
+
+            self.gbasis = gbasis
+
         # A block called 'Calculation Information' prints these before starting the SCF.
         if (self.section == "Pre-Iterations") and ("Number of atoms" in line):
             natom = int(line.split()[-1])
@@ -383,11 +499,14 @@ class Psi(logfileparser.Logfile):
                 self.mocoeffs = []
             self.mocoeffs.append(mocoeffs)
 
-        #Properties computed using the SCF density density matrix
-        #  Mulliken Charges: (a.u.)
-        #   Center  Symbol    Alpha    Beta     Spin     Total
-        #       1     C     2.99909  2.99909  0.00000  0.00182
-        #       2     C     2.99909  2.99909  0.00000  0.00182
+        # The formats for Mulliken and Lowdin atomic charges are the same, just with
+        # the name changes, so use the same code for both.
+        #
+        # Properties computed using the SCF density density matrix
+        #   Mulliken Charges: (a.u.)
+        #    Center  Symbol    Alpha    Beta     Spin     Total
+        #        1     C     2.99909  2.99909  0.00000  0.00182
+        #        2     C     2.99909  2.99909  0.00000  0.00182
         # ...
         for pop_type in ["Mulliken", "Lowdin"]:
             if line.strip() == "%s Charges: (a.u.)" % pop_type:

@@ -26,6 +26,7 @@ set {
     guess sad
     reference rhf
     scf_type pk
+    print_basis true
     print_mos true
 }
 

@@ -12,7 +12,7 @@
     A. E. DePrince, M. Saitow, U. Bozkaya, A. Yu. Sokolov
     -----------------------------------------------------------------------
 
-    Process ID:  26812
+    Process ID:  32534
     PSI4DATADIR: /usr/local/share/psi
 
     Using LocalCommunicator (Number of processes = 1)
@@ -51,6 +51,7 @@ set {
     reference rks
     scf_type pk
     dft_functional b3lyp
+    print_basis true
     print_mos true
 }
 
@@ -58,7 +59,7 @@ energy('scf')
 oeprop('MULLIKEN_CHARGES', 'LOWDIN_CHARGES')--------------------------------------------------------------------------
 
 *** tstart() called on helena
-*** at Thu Apr 10 10:59:37 2014
+*** at Thu Apr 10 11:09:11 2014
 
 	There are an even number of electrons - assuming singlet.
 	Specify the multiplicity with the MULTP option in the
@@ -181,6 +182,145 @@ oeprop('MULLIKEN_CHARGES', 'LOWDIN_CHARGES')------------------------------------
     Total Blocks     =            708
     Max Points       =            996
     Max Functions    =             56
+
+  -AO BASIS SET INFORMATION:
+    Name                   = STO-3G
+    Total number of shells = 40
+    Number of primitives   = 120
+    Number of AO           = 60
+    Number of SO           = 60
+    Maximum AM             = 1
+    Spherical Harmonics    = TRUE
+
+  -Contraction Scheme:
+    Atom   Type   All Primitives // Shells:
+   ------ ------ --------------------------
+       1     C     6s 3p // 2s 1p 
+       2     C     6s 3p // 2s 1p 
+       3     C     6s 3p // 2s 1p 
+       4     C     6s 3p // 2s 1p 
+       5     C     6s 3p // 2s 1p 
+       6     C     6s 3p // 2s 1p 
+       7     H     3s // 1s 
+       8     H     3s // 1s 
+       9     H     3s // 1s 
+      10     H     3s // 1s 
+      11     C     6s 3p // 2s 1p 
+      12     C     6s 3p // 2s 1p 
+      13     H     3s // 1s 
+      14     H     3s // 1s 
+      15     C     6s 3p // 2s 1p 
+      16     C     6s 3p // 2s 1p 
+      17     H     3s // 1s 
+      18     H     3s // 1s 
+      19     H     3s // 1s 
+      20     H     3s // 1s 
+
+  ==> AO Basis Functions <==
+
+    [ STO-3G ]
+    spherical
+    ****
+    C   1
+    S   3 1.00
+                        71.61683700           2.70781445
+                        13.04509600           2.61888016
+                         3.53051220           0.81619058
+    S   3 1.00
+                         2.94124940          -0.16001719
+                         0.68348310           0.21403592
+                         0.22228990           0.16153609
+    P   3 1.00
+                         2.94124940           0.85604451
+                         0.68348310           0.53830377
+                         0.22228990           0.08527635
+    ****
+    C   3
+    S   3 1.00
+                        71.61683700           2.70781445
+                        13.04509600           2.61888016
+                         3.53051220           0.81619058
+    S   3 1.00
+                         2.94124940          -0.16001719
+                         0.68348310           0.21403592
+                         0.22228990           0.16153609
+    P   3 1.00
+                         2.94124940           0.85604451
+                         0.68348310           0.53830377
+                         0.22228990           0.08527635
+    ****
+    C   5
+    S   3 1.00
+                        71.61683700           2.70781445
+                        13.04509600           2.61888016
+                         3.53051220           0.81619058
+    S   3 1.00
+                         2.94124940          -0.16001719
+                         0.68348310           0.21403592
+                         0.22228990           0.16153609
+    P   3 1.00
+                         2.94124940           0.85604451
+                         0.68348310           0.53830377
+                         0.22228990           0.08527635
+    ****
+    H   7
+    S   3 1.00
+                         3.42525091           0.27693436
+                         0.62391373           0.26783885
+                         0.16885540           0.08347367
+    ****
+    H   9
+    S   3 1.00
+                         3.42525091           0.27693436
+                         0.62391373           0.26783885
+                         0.16885540           0.08347367
+    ****
+    C  11
+    S   3 1.00
+                        71.61683700           2.70781445
+                        13.04509600           2.61888016
+                         3.53051220           0.81619058
+    S   3 1.00
+                         2.94124940          -0.16001719
+                         0.68348310           0.21403592
+                         0.22228990           0.16153609
+    P   3 1.00
+                         2.94124940           0.85604451
+                         0.68348310           0.53830377
+                         0.22228990           0.08527635
+    ****
+    H  13
+    S   3 1.00
+                         3.42525091           0.27693436
+                         0.62391373           0.26783885
+                         0.16885540           0.08347367
+    ****
+    C  15
+    S   3 1.00
+                        71.61683700           2.70781445
+                        13.04509600           2.61888016
+                         3.53051220           0.81619058
+    S   3 1.00
+                         2.94124940          -0.16001719
+                         0.68348310           0.21403592
+                         0.22228990           0.16153609
+    P   3 1.00
+                         2.94124940           0.85604451
+                         0.68348310           0.53830377
+                         0.22228990           0.08527635
+    ****
+    H  17
+    S   3 1.00
+                         3.42525091           0.27693436
+                         0.62391373           0.26783885
+                         0.16885540           0.08347367
+    ****
+    H  19
+    S   3 1.00
+                         3.42525091           0.27693436
+                         0.62391373           0.26783885
+                         0.16885540           0.08347367
+    ****
 
   ==> Pre-Iterations <==
 
@@ -1184,15 +1324,15 @@ Properties computed using the SCF density density matrix
 
 
 
-*** tstop() called on helena at Thu Apr 10 11:01:03 2014
+*** tstop() called on helena at Thu Apr 10 11:10:36 2014
 Module time:
-	user time   =      84.94 seconds =       1.42 minutes
-	system time =       0.63 seconds =       0.01 minutes
-	total time  =         86 seconds =       1.43 minutes
+	user time   =      84.63 seconds =       1.41 minutes
+	system time =       0.31 seconds =       0.01 minutes
+	total time  =         85 seconds =       1.42 minutes
 Total time:
-	user time   =      84.94 seconds =       1.42 minutes
-	system time =       0.63 seconds =       0.01 minutes
-	total time  =         86 seconds =       1.43 minutes
+	user time   =      84.63 seconds =       1.41 minutes
+	system time =       0.31 seconds =       0.01 minutes
+	total time  =         85 seconds =       1.42 minutes
 
 
 Properties will be evaluated at   0.000000,   0.000000,   0.000000 Bohr
