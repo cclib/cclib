@@ -74,6 +74,11 @@ class GaussianTDDFTTest(GenericTDTest):
         self.assertEqual(len(self.data.etrotats), self.number)
 
 
+class JaguarTDDFTTest(GenericTDTest):
+    """Jaguar time-dependent HF/DFT unittest."""
+    number = 5
+
+
 class GAMESSUSTDDFTTest(GenericTDTest):
     """GAMESS time-dependent HF/DFT unittest."""
 

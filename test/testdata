@@ -142,6 +142,7 @@ TDun      Gaussian    GaussianTDDFTunTest   basicGaussian03       CO_TD_delta.lo
 TDun      Gaussian    GaussianTDDFTunTest   basicGaussian09       CO_TD_delta.log
 TD        GAMESS      GAMESSUSTDDFTTest     basicGAMESS-US2012    dvb_td.out
 TD        GAMESS      GAMESSUSTDDFTtrpTest  basicGAMESS-US2012    dvb_td_trplet.out
+TD        Jaguar      JaguarTDDFTTest       basicJaguar8.3        dvb_td.out
 TD        GAMESS      PCGamessTDDFTTest     basicPCGAMESS         dvb_td.out
 TD        GAMESS      PCGamessTDDFTtrpTest  basicPCGAMESS         dvb_td_trplet.out
 TD        ORCA        OrcaTDDFTTest         basicORCA2.9          dvb_td.out
