@@ -383,6 +383,29 @@ class Psi(logfileparser.Logfile):
                 self.mocoeffs = []
             self.mocoeffs.append(mocoeffs)
 
+        #Properties computed using the SCF density density matrix
+        #  Mulliken Charges: (a.u.)
+        #   Center  Symbol    Alpha    Beta     Spin     Total
+        #       1     C     2.99909  2.99909  0.00000  0.00182
+        #       2     C     2.99909  2.99909  0.00000  0.00182
+        # ...
+        for pop_type in ["Mulliken", "Lowdin"]:
+            if line.strip() == "%s Charges: (a.u.)" % pop_type:
+                if not hasattr(self, 'atomcharges'):
+                    self.atomcharges = {}
+                header = next(inputfile)
+
+                line = next(inputfile)
+                while not line.strip():
+                    line = next(inputfile)
+
+                charges = []
+                while line.strip():
+                    ch = float(line.split()[-1])
+                    charges.append(ch)
+                    line = next(inputfile)
+                self.atomcharges[pop_type.lower()] = charges
+
 if __name__ == "__main__":
     import doctest, psiparser
     doctest.testmod(psiparser, verbose=False)
