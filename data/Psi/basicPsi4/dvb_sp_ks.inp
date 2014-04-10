@@ -31,3 +31,4 @@ set {
 }
 
 energy('scf')
+oeprop('MULLIKEN_CHARGES', 'LOWDIN_CHARGES')

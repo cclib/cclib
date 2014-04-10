@@ -12,7 +12,7 @@
     A. E. DePrince, M. Saitow, U. Bozkaya, A. Yu. Sokolov
     -----------------------------------------------------------------------
 
-    Process ID:  11667
+    Process ID:  26178
     PSI4DATADIR: /usr/local/share/psi
 
     Using LocalCommunicator (Number of processes = 1)
@@ -54,10 +54,11 @@ set {
 }
 
 energy('scf')
+oeprop('MULLIKEN_CHARGES', 'LOWDIN_CHARGES')
 --------------------------------------------------------------------------
 
-*** tstart() called on silenziosa
-*** at Fri Apr  4 08:01:29 2014
+*** tstart() called on helena
+*** at Thu Apr 10 10:58:14 2014
 
 	There are an even number of electrons - assuming singlet.
 	Specify the multiplicity with the MULTP option in the
@@ -196,14 +197,14 @@ energy('scf')
                            Total Energy        Delta E     RMS |[F,P]|
 
    @DF-RHF iter   0:  -379.39903563530487   -3.79399e+02   1.22406e-01 
-   @DF-RHF iter   1:  -379.50926542578173   -1.10230e-01   1.48231e-02 
+   @DF-RHF iter   1:  -379.50926542578162   -1.10230e-01   1.48231e-02 
    @DF-RHF iter   2:  -379.75121179218633   -2.41946e-01   3.85556e-03 DIIS
    @DF-RHF iter   3:  -379.76614390168305   -1.49321e-02   1.54564e-03 DIIS
    @DF-RHF iter   4:  -379.76804256982945   -1.89867e-03   2.31071e-04 DIIS
    @DF-RHF iter   5:  -379.76809409007859   -5.15202e-05   2.54658e-05 DIIS
-   @DF-RHF iter   6:  -379.76809539087418   -1.30080e-06   8.40219e-06 DIIS
-   @DF-RHF iter   7:  -379.76809550064041   -1.09766e-07   2.68312e-06 DIIS
-   @DF-RHF iter   8:  -379.76809551427954   -1.36391e-08   6.92302e-07 DIIS
+   @DF-RHF iter   6:  -379.76809539087407   -1.30080e-06   8.40219e-06 DIIS
+   @DF-RHF iter   7:  -379.76809550064030   -1.09766e-07   2.68312e-06 DIIS
+   @DF-RHF iter   8:  -379.76809551427965   -1.36394e-08   6.92302e-07 DIIS
 
   DF guess converged.
 
@@ -240,9 +241,9 @@ energy('scf')
     Memory (MB):               183
     Schwarz Cutoff:          1E-12
 
-   @RHF iter   9:  -379.76896289852897   -8.67384e-04   4.38031e-06 DIIS
-   @RHF iter  10:  -379.76896292130931   -2.27803e-08   1.18950e-06 DIIS
-   @RHF iter  11:  -379.76896292284840   -1.53909e-09   5.18251e-07 DIIS
+   @RHF iter   9:  -379.76896289852920   -8.67384e-04   4.38031e-06 DIIS
+   @RHF iter  10:  -379.76896292130908   -2.27799e-08   1.18950e-06 DIIS
+   @RHF iter  11:  -379.76896292284863   -1.53955e-09   5.18251e-07 DIIS
 
   ==> Post-Iterations <==
 
@@ -282,16 +283,16 @@ energy('scf')
 
   Energy converged.
 
-  @RHF Final Energy:  -379.76896292284840
+  @RHF Final Energy:  -379.76896292284863
 
    => Energetics <=
 
     Nuclear Repulsion Energy =            445.9369781142434590
-    One-Electron Energy =               -1400.2221335987978819
-    Two-Electron Energy =                 574.5161925617059069
+    One-Electron Energy =               -1400.2221335987981092
+    Two-Electron Energy =                 574.5161925617060206
     DFT Exchange-Correlation Energy =       0.0000000000000000
     Empirical Dispersion Energy =           0.0000000000000000
-    Total Energy =                       -379.7689629228485728
+    Total Energy =                       -379.7689629228486865
 
 
 
@@ -1134,14 +1135,71 @@ Properties computed using the SCF density density matrix
 
 
 
-*** tstop() called on silenziosa at Fri Apr  4 08:01:38 2014
+*** tstop() called on helena at Thu Apr 10 10:58:25 2014
 Module time:
-	user time   =       8.95 seconds =       0.15 minutes
-	system time =       0.12 seconds =       0.00 minutes
-	total time  =          9 seconds =       0.15 minutes
+	user time   =      11.07 seconds =       0.18 minutes
+	system time =       0.10 seconds =       0.00 minutes
+	total time  =         11 seconds =       0.18 minutes
 Total time:
-	user time   =       8.95 seconds =       0.15 minutes
-	system time =       0.12 seconds =       0.00 minutes
-	total time  =          9 seconds =       0.15 minutes
+	user time   =      11.07 seconds =       0.18 minutes
+	system time =       0.10 seconds =       0.00 minutes
+	total time  =         11 seconds =       0.18 minutes
+
+
+Properties will be evaluated at   0.000000,   0.000000,   0.000000 Bohr
+
+Properties computed using the SCF density density matrix
+  Mulliken Charges: (a.u.)
+   Center  Symbol    Alpha    Beta     Spin     Total
+       1     C     2.99909  2.99909  0.00000  0.00182
+       2     C     2.99909  2.99909  0.00000  0.00182
+       3     C     3.02983  3.02983  0.00000 -0.05965
+       4     C     3.02983  3.02983  0.00000 -0.05965
+       5     C     3.03022  3.03022  0.00000 -0.06045
+       6     C     3.03022  3.03022  0.00000 -0.06045
+       7     H     0.47065  0.47065  0.00000  0.05870
+       8     H     0.47065  0.47065  0.00000  0.05870
+       9     H     0.46970  0.46970  0.00000  0.06060
+      10     H     0.46970  0.46970  0.00000  0.06060
+      11     C     3.02762  3.02762  0.00000 -0.05525
+      12     C     3.02762  3.02762  0.00000 -0.05525
+      13     H     0.47118  0.47118  0.00000  0.05764
+      14     H     0.47118  0.47118  0.00000  0.05764
+      15     C     3.06194  3.06194  0.00000 -0.12389
+      16     C     3.06194  3.06194  0.00000 -0.12389
+      17     H     0.47049  0.47049  0.00000  0.05902
+      18     H     0.47049  0.47049  0.00000  0.05902
+      19     H     0.46927  0.46927  0.00000  0.06146
+      20     H     0.46927  0.46927  0.00000  0.06146
+
+   Total alpha = 35.00000, Total beta = 35.00000, Total charge =  0.00000
+
+
+
+  Lowdin Charges [a.u.]:
+
+   Center  Symbol    Alpha    Beta     Spin     Total
+       1     C     2.99564  2.99564  0.00000  0.00873
+       2     C     2.99564  2.99564  0.00000  0.00873
+       3     C     3.01585  3.01585  0.00000 -0.03170
+       4     C     3.01585  3.01585  0.00000 -0.03170
+       5     C     3.01611  3.01611  0.00000 -0.03222
+       6     C     3.01611  3.01611  0.00000 -0.03222
+       7     H     0.48596  0.48596  0.00000  0.02809
+       8     H     0.48596  0.48596  0.00000  0.02809
+       9     H     0.48497  0.48497  0.00000  0.03007
+      10     H     0.48497  0.48497  0.00000  0.03007
+      11     C     3.01141  3.01141  0.00000 -0.02282
+      12     C     3.01141  3.01141  0.00000 -0.02282
+      13     H     0.48647  0.48647  0.00000  0.02705
+      14     H     0.48647  0.48647  0.00000  0.02705
+      15     C     3.03483  3.03483  0.00000 -0.06967
+      16     C     3.03483  3.03483  0.00000 -0.06967
+      17     H     0.48472  0.48472  0.00000  0.03056
+      18     H     0.48472  0.48472  0.00000  0.03056
+      19     H     0.48405  0.48405  0.00000  0.03190
+      20     H     0.48405  0.48405  0.00000  0.03190
+
+  Total alpha = 35.00000, Total beta = 35.00000, Total charge =  0.00000
 
 *** PSI4 exiting successfully. Buy a developer a beer!
