@@ -299,8 +299,32 @@ class Jaguar(logfileparser.Logfile):
 
                     offset += 5
                 self.mocoeffs.append(mocoeffs)
-                        
-                        
+
+        #  Atomic charges from Mulliken population analysis: 
+        #   
+        # Atom       C1           C2           C3           C4           C5      
+        # Charge    0.00177     -0.06075     -0.05956      0.00177     -0.06075
+        #   
+        # Atom       H6           H7           H8           C9           C10  
+        # ...
+        if line.strip() == "Atomic charges from Mulliken population analysis:":
+
+            if not hasattr(self, 'atomcharges'):
+                self.atomcharges = {}
+
+            charges = []
+            self.skip_line(inputfile, "blank")
+            line = next(inputfile)
+            while "sum of atomic charges" not in line:
+                assert line.split()[0] == "Atom"
+                line = next(inputfile)
+                assert line.split()[0] == "Charge"
+                charges.extend([float(c) for c in line.split()[1:]])
+                self.skip_line(inputfile, "blank")
+                line = next(inputfile)
+
+            self.atomcharges['mulliken'] = charges
+
         if line[2:6] == "olap":
             if line[6] == "-":
                 return
