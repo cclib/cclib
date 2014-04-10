@@ -104,11 +104,16 @@ class Psi(logfileparser.Logfile):
                 self.skip_line(inputfile, "dashes")
                 line = next(inputfile)
 
+            elements = []
             coords = []
             while line.strip():
                 el, x, y, z = line.split()
+                elements.append(el)
                 coords.append([float(x), float(y), float(z)])
                 line = next(inputfile)
+
+            if not hasattr(self, 'atomnos'):
+                self.atomnos = [self.table.number[el] for el in elements]
 
             if not hasattr(self, 'atomcoords'):
                 self.atomcoords = []
