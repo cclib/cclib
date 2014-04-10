@@ -1,0 +1,293 @@
+Job C_bigbasis started on silenziosa at Wed Apr  9 23:36:19 2014
+jobid: silenziosa-0-534611b3
+
+  +--------------------------------------------------------------------+
+  |  Jaguar version 8.3, release  13                                   |
+  |                                                                    |
+  |  Copyright Schrodinger, Inc.                                       |
+  |  All Rights Reserved.                                              |
+  |                                                                    |
+  |  The following have contributed to Jaguar (listed alphabetically): |
+  |  Mike Beachy, Art Bochevarov, Dale Braden, Yixiang Cao,            |
+  |  Chris Cortis, Rich Friesner, Bill Goddard, Hod Greeley,           |
+  |  Tom Hughes, Jean-Marc Langlois, Daniel Mainz, Rob Murphy,         |
+  |  Dean Philipp, Tom Pollard, Murco Ringnalda.                       |
+  |                                                                    |
+  |  Use of this program should be acknowledged in publications as:    |
+  |                                                                    |
+  |  Jaguar, version 8.3, Schrodinger, Inc., New York, NY, 2014.       |
+  |                                                                    |
+  |  A. D. Bochevarov, E. Harder, T. F. Hughes, J. R. Greenwood,       |
+  |  D. A. Braden, D. M. Philipp, D. Rinaldo, M. D. Halls,             |
+  |  J. Zhang, R. A. Friesner, "Jaguar: A High-Performance Quantum     |
+  |  Chemistry Software Program with Strengths in Life and Materials   |
+  |  Sciences", Int. J. Quantum Chem., 2013, 113(18), 2110-2142.       |
+  +--------------------------------------------------------------------+
+  
+  start of program pre
+  
+  Job name: C_bigbasis
+  Executables used: /usr/local/lib/schrodinger2014-1/jaguar-v83013/bin/Linux-x86_64
+  Temporary files : /home/kml/C_bigbasis
+  
+  
+  basis set:             cc-pvqz(-g)+    
+  net molecular charge:    0
+  multiplicity:            1
+  
+  number of basis functions....           62
+  
+  Basis set name for each atom
+  
+  Atom     Basis 
+  C1       cc-pvqz(-g)+    
+  
+  Gaussian basis set information
+  
+                                                        renorm    mfac*renorm
+   atom    fn   prim  L        z            coef         coef         coef
+ -------- ----- ---- --- -------------  -----------  -----------  -----------
+ C1           1    1   S  3.398000E+04   9.1635E-05   1.6345E-01   1.6345E-01
+ C1           1    2   S  5.089000E+03   7.0891E-04   3.0442E-01   3.0442E-01
+ C1           1    3   S  1.157000E+03   3.7188E-03   5.2578E-01   5.2578E-01
+ C1           1    4   S  3.266000E+02   1.5467E-02   8.4690E-01   8.4690E-01
+ C1           1    5   S  1.061000E+02   5.3298E-02   1.2558E+00   1.2558E+00
+ C1           1    6   S  3.811000E+01   1.4807E-01   1.6186E+00   1.6186E+00
+ C1           1    7   S  1.475000E+01   3.0776E-01   1.6509E+00   1.6509E+00
+ C1           1    8   S  6.035000E+00   4.0213E-01   1.1035E+00   1.1035E+00
+ C1           1    9   S  2.530000E+00   2.1856E-01   3.1249E-01   3.1249E-01
+ C1           2   10   S  3.398000E+04  -5.5710E-05  -9.9372E-02  -9.9372E-02
+ C1           2   11   S  5.089000E+03  -4.4275E-04  -1.9013E-01  -1.9013E-01
+ C1           2   12   S  1.157000E+03  -2.3017E-03  -3.2543E-01  -3.2543E-01
+ C1           2   13   S  3.266000E+02  -9.7464E-03  -5.3366E-01  -5.3366E-01
+ C1           2   14   S  1.061000E+02  -3.3755E-02  -7.9530E-01  -7.9530E-01
+ C1           2   15   S  3.811000E+01  -1.0016E-01  -1.0949E+00  -1.0949E+00
+ C1           2   16   S  1.475000E+01  -2.2628E-01  -1.2138E+00  -1.2138E+00
+ C1           2   17   S  6.035000E+00  -4.1488E-01  -1.1385E+00  -1.1385E+00
+ C1           2   18   S  2.530000E+00  -3.4605E-01  -4.9475E-01  -4.9475E-01
+ C1           3   19   S  7.355000E-01   1.0000E+00   5.6604E-01   5.6604E-01
+ C1           4   20   S  2.905000E-01   1.0000E+00   2.8201E-01   2.8201E-01
+ C1           5   21   S  1.111000E-01   1.0000E+00   1.3715E-01   1.3715E-01
+ C1           6   22   X  3.451000E+01   3.1688E-02   3.7780E+00   3.7780E+00
+              7        Y                                           3.7780E+00
+              8        Z                                           3.7780E+00
+ C1           6   23   X  7.915000E+00   2.1289E-01   4.0287E+00   4.0287E+00
+              7        Y                                           4.0287E+00
+              8        Z                                           4.0287E+00
+ C1           6   24   X  2.368000E+00   8.3959E-01   3.5155E+00   3.5155E+00
+              7        Y                                           3.5155E+00
+              8        Z                                           3.5155E+00
+ C1           9   25   X  8.132000E-01   1.0000E+00   1.1007E+00   1.1007E+00
+             10        Y                                           1.1007E+00
+             11        Z                                           1.1007E+00
+ C1          12   26   X  2.890000E-01   1.0000E+00   3.0204E-01   3.0204E-01
+             13        Y                                           3.0204E-01
+             14        Z                                           3.0204E-01
+ C1          15   27   X  1.007000E-01   1.0000E+00   8.0859E-02   8.0859E-02
+             16        Y                                           8.0859E-02
+             17        Z                                           8.0859E-02
+ C1          18   28  XX  1.848000E+00   1.0000E+00   4.8210E+00   4.8210E+00
+             19       YY                                           4.8210E+00
+             20       ZZ                                           4.8210E+00
+             21       XY                                           8.3502E+00
+             22       XZ                                           8.3502E+00
+             23       YZ                                           8.3502E+00
+ C1          24   29  XX  6.490000E-01   1.0000E+00   7.7239E-01   7.7239E-01
+             25       YY                                           7.7239E-01
+             26       ZZ                                           7.7239E-01
+             27       XY                                           1.3378E+00
+             28       XZ                                           1.3378E+00
+             29       YZ                                           1.3378E+00
+ C1          30   30  XX  2.280000E-01   1.0000E+00   1.2382E-01   1.2382E-01
+             31       YY                                           1.2382E-01
+             32       ZZ                                           1.2382E-01
+             33       XY                                           2.1446E-01
+             34       XZ                                           2.1446E-01
+             35       YZ                                           2.1446E-01
+ C1          36   31 XXX  1.419000E+00   1.0000E+00   3.2353E+00   3.2353E+00
+             37      YYY                                           3.2353E+00
+             38      ZZZ                                           3.2353E+00
+             39      XYY                                           7.2344E+00
+             40      XXY                                           7.2344E+00
+             41      XXZ                                           7.2344E+00
+             42      XZZ                                           7.2344E+00
+             43      YZZ                                           7.2344E+00
+             44      YYZ                                           7.2344E+00
+             45      XYZ                                           1.2530E+01
+ C1          46   32 XXX  4.850000E-01   1.0000E+00   2.8898E-01   2.8898E-01
+             47      YYY                                           2.8898E-01
+             48      ZZZ                                           2.8898E-01
+             49      XYY                                           6.4619E-01
+             50      XXY                                           6.4619E-01
+             51      XXZ                                           6.4619E-01
+             52      XZZ                                           6.4619E-01
+             53      YZZ                                           6.4619E-01
+             54      YYZ                                           6.4619E-01
+             55      XYZ                                           1.1192E+00
+ C1          56   33   S  4.145000E-02   1.0000E+00   6.5472E-02   6.5472E-02
+ C1          57   34   X  3.218000E-02   1.0000E+00   1.9428E-02   1.9428E-02
+             58        Y                                           1.9428E-02
+             59        Z                                           1.9428E-02
+ C1          60   35  XX  7.660000E-02   1.0000E+00   1.8357E-02   1.8357E-02
+             61       YY                                           1.8357E-02
+             62       ZZ                                           1.8357E-02
+             63       XY                                           3.1796E-02
+             64       XZ                                           3.1796E-02
+             65       YZ                                           3.1796E-02
+ C1          66   36 XXX  1.870000E-01   1.0000E+00   3.3853E-02   3.3853E-02
+             67      YYY                                           3.3853E-02
+             68      ZZZ                                           3.3853E-02
+             69      XYY                                           7.5698E-02
+             70      XXY                                           7.5698E-02
+             71      XXZ                                           7.5698E-02
+             72      XZZ                                           7.5698E-02
+             73      YZZ                                           7.5698E-02
+             74      YYZ                                           7.5698E-02
+             75      XYZ                                           1.3111E-01
+  
+  Effective Core Potential 
+  
+  Atom      Electrons represented by ECP
+ C1                     0
+  
+  no dealiasing set available for atom            1
+  switch to all-analytic calculation
+  
+ Input geometry:
+                                   angstroms
+  atom               x                 y                 z
+  C1            0.0000000000      0.0000000000      0.0000000000 
+   
+  Molecular weight:      12.00 amu
+   
+  Stoichiometry: C
+  Point Group: Atomic
+	Molecule translated to center of mass 
+	Molecule reoriented along symmetry axes
+  
+ Symmetrized geometry:
+                                   angstroms
+  atom               x                 y                 z
+  C1            0.0000000000      0.0000000000      0.0000000000 
+   
+  nuclear repulsion energy.......       0.000000000 hartrees
+ 
+ Non-default options chosen:
+  
+ Non-default print settings:
+      1=  2
+  
+ Temporary integer options set:
+     73=  2
+  
+  Peak memory usage:    479 Mb
+  
+  end of program pre
+   
+ Time(pre)  user:        0.0  user+sys:        0.0  wallclock:        0.1
+  
+  start of program onee
+  
+  smallest eigenvalue of S:    4.285E-03
+  number of canonical orbitals.....           62
+  Peak memory usage:    623 Mb
+  
+  end of program onee
+   
+ Time(onee)  user:        0.0  user+sys:        0.0  wallclock:        0.1
+  
+  start of program hfig
+  
+  initial wavefunction generated automatically from atomic wavefunctions
+ 
+  Irreducible     Total no   No of occupied orbitals 
+  representation  orbitals   Shell_1  Shell_2    ...
+  S                  6          2
+  Px                 5          0
+  Py                 5          0
+  Pz                 5          1
+  Dxxyy              4          0
+  Dxy                4          0
+  Dxz                4          0
+  Dyz                4          0
+  D2zz               4          0
+  F-3                3          0
+  F-2                3          0
+  F-1                3          0
+  F0                 3          0
+  F+1                3          0
+  F+2                3          0
+  F+3                3          0
+  ------------------------
+  Orbital occupation/shell    1.000
+ 
+  Peak memory usage:    560 Mb
+  
+  end of program hfig
+   
+ Time(hfig)  user:        0.0  user+sys:        0.0  wallclock:        0.1
+  
+  start of program probe
+  
+  Peak memory usage:    560 Mb
+  
+  end of program probe
+   
+ Time(probe)  user:        0.0  user+sys:        0.0  wallclock:        0.1
+  
+  start of program scf
+  
+ number of electrons..........          6
+ number of alpha electrons....          3
+ number of beta electrons.....          3
+ number of orbitals, total....         62
+ number of doubly-occ'd orbs..          3
+ number of open shell orbs....          0
+ number of occupied orbitals..          3
+ number of virtual orbitals...         59
+ number of hamiltonians.......          1
+ number of shells.............          1
+ SCF type: HF
+  
+       i  u  d  i  g                   
+       t  p  i  c  r                                 RMS    maximum
+       e  d  i  u  i                       energy  density   DIIS  
+       r  t  s  t  d       total energy    change  change    error 
+  
+etot    1  N  N  0  N     -37.59496023608           1.3E-03  3.6E-02
+etot    2  Y  Y  0  N     -37.60241256090  7.5E-03  4.0E-04  8.9E-03
+etot    3  N  Y  0  N     -37.60312801555  7.2E-04  1.3E-04  2.2E-03
+etot    4  Y  Y  0  N     -37.60318380948  5.6E-05  2.3E-05  3.6E-04
+etot    5  N  N  0  N     -37.60318511382  1.3E-06  0.0E+00  0.0E+00
+  
+  
+ Energy components, in hartrees:
+   (A)  Nuclear repulsion............       0.00000000000
+   (E)  Total one-electron terms.....     -50.31187999091
+   (I)  Total two-electron terms.....      12.70869487709
+   (L)  Electronic energy............     -37.60318511382  (E+I)
+   (N)  Total energy.................     -37.60318511382  (A+L)
+  
+ SCFE: SCF energy: HF       -37.60318511382 hartrees   iterations:   5
+  
+ 
+ HOMO energy:    -0.35664
+ LUMO energy:     0.01857
+ 
+  Orbital energies (hartrees)/symmetry label: 
+   -11.36502 S          -0.72559 S          -0.35664 Pz          0.01857 Px     
+     0.01857 Py          0.08394 S           0.09004 Pz          0.10811 Px     
+     0.10811 Py          0.23222 Dxxyy       0.23222 Dxy         0.24182 Dxz    
+     0.24182 Dyz    
+ 
+  Peak memory usage:    654 Mb
+  
+  end of program scf
+   
+ Time(scf)  user:        0.0  user+sys:        0.0  wallclock:        0.5
+
+ Total cpu seconds     user:       0.000   user+sys:       0.000
+  
+ Total elapsed time:    2 seconds
+
+Job C_bigbasis completed on silenziosa at Wed Apr  9 23:36:21 2014

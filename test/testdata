@@ -15,6 +15,9 @@ Basis     Gaussian    GaussianBigBasisTest  basicGaussian03       C_bigbasis.out
 Basis     Gaussian    GaussianBigBasisTest  basicGaussian09       C_bigbasis.out
 Basis     GAMESS      PCGamessBasisTest     basicPCGAMESS         dvb_sp.out
 Basis     GAMESS      PCGamessBigBasisTest  basicPCGAMESS         C_bigbasis.out
+Basis     Jaguar      JaguarBasisTest       basicJaguar8.3        dvb_sp_hf.out
+Basis     Jaguar      JaguarBasisTest       basicJaguar8.3        dvb_sp_ks.out
+Basis     Jaguar      JaguarBigBasisTest    basicJaguar8.3        C_bigbasis.out
 Basis     Molpro      MolproBasisTest       basicMolpro2006       dvb_sphf.out
 Basis     Molpro      MolproBasisTest       basicMolpro2012       dvb_sphf.out
 Basis     Molpro      MolproBigBasisTest    basicMolpro2006       C_bigbasis.out
