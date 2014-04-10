@@ -219,16 +219,13 @@ class Jaguar(logfileparser.Logfile):
             
             line = next(inputfile)
 
-        if line.find("Occupied + virtual Orbitals- final wvfn") > 0:
+        # The second string is in the version 8.3 unit test and the first one is not used
+        # since we did not test for mocoeffs before, but leave it in case it works for something.
+        if line.find("Occupied + virtual Orbitals- final wvfn") > 0 or line.find("occupied + virtual orbitals: final wave function") > 0:
 
             self.skip_lines(inputfile, ['b', 's', 'b', 'b'])
             
             if not hasattr(self,"mocoeffs"):
-                if self.unrestrictedflag:
-                    spin = 2
-                else:
-                    spin = 1
-
                 self.mocoeffs = []
 
             aonames = []
@@ -243,6 +240,7 @@ class Jaguar(logfileparser.Logfile):
 
             offset = 0
 
+            spin = 1 + int(self.unrestrictedflag)
             for s in range(spin):
                 mocoeffs = numpy.zeros((len(self.moenergies[s]), self.nbasis), "d")
 
@@ -252,7 +250,7 @@ class Jaguar(logfileparser.Logfile):
                 for k in range(0,len(self.moenergies[s]),5):
                     self.updateprogress(inputfile, "Coefficients")
 
-                    self.skip_lines(inputfile, ['numbers', 'eigens'])
+                    self.skip_lines(inputfile, ['numbers', 'eigens', 'oocupations'])
 
                     line = next(inputfile)
                     for i in range(self.nbasis):
@@ -301,8 +299,32 @@ class Jaguar(logfileparser.Logfile):
 
                     offset += 5
                 self.mocoeffs.append(mocoeffs)
-                        
-                        
+
+        #  Atomic charges from Mulliken population analysis: 
+        #   
+        # Atom       C1           C2           C3           C4           C5      
+        # Charge    0.00177     -0.06075     -0.05956      0.00177     -0.06075
+        #   
+        # Atom       H6           H7           H8           C9           C10  
+        # ...
+        if line.strip() == "Atomic charges from Mulliken population analysis:":
+
+            if not hasattr(self, 'atomcharges'):
+                self.atomcharges = {}
+
+            charges = []
+            self.skip_line(inputfile, "blank")
+            line = next(inputfile)
+            while "sum of atomic charges" not in line:
+                assert line.split()[0] == "Atom"
+                line = next(inputfile)
+                assert line.split()[0] == "Charge"
+                charges.extend([float(c) for c in line.split()[1:]])
+                self.skip_line(inputfile, "blank")
+                line = next(inputfile)
+
+            self.atomcharges['mulliken'] = charges
+
         if line[2:6] == "olap":
             if line[6] == "-":
                 return
@@ -376,11 +398,15 @@ class Jaguar(logfileparser.Logfile):
 
             self.skip_line(inputfile, 'blank')
 
+            # Version 8.3 has two blank lines here, earlier versions just one.
+            line = next(inputfile)
+            if not line.strip():
+                line = next(inputfile)
+
             self.vibfreqs = []
             self.vibdisps = []
             forceconstants = False
             intensities = False
-            line = next(inputfile)
             while line.strip():
                 if "force const" in line:
                     forceconstants = True
@@ -388,9 +414,11 @@ class Jaguar(logfileparser.Logfile):
                     intensities = True
                 line = next(inputfile)
             
-            # The last block has an extra blank line after it - catch it.
+            # In older version, the last block had an extra blank line after it,
+            # which could be caught. This is not true in newer version (including 8.3),
+            # but in general it would be better to bound this loop more strictly.
             freqs = next(inputfile)
-            while freqs.strip():
+            while freqs.strip() and not "imaginary frequencies" in freqs:
 
                 # Number of modes (columns printed in this block).
                 nmodes = len(freqs.split())-1

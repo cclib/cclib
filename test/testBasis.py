@@ -91,6 +91,13 @@ class GaussianBigBasisTest(GenericBigBasisTest):
     spherical = True
 
 
+class JaguarBasisTest(GenericBasisTest):
+    """Jaguar basis set unittest."""
+
+class JaguarBigBasisTest(GenericBigBasisTest):
+    """Jaguar big basis set unittest."""
+
+
 class MolproBasisTest(GenericBasisTest):
     """Molpro basis set unittest."""
 
