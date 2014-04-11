@@ -325,7 +325,8 @@ class Jaguar(logfileparser.Logfile):
 
             self.atomcharges['mulliken'] = charges
 
-        if line[2:6] == "olap":
+        if (line[2:6] == "olap") or (line.strip() == "overlap matrix:"):
+
             if line[6] == "-":
                 return
                 # This was continue (in loop) before parser refactoring.

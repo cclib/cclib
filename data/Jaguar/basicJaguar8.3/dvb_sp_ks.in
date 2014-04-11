@@ -2,6 +2,7 @@
 dftname=b3lyp
 basis=sto-3g
 ip1=2
+ip18=2
 ip102=8
 ipvirt=-1
 mulken=1
