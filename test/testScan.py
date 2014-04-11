@@ -44,6 +44,10 @@ class GaussianScanTest(GenericScanTest):
     extra = 1
 
 
+class JaguarScanTest(GenericScanTest):
+    """Jaguar relaxed potential energy surface scan unittest."""
+
+
 class OrcaScanTest(GenericScanTest):
     """ORCA relaxed potential energy surface scan unittest."""
 

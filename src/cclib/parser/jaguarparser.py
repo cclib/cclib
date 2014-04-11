@@ -353,23 +353,64 @@ class Jaguar(logfileparser.Logfile):
             else:
                 self.scftargets.append([5E-5])
 
-        if line[2:28] == "geometry optimization step":
         # Get Geometry Opt convergence information
+        #
+        #  geometry optimization step  7
+        #  energy:            -382.30219111487 hartrees
+        #  [ turning on trust-radius adjustment ]
+        #  ** restarting optimization from step    6 **
+        #  
+        #  
+        #  Level shifts adjusted to satisfy step-size constraints
+        #   Step size:    0.0360704
+        #   Cos(theta):   0.8789215
+        #   Final level shift:  -8.6176299E-02
+        #  
+        #  energy change:           2.5819E-04 .  (  5.0000E-05 )
+        #  gradient maximum:        5.0947E-03 .  (  4.5000E-04 )
+        #  gradient rms:            1.2996E-03 .  (  3.0000E-04 )
+        #  displacement maximum:    1.3954E-02 .  (  1.8000E-03 )
+        #  displacement rms:        4.6567E-03 .  (  1.2000E-03 )
+        #
+        if line[2:28] == "geometry optimization step":
+
             if not hasattr(self, "geovalues"):
                 self.geovalues = []
                 self.geotargets = numpy.zeros(5, "d")
+
             gopt_step = int(line.split()[-1])
+
             energy = next(inputfile)
-            # quick hack for messages of the sort:
+            blank = next(inputfile)
+
+            # A quick hack for messages that show up right after the energy
+            # at this point, which include:
             #   ** restarting optimization from step    2 **
-            # as found in regression file ptnh3_2_H2O_2_2plus.out
-            if next(inputfile).strip():
+            #   [ turning on trust-radius adjustment ]
+            # as found in regression file ptnh3_2_H2O_2_2plus.out and other logfiles.
+            restarting_from_1 = False
+            while blank.strip():
+                if blank.strip() == "** restarting optimization from step    1 **":
+                    restarting_from_1 = True
                 blank = next(inputfile)
+
+            # One or more blank lines, depending on content.
             line = next(inputfile)
+            while not line.strip():
+                line = next(inputfile)
+
+            # Note that the level shift message is followed by a blank, too.
+            if "Level shifts adjusted" in line:
+                while line.strip():
+                    line = next(inputfile)
+                line = next(inputfile)
+
+            # The first optimization step does not produce an energy change, and
+            # ther is also no energy change when the optimization is restarted
+            # from step 1 (since step 1 had no change).
             values = []
             target_index = 0                
-            if gopt_step == 1:
-                # The first optimization step does not produce an energy change
+            if (gopt_step == 1) or restarting_from_1:
                 values.append(0.0)
                 target_index = 1
             while line.strip():
