@@ -63,6 +63,91 @@ class Jaguar(logfileparser.Logfile):
             self.set_scalar('charge', int(line.split()[-1]))
             self.set_scalar('mult', int(next(inputfile).split()[-1]))
 
+        # The Gaussian basis set information is printed before the geometry, and we need
+        # to do some indexing to get this into cclib format, because fn increments
+        # for each engular momentum, but cclib does not (we have just P instead of
+        # all three X/Y/Z with the same parameters. On the other hand, fn enumerates
+        # the atomic orbitals correctly, so use it to build atombasis.
+        #
+        #  Gaussian basis set information
+        #  
+        #                                                        renorm    mfac*renorm
+        #   atom    fn   prim  L        z            coef         coef         coef
+        # -------- ----- ---- --- -------------  -----------  -----------  -----------
+        # C1           1    1   S  7.161684E+01   1.5433E-01   2.7078E+00   2.7078E+00
+        # C1           1    2   S  1.304510E+01   5.3533E-01   2.6189E+00   2.6189E+00
+        # ...
+        # C1           3    6   X  2.941249E+00   2.2135E-01   1.2153E+00   1.2153E+00
+        #              4        Y                                           1.2153E+00
+        #              5        Z                                           1.2153E+00
+        # C1           2    8   S  2.222899E-01   1.0000E+00   2.3073E-01   2.3073E-01
+        # C1           3    7   X  6.834831E-01   8.6271E-01   7.6421E-01   7.6421E-01
+        # ...
+        # C2           6    1   S  7.161684E+01   1.5433E-01   2.7078E+00   2.7078E+00
+        # ...
+        #
+        if line.strip() == "Gaussian basis set information":
+
+            self.skip_lines(inputfile, ['b', 'renorm', 'header', 'd'])
+
+            # This is probably the only place we can get this information from Jaguar.
+            self.gbasis = []
+
+            atombasis = []
+            line = next(inputfile)
+            fn_per_atom = []
+            while line.strip():
+
+                if len(line.split()) > 3:
+
+                    aname = line.split()[0]
+                    fn = int(line.split()[1])
+                    prim = int(line.split()[2])
+                    L = line.split()[3]
+                    z = float(line.split()[4])
+                    coef = float(line.split()[5])
+
+                    # The primitive count is reset for each atom, so use that for adding
+                    # new elements to atombasis and gbasis. We could also probably do this
+                    # using the atom name, although that perhaps might not always be unique.
+                    if prim == 1:
+                        atombasis.append([])
+                        fn_per_atom = []
+                        self.gbasis.append([])
+
+                    # Remember that fn is repeated when functions are contracted.
+                    if not fn-1 in atombasis[-1]:
+                        atombasis[-1].append(fn-1)
+
+                    # Here we use fn only to know when a new contraction is encountered,
+                    # so we don't need to decrement it, and we don't even use all values.
+                    # What's more, since we only wish to save the parameters for each subshell
+                    # once, we don't even need to consider lines for orbitals other than
+                    # those for X*, making things a bit easier.
+                    if not fn in fn_per_atom:
+                        fn_per_atom.append(fn)
+                        label = {'S': 'S', 'X': 'P', 'XX': 'D', 'XXX': 'F'}[L]
+                        self.gbasis[-1].append((label, []))
+                    igbasis = fn_per_atom.index(fn)
+                    self.gbasis[-1][igbasis][1].append([z, coef])
+
+                else:
+
+                    fn = int(line.split()[0])
+                    L = line.split()[1]
+
+                    # Some AO indices are only printed in these lines, for L > 0.
+                    if not fn-1 in atombasis[-1]:
+                        atombasis[-1].append(fn-1)
+
+                line = next(inputfile)
+
+            # The indices for atombasis can also be read later from the molecualr orbital output.
+            if not hasattr(self, 'atombasis'):
+                self.atombasis = atombasis
+            else:
+                assert self.atombasis == atombasis
+
         if line[2:14] == "new geometry" or line[1:21] == "Symmetrized geometry" or line.find("Input geometry") > 0:
         # Get the atom coordinates
             if not hasattr(self, "atomcoords") or line[1:21] == "Symmetrized geometry":
