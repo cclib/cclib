@@ -34,12 +34,12 @@ test_modules = testall.test_modules
 # The regression test functions defined below should be named according to the path
 # of the logfile, with some characters changed according to normalisefilename().
 
-def testADF_basicADF2004_01_dvb_sp_c_adfout(logfile):
+def testADF_ADF2004_01_dvb_sp_c_adfout(logfile):
     """Had homo[0] as 35, when it should be 34."""
     assert logfile.data.homos[0] == 34
 
 
-def testADF_ADF2004_01_Fe_ox3_final_out_gz(logfile):
+def testADF_ADF2004_01_Fe_ox3_final_out(logfile):
     """Make sure HOMOS are correct."""
     assert logfile.data.homos[0]==59 and logfile.data.homos[1]==54
 
@@ -65,31 +65,31 @@ def testGAMESS_basicPCGAMESS_dvb_td_out(logfile):
     assert len(logfile.data.etoscs) == 5
 
 
-def testGAMESS_GAMESS_US_N2_UMP2_zip(logfile):
+def testGAMESS_GAMESS_US2008_N2_UMP2_out(logfile):
     """Check that the new format for GAMESS MP2 is parsed."""
     assert hasattr(logfile.data, "mpenergies")
     assert len(logfile.data.mpenergies) == 1
     assert abs(logfile.data.mpenergies[0] + 2975.97) < 0.01
 
-def testGAMESS_GAMESS_US_N2_ROMP2_zip(logfile):
+def testGAMESS_GAMESS_US2008_N2_ROMP2_out(logfile):
     """Check that the new format for GAMESS MP2 is parsed."""
     assert hasattr(logfile.data, "mpenergies")
     assert len(logfile.data.mpenergies) == 1
     assert abs(logfile.data.mpenergies[0] + 2975.97) < 0.01    
 
-def testGAMESS_GAMESS_US_open_shell_ccsd_test_log_gz(logfile):
+def testGAMESS_GAMESS_US2009_open_shell_ccsd_test_log(logfile):
     """Parse ccenergies from open shell CCSD calculations."""
     assert hasattr(logfile.data, "ccenergies")
     assert len(logfile.data.ccenergies) == 1
     assert abs(logfile.data.ccenergies[0] + 3501.50) < 0.01
 
-def testGAMESS_GAMESS_US_paulo_h2o_mp2_zip(logfile):
+def testGAMESS_GAMESS_US2009_paulo_h2o_mp2_out(logfile):
     """Check that the new format for GAMESS MP2 is parsed."""
     assert hasattr(logfile.data, "mpenergies")
     assert len(logfile.data.mpenergies) == 1
     assert abs(logfile.data.mpenergies[0] + 2072.13) < 0.01
 
-def testGAMESS_WinGAMESS_dvb_td_trplet_2007_03_24_r1_out_gz(logfile):
+def testGAMESS_WinGAMESS_dvb_td_trplet_2007_03_24_r1_out(logfile):
     """Do some basic checks for this old unit test that was failing.
 
     The unit tests are not run automatically on this old unit logfile,
@@ -104,12 +104,12 @@ def testGAMESS_WinGAMESS_dvb_td_trplet_2007_03_24_r1_out_gz(logfile):
     assert abs(max(logfile.data.etoscs) - 0.0) < 0.01
     assert len(logfile.data.etsecs) == number
 
-def testGaussian_Gaussian09_irc_point_log_bz2(logfile):
+def testGaussian_Gaussian09_irc_point_log(logfile):
     """Failed to parse vibfreqs except for 10, 11"""
     assert hasattr(logfile.data, "vibfreqs")
     assert len(logfile.data.vibfreqs) == 11
 
-def testGaussian_Gaussian09_Dahlgren_TS_zip(logfile):
+def testGaussian_Gaussian09_Dahlgren_TS_log(logfile):
     """Failed to parse ccenergies for a variety of reasons"""
     assert hasattr(logfile.data, "ccenergies")
     assert abs(logfile.data.ccenergies[0] - (-11819.96506609)) < 0.001
@@ -118,10 +118,12 @@ def testGaussian_basicGaussian03_water_ccd_log(logfile):
     """Ensure that ccenergies continues to be parsed correctly"""
     assert hasattr(logfile.data, "ccenergies")
     assert abs(logfile.data.ccenergies[0] - (-2041.32671705)) < 0.001
+
 def testGaussian_basicGaussian03_water_ccsd_log(logfile):
     """Ensure that ccenergies continues to be parsed correctly"""
     assert hasattr(logfile.data, "ccenergies")
     assert abs(logfile.data.ccenergies[0] - (-2041.33503383)) < 0.001
+
 def testGaussian_basicGaussian03_water_ccsd_t__log(logfile):
     """Ensure that ccenergies continues to be parsed correctly"""
     assert hasattr(logfile.data, "ccenergies")
@@ -129,7 +131,7 @@ def testGaussian_basicGaussian03_water_ccsd_t__log(logfile):
 
     ##### ADD TESTS FOR THE OTHERS ######
 
-def testGaussian_Gaussian09_dvb_lowdin_log_gz(logfile):
+def testGaussian_Gaussian09_dvb_lowdin_log(logfile):
     """Check if both Mulliken and Lowdin charges are parsed."""
     assert "mulliken" in logfile.data.atomcharges
     assert "lowdin" in logfile.data.atomcharges
@@ -169,7 +171,7 @@ def testGaussian_basicGaussian09_dvb_gopt_log(logfile):
     assert len(logfile.data.atomnos) == logfile.data.natom == 20
 
 
-def testGaussian_Gaussian98_C_bigmult_log_gz(logfile):
+def testGaussian_Gaussian98_C_bigmult_log(logfile):
     """
     This file failed first becuase it had a double digit multiplicity.
     Then it failed because it had no alpha virtual orbitals.
@@ -179,7 +181,7 @@ def testGaussian_Gaussian98_C_bigmult_log_gz(logfile):
     assert logfile.data.homos[0] == 8
     assert logfile.data.homos[1] == -1 # No occupied beta orbitals
 
-def testGaussian_Gaussian98_water_zmatrix_nosym_log_gz(logfile):
+def testGaussian_Gaussian98_water_zmatrix_nosym_log(logfile):
     """This file is missing natom.
 
     This file had no atomcoords as it did not contain either an
@@ -190,22 +192,22 @@ def testGaussian_Gaussian98_water_zmatrix_nosym_log_gz(logfile):
     assert logfile.data.natom == 3
 
 
-def testGaussian_Gaussian03_AM1_SP_out_gz(logfile):
+def testGaussian_Gaussian03_AM1_SP_out(logfile):
     """Previously, caused scfvalue parsing to fail."""
     assert len(logfile.data.scfvalues[0])==12
 
-def testGaussian_Gaussian03_anthracene_log_gz(logfile):
+def testGaussian_Gaussian03_anthracene_log(logfile):
     """This file exposed a bug in extracting the vibsyms."""
     assert len(logfile.data.vibsyms) == len(logfile.data.vibfreqs)
 
-def testGaussian_Gaussian03_chn1_log_gz(logfile):
+def testGaussian_Gaussian03_chn1_log(logfile):
     """
     This file failed to parse, due to the use of 'pop=regular'.
     We have decided that mocoeffs should not be defined for such calculations.
     """
     assert not hasattr(logfile.data, "mocoeffs")
 
-def testGaussian_Gaussian03_cyclopropenyl_rhf_g03_cut_log_bz2(logfile):
+def testGaussian_Gaussian03_cyclopropenyl_rhf_g03_cut_log(logfile):
     """
     Not using symmetry at all (option nosymm) means standard orientation
     is not printed. In this case inputcoords are copied by the parser,
@@ -213,7 +215,7 @@ def testGaussian_Gaussian03_cyclopropenyl_rhf_g03_cut_log_bz2(logfile):
     """
     assert len(logfile.data.atomcoords)==len(logfile.data.geovalues)
 
-def testGaussian_Gaussian03_DCV4T_C60_start_zip(logfile):
+def testGaussian_Gaussian03_DCV4T_C60_log(logfile):
     """This is a test for a very large Gaussian file with > 99 atoms.
 
     The log file is too big, so we are just including the start.
@@ -222,7 +224,7 @@ def testGaussian_Gaussian03_DCV4T_C60_start_zip(logfile):
     assert len(logfile.data.coreelectrons) == 102
     assert logfile.data.coreelectrons[101] == 2
 
-def testGaussian_Gaussian03_dvb_gopt_symmfollow_log_bz2(logfile):
+def testGaussian_Gaussian03_dvb_gopt_symmfollow_log(logfile):
     """Non-standard treatment of symmetry.
 
     In this case the Standard orientation is also printed non-standard,
@@ -230,7 +232,7 @@ def testGaussian_Gaussian03_dvb_gopt_symmfollow_log_bz2(logfile):
     """
     assert len(logfile.data.atomcoords) == len(logfile.data.geovalues)
 
-def testGaussian_Gaussian03_mendes_zip(logfile):
+def testGaussian_Gaussian03_mendes_out(logfile):
     """Previously, failed to extract coreelectrons."""
     centers = [9, 10, 11, 27]
     for i, x in enumerate(logfile.data.coreelectrons):
@@ -239,14 +241,14 @@ def testGaussian_Gaussian03_mendes_zip(logfile):
         else:
             assert x == 0
 
-def testGaussian_Gaussian03_Mo4OSibdt2_opt_log_bz2(logfile):
+def testGaussian_Gaussian03_Mo4OSibdt2_opt_log(logfile):
     """
     This file had no atomcoords as it did not contain any
     "Input orientation" sections, only "Standard orientation".
     """
     assert hasattr(logfile.data, "atomcoords")
 
-def testGaussian_Gaussian03_orbgs_log_bz2(logfile):
+def testGaussian_Gaussian03_orbgs_log(logfile):
     """Check that the pseudopotential is being parsed correctly."""
     assert hasattr(logfile.data, "coreelectrons"), "Missing coreelectrons"
     assert logfile.data.coreelectrons[0] == 28
@@ -255,7 +257,7 @@ def testGaussian_Gaussian03_orbgs_log_bz2(logfile):
     assert logfile.data.coreelectrons[23] == 10
 
 
-def testGaussian_Gaussian09_25DMF_HRANH_zip(logfile):
+def testGaussian_Gaussian09_25DMF_HRANH_log(logfile):
     """Check that the anharmonicities are being parsed correctly."""
     assert hasattr(logfile.data, "vibanharms"), "Missing vibanharms"
     anharms = logfile.data.vibanharms
@@ -264,27 +266,27 @@ def testGaussian_Gaussian09_25DMF_HRANH_zip(logfile):
     assert abs(anharms[0][0] + 43.341) < 0.01
     assert abs(anharms[N-1][N-1] + 36.481) < 0.01 
     
-def testGaussian_Gaussian09_534_out_zip(logfile):
+def testGaussian_Gaussian09_534_out(logfile):
     """Previously, caused etenergies parsing to fail."""
     assert logfile.data.etsyms[0] == "Singlet-?Sym"
     assert logfile.data.etenergies[0] == 20920.55328
 
-def testGaussian_Gaussian09_OPT_td_g09_zip(logfile):
+def testGaussian_Gaussian09_OPT_td_g09_out(logfile):
     """Couldn't find etrotats as G09 has different output than G03."""
     assert len(logfile.data.etrotats) == 10
     assert logfile.data.etrotats[0] == -0.4568
 
-def testGaussian_Gaussian09_OPT_td_zip(logfile):
+def testGaussian_Gaussian09_OPT_td_out(logfile):
     """Working fine - adding to ensure that CD is parsed correctly."""
     assert len(logfile.data.etrotats) == 10
     assert logfile.data.etrotats[0] == -0.4568
 
-def testGaussian_Gaussian09_Ru2bpyen2_H2_freq3_log_bz2(logfile):
+def testGaussian_Gaussian09_Ru2bpyen2_H2_freq3_log(logfile):
     """Here atomnos wans't added to the gaussian parser before."""
     assert len(logfile.data.atomnos) == 69
 
 
-def testORCA_ORCA2_8_co_cosmo_out_gz(logfile):
+def testORCA_ORCA2_8_co_cosmo_out(logfile):
     """This is related to bug 3184890.
 
     The scfenergies were not being parsed correctly for this geometry
@@ -300,7 +302,7 @@ def testORCA_ORCA2_8_co_cosmo_out_gz(logfile):
     assert hasattr(logfile.data, "scfenergies") and len(logfile.data.scfenergies) == 4
 
 
-def testORCA_ORCA2_9_job_out_gz(logfile):
+def testORCA_ORCA2_9_job_out(logfile):
     """First output file and request to parse atomic spin densities.
 
     Make sure that the sum of such densities is one in this case (or reasonaby close),
@@ -312,7 +314,7 @@ def testORCA_ORCA2_9_job_out_gz(logfile):
 # These regression tests are for logfiles that are not to be parsed
 # for some reason, and the function should start with 'testnoparse'.
 
-def testnoparseGaussian_Gaussian09_coeffs_zip(filename):
+def testnoparseGaussian_Gaussian09_coeffs_log(filename):
     """This is a test for a Gaussian file with more than 999 basis functions.
 
     The log file is too big, so we are just including a section. Before
@@ -444,7 +446,7 @@ def main(which=[], traceback=False):
             # correctly parsed (for fragments, for example), and these test need
             # to be additionaly prepended with 'testnoparse'.
             test_this = test_noparse = False
-            fname_norm = normalisefilename("_".join(fname.split(os.sep)[2:]))
+            fname_norm = normalisefilename("_".join(fname.split(os.sep)[3:]))
 
             funcname = "test" + fname_norm
             test_this = funcname in globals()
