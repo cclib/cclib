@@ -321,15 +321,15 @@ def testnoparseGaussian_Gaussian09_coeffs_log(filename):
     parsing, we set some attributes of the parser so that it all goes smoothly.
     """
 
-    d = Gaussian(filename)
-    d.logger.setLevel(logging.ERROR)
-    d.nmo = 5
-    d.nbasis  = 1128
+    parser = Gaussian(filename)
+    parser.logger.setLevel(logging.ERROR)
+    parser.nmo = 5
+    parser.nbasis  = 1128
     
-    logfile = d.parse()
-    assert logfile.data.mocoeffs[0].shape == (5, 1128)
-    assert logfile.data.aonames[-1] == "Ga71_19D-2"
-    assert logfile.data.aonames[0] == "Mn1_1S"
+    data = parser.parse()
+    assert data.mocoeffs[0].shape == (5, 1128)
+    assert data.aonames[-1] == "Ga71_19D-2"
+    assert data.aonames[0] == "Mn1_1S"
 
 
 def flatten(seq):
@@ -494,7 +494,7 @@ def main(which=[], traceback=False):
                         failures += 1
             else:
                 try:
-                    eval(funcname_noparse)(filename)
+                    eval(funcname_noparse)(fname)
                 except AssertionError:
                     print("test failed")
                     failures += 1
