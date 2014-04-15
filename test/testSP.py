@@ -150,7 +150,10 @@ class GamessUKSPTest(GenericSPTest):
 class GamessUSSPTest(GenericSPTest):
     """GAMESS-US restricted single point unittest."""
 
-    old_tests = ["GAMESS/GAMESS-US/dvb_sp_2006.02.22.r2.out.gz"]
+    old_tests = [
+        "GAMESS/GAMESS-US2006/dvb_sp_2006.02.22.r2.out",
+        "GAMESS/GAMESS-US2010/dvb_sp.log"
+    ]
 
 
 class GaussianSPTest(GenericSPTest):

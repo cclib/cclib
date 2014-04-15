@@ -79,7 +79,10 @@ class GAMESSUSTDDFTTest(GenericTDTest):
 
     number = 10
 
-    old_tests = ["GAMESS/WinGAMESS/dvb_td_2007.03.24.r1.out.gz"]
+    old_tests = [
+        "GAMESS/WinGAMESS/dvb_td_2007.03.24.r1.out",
+        "GAMESS/GAMESS-US2010/dvb_td.log"
+    ]
 
 
 class PCGamessTDDFTTest(GenericTDTest):
