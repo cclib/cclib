@@ -36,31 +36,13 @@ import testall
 # that the function name corresponds to the path of the logfile, with some characters
 # changed according to normalisefilename().
 
+# ADF #
+
 def testADF_ADF2004_01_Fe_ox3_final_out(logfile):
     """Make sure HOMOS are correct."""
     assert logfile.data.homos[0]==59 and logfile.data.homos[1]==54
 
-
-def testGAMESS_basicGAMESS_US_water_ccd_out(logfile):
-    """Keep parsing ccenergies correctly."""
-    assert len(logfile.data.ccenergies) == 1
-    assert abs(logfile.data.ccenergies[0] + 2074.22) < 0.01
-
-def testGAMESS_basicGAMESS_US_water_ccsd_out(logfile):
-    """Keep parsing ccenergies correctly"""
-    assert len(logfile.data.ccenergies) == 1
-    assert abs(logfile.data.ccenergies[0] + 2074.24) < 0.01
-
-def testGAMESS_basicGAMESS_US_water_ccsd_t__out(logfile):
-    """Keep parsing ccenergies correctly."""
-    assert len(logfile.data.ccenergies) == 1
-    assert abs(logfile.data.ccenergies[0] + 2074.32) < 0.01
-
-
-def testGAMESS_basicPCGAMESS_dvb_td_out(logfile):
-    """Previously, etoscs was not extracted for this TD DFT calculation."""
-    assert len(logfile.data.etoscs) == 5
-
+# GAMESS #
 
 def testGAMESS_GAMESS_US2008_N2_UMP2_out(logfile):
     """Check that the new format for GAMESS MP2 is parsed."""
@@ -101,58 +83,19 @@ def testGAMESS_WinGAMESS_dvb_td_trplet_2007_03_24_r1_out(logfile):
     assert abs(max(logfile.data.etoscs) - 0.0) < 0.01
     assert len(logfile.data.etsecs) == number
 
-def testGaussian_Gaussian09_irc_point_log(logfile):
-    """Failed to parse vibfreqs except for 10, 11"""
-    assert hasattr(logfile.data, "vibfreqs")
-    assert len(logfile.data.vibfreqs) == 11
+# Gaussian #
 
-def testGaussian_Gaussian09_Dahlgren_TS_log(logfile):
-    """Failed to parse ccenergies for a variety of reasons"""
-    assert hasattr(logfile.data, "ccenergies")
-    assert abs(logfile.data.ccenergies[0] - (-11819.96506609)) < 0.001
-
-def testGaussian_basicGaussian03_water_ccd_log(logfile):
-    """Ensure that ccenergies continues to be parsed correctly"""
-    assert hasattr(logfile.data, "ccenergies")
-    assert abs(logfile.data.ccenergies[0] - (-2041.32671705)) < 0.001
-
-def testGaussian_basicGaussian03_water_ccsd_log(logfile):
-    """Ensure that ccenergies continues to be parsed correctly"""
-    assert hasattr(logfile.data, "ccenergies")
-    assert abs(logfile.data.ccenergies[0] - (-2041.33503383)) < 0.001
-
-def testGaussian_basicGaussian03_water_ccsd_t__log(logfile):
-    """Ensure that ccenergies continues to be parsed correctly"""
-    assert hasattr(logfile.data, "ccenergies")
-    assert abs(logfile.data.ccenergies[0] - (-2041.3371232)) < 0.001
-
-    ##### ADD TESTS FOR THE OTHERS ######
-
-def testGaussian_Gaussian09_dvb_lowdin_log(logfile):
-    """Check if both Mulliken and Lowdin charges are parsed."""
-    assert "mulliken" in logfile.data.atomcharges
-    assert "lowdin" in logfile.data.atomcharges
-
-def testGaussian_basicGaussian03_dvb_gopt_out(logfile):
-    """Example regression test for Gaussian/basicGaussian03/dvb_gopt.out
-
-    Note: the name of the test must match the full path to the datafile
-    exactly, except that all periods, hyphens, path separators and
-    parentheses, which should be2 replaced by underscores.
-    """
-    assert len(logfile.data.homos)==1
-
+# KML: these functions are not called currently. We probably want to do these checks
+# simply as part of the appropriate unit tests.
 def testGaussian_basicGaussian09_dvb_raman_log(logfile):
     """Was not extracting vibdisps"""
     assert hasattr(logfile.data, "vibdisps")
     assert len(logfile.data.vibdisps) == 54
-
 def testGaussian_basicGaussian03_dvb_raman_out(logfile):
     """Was extracting the "Depolar P" instead of the "Raman activity". Oops!"""
     assert logfile.data.vibramans[1] - 2.6872 < 0.0001
     assert hasattr(logfile.data, "vibdisps")
     assert len(logfile.data.vibdisps) == 54
-
 def testGaussian_basicGaussian03_dvb_un_sp_out(logfile):
     """
     This file had no atomcoords at all at all, due to only having an
@@ -160,13 +103,6 @@ def testGaussian_basicGaussian03_dvb_un_sp_out(logfile):
     """
     assert len(logfile.data.atomnos) == 20
     assert logfile.data.atomcoords.shape == (1, 20, 3)
-
-
-def testGaussian_basicGaussian09_dvb_gopt_log(logfile):
-    """Check that the atomnos is being parsed correctly."""
-    assert hasattr(logfile.data, "atomnos"), "Missing atomnos"
-    assert len(logfile.data.atomnos) == logfile.data.natom == 20
-
 
 def testGaussian_Gaussian98_C_bigmult_log(logfile):
     """
@@ -187,7 +123,6 @@ def testGaussian_Gaussian98_water_zmatrix_nosym_log(logfile):
     """
     assert len(logfile.data.atomcoords)==1
     assert logfile.data.natom == 3
-
 
 def testGaussian_Gaussian03_AM1_SP_out(logfile):
     """Previously, caused scfvalue parsing to fail."""
@@ -253,7 +188,6 @@ def testGaussian_Gaussian03_orbgs_log(logfile):
     assert logfile.data.coreelectrons[20] == 10
     assert logfile.data.coreelectrons[23] == 10
 
-
 def testGaussian_Gaussian09_25DMF_HRANH_log(logfile):
     """Check that the anharmonicities are being parsed correctly."""
     assert hasattr(logfile.data, "vibanharms"), "Missing vibanharms"
@@ -267,6 +201,21 @@ def testGaussian_Gaussian09_534_out(logfile):
     """Previously, caused etenergies parsing to fail."""
     assert logfile.data.etsyms[0] == "Singlet-?Sym"
     assert logfile.data.etenergies[0] == 20920.55328
+
+def testGaussian_Gaussian09_dvb_lowdin_log(logfile):
+    """Check if both Mulliken and Lowdin charges are parsed."""
+    assert "mulliken" in logfile.data.atomcharges
+    assert "lowdin" in logfile.data.atomcharges
+
+def testGaussian_Gaussian09_Dahlgren_TS_log(logfile):
+    """Failed to parse ccenergies for a variety of reasons"""
+    assert hasattr(logfile.data, "ccenergies")
+    assert abs(logfile.data.ccenergies[0] - (-11819.96506609)) < 0.001
+
+def testGaussian_Gaussian09_irc_point_log(logfile):
+    """Failed to parse vibfreqs except for 10, 11"""
+    assert hasattr(logfile.data, "vibfreqs")
+    assert len(logfile.data.vibfreqs) == 11
 
 def testGaussian_Gaussian09_OPT_td_g09_out(logfile):
     """Couldn't find etrotats as G09 has different output than G03."""
@@ -282,6 +231,7 @@ def testGaussian_Gaussian09_Ru2bpyen2_H2_freq3_log(logfile):
     """Here atomnos wans't added to the gaussian parser before."""
     assert len(logfile.data.atomnos) == 69
 
+# ORCA #
 
 def testORCA_ORCA2_8_co_cosmo_out(logfile):
     """This is related to bug 3184890.
@@ -297,7 +247,6 @@ def testORCA_ORCA2_8_co_cosmo_out(logfile):
     and the number of values in scfenergies preserved.
     """
     assert hasattr(logfile.data, "scfenergies") and len(logfile.data.scfenergies) == 4
-
 
 def testORCA_ORCA2_9_job_out(logfile):
     """First output file and request to parse atomic spin densities.
@@ -383,13 +332,52 @@ for m, module in test_modules.items():
 class ADFSPTest_nosyms(test_modules['SP'].ADFSPTest):
     def testsymlabels(self):
         """Symmetry labels were not printed here. PASS"""
-        pass
 
 class ADFSPTest_nosyms_valence(ADFSPTest_nosyms):
     def testlengthmoenergies(self):
         """Only valence orbital energies were printed here."""
         self.assertEquals(len(self.data.moenergies[0]), 45)
         self.assertEquals(self.data.moenergies[0][0], 99999.0)
+
+class GAMESSUSSPunTest_charge0(GamessUSSPunTest):
+    def testcharge_and_mult(self):
+        """The charge in the input was wrong."""
+        self.assertEquals(self.data.charge, 0)
+    def testhomos(self):
+        """HOMOs were incorrect due to charge being wrong. PASS"""
+
+class GAMESSUSIRTest_ts(GamessUSIRTest):
+    def testirintens(self):
+        """This is a transition state with different intensities. PASS"""
+
+class GAMESSUSCISTest_dets(GAMESSUSCISTest):
+    nstates = 10
+    def testetsecsvalues(self):
+        """This gives unexpected coeficcients, also for current unit tests. PASSS"""
+
+class JaguarGeoOptTest_nmo45(JaguarGeoOptTest):
+    def testlengthmoenergies(self):
+        """Without special options, Jaguar only print Homo+10 orbital energies."""
+        self.assertEquals(len(self.data.moenergies[0]), 45)
+
+class OrcaSPunTest_charge0(OrcaSPunTest):
+    def testcharge_and_mult(self):
+        """The charge in the input was wrong."""
+        self.assertEquals(self.data.charge, 0)
+    def testhomos(self):
+        """HOMOs were incorrect due to charge being wrong. PASS"""
+
+class OrcaTDDFTTest_error(OrcaTDDFTTest):
+    def testoscs(self):
+        """These values used to be less accurate, probably due to wrong coordinates."""
+        self.assertEqual(len(self.data.etoscs), self.number)
+        self.assertInside(max(self.data.etoscs), 1.0, 0.2)
+
+class OrcaIRTest_old(OrcaIRTest):
+    def testfreqval(self):
+        """These values were wrong due to wrong input coordinates. PASS"""
+    def testirintens(self):
+        """These values were wrong due to wrong input coordinates. PASS"""
 
 old_unittests = {
 
@@ -409,7 +397,7 @@ old_unittests = {
     "GAMESS/GAMESS-US2005/water_ccd_2005.06.27.r3.out":         GAMESSUSCCDTest,
     "GAMESS/GAMESS-US2005/water_ccsd_2005.06.27.r3.out":        GAMESSUSCCSDTest,
     "GAMESS/GAMESS-US2005/water_ccsd(t)_2005.06.27.r3.out":     GAMESSUSCCSDTTest,
-    "GAMESS/GAMESS-US2005/water_cis_dets_2005.06.27.r3.out":    GAMESSUSCISTest,
+    "GAMESS/GAMESS-US2005/water_cis_dets_2005.06.27.r3.out":    GAMESSUSCISTest_dets,
     "GAMESS/GAMESS-US2005/water_cis_saps_2005.06.27.r3.out":    GAMESSUSCISTest,
     "GAMESS/GAMESS-US2005/MoOCl4-sp_2005.06.27.r3.out":         GAMESSUSCoreTest,
     "GAMESS/GAMESS-US2005/water_mp2_2005.06.27.r3.out":         GAMESSUSMP2Test,
@@ -419,28 +407,28 @@ old_unittests = {
     "GAMESS/GAMESS-US2006/dvb_sp_2006.02.22.r2.out":        GamessUSSPTest,
     "GAMESS/GAMESS-US2006/dvb_un_sp_2006.02.22.r2.out":     GamessUSSPunTest,
     "GAMESS/GAMESS-US2006/dvb_ir.2006.02.22.r2.out":        GamessUSIRTest,
-    "GAMESS/GAMESS-US2006/nh3_ts_ir.2006.2.22.r2.out":      GamessUSIRTest,
+    "GAMESS/GAMESS-US2006/nh3_ts_ir.2006.2.22.r2.out":      GAMESSUSIRTest_ts,
 
     "GAMESS/GAMESS-US2010/dvb_gopt.log":    GamessUSGeoOptTest,
     "GAMESS/GAMESS-US2010/dvb_sp.log":      GamessUSSPTest,
-    "GAMESS/GAMESS-US2010/dvb_sp_un.log":   GamessUSSPunTest,
+    "GAMESS/GAMESS-US2010/dvb_sp_un.log":   GAMESSUSSPunTest_charge0,
     "GAMESS/GAMESS-US2010/dvb_td.log":      GAMESSUSTDDFTTest,
     "GAMESS/GAMESS-US2010/dvb_ir.log":      GamessUSIRTest,
 
     "GAMESS/WinGAMESS/dvb_td_2007.03.24.r1.out":    GAMESSUSTDDFTTest,
 
-    "Jaguar/Jaguar4.2/dvb_gopt.out":    JaguarGeoOptTest,
+    "Jaguar/Jaguar4.2/dvb_gopt.out":    JaguarGeoOptTest_nmo45,
     "Jaguar/Jaguar4.2/dvb_gopt_b.out":  JaguarGeoOptTest,
     "Jaguar/Jaguar4.2/dvb_sp.out":      JaguarSPTest,
     "Jaguar/Jaguar4.2/dvb_sp_b.out":    JaguarSPTest,
     "Jaguar/Jaguar4.2/dvb_un_sp.out":   JaguarSPunTest,
     "Jaguar/Jaguar4.2/dvb_ir.out":      JaguarIRTest,
 
-    "Jaguar/Jaguar6.0/dvb_gopt.out":    JaguarGeoOptTest,
+    "Jaguar/Jaguar6.0/dvb_gopt.out":    JaguarGeoOptTest_nmo45,
     "Jaguar/Jaguar6.0/dvb_sp.out":      JaguarSPTest,
     "Jaguar/Jaguar6.0/dvb_un_sp.out" :  JaguarSPunTest,
 
-    "Jaguar/Jaguar6.5/dvb_gopt.out":    JaguarGeoOptTest,
+    "Jaguar/Jaguar6.5/dvb_gopt.out":    JaguarGeoOptTest_nmo45,
     "Jaguar/Jaguar6.5/dvb_sp.out":      JaguarSPTest,
     "Jaguar/Jaguar6.5/dvb_un_sp.out":   JaguarSPunTest,
     "Jaguar/Jaguar6.5/dvb_ir.out":      JaguarIRTest,
@@ -450,14 +438,14 @@ old_unittests = {
     "ORCA/ORCA2.6/dvb_gopt.out":    OrcaGeoOptTest,
     "ORCA/ORCA2.6/dvb_sp.out":      OrcaSPTest,
     "ORCA/ORCA2.6/dvb_sp_un.out":   OrcaSPunTest,
-    "ORCA/ORCA2.6/dvb_td.out":      OrcaTDDFTTest,
+    "ORCA/ORCA2.6/dvb_td.out":      OrcaTDDFTTest_error,
     "ORCA/ORCA2.6/dvb_ir.out":      OrcaIRTest,
 
     "ORCA/ORCA2.8/dvb_gopt.out":    OrcaGeoOptTest,
     "ORCA/ORCA2.8/dvb_sp.out":      OrcaSPTest,
-    "ORCA/ORCA2.8/dvb_sp_un.out":   OrcaSPunTest,
+    "ORCA/ORCA2.8/dvb_sp_un.out":   OrcaSPunTest_charge0,
     "ORCA/ORCA2.8/dvb_td.out":      OrcaTDDFTTest,
-    "ORCA/ORCA2.8/dvb_ir.out":      OrcaIRTest,
+    "ORCA/ORCA2.8/dvb_ir.out":      OrcaIRTest_old,
 }
 
 def make_regression_from_old_unittest(test_class):
