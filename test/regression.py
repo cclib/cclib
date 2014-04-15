@@ -397,19 +397,25 @@ def main(which=[], traceback=False):
         print("Run regression_download.sh in the ../data directory to update.")
         sys.exit(1)
 
-    # Print a warning if you haven't downloaded all of the regression test files,
-    # or an error if not all of the regression test files are included in filenames.
+    # This file should contain the paths to all regresssion test files we have gathered
+    # over the years. It is not really necessary, since we can discover them on the disk,
+    # but we keep it as a legacy and a way to track double check the regression tests.
     regfile = open(os.path.join("..", "data", "regressionfiles.txt"), "r")
     regfilenames = [os.sep.join(x.strip().split("/")) for x in regfile.readlines()]
     regfile.close()
 
-    missing = []
+    # We will want to print a warning if you haven't downloaded all of the regression
+    # test files, or when, vice versa, not all of the regression test files found on disk
+    # are included in filenames. However, gather that data here and print the warnings
+    # at the end so that we test all available files and the messages are displayed
+    # prominently at the end.
+    missing_on_disk = []
+    missing_in_list = []
     for x in regfilenames:
         if not os.path.isfile(os.path.join("..", "data", "regression", x)):
-            missing.append(x)
+            missing_on_disk.append(x)
         elif os.path.join("..", "data", "regression", x) not in flatten(filenames):
-            print("\nERROR: The regression file %s is on disk, but not in the 'filenames' list.\n" % x)
-            sys.exit(1)       
+            missing_in_list.append(x)
 
     # When a unit test is removed or replaced by a newer version, the old logfile
     # typically becomes a regression, and normally we still want to run the unit test
@@ -510,13 +516,18 @@ def main(which=[], traceback=False):
     if not traceback and failures + errors > 0:
         print("\nFor more information on failures/errors, add 'traceback' as argument.")
 
-    # Show this warning at the end, so that it's easy to notice.
-    if len(missing) > 0:
-        print("\nWARNING: You are missing %d regression file(s)." % len(missing))
+    # Show these warnings at the end, so that they're easy to notice. Notice that the lists
+    # were populated at the beginning of this function.
+    if len(missing_on_disk) > 0:
+        print("\nWARNING: You are missing %d regression file(s)." % len(missing_on_disk))
         print("Run regression_download.sh in the ../data directory to update.")
         print("Missing files:")
-        print("\n".join(missing))
-
+        print("\n".join(missing_on_disk))
+    if len(missing_in_list) > 0:
+        print("\nWARNING: The list in 'regressionfiles.txt' is missing %d file(s)." % len(missing_in_list))
+        print("Add these files paths to the list and commit the change.")
+        print("Missing files:")
+        print("\n".join(missing_in_list))
 
 if __name__=="__main__":
 
