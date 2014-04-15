@@ -76,12 +76,6 @@ class GamessUKIRTest(GenericIRTest):
 class GamessUSIRTest(GenericIRTest):
     """GAMESS-US vibrational frequency unittest."""
 
-    old_tests = [
-        "GAMESS/GAMESS-US2006/dvb_ir.2006.02.22.r2.out",
-        "GAMESS/GAMESS-US2006/nh3_ts_ir.2006.2.22.r2.out",
-        "GAMESS/GAMESS-US2010/dvb_ir.log",
-    ]
-
 
 class GaussianIRTest(GenericIRTest):
     """Gaussian vibrational frequency unittest."""

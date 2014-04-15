@@ -112,11 +112,6 @@ class GenericCISWaterTest(GenericCISTest):
 class GAMESSUSCISTest(GenericCISWaterTest):
     """GAMESS-US CIS(RHF)/STO-3G water unittest."""
 
-    old_tests = [
-        "GAMESS/GAMESS-US2005/water_cis_dets_2005.06.27.r3.out",
-        "GAMESS/GAMESS-US2005/water_cis_saps_2005.06.27.r3.out",
-    ]
-
     nstates = 5
         
     def testnocoeffs(self):

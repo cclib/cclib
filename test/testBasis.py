@@ -79,7 +79,6 @@ class GamessUSBasisTest(GenericBasisTest):
 class GamessUSBigBasisTest(GenericBigBasisTest):
     """GAMESS-US big basis set unittest."""
 
-    old_tests = ["GAMESS/GAMESS-US2006/C_bigbasis_2006.02.22.r3.out"]
 
 class GaussianBasisTest(GenericBasisTest):
     """Gaussian basis set unittest."""

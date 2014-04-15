@@ -17,6 +17,7 @@ To run the doctest, just use "python regression.py test".
 from __future__ import print_function
 import os
 import sys
+import importlib
 import inspect
 import logging
 import unittest
@@ -28,16 +29,12 @@ from cclib.parser import ccopen
 from cclib.parser import ADF, GAMESS, GAMESSUK, Gaussian, Jaguar, Molpro, ORCA
 
 import testall
-parsers = testall.parsers
-test_modules = testall.test_modules
 
-# The regression test functions defined below should be named according to the path
-# of the logfile, with some characters changed according to normalisefilename().
 
-def testADF_ADF2004_01_dvb_sp_c_adfout(logfile):
-    """Had homo[0] as 35, when it should be 34."""
-    assert logfile.data.homos[0] == 34
-
+# The following regression test functions were manually written, because they
+# contain custom checks that were determined on a per-file basis. Care needs to be taken
+# that the function name corresponds to the path of the logfile, with some characters
+# changed according to normalisefilename().
 
 def testADF_ADF2004_01_Fe_ox3_final_out(logfile):
     """Make sure HOMOS are correct."""
@@ -350,7 +347,7 @@ def normalisefilename(filename):
 
     >>> import regression
     >>> for x in [ "Gaussian_Gaussian03_Mo4OSibdt2-opt.log" ]:
-    ...     print regression.normalisefilename(x)
+    ...     print(regression.normalisefilename(x))
     ...
     Gaussian_Gaussian03_Mo4OSibdt2_opt_log
     """
@@ -364,15 +361,98 @@ def normalisefilename(filename):
     return "".join(ans)
 
 
-def make_regression_from_old_unittest(filename, module_name, test_name):
-    """Return a regression test function from an old unit test logfile.
+# When a unit test is removed or replaced by a newer version, we normally want
+# the old logfile to become a regression, namely to run the unit test as part of
+# the regression suite. To this end, add the logfile path to the dictionary
+# below along with the appropriate unit test class to use, and the appropriate
+# regression test function will be created automatically. If modifications
+# are necessary due to developments in the unit test class, tweak it here
+# and provide the modified version of the test class.
 
-    When using this, take precaution to ensure that test_name is
-    a valid unit test class within module_name.
-    """
+# We're going to need to import all of the unit test modules.
+test_modules = { m : importlib.import_module('test'+m) for m in testall.test_modules }
+
+# Although there is probably a cleaner way to do this, making the unit class test names
+# global makes reading the dictionary of old unit tests much easier, especially it
+# will contain some classes defined here.
+for m, module in test_modules.items():
+    for name in dir(module):
+        if name[-4:] == "Test":
+            globals()[name] = getattr(module, name)
+
+old_unittests = {
+
+    "ADF/ADF2004.01/MoOCl4-sp.adfout":      ADFCoreTest,
+    "ADF/ADF2004.01/dvb_gopt.adfout":       ADFGeoOptTest,
+    "ADF/ADF2004.01/dvb_gopt_b.adfout":     ADFGeoOptTest,
+    "ADF/ADF2004.01/dvb_sp.adfout":         ADFSPTest,
+    "ADF/ADF2004.01/dvb_sp_b.adfout":       ADFSPTest,
+    "ADF/ADF2004.01/dvb_sp_c.adfout":       ADFSPTest,
+    "ADF/ADF2004.01/dvb_sp_d.adfout":       ADFSPTest,
+    "ADF/ADF2004.01/dvb_un_sp.adfout":      ADFSPunTest,
+    "ADF/ADF2004.01/dvb_un_sp_c.adfout":    ADFSPunTest,
+    "ADF/ADF2004.01/dvb_ir.adfout":         ADFIRTest,
+
+    "ADF/ADF2006.01/dvb_gopt.adfout":       ADFGeoOptTest,
+
+    "GAMESS/GAMESS-US2005/water_ccd_2005.06.27.r3.out":         GAMESSUSCCDTest,
+    "GAMESS/GAMESS-US2005/water_ccsd_2005.06.27.r3.out":        GAMESSUSCCSDTest,
+    "GAMESS/GAMESS-US2005/water_ccsd(t)_2005.06.27.r3.out":     GAMESSUSCCSDTTest,
+    "GAMESS/GAMESS-US2005/water_cis_dets_2005.06.27.r3.out":    GAMESSUSCISTest,
+    "GAMESS/GAMESS-US2005/water_cis_saps_2005.06.27.r3.out":    GAMESSUSCISTest,
+    "GAMESS/GAMESS-US2005/MoOCl4-sp_2005.06.27.r3.out":         GAMESSUSCoreTest,
+    "GAMESS/GAMESS-US2005/water_mp2_2005.06.27.r3.out":         GAMESSUSMP2Test,
+
+    "GAMESS/GAMESS-US2006/C_bigbasis_2006.02.22.r3.out":    GamessUSBigBasisTest,
+    "GAMESS/GAMESS-US2006/dvb_gopt_a_2006.02.22.r2.out":    GamessUSGeoOptTest,
+    "GAMESS/GAMESS-US2006/dvb_sp_2006.02.22.r2.out":        GamessUSSPTest,
+    "GAMESS/GAMESS-US2006/dvb_un_sp_2006.02.22.r2.out":     GamessUSSPunTest,
+    "GAMESS/GAMESS-US2006/dvb_ir.2006.02.22.r2.out":        GamessUSIRTest,
+    "GAMESS/GAMESS-US2006/nh3_ts_ir.2006.2.22.r2.out":      GamessUSIRTest,
+
+    "GAMESS/GAMESS-US2010/dvb_gopt.log":    GamessUSGeoOptTest,
+    "GAMESS/GAMESS-US2010/dvb_sp.log":      GamessUSSPTest,
+    "GAMESS/GAMESS-US2010/dvb_sp_un.log":   GamessUSSPunTest,
+    "GAMESS/GAMESS-US2010/dvb_td.log":      GAMESSUSTDDFTTest,
+    "GAMESS/GAMESS-US2010/dvb_ir.log":      GamessUSIRTest,
+
+    "GAMESS/WinGAMESS/dvb_td_2007.03.24.r1.out":    GAMESSUSTDDFTTest,
+
+    "Jaguar/Jaguar4.2/dvb_gopt.out":    JaguarGeoOptTest,
+    "Jaguar/Jaguar4.2/dvb_gopt_b.out":  JaguarGeoOptTest,
+    "Jaguar/Jaguar4.2/dvb_sp.out":      JaguarSPTest,
+    "Jaguar/Jaguar4.2/dvb_sp_b.out":    JaguarSPTest,
+    "Jaguar/Jaguar4.2/dvb_un_sp.out":   JaguarSPunTest,
+    "Jaguar/Jaguar4.2/dvb_ir.out":      JaguarIRTest,
+
+    "Jaguar/Jaguar6.0/dvb_gopt.out":    JaguarGeoOptTest,
+    "Jaguar/Jaguar6.0/dvb_sp.out":      JaguarSPTest,
+    "Jaguar/Jaguar6.0/dvb_un_sp.out" :  JaguarSPunTest,
+
+    "Jaguar/Jaguar6.5/dvb_gopt.out":    JaguarGeoOptTest,
+    "Jaguar/Jaguar6.5/dvb_sp.out":      JaguarSPTest,
+    "Jaguar/Jaguar6.5/dvb_un_sp.out":   JaguarSPunTest,
+    "Jaguar/Jaguar6.5/dvb_ir.out":      JaguarIRTest,
+
+    "Molpro/Molpro2006/C_bigbasis_cart.out":    MolproBigBasisTest,
+
+    "ORCA/ORCA2.6/dvb_gopt.out":    OrcaGeoOptTest,
+    "ORCA/ORCA2.6/dvb_sp.out":      OrcaSPTest,
+    "ORCA/ORCA2.6/dvb_sp_un.out":   OrcaSPunTest,
+    "ORCA/ORCA2.6/dvb_td.out":      OrcaTDDFTTest,
+    "ORCA/ORCA2.6/dvb_ir.out":      OrcaIRTest,
+
+    "ORCA/ORCA2.8/dvb_gopt.out":    OrcaGeoOptTest,
+    "ORCA/ORCA2.8/dvb_sp.out":      OrcaSPTest,
+    "ORCA/ORCA2.8/dvb_sp_un.out":   OrcaSPunTest,
+    "ORCA/ORCA2.8/dvb_td.out":      OrcaTDDFTTest,
+    "ORCA/ORCA2.8/dvb_ir.out":      OrcaIRTest,
+}
+
+def make_regression_from_old_unittest(test_class):
+    """Return a regression test function from an old unit test logfile."""
 
     def old_unit_test(logfile):
-        test_class = getattr(__import__(module_name), test_name)
         test_class.logfile = logfile
         test_class.data = logfile.data
         devnull = open(os.devnull, 'w')
@@ -383,12 +463,12 @@ def make_regression_from_old_unittest(filename, module_name, test_name):
 
 def main(which=[], traceback=False):
 
-    dummyfiles = [eval(n)("") for n in parsers]
+    dummyfiles = [eval(n)("") for n in testall.parsers]
 
     # It would be nice to fix the structure of this nested list,
     # because in its current form it is not amenable to tweaks.
     regdir = os.path.join("..", "data", "regression")
-    programs = [os.path.join(regdir,testall.get_program_dir(p)) for p in parsers]
+    programs = [os.path.join(regdir,testall.get_program_dir(p)) for p in testall.parsers]
     try:
         filenames = [[os.path.join(p,version,fn) for version in os.listdir(p) for fn in os.listdir(os.path.join(p,version))] for p in programs]
     except OSError as e:
@@ -417,23 +497,14 @@ def main(which=[], traceback=False):
         elif os.path.join("..", "data", "regression", x) not in flatten(filenames):
             missing_in_list.append(x)
 
-    # When a unit test is removed or replaced by a newer version, the old logfile
-    # typically becomes a regression, and normally we still want to run the unit test
-    # within the regression suite. To this end, add the logfile location to a list
-    # called 'old_tests' in the appropriate unit test class, in which case the
-    # following code will find it and create the becessary regression test function.
-    for mod in test_modules:
-        mod_name = "test" + mod
-        tests = inspect.getmembers(__import__(mod_name), inspect.isclass)
-        tests = [tc for tc in tests if tc[0][-4:] == "Test"]
-        for test_name, test_class in tests:
-            for old in getattr(test_class, "old_tests", []):
-                funcname = "test" + normalisefilename(old)
-                func = make_regression_from_old_unittest(old, mod_name, test_name)
-                globals()[funcname] = func
+    # Create the regression test functions from logfiles that were old unittests.
+    for path, test_class in old_unittests.items():
+        funcname = "test" + normalisefilename(path)
+        func = make_regression_from_old_unittest(test_class)
+        globals()[funcname] = func
 
     failures = errors = total = 0
-    for iname, name in enumerate(parsers):
+    for iname, name in enumerate(testall.parsers):
 
         # Continue to next iteration if we are limiting the regression and the current
         #   name was not explicitely chosen (that is, passed as an argument).
@@ -529,11 +600,12 @@ def main(which=[], traceback=False):
         print("Missing files:")
         print("\n".join(missing_in_list))
 
+
 if __name__=="__main__":
 
     # If 'test' is passed as the first argument, do a doctest on this module.
     # Otherwise, any arguments are used to limit the test to the packages/parsers
-    #   passed as arguments. Not arguments implies all parsers.
+    # passed as arguments. No arguments implies all parsers.
     if len(sys.argv) == 2 and sys.argv[1] == "test":
         import doctest
         doctest.testmod()
