@@ -380,6 +380,17 @@ for m, module in test_modules.items():
         if name[-4:] == "Test":
             globals()[name] = getattr(module, name)
 
+class ADFSPTest_nosyms(test_modules['SP'].ADFSPTest):
+    def testsymlabels(self):
+        """Symmetry labels were not printed here. PASS"""
+        pass
+
+class ADFSPTest_nosyms_valence(ADFSPTest_nosyms):
+    def testlengthmoenergies(self):
+        """Only valence orbital energies were printed here."""
+        self.assertEquals(len(self.data.moenergies[0]), 45)
+        self.assertEquals(self.data.moenergies[0][0], 99999.0)
+
 old_unittests = {
 
     "ADF/ADF2004.01/MoOCl4-sp.adfout":      ADFCoreTest,
@@ -387,8 +398,8 @@ old_unittests = {
     "ADF/ADF2004.01/dvb_gopt_b.adfout":     ADFGeoOptTest,
     "ADF/ADF2004.01/dvb_sp.adfout":         ADFSPTest,
     "ADF/ADF2004.01/dvb_sp_b.adfout":       ADFSPTest,
-    "ADF/ADF2004.01/dvb_sp_c.adfout":       ADFSPTest,
-    "ADF/ADF2004.01/dvb_sp_d.adfout":       ADFSPTest,
+    "ADF/ADF2004.01/dvb_sp_c.adfout":       ADFSPTest_nosyms_valence,
+    "ADF/ADF2004.01/dvb_sp_d.adfout":       ADFSPTest_nosyms,
     "ADF/ADF2004.01/dvb_un_sp.adfout":      ADFSPunTest,
     "ADF/ADF2004.01/dvb_un_sp_c.adfout":    ADFSPunTest,
     "ADF/ADF2004.01/dvb_ir.adfout":         ADFIRTest,
