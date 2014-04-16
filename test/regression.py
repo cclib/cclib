@@ -334,12 +334,51 @@ class GAMESSUSIRTest_ts(GamessUSIRTest):
 class GAMESSUSCISTest_dets(GAMESSUSCISTest):
     nstates = 10
     def testetsecsvalues(self):
-        """This gives unexpected coeficcients, also for current unit tests. PASSS"""
+        """This gives unexpected coeficcients, also for current unit tests. PASS"""
+
+class JaguarSPTest_6_31gss(JaguarSPTest):
+    b3lyp_energy = -10530
+    def testnbasis(self):
+        """The AO count is larger in 6-31G** than STO-3G."""
+        self.assertEquals(self.data.nbasis, 200)
+    def testlengthmoenergies(self):
+        """Some tests printed all MO energies apparently."""
+        self.assertEquals(len(self.data.moenergies[0]), self.data.nmo)
+
+class JaguarSPunTest_nmo_all(JaguarSPunTest):
+    def testmoenergies(self):
+        """Some tests printed all MO energies apparently."""
+        self.assertEquals(len(self.data.moenergies[0]), self.data.nmo)
 
 class JaguarGeoOptTest_nmo45(JaguarGeoOptTest):
     def testlengthmoenergies(self):
         """Without special options, Jaguar only print Homo+10 orbital energies."""
         self.assertEquals(len(self.data.moenergies[0]), 45)
+
+class JaguarGeoOptTest_6_31gss(JaguarGeoOptTest):
+    b3lyp_energy = -10530
+    def testnbasis(self):
+        """The AO count is larger in 6-31G** than STO-3G."""
+        self.assertEquals(self.data.nbasis, 200)
+
+class MolproBigBasisTest_cart(MolproBigBasisTest):
+    spherical = False
+
+class OrcaSPTest_3_21g(OrcaSPTest):
+    b3lyp_energy = -10460
+    def testatombasis(self):
+        """The basis set here was 3-21G instead of STO-3G. PASS"""
+    def testnbasis(self):
+        """The basis set here was 3-21G instead of STO-3G."""
+        self.assertEquals(self.data.nbasis, 110)
+
+class OrcaGeoOptTest_3_21g(OrcaGeoOptTest):
+    b3lyp_energy = -10460
+    def testatombasis(self):
+        """The basis set here was 3-21G instead of STO-3G. PASS"""
+    def testnbasis(self):
+        """The basis set here was 3-21G instead of STO-3G."""
+        self.assertEquals(self.data.nbasis, 110)
 
 class OrcaSPunTest_charge0(OrcaSPunTest):
     def testcharge_and_mult(self):
@@ -402,22 +441,22 @@ old_unittests = {
     "Jaguar/Jaguar4.2/dvb_gopt_b.out":  JaguarGeoOptTest,
     "Jaguar/Jaguar4.2/dvb_sp.out":      JaguarSPTest,
     "Jaguar/Jaguar4.2/dvb_sp_b.out":    JaguarSPTest,
-    "Jaguar/Jaguar4.2/dvb_un_sp.out":   JaguarSPunTest,
+    "Jaguar/Jaguar4.2/dvb_un_sp.out":   JaguarSPunTest_nmo_all,
     "Jaguar/Jaguar4.2/dvb_ir.out":      JaguarIRTest,
 
-    "Jaguar/Jaguar6.0/dvb_gopt.out":    JaguarGeoOptTest_nmo45,
-    "Jaguar/Jaguar6.0/dvb_sp.out":      JaguarSPTest,
-    "Jaguar/Jaguar6.0/dvb_un_sp.out" :  JaguarSPunTest,
+    "Jaguar/Jaguar6.0/dvb_gopt.out":    JaguarGeoOptTest_6_31gss,
+    "Jaguar/Jaguar6.0/dvb_sp.out":      JaguarSPTest_6_31gss,
+    "Jaguar/Jaguar6.0/dvb_un_sp.out" :  JaguarSPunTest_nmo_all,
 
     "Jaguar/Jaguar6.5/dvb_gopt.out":    JaguarGeoOptTest_nmo45,
     "Jaguar/Jaguar6.5/dvb_sp.out":      JaguarSPTest,
     "Jaguar/Jaguar6.5/dvb_un_sp.out":   JaguarSPunTest,
     "Jaguar/Jaguar6.5/dvb_ir.out":      JaguarIRTest,
 
-    "Molpro/Molpro2006/C_bigbasis_cart.out":    MolproBigBasisTest,
+    "Molpro/Molpro2006/C_bigbasis_cart.out":    MolproBigBasisTest_cart,
 
-    "ORCA/ORCA2.6/dvb_gopt.out":    OrcaGeoOptTest,
-    "ORCA/ORCA2.6/dvb_sp.out":      OrcaSPTest,
+    "ORCA/ORCA2.6/dvb_gopt.out":    OrcaGeoOptTest_3_21g,
+    "ORCA/ORCA2.6/dvb_sp.out":      OrcaSPTest_3_21g,
     "ORCA/ORCA2.6/dvb_td.out":      OrcaTDDFTTest_error,
     "ORCA/ORCA2.6/dvb_ir.out":      OrcaIRTest,
 
