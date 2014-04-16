@@ -502,6 +502,17 @@ def main(which=[], traceback=False):
         func = make_regression_from_old_unittest(test_class)
         globals()[funcname] = func
 
+    # Gather orphaned tests - functions starting with 'test' and not corresponding
+    # to any regression file name.
+    orphaned_tests = []
+    for ip, parser in enumerate(testall.parsers):
+        prefix = "test%s" % parser
+        tests = [fn for fn in globals() if fn[:len(prefix)] == prefix]
+        normalize = lambda fn: normalisefilename("_".join(fn.split(os.sep)[3:]))
+        normalized = [normalize(fname) for fname in filenames[ip]]
+        orphaned = [t for t in tests if t[4:] not in normalized]
+        orphaned_tests.extend(orphaned)
+
     failures = errors = total = 0
     for iname, name in enumerate(testall.parsers):
 
@@ -584,7 +595,7 @@ def main(which=[], traceback=False):
             
     print("Total: %d   Failed: %d  Errors: %d" % (total, failures, errors))
     if not traceback and failures + errors > 0:
-        print("\nFor more information on failures/errors, add 'traceback' as argument.")
+        print("\nFor more information on failures/errors, add 'traceback' as an argument.")
 
     # Show these warnings at the end, so that they're easy to notice. Notice that the lists
     # were populated at the beginning of this function.
@@ -598,7 +609,10 @@ def main(which=[], traceback=False):
         print("Add these files paths to the list and commit the change.")
         print("Missing files:")
         print("\n".join(missing_in_list))
-
+    if len(orphaned_tests) > 0:
+        print("\nWARNING: There are %d orphaned regression test function." % len(orphaned_tests))
+        print("Please make sure these function names correspond to regression files:")
+        print("\n".join(orphaned_tests))
 
 if __name__=="__main__":
 
