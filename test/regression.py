@@ -119,7 +119,7 @@ def testGaussian_Gaussian98_water_zmatrix_nosym_log(logfile):
 
 def testGaussian_Gaussian03_AM1_SP_out(logfile):
     """Previously, caused scfvalue parsing to fail."""
-    assert len(logfile.data.scfvalues[0])==12
+    assert len(logfile.data.scfvalues[0])==13
 
 def testGaussian_Gaussian03_anthracene_log(logfile):
     """This file exposed a bug in extracting the vibsyms."""
