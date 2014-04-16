@@ -95,6 +95,14 @@ def testGaussian_Gaussian98_C_bigmult_log(logfile):
     assert logfile.data.homos[0] == 8
     assert logfile.data.homos[1] == -1 # No occupied beta orbitals
 
+def testGaussian_Gaussian98_test_H2_log(logfile):
+    """
+    The atomic charges from a natural population analysis were
+    not parsed correctly, and they should be zero for dihydrogen.
+    """
+    assert logfile.data.atomcharges['natural'][0] == 0.0
+    assert logfile.data.atomcharges['natural'][1] == 0.0
+
 def testGaussian_Gaussian98_water_zmatrix_nosym_log(logfile):
     """This file is missing natom.
 

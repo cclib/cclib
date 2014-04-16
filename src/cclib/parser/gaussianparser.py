@@ -1222,6 +1222,8 @@ class Gaussian(logfileparser.Logfile):
                 self.atomcharges["lowdin"] = charges
 
         if line.strip() == "Natural Population":
+            if not hasattr(self, 'atomcharges'):
+                self.atomcharges = {}
             line1 = next(inputfile)
             line2 = next(inputfile)
             if line1.split()[0] == 'Natural' and line2.split()[2] == 'Charge':
