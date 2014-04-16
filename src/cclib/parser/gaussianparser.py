@@ -926,8 +926,8 @@ class Gaussian(logfileparser.Logfile):
             if self.oniom: return
 
             # If nbasis was already parsed, check if it changed. If it did, issue a warning.
-            # In the future, we will probably want to have nbasis, as well as nmo, as a list,
-            # so that we don't need to pick one value when it changes.
+            # In the future, we will probably want to have nbasis, as well as nmo below,
+            # as a list so that we don't need to pick one value when it changes.
             nbasis = int(line.split('=')[1].split()[0])
             if hasattr(self, "nbasis"):
                 try:
@@ -947,9 +947,11 @@ class Gaussian(logfileparser.Logfile):
 
             nmo = int(line.split('=')[1].split()[0])
             if hasattr(self, "nmo"):
-                assert nmo == self.nmo
-            else:
-                self.nmo = nmo
+                try:
+                    assert nmo == self.nmo
+                except AssertionError:
+                    self.logger.warning("Number of molecular orbitals (nmo) has changed from %i to %i" % (self.nmo, nmo))
+            self.nmo = nmo
 
         # For AM1 calculations, set nbasis by a second method,
         #   as nmo may not always be explicitly stated.

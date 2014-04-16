@@ -125,6 +125,10 @@ def testGaussian_Gaussian03_anthracene_log(logfile):
     """This file exposed a bug in extracting the vibsyms."""
     assert len(logfile.data.vibsyms) == len(logfile.data.vibfreqs)
 
+def testGaussian_Gaussian03_borane_opt_log(logfile):
+    """An example of changing molecular orbital count."""
+    assert logfile.data.nmo == 609
+
 def testGaussian_Gaussian03_chn1_log(logfile):
     """
     This file failed to parse, due to the use of 'pop=regular'.
