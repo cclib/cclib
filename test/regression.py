@@ -85,25 +85,6 @@ def testGAMESS_WinGAMESS_dvb_td_trplet_2007_03_24_r1_out(logfile):
 
 # Gaussian #
 
-# KML: these functions are not called currently. We probably want to do these checks
-# simply as part of the appropriate unit tests.
-def testGaussian_basicGaussian09_dvb_raman_log(logfile):
-    """Was not extracting vibdisps"""
-    assert hasattr(logfile.data, "vibdisps")
-    assert len(logfile.data.vibdisps) == 54
-def testGaussian_basicGaussian03_dvb_raman_out(logfile):
-    """Was extracting the "Depolar P" instead of the "Raman activity". Oops!"""
-    assert logfile.data.vibramans[1] - 2.6872 < 0.0001
-    assert hasattr(logfile.data, "vibdisps")
-    assert len(logfile.data.vibdisps) == 54
-def testGaussian_basicGaussian03_dvb_un_sp_out(logfile):
-    """
-    This file had no atomcoords at all at all, due to only having an
-    Input Orientation section and no Standard Orientation.
-    """
-    assert len(logfile.data.atomnos) == 20
-    assert logfile.data.atomcoords.shape == (1, 20, 3)
-
 def testGaussian_Gaussian98_C_bigmult_log(logfile):
     """
     This file failed first becuase it had a double digit multiplicity.
@@ -437,7 +418,6 @@ old_unittests = {
 
     "ORCA/ORCA2.6/dvb_gopt.out":    OrcaGeoOptTest,
     "ORCA/ORCA2.6/dvb_sp.out":      OrcaSPTest,
-    "ORCA/ORCA2.6/dvb_sp_un.out":   OrcaSPunTest,
     "ORCA/ORCA2.6/dvb_td.out":      OrcaTDDFTTest_error,
     "ORCA/ORCA2.6/dvb_ir.out":      OrcaIRTest,
 
@@ -610,7 +590,7 @@ def main(which=[], traceback=False):
         print("Missing files:")
         print("\n".join(missing_in_list))
     if len(orphaned_tests) > 0:
-        print("\nWARNING: There are %d orphaned regression test function." % len(orphaned_tests))
+        print("\nWARNING: There are %d orphaned regression test functions." % len(orphaned_tests))
         print("Please make sure these function names correspond to regression files:")
         print("\n".join(orphaned_tests))
 

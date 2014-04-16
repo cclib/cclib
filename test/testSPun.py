@@ -20,6 +20,20 @@ import bettertest
 class GenericSPunTest(bettertest.TestCase):
     """Unrestricted single point unittest."""
 
+    def testnatom(self):
+        """Is the number of atoms equal to 20?"""
+        self.assertEquals(self.data.natom, 20)
+
+    def testatomnos(self):
+        """Are the atomnos correct?"""
+        self.failUnless(numpy.alltrue([numpy.issubdtype(atomno,int) for atomno in self.data.atomnos]))
+        self.assertEquals(self.data.atomnos.shape, (20,) )
+        self.assertEquals(sum(self.data.atomnos==6) + sum(self.data.atomnos==1), 20)
+
+    def testatomcoords(self):
+        """Are the dimensions of atomcoords 1 x natom x 3?"""
+        self.assertEquals(self.data.atomcoords.shape,(1,self.data.natom,3))
+
     def testdimaooverlaps(self):
         """Are the dims of the overlap matrix consistent with nbasis?"""
         self.assertEquals(self.data.aooverlaps.shape,(self.data.nbasis,self.data.nbasis))
