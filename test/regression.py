@@ -197,7 +197,7 @@ def testGaussian_Gaussian09_25DMF_HRANH_log(logfile):
 def testGaussian_Gaussian09_534_out(logfile):
     """Previously, caused etenergies parsing to fail."""
     assert logfile.data.etsyms[0] == "Singlet-?Sym"
-    assert logfile.data.etenergies[0] == 20920.55328
+    assert abs(logfile.data.etenergies[0] - 20920.55328) < 1.0
 
 def testGaussian_Gaussian09_dvb_lowdin_log(logfile):
     """Check if both Mulliken and Lowdin charges are parsed."""
