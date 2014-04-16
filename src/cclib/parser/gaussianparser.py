@@ -925,13 +925,17 @@ class Gaussian(logfileparser.Logfile):
             # For ONIOM calcs, ignore this section in order to bypass assertion failure.
             if self.oniom: return
 
-            # If nbasis was already parsed, check if it changed.
+            # If nbasis was already parsed, check if it changed. If it did, issue a warning.
+            # In the future, we will probably want to have nbasis, as well as nmo, as a list,
+            # so that we don't need to pick one value when it changes.
             nbasis = int(line.split('=')[1].split()[0])
             if hasattr(self, "nbasis"):
-                assert nbasis == self.nbasis
-            else:
-                self.nbasis = nbasis
-                
+                try:
+                    assert nbasis == self.nbasis
+                except AssertionError:
+                    self.logger.warning("Number of basis functions (nbasis) has changed from %i to %i" % (self.nbasis, nbasis))
+            self.nbasis = nbasis
+
         # Number of linearly-independent basis sets.
         if line[1:7] == "NBsUse":
 

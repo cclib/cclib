@@ -95,6 +95,10 @@ def testGaussian_Gaussian98_C_bigmult_log(logfile):
     assert logfile.data.homos[0] == 8
     assert logfile.data.homos[1] == -1 # No occupied beta orbitals
 
+def testGaussian_Gaussian98_test_Cu2_log(logfile):
+    """An example of the number of basis set function changing."""
+    assert logfile.data.nbasis == 38
+
 def testGaussian_Gaussian98_test_H2_log(logfile):
     """
     The atomic charges from a natural population analysis were
