@@ -85,25 +85,6 @@ def testGAMESS_WinGAMESS_dvb_td_trplet_2007_03_24_r1_out(logfile):
 
 # Gaussian #
 
-# KML: these functions are not called currently. We probably want to do these checks
-# simply as part of the appropriate unit tests.
-def testGaussian_basicGaussian09_dvb_raman_log(logfile):
-    """Was not extracting vibdisps"""
-    assert hasattr(logfile.data, "vibdisps")
-    assert len(logfile.data.vibdisps) == 54
-def testGaussian_basicGaussian03_dvb_raman_out(logfile):
-    """Was extracting the "Depolar P" instead of the "Raman activity". Oops!"""
-    assert logfile.data.vibramans[1] - 2.6872 < 0.0001
-    assert hasattr(logfile.data, "vibdisps")
-    assert len(logfile.data.vibdisps) == 54
-def testGaussian_basicGaussian03_dvb_un_sp_out(logfile):
-    """
-    This file had no atomcoords at all at all, due to only having an
-    Input Orientation section and no Standard Orientation.
-    """
-    assert len(logfile.data.atomnos) == 20
-    assert logfile.data.atomcoords.shape == (1, 20, 3)
-
 def testGaussian_Gaussian98_C_bigmult_log(logfile):
     """
     This file failed first becuase it had a double digit multiplicity.
@@ -113,6 +94,18 @@ def testGaussian_Gaussian98_C_bigmult_log(logfile):
     assert logfile.data.mult == 10
     assert logfile.data.homos[0] == 8
     assert logfile.data.homos[1] == -1 # No occupied beta orbitals
+
+def testGaussian_Gaussian98_test_Cu2_log(logfile):
+    """An example of the number of basis set function changing."""
+    assert logfile.data.nbasis == 38
+
+def testGaussian_Gaussian98_test_H2_log(logfile):
+    """
+    The atomic charges from a natural population analysis were
+    not parsed correctly, and they should be zero for dihydrogen.
+    """
+    assert logfile.data.atomcharges['natural'][0] == 0.0
+    assert logfile.data.atomcharges['natural'][1] == 0.0
 
 def testGaussian_Gaussian98_water_zmatrix_nosym_log(logfile):
     """This file is missing natom.
@@ -126,11 +119,15 @@ def testGaussian_Gaussian98_water_zmatrix_nosym_log(logfile):
 
 def testGaussian_Gaussian03_AM1_SP_out(logfile):
     """Previously, caused scfvalue parsing to fail."""
-    assert len(logfile.data.scfvalues[0])==12
+    assert len(logfile.data.scfvalues[0])==13
 
 def testGaussian_Gaussian03_anthracene_log(logfile):
     """This file exposed a bug in extracting the vibsyms."""
     assert len(logfile.data.vibsyms) == len(logfile.data.vibfreqs)
+
+def testGaussian_Gaussian03_borane_opt_log(logfile):
+    """An example of changing molecular orbital count."""
+    assert logfile.data.nmo == 609
 
 def testGaussian_Gaussian03_chn1_log(logfile):
     """
@@ -200,7 +197,7 @@ def testGaussian_Gaussian09_25DMF_HRANH_log(logfile):
 def testGaussian_Gaussian09_534_out(logfile):
     """Previously, caused etenergies parsing to fail."""
     assert logfile.data.etsyms[0] == "Singlet-?Sym"
-    assert logfile.data.etenergies[0] == 20920.55328
+    assert abs(logfile.data.etenergies[0] - 20920.55328) < 1.0
 
 def testGaussian_Gaussian09_dvb_lowdin_log(logfile):
     """Check if both Mulliken and Lowdin charges are parsed."""
@@ -353,12 +350,51 @@ class GAMESSUSIRTest_ts(GamessUSIRTest):
 class GAMESSUSCISTest_dets(GAMESSUSCISTest):
     nstates = 10
     def testetsecsvalues(self):
-        """This gives unexpected coeficcients, also for current unit tests. PASSS"""
+        """This gives unexpected coeficcients, also for current unit tests. PASS"""
+
+class JaguarSPTest_6_31gss(JaguarSPTest):
+    b3lyp_energy = -10530
+    def testnbasis(self):
+        """The AO count is larger in 6-31G** than STO-3G."""
+        self.assertEquals(self.data.nbasis, 200)
+    def testlengthmoenergies(self):
+        """Some tests printed all MO energies apparently."""
+        self.assertEquals(len(self.data.moenergies[0]), self.data.nmo)
+
+class JaguarSPunTest_nmo_all(JaguarSPunTest):
+    def testmoenergies(self):
+        """Some tests printed all MO energies apparently."""
+        self.assertEquals(len(self.data.moenergies[0]), self.data.nmo)
 
 class JaguarGeoOptTest_nmo45(JaguarGeoOptTest):
     def testlengthmoenergies(self):
         """Without special options, Jaguar only print Homo+10 orbital energies."""
         self.assertEquals(len(self.data.moenergies[0]), 45)
+
+class JaguarGeoOptTest_6_31gss(JaguarGeoOptTest):
+    b3lyp_energy = -10530
+    def testnbasis(self):
+        """The AO count is larger in 6-31G** than STO-3G."""
+        self.assertEquals(self.data.nbasis, 200)
+
+class MolproBigBasisTest_cart(MolproBigBasisTest):
+    spherical = False
+
+class OrcaSPTest_3_21g(OrcaSPTest):
+    b3lyp_energy = -10460
+    def testatombasis(self):
+        """The basis set here was 3-21G instead of STO-3G. PASS"""
+    def testnbasis(self):
+        """The basis set here was 3-21G instead of STO-3G."""
+        self.assertEquals(self.data.nbasis, 110)
+
+class OrcaGeoOptTest_3_21g(OrcaGeoOptTest):
+    b3lyp_energy = -10460
+    def testatombasis(self):
+        """The basis set here was 3-21G instead of STO-3G. PASS"""
+    def testnbasis(self):
+        """The basis set here was 3-21G instead of STO-3G."""
+        self.assertEquals(self.data.nbasis, 110)
 
 class OrcaSPunTest_charge0(OrcaSPunTest):
     def testcharge_and_mult(self):
@@ -421,23 +457,22 @@ old_unittests = {
     "Jaguar/Jaguar4.2/dvb_gopt_b.out":  JaguarGeoOptTest,
     "Jaguar/Jaguar4.2/dvb_sp.out":      JaguarSPTest,
     "Jaguar/Jaguar4.2/dvb_sp_b.out":    JaguarSPTest,
-    "Jaguar/Jaguar4.2/dvb_un_sp.out":   JaguarSPunTest,
+    "Jaguar/Jaguar4.2/dvb_un_sp.out":   JaguarSPunTest_nmo_all,
     "Jaguar/Jaguar4.2/dvb_ir.out":      JaguarIRTest,
 
-    "Jaguar/Jaguar6.0/dvb_gopt.out":    JaguarGeoOptTest_nmo45,
-    "Jaguar/Jaguar6.0/dvb_sp.out":      JaguarSPTest,
-    "Jaguar/Jaguar6.0/dvb_un_sp.out" :  JaguarSPunTest,
+    "Jaguar/Jaguar6.0/dvb_gopt.out":    JaguarGeoOptTest_6_31gss,
+    "Jaguar/Jaguar6.0/dvb_sp.out":      JaguarSPTest_6_31gss,
+    "Jaguar/Jaguar6.0/dvb_un_sp.out" :  JaguarSPunTest_nmo_all,
 
     "Jaguar/Jaguar6.5/dvb_gopt.out":    JaguarGeoOptTest_nmo45,
     "Jaguar/Jaguar6.5/dvb_sp.out":      JaguarSPTest,
     "Jaguar/Jaguar6.5/dvb_un_sp.out":   JaguarSPunTest,
     "Jaguar/Jaguar6.5/dvb_ir.out":      JaguarIRTest,
 
-    "Molpro/Molpro2006/C_bigbasis_cart.out":    MolproBigBasisTest,
+    "Molpro/Molpro2006/C_bigbasis_cart.out":    MolproBigBasisTest_cart,
 
-    "ORCA/ORCA2.6/dvb_gopt.out":    OrcaGeoOptTest,
-    "ORCA/ORCA2.6/dvb_sp.out":      OrcaSPTest,
-    "ORCA/ORCA2.6/dvb_sp_un.out":   OrcaSPunTest,
+    "ORCA/ORCA2.6/dvb_gopt.out":    OrcaGeoOptTest_3_21g,
+    "ORCA/ORCA2.6/dvb_sp.out":      OrcaSPTest_3_21g,
     "ORCA/ORCA2.6/dvb_td.out":      OrcaTDDFTTest_error,
     "ORCA/ORCA2.6/dvb_ir.out":      OrcaIRTest,
 
@@ -610,7 +645,7 @@ def main(which=[], traceback=False):
         print("Missing files:")
         print("\n".join(missing_in_list))
     if len(orphaned_tests) > 0:
-        print("\nWARNING: There are %d orphaned regression test function." % len(orphaned_tests))
+        print("\nWARNING: There are %d orphaned regression test functions." % len(orphaned_tests))
         print("Please make sure these function names correspond to regression files:")
         print("\n".join(orphaned_tests))
 
