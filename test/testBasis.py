@@ -122,6 +122,10 @@ class PCGamessBasisTest(GenericBasisTest):
 class PCGamessBigBasisTest(GenericBigBasisTest):
     """PC-GAMESS big basis set unittest."""
 
+
+class PsiBasisTest(GenericBasisTest):
+    """Psi basis set unittest."""
+
               
 if __name__=="__main__":
 
