@@ -148,6 +148,46 @@ class Jaguar(logfileparser.Logfile):
             else:
                 assert self.atombasis == atombasis
 
+            # This length of atombasis should always be the number of atoms.
+            self.set_scalar('natom', len(self.atombasis))
+
+        #  Effective Core Potential 
+        #  
+        #  Atom      Electrons represented by ECP
+        # Mo                    36
+        #              Maximum angular term         3
+        # F Potential      1/r^n   Exponent  Coefficient
+        #                  -----   --------  -----------
+        #                    0  140.4577691   -0.0469492
+        #                    1   89.4739342  -24.9754989
+        # ...
+        # S-F Potential    1/r^n   Exponent  Coefficient
+        #                  -----   --------  -----------
+        #                    0   33.7771969    2.9278406
+        #                    1   10.0120020   34.3483716
+        # ...
+        # O                      0
+        # Cl                    10
+        #              Maximum angular term         2
+        # D Potential      1/r^n   Exponent  Coefficient
+        #                  -----   --------  -----------
+        #                    1   94.8130000  -10.0000000
+        # ...
+        if line.strip() == "Effective Core Potential":
+
+            self.skip_line(inputfile, 'blank')
+            line = next(inputfile)
+            assert line.split()[0] == "Atom"
+            assert " ".join(line.split()[1:]) == "Electrons represented by ECP"
+
+            self.coreelectrons = []
+            line = next(inputfile)
+            while line.strip():
+                if len(line.split()) == 2:
+                    self.coreelectrons.append(int(line.split()[1]))
+                line = next(inputfile)
+                
+
         if line[2:14] == "new geometry" or line[1:21] == "Symmetrized geometry" or line.find("Input geometry") > 0:
         # Get the atom coordinates
             if not hasattr(self, "atomcoords") or line[1:21] == "Symmetrized geometry":
