@@ -32,14 +32,21 @@ class GenericBasisTest(bettertest.TestCase):
 
     def testsizeofbasis(self):
         """Is the basis set the correct size?"""
+
         total = 0
+
         multiple = self.multiple
         if self.spherical:
             multiple = self.multiple_spher
+
         for atom in self.data.gbasis:
+
             for fns in atom:
+
                  # Add 3 for P, 5 or 6 for D, and so forth.
-                total += multiple[fns[0]]
+                ftype = fns[0]
+                total += multiple[ftype]
+
         self.assertEquals(self.data.nbasis, total)
     
     def testcoeffs(self):
@@ -96,6 +103,11 @@ class JaguarBasisTest(GenericBasisTest):
 
 class JaguarBigBasisTest(GenericBigBasisTest):
     """Jaguar big basis set unittest."""
+
+    spherical = True
+
+    # Jaguar only goes up to F functions.
+    names = ['S', 'P', 'D', 'F']
 
 
 class MolproBasisTest(GenericBasisTest):
