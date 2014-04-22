@@ -52,6 +52,12 @@ class GaussianCoreTest(GenericCoreTest):
 
     coredict = {'Mo': 28, 'O':0, 'Cl':10}
 
+
+class JaguarCoreTest(GenericCoreTest):
+    """Jaguar core electrons unittest."""
+
+    coredict = {'Mo': 28, 'O':0, 'Cl':10}
+
            
 if __name__=="__main__":
 

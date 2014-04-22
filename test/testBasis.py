@@ -91,6 +91,13 @@ class GaussianBigBasisTest(GenericBigBasisTest):
     spherical = True
 
 
+class JaguarBasisTest(GenericBasisTest):
+    """Jaguar basis set unittest."""
+
+class JaguarBigBasisTest(GenericBigBasisTest):
+    """Jaguar big basis set unittest."""
+
+
 class MolproBasisTest(GenericBasisTest):
     """Molpro basis set unittest."""
 
@@ -114,6 +121,10 @@ class PCGamessBasisTest(GenericBasisTest):
 
 class PCGamessBigBasisTest(GenericBigBasisTest):
     """PC-GAMESS big basis set unittest."""
+
+
+class PsiBasisTest(GenericBasisTest):
+    """Psi basis set unittest."""
 
               
 if __name__=="__main__":
