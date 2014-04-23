@@ -17,6 +17,8 @@ import bettertest
 class GenericCoreTest(bettertest.TestCase):
     """Core electrons unittest."""
 
+    coredict = {'Mo': 28, 'O':0, 'Cl':10}
+
     def testcorrect(self):
         """Is coreelectrons equal to what it should be?"""
         pt = PeriodicTable()
@@ -36,27 +38,21 @@ class ADFCoreTest(GenericCoreTest):
 class GAMESSUKCoreTest(GenericCoreTest):
     """GAMESS-UK core electrons unittest."""
 
-    coredict = {'Mo': 28, 'O':0, 'Cl':10}
-
-
 class GAMESSUSCoreTest(GenericCoreTest):
     """GAMESS-US core electrons unittest."""
 
     old_tests = ["GAMESS/GAMESS-US/C_bigbasis_2006.02.22.r3.out.gz"]
 
-    coredict = {'Mo': 28, 'O':0, 'Cl':10}
-
 
 class GaussianCoreTest(GenericCoreTest):
     """Gaussian core electrons unittest."""
-
-    coredict = {'Mo': 28, 'O':0, 'Cl':10}
 
 
 class JaguarCoreTest(GenericCoreTest):
     """Jaguar core electrons unittest."""
 
-    coredict = {'Mo': 28, 'O':0, 'Cl':10}
+    # This test was done using LanL2DZ instead of the smaller variant.
+    coredict = {'Mo': 36, 'O':0, 'Cl':10}
 
            
 if __name__=="__main__":

@@ -55,6 +55,9 @@ class Jaguar(logfileparser.Logfile):
         # to parse SCF targets/values correctly.
         self.geoopt = False
 
+        # List of indices pointing to finished geometry optimizations.
+        self.optdone = []
+
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
 
@@ -62,6 +65,131 @@ class Jaguar(logfileparser.Logfile):
         if line[2:22] == "net molecular charge":
             self.set_scalar('charge', int(line.split()[-1]))
             self.set_scalar('mult', int(next(inputfile).split()[-1]))
+
+        # The Gaussian basis set information is printed before the geometry, and we need
+        # to do some indexing to get this into cclib format, because fn increments
+        # for each engular momentum, but cclib does not (we have just P instead of
+        # all three X/Y/Z with the same parameters. On the other hand, fn enumerates
+        # the atomic orbitals correctly, so use it to build atombasis.
+        #
+        #  Gaussian basis set information
+        #  
+        #                                                        renorm    mfac*renorm
+        #   atom    fn   prim  L        z            coef         coef         coef
+        # -------- ----- ---- --- -------------  -----------  -----------  -----------
+        # C1           1    1   S  7.161684E+01   1.5433E-01   2.7078E+00   2.7078E+00
+        # C1           1    2   S  1.304510E+01   5.3533E-01   2.6189E+00   2.6189E+00
+        # ...
+        # C1           3    6   X  2.941249E+00   2.2135E-01   1.2153E+00   1.2153E+00
+        #              4        Y                                           1.2153E+00
+        #              5        Z                                           1.2153E+00
+        # C1           2    8   S  2.222899E-01   1.0000E+00   2.3073E-01   2.3073E-01
+        # C1           3    7   X  6.834831E-01   8.6271E-01   7.6421E-01   7.6421E-01
+        # ...
+        # C2           6    1   S  7.161684E+01   1.5433E-01   2.7078E+00   2.7078E+00
+        # ...
+        #
+        if line.strip() == "Gaussian basis set information":
+
+            self.skip_lines(inputfile, ['b', 'renorm', 'header', 'd'])
+
+            # This is probably the only place we can get this information from Jaguar.
+            self.gbasis = []
+
+            atombasis = []
+            line = next(inputfile)
+            fn_per_atom = []
+            while line.strip():
+
+                if len(line.split()) > 3:
+
+                    aname = line.split()[0]
+                    fn = int(line.split()[1])
+                    prim = int(line.split()[2])
+                    L = line.split()[3]
+                    z = float(line.split()[4])
+                    coef = float(line.split()[5])
+
+                    # The primitive count is reset for each atom, so use that for adding
+                    # new elements to atombasis and gbasis. We could also probably do this
+                    # using the atom name, although that perhaps might not always be unique.
+                    if prim == 1:
+                        atombasis.append([])
+                        fn_per_atom = []
+                        self.gbasis.append([])
+
+                    # Remember that fn is repeated when functions are contracted.
+                    if not fn-1 in atombasis[-1]:
+                        atombasis[-1].append(fn-1)
+
+                    # Here we use fn only to know when a new contraction is encountered,
+                    # so we don't need to decrement it, and we don't even use all values.
+                    # What's more, since we only wish to save the parameters for each subshell
+                    # once, we don't even need to consider lines for orbitals other than
+                    # those for X*, making things a bit easier.
+                    if not fn in fn_per_atom:
+                        fn_per_atom.append(fn)
+                        label = {'S': 'S', 'X': 'P', 'XX': 'D', 'XXX': 'F'}[L]
+                        self.gbasis[-1].append((label, []))
+                    igbasis = fn_per_atom.index(fn)
+                    self.gbasis[-1][igbasis][1].append([z, coef])
+
+                else:
+
+                    fn = int(line.split()[0])
+                    L = line.split()[1]
+
+                    # Some AO indices are only printed in these lines, for L > 0.
+                    if not fn-1 in atombasis[-1]:
+                        atombasis[-1].append(fn-1)
+
+                line = next(inputfile)
+
+            # The indices for atombasis can also be read later from the molecualr orbital output.
+            if not hasattr(self, 'atombasis'):
+                self.atombasis = atombasis
+            else:
+                assert self.atombasis == atombasis
+
+            # This length of atombasis should always be the number of atoms.
+            self.set_scalar('natom', len(self.atombasis))
+
+        #  Effective Core Potential 
+        #  
+        #  Atom      Electrons represented by ECP
+        # Mo                    36
+        #              Maximum angular term         3
+        # F Potential      1/r^n   Exponent  Coefficient
+        #                  -----   --------  -----------
+        #                    0  140.4577691   -0.0469492
+        #                    1   89.4739342  -24.9754989
+        # ...
+        # S-F Potential    1/r^n   Exponent  Coefficient
+        #                  -----   --------  -----------
+        #                    0   33.7771969    2.9278406
+        #                    1   10.0120020   34.3483716
+        # ...
+        # O                      0
+        # Cl                    10
+        #              Maximum angular term         2
+        # D Potential      1/r^n   Exponent  Coefficient
+        #                  -----   --------  -----------
+        #                    1   94.8130000  -10.0000000
+        # ...
+        if line.strip() == "Effective Core Potential":
+
+            self.skip_line(inputfile, 'blank')
+            line = next(inputfile)
+            assert line.split()[0] == "Atom"
+            assert " ".join(line.split()[1:]) == "Electrons represented by ECP"
+
+            self.coreelectrons = []
+            line = next(inputfile)
+            while line.strip():
+                if len(line.split()) == 2:
+                    self.coreelectrons.append(int(line.split()[1]))
+                line = next(inputfile)
+                
 
         if line[2:14] == "new geometry" or line[1:21] == "Symmetrized geometry" or line.find("Input geometry") > 0:
         # Get the atom coordinates
@@ -102,7 +230,7 @@ class Jaguar(logfileparser.Logfile):
             self.mpenergies[-1].append(lmp2energy)
 
         if line[15:45] == "Geometry optimization complete":
-            self.optdone = True
+            self.optdone.append(len(self.geovalues) - 1)
 
         if line.find("number of occupied orbitals") > 0:
         # Get number of MOs
@@ -325,7 +453,8 @@ class Jaguar(logfileparser.Logfile):
 
             self.atomcharges['mulliken'] = charges
 
-        if line[2:6] == "olap":
+        if (line[2:6] == "olap") or (line.strip() == "overlap matrix:"):
+
             if line[6] == "-":
                 return
                 # This was continue (in loop) before parser refactoring.
@@ -353,23 +482,64 @@ class Jaguar(logfileparser.Logfile):
             else:
                 self.scftargets.append([5E-5])
 
-        if line[2:28] == "geometry optimization step":
         # Get Geometry Opt convergence information
+        #
+        #  geometry optimization step  7
+        #  energy:            -382.30219111487 hartrees
+        #  [ turning on trust-radius adjustment ]
+        #  ** restarting optimization from step    6 **
+        #  
+        #  
+        #  Level shifts adjusted to satisfy step-size constraints
+        #   Step size:    0.0360704
+        #   Cos(theta):   0.8789215
+        #   Final level shift:  -8.6176299E-02
+        #  
+        #  energy change:           2.5819E-04 .  (  5.0000E-05 )
+        #  gradient maximum:        5.0947E-03 .  (  4.5000E-04 )
+        #  gradient rms:            1.2996E-03 .  (  3.0000E-04 )
+        #  displacement maximum:    1.3954E-02 .  (  1.8000E-03 )
+        #  displacement rms:        4.6567E-03 .  (  1.2000E-03 )
+        #
+        if line[2:28] == "geometry optimization step":
+
             if not hasattr(self, "geovalues"):
                 self.geovalues = []
                 self.geotargets = numpy.zeros(5, "d")
+
             gopt_step = int(line.split()[-1])
+
             energy = next(inputfile)
-            # quick hack for messages of the sort:
+            blank = next(inputfile)
+
+            # A quick hack for messages that show up right after the energy
+            # at this point, which include:
             #   ** restarting optimization from step    2 **
-            # as found in regression file ptnh3_2_H2O_2_2plus.out
-            if next(inputfile).strip():
+            #   [ turning on trust-radius adjustment ]
+            # as found in regression file ptnh3_2_H2O_2_2plus.out and other logfiles.
+            restarting_from_1 = False
+            while blank.strip():
+                if blank.strip() == "** restarting optimization from step    1 **":
+                    restarting_from_1 = True
                 blank = next(inputfile)
+
+            # One or more blank lines, depending on content.
             line = next(inputfile)
+            while not line.strip():
+                line = next(inputfile)
+
+            # Note that the level shift message is followed by a blank, too.
+            if "Level shifts adjusted" in line:
+                while line.strip():
+                    line = next(inputfile)
+                line = next(inputfile)
+
+            # The first optimization step does not produce an energy change, and
+            # ther is also no energy change when the optimization is restarted
+            # from step 1 (since step 1 had no change).
             values = []
             target_index = 0                
-            if gopt_step == 1:
-                # The first optimization step does not produce an energy change
+            if (gopt_step == 1) or restarting_from_1:
                 values.append(0.0)
                 target_index = 1
             while line.strip():

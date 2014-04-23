@@ -175,3 +175,4 @@ vib       ORCA        OrcaRamanTest         basicORCA3.0          dvb_raman.out
 
 Scan      Gaussian     GaussianScanTest     basicGaussian09       dvb_scan.log
 Scan      ORCA         OrcaScanTest         basicORCA2.9          dvb_scan.out
+Scan      Jaguar       JaguarScanTest       basicJaguar8.3	  dvb_scan.out
