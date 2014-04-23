@@ -633,6 +633,21 @@ class Psi(logfileparser.Logfile):
                     line = next(inputfile)
                 self.atomcharges[pop_type.lower()] = charges
 
+        mp_trigger = "MP2 Total Energy (a.u.)"
+        if line.strip()[:len(mp_trigger)] == mp_trigger:
+            mpenergy = utils.convertor(float(line.split()[-1]), 'hartree', 'eV')
+            if not hasattr(self, 'mpenergies'):
+                self.mpenergies = []
+            self.mpenergies.append([mpenergy])
+
+        # Note this is just a start and needs to be modified for CCSD(T), etc.
+        ccsd_trigger = "* CCSD total energy"
+        if line.strip()[:len(ccsd_trigger)] == ccsd_trigger:
+            ccsd_energy = utils.convertor(float(line.split()[-1]), 'hartree', 'eV')
+            if not hasattr(self, "ccenergis"):
+                self.ccenergies = []
+            self.ccenergies.append(ccsd_energy)
+
 if __name__ == "__main__":
     import doctest, psiparser
     doctest.testmod(psiparser, verbose=False)

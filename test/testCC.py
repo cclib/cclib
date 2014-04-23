@@ -91,6 +91,10 @@ class NWChemCCSDTTest(GenericCCSDTTest):
     """NWChem CCSD(T) unittest."""
 
 
+class PsiCCSDTest(GenericCCSDTest):
+    """Psi CCSD unittest."""
+
+
 if __name__ == "__main__":
 
     from testall import testall
