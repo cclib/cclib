@@ -43,6 +43,8 @@ class Psi(logfileparser.Logfile):
         # with changes triggered by ==> things like this <== (Psi3 does not have this)
         self.section = None
 
+        self.optdone = []
+
     def normalisesym(self, label):
         """Use standard symmetry labels instead of NWChem labels.
 
@@ -647,6 +649,54 @@ class Psi(logfileparser.Logfile):
             if not hasattr(self, "ccenergis"):
                 self.ccenergies = []
             self.ccenergies.append(ccsd_energy)
+
+        # The geometry convergence targets and values are printed in a table, but the legends
+        # described do not seems to be working. Still, probably exact slicing of the line needs
+        # to be done in order to extract the numbers correctly.
+        #
+        #  ==> Convergence Check <==
+        #
+        #  Measures of convergence in internal coordinates in au.
+        #  Criteria marked as inactive (o), active & met (*), and active & unmet ( ).
+        #  ---------------------------------------------------------------------------------------------
+        #   Step     Total Energy     Delta E     MAX Force     RMS Force      MAX Disp      RMS Disp   
+        #  ---------------------------------------------------------------------------------------------
+        #    Convergence Criteria    1.00e-06 *    3.00e-04 *             o    1.20e-03 *             o
+        #  ---------------------------------------------------------------------------------------------
+        #      2    -379.77675264   -7.79e-03      1.88e-02      4.37e-03 o    2.29e-02      6.76e-03 o  ~
+        #  ---------------------------------------------------------------------------------------------
+        #
+        if (self.section == "Convergence Check") and line.strip() == "==> Convergence Check <==":
+
+            self.skip_lines(inputfile, ['b', 'units', 'comment', 'd', 'header', 'd'])
+
+            # These are the position in the line at which numbers should start.
+            starts = [27, 41, 55, 69, 83]
+
+            criteria = next(inputfile)
+            geotargets = []
+            for istart in starts:
+                if line[istart:istart+9].strip():
+                    geotargets.append(float(line[istart:istart+9]))
+
+            self.skip_line(inputfile, 'dashes')
+
+            values = next(inputfile)
+            geovalues = []
+            for istart in starts:
+                if line[istart:istart+9].strip():
+                    geovalues.append(float(line[istart:istart+9]))
+
+            if not hasattr(self, 'geotargets'):
+                self.geotargets = []
+            self.geotargets.append(geotargets)
+
+            if not hasattr(self, 'geovalues'):
+                self.geovalues = []
+            self.geovalues.append(geovalues)
+
+        if line.strip() == "**** Optimization is complete! ****":
+            self.optdone.append(len(self.geovalues))
 
 if __name__ == "__main__":
     import doctest, psiparser
