@@ -67,10 +67,44 @@ class Psi(logfileparser.Logfile):
         if "PSI4: An Open-Source Ab Initio" in line:
             self.version = 4
 
-        # This will automatically change the section attribute, when encountering
+        # This will automatically change the section attribute for Psi4, when encountering
         # a line that <== looks like this ==>, to whatever is in between.
         if (line.strip()[:3] == "==>") and (line.strip()[-3:] == "<=="):
             self.section = line.strip()[4:-4]
+
+        # Psi3 print the coordinates in several configurations, and we will parse the
+        # the canonical coordinates system in Angstroms as the first coordinate set,
+        # although ir is actually somewhere later in the input, after basis set, etc.
+        # We can also get or verify he number of atoms and atomic numbers from this block.
+        if (self.version == 3) and (line.strip() == "-Geometry in the canonical coordinate system (Angstrom):"):
+
+            self.skip_lines(inputfile, ['header', 'd'])
+
+            coords = []
+            numbers = []
+            line = next(inputfile)
+            while line.strip():
+
+                element = line.split()[0]
+                numbers.append(self.table.number[element])
+
+                x = float(line.split()[1])
+                y = float(line.split()[2])
+                z = float(line.split()[3])
+                coords.append([x,y,z])
+
+                line = next(inputfile)
+
+            self.set_scalar('natom', len(coords))
+
+            if not hasattr(self, 'atomcoords'):
+                self.atomcoords = []
+            self.atomcoords.append(coords)
+
+            if not hasattr(self, 'atomnos'):
+                self.atomnos = numbers
+            else:
+                assert self.atomnos == numbers
 
         #  ==> Geometry <==
         #
@@ -119,6 +153,20 @@ class Psi(logfileparser.Logfile):
                 self.atomcoords = []
             self.atomcoords.append(coords)
 
+        # In Psi3 there are these two helpful sections.
+        if (self.version == 3) and (line.strip() == '-SYMMETRY INFORMATION:'):
+            line = next(inputfile)
+            while line.strip():
+                if "Number of atoms" in line:
+                    self.set_scalar('natom', int(line.split()[-1]))
+                line = next(inputfile)
+        if (self.version == 3) and (line.strip() == "-BASIS SET INFORMATION:"):
+            line = next(inputfile)
+            while line.strip():
+                if "Number of AO" in line:
+                    self.set_scalar('nbasis', int(line.split()[-1]))
+                line = next(inputfile)            
+
         # Psi4 repeats the charge and multiplicity after the geometry.
         if (self.section == "Geometry") and (line[2:16].lower() == "charge       ="):
             charge = int(line.split()[-1])
@@ -126,6 +174,29 @@ class Psi(logfileparser.Logfile):
         if (self.section == "Geometry") and (line[2:16].lower() == "multiplicity ="):
             mult = int(line.split()[-1])
             self.set_scalar('mult', mult)
+
+        # In Psi3, the section with the contraction scheme can be used to infer atombasis.
+        if (self.version == 3) and line.strip() == "-Contraction Scheme:":
+
+            self.skip_lines(inputfile, ['header', 'd'])
+
+            indices = []
+            line = next(inputfile)
+            while line.strip():
+                shells = line.split('//')[-1]
+                expression = shells.strip().replace(' ', '+')
+                expression = expression.replace('s', '*1')
+                expression = expression.replace('p', '*3')
+                nfuncs = eval(expression)
+                if len(indices) == 0:
+                    indices.append(range(nfuncs))
+                else:
+                    start = indices[-1][-1] + 1
+                    indices.append(range(start, start+nfuncs))
+                line = next(inputfile)
+
+            if not hasattr(self, 'atombasis'):
+                self.atombasis = indices
 
         # In Psi3, the integrals program prints useful information when invoked.
         if (self.version == 3) and (line.strip() == "CINTS: An integrals program written in C"):
