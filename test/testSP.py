@@ -231,7 +231,7 @@ class PCGamessSPTest(GenericSPTest):
     """PC-GAMESS restricted single point unittest."""
 
 
-class PsiSPHFTest(GenericSPTest):
+class PsiSPTest(GenericSPTest):
     """Psi restricted single point HF/KS unittest."""
 
     # Psi does not currently have the option to print the overlap matrix.
@@ -239,6 +239,15 @@ class PsiSPHFTest(GenericSPTest):
         """Are the first row and colm of the overlap matrix identical? PASS"""
     def testdimaooverlaps(self):
         """Are the dims of the overlap matrix consistent with nbasis? PASS"""
+
+class Psi3SPTest(PsiSPTest):
+    """Psi3 restructed single point HF/KS unittest."""
+
+    # Psi3 did not print partial atomic charges.
+    def testatomcharges(self):
+        """Are atomcharges (at least Mulliken) consistent with natom and sum to zero? PASS"""
+
+
 if __name__=="__main__":
 
     from testall import testall
