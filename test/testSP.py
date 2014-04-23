@@ -243,6 +243,10 @@ class PsiSPTest(GenericSPTest):
 class Psi3SPTest(PsiSPTest):
     """Psi3 restructed single point HF/KS unittest."""
 
+    # The final energy is also a bit higher here, I think due to the fact
+    # that a SALC calculation is done instead of a full LCAO.
+    b3lyp_energy = -10300
+
     # Psi3 did not print partial atomic charges.
     def testatomcharges(self):
         """Are atomcharges (at least Mulliken) consistent with natom and sum to zero? PASS"""
