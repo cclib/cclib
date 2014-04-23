@@ -315,6 +315,8 @@ class Psi(logfileparser.Logfile):
         # last atom of the same element before it. This might not work if a mixture of basis sets
         # is used somehow... but it should cover almost all cases for now.
         #
+        # Note that Psi also print normalized coefficients (details below).
+        #
         #  ==> AO Basis Functions <==
         #
         #    [ STO-3G ]
@@ -326,6 +328,26 @@ class Psi(logfileparser.Logfile):
         #                        13.04509600           2.61888016
         # ...
         if (self.section == "AO Basis Functions") and (line.strip() == "==> AO Basis Functions <=="):
+
+            def get_symmetry_atom_basis(gbasis):
+                """Get symmetry atom by replicating the last atom in gbasis of the same element."""
+
+                missing_index = len(gbasis)
+                missing_atomno = self.atomnos[missing_index]
+
+                ngbasis = len(gbasis)
+                last_same = ngbasis - self.atomnos[:ngbasis][::-1].index(missing_atomno) - 1
+                return gbasis[last_same]
+
+            dfact = lambda n: (n <= 0) or n * dfact(n-2)
+            def get_normalization_factor(exp, lx, ly, lz):
+                norm_s = (2*exp/numpy.pi)**0.75
+                if lx + ly + lz > 0:
+                    nom = (4*exp)**((lx+ly+lz)/2.0)
+                    den = numpy.sqrt(dfact(2*lx-1) * dfact(2*ly-1) * dfact(2*lz-1))
+                    return norm_s * nom / den
+                else:
+                    return norm_s
 
             self.skip_lines(inputfile, ['b', 'basisname'])
 
@@ -349,27 +371,42 @@ class Psi(logfileparser.Logfile):
                 # from the basis set printout. Again, this will work only if all atoms of
                 # the same element use the same basis set.
                 while index > len(gbasis) + 1:
-
-                    missing_index = len(gbasis)
-                    missing_atomno = self.atomnos[missing_index]
-
-                    ngbasis = len(gbasis)
-                    last_same = ngbasis - self.atomnos[:ngbasis][::-1].index(missing_atomno) - 1
-                    gbasis.append(gbasis[last_same])
+                    gbasis.append(get_symmetry_atom_basis(gbasis))
 
                 gbasis.append([])
                 line = next(inputfile)
                 while line.find("*") == -1:
+
+                    # The shell type and primitive count is in the first line.
                     shell_type, nprimitives, smthg = line.split()
                     nprimitives = int(nprimitives)
+
+                    # Get the angular momentum for this shell type.
+                    momentum = { 'S' : 0, 'P' : 1, 'D' : 2, 'F' : 3, 'G' : 4 }[shell_type.upper()]
+
+                    # Read in the primitives.
                     primitives_lines = [next(inputfile) for i in range(nprimitives)]
-                    primitives = [map(float, pl.split()) for pl in primitives_lines]
+                    primitives = [list(map(float, pl.split())) for pl in primitives_lines]
+
+                    # Un-normalize the coefficients. Psi prints the normalized coefficient
+                    # of the highest polynomial, namely XX for D orbitals, XXX for F, and so on.
+                    for iprim, prim in enumerate(primitives):
+                        exp, coef = prim
+                        coef = coef / get_normalization_factor(exp, momentum, 0, 0)
+                        primitives[iprim] = [exp, coef]
+
                     primitives = [tuple(p) for p in primitives]
-                    shell = [shell_type, primitives]                        
+                    shell = [shell_type, primitives]
                     gbasis[-1].append(shell)
+
                     line = next(inputfile)
 
                 line = next(inputfile)
+
+            # We will also need to add symmetry atoms that are missing from the input
+            # at the end of this block, if the symmetry atoms are last.
+            while len(gbasis) < self.natom:
+                gbasis.append(get_symmetry_atom_basis(gbasis))
 
             self.gbasis = gbasis
 
