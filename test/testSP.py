@@ -247,6 +247,12 @@ class Psi3SPTest(PsiSPTest):
     def testatomcharges(self):
         """Are atomcharges (at least Mulliken) consistent with natom and sum to zero? PASS"""
 
+    # The molecular orbitals in Psi3 are printed within each irreducible representation,
+    # but I don't know if that means there is no mixing between them (SALC calculation).
+    # In any case, Psi4 prints a standard LCAO, with coefficients between all basis functions
+    # and molecular orbitals, so we do not parse mocoeffs in Psi3 at all.
+    def testdimmocoeffs(self):
+        """Are the dimensions of mocoeffs equal to 1 x nmo x nbasis? PASS"""
 
 if __name__=="__main__":
 
