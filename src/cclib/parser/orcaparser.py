@@ -149,39 +149,101 @@ class ORCA(logfileparser.Logfile):
 
             self._append_scfvalues_scftargets(inputfile, line)  
 
-        if line[25:50] == "Geometry Optimization Run" or line[28:48] == "Relaxed Surface Scan":
+        # The convergence targets for geometry optimizations are printed at the
+        # beginning of the output, although the order and their description is
+        # different than later on. So, try to standardize the names of the criteria
+        # and save them for later so that we can get the order right.
+        #
+        #                        *****************************
+        #                        * Geometry Optimization Run *
+        #                        *****************************
+        #
+        # Geometry optimization settings:
+        # Update method            Update   .... BFGS
+        # Choice of coordinates    CoordSys .... Redundant Internals
+        # Initial Hessian          InHess   .... Almoef's Model
+        #
+        # Convergence Tolerances:
+        # Energy Change            TolE     ....  5.0000e-06 Eh
+        # Max. Gradient            TolMAXG  ....  3.0000e-04 Eh/bohr
+        # RMS Gradient             TolRMSG  ....  1.0000e-04 Eh/bohr
+        # Max. Displacement        TolMAXD  ....  4.0000e-03 bohr
+        # RMS Displacement         TolRMSD  ....  2.0000e-03 bohr
+        #
+        if line[25:50] == "Geometry Optimization Run":
+
+            stars = next(inputfile)
+            blank = next(inputfile)
 
             line = next(inputfile)
             while line[0:23] != "Convergence Tolerances:":
                 line = next(inputfile)
 
-            self.geotargets = numpy.zeros((5,), "d")
+            if hasattr(self, 'geotargets'):
+                self.logger.warning('The geotargets attribute should not exist yet. There is a problem in the parser.')
+            self.geotargets = []
+            self.geotargets_names = []
+
+            # There should always be five tolerance values printed here.
             for i in range(5):
                 line = next(inputfile)
-                self.geotargets[i] = float(line.split()[-2])
+                name = line[:25].strip().lower().replace('.','').replace('displacement', 'step')
+                target = float(line.split()[-2])
+                self.geotargets_names.append(name)
+                self.geotargets.append(target)
 
-        #get geometry convergence criteria
+        # After each geometry optimization step, ORCA prints the current convergence
+        # parameters and the targets (again), so it is a good idea to check that they
+        # have not changed. Note that the order of these criteria here are different
+        # than at the beginning of the output, so make use of the geotargets_names created
+        # before and save the new geovalues in correct order.
+        #
+        #          ----------------------|Geometry convergence|---------------------
+        #          Item                value                 Tolerance   Converged
+        #          -----------------------------------------------------------------
+        #          Energy change       0.00006021            0.00000500      NO
+        #          RMS gradient        0.00031313            0.00010000      NO
+        #          RMS step            0.01596159            0.00200000      NO
+        #          MAX step            0.04324586            0.00400000      NO
+        #          ....................................................
+        #          Max(Bonds)      0.0218      Max(Angles)    2.48
+        #          Max(Dihed)        0.00      Max(Improp)    0.00
+        #          -----------------------------------------------------------------
+        #
         if line[33:53] == "Geometry convergence":
-            if not hasattr(self, "geovalues"):
-                self.geovalues = [ ]
-            
-            newlist = []
-            self.skip_lines(inputfile, ['headers', 'd'])
-            
-            #check if energy change is present (steps > 1)
-            line = next(inputfile)
-            if line.find("Energy change") > 0:
-                newlist.append(float(line.split()[2]))
-                line = next(inputfile)
-            else:
-                newlist.append(0.0)
 
-            #get rest of info
-            for i in range(4):
-                newlist.append(float(line.split()[2]))
-                line = next(inputfile)
+            if not hasattr(self, "geovalues"):
+                self.geovalues = []
             
-            self.geovalues.append(newlist)
+            headers = next(inputfile)
+            dashes = next(inputfile)
+
+            names = []
+            values = []
+            targets = []
+            line = next(inputfile)
+            while list(set(line.strip())) != ["."]:
+                name = line[10:28].strip().lower()
+                value = float(line.split()[2])
+                target = float(line.split()[3])
+                names.append(name)
+                values.append(value)
+                targets.append(target)
+                line = next(inputfile)
+
+            # The energy change is normally not printed in the first iteration, because
+            # there was no previous energy -- in that case assume zero, but check that
+            # no previous geovalues were parsed.
+            newvalues = []
+            for i, n in enumerate(self.geotargets_names):
+                if (n == "energy change") and (n not in names):
+                    assert len(self.geovalues) == 0
+                    newvalues.append(0.0)
+                else:
+                    newvalues.append(values[names.index(n)])
+                    assert targets[names.index(n)] == self.geotargets[i]
+            
+            self.geovalues.append(newvalues)
 
         #if not an optimization, determine structure used
         if line[0:21] == "CARTESIAN COORDINATES" and not hasattr(self, "atomcoords"):

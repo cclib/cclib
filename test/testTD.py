@@ -84,8 +84,6 @@ class GAMESSUSTDDFTTest(GenericTDTest):
 
     number = 10
 
-    old_tests = ["GAMESS/WinGAMESS/dvb_td_2007.03.24.r1.out.gz"]
-
 
 class PCGamessTDDFTTest(GenericTDTest):
     """PC-GAMESS time-dependent HF/DFT unittest."""
