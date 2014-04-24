@@ -53,6 +53,9 @@ class ORCA(logfileparser.Logfile):
         # Keep track of when geometry optimizations finish
         self.optdone = []
 
+        # Keep track of whether this is a relaxed scan calculation
+        self.is_relaxed_scan = False
+
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
 
@@ -216,6 +219,7 @@ class ORCA(logfileparser.Logfile):
         # RMS Displacement         TolRMSD  ....  2.0000e-03 bohr
         if line[25:50] == "RELAXED SURFACE SCAN STEP":
 
+           self.is_relaxed_scan = True
            blank = next(inputfile)
            info = next(inputfile)
            stars = next(inputfile)
@@ -225,8 +229,6 @@ class ORCA(logfileparser.Logfile):
            while line[0:23] != "Convergence Tolerances:":
                line = next(inputfile)
 
-           if hasattr(self, 'geotargets'):
-               self.logger.warning('The geotargets attribute should not exist yet. There is a problem in the parser.')
            self.geotargets = []
            self.geotargets_names = []
 
@@ -281,9 +283,11 @@ class ORCA(logfileparser.Logfile):
             # there was no previous energy -- in that case assume zero, but check that
             # no previous geovalues were parsed.
             newvalues = []
+
             for i, n in enumerate(self.geotargets_names):
                 if (n == "energy change") and (n not in names):
-                    assert len(self.geovalues) == 0
+                    if not self.is_relaxed_scan:
+                        assert len(self.geovalues) == 0
                     newvalues.append(0.0)
                 else:
                     newvalues.append(values[names.index(n)])
