@@ -192,6 +192,52 @@ class ORCA(logfileparser.Logfile):
                 self.geotargets_names.append(name)
                 self.geotargets.append(target)
 
+        # The convergence targets for relaxed surface scan steps are printed at the
+        # beginning of the output, although the order and their description is
+        # different than later on. So, try to standardize the names of the criteria
+        # and save them for later so that we can get the order right.
+        #
+        #         *************************************************************
+        #         *               RELAXED SURFACE SCAN STEP  12               *
+        #         *                                                           *
+        #         *   Dihedral ( 11,  10,   3,   4)  : 180.00000000           *
+        #         *************************************************************
+        #
+        # Geometry optimization settings:
+        # Update method            Update   .... BFGS
+        # Choice of coordinates    CoordSys .... Redundant Internals
+        # Initial Hessian          InHess   .... Almoef's Model
+        #
+        # Convergence Tolerances:
+        # Energy Change            TolE     ....  5.0000e-06 Eh
+        # Max. Gradient            TolMAXG  ....  3.0000e-04 Eh/bohr
+        # RMS Gradient             TolRMSG  ....  1.0000e-04 Eh/bohr
+        # Max. Displacement        TolMAXD  ....  4.0000e-03 bohr
+        # RMS Displacement         TolRMSD  ....  2.0000e-03 bohr
+        if line[25:50] == "RELAXED SURFACE SCAN STEP":
+
+           blank = next(inputfile)
+           info = next(inputfile)
+           stars = next(inputfile)
+           blank = next(inputfile)
+
+           line = next(inputfile)
+           while line[0:23] != "Convergence Tolerances:":
+               line = next(inputfile)
+
+           if hasattr(self, 'geotargets'):
+               self.logger.warning('The geotargets attribute should not exist yet. There is a problem in the parser.')
+           self.geotargets = []
+           self.geotargets_names = []
+
+           # There should always be five tolerance values printed here.
+           for i in range(5):
+               line = next(inputfile)
+               name = line[:25].strip().lower().replace('.','').replace('displacement', 'step')
+               target = float(line.split()[-2])
+               self.geotargets_names.append(name)
+               self.geotargets.append(target)
+
         # After each geometry optimization step, ORCA prints the current convergence
         # parameters and the targets (again), so it is a good idea to check that they
         # have not changed. Note that the order of these criteria here are different
