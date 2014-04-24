@@ -231,9 +231,32 @@ class PCGamessSPTest(GenericSPTest):
     """PC-GAMESS restricted single point unittest."""
 
 
-class PsiSPHFTest(GenericSPTest):
+class PsiSPTest(GenericSPTest):
     """Psi restricted single point HF/KS unittest."""
 
+    # Psi does not currently have the option to print the overlap matrix.
+    def testaooverlaps(self):
+        """Are the first row and colm of the overlap matrix identical? PASS"""
+    def testdimaooverlaps(self):
+        """Are the dims of the overlap matrix consistent with nbasis? PASS"""
+
+class Psi3SPTest(PsiSPTest):
+    """Psi3 restructed single point HF/KS unittest."""
+
+    # The final energy is also a bit higher here, I think due to the fact
+    # that a SALC calculation is done instead of a full LCAO.
+    b3lyp_energy = -10300
+
+    # Psi3 did not print partial atomic charges.
+    def testatomcharges(self):
+        """Are atomcharges (at least Mulliken) consistent with natom and sum to zero? PASS"""
+
+    # The molecular orbitals in Psi3 are printed within each irreducible representation,
+    # but I don't know if that means there is no mixing between them (SALC calculation).
+    # In any case, Psi4 prints a standard LCAO, with coefficients between all basis functions
+    # and molecular orbitals, so we do not parse mocoeffs in Psi3 at all.
+    def testdimmocoeffs(self):
+        """Are the dimensions of mocoeffs equal to 1 x nmo x nbasis? PASS"""
 
 if __name__=="__main__":
 

@@ -169,6 +169,10 @@ class PCGAMESSMP4SDQTest(GenericMP4SDQTest):
 class PCGAMESSMP4SDTQTest(GenericMP4SDTQTest):
     """PC-GAMESS MP4-SDTQ unittest."""
 
+
+class PsiMP2Test(GenericMP2Test):
+    """Psi MP2 unittest."""
+
               
 if __name__=="__main__":
 

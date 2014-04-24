@@ -43,6 +43,8 @@ class Psi(logfileparser.Logfile):
         # with changes triggered by ==> things like this <== (Psi3 does not have this)
         self.section = None
 
+        self.optdone = []
+
     def normalisesym(self, label):
         """Use standard symmetry labels instead of NWChem labels.
 
@@ -67,10 +69,44 @@ class Psi(logfileparser.Logfile):
         if "PSI4: An Open-Source Ab Initio" in line:
             self.version = 4
 
-        # This will automatically change the section attribute, when encountering
+        # This will automatically change the section attribute for Psi4, when encountering
         # a line that <== looks like this ==>, to whatever is in between.
         if (line.strip()[:3] == "==>") and (line.strip()[-3:] == "<=="):
             self.section = line.strip()[4:-4]
+
+        # Psi3 print the coordinates in several configurations, and we will parse the
+        # the canonical coordinates system in Angstroms as the first coordinate set,
+        # although ir is actually somewhere later in the input, after basis set, etc.
+        # We can also get or verify he number of atoms and atomic numbers from this block.
+        if (self.version == 3) and (line.strip() == "-Geometry in the canonical coordinate system (Angstrom):"):
+
+            self.skip_lines(inputfile, ['header', 'd'])
+
+            coords = []
+            numbers = []
+            line = next(inputfile)
+            while line.strip():
+
+                element = line.split()[0]
+                numbers.append(self.table.number[element])
+
+                x = float(line.split()[1])
+                y = float(line.split()[2])
+                z = float(line.split()[3])
+                coords.append([x,y,z])
+
+                line = next(inputfile)
+
+            self.set_scalar('natom', len(coords))
+
+            if not hasattr(self, 'atomcoords'):
+                self.atomcoords = []
+            self.atomcoords.append(coords)
+
+            if not hasattr(self, 'atomnos'):
+                self.atomnos = numbers
+            else:
+                assert self.atomnos == numbers
 
         #  ==> Geometry <==
         #
@@ -104,15 +140,34 @@ class Psi(logfileparser.Logfile):
                 self.skip_line(inputfile, "dashes")
                 line = next(inputfile)
 
+            elements = []
             coords = []
             while line.strip():
                 el, x, y, z = line.split()
+                elements.append(el)
                 coords.append([float(x), float(y), float(z)])
                 line = next(inputfile)
+
+            if not hasattr(self, 'atomnos'):
+                self.atomnos = [self.table.number[el] for el in elements]
 
             if not hasattr(self, 'atomcoords'):
                 self.atomcoords = []
             self.atomcoords.append(coords)
+
+        # In Psi3 there are these two helpful sections.
+        if (self.version == 3) and (line.strip() == '-SYMMETRY INFORMATION:'):
+            line = next(inputfile)
+            while line.strip():
+                if "Number of atoms" in line:
+                    self.set_scalar('natom', int(line.split()[-1]))
+                line = next(inputfile)
+        if (self.version == 3) and (line.strip() == "-BASIS SET INFORMATION:"):
+            line = next(inputfile)
+            while line.strip():
+                if "Number of AO" in line:
+                    self.set_scalar('nbasis', int(line.split()[-1]))
+                line = next(inputfile)            
 
         # Psi4 repeats the charge and multiplicity after the geometry.
         if (self.section == "Geometry") and (line[2:16].lower() == "charge       ="):
@@ -121,6 +176,29 @@ class Psi(logfileparser.Logfile):
         if (self.section == "Geometry") and (line[2:16].lower() == "multiplicity ="):
             mult = int(line.split()[-1])
             self.set_scalar('mult', mult)
+
+        # In Psi3, the section with the contraction scheme can be used to infer atombasis.
+        if (self.version == 3) and line.strip() == "-Contraction Scheme:":
+
+            self.skip_lines(inputfile, ['header', 'd'])
+
+            indices = []
+            line = next(inputfile)
+            while line.strip():
+                shells = line.split('//')[-1]
+                expression = shells.strip().replace(' ', '+')
+                expression = expression.replace('s', '*1')
+                expression = expression.replace('p', '*3')
+                nfuncs = eval(expression)
+                if len(indices) == 0:
+                    indices.append(range(nfuncs))
+                else:
+                    start = indices[-1][-1] + 1
+                    indices.append(range(start, start+nfuncs))
+                line = next(inputfile)
+
+            if not hasattr(self, 'atombasis'):
+                self.atombasis = indices
 
         # In Psi3, the integrals program prints useful information when invoked.
         if (self.version == 3) and (line.strip() == "CINTS: An integrals program written in C"):
@@ -180,6 +258,159 @@ class Psi(logfileparser.Logfile):
             if not hasattr(self, "scftargets"):
                 self.scftargets = []
             self.scftargets.append([etarget, dtarget])
+
+        # This section prints contraction information before the atomic basis set functions and
+        # is a good place to parse atombasis indices as well as atomnos. However, the section this line
+        # is in differs between HF and DFT outputs.
+        #
+        #  -Contraction Scheme:
+        #    Atom   Type   All Primitives // Shells:
+        #   ------ ------ --------------------------
+        #       1     C     6s 3p // 2s 1p 
+        #       2     C     6s 3p // 2s 1p 
+        #       3     C     6s 3p // 2s 1p 
+        # ...
+        if (self.section == "Primary Basis" or self.section == "DFT Potential") and line.strip() == "-Contraction Scheme:":
+
+            self.skip_lines(inputfile, ['headers', 'd'])
+
+            atomnos = []
+            atombasis = []
+            atombasis_pos = 0
+            line = next(inputfile)
+            while line.strip():
+
+                element = line.split()[1]
+                atomnos.append(self.table.number[element])
+
+                # To count the number of atomic orbitals for the atom, sum up the orbitals
+                # in each type of shell, times the numbers of shells. Currently, we assume
+                # the multiplier is a single digit and that there are only s and p shells,
+                # which will need to be extended later when considering larger basis sets,
+                # with corrections for the cartesian/spherical cases.
+                ao_count = 0
+                shells = line.split('//')[1].split()
+                for s in shells:
+                    count, type = s
+                    multiplier = 3*(type=='p') or 1
+                    ao_count += multiplier*int(count)
+
+                if len(atombasis) > 0:
+                    atombasis_pos = atombasis[-1][-1] + 1
+                atombasis.append(list(range(atombasis_pos, atombasis_pos+ao_count)))
+
+                line = next(inputfile)
+
+            self.set_scalar('natom', len(atomnos))
+
+            if not hasattr(self, 'atomnos'):
+                self.atomnos = atomnos
+            else:
+                assert self.atomnos == atomnos
+
+            self.atombasis = atombasis
+
+        # The atomic basis set is straightforward to parse, but there are some complications
+        # when symmetry is used, because in that case Psi4 only print the symmetry-unique atoms,
+        # and the list of symmetry-equivalent ones is not printed. Therefore, for simplicity here
+        # when an atomic is missing (atom indices are printed) assume the atomic orbitals of the
+        # last atom of the same element before it. This might not work if a mixture of basis sets
+        # is used somehow... but it should cover almost all cases for now.
+        #
+        # Note that Psi also print normalized coefficients (details below).
+        #
+        #  ==> AO Basis Functions <==
+        #
+        #    [ STO-3G ]
+        #    spherical
+        #    ****
+        #    C   1
+        #    S   3 1.00
+        #                        71.61683700           2.70781445
+        #                        13.04509600           2.61888016
+        # ...
+        if (self.section == "AO Basis Functions") and (line.strip() == "==> AO Basis Functions <=="):
+
+            def get_symmetry_atom_basis(gbasis):
+                """Get symmetry atom by replicating the last atom in gbasis of the same element."""
+
+                missing_index = len(gbasis)
+                missing_atomno = self.atomnos[missing_index]
+
+                ngbasis = len(gbasis)
+                last_same = ngbasis - self.atomnos[:ngbasis][::-1].index(missing_atomno) - 1
+                return gbasis[last_same]
+
+            dfact = lambda n: (n <= 0) or n * dfact(n-2)
+            def get_normalization_factor(exp, lx, ly, lz):
+                norm_s = (2*exp/numpy.pi)**0.75
+                if lx + ly + lz > 0:
+                    nom = (4*exp)**((lx+ly+lz)/2.0)
+                    den = numpy.sqrt(dfact(2*lx-1) * dfact(2*ly-1) * dfact(2*lz-1))
+                    return norm_s * nom / den
+                else:
+                    return norm_s
+
+            self.skip_lines(inputfile, ['b', 'basisname'])
+
+            line = next(inputfile)
+            spherical = line.strip() == "spherical"
+            if hasattr(self, 'spherical_basis'):
+                assert self.spherical_basis == spherical
+            else:
+                self.spherical_basis = spherical
+
+            gbasis = []
+            self.skip_line(inputfile, 'stars')
+            line = next(inputfile)
+            while line.strip():
+
+                element, index = line.split()
+                atomno = self.table.number[element]
+                index = int(index)
+
+                # This is the code that adds missing atoms when symmetry atoms are excluded
+                # from the basis set printout. Again, this will work only if all atoms of
+                # the same element use the same basis set.
+                while index > len(gbasis) + 1:
+                    gbasis.append(get_symmetry_atom_basis(gbasis))
+
+                gbasis.append([])
+                line = next(inputfile)
+                while line.find("*") == -1:
+
+                    # The shell type and primitive count is in the first line.
+                    shell_type, nprimitives, smthg = line.split()
+                    nprimitives = int(nprimitives)
+
+                    # Get the angular momentum for this shell type.
+                    momentum = { 'S' : 0, 'P' : 1, 'D' : 2, 'F' : 3, 'G' : 4 }[shell_type.upper()]
+
+                    # Read in the primitives.
+                    primitives_lines = [next(inputfile) for i in range(nprimitives)]
+                    primitives = [list(map(float, pl.split())) for pl in primitives_lines]
+
+                    # Un-normalize the coefficients. Psi prints the normalized coefficient
+                    # of the highest polynomial, namely XX for D orbitals, XXX for F, and so on.
+                    for iprim, prim in enumerate(primitives):
+                        exp, coef = prim
+                        coef = coef / get_normalization_factor(exp, momentum, 0, 0)
+                        primitives[iprim] = [exp, coef]
+
+                    primitives = [tuple(p) for p in primitives]
+                    shell = [shell_type, primitives]
+                    gbasis[-1].append(shell)
+
+                    line = next(inputfile)
+
+                line = next(inputfile)
+
+            # We will also need to add symmetry atoms that are missing from the input
+            # at the end of this block, if the symmetry atoms are last.
+            while len(gbasis) < self.natom:
+                gbasis.append(get_symmetry_atom_basis(gbasis))
+
+            self.gbasis = gbasis
 
         # A block called 'Calculation Information' prints these before starting the SCF.
         if (self.section == "Pre-Iterations") and ("Number of atoms" in line):
@@ -377,6 +608,95 @@ class Psi(logfileparser.Logfile):
             if not hasattr(self, 'mocoeffs'):
                 self.mocoeffs = []
             self.mocoeffs.append(mocoeffs)
+
+        # The formats for Mulliken and Lowdin atomic charges are the same, just with
+        # the name changes, so use the same code for both.
+        #
+        # Properties computed using the SCF density density matrix
+        #   Mulliken Charges: (a.u.)
+        #    Center  Symbol    Alpha    Beta     Spin     Total
+        #        1     C     2.99909  2.99909  0.00000  0.00182
+        #        2     C     2.99909  2.99909  0.00000  0.00182
+        # ...
+        for pop_type in ["Mulliken", "Lowdin"]:
+            if line.strip() == "%s Charges: (a.u.)" % pop_type:
+                if not hasattr(self, 'atomcharges'):
+                    self.atomcharges = {}
+                header = next(inputfile)
+
+                line = next(inputfile)
+                while not line.strip():
+                    line = next(inputfile)
+
+                charges = []
+                while line.strip():
+                    ch = float(line.split()[-1])
+                    charges.append(ch)
+                    line = next(inputfile)
+                self.atomcharges[pop_type.lower()] = charges
+
+        mp_trigger = "MP2 Total Energy (a.u.)"
+        if line.strip()[:len(mp_trigger)] == mp_trigger:
+            mpenergy = utils.convertor(float(line.split()[-1]), 'hartree', 'eV')
+            if not hasattr(self, 'mpenergies'):
+                self.mpenergies = []
+            self.mpenergies.append([mpenergy])
+
+        # Note this is just a start and needs to be modified for CCSD(T), etc.
+        ccsd_trigger = "* CCSD total energy"
+        if line.strip()[:len(ccsd_trigger)] == ccsd_trigger:
+            ccsd_energy = utils.convertor(float(line.split()[-1]), 'hartree', 'eV')
+            if not hasattr(self, "ccenergis"):
+                self.ccenergies = []
+            self.ccenergies.append(ccsd_energy)
+
+        # The geometry convergence targets and values are printed in a table, but the legends
+        # described do not seems to be working. Still, probably exact slicing of the line needs
+        # to be done in order to extract the numbers correctly.
+        #
+        #  ==> Convergence Check <==
+        #
+        #  Measures of convergence in internal coordinates in au.
+        #  Criteria marked as inactive (o), active & met (*), and active & unmet ( ).
+        #  ---------------------------------------------------------------------------------------------
+        #   Step     Total Energy     Delta E     MAX Force     RMS Force      MAX Disp      RMS Disp   
+        #  ---------------------------------------------------------------------------------------------
+        #    Convergence Criteria    1.00e-06 *    3.00e-04 *             o    1.20e-03 *             o
+        #  ---------------------------------------------------------------------------------------------
+        #      2    -379.77675264   -7.79e-03      1.88e-02      4.37e-03 o    2.29e-02      6.76e-03 o  ~
+        #  ---------------------------------------------------------------------------------------------
+        #
+        if (self.section == "Convergence Check") and line.strip() == "==> Convergence Check <==":
+
+            self.skip_lines(inputfile, ['b', 'units', 'comment', 'd', 'header', 'd'])
+
+            # These are the position in the line at which numbers should start.
+            starts = [27, 41, 55, 69, 83]
+
+            criteria = next(inputfile)
+            geotargets = []
+            for istart in starts:
+                if line[istart:istart+9].strip():
+                    geotargets.append(float(line[istart:istart+9]))
+
+            self.skip_line(inputfile, 'dashes')
+
+            values = next(inputfile)
+            geovalues = []
+            for istart in starts:
+                if line[istart:istart+9].strip():
+                    geovalues.append(float(line[istart:istart+9]))
+
+            if not hasattr(self, 'geotargets'):
+                self.geotargets = []
+            self.geotargets.append(geotargets)
+
+            if not hasattr(self, 'geovalues'):
+                self.geovalues = []
+            self.geovalues.append(geovalues)
+
+        if line.strip() == "**** Optimization is complete! ****":
+            self.optdone.append(len(self.geovalues))
 
 if __name__ == "__main__":
     import doctest, psiparser
