@@ -48,19 +48,11 @@ class GenericCCSDTTest(GenericCCTest):
 class GAMESSUSCCDTest(GenericCCDTest):
     """GAMESS-US CCD unittest."""
 
-    old_tests = ["GAMESS/GAMESS-US/water_ccd_2005.06.27.r3.out.gz"]
-
-
 class GAMESSUSCCSDTest(GenericCCSDTest):
     """GAMESS-US CCSD unittest."""
 
-    old_tests = ["GAMESS/GAMESS-US/water_ccsd_2005.06.27.r3.out.gz"]
-
-    
 class GAMESSUSCCSDTTest(GenericCCSDTTest):
     """GAMESS-US CCSD(T) unittest."""
-
-    old_tests = ["GAMESS/GAMESS-US/water_ccsd(t)_2005.06.27.r3.out.gz"]
 
     
 class GaussianCCDTest(GenericCCDTest):

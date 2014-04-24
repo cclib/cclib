@@ -164,8 +164,6 @@ class GamessUKGeoOptTest(GenericGeoOptTest):
 class GamessUSGeoOptTest(GenericGeoOptTest):
     """GAMESS-US geometry optimization unittest."""
 
-    old_tests = ["GAMESS/GAMESS-US/dvb_gopt_a_2006.02.22.r2.out.gz"]
-
 
 class GaussianGeoOptTest(GenericGeoOptTest):
     """Gaussian geometry optimization unittest."""
@@ -254,6 +252,41 @@ class OrcaGeoOptTest(GenericGeoOptTest):
 
     extracoords = 1
     extrascfs = 1
+
+    # ORCA has no support for symmetry yet.
+    def testsymlabels(self):
+        """Are all the symmetry labels either Ag/u or Bg/u? PASS"""
+        self.assertEquals(1,1)
+
+    # Besides all the geovalues being below their tolerances, ORCA also considers
+    # an optimization finished in some extra cases. These are:
+    #   1) everything converged except the energy (within 25 x tolerance)
+    #   2) gradient is overachieved and displacement is reasonable (3 x tolerance)
+    #   3) displacement is overachieved and gradient is reasonable (3 x tolerance)
+    #   4) energy, gradients and angles are converged (displacements not considered)
+    # All these exceptions are signaleld in the output with some comments, and here
+    # we include the first three exceptions for the pruposes of the unit test.
+    def testoptdone(self):
+        """Has the geometry converged and set optdone to True?"""
+
+        self.assertTrue(self.data.optdone)
+
+        targets = self.data.geotargets
+        values = numpy.abs(self.data.geovalues[-1])
+
+        target_e = targets[0]
+        target_g = targets[1:3]
+        target_x = targets[3:]
+        value_e = values[0]
+        value_g = values[1:3]
+        value_x = values[3:]
+
+        conv_all = all(values < targets)
+        conv_e = value_e < 25*target_e and all(value_g < target_g) and all(value_x < target_x)
+        conv_g = value_e < target_e and all(value_g < target_g/3.0) and all(value_x < target_x*3.0)
+        conv_x = value_e < target_e and all(value_g < target_g*3.0) and all(value_x < target_x/3.0)
+        converged = conv_all or conv_e or conv_g or conv_x
+        self.assertTrue(converged)
 
 
 class PCGamessGeoOptTest(GenericGeoOptTest):

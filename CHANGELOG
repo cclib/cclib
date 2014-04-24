@@ -6,6 +6,7 @@ Features:
     * Add a multifile mode to ccget script
     * Extract vibrational displacements for ORCA
     * Extract natural atom charges for Gaussian (Fedor Zhuravlev)
+    * New attribute optdone flags converged geometry optimization
     * Updated test file versions to ADF2013.01, GAMESS-US 2012,
     Gaussian09, Molpro 2012 and ORCA 3.0.1
 
