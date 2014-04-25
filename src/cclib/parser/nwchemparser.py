@@ -415,6 +415,18 @@ class NWChem(logfileparser.Logfile):
             self.geovalues.append([gmax, grms, xmax, xrms])
             self.linesearch = True
 
+        # There is a clear message when the geometry optimization has converged:
+        #
+        #      ----------------------
+        #      Optimization converged
+        #      ----------------------
+        #
+        if line.strip() == "Optimization converged":
+            self.skip_line(inputfile, 'dashes')
+            if not hasattr(self, 'optdone'):
+                self.optdone = []
+            self.optdone.append(len(self.geovalues) - 1)
+
         # The line containing the final SCF energy seems to be always identifiable like this.
         if "Total SCF energy" in line or "Total DFT energy" in line:
 
