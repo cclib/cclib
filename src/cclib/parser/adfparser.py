@@ -207,7 +207,7 @@ class ADF(logfileparser.Logfile):
         if line[1:11] == "Net Charge":
 
             charge = int(line.split()[2])
-            self.set_scalar('charge', charge)
+            self.set_attribute('charge', charge)
 
             line = next(inputfile)
             if len(line.strip()):
@@ -216,7 +216,7 @@ class ADF(logfileparser.Logfile):
                 mult = int(line.split()[2]) + 1
             else:
                 mult = 1
-            self.set_scalar('mult', mult)
+            self.set_attribute('mult', mult)
 
         if line[1:22] == "S C F   U P D A T E S":
         # find targets for SCF convergence
@@ -670,7 +670,7 @@ class ADF(logfileparser.Logfile):
         # Extract the number of basis sets
         if line[1:49] == "Total nr. of (C)SFOs (summation over all irreps)":
             nbasis = int(line.split(":")[1].split()[0])
-            self.set_scalar('nbasis', nbasis)
+            self.set_attribute('nbasis', nbasis)
 
         # now that we're here, let's extract aonames
 

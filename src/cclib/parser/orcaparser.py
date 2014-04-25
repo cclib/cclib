@@ -59,17 +59,17 @@ class ORCA(logfileparser.Logfile):
         if line[0:15] == "Number of atoms":
 
             natom = int(line.split()[-1])
-            self.set_scalar('natom', natom)
+            self.set_attribute('natom', natom)
 
         if line[1:13] == "Total Charge":
 
             charge = int(line.split()[-1])
-            self.set_scalar('charge', charge)
+            self.set_attribute('charge', charge)
 
             line = next(inputfile)
 
             mult = int(line.split()[-1])
-            self.set_scalar('mult', mult)
+            self.set_attribute('mult', mult)
 
         # SCF convergence output begins with:
         #
@@ -308,7 +308,7 @@ class ORCA(logfileparser.Logfile):
 
             if not hasattr(self, "atomnos"):
                 self.atomnos = atomnos
-                self.set_scalar('natom', len(atomnos))
+                self.set_attribute('natom', len(atomnos))
             self.atomcoords = [atomcoords]
 
         # There's always a banner announcing the next geometry optimization cycle,
@@ -393,9 +393,9 @@ class ORCA(logfileparser.Logfile):
         # For this reason, also check for the second patterns, and use it as an assert
         # if nbasis was already parsed. Regression PCB_1_122.out covers this test case.
         if line[1:32] == "# of contracted basis functions":
-            self.set_scalar('nbasis', int(line.split()[-1]))
+            self.set_attribute('nbasis', int(line.split()[-1]))
         if line[1:27] == "Basis Dimension        Dim":
-            self.set_scalar('nbasis', int(line.split()[-1]))
+            self.set_attribute('nbasis', int(line.split()[-1]))
 
         if line[0:14] == "OVERLAP MATRIX":
 

@@ -160,11 +160,11 @@ class GAMESS(logfileparser.Logfile):
         if line[1:19] == "CHARGE OF MOLECULE":
 
             charge = int(line.split()[-1])
-            self.set_scalar('charge', charge)
+            self.set_attribute('charge', charge)
 
             line = next(inputfile)
             mult = int(line.split()[-1])
-            self.set_scalar('mult', mult)
+            self.set_attribute('mult', mult)
 
         # etenergies (used only for CIS runs now)
         if "EXCITATION ENERGIES" in line and line.find("DONE WITH") < 0:
@@ -1007,31 +1007,31 @@ class GAMESS(logfileparser.Logfile):
         #   this is slightly different (ex. lower case for FMO in exam37).
         if not hasattr(self,"natom") and "NUMBER OF ATOMS" in line.upper():
             natom = int(line.split()[-1])
-            self.set_scalar('natom', natom)
+            self.set_attribute('natom', natom)
             
         # The first is from Julien's Example and the second is from Alexander's
         # I think it happens if you use a polar basis function instead of a cartesian one
         if line.find("NUMBER OF CARTESIAN GAUSSIAN BASIS") == 1 or line.find("TOTAL NUMBER OF BASIS FUNCTIONS") == 1:
             nbasis = int(line.strip().split()[-1])
-            self.set_scalar('nbasis', nbasis)
+            self.set_attribute('nbasis', nbasis)
                 
         elif line.find("TOTAL NUMBER OF CONTAMINANTS DROPPED") >= 0:
             nmos_dropped = int(line.split()[-1])
             if hasattr(self, "nmo"):
-                self.set_scalar('nmo', self.nmo - nmos_dropped)
+                self.set_attribute('nmo', self.nmo - nmos_dropped)
             else:
-                self.set_scalar('nmo', self.nbasis - nmos_dropped)
+                self.set_attribute('nmo', self.nbasis - nmos_dropped)
 
         # Note that this line is present if ISPHER=1, e.g. for C_bigbasis
         elif line.find("SPHERICAL HARMONICS KEPT IN THE VARIATION SPACE") >= 0:
             nmo = int(line.strip().split()[-1])
-            self.set_scalar('nmo', nmo)
+            self.set_attribute('nmo', nmo)
             
         # Note that this line is not always present, so by default
         # NBsUse is set equal to NBasis (see below).
         elif line.find("TOTAL NUMBER OF MOS IN VARIATION SPACE") == 1:
             nmo = int(line.split()[-1])
-            self.set_scalar('nmo', nmo)
+            self.set_attribute('nmo', nmo)
 
         elif line.find("OVERLAP MATRIX") == 0 or line.find("OVERLAP MATRIX") == 1:
             # The first is for PC-GAMESS, the second for GAMESS

@@ -91,7 +91,7 @@ class NWChem(logfileparser.Logfile):
 
             self.skip_line(inputfile, 'dashes')
             natom = int(next(inputfile).strip())
-            self.set_scalar('natom', natom)
+            self.set_attribute('natom', natom)
 
         if line.strip() == "NWChem Geometry Optimization":
             self.skip_lines(inputfile, ['d', 'b', 'b', 'b', 'b', 'title', 'b', 'b'])
@@ -219,16 +219,16 @@ class NWChem(logfileparser.Logfile):
             while line.strip():
                 if line[2:8] == "charge":
                     charge = int(float(line.split()[-1]))
-                    self.set_scalar('charge', charge)
+                    self.set_attribute('charge', charge)
                 if line[2:13] == "open shells":
                     unpaired = int(line.split()[-1])
-                    self.set_scalar('mult', 2*unpaired + 1)
+                    self.set_attribute('mult', 2*unpaired + 1)
                 if line[2:7] == "atoms":
                     natom = int(line.split()[-1])
-                    self.set_scalar('natom', natom)
+                    self.set_attribute('natom', natom)
                 if line[2:11] == "functions":
                     nfuncs = int(line.split()[-1])
-                    self.set_scalar("nbasis", nfuncs)
+                    self.set_attribute("nbasis", nfuncs)
                 line = next(inputfile)
 
         # This section contains general parameters for DFT calculations, as well as
@@ -241,17 +241,17 @@ class NWChem(logfileparser.Logfile):
             while line.strip():
 
                 if "No. of atoms" in line:
-                    self.set_scalar('natom', int(line.split()[-1]))
+                    self.set_attribute('natom', int(line.split()[-1]))
                 if "Charge" in line:
-                    self.set_scalar('charge', int(line.split()[-1]))
+                    self.set_attribute('charge', int(line.split()[-1]))
                 if "Spin multiplicity" in line:
                     mult = line.split()[-1]
                     if mult == "singlet":
                         mult = 1
-                    self.set_scalar('mult', int(mult))
+                    self.set_attribute('mult', int(mult))
                 if "AO basis - number of function" in line:
                     nfuncs = int(line.split()[-1])
-                    self.set_scalar('nbasis', nfuncs)
+                    self.set_attribute('nbasis', nfuncs)
 
                 # These will be present only in the DFT module.
                 if "Convergence on energy requested" in line:
@@ -553,7 +553,7 @@ class NWChem(logfileparser.Logfile):
                 line = next(inputfile)
 
             self.moenergies.append(energies)
-            self.set_scalar('nmo', nvector)
+            self.set_attribute('nmo', nvector)
 
             if any(symmetries):
                 if len(self.mosyms) == alphabeta + 1:
@@ -603,8 +603,8 @@ class NWChem(logfileparser.Logfile):
                 size = array_info.split('[')[1].split(']')[0]
                 nbasis = int(size.split(',')[0].split(':')[1])
                 nmo = int(size.split(',')[1].split(':')[1])
-                self.set_scalar('nbasis', nbasis)
-                self.set_scalar('nmo', nmo)
+                self.set_attribute('nbasis', nbasis)
+                self.set_attribute('nmo', nmo)
             
                 self.skip_line(inputfile, 'blank')
                 mocoeffs = []

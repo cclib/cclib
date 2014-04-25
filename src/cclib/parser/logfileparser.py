@@ -324,8 +324,14 @@ class Logfile(object):
         number = number.replace("D","E")
         return float(number)
 
-    def set_scalar(self, name, value, check=True):
-        """Set an attribute and perform a check when it already exists."""
+    def set_attribute(self, name, value, check=True):
+        """Set an attribute and perform a check when it already exists.
+
+        Note that this can be used for scalars and lists alike, whenever we want
+        to set a value for an attribute. By default we want to check that
+        the value does not change if the attribute already exists, and this function
+        is a good place to add more tests in the future.        
+        """
         if check and hasattr(self, name):
             try:
                 assert getattr(self, name) == value

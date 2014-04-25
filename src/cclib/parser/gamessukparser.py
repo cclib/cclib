@@ -61,7 +61,7 @@ class GAMESSUK(logfileparser.Logfile):
 
         if line[1:22] == "total number of atoms":
             natom = int(line.split()[-1])
-            self.set_scalar('natom', natom)
+            self.set_attribute('natom', natom)
 
         if line[3:44] == "convergence threshold in optimization run":
             # Assuming that this is only found in the case of OPTXYZ
@@ -165,16 +165,16 @@ class GAMESSUK(logfileparser.Logfile):
         if line[1:32] == "total number of basis functions":
 
             nbasis = int(line.split()[-1])
-            self.set_scalar('nbasis', nbasis)
+            self.set_attribute('nbasis', nbasis)
 
             while line.find("charge of molecule")<0:
                 line = next(inputfile)
 
             charge = int(line.split()[-1])
-            self.set_scalar('charge', charge)
+            self.set_attribute('charge', charge)
 
             mult = int(next(inputfile).split()[-1])
-            self.set_scalar('mult', mult)
+            self.set_attribute('mult', mult)
 
             alpha = int(next(inputfile).split()[-1])-1
             beta = int(next(inputfile).split()[-1])-1

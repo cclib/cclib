@@ -60,8 +60,8 @@ class Jaguar(logfileparser.Logfile):
 
         # Extract charge and multiplicity
         if line[2:22] == "net molecular charge":
-            self.set_scalar('charge', int(line.split()[-1]))
-            self.set_scalar('mult', int(next(inputfile).split()[-1]))
+            self.set_attribute('charge', int(line.split()[-1]))
+            self.set_attribute('mult', int(next(inputfile).split()[-1]))
 
         # The Gaussian basis set information is printed before the geometry, and we need
         # to do some indexing to get this into cclib format, because fn increments
@@ -149,7 +149,7 @@ class Jaguar(logfileparser.Logfile):
                 assert self.atombasis == atombasis
 
             # This length of atombasis should always be the number of atoms.
-            self.set_scalar('natom', len(self.atombasis))
+            self.set_attribute('natom', len(self.atombasis))
 
         #  Effective Core Potential 
         #  
@@ -207,7 +207,7 @@ class Jaguar(logfileparser.Logfile):
                 line = next(inputfile)
             self.atomcoords.append(atomcoords)
             self.atomnos = numpy.array(atomnos, "i")
-            self.set_scalar('natom', len(atomcoords))
+            self.set_attribute('natom', len(atomcoords))
 
         # Hartree-Fock energy after SCF
         if line[1:18] == "SCFE: SCF energy:":
@@ -246,7 +246,7 @@ class Jaguar(logfileparser.Logfile):
 
         if line[2:27] == "number of basis functions":
             nbasis = int(line.strip().split()[-1])
-            self.set_scalar('nbasis', nbasis)
+            self.set_attribute('nbasis', nbasis)
 
         if line.find("number of alpha occupied orb") > 0:
         # Get number of MOs for an unrestricted calc

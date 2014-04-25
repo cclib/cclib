@@ -76,7 +76,7 @@ class Molpro(logfileparser.Logfile):
                 
             self.atomnos = numpy.array(atomnos, "i")
             self.atomcoords.append(atomcoords)
-            self.set_scalar('natom', len(self.atomnos))
+            self.set_attribute('natom', len(self.atomnos))
         
         # Use BASIS DATA to parse input for aonames and atombasis.
         # This is always the first place this information is printed, so no attribute check is needed.
@@ -154,7 +154,7 @@ class Molpro(logfileparser.Logfile):
         if line[1:23] == "NUMBER OF CONTRACTIONS":
             
             nbasis = int(line.split()[3])
-            self.set_scalar('nbasis', nbasis)
+            self.set_attribute('nbasis', nbasis)
 
         # This is used to signalize whether we are inside an SCF calculation.
         if line[1:8] == "PROGRAM" and line[14:18] == "-SCF":
@@ -171,10 +171,10 @@ class Molpro(logfileparser.Logfile):
             nuclear = numpy.sum(self.atomnos)
 
             charge = nuclear - spinup - spindown
-            self.set_scalar('charge', charge)
+            self.set_attribute('charge', charge)
 
             mult = spinup - spindown + 1
-            self.set_scalar('mult', mult)
+            self.set_attribute('mult', mult)
         
         # Convergenve thresholds for SCF cycle, should be contained in a line such as:
         #   CONVERGENCE THRESHOLDS:    1.00E-05 (Density)    1.40E-07 (Energy)

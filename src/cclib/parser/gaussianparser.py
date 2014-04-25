@@ -102,7 +102,7 @@ class Gaussian(logfileparser.Logfile):
             self.updateprogress(inputfile, "Attributes", self.fupdate)
                     
             natom = int(line.split()[1])
-            self.set_scalar('natom', natom)
+            self.set_attribute('natom', natom)
 
         # Catch message about completed optimization.
         if line[1:23] == "Optimization completed":
@@ -193,7 +193,7 @@ class Gaussian(logfileparser.Logfile):
 
             if not hasattr(self, "natom"):
                 self.atomnos = numpy.array(atomnos, 'i')
-                self.set_scalar('natom', len(self.atomnos))
+                self.set_attribute('natom', len(self.atomnos))
 
             # make sure atomnos is added for the case where natom has already been set
             elif not hasattr(self, "atomnos"):
@@ -499,8 +499,8 @@ class Gaussian(logfileparser.Logfile):
             match = re.match(regex, line)
             assert match, "Something unusual about the line: '%s'" % line
             
-            self.set_scalar('charge', int(match.groups()[0]))
-            self.set_scalar('mult', int(match.groups()[1]))
+            self.set_attribute('charge', int(match.groups()[0]))
+            self.set_attribute('mult', int(match.groups()[1]))
 
         # Orbital symmetries.
         if line[1:20] == 'Orbital symmetries:' and not hasattr(self, "mosyms"):
@@ -558,7 +558,7 @@ class Gaussian(logfileparser.Logfile):
             # and will occasionally drop some without warning. We can infer the number,
             # however, from the MO symmetries printed here. Specifically, this fixes
             # regression Gaussian/Gaussian09/dvb_sp_terse.log (#23 on github).
-            self.set_scalar('nmo', len(self.mosyms[-1]))
+            self.set_attribute('nmo', len(self.mosyms[-1]))
 
         # Alpha/Beta electron eigenvalues.
         if line[1:6] == "Alpha" and line.find("eigenvalues") >= 0:
@@ -895,7 +895,7 @@ class Gaussian(logfileparser.Logfile):
         if line[7:22] == "basis functions, ":
         
             nbasis = int(line.split()[0])
-            self.set_scalar('nbasis', nbasis)
+            self.set_attribute('nbasis', nbasis)
 
         # Molecular orbital overlap matrix.
         # Has to deal with lines such as:
