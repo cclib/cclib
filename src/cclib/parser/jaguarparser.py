@@ -142,11 +142,8 @@ class Jaguar(logfileparser.Logfile):
 
                 line = next(inputfile)
 
-            # The indices for atombasis can also be read later from the molecualr orbital output.
-            if not hasattr(self, 'atombasis'):
-                self.atombasis = atombasis
-            else:
-                assert self.atombasis == atombasis
+            # The indices for atombasis can also be read later from the molecular orbital output.
+            self.set_attribute('atombasis', atombasis)
 
             # This length of atombasis should always be the number of atoms.
             self.set_attribute('natom', len(self.atombasis))

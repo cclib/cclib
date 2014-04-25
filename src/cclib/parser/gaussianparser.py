@@ -82,12 +82,14 @@ class Gaussian(logfileparser.Logfile):
             new_etsecs = [[(x[0], x[1], x[2] * numpy.sqrt(2)) for x in etsec]
                           for etsec in self.etsecs]
             self.etsecs = new_etsecs
+
         if hasattr(self, "scanenergies"):
             self.scancoords = []
             self.scancoords = self.atomcoords
+
         if (hasattr(self, 'enthalpy') and hasattr(self, 'temperature') 
                 and hasattr(self, 'freeenergy')):
-            self.entropy = (self.enthalpy - self.freeenergy)/self.temperature
+            self.set_attribute('entropy', (self.enthalpy - self.freeenergy) / self.temperature)
 
         if hasattr(self, 'atomcoords') and hasattr(self, 'optdone') and len(self.optdone) > 0:
             last_point = self.optdone[-1]
@@ -106,8 +108,10 @@ class Gaussian(logfileparser.Logfile):
 
         # Catch message about completed optimization.
         if line[1:23] == "Optimization completed":
+
             if not hasattr(self, 'optdone'):
                 self.optdone = []
+
             self.optdone.append(len(self.geovalues) - 1)
         
         # Extract the atomic numbers and coordinates from the input orientation,
@@ -136,9 +140,8 @@ class Gaussian(logfileparser.Logfile):
 
             self.inputcoords.append(atomcoords)
 
-            if not hasattr(self, "atomnos"):
-                self.atomnos = numpy.array(self.inputatoms, 'i')
-                self.natom = len(self.atomnos)
+            self.set_attribute('atomnos', self.inputatoms)
+            self.set_attribute('natom', len(self.inputatoms))
 
         # Extract the atomic masses.
         # Typical section:
@@ -191,13 +194,8 @@ class Gaussian(logfileparser.Logfile):
                 line = next(inputfile)
             self.atomcoords.append(atomcoords)
 
-            if not hasattr(self, "natom"):
-                self.atomnos = numpy.array(atomnos, 'i')
-                self.set_attribute('natom', len(self.atomnos))
-
-            # make sure atomnos is added for the case where natom has already been set
-            elif not hasattr(self, "atomnos"):
-                self.atomnos = numpy.array(atomnos, 'i')
+            self.set_attribute('natom', len(atomnos))
+            self.set_attribute('atmonos', atomnos)
 
         # Find the targets for SCF convergence (QM calcs).
         if line[1:44] == 'Requested convergence on RMS density matrix':
@@ -883,12 +881,7 @@ class Gaussian(logfileparser.Logfile):
             if self.oniom: return
 
             nmo = int(line.split('=')[1].split()[0])
-            if hasattr(self, "nmo"):
-                try:
-                    assert nmo == self.nmo
-                except AssertionError:
-                    self.logger.warning("Number of molecular orbitals (nmo) has changed from %i to %i" % (self.nmo, nmo))
-            self.nmo = nmo
+            self.set_attribute('nmo', nmo)
 
         # For AM1 calculations, set nbasis by a second method,
         #   as nmo may not always be explicitly stated.
@@ -1182,14 +1175,11 @@ class Gaussian(logfileparser.Logfile):
         #Sum of electronic and thermal Enthalpies=            -563.635755
         #Sum of electronic and thermal Free Energies=         -563.689037
         if "Sum of electronic and thermal Enthalpies" in line:
-            if not hasattr(self, 'enthalpy'):
-                self.enthalpy = float(line.split()[6])
+            self.set_attribute('enthalpy', float(line.split()[6]))
         if "Sum of electronic and thermal Free Energies=" in line:
-            if not hasattr(self, 'freeenergy'):
-                self.freeenergy = float(line.split()[7])
+            self.set_attribute('freenergy', float(line.split()[7]))
         if line[1:12] == "Temperature":
-            if not hasattr(self, 'temperature'):
-                self.temperature = float(line.split()[1])
+            self.set_attribute('temperature', float(line.split()[1]))
 
 
 if __name__ == "__main__":

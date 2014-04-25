@@ -80,11 +80,10 @@ class NWChem(logfileparser.Logfile):
                 coords.append(list(map(float, [x,y,z])))
                 atomnos.append(int(float(nuclear)))
                 line = next(inputfile)
+
             self.atomcoords.append(coords)
-            if hasattr(self, 'atomnos'):
-                assert atomnos == self.atomnos
-            else:
-                self.atomnos = atomnos
+
+            self.set_attribute('atomnos', atomnos)
 
         # If the geometry is printed in XYZ format, it will have the number of atoms.
         if line[12:31] == "XYZ format geometry":
@@ -106,10 +105,8 @@ class NWChem(logfileparser.Logfile):
                 if "rms cartesian step threshold" in line:
                     xrms = float(line.split()[-1])
                 line = next(inputfile)
-            if not hasattr(self, 'geotargets'):
-                self.geotargets = [gmax, grms, xmax, xrms]
-            else:
-                assert self.geotargets == [gmax, grms, xmax, xrms]
+
+            self.set_attribute('geotargets', [gmax, grms, xmax, xrms])
 
         # NWChem does not normally print the basis set for each atom, but rather
         # chooses the concise option of printing Gaussian coefficients for each
@@ -174,14 +171,13 @@ class NWChem(logfileparser.Logfile):
                     shells.append(shell)
                     line = next(inputfile)
                 gbasis_dict[atomelement].extend(shells)
+
             gbasis = []
             for i in range(self.natom):
                 atomtype = utils.PeriodicTable().element[self.atomnos[i]]
                 gbasis.append(gbasis_dict[atomtype])
-            if not hasattr(self, 'gbasis'):
-                self.gbasis = gbasis
-            else:
-                assert self.gbasis == gbasis
+
+            self.set_attribute('gbasis', gbasis)
 
         # Normally the indexes of AOs assigned to specific atoms are also not printed,
         # so we need to infer that. We could do that from the previous section,
@@ -191,25 +187,27 @@ class NWChem(logfileparser.Logfile):
         # we assume all atoms of the same element have the same basis sets, but
         # this will probably need to be revised later.
         if line.strip() == """Summary of "ao basis" -> "ao basis" (cartesian)""":
+
             self.skip_lines(inputfile, ['d', 'headers', 'd'])
+
             atombasis_dict = {}
+
             line = next(inputfile)
             while line.strip():
                 atomname, desc, shells, funcs, types = line.split()
                 atomelement = self.name2element(atomname)
                 atombasis_dict[atomelement] = int(funcs)
                 line = next(inputfile)
-            atombasis = []
+
             last = 0
+            atombasis = []
             for i in range(self.natom):
                 atomelement = utils.PeriodicTable().element[self.atomnos[i]]
                 nfuncs = atombasis_dict[atomelement]
                 atombasis.append(list(range(last,last+nfuncs)))
                 last = atombasis[-1][-1] + 1
-            if not hasattr(self, 'atombasis'):
-                self.atombasis = atombasis
-            else:
-                assert self.atombasis == atombasis
+
+            self.set_attribute('atombasis', atombasis)
 
         # This section contains general parameters for Hartree-Fock calculations,
         # which do not contain the 'General Information' section like most jobs.

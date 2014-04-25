@@ -306,9 +306,9 @@ class ORCA(logfileparser.Logfile):
                 atomcoords.append(list(map(float, broken[1:4])))
                 line = next(inputfile)
 
-            if not hasattr(self, "atomnos"):
-                self.atomnos = atomnos
-                self.set_attribute('natom', len(atomnos))
+            self.set_attribute('natom', len(atomnos))
+            self.set_attribute('atomnos', atomnos)
+
             self.atomcoords = [atomcoords]
 
         # There's always a banner announcing the next geometry optimization cycle,
@@ -337,8 +337,8 @@ class ORCA(logfileparser.Logfile):
                 atomcoords.append(list(map(float, broken[1:4])))
             
             self.atomcoords.append(atomcoords)
-            if not hasattr(self, "atomnos"):
-                self.atomnos = numpy.array(atomnos,'i')
+
+            self.set_attribute('atomnos', atomnos)
 
         if line[21:68] == "FINAL ENERGY EVALUATION AT THE STATIONARY POINT":
 

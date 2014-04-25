@@ -400,13 +400,14 @@ class GAMESS(logfileparser.Logfile):
 
             self.geovalues.append([maximum, rms])
 
+        # This is the input orientation, which is the only data available for
+        # SP calcs, but which should be overwritten by the standard orientation
+        # values, which is the only information available for all geoopt cycles.
         if line[11:50] == "ATOMIC                      COORDINATES":
-            # This is the input orientation, which is the only data available for
-            # SP calcs, but which should be overwritten by the standard orientation
-            # values, which is the only information available for all geoopt cycles.
+
             if not hasattr(self, "atomcoords"):
                 self.atomcoords = []
-                self.atomnos = []
+
             line = next(inputfile)
             atomcoords = []
             atomnos = []
@@ -416,7 +417,8 @@ class GAMESS(logfileparser.Logfile):
                 atomcoords.append([utils.convertor(float(x), "bohr", "Angstrom") for x in temp[2:5]])
                 atomnos.append(int(round(float(temp[1])))) # Don't use the atom name as this is arbitary
                 line = next(inputfile)
-            self.atomnos = numpy.array(atomnos, "i")
+
+            self.set_attribute('atomnos', atomnos)
             self.atomcoords.append(atomcoords)
 
         if line[12:40] == "EQUILIBRIUM GEOMETRY LOCATED":
@@ -978,10 +980,12 @@ class GAMESS(logfileparser.Logfile):
         # Note that MCSCF calcs also print this search string, so make sure
         #   that self.homos does not exist yet.
         if line[1:28] == "NUMBER OF OCCUPIED ORBITALS" and not hasattr(self,'homos'):
+
             homos = [int(line.split()[-1])-1]
             line = next(inputfile)
             homos.append(int(line.split()[-1])-1)
-            self.homos = numpy.array(homos, "i")
+
+            self.set_attribute('homos', homos)
 
         
         if line.find("SYMMETRIES FOR INITIAL GUESS ORBITALS FOLLOW") >= 0:

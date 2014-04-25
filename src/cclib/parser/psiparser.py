@@ -190,8 +190,7 @@ class Psi(logfileparser.Logfile):
                     indices.append(range(start, start+nfuncs))
                 line = next(inputfile)
 
-            if not hasattr(self, 'atombasis'):
-                self.atombasis = indices
+            self.set_attribute('atombasis', indices)
 
         # In Psi3, the integrals program prints useful information when invoked.
         if (self.version == 3) and (line.strip() == "CINTS: An integrals program written in C"):
@@ -295,13 +294,8 @@ class Psi(logfileparser.Logfile):
                 line = next(inputfile)
 
             self.set_attribute('natom', len(atomnos))
-
-            if not hasattr(self, 'atomnos'):
-                self.atomnos = atomnos
-            else:
-                assert self.atomnos == atomnos
-
-            self.atombasis = atombasis
+            self.set_attribute('atomnos', atomnos)
+            self.set_attribute('atombasis', atombasis)
 
         # The atomic basis set is straightforward to parse, but there are some complications
         # when symmetry is used, because in that case Psi4 only print the symmetry-unique atoms,

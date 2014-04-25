@@ -74,8 +74,9 @@ class Molpro(logfileparser.Logfile):
                 atomnos.append(int(round(float(temp[2]))))
                 line = next(inputfile)
                 
-            self.atomnos = numpy.array(atomnos, "i")
             self.atomcoords.append(atomcoords)
+
+            self.set_attribute('atomnos', atomnos)
             self.set_attribute('natom', len(self.atomnos))
         
         # Use BASIS DATA to parse input for aonames and atombasis.
