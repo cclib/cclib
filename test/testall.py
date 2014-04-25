@@ -145,6 +145,7 @@ def testall(parserchoice=parsers, modules=test_modules, stream=sys.stdout):
 
     perpackage = {}
     errors = []
+    failures = []
     
     alltests = []
     for module in modules:
@@ -183,6 +184,15 @@ def testall(parserchoice=parsers, modules=test_modules, stream=sys.stdout):
                     if hasattr(a, "skipped"):
                         l[3] += len(a.skipped)
                     alltests.append(test)
+                    failures.extend(a.failures)
+
+    if errors:
+        print("\n\n********* SUMMARY OF ERRORS *********", file=stream)
+        print("\n".join(errors))
+
+    if failures:
+        print("\n\n********* SUMMARY OF FAILURES *********", file=stream)
+        print("\n".join([str(f) for f in failures]))
 
     print("\n\n********* SUMMARY PER PACKAGE ****************", file=stream)
     names = sorted(perpackage.keys())
@@ -197,9 +207,6 @@ def testall(parserchoice=parsers, modules=test_modules, stream=sys.stdout):
     print("\n\n********* SUMMARY OF EVERYTHING **************", file=stream)
     print("TOTAL: %d\tPASSED: %d\tFAILED: %d\tERRORS: %d\tSKIPPED: %d" \
             %(total[0], total[0]-(total[1]+total[2]+total[3]), total[2], total[1], total[3]), file=stream)
-
-    if errors:
-        print("\n".join(errors))
 
     print("\n\n*** Visual tests ***", file=stream)
     visualtests(stream=stream)
