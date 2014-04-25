@@ -63,9 +63,6 @@ class Gaussian(logfileparser.Logfile):
         # Used to index self.scftargets[].
         SCFRMS, SCFMAX, SCFENERGY = list(range(3))
 
-        # List to keep track of points of finished geometry optimizations
-        self.optdone = []
-        
         # Flag for identifying Coupled Cluster runs.
         self.coupledcluster = False
 
@@ -92,7 +89,7 @@ class Gaussian(logfileparser.Logfile):
                 and hasattr(self, 'freeenergy')):
             self.entropy = (self.enthalpy - self.freeenergy)/self.temperature
 
-        if hasattr(self, 'atomcoords') and len(self.optdone) > 0:
+        if hasattr(self, 'atomcoords') and hasattr(self, 'optdone') and len(self.optdone) > 0:
             last_point = self.optdone[-1]
             self.atomcoords = self.atomcoords[:last_point + 1]
             
@@ -109,6 +106,8 @@ class Gaussian(logfileparser.Logfile):
 
         # Catch message about completed optimization.
         if line[1:23] == "Optimization completed":
+            if not hasattr(self, 'optdone'):
+                self.optdone = []
             self.optdone.append(len(self.geovalues) - 1)
         
         # Extract the atomic numbers and coordinates from the input orientation,

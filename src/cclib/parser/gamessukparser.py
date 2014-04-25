@@ -158,7 +158,9 @@ class GAMESSUK(logfileparser.Logfile):
                 self.atomnos = atomnos
 
         if line[40:62] == "optimization converged":
-            self.optdone = True
+            if not hasattr(self, 'optdone'):
+                self.optdone = []
+            self.optdone.append(len(self.geovalues)-1)
 
         if line[1:32] == "total number of basis functions":
 

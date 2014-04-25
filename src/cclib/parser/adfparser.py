@@ -333,9 +333,10 @@ class ADF(logfileparser.Logfile):
                 self.atomcoords = []
             self.atomcoords.append(atomcoords)
 
-            if self.finalgeometry == self.GETLAST: # Don't get any more coordinates
+            # Don't get any more coordinates in this case.
+            # KML: I think we could combine this with optdone (see below).
+            if self.finalgeometry == self.GETLAST:
                 self.finalgeometry = self.NOMORE
-                self.optdone = True
 
         # There have been some changes in the format of the geometry convergence information,
         # and this is how it is printed in older versions (2007.01 unit tests).
@@ -383,6 +384,18 @@ class ADF(logfileparser.Logfile):
 
             self.geovalues.append(values)
 
+        # After the test, there is a message if the search is converged:
+        #
+        # ***************************************************************************************************
+        #                             Geometry CONVERGED
+        # ***************************************************************************************************
+        #
+        if line.strip() == "Geometry CONVERGED":
+            self.skip_line(inputfile, 'stars')
+            if not hasattr(self, 'optdone'):
+                self.optdone = []
+            self.optdone.append(len(self.geovalues) - 1)
+
         # Here is the corresponding geometry convergence info from the 2013.01 unit test.
         # Note that the step number is given, which it will be prudent to use in an assertion.
         #
@@ -402,7 +415,9 @@ class ADF(logfileparser.Logfile):
             stepno = int(line.split()[4])
 
             if "** CONVERGED **" in line:
-                self.optdone = True
+                if not hasattr(self, 'optdone'):
+                    self.optdone = []
+                self.optdone.append(len(self.geovalues) - 1)
 
             self.skip_line(inputfile, 'dashes')
 

@@ -55,9 +55,6 @@ class Jaguar(logfileparser.Logfile):
         # to parse SCF targets/values correctly.
         self.geoopt = False
 
-        # List of indices pointing to finished geometry optimizations.
-        self.optdone = []
-
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
 
@@ -230,6 +227,8 @@ class Jaguar(logfileparser.Logfile):
             self.mpenergies[-1].append(lmp2energy)
 
         if line[15:45] == "Geometry optimization complete":
+            if not hasattr(self, 'optdone'):
+                self.optdone = []
             self.optdone.append(len(self.geovalues) - 1)
 
         if line.find("number of occupied orbitals") > 0:

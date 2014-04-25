@@ -184,11 +184,12 @@ def testall(parserchoice=parsers, modules=test_modules, stream=sys.stdout):
                     if hasattr(a, "skipped"):
                         l[3] += len(a.skipped)
                     alltests.append(test)
+                    errors.extend(a.errors)
                     failures.extend(a.failures)
 
     if errors:
         print("\n\n********* SUMMARY OF ERRORS *********", file=stream)
-        print("\n".join(errors))
+        print("\n".join([str(e) for e in errors]))
 
     if failures:
         print("\n\n********* SUMMARY OF FAILURES *********", file=stream)

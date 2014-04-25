@@ -421,9 +421,11 @@ class GAMESS(logfileparser.Logfile):
 
         if line[12:40] == "EQUILIBRIUM GEOMETRY LOCATED":
             # Prevent extraction of the final geometry twice
-            self.optdone = True
+            if not hasattr(self, 'optdone'):
+                self.optdone = []
+            self.optdone.append(len(self.geovalues) - 1)
         
-        if line[1:29] == "COORDINATES OF ALL ATOMS ARE" and not self.optdone:
+        if line[1:29] == "COORDINATES OF ALL ATOMS ARE" and (not hasattr(self, "optdone") or self.optdone == []):
             # This is the standard orientation, which is the only coordinate
             # information available for all geometry optimisation cycles.
             # The input orientation will be overwritten if this is a geometry optimisation

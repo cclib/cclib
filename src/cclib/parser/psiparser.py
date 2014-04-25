@@ -43,8 +43,6 @@ class Psi(logfileparser.Logfile):
         # with changes triggered by ==> things like this <== (Psi3 does not have this)
         self.section = None
 
-        self.optdone = []
-
     def normalisesym(self, label):
         """Use standard symmetry labels instead of NWChem labels.
 
@@ -696,6 +694,8 @@ class Psi(logfileparser.Logfile):
             self.geovalues.append(geovalues)
 
         if line.strip() == "**** Optimization is complete! ****":
+            if not hasattr(self, 'optdone'):
+                self.optdone = []
             self.optdone.append(len(self.geovalues))
 
 if __name__ == "__main__":

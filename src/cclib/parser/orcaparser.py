@@ -50,9 +50,6 @@ class ORCA(logfileparser.Logfile):
         # we parse a cycle (so it will be larger than zero().
         self.gopt_cycle = 0
 
-        # Keep track of when geometry optimizations finish
-        self.optdone = []
-
         # Keep track of whether this is a relaxed scan calculation
         self.is_relaxed_scan = False
 
@@ -343,13 +340,11 @@ class ORCA(logfileparser.Logfile):
             if not hasattr(self, "atomnos"):
                 self.atomnos = numpy.array(atomnos,'i')
 
-        # This was for optdone in v1.2.
-        #if line[31:61] == "THE OPTIMIZATION HAS CONVERGED":
-        #    self.optdone = True
-
         if line[21:68] == "FINAL ENERGY EVALUATION AT THE STATIONARY POINT":
-            count = len(self.atomcoords)
-            self.optdone.append(count)
+
+            if not hasattr(self, 'optdone'):
+                self.optdone = []
+            self.optdone.append(len(self.atomcoords))
 
             self.skip_lines(inputfile, ['text', 's', 'd', 'text', 'd'])
 
