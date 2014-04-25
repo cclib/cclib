@@ -61,7 +61,7 @@ class Molpro(logfileparser.Logfile):
             
             if not hasattr(self,"atomcoords"):
                 self.atomcoords = []
-                self.atomnos = []
+
             atomcoords = []
             atomnos = []
             
