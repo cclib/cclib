@@ -172,9 +172,6 @@ class Logfile(object):
         #   and should normally be ccData or a subclass.
         self.datatype = datatype
 
-        # All parsers should have an optdone attribute; might as well set here
-        self.optdone = False
-
     def __setattr__(self, name, value):
 
         # Send info to logger if the attribute is in the list self._attrlist.
@@ -327,8 +324,14 @@ class Logfile(object):
         number = number.replace("D","E")
         return float(number)
 
-    def set_scalar(self, name, value, check=True):
-        """Set an attribute and perform a check when it already exists."""
+    def set_attribute(self, name, value, check=True):
+        """Set an attribute and perform a check when it already exists.
+
+        Note that this can be used for scalars and lists alike, whenever we want
+        to set a value for an attribute. By default we want to check that
+        the value does not change if the attribute already exists, and this function
+        is a good place to add more tests in the future.        
+        """
         if check and hasattr(self, name):
             try:
                 assert getattr(self, name) == value

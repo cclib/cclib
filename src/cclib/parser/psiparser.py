@@ -43,8 +43,6 @@ class Psi(logfileparser.Logfile):
         # with changes triggered by ==> things like this <== (Psi3 does not have this)
         self.section = None
 
-        self.optdone = []
-
     def normalisesym(self, label):
         """Use standard symmetry labels instead of NWChem labels.
 
@@ -97,16 +95,12 @@ class Psi(logfileparser.Logfile):
 
                 line = next(inputfile)
 
-            self.set_scalar('natom', len(coords))
+            self.set_attribute('natom', len(coords))
+            self.set_attribute('atomnos', numbers)
 
             if not hasattr(self, 'atomcoords'):
                 self.atomcoords = []
             self.atomcoords.append(coords)
-
-            if not hasattr(self, 'atomnos'):
-                self.atomnos = numbers
-            else:
-                assert self.atomnos == numbers
 
         #  ==> Geometry <==
         #
@@ -125,11 +119,11 @@ class Psi(logfileparser.Logfile):
 
             assert line.split()[3] == "charge"
             charge = int(line.split()[5].strip(','))
-            self.set_scalar('charge', charge)
+            self.set_attribute('charge', charge)
 
             assert line.split()[6] == "multiplicity"
             mult = int(line.split()[8].strip(':'))
-            self.set_scalar('mult', mult)
+            self.set_attribute('mult', mult)
 
             self.skip_line(inputfile, "blank")
             line = next(inputfile)
@@ -148,8 +142,7 @@ class Psi(logfileparser.Logfile):
                 coords.append([float(x), float(y), float(z)])
                 line = next(inputfile)
 
-            if not hasattr(self, 'atomnos'):
-                self.atomnos = [self.table.number[el] for el in elements]
+            self.set_attribute('atomnos', [self.table.number[el] for el in elements])
 
             if not hasattr(self, 'atomcoords'):
                 self.atomcoords = []
@@ -160,22 +153,22 @@ class Psi(logfileparser.Logfile):
             line = next(inputfile)
             while line.strip():
                 if "Number of atoms" in line:
-                    self.set_scalar('natom', int(line.split()[-1]))
+                    self.set_attribute('natom', int(line.split()[-1]))
                 line = next(inputfile)
         if (self.version == 3) and (line.strip() == "-BASIS SET INFORMATION:"):
             line = next(inputfile)
             while line.strip():
                 if "Number of AO" in line:
-                    self.set_scalar('nbasis', int(line.split()[-1]))
+                    self.set_attribute('nbasis', int(line.split()[-1]))
                 line = next(inputfile)            
 
         # Psi4 repeats the charge and multiplicity after the geometry.
         if (self.section == "Geometry") and (line[2:16].lower() == "charge       ="):
             charge = int(line.split()[-1])
-            self.set_scalar('charge', charge)
+            self.set_attribute('charge', charge)
         if (self.section == "Geometry") and (line[2:16].lower() == "multiplicity ="):
             mult = int(line.split()[-1])
-            self.set_scalar('mult', mult)
+            self.set_attribute('mult', mult)
 
         # In Psi3, the section with the contraction scheme can be used to infer atombasis.
         if (self.version == 3) and line.strip() == "-Contraction Scheme:":
@@ -197,8 +190,7 @@ class Psi(logfileparser.Logfile):
                     indices.append(range(start, start+nfuncs))
                 line = next(inputfile)
 
-            if not hasattr(self, 'atombasis'):
-                self.atombasis = indices
+            self.set_attribute('atombasis', indices)
 
         # In Psi3, the integrals program prints useful information when invoked.
         if (self.version == 3) and (line.strip() == "CINTS: An integrals program written in C"):
@@ -215,10 +207,10 @@ class Psi(logfileparser.Logfile):
             while line.strip():
                 if "Number of atoms" in line:
                     natom = int(line.split()[-1])
-                    self.set_scalar('natom', natom)
+                    self.set_attribute('natom', natom)
                 if "Number of atomic orbitals" in line:
                     nbasis = int(line.split()[-1])
-                    self.set_scalar('nbasis', nbasis)
+                    self.set_attribute('nbasis', nbasis)
                 line = next(inputfile)
 
         # In Psi3, this part contains alot of important data pertaining to the SCF, but not only:
@@ -230,10 +222,10 @@ class Psi(logfileparser.Logfile):
             while line.strip():
                 if line.split()[0] == "multiplicity":
                     mult = int(line.split()[-1])
-                    self.set_scalar('mult', mult)
+                    self.set_attribute('mult', mult)
                 if line.split()[0] == "charge":
                     charge = int(line.split()[-1])
-                    self.set_scalar('charge', charge)
+                    self.set_attribute('charge', charge)
                 if line.split()[0] == "convergence":
                     conv = float(line.split()[-1])
                 line = next(inputfile)
@@ -301,14 +293,9 @@ class Psi(logfileparser.Logfile):
 
                 line = next(inputfile)
 
-            self.set_scalar('natom', len(atomnos))
-
-            if not hasattr(self, 'atomnos'):
-                self.atomnos = atomnos
-            else:
-                assert self.atomnos == atomnos
-
-            self.atombasis = atombasis
+            self.set_attribute('natom', len(atomnos))
+            self.set_attribute('atomnos', atomnos)
+            self.set_attribute('atombasis', atombasis)
 
         # The atomic basis set is straightforward to parse, but there are some complications
         # when symmetry is used, because in that case Psi4 only print the symmetry-unique atoms,
@@ -415,10 +402,10 @@ class Psi(logfileparser.Logfile):
         # A block called 'Calculation Information' prints these before starting the SCF.
         if (self.section == "Pre-Iterations") and ("Number of atoms" in line):
             natom = int(line.split()[-1])
-            self.set_scalar('natom', natom)
+            self.set_attribute('natom', natom)
         if (self.section == "Pre-Iterations") and ("Number of atomic orbitals" in line):
             nbasis = int(line.split()[-1])
-            self.set_scalar('nbasis', nbasis)
+            self.set_attribute('nbasis', nbasis)
 
         #  ==> Iterations <==
 
@@ -696,6 +683,8 @@ class Psi(logfileparser.Logfile):
             self.geovalues.append(geovalues)
 
         if line.strip() == "**** Optimization is complete! ****":
+            if not hasattr(self, 'optdone'):
+                self.optdone = []
             self.optdone.append(len(self.geovalues))
 
 if __name__ == "__main__":

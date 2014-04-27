@@ -131,6 +131,10 @@ class GenericSPTest(bettertest.TestCase):
                               self.data.aooverlaps[:,0]),
                           0)
 
+    def testoptdone(self):
+        """There should be no optdone attribute set."""
+        self.assertFalse(hasattr(self.data, 'optdone'))
+
 
 class ADFSPTest(GenericSPTest):
     """ADF restricted single point unittest."""

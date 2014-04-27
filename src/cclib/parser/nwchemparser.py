@@ -80,18 +80,17 @@ class NWChem(logfileparser.Logfile):
                 coords.append(list(map(float, [x,y,z])))
                 atomnos.append(int(float(nuclear)))
                 line = next(inputfile)
+
             self.atomcoords.append(coords)
-            if hasattr(self, 'atomnos'):
-                assert atomnos == self.atomnos
-            else:
-                self.atomnos = atomnos
+
+            self.set_attribute('atomnos', atomnos)
 
         # If the geometry is printed in XYZ format, it will have the number of atoms.
         if line[12:31] == "XYZ format geometry":
 
             self.skip_line(inputfile, 'dashes')
             natom = int(next(inputfile).strip())
-            self.set_scalar('natom', natom)
+            self.set_attribute('natom', natom)
 
         if line.strip() == "NWChem Geometry Optimization":
             self.skip_lines(inputfile, ['d', 'b', 'b', 'b', 'b', 'title', 'b', 'b'])
@@ -106,10 +105,8 @@ class NWChem(logfileparser.Logfile):
                 if "rms cartesian step threshold" in line:
                     xrms = float(line.split()[-1])
                 line = next(inputfile)
-            if not hasattr(self, 'geotargets'):
-                self.geotargets = [gmax, grms, xmax, xrms]
-            else:
-                assert self.geotargets == [gmax, grms, xmax, xrms]
+
+            self.set_attribute('geotargets', [gmax, grms, xmax, xrms])
 
         # NWChem does not normally print the basis set for each atom, but rather
         # chooses the concise option of printing Gaussian coefficients for each
@@ -174,14 +171,13 @@ class NWChem(logfileparser.Logfile):
                     shells.append(shell)
                     line = next(inputfile)
                 gbasis_dict[atomelement].extend(shells)
+
             gbasis = []
             for i in range(self.natom):
                 atomtype = utils.PeriodicTable().element[self.atomnos[i]]
                 gbasis.append(gbasis_dict[atomtype])
-            if not hasattr(self, 'gbasis'):
-                self.gbasis = gbasis
-            else:
-                assert self.gbasis == gbasis
+
+            self.set_attribute('gbasis', gbasis)
 
         # Normally the indexes of AOs assigned to specific atoms are also not printed,
         # so we need to infer that. We could do that from the previous section,
@@ -191,25 +187,27 @@ class NWChem(logfileparser.Logfile):
         # we assume all atoms of the same element have the same basis sets, but
         # this will probably need to be revised later.
         if line.strip() == """Summary of "ao basis" -> "ao basis" (cartesian)""":
+
             self.skip_lines(inputfile, ['d', 'headers', 'd'])
+
             atombasis_dict = {}
+
             line = next(inputfile)
             while line.strip():
                 atomname, desc, shells, funcs, types = line.split()
                 atomelement = self.name2element(atomname)
                 atombasis_dict[atomelement] = int(funcs)
                 line = next(inputfile)
-            atombasis = []
+
             last = 0
+            atombasis = []
             for i in range(self.natom):
                 atomelement = utils.PeriodicTable().element[self.atomnos[i]]
                 nfuncs = atombasis_dict[atomelement]
                 atombasis.append(list(range(last,last+nfuncs)))
                 last = atombasis[-1][-1] + 1
-            if not hasattr(self, 'atombasis'):
-                self.atombasis = atombasis
-            else:
-                assert self.atombasis == atombasis
+
+            self.set_attribute('atombasis', atombasis)
 
         # This section contains general parameters for Hartree-Fock calculations,
         # which do not contain the 'General Information' section like most jobs.
@@ -219,16 +217,16 @@ class NWChem(logfileparser.Logfile):
             while line.strip():
                 if line[2:8] == "charge":
                     charge = int(float(line.split()[-1]))
-                    self.set_scalar('charge', charge)
+                    self.set_attribute('charge', charge)
                 if line[2:13] == "open shells":
                     unpaired = int(line.split()[-1])
-                    self.set_scalar('mult', 2*unpaired + 1)
+                    self.set_attribute('mult', 2*unpaired + 1)
                 if line[2:7] == "atoms":
                     natom = int(line.split()[-1])
-                    self.set_scalar('natom', natom)
+                    self.set_attribute('natom', natom)
                 if line[2:11] == "functions":
                     nfuncs = int(line.split()[-1])
-                    self.set_scalar("nbasis", nfuncs)
+                    self.set_attribute("nbasis", nfuncs)
                 line = next(inputfile)
 
         # This section contains general parameters for DFT calculations, as well as
@@ -241,17 +239,17 @@ class NWChem(logfileparser.Logfile):
             while line.strip():
 
                 if "No. of atoms" in line:
-                    self.set_scalar('natom', int(line.split()[-1]))
+                    self.set_attribute('natom', int(line.split()[-1]))
                 if "Charge" in line:
-                    self.set_scalar('charge', int(line.split()[-1]))
+                    self.set_attribute('charge', int(line.split()[-1]))
                 if "Spin multiplicity" in line:
                     mult = line.split()[-1]
                     if mult == "singlet":
                         mult = 1
-                    self.set_scalar('mult', int(mult))
+                    self.set_attribute('mult', int(mult))
                 if "AO basis - number of function" in line:
                     nfuncs = int(line.split()[-1])
-                    self.set_scalar('nbasis', nfuncs)
+                    self.set_attribute('nbasis', nfuncs)
 
                 # These will be present only in the DFT module.
                 if "Convergence on energy requested" in line:
@@ -417,6 +415,18 @@ class NWChem(logfileparser.Logfile):
             self.geovalues.append([gmax, grms, xmax, xrms])
             self.linesearch = True
 
+        # There is a clear message when the geometry optimization has converged:
+        #
+        #      ----------------------
+        #      Optimization converged
+        #      ----------------------
+        #
+        if line.strip() == "Optimization converged":
+            self.skip_line(inputfile, 'dashes')
+            if not hasattr(self, 'optdone'):
+                self.optdone = []
+            self.optdone.append(len(self.geovalues) - 1)
+
         # The line containing the final SCF energy seems to be always identifiable like this.
         if "Total SCF energy" in line or "Total DFT energy" in line:
 
@@ -553,7 +563,7 @@ class NWChem(logfileparser.Logfile):
                 line = next(inputfile)
 
             self.moenergies.append(energies)
-            self.set_scalar('nmo', nvector)
+            self.set_attribute('nmo', nvector)
 
             if any(symmetries):
                 if len(self.mosyms) == alphabeta + 1:
@@ -603,8 +613,8 @@ class NWChem(logfileparser.Logfile):
                 size = array_info.split('[')[1].split(']')[0]
                 nbasis = int(size.split(',')[0].split(':')[1])
                 nmo = int(size.split(',')[1].split(':')[1])
-                self.set_scalar('nbasis', nbasis)
-                self.set_scalar('nmo', nmo)
+                self.set_attribute('nbasis', nbasis)
+                self.set_attribute('nmo', nmo)
             
                 self.skip_line(inputfile, 'blank')
                 mocoeffs = []

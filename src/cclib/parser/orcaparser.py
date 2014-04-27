@@ -50,9 +50,6 @@ class ORCA(logfileparser.Logfile):
         # we parse a cycle (so it will be larger than zero().
         self.gopt_cycle = 0
 
-        # Keep track of when geometry optimizations finish
-        self.optdone = []
-
         # Keep track of whether this is a relaxed scan calculation
         self.is_relaxed_scan = False
 
@@ -62,17 +59,17 @@ class ORCA(logfileparser.Logfile):
         if line[0:15] == "Number of atoms":
 
             natom = int(line.split()[-1])
-            self.set_scalar('natom', natom)
+            self.set_attribute('natom', natom)
 
         if line[1:13] == "Total Charge":
 
             charge = int(line.split()[-1])
-            self.set_scalar('charge', charge)
+            self.set_attribute('charge', charge)
 
             line = next(inputfile)
 
             mult = int(line.split()[-1])
-            self.set_scalar('mult', mult)
+            self.set_attribute('mult', mult)
 
         # SCF convergence output begins with:
         #
@@ -309,9 +306,9 @@ class ORCA(logfileparser.Logfile):
                 atomcoords.append(list(map(float, broken[1:4])))
                 line = next(inputfile)
 
-            if not hasattr(self, "atomnos"):
-                self.atomnos = atomnos
-                self.set_scalar('natom', len(atomnos))
+            self.set_attribute('natom', len(atomnos))
+            self.set_attribute('atomnos', atomnos)
+
             self.atomcoords = [atomcoords]
 
         # There's always a banner announcing the next geometry optimization cycle,
@@ -340,16 +337,14 @@ class ORCA(logfileparser.Logfile):
                 atomcoords.append(list(map(float, broken[1:4])))
             
             self.atomcoords.append(atomcoords)
-            if not hasattr(self, "atomnos"):
-                self.atomnos = numpy.array(atomnos,'i')
 
-        # This was for optdone in v1.2.
-        #if line[31:61] == "THE OPTIMIZATION HAS CONVERGED":
-        #    self.optdone = True
+            self.set_attribute('atomnos', atomnos)
 
         if line[21:68] == "FINAL ENERGY EVALUATION AT THE STATIONARY POINT":
-            count = len(self.atomcoords)
-            self.optdone.append(count)
+
+            if not hasattr(self, 'optdone'):
+                self.optdone = []
+            self.optdone.append(len(self.atomcoords))
 
             self.skip_lines(inputfile, ['text', 's', 'd', 'text', 'd'])
 
@@ -398,9 +393,9 @@ class ORCA(logfileparser.Logfile):
         # For this reason, also check for the second patterns, and use it as an assert
         # if nbasis was already parsed. Regression PCB_1_122.out covers this test case.
         if line[1:32] == "# of contracted basis functions":
-            self.set_scalar('nbasis', int(line.split()[-1]))
+            self.set_attribute('nbasis', int(line.split()[-1]))
         if line[1:27] == "Basis Dimension        Dim":
-            self.set_scalar('nbasis', int(line.split()[-1]))
+            self.set_attribute('nbasis', int(line.split()[-1]))
 
         if line[0:14] == "OVERLAP MATRIX":
 

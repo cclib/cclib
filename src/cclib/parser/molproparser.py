@@ -61,7 +61,7 @@ class Molpro(logfileparser.Logfile):
             
             if not hasattr(self,"atomcoords"):
                 self.atomcoords = []
-                self.atomnos = []
+
             atomcoords = []
             atomnos = []
             
@@ -74,9 +74,10 @@ class Molpro(logfileparser.Logfile):
                 atomnos.append(int(round(float(temp[2]))))
                 line = next(inputfile)
                 
-            self.atomnos = numpy.array(atomnos, "i")
             self.atomcoords.append(atomcoords)
-            self.set_scalar('natom', len(self.atomnos))
+
+            self.set_attribute('atomnos', atomnos)
+            self.set_attribute('natom', len(self.atomnos))
         
         # Use BASIS DATA to parse input for aonames and atombasis.
         # This is always the first place this information is printed, so no attribute check is needed.
@@ -154,7 +155,7 @@ class Molpro(logfileparser.Logfile):
         if line[1:23] == "NUMBER OF CONTRACTIONS":
             
             nbasis = int(line.split()[3])
-            self.set_scalar('nbasis', nbasis)
+            self.set_attribute('nbasis', nbasis)
 
         # This is used to signalize whether we are inside an SCF calculation.
         if line[1:8] == "PROGRAM" and line[14:18] == "-SCF":
@@ -171,10 +172,10 @@ class Molpro(logfileparser.Logfile):
             nuclear = numpy.sum(self.atomnos)
 
             charge = nuclear - spinup - spindown
-            self.set_scalar('charge', charge)
+            self.set_attribute('charge', charge)
 
             mult = spinup - spindown + 1
-            self.set_scalar('mult', mult)
+            self.set_attribute('mult', mult)
         
         # Convergenve thresholds for SCF cycle, should be contained in a line such as:
         #   CONVERGENCE THRESHOLDS:    1.00E-05 (Density)    1.40E-07 (Energy)
@@ -469,9 +470,6 @@ class Molpro(logfileparser.Logfile):
 
             self.geotargets = [optenerg, optgrad, optstep]
 
-        if line[1:30] == "END OF GEOMETRY OPTIMIZATION.":
-            self.optdone = True
-
         # The optimization history is the source for geovlues:
         #
         #   END OF GEOMETRY OPTIMIZATION.    TOTAL CPU:       246.9 SEC
@@ -487,7 +485,10 @@ class Molpro(logfileparser.Logfile):
         # actual history list. It seems there is a another consistent line before the
         # history, but this might not be always true -- so this is a potential weak link.
         if line[1:30] == "END OF GEOMETRY OPTIMIZATION." or line.strip() == "Quadratic Steepest Descent - Minimum Search":
-            
+
+            # I think this is the trigger for convergence, and it shows up at the top in Molpro 2006.
+            geometry_converged = line[1:30] == "END OF GEOMETRY OPTIMIZATION."
+
             self.skip_line(inputfile, 'blank')
 
             # Newer version of Molpro (at least for 2012) print and additional column
@@ -498,15 +499,18 @@ class Molpro(logfileparser.Logfile):
 
             # Although criteria can be changed, the printed format should not change.
             # In case it does, retrieve the columns for each parameter.
+            index_ITER = headers.index('ITER.')
             index_THRENERG = headers.index('DE')
             index_THRGRAD = headers.index('GRADMAX')
             index_THRSTEP = headers.index('STEPMAX')
 
             line = next(inputfile)
             self.geovalues = []            
-            while line.strip() != "":
+            while line.strip():
 
                 line = line.split()
+                istep = int(line[index_ITER])
+
                 geovalues = []
                 geovalues.append(float(line[index_THRENERG]))
                 geovalues.append(float(line[index_THRGRAD]))
@@ -515,6 +519,18 @@ class Molpro(logfileparser.Logfile):
                 line = next(inputfile)
                 if line.strip() == "Freezing grid":
                     line = next(inputfile)
+
+            # The convergence trigger shows up at the bottom in Molpro 2012.
+            while line.strip() == '':
+                line = next(inputfile)
+            if line.strip() == "END OF GEOMETRY OPTIMIZATION.":
+                geometry_converged = True
+
+            # Finally, deal with optdone, append the last step to it only if we had convergence.
+            if not hasattr(self, 'optdone'):
+                self.optdone = []
+            if geometry_converged:
+                self.optdone.append(istep-1)
 
         # This block should look like this:
         #   Normal Modes

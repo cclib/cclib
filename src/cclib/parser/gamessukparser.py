@@ -61,7 +61,7 @@ class GAMESSUK(logfileparser.Logfile):
 
         if line[1:22] == "total number of atoms":
             natom = int(line.split()[-1])
-            self.set_scalar('natom', natom)
+            self.set_attribute('natom', natom)
 
         if line[3:44] == "convergence threshold in optimization run":
             # Assuming that this is only found in the case of OPTXYZ
@@ -96,7 +96,6 @@ class GAMESSUK(logfileparser.Logfile):
             # For geo-opts, more coordinates are taken from the "nuclear coordinates"
             if not hasattr(self, "atomcoords"):
                 self.atomcoords = []
-            self.atomnos = []
             
             stop = " "*9 + "*"*79
             line = next(inputfile)
@@ -107,12 +106,13 @@ class GAMESSUK(logfileparser.Logfile):
                 line = next(inputfile)
             empty = next(inputfile)
 
+            atomnos = []
             atomcoords = []
             empty = next(inputfile)
             while not empty.startswith(stop):
                 line = next(inputfile).split() # the coordinate data
                 atomcoords.append(list(map(float,line[3:6])))
-                self.atomnos.append(int(round(float(line[2]))))
+                atomnos.append(int(round(float(line[2]))))
                 while line!=empty:
                     line = next(inputfile)
                 # at this point, line is an empty line, right after
@@ -122,7 +122,7 @@ class GAMESSUK(logfileparser.Logfile):
                 # before the row of coordinate data
             
             self.atomcoords.append(atomcoords)
-            self.atomnos = numpy.array(self.atomnos, "i")
+            self.set_attribute('atomnos', atomnos)
 
         if line[40:59] == "nuclear coordinates":
             # We need not remember the first geometry in the geo-opt as this will
@@ -136,9 +136,9 @@ class GAMESSUK(logfileparser.Logfile):
                 return
                 # This was continue (in loop) before parser refactoring.
                 # continue
+
             if not hasattr(self, "atomcoords"):
                 self.atomcoords = []
-                self.atomnos = []
 
             self.skip_lines(inputfile, ['s', 'b', 'colname', 'e'])
 
@@ -154,25 +154,26 @@ class GAMESSUK(logfileparser.Logfile):
                 line = next(inputfile)
 
             self.atomcoords.append(atomcoords)
-            if not hasattr(self, "atomnos") or len(self.atomnos) == 0:
-                self.atomnos = atomnos
+            self.set_attribute('atomnos', atomnos)
 
         if line[40:62] == "optimization converged":
-            self.optdone = True
+            if not hasattr(self, 'optdone'):
+                self.optdone = []
+            self.optdone.append(len(self.geovalues)-1)
 
         if line[1:32] == "total number of basis functions":
 
             nbasis = int(line.split()[-1])
-            self.set_scalar('nbasis', nbasis)
+            self.set_attribute('nbasis', nbasis)
 
             while line.find("charge of molecule")<0:
                 line = next(inputfile)
 
             charge = int(line.split()[-1])
-            self.set_scalar('charge', charge)
+            self.set_attribute('charge', charge)
 
             mult = int(next(inputfile).split()[-1])
-            self.set_scalar('mult', mult)
+            self.set_attribute('mult', mult)
 
             alpha = int(next(inputfile).split()[-1])-1
             beta = int(next(inputfile).split()[-1])-1

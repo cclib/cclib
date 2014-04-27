@@ -55,16 +55,13 @@ class Jaguar(logfileparser.Logfile):
         # to parse SCF targets/values correctly.
         self.geoopt = False
 
-        # List of indices pointing to finished geometry optimizations.
-        self.optdone = []
-
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
 
         # Extract charge and multiplicity
         if line[2:22] == "net molecular charge":
-            self.set_scalar('charge', int(line.split()[-1]))
-            self.set_scalar('mult', int(next(inputfile).split()[-1]))
+            self.set_attribute('charge', int(line.split()[-1]))
+            self.set_attribute('mult', int(next(inputfile).split()[-1]))
 
         # The Gaussian basis set information is printed before the geometry, and we need
         # to do some indexing to get this into cclib format, because fn increments
@@ -145,14 +142,11 @@ class Jaguar(logfileparser.Logfile):
 
                 line = next(inputfile)
 
-            # The indices for atombasis can also be read later from the molecualr orbital output.
-            if not hasattr(self, 'atombasis'):
-                self.atombasis = atombasis
-            else:
-                assert self.atombasis == atombasis
+            # The indices for atombasis can also be read later from the molecular orbital output.
+            self.set_attribute('atombasis', atombasis)
 
             # This length of atombasis should always be the number of atoms.
-            self.set_scalar('natom', len(self.atombasis))
+            self.set_attribute('natom', len(self.atombasis))
 
         #  Effective Core Potential 
         #  
@@ -210,7 +204,7 @@ class Jaguar(logfileparser.Logfile):
                 line = next(inputfile)
             self.atomcoords.append(atomcoords)
             self.atomnos = numpy.array(atomnos, "i")
-            self.set_scalar('natom', len(atomcoords))
+            self.set_attribute('natom', len(atomcoords))
 
         # Hartree-Fock energy after SCF
         if line[1:18] == "SCFE: SCF energy:":
@@ -230,6 +224,8 @@ class Jaguar(logfileparser.Logfile):
             self.mpenergies[-1].append(lmp2energy)
 
         if line[15:45] == "Geometry optimization complete":
+            if not hasattr(self, 'optdone'):
+                self.optdone = []
             self.optdone.append(len(self.geovalues) - 1)
 
         if line.find("number of occupied orbitals") > 0:
@@ -247,7 +243,7 @@ class Jaguar(logfileparser.Logfile):
 
         if line[2:27] == "number of basis functions":
             nbasis = int(line.strip().split()[-1])
-            self.set_scalar('nbasis', nbasis)
+            self.set_attribute('nbasis', nbasis)
 
         if line.find("number of alpha occupied orb") > 0:
         # Get number of MOs for an unrestricted calc
@@ -347,9 +343,27 @@ class Jaguar(logfileparser.Logfile):
             
             line = next(inputfile)
 
-        # The second string is in the version 8.3 unit test and the first one is not used
-        # since we did not test for mocoeffs before, but leave it in case it works for something.
-        if line.find("Occupied + virtual Orbitals- final wvfn") > 0 or line.find("occupied + virtual orbitals: final wave function") > 0:
+        # The second trigger string is in the version 8.3 unit test and the first one was
+        # encountered in version 6.x and is followed by a bit different format. In particular,
+        # the line with occupations is missing in each block. Here is a fragment of this block
+        # from version 8.3:
+        #
+        # ***************************************** 
+        # 
+        # occupied + virtual orbitals: final wave function
+        # 
+        # ***************************************** 
+        #   
+        #   
+        #                              1         2         3         4         5
+        #  eigenvalues-            -11.04064 -11.04058 -11.03196 -11.03196 -11.02881
+        #  occupations-              2.00000   2.00000   2.00000   2.00000   2.00000
+        #    1 C1               S    0.70148   0.70154  -0.00958  -0.00991   0.00401
+        #    2 C1               S    0.02527   0.02518   0.00380   0.00374   0.00371
+        # ...
+        #
+        if line.find("Occupied + virtual Orbitals- final wvfn") > 0 or \
+           line.find("occupied + virtual orbitals: final wave function") > 0:
 
             self.skip_lines(inputfile, ['b', 's', 'b', 'b'])
             
@@ -375,12 +389,17 @@ class Jaguar(logfileparser.Logfile):
                 if s == 1: #beta case
                     self.skip_lines(inputfile, ['s', 'b', 'title', 'b', 's', 'b', 'b'])
 
-                for k in range(0,len(self.moenergies[s]),5):
+                for k in range(0, len(self.moenergies[s]), 5):
                     self.updateprogress(inputfile, "Coefficients")
 
-                    self.skip_lines(inputfile, ['numbers', 'eigens', 'oocupations'])
+                    # All known version have a line with indices followed by the eigenvalues.
+                    self.skip_lines(inputfile, ['numbers', 'eigens'])
 
+                    # Newer version also have a line with occupation numbers here.
                     line = next(inputfile)
+                    if "occupations-" in line:
+                        line = next(inputfile)
+
                     for i in range(self.nbasis):
 
                         info = line.split()

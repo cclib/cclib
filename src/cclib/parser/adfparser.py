@@ -161,27 +161,29 @@ class ADF(logfileparser.Logfile):
         # and the atommasses (previously called vibmasses)
             self.updateprogress(inputfile, "Attributes", self.cupdate)
 
-            self.atomnos = []
-            self.atommasses = []
             self.atomcoords = []
-            self.coreelectrons = []
 
             self.skip_lines(inputfile, ['header1', 'header2', 'header3'])
 
+            atomnos = []
+            atommasses = []
             atomcoords = []
+            coreelectrons = []
             line = next(inputfile)
             while len(line)>2: #ensure that we are reading no blank lines
                 info = line.split()
                 element = info[1].split('.')[0]
-                self.atomnos.append(self.table.number[element])
+                atomnos.append(self.table.number[element])
                 atomcoords.append(list(map(float, info[2:5])))
-                self.coreelectrons.append(int(float(info[5]) - float(info[6])))
-                self.atommasses.append(float(info[7]))
+                coreelectrons.append(int(float(info[5]) - float(info[6])))
+                atommasses.append(float(info[7]))
                 line = next(inputfile)
             self.atomcoords.append(atomcoords)
 
-            self.natom = len(self.atomnos)
-            self.atomnos = numpy.array(self.atomnos, "i")
+            self.set_attribute('natom', len(atomnos))
+            self.set_attribute('atomnos', atomnos)
+            self.set_attribute('atommasses', atommasses)
+            self.set_attribute('coreelectrons', coreelectrons)
 
         if line[1:10] == "FRAGMENTS":
             header = next(inputfile)
@@ -207,7 +209,7 @@ class ADF(logfileparser.Logfile):
         if line[1:11] == "Net Charge":
 
             charge = int(line.split()[2])
-            self.set_scalar('charge', charge)
+            self.set_attribute('charge', charge)
 
             line = next(inputfile)
             if len(line.strip()):
@@ -216,7 +218,7 @@ class ADF(logfileparser.Logfile):
                 mult = int(line.split()[2]) + 1
             else:
                 mult = 1
-            self.set_scalar('mult', mult)
+            self.set_attribute('mult', mult)
 
         if line[1:22] == "S C F   U P D A T E S":
         # find targets for SCF convergence
@@ -333,9 +335,10 @@ class ADF(logfileparser.Logfile):
                 self.atomcoords = []
             self.atomcoords.append(atomcoords)
 
-            if self.finalgeometry == self.GETLAST: # Don't get any more coordinates
+            # Don't get any more coordinates in this case.
+            # KML: I think we could combine this with optdone (see below).
+            if self.finalgeometry == self.GETLAST:
                 self.finalgeometry = self.NOMORE
-                self.optdone = True
 
         # There have been some changes in the format of the geometry convergence information,
         # and this is how it is printed in older versions (2007.01 unit tests).
@@ -383,6 +386,18 @@ class ADF(logfileparser.Logfile):
 
             self.geovalues.append(values)
 
+        # After the test, there is a message if the search is converged:
+        #
+        # ***************************************************************************************************
+        #                             Geometry CONVERGED
+        # ***************************************************************************************************
+        #
+        if line.strip() == "Geometry CONVERGED":
+            self.skip_line(inputfile, 'stars')
+            if not hasattr(self, 'optdone'):
+                self.optdone = []
+            self.optdone.append(len(self.geovalues) - 1)
+
         # Here is the corresponding geometry convergence info from the 2013.01 unit test.
         # Note that the step number is given, which it will be prudent to use in an assertion.
         #
@@ -402,7 +417,9 @@ class ADF(logfileparser.Logfile):
             stepno = int(line.split()[4])
 
             if "** CONVERGED **" in line:
-                self.optdone = True
+                if not hasattr(self, 'optdone'):
+                    self.optdone = []
+                self.optdone.append(len(self.geovalues) - 1)
 
             self.skip_line(inputfile, 'dashes')
 
@@ -468,11 +485,10 @@ class ADF(logfileparser.Logfile):
                 self.mosyms[0].append('A')
                 self.moenergies[0].append(utils.convertor(float(info[2]), 'hartree', 'eV'))
                 if info[1] == '0.000' and not hasattr(self, 'homos'):
-                    self.homos = [len(self.moenergies[0]) - 2]
+                    self.set_attribute('homos', [len(self.moenergies[0]) - 2])
                 line = next(inputfile)
 
             self.moenergies = [numpy.array(self.moenergies[0], "d")]
-            self.homos = numpy.array(self.homos, "i")
 
         if line[1:29] == 'Orbital Energies, both Spins' and not hasattr(self, "mosyms") and self.nosymflag and self.unrestrictedflag:
         #Extracting orbital symmetries and energies, homos for nosym case
@@ -505,7 +521,8 @@ class ADF(logfileparser.Logfile):
                 line = next(inputfile)
 
             self.moenergies = [numpy.array(x, "d") for x in moenergies]
-            self.homos = numpy.array([homoa, homob], "i")
+
+            self.set_attribute('homos', [homoa, homob])
 
 
         # Extracting orbital symmetries and energies, homos.
@@ -515,7 +532,7 @@ class ADF(logfileparser.Logfile):
             self.mosyms = [[]]
             self.moenergies = [[]]
 
-            self.skip_lines(inputfile, ['d', 'b', 'header', 'd'])
+            self.skip_lines(inputfile, ['e', 'b', 'header', 'd'])
 
             homoa = None
             homob = None
@@ -602,10 +619,9 @@ class ADF(logfileparser.Logfile):
                     print(("Error", info))
 
             if len(info) == 6: #still unrestricted, despite being out of loop
-                self.homos = [homoa, homob]
+                self.set_attribute('homos', [homoa, homob])
 
             self.moenergies = [numpy.array(x, "d") for x in self.moenergies]
-            self.homos = numpy.array(self.homos, "i")
 
         # Section on extracting vibdisps
         # Also contains vibfreqs, but these are extracted in the
@@ -655,7 +671,7 @@ class ADF(logfileparser.Logfile):
         # Extract the number of basis sets
         if line[1:49] == "Total nr. of (C)SFOs (summation over all irreps)":
             nbasis = int(line.split(":")[1].split()[0])
-            self.set_scalar('nbasis', nbasis)
+            self.set_attribute('nbasis', nbasis)
 
         # now that we're here, let's extract aonames
 
