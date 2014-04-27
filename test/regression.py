@@ -354,6 +354,7 @@ class GAMESSUSCISTest_dets(GAMESSUSCISTest):
 
 class JaguarSPTest_6_31gss(JaguarSPTest):
     b3lyp_energy = -10530
+    nbasisdict = {1:5, 6:15}
     def testnbasis(self):
         """The AO count is larger in 6-31G** than STO-3G."""
         self.assertEquals(self.data.nbasis, 200)
@@ -455,8 +456,8 @@ old_unittests = {
 
     "Jaguar/Jaguar4.2/dvb_gopt.out":    JaguarGeoOptTest_nmo45,
     "Jaguar/Jaguar4.2/dvb_gopt_b.out":  JaguarGeoOptTest,
-    "Jaguar/Jaguar4.2/dvb_sp.out":      JaguarSPTest,
-    "Jaguar/Jaguar4.2/dvb_sp_b.out":    JaguarSPTest,
+    "Jaguar/Jaguar4.2/dvb_sp.out":      JaguarGeoOptTest_nmo45,
+    "Jaguar/Jaguar4.2/dvb_sp_b.out":    JaguarGeoOptTest_nmo45,
     "Jaguar/Jaguar4.2/dvb_un_sp.out":   JaguarSPunTest_nmo_all,
     "Jaguar/Jaguar4.2/dvb_ir.out":      JaguarIRTest,
 
@@ -465,7 +466,7 @@ old_unittests = {
     "Jaguar/Jaguar6.0/dvb_un_sp.out" :  JaguarSPunTest_nmo_all,
 
     "Jaguar/Jaguar6.5/dvb_gopt.out":    JaguarGeoOptTest_nmo45,
-    "Jaguar/Jaguar6.5/dvb_sp.out":      JaguarSPTest,
+    "Jaguar/Jaguar6.5/dvb_sp.out":      JaguarGeoOptTest_nmo45,
     "Jaguar/Jaguar6.5/dvb_un_sp.out":   JaguarSPunTest,
     "Jaguar/Jaguar6.5/dvb_ir.out":      JaguarIRTest,
 

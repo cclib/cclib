@@ -343,9 +343,27 @@ class Jaguar(logfileparser.Logfile):
             
             line = next(inputfile)
 
-        # The second string is in the version 8.3 unit test and the first one is not used
-        # since we did not test for mocoeffs before, but leave it in case it works for something.
-        if line.find("Occupied + virtual Orbitals- final wvfn") > 0 or line.find("occupied + virtual orbitals: final wave function") > 0:
+        # The second trigger string is in the version 8.3 unit test and the first one was
+        # encountered in version 6.x and is followed by a bit different format. In particular,
+        # the line with occupations is missing in each block. Here is a fragment of this block
+        # from version 8.3:
+        #
+        # ***************************************** 
+        # 
+        # occupied + virtual orbitals: final wave function
+        # 
+        # ***************************************** 
+        #   
+        #   
+        #                              1         2         3         4         5
+        #  eigenvalues-            -11.04064 -11.04058 -11.03196 -11.03196 -11.02881
+        #  occupations-              2.00000   2.00000   2.00000   2.00000   2.00000
+        #    1 C1               S    0.70148   0.70154  -0.00958  -0.00991   0.00401
+        #    2 C1               S    0.02527   0.02518   0.00380   0.00374   0.00371
+        # ...
+        #
+        if line.find("Occupied + virtual Orbitals- final wvfn") > 0 or \
+           line.find("occupied + virtual orbitals: final wave function") > 0:
 
             self.skip_lines(inputfile, ['b', 's', 'b', 'b'])
             
@@ -371,12 +389,17 @@ class Jaguar(logfileparser.Logfile):
                 if s == 1: #beta case
                     self.skip_lines(inputfile, ['s', 'b', 'title', 'b', 's', 'b', 'b'])
 
-                for k in range(0,len(self.moenergies[s]),5):
+                for k in range(0, len(self.moenergies[s]), 5):
                     self.updateprogress(inputfile, "Coefficients")
 
-                    self.skip_lines(inputfile, ['numbers', 'eigens', 'oocupations'])
+                    # All known version have a line with indices followed by the eigenvalues.
+                    self.skip_lines(inputfile, ['numbers', 'eigens'])
 
+                    # Newer version also have a line with occupation numbers here.
                     line = next(inputfile)
+                    if "occupations-" in line:
+                        line = next(inputfile)
+
                     for i in range(self.nbasis):
 
                         info = line.split()
