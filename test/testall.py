@@ -107,7 +107,7 @@ def visualtests(stream=sys.stdout):
                getfile(Molpro,"basicMolpro2006", "dvb_gopt.out", "dvb_gopt.out")[0],
              ]
 
-    print("\n\nMO energies of optimised dvb", file=stream)
+    print("MO energies of optimised dvb", file=stream)
     print("      ", "".join(["%-12s" % x for x in ['Gaussian03','PC-GAMESS','GAMESS-US','ADF2007.01','Jaguar7.0','Molpro2006']]), file=stream)
     print("HOMO", "   ".join(["%+9.4f" % x.moenergies[0][x.homos[0]] for x in output]), file=stream)
     print("LUMO", "   ".join(["%+9.4f" % x.moenergies[0][x.homos[0]+1] for x in output]), file=stream)
@@ -133,30 +133,45 @@ def importName(modulename, name):
     return getattr(module, name, None)
 
 
-def testall(parserchoice=parsers, modules=test_modules, stream=sys.stdout):
-    """Run all unittests in all modules."""
+def testall(parsers=parsers, modules=test_modules, status=False, terse=False, stream=sys.stdout):
+    """Run all unittests in all modules.
 
-    # Make sure we are in the test directory of this script,
-    #   so that getfile() can access the data files.
+    Run unit tests for all or a subset of parsers and modules. Arguments:
+        parsers - list of parsers to test (all by default)
+        modules - list of modules to test (all by default)
+        status - exists with error status when any errors in tests found
+        terse - do not print output from tests
+        stream - stream used for all output
+    """
+
+    # Make sure we are in the test directory of this script, so that getfile()
+    # can access the data files.
     curdir = os.path.abspath(os.curdir)
     destdir = os.path.dirname(__file__)
     if destdir:
         os.chdir(destdir)
 
-    perpackage = {}
+    # We want to gather the unit tests and results in several lists/dicts,
+    # in order to easily generate summaries at the end.
     errors = []
     failures = []
-    
     alltests = []
+    perpackage = {}
+
+    stream_test = stream
+    if terse:
+        devnull = open(os.devnull, 'w')
+        stream_test = devnull
+
     for module in modules:
 
         testdata = gettestdata(module)
 
         # Filter the test data to use if a list of requested parsers is passed
         # to this function, assuming that all unit tests for a given test class
-        # use the same parser (use the first unit test to check).
-        if parserchoice:
-            testdata = dict([(x,y) for x,y in testdata.items() if y[0]['parser'] in parserchoice ])
+        # use the same parser (use the first unit test to check which one that is).
+        if parsers:
+            testdata = dict([(x,y) for x,y in testdata.items() if y[0]['parser'] in parsers])
                 
         testnames = sorted(testdata.keys())
         for name in testnames:
@@ -171,12 +186,12 @@ def testall(parserchoice=parsers, modules=test_modules, stream=sys.stdout):
                 except:
                     errors.append("ERROR: could not import %s from %s." %(name, module))
                 else:
-                    print("\n**** test%s (%s): %s ****" %(module, program, test.__doc__), file=stream)
+                    print("**** test%s (%s): %s ****" %(module, program, test.__doc__), file=stream)
                     parser = test_instance["parser"]
                     location = test_instance["location"]
                     test.data, test.logfile = getfile(eval(parser), *location, stream=stream)
                     myunittest = unittest.makeSuite(test)
-                    a = unittest.TextTestRunner(stream=stream, verbosity=2).run(myunittest)
+                    a = unittest.TextTestRunner(stream=stream_test, verbosity=2).run(myunittest)
                     l = perpackage.setdefault(program, [0, 0, 0, 0])
                     l[0] += a.testsRun
                     l[1] += len(a.errors)
@@ -187,15 +202,18 @@ def testall(parserchoice=parsers, modules=test_modules, stream=sys.stdout):
                     errors.extend(a.errors)
                     failures.extend(a.failures)
 
+    if terse:
+        devnull.close()
+
     if errors:
-        print("\n\n********* SUMMARY OF ERRORS *********", file=stream)
-        print("\n".join([str(e) for e in errors]))
+        print("\n********* SUMMARY OF ERRORS *********", file=stream)
+        print("\n".join([str(e) for e in errors]), file=stream)
 
     if failures:
-        print("\n\n********* SUMMARY OF FAILURES *********", file=stream)
-        print("\n".join([str(f) for f in failures]))
+        print("\n********* SUMMARY OF FAILURES *********", file=stream)
+        print("\n".join([str(f) for f in failures]), file=stream)
 
-    print("\n\n********* SUMMARY PER PACKAGE ****************", file=stream)
+    print("\n********* SUMMARY PER PACKAGE ****************", file=stream)
     names = sorted(perpackage.keys())
     total = [0, 0, 0, 0]
     print(" "*14, "\t".join(["Total", "Passed", "Failed", "Errors", "Skipped"]), file=stream)
@@ -205,21 +223,31 @@ def testall(parserchoice=parsers, modules=test_modules, stream=sys.stdout):
         for i in range(4):
             total[i] += l[i]
 
-    print("\n\n********* SUMMARY OF EVERYTHING **************", file=stream)
+    print("\n********* SUMMARY OF EVERYTHING **************", file=stream)
     print("TOTAL: %d\tPASSED: %d\tFAILED: %d\tERRORS: %d\tSKIPPED: %d" \
             %(total[0], total[0]-(total[1]+total[2]+total[3]), total[2], total[1], total[3]), file=stream)
 
-    print("\n\n*** Visual tests ***", file=stream)
+    print("\n*** Visual tests ***", file=stream)
     visualtests(stream=stream)
     
-    # Return to the directory we started from.
     if destdir:
         os.chdir(curdir)
+
+    if status and len(errors) > 0:
+        sys.exit(1)
 
     return alltests
 
 
 if __name__ == "__main__":
-    chosen_parsers = [p for p in parsers if p in sys.argv] or parsers
-    chosen_modules = [m for m in test_modules if m in sys.argv] or test_modules
-    tests = testall(chosen_parsers, chosen_modules)
+
+    # These allow the parsers and modules tested to be filtered on the command line
+    # with any number of arguments. No matching parsers/modules implies all of them.
+    parsers = [p for p in parsers if p in sys.argv] or parsers
+    modules = [m for m in test_modules if m in sys.argv] or test_modules
+
+    # These options are used for Travis CI.
+    status = "status" in sys.argv or "--status" in sys.argv
+    terse = "terse" in sys.argv or "--terse" in sys.argv
+
+    tests = testall(parsers, modules, status, terse)

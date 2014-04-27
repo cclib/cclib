@@ -496,7 +496,7 @@ def make_regression_from_old_unittest(test_class):
     return old_unit_test
 
 
-def main(which=[], traceback=False):
+def main(which=[], traceback=False, status=False):
 
     dummyfiles = [eval(n)("") for n in testall.parsers]
 
@@ -650,6 +650,9 @@ def main(which=[], traceback=False):
         print("Please make sure these function names correspond to regression files:")
         print("\n".join(orphaned_tests))
 
+    if status and errors > 0:
+        os.exit(1)
+
 if __name__=="__main__":
 
     # If 'test' is passed as the first argument, do a doctest on this module.
@@ -660,4 +663,5 @@ if __name__=="__main__":
         doctest.testmod()
     else:
         traceback = "traceback" in sys.argv or "tb" in sys.argv
-        main(sys.argv[1:], traceback)
+        status = "status" in sys.argv or "--status" in sys.argv
+        main(sys.argv[1:], traceback, status)
