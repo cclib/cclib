@@ -195,7 +195,7 @@ class Gaussian(logfileparser.Logfile):
             self.atomcoords.append(atomcoords)
 
             self.set_attribute('natom', len(atomnos))
-            self.set_attribute('atmonos', atomnos)
+            self.set_attribute('atomnos', atomnos)
 
         # Find the targets for SCF convergence (QM calcs).
         if line[1:44] == 'Requested convergence on RMS density matrix':
