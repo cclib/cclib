@@ -485,7 +485,7 @@ class ADF(logfileparser.Logfile):
                 self.mosyms[0].append('A')
                 self.moenergies[0].append(utils.convertor(float(info[2]), 'hartree', 'eV'))
                 if info[1] == '0.000' and not hasattr(self, 'homos'):
-                    self.set_attribute([len(self.moenergies[0]) - 2])
+                    self.set_attribute('homos', [len(self.moenergies[0]) - 2])
                 line = next(inputfile)
 
             self.moenergies = [numpy.array(self.moenergies[0], "d")]
