@@ -49,7 +49,7 @@ class NWChem(logfileparser.Logfile):
         # FIXME if necessary
         return label
 
-    name2element = lambda self, lbl: "".join(itertools.takewhile(str.isalpha, lbl))
+    name2element = lambda self, lbl: "".join(itertools.takewhile(str.isalpha, str(lbl)))
 
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
