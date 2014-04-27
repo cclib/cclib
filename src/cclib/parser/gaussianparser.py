@@ -91,9 +91,20 @@ class Gaussian(logfileparser.Logfile):
                 and hasattr(self, 'freeenergy')):
             self.set_attribute('entropy', (self.enthalpy - self.freeenergy) / self.temperature)
 
-        if hasattr(self, 'atomcoords') and hasattr(self, 'optdone') and len(self.optdone) > 0:
+        # This bit is needed in order to trim coordinates that are printed a second time
+        # at the end of geometry optimizations. Note that we need to do this for both atomcoords
+        # and inputcoords. The reason is that normally a standard orientation is printed and that
+        # is what we parse into atomcoords, but inputcoords stores the input (unmodified) coordinates
+        # and that is copied over to atomcoords if no standard oritentation was printed, which happens
+        # for example for jobs with no symmetry. This last step, however, is now generic for all parsers.
+        # Perhaps then this part should also be generic code...
+        # Regression that tests this: Gaussian03/cyclopropenyl.rhf.g03.cut.log
+        if hasattr(self, 'optdone') and len(self.optdone) > 0:
             last_point = self.optdone[-1]
-            self.atomcoords = self.atomcoords[:last_point + 1]
+            if hasattr(self, 'atomcoords'):
+                self.atomcoords = self.atomcoords[:last_point + 1]
+            if hasattr(self, 'inputcoords'):
+                self.inputcoords = self.inputcoords[:last_point + 1]
             
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
