@@ -9,6 +9,8 @@ before_install:
   - if [[ $TRAVIS_PYTHON_VERSION == 3* ]]; then sudo apt-get install python3-numpy; fi
 install:
   - if [[ $TRAVIS_PYTHON_VERSION == 2* ]]; then python setup.py install; fi
-  - if [[ $TRAVIS_PYTHON_VERSION == 3* ]]; then python3 setup.py install; fi
+  - if [[ $TRAVIS_PYTHON_VERSION == 3* ]]; then python setup.py install; fi
 script:
-  - cd test; python testall.py --status --terse
+  - cd test && python testall.py --status --terse
+  - cd ../data && bash regression_download.sh
+  - cd ../test && python regression.py
