@@ -1,4 +1,4 @@
-On behalf of the cclib development team, I am pleased to announce the release of cclib 1.2b, which is now available for download from http://cclib.github.io. This beta version marks the first release to target Python 3, and includes several new features and bug fixes (see below).
+On behalf of the cclib development team, I am pleased to announce the release of cclib 1.2, which is now available for download from http://cclib.github.io. This beta version marks the first release to target Python 3, and includes several new features and bug fixes (see below).
 
 cclib is an open source library, written in Python, for parsing and interpreting the results of computational chemistry packages. It currently parses output files from ADF, Firefly, GAMESS (US), GAMESS-UK, Gaussian, Jaguar, Molpro and ORCA.
 
