@@ -12,7 +12,7 @@ import bettertest
 
 
 class GenericBasisTest(bettertest.TestCase):
-    """Basis set unittest."""
+    """Generic basis set unittest"""
 
     names = ['S', 'P', 'D', 'F', 'G']
     multiple = {'S':1, 'P':3, 'D':6, 'F':10, 'G':15}
@@ -67,7 +67,7 @@ class GenericBasisTest(bettertest.TestCase):
 
 
 class GenericBigBasisTest(GenericBasisTest):
-    """Big basis set unittest."""
+    """Generic big basis set unittest"""
     
     # Write up a new test, and/or revise the one inherited.
     def testcoeffs(self):
@@ -76,12 +76,12 @@ class GenericBigBasisTest(GenericBasisTest):
 
 
 class GaussianBigBasisTest(GenericBigBasisTest):
-    """Customized big basis set unittest."""
+    """Customized big basis set unittest"""
     spherical = True
 
 
 class JaguarBigBasisTest(GenericBigBasisTest):
-    """Customized big basis set unittest."""
+    """Customized big basis set unittest"""
 
     spherical = True
 
@@ -90,7 +90,7 @@ class JaguarBigBasisTest(GenericBigBasisTest):
 
 
 class MolproBigBasisTest(GenericBigBasisTest):
-    """Customized big basis set unittest."""
+    """Customized big basis set unittest"""
     spherical = True
 
               

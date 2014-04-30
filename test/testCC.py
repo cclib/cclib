@@ -14,7 +14,7 @@ import bettertest
 
 
 class GenericCCTest(bettertest.TestCase):
-    """Coupled cluster unittest."""
+    """Generic coupled cluster unittest"""
 
     def testsign(self):
         """Are the coupled cluster corrections negative?"""

@@ -12,7 +12,7 @@ import bettertest
 
 
 class GenericIRTest(bettertest.TestCase):
-    """Generic vibrational frequency unittest."""
+    """Generic vibrational frequency unittest"""
 
     # Unit tests should normally give this value for the largest IR intensity.
     max_IR_intensity = 100
@@ -39,7 +39,7 @@ class GenericIRTest(bettertest.TestCase):
 
 
 class PCGamessIRTest(GenericIRTest):
-    """PC-GAMESS vibrational frequency unittest."""
+    """Customized vibrational frequency unittest"""
 
     def testirintens(self):
         """Is the maximum IR intensity 135 +/- 5 km mol-1?"""
@@ -47,7 +47,7 @@ class PCGamessIRTest(GenericIRTest):
 
 
 class GaussianIRTest(GenericIRTest):
-    """Gaussian vibrational frequency unittest."""
+    """Customized vibrational frequency unittest"""
 
     def testvibsyms(self):
         """Is the length of vibsyms correct?"""
@@ -56,7 +56,7 @@ class GaussianIRTest(GenericIRTest):
 
        
 class JaguarIRTest(GenericIRTest):
-    """Jaguar vibrational frequency unittest."""
+    """Customized vibrational frequency unittest"""
 
     def testvibsyms(self):
             """Is the length of vibsyms correct?"""
@@ -65,7 +65,7 @@ class JaguarIRTest(GenericIRTest):
 
 
 class OrcaIRTest(GenericIRTest):
-    """ORCA vibrational frequency unittest."""
+    """Customized vibrational frequency unittest"""
 
     # We have not been able to determine why ORCA gets such a different
     # maximum IR intensity. The coordinates are exactly the same, and
@@ -76,7 +76,7 @@ class OrcaIRTest(GenericIRTest):
 
 
 class GenericIRimgTest(bettertest.TestCase):
-    """Generic imaginary vibrational frequency unittest."""
+    """Generic imaginary vibrational frequency unittest"""
 
     def testvibdisps(self):
         """Are the dimensions of vibdisps consistent with 3N-6 x N x 3"""
@@ -101,12 +101,8 @@ class GenericIRimgTest(bettertest.TestCase):
 ##        self.assertEqual(max(abs(Cvibdisps).flat), 1.0)
 
 
-class GamessUSIRimgTest(GenericIRimgTest):
-    """GAMESS-US imaginary vibrational frequency unittest."""
-
-
 class GenericRamanTest(bettertest.TestCase):
-    """Generic Raman unittest."""
+    """Generic Raman unittest"""
 
     def testlengths(self):
         """Is the length of vibramans correct?"""
@@ -137,7 +133,7 @@ class GenericRamanTest(bettertest.TestCase):
 
 
 class GaussianRamanTest(GenericRamanTest):
-    """Gaussian Raman unittest."""
+    """Customized Raman unittest"""
 
     def testramanintens(self):
         """Is the maximum Raman intensity 1066 +/- 5 A**4/amu?"""

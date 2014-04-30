@@ -180,13 +180,15 @@ def testall(parsers=parsers, modules=test_modules, status=False, terse=False, st
 
                 path = '/'.join(test_instance["location"])
                 program = test_instance["location"][0][5:]
+                fname = test_instance["location"][-1]
 
                 try:
                     test = importName("test%s" %module, name)
                 except:
                     errors.append("ERROR: could not import %s from %s." %(name, module))
                 else:
-                    print("**** test%s (%s): %s ****" %(module, program, test.__doc__), file=stream)
+                    print("", file=stream_test)
+                    print("**** %s/%s: %s****" %(program, fname, test.__doc__), file=stream)
                     parser = test_instance["parser"]
                     location = test_instance["location"]
                     test.data, test.logfile = getfile(eval(parser), *location, stream=stream)

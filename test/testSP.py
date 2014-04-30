@@ -15,7 +15,7 @@ import bettertest
 
 
 class GenericSPTest(bettertest.TestCase):
-    """Restricted single point unittest."""
+    """Generic restricted single point unittest"""
 
     # In STO-3G, H has 1, C has 5 (1 S and 4 SP).
     nbasisdict = {1:1, 6:5}
@@ -137,7 +137,7 @@ class GenericSPTest(bettertest.TestCase):
 
 
 class ADFSPTest(GenericSPTest):
-    """ADF restricted single point unittest."""
+    """Customized restricted single point unittest"""
 
     # ADF parser does not extract atombasis.
     def testatombasis(self):
@@ -150,7 +150,7 @@ class ADFSPTest(GenericSPTest):
 
 
 class GaussianSPTest(GenericSPTest):
-    """Gaussian restricted single point unittest."""
+    """Customized restricted single point unittest"""
 
     # Molecular mass of DVB in mD.
     molecularmass = 130078.25
@@ -162,7 +162,7 @@ class GaussianSPTest(GenericSPTest):
 
 
 class Jaguar7SPTest(GenericSPTest):
-    """Jaguar restricted single point unittest."""
+    """Customized restricted single point unittest"""
 
     # Data file does not contain enough information. Can we make a new one?
     def testatombasis(self):
@@ -186,14 +186,14 @@ class Jaguar7SPTest(GenericSPTest):
 
 
 class MolproSPTest(GenericSPTest):
-    """Molpro restricted single point unittest."""
+    """Customized restricted single point unittest"""
 
     def testsymlabels(self):
         """Are all the symmetry labels either Ag/u or Bg/u? PASS"""
         self.assertEquals(1,1)
 
 class MolproSPTest2006(MolproSPTest):
-    """Molpro restricted single point unittest for version 2006."""
+    """Customized restricted single point unittest"""
 
     # These tests were run a long time ago and since we don't have access
     # to Molpro 2006 anymore, we can skip this test (it is tested in 2012).
@@ -203,7 +203,7 @@ class MolproSPTest2006(MolproSPTest):
 
 
 class OrcaSPTest(GenericSPTest):
-    """ORCA restricted single point unittest."""
+    """Customized restricted single point unittest"""
     
     # ORCA has no support for symmetry yet.
     def testsymlabels(self):
@@ -212,7 +212,7 @@ class OrcaSPTest(GenericSPTest):
 
 
 class PsiSPTest(GenericSPTest):
-    """Psi restricted single point HF/KS unittest."""
+    """Customized restricted single point HF/KS unittest"""
 
     # Psi does not currently have the option to print the overlap matrix.
     def testaooverlaps(self):
@@ -221,7 +221,7 @@ class PsiSPTest(GenericSPTest):
         """Are the dims of the overlap matrix consistent with nbasis? PASS"""
 
 class Psi3SPTest(PsiSPTest):
-    """Psi3 restructed single point HF/KS unittest."""
+    """Customized restructed single point HF/KS unittest"""
 
     # The final energy is also a bit higher here, I think due to the fact
     # that a SALC calculation is done instead of a full LCAO.
