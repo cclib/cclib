@@ -336,23 +336,23 @@ class ADFSPTest_nosyms_valence(ADFSPTest_nosyms):
         self.assertEquals(len(self.data.moenergies[0]), 45)
         self.assertEquals(self.data.moenergies[0][0], 99999.0)
 
-class GAMESSUSSPunTest_charge0(GamessUSSPunTest):
+class GAMESSUSSPunTest_charge0(GenericSPunTest):
     def testcharge_and_mult(self):
         """The charge in the input was wrong."""
         self.assertEquals(self.data.charge, 0)
     def testhomos(self):
         """HOMOs were incorrect due to charge being wrong. PASS"""
 
-class GAMESSUSIRTest_ts(GamessUSIRTest):
+class GAMESSUSIRTest_ts(GenericIRTest):
     def testirintens(self):
         """This is a transition state with different intensities. PASS"""
 
-class GAMESSUSCISTest_dets(GAMESSUSCISTest):
+class GAMESSUSCISTest_dets(GenericCISTest):
     nstates = 10
     def testetsecsvalues(self):
         """This gives unexpected coeficcients, also for current unit tests. PASS"""
 
-class JaguarSPTest_6_31gss(JaguarSPTest):
+class JaguarSPTest_6_31gss(GenericSPTest):
     b3lyp_energy = -10530
     nbasisdict = {1:5, 6:15}
     def testnbasis(self):
@@ -427,30 +427,30 @@ old_unittests = {
     "ADF/ADF2004.01/dvb_sp_d.adfout":       ADFSPTest_nosyms,
     "ADF/ADF2004.01/dvb_un_sp.adfout":      ADFSPunTest,
     "ADF/ADF2004.01/dvb_un_sp_c.adfout":    ADFSPunTest,
-    "ADF/ADF2004.01/dvb_ir.adfout":         ADFIRTest,
+    "ADF/ADF2004.01/dvb_ir.adfout":         GenericIRTest,
 
     "ADF/ADF2006.01/dvb_gopt.adfout":       ADFGeoOptTest,
 
-    "GAMESS/GAMESS-US2005/water_ccd_2005.06.27.r3.out":         GAMESSUSCCDTest,
-    "GAMESS/GAMESS-US2005/water_ccsd_2005.06.27.r3.out":        GAMESSUSCCSDTest,
-    "GAMESS/GAMESS-US2005/water_ccsd(t)_2005.06.27.r3.out":     GAMESSUSCCSDTTest,
+    "GAMESS/GAMESS-US2005/water_ccd_2005.06.27.r3.out":         GenericCCTest,
+    "GAMESS/GAMESS-US2005/water_ccsd_2005.06.27.r3.out":        GenericCCTest,
+    "GAMESS/GAMESS-US2005/water_ccsd(t)_2005.06.27.r3.out":     GenericCCTest,
     "GAMESS/GAMESS-US2005/water_cis_dets_2005.06.27.r3.out":    GAMESSUSCISTest_dets,
-    "GAMESS/GAMESS-US2005/water_cis_saps_2005.06.27.r3.out":    GAMESSUSCISTest,
-    "GAMESS/GAMESS-US2005/MoOCl4-sp_2005.06.27.r3.out":         GAMESSUSCoreTest,
-    "GAMESS/GAMESS-US2005/water_mp2_2005.06.27.r3.out":         GAMESSUSMP2Test,
+    "GAMESS/GAMESS-US2005/water_cis_saps_2005.06.27.r3.out":    GenericCISTest,
+    "GAMESS/GAMESS-US2005/MoOCl4-sp_2005.06.27.r3.out":         GenericCoreTest,
+    "GAMESS/GAMESS-US2005/water_mp2_2005.06.27.r3.out":         GenericMP2Test,
 
-    "GAMESS/GAMESS-US2006/C_bigbasis_2006.02.22.r3.out":    GamessUSBigBasisTest,
-    "GAMESS/GAMESS-US2006/dvb_gopt_a_2006.02.22.r2.out":    GamessUSGeoOptTest,
-    "GAMESS/GAMESS-US2006/dvb_sp_2006.02.22.r2.out":        GamessUSSPTest,
-    "GAMESS/GAMESS-US2006/dvb_un_sp_2006.02.22.r2.out":     GamessUSSPunTest,
-    "GAMESS/GAMESS-US2006/dvb_ir.2006.02.22.r2.out":        GamessUSIRTest,
+    "GAMESS/GAMESS-US2006/C_bigbasis_2006.02.22.r3.out":    GenericBigBasisTest,
+    "GAMESS/GAMESS-US2006/dvb_gopt_a_2006.02.22.r2.out":    GenericGeoOptTest,
+    "GAMESS/GAMESS-US2006/dvb_sp_2006.02.22.r2.out":        GenericSPTest,
+    "GAMESS/GAMESS-US2006/dvb_un_sp_2006.02.22.r2.out":     GenericSPunTest,
+    "GAMESS/GAMESS-US2006/dvb_ir.2006.02.22.r2.out":        GenericIRTest,
     "GAMESS/GAMESS-US2006/nh3_ts_ir.2006.2.22.r2.out":      GAMESSUSIRTest_ts,
 
-    "GAMESS/GAMESS-US2010/dvb_gopt.log":    GamessUSGeoOptTest,
-    "GAMESS/GAMESS-US2010/dvb_sp.log":      GamessUSSPTest,
+    "GAMESS/GAMESS-US2010/dvb_gopt.log":    GenericGeoOptTest,
+    "GAMESS/GAMESS-US2010/dvb_sp.log":      GenericSPTest,
     "GAMESS/GAMESS-US2010/dvb_sp_un.log":   GAMESSUSSPunTest_charge0,
     "GAMESS/GAMESS-US2010/dvb_td.log":      GAMESSUSTDDFTTest,
-    "GAMESS/GAMESS-US2010/dvb_ir.log":      GamessUSIRTest,
+    "GAMESS/GAMESS-US2010/dvb_ir.log":      GenericIRTest,
 
     "GAMESS/WinGAMESS/dvb_td_2007.03.24.r1.out":    GAMESSUSTDDFTTest,
 
