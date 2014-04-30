@@ -16,6 +16,8 @@ import bettertest
 class GenericTDTest(bettertest.TestCase):
     """Time-dependent HF/DFT unittest."""
 
+    number = 5
+
     def testenergies(self):
         """Is the l_max reasonable?"""
         self.assertEqual(len(self.data.etenergies), self.number)
@@ -67,27 +69,15 @@ class ADFTDDFTTest(GenericTDTest):
 
 class GaussianTDDFTTest(GenericTDTest):
     """Gaussian time-dependent HF/DFT unittest."""
-    number = 5
 
     def testrotatsnumber(self):
         """Is the length of etrotats correct?"""
         self.assertEqual(len(self.data.etrotats), self.number)
 
 
-class JaguarTDDFTTest(GenericTDTest):
-    """Jaguar time-dependent HF/DFT unittest."""
-    number = 5
-
-
 class GAMESSUSTDDFTTest(GenericTDTest):
     """GAMESS time-dependent HF/DFT unittest."""
-
     number = 10
-
-
-class PCGamessTDDFTTest(GenericTDTest):
-    """PC-GAMESS time-dependent HF/DFT unittest."""
-    number = 5
 
     
 class OrcaTDDFTTest(GenericTDTest):
@@ -110,6 +100,8 @@ class OrcaTDDFTTest(GenericTDTest):
 class GenericTDTesttrp(GenericTDTest):
     """Time-dependent HF/DFT (triplet) unittest."""
 
+    number = 5
+
     def testenergies(self):
         """Is the l_max reasonable?"""
         self.assertEqual(len(self.data.etenergies), self.number)
@@ -126,18 +118,11 @@ class GenericTDTesttrp(GenericTDTest):
 class GAMESSUSTDDFTtrpTest(GenericTDTesttrp):
     """GAMESS TD DFT (restricted) triplet unittest."""
 
-    number = 5
-
     #old_tests = ["GAMESS/WinGAMESS/dvb_td_trplet_2007.03.24.r1.out.gz"]
 
     def testsymsnumber(self):
         """Is the length of etsyms correct? PASS"""
         pass
-
-
-class PCGamessTDDFTtrpTest(GenericTDTesttrp):
-    """PC-GAMESS TD DFT (restricted) triplet unittest."""
-    number = 5
 
 
 if __name__=="__main__":

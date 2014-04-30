@@ -13,29 +13,10 @@ import numpy
 import bettertest
 
 
-class GenericCITest(bettertest.TestCase):
-    """CI unittest."""
-    
-    def testnumberofstates(self):
-        """ Are there nstate elements in etenergies/etsecs/etsyms/etoscs?"""
-        self.assertEqual(len(self.data.etenergies), self.nstates)
-        self.assertEqual(len(self.data.etsecs), self.nstates)
-        self.assertEqual(len(self.data.etsyms), self.nstates)
-        self.assertEqual(len(self.data.etoscs), self.nstates)
-    
-    def testetenergies(self):
-        """ Are transition energies positive and rising?"""
-        self.failUnless(numpy.alltrue(self.data.etenergies > 0.0))
-        changes = self.data.etenergies[1:] - self.data.etenergies[:-1]
-        self.failUnless(numpy.alltrue(changes > 0.0))
-
-
-class GenericCISTest(GenericCITest):
-    """CIS unittest."""
-
-    
-class GenericCISWaterTest(GenericCISTest):
+class GenericCISTest(bettertest.TestCase):
     """CIS(RHF)/STO-3G water unittest."""
+
+    nstates = 5
 
     # First four singlet/triplet state excitation energies [cm-1].
     # Based on output in GAMESS test.
@@ -108,33 +89,16 @@ class GenericCISWaterTest(GenericCISTest):
                     if not found:
                         self.fail("Excitation %i->%s not found (triplet state %i)" %(exc[0], exc[1], i))
 
-
-class GAMESSUSCISTest(GenericCISWaterTest):
-    """GAMESS-US CIS(RHF)/STO-3G water unittest."""
-
-    nstates = 5
-        
     def testnocoeffs(self):
         """(MP2) Are Natural Orbital coefficients the right size?"""
         self.assertEquals(self.data.nocoeffs.shape, (self.data.nmo, self.data.nbasis))
 
 
-class GaussianCISTest(GenericCISWaterTest):
+class GaussianCISTest(GenericCISTest):
     """Gaussian CIS(RHF)/STO-3G water unittest."""
-
     nstates = 10
 
-    def testnocoeffs(self):
-        """(MP2) Are Natural Orbital coefficients the right size?"""
-        self.assertEquals(self.data.nocoeffs.shape, (self.data.nmo, self.data.nbasis))
 
-
-class JaguarCISTest(GenericCISWaterTest):
-    """Jaguar CIS(RHF)/STO-3G water unittest."""
-
-    nstates = 5
-
-             
 if __name__=="__main__":
 
     from testall import testall
