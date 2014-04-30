@@ -14,7 +14,7 @@ import bettertest
 
 
 class GenericMP2Test(bettertest.TestCase):
-    """Generic MP2 unittest."""
+    """Generic MP2 unittest"""
 
     level = 2
     
@@ -32,39 +32,39 @@ class GenericMP2Test(bettertest.TestCase):
         self.failUnless(numpy.alltrue(corrections < 0.0))
         
 class GenericMP3Test(GenericMP2Test):
-    """Generic MP3 unittest."""
+    """Generic MP3 unittest"""
     level = 3
 
 class GenericMP4SDQTest(GenericMP2Test):
-    """Generic MP4(SDQ) unittest."""
+    """Generic MP4(SDQ) unittest"""
     level = 4
 
 class GenericMP4SDTQTest(GenericMP2Test):
-    """Generic MP4(SDTQ) unittest."""
+    """Generic MP4(SDTQ) unittest"""
     level = 4
 
 class GenericMP5Test(GenericMP2Test):
-    """Generic MP5 unittest."""
+    """Generic MP5 unittest"""
     level = 5
 
 
 class GaussianMP2Test(GenericMP2Test):
-    """Gaussian MP2 unittest."""
+    """Customized MP2 unittest"""
         
     def testnocoeffs(self):
         """(MP2) Are Natural Orbital coefficients the right size?"""
         self.assertEquals(self.data.nocoeffs.shape, (self.data.nmo, self.data.nbasis))
 
 class GaussianMP3Test(GenericMP2Test):
-    """Gaussian MP3 unittest."""
+    """Customized MP3 unittest"""
     level = 3
 
 class GaussianMP4SDQTest(GenericMP2Test):
-    """Gaussian MP4-SDQ unittest."""
+    """Customized MP4-SDQ unittest"""
     level = 4
 
 class GaussianMP4SDTQTest(GenericMP2Test):
-    """Gaussian MP4-SDTQ unittest."""
+    """Customized MP4-SDTQ unittest"""
     level = 4
 
 

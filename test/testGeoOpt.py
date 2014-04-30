@@ -17,7 +17,7 @@ import testSP
 
 
 class GenericGeoOptTest(bettertest.TestCase):
-    """Geometry optimization unittest."""
+    """Generic geometry optimization unittest"""
 
     # In STO-3G, H has 1, C has 3.
     nbasisdict = {1:1, 6:5}
@@ -146,7 +146,7 @@ class GenericGeoOptTest(bettertest.TestCase):
         self.assertTrue(temp[-1])
 
 class ADFGeoOptTest(GenericGeoOptTest):
-    """ADF geometry optimization unittest."""
+    """Customized geometry optimization unittest"""
 
     extracoords = 1
     extrascfs = 1
@@ -156,7 +156,7 @@ class ADFGeoOptTest(GenericGeoOptTest):
 
 
 class GaussianGeoOptTest(GenericGeoOptTest):
-    """Gaussian geometry optimization unittest."""
+    """Customized geometry optimization unittest"""
 
     def testgrads(self):
         """Do the grads have the right dimensions?"""
@@ -164,7 +164,7 @@ class GaussianGeoOptTest(GenericGeoOptTest):
 
 
 class JaguarGeoOptTest(GenericGeoOptTest):
-    """Jaguar geometry optimization unittest."""
+    """Customized geometry optimization unittest"""
 
     # Data file does not contain enough information. Can we make a new one?
     def testatombasis(self):
@@ -183,7 +183,7 @@ class JaguarGeoOptTest(GenericGeoOptTest):
 
 
 class MolproGeoOptTest(GenericGeoOptTest):
-    """Molpro geometry optimization unittest."""
+    """Customized geometry optimization unittest"""
 
     # Note that these extra coordinates and energies will be available only
     # if the appropriate output is parsed, and Molpro often saves the initial
@@ -215,7 +215,7 @@ class MolproGeoOptTest(GenericGeoOptTest):
         self.assertTrue(converged)
 
 class MolproGeoOptTest2006(MolproGeoOptTest):
-    """Molpro 2006 geometry optimization unittest."""
+    """Customized 2006 geometry optimization unittest"""
 
     # Same situation as SP -- this is tested for in the 2012 logfiles, but
     # the 2006 logfiles were created before atomcharges was an attribute and
@@ -226,7 +226,7 @@ class MolproGeoOptTest2006(MolproGeoOptTest):
 
 
 class NWChemGeoOptTest(GenericGeoOptTest):
-    """NWChem restricted single point HF unittest."""
+    """Customized restricted single point HF unittest"""
 
     # NWChem typically prints the coordinates in the input module, at the
     # beginning of each geometry optimization step, and then again after
@@ -238,7 +238,7 @@ class NWChemGeoOptTest(GenericGeoOptTest):
 
 
 class OrcaGeoOptTest(GenericGeoOptTest):
-    """ORCA geometry optimization unittest."""
+    """Customized geometry optimization unittest"""
 
     extracoords = 1
     extrascfs = 1

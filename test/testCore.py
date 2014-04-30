@@ -15,7 +15,7 @@ import bettertest
 
 
 class GenericCoreTest(bettertest.TestCase):
-    """Core electrons unittest."""
+    """Generic core electrons unittest"""
 
     coredict = {'Mo': 28, 'O':0, 'Cl':10}
 
@@ -30,7 +30,7 @@ class GenericCoreTest(bettertest.TestCase):
 
 
 class ADFCoreTest(GenericCoreTest):
-    """ADF core electrons unittest."""
+    """Customized core electrons unittest"""
 
     # For some reason ADF does not have a core in this test for chlorine atoms.
     # This might be fixable in the input.
@@ -38,7 +38,7 @@ class ADFCoreTest(GenericCoreTest):
 
 
 class JaguarCoreTest(GenericCoreTest):
-    """Jaguar core electrons unittest."""
+    """Customized core electrons unittest"""
 
     # This test was done using LanL2DZ instead of the smaller variant.
     coredict = {'Mo': 36, 'O':0, 'Cl':10}

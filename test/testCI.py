@@ -14,7 +14,7 @@ import bettertest
 
 
 class GenericCISTest(bettertest.TestCase):
-    """CIS(RHF)/STO-3G water unittest."""
+    """Generic CIS(RHF)/STO-3G water unittest"""
 
     nstates = 5
 
@@ -95,7 +95,7 @@ class GenericCISTest(bettertest.TestCase):
 
 
 class GaussianCISTest(GenericCISTest):
-    """Gaussian CIS(RHF)/STO-3G water unittest."""
+    """Customized CIS(RHF)/STO-3G water unittest"""
     nstates = 10
 
 
