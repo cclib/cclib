@@ -90,10 +90,6 @@ class GamessUKSPunTest(GenericSPunTest):
                           (self.data.homos[1]+6, self.data.nbasis))
 
 
-class GamessUSSPunTest(GenericSPunTest):
-    """GAMESS-US unrestricted single point unittest."""
-
-
 class GaussianSPunTest(GenericSPunTest):
     """Gaussian unrestricted single point unittest."""
 
@@ -136,8 +132,6 @@ class MolproSPunTest(GenericSPunTest):
         """Are the dims of the mosyms equal to 2 x nmo? PASS"""
         self.assertEquals(1,1)
 
-class NWChemSPunTest(GenericSPunTest):
-    """NWChem unrestricted single point unittest."""
 
 class OrcaSPunTest(GenericSPunTest):
     """ORCA unrestricted single point unittest."""
@@ -148,10 +142,6 @@ class OrcaSPunTest(GenericSPunTest):
         self.assertEquals(1,1)
 
 
-class PCGamessSPunTest(GenericSPunTest):
-    """PC-GAMESS unrestricted single point unittest."""
-
-              
 if __name__=="__main__":
 
     from testall import testall

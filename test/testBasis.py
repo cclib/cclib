@@ -75,33 +75,13 @@ class GenericBigBasisTest(GenericBasisTest):
         self.assertEqual(1, 1)
 
 
-class GamessUKBasisTest(GenericBasisTest):
-    """GAMESS-UK basis set unittest."""
-
-
-class GamessUSBasisTest(GenericBasisTest):
-    """GAMESS-US basis set unittest."""
-
-
-class GamessUSBigBasisTest(GenericBigBasisTest):
-    """GAMESS-US big basis set unittest."""
-
-
-class GaussianBasisTest(GenericBasisTest):
-    """Gaussian basis set unittest."""
-
-
 class GaussianBigBasisTest(GenericBigBasisTest):
-    """Gaussian big basis set unittest."""
-    
+    """Customized big basis set unittest."""
     spherical = True
 
 
-class JaguarBasisTest(GenericBasisTest):
-    """Jaguar basis set unittest."""
-
 class JaguarBigBasisTest(GenericBigBasisTest):
-    """Jaguar big basis set unittest."""
+    """Customized big basis set unittest."""
 
     spherical = True
 
@@ -109,36 +89,9 @@ class JaguarBigBasisTest(GenericBigBasisTest):
     names = ['S', 'P', 'D', 'F']
 
 
-class MolproBasisTest(GenericBasisTest):
-    """Molpro basis set unittest."""
-
-
 class MolproBigBasisTest(GenericBigBasisTest):
-    """Molpro big basis set unittest."""
-
+    """Customized big basis set unittest."""
     spherical = True
-
-
-class NWChemBasisTest(GenericBasisTest):
-    """NWChem basis set unittest."""
-
-class NWChemBigBasisTest(GenericBigBasisTest):
-    """NWChem big basis set unittest."""
-
-
-class PCGamessBasisTest(GenericBasisTest):
-    """PC-GAMESS basis set unittest."""
-
-
-class PCGamessBigBasisTest(GenericBigBasisTest):
-    """PC-GAMESS big basis set unittest."""
-
-
-class PsiBasisTest(GenericBasisTest):
-    """Psi basis set unittest."""
-
-class PsiBigBasisTest(GenericBigBasisTest):
-    """Psi big basis set unittest."""
 
               
 if __name__=="__main__":

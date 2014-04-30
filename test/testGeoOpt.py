@@ -30,6 +30,7 @@ class GenericGeoOptTest(bettertest.TestCase):
 
     # Approximate B3LYP energy of dvb after SCF in STO-3G.
     b3lyp_energy = -10365
+    b3lyp_tolerance = 40
 
     def testnatom(self):
         """Is the number of atoms equal to 20?"""
@@ -100,10 +101,11 @@ class GenericGeoOptTest(bettertest.TestCase):
         self.assertEquals(type(self.data.scfvalues[0]),type(numpy.array([])))
 
     def testscfenergy(self):
-        """Is the SCF energy within 40eV of target?"""
+        """Is the SCF energy close to target?"""
         scf = self.data.scfenergies[-1]
         ref = self.b3lyp_energy
-        msg = "Final scf energy: %f not %i +- 40eV" %(scf, ref)
+        tol = self.b3lyp_tolerance
+        msg = "Final scf energy: %f not %i +- %ieV" %(scf, ref, tol)
         self.assertInside(scf, ref, 40, msg)
 
     def testscfenergydim(self):
@@ -148,21 +150,9 @@ class ADFGeoOptTest(GenericGeoOptTest):
 
     extracoords = 1
     extrascfs = 1
-       
-    def testscfenergy(self):
-        """Is the SCF energy within 1eV of -140eV?"""
-        scf = self.data.scfenergies[-1]
-        ref = -140
-        msg = "Final scf energy: %f not -140+-1eV" % scf
-        self.assertInside(scf, ref, 1, msg)
 
-
-class GamessUKGeoOptTest(GenericGeoOptTest):
-    """GAMESS-UK geometry optimization unittest."""
-
-        
-class GamessUSGeoOptTest(GenericGeoOptTest):
-    """GAMESS-US geometry optimization unittest."""
+    b3lyp_energy = -140
+    b3lyp_tolerance = 1
 
 
 class GaussianGeoOptTest(GenericGeoOptTest):
@@ -287,20 +277,6 @@ class OrcaGeoOptTest(GenericGeoOptTest):
         conv_x = value_e < target_e and all(value_g < target_g*3.0) and all(value_x < target_x/3.0)
         converged = conv_all or conv_e or conv_g or conv_x
         self.assertTrue(converged)
-
-
-class PCGamessGeoOptTest(GenericGeoOptTest):
-    """PC-GAMESS geometry optimization unittest."""
-
-
-class NWChemGeoOptHFTest(GenericGeoOptTest):
-    """NWChem restricted single point HF unittest."""
-
-class NWChemGeoOptKSTest(GenericGeoOptTest):
-    """NWChem restricted single point KS unittest."""
-
-class PsiGeoOptTest(GenericGeoOptTest):
-    """Psi geometry optimization unittest."""
 
 
 if __name__=="__main__":

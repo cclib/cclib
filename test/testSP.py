@@ -149,14 +149,6 @@ class ADFSPTest(GenericSPTest):
         self.assertInside(self.data.scfenergies[-1],-140,1,"Final scf energy: %f not -140+-1eV" % self.data.scfenergies[-1])
 
 
-class GamessUKSPTest(GenericSPTest):
-    """GAMESS-UK restricted single point unittest."""
-
-
-class GamessUSSPTest(GenericSPTest):
-    """GAMESS-US restricted single point unittest."""
-
-
 class GaussianSPTest(GenericSPTest):
     """Gaussian restricted single point unittest."""
 
@@ -192,9 +184,6 @@ class Jaguar7SPTest(GenericSPTest):
         """Are the dimensions of mocoeffs equal to 1 x nmo x nbasis? PASS"""
         self.assertEquals(1, 1)
 
-class JaguarSPTest(GenericSPTest):
-    """Jaguar restricted single point unittest."""
-
 
 class MolproSPTest(GenericSPTest):
     """Molpro restricted single point unittest."""
@@ -220,17 +209,6 @@ class OrcaSPTest(GenericSPTest):
     def testsymlabels(self):
         """Are all the symmetry labels either Ag/u or Bg/u? PASS"""
         self.assertEquals(1,1)
-
-
-class NWChemSPHFTest(GenericSPTest):
-    """NWChem restricted single point HF unittest."""
-
-class NWChemSPKSTest(GenericSPTest):
-    """NWChem restricted single point KS unittest."""
-
-
-class PCGamessSPTest(GenericSPTest):
-    """PC-GAMESS restricted single point unittest."""
 
 
 class PsiSPTest(GenericSPTest):
@@ -259,6 +237,7 @@ class Psi3SPTest(PsiSPTest):
     # and molecular orbitals, so we do not parse mocoeffs in Psi3 at all.
     def testdimmocoeffs(self):
         """Are the dimensions of mocoeffs equal to 1 x nmo x nbasis? PASS"""
+
 
 if __name__=="__main__":
 
