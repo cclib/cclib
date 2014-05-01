@@ -168,13 +168,12 @@ def testall(parsers=parsers, modules=test_modules, status=False, terse=False, st
         testdata = gettestdata(module)
 
         # Filter the test data to use if a list of requested parsers is passed
-        # to this function, assuming that all unit tests for a given test class
-        # use the same parser (use the first unit test to check which one that is).
-        if parsers:
-            testdata = dict([(x,y) for x,y in testdata.items() if y[0]['parser'] in parsers])
-                
-        testnames = sorted(testdata.keys())
-        for name in testnames:
+        # to this function. We used to assume that all unit tests for a given test class
+        # use the same parser, but that is no longer true. We now use the generic
+        # test class in many cases, to reduce the total number of classes.
+        testdata = dict([(x,[t for t in y if t['parser'] in parsers]) for x,y in testdata.items()])
+
+        for name in sorted(testdata.keys()):
 
             for test_instance in testdata[name]:
 
