@@ -227,6 +227,12 @@ def testGaussian_Gaussian09_Ru2bpyen2_H2_freq3_log(logfile):
     """Here atomnos wans't added to the gaussian parser before."""
     assert len(logfile.data.atomnos) == 69
 
+# Molpro #
+
+def testMolpro_Molpro2012_dvb_gopt_unconverged_out(logfile):
+    """An unconverged geometry optimization to test for empty optdone (see #103 for details)."""
+    assert hasattr(logfile.data, 'optdone') and logfile.data.optdone == []
+
 # NWChem #
 
 def testNWChem_NWChem6_0_dvb_gopt_hf_unconverged_out(logfile):

@@ -538,11 +538,17 @@ class Molpro(logfileparser.Logfile):
                 if line.strip() == "Freezing grid":
                     line = next(inputfile)
 
-            # The convergence trigger shows up at the bottom in Molpro 2012.
-            while line.strip() == '':
+            # The convergence trigger shows up somewhere at the bottom in Molpro 2012,
+            # before the final stars. If convergence is not reached, there is an additional
+            # line that can be checked for. This is a little tricky, though, since it is
+            # not the last line... so bail out of the loop if convergence failure is detected.
+            while "*****" not in line:
                 line = next(inputfile)
-            if line.strip() == "END OF GEOMETRY OPTIMIZATION.":
-                geometry_converged = True
+                if line.strip() == "END OF GEOMETRY OPTIMIZATION.":
+                    geometry_converged = True
+                if "No convergence" in line:
+                    geometry_converged = False
+                    break
 
             # Finally, deal with optdone, append the last step to it only if we had convergence.
             if not hasattr(self, 'optdone'):
