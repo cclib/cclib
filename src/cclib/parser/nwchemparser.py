@@ -427,6 +427,10 @@ class NWChem(logfileparser.Logfile):
                 self.optdone = []
             self.optdone.append(len(self.geovalues) - 1)
 
+        if "Failed to converge" in line and hasattr(self, 'geovalues'):
+            if not hasattr(self, 'optdone'):
+                self.optdone = []
+
         # The line containing the final SCF energy seems to be always identifiable like this.
         if "Total SCF energy" in line or "Total DFT energy" in line:
 
