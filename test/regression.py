@@ -253,14 +253,14 @@ def testORCA_ORCA2_9_job_out(logfile):
     """
     assert all([abs(sum(v)-1.0) < 0.0001 for k,v in logfile.data.atomspins.items()])
 
+def testORCA_ORCA3_0_dvb_gopt_unconverged_out(logfile):
+    """An unconverged geometry optimization to test for empty optdone (see #103 for details)."""
+    assert hasattr(logfile.data, 'optdone') and logfile.data.optdone == []
+
 # PSI #
 
 def testPsi_Psi4_dvb_gopt_hf_unconverged_out(logfile):
-    """An unconverged geometry optimization.
-
-    Even though the optimization is not converged, we want to make sure
-    that optdone is set (to an empty list in this case). See #103 for details.
-    """
+    """An unconverged geometry optimization to test for empty optdone (see #103 for details)."""
     assert hasattr(logfile.data, 'optdone') and logfile.data.optdone == []
 
 

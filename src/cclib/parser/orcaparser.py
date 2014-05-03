@@ -356,6 +356,10 @@ class ORCA(logfileparser.Logfile):
 
             self.atomcoords.append(atomcoords)
 
+        if "The optimization did not converge" in line:
+            if not hasattr(self, 'optdone'):
+                self.optdone = []
+
         if line[0:16] == "ORBITAL ENERGIES":
 
             self.skip_lines(inputfile, ['d', 'text', 'text'])
@@ -798,6 +802,7 @@ class ORCA(logfileparser.Logfile):
                 assert maxDP_target == self.scftargets[-1][1]
             self.scfvalues[-1].append([deltaE_value, maxDP_value, rmsDP_value])
             self.scftargets.append([deltaE_target, maxDP_target, rmsDP_target])
+
 
 if __name__ == "__main__":
     import sys
