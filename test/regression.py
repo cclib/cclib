@@ -15,15 +15,14 @@ To run the doctest, just use "python regression.py test".
 """
 
 from __future__ import print_function
-import os
-import sys
+
+import glob
 import importlib
 import inspect
 import logging
+import os
+import sys
 import unittest
-
-from glob import glob
-from io import StringIO
 
 from cclib.parser import ccopen
 from cclib.parser import ADF, GAMESS, GAMESSUK, Gaussian, Jaguar, Molpro, NWChem, ORCA, Psi
@@ -536,11 +535,12 @@ def main(which=[], traceback=False, status=False):
     # prominently at the end.
     missing_on_disk = []
     missing_in_list = []
-    for x in regfilenames:
-        if not os.path.isfile(os.path.join("..", "data", "regression", x)):
-            missing_on_disk.append(x)
-        elif os.path.join("..", "data", "regression", x) not in flatten(filenames):
-            missing_in_list.append(x)
+    for fn in regfilenames:
+        if not os.path.isfile(os.path.join("..", "data", "regression", fn)):
+            missing_on_disk.append(fn)
+    for fn in glob.glob(os.path.join('..', 'data', 'regression', '*', '*', '*')):
+        if os.path.join(*fn.split(os.path.sep)[3:]) not in regfilenames:
+            missing_in_list.append(fn)
 
     # Create the regression test functions from logfiles that were old unittests.
     for path, test_class in old_unittests.items():
