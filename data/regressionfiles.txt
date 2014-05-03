@@ -144,4 +144,5 @@ ORCA/ORCA2.8/dvb_sp_un.out
 ORCA/ORCA2.9/job.out
 ORCA/ORCA2.9/prova.out
 ORCA/ORCA2.9/PCB_1_122.out
+Psi/Psi4/dvb_gopt_hf_unconverged.out
 Psi/Psi4/psi4.0b5_samples_scf4.out

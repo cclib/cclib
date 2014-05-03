@@ -253,6 +253,16 @@ def testORCA_ORCA2_9_job_out(logfile):
     """
     assert all([abs(sum(v)-1.0) < 0.0001 for k,v in logfile.data.atomspins.items()])
 
+# PSI #
+
+def testPsi_Psi4_dvb_gopt_hf_unconverged_out(logfile):
+    """An unconverged geometry optimization.
+
+    Even though the optimization is not converged, we want to make sure
+    that optdone is set (to an empty list in this case). See #103 for details.
+    """
+    assert hasattr(logfile.data, 'optdone') and logfile.data.optdone == []
+
 
 # These regression tests are for logfiles that are not to be parsed
 # for some reason, and the function should start with 'testnoparse'.

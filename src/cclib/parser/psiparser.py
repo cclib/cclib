@@ -682,10 +682,20 @@ class Psi(logfileparser.Logfile):
                 self.geovalues = []
             self.geovalues.append(geovalues)
 
+        # This message signals a converged optimization, in which case we want
+        # to append the index for this step to optdone, which should be equal
+        # to the number of geovalues gathered so far.
         if line.strip() == "**** Optimization is complete! ****":
             if not hasattr(self, 'optdone'):
                 self.optdone = []
             self.optdone.append(len(self.geovalues))
+
+        # This message means that optimization has stopped for some reason, but we
+        # still want optdone to exist in this case, although it will be an empty list.
+        if line.strip() == "Optimizer: Did not converge!":
+            if not hasattr(self, 'optdone'):
+                self.optdone = []
+
 
 if __name__ == "__main__":
     import doctest, psiparser
