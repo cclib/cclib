@@ -17,7 +17,7 @@ import testSP
 
 
 class GenericScanTest(bettertest.TestCase):
-    """Relaxed potential energy surfance scan unittest."""
+    """Generic relaxed potential energy surfance scan unittest"""
 
     # extra indices
     extra = 0
@@ -39,23 +39,21 @@ class GenericScanTest(bettertest.TestCase):
 
 
 class GaussianScanTest(GenericScanTest):
-    """Gaussian relaxed potential energy surface scan unittest."""
-
+    """Customized relaxed potential energy surface scan unittest"""
     extra = 1
 
 
 class JaguarScanTest(GenericScanTest):
-    """Jaguar relaxed potential energy surface scan unittest."""
-
+    """Customized relaxed potential energy surface scan unittest"""
     extra = 1
 
 class OrcaScanTest(GenericScanTest):
-    """ORCA relaxed potential energy surface scan unittest."""
+    """Customized relaxed potential energy surface scan unittest"""
 
     def testindices(self):
         """Do the indices match the results from geovalues. PASS"""
-
         self.assertEquals(1, 1)
+
 
 if __name__=="__main__":
 

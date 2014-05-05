@@ -14,7 +14,9 @@ import bettertest
 
 
 class GenericTDunTest(bettertest.TestCase):
-    """Time-dependent HF/DFT unittest for unrestricted case."""
+    """Generic time-dependent unrestricted HF/DFT unittest"""
+
+    number = 24
 
     def testenergiesnumber(self):
         """Is the length of etenergies correct?"""
@@ -36,12 +38,6 @@ class GenericTDunTest(bettertest.TestCase):
         """Is the length of etsyms correct?"""
         self.assertEqual(len(self.data.etsyms), self.number)
 
-
-class GaussianTDDFTunTest(GenericTDunTest):
-    """Gaussian time-dependent HF/DFT unittest."""
-
-    number = 24
-    
     def testsyms(self):
         """Is etsyms populated by singlets and triplets 50/50?"""
         singlets = [sym for sym in self.data.etsyms if "Singlet" in sym]

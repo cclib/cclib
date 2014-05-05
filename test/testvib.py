@@ -12,7 +12,7 @@ import bettertest
 
 
 class GenericIRTest(bettertest.TestCase):
-    """Generic vibrational frequency unittest."""
+    """Generic vibrational frequency unittest"""
 
     # Unit tests should normally give this value for the largest IR intensity.
     max_IR_intensity = 100
@@ -38,8 +38,45 @@ class GenericIRTest(bettertest.TestCase):
         self.assertInside(max(self.data.vibirs), self.max_IR_intensity, 10)
 
 
+class PCGamessIRTest(GenericIRTest):
+    """Customized vibrational frequency unittest"""
+
+    def testirintens(self):
+        """Is the maximum IR intensity 135 +/- 5 km mol-1?"""
+        self.assertInside(max(self.data.vibirs), 135, 5) 
+
+
+class GaussianIRTest(GenericIRTest):
+    """Customized vibrational frequency unittest"""
+
+    def testvibsyms(self):
+        """Is the length of vibsyms correct?"""
+        numvib = 3*len(self.data.atomnos) - 6        
+        self.assertEqual(len(self.data.vibsyms), numvib)
+
+       
+class JaguarIRTest(GenericIRTest):
+    """Customized vibrational frequency unittest"""
+
+    def testvibsyms(self):
+            """Is the length of vibsyms correct?"""
+            numvib = 3*len(self.data.atomnos) - 6        
+            self.assertEqual(len(self.data.vibsyms), numvib)
+
+
+class OrcaIRTest(GenericIRTest):
+    """Customized vibrational frequency unittest"""
+
+    # We have not been able to determine why ORCA gets such a different
+    # maximum IR intensity. The coordinates are exactly the same, and
+    # the basis set seems close enough to other programs. It would be nice
+    # to determine whether this difference is algorithmic in nature,
+    # but in the meanwhile we will expect to parse this value.
+    max_IR_intensity = 215    
+
+
 class GenericIRimgTest(bettertest.TestCase):
-    """Generic imaginary vibrational frequency unittest."""
+    """Generic imaginary vibrational frequency unittest"""
 
     def testvibdisps(self):
         """Are the dimensions of vibdisps consistent with 3N-6 x N x 3"""
@@ -57,68 +94,15 @@ class GenericIRimgTest(bettertest.TestCase):
         """Is the lowest freq value negative?"""
         self.assertTrue(self.data.vibfreqs[0] < 0)
 
-
 ##    def testmaxvibdisps(self):
 ##        """What is the maximum value of displacement for a H vs a C?"""
 ##        Cvibdisps = compress(self.data.atomnos==6, self.data.vibdisps, 1)
 ##        Hvibdisps = compress(self.data.atomnos==1, self.data.vibdisps, 1)
 ##        self.assertEqual(max(abs(Cvibdisps).flat), 1.0)
-        
-
-class ADFIRTest(GenericIRTest):
-    """ADF vibrational frequency unittest."""
-
-    
-class GamessUKIRTest(GenericIRTest):
-    """GAMeSS-UK vibrational frequency unittest."""
-
-
-class GamessUSIRTest(GenericIRTest):
-    """GAMESS-US vibrational frequency unittest."""
-
-
-class GaussianIRTest(GenericIRTest):
-    """Gaussian vibrational frequency unittest."""
-
-    def testvibsyms(self):
-        """Is the length of vibsyms correct?"""
-        numvib = 3*len(self.data.atomnos) - 6        
-        self.assertEqual(len(self.data.vibsyms), numvib)
-
-       
-class JaguarIRTest(GenericIRTest):
-    """Jaguar vibrational frequency unittest."""
-
-    def testvibsyms(self):
-            """Is the length of vibsyms correct?"""
-            numvib = 3*len(self.data.atomnos) - 6        
-            self.assertEqual(len(self.data.vibsyms), numvib)
-
-
-class MolproIRTest(GenericIRTest):
-    """Molpro vibrational frequency unittest."""
-
-
-class OrcaIRTest(GenericIRTest):
-    """ORCA vibrational frequency unittest."""
-
-    # We have not been able to determine why ORCA gets such a different
-    # maximum IR intensity. The coordinates are exactly the same, and
-    # the basis set seems close enough to other programs. It would be nice
-    # to determine whether this difference is algorithmic in nature,
-    # but in the meanwhile we will expect to parse this value.
-    max_IR_intensity = 215
-
-class PCGamessIRTest(GenericIRTest):
-    """PC-GAMESS vibrational frequency unittest."""
-
-    def testirintens(self):
-        """Is the maximum IR intensity 135 +/- 5 km mol-1?"""
-        self.assertInside(max(self.data.vibirs), 135, 5)     
 
 
 class GenericRamanTest(bettertest.TestCase):
-    """Generic Raman unittest."""
+    """Generic Raman unittest"""
 
     def testlengths(self):
         """Is the length of vibramans correct?"""
@@ -147,32 +131,13 @@ class GenericRamanTest(bettertest.TestCase):
         assert hasattr(self.data, "vibdisps")
         assert len(self.data.vibdisps) == 54
 
-class GamessUKRamanTest(GenericRamanTest):
-    """GAMESS-UK Raman unittest."""
-
 
 class GaussianRamanTest(GenericRamanTest):
-    """Gaussian Raman unittest."""
+    """Customized Raman unittest"""
 
     def testramanintens(self):
         """Is the maximum Raman intensity 1066 +/- 5 A**4/amu?"""
         self.assertInside(max(self.data.vibramans), 1066, 5)
-
-
-class MolproRamanTest(GenericRamanTest):
-    """Molpro Raman unittest."""
-
-
-class OrcaRamanTest(GenericRamanTest):
-    """ORCA Raman unittest."""
-
-    
-class PCGamessRamanTest(GenericRamanTest):
-    """PC-GAMESS Raman unittest."""
-
-
-class GamessUSIRimgTest(GenericIRimgTest):
-    """GAMESS-US imaginary vibrational frequency unittest."""
 
 
 if __name__=="__main__":

@@ -17,7 +17,7 @@ import testSP
 
 
 class GenericGeoOptTest(bettertest.TestCase):
-    """Geometry optimization unittest."""
+    """Generic geometry optimization unittest"""
 
     # In STO-3G, H has 1, C has 3.
     nbasisdict = {1:1, 6:5}
@@ -30,6 +30,7 @@ class GenericGeoOptTest(bettertest.TestCase):
 
     # Approximate B3LYP energy of dvb after SCF in STO-3G.
     b3lyp_energy = -10365
+    b3lyp_tolerance = 40
 
     def testnatom(self):
         """Is the number of atoms equal to 20?"""
@@ -100,10 +101,11 @@ class GenericGeoOptTest(bettertest.TestCase):
         self.assertEquals(type(self.data.scfvalues[0]),type(numpy.array([])))
 
     def testscfenergy(self):
-        """Is the SCF energy within 40eV of target?"""
+        """Is the SCF energy close to target?"""
         scf = self.data.scfenergies[-1]
         ref = self.b3lyp_energy
-        msg = "Final scf energy: %f not %i +- 40eV" %(scf, ref)
+        tol = self.b3lyp_tolerance
+        msg = "Final scf energy: %f not %i +- %ieV" %(scf, ref, tol)
         self.assertInside(scf, ref, 40, msg)
 
     def testscfenergydim(self):
@@ -144,29 +146,17 @@ class GenericGeoOptTest(bettertest.TestCase):
         self.assertTrue(temp[-1])
 
 class ADFGeoOptTest(GenericGeoOptTest):
-    """ADF geometry optimization unittest."""
+    """Customized geometry optimization unittest"""
 
     extracoords = 1
     extrascfs = 1
-       
-    def testscfenergy(self):
-        """Is the SCF energy within 1eV of -140eV?"""
-        scf = self.data.scfenergies[-1]
-        ref = -140
-        msg = "Final scf energy: %f not -140+-1eV" % scf
-        self.assertInside(scf, ref, 1, msg)
 
-
-class GamessUKGeoOptTest(GenericGeoOptTest):
-    """GAMESS-UK geometry optimization unittest."""
-
-        
-class GamessUSGeoOptTest(GenericGeoOptTest):
-    """GAMESS-US geometry optimization unittest."""
+    b3lyp_energy = -140
+    b3lyp_tolerance = 1
 
 
 class GaussianGeoOptTest(GenericGeoOptTest):
-    """Gaussian geometry optimization unittest."""
+    """Customized geometry optimization unittest"""
 
     def testgrads(self):
         """Do the grads have the right dimensions?"""
@@ -174,7 +164,7 @@ class GaussianGeoOptTest(GenericGeoOptTest):
 
 
 class JaguarGeoOptTest(GenericGeoOptTest):
-    """Jaguar geometry optimization unittest."""
+    """Customized geometry optimization unittest"""
 
     # Data file does not contain enough information. Can we make a new one?
     def testatombasis(self):
@@ -193,7 +183,7 @@ class JaguarGeoOptTest(GenericGeoOptTest):
 
 
 class MolproGeoOptTest(GenericGeoOptTest):
-    """Molpro geometry optimization unittest."""
+    """Customized geometry optimization unittest"""
 
     # Note that these extra coordinates and energies will be available only
     # if the appropriate output is parsed, and Molpro often saves the initial
@@ -225,7 +215,7 @@ class MolproGeoOptTest(GenericGeoOptTest):
         self.assertTrue(converged)
 
 class MolproGeoOptTest2006(MolproGeoOptTest):
-    """Molpro 2006 geometry optimization unittest."""
+    """Customized 2006 geometry optimization unittest"""
 
     # Same situation as SP -- this is tested for in the 2012 logfiles, but
     # the 2006 logfiles were created before atomcharges was an attribute and
@@ -236,7 +226,7 @@ class MolproGeoOptTest2006(MolproGeoOptTest):
 
 
 class NWChemGeoOptTest(GenericGeoOptTest):
-    """NWChem restricted single point HF unittest."""
+    """Customized restricted single point HF unittest"""
 
     # NWChem typically prints the coordinates in the input module, at the
     # beginning of each geometry optimization step, and then again after
@@ -248,7 +238,7 @@ class NWChemGeoOptTest(GenericGeoOptTest):
 
 
 class OrcaGeoOptTest(GenericGeoOptTest):
-    """ORCA geometry optimization unittest."""
+    """Customized geometry optimization unittest"""
 
     extracoords = 1
     extrascfs = 1
@@ -287,20 +277,6 @@ class OrcaGeoOptTest(GenericGeoOptTest):
         conv_x = value_e < target_e and all(value_g < target_g*3.0) and all(value_x < target_x/3.0)
         converged = conv_all or conv_e or conv_g or conv_x
         self.assertTrue(converged)
-
-
-class PCGamessGeoOptTest(GenericGeoOptTest):
-    """PC-GAMESS geometry optimization unittest."""
-
-
-class NWChemGeoOptHFTest(GenericGeoOptTest):
-    """NWChem restricted single point HF unittest."""
-
-class NWChemGeoOptKSTest(GenericGeoOptTest):
-    """NWChem restricted single point KS unittest."""
-
-class PsiGeoOptTest(GenericGeoOptTest):
-    """Psi geometry optimization unittest."""
 
 
 if __name__=="__main__":

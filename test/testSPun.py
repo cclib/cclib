@@ -18,7 +18,7 @@ import bettertest
 
 
 class GenericSPunTest(bettertest.TestCase):
-    """Unrestricted single point unittest."""
+    """Generic unrestricted single point unittest"""
 
     def testnatom(self):
         """Is the number of atoms equal to 20?"""
@@ -69,7 +69,7 @@ class GenericSPunTest(bettertest.TestCase):
 
         
 class ADFSPunTest(GenericSPunTest):
-    """ADF unrestricted single point unittest."""
+    """Customized unrestricted single point unittest"""
 
     def testdimaooverlaps(self):
         """Are the dims of the overlap matrix consistent with nbasis?"""
@@ -78,7 +78,7 @@ class ADFSPunTest(GenericSPunTest):
 
 
 class GamessUKSPunTest(GenericSPunTest):
-    """GAMESS-UK unrestricted single point unittest."""
+    """Customized unrestricted single point unittest"""
 
     def testdimmocoeffs(self):
         """Are the dimensions of mocoeffs equal to 2 x (homos+6) x nbasis?"""
@@ -90,12 +90,8 @@ class GamessUKSPunTest(GenericSPunTest):
                           (self.data.homos[1]+6, self.data.nbasis))
 
 
-class GamessUSSPunTest(GenericSPunTest):
-    """GAMESS-US unrestricted single point unittest."""
-
-
 class GaussianSPunTest(GenericSPunTest):
-    """Gaussian unrestricted single point unittest."""
+    """Customized unrestricted single point unittest"""
 
     def testatomnos(self):
         """Does atomnos have the right dimension (20)?"""
@@ -104,7 +100,7 @@ class GaussianSPunTest(GenericSPunTest):
 
 
 class JaguarSPunTest(GenericSPunTest):
-    """Jaguar unrestricted single point unittest."""
+    """Customized unrestricted single point unittest"""
         
     # Data file does not contain enough information. Can we make a new one?
     def testdimaooverlaps(self):
@@ -130,17 +126,15 @@ class JaguarSPunTest(GenericSPunTest):
 
 
 class MolproSPunTest(GenericSPunTest):
-    """Molpro unrestricted single point unittest."""
+    """Customized unrestricted single point unittest"""
 
     def testmosyms(self):
         """Are the dims of the mosyms equal to 2 x nmo? PASS"""
         self.assertEquals(1,1)
 
-class NWChemSPunTest(GenericSPunTest):
-    """NWChem unrestricted single point unittest."""
 
 class OrcaSPunTest(GenericSPunTest):
-    """ORCA unrestricted single point unittest."""
+    """Customized unrestricted single point unittest"""
     
     # ORCA has no support for symmetry yet.
     def testmosyms(self):
@@ -148,10 +142,6 @@ class OrcaSPunTest(GenericSPunTest):
         self.assertEquals(1,1)
 
 
-class PCGamessSPunTest(GenericSPunTest):
-    """PC-GAMESS unrestricted single point unittest."""
-
-              
 if __name__=="__main__":
 
     from testall import testall

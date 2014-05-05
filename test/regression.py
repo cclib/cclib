@@ -15,15 +15,14 @@ To run the doctest, just use "python regression.py test".
 """
 
 from __future__ import print_function
-import os
-import sys
+
+import glob
 import importlib
 import inspect
 import logging
+import os
+import sys
 import unittest
-
-from glob import glob
-from io import StringIO
 
 from cclib.parser import ccopen
 from cclib.parser import ADF, GAMESS, GAMESSUK, Gaussian, Jaguar, Molpro, NWChem, ORCA, Psi
@@ -228,6 +227,18 @@ def testGaussian_Gaussian09_Ru2bpyen2_H2_freq3_log(logfile):
     """Here atomnos wans't added to the gaussian parser before."""
     assert len(logfile.data.atomnos) == 69
 
+# Molpro #
+
+def testMolpro_Molpro2012_dvb_gopt_unconverged_out(logfile):
+    """An unconverged geometry optimization to test for empty optdone (see #103 for details)."""
+    assert hasattr(logfile.data, 'optdone') and logfile.data.optdone == []
+
+# NWChem #
+
+def testNWChem_NWChem6_0_dvb_gopt_hf_unconverged_out(logfile):
+    """An unconverged geometry optimization to test for empty optdone (see #103 for details)."""
+    assert hasattr(logfile.data, 'optdone') and logfile.data.optdone == []
+
 # ORCA #
 
 def testORCA_ORCA2_8_co_cosmo_out(logfile):
@@ -252,6 +263,16 @@ def testORCA_ORCA2_9_job_out(logfile):
     but remember that this attribute is a dictionary, so we must iterate.
     """
     assert all([abs(sum(v)-1.0) < 0.0001 for k,v in logfile.data.atomspins.items()])
+
+def testORCA_ORCA3_0_dvb_gopt_unconverged_out(logfile):
+    """An unconverged geometry optimization to test for empty optdone (see #103 for details)."""
+    assert hasattr(logfile.data, 'optdone') and logfile.data.optdone == []
+
+# PSI #
+
+def testPsi_Psi4_dvb_gopt_hf_unconverged_out(logfile):
+    """An unconverged geometry optimization to test for empty optdone (see #103 for details)."""
+    assert hasattr(logfile.data, 'optdone') and logfile.data.optdone == []
 
 
 # These regression tests are for logfiles that are not to be parsed
@@ -336,23 +357,23 @@ class ADFSPTest_nosyms_valence(ADFSPTest_nosyms):
         self.assertEquals(len(self.data.moenergies[0]), 45)
         self.assertEquals(self.data.moenergies[0][0], 99999.0)
 
-class GAMESSUSSPunTest_charge0(GamessUSSPunTest):
+class GAMESSUSSPunTest_charge0(GenericSPunTest):
     def testcharge_and_mult(self):
         """The charge in the input was wrong."""
         self.assertEquals(self.data.charge, 0)
     def testhomos(self):
         """HOMOs were incorrect due to charge being wrong. PASS"""
 
-class GAMESSUSIRTest_ts(GamessUSIRTest):
+class GAMESSUSIRTest_ts(GenericIRTest):
     def testirintens(self):
         """This is a transition state with different intensities. PASS"""
 
-class GAMESSUSCISTest_dets(GAMESSUSCISTest):
+class GAMESSUSCISTest_dets(GenericCISTest):
     nstates = 10
     def testetsecsvalues(self):
         """This gives unexpected coeficcients, also for current unit tests. PASS"""
 
-class JaguarSPTest_6_31gss(JaguarSPTest):
+class JaguarSPTest_6_31gss(GenericSPTest):
     b3lyp_energy = -10530
     nbasisdict = {1:5, 6:15}
     def testnbasis(self):
@@ -427,30 +448,30 @@ old_unittests = {
     "ADF/ADF2004.01/dvb_sp_d.adfout":       ADFSPTest_nosyms,
     "ADF/ADF2004.01/dvb_un_sp.adfout":      ADFSPunTest,
     "ADF/ADF2004.01/dvb_un_sp_c.adfout":    ADFSPunTest,
-    "ADF/ADF2004.01/dvb_ir.adfout":         ADFIRTest,
+    "ADF/ADF2004.01/dvb_ir.adfout":         GenericIRTest,
 
     "ADF/ADF2006.01/dvb_gopt.adfout":       ADFGeoOptTest,
 
-    "GAMESS/GAMESS-US2005/water_ccd_2005.06.27.r3.out":         GAMESSUSCCDTest,
-    "GAMESS/GAMESS-US2005/water_ccsd_2005.06.27.r3.out":        GAMESSUSCCSDTest,
-    "GAMESS/GAMESS-US2005/water_ccsd(t)_2005.06.27.r3.out":     GAMESSUSCCSDTTest,
+    "GAMESS/GAMESS-US2005/water_ccd_2005.06.27.r3.out":         GenericCCTest,
+    "GAMESS/GAMESS-US2005/water_ccsd_2005.06.27.r3.out":        GenericCCTest,
+    "GAMESS/GAMESS-US2005/water_ccsd(t)_2005.06.27.r3.out":     GenericCCTest,
     "GAMESS/GAMESS-US2005/water_cis_dets_2005.06.27.r3.out":    GAMESSUSCISTest_dets,
-    "GAMESS/GAMESS-US2005/water_cis_saps_2005.06.27.r3.out":    GAMESSUSCISTest,
-    "GAMESS/GAMESS-US2005/MoOCl4-sp_2005.06.27.r3.out":         GAMESSUSCoreTest,
-    "GAMESS/GAMESS-US2005/water_mp2_2005.06.27.r3.out":         GAMESSUSMP2Test,
+    "GAMESS/GAMESS-US2005/water_cis_saps_2005.06.27.r3.out":    GenericCISTest,
+    "GAMESS/GAMESS-US2005/MoOCl4-sp_2005.06.27.r3.out":         GenericCoreTest,
+    "GAMESS/GAMESS-US2005/water_mp2_2005.06.27.r3.out":         GenericMP2Test,
 
-    "GAMESS/GAMESS-US2006/C_bigbasis_2006.02.22.r3.out":    GamessUSBigBasisTest,
-    "GAMESS/GAMESS-US2006/dvb_gopt_a_2006.02.22.r2.out":    GamessUSGeoOptTest,
-    "GAMESS/GAMESS-US2006/dvb_sp_2006.02.22.r2.out":        GamessUSSPTest,
-    "GAMESS/GAMESS-US2006/dvb_un_sp_2006.02.22.r2.out":     GamessUSSPunTest,
-    "GAMESS/GAMESS-US2006/dvb_ir.2006.02.22.r2.out":        GamessUSIRTest,
+    "GAMESS/GAMESS-US2006/C_bigbasis_2006.02.22.r3.out":    GenericBigBasisTest,
+    "GAMESS/GAMESS-US2006/dvb_gopt_a_2006.02.22.r2.out":    GenericGeoOptTest,
+    "GAMESS/GAMESS-US2006/dvb_sp_2006.02.22.r2.out":        GenericSPTest,
+    "GAMESS/GAMESS-US2006/dvb_un_sp_2006.02.22.r2.out":     GenericSPunTest,
+    "GAMESS/GAMESS-US2006/dvb_ir.2006.02.22.r2.out":        GenericIRTest,
     "GAMESS/GAMESS-US2006/nh3_ts_ir.2006.2.22.r2.out":      GAMESSUSIRTest_ts,
 
-    "GAMESS/GAMESS-US2010/dvb_gopt.log":    GamessUSGeoOptTest,
-    "GAMESS/GAMESS-US2010/dvb_sp.log":      GamessUSSPTest,
+    "GAMESS/GAMESS-US2010/dvb_gopt.log":    GenericGeoOptTest,
+    "GAMESS/GAMESS-US2010/dvb_sp.log":      GenericSPTest,
     "GAMESS/GAMESS-US2010/dvb_sp_un.log":   GAMESSUSSPunTest_charge0,
     "GAMESS/GAMESS-US2010/dvb_td.log":      GAMESSUSTDDFTTest,
-    "GAMESS/GAMESS-US2010/dvb_ir.log":      GamessUSIRTest,
+    "GAMESS/GAMESS-US2010/dvb_ir.log":      GenericIRTest,
 
     "GAMESS/WinGAMESS/dvb_td_2007.03.24.r1.out":    GAMESSUSTDDFTTest,
 
@@ -526,11 +547,12 @@ def main(which=[], traceback=False, status=False):
     # prominently at the end.
     missing_on_disk = []
     missing_in_list = []
-    for x in regfilenames:
-        if not os.path.isfile(os.path.join("..", "data", "regression", x)):
-            missing_on_disk.append(x)
-        elif os.path.join("..", "data", "regression", x) not in flatten(filenames):
-            missing_in_list.append(x)
+    for fn in regfilenames:
+        if not os.path.isfile(os.path.join("..", "data", "regression", fn)):
+            missing_on_disk.append(fn)
+    for fn in glob.glob(os.path.join('..', 'data', 'regression', '*', '*', '*')):
+        if os.path.join(*fn.split(os.path.sep)[3:]) not in regfilenames:
+            missing_in_list.append(fn)
 
     # Create the regression test functions from logfiles that were old unittests.
     for path, test_class in old_unittests.items():

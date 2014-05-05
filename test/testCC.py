@@ -14,77 +14,12 @@ import bettertest
 
 
 class GenericCCTest(bettertest.TestCase):
-    """Coupled cluster unittest."""
+    """Generic coupled cluster unittest"""
 
     def testsign(self):
+        """Are the coupled cluster corrections negative?"""
         corrections = self.data.ccenergies - self.data.scfenergies
         self.failUnless(numpy.alltrue(corrections < 0.0))
-
-
-class GenericCCDTest(GenericCCTest):
-    """CCD unittest."""
-    
-    def testsign(self):
-        """CCD: Are the Coupled cluster corrections negative?"""
-        super(GenericCCDTest, self).testsign()
-
-
-class GenericCCSDTest(GenericCCTest):
-    """CCSD unittest."""
-    
-    def testsign(self):
-        """CCSD: Are the Coupled cluster corrections negative?"""
-        super(GenericCCSDTest, self).testsign()
-
-
-class GenericCCSDTTest(GenericCCTest):
-    """CCSD(T) unittest."""
-    
-    def testsign(self):
-        """CCSD(T): Are the Coupled cluster correction negative?"""
-        super(GenericCCSDTTest, self).testsign()
-
-
-class GAMESSUSCCDTest(GenericCCDTest):
-    """GAMESS-US CCD unittest."""
-
-class GAMESSUSCCSDTest(GenericCCSDTest):
-    """GAMESS-US CCSD unittest."""
-
-class GAMESSUSCCSDTTest(GenericCCSDTTest):
-    """GAMESS-US CCSD(T) unittest."""
-
-    
-class GaussianCCDTest(GenericCCDTest):
-    """Gaussian CCD unittest."""
-
-    
-class GaussianCCSDTest(GenericCCSDTest):
-    """Gaussian CCSD unittest."""
-
-    
-class GaussianCCSDTTest(GenericCCSDTTest):
-    """Gaussian CCSD(T) unittest."""
-
-    
-class MolproCCDTest(GenericCCDTest):
-    """Molpro CCD unittest."""
-
-    
-class MolproCCSDTest(GenericCCSDTest):
-    """Molpro CCSD unittest."""
-
-    
-class MolproCCSDTTest(GenericCCSDTTest):
-    """Molpro CCSD(T) unittest."""
-
-
-class NWChemCCSDTTest(GenericCCSDTTest):
-    """NWChem CCSD(T) unittest."""
-
-
-class PsiCCSDTest(GenericCCSDTest):
-    """Psi CCSD unittest."""
 
 
 if __name__ == "__main__":

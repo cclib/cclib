@@ -79,8 +79,21 @@ class Molpro(logfileparser.Logfile):
             self.set_attribute('atomnos', atomnos)
             self.set_attribute('natom', len(self.atomnos))
         
-        # Use BASIS DATA to parse input for aonames and atombasis.
-        # This is always the first place this information is printed, so no attribute check is needed.
+        # Use BASIS DATA to parse input for gbasis, aonames and atombasis. This is always
+        # the first place this information is printed, so no attribute checks are needed.
+        # Note that the formatting can exhibit subtle differences, including number
+        # of spaces in indentation.
+        #
+        # BASIS DATA
+        #
+        #   Nr Sym  Nuc  Type         Exponents   Contraction coefficients
+        #
+        #   1.1 A     1  1s           71.616837     0.154329
+        #                             13.045096     0.535328
+        #                              3.530512     0.444635
+        #   2.1 A     1  1s            2.941249    -0.099967
+        # ...
+        #
         if line[1:11] == "BASIS DATA":
             
             self.skip_lines(inputfile, ['b', 'header', 'b'])
@@ -94,7 +107,9 @@ class Molpro(logfileparser.Logfile):
             
             line = "dummy"
             while line.strip() != "":
+
                 line = next(inputfile)
+
                 funcnr = line[1:6]
                 funcsym = line[7:9]
                 funcatom_ = line[11:14]
@@ -108,8 +123,11 @@ class Molpro(logfileparser.Logfile):
                 #   note that Molpro prints all components, and we want to add
                 #   only one to gbasis, with the proper code (S,P,D,F,G).
                 # Warning! The function types differ for cartesian/spherical functions.
-                # Skip the first printed function type, however (line[3] != '1').
-                if (functype_.strip() and line[1:4] != '  1') or line.strip() == "":
+                # Skip the first printed function type, however, which can be detected
+                # by checking the beginning of the line (beware indentation differences!).
+                # KML: it might be good to rewrite this block a bit, to be more robust
+                # with respect to this formatting -- so use split instead of explicit slices.
+                if (functype_.strip() and line.strip()[:2] != '1.') or line.strip() == "":
                     funcbasis = None
                     if functype in ['1s', 's']:
                         funcbasis = 'S'
@@ -520,11 +538,17 @@ class Molpro(logfileparser.Logfile):
                 if line.strip() == "Freezing grid":
                     line = next(inputfile)
 
-            # The convergence trigger shows up at the bottom in Molpro 2012.
-            while line.strip() == '':
+            # The convergence trigger shows up somewhere at the bottom in Molpro 2012,
+            # before the final stars. If convergence is not reached, there is an additional
+            # line that can be checked for. This is a little tricky, though, since it is
+            # not the last line... so bail out of the loop if convergence failure is detected.
+            while "*****" not in line:
                 line = next(inputfile)
-            if line.strip() == "END OF GEOMETRY OPTIMIZATION.":
-                geometry_converged = True
+                if line.strip() == "END OF GEOMETRY OPTIMIZATION.":
+                    geometry_converged = True
+                if "No convergence" in line:
+                    geometry_converged = False
+                    break
 
             # Finally, deal with optdone, append the last step to it only if we had convergence.
             if not hasattr(self, 'optdone'):
