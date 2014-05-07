@@ -55,6 +55,14 @@ class Jaguar(logfileparser.Logfile):
         # to parse SCF targets/values correctly.
         self.geoopt = False
 
+    def after_parsing(self):
+
+        # This is to make sure we always have optdone after geometry optimizations,
+        # even if it is to be empty for unconverged runs. We have yet to test this
+        # with a regression for Jaguar, though.
+        if self.geoopt and not hasattr(self, 'optdone'):
+            self.optdone = []
+
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
 
