@@ -62,6 +62,7 @@ GAMESS/GAMESS-US2010/dvb_sp.log
 GAMESS/GAMESS-US2010/dvb_sp_un.log
 GAMESS/GAMESS-US2010/dvb_td.log
 GAMESS/GAMESS-US2010/n_water.log
+GAMESS/GAMESS-US2012/dvb_gopt_a_unconverged.out
 GAMESS/GAMESS-US2012/ScriptBicarbNa1B3LYP-B2Vib-good.gamout
 GAMESS/PCGAMESS/aomixgamess.log
 GAMESS/PCGAMESS/d2d_sp.out
