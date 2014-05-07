@@ -124,6 +124,11 @@ class Gaussian(logfileparser.Logfile):
                 self.optdone = []
 
             self.optdone.append(len(self.geovalues) - 1)
+
+        # Catch message about stopped optimization (not converged).
+        if line[1:21] == "Optimization stopped":
+            if not hasattr(self, "optdone"):
+                self.optdone = []
         
         # Extract the atomic numbers and coordinates from the input orientation,
         #   in the event the standard orientation isn't available.

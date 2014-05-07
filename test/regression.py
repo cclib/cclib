@@ -198,6 +198,10 @@ def testGaussian_Gaussian09_534_out(logfile):
     assert logfile.data.etsyms[0] == "Singlet-?Sym"
     assert abs(logfile.data.etenergies[0] - 20920.55328) < 1.0
 
+def testGaussian_Gaussian09_dvb_gopt_unconverged_log(logfile):
+    """An unconverged geometry optimization to test for empty optdone (see #103 for details)."""
+    assert hasattr(logfile.data, 'optdone') and logfile.data.optdone == []
+
 def testGaussian_Gaussian09_dvb_lowdin_log(logfile):
     """Check if both Mulliken and Lowdin charges are parsed."""
     assert "mulliken" in logfile.data.atomcharges
