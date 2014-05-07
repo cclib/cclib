@@ -386,6 +386,11 @@ class ADF(logfileparser.Logfile):
 
             self.geovalues.append(values)
 
+            # This is to make geometry optimization always have the optdone attribute,
+            # even if it is to be empty for unconverged runs.
+            if not hasattr(self, 'optdone'):
+                self.optdone = []
+
         # After the test, there is a message if the search is converged:
         #
         # ***************************************************************************************************
@@ -394,8 +399,6 @@ class ADF(logfileparser.Logfile):
         #
         if line.strip() == "Geometry CONVERGED":
             self.skip_line(inputfile, 'stars')
-            if not hasattr(self, 'optdone'):
-                self.optdone = []
             self.optdone.append(len(self.geovalues) - 1)
 
         # Here is the corresponding geometry convergence info from the 2013.01 unit test.
@@ -416,6 +419,12 @@ class ADF(logfileparser.Logfile):
 
             stepno = int(line.split()[4])
 
+            # This is to make geometry optimization always have the optdone attribute,
+            # even if it is to be empty for unconverged runs.
+            if not hasattr(self, 'optdone'):
+                self.optdone = []
+
+            # The convergence message is inline in this block, not later as it was before.
             if "** CONVERGED **" in line:
                 if not hasattr(self, 'optdone'):
                     self.optdone = []

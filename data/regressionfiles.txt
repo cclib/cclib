@@ -23,6 +23,7 @@ ADF/ADF2006.01/HgMeBr_zso_orig.out
 ADF/ADF2006.01/Frags_NiCO4_orig.out
 ADF/ADF2006.01/Au2.out
 ADF/ADF2009.01/JOCRUP-sp3-adf09.out
+ADF/ADF2013.01/dvb_gopt_b_unconverged.adfout
 GAMESS/GAMESS-US2003/bv6010sup1molecule_4.inp.cml_.log
 GAMESS/GAMESS-US2004/ex.out
 GAMESS/GAMESS-US2004/exam01.out
