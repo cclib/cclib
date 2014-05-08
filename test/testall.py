@@ -72,8 +72,14 @@ def gettestdata(module=None):
     lines = open(testdatadir+'/testdata').readlines()
 
     # Remove blank lines and those starting with '#'.
-    lines = [line.split() for line in lines if (line.strip() and line[0] != '#')]
-    
+    lines = [line for line in lines if (line.strip() and line[0] != '#')]
+
+    # Remove comment at end of lines (everything after a '#').
+    lines = [line.split('#')[0] for line in lines]
+
+    # Split up each line into columns.
+    lines = [line.split() for line in lines]
+
     # Filter for lines only for the given module.
     if module:
         lines = [line for line in lines if line[0] == module]
