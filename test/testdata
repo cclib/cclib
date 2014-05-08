@@ -5,13 +5,18 @@
 #   column 3: unittest class
 #   column 4: subdirectory containing the data file(s)
 #   column 5 and further: data files to be used in the unittest
+#   everything after a hash (#) will be considered a comment
 
+# Most SP runs contain a printout of the basis set, by default or after using
+# a special keyword, and we can test both HF and DFT outputs. Gaussian is an
+# exception, as it has at least two different formats for printing basis set
+# information, and so we made dedicated unit test logfiles in that case.
 Basis     GAMESSUK    GenericBasisTest      basicGAMESS-UK        dvb_sp.out
 Basis     GAMESS      GenericBasisTest      basicGAMESS-US2012    dvb_sp.out
 Basis     GAMESS      GenericBasisTest      basicPCGAMESS         dvb_sp.out
-Basis     Gaussian    GenericBasisTest      basicGaussian03       dvb_sp_basis.log
-Basis     Gaussian    GenericBasisTest      basicGaussian09       dvb_sp_basis.log
-Basis     Jaguar      GenericBasisTest      basicJaguar8.3        dvb_sp_hf.out
+Basis     Gaussian    GenericBasisTest      basicGaussian03       dvb_sp_basis.log      # This version uses the GFINPUT keyword
+Basis     Gaussian    GenericBasisTest      basicGaussian09       dvb_sp_basis.log      # This version uses the GFPRINT keyword
+Basis     Jaguar      GenericBasisTest      basicJaguar8.3        dvb_sp_hf.out         
 Basis     Jaguar      GenericBasisTest      basicJaguar8.3        dvb_sp_ks.out
 Basis     Molpro      GenericBasisTest      basicMolpro2006       dvb_sphf.out
 Basis     Molpro      GenericBasisTest      basicMolpro2012       dvb_sphf.out
