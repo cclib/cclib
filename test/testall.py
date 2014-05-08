@@ -98,20 +98,25 @@ def gettestdata(module=None):
 
 def visualtests(stream=sys.stdout):
     """These are not formal tests -- but they should be eyeballed."""
-    
-    output = [ getfile(Gaussian,"basicGaussian03","dvb_gopt.out")[0],
-               getfile(GAMESS,"basicPCGAMESS","dvb_gopt_a.out")[0],
-               getfile(GAMESS,"basicGAMESS-US2012","dvb_gopt_a.out")[0],
-               getfile(ADF,"basicADF2007.01","dvb_gopt.adfout")[0],
-               getfile(Jaguar,"basicJaguar7.0", "dvb_gopt.out")[0],
-               getfile(Molpro,"basicMolpro2006", "dvb_gopt.out", "dvb_gopt.out")[0],
-             ]
+
+    parsers_to_test = {
+        'ADF2007.01' : getfile(ADF, "basicADF2007.01", "dvb_gopt.adfout")[0],
+        'Gaussian03' : getfile(Gaussian, "basicGaussian03", "dvb_gopt.out")[0],
+        'GAMESS-US' : getfile(GAMESS, "basicGAMESS-US2012", "dvb_gopt_a.out")[0],
+        'PC-GAMESS' : getfile(GAMESS, "basicPCGAMESS","dvb_gopt_a.out")[0],
+        'Jaguar7.0' : getfile(Jaguar, "basicJaguar7.0", "dvb_gopt.out")[0],
+        'Molpro2006' : getfile(Molpro, "basicMolpro2006", "dvb_gopt.log", "dvb_gopt.out")[0],
+        'NWChem6.0' : getfile(NWChem, "basicNWChem6.0", "dvb_gopt_ks.out")[0],
+        'ORCA3.0' : getfile(ORCA, 'basicORCA3.0', 'dvb_gopt.out')[0],
+    }
+    parser_names = sorted(parsers_to_test.keys())
+    output = [parsers_to_test[pn] for pn in parser_names]
 
     print("MO energies of optimised dvb", file=stream)
-    print("      ", "".join(["%-12s" % x for x in ['Gaussian03','PC-GAMESS','GAMESS-US','ADF2007.01','Jaguar7.0','Molpro2006']]), file=stream)
-    print("HOMO", "   ".join(["%+9.4f" % x.moenergies[0][x.homos[0]] for x in output]), file=stream)
-    print("LUMO", "   ".join(["%+9.4f" % x.moenergies[0][x.homos[0]+1] for x in output]), file=stream)
-    print("H-L ", "   ".join(["%9.4f" % (x.moenergies[0][x.homos[0]+1]-x.moenergies[0][x.homos[0]],) for x in output]), file=stream)
+    print("      ", "".join(["%-12s" % pn for pn in parser_names]), file=stream)
+    print("HOMO", "   ".join(["%+9.4f" % out.moenergies[0][out.homos[0]] for out in output]), file=stream)
+    print("LUMO", "   ".join(["%+9.4f" % out.moenergies[0][out.homos[0]+1] for out in output]), file=stream)
+    print("H-L ", "   ".join(["%9.4f" % (out.moenergies[0][out.homos[0]+1]-out.moenergies[0][out.homos[0]],) for out in output]), file=stream)
 
 
 def importName(modulename, name):
