@@ -135,6 +135,10 @@ class GenericSPTest(bettertest.TestCase):
         """There should be no optdone attribute set."""
         self.assertFalse(hasattr(self.data, 'optdone'))
 
+    def testmoments(self):
+        """Check the dipole and possibly higher molecular moments."""
+        self.assertEquals(len(self.data.moments[0]), 3)
+
 
 class ADFSPTest(GenericSPTest):
     """Customized restricted single point unittest"""
