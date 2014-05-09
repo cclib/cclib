@@ -25,6 +25,7 @@ Basis     NWChem      GenericBasisTest      basicNWChem6.0        dvb_sp_ks.out
 Basis     Psi         GenericBasisTest      basicPsi4             dvb_sp_hf.out
 Basis     Psi         GenericBasisTest      basicPsi4             dvb_sp_ks.out
 
+Basis     GAMESS      GenericBigBasisTest   basicFirefly8.0       C_bigbasis.out
 Basis     GAMESS      GenericBigBasisTest   basicGAMESS-US2012    C_bigbasis.out
 Basis     GAMESS      GenericBigBasisTest   basicPCGAMESS         C_bigbasis.out
 Basis     Gaussian    GaussianBigBasisTest  basicGaussian03       C_bigbasis.out
@@ -70,6 +71,7 @@ Core      Jaguar      JaguarCoreTest        basicJaguar8.3        MoOCl4-sp.out
 GeoOpt    ADF         ADFGeoOptTest         basicADF2007.01       dvb_gopt_b.adfout
 GeoOpt    ADF         ADFGeoOptTest         basicADF2013.01       dvb_gopt_b.adfout
 GeoOpt    GAMESSUK    GenericGeoOptTest     basicGAMESS-UK        dvb_gopt_d.out
+GeoOpt    GAMESS      GenericGeoOptTest     basicFirefly8.0       dvb_gopt_a.out
 GeoOpt    GAMESS      GenericGeoOptTest     basicGAMESS-US2012    dvb_gopt_a.out
 GeoOpt    GAMESS      GenericGeoOptTest     basicPCGAMESS         dvb_gopt_b.out
 GeoOpt    Gaussian    GaussianGeoOptTest    basicGaussian03       dvb_gopt.out
@@ -100,6 +102,7 @@ MP        Gaussian    GenericMP5Test        basicGaussian03       water_mp5.log
 MP        Gaussian    GenericMP5Test        basicGaussian09       water_mp5.log
 MP        Jaguar      GenericMP2Test        basicJaguar7.0        water_lmp2.out
 MP        Jaguar      GenericMP2Test        basicJaguar8.3        water_lmp2.out
+MP        GAMESS      GenericMP2Test        basicFirefly8.0       water_mp2.out
 MP        GAMESS      GenericMP2Test        basicPCGAMESS         water_mp2.out
 MP        GAMESS      GenericMP3Test        basicPCGAMESS         water_mp3.out
 MP        GAMESS      GenericMP4SDQTest     basicPCGAMESS         water_mp4.out
@@ -122,6 +125,7 @@ SP        ADF         ADFSPTest             basicADF2013.01       dvb_sp_b.adfou
 SP        GAMESSUK    GenericSPTest         basicGAMESS-UK        dvb_sp_b.out
 SP        GAMESS      GenericSPTest         basicGAMESS-US2012    dvb_sp.out
 SP        GAMESS      GenericSPTest         basicPCGAMESS         dvb_sp.out
+SP        GAMESS      GenericSPTest         basicFirefly8.0       dvb_sp.out
 SP        Gaussian    GaussianSPTest        basicGaussian03       dvb_sp.out
 SP        Gaussian    GaussianSPTest        basicGaussian09       dvb_sp.out
 SP        Jaguar      Jaguar7SPTest         basicJaguar7.0        dvb_sp.out
@@ -141,6 +145,7 @@ SPun      ADF         ADFSPunTest           basicADF2007.01       dvb_un_sp.adfo
 SPun      ADF         ADFSPunTest           basicADF2013.01       dvb_un_sp.adfout
 SPun      GAMESSUK    GamessUKSPunTest      basicGAMESS-UK        dvb_un_sp_b.out
 SPun      GAMESS      GenericSPunTest       basicGAMESS-US2012    dvb_un_sp.out
+SPun      GAMESS      GenericSPunTest       basicFirefly8.0       dvb_un_sp.out
 SPun      GAMESS      GenericSPunTest       basicPCGAMESS         dvb_un_sp.out
 SPun      Gaussian    GaussianSPunTest      basicGaussian03       dvb_un_sp_b.log
 SPun      Gaussian    GaussianSPunTest      basicGaussian09       dvb_un_sp_b.log
@@ -155,6 +160,8 @@ SPun      ORCA        OrcaSPunTest          basicORCA3.0          dvb_sp_un.out
 
 TD        ADF         ADFTDDFTTest          basicADF2007.01       dvb_td.adfout
 TD        ADF         ADFTDDFTTest          basicADF2013.01       dvb_td.adfout
+TD        GAMESS      GenericTDTest         basicFirefly8.0       dvb_td.out
+TD        GAMESS      GenericTDTest         basicFirefly8.0       dvb_td_trplet.out
 TD        GAMESS      GAMESSUSTDDFTTest     basicGAMESS-US2012    dvb_td.out
 TD        GAMESS      GAMESSUSTDDFTtrpTest  basicGAMESS-US2012    dvb_td_trplet.out
 TD        GAMESS      GenericTDTest         basicPCGAMESS         dvb_td.out
@@ -171,6 +178,7 @@ TDun      Gaussian    GenericTDunTest       basicGaussian09       CO_TD_delta.lo
 vib       ADF         GenericIRTest         basicADF2007.01       dvb_ir.adfout
 vib       ADF         GenericIRTest         basicADF2013.01       dvb_ir.adfout
 vib       GAMESSUK    GenericIRTest         basicGAMESS-UK        dvb_ir.out
+vib       GAMESS      GenericIRTest         basicFirefly8.0       dvb_ir.out
 vib       GAMESS      GenericIRTest         basicGAMESS-US2012    dvb_ir.out
 vib       GAMESS      PCGamessIRTest        basicPCGAMESS         dvb_ir.out
 vib       Gaussian    GaussianIRTest        basicGaussian03       dvb_ir.out
@@ -187,6 +195,7 @@ vib       GAMESS      GenericIRimgTest      basicGAMESS-US2012    nh3_ts_ir.out
 vib       GAMESSUK    GenericRamanTest      basicGAMESS-UK        dvb_raman.out
 vib       Gaussian    GaussianRamanTest     basicGaussian03       dvb_raman.out
 vib       Gaussian    GaussianRamanTest     basicGaussian09       dvb_raman.out
+vib       GAMESS      GenericRamanTest      basicFirefly8.0       dvb_raman.out
 vib       GAMESS      GenericRamanTest      basicPCGAMESS         dvb_raman.out
 vib       ORCA        GenericRamanTest      basicORCA2.9          dvb_raman.out
 vib       ORCA        GenericRamanTest      basicORCA3.0          dvb_raman.out
