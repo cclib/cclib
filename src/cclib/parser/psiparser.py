@@ -696,6 +696,74 @@ class Psi(logfileparser.Logfile):
             if not hasattr(self, 'optdone'):
                 self.optdone = []
 
+        # The properties section print the molecular dipole moment:
+        #
+        #  ==> Properties <==
+        #
+        #
+        #Properties computed using the SCF density density matrix
+        #  Nuclear Dipole Moment: (a.u.)
+        #     X:     0.0000      Y:     0.0000      Z:     0.0000
+        #
+        #  Electronic Dipole Moment: (a.u.)
+        #     X:     0.0000      Y:     0.0000      Z:     0.0000
+        #
+        #  Dipole Moment: (a.u.)
+        #     X:     0.0000      Y:     0.0000      Z:     0.0000     Total:     0.0000
+        #
+        if (self.section == "Properties") and line.strip() == "Dipole Moment: (a.u.)":
+            line = next(inputfile)
+            dipole = [float(line.split()[1]), float(line.split()[3]), float(line.split()[5])]
+            if not hasattr(self, 'moments'):
+                self.moments = [dipole]
+            else:
+                assert self.moments[0] == dipole
+
+        # Higher multipole moments are printed separately, on demand, in lexigraphical order it seems.
+        #
+        # Multipole Moments:
+        #
+        # ------------------------------------------------------------------------------------
+        #     Multipole             Electric (a.u.)       Nuclear  (a.u.)        Total (a.u.)
+        # ------------------------------------------------------------------------------------
+        #
+        # L = 1.  Multiply by 2.5417462300 to convert to Debye
+        # Dipole X            :          0.0000000            0.0000000            0.0000000
+        # Dipole Y            :          0.0000000            0.0000000            0.0000000
+        # Dipole Z            :          0.0000000            0.0000000            0.0000000
+        #
+        # L = 2.  Multiply by 1.3450341749 to convert to Debye.ang
+        # Quadrupole XX       :      -1535.8888701         1496.8839996          -39.0048704
+        # Quadrupole XY       :        -11.5262958           11.4580038           -0.0682920
+        # ...
+        #
+        if line.strip() == "Multipole Moments:":
+
+            self.skip_lines(inputfile, ['b', 'd', 'header', 'd', 'b'])
+
+            moments = []
+            line = next(inputfile)
+            while "----------" not in line.strip():
+
+                multipole = []
+                line = next(inputfile)
+                while line.strip():
+                    value = float(line.split()[-1])
+                    multipole.append(value)
+                    line = next(inputfile)
+
+                moments.append(multipole)
+                line = next(inputfile)
+
+            if not hasattr(self, 'moments'):
+                self.moments = moments
+            else:
+                for im,m in enumerate(moments):
+                    if len(self.moments) <= im:
+                        self.moments.append(m)
+                    else:
+                        assert self.moments[im] == m
+
 
 if __name__ == "__main__":
     import doctest, psiparser
