@@ -719,7 +719,7 @@ class Psi(logfileparser.Logfile):
             else:
                 assert self.moments[0] == dipole
 
-        # Higher multipole moments are printed separately, on demand, in lexigraphical order it seems.
+        # Higher multipole moments are printed separately, on demand, in lexicographical order.
         #
         # Multipole Moments:
         #
@@ -763,6 +763,54 @@ class Psi(logfileparser.Logfile):
                         self.moments.append(m)
                     else:
                         assert self.moments[im] == m
+
+        # We can also get some higher moments in Psi3, although here the dipole is not printed
+        # separately and the order is not lexicographical. However, the numbers seem
+        # kind of strange -- the quadrupole seems to be traceless, although I'm not sure
+        # whether the standard transformation has been used. So, until we know what kind
+        # of moment these are and how to make them raw again, we will only parse the dipole.
+        #
+        # --------------------------------------------------------------
+        #                *** Electric multipole moments ***
+        # --------------------------------------------------------------
+        #
+        #  CAUTION : The system has non-vanishing dipole moment, therefore
+        #    quadrupole and higher moments depend on the reference point.
+        #
+        # -Coordinates of the reference point (a.u.) :
+        #           x                     y                     z
+        #  --------------------  --------------------  --------------------
+        #          0.0000000000          0.0000000000          0.0000000000
+        #
+        # -Electric dipole moment (expectation values) :
+        #
+        #    mu(X)  =  -0.00000 D  =  -1.26132433e-43 C*m  =  -0.00000000 a.u.
+        #    mu(Y)  =   0.00000 D  =   3.97987832e-44 C*m  =   0.00000000 a.u.
+        #    mu(Z)  =   0.00000 D  =   0.00000000e+00 C*m  =   0.00000000 a.u.
+        #    |mu|   =   0.00000 D  =   1.32262368e-43 C*m  =   0.00000000 a.u.
+        #
+        # -Components of electric quadrupole moment (expectation values) (a.u.) :
+        #
+        #     Q(XX) =   10.62340220   Q(YY) =    1.11816843   Q(ZZ) =  -11.74157063
+        #     Q(XY) =    3.64633112   Q(XZ) =    0.00000000   Q(YZ) =    0.00000000
+        #
+        if (self.version == 3) and line.strip() == "*** Electric multipole moments ***":
+
+            self.skip_lines(inputfile, ['d', 'b', 'caution1', 'caution2', 'b'])
+            self.skip_lines(inputfile, ['coord', 'xyz', 'd', 'center', 'b'])
+
+            line = next(inputfile)
+            assert "Electric dipole moment" in line
+            self.skip_line(inputfile, "blank")
+            dipole = []
+            for i in range(3):
+                line = next(inputfile)
+                dipole.append(float(line.split()[-2]))
+
+            if not hasattr(self, 'moments'):
+                self.moments = [dipole]
+            else:
+                assert self.moments[0] == dipole
 
 
 if __name__ == "__main__":
