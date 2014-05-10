@@ -134,7 +134,7 @@ class ccData(object):
     }
 
     # The name of all attributes can be generated from the dictionary above.
-    _attrlist = _attrtypes.keys()
+    _attrlist = sorted(_attrtypes.keys())
 
     # Arrays are double precision by default, but these will be integer arrays.
     _intarrays = ['atomnos', 'coreelectrons', 'homos']
