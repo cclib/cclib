@@ -31,6 +31,9 @@
   end
   property
     mulliken
+    dipole
+    quadrupole
+    octupole
   end
   task scf property
 

@@ -739,6 +739,136 @@ class NWChem(logfileparser.Logfile):
                 assert max(self.atomcharges['mulliken'] - numpy.array(charges)) < 0.01
                 self.atomcharges['mulliken'] = charges
 
+        #          -------------
+        #          Dipole Moment
+        #          -------------
+        #
+        # Center of charge (in au) is the expansion point
+        #         X =       0.0000000 Y =       0.0000000 Z =       0.0000000
+        #
+        #   Dipole moment        0.0000000000 A.U.
+        #             DMX        0.0000000000 DMXEFC        0.0000000000
+        #             DMY        0.0000000000 DMYEFC        0.0000000000
+        #             DMZ       -0.0000000000 DMZEFC        0.0000000000
+        if line.strip() == "Dipole Moment":
+
+            self.skip_lines(inputfile, ['d', 'b', 'comment', 'center', 'b'])
+
+            magnitude = next(inputfile)
+            assert magnitude.split()[-1] == "A.U."
+
+            dipole = []
+            for i in range(3):
+                line = next(inputfile)
+                dipole.append(float(line.split()[1]))
+
+            if not hasattr(self, 'moments'):
+                self.moments = [dipole]
+            else:
+                self.moments[0] == dipole
+
+        # The quadrupole moment is pretty straightforward to parse. There are several
+        # block printed, and the first one called 'second moments' contains the raw
+        # moments, and later traceless values are printed. The moments, however, are
+        # not in lexicographical order, so we need to sort them.
+        #
+        #          -----------------
+        #          Quadrupole Moment
+        #          -----------------
+        #
+        # Center of charge (in au) is the expansion point
+        #         X =       0.0000000 Y =       0.0000000 Z =       0.0000000
+        #
+        # < R**2 > = ********** a.u.  ( 1 a.u. = 0.280023 10**(-16) cm**2 ) 
+        # ( also called diamagnetic susceptibility ) 
+        #
+        #   Second moments in atomic units
+        #
+        #   Component  Electronic+nuclear     Point charges             Total
+        #  --------------------------------------------------------------------------
+        #      XX          -38.3608511210          0.0000000000        -38.3608511210
+        #      YY          -39.0055467347          0.0000000000        -39.0055467347
+        # ...
+        #
+        if line.strip() == "Quadrupole Moment":
+
+            self.skip_lines(inputfile, ['d', 'b', 'comment', 'center', 'b', 'units', 'susc', 'b'])
+
+            line = next(inputfile)
+            assert line.strip() == "Second moments in atomic units"
+
+            self.skip_lines(inputfile, ['b', 'header', 'd'])
+
+            # Parse into a dictionary and then sort by the component key.
+            quadrupole = {}
+            for i in range(6):
+                line = next(inputfile)
+                quadrupole[line.split()[0]] = float(line.split()[-1])
+            lex = sorted(quadrupole.keys())
+            quadrupole = [quadrupole[key] for key in lex]
+
+            # The checking of potential previous values if a bit more involved here,
+            # because it turns out NWChem has separate keywords for dipole, quadrupole
+            # and octupole output. So, it is perfectly possible to print the quadrupole
+            # and not the dipole... if that is the case set the former to None and
+            # issue a warning. Also, a regression has been added to cover this case.
+            if not hasattr(self, 'moments') or len(self.moments) == 0:
+                self.logger.warning("Found quadrupole moments but no previous dipole")
+                self.moments = [None, quadrupole]
+            else:
+                if len(self.moments) == 1:
+                    self.moments.append(quadrupole)
+                else:
+                    assert self.moments[1] == quadrupole
+
+        # The octupole moment is analogous to the quadrupole, but there are more components
+        # and the checking of previously parsed dipole and quadrupole moments is more involved,
+        # with a corresponding test also added to regressions.
+        #
+        #          ---------------
+        #          Octupole Moment
+        #          ---------------
+        #
+        # Center of charge (in au) is the expansion point
+        #         X =       0.0000000 Y =       0.0000000 Z =       0.0000000
+        #
+        #   Third moments in atomic units
+        #
+        #   Component  Electronic+nuclear     Point charges             Total
+        #  --------------------------------------------------------------------------
+        #      XXX          -0.0000000000          0.0000000000         -0.0000000000
+        #      YYY          -0.0000000000          0.0000000000         -0.0000000000
+        # ...
+        #
+        if line.strip() == "Octupole Moment":
+
+            self.skip_lines(inputfile, ['d', 'b', 'comment', 'center', 'b'])
+
+            line = next(inputfile)
+            assert line.strip() == "Third moments in atomic units"
+
+            self.skip_lines(inputfile, ['b', 'header', 'd'])
+
+            octupole = {}
+            for i in range(10):
+                line = next(inputfile)
+                octupole[line.split()[0]] = float(line.split()[-1])
+            lex = sorted(octupole.keys())
+            octupole = [octupole[key] for key in lex]
+
+            if not hasattr(self, 'moments') or len(self.moments) == 0:
+                self.logger.warning("Found octupole moments but no previous dipole or quadrupole moments")
+                self.moments = [None, None, octupole]
+            elif len(self.moments) == 1:
+                self.logger.warning("Found octupole moments but no previous quadrupole moments")
+                self.moments.append(None)
+                self.moments.append(octupole)
+            else:
+                if len(self.moments) == 2:
+                    self.moments.append(octupole)
+                else:
+                    assert self.moments[2] == octupole
+
         if "Total MP2 energy" in line:
             mpenerg = float(line.split()[-1])
             if not hasattr(self, "mpenergies"):
