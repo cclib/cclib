@@ -1131,6 +1131,44 @@ class GAMESS(logfileparser.Logfile):
             self.atomcharges["mulliken"] = mulliken
             self.atomcharges["lowdin"] = lowdin
 
+        #          ---------------------
+        #          ELECTROSTATIC MOMENTS
+        #          ---------------------
+        #
+        # POINT   1           X           Y           Z (BOHR)    CHARGE
+        #                -0.000000    0.000000    0.000000       -0.00 (A.U.)
+        #         DX          DY          DZ         /D/  (DEBYE)
+        #     0.000000   -0.000000    0.000000    0.000000
+        #
+        if line.strip() == "ELECTROSTATIC MOMENTS":
+
+            self.skip_lines(inputfile, ['d', 'b'])
+            line = next(inputfile)
+
+            # The old PC-GAMESS prints memory assignment information here.
+            if "MEMORY ASSIGNMENT" in line:
+                memory_assignment = next(inputfile)
+                line = next(inputfile)
+
+            # If something else ever comes up, we should get a signal from this assert.
+            assert line.split()[0] == "POINT"
+
+            # We can check here that the net charge of the molecule is correct.
+            coords_and_charge = next(inputfile)
+            charge = float(coords_and_charge.split()[-2])
+            self.set_attribute('charge', charge)
+
+            dipoleheader = next(inputfile)
+            assert dipoleheader.split()[:3] == ['DX', 'DY', 'DZ']
+
+            dipoleline = next(inputfile)
+            dipole = [float(d) for d in dipoleline.split()[:3]]
+
+            if not hasattr(self, 'moments'):
+                self.moments = [dipole]
+            else:
+                assert self.moments[0] == dipole
+
         
 if __name__ == "__main__":
     import doctest, gamessparser, sys
