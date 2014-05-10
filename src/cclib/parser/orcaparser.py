@@ -82,11 +82,12 @@ class ORCA(logfileparser.Logfile):
 
             self.skip_line(inputfile, 'dashes')
 
-            line = next(inputfile).split()
-            if line[1] == "Energy":
-                self.parse_scf_condensed_format(inputfile, line)
-            elif line[1] == "Starting":
-                self.parse_scf_expanded_format(inputfile, line)
+            line = next(inputfile)
+            colums = line.split()
+            if colums[1] == "Energy":
+                self.parse_scf_condensed_format(inputfile, colums)
+            elif colums[1] == "Starting":
+                self.parse_scf_expanded_format(inputfile, colums)
 
         # Information about the final iteration, which also includes the convergence
         # targets and the convergence values, is printed separately, in a section like this:
@@ -659,6 +660,17 @@ class ORCA(logfileparser.Logfile):
             self.atomcharges["lowdin"] = charges
             if has_spins:
                 self.atomspins["lowdin"] = spins
+
+        if line.strip() == "DIPOLE MOMENT":
+            self.skip_lines(inputfile, ['d', 'XYZ', 'electronic', 'nuclear', 'd'])
+            total = next(inputfile)
+            assert "Total Dipole Moment" in total
+
+            dipole = [float(d) for d in total.split()[-3:]]
+            if not hasattr(self, 'moments'):
+                self.moments = [dipole]
+            else:
+                assert self.moments[0] == dipole
 
     def parse_scf_condensed_format(self, inputfile, line):
         """ Parse the SCF convergence information in condensed format """
