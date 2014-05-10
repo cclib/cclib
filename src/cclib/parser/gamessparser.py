@@ -426,6 +426,11 @@ class GAMESS(logfileparser.Logfile):
             if not hasattr(self, 'optdone'):
                 self.optdone = []
             self.optdone.append(len(self.geovalues) - 1)
+
+        # Make sure we always have optdone for geomtry optimization, even if not converged.
+        if "GEOMETRY SEARCH IS NOT CONVERGED" in line:
+            if not hasattr(self, 'optdone'):
+                self.optdone = []
         
         if line[1:29] == "COORDINATES OF ALL ATOMS ARE" and (not hasattr(self, "optdone") or self.optdone == []):
             # This is the standard orientation, which is the only coordinate

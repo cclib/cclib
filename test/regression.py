@@ -41,6 +41,10 @@ def testADF_ADF2004_01_Fe_ox3_final_out(logfile):
     """Make sure HOMOS are correct."""
     assert logfile.data.homos[0]==59 and logfile.data.homos[1]==54
 
+def testADF_ADF2013_01_dvb_gopt_b_unconverged_adfout(logfile):
+    """An unconverged geometry optimization to test for empty optdone (see #103 for details)."""
+    assert hasattr(logfile.data, 'optdone') and logfile.data.optdone == []
+
 # GAMESS #
 
 def testGAMESS_GAMESS_US2008_N2_UMP2_out(logfile):
@@ -66,6 +70,10 @@ def testGAMESS_GAMESS_US2009_paulo_h2o_mp2_out(logfile):
     assert hasattr(logfile.data, "mpenergies")
     assert len(logfile.data.mpenergies) == 1
     assert abs(logfile.data.mpenergies[0] + 2072.13) < 0.01
+
+def testGAMESS_GAMESS_US2012_dvb_gopt_a_unconverged_out(logfile):
+    """An unconverged geometry optimization to test for empty optdone (see #103 for details)."""
+    assert hasattr(logfile.data, 'optdone') and logfile.data.optdone == []
 
 def testGAMESS_WinGAMESS_dvb_td_trplet_2007_03_24_r1_out(logfile):
     """Do some basic checks for this old unit test that was failing.
@@ -197,6 +205,10 @@ def testGaussian_Gaussian09_534_out(logfile):
     """Previously, caused etenergies parsing to fail."""
     assert logfile.data.etsyms[0] == "Singlet-?Sym"
     assert abs(logfile.data.etenergies[0] - 20920.55328) < 1.0
+
+def testGaussian_Gaussian09_dvb_gopt_unconverged_log(logfile):
+    """An unconverged geometry optimization to test for empty optdone (see #103 for details)."""
+    assert hasattr(logfile.data, 'optdone') and logfile.data.optdone == []
 
 def testGaussian_Gaussian09_dvb_lowdin_log(logfile):
     """Check if both Mulliken and Lowdin charges are parsed."""

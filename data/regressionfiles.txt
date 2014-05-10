@@ -23,6 +23,7 @@ ADF/ADF2006.01/HgMeBr_zso_orig.out
 ADF/ADF2006.01/Frags_NiCO4_orig.out
 ADF/ADF2006.01/Au2.out
 ADF/ADF2009.01/JOCRUP-sp3-adf09.out
+ADF/ADF2013.01/dvb_gopt_b_unconverged.adfout
 GAMESS/GAMESS-US2003/bv6010sup1molecule_4.inp.cml_.log
 GAMESS/GAMESS-US2004/ex.out
 GAMESS/GAMESS-US2004/exam01.out
@@ -61,6 +62,7 @@ GAMESS/GAMESS-US2010/dvb_sp.log
 GAMESS/GAMESS-US2010/dvb_sp_un.log
 GAMESS/GAMESS-US2010/dvb_td.log
 GAMESS/GAMESS-US2010/n_water.log
+GAMESS/GAMESS-US2012/dvb_gopt_a_unconverged.out
 GAMESS/GAMESS-US2012/ScriptBicarbNa1B3LYP-B2Vib-good.gamout
 GAMESS/PCGAMESS/aomixgamess.log
 GAMESS/PCGAMESS/d2d_sp.out
@@ -78,6 +80,7 @@ GAMESS-UK/GAMESS-UK7.0/pyridine.out
 Gaussian/Gaussian09/encaps1.log
 Gaussian/Gaussian09/irc_point.log
 Gaussian/Gaussian09/Dahlgren_TS.log
+Gaussian/Gaussian09/dvb_gopt_unconverged.log
 Gaussian/Gaussian09/dvb_lowdin.log
 Gaussian/Gaussian03/DCV4T+C60.log
 Gaussian/Gaussian09/di-iodophenyl.log
