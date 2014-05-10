@@ -164,6 +164,9 @@ class GaussianSPTest(GenericSPTest):
         mm = 1000*sum(self.data.atommasses)
         self.assertInside(mm, 130078.25, 0.1, "Molecule mass: %f not 130078 +- 0.1mD" %mm)
 
+    def testmoments(self):
+        """We don't yet have dipole moments printed in the unit test logfile. PASS"""
+
 
 class Jaguar7SPTest(GenericSPTest):
     """Customized restricted single point unittest"""
@@ -187,6 +190,15 @@ class Jaguar7SPTest(GenericSPTest):
     def testdimmocoeffs(self):
         """Are the dimensions of mocoeffs equal to 1 x nmo x nbasis? PASS"""
         self.assertEquals(1, 1)
+
+    def testmoments(self):
+        """No dipole moments in the logfile. PASS"""
+
+class JaguarSPTest(GenericSPTest):
+    """Customized restricted single point unittest"""
+
+    def testmoments(self):
+        """No dipole moments in the logfile. PASS"""
 
 
 class MolproSPTest(GenericSPTest):
