@@ -1038,6 +1038,28 @@ class ADF(logfileparser.Logfile):
                 line = next(inputfile)
             self.atomcharges["mulliken"] = mulliken
 
+        # Dipole moment is always printed after a point calculation.
+        #
+        # =============
+        # Dipole Moment  ***  (Debye)  ***
+        # =============
+        #  
+        # Vector   :         0.00000000      0.00000000      0.00000000
+        # Magnitude:         0.00000000
+        #
+        if line.strip()[:13] == "Dipole Moment":
+
+            self.skip_lines(inputfile, ['e', 'b'])
+
+            line = next(inputfile)
+            assert line.split()[0] == "Vector"
+            dipole = [float(d) for d in line.split()[-3:]]
+
+            if not hasattr(self, 'moments'):
+                self.moments = [dipole]
+            else:
+                assert self.moments[0] == dipole
+
 
 if __name__ == "__main__":
     import doctest, adfparser

@@ -313,6 +313,13 @@ class Molpro(logfileparser.Logfile):
             line = next(inputfile)
             self.homos.append(int(line.split()[-1])-1)
 
+        if line.strip()[:13] == "Dipole moment":
+            dipole = [float(d) for d in line.split()[-3:]]
+            if not hasattr(self, 'moments'):
+                self.moments = [dipole]
+            else:
+                self.moments[0] == dipole
+
         # From this block atombasis, moenergies, and mocoeffs can be parsed.
         # Note that Molpro does not print this by default, you must add this in the input:
         #   GPRINT,ORBITALS

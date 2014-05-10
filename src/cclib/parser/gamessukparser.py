@@ -519,7 +519,38 @@ class GAMESSUK(logfileparser.Logfile):
                 self.moenergies = [moenergies, moenergies]
             else:
                 self.moenergies = [moenergies]
-                
+
+        # The dipole moment is printed by default at the beginning of wavefunction analysis.
+        #
+        #                                        *********************
+        #                                        wavefunction analysis
+        #                                        *********************
+        #
+        # commence analysis at     24.61 seconds
+        #
+        #                 dipole moments
+        #
+        #
+        #           nuclear      electronic           total
+        #
+        # x       0.0000000       0.0000000       0.0000000
+        # y       0.0000000       0.0000000       0.0000000
+        # z       0.0000000       0.0000000       0.0000000
+        #
+        if line.strip() == "dipole moments":
+
+            self.skip_lines(inputfile, ['b', 'b', 'header', 'b'])
+
+            dipole = []
+            for i in range(3):
+                line = next(inputfile)
+                dipole.append(float(line.split()[-1]))
+
+            if not hasattr(self, 'moments'):
+                self.moments = [dipole]
+            else:
+                assert self.moments[0] == dipole
+
         # Net atomic charges are not printed at all, it seems,
         # but you can get at them from nuclear charges and
         # electron populations, which are printed like so:
