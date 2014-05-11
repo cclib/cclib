@@ -717,7 +717,12 @@ class Psi(logfileparser.Logfile):
             if not hasattr(self, 'moments'):
                 self.moments = [dipole]
             else:
-                assert self.moments[0] == dipole
+                try:
+                    assert self.moments[0] == dipole
+                except AssertionError:
+                    self.logger.warning('Overwriting previous multipole moments with new values')
+                    self.logger.warning('This could be from post-HF properties or geometry optimization')
+                    self.moments = [dipole]
 
         # Higher multipole moments are printed separately, on demand, in lexicographical order.
         #

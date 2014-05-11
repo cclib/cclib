@@ -1049,16 +1049,24 @@ class ADF(logfileparser.Logfile):
         #
         if line.strip()[:13] == "Dipole Moment":
 
-            self.skip_lines(inputfile, ['e', 'b'])
+            self.skip_line(inputfile, 'equals')
 
+            # There is not always a blank line here.
             line = next(inputfile)
+            if not line.strip():
+                line = next(inputfile)
+
             assert line.split()[0] == "Vector"
             dipole = [float(d) for d in line.split()[-3:]]
 
             if not hasattr(self, 'moments'):
                 self.moments = [dipole]
             else:
-                assert self.moments[0] == dipole
+                try:
+                    assert self.moments[0] == dipole
+                except AssertionError:
+                    self.logger.warning('Overwriting previous multipole moments with new values')
+                    self.moments = [dipole]
 
 
 if __name__ == "__main__":

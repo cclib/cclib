@@ -1164,10 +1164,18 @@ class GAMESS(logfileparser.Logfile):
             dipoleline = next(inputfile)
             dipole = [float(d) for d in dipoleline.split()[:3]]
 
+            # The dipole is always the first multipole moment to be printed,
+            # so if it already exists, we will overwrite all moments since we want
+            # to leave just the last printed value (could change in the future).
             if not hasattr(self, 'moments'):
                 self.moments = [dipole]
             else:
-                assert self.moments[0] == dipole
+                try:
+                    assert self.moments[0] == dipole
+                except AssertionError:
+                    self.logger.warning('Overwriting previous multipole moments with new values')
+                    self.logger.warning('This could be from post-HF properties or geometry optimization')
+                    self.moments = [dipole]
 
         
 if __name__ == "__main__":

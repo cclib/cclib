@@ -670,7 +670,11 @@ class ORCA(logfileparser.Logfile):
             if not hasattr(self, 'moments'):
                 self.moments = [dipole]
             else:
-                assert self.moments[0] == dipole
+                try:
+                    assert self.moments[0] == dipole
+                except AssertionError:
+                    self.logger.warning('Overwriting previous multipole moments with new values')
+                    self.moments = [dipole]
 
     def parse_scf_condensed_format(self, inputfile, line):
         """ Parse the SCF convergence information in condensed format """
