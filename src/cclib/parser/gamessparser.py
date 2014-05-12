@@ -1160,6 +1160,7 @@ class GAMESS(logfileparser.Logfile):
 
             dipoleheader = next(inputfile)
             assert dipoleheader.split()[:3] == ['DX', 'DY', 'DZ']
+            assert dipoleheader.split()[-1] == "(DEBYE)"
 
             dipoleline = next(inputfile)
             dipole = [float(d) for d in dipoleline.split()[:3]]

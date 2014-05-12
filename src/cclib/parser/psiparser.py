@@ -712,13 +712,16 @@ class Psi(logfileparser.Logfile):
         #     X:     0.0000      Y:     0.0000      Z:     0.0000     Total:     0.0000
         #
         if (self.section == "Properties") and line.strip() == "Dipole Moment: (a.u.)":
+
             line = next(inputfile)
-            dipole = [float(line.split()[1]), float(line.split()[3]), float(line.split()[5])]
+            dipole = numpy.array([float(line.split()[1]), float(line.split()[3]), float(line.split()[5])])
+            dipole = utils.convertor(dipole, "ebohr", "Debye")
+
             if not hasattr(self, 'moments'):
                 self.moments = [dipole]
             else:
                 try:
-                    assert self.moments[0] == dipole
+                    assert numpy.all(self.moments[0] == dipole)
                 except AssertionError:
                     self.logger.warning('Overwriting previous multipole moments with new values')
                     self.logger.warning('This could be from post-HF properties or geometry optimization')
@@ -750,13 +753,21 @@ class Psi(logfileparser.Logfile):
             line = next(inputfile)
             while "----------" not in line.strip():
 
+                rank = int(line.split()[2].strip('.'))
+
                 multipole = []
                 line = next(inputfile)
                 while line.strip():
+
                     value = float(line.split()[-1])
+                    fromunits = "ebohr" + (rank>1)*("%i" % rank)
+                    tounits = "Debye" + (rank>1)*".ang" + (rank>2)*("%i" % (rank-1))
+                    value = utils.convertor(value, fromunits, tounits)
                     multipole.append(value)
+
                     line = next(inputfile)
 
+                multipole = numpy.array(multipole)
                 moments.append(multipole)
                 line = next(inputfile)
 
@@ -767,7 +778,7 @@ class Psi(logfileparser.Logfile):
                     if len(self.moments) <= im:
                         self.moments.append(m)
                     else:
-                        assert self.moments[im] == m
+                        assert numpy.all(self.moments[im] == m)
 
         # We can also get some higher moments in Psi3, although here the dipole is not printed
         # separately and the order is not lexicographical. However, the numbers seem
@@ -807,10 +818,12 @@ class Psi(logfileparser.Logfile):
             line = next(inputfile)
             assert "Electric dipole moment" in line
             self.skip_line(inputfile, "blank")
+
+            # Make sure to use the column that has the value in Debyes.
             dipole = []
             for i in range(3):
                 line = next(inputfile)
-                dipole.append(float(line.split()[-2]))
+                dipole.append(float(line.split()[2]))
 
             if not hasattr(self, 'moments'):
                 self.moments = [dipole]

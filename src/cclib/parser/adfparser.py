@@ -1051,7 +1051,9 @@ class ADF(logfileparser.Logfile):
 
             self.skip_line(inputfile, 'equals')
 
-            # There is not always a blank line here.
+            # There is not always a blank line here, for example when the dipole and quadrupole
+            # moments are printed after the multipole derived atomic charges. Still, to the best
+            # of my knowledge (KML) the values are still in Debye.
             line = next(inputfile)
             if not line.strip():
                 line = next(inputfile)

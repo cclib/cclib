@@ -136,8 +136,32 @@ class GenericSPTest(bettertest.TestCase):
         self.assertFalse(hasattr(self.data, 'optdone'))
 
     def testmoments(self):
-        """Check the dipole and possibly higher molecular moments."""
+        """Does the dipole and possible higher molecular moments look reasonable?"""
+
+        # Length and value of dipole moment should always be correct (zero for this test).
         self.assertEquals(len(self.data.moments[0]), 3)
+        self.assertInside(sum(self.data.moments[0]), 0.0, 0.0001)
+
+        # If the quadrupole is there, we can expect roughly -50B for the XX moment.
+        if len(self.data.moments) > 1:
+            self.assertEquals(len(self.data.moments[1]), 6)
+            self.assertInside(self.data.moments[1][0], -50, 5)
+
+        # If the octupole is there, it should have 10 components and be zero.
+        if len(self.data.moments) > 2:
+            self.assertEquals(len(self.data.moments[2]), 10)
+            self.assertInside(sum(self.data.moments[2]), 0.0, 0.0001)
+
+        # Hexadecapole should have 15 elements and an XX componenet of around -1900 Debye*ang^2.
+        if len(self.data.moments) > 3:
+            self.assertEquals(len(self.data.moments[3]), 15)
+            self.assertInside(self.data.moments[3][0], -1900, 100)
+
+        # The are 21 unique 32-pole moments, and all are zero in this test case.
+        if len(self.data.moments) > 4:
+            self.assertEquals(len(self.data.moments[4]), 21)
+            self.assertInside(sum(self.data.moments[4]), 0.0, 0.0001)
+
 
 
 class ADFSPTest(GenericSPTest):

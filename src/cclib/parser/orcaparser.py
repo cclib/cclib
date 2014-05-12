@@ -13,6 +13,7 @@ from __future__ import print_function
 import numpy
 
 from . import logfileparser
+from . import utils
 
 
 class ORCA(logfileparser.Logfile):
@@ -661,17 +662,35 @@ class ORCA(logfileparser.Logfile):
             if has_spins:
                 self.atomspins["lowdin"] = spins
 
+        # It is not stated explicitely, but the dipole moment components printed by ORCA
+        # seem to be in atomic units, so they will need to be converted.
+        #
+        # -------------
+        # DIPOLE MOMENT
+        # -------------
+        #                                 X             Y             Z
+        # Electronic contribution:      0.00000      -0.00000      -0.00000
+        # Nuclear contribution   :      0.00000       0.00000       0.00000
+        #                         -----------------------------------------
+        # Total Dipole Moment    :      0.00000      -0.00000      -0.00000
+        #                         -----------------------------------------
+        # Magnitude (a.u.)       :      0.00000
+        # Magnitude (Debye)      :      0.00000
+        #
         if line.strip() == "DIPOLE MOMENT":
+
             self.skip_lines(inputfile, ['d', 'XYZ', 'electronic', 'nuclear', 'd'])
             total = next(inputfile)
             assert "Total Dipole Moment" in total
 
-            dipole = [float(d) for d in total.split()[-3:]]
+            dipole = numpy.array([float(d) for d in total.split()[-3:]])
+            dipole = utils.convertor(dipole, "ebohr", "Debye")
+
             if not hasattr(self, 'moments'):
                 self.moments = [dipole]
             else:
                 try:
-                    assert self.moments[0] == dipole
+                    assert numpy.all(self.moments[0] == dipole)
                 except AssertionError:
                     self.logger.warning('Overwriting previous multipole moments with new values')
                     self.moments = [dipole]

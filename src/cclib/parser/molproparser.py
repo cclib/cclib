@@ -313,8 +313,13 @@ class Molpro(logfileparser.Logfile):
             line = next(inputfile)
             self.homos.append(int(line.split()[-1])-1)
 
+        # Dipole is always printed on one line after the final RHF energy.
         if line.strip()[:13] == "Dipole moment":
+
+            assert line.split()[2] == "/Debye"
+
             dipole = [float(d) for d in line.split()[-3:]]
+
             if not hasattr(self, 'moments'):
                 self.moments = [dipole]
             else:

@@ -520,7 +520,8 @@ class GAMESSUK(logfileparser.Logfile):
             else:
                 self.moenergies = [moenergies]
 
-        # The dipole moment is printed by default at the beginning of wavefunction analysis.
+        # The dipole moment is printed by default at the beginning of the wavefunction analysis,
+        # but the value is in atomic units, so we need to convert to Debye.
         #
         #                                        *********************
         #                                        wavefunction analysis
@@ -539,12 +540,20 @@ class GAMESSUK(logfileparser.Logfile):
         #
         if line.strip() == "dipole moments":
 
-            self.skip_lines(inputfile, ['b', 'b', 'header', 'b'])
+            # In older version there is only one blank line before the header,
+            # and newer version there are two.
+            self.skip_line(inputfile, 'blank')
+            line = next(inputfile)
+            if not line.strip():
+                line = next(inputfile)
+            self.skip_line(inputfile, 'blank')
 
             dipole = []
             for i in range(3):
                 line = next(inputfile)
                 dipole.append(float(line.split()[-1]))
+
+            dipole = utils.convertor(numpy.array(dipole), "ebohr", "Debye")
 
             if not hasattr(self, 'moments'):
                 self.moments = [dipole]

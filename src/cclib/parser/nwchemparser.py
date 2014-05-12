@@ -739,6 +739,10 @@ class NWChem(logfileparser.Logfile):
                 assert max(self.atomcharges['mulliken'] - numpy.array(charges)) < 0.01
                 self.atomcharges['mulliken'] = charges
 
+        # NWChem prints the dipole moment in atomic units first, and we could just fast forward
+        # to the values in Debye, which are also printed. But we can also just convert them
+        # right away and so parse a little bit less.
+        # 
         #          -------------
         #          Dipole Moment
         #          -------------
@@ -746,10 +750,13 @@ class NWChem(logfileparser.Logfile):
         # Center of charge (in au) is the expansion point
         #         X =       0.0000000 Y =       0.0000000 Z =       0.0000000
         #
-        #   Dipole moment        0.0000000000 A.U.
+        #   Dipole moment        0.0000000000 Debye(s)
         #             DMX        0.0000000000 DMXEFC        0.0000000000
         #             DMY        0.0000000000 DMYEFC        0.0000000000
         #             DMZ       -0.0000000000 DMZEFC        0.0000000000
+        #
+        # ...
+        #
         if line.strip() == "Dipole Moment":
 
             self.skip_lines(inputfile, ['d', 'b', 'comment', 'center', 'b'])
@@ -762,15 +769,18 @@ class NWChem(logfileparser.Logfile):
                 line = next(inputfile)
                 dipole.append(float(line.split()[1]))
 
+            dipole = utils.convertor(numpy.array(dipole), "ebohr", "Debye")
+
             if not hasattr(self, 'moments'):
                 self.moments = [dipole]
             else:
                 self.moments[0] == dipole
 
         # The quadrupole moment is pretty straightforward to parse. There are several
-        # block printed, and the first one called 'second moments' contains the raw
+        # blocks printed, and the first one called 'second moments' contains the raw
         # moments, and later traceless values are printed. The moments, however, are
-        # not in lexicographical order, so we need to sort them.
+        # not in lexicographical order, so we need to sort them. Also, the first block
+        # is in atomic units, so remember to convert to Buckinghams along the way.
         #
         #          -----------------
         #          Quadrupole Moment
@@ -806,6 +816,8 @@ class NWChem(logfileparser.Logfile):
                 quadrupole[line.split()[0]] = float(line.split()[-1])
             lex = sorted(quadrupole.keys())
             quadrupole = [quadrupole[key] for key in lex]
+
+            quadrupole = utils.convertor(numpy.array(quadrupole), "ebohr2", "Buckingham")
 
             # The checking of potential previous values if a bit more involved here,
             # because it turns out NWChem has separate keywords for dipole, quadrupole
@@ -855,6 +867,8 @@ class NWChem(logfileparser.Logfile):
                 octupole[line.split()[0]] = float(line.split()[-1])
             lex = sorted(octupole.keys())
             octupole = [octupole[key] for key in lex]
+
+            octupole = utils.convertor(numpy.array(octupole), "ebohr3", "Debye.ang2")
 
             if not hasattr(self, 'moments') or len(self.moments) == 0:
                 self.logger.warning("Found octupole moments but no previous dipole or quadrupole moments")
