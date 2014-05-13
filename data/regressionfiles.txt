@@ -24,6 +24,8 @@ ADF/ADF2006.01/Frags_NiCO4_orig.out
 ADF/ADF2006.01/Au2.out
 ADF/ADF2009.01/JOCRUP-sp3-adf09.out
 ADF/ADF2013.01/dvb_gopt_b_unconverged.adfout
+GAMESS/Firefly7.1/firefly-FailStationary.out
+GAMESS/Firefly7.1/triazole_tddft_c1_b3lyp_631Gdp_sp.out
 GAMESS/GAMESS-US2003/bv6010sup1molecule_4.inp.cml_.log
 GAMESS/GAMESS-US2004/ex.out
 GAMESS/GAMESS-US2004/exam01.out
@@ -66,8 +68,6 @@ GAMESS/GAMESS-US2012/dvb_gopt_a_unconverged.out
 GAMESS/GAMESS-US2012/ScriptBicarbNa1B3LYP-B2Vib-good.gamout
 GAMESS/PCGAMESS/aomixgamess.log
 GAMESS/PCGAMESS/d2d_sp.out
-GAMESS/PCGAMESS/firefly-FailStationary.out
-GAMESS/PCGAMESS/triazole_tddft_c1_b3lyp_631Gdp_sp.out
 GAMESS/WinGAMESS/WinGAMESS.log
 GAMESS/WinGAMESS/dvb_td_2007.03.24.r1.out
 GAMESS/WinGAMESS/dvb_td_trplet_2007.03.24.r1.out
