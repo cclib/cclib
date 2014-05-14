@@ -138,29 +138,41 @@ class GenericSPTest(bettertest.TestCase):
     def testmoments(self):
         """Does the dipole and possible higher molecular moments look reasonable?"""
 
+        # The reference point is always a vector, but not necessarily the
+        # origin or center of mass. In this case, however, the center of mass
+        # is at the origin, so we now what to expect.
+        reference = self.data.moments[0]
+        self.assertEquals(len(reference), 3)
+        self.assertInside(sum(reference), 0.0, 0.0001)
+
         # Length and value of dipole moment should always be correct (zero for this test).
-        self.assertEquals(len(self.data.moments[0]), 3)
-        self.assertInside(sum(self.data.moments[0]), 0.0, 0.0001)
+        dipole = self.data.moments[1]
+        self.assertEquals(len(dipole), 3)
+        self.assertInside(sum(dipole), 0.0, 0.0001)
 
         # If the quadrupole is there, we can expect roughly -50B for the XX moment.
-        if len(self.data.moments) > 1:
-            self.assertEquals(len(self.data.moments[1]), 6)
-            self.assertInside(self.data.moments[1][0], -50, 5)
+        if len(self.data.moments) > 2:
+            quadrupole = self.data.moments[2]
+            self.assertEquals(len(quadrupole), 6)
+            self.assertInside(quadrupole[0], -50, 5)
 
         # If the octupole is there, it should have 10 components and be zero.
-        if len(self.data.moments) > 2:
-            self.assertEquals(len(self.data.moments[2]), 10)
-            self.assertInside(sum(self.data.moments[2]), 0.0, 0.0001)
+        if len(self.data.moments) > 3:
+            octupole = self.data.moments[3]
+            self.assertEquals(len(octupole), 10)
+            self.assertInside(sum(octupole), 0.0, 0.0001)
 
         # Hexadecapole should have 15 elements and an XX componenet of around -1900 Debye*ang^2.
-        if len(self.data.moments) > 3:
-            self.assertEquals(len(self.data.moments[3]), 15)
-            self.assertInside(self.data.moments[3][0], -1900, 100)
+        if len(self.data.moments) > 4:
+            hexadecapole = self.data.moments[4]
+            self.assertEquals(len(hexadecapole), 15)
+            self.assertInside(hexadecapole[0], -1900, 100)
 
         # The are 21 unique 32-pole moments, and all are zero in this test case.
-        if len(self.data.moments) > 4:
-            self.assertEquals(len(self.data.moments[4]), 21)
-            self.assertInside(sum(self.data.moments[4]), 0.0, 0.0001)
+        if len(self.data.moments) > 5:
+            moment32 = self.data.moments[5]
+            self.assertEquals(len(moment32), 21)
+            self.assertInside(sum(moment32), 0.0, 0.0001)
 
 
 

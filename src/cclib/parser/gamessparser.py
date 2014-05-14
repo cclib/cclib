@@ -1153,8 +1153,12 @@ class GAMESS(logfileparser.Logfile):
             # If something else ever comes up, we should get a signal from this assert.
             assert line.split()[0] == "POINT"
 
-            # We can check here that the net charge of the molecule is correct.
+            # We can get the reference point from here, as well as
+            # check here that the net charge of the molecule is correct.
             coords_and_charge = next(inputfile)
+            assert coords_and_charge.split()[-1] == '(A.U.)'
+            reference = numpy.array([float(x) for x in coords_and_charge.split()[:3]])
+            reference = utils.convertor(reference, 'bohr', 'Angstrom')
             charge = float(coords_and_charge.split()[-2])
             self.set_attribute('charge', charge)
 
@@ -1169,10 +1173,10 @@ class GAMESS(logfileparser.Logfile):
             # so if it already exists, we will overwrite all moments since we want
             # to leave just the last printed value (could change in the future).
             if not hasattr(self, 'moments'):
-                self.moments = [dipole]
+                self.moments = [reference, dipole]
             else:
                 try:
-                    assert self.moments[0] == dipole
+                    assert self.moments[1] == dipole
                 except AssertionError:
                     self.logger.warning('Overwriting previous multipole moments with new values')
                     self.logger.warning('This could be from post-HF properties or geometry optimization')

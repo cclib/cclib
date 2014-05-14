@@ -1038,7 +1038,10 @@ class ADF(logfileparser.Logfile):
                 line = next(inputfile)
             self.atomcharges["mulliken"] = mulliken
 
-        # Dipole moment is always printed after a point calculation.
+        # Dipole moment is always printed after a point calculation,
+        # and the reference point for this is always the origin (0,0,0)
+        # and not necessarily the center of mass, as explained on the
+        # ADF user mailing list (see cclib/cclib#113 for details).
         #
         # =============
         # Dipole Moment  ***  (Debye)  ***
@@ -1062,10 +1065,11 @@ class ADF(logfileparser.Logfile):
             dipole = [float(d) for d in line.split()[-3:]]
 
             if not hasattr(self, 'moments'):
-                self.moments = [dipole]
+                reference = [0.0, 0.0, 0.0]
+                self.moments = [reference, dipole]
             else:
                 try:
-                    assert self.moments[0] == dipole
+                    assert self.moments[1] == dipole
                 except AssertionError:
                     self.logger.warning('Overwriting previous multipole moments with new values')
                     self.moments = [dipole]
