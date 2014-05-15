@@ -1064,15 +1064,15 @@ class ADF(logfileparser.Logfile):
             assert line.split()[0] == "Vector"
             dipole = [float(d) for d in line.split()[-3:]]
 
+            reference = [0.0, 0.0, 0.0]
             if not hasattr(self, 'moments'):
-                reference = [0.0, 0.0, 0.0]
                 self.moments = [reference, dipole]
             else:
                 try:
                     assert self.moments[1] == dipole
                 except AssertionError:
                     self.logger.warning('Overwriting previous multipole moments with new values')
-                    self.moments = [dipole]
+                    self.moments = [reference, dipole]
 
 
 if __name__ == "__main__":

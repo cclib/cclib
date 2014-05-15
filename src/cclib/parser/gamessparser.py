@@ -1180,7 +1180,7 @@ class GAMESS(logfileparser.Logfile):
                 except AssertionError:
                     self.logger.warning('Overwriting previous multipole moments with new values')
                     self.logger.warning('This could be from post-HF properties or geometry optimization')
-                    self.moments = [dipole]
+                    self.moments = [reference, dipole]
 
         
 if __name__ == "__main__":

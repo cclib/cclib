@@ -253,16 +253,18 @@ def testNWChem_NWChem6_0_dvb_gopt_hf_unconverged_out(logfile):
 
 def testNWChem_NWChem6_0_dvb_sp_hf_moments_only_quadrupole_out(logfile):
     """Quadrupole moments are printed/parsed, but not lower moments (no shape)."""
-    assert hasattr(logfile.data, 'moments') and len(logfile.data.moments) == 2
-    assert not logfile.data.moments[0].shape
-    assert len(logfile.data.moments[1]) == 6
+    assert hasattr(logfile.data, 'moments') and len(logfile.data.moments) == 3
+    assert len(logfile.data.moments[0]) == 3
+    assert not logfile.data.moments[1].shape
+    assert len(logfile.data.moments[2]) == 6
 
 def testNWChem_NWChem6_0_dvb_sp_hf_moments_only_octupole_out(logfile):
     """Quadrupole moments are printed/parsed, but not lower moments (no shape)."""
-    assert hasattr(logfile.data, 'moments') and len(logfile.data.moments) == 3
-    assert not logfile.data.moments[0].shape
+    assert hasattr(logfile.data, 'moments') and len(logfile.data.moments) == 4
+    assert len(logfile.data.moments[0]) == 3
     assert not logfile.data.moments[1].shape
-    assert len(logfile.data.moments[2]) == 10
+    assert not logfile.data.moments[2].shape
+    assert len(logfile.data.moments[3]) == 10
 
 # ORCA #
 

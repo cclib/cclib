@@ -730,7 +730,7 @@ class Psi(logfileparser.Logfile):
             dipole = utils.convertor(dipole, "ebohr", "Debye")
 
             if not hasattr(self, 'moments'):
-                self.moments = [dipole]
+                self.moments = [self.reference, dipole]
             else:
                 try:
                     assert numpy.all(self.moments[1] == dipole)
