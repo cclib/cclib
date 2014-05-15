@@ -696,6 +696,18 @@ class Psi(logfileparser.Logfile):
             if not hasattr(self, 'optdone'):
                 self.optdone = []
 
+        # The reference point at which properties are evaluated in Psi4 is explicitely stated,
+        # so we can save it for later. It is not, however, a part of the Properties section,
+        # but it appears before it and also in other places where properies that might depend
+        # on it are printed.
+        #
+        # Properties will be evaluated at   0.000000,   0.000000,   0.000000 Bohr
+        #
+        if (self.version == 4) and ("Properties will be evaluated at" in line.strip()):
+            self.reference = numpy.array([float(x.strip(',')) for x in line.split()[-4:-1]])
+            assert line.split()[-1] == "Bohr"
+            self.reference = utils.convertor(self.reference, 'bohr', 'Angstrom')
+
         # The properties section print the molecular dipole moment:
         #
         #  ==> Properties <==
@@ -721,11 +733,11 @@ class Psi(logfileparser.Logfile):
                 self.moments = [dipole]
             else:
                 try:
-                    assert numpy.all(self.moments[0] == dipole)
+                    assert numpy.all(self.moments[1] == dipole)
                 except AssertionError:
                     self.logger.warning('Overwriting previous multipole moments with new values')
                     self.logger.warning('This could be from post-HF properties or geometry optimization')
-                    self.moments = [dipole]
+                    self.moments = [self.reference, dipole]
 
         # Higher multipole moments are printed separately, on demand, in lexicographical order.
         #
@@ -749,7 +761,10 @@ class Psi(logfileparser.Logfile):
 
             self.skip_lines(inputfile, ['b', 'd', 'header', 'd', 'b'])
 
-            moments = []
+            # The reference used here should have been printed somewhere
+            # before the properties and parsed above.
+            moments = [self.reference]
+
             line = next(inputfile)
             while "----------" not in line.strip():
 
@@ -813,8 +828,15 @@ class Psi(logfileparser.Logfile):
         if (self.version == 3) and line.strip() == "*** Electric multipole moments ***":
 
             self.skip_lines(inputfile, ['d', 'b', 'caution1', 'caution2', 'b'])
-            self.skip_lines(inputfile, ['coord', 'xyz', 'd', 'center', 'b'])
 
+            coordinates = next(inputfile)
+            assert coordinates.split()[-2] == "(a.u.)"
+            self.skip_lines(inputfile, ['xyz', 'd'])
+            line = next(inputfile)
+            self.reference = numpy.array([float(x) for x in line.split()])
+            self.reference = utils.convertor(self.reference, 'bohr', 'Angstrom')
+
+            self.skip_line(inputfile, "blank")
             line = next(inputfile)
             assert "Electric dipole moment" in line
             self.skip_line(inputfile, "blank")
@@ -826,9 +848,9 @@ class Psi(logfileparser.Logfile):
                 dipole.append(float(line.split()[2]))
 
             if not hasattr(self, 'moments'):
-                self.moments = [dipole]
+                self.moments = [self.reference, dipole]
             else:
-                assert self.moments[0] == dipole
+                assert self.moments[1] == dipole
 
 
 if __name__ == "__main__":

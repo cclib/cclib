@@ -521,7 +521,10 @@ class GAMESSUK(logfileparser.Logfile):
                 self.moenergies = [moenergies]
 
         # The dipole moment is printed by default at the beginning of the wavefunction analysis,
-        # but the value is in atomic units, so we need to convert to Debye.
+        # but the value is in atomic units, so we need to convert to Debye. It seems pretty
+        # evident that the reference point is the origin (0,0,0) which is also the center
+        # of mass after reorientation at the beginning of the job, although this is not
+        # stated anywhere (would be good to check).
         #
         #                                        *********************
         #                                        wavefunction analysis
@@ -553,12 +556,13 @@ class GAMESSUK(logfileparser.Logfile):
                 line = next(inputfile)
                 dipole.append(float(line.split()[-1]))
 
+            reference = [0.0, 0.0, 0.0]
             dipole = utils.convertor(numpy.array(dipole), "ebohr", "Debye")
 
             if not hasattr(self, 'moments'):
-                self.moments = [dipole]
+                self.moments = [reference, dipole]
             else:
-                assert self.moments[0] == dipole
+                assert self.moments[1] == dipole
 
         # Net atomic charges are not printed at all, it seems,
         # but you can get at them from nuclear charges and

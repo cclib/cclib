@@ -741,7 +741,8 @@ class NWChem(logfileparser.Logfile):
 
         # NWChem prints the dipole moment in atomic units first, and we could just fast forward
         # to the values in Debye, which are also printed. But we can also just convert them
-        # right away and so parse a little bit less.
+        # right away and so parse a little bit less. Note how the reference point is print
+        # here within the block nicely, as it is for all moment later.
         # 
         #          -------------
         #          Dipole Moment
@@ -759,7 +760,16 @@ class NWChem(logfileparser.Logfile):
         #
         if line.strip() == "Dipole Moment":
 
-            self.skip_lines(inputfile, ['d', 'b', 'comment', 'center', 'b'])
+            self.skip_lines(inputfile, ['d', 'b'])
+
+            reference_comment = next(inputfile)
+            assert "(in au)" in reference_comment
+            reference = next(inputfile).split()
+            self.reference = [reference[-7], reference[-4], reference[-1]]
+            self.reference = numpy.array([float(x) for x in self.reference])
+            self.reference = utils.convertor(self.reference, 'bohr', 'Angstrom')
+
+            self.skip_line(inputfile, 'blank')
 
             magnitude = next(inputfile)
             assert magnitude.split()[-1] == "A.U."
@@ -772,9 +782,9 @@ class NWChem(logfileparser.Logfile):
             dipole = utils.convertor(numpy.array(dipole), "ebohr", "Debye")
 
             if not hasattr(self, 'moments'):
-                self.moments = [dipole]
+                self.moments = [self.reference, dipole]
             else:
-                self.moments[0] == dipole
+                self.moments[1] == dipole
 
         # The quadrupole moment is pretty straightforward to parse. There are several
         # blocks printed, and the first one called 'second moments' contains the raw
@@ -802,7 +812,16 @@ class NWChem(logfileparser.Logfile):
         #
         if line.strip() == "Quadrupole Moment":
 
-            self.skip_lines(inputfile, ['d', 'b', 'comment', 'center', 'b', 'units', 'susc', 'b'])
+            self.skip_lines(inputfile, ['d', 'b'])
+
+            reference_comment = next(inputfile)
+            assert "(in au)" in reference_comment
+            reference = next(inputfile).split()
+            self.reference = [reference[-7], reference[-4], reference[-1]]
+            self.reference = numpy.array([float(x) for x in self.reference])
+            self.reference = utils.convertor(self.reference, 'bohr', 'Angstrom')
+
+            self.skip_lines(inputfile, ['b', 'units', 'susc', 'b'])
 
             line = next(inputfile)
             assert line.strip() == "Second moments in atomic units"
@@ -824,14 +843,14 @@ class NWChem(logfileparser.Logfile):
             # and octupole output. So, it is perfectly possible to print the quadrupole
             # and not the dipole... if that is the case set the former to None and
             # issue a warning. Also, a regression has been added to cover this case.
-            if not hasattr(self, 'moments') or len(self.moments) == 0:
+            if not hasattr(self, 'moments') or len(self.moments) <2:
                 self.logger.warning("Found quadrupole moments but no previous dipole")
-                self.moments = [None, quadrupole]
+                self.moments = [self.reference, None, quadrupole]
             else:
-                if len(self.moments) == 1:
+                if len(self.moments) == 2:
                     self.moments.append(quadrupole)
                 else:
-                    assert self.moments[1] == quadrupole
+                    assert self.moments[2] == quadrupole
 
         # The octupole moment is analogous to the quadrupole, but there are more components
         # and the checking of previously parsed dipole and quadrupole moments is more involved,
@@ -854,7 +873,16 @@ class NWChem(logfileparser.Logfile):
         #
         if line.strip() == "Octupole Moment":
 
-            self.skip_lines(inputfile, ['d', 'b', 'comment', 'center', 'b'])
+            self.skip_lines(inputfile, ['d', 'b'])
+
+            reference_comment = next(inputfile)
+            assert "(in au)" in reference_comment
+            reference = next(inputfile).split()
+            self.reference = [reference[-7], reference[-4], reference[-1]]
+            self.reference = numpy.array([float(x) for x in self.reference])
+            self.reference = utils.convertor(self.reference, 'bohr', 'Angstrom')
+
+            self.skip_line(inputfile, 'blank')
 
             line = next(inputfile)
             assert line.strip() == "Third moments in atomic units"
@@ -870,18 +898,18 @@ class NWChem(logfileparser.Logfile):
 
             octupole = utils.convertor(numpy.array(octupole), "ebohr3", "Debye.ang2")
 
-            if not hasattr(self, 'moments') or len(self.moments) == 0:
+            if not hasattr(self, 'moments') or len(self.moments) < 2:
                 self.logger.warning("Found octupole moments but no previous dipole or quadrupole moments")
-                self.moments = [None, None, octupole]
-            elif len(self.moments) == 1:
+                self.moments = [self.reference, None, None, octupole]
+            elif len(self.moments) == 2:
                 self.logger.warning("Found octupole moments but no previous quadrupole moments")
                 self.moments.append(None)
                 self.moments.append(octupole)
             else:
-                if len(self.moments) == 2:
+                if len(self.moments) == 3:
                     self.moments.append(octupole)
                 else:
-                    assert self.moments[2] == octupole
+                    assert self.moments[3] == octupole
 
         if "Total MP2 energy" in line:
             mpenerg = float(line.split()[-1])

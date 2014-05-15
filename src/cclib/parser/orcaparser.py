@@ -663,7 +663,8 @@ class ORCA(logfileparser.Logfile):
                 self.atomspins["lowdin"] = spins
 
         # It is not stated explicitely, but the dipole moment components printed by ORCA
-        # seem to be in atomic units, so they will need to be converted.
+        # seem to be in atomic units, so they will need to be converted. Also, they
+        # are most probably calculated with respect to the origin .
         #
         # -------------
         # DIPOLE MOMENT
@@ -683,17 +684,18 @@ class ORCA(logfileparser.Logfile):
             total = next(inputfile)
             assert "Total Dipole Moment" in total
 
+            reference = [0.0, 0.0, 0.0]
             dipole = numpy.array([float(d) for d in total.split()[-3:]])
             dipole = utils.convertor(dipole, "ebohr", "Debye")
 
             if not hasattr(self, 'moments'):
-                self.moments = [dipole]
+                self.moments = [reference, dipole]
             else:
                 try:
-                    assert numpy.all(self.moments[0] == dipole)
+                    assert numpy.all(self.moments[1] == dipole)
                 except AssertionError:
                     self.logger.warning('Overwriting previous multipole moments with new values')
-                    self.moments = [dipole]
+                    self.moments = [reference, dipole]
 
     def parse_scf_condensed_format(self, inputfile, line):
         """ Parse the SCF convergence information in condensed format """
