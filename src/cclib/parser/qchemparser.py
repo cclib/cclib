@@ -42,6 +42,14 @@ class QChem(logfileparser.Logfile):
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
 
+        # Charge and multiplicity.
+        # Only present in the input file.
+        if line.find("$molecule") > -1:
+            line = next(inputfile)
+            charge, mult = map(int, line.split())
+            self.set_attribute('charge', charge)
+            self.set_attribute('mult', mult)
+
         # Extract the atomic numbers and coordinates of the atoms.
         if line.find("Standard Nuclear Orientation (Angstroms)") > -1:
             self.skip_lines(inputfile, ['cols', 'd'])
