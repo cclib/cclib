@@ -46,6 +46,7 @@ class QChem(logfileparser.Logfile):
 
         # Charge and multiplicity.
         # Only present in the input file.
+
         if line.find("$molecule") > -1:
             line = next(inputfile)
             charge, mult = map(int, line.split())
@@ -53,6 +54,7 @@ class QChem(logfileparser.Logfile):
             self.set_attribute('mult', mult)
 
         # Extract the atomic numbers and coordinates of the atoms.
+
         if line.find("Standard Nuclear Orientation (Angstroms)") > -1:
             self.skip_lines(inputfile, ['cols', 'd'])
             atomelements = []
@@ -78,10 +80,18 @@ class QChem(logfileparser.Logfile):
         #   There are 30 shells and 60 basis functions
         #  Both Cartesian and pure:
         #   ...
+
         if line.find("basis functions") > -1:
             self.nbasis = int(line.split()[-3])
 
-        # Section with SCF information.
+        # Section with SCF iterations.
+
+        if line.find("SCF converges when DIIS error is below") > -1:
+            if not hasattr(self, 'scftargets'):
+                self.scftargets = []
+            diis_target = float(line.split()[-1])
+            self.scftargets.append([diis_target])
+
         if line.find("Cycle       Energy         DIIS Error") > -1:
             self.skip_lines(inputfile, ['d'])
             line = next(inputfile)
@@ -112,6 +122,7 @@ class QChem(logfileparser.Logfile):
         #         self.hessian = []
 
         # Start of the IR/Raman frequency section.
+
         if line.find("VIBRATIONAL ANALYSIS") > -1:
 
             while "STANDARD THERMODYNAMIC QUANTITIES" not in line:
@@ -256,7 +267,6 @@ class QChem(logfileparser.Logfile):
         # 'scanenergies'
         # 'scannames'
         # 'scanparm'
-        # 'scftargets'
         # 'temperature'
 
 
