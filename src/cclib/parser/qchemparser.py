@@ -50,6 +50,18 @@ class QChem(logfileparser.Logfile):
             self.set_attribute('charge', charge)
             self.set_attribute('mult', mult)
 
+        # Number of basis functions.
+        # Because Q-Chem's integral recursion scheme is defined using
+        # Cartesian basis functions, there is often a distinction between the
+        # two in the output. We only parse for *pure* functions.
+        # Examples:
+        #  Only one type:
+        #   There are 30 shells and 60 basis functions
+        #  Both Cartesian and pure:
+        #   ...
+        if line.find("basis functions") > 1:
+            self.nbasis = int(line.split()[-3])
+
         # Extract the atomic numbers and coordinates of the atoms.
         if line.find("Standard Nuclear Orientation (Angstroms)") > -1:
             self.skip_lines(inputfile, ['cols', 'd'])
@@ -122,8 +134,6 @@ class QChem(logfileparser.Logfile):
                 # Mode:                 4                      5                      6
                 # ...
 
-                # if not hasattr(self, 'vibanharms'):
-                #     self.vibanharms = []
                 # There isn't any symmetry information for normal modes present
                 # in Q-Chem.
                 # if not hasattr(self, 'vibsyms'):
@@ -165,6 +175,19 @@ class QChem(logfileparser.Logfile):
 
                 line = next(inputfile)
 
+        # Anharmonic vibrational analysis.
+        # Q-Chem includes 3 theories: VPT2, TOSH, and VCI.
+        # For now, just take the VPT2 results.
+
+        if line.find("VIBRATIONAL ANHARMONIC ANALYSIS") > -1:
+
+            while list(set(line.strip())) != ["="]:
+                if "VPT2" in line:
+                    if not hasattr(self, 'vibanharms'):
+                        self.vibanharms = []
+                    self.vibanharms.append(float(line.split()[-1]))
+                line = next(inputfile)
+
         # TODO:
         # 'aonames'
         # 'aooverlaps'
@@ -173,7 +196,6 @@ class QChem(logfileparser.Logfile):
         # 'atommasses'
         # 'atomspins'
         # 'ccenergies'
-        # 'charge'
         # 'coreelectrons'
         # 'enthalpy'
         # 'entropy'
@@ -197,9 +219,6 @@ class QChem(logfileparser.Logfile):
         # 'moenergies'
         # 'mosyms'
         # 'mpenergies'
-        # 'mult'
-        # 'nbasis'
-        # 'nmo'
         # 'nocoeffs'
         # 'optdone'
         # 'scancoords'
@@ -210,7 +229,6 @@ class QChem(logfileparser.Logfile):
         # 'scftargets'
         # 'scfvalues'
         # 'temperature'
-        # 'vibanharms'
         # 'vibsyms'
 
 
