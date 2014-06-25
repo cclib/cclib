@@ -115,6 +115,17 @@ class QChem(logfileparser.Logfile):
             scfenergy = float(line.split()[-1])
             self.scfenergies.append(utils.convertor(scfenergy, "hartree", "eV"))
 
+        # Geometry optimization convergence.
+
+        if line.find("**  OPTIMIZATION CONVERGED  **") > -1:
+            if not hasattr(self, 'optdone'):
+                self.optdone = []
+            self.optdone.append(len(self.atomcoords))
+
+        if line.find("**  MAXIMUM OPTIMIZATION CYCLES REACHED  **") > -1:
+            if not hasattr(self, 'optdone'):
+                self.optdone = []
+
         # For IR-related jobs, the Hessian is printed (dim: 3*natom, 3*natom).
         # if line.find("Hessian of the SCF Energy") > -1:
         #     # A maximum of 6 columns/block.
@@ -262,7 +273,6 @@ class QChem(logfileparser.Logfile):
         # 'mosyms'
         # 'mpenergies'
         # 'nocoeffs'
-        # 'optdone'
         # 'scancoords'
         # 'scanenergies'
         # 'scannames'
