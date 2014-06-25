@@ -10,6 +10,8 @@
 
 from __future__ import print_function
 
+import numpy
+
 from . import logfileparser
 from . import utils
 
@@ -50,18 +52,6 @@ class QChem(logfileparser.Logfile):
             self.set_attribute('charge', charge)
             self.set_attribute('mult', mult)
 
-        # Number of basis functions.
-        # Because Q-Chem's integral recursion scheme is defined using
-        # Cartesian basis functions, there is often a distinction between the
-        # two in the output. We only parse for *pure* functions.
-        # Examples:
-        #  Only one type:
-        #   There are 30 shells and 60 basis functions
-        #  Both Cartesian and pure:
-        #   ...
-        if line.find("basis functions") > 1:
-            self.nbasis = int(line.split()[-3])
-
         # Extract the atomic numbers and coordinates of the atoms.
         if line.find("Standard Nuclear Orientation (Angstroms)") > -1:
             self.skip_lines(inputfile, ['cols', 'd'])
@@ -78,6 +68,48 @@ class QChem(logfileparser.Logfile):
             self.set_attribute('natom', len(atomnos))
             self.set_attribute('atomnos', atomnos)
             self.set_attribute('atomcoords', atomcoords)
+
+        # Number of basis functions.
+        # Because Q-Chem's integral recursion scheme is defined using
+        # Cartesian basis functions, there is often a distinction between the
+        # two in the output. We only parse for *pure* functions.
+        # Examples:
+        #  Only one type:
+        #   There are 30 shells and 60 basis functions
+        #  Both Cartesian and pure:
+        #   ...
+        if line.find("basis functions") > -1:
+            self.nbasis = int(line.split()[-3])
+
+        # Section with SCF information.
+        if line.find("Cycle       Energy         DIIS Error") > -1:
+            self.skip_lines(inputfile, ['d'])
+            line = next(inputfile)
+            scfvalues = []
+            values = []
+            while list(set(line.strip())) != ['-']:
+                if not hasattr(self, 'scfvalues'):
+                    self.scfvalues = []
+                # Q-Chem only outputs the DIIS error, even if one chooses
+                # (G)DM, RCA, ...
+                diis_error = float(line.split()[2])
+                values.append(diis_error)
+                line = next(inputfile)
+            # Only so we remain a list of arrays of rank 2.
+            scfvalues.append(values)
+            self.scfvalues.append(numpy.array(scfvalues))
+
+        if line.find("Total energy in the final basis set") > -1:
+            if not hasattr(self, 'scfenergies'):
+                self.scfenergies = []
+            scfenergy = float(line.split()[-1])
+            self.scfenergies.append(utils.convertor(scfenergy, "hartree", "eV"))
+
+        # For IR-related jobs, the Hessian is printed (dim: 3*natom, 3*natom).
+        # if line.find("Hessian of the SCF Energy") > -1:
+        #     # A maximum of 6 columns/block.
+        #     if not hasattr(self, 'hessian'):
+        #         self.hessian = []
 
         # Start of the IR/Raman frequency section.
         if line.find("VIBRATIONAL ANALYSIS") > -1:
@@ -175,22 +207,21 @@ class QChem(logfileparser.Logfile):
 
                 line = next(inputfile)
 
-        # Anharmonic vibrational analysis.
-        # Q-Chem includes 3 theories: VPT2, TOSH, and VCI.
-        # For now, just take the VPT2 results.
+                # Anharmonic vibrational analysis.
+                # Q-Chem includes 3 theories: VPT2, TOSH, and VCI.
+                # For now, just take the VPT2 results.
 
-        if line.find("VIBRATIONAL ANHARMONIC ANALYSIS") > -1:
+                if line.find("VIBRATIONAL ANHARMONIC ANALYSIS") > -1:
 
-            while list(set(line.strip())) != ["="]:
-                if "VPT2" in line:
-                    if not hasattr(self, 'vibanharms'):
-                        self.vibanharms = []
-                    self.vibanharms.append(float(line.split()[-1]))
-                line = next(inputfile)
+                    while list(set(line.strip())) != ["="]:
+                        if "VPT2" in line:
+                            if not hasattr(self, 'vibanharms'):
+                                self.vibanharms = []
+                            self.vibanharms.append(float(line.split()[-1]))
+                        line = next(inputfile)
 
         # TODO:
         # 'aonames'
-        # 'aooverlaps'
         # 'atombasis'
         # 'atomcharges'
         # 'atommasses'
@@ -225,11 +256,8 @@ class QChem(logfileparser.Logfile):
         # 'scanenergies'
         # 'scannames'
         # 'scanparm'
-        # 'scfenergies'
         # 'scftargets'
-        # 'scfvalues'
         # 'temperature'
-        # 'vibsyms'
 
 
 if __name__ == "__main__":
