@@ -47,7 +47,7 @@ class QChem(logfileparser.Logfile):
         # Charge and multiplicity.
         # Only present in the input file.
 
-        if line.find("$molecule") > -1:
+        if line.find('$molecule') > -1:
             line = next(inputfile)
             charge, mult = map(int, line.split())
             self.set_attribute('charge', charge)
@@ -55,12 +55,12 @@ class QChem(logfileparser.Logfile):
 
         # Extract the atomic numbers and coordinates of the atoms.
 
-        if line.find("Standard Nuclear Orientation (Angstroms)") > -1:
-            self.skip_lines(inputfile, ['cols', 'd'])
+        if line.find('Standard Nuclear Orientation (Angstroms)') > -1:
+            self.skip_lines(inputfile, ['cols', 'dashes'])
             atomelements = []
             atomcoords = []
             line = next(inputfile)
-            while list(set(line.strip())) != ["-"]:
+            while list(set(line.strip())) != ['-']:
                 entry = line.split()
                 atomelements.append(entry[1])
                 atomcoords.append(list(map(float, entry[2:])))
@@ -81,18 +81,18 @@ class QChem(logfileparser.Logfile):
         #  Both Cartesian and pure:
         #   ...
 
-        if line.find("basis functions") > -1:
+        if line.find('basis functions') > -1:
             self.nbasis = int(line.split()[-3])
 
         # Section with SCF iterations.
 
-        if line.find("SCF converges when DIIS error is below") > -1:
+        if line.find('SCF converges when DIIS error is below') > -1:
             if not hasattr(self, 'scftargets'):
                 self.scftargets = []
             diis_target = float(line.split()[-1])
             self.scftargets.append([diis_target])
 
-        if line.find("Cycle       Energy         DIIS Error") > -1:
+        if line.find('Cycle       Energy         DIIS Error') > -1:
             self.skip_lines(inputfile, ['d'])
             line = next(inputfile)
             scfvalues = []
@@ -109,34 +109,273 @@ class QChem(logfileparser.Logfile):
             scfvalues.append(values)
             self.scfvalues.append(numpy.array(scfvalues))
 
-        if line.find("Total energy in the final basis set") > -1:
+        if line.find('Total energy in the final basis set') > -1:
             if not hasattr(self, 'scfenergies'):
                 self.scfenergies = []
             scfenergy = float(line.split()[-1])
-            self.scfenergies.append(utils.convertor(scfenergy, "hartree", "eV"))
+            self.scfenergies.append(utils.convertor(scfenergy, 'hartree', 'eV'))
 
         # Geometry optimization convergence.
 
-        if line.find("**  OPTIMIZATION CONVERGED  **") > -1:
+        if line.find('**  OPTIMIZATION CONVERGED  **') > -1:
             if not hasattr(self, 'optdone'):
                 self.optdone = []
             self.optdone.append(len(self.atomcoords))
 
-        if line.find("**  MAXIMUM OPTIMIZATION CYCLES REACHED  **") > -1:
+        if line.find('**  MAXIMUM OPTIMIZATION CYCLES REACHED  **') > -1:
             if not hasattr(self, 'optdone'):
                 self.optdone = []
 
         # For IR-related jobs, the Hessian is printed (dim: 3*natom, 3*natom).
-        # if line.find("Hessian of the SCF Energy") > -1:
+        # if line.find('Hessian of the SCF Energy') > -1:
         #     # A maximum of 6 columns/block.
         #     if not hasattr(self, 'hessian'):
         #         self.hessian = []
 
+        # Moller-Plesset corrections.
+
+        # There are multiple modules in Q-Chem for calculating MPn energies:
+        # cdman, ccman, and ccman2, all with different output.
+        #
+        # MP2, RI-MP2, and local MP2 all default to cdman, which has a simple
+        # block of output after the regular SCF iterations.
+        #
+        # MP3 is handled by ccman2.
+        #
+        # MP4 and variants are handled by ccman.
+
+        if line.find('MP2         total energy') > -1:
+            if not hasattr(self, 'mpenergies'):
+                self.mpenergies = []
+            mp2energy = float(line.split()[4])
+            self.mpenergies.append([mp2energy])
+
+        # This is the MP3 case.
+        if line.find('MP2 energy') > -1:
+            if not hasattr(self, 'mpenergies'):
+                self.mpenergies = []
+            mp2energy = float(line.split()[3])
+            line = next(inputfile)
+            line = next(inputfile)
+            # Just a safe check.
+            if 'MP3 energy' in line:
+                mp3energy = float(line.split()[3])
+            self.mpenergies.append([mp2energy, mp3energy])
+
+        # Molecular orbital energies and symmetries.
+
+        if line.find('Orbital Energies (a.u.) and Symmetries') > -1:
+
+            #  --------------------------------------------------------------
+            #              Orbital Energies (a.u.) and Symmetries
+            #  --------------------------------------------------------------
+
+            #  Alpha MOs, Restricted
+            #  -- Occupied --
+            # -10.018 -10.018 -10.008 -10.008 -10.007 -10.007 -10.006 -10.005
+            #   1 Bu    1 Ag    2 Bu    2 Ag    3 Bu    3 Ag    4 Bu    4 Ag
+            #  -9.992  -9.992  -0.818  -0.755  -0.721  -0.704  -0.670  -0.585
+            #   5 Ag    5 Bu    6 Ag    6 Bu    7 Ag    7 Bu    8 Bu    8 Ag
+            #  -0.561  -0.532  -0.512  -0.462  -0.439  -0.410  -0.400  -0.397
+            #   9 Ag    9 Bu   10 Ag   11 Ag   10 Bu   11 Bu   12 Bu   12 Ag
+            #  -0.376  -0.358  -0.349  -0.330  -0.305  -0.295  -0.281  -0.263
+            #  13 Bu   14 Bu   13 Ag    1 Au   15 Bu   14 Ag   15 Ag    1 Bg
+            #  -0.216  -0.198  -0.160
+            #   2 Au    2 Bg    3 Bg
+            #  -- Virtual --
+            #   0.050   0.091   0.116   0.181   0.280   0.319   0.330   0.365
+            #   3 Au    4 Au    4 Bg    5 Au    5 Bg   16 Ag   16 Bu   17 Bu
+            #   0.370   0.413   0.416   0.422   0.446   0.469   0.496   0.539
+            #  17 Ag   18 Bu   18 Ag   19 Bu   19 Ag   20 Bu   20 Ag   21 Ag
+            #   0.571   0.587   0.610   0.627   0.646   0.693   0.743   0.806
+            #  21 Bu   22 Ag   22 Bu   23 Bu   23 Ag   24 Ag   24 Bu   25 Ag
+            #   0.816
+            #  25 Bu
+
+            #  Beta MOs, Restricted
+            #  -- Occupied --
+            # -10.018 -10.018 -10.008 -10.008 -10.007 -10.007 -10.006 -10.005
+            #   1 Bu    1 Ag    2 Bu    2 Ag    3 Bu    3 Ag    4 Bu    4 Ag
+            #  -9.992  -9.992  -0.818  -0.755  -0.721  -0.704  -0.670  -0.585
+            #   5 Ag    5 Bu    6 Ag    6 Bu    7 Ag    7 Bu    8 Bu    8 Ag
+            #  -0.561  -0.532  -0.512  -0.462  -0.439  -0.410  -0.400  -0.397
+            #   9 Ag    9 Bu   10 Ag   11 Ag   10 Bu   11 Bu   12 Bu   12 Ag
+            #  -0.376  -0.358  -0.349  -0.330  -0.305  -0.295  -0.281  -0.263
+            #  13 Bu   14 Bu   13 Ag    1 Au   15 Bu   14 Ag   15 Ag    1 Bg
+            #  -0.216  -0.198  -0.160
+            #   2 Au    2 Bg    3 Bg
+            #  -- Virtual --
+            #   0.050   0.091   0.116   0.181   0.280   0.319   0.330   0.365
+            #   3 Au    4 Au    4 Bg    5 Au    5 Bg   16 Ag   16 Bu   17 Bu
+            #   0.370   0.413   0.416   0.422   0.446   0.469   0.496   0.539
+            #  17 Ag   18 Bu   18 Ag   19 Bu   19 Ag   20 Bu   20 Ag   21 Ag
+            #   0.571   0.587   0.610   0.627   0.646   0.693   0.743   0.806
+            #  21 Bu   22 Ag   22 Bu   23 Bu   23 Ag   24 Ag   24 Bu   25 Ag
+            #   0.816
+            #  25 Bu
+            #  --------------------------------------------------------------
+
+            self.skip_lines(inputfile, ['dashes', 'blank'])
+            line = next(inputfile)
+            unres = False
+            energies_alpha = []
+            symbols_alpha = []
+            if line.split()[2] == 'Unrestricted':
+                unres = True
+                energies_beta = []
+                symbols_beta = []
+            line = next(inputfile)
+
+            while len(energies_alpha) < self.nbasis:
+                if 'Occupied' in line or 'Virtual' in line:
+                    line = next(inputfile)
+                # Parse the energies and symmetries in pairs of lines.
+                # energies = [utils.convertor(energy, 'hartree', 'eV')
+                #             for energy in map(float, line.split())]
+                # This convoluted bit handles '*******' when present.
+                energies = []
+                energy_line = line.split()
+                for e in energy_line:
+                    try:
+                        energy = utils.convertor(self.float(e), 'hartree', 'eV')
+                    except ValueError:
+                        energy = numpy.nan
+                    energies.append(energy)
+                energies_alpha.extend(energies)
+                line = next(inputfile)
+                symbols = line.split()[1::2]
+                symbols_alpha.extend(symbols)
+                line = next(inputfile)
+
+            # Only look at the second block if doing an unrestricted calculation.
+            # This might be a problem for ROHF/ROKS.
+            if unres:
+                self.skip_lines(inputfile, ['blank'])
+                line = next(inputfile)
+                while len(energies_beta) < self.nbasis:
+                    if 'Occupied' in line or 'Virtual' in line:
+                        line = next(inputfile)
+                    energies = []
+                    energy_line = line.split()
+                    for e in energy_line:
+                        try:
+                            energy = utils.convertor(self.float(e), 'hartree', 'eV')
+                        except ValueError:
+                            energy = numpy.nan
+                        energies.append(energy)
+                    energies_beta.extend(energies)
+                    line = next(inputfile)
+                    symbols = line.split()[1::2]
+                    symbols_beta.extend(symbols)
+                    line = next(inputfile)
+
+            if not hasattr(self, 'moenergies'):
+                self.moenergies = []
+            if not hasattr(self, 'mosyms'):
+                self.mosyms = []
+            self.moenergies.append(numpy.array(energies_alpha))
+            self.mosyms.append(symbols_alpha)
+            if unres:
+                self.moenergies.append(numpy.array(energies_beta))
+                self.mosyms.append(symbols_beta)
+
+        # Molecular orbital energies, no symmetries.
+
+        if line.strip() == 'Orbital Energies (a.u.)':
+
+            # In the case of no orbital symmetries, the beta spin block is not
+            # present for restricted calculations.
+
+            #  --------------------------------------------------------------
+            #                     Orbital Energies (a.u.)
+            #  --------------------------------------------------------------
+
+            #  Alpha MOs
+            #  -- Occupied --
+            # ******* -38.595 -34.580 -34.579 -34.578 -19.372 -19.372 -19.364
+            # -19.363 -19.362 -19.362  -4.738  -3.252  -3.250  -3.250  -1.379
+            #  -1.371  -1.369  -1.365  -1.364  -1.362  -0.859  -0.855  -0.849
+            #  -0.846  -0.840  -0.836  -0.810  -0.759  -0.732  -0.729  -0.704
+            #  -0.701  -0.621  -0.610  -0.595  -0.587  -0.584  -0.578  -0.411
+            #  -0.403  -0.355  -0.354  -0.352
+            #  -- Virtual --
+            #  -0.201  -0.117  -0.099  -0.086   0.020   0.031   0.055   0.067
+            #   0.075   0.082   0.086   0.092   0.096   0.105   0.114   0.148
+
+            #  Beta MOs
+            #  -- Occupied --
+            # ******* -38.561 -34.550 -34.549 -34.549 -19.375 -19.375 -19.367
+            # -19.367 -19.365 -19.365  -4.605  -3.105  -3.103  -3.102  -1.385
+            #  -1.376  -1.376  -1.371  -1.370  -1.368  -0.863  -0.858  -0.853
+            #  -0.849  -0.843  -0.839  -0.818  -0.765  -0.738  -0.737  -0.706
+            #  -0.702  -0.624  -0.613  -0.600  -0.591  -0.588  -0.585  -0.291
+            #  -0.291  -0.288  -0.275
+            #  -- Virtual --
+            #  -0.139  -0.122  -0.103   0.003   0.014   0.049   0.049   0.059
+            #   0.061   0.070   0.076   0.081   0.086   0.090   0.098   0.106
+            #   0.138
+            #  --------------------------------------------------------------
+
+            self.skip_lines(inputfile, ['dashes', 'blank'])
+            line = next(inputfile)
+            unres = False
+            energies_alpha = []
+            line = next(inputfile)
+
+            while len(energies_alpha) < self.nbasis:
+                if 'Occupied' in line or 'Virtual' in line:
+                    line = next(inputfile)
+                # Parse the energies and symmetries in pairs of lines.
+                # energies = [utils.convertor(energy, 'hartree', 'eV')
+                #             for energy in map(float, line.split())]
+                # This convoluted bit handles '*******' when present.
+                energies = []
+                energy_line = line.split()
+                for e in energy_line:
+                    try:
+                        energy = utils.convertor(self.float(e), 'hartree', 'eV')
+                        energy = self.float(e)
+                    except ValueError:
+                        energy = numpy.nan
+                    energies.append(energy)
+                energies_alpha.extend(energies)
+                line = next(inputfile)
+
+            line = next(inputfile)
+            # Only look at the second block if doing an unrestricted calculation.
+            # This might be a problem for ROHF/ROKS.
+            if line.strip() == 'Beta MOs':
+                unres = True
+                energies_beta = []
+
+                self.skip_lines(inputfile, ['blank'])
+                line = next(inputfile)
+                while len(energies_beta) < self.nbasis:
+                    if 'Occupied' in line or 'Virtual' in line:
+                        line = next(inputfile)
+                    energies = []
+                    energy_line = line.split()
+                    for e in energy_line:
+                        try:
+                            energy = utils.convertor(self.float(e), 'hartree', 'eV')
+                            energy = self.float(e)
+                        except ValueError:
+                            energy = numpy.nan
+                        energies.append(energy)
+                    energies_beta.extend(energies)
+                    line = next(inputfile)
+
+            if not hasattr(self, 'moenergies'):
+                self.moenergies = []
+            self.moenergies.append(numpy.array(energies_alpha))
+            if unres:
+                self.moenergies.append(numpy.array(energies_beta))
+
         # Start of the IR/Raman frequency section.
 
-        if line.find("VIBRATIONAL ANALYSIS") > -1:
+        if line.find('VIBRATIONAL ANALYSIS') > -1:
 
-            while "STANDARD THERMODYNAMIC QUANTITIES" not in line:
+            while 'STANDARD THERMODYNAMIC QUANTITIES' not in line:
 
                 ## IR, optional Raman:
 
@@ -193,26 +432,26 @@ class QChem(logfileparser.Logfile):
                 # if not hasattr(self, 'vibsyms'):
                 #     self.vibsyms = []
 
-                if "Frequency:" in line:
+                if 'Frequency:' in line:
                     if not hasattr(self, 'vibfreqs'):
                         self.vibfreqs = []
                     vibfreqs = map(float, line.split()[1:])
                     self.vibfreqs.extend(vibfreqs)
 
-                if "IR Intens:" in line:
+                if 'IR Intens:' in line:
                     if not hasattr(self, 'vibirs'):
                         self.vibirs = []
                     vibirs = map(float, line.split()[2:])
                     self.vibirs.extend(vibirs)
 
-                if "Raman Intens:" in line:
+                if 'Raman Intens:' in line:
                     if not hasattr(self, 'vibramans'):
                         self.vibramans = []
                     vibramans = map(float, line.split()[2:])
                     self.vibramans.extend(vibramans)
 
                 # This is the start of the displacement block.
-                if line.split()[0:3] == ["X", "Y", "Z"]:
+                if line.split()[0:3] == ['X', 'Y', 'Z']:
                     if not hasattr(self, 'vibdisps'):
                         self.vibdisps = []
                     disps = []
@@ -233,10 +472,10 @@ class QChem(logfileparser.Logfile):
                 # Q-Chem includes 3 theories: VPT2, TOSH, and VCI.
                 # For now, just take the VPT2 results.
 
-                if line.find("VIBRATIONAL ANHARMONIC ANALYSIS") > -1:
+                if line.find('VIBRATIONAL ANHARMONIC ANALYSIS') > -1:
 
-                    while list(set(line.strip())) != ["="]:
-                        if "VPT2" in line:
+                    while list(set(line.strip())) != ['=']:
+                        if 'VPT2' in line:
                             if not hasattr(self, 'vibanharms'):
                                 self.vibanharms = []
                             self.vibanharms.append(float(line.split()[-1]))
@@ -269,8 +508,6 @@ class QChem(logfileparser.Logfile):
         # 'hessian'
         # 'homos'
         # 'mocoeffs'
-        # 'moenergies'
-        # 'mosyms'
         # 'mpenergies'
         # 'nocoeffs'
         # 'scancoords'
@@ -280,7 +517,7 @@ class QChem(logfileparser.Logfile):
         # 'temperature'
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     import sys
     import doctest, qchemparser
 
