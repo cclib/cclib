@@ -121,7 +121,7 @@ class QChem(logfileparser.Logfile):
             line_g = list(map(float, next(inputfile).split()[1:3]))
             line_d = list(map(float, next(inputfile).split()[1:3]))
             line_e = next(inputfile).split()[2:4]
-            print(line_e)
+
             if not hasattr(self, 'geotargets'):
                 self.geotargets = [line_g[1], line_d[1], self.float(line_e[1])]
             if not hasattr(self, 'geovalues'):
@@ -238,6 +238,10 @@ class QChem(logfileparser.Logfile):
 
             while len(energies_alpha) < self.nbasis:
                 if 'Occupied' in line or 'Virtual' in line:
+                    # A nice trick to find where the HOMO is.
+                    if 'Virtual' in line:
+                        if not hasattr(self, 'homos'):
+                            self.homos = [len(energies_alpha)-1]
                     line = next(inputfile)
                 # Parse the energies and symmetries in pairs of lines.
                 # energies = [utils.convertor(energy, 'hartree', 'eV')
@@ -264,6 +268,10 @@ class QChem(logfileparser.Logfile):
                 line = next(inputfile)
                 while len(energies_beta) < self.nbasis:
                     if 'Occupied' in line or 'Virtual' in line:
+                        # This will definitely exist, thanks to the above block.
+                        if 'Virtual' in line:
+                            if len(self.homos) == 1:
+                                self.homos.append(len(energies_beta)-1)
                         line = next(inputfile)
                     energies = []
                     energy_line = line.split()
@@ -334,6 +342,10 @@ class QChem(logfileparser.Logfile):
 
             while len(energies_alpha) < self.nbasis:
                 if 'Occupied' in line or 'Virtual' in line:
+                    # A nice trick to find where the HOMO is.
+                    if 'Virtual' in line:
+                        if not hasattr(self, 'homos'):
+                            self.homos = [len(energies_alpha)-1]
                     line = next(inputfile)
                 # Parse the energies and symmetries in pairs of lines.
                 # energies = [utils.convertor(energy, 'hartree', 'eV')
@@ -362,6 +374,10 @@ class QChem(logfileparser.Logfile):
                 line = next(inputfile)
                 while len(energies_beta) < self.nbasis:
                     if 'Occupied' in line or 'Virtual' in line:
+                        # This will definitely exist, thanks to the above block.
+                        if 'Virtual' in line:
+                            if len(self.homos) == 1:
+                                self.homos.append(len(energies_beta)-1)
                         line = next(inputfile)
                     energies = []
                     energy_line = line.split()
@@ -520,7 +536,6 @@ class QChem(logfileparser.Logfile):
         # 'gbasis'
         # 'grads'
         # 'hessian'
-        # 'homos'
         # 'mocoeffs'
         # 'mpenergies'
         # 'nocoeffs'
