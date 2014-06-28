@@ -1,4 +1,3 @@
-/home/eric/opt/apps/qchem/trunk_intel_release_r16298/exe/qcprog.exe .water_cisd.in.12478.qcin.1 /home/eric/scratch/qchem/qchem12478/
                   Welcome to Q-Chem
      A Quantum Leap Into The Future Of Chemistry
 
@@ -51,12 +50,12 @@
  Parts of Q-Chem use Armadillo 4.100.2 (Dirt Cruiser).
  http://arma.sourceforge.net/
 
- Q-Chem begins on Sat Jun 21 18:38:07 2014  
+ Q-Chem begins on Sat Jun 28 17:22:17 2014  
 
 Host: 
 0
 
-     Scratch files written to /home/eric/scratch/qchem/qchem12478//
+     Scratch files written to /home/eric/scratch/qchem/qchem28263//
  Apr3014 |home|eric|opt|apps|qchem|trunk_intel_release|libmdc|qstr_info.C -1
 Finally everything over in PARseQInput
 
@@ -68,6 +67,7 @@ $comment
 $end
 
 $rem
+ jobtype = sp
  method = cis(d)
  basis = sto-3g
  cis_n_roots = 5
@@ -245,9 +245,9 @@ OV_DIM:  Setting MaxSpc = 10
  ---------------------------------------------------
  Setting up for CIS(D)
   Timing summary (seconds)
-  CPU time          0.02s
+  CPU time          0.01s
   System time       0.00s
-  Wall time         0.02s
+  Wall time         0.07s
  Algorithm is semi-direct
  Memory given =   60 MB     Disk given =   -1 MB
 not enough memory
@@ -332,7 +332,7 @@ not enough disk
      job step          cpu (% of tot)      sys (% of tot)     wall (% of tot)
  ------------------------------------------------------------------------------
  ------------------------------------------------------------------------------
-   Grand Totals     0.8590E-02          0.1000E-05          0.8610E-02
+   Grand Totals     0.1214E-01          0.1000E-05          0.1583E+00
  ------------------------------------------------------------------------------
  Algorithm is semi-direct
  Memory given =   60 MB     Disk given =   -1 MB
@@ -418,7 +418,7 @@ not enough disk
      job step          cpu (% of tot)      sys (% of tot)     wall (% of tot)
  ------------------------------------------------------------------------------
  ------------------------------------------------------------------------------
-   Grand Totals     0.1627E-01          0.1000E-05          0.1631E-01
+   Grand Totals     0.2359E-01          0.1000E-05          0.2043E+00
  ------------------------------------------------------------------------------
  Analysis of SCF Wavefunction
  
@@ -477,10 +477,10 @@ not enough disk
       XZZZ       0.0000   YZZZ       0.0000   ZZZZ      -4.9965
  -----------------------------------------------------------------
 Archival summary:
-1\1\gold\SP\MP2\STO-3G\12\eric\SatJun2118:38:072014SatJun2118:38:072014\0\\#,MP2,STO-3G,\\0,1\O\H,1,0.99\H,1,0.99,2,106\\HF=-74.9643288\MP2=-121.840169\\@
+1\1\gold\SP\MP2\STO-3G\12\eric\SatJun2817:22:182014SatJun2817:22:182014\0\\#,MP2,STO-3G,\\0,1\O\H,1,0.99\H,1,0.99,2,106\\HF=-74.9643288\MP2=-121.840169\\@
 
- Total job time:  0.08s(wall), 0.08s(cpu) 
- Sat Jun 21 18:38:07 2014
+ Total job time:  0.36s(wall), 0.08s(cpu) 
+ Sat Jun 28 17:22:18 2014
 
         *************************************************************
         *                                                           *

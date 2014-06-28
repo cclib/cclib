@@ -1,4 +1,3 @@
-/home/eric/opt/apps/qchem/trunk_intel_release_r16298/exe/qcprog.exe .water_ccsdt.in.12374.qcin.1 /home/eric/scratch/qchem/qchem12374/
                   Welcome to Q-Chem
      A Quantum Leap Into The Future Of Chemistry
 
@@ -51,12 +50,12 @@
  Parts of Q-Chem use Armadillo 4.100.2 (Dirt Cruiser).
  http://arma.sourceforge.net/
 
- Q-Chem begins on Sat Jun 21 18:37:57 2014  
+ Q-Chem begins on Sat Jun 28 17:22:07 2014  
 
 Host: 
 0
 
-     Scratch files written to /home/eric/scratch/qchem/qchem12374//
+     Scratch files written to /home/eric/scratch/qchem/qchem28224//
  Apr3014 |home|eric|opt|apps|qchem|trunk_intel_release|libmdc|qstr_info.C -1
 Finally everything over in PARseQInput
 
@@ -68,6 +67,7 @@ $comment
 $end
 
 $rem
+ jobtype = sp
  method = ccsd(t)
  basis = sto-3g
 $end
@@ -138,7 +138,7 @@ MEM_STATIC part       301 MB
     9     -74.9643287668      1.38E-08
    10     -74.9643287668      2.58E-10 Convergence criterion met
  ---------------------------------------
- SCF time:  CPU 0.01 s  wall 0.01 s
+ SCF time:  CPU 0.05 s  wall 0.05 s
  SCF   energy in the final basis set = -74.9643287668
  Total energy in the final basis set = -74.9643287668
 
@@ -214,7 +214,7 @@ MEM_STATIC part       301 MB
  Import integrals:   CPU 0.00 s  wall 0.00 s
 
  
- Import integrals:   CPU 0.01 s  wall 0.01 s
+ Import integrals:   CPU 0.00 s  wall 0.00 s
 
  MP2 amplitudes:   CPU 0.00 s  wall 0.00 s
 
@@ -274,49 +274,49 @@ Calls: 1         , Wall: 0.00     s
  -0.0818       1 (B1) B      1 (B1) A    ->    2 (B1) B      2 (B1) A     
               -0.6032       -0.6032            0.7086        0.7086       
 
- CCSD calculation:   CPU 0.70 s  wall 0.69 s
+ CCSD calculation:   CPU 0.51 s  wall 2.25 s
 
  libcc timings
  -------------
 Execution of ccsd_energy: 
-Calls: 9         , Wall: 0.02     s
+Calls: 9         , Wall: 0.01     s
 Execution of ccsd_f1_vv: 
-Calls: 7         , Wall: 0.03     s
+Calls: 7         , Wall: 0.02     s
 Execution of ccsd_f2_oo: 
-Calls: 7         , Wall: 0.04     s
+Calls: 7         , Wall: 0.03     s
 Execution of ccsd_f2_ov: 
 Calls: 7         , Wall: 0.01     s
 Execution of ccsd_f2_vv: 
-Calls: 7         , Wall: 0.02     s
+Calls: 7         , Wall: 0.01     s
 Execution of ccsd_f3_oo: 
-Calls: 7         , Wall: 0.03     s
+Calls: 7         , Wall: 0.02     s
 Execution of ccsd_i1a_ovov: 
-Calls: 7         , Wall: 0.06     s
+Calls: 7         , Wall: 0.04     s
 Execution of ccsd_i2a_ooov: 
 Calls: 7         , Wall: 0.04     s
 Execution of ccsd_i4_oooo: 
-Calls: 7         , Wall: 0.04     s
+Calls: 7         , Wall: 0.03     s
 Execution of ccsd_t1: 
-Calls: 7         , Wall: 0.05     s
+Calls: 7         , Wall: 0.03     s
 Execution of ccsd_t2: 
-Calls: 7         , Wall: 0.14     s
+Calls: 7         , Wall: 0.09     s
 
  ccman2 timings
  --------------
 Execution of ccsd::pt: 
-Calls: 1         , Wall: 0.18     s
+Calls: 1         , Wall: 1.89     s
 Execution of ccsd::t: 
-Calls: 1         , Wall: 0.51     s
+Calls: 1         , Wall: 0.36     s
 Execution of ccsd_pt_impl::asymm: 
 Calls: 4         , Wall: 0.01     s
 Execution of ccsd_pt_impl::denom: 
 Calls: 4         , Wall: 0.00     s
 Execution of ccsd_pt_impl::dotprod: 
-Calls: 4         , Wall: 0.01     s
+Calls: 4         , Wall: 0.13     s
 Execution of ccsd_pt_impl::prepare: 
 Calls: 8         , Wall: 0.00     s
 
- Total ccman2 time:   CPU 1.10 s  wall 1.09 s
+ Total ccman2 time:   CPU 1.67 s  wall 3.40 s
 
  Analysis of SCF Wavefunction
  
@@ -375,10 +375,10 @@ Calls: 8         , Wall: 0.00     s
       XZZZ      -0.0000   YZZZ      -0.0000   ZZZZ      -4.9965
  -----------------------------------------------------------------
 Archival summary:
-1\1\gold\SP\ProcedureUnspecified\STO-3G\12\eric\SatJun2118:37:592014SatJun2118:37:592014\0\\#,ProcedureUnspecified,STO-3G,\\0,1\O\H,1,0.99\H,1,0.99,2,106\\HF=-74.9643288\\@
+1\1\gold\SP\ProcedureUnspecified\STO-3G\12\eric\SatJun2817:22:112014SatJun2817:22:112014\0\\#,ProcedureUnspecified,STO-3G,\\0,1\O\H,1,0.99\H,1,0.99,2,106\\HF=-74.9643288\\@
 
- Total job time:  1.19s(wall), 1.20s(cpu) 
- Sat Jun 21 18:37:59 2014
+ Total job time:  3.88s(wall), 2.14s(cpu) 
+ Sat Jun 28 17:22:11 2014
 
         *************************************************************
         *                                                           *

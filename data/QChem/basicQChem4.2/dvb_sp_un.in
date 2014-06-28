@@ -1,15 +1,16 @@
 $comment
- Divinylbenzene, single point, UB3LYP/STO-3G
+ Divinylbenzene cation, single point, UB3LYP/STO-3G
 $end
 
 $rem
+ jobtype = sp
  method = b3lyp
  basis = sto-3g
  unrestricted = true
 $end
 
 $molecule
- 0 1
+ +1 2
  C                  0.27867948   -1.36683162    0.00000000
  C                  1.32303041   -0.44173575    0.00000000
  C                  1.04434506    0.92484978    0.00000000

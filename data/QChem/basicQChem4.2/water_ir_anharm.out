@@ -1,4 +1,6 @@
-/home/eric/opt/apps/qchem/trunk_intel_release_r16298/exe/qcprog.exe .water_ir_anharm.in.4190.qcin.1 /home/eric/scratch/qchem/qchem4190/
+
+Running Job 1 of 1 water_ir_anharm.in
+qchem water_ir_anharm.in_28584.0 /home/eric/scratch/qchem/qchem28584/ 1
                   Welcome to Q-Chem
      A Quantum Leap Into The Future Of Chemistry
 
@@ -46,52 +48,52 @@
  D. Neuhauser,  R. Olson,  B. Peters,  J. Ritchie,  N. E. Schultz,  
  N. Shenvi,  A. C. Simmonett,  K. S. Thanthiriwatte,  Q. Wu,  W. Zhang
 
- Q-Chem 4.2.0 for Intel X86 EM64T Linux
+ Q-Chem 4.2.0 for Intel X86 Linux
 
  Parts of Q-Chem use Armadillo 4.100.2 (Dirt Cruiser).
  http://arma.sourceforge.net/
 
- Q-Chem begins on Sat Jun 21 23:41:10 2014  
+ Q-Chem begins on Sat Jun 28 17:23:49 2014  
 
 Host: 
 0
 
-     Scratch files written to /home/eric/scratch/qchem/qchem4190//
- Apr3014 |home|eric|opt|apps|qchem|trunk_intel_release|libmdc|qstr_info.C -1
+     Scratch files written to /home/eric/scratch/qchem/qchem28584//
+ May1314 814_zgan -1
 Finally everything over in PARseQInput
 
 --------------------------------------------------------------
 User input:
 --------------------------------------------------------------
 $comment
- Water, frequencies (analytic), RB3LYP/STO-3G
- with anharmonic corrections via VPT2
+Water, frequencies (analytic), RB3LYP/STO-3G
+with anharmonic corrections via VPT2
 $end
 
 $rem
- jobtype = freq
- method = b3lyp
- basis = sto-3g
- anhar = true
+jobtype = freq
+method = b3lyp
+basis = sto-3g
+anhar = true
 $end
 
 $molecule
- 0 1
- O
- H 1 R1
- H 1 R1 2 A1
+0 1
+O
+H 1 R1
+H 1 R1 2 A1
 
- R1=0.99
- A1=106.0
+R1=0.99
+A1=106.0
 $end
 --------------------------------------------------------------
  ----------------------------------------------------------------
              Standard Nuclear Orientation (Angstroms)
     I     Atom           X                Y                Z
  ----------------------------------------------------------------
-    1      O      -0.0000000000     0.0000000000     0.1191593746
-    2      H      -0.7906491549    -0.0000000000    -0.4766374983
-    3      H       0.7906491549    -0.0000000000    -0.4766374983
+    1      O       0.0000000000     0.0000000000     0.1191593746
+    2      H      -0.7906491549     0.0000000000    -0.4766374983
+    3      H       0.7906491549     0.0000000000    -0.4766374983
  ----------------------------------------------------------------
  Molecular Point Group                 C2v   NOp =  4
  Largest Abelian Subgroup              C2v   NOp =  4
@@ -130,11 +132,11 @@ MEM_STATIC part        62 MB
     5     -75.3178467246      2.84E-05
     6     -75.3178467144      1.23E-06
     7     -75.3178467040      2.01E-08
-    8     -75.3178466998      2.55E-09 Convergence criterion met
+    8     -75.3178467000      6.72E-10 Convergence criterion met
  ---------------------------------------
  SCF time:  CPU 0.10 s  wall 0.10 s
- SCF   energy in the final basis set = -75.3178466998
- Total energy in the final basis set = -75.3178466998
+ SCF   energy in the final basis set = -75.3178467000
+ Total energy in the final basis set = -75.3178467000
  Analysis of SCF Wavefunction
  
  --------------------------------------------------------------
@@ -166,30 +168,30 @@ MEM_STATIC part        62 MB
       2 H                     0.170382
       3 H                     0.170382
   ----------------------------------------
-  Sum of atomic charges =    -0.000000
+  Sum of atomic charges =     0.000000
 
  -----------------------------------------------------------------
                     Cartesian Multipole Moments
  -----------------------------------------------------------------
     Charge (ESU x 10^10)
-                -0.0000
+                 0.0000
     Dipole Moment (Debye)
-         X       0.0000      Y      -0.0000      Z      -1.6167
+         X       0.0000      Y       0.0000      Z      -1.6167
        Tot       1.6167
     Quadrupole Moments (Debye-Ang)
         XX      -4.3198     XY       0.0000     YY      -6.1259
-        XZ      -0.0000     YZ       0.0000     ZZ      -5.4148
+        XZ       0.0000     YZ       0.0000     ZZ      -5.4148
     Octopole Moments (Debye-Ang^2)
        XXX       0.0000    XXY       0.0000    XYY       0.0000
        YYY       0.0000    XXZ      -0.5574    XYZ       0.0000
        YYZ       0.0235    XZZ       0.0000    YZZ       0.0000
        ZZZ      -0.0969
     Hexadecapole Moments (Debye-Ang^3)
-      XXXX      -6.8771   XXXY      -0.0000   XXYY      -1.8643
-      XYYY      -0.0000   YYYY      -3.2662   XXXZ      -0.0000
-      XXYZ      -0.0000   XYYZ      -0.0000   YYYZ       0.0000
-      XXZZ      -1.7671   XYZZ      -0.0000   YYZZ      -1.4153
-      XZZZ      -0.0000   YZZZ       0.0000   ZZZZ      -5.0125
+      XXXX      -6.8771   XXXY       0.0000   XXYY      -1.8643
+      XYYY       0.0000   YYYY      -3.2662   XXXZ       0.0000
+      XXYZ       0.0000   XYYZ       0.0000   YYYZ       0.0000
+      XXZZ      -1.7671   XYZZ       0.0000   YYZZ      -1.4153
+      XZZZ       0.0000   YZZZ       0.0000   ZZZZ      -5.0125
  -----------------------------------------------------------------
  Calculating MO derivatives via CPSCF
 OV_DIM:  Setting MaxSz  = 10
@@ -205,10 +207,10 @@ OV_DIM:  Setting MaxSpc = 10
  
  Direct stationary perturbation theory relativistic correction:
  
- rels  =       0.028900895083
- relv  =      -0.096847963529
- rel2e =       0.029703399668
- E_rel =      -0.038243668778
+ rels  =       0.028900895072
+ relv  =      -0.096847963521
+ rel2e =       0.029703399653
+ E_rel =      -0.038243668796
  
  Hessian of the SCF Energy
             1           2           3           4           5           6
@@ -231,7 +233,7 @@ OV_DIM:  Setting MaxSpc = 10
     7   0.4148874  -0.0000000  -0.2634436
     8  -0.0000000  -0.0194027   0.0000000
     9  -0.2634436   0.0000000   0.2453350
- Gradient time:  CPU 0.36 s  wall 0.36 s
+ Gradient time:  CPU 0.42 s  wall 0.42 s
  **********************************************************************
  **                                                                  **
  **                       VIBRATIONAL ANALYSIS                       **
@@ -252,10 +254,10 @@ OV_DIM:  Setting MaxSpc = 10
  IR Intens:        5.911                 61.120                 36.761
  Raman Active:       YES                    YES                    YES
                X      Y      Z        X      Y      Z        X      Y      Z
- O          0.000 -0.000 -0.070   -0.000  0.000  0.050   -0.071 -0.000 -0.000
- H         -0.430  0.000  0.559   -0.583 -0.000 -0.398    0.563  0.000  0.424
- H          0.430 -0.000  0.559    0.583 -0.000 -0.398    0.563  0.000 -0.424
- TransDip   0.000 -0.000  0.078    0.000  0.000  0.250   -0.194  0.000 -0.000
+ O          0.000  0.000 -0.070    0.000  0.000  0.050   -0.071  0.000  0.000
+ H         -0.430  0.000  0.559   -0.583  0.000 -0.398    0.563  0.000  0.424
+ H          0.430  0.000  0.559    0.583  0.000 -0.398    0.563  0.000 -0.424
+ TransDip   0.000  0.000  0.078    0.000  0.000  0.250   -0.194  0.000  0.000
 
  STANDARD THERMODYNAMIC QUANTITIES AT   298.15 K  AND     1.00 ATM
 
@@ -269,7 +271,7 @@ OV_DIM:  Setting MaxSpc = 10
    Principal axes and moments of inertia in amu*Bohr^2:
                              1           2           3
     Eigenvalues --        2.26916     4.49969     6.76885
-          X               1.00000     0.00000    -0.00000
+          X               1.00000     0.00000     0.00000
           Y               0.00000     0.00000     1.00000
           Z               0.00000     1.00000     0.00000
    Rotational Symmetry Number is   2
@@ -304,10 +306,10 @@ OV_DIM:  Setting MaxSpc = 10
  IR Intens:        5.911                 61.120                 36.761
  Raman Active:       YES                    YES                    YES
                X      Y      Z        X      Y      Z        X      Y      Z
- O          0.000 -0.000 -0.070   -0.000  0.000  0.050   -0.071 -0.000 -0.000
- H         -0.430  0.000  0.559   -0.583 -0.000 -0.398    0.563  0.000  0.424
- H          0.430 -0.000  0.559    0.583 -0.000 -0.398    0.563  0.000 -0.424
- TransDip   0.000 -0.000  0.078    0.000  0.000  0.250   -0.194  0.000 -0.000
+ O          0.000  0.000 -0.070    0.000  0.000  0.050   -0.071  0.000  0.000
+ H         -0.430  0.000  0.559   -0.583  0.000 -0.398    0.563  0.000  0.424
+ H          0.430  0.000  0.559    0.583  0.000 -0.398    0.563  0.000 -0.424
+ TransDip   0.000  0.000  0.078    0.000  0.000  0.250   -0.194  0.000  0.000
 
  STANDARD THERMODYNAMIC QUANTITIES AT   298.15 K  AND     1.00 ATM
 
@@ -321,7 +323,7 @@ OV_DIM:  Setting MaxSpc = 10
    Principal axes and moments of inertia in amu*Bohr^2:
                              1           2           3
     Eigenvalues --        2.26916     4.49969     6.76885
-          X               1.00000     0.00000    -0.00000
+          X               1.00000     0.00000     0.00000
           Y               0.00000     0.00000     1.00000
           Z               0.00000     1.00000     0.00000
    Rotational Symmetry Number is   2
@@ -344,7 +346,7 @@ OV_DIM:  Setting MaxSpc = 10
  Low frequencies less than 300 will be treated as rotation
  Anharmonic Force Field will start with mode 1
 
- Eng[0,0,0,0] = -7.53178466998004e+01
+ Eng[0,0,0,0] = -7.53178466999578e+01
 
  You need 0.0000077 GB memory
  Calculating analytic gradient of the SCF energy
@@ -360,16 +362,16 @@ OV_DIM:  Setting MaxSpc = 10
     3  -0.0679930   0.0339965   0.0339965
  Max gradient component =       6.799E-02
  RMS gradient           =       2.848E-02
- Grad[1,0,0,0] = 3.11778110911786e-02
- Grad[2,0,0,0] = -4.62891932563940e-02
- Grad[3,0,0,0] = 9.20282607064227e-10
+ Grad[1,0,0,0] = 3.11778117707418e-02
+ Grad[2,0,0,0] = -4.62891947193646e-02
+ Grad[3,0,0,0] = 9.42419031702002e-10
  CoordNormalMode -1 , 0 , 0
  ----------------------------------------------------------------
              Standard Nuclear Orientation (Angstroms)
     I     Atom           X                Y                Z
  ----------------------------------------------------------------
-    1      O      -0.0000000000     0.0000000000     0.1228893714
-    2      H      -0.7679182696    -0.0000000000    -0.5062362224
+    1      O       0.0000000000     0.0000000000     0.1228893714
+    2      H      -0.7679182696     0.0000000000    -0.5062362224
     3      H       0.7679182696     0.0000000000    -0.5062362224
  ----------------------------------------------------------------
  Nuclear Repulsion Energy =     8.8734596344 hartrees
@@ -397,14 +399,13 @@ Reading MOs from coefficient file
  ---------------------------------------
   Cycle       Energy         DIIS Error
  ---------------------------------------
-    1     -75.3150874346      4.69E-03
+    1     -75.3150874347      4.69E-03
     2     -75.3201968926      2.19E-03
     3     -75.3202306757      8.10E-04
     4     -75.3202362370      2.16E-05
     5     -75.3202362426      1.24E-06
     6     -75.3202362426      1.81E-08
-    7     -75.3202362426      1.61E-08
-    8     -75.3202362426      1.34E-09 Convergence criterion met
+    7     -75.3202362426      2.04E-09 Convergence criterion met
  ---------------------------------------
  SCF time:  CPU 0.09 s  wall 0.09 s
  SCF   energy in the final basis set = -75.3202362426
@@ -430,32 +431,32 @@ Reading MOs from coefficient file
       2 H                     0.165936
       3 H                     0.165936
   ----------------------------------------
-  Sum of atomic charges =    -0.000000
+  Sum of atomic charges =     0.000000
 
  -----------------------------------------------------------------
                     Cartesian Multipole Moments
  -----------------------------------------------------------------
     Charge (ESU x 10^10)
-                -0.0000
+                 0.0000
     Dipole Moment (Debye)
-         X       0.0000      Y      -0.0000      Z      -1.6351
+         X       0.0000      Y       0.0000      Z      -1.6351
        Tot       1.6351
     Quadrupole Moments (Debye-Ang)
         XX      -4.4650     XY       0.0000     YY      -6.1318
-        XZ      -0.0000     YZ       0.0000     ZZ      -5.3390
+        XZ       0.0000     YZ       0.0000     ZZ      -5.3390
     Octopole Moments (Debye-Ang^2)
        XXX       0.0000    XXY       0.0000    XYY       0.0000
        YYY       0.0000    XXZ      -0.5059    XYZ       0.0000
        YYZ       0.0483    XZZ       0.0000    YZZ       0.0000
        ZZZ      -0.0627
     Hexadecapole Moments (Debye-Ang^3)
-      XXXX      -6.8330   XXXY      -0.0000   XXYY      -1.8321
-      XYYY      -0.0000   YYYY      -3.2721   XXXZ      -0.0000
-      XXYZ      -0.0000   XYYZ      -0.0000   YYYZ      -0.0000
-      XXZZ      -1.7604   XYZZ      -0.0000   YYZZ      -1.4565
-      XZZZ      -0.0000   YZZZ       0.0000   ZZZZ      -5.2058
+      XXXX      -6.8330   XXXY       0.0000   XXYY      -1.8321
+      XYYY       0.0000   YYYY      -3.2721   XXXZ       0.0000
+      XXYZ       0.0000   XYYZ       0.0000   YYYZ       0.0000
+      XXZZ      -1.7604   XYZZ       0.0000   YYZZ      -1.4565
+      XZZZ       0.0000   YZZZ       0.0000   ZZZZ      -5.2058
  -----------------------------------------------------------------
- Eng[-1,0] = -7.53202362426179e+01
+ Eng[-1,0] = -7.53202362426187e+01
  Calculating analytic gradient of the SCF energy
  Gradient of Coulomb and Exchange Energy
             1           2           3
@@ -469,9 +470,9 @@ Reading MOs from coefficient file
     3  -0.0521366   0.0260683   0.0260683
  Max gradient component =       5.214E-02
  RMS gradient           =       2.311E-02
- Grad[1,-1,0,0] = 1.64263946117145e-02
- Grad[2,-1,0,0] = -4.56533279105892e-02
- Grad[3,-1,0,0] = 1.28656217103507e-09
+ Grad[1,-1,0,0] = 1.64263952616362e-02
+ Grad[2,-1,0,0] = -4.56533293732740e-02
+ Grad[3,-1,0,0] = 1.02434632304194e-09
  points done 1/12
  CoordNormalMode 1 , 0 , 0
  ----------------------------------------------------------------
@@ -479,8 +480,8 @@ Reading MOs from coefficient file
     I     Atom           X                Y                Z
  ----------------------------------------------------------------
     1      O       0.0000000000     0.0000000000     0.1154293777
-    2      H      -0.8133800403    -0.0000000000    -0.4470387743
-    3      H       0.8133800403    -0.0000000000    -0.4470387743
+    2      H      -0.8133800403     0.0000000000    -0.4470387743
+    3      H       0.8133800403     0.0000000000    -0.4470387743
  ----------------------------------------------------------------
  Nuclear Repulsion Energy =     8.8870171767 hartrees
  There are        5 alpha and        5 beta electrons
@@ -507,16 +508,15 @@ Reading MOs from coefficient file
  ---------------------------------------
   Cycle       Energy         DIIS Error
  ---------------------------------------
-    1     -75.3247668977      8.38E-03
-    2     -75.3138784741      4.49E-03
+    1     -75.3247668976      8.38E-03
+    2     -75.3138784740      4.49E-03
     3     -75.3140269730      1.21E-03
     4     -75.3140402461      4.37E-05
     5     -75.3140402686      1.56E-06
     6     -75.3140402686      2.25E-08
-    7     -75.3140402686      1.63E-08
-    8     -75.3140402686      2.67E-09 Convergence criterion met
+    7     -75.3140402686      2.14E-09 Convergence criterion met
  ---------------------------------------
- SCF time:  CPU 0.09 s  wall 0.09 s
+ SCF time:  CPU 0.08 s  wall 0.08 s
  SCF   energy in the final basis set = -75.3140402686
  Total energy in the final basis set = -75.3140402686
  Analysis of SCF Wavefunction
@@ -540,7 +540,7 @@ Reading MOs from coefficient file
       2 H                     0.174686
       3 H                     0.174686
   ----------------------------------------
-  Sum of atomic charges =    -0.000000
+  Sum of atomic charges =     0.000000
 
  -----------------------------------------------------------------
                     Cartesian Multipole Moments
@@ -548,30 +548,30 @@ Reading MOs from coefficient file
     Charge (ESU x 10^10)
                  0.0000
     Dipole Moment (Debye)
-         X      -0.0000      Y       0.0000      Z      -1.5938
+         X       0.0000      Y       0.0000      Z      -1.5938
        Tot       1.5938
     Quadrupole Moments (Debye-Ang)
         XX      -4.1694     XY       0.0000     YY      -6.1205
-        XZ       0.0000     YZ      -0.0000     ZZ      -5.4881
+        XZ       0.0000     YZ       0.0000     ZZ      -5.4881
     Octopole Moments (Debye-Ang^2)
-       XXX      -0.0000    XXY      -0.0000    XYY      -0.0000
-       YYY      -0.0000    XXZ      -0.6023    XYZ       0.0000
-       YYZ      -0.0004    XZZ      -0.0000    YZZ      -0.0000
+       XXX       0.0000    XXY       0.0000    XYY       0.0000
+       YYY       0.0000    XXZ      -0.6023    XYZ       0.0000
+       YYZ      -0.0004    XZZ       0.0000    YZZ       0.0000
        ZZZ      -0.1326
     Hexadecapole Moments (Debye-Ang^3)
-      XXXX      -6.9088   XXXY      -0.0000   XXYY      -1.8976
-      XYYY      -0.0000   YYYY      -3.2612   XXXZ       0.0000
-      XXYZ       0.0000   XYYZ       0.0000   YYYZ      -0.0000
-      XXZZ      -1.7819   XYZZ      -0.0000   YYZZ      -1.3770
-      XZZZ       0.0000   YZZZ      -0.0000   ZZZZ      -4.8293
+      XXXX      -6.9088   XXXY       0.0000   XXYY      -1.8976
+      XYYY       0.0000   YYYY      -3.2612   XXXZ       0.0000
+      XXYZ       0.0000   XYYZ       0.0000   YYYZ       0.0000
+      XXZZ      -1.7819   XYZZ       0.0000   YYZZ      -1.3770
+      XZZZ       0.0000   YZZZ       0.0000   ZZZZ      -4.8293
  -----------------------------------------------------------------
- Eng[1,0] = -7.53140402686077e+01
+ Eng[1,0] = -7.53140402686069e+01
  Calculating analytic gradient of the SCF energy
  Gradient of Coulomb and Exchange Energy
             1           2           3
     1  -0.0000000   2.1951607  -2.1951607
     2  -0.0000000  -0.0000000   0.0000000
-    3  -2.7228919   1.3614459   1.3614459
+    3  -2.7228919   1.3614460   1.3614459
  Gradient of SCF Energy
             1           2           3
     1   0.0000000   0.0077121  -0.0077121
@@ -579,9 +579,9 @@ Reading MOs from coefficient file
     3  -0.0815965   0.0407983   0.0407983
  Max gradient component =       8.160E-02
  RMS gradient           =       3.351E-02
- Grad[1,1,0,0] = 4.47722529991256e-02
- Grad[2,1,0,0] = -4.55596364674186e-02
- Grad[3,1,0,0] = -1.67864312727861e-10
+ Grad[1,1,0,0] = 4.47722515659694e-02
+ Grad[2,1,0,0] = -4.55596342242057e-02
+ Grad[3,1,0,0] = -1.42197260910581e-10
  points done 2/12
  CoordNormalMode -2 , 0 , 0
  ----------------------------------------------------------------
@@ -589,7 +589,7 @@ Reading MOs from coefficient file
     I     Atom           X                Y                Z
  ----------------------------------------------------------------
     1      O       0.0000000000     0.0000000000     0.1165061879
-    2      H      -0.7597792976    -0.0000000000    -0.4555836095
+    2      H      -0.7597792976     0.0000000000    -0.4555836095
     3      H       0.7597792971     0.0000000000    -0.4555836091
  ----------------------------------------------------------------
  Nuclear Repulsion Energy =     9.2505908677 hartrees
@@ -616,8 +616,8 @@ Reading MOs from coefficient file
  SCF converges when DIIS error is below 1.0E-08
  Inaccurate integrated density:
    Number of electrons =    10
-   Numerical integral  =    10.026274759391
-   Relative error      =     0.2627475939 %
+   Numerical integral  =    10.026274759514
+   Relative error      =     0.2627475951 %
  ---------------------------------------
   Cycle       Energy         DIIS Error
  ---------------------------------------
@@ -627,8 +627,7 @@ Reading MOs from coefficient file
     4     -75.3098999368      1.71E-04
     5     -75.3099001648      1.37E-06
     6     -75.3099001648      4.32E-08
-    7     -75.3099001648      2.23E-08
-    8     -75.3099001648      6.69E-09 Convergence criterion met
+    7     -75.3099001648      1.94E-09 Convergence criterion met
  ---------------------------------------
  SCF time:  CPU 0.09 s  wall 0.09 s
  SCF   energy in the final basis set = -75.3099001648
@@ -654,32 +653,32 @@ Reading MOs from coefficient file
       2 H                     0.188412
       3 H                     0.188412
   ----------------------------------------
-  Sum of atomic charges =    -0.000000
+  Sum of atomic charges =     0.000000
 
  -----------------------------------------------------------------
                     Cartesian Multipole Moments
  -----------------------------------------------------------------
     Charge (ESU x 10^10)
-                -0.0000
+                 0.0000
     Dipole Moment (Debye)
-         X      -0.0000      Y      -0.0000      Z      -1.6807
+         X       0.0000      Y       0.0000      Z      -1.6807
        Tot       1.6807
     Quadrupole Moments (Debye-Ang)
         XX      -4.3293     XY       0.0000     YY      -6.0911
         XZ       0.0000     YZ       0.0000     ZZ      -5.4188
     Octopole Moments (Debye-Ang^2)
-       XXX      -0.0000    XXY       0.0000    XYY      -0.0000
+       XXX       0.0000    XXY       0.0000    XYY       0.0000
        YYY       0.0000    XXZ      -0.5468    XYZ       0.0000
-       YYZ      -0.0129    XZZ      -0.0000    YZZ       0.0000
+       YYZ      -0.0129    XZZ       0.0000    YZZ       0.0000
        ZZZ      -0.1998
     Hexadecapole Moments (Debye-Ang^3)
-      XXXX      -6.4878   XXXY      -0.0000   XXYY      -1.7745
-      XYYY      -0.0000   YYYY      -3.2272   XXXZ       0.0000
-      XXYZ      -0.0000   XYYZ       0.0000   YYYZ      -0.0000
-      XXZZ      -1.6898   XYZZ      -0.0000   YYZZ      -1.3696
+      XXXX      -6.4878   XXXY       0.0000   XXYY      -1.7745
+      XYYY       0.0000   YYYY      -3.2272   XXXZ       0.0000
+      XXYZ       0.0000   XYYZ       0.0000   YYYZ       0.0000
+      XXZZ      -1.6898   XYZZ       0.0000   YYZZ      -1.3696
       XZZZ       0.0000   YZZZ       0.0000   ZZZZ      -4.7998
  -----------------------------------------------------------------
- Eng[-2,0] = -7.53099001648375e+01
+ Eng[-2,0] = -7.53099001648381e+01
  Calculating analytic gradient of the SCF energy
  Gradient of Coulomb and Exchange Energy
             1           2           3
@@ -693,18 +692,18 @@ Reading MOs from coefficient file
     3  -0.1205996   0.0602998   0.0602998
  Max gradient component =       1.206E-01
  RMS gradient           =       5.511E-02
- Grad[1,-2,0,0] = 3.08358585446695e-02
- Grad[2,-2,0,0] = -1.15327534322487e-01
- Grad[3,-2,0,0] = -1.30888448690580e-09
+ Grad[1,-2,0,0] = 3.08358590986944e-02
+ Grad[2,-2,0,0] = -1.15327536119619e-01
+ Grad[3,-2,0,0] = -1.36549770102246e-09
  points done 3/12
  CoordNormalMode 2 , 0 , 0
  ----------------------------------------------------------------
              Standard Nuclear Orientation (Angstroms)
     I     Atom           X                Y                Z
  ----------------------------------------------------------------
-    1      O      -0.0000000000     0.0000000000     0.1218125613
-    2      H      -0.8215190123    -0.0000000000    -0.4976913872
-    3      H       0.8215190128    -0.0000000000    -0.4976913876
+    1      O       0.0000000000     0.0000000000     0.1218125613
+    2      H      -0.8215190123     0.0000000000    -0.4976913872
+    3      H       0.8215190128     0.0000000000    -0.4976913876
  ----------------------------------------------------------------
  Nuclear Repulsion Energy =     8.5509204414 hartrees
  There are        5 alpha and        5 beta electrons
@@ -730,20 +729,20 @@ Reading MOs from coefficient file
  SCF converges when DIIS error is below 1.0E-08
  Inaccurate integrated density:
    Number of electrons =    10
-   Numerical integral  =     9.946142743442
-   Relative error      =    -0.5385725656 %
+   Numerical integral  =     9.946142743745
+   Relative error      =    -0.5385725626 %
  ---------------------------------------
   Cycle       Energy         DIIS Error
  ---------------------------------------
-    1     -75.2755329962      5.15E-02
-    2     -75.3190864336      7.60E-03
-    3     -75.3193392219      5.85E-03
+    1     -75.2755329964      5.15E-02
+    2     -75.3190864338      7.60E-03
+    3     -75.3193392220      5.85E-03
     4     -75.3196260414      1.41E-04
     5     -75.3196261841      5.32E-06
     6     -75.3196261844      6.18E-07
     7     -75.3196261844      1.90E-09 Convergence criterion met
  ---------------------------------------
- SCF time:  CPU 0.08 s  wall 0.08 s
+ SCF time:  CPU 0.09 s  wall 0.09 s
  SCF   energy in the final basis set = -75.3196261844
  Total energy in the final basis set = -75.3196261844
  Analysis of SCF Wavefunction
@@ -775,40 +774,40 @@ Reading MOs from coefficient file
     Charge (ESU x 10^10)
                  0.0000
     Dipole Moment (Debye)
-         X      -0.0000      Y      -0.0000      Z      -1.5510
+         X       0.0000      Y       0.0000      Z      -1.5510
        Tot       1.5510
     Quadrupole Moments (Debye-Ang)
         XX      -4.3122     XY       0.0000     YY      -6.1585
-        XZ      -0.0000     YZ       0.0000     ZZ      -5.4087
+        XZ       0.0000     YZ       0.0000     ZZ      -5.4087
     Octopole Moments (Debye-Ang^2)
-       XXX      -0.0000    XXY       0.0000    XYY      -0.0000
+       XXX       0.0000    XXY       0.0000    XYY       0.0000
        YYY       0.0000    XXZ      -0.5690    XYZ       0.0000
-       YYZ       0.0601    XZZ      -0.0000    YZZ       0.0000
+       YYZ       0.0601    XZZ       0.0000    YZZ       0.0000
        ZZZ       0.0061
     Hexadecapole Moments (Debye-Ang^3)
-      XXXX      -7.2830   XXXY      -0.0000   XXYY      -1.9576
-      XYYY      -0.0000   YYYY      -3.3030   XXXZ       0.0000
-      XXYZ      -0.0000   XYYZ       0.0000   YYYZ       0.0000
-      XXZZ      -1.8468   XYZZ      -0.0000   YYZZ      -1.4621
+      XXXX      -7.2830   XXXY       0.0000   XXYY      -1.9576
+      XYYY       0.0000   YYYY      -3.3030   XXXZ       0.0000
+      XXYZ       0.0000   XYYZ       0.0000   YYYZ       0.0000
+      XXZZ      -1.8468   XYZZ       0.0000   YYZZ      -1.4621
       XZZZ       0.0000   YZZZ       0.0000   ZZZZ      -5.2327
  -----------------------------------------------------------------
- Eng[2,0] = -7.53196261844227e+01
+ Eng[2,0] = -7.53196261844224e+01
  Calculating analytic gradient of the SCF energy
  Gradient of Coulomb and Exchange Energy
             1           2           3
-    1  -0.0000000   2.1020974  -2.1020974
+    1   0.0000000   2.1020974  -2.1020974
     2   0.0000000  -0.0000000  -0.0000000
     3  -3.0017637   1.5008819   1.5008819
  Gradient of SCF Energy
             1           2           3
-    1   0.0000000  -0.0171994   0.0171994
+    1  -0.0000000  -0.0171994   0.0171994
     2   0.0000000  -0.0000000   0.0000000
     3  -0.0255571   0.0127785   0.0127785
  Max gradient component =       2.556E-02
  RMS gradient           =       1.321E-02
- Grad[1,2,0,0] = 3.08769223522556e-02
- Grad[2,2,0,0] = 8.61840432190320e-03
- Grad[3,2,0,0] = -7.83735318830858e-10
+ Grad[1,2,0,0] = 3.08769215781248e-02
+ Grad[2,2,0,0] = 8.61840511492967e-03
+ Grad[3,2,0,0] = 1.28244784063092e-09
  points done 4/12
  CoordNormalMode -3 , 0 , 0
  ----------------------------------------------------------------
@@ -816,8 +815,8 @@ Reading MOs from coefficient file
     I     Atom           X                Y                Z
  ----------------------------------------------------------------
     1      O       0.0037558642     0.0000000000     0.1191593746
-    2      H      -0.8204531452    -0.0000000000    -0.4990964159
-    3      H       0.7608451652    -0.0000000000    -0.4541785811
+    2      H      -0.8204531452     0.0000000000    -0.4990964159
+    3      H       0.7608451652     0.0000000000    -0.4541785811
  ----------------------------------------------------------------
  Nuclear Repulsion Energy =     8.9010570094 hartrees
  There are        5 alpha and        5 beta electrons
@@ -843,23 +842,21 @@ Reading MOs from coefficient file
  SCF converges when DIIS error is below 1.0E-08
  Inaccurate integrated density:
    Number of electrons =    10
-   Numerical integral  =    10.026965012386
-   Relative error      =     0.2696501239 %
+   Numerical integral  =    10.026965012668
+   Relative error      =     0.2696501267 %
  ---------------------------------------
   Cycle       Energy         DIIS Error
  ---------------------------------------
-    1     -75.3408375089      4.68E-02
-    2     -75.3137933479      5.07E-03
+    1     -75.3408375091      4.68E-02
+    2     -75.3137933480      5.07E-03
     3     -75.3140532971      2.03E-03
     4     -75.3140866844      5.26E-04
     5     -75.3140890295      2.47E-05
     6     -75.3140890362      1.54E-06
     7     -75.3140890362      8.94E-08
-    8     -75.3140890362      5.48E-08
-    9     -75.3140890362      1.03E-08
-   10     -75.3140890362      9.93E-10 Convergence criterion met
+    8     -75.3140890362      1.94E-09 Convergence criterion met
  ---------------------------------------
- SCF time:  CPU 0.11 s  wall 0.11 s
+ SCF time:  CPU 0.10 s  wall 0.10 s
  SCF   energy in the final basis set = -75.3140890362
  Total energy in the final basis set = -75.3140890362
  Analysis of SCF Wavefunction
@@ -883,15 +880,15 @@ Reading MOs from coefficient file
       2 H                     0.155376
       3 H                     0.187519
   ----------------------------------------
-  Sum of atomic charges =    -0.000000
+  Sum of atomic charges =     0.000000
 
  -----------------------------------------------------------------
                     Cartesian Multipole Moments
  -----------------------------------------------------------------
     Charge (ESU x 10^10)
-                -0.0000
+                 0.0000
     Dipole Moment (Debye)
-         X       0.0510      Y      -0.0000      Z      -1.6190
+         X       0.0510      Y       0.0000      Z      -1.6190
        Tot       1.6198
     Quadrupole Moments (Debye-Ang)
         XX      -4.3174     XY       0.0000     YY      -6.1247
@@ -902,13 +899,13 @@ Reading MOs from coefficient file
        YYZ       0.0233    XZZ       0.0066    YZZ       0.0000
        ZZZ      -0.0988
     Hexadecapole Moments (Debye-Ang^3)
-      XXXX      -6.8791   XXXY      -0.0000   XXYY      -1.8653
+      XXXX      -6.8791   XXXY       0.0000   XXYY      -1.8653
       XYYY       0.0000   YYYY      -3.2651   XXXZ      -0.0682
-      XXYZ      -0.0000   XYYZ      -0.0495   YYYZ       0.0000
-      XXZZ      -1.7665   XYZZ      -0.0000   YYZZ      -1.4159
+      XXYZ       0.0000   XYYZ      -0.0495   YYYZ       0.0000
+      XXZZ      -1.7665   XYZZ       0.0000   YYZZ      -1.4159
       XZZZ      -0.1124   YZZZ       0.0000   ZZZZ      -5.0159
  -----------------------------------------------------------------
- Eng[-3,0] = -7.53140890362138e+01
+ Eng[-3,0] = -7.53140890362158e+01
  Calculating analytic gradient of the SCF energy
  Gradient of Coulomb and Exchange Energy
             1           2           3
@@ -918,13 +915,13 @@ Reading MOs from coefficient file
  Gradient of SCF Energy
             1           2           3
     1   0.0781631  -0.0211736  -0.0569895
-    2  -0.0000000   0.0000000  -0.0000000
+    2  -0.0000000   0.0000000   0.0000000
     3  -0.0748517   0.0068975   0.0679542
  Max gradient component =       7.816E-02
  RMS gradient           =       4.723E-02
- Grad[1,-3,0,0] = 3.17630802969227e-02
- Grad[2,-3,0,0] = -5.44347907105179e-02
- Grad[3,-3,0,0] = -7.54944084067086e-02
+ Grad[1,-3,0,0] = 3.17630803720907e-02
+ Grad[2,-3,0,0] = -5.44347897210250e-02
+ Grad[3,-3,0,0] = -7.54944074972692e-02
  points done 5/12
  CoordNormalMode 3 , 0 , 0
  ----------------------------------------------------------------
@@ -932,8 +929,8 @@ Reading MOs from coefficient file
     I     Atom           X                Y                Z
  ----------------------------------------------------------------
     1      O      -0.0037558642     0.0000000000     0.1191593746
-    2      H      -0.7608451647    -0.0000000000    -0.4541785808
-    3      H       0.8204531447    -0.0000000000    -0.4990964155
+    2      H      -0.7608451647     0.0000000000    -0.4541785808
+    3      H       0.8204531447     0.0000000000    -0.4990964155
  ----------------------------------------------------------------
  Nuclear Repulsion Energy =     8.9010570155 hartrees
  There are        5 alpha and        5 beta electrons
@@ -960,15 +957,14 @@ Reading MOs from coefficient file
  ---------------------------------------
   Cycle       Energy         DIIS Error
  ---------------------------------------
-    1     -75.3224062594      7.43E-02
+    1     -75.3224062592      7.43E-02
     2     -75.3131177852      8.66E-03
     3     -75.3140179343      2.53E-03
     4     -75.3140842567      7.67E-04
     5     -75.3140890331      1.96E-05
     6     -75.3140890361      1.26E-06
     7     -75.3140890361      4.54E-08
-    8     -75.3140890361      1.91E-08
-    9     -75.3140890361      9.44E-09 Convergence criterion met
+    8     -75.3140890361      3.31E-09 Convergence criterion met
  ---------------------------------------
  SCF time:  CPU 0.10 s  wall 0.10 s
  SCF   energy in the final basis set = -75.3140890361
@@ -1006,20 +1002,20 @@ Reading MOs from coefficient file
        Tot       1.6198
     Quadrupole Moments (Debye-Ang)
         XX      -4.3174     XY       0.0000     YY      -6.1247
-        XZ      -0.0492     YZ      -0.0000     ZZ      -5.4140
+        XZ      -0.0492     YZ       0.0000     ZZ      -5.4140
     Octopole Moments (Debye-Ang^2)
-       XXX      -0.0568    XXY      -0.0000    XYY      -0.0452
-       YYY      -0.0000    XXZ      -0.5598    XYZ       0.0000
-       YYZ       0.0233    XZZ      -0.0066    YZZ      -0.0000
+       XXX      -0.0568    XXY       0.0000    XYY      -0.0452
+       YYY       0.0000    XXZ      -0.5598    XYZ       0.0000
+       YYZ       0.0233    XZZ      -0.0066    YZZ       0.0000
        ZZZ      -0.0988
     Hexadecapole Moments (Debye-Ang^3)
-      XXXX      -6.8791   XXXY      -0.0000   XXYY      -1.8653
+      XXXX      -6.8791   XXXY       0.0000   XXYY      -1.8653
       XYYY       0.0000   YYYY      -3.2651   XXXZ       0.0682
-      XXYZ       0.0000   XYYZ       0.0495   YYYZ      -0.0000
-      XXZZ      -1.7665   XYZZ      -0.0000   YYZZ      -1.4159
-      XZZZ       0.1124   YZZZ      -0.0000   ZZZZ      -5.0159
+      XXYZ       0.0000   XYYZ       0.0495   YYYZ       0.0000
+      XXZZ      -1.7665   XYZZ       0.0000   YYZZ      -1.4159
+      XZZZ       0.1124   YZZZ       0.0000   ZZZZ      -5.0159
  -----------------------------------------------------------------
- Eng[3,0] = -7.53140890361191e+01
+ Eng[3,0] = -7.53140890361190e+01
  Calculating analytic gradient of the SCF energy
  Gradient of Coulomb and Exchange Energy
             1           2           3
@@ -1033,9 +1029,9 @@ Reading MOs from coefficient file
     3  -0.0748517   0.0679542   0.0068975
  Max gradient component =       7.816E-02
  RMS gradient           =       4.723E-02
- Grad[1,3,0,0] = 3.17630808091768e-02
- Grad[2,3,0,0] = -5.44347895990636e-02
- Grad[3,3,0,0] = 7.54944072082702e-02
+ Grad[1,3,0,0] = 3.17630807488706e-02
+ Grad[2,3,0,0] = -5.44347888188065e-02
+ Grad[3,3,0,0] = 7.54944080309086e-02
  points done 6/12
  CoordNormalMode -2 , -1 , 0
  ----------------------------------------------------------------
@@ -1043,10 +1039,10 @@ Reading MOs from coefficient file
     I     Atom           X                Y                Z
  ----------------------------------------------------------------
     1      O       0.0000000000     0.0000000000     0.1202361848
-    2      H      -0.7370484123    -0.0000000000    -0.4851823335
+    2      H      -0.7370484123     0.0000000000    -0.4851823335
     3      H       0.7370484118     0.0000000000    -0.4851823331
  ----------------------------------------------------------------
- Nuclear Repulsion Energy =     9.2357515397 hartrees
+ Nuclear Repulsion Energy =     9.2357515396 hartrees
  There are        5 alpha and        5 beta electrons
 
                        Distance Matrix (Angstroms)
@@ -1070,21 +1066,21 @@ Reading MOs from coefficient file
  SCF converges when DIIS error is below 1.0E-08
  Inaccurate integrated density:
    Number of electrons =    10
-   Numerical integral  =    10.023573497517
-   Relative error      =     0.2357349752 %
+   Numerical integral  =    10.023573497645
+   Relative error      =     0.2357349765 %
  ---------------------------------------
   Cycle       Energy         DIIS Error
  ---------------------------------------
-    1     -75.3338937444      4.45E-02
+    1     -75.3338937445      4.45E-02
     2     -75.3121177342      4.21E-03
     3     -75.3123295404      9.73E-04
     4     -75.3123392326      2.43E-04
     5     -75.3123396948      2.49E-05
     6     -75.3123396998      4.28E-07
     7     -75.3123396998      2.39E-08
-    8     -75.3123396998      3.79E-09 Convergence criterion met
+    8     -75.3123396998      2.07E-09 Convergence criterion met
  ---------------------------------------
- SCF time:  CPU 0.09 s  wall 0.09 s
+ SCF time:  CPU 0.10 s  wall 0.10 s
  SCF   energy in the final basis set = -75.3123396998
  Total energy in the final basis set = -75.3123396998
  Analysis of SCF Wavefunction
@@ -1108,41 +1104,41 @@ Reading MOs from coefficient file
       2 H                     0.183764
       3 H                     0.183764
   ----------------------------------------
-  Sum of atomic charges =    -0.000000
+  Sum of atomic charges =     0.000000
 
  -----------------------------------------------------------------
                     Cartesian Multipole Moments
  -----------------------------------------------------------------
     Charge (ESU x 10^10)
-                -0.0000
+                 0.0000
     Dipole Moment (Debye)
-         X       0.0000      Y      -0.0000      Z      -1.7028
+         X       0.0000      Y       0.0000      Z      -1.7028
        Tot       1.7028
     Quadrupole Moments (Debye-Ang)
-        XX      -4.4787     XY      -0.0000     YY      -6.0975
-        XZ      -0.0000     YZ       0.0000     ZZ      -5.3415
+        XX      -4.4787     XY       0.0000     YY      -6.0975
+        XZ       0.0000     YZ       0.0000     ZZ      -5.3415
     Octopole Moments (Debye-Ang^2)
        XXX       0.0000    XXY       0.0000    XYY       0.0000
-       YYY       0.0000    XXZ      -0.4952    XYZ      -0.0000
+       YYY       0.0000    XXZ      -0.4952    XYZ       0.0000
        YYZ       0.0111    XZZ       0.0000    YZZ       0.0000
        ZZZ      -0.1665
     Hexadecapole Moments (Debye-Ang^3)
       XXXX      -6.4551   XXXY       0.0000   XXYY      -1.7457
-      XYYY       0.0000   YYYY      -3.2335   XXXZ      -0.0000
-      XXYZ      -0.0000   XYYZ      -0.0000   YYYZ      -0.0000
+      XYYY       0.0000   YYYY      -3.2335   XXXZ       0.0000
+      XXYZ       0.0000   XYYZ       0.0000   YYYZ       0.0000
       XXZZ      -1.6855   XYZZ       0.0000   YYZZ      -1.4083
-      XZZZ      -0.0000   YZZZ       0.0000   ZZZZ      -4.9805
+      XZZZ       0.0000   YZZZ       0.0000   ZZZZ      -4.9805
  -----------------------------------------------------------------
- Eng[-2,-1] = -7.53123396998450e+01
+ Eng[-2,-1] = -7.53123396998472e+01
  points done 7/12
  CoordNormalMode 2 , 1 , 0
  ----------------------------------------------------------------
              Standard Nuclear Orientation (Angstroms)
     I     Atom           X                Y                Z
  ----------------------------------------------------------------
-    1      O      -0.0000000000     0.0000000000     0.1180825644
-    2      H      -0.8442498976    -0.0000000000    -0.4680926632
-    3      H       0.8442498981    -0.0000000000    -0.4680926635
+    1      O       0.0000000000     0.0000000000     0.1180825644
+    2      H      -0.8442498976     0.0000000000    -0.4680926632
+    3      H       0.8442498981     0.0000000000    -0.4680926635
  ----------------------------------------------------------------
  Nuclear Repulsion Energy =     8.5512775262 hartrees
  There are        5 alpha and        5 beta electrons
@@ -1168,20 +1164,20 @@ Reading MOs from coefficient file
  SCF converges when DIIS error is below 1.0E-08
  Inaccurate integrated density:
    Number of electrons =    10
-   Numerical integral  =     9.956080675419
-   Relative error      =    -0.4391932458 %
+   Numerical integral  =     9.956080675615
+   Relative error      =    -0.4391932439 %
  ---------------------------------------
   Cycle       Energy         DIIS Error
  ---------------------------------------
-    1     -75.2862824500      4.66E-02
-    2     -75.3156900695      3.12E-03
-    3     -75.3157608330      2.04E-03
+    1     -75.2862824501      4.66E-02
+    2     -75.3156900696      3.12E-03
+    3     -75.3157608331      2.04E-03
     4     -75.3157948762      3.06E-04
     5     -75.3157956583      6.47E-06
     6     -75.3157956587      3.12E-07
     7     -75.3157956587      1.08E-09 Convergence criterion met
  ---------------------------------------
- SCF time:  CPU 0.08 s  wall 0.08 s
+ SCF time:  CPU 0.09 s  wall 0.09 s
  SCF   energy in the final basis set = -75.3157956587
  Total energy in the final basis set = -75.3157956587
  Analysis of SCF Wavefunction
@@ -1216,21 +1212,21 @@ Reading MOs from coefficient file
          X       0.0000      Y       0.0000      Z      -1.5312
        Tot       1.5312
     Quadrupole Moments (Debye-Ang)
-        XX      -4.1669     XY      -0.0000     YY      -6.1535
-        XZ      -0.0000     YZ      -0.0000     ZZ      -5.4805
+        XX      -4.1669     XY       0.0000     YY      -6.1535
+        XZ       0.0000     YZ       0.0000     ZZ      -5.4805
     Octopole Moments (Debye-Ang^2)
-       XXX       0.0000    XXY      -0.0000    XYY      -0.0000
-       YYY      -0.0000    XXZ      -0.6135    XYZ      -0.0000
-       YYZ       0.0353    XZZ       0.0000    YZZ      -0.0000
+       XXX       0.0000    XXY       0.0000    XYY       0.0000
+       YYY       0.0000    XXZ      -0.6135    XYZ       0.0000
+       YYZ       0.0353    XZZ       0.0000    YZZ       0.0000
        ZZZ      -0.0301
     Hexadecapole Moments (Debye-Ang^3)
       XXXX      -7.3278   XXXY       0.0000   XXYY      -1.9945
       XYYY       0.0000   YYYY      -3.2984   XXXZ       0.0000
-      XXYZ       0.0000   XYYZ       0.0000   YYYZ      -0.0000
+      XXYZ       0.0000   XYYZ       0.0000   YYYZ       0.0000
       XXZZ      -1.8646   XYZZ       0.0000   YYZZ      -1.4213
-      XZZZ       0.0000   YZZZ      -0.0000   ZZZZ      -5.0369
+      XZZZ       0.0000   YZZZ       0.0000   ZZZZ      -5.0369
  -----------------------------------------------------------------
- Eng[2,1] = -7.53157956586896e+01
+ Eng[2,1] = -7.53157956586891e+01
  points done 8/12
  CoordNormalMode -3 , -1 , 0
  ----------------------------------------------------------------
@@ -1238,7 +1234,7 @@ Reading MOs from coefficient file
     I     Atom           X                Y                Z
  ----------------------------------------------------------------
     1      O       0.0037558642     0.0000000000     0.1228893715
-    2      H      -0.7977222599    -0.0000000000    -0.5286951399
+    2      H      -0.7977222599     0.0000000000    -0.5286951399
     3      H       0.7381142799     0.0000000000    -0.4837773052
  ----------------------------------------------------------------
  Nuclear Repulsion Energy =     8.8872501933 hartrees
@@ -1265,8 +1261,8 @@ Reading MOs from coefficient file
  SCF converges when DIIS error is below 1.0E-08
  Inaccurate integrated density:
    Number of electrons =    10
-   Numerical integral  =    10.025276517972
-   Relative error      =     0.2527651797 %
+   Numerical integral  =    10.025276517936
+   Relative error      =     0.2527651794 %
  ---------------------------------------
   Cycle       Energy         DIIS Error
  ---------------------------------------
@@ -1277,8 +1273,7 @@ Reading MOs from coefficient file
     5     -75.3165622625      1.17E-05
     6     -75.3165622642      1.09E-06
     7     -75.3165622642      3.82E-08
-    8     -75.3165622642      1.17E-08
-    9     -75.3165622642      7.69E-09 Convergence criterion met
+    8     -75.3165622642      3.21E-09 Convergence criterion met
  ---------------------------------------
  SCF time:  CPU 0.10 s  wall 0.10 s
  SCF   energy in the final basis set = -75.3165622642
@@ -1304,32 +1299,32 @@ Reading MOs from coefficient file
       2 H                     0.150586
       3 H                     0.183383
   ----------------------------------------
-  Sum of atomic charges =    -0.000000
+  Sum of atomic charges =     0.000000
 
  -----------------------------------------------------------------
                     Cartesian Multipole Moments
  -----------------------------------------------------------------
     Charge (ESU x 10^10)
-                -0.0000
+                 0.0000
     Dipole Moment (Debye)
-         X       0.0532      Y      -0.0000      Z      -1.6374
+         X       0.0532      Y       0.0000      Z      -1.6374
        Tot       1.6383
     Quadrupole Moments (Debye-Ang)
-        XX      -4.4628     XY      -0.0000     YY      -6.1307
+        XX      -4.4628     XY       0.0000     YY      -6.1307
         XZ       0.0454     YZ       0.0000     ZZ      -5.3384
     Octopole Moments (Debye-Ang^2)
        XXX       0.0689    XXY       0.0000    XYY       0.0455
-       YYY       0.0000    XXZ      -0.5080    XYZ      -0.0000
+       YYY       0.0000    XXZ      -0.5080    XYZ       0.0000
        YYZ       0.0481    XZZ       0.0074    YZZ       0.0000
        ZZZ      -0.0645
     Hexadecapole Moments (Debye-Ang^3)
       XXXX      -6.8361   XXXY       0.0000   XXYY      -1.8332
       XYYY       0.0000   YYYY      -3.2710   XXXZ      -0.0784
-      XXYZ      -0.0000   XYYZ      -0.0509   YYYZ      -0.0000
+      XXYZ       0.0000   XYYZ      -0.0509   YYYZ       0.0000
       XXZZ      -1.7601   XYZZ       0.0000   YYZZ      -1.4571
       XZZZ      -0.1146   YZZZ       0.0000   ZZZZ      -5.2095
  -----------------------------------------------------------------
- Eng[-3,-1] = -7.53165622642154e+01
+ Eng[-3,-1] = -7.53165622642173e+01
  points done 9/12
  CoordNormalMode 3 , 1 , 0
  ----------------------------------------------------------------
@@ -1337,10 +1332,10 @@ Reading MOs from coefficient file
     I     Atom           X                Y                Z
  ----------------------------------------------------------------
     1      O      -0.0037558642     0.0000000000     0.1154293777
-    2      H      -0.7835760500    -0.0000000000    -0.4245798567
-    3      H       0.8431840300    -0.0000000000    -0.4694976915
+    2      H      -0.7835760500     0.0000000000    -0.4245798567
+    3      H       0.8431840300     0.0000000000    -0.4694976915
  ----------------------------------------------------------------
- Nuclear Repulsion Energy =     8.9011880805 hartrees
+ Nuclear Repulsion Energy =     8.9011880806 hartrees
  There are        5 alpha and        5 beta electrons
 
                        Distance Matrix (Angstroms)
@@ -1365,18 +1360,16 @@ Reading MOs from coefficient file
  ---------------------------------------
   Cycle       Energy         DIIS Error
  ---------------------------------------
-    1     -75.3292388679      7.63E-02
-    2     -75.3092477410      9.01E-03
+    1     -75.3292388678      7.63E-02
+    2     -75.3092477409      9.01E-03
     3     -75.3101916700      2.33E-03
-    4     -75.3102474285      5.20E-04
+    4     -75.3102474284      5.20E-04
     5     -75.3102496192      2.19E-05
     6     -75.3102496264      3.55E-06
     7     -75.3102496265      1.17E-07
-    8     -75.3102496265      6.62E-08
-    9     -75.3102496265      1.37E-08
-   10     -75.3102496265      1.63E-09 Convergence criterion met
+    8     -75.3102496265      3.65E-09 Convergence criterion met
  ---------------------------------------
- SCF time:  CPU 0.11 s  wall 0.11 s
+ SCF time:  CPU 0.10 s  wall 0.10 s
  SCF   energy in the final basis set = -75.3102496265
  Total energy in the final basis set = -75.3102496265
  Analysis of SCF Wavefunction
@@ -1408,24 +1401,24 @@ Reading MOs from coefficient file
     Charge (ESU x 10^10)
                  0.0000
     Dipole Moment (Debye)
-         X      -0.0483      Y      -0.0000      Z      -1.5959
+         X      -0.0483      Y       0.0000      Z      -1.5959
        Tot       1.5967
     Quadrupole Moments (Debye-Ang)
-        XX      -4.1667     XY      -0.0000     YY      -6.1193
+        XX      -4.1667     XY       0.0000     YY      -6.1193
         XZ      -0.0532     YZ       0.0000     ZZ      -5.4869
     Octopole Moments (Debye-Ang^2)
        XXX      -0.0436    XXY       0.0000    XYY      -0.0448
-       YYY       0.0000    XXZ      -0.6050    XYZ      -0.0000
+       YYY       0.0000    XXZ      -0.6050    XYZ       0.0000
        YYZ      -0.0006    XZZ      -0.0063    YZZ       0.0000
        ZZZ      -0.1345
     Hexadecapole Moments (Debye-Ang^3)
       XXXX      -6.9096   XXXY       0.0000   XXYY      -1.8986
-      XYYY      -0.0000   YYYY      -3.2601   XXXZ       0.0580
-      XXYZ      -0.0000   XYYZ       0.0481   YYYZ       0.0000
+      XYYY       0.0000   YYYY      -3.2601   XXXZ       0.0580
+      XXYZ       0.0000   XYYZ       0.0481   YYYZ       0.0000
       XXZZ      -1.7811   XYZZ       0.0000   YYZZ      -1.3775
       XZZZ       0.1106   YZZZ       0.0000   ZZZZ      -4.8324
  -----------------------------------------------------------------
- Eng[3,1] = -7.53102496265026e+01
+ Eng[3,1] = -7.53102496265023e+01
  points done 10/12
  CoordNormalMode -3 , -2 , 0
  ----------------------------------------------------------------
@@ -1433,7 +1426,7 @@ Reading MOs from coefficient file
     I     Atom           X                Y                Z
  ----------------------------------------------------------------
     1      O       0.0037558643     0.0000000000     0.1165061879
-    2      H      -0.7895832879    -0.0000000000    -0.4780425270
+    2      H      -0.7895832879     0.0000000000    -0.4780425271
     3      H       0.7299753074     0.0000000000    -0.4331246919
  ----------------------------------------------------------------
  Nuclear Repulsion Energy =     9.2664415108 hartrees
@@ -1460,20 +1453,19 @@ Reading MOs from coefficient file
  SCF converges when DIIS error is below 1.0E-08
  Inaccurate integrated density:
    Number of electrons =    10
-   Numerical integral  =    10.028749866593
-   Relative error      =     0.2874986659 %
+   Numerical integral  =    10.028749866282
+   Relative error      =     0.2874986628 %
  ---------------------------------------
   Cycle       Energy         DIIS Error
  ---------------------------------------
-    1     -75.3356511867      8.17E-02
+    1     -75.3356511864      8.17E-02
     2     -75.3044001324      8.11E-03
     3     -75.3051896786      1.76E-03
     4     -75.3052248077      4.00E-04
     5     -75.3052260746      2.02E-05
-    6     -75.3052260777      7.80E-07
+    6     -75.3052260778      7.80E-07
     7     -75.3052260778      5.94E-08
-    8     -75.3052260778      2.82E-08
-    9     -75.3052260778      8.88E-09 Convergence criterion met
+    8     -75.3052260778      1.38E-09 Convergence criterion met
  ---------------------------------------
  SCF time:  CPU 0.10 s  wall 0.10 s
  SCF   energy in the final basis set = -75.3052260778
@@ -1507,7 +1499,7 @@ Reading MOs from coefficient file
     Charge (ESU x 10^10)
                  0.0000
     Dipole Moment (Debye)
-         X       0.0465      Y      -0.0000      Z      -1.6830
+         X       0.0465      Y       0.0000      Z      -1.6830
        Tot       1.6836
     Quadrupole Moments (Debye-Ang)
         XX      -4.3265     XY       0.0000     YY      -6.0899
@@ -1518,13 +1510,13 @@ Reading MOs from coefficient file
        YYZ      -0.0131    XZZ       0.0060    YZZ       0.0000
        ZZZ      -0.2018
     Hexadecapole Moments (Debye-Ang^3)
-      XXXX      -6.4892   XXXY      -0.0000   XXYY      -1.7754
-      XYYY      -0.0000   YYYY      -3.2261   XXXZ      -0.0635
-      XXYZ      -0.0000   XYYZ      -0.0466   YYYZ      -0.0000
-      XXZZ      -1.6890   XYZZ      -0.0000   YYZZ      -1.3701
+      XXXX      -6.4892   XXXY       0.0000   XXYY      -1.7754
+      XYYY       0.0000   YYYY      -3.2261   XXXZ      -0.0635
+      XXYZ       0.0000   XYYZ      -0.0466   YYYZ       0.0000
+      XXZZ      -1.6890   XYZZ       0.0000   YYZZ      -1.3701
       XZZZ      -0.1055   YZZZ       0.0000   ZZZZ      -4.8030
  -----------------------------------------------------------------
- Eng[-3,-2] = -7.53052260777583e+01
+ Eng[-3,-2] = -7.53052260777594e+01
  points done 11/12
  CoordNormalMode 3 , 2 , 0
  ----------------------------------------------------------------
@@ -1532,8 +1524,8 @@ Reading MOs from coefficient file
     I     Atom           X                Y                Z
  ----------------------------------------------------------------
     1      O      -0.0037558643     0.0000000000     0.1218125612
-    2      H      -0.7917150220    -0.0000000000    -0.4752324696
-    3      H       0.8513230025    -0.0000000000    -0.5201503048
+    2      H      -0.7917150220     0.0000000000    -0.4752324696
+    3      H       0.8513230025     0.0000000000    -0.5201503048
  ----------------------------------------------------------------
  Nuclear Repulsion Energy =     8.5634338664 hartrees
  There are        5 alpha and        5 beta electrons
@@ -1559,23 +1551,21 @@ Reading MOs from coefficient file
  SCF converges when DIIS error is below 1.0E-08
  Inaccurate integrated density:
    Number of electrons =    10
-   Numerical integral  =     9.948929588130
-   Relative error      =    -0.5107041187 %
+   Numerical integral  =     9.948929587801
+   Relative error      =    -0.5107041220 %
  ---------------------------------------
   Cycle       Energy         DIIS Error
  ---------------------------------------
-    1     -75.2805860535      8.84E-02
-    2     -75.3145939130      1.33E-02
-    3     -75.3159767302      8.31E-03
+    1     -75.2805860532      8.84E-02
+    2     -75.3145939127      1.33E-02
+    3     -75.3159767300      8.31E-03
     4     -75.3165858875      1.31E-03
     5     -75.3166008316      4.99E-05
     6     -75.3166008575      1.81E-06
     7     -75.3166008576      2.19E-07
-    8     -75.3166008576      1.59E-07
-    9     -75.3166008576      1.98E-08
-   10     -75.3166008576      1.76E-09 Convergence criterion met
+    8     -75.3166008576      4.78E-09 Convergence criterion met
  ---------------------------------------
- SCF time:  CPU 0.11 s  wall 0.11 s
+ SCF time:  CPU 0.10 s  wall 0.10 s
  SCF   energy in the final basis set = -75.3166008576
  Total energy in the final basis set = -75.3166008576
  Analysis of SCF Wavefunction
@@ -1607,7 +1597,7 @@ Reading MOs from coefficient file
     Charge (ESU x 10^10)
                  0.0000
     Dipole Moment (Debye)
-         X      -0.0547      Y      -0.0000      Z      -1.5532
+         X      -0.0547      Y       0.0000      Z      -1.5532
        Tot       1.5541
     Quadrupole Moments (Debye-Ang)
         XX      -4.3102     XY       0.0000     YY      -6.1574
@@ -1618,47 +1608,47 @@ Reading MOs from coefficient file
        YYZ       0.0599    XZZ      -0.0073    YZZ       0.0000
        ZZZ       0.0044
     Hexadecapole Moments (Debye-Ang^3)
-      XXXX      -7.2859   XXXY      -0.0000   XXYY      -1.9587
-      XYYY      -0.0000   YYYY      -3.3020   XXXZ       0.0733
-      XXYZ      -0.0000   XYYZ       0.0525   YYYZ       0.0000
-      XXZZ      -1.8465   XYZZ      -0.0000   YYZZ      -1.4627
+      XXXX      -7.2859   XXXY       0.0000   XXYY      -1.9587
+      XYYY       0.0000   YYYY      -3.3020   XXXZ       0.0733
+      XXYZ       0.0000   XYYZ       0.0525   YYYZ       0.0000
+      XXZZ      -1.8465   XYZZ       0.0000   YYZZ      -1.4627
       XZZZ       0.1195   YZZZ       0.0000   ZZZZ      -5.2363
  -----------------------------------------------------------------
- Eng[3,2] = -7.53166008575881e+01
+ Eng[3,2] = -7.53166008575872e+01
  points done 12/12
- derivatives time:           CPU    1.31 s  wall    1.31 s
+ derivatives time:           CPU    1.24 s  wall    1.25 s
  ======================================================================
  ======================================================================
       ANHARMONIC CUBIC & QUARTIC FORCE FIELD (CM**-1)                  
  ______________________________________________________________________
- Eta[1,1,1]=-371.4806640,
- Eta[1,1,1,1]=16.1000857,
- Eta[1,1,2]=306.5200706,
- Eta[1,1,1,2]=154.3275688,
- Eta[1,1,2,2]=-301.9554481,
- Eta[1,1,3]=-0.0001529,
- Eta[1,1,1,3]=-0.0022598,
- Eta[1,1,3,3]=-346.2372001,
- Eta[2,2,2]=-1550.6584434,
- Eta[2,2,2,2]=662.5370507,
- Eta[2,2,1]=-100.8963179,
- Eta[2,2,2,1]=33.0645000,
- Eta[2,2,3]=-0.0004071,
- Eta[2,2,2,3]=0.0002789,
- Eta[2,2,3,3]=615.2474210,
- Eta[3,3,3]=-0.0002799,
- Eta[3,3,3,3]=589.5815052,
- Eta[3,3,1]=163.4637265,
- Eta[3,3,3,1]=0.0003462,
- Eta[3,3,2]=-1590.6258070,
- Eta[3,3,3,2]=0.0005251,
+ Eta[1,1,1]=-371.4813507,
+ Eta[1,1,1,1]=16.0948983,
+ Eta[1,1,2]=306.5209018,
+ Eta[1,1,1,2]=154.3336726,
+ Eta[1,1,2,2]=-301.9550470,
+ Eta[1,1,3]=-0.0002123,
+ Eta[1,1,1,3]=-0.0018125,
+ Eta[1,1,3,3]=-346.2349392,
+ Eta[2,2,2]=-1550.6582296,
+ Eta[2,2,2,2]=662.5383350,
+ Eta[2,2,1]=-100.8965656,
+ Eta[2,2,2,1]=33.0634305,
+ Eta[2,2,3]=-0.0002037,
+ Eta[2,2,2,3]=0.0014061,
+ Eta[2,2,3,3]=615.2475337,
+ Eta[3,3,3]=-0.0001244,
+ Eta[3,3,3,3]=589.5811334,
+ Eta[3,3,1]=163.4635382,
+ Eta[3,3,3,1]=0.0002546,
+ Eta[3,3,2]=-1590.6253436,
+ Eta[3,3,3,2]=0.0004263,
  ----------------------------------------------------------------
              Standard Nuclear Orientation (Angstroms)
     I     Atom           X                Y                Z
  ----------------------------------------------------------------
-    1      O      -0.0000000000     0.0000000000     0.1191593746
-    2      H      -0.7906491549    -0.0000000000    -0.4766374983
-    3      H       0.7906491549    -0.0000000000    -0.4766374983
+    1      O       0.0000000000     0.0000000000     0.1191593746
+    2      H      -0.7906491549     0.0000000000    -0.4766374983
+    3      H       0.7906491549     0.0000000000    -0.4766374983
  ----------------------------------------------------------------
  Nuclear Repulsion Energy =     8.8870062630 hartrees
  There are        5 alpha and        5 beta electrons
@@ -1688,10 +1678,10 @@ Reading MOs from coefficient file
  IR Intens:        5.911                 61.120                 36.761
  Raman Active:       YES                    YES                    YES
                X      Y      Z        X      Y      Z        X      Y      Z
- O          0.000 -0.000 -0.070   -0.000  0.000  0.050   -0.071 -0.000 -0.000
- H         -0.430  0.000  0.559   -0.583 -0.000 -0.398    0.563  0.000  0.424
- H          0.430 -0.000  0.559    0.583 -0.000 -0.398    0.563  0.000 -0.424
- TransDip   0.000 -0.000  0.078    0.000  0.000  0.250   -0.194  0.000 -0.000
+ O          0.000  0.000 -0.070    0.000  0.000  0.050   -0.071  0.000  0.000
+ H         -0.430  0.000  0.559   -0.583  0.000 -0.398    0.563  0.000  0.424
+ H          0.430  0.000  0.559    0.583  0.000 -0.398    0.563  0.000 -0.424
+ TransDip   0.000  0.000  0.078    0.000  0.000  0.250   -0.194  0.000  0.000
 
  ======================================================================
                      VIBRATIONAL ANHARMONIC ANALYSIS                   
@@ -1718,7 +1708,7 @@ Reading MOs from coefficient file
    Principal axes and moments of inertia in amu*Bohr^2:
                              1           2           3
     Eigenvalues --        2.26916     4.49969     6.76885
-          X               1.00000     0.00000    -0.00000
+          X               1.00000     0.00000     0.00000
           Y               0.00000     0.00000     1.00000
           Z               0.00000     1.00000     0.00000
    Rotational Symmetry Number is   2
@@ -1761,10 +1751,10 @@ Reading MOs from coefficient file
  ======================================================================
  
 Archival summary:
-1\1\gold\FREQ\ProcedureUnspecified\STO-3G\12\eric\SatJun2123:41:112014SatJun2123:41:112014\0\\#,FREQ,ProcedureUnspecified,STO-3G,\\0,1\O\H,1,0.99\H,1,0.99,2,106\\\@
+1\1\gold\FREQ\ProcedureUnspecified\STO-3G\12\eric\SatJun2817:23:512014SatJun2817:23:512014\0\\#,FREQ,ProcedureUnspecified,STO-3G,\\0,1\O\H,1,0.99\H,1,0.99,2,106\\\@
 
- Total job time:  1.81s(wall), 1.80s(cpu) 
- Sat Jun 21 23:41:11 2014
+ Total job time:  1.90s(wall), 1.78s(cpu) 
+ Sat Jun 28 17:23:51 2014
 
         *************************************************************
         *                                                           *

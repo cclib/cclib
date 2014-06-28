@@ -1,4 +1,3 @@
-/home/eric/opt/apps/qchem/trunk_intel_release_r16298/exe/qcprog.exe .water_mp4.in.12838.qcin.1 /home/eric/scratch/qchem/qchem12838/
                   Welcome to Q-Chem
      A Quantum Leap Into The Future Of Chemistry
 
@@ -51,12 +50,12 @@
  Parts of Q-Chem use Armadillo 4.100.2 (Dirt Cruiser).
  http://arma.sourceforge.net/
 
- Q-Chem begins on Sat Jun 21 18:38:39 2014  
+ Q-Chem begins on Sat Jun 28 17:22:53 2014  
 
 Host: 
 0
 
-     Scratch files written to /home/eric/scratch/qchem/qchem12838//
+     Scratch files written to /home/eric/scratch/qchem/qchem28440//
  Apr3014 |home|eric|opt|apps|qchem|trunk_intel_release|libmdc|qstr_info.C -1
 Finally everything over in PARseQInput
 
@@ -68,6 +67,7 @@ $comment
 $end
 
 $rem
+ jobtype = sp
  method = mp4
  basis = sto-3g
 $end
@@ -402,15 +402,15 @@ EMP3                   =   -75.012879231
 EMP4SDQ                =   -75.016089019
 
 
- CCSD or (V)OO-CCD job:  CPU 0.02 s  wall 0.02 s
+ CCSD or (V)OO-CCD job:  CPU 0.02 s  wall 0.19 s
 Doing only closed-shell triples contributions
 EMP4                   =   -75.016143404
 
 
- (2) or (T) job:  CPU 0.02 s  wall 0.02 s
+ (2) or (T) job:  CPU 0.01 s  wall 0.01 s
 
 
- CCMAN JOB: ALL  CPU 0.04 s  wall 0.04 s
+ CCMAN JOB: ALL  CPU 0.04 s  wall 0.23 s
  Analysis of SCF Wavefunction
  
  --------------------------------------------------------------
@@ -468,10 +468,10 @@ EMP4                   =   -75.016143404
       XZZZ      -0.0000   YZZZ      -0.0000   ZZZZ      -4.9965
  -----------------------------------------------------------------
 Archival summary:
-1\1\gold\SP\ProcedureUnspecified\STO-3G\12\eric\SatJun2118:38:392014SatJun2118:38:392014\0\\#,ProcedureUnspecified,STO-3G,\\0,1\O\H,1,0.99\H,1,0.99,2,106\\HF=-74.9643288\\@
+1\1\gold\SP\ProcedureUnspecified\STO-3G\12\eric\SatJun2817:22:532014SatJun2817:22:532014\0\\#,ProcedureUnspecified,STO-3G,\\0,1\O\H,1,0.99\H,1,0.99,2,106\\HF=-74.9643288\\@
 
- Total job time:  0.14s(wall), 0.13s(cpu) 
- Sat Jun 21 18:38:39 2014
+ Total job time:  0.34s(wall), 0.15s(cpu) 
+ Sat Jun 28 17:22:53 2014
 
         *************************************************************
         *                                                           *

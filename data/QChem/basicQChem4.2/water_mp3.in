@@ -3,6 +3,7 @@ $comment
 $end
 
 $rem
+ jobtype = sp
  method = mp3
  basis = sto-3g
 $end

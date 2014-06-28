@@ -3,6 +3,7 @@ $comment
 $end
 
 $rem
+ jobtype = sp
  method = ccsd
  basis = sto-3g
 $end

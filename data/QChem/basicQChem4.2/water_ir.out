@@ -1,4 +1,6 @@
-/home/eric/opt/apps/qchem/trunk_gcc_release_r16239/exe/qcprog.exe .water_ir.in.30675.qcin.1 /home/eric/scratch/qchem/qchem30675/
+
+Running Job 1 of 1 water_ir.in
+qchem water_ir.in_28554.0 /home/eric/scratch/qchem/qchem28554/ 1
                   Welcome to Q-Chem
      A Quantum Leap Into The Future Of Chemistry
 
@@ -46,50 +48,50 @@
  D. Neuhauser,  R. Olson,  B. Peters,  J. Ritchie,  N. E. Schultz,  
  N. Shenvi,  A. C. Simmonett,  K. S. Thanthiriwatte,  Q. Wu,  W. Zhang
 
- Q-Chem 4.2.0 for Intel X86 EM64T Linux
+ Q-Chem 4.2.0 for Intel X86 Linux
 
  Parts of Q-Chem use Armadillo 4.100.2 (Dirt Cruiser).
  http://arma.sourceforge.net/
 
- Q-Chem begins on Wed Jun 25 08:42:39 2014  
+ Q-Chem begins on Sat Jun 28 17:23:36 2014  
 
+Host: 
+0
 
-Host: 0
-
-     Scratch files written to /home/eric/scratch/qchem/qchem30675//
- May1314 |home|eric|opt|apps|qchem|trunk_gcc_release|libmdc|qstr_info.C -1
+     Scratch files written to /home/eric/scratch/qchem/qchem28554//
+ May1314 814_zgan -1
 Finally everything over in PARseQInput
 
 --------------------------------------------------------------
 User input:
 --------------------------------------------------------------
 $comment
- Water, frequencies (analytic), RB3LYP/STO-3G
+Water, frequencies (analytic), RB3LYP/STO-3G
 $end
 
 $rem
- jobtype = freq
- method = b3lyp
- basis = sto-3g
+jobtype = freq
+method = b3lyp
+basis = sto-3g
 $end
 
 $molecule
- 0 1
- O
- H 1 R1
- H 1 R1 2 A1
+0 1
+O
+H 1 R1
+H 1 R1 2 A1
 
- R1=0.99
- A1=106.0
+R1=0.99
+A1=106.0
 $end
 --------------------------------------------------------------
  ----------------------------------------------------------------
              Standard Nuclear Orientation (Angstroms)
     I     Atom           X                Y                Z
  ----------------------------------------------------------------
-    1      O      -0.0000000000     0.0000000000     0.1191593746
-    2      H      -0.7906491549    -0.0000000000    -0.4766374983
-    3      H       0.7906491549    -0.0000000000    -0.4766374983
+    1      O       0.0000000000     0.0000000000     0.1191593746
+    2      H      -0.7906491549     0.0000000000    -0.4766374983
+    3      H       0.7906491549     0.0000000000    -0.4766374983
  ----------------------------------------------------------------
  Molecular Point Group                 C2v   NOp =  4
  Largest Abelian Subgroup              C2v   NOp =  4
@@ -106,7 +108,7 @@ MEM_STATIC part        62 MB
              O (  1)   H (  2)
    H (  2)  0.990000
    H (  3)  0.990000  1.581298
-
+ 
  A cutoff of  1.0D-11 yielded     10 shell pairs
  There are        34 function pairs
  Smallest overlap matrix eigenvalue = 3.64E-01
@@ -128,17 +130,17 @@ MEM_STATIC part        62 MB
     5     -75.3178467246      2.84E-05
     6     -75.3178467144      1.23E-06
     7     -75.3178467040      2.01E-08
-    8     -75.3178466998      2.55E-09 Convergence criterion met
+    8     -75.3178467000      6.72E-10 Convergence criterion met
  ---------------------------------------
- SCF time:  CPU 0.15 s  wall 0.33 s
- SCF   energy in the final basis set = -75.3178466998
- Total energy in the final basis set = -75.3178466998
+ SCF time:  CPU 0.10 s  wall 0.10 s
+ SCF   energy in the final basis set = -75.3178467000
+ Total energy in the final basis set = -75.3178467000
  Analysis of SCF Wavefunction
-
+ 
  --------------------------------------------------------------
              Orbital Energies (a.u.) and Symmetries
  --------------------------------------------------------------
-
+ 
  Alpha MOs, Restricted
  -- Occupied --                  
 -18.837  -0.919  -0.433  -0.229  -0.142
@@ -146,7 +148,7 @@ MEM_STATIC part        62 MB
  -- Virtual --                   
   0.324   0.441
   4 A1    2 B1                                                                 
-
+ 
  Beta MOs, Restricted
  -- Occupied --                  
 -18.837  -0.919  -0.433  -0.229  -0.142
@@ -155,7 +157,7 @@ MEM_STATIC part        62 MB
   0.324   0.441
   4 A1    2 B1                                                                 
  --------------------------------------------------------------
-
+ 
           Ground-State Mulliken Net Atomic Charges
 
      Atom                 Charge (a.u.)
@@ -172,22 +174,22 @@ MEM_STATIC part        62 MB
     Charge (ESU x 10^10)
                  0.0000
     Dipole Moment (Debye)
-         X       0.0000      Y      -0.0000      Z      -1.6167
+         X       0.0000      Y       0.0000      Z      -1.6167
        Tot       1.6167
     Quadrupole Moments (Debye-Ang)
         XX      -4.3198     XY       0.0000     YY      -6.1259
-        XZ      -0.0000     YZ       0.0000     ZZ      -5.4148
+        XZ       0.0000     YZ       0.0000     ZZ      -5.4148
     Octopole Moments (Debye-Ang^2)
        XXX       0.0000    XXY       0.0000    XYY       0.0000
        YYY       0.0000    XXZ      -0.5574    XYZ       0.0000
        YYZ       0.0235    XZZ       0.0000    YZZ       0.0000
        ZZZ      -0.0969
     Hexadecapole Moments (Debye-Ang^3)
-      XXXX      -6.8771   XXXY      -0.0000   XXYY      -1.8643
-      XYYY      -0.0000   YYYY      -3.2662   XXXZ      -0.0000
-      XXYZ      -0.0000   XYYZ      -0.0000   YYYZ       0.0000
-      XXZZ      -1.7671   XYZZ      -0.0000   YYZZ      -1.4153
-      XZZZ      -0.0000   YZZZ       0.0000   ZZZZ      -5.0125
+      XXXX      -6.8771   XXXY       0.0000   XXYY      -1.8643
+      XYYY       0.0000   YYYY      -3.2662   XXXZ       0.0000
+      XXYZ       0.0000   XYYZ       0.0000   YYYZ       0.0000
+      XXZZ      -1.7671   XYZZ       0.0000   YYZZ      -1.4153
+      XZZZ       0.0000   YZZZ       0.0000   ZZZZ      -5.0125
  -----------------------------------------------------------------
  Calculating MO derivatives via CPSCF
 OV_DIM:  Setting MaxSz  = 10
@@ -200,14 +202,14 @@ OV_DIM:  Setting MaxSpc = 10
     1  -5.5854984   0.0000000  -0.0000000
     2   0.0000000  -0.0409346  -0.0000000
     3  -0.0000000  -0.0000000  -2.3246756
-
+ 
  Direct stationary perturbation theory relativistic correction:
-
- rels  =       0.028900895083
- relv  =      -0.096847963529
- rel2e =       0.029703399668
- E_rel =      -0.038243668778
-
+ 
+ rels  =       0.028900895072
+ relv  =      -0.096847963521
+ rel2e =       0.029703399653
+ E_rel =      -0.038243668796
+ 
  Hessian of the SCF Energy
             1           2           3           4           5           6
     1   0.7920702   0.0000000  -0.0000000  -0.3960351  -0.0000000  -0.3210686
@@ -229,7 +231,7 @@ OV_DIM:  Setting MaxSpc = 10
     7   0.4148874  -0.0000000  -0.2634436
     8  -0.0000000  -0.0194027   0.0000000
     9  -0.2634436   0.0000000   0.2453350
- Gradient time:  CPU 0.47 s  wall 0.75 s
+ Gradient time:  CPU 0.41 s  wall 0.41 s
  **********************************************************************
  **                                                                  **
  **                       VIBRATIONAL ANALYSIS                       **
@@ -240,7 +242,7 @@ OV_DIM:  Setting MaxSpc = 10
  **                  INFRARED INTENSITIES (KM/MOL)                   **
  **                                                                  **
  **********************************************************************
-
+ 
 
  Mode:                 1                      2                      3
  Frequency:      1860.10                3939.13                4272.66
@@ -250,10 +252,10 @@ OV_DIM:  Setting MaxSpc = 10
  IR Intens:        5.911                 61.120                 36.761
  Raman Active:       YES                    YES                    YES
                X      Y      Z        X      Y      Z        X      Y      Z
- O          0.000 -0.000 -0.070   -0.000  0.000  0.050   -0.071 -0.000 -0.000
- H         -0.430  0.000  0.559   -0.583 -0.000 -0.398    0.563  0.000  0.424
+ O          0.000  0.000 -0.070    0.000  0.000  0.050   -0.071  0.000  0.000
+ H         -0.430  0.000  0.559   -0.583  0.000 -0.398    0.563  0.000  0.424
  H          0.430  0.000  0.559    0.583  0.000 -0.398    0.563  0.000 -0.424
- TransDip   0.000 -0.000  0.078    0.000  0.000  0.250   -0.194  0.000 -0.000
+ TransDip   0.000  0.000  0.078    0.000  0.000  0.250   -0.194  0.000  0.000
 
  STANDARD THERMODYNAMIC QUANTITIES AT   298.15 K  AND     1.00 ATM
 
@@ -267,9 +269,9 @@ OV_DIM:  Setting MaxSpc = 10
    Principal axes and moments of inertia in amu*Bohr^2:
                              1           2           3
     Eigenvalues --        2.26916     4.49969     6.76885
-          X               1.00000     0.00000    -0.00000
+          X               1.00000     0.00000     0.00000
           Y               0.00000     0.00000     1.00000
-          Z               0.00000     1.00000    -0.00000
+          Z               0.00000     1.00000     0.00000
    Rotational Symmetry Number is   2
    The Molecule is an Asymmetric Top
    Translational Enthalpy:        0.889 kcal/mol
@@ -282,38 +284,11 @@ OV_DIM:  Setting MaxSpc = 10
 
    Total Enthalpy:               16.769 kcal/mol
    Total Entropy:                45.245  cal/mol.K
-
- ======================================================================
-
- STANDARD THERMODYNAMIC QUANTITIES FOR ANHARMONIC VIBRATION -- TOSH
-
-   Zero point vibrational energy: ************ kcal/mol
-
-   Vibrational Enthalpy:       Infinity kcal/mol
-   Vibrational Entropy:        Infinity  cal/mol.K
-
-   Total Enthalpy:             Infinity kcal/mol
-   Total Entropy:              Infinity  cal/mol.K
-
- ======================================================================
-
- STANDARD THERMODYNAMIC QUANTITIES FOR ANHARMONIC VIBRATION -- VPT2
-
-   Zero point vibrational energy: ************ kcal/mol
-
-   Vibrational Enthalpy:       Infinity kcal/mol
-   Vibrational Entropy:        Infinity  cal/mol.K
-
-   Total Enthalpy:             Infinity kcal/mol
-   Total Entropy:              Infinity  cal/mol.K
-
- ======================================================================
-
 Archival summary:
-1\1\gold\FREQ\ProcedureUnspecified\STO-3G\12\eric\WedJun2508:42:412014WedJun2508:42:412014\0\\#,FREQ,ProcedureUnspecified,STO-3G,\\0,1\O\H,1,0.99\H,1,0.99,2,106\\\@
+1\1\gold\FREQ\ProcedureUnspecified\STO-3G\12\eric\SatJun2817:23:362014SatJun2817:23:362014\0\\#,FREQ,ProcedureUnspecified,STO-3G,\\0,1\O\H,1,0.99\H,1,0.99,2,106\\\@
 
- Total job time:  1.93s(wall), 0.64s(cpu) 
- Wed Jun 25 08:42:41 2014
+ Total job time:  0.53s(wall), 0.53s(cpu) 
+ Sat Jun 28 17:23:36 2014
 
         *************************************************************
         *                                                           *

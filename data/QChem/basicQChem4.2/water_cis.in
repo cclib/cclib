@@ -3,6 +3,7 @@ $comment
 $end
 
 $rem
+ jobtype = sp
  method = cis
  basis = sto-3g
  cis_n_roots = 5

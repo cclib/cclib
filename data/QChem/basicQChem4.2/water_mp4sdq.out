@@ -1,4 +1,3 @@
-/home/eric/opt/apps/qchem/trunk_intel_release_r16298/exe/qcprog.exe .water_mp4sdq.in.12942.qcin.1 /home/eric/scratch/qchem/qchem12942/
                   Welcome to Q-Chem
      A Quantum Leap Into The Future Of Chemistry
 
@@ -51,12 +50,12 @@
  Parts of Q-Chem use Armadillo 4.100.2 (Dirt Cruiser).
  http://arma.sourceforge.net/
 
- Q-Chem begins on Sat Jun 21 18:38:47 2014  
+ Q-Chem begins on Sat Jun 28 17:23:00 2014  
 
 Host: 
 0
 
-     Scratch files written to /home/eric/scratch/qchem/qchem12942//
+     Scratch files written to /home/eric/scratch/qchem/qchem28479//
  Apr3014 |home|eric|opt|apps|qchem|trunk_intel_release|libmdc|qstr_info.C -1
 Finally everything over in PARseQInput
 
@@ -68,6 +67,7 @@ $comment
 $end
 
 $rem
+ jobtype = sp
  method = mp4sdq
  basis = sto-3g
 $end
@@ -402,11 +402,11 @@ EMP3                   =   -75.012879231
 EMP4SDQ                =   -75.016089019
 
 
- CCSD or (V)OO-CCD job:  CPU 0.02 s  wall 0.02 s
+ CCSD or (V)OO-CCD job:  CPU 0.03 s  wall 0.03 s
 PREPARE to CLEAN
 
 
- CCMAN JOB: ALL  CPU 0.02 s  wall 0.02 s
+ CCMAN JOB: ALL  CPU 0.03 s  wall 0.03 s
  Analysis of SCF Wavefunction
  
  --------------------------------------------------------------
@@ -464,10 +464,10 @@ PREPARE to CLEAN
       XZZZ      -0.0000   YZZZ      -0.0000   ZZZZ      -4.9965
  -----------------------------------------------------------------
 Archival summary:
-1\1\gold\SP\ProcedureUnspecified\STO-3G\12\eric\SatJun2118:38:472014SatJun2118:38:472014\0\\#,ProcedureUnspecified,STO-3G,\\0,1\O\H,1,0.99\H,1,0.99,2,106\\HF=-74.9643288\\@
+1\1\gold\SP\ProcedureUnspecified\STO-3G\12\eric\SatJun2817:23:002014SatJun2817:23:002014\0\\#,ProcedureUnspecified,STO-3G,\\0,1\O\H,1,0.99\H,1,0.99,2,106\\HF=-74.9643288\\@
 
- Total job time:  0.12s(wall), 0.12s(cpu) 
- Sat Jun 21 18:38:47 2014
+ Total job time:  0.16s(wall), 0.15s(cpu) 
+ Sat Jun 28 17:23:00 2014
 
         *************************************************************
         *                                                           *

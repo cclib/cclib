@@ -3,6 +3,7 @@ $comment
 $end
 
 $rem
+ jobtype = sp
  method = mp4sdq
  basis = sto-3g
 $end
