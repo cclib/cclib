@@ -47,7 +47,7 @@ class QChem(logfileparser.Logfile):
         # Charge and multiplicity.
         # Only present in the input file.
 
-        if line.find('$molecule') > -1:
+        if '$molecule' in line:
             line = next(inputfile)
             charge, mult = map(int, line.split())
             self.set_attribute('charge', charge)
@@ -55,7 +55,7 @@ class QChem(logfileparser.Logfile):
 
         # Extract the atomic numbers and coordinates of the atoms.
 
-        if line.find('Standard Nuclear Orientation (Angstroms)') > -1:
+        if 'Standard Nuclear Orientation (Angstroms)' in line:
             self.skip_lines(inputfile, ['cols', 'dashes'])
             atomelements = []
             atomcoords = []
@@ -81,18 +81,18 @@ class QChem(logfileparser.Logfile):
         #  Both Cartesian and pure:
         #   ...
 
-        if line.find('basis functions') > -1:
+        if 'basis functions' in line:
             self.nbasis = int(line.split()[-3])
 
         # Section with SCF iterations.
 
-        if line.find('SCF converges when DIIS error is below') > -1:
+        if 'SCF converges when DIIS error is below' in line:
             if not hasattr(self, 'scftargets'):
                 self.scftargets = []
             diis_target = float(line.split()[-1])
             self.scftargets.append([diis_target])
 
-        if line.find('Cycle       Energy         DIIS Error') > -1:
+        if 'Cycle       Energy         DIIS Error' in line:
             self.skip_lines(inputfile, ['d'])
             line = next(inputfile)
             scfvalues = []
@@ -109,7 +109,7 @@ class QChem(logfileparser.Logfile):
             scfvalues.append(values)
             self.scfvalues.append(numpy.array(scfvalues))
 
-        if line.find('Total energy in the final basis set') > -1:
+        if 'Total energy in the final basis set' in line:
             if not hasattr(self, 'scfenergies'):
                 self.scfenergies = []
             scfenergy = float(line.split()[-1])
@@ -117,7 +117,7 @@ class QChem(logfileparser.Logfile):
 
         # Geometry optimization.
 
-        if line.strip() == 'Maximum     Tolerance    Cnvgd?':
+        if 'Maximum     Tolerance    Cnvgd?' in line:
             line_g = list(map(float, next(inputfile).split()[1:3]))
             line_d = list(map(float, next(inputfile).split()[1:3]))
             line_e = next(inputfile).split()[2:4]
@@ -133,12 +133,12 @@ class QChem(logfileparser.Logfile):
             geovalues = [line_g[0], line_d[0], ediff]
             self.geovalues.append(geovalues)
 
-        if line.find('**  OPTIMIZATION CONVERGED  **') > -1:
+        if '**  OPTIMIZATION CONVERGED  **' in line:
             if not hasattr(self, 'optdone'):
                 self.optdone = []
             self.optdone.append(len(self.atomcoords))
 
-        if line.find('**  MAXIMUM OPTIMIZATION CYCLES REACHED  **') > -1:
+        if '**  MAXIMUM OPTIMIZATION CYCLES REACHED  **' in line:
             if not hasattr(self, 'optdone'):
                 self.optdone = []
 
@@ -154,14 +154,14 @@ class QChem(logfileparser.Logfile):
         #
         # MP4 and variants are handled by ccman.
 
-        if line.find('MP2         total energy') > -1:
+        if 'MP2         total energy' in line:
             if not hasattr(self, 'mpenergies'):
                 self.mpenergies = []
             mp2energy = float(line.split()[4])
             self.mpenergies.append([mp2energy])
 
         # This is the MP3 case.
-        if line.find('MP2 energy') > -1:
+        if 'MP2 energy' in line:
             if not hasattr(self, 'mpenergies'):
                 self.mpenergies = []
             mp2energy = float(line.split()[3])
@@ -174,7 +174,7 @@ class QChem(logfileparser.Logfile):
 
         # Molecular orbital energies and symmetries.
 
-        if line.find('Orbital Energies (a.u.) and Symmetries') > -1:
+        if 'Orbital Energies (a.u.) and Symmetries' in line:
 
             #  --------------------------------------------------------------
             #              Orbital Energies (a.u.) and Symmetries
@@ -397,6 +397,37 @@ class QChem(logfileparser.Logfile):
             if unres:
                 self.moenergies.append(numpy.array(energies_beta))
 
+        # Population analysis.
+
+        if 'Ground-State Mulliken Net Atomic Charges' in line:
+
+            self.skip_line(inputfile, 'blank')
+            line = next(inputfile)
+            has_spins = False
+            if 'Spin' in line:
+                if not hasattr(self, 'atomspins'):
+                    self.atomspins = dict()
+                has_spins = True
+                spins = []
+            self.skip_line(inputfile, 'dashes')
+            if not hasattr(self, 'atomcharges'):
+                self.atomcharges = dict()
+            charges = []
+            line = next(inputfile)
+
+            while list(set(line.strip())) != ['-']:
+                elements = line.split()
+                charge = self.float(elements[2])
+                charges.append(charge)
+                if has_spins:
+                    spin = self.float(elements[3])
+                    spins.append(spin)
+                line = next(inputfile)
+
+            self.atomcharges['mulliken'] = numpy.array(charges)
+            if has_spins:
+                self.atomspins['mulliken'] = numpy.array(spins)
+
         # For IR-related jobs, the Hessian is printed (dim: 3*natom, 3*natom).
         # if line.find('Hessian of the SCF Energy') > -1:
         #     # A maximum of 6 columns/block.
@@ -405,7 +436,7 @@ class QChem(logfileparser.Logfile):
 
         # Start of the IR/Raman frequency section.
 
-        if line.find('VIBRATIONAL ANALYSIS') > -1:
+        if 'VIBRATIONAL ANALYSIS' in line:
 
             while 'STANDARD THERMODYNAMIC QUANTITIES' not in line:
 
@@ -504,7 +535,7 @@ class QChem(logfileparser.Logfile):
                 # Q-Chem includes 3 theories: VPT2, TOSH, and VCI.
                 # For now, just take the VPT2 results.
 
-                if line.find('VIBRATIONAL ANHARMONIC ANALYSIS') > -1:
+                if 'VIBRATIONAL ANHARMONIC ANALYSIS' in line:
 
                     while list(set(line.strip())) != ['=']:
                         if 'VPT2' in line:
@@ -516,9 +547,7 @@ class QChem(logfileparser.Logfile):
         # TODO:
         # 'aonames'
         # 'atombasis'
-        # 'atomcharges'
         # 'atommasses'
-        # 'atomspins'
         # 'ccenergies'
         # 'coreelectrons'
         # 'enthalpy'
