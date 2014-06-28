@@ -115,7 +115,23 @@ class QChem(logfileparser.Logfile):
             scfenergy = float(line.split()[-1])
             self.scfenergies.append(utils.convertor(scfenergy, 'hartree', 'eV'))
 
-        # Geometry optimization convergence.
+        # Geometry optimization.
+
+        if line.strip() == 'Maximum     Tolerance    Cnvgd?':
+            line_g = list(map(float, next(inputfile).split()[1:3]))
+            line_d = list(map(float, next(inputfile).split()[1:3]))
+            line_e = next(inputfile).split()[2:4]
+            print(line_e)
+            if not hasattr(self, 'geotargets'):
+                self.geotargets = [line_g[1], line_d[1], self.float(line_e[1])]
+            if not hasattr(self, 'geovalues'):
+                self.geovalues = []
+            try:
+                ediff = abs(self.float(line_e[0]))
+            except ValueError:
+                ediff = numpy.nan
+            geovalues = [line_g[0], line_d[0], ediff]
+            self.geovalues.append(geovalues)
 
         if line.find('**  OPTIMIZATION CONVERGED  **') > -1:
             if not hasattr(self, 'optdone'):
@@ -125,12 +141,6 @@ class QChem(logfileparser.Logfile):
         if line.find('**  MAXIMUM OPTIMIZATION CYCLES REACHED  **') > -1:
             if not hasattr(self, 'optdone'):
                 self.optdone = []
-
-        # For IR-related jobs, the Hessian is printed (dim: 3*natom, 3*natom).
-        # if line.find('Hessian of the SCF Energy') > -1:
-        #     # A maximum of 6 columns/block.
-        #     if not hasattr(self, 'hessian'):
-        #         self.hessian = []
 
         # Moller-Plesset corrections.
 
@@ -371,6 +381,12 @@ class QChem(logfileparser.Logfile):
             if unres:
                 self.moenergies.append(numpy.array(energies_beta))
 
+        # For IR-related jobs, the Hessian is printed (dim: 3*natom, 3*natom).
+        # if line.find('Hessian of the SCF Energy') > -1:
+        #     # A maximum of 6 columns/block.
+        #     if not hasattr(self, 'hessian'):
+        #         self.hessian = []
+
         # Start of the IR/Raman frequency section.
 
         if line.find('VIBRATIONAL ANALYSIS') > -1:
@@ -502,8 +518,6 @@ class QChem(logfileparser.Logfile):
         # 'fragnames'
         # 'frags'
         # 'gbasis'
-        # 'geotargets'
-        # 'geovalues'
         # 'grads'
         # 'hessian'
         # 'homos'
