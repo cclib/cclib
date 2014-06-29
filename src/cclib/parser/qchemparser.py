@@ -69,7 +69,7 @@ class QChem(logfileparser.Logfile):
             atomnos = list(utils.PeriodicTable().number[i] for i in atomelements)
             self.set_attribute('natom', len(atomnos))
             self.set_attribute('atomnos', atomnos)
-            self.set_attribute('atomcoords', atomcoords)
+            self.set_attribute('atomcoords', [atomcoords])
 
         # Number of basis functions.
         # Because Q-Chem's integral recursion scheme is defined using
