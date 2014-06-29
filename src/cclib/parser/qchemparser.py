@@ -225,7 +225,12 @@ class QChem(logfileparser.Logfile):
             #  25 Bu
             #  --------------------------------------------------------------
 
-            self.skip_lines(inputfile, ['dashes', 'blank'])
+            self.skip_line(inputfile, 'dashes')
+            line = next(inputfile)
+            # Sometimes Q-Chem gets a little confused...
+            while 'Warning : Irrep of orbital' in line:
+                line = next(inputfile)
+
             line = next(inputfile)
             unres = False
             energies_alpha = []
@@ -429,7 +434,7 @@ class QChem(logfileparser.Logfile):
                 self.atomspins['mulliken'] = numpy.array(spins)
 
         # For IR-related jobs, the Hessian is printed (dim: 3*natom, 3*natom).
-        # if line.find('Hessian of the SCF Energy') > -1:
+        # if 'Hessian of the SCF Energy' in line:
         #     # A maximum of 6 columns/block.
         #     if not hasattr(self, 'hessian'):
         #         self.hessian = []
