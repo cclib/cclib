@@ -56,6 +56,8 @@ class QChem(logfileparser.Logfile):
         # Extract the atomic numbers and coordinates of the atoms.
 
         if 'Standard Nuclear Orientation (Angstroms)' in line:
+            if not hasattr(self, 'atomcoords'):
+                self.atomcoords = []
             self.skip_lines(inputfile, ['cols', 'dashes'])
             atomelements = []
             atomcoords = []
@@ -66,10 +68,15 @@ class QChem(logfileparser.Logfile):
                 atomcoords.append(list(map(float, entry[2:])))
                 line = next(inputfile)
 
-            atomnos = list(utils.PeriodicTable().number[i] for i in atomelements)
-            self.set_attribute('natom', len(atomnos))
-            self.set_attribute('atomnos', atomnos)
-            self.set_attribute('atomcoords', [atomcoords])
+            self.atomcoords.append(atomcoords)
+
+            atomnos = list(utils.PeriodicTable().number[i]
+                           for i in atomelements)
+
+            if not hasattr(self, 'natom'):
+                self.natom = len(atomnos)
+            if not hasattr(self, 'atomnos'):
+                self.atomnos = atomnos
 
         # Number of basis functions.
         # Because Q-Chem's integral recursion scheme is defined using
@@ -95,7 +102,6 @@ class QChem(logfileparser.Logfile):
         if 'Cycle       Energy         DIIS Error' in line:
             self.skip_lines(inputfile, ['d'])
             line = next(inputfile)
-            scfvalues = []
             values = []
             while list(set(line.strip())) != ['-']:
                 if not hasattr(self, 'scfvalues'):
@@ -103,11 +109,10 @@ class QChem(logfileparser.Logfile):
                 # Q-Chem only outputs the DIIS error, even if one chooses
                 # (G)DM, RCA, ...
                 diis_error = float(line.split()[2])
-                values.append(diis_error)
+                values.append([diis_error])
                 line = next(inputfile)
             # Only so we remain a list of arrays of rank 2.
-            scfvalues.append(values)
-            self.scfvalues.append(numpy.array(scfvalues))
+            self.scfvalues.append(numpy.array(values))
 
         if 'Total energy in the final basis set' in line:
             if not hasattr(self, 'scfenergies'):
@@ -179,7 +184,7 @@ class QChem(logfileparser.Logfile):
             #  --------------------------------------------------------------
             #              Orbital Energies (a.u.) and Symmetries
             #  --------------------------------------------------------------
-
+            #
             #  Alpha MOs, Restricted
             #  -- Occupied --
             # -10.018 -10.018 -10.008 -10.008 -10.007 -10.007 -10.006 -10.005
@@ -201,7 +206,7 @@ class QChem(logfileparser.Logfile):
             #  21 Bu   22 Ag   22 Bu   23 Bu   23 Ag   24 Ag   24 Bu   25 Ag
             #   0.816
             #  25 Bu
-
+            #
             #  Beta MOs, Restricted
             #  -- Occupied --
             # -10.018 -10.018 -10.008 -10.008 -10.007 -10.007 -10.006 -10.005
@@ -269,7 +274,7 @@ class QChem(logfileparser.Logfile):
             # Only look at the second block if doing an unrestricted calculation.
             # This might be a problem for ROHF/ROKS.
             if unres:
-                self.skip_lines(inputfile, ['blank'])
+                self.skip_line(inputfile, 'header')
                 line = next(inputfile)
                 while len(energies_beta) < self.nbasis:
                     if 'Occupied' in line or 'Virtual' in line:
@@ -312,7 +317,7 @@ class QChem(logfileparser.Logfile):
             #  --------------------------------------------------------------
             #                     Orbital Energies (a.u.)
             #  --------------------------------------------------------------
-
+            #
             #  Alpha MOs
             #  -- Occupied --
             # ******* -38.595 -34.580 -34.579 -34.578 -19.372 -19.372 -19.364
@@ -324,7 +329,7 @@ class QChem(logfileparser.Logfile):
             #  -- Virtual --
             #  -0.201  -0.117  -0.099  -0.086   0.020   0.031   0.055   0.067
             #   0.075   0.082   0.086   0.092   0.096   0.105   0.114   0.148
-
+            #
             #  Beta MOs
             #  -- Occupied --
             # ******* -38.561 -34.550 -34.549 -34.549 -19.375 -19.375 -19.367
