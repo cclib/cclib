@@ -89,7 +89,8 @@ class QChem(logfileparser.Logfile):
         #   ...
 
         if 'basis functions' in line:
-            self.nbasis = int(line.split()[-3])
+            if not hasattr(self, 'nbasis'):
+                self.nbasis = int(line.split()[-3])
 
         # Section with SCF iterations.
 
@@ -410,33 +411,11 @@ class QChem(logfileparser.Logfile):
         # Population analysis.
 
         if 'Ground-State Mulliken Net Atomic Charges' in line:
-
-            self.skip_line(inputfile, 'blank')
-            line = next(inputfile)
-            has_spins = False
-            if 'Spin' in line:
-                if not hasattr(self, 'atomspins'):
-                    self.atomspins = dict()
-                has_spins = True
-                spins = []
-            self.skip_line(inputfile, 'dashes')
-            if not hasattr(self, 'atomcharges'):
-                self.atomcharges = dict()
-            charges = []
-            line = next(inputfile)
-
-            while list(set(line.strip())) != ['-']:
-                elements = line.split()
-                charge = self.float(elements[2])
-                charges.append(charge)
-                if has_spins:
-                    spin = self.float(elements[3])
-                    spins.append(spin)
-                line = next(inputfile)
-
-            self.atomcharges['mulliken'] = numpy.array(charges)
-            if has_spins:
-                self.atomspins['mulliken'] = numpy.array(spins)
+            self.parse_charge_section(inputfile, 'mulliken')
+        if 'Hirshfeld Atomic Charges' in line:
+            self.parse_charge_section(inputfile, 'hirshfeld')
+        if 'Ground-State ChElPG Net Atomic Charges' in line:
+            self.parse_charge_section(inputfile, 'chelpg')
 
         # For IR-related jobs, the Hessian is printed (dim: 3*natom, 3*natom).
         # if 'Hessian of the SCF Energy' in line:
@@ -583,6 +562,38 @@ class QChem(logfileparser.Logfile):
         # 'scannames'
         # 'scanparm'
         # 'temperature'
+
+
+    def parse_charge_section(self, inputfile, chargetype):
+        """
+        Parse the population analysis charge block.
+        """
+        self.skip_line(inputfile, 'blank')
+        line = next(inputfile)
+        has_spins = False
+        if 'Spin' in line:
+            if not hasattr(self, 'atomspins'):
+                self.atomspins = dict()
+            has_spins = True
+            spins = []
+        self.skip_line(inputfile, 'dashes')
+        if not hasattr(self, 'atomcharges'):
+            self.atomcharges = dict()
+        charges = []
+        line = next(inputfile)
+
+        while list(set(line.strip())) != ['-']:
+            elements = line.split()
+            charge = self.float(elements[2])
+            charges.append(charge)
+            if has_spins:
+                spin = self.float(elements[3])
+                spins.append(spin)
+            line = next(inputfile)
+
+        self.atomcharges[chargetype] = numpy.array(charges)
+        if has_spins:
+            self.atomspins[chargetype] = numpy.array(spins)
 
 
 if __name__ == '__main__':
