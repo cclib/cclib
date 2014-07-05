@@ -94,25 +94,30 @@ class QChem(logfileparser.Logfile):
 
         # Section with SCF iterations.
 
-        if 'SCF converges when DIIS error is below' in line:
+        if 'SCF converges when ' in line:
             if not hasattr(self, 'scftargets'):
                 self.scftargets = []
-            diis_target = float(line.split()[-1])
-            self.scftargets.append([diis_target])
+            target = float(line.split()[-1])
+            self.scftargets.append([target])
 
-        if 'Cycle       Energy         DIIS Error' in line:
+        if 'Cycle       Energy' in line:
             self.skip_lines(inputfile, ['d'])
             line = next(inputfile)
             values = []
-            while list(set(line.strip())) != ['-']:
-                if not hasattr(self, 'scfvalues'):
-                    self.scfvalues = []
-                # Q-Chem only outputs the DIIS error, even if one chooses
-                # (G)DM, RCA, ...
-                diis_error = float(line.split()[2])
-                values.append([diis_error])
+            iter_counter = 1
+            while 'energy in the final basis set' not in line:
+                # Some trickery to avoid a lot of printing that can occur
+                # between each SCF iteration.
+                entry = line.split()
+                if len(entry) > 0:
+                    if entry[0] == str(iter_counter):
+                        # Q-Chem only outputs one error metric.
+                        error = float(entry[2])
+                        values.append([error])
+                        iter_counter += 1
                 line = next(inputfile)
-            # Only so we remain a list of arrays of rank 2.
+            if not hasattr(self, 'scfvalues'):
+                self.scfvalues = []
             self.scfvalues.append(numpy.array(values))
 
         if 'Total energy in the final basis set' in line:
