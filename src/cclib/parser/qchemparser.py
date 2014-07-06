@@ -159,23 +159,57 @@ class QChem(logfileparser.Logfile):
         #
         # MP4 and variants are handled by ccman.
 
+        # This is the MP2/cdman case.
         if 'MP2         total energy' in line:
             if not hasattr(self, 'mpenergies'):
                 self.mpenergies = []
             mp2energy = float(line.split()[4])
+            mp2energy = utils.convertor(mp2energy, 'hartree', 'eV')
             self.mpenergies.append([mp2energy])
 
-        # This is the MP3 case.
+        # This is the MP3/ccman2 case.
         if 'MP2 energy' in line:
             if not hasattr(self, 'mpenergies'):
                 self.mpenergies = []
+            mpenergies = []
             mp2energy = float(line.split()[3])
+            mpenergies.append(mp2energy)
             line = next(inputfile)
             line = next(inputfile)
             # Just a safe check.
             if 'MP3 energy' in line:
                 mp3energy = float(line.split()[3])
-            self.mpenergies.append([mp2energy, mp3energy])
+                mpenergies.append(mp3energy)
+            mpenergies = [utils.convertor(mpe, 'hartree', 'eV')
+                          for mpe in mpenergies]
+            self.mpenergies.append(mpenergies)
+
+        # This is the MP4/ccman case.
+        if 'EHF' in line:
+            if not hasattr(self, 'mpenergies'):
+                self.mpenergies = []
+            mpenergies = []
+
+            while list(set(line.strip())) != ['-']:
+
+                if 'EMP2' in line:
+                    mp2energy = float(line.split()[2])
+                    mpenergies.append(mp2energy)
+                if 'EMP3' in line:
+                    mp3energy = float(line.split()[2])
+                    mpenergies.append(mp3energy)
+                if 'EMP4SDQ' in line:
+                    mp4sdqenergy = float(line.split()[2])
+                    mpenergies.append(mp4sdqenergy)
+                if 'EMP4 ' in line:
+                    mp4sdtqenergy = float(line.split()[2])
+                    mpenergies.append(mp4sdtqenergy)
+
+                line = next(inputfile)
+
+            mpenergies = [utils.convertor(mpe, 'hartree', 'eV')
+                          for mpe in mpenergies]
+            self.mpenergies.append(mpenergies)
 
         # Electronic transitions.
 
@@ -587,7 +621,6 @@ class QChem(logfileparser.Logfile):
         # 'grads'
         # 'hessian'
         # 'mocoeffs'
-        # 'mpenergies'
         # 'nocoeffs'
         # 'scancoords'
         # 'scanenergies'
