@@ -1,3 +1,6 @@
+
+Running Job 1 of 1 water_cis(d).in
+qchem water_cis(d).in_5516.0 /home/eric/scratch/qchem/qchem5516/ 1
                   Welcome to Q-Chem
      A Quantum Leap Into The Future Of Chemistry
 
@@ -45,51 +48,51 @@
  D. Neuhauser,  R. Olson,  B. Peters,  J. Ritchie,  N. E. Schultz,  
  N. Shenvi,  A. C. Simmonett,  K. S. Thanthiriwatte,  Q. Wu,  W. Zhang
 
- Q-Chem 4.2.0 for Intel X86 EM64T Linux
+ Q-Chem 4.2.0 for Intel X86 Linux
 
  Parts of Q-Chem use Armadillo 4.100.2 (Dirt Cruiser).
  http://arma.sourceforge.net/
 
- Q-Chem begins on Sat Jun 28 17:22:17 2014  
+ Q-Chem begins on Sun Jul  6 13:13:16 2014  
 
 Host: 
 0
 
-     Scratch files written to /home/eric/scratch/qchem/qchem28263//
- Apr3014 |home|eric|opt|apps|qchem|trunk_intel_release|libmdc|qstr_info.C -1
+     Scratch files written to /home/eric/scratch/qchem/qchem5516//
+ May1314 814_zgan -1
 Finally everything over in PARseQInput
 
 --------------------------------------------------------------
 User input:
 --------------------------------------------------------------
 $comment
- Water, single point, RCIS(D)/STO-3G
+Water, single point, RCIS(D)/STO-3G (5 singlets, 5 triplets)
 $end
 
 $rem
- jobtype = sp
- method = cis(d)
- basis = sto-3g
- cis_n_roots = 5
+method = cis(d)
+basis = sto-3g
+cis_n_roots = 5
+ao2mo_disk = 200
 $end
 
 $molecule
- 0 1
- O
- H 1 R1
- H 1 R1 2 A1
+0 1
+O
+H 1 R1
+H 1 R1 2 A1
 
- R1=0.99
- A1=106.0
+R1=0.99
+A1=106.0
 $end
 --------------------------------------------------------------
  ----------------------------------------------------------------
              Standard Nuclear Orientation (Angstroms)
     I     Atom           X                Y                Z
  ----------------------------------------------------------------
-    1      O      -0.0000000000     0.0000000000     0.1191593746
-    2      H      -0.7906491549    -0.0000000000    -0.4766374983
-    3      H       0.7906491549    -0.0000000000    -0.4766374983
+    1      O       0.0000000000     0.0000000000     0.1191593746
+    2      H      -0.7906491549     0.0000000000    -0.4766374983
+    3      H       0.7906491549     0.0000000000    -0.4766374983
  ----------------------------------------------------------------
  Molecular Point Group                 C2v   NOp =  4
  Largest Abelian Subgroup              C2v   NOp =  4
@@ -130,9 +133,7 @@ MEM_STATIC part        62 MB
     5     -74.9643287510      2.83E-05
     6     -74.9643287654      8.23E-06
     7     -74.9643287668      1.04E-07
-    8     -74.9643287668      3.87E-08
-    9     -74.9643287668      1.38E-08
-   10     -74.9643287668      2.58E-10 Convergence criterion met
+    8     -74.9643287668      5.45E-11 Convergence criterion met
  ---------------------------------------
  SCF time:  CPU 0.01 s  wall 0.01 s
  SCF   energy in the final basis set = -74.9643287668
@@ -167,21 +168,21 @@ OV_DIM:  Setting MaxSpc = 10
  ---------------------------------------------------
 
  Excited state   1: excitation energy (eV) =   10.1773
-    Total energy for state   1:    -74.590320491555
+    Total energy for state   1:    -74.590320491568
     Multiplicity: Triplet 
     Trans. Mom.:  0.0000 X   0.0000 Y   0.0000 Z
     Strength   :  0.0000
     D(  5) --> V(  1) amplitude =  1.0000
 
  Excited state   2: excitation energy (eV) =   12.2266
-    Total energy for state   2:    -74.515007828204
+    Total energy for state   2:    -74.515007828213
     Multiplicity: Singlet 
-    Trans. Mom.: -0.0000 X  -0.1058 Y  -0.0000 Z
+    Trans. Mom.:  0.0000 X  -0.1058 Y   0.0000 Z
     Strength   :  0.0034
     D(  5) --> V(  1) amplitude =  1.0000
 
  Excited state   3: excitation energy (eV) =   12.2737
-    Total energy for state   3:    -74.513278653426
+    Total energy for state   3:    -74.513278653532
     Multiplicity: Triplet 
     Trans. Mom.:  0.0000 X   0.0000 Y   0.0000 Z
     Strength   :  0.0000
@@ -189,14 +190,14 @@ OV_DIM:  Setting MaxSpc = 10
     D(  4) --> V(  1) amplitude =  0.9676
 
  Excited state   4: excitation energy (eV) =   12.9040
-    Total energy for state   4:    -74.490115104837
+    Total energy for state   4:    -74.490115104890
     Multiplicity: Triplet 
     Trans. Mom.:  0.0000 X   0.0000 Y   0.0000 Z
     Strength   :  0.0000
     D(  5) --> V(  2) amplitude =  1.0000
 
  Excited state   5: excitation energy (eV) =   14.1314
-    Total energy for state   5:    -74.445008310566
+    Total energy for state   5:    -74.445008310664
     Multiplicity: Triplet 
     Trans. Mom.:  0.0000 X   0.0000 Y   0.0000 Z
     Strength   :  0.0000
@@ -204,22 +205,22 @@ OV_DIM:  Setting MaxSpc = 10
     D(  4) --> V(  2) amplitude =  0.8429
 
  Excited state   6: excitation energy (eV) =   14.2466
-    Total energy for state   6:    -74.440775912036
+    Total energy for state   6:    -74.440775912108
     Multiplicity: Singlet 
-    Trans. Mom.: -0.0000 X  -0.0000 Y   0.0000 Z
+    Trans. Mom.:  0.0000 X   0.0000 Y   0.0000 Z
     Strength   :  0.0000
     D(  5) --> V(  2) amplitude =  1.0000
 
  Excited state   7: excitation energy (eV) =   15.8632
-    Total energy for state   7:    -74.381368214386
+    Total energy for state   7:    -74.381368214424
     Multiplicity: Singlet 
-    Trans. Mom.:  0.0000 X  -0.0000 Y   0.4349 Z
+    Trans. Mom.:  0.0000 X   0.0000 Y   0.4349 Z
     Strength   :  0.0735
     D(  3) --> V(  2) amplitude = -0.2477
     D(  4) --> V(  1) amplitude =  0.9669
 
  Excited state   8: excitation energy (eV) =   17.0481
-    Total energy for state   8:    -74.337821017946
+    Total energy for state   8:    -74.337821017881
     Multiplicity: Triplet 
     Trans. Mom.:  0.0000 X   0.0000 Y   0.0000 Z
     Strength   :  0.0000
@@ -227,15 +228,15 @@ OV_DIM:  Setting MaxSpc = 10
     D(  4) --> V(  2) amplitude = -0.5373
 
  Excited state   9: excitation energy (eV) =   18.1604
-    Total energy for state   9:    -74.296947364500
+    Total energy for state   9:    -74.296947364576
     Multiplicity: Singlet 
-    Trans. Mom.:  0.3369 X  -0.0000 Y   0.0000 Z
+    Trans. Mom.:  0.3369 X   0.0000 Y   0.0000 Z
     Strength   :  0.0505
     D(  3) --> V(  1) amplitude = -0.4406
     D(  4) --> V(  2) amplitude =  0.8977
 
  Excited state  10: excitation energy (eV) =   21.0594
-    Total energy for state  10:    -74.190411082557
+    Total energy for state  10:    -74.190411082533
     Multiplicity: Singlet 
     Trans. Mom.:  1.5338 X   0.0000 Y   0.0000 Z
     Strength   :  1.2138
@@ -247,11 +248,9 @@ OV_DIM:  Setting MaxSpc = 10
   Timing summary (seconds)
   CPU time          0.01s
   System time       0.00s
-  Wall time         0.07s
+  Wall time         0.01s
  Algorithm is semi-direct
- Memory given =   60 MB     Disk given =   -1 MB
-not enough memory
-not enough disk
+ Memory given =   60 MB     Disk given =  200 MB
  
  MP2 correlation energy    =     -0.0380499384 au
  Total ground state energy =    -75.0023787051 au
@@ -332,12 +331,10 @@ not enough disk
      job step          cpu (% of tot)      sys (% of tot)     wall (% of tot)
  ------------------------------------------------------------------------------
  ------------------------------------------------------------------------------
-   Grand Totals     0.1214E-01          0.1000E-05          0.1583E+00
+   Grand Totals     0.4771E-02          0.1000E-05          0.4774E-02
  ------------------------------------------------------------------------------
  Algorithm is semi-direct
- Memory given =   60 MB     Disk given =   -1 MB
-not enough memory
-not enough disk
+ Memory given =   60 MB     Disk given =  200 MB
  
  MP2 correlation energy    =     -0.0380499384 au
  Total ground state energy =    -75.0023787051 au
@@ -418,7 +415,7 @@ not enough disk
      job step          cpu (% of tot)      sys (% of tot)     wall (% of tot)
  ------------------------------------------------------------------------------
  ------------------------------------------------------------------------------
-   Grand Totals     0.2359E-01          0.1000E-05          0.2043E+00
+   Grand Totals     0.8756E-02          0.1000E-05          0.8767E-02
  ------------------------------------------------------------------------------
  Analysis of SCF Wavefunction
  
@@ -451,36 +448,36 @@ not enough disk
       2 H                     0.169607
       3 H                     0.169607
   ----------------------------------------
-  Sum of atomic charges =    -0.000000
+  Sum of atomic charges =     0.000000
 
  -----------------------------------------------------------------
                     Cartesian Multipole Moments
  -----------------------------------------------------------------
     Charge (ESU x 10^10)
-                -0.0000
+                 0.0000
     Dipole Moment (Debye)
-         X      -0.0000      Y       0.0000      Z      -1.6735
+         X       0.0000      Y       0.0000      Z      -1.6735
        Tot       1.6735
     Quadrupole Moments (Debye-Ang)
         XX      -4.2950     XY       0.0000     YY      -6.1213
         XZ       0.0000     YZ       0.0000     ZZ      -5.4175
     Octopole Moments (Debye-Ang^2)
-       XXX      -0.0000    XXY       0.0000    XYY      -0.0000
-       YYY       0.0000    XXZ      -0.5848    XYZ      -0.0000
-       YYZ       0.0136    XZZ      -0.0000    YZZ       0.0000
+       XXX       0.0000    XXY       0.0000    XYY       0.0000
+       YYY       0.0000    XXZ      -0.5848    XYZ       0.0000
+       YYZ       0.0136    XZZ       0.0000    YZZ       0.0000
        ZZZ      -0.1457
     Hexadecapole Moments (Debye-Ang^3)
       XXXX      -6.8264   XXXY       0.0000   XXYY      -1.8585
-      XYYY      -0.0000   YYYY      -3.2614   XXXZ       0.0000
+      XYYY       0.0000   YYYY      -3.2614   XXXZ       0.0000
       XXYZ       0.0000   XYYZ       0.0000   YYYZ       0.0000
       XXZZ      -1.7504   XYZZ       0.0000   YYZZ      -1.4123
       XZZZ       0.0000   YZZZ       0.0000   ZZZZ      -4.9965
  -----------------------------------------------------------------
 Archival summary:
-1\1\gold\SP\MP2\STO-3G\12\eric\SatJun2817:22:182014SatJun2817:22:182014\0\\#,MP2,STO-3G,\\0,1\O\H,1,0.99\H,1,0.99,2,106\\HF=-74.9643288\MP2=-121.840169\\@
+1\1\gold\SP\MP2\STO-3G\12\eric\SunJul613:13:162014SunJul613:13:162014\0\\#,MP2,STO-3G,\\0,1\O\H,1,0.99\H,1,0.99,2,106\\HF=-74.9643288\MP2=-121.840169\\@
 
- Total job time:  0.36s(wall), 0.08s(cpu) 
- Sat Jun 28 17:22:18 2014
+ Total job time:  0.05s(wall), 0.05s(cpu) 
+ Sun Jul  6 13:13:16 2014
 
         *************************************************************
         *                                                           *

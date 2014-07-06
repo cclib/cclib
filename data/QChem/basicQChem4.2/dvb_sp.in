@@ -3,9 +3,9 @@ $comment
 $end
 
 $rem
- jobtype = sp
  method = b3lyp
  basis = sto-3g
+ scf_final_print = 2
 $end
 
 $molecule

@@ -1,4 +1,6 @@
-/home/eric/opt/apps/qchem/trunk_intel_release_r16298/exe/qcprog.exe .dvb_td.in.12004.qcin.1 /home/eric/scratch/qchem/qchem12004/
+
+Running Job 1 of 1 dvb_td.in
+qchem dvb_td.in_4211.0 /home/eric/scratch/qchem/qchem4211/ 1
                   Welcome to Q-Chem
      A Quantum Leap Into The Future Of Chemistry
 
@@ -46,79 +48,79 @@
  D. Neuhauser,  R. Olson,  B. Peters,  J. Ritchie,  N. E. Schultz,  
  N. Shenvi,  A. C. Simmonett,  K. S. Thanthiriwatte,  Q. Wu,  W. Zhang
 
- Q-Chem 4.2.0 for Intel X86 EM64T Linux
+ Q-Chem 4.2.0 for Intel X86 Linux
 
  Parts of Q-Chem use Armadillo 4.100.2 (Dirt Cruiser).
  http://arma.sourceforge.net/
 
- Q-Chem begins on Sat Jun 21 18:37:18 2014  
+ Q-Chem begins on Sun Jul  6 12:59:31 2014  
 
 Host: 
 0
 
-     Scratch files written to /home/eric/scratch/qchem/qchem12004//
- Apr3014 |home|eric|opt|apps|qchem|trunk_intel_release|libmdc|qstr_info.C -1
+     Scratch files written to /home/eric/scratch/qchem/qchem4211//
+ May1314 814_zgan -1
 Finally everything over in PARseQInput
 
 --------------------------------------------------------------
 User input:
 --------------------------------------------------------------
 $comment
- Divinylbenzene, single point, TD-DFT, RB3LYP/STO-3G
+Divinylbenzene, single point, TD-DFT (5 singlets, 5 triplets), RB3LYP/STO-3G
 $end
 
 $rem
- method = b3lyp
- basis = sto-3g
- cis_n_roots = 5
+method = b3lyp
+basis = sto-3g
+cis_n_roots = 5
 $end
 
 $molecule
- 0 1
- C                  0.27867948   -1.36683162    0.00000000
- C                  1.32303041   -0.44173575    0.00000000
- C                  1.04434506    0.92484978    0.00000000
- C                 -0.27867948    1.36683162    0.00000000
- C                 -1.32303041    0.44173575    0.00000000
- C                 -1.04434506   -0.92484978    0.00000000
- H                  2.36595443   -0.79037726    0.00000000
- H                  1.86746094    1.65407997    0.00000000
- H                 -2.36595443    0.79037726    0.00000000
- H                 -1.86746094   -1.65407997    0.00000000
- C                 -0.58659169    2.87589931    0.00000000
- C                  0.36350188    3.80076420    0.00000000
- H                 -1.65647768    3.12394312    0.00000000
- H                  0.14429560    4.87693235    0.00000000
- H                  1.43338788    3.55272039    0.00000000
- C                  0.58659169   -2.87589931    0.00000000
- C                 -0.36350188   -3.80076420    0.00000000
- H                  1.65647768   -3.12394312    0.00000000
- H                 -0.14429560   -4.87693235    0.00000000
- H                 -1.43338788   -3.55272039    0.00000000
+0 1
+C                  0.27867948   -1.36683162    0.00000000
+C                  1.32303041   -0.44173575    0.00000000
+C                  1.04434506    0.92484978    0.00000000
+C                 -0.27867948    1.36683162    0.00000000
+C                 -1.32303041    0.44173575    0.00000000
+C                 -1.04434506   -0.92484978    0.00000000
+H                  2.36595443   -0.79037726    0.00000000
+H                  1.86746094    1.65407997    0.00000000
+H                 -2.36595443    0.79037726    0.00000000
+H                 -1.86746094   -1.65407997    0.00000000
+C                 -0.58659169    2.87589931    0.00000000
+C                  0.36350188    3.80076420    0.00000000
+H                 -1.65647768    3.12394312    0.00000000
+H                  0.14429560    4.87693235    0.00000000
+H                  1.43338788    3.55272039    0.00000000
+C                  0.58659169   -2.87589931    0.00000000
+C                 -0.36350188   -3.80076420    0.00000000
+H                  1.65647768   -3.12394312    0.00000000
+H                 -0.14429560   -4.87693235    0.00000000
+H                 -1.43338788   -3.55272039    0.00000000
 $end
 --------------------------------------------------------------
  ----------------------------------------------------------------
              Standard Nuclear Orientation (Angstroms)
     I     Atom           X                Y                Z
  ----------------------------------------------------------------
-    1      C       1.3668132833     0.2787694006    -0.0000000000
-    2      C       0.4416487095     1.3230594681    -0.0000000000
-    3      C      -0.9249184834     1.0442842137    -0.0000000000
+    1      C       1.3668132833     0.2787694006     0.0000000000
+    2      C       0.4416487095     1.3230594681     0.0000000000
+    3      C      -0.9249184834     1.0442842137     0.0000000000
     4      C      -1.3668132833    -0.2787694006     0.0000000000
     5      C      -0.4416487095    -1.3230594681     0.0000000000
     6      C       0.9249184834    -1.0442842137     0.0000000000
-    7      H       0.7902216068     2.3660064222    -0.0000000000
-    8      H      -1.6542028230     1.8673521173    -0.0000000000
+    7      H       0.7902216068     2.3660064222     0.0000000000
+    8      H      -1.6542028230     1.8673521173     0.0000000000
     9      H      -0.7902216068    -2.3660064222     0.0000000000
    10      H       1.6542028230    -1.8673521173     0.0000000000
    11      C      -2.8758607131    -0.5867808885     0.0000000000
-   12      C      -3.8007881058     0.3632518344    -0.0000000000
+   12      C      -3.8007881058     0.3632518344     0.0000000000
    13      H      -3.1238341368    -1.6566831945     0.0000000000
-   14      H      -4.8769418324     0.1439747559    -0.0000000000
-   15      H      -3.5528146821     1.4331541504    -0.0000000000
-   16      C       2.8758607131     0.5867808885    -0.0000000000
+   14      H      -4.8769418324     0.1439747559     0.0000000000
+   15      H      -3.5528146821     1.4331541504     0.0000000000
+   16      C       2.8758607131     0.5867808885     0.0000000000
    17      C       3.8007881058    -0.3632518344     0.0000000000
-   18      H       3.1238341368     1.6566831945    -0.0000000000
+   18      H       3.1238341368     1.6566831945     0.0000000000
    19      H       4.8769418324    -0.1439747559     0.0000000000
    20      H       3.5528146821    -1.4331541504     0.0000000000
  ----------------------------------------------------------------
@@ -163,7 +165,7 @@ MEM_STATIC part        62 MB
    10    -382.3003620412      1.01E-07
    11    -382.3003620405      9.12E-09 Convergence criterion met
  ---------------------------------------
- SCF time:  CPU 4.57 s  wall 4.58 s
+ SCF time:  CPU 4.40 s  wall 4.42 s
  SCF   energy in the final basis set = -382.3003620405
  Total energy in the final basis set = -382.3003620405
 OV_DIM:  Setting MaxSz  = 150
@@ -206,7 +208,7 @@ OV_DIM:  Setting MaxSpc = 150
  ---------------------------------------------------
 
  Excited state   1: excitation energy (eV) =    3.6052
-    Total energy for state   1:   -382.167872200685
+    Total energy for state   1:   -382.167872199532
     Multiplicity: Triplet 
     Trans. Mom.:  0.0000 X   0.0000 Y   0.0000 Z
     Strength   :  0.0000
@@ -215,7 +217,7 @@ OV_DIM:  Setting MaxSpc = 150
     D( 35) --> V(  1) amplitude =  0.9266
 
  Excited state   2: excitation energy (eV) =    4.5675
-    Total energy for state   2:   -382.132508663686
+    Total energy for state   2:   -382.132508661758
     Multiplicity: Triplet 
     Trans. Mom.:  0.0000 X   0.0000 Y   0.0000 Z
     Strength   :  0.0000
@@ -225,7 +227,7 @@ OV_DIM:  Setting MaxSpc = 150
     D( 35) --> V(  3) amplitude =  0.6096
 
  Excited state   3: excitation energy (eV) =    4.9905
-    Total energy for state   3:   -382.116965983483
+    Total energy for state   3:   -382.116965984685
     Multiplicity: Triplet 
     Trans. Mom.:  0.0000 X   0.0000 Y   0.0000 Z
     Strength   :  0.0000
@@ -234,7 +236,7 @@ OV_DIM:  Setting MaxSpc = 150
     D( 35) --> V(  2) amplitude =  0.6085
 
  Excited state   4: excitation energy (eV) =    5.0940
-    Total energy for state   4:   -382.113160870094
+    Total energy for state   4:   -382.113160868433
     Multiplicity: Triplet 
     Trans. Mom.:  0.0000 X   0.0000 Y   0.0000 Z
     Strength   :  0.0000
@@ -244,7 +246,7 @@ OV_DIM:  Setting MaxSpc = 150
     D( 35) --> V(  2) amplitude = -0.2449
 
  Excited state   5: excitation energy (eV) =    5.5401
-    Total energy for state   5:   -382.096766765495
+    Total energy for state   5:   -382.096766766366
     Multiplicity: Triplet 
     Trans. Mom.:  0.0000 X   0.0000 Y   0.0000 Z
     Strength   :  0.0000
@@ -252,7 +254,7 @@ OV_DIM:  Setting MaxSpc = 150
     D( 35) --> V(  2) amplitude =  0.7378
 
  Excited state   6: excitation energy (eV) =    5.6388
-    Total energy for state   6:   -382.093141034141
+    Total energy for state   6:   -382.093141033035
     Multiplicity: Singlet 
     Trans. Mom.: -0.1222 X   0.0442 Y   0.0000 Z
     Strength   :  0.0023
@@ -260,24 +262,24 @@ OV_DIM:  Setting MaxSpc = 150
     D( 35) --> V(  2) amplitude = -0.6819
 
  Excited state   7: excitation energy (eV) =    6.0376
-    Total energy for state   7:   -382.078483978315
+    Total energy for state   7:   -382.078483979216
     Multiplicity: Singlet 
-    Trans. Mom.:  2.5216 X  -0.0404 Y  -0.0000 Z
+    Trans. Mom.:  2.5216 X  -0.0404 Y   0.0000 Z
     Strength   :  0.9408
     D( 35) --> V(  1) amplitude =  0.9669
 
  Excited state   8: excitation energy (eV) =    6.6210
-    Total energy for state   8:   -382.057044236764
+    Total energy for state   8:   -382.057044233591
     Multiplicity: Singlet 
-    Trans. Mom.:  0.0000 X  -0.0000 Y   0.0000 Z
+    Trans. Mom.:  0.0000 X   0.0000 Y   0.0000 Z
     Strength   :  0.0000
     D( 33) --> V(  1) amplitude =  0.7612
     D( 35) --> V(  3) amplitude = -0.6427
 
  Excited state   9: excitation energy (eV) =    7.3316
-    Total energy for state   9:   -382.030929218551
+    Total energy for state   9:   -382.030929214970
     Multiplicity: Singlet 
-    Trans. Mom.: -0.5413 X   0.9349 Y  -0.0000 Z
+    Trans. Mom.: -0.5413 X   0.9349 Y   0.0000 Z
     Strength   :  0.2096
     D( 32) --> V(  2) amplitude = -0.3718
     D( 34) --> V(  1) amplitude =  0.5918
@@ -285,18 +287,18 @@ OV_DIM:  Setting MaxSpc = 150
     D( 35) --> V(  2) amplitude =  0.6527
 
  Excited state  10: excitation energy (eV) =    7.5567
-    Total energy for state  10:   -382.022659227609
+    Total energy for state  10:   -382.022659215734
     Multiplicity: Singlet 
-    Trans. Mom.: -0.0000 X   0.0000 Y  -0.0000 Z
+    Trans. Mom.:  0.0000 X   0.0000 Y   0.0000 Z
     Strength   :  0.0000
     D( 33) --> V(  2) amplitude =  0.8857
     D( 34) --> V(  3) amplitude = -0.4536
  
  ---------------------------------------------------
   Timing summary (seconds)
-  CPU time          8.75s
+  CPU time         11.06s
   System time       0.00s
-  Wall time         8.76s
+  Wall time        11.08s
  Analysis of SCF Wavefunction
  
  --------------------------------------------------------------
@@ -354,10 +356,10 @@ OV_DIM:  Setting MaxSpc = 150
   ----------------------------------------
       1 C                    -0.004104
       2 C                    -0.079244
-      3 C                    -0.077214
+      3 C                    -0.077213
       4 C                    -0.004104
       5 C                    -0.079244
-      6 C                    -0.077214
+      6 C                    -0.077213
       7 H                     0.078761
       8 H                     0.079722
       9 H                     0.078761
@@ -373,7 +375,7 @@ OV_DIM:  Setting MaxSpc = 150
      19 H                     0.078363
      20 H                     0.076553
   ----------------------------------------
-  Sum of atomic charges =    -0.000000
+  Sum of atomic charges =     0.000000
 
  -----------------------------------------------------------------
                     Cartesian Multipole Moments
@@ -381,28 +383,28 @@ OV_DIM:  Setting MaxSpc = 150
     Charge (ESU x 10^10)
                  0.0000
     Dipole Moment (Debye)
-         X       0.0000      Y      -0.0000      Z      -0.0000
+         X       0.0000      Y       0.0000      Z       0.0000
        Tot       0.0000
     Quadrupole Moments (Debye-Ang)
         XX     -50.9644     XY      -0.1107     YY     -50.1432
-        XZ      -0.0000     YZ      -0.0000     ZZ     -58.5742
+        XZ       0.0000     YZ       0.0000     ZZ     -58.5742
     Octopole Moments (Debye-Ang^2)
-       XXX       0.0000    XXY       0.0000    XYY      -0.0000
-       YYY      -0.0000    XXZ      -0.0000    XYZ       0.0000
-       YYZ      -0.0000    XZZ       0.0000    YZZ      -0.0000
-       ZZZ      -0.0000
+       XXX       0.0000    XXY       0.0000    XYY       0.0000
+       YYY       0.0000    XXZ       0.0000    XYZ       0.0000
+       YYZ       0.0000    XZZ       0.0000    YZZ       0.0000
+       ZZZ       0.0000
     Hexadecapole Moments (Debye-Ang^3)
-      XXXX   -1811.1615   XXXY       0.4958   XXYY    -358.4243
-      XYYY       3.4692   YYYY    -329.5791   XXXZ      -0.0000
-      XXYZ      -0.0000   XYYZ      -0.0000   YYYZ      -0.0000
+      XXXX   -1811.1616   XXXY       0.4958   XXYY    -358.4243
+      XYYY       3.4692   YYYY    -329.5792   XXXZ       0.0000
+      XXYZ       0.0000   XYYZ       0.0000   YYYZ       0.0000
       XXZZ    -356.7119   XYZZ      -0.0670   YYZZ     -72.1347
-      XZZZ      -0.0000   YZZZ      -0.0000   ZZZZ     -47.5456
+      XZZZ       0.0000   YZZZ       0.0000   ZZZZ     -47.5456
  -----------------------------------------------------------------
 Archival summary:
-1\1\gold\SP\ProcedureUnspecified\STO-3G\1010\eric\SatJun2118:37:312014SatJun2118:37:312014\0\\#,ProcedureUnspecified,STO-3G,\\0,1\C\C,1,1.3949\H,2,1.09968,1,119.988\C,2,1.39471,1,119.999,3,180,0\H,4,1.09966,2,120.011,1,180,0\C,4,1.39516,2,120.009,1,0,0\C,6,1.3949,4,119.992,2,-0,0\H,7,1.09968,6,119.988,4,180,0\C,7,1.39471,6,119.999,4,0,0\H,9,1.09966,7,120.011,6,-180,0\C,1,1.54016,2,120.005,3,0,0\H,11,1.09826,1,114.585,2,180,0\C,11,1.32592,1,122.697,2,-0,0\H,13,1.09826,11,122.718,1,-0,0\H,13,1.09827,11,122.716,1,-180,0\C,6,1.54016,4,120.002,2,180,0\H,16,1.09826,6,114.585,4,-0,0\C,16,1.32592,6,122.697,4,-180,0\H,18,1.09826,16,122.718,6,0,0\H,18,1.09827,16,122.716,6,180,0\\\@
+1\1\gold\SP\ProcedureUnspecified\STO-3G\1010\eric\SunJul612:59:472014SunJul612:59:472014\0\\#,ProcedureUnspecified,STO-3G,\\0,1\C\C,1,1.3949\H,2,1.09968,1,119.988\C,2,1.39471,1,119.999,3,180,0\H,4,1.09966,2,120.011,1,-180,0\C,4,1.39516,2,120.009,1,0,0\C,6,1.3949,4,119.992,2,0,0\H,7,1.09968,6,119.988,4,-180,0\C,7,1.39471,6,119.999,4,0,0\H,9,1.09966,7,120.011,6,180,0\C,1,1.54016,2,120.005,3,0,0\H,11,1.09826,1,114.585,2,-180,0\C,11,1.32592,1,122.697,2,0,0\H,13,1.09826,11,122.718,1,0,0\H,13,1.09827,11,122.716,1,-180,0\C,6,1.54016,4,120.002,2,180,0\H,16,1.09826,6,114.585,4,0,0\C,16,1.32592,6,122.697,4,-180,0\H,18,1.09826,16,122.718,6,0,0\H,18,1.09827,16,122.716,6,180,0\\\@
 
- Total job time:  13.38s(wall), 13.36s(cpu) 
- Sat Jun 21 18:37:31 2014
+ Total job time:  15.60s(wall), 15.49s(cpu) 
+ Sun Jul  6 12:59:47 2014
 
         *************************************************************
         *                                                           *

@@ -1,3 +1,6 @@
+
+Running Job 1 of 1 water_ccd.in
+qchem water_ccd.in_3593.0 /home/eric/scratch/qchem/qchem3593/ 1
                   Welcome to Q-Chem
      A Quantum Leap Into The Future Of Chemistry
 
@@ -45,50 +48,49 @@
  D. Neuhauser,  R. Olson,  B. Peters,  J. Ritchie,  N. E. Schultz,  
  N. Shenvi,  A. C. Simmonett,  K. S. Thanthiriwatte,  Q. Wu,  W. Zhang
 
- Q-Chem 4.2.0 for Intel X86 EM64T Linux
+ Q-Chem 4.2.0 for Intel X86 Linux
 
  Parts of Q-Chem use Armadillo 4.100.2 (Dirt Cruiser).
  http://arma.sourceforge.net/
 
- Q-Chem begins on Sat Jun 28 17:21:30 2014  
+ Q-Chem begins on Sun Jul  6 12:54:17 2014  
 
 Host: 
 0
 
-     Scratch files written to /home/eric/scratch/qchem/qchem28086//
- Apr3014 |home|eric|opt|apps|qchem|trunk_intel_release|libmdc|qstr_info.C -1
+     Scratch files written to /home/eric/scratch/qchem/qchem3593//
+ May1314 814_zgan -1
 Finally everything over in PARseQInput
 
 --------------------------------------------------------------
 User input:
 --------------------------------------------------------------
 $comment
- Water, single point, RCCD/STO-3G
+Water, single point, RCCD/STO-3G
 $end
 
 $rem
- jobtype = sp
- method = ccd
- basis = sto-3g
+method = ccd
+basis = sto-3g
 $end
 
 $molecule
- 0 1
- O
- H 1 R1
- H 1 R1 2 A1
+0 1
+O
+H 1 R1
+H 1 R1 2 A1
 
- R1=0.99
- A1=106.0
+R1=0.99
+A1=106.0
 $end
 --------------------------------------------------------------
  ----------------------------------------------------------------
              Standard Nuclear Orientation (Angstroms)
     I     Atom           X                Y                Z
  ----------------------------------------------------------------
-    1      O      -0.0000000000     0.0000000000     0.1191593746
-    2      H      -0.7906491549    -0.0000000000    -0.4766374983
-    3      H       0.7906491549    -0.0000000000    -0.4766374983
+    1      O       0.0000000000     0.0000000000     0.1191593746
+    2      H      -0.7906491549     0.0000000000    -0.4766374983
+    3      H       0.7906491549     0.0000000000    -0.4766374983
  ----------------------------------------------------------------
  Molecular Point Group                 C2v   NOp =  4
  Largest Abelian Subgroup              C2v   NOp =  4
@@ -134,9 +136,7 @@ MEM_STATIC part       301 MB
     5     -74.9643287511      2.83E-05
     6     -74.9643287654      8.23E-06
     7     -74.9643287668      1.04E-07
-    8     -74.9643287668      3.87E-08
-    9     -74.9643287668      1.38E-08
-   10     -74.9643287668      2.58E-10 Convergence criterion met
+    8     -74.9643287668      5.45E-11 Convergence criterion met
  ---------------------------------------
  SCF time:  CPU 0.01 s  wall 0.01 s
  SCF   energy in the final basis set = -74.9643287668
@@ -211,21 +211,12 @@ MEM_STATIC part       301 MB
   - Frozen virtual         0    0    0    0     0   
  ----------------------------------------------------
 
- Import integrals:   CPU 0.00 s  wall 0.01 s
+ Import integrals:   CPU 0.00 s  wall 0.00 s
 
  
- Import integrals:   CPU 0.01 s  wall 0.89 s
+ Import integrals:   CPU 0.00 s  wall 0.00 s
 
- MP2 amplitudes:   CPU 0.00 s  wall 1.17 s
-
- libcc timings
- -------------
-Execution of mp2_energy: 
-Calls: 1         , Wall: 0.63     s
-Execution of mp2_t1: 
-Calls: 1         , Wall: 0.00     s
-Execution of mp2_t2: 
-Calls: 1         , Wall: 0.04     s
+ MP2 amplitudes:   CPU 0.00 s  wall 0.00 s
 
            CCD T amplitudes will be solved using DIIS.
            Start     Size      MaxIter   EConv     TConv     
@@ -261,24 +252,9 @@ Calls: 1         , Wall: 0.04     s
  -0.0818       1 (B1) B      1 (B1) A    ->    2 (B1) B      2 (B1) A     
               -0.6032       -0.6032            0.7086        0.7086       
 
- CCD calculation:   CPU 0.17 s  wall 1.87 s
+ CCD calculation:   CPU 0.16 s  wall 0.36 s
 
- libcc timings
- -------------
-Execution of ccd_energy: 
-Calls: 9         , Wall: 0.00     s
-Execution of ccd_f1_oo: 
-Calls: 7         , Wall: 0.53     s
-Execution of ccd_f1_vv: 
-Calls: 7         , Wall: 0.08     s
-Execution of ccd_i1a_ovov: 
-Calls: 7         , Wall: 0.49     s
-Execution of ccd_i4_oooo: 
-Calls: 7         , Wall: 0.02     s
-Execution of ccd_t2: 
-Calls: 7         , Wall: 0.49     s
-
- Total ccman2 time:   CPU 0.94 s  wall 9.68 s
+ Total ccman2 time:   CPU 1.10 s  wall 1.30 s
 
  Analysis of SCF Wavefunction
  
@@ -311,36 +287,36 @@ Calls: 7         , Wall: 0.49     s
       2 H                     0.169607
       3 H                     0.169607
   ----------------------------------------
-  Sum of atomic charges =    -0.000000
+  Sum of atomic charges =     0.000000
 
  -----------------------------------------------------------------
                     Cartesian Multipole Moments
  -----------------------------------------------------------------
     Charge (ESU x 10^10)
-                -0.0000
+                 0.0000
     Dipole Moment (Debye)
-         X       0.0000      Y      -0.0000      Z      -1.6735
+         X       0.0000      Y       0.0000      Z      -1.6735
        Tot       1.6735
     Quadrupole Moments (Debye-Ang)
         XX      -4.2950     XY       0.0000     YY      -6.1213
-        XZ      -0.0000     YZ       0.0000     ZZ      -5.4175
+        XZ       0.0000     YZ       0.0000     ZZ      -5.4175
     Octopole Moments (Debye-Ang^2)
-       XXX       0.0000    XXY      -0.0000    XYY       0.0000
-       YYY      -0.0000    XXZ      -0.5848    XYZ      -0.0000
-       YYZ       0.0136    XZZ       0.0000    YZZ      -0.0000
+       XXX       0.0000    XXY       0.0000    XYY       0.0000
+       YYY       0.0000    XXZ      -0.5848    XYZ       0.0000
+       YYZ       0.0136    XZZ       0.0000    YZZ       0.0000
        ZZZ      -0.1457
     Hexadecapole Moments (Debye-Ang^3)
       XXXX      -6.8264   XXXY       0.0000   XXYY      -1.8585
-      XYYY      -0.0000   YYYY      -3.2614   XXXZ      -0.0000
-      XXYZ       0.0000   XYYZ      -0.0000   YYYZ      -0.0000
+      XYYY       0.0000   YYYY      -3.2614   XXXZ       0.0000
+      XXYZ       0.0000   XYYZ       0.0000   YYYZ       0.0000
       XXZZ      -1.7504   XYZZ       0.0000   YYZZ      -1.4123
-      XZZZ      -0.0000   YZZZ      -0.0000   ZZZZ      -4.9965
+      XZZZ       0.0000   YZZZ       0.0000   ZZZZ      -4.9965
  -----------------------------------------------------------------
 Archival summary:
-1\1\gold\SP\ProcedureUnspecified\STO-3G\12\eric\SatJun2817:21:402014SatJun2817:21:402014\0\\#,ProcedureUnspecified,STO-3G,\\0,1\O\H,1,0.99\H,1,0.99,2,106\\HF=-74.9643288\\@
+1\1\gold\SP\ProcedureUnspecified\STO-3G\12\eric\SunJul612:54:192014SunJul612:54:192014\0\\#,ProcedureUnspecified,STO-3G,\\0,1\O\H,1,0.99\H,1,0.99,2,106\\HF=-74.9643288\\@
 
- Total job time:  10.78s(wall), 1.02s(cpu) 
- Sat Jun 28 17:21:41 2014
+ Total job time:  1.38s(wall), 1.18s(cpu) 
+ Sun Jul  6 12:54:19 2014
 
         *************************************************************
         *                                                           *

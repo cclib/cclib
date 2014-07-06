@@ -3,7 +3,6 @@ $comment
 $end
 
 $rem
- jobtype = sp
  method = mp2
  basis = sto-3g
 $end

@@ -1,6 +1,6 @@
 
 Running Job 1 of 1 dvb_gopt_unconverged.in
-qchem dvb_gopt_unconverged.in_20047.0 /home/eric/scratch/qchem/qchem20047/ 1
+qchem dvb_gopt_unconverged.in_4700.0 /home/eric/scratch/qchem/qchem4700/ 1
                   Welcome to Q-Chem
      A Quantum Leap Into The Future Of Chemistry
 
@@ -53,12 +53,12 @@ qchem dvb_gopt_unconverged.in_20047.0 /home/eric/scratch/qchem/qchem20047/ 1
  Parts of Q-Chem use Armadillo 4.100.2 (Dirt Cruiser).
  http://arma.sourceforge.net/
 
- Q-Chem begins on Sat Jun 28 16:55:58 2014  
+ Q-Chem begins on Sun Jul  6 13:05:28 2014  
 
 Host: 
 0
 
-     Scratch files written to /home/eric/scratch/qchem/qchem20047//
+     Scratch files written to /home/eric/scratch/qchem/qchem4700//
  May1314 814_zgan -1
 Finally everything over in PARseQInput
 
@@ -166,7 +166,7 @@ MEM_STATIC part        62 MB
    10    -382.3003620412      1.01E-07
    11    -382.3003620405      9.12E-09 Convergence criterion met
  ---------------------------------------
- SCF time:  CPU 4.63 s  wall 4.65 s
+ SCF time:  CPU 6.17 s  wall 6.18 s
  SCF   energy in the final basis set = -382.3003620405
  Total energy in the final basis set = -382.3003620405
  Analysis of SCF Wavefunction
@@ -307,7 +307,7 @@ MEM_STATIC part        62 MB
     3   0.0000000   0.0000000
  Max gradient component =       5.055E-02
  RMS gradient           =       1.385E-02
- Gradient time:  CPU 0.94 s  wall 0.94 s
+ Gradient time:  CPU 0.87 s  wall 0.88 s
  Geometry Optimization Parameters
    NAtoms,    NIC,     NZ,  NCons,   NDum,   NFix, NCnnct, MaxDiis
        20     130       0       0       0       0       0       0
@@ -445,7 +445,7 @@ Setting SaveMinima to 0
    10    -382.3076865484      3.99E-08
    11    -382.3076865486      3.58E-09 Convergence criterion met
  ---------------------------------------
- SCF time:  CPU 5.28 s  wall 5.29 s
+ SCF time:  CPU 4.49 s  wall 4.50 s
  SCF   energy in the final basis set = -382.3076865486
  Total energy in the final basis set = -382.3076865486
  Analysis of SCF Wavefunction
@@ -586,7 +586,7 @@ Setting SaveMinima to 0
     3  -0.0000000  -0.0000000
  Max gradient component =       9.678E-03
  RMS gradient           =       3.235E-03
- Gradient time:  CPU 0.95 s  wall 0.96 s
+ Gradient time:  CPU 0.86 s  wall 0.86 s
  Geometry Optimization Parameters
    NAtoms,    NIC,     NZ,  NCons,   NDum,   NFix, NCnnct, MaxDiis
        20     130       0       0       0       0       0       0

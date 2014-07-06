@@ -1,6 +1,6 @@
 
 Running Job 1 of 1 dvb_ir.in
-qchem dvb_ir.in_15540.0 /home/eric/scratch/qchem/qchem15540/ 1
+qchem dvb_ir.in_4469.0 /home/eric/scratch/qchem/qchem4469/ 1
                   Welcome to Q-Chem
      A Quantum Leap Into The Future Of Chemistry
 
@@ -53,12 +53,12 @@ qchem dvb_ir.in_15540.0 /home/eric/scratch/qchem/qchem15540/ 1
  Parts of Q-Chem use Armadillo 4.100.2 (Dirt Cruiser).
  http://arma.sourceforge.net/
 
- Q-Chem begins on Sat Jun 28 16:54:20 2014  
+ Q-Chem begins on Sun Jul  6 13:01:29 2014  
 
 Host: 
 0
 
-     Scratch files written to /home/eric/scratch/qchem/qchem15540//
+     Scratch files written to /home/eric/scratch/qchem/qchem4469//
  May1314 814_zgan -1
 Finally everything over in PARseQInput
 
@@ -160,7 +160,7 @@ MEM_STATIC part        62 MB
    10    -382.3082745589      3.92E-08
    11    -382.3082745715      6.45E-09 Convergence criterion met
  ---------------------------------------
- SCF time:  CPU 5.58 s  wall 5.60 s
+ SCF time:  CPU 6.14 s  wall 6.15 s
  SCF   energy in the final basis set = -382.3082745715
  Total energy in the final basis set = -382.3082745715
  Analysis of SCF Wavefunction
@@ -897,7 +897,7 @@ OV_DIM:  Setting MaxSpc = 875
    58  -0.0000231  -0.0000179   0.0000000   0.3934214   0.1021811  -0.0000000
    59  -0.0000179  -0.0000139  -0.0000000   0.1021811   0.0933606  -0.0000000
    60  -0.0000000  -0.0000000   0.0000279  -0.0000000  -0.0000000   0.0251021
- Gradient time:  CPU 126.60 s  wall 126.86 s
+ Gradient time:  CPU 117.37 s  wall 117.65 s
  **********************************************************************
  **                                                                  **
  **                       VIBRATIONAL ANALYSIS                       **
@@ -1495,10 +1495,10 @@ OV_DIM:  Setting MaxSpc = 875
    Total Enthalpy:              117.424 kcal/mol
    Total Entropy:                92.039  cal/mol.K
 Archival summary:
-1\1\gold\FREQ\ProcedureUnspecified\STO-3G\1010\eric\SatJun2816:56:322014SatJun2816:56:322014\0\\#,FREQ,ProcedureUnspecified,STO-3G,\\0,1\C\C,1,1.42197\H,2,1.09701,1,119.423\C,2,1.40247,1,120.874,3,-180,0\H,4,1.09872,2,119.65,1,180,0\C,1,1.42204,2,117.978,3,180,0\H,6,1.09872,1,119.201,2,180,0\C,6,1.40247,1,121.149,2,0,0\H,8,1.09701,6,119.704,1,-180,0\C,8,1.42197,6,120.874,1,0,0\C,1,1.49784,2,122.901,3,0,0\H,11,1.10099,1,114.63,2,-180,0\C,11,1.34423,1,126.58,2,0,0\H,13,1.09597,11,122.485,1,0,0\H,13,1.09667,11,121.295,1,180,0\C,10,1.49784,8,122.901,6,-180,0\H,16,1.10099,10,114.63,8,180,0\C,16,1.34423,10,126.58,8,0,0\H,18,1.09597,16,122.485,10,0,0\H,18,1.09667,16,121.295,10,-180,0\\\@
+1\1\gold\FREQ\ProcedureUnspecified\STO-3G\1010\eric\SunJul613:03:332014SunJul613:03:332014\0\\#,FREQ,ProcedureUnspecified,STO-3G,\\0,1\C\C,1,1.42197\H,2,1.09701,1,119.423\C,2,1.40247,1,120.874,3,-180,0\H,4,1.09872,2,119.65,1,180,0\C,1,1.42204,2,117.978,3,180,0\H,6,1.09872,1,119.201,2,180,0\C,6,1.40247,1,121.149,2,0,0\H,8,1.09701,6,119.704,1,-180,0\C,8,1.42197,6,120.874,1,0,0\C,1,1.49784,2,122.901,3,0,0\H,11,1.10099,1,114.63,2,-180,0\C,11,1.34423,1,126.58,2,0,0\H,13,1.09597,11,122.485,1,0,0\H,13,1.09667,11,121.295,1,180,0\C,10,1.49784,8,122.901,6,-180,0\H,16,1.10099,10,114.63,8,180,0\C,16,1.34423,10,126.58,8,0,0\H,18,1.09597,16,122.485,10,0,0\H,18,1.09667,16,121.295,10,-180,0\\\@
 
- Total job time:  132.60s(wall), 132.31s(cpu) 
- Sat Jun 28 16:56:32 2014
+ Total job time:  123.85s(wall), 123.56s(cpu) 
+ Sun Jul  6 13:03:33 2014
 
         *************************************************************
         *                                                           *

@@ -1,12 +1,12 @@
 $comment
- Water, single point, RCIS(D)/STO-3G
+ Water, single point, RCIS(D)/STO-3G (5 singlets, 5 triplets)
 $end
 
 $rem
- jobtype = sp
  method = cis(d)
  basis = sto-3g
  cis_n_roots = 5
+ ao2mo_disk = 200
 $end
 
 $molecule

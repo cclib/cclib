@@ -1,6 +1,6 @@
 
 Running Job 1 of 1 water_ir.in
-qchem water_ir.in_28554.0 /home/eric/scratch/qchem/qchem28554/ 1
+qchem water_ir.in_2684.0 /home/eric/scratch/qchem/qchem2684/ 1
                   Welcome to Q-Chem
      A Quantum Leap Into The Future Of Chemistry
 
@@ -53,12 +53,12 @@ qchem water_ir.in_28554.0 /home/eric/scratch/qchem/qchem28554/ 1
  Parts of Q-Chem use Armadillo 4.100.2 (Dirt Cruiser).
  http://arma.sourceforge.net/
 
- Q-Chem begins on Sat Jun 28 17:23:36 2014  
+ Q-Chem begins on Sun Jul  6 12:48:36 2014  
 
 Host: 
 0
 
-     Scratch files written to /home/eric/scratch/qchem/qchem28554//
+     Scratch files written to /home/eric/scratch/qchem/qchem2684//
  May1314 814_zgan -1
 Finally everything over in PARseQInput
 
@@ -231,7 +231,7 @@ OV_DIM:  Setting MaxSpc = 10
     7   0.4148874  -0.0000000  -0.2634436
     8  -0.0000000  -0.0194027   0.0000000
     9  -0.2634436   0.0000000   0.2453350
- Gradient time:  CPU 0.41 s  wall 0.41 s
+ Gradient time:  CPU 0.41 s  wall 0.78 s
  **********************************************************************
  **                                                                  **
  **                       VIBRATIONAL ANALYSIS                       **
@@ -285,10 +285,10 @@ OV_DIM:  Setting MaxSpc = 10
    Total Enthalpy:               16.769 kcal/mol
    Total Entropy:                45.245  cal/mol.K
 Archival summary:
-1\1\gold\FREQ\ProcedureUnspecified\STO-3G\12\eric\SatJun2817:23:362014SatJun2817:23:362014\0\\#,FREQ,ProcedureUnspecified,STO-3G,\\0,1\O\H,1,0.99\H,1,0.99,2,106\\\@
+1\1\gold\FREQ\ProcedureUnspecified\STO-3G\12\eric\SunJul612:48:372014SunJul612:48:372014\0\\#,FREQ,ProcedureUnspecified,STO-3G,\\0,1\O\H,1,0.99\H,1,0.99,2,106\\\@
 
- Total job time:  0.53s(wall), 0.53s(cpu) 
- Sat Jun 28 17:23:36 2014
+ Total job time:  0.93s(wall), 0.53s(cpu) 
+ Sun Jul  6 12:48:37 2014
 
         *************************************************************
         *                                                           *
