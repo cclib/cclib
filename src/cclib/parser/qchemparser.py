@@ -212,7 +212,7 @@ class QChem(logfileparser.Logfile):
             self.mpenergies.append(mpenergies)
 
         # Coupled cluster corrections.
-        # Homefully we only have to deal with ccman2 here.
+        # Hopefully we only have to deal with ccman2 here.
 
         if 'CCD total energy' in line:
             if not hasattr(self, 'ccenergies'):
@@ -628,10 +628,43 @@ class QChem(logfileparser.Logfile):
                             self.vibanharms.append(float(line.split()[-1]))
                         line = next(inputfile)
 
+        if 'STANDARD THERMODYNAMIC QUANTITIES AT' in line:
+
+            if not hasattr(self, 'temperature'):
+                self.temperature = float(line.split()[4])
+            # Not supported yet.
+            if not hasattr(self, 'pressure'):
+                self.pressure = float(line.split()[7])
+            self.skip_lines(inputfile, ['blank', 'Imaginary'])
+            line = next(inputfile)
+            # Not supported yet.
+            if 'Zero point vibrational energy' in line:
+                if not hasattr(self, 'zpe'):
+                    self.zpe = float(line.split()[4])
+
+            atommasses = []
+
+            while 'Archival summary' not in line:
+
+                if 'Has Mass' in line:
+                    atommass = float(line.split()[6])
+                    atommasses.append(atommass)
+
+                if 'Total Enthalpy' in line:
+                    if not hasattr(self, 'enthalpy'):
+                        self.enthalpy = float(line.split()[2])
+                if 'Total Entropy' in line:
+                    if not hasattr(self, 'entropy'):
+                        self.enthalpy = float(line.split()[2])
+
+                line = next(inputfile)
+
+            if not hasattr(self, 'atommasses'):
+                self.atommasses = numpy.array(atommasses)
+
         # TODO:
         # 'aonames'
         # 'atombasis'
-        # 'atommasses'
         # 'coreelectrons'
         # 'enthalpy'
         # 'entropy'
@@ -651,7 +684,6 @@ class QChem(logfileparser.Logfile):
         # 'scanenergies'
         # 'scannames'
         # 'scanparm'
-        # 'temperature'
 
 
     def parse_charge_section(self, inputfile, chargetype):
