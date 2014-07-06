@@ -211,6 +211,32 @@ class QChem(logfileparser.Logfile):
                           for mpe in mpenergies]
             self.mpenergies.append(mpenergies)
 
+        # Coupled cluster corrections.
+        # Homefully we only have to deal with ccman2 here.
+
+        if 'CCD total energy' in line:
+            if not hasattr(self, 'ccenergies'):
+                self.ccenergies = []
+            ccdenergy = float(line.split()[-1])
+            ccdenergy = utils.convertor(ccdenergy, 'hartree', 'eV')
+            self.ccenergies.append(ccdenergy)
+        if 'CCSD total energy' in line:
+            has_triples = False
+            if not hasattr(self, 'ccenergies'):
+                self.ccenergies = []
+            ccsdenergy = float(line.split()[-1])
+            # Make sure we aren't actually doing CCSD(T).
+            line = next(inputfile)
+            line = next(inputfile)
+            if 'CCSD(T) total energy' in line:
+                has_triples = True
+                ccsdtenergy = float(line.split()[-1])
+                ccsdtenergy = utils.convertor(ccsdtenergy, 'hartree', 'eV')
+                self.ccenergies.append(ccsdtenergy)
+            if not has_triples:
+                ccsdenergy = utils.convertor(ccsdenergy, 'hartree', 'eV')
+                self.ccenergies.append(ccsdenergy)
+
         # Electronic transitions.
 
         if 'Excitation Energies' in line:
@@ -606,7 +632,6 @@ class QChem(logfileparser.Logfile):
         # 'aonames'
         # 'atombasis'
         # 'atommasses'
-        # 'ccenergies'
         # 'coreelectrons'
         # 'enthalpy'
         # 'entropy'
