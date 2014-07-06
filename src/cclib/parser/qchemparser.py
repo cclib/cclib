@@ -33,13 +33,7 @@ class QChem(logfileparser.Logfile):
         return 'QChem("%s")' % (self.filename)
 
     def normalisesym(self, label):
-        pass
-
-    def before_parsing(self):
-        pass
-
-    def after_parsing(self):
-        pass
+        """Q-Chem does not require normalizing symmetry labels."""
 
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
@@ -182,6 +176,42 @@ class QChem(logfileparser.Logfile):
             if 'MP3 energy' in line:
                 mp3energy = float(line.split()[3])
             self.mpenergies.append([mp2energy, mp3energy])
+
+        # Electronic transitions.
+
+        if 'Excitation Energies' in line:
+
+            self.skip_lines(inputfile, ['dashes', 'blank'])
+            line = next(inputfile)
+
+            etenergies = []
+            etsyms = []
+            etoscs = []
+
+            while list(set(line.strip())) != ['-']:
+
+                # Take the total energy for the state and subtract from the
+                # ground state energy, rather than just the EE;
+                # this will be more accurate.
+                if 'Total energy for state' in line:
+                    energy = utils.convertor(float(line.split()[-1]), 'hartree', 'cm-1')
+                    etenergy = energy - utils.convertor(self.scfenergies[-1], 'eV', 'cm-1')
+                    etenergies.append(etenergy)
+                if 'Multiplicity' in line:
+                    etsym = line.split()[1]
+                    etsyms.append(etsym)
+                if 'Strength' in line:
+                    strength = float(line.split()[-1])
+                    etoscs.append(strength)
+
+                line = next(inputfile)
+
+            if not hasattr(self, 'etenergies'):
+                self.etenergies = numpy.array(etenergies)
+            if not hasattr(self, 'etsyms'):
+                self.etsyms = etsyms
+            if not hasattr(self, 'etosecs'):
+                self.etoscs = numpy.array(etoscs)
 
         # Molecular orbital energies and symmetries.
 
@@ -546,11 +576,8 @@ class QChem(logfileparser.Logfile):
         # 'coreelectrons'
         # 'enthalpy'
         # 'entropy'
-        # 'etenergies'
-        # 'etoscs'
         # 'etrotats'
         # 'etsecs'
-        # 'etsyms'
         # 'freeenergy'
         # 'fonames'
         # 'fooverlaps'
@@ -570,9 +597,7 @@ class QChem(logfileparser.Logfile):
 
 
     def parse_charge_section(self, inputfile, chargetype):
-        """
-        Parse the population analysis charge block.
-        """
+        """Parse the population analysis charge block."""
         self.skip_line(inputfile, 'blank')
         line = next(inputfile)
         has_spins = False
