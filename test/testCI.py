@@ -99,6 +99,11 @@ class GaussianCISTest(GenericCISTest):
         self.assertEquals(self.data.nocoeffs.shape, (self.data.nmo, self.data.nbasis))
 
 
+class QChemCISTest(GenericCISTest):
+    """Customized CIS(RHF)/STO-3G water unittest"""
+    nstates = 10
+
+
 if __name__=="__main__":
 
     from testall import testall

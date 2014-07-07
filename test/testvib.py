@@ -59,9 +59,9 @@ class JaguarIRTest(GenericIRTest):
     """Customized vibrational frequency unittest"""
 
     def testvibsyms(self):
-            """Is the length of vibsyms correct?"""
-            numvib = 3*len(self.data.atomnos) - 6        
-            self.assertEqual(len(self.data.vibsyms), numvib)
+        """Is the length of vibsyms correct?"""
+        numvib = 3*len(self.data.atomnos) - 6
+        self.assertEqual(len(self.data.vibsyms), numvib)
 
 
 class OrcaIRTest(GenericIRTest):
@@ -73,6 +73,34 @@ class OrcaIRTest(GenericIRTest):
     # to determine whether this difference is algorithmic in nature,
     # but in the meanwhile we will expect to parse this value.
     max_IR_intensity = 215    
+
+
+class QChemIRTest(GenericIRTest):
+    """Customized vibrational frequency unittest"""
+
+    def testtemperature(self):
+        """Is the temperature 298.15 K?"""
+        self.assertEqual(298.15, self.data.temperature)
+
+    # def testenthalpy(self):
+    #     """Is the enthalpy ..."""
+    #     self.assertInside(self.data.enthalpy, )
+
+    # def testentropy(self):
+    #     """Is the entropy ..."""
+    #     self.assertInside(self.data.entropy, )
+
+    # def testfreeenergy(self):
+    #     """Is the free energy ..."""
+    #     self.assertInside(self.data.freeenergy, )
+
+    # Molecular mass of DVB in mD.
+    molecularmass = 130078.25
+
+    def testatommasses(self):
+        """Do the atom masses sum up to the molecular mass (130078.25+-0.1mD)?"""
+        mm = 1000*sum(self.data.atommasses)
+        self.assertInside(mm, 130078.25, 0.1, "Molecule mass: %f not 130078 +- 0.1mD" %mm)
 
 
 class GenericIRimgTest(bettertest.TestCase):

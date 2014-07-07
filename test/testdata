@@ -53,12 +53,16 @@ CC        Molpro      GenericCCTest         basicMolpro2006       h2o_ccsd(t).ou
 CC        Molpro      GenericCCTest         basicMolpro2012       h2o_ccsdt.out
 CC        NWChem      GenericCCTest         basicNWChem6.0        water_ccsd(t).out
 CC        Psi         GenericCCTest         basicPsi4             water_ccsd.out
+CC        QChem       GenericCCTest         basicQChem4.2         water_ccd.out
+CC        QChem       GenericCCTest         basicQChem4.2         water_ccsd.out
+CC        QChem       GenericCCTest         basicQChem4.2         water_ccsd(t).out
 
 CI        GAMESS      GenericCISTest        basicGAMESS-US2012    water_cis_saps.out
 CI        Gaussian    GaussianCISTest       basicGaussian03       water_cis.log
 CI        Gaussian    GaussianCISTest       basicGaussian09       water_cis.log
 CI        Jaguar      GenericCISTest        basicJaguar7.0        water_cis.out
 CI        Jaguar      GenericCISTest        basicJaguar8.3        water_cis.out
+CI        QChem       QChemCISTest          basicQChem4.2         water_cis.out
 
 Core      ADF         ADFCoreTest           basicADF2007.01       MoOCl4-sp.adfout
 Core      ADF         ADFCoreTest           basicADF2013.01       MoOCl4-sp.adfout
@@ -116,6 +120,10 @@ MP        Molpro      GenericMP4SDTQTest    basicMolpro2006       h2o_mp4.out
 MP        Molpro      GenericMP4SDTQTest    basicMolpro2012       h2o_mp4.out
 MP        NWChem      GenericMP2Test        basicNWChem6.0        water_mp2.out
 MP        Psi         GenericMP2Test        basicPsi4             water_mp2.out
+MP        QChem       GenericMP2Test        basicQChem4.2         water_mp2.out
+MP        QChem       GenericMP3Test        basicQChem4.2         water_mp3.out
+MP        QChem       QChemMP4SDQTest       basicQChem4.2         water_mp4sdq.out
+MP        QChem       QChemMP4SDTQTest      basicQChem4.2         water_mp4.out
 
 Scan      Gaussian     GaussianScanTest     basicGaussian09       dvb_scan.log
 Scan      ORCA         OrcaScanTest         basicORCA2.9          dvb_scan.out
@@ -174,6 +182,7 @@ TD        Gaussian    GaussianTDDFTTest     basicGaussian09       dvb_td.out
 TD        Jaguar      GenericTDTest         basicJaguar8.3        dvb_td.out
 TD        ORCA        OrcaTDDFTTest         basicORCA2.9          dvb_td.out
 TD        ORCA        OrcaTDDFTTest         basicORCA3.0          dvb_td.out
+TD        QChem       QChemTDTest           basicQChem4.2         dvb_td.out
 
 TDun      Gaussian    GenericTDunTest       basicGaussian03       CO_TD_delta.log
 TDun      Gaussian    GenericTDunTest       basicGaussian09       CO_TD_delta.log
@@ -192,7 +201,7 @@ vib       Molpro      GenericIRTest         basicMolpro2006       dvb_ir.out    
 vib       Molpro      GenericIRTest         basicMolpro2012       dvb_ir.out            dvb_ir.log
 vib       ORCA        OrcaIRTest            basicORCA2.9          dvb_ir.out
 vib       ORCA        OrcaIRTest            basicORCA3.0          dvb_ir.out
-vib       QChem       GenericIRTest         basicQChem4.2         dvb_ir.out
+vib       QChem       QChemIRTest         basicQChem4.2         dvb_ir.out
 
 vib       GAMESS      GenericIRimgTest      basicGAMESS-US2012    nh3_ts_ir.out
 

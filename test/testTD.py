@@ -26,7 +26,7 @@ class GenericTDTest(bettertest.TestCase):
         self.assertInside(self.data.etenergies[idx_lambdamax], 41000, 5000)
     
     def testoscs(self):
-        """Is the maximum of eotscs in the right range?"""
+        """Is the maximum of etoscs in the right range?"""
         self.assertEqual(len(self.data.etoscs), self.number)
         self.assertInside(max(self.data.etoscs), 0.67, 0.1)
 
@@ -92,9 +92,15 @@ class OrcaTDDFTTest(GenericTDTest):
         self.assertInside(self.data.etenergies[idx_lambdamax], 48000, 5000)
 
     def testoscs(self):
-        """Is the maximum of eotscs in the right range?"""
+        """Is the maximum of etoscs in the right range?"""
         self.assertEqual(len(self.data.etoscs), self.number)
         self.assertInside(max(self.data.etoscs), 1.0, 0.1)
+
+
+class QChemTDTest(GenericTDTest):
+    """Customized time-dependent HF/DFT unittest"""
+
+    number = 10
 
 
 class GenericTDTesttrp(GenericTDTest):

@@ -10,6 +10,7 @@
 
 from __future__ import print_function
 
+import re
 import numpy
 
 from . import logfileparser
@@ -34,6 +35,12 @@ class QChem(logfileparser.Logfile):
 
     def normalisesym(self, label):
         """Q-Chem does not require normalizing symmetry labels."""
+
+    def before_parsing(self):
+
+        # Keep track of whether or not we're performing an
+        # (un)restricted calculation.
+        self.unrestricted = False
 
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
@@ -72,6 +79,16 @@ class QChem(logfileparser.Logfile):
             if not hasattr(self, 'atomnos'):
                 self.atomnos = atomnos
 
+        # Number of electrons.
+        # Useful for determining the number of occupied/virtual orbitals.
+        if 'Nuclear Repulsion Energy' in line:
+            if not hasattr(self, 'nalpha'):
+                line = next(inputfile)
+                nelec_re_string = 'There are(\s+[0-9]+) alpha and(\s+[0-9]+) beta electrons'
+                match = re.findall(nelec_re_string, line.strip())
+                self.nalpha = int(match[0][0].strip())
+                self.nbeta = int(match[0][1].strip())
+
         # Number of basis functions.
         # Because Q-Chem's integral recursion scheme is defined using
         # Cartesian basis functions, there is often a distinction between the
@@ -85,6 +102,14 @@ class QChem(logfileparser.Logfile):
         if 'basis functions' in line:
             if not hasattr(self, 'nbasis'):
                 self.nbasis = int(line.split()[-3])
+
+        # Check for whether or not we're peforming an
+        # (un)restricted calculation.
+        if 'calculation will be' in line:
+            if ' restricted' in line:
+                self.unrestricted = False
+            if 'unrestricted' in line:
+                self.unrestricted = True
 
         # Section with SCF iterations.
 
@@ -201,6 +226,7 @@ class QChem(logfileparser.Logfile):
                 if 'EMP4SDQ' in line:
                     mp4sdqenergy = float(line.split()[2])
                     mpenergies.append(mp4sdqenergy)
+                # This is really MP4SD(T)Q.
                 if 'EMP4 ' in line:
                     mp4sdtqenergy = float(line.split()[2])
                     mpenergies.append(mp4sdtqenergy)
@@ -237,9 +263,32 @@ class QChem(logfileparser.Logfile):
                 ccsdenergy = utils.convertor(ccsdenergy, 'hartree', 'eV')
                 self.ccenergies.append(ccsdenergy)
 
-        # Electronic transitions.
+        # Electronic transitions. Works for both CIS and TDDFT.
 
         if 'Excitation Energies' in line:
+
+            # Restricted:
+            # ---------------------------------------------------
+            #         TDDFT/TDA Excitation Energies              
+            # ---------------------------------------------------
+            #
+            # Excited state   1: excitation energy (eV) =    3.6052
+            #    Total energy for state   1:   -382.167872200685
+            #    Multiplicity: Triplet 
+            #    Trans. Mom.:  0.0000 X   0.0000 Y   0.0000 Z
+            #    Strength   :  0.0000
+            #    D( 33) --> V(  3) amplitude =  0.2618
+            #    D( 34) --> V(  2) amplitude =  0.2125
+            #    D( 35) --> V(  1) amplitude =  0.9266
+            #
+            # Unrestricted:
+            # Excited state   2: excitation energy (eV) =    2.3156
+            #    Total energy for state   2:   -381.980177630969
+            #    <S**2>     :  0.7674
+            #    Trans. Mom.: -2.7680 X  -0.1089 Y   0.0000 Z
+            #    Strength   :  0.4353
+            #    S(  1) --> V(  1) amplitude = -0.3105 alpha
+            #    D( 34) --> S(  1) amplitude =  0.9322 beta
 
             self.skip_lines(inputfile, ['dashes', 'blank'])
             line = next(inputfile)
@@ -247,6 +296,8 @@ class QChem(logfileparser.Logfile):
             etenergies = []
             etsyms = []
             etoscs = []
+            etsecs = []
+            spinmap = {'alpha': 0, 'beta': 1}
 
             while list(set(line.strip())) != ['-']:
 
@@ -257,12 +308,32 @@ class QChem(logfileparser.Logfile):
                     energy = utils.convertor(float(line.split()[-1]), 'hartree', 'cm-1')
                     etenergy = energy - utils.convertor(self.scfenergies[-1], 'eV', 'cm-1')
                     etenergies.append(etenergy)
+                # if 'excitation energy' in line:
+                #     etenergy = utils.convertor(float(line.split()[-1]), 'eV', 'cm-1')
+                #     etenergies.append(etenergy)
                 if 'Multiplicity' in line:
                     etsym = line.split()[1]
                     etsyms.append(etsym)
                 if 'Strength' in line:
                     strength = float(line.split()[-1])
                     etoscs.append(strength)
+                # This is the list of transitions.
+                if 'amplitude' in line:
+                    sec = []
+                    while line.strip() != '':
+                        if self.unrestricted:
+                            spin = spinmap[line[42:47].strip()]
+                        else:
+                            spin = 0
+                        startidx = int(line[6:9]) - 1
+                        start = (startidx, spin)
+                        # Q-Chem starts reindexing virtual orbitals at 1.
+                        endidx = int(line[17:20]) - 1 + self.nalpha
+                        end = (endidx, spin)
+                        contrib = float(line[34:41].strip())
+                        sec.append([start, end, contrib])
+                        line = next(inputfile)
+                    etsecs.append(sec)
 
                 line = next(inputfile)
 
@@ -272,6 +343,8 @@ class QChem(logfileparser.Logfile):
                 self.etsyms = etsyms
             if not hasattr(self, 'etosecs'):
                 self.etoscs = numpy.array(etoscs)
+            if not hasattr(self, 'etsecs') and len(etsecs) > 0:
+                self.etsecs = etsecs
 
         # Molecular orbital energies and symmetries.
 
@@ -333,11 +406,9 @@ class QChem(logfileparser.Logfile):
                 line = next(inputfile)
 
             line = next(inputfile)
-            unres = False
             energies_alpha = []
             symbols_alpha = []
-            if line.split()[2] == 'Unrestricted':
-                unres = True
+            if self.unrestricted:
                 energies_beta = []
                 symbols_beta = []
             line = next(inputfile)
@@ -369,7 +440,7 @@ class QChem(logfileparser.Logfile):
 
             # Only look at the second block if doing an unrestricted calculation.
             # This might be a problem for ROHF/ROKS.
-            if unres:
+            if self.unrestricted:
                 self.skip_line(inputfile, 'header')
                 line = next(inputfile)
                 while len(energies_beta) < self.nbasis:
@@ -399,7 +470,7 @@ class QChem(logfileparser.Logfile):
                 self.mosyms = []
             self.moenergies.append(numpy.array(energies_alpha))
             self.mosyms.append(symbols_alpha)
-            if unres:
+            if self.unrestricted:
                 self.moenergies.append(numpy.array(energies_beta))
                 self.mosyms.append(symbols_beta)
 
@@ -442,7 +513,6 @@ class QChem(logfileparser.Logfile):
 
             self.skip_lines(inputfile, ['dashes', 'blank'])
             line = next(inputfile)
-            unres = False
             energies_alpha = []
             line = next(inputfile)
 
@@ -473,7 +543,6 @@ class QChem(logfileparser.Logfile):
             # Only look at the second block if doing an unrestricted calculation.
             # This might be a problem for ROHF/ROKS.
             if line.strip() == 'Beta MOs':
-                unres = True
                 energies_beta = []
 
                 self.skip_lines(inputfile, ['blank'])
@@ -500,7 +569,7 @@ class QChem(logfileparser.Logfile):
             if not hasattr(self, 'moenergies'):
                 self.moenergies = []
             self.moenergies.append(numpy.array(energies_alpha))
-            if unres:
+            if self.unrestricted:
                 self.moenergies.append(numpy.array(energies_beta))
 
         # Population analysis.
@@ -652,10 +721,12 @@ class QChem(logfileparser.Logfile):
 
                 if 'Total Enthalpy' in line:
                     if not hasattr(self, 'enthalpy'):
-                        self.enthalpy = float(line.split()[2])
+                        enthalpy = float(line.split()[2])
+                        self.enthalpy = enthalpy
                 if 'Total Entropy' in line:
                     if not hasattr(self, 'entropy'):
-                        self.enthalpy = float(line.split()[2])
+                        entropy = float(line.split()[2])
+                        self.entropy = entropy
 
                 line = next(inputfile)
 
@@ -684,7 +755,6 @@ class QChem(logfileparser.Logfile):
         # 'scanenergies'
         # 'scannames'
         # 'scanparm'
-
 
     def parse_charge_section(self, inputfile, chargetype):
         """Parse the population analysis charge block."""
