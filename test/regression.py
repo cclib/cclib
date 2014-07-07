@@ -25,7 +25,7 @@ import sys
 import unittest
 
 from cclib.parser import ccopen
-from cclib.parser import ADF, GAMESS, GAMESSUK, Gaussian, Jaguar, Molpro, NWChem, ORCA, Psi
+from cclib.parser import ADF, GAMESS, GAMESSUK, Gaussian, Jaguar, Molpro, NWChem, ORCA, Psi, QChem
 
 import testall
 

@@ -102,6 +102,9 @@ class QChemIRTest(GenericIRTest):
         mm = 1000*sum(self.data.atommasses)
         self.assertInside(mm, 130078.25, 0.1, "Molecule mass: %f not 130078 +- 0.1mD" %mm)
 
+    def testhessian(self):
+        """Do the frequencies from the Hessian match the printed frequencies?"""
+
 
 class GenericIRimgTest(bettertest.TestCase):
     """Generic imaginary vibrational frequency unittest"""
@@ -166,6 +169,17 @@ class GaussianRamanTest(GenericRamanTest):
     def testramanintens(self):
         """Is the maximum Raman intensity 1066 +/- 5 A**4/amu?"""
         self.assertInside(max(self.data.vibramans), 1066, 5)
+
+
+class QChemRamanTest(GenericRamanTest):
+    """Customized Raman unittest"""
+
+    # Similar to above, this number is even higher than above. It may
+    # or may not have to do with the numerical differentiation scheme,
+    # but altering the finite difference step size makes little difference.
+    def testramanintens(self):
+        """Is the maximum Raman intensity 588 +/- 5 A**4/amu?"""
+        self.assertInside(max(self.data.vibramans), 588, 5)
 
 
 if __name__=="__main__":

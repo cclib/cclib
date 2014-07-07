@@ -581,11 +581,48 @@ class QChem(logfileparser.Logfile):
         if 'Ground-State ChElPG Net Atomic Charges' in line:
             self.parse_charge_section(inputfile, 'chelpg')
 
+        # For `method = force` or geometry optimizations,
+        # the gradient is printed.
+        if 'Gradient of SCF Energy' in line:
+            if not hasattr(self, 'grads'):
+                self.grads = []
+            grad = numpy.empty(shape=(3, self.natom))
+            # A maximum of 6 columns/block.
+            ncols = 6
+            line = next(inputfile)
+            colcounter = 0
+            while colcounter <= self.natom:
+                if line[:5].strip() == '':
+                    line = next(inputfile)
+                rowcounter = 0
+                while rowcounter < 3:
+                    row = list(map(float, line.split()[1:]))
+                    grad[rowcounter][colcounter:colcounter+ncols] = row
+                    line = next(inputfile)
+                    rowcounter += 1
+                colcounter += ncols
+            self.grads.append(grad.T)
+
         # For IR-related jobs, the Hessian is printed (dim: 3*natom, 3*natom).
-        # if 'Hessian of the SCF Energy' in line:
-        #     # A maximum of 6 columns/block.
-        #     if not hasattr(self, 'hessian'):
-        #         self.hessian = []
+        # Note that this is *not* the mass-weighted Hessian.
+        if 'Hessian of the SCF Energy' in line:
+            if not hasattr(self, 'hessian'):
+                # A maximum of 6 columns/block.
+                ncols = 6
+                dim = 3*self.natom
+                self.hessian = numpy.empty(shape=(dim, dim))
+                line = next(inputfile)
+                colcounter = 0
+                while colcounter < dim:
+                    if line[:5].strip() == '':
+                        line = next(inputfile)
+                    rowcounter = 0
+                    while rowcounter < dim:
+                        row = list(map(float, line.split()[1:]))
+                        self.hessian[rowcounter][colcounter:colcounter+ncols] = row
+                        line = next(inputfile)
+                        rowcounter += 1
+                    colcounter += ncols
 
         # Start of the IR/Raman frequency section.
 
@@ -688,14 +725,14 @@ class QChem(logfileparser.Logfile):
                 # Q-Chem includes 3 theories: VPT2, TOSH, and VCI.
                 # For now, just take the VPT2 results.
 
-                if 'VIBRATIONAL ANHARMONIC ANALYSIS' in line:
+                # if 'VIBRATIONAL ANHARMONIC ANALYSIS' in line:
 
-                    while list(set(line.strip())) != ['=']:
-                        if 'VPT2' in line:
-                            if not hasattr(self, 'vibanharms'):
-                                self.vibanharms = []
-                            self.vibanharms.append(float(line.split()[-1]))
-                        line = next(inputfile)
+                #     while list(set(line.strip())) != ['=']:
+                #         if 'VPT2' in line:
+                #             if not hasattr(self, 'vibanharms'):
+                #                 self.vibanharms = []
+                #             self.vibanharms.append(float(line.split()[-1]))
+                #         line = next(inputfile)
 
         if 'STANDARD THERMODYNAMIC QUANTITIES AT' in line:
 
@@ -709,7 +746,9 @@ class QChem(logfileparser.Logfile):
             # Not supported yet.
             if 'Zero point vibrational energy' in line:
                 if not hasattr(self, 'zpe'):
-                    self.zpe = float(line.split()[4])
+                    # Convert from kcal/mol to Hartree/particle.
+                    self.zpe = utils.convertor(float(line.split()[4]),
+                                               'kcal', 'hartree')
 
             atommasses = []
 
@@ -722,11 +761,16 @@ class QChem(logfileparser.Logfile):
                 if 'Total Enthalpy' in line:
                     if not hasattr(self, 'enthalpy'):
                         enthalpy = float(line.split()[2])
-                        self.enthalpy = enthalpy
+                        self.enthalpy = utils.convertor(enthalpy,
+                                                        'kcal', 'hartree')
                 if 'Total Entropy' in line:
                     if not hasattr(self, 'entropy'):
-                        entropy = float(line.split()[2])
-                        self.entropy = entropy
+                        entropy = float(line.split()[2]) * self.temperature / 1000
+                        # This is the *temperature dependent* entropy.
+                        self.entropy = utils.convertor(entropy,
+                                                       'kcal', 'hartree')
+                    if not hasattr(self, 'freeenergy'):
+                        self.freeenergy = self.enthalpy - self.entropy
 
                 line = next(inputfile)
 
@@ -736,19 +780,12 @@ class QChem(logfileparser.Logfile):
         # TODO:
         # 'aonames'
         # 'atombasis'
-        # 'coreelectrons'
-        # 'enthalpy'
-        # 'entropy'
-        # 'etrotats'
-        # 'etsecs'
         # 'freeenergy'
         # 'fonames'
         # 'fooverlaps'
         # 'fragnames'
         # 'frags'
         # 'gbasis'
-        # 'grads'
-        # 'hessian'
         # 'mocoeffs'
         # 'nocoeffs'
         # 'scancoords'

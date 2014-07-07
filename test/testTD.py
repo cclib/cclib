@@ -97,12 +97,6 @@ class OrcaTDDFTTest(GenericTDTest):
         self.assertInside(max(self.data.etoscs), 1.0, 0.1)
 
 
-class QChemTDTest(GenericTDTest):
-    """Customized time-dependent HF/DFT unittest"""
-
-    number = 10
-
-
 class GenericTDTesttrp(GenericTDTest):
     """Generic time-dependent HF/DFT (triplet) unittest"""
 
