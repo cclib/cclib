@@ -75,7 +75,7 @@ class QChem(logfileparser.Logfile):
                 self.atomnos = []
                 for atomelement in atomelements:
                     if atomelement == 'GH':
-                        self.atomnos.append(utils.PeriodicTable().number[0])
+                        self.atomnos.append(0)
                     else:
                         self.atomnos.append(utils.PeriodicTable().number[atomelement])
                 self.natom = len(self.atomnos)
