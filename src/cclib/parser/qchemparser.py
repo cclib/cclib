@@ -71,13 +71,14 @@ class QChem(logfileparser.Logfile):
 
             self.atomcoords.append(atomcoords)
 
-            atomnos = list(utils.PeriodicTable().number[i]
-                           for i in atomelements)
-
-            if not hasattr(self, 'natom'):
-                self.natom = len(atomnos)
             if not hasattr(self, 'atomnos'):
-                self.atomnos = atomnos
+                self.atomnos = []
+                for atomelement in atomelements:
+                    if atomelement == 'GH':
+                        self.atomnos.append(utils.PeriodicTable().number[0])
+                    else:
+                        self.atomnos.append(utils.PeriodicTable().number[atomelement])
+                self.natom = len(self.atomnos)
 
         # Number of electrons.
         # Useful for determining the number of occupied/virtual orbitals.
