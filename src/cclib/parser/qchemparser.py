@@ -592,7 +592,7 @@ class QChem(logfileparser.Logfile):
             ncols = 6
             line = next(inputfile)
             colcounter = 0
-            while colcounter <= self.natom:
+            while colcounter < self.natom:
                 if line[:5].strip() == '':
                     line = next(inputfile)
                 rowcounter = 0
