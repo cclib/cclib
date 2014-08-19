@@ -152,3 +152,5 @@ ORCA/ORCA2.9/PCB_1_122.out
 ORCA/ORCA3.0/dvb_gopt_unconverged.out
 Psi/Psi4/dvb_gopt_hf_unconverged.out
 Psi/Psi4/psi4.0b5_samples_scf4.out
+QChem/QChem4.2/dvb_gopt_unconverged.out
+QChem/QChem4.2/dvb_sp_unconverged.out
