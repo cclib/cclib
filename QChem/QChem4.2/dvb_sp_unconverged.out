@@ -1,0 +1,164 @@
+
+Running Job 1 of 1 dvb_sp_unconverged.in
+qchem dvb_sp_unconverged.in_5939.0 /home/eric/scratch/qchem/qchem5939/ 1
+                  Welcome to Q-Chem
+     A Quantum Leap Into The Future Of Chemistry
+
+
+ Q-Chem 4.2, Q-Chem, Inc., Pleasanton, CA (2014).
+
+ Y. Shao,  Z. Gan,  E. Epifanovsky,  A. T. B. Gilbert,  M. Wormit,  
+ J. Kussmann,  A. W. Lange,  A. Behn,  J. Deng,  X. Feng,  D. Ghosh,  
+ M. Goldey,  P. R. Horn,  L. D. Jacobson,  I. Kaliman,  R. Z. Khaliullin,  
+ T. Kus,  A. Landau,  J. Liu,  E. I. Proynov,  Y. M. Rhee,  R. M. Richard,  
+ M. A. Rohrdanz,  R. P. Steele,  E. J. Sundstrom,  H. L. Woodcock III,  
+ P. M. Zimmerman,  D. Zuev,  B. Albrecht,  E. Alguire,  B. Austin,  
+ G. J. O. Beran,  Y. A. Bernard,  E. Berquist,  K. Brandhorst,  
+ K. B. Bravaya,  S. T. Brown,  D. Casanova,  C.-M. Chang,  Y. Chen,  
+ S. H. Chien,  K. D. Closser,  D. L. Crittenden,  M. Diedenhofen,  
+ R. A. DiStasio Jr.,  H. Do,  A. D. Dutoi,  R. G. Edgar,  S. Fatehi,  
+ L. Fusti-Molnar,  A. Ghysels,  A. Golubeva-Zadorozhnaya,  J. Gomes,  
+ M. W. D. Hanson-Heine,  P. H. P. Harbach,  A. W. Hauser,  E. G. Hohenstein,  
+ Z. C. Holden,  T.-C. Jagau,  H. Ji,  B. Kaduk,  K. Khistyaev,  Jaehoon Kim,  
+ Jihan Kim,  R. A. King,  P. Klunzinger,  D. Kosenkov,  T. Kowalczyk,  
+ C. M. Krauter,  K. U. Lao,  A. Laurent,  K. V. Lawler,  S. V. Levchenko,  
+ C. Y. Lin,  F. Liu,  E. Livshits,  R. C. Lochan,  A. Luenser,  P. Manohar,  
+ S. F. Manzer,  S.-P. Mao,  N. Mardirossian,  A. V. Marenich,  S. A. Maurer,  
+ N. J. Mayhall,  C. M. Oana,  R. Olivares-Amaya,  D. P. O'Neill,  
+ J. A. Parkhill,  T. M. Perrine,  R. Peverati,  P. A. Pieniazek,  A. Prociuk,  
+ D. R. Rehn,  E. Rosta,  N. J. Russ,  N. Sergueev,  S. M. Sharada,  
+ S. Sharma,  D. W. Small,  A. Sodt,  T. Stein,  D. Stuck,  Y.-C. Su,  
+ A. J. W. Thom,  T. Tsuchimochi,  L. Vogt,  O. Vydrov,  T. Wang,  
+ M. A. Watson,  J. Wenzel,  A. White,  C. F. Williams,  V. Vanovschi,  
+ S. Yeganeh,  S. R. Yost,  Z.-Q. You,  I. Y. Zhang,  X. Zhang,  Y. Zhao,  
+ B. R. Brooks,  G. K. L. Chan,  D. M. Chipman,  C. J. Cramer,  
+ W. A. Goddard III,  M. S. Gordon,  W. J. Hehre,  A. Klamt,  
+ H. F. Schaefer III,  M. W. Schmidt,  C. D. Sherrill,  D. G. Truhlar,  
+ A. Warshel,  X. Xu,  A. Aspuru-Guzik,  R. Baer,  A. T. Bell,  N. A. Besley,  
+ J.-D. Chai,  A. Dreuw,  B. D. Dunietz,  T. R. Furlani,  S. R. Gwaltney,  
+ C.-P. Hsu,  Y. Jung,  J. Kong,  D. S. Lambrecht,  W. Liang,  C. Ochsenfeld,  
+ V. A. Rassolov,  L. V. Slipchenko,  J. E. Subotnik,  T. Van Voorhis,  
+ J. M. Herbert,  A. I. Krylov,  P. M. W. Gill,  M. Head-Gordon
+
+ Contributors to earlier versions of Q-Chem not listed above: 
+ R. D. Adamson,  J. Baker,  E. F. C. Byrd,  A. K. Chakraborty,  C.-L. Cheng,  
+ H. Dachsel,  R. J. Doerksen,  G. Hawkins,  A. Heyden,  S. Hirata,  
+ G. Kedziora,  F. J. Keil,  C. Kelley,  P. P. Korambath,  W. Kurlancheek,  
+ A. M. Lee,  M. S. Lee,  D. Liotard,  I. Lotan,  P. E. Maslen,  N. Nair,  
+ D. Neuhauser,  R. Olson,  B. Peters,  J. Ritchie,  N. E. Schultz,  
+ N. Shenvi,  A. C. Simmonett,  K. S. Thanthiriwatte,  Q. Wu,  W. Zhang
+
+ Q-Chem 4.2.0 for Intel X86 Linux
+
+ Parts of Q-Chem use Armadillo 4.100.2 (Dirt Cruiser).
+ http://arma.sourceforge.net/
+
+ Q-Chem begins on Tue Aug 19 16:41:27 2014  
+
+Host: 
+0
+
+     Scratch files written to /home/eric/scratch/qchem/qchem5939//
+ May1314 814_zgan -1
+Processing $rem in /home/eric/opt/apps/qchem/website/4.2.0-omp/config/preferences.
+ MEM_TOTAL  2000 
+Finally everything over in PARseQInput
+
+--------------------------------------------------------------
+User input:
+--------------------------------------------------------------
+$comment
+Divinylbenzene, single point energy (unconverged), RB3LYP/STO-3G
+$end
+
+$rem
+method = b3lyp
+basis = sto-3g
+max_scf_cycles = 2
+$end
+
+$molecule
+0 1
+C                  0.27867948   -1.36683162    0.00000000
+C                  1.32303041   -0.44173575    0.00000000
+C                  1.04434506    0.92484978    0.00000000
+C                 -0.27867948    1.36683162    0.00000000
+C                 -1.32303041    0.44173575    0.00000000
+C                 -1.04434506   -0.92484978    0.00000000
+H                  2.36595443   -0.79037726    0.00000000
+H                  1.86746094    1.65407997    0.00000000
+H                 -2.36595443    0.79037726    0.00000000
+H                 -1.86746094   -1.65407997    0.00000000
+C                 -0.58659169    2.87589931    0.00000000
+C                  0.36350188    3.80076420    0.00000000
+H                 -1.65647768    3.12394312    0.00000000
+H                  0.14429560    4.87693235    0.00000000
+H                  1.43338788    3.55272039    0.00000000
+C                  0.58659169   -2.87589931    0.00000000
+C                 -0.36350188   -3.80076420    0.00000000
+H                  1.65647768   -3.12394312    0.00000000
+H                 -0.14429560   -4.87693235    0.00000000
+H                 -1.43338788   -3.55272039    0.00000000
+$end
+--------------------------------------------------------------
+ ----------------------------------------------------------------
+             Standard Nuclear Orientation (Angstroms)
+    I     Atom           X                Y                Z
+ ----------------------------------------------------------------
+    1      C       1.3668132833     0.2787694006     0.0000000000
+    2      C       0.4416487095     1.3230594681     0.0000000000
+    3      C      -0.9249184834     1.0442842137     0.0000000000
+    4      C      -1.3668132833    -0.2787694006     0.0000000000
+    5      C      -0.4416487095    -1.3230594681     0.0000000000
+    6      C       0.9249184834    -1.0442842137     0.0000000000
+    7      H       0.7902216068     2.3660064222     0.0000000000
+    8      H      -1.6542028230     1.8673521173     0.0000000000
+    9      H      -0.7902216068    -2.3660064222     0.0000000000
+   10      H       1.6542028230    -1.8673521173     0.0000000000
+   11      C      -2.8758607131    -0.5867808885     0.0000000000
+   12      C      -3.8007881058     0.3632518344     0.0000000000
+   13      H      -3.1238341368    -1.6566831945     0.0000000000
+   14      H      -4.8769418324     0.1439747559     0.0000000000
+   15      H      -3.5528146821     1.4331541504     0.0000000000
+   16      C       2.8758607131     0.5867808885     0.0000000000
+   17      C       3.8007881058    -0.3632518344     0.0000000000
+   18      H       3.1238341368     1.6566831945     0.0000000000
+   19      H       4.8769418324    -0.1439747559     0.0000000000
+   20      H       3.5528146821    -1.4331541504     0.0000000000
+ ----------------------------------------------------------------
+ Molecular Point Group                 C2h   NOp =  4
+ Largest Abelian Subgroup              C2h   NOp =  4
+ Nuclear Repulsion Energy =   450.0061381957 hartrees
+ There are       35 alpha and       35 beta electrons
+ Requested basis set is STO-3G
+ There are 30 shells and 60 basis functions
+
+Total QAlloc Memory Limit   2000 MB
+Mega-Array Size        61 MB
+MEM_STATIC part        62 MB
+ A cutoff of  1.0D-08 yielded    367 shell pairs
+ There are      1648 function pairs
+ Smallest overlap matrix eigenvalue = 1.71E-01
+
+  Scale SEOQF with 1.000000e-01/1.000000e-01/1.000000e+00
+
+ Standard Electronic Orientation quadrupole field applied
+ Nucleus-field energy     =     0.0000000194 hartrees
+ Guess from superposition of atomic densities
+ Warning:  Energy on first SCF cycle will be non-variational
+ A restricted hybrid HF-DFT SCF calculation will be
+ performed using Pulay DIIS extrapolation
+ Exchange:     0.2000 Hartree-Fock + 0.0800 Slater + 0.7200 Becke88
+ Correlation:  0.8100 LYP + 0.1900 VWN1RPA
+ Using SG-1 standard quadrature grid
+ SCF converges when DIIS error is below 1.0E-05
+ ---------------------------------------
+  Cycle       Energy         DIIS Error
+ ---------------------------------------
+    1    -381.9238072190      1.39E-01
+    2    -382.2937212775      3.10E-03    Convergence failure
+
+ Q-Chem fatal error occurred in module /home/scratch/svnadmin/814_zgan/qchem/scfman/scfman.C, line 4414:
+
+ SCF failed to converge
+
