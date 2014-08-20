@@ -1,0 +1,327 @@
+ Entering Gaussian System, Link 0=/usr/local/gaussian-2009-D.01_intel_sse2/g09/g09
+ Initial command:
+ /usr/local/gaussian-2009-D.01_intel_sse2/g09/l1.exe "/lustre/scratch/tmp/pbs.7562422.nova/g09--21085-YJIjYkTApqw21086/Gau-21088.inp" -scrdir="/lustre/scratch/tmp/pbs.7562422.nova/g09--21085-YJIjYkTApqw21086/"
+ Entering Link 1 = /usr/local/gaussian-2009-D.01_intel_sse2/g09/l1.exe PID=     21089.
+  
+ Copyright (c) 1988,1990,1992,1993,1995,1998,2003,2009,2013,
+            Gaussian, Inc.  All Rights Reserved.
+  
+ This is part of the Gaussian(R) 09 program.  It is based on
+ the Gaussian(R) 03 system (copyright 2003, Gaussian, Inc.),
+ the Gaussian(R) 98 system (copyright 1998, Gaussian, Inc.),
+ the Gaussian(R) 94 system (copyright 1995, Gaussian, Inc.),
+ the Gaussian 92(TM) system (copyright 1992, Gaussian, Inc.),
+ the Gaussian 90(TM) system (copyright 1990, Gaussian, Inc.),
+ the Gaussian 88(TM) system (copyright 1988, Gaussian, Inc.),
+ the Gaussian 86(TM) system (copyright 1986, Carnegie Mellon
+ University), and the Gaussian 82(TM) system (copyright 1983,
+ Carnegie Mellon University). Gaussian is a federally registered
+ trademark of Gaussian, Inc.
+  
+ This software contains proprietary and confidential information,
+ including trade secrets, belonging to Gaussian, Inc.
+  
+ This software is provided under written license and may be
+ used, copied, transmitted, or stored only in accord with that
+ written license.
+  
+ The following legend is applicable only to US Government
+ contracts under FAR:
+  
+                    RESTRICTED RIGHTS LEGEND
+  
+ Use, reproduction and disclosure by the US Government is
+ subject to restrictions as set forth in subparagraphs (a)
+ and (c) of the Commercial Computer Software - Restricted
+ Rights clause in FAR 52.227-19.
+  
+ Gaussian, Inc.
+ 340 Quinnipiac St., Bldg. 40, Wallingford CT 06492
+  
+  
+ ---------------------------------------------------------------
+ Warning -- This program may not be used in any manner that
+ competes with the business of Gaussian, Inc. or will provide
+ assistance to any competitor of Gaussian, Inc.  The licensee
+ of this program is prohibited from giving any competitor of
+ Gaussian, Inc. access to this program.  By using this program,
+ the user acknowledges that Gaussian, Inc. is engaged in the
+ business of creating and licensing software in the field of
+ computational chemistry and represents and warrants to the
+ licensee that it is not a competitor of Gaussian, Inc. and that
+ it will not use this program in any manner prohibited above.
+ ---------------------------------------------------------------
+  
+
+ Cite this work as:
+ Gaussian 09, Revision D.01,
+ M. J. Frisch, G. W. Trucks, H. B. Schlegel, G. E. Scuseria, 
+ M. A. Robb, J. R. Cheeseman, G. Scalmani, V. Barone, B. Mennucci, 
+ G. A. Petersson, H. Nakatsuji, M. Caricato, X. Li, H. P. Hratchian, 
+ A. F. Izmaylov, J. Bloino, G. Zheng, J. L. Sonnenberg, M. Hada, 
+ M. Ehara, K. Toyota, R. Fukuda, J. Hasegawa, M. Ishida, T. Nakajima, 
+ Y. Honda, O. Kitao, H. Nakai, T. Vreven, J. A. Montgomery, Jr., 
+ J. E. Peralta, F. Ogliaro, M. Bearpark, J. J. Heyd, E. Brothers, 
+ K. N. Kudin, V. N. Staroverov, T. Keith, R. Kobayashi, J. Normand, 
+ K. Raghavachari, A. Rendell, J. C. Burant, S. S. Iyengar, J. Tomasi, 
+ M. Cossi, N. Rega, J. M. Millam, M. Klene, J. E. Knox, J. B. Cross, 
+ V. Bakken, C. Adamo, J. Jaramillo, R. Gomperts, R. E. Stratmann, 
+ O. Yazyev, A. J. Austin, R. Cammi, C. Pomelli, J. W. Ochterski, 
+ R. L. Martin, K. Morokuma, V. G. Zakrzewski, G. A. Voth, 
+ P. Salvador, J. J. Dannenberg, S. Dapprich, A. D. Daniels, 
+ O. Farkas, J. B. Foresman, J. V. Ortiz, J. Cioslowski, 
+ and D. J. Fox, Gaussian, Inc., Wallingford CT, 2013.
+ 
+ ******************************************
+ Gaussian 09:  EM64L-G09RevD.01 24-Apr-2013
+                20-Aug-2014 
+ ******************************************
+ %nproc=2
+ Will use up to    2 processors via shared memory.
+ %mem=1000MB
+ %chk=BH3CO_fragment_guess.chk
+ ------------------------------------------------
+ #p B3LYP/STO-3G guess=(only,fragment=2) pop=none
+ ------------------------------------------------
+ 1/38=1,62=2,160=20/1;
+ 2/12=2,17=6,18=5,40=1/2;
+ 1/38=1,53=2,62=2,63=1,160=20/22;
+ 3/6=3,11=2,16=1,25=1,30=1,74=-5,89=1/1,2;
+ 4//1;
+ 1/53=2,62=2,63=1,160=20/22;
+ 3/5=7,6=11,11=2,16=1,25=1,30=1,74=-5,82=7,89=1/1,2;
+ 4//1;
+ 1/53=2,62=2,63=1,160=20/22(-2);
+ 99/5=5/99;
+ Leave Link    1 at Wed Aug 20 14:49:58 2014, MaxMem=   131072000 cpu:         0.1
+ (Enter /usr/local/gaussian-2009-D.01_intel_sse2/g09/l101.exe)
+ -------------------------
+ BH3CO with Fragment guess
+ -------------------------
+ Symbolic Z-matrix:
+ Charge =  0 Multiplicity = 1 in supermolecule
+ Charge =  0 Multiplicity = 1 in fragment      1.
+ Charge =  0 Multiplicity = 1 in fragment      2.
+ B(Fragment=1)         0.06457  -0.0279    0.01364 
+ H(Fragment=1)         0.03117  -0.02317   1.21604 
+ H(Fragment=1)         1.16348   0.05251  -0.46818 
+ H(Fragment=1)        -0.66778  -0.82424  -0.51225 
+ C(Fragment=2)        -0.61187   1.40183  -0.37553 
+ O(Fragment=2)        -1.07258   2.37408  -0.64075 
+ 
+ NAtoms=      6 NQM=        6 NQMF=       0 NMMI=      0 NMMIF=      0
+                NMic=       0 NMicF=      0.
+                    Isotopes and Nuclear Properties:
+ (Nuclear quadrupole moments (NQMom) in fm**2, nuclear magnetic moments (NMagM)
+  in nuclear magnetons)
+
+  Atom         1           2           3           4           5           6
+ IAtWgt=          11           1           1           1          12          16
+ AtmWgt=  11.0093053   1.0078250   1.0078250   1.0078250  12.0000000  15.9949146
+ NucSpn=           3           1           1           1           0           0
+ AtZEff=   0.0000000   0.0000000   0.0000000   0.0000000   0.0000000   0.0000000
+ NQMom=    4.0590000   0.0000000   0.0000000   0.0000000   0.0000000   0.0000000
+ NMagM=    2.6886370   2.7928460   2.7928460   2.7928460   0.0000000   0.0000000
+ AtZNuc=   5.0000000   1.0000000   1.0000000   1.0000000   6.0000000   8.0000000
+ Leave Link  101 at Wed Aug 20 14:49:59 2014, MaxMem=   131072000 cpu:         0.4
+ (Enter /usr/local/gaussian-2009-D.01_intel_sse2/g09/l202.exe)
+                          Input orientation:                          
+ ---------------------------------------------------------------------
+ Center     Atomic      Atomic             Coordinates (Angstroms)
+ Number     Number       Type             X           Y           Z
+ ---------------------------------------------------------------------
+      1          5           0        0.064570   -0.027900    0.013640
+      2          1           0        0.031170   -0.023170    1.216040
+      3          1           0        1.163480    0.052510   -0.468180
+      4          1           0       -0.667780   -0.824240   -0.512250
+      5          6           0       -0.611870    1.401830   -0.375530
+      6          8           0       -1.072580    2.374080   -0.640750
+ ---------------------------------------------------------------------
+                    Distance matrix (angstroms):
+                    1          2          3          4          5
+     1  B    0.000000
+     2  H    1.202873   0.000000
+     3  H    1.202589   2.030874   0.000000
+     4  H    1.202936   2.029096   2.030799   0.000000
+     5  C    1.628850   2.230969   2.231841   2.230965   0.000000
+     6  O    2.736941   3.226878   3.227914   3.226395   1.108091
+                    6
+     6  O    0.000000
+ Stoichiometry    CH3BO
+ Framework group  C1[X(CH3BO)]
+ Deg. of freedom    12
+ Full point group                 C1      NOp   1
+ Largest Abelian subgroup         C1      NOp   1
+ Largest concise Abelian subgroup C1      NOp   1
+                         Standard orientation:                         
+ ---------------------------------------------------------------------
+ Center     Atomic      Atomic             Coordinates (Angstroms)
+ Number     Number       Type             X           Y           Z
+ ---------------------------------------------------------------------
+      1          5           0       -1.402704    0.000287    0.000063
+      2          1           0       -1.672219   -0.605945   -1.003306
+      3          1           0       -1.673357    1.171825   -0.021480
+      4          1           0       -1.671668   -0.568318    1.025441
+      5          6           0        0.226146    0.000264   -0.000338
+      6          8           0        1.334236   -0.000072    0.000132
+ ---------------------------------------------------------------------
+ Rotational constants (GHZ):    121.6549394      8.2876413      8.2869955
+ Leave Link  202 at Wed Aug 20 14:49:59 2014, MaxMem=   131072000 cpu:         0.0
+ (Enter /usr/local/gaussian-2009-D.01_intel_sse2/g09/l122.exe)
+ Fragment guess: doing full dimer calculation.
+ Leave Link  122 at Wed Aug 20 14:49:59 2014, MaxMem=   131072000 cpu:         0.0
+ (Enter /usr/local/gaussian-2009-D.01_intel_sse2/g09/l301.exe)
+ Standard basis: STO-3G (5D, 7F)
+ Ernie: Thresh=  0.10000D-02 Tol=  0.10000D-05 Strict=F.
+ There are    18 symmetry adapted cartesian basis functions of A   symmetry.
+ There are    18 symmetry adapted basis functions of A   symmetry.
+    18 basis functions,    54 primitive gaussians,    18 cartesian basis functions
+    11 alpha electrons       11 beta electrons
+       nuclear repulsion energy        55.9887291669 Hartrees.
+ IExCor=  402 DFT=T Ex+Corr=B3LYP ExCW=0 ScaHFX=  0.200000
+ ScaDFX=  0.800000  0.720000  1.000000  0.810000 ScalE2=  1.000000  1.000000
+ IRadAn=      0 IRanWt=     -1 IRanGd=            0 ICorTp=0 IEmpDi=  4
+ NAtoms=    6 NActive=    6 NUniq=    6 SFac= 1.00D+00 NAtFMM=   60 NAOKFM=F Big=F
+ Integral buffers will be    131072 words long.
+ Raffenetti 2 integral format.
+ Two-electron integral symmetry is turned on.
+ Leave Link  301 at Wed Aug 20 14:50:00 2014, MaxMem=   131072000 cpu:         0.3
+ (Enter /usr/local/gaussian-2009-D.01_intel_sse2/g09/l302.exe)
+ NPDir=0 NMtPBC=     1 NCelOv=     1 NCel=       1 NClECP=     1 NCelD=      1
+         NCelK=      1 NCelE2=     1 NClLst=     1 CellRange=     0.0.
+ One-electron integrals computed using PRISM.
+ NBasis=    18 RedAO= T EigKep=  1.82D-01  NBF=    18
+ NBsUse=    18 1.00D-06 EigRej= -1.00D+00 NBFU=    18
+ Precomputing XC quadrature grid using
+ IXCGrd= 4 IRadAn=           0 IRanWt=          -1 IRanGd=           0 AccXCQ= 0.00D+00.
+ Generated NRdTot=       0 NPtTot=           0 NUsed=           0 NTot=          32
+ NSgBfM=    18    18    18    18    18 MxSgAt=     6 MxSgA2=     6.
+ Leave Link  302 at Wed Aug 20 14:50:01 2014, MaxMem=   131072000 cpu:         0.6
+ (Enter /usr/local/gaussian-2009-D.01_intel_sse2/g09/l401.exe)
+ ExpMin= 1.69D-01 ExpMax= 1.31D+02 ExpMxC= 1.31D+02 IAcc=1 IRadAn=         1 AccDes= 0.00D+00
+ Harris functional with IExCor=  402 and IRadAn=       1 diagonalized for initial guess.
+ HarFok:  IExCor=  402 AccDes= 0.00D+00 IRadAn=         1 IDoV= 1 UseB2=F ITyADJ=14
+ ICtDFT=  3500011 ScaDFX=  1.000000  1.000000  1.000000  1.000000
+ FoFCou: FMM=F IPFlag=           0 FMFlag=      100000 FMFlg1=           0
+         NFxFlg=           0 DoJE=T BraDBF=F KetDBF=T FulRan=T
+         wScrn=  0.000000 ICntrl=     500 IOpCl=  0 I1Cent=   200000004 NGrid=           0
+         NMat0=    1 NMatS0=      1 NMatT0=    0 NMatD0=    1 NMtDS0=    0 NMtDT0=    0
+ Petite list used in FoFCou.
+ Harris En= -138.158356359008    
+ JPrj=0 DoOrth=F DoCkMO=F.
+ Leave Link  401 at Wed Aug 20 14:50:02 2014, MaxMem=   131072000 cpu:         0.6
+ (Enter /usr/local/gaussian-2009-D.01_intel_sse2/g09/l122.exe)
+ CPIOFr:  IOpCl= 0 IRwI=-1 IRwCP=  731 ICalc= -1 LCPTot=        1612 Len1MO=        1256 IndFrg=        1612
+ CPIOFr:  IOpCl= 0 IRwI=-1 IRwCP=  731 ICalc=  0 LCPTot=        1612 Len1MO=        1256 IndFrg=        2868
+ Fragment guess: doing MCBS calculation for fragment   1
+ Leave Link  122 at Wed Aug 20 14:50:02 2014, MaxMem=   131072000 cpu:         0.0
+ (Enter /usr/local/gaussian-2009-D.01_intel_sse2/g09/l301.exe)
+ Basis read from rwf:  (5D, 7F)
+ No pseudopotential information found on rwf file.
+ There are     8 symmetry adapted cartesian basis functions of A   symmetry.
+ There are     8 symmetry adapted basis functions of A   symmetry.
+     8 basis functions,    24 primitive gaussians,     8 cartesian basis functions
+     4 alpha electrons        4 beta electrons
+       nuclear repulsion energy         7.3812581264 Hartrees.
+ IExCor=  402 DFT=T Ex+Corr=B3LYP ExCW=0 ScaHFX=  0.200000
+ ScaDFX=  0.800000  0.720000  1.000000  0.810000 ScalE2=  1.000000  1.000000
+ IRadAn=      0 IRanWt=     -1 IRanGd=            0 ICorTp=0 IEmpDi=  4
+ NAtoms=    6 NActive=    4 NUniq=    4 SFac= 1.00D+00 NAtFMM=   60 NAOKFM=F Big=F
+ Integral buffers will be    131072 words long.
+ Raffenetti 2 integral format.
+ Two-electron integral symmetry is turned on.
+ No density basis found on file   718.
+ Leave Link  301 at Wed Aug 20 14:50:02 2014, MaxMem=   131072000 cpu:         0.2
+ (Enter /usr/local/gaussian-2009-D.01_intel_sse2/g09/l302.exe)
+ NPDir=0 NMtPBC=     1 NCelOv=     1 NCel=       1 NClECP=     1 NCelD=      1
+         NCelK=      1 NCelE2=     1 NClLst=     1 CellRange=     0.0.
+ One-electron integrals computed using PRISM.
+ NBasis=     8 RedAO= T EigKep=  2.50D-01  NBF=     8
+ NBsUse=     8 1.00D-06 EigRej= -1.00D+00 NBFU=     8
+ Precomputing XC quadrature grid using
+ IXCGrd= 4 IRadAn=           0 IRanWt=          -1 IRanGd=           0 AccXCQ= 0.00D+00.
+ Generated NRdTot=       0 NPtTot=           0 NUsed=           0 NTot=          32
+ NSgBfM=     8     8     8     8     8 MxSgAt=     4 MxSgA2=     4.
+ Leave Link  302 at Wed Aug 20 14:50:02 2014, MaxMem=   131072000 cpu:         0.3
+ (Enter /usr/local/gaussian-2009-D.01_intel_sse2/g09/l401.exe)
+ ExpMin= 1.69D-01 ExpMax= 4.88D+01 ExpMxC= 4.88D+01 IAcc=1 IRadAn=         1 AccDes= 0.00D+00
+ Harris functional with IExCor=  402 and IRadAn=       1 diagonalized for initial guess.
+ HarFok:  IExCor=  402 AccDes= 0.00D+00 IRadAn=         1 IDoV= 1 UseB2=F ITyADJ=14
+ ICtDFT=  3500011 ScaDFX=  1.000000  1.000000  1.000000  1.000000
+ FoFCou: FMM=F IPFlag=           0 FMFlag=      100000 FMFlg1=           0
+         NFxFlg=           0 DoJE=T BraDBF=F KetDBF=T FulRan=T
+         wScrn=  0.000000 ICntrl=     500 IOpCl=  0 I1Cent=   200000004 NGrid=           0
+         NMat0=    1 NMatS0=      1 NMatT0=    0 NMatD0=    1 NMtDS0=    0 NMtDT0=    0
+ Petite list used in FoFCou.
+ Harris En= -26.2957981038761    
+ JPrj=0 DoOrth=F DoCkMO=F.
+ Leave Link  401 at Wed Aug 20 14:50:02 2014, MaxMem=   131072000 cpu:         0.3
+ (Enter /usr/local/gaussian-2009-D.01_intel_sse2/g09/l122.exe)
+ CPIOFr:  IOpCl= 0 IRwI=-1 IRwCP=  731 ICalc=  1 LCPTot=        1612 Len1MO=        1256 IndFrg=        4124
+ CPIOFr:  IOpCl= 0 IRwI= 2 IRwCP=  731 ICalc=  0 LCPTot=        1612 Len1MO=        1256 IndFrg=        2868
+ CPIOFr:  IOpCl= 0 IRwI= 1 IRwCP=  731 ICalc=  0 LCPTot=        1612 Len1MO=        1256 IndFrg=        2868
+ Fragment guess: doing MCBS calculation for fragment   2
+ Leave Link  122 at Wed Aug 20 14:50:02 2014, MaxMem=   131072000 cpu:         0.1
+ (Enter /usr/local/gaussian-2009-D.01_intel_sse2/g09/l301.exe)
+ Basis read from rwf:  (5D, 7F)
+ No pseudopotential information found on rwf file.
+ There are    10 symmetry adapted cartesian basis functions of A   symmetry.
+ There are    10 symmetry adapted basis functions of A   symmetry.
+    10 basis functions,    30 primitive gaussians,    10 cartesian basis functions
+     7 alpha electrons        7 beta electrons
+       nuclear repulsion energy        22.9227640967 Hartrees.
+ IExCor=  402 DFT=T Ex+Corr=B3LYP ExCW=0 ScaHFX=  0.200000
+ ScaDFX=  0.800000  0.720000  1.000000  0.810000 ScalE2=  1.000000  1.000000
+ IRadAn=      0 IRanWt=     -1 IRanGd=            0 ICorTp=0 IEmpDi=  4
+ NAtoms=    6 NActive=    2 NUniq=    2 SFac= 1.00D+00 NAtFMM=   60 NAOKFM=F Big=F
+ Integral buffers will be    131072 words long.
+ Raffenetti 2 integral format.
+ Two-electron integral symmetry is turned on.
+ No density basis found on file   718.
+ Leave Link  301 at Wed Aug 20 14:50:03 2014, MaxMem=   131072000 cpu:         0.2
+ (Enter /usr/local/gaussian-2009-D.01_intel_sse2/g09/l302.exe)
+ NPDir=0 NMtPBC=     1 NCelOv=     1 NCel=       1 NClECP=     1 NCelD=      1
+         NCelK=      1 NCelE2=     1 NClLst=     1 CellRange=     0.0.
+ One-electron integrals computed using PRISM.
+ NBasis=    10 RedAO= T EigKep=  1.91D-01  NBF=    10
+ NBsUse=    10 1.00D-06 EigRej= -1.00D+00 NBFU=    10
+ Precomputing XC quadrature grid using
+ IXCGrd= 4 IRadAn=           0 IRanWt=          -1 IRanGd=           0 AccXCQ= 0.00D+00.
+ Generated NRdTot=       0 NPtTot=           0 NUsed=           0 NTot=          32
+ NSgBfM=    10    10    10    10    10 MxSgAt=     2 MxSgA2=     2.
+ Leave Link  302 at Wed Aug 20 14:50:03 2014, MaxMem=   131072000 cpu:         0.3
+ (Enter /usr/local/gaussian-2009-D.01_intel_sse2/g09/l401.exe)
+ ExpMin= 2.22D-01 ExpMax= 1.31D+02 ExpMxC= 1.31D+02 IAcc=1 IRadAn=         1 AccDes= 0.00D+00
+ Harris functional with IExCor=  402 and IRadAn=       1 diagonalized for initial guess.
+ HarFok:  IExCor=  402 AccDes= 0.00D+00 IRadAn=         1 IDoV= 1 UseB2=F ITyADJ=14
+ ICtDFT=  3500011 ScaDFX=  1.000000  1.000000  1.000000  1.000000
+ FoFCou: FMM=F IPFlag=           0 FMFlag=      100000 FMFlg1=           0
+         NFxFlg=           0 DoJE=T BraDBF=F KetDBF=T FulRan=T
+         wScrn=  0.000000 ICntrl=     500 IOpCl=  0 I1Cent=   200000004 NGrid=           0
+         NMat0=    1 NMatS0=      1 NMatT0=    0 NMatD0=    1 NMtDS0=    0 NMtDT0=    0
+ Petite list used in FoFCou.
+ Harris En= -111.738728612150    
+ JPrj=0 DoOrth=F DoCkMO=F.
+ Leave Link  401 at Wed Aug 20 14:50:03 2014, MaxMem=   131072000 cpu:         0.3
+ (Enter /usr/local/gaussian-2009-D.01_intel_sse2/g09/l122.exe)
+ CPIOFr:  IOpCl= 0 IRwI=-1 IRwCP=  731 ICalc=  2 LCPTot=        1612 Len1MO=        1256 IndFrg=        5380
+ CPIOFr:  IOpCl= 0 IRwI= 2 IRwCP=  731 ICalc=  0 LCPTot=        1612 Len1MO=        1256 IndFrg=        2868
+ CPIOFr:  IOpCl= 0 IRwI= 1 IRwCP=  731 ICalc=  0 LCPTot=        1612 Len1MO=        1256 IndFrg=        2868
+ CPIOFr:  IOpCl= 0 IRwI= 2 IRwCP=  731 ICalc= -1 LCPTot=        1612 Len1MO=        1256 IndFrg=        1612
+ CPIOFr:  IOpCl= 0 IRwI= 2 IRwCP=  731 ICalc=  0 LCPTot=        1612 Len1MO=        1256 IndFrg=        2868
+ FinFrg:  NACore=     3 NAVal2=     8 NAVal1=     0 NBCore=     3 NBVal2=     8 NBVal1=     0
+ Alpha deviation from unit magnitude is 4.44D-16 for orbital      1.
+ Alpha deviation from orthogonality  is 2.96D-16 for orbitals    18     6.
+ Beta  deviation from unit magnitude is 4.44D-16 for orbital      1.
+ Beta  deviation from orthogonality  is 2.96D-16 for orbitals    18     6.
+ Leave Link  122 at Wed Aug 20 14:50:03 2014, MaxMem=   131072000 cpu:         0.3
+ (Enter /usr/local/gaussian-2009-D.01_intel_sse2/g09/l9999.exe)
+
+ This type of calculation cannot be archived.
+
+
+ THE REASON MAN'S BEST FRIEND IS A DOG IS BECAUSE
+ HE WAGS HIS TAIL INSTEAD OF HIS TONGUE.
+ Job cpu time:       0 days  0 hours  0 minutes  4.4 seconds.
+ File lengths (MBytes):  RWF=      5 Int=      0 D2E=      0 Chk=      1 Scr=      1
+ Normal termination of Gaussian 09 at Wed Aug 20 14:50:04 2014.
