@@ -38,7 +38,7 @@ class GenericIRTest(bettertest.TestCase):
         self.assertInside(max(self.data.vibirs), self.max_IR_intensity, 10)
 
 
-class PCGamessIRTest(GenericIRTest):
+class FireflyIRTest(GenericIRTest):
     """Customized vibrational frequency unittest"""
 
     def testirintens(self):

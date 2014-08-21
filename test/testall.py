@@ -107,9 +107,9 @@ def visualtests(stream=sys.stdout):
 
     parsers_to_test = {
         'ADF2007.01' : getfile(ADF, "basicADF2007.01", "dvb_gopt.adfout")[0],
+        'Firefly8.0' : getfile(GAMESS, "basicFirefly8.0", "dvb_gopt_a.out")[0],
         'Gaussian03' : getfile(Gaussian, "basicGaussian03", "dvb_gopt.out")[0],
         'GAMESS-US' : getfile(GAMESS, "basicGAMESS-US2012", "dvb_gopt_a.out")[0],
-        'PC-GAMESS' : getfile(GAMESS, "basicPCGAMESS","dvb_gopt_a.out")[0],
         'Jaguar7.0' : getfile(Jaguar, "basicJaguar7.0", "dvb_gopt.out")[0],
         'Molpro2006' : getfile(Molpro, "basicMolpro2006", "dvb_gopt.log", "dvb_gopt.out")[0],
         'NWChem6.0' : getfile(NWChem, "basicNWChem6.0", "dvb_gopt_ks.out")[0],
