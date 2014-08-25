@@ -142,6 +142,19 @@ class OrcaSPunTest(GenericSPunTest):
         self.assertEquals(1,1)
 
 
+class QChemSPunTest(GenericSPunTest):
+    """Customized unrestricted single point unittest"""
+
+    # Q-Chem cannot print the overlap matrix.
+    def testdimaooverlaps(self):
+        """Are the dims of the overlap matrix consistent with nbasis? PASS"""
+
+    # `mocoeffs` not implemented yet.
+    def testdimmocoeffs(self):
+        """Are the dimensions of mocoeffs equal to 2 x nmo x nbasis? PASS"""
+
+
+
 if __name__=="__main__":
 
     from testall import testall

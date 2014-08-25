@@ -68,6 +68,15 @@ class GaussianMP4SDTQTest(GenericMP2Test):
     level = 4
 
 
+class QChemMP4SDQTest(GenericMP2Test):
+    """Customized MP4-SDQ unittest"""
+    level = 4
+
+class QChemMP4SDTQTest(GenericMP2Test):
+    """Customized MP4-SD(T)Q unittest"""
+    level = 5
+
+
 if __name__=="__main__":
 
     from testall import testall
