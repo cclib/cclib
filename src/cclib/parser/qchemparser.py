@@ -582,6 +582,74 @@ class QChem(logfileparser.Logfile):
         if 'Ground-State ChElPG Net Atomic Charges' in line:
             self.parse_charge_section(inputfile, 'chelpg')
 
+        # Multipole moments are not printed in lexicographical order,
+        # so we need to parse and sort. The units seem OK, but there
+        # is some uncertainty about the reference point and whether
+        # it can be changed (should follow up on that).
+        #
+        # -----------------------------------------------------------------
+        # Cartesian Multipole Moments
+        # -----------------------------------------------------------------
+        # Charge (ESU x 10^10)
+        # 0.0000
+        # Dipole Moment (Debye)
+        # X 0.0000 Y 0.0000 Z 0.0000
+        # Tot 0.0000
+        # Quadrupole Moments (Debye-Ang)
+        # XX -50.9647 XY -0.1100 YY -50.1441
+        # XZ 0.0000 YZ 0.0000 ZZ -58.5742
+        # Octopole Moments (Debye-Ang^2)
+        # ...
+        # -----------------------------------------------------------------
+        if "Cartesian Multipole Moments" in line:
+
+            self.skip_line(inputfile, 'dashes')
+
+            # As far as I can see, the reference point is not
+            # printed anywhere in the output, and the documentation
+            # is not clear about this, do for now I assume it is
+            # the origin, but this should be followed up on.
+            self.reference = [0.0, 0.0, 0.0]
+            self.moments = [self.reference]
+
+            charge_header = inputfile.next()
+            assert charge_header.split()[0] == "Charge"
+            charge = inputfile.next()
+            assert float(charge.strip()) == self.charge
+
+            # This will make sure Debyes are used (not sure if it can be changed).
+            line = inputfile.next()
+            assert line.strip() == "Dipole Moment (Debye)"
+
+            while "-----" not in line:
+
+                # The current multipole element will be gathered here.
+                multipole = []
+
+                line = inputfile.next()
+                while ("-----" not in line) and ("Moment" not in line):
+
+                    cols = line.split()
+
+                    # The total (norm I guess) is printed for dipole
+                    # but not other multipoles.
+                    if cols[0] == 'Tot':
+                        line = inputfile.next()
+                        continue
+
+                    # The moment come in pairs (label and value).
+                    for i in range(len(cols)/2):
+                        multipole.append(cols[2*i:2*(i+1)])
+
+                    line = inputfile.next()
+
+                # Sort should use the first element when sorting lists,
+                # so this should simply work, and afterwards we just need
+                # to extract the second element in each list (the actual moment).
+                multipole.sort()
+                multipole = [m[1] for m in multipole]
+                self.moments.append(multipole)
+
         # For `method = force` or geometry optimizations,
         # the gradient is printed.
         if 'Gradient of SCF Energy' in line:
