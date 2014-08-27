@@ -23,6 +23,7 @@ from .molproparser import Molpro
 from .nwchemparser import NWChem
 from .orcaparser import ORCA
 from .psiparser import Psi
+from .qchemparser import QChem
 
 # This allow users to type:
 #         from cclib.parser import ccopen

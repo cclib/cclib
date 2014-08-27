@@ -13,13 +13,17 @@ import re
 
 import numpy
 
+
 from . import logfileparser
 from . import utils
 
 
 class GAMESS(logfileparser.Logfile):
-    """A GAMESS log file."""
-    SCFRMS, SCFMAX, SCFENERGY = list(range(3)) # Used to index self.scftargets[]
+    """A GAMESS/Firefly log file."""
+
+    # Used to index self.scftargets[].
+    SCFRMS, SCFMAX, SCFENERGY = list(range(3))
+
     def __init__(self, *args, **kwargs):
 
         # Call the __init__ method of the superclass
@@ -47,6 +51,7 @@ class GAMESS(logfileparser.Logfile):
         >>> print answers
         ['A', 'A1', 'A1g', "A'", 'A"', 'Ag']
         """
+
         if label[1:] == "''":
             end = '"'
         else:
@@ -74,13 +79,13 @@ class GAMESS(logfileparser.Logfile):
                 opttol = float(line.split()[2])
                 self.geotargets = numpy.array([opttol, 3. / opttol], "d")
                         
-        if line.find("FINAL") == 1:
-            if not hasattr(self, "scfenergies"):
-                self.scfenergies = []
         # Has to deal with such lines as:
         #  FINAL R-B3LYP ENERGY IS     -382.0507446475 AFTER  10 ITERATIONS
         #  FINAL ENERGY IS     -379.7594673378 AFTER   9 ITERATIONS
         # ...so take the number after the "IS"
+        if line.find("FINAL") == 1:
+            if not hasattr(self, "scfenergies"):
+                self.scfenergies = []
             temp = line.split()
             self.scfenergies.append(utils.convertor(float(temp[temp.index("IS") + 1]), "hartree", "eV"))
 

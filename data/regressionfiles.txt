@@ -73,11 +73,11 @@ GAMESS/PCGAMESS/d2d_sp.out
 GAMESS/PCGAMESS/dvb_gopt_a.out
 GAMESS/PCGAMESS/dvb_gopt_b.out
 GAMESS/PCGAMESS/dvb_ir.out
-GAMESS/PCGAMESS/dvb_un_sp.out
 GAMESS/PCGAMESS/dvb_raman.out
 GAMESS/PCGAMESS/dvb_sp.out
 GAMESS/PCGAMESS/dvb_td.out
 GAMESS/PCGAMESS/dvb_td_trplet.out
+GAMESS/PCGAMESS/dvb_un_sp.out
 GAMESS/PCGAMESS/water_mp2.out
 GAMESS/PCGAMESS/water_mp3.out
 GAMESS/PCGAMESS/water_mp4.out
@@ -91,6 +91,7 @@ GAMESS-UK/GAMESS-UK7.0/mg10.out
 GAMESS-UK/GAMESS-UK7.0/pyridine2_21m10r.out
 GAMESS-UK/GAMESS-UK7.0/mg10.out
 GAMESS-UK/GAMESS-UK7.0/pyridine.out
+Gaussian/Gaussian09/BH3CO_fragment_guess.log
 Gaussian/Gaussian09/encaps1.log
 Gaussian/Gaussian09/irc_point.log
 Gaussian/Gaussian09/Dahlgren_TS.log
@@ -168,3 +169,5 @@ ORCA/ORCA2.9/PCB_1_122.out
 ORCA/ORCA3.0/dvb_gopt_unconverged.out
 Psi/Psi4/dvb_gopt_hf_unconverged.out
 Psi/Psi4/psi4.0b5_samples_scf4.out
+QChem/QChem4.2/dvb_gopt_unconverged.out
+QChem/QChem4.2/dvb_sp_unconverged.out

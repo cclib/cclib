@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # This file is part of cclib (http://cclib.sf.net), a library for parsing
 # and interpreting the results of computational chemistry packages.
 #
@@ -88,7 +89,7 @@ class ccData(object):
         "ccenergies":     numpy.ndarray,
         "charge":         int,
         "coreelectrons":  numpy.ndarray,
-        "enthaply":       float,
+        "enthalpy":       float,
         "entropy":        float,
         "etenergies":     numpy.ndarray,
         "etoscs":         numpy.ndarray,

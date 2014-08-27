@@ -75,7 +75,7 @@ class GenericSPTest(bettertest.TestCase):
 
     def testnormalisesym(self):
         """Did this subclass overwrite normalisesym?"""
-        self.assertNotEquals(self.logfile.normalisesym("A"),"ERROR: This should be overwritten by this subclass")
+        self.assertNotEquals(self.logfile.normalisesym("A"), "ERROR: This should be overwritten by this subclass")
 
     def testsymlabels(self):
         """Are all the symmetry labels either Ag/u or Bg/u?"""
@@ -97,7 +97,7 @@ class GenericSPTest(bettertest.TestCase):
 
     def testscftargetdim(self):
         """Do the scf targets have the right dimensions?"""
-        self.assertEquals(self.data.scftargets.shape,(len(self.data.scfvalues),len(self.data.scfvalues[0][0])))
+        self.assertEquals(self.data.scftargets.shape, (len(self.data.scfvalues),len(self.data.scfvalues[0][0])))
 
     def testlengthmoenergies(self):
         """Is the number of evalues equal to nmo?"""
@@ -120,10 +120,10 @@ class GenericSPTest(bettertest.TestCase):
         # ADF has the attribute fooverlaps instead of aooverlaps.
         if not hasattr(self.data, "aooverlaps") and hasattr(self.data, "fooverlaps"):
             self.data.aooverlaps = self.data.fooverlaps
-        self.assertEquals(self.data.aooverlaps.shape,(self.data.nbasis,self.data.nbasis))
+        self.assertEquals(self.data.aooverlaps.shape, (self.data.nbasis, self.data.nbasis))
 
     def testaooverlaps(self):
-        """Are the first row and colm of the overlap matrix identical?"""
+        """Are the first row and column of the overlap matrix identical?"""
         # ADF has the attribute fooverlaps instead of aooverlaps.
         if not hasattr(self.data, "aooverlaps") and hasattr(self.data, "fooverlaps"):
             self.data.aooverlaps = self.data.fooverlaps
@@ -244,6 +244,7 @@ class MolproSPTest(GenericSPTest):
         """Are all the symmetry labels either Ag/u or Bg/u? PASS"""
         self.assertEquals(1,1)
 
+
 class MolproSPTest2006(MolproSPTest):
     """Customized restricted single point unittest"""
 
@@ -272,8 +273,9 @@ class PsiSPTest(GenericSPTest):
     def testdimaooverlaps(self):
         """Are the dims of the overlap matrix consistent with nbasis? PASS"""
 
+
 class Psi3SPTest(PsiSPTest):
-    """Customized restructed single point HF/KS unittest"""
+    """Customized restricted single point HF/KS unittest"""
 
     # The final energy is also a bit higher here, I think due to the fact
     # that a SALC calculation is done instead of a full LCAO.
@@ -290,6 +292,25 @@ class Psi3SPTest(PsiSPTest):
     def testdimmocoeffs(self):
         """Are the dimensions of mocoeffs equal to 1 x nmo x nbasis? PASS"""
 
+
+class QChemSPTest(GenericSPTest):
+    """Customized restricted single point unittest"""
+
+    # Q-Chem cannot print the overlap matrix.
+    def testdimaooverlaps(self):
+        """Are the dims of the overlap matrix consistent with nbasis? PASS"""
+
+    # Q-Chem cannot print the overlap matrix.
+    def testaooverlaps(self):
+        """Are the first row and column of the overlap matrix identical? PASS"""
+
+    # `mocoeffs` not implemented yet.
+    def testdimmocoeffs(self):
+        """Are the dimensions of mocoeffs equal to 1 x nmo x nbasis? PASS"""
+
+    # `atombasis` not implemented yet.
+    def testatombasis(self):
+        """Are the indices in atombasis the right amount and unique?"""
 
 if __name__=="__main__":
 

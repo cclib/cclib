@@ -25,7 +25,7 @@ import sys
 import unittest
 
 from cclib.parser import ccopen
-from cclib.parser import ADF, GAMESS, GAMESSUK, Gaussian, Jaguar, Molpro, NWChem, ORCA, Psi
+from cclib.parser import ADF, GAMESS, GAMESSUK, Gaussian, Jaguar, Molpro, NWChem, ORCA, Psi, QChem
 
 import testall
 
@@ -301,6 +301,11 @@ def testPsi_Psi4_dvb_gopt_hf_unconverged_out(logfile):
     """An unconverged geometry optimization to test for empty optdone (see #103 for details)."""
     assert hasattr(logfile.data, 'optdone') and logfile.data.optdone == []
 
+# Q-Chem #
+
+def testQChem_QChem4_2_dvb_gopt_unconverged_out(logfile):
+    """An unconverged geometry optimization to test for empty optdone (see #103 for details)."""
+    assert hasattr(logfile.data, 'optdone') and logfile.data.optdone == []
 
 # These regression tests are for logfiles that are not to be parsed
 # for some reason, and the function should start with 'testnoparse'.
@@ -500,14 +505,18 @@ old_unittests = {
     "GAMESS/GAMESS-US2010/dvb_td.log":      GAMESSUSTDDFTTest,
     "GAMESS/GAMESS-US2010/dvb_ir.log":      GenericIRTest,
 
-    "GAMESS/PCGAMESS/C_bigbasis.out":   GenericBigBasisTest,
-    "GAMESS/PCGAMESS/dvb_gopt_b.out":   GenericGeoOptTest,
-    "GAMESS/PCGAMESS/dvb_sp.out":       GenericBasisTest,
-    "GAMESS/PCGAMESS/dvb_sp.out":       GenericSPTest,
-    "GAMESS/PCGAMESS/water_mp2.out":    GenericMP2Test,
-    "GAMESS/PCGAMESS/water_mp3.out":    GenericMP3Test,
-    "GAMESS/PCGAMESS/water_mp4.out":    GenericMP4SDQTest,
-    "GAMESS/PCGAMESS/water_mp4_sdtq.out":    GenericMP4SDTQTest,
+    "GAMESS/PCGAMESS/C_bigbasis.out":       GenericBigBasisTest,
+    "GAMESS/PCGAMESS/dvb_gopt_b.out":       GenericGeoOptTest,
+    "GAMESS/PCGAMESS/dvb_ir.out":           FireflyIRTest,
+    "GAMESS/PCGAMESS/dvb_raman.out":        GenericRamanTest,
+    "GAMESS/PCGAMESS/dvb_sp.out":           GenericSPTest,
+    "GAMESS/PCGAMESS/dvb_td.out":           GenericTDTest,
+    "GAMESS/PCGAMESS/dvb_td_trplet.out":    GenericTDTest,
+    "GAMESS/PCGAMESS/dvb_un_sp.out":        GenericSPunTest,
+    "GAMESS/PCGAMESS/water_mp2.out":        GenericMP2Test,
+    "GAMESS/PCGAMESS/water_mp3.out":        GenericMP3Test,
+    "GAMESS/PCGAMESS/water_mp4.out":        GenericMP4SDQTest,
+    "GAMESS/PCGAMESS/water_mp4_sdtq.out":   GenericMP4SDTQTest,
 
     "GAMESS/WinGAMESS/dvb_td_2007.03.24.r1.out":    GAMESSUSTDDFTTest,
 

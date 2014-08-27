@@ -21,6 +21,7 @@ from . import molproparser
 from . import nwchemparser
 from . import orcaparser
 from . import psiparser
+from . import qchemparser
 
 
 def ccopen(source, *args, **kargs):
@@ -30,8 +31,9 @@ def ccopen(source, *args, **kargs):
       source - a single logfile, a list of logfiles, or an input stream
 
     Returns:
-      one of ADF, GAMESS, GAMESS UK, Gaussian, Jaguar, Molpro, ORCA, or
-        None (if it cannot figure it out or the file does not exist).
+      one of ADF, GAMESS, GAMESS UK, Gaussian, Jaguar, Molpro, NWChem, ORCA,
+        Psi, QChem, or None (if it cannot figure it out or the file does not
+        exist).
     """
 
     filetype = None
@@ -100,6 +102,10 @@ def ccopen(source, *args, **kargs):
 
         elif line.find("PSI") >= 0 and line.find("Ab Initio Electronic Structure") >= 0:
             filetype = psiparser.Psi
+            break
+
+        elif line.find("A Quantum Leap Into The Future Of Chemistry") >= 0:
+            filetype = qchemparser.QChem
             break
 
     # Need to close file before creating a instance.

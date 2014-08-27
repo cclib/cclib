@@ -38,7 +38,7 @@ class GenericIRTest(bettertest.TestCase):
         self.assertInside(max(self.data.vibirs), self.max_IR_intensity, 10)
 
 
-class PCGamessIRTest(GenericIRTest):
+class FireflyIRTest(GenericIRTest):
     """Customized vibrational frequency unittest"""
 
     def testirintens(self):
@@ -59,9 +59,9 @@ class JaguarIRTest(GenericIRTest):
     """Customized vibrational frequency unittest"""
 
     def testvibsyms(self):
-            """Is the length of vibsyms correct?"""
-            numvib = 3*len(self.data.atomnos) - 6        
-            self.assertEqual(len(self.data.vibsyms), numvib)
+        """Is the length of vibsyms correct?"""
+        numvib = 3*len(self.data.atomnos) - 6
+        self.assertEqual(len(self.data.vibsyms), numvib)
 
 
 class OrcaIRTest(GenericIRTest):
@@ -73,6 +73,37 @@ class OrcaIRTest(GenericIRTest):
     # to determine whether this difference is algorithmic in nature,
     # but in the meanwhile we will expect to parse this value.
     max_IR_intensity = 215    
+
+
+class QChemIRTest(GenericIRTest):
+    """Customized vibrational frequency unittest"""
+
+    def testtemperature(self):
+        """Is the temperature 298.15 K?"""
+        self.assertEqual(298.15, self.data.temperature)
+
+    # def testenthalpy(self):
+    #     """Is the enthalpy ..."""
+    #     self.assertInside(self.data.enthalpy, )
+
+    # def testentropy(self):
+    #     """Is the entropy ..."""
+    #     self.assertInside(self.data.entropy, )
+
+    # def testfreeenergy(self):
+    #     """Is the free energy ..."""
+    #     self.assertInside(self.data.freeenergy, )
+
+    # Molecular mass of DVB in mD.
+    molecularmass = 130078.25
+
+    def testatommasses(self):
+        """Do the atom masses sum up to the molecular mass (130078.25+-0.1mD)?"""
+        mm = 1000*sum(self.data.atommasses)
+        self.assertInside(mm, 130078.25, 0.1, "Molecule mass: %f not 130078 +- 0.1mD" %mm)
+
+    def testhessian(self):
+        """Do the frequencies from the Hessian match the printed frequencies?"""
 
 
 class GenericIRimgTest(bettertest.TestCase):
@@ -138,6 +169,17 @@ class GaussianRamanTest(GenericRamanTest):
     def testramanintens(self):
         """Is the maximum Raman intensity 1066 +/- 5 A**4/amu?"""
         self.assertInside(max(self.data.vibramans), 1066, 5)
+
+
+class QChemRamanTest(GenericRamanTest):
+    """Customized Raman unittest"""
+
+    # Similar to above, this number is even higher than above. It may
+    # or may not have to do with the numerical differentiation scheme,
+    # but altering the finite difference step size makes little difference.
+    def testramanintens(self):
+        """Is the maximum Raman intensity 588 +/- 5 A**4/amu?"""
+        self.assertInside(max(self.data.vibramans), 588, 5)
 
 
 if __name__=="__main__":
