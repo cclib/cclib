@@ -612,10 +612,14 @@ class QChem(logfileparser.Logfile):
             self.reference = [0.0, 0.0, 0.0]
             self.moments = [self.reference]
 
+            # Watch out! This charge is in statcoulombs without the exponent!
+            # We should expect very good agreement, however Q-Chem prints
+            # the charge only with 5 digits, so expect 1e-4 accuracy.
             charge_header = inputfile.next()
             assert charge_header.split()[0] == "Charge"
-            charge = inputfile.next()
-            assert float(charge.strip()) == self.charge
+            charge = float(inputfile.next().strip())
+            charge = utils.convertor(charge, 'statcoulomb', 'e') * 1e-10
+            assert abs(charge - self.charge) < 1e-4
 
             # This will make sure Debyes are used (not sure if it can be changed).
             line = inputfile.next()

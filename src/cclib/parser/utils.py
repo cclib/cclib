@@ -53,7 +53,11 @@ def convertor(value, fromunits, tounits):
         # "Molecular Properties and Conversion Factors"
         "Debye^2/amu-Angstrom^2_to_km/mol": lambda x: x*42.255,
 
-        # Conversion for multipole moments.
+        # Conversion for charges and multipole moments.
+        "e_to_coulomb":         lambda x: x * 1.602176565 * 1e-19,
+        "e_to_statcoulomb":     lambda x: x * 4.80320425 * 1e-10,
+        "coulomb_to_e":         lambda x: x * 0.6241509343 * 1e19,
+        "statcoulomb_to_e":     lambda x: x * 0.2081943527 * 1e10,
         "ebohr_to_Debye":       lambda x: x * 2.5417462300,
         "ebohr2_to_Buckingham": lambda x: x * 1.3450341749,
         "ebohr2_to_Debye.ang":  lambda x: x * 1.3450341749,
