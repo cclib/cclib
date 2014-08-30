@@ -112,20 +112,35 @@ class QChem(logfileparser.Logfile):
             if 'unrestricted' in line:
                 self.unrestricted = True
 
-        # Section with SCF iterations.
-
+        # Section with SCF iterations goes like this:
+        #
+        # SCF converges when DIIS error is below 1.0E-05
+        # ---------------------------------------
+        #  Cycle       Energy         DIIS Error
+        # ---------------------------------------
+        #    1    -381.9238072190      1.39E-01
+        #    2    -382.2937212775      3.10E-03
+        #    3    -382.2939780242      3.37E-03
+        # ...
+        #
         if 'SCF converges when ' in line:
             if not hasattr(self, 'scftargets'):
                 self.scftargets = []
             target = float(line.split()[-1])
             self.scftargets.append([target])
 
-        if 'Cycle       Energy' in line:
+            # We should have the header between dashes now,
+            # but sometimes there are lines before the first dashes.
+            while not "-----" in line:
+                line = inputfile.next()
+            assert 'Cycle       Energy' in inputfile.next()
             self.skip_lines(inputfile, ['d'])
-            line = next(inputfile)
+
             values = []
             iter_counter = 1
+            line = next(inputfile)
             while 'energy in the final basis set' not in line:
+
                 # Some trickery to avoid a lot of printing that can occur
                 # between each SCF iteration.
                 entry = line.split()
@@ -136,6 +151,12 @@ class QChem(logfileparser.Logfile):
                         values.append([error])
                         iter_counter += 1
                 line = next(inputfile)
+
+                # This is printed in regression Qchem4.2/dvb_sp_unconverged.out
+                # so use it to bail out when convergence fails.
+                if "SCF failed to converge" in line or "Convergence failure" in line:
+                    break
+
             if not hasattr(self, 'scfvalues'):
                 self.scfvalues = []
             self.scfvalues.append(numpy.array(values))
