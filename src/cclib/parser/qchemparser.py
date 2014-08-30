@@ -663,7 +663,7 @@ class QChem(logfileparser.Logfile):
                         continue
 
                     # The moment come in pairs (label and value).
-                    for i in range(len(cols)/2):
+                    for i in range(len(cols)//2):
                         multipole.append(cols[2*i:2*(i+1)])
 
                     line = inputfile.next()
