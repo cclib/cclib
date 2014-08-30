@@ -313,6 +313,20 @@ class Molpro(logfileparser.Logfile):
             line = next(inputfile)
             self.homos.append(int(line.split()[-1])-1)
 
+        # Dipole is always printed on one line after the final RHF energy, and by default
+        # it seems Molpro uses the origin as the reference point.
+        if line.strip()[:13] == "Dipole moment":
+
+            assert line.split()[2] == "/Debye"
+
+            reference = [0.0, 0.0, 0.0]
+            dipole = [float(d) for d in line.split()[-3:]]
+
+            if not hasattr(self, 'moments'):
+                self.moments = [reference, dipole]
+            else:
+                self.moments[1] == dipole
+
         # From this block atombasis, moenergies, and mocoeffs can be parsed.
         # Note that Molpro does not print this by default, you must add this in the input:
         #   GPRINT,ORBITALS

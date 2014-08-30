@@ -112,20 +112,35 @@ class QChem(logfileparser.Logfile):
             if 'unrestricted' in line:
                 self.unrestricted = True
 
-        # Section with SCF iterations.
-
+        # Section with SCF iterations goes like this:
+        #
+        # SCF converges when DIIS error is below 1.0E-05
+        # ---------------------------------------
+        #  Cycle       Energy         DIIS Error
+        # ---------------------------------------
+        #    1    -381.9238072190      1.39E-01
+        #    2    -382.2937212775      3.10E-03
+        #    3    -382.2939780242      3.37E-03
+        # ...
+        #
         if 'SCF converges when ' in line:
             if not hasattr(self, 'scftargets'):
                 self.scftargets = []
             target = float(line.split()[-1])
             self.scftargets.append([target])
 
-        if 'Cycle       Energy' in line:
+            # We should have the header between dashes now,
+            # but sometimes there are lines before the first dashes.
+            while not "-----" in line:
+                line = inputfile.next()
+            assert 'Cycle       Energy' in inputfile.next()
             self.skip_lines(inputfile, ['d'])
-            line = next(inputfile)
+
             values = []
             iter_counter = 1
+            line = next(inputfile)
             while 'energy in the final basis set' not in line:
+
                 # Some trickery to avoid a lot of printing that can occur
                 # between each SCF iteration.
                 entry = line.split()
@@ -136,6 +151,12 @@ class QChem(logfileparser.Logfile):
                         values.append([error])
                         iter_counter += 1
                 line = next(inputfile)
+
+                # This is printed in regression Qchem4.2/dvb_sp_unconverged.out
+                # so use it to bail out when convergence fails.
+                if "SCF failed to converge" in line or "Convergence failure" in line:
+                    break
+
             if not hasattr(self, 'scfvalues'):
                 self.scfvalues = []
             self.scfvalues.append(numpy.array(values))
@@ -581,6 +602,78 @@ class QChem(logfileparser.Logfile):
             self.parse_charge_section(inputfile, 'hirshfeld')
         if 'Ground-State ChElPG Net Atomic Charges' in line:
             self.parse_charge_section(inputfile, 'chelpg')
+
+        # Multipole moments are not printed in lexicographical order,
+        # so we need to parse and sort. The units seem OK, but there
+        # is some uncertainty about the reference point and whether
+        # it can be changed (should follow up on that).
+        #
+        # -----------------------------------------------------------------
+        # Cartesian Multipole Moments
+        # -----------------------------------------------------------------
+        # Charge (ESU x 10^10)
+        # 0.0000
+        # Dipole Moment (Debye)
+        # X 0.0000 Y 0.0000 Z 0.0000
+        # Tot 0.0000
+        # Quadrupole Moments (Debye-Ang)
+        # XX -50.9647 XY -0.1100 YY -50.1441
+        # XZ 0.0000 YZ 0.0000 ZZ -58.5742
+        # Octopole Moments (Debye-Ang^2)
+        # ...
+        # -----------------------------------------------------------------
+        if "Cartesian Multipole Moments" in line:
+
+            self.skip_line(inputfile, 'dashes')
+
+            # As far as I can see, the reference point is not
+            # printed anywhere in the output, and the documentation
+            # is not clear about this, do for now I assume it is
+            # the origin, but this should be followed up on.
+            self.reference = [0.0, 0.0, 0.0]
+            self.moments = [self.reference]
+
+            # Watch out! This charge is in statcoulombs without the exponent!
+            # We should expect very good agreement, however Q-Chem prints
+            # the charge only with 5 digits, so expect 1e-4 accuracy.
+            charge_header = inputfile.next()
+            assert charge_header.split()[0] == "Charge"
+            charge = float(inputfile.next().strip())
+            charge = utils.convertor(charge, 'statcoulomb', 'e') * 1e-10
+            assert abs(charge - self.charge) < 1e-4
+
+            # This will make sure Debyes are used (not sure if it can be changed).
+            line = inputfile.next()
+            assert line.strip() == "Dipole Moment (Debye)"
+
+            while "-----" not in line:
+
+                # The current multipole element will be gathered here.
+                multipole = []
+
+                line = inputfile.next()
+                while ("-----" not in line) and ("Moment" not in line):
+
+                    cols = line.split()
+
+                    # The total (norm I guess) is printed for dipole
+                    # but not other multipoles.
+                    if cols[0] == 'Tot':
+                        line = inputfile.next()
+                        continue
+
+                    # The moment come in pairs (label and value).
+                    for i in range(len(cols)//2):
+                        multipole.append(cols[2*i:2*(i+1)])
+
+                    line = inputfile.next()
+
+                # Sort should use the first element when sorting lists,
+                # so this should simply work, and afterwards we just need
+                # to extract the second element in each list (the actual moment).
+                multipole.sort()
+                multipole = [m[1] for m in multipole]
+                self.moments.append(multipole)
 
         # For `method = force` or geometry optimizations,
         # the gradient is printed.

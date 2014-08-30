@@ -33,7 +33,9 @@ Usage:  ccget <attribute> [<attribute>] <compchemlogfile> [<compchemlogfile>]
 For a list of attributes available in a file, use --list (or -l):
     ccget --list <compchemlogfile>
 To parse multiple files as one input stream, use --multi (or -m):
-    ccget --multi <attr> [<attr>]  <cclogfile> <cclogfile> [<cclogfile>]\
+    ccget --multi <attr> [<attr>]  <cclogfile> <cclogfile> [<cclogfile>]
+Additional options:
+    -v or --verbose: more verbose parsing output (only errors by default)\
 """
 
 
@@ -41,13 +43,14 @@ def main():
 
     # Parse the arguments, but print help information and exit if it fails.
     try:
-        opts, args = getopt.getopt(sys.argv[1:], "hlm", ["help", "list", "multi"])
+        opts, args = getopt.getopt(sys.argv[1:], "hlmv", ["help", "list", "multi", "verbose"])
     except getopt.GetoptError:
         print(msg_usage_long)
         sys.exit(2)
 
     showattr = False
     multifile = False
+    verbose = False
     for o, a in opts:
         if o in ("-h", "--help"):
             print(msg_usage_long)
@@ -56,6 +59,8 @@ def main():
             showattr = True
         if o in ("-m", "--multi"):
             multifile = True
+        if o in ("-v", "--verbose"):
+            verbose = True
 
     # We need at least one attribute and the filename, so two arguments, or
     # just one filename if we want to list attributes that can be extracted.
@@ -121,8 +126,11 @@ def main():
             print("Report this to the cclib development team if you think this is an error.")
             print(msg_usage)
             sys.exit()
-              
-        log.logger.setLevel(logging.ERROR)
+
+        if verbose:
+            log.logger.setLevel(logging.INFO)
+        else:
+            log.logger.setLevel(logging.ERROR)
         data = log.parse()
         if showattr:
             print("cclib can parse the following attributes from %s:" % name)

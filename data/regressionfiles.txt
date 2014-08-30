@@ -144,6 +144,8 @@ Jaguar/Jaguar6.5/dvb_un_sp.out
 Molpro/Molpro2006/C_bigbasis_cart.out
 Molpro/Molpro2006/thymine.scf.out
 Molpro/Molpro2012/dvb_gopt_unconverged.out
+NWChem/NWChem6.0/dvb_sp_hf_moments_only_quadrupole.out
+NWChem/NWChem6.0/dvb_sp_hf_moments_only_octupole.out
 NWChem/NWChem6.0/dvb_sp_ks_warnings.out
 NWChem/NWChem6.0/dvb_gopt_hf_unconverged.out
 ORCA/ORCA2.6/dvb_gopt.out

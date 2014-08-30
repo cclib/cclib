@@ -14,6 +14,7 @@ from __future__ import print_function
 import numpy
 
 from . import logfileparser
+from . import utils
 
 
 class ORCA(logfileparser.Logfile):
@@ -83,11 +84,12 @@ class ORCA(logfileparser.Logfile):
 
             self.skip_line(inputfile, 'dashes')
 
-            line = next(inputfile).split()
-            if line[1] == "Energy":
-                self.parse_scf_condensed_format(inputfile, line)
-            elif line[1] == "Starting":
-                self.parse_scf_expanded_format(inputfile, line)
+            line = next(inputfile)
+            colums = line.split()
+            if colums[1] == "Energy":
+                self.parse_scf_condensed_format(inputfile, colums)
+            elif colums[1] == "Starting":
+                self.parse_scf_expanded_format(inputfile, colums)
 
         # Information about the final iteration, which also includes the convergence
         # targets and the convergence values, is printed separately, in a section like this:
@@ -660,6 +662,41 @@ class ORCA(logfileparser.Logfile):
             self.atomcharges["lowdin"] = charges
             if has_spins:
                 self.atomspins["lowdin"] = spins
+
+        # It is not stated explicitely, but the dipole moment components printed by ORCA
+        # seem to be in atomic units, so they will need to be converted. Also, they
+        # are most probably calculated with respect to the origin .
+        #
+        # -------------
+        # DIPOLE MOMENT
+        # -------------
+        #                                 X             Y             Z
+        # Electronic contribution:      0.00000      -0.00000      -0.00000
+        # Nuclear contribution   :      0.00000       0.00000       0.00000
+        #                         -----------------------------------------
+        # Total Dipole Moment    :      0.00000      -0.00000      -0.00000
+        #                         -----------------------------------------
+        # Magnitude (a.u.)       :      0.00000
+        # Magnitude (Debye)      :      0.00000
+        #
+        if line.strip() == "DIPOLE MOMENT":
+
+            self.skip_lines(inputfile, ['d', 'XYZ', 'electronic', 'nuclear', 'd'])
+            total = next(inputfile)
+            assert "Total Dipole Moment" in total
+
+            reference = [0.0, 0.0, 0.0]
+            dipole = numpy.array([float(d) for d in total.split()[-3:]])
+            dipole = utils.convertor(dipole, "ebohr", "Debye")
+
+            if not hasattr(self, 'moments'):
+                self.moments = [reference, dipole]
+            else:
+                try:
+                    assert numpy.all(self.moments[1] == dipole)
+                except AssertionError:
+                    self.logger.warning('Overwriting previous multipole moments with new values')
+                    self.moments = [reference, dipole]
 
     def parse_scf_condensed_format(self, inputfile, line):
         """ Parse the SCF convergence information in condensed format """

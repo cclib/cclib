@@ -1136,6 +1136,57 @@ class GAMESS(logfileparser.Logfile):
             self.atomcharges["mulliken"] = mulliken
             self.atomcharges["lowdin"] = lowdin
 
+        #          ---------------------
+        #          ELECTROSTATIC MOMENTS
+        #          ---------------------
+        #
+        # POINT   1           X           Y           Z (BOHR)    CHARGE
+        #                -0.000000    0.000000    0.000000       -0.00 (A.U.)
+        #         DX          DY          DZ         /D/  (DEBYE)
+        #     0.000000   -0.000000    0.000000    0.000000
+        #
+        if line.strip() == "ELECTROSTATIC MOMENTS":
+
+            self.skip_lines(inputfile, ['d', 'b'])
+            line = next(inputfile)
+
+            # The old PC-GAMESS prints memory assignment information here.
+            if "MEMORY ASSIGNMENT" in line:
+                memory_assignment = next(inputfile)
+                line = next(inputfile)
+
+            # If something else ever comes up, we should get a signal from this assert.
+            assert line.split()[0] == "POINT"
+
+            # We can get the reference point from here, as well as
+            # check here that the net charge of the molecule is correct.
+            coords_and_charge = next(inputfile)
+            assert coords_and_charge.split()[-1] == '(A.U.)'
+            reference = numpy.array([float(x) for x in coords_and_charge.split()[:3]])
+            reference = utils.convertor(reference, 'bohr', 'Angstrom')
+            charge = float(coords_and_charge.split()[-2])
+            self.set_attribute('charge', charge)
+
+            dipoleheader = next(inputfile)
+            assert dipoleheader.split()[:3] == ['DX', 'DY', 'DZ']
+            assert dipoleheader.split()[-1] == "(DEBYE)"
+
+            dipoleline = next(inputfile)
+            dipole = [float(d) for d in dipoleline.split()[:3]]
+
+            # The dipole is always the first multipole moment to be printed,
+            # so if it already exists, we will overwrite all moments since we want
+            # to leave just the last printed value (could change in the future).
+            if not hasattr(self, 'moments'):
+                self.moments = [reference, dipole]
+            else:
+                try:
+                    assert self.moments[1] == dipole
+                except AssertionError:
+                    self.logger.warning('Overwriting previous multipole moments with new values')
+                    self.logger.warning('This could be from post-HF properties or geometry optimization')
+                    self.moments = [reference, dipole]
+
         
 if __name__ == "__main__":
     import doctest, gamessparser, sys

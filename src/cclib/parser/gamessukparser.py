@@ -519,7 +519,51 @@ class GAMESSUK(logfileparser.Logfile):
                 self.moenergies = [moenergies, moenergies]
             else:
                 self.moenergies = [moenergies]
-                
+
+        # The dipole moment is printed by default at the beginning of the wavefunction analysis,
+        # but the value is in atomic units, so we need to convert to Debye. It seems pretty
+        # evident that the reference point is the origin (0,0,0) which is also the center
+        # of mass after reorientation at the beginning of the job, although this is not
+        # stated anywhere (would be good to check).
+        #
+        #                                        *********************
+        #                                        wavefunction analysis
+        #                                        *********************
+        #
+        # commence analysis at     24.61 seconds
+        #
+        #                 dipole moments
+        #
+        #
+        #           nuclear      electronic           total
+        #
+        # x       0.0000000       0.0000000       0.0000000
+        # y       0.0000000       0.0000000       0.0000000
+        # z       0.0000000       0.0000000       0.0000000
+        #
+        if line.strip() == "dipole moments":
+
+            # In older version there is only one blank line before the header,
+            # and newer version there are two.
+            self.skip_line(inputfile, 'blank')
+            line = next(inputfile)
+            if not line.strip():
+                line = next(inputfile)
+            self.skip_line(inputfile, 'blank')
+
+            dipole = []
+            for i in range(3):
+                line = next(inputfile)
+                dipole.append(float(line.split()[-1]))
+
+            reference = [0.0, 0.0, 0.0]
+            dipole = utils.convertor(numpy.array(dipole), "ebohr", "Debye")
+
+            if not hasattr(self, 'moments'):
+                self.moments = [reference, dipole]
+            else:
+                assert self.moments[1] == dipole
+
         # Net atomic charges are not printed at all, it seems,
         # but you can get at them from nuclear charges and
         # electron populations, which are printed like so:

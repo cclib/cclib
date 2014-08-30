@@ -198,41 +198,49 @@ def testall(parsers=parsers, modules=test_modules, status=False, terse=False, st
                 except:
                     errors.append("ERROR: could not import %s from %s." %(name, module))
                 else:
+                    description = "%s/%s: %s" %(program, fname, test.__doc__)
                     print("", file=stream_test)
-                    print("**** %s/%s: %s****" %(program, fname, test.__doc__), file=stream)
+                    print("**** %s ****" % description, file=stream)
+
                     parser = test_instance["parser"]
                     location = test_instance["location"]
                     test.data, test.logfile = getfile(eval(parser), *location, stream=stream)
+
                     myunittest = unittest.makeSuite(test)
                     a = unittest.TextTestRunner(stream=stream_test, verbosity=2).run(myunittest)
+
                     l = perpackage.setdefault(program, [0, 0, 0, 0])
                     l[0] += a.testsRun
                     l[1] += len(a.errors)
                     l[2] += len(a.failures)
+
                     if hasattr(a, "skipped"):
                         l[3] += len(a.skipped)
                     alltests.append(test)
-                    errors.extend(a.errors)
-                    failures.extend(a.failures)
+                    errors.extend([description+"\n"+"".join(map(str,e)) for e in a.errors])
+                    failures.extend([description+"\n"+"".join(map(str,f)) for f in a.failures])
 
     if terse:
         devnull.close()
 
     if errors:
-        print("\n********* SUMMARY OF ERRORS *********", file=stream)
-        print("\n".join([str(e) for e in errors]), file=stream)
+        print("\n********* SUMMARY OF ERRORS *********\n", file=stream)
+        print("\n".join(errors), file=stream)
 
     if failures:
-        print("\n********* SUMMARY OF FAILURES *********", file=stream)
-        print("\n".join([str(f) for f in failures]), file=stream)
+        print("\n********* SUMMARY OF FAILURES *********\n", file=stream)
+        print("\n".join(failures), file=stream)
 
     print("\n********* SUMMARY PER PACKAGE ****************", file=stream)
     names = sorted(perpackage.keys())
     total = [0, 0, 0, 0]
     print(" "*14, "\t".join(["Total", "Passed", "Failed", "Errors", "Skipped"]), file=stream)
+
+    fmt = "%3d\t%3d\t%3d\t%3d\t%3d"
     for name in names:
         l = perpackage[name]
-        print(name.ljust(15), "%3d\t%3d\t%3d\t%3d\t%3d" % (l[0], l[0]-l[1]-l[2]-l[3], l[2], l[1], l[3]), file=stream)
+        args = (l[0], l[0]-l[1]-l[2]-l[3], l[2], l[1], l[3])
+        print(name.ljust(15), fmt % args, file=stream)
         for i in range(4):
             total[i] += l[i]
 

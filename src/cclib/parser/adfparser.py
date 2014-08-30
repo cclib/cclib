@@ -1038,6 +1038,42 @@ class ADF(logfileparser.Logfile):
                 line = next(inputfile)
             self.atomcharges["mulliken"] = mulliken
 
+        # Dipole moment is always printed after a point calculation,
+        # and the reference point for this is always the origin (0,0,0)
+        # and not necessarily the center of mass, as explained on the
+        # ADF user mailing list (see cclib/cclib#113 for details).
+        #
+        # =============
+        # Dipole Moment  ***  (Debye)  ***
+        # =============
+        #  
+        # Vector   :         0.00000000      0.00000000      0.00000000
+        # Magnitude:         0.00000000
+        #
+        if line.strip()[:13] == "Dipole Moment":
+
+            self.skip_line(inputfile, 'equals')
+
+            # There is not always a blank line here, for example when the dipole and quadrupole
+            # moments are printed after the multipole derived atomic charges. Still, to the best
+            # of my knowledge (KML) the values are still in Debye.
+            line = next(inputfile)
+            if not line.strip():
+                line = next(inputfile)
+
+            assert line.split()[0] == "Vector"
+            dipole = [float(d) for d in line.split()[-3:]]
+
+            reference = [0.0, 0.0, 0.0]
+            if not hasattr(self, 'moments'):
+                self.moments = [reference, dipole]
+            else:
+                try:
+                    assert self.moments[1] == dipole
+                except AssertionError:
+                    self.logger.warning('Overwriting previous multipole moments with new values')
+                    self.moments = [reference, dipole]
+
 
 if __name__ == "__main__":
     import doctest, adfparser

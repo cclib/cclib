@@ -51,7 +51,21 @@ def convertor(value, fromunits, tounits):
 
         # Taken from GAMESS docs, "Further information",
         # "Molecular Properties and Conversion Factors"
-        "Debye^2/amu-Angstrom^2_to_km/mol": lambda x: x*42.255}
+        "Debye^2/amu-Angstrom^2_to_km/mol": lambda x: x*42.255,
+
+        # Conversion for charges and multipole moments.
+        "e_to_coulomb":         lambda x: x * 1.602176565 * 1e-19,
+        "e_to_statcoulomb":     lambda x: x * 4.80320425 * 1e-10,
+        "coulomb_to_e":         lambda x: x * 0.6241509343 * 1e19,
+        "statcoulomb_to_e":     lambda x: x * 0.2081943527 * 1e10,
+        "ebohr_to_Debye":       lambda x: x * 2.5417462300,
+        "ebohr2_to_Buckingham": lambda x: x * 1.3450341749,
+        "ebohr2_to_Debye.ang":  lambda x: x * 1.3450341749,
+        "ebohr3_to_Debye.ang2": lambda x: x * 0.7117614302,
+        "ebohr4_to_Debye.ang3": lambda x: x * 0.3766479268,
+        "ebohr5_to_Debye.ang4": lambda x: x * 0.1993134985,
+
+    }
 
     return _convertor["%s_to_%s" % (fromunits, tounits)] (value)
 

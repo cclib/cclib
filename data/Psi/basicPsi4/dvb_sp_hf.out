@@ -12,7 +12,7 @@
     A. E. DePrince, M. Saitow, U. Bozkaya, A. Yu. Sokolov
     -----------------------------------------------------------------------
 
-    Process ID:  32069
+    Process ID:  31205
     PSI4DATADIR: /usr/local/share/psi
 
     Using LocalCommunicator (Number of processes = 1)
@@ -55,11 +55,11 @@ set {
 }
 
 energy('scf')
-oeprop('MULLIKEN_CHARGES', 'LOWDIN_CHARGES')
+oeprop('MULLIKEN_CHARGES', 'LOWDIN_CHARGES', 'MULTIPOLE(5)')
 --------------------------------------------------------------------------
 
 *** tstart() called on helena
-*** at Thu Apr 10 11:08:24 2014
+*** at Fri May  9 15:19:27 2014
 
 	There are an even number of electrons - assuming singlet.
 	Specify the multiplicity with the MULTP option in the
@@ -1275,20 +1275,93 @@ Properties computed using the SCF density density matrix
 
 
 
-*** tstop() called on helena at Thu Apr 10 11:08:36 2014
+*** tstop() called on helena at Fri May  9 15:19:38 2014
 Module time:
-	user time   =      10.96 seconds =       0.18 minutes
-	system time =       0.12 seconds =       0.00 minutes
-	total time  =         12 seconds =       0.20 minutes
+	user time   =      11.06 seconds =       0.18 minutes
+	system time =       0.10 seconds =       0.00 minutes
+	total time  =         11 seconds =       0.18 minutes
 Total time:
-	user time   =      10.96 seconds =       0.18 minutes
-	system time =       0.12 seconds =       0.00 minutes
-	total time  =         12 seconds =       0.20 minutes
+	user time   =      11.06 seconds =       0.18 minutes
+	system time =       0.10 seconds =       0.00 minutes
+	total time  =         11 seconds =       0.18 minutes
 
 
 Properties will be evaluated at   0.000000,   0.000000,   0.000000 Bohr
 
 Properties computed using the SCF density density matrix
+
+ Multipole Moments:
+
+ ------------------------------------------------------------------------------------
+     Multipole             Electric (a.u.)       Nuclear  (a.u.)        Total (a.u.)
+ ------------------------------------------------------------------------------------
+
+ L = 1.  Multiply by 2.5417462300 to convert to Debye
+ Dipole X            :          0.0000000            0.0000000            0.0000000
+ Dipole Y            :          0.0000000            0.0000000            0.0000000
+ Dipole Z            :          0.0000000            0.0000000            0.0000000
+
+ L = 2.  Multiply by 1.3450341749 to convert to Debye.ang
+ Quadrupole XX       :      -1535.8888701         1496.8839996          -39.0048704
+ Quadrupole XY       :        -11.5262958           11.4580038           -0.0682920
+ Quadrupole XZ       :          0.0000000            0.0000000            0.0000000
+ Quadrupole YY       :       -283.2369151          244.8754384          -38.3614767
+ Quadrupole YZ       :          0.0000000            0.0000000            0.0000000
+ Quadrupole ZZ       :        -43.5642745            0.0000000          -43.5642745
+
+ L = 3.  Multiply by 0.7117614302 to convert to Debye.ang^2
+ Octupole XXX        :          0.0000000            0.0000000            0.0000000
+ Octupole XXY        :          0.0000000            0.0000000            0.0000000
+ Octupole XXZ        :          0.0000000            0.0000000            0.0000000
+ Octupole XYY        :          0.0000000            0.0000000            0.0000000
+ Octupole XYZ        :          0.0000000            0.0000000            0.0000000
+ Octupole XZZ        :          0.0000000            0.0000000            0.0000000
+ Octupole YYY        :          0.0000000            0.0000000            0.0000000
+ Octupole YYZ        :          0.0000000            0.0000000            0.0000000
+ Octupole YZZ        :          0.0000000            0.0000000            0.0000000
+ Octupole ZZZ        :          0.0000000            0.0000000            0.0000000
+
+ L = 4.  Multiply by 0.3766479268 to convert to Debye.ang^3
+ Hexadecapole XXXX   :     -73574.4550039        68490.6499305        -5083.8050734
+ Hexadecapole XXXY   :      -2528.3919301         2491.6209456          -36.7709845
+ Hexadecapole XXXZ   :          0.0000000            0.0000000            0.0000000
+ Hexadecapole XXYY   :      -3640.8159556         2641.3398575         -999.4760981
+ Hexadecapole XXYZ   :          0.0000000            0.0000000            0.0000000
+ Hexadecapole XXZZ   :       -975.7054240            0.0000000         -975.7054240
+ Hexadecapole XYYY   :         26.1849018          -48.3518197          -22.1669179
+ Hexadecapole XYYZ   :          0.0000000            0.0000000            0.0000000
+ Hexadecapole XYZZ   :         -7.1957865            0.0000000           -7.1957865
+ Hexadecapole XZZZ   :          0.0000000            0.0000000            0.0000000
+ Hexadecapole YYYY   :      -3004.6094453         2103.6746773         -900.9347680
+ Hexadecapole YYYZ   :          0.0000000            0.0000000            0.0000000
+ Hexadecapole YYZZ   :       -192.3803368            0.0000000         -192.3803368
+ Hexadecapole YZZZ   :          0.0000000            0.0000000            0.0000000
+ Hexadecapole ZZZZ   :       -126.3741187            0.0000000         -126.3741187
+
+ L = 5.  Multiply by 0.1993134985 to convert to Debye.ang^4
+ 32-pole XXXXX       :          0.0000000            0.0000000            0.0000000
+ 32-pole XXXXY       :          0.0000000            0.0000000            0.0000000
+ 32-pole XXXXZ       :          0.0000000            0.0000000            0.0000000
+ 32-pole XXXYY       :          0.0000000            0.0000000            0.0000000
+ 32-pole XXXYZ       :          0.0000000            0.0000000            0.0000000
+ 32-pole XXXZZ       :          0.0000000            0.0000000            0.0000000
+ 32-pole XXYYY       :          0.0000000            0.0000000            0.0000000
+ 32-pole XXYYZ       :          0.0000000            0.0000000            0.0000000
+ 32-pole XXYZZ       :          0.0000000            0.0000000            0.0000000
+ 32-pole XXZZZ       :          0.0000000            0.0000000            0.0000000
+ 32-pole XYYYY       :          0.0000000            0.0000000            0.0000000
+ 32-pole XYYYZ       :          0.0000000            0.0000000            0.0000000
+ 32-pole XYYZZ       :          0.0000000            0.0000000            0.0000000
+ 32-pole XYZZZ       :          0.0000000            0.0000000            0.0000000
+ 32-pole XZZZZ       :          0.0000000            0.0000000            0.0000000
+ 32-pole YYYYY       :          0.0000000            0.0000000            0.0000000
+ 32-pole YYYYZ       :          0.0000000            0.0000000            0.0000000
+ 32-pole YYYZZ       :          0.0000000            0.0000000            0.0000000
+ 32-pole YYZZZ       :          0.0000000            0.0000000            0.0000000
+ 32-pole YZZZZ       :          0.0000000            0.0000000            0.0000000
+ 32-pole ZZZZZ       :          0.0000000            0.0000000            0.0000000
+
+ --------------------------------------------------------------------------------
   Mulliken Charges: (a.u.)
    Center  Symbol    Alpha    Beta     Spin     Total
        1     C     2.99909  2.99909  0.00000  0.00182

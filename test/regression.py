@@ -251,6 +251,21 @@ def testNWChem_NWChem6_0_dvb_gopt_hf_unconverged_out(logfile):
     """An unconverged geometry optimization to test for empty optdone (see #103 for details)."""
     assert hasattr(logfile.data, 'optdone') and logfile.data.optdone == []
 
+def testNWChem_NWChem6_0_dvb_sp_hf_moments_only_quadrupole_out(logfile):
+    """Quadrupole moments are printed/parsed, but not lower moments (no shape)."""
+    assert hasattr(logfile.data, 'moments') and len(logfile.data.moments) == 3
+    assert len(logfile.data.moments[0]) == 3
+    assert not logfile.data.moments[1].shape
+    assert len(logfile.data.moments[2]) == 6
+
+def testNWChem_NWChem6_0_dvb_sp_hf_moments_only_octupole_out(logfile):
+    """Quadrupole moments are printed/parsed, but not lower moments (no shape)."""
+    assert hasattr(logfile.data, 'moments') and len(logfile.data.moments) == 4
+    assert len(logfile.data.moments[0]) == 3
+    assert not logfile.data.moments[1].shape
+    assert not logfile.data.moments[2].shape
+    assert len(logfile.data.moments[3]) == 10
+
 # ORCA #
 
 def testORCA_ORCA2_8_co_cosmo_out(logfile):

@@ -31,4 +31,4 @@ set {
 }
 
 energy('scf')
-oeprop('MULLIKEN_CHARGES', 'LOWDIN_CHARGES')
+oeprop('MULLIKEN_CHARGES', 'LOWDIN_CHARGES', 'MULTIPOLE(5)')

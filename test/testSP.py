@@ -135,6 +135,46 @@ class GenericSPTest(bettertest.TestCase):
         """There should be no optdone attribute set."""
         self.assertFalse(hasattr(self.data, 'optdone'))
 
+    def testmoments(self):
+        """Does the dipole and possible higher molecular moments look reasonable?"""
+
+        # The reference point is always a vector, but not necessarily the
+        # origin or center of mass. In this case, however, the center of mass
+        # is at the origin, so we now what to expect.
+        reference = self.data.moments[0]
+        self.assertEquals(len(reference), 3)
+        self.assertInside(sum(reference), 0.0, 0.0001)
+
+        # Length and value of dipole moment should always be correct (zero for this test).
+        dipole = self.data.moments[1]
+        self.assertEquals(len(dipole), 3)
+        self.assertInside(sum(dipole), 0.0, 0.0001)
+
+        # If the quadrupole is there, we can expect roughly -50B for the XX moment.
+        if len(self.data.moments) > 2:
+            quadrupole = self.data.moments[2]
+            self.assertEquals(len(quadrupole), 6)
+            self.assertInside(quadrupole[0], -50, 5)
+
+        # If the octupole is there, it should have 10 components and be zero.
+        if len(self.data.moments) > 3:
+            octupole = self.data.moments[3]
+            self.assertEquals(len(octupole), 10)
+            self.assertInside(sum(octupole), 0.0, 0.0001)
+
+        # Hexadecapole should have 15 elements and an XX componenet of around -1900 Debye*ang^2.
+        if len(self.data.moments) > 4:
+            hexadecapole = self.data.moments[4]
+            self.assertEquals(len(hexadecapole), 15)
+            self.assertInside(hexadecapole[0], -1900, 100)
+
+        # The are 21 unique 32-pole moments, and all are zero in this test case.
+        if len(self.data.moments) > 5:
+            moment32 = self.data.moments[5]
+            self.assertEquals(len(moment32), 21)
+            self.assertInside(sum(moment32), 0.0, 0.0001)
+
+
 
 class ADFSPTest(GenericSPTest):
     """Customized restricted single point unittest"""
@@ -160,6 +200,9 @@ class GaussianSPTest(GenericSPTest):
         mm = 1000*sum(self.data.atommasses)
         self.assertInside(mm, 130078.25, 0.1, "Molecule mass: %f not 130078 +- 0.1mD" %mm)
 
+    def testmoments(self):
+        """We don't yet have dipole moments printed in the unit test logfile. PASS"""
+
 
 class Jaguar7SPTest(GenericSPTest):
     """Customized restricted single point unittest"""
@@ -183,6 +226,15 @@ class Jaguar7SPTest(GenericSPTest):
     def testdimmocoeffs(self):
         """Are the dimensions of mocoeffs equal to 1 x nmo x nbasis? PASS"""
         self.assertEquals(1, 1)
+
+    def testmoments(self):
+        """No dipole moments in the logfile. PASS"""
+
+class JaguarSPTest(GenericSPTest):
+    """Customized restricted single point unittest"""
+
+    def testmoments(self):
+        """No dipole moments in the logfile. PASS"""
 
 
 class MolproSPTest(GenericSPTest):

@@ -47,6 +47,7 @@ class ccData(object):
         homos -- molecular orbital indices of HOMO(s) (array[1])
         mocoeffs -- molecular orbital coefficients (list of arrays[2])
         moenergies -- molecular orbital energies (list of arrays[1], eV)
+        moments -- molecular multipole moments (list of arrays[], a.u.)
         mosyms -- orbital symmetries (list of lists)
         mpenergies -- molecular electronic energies with Möller-Plesset corrections (array[2], eV)
         mult -- multiplicity of the system (integer)
@@ -108,6 +109,7 @@ class ccData(object):
         "homos":          numpy.ndarray,
         "mocoeffs":       list,
         "moenergies":     list,
+        "moments":        list,
         "mosyms":         list,
         "mpenergies":     numpy.ndarray,
         "mult":           int,
@@ -133,13 +135,13 @@ class ccData(object):
     }
 
     # The name of all attributes can be generated from the dictionary above.
-    _attrlist = _attrtypes.keys()
+    _attrlist = sorted(_attrtypes.keys())
 
     # Arrays are double precision by default, but these will be integer arrays.
     _intarrays = ['atomnos', 'coreelectrons', 'homos']
 
     # Attributes that should be lists of arrays (double precision).
-    _listsofarrays = ['mocoeffs', 'moenergies', 'scfvalues']
+    _listsofarrays = ['mocoeffs', 'moenergies', 'moments', 'scfvalues']
     
     # Attributes that should be dictionaries of arrays (double precision).
     _dictsofarrays = ["atomcharges", "atomspins"]

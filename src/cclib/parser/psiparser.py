@@ -696,6 +696,162 @@ class Psi(logfileparser.Logfile):
             if not hasattr(self, 'optdone'):
                 self.optdone = []
 
+        # The reference point at which properties are evaluated in Psi4 is explicitely stated,
+        # so we can save it for later. It is not, however, a part of the Properties section,
+        # but it appears before it and also in other places where properies that might depend
+        # on it are printed.
+        #
+        # Properties will be evaluated at   0.000000,   0.000000,   0.000000 Bohr
+        #
+        if (self.version == 4) and ("Properties will be evaluated at" in line.strip()):
+            self.reference = numpy.array([float(x.strip(',')) for x in line.split()[-4:-1]])
+            assert line.split()[-1] == "Bohr"
+            self.reference = utils.convertor(self.reference, 'bohr', 'Angstrom')
+
+        # The properties section print the molecular dipole moment:
+        #
+        #  ==> Properties <==
+        #
+        #
+        #Properties computed using the SCF density density matrix
+        #  Nuclear Dipole Moment: (a.u.)
+        #     X:     0.0000      Y:     0.0000      Z:     0.0000
+        #
+        #  Electronic Dipole Moment: (a.u.)
+        #     X:     0.0000      Y:     0.0000      Z:     0.0000
+        #
+        #  Dipole Moment: (a.u.)
+        #     X:     0.0000      Y:     0.0000      Z:     0.0000     Total:     0.0000
+        #
+        if (self.section == "Properties") and line.strip() == "Dipole Moment: (a.u.)":
+
+            line = next(inputfile)
+            dipole = numpy.array([float(line.split()[1]), float(line.split()[3]), float(line.split()[5])])
+            dipole = utils.convertor(dipole, "ebohr", "Debye")
+
+            if not hasattr(self, 'moments'):
+                self.moments = [self.reference, dipole]
+            else:
+                try:
+                    assert numpy.all(self.moments[1] == dipole)
+                except AssertionError:
+                    self.logger.warning('Overwriting previous multipole moments with new values')
+                    self.logger.warning('This could be from post-HF properties or geometry optimization')
+                    self.moments = [self.reference, dipole]
+
+        # Higher multipole moments are printed separately, on demand, in lexicographical order.
+        #
+        # Multipole Moments:
+        #
+        # ------------------------------------------------------------------------------------
+        #     Multipole             Electric (a.u.)       Nuclear  (a.u.)        Total (a.u.)
+        # ------------------------------------------------------------------------------------
+        #
+        # L = 1.  Multiply by 2.5417462300 to convert to Debye
+        # Dipole X            :          0.0000000            0.0000000            0.0000000
+        # Dipole Y            :          0.0000000            0.0000000            0.0000000
+        # Dipole Z            :          0.0000000            0.0000000            0.0000000
+        #
+        # L = 2.  Multiply by 1.3450341749 to convert to Debye.ang
+        # Quadrupole XX       :      -1535.8888701         1496.8839996          -39.0048704
+        # Quadrupole XY       :        -11.5262958           11.4580038           -0.0682920
+        # ...
+        #
+        if line.strip() == "Multipole Moments:":
+
+            self.skip_lines(inputfile, ['b', 'd', 'header', 'd', 'b'])
+
+            # The reference used here should have been printed somewhere
+            # before the properties and parsed above.
+            moments = [self.reference]
+
+            line = next(inputfile)
+            while "----------" not in line.strip():
+
+                rank = int(line.split()[2].strip('.'))
+
+                multipole = []
+                line = next(inputfile)
+                while line.strip():
+
+                    value = float(line.split()[-1])
+                    fromunits = "ebohr" + (rank>1)*("%i" % rank)
+                    tounits = "Debye" + (rank>1)*".ang" + (rank>2)*("%i" % (rank-1))
+                    value = utils.convertor(value, fromunits, tounits)
+                    multipole.append(value)
+
+                    line = next(inputfile)
+
+                multipole = numpy.array(multipole)
+                moments.append(multipole)
+                line = next(inputfile)
+
+            if not hasattr(self, 'moments'):
+                self.moments = moments
+            else:
+                for im,m in enumerate(moments):
+                    if len(self.moments) <= im:
+                        self.moments.append(m)
+                    else:
+                        assert numpy.all(self.moments[im] == m)
+
+        # We can also get some higher moments in Psi3, although here the dipole is not printed
+        # separately and the order is not lexicographical. However, the numbers seem
+        # kind of strange -- the quadrupole seems to be traceless, although I'm not sure
+        # whether the standard transformation has been used. So, until we know what kind
+        # of moment these are and how to make them raw again, we will only parse the dipole.
+        #
+        # --------------------------------------------------------------
+        #                *** Electric multipole moments ***
+        # --------------------------------------------------------------
+        #
+        #  CAUTION : The system has non-vanishing dipole moment, therefore
+        #    quadrupole and higher moments depend on the reference point.
+        #
+        # -Coordinates of the reference point (a.u.) :
+        #           x                     y                     z
+        #  --------------------  --------------------  --------------------
+        #          0.0000000000          0.0000000000          0.0000000000
+        #
+        # -Electric dipole moment (expectation values) :
+        #
+        #    mu(X)  =  -0.00000 D  =  -1.26132433e-43 C*m  =  -0.00000000 a.u.
+        #    mu(Y)  =   0.00000 D  =   3.97987832e-44 C*m  =   0.00000000 a.u.
+        #    mu(Z)  =   0.00000 D  =   0.00000000e+00 C*m  =   0.00000000 a.u.
+        #    |mu|   =   0.00000 D  =   1.32262368e-43 C*m  =   0.00000000 a.u.
+        #
+        # -Components of electric quadrupole moment (expectation values) (a.u.) :
+        #
+        #     Q(XX) =   10.62340220   Q(YY) =    1.11816843   Q(ZZ) =  -11.74157063
+        #     Q(XY) =    3.64633112   Q(XZ) =    0.00000000   Q(YZ) =    0.00000000
+        #
+        if (self.version == 3) and line.strip() == "*** Electric multipole moments ***":
+
+            self.skip_lines(inputfile, ['d', 'b', 'caution1', 'caution2', 'b'])
+
+            coordinates = next(inputfile)
+            assert coordinates.split()[-2] == "(a.u.)"
+            self.skip_lines(inputfile, ['xyz', 'd'])
+            line = next(inputfile)
+            self.reference = numpy.array([float(x) for x in line.split()])
+            self.reference = utils.convertor(self.reference, 'bohr', 'Angstrom')
+
+            self.skip_line(inputfile, "blank")
+            line = next(inputfile)
+            assert "Electric dipole moment" in line
+            self.skip_line(inputfile, "blank")
+
+            # Make sure to use the column that has the value in Debyes.
+            dipole = []
+            for i in range(3):
+                line = next(inputfile)
+                dipole.append(float(line.split()[2]))
+
+            if not hasattr(self, 'moments'):
+                self.moments = [self.reference, dipole]
+            else:
+                assert self.moments[1] == dipole
+
 
 if __name__ == "__main__":
     import doctest, psiparser
