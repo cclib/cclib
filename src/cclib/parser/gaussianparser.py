@@ -213,6 +213,53 @@ class Gaussian(logfileparser.Logfile):
             self.set_attribute('natom', len(atomnos))
             self.set_attribute('atomnos', atomnos)
 
+        # The basis set function are printed like this:
+        #
+        # AO basis set in the form of general basis input (Overlap normalization):
+        #  1 0
+        # S   3 1.00       0.000000000000
+        #      0.7161683735D+02  0.1543289673D+00
+        #      0.1304509632D+02  0.5353281423D+00
+        #      0.3530512160D+01  0.4446345422D+00
+        # SP   3 1.00       0.000000000000
+        #      0.2941249355D+01 -0.9996722919D-01  0.1559162750D+00
+        #      0.6834830964D+00  0.3995128261D+00  0.6076837186D+00
+        #      0.2222899159D+00  0.7001154689D+00  0.3919573931D+00
+        # ****
+        #  2 0
+        # S   3 1.00       0.000000000000
+        #      0.7161683735D+02  0.1543289673D+00
+        # ...
+        #
+        if line[1:13] == "AO basis set":
+        
+            # For counterpoise fragment calcualtions, skip these lines.
+            if self.counterpoise != 0: return
+
+            self.gbasis = []
+            for i in range(self.natom):
+                atom_line = inputfile.next()
+                line = inputfile.next()
+                shells = []
+                while line.strip() != "****":
+                    cols = line.split()
+                    subshells = cols[0]
+                    ngauss = int(cols[1])
+                    parameters = []
+                    for ig in range(ngauss):
+                        line = inputfile.next()
+                        parameters.append(map(self.float, line.split()))
+                    for iss, ss in enumerate(subshells):
+                        contractions = []
+                        for param in parameters:
+                            exponent = param[0]
+                            coefficient = param[iss+1]
+                            contractions.append((exponent, coefficient))
+                        subshell = (ss, contractions)
+                        shells.append(subshell)
+                    line = inputfile.next()
+                self.gbasis.append(shells)
+
         # Find the targets for SCF convergence (QM calcs).
         if line[1:44] == 'Requested convergence on RMS density matrix':
 
@@ -644,43 +691,6 @@ class Gaussian(logfileparser.Logfile):
                 line = next(inputfile)
 
             self.moenergies = [numpy.array(x, "d") for x in self.moenergies]
-            
-        # Gaussian Rev <= B.0.3 (?)
-        # AO basis set in the form of general basis input:
-        #  1 0
-        # S   3 1.00       0.000000000000
-        #      0.7161683735D+02  0.1543289673D+00
-        #      0.1304509632D+02  0.5353281423D+00
-        #      0.3530512160D+01  0.4446345422D+00
-        # SP   3 1.00       0.000000000000
-        #      0.2941249355D+01 -0.9996722919D-01  0.1559162750D+00
-        #      0.6834830964D+00  0.3995128261D+00  0.6076837186D+00
-        #      0.2222899159D+00  0.7001154689D+00  0.3919573931D+00
-        if line[1:16] == "AO basis set in":
-        
-            # For counterpoise fragment calcualtions, skip these lines.
-            if self.counterpoise != 0: return
-        
-            self.gbasis = []
-            line = next(inputfile)
-            while line.strip():
-                gbasis = []
-                line = next(inputfile)
-                while line.find("*")<0:
-                    temp = line.split()
-                    symtype = temp[0]
-                    numgau = int(temp[1])
-                    gau = []
-                    for i in range(numgau):
-                        temp = list(map(self.float, next(inputfile).split()))
-                        gau.append(temp)
-                        
-                    for i, x in enumerate(symtype):
-                        newgau = [(z[0], z[i+1]) for z in gau]
-                        gbasis.append((x, newgau))
-                    line = next(inputfile) # i.e. "****" or "SP ...."
-                self.gbasis.append(gbasis)
-                line = next(inputfile) # i.e. "20 0" or blank line
 
         # Start of the IR/Raman frequency section.
         # Caution is advised here, as additional frequency blocks
