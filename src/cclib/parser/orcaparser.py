@@ -470,12 +470,19 @@ class ORCA(logfileparser.Logfile):
             self.mocoeffs = mocoeffs
 
         if line[0:18] == "TD-DFT/TDA EXCITED":
-            sym = "Triplet" # Could be singlets or triplets
+            # Could be singlets or triplets
             if line.find("SINGLETS") >= 0:
                 sym = "Singlet"
+            elif line.find("TRIPLETS") >= 0:
+                sym = "Triplet"
+            else:
+                sym = "Not specified"
+
+            if not hasattr(self, "etenergies"):
                 self.etsecs = []
                 self.etenergies = []
                 self.etsyms = []
+
             lookup = {'a':0, 'b':1}
             line = next(inputfile)
             while line.find("STATE") < 0:
