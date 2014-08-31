@@ -213,7 +213,7 @@ class Gaussian(logfileparser.Logfile):
             self.set_attribute('natom', len(atomnos))
             self.set_attribute('atomnos', atomnos)
 
-        # The basis set function are printed like this:
+        # With the gfinput keyword, the atomic basis set functios are:
         #
         # AO basis set in the form of general basis input (Overlap normalization):
         #  1 0
@@ -231,34 +231,77 @@ class Gaussian(logfileparser.Logfile):
         #      0.7161683735D+02  0.1543289673D+00
         # ...
         #
+        # The same is also printed when the gfprint keyword is used, but the
+        # interstitial lines differ and there are no stars between atoms:
+        #
+        # AO basis set (Overlap normalization):
+        # Atom C1       Shell     1 S   3     bf    1 -     1          0.509245180608         -2.664678875191          0.000000000000
+        #       0.7161683735D+02  0.1543289673D+00
+        #       0.1304509632D+02  0.5353281423D+00
+        #       0.3530512160D+01  0.4446345422D+00
+        # Atom C1       Shell     2 SP   3    bf    2 -     5          0.509245180608         -2.664678875191          0.000000000000
+        #       0.2941249355D+01 -0.9996722919D-01  0.1559162750D+00
+        # ...
         if line[1:13] == "AO basis set":
         
+            self.gbasis = []
+
             # For counterpoise fragment calcualtions, skip these lines.
             if self.counterpoise != 0: return
 
-            self.gbasis = []
-            for i in range(self.natom):
-                atom_line = inputfile.next()
-                line = inputfile.next()
-                shells = []
-                while line.strip() != "****":
-                    cols = line.split()
+            atom_line = inputfile.next()
+            self.gfprint = atom_line.split()[0] == "Atom"
+            self.gfinput = not self.gfprint
+
+            # Note how the shell information is on a separate line for gfinput,
+            # whereas for gfprint it is on the same line as atom information.
+            if self.gfinput:
+                shell_line = inputfile.next()
+
+            shell = []
+            while len(self.gbasis) < self.natom:
+
+                if self.gfprint:
+                    cols = atom_line.split()
+                    subshells = cols[4]
+                    ngauss = int(cols[5])
+                else:
+                    cols = shell_line.split()
                     subshells = cols[0]
                     ngauss = int(cols[1])
-                    parameters = []
-                    for ig in range(ngauss):
-                        line = inputfile.next()
-                        parameters.append(map(self.float, line.split()))
-                    for iss, ss in enumerate(subshells):
-                        contractions = []
-                        for param in parameters:
-                            exponent = param[0]
-                            coefficient = param[iss+1]
-                            contractions.append((exponent, coefficient))
-                        subshell = (ss, contractions)
-                        shells.append(subshell)
+
+                parameters = []
+                for ig in range(ngauss):
                     line = inputfile.next()
-                self.gbasis.append(shells)
+                    parameters.append(map(self.float, line.split()))
+                for iss, ss in enumerate(subshells):
+                    contractions = []
+                    for param in parameters:
+                        exponent = param[0]
+                        coefficient = param[iss+1]
+                        contractions.append((exponent, coefficient))
+                    subshell = (ss, contractions)
+                    shell.append(subshell)
+
+                if self.gfprint:
+                    line = inputfile.next()
+                    if line.split()[0] == "Atom":
+                        atomnum = int(re.sub(r"\D", "", line.split()[1]))
+                        if atomnum == len(self.gbasis) + 2:
+                            self.gbasis.append(shell)
+                            shell = []
+                        atom_line = line
+                    else:
+                        self.gbasis.append(shell)
+                else:
+                    line = inputfile.next()
+                    if line.strip() == "****":
+                        self.gbasis.append(shell)
+                        shell = []
+                        atom_line = inputfile.next()
+                        shell_line = inputfile.next()
+                    else:
+                        shell_line = line
 
         # Find the targets for SCF convergence (QM calcs).
         if line[1:44] == 'Requested convergence on RMS density matrix':

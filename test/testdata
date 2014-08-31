@@ -14,8 +14,10 @@
 Basis     GAMESSUK    GenericBasisTest      basicGAMESS-UK        dvb_sp.out
 Basis     GAMESS      GenericBasisTest      basicGAMESS-US2012    dvb_sp.out
 Basis     GAMESS      GenericBasisTest      basicFirefly8.0       dvb_sp.out
-Basis     Gaussian    GenericBasisTest      basicGaussian03       dvb_sp_basis.log      # This version uses the GFINPUT keyword
-Basis     Gaussian    GenericBasisTest      basicGaussian09       dvb_sp_basis.log      # This version uses the GFPRINT keyword
+Basis     Gaussian    GenericBasisTest      basicGaussian03       dvb_sp_basis.log
+Basis     Gaussian    GenericBasisTest      basicGaussian03       dvb_sp_basis_b.log
+Basis     Gaussian    GenericBasisTest      basicGaussian09       dvb_sp_basis.log
+Basis     Gaussian    GenericBasisTest      basicGaussian09       dvb_sp_basis_b.log
 Basis     Jaguar      GenericBasisTest      basicJaguar8.3        dvb_sp_hf.out         
 Basis     Jaguar      GenericBasisTest      basicJaguar8.3        dvb_sp_ks.out
 Basis     Molpro      GenericBasisTest      basicMolpro2006       dvb_sphf.out
