@@ -1205,16 +1205,35 @@ class Gaussian(logfileparser.Logfile):
         if line[1:7] == "ONIOM:":
             self.oniom = True
 
-        if (line[1:24] == "Mulliken atomic charges" or
-            line[1:22] == "Lowdin Atomic Charges"):
+        # Atomic charges are straightforward to parse, although the header
+        # has changed over time somewhat.
+        #
+        # Mulliken charges:
+        #                1
+        #     1  C   -0.004513
+        #     2  C   -0.077156
+        # ...
+        # Sum of Mulliken charges =   0.00000
+        # Mulliken charges with hydrogens summed into heavy atoms:
+        #               1
+        #     1  C   -0.004513
+        #     2  C    0.002063
+        # ...
+        #
+        if line[1:25] == "Mulliken atomic charges:" or line[1:18] == "Mulliken charges:" or \
+           line[1:23] == "Lowdin Atomic Charges:" or line[1:16] == "Lowdin charges:":
+
             if not hasattr(self, "atomcharges"):
                 self.atomcharges = {}
+
             ones = next(inputfile)
+
             charges = []
             nline = next(inputfile)
             while not "Sum of" in nline:
                 charges.append(float(nline.split()[2]))
                 nline = next(inputfile)
+
             if "Mulliken" in line:
                 self.atomcharges["mulliken"] = charges
             else:

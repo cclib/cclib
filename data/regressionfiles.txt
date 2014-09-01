@@ -97,6 +97,9 @@ Gaussian/Gaussian09/irc_point.log
 Gaussian/Gaussian09/Dahlgren_TS.log
 Gaussian/Gaussian09/dvb_gopt_unconverged.log
 Gaussian/Gaussian09/dvb_lowdin.log
+Gaussian/Gaussian09/dvb_sp_basis_b_gfprint.log
+Gaussian/Gaussian09/dvb_sp_basis_gfinput.log
+Gaussian/Gaussian09/dvb_sp_revA.02.out
 Gaussian/Gaussian03/DCV4T+C60.log
 Gaussian/Gaussian09/di-iodophenyl.log
 Gaussian/Gaussian09/coeffs.log
