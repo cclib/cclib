@@ -17,13 +17,14 @@ class GenericTDTest(bettertest.TestCase):
     """Generic time-dependent HF/DFT unittest"""
 
     number = 5
+    expected_l_max = 41000
 
     def testenergies(self):
         """Is the l_max reasonable?"""
         self.assertEqual(len(self.data.etenergies), self.number)
         idx_lambdamax = [i for i, x in enumerate(self.data.etoscs)
                          if x==max(self.data.etoscs)][0]
-        self.assertInside(self.data.etenergies[idx_lambdamax], 41000, 5000)
+        self.assertInside(self.data.etenergies[idx_lambdamax], self.expected_l_max, 5000)
     
     def testoscs(self):
         """Is the maximum of etoscs in the right range?"""
@@ -70,6 +71,8 @@ class ADFTDDFTTest(GenericTDTest):
 class GaussianTDDFTTest(GenericTDTest):
     """Customized time-dependent HF/DFT unittest"""
 
+    expected_l_max = 48000
+
     def testrotatsnumber(self):
         """Is the length of etrotats correct?"""
         self.assertEqual(len(self.data.etrotats), self.number)
@@ -82,14 +85,9 @@ class GAMESSUSTDDFTTest(GenericTDTest):
     
 class OrcaTDDFTTest(GenericTDTest):
     """Customized time-dependent HF/DFT unittest"""
-    number = 10
 
-    def testenergies(self):
-        """Is the l_max reasonable?"""
-        self.assertEqual(len(self.data.etenergies), self.number)
-        idx_lambdamax = [i for i, x in enumerate(self.data.etoscs)
-                         if x==max(self.data.etoscs)][0]
-        self.assertInside(self.data.etenergies[idx_lambdamax], 48000, 5000)
+    number = 10
+    expected_l_max = 48000
 
     def testoscs(self):
         """Is the maximum of etoscs in the right range?"""
