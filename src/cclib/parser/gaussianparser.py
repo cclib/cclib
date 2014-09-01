@@ -273,7 +273,7 @@ class Gaussian(logfileparser.Logfile):
                 parameters = []
                 for ig in range(ngauss):
                     line = inputfile.next()
-                    parameters.append(map(self.float, line.split()))
+                    parameters.append(list(map(self.float, line.split())))
                 for iss, ss in enumerate(subshells):
                     contractions = []
                     for param in parameters:
