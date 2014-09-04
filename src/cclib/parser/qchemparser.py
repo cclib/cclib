@@ -214,7 +214,7 @@ class QChem(logfileparser.Logfile):
             self.mpenergies.append([mp2energy])
 
         # This is the MP3/ccman2 case.
-        if 'MP2 energy' in line:
+        if line[1:11] == 'MP2 energy':
             if not hasattr(self, 'mpenergies'):
                 self.mpenergies = []
             mpenergies = []
