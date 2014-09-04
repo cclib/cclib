@@ -131,9 +131,8 @@ class QChem(logfileparser.Logfile):
 
             # We should have the header between dashes now,
             # but sometimes there are lines before the first dashes.
-            while not "-----" in line:
-                line = inputfile.next()
-            assert 'Cycle       Energy' in inputfile.next()
+            while not 'Cycle       Energy' in line:
+                line = next(inputfile)
             self.skip_lines(inputfile, ['d'])
 
             values = []
