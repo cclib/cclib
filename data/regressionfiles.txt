@@ -94,6 +94,9 @@ GAMESS-UK/GAMESS-UK7.0/pyridine.out
 Gaussian/Gaussian09/25DMF_HRANH.log
 Gaussian/Gaussian09/534.out
 Gaussian/Gaussian09/BH3CO_fragment_guess.log
+Gaussian/Gaussian09/BH3CO_fragment_guess.pop_minimal.log
+Gaussian/Gaussian09/encaps1.log
+Gaussian/Gaussian09/irc_point.log
 Gaussian/Gaussian09/Dahlgren_TS.log
 Gaussian/Gaussian03/DCV4T+C60.log
 Gaussian/Gaussian09/OPT_td.out
@@ -176,6 +179,7 @@ ORCA/ORCA2.8/dvb_sp_un.out
 ORCA/ORCA2.9/job.out
 ORCA/ORCA2.9/prova.out
 ORCA/ORCA2.9/PCB_1_122.out
+ORCA/ORCA3.0/benzene_td_singlets.out
 ORCA/ORCA3.0/dvb_gopt_unconverged.out
 Psi/Psi4/dvb_gopt_hf_unconverged.out
 Psi/Psi4/psi4.0b5_samples_scf4.out
