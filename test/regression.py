@@ -520,6 +520,17 @@ old_unittests = {
 
     "GAMESS/WinGAMESS/dvb_td_2007.03.24.r1.out":    GAMESSUSTDDFTTest,
 
+    "Gaussian/Gaussian09/dvb_gopt_revA.02.out":         GaussianGeoOptTest,
+    "Gaussian/Gaussian09/dvb_ir_revA.02.out":           GaussianIRTest,
+    "Gaussian/Gaussian09/dvb_raman_revA.02.out":        GaussianRamanTest,
+    "Gaussian/Gaussian09/dvb_scan_revA.02.log":         GaussianScanTest,
+    "Gaussian/Gaussian09/dvb_sp_basis_b_gfprint.log":   GenericBasisTest,
+    "Gaussian/Gaussian09/dvb_sp_basis_gfinput.log":     GenericBasisTest,
+    "Gaussian/Gaussian09/dvb_sp_revA.02.out":           GaussianSPTest,
+    "Gaussian/Gaussian09/dvb_td_revA.02.out":           GaussianTDDFTTest,
+    "Gaussian/Gaussian09/dvb_un_sp_revA.02.log":        GaussianSPunTest,
+    "Gaussian/Gaussian09/dvb_un_sp_b_revA.02.log":      GaussianSPunTest,
+
     "Jaguar/Jaguar4.2/dvb_gopt.out":    JaguarGeoOptTest_nmo45,
     "Jaguar/Jaguar4.2/dvb_gopt_b.out":  JaguarGeoOptTest,
     "Jaguar/Jaguar4.2/dvb_sp.out":      JaguarGeoOptTest_nmo45,

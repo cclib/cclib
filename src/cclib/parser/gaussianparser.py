@@ -213,6 +213,96 @@ class Gaussian(logfileparser.Logfile):
             self.set_attribute('natom', len(atomnos))
             self.set_attribute('atomnos', atomnos)
 
+        # With the gfinput keyword, the atomic basis set functios are:
+        #
+        # AO basis set in the form of general basis input (Overlap normalization):
+        #  1 0
+        # S   3 1.00       0.000000000000
+        #      0.7161683735D+02  0.1543289673D+00
+        #      0.1304509632D+02  0.5353281423D+00
+        #      0.3530512160D+01  0.4446345422D+00
+        # SP   3 1.00       0.000000000000
+        #      0.2941249355D+01 -0.9996722919D-01  0.1559162750D+00
+        #      0.6834830964D+00  0.3995128261D+00  0.6076837186D+00
+        #      0.2222899159D+00  0.7001154689D+00  0.3919573931D+00
+        # ****
+        #  2 0
+        # S   3 1.00       0.000000000000
+        #      0.7161683735D+02  0.1543289673D+00
+        # ...
+        #
+        # The same is also printed when the gfprint keyword is used, but the
+        # interstitial lines differ and there are no stars between atoms:
+        #
+        # AO basis set (Overlap normalization):
+        # Atom C1       Shell     1 S   3     bf    1 -     1          0.509245180608         -2.664678875191          0.000000000000
+        #       0.7161683735D+02  0.1543289673D+00
+        #       0.1304509632D+02  0.5353281423D+00
+        #       0.3530512160D+01  0.4446345422D+00
+        # Atom C1       Shell     2 SP   3    bf    2 -     5          0.509245180608         -2.664678875191          0.000000000000
+        #       0.2941249355D+01 -0.9996722919D-01  0.1559162750D+00
+        # ...
+        if line[1:13] == "AO basis set":
+        
+            self.gbasis = []
+
+            # For counterpoise fragment calcualtions, skip these lines.
+            if self.counterpoise != 0: return
+
+            atom_line = inputfile.next()
+            self.gfprint = atom_line.split()[0] == "Atom"
+            self.gfinput = not self.gfprint
+
+            # Note how the shell information is on a separate line for gfinput,
+            # whereas for gfprint it is on the same line as atom information.
+            if self.gfinput:
+                shell_line = inputfile.next()
+
+            shell = []
+            while len(self.gbasis) < self.natom:
+
+                if self.gfprint:
+                    cols = atom_line.split()
+                    subshells = cols[4]
+                    ngauss = int(cols[5])
+                else:
+                    cols = shell_line.split()
+                    subshells = cols[0]
+                    ngauss = int(cols[1])
+
+                parameters = []
+                for ig in range(ngauss):
+                    line = inputfile.next()
+                    parameters.append(list(map(self.float, line.split())))
+                for iss, ss in enumerate(subshells):
+                    contractions = []
+                    for param in parameters:
+                        exponent = param[0]
+                        coefficient = param[iss+1]
+                        contractions.append((exponent, coefficient))
+                    subshell = (ss, contractions)
+                    shell.append(subshell)
+
+                if self.gfprint:
+                    line = inputfile.next()
+                    if line.split()[0] == "Atom":
+                        atomnum = int(re.sub(r"\D", "", line.split()[1]))
+                        if atomnum == len(self.gbasis) + 2:
+                            self.gbasis.append(shell)
+                            shell = []
+                        atom_line = line
+                    else:
+                        self.gbasis.append(shell)
+                else:
+                    line = inputfile.next()
+                    if line.strip() == "****":
+                        self.gbasis.append(shell)
+                        shell = []
+                        atom_line = inputfile.next()
+                        shell_line = inputfile.next()
+                    else:
+                        shell_line = line
+
         # Find the targets for SCF convergence (QM calcs).
         if line[1:44] == 'Requested convergence on RMS density matrix':
 
@@ -644,43 +734,6 @@ class Gaussian(logfileparser.Logfile):
                 line = next(inputfile)
 
             self.moenergies = [numpy.array(x, "d") for x in self.moenergies]
-            
-        # Gaussian Rev <= B.0.3 (?)
-        # AO basis set in the form of general basis input:
-        #  1 0
-        # S   3 1.00       0.000000000000
-        #      0.7161683735D+02  0.1543289673D+00
-        #      0.1304509632D+02  0.5353281423D+00
-        #      0.3530512160D+01  0.4446345422D+00
-        # SP   3 1.00       0.000000000000
-        #      0.2941249355D+01 -0.9996722919D-01  0.1559162750D+00
-        #      0.6834830964D+00  0.3995128261D+00  0.6076837186D+00
-        #      0.2222899159D+00  0.7001154689D+00  0.3919573931D+00
-        if line[1:16] == "AO basis set in":
-        
-            # For counterpoise fragment calcualtions, skip these lines.
-            if self.counterpoise != 0: return
-        
-            self.gbasis = []
-            line = next(inputfile)
-            while line.strip():
-                gbasis = []
-                line = next(inputfile)
-                while line.find("*")<0:
-                    temp = line.split()
-                    symtype = temp[0]
-                    numgau = int(temp[1])
-                    gau = []
-                    for i in range(numgau):
-                        temp = list(map(self.float, next(inputfile).split()))
-                        gau.append(temp)
-                        
-                    for i, x in enumerate(symtype):
-                        newgau = [(z[0], z[i+1]) for z in gau]
-                        gbasis.append((x, newgau))
-                    line = next(inputfile) # i.e. "****" or "SP ...."
-                self.gbasis.append(gbasis)
-                line = next(inputfile) # i.e. "20 0" or blank line
 
         # Start of the IR/Raman frequency section.
         # Caution is advised here, as additional frequency blocks
@@ -1152,16 +1205,35 @@ class Gaussian(logfileparser.Logfile):
         if line[1:7] == "ONIOM:":
             self.oniom = True
 
-        if (line[1:24] == "Mulliken atomic charges" or
-            line[1:22] == "Lowdin Atomic Charges"):
+        # Atomic charges are straightforward to parse, although the header
+        # has changed over time somewhat.
+        #
+        # Mulliken charges:
+        #                1
+        #     1  C   -0.004513
+        #     2  C   -0.077156
+        # ...
+        # Sum of Mulliken charges =   0.00000
+        # Mulliken charges with hydrogens summed into heavy atoms:
+        #               1
+        #     1  C   -0.004513
+        #     2  C    0.002063
+        # ...
+        #
+        if line[1:25] == "Mulliken atomic charges:" or line[1:18] == "Mulliken charges:" or \
+           line[1:23] == "Lowdin Atomic Charges:" or line[1:16] == "Lowdin charges:":
+
             if not hasattr(self, "atomcharges"):
                 self.atomcharges = {}
+
             ones = next(inputfile)
+
             charges = []
             nline = next(inputfile)
             while not "Sum of" in nline:
                 charges.append(float(nline.split()[2]))
                 nline = next(inputfile)
+
             if "Mulliken" in line:
                 self.atomcharges["mulliken"] = charges
             else:
