@@ -146,7 +146,7 @@ class ccData(object):
     # Attributes that should be dictionaries of arrays (double precision).
     _dictsofarrays = ["atomcharges", "atomspins"]
 
-    def __init__(self, attributes=None):
+    def __init__(self, **kwds):
         """Initialize the cclibData object.
         
         Normally called in the parse() method of a Logfile subclass.
@@ -154,8 +154,16 @@ class ccData(object):
         Inputs:
             attributes - dictionary of attributes to load
         """
+
+        attributes = kwds.get("attributes", None)
         if attributes:
             self.setattributes(attributes)
+
+        self.optdone_as_list = kwds.get("optdone_as_list", False)
+        if type(self.optdone_as_list) is not bool:
+            self.optdone_as_list = False
+        if not self.optdone_as_list:
+            self._attrtypes["optdone"] = bool
         
     def listify(self):
         """Converts all attributes that are arrays or lists/dicts of arrays to lists."""
@@ -226,6 +234,8 @@ class ccData(object):
     
         for attr in valid:
             setattr(self, attr, attributes[attr])
+            if not self.optdone_as_list and attr == "optdone":
+                setattr(self, attr, ( len(attributes[attr]) > 0 ))
 
         self.arrayify()
         self.typecheck()

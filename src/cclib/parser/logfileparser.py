@@ -128,7 +128,7 @@ class Logfile(object):
     """
 
     def __init__(self, source, loglevel=logging.INFO, logname="Log",
-                    logstream=sys.stdout, datatype=ccData):
+                    logstream=sys.stdout, datatype=ccData, **kwds):
         """Initialise the Logfile object.
 
         This should be called by a ubclass in its own __init__ method.
@@ -136,6 +136,11 @@ class Logfile(object):
         Inputs:
             source - a single logfile, a list of logfiles, or input stream
         """
+
+
+        self.optdone_as_list = kwds.get("optdone_as_list", False)
+        if type(self.optdone_as_list) is not bool:
+            self.optdone_as_list = False
 
         # Set the filename to source if it is a string or a list of filenames.
         # In the case of an input stream, set some arbitrary name and the stream.
@@ -223,7 +228,7 @@ class Logfile(object):
         # Initialize the ccData object that will be returned.
         # This is normally ccData, but can be changed by passing
         #   the datatype argument to __init__().
-        data = self.datatype()
+        data = self.datatype(optdone_as_list=self.optdone_as_list)
         
         # Copy the attribute list, so that the parser knows what to expect,
         #   specifically in __setattr__().
