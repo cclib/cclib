@@ -185,3 +185,6 @@ Psi/Psi4/dvb_gopt_hf_unconverged.out
 Psi/Psi4/psi4.0b5_samples_scf4.out
 QChem/QChem4.2/dvb_gopt_unconverged.out
 QChem/QChem4.2/dvb_sp_unconverged.out
+QChem/QChem4.2/dvb_sp_multipole_10.out
+QChem/QChem4.2/dvb_sp_omp.out
+QChem/QChem4.2/copper_ax2wat_eq0wat4amm.opt_tzvpp.SOS-CIS_D0.out

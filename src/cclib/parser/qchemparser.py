@@ -131,9 +131,8 @@ class QChem(logfileparser.Logfile):
 
             # We should have the header between dashes now,
             # but sometimes there are lines before the first dashes.
-            while not "-----" in line:
-                line = inputfile.next()
-            assert 'Cycle       Energy' in inputfile.next()
+            while not 'Cycle       Energy' in line:
+                line = next(inputfile)
             self.skip_lines(inputfile, ['d'])
 
             values = []
@@ -215,7 +214,7 @@ class QChem(logfileparser.Logfile):
             self.mpenergies.append([mp2energy])
 
         # This is the MP3/ccman2 case.
-        if 'MP2 energy' in line:
+        if line[1:11] == 'MP2 energy':
             if not hasattr(self, 'mpenergies'):
                 self.mpenergies = []
             mpenergies = []
@@ -609,22 +608,45 @@ class QChem(logfileparser.Logfile):
         # it can be changed (should follow up on that).
         #
         # -----------------------------------------------------------------
-        # Cartesian Multipole Moments
+        #                    Cartesian Multipole Moments
+        ##                 LMN = < X^L Y^M Z^N >
         # -----------------------------------------------------------------
-        # Charge (ESU x 10^10)
-        # 0.0000
-        # Dipole Moment (Debye)
-        # X 0.0000 Y 0.0000 Z 0.0000
-        # Tot 0.0000
-        # Quadrupole Moments (Debye-Ang)
-        # XX -50.9647 XY -0.1100 YY -50.1441
-        # XZ 0.0000 YZ 0.0000 ZZ -58.5742
-        # Octopole Moments (Debye-Ang^2)
+        #    Charge (ESU x 10^10)
+        #                 0.0000
+        #    Dipole Moment (Debye)
+        #         X       0.0000      Y       0.0000      Z       0.0000
+        #       Tot       0.0000
+        #    Quadrupole Moments (Debye-Ang)
+        #        XX     -50.9647     XY      -0.1100     YY     -50.1441
+        #        XZ       0.0000     YZ       0.0000     ZZ     -58.5742
+        #    Octopole Moments (Debye-Ang^2)
+        #       XXX       0.0007    XXY      -0.0001    XYY       0.0001
+        #       YYY       0.0001    XXZ       0.0000    XYZ       0.0000
+        #       YYZ       0.0000    XZZ       0.0000    YZZ       0.0000
+        #       ZZZ       0.0000
+        #    Hexadecapole Moments (Debye-Ang^3)
+        #      XXXX   -1811.1540   XXXY       0.5021   XXYY    -358.4260
+        #      XYYY       3.4716   YYYY    -329.5868   XXXZ       0.0000
+        #      XXYZ       0.0000   XYYZ       0.0000   YYYZ       0.0000
+        #      XXZZ    -356.7120   XYZZ      -0.0669   YYZZ     -72.1349
+        #      XZZZ       0.0000   YZZZ       0.0000   ZZZZ     -47.5456
+        # ... [by default, stop right here]
+        #    027       0.0000    108       0.0000    018       0.0000
+        #    009       0.0000
+        # 10th-Order Moments (Debye-Ang^9)
+        #  10  0  0 ************   9  1  0 2339335.3503   8  2  0 ************
+        #   7  3  0  239482.2198   6  4  0 -226219.6647   5  5  0   19555.6860
+        #   4  6  0  -67680.6179   3  7  0   -1948.1091   2  8  0  -48197.6911
         # ...
         # -----------------------------------------------------------------
         if "Cartesian Multipole Moments" in line:
 
-            self.skip_line(inputfile, 'dashes')
+            # This line appears not by default, but only when
+            # `multipole_order` > 4:
+            line = inputfile.next()
+            if 'LMN = < X^L Y^M Z^N >' in line:
+                line = inputfile.next()
+                # self.skip_line(inputfile, 'dashes')
 
             # As far as I can see, the reference point is not
             # printed anywhere in the output, and the documentation
@@ -656,13 +678,19 @@ class QChem(logfileparser.Logfile):
 
                     cols = line.split()
 
-                    # The total (norm I guess) is printed for dipole
+                    # The total (norm) is printed for dipole
                     # but not other multipoles.
                     if cols[0] == 'Tot':
                         line = inputfile.next()
                         continue
 
+                    # Find and replace any blank values before moving on.
+                    for i in range(len(cols)):
+                        if '***' in cols[i]:
+                            cols[i] = numpy.nan
+
                     # The moment come in pairs (label and value).
+                    # Right now this is an issue for `multipole_order` >= 10.
                     for i in range(len(cols)//2):
                         multipole.append(cols[2*i:2*(i+1)])
 
