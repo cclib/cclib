@@ -25,10 +25,16 @@ class GenericScanTest(bettertest.TestCase):
     def testnumindices(self):
         """Do the number of indices match number of scan points."""
 
+        if self.data._attrtypes["optdone"] is bool:
+            self.skipTest("optdone is bool in this version")
+
         self.assertEquals(len(self.data.optdone), 12 + self.extra)
 
     def testindices(self):
         """Do the indices match the results from geovalues."""
+
+        if self.data._attrtypes["optdone"] is bool:
+            self.skipTest("optdone is bool in this version")
 
         indexes = self.data.optdone
         geovalues_from_index = self.data.geovalues[indexes]
