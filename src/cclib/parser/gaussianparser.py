@@ -150,6 +150,9 @@ class Gaussian(logfileparser.Logfile):
                 nfragment += 1
                 line = inputfile.next()
 
+            # Save this for later use (or maybe make it an attribute in the future).
+            self.set_attribute('nfragment', nfragment)
+
             # The remaining part will allow us to get the atom count.
             # When coordinates are given, there is a blank line at the end, but if
             # there is a Z-matrix here, there will also be variables and we need to
@@ -182,7 +185,10 @@ class Gaussian(logfileparser.Logfile):
                 self.set_attribute('charge', int(match.groups()[0]))
                 self.set_attribute('mult', int(match.groups()[1]))
 
-        # Number of atoms is also explicitely write after the above.
+            if line.split()[-1] == "fragment":
+                self.setattr('nfragment', self.getattr('nfragment', 0) + 1)
+
+        # Number of atoms is also explicitely printed after the above.
         if line[1:8] == "NAtoms=":
 
             self.updateprogress(inputfile, "Attributes", self.fupdate)
@@ -285,6 +291,14 @@ class Gaussian(logfileparser.Logfile):
 
             self.set_attribute('natom', len(atomnos))
             self.set_attribute('atomnos', atomnos)
+
+        # This is a bit of a hack for regression Gaussian09/BH3_fragment_guess.pop_minimal.log
+        # to skip output for all fragments, assuming the supermolecule is always printed first.
+        # Eventually we want to make this more general, or even better parse the output for
+        # all fragment, but that will happen in a newer version of cclib.
+        if line[1:16] == "Fragment guess:" and getattr(self, 'nfragment', 0) > 1:
+            if not "full" in line:
+                inputfile.file.seek(0, 2)
 
         # With the gfinput keyword, the atomic basis set functios are:
         #
