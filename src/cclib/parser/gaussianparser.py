@@ -109,7 +109,80 @@ class Gaussian(logfileparser.Logfile):
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
 
-        # Number of atoms.
+        # This block contains some general information as well as coordinates,
+        # which could be parsed in the future:
+        #
+        # Symbolic Z-matrix:
+        # Charge =  0 Multiplicity = 1
+        # C                     0.73465   0.        0. 
+        # C                     1.93465   0.        0. 
+        # C 
+        # ...
+        #
+        # It also lists fragments, if there are any, which is potentially valuable:
+        #
+        # Symbolic Z-matrix:
+        # Charge =  0 Multiplicity = 1 in supermolecule
+        # Charge =  0 Multiplicity = 1 in fragment      1.
+        # Charge =  0 Multiplicity = 1 in fragment      2.
+        # B(Fragment=1)         0.06457  -0.0279    0.01364 
+        # H(Fragment=1)         0.03117  -0.02317   1.21604 
+        # ...
+        #
+        # Note, however, that currently we only parse information for the whole system
+        # or supermolecule as Gaussian calls it.
+        if line.strip() == "Symbolic Z-matrix:":
+
+            self.updateprogress(inputfile, "Symbolic Z-matrix", self.fupdate)
+
+            nfragment = 0
+            line = inputfile.next()
+            while line.split()[0] == 'Charge':
+
+                # For the supermolecule, we can parse the charge and multicplicity.
+                regex = ".*=(.*)Mul.*=\s*-?(\d+).*"
+                match = re.match(regex, line)
+                assert match, "Something unusual about the line: '%s'" % line
+                
+                self.set_attribute('charge', int(match.groups()[0]))
+                self.set_attribute('mult', int(match.groups()[1]))
+
+                nfragment += 1
+                line = inputfile.next()
+
+            # The remaining part will allow us to get the atom count.
+            # When coordinates are given, there is a blank line at the end, but if
+            # there is a Z-matrix here, there will also be variables and we need to
+            # stop at those to get the right atom count.
+            # Also, in older versions there is bo blank line (G98 regressions),
+            # so we need to watch out for leaving the link.
+            natom = 0
+            while line.split() and not "Variables" in line and not "Leave Link" in line:
+                natom += 1
+                line = inputfile.next()
+            self.set_attribute('natom', natom)
+
+        # Continuing from above, there is not always a symbolic matrix, for example
+        # if the Z-matrix was in the input file. In such cases, try to match the
+        # line and get at the charge and multiplicity.
+        # 
+        #   Charge =  0 Multiplicity = 1 in supermolecule
+        #   Charge =  0 Multiplicity = 1 in fragment  1.
+        #   Charge =  0 Multiplicity = 1 in fragment  2.
+        if line[1:7] == 'Charge' and line.find("Multiplicity") >= 0:
+
+            self.updateprogress(inputfile, "Charge and Multiplicity", self.fupdate)
+
+            if line.split()[-1] == "supermolecule" or not "fragment" in line:
+
+                regex = ".*=(.*)Mul.*=\s*-?(\d+).*"
+                match = re.match(regex, line)
+                assert match, "Something unusual about the line: '%s'" % line
+                
+                self.set_attribute('charge', int(match.groups()[0]))
+                self.set_attribute('mult', int(match.groups()[1]))
+
+        # Number of atoms is also explicitely write after the above.
         if line[1:8] == "NAtoms=":
 
             self.updateprogress(inputfile, "Attributes", self.fupdate)
@@ -590,21 +663,6 @@ class Gaussian(logfileparser.Logfile):
                 self.scanparm = scanparm
             if not hasattr(self, "scannames"):
                 self.scannames = colmnames.split()[1:-1]
-
-        # Charge and multiplicity.
-        # If counterpoise correction is used, multiple lines match.
-        # The first one contains charge/multiplicity of the whole molecule.:
-        #   Charge =  0 Multiplicity = 1 in supermolecule
-        #   Charge =  0 Multiplicity = 1 in fragment  1.
-        #   Charge =  0 Multiplicity = 1 in fragment  2.
-        if line[1:7] == 'Charge' and line.find("Multiplicity")>=0:
-
-            regex = ".*=(.*)Mul.*=\s*-?(\d+).*"
-            match = re.match(regex, line)
-            assert match, "Something unusual about the line: '%s'" % line
-            
-            self.set_attribute('charge', int(match.groups()[0]))
-            self.set_attribute('mult', int(match.groups()[1]))
 
         # Orbital symmetries.
         if line[1:20] == 'Orbital symmetries:' and not hasattr(self, "mosyms"):
