@@ -496,7 +496,7 @@ class GAMESS(logfileparser.Logfile):
                 if "GVB" in self.scftype and "SQCDF TOL=" in line:
                     scftarget = float(line.split("=")[-1])
 
-                # Normally however the density is used as the convergence criterium.
+                # Normally, however, the density is used as the convergence criterium.
                 # Deal with various versions:
                 #   (GAMESS VERSION = 12 DEC 2003)
                 #     DENSITY MATRIX CONV=  2.00E-05  DFT GRID SWITCH THRESHOLD=  3.00E-04
@@ -517,14 +517,14 @@ class GAMESS(logfileparser.Logfile):
             if not hasattr(self,"scfvalues"):
                 self.scfvalues = []
 
-            line = next(inputfile)
-
-            # Normally the iteration print in 6 columns.
+            # Normally the iterations print in 6 columns.
             # For ROHF, however, it is 5 columns, thus this extra parameter.
             if "ROHF" in self.scftype:
-                valcol = 4
+                self.scf_valcol = 4
             else:
-                valcol = 5
+                self.scf_valcol = 5
+
+            line = next(inputfile)
 
             # SCF iterations are terminated by a blank line.
             # The first four characters usually contains the step number.
@@ -539,7 +539,28 @@ class GAMESS(logfileparser.Logfile):
                 except ValueError:
                     pass
                 else:
-                    values.append([float(line.split()[valcol])])
+                    values.append([float(line.split()[self.scf_valcol])])
+                line = next(inputfile)
+            self.scfvalues.append(values)
+
+        # Sometimes, only the first SCF cycle has the banner parsed for above,
+        # so we must identify them from the header before the SCF iterations.
+        # The example we have for this is the GeoOpt unittest for Firefly8.
+        if line[1:8] == "ITER EX":
+
+            # In this case, the convergence targets are not printed, so we assume
+            # they do not change.
+            self.scftargets.append(self.scftargets[-1])
+
+            values = []
+            line = next(inputfile)
+            while line.strip():
+                try:
+                    temp = int(line[0:4])
+                except ValueError:
+                    pass
+                else:
+                    values.append([float(line.split()[self.scf_valcol])])
                 line = next(inputfile)
             self.scfvalues.append(values)
 
