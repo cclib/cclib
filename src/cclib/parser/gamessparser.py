@@ -947,6 +947,13 @@ class GAMESS(logfileparser.Logfile):
             #                      1          2          3          4          5
             # ... and so forth.
             line = next(inputfile)
+
+            # This can come in between the alpha and beta orbitals (see #130).
+            if line.strip() == "LZ VALUE ANALYSIS FOR THE MOS":
+                while line.strip():
+                    line = next(inputfile)
+                line = next(inputfile)
+
             if line[2:22] == "----- BETA SET -----":
                 self.mocoeffs.append(numpy.zeros((self.nmo, self.nbasis), "d"))
                 self.moenergies.append([])

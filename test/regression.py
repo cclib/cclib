@@ -75,6 +75,10 @@ def testGAMESS_GAMESS_US2012_dvb_gopt_a_unconverged_out(logfile):
     """An unconverged geometry optimization to test for empty optdone (see #103 for details)."""
     assert hasattr(logfile.data, 'optdone') and logfile.data.optdone == []
 
+def testGAMESS_GAMESS_US2013_N_UHF_out(logfile):
+    """An UHF job that has an LZ value analysis between the alpha and beta orbitals."""
+    assert len(logfile.data.moenergies) == 2
+
 def testGAMESS_WinGAMESS_dvb_td_trplet_2007_03_24_r1_out(logfile):
     """Do some basic checks for this old unit test that was failing.
 
