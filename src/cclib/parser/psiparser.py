@@ -637,8 +637,8 @@ class Psi(logfileparser.Logfile):
                 self.ccenergies = []
             self.ccenergies.append(ccsd_energy)
 
-        # The geometry convergence targets and values are printed in a table, but the legends
-        # described do not seems to be working. Still, probably exact slicing of the line needs
+        # The geometry convergence targets and values are printed in a table, with the legends
+        # describing the convergence annotation. Probably exact slicing of the line needs
         # to be done in order to extract the numbers correctly.
         #
         #  ==> Convergence Check <==
@@ -663,20 +663,25 @@ class Psi(logfileparser.Logfile):
             criteria = next(inputfile)
             geotargets = []
             for istart in starts:
-                if line[istart:istart+9].strip():
-                    geotargets.append(float(line[istart:istart+9]))
+                if criteria[istart:istart+9].strip():
+                    geotargets.append(float(criteria[istart:istart+9]))
+                else:
+                    geotargets.append(numpy.nan)
 
             self.skip_line(inputfile, 'dashes')
 
             values = next(inputfile)
             geovalues = []
             for istart in starts:
-                if line[istart:istart+9].strip():
-                    geovalues.append(float(line[istart:istart+9]))
+                if values[istart:istart+9].strip():
+                    geovalues.append(float(values[istart:istart+9]))
 
+            # This assertion may be too restrictive, but we haven't seen the geotargets change.
+            # If such an example comes up, update the value since we're interested in the last ones.
             if not hasattr(self, 'geotargets'):
-                self.geotargets = []
-            self.geotargets.append(geotargets)
+                self.geotargets = geotargets
+            else:
+                assert self.geotargets == geotargets
 
             if not hasattr(self, 'geovalues'):
                 self.geovalues = []
