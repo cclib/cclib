@@ -143,12 +143,12 @@ class GenericSPTest(bettertest.TestCase):
         # is at the origin, so we now what to expect.
         reference = self.data.moments[0]
         self.assertEquals(len(reference), 3)
-        self.assertInside(sum(reference), 0.0, 0.0001)
+        self.assertInside(sum(reference), 0.0, 0.001)
 
         # Length and value of dipole moment should always be correct (zero for this test).
         dipole = self.data.moments[1]
         self.assertEquals(len(dipole), 3)
-        self.assertInside(sum(dipole), 0.0, 0.0001)
+        self.assertInside(sum(dipole), 0.0, 0.001)
 
         # If the quadrupole is there, we can expect roughly -50B for the XX moment.
         if len(self.data.moments) > 2:
@@ -160,7 +160,7 @@ class GenericSPTest(bettertest.TestCase):
         if len(self.data.moments) > 3:
             octupole = self.data.moments[3]
             self.assertEquals(len(octupole), 10)
-            self.assertInside(sum(octupole), 0.0, 0.0001)
+            self.assertInside(sum(octupole), 0.0, 0.001)
 
         # Hexadecapole should have 15 elements and an XX componenet of around -1900 Debye*ang^2.
         if len(self.data.moments) > 4:
@@ -172,7 +172,7 @@ class GenericSPTest(bettertest.TestCase):
         if len(self.data.moments) > 5:
             moment32 = self.data.moments[5]
             self.assertEquals(len(moment32), 21)
-            self.assertInside(sum(moment32), 0.0, 0.0001)
+            self.assertInside(sum(moment32), 0.0, 0.001)
 
 
 
@@ -315,7 +315,4 @@ class QChemSPTest(GenericSPTest):
 if __name__=="__main__":
 
     from testall import testall
-    parser = None
-    if len(sys.argv)==2:
-        parser = sys.argv[1]
-    testall(parser, modules=["SP"])
+    testall(modules=["SP"])
