@@ -794,53 +794,56 @@ class GAMESS(logfileparser.Logfile):
                 for x in range(numtoadd):
                     self.gbasis.append(gbasis)
 
+        # The eigenvectors, which also include MO energies and symmetries, follow
+        # the *final* report of evalues and the last list of symmetries in the log file:
+        #
+        #           ------------
+        #           EIGENVECTORS
+        #           ------------
+        # 
+        #                       1          2          3          4          5
+        #                   -10.0162   -10.0161   -10.0039   -10.0039   -10.0029
+        #                      BU         AG         BU         AG         AG  
+        #     1  C  1  S    0.699293   0.699290  -0.027566   0.027799   0.002412
+        #     2  C  1  S    0.031569   0.031361   0.004097  -0.004054  -0.000605
+        #     3  C  1  X    0.000908   0.000632  -0.004163   0.004132   0.000619
+        #     4  C  1  Y   -0.000019   0.000033   0.000668  -0.000651   0.005256
+        #     5  C  1  Z    0.000000   0.000000   0.000000   0.000000   0.000000
+        #     6  C  2  S   -0.699293   0.699290   0.027566   0.027799   0.002412
+        #     7  C  2  S   -0.031569   0.031361  -0.004097  -0.004054  -0.000605
+        #     8  C  2  X    0.000908  -0.000632  -0.004163  -0.004132  -0.000619
+        #     9  C  2  Y   -0.000019  -0.000033   0.000668   0.000651  -0.005256
+        #    10  C  2  Z    0.000000   0.000000   0.000000   0.000000   0.000000
+        #    11  C  3  S   -0.018967  -0.019439   0.011799  -0.014884  -0.452328
+        #    12  C  3  S   -0.007748  -0.006932   0.000680  -0.000695  -0.024917
+        #    13  C  3  X    0.002628   0.002997   0.000018   0.000061  -0.003608
+        # ...
+        # 
+        # There are blanks lines between each block.
+        #
+        # Warning! There are subtle differences between GAMESS-US and PC-GAMES
+        # in the formatting of the first four columns. In particular, for F orbitals,
+        # PC GAMESS:
+        #   19  C   1 YZ   0.000000   0.000000   0.000000   0.000000   0.000000
+        #   20  C    XXX   0.000000   0.000000   0.000000   0.000000   0.002249
+        #   21  C    YYY   0.000000   0.000000  -0.025555   0.000000   0.000000
+        #   22  C    ZZZ   0.000000   0.000000   0.000000   0.002249   0.000000
+        #   23  C    XXY   0.000000   0.000000   0.001343   0.000000   0.000000
+        # GAMESS US
+        #   55  C  1 XYZ   0.000000   0.000000   0.000000   0.000000   0.000000
+        #   56  C  1XXXX  -0.000014  -0.000067   0.000000   0.000000   0.000000
+        #
         if line.find("EIGENVECTORS") == 10 or line.find("MOLECULAR OBRITALS") == 10:
-            # The details returned come from the *final* report of evalues and
-            #   the last list of symmetries in the log file.
-            # Should be followed by lines like this:
-            #           ------------
-            #           EIGENVECTORS
-            #           ------------
-            # 
-            #                       1          2          3          4          5
-            #                   -10.0162   -10.0161   -10.0039   -10.0039   -10.0029
-            #                      BU         AG         BU         AG         AG  
-            #     1  C  1  S    0.699293   0.699290  -0.027566   0.027799   0.002412
-            #     2  C  1  S    0.031569   0.031361   0.004097  -0.004054  -0.000605
-            #     3  C  1  X    0.000908   0.000632  -0.004163   0.004132   0.000619
-            #     4  C  1  Y   -0.000019   0.000033   0.000668  -0.000651   0.005256
-            #     5  C  1  Z    0.000000   0.000000   0.000000   0.000000   0.000000
-            #     6  C  2  S   -0.699293   0.699290   0.027566   0.027799   0.002412
-            #     7  C  2  S   -0.031569   0.031361  -0.004097  -0.004054  -0.000605
-            #     8  C  2  X    0.000908  -0.000632  -0.004163  -0.004132  -0.000619
-            #     9  C  2  Y   -0.000019  -0.000033   0.000668   0.000651  -0.005256
-            #    10  C  2  Z    0.000000   0.000000   0.000000   0.000000   0.000000
-            #    11  C  3  S   -0.018967  -0.019439   0.011799  -0.014884  -0.452328
-            #    12  C  3  S   -0.007748  -0.006932   0.000680  -0.000695  -0.024917
-            #    13  C  3  X    0.002628   0.002997   0.000018   0.000061  -0.003608
-            # and so forth... with blanks lines between blocks of 5 orbitals each.
-            # Warning! There are subtle differences between GAMESS-US and PC-GAMES
-            #   in the formatting of the first four columns.
-            #
-            # Watch out for F orbitals...
-            # PC GAMESS
-            #   19  C   1 YZ   0.000000   0.000000   0.000000   0.000000   0.000000
-            #   20  C    XXX   0.000000   0.000000   0.000000   0.000000   0.002249
-            #   21  C    YYY   0.000000   0.000000  -0.025555   0.000000   0.000000
-            #   22  C    ZZZ   0.000000   0.000000   0.000000   0.002249   0.000000
-            #   23  C    XXY   0.000000   0.000000   0.001343   0.000000   0.000000
-            # GAMESS US
-            #   55  C  1 XYZ   0.000000   0.000000   0.000000   0.000000   0.000000
-            #   56  C  1XXXX  -0.000014  -0.000067   0.000000   0.000000   0.000000
-            #
-            # This is fine for GeoOpt and SP, but may be weird for TD and Freq.
 
             # This is the stuff that we can read from these blocks.
             self.moenergies = [[]]
             self.mosyms = [[]]
+
             if not hasattr(self, "nmo"):
                 self.nmo = self.nbasis
+
             self.mocoeffs = [numpy.zeros((self.nmo, self.nbasis), "d")]
+
             readatombasis = False
             if not hasattr(self, "atombasis"):
                 self.atombasis = []
@@ -857,7 +860,9 @@ class GAMESS(logfileparser.Logfile):
                 self.updateprogress(inputfile, "Coefficients")
 
                 line = next(inputfile)
-                # Make sure that this section does not end prematurely - checked by regression test 2CO.ccsd.aug-cc-pVDZ.out.
+
+                # This makes sure that this section does not end prematurely,
+                # which happens in regression 2CO.ccsd.aug-cc-pVDZ.out.
                 if line.strip() != "":
                     break;
                 
@@ -879,9 +884,7 @@ class GAMESS(logfileparser.Logfile):
                 if line.strip():
                     self.mosyms[0].extend(list(map(self.normalisesym, line.split())))
                 
-                # Now we have nbasis lines.
-                # Going to use the same method as for normalise_aonames()
-                # to extract basis set information.
+                # Now we have nbasis lines. We will use the same method as in normalise_aonames() before.
                 p = re.compile("(\d+)\s*([A-Z][A-Z]?)\s*(\d+)\s*([A-Z]+)")
                 oldatom = '0'
                 i_atom = 0 # counter to keep track of n_atoms > 99
@@ -890,7 +893,7 @@ class GAMESS(logfileparser.Logfile):
                 for i in range(self.nbasis):
                     line = next(inputfile)
 
-                    # If line is empty, break (ex. for FMO in exam37).
+                    # If line is empty, break (ex. for FMO in exam37 which is a regression).
                     if not line.strip(): break
 
                     # Fill atombasis and aonames only first time around
@@ -931,12 +934,15 @@ class GAMESS(logfileparser.Logfile):
                         j += 1
 
             line = next(inputfile)
-            # If it's restricted and no more properties:
+
+            # If it's a restricted calc and no more properties, we have:
+            #
             #  ...... END OF RHF/DFT CALCULATION ......
-            # If there are more properties (DENSITY MATRIX):
+            #
+            # If there are more properties (such as the density matrix):
             #               --------------
             #
-            # If it's unrestricted we have:
+            # If it's an unrestricted calculation, however, we not get the beta orbitals:
             #
             #  ----- BETA SET ----- 
             #
@@ -945,7 +951,8 @@ class GAMESS(logfileparser.Logfile):
             #          ------------
             #
             #                      1          2          3          4          5
-            # ... and so forth.
+            # ...
+            #
             line = next(inputfile)
 
             # This can come in between the alpha and beta orbitals (see #130).
