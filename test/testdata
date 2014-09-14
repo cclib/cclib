@@ -165,9 +165,9 @@ SPun      QChem       QChemSPunTest         basicQChem4.2         dvb_sp_un.out
 TD        ADF         ADFTDDFTTest          basicADF2007.01       dvb_td.adfout
 TD        ADF         ADFTDDFTTest          basicADF2013.01       dvb_td.adfout
 TD        GAMESS      GenericTDTest         basicFirefly8.0       dvb_td.out
-TD        GAMESS      GenericTDTest         basicFirefly8.0       dvb_td_trplet.out
+TD        GAMESS      GenericTDDFTtrpTest   basicFirefly8.0       dvb_td_trplet.out
 TD        GAMESS      GAMESSUSTDDFTTest     basicGAMESS-US2012    dvb_td.out
-TD        GAMESS      GAMESSUSTDDFTtrpTest  basicGAMESS-US2012    dvb_td_trplet.out
+TD        GAMESS      GenericTDDFTtrpTest   basicGAMESS-US2012    dvb_td_trplet.out
 TD        Gaussian    GaussianTDDFTTest     basicGaussian03       dvb_td.out
 TD        Gaussian    GaussianTDDFTTest     basicGaussian09       dvb_td.out
 TD        Jaguar      GenericTDTest         basicJaguar8.3        dvb_td.out

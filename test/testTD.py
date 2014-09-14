@@ -21,7 +21,11 @@ class GenericTDTest(bettertest.TestCase):
 
     def testenergies(self):
         """Is the l_max reasonable?"""
+
         self.assertEqual(len(self.data.etenergies), self.number)
+
+        # Note that if all oscillator strengths are zero (like for triplets)
+        # then this will simply pick out the first energy.
         idx_lambdamax = [i for i, x in enumerate(self.data.etoscs)
                          if x==max(self.data.etoscs)][0]
         self.assertInside(self.data.etenergies[idx_lambdamax], self.expected_l_max, 5000)
@@ -95,32 +99,16 @@ class OrcaTDDFTTest(GenericTDTest):
         self.assertInside(max(self.data.etoscs), 1.0, 0.1)
 
 
-class GenericTDTesttrp(GenericTDTest):
+class GenericTDDFTtrpTest(GenericTDTest):
     """Generic time-dependent HF/DFT (triplet) unittest"""
 
     number = 5
-
-    def testenergies(self):
-        """Is the l_max reasonable?"""
-        self.assertEqual(len(self.data.etenergies), self.number)
-        idx_lambdamax = [i for i, x in enumerate(self.data.etoscs)
-                         if x==max(self.data.etoscs)][0]
-        self.assertInside(self.data.etenergies[idx_lambdamax], 24500, 100)
+    expected_l_max = 24500
     
     def testoscs(self):
         """Triplet excitations should be disallowed."""
         self.assertEqual(len(self.data.etoscs), self.number)
         self.assertInside(max(self.data.etoscs), 0.0, 0.01)
-
-
-class GAMESSUSTDDFTtrpTest(GenericTDTesttrp):
-    """Customized TD DFT (restricted) triplet unittest"""
-
-    #old_tests = ["GAMESS/WinGAMESS/dvb_td_trplet_2007.03.24.r1.out.gz"]
-
-    def testsymsnumber(self):
-        """Is the length of etsyms correct? PASS"""
-        pass
 
 
 if __name__=="__main__":
