@@ -5,7 +5,7 @@
 #
 # The library is free software, distributed under the terms of
 # the GNU Lesser General Public version 2.1 or later. You should have
-# received a copy of the license along with cclib. You can also access
+z# received a copy of the license along with cclib. You can also access
 # the full license online at http://www.gnu.org/copyleft/lgpl.html.
 
 from __future__ import print_function
@@ -153,6 +153,7 @@ class GAMESS(logfileparser.Logfile):
                 if line[8:23] == "CCSD(T) ENERGY:":
                     ccenergy = float(line.split()[2])
             self.ccenergies.append(utils.convertor(ccenergy, "hartree", "eV"))
+
         # Also collect MP2 energies, which are always calculated before CC
         if line [8:23] == "MBPT(2) ENERGY:":
             if not hasattr(self, "mpenergies"):
@@ -190,6 +191,7 @@ class GAMESS(logfileparser.Logfile):
             line = next(inputfile)
             broken = line.split()
             while len(broken) > 0:
+
                 # Take hartree value with more numbers, and convert.
                 # Note that the values listed after this are also less exact!
                 etenergy = float(broken[1])
@@ -437,12 +439,13 @@ class GAMESS(logfileparser.Logfile):
             if not hasattr(self, 'optdone'):
                 self.optdone = []
         
+        # This is the standard orientation, which is the only coordinate
+        # information available for all geometry optimisation cycles.
+        # The input orientation will be overwritten if this is a geometry optimisation
+        # We assume that a previous Input Orientation has been found and
+        # used to extract the atomnos
         if line[1:29] == "COORDINATES OF ALL ATOMS ARE" and (not hasattr(self, "optdone") or self.optdone == []):
-            # This is the standard orientation, which is the only coordinate
-            # information available for all geometry optimisation cycles.
-            # The input orientation will be overwritten if this is a geometry optimisation
-            # We assume that a previous Input Orientation has been found and
-            # used to extract the atomnos
+
             self.updateprogress(inputfile, "Coordinates")
 
             if self.firststdorient:
@@ -898,9 +901,11 @@ class GAMESS(logfileparser.Logfile):
 
                     # Fill atombasis and aonames only first time around
                     if readatombasis and base == 0:
+
                         aonames = []
                         start = line[:17].strip()
                         m = p.search(start)
+
                         if m:
                             g = m.groups()
                             g2 = int(g[2]) # atom index in GAMESS file; changes to 0 after 99
@@ -925,10 +930,13 @@ class GAMESS(logfileparser.Logfile):
                             aoname = "%s%s_%s" % (g[1].capitalize(), oldatom, g[2])
                             atomno = int(oldatom)-1
                             orbno = int(g[0])-1
+
                         self.atombasis[atomno].append(orbno)
                         self.aonames.append(aoname)
+
                     coeffs = line[15:] # Strip off the crud at the start.
                     j = 0
+
                     while j*11+4 < len(coeffs):
                         self.mocoeffs[0][base+j, i] = float(coeffs[j * 11:(j + 1) * 11])
                         j += 1
@@ -942,7 +950,7 @@ class GAMESS(logfileparser.Logfile):
             # If there are more properties (such as the density matrix):
             #               --------------
             #
-            # If it's an unrestricted calculation, however, we not get the beta orbitals:
+            # If it's an unrestricted calculation, however, we now get the beta orbitals:
             #
             #  ----- BETA SET ----- 
             #
