@@ -740,10 +740,12 @@ if __name__=="__main__":
     # If 'test' is passed as the first argument, do a doctest on this module.
     # Otherwise, any arguments are used to limit the test to the packages/parsers
     # passed as arguments. No arguments implies all parsers.
+    # In general, it would be best to replace this trickery by argparse magic.
     if len(sys.argv) == 2 and sys.argv[1] == "test":
         import doctest
         doctest.testmod()
     else:
-        traceback = "traceback" in sys.argv or "tb" in sys.argv or "--traceback" in sys.argv
-        status = "status" in sys.argv or "--status" in sys.argv
-        main(sys.argv[1:], traceback, status)
+        traceback = "--traceback" in sys.argv
+        status = "--status" in sys.argv
+        which = [arg for arg in sys.argv[1:] if not arg in ["--status", "--traceback"]]
+        main(which, traceback, status)
