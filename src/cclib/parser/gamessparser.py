@@ -5,7 +5,7 @@
 #
 # The library is free software, distributed under the terms of
 # the GNU Lesser General Public version 2.1 or later. You should have
-z# received a copy of the license along with cclib. You can also access
+# received a copy of the license along with cclib. You can also access
 # the full license online at http://www.gnu.org/copyleft/lgpl.html.
 
 from __future__ import print_function
