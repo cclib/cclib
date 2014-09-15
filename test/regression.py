@@ -733,7 +733,7 @@ def main(which=[], traceback=False, status=False):
         print("\n".join(orphaned_tests))
 
     if status and errors > 0:
-        os.exit(1)
+        sys.exit(1)
 
 if __name__=="__main__":
 
@@ -744,6 +744,6 @@ if __name__=="__main__":
         import doctest
         doctest.testmod()
     else:
-        traceback = "traceback" in sys.argv or "tb" in sys.argv
+        traceback = "traceback" in sys.argv or "tb" in sys.argv or "--traceback" in sys.argv
         status = "status" in sys.argv or "--status" in sys.argv
         main(sys.argv[1:], traceback, status)
