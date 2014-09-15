@@ -13,4 +13,4 @@ install:
 script:
   - cd test && python testall.py --status --terse
   - cd ../data && bash regression_download.sh
-  - cd ../test && python regression.py
+  - cd ../test && python regression.py --status --traceback

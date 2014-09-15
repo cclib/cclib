@@ -153,6 +153,7 @@ class GAMESS(logfileparser.Logfile):
                 if line[8:23] == "CCSD(T) ENERGY:":
                     ccenergy = float(line.split()[2])
             self.ccenergies.append(utils.convertor(ccenergy, "hartree", "eV"))
+
         # Also collect MP2 energies, which are always calculated before CC
         if line [8:23] == "MBPT(2) ENERGY:":
             if not hasattr(self, "mpenergies"):
@@ -171,7 +172,7 @@ class GAMESS(logfileparser.Logfile):
             mult = int(line.split()[-1])
             self.set_attribute('mult', mult)
 
-        # etenergies (used only for CIS runs now)
+        # etenergies (originally used only for CIS runs, but now also TD-DFT)
         if "EXCITATION ENERGIES" in line and line.find("DONE WITH") < 0:
 
             if not hasattr(self, "etenergies"):
@@ -190,6 +191,7 @@ class GAMESS(logfileparser.Logfile):
             line = next(inputfile)
             broken = line.split()
             while len(broken) > 0:
+
                 # Take hartree value with more numbers, and convert.
                 # Note that the values listed after this are also less exact!
                 etenergy = float(broken[1])
@@ -437,12 +439,13 @@ class GAMESS(logfileparser.Logfile):
             if not hasattr(self, 'optdone'):
                 self.optdone = []
         
+        # This is the standard orientation, which is the only coordinate
+        # information available for all geometry optimisation cycles.
+        # The input orientation will be overwritten if this is a geometry optimisation
+        # We assume that a previous Input Orientation has been found and
+        # used to extract the atomnos
         if line[1:29] == "COORDINATES OF ALL ATOMS ARE" and (not hasattr(self, "optdone") or self.optdone == []):
-            # This is the standard orientation, which is the only coordinate
-            # information available for all geometry optimisation cycles.
-            # The input orientation will be overwritten if this is a geometry optimisation
-            # We assume that a previous Input Orientation has been found and
-            # used to extract the atomnos
+
             self.updateprogress(inputfile, "Coordinates")
 
             if self.firststdorient:
@@ -496,7 +499,7 @@ class GAMESS(logfileparser.Logfile):
                 if "GVB" in self.scftype and "SQCDF TOL=" in line:
                     scftarget = float(line.split("=")[-1])
 
-                # Normally however the density is used as the convergence criterium.
+                # Normally, however, the density is used as the convergence criterium.
                 # Deal with various versions:
                 #   (GAMESS VERSION = 12 DEC 2003)
                 #     DENSITY MATRIX CONV=  2.00E-05  DFT GRID SWITCH THRESHOLD=  3.00E-04
@@ -517,14 +520,14 @@ class GAMESS(logfileparser.Logfile):
             if not hasattr(self,"scfvalues"):
                 self.scfvalues = []
 
-            line = next(inputfile)
-
-            # Normally the iteration print in 6 columns.
+            # Normally the iterations print in 6 columns.
             # For ROHF, however, it is 5 columns, thus this extra parameter.
             if "ROHF" in self.scftype:
-                valcol = 4
+                self.scf_valcol = 4
             else:
-                valcol = 5
+                self.scf_valcol = 5
+
+            line = next(inputfile)
 
             # SCF iterations are terminated by a blank line.
             # The first four characters usually contains the step number.
@@ -539,7 +542,28 @@ class GAMESS(logfileparser.Logfile):
                 except ValueError:
                     pass
                 else:
-                    values.append([float(line.split()[valcol])])
+                    values.append([float(line.split()[self.scf_valcol])])
+                line = next(inputfile)
+            self.scfvalues.append(values)
+
+        # Sometimes, only the first SCF cycle has the banner parsed for above,
+        # so we must identify them from the header before the SCF iterations.
+        # The example we have for this is the GeoOpt unittest for Firefly8.
+        if line[1:8] == "ITER EX":
+
+            # In this case, the convergence targets are not printed, so we assume
+            # they do not change.
+            self.scftargets.append(self.scftargets[-1])
+
+            values = []
+            line = next(inputfile)
+            while line.strip():
+                try:
+                    temp = int(line[0:4])
+                except ValueError:
+                    pass
+                else:
+                    values.append([float(line.split()[self.scf_valcol])])
                 line = next(inputfile)
             self.scfvalues.append(values)
 
@@ -773,53 +797,56 @@ class GAMESS(logfileparser.Logfile):
                 for x in range(numtoadd):
                     self.gbasis.append(gbasis)
 
+        # The eigenvectors, which also include MO energies and symmetries, follow
+        # the *final* report of evalues and the last list of symmetries in the log file:
+        #
+        #           ------------
+        #           EIGENVECTORS
+        #           ------------
+        # 
+        #                       1          2          3          4          5
+        #                   -10.0162   -10.0161   -10.0039   -10.0039   -10.0029
+        #                      BU         AG         BU         AG         AG  
+        #     1  C  1  S    0.699293   0.699290  -0.027566   0.027799   0.002412
+        #     2  C  1  S    0.031569   0.031361   0.004097  -0.004054  -0.000605
+        #     3  C  1  X    0.000908   0.000632  -0.004163   0.004132   0.000619
+        #     4  C  1  Y   -0.000019   0.000033   0.000668  -0.000651   0.005256
+        #     5  C  1  Z    0.000000   0.000000   0.000000   0.000000   0.000000
+        #     6  C  2  S   -0.699293   0.699290   0.027566   0.027799   0.002412
+        #     7  C  2  S   -0.031569   0.031361  -0.004097  -0.004054  -0.000605
+        #     8  C  2  X    0.000908  -0.000632  -0.004163  -0.004132  -0.000619
+        #     9  C  2  Y   -0.000019  -0.000033   0.000668   0.000651  -0.005256
+        #    10  C  2  Z    0.000000   0.000000   0.000000   0.000000   0.000000
+        #    11  C  3  S   -0.018967  -0.019439   0.011799  -0.014884  -0.452328
+        #    12  C  3  S   -0.007748  -0.006932   0.000680  -0.000695  -0.024917
+        #    13  C  3  X    0.002628   0.002997   0.000018   0.000061  -0.003608
+        # ...
+        # 
+        # There are blanks lines between each block.
+        #
+        # Warning! There are subtle differences between GAMESS-US and PC-GAMES
+        # in the formatting of the first four columns. In particular, for F orbitals,
+        # PC GAMESS:
+        #   19  C   1 YZ   0.000000   0.000000   0.000000   0.000000   0.000000
+        #   20  C    XXX   0.000000   0.000000   0.000000   0.000000   0.002249
+        #   21  C    YYY   0.000000   0.000000  -0.025555   0.000000   0.000000
+        #   22  C    ZZZ   0.000000   0.000000   0.000000   0.002249   0.000000
+        #   23  C    XXY   0.000000   0.000000   0.001343   0.000000   0.000000
+        # GAMESS US
+        #   55  C  1 XYZ   0.000000   0.000000   0.000000   0.000000   0.000000
+        #   56  C  1XXXX  -0.000014  -0.000067   0.000000   0.000000   0.000000
+        #
         if line.find("EIGENVECTORS") == 10 or line.find("MOLECULAR OBRITALS") == 10:
-            # The details returned come from the *final* report of evalues and
-            #   the last list of symmetries in the log file.
-            # Should be followed by lines like this:
-            #           ------------
-            #           EIGENVECTORS
-            #           ------------
-            # 
-            #                       1          2          3          4          5
-            #                   -10.0162   -10.0161   -10.0039   -10.0039   -10.0029
-            #                      BU         AG         BU         AG         AG  
-            #     1  C  1  S    0.699293   0.699290  -0.027566   0.027799   0.002412
-            #     2  C  1  S    0.031569   0.031361   0.004097  -0.004054  -0.000605
-            #     3  C  1  X    0.000908   0.000632  -0.004163   0.004132   0.000619
-            #     4  C  1  Y   -0.000019   0.000033   0.000668  -0.000651   0.005256
-            #     5  C  1  Z    0.000000   0.000000   0.000000   0.000000   0.000000
-            #     6  C  2  S   -0.699293   0.699290   0.027566   0.027799   0.002412
-            #     7  C  2  S   -0.031569   0.031361  -0.004097  -0.004054  -0.000605
-            #     8  C  2  X    0.000908  -0.000632  -0.004163  -0.004132  -0.000619
-            #     9  C  2  Y   -0.000019  -0.000033   0.000668   0.000651  -0.005256
-            #    10  C  2  Z    0.000000   0.000000   0.000000   0.000000   0.000000
-            #    11  C  3  S   -0.018967  -0.019439   0.011799  -0.014884  -0.452328
-            #    12  C  3  S   -0.007748  -0.006932   0.000680  -0.000695  -0.024917
-            #    13  C  3  X    0.002628   0.002997   0.000018   0.000061  -0.003608
-            # and so forth... with blanks lines between blocks of 5 orbitals each.
-            # Warning! There are subtle differences between GAMESS-US and PC-GAMES
-            #   in the formatting of the first four columns.
-            #
-            # Watch out for F orbitals...
-            # PC GAMESS
-            #   19  C   1 YZ   0.000000   0.000000   0.000000   0.000000   0.000000
-            #   20  C    XXX   0.000000   0.000000   0.000000   0.000000   0.002249
-            #   21  C    YYY   0.000000   0.000000  -0.025555   0.000000   0.000000
-            #   22  C    ZZZ   0.000000   0.000000   0.000000   0.002249   0.000000
-            #   23  C    XXY   0.000000   0.000000   0.001343   0.000000   0.000000
-            # GAMESS US
-            #   55  C  1 XYZ   0.000000   0.000000   0.000000   0.000000   0.000000
-            #   56  C  1XXXX  -0.000014  -0.000067   0.000000   0.000000   0.000000
-            #
-            # This is fine for GeoOpt and SP, but may be weird for TD and Freq.
 
             # This is the stuff that we can read from these blocks.
             self.moenergies = [[]]
             self.mosyms = [[]]
+
             if not hasattr(self, "nmo"):
                 self.nmo = self.nbasis
+
             self.mocoeffs = [numpy.zeros((self.nmo, self.nbasis), "d")]
+
             readatombasis = False
             if not hasattr(self, "atombasis"):
                 self.atombasis = []
@@ -836,7 +863,9 @@ class GAMESS(logfileparser.Logfile):
                 self.updateprogress(inputfile, "Coefficients")
 
                 line = next(inputfile)
-                # Make sure that this section does not end prematurely - checked by regression test 2CO.ccsd.aug-cc-pVDZ.out.
+
+                # This makes sure that this section does not end prematurely,
+                # which happens in regression 2CO.ccsd.aug-cc-pVDZ.out.
                 if line.strip() != "":
                     break;
                 
@@ -858,9 +887,7 @@ class GAMESS(logfileparser.Logfile):
                 if line.strip():
                     self.mosyms[0].extend(list(map(self.normalisesym, line.split())))
                 
-                # Now we have nbasis lines.
-                # Going to use the same method as for normalise_aonames()
-                # to extract basis set information.
+                # Now we have nbasis lines. We will use the same method as in normalise_aonames() before.
                 p = re.compile("(\d+)\s*([A-Z][A-Z]?)\s*(\d+)\s*([A-Z]+)")
                 oldatom = '0'
                 i_atom = 0 # counter to keep track of n_atoms > 99
@@ -869,14 +896,16 @@ class GAMESS(logfileparser.Logfile):
                 for i in range(self.nbasis):
                     line = next(inputfile)
 
-                    # If line is empty, break (ex. for FMO in exam37).
+                    # If line is empty, break (ex. for FMO in exam37 which is a regression).
                     if not line.strip(): break
 
                     # Fill atombasis and aonames only first time around
                     if readatombasis and base == 0:
+
                         aonames = []
                         start = line[:17].strip()
                         m = p.search(start)
+
                         if m:
                             g = m.groups()
                             g2 = int(g[2]) # atom index in GAMESS file; changes to 0 after 99
@@ -901,21 +930,27 @@ class GAMESS(logfileparser.Logfile):
                             aoname = "%s%s_%s" % (g[1].capitalize(), oldatom, g[2])
                             atomno = int(oldatom)-1
                             orbno = int(g[0])-1
+
                         self.atombasis[atomno].append(orbno)
                         self.aonames.append(aoname)
+
                     coeffs = line[15:] # Strip off the crud at the start.
                     j = 0
+
                     while j*11+4 < len(coeffs):
                         self.mocoeffs[0][base+j, i] = float(coeffs[j * 11:(j + 1) * 11])
                         j += 1
 
             line = next(inputfile)
-            # If it's restricted and no more properties:
+
+            # If it's a restricted calc and no more properties, we have:
+            #
             #  ...... END OF RHF/DFT CALCULATION ......
-            # If there are more properties (DENSITY MATRIX):
+            #
+            # If there are more properties (such as the density matrix):
             #               --------------
             #
-            # If it's unrestricted we have:
+            # If it's an unrestricted calculation, however, we now get the beta orbitals:
             #
             #  ----- BETA SET ----- 
             #
@@ -924,8 +959,16 @@ class GAMESS(logfileparser.Logfile):
             #          ------------
             #
             #                      1          2          3          4          5
-            # ... and so forth.
+            # ...
+            #
             line = next(inputfile)
+
+            # This can come in between the alpha and beta orbitals (see #130).
+            if line.strip() == "LZ VALUE ANALYSIS FOR THE MOS":
+                while line.strip():
+                    line = next(inputfile)
+                line = next(inputfile)
+
             if line[2:22] == "----- BETA SET -----":
                 self.mocoeffs.append(numpy.zeros((self.nmo, self.nbasis), "d"))
                 self.moenergies.append([])

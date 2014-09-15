@@ -143,36 +143,46 @@ class GenericSPTest(bettertest.TestCase):
         # is at the origin, so we now what to expect.
         reference = self.data.moments[0]
         self.assertEquals(len(reference), 3)
-        self.assertInside(sum(reference), 0.0, 0.0001)
+        for x in reference:
+            self.assertInside(x, 0.0, 0.001)
 
         # Length and value of dipole moment should always be correct (zero for this test).
         dipole = self.data.moments[1]
         self.assertEquals(len(dipole), 3)
-        self.assertInside(sum(dipole), 0.0, 0.0001)
+        for d in dipole:
+            self.assertInside(d, 0.0, 0.001)
 
-        # If the quadrupole is there, we can expect roughly -50B for the XX moment.
+        # If the quadrupole is there, we can expect roughly -50B for the XX moment,
+        # -50B for the YY moment and and -60B for the ZZ moment.
         if len(self.data.moments) > 2:
             quadrupole = self.data.moments[2]
             self.assertEquals(len(quadrupole), 6)
             self.assertInside(quadrupole[0], -50, 5)
+            self.assertInside(quadrupole[3], -50, 5)
+            self.assertInside(quadrupole[5], -60, 5)
 
         # If the octupole is there, it should have 10 components and be zero.
         if len(self.data.moments) > 3:
             octupole = self.data.moments[3]
             self.assertEquals(len(octupole), 10)
-            self.assertInside(sum(octupole), 0.0, 0.0001)
+            for m in octupole:
+                self.assertInside(m, 0.0, 0.001)
 
-        # Hexadecapole should have 15 elements and an XX componenet of around -1900 Debye*ang^2.
+        # Hexadecapole should have 15 elements and an XXXX componenet of around -1900 Debye*ang^2,
+        # YYYY component of -330B and ZZZZ component of -50B.
         if len(self.data.moments) > 4:
             hexadecapole = self.data.moments[4]
             self.assertEquals(len(hexadecapole), 15)
             self.assertInside(hexadecapole[0], -1900, 100)
+            self.assertInside(hexadecapole[10], -330, 10)
+            self.assertInside(hexadecapole[14], -50, 5)
 
         # The are 21 unique 32-pole moments, and all are zero in this test case.
         if len(self.data.moments) > 5:
             moment32 = self.data.moments[5]
             self.assertEquals(len(moment32), 21)
-            self.assertInside(sum(moment32), 0.0, 0.0001)
+            for m in moment32:
+                self.assertInside(m, 0.0, 0.001)
 
 
 
@@ -315,7 +325,4 @@ class QChemSPTest(GenericSPTest):
 if __name__=="__main__":
 
     from testall import testall
-    parser = None
-    if len(sys.argv)==2:
-        parser = sys.argv[1]
-    testall(parser, modules=["SP"])
+    testall(modules=["SP"])
