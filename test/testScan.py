@@ -26,22 +26,21 @@ class GenericScanTest(bettertest.TestCase):
         """Do the number of indices match number of scan points."""
 
         if self.data._attrtypes["optdone"] is bool:
-            self.skipTest("optdone is bool in this version")
-
-        self.assertEquals(len(self.data.optdone), 12 + self.extra)
+            self.assertEquals(self.data.optdone, True)
+        else:
+            self.assertEquals(len(self.data.optdone), 12 + self.extra)
 
     def testindices(self):
         """Do the indices match the results from geovalues."""
 
         if self.data._attrtypes["optdone"] is bool:
-            self.skipTest("optdone is bool in this version")
-
-        indexes = self.data.optdone
-        geovalues_from_index = self.data.geovalues[indexes]
-        temp = numpy.all(self.data.geovalues <= self.data.geotargets, axis=1)
-        geovalues = self.data.geovalues[temp]
-
-        self.assertArrayEquals(geovalues, geovalues_from_index)
+            assert self.data.optdone and numpy.all(self.data.geovalues[-1] <= self.data.geotargets)
+        else:
+            indexes = self.data.optdone
+            geovalues_from_index = self.data.geovalues[indexes]
+            temp = numpy.all(self.data.geovalues <= self.data.geotargets, axis=1)
+            geovalues = self.data.geovalues[temp]
+            self.assertArrayEquals(geovalues, geovalues_from_index)
 
 
 class GaussianScanTest(GenericScanTest):
