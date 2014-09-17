@@ -146,24 +146,17 @@ class ccData(object):
     # Attributes that should be dictionaries of arrays (double precision).
     _dictsofarrays = ["atomcharges", "atomspins"]
 
-    def __init__(self, **kwds):
+    def __init__(self, attributes={}):
         """Initialize the cclibData object.
         
         Normally called in the parse() method of a Logfile subclass.
         
         Inputs:
-            attributes - dictionary of attributes to load
+            attributes - optional dictionary of attributes to load as data
         """
 
-        attributes = kwds.get("attributes", None)
         if attributes:
             self.setattributes(attributes)
-
-        self.optdone_as_list = kwds.get("optdone_as_list", False)
-        if type(self.optdone_as_list) is not bool:
-            self.optdone_as_list = False
-        if not self.optdone_as_list:
-            self._attrtypes["optdone"] = bool
         
     def listify(self):
         """Converts all attributes that are arrays or lists/dicts of arrays to lists."""
@@ -234,8 +227,6 @@ class ccData(object):
     
         for attr in valid:
             setattr(self, attr, attributes[attr])
-            if not self.optdone_as_list and attr == "optdone":
-                setattr(self, attr, ( len(attributes[attr]) > 0 ))
 
         self.arrayify()
         self.typecheck()
@@ -261,3 +252,22 @@ class ccData(object):
             except ValueError:
                 args = (attr, type(val), self._attrtypes[attr])
                 raise TypeError("attribute %s is %s instead of %s and could not be converted" % args)
+
+
+class ccData_optdone_bool(ccData):
+    """This is the version of ccData where optdone is a Boolean."""
+
+    def __init__(self, *args, **kwargs):
+
+        super(ccData_optdone_bool, self).__init__(*args, **kwargs)
+
+        self._attrtypes['optdone'] = bool
+
+    def setattributes(self, *args, **kwargs):
+
+        invalid = super(ccData_optdone_bool, self).setattributes(*args, **kwargs)
+
+        # Reduce optdone to a Boolean, because it will be parsed as a list. If this list has any element,
+        # it means that there was an optimized structure and optdone should be True.
+        if hasattr(self, 'optdone'):
+            self.optdone = len(self.optdone) > 0
