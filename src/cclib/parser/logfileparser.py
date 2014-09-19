@@ -128,7 +128,7 @@ class Logfile(object):
     """
 
     def __init__(self, source, loglevel=logging.INFO, logname="Log",
-                    logstream=sys.stdout, datatype=ccData):
+                    logstream=sys.stdout, datatype=ccData, **kwds):
         """Initialise the Logfile object.
 
         This should be called by a ubclass in its own __init__ method.
@@ -169,9 +169,17 @@ class Logfile(object):
         # Periodic table of elements.
         self.table = utils.PeriodicTable()
 
-        # This is the class that will be used in the data object returned by parse(),
-        #   and should normally be ccData or a subclass.
+        # This is the class that will be used in the data object returned by parse(), and should
+        # normally be ccData or a subclass of it.
         self.datatype = datatype
+
+        # Change the class used if we want optdone to be a list or if the 'future' option
+        # is used, which might have more consequences in the future.
+        optdone_as_list = kwds.get("optdone_as_list", False) or kwds.get("future", False)
+        optdone_as_list = optdone_as_list if isinstance(optdone_as_list, bool) else False
+        if not optdone_as_list:
+            from .data import ccData_optdone_bool
+            self.datatype = ccData_optdone_bool
 
     def __setattr__(self, name, value):
 
@@ -212,24 +220,14 @@ class Logfile(object):
             inputfile = self.stream
 
         # Intialize self.progress
-        if progress and not (isinstance(inputfile, myGzipFile) or
-                                isinstance(inputfile, myBZ2File)):
+        is_compressed = isinstance(inputfile, myGzipFile) or isinstance(inputfile, myBZ2File)
+        if progress and not (is_compressed):
             self.progress = progress
             self.progress.initialize(inputfile.size)
             self.progress.step = 0
         self.fupdate = fupdate
         self.cupdate = cupdate
 
-        # Initialize the ccData object that will be returned.
-        # This is normally ccData, but can be changed by passing
-        #   the datatype argument to __init__().
-        data = self.datatype()
-        
-        # Copy the attribute list, so that the parser knows what to expect,
-        #   specifically in __setattr__().
-        # The class self.datatype (normally ccData) must have this attribute.
-        self._attrlist = data._attrlist
-        
         # Maybe the sub-class has something to do before parsing.
         self.before_parsing()
 
@@ -265,17 +263,20 @@ class Logfile(object):
         if not hasattr(self, "coreelectrons") and hasattr(self, "natom"):
             self.coreelectrons = numpy.zeros(self.natom, "i")
 
-        # Move all cclib attributes to the ccData object, but beware that
-        # in order to be moved an attribute must be in data._attrlist.
-        data.setattributes(self.__dict__)
+        # Create the data object we want to return. This is normally ccData, but can be changed
+        # by passing the datatype argument to the constructor. All supported cclib attributes
+        # are copied to this object, but beware that in order to be moved an attribute must be
+        # included in the data._attrlist of ccData (or whatever else).
+        # There is the possibility of passing assitional argument via self.data_args, but
+        # we use this sparingly in cases where we want to limit the API with options, etc.
+        data = self.datatype(attributes=self.__dict__)
                 
-        # Now make sure that the cclib attributes in the data object
-        #   are all the correct type (including arrays and lists of arrays).
+        # Now make sure that the cclib attributes in the data object are all the correct type,
+        # including arrays and lists of arrays.
         data.arrayify()
 
         # Delete all temporary attributes (including cclib attributes).
-        # All attributes should have been moved to a data object,
-        #   which will be returned.
+        # All attributes should have been moved to a data object, which will be returned.
         for attr in list(self.__dict__.keys()):
             if not attr in _nodelete:
                 self.__delattr__(attr)
@@ -284,7 +285,6 @@ class Logfile(object):
         if hasattr(self, "progress"):
             self.progress.update(inputfile.size, "Done")
 
-        # Return the ccData object that was generated.
         return data
 
     def before_parsing(self):

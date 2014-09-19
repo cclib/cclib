@@ -146,14 +146,15 @@ class ccData(object):
     # Attributes that should be dictionaries of arrays (double precision).
     _dictsofarrays = ["atomcharges", "atomspins"]
 
-    def __init__(self, attributes=None):
+    def __init__(self, attributes={}):
         """Initialize the cclibData object.
         
         Normally called in the parse() method of a Logfile subclass.
         
         Inputs:
-            attributes - dictionary of attributes to load
+            attributes - optional dictionary of attributes to load as data
         """
+
         if attributes:
             self.setattributes(attributes)
         
@@ -251,3 +252,22 @@ class ccData(object):
             except ValueError:
                 args = (attr, type(val), self._attrtypes[attr])
                 raise TypeError("attribute %s is %s instead of %s and could not be converted" % args)
+
+
+class ccData_optdone_bool(ccData):
+    """This is the version of ccData where optdone is a Boolean."""
+
+    def __init__(self, *args, **kwargs):
+
+        super(ccData_optdone_bool, self).__init__(*args, **kwargs)
+
+        self._attrtypes['optdone'] = bool
+
+    def setattributes(self, *args, **kwargs):
+
+        invalid = super(ccData_optdone_bool, self).setattributes(*args, **kwargs)
+
+        # Reduce optdone to a Boolean, because it will be parsed as a list. If this list has any element,
+        # it means that there was an optimized structure and optdone should be True.
+        if hasattr(self, 'optdone'):
+            self.optdone = len(self.optdone) > 0

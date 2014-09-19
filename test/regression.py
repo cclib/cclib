@@ -43,7 +43,7 @@ def testADF_ADF2004_01_Fe_ox3_final_out(logfile):
 
 def testADF_ADF2013_01_dvb_gopt_b_unconverged_adfout(logfile):
     """An unconverged geometry optimization to test for empty optdone (see #103 for details)."""
-    assert hasattr(logfile.data, 'optdone') and logfile.data.optdone == []
+    assert hasattr(logfile.data, 'optdone') and not logfile.data.optdone
 
 # GAMESS #
 
@@ -73,7 +73,7 @@ def testGAMESS_GAMESS_US2009_paulo_h2o_mp2_out(logfile):
 
 def testGAMESS_GAMESS_US2012_dvb_gopt_a_unconverged_out(logfile):
     """An unconverged geometry optimization to test for empty optdone (see #103 for details)."""
-    assert hasattr(logfile.data, 'optdone') and logfile.data.optdone == []
+    assert hasattr(logfile.data, 'optdone') and not logfile.data.optdone
 
 def testGAMESS_GAMESS_US2013_N_UHF_out(logfile):
     """An UHF job that has an LZ value analysis between the alpha and beta orbitals."""
@@ -212,7 +212,7 @@ def testGaussian_Gaussian09_534_out(logfile):
 
 def testGaussian_Gaussian09_dvb_gopt_unconverged_log(logfile):
     """An unconverged geometry optimization to test for empty optdone (see #103 for details)."""
-    assert hasattr(logfile.data, 'optdone') and logfile.data.optdone == []
+    assert hasattr(logfile.data, 'optdone') and not logfile.data.optdone
 
 def testGaussian_Gaussian09_dvb_lowdin_log(logfile):
     """Check if both Mulliken and Lowdin charges are parsed."""
@@ -247,13 +247,13 @@ def testGaussian_Gaussian09_Ru2bpyen2_H2_freq3_log(logfile):
 
 def testMolpro_Molpro2012_dvb_gopt_unconverged_out(logfile):
     """An unconverged geometry optimization to test for empty optdone (see #103 for details)."""
-    assert hasattr(logfile.data, 'optdone') and logfile.data.optdone == []
+    assert hasattr(logfile.data, 'optdone') and not logfile.data.optdone
 
 # NWChem #
 
 def testNWChem_NWChem6_0_dvb_gopt_hf_unconverged_out(logfile):
     """An unconverged geometry optimization to test for empty optdone (see #103 for details)."""
-    assert hasattr(logfile.data, 'optdone') and logfile.data.optdone == []
+    assert hasattr(logfile.data, 'optdone') and not logfile.data.optdone
 
 def testNWChem_NWChem6_0_dvb_sp_hf_moments_only_quadrupole_out(logfile):
     """Quadrupole moments are printed/parsed, but not lower moments (no shape)."""
@@ -297,19 +297,19 @@ def testORCA_ORCA2_9_job_out(logfile):
 
 def testORCA_ORCA3_0_dvb_gopt_unconverged_out(logfile):
     """An unconverged geometry optimization to test for empty optdone (see #103 for details)."""
-    assert hasattr(logfile.data, 'optdone') and logfile.data.optdone == []
+    assert hasattr(logfile.data, 'optdone') and not logfile.data.optdone
 
 # PSI #
 
 def testPsi_Psi4_dvb_gopt_hf_unconverged_out(logfile):
     """An unconverged geometry optimization to test for empty optdone (see #103 for details)."""
-    assert hasattr(logfile.data, 'optdone') and logfile.data.optdone == []
+    assert hasattr(logfile.data, 'optdone') and not logfile.data.optdone
 
 # Q-Chem #
 
 def testQChem_QChem4_2_dvb_gopt_unconverged_out(logfile):
     """An unconverged geometry optimization to test for empty optdone (see #103 for details)."""
-    assert hasattr(logfile.data, 'optdone') and logfile.data.optdone == []
+    assert hasattr(logfile.data, 'optdone') and not logfile.data.optdone
 
 # These regression tests are for logfiles that are not to be parsed
 # for some reason, and the function should start with 'testnoparse'.

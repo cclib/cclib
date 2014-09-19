@@ -35,7 +35,8 @@ For a list of attributes available in a file, use --list (or -l):
 To parse multiple files as one input stream, use --multi (or -m):
     ccget --multi <attr> [<attr>]  <cclogfile> <cclogfile> [<cclogfile>]
 Additional options:
-    -v or --verbose: more verbose parsing output (only errors by default)\
+    -v or --verbose: more verbose parsing output (only errors by default)
+    -u or --future: use experimental features (currently optdone_as_list)\
 """
 
 
@@ -43,11 +44,12 @@ def main():
 
     # Parse the arguments, but print help information and exit if it fails.
     try:
-        opts, args = getopt.getopt(sys.argv[1:], "hlmv", ["help", "list", "multi", "verbose"])
+        opts, args = getopt.getopt(sys.argv[1:], "hlmvu", ["help", "list", "multi", "verbose", "future"])
     except getopt.GetoptError:
         print(msg_usage_long)
         sys.exit(2)
 
+    future = False
     showattr = False
     multifile = False
     verbose = False
@@ -61,6 +63,8 @@ def main():
             multifile = True
         if o in ("-v", "--verbose"):
             verbose = True
+        if o in ("-u", "--future"):
+            future = True
 
     # We need at least one attribute and the filename, so two arguments, or
     # just one filename if we want to list attributes that can be extracted.
@@ -119,8 +123,14 @@ def main():
 
         name = (not multifile)*filename or ", ".join(filename[:-1]) + " and " + filename[-1]
 
+        # We might want to use this option in the near future.
+        ccopen_kwargs = {}
+        if future:
+            ccopen_kwargs['future'] = True
+
         print("Attempting to parse %s" % name)
-        log = ccopen(filename)
+        log = ccopen(filename, **ccopen_kwargs)
+
         if log == None:
             print("Cannot figure out what type of computation chemistry output file '%s' is." % name)
             print("Report this to the cclib development team if you think this is an error.")
