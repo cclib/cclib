@@ -1,0 +1,931 @@
+This is a multi-thread run using 4 threads
+/home/eric/opt/apps/qchem/trunk_intel_release_r16523/exe/qcprog.exe .copper_ax2wat_eq0wat4amm.opt_tzvpp.SOS-CIS_D0.in.15834.qcin.1 /home/eric/scratch/qchem/qchem15834/
+
+                  Welcome to Q-Chem
+     A Quantum Leap Into The Future Of Chemistry
+
+
+ Q-Chem 4.2, Q-Chem, Inc., Pleasanton, CA (2014).
+
+ Y. Shao,  Z. Gan,  E. Epifanovsky,  A. T. B. Gilbert,  M. Wormit,  
+ J. Kussmann,  A. W. Lange,  A. Behn,  J. Deng,  X. Feng,  D. Ghosh,  
+ M. Goldey,  P. R. Horn,  L. D. Jacobson,  I. Kaliman,  R. Z. Khaliullin,  
+ T. Kus,  A. Landau,  J. Liu,  E. I. Proynov,  Y. M. Rhee,  R. M. Richard,  
+ M. A. Rohrdanz,  R. P. Steele,  E. J. Sundstrom,  H. L. Woodcock III,  
+ P. M. Zimmerman,  D. Zuev,  B. Albrecht,  E. Alguire,  B. Austin,  
+ G. J. O. Beran,  Y. A. Bernard,  E. Berquist,  K. Brandhorst,  
+ K. B. Bravaya,  S. T. Brown,  D. Casanova,  C.-M. Chang,  Y. Chen,  
+ S. H. Chien,  K. D. Closser,  D. L. Crittenden,  M. Diedenhofen,  
+ R. A. DiStasio Jr.,  H. Do,  A. D. Dutoi,  R. G. Edgar,  S. Fatehi,  
+ L. Fusti-Molnar,  A. Ghysels,  A. Golubeva-Zadorozhnaya,  J. Gomes,  
+ M. W. D. Hanson-Heine,  P. H. P. Harbach,  A. W. Hauser,  E. G. Hohenstein,  
+ Z. C. Holden,  T.-C. Jagau,  H. Ji,  B. Kaduk,  K. Khistyaev,  Jaehoon Kim,  
+ Jihan Kim,  R. A. King,  P. Klunzinger,  D. Kosenkov,  T. Kowalczyk,  
+ C. M. Krauter,  K. U. Lao,  A. Laurent,  K. V. Lawler,  S. V. Levchenko,  
+ C. Y. Lin,  F. Liu,  E. Livshits,  R. C. Lochan,  A. Luenser,  P. Manohar,  
+ S. F. Manzer,  S.-P. Mao,  N. Mardirossian,  A. V. Marenich,  S. A. Maurer,  
+ N. J. Mayhall,  C. M. Oana,  R. Olivares-Amaya,  D. P. O'Neill,  
+ J. A. Parkhill,  T. M. Perrine,  R. Peverati,  P. A. Pieniazek,  A. Prociuk,  
+ D. R. Rehn,  E. Rosta,  N. J. Russ,  N. Sergueev,  S. M. Sharada,  
+ S. Sharma,  D. W. Small,  A. Sodt,  T. Stein,  D. Stuck,  Y.-C. Su,  
+ A. J. W. Thom,  T. Tsuchimochi,  L. Vogt,  O. Vydrov,  T. Wang,  
+ M. A. Watson,  J. Wenzel,  A. White,  C. F. Williams,  V. Vanovschi,  
+ S. Yeganeh,  S. R. Yost,  Z.-Q. You,  I. Y. Zhang,  X. Zhang,  Y. Zhao,  
+ B. R. Brooks,  G. K. L. Chan,  D. M. Chipman,  C. J. Cramer,  
+ W. A. Goddard III,  M. S. Gordon,  W. J. Hehre,  A. Klamt,  
+ H. F. Schaefer III,  M. W. Schmidt,  C. D. Sherrill,  D. G. Truhlar,  
+ A. Warshel,  X. Xu,  A. Aspuru-Guzik,  R. Baer,  A. T. Bell,  N. A. Besley,  
+ J.-D. Chai,  A. Dreuw,  B. D. Dunietz,  T. R. Furlani,  S. R. Gwaltney,  
+ C.-P. Hsu,  Y. Jung,  J. Kong,  D. S. Lambrecht,  W. Liang,  C. Ochsenfeld,  
+ V. A. Rassolov,  L. V. Slipchenko,  J. E. Subotnik,  T. Van Voorhis,  
+ J. M. Herbert,  A. I. Krylov,  P. M. W. Gill,  M. Head-Gordon
+
+ Contributors to earlier versions of Q-Chem not listed above: 
+ R. D. Adamson,  J. Baker,  E. F. C. Byrd,  A. K. Chakraborty,  C.-L. Cheng,  
+ H. Dachsel,  R. J. Doerksen,  G. Hawkins,  A. Heyden,  S. Hirata,  
+ G. Kedziora,  F. J. Keil,  C. Kelley,  P. P. Korambath,  W. Kurlancheek,  
+ A. M. Lee,  M. S. Lee,  D. Liotard,  I. Lotan,  P. E. Maslen,  N. Nair,  
+ D. Neuhauser,  R. Olson,  B. Peters,  J. Ritchie,  N. E. Schultz,  
+ N. Shenvi,  A. C. Simmonett,  K. S. Thanthiriwatte,  Q. Wu,  W. Zhang
+
+ Q-Chem 4.2.0 for Intel X86 EM64T Linux
+
+ Parts of Q-Chem use Armadillo 4.100.2 (Dirt Cruiser).
+ http://arma.sourceforge.net/
+
+ Q-Chem begins on Sun Aug 24 20:39:45 2014  
+
+Host: osmium
+0
+
+     Scratch files written to /home/eric/scratch/qchem/qchem15834//
+ Jul1214 |home|eric|opt|apps|qchem|trunk_intel_release|libmdc|qstr_info.C -1
+Checking the input file for consistency...	...done.
+
+--------------------------------------------------------------
+User input:
+--------------------------------------------------------------
+$rem
+ method = soscis(d0)
+ basis = 6-31g(d)
+ aux_basis = gen
+ purecart = 1111
+ cis_n_roots = 20
+ mem_static = 8000
+ mem_total = 10000
+ ao2mo_disk = 10000
+$end
+
+$molecule
+ +2 2
+  Cu  -0.76340642779813     -1.02405517335073     -0.02193513687359
+  O   -1.00976839507170      0.78750664054718     -1.81382181275398
+  H   -1.56162901515337      0.76800651598954     -2.60164333481467
+  N   -2.32386388521900     -0.08996155552844      0.95795351424424
+  H   -3.16060956596427     -0.65173388564472      1.08500923139546
+  N   -2.09884273655719     -2.29852671183089     -0.94870062460663
+  H   -2.16597793014165     -3.13530089086939     -0.37313979047614
+  N   0.59568029943888      0.07645483333462      1.07761062918926
+  H   0.25185512490480      0.96103973993761      1.43977161066447
+  N   0.77382291034593     -1.78330780266182     -1.17430047079735
+  H   0.63362194243690     -2.72631604889461     -1.52495746398191
+  O   -0.51957653465232     -2.83386966497095      1.77170496370122
+  H   -1.03183424668359     -2.93792944478719      2.57938855830821
+  H   -2.59924049481669      0.71008625319212      0.39219190198367
+  H   -1.83366890615023     -2.61147131230732     -1.87800911220187
+  H   0.10267443565773     -3.56722137766703      1.79656723730246
+  H   1.68766615319018     -1.79878533264157     -0.73096477178951
+  H   1.46295823115022      0.30471732294095      0.60052839043211
+  H   -0.57384508102292      1.64402610076254     -1.85814731457755
+  H   -2.10643929417990      0.27403971149829      1.88105326890770
+  H   -3.04530738405428     -1.94346866572263     -1.04873743715050
+  H   0.86239393137460     -1.18397212522385     -1.99217590082646
+  H   0.85308686896600     -0.48372712610170      1.88750386472139
+$end
+
+$aux_basis
+****
+H    0
+S  2  1.00
+    9.33521609             .64609379                                            
+    1.86110704            1.37005241                                            
+S  1  1.00
+     .59512466            1.00000000                                            
+S  1  1.00
+     .26448099            1.00000000                                            
+P  2  1.00
+    2.45249821             .13284956                                            
+    1.35403830            1.45276215                                            
+P  1  1.00
+     .59522394            1.00000000                                            
+D  2  1.00
+    1.58163766            1.49367397                                            
+     .62743960            -.01070690                                            
+! C. Hättig; PCCP 7, 59 (2005).
+****
+N    0
+S  3  1.00
+  291.18394257             .56533084                                            
+   62.03053238            1.37490932                                            
+   21.98113229             .28294012                                            
+S  1  1.00
+    9.06711534            1.00000000                                            
+S  1  1.00
+    3.60654848            1.00000000                                            
+S  1  1.00
+    1.37284474            1.00000000                                            
+S  1  1.00
+     .63709085            1.00000000                                            
+S  1  1.00
+     .26907231            1.00000000                                            
+P  2  1.00
+   34.12169197            1.03739350                                            
+    8.66927085             .98879118                                            
+P  1  1.00
+    3.96958444            1.00000000                                            
+P  1  1.00
+    1.67569027            1.00000000                                            
+P  1  1.00
+     .69769401            1.00000000                                            
+P  1  1.00
+     .33582544            1.00000000                                            
+D  2  1.00
+   12.72717340             .53636257                                            
+    5.02916611            1.31247449                                            
+D  1  1.00
+    2.09125025            1.00000000                                            
+D  1  1.00
+     .85902043            1.00000000                                            
+D  1  1.00
+     .35068479            1.00000000                                            
+F  3  1.00
+    3.46865369             .90354051                                            
+    1.66865042            1.65562725                                            
+     .80947600             .24984638                                            
+! C. Hättig; PCCP 7, 59 (2005).
+****
+O    0
+S  3  1.00
+  364.91291000             .58060367                                            
+   77.38709400            1.40179849                                            
+   24.30170600             .34994578                                            
+S  1  1.00
+    8.43695450            1.00000000                                            
+S  1  1.00
+    3.15279410            1.00000000                                            
+S  1  1.00
+    1.57754300            1.00000000                                            
+S  1  1.00
+     .78178244            1.00000000                                            
+S  1  1.00
+     .31652679            1.00000000                                            
+P  2  1.00
+   56.73594800            1.06024410                                            
+   14.99721700            1.20038258                                            
+P  1  1.00
+    5.64281160            1.00000000                                            
+P  1  1.00
+    2.40692198            1.00000000                                            
+P  1  1.00
+    1.02640596            1.00000000                                            
+P  1  1.00
+     .43769977            1.00000000                                            
+D  2  1.00
+   12.44682100            1.13716995                                            
+    6.12169170             .77017590                                            
+D  1  1.00
+    2.71029490            1.00000000                                            
+D  1  1.00
+    1.15240610            1.00000000                                            
+D  1  1.00
+     .41386174            1.00000000                                            
+F  3  1.00
+    4.77935390             .25251741                                            
+    2.32046420            1.78671278                                            
+    1.09128040             .32923623                                            
+! C. Hättig; PCCP 7, 59 (2005).
+****
+Cu    0
+S  3  1.00
+   76.61888700             .22127009                                            
+   35.84420500            1.10771089                                            
+   17.43598000           -1.23596756                                            
+S  1  1.00
+    8.79010800            1.00000000                                            
+S  1  1.00
+    4.57569200            1.00000000                                            
+S  1  1.00
+    2.44935700            1.00000000                                            
+S  1  1.00
+    1.34224700            1.00000000                                            
+S  1  1.00
+     .74938200            1.00000000                                            
+S  1  1.00
+     .42407900            1.00000000                                            
+S  1  1.00
+     .24196400            1.00000000                                            
+S  1  1.00
+     .13843600            1.00000000                                            
+P  2  1.00
+  214.96507000            -.38582926                                            
+   49.56055100            1.55957840                                            
+P  2  1.00
+   21.13481700           -1.17913540                                            
+    5.35438120            1.89982860                                            
+P  1  1.00
+    2.19793250            1.00000000                                            
+P  1  1.00
+    1.36618190            1.00000000                                            
+P  1  1.00
+     .60037788            1.00000000                                            
+P  1  1.00
+     .33277531            1.00000000                                            
+P  1  1.00
+     .14673856            1.00000000                                            
+D  2  1.00
+  106.44265000            2.09841882                                            
+   23.19483600           10.00024900                                            
+D  2  1.00
+    8.84118380             .94747908                                            
+    4.57102270            1.26590806                                            
+D  1  1.00
+    1.82217990            1.00000000                                            
+D  1  1.00
+     .85046261            1.00000000                                            
+D  1  1.00
+     .38749958            1.00000000                                            
+F  4  1.00
+   52.13364200           -1.27232142                                            
+   13.24690900            1.15816535                                            
+    6.28481480            2.20111275                                            
+    3.05058080             .70886158                                            
+F  1  1.00
+    1.47003350            1.00000000                                            
+F  1  1.00
+     .50664456            1.00000000                                            
+G  3  1.00
+   17.80510400            1.25317348                                            
+    6.02365790            1.31975806                                            
+    2.06261490            -.16398042                                            
+G  1  1.00
+     .70220936            1.00000000                                            
+! C. Hättig; PCCP 7, 59 (2005).
+****
+$end
+--------------------------------------------------------------
+ ----------------------------------------------------------------
+             Standard Nuclear Orientation (Angstroms)
+    I     Atom           X                Y                Z
+ ----------------------------------------------------------------
+    1      Cu      0.0000760128    -0.0003446231     0.0003431801
+    2      O      -2.5598652584     0.0020389706     0.0021570387
+    3      H      -3.1497877594     0.4235048907     0.6345738874
+    4      N      -0.1244384513     1.7137841922    -1.1459546367
+    5      H       0.2825824608     2.5478070615    -0.7328995907
+    6      N       0.1270184993     1.1461534649     1.7138162163
+    7      H       1.1158522521     1.2843344941     1.9115085202
+    8      N       0.1194555194    -1.1469537293    -1.7137968345
+    9      H      -0.2863181222    -0.7317998381    -2.5473805331
+   10      N      -0.1221016748    -1.7147130642     1.1464225476
+   11      H       0.2869989435    -1.6513583490     2.0740561255
+   12      O       2.5597655497     0.0000837286    -0.0036081130
+   13      H       3.1497466864     0.6298630451    -0.4289191299
+   14      H      -1.1130261160     1.9145691257    -1.2815083708
+   15      H      -0.2762872771     0.7323838503     2.5492830948
+   16      H       3.1557299039    -0.6262955213     0.4184045184
+   17      H       0.2860507170    -2.5481999600     0.7333768019
+   18      H      -0.2933736771    -2.0729907360    -1.6512688066
+   19      H      -3.1558975513    -0.4169034821    -0.6262156204
+   20      H       0.2843256898     1.6511235668    -2.0737849311
+   21      H      -0.2845302390     2.0727973259     1.6519478086
+   22      H      -1.1102839138    -1.9170298196     1.2825551743
+   23      H       1.1072740516    -1.2866892235    -1.9154836257
+ ----------------------------------------------------------------
+ Molecular Point Group                 C1    NOp =  1
+ Largest Abelian Subgroup              C1    NOp =  1
+ Nuclear Repulsion Energy =   683.3124681207 hartrees
+ There are       44 alpha and       43 beta electrons
+
+ Q-Chem warning in module /home/eric/opt/apps/qchem/trunk_intel_release/forms1/BasisType.C, line 1231:
+
+ You are not using the predefined 5D/6D in this basis set.
+
+ Requested basis set is 6-31G(d)
+ There are 64 shells and 150 basis functions
+
+Total QAlloc Memory Limit  10000 MB
+Mega-Array Size      7821 MB
+MEM_STATIC part      8000 MB
+ Requested basis set is non-standard
+ There are 218 shells and 606 basis functions
+ A cutoff of  1.0D-11 yielded   1878 shell pairs
+ There are     10967 function pairs (     12692 Cartesian)
+ Smallest overlap matrix eigenvalue = 1.32E-02
+
+  Scale SEOQF with 1.000000e-01/1.000000e-01/1.000000e-01
+
+ Standard Electronic Orientation quadrupole field applied
+ Nucleus-field energy     =     0.0000000018 hartrees
+ Guess MOs from core Hamiltonian diagonalization
+ An unrestricted Hartree-Fock SCF calculation will be
+ performed using Pulay DIIS extrapolation
+ SCF converges when DIIS error is below 1.0E-08
+ using 4 threads for integral computing 
+ 
+ -------------------------------------------------------
+ OpenMP Integral Computing Module                       
+ Release: version 1.0, May 2013, Q-Chem Inc. Pittsburgh 
+ -------------------------------------------------------
+ Integral Job Info:
+ Integral job number is                      22
+ Integral operator is                         1
+ short-range coefficients               -999999
+ long-range coefficients                -999999
+ Omega coefficients                           0
+ if combine SR and LR in K              -999999
+ Integral screening is                        1
+ Integral computing path is                   2
+ max size of driver memory is            800000
+ size of driver memory is                776850
+ size of scratch memory is              4426800
+ max col of scratch BK array              10000
+ max len of scratch array in speh3          662
+ max len of scratch index in speh4           32
+ max int batch size is                       50
+ min int batch size is                       15
+ fixed nKL is                                15
+ max L of basis functions is                  3
+ order of int derivative is                   0
+ number of shells is                         64
+ number of basis is                         161
+ number of cartesian basis is               161
+ number of contracted shell pairs          1878
+ number of primitive shell pairs           6633
+ maxK2 (contraction) of shell pair           36
+ max number of K2 of shell pair               1
+ max number of CS2 of shell pair            264
+ max number of PS2 of shell pair            912
+ mem total for path MDJ                   38242
+ -------------------------------------------------------
+         cpu   5.01 wall   1.25
+ ---------------------------------------
+  Cycle       Energy         DIIS Error
+ ---------------------------------------
+    1   -1760.2883244730      9.08E-02
+         cpu   5.02 wall   1.25
+    2   -1777.4776043115      1.19E-01
+         cpu   5.00 wall   1.25
+    3   -1943.4046441324      8.67E-02
+         cpu   4.95 wall   1.24
+    4   -2010.5802028864      5.24E-02
+         cpu   4.91 wall   1.23
+    5   -1974.9347099763      6.58E-02
+         cpu   4.77 wall   1.19
+    6   -1976.5603230150      6.11E-02
+         cpu   4.91 wall   1.23
+    7   -2013.1217144510      2.25E-02
+         cpu   4.89 wall   1.22
+    8   -1977.5303458598      7.00E-02
+         cpu   4.51 wall   1.13
+    9   -1977.5942939509      6.97E-02
+         cpu   4.75 wall   1.19
+   10   -1977.5303832555      7.01E-02
+         cpu   4.96 wall   1.24
+   11   -1977.4898219180      7.03E-02
+         cpu   4.68 wall   1.17
+   12   -1977.5367278936      7.01E-02
+         cpu   4.75 wall   1.19
+   13   -1977.8884903607      7.05E-02
+         cpu   4.74 wall   1.18
+   14   -1977.7750239279      7.07E-02
+         cpu   4.69 wall   1.17
+   15   -1977.7759988999      7.09E-02
+         cpu   4.94 wall   1.23
+   16   -1977.7686404795      7.09E-02
+         cpu   4.91 wall   1.23
+   17   -2012.3526827064      3.65E-02
+         cpu   4.76 wall   1.19
+   18   -2013.3796428505      2.85E-02
+         cpu   4.81 wall   1.20
+   19   -2014.8395998825      9.29E-03
+         cpu   4.74 wall   1.19
+   20   -2015.1002857510      1.75E-03
+         cpu   4.65 wall   1.16
+   21   -2015.1299445468      7.02E-04
+         cpu   4.48 wall   1.12
+   22   -2015.1345550717      2.88E-04
+         cpu   4.39 wall   1.10
+   23   -2015.1358300633      1.53E-04
+         cpu   4.24 wall   1.06
+   24   -2015.1362533474      1.05E-04
+         cpu   4.17 wall   1.04
+   25   -2015.1365736935      8.82E-05
+         cpu   4.30 wall   1.08
+   26   -2015.1372900476      7.51E-05
+         cpu   4.37 wall   1.09
+   27   -2015.1381480481      4.74E-05
+         cpu   4.25 wall   1.06
+   28   -2015.1384052227      3.22E-05
+         cpu   4.27 wall   1.07
+   29   -2015.1385779311      1.29E-05
+         cpu   4.13 wall   1.03
+   30   -2015.1386005823      4.77E-06
+         cpu   4.89 wall   1.22
+   31   -2015.1386067571      2.20E-06
+         cpu   3.64 wall   0.91
+   32   -2015.1386074506      1.12E-06
+         cpu   3.53 wall   0.88
+   33   -2015.1386080079      9.02E-07
+         cpu   3.58 wall   0.90
+   34   -2015.1386083147      8.24E-07
+         cpu   3.66 wall   0.91
+   35   -2015.1386080343      6.65E-07
+         cpu   3.54 wall   0.88
+   36   -2015.1386078367      3.19E-07
+         cpu   3.55 wall   0.89
+   37   -2015.1386082489      2.48E-07
+         cpu   3.42 wall   0.86
+   38   -2015.1386084209      1.10E-07
+         cpu   3.31 wall   0.83
+   39   -2015.1386084460      3.73E-08
+         cpu   2.86 wall   0.72
+   40   -2015.1386084464      1.31E-08
+         cpu   2.69 wall   0.67
+   41   -2015.1386084466      8.08E-09 Convergence criterion met
+ ---------------------------------------
+ <S^2> = 0.7520
+ SCF time:  CPU 186.28 s  wall 46.58 s
+ SCF   energy in the final basis set = -2015.1386084466
+ Total energy in the final basis set = -2015.1386084466
+OV_DIM:  Setting MaxSz  = 600
+OV_DIM:  Setting MaxSpc = 600
+ Direct UCIS calculation will be performed
+ CIS energy converged when residual is below 10e- 6
+  Skipping CIS/RPA calculation
+  Going directly to Wavefunction Analysis
+ SOS-CIS(Dn) energy converged when residual is below 10e- 6
+ Calling PreMake_DN in SOSCIS(Dn)
+ Running PreMakeAs_Dn 
+Checking memory requirement for PreMakeAs_Dn
+ Memory required:  1 MB
+ Memory available: 10000 MB
+Checking disk requirement for SOS-CIS(Dn)
+ Disk required:  213 MB
+ Disk available: 10000 MB
+ Disk actual:    287 MB
+
+Form (P|Q)**(-1/2)...
+ Entering AOints
+ 
+ done
+ ---------------------------------------------------
+ Iter    Rts Conv    Rts Left    Ttl Dev     Max Dev
+ ---------------------------------------------------
+Warning: Xmax(664.34) too large for predefined quadrature points!
+reading 4
+   1         0          20      0.014871    0.000952
+Warning: Xmax(664.34) too large for predefined quadrature points!
+   2         0          20      0.009384    0.000704
+Warning: Xmax(664.34) too large for predefined quadrature points!
+   3         0          20      0.006443    0.000748
+Warning: Xmax(664.34) too large for predefined quadrature points!
+   4         0          20      0.010769    0.002676
+Warning: Xmax(664.34) too large for predefined quadrature points!
+   5         0          20      0.009248    0.002551
+Warning: Xmax(664.34) too large for predefined quadrature points!
+   6         0          20      0.005016    0.001178
+Warning: Xmax(664.34) too large for predefined quadrature points!
+   7         0          20      0.001834    0.000364
+Warning: Xmax(664.34) too large for predefined quadrature points!
+   8         2          18      0.003424    0.002798
+Warning: Xmax(664.34) too large for predefined quadrature points!
+   9         6          14      0.000781    0.000537
+Warning: Xmax(664.34) too large for predefined quadrature points!
+  10        10          10      0.000182    0.000093
+Warning: Xmax(664.34) too large for predefined quadrature points!
+  11        10          10      0.000055    0.000016
+Warning: Xmax(664.34) too large for predefined quadrature points!
+  12        14           6      0.000020    0.000004
+Warning: Xmax(664.34) too large for predefined quadrature points!
+  13        17           3      0.000009    0.000002
+Warning: Xmax(664.34) too large for predefined quadrature points!
+  14        19           1      0.000007    0.000001
+Warning: Xmax(664.34) too large for predefined quadrature points!
+  15        20           0      0.000006    0.000001    Roots Converged
+ ---------------------------------------------------
+ Hartree-Fock energy                 =     -2015.1386084466 au
+ SOS-MP2 correlation energy          =        -1.2936370754 au
+ Total SOS-MP2 energy                =     -2016.4322455221 au
+ ---------------------------------------------------
+           SOS-CIS(D0) Excitation Energies          
+ ---------------------------------------------------
+
+ Excited state   1: excitation energy (eV) =    1.3269
+    Total energy for state   1:  -2016.383482704288
+    <S**2>     :  0.7535
+    Trans. Mom.: -0.0187 X   0.0000 Y   0.0000 Z
+    Strength   :  0.0000
+    D( 32) --> V(  5) amplitude =  0.4037 beta
+    D( 32) --> V(  7) amplitude =  0.4298 beta
+    D( 32) --> V( 12) amplitude =  0.4557 beta
+    D( 38) --> V(  5) amplitude =  0.3513 beta
+    D( 38) --> V(  7) amplitude =  0.3697 beta
+    D( 38) --> V( 12) amplitude =  0.3889 beta
+
+ Excited state   2: excitation energy (eV) =    1.4189
+    Total energy for state   2:  -2016.380101078510
+    <S**2>     :  0.7530
+    Trans. Mom.: -0.0000 X   0.0000 Y  -0.0000 Z
+    Strength   :  0.0000
+    D( 22) --> V(  5) amplitude = -0.3671 beta
+    D( 22) --> V(  7) amplitude = -0.3940 beta
+    D( 22) --> V( 12) amplitude = -0.4176 beta
+    D( 31) --> V(  5) amplitude = -0.3880 beta
+    D( 31) --> V(  7) amplitude = -0.4152 beta
+    D( 31) --> V( 12) amplitude = -0.4390 beta
+
+ Excited state   3: excitation energy (eV) =    1.5457
+    Total energy for state   3:  -2016.375442244070
+    <S**2>     :  0.7534
+    Trans. Mom.:  0.0000 X  -0.0084 Y  -0.0016 Z
+    Strength   :  0.0000
+    D( 25) --> V(  5) amplitude = -0.2527 beta
+    D( 25) --> V(  7) amplitude = -0.2700 beta
+    D( 25) --> V( 12) amplitude = -0.2862 beta
+    D( 34) --> V(  5) amplitude = -0.3681 beta
+    D( 34) --> V(  7) amplitude = -0.3915 beta
+    D( 34) --> V( 12) amplitude = -0.4138 beta
+    D( 35) --> V(  5) amplitude = -0.2862 beta
+    D( 35) --> V(  7) amplitude = -0.3045 beta
+    D( 35) --> V( 12) amplitude = -0.3217 beta
+
+ Excited state   4: excitation energy (eV) =    1.5459
+    Total energy for state   4:  -2016.375433773577
+    <S**2>     :  0.7534
+    Trans. Mom.: -0.0000 X   0.0016 Y  -0.0084 Z
+    Strength   :  0.0000
+    D( 26) --> V(  5) amplitude = -0.2528 beta
+    D( 26) --> V(  7) amplitude = -0.2700 beta
+    D( 26) --> V( 12) amplitude = -0.2862 beta
+    D( 34) --> V(  5) amplitude = -0.2862 beta
+    D( 34) --> V(  7) amplitude = -0.3044 beta
+    D( 34) --> V( 12) amplitude = -0.3217 beta
+    D( 35) --> V(  5) amplitude =  0.3681 beta
+    D( 35) --> V(  7) amplitude =  0.3915 beta
+    D( 35) --> V( 12) amplitude =  0.4137 beta
+
+ Excited state   5: excitation energy (eV) =    8.3812
+    Total energy for state   5:  -2016.124241337365
+    <S**2>     :  1.5064
+    Trans. Mom.:  0.0720 X   0.0002 Y   0.0001 Z
+    Strength   :  0.0011
+    D( 22) --> V(  1) amplitude =  0.1560 alpha
+    D( 40) --> V(  2) amplitude =  0.1882 alpha
+    D( 41) --> V(  3) amplitude = -0.1883 alpha
+    S(  1) --> V(  1) amplitude =  0.9031 alpha
+
+ Excited state   6: excitation energy (eV) =    8.6442
+    Total energy for state   6:  -2016.114576875298
+    <S**2>     :  2.7509
+    Trans. Mom.: -0.0000 X  -0.0063 Y   0.0038 Z
+    Strength   :  0.0000
+    D( 42) --> V(  4) amplitude = -0.2054 alpha
+    D( 43) --> V(  1) amplitude = -0.3629 alpha
+    D( 43) --> V(  4) amplitude =  0.4093 alpha
+    D( 43) --> V(  5) amplitude = -0.2582 alpha
+    D( 40) --> S(  1) amplitude =  0.1687 beta
+    D( 40) --> V(  3) amplitude = -0.2216 beta
+    D( 41) --> S(  1) amplitude = -0.1684 beta
+    D( 41) --> V(  3) amplitude =  0.2217 beta
+    D( 42) --> S(  1) amplitude =  0.2876 beta
+    D( 42) --> V(  3) amplitude = -0.3206 beta
+    D( 42) --> V(  4) amplitude =  0.2047 beta
+
+ Excited state   7: excitation energy (eV) =    8.6444
+    Total energy for state   7:  -2016.114571327133
+    <S**2>     :  2.7509
+    Trans. Mom.:  0.0000 X  -0.0039 Y  -0.0063 Z
+    Strength   :  0.0000
+    D( 42) --> V(  1) amplitude = -0.3629 alpha
+    D( 42) --> V(  4) amplitude = -0.4094 alpha
+    D( 42) --> V(  5) amplitude = -0.2582 alpha
+    D( 43) --> V(  4) amplitude = -0.2052 alpha
+    D( 39) --> S(  1) amplitude =  0.1686 beta
+    D( 39) --> V(  3) amplitude =  0.2215 beta
+    D( 41) --> S(  1) amplitude =  0.2878 beta
+    D( 41) --> V(  3) amplitude =  0.3208 beta
+    D( 41) --> V(  4) amplitude =  0.2048 beta
+    D( 42) --> S(  1) amplitude =  0.1684 beta
+    D( 42) --> V(  3) amplitude =  0.2216 beta
+
+ Excited state   8: excitation energy (eV) =    9.2480
+    Total energy for state   8:  -2016.092387371433
+    <S**2>     :  1.6041
+    Trans. Mom.:  0.0002 X   0.3556 Y   0.0437 Z
+    Strength   :  0.0291
+    D( 40) --> V(  1) amplitude =  0.2808 alpha
+    D( 43) --> V(  1) amplitude =  0.2160 alpha
+    S(  1) --> V(  2) amplitude =  0.7834 alpha
+    D( 39) --> S(  1) amplitude =  0.1656 beta
+
+ Excited state   9: excitation energy (eV) =    9.2490
+    Total energy for state   9:  -2016.092352709166
+    <S**2>     :  1.6002
+    Trans. Mom.:  0.0004 X  -0.0436 Y   0.3566 Z
+    Strength   :  0.0293
+    D( 41) --> V(  1) amplitude = -0.2797 alpha
+    D( 42) --> V(  1) amplitude =  0.2181 alpha
+    S(  1) --> V(  3) amplitude =  0.7812 alpha
+    D( 40) --> S(  1) amplitude = -0.1671 beta
+
+ Excited state  10: excitation energy (eV) =    9.2841
+    Total energy for state  10:  -2016.091062600902
+    <S**2>     :  0.8526
+    Trans. Mom.: -0.0002 X   0.2060 Y  -0.1769 Z
+    Strength   :  0.0168
+    D( 41) --> V(  1) amplitude = -0.2007 alpha
+    D( 42) --> V(  1) amplitude = -0.1860 alpha
+    D( 43) --> V(  1) amplitude =  0.3014 alpha
+    D( 43) --> V(  4) amplitude = -0.4184 alpha
+    D( 43) --> V(  5) amplitude =  0.2158 alpha
+    S(  1) --> V(  2) amplitude = -0.1504 alpha
+    S(  1) --> V(  3) amplitude =  0.2276 alpha
+    D( 39) --> V(  3) amplitude = -0.1564 beta
+    D( 40) --> S(  1) amplitude =  0.1679 beta
+    D( 40) --> V(  3) amplitude = -0.1866 beta
+    D( 41) --> S(  1) amplitude = -0.2309 beta
+    D( 41) --> V(  3) amplitude =  0.1603 beta
+    D( 42) --> S(  1) amplitude =  0.2770 beta
+    D( 42) --> V(  3) amplitude = -0.3397 beta
+    D( 42) --> V(  4) amplitude =  0.1548 beta
+
+ Excited state  11: excitation energy (eV) =    9.2842
+    Total energy for state  11:  -2016.091056686015
+    <S**2>     :  0.8516
+    Trans. Mom.:  0.0000 X   0.1809 Y   0.2037 Z
+    Strength   :  0.0169
+    D( 40) --> V(  1) amplitude = -0.1996 alpha
+    D( 42) --> V(  1) amplitude =  0.3009 alpha
+    D( 42) --> V(  4) amplitude =  0.4190 alpha
+    D( 42) --> V(  5) amplitude =  0.2157 alpha
+    D( 43) --> V(  1) amplitude =  0.1873 alpha
+    S(  1) --> V(  2) amplitude = -0.2234 alpha
+    S(  1) --> V(  3) amplitude = -0.1543 alpha
+    D( 39) --> S(  1) amplitude =  0.1686 beta
+    D( 39) --> V(  3) amplitude =  0.1862 beta
+    D( 40) --> V(  3) amplitude = -0.1567 beta
+    D( 41) --> S(  1) amplitude =  0.2770 beta
+    D( 41) --> V(  3) amplitude =  0.3406 beta
+    D( 41) --> V(  4) amplitude =  0.1545 beta
+    D( 42) --> S(  1) amplitude =  0.2311 beta
+    D( 42) --> V(  3) amplitude =  0.1594 beta
+
+ Excited state  12: excitation energy (eV) =    9.4118
+    Total energy for state  12:  -2016.086369954504
+    <S**2>     :  1.0170
+    Trans. Mom.:  0.0001 X   0.0020 Y   0.0014 Z
+    Strength   :  0.0000
+    D( 38) --> S(  1) amplitude =  0.3523 beta
+    D( 43) --> V(  5) amplitude =  0.5391 beta
+    D( 43) --> V(  7) amplitude =  0.4911 beta
+    D( 43) --> V( 12) amplitude =  0.4809 beta
+
+ Excited state  13: excitation energy (eV) =    9.6784
+    Total energy for state  13:  -2016.076571592640
+    <S**2>     :  0.8041
+    Trans. Mom.: -0.0002 X  -0.7860 Y   0.1173 Z
+    Strength   :  0.1497
+    S(  1) --> V(  2) amplitude = -0.1773 alpha
+    D( 40) --> V(  5) amplitude = -0.4252 beta
+    D( 40) --> V(  7) amplitude = -0.3941 beta
+    D( 40) --> V( 12) amplitude = -0.3916 beta
+    D( 41) --> V(  5) amplitude = -0.3183 beta
+    D( 41) --> V(  7) amplitude = -0.3026 beta
+    D( 41) --> V( 12) amplitude = -0.2941 beta
+    D( 42) --> V(  5) amplitude =  0.2015 beta
+    D( 42) --> V(  7) amplitude =  0.1915 beta
+    D( 42) --> V( 12) amplitude =  0.1861 beta
+
+ Excited state  14: excitation energy (eV) =    9.6788
+    Total energy for state  14:  -2016.076556411782
+    <S**2>     :  0.8040
+    Trans. Mom.: -0.0015 X  -0.1173 Y  -0.7854 Z
+    Strength   :  0.1495
+    S(  1) --> V(  3) amplitude = -0.1774 alpha
+    D( 39) --> V(  5) amplitude =  0.4248 beta
+    D( 39) --> V(  7) amplitude =  0.3938 beta
+    D( 39) --> V( 12) amplitude =  0.3913 beta
+    D( 41) --> V(  5) amplitude = -0.2013 beta
+    D( 41) --> V(  7) amplitude = -0.1913 beta
+    D( 41) --> V( 12) amplitude = -0.1860 beta
+    D( 42) --> V(  5) amplitude = -0.3188 beta
+    D( 42) --> V(  7) amplitude = -0.3031 beta
+    D( 42) --> V( 12) amplitude = -0.2946 beta
+
+ Excited state  15: excitation energy (eV) =    9.7814
+    Total energy for state  15:  -2016.072783844600
+    <S**2>     :  2.0333
+    Trans. Mom.:  0.0000 X   0.0030 Y   0.0014 Z
+    Strength   :  0.0000
+    D( 39) --> V(  1) amplitude = -0.2035 alpha
+    D( 32) --> S(  1) amplitude =  0.2977 beta
+    D( 32) --> V( 18) amplitude = -0.2207 beta
+    D( 38) --> S(  1) amplitude =  0.6729 beta
+    D( 38) --> V( 18) amplitude = -0.2399 beta
+    D( 43) --> V(  5) amplitude = -0.1923 beta
+    D( 43) --> V(  7) amplitude = -0.2589 beta
+    D( 43) --> V( 12) amplitude = -0.3005 beta
+
+ Excited state  16: excitation energy (eV) =   10.1152
+    Total energy for state  16:  -2016.060518182986
+    <S**2>     :  1.2441
+    Trans. Mom.: -0.0000 X   0.0004 Y   0.0002 Z
+    Strength   :  0.0000
+    D( 22) --> V(  4) amplitude =  0.2066 alpha
+    S(  1) --> V(  4) amplitude =  0.9171 alpha
+    S(  1) --> V( 17) amplitude =  0.2071 alpha
+
+ Excited state  17: excitation energy (eV) =   10.2891
+    Total energy for state  17:  -2016.054128326763
+    <S**2>     :  1.6318
+    Trans. Mom.: -0.1454 X  -0.0002 Y   0.0001 Z
+    Strength   :  0.0053
+    D( 38) --> V(  5) amplitude =  0.1874 beta
+    D( 39) --> V(  1) amplitude =  0.3126 beta
+    D( 40) --> V(  2) amplitude = -0.3128 beta
+    D( 41) --> V(  2) amplitude = -0.2472 beta
+    D( 42) --> V(  1) amplitude = -0.2477 beta
+    D( 43) --> S(  1) amplitude =  0.7224 beta
+
+ Excited state  18: excitation energy (eV) =   10.3398
+    Total energy for state  18:  -2016.052264819743
+    <S**2>     :  1.4058
+    Trans. Mom.:  0.0000 X   0.0005 Y   0.0003 Z
+    Strength   :  0.0000
+    D( 28) --> V(  1) amplitude =  0.2146 alpha
+    D( 39) --> V(  1) amplitude =  0.6747 alpha
+    D( 40) --> V(  3) amplitude = -0.2639 alpha
+    D( 41) --> V(  2) amplitude =  0.2642 alpha
+    S(  1) --> V(  6) amplitude = -0.2587 alpha
+    D( 32) --> S(  1) amplitude =  0.1724 beta
+    D( 38) --> S(  1) amplitude =  0.2153 beta
+
+ Excited state  19: excitation energy (eV) =   10.5050
+    Total energy for state  19:  -2016.046192720647
+    <S**2>     :  1.6248
+    Trans. Mom.:  0.0047 X  -0.2908 Y   0.2702 Z
+    Strength   :  0.0406
+    S(  1) --> V(  3) amplitude =  0.1504 alpha
+    D( 38) --> V(  1) amplitude = -0.3256 beta
+    D( 38) --> V(  2) amplitude =  0.2677 beta
+    D( 39) --> S(  1) amplitude =  0.2089 beta
+    D( 40) --> S(  1) amplitude =  0.4762 beta
+    D( 41) --> S(  1) amplitude =  0.2546 beta
+    D( 42) --> S(  1) amplitude = -0.2882 beta
+    D( 42) --> V( 12) amplitude = -0.1545 beta
+    D( 43) --> V(  1) amplitude =  0.2425 beta
+    D( 43) --> V(  2) amplitude = -0.3818 beta
+
+ Excited state  20: excitation energy (eV) =   10.5054
+    Total energy for state  20:  -2016.046177880216
+    <S**2>     :  1.6253
+    Trans. Mom.: -0.0057 X  -0.2705 Y  -0.2910 Z
+    Strength   :  0.0406
+    S(  1) --> V(  2) amplitude = -0.1503 alpha
+    D( 38) --> V(  1) amplitude =  0.2684 beta
+    D( 38) --> V(  2) amplitude =  0.3255 beta
+    D( 39) --> S(  1) amplitude =  0.4762 beta
+    D( 40) --> S(  1) amplitude = -0.2093 beta
+    D( 41) --> S(  1) amplitude = -0.2879 beta
+    D( 41) --> V( 12) amplitude =  0.1540 beta
+    D( 42) --> S(  1) amplitude = -0.2550 beta
+    D( 43) --> V(  1) amplitude =  0.3818 beta
+    D( 43) --> V(  2) amplitude =  0.2418 beta
+ 
+ ---------------------------------------------------
+ SOS-CIS(D0): Timing summary (seconds)
+  CPU time      16046.74s
+  System time       0.21s
+  Wall time     16066.96s
+ Analysis of SCF Wavefunction
+ 
+ --------------------------------------------------------------
+                    Orbital Energies (a.u.)
+ --------------------------------------------------------------
+ 
+ Alpha MOs
+ -- Occupied --
+******* -41.363 -36.174 -36.174 -36.135 -20.859 -20.859 -15.878
+-15.878 -15.878 -15.878  -5.562  -3.903  -3.903  -3.819  -1.641
+ -1.641  -1.494  -1.483  -1.483  -1.476  -1.096  -1.033  -1.007
+ -1.007  -0.996  -0.996  -0.991  -0.971  -0.963  -0.963  -0.962
+ -0.958  -0.945  -0.945  -0.937  -0.910  -0.886  -0.833  -0.818
+ -0.818  -0.800  -0.800  -0.729
+ -- Virtual --
+ -0.145  -0.121  -0.121  -0.112  -0.041  -0.007   0.002   0.019
+  0.020   0.023   0.031   0.031   0.036   0.042   0.043   0.043
+  0.066   0.072   0.146   0.146   0.217   0.221   0.318   0.318
+  0.412   0.539   0.539   0.655   0.679   0.679   0.763   0.776
+  0.793   0.793   0.833   0.833   0.837   0.842   0.871   0.878
+  0.907   0.909   0.911   0.911   0.913   0.921   0.921   0.935
+  0.979   0.992   0.993   1.026   1.079   1.079   1.144   1.145
+  1.190   1.200   1.232   1.312   1.408   1.483   1.524   1.524
+  1.566   1.566   1.575   1.585   1.635   1.653   1.653   1.653
+  1.714   1.727   1.728   1.735   1.776   1.777   1.876   1.877
+  1.879   1.894   2.159   2.159   2.171   2.322   2.322   2.330
+  2.395   2.395   2.408   2.442   2.442   2.447   2.470   2.478
+  2.491   2.492   2.499   2.521   2.588   2.672   2.672   2.753
+  2.880   2.880
+ 
+ Beta MOs
+ -- Occupied --
+******* -41.321 -36.124 -36.119 -36.119 -20.859 -20.859 -15.876
+-15.876 -15.876 -15.876  -5.460  -3.790  -3.734  -3.734  -1.641
+ -1.641  -1.490  -1.479  -1.479  -1.471  -1.017  -1.004  -1.004
+ -0.976  -0.976  -0.970  -0.962  -0.962  -0.957  -0.951  -0.949
+ -0.936  -0.920  -0.920  -0.908  -0.887  -0.816  -0.809  -0.809
+ -0.798  -0.798  -0.789
+ -- Virtual --
+ -0.144  -0.121  -0.121  -0.112  -0.041  -0.018   0.003   0.014
+  0.020   0.021   0.032   0.032   0.033   0.037   0.043   0.044
+  0.044   0.066   0.081   0.146   0.147   0.218   0.222   0.329
+  0.329   0.413   0.540   0.540   0.655   0.680   0.680   0.767
+  0.778   0.795   0.795   0.833   0.834   0.837   0.844   0.872
+  0.879   0.908   0.910   0.913   0.913   0.915   0.922   0.922
+  0.936   0.980   0.993   0.993   1.030   1.079   1.079   1.145
+  1.145   1.191   1.206   1.280   1.313   1.408   1.484   1.527
+  1.528   1.569   1.569   1.577   1.588   1.637   1.655   1.657
+  1.657   1.717   1.727   1.728   1.773   1.778   1.778   1.881
+  1.882   1.883   1.899   2.175   2.175   2.182   2.322   2.322
+  2.329   2.400   2.400   2.410   2.444   2.444   2.453   2.479
+  2.492   2.496   2.497   2.506   2.522   2.607   2.672   2.672
+  2.875   2.915   2.916
+ --------------------------------------------------------------
+ 
+          Ground-State Mulliken Net Atomic Charges
+
+     Atom                 Charge (a.u.)    Spin (a.u.)
+  --------------------------------------------------------
+      1 Cu                    1.255122       0.919010
+      2 O                    -0.945742      -0.000283
+      3 H                     0.506493      -0.000101
+      4 N                    -1.176848       0.026753
+      5 H                     0.435698      -0.001996
+      6 N                    -1.176844       0.026741
+      7 H                     0.457940      -0.002267
+      8 N                    -1.176785       0.026755
+      9 H                     0.435647      -0.001997
+     10 N                    -1.176763       0.026762
+     11 H                     0.435656      -0.001999
+     12 O                    -0.945749      -0.000284
+     13 H                     0.506479      -0.000101
+     14 H                     0.457933      -0.002272
+     15 H                     0.435696      -0.001990
+     16 H                     0.506637      -0.000103
+     17 H                     0.435812      -0.001995
+     18 H                     0.435833      -0.001996
+     19 H                     0.506607      -0.000103
+     20 H                     0.435710      -0.001996
+     21 H                     0.435751      -0.001995
+     22 H                     0.457843      -0.002272
+     23 H                     0.457873      -0.002270
+  --------------------------------------------------------
+  Sum of atomic charges =     2.000000
+  Sum of spin   charges =     1.000000
+
+ -----------------------------------------------------------------
+                    Cartesian Multipole Moments
+ -----------------------------------------------------------------
+    Charge (ESU x 10^10)
+                 9.6064
+    Dipole Moment (Debye)
+         X      -0.0003      Y       0.0073      Z       0.0016
+       Tot       0.0075
+    Quadrupole Moments (Debye-Ang)
+        XX     -10.9868     XY       0.0059     YY     -20.6496
+        XZ      -0.0079     YZ      -0.0053     ZZ     -20.6309
+    Octopole Moments (Debye-Ang^2)
+       XXX      -0.0026    XXY       0.0508    XYY       2.1770
+       YYY      -0.0343    XXZ      -0.0289    XYZ      -5.3439
+       YYZ       0.0083    XZZ      -2.1768    YZZ       0.0116
+       ZZZ       0.0358
+    Hexadecapole Moments (Debye-Ang^3)
+      XXXX     -81.4130   XXXY      -0.1463   XXYY    -128.2507
+      XYYY       0.0383   YYYY    -272.2125   XXXZ      -0.3259
+      XXYZ      -0.0369   XYYZ      -0.0197   YYYZ      -6.0752
+      XXZZ    -128.0285   XYZZ       0.0302   YYZZ     -82.5564
+      XZZZ       0.0470   YZZZ       6.0286   ZZZZ    -271.9807
+ -----------------------------------------------------------------
+Archival summary:
+1\1\osmium\SP\ProcedureUnspecified\6-31G*\u12416(2+,2)\eric\MonAug2501:08:192014MonAug2501:08:192014\0\\#,ProcedureUnspecified,6-31G*,\\2,2\Cu\N,1,2.06557\H,2,1.01581,1,115.581\H,2,1.01581,1,115.525,3,123.3,0\H,2,1.01783,1,107.228,3,-118.355,0\N,1,2.06573,2,173.164,3,118.131,0\H,6,1.01581,1,115.531,2,118.039,0\H,6,1.01582,1,115.559,2,-118.68,0\H,6,1.01784,1,107.26,2,-0.301303,0\N,1,2.06579,2,90.2317,3,24.6829,0\H,10,1.01582,1,115.534,2,24.8702,0\H,10,1.01582,1,115.568,2,148.155,0\H,10,1.01783,1,107.252,2,-93.4727,0\N,1,2.06585,2,90.1975,3,-148.484,0\H,14,1.01581,1,115.561,2,-24.7663,0\H,14,1.01582,1,115.555,2,-148.076,0\H,14,1.01784,1,107.225,2,93.5807,0\O,1,2.55969,2,86.5448,3,118.123,0\H,18,0.962075,1,127.881,2,90.1964,0\H,18,0.962091,1,128.218,2,-89.7603,0\O,1,2.55994,2,93.46,3,-61.956,0\H,21,0.962078,1,127.883,2,0.124173,0\H,21,0.962091,1,128.218,2,-179.921,0\\HF=-2015.13861\\@
+
+ Total job time:  16114.02s(wall), 16233.60s(cpu) 
+ Mon Aug 25 01:08:19 2014
+
+        *************************************************************
+        *                                                           *
+        *  Thank you very much for using Q-Chem.  Have a nice day.  *
+        *                                                           *
+        *************************************************************
+
+
