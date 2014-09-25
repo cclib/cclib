@@ -314,16 +314,26 @@ class Logfile(object):
         return "ERROR: This should be overwritten by this subclass"
 
     def float(self, number):
-        """Convert a string to a float avoiding the problem with Ds.
+        """Convert a string to a float.
+
+        This method should perform certain checks that are specific to cclib,
+        including avoiding the problem with Ds instead of Es in scientific notation.
+        Another point is converting string signifying numerical problems (*****)
+        to something we can manage (Numpy's NaN).
 
         >>> t = Logfile("dummyfile")
         >>> t.float("123.2323E+02")
         12323.23
         >>> t.float("123.2323D+02")
         12323.23
+        >>> t.float("*****")
+        nan
         """
-        number = number.replace("D","E")
-        return float(number)
+
+        if list(set(number)) == ['*']:
+            return numpy.nan
+
+        return float(number.replace("D","E"))
 
     def set_attribute(self, name, value, check=True):
         """Set an attribute and perform a check when it already exists.

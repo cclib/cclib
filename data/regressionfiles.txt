@@ -131,6 +131,7 @@ Gaussian/Gaussian03/borane-opt.log
 Gaussian/Gaussian03/chn1.log
 Gaussian/Gaussian03/cyclopropenyl.rhf.g03.cut.log
 Gaussian/Gaussian03/dvb_gopt_symmfollow.log
+Gaussian/Gaussian03/m1b1.out
 Gaussian/Gaussian03/maheshkumar.log
 Gaussian/Gaussian03/mendes.out
 Gaussian/Gaussian03/neoprene.out
