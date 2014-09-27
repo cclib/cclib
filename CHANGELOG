@@ -1,3 +1,13 @@
+Changes since cclib-1.2:
+
+Features:
+	* New parser: cclib can now parse NWChem files
+	* New parser: cclib can now parse Psi (versions 3 and 4) files
+	* New parser: cclib can now parse QChem files
+
+Bugfixes:
+    * Handle Gaussian jobs with fragments and ONIOM output
+
 Changes since cclib-1.1:
 
 Features:
