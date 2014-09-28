@@ -22,6 +22,7 @@ import inspect
 import logging
 import os
 import sys
+import traceback
 import unittest
 
 from cclib.parser import ccopen
@@ -577,7 +578,7 @@ def make_regression_from_old_unittest(test_class):
     return old_unit_test
 
 
-def main(which=[], traceback=False, status=False):
+def main(which=[], opt_traceback=False, opt_status=False):
 
     dummyfiles = [eval(n)("") for n in testall.parsers]
 
@@ -672,9 +673,11 @@ def main(which=[], traceback=False, status=False):
                             logfile.data = logfile.parse()
                         except KeyboardInterrupt:
                             sys.exit(1)
-                        except:
+                        except Exception as e:
                             print("parse error")
                             errors += 1
+                            if opt_traceback:
+                                print(traceback.format_exc())
                         else:
                             if test_this:
                                 try:
@@ -682,7 +685,7 @@ def main(which=[], traceback=False, status=False):
                                     if res and len(res.failures) > 0:
                                         failures += len(res.failures)
                                         print("%i test(s) failed" % len(res.failures))
-                                        if traceback:
+                                        if opt_traceback:
                                             for f in res.failures:
                                                 print("Failure for", f[0])
                                                 print(f[1])
@@ -712,8 +715,8 @@ def main(which=[], traceback=False, status=False):
         print()
             
     print("Total: %d   Failed: %d  Errors: %d" % (total, failures, errors))
-    if not traceback and failures + errors > 0:
-        print("\nFor more information on failures/errors, add 'traceback' as an argument.")
+    if not opt_traceback and failures + errors > 0:
+        print("\nFor more information on failures/errors, add --traceback as an argument.")
 
     # Show these warnings at the end, so that they're easy to notice. Notice that the lists
     # were populated at the beginning of this function.
@@ -732,7 +735,7 @@ def main(which=[], traceback=False, status=False):
         print("Please make sure these function names correspond to regression files:")
         print("\n".join(orphaned_tests))
 
-    if status and errors > 0:
+    if opt_status and errors > 0:
         sys.exit(1)
 
 if __name__=="__main__":
@@ -745,7 +748,7 @@ if __name__=="__main__":
         import doctest
         doctest.testmod()
     else:
-        traceback = "--traceback" in sys.argv
-        status = "--status" in sys.argv
+        opt_traceback = "--traceback" in sys.argv
+        opt_status = "--status" in sys.argv
         which = [arg for arg in sys.argv[1:] if not arg in ["--status", "--traceback"]]
-        main(which, traceback, status)
+        main(which, opt_traceback, opt_status)
