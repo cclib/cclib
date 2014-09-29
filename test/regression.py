@@ -601,8 +601,6 @@ def make_regression_from_old_unittest(test_class):
 
 def main(which=[], opt_traceback=False, opt_status=False):
 
-    dummyfiles = [eval(n)("") for n in testall.parsers]
-
     # It would be nice to fix the structure of this nested list,
     # because in its current form it is not amenable to tweaks.
     regdir = os.path.join("..", "data", "regression")
@@ -656,6 +654,8 @@ def main(which=[], opt_traceback=False, opt_status=False):
     failures = errors = total = 0
     for iname, name in enumerate(testall.parsers):
 
+        parser_class = eval(name)
+
         # Continue to next iteration if we are limiting the regression and the current
         #   name was not explicitely chosen (that is, passed as an argument).
         if len(which) > 0 and not name in which:
@@ -688,7 +688,7 @@ def main(which=[], opt_traceback=False, opt_status=False):
                     errors += 1
                     print("ccopen error")
                 else:
-                    if type(logfile) == type(dummyfiles[iname]):
+                    if type(logfile) == parser_class:
                         try:
                             logfile.logger.setLevel(logging.ERROR)
                             logfile.data = logfile.parse()
