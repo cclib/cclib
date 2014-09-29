@@ -31,7 +31,7 @@ Programming Language :: Python
 Topic :: Scientific/Engineering :: Chemistry
 Topic :: Software Development :: Libraries :: Python Modules"""
 
-programs = ['ADF', 'GAMESS', 'GAMESS-UK', 'Gaussian', 'Jaguar', 'Molpro', 'ORCA']
+programs = ['ADF', 'GAMESS', 'GAMESS-UK', 'Gaussian', 'Jaguar', 'Molpro', 'NWChem', 'ORCA', 'Psi', 'QChem']
 
 
 def setup_cclib():
@@ -51,7 +51,7 @@ def setup_cclib():
 
     setup(
         name = "cclib",
-        version = "1.2",
+        version = "1.3b",
         url = "http://cclib.github.io/",
         author = "cclib development team",
         author_email = "cclib-users@lists.sourceforge.net",

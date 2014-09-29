@@ -22,7 +22,10 @@ import inspect
 import logging
 import os
 import sys
+import traceback
 import unittest
+
+import numpy
 
 from cclib.parser import ccopen
 from cclib.parser import ADF, GAMESS, GAMESSUK, Gaussian, Jaguar, Molpro, NWChem, ORCA, Psi, QChem
@@ -311,6 +314,25 @@ def testQChem_QChem4_2_dvb_gopt_unconverged_out(logfile):
     """An unconverged geometry optimization to test for empty optdone (see #103 for details)."""
     assert hasattr(logfile.data, 'optdone') and not logfile.data.optdone
 
+def testQChem_QChem4_2_dvb_sp_multipole_10_out(logfile):
+    """Multipole moments up to the 10-th order.
+
+    Since this example has various formats for the moment ranks, we can test
+    the parser by making sure the first moment (pure X) is as epected.
+    """
+    assert hasattr(logfile.data, 'moments') and len(logfile.data.moments) == 11
+    tol = 1.0e-6
+    assert logfile.data.moments[1][0] < tol
+    assert abs(logfile.data.moments[2][0] - -50.9647) < tol
+    assert abs(logfile.data.moments[3][0] - 0.0007) < tol
+    assert abs(logfile.data.moments[4][0] - -1811.1540) < tol
+    assert abs(logfile.data.moments[5][0] - 0.0159) < tol
+    assert abs(logfile.data.moments[6][0] - -57575.0744) < tol
+    assert abs(logfile.data.moments[7][0] - 0.3915) < tol
+    assert numpy.isnan(logfile.data.moments[8][0])
+    assert abs(logfile.data.moments[9][0] - 10.1638) < tol
+    assert numpy.isnan(logfile.data.moments[10][0])
+
 # These regression tests are for logfiles that are not to be parsed
 # for some reason, and the function should start with 'testnoparse'.
 
@@ -577,9 +599,7 @@ def make_regression_from_old_unittest(test_class):
     return old_unit_test
 
 
-def main(which=[], traceback=False, status=False):
-
-    dummyfiles = [eval(n)("") for n in testall.parsers]
+def main(which=[], opt_traceback=False, opt_status=False):
 
     # It would be nice to fix the structure of this nested list,
     # because in its current form it is not amenable to tweaks.
@@ -634,6 +654,8 @@ def main(which=[], traceback=False, status=False):
     failures = errors = total = 0
     for iname, name in enumerate(testall.parsers):
 
+        parser_class = eval(name)
+
         # Continue to next iteration if we are limiting the regression and the current
         #   name was not explicitely chosen (that is, passed as an argument).
         if len(which) > 0 and not name in which:
@@ -666,15 +688,17 @@ def main(which=[], traceback=False, status=False):
                     errors += 1
                     print("ccopen error")
                 else:
-                    if type(logfile) == type(dummyfiles[iname]):
+                    if type(logfile) == parser_class:
                         try:
                             logfile.logger.setLevel(logging.ERROR)
                             logfile.data = logfile.parse()
                         except KeyboardInterrupt:
                             sys.exit(1)
-                        except:
+                        except Exception as e:
                             print("parse error")
                             errors += 1
+                            if opt_traceback:
+                                print(traceback.format_exc())
                         else:
                             if test_this:
                                 try:
@@ -682,7 +706,7 @@ def main(which=[], traceback=False, status=False):
                                     if res and len(res.failures) > 0:
                                         failures += len(res.failures)
                                         print("%i test(s) failed" % len(res.failures))
-                                        if traceback:
+                                        if opt_traceback:
                                             for f in res.failures:
                                                 print("Failure for", f[0])
                                                 print(f[1])
@@ -690,6 +714,8 @@ def main(which=[], traceback=False, status=False):
                                 except AssertionError:
                                     print("test failed")
                                     failures += 1
+                                    if opt_traceback:
+                                        print(traceback.format_exc())
                                 else:
                                     print("parsed and tested")
                             else:
@@ -712,8 +738,8 @@ def main(which=[], traceback=False, status=False):
         print()
             
     print("Total: %d   Failed: %d  Errors: %d" % (total, failures, errors))
-    if not traceback and failures + errors > 0:
-        print("\nFor more information on failures/errors, add 'traceback' as an argument.")
+    if not opt_traceback and failures + errors > 0:
+        print("\nFor more information on failures/errors, add --traceback as an argument.")
 
     # Show these warnings at the end, so that they're easy to notice. Notice that the lists
     # were populated at the beginning of this function.
@@ -732,7 +758,7 @@ def main(which=[], traceback=False, status=False):
         print("Please make sure these function names correspond to regression files:")
         print("\n".join(orphaned_tests))
 
-    if status and errors > 0:
+    if opt_status and errors > 0:
         sys.exit(1)
 
 if __name__=="__main__":
@@ -745,7 +771,7 @@ if __name__=="__main__":
         import doctest
         doctest.testmod()
     else:
-        traceback = "--traceback" in sys.argv
-        status = "--status" in sys.argv
+        opt_traceback = "--traceback" in sys.argv
+        opt_status = "--status" in sys.argv
         which = [arg for arg in sys.argv[1:] if not arg in ["--status", "--traceback"]]
-        main(which, traceback, status)
+        main(which, opt_traceback, opt_status)
