@@ -25,6 +25,8 @@ import sys
 import traceback
 import unittest
 
+import numpy
+
 from cclib.parser import ccopen
 from cclib.parser import ADF, GAMESS, GAMESSUK, Gaussian, Jaguar, Molpro, NWChem, ORCA, Psi, QChem
 
@@ -311,6 +313,25 @@ def testPsi_Psi4_dvb_gopt_hf_unconverged_out(logfile):
 def testQChem_QChem4_2_dvb_gopt_unconverged_out(logfile):
     """An unconverged geometry optimization to test for empty optdone (see #103 for details)."""
     assert hasattr(logfile.data, 'optdone') and not logfile.data.optdone
+
+def testQChem_QChem4_2_dvb_sp_multipole_10_out(logfile):
+    """Multipole moments up to the 10-th order.
+
+    Since this example has various formats for the moment ranks, we can test
+    the parser by making sure the first moment (pure X) is as epected.
+    """
+    assert hasattr(logfile.data, 'moments') and len(logfile.data.moments) == 11
+    tol = 1.0e-6
+    assert logfile.data.moments[1][0] < tol
+    assert abs(logfile.data.moments[2][0] - -50.9647) < tol
+    assert abs(logfile.data.moments[3][0] - 0.0007) < tol
+    assert abs(logfile.data.moments[4][0] - -1811.1540) < tol
+    assert abs(logfile.data.moments[5][0] - 0.0159) < tol
+    assert abs(logfile.data.moments[6][0] - -57575.0744) < tol
+    assert abs(logfile.data.moments[7][0] - 0.3915) < tol
+    assert numpy.isnan(logfile.data.moments[8][0])
+    assert abs(logfile.data.moments[9][0] - 10.1638) < tol
+    assert numpy.isnan(logfile.data.moments[10][0])
 
 # These regression tests are for logfiles that are not to be parsed
 # for some reason, and the function should start with 'testnoparse'.
@@ -693,6 +714,8 @@ def main(which=[], opt_traceback=False, opt_status=False):
                                 except AssertionError:
                                     print("test failed")
                                     failures += 1
+                                    if opt_traceback:
+                                        print(traceback.format_exc())
                                 else:
                                     print("parsed and tested")
                             else:

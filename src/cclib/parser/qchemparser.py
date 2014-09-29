@@ -603,13 +603,18 @@ class QChem(logfileparser.Logfile):
             self.parse_charge_section(inputfile, 'chelpg')
 
         # Multipole moments are not printed in lexicographical order,
-        # so we need to parse and sort. The units seem OK, but there
-        # is some uncertainty about the reference point and whether
-        # it can be changed (should follow up on that).
+        # so we need to parse and sort them. The units seem OK, but there
+        # is some uncertainty about the reference point and whether it
+        # can be changed.
+        #
+        # Notice how the letter/coordinate labels change to coordinate ranks
+        # after hexadecapole moments, and need to be translated. Additionally,
+        # after 9-th order moments the ranks are not necessarily single digits
+        # and so there are spaces between them.
         #
         # -----------------------------------------------------------------
         #                    Cartesian Multipole Moments
-        ##                 LMN = < X^L Y^M Z^N >
+        #                  LMN = < X^L Y^M Z^N >
         # -----------------------------------------------------------------
         #    Charge (ESU x 10^10)
         #                 0.0000
@@ -619,26 +624,13 @@ class QChem(logfileparser.Logfile):
         #    Quadrupole Moments (Debye-Ang)
         #        XX     -50.9647     XY      -0.1100     YY     -50.1441
         #        XZ       0.0000     YZ       0.0000     ZZ     -58.5742
-        #    Octopole Moments (Debye-Ang^2)
-        #       XXX       0.0007    XXY      -0.0001    XYY       0.0001
-        #       YYY       0.0001    XXZ       0.0000    XYZ       0.0000
-        #       YYZ       0.0000    XZZ       0.0000    YZZ       0.0000
-        #       ZZZ       0.0000
-        #    Hexadecapole Moments (Debye-Ang^3)
-        #      XXXX   -1811.1540   XXXY       0.5021   XXYY    -358.4260
-        #      XYYY       3.4716   YYYY    -329.5868   XXXZ       0.0000
-        #      XXYZ       0.0000   XYYZ       0.0000   YYYZ       0.0000
-        #      XXZZ    -356.7120   XYZZ      -0.0669   YYZZ     -72.1349
-        #      XZZZ       0.0000   YZZZ       0.0000   ZZZZ     -47.5456
-        # ... [by default, stop right here]
-        #    027       0.0000    108       0.0000    018       0.0000
-        #    009       0.0000
-        # 10th-Order Moments (Debye-Ang^9)
-        #  10  0  0 ************   9  1  0 2339335.3503   8  2  0 ************
-        #   7  3  0  239482.2198   6  4  0 -226219.6647   5  5  0   19555.6860
-        #   4  6  0  -67680.6179   3  7  0   -1948.1091   2  8  0  -48197.6911
+        # ...
+        #    5th-Order Moments (Debye-Ang^4)
+        #       500       0.0159    410      -0.0010    320       0.0005
+        #       230       0.0000    140       0.0005    050       0.0012
         # ...
         # -----------------------------------------------------------------
+        #
         if "Cartesian Multipole Moments" in line:
 
             # This line appears not by default, but only when
@@ -646,12 +638,9 @@ class QChem(logfileparser.Logfile):
             line = inputfile.next()
             if 'LMN = < X^L Y^M Z^N >' in line:
                 line = inputfile.next()
-                # self.skip_line(inputfile, 'dashes')
 
-            # As far as I can see, the reference point is not
-            # printed anywhere in the output, and the documentation
-            # is not clear about this, do for now I assume it is
-            # the origin, but this should be followed up on.
+            # The reference point is always the origin, although normally the molecule
+            # is moved so that the center of charge is at the origin.
             self.reference = [0.0, 0.0, 0.0]
             self.moments = [self.reference]
 
@@ -678,21 +667,36 @@ class QChem(logfileparser.Logfile):
 
                     cols = line.split()
 
-                    # The total (norm) is printed for dipole
-                    # but not other multipoles.
+                    # The total (norm) is printed for dipole but not other multipoles.
                     if cols[0] == 'Tot':
                         line = inputfile.next()
                         continue
 
-                    # Find and replace any blank values before moving on.
+                    # Find and replace any 'stars' with NaN before moving on.
                     for i in range(len(cols)):
                         if '***' in cols[i]:
                             cols[i] = numpy.nan
 
-                    # The moment come in pairs (label and value).
-                    # Right now this is an issue for `multipole_order` >= 10.
-                    for i in range(len(cols)//2):
-                        multipole.append(cols[2*i:2*(i+1)])
+                    # The moments come in pairs (label followed by value) up to the 9-th order,
+                    # although above hexadecapoles the labels are digits representing the rank
+                    # in each coordinate. Above the 9-th order, ranks are not always single digits,
+                    # so there are spaces between them, which means moments come in quartets.
+                    if len(self.moments) < 5:
+                        for i in range(len(cols)//2):
+                            lbl = cols[2*i]
+                            m = cols[2*i + 1]
+                            multipole.append([lbl, m])
+                    elif len(self.moments) < 10:
+                        for i in range(len(cols)//2):
+                            lbl = cols[2*i]
+                            lbl = 'X'*int(lbl[0]) + 'Y'*int(lbl[1]) + 'Z'*int(lbl[2])
+                            m = cols[2*i + 1]
+                            multipole.append([lbl, m])
+                    else:
+                        for i in range(len(cols)//4):
+                            lbl = 'X'*int(cols[4*i]) + 'Y'*int(cols[4*i + 1]) + 'Z'*int(cols[4*i + 2])
+                            m = cols[4*i + 3]
+                            multipole.append([lbl, m])
 
                     line = inputfile.next()
 
@@ -747,7 +751,6 @@ class QChem(logfileparser.Logfile):
                     colcounter += ncols
 
         # Start of the IR/Raman frequency section.
-
         if 'VIBRATIONAL ANALYSIS' in line:
 
             while 'STANDARD THERMODYNAMIC QUANTITIES' not in line:
