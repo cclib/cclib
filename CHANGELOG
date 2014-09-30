@@ -1,9 +1,9 @@
 Changes since cclib-1.2:
 
 Features:
-	* New parser: cclib can now parse NWChem files
-	* New parser: cclib can now parse Psi (versions 3 and 4) files
-	* New parser: cclib can now parse QChem files (by Eric Berquist)
+    * New parser: cclib can now parse NWChem files
+    * New parser: cclib can now parse Psi (versions 3 and 4) files
+    * New parser: cclib can now parse QChem files (by Eric Berquist)
     * Handle Gaussian basis set output with GFPRINT keyword
     * Attribute optdone reverted to single Boolean value by default
     * Add --verbose and --future options to ccget and parsers
