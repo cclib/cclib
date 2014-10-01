@@ -55,7 +55,7 @@ class ccData(object):
         nbasis -- number of basis functions (integer)
         nmo -- number of molecular orbitals (integer)
         nocoeffs -- natural orbital coefficients (array[2])
-        optdone -- indexes corresponding to energies/coords when optimizations have converged (list)
+        optdone -- flags whether an optimization has converged (Boolean)
         scancoords -- geometries of each scan step (array[3], angstroms)
         scanenergies -- energies of potential energy surface (list)
         scannames -- names of varaibles scanned (list of strings)
