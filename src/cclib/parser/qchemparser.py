@@ -42,6 +42,18 @@ class QChem(logfileparser.Logfile):
         # (un)restricted calculation.
         self.unrestricted = False
 
+    def after_parsing(self):
+
+        # If parsing a fragment job, each of the geometries appended to
+        # `atomcoords` may be of different lengths, which will prevent
+        # conversion from a list to NumPy array.
+        # Take the length of the first geometry as correct, and remove
+        # all others with different lengths.
+        if len(self.atomcoords) > 1:
+            correctlen = len(self.atomcoords[0])
+            self.atomcoords[:] = [coords for coords in self.atomcoords
+                                  if len(coords) == correctlen]
+
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
 
