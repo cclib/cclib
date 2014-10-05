@@ -50,10 +50,9 @@ def testADF_ADF2013_01_dvb_gopt_b_unconverged_adfout(logfile):
 
 # Firefly #
 
-# It would be good to have an unconverged geometry optimization so that
-# we can test that optdone is set properly.
-#def testFireflyX.X_dvb_gopt_unconverged:
-#    assert hasattr(logfile.data, 'optdone') and not logfile.data.optdone
+def testGAMESS_Firefly8_0_dvb_gopt_a_unconverged_out(logfile):
+    """An unconverged geometry optimization to test for empty optdone (see #103 for details)."""
+    assert hasattr(logfile.data, 'optdone') and not logfile.data.optdone
 
 # GAMESS #
 
