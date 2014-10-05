@@ -48,6 +48,12 @@ def testADF_ADF2013_01_dvb_gopt_b_unconverged_adfout(logfile):
     """An unconverged geometry optimization to test for empty optdone (see #103 for details)."""
     assert hasattr(logfile.data, 'optdone') and not logfile.data.optdone
 
+# Firefly #
+
+def testGAMESS_Firefly8_0_dvb_gopt_a_unconverged_out(logfile):
+    """An unconverged geometry optimization to test for empty optdone (see #103 for details)."""
+    assert hasattr(logfile.data, 'optdone') and not logfile.data.optdone
+
 # GAMESS #
 
 def testGAMESS_GAMESS_US2008_N2_UMP2_out(logfile):
@@ -96,6 +102,13 @@ def testGAMESS_WinGAMESS_dvb_td_trplet_2007_03_24_r1_out(logfile):
     assert len(logfile.data.etoscs) == number
     assert abs(max(logfile.data.etoscs) - 0.0) < 0.01
     assert len(logfile.data.etsecs) == number
+
+# GAMESS-UK #
+
+# It would be good to have an unconverged geometry optimization so that
+# we can test that optdone is set properly.
+#def testGAMESS_UKX.X_dvb_gopt_unconverged:
+#    assert hasattr(logfile.data, 'optdone') and not logfile.data.optdone
 
 # Gaussian #
 
@@ -245,6 +258,13 @@ def testGaussian_Gaussian09_OPT_td_out(logfile):
 def testGaussian_Gaussian09_Ru2bpyen2_H2_freq3_log(logfile):
     """Here atomnos wans't added to the gaussian parser before."""
     assert len(logfile.data.atomnos) == 69
+
+# Jaguar #
+
+# It would be good to have an unconverged geometry optimization so that
+# we can test that optdone is set properly.
+#def testJaguarX.X_dvb_gopt_unconverged:
+#    assert hasattr(logfile.data, 'optdone') and not logfile.data.optdone
 
 # Molpro #
 
