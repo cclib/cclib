@@ -236,7 +236,7 @@ class ADF(logfileparser.Logfile):
         # In ADF 2013, the default numerical integration method is fuzzy cells,
         # although it used to be Voronoi polyhedra. Both methods apparently set
         # the accint parameter, although the latter does so indirectly, based on
-        # a 'grid quality' setting. This is translated into accing using a
+        # a 'grid quality' setting. This is translated into accint using a
         # dictionary with values taken from the documentation.
         if "Numerical Integration : Voronoi Polyhedra (Te Velde)" in line:
             self.integration_method = "voronoi_polyhedra"
