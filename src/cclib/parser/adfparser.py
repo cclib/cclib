@@ -107,7 +107,7 @@ class ADF(logfileparser.Logfile):
         """Extract information from the file object inputfile."""
 
         # Check to make sure we aren't parsing Create jobs
-        if line.find("INPUT FILE") >= 0:
+        if line.strip() == "(INPUT FILE)":
             while line:
 
                 self.updateprogress(inputfile, "Unsupported Information", self.fupdate)
@@ -125,13 +125,17 @@ class ADF(logfileparser.Logfile):
                     line2 = None
 
                 if line2 and len(line2) <= 2:
-                #make sure that it's not blank like in the NiCO4 regression
                     line2 = next(inputfile)
 
                 if line2 and (line2.find("Create") < 0 and line2.find("create") < 0):
                     break
 
                 line = next(inputfile)
+
+        if line[:6] == "Create":
+            while line[:5] != "title":
+                line = inputfile.next()
+            
 
         if line[1:10] == "Symmetry:":
             info = line.split()
