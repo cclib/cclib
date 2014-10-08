@@ -450,8 +450,7 @@ class QChem(logfileparser.Logfile):
                 if 'Occupied' in line or 'Virtual' in line:
                     # A nice trick to find where the HOMO is.
                     if 'Virtual' in line:
-                        if not hasattr(self, 'homos'):
-                            self.homos = [len(energies_alpha)-1]
+                        self.homos = [len(energies_alpha)-1]
                     line = next(inputfile)
                 # Parse the energies and symmetries in pairs of lines.
                 # energies = [utils.convertor(energy, 'hartree', 'eV')
@@ -553,8 +552,7 @@ class QChem(logfileparser.Logfile):
                 if 'Occupied' in line or 'Virtual' in line:
                     # A nice trick to find where the HOMO is.
                     if 'Virtual' in line:
-                        if not hasattr(self, 'homos'):
-                            self.homos = [len(energies_alpha)-1]
+                        self.homos = [len(energies_alpha)-1]
                     line = next(inputfile)
                 # Parse the energies and symmetries in pairs of lines.
                 # energies = [utils.convertor(energy, 'hartree', 'eV')
@@ -663,7 +661,8 @@ class QChem(logfileparser.Logfile):
             assert charge_header.split()[0] == "Charge"
             charge = float(inputfile.next().strip())
             charge = utils.convertor(charge, 'statcoulomb', 'e') * 1e-10
-            assert abs(charge - self.charge) < 1e-4
+            # This is causing a problem with fragment jobs.
+            # assert abs(charge - self.charge) < 1e-4
 
             # This will make sure Debyes are used (not sure if it can be changed).
             line = inputfile.next()
