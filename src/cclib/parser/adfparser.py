@@ -106,32 +106,33 @@ class ADF(logfileparser.Logfile):
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
 
-        # Check to make sure we aren't parsing Create jobs
-        if line.find("INPUT FILE") >= 0:
-            while line:
+        # If a file contains multiple calculations, currently we want to print a warning
+        # and skip to the end of the file, since cclib parses only the main system, which
+        # is usually the largest. Here we test this by checking if scftargets has already
+        # been parsed when another INPUT FILE segment is found, although this might
+        # not always be the best indicator.
+        if line.strip() == "(INPUT FILE)" and hasattr(self, "scftargets"):
+            self.logger.warning("Skipping remaining calculations")
+            inputfile.seek(0, 2)
+            return
 
+        # We also want to check to make sure we aren't parsing "Create" jobs,
+        # which normally come before the calculation we actually want to parse.
+        if line.strip() == "(INPUT FILE)":
+            while True:
                 self.updateprogress(inputfile, "Unsupported Information", self.fupdate)
-
-                # Does this file contain multiple calculations?
-                # If so, print a warning and skip to end of file.
-                if line.find("INPUT FILE") >=0 and hasattr(self,"scftargets"):
-                    self.logger.warning("Skipping remaining calculations")
-                    inputfile.seek(0, 2)
+                line = next(inputfile) if line.strip() == "(INPUT FILE)" else None
+                if line and not line[:6] in ("Create", "create"):
                     break
-
-                if line.find("INPUT FILE") >= 0:
-                    line2 = next(inputfile)
-                else:
-                    line2 = None
-
-                if line2 and len(line2) <= 2:
-                #make sure that it's not blank like in the NiCO4 regression
-                    line2 = next(inputfile)
-
-                if line2 and (line2.find("Create") < 0 and line2.find("create") < 0):
-                    break
-
                 line = next(inputfile)
+
+        # In ADF 2014.01, there are (INPUT FILE) messages, so we need to use just
+        # the lines that start with 'Create' and run until the title or something
+        # else we are sure is is the calculation proper. It would be good to combine
+        # this with the previous block, if possible.
+        if line[:6] == "Create":
+            while line[:5] != "title":
+                line = inputfile.next()
 
         if line[1:10] == "Symmetry:":
             info = line.split()

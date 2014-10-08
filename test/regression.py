@@ -530,6 +530,9 @@ old_unittests = {
 
     "ADF/ADF2006.01/dvb_gopt.adfout":       ADFGeoOptTest,
 
+    "ADF/ADF2013.01/dvb_gopt_b_fullscf.adfout":       ADFGeoOptTest,
+    "ADF/ADF2014.01/dvb_gopt_b_fullscf.out":       ADFGeoOptTest,
+
     "GAMESS/GAMESS-US2005/water_ccd_2005.06.27.r3.out":         GenericCCTest,
     "GAMESS/GAMESS-US2005/water_ccsd_2005.06.27.r3.out":        GenericCCTest,
     "GAMESS/GAMESS-US2005/water_ccsd(t)_2005.06.27.r3.out":     GenericCCTest,
