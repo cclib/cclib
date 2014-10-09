@@ -50,8 +50,8 @@
                                         Revision    6248      
                                         Compiled on 28-01-2012 17:52 by sismfg    
                                         job name   n/a     
-                                        date    Oct  7 2014
-                                        time       15:59:12
+                                        date    Oct  8 2014
+                                        time       19:57:25
                                         acct           1001
 
                                         job time specified      60000 minutes
@@ -672,7 +672,7 @@
           ----------------
 
           --------------
-          final energies   after  13 cycles at         7.83 seconds   0:00:08 wall
+          final energies   after  13 cycles at         7.86 seconds   0:00:08 wall
           --------------
 
 
@@ -1134,13 +1134,13 @@
    60  20 h s       0.1368   0.0000   0.0000   0.0000   0.0000   0.0000   0.0000   0.0000   0.0000   0.0000
 
 
- end of closed shell scf at         7.83 seconds   0:00:08 wall
+ end of closed shell scf at         7.86 seconds   0:00:08 wall
 
  --------------------------------------------------------------------------------------------------------
 
 
 
- commence gradient evaluation at      7.83 seconds   0:00:08 wall
+ commence gradient evaluation at      7.86 seconds   0:00:08 wall
 
  gradient prefactor threshold 0.100000E-08
  Now off to CD_forces
@@ -1174,7 +1174,7 @@
    e/y      0.0023586     -0.0023586     -0.0220617      0.0220617
    e/z      0.0000000      0.0000000      0.0000000      0.0000000
 
- end of calculation of the energy gradient at    10.20 seconds   0:00:10 wall
+ end of calculation of the energy gradient at    10.24 seconds   0:00:10 wall
 
 
           nserch  update   npts       func            gnorm          alpha   icode
@@ -1216,7 +1216,7 @@
 
  ========================================================================================================
 
- commence scf/gradient treatment at      10.20 seconds   0:00:10 wall
+ commence scf/gradient treatment at      10.24 seconds   0:00:10 wall
 
  search  1
                                         *******************
@@ -1313,9 +1313,9 @@
  integrals are not in a supermatrix form : p-k option is off
  number of integrals per block = 340
 
- commence 2-electron integral evaluation at        10.20 seconds   0:00:10 wall
+ commence 2-electron integral evaluation at        10.24 seconds   0:00:10 wall
 
- end of 2-electron integral evaluation at          10.26 seconds   0:00:10 wall
+ end of 2-electron integral evaluation at          10.30 seconds   0:00:10 wall
 
  --------------------------------------------------------------------------------------------------------
 
@@ -1359,7 +1359,7 @@
           ----------------
 
           --------------
-          final energies   after  11 cycles at        16.82 seconds   0:00:17 wall
+          final energies   after  11 cycles at        16.85 seconds   0:00:17 wall
           --------------
 
 
@@ -1818,13 +1818,13 @@
    60  20 h s      -0.0800   0.0000   0.0000   0.0000   0.0000   0.0000   0.0000   0.0000   0.0000   0.0000
 
 
- end of closed shell scf at        16.82 seconds   0:00:17 wall
+ end of closed shell scf at        16.85 seconds   0:00:17 wall
 
  --------------------------------------------------------------------------------------------------------
 
 
 
- commence gradient evaluation at     16.82 seconds   0:00:17 wall
+ commence gradient evaluation at     16.85 seconds   0:00:17 wall
 
  gradient prefactor threshold 0.100000E-08
  Now off to CD_forces
@@ -1858,7 +1858,7 @@
    e/y     -0.0072919      0.0072919     -0.0050212      0.0050212
    e/z      0.0000000      0.0000000      0.0000000      0.0000000
 
- end of calculation of the energy gradient at    19.18 seconds   0:00:19 wall
+ end of calculation of the energy gradient at    19.20 seconds   0:00:19 wall
 
 
           nserch  update   npts       func            gnorm          alpha   icode
@@ -1900,7 +1900,7 @@
 
  ========================================================================================================
 
- commence scf/gradient treatment at      19.18 seconds   0:00:19 wall
+ commence scf/gradient treatment at      19.20 seconds   0:00:19 wall
 
  search  2
                                         *******************
@@ -1997,9 +1997,9 @@
  integrals are not in a supermatrix form : p-k option is off
  number of integrals per block = 340
 
- commence 2-electron integral evaluation at        19.18 seconds   0:00:19 wall
+ commence 2-electron integral evaluation at        19.20 seconds   0:00:19 wall
 
- end of 2-electron integral evaluation at          19.24 seconds   0:00:19 wall
+ end of 2-electron integral evaluation at          19.26 seconds   0:00:19 wall
 
  --------------------------------------------------------------------------------------------------------
 
@@ -2043,7 +2043,7 @@
           ----------------
 
           --------------
-          final energies   after  11 cycles at        25.79 seconds   0:00:26 wall
+          final energies   after  11 cycles at        25.81 seconds   0:00:26 wall
           --------------
 
 
@@ -2502,13 +2502,13 @@
    60  20 h s      -0.0554   0.0000   0.0000   0.0000   0.0000   0.0000   0.0000   0.0000   0.0000   0.0000
 
 
- end of closed shell scf at        25.80 seconds   0:00:26 wall
+ end of closed shell scf at        25.81 seconds   0:00:26 wall
 
  --------------------------------------------------------------------------------------------------------
 
 
 
- commence gradient evaluation at     25.80 seconds   0:00:26 wall
+ commence gradient evaluation at     25.81 seconds   0:00:26 wall
 
  gradient prefactor threshold 0.100000E-08
  Now off to CD_forces
@@ -2542,7 +2542,7 @@
    e/y     -0.0055579      0.0055579     -0.0068546      0.0068546
    e/z      0.0000000      0.0000000      0.0000000      0.0000000
 
- end of calculation of the energy gradient at    28.14 seconds   0:00:28 wall
+ end of calculation of the energy gradient at    28.16 seconds   0:00:28 wall
 
 
           nserch  update   npts       func            gnorm          alpha   icode
@@ -2584,7 +2584,7 @@
 
  ========================================================================================================
 
- commence scf/gradient treatment at      28.14 seconds   0:00:28 wall
+ commence scf/gradient treatment at      28.16 seconds   0:00:28 wall
 
  search  3
                                         *******************
@@ -2681,9 +2681,9 @@
  integrals are not in a supermatrix form : p-k option is off
  number of integrals per block = 340
 
- commence 2-electron integral evaluation at        28.15 seconds   0:00:28 wall
+ commence 2-electron integral evaluation at        28.16 seconds   0:00:28 wall
 
- end of 2-electron integral evaluation at          28.20 seconds   0:00:28 wall
+ end of 2-electron integral evaluation at          28.21 seconds   0:00:28 wall
 
  --------------------------------------------------------------------------------------------------------
 
@@ -2726,7 +2726,7 @@
           ----------------
 
           --------------
-          final energies   after  10 cycles at        34.14 seconds   0:00:34 wall
+          final energies   after  10 cycles at        34.16 seconds   0:00:34 wall
           --------------
 
 
@@ -3184,13 +3184,13 @@
    60  20 h s       0.0627   0.0000   0.0000   0.0000   0.0000   0.0000   0.0000   0.0000   0.0000   0.0000
 
 
- end of closed shell scf at        34.14 seconds   0:00:34 wall
+ end of closed shell scf at        34.17 seconds   0:00:34 wall
 
  --------------------------------------------------------------------------------------------------------
 
 
 
- commence gradient evaluation at     34.14 seconds   0:00:34 wall
+ commence gradient evaluation at     34.17 seconds   0:00:34 wall
 
  gradient prefactor threshold 0.100000E-08
  Now off to CD_forces
@@ -3224,7 +3224,7 @@
    e/y     -0.0055386      0.0055386     -0.0039584      0.0039584
    e/z      0.0000000      0.0000000      0.0000000      0.0000000
 
- end of calculation of the energy gradient at    36.50 seconds   0:00:37 wall
+ end of calculation of the energy gradient at    36.52 seconds   0:00:37 wall
 
 
           nserch  update   npts       func            gnorm          alpha   icode
@@ -3266,7 +3266,7 @@
 
  ========================================================================================================
 
- commence scf/gradient treatment at      36.50 seconds   0:00:37 wall
+ commence scf/gradient treatment at      36.52 seconds   0:00:37 wall
 
  search  4
                                         *******************
@@ -3363,9 +3363,9 @@
  integrals are not in a supermatrix form : p-k option is off
  number of integrals per block = 340
 
- commence 2-electron integral evaluation at        36.50 seconds   0:00:37 wall
+ commence 2-electron integral evaluation at        36.52 seconds   0:00:37 wall
 
- end of 2-electron integral evaluation at          36.55 seconds   0:00:37 wall
+ end of 2-electron integral evaluation at          36.58 seconds   0:00:37 wall
 
  --------------------------------------------------------------------------------------------------------
 
@@ -3408,7 +3408,7 @@
           ----------------
 
           --------------
-          final energies   after  10 cycles at        42.50 seconds   0:00:43 wall
+          final energies   after  10 cycles at        42.53 seconds   0:00:43 wall
           --------------
 
 
@@ -3866,13 +3866,13 @@
    60  20 h s      -0.0674   0.0000   0.0000   0.0000   0.0000   0.0000   0.0000   0.0000   0.0000   0.0000
 
 
- end of closed shell scf at        42.50 seconds   0:00:43 wall
+ end of closed shell scf at        42.53 seconds   0:00:43 wall
 
  --------------------------------------------------------------------------------------------------------
 
 
 
- commence gradient evaluation at     42.50 seconds   0:00:43 wall
+ commence gradient evaluation at     42.53 seconds   0:00:43 wall
 
  gradient prefactor threshold 0.100000E-08
  Now off to CD_forces
@@ -3906,7 +3906,7 @@
    e/y     -0.0062277      0.0062277     -0.0004796      0.0004796
    e/z      0.0000000      0.0000000      0.0000000      0.0000000
 
- end of calculation of the energy gradient at    44.86 seconds   0:00:45 wall
+ end of calculation of the energy gradient at    44.89 seconds   0:00:45 wall
 
 
           nserch  update   npts       func            gnorm          alpha   icode
@@ -3948,7 +3948,7 @@
 
  ========================================================================================================
 
- commence scf/gradient treatment at      44.86 seconds   0:00:45 wall
+ commence scf/gradient treatment at      44.89 seconds   0:00:45 wall
 
  search  5
                                         *******************
@@ -4045,9 +4045,9 @@
  integrals are not in a supermatrix form : p-k option is off
  number of integrals per block = 340
 
- commence 2-electron integral evaluation at        44.86 seconds   0:00:45 wall
+ commence 2-electron integral evaluation at        44.89 seconds   0:00:45 wall
 
- end of 2-electron integral evaluation at          44.92 seconds   0:00:45 wall
+ end of 2-electron integral evaluation at          44.94 seconds   0:00:45 wall
 
  --------------------------------------------------------------------------------------------------------
 
@@ -4090,7 +4090,7 @@
           ----------------
 
           --------------
-          final energies   after  10 cycles at        50.85 seconds   0:00:51 wall
+          final energies   after  10 cycles at        50.89 seconds   0:00:51 wall
           --------------
 
 
@@ -4548,13 +4548,13 @@
    60  20 h s      -0.0750   0.0000   0.0000   0.0000   0.0000   0.0000   0.0000   0.0000   0.0000   0.0000
 
 
- end of closed shell scf at        50.86 seconds   0:00:51 wall
+ end of closed shell scf at        50.89 seconds   0:00:51 wall
 
  --------------------------------------------------------------------------------------------------------
 
 
 
- commence gradient evaluation at     50.86 seconds   0:00:51 wall
+ commence gradient evaluation at     50.89 seconds   0:00:51 wall
 
  gradient prefactor threshold 0.100000E-08
  Now off to CD_forces
@@ -4588,7 +4588,7 @@
    e/y     -0.0062079      0.0062079      0.0019596     -0.0019596
    e/z      0.0000000      0.0000000      0.0000000      0.0000000
 
- end of calculation of the energy gradient at    53.21 seconds   0:00:53 wall
+ end of calculation of the energy gradient at    53.24 seconds   0:00:53 wall
 
 
           nserch  update   npts       func            gnorm          alpha   icode
@@ -4630,7 +4630,7 @@
 
  ========================================================================================================
 
- commence scf/gradient treatment at      53.21 seconds   0:00:53 wall
+ commence scf/gradient treatment at      53.24 seconds   0:00:53 wall
 
  search  6
                                         *******************
@@ -4727,9 +4727,9 @@
  integrals are not in a supermatrix form : p-k option is off
  number of integrals per block = 340
 
- commence 2-electron integral evaluation at        53.21 seconds   0:00:53 wall
+ commence 2-electron integral evaluation at        53.24 seconds   0:00:53 wall
 
- end of 2-electron integral evaluation at          53.26 seconds   0:00:53 wall
+ end of 2-electron integral evaluation at          53.30 seconds   0:00:53 wall
 
  --------------------------------------------------------------------------------------------------------
 
@@ -4772,7 +4772,7 @@
           ----------------
 
           --------------
-          final energies   after  10 cycles at        59.19 seconds   0:00:59 wall
+          final energies   after  10 cycles at        59.24 seconds   0:00:59 wall
           --------------
 
 
@@ -5229,13 +5229,13 @@
    60  20 h s       0.0789   0.0000   0.0000   0.0000   0.0000   0.0000   0.0000   0.0000   0.0000   0.0000
 
 
- end of closed shell scf at        59.19 seconds   0:00:59 wall
+ end of closed shell scf at        59.24 seconds   0:00:59 wall
 
  --------------------------------------------------------------------------------------------------------
 
 
 
- commence gradient evaluation at     59.19 seconds   0:00:59 wall
+ commence gradient evaluation at     59.24 seconds   0:00:59 wall
 
  gradient prefactor threshold 0.100000E-08
  Now off to CD_forces
@@ -5269,7 +5269,7 @@
    e/y     -0.0052232      0.0052232      0.0013631     -0.0013631
    e/z      0.0000000      0.0000000      0.0000000      0.0000000
 
- end of calculation of the energy gradient at    61.54 seconds   0:01:02 wall
+ end of calculation of the energy gradient at    61.59 seconds   0:01:02 wall
 
 
           nserch  update   npts       func            gnorm          alpha   icode
@@ -5311,7 +5311,7 @@
 
  ========================================================================================================
 
- commence scf/gradient treatment at      61.54 seconds   0:01:02 wall
+ commence scf/gradient treatment at      61.59 seconds   0:01:02 wall
 
  search  7
                                         *******************
@@ -5408,9 +5408,9 @@
  integrals are not in a supermatrix form : p-k option is off
  number of integrals per block = 340
 
- commence 2-electron integral evaluation at        61.54 seconds   0:01:02 wall
+ commence 2-electron integral evaluation at        61.59 seconds   0:01:02 wall
 
- end of 2-electron integral evaluation at          61.60 seconds   0:01:02 wall
+ end of 2-electron integral evaluation at          61.65 seconds   0:01:02 wall
 
  --------------------------------------------------------------------------------------------------------
 
@@ -5453,7 +5453,7 @@
           ----------------
 
           --------------
-          final energies   after  10 cycles at        67.52 seconds   0:01:08 wall
+          final energies   after  10 cycles at        67.70 seconds   0:01:08 wall
           --------------
 
 
@@ -5911,13 +5911,13 @@
    60  20 h s      -0.0822   0.0000   0.0000   0.0000   0.0000   0.0000   0.0000   0.0000   0.0000   0.0000
 
 
- end of closed shell scf at        67.52 seconds   0:01:08 wall
+ end of closed shell scf at        67.70 seconds   0:01:08 wall
 
  --------------------------------------------------------------------------------------------------------
 
 
 
- commence gradient evaluation at     67.52 seconds   0:01:08 wall
+ commence gradient evaluation at     67.70 seconds   0:01:08 wall
 
  gradient prefactor threshold 0.100000E-08
  Now off to CD_forces
@@ -5951,7 +5951,7 @@
    e/y     -0.0037846      0.0037846     -0.0005190      0.0005190
    e/z      0.0000000      0.0000000      0.0000000      0.0000000
 
- end of calculation of the energy gradient at    69.87 seconds   0:01:10 wall
+ end of calculation of the energy gradient at    70.04 seconds   0:01:10 wall
 
 
           nserch  update   npts       func            gnorm          alpha   icode
@@ -5993,7 +5993,7 @@
 
  ========================================================================================================
 
- commence scf/gradient treatment at      69.87 seconds   0:01:10 wall
+ commence scf/gradient treatment at      70.04 seconds   0:01:10 wall
 
  search  8
                                         *******************
@@ -6090,9 +6090,9 @@
  integrals are not in a supermatrix form : p-k option is off
  number of integrals per block = 340
 
- commence 2-electron integral evaluation at        69.87 seconds   0:01:10 wall
+ commence 2-electron integral evaluation at        70.04 seconds   0:01:10 wall
 
- end of 2-electron integral evaluation at          69.93 seconds   0:01:10 wall
+ end of 2-electron integral evaluation at          70.09 seconds   0:01:10 wall
 
  --------------------------------------------------------------------------------------------------------
 
@@ -6135,7 +6135,7 @@
           ----------------
 
           --------------
-          final energies   after  10 cycles at        75.86 seconds   0:01:16 wall
+          final energies   after  10 cycles at        76.03 seconds   0:01:16 wall
           --------------
 
 
@@ -6593,13 +6593,13 @@
    60  20 h s       0.0828   0.0000   0.0000   0.0000   0.0000   0.0000   0.0000   0.0000   0.0000   0.0000
 
 
- end of closed shell scf at        75.86 seconds   0:01:16 wall
+ end of closed shell scf at        76.03 seconds   0:01:16 wall
 
  --------------------------------------------------------------------------------------------------------
 
 
 
- commence gradient evaluation at     75.86 seconds   0:01:16 wall
+ commence gradient evaluation at     76.03 seconds   0:01:16 wall
 
  gradient prefactor threshold 0.100000E-08
  Now off to CD_forces
@@ -6633,7 +6633,7 @@
    e/y     -0.0021386      0.0021386     -0.0023216      0.0023216
    e/z      0.0000000      0.0000000      0.0000000      0.0000000
 
- end of calculation of the energy gradient at    78.21 seconds   0:01:18 wall
+ end of calculation of the energy gradient at    78.36 seconds   0:01:19 wall
 
 
           nserch  update   npts       func            gnorm          alpha   icode
@@ -6675,7 +6675,7 @@
 
  ========================================================================================================
 
- commence scf/gradient treatment at      78.21 seconds   0:01:18 wall
+ commence scf/gradient treatment at      78.36 seconds   0:01:19 wall
 
  search  9
                                         *******************
@@ -6772,9 +6772,9 @@
  integrals are not in a supermatrix form : p-k option is off
  number of integrals per block = 340
 
- commence 2-electron integral evaluation at        78.21 seconds   0:01:18 wall
+ commence 2-electron integral evaluation at        78.37 seconds   0:01:19 wall
 
- end of 2-electron integral evaluation at          78.26 seconds   0:01:18 wall
+ end of 2-electron integral evaluation at          78.42 seconds   0:01:19 wall
 
  --------------------------------------------------------------------------------------------------------
 
@@ -6817,7 +6817,7 @@
           ----------------
 
           --------------
-          final energies   after  10 cycles at        84.19 seconds   0:01:24 wall
+          final energies   after  10 cycles at        84.34 seconds   0:01:25 wall
           --------------
 
 
@@ -7275,13 +7275,13 @@
    60  20 h s      -0.0853   0.0000   0.0000   0.0000   0.0000   0.0000   0.0000   0.0000   0.0000   0.0000
 
 
- end of closed shell scf at        84.19 seconds   0:01:24 wall
+ end of closed shell scf at        84.34 seconds   0:01:25 wall
 
  --------------------------------------------------------------------------------------------------------
 
 
 
- commence gradient evaluation at     84.19 seconds   0:01:24 wall
+ commence gradient evaluation at     84.34 seconds   0:01:25 wall
 
  gradient prefactor threshold 0.100000E-08
  Now off to CD_forces
@@ -7315,7 +7315,7 @@
    e/y     -0.0004447      0.0004447     -0.0032642      0.0032642
    e/z      0.0000000      0.0000000      0.0000000      0.0000000
 
- end of calculation of the energy gradient at    86.53 seconds   0:01:27 wall
+ end of calculation of the energy gradient at    86.68 seconds   0:01:27 wall
 
 
           nserch  update   npts       func            gnorm          alpha   icode
@@ -7357,7 +7357,7 @@
 
  ========================================================================================================
 
- commence scf/gradient treatment at      86.53 seconds   0:01:27 wall
+ commence scf/gradient treatment at      86.68 seconds   0:01:27 wall
 
  search 10
                                         *******************
@@ -7454,9 +7454,9 @@
  integrals are not in a supermatrix form : p-k option is off
  number of integrals per block = 340
 
- commence 2-electron integral evaluation at        86.53 seconds   0:01:27 wall
+ commence 2-electron integral evaluation at        86.68 seconds   0:01:27 wall
 
- end of 2-electron integral evaluation at          86.58 seconds   0:01:27 wall
+ end of 2-electron integral evaluation at          86.74 seconds   0:01:27 wall
 
  --------------------------------------------------------------------------------------------------------
 
@@ -7499,7 +7499,7 @@
           ----------------
 
           --------------
-          final energies   after  10 cycles at        92.50 seconds   0:01:33 wall
+          final energies   after  10 cycles at        92.65 seconds   0:01:33 wall
           --------------
 
 
@@ -7957,13 +7957,13 @@
    60  20 h s       0.0876   0.0000   0.0000   0.0000   0.0000   0.0000   0.0000   0.0000   0.0000   0.0000
 
 
- end of closed shell scf at        92.50 seconds   0:01:33 wall
+ end of closed shell scf at        92.65 seconds   0:01:33 wall
 
  --------------------------------------------------------------------------------------------------------
 
 
 
- commence gradient evaluation at     92.50 seconds   0:01:33 wall
+ commence gradient evaluation at     92.65 seconds   0:01:33 wall
 
  gradient prefactor threshold 0.100000E-08
  Now off to CD_forces
@@ -7997,7 +7997,7 @@
    e/y      0.0007126     -0.0007126     -0.0025968      0.0025968
    e/z      0.0000000      0.0000000      0.0000000      0.0000000
 
- end of calculation of the energy gradient at    94.85 seconds   0:01:35 wall
+ end of calculation of the energy gradient at    94.97 seconds   0:01:35 wall
 
 
           nserch  update   npts       func            gnorm          alpha   icode
@@ -8039,7 +8039,7 @@
 
  ========================================================================================================
 
- commence scf/gradient treatment at      94.85 seconds   0:01:35 wall
+ commence scf/gradient treatment at      94.97 seconds   0:01:35 wall
 
  search 11
                                         *******************
@@ -8136,9 +8136,9 @@
  integrals are not in a supermatrix form : p-k option is off
  number of integrals per block = 340
 
- commence 2-electron integral evaluation at        94.85 seconds   0:01:35 wall
+ commence 2-electron integral evaluation at        94.98 seconds   0:01:35 wall
 
- end of 2-electron integral evaluation at          94.91 seconds   0:01:35 wall
+ end of 2-electron integral evaluation at          95.03 seconds   0:01:35 wall
 
  --------------------------------------------------------------------------------------------------------
 
@@ -8181,7 +8181,7 @@
           ----------------
 
           --------------
-          final energies   after  10 cycles at       100.83 seconds   0:01:41 wall
+          final energies   after  10 cycles at       100.96 seconds   0:01:41 wall
           --------------
 
 
@@ -8639,13 +8639,13 @@
    60  20 h s      -0.0907   0.0000   0.0000   0.0000   0.0000   0.0000   0.0000   0.0000   0.0000   0.0000
 
 
- end of closed shell scf at       100.83 seconds   0:01:41 wall
+ end of closed shell scf at       100.96 seconds   0:01:41 wall
 
  --------------------------------------------------------------------------------------------------------
 
 
 
- commence gradient evaluation at    100.83 seconds   0:01:41 wall
+ commence gradient evaluation at    100.96 seconds   0:01:41 wall
 
  gradient prefactor threshold 0.100000E-08
  Now off to CD_forces
@@ -8679,7 +8679,7 @@
    e/y      0.0010044     -0.0010044     -0.0007643      0.0007643
    e/z      0.0000000      0.0000000      0.0000000      0.0000000
 
- end of calculation of the energy gradient at   103.17 seconds   0:01:43 wall
+ end of calculation of the energy gradient at   103.30 seconds   0:01:44 wall
 
 
           nserch  update   npts       func            gnorm          alpha   icode
@@ -8721,7 +8721,7 @@
 
  ========================================================================================================
 
- commence scf/gradient treatment at     103.17 seconds   0:01:43 wall
+ commence scf/gradient treatment at     103.30 seconds   0:01:44 wall
 
  search 12
                                         *******************
@@ -8818,9 +8818,9 @@
  integrals are not in a supermatrix form : p-k option is off
  number of integrals per block = 340
 
- commence 2-electron integral evaluation at       103.17 seconds   0:01:43 wall
+ commence 2-electron integral evaluation at       103.30 seconds   0:01:44 wall
 
- end of 2-electron integral evaluation at         103.23 seconds   0:01:44 wall
+ end of 2-electron integral evaluation at         103.35 seconds   0:01:44 wall
 
  --------------------------------------------------------------------------------------------------------
 
@@ -8862,7 +8862,7 @@
           ----------------
 
           --------------
-          final energies   after   9 cycles at       108.55 seconds   0:01:49 wall
+          final energies   after   9 cycles at       108.67 seconds   0:01:49 wall
           --------------
 
 
@@ -9319,13 +9319,13 @@
    60  20 h s       0.0923   0.0000   0.0000   0.0000   0.0000   0.0000   0.0000   0.0000   0.0000   0.0000
 
 
- end of closed shell scf at       108.55 seconds   0:01:49 wall
+ end of closed shell scf at       108.67 seconds   0:01:49 wall
 
  --------------------------------------------------------------------------------------------------------
 
 
 
- commence gradient evaluation at    108.55 seconds   0:01:49 wall
+ commence gradient evaluation at    108.67 seconds   0:01:49 wall
 
  gradient prefactor threshold 0.100000E-08
  Now off to CD_forces
@@ -9359,7 +9359,7 @@
    e/y      0.0007086     -0.0007086      0.0014245     -0.0014245
    e/z      0.0000000      0.0000000      0.0000000      0.0000000
 
- end of calculation of the energy gradient at   110.90 seconds   0:01:51 wall
+ end of calculation of the energy gradient at   111.00 seconds   0:01:51 wall
 
 
           nserch  update   npts       func            gnorm          alpha   icode
@@ -9401,7 +9401,7 @@
 
  ========================================================================================================
 
- commence scf/gradient treatment at     110.90 seconds   0:01:51 wall
+ commence scf/gradient treatment at     111.00 seconds   0:01:51 wall
 
  search 13
                                         *******************
@@ -9498,9 +9498,9 @@
  integrals are not in a supermatrix form : p-k option is off
  number of integrals per block = 340
 
- commence 2-electron integral evaluation at       110.90 seconds   0:01:51 wall
+ commence 2-electron integral evaluation at       111.01 seconds   0:01:51 wall
 
- end of 2-electron integral evaluation at         110.96 seconds   0:01:51 wall
+ end of 2-electron integral evaluation at         111.06 seconds   0:01:51 wall
 
  --------------------------------------------------------------------------------------------------------
 
@@ -9543,7 +9543,7 @@
           ----------------
 
           --------------
-          final energies   after  10 cycles at       116.85 seconds   0:01:57 wall
+          final energies   after  10 cycles at       116.97 seconds   0:01:57 wall
           --------------
 
 
@@ -10000,13 +10000,13 @@
    60  20 h s       0.0935   0.0000   0.0000   0.0000   0.0000   0.0000   0.0000   0.0000   0.0000   0.0000
 
 
- end of closed shell scf at       116.85 seconds   0:01:57 wall
+ end of closed shell scf at       116.97 seconds   0:01:57 wall
 
  --------------------------------------------------------------------------------------------------------
 
 
 
- commence gradient evaluation at    116.85 seconds   0:01:57 wall
+ commence gradient evaluation at    116.97 seconds   0:01:57 wall
 
  gradient prefactor threshold 0.100000E-08
  Now off to CD_forces
@@ -10040,7 +10040,7 @@
    e/y     -0.0000798      0.0000798      0.0035887     -0.0035887
    e/z      0.0000000      0.0000000      0.0000000      0.0000000
 
- end of calculation of the energy gradient at   119.19 seconds   0:01:60 wall
+ end of calculation of the energy gradient at   119.29 seconds   0:01:60 wall
 
 
           nserch  update   npts       func            gnorm          alpha   icode
@@ -10082,7 +10082,7 @@
 
  ========================================================================================================
 
- commence scf/gradient treatment at     119.19 seconds   0:01:60 wall
+ commence scf/gradient treatment at     119.29 seconds   0:01:60 wall
 
  search 14
                                         *******************
@@ -10179,9 +10179,9 @@
  integrals are not in a supermatrix form : p-k option is off
  number of integrals per block = 340
 
- commence 2-electron integral evaluation at       119.19 seconds   0:01:60 wall
+ commence 2-electron integral evaluation at       119.29 seconds   0:01:60 wall
 
- end of 2-electron integral evaluation at         119.25 seconds   0:01:60 wall
+ end of 2-electron integral evaluation at         119.35 seconds   0:01:60 wall
 
  --------------------------------------------------------------------------------------------------------
 
@@ -10225,7 +10225,7 @@
           ----------------
 
           --------------
-          final energies   after  11 cycles at       125.74 seconds   0:02:06 wall
+          final energies   after  11 cycles at       125.83 seconds   0:02:06 wall
           --------------
 
 
@@ -10684,13 +10684,13 @@
    60  20 h s      -0.0924   0.0000   0.0000   0.0000   0.0000   0.0000   0.0000   0.0000   0.0000   0.0000
 
 
- end of closed shell scf at       125.74 seconds   0:02:06 wall
+ end of closed shell scf at       125.84 seconds   0:02:06 wall
 
  --------------------------------------------------------------------------------------------------------
 
 
 
- commence gradient evaluation at    125.74 seconds   0:02:06 wall
+ commence gradient evaluation at    125.84 seconds   0:02:06 wall
 
  gradient prefactor threshold 0.100000E-08
  Now off to CD_forces
@@ -10724,7 +10724,7 @@
    e/y     -0.0009806      0.0009806      0.0043331     -0.0043331
    e/z      0.0000000      0.0000000      0.0000000      0.0000000
 
- end of calculation of the energy gradient at   128.08 seconds   0:02:08 wall
+ end of calculation of the energy gradient at   128.16 seconds   0:02:09 wall
 
 
           nserch  update   npts       func            gnorm          alpha   icode
@@ -10766,7 +10766,7 @@
 
  ========================================================================================================
 
- commence scf/gradient treatment at     128.08 seconds   0:02:08 wall
+ commence scf/gradient treatment at     128.16 seconds   0:02:09 wall
 
  search 15
                                         *******************
@@ -10863,9 +10863,9 @@
  integrals are not in a supermatrix form : p-k option is off
  number of integrals per block = 340
 
- commence 2-electron integral evaluation at       128.08 seconds   0:02:08 wall
+ commence 2-electron integral evaluation at       128.17 seconds   0:02:09 wall
 
- end of 2-electron integral evaluation at         128.14 seconds   0:02:08 wall
+ end of 2-electron integral evaluation at         128.22 seconds   0:02:09 wall
 
  --------------------------------------------------------------------------------------------------------
 
@@ -10908,7 +10908,7 @@
           ----------------
 
           --------------
-          final energies   after  10 cycles at       134.03 seconds   0:02:14 wall
+          final energies   after  10 cycles at       134.12 seconds   0:02:14 wall
           --------------
 
 
@@ -11365,13 +11365,13 @@
    60  20 h s       0.0909   0.0000   0.0000   0.0000   0.0000   0.0000   0.0000   0.0000   0.0000   0.0000
 
 
- end of closed shell scf at       134.03 seconds   0:02:14 wall
+ end of closed shell scf at       134.12 seconds   0:02:14 wall
 
  --------------------------------------------------------------------------------------------------------
 
 
 
- commence gradient evaluation at    134.03 seconds   0:02:14 wall
+ commence gradient evaluation at    134.12 seconds   0:02:14 wall
 
  gradient prefactor threshold 0.100000E-08
  Now off to CD_forces
@@ -11405,7 +11405,7 @@
    e/y     -0.0013674      0.0013674      0.0028936     -0.0028936
    e/z      0.0000000      0.0000000      0.0000000      0.0000000
 
- end of calculation of the energy gradient at   136.36 seconds   0:02:17 wall
+ end of calculation of the energy gradient at   136.44 seconds   0:02:17 wall
 
 
           nserch  update   npts       func            gnorm          alpha   icode
@@ -11447,7 +11447,7 @@
 
  ========================================================================================================
 
- commence scf/gradient treatment at     136.36 seconds   0:02:17 wall
+ commence scf/gradient treatment at     136.44 seconds   0:02:17 wall
 
  search 16
                                         *******************
@@ -11544,9 +11544,9 @@
  integrals are not in a supermatrix form : p-k option is off
  number of integrals per block = 340
 
- commence 2-electron integral evaluation at       136.36 seconds   0:02:17 wall
+ commence 2-electron integral evaluation at       136.44 seconds   0:02:17 wall
 
- end of 2-electron integral evaluation at         136.42 seconds   0:02:17 wall
+ end of 2-electron integral evaluation at         136.50 seconds   0:02:17 wall
 
  --------------------------------------------------------------------------------------------------------
 
@@ -11589,7 +11589,7 @@
           ----------------
 
           --------------
-          final energies   after  10 cycles at       142.30 seconds   0:02:23 wall
+          final energies   after  10 cycles at       142.39 seconds   0:02:23 wall
           --------------
 
 
@@ -12046,13 +12046,13 @@
    60  20 h s      -0.0891   0.0000   0.0000   0.0000   0.0000   0.0000   0.0000   0.0000   0.0000   0.0000
 
 
- end of closed shell scf at       142.30 seconds   0:02:23 wall
+ end of closed shell scf at       142.39 seconds   0:02:23 wall
 
  --------------------------------------------------------------------------------------------------------
 
 
 
- commence gradient evaluation at    142.30 seconds   0:02:23 wall
+ commence gradient evaluation at    142.39 seconds   0:02:23 wall
 
  gradient prefactor threshold 0.100000E-08
  Now off to CD_forces
@@ -12086,7 +12086,7 @@
    e/y     -0.0011247      0.0011247      0.0010445     -0.0010445
    e/z      0.0000000      0.0000000      0.0000000      0.0000000
 
- end of calculation of the energy gradient at   144.63 seconds   0:02:25 wall
+ end of calculation of the energy gradient at   144.71 seconds   0:02:25 wall
 
 
           nserch  update   npts       func            gnorm          alpha   icode
@@ -12128,7 +12128,7 @@
 
  ========================================================================================================
 
- commence scf/gradient treatment at     144.63 seconds   0:02:25 wall
+ commence scf/gradient treatment at     144.71 seconds   0:02:25 wall
 
  search 17
                                         *******************
@@ -12225,9 +12225,9 @@
  integrals are not in a supermatrix form : p-k option is off
  number of integrals per block = 340
 
- commence 2-electron integral evaluation at       144.63 seconds   0:02:25 wall
+ commence 2-electron integral evaluation at       144.72 seconds   0:02:25 wall
 
- end of 2-electron integral evaluation at         144.69 seconds   0:02:25 wall
+ end of 2-electron integral evaluation at         144.78 seconds   0:02:25 wall
 
  --------------------------------------------------------------------------------------------------------
 
@@ -12270,7 +12270,7 @@
           ----------------
 
           --------------
-          final energies   after  10 cycles at       150.58 seconds   0:02:31 wall
+          final energies   after  10 cycles at       150.68 seconds   0:02:31 wall
           --------------
 
 
@@ -12727,13 +12727,13 @@
    60  20 h s       0.0882   0.0000   0.0000   0.0000   0.0000   0.0000   0.0000   0.0000   0.0000   0.0000
 
 
- end of closed shell scf at       150.58 seconds   0:02:31 wall
+ end of closed shell scf at       150.68 seconds   0:02:31 wall
 
  --------------------------------------------------------------------------------------------------------
 
 
 
- commence gradient evaluation at    150.58 seconds   0:02:31 wall
+ commence gradient evaluation at    150.68 seconds   0:02:31 wall
 
  gradient prefactor threshold 0.100000E-08
  Now off to CD_forces
@@ -12767,7 +12767,7 @@
    e/y     -0.0006538      0.0006538     -0.0000157      0.0000157
    e/z      0.0000000      0.0000000      0.0000000      0.0000000
 
- end of calculation of the energy gradient at   152.91 seconds   0:02:33 wall
+ end of calculation of the energy gradient at   153.01 seconds   0:02:33 wall
 
 
           nserch  update   npts       func            gnorm          alpha   icode
@@ -12809,7 +12809,7 @@
 
  ========================================================================================================
 
- commence scf/gradient treatment at     152.91 seconds   0:02:33 wall
+ commence scf/gradient treatment at     153.01 seconds   0:02:33 wall
 
  search 18
                                         *******************
@@ -12906,9 +12906,9 @@
  integrals are not in a supermatrix form : p-k option is off
  number of integrals per block = 340
 
- commence 2-electron integral evaluation at       152.91 seconds   0:02:33 wall
+ commence 2-electron integral evaluation at       153.01 seconds   0:02:33 wall
 
- end of 2-electron integral evaluation at         152.96 seconds   0:02:33 wall
+ end of 2-electron integral evaluation at         153.07 seconds   0:02:33 wall
 
  --------------------------------------------------------------------------------------------------------
 
@@ -12950,7 +12950,7 @@
           ----------------
 
           --------------
-          final energies   after   9 cycles at       158.26 seconds   0:02:39 wall
+          final energies   after   9 cycles at       158.39 seconds   0:02:39 wall
           --------------
 
 
@@ -13406,13 +13406,13 @@
    60  20 h s      -0.0871   0.0000   0.0000   0.0000   0.0000   0.0000   0.0000   0.0000   0.0000   0.0000
 
 
- end of closed shell scf at       158.27 seconds   0:02:39 wall
+ end of closed shell scf at       158.39 seconds   0:02:39 wall
 
  --------------------------------------------------------------------------------------------------------
 
 
 
- commence gradient evaluation at    158.27 seconds   0:02:39 wall
+ commence gradient evaluation at    158.39 seconds   0:02:39 wall
 
  gradient prefactor threshold 0.100000E-08
  Now off to CD_forces
@@ -13446,7 +13446,7 @@
    e/y      0.0000135     -0.0000135     -0.0006644      0.0006644
    e/z      0.0000000      0.0000000      0.0000000      0.0000000
 
- end of calculation of the energy gradient at   160.59 seconds   0:02:41 wall
+ end of calculation of the energy gradient at   160.71 seconds   0:02:41 wall
 
 
           nserch  update   npts       func            gnorm          alpha   icode
@@ -13488,7 +13488,7 @@
 
  ========================================================================================================
 
- commence scf/gradient treatment at     160.59 seconds   0:02:41 wall
+ commence scf/gradient treatment at     160.71 seconds   0:02:41 wall
 
  search 19
                                         *******************
@@ -13585,9 +13585,9 @@
  integrals are not in a supermatrix form : p-k option is off
  number of integrals per block = 340
 
- commence 2-electron integral evaluation at       160.60 seconds   0:02:41 wall
+ commence 2-electron integral evaluation at       160.71 seconds   0:02:41 wall
 
- end of 2-electron integral evaluation at         160.65 seconds   0:02:41 wall
+ end of 2-electron integral evaluation at         160.76 seconds   0:02:41 wall
 
  --------------------------------------------------------------------------------------------------------
 
@@ -13629,7 +13629,7 @@
           ----------------
 
           --------------
-          final energies   after   9 cycles at       165.96 seconds   0:02:46 wall
+          final energies   after   9 cycles at       166.05 seconds   0:02:46 wall
           --------------
 
 
@@ -14085,13 +14085,13 @@
    60  20 h s       0.0869   0.0000   0.0000   0.0000   0.0000   0.0000   0.0000   0.0000   0.0000   0.0000
 
 
- end of closed shell scf at       165.96 seconds   0:02:46 wall
+ end of closed shell scf at       166.06 seconds   0:02:46 wall
 
  --------------------------------------------------------------------------------------------------------
 
 
 
- commence gradient evaluation at    165.96 seconds   0:02:46 wall
+ commence gradient evaluation at    166.06 seconds   0:02:46 wall
 
  gradient prefactor threshold 0.100000E-08
  Now off to CD_forces
@@ -14125,7 +14125,7 @@
    e/y      0.0004081     -0.0004081     -0.0004744      0.0004744
    e/z      0.0000000      0.0000000      0.0000000      0.0000000
 
- end of calculation of the energy gradient at   168.28 seconds   0:02:49 wall
+ end of calculation of the energy gradient at   168.38 seconds   0:02:49 wall
 
 
           nserch  update   npts       func            gnorm          alpha   icode
@@ -14167,7 +14167,7 @@
 
  ========================================================================================================
 
- commence scf/gradient treatment at     168.28 seconds   0:02:49 wall
+ commence scf/gradient treatment at     168.38 seconds   0:02:49 wall
 
  search 20
                                         *******************
@@ -14264,9 +14264,9 @@
  integrals are not in a supermatrix form : p-k option is off
  number of integrals per block = 340
 
- commence 2-electron integral evaluation at       168.29 seconds   0:02:49 wall
+ commence 2-electron integral evaluation at       168.38 seconds   0:02:49 wall
 
- end of 2-electron integral evaluation at         168.35 seconds   0:02:49 wall
+ end of 2-electron integral evaluation at         168.44 seconds   0:02:49 wall
 
  --------------------------------------------------------------------------------------------------------
 
@@ -14308,7 +14308,7 @@
           ----------------
 
           --------------
-          final energies   after   9 cycles at       173.65 seconds   0:02:54 wall
+          final energies   after   9 cycles at       173.74 seconds   0:02:54 wall
           --------------
 
 
@@ -14764,13 +14764,13 @@
    60  20 h s       0.0868   0.0000   0.0000   0.0000   0.0000   0.0000   0.0000   0.0000   0.0000   0.0000
 
 
- end of closed shell scf at       173.65 seconds   0:02:54 wall
+ end of closed shell scf at       173.74 seconds   0:02:54 wall
 
  --------------------------------------------------------------------------------------------------------
 
 
 
- commence gradient evaluation at    173.65 seconds   0:02:54 wall
+ commence gradient evaluation at    173.74 seconds   0:02:54 wall
 
  gradient prefactor threshold 0.100000E-08
  Now off to CD_forces
@@ -14804,7 +14804,7 @@
    e/y      0.0004549     -0.0004549     -0.0000354      0.0000354
    e/z      0.0000000      0.0000000      0.0000000      0.0000000
 
- end of calculation of the energy gradient at   175.98 seconds   0:02:56 wall
+ end of calculation of the energy gradient at   176.07 seconds   0:02:57 wall
 
 
 
@@ -14992,7 +14992,7 @@
                                         wavefunction analysis
                                         *********************
 
- commence analysis at    175.98 seconds   0:02:56 wall
+ commence analysis at    176.07 seconds   0:02:57 wall
 
                  dipole moments
 
@@ -15103,7 +15103,7 @@
              20  h            1.0     0.92078     0.95508
 
 
- end of wavefunction analysis at   175.98 seconds.   0:02:56 wall
+ end of wavefunction analysis at   176.07 seconds.   0:02:57 wall
 
  ================================================================================
 
@@ -15112,7 +15112,7 @@
  **********************************************************************
  **********************************************************************
  *                                                                    *
- *     job  option  complete at        175.98 seconds   0:02:56 wall  *
+ *     job  option  complete at        176.07 seconds   0:02:57 wall  *
  *                                                                    *
  **********************************************************************
  **********************************************************************
@@ -15120,7 +15120,7 @@
 
 
 
- end of  G A M E S S   program at       175.98 seconds   0:02:56 wall
+ end of  G A M E S S   program at       176.07 seconds   0:02:57 wall
 
 
 
@@ -15162,7 +15162,7 @@
  *summary of vector sections
  *
  *section    type      created:           title:
- *      1    rhf      15:59:12 on Oct  7  divinylbenzene optimisiation
+ *      1    rhf      19:57:25 on Oct  8  divinylbenzene optimisiation
 
  file positions
  lfn   block  length
@@ -15179,17 +15179,17 @@
  ******************************************************************************
  input                                 0.00      0.00            0.00      0.00
  vector generation                     0.00      0.00            0.00      0.00
- 1e-integral evaluation                0.02      0.01            0.06      0.03
- 2e-integral evaluation                1.19      0.68            1.21      0.69
- scf                                   2.02      1.15            2.12      1.20
- 1e-integral derivatives               0.45      0.26            0.46      0.26
- 2e-integral derivatives               3.29      1.87            3.28      1.86
+ 1e-integral evaluation                0.03      0.02            0.06      0.03
+ 2e-integral evaluation                1.17      0.66            1.20      0.68
+ scf                                   1.97      1.12            2.13      1.21
+ 1e-integral derivatives               0.46      0.26            0.46      0.26
+ 2e-integral derivatives               3.23      1.83            3.27      1.85
  wave-function analysis                0.00      0.00            0.00      0.00
- ExCorr. energy                      123.53     70.20          123.73     70.14
- ExCorr. gradient                     45.47     25.84           45.52     25.80
- other                                 0.01      0.01            0.01      0.01
+ ExCorr. energy                      123.81     70.31          123.95     70.22
+ ExCorr. gradient                     45.38     25.77           45.43     25.73
+ other                                 0.03      0.02            0.02      0.01
  ******************************************************************************
- Total                               175.98                    176.40
+ Total                               176.08                    176.53
  ******************************************************************************
 
  Memory high water mark

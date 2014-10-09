@@ -1,7 +1,5 @@
 TITLE
-Divinylbenzene unrestricted singlepoint
-CHARGE 1
-MULT 2
+Divinylbenzene singlepoint
 GEOMETRY BOHR
         0.1166458     -2.7143888      0.0000000    6.00  c       
        -0.1166458      2.7143888      0.0000000    6.00  c       
@@ -25,8 +23,8 @@ GEOMETRY BOHR
         2.0287924     -9.1061355      0.0000000    1.00  h       
 END
 IPRINT S
+FORMAT HIGH
 BASIS STO3G
 RUNTYPE SCF
-SCFTYPE UHF
-DFT B3LYP
+SCFTYPE RHF
 ENTER
