@@ -101,6 +101,7 @@ GAMESS-UK/GAMESS-UK7.0/pyridine.out
 GAMESS-UK/GAMESS-UK8.0/dvb_gopt.out
 GAMESS-UK/GAMESS-UK8.0/dvb_gopt_b.out
 GAMESS-UK/GAMESS-UK8.0/dvb_gopt_c.out
+GAMESS-UK/GAMESS-UK8.0/dvb_gopt_hf_unconverged.out
 GAMESS-UK/GAMESS-UK8.0/dvb_sp.out
 GAMESS-UK/GAMESS-UK8.0/dvb_un_sp.out
 Gaussian/Gaussian09/25DMF_HRANH.log

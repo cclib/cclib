@@ -181,10 +181,17 @@ class GAMESSUK(logfileparser.Logfile):
             self.atomcoords.append(atomcoords)
             self.set_attribute('atomnos', atomnos)
 
+        # This is printed when a geometry optimization succeeds, after the last gradient of the energy.
         if line[40:62] == "optimization converged":
+            self.skip_line(inputfile, 's')
             if not hasattr(self, 'optdone'):
                 self.optdone = []
             self.optdone.append(len(self.geovalues)-1)
+
+        # This is apparently printed when a geometry optimization is not converged but the job ends.
+        if "minimisation not converging" in line:
+            self.skip_line(inputfile, 's')
+            self.optdone = []
 
         if line[1:32] == "total number of basis functions":
 

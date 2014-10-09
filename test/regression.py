@@ -105,10 +105,8 @@ def testGAMESS_WinGAMESS_dvb_td_trplet_2007_03_24_r1_out(logfile):
 
 # GAMESS-UK #
 
-# It would be good to have an unconverged geometry optimization so that
-# we can test that optdone is set properly.
-#def testGAMESS_UKX.X_dvb_gopt_unconverged:
-#    assert hasattr(logfile.data, 'optdone') and not logfile.data.optdone
+def testGAMESS_UK_GAMESS_UK8_0_dvb_gopt_hf_unconverged_out(logfile):
+    assert hasattr(logfile.data, 'optdone') and not logfile.data.optdone
 
 # Gaussian #
 
@@ -391,7 +389,7 @@ def normalisefilename(filename):
     """Replace all non-alphanumeric symbols by underscores.
 
     >>> import regression
-    >>> for x in [ "Gaussian_Gaussian03_Mo4OSibdt2-opt.log" ]:
+    >>> for x in [ "Gaussian/Gaussian03/Mo4OSibdt2-opt.log" ]:
     ...     print(regression.normalisefilename(x))
     ...
     Gaussian_Gaussian03_Mo4OSibdt2_opt_log
@@ -664,7 +662,7 @@ def main(which=[], opt_traceback=False, opt_status=False):
     # to any regression file name.
     orphaned_tests = []
     for ip, parser in enumerate(testall.parsers):
-        prefix = "test%s" % parser
+        prefix = "test%s_%s" % (parser, parser)
         tests = [fn for fn in globals() if fn[:len(prefix)] == prefix]
         normalize = lambda fn: normalisefilename("_".join(fn.split(os.sep)[3:]))
         normalized = [normalize(fname) for fname in filenames[ip]]
