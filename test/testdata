@@ -11,7 +11,7 @@
 # a special keyword, and we can test both HF and DFT outputs. Gaussian is an
 # exception, as it has at least two different formats for printing basis set
 # information, and so we made dedicated unit test logfiles in that case.
-Basis     GAMESSUK    GenericBasisTest      basicGAMESS-UK7.0     dvb_sp.out
+Basis     GAMESSUK    GenericBasisTest      basicGAMESS-UK7.0     dvb_sp_b.out
 Basis     GAMESSUK    GenericBasisTest      basicGAMESS-UK8.0     dvb_sp_hf.out
 Basis     GAMESSUK    GenericBasisTest      basicGAMESS-UK8.0     dvb_sp_ks.out
 Basis     GAMESS      GenericBasisTest      basicGAMESS-US2012    dvb_sp.out
