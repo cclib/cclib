@@ -77,17 +77,21 @@ class ADFSPunTest(GenericSPunTest):
         self.assertEquals(self.data.fooverlaps.shape,(self.data.nbasis,self.data.nbasis))
 
 
-class GamessUKSPunTest(GenericSPunTest):
+class GamessUK70SPunTest(GenericSPunTest):
     """Customized unrestricted single point unittest"""
 
     def testdimmocoeffs(self):
         """Are the dimensions of mocoeffs equal to 2 x (homos+6) x nbasis?"""
+
         self.assertEquals(type(self.data.mocoeffs), type([]))
         self.assertEquals(len(self.data.mocoeffs), 2)
-        self.assertEquals(self.data.mocoeffs[0].shape,
-                          (self.data.homos[0]+6, self.data.nbasis))
-        self.assertEquals(self.data.mocoeffs[1].shape,
-                          (self.data.homos[1]+6, self.data.nbasis))
+
+        # This is only an issue in version 7.0 (and before?), since in the version 8.0
+        # logfile all eigenvectors are happily printed.
+        shape_alpha = (self.data.homos[0]+6, self.data.nbasis)
+        shape_beta = (self.data.homos[1]+6, self.data.nbasis)
+        self.assertEquals(self.data.mocoeffs[0].shape, shape_alpha)
+        self.assertEquals(self.data.mocoeffs[1].shape, shape_beta)
 
 
 class GaussianSPunTest(GenericSPunTest):
