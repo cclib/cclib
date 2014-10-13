@@ -93,7 +93,7 @@ GeoOpt    NWChem      NWChemGeoOptTest      basicNWChem6.0        dvb_gopt_hf.ou
 GeoOpt    NWChem      NWChemGeoOptTest      basicNWChem6.0        dvb_gopt_ks.out
 GeoOpt    ORCA        OrcaGeoOptTest        basicORCA2.9          dvb_gopt.out
 GeoOpt    ORCA        OrcaGeoOptTest        basicORCA3.0          dvb_gopt.out
-GeoOpt    Psi         GenericGeoOptTest     basicPsi4             dvb_gopt_hf.out
+GeoOpt    Psi         PsiGeoOptTest         basicPsi4             dvb_gopt_hf.out
 GeoOpt    QChem       GenericGeoOptTest     basicQChem4.2         dvb_gopt.out
 
 MP        GAMESSUK    GenericMP2Test        basicGAMESS-UK7.0     water_mp2.out

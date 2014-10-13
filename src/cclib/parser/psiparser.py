@@ -639,7 +639,9 @@ class Psi(logfileparser.Logfile):
 
         # The geometry convergence targets and values are printed in a table, with the legends
         # describing the convergence annotation. Probably exact slicing of the line needs
-        # to be done in order to extract the numbers correctly.
+        # to be done in order to extract the numbers correctly. If there are no values for
+        # a paritcular target it means they are not used (marked also with an 'o'), and in this case
+        # we will set a value of numpy.inf so that any value will be smaller.
         #
         #  ==> Convergence Check <==
         #
@@ -666,7 +668,7 @@ class Psi(logfileparser.Logfile):
                 if criteria[istart:istart+9].strip():
                     geotargets.append(float(criteria[istart:istart+9]))
                 else:
-                    geotargets.append(numpy.nan)
+                    geotargets.append(numpy.inf)
 
             self.skip_line(inputfile, 'dashes')
 
