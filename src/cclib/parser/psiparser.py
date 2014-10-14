@@ -541,7 +541,9 @@ class Psi(logfileparser.Logfile):
         if (self.version == 3 and "* SCF total energy" in line) or \
            (self.section == "Post-Iterations" and ("@RHF Final Energy:" in line or "@RKS Final Energy" in line)):
             e = float(line.split()[-1])
-            self.scfenergies = [utils.convertor(e, 'hartree', 'eV')]
+            if not hasattr(self, 'scfenergies'):
+                self.scfenergies = []
+            self.scfenergies.append(utils.convertor(e, 'hartree', 'eV'))
 
         #  ==> Molecular Orbitals <==
         #
