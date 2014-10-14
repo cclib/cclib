@@ -146,7 +146,12 @@ class Psi(logfileparser.Logfile):
 
             if not hasattr(self, 'atomcoords'):
                 self.atomcoords = []
-            self.atomcoords.append(coords)
+
+            # This condition discards any repeated coordinates that Psi print. For example,
+            # geometry optimizations will print the coordinates at the beginning of and SCF
+            # section and also at the start of the gradient calculation.
+            if len(self.atomcoords) == 0 or self.atomcoords[-1] != coords:
+                self.atomcoords.append(coords)
 
         # In Psi3 there are these two helpful sections.
         if (self.version == 3) and (line.strip() == '-SYMMETRY INFORMATION:'):
