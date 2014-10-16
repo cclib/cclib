@@ -181,7 +181,7 @@ TD        GAMESS      GAMESSUSTDDFTTest     basicGAMESS-US2012    dvb_td.out
 TD        GAMESS      GenericTDDFTtrpTest   basicGAMESS-US2012    dvb_td_trplet.out
 TD        Gaussian    GaussianTDDFTTest     basicGaussian03       dvb_td.out
 TD        Gaussian    GaussianTDDFTTest     basicGaussian09       dvb_td.out
-TD        Jaguar      GenericTDTest         basicJaguar8.3        dvb_td.out
+TD        Jaguar      JaguarTDDFTTest       basicJaguar8.3        dvb_td.out
 TD        ORCA        OrcaTDDFTTest         basicORCA2.9          dvb_td.out
 TD        ORCA        OrcaTDDFTTest         basicORCA3.0          dvb_td.out
 TD        QChem       OrcaTDDFTTest         basicQChem4.2         dvb_td.out

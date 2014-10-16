@@ -86,6 +86,12 @@ class GAMESSUSTDDFTTest(GenericTDTest):
     """Customized time-dependent HF/DFT unittest"""
     number = 10
 
+
+class JaguarTDDFTTest(GenericTDTest):
+    """Customized time-dependent HF/DFT unittest"""
+
+    expected_l_max = 48000
+
     
 class OrcaTDDFTTest(GenericTDTest):
     """Customized time-dependent HF/DFT unittest"""
