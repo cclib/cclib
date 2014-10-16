@@ -63,7 +63,7 @@ CI        GAMESS      GenericCISTest        basicGAMESS-US2012    water_cis_saps
 CI        Gaussian    GaussianCISTest       basicGaussian03       water_cis.log
 CI        Gaussian    GaussianCISTest       basicGaussian09       water_cis.log
 CI        Jaguar      GenericCISTest        basicJaguar7.0        water_cis.out
-CI        Jaguar      GenericCISTest        basicJaguar8.3        water_cis.out
+CI        Jaguar      Jaguar83CISTest       basicJaguar8.3        water_cis.out
 CI        QChem       QChemCISTest          basicQChem4.2         water_cis.out
 
 Core      ADF         ADFCoreTest           basicADF2007.01       MoOCl4-sp.adfout
