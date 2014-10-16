@@ -92,6 +92,11 @@ class JaguarTDDFTTest(GenericTDTest):
 
     expected_l_max = 48000
 
+    def testoscs(self):
+        """Is the maximum of etoscs in the right range?"""
+        self.assertEqual(len(self.data.etoscs), self.number)
+        self.assertInside(max(self.data.etoscs), 1.0, 0.2)
+
     
 class OrcaTDDFTTest(GenericTDTest):
     """Customized time-dependent HF/DFT unittest"""
