@@ -122,9 +122,9 @@ class GAMESSUK(logfileparser.Logfile):
             self.skip_lines(inputfile, ['s', 'b', 's'])
             line = next(inputfile)
             if "basis selected is" in line:
-                self.skip_lines(inputfile, ['s', 'b', 's'])
+                self.skip_lines(inputfile, ['s', 'b', 's', 's'])
 
-            self.skip_lines(inputfile, ['s', 'header1', 'header2', 's', 's'])
+            self.skip_lines(inputfile, ['header1', 'header2', 's', 's'])
 
             atomnos = []
             atomcoords = []

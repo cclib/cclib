@@ -664,7 +664,7 @@ class Psi(logfileparser.Logfile):
         #
         if (self.section == "Convergence Check") and line.strip() == "==> Convergence Check <==":
 
-            self.skip_lines(inputfile, ['b', 'units', 'comment', 'd', 'header', 'd'])
+            self.skip_lines(inputfile, ['b', 'units', 'comment', 'dash+tilde', 'header', 'dash+tilde'])
 
             # These are the position in the line at which numbers should start.
             starts = [27, 41, 55, 69, 83]
