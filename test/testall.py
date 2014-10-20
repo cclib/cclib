@@ -84,20 +84,15 @@ def gettestdata(module=None):
     if module:
         lines = [line for line in lines if line[0] == module]
 
-    # This dictionary contains information needed to run unit tests, with one entry
-    # for each unit test class used. Since there may in principle be multiple tests
-    # for a test class (files from different program versions, for example), the values
-    # in this dictionary are themselves lists of dictionaries.
-    testdata = {}
+    # Each dictionary in this list contains the information needed to run one unit test.
+    testdata = []
     for line in lines:
         test = {}
         test["module"] = line[0]
         test["parser"] = line[1]
+        test["class"] = line[2]
         test["location"] = line[3:]
-        testclass = line[2]
-        if testclass not in testdata:
-            testdata[testclass] = []
-        testdata[testclass].append(test)
+        testdata.append(test)
 
     return testdata
 
@@ -179,16 +174,15 @@ def testall(parsers=parsers, modules=test_modules, status=False, terse=False, st
 
         testdata = gettestdata(module)
 
-        # Filter the test data to use if a list of requested parsers is passed
-        # to this function. We used to assume that all unit tests for a given test class
-        # use the same parser, but that is no longer true. We now use the generic
-        # test class in many cases, to reduce the total number of classes.
-        testdata = dict([(x,[t for t in y if t['parser'] in parsers]) for x,y in testdata.items()])
+        # Filter the test data by parser, which has an effect only if a list of requested parsers
+        # is passed to this function othet than the default. We used to assume here that all unit tests
+        # for a given test class use the same parser, but that is no longer true. We now use generic
+        # test classes in many cases, in order to reduce the total number of classes needed.
+        testdata = [t for t in testdata if t['parser'] in parsers]
 
-        for name in sorted(testdata.keys()):
+        for test_instance in testdata:
 
-            for test_instance in testdata[name]:
-
+                name = test_instance['class']
                 path = '/'.join(test_instance["location"])
                 program = test_instance["location"][0][5:]
                 fname = test_instance["location"][-1]
