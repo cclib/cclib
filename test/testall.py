@@ -9,6 +9,7 @@
 # the full license online at http://www.gnu.org/copyleft/lgpl.html.
 
 from __future__ import print_function
+
 import os
 import sys
 import unittest
@@ -39,7 +40,7 @@ def getfile(parser, *location, **kwds):
     Inputs:
         parser - a logfile parser class (subclass of LogFile)
         *location - subdirectory and data filename(s)
-        **kwds - accepts 'stream' keyword argument
+        **kwds - currently accepts 'stream' keyword argument
     
     Outputs:
         data - the resulting data object
@@ -49,10 +50,9 @@ def getfile(parser, *location, **kwds):
     location = os.path.join(("..", "data", get_program_dir(parser.__name__)) + location)
     stream = kwds.get('stream', sys.stdout)
 
-    # Now construct the proper full path(s).
-    # Multiple paths will be in a list only if more than one data file given.
-    # Presently, location contains only one subdirectory (basic*),
-    #   so this is easy since there are normally 5 elements in location.
+    # Construct the proper full path(s). Multiple paths will be in a list only if more than one
+    # data file given. Presently, location contains only one subdirectory (basic*), so this is easy
+    # since there are normally 5 elements in location.
     if len(location) == 5:
         filename = os.path.join(*location)
     else:
@@ -101,12 +101,12 @@ def visualtests(stream=sys.stdout):
     """These are not formal tests -- but they should be eyeballed."""
 
     parsers_to_test = {
-        'ADF2007.01' : getfile(ADF, "basicADF2007.01", "dvb_gopt.adfout")[0],
+        'ADF2013.01' : getfile(ADF, "basicADF2013.01", "dvb_gopt.adfout")[0],
         'Firefly8.0' : getfile(GAMESS, "basicFirefly8.0", "dvb_gopt_a.out")[0],
-        'Gaussian03' : getfile(Gaussian, "basicGaussian03", "dvb_gopt.out")[0],
+        'Gaussian09' : getfile(Gaussian, "basicGaussian09", "dvb_gopt.out")[0],
         'GAMESS-US' : getfile(GAMESS, "basicGAMESS-US2012", "dvb_gopt_a.out")[0],
-        'Jaguar7.0' : getfile(Jaguar, "basicJaguar7.0", "dvb_gopt.out")[0],
-        'Molpro2006' : getfile(Molpro, "basicMolpro2006", "dvb_gopt.log", "dvb_gopt.out")[0],
+        'Jaguar8.0' : getfile(Jaguar, "basicJaguar8.3", "dvb_gopt_ks.out")[0],
+        'Molpro2012' : getfile(Molpro, "basicMolpro2012", "dvb_gopt.log", "dvb_gopt.out")[0],
         'NWChem6.0' : getfile(NWChem, "basicNWChem6.0", "dvb_gopt_ks.out")[0],
         'ORCA3.0' : getfile(ORCA, "basicORCA3.0", "dvb_gopt.out")[0],
         'QChem4.2' : getfile(QChem, "basicQChem4.2", "dvb_gopt.out")[0],
@@ -114,6 +114,7 @@ def visualtests(stream=sys.stdout):
     parser_names = sorted(parsers_to_test.keys())
     output = [parsers_to_test[pn] for pn in parser_names]
 
+    print("\n*** Visual tests ***", file=stream)
     print("MO energies of optimised dvb", file=stream)
     print("      ", "".join(["%-12s" % pn for pn in parser_names]), file=stream)
     print("HOMO", "   ".join(["%+9.4f" % out.moenergies[0][out.homos[0]] for out in output]), file=stream)
@@ -182,37 +183,37 @@ def testall(parsers=parsers, modules=test_modules, status=False, terse=False, st
 
         for test_instance in testdata:
 
-                name = test_instance['class']
-                path = '/'.join(test_instance["location"])
-                program = test_instance["location"][0][5:]
-                fname = test_instance["location"][-1]
+            name = test_instance['class']
+            path = '/'.join(test_instance["location"])
+            program = test_instance["location"][0][5:]
+            fname = test_instance["location"][-1]
 
-                try:
-                    test = importName("test%s" %module, name)
-                except:
-                    errors.append("ERROR: could not import %s from %s." %(name, module))
-                else:
-                    description = "%s/%s: %s" %(program, fname, test.__doc__)
-                    print("", file=stream_test)
-                    print("**** %s ****" % description, file=stream)
+            try:
+                test = importName("test%s" %module, name)
+            except:
+                errors.append("ERROR: could not import %s from %s." %(name, module))
+            else:
+                description = "%s/%s: %s" %(program, fname, test.__doc__)
+                print("", file=stream_test)
+                print("**** %s ****" % description, file=stream)
 
-                    parser = test_instance["parser"]
-                    location = test_instance["location"]
-                    test.data, test.logfile = getfile(eval(parser), *location, stream=stream)
+                parser = test_instance["parser"]
+                location = test_instance["location"]
+                test.data, test.logfile = getfile(eval(parser), *location, stream=stream)
 
-                    myunittest = unittest.makeSuite(test)
-                    a = unittest.TextTestRunner(stream=stream_test, verbosity=2).run(myunittest)
+                myunittest = unittest.makeSuite(test)
+                a = unittest.TextTestRunner(stream=stream_test, verbosity=2).run(myunittest)
 
-                    l = perpackage.setdefault(program, [0, 0, 0, 0])
-                    l[0] += a.testsRun
-                    l[1] += len(a.errors)
-                    l[2] += len(a.failures)
+                l = perpackage.setdefault(program, [0, 0, 0, 0])
+                l[0] += a.testsRun
+                l[1] += len(a.errors)
+                l[2] += len(a.failures)
 
-                    if hasattr(a, "skipped"):
-                        l[3] += len(a.skipped)
-                    alltests.append(test)
-                    errors.extend([description+"\n"+"".join(map(str,e)) for e in a.errors])
-                    failures.extend([description+"\n"+"".join(map(str,f)) for f in a.failures])
+                if hasattr(a, "skipped"):
+                    l[3] += len(a.skipped)
+                alltests.append(test)
+                errors.extend([description+"\n"+"".join(map(str,e)) for e in a.errors])
+                failures.extend([description+"\n"+"".join(map(str,f)) for f in a.failures])
 
     if terse:
         devnull.close()
@@ -242,9 +243,6 @@ def testall(parsers=parsers, modules=test_modules, status=False, terse=False, st
     print("TOTAL: %d\tPASSED: %d\tFAILED: %d\tERRORS: %d\tSKIPPED: %d" \
             %(total[0], total[0]-(total[1]+total[2]+total[3]), total[2], total[1], total[3]), file=stream)
 
-    print("\n*** Visual tests ***", file=stream)
-    visualtests(stream=stream)
-    
     if destdir:
         os.chdir(curdir)
 
@@ -266,3 +264,4 @@ if __name__ == "__main__":
     terse = "terse" in sys.argv or "--terse" in sys.argv
 
     tests = testall(parsers, modules, status, terse)
+    visualtests()
