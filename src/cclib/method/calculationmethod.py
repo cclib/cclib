@@ -13,19 +13,19 @@ import sys
 
 
 class Method(object):
-    """Abstract class for logfile objects.
+    """Abstract class for method classes.
 
     Subclasses defined by cclib:
-        Density, Fragments, OPA, Population
-    
-    Attributes:
-        data - ccData source data object
+        CDA, CSPA, Density, FragmentAnalysis, LPA, MBO, MPA, OPA, Population, Volume
+
+    All the modules containing methods should be importable:
+    >>> import cda, cspa, density, fragments, lpa, mbo, mpa, opa, population, volume
     """
-    def __init__(self, data, progress=None,
-                 loglevel=logging.INFO, logname="Log"):
+
+    def __init__(self, data, progress=None, loglevel=logging.INFO, logname="Log"):
         """Initialise the Logfile object.
 
-        Typically called by subclasses in their own __init__ methods.
+        This constructor is typically called by the constructor of a subclass.
         """
 
         self.data = data
@@ -33,15 +33,14 @@ class Method(object):
         self.loglevel = loglevel
         self.logname = logname
 
-        # Set up the logger.
         self.logger = logging.getLogger('%s %s' % (self.logname, self.data))
         self.logger.setLevel(self.loglevel)
+        self.logformat = "[%(name)s %(levelname)s] %(message)s"
         handler = logging.StreamHandler(sys.stdout)
-        handler.setFormatter(logging.Formatter(
-                             "[%(name)s %(levelname)s] %(message)s"))
+        handler.setFormatter(logging.Formatter(self.logformat))
         self.logger.addHandler(handler)
 
 
 if __name__ == "__main__":
-    import doctest, calculationmethod
-    doctest.testmod(calculationmethod, verbose=False)
+    import doctest
+    doctest.testmod(verbose=True)
