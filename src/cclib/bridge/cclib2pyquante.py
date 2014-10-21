@@ -8,12 +8,14 @@
 # received a copy of the license along with cclib. You can also access
 # the full license online at http://www.gnu.org/copyleft/lgpl.html.
 
+from __future__ import print_function
+
 import sys
 
 try:
     from PyQuante.Molecule import Molecule
 except ImportError:
-    print "PyQuante could not be imported."
+    print("PyQuante could not be imported.")
 
 
 def makepyquante(atomcoords, atomnos, charge=0, mult=1):
