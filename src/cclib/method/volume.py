@@ -15,6 +15,7 @@ import numpy
 
 try:
     from PyQuante.CGBF import CGBF
+    from cclib.bridge import cclib2pyquante
     module_pyq = True
 except:
     module_pyq = False
@@ -26,7 +27,6 @@ try:
 except:
     module_pyvtk = False
 
-from cclib.bridge import makepyquante
 from cclib.parser.utils import convertor
 
 
