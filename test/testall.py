@@ -9,6 +9,7 @@
 # the full license online at http://www.gnu.org/copyleft/lgpl.html.
 
 from __future__ import print_function
+
 import os
 import sys
 import unittest
@@ -39,7 +40,7 @@ def getfile(parser, *location, **kwds):
     Inputs:
         parser - a logfile parser class (subclass of LogFile)
         *location - subdirectory and data filename(s)
-        **kwds - accepts 'stream' keyword argument
+        **kwds - currently accepts 'stream' keyword argument
     
     Outputs:
         data - the resulting data object
@@ -49,10 +50,9 @@ def getfile(parser, *location, **kwds):
     location = os.path.join(("..", "data", get_program_dir(parser.__name__)) + location)
     stream = kwds.get('stream', sys.stdout)
 
-    # Now construct the proper full path(s).
-    # Multiple paths will be in a list only if more than one data file given.
-    # Presently, location contains only one subdirectory (basic*),
-    #   so this is easy since there are normally 5 elements in location.
+    # Construct the proper full path(s). Multiple paths will be in a list only if more than one
+    # data file given. Presently, location contains only one subdirectory (basic*), so this is easy
+    # since there are normally 5 elements in location.
     if len(location) == 5:
         filename = os.path.join(*location)
     else:
@@ -84,20 +84,15 @@ def gettestdata(module=None):
     if module:
         lines = [line for line in lines if line[0] == module]
 
-    # This dictionary contains information needed to run unit tests, with one entry
-    # for each unit test class used. Since there may in principle be multiple tests
-    # for a test class (files from different program versions, for example), the values
-    # in this dictionary are themselves lists of dictionaries.
-    testdata = {}
+    # Each dictionary in this list contains the information needed to run one unit test.
+    testdata = []
     for line in lines:
         test = {}
         test["module"] = line[0]
         test["parser"] = line[1]
+        test["class"] = line[2]
         test["location"] = line[3:]
-        testclass = line[2]
-        if testclass not in testdata:
-            testdata[testclass] = []
-        testdata[testclass].append(test)
+        testdata.append(test)
 
     return testdata
 
@@ -106,12 +101,12 @@ def visualtests(stream=sys.stdout):
     """These are not formal tests -- but they should be eyeballed."""
 
     parsers_to_test = {
-        'ADF2007.01' : getfile(ADF, "basicADF2007.01", "dvb_gopt.adfout")[0],
+        'ADF2013.01' : getfile(ADF, "basicADF2013.01", "dvb_gopt.adfout")[0],
         'Firefly8.0' : getfile(GAMESS, "basicFirefly8.0", "dvb_gopt_a.out")[0],
-        'Gaussian03' : getfile(Gaussian, "basicGaussian03", "dvb_gopt.out")[0],
+        'Gaussian09' : getfile(Gaussian, "basicGaussian09", "dvb_gopt.out")[0],
         'GAMESS-US' : getfile(GAMESS, "basicGAMESS-US2012", "dvb_gopt_a.out")[0],
-        'Jaguar7.0' : getfile(Jaguar, "basicJaguar7.0", "dvb_gopt.out")[0],
-        'Molpro2006' : getfile(Molpro, "basicMolpro2006", "dvb_gopt.log", "dvb_gopt.out")[0],
+        'Jaguar8.0' : getfile(Jaguar, "basicJaguar8.3", "dvb_gopt_ks.out")[0],
+        'Molpro2012' : getfile(Molpro, "basicMolpro2012", "dvb_gopt.log", "dvb_gopt.out")[0],
         'NWChem6.0' : getfile(NWChem, "basicNWChem6.0", "dvb_gopt_ks.out")[0],
         'ORCA3.0' : getfile(ORCA, "basicORCA3.0", "dvb_gopt.out")[0],
         'QChem4.2' : getfile(QChem, "basicQChem4.2", "dvb_gopt.out")[0],
@@ -119,6 +114,7 @@ def visualtests(stream=sys.stdout):
     parser_names = sorted(parsers_to_test.keys())
     output = [parsers_to_test[pn] for pn in parser_names]
 
+    print("\n*** Visual tests ***", file=stream)
     print("MO energies of optimised dvb", file=stream)
     print("      ", "".join(["%-12s" % pn for pn in parser_names]), file=stream)
     print("HOMO", "   ".join(["%+9.4f" % out.moenergies[0][out.homos[0]] for out in output]), file=stream)
@@ -179,46 +175,45 @@ def testall(parsers=parsers, modules=test_modules, status=False, terse=False, st
 
         testdata = gettestdata(module)
 
-        # Filter the test data to use if a list of requested parsers is passed
-        # to this function. We used to assume that all unit tests for a given test class
-        # use the same parser, but that is no longer true. We now use the generic
-        # test class in many cases, to reduce the total number of classes.
-        testdata = dict([(x,[t for t in y if t['parser'] in parsers]) for x,y in testdata.items()])
+        # Filter the test data by parser, which has an effect only if a list of requested parsers
+        # is passed to this function othet than the default. We used to assume here that all unit tests
+        # for a given test class use the same parser, but that is no longer true. We now use generic
+        # test classes in many cases, in order to reduce the total number of classes needed.
+        testdata = [t for t in testdata if t['parser'] in parsers]
 
-        for name in sorted(testdata.keys()):
+        for test_instance in testdata:
 
-            for test_instance in testdata[name]:
+            name = test_instance['class']
+            path = '/'.join(test_instance["location"])
+            program = test_instance["location"][0][5:]
+            fname = test_instance["location"][-1]
 
-                path = '/'.join(test_instance["location"])
-                program = test_instance["location"][0][5:]
-                fname = test_instance["location"][-1]
+            try:
+                test = importName("test%s" %module, name)
+            except:
+                errors.append("ERROR: could not import %s from %s." %(name, module))
+            else:
+                description = "%s/%s: %s" %(program, fname, test.__doc__)
+                print("", file=stream_test)
+                print("**** %s ****" % description, file=stream)
 
-                try:
-                    test = importName("test%s" %module, name)
-                except:
-                    errors.append("ERROR: could not import %s from %s." %(name, module))
-                else:
-                    description = "%s/%s: %s" %(program, fname, test.__doc__)
-                    print("", file=stream_test)
-                    print("**** %s ****" % description, file=stream)
+                parser = test_instance["parser"]
+                location = test_instance["location"]
+                test.data, test.logfile = getfile(eval(parser), *location, stream=stream)
 
-                    parser = test_instance["parser"]
-                    location = test_instance["location"]
-                    test.data, test.logfile = getfile(eval(parser), *location, stream=stream)
+                myunittest = unittest.makeSuite(test)
+                a = unittest.TextTestRunner(stream=stream_test, verbosity=2).run(myunittest)
 
-                    myunittest = unittest.makeSuite(test)
-                    a = unittest.TextTestRunner(stream=stream_test, verbosity=2).run(myunittest)
+                l = perpackage.setdefault(program, [0, 0, 0, 0])
+                l[0] += a.testsRun
+                l[1] += len(a.errors)
+                l[2] += len(a.failures)
 
-                    l = perpackage.setdefault(program, [0, 0, 0, 0])
-                    l[0] += a.testsRun
-                    l[1] += len(a.errors)
-                    l[2] += len(a.failures)
-
-                    if hasattr(a, "skipped"):
-                        l[3] += len(a.skipped)
-                    alltests.append(test)
-                    errors.extend([description+"\n"+"".join(map(str,e)) for e in a.errors])
-                    failures.extend([description+"\n"+"".join(map(str,f)) for f in a.failures])
+                if hasattr(a, "skipped"):
+                    l[3] += len(a.skipped)
+                alltests.append(test)
+                errors.extend([description+"\n"+"".join(map(str,e)) for e in a.errors])
+                failures.extend([description+"\n"+"".join(map(str,f)) for f in a.failures])
 
     if terse:
         devnull.close()
@@ -248,9 +243,6 @@ def testall(parsers=parsers, modules=test_modules, status=False, terse=False, st
     print("TOTAL: %d\tPASSED: %d\tFAILED: %d\tERRORS: %d\tSKIPPED: %d" \
             %(total[0], total[0]-(total[1]+total[2]+total[3]), total[2], total[1], total[3]), file=stream)
 
-    print("\n*** Visual tests ***", file=stream)
-    visualtests(stream=stream)
-    
     if destdir:
         os.chdir(curdir)
 
@@ -272,3 +264,4 @@ if __name__ == "__main__":
     terse = "terse" in sys.argv or "--terse" in sys.argv
 
     tests = testall(parsers, modules, status, terse)
+    visualtests()

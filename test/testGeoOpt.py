@@ -279,6 +279,30 @@ class OrcaGeoOptTest(GenericGeoOptTest):
         self.assertTrue(converged)
 
 
+class PsiGeoOptTest(GenericGeoOptTest):
+    """Customized geometry optimization unittest"""
+
+    # Psi has a number of different convergence strategies to choose from, as described here:
+    #     http://sirius.chem.vt.edu/psi4manual/latest/optking.html
+    # and the default is to check that the max. force is converged and if the max energy change
+    # or dispalcement is converged. This is in fact what is tested below.
+    def testoptdone(self):
+        """Has the geometry converged and set optdone to True?"""
+
+        self.assertTrue(self.data.optdone)
+
+        targets = self.data.geotargets
+        values = numpy.abs(self.data.geovalues[-1])
+
+        # Since the other criteria are not used and are not printed in this case, they should
+        # be parsed as numpy.inf, for which we can check.
+        self.assertTrue(numpy.isinf(targets[2]))
+        self.assertTrue(numpy.isinf(targets[4]))
+
+        conv = values[1] < targets[1] and (values[0] < targets[0] or values[3] < targets[3])
+        self.assertTrue(conv)
+
+
 if __name__=="__main__":
 
     from testall import testall

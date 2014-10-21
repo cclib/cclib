@@ -146,7 +146,12 @@ class Psi(logfileparser.Logfile):
 
             if not hasattr(self, 'atomcoords'):
                 self.atomcoords = []
-            self.atomcoords.append(coords)
+
+            # This condition discards any repeated coordinates that Psi print. For example,
+            # geometry optimizations will print the coordinates at the beginning of and SCF
+            # section and also at the start of the gradient calculation.
+            if len(self.atomcoords) == 0 or self.atomcoords[-1] != coords:
+                self.atomcoords.append(coords)
 
         # In Psi3 there are these two helpful sections.
         if (self.version == 3) and (line.strip() == '-SYMMETRY INFORMATION:'):
@@ -536,7 +541,9 @@ class Psi(logfileparser.Logfile):
         if (self.version == 3 and "* SCF total energy" in line) or \
            (self.section == "Post-Iterations" and ("@RHF Final Energy:" in line or "@RKS Final Energy" in line)):
             e = float(line.split()[-1])
-            self.scfenergies = [utils.convertor(e, 'hartree', 'eV')]
+            if not hasattr(self, 'scfenergies'):
+                self.scfenergies = []
+            self.scfenergies.append(utils.convertor(e, 'hartree', 'eV'))
 
         #  ==> Molecular Orbitals <==
         #
@@ -639,7 +646,9 @@ class Psi(logfileparser.Logfile):
 
         # The geometry convergence targets and values are printed in a table, with the legends
         # describing the convergence annotation. Probably exact slicing of the line needs
-        # to be done in order to extract the numbers correctly.
+        # to be done in order to extract the numbers correctly. If there are no values for
+        # a paritcular target it means they are not used (marked also with an 'o'), and in this case
+        # we will set a value of numpy.inf so that any value will be smaller.
         #
         #  ==> Convergence Check <==
         #
@@ -655,7 +664,7 @@ class Psi(logfileparser.Logfile):
         #
         if (self.section == "Convergence Check") and line.strip() == "==> Convergence Check <==":
 
-            self.skip_lines(inputfile, ['b', 'units', 'comment', 'd', 'header', 'd'])
+            self.skip_lines(inputfile, ['b', 'units', 'comment', 'dash+tilde', 'header', 'dash+tilde'])
 
             # These are the position in the line at which numbers should start.
             starts = [27, 41, 55, 69, 83]
@@ -666,7 +675,7 @@ class Psi(logfileparser.Logfile):
                 if criteria[istart:istart+9].strip():
                     geotargets.append(float(criteria[istart:istart+9]))
                 else:
-                    geotargets.append(numpy.nan)
+                    geotargets.append(numpy.inf)
 
             self.skip_line(inputfile, 'dashes')
 

@@ -19,6 +19,12 @@ class GenericBasisTest(bettertest.TestCase):
     multiple_spher = {'S':1, 'P':3, 'D':5, 'F':7, 'G':9}
     spherical = False
 
+    # These are the expected exponents and coefficients for the first
+    # Gaussians in particular shells for hydrogen and carbon atoms.
+    gbasis_H_1s_func0 = [3.42525, 0.15433]
+    gbasis_C_2s_func0 = [2.9412, -0.1000]
+    gbasis_C_2p_func0 = [2.9412, 0.1559]
+
     def testgbasis(self):
         """Is gbasis the right length?"""
         self.assertEquals(self.data.natom, len(self.data.gbasis))
@@ -50,20 +56,31 @@ class GenericBasisTest(bettertest.TestCase):
         self.assertEquals(self.data.nbasis, total)
     
     def testcoeffs(self):
-        """Are the basis set coefficients correct?"""
-        for atom in self.data.gbasis:
-            if len(atom)==1: # i.e. a 'H'
+        """Are the atomic basis set exponents and coefficients correct?"""
+
+        for iatom,atom in enumerate(self.data.gbasis):
+            if self.data.atomnos[iatom] == 1:
                 coeffs = atom[0][1]
-                self.assertAlmostEqual(coeffs[0][0], 3.42525, 5)
-                self.assertAlmostEqual(coeffs[0][1], 0.15433, 5)
-            else: # i.e. a 'C'
+                self.assertAlmostEqual(coeffs[0][0], self.gbasis_H_1s_func0[0], 5)
+                self.assertAlmostEqual(coeffs[0][1], self.gbasis_H_1s_func0[1], 5)
+            else:
                 self.assertEquals(len(atom), 3)
                 s_coeffs = atom[1][1]
                 p_coeffs = atom[2][1]
-                self.assertAlmostEqual(s_coeffs[0][0], 2.9412, 4)
-                self.assertAlmostEqual(p_coeffs[0][0], 2.9412, 4)
-                self.assertAlmostEqual(s_coeffs[0][1], -0.1000, 4)
-                self.assertAlmostEqual(p_coeffs[0][1], 0.1559, 4)
+                self.assertAlmostEqual(s_coeffs[0][0], self.gbasis_C_2s_func0[0], 4)
+                self.assertAlmostEqual(p_coeffs[0][0], self.gbasis_C_2p_func0[0], 4)
+                self.assertAlmostEqual(s_coeffs[0][1], self.gbasis_C_2s_func0[1], 4)
+                self.assertAlmostEqual(p_coeffs[0][1], self.gbasis_C_2p_func0[1], 4)
+
+
+class JaguarBasisTest(GenericBasisTest):
+    """Customized basis set unittest"""
+
+    # For some reason, Jaguar seems to use slightly different coefficients for
+    # contractions in the STO-3G basis set. Or perhaps we don't understand something.
+    gbasis_H_1s_func0 = [3.42525, 0.24050]
+    gbasis_C_2s_func0 = [2.941249, -0.29565]
+    gbasis_C_2p_func0 = [2.941249, 0.22135]
 
 
 class GenericBigBasisTest(GenericBasisTest):

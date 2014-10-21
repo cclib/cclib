@@ -40,7 +40,9 @@ class GenericCISTest(bettertest.TestCase):
                 [(2, 6, -0.231), (3, 5, -0.9676)],
                 [(4, 6,  1.0)],
                 [(2, 5, -0.536), (3, 6, -0.843)] ]
-                
+
+    etsecs_precision = 0.0005
+
     def testetenergiesvalues(self):
         """ Are etenergies within 50cm-1 of the correct values?"""
         indices0 = [i for i in range(self.nstates) if self.data.etsyms[i][0] == "S"]
@@ -62,7 +64,7 @@ class GenericCISTest(bettertest.TestCase):
         self.assertInside(sumofsec, 1.0, 0.02)
 
     def testetsecsvalues(self):
-        """ Are etsecs correct and coefficients within 0.0005 of the correct values?"""
+        """ Are etsecs correct and coefficients close to the correct values?"""
         indices0 = [i for i in range(self.nstates) if self.data.etsyms[i][0] == "S"]
         indices1 = [i for i in range(self.nstates) if self.data.etsyms[i][0] == "T"]
         singlets = [self.data.etsecs[i] for i in indices0]
@@ -74,7 +76,7 @@ class GenericCISTest(bettertest.TestCase):
                 for s in singlets[i]:
                     if s[0][0] == exc[0] and s[1][0] == exc[1]:
                         found = True
-                        self.assertInside(abs(s[2]), abs(exc[2]), 0.0005)
+                        self.assertInside(abs(s[2]), abs(exc[2]), self.etsecs_precision)
                 if not found:
                     self.fail("Excitation %i->%s not found (singlet state %i)" %(exc[0], exc[1], i))
         # Not all programs do triplets (i.e. Jaguar).
@@ -85,7 +87,7 @@ class GenericCISTest(bettertest.TestCase):
                     for s in triplets[i]:
                         if s[0][0] == exc[0] and s[1][0] == exc[1]:
                             found = True
-                            self.assertInside(abs(s[2]), abs(exc[2]), 0.0005)
+                            self.assertInside(abs(s[2]), abs(exc[2]), self.etsecs_precision)
                     if not found:
                         self.fail("Excitation %i->%s not found (triplet state %i)" %(exc[0], exc[1], i))
 
@@ -97,6 +99,20 @@ class GaussianCISTest(GenericCISTest):
     def testnocoeffs(self):
         """(MP2) Are Natural Orbital coefficients the right size?"""
         self.assertEquals(self.data.nocoeffs.shape, (self.data.nmo, self.data.nbasis))
+
+
+class Jaguar83CISTest(GenericCISTest):
+    """CUstomized CIS(RHF)/STO-3G water unittest"""
+
+    # The Jaguar8.3 job was created using 6-31G instead of STO-3G.
+    etsecs0 = [ [(4, 5,  0.99186)],
+                [(4, 6, -0.98594)],
+                [(3, 5, -0.98321)],
+                [(2, 5,  0.19240), (3, 6, -0.97090)] ]
+    etsecs1 = [ [(4, 5,  1.0)],
+                [(2, 6, -0.231), (3, 5, -0.9676)],
+                [(4, 6,  1.0)],
+                [(2, 5, -0.536), (3, 6, -0.843)] ]
 
 
 class QChemCISTest(GenericCISTest):
