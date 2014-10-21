@@ -19,8 +19,8 @@ def convertor(value, fromunits, tounits):
         
         # Taken taken from NIST 2010 CODATA reference
         # Available at: http://physics.nist.gov/cuu/Constants/index.html
-        "Angstrom_to_bohr": lambda x: x*1.889716,
-        "bohr_to_Angstrom": lambda x: x*0.529177,
+        "Angstrom_to_bohr": lambda x: x*1.8897261245,
+        "bohr_to_Angstrom": lambda x: x*0.5291772109,
     
         "cm-1_to_eV":       lambda x: x/8065.54429,
         "cm-1_to_hartree":  lambda x: x/219474.6313708,
