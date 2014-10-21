@@ -16,10 +16,10 @@ class Method(object):
     """Abstract class for method classes.
 
     Subclasses defined by cclib:
-        CDA, CSPA, Density, FragmentAnalysis, LPA, MBO, MPA, OPA, Population, Volume
+        CDA, CSPA, Density, FragmentAnalysis, LPA, MBO, MPA, Nuclear, OPA, Population, Volume
 
     All the modules containing methods should be importable:
-    >>> import cda, cspa, density, fragments, lpa, mbo, mpa, opa, population, volume
+    >>> import cda, cspa, density, fragments, lpa, mbo, mpa, nuclear, opa, population, volume
     """
 
     def __init__(self, data, progress=None, loglevel=logging.INFO, logname="Log"):
@@ -43,4 +43,4 @@ class Method(object):
 
 if __name__ == "__main__":
     import doctest
-    doctest.testmod(verbose=True)
+    doctest.testmod(verbose=False)
