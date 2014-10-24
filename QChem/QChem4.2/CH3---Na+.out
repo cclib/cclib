@@ -1,0 +1,2028 @@
+/home/eric/qcprograms/qchem/dlambrecht/4.1-release.O2.serial/exe/qcprog.exe .12.8.qcin.975.qcin.1 /home/eric/scratch/qchem/qchem975/
+                  Welcome to Q-Chem
+     A Quantum Leap Into The Future Of Chemistry
+
+ Y. Shao, L. Fusti-Molnar, Y. Jung, J. Kussmann, C. Ochsenfeld,
+ S. T. Brown, A. T. B. Gilbert, L. V. Slipchenko,S. V. Levchenko,
+ D. P. O'Neill, R. A. DiStasio Jr., R. C. Lochan, T. Wang,
+ G. J. O. Beran, N. A. Besley, J. M. Herbert, C. Y. Lin,
+ T. Van Voorhis, S. H. Chien, A. Sodt, R. P. Steele, 
+ V. A. Rassolov, P. E. Maslen, P. P. Korambath, R. D. Adamson,
+ B. Austin, J. Baker, E. F. C. Byrd, H. Dachsel, R. J. Doerksen,
+ A. Dreuw, B. D. Dunietz, A. D. Dutoi, T. R. Furlani,
+ S. R. Gwaltney, A. Heyden, S. Hirata, C.-P. Hsu, G. Kedziora,
+ R. Z. Khaliullin, P. Klunzinger, A. M. Lee, M. S. Lee, W. Liang,
+ I. Lotan, N. Nair, B. Peters, E. I. Proynov, P. A. Pieniazek, 
+ Y. M. Rhee, J. Ritchie, E. Rosta, C. D. Sherrill, 
+ A. C. Simmonett, J. E. Subotnik, H. L. Woodcock III,
+ W. Zhang, A. T. Bell, A. K. Chakraborty, D. M. Chipman,
+ F. J. Keil, A. Warshel, W. J. Hehre, H. F. Schaefer III,
+ J. Kong, A. I. Krylov, P. M. W. Gill, M. Head-Gordon,
+
+ Additional authors for Version 3.1: 
+ Z. Gan, Y. Zhao, N. E. Schultz, D. Truhlar, E. Epifanovsky and M. Oana.
+
+ Additional authors for Version 3.2: 
+ R. Baer, B. R. Brooks, D. Casanova, J.-D. Chai, C.-L. Cheng, 
+ C. Cramer, D. Crittenden, A. Ghysels, G. Hawkins, E. G. Hohenstein, 
+ C. Kelley, W. Kurlancheek, D. Liotard, E. Livshits, P. Manohar, 
+ A. Marenich, D. Neuhauser, R. Olson, M. A. Rohrdanz, K. S. Thanthiriwatte, 
+ A. J. W. Thom, V. Vanovschi, C. F. Williams, Q. Wu and Z.-Q. You. 
+
+ Additional authors for Version 4.0: 
+ A. Aspuru-Guzik, C. Chang, R. G. Edgar, E. Sundstrom, J. Parkhill, K. Lawler,
+ M. Gordon, M. Schmidt, N. Shenvi, D. Lambrecht, M. Goldey, R. Olivares-Amaya,
+ Y. Bernard, L. Vogt, M. Watson, J. Liu, S. Yeganeh, B. Kaduk, O. Vydrov, X. Xu, 
+ I. Kaliman, K. Khistyaev, N. Russ, I.Y. Zhang, W.A. Goddard III, F. Liu, R. King ,
+ A. Landau, M. Wormit, A. Dreuw, M. Diedenhofen, A. Klamt, A.W. Lange, D. Ghosh,
+ D. Kosenkov, T. Kus, A. Landau, D. Zuev, J. Deng, S.P. Mao, Y.C. Su, D. Small,
+ L. D. Jacobson
+
+ Additional authors for Version 4.1: 
+ A. Laurent, H. Ji, M. W.D. Hason-Heine, N. Mardirossian, N. Sergueev, P. Zimmerman,
+ P. Horn, R. Peverati, S. Sharada, P. Zimmerman, P. Horn, X. Feng 
+
+ 
+ Q-Chem, Version 4.1, Q-Chem, Inc., Pittsburgh, PA (2013).
+
+
+ Intel X86 EM64T Linux Version 4.1.0.1 
+
+ Q-chem begins on Thu Aug 22 14:38:13 2013  
+
+Host: 
+0
+
+     Scratch files written to /home/eric/scratch/qchem/qchem975//
+ Aug1113 |home|dlambrecht|software|qchem4.1|trunk_2013-07-30|libmdc|qstr_info.C -1
+
+theFileMan(): MAXOPENFILES=974 MAX_SUB_FILE_NUM=16
+Maximum size of a physical file is 2.0 GB, maximum size of a tmp-file is 32.0 GB
+
+Finally everything over in PARseQInput
+
+--------------------------------------------------------------
+User input:
+--------------------------------------------------------------
+$molecule
+1 2
+--
+0 2
+C -1.447596 -0.000023  0.000019
+H -1.562749  0.330361 -1.023835
+H -1.561982  0.721445  0.798205
+H -1.561187 -1.052067  0.225866
+--
+1 1
+Na 1.215591  0.000036 -0.000032
+$end
+
+$rem
+jobtype              eda
+exchange             b3lyp
+basis                6-31g*
+unrestricted         true
+scf_guess            fragmo
+frgm_method          stoll
+frgm_lpcorr          rs_exact_scf
+eda_bsse             true
+diis_separate_errvec 1
+scf_print_frgm       true
+$end
+--------------------------------------------------------------
+ ----------------------------------------------------
+       Standard Nuclear Orientation (Angstroms)
+    I     Atom         X            Y            Z
+ ----------------------------------------------------
+    1      C      -1.447596    -0.000023     0.000019
+    2      H      -1.562749     0.334487    -1.022494
+    3      H      -1.561982     0.718221     0.801108
+    4      H      -1.561187    -1.052969     0.221622
+    5      Na      1.215591     0.000036    -0.000032
+ ----------------------------------------------------
+ Molecular Point Group                 C1    NOp =  1
+ Largest Abelian Subgroup              C1    NOp =  1
+ Nuclear Repulsion Energy =    28.6321722722 hartrees
+ There are       10 alpha and        9 beta electrons
+ Requested basis set is 6-31G(d)
+ There are 15 shells and 40 basis functions
+
+Total QAlloc Memory Limit   2000 MB
+Mega-Array Size        61 MB
+MEM_STATIC part        62 MB
+
+                       Distance Matrix (Angstroms)
+             C (  1)   H (  2)   H (  3)   H (  4)
+   H (  2)  1.081985
+   H (  3)  1.081989  1.863539
+   H (  4)  1.081992  1.863562  1.863577
+   Na(  5)  2.663187  2.979339  2.978678  2.977994
+ 
+ A cutoff of  1.0D-08 yielded    116 shell pairs
+ There are       876 function pairs
+ Smallest overlap matrix eigenvalue = 9.36E-03
+
+  Scale SEOQF with 1.000000e-01/1.000000e-01/1.000000e-01
+
+ Standard Electronic Orientation quadrupole field applied
+ Nucleus-field energy     =     0.0000000012 hartrees
+ Guess MOs from converged MOs on fragments
+
+QCSCRATCH   is /home/eric/scratch/qchem
+QCFILEPREF  is /home/eric/scratch/qchem/qchem975/
+QCRUNNAME   is qchem975
+calling putenv with: QCSCRATCH=/home/eric/scratch/qchem/qchem975/ 
+
+-----------------------------------------------------------------
+ SCF on fragment 1 out of 2
+-----------------------------------------------------------------
+
+/home/eric/qcprograms/qchem/dlambrecht/4.1-release.O2.serial/bin/xr.csh  /home/eric/scratch/qchem/qchem975/Frg1.input  stdout  Frg1
+/home/eric/qcprograms/qchem/dlambrecht/4.1-release.O2.serial/bin/xr.csh /home/eric/scratch/qchem/qchem975/Frg1.input stdout Frg1
+/home/eric/qcprograms/qchem/dlambrecht/4.1-release.O2.serial/exe/qcprog.exe /home/eric/scratch/qchem/qchem975/Frg1.input /home/eric/scratch/qchem/qchem975//Frg1/
+                  Welcome to Q-Chem
+     A Quantum Leap Into The Future Of Chemistry
+
+ Y. Shao, L. Fusti-Molnar, Y. Jung, J. Kussmann, C. Ochsenfeld,
+ S. T. Brown, A. T. B. Gilbert, L. V. Slipchenko,S. V. Levchenko,
+ D. P. O'Neill, R. A. DiStasio Jr., R. C. Lochan, T. Wang,
+ G. J. O. Beran, N. A. Besley, J. M. Herbert, C. Y. Lin,
+ T. Van Voorhis, S. H. Chien, A. Sodt, R. P. Steele, 
+ V. A. Rassolov, P. E. Maslen, P. P. Korambath, R. D. Adamson,
+ B. Austin, J. Baker, E. F. C. Byrd, H. Dachsel, R. J. Doerksen,
+ A. Dreuw, B. D. Dunietz, A. D. Dutoi, T. R. Furlani,
+ S. R. Gwaltney, A. Heyden, S. Hirata, C.-P. Hsu, G. Kedziora,
+ R. Z. Khaliullin, P. Klunzinger, A. M. Lee, M. S. Lee, W. Liang,
+ I. Lotan, N. Nair, B. Peters, E. I. Proynov, P. A. Pieniazek, 
+ Y. M. Rhee, J. Ritchie, E. Rosta, C. D. Sherrill, 
+ A. C. Simmonett, J. E. Subotnik, H. L. Woodcock III,
+ W. Zhang, A. T. Bell, A. K. Chakraborty, D. M. Chipman,
+ F. J. Keil, A. Warshel, W. J. Hehre, H. F. Schaefer III,
+ J. Kong, A. I. Krylov, P. M. W. Gill, M. Head-Gordon,
+
+ Additional authors for Version 3.1: 
+ Z. Gan, Y. Zhao, N. E. Schultz, D. Truhlar, E. Epifanovsky and M. Oana.
+
+ Additional authors for Version 3.2: 
+ R. Baer, B. R. Brooks, D. Casanova, J.-D. Chai, C.-L. Cheng, 
+ C. Cramer, D. Crittenden, A. Ghysels, G. Hawkins, E. G. Hohenstein, 
+ C. Kelley, W. Kurlancheek, D. Liotard, E. Livshits, P. Manohar, 
+ A. Marenich, D. Neuhauser, R. Olson, M. A. Rohrdanz, K. S. Thanthiriwatte, 
+ A. J. W. Thom, V. Vanovschi, C. F. Williams, Q. Wu and Z.-Q. You. 
+
+ Additional authors for Version 4.0: 
+ A. Aspuru-Guzik, C. Chang, R. G. Edgar, E. Sundstrom, J. Parkhill, K. Lawler,
+ M. Gordon, M. Schmidt, N. Shenvi, D. Lambrecht, M. Goldey, R. Olivares-Amaya,
+ Y. Bernard, L. Vogt, M. Watson, J. Liu, S. Yeganeh, B. Kaduk, O. Vydrov, X. Xu, 
+ I. Kaliman, K. Khistyaev, N. Russ, I.Y. Zhang, W.A. Goddard III, F. Liu, R. King ,
+ A. Landau, M. Wormit, A. Dreuw, M. Diedenhofen, A. Klamt, A.W. Lange, D. Ghosh,
+ D. Kosenkov, T. Kus, A. Landau, D. Zuev, J. Deng, S.P. Mao, Y.C. Su, D. Small,
+ L. D. Jacobson
+
+ Additional authors for Version 4.1: 
+ A. Laurent, H. Ji, M. W.D. Hason-Heine, N. Mardirossian, N. Sergueev, P. Zimmerman,
+ P. Horn, R. Peverati, S. Sharada, P. Zimmerman, P. Horn, X. Feng 
+
+ 
+ Q-Chem, Version 4.1, Q-Chem, Inc., Pittsburgh, PA (2013).
+
+
+ Intel X86 EM64T Linux Version 4.1.0.1 
+
+ Q-chem begins on Thu Aug 22 14:38:13 2013  
+
+Host: 
+0
+
+     Scratch files written to /home/eric/scratch/qchem/qchem975//Frg1//
+ Aug1113 |home|dlambrecht|software|qchem4.1|trunk_2013-07-30|libmdc|qstr_info.C -1
+
+theFileMan(): MAXOPENFILES=974 MAX_SUB_FILE_NUM=16
+Maximum size of a physical file is 2.0 GB, maximum size of a tmp-file is 32.0 GB
+
+Finally everything over in PARseQInput
+
+--------------------------------------------------------------
+User input:
+--------------------------------------------------------------
+$molecule
+0 2
+ 6	-1.4475963500	-0.0000229678	0.0000191465
+ 1	-1.5627494575	0.3344866289	-1.0224943770
+ 1	-1.5619822935	0.7182207954	0.8011077029
+ 1	-1.5611872989	-1.0529690575	0.2216223709
+$end
+$rem
+EXCHANGE		B3LYP
+BASIS		6-31G*
+UNRESTRICTED		TRUE
+EDA_BSSE		TRUE
+DIIS_SEPARATE_ERRVEC		1
+SCF_PRINT_FRGM		TRUE
+!required keywords
+JOBTYPE		SP
+SYM_IGNORE		TRUE
+SUBSYSTEM		TRUE
+SAVE_SUBSYSTEM		TRUE
+PURECART		12
+$end
+--------------------------------------------------------------
+ ----------------------------------------------------
+       Standard Nuclear Orientation (Angstroms)
+    I     Atom         X            Y            Z
+ ----------------------------------------------------
+    1      C      -1.447596    -0.000023     0.000019
+    2      H      -1.562749     0.334487    -1.022494
+    3      H      -1.561982     0.718221     0.801108
+    4      H      -1.561187    -1.052969     0.221622
+ ----------------------------------------------------
+ Nuclear Repulsion Energy =     9.6552917074 hartrees
+ There are        5 alpha and        4 beta electrons
+ Requested basis set is 6-31G(d)
+ There are 10 shells and 21 basis functions
+
+Total QAlloc Memory Limit   2000 MB
+Mega-Array Size        61 MB
+MEM_STATIC part        62 MB
+
+                       Distance Matrix (Angstroms)
+             C (  1)   H (  2)   H (  3)
+   H (  2)  1.081985
+   H (  3)  1.081989  1.863539
+   H (  4)  1.081992  1.863562  1.863577
+ 
+ A cutoff of  1.0D-08 yielded     55 shell pairs
+ There are       258 function pairs
+ Smallest overlap matrix eigenvalue = 2.72E-02
+
+  Scale SEOQF with 1.000000e-01/1.000000e+00/1.000000e+00
+
+ Standard Electronic Orientation quadrupole field applied
+ Guess from superposition of atomic densities
+ Warning:  Energy on first SCF cycle will be non-variational
+ An unrestricted hybrid HF-DFT SCF calculation will be
+ performed using Pulay DIIS extrapolation
+ Exchange:     0.2000 Hartree-Fock + 0.0800 Slater + 0.7200 Becke88
+ Correlation:  0.8100 LYP + 0.1900 VWN1RPA
+ Using SG-1 standard quadrature grid
+ SCF converges when DIIS error is below 1.0E-05
+ ---------------------------------------
+  Cycle       Energy         DIIS Error
+ ---------------------------------------
+    1     -39.7523058910      7.51E-02
+    2     -39.8115821591      1.15E-02
+    3     -39.8185991467      1.03E-02
+    4     -39.8377279336      3.57E-04
+    5     -39.8377787307      1.07E-04
+    6     -39.8377832422      2.11E-05
+    7     -39.8377833972      4.56E-06 Convergence criterion met
+ ---------------------------------------
+ <S^2> = 0.7535
+ SCF time:  CPU 0.24 s  wall 0.24 s
+ SCF   energy in the final basis set = -39.8377833972
+ Total energy in the final basis set = -39.8377833972
+ Analysis of SCF Wavefunction
+ 
+ --------------------------------------------------------------
+                    Orbital Energies (a.u.)
+ --------------------------------------------------------------
+ 
+ Alpha MOs
+ -- Occupied --
+-10.192  -0.682  -0.416  -0.416  -0.228
+ -- Virtual --
+  0.116   0.181   0.181   0.536   0.543   0.543   0.695   0.912
+  0.912   0.960   1.648   1.648   1.996   2.196   2.196   4.067
+ 
+ Beta MOs
+ -- Occupied --
+-10.178  -0.642  -0.406  -0.406
+ -- Virtual --
+ -0.050   0.131   0.188   0.188   0.551   0.551   0.614   0.722
+  0.918   0.918   0.988   1.717   1.717   2.082   2.209   2.209
+  4.105
+ --------------------------------------------------------------
+ 
+          Ground-State Mulliken Net Atomic Charges
+
+     Atom                 Charge (a.u.)    Spin (a.u.)
+  --------------------------------------------------------
+      1 C                    -0.483924       1.146701
+      2 H                     0.161303      -0.048907
+      3 H                     0.161305      -0.048900
+      4 H                     0.161316      -0.048894
+  --------------------------------------------------------
+  Sum of atomic charges =     0.000000
+  Sum of spin   charges =     1.000000
+
+ -----------------------------------------------------------------
+                    Cartesian Multipole Moments
+ -----------------------------------------------------------------
+    Charge (ESU x 10^10)
+                 0.0000
+    Dipole Moment (Debye)
+         X      -0.2520      Y      -0.0002      Z       0.0002
+       Tot       0.2520
+    Quadrupole Moments (Debye-Ang)
+        XX      -7.8492     XY      -0.0007     YY      -7.0466
+        XZ       0.0006     YZ       0.0000     ZZ      -7.0467
+    Octapole Moments (Debye-Ang^2)
+       XXX      36.3255    XXY       0.0029    XYY      10.2526
+       YYY      -0.6205    XXZ      -0.0026    XYZ       0.0001
+       YYZ       0.4453    XZZ      10.2515    YZZ       0.6211
+       ZZZ      -0.4458
+    Hexadecapole Moments (Debye-Ang^3)
+      XXXX    -117.6747   XXXY      -0.0057   XXYY     -19.0465
+      XYYY       1.0037   YYYY     -13.9497   XXXZ       0.0050
+      XXYZ      -0.0002   XYYZ      -0.7198   YYYZ      -0.0003
+      XXZZ     -19.0427   XYZZ      -1.0033   YYZZ      -4.6501
+      XZZZ       0.7195   YZZZ       0.0002   ZZZZ     -13.9502
+ -----------------------------------------------------------------
+Archival summary:
+1\1\gold\SP\ProcedureUnspecified\6-31G*\13(2)\eric\ThuAug2214:38:132013ThuAug2214:38:132013\0\\#,ProcedureUnspecified,6-31G*,\\0,2\C\H,1,1.08198\H,1,1.08199,2,118.895\H,1,1.08199,2,118.897,3,-159.249,0\\\@
+
+ Total job time:  0.26s(wall), 0.26s(cpu) 
+ Thu Aug 22 14:38:13 2013
+
+        *************************************************************
+        *                                                           *
+        *  Thank you very much for using Q-Chem.  Have a nice day.  *
+        *                                                           *
+        *************************************************************
+
+
+calling putenv with: QCSCRATCH=/home/eric/scratch/qchem 
+Copy Fragment Subsystem from /home/eric/scratch/qchem/qchem975//Frg1/
+calling putenv with: QCSCRATCH=/home/eric/scratch/qchem/qchem975/ 
+
+-----------------------------------------------------------------
+ SCF on fragment 2 out of 2
+-----------------------------------------------------------------
+
+/home/eric/qcprograms/qchem/dlambrecht/4.1-release.O2.serial/bin/xr.csh  /home/eric/scratch/qchem/qchem975/Frg2.input  stdout  Frg2
+/home/eric/qcprograms/qchem/dlambrecht/4.1-release.O2.serial/bin/xr.csh /home/eric/scratch/qchem/qchem975/Frg2.input stdout Frg2
+/home/eric/qcprograms/qchem/dlambrecht/4.1-release.O2.serial/exe/qcprog.exe /home/eric/scratch/qchem/qchem975/Frg2.input /home/eric/scratch/qchem/qchem975//Frg2/
+                  Welcome to Q-Chem
+     A Quantum Leap Into The Future Of Chemistry
+
+ Y. Shao, L. Fusti-Molnar, Y. Jung, J. Kussmann, C. Ochsenfeld,
+ S. T. Brown, A. T. B. Gilbert, L. V. Slipchenko,S. V. Levchenko,
+ D. P. O'Neill, R. A. DiStasio Jr., R. C. Lochan, T. Wang,
+ G. J. O. Beran, N. A. Besley, J. M. Herbert, C. Y. Lin,
+ T. Van Voorhis, S. H. Chien, A. Sodt, R. P. Steele, 
+ V. A. Rassolov, P. E. Maslen, P. P. Korambath, R. D. Adamson,
+ B. Austin, J. Baker, E. F. C. Byrd, H. Dachsel, R. J. Doerksen,
+ A. Dreuw, B. D. Dunietz, A. D. Dutoi, T. R. Furlani,
+ S. R. Gwaltney, A. Heyden, S. Hirata, C.-P. Hsu, G. Kedziora,
+ R. Z. Khaliullin, P. Klunzinger, A. M. Lee, M. S. Lee, W. Liang,
+ I. Lotan, N. Nair, B. Peters, E. I. Proynov, P. A. Pieniazek, 
+ Y. M. Rhee, J. Ritchie, E. Rosta, C. D. Sherrill, 
+ A. C. Simmonett, J. E. Subotnik, H. L. Woodcock III,
+ W. Zhang, A. T. Bell, A. K. Chakraborty, D. M. Chipman,
+ F. J. Keil, A. Warshel, W. J. Hehre, H. F. Schaefer III,
+ J. Kong, A. I. Krylov, P. M. W. Gill, M. Head-Gordon,
+
+ Additional authors for Version 3.1: 
+ Z. Gan, Y. Zhao, N. E. Schultz, D. Truhlar, E. Epifanovsky and M. Oana.
+
+ Additional authors for Version 3.2: 
+ R. Baer, B. R. Brooks, D. Casanova, J.-D. Chai, C.-L. Cheng, 
+ C. Cramer, D. Crittenden, A. Ghysels, G. Hawkins, E. G. Hohenstein, 
+ C. Kelley, W. Kurlancheek, D. Liotard, E. Livshits, P. Manohar, 
+ A. Marenich, D. Neuhauser, R. Olson, M. A. Rohrdanz, K. S. Thanthiriwatte, 
+ A. J. W. Thom, V. Vanovschi, C. F. Williams, Q. Wu and Z.-Q. You. 
+
+ Additional authors for Version 4.0: 
+ A. Aspuru-Guzik, C. Chang, R. G. Edgar, E. Sundstrom, J. Parkhill, K. Lawler,
+ M. Gordon, M. Schmidt, N. Shenvi, D. Lambrecht, M. Goldey, R. Olivares-Amaya,
+ Y. Bernard, L. Vogt, M. Watson, J. Liu, S. Yeganeh, B. Kaduk, O. Vydrov, X. Xu, 
+ I. Kaliman, K. Khistyaev, N. Russ, I.Y. Zhang, W.A. Goddard III, F. Liu, R. King ,
+ A. Landau, M. Wormit, A. Dreuw, M. Diedenhofen, A. Klamt, A.W. Lange, D. Ghosh,
+ D. Kosenkov, T. Kus, A. Landau, D. Zuev, J. Deng, S.P. Mao, Y.C. Su, D. Small,
+ L. D. Jacobson
+
+ Additional authors for Version 4.1: 
+ A. Laurent, H. Ji, M. W.D. Hason-Heine, N. Mardirossian, N. Sergueev, P. Zimmerman,
+ P. Horn, R. Peverati, S. Sharada, P. Zimmerman, P. Horn, X. Feng 
+
+ 
+ Q-Chem, Version 4.1, Q-Chem, Inc., Pittsburgh, PA (2013).
+
+
+ Intel X86 EM64T Linux Version 4.1.0.1 
+
+ Q-chem begins on Thu Aug 22 14:38:13 2013  
+
+Host: 
+0
+
+     Scratch files written to /home/eric/scratch/qchem/qchem975//Frg2//
+ Aug1113 |home|dlambrecht|software|qchem4.1|trunk_2013-07-30|libmdc|qstr_info.C -1
+
+theFileMan(): MAXOPENFILES=974 MAX_SUB_FILE_NUM=16
+Maximum size of a physical file is 2.0 GB, maximum size of a tmp-file is 32.0 GB
+
+Finally everything over in PARseQInput
+
+--------------------------------------------------------------
+User input:
+--------------------------------------------------------------
+$molecule
+1 1
+ 11	1.2155906500	0.0000363127	-0.0000318705
+$end
+$rem
+EXCHANGE		B3LYP
+BASIS		6-31G*
+UNRESTRICTED		TRUE
+EDA_BSSE		TRUE
+DIIS_SEPARATE_ERRVEC		1
+SCF_PRINT_FRGM		TRUE
+!required keywords
+JOBTYPE		SP
+SYM_IGNORE		TRUE
+SUBSYSTEM		TRUE
+SAVE_SUBSYSTEM		TRUE
+PURECART		12
+$end
+--------------------------------------------------------------
+ ----------------------------------------------------
+       Standard Nuclear Orientation (Angstroms)
+    I     Atom         X            Y            Z
+ ----------------------------------------------------
+    1      Na      1.215591     0.000036    -0.000032
+ ----------------------------------------------------
+ Nuclear Repulsion Energy =     0.0000000000 hartrees
+ There are        5 alpha and        5 beta electrons
+ Requested basis set is 6-31G(d)
+ There are 5 shells and 19 basis functions
+
+Total QAlloc Memory Limit   2000 MB
+Mega-Array Size        61 MB
+MEM_STATIC part        62 MB
+ A cutoff of  1.0D-08 yielded     15 shell pairs
+ There are       223 function pairs
+ Smallest overlap matrix eigenvalue = 1.00E-02
+
+  Scale SEOQF with 1.000000e-01/1.000000e-01/1.000000e-01
+
+ Standard Electronic Orientation quadrupole field applied
+ Nucleus-field energy     =     0.0000000006 hartrees
+ Guess from superposition of atomic densities
+ Warning:  Energy on first SCF cycle will be non-variational
+ An unrestricted hybrid HF-DFT SCF calculation will be
+ performed using Pulay DIIS extrapolation
+ Exchange:     0.2000 Hartree-Fock + 0.0800 Slater + 0.7200 Becke88
+ Correlation:  0.8100 LYP + 0.1900 VWN1RPA
+ Using SG-1 standard quadrature grid
+ SCF converges when DIIS error is below 1.0E-05
+ Inaccurate integrated density:
+   Number of electrons =    10
+   Numerical integral  =    10.999997101602
+   Relative error      =     9.9999710160 %
+ ---------------------------------------
+  Cycle       Energy         DIIS Error
+ ---------------------------------------
+    1    -162.2650112650      2.39E-03
+    2    -162.0808735531      1.38E-03
+    3    -162.0812012101      3.75E-04
+    4    -162.0812279270      9.07E-06 Convergence criterion met
+ ---------------------------------------
+ <S^2> = 0.0000
+ SCF time:  CPU 0.05 s  wall 0.05 s
+ SCF   energy in the final basis set = -162.0812279270
+ Total energy in the final basis set = -162.0812279270
+ Analysis of SCF Wavefunction
+ 
+ --------------------------------------------------------------
+                    Orbital Energies (a.u.)
+ --------------------------------------------------------------
+ 
+ Alpha MOs
+ -- Occupied --
+-38.791  -2.521  -1.452  -1.452  -1.452
+ -- Virtual --
+ -0.256  -0.149  -0.149  -0.149  -0.052  -0.024  -0.024  -0.024
+  0.133   0.133   0.133   0.133   0.133   0.342
+ 
+ Beta MOs
+ -- Occupied --
+-38.791  -2.521  -1.452  -1.452  -1.452
+ -- Virtual --
+ -0.256  -0.149  -0.149  -0.149  -0.052  -0.024  -0.024  -0.024
+  0.133   0.133   0.133   0.133   0.133   0.342
+ --------------------------------------------------------------
+ 
+          Ground-State Mulliken Net Atomic Charges
+
+     Atom                 Charge (a.u.)    Spin (a.u.)
+  --------------------------------------------------------
+      1 Na                    1.000000       0.000000
+  --------------------------------------------------------
+  Sum of atomic charges =     1.000000
+  Sum of spin   charges =     0.000000
+
+ -----------------------------------------------------------------
+                    Cartesian Multipole Moments
+ -----------------------------------------------------------------
+    Charge (ESU x 10^10)
+                 4.8032
+    Dipole Moment (Debye)
+         X       5.8387      Y       0.0002      Z      -0.0002
+       Tot       5.8387
+    Quadrupole Moments (Debye-Ang)
+        XX       4.1630     XY       0.0002     YY      -2.9345
+        XZ      -0.0002     YZ       0.0000     ZZ      -2.9345
+    Octapole Moments (Debye-Ang^2)
+       XXX      -2.0738    XXY       0.0002    XYY      -3.5671
+       YYY      -0.0003    XXZ      -0.0001    XYZ       0.0000
+       YYZ       0.0001    XZZ      -3.5671    YZZ      -0.0001
+       ZZZ       0.0003
+    Hexadecapole Moments (Debye-Ang^3)
+      XXXX     -16.4778   XXXY      -0.0001   XXYY      -4.6523
+      XYYY      -0.0004   YYYY      -0.9484   XXXZ       0.0001
+      XXYZ       0.0000   XYYZ       0.0001   YYYZ       0.0000
+      XXZZ      -4.6523   XYZZ      -0.0001   YYZZ      -0.3161
+      XZZZ       0.0003   YZZZ       0.0000   ZZZZ      -0.9484
+ -----------------------------------------------------------------
+Archival summary:
+1\1\gold\SP\ProcedureUnspecified\6-31G*\a1(1+,1)\eric\ThuAug2214:38:132013ThuAug2214:38:132013\0\\#,ProcedureUnspecified,6-31G*,\\1,1\Na\\\@
+
+ Total job time:  0.07s(wall), 0.06s(cpu) 
+ Thu Aug 22 14:38:13 2013
+
+        *************************************************************
+        *                                                           *
+        *  Thank you very much for using Q-Chem.  Have a nice day.  *
+        *                                                           *
+        *************************************************************
+
+
+calling putenv with: QCSCRATCH=/home/eric/scratch/qchem 
+Copy Fragment Subsystem from /home/eric/scratch/qchem/qchem975//Frg2/
+
+-----------------------------------------------------------------
+ Done with SCF on isolated fragments
+-----------------------------------------------------------------
+
+ User-specified occupied guess orbitals will be used
+ An unrestricted hybrid HF-DFT SCF calculation will be
+ performed using Pulay DIIS extrapolation
+ Locally projected approximation of Stoll
+ with single Roothaan step correction
+ Exchange:     0.2000 Hartree-Fock + 0.0800 Slater + 0.7200 Becke88
+ Correlation:  0.8100 LYP + 0.1900 VWN1RPA
+ Using SG-1 standard quadrature grid
+ SCF converges when DIIS error is below 1.0E-05
+ ---------------------------------------
+  Cycle       Energy         DIIS Error
+ ---------------------------------------
+    1    -201.9268311993      4.17E-03
+    2    -201.9309276895      1.67E-03
+    3    -201.9314291297      4.42E-04
+    4    -201.9314721935      1.72E-04
+    5    -201.9314799739      2.45E-05
+Last iteration: RS correction
+SCF MI energy: -201.9314799308
+SCF MI(RS) energy: -201.9388582085
+    6    -201.9388582085      5.72E-06 Convergence criterion met
+ ---------------------------------------
+ <S^2> = 0.7482
+ SCF time:  CPU 0.49 s  wall 0.49 s
+-----------------------------------------------------
+ full SCF correction to the locally projected method
+-----------------------------------------------------
+ An unrestricted hybrid HF-DFT SCF calculation will be
+ performed using Pulay DIIS extrapolation
+ Exchange:     0.2000 Hartree-Fock + 0.0800 Slater + 0.7200 Becke88
+ Correlation:  0.8100 LYP + 0.1900 VWN1RPA
+ Using SG-1 standard quadrature grid
+ SCF converges when DIIS error is below 1.0E-05
+ ---------------------------------------
+  Cycle       Energy         DIIS Error
+ ---------------------------------------
+    1    -201.9394119424      5.42E-04
+    2    -201.9395649788      4.59E-04
+    3    -201.9396930350      6.82E-05
+    4    -201.9396972311      1.34E-05
+    5    -201.9396979324      3.06E-06 Convergence criterion met
+ ---------------------------------------
+ <S^2> = 0.7528
+ SCF time:  CPU 0.41 s  wall 0.41 s
+
+QCSCRATCH   is /home/eric/scratch/qchem
+QCFILEPREF  is /home/eric/scratch/qchem/qchem975/
+QCRUNNAME   is qchem975
+calling putenv with: QCSCRATCH=/home/eric/scratch/qchem/qchem975/ 
+
+-----------------------------------------------------------------
+ RS CP correction for fragment 1 out of 2
+-----------------------------------------------------------------
+
+/home/eric/qcprograms/qchem/dlambrecht/4.1-release.O2.serial/bin/xr.csh  /home/eric/scratch/qchem/qchem975/Frg1.input  stdout  Frg1ARSBSSE
+/home/eric/qcprograms/qchem/dlambrecht/4.1-release.O2.serial/bin/xr.csh /home/eric/scratch/qchem/qchem975/Frg1.input stdout Frg1ARSBSSE
+/home/eric/qcprograms/qchem/dlambrecht/4.1-release.O2.serial/exe/qcprog.exe /home/eric/scratch/qchem/qchem975/Frg1.input /home/eric/scratch/qchem/qchem975//Frg1ARSBSSE/
+                  Welcome to Q-Chem
+     A Quantum Leap Into The Future Of Chemistry
+
+ Y. Shao, L. Fusti-Molnar, Y. Jung, J. Kussmann, C. Ochsenfeld,
+ S. T. Brown, A. T. B. Gilbert, L. V. Slipchenko,S. V. Levchenko,
+ D. P. O'Neill, R. A. DiStasio Jr., R. C. Lochan, T. Wang,
+ G. J. O. Beran, N. A. Besley, J. M. Herbert, C. Y. Lin,
+ T. Van Voorhis, S. H. Chien, A. Sodt, R. P. Steele, 
+ V. A. Rassolov, P. E. Maslen, P. P. Korambath, R. D. Adamson,
+ B. Austin, J. Baker, E. F. C. Byrd, H. Dachsel, R. J. Doerksen,
+ A. Dreuw, B. D. Dunietz, A. D. Dutoi, T. R. Furlani,
+ S. R. Gwaltney, A. Heyden, S. Hirata, C.-P. Hsu, G. Kedziora,
+ R. Z. Khaliullin, P. Klunzinger, A. M. Lee, M. S. Lee, W. Liang,
+ I. Lotan, N. Nair, B. Peters, E. I. Proynov, P. A. Pieniazek, 
+ Y. M. Rhee, J. Ritchie, E. Rosta, C. D. Sherrill, 
+ A. C. Simmonett, J. E. Subotnik, H. L. Woodcock III,
+ W. Zhang, A. T. Bell, A. K. Chakraborty, D. M. Chipman,
+ F. J. Keil, A. Warshel, W. J. Hehre, H. F. Schaefer III,
+ J. Kong, A. I. Krylov, P. M. W. Gill, M. Head-Gordon,
+
+ Additional authors for Version 3.1: 
+ Z. Gan, Y. Zhao, N. E. Schultz, D. Truhlar, E. Epifanovsky and M. Oana.
+
+ Additional authors for Version 3.2: 
+ R. Baer, B. R. Brooks, D. Casanova, J.-D. Chai, C.-L. Cheng, 
+ C. Cramer, D. Crittenden, A. Ghysels, G. Hawkins, E. G. Hohenstein, 
+ C. Kelley, W. Kurlancheek, D. Liotard, E. Livshits, P. Manohar, 
+ A. Marenich, D. Neuhauser, R. Olson, M. A. Rohrdanz, K. S. Thanthiriwatte, 
+ A. J. W. Thom, V. Vanovschi, C. F. Williams, Q. Wu and Z.-Q. You. 
+
+ Additional authors for Version 4.0: 
+ A. Aspuru-Guzik, C. Chang, R. G. Edgar, E. Sundstrom, J. Parkhill, K. Lawler,
+ M. Gordon, M. Schmidt, N. Shenvi, D. Lambrecht, M. Goldey, R. Olivares-Amaya,
+ Y. Bernard, L. Vogt, M. Watson, J. Liu, S. Yeganeh, B. Kaduk, O. Vydrov, X. Xu, 
+ I. Kaliman, K. Khistyaev, N. Russ, I.Y. Zhang, W.A. Goddard III, F. Liu, R. King ,
+ A. Landau, M. Wormit, A. Dreuw, M. Diedenhofen, A. Klamt, A.W. Lange, D. Ghosh,
+ D. Kosenkov, T. Kus, A. Landau, D. Zuev, J. Deng, S.P. Mao, Y.C. Su, D. Small,
+ L. D. Jacobson
+
+ Additional authors for Version 4.1: 
+ A. Laurent, H. Ji, M. W.D. Hason-Heine, N. Mardirossian, N. Sergueev, P. Zimmerman,
+ P. Horn, R. Peverati, S. Sharada, P. Zimmerman, P. Horn, X. Feng 
+
+ 
+ Q-Chem, Version 4.1, Q-Chem, Inc., Pittsburgh, PA (2013).
+
+
+ Intel X86 EM64T Linux Version 4.1.0.1 
+
+ Q-chem begins on Thu Aug 22 14:38:14 2013  
+
+Host: 
+0
+
+     Scratch files written to /home/eric/scratch/qchem/qchem975//Frg1ARSBSSE//
+ Aug1113 |home|dlambrecht|software|qchem4.1|trunk_2013-07-30|libmdc|qstr_info.C -1
+
+theFileMan(): MAXOPENFILES=974 MAX_SUB_FILE_NUM=16
+Maximum size of a physical file is 2.0 GB, maximum size of a tmp-file is 32.0 GB
+
+Symmetry disabled for mixed basis and EFP jobs.
+Finally everything over in PARseQInput
+
+--------------------------------------------------------------
+User input:
+--------------------------------------------------------------
+$molecule
+0 2
+ 6	-1.4475963500	-0.0000229678	0.0000191465
+ 1	-1.5627494575	0.3344866289	-1.0224943770
+ 1	-1.5619822935	0.7182207954	0.8011077029
+ 1	-1.5611872989	-1.0529690575	0.2216223709
+@11	1.2155906500	0.0000363127	-0.0000318705
+$end
+$rem
+EXCHANGE		B3LYP
+BASIS		6-31G*
+UNRESTRICTED		TRUE
+EDA_BSSE		TRUE
+DIIS_SEPARATE_ERRVEC		1
+SCF_PRINT_FRGM		TRUE
+!required keywords
+JOBTYPE		SP
+SYM_IGNORE		TRUE
+SUBSYSTEM		TRUE
+SCF_GUESS		READ
+SYM_IGNORE		TRUE
+ARS_BSSE_SUBSYSTEM		2
+SAVE_SUBSYSTEM		TRUE
+PURECART		12
+$end
+--------------------------------------------------------------
+ ----------------------------------------------------
+       Standard Nuclear Orientation (Angstroms)
+    I     Atom         X            Y            Z
+ ----------------------------------------------------
+    1      C      -1.447596    -0.000023     0.000019
+    2      H      -1.562749     0.334487    -1.022494
+    3      H      -1.561982     0.718221     0.801108
+    4      H      -1.561187    -1.052969     0.221622
+    5      GH      1.215591     0.000036    -0.000032
+ ----------------------------------------------------
+ Nuclear Repulsion Energy =     9.6552917074 hartrees
+ There are        5 alpha and        4 beta electrons
+ Requested basis set is non-standard
+ There are 15 shells and 40 basis functions
+
+Total QAlloc Memory Limit   2000 MB
+Mega-Array Size        61 MB
+MEM_STATIC part        62 MB
+
+                       Distance Matrix (Angstroms)
+             C (  1)   H (  2)   H (  3)   H (  4)
+   H (  2)  1.081985
+   H (  3)  1.081989  1.863539
+   H (  4)  1.081992  1.863562  1.863577
+   GH(  5)  2.663187  2.979339  2.978678  2.977994
+ 
+ A cutoff of  1.0D-08 yielded    116 shell pairs
+ There are       876 function pairs
+ Smallest overlap matrix eigenvalue = 9.36E-03
+
+  Scale SEOQF with 1.000000e-01/1.000000e-01/1.000000e-01
+
+ Standard Electronic Orientation quadrupole field applied
+ Nucleus-field energy     =     0.0000000006 hartrees
+ Guess MOs from SCF MO coefficient file
+ User-specified occupied guess orbitals will be used
+
+ Q-Chem warning in module /home/dlambrecht/software/qchem4.1/trunk_2013-07-30/libgen/Atomic_PolEc.C, line 55:
+
+ No atomic polarizability available.
+
+
+ Q-Chem warning in module /home/dlambrecht/software/qchem4.1/trunk_2013-07-30/libgen/Atomic_PolEc.C, line 65:
+
+ No atomic polarizability available.
+
+ An unrestricted hybrid HF-DFT SCF calculation will be
+ performed using Pulay DIIS extrapolation
+ Exchange:     0.2000 Hartree-Fock + 0.0800 Slater + 0.7200 Becke88
+ Correlation:  0.8100 LYP + 0.1900 VWN1RPA
+ Using SG-1 standard quadrature grid
+ SCF converges when DIIS error is below 1.0E-05
+
+ Q-Chem warning in module /home/dlambrecht/software/qchem4.1/trunk_2013-07-30/libgen/Atomic_PolEc.C, line 55:
+
+ No atomic polarizability available.
+
+
+ Q-Chem warning in module /home/dlambrecht/software/qchem4.1/trunk_2013-07-30/libgen/Atomic_PolEc.C, line 65:
+
+ No atomic polarizability available.
+
+Energy of the initial guess: -39.8377860882
+RS energy correction to the guess: -0.0018379628
+RS energy: -39.8396240510
+ ---------------------------------------
+  Cycle       Energy         DIIS Error
+ ---------------------------------------
+    1     -39.8396240510      8.70E-04    RS corrected energy
+ SCF time:  CPU 0.12 s  wall 0.12 s
+ SCF   energy in the final basis set = -39.8396240510
+ Total energy in the final basis set = -39.8396240510
+ Analysis of SCF Wavefunction
+ 
+ --------------------------------------------------------------
+                    Orbital Energies (a.u.)
+ --------------------------------------------------------------
+ 
+ Alpha MOs
+ -- Occupied --
+  0.000   0.000   0.000   0.000   0.000
+ -- Virtual --
+  0.000   0.000   0.000   0.000   0.000   0.000   0.000   0.000
+  0.000   0.000   0.000   0.000   0.000   0.000   0.000   0.000
+  0.000   0.000   0.000   0.000   0.000   0.000   0.000   0.000
+  0.000   0.000   0.000   0.000   0.000   0.000   0.000   0.000
+  0.000   0.000   0.000
+ 
+ Beta MOs
+ -- Occupied --
+  0.000   0.000   0.000   0.000
+ -- Virtual --
+  0.000   0.000   0.000   0.000   0.000   0.000   0.000   0.000
+  0.000   0.000   0.000   0.000   0.000   0.000   0.000   0.000
+  0.000   0.000   0.000   0.000   0.000   0.000   0.000   0.000
+  0.000   0.000   0.000   0.000   0.000   0.000   0.000   0.000
+  0.000   0.000   0.000   0.000
+ --------------------------------------------------------------
+ 
+          Ground-State Mulliken Net Atomic Charges
+
+     Atom                 Charge (a.u.)    Spin (a.u.)
+  --------------------------------------------------------
+      1 C                    -0.473662       1.112756
+      2 H                     0.171502      -0.048510
+      3 H                     0.171500      -0.048502
+      4 H                     0.171534      -0.048505
+      5 GH                   -0.040873       0.032760
+  --------------------------------------------------------
+  Sum of atomic charges =     0.000000
+  Sum of spin   charges =     1.000000
+
+ -----------------------------------------------------------------
+                    Cartesian Multipole Moments
+ -----------------------------------------------------------------
+    Charge (ESU x 10^10)
+                 0.0000
+    Dipole Moment (Debye)
+         X      -0.4365      Y      -0.0002      Z       0.0002
+       Tot       0.4365
+    Quadrupole Moments (Debye-Ang)
+        XX      -7.6231     XY      -0.0007     YY      -7.1795
+        XZ       0.0006     YZ       0.0000     ZZ      -7.1796
+    Octapole Moments (Debye-Ang^2)
+       XXX      35.6129    XXY       0.0029    XYY      10.2196
+       YYY      -0.6224    XXZ      -0.0026    XYZ       0.0001
+       YYZ       0.4467    XZZ      10.2186    YZZ       0.6231
+       ZZZ      -0.4472
+    Hexadecapole Moments (Debye-Ang^3)
+      XXXX    -116.6687   XXXY      -0.0056   XXYY     -19.2336
+      XYYY       1.0099   YYYY     -14.7029   XXXZ       0.0051
+      XXYZ      -0.0002   XYYZ      -0.7243   YYYZ      -0.0003
+      XXZZ     -19.2298   XYZZ      -1.0096   YYZZ      -4.9012
+      XZZZ       0.7240   YZZZ       0.0002   ZZZZ     -14.7035
+ -----------------------------------------------------------------
+Archival summary:
+1\1\gold\SP\ProcedureUnspecified\BasisUnspecified\13h1(2)\eric\ThuAug2214:38:142013ThuAug2214:38:142013\0\\#,ProcedureUnspecified,BasisUnspecified,\\0,2\C\H,1,1.08198\H,1,1.08199,2,118.895\H,1,1.08199,2,118.897,3,-159.249,0\Gh,1,2.66319,2,96.108,3,100.399,0\\\@
+
+ Total job time:  0.15s(wall), 0.14s(cpu) 
+ Thu Aug 22 14:38:14 2013
+
+        *************************************************************
+        *                                                           *
+        *  Thank you very much for using Q-Chem.  Have a nice day.  *
+        *                                                           *
+        *************************************************************
+
+
+calling putenv with: QCSCRATCH=/home/eric/scratch/qchem 
+Copy Fragment Subsystem from /home/eric/scratch/qchem/qchem975//Frg1/
+calling putenv with: QCSCRATCH=/home/eric/scratch/qchem/qchem975/ 
+
+-----------------------------------------------------------------
+ RS CP correction for fragment 2 out of 2
+-----------------------------------------------------------------
+
+/home/eric/qcprograms/qchem/dlambrecht/4.1-release.O2.serial/bin/xr.csh  /home/eric/scratch/qchem/qchem975/Frg2.input  stdout  Frg2ARSBSSE
+/home/eric/qcprograms/qchem/dlambrecht/4.1-release.O2.serial/bin/xr.csh /home/eric/scratch/qchem/qchem975/Frg2.input stdout Frg2ARSBSSE
+/home/eric/qcprograms/qchem/dlambrecht/4.1-release.O2.serial/exe/qcprog.exe /home/eric/scratch/qchem/qchem975/Frg2.input /home/eric/scratch/qchem/qchem975//Frg2ARSBSSE/
+                  Welcome to Q-Chem
+     A Quantum Leap Into The Future Of Chemistry
+
+ Y. Shao, L. Fusti-Molnar, Y. Jung, J. Kussmann, C. Ochsenfeld,
+ S. T. Brown, A. T. B. Gilbert, L. V. Slipchenko,S. V. Levchenko,
+ D. P. O'Neill, R. A. DiStasio Jr., R. C. Lochan, T. Wang,
+ G. J. O. Beran, N. A. Besley, J. M. Herbert, C. Y. Lin,
+ T. Van Voorhis, S. H. Chien, A. Sodt, R. P. Steele, 
+ V. A. Rassolov, P. E. Maslen, P. P. Korambath, R. D. Adamson,
+ B. Austin, J. Baker, E. F. C. Byrd, H. Dachsel, R. J. Doerksen,
+ A. Dreuw, B. D. Dunietz, A. D. Dutoi, T. R. Furlani,
+ S. R. Gwaltney, A. Heyden, S. Hirata, C.-P. Hsu, G. Kedziora,
+ R. Z. Khaliullin, P. Klunzinger, A. M. Lee, M. S. Lee, W. Liang,
+ I. Lotan, N. Nair, B. Peters, E. I. Proynov, P. A. Pieniazek, 
+ Y. M. Rhee, J. Ritchie, E. Rosta, C. D. Sherrill, 
+ A. C. Simmonett, J. E. Subotnik, H. L. Woodcock III,
+ W. Zhang, A. T. Bell, A. K. Chakraborty, D. M. Chipman,
+ F. J. Keil, A. Warshel, W. J. Hehre, H. F. Schaefer III,
+ J. Kong, A. I. Krylov, P. M. W. Gill, M. Head-Gordon,
+
+ Additional authors for Version 3.1: 
+ Z. Gan, Y. Zhao, N. E. Schultz, D. Truhlar, E. Epifanovsky and M. Oana.
+
+ Additional authors for Version 3.2: 
+ R. Baer, B. R. Brooks, D. Casanova, J.-D. Chai, C.-L. Cheng, 
+ C. Cramer, D. Crittenden, A. Ghysels, G. Hawkins, E. G. Hohenstein, 
+ C. Kelley, W. Kurlancheek, D. Liotard, E. Livshits, P. Manohar, 
+ A. Marenich, D. Neuhauser, R. Olson, M. A. Rohrdanz, K. S. Thanthiriwatte, 
+ A. J. W. Thom, V. Vanovschi, C. F. Williams, Q. Wu and Z.-Q. You. 
+
+ Additional authors for Version 4.0: 
+ A. Aspuru-Guzik, C. Chang, R. G. Edgar, E. Sundstrom, J. Parkhill, K. Lawler,
+ M. Gordon, M. Schmidt, N. Shenvi, D. Lambrecht, M. Goldey, R. Olivares-Amaya,
+ Y. Bernard, L. Vogt, M. Watson, J. Liu, S. Yeganeh, B. Kaduk, O. Vydrov, X. Xu, 
+ I. Kaliman, K. Khistyaev, N. Russ, I.Y. Zhang, W.A. Goddard III, F. Liu, R. King ,
+ A. Landau, M. Wormit, A. Dreuw, M. Diedenhofen, A. Klamt, A.W. Lange, D. Ghosh,
+ D. Kosenkov, T. Kus, A. Landau, D. Zuev, J. Deng, S.P. Mao, Y.C. Su, D. Small,
+ L. D. Jacobson
+
+ Additional authors for Version 4.1: 
+ A. Laurent, H. Ji, M. W.D. Hason-Heine, N. Mardirossian, N. Sergueev, P. Zimmerman,
+ P. Horn, R. Peverati, S. Sharada, P. Zimmerman, P. Horn, X. Feng 
+
+ 
+ Q-Chem, Version 4.1, Q-Chem, Inc., Pittsburgh, PA (2013).
+
+
+ Intel X86 EM64T Linux Version 4.1.0.1 
+
+ Q-chem begins on Thu Aug 22 14:38:14 2013  
+
+Host: 
+0
+
+     Scratch files written to /home/eric/scratch/qchem/qchem975//Frg2ARSBSSE//
+ Aug1113 |home|dlambrecht|software|qchem4.1|trunk_2013-07-30|libmdc|qstr_info.C -1
+
+theFileMan(): MAXOPENFILES=974 MAX_SUB_FILE_NUM=16
+Maximum size of a physical file is 2.0 GB, maximum size of a tmp-file is 32.0 GB
+
+Symmetry disabled for mixed basis and EFP jobs.
+Finally everything over in PARseQInput
+
+--------------------------------------------------------------
+User input:
+--------------------------------------------------------------
+$molecule
+1 1
+@6	-1.4475963500	-0.0000229678	0.0000191465
+@1	-1.5627494575	0.3344866289	-1.0224943770
+@1	-1.5619822935	0.7182207954	0.8011077029
+@1	-1.5611872989	-1.0529690575	0.2216223709
+ 11	1.2155906500	0.0000363127	-0.0000318705
+$end
+$rem
+EXCHANGE		B3LYP
+BASIS		6-31G*
+UNRESTRICTED		TRUE
+EDA_BSSE		TRUE
+DIIS_SEPARATE_ERRVEC		1
+SCF_PRINT_FRGM		TRUE
+!required keywords
+JOBTYPE		SP
+SYM_IGNORE		TRUE
+SUBSYSTEM		TRUE
+SCF_GUESS		READ
+SYM_IGNORE		TRUE
+ARS_BSSE_SUBSYSTEM		2
+SAVE_SUBSYSTEM		TRUE
+PURECART		12
+$end
+--------------------------------------------------------------
+ ----------------------------------------------------
+       Standard Nuclear Orientation (Angstroms)
+    I     Atom         X            Y            Z
+ ----------------------------------------------------
+    1      GH     -1.447596    -0.000023     0.000019
+    2      GH     -1.562749     0.334487    -1.022494
+    3      GH     -1.561982     0.718221     0.801108
+    4      GH     -1.561187    -1.052969     0.221622
+    5      Na      1.215591     0.000036    -0.000032
+ ----------------------------------------------------
+ Nuclear Repulsion Energy =     0.0000000000 hartrees
+ There are        5 alpha and        5 beta electrons
+ Requested basis set is non-standard
+ There are 15 shells and 40 basis functions
+
+Total QAlloc Memory Limit   2000 MB
+Mega-Array Size        61 MB
+MEM_STATIC part        62 MB
+
+                       Distance Matrix (Angstroms)
+             GH(  1)   GH(  2)   GH(  3)   GH(  4)
+   GH(  2)  1.081985
+   GH(  3)  1.081989  1.863539
+   GH(  4)  1.081992  1.863562  1.863577
+   Na(  5)  2.663187  2.979339  2.978678  2.977994
+ 
+ A cutoff of  1.0D-08 yielded    116 shell pairs
+ There are       876 function pairs
+ Smallest overlap matrix eigenvalue = 9.36E-03
+
+  Scale SEOQF with 1.000000e-01/1.000000e-01/1.000000e-01
+
+ Standard Electronic Orientation quadrupole field applied
+ Nucleus-field energy     =     0.0000000006 hartrees
+ Guess MOs from SCF MO coefficient file
+ User-specified occupied guess orbitals will be used
+
+ Q-Chem warning in module /home/dlambrecht/software/qchem4.1/trunk_2013-07-30/libgen/Atomic_PolEc.C, line 55:
+
+ No atomic polarizability available.
+
+
+ Q-Chem warning in module /home/dlambrecht/software/qchem4.1/trunk_2013-07-30/libgen/Atomic_PolEc.C, line 65:
+
+ No atomic polarizability available.
+
+
+ Q-Chem warning in module /home/dlambrecht/software/qchem4.1/trunk_2013-07-30/libgen/Atomic_PolEc.C, line 55:
+
+ No atomic polarizability available.
+
+
+ Q-Chem warning in module /home/dlambrecht/software/qchem4.1/trunk_2013-07-30/libgen/Atomic_PolEc.C, line 65:
+
+ No atomic polarizability available.
+
+
+ Q-Chem warning in module /home/dlambrecht/software/qchem4.1/trunk_2013-07-30/libgen/Atomic_PolEc.C, line 55:
+
+ No atomic polarizability available.
+
+
+ Q-Chem warning in module /home/dlambrecht/software/qchem4.1/trunk_2013-07-30/libgen/Atomic_PolEc.C, line 65:
+
+ No atomic polarizability available.
+
+
+ Q-Chem warning in module /home/dlambrecht/software/qchem4.1/trunk_2013-07-30/libgen/Atomic_PolEc.C, line 55:
+
+ No atomic polarizability available.
+
+
+ Q-Chem warning in module /home/dlambrecht/software/qchem4.1/trunk_2013-07-30/libgen/Atomic_PolEc.C, line 65:
+
+ No atomic polarizability available.
+
+ An unrestricted hybrid HF-DFT SCF calculation will be
+ performed using Pulay DIIS extrapolation
+ Exchange:     0.2000 Hartree-Fock + 0.0800 Slater + 0.7200 Becke88
+ Correlation:  0.8100 LYP + 0.1900 VWN1RPA
+ Using SG-1 standard quadrature grid
+ SCF converges when DIIS error is below 1.0E-05
+
+ Q-Chem warning in module /home/dlambrecht/software/qchem4.1/trunk_2013-07-30/libgen/Atomic_PolEc.C, line 55:
+
+ No atomic polarizability available.
+
+
+ Q-Chem warning in module /home/dlambrecht/software/qchem4.1/trunk_2013-07-30/libgen/Atomic_PolEc.C, line 65:
+
+ No atomic polarizability available.
+
+
+ Q-Chem warning in module /home/dlambrecht/software/qchem4.1/trunk_2013-07-30/libgen/Atomic_PolEc.C, line 55:
+
+ No atomic polarizability available.
+
+
+ Q-Chem warning in module /home/dlambrecht/software/qchem4.1/trunk_2013-07-30/libgen/Atomic_PolEc.C, line 65:
+
+ No atomic polarizability available.
+
+
+ Q-Chem warning in module /home/dlambrecht/software/qchem4.1/trunk_2013-07-30/libgen/Atomic_PolEc.C, line 55:
+
+ No atomic polarizability available.
+
+
+ Q-Chem warning in module /home/dlambrecht/software/qchem4.1/trunk_2013-07-30/libgen/Atomic_PolEc.C, line 65:
+
+ No atomic polarizability available.
+
+
+ Q-Chem warning in module /home/dlambrecht/software/qchem4.1/trunk_2013-07-30/libgen/Atomic_PolEc.C, line 55:
+
+ No atomic polarizability available.
+
+
+ Q-Chem warning in module /home/dlambrecht/software/qchem4.1/trunk_2013-07-30/libgen/Atomic_PolEc.C, line 65:
+
+ No atomic polarizability available.
+
+Energy of the initial guess: -162.0812042163
+RS energy correction to the guess: -0.0000254366
+RS energy: -162.0812296529
+ ---------------------------------------
+  Cycle       Energy         DIIS Error
+ ---------------------------------------
+    1    -162.0812296529      5.51E-04    RS corrected energy
+ SCF time:  CPU 0.11 s  wall 0.11 s
+ SCF   energy in the final basis set = -162.0812296529
+ Total energy in the final basis set = -162.0812296529
+ Analysis of SCF Wavefunction
+ 
+ --------------------------------------------------------------
+                    Orbital Energies (a.u.)
+ --------------------------------------------------------------
+ 
+ Alpha MOs
+ -- Occupied --
+  0.000   0.000   0.000   0.000   0.000
+ -- Virtual --
+  0.000   0.000   0.000   0.000   0.000   0.000   0.000   0.000
+  0.000   0.000   0.000   0.000   0.000   0.000   0.000   0.000
+  0.000   0.000   0.000   0.000   0.000   0.000   0.000   0.000
+  0.000   0.000   0.000   0.000   0.000   0.000   0.000   0.000
+  0.000   0.000   0.000
+ 
+ Beta MOs
+ -- Occupied --
+  0.000   0.000   0.000   0.000   0.000
+ -- Virtual --
+  0.000   0.000   0.000   0.000   0.000   0.000   0.000   0.000
+  0.000   0.000   0.000   0.000   0.000   0.000   0.000   0.000
+  0.000   0.000   0.000   0.000   0.000   0.000   0.000   0.000
+  0.000   0.000   0.000   0.000   0.000   0.000   0.000   0.000
+  0.000   0.000   0.000
+ --------------------------------------------------------------
+ 
+          Ground-State Mulliken Net Atomic Charges
+
+     Atom                 Charge (a.u.)    Spin (a.u.)
+  --------------------------------------------------------
+      1 GH                   -0.000453       0.000000
+      2 GH                    0.000077       0.000000
+      3 GH                    0.000078       0.000000
+      4 GH                    0.000078       0.000000
+      5 Na                    1.000220       0.000000
+  --------------------------------------------------------
+  Sum of atomic charges =     1.000000
+  Sum of spin   charges =     0.000000
+
+ -----------------------------------------------------------------
+                    Cartesian Multipole Moments
+ -----------------------------------------------------------------
+    Charge (ESU x 10^10)
+                 4.8032
+    Dipole Moment (Debye)
+         X       5.8386      Y       0.0002      Z      -0.0001
+       Tot       5.8386
+    Quadrupole Moments (Debye-Ang)
+        XX       4.1624     XY       0.0002     YY      -2.9344
+        XZ      -0.0002     YZ       0.0000     ZZ      -2.9344
+    Octapole Moments (Debye-Ang^2)
+       XXX      -2.0755    XXY       0.0002    XYY      -3.5671
+       YYY      -0.0003    XXZ      -0.0001    XYZ       0.0000
+       YYZ       0.0001    XZZ      -3.5671    YZZ      -0.0001
+       ZZZ       0.0003
+    Hexadecapole Moments (Debye-Ang^3)
+      XXXX     -16.4783   XXXY       0.0000   XXYY      -4.6513
+      XYYY      -0.0004   YYYY      -0.9470   XXXZ       0.0001
+      XXYZ       0.0000   XYYZ       0.0001   YYYZ       0.0000
+      XXZZ      -4.6513   XYZZ      -0.0001   YYZZ      -0.3157
+      XZZZ       0.0004   YZZZ       0.0000   ZZZZ      -0.9470
+ -----------------------------------------------------------------
+Archival summary:
+1\1\gold\SP\ProcedureUnspecified\BasisUnspecified\a1h4(1+,1)\eric\ThuAug2214:38:142013ThuAug2214:38:142013\0\\#,ProcedureUnspecified,BasisUnspecified,\\1,1\Gh\Gh,1,1.08198\Gh,1,1.08199,2,118.895\Gh,1,1.08199,2,118.897,3,-159.249,0\Na,1,2.66319,2,96.108,3,100.399,0\\\@
+
+ Total job time:  0.14s(wall), 0.14s(cpu) 
+ Thu Aug 22 14:38:14 2013
+
+        *************************************************************
+        *                                                           *
+        *  Thank you very much for using Q-Chem.  Have a nice day.  *
+        *                                                           *
+        *************************************************************
+
+
+calling putenv with: QCSCRATCH=/home/eric/scratch/qchem 
+Copy Fragment Subsystem from /home/eric/scratch/qchem/qchem975//Frg2/
+
+-----------------------------------------------------------------
+ Done with counterpoise correction on fragments
+-----------------------------------------------------------------
+
+
+QCSCRATCH   is /home/eric/scratch/qchem
+QCFILEPREF  is /home/eric/scratch/qchem/qchem975/
+QCRUNNAME   is qchem975
+calling putenv with: QCSCRATCH=/home/eric/scratch/qchem/qchem975/ 
+
+-----------------------------------------------------------------
+ SCF CP correction for fragment 1 out of 2
+-----------------------------------------------------------------
+
+/home/eric/qcprograms/qchem/dlambrecht/4.1-release.O2.serial/bin/xr.csh  /home/eric/scratch/qchem/qchem975/Frg1.input  stdout  Frg1BSSE
+/home/eric/qcprograms/qchem/dlambrecht/4.1-release.O2.serial/bin/xr.csh /home/eric/scratch/qchem/qchem975/Frg1.input stdout Frg1BSSE
+/home/eric/qcprograms/qchem/dlambrecht/4.1-release.O2.serial/exe/qcprog.exe /home/eric/scratch/qchem/qchem975/Frg1.input /home/eric/scratch/qchem/qchem975//Frg1BSSE/
+                  Welcome to Q-Chem
+     A Quantum Leap Into The Future Of Chemistry
+
+ Y. Shao, L. Fusti-Molnar, Y. Jung, J. Kussmann, C. Ochsenfeld,
+ S. T. Brown, A. T. B. Gilbert, L. V. Slipchenko,S. V. Levchenko,
+ D. P. O'Neill, R. A. DiStasio Jr., R. C. Lochan, T. Wang,
+ G. J. O. Beran, N. A. Besley, J. M. Herbert, C. Y. Lin,
+ T. Van Voorhis, S. H. Chien, A. Sodt, R. P. Steele, 
+ V. A. Rassolov, P. E. Maslen, P. P. Korambath, R. D. Adamson,
+ B. Austin, J. Baker, E. F. C. Byrd, H. Dachsel, R. J. Doerksen,
+ A. Dreuw, B. D. Dunietz, A. D. Dutoi, T. R. Furlani,
+ S. R. Gwaltney, A. Heyden, S. Hirata, C.-P. Hsu, G. Kedziora,
+ R. Z. Khaliullin, P. Klunzinger, A. M. Lee, M. S. Lee, W. Liang,
+ I. Lotan, N. Nair, B. Peters, E. I. Proynov, P. A. Pieniazek, 
+ Y. M. Rhee, J. Ritchie, E. Rosta, C. D. Sherrill, 
+ A. C. Simmonett, J. E. Subotnik, H. L. Woodcock III,
+ W. Zhang, A. T. Bell, A. K. Chakraborty, D. M. Chipman,
+ F. J. Keil, A. Warshel, W. J. Hehre, H. F. Schaefer III,
+ J. Kong, A. I. Krylov, P. M. W. Gill, M. Head-Gordon,
+
+ Additional authors for Version 3.1: 
+ Z. Gan, Y. Zhao, N. E. Schultz, D. Truhlar, E. Epifanovsky and M. Oana.
+
+ Additional authors for Version 3.2: 
+ R. Baer, B. R. Brooks, D. Casanova, J.-D. Chai, C.-L. Cheng, 
+ C. Cramer, D. Crittenden, A. Ghysels, G. Hawkins, E. G. Hohenstein, 
+ C. Kelley, W. Kurlancheek, D. Liotard, E. Livshits, P. Manohar, 
+ A. Marenich, D. Neuhauser, R. Olson, M. A. Rohrdanz, K. S. Thanthiriwatte, 
+ A. J. W. Thom, V. Vanovschi, C. F. Williams, Q. Wu and Z.-Q. You. 
+
+ Additional authors for Version 4.0: 
+ A. Aspuru-Guzik, C. Chang, R. G. Edgar, E. Sundstrom, J. Parkhill, K. Lawler,
+ M. Gordon, M. Schmidt, N. Shenvi, D. Lambrecht, M. Goldey, R. Olivares-Amaya,
+ Y. Bernard, L. Vogt, M. Watson, J. Liu, S. Yeganeh, B. Kaduk, O. Vydrov, X. Xu, 
+ I. Kaliman, K. Khistyaev, N. Russ, I.Y. Zhang, W.A. Goddard III, F. Liu, R. King ,
+ A. Landau, M. Wormit, A. Dreuw, M. Diedenhofen, A. Klamt, A.W. Lange, D. Ghosh,
+ D. Kosenkov, T. Kus, A. Landau, D. Zuev, J. Deng, S.P. Mao, Y.C. Su, D. Small,
+ L. D. Jacobson
+
+ Additional authors for Version 4.1: 
+ A. Laurent, H. Ji, M. W.D. Hason-Heine, N. Mardirossian, N. Sergueev, P. Zimmerman,
+ P. Horn, R. Peverati, S. Sharada, P. Zimmerman, P. Horn, X. Feng 
+
+ 
+ Q-Chem, Version 4.1, Q-Chem, Inc., Pittsburgh, PA (2013).
+
+
+ Intel X86 EM64T Linux Version 4.1.0.1 
+
+ Q-chem begins on Thu Aug 22 14:38:14 2013  
+
+Host: 
+0
+
+     Scratch files written to /home/eric/scratch/qchem/qchem975//Frg1BSSE//
+ Aug1113 |home|dlambrecht|software|qchem4.1|trunk_2013-07-30|libmdc|qstr_info.C -1
+
+theFileMan(): MAXOPENFILES=974 MAX_SUB_FILE_NUM=16
+Maximum size of a physical file is 2.0 GB, maximum size of a tmp-file is 32.0 GB
+
+Symmetry disabled for mixed basis and EFP jobs.
+Finally everything over in PARseQInput
+
+--------------------------------------------------------------
+User input:
+--------------------------------------------------------------
+$molecule
+0 2
+ 6	-1.4475963500	-0.0000229678	0.0000191465
+ 1	-1.5627494575	0.3344866289	-1.0224943770
+ 1	-1.5619822935	0.7182207954	0.8011077029
+ 1	-1.5611872989	-1.0529690575	0.2216223709
+@11	1.2155906500	0.0000363127	-0.0000318705
+$end
+$rem
+EXCHANGE		B3LYP
+BASIS		6-31G*
+UNRESTRICTED		TRUE
+EDA_BSSE		TRUE
+DIIS_SEPARATE_ERRVEC		1
+SCF_PRINT_FRGM		TRUE
+!required keywords
+JOBTYPE		SP
+SYM_IGNORE		TRUE
+SUBSYSTEM		TRUE
+SCF_GUESS		READ
+SYM_IGNORE		TRUE
+ARS_BSSE_SUBSYSTEM		7
+SAVE_SUBSYSTEM		TRUE
+PURECART		12
+$end
+--------------------------------------------------------------
+ ----------------------------------------------------
+       Standard Nuclear Orientation (Angstroms)
+    I     Atom         X            Y            Z
+ ----------------------------------------------------
+    1      C      -1.447596    -0.000023     0.000019
+    2      H      -1.562749     0.334487    -1.022494
+    3      H      -1.561982     0.718221     0.801108
+    4      H      -1.561187    -1.052969     0.221622
+    5      GH      1.215591     0.000036    -0.000032
+ ----------------------------------------------------
+ Nuclear Repulsion Energy =     9.6552917074 hartrees
+ There are        5 alpha and        4 beta electrons
+ Requested basis set is non-standard
+ There are 15 shells and 40 basis functions
+
+Total QAlloc Memory Limit   2000 MB
+Mega-Array Size        61 MB
+MEM_STATIC part        62 MB
+
+                       Distance Matrix (Angstroms)
+             C (  1)   H (  2)   H (  3)   H (  4)
+   H (  2)  1.081985
+   H (  3)  1.081989  1.863539
+   H (  4)  1.081992  1.863562  1.863577
+   GH(  5)  2.663187  2.979339  2.978678  2.977994
+ 
+ A cutoff of  1.0D-08 yielded    116 shell pairs
+ There are       876 function pairs
+ Smallest overlap matrix eigenvalue = 9.36E-03
+
+  Scale SEOQF with 1.000000e-01/1.000000e-01/1.000000e-01
+
+ Standard Electronic Orientation quadrupole field applied
+ Nucleus-field energy     =     0.0000000006 hartrees
+ Guess MOs from SCF MO coefficient file
+ User-specified occupied guess orbitals will be used
+
+ Q-Chem warning in module /home/dlambrecht/software/qchem4.1/trunk_2013-07-30/libgen/Atomic_PolEc.C, line 55:
+
+ No atomic polarizability available.
+
+
+ Q-Chem warning in module /home/dlambrecht/software/qchem4.1/trunk_2013-07-30/libgen/Atomic_PolEc.C, line 65:
+
+ No atomic polarizability available.
+
+ An unrestricted hybrid HF-DFT SCF calculation will be
+ performed using Pulay DIIS extrapolation
+ Exchange:     0.2000 Hartree-Fock + 0.0800 Slater + 0.7200 Becke88
+ Correlation:  0.8100 LYP + 0.1900 VWN1RPA
+ Using SG-1 standard quadrature grid
+ SCF converges when DIIS error is below 1.0E-05
+
+ Q-Chem warning in module /home/dlambrecht/software/qchem4.1/trunk_2013-07-30/libgen/Atomic_PolEc.C, line 55:
+
+ No atomic polarizability available.
+
+
+ Q-Chem warning in module /home/dlambrecht/software/qchem4.1/trunk_2013-07-30/libgen/Atomic_PolEc.C, line 65:
+
+ No atomic polarizability available.
+
+ ---------------------------------------
+  Cycle       Energy         DIIS Error
+ ---------------------------------------
+    1     -39.8377860882      8.70E-04
+
+ Q-Chem warning in module /home/dlambrecht/software/qchem4.1/trunk_2013-07-30/libgen/Atomic_PolEc.C, line 55:
+
+ No atomic polarizability available.
+
+
+ Q-Chem warning in module /home/dlambrecht/software/qchem4.1/trunk_2013-07-30/libgen/Atomic_PolEc.C, line 65:
+
+ No atomic polarizability available.
+
+    2     -39.8398029410      1.75E-04
+
+ Q-Chem warning in module /home/dlambrecht/software/qchem4.1/trunk_2013-07-30/libgen/Atomic_PolEc.C, line 55:
+
+ No atomic polarizability available.
+
+
+ Q-Chem warning in module /home/dlambrecht/software/qchem4.1/trunk_2013-07-30/libgen/Atomic_PolEc.C, line 65:
+
+ No atomic polarizability available.
+
+    3     -39.8398371166      1.45E-04
+
+ Q-Chem warning in module /home/dlambrecht/software/qchem4.1/trunk_2013-07-30/libgen/Atomic_PolEc.C, line 55:
+
+ No atomic polarizability available.
+
+
+ Q-Chem warning in module /home/dlambrecht/software/qchem4.1/trunk_2013-07-30/libgen/Atomic_PolEc.C, line 65:
+
+ No atomic polarizability available.
+
+    4     -39.8398495060      1.45E-05
+
+ Q-Chem warning in module /home/dlambrecht/software/qchem4.1/trunk_2013-07-30/libgen/Atomic_PolEc.C, line 55:
+
+ No atomic polarizability available.
+
+
+ Q-Chem warning in module /home/dlambrecht/software/qchem4.1/trunk_2013-07-30/libgen/Atomic_PolEc.C, line 65:
+
+ No atomic polarizability available.
+
+    5     -39.8398496474      3.53E-06 Convergence criterion met
+ ---------------------------------------
+ <S^2> = 0.7534
+ SCF time:  CPU 0.41 s  wall 0.41 s
+ SCF   energy in the final basis set = -39.8398496474
+ Total energy in the final basis set = -39.8398496474
+ Analysis of SCF Wavefunction
+ 
+ --------------------------------------------------------------
+                    Orbital Energies (a.u.)
+ --------------------------------------------------------------
+ 
+ Alpha MOs
+ -- Occupied --
+-10.198  -0.687  -0.420  -0.420  -0.233
+ -- Virtual --
+  0.006   0.036   0.039   0.039   0.142   0.182   0.182   0.192
+  0.230   0.230   0.265   0.495   0.503   0.503   0.573   0.573
+  0.633   0.643   0.662   0.662   0.920   0.920   0.975   1.216
+  1.666   1.666   1.889   2.006   2.213   2.213   4.171   6.094
+  6.094   6.138  61.411
+ 
+ Beta MOs
+ -- Occupied --
+-10.184  -0.648  -0.410  -0.410
+ -- Virtual --
+ -0.064   0.011   0.040   0.040   0.041   0.155   0.188   0.188
+  0.206   0.234   0.234   0.280   0.512   0.513   0.513   0.577
+  0.578   0.652   0.670   0.670   0.690   0.925   0.925   0.993
+  1.240   1.733   1.733   1.922   2.090   2.226   2.226   4.206
+  6.122   6.122   6.169  61.659
+ --------------------------------------------------------------
+ 
+          Ground-State Mulliken Net Atomic Charges
+
+     Atom                 Charge (a.u.)    Spin (a.u.)
+  --------------------------------------------------------
+      1 C                    -0.481167       1.103865
+      2 H                     0.175991      -0.047391
+      3 H                     0.175990      -0.047384
+      4 H                     0.176026      -0.047390
+      5 GH                   -0.046840       0.038299
+  --------------------------------------------------------
+  Sum of atomic charges =     0.000000
+  Sum of spin   charges =     1.000000
+
+ -----------------------------------------------------------------
+                    Cartesian Multipole Moments
+ -----------------------------------------------------------------
+    Charge (ESU x 10^10)
+                 0.0000
+    Dipole Moment (Debye)
+         X      -0.4732      Y      -0.0002      Z       0.0002
+       Tot       0.4732
+    Quadrupole Moments (Debye-Ang)
+        XX      -7.5726     XY      -0.0007     YY      -7.1570
+        XZ       0.0006     YZ       0.0000     ZZ      -7.1572
+    Octapole Moments (Debye-Ang^2)
+       XXX      35.4095    XXY       0.0028    XYY      10.1350
+       YYY      -0.6381    XXZ      -0.0026    XYZ       0.0001
+       YYZ       0.4579    XZZ      10.1339    YZZ       0.6386
+       ZZZ      -0.4583
+    Hexadecapole Moments (Debye-Ang^3)
+      XXXX    -116.2616   XXXY      -0.0057   XXYY     -19.1283
+      XYYY       1.0342   YYYY     -14.6719   XXXZ       0.0052
+      XXYZ      -0.0002   XYYZ      -0.7416   YYYZ      -0.0003
+      XXZZ     -19.1244   XYZZ      -1.0338   YYZZ      -4.8908
+      XZZZ       0.7414   YZZZ       0.0002   ZZZZ     -14.6725
+ -----------------------------------------------------------------
+Archival summary:
+1\1\gold\SP\ProcedureUnspecified\BasisUnspecified\13h1(2)\eric\ThuAug2214:38:152013ThuAug2214:38:152013\0\\#,ProcedureUnspecified,BasisUnspecified,\\0,2\C\H,1,1.08198\H,1,1.08199,2,118.895\H,1,1.08199,2,118.897,3,-159.249,0\Gh,1,2.66319,2,96.108,3,100.399,0\\\@
+
+ Total job time:  0.44s(wall), 0.44s(cpu) 
+ Thu Aug 22 14:38:15 2013
+
+        *************************************************************
+        *                                                           *
+        *  Thank you very much for using Q-Chem.  Have a nice day.  *
+        *                                                           *
+        *************************************************************
+
+
+calling putenv with: QCSCRATCH=/home/eric/scratch/qchem 
+Copy Fragment Subsystem from /home/eric/scratch/qchem/qchem975//Frg1/
+calling putenv with: QCSCRATCH=/home/eric/scratch/qchem/qchem975/ 
+
+-----------------------------------------------------------------
+ SCF CP correction for fragment 2 out of 2
+-----------------------------------------------------------------
+
+/home/eric/qcprograms/qchem/dlambrecht/4.1-release.O2.serial/bin/xr.csh  /home/eric/scratch/qchem/qchem975/Frg2.input  stdout  Frg2BSSE
+/home/eric/qcprograms/qchem/dlambrecht/4.1-release.O2.serial/bin/xr.csh /home/eric/scratch/qchem/qchem975/Frg2.input stdout Frg2BSSE
+/home/eric/qcprograms/qchem/dlambrecht/4.1-release.O2.serial/exe/qcprog.exe /home/eric/scratch/qchem/qchem975/Frg2.input /home/eric/scratch/qchem/qchem975//Frg2BSSE/
+                  Welcome to Q-Chem
+     A Quantum Leap Into The Future Of Chemistry
+
+ Y. Shao, L. Fusti-Molnar, Y. Jung, J. Kussmann, C. Ochsenfeld,
+ S. T. Brown, A. T. B. Gilbert, L. V. Slipchenko,S. V. Levchenko,
+ D. P. O'Neill, R. A. DiStasio Jr., R. C. Lochan, T. Wang,
+ G. J. O. Beran, N. A. Besley, J. M. Herbert, C. Y. Lin,
+ T. Van Voorhis, S. H. Chien, A. Sodt, R. P. Steele, 
+ V. A. Rassolov, P. E. Maslen, P. P. Korambath, R. D. Adamson,
+ B. Austin, J. Baker, E. F. C. Byrd, H. Dachsel, R. J. Doerksen,
+ A. Dreuw, B. D. Dunietz, A. D. Dutoi, T. R. Furlani,
+ S. R. Gwaltney, A. Heyden, S. Hirata, C.-P. Hsu, G. Kedziora,
+ R. Z. Khaliullin, P. Klunzinger, A. M. Lee, M. S. Lee, W. Liang,
+ I. Lotan, N. Nair, B. Peters, E. I. Proynov, P. A. Pieniazek, 
+ Y. M. Rhee, J. Ritchie, E. Rosta, C. D. Sherrill, 
+ A. C. Simmonett, J. E. Subotnik, H. L. Woodcock III,
+ W. Zhang, A. T. Bell, A. K. Chakraborty, D. M. Chipman,
+ F. J. Keil, A. Warshel, W. J. Hehre, H. F. Schaefer III,
+ J. Kong, A. I. Krylov, P. M. W. Gill, M. Head-Gordon,
+
+ Additional authors for Version 3.1: 
+ Z. Gan, Y. Zhao, N. E. Schultz, D. Truhlar, E. Epifanovsky and M. Oana.
+
+ Additional authors for Version 3.2: 
+ R. Baer, B. R. Brooks, D. Casanova, J.-D. Chai, C.-L. Cheng, 
+ C. Cramer, D. Crittenden, A. Ghysels, G. Hawkins, E. G. Hohenstein, 
+ C. Kelley, W. Kurlancheek, D. Liotard, E. Livshits, P. Manohar, 
+ A. Marenich, D. Neuhauser, R. Olson, M. A. Rohrdanz, K. S. Thanthiriwatte, 
+ A. J. W. Thom, V. Vanovschi, C. F. Williams, Q. Wu and Z.-Q. You. 
+
+ Additional authors for Version 4.0: 
+ A. Aspuru-Guzik, C. Chang, R. G. Edgar, E. Sundstrom, J. Parkhill, K. Lawler,
+ M. Gordon, M. Schmidt, N. Shenvi, D. Lambrecht, M. Goldey, R. Olivares-Amaya,
+ Y. Bernard, L. Vogt, M. Watson, J. Liu, S. Yeganeh, B. Kaduk, O. Vydrov, X. Xu, 
+ I. Kaliman, K. Khistyaev, N. Russ, I.Y. Zhang, W.A. Goddard III, F. Liu, R. King ,
+ A. Landau, M. Wormit, A. Dreuw, M. Diedenhofen, A. Klamt, A.W. Lange, D. Ghosh,
+ D. Kosenkov, T. Kus, A. Landau, D. Zuev, J. Deng, S.P. Mao, Y.C. Su, D. Small,
+ L. D. Jacobson
+
+ Additional authors for Version 4.1: 
+ A. Laurent, H. Ji, M. W.D. Hason-Heine, N. Mardirossian, N. Sergueev, P. Zimmerman,
+ P. Horn, R. Peverati, S. Sharada, P. Zimmerman, P. Horn, X. Feng 
+
+ 
+ Q-Chem, Version 4.1, Q-Chem, Inc., Pittsburgh, PA (2013).
+
+
+ Intel X86 EM64T Linux Version 4.1.0.1 
+
+ Q-chem begins on Thu Aug 22 14:38:15 2013  
+
+Host: 
+0
+
+     Scratch files written to /home/eric/scratch/qchem/qchem975//Frg2BSSE//
+ Aug1113 |home|dlambrecht|software|qchem4.1|trunk_2013-07-30|libmdc|qstr_info.C -1
+
+theFileMan(): MAXOPENFILES=974 MAX_SUB_FILE_NUM=16
+Maximum size of a physical file is 2.0 GB, maximum size of a tmp-file is 32.0 GB
+
+Symmetry disabled for mixed basis and EFP jobs.
+Finally everything over in PARseQInput
+
+--------------------------------------------------------------
+User input:
+--------------------------------------------------------------
+$molecule
+1 1
+@6	-1.4475963500	-0.0000229678	0.0000191465
+@1	-1.5627494575	0.3344866289	-1.0224943770
+@1	-1.5619822935	0.7182207954	0.8011077029
+@1	-1.5611872989	-1.0529690575	0.2216223709
+ 11	1.2155906500	0.0000363127	-0.0000318705
+$end
+$rem
+EXCHANGE		B3LYP
+BASIS		6-31G*
+UNRESTRICTED		TRUE
+EDA_BSSE		TRUE
+DIIS_SEPARATE_ERRVEC		1
+SCF_PRINT_FRGM		TRUE
+!required keywords
+JOBTYPE		SP
+SYM_IGNORE		TRUE
+SUBSYSTEM		TRUE
+SCF_GUESS		READ
+SYM_IGNORE		TRUE
+ARS_BSSE_SUBSYSTEM		7
+SAVE_SUBSYSTEM		TRUE
+PURECART		12
+$end
+--------------------------------------------------------------
+ ----------------------------------------------------
+       Standard Nuclear Orientation (Angstroms)
+    I     Atom         X            Y            Z
+ ----------------------------------------------------
+    1      GH     -1.447596    -0.000023     0.000019
+    2      GH     -1.562749     0.334487    -1.022494
+    3      GH     -1.561982     0.718221     0.801108
+    4      GH     -1.561187    -1.052969     0.221622
+    5      Na      1.215591     0.000036    -0.000032
+ ----------------------------------------------------
+ Nuclear Repulsion Energy =     0.0000000000 hartrees
+ There are        5 alpha and        5 beta electrons
+ Requested basis set is non-standard
+ There are 15 shells and 40 basis functions
+
+Total QAlloc Memory Limit   2000 MB
+Mega-Array Size        61 MB
+MEM_STATIC part        62 MB
+
+                       Distance Matrix (Angstroms)
+             GH(  1)   GH(  2)   GH(  3)   GH(  4)
+   GH(  2)  1.081985
+   GH(  3)  1.081989  1.863539
+   GH(  4)  1.081992  1.863562  1.863577
+   Na(  5)  2.663187  2.979339  2.978678  2.977994
+ 
+ A cutoff of  1.0D-08 yielded    116 shell pairs
+ There are       876 function pairs
+ Smallest overlap matrix eigenvalue = 9.36E-03
+
+  Scale SEOQF with 1.000000e-01/1.000000e-01/1.000000e-01
+
+ Standard Electronic Orientation quadrupole field applied
+ Nucleus-field energy     =     0.0000000006 hartrees
+ Guess MOs from SCF MO coefficient file
+ User-specified occupied guess orbitals will be used
+
+ Q-Chem warning in module /home/dlambrecht/software/qchem4.1/trunk_2013-07-30/libgen/Atomic_PolEc.C, line 55:
+
+ No atomic polarizability available.
+
+
+ Q-Chem warning in module /home/dlambrecht/software/qchem4.1/trunk_2013-07-30/libgen/Atomic_PolEc.C, line 65:
+
+ No atomic polarizability available.
+
+
+ Q-Chem warning in module /home/dlambrecht/software/qchem4.1/trunk_2013-07-30/libgen/Atomic_PolEc.C, line 55:
+
+ No atomic polarizability available.
+
+
+ Q-Chem warning in module /home/dlambrecht/software/qchem4.1/trunk_2013-07-30/libgen/Atomic_PolEc.C, line 65:
+
+ No atomic polarizability available.
+
+
+ Q-Chem warning in module /home/dlambrecht/software/qchem4.1/trunk_2013-07-30/libgen/Atomic_PolEc.C, line 55:
+
+ No atomic polarizability available.
+
+
+ Q-Chem warning in module /home/dlambrecht/software/qchem4.1/trunk_2013-07-30/libgen/Atomic_PolEc.C, line 65:
+
+ No atomic polarizability available.
+
+
+ Q-Chem warning in module /home/dlambrecht/software/qchem4.1/trunk_2013-07-30/libgen/Atomic_PolEc.C, line 55:
+
+ No atomic polarizability available.
+
+
+ Q-Chem warning in module /home/dlambrecht/software/qchem4.1/trunk_2013-07-30/libgen/Atomic_PolEc.C, line 65:
+
+ No atomic polarizability available.
+
+ An unrestricted hybrid HF-DFT SCF calculation will be
+ performed using Pulay DIIS extrapolation
+ Exchange:     0.2000 Hartree-Fock + 0.0800 Slater + 0.7200 Becke88
+ Correlation:  0.8100 LYP + 0.1900 VWN1RPA
+ Using SG-1 standard quadrature grid
+ SCF converges when DIIS error is below 1.0E-05
+
+ Q-Chem warning in module /home/dlambrecht/software/qchem4.1/trunk_2013-07-30/libgen/Atomic_PolEc.C, line 55:
+
+ No atomic polarizability available.
+
+
+ Q-Chem warning in module /home/dlambrecht/software/qchem4.1/trunk_2013-07-30/libgen/Atomic_PolEc.C, line 65:
+
+ No atomic polarizability available.
+
+
+ Q-Chem warning in module /home/dlambrecht/software/qchem4.1/trunk_2013-07-30/libgen/Atomic_PolEc.C, line 55:
+
+ No atomic polarizability available.
+
+
+ Q-Chem warning in module /home/dlambrecht/software/qchem4.1/trunk_2013-07-30/libgen/Atomic_PolEc.C, line 65:
+
+ No atomic polarizability available.
+
+
+ Q-Chem warning in module /home/dlambrecht/software/qchem4.1/trunk_2013-07-30/libgen/Atomic_PolEc.C, line 55:
+
+ No atomic polarizability available.
+
+
+ Q-Chem warning in module /home/dlambrecht/software/qchem4.1/trunk_2013-07-30/libgen/Atomic_PolEc.C, line 65:
+
+ No atomic polarizability available.
+
+
+ Q-Chem warning in module /home/dlambrecht/software/qchem4.1/trunk_2013-07-30/libgen/Atomic_PolEc.C, line 55:
+
+ No atomic polarizability available.
+
+
+ Q-Chem warning in module /home/dlambrecht/software/qchem4.1/trunk_2013-07-30/libgen/Atomic_PolEc.C, line 65:
+
+ No atomic polarizability available.
+
+ ---------------------------------------
+  Cycle       Energy         DIIS Error
+ ---------------------------------------
+    1    -162.0812042163      5.51E-04
+
+ Q-Chem warning in module /home/dlambrecht/software/qchem4.1/trunk_2013-07-30/libgen/Atomic_PolEc.C, line 55:
+
+ No atomic polarizability available.
+
+
+ Q-Chem warning in module /home/dlambrecht/software/qchem4.1/trunk_2013-07-30/libgen/Atomic_PolEc.C, line 65:
+
+ No atomic polarizability available.
+
+
+ Q-Chem warning in module /home/dlambrecht/software/qchem4.1/trunk_2013-07-30/libgen/Atomic_PolEc.C, line 55:
+
+ No atomic polarizability available.
+
+
+ Q-Chem warning in module /home/dlambrecht/software/qchem4.1/trunk_2013-07-30/libgen/Atomic_PolEc.C, line 65:
+
+ No atomic polarizability available.
+
+
+ Q-Chem warning in module /home/dlambrecht/software/qchem4.1/trunk_2013-07-30/libgen/Atomic_PolEc.C, line 55:
+
+ No atomic polarizability available.
+
+
+ Q-Chem warning in module /home/dlambrecht/software/qchem4.1/trunk_2013-07-30/libgen/Atomic_PolEc.C, line 65:
+
+ No atomic polarizability available.
+
+
+ Q-Chem warning in module /home/dlambrecht/software/qchem4.1/trunk_2013-07-30/libgen/Atomic_PolEc.C, line 55:
+
+ No atomic polarizability available.
+
+
+ Q-Chem warning in module /home/dlambrecht/software/qchem4.1/trunk_2013-07-30/libgen/Atomic_PolEc.C, line 65:
+
+ No atomic polarizability available.
+
+    2    -162.0812300003      3.45E-06 Convergence criterion met
+ ---------------------------------------
+ <S^2> = 0.0000
+ SCF time:  CPU 0.18 s  wall 0.18 s
+ SCF   energy in the final basis set = -162.0812300003
+ Total energy in the final basis set = -162.0812300003
+ Analysis of SCF Wavefunction
+ 
+ --------------------------------------------------------------
+                    Orbital Energies (a.u.)
+ --------------------------------------------------------------
+ 
+ Alpha MOs
+ -- Occupied --
+-38.791  -2.521  -1.452  -1.452  -1.452
+ -- Virtual --
+ -0.257  -0.149  -0.149  -0.149  -0.053  -0.028  -0.024  -0.024
+  0.029   0.090   0.090   0.131   0.131   0.199   0.219   0.219
+  0.341   0.407   0.421   0.421   0.472   1.598   1.781   1.782
+  2.089   2.597   2.597   2.802   2.852   2.855   3.022   3.570
+  3.570   4.065  23.557
+ 
+ Beta MOs
+ -- Occupied --
+-38.791  -2.521  -1.452  -1.452  -1.452
+ -- Virtual --
+ -0.257  -0.149  -0.149  -0.149  -0.053  -0.028  -0.024  -0.024
+  0.029   0.090   0.090   0.131   0.131   0.199   0.219   0.219
+  0.341   0.407   0.421   0.421   0.472   1.598   1.781   1.782
+  2.089   2.597   2.597   2.802   2.852   2.855   3.022   3.570
+  3.570   4.065  23.557
+ --------------------------------------------------------------
+ 
+          Ground-State Mulliken Net Atomic Charges
+
+     Atom                 Charge (a.u.)    Spin (a.u.)
+  --------------------------------------------------------
+      1 GH                   -0.000465       0.000000
+      2 GH                    0.000079       0.000000
+      3 GH                    0.000080       0.000000
+      4 GH                    0.000080       0.000000
+      5 Na                    1.000226       0.000000
+  --------------------------------------------------------
+  Sum of atomic charges =     1.000000
+  Sum of spin   charges =     0.000000
+
+ -----------------------------------------------------------------
+                    Cartesian Multipole Moments
+ -----------------------------------------------------------------
+    Charge (ESU x 10^10)
+                 4.8032
+    Dipole Moment (Debye)
+         X       5.8386      Y       0.0002      Z      -0.0001
+       Tot       5.8386
+    Quadrupole Moments (Debye-Ang)
+        XX       4.1624     XY       0.0002     YY      -2.9344
+        XZ      -0.0002     YZ       0.0000     ZZ      -2.9344
+    Octapole Moments (Debye-Ang^2)
+       XXX      -2.0754    XXY       0.0002    XYY      -3.5670
+       YYY      -0.0003    XXZ      -0.0001    XYZ       0.0000
+       YYZ       0.0001    XZZ      -3.5670    YZZ      -0.0001
+       ZZZ       0.0003
+    Hexadecapole Moments (Debye-Ang^3)
+      XXXX     -16.4781   XXXY       0.0000   XXYY      -4.6512
+      XYYY      -0.0004   YYYY      -0.9469   XXXZ       0.0001
+      XXYZ       0.0000   XYYZ       0.0001   YYYZ       0.0000
+      XXZZ      -4.6512   XYZZ      -0.0001   YYZZ      -0.3156
+      XZZZ       0.0004   YZZZ       0.0000   ZZZZ      -0.9469
+ -----------------------------------------------------------------
+Archival summary:
+1\1\gold\SP\ProcedureUnspecified\BasisUnspecified\a1h4(1+,1)\eric\ThuAug2214:38:152013ThuAug2214:38:152013\0\\#,ProcedureUnspecified,BasisUnspecified,\\1,1\Gh\Gh,1,1.08198\Gh,1,1.08199,2,118.895\Gh,1,1.08199,2,118.897,3,-159.249,0\Na,1,2.66319,2,96.108,3,100.399,0\\\@
+
+ Total job time:  0.21s(wall), 0.21s(cpu) 
+ Thu Aug 22 14:38:15 2013
+
+        *************************************************************
+        *                                                           *
+        *  Thank you very much for using Q-Chem.  Have a nice day.  *
+        *                                                           *
+        *************************************************************
+
+
+calling putenv with: QCSCRATCH=/home/eric/scratch/qchem 
+Copy Fragment Subsystem from /home/eric/scratch/qchem/qchem975//Frg2/
+
+-----------------------------------------------------------------
+ Done with counterpoise correction on fragments
+-----------------------------------------------------------------
+
+ SCF   energy in the final basis set = -201.9396979324
+ Total energy in the final basis set = -201.9396979324
+ Analysis of SCF Wavefunction
+ 
+ --------------------------------------------------------------
+                    Orbital Energies (a.u.)
+ --------------------------------------------------------------
+ 
+ Alpha MOs
+ -- Occupied --
+-38.755 -10.394  -2.487  -1.419  -1.419  -1.419  -0.882  -0.611
+ -0.611  -0.446
+ -- Virtual --
+ -0.230  -0.148  -0.148  -0.135  -0.062  -0.029  -0.029  -0.020
+  0.011   0.011   0.036   0.134   0.134   0.155   0.156   0.200
+  0.334   0.418   0.418   0.449   0.736   0.736   0.781   0.974
+  1.463   1.463   1.801   2.019   2.019   3.973
+ 
+ Beta MOs
+ -- Occupied --
+-38.755 -10.381  -2.487  -1.419  -1.419  -1.418  -0.844  -0.601
+ -0.601
+ -- Virtual --
+ -0.298  -0.217  -0.147  -0.147  -0.131  -0.055  -0.029  -0.029
+ -0.008   0.016   0.016   0.047   0.139   0.139   0.152   0.152
+  0.219   0.342   0.424   0.424   0.496   0.741   0.741   0.798
+  0.997   1.525   1.525   1.879   2.030   2.030   4.006
+ --------------------------------------------------------------
+ 
+          Ground-State Mulliken Net Atomic Charges
+
+     Atom                 Charge (a.u.)    Spin (a.u.)
+  --------------------------------------------------------
+      1 C                    -0.551137       0.988912
+      2 H                     0.235637      -0.038899
+      3 H                     0.235588      -0.038891
+      4 H                     0.235586      -0.038885
+      5 Na                    0.844326       0.127764
+  --------------------------------------------------------
+  Sum of atomic charges =     1.000000
+  Sum of spin   charges =     1.000000
+
+ -----------------------------------------------------------------
+                    Cartesian Multipole Moments
+ -----------------------------------------------------------------
+    Charge (ESU x 10^10)
+                 4.8032
+    Dipole Moment (Debye)
+         X       4.2696      Y       0.0001      Z       0.0001
+       Tot       4.2696
+    Quadrupole Moments (Debye-Ang)
+        XX      -1.1284     XY      -0.0006     YY      -9.9209
+        XZ       0.0006     YZ      -0.0001     ZZ      -9.9209
+    Octapole Moments (Debye-Ang^2)
+       XXX      27.2407    XXY       0.0034    XYY       5.5826
+       YYY      -0.8406    XXZ      -0.0030    XYZ       0.0001
+       YYZ       0.6031    XZZ       5.5808    YZZ       0.8409
+       ZZZ      -0.6031
+    Hexadecapole Moments (Debye-Ang^3)
+      XXXX    -118.6695   XXXY      -0.0067   XXYY     -22.0119
+      XYYY       1.3521   YYYY     -14.9008   XXXZ       0.0063
+      XXYZ      -0.0004   XYYZ      -0.9700   YYYZ      -0.0003
+      XXZZ     -22.0061   XYZZ      -1.3531   YYZZ      -4.9670
+      XZZZ       0.9712   YZZZ       0.0001   ZZZZ     -14.9006
+ -----------------------------------------------------------------
+
+ ---------------------------------------------------------------------
+ *                   Energy decomposition analysis                   *
+ *  R.Z.Khaliullin, E.A.Cobar, R.C.Lochan, A.T.Bell, M.Head-Gordon   *
+ *              J. Phys. Chem. A, 2007, 111, 8753-8765.              *
+ ---------------------------------------------------------------------
+   Fragment           E(TOTAL)      E(RS CP-CORR)     E(SCF CP-CORR)
+ ---------------------------------------------------------------------
+          1     -39.8377833972     -39.8396240510     -39.8398496474
+          2    -162.0812279270    -162.0812296529    -162.0812300003
+ ---------------------------------------------------------------------
+   initial     -201.9268311993
+    SCF MI     -201.9314799308
+        RS     -201.9388582085
+       SCF     -201.9396979324
+ ---------------------------------------------------------------------
+                                       Energy term         DE, kJ/mol
+ ---------------------------------------------------------------------
+                            Frozen Density ( FRZ )          -20.53133
+                              Polarization ( POL )          -12.20539
+                       RS Delocalization ( P-DEL )          -19.37190
+       RS Basis set superposition error ( P-BSSE )            4.83723
+      RS Charge-transfer ( P-CT = P-DEL + P-BSSE )          -14.53467
+                      SCF Delocalization ( V-DEL )          -21.57662
+      SCF Basis set superposition error ( V-BSSE )            5.43045
+     SCF Charge-transfer ( V-CT = V-DEL + V-BSSE )          -16.14617
+ ---------------------------------------------------------------------
+             RS Total ( P-TOT = FRZ + POL + P-CT )          -47.27139
+            SCF Total ( V-TOT = FRZ + POL + V-CT )          -48.88289
+    Higher order relaxation ( HO = V-TOT - P-TOT )           -1.61150
+
+ *-------------------------------------------------------------------* 
+ *      Energy decomposition of the delocalization term, kJ/mol      * 
+ *-------------------------------------------------------------------* 
+                DEL from fragment(row) to fragment(col)                
+  -------------------------------------------------------------------    
+             1           2
+    1    -0.00299   -19.26957
+    2    -0.09786    -0.00024
+  -------------------------------------------------------------------  
+                BSSE from fragment(row) to fragment(col)               
+                  Grid superposition error: -0.05519
+  -------------------------------------------------------------------    
+             1           2
+    1     0.00001     4.82562
+    2     0.06675     0.00003
+  -------------------------------------------------------------------  
+                 CT from fragment(row) to fragment(col)                
+                  Grid superposition error: -0.05641
+  -------------------------------------------------------------------    
+             1           2
+    1    -0.00299   -14.44395
+    2    -0.03111    -0.00021
+ ---------------------------------------------------------------------
+
+
+ --------------------------------------------------------------------- 
+ *                     Charge transfer analysis                      * 
+ *             R.Z.Khaliullin, A.T. Bell, M.Head-Gordon              * 
+ *                J. Chem. Phys., 2008, 128, 184112                  * 
+ *-------------------------------------------------------------------* 
+                       Fragment population, a.u.                       
+ --------------------------------------------------------------------- 
+    Method   Fragment         Occ         Vir     Occ+Vir    Isolated
+ --------------------------------------------------------------------- 
+    SCF MI          1    9.000000    0.000000    9.000000    9.000000
+                    2   10.000000    0.000000   10.000000   10.000000
+ --------------------------------------------------------------------- 
+        RS          1    8.978345   -0.003092    8.975253    9.000000
+                    2    9.999990    0.024757   10.024747   10.000000
+ --------------------------------------------------------------------- 
+       SCF          1    8.972580   -0.003623    8.968958    9.000000
+                    2    9.999987    0.031055   10.031042   10.000000
+ --------------------------------------------------------------------- 
+   BSSE RS          1    8.995565   -0.000331    8.995234    9.000000
+                    2    9.999994    0.004773   10.004766   10.000000
+ --------------------------------------------------------------------- 
+  BSSE SCF          1    8.994155   -0.000425    8.993730    9.000000
+                    2    9.999993    0.006276   10.006270   10.000000
+ --------------------------------------------------------------------- 
+                           Total electron transfer            DQ, me-
+ --------------------------------------------------------------------- 
+                                 RS Delocalization          21.665021
+                                SCF Delocalization          27.432337
+                  RS Basis set superposition error           4.441427
+                 SCF Basis set superposition error           5.851590
+ --------------------------------------------------------------------- 
+                                RS Charge-transfer          17.223594
+                               SCF Charge-transfer          21.580746
+              Higher order relaxation ( SCF - RS )           4.357153
+
+
+ *-------------------------------------------------------------------* 
+ *      Decomposition of the total RS charge-transfer term, me-      * 
+ *-------------------------------------------------------------------* 
+           Delocalization from fragment(row) to fragment(col)          
+  -------------------------------------------------------------------    
+             1           2
+    1    -3.10413    24.75944
+    2     0.01213    -0.00242
+  -------------------------------------------------------------------  
+                BSSE from fragment(row) to fragment(col)               
+  -------------------------------------------------------------------    
+             1           2
+    1    -0.33779     4.77279
+    2     0.00633     0.00009
+  -------------------------------------------------------------------  
+         Electron transfer from fragment(row) to fragment(col)         
+  -------------------------------------------------------------------    
+             1           2
+    1    -2.76634    19.98664
+    2     0.00580    -0.00251
+  -------------------------------------------------------------------  
+
+Archival summary:
+1\1\gold\SP\ProcedureUnspecified\6-31G*\a113(1+,2)\eric\ThuAug2214:38:152013ThuAug2214:38:152013\0\\#,ProcedureUnspecified,6-31G*,\\1,2\C\H,1,1.08198\H,1,1.08199,2,118.895\H,1,1.08199,2,118.897,3,-159.249,0\Na,1,2.66319,2,96.108,3,100.399,0\\\@
+
+ Total job time:  2.32s(wall), 0.94s(cpu) 
+ Thu Aug 22 14:38:15 2013
+
+        *************************************************************
+        *                                                           *
+        *  Thank you very much for using Q-Chem.  Have a nice day.  *
+        *                                                           *
+        *************************************************************
+
+
