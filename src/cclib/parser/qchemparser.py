@@ -53,6 +53,7 @@ class QChem(logfileparser.Logfile):
             correctlen = len(self.atomcoords[0])
             self.atomcoords[:] = [coords for coords in self.atomcoords
                                   if len(coords) == correctlen]
+        # At the moment, there is no similar correction for other properties!
 
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
@@ -113,9 +114,7 @@ class QChem(logfileparser.Logfile):
         #   ...
 
         if 'basis functions' in line:
-            # Allow this to change until fragment jobs are properly implemented.
-            # if not hasattr(self, 'nbasis'):
-            self.nbasis = int(line.split()[-3])
+            self.set_attribute('nbasis', int(line.split()[-3]))
 
         # Check for whether or not we're peforming an
         # (un)restricted calculation.
@@ -446,7 +445,7 @@ class QChem(logfileparser.Logfile):
                 symbols_beta = []
             line = next(inputfile)
 
-            while len(energies_alpha) < self.nbasis:
+            while not re.search('^[\s-]+$', line):
                 if 'Occupied' in line or 'Virtual' in line:
                     # A nice trick to find where the HOMO is.
                     if 'Virtual' in line:
@@ -496,15 +495,18 @@ class QChem(logfileparser.Logfile):
                     symbols_beta.extend(symbols)
                     line = next(inputfile)
 
-            if not hasattr(self, 'moenergies'):
-                self.moenergies = []
-            if not hasattr(self, 'mosyms'):
-                self.mosyms = []
-            self.moenergies.append(numpy.array(energies_alpha))
-            self.mosyms.append(symbols_alpha)
+            # For now, only keep the last set of MO energies, even though it is
+            # printed at every step of geometry optimizations and fragment jobs.
+            self.moenergies = [[]]
+            self.mosyms = [[]]
+            self.moenergies[0] = numpy.array(energies_alpha)
+            self.mosyms[0] = symbols_alpha
             if self.unrestricted:
-                self.moenergies.append(numpy.array(energies_beta))
-                self.mosyms.append(symbols_beta)
+                self.moenergies.append([])
+                self.mosyms.append([])
+                self.moenergies[1] = numpy.array(energies_beta)
+                self.mosyms[1] = symbols_beta
+            self.set_attribute('nmo', len(self.moenergies[0]))
 
         # Molecular orbital energies, no symmetries.
 
@@ -550,7 +552,7 @@ class QChem(logfileparser.Logfile):
                 energies_beta = []
             line = next(inputfile)
 
-            while len(energies_alpha) < self.nbasis:
+            while not re.search('^[\s-]+$', line):
                 if 'Occupied' in line or 'Virtual' in line:
                     # A nice trick to find where the HOMO is.
                     if 'Virtual' in line:
@@ -591,11 +593,14 @@ class QChem(logfileparser.Logfile):
                     energies_beta.extend(energies)
                     line = next(inputfile)
 
-            if not hasattr(self, 'moenergies'):
-                self.moenergies = []
-            self.moenergies.append(numpy.array(energies_alpha))
+            # For now, only keep the last set of MO energies, even though it is
+            # printed at every step of geometry optimizations and fragment jobs.
+            self.moenergies = [[]]
+            self.moenergies[0] = numpy.array(energies_alpha)
             if self.unrestricted:
-                self.moenergies.append(numpy.array(energies_beta))
+                self.moenergies.append([])
+                self.moenergies[1] = numpy.array(energies_beta)
+            self.set_attribute('nmo', len(self.moenergies[0]))
 
         # Population analysis.
 

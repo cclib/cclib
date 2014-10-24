@@ -336,7 +336,7 @@ def testQChem_QChem4_2_dvb_sp_multipole_10_out(logfile):
     """Multipole moments up to the 10-th order.
 
     Since this example has various formats for the moment ranks, we can test
-    the parser by making sure the first moment (pure X) is as epected.
+    the parser by making sure the first moment (pure X) is as expected.
     """
     assert hasattr(logfile.data, 'moments') and len(logfile.data.moments) == 11
     tol = 1.0e-6
@@ -350,6 +350,38 @@ def testQChem_QChem4_2_dvb_sp_multipole_10_out(logfile):
     assert numpy.isnan(logfile.data.moments[8][0])
     assert abs(logfile.data.moments[9][0] - 10.1638) < tol
     assert numpy.isnan(logfile.data.moments[10][0])
+
+def testQChem_QChem4_2_CH3___Na__out(logfile):
+    """An unrestricted fragment job with BSSE correction.
+
+    For now, we only keep the final block of MO energies. This corresponds to
+    the section titled 'Done with counterpoise correction on fragments'.
+    """
+    assert len(logfile.data.atomnos) == 5
+    assert len(logfile.data.scfenergies) == 7
+    assert len(logfile.data.moenergies) == 2
+    # There are 40 MOs in the supersystem.
+    assert len(logfile.data.moenergies[0]) == 40
+    assert len(logfile.data.moenergies[1]) == 40
+    assert logfile.data.nmo == 40
+    assert type(logfile.data.moenergies) == type([])
+    assert type(logfile.data.moenergies[0]) == type(numpy.array([]))
+    assert type(logfile.data.moenergies[1]) == type(numpy.array([]))
+
+def testQChem_QChem4_2_CH4___Na__out(logfile):
+    """A restricted fragment job with no BSSE correction.
+
+    For now, we only keep the final block of MO energies. This corresponds to
+    the section titled 'Done with SCF on isolated fragments'.
+    """
+    assert len(logfile.data.atomnos) == 6
+    assert len(logfile.data.scfenergies) == 3
+    assert len(logfile.data.moenergies) == 1
+    # There are 42 MOs in the supersystem.
+    assert len(logfile.data.moenergies[0]) == 42
+    assert logfile.data.nmo == 42
+    assert type(logfile.data.moenergies) == type([])
+    assert type(logfile.data.moenergies[0]) == type(numpy.array([]))
 
 # These regression tests are for logfiles that are not to be parsed
 # for some reason, and the function should start with 'testnoparse'.
