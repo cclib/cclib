@@ -445,6 +445,7 @@ class QChem(logfileparser.Logfile):
                 symbols_beta = []
             line = next(inputfile)
 
+            # The end of the block is either a blank line or only dashes.
             while not re.search('^[\s-]+$', line):
                 if 'Occupied' in line or 'Virtual' in line:
                     # A nice trick to find where the HOMO is.
@@ -552,6 +553,7 @@ class QChem(logfileparser.Logfile):
                 energies_beta = []
             line = next(inputfile)
 
+            # The end of the block is either a blank line or only dashes.
             while not re.search('^[\s-]+$', line):
                 if 'Occupied' in line or 'Virtual' in line:
                     # A nice trick to find where the HOMO is.
