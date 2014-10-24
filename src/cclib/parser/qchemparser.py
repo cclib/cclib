@@ -113,8 +113,9 @@ class QChem(logfileparser.Logfile):
         #   ...
 
         if 'basis functions' in line:
-            if not hasattr(self, 'nbasis'):
-                self.nbasis = int(line.split()[-3])
+            # Allow this to change until fragment jobs are properly implemented.
+            # if not hasattr(self, 'nbasis'):
+            self.nbasis = int(line.split()[-3])
 
         # Check for whether or not we're peforming an
         # (un)restricted calculation.
@@ -302,12 +303,12 @@ class QChem(logfileparser.Logfile):
 
             # Restricted:
             # ---------------------------------------------------
-            #         TDDFT/TDA Excitation Energies              
+            #         TDDFT/TDA Excitation Energies
             # ---------------------------------------------------
             #
             # Excited state   1: excitation energy (eV) =    3.6052
             #    Total energy for state   1:   -382.167872200685
-            #    Multiplicity: Triplet 
+            #    Multiplicity: Triplet
             #    Trans. Mom.:  0.0000 X   0.0000 Y   0.0000 Z
             #    Strength   :  0.0000
             #    D( 33) --> V(  3) amplitude =  0.2618
@@ -437,7 +438,6 @@ class QChem(logfileparser.Logfile):
             # Sometimes Q-Chem gets a little confused...
             while 'Warning : Irrep of orbital' in line:
                 line = next(inputfile)
-
             line = next(inputfile)
             energies_alpha = []
             symbols_alpha = []
@@ -546,6 +546,8 @@ class QChem(logfileparser.Logfile):
             self.skip_lines(inputfile, ['dashes', 'blank'])
             line = next(inputfile)
             energies_alpha = []
+            if self.unrestricted:
+                energies_beta = []
             line = next(inputfile)
 
             while len(energies_alpha) < self.nbasis:
@@ -554,16 +556,11 @@ class QChem(logfileparser.Logfile):
                     if 'Virtual' in line:
                         self.homos = [len(energies_alpha)-1]
                     line = next(inputfile)
-                # Parse the energies and symmetries in pairs of lines.
-                # energies = [utils.convertor(energy, 'hartree', 'eV')
-                #             for energy in map(float, line.split())]
-                # This convoluted bit handles '*******' when present.
                 energies = []
                 energy_line = line.split()
                 for e in energy_line:
                     try:
                         energy = utils.convertor(self.float(e), 'hartree', 'eV')
-                        energy = self.float(e)
                     except ValueError:
                         energy = numpy.nan
                     energies.append(energy)
@@ -573,9 +570,7 @@ class QChem(logfileparser.Logfile):
             line = next(inputfile)
             # Only look at the second block if doing an unrestricted calculation.
             # This might be a problem for ROHF/ROKS.
-            if line.strip() == 'Beta MOs':
-                energies_beta = []
-
+            if self.unrestricted:
                 self.skip_lines(inputfile, ['blank'])
                 line = next(inputfile)
                 while len(energies_beta) < self.nbasis:
@@ -590,7 +585,6 @@ class QChem(logfileparser.Logfile):
                     for e in energy_line:
                         try:
                             energy = utils.convertor(self.float(e), 'hartree', 'eV')
-                            energy = self.float(e)
                         except ValueError:
                             energy = numpy.nan
                         energies.append(energy)
@@ -661,8 +655,8 @@ class QChem(logfileparser.Logfile):
             assert charge_header.split()[0] == "Charge"
             charge = float(inputfile.next().strip())
             charge = utils.convertor(charge, 'statcoulomb', 'e') * 1e-10
-            # This is causing a problem with fragment jobs.
-            assert abs(charge - self.charge) < 1e-4
+            # Allow this to change until fragment jobs are properly implemented.
+            # assert abs(charge - self.charge) < 1e-4
 
             # This will make sure Debyes are used (not sure if it can be changed).
             line = inputfile.next()
@@ -974,4 +968,3 @@ if __name__ == '__main__':
         for i in range(len(sys.argv[2:])):
             if hasattr(data, sys.argv[2 + i]):
                 print(getattr(data, sys.argv[2 + i]))
-
