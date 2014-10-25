@@ -226,7 +226,7 @@ class QChem(logfileparser.Logfile):
             self.mpenergies.append([mp2energy])
 
         # This is the MP3/ccman2 case.
-        if line[1:11] == 'MP2 energy':
+        if line[1:11] == 'MP2 energy' and line[12:19] != 'read as':
             if not hasattr(self, 'mpenergies'):
                 self.mpenergies = []
             mpenergies = []
@@ -475,7 +475,7 @@ class QChem(logfileparser.Logfile):
             if self.unrestricted:
                 self.skip_line(inputfile, 'header')
                 line = next(inputfile)
-                while len(energies_beta) < self.nbasis:
+                while not re.search('^[\s-]+$', line):
                     if 'Occupied' in line or 'Virtual' in line:
                         # This will definitely exist, thanks to the above block.
                         if 'Virtual' in line:
@@ -577,7 +577,7 @@ class QChem(logfileparser.Logfile):
             if self.unrestricted:
                 self.skip_lines(inputfile, ['blank'])
                 line = next(inputfile)
-                while len(energies_beta) < self.nbasis:
+                while not re.search('^[\s-]+$', line):
                     if 'Occupied' in line or 'Virtual' in line:
                         # This will definitely exist, thanks to the above block.
                         if 'Virtual' in line:
