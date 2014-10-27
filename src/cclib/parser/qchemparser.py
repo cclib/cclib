@@ -42,6 +42,9 @@ class QChem(logfileparser.Logfile):
         # (un)restricted calculation.
         self.unrestricted = False
 
+        # Compile the dashes-and-or-spaces-only regex.
+        self.dashes_and_spaces = re.compile('^[\s-]+$')
+
     def after_parsing(self):
 
         # If parsing a fragment job, each of the geometries appended to
@@ -446,7 +449,7 @@ class QChem(logfileparser.Logfile):
             line = next(inputfile)
 
             # The end of the block is either a blank line or only dashes.
-            while not re.search('^[\s-]+$', line):
+            while not self.dashes_and_spaces.search(line):
                 if 'Occupied' in line or 'Virtual' in line:
                     # A nice trick to find where the HOMO is.
                     if 'Virtual' in line:
@@ -475,7 +478,7 @@ class QChem(logfileparser.Logfile):
             if self.unrestricted:
                 self.skip_line(inputfile, 'header')
                 line = next(inputfile)
-                while not re.search('^[\s-]+$', line):
+                while not self.dashes_and_spaces.search(line):
                     if 'Occupied' in line or 'Virtual' in line:
                         # This will definitely exist, thanks to the above block.
                         if 'Virtual' in line:
@@ -554,7 +557,7 @@ class QChem(logfileparser.Logfile):
             line = next(inputfile)
 
             # The end of the block is either a blank line or only dashes.
-            while not re.search('^[\s-]+$', line):
+            while not self.dashes_and_spaces.search(line):
                 if 'Occupied' in line or 'Virtual' in line:
                     # A nice trick to find where the HOMO is.
                     if 'Virtual' in line:
@@ -577,7 +580,7 @@ class QChem(logfileparser.Logfile):
             if self.unrestricted:
                 self.skip_lines(inputfile, ['blank'])
                 line = next(inputfile)
-                while not re.search('^[\s-]+$', line):
+                while not self.dashes_and_spaces.search(line):
                     if 'Occupied' in line or 'Virtual' in line:
                         # This will definitely exist, thanks to the above block.
                         if 'Virtual' in line:
