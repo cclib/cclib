@@ -13,7 +13,7 @@ import sys
 import unittest
 
 
-testmodules = ['testpopulation', 'testcda']
+testmodules = ['testpopulation', 'testcda', 'testnuclear']
 
 
 def importname(modulename, name):

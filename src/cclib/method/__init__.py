@@ -14,5 +14,6 @@ from .mpa import MPA
 from .lpa import LPA
 from .opa import OPA
 from .mbo import MBO
+from .nuclear import Nuclear
 from .fragments import FragmentAnalysis
 from .cda import CDA
