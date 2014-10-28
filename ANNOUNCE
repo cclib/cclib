@@ -1,4 +1,4 @@
-On behalf of the cclib development team, we are pleased to announce the release of cclib 1.3b, which is now available for download from http://cclib.github.io. This version includes three new parsers (for NWchem, Psi and QChem), as well as a number of bug fixes and improvements (see below).
+On behalf of the cclib development team, we are pleased to announce the release of cclib 1.3, which is now available for download from http://cclib.github.io. This version includes three new parsers (for NWchem, Psi and QChem), as well as a number of bug fixes and improvements (see below).
 
 cclib is an open source library, written in Python, for parsing and interpreting the results of computational chemistry packages. It currently parses output files from ADF, Firefly, GAMESS (US), GAMESS-UK, Gaussian, Jaguar, Molpro, NWChem, ORCA, Psi and QChem.
 
