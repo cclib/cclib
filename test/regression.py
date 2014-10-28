@@ -811,7 +811,7 @@ def main(which=[], opt_traceback=False, opt_status=False):
         print("Please make sure these function names correspond to regression files:")
         print("\n".join(orphaned_tests))
 
-    if opt_status and errors > 0:
+    if opt_status and failures+errors > 0:
         sys.exit(1)
 
 if __name__=="__main__":
