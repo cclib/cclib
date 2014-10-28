@@ -4,10 +4,12 @@ Features:
     * New parser: cclib can now parse NWChem files
     * New parser: cclib can now parse Psi (versions 3 and 4) files
     * New parser: cclib can now parse QChem files (by Eric Berquist)
+    * New method: Nuclear (currently calculates the repulsion energy)
     * Handle Gaussian basis set output with GFPRINT keyword
     * Attribute optdone reverted to single Boolean value by default
     * Add --verbose and --future options to ccget and parsers
     * Replaced PC-GAMESS test files with newer Firefly versions
+    * Updated test file versions to GAMESS-UK 8.0
 
 Bugfixes:
     * Handle GAMESS-US file with LZ value analysis (Martin Rahm)
