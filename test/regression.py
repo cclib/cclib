@@ -590,7 +590,7 @@ old_unittests = {
     "GAMESS/PCGAMESS/dvb_raman.out":        GenericRamanTest,
     "GAMESS/PCGAMESS/dvb_sp.out":           GenericSPTest,
     "GAMESS/PCGAMESS/dvb_td.out":           GenericTDTest,
-    "GAMESS/PCGAMESS/dvb_td_trplet.out":    GenericTDTest,
+    "GAMESS/PCGAMESS/dvb_td_trplet.out":    GenericTDDFTtrpTest,
     "GAMESS/PCGAMESS/dvb_un_sp.out":        GenericSPunTest,
     "GAMESS/PCGAMESS/water_mp2.out":        GenericMP2Test,
     "GAMESS/PCGAMESS/water_mp3.out":        GenericMP3Test,
