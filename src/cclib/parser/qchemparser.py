@@ -42,6 +42,9 @@ class QChem(logfileparser.Logfile):
         # (un)restricted calculation.
         self.unrestricted = False
 
+        # Compile the dashes-and-or-spaces-only regex.
+        self.dashes_and_spaces = re.compile('^[\s-]+$')
+
     def after_parsing(self):
 
         # If parsing a fragment job, each of the geometries appended to
@@ -53,6 +56,7 @@ class QChem(logfileparser.Logfile):
             correctlen = len(self.atomcoords[0])
             self.atomcoords[:] = [coords for coords in self.atomcoords
                                   if len(coords) == correctlen]
+        # At the moment, there is no similar correction for other properties!
 
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
@@ -113,8 +117,7 @@ class QChem(logfileparser.Logfile):
         #   ...
 
         if 'basis functions' in line:
-            if not hasattr(self, 'nbasis'):
-                self.nbasis = int(line.split()[-3])
+            self.set_attribute('nbasis', int(line.split()[-3]))
 
         # Check for whether or not we're peforming an
         # (un)restricted calculation.
@@ -226,7 +229,7 @@ class QChem(logfileparser.Logfile):
             self.mpenergies.append([mp2energy])
 
         # This is the MP3/ccman2 case.
-        if line[1:11] == 'MP2 energy':
+        if line[1:11] == 'MP2 energy' and line[12:19] != 'read as':
             if not hasattr(self, 'mpenergies'):
                 self.mpenergies = []
             mpenergies = []
@@ -302,12 +305,12 @@ class QChem(logfileparser.Logfile):
 
             # Restricted:
             # ---------------------------------------------------
-            #         TDDFT/TDA Excitation Energies              
+            #         TDDFT/TDA Excitation Energies
             # ---------------------------------------------------
             #
             # Excited state   1: excitation energy (eV) =    3.6052
             #    Total energy for state   1:   -382.167872200685
-            #    Multiplicity: Triplet 
+            #    Multiplicity: Triplet
             #    Trans. Mom.:  0.0000 X   0.0000 Y   0.0000 Z
             #    Strength   :  0.0000
             #    D( 33) --> V(  3) amplitude =  0.2618
@@ -437,7 +440,6 @@ class QChem(logfileparser.Logfile):
             # Sometimes Q-Chem gets a little confused...
             while 'Warning : Irrep of orbital' in line:
                 line = next(inputfile)
-
             line = next(inputfile)
             energies_alpha = []
             symbols_alpha = []
@@ -446,12 +448,12 @@ class QChem(logfileparser.Logfile):
                 symbols_beta = []
             line = next(inputfile)
 
-            while len(energies_alpha) < self.nbasis:
+            # The end of the block is either a blank line or only dashes.
+            while not self.dashes_and_spaces.search(line):
                 if 'Occupied' in line or 'Virtual' in line:
                     # A nice trick to find where the HOMO is.
                     if 'Virtual' in line:
-                        if not hasattr(self, 'homos'):
-                            self.homos = [len(energies_alpha)-1]
+                        self.homos = [len(energies_alpha)-1]
                     line = next(inputfile)
                 # Parse the energies and symmetries in pairs of lines.
                 # energies = [utils.convertor(energy, 'hartree', 'eV')
@@ -476,7 +478,7 @@ class QChem(logfileparser.Logfile):
             if self.unrestricted:
                 self.skip_line(inputfile, 'header')
                 line = next(inputfile)
-                while len(energies_beta) < self.nbasis:
+                while not self.dashes_and_spaces.search(line):
                     if 'Occupied' in line or 'Virtual' in line:
                         # This will definitely exist, thanks to the above block.
                         if 'Virtual' in line:
@@ -497,15 +499,18 @@ class QChem(logfileparser.Logfile):
                     symbols_beta.extend(symbols)
                     line = next(inputfile)
 
-            if not hasattr(self, 'moenergies'):
-                self.moenergies = []
-            if not hasattr(self, 'mosyms'):
-                self.mosyms = []
-            self.moenergies.append(numpy.array(energies_alpha))
-            self.mosyms.append(symbols_alpha)
+            # For now, only keep the last set of MO energies, even though it is
+            # printed at every step of geometry optimizations and fragment jobs.
+            self.moenergies = [[]]
+            self.mosyms = [[]]
+            self.moenergies[0] = numpy.array(energies_alpha)
+            self.mosyms[0] = symbols_alpha
             if self.unrestricted:
-                self.moenergies.append(numpy.array(energies_beta))
-                self.mosyms.append(symbols_beta)
+                self.moenergies.append([])
+                self.mosyms.append([])
+                self.moenergies[1] = numpy.array(energies_beta)
+                self.mosyms[1] = symbols_beta
+            self.set_attribute('nmo', len(self.moenergies[0]))
 
         # Molecular orbital energies, no symmetries.
 
@@ -547,25 +552,22 @@ class QChem(logfileparser.Logfile):
             self.skip_lines(inputfile, ['dashes', 'blank'])
             line = next(inputfile)
             energies_alpha = []
+            if self.unrestricted:
+                energies_beta = []
             line = next(inputfile)
 
-            while len(energies_alpha) < self.nbasis:
+            # The end of the block is either a blank line or only dashes.
+            while not self.dashes_and_spaces.search(line):
                 if 'Occupied' in line or 'Virtual' in line:
                     # A nice trick to find where the HOMO is.
                     if 'Virtual' in line:
-                        if not hasattr(self, 'homos'):
-                            self.homos = [len(energies_alpha)-1]
+                        self.homos = [len(energies_alpha)-1]
                     line = next(inputfile)
-                # Parse the energies and symmetries in pairs of lines.
-                # energies = [utils.convertor(energy, 'hartree', 'eV')
-                #             for energy in map(float, line.split())]
-                # This convoluted bit handles '*******' when present.
                 energies = []
                 energy_line = line.split()
                 for e in energy_line:
                     try:
                         energy = utils.convertor(self.float(e), 'hartree', 'eV')
-                        energy = self.float(e)
                     except ValueError:
                         energy = numpy.nan
                     energies.append(energy)
@@ -575,12 +577,10 @@ class QChem(logfileparser.Logfile):
             line = next(inputfile)
             # Only look at the second block if doing an unrestricted calculation.
             # This might be a problem for ROHF/ROKS.
-            if line.strip() == 'Beta MOs':
-                energies_beta = []
-
+            if self.unrestricted:
                 self.skip_lines(inputfile, ['blank'])
                 line = next(inputfile)
-                while len(energies_beta) < self.nbasis:
+                while not self.dashes_and_spaces.search(line):
                     if 'Occupied' in line or 'Virtual' in line:
                         # This will definitely exist, thanks to the above block.
                         if 'Virtual' in line:
@@ -592,18 +592,20 @@ class QChem(logfileparser.Logfile):
                     for e in energy_line:
                         try:
                             energy = utils.convertor(self.float(e), 'hartree', 'eV')
-                            energy = self.float(e)
                         except ValueError:
                             energy = numpy.nan
                         energies.append(energy)
                     energies_beta.extend(energies)
                     line = next(inputfile)
 
-            if not hasattr(self, 'moenergies'):
-                self.moenergies = []
-            self.moenergies.append(numpy.array(energies_alpha))
+            # For now, only keep the last set of MO energies, even though it is
+            # printed at every step of geometry optimizations and fragment jobs.
+            self.moenergies = [[]]
+            self.moenergies[0] = numpy.array(energies_alpha)
             if self.unrestricted:
-                self.moenergies.append(numpy.array(energies_beta))
+                self.moenergies.append([])
+                self.moenergies[1] = numpy.array(energies_beta)
+            self.set_attribute('nmo', len(self.moenergies[0]))
 
         # Population analysis.
 
@@ -663,7 +665,8 @@ class QChem(logfileparser.Logfile):
             assert charge_header.split()[0] == "Charge"
             charge = float(inputfile.next().strip())
             charge = utils.convertor(charge, 'statcoulomb', 'e') * 1e-10
-            assert abs(charge - self.charge) < 1e-4
+            # Allow this to change until fragment jobs are properly implemented.
+            # assert abs(charge - self.charge) < 1e-4
 
             # This will make sure Debyes are used (not sure if it can be changed).
             line = inputfile.next()
@@ -975,4 +978,3 @@ if __name__ == '__main__':
         for i in range(len(sys.argv[2:])):
             if hasattr(data, sys.argv[2 + i]):
                 print(getattr(data, sys.argv[2 + i]))
-
