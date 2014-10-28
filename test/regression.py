@@ -590,7 +590,7 @@ old_unittests = {
     "GAMESS/PCGAMESS/dvb_raman.out":        GenericRamanTest,
     "GAMESS/PCGAMESS/dvb_sp.out":           GenericSPTest,
     "GAMESS/PCGAMESS/dvb_td.out":           GenericTDTest,
-    "GAMESS/PCGAMESS/dvb_td_trplet.out":    GenericTDTest,
+    "GAMESS/PCGAMESS/dvb_td_trplet.out":    GenericTDDFTtrpTest,
     "GAMESS/PCGAMESS/dvb_un_sp.out":        GenericSPunTest,
     "GAMESS/PCGAMESS/water_mp2.out":        GenericMP2Test,
     "GAMESS/PCGAMESS/water_mp3.out":        GenericMP3Test,
@@ -811,7 +811,7 @@ def main(which=[], opt_traceback=False, opt_status=False):
         print("Please make sure these function names correspond to regression files:")
         print("\n".join(orphaned_tests))
 
-    if opt_status and errors > 0:
+    if opt_status and failures+errors > 0:
         sys.exit(1)
 
 if __name__=="__main__":
