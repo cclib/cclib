@@ -59,6 +59,7 @@ class ccData(object):
         nbasis -- number of basis functions (integer)
         nmo -- number of molecular orbitals (integer)
         nocoeffs -- natural orbital coefficients (array[2])
+        nonumbers -- natural orbital occupation numbers (array[1])
         optdone -- flags whether an optimization has converged (Boolean)
         scancoords -- geometries of each scan step (array[3], angstroms)
         scanenergies -- energies of potential energy surface (list)
@@ -121,6 +122,7 @@ class ccData(object):
         "nbasis":         int,
         "nmo":            int,
         "nocoeffs":       numpy.ndarray,
+        "nonumbers":      numpy.ndarray,
         "optdone":        bool,
         "scancoords":     numpy.ndarray,
         "scanenergies":   list,

@@ -1150,20 +1150,31 @@ class Gaussian(logfileparser.Logfile):
             if not self.popregular and not beta:
                 self.mocoeffs = mocoeffs
 
-        # Natural Orbital Coefficients (nocoeffs) - alternative for mocoeffs.
-        # Most extensively formed after CI calculations, but not only.
-        # Like for mocoeffs, this is also where aonames and atombasis are parsed.
+        # Natural orbital coefficients (nocoeffs) and occupation numbers (nonumbers),
+        # which are respectively define the eigenvectors and eigenvalues of the
+        # diagnolized one-electron density matrix. These orbitals are formed after
+        # configuration interact (CI) calculations, but not only. Similarly to mocoeffs,
+        # we can parse and check aonames and atombasis here.
+        #
+        #     Natural Orbital Coefficients:
+        #                           1         2         3         4         5
+        #     Eigenvalues --     2.01580   2.00363   2.00000   2.00000   1.00000
+        #   1 1   O  1S          0.00000  -0.15731  -0.28062   0.97330   0.00000
+        #   2        2S          0.00000   0.75440   0.57746   0.07245   0.00000
+        # ...
+        #
         if line[5:33] == "Natural Orbital Coefficients":
 
             self.aonames = []
             self.atombasis = []
             nocoeffs = numpy.zeros((self.nmo, self.nbasis), "d")
+            nonumbers = []
 
             base = 0
             self.popregular = False
             for base in range(0, self.nmo, 5):
                 
-                self.updateprogress(inputfile, "Coefficients", self.fupdate)
+                self.updateprogress(inputfile, "Natural orbitals", self.fupdate)
                          
                 colmNames = next(inputfile)   
                 if base == 0 and int(colmNames.split()[0]) != 1:
@@ -1171,9 +1182,8 @@ class Gaussian(logfileparser.Logfile):
                     # and so, only aonames (not mocoeffs) will be extracted
                     self.popregular = True
 
-                # No symmetry line for natural orbitals.
-                # symmetries = inputfile.next()
                 eigenvalues = next(inputfile)
+                nonumbers.extend(map(float, eigenvalues.split()[2:]))
 
                 for i in range(self.nbasis):
                                    
@@ -1212,6 +1222,7 @@ class Gaussian(logfileparser.Logfile):
 
             if not self.popregular:
                 self.nocoeffs = nocoeffs
+                self.nonumbers = nonumbers
 
         # For FREQ=Anharm, extract anharmonicity constants
         if line[1:40] == "X matrix of Anharmonic Constants (cm-1)":
