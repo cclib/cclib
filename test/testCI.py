@@ -94,6 +94,18 @@ class GenericCISTest(bettertest.TestCase):
                         self.fail("Excitation %i->%s not found (triplet state %i)" %(exc[0], exc[1], i))
 
 
+class GAMESSCISTest(GenericCISTest):
+    """Customized CIS(RHF)/STO-3G water unittest"""
+
+    def testnocoeffs(self):
+        """Are natural orbital coefficients the right size?"""
+        self.assertEquals(self.data.nocoeffs.shape, (self.data.nmo, self.data.nbasis))
+
+    def testnonumbers(self):
+        """Are natural orbital occupation numbers the right size?"""
+        self.assertEquals(self.data.nonumbers.shape, (self.data.nmo, ))
+
+
 class GaussianCISTest(GenericCISTest):
     """Customized CIS(RHF)/STO-3G water unittest"""
     nstates = 10

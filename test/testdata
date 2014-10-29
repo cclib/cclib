@@ -59,7 +59,7 @@ CC        QChem       GenericCCTest         basicQChem4.2         water_ccd.out
 CC        QChem       GenericCCTest         basicQChem4.2         water_ccsd.out
 CC        QChem       GenericCCTest         basicQChem4.2         water_ccsd(t).out
 
-CI        GAMESS      GenericCISTest        basicGAMESS-US2012    water_cis_saps.out
+CI        GAMESS      GAMESSCISTest         basicGAMESS-US2012    water_cis_saps.out
 CI        Gaussian    GaussianCISTest       basicGaussian03       water_cis.log
 CI        Gaussian    GaussianCISTest       basicGaussian09       water_cis.log
 CI        Jaguar      GenericCISTest        basicJaguar7.0        water_cis.out
