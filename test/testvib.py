@@ -1,4 +1,4 @@
-# This file is part of cclib (http://cclib.sf.net), a library for parsing
+# This file is part of cclib (http://cclib.github.io), a library for parsing
 # and interpreting the results of computational chemistry packages.
 #
 # Copyright (C) 2006-2014, the cclib development team

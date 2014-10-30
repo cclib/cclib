@@ -1,4 +1,4 @@
-# This file is part of cclib (http://cclib.sf.net), a library for parsing
+# This file is part of cclib (http://cclib.github.io), a library for parsing
 # and interpreting the results of computational chemistry packages.
 #
 # Copyright (C) 2006-2014, the cclib development team
@@ -8,6 +8,8 @@
 # received a copy of the license along with cclib. You can also access
 # the full license online at http://www.gnu.org/copyleft/lgpl.html.
 
+"""Calculate properties of nuclei based on data parsed by cclib."""
+
 import logging
 
 import numpy
@@ -16,7 +18,7 @@ from .calculationmethod import Method
 
 
 class Nuclear(Method):
-    """A base class for all methods pertaining to atomic nuclei."""
+    """A container for methods pertaining to atomic nuclei."""
     
     def __init__(self, data, progress=None, loglevel=logging.INFO, logname="Log"):
 

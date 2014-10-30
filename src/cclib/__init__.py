@@ -1,4 +1,14 @@
-"""cclib is a library for parsing and interpreting results from computational chemistry packages.
+# This file is part of cclib (http://cclib.github.io), a library for parsing
+# and interpreting the results of computational chemistry packages.
+#
+# Copyright (C) 2006-2014 the cclib development team
+#
+# The library is free software, distributed under the terms of
+# the GNU Lesser General Public version 2.1 or later. You should have
+# received a copy of the license along with cclib. You can also access
+# the full license online at http://www.gnu.org/copyleft/lgpl.html.
+
+"""A library for parsing and interpreting results from computational chemistry packages.
 
 The goals of cclib are centered around the reuse of data obtained from various
 computational chemistry programs and typically contained in output files. Specifically,
@@ -15,16 +25,6 @@ with other open source computational chemistry and cheminformatic software libra
 To this end, cclib provides a number of bridges to help transfer data to other libraries
 as well as example methods that take parsed data as input.
 """
-
-# This file is part of cclib (http://cclib.sf.net), a library for parsing
-# and interpreting the results of computational chemistry packages.
-#
-# Copyright (C) 2006-2014 the cclib development team
-#
-# The library is free software, distributed under the terms of
-# the GNU Lesser General Public version 2.1 or later. You should have
-# received a copy of the license along with cclib. You can also access
-# the full license online at http://www.gnu.org/copyleft/lgpl.html.
 
 __version__ = "1.3"
 
