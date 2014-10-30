@@ -101,9 +101,9 @@ class GAMESSCISTest(GenericCISTest):
         """Are natural orbital coefficients the right size?"""
         self.assertEquals(self.data.nocoeffs.shape, (self.data.nmo, self.data.nbasis))
 
-    def testnonumbers(self):
+    def testnooccnos(self):
         """Are natural orbital occupation numbers the right size?"""
-        self.assertEquals(self.data.nonumbers.shape, (self.data.nmo, ))
+        self.assertEquals(self.data.nooccnos.shape, (self.data.nmo, ))
 
 
 class GaussianCISTest(GenericCISTest):
@@ -114,9 +114,9 @@ class GaussianCISTest(GenericCISTest):
         """Are natural orbital coefficients the right size?"""
         self.assertEquals(self.data.nocoeffs.shape, (self.data.nmo, self.data.nbasis))
 
-    def testnonumbers(self):
+    def testnooccnos(self):
         """Are natural orbital occupation numbers the right size?"""
-        self.assertEquals(self.data.nonumbers.shape, (self.data.nmo, ))
+        self.assertEquals(self.data.nooccnos.shape, (self.data.nmo, ))
         
 
 

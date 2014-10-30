@@ -1015,7 +1015,7 @@ class GAMESS(logfileparser.Logfile):
         if line[10:30] == "CIS NATURAL ORBITALS":
 
             self.nocoeffs = numpy.zeros((self.nmo, self.nbasis), "d")
-            self.nonumbers = []
+            self.nooccnos = []
 
             self.skip_line(inputfile, 'dashes')
 
@@ -1029,7 +1029,7 @@ class GAMESS(logfileparser.Logfile):
                 while not line.strip():
                     line = next(inputfile)
                 eigenvalues = map(float, line.split())
-                self.nonumbers.extend(eigenvalues)
+                self.nooccnos.extend(eigenvalues)
 
                 # Orbital symemtry labels are normally here for MO coefficients.
                 line = next(inputfile)

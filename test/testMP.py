@@ -59,7 +59,7 @@ class GaussianMP2Test(GenericMP2Test):
 
     def testnocoeffs(self):
         """Are natural orbital occupation numbers the right size?"""
-        self.assertEquals(self.data.nonumbers.shape, (self.data.nmo, ))
+        self.assertEquals(self.data.nooccnos.shape, (self.data.nmo, ))
 
 class GaussianMP3Test(GenericMP2Test):
     """Customized MP3 unittest"""

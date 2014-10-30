@@ -1150,7 +1150,7 @@ class Gaussian(logfileparser.Logfile):
             if not self.popregular and not beta:
                 self.mocoeffs = mocoeffs
 
-        # Natural orbital coefficients (nocoeffs) and occupation numbers (nonumbers),
+        # Natural orbital coefficients (nocoeffs) and occupation numbers (nooccnos),
         # which are respectively define the eigenvectors and eigenvalues of the
         # diagnolized one-electron density matrix. These orbitals are formed after
         # configuration interact (CI) calculations, but not only. Similarly to mocoeffs,
@@ -1168,7 +1168,7 @@ class Gaussian(logfileparser.Logfile):
             self.aonames = []
             self.atombasis = []
             nocoeffs = numpy.zeros((self.nmo, self.nbasis), "d")
-            nonumbers = []
+            nooccnos = []
 
             base = 0
             self.popregular = False
@@ -1183,7 +1183,7 @@ class Gaussian(logfileparser.Logfile):
                     self.popregular = True
 
                 eigenvalues = next(inputfile)
-                nonumbers.extend(map(float, eigenvalues.split()[2:]))
+                nooccnos.extend(map(float, eigenvalues.split()[2:]))
 
                 for i in range(self.nbasis):
                                    
@@ -1222,7 +1222,7 @@ class Gaussian(logfileparser.Logfile):
 
             if not self.popregular:
                 self.nocoeffs = nocoeffs
-                self.nonumbers = nonumbers
+                self.nooccnos = nooccnos
 
         # For FREQ=Anharm, extract anharmonicity constants
         if line[1:40] == "X matrix of Anharmonic Constants (cm-1)":
