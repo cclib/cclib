@@ -56,7 +56,7 @@ def setup_cclib():
         author = "cclib development team",
         author_email = "cclib-users@lists.sourceforge.net",
         maintainer = "cclib development team",
-        maintainer_email = "cclib development team",
+        maintainer_email = "cclib-users@lists.sourceforge.net",
         license = "LGPL",
         description = doclines[0],
         long_description = "\n".join(doclines[2:]),      
