@@ -8,5 +8,7 @@
 # received a copy of the license along with cclib. You can also access
 # the full license online at http://www.gnu.org/copyleft/lgpl.html.
 
+"""Unit tests and regressions for cclib"""
+
 # Convenience methods.
 from .testall import testall

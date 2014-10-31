@@ -8,6 +8,8 @@
 # received a copy of the license along with cclib. You can also access
 # the full license online at http://www.gnu.org/copyleft/lgpl.html.
 
+"""Test coupled cluster logfiles"""
+
 import numpy
 
 import bettertest
