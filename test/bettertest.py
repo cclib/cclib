@@ -1,4 +1,4 @@
-# This file is part of cclib (http://cclib.sf.net), a library for parsing
+# This file is part of cclib (http://cclib.github.io), a library for parsing
 # and interpreting the results of computational chemistry packages.
 #
 # Copyright (C) 2006-2014, the cclib development team
@@ -7,6 +7,8 @@
 # the GNU Lesser General Public version 2.1 or later. You should have
 # received a copy of the license along with cclib. You can also access
 # the full license online at http://www.gnu.org/copyleft/lgpl.html.
+
+"""Custom unittest class for cclib"""
 
 import unittest
 
@@ -39,7 +41,6 @@ class TestCase(unittest.TestCase):
         errormsg = None
         if not first.shape == second.shape:
             errormsg = "Shapes are different: %s != %s" % (first.shape, second.shape)
-        # If NumPy was not imported, assume Numeric was.
         try:
             type1 = first.dtype
             type2 = second.dtype

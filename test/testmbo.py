@@ -1,4 +1,4 @@
-# This file is part of cclib (http://cclib.sf.net), a library for parsing
+# This file is part of cclib (http://cclib.github.io), a library for parsing
 # and interpreting the results of computational chemistry packages.
 #
 # Copyright (C) 2007-2014, the cclib development team
@@ -8,16 +8,15 @@
 # received a copy of the license along with cclib. You can also access
 # the full license online at http://www.gnu.org/copyleft/lgpl.html.
 
+"""Test the MBO method in cclib"""
+
 from __future__ import print_function
+
 import os
 import logging
 import unittest
 
-# If numpy is not installed, try to import Numeric instead.
-try:
-    import numpy
-except ImportError:
-    import Numeric as numpy
+import numpy
 
 from testall import getfile
 from cclib.method import MBO
