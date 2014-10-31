@@ -10,11 +10,7 @@
 
 """Test unrestrictied single point logfiles in cclib"""
 
-# If numpy is not installed, try to import Numeric instead.
-try:
-    import numpy
-except ImportError:
-    import Numeric as numpy
+import numpy
 
 import bettertest
 
