@@ -99,7 +99,15 @@ class Molpro(logfileparser.Logfile):
         #
         if line[1:11] == "BASIS DATA":
             
-            self.skip_lines(inputfile, ['b', 'header', 'b'])
+            # We can do a few sanity check with the header.
+            self.skip_line(inputfile, 'blank')
+            header = next(inputfile)
+            assert header.split()[0] == "Nr"
+            assert header.split()[1] == "Sym"
+            assert header.split()[2] == "Nuc"
+            assert header.split()[3] == "Type"
+            assert header.split()[4] == "Exponents"
+            self.skip_line(inputfile, 'blank')
 
             self.aonames = []
             self.atombasis = []
@@ -108,29 +116,25 @@ class Molpro(logfileparser.Logfile):
                 self.atombasis.append([])
                 self.gbasis.append([])
             
-            line = "dummy"
-            while line.strip() != "":
+            while line.strip():
 
+                # We need to read the line at the start of the loop, because the last function
+                # will be added when a blank line signalling the end of the block is encountered.
                 line = next(inputfile)
 
-                funcnr = line[1:6]
-                funcsym = line[7:9]
-                funcatom_ = line[11:14]
-                functype_ = line[16:22]
-                funcexp = line[25:38]
-                funccoeffs = line[38:]
+                line_nr = line[1:6]
+                line_sym = line[7:9]
+                line_nuc = line[11:14]
+                line_type = line[16:22]
+                line_exp = line[25:38]
+                line_coeffs = line[38:]
 
-                # If a new function type is printed or the BASIS DATA block ends,
-                #   then the previous functions can be added to gbasis.
-                # When translating the Molpro function type name into a gbasis code,
-                #   note that Molpro prints all components, and we want to add
-                #   only one to gbasis, with the proper code (S,P,D,F,G).
-                # Warning! The function types differ for cartesian/spherical functions.
-                # Skip the first printed function type, however, which can be detected
-                # by checking the beginning of the line (beware indentation differences!).
-                # KML: it might be good to rewrite this block a bit, to be more robust
-                # with respect to this formatting -- so use split instead of explicit slices.
-                if (functype_.strip() and line.strip()[:2] != '1.') or line.strip() == "":
+                # If a new function type is printed or the BASIS DATA block ends with a blank line,
+                # then add the previous function to gbasis, except for the first function since
+                # there was no preceeding one. When translating the Molpro function name to gbasis,
+                # note that Molpro prints all components, but we want it only once, with the proper
+                # shell type (S,P,D,F,G). Molpro names also differ for Cartesian/spherical functions.
+                if (line_type.strip() and line.strip()[:2] != '1.') or line.strip() == "":
                     funcbasis = None
                     if functype in ['1s', 's']:
                         funcbasis = 'S'
@@ -152,22 +156,22 @@ class Molpro(logfileparser.Logfile):
                             self.gbasis[funcatom-1].append(func)
 
                 # If it is a new type, set up the variables for the next shell(s).
-                if functype_.strip():
+                if line_type.strip():
                     exponents = []
                     coefficients = []
-                    functype = functype_.strip()
-                    funcatom = int(funcatom_.strip())
+                    functype = line_type.strip()
+                    funcatom = int(line_nuc.strip())
 
                 # Add exponents and coefficients to lists.
                 if line.strip():
-                    funcexp = float(funcexp)
-                    funccoeffs = [float(s) for s in funccoeffs.split()]
+                    funcexp = float(line_exp)
+                    funccoeffs = [float(s) for s in line_coeffs.split()]
                     exponents.append(funcexp)
                     coefficients.append(funccoeffs)
 
                 # If the function number is there, add to atombasis and aonames.
-                if funcnr.strip():
-                    funcnr = int(funcnr.split('.')[0])
+                if line_nr.strip():
+                    funcnr = int(line_nr.split('.')[0])
                     self.atombasis[funcatom-1].append(funcnr-1)
                     element = self.table.element[self.atomnos[funcatom-1]]
                     aoname = "%s%i_%s" % (element, funcatom, functype)
