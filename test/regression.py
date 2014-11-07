@@ -322,6 +322,14 @@ def testORCA_ORCA3_0_dvb_gopt_unconverged_out(logfile):
 
 # PSI #
 
+def testPsi_Psi3_water_psi3_log(logfile):
+    """An RHF for water with D orbitals and C2v symmetry.
+
+    Here we can check that the D orbitals are considered by checking atombasis and nbasis.
+    """
+    assert logfile.data.nbasis == 25
+    assert [len(ab) for ab in logfile.data.atombasis] == [15, 5, 5]
+
 def testPsi_Psi4_dvb_gopt_hf_unconverged_out(logfile):
     """An unconverged geometry optimization to test for empty optdone (see #103 for details)."""
     assert hasattr(logfile.data, 'optdone') and not logfile.data.optdone
