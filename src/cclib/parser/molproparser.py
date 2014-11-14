@@ -83,9 +83,7 @@ class Molpro(logfileparser.Logfile):
             self.set_attribute('natom', len(self.atomnos))
         
         # Use BASIS DATA to parse input for gbasis, aonames and atombasis. This is always
-        # the first place this information is printed, so no attribute checks are needed.
-        # Note that the formatting can exhibit subtle differences, including number
-        # of spaces in indentation.
+        # the first place this information is printed, so no attribute checks here.
         #
         # BASIS DATA
         #
@@ -95,82 +93,93 @@ class Molpro(logfileparser.Logfile):
         #                             13.045096     0.535328
         #                              3.530512     0.444635
         #   2.1 A     1  1s            2.941249    -0.099967
+        #                              0.683483     0.399513
         # ...
         #
         if line[1:11] == "BASIS DATA":
             
-            # We can do a few sanity check with the header.
+            # We can do a sanity check with the header.
             self.skip_line(inputfile, 'blank')
             header = next(inputfile)
-            assert header.split()[0] == "Nr"
-            assert header.split()[1] == "Sym"
-            assert header.split()[2] == "Nuc"
-            assert header.split()[3] == "Type"
-            assert header.split()[4] == "Exponents"
+            assert header.split() == ["Nr", "Sym", "Nuc", "Type", "Exponents", "Contraction", "coefficients"]
             self.skip_line(inputfile, 'blank')
 
             self.aonames = []
-            self.atombasis = []
-            self.gbasis = []
-            for i in range(self.natom):
-                self.atombasis.append([])
-                self.gbasis.append([])
+            self.atombasis = [[] for i in range(self.natom)]
+            self.gbasis = [[] for i in range(self.natom)]
             
             while line.strip():
 
-                # We need to read the line at the start of the loop, because the last function
+                # We need to read the line at the start of the loop here, because the last function
                 # will be added when a blank line signalling the end of the block is encountered.
                 line = next(inputfile)
 
-                line_nr = line[1:6]
-                line_sym = line[7:9]
-                line_nuc = line[11:14]
-                line_type = line[16:22]
-                line_exp = line[25:38]
-                line_coeffs = line[38:]
+                # The formatting here can exhibit subtle differences, including the number of spaces
+                # or indentation size. However, we will rely on explicit slices since not all components
+                # are always available. In fact, components not being there has some meaning (see below).
+                line_nr = line[1:6].strip()
+                line_sym = line[7:9].strip()
+                line_nuc = line[11:14].strip()
+                line_type = line[16:22].strip()
+                line_exp = line[25:38].strip()
+                line_coeffs = line[38:].strip()
+
+                aonames_s = ['s', '1s']
+                aonames_p = ['x', 'y', 'z', '2px', '2py', '2pz']
+                aonames_d = ['xx', 'yy', 'zz', 'xy', 'xz', 'yz', '3d0', '3d1-', '3d1+', '3d2-', '3d2+']
+                aonames_f = ['xxx', '4f0', '4f1-', '4f1+', '4f2-', '4f2+', '4f3-', '4f3+']
+                aonames_g = ['xxxx', '5g0', '5g1-', '5g1+', '5g2-', '5g2+', '5g3-', '5g3+', '5g4-', '5g4+']
 
                 # If a new function type is printed or the BASIS DATA block ends with a blank line,
                 # then add the previous function to gbasis, except for the first function since
                 # there was no preceeding one. When translating the Molpro function name to gbasis,
                 # note that Molpro prints all components, but we want it only once, with the proper
-                # shell type (S,P,D,F,G). Molpro names also differ for Cartesian/spherical functions.
-                if (line_type.strip() and line.strip()[:2] != '1.') or line.strip() == "":
-                    funcbasis = None
-                    if functype in ['1s', 's']:
-                        funcbasis = 'S'
-                    if functype in ['x', '2px']:
-                        funcbasis = 'P'
-                    if functype in ['xx', '3d0']:
-                        funcbasis = 'D'
-                    if functype in ['xxx', '4f0']:
-                        funcbasis = 'F'
-                    if functype in ['xxxx', '5g0']:
-                        funcbasis = 'G'
-                    if funcbasis:
+                # shell type (S,P,D,F,G). Molpro names also differ between Cartesian/spherical representations.
+                if (line_type and self.aonames) or line.strip() == "":
 
-                        # The function is split into as many columns as there are.
-                        for i in range(len(coefficients[0])):
-                            func = (funcbasis, [])
-                            for j in range(len(exponents)):
-                                func[1].append((exponents[j], coefficients[j][i]))
+                    if functype in aonames_s:
+                        funcbasis = 'S'
+                    if functype in aonames_p:
+                        funcbasis = 'P'
+                    if functype in aonames_d:
+                        funcbasis = 'D'
+                    if functype in aonames_f:
+                        funcbasis = 'F'
+                    if functype in aonames_g:
+                        funcbasis = 'G'
+
+                    # There is a separate function for each column of contraction coefficients. Since all atomic orbitals
+                    # for a particular function will have the same parameters, we can simply check if the function is
+                    # already in gbasis[i] before adding it.
+                    for i in range(len(coefficients[0])):
+
+                        func = (funcbasis, [])
+                        for j in range(len(exponents)):
+                            func[1].append((exponents[j], coefficients[j][i]))
+                        if func not in self.gbasis[funcatom-1]:
                             self.gbasis[funcatom-1].append(func)
 
-                # If it is a new type, set up the variables for the next shell(s).
-                if line_type.strip():
-                    exponents = []
-                    coefficients = []
-                    functype = line_type.strip()
-                    funcatom = int(line_nuc.strip())
+                # If it is a new type, set up the variables for the next shell(s). An exception is symmetry functions,
+                # which we want to copy from the previous function and don't have a new number on the line. For them,
+                # we just want to update the nuclear index.
+                if line_type:
+                    if line_nr:
+                        exponents = []
+                        coefficients = []
+                        functype = line_type
+                    funcatom = int(line_nuc)
 
-                # Add exponents and coefficients to lists.
-                if line.strip():
+                # Add any exponents and coefficients to lists.
+                if line_exp and line_coeffs:
                     funcexp = float(line_exp)
                     funccoeffs = [float(s) for s in line_coeffs.split()]
                     exponents.append(funcexp)
                     coefficients.append(funccoeffs)
 
-                # If the function number is there, add to atombasis and aonames.
-                if line_nr.strip():
+                # If the function number is there, add to atombasis and aonames. Notice how this is different thatn
+                # adding to gbasis, since it enumerates AOs, not basis functions. Also, this skips any symmetry
+                # functions printed, which will not have a number printed on the line.
+                if line_nr:
                     funcnr = int(line_nr.split('.')[0])
                     self.atombasis[funcatom-1].append(funcnr-1)
                     element = self.table.element[self.atomnos[funcatom-1]]
@@ -178,7 +187,6 @@ class Molpro(logfileparser.Logfile):
                     self.aonames.append(aoname)
 
         if line[1:23] == "NUMBER OF CONTRACTIONS":
-            
             nbasis = int(line.split()[3])
             self.set_attribute('nbasis', nbasis)
 
