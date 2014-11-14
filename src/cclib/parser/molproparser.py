@@ -11,14 +11,49 @@
 """Parser for Molpro output files"""
 
 
+import itertools
+
 import numpy
 
 from . import logfileparser
 from . import utils
 
 
+def create_atomic_orbital_names(orbitals):
+    """Generate all atomic orbital names that could be used by Molpro.
+
+    The names are returned in a dictionary, organized by subshell (S, P, D and so on).
+    """
+
+    # We can write out the first two manually, since there are not that many.
+    atomic_orbital_names = {
+        'S': ['s', '1s'],
+        'P': ['x', 'y', 'z', '2px', '2py', '2pz'],
+    }
+
+    # Although we could write out all names for the other subshells, it is better
+    # to generate them if we need to expand further, since the number of functions quickly
+    # grows and there are both Cartesian and spherical variants to consider.
+    # For D orbitals, the Cartesian functions are xx, yy, zz, xy, xz and yz, and the
+    # spherical ones are called 3d0, 3d1-, 3d1+, 3d2- and 3d2+. For F orbitals, the Cartesians
+    # are xxx, xxy, xxz, xyy, ... and the sphericals are 4f0, 4f1-, 4f+ and so on.
+    for i, orb in enumerate(orbitals):
+
+        # Cartesian can be generated directly by combinations.
+        cartesian = map(''.join, list(itertools.combinations_with_replacement(['x', 'y', 'z'], i+2)))
+
+        # For spherical functions, we need to construct the names.
+        pre = str(i+3) + orb.lower()
+        spherical = [pre + '0'] + [pre + str(j) + s for j in range(1, i+3) for s in ['-', '+']]
+        atomic_orbital_names[orb] = cartesian + spherical
+
+    return atomic_orbital_names
+
+
 class Molpro(logfileparser.Logfile):
     """Molpro file parser"""
+
+    atomic_orbital_names = create_atomic_orbital_names(['D', 'F', 'G'])
 
     def __init__(self, *args, **kwargs):
         # Call the __init__ method of the superclass
@@ -124,12 +159,6 @@ class Molpro(logfileparser.Logfile):
                 line_exp = line[25:38].strip()
                 line_coeffs = line[38:].strip()
 
-                aonames_s = ['s', '1s']
-                aonames_p = ['x', 'y', 'z', '2px', '2py', '2pz']
-                aonames_d = ['xx', 'yy', 'zz', 'xy', 'xz', 'yz', '3d0', '3d1-', '3d1+', '3d2-', '3d2+']
-                aonames_f = ['xxx', '4f0', '4f1-', '4f1+', '4f2-', '4f2+', '4f3-', '4f3+']
-                aonames_g = ['xxxx', '5g0', '5g1-', '5g1+', '5g2-', '5g2+', '5g3-', '5g3+', '5g4-', '5g4+']
-
                 # If a new function type is printed or the BASIS DATA block ends with a blank line,
                 # then add the previous function to gbasis, except for the first function since
                 # there was no preceeding one. When translating the Molpro function name to gbasis,
@@ -137,20 +166,18 @@ class Molpro(logfileparser.Logfile):
                 # shell type (S,P,D,F,G). Molpro names also differ between Cartesian/spherical representations.
                 if (line_type and self.aonames) or line.strip() == "":
 
-                    if functype in aonames_s:
-                        funcbasis = 'S'
-                    if functype in aonames_p:
-                        funcbasis = 'P'
-                    if functype in aonames_d:
-                        funcbasis = 'D'
-                    if functype in aonames_f:
-                        funcbasis = 'F'
-                    if functype in aonames_g:
-                        funcbasis = 'G'
+                    # All the possible AO names are created with the class. The function should always
+                    # find a match in that dictionary, so we can check for that here and will need to
+                    # update the dict if something unexpected comes up.
+                    funcbasis = None
+                    for fb, names in self.atomic_orbital_names.items():
+                        if functype in names:
+                            funcbasis = fb
+                    assert funcbasis
 
-                    # There is a separate function for each column of contraction coefficients. Since all atomic orbitals
-                    # for a particular function will have the same parameters, we can simply check if the function is
-                    # already in gbasis[i] before adding it.
+                    # There is a separate basis function for each column of contraction coefficients. Since all
+                    # atomic orbitals for a subshell will have the same parameters, we can simply check if
+                    # the function tuple is already in gbasis[i] before adding it.
                     for i in range(len(coefficients[0])):
 
                         func = (funcbasis, [])
