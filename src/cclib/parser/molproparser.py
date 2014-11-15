@@ -369,15 +369,10 @@ class Molpro(logfileparser.Logfile):
             else:
                 self.moments[1] == dipole
 
-        # From this block atombasis, moenergies, and mocoeffs can be parsed.
-        # Note that Molpro does not print this by default, you must add this in the input:
-        #   GPRINT,ORBITALS
-        # What's more, this prints only the occupied orbitals. To get virtuals, add also:
-        #   ORBPTIN,NVIRT
-        #   where NVIRT is how many to print (can be some large number, like 99999, to print all).
-        # The block is in general flipped when compared to other programs (GAMESS, Gaussian), and
-        #   MOs in the rows. Also, it does not cut the table into parts, rather each MO row has
-        #   as many lines as it takes to print all the coefficients, as shown below:
+        # From this block atombasis, moenergies and mocoeffs can be parsed. The block is in general
+        # flipped when compared to other programs (GAMESS, Gaussian), since the MOs are in rows. Also,
+        # Molpro does not cut the table into parts, rather each MO row has as many lines as it takes
+        # to print all the coefficients.
         #
         # ELECTRON ORBITALS
         # =================
@@ -393,9 +388,9 @@ class Molpro(logfileparser.Logfile):
         #                                -0.006450  0.004742 -0.001028 -0.002955  0.000000 -0.701460 (...)
         # (...)
         #
-        # For unrestricted calcualtions, ELECTRON ORBITALS is followed on the same line
-        #   by FOR POSITIVE SPIN or FOR NEGATIVE SPIN.
-        # For examples, see data/Molpro/basicMolpro2006/dvb_sp*.
+        # For unrestricted calcualtions, ELECTRON ORBITALS is followed on the same line by FOR POSITIVE SPIN
+        # or FOR NEGATIVE SPIN as appropriate.
+        #
         if line[1:18] == "ELECTRON ORBITALS" or self.electronorbitals:
             # Detect if we are reading beta (negative spin) orbitals.
             spin = 0
