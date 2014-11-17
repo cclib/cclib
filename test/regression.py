@@ -266,6 +266,27 @@ def testGaussian_Gaussian09_Ru2bpyen2_H2_freq3_log(logfile):
 
 # Molpro #
 
+def testMolpro_Molpro2008_ch2o_molpro_casscf_out(logfile):
+    """A CASSCF job with symmetry and natural orbitals."""
+
+    # The last two atoms are equivalent, so the last ends up having no
+    # functions asigned. This is not obvious, because the functions are
+    # distributed between the last two atoms in the block where gbasis
+    # is parsed, but it seems all are assigned to the penultimate atom later.
+    assert logfile.data.atombasis[-1] == []
+    assert len(logfile.data.aonames) == logfile.data.nbasis
+
+    # The MO coefficients are printed in several block, each corresponding
+    # to one irrep, so make sure we have reconstructed the coefficients correctly.
+    assert len(logfile.data.moenergies) == 1
+    assert logfile.data.moenergies[0].shape == (logfile.data.nmo, )
+    assert len(logfile.data.mocoeffs) == 1
+    assert logfile.data.mocoeffs[0].shape == (logfile.data.nmo, logfile.data.nbasis)
+
+    # These coefficients should be zero due to symmetry.
+    assert logfile.data.mocoeffs[0][-2][0] == 0.0
+    assert logfile.data.mocoeffs[0][0][-2] == 0.0
+
 def testMolpro_Molpro2012_dvb_gopt_unconverged_out(logfile):
     """An unconverged geometry optimization to test for empty optdone (see #103 for details)."""
     assert hasattr(logfile.data, 'optdone') and not logfile.data.optdone
