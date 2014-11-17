@@ -147,6 +147,14 @@ class GenericGeoOptTest(bettertest.TestCase):
         temp = numpy.all(numpy.abs(self.data.geovalues) <= self.data.geotargets, axis=1)
         self.assertTrue(temp[-1])
 
+    def testmoenergies(self):
+        """Are only the final MOs parsed?"""
+        self.assertEquals(len(self.data.moenergies), 1)
+        self.assertEquals(len(self.data.mocoeffs), 1)
+        self.assertEquals(self.data.moenergies[0].shape, (self.data.nmo, ))
+        self.assertEquals(self.data.mocoeffs[0].shape, (self.data.nmo, self.data.nbasis))
+
+
 class ADFGeoOptTest(GenericGeoOptTest):
     """Customized geometry optimization unittest"""
 
