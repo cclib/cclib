@@ -40,7 +40,7 @@ def create_atomic_orbital_names(orbitals):
     for i, orb in enumerate(orbitals):
 
         # Cartesian can be generated directly by combinations.
-        cartesian = map(''.join, list(itertools.combinations_with_replacement(['x', 'y', 'z'], i+2)))
+        cartesian = list(map(''.join, list(itertools.combinations_with_replacement(['x', 'y', 'z'], i+2))))
 
         # For spherical functions, we need to construct the names.
         pre = str(i+3) + orb.lower()
@@ -203,9 +203,10 @@ class Molpro(logfileparser.Logfile):
                     exponents.append(funcexp)
                     coefficients.append(funccoeffs)
 
-                # If the function number is there, add to atombasis and aonames. Notice how this is different thatn
+                # If the function number is there, add to atombasis and aonames. Notice how this is different than
                 # adding to gbasis, since it enumerates AOs, not basis functions. Also, this skips any symmetry
-                # functions printed, which will not have a number printed on the line.
+                # functions printed, which will not have a number printed on the line and generally are not
+                # used in subsequent calculations.
                 if line_nr:
                     funcnr = int(line_nr.split('.')[0])
                     self.atombasis[funcatom-1].append(funcnr-1)
@@ -392,63 +393,53 @@ class Molpro(logfileparser.Logfile):
         # or FOR NEGATIVE SPIN as appropriate.
         #
         if line[1:18] == "ELECTRON ORBITALS" or self.electronorbitals:
+
             # Detect if we are reading beta (negative spin) orbitals.
-            spin = 0
-            if line[19:36] == "FOR NEGATIVE SPIN" or self.electronorbitals[19:36] == "FOR NEGATIVE SPIN":
-                spin = 1
+            spin = (line[19:36] == "FOR NEGATIVE SPIN") or (self.electronorbitals[19:36] == "FOR NEGATIVE SPIN")
             
             if not self.electronorbitals:
                 self.skip_line(inputfile, 'equals')
             self.skip_lines(inputfile, ['b', 'b', 'headers', 'b'])
-            
-            # Parse the list of atomic orbitals if atombasis or aonames is missing.
-            line = next(inputfile)
-            if not hasattr(self, "atombasis") or not hasattr(self, "aonames"):
-                self.atombasis = []
-                for i in range(self.natom):
-                    self.atombasis.append([])
-                self.aonames = []
-                aonum = 0
-                while line.strip():
-                    for s in line.split():
-                        if s.isdigit():
-                            atomno = int(s)
-                            self.atombasis[atomno-1].append(aonum)
-                            aonum += 1
-                        else:
-                            functype = s
-                            element = self.table.element[self.atomnos[atomno-1]]
-                            aoname = "%s%i_%s" % (element, atomno, functype)
-                            self.aonames.append(aoname)
-                    line = next(inputfile)
-            else:
-                while line.strip():
-                    line = next(inputfile)
-
-            # Now there can be one or two blank lines.
-            while not line.strip():
-                line = next(inputfile)
-            
-            # Create empty moenergies and mocoeffs if they don't exist.
-            if not hasattr(self, "moenergies"):
-                self.moenergies = [[]]
-                self.mocoeffs = [[]]
-            # Do the same if they exist and are being read again (spin=0),
-            #   this means only the last print-out of these data are saved,
-            #   which consistent with current cclib practices.
-            elif len(self.moenergies) == 1 and spin == 0:
-                self.moenergies = [[]]
-                self.mocoeffs = [[]]
-            else:
-                self.moenergies.append([])
-                self.mocoeffs.append([])
 
             # This loop will keep going until there is a double blank line, because
             # there is a single line between each coefficient block. We can also check
             # whether there are stars (there are, at the end), in case something goes wrong.
+            moenergies = []
+            mocoeffs = []
+            line = next(inputfile)
             while line.strip() and (not "ORBITALS" in line) and (not set(line.strip()) == {'*'}):
 
-                # Newer version of Molpro (for example, 2012 test files) wil print some
+                is_aonames = line[:25].strip() == ""
+                if is_aonames:
+
+                    # Parse the list of atomic orbitals if atombasis or aonames is missing.
+                    if not hasattr(self, "atombasis") or not hasattr(self, "aonames"):
+                        self.atombasis = []
+                        for i in range(self.natom):
+                            self.atombasis.append([])
+                        self.aonames = []
+                        aonum = 0
+                        while line.strip():
+                            for s in line.split():
+                                if s.isdigit():
+                                    atomno = int(s)
+                                    self.atombasis[atomno-1].append(aonum)
+                                    aonum += 1
+                                else:
+                                    functype = s
+                                    element = self.table.element[self.atomnos[atomno-1]]
+                                    aoname = "%s%i_%s" % (element, atomno, functype)
+                                    self.aonames.append(aoname)
+                            line = next(inputfile)
+                    else:
+                        while line.strip():
+                            line = next(inputfile)
+
+                    # Now there can be one or two blank lines.
+                    while not line.strip():
+                        line = next(inputfile)
+
+                # Newer versions of Molpro (for example, 2012 test files) wil print some
                 # more things here, such as HOMO and LUMO, but these have less than 10 columns.
                 if len(line.split()) < 10 or "HOMO" in line or "LUMO" in line:
                     break
@@ -458,7 +449,7 @@ class Molpro(logfileparser.Logfile):
                     if line[:30].strip():
                         moenergy = float(line.split()[2])
                         moenergy = utils.convertor(moenergy, "hartree", "eV")
-                        self.moenergies[spin].append(moenergy)
+                        moenergies.append(moenergy)
                     line = line[31:]
                     # Each line has 10 coefficients in 10.6f format.
                     num = len(line)//10
@@ -471,9 +462,17 @@ class Molpro(logfileparser.Logfile):
                             coeff = 0.0
                         coeffs.append(coeff)
                     line = next(inputfile)
-                self.mocoeffs[spin].append(coeffs)
+                mocoeffs.append(coeffs)
                 line = next(inputfile)
-            
+                if not line.strip():
+                    line = next(inputfile)
+
+            if not hasattr(self, "moenergies") or spin == 0:
+                self.mocoeffs = []
+                self.moenergies = []
+            self.moenergies.append(moenergies)
+            self.mocoeffs.append(mocoeffs)
+
             # Check if last line begins the next ELECTRON ORBITALS section.
             if line[1:18] == "ELECTRON ORBITALS":
                 self.electronorbitals = line
