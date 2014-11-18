@@ -488,8 +488,8 @@ class NWChem(logfileparser.Logfile):
         # The same format is used for HF and DFT molecular orbital analysis. We want to parse
         # the MO energies from this section, although it is printed already before this with
         # less precision (might be useful to parse that if this is not available). Also, this
-        # section contains coefficients for the leading AO contributions, so it would also
-        # be good to parse and use those values if the full vectors are not printed.
+        # section contains coefficients for the leading AO contributions, so it might also
+        # be useful to parse and use those values if the full vectors are not printed.
         #
         # The block looks something like this (two separate alpha/beta blocks in the unrestricted case):
         #
@@ -521,13 +521,6 @@ class NWChem(logfileparser.Logfile):
             alphabeta = int("Beta" in line)
 
             self.skip_lines(inputfile, ['dashes', 'blank'])
-
-            if not hasattr(self, "moenergies"):
-                self.moenergies = []
-            if not hasattr(self, 'mosyms'):
-                self.mosyms = []
-            if not hasattr(self, 'homos'):
-                self.homos = []
 
             energies = []
             symmetries = [None]*self.nbasis
@@ -568,24 +561,19 @@ class NWChem(logfileparser.Logfile):
                     line = next(inputfile)
                 line = next(inputfile)
 
-            self.moenergies.append(energies)
             self.set_attribute('nmo', nvector)
 
-            if any(symmetries):
-                if len(self.mosyms) == alphabeta + 1:
-                    for i,s in enumerate(self.mosyms[alphabeta]):
-                        if s:
-                            if symmetries[i]:
-                                assert s == symmetries[i]
-                        elif symmetries[i]:
-                            self.mosyms[alphabeta][i] = symmetries[i]
-                else:
-                    self.mosyms.append(symmetries)
+            if not hasattr(self, 'moenergies') or (len(self.moenergies) > alphabeta):
+                self.moenergies = []
+            self.moenergies.append(energies)
 
-            if len(self.homos) == alphabeta + 1:
-                assert self.homos[alphabeta] == homo
-            else:
-                self.homos.append(homo)
+            if not hasattr(self, 'mosyms') or (len(self.mosyms) > alphabeta):
+                self.mosyms = []
+            self.mosyms.append(symmetries)
+
+            if not hasattr(self, 'homos') or (len(self.homos) > alphabeta):
+                self.homos = []
+            self.homos.append(homo)
 
         # This is where the full MO vectors are printed, but a special directive is needed for it:
         #
