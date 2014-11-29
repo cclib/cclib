@@ -640,7 +640,28 @@ class GAMESSUK(logfileparser.Logfile):
             self.atomcharges["mulliken"] = mulliken
             self.atomcharges["lowdin"] = lowdin
 
-             
+        #          ----- spinfree UHF natural orbital occupations -----
+        #
+        #               2.0000000     2.0000000     2.0000000     2.0000000     2.0000000     2.0000000     2.0000000
+        #
+        #               2.0000000     2.0000000     2.0000000     2.0000000     2.0000000     1.9999997     1.9999997
+        # ...
+        if "natural orbital occupations" in line:
+
+            occupations = []
+
+            self.skip_line(inputfile, "blank")
+            line = inputfile.next()
+
+            while line.strip():
+                occupations += map(float, line.split())
+
+                self.skip_line(inputfile, "blank")
+                line = inputfile.next()
+
+            self.set_attribute('nooccnos', occupations)
+
+
 if __name__ == "__main__":
     import doctest
     doctest.testmod()
