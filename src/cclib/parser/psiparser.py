@@ -189,6 +189,7 @@ class Psi(logfileparser.Logfile):
                 expression = shells.strip().replace(' ', '+')
                 expression = expression.replace('s', '*1')
                 expression = expression.replace('p', '*3')
+                expression = expression.replace('d', '*6')
                 nfuncs = eval(expression)
                 if len(indices) == 0:
                     indices.append(range(nfuncs))

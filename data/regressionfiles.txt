@@ -69,6 +69,7 @@ GAMESS/GAMESS-US2010/dvb_td.log
 GAMESS/GAMESS-US2010/n_water.log
 GAMESS/GAMESS-US2012/dvb_gopt_a_unconverged.out
 GAMESS/GAMESS-US2012/ScriptBicarbNa1B3LYP-B2Vib-good.gamout
+GAMESS/GAMESS-US2012/water_gamessUS.log
 GAMESS/GAMESS-US2013/N-UHF.out
 GAMESS/PCGAMESS/C_bigbasis.out
 GAMESS/PCGAMESS/CN_ir.out
@@ -135,6 +136,7 @@ Gaussian/Gaussian09/dvb_un_sp_revA.02.log
 Gaussian/Gaussian09/encaps1.log
 Gaussian/Gaussian09/guessIndo_modified_ALT.out
 Gaussian/Gaussian09/irc_point.log
+Gaussian/Gaussian09/water_gaussian.inp.log
 Gaussian/Gaussian03/AM1_SP.out
 Gaussian/Gaussian03/H2FAs--AsH2F.opt-mp2-cp.log
 Gaussian/Gaussian03/QVGXLLKOCUKJST-UHFFFAOYAJmult3Fixed.out
@@ -172,6 +174,7 @@ Jaguar/Jaguar6.5/dvb_sp.out
 Jaguar/Jaguar6.5/dvb_un_sp.out
 Molpro/Molpro2006/C_bigbasis_cart.out
 Molpro/Molpro2006/thymine.scf.out
+Molpro/Molpro2008/water_molpro.out
 Molpro/Molpro2012/dvb_gopt_unconverged.out
 NWChem/NWChem6.0/dvb_sp_hf_moments_only_quadrupole.out
 NWChem/NWChem6.0/dvb_sp_hf_moments_only_octupole.out
@@ -197,6 +200,7 @@ ORCA/ORCA2.9/prova.out
 ORCA/ORCA2.9/PCB_1_122.out
 ORCA/ORCA3.0/benzene_td_singlets.out
 ORCA/ORCA3.0/dvb_gopt_unconverged.out
+Psi/Psi3/water_psi3.log
 Psi/Psi4/dvb_gopt_hf_unconverged.out
 Psi/Psi4/psi4.0b5_samples_scf4.out
 QChem/QChem4.2/dvb_gopt_unconverged.out

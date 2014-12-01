@@ -997,11 +997,25 @@ class GAMESS(logfileparser.Logfile):
                 line = next(inputfile)
             self.moenergies = [numpy.array(x, "d") for x in self.moenergies]
 
-        # Natural orbitals - presently support only CIS.
-        # Looks basically the same as eigenvectors, without symmetry labels.
+        # Natural orbital coefficients and occupation numbers, presently supported only
+        # for CIS calculations. Looks the same as eigenvectors, without symmetry labels.
+        #
+        #          --------------------
+        #          CIS NATURAL ORBITALS
+        #          --------------------
+        #
+        #                      1          2          3          4          5
+        #
+        #                    2.0158     2.0036     2.0000     2.0000     1.0000
+        #
+        #    1  O  1  S    0.000000  -0.157316   0.999428   0.164938   0.000000
+        #    2  O  1  S    0.000000   0.754402   0.004472  -0.581970   0.000000
+        # ...
+        #
         if line[10:30] == "CIS NATURAL ORBITALS":
 
             self.nocoeffs = numpy.zeros((self.nmo, self.nbasis), "d")
+            self.nooccnos = []
 
             self.skip_line(inputfile, 'dashes')
 
@@ -1009,12 +1023,13 @@ class GAMESS(logfileparser.Logfile):
 
                 self.skip_lines(inputfile, ['blank', 'numbers'])
 
-                # Eigenvalues for these natural orbitals (not in hartrees!).
-                # Sometimes there are some blank lines before it.
+                # The eigenvalues that go along with these natural orbitals are
+                # their occupation numbers. Sometimes there are blank lines before them.
                 line = next(inputfile)
                 while not line.strip():
                     line = next(inputfile)
-                eigenvalues = line
+                eigenvalues = map(float, line.split())
+                self.nooccnos.extend(eigenvalues)
 
                 # Orbital symemtry labels are normally here for MO coefficients.
                 line = next(inputfile)

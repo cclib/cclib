@@ -42,7 +42,6 @@ class GenericBasisTest(bettertest.TestCase):
         """Is the basis set the correct size?"""
 
         total = 0
-
         multiple = self.multiple
         if self.spherical:
             multiple = self.multiple_spher

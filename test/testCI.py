@@ -94,17 +94,34 @@ class GenericCISTest(bettertest.TestCase):
                         self.fail("Excitation %i->%s not found (triplet state %i)" %(exc[0], exc[1], i))
 
 
+class GAMESSCISTest(GenericCISTest):
+    """Customized CIS(RHF)/STO-3G water unittest"""
+
+    def testnocoeffs(self):
+        """Are natural orbital coefficients the right size?"""
+        self.assertEquals(self.data.nocoeffs.shape, (self.data.nmo, self.data.nbasis))
+
+    def testnooccnos(self):
+        """Are natural orbital occupation numbers the right size?"""
+        self.assertEquals(self.data.nooccnos.shape, (self.data.nmo, ))
+
+
 class GaussianCISTest(GenericCISTest):
     """Customized CIS(RHF)/STO-3G water unittest"""
     nstates = 10
 
     def testnocoeffs(self):
-        """(MP2) Are Natural Orbital coefficients the right size?"""
+        """Are natural orbital coefficients the right size?"""
         self.assertEquals(self.data.nocoeffs.shape, (self.data.nmo, self.data.nbasis))
+
+    def testnooccnos(self):
+        """Are natural orbital occupation numbers the right size?"""
+        self.assertEquals(self.data.nooccnos.shape, (self.data.nmo, ))
+        
 
 
 class Jaguar83CISTest(GenericCISTest):
-    """CUstomized CIS(RHF)/STO-3G water unittest"""
+    """Customized CIS(RHF)/STO-3G water unittest"""
 
     # The Jaguar8.3 job was created using 6-31G instead of STO-3G.
     etsecs0 = [ [(4, 5,  0.99186)],

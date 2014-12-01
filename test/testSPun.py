@@ -91,6 +91,18 @@ class GamessUK70SPunTest(GenericSPunTest):
         self.assertEquals(self.data.mocoeffs[0].shape, shape_alpha)
         self.assertEquals(self.data.mocoeffs[1].shape, shape_beta)
 
+    def testnooccnos(self):
+        """Are natural orbital occupation numbers the right size?"""
+        self.assertEquals(self.data.nooccnos.shape, (self.data.nmo, ))
+
+
+class GamessUK80SPunTest(GenericSPunTest):
+    """Customized unrestricted single point unittest"""
+
+    def testnooccnos(self):
+        """Are natural orbital occupation numbers the right size?"""
+        self.assertEquals(self.data.nooccnos.shape, (self.data.nmo, ))
+
 
 class GaussianSPunTest(GenericSPunTest):
     """Customized unrestricted single point unittest"""
