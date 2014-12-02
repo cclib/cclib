@@ -147,6 +147,13 @@ class GenericGeoOptTest(bettertest.TestCase):
         temp = numpy.all(numpy.abs(self.data.geovalues) <= self.data.geotargets, axis=1)
         self.assertTrue(temp[-1])
 
+    def testmoenergies(self):
+        """Are only the final MOs parsed?"""
+        self.assertEquals(len(self.data.moenergies), 1)
+        if hasattr(self.data, "mocoeffs"):
+            self.assertEquals(len(self.data.mocoeffs), 1)
+
+
 class ADFGeoOptTest(GenericGeoOptTest):
     """Customized geometry optimization unittest"""
 
@@ -181,7 +188,6 @@ class JaguarGeoOptTest(GenericGeoOptTest):
     # Data file does not contain enough information. Can we make a new one?
     def testdimmocoeffs(self):
         """Are the dimensions of mocoeffs equal to 1 x nmo x nbasis? PASS"""
-        self.assertEquals(1, 1)
 
 
 class MolproGeoOptTest(GenericGeoOptTest):
