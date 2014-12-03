@@ -393,7 +393,21 @@ def testQChem_QChem4_2_qchem_tddft_rpa_out(logfile):
     """
     assert len(logfile.data.etsecs) == 10
     assert len(logfile.data.etsecs[0]) == 13
+
+    # Check a few vectors manually, since we know the output. X vectors are transitions
+    # from occupied to virtual orbitals, whereas Y vectors the other way around, so cclib
+    # should be switching the indices. Here is the corresponding fragment in the logfile:
+    #     Excited state 1: excitation energy (eV) = 3.1318
+    #     Total energy for state 1: -382.185270280389
+    #     Multiplicity: Triplet
+    #     Trans. Mom.: 0.0000 X 0.0000 Y 0.0000 Z
+    #     Strength : 0.0000
+    #     X: D( 12) --> V( 13) amplitude = 0.0162
+    #     X: D( 28) --> V( 5) amplitude = 0.1039
+    #     Y: D( 28) --> V( 5) amplitude = 0.0605
     assert logfile.data.etsecs[0][0] == [(11, 0), (47, 0), 0.0162]
+    assert logfile.data.etsecs[0][1] == [(27, 0), (39, 0), 0.1039]
+    assert logfile.data.etsecs[0][2] == [(39, 0), (27, 0), 0.0605]
 
 def testQChem_QChem4_2_CH3___Na__out(logfile):
     """An unrestricted fragment job with BSSE correction.
