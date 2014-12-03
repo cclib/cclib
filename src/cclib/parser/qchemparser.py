@@ -302,7 +302,6 @@ class QChem(logfileparser.Logfile):
                 self.ccenergies.append(ccsdenergy)
 
         # Electronic transitions. Works for both CIS and TDDFT.
-
         if 'Excitation Energies' in line:
 
             # Restricted:
@@ -355,6 +354,7 @@ class QChem(logfileparser.Logfile):
                 if 'Strength' in line:
                     strength = float(line.split()[-1])
                     etoscs.append(strength)
+
                 # This is the list of transitions.
                 if 'amplitude' in line:
                     sec = []
@@ -363,29 +363,44 @@ class QChem(logfileparser.Logfile):
                             spin = spinmap[line[42:47].strip()]
                         else:
                             spin = 0
-                        startidx = int(line[6:9]) - 1
+
+                        # There is a subtle difference between TDA and RPA calcs,
+                        # because in the latter case each transition line is
+                        # preceeded by the type of vector: X or Y, name excitation
+                        # or deexcitation (see #154 for details). For deexcitations,
+                        # we will need to reverse the MO indices. Note also that Q-Chem
+                        # starts reindexing virtual orbitals at 1.
+                        if line[5] == '(':
+                            ttype = 'X'
+                            startidx = int(line[6:9]) - 1
+                            endidx = int(line[17:20]) - 1 + self.nalpha
+                            contrib = float(line[34:41].strip())
+                        else:
+                            assert line[5] == ":"
+                            ttype = line[4]
+                            startidx = int(line[9:12]) - 1
+                            endidx = int(line[20:23]) - 1 + self.nalpha
+                            contrib = float(line[37:44].strip())
+
                         start = (startidx, spin)
-                        # Q-Chem starts reindexing virtual orbitals at 1.
-                        endidx = int(line[17:20]) - 1 + self.nalpha
                         end = (endidx, spin)
-                        contrib = float(line[34:41].strip())
-                        sec.append([start, end, contrib])
+                        if ttype == 'X':
+                            sec.append([start, end, contrib])
+                        elif ttype == 'Y':
+                            sec.append([end, start, contrib])
+                        else:
+                            raise ValueError('Unknown transition type: %s' % ttype)
                         line = next(inputfile)
                     etsecs.append(sec)
 
                 line = next(inputfile)
 
-            if not hasattr(self, 'etenergies'):
-                self.etenergies = numpy.array(etenergies)
-            if not hasattr(self, 'etsyms'):
-                self.etsyms = etsyms
-            if not hasattr(self, 'etosecs'):
-                self.etoscs = numpy.array(etoscs)
-            if not hasattr(self, 'etsecs') and len(etsecs) > 0:
-                self.etsecs = etsecs
+            self.set_attribute('etenergies', etenergies)
+            self.set_attribute('etsyms', etsyms)
+            self.set_attribute('etoscs', etoscs)
+            self.set_attribute('etsecs', etsecs)
 
         # Molecular orbital energies and symmetries.
-
         if 'Orbital Energies (a.u.) and Symmetries' in line:
 
             #  --------------------------------------------------------------

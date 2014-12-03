@@ -380,6 +380,21 @@ def testQChem_QChem4_2_dvb_sp_multipole_10_out(logfile):
     assert abs(logfile.data.moments[9][0] - 10.1638) < tol
     assert numpy.isnan(logfile.data.moments[10][0])
 
+def testQChem_QChem4_2_qchem_tddft_rpa_out(logfile):
+    """An RPA/TD-DFT job.
+
+    Here Q-Chem prints both the TDA and RPA results. These differ somewhat, since
+    TDA allows only X vectors (occupied-virtual transitions) whereas RPA also
+    allows Y vectors (virtual-occupied deexcitations), and the formatting in these
+    two cases is subtly different (see cclib/cclib#154 for details).
+
+    Currently cclib will store the second set of transitions (RPA), but this
+    could change in the future if we support multistep jobs.
+    """
+    assert len(logfile.data.etsecs) == 10
+    assert len(logfile.data.etsecs[0]) == 13
+    assert logfile.data.etsecs[0][0] == [(11, 0), (47, 0), 0.0162]
+
 def testQChem_QChem4_2_CH3___Na__out(logfile):
     """An unrestricted fragment job with BSSE correction.
 
