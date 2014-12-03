@@ -174,6 +174,7 @@ Jaguar/Jaguar6.5/dvb_sp.out
 Jaguar/Jaguar6.5/dvb_un_sp.out
 Molpro/Molpro2006/C_bigbasis_cart.out
 Molpro/Molpro2006/thymine.scf.out
+Molpro/Molpro2008/ch2o_molpro_casscf.out
 Molpro/Molpro2008/water_molpro.out
 Molpro/Molpro2012/dvb_gopt_unconverged.out
 NWChem/NWChem6.0/dvb_sp_hf_moments_only_quadrupole.out
@@ -208,5 +209,6 @@ QChem/QChem4.2/dvb_sp_unconverged.out
 QChem/QChem4.2/dvb_sp_multipole_10.out
 QChem/QChem4.2/dvb_sp_omp.out
 QChem/QChem4.2/copper_ax2wat_eq0wat4amm.opt_tzvpp.SOS-CIS_D0.out
+QChem/QChem4.2/qchem_tddft_rpa.out
 QChem/QChem4.2/CH3---Na+.out
 QChem/QChem4.2/CH4---Na+.out
