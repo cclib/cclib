@@ -119,7 +119,8 @@ class QChem(logfileparser.Logfile):
         #   ...
 
         if 'basis functions' in line:
-            self.set_attribute('nbasis', int(line.split()[-3]))
+            if not hasattr(self, 'nbasis'):
+                self.set_attribute('nbasis', int(line.split()[-3]))
 
         # Check for whether or not we're peforming an
         # (un)restricted calculation.
