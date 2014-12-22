@@ -63,17 +63,18 @@ class QChem(logfileparser.Logfile):
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
 
-        # Charge and multiplicity.
-        # Only present in the input file.
-
+        # Charge and multiplicity are present in the input file, which is generally
+        # printed once at the beginning. However, it is also prined for fragment
+        # calculations, so make sure we parse only the first occurance.
         if '$molecule' in line:
             line = next(inputfile)
             charge, mult = map(int, line.split())
-            self.set_attribute('charge', charge)
-            self.set_attribute('mult', mult)
+            if not hasattr(self, 'charge'):
+                self.set_attribute('charge', charge)
+            if not hasattr(self, 'mult'):
+                self.set_attribute('mult', mult)
 
         # Extract the atomic numbers and coordinates of the atoms.
-
         if 'Standard Nuclear Orientation (Angstroms)' in line:
             if not hasattr(self, 'atomcoords'):
                 self.atomcoords = []
@@ -117,9 +118,9 @@ class QChem(logfileparser.Logfile):
         #   There are 30 shells and 60 basis functions
         #  Both Cartesian and pure:
         #   ...
-
         if 'basis functions' in line:
-            self.set_attribute('nbasis', int(line.split()[-3]))
+            if not hasattr(self, 'nbasis'):
+                self.set_attribute('nbasis', int(line.split()[-3]))
 
         # Check for whether or not we're peforming an
         # (un)restricted calculation.
@@ -527,6 +528,7 @@ class QChem(logfileparser.Logfile):
                 self.mosyms.append([])
                 self.moenergies[1] = numpy.array(energies_beta)
                 self.mosyms[1] = symbols_beta
+
             self.set_attribute('nmo', len(self.moenergies[0]))
 
         # Molecular orbital energies, no symmetries.
