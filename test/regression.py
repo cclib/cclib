@@ -415,13 +415,18 @@ def testQChem_QChem4_2_CH3___Na__out(logfile):
     For now, we only keep the final block of MO energies. This corresponds to
     the section titled 'Done with counterpoise correction on fragments'.
     """
+
+    assert logfile.data.charge == 1
+    assert logfile.data.mult == 2
+    assert logfile.data.nbasis == logfile.data.nmo == 40
+
     assert len(logfile.data.atomnos) == 5
     assert len(logfile.data.scfenergies) == 7
     assert len(logfile.data.moenergies) == 2
+
     # There are 40 MOs in the supersystem.
     assert len(logfile.data.moenergies[0]) == 40
     assert len(logfile.data.moenergies[1]) == 40
-    assert logfile.data.nmo == 40
     assert type(logfile.data.moenergies) == type([])
     assert type(logfile.data.moenergies[0]) == type(numpy.array([]))
     assert type(logfile.data.moenergies[1]) == type(numpy.array([]))
@@ -432,12 +437,17 @@ def testQChem_QChem4_2_CH4___Na__out(logfile):
     For now, we only keep the final block of MO energies. This corresponds to
     the section titled 'Done with SCF on isolated fragments'.
     """
+
+    assert logfile.data.charge == 1
+    assert logfile.data.mult == 1
+    assert logfile.data.nbasis == logfile.data.nmo == 42
+
     assert len(logfile.data.atomnos) == 6
     assert len(logfile.data.scfenergies) == 3
     assert len(logfile.data.moenergies) == 1
+
     # There are 42 MOs in the supersystem.
     assert len(logfile.data.moenergies[0]) == 42
-    assert logfile.data.nmo == 42
     assert type(logfile.data.moenergies) == type([])
     assert type(logfile.data.moenergies[0]) == type(numpy.array([]))
 
