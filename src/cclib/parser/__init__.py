@@ -28,8 +28,8 @@ from .orcaparser import ORCA
 from .psiparser import Psi
 from .qchemparser import QChem
 
-# This allow users to type:
-#         from cclib.parser import ccopen
+# This allows users to type:
+#     from cclib.parser import ccopen
 from .ccopen import ccopen
 
 from .data import ccData
