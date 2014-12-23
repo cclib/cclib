@@ -20,14 +20,16 @@ from . import cmlwriter
 from . import xyzwriter
 
 
-def ccwrite(ccobj, outputtype=None, outputdest=None, *args, **kwargs):
+def ccwrite(ccobj, outputtype=None, outputdest=None, returnstr=False,
+            *args, **kwargs):
     """Write the parsed data from an outputfile to a standard chemical
     representation.
 
     Inputs:
         ccobj - Either a job (from ccopen) or a data (from job.parse()) object
-        outputtype - The output format (one of 'cjson', 'cml', 'xyz')
-        outputdest - [Optional] a filename or file object for writing
+        outputtype - The output format (should be one of 'cjson', 'cml', 'xyz')
+        outputdest - A filename or file object for writing
+        returnstr - Whether or not to return a string representation.
 
     Returns:
         the string representation of the chemical datatype
@@ -60,6 +62,9 @@ def ccwrite(ccobj, outputtype=None, outputdest=None, *args, **kwargs):
             raise ValueError
     # If outputdest is None, return a string representation of the output.
     else:
+        return output
+
+    if returnstr:
         return output
 
 
