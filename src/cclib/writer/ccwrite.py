@@ -79,12 +79,13 @@ def _determine_output_format(outputtype, outputdest):
     #  2. outputdest
 
     # First check outputtype.
-    if outputtype.lower() in ('cjson', 'json'):
-        outputclass = cjsonwriter.CJSON
-    elif outputtype.lower() == 'cml':
-        outputclass = cmlwriter.CML
-    elif outputtype.lower() == 'xyz':
-        outputclass = xyzwriter.XYZ
+    if isinstance(outputtype, str):
+        if outputtype.lower() in ('cjson', 'json'):
+            outputclass = cjsonwriter.CJSON
+        elif outputtype.lower() == 'cml':
+            outputclass = cmlwriter.CML
+        elif outputtype.lower() == 'xyz':
+            outputclass = xyzwriter.XYZ
     else:
         # Then checkout outputdest.
         if isinstance(outputdest, str):

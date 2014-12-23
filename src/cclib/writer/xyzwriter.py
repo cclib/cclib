@@ -52,7 +52,7 @@ class XYZ(filewriter.Writer):
         lencoords = len(self.ccdata.atomcoords)
 
         if lencoords == 1:
-            xyzblock.append(self._xyz_from_ccdata(self.ccdata, 0))
+            xyzblock.append(self._xyz_from_ccdata(self.ccdata, -1))
         elif self.do_allgeom:
             for index in range(lencoords):
                 xyzblock.append(self._xyz_from_ccdata(self.ccdata, index))
