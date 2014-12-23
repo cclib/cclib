@@ -11,6 +11,7 @@
 """The top-level interface for writing ..."""
 
 import os.path
+import io
 
 from .. import parser
 
@@ -53,7 +54,7 @@ def ccwrite(ccobj, outputtype=None, outputdest=None, *args, **kwargs):
         if isinstance(outputdest, str):
             with open(outputdest, 'w') as outputobj:
                 outputobj.write(output)
-        elif isinstance(outputdest, file):
+        elif isinstance(outputdest, io.IOBase):
             outputdest.write(output)
         else:
             raise ValueError
@@ -90,7 +91,7 @@ def _determine_output_format(outputtype, outputdest):
         # Then checkout outputdest.
         if isinstance(outputdest, str):
             extension = os.path.splitext(outputdest)[1]
-        elif isinstance(outputdest, file):
+        elif isinstance(outputdest, io.IOBase):
             extension = os.path.splitext(outputdest.name)[1]
         else:
             raise ValueError
@@ -104,3 +105,7 @@ def _determine_output_format(outputtype, outputdest):
             raise ValueError
 
     return outputclass
+
+
+if __name__ == "__main__":
+    pass
