@@ -38,12 +38,13 @@ class XYZ(filewriter.Writer):
         """Generate the XYZ representation of the logfile data."""
 
         # Options for output (to a single file):
-        # 1. Write the final converged geometry, which for any job other than
-        #   a geometry optimization would be the single/only geometry.
-        # 2. Write the very first geometry, which for any job other than a
-        #   geometry optimization would be the single/only geometry.
-        # 3. Write all geometries from an optimization, which programs like VMD
+        # 1. Write all geometries from an optimization, which programs like VMD
         #   can read in like a trajectory.
+        # 2. Write the final converged geometry, which for any job other than
+        #   a geometry optimization would be the single/only geometry.
+        # 3. Write the very first geometry, which for any job other than a
+        #   geometry optimization would be the single/only geometry.
+        # 4. Write the first and last geometries from a geometry optimization.
         # Options for ouput (to multiple files):
         # 1. Write all geometries from an optimization, to suitably named files. [TODO]
 
@@ -56,6 +57,9 @@ class XYZ(filewriter.Writer):
         elif self.do_allgeom:
             for index in range(lencoords):
                 xyzblock.append(self._xyz_from_ccdata(self.ccdata, index))
+        elif self.do_firstgeom and self.do_lastgeom:
+            xyzblock.append(self._xyz_from_ccdata(self.ccdata, 0))
+            xyzblock.append(self._xyz_from_ccdata(self.ccdata, -1))
         elif self.do_firstgeom:
             xyzblock.append(self._xyz_from_ccdata(self.ccdata, 0))
         elif self.do_lastgeom:
@@ -72,7 +76,11 @@ class XYZ(filewriter.Writer):
         element_list = [self.pt.element[Z] for Z in ccdata.atomnos]
         atomcoords = ccdata.atomcoords[index]
         # Create a comment derived from the filename and the index.
-        comment = "{}: Geometry {}".format(self.jobfilename, index + 1)
+        if index == -1:
+            geometry_num = len(ccdata.atomcoords)
+        else:
+            geometry_num = index + 1
+        comment = "{}: Geometry {}".format(self.jobfilename, geometry_num)
 
         atom_template = '{:3s} {:15.10f} {:15.10f} {:15.10f}'
         block = []
