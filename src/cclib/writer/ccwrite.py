@@ -11,7 +11,12 @@
 """The top-level interface for writing ..."""
 
 import os.path
-import io
+import sys
+if sys.version_info[0] == 2:
+    fileclass = file
+elif sys.version_info[0] == 3:
+    import io
+    fileclass = io.IOBase
 
 from .. import parser
 
@@ -30,6 +35,9 @@ def ccwrite(ccobj, outputtype=None, outputdest=None, returnstr=False,
         outputtype - The output format (should be one of 'cjson', 'cml', 'xyz')
         outputdest - A filename or file object for writing
         returnstr - Whether or not to return a string representation.
+
+    The different writers may take additional arguments, which are
+    documented in their respective docstrings.
 
     Returns:
         the string representation of the chemical datatype
@@ -56,7 +64,7 @@ def ccwrite(ccobj, outputtype=None, outputdest=None, returnstr=False,
         if isinstance(outputdest, str):
             with open(outputdest, 'w') as outputobj:
                 outputobj.write(output)
-        elif isinstance(outputdest, io.IOBase):
+        elif isinstance(outputdest, fileclass):
             outputdest.write(output)
         else:
             raise ValueError
@@ -96,7 +104,7 @@ def _determine_output_format(outputtype, outputdest):
         # Then checkout outputdest.
         if isinstance(outputdest, str):
             extension = os.path.splitext(outputdest)[1]
-        elif isinstance(outputdest, io.IOBase):
+        elif isinstance(outputdest, fileclass):
             extension = os.path.splitext(outputdest.name)[1]
         else:
             raise ValueError
