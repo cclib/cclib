@@ -53,31 +53,31 @@ class XYZ(filewriter.Writer):
         lencoords = len(self.ccdata.atomcoords)
 
         if lencoords == 1:
-            xyzblock.append(self._xyz_from_ccdata(self.ccdata, -1))
+            xyzblock.append(self._xyz_from_ccdata(-1))
         elif self.do_allgeom:
             for index in range(lencoords):
-                xyzblock.append(self._xyz_from_ccdata(self.ccdata, index))
+                xyzblock.append(self._xyz_from_ccdata(index))
         elif self.do_firstgeom and self.do_lastgeom:
-            xyzblock.append(self._xyz_from_ccdata(self.ccdata, 0))
-            xyzblock.append(self._xyz_from_ccdata(self.ccdata, -1))
+            xyzblock.append(self._xyz_from_ccdata(0))
+            xyzblock.append(self._xyz_from_ccdata(-1))
         elif self.do_firstgeom:
-            xyzblock.append(self._xyz_from_ccdata(self.ccdata, 0))
+            xyzblock.append(self._xyz_from_ccdata(0))
         elif self.do_lastgeom:
-            xyzblock.append(self._xyz_from_ccdata(self.ccdata, -1))
+            xyzblock.append(self._xyz_from_ccdata(-1))
         # If none of the options are set, return the empty string.
         else:
             xyzblock.append("")
 
         return '\n'.join(xyzblock)
 
-    def _xyz_from_ccdata(self, ccdata, index):
+    def _xyz_from_ccdata(self, index):
         """Create an XYZ file of the geometry at the given index."""
-        natom = str(ccdata.natom)
-        element_list = [self.pt.element[Z] for Z in ccdata.atomnos]
-        atomcoords = ccdata.atomcoords[index]
+        natom = str(self.ccdata.natom)
+        element_list = [self.pt.element[Z] for Z in self.ccdata.atomnos]
+        atomcoords = self.ccdata.atomcoords[index]
         # Create a comment derived from the filename and the index.
         if index == -1:
-            geometry_num = len(ccdata.atomcoords)
+            geometry_num = len(self.ccdata.atomcoords)
         else:
             geometry_num = index + 1
         comment = "{}: Geometry {}".format(self.jobfilename, geometry_num)
