@@ -24,7 +24,7 @@ class Writer(object):
         This should be called by a subclass in its own __init__ method.
 
         Inputs:
-            ccdata - ...
+            ccdata - An instance of ccData, parsed from a logfile.
         """
 
     def generate_repr(self):

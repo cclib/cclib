@@ -25,6 +25,12 @@ class CJSON(filewriter.Writer):
 
     def __init__(self, ccdata, jobfilename=None,
                  *args, **kwargs):
+        """Initialize the chemical JSON writer object.
+
+        Inputs:
+          ccdata - An instance of ccData, parsed from a logfile.
+          jobfilename - The filename of the parsed logfile.
+        """
 
         # Call the __init__ method of the superclass
         super(CJSON, self).__init__(ccdata, *args, **kwargs)
@@ -38,7 +44,7 @@ class CJSON(filewriter.Writer):
         """Generate the CJSON representation of the logfile data."""
 
         # Generate the Open Babel/Pybel representation of the molecule.
-        # Used for calculating SMILES/InChI, formula, MW, ...
+        # Used for calculating SMILES/InChI, formula, MW, etc.
         obmol = self._makeopenbabel_from_ccdata()
         pbmol = pb.Molecule(obmol)
 

@@ -17,6 +17,11 @@ class CML(filewriter.Writer):
     """A writer for chemical markup language (CML) files."""
 
     def __init__(self, ccdata, *args, **kwargs):
+        """Initialize the CML writer object.
+
+        Inputs:
+          ccdata - An instance of ccData, parsed from a logfile.
+        """
 
         # Call the __init__ method of the superclass
         super(CML, self).__init__(ccdata, *args, **kwargs)

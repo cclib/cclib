@@ -20,6 +20,16 @@ class XYZ(filewriter.Writer):
     def __init__(self, ccdata, jobfilename=None, splitfiles=False,
                  firstgeom=False, lastgeom=True, allgeom=False,
                  *args, **kwargs):
+        """Initialize the XYZ writer object.
+
+        Inputs:
+          ccdata - An instance of ccData, parse from a logfile.
+          jobfilename - The filename of the parsed logfile.
+          splitfiles - Boolean to write multiple files if multiple files are requested. [TODO]
+          firstgeom - Boolean to write the first available geometry from the logfile.
+          lastgeom - Boolean to write the last available geometry from the logfile.
+          allgeom - Boolean to write all available geometries from the logfile.
+        """
 
         # Call the __init__ method of the superclass
         super(XYZ, self).__init__(ccdata, *args, **kwargs)
