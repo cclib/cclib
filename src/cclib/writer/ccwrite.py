@@ -12,11 +12,12 @@
 
 import os.path
 import sys
-if sys.version_info[0] == 2:
-    fileclass = file
-elif sys.version_info[0] == 3:
+# Python 2->3 changes the default file object hierarchy.
+if sys.version_info[0] == 3:
     import io
     fileclass = io.IOBase
+else:
+    fileclass = file
 
 from .. import parser
 
