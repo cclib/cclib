@@ -94,6 +94,20 @@ class NWChem(logfileparser.Logfile):
             natom = int(next(inputfile).strip())
             self.set_attribute('natom', natom)
 
+        if line[1:11] == "Summary of":
+            match = re.match(' Summary of "([^\"]*)" -> "([^\"]*)"', line)
+            if match and match.group(1) == match.group(2):
+
+                self.skip_lines(inputfile, ['d', 'title', 'd'])
+
+                self.shells = {}
+                line = next(inputfile)
+                while len(line) > 1:
+                    info = line.split()
+                    elem = info[0]
+                    self.shells[elem] = info[-1]
+                    line = next(inputfile)
+
         if line.strip() == "NWChem Geometry Optimization":
             self.skip_lines(inputfile, ['d', 'b', 'b', 'b', 'b', 'title', 'b', 'b'])
             line = next(inputfile)
@@ -914,6 +928,40 @@ class NWChem(logfileparser.Logfile):
                 self.ccenergies = []
             self.ccenergies.append([])
             self.ccenergies[-1].append(utils.convertor(ccenerg, "hartree", "eV"))
+
+    def after_parsing(self):
+        """NWChem-specific routines for after parsing file.
+
+        Currently, expands self.shells() into self.aonames.
+        """
+
+        # setup a few necessary things, including a regular expression
+        # for matching the shells
+        table = utils.PeriodicTable()
+        elements = [ table.element[x] for x in self.atomnos ]
+        pattern = re.compile("(\ds)+(\dp)*(\dd)*(\df)*(\dg)*")
+
+        labels = {}
+        labels['s'] = ["%iS"]
+        labels['p'] = ["%iPX", "%iPY", "%iPZ"]
+
+        # now actually build aonames
+        self.aonames = []
+        for i, element in enumerate(elements):
+            shell_text = self.shells[element]
+            prefix = "%s%i_" % (element, i + 1) # (e.g. C1_)
+
+            matches = pattern.match(shell_text)
+            for j, group in enumerate(matches.groups()):
+                if group is None:
+                    continue
+
+                count = int(group[:-1])
+                label = group[-1]
+
+                for k in range(count):
+                    temp = [ x % (j + k + 1) for x in labels[label] ]
+                    self.aonames.extend( [ prefix + x for x in temp ] )
 
 
 if __name__ == "__main__":
