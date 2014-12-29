@@ -94,6 +94,23 @@ class NWChem(logfileparser.Logfile):
             natom = int(next(inputfile).strip())
             self.set_attribute('natom', natom)
 
+        # The section we can glean info about aonmaes looks like:
+        #
+        # Summary of "ao basis" -> "ao basis" (cartesian)
+        # ------------------------------------------------------------------------------
+        #       Tag                 Description            Shells   Functions and Types
+        # ---------------- ------------------------------  ------  ---------------------
+        # C                           sto-3g                  3        5   2s1p
+        # H                           sto-3g                  1        1   1s
+        #
+        # However, we need to make sure not to match the following entry lines:
+        #
+        # *  Summary of "ao basis" -> "" (cartesian)
+        # *  Summary of allocated global arrays
+        #
+        # Unfortantely, "ao basis" isn't unique because it can be renamed to anythign for
+        # later reference: http://www.nwchem-sw.org/index.php/Basis
+
         if line[1:11] == "Summary of":
             match = re.match(' Summary of "([^\"]*)" -> "([^\"]*)"', line)
             if match and match.group(1) == match.group(2):
@@ -946,6 +963,8 @@ class NWChem(logfileparser.Logfile):
         labels['p'] = ["%iPX", "%iPY", "%iPZ"]
 
         # now actually build aonames
+        # involves expanding 2s1p into appropriate types
+
         self.aonames = []
         for i, element in enumerate(elements):
             shell_text = self.shells[element]
