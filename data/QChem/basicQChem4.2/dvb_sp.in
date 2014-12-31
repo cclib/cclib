@@ -6,6 +6,7 @@ $rem
  method = b3lyp
  basis = sto-3g
  scf_final_print = 2
+ print_general_basis = true
 $end
 
 $molecule

@@ -7,6 +7,7 @@ $rem
  basis = sto-3g
  unrestricted = true
  scf_final_print = 2
+ print_general_basis = true
 $end
 
 $molecule
