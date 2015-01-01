@@ -76,6 +76,73 @@ class QChem(logfileparser.Logfile):
             if not hasattr(self, 'mult'):
                 self.set_attribute('mult', mult)
 
+        # Parse the general basis for `gbasis`.
+        if 'Basis set in general basis input format:' in line:
+            self.skip_lines(inputfile, ['d', '$basis'])
+            line = next(inputfile)
+            if not hasattr(self, 'gbasis'):
+                self.gbasis = []
+            # The end of the general basis block.
+            while '$end' not in line:
+                atom = []
+                # 1. Contains element symbol and atomic index of
+                # basis functions; if 0, applies to all atoms of
+                # same element.
+                assert len(line.split()) == 2
+                line = next(inputfile)
+                # The end of each atomic block.
+                while '****' not in line:
+                    # 2. Contains the type of basis function {S, SP,
+                    # P, D, F, G, H, ...}, the number of primitives,
+                    # and the weight of the final contracted function.
+                    bfsplitline = line.split()
+                    assert len(bfsplitline) == 3
+                    bftype = bfsplitline[0]
+                    nprim = int(bfsplitline[1])
+                    line = next(inputfile)
+                    # 3. The primitive basis functions that compose
+                    # the contracted basis function; there are `nprim`
+                    # of them. The first value is the exponent, and
+                    # the second value is the contraction
+                    # coefficient. If `bftype == 'SP'`, the primitives
+                    # are for both S- and P-type basis functions but
+                    # with separate contraction coefficients,
+                    # resulting in three columns.
+                    if bftype == 'SP':
+                        primitives_S = []
+                        primitives_P = []
+                    else:
+                        primitives = []
+                    # For each primitive in the contracted basis
+                    # function...
+                    for iprim in range(nprim):
+                        primsplitline = line.split()
+                        exponent = float(primsplitline[0])
+                        if bftype == 'SP':
+                            assert len(primsplitline) == 3
+                            coefficient_S = float(primsplitline[1])
+                            coefficient_P = float(primsplitline[2])
+                            primitives_S.append((exponent, coefficient_S))
+                            primitives_P.append((exponent, coefficient_P))
+                        else:
+                            assert len(primsplitline) == 2
+                            coefficient = float(primsplitline[1])
+                            primitives.append((exponent, coefficient))
+                        line = next(inputfile)
+                    if bftype == 'SP':
+                        bf_S = ('S', primitives_S)
+                        bf_P = ('P', primitives_P)
+                        atom.append(bf_S)
+                        atom.append(bf_P)
+                    else:
+                        bf = (bftype, primitives)
+                        atom.append(bf)
+                    # Move to the next contracted basis function
+                    # as long as we don't hit the '****' atom
+                    # delimiter.
+                self.gbasis.append(atom)
+                line = next(inputfile)
+
         # Extract the atomic numbers and coordinates of the atoms.
         if 'Standard Nuclear Orientation (Angstroms)' in line:
             if not hasattr(self, 'atomcoords'):
@@ -941,18 +1008,15 @@ class QChem(logfileparser.Logfile):
         # TODO:
         # 'aonames'
         # 'atombasis'
-        # 'freeenergy'
-        # 'fonames'
-        # 'fooverlaps'
-        # 'fragnames'
-        # 'frags'
-        # 'gbasis'
+        # 'enthalpy' (incorrect)
+        # 'freeenergy' (incorrect)
         # 'mocoeffs'
         # 'nocoeffs'
         # 'scancoords'
         # 'scanenergies'
         # 'scannames'
         # 'scanparm'
+        # 'vibanharms'
 
     def parse_charge_section(self, inputfile, chargetype):
         """Parse the population analysis charge block."""
