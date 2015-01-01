@@ -108,16 +108,19 @@ class NWChem(logfileparser.Logfile):
         # *  Summary of "ao basis" -> "" (cartesian)
         # *  Summary of allocated global arrays
         #
-        # Unfortantely, "ao basis" isn't unique because it can be renamed to anythign for
+        # Unfortantely, "ao basis" isn't unique because it can be renamed to anything for
         # later reference: http://www.nwchem-sw.org/index.php/Basis
+        # It also appears that we have to handle cartesian vs. spherical 
 
         if line[1:11] == "Summary of":
-            match = re.match(' Summary of "([^\"]*)" -> "([^\"]*)"', line)
+            match = re.match(' Summary of "([^\"]*)" -> "([^\"]*)" \((.+)\)', line)
             if match and match.group(1) == match.group(2):
 
                 self.skip_lines(inputfile, ['d', 'title', 'd'])
 
                 self.shells = {}
+                self.shells["type"] = match.group(3)
+
                 line = next(inputfile)
                 while len(line) > 1:
                     info = line.split()
@@ -961,6 +964,12 @@ class NWChem(logfileparser.Logfile):
         labels = {}
         labels['s'] = ["%iS"]
         labels['p'] = ["%iPX", "%iPY", "%iPZ"]
+        if self.shells['type'] == 'spherical':
+            labels['d'] = ['%iD-2', '%iD-1', '%iD0', '%iD1', '%iD2']
+            labels['f'] = ['%iF-3', '%iF-2', '%iF-1', '%iF0',
+                            '%iF1', '%iF2', '%iF3']
+            labels['g'] = ['%iG-4', '%iG-3', '%iG-2', '%iG-1', '%iG0',
+                            '%iG1', '%iG2', '%iG3', '%iG4']
 
         # now actually build aonames
         # involves expanding 2s1p into appropriate types
