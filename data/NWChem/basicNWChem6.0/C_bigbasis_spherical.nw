@@ -1,0 +1,14 @@
+  start carbon
+  title "C atom"
+
+  geometry units angstroms
+    C          -1.4152533224   0.2302217854   0.0000000000
+  end
+  basis spherical
+    *    library aug-cc-pCVQZ
+  end
+  scf
+    print "final vectors" "final vectors analysis"
+  end
+  task scf
+
