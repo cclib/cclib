@@ -21,7 +21,7 @@ class GenericSPTest(bettertest.TestCase):
 
     # In STO-3G, H has 1, C has 5 (1 S and 4 SP).
     nbasisdict = {1:1, 6:5}
-    
+
     # Approximate B3LYP energy of dvb after SCF in STO-3G.
     b3lyp_energy = -10365
 
@@ -308,6 +308,16 @@ class Psi3SPTest(PsiSPTest):
 class QChemSPTest(GenericSPTest):
     """Customized restricted single point unittest"""
 
+    # By default, Q-Chem doesn't print out an nmo * nbasis dim MO
+    # coefficient matrix, but a nmo * (nocc + 5) matrix.
+    def testdimmocoeffs(self):
+        """Are the dimensions of mocoeffs equal to 1 x nmo x (nocc + 5)?"""
+        ncols = self.data.homos[0] + 1 + 5
+        self.assertEquals(type(self.data.mocoeffs), type([]))
+        self.assertEquals(len(self.data.mocoeffs), 1)
+        self.assertEquals(self.data.mocoeffs[0].shape,
+                          (self.data.nmo, ncols))
+
     # Q-Chem cannot print the overlap matrix.
     def testdimaooverlaps(self):
         """Are the dims of the overlap matrix consistent with nbasis? PASS"""
@@ -316,13 +326,10 @@ class QChemSPTest(GenericSPTest):
     def testaooverlaps(self):
         """Are the first row and column of the overlap matrix identical? PASS"""
 
-    # `mocoeffs` not implemented yet.
-    def testdimmocoeffs(self):
-        """Are the dimensions of mocoeffs equal to 1 x nmo x nbasis? PASS"""
-
     # `atombasis` not implemented yet.
     def testatombasis(self):
-        """Are the indices in atombasis the right amount and unique?"""
+        """Are the indices in atombasis the right amount and unique? PASS"""
+
 
 if __name__=="__main__":
 

@@ -49,6 +49,13 @@ class QChem(logfileparser.Logfile):
         # Compile the dashes-and-or-spaces-only regex.
         self.dashes_and_spaces = re.compile('^[\s-]+$')
 
+        # By default, when asked to print orbitals via
+        # `scf_final_print` and/or `print_orbitals`, Q-Chem will print
+        # all occupieds and the first 5 virtuals. Add `nalpha/nbeta`
+        # to this value later to get the correct default value.
+        self.norbdisp_alpha = 5
+        self.norbdisp_beta = 5
+
     def after_parsing(self):
 
         # If parsing a fragment job, each of the geometries appended to
@@ -64,6 +71,21 @@ class QChem(logfileparser.Logfile):
 
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
+
+        # If the input section is repeated back, parse the $rem
+        # section.
+        if '$rem' in line:
+            while '$end' not in line:
+                line = next(inputfile)
+                if 'print_orbitals' in line.lower():
+                    # Stay with the default value if a number isn't
+                    # specified.
+                    if line.split()[-1].lower() in ('true', 'false'):
+                        continue
+                    else:
+                        norbdisp = int(line.split()[-1])
+                        self.norbdisp_alpha = norbdisp
+                        self.norbdisp_beta = norbdisp
 
         # Charge and multiplicity are present in the input file, which is generally
         # printed once at the beginning. However, it is also prined for fragment
@@ -81,7 +103,7 @@ class QChem(logfileparser.Logfile):
             self.skip_lines(inputfile, ['d', '$basis'])
             line = next(inputfile)
             if not hasattr(self, 'gbasis'):
-                self.gbasis = []
+                self.set_attribute('gbasis', [])
             # The end of the general basis block.
             while '$end' not in line:
                 atom = []
@@ -177,6 +199,8 @@ class QChem(logfileparser.Logfile):
                 match = re.findall(nelec_re_string, line.strip())
                 self.nalpha = int(match[0][0].strip())
                 self.nbeta = int(match[0][1].strip())
+                self.norbdisp_alpha += self.nalpha
+                self.norbdisp_beta += self.nbeta
 
         # Number of basis functions.
         # Because Q-Chem's integral recursion scheme is defined using
@@ -220,12 +244,12 @@ class QChem(logfileparser.Logfile):
             # but sometimes there are lines before the first dashes.
             while not 'Cycle       Energy' in line:
                 line = next(inputfile)
-            self.skip_lines(inputfile, ['d'])
+            self.skip_line(inputfile, 'd')
 
             values = []
             iter_counter = 1
             line = next(inputfile)
-            while 'energy in the final basis set' not in line:
+            while 'Convergence ' not in line:
 
                 # Some trickery to avoid a lot of printing that can occur
                 # between each SCF iteration.
@@ -238,7 +262,14 @@ class QChem(logfileparser.Logfile):
                         iter_counter += 1
                 line = next(inputfile)
 
-                # This is printed in regression Qchem4.2/dvb_sp_unconverged.out
+                # We've converged, but still need the last iteration.
+                if 'Convergence criterion met' in line:
+                    entry = line.split()
+                    error = float(entry[2])
+                    values.append([error])
+                    iter_counter += 1
+
+                # This is printed in regression QChem4.2/dvb_sp_unconverged.out
                 # so use it to bail out when convergence fails.
                 if "SCF failed to converge" in line or "Convergence failure" in line:
                     break
@@ -246,6 +277,56 @@ class QChem(logfileparser.Logfile):
             if not hasattr(self, 'scfvalues'):
                 self.scfvalues = []
             self.scfvalues.append(numpy.array(values))
+
+        # Molecular orbital coefficients.
+
+        # Try parsing them from this block (which comes from
+        # `scf_final_print = 2``) rather than the combined
+        # aonames/mocoeffs/moenergies block (which comes from
+        # `print_orbitals = true`).
+        if 'Final Alpha MO Coefficients' in line:
+            if not hasattr(self, 'mocoeffs'):
+                self.set_attribute('mocoeffs', [])
+            mocoeffs = numpy.empty(shape=(self.nbasis, self.norbdisp_alpha))
+            # A maximum of 6 columns/block.
+            ncolsblock = 6
+            line = next(inputfile)
+            assert len(line.split()) == ncolsblock
+            colcounter = 0
+            while colcounter < self.norbdisp_alpha:
+                # If the line is just the column header (indices)...
+                if line[:5].strip() == '':
+                    ncols = len(line.split())
+                    line = next(inputfile)
+                rowcounter = 0
+                while rowcounter < self.nbasis:
+                    row = list(map(float, line.split()[1:]))
+                    mocoeffs[rowcounter][colcounter:colcounter + ncols] = row
+                    line = next(inputfile)
+                    rowcounter += 1
+                colcounter += ncols
+            self.mocoeffs.append(mocoeffs)
+
+        if 'Final Beta MO Coefficients' in line:
+            mocoeffs = numpy.empty(shape=(self.nbasis, self.norbdisp_beta))
+            # A maximum of 6 columns/block.
+            ncolsblock = 6
+            line = next(inputfile)
+            assert len(line.split()) == ncolsblock
+            colcounter = 0
+            while colcounter < self.norbdisp_beta:
+                # If the line is just the column header (indices)...
+                if line[:5].strip() == '':
+                    ncols = len(line.split())
+                    line = next(inputfile)
+                rowcounter = 0
+                while rowcounter < self.nbasis:
+                    row = list(map(float, line.split()[1:]))
+                    mocoeffs[rowcounter][colcounter:colcounter + ncols] = row
+                    line = next(inputfile)
+                    rowcounter += 1
+                colcounter += ncols
+            self.mocoeffs.append(mocoeffs)
 
         if 'Total energy in the final basis set' in line:
             if not hasattr(self, 'scfenergies'):
@@ -819,14 +900,16 @@ class QChem(logfileparser.Logfile):
             # A maximum of 6 columns/block.
             ncols = 6
             line = next(inputfile)
+            assert len(line.split()) == ncols
             colcounter = 0
             while colcounter < self.natom:
+                # If the line is just the column header (indices)...
                 if line[:5].strip() == '':
                     line = next(inputfile)
                 rowcounter = 0
                 while rowcounter < 3:
                     row = list(map(float, line.split()[1:]))
-                    grad[rowcounter][colcounter:colcounter+ncols] = row
+                    grad[rowcounter][colcounter:colcounter + ncols] = row
                     line = next(inputfile)
                     rowcounter += 1
                 colcounter += ncols
@@ -848,7 +931,7 @@ class QChem(logfileparser.Logfile):
                     rowcounter = 0
                     while rowcounter < dim:
                         row = list(map(float, line.split()[1:]))
-                        self.hessian[rowcounter][colcounter:colcounter+ncols] = row
+                        self.hessian[rowcounter][colcounter:colcounter + ncols] = row
                         line = next(inputfile)
                         rowcounter += 1
                     colcounter += ncols
@@ -1010,7 +1093,6 @@ class QChem(logfileparser.Logfile):
         # 'atombasis'
         # 'enthalpy' (incorrect)
         # 'freeenergy' (incorrect)
-        # 'mocoeffs'
         # 'nocoeffs'
         # 'scancoords'
         # 'scanenergies'
