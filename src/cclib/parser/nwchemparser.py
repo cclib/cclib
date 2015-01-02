@@ -970,6 +970,22 @@ class NWChem(logfileparser.Logfile):
                             '%iF1', '%iF2', '%iF3']
             labels['g'] = ['%iG-4', '%iG-3', '%iG-2', '%iG-1', '%iG0',
                             '%iG1', '%iG2', '%iG3', '%iG4']
+        elif self.shells['type'] == 'cartesian':
+            labels['d'] = ['%iDXX', '%iDXY', '%iDXZ',
+                            '%iDYY', '%iDYZ',
+                            '%iDZZ']
+            labels['f'] = ['%iFXXX', '%iFXXY', '%iFXXZ',
+                            '%iFXYY', '%iFXYZ', '%iFXZZ',
+                            '%iFYYY', '%iFYYZ', '%iFYZZ',
+                            '%iFZZZ']
+            labels['g'] = ['%iGXXXX', '%iGXXXY', '%iGXXXZ',
+                            '%iGXXYY', '%iGXXYZ', '%iGXXZZ',
+                            '%iGXYYY', '%iGXYYZ', '%iGXYZZ',
+                            '%iGXZZZ', '%iGYYYY', '%iGYYYZ',
+                            '%iGYYZZ', '%iGYZZZ', '%iGZZZZ']
+        else:
+            self.logger.warning("Found a non-standard aoname representation type.")
+            return
 
         # now actually build aonames
         # involves expanding 2s1p into appropriate types
