@@ -16,6 +16,7 @@ from __future__ import print_function
 
 import re
 import numpy
+import itertools
 
 from . import logfileparser
 from . import utils
@@ -48,6 +49,9 @@ class QChem(logfileparser.Logfile):
 
         # Compile the dashes-and-or-spaces-only regex.
         self.dashes_and_spaces = re.compile('^[\s-]+$')
+
+        # A maximum of 6 columns per block when printing matrices.
+        self.ncolsblock = 6
 
         # By default, when asked to print orbitals via
         # `scf_final_print` and/or `print_orbitals`, Q-Chem will print
@@ -103,7 +107,7 @@ class QChem(logfileparser.Logfile):
             self.skip_lines(inputfile, ['d', '$basis'])
             line = next(inputfile)
             if not hasattr(self, 'gbasis'):
-                self.set_attribute('gbasis', [])
+                self.gbasis = []
             # The end of the general basis block.
             while '$end' not in line:
                 atom = []
@@ -189,6 +193,12 @@ class QChem(logfileparser.Logfile):
                     else:
                         self.atomnos.append(utils.PeriodicTable().number[atomelement])
                 self.natom = len(self.atomnos)
+                # Generate the map to go from Q-Chem atom numbering:
+                #  'C1', 'C2', 'C3', 'C4', 'C5', 'C6', 'H1', 'H2', 'H3', 'H4', 'C7', ...
+                # to cclib atom numbering:
+                #  'C1', 'C2', 'C3', 'C4', 'C5', 'C6', 'H7', 'H8', 'H9', 'H10', 'C11', ...
+                # for later use.
+                self.atommap = _generate_atom_map(self.atomnos)
 
         # Number of electrons.
         # Useful for determining the number of occupied/virtual orbitals.
@@ -286,12 +296,10 @@ class QChem(logfileparser.Logfile):
         # `print_orbitals = true`).
         if 'Final Alpha MO Coefficients' in line:
             if not hasattr(self, 'mocoeffs'):
-                self.set_attribute('mocoeffs', [])
+                self.mocoeffs = []
             mocoeffs = numpy.empty(shape=(self.nbasis, self.norbdisp_alpha))
-            # A maximum of 6 columns/block.
-            ncolsblock = 6
             line = next(inputfile)
-            assert len(line.split()) == ncolsblock
+            assert len(line.split()) == min(self.ncolsblock, self.nbasis)
             colcounter = 0
             while colcounter < self.norbdisp_alpha:
                 # If the line is just the column header (indices)...
@@ -309,10 +317,8 @@ class QChem(logfileparser.Logfile):
 
         if 'Final Beta MO Coefficients' in line:
             mocoeffs = numpy.empty(shape=(self.nbasis, self.norbdisp_beta))
-            # A maximum of 6 columns/block.
-            ncolsblock = 6
             line = next(inputfile)
-            assert len(line.split()) == ncolsblock
+            assert len(line.split()) == min(self.ncolsblock, self.nbasis)
             colcounter = 0
             while colcounter < self.norbdisp_beta:
                 # If the line is just the column header (indices)...
@@ -776,6 +782,71 @@ class QChem(logfileparser.Logfile):
                 self.moenergies[1] = numpy.array(energies_beta)
             self.set_attribute('nmo', len(self.moenergies[0]))
 
+        # Molecular orbital coefficients.
+
+        # This block comes from `print_orbitals = true/{int}`. Less
+        # precision than `scf_final_print = >2` for `mocoeffs`, but
+        # important for `aonames` and `atombasis`.
+
+        if 'MOLECULAR ORBITAL COEFFICIENTS' in line:
+
+            if not hasattr(self, 'mocoeffs'):
+                self.mocoeffs = []
+            if not hasattr(self, 'atombasis'):
+                self.atombasis = []
+                for n in range(self.natom):
+                    self.atombasis.append([])
+            if not hasattr(self, 'aonames'):
+                self.aonames = []
+            # We could also attempt to parse `moenergies` here, but
+            # nothing is gained by it.
+
+            line = next(inputfile)
+            assert len(line.split()) == min(self.ncolsblock, self.nbasis)
+            colcounter = 0
+            while colcounter < self.norbdisp_alpha:
+                # If the line is just the column header (indices)...
+                if line[:5].strip() == '':
+                    ncols = len(line.split())
+                    line = next(inputfile)
+                if 'eigenvalues' in line:
+                    # Do nothing for now, since these are probably
+                    # incomplete.
+                    line = next(inputfile)
+                rowcounter = 0
+                while rowcounter < self.nbasis:
+                    row = line.split()
+                    # Only take these on the first time through.
+                    if colcounter == 0:
+                        name = self.atommap.get(row[1] + str(row[2]))
+                        aoname = ''.join([name, '_', row[3].upper()])
+                        self.aonames.append(aoname)
+                    vals = list(map(float, row[4:]))
+                    line = next(inputfile)
+                    rowcounter += 1
+                colcounter += ncols
+            if self.unrestricted:
+                # The beta orbital block occurs immediately after the
+                # alpha block.
+                self.skip_lines(inputfile, ['blank', 'blank'])
+                line = next(inputfile)
+                while colcounter < self.norbdisp_beta:
+                # If the line is just the column header (indices)...
+                    if line[:5].strip() == '':
+                        ncols = len(line.split())
+                        line = next(inputfile)
+                    if 'eigenvalues' in line:
+                        # Do nothing for now, since these are probably
+                        # incomplete.
+                        line = next(inputfile)
+                    rowcounter = 0
+                    while rowcounter < self.nbasis:
+                        row = line.split()
+                        vals = list(map(float, row[4:]))
+                        line = next(inputfile)
+                        rowcounter += 1
+                    colcounter += ncols
+
         # Population analysis.
 
         if 'Ground-State Mulliken Net Atomic Charges' in line:
@@ -897,10 +968,8 @@ class QChem(logfileparser.Logfile):
             if not hasattr(self, 'grads'):
                 self.grads = []
             grad = numpy.empty(shape=(3, self.natom))
-            # A maximum of 6 columns/block.
-            ncols = 6
             line = next(inputfile)
-            assert len(line.split()) == ncols
+            assert len(line.split()) == min(self.ncolsblock, self.natom)
             colcounter = 0
             while colcounter < self.natom:
                 # If the line is just the column header (indices)...
@@ -909,18 +978,16 @@ class QChem(logfileparser.Logfile):
                 rowcounter = 0
                 while rowcounter < 3:
                     row = list(map(float, line.split()[1:]))
-                    grad[rowcounter][colcounter:colcounter + ncols] = row
+                    grad[rowcounter][colcounter:colcounter + self.ncolsblock] = row
                     line = next(inputfile)
                     rowcounter += 1
-                colcounter += ncols
+                colcounter += self.ncolsblock
             self.grads.append(grad.T)
 
         # For IR-related jobs, the Hessian is printed (dim: 3*natom, 3*natom).
         # Note that this is *not* the mass-weighted Hessian.
         if 'Hessian of the SCF Energy' in line:
             if not hasattr(self, 'hessian'):
-                # A maximum of 6 columns/block.
-                ncols = 6
                 dim = 3*self.natom
                 self.hessian = numpy.empty(shape=(dim, dim))
                 line = next(inputfile)
@@ -931,10 +998,10 @@ class QChem(logfileparser.Logfile):
                     rowcounter = 0
                     while rowcounter < dim:
                         row = list(map(float, line.split()[1:]))
-                        self.hessian[rowcounter][colcounter:colcounter + ncols] = row
+                        self.hessian[rowcounter][colcounter:colcounter + self.ncolsblock] = row
                         line = next(inputfile)
                         rowcounter += 1
-                    colcounter += ncols
+                    colcounter += self.ncolsblock
 
         # Start of the IR/Raman frequency section.
         if 'VIBRATIONAL ANALYSIS' in line:
@@ -1094,6 +1161,7 @@ class QChem(logfileparser.Logfile):
         # 'enthalpy' (incorrect)
         # 'freeenergy' (incorrect)
         # 'nocoeffs'
+        # 'nooccnos'
         # 'scancoords'
         # 'scanenergies'
         # 'scannames'
@@ -1128,6 +1196,31 @@ class QChem(logfileparser.Logfile):
         self.atomcharges[chargetype] = numpy.array(charges)
         if has_spins:
             self.atomspins[chargetype] = numpy.array(spins)
+
+
+def _generate_atom_map(atomnos):
+    """Generate the map to go from Q-Chem atom numbering:
+     'C1', 'C2', 'C3', 'C4', 'C5', 'C6', 'H1', 'H2', 'H3', 'H4', 'C7', ...
+    to cclib atom numbering:
+     'C1', 'C2', 'C3', 'C4', 'C5', 'C6', 'H7', 'H8', 'H9', 'H10', 'C11', ...
+    for later use.
+    """
+
+    # Generate the elemental symbols.
+    elements = [utils.PeriodicTable().element[Z]
+                for Z in atomnos]
+    # Generate the desired order.
+    order_proper = [element + str(num)
+                    for element, num in zip(elements, itertools.count(start=1))]
+    # We need separate counters for each element.
+    element_counters = {element: itertools.count(start=1)
+                        for element in set(elements)}
+    # Generate the Q-Chem printed order.
+    order_qchem = [element + str(next(element_counters[element]))
+                   for element in elements]
+    # Combine the orders into a mapping.
+    atommap = {k:v for k, v, in zip(order_qchem, order_proper)}
+    return atommap
 
 
 if __name__ == '__main__':
