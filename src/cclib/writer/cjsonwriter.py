@@ -10,12 +10,7 @@
 
 """A writer for chemical JSON (CJSON) files."""
 
-import openbabel as ob
-import pybel as pb
-
 import json
-
-import numpy.linalg as npl
 
 from . import filewriter
 
@@ -23,20 +18,15 @@ from . import filewriter
 class CJSON(filewriter.Writer):
     """A writer for chemical JSON (CJSON) files."""
 
-    def __init__(self, ccdata, jobfilename=None,
-                 *args, **kwargs):
+    def __init__(self, ccdata, *args, **kwargs):
         """Initialize the chemical JSON writer object.
 
         Inputs:
           ccdata - An instance of ccData, parsed from a logfile.
-          jobfilename - The filename of the parsed logfile.
         """
 
         # Call the __init__ method of the superclass
         super(CJSON, self).__init__(ccdata, *args, **kwargs)
-
-        self.ccdata = ccdata
-        self.jobfilename = jobfilename
 
         self.generate_repr()
 
@@ -45,8 +35,7 @@ class CJSON(filewriter.Writer):
 
         # Generate the Open Babel/Pybel representation of the molecule.
         # Used for calculating SMILES/InChI, formula, MW, etc.
-        obmol = self._makeopenbabel_from_ccdata()
-        pbmol = pb.Molecule(obmol)
+        obmol, pbmol = self._makeopenbabel_from_ccdata()
 
         cjson_dict = dict()
         cjson_dict['chemical json'] = 0
@@ -105,7 +94,7 @@ class CJSON(filewriter.Writer):
         cjson_dict['energy']['beta']['lumo'] = energy_beta_lumo
         cjson_dict['energy']['beta']['gap'] = energy_beta_gap
 
-        cjson_dict['totalDipoleMoment'] = _calculate_total_dipole_moment(self.ccdata.moments[1])
+        cjson_dict['totalDipoleMoment'] = self._calculate_total_dipole_moment()
 
         # Can/should we append the entire original log file?
         # cjson_dict['files'] = dict()
@@ -113,31 +102,6 @@ class CJSON(filewriter.Writer):
         # cjson_dict['files']['log'].append()
 
         return json.dumps(cjson_dict)
-
-    def _makeopenbabel_from_ccdata(self):
-        """Create an Open Babel molecule.
-        """
-        obmol = ob.OBMol()
-        for i in range(len(self.ccdata.atomnos)):
-            # Note that list(atomcoords[i]) is not equivalent!!!
-            coords = self.ccdata.atomcoords[-1][i].tolist()
-            atomno = int(self.ccdata.atomnos[i])
-            obatom = ob.OBAtom()
-            obatom.SetAtomicNum(atomno)
-            obatom.SetVector(*coords)
-            obmol.AddAtom(obatom)
-        obmol.ConnectTheDots()
-        obmol.PerceiveBondOrders()
-        obmol.SetTotalSpinMultiplicity(self.ccdata.mult)
-        obmol.SetTotalCharge(self.ccdata.charge)
-        if self.jobfilename is not None:
-            obmol.SetTitle(self.filename)
-        return obmol
-
-
-def _calculate_total_dipole_moment(dipolevec):
-    """Calculate the total dipole moment."""
-    return npl.norm(dipolevec)
 
 
 if __name__ == "__main__":

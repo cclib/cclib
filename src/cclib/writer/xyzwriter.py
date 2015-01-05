@@ -11,20 +11,18 @@
 """A writer for XYZ (Cartesian coordinate) files."""
 
 from . import filewriter
-from cclib.parser.utils import PeriodicTable
 
 
 class XYZ(filewriter.Writer):
     """A writer for XYZ (Cartesian coordinate) files."""
 
-    def __init__(self, ccdata, jobfilename=None, splitfiles=False,
+    def __init__(self, ccdata, splitfiles=False,
                  firstgeom=False, lastgeom=True, allgeom=False,
                  *args, **kwargs):
         """Initialize the XYZ writer object.
 
         Inputs:
           ccdata - An instance of ccData, parse from a logfile.
-          jobfilename - The filename of the parsed logfile.
           splitfiles - Boolean to write multiple files if multiple files are requested. [TODO]
           firstgeom - Boolean to write the first available geometry from the logfile.
           lastgeom - Boolean to write the last available geometry from the logfile.
@@ -33,10 +31,6 @@ class XYZ(filewriter.Writer):
 
         # Call the __init__ method of the superclass
         super(XYZ, self).__init__(ccdata, *args, **kwargs)
-
-        self.ccdata = ccdata
-        self.jobfilename = jobfilename
-        self.pt = PeriodicTable()
 
         self.do_firstgeom = firstgeom
         self.do_lastgeom = lastgeom
