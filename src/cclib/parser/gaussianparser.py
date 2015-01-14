@@ -670,10 +670,8 @@ class Gaussian(logfileparser.Logfile):
 
             scanenergies = []
             scanparm = []
-
             colmnames = next(inputfile)
-            self.skip_line(inputfile, 'dashes')
-
+            hyphens = next(inputfile)
             line = next(inputfile)
             while line != hyphens:
                 broken = line.split()
