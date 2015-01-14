@@ -586,6 +586,23 @@ class Gaussian(logfileparser.Logfile):
                 self.ccenergies.append(utils.convertor(self.ccenergy, "hartree", "eV"))
                 del self.ccenergy
 
+        #ONIOM component energy extraction
+        if self.oniom and line[1:26] == "ONIOM: calculating energy":
+
+            if not hasattr(self, "oniomenergies"):
+                self.oniomenergies = []
+
+            line = next(inputfile)
+
+            component_energies = []
+            while line.find('extrapolated') == -1:
+                component_energy = float(line.split()[8])
+                component_energy = utils.convertor(component_energy, "hartree", "eV")
+                component_energies.append(component_energy)
+                line = next(inputfile)
+
+            self.oniomenergies.append(component_energies)
+
         # Geometry convergence information.
         if line[49:59] == 'Converged?':
 
