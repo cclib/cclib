@@ -340,7 +340,9 @@ class Gaussian(logfileparser.Logfile):
         # Atom C1       Shell     2 SP   3    bf    2 -     5          0.509245180608         -2.664678875191          0.000000000000
         #       0.2941249355D+01 -0.9996722919D-01  0.1559162750D+00
         # ...
-        if line[1:13] == "AO basis set":
+
+        #ONIOM calculations result basis sets reported for atoms that are not in order of atom number which breaks this code (line 390 relies on atoms coming in order)
+        if line[1:13] == "AO basis set" and not self.oniom:
         
             self.gbasis = []
 
