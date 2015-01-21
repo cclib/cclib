@@ -109,7 +109,7 @@ def visualtests(stream=sys.stdout):
         'GAMESS-US' : getfile(GAMESS, "basicGAMESS-US2012", "dvb_gopt_a.out")[0],
         'Jaguar8.0' : getfile(Jaguar, "basicJaguar8.3", "dvb_gopt_ks.out")[0],
         'Molpro2012' : getfile(Molpro, "basicMolpro2012", "dvb_gopt.log", "dvb_gopt.out")[0],
-        'NWChem6.5' : getfile(NWChem, "basicNWChem6.5", "dvb_gopt_ks.out")[0],
+        'NWChem6.0' : getfile(NWChem, "basicNWChem6.0", "dvb_gopt_ks.out")[0],
         'ORCA3.0' : getfile(ORCA, "basicORCA3.0", "dvb_gopt.out")[0],
         'QChem4.2' : getfile(QChem, "basicQChem4.2", "dvb_gopt.out")[0],
     }
