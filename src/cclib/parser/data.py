@@ -61,7 +61,6 @@ class ccData(object):
         nocoeffs -- natural orbital coefficients (array[2])
         nooccnos -- natural orbital occupation numbers (array[1])
         optdone -- flags whether an optimization has converged (Boolean)
-        oniomenergies -- energies of components involved in an oniom calculation (list)
         scancoords -- geometries of each scan step (array[3], angstroms)
         scanenergies -- energies of potential energy surface (list)
         scannames -- names of varaibles scanned (list of strings)
@@ -124,7 +123,6 @@ class ccData(object):
         "nmo":            int,
         "nocoeffs":       numpy.ndarray,
         "nooccnos":       numpy.ndarray,
-        "oniomenergies":  list,
         "optdone":        bool,
         "scancoords":     numpy.ndarray,
         "scanenergies":   list,
