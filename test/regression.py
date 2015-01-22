@@ -28,7 +28,7 @@ import unittest
 import numpy
 
 from cclib.parser import ccopen
-from cclib.parser import ADF, GAMESS, GAMESSUK, Gaussian, Jaguar, Molpro, NWChem, ORCA, Psi, QChem
+from cclib.parser import ADF, DALTON, GAMESS, GAMESSUK, Gaussian, Jaguar, Molpro, NWChem, ORCA, Psi, QChem
 
 import testall
 
@@ -533,6 +533,12 @@ class ADFSPTest_nosyms_valence(ADFSPTest_nosyms):
         self.assertEquals(len(self.data.moenergies[0]), 45)
         self.assertEquals(self.data.moenergies[0][0], 99999.0)
 
+# DALTON #
+
+class DALTONSPTest_nosyms_nolabels(DALTONSPTest):
+    def testsymlabels(self):
+        """Are all the symmetry labels either Ag/u or Bg/u?. PASS"""
+
 class GAMESSUSSPunTest_charge0(GenericSPunTest):
     def testcharge_and_mult(self):
         """The charge in the input was wrong."""
@@ -631,6 +637,7 @@ old_unittests = {
     "ADF/ADF2013.01/dvb_gopt_b_fullscf.adfout":       ADFGeoOptTest,
     "ADF/ADF2014.01/dvb_gopt_b_fullscf.out":       ADFGeoOptTest,
 
+    "DALTON/DALTON-2013.0/b3lyp_energy_dvb_sp_nosym.out":       DALTONSPTest_nosyms_nolabels,
     "GAMESS/GAMESS-US2005/water_ccd_2005.06.27.r3.out":         GenericCCTest,
     "GAMESS/GAMESS-US2005/water_ccsd_2005.06.27.r3.out":        GenericCCTest,
     "GAMESS/GAMESS-US2005/water_ccsd(t)_2005.06.27.r3.out":     GenericCCTest,
