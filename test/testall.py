@@ -16,12 +16,12 @@ import os
 import sys
 import unittest
 
-from cclib.parser import (ADF, GAMESS, GAMESSUK, Gaussian,
+from cclib.parser import (ADF, DALTON, GAMESS, GAMESSUK, Gaussian,
                           Jaguar, Molpro, NWChem, ORCA, Psi, QChem)
 
 
 # All supported parsers.
-parsers = [ "ADF", "GAMESS", "GAMESSUK", "Gaussian", "Jaguar", "Molpro", "NWChem", "ORCA", "Psi", "QChem" ]
+parsers = [ "ADF", "DALTON", "GAMESS", "GAMESSUK", "Gaussian", "Jaguar", "Molpro", "NWChem", "ORCA", "Psi", "QChem" ]
 
 # The modules to be included in the global test testall().
 test_modules = [ "SP", "SPun", "GeoOpt", "Basis", "Core",   # Basic calculations.

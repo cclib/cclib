@@ -26,6 +26,7 @@ ADF/ADF2009.01/JOCRUP-sp3-adf09.out
 ADF/ADF2013.01/dvb_gopt_b_unconverged.adfout
 ADF/ADF2013.01/dvb_gopt_b_fullscf.adfout
 ADF/ADF2014.01/dvb_gopt_b_fullscf.out
+DALTON/DALTON-2013.0/b3lyp_energy_dvb_sp_nosym.out
 GAMESS/Firefly7.1/firefly-FailStationary.out
 GAMESS/Firefly7.1/triazole_tddft_c1_b3lyp_631Gdp_sp.out
 GAMESS/Firefly8.0/dvb_gopt_a_unconverged.out

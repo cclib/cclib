@@ -16,6 +16,7 @@ from __future__ import print_function
 from . import logfileparser
 
 from . import adfparser
+from . import daltonparser
 from . import gamessparser
 from . import gamessukparser
 from . import gaussianparser
@@ -34,7 +35,7 @@ def ccopen(source, *args, **kargs):
       source - a single logfile, a list of logfiles, or an input stream
 
     Returns:
-      one of ADF, GAMESS, GAMESS UK, Gaussian, Jaguar, Molpro, NWChem, ORCA,
+      one of ADF, DALTON, GAMESS, GAMESS UK, Gaussian, Jaguar, Molpro, NWChem, ORCA,
         Psi, QChem, or None (if it cannot figure it out or the file does not
         exist).
     """
@@ -62,6 +63,12 @@ def ccopen(source, *args, **kargs):
 
         if line.find("Amsterdam Density Functional") >= 0:
             filetype = adfparser.ADF
+            break
+
+        # there is a yearly release of DALTON 2013, 2014 and so on
+        # so just check for 201
+        if line.find("DALTON 201") >= 0:
+            filetype = daltonparser.DALTON
             break
 
         # Don't break in this case as it may be a GAMESS-UK file.
