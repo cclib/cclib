@@ -119,19 +119,25 @@ class GenericSPTest(bettertest.TestCase):
 
     def testdimaooverlaps(self):
         """Are the dims of the overlap matrix consistent with nbasis?"""
+
         # ADF has the attribute fooverlaps instead of aooverlaps.
         if not hasattr(self.data, "aooverlaps") and hasattr(self.data, "fooverlaps"):
             self.data.aooverlaps = self.data.fooverlaps
+
         self.assertEquals(self.data.aooverlaps.shape, (self.data.nbasis, self.data.nbasis))
 
     def testaooverlaps(self):
-        """Are the first row and column of the overlap matrix identical?"""
+        """Is the overlap matrix diagonal with expected values?"""
+
         # ADF has the attribute fooverlaps instead of aooverlaps.
         if not hasattr(self.data, "aooverlaps") and hasattr(self.data, "fooverlaps"):
             self.data.aooverlaps = self.data.fooverlaps
-        self.assertEquals(sum(self.data.aooverlaps[0,:] -
-                              self.data.aooverlaps[:,0]),
-                          0)
+
+        row = self.data.aooverlaps[0,:]
+        col = self.data.aooverlaps[:,0]
+        self.assertEquals(sum(col - row), 0.0)
+
+        self.assertEquals(self.data.aooverlaps[0,0], 1.0)
 
     def testoptdone(self):
         """There should be no optdone attribute set."""

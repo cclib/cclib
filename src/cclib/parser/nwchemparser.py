@@ -269,6 +269,39 @@ class NWChem(logfileparser.Logfile):
                     self.scftargets = []
                 self.scftargets.append([target_energy, target_density, target_gradient])
 
+
+        # If the full overlap matrix is printed, it looks like this:
+        #
+        # global array: Temp Over[1:60,1:60],  handle: -996 
+        #
+        #            1           2           3           4           5           6  
+        #       ----------- ----------- ----------- ----------- ----------- -----------
+        #   1       1.00000     0.24836    -0.00000    -0.00000     0.00000     0.00000
+        #   2       0.24836     1.00000     0.00000    -0.00000     0.00000     0.00030
+        #   3      -0.00000     0.00000     1.00000     0.00000     0.00000    -0.00014
+        # ...
+        if "global array: Temp Over[" in line:
+
+            aooverlaps = []
+            while len(aooverlaps) < self.nbasis:
+
+                self.skip_line(inputfile, 'blank')
+
+                indices = [int(i) for i in inputfile.next().split()]
+                assert indices[0] == len(aooverlaps) + 1
+                assert indices[-1] == indices[0] + 5
+
+                self.skip_line(inputfile, "dashes")
+                data = [inputfile.next().split() for i in range(self.nbasis)]
+                indices = [int(d[0]) for d in data]
+                assert indices == list(range(1, self.nbasis+1))
+
+                for i in range(6):
+                    vector = [float(d[i+1]) for d in data]
+                    aooverlaps.append(vector)
+
+            self.set_attribute('aooverlaps', aooverlaps)
+
         if line.strip() in ("The SCF is already converged", "The DFT is already converged"):
             if self.linesearch:
                 return
@@ -657,7 +690,9 @@ class NWChem(logfileparser.Logfile):
                 line = next(inputfile)
             self.atomcharges['mulliken'] = charges
 
-        # If the full overlap matrix is printed, it looks like this:
+        # Not the the 'overlap population' as printed in the Mulliken population analysis,
+        # is not the same thing as the 'overlap matrix'. In fact, it is the overlap matrix
+        # multiplied elementwise times the density matrix.
         #
         #          ----------------------------
         #          Mulliken population analysis
@@ -671,7 +706,7 @@ class NWChem(logfileparser.Logfile):
         #    2   1 C  s           -0.0535883400   0.8281341291   0.0000000000  -0.0000000000   0.0000000000   0.0000039991  -0.0009906747
         # ...
         #
-        # Also, DFT does not seem to print the separate listing of Mulliken charges
+        # DFT does not seem to print the separate listing of Mulliken charges
         # by default, but they are printed by this modules later on. They are also print
         # for Hartree-Fock runs, though, so in that case make sure they are consistent.
         if line.strip() == "Mulliken population analysis":
@@ -701,8 +736,6 @@ class NWChem(logfileparser.Logfile):
                     line = next(inputfile)
 
                 line = next(inputfile)
-
-            self.aooverlaps = overlaps
 
             # This header should be printed later, before the charges are print, which of course
             # are just sums of the overlaps and could be calculated. But we just go ahead and
