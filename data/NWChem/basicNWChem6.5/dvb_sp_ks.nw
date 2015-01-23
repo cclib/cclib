@@ -29,7 +29,7 @@
   dft
     xc b3lyp
     grid xfine
-    print "final vectors" "final vectors analysis"
+    print "final vectors" "final vectors analysis" "ao overlap"
   end
   property
     mulliken
