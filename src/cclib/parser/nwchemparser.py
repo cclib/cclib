@@ -282,6 +282,9 @@ class NWChem(logfileparser.Logfile):
         # ...
         if "global array: Temp Over[" in line:
 
+            self.set_attribute('nbasis', int(line.split('[')[1].split(',')[0].split(':')[1]))
+            self.set_attribute('nmo', int(line.split(']')[0].split(',')[1].split(':')[1]))
+
             aooverlaps = []
             while len(aooverlaps) < self.nbasis:
 
@@ -289,15 +292,14 @@ class NWChem(logfileparser.Logfile):
 
                 indices = [int(i) for i in inputfile.next().split()]
                 assert indices[0] == len(aooverlaps) + 1
-                assert indices[-1] == indices[0] + 5
 
                 self.skip_line(inputfile, "dashes")
                 data = [inputfile.next().split() for i in range(self.nbasis)]
                 indices = [int(d[0]) for d in data]
                 assert indices == list(range(1, self.nbasis+1))
 
-                for i in range(6):
-                    vector = [float(d[i+1]) for d in data]
+                for i in range(1, len(data[0])):
+                    vector = [float(d[i]) for d in data]
                     aooverlaps.append(vector)
 
             self.set_attribute('aooverlaps', aooverlaps)
