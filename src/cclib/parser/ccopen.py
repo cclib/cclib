@@ -29,7 +29,7 @@ from . import qchemparser
 
 def ccopen(source, *args, **kargs):
     """Guess the identity of a particular log file and return an instance of it.
-    
+
     Inputs:
       source - a single logfile, a list of logfiles, or an input stream
 
@@ -114,7 +114,7 @@ def ccopen(source, *args, **kargs):
     # Need to close file before creating a instance.
     if not isstream:
         inputfile.close()
-    
+
     # Return an instance of the chosen class.
     try:
         return filetype(source, *args, **kargs)

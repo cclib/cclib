@@ -1,7 +1,7 @@
 # This file is part of cclib (http://cclib.github.io), a library for parsing
 # and interpreting the results of computational chemistry packages.
 #
-# Copyright (C) 2006, the cclib development team
+# Copyright (C) 2006-2014, the cclib development team
 #
 # The library is free software, distributed under the terms of
 # the GNU Lesser General Public version 2.1 or later. You should have
@@ -17,8 +17,8 @@ def makeopenbabel(atomcoords, atomnos, charge=0, mult=1):
     """Create an Open Babel molecule.
 
     >>> import numpy, openbabel
-    >>> atomnos = numpy.array([1,8,1],"i")
-    >>> coords = numpy.array([[-1.,1.,0.],[0.,0.,0.],[1.,1.,0.]])
+    >>> atomnos = numpy.array([1, 8, 1], "i")
+    >>> coords = numpy.array([[-1., 1., 0.], [0., 0., 0.], [1., 1., 0.]])
     >>> obmol = makeopenbabel(coords, atomnos)
     >>> obconversion = openbabel.OBConversion()
     >>> formatok = obconversion.SetOutFormat("inchi")
@@ -28,7 +28,7 @@ def makeopenbabel(atomcoords, atomnos, charge=0, mult=1):
     obmol = ob.OBMol()
     for i in range(len(atomnos)):
         # Note that list(atomcoords[i]) is not equivalent!!!
-        coords = atomcoords[i].tolist()
+        coords = atomcoords[-1][i].tolist()
         atomno = int(atomnos[i])
         obatom = ob.OBAtom()
         obatom.SetAtomicNum(atomno)
