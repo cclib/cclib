@@ -10,6 +10,9 @@
 
 """A writer for chemical JSON (CJSON) files."""
 
+import openbabel as ob
+
+import os.path
 import json
 
 from . import filewriter
@@ -35,10 +38,14 @@ class CJSON(filewriter.Writer):
 
         # Generate the Open Babel/Pybel representation of the molecule.
         # Used for calculating SMILES/InChI, formula, MW, etc.
-        obmol, pbmol = self._makeopenbabel_from_ccdata()
+        obmol, pbmol = self._make_openbabel_from_ccdata()
+        bond_connectivities = self._make_bond_connectivity_from_openbabel(obmol)
 
         cjson_dict = dict()
         cjson_dict['chemical json'] = 0
+
+        if self.jobfilename is not None:
+            cjson_dict['name'] = os.path.splitext(self.jobfilename)[0]
 
         # These are properties that can be collected using Open Babel.
 
@@ -53,24 +60,21 @@ class CJSON(filewriter.Writer):
         cjson_dict['atoms']['coords'] = dict()
         cjson_dict['atoms']['coords']['3d'] = self.ccdata.atomcoords[-1].flatten().tolist()
 
-        # Need to get connectivity information from Open Babel.
-        # cjson_dict['bonds'] = dict()
-        # cjson_dict['bonds']['connections'] = dict()
-        # cjson_dict['bonds']['connections']['index'] = []
-        # cjson_dict['bonds']['order'] = []
+        cjson_dict['bonds'] = dict()
+        cjson_dict['bonds']['connections'] = dict()
+        cjson_dict['bonds']['connections']['index'] = []
+        for bond in bond_connectivities:
+            cjson_dict['bonds']['connections']['index'].append(bond[0] + 1)
+            cjson_dict['bonds']['connections']['index'].append(bond[1] + 1)
+        cjson_dict['bonds']['order'] = [bond[2] for bond in bond_connectivities]
 
         cjson_dict['properties'] = dict()
-        # Or is it pbmol.exactmass? Determine which is the isotopic
-        # average and use that one.
         cjson_dict['properties']['molecular mass'] = pbmol.molwt
 
         cjson_dict['atomCount'] = obmol.NumAtoms()
         cjson_dict['heavyAtomCount'] = obmol.NumHvyAtoms()
 
-        # These entries are likely to be added outside of Open Babel/cclib.
-        # cjson_dict['annotations']
-        # cjson_dict['diagram']
-        # cjson_dict['3dStructure']
+        cjson_dict['diagram'] = pbmol.write(format='svg')
 
         # These are properties that can be collected using cclib.
 

@@ -76,15 +76,20 @@ class XYZ(filewriter.Writer):
 
     def _xyz_from_ccdata(self, index):
         """Create an XYZ file of the geometry at the given index."""
+
         natom = str(self.ccdata.natom)
         element_list = [self.pt.element[Z] for Z in self.ccdata.atomnos]
         atomcoords = self.ccdata.atomcoords[index]
+
         # Create a comment derived from the filename and the index.
         if index == -1:
             geometry_num = len(self.ccdata.atomcoords)
         else:
             geometry_num = index + 1
-        comment = "{}: Geometry {}".format(self.jobfilename, geometry_num)
+        if self.jobfilename is not None:
+            comment = "{}: Geometry {}".format(self.jobfilename, geometry_num)
+        else:
+            comment = "Geometry {}".format(geometry_num)
 
         atom_template = '{:3s} {:15.10f} {:15.10f} {:15.10f}'
         block = []
