@@ -59,6 +59,14 @@ def ccwrite(ccobj, outputtype=None, outputdest=None, returnstr=False,
         ccdata = ccobj
     else:
         raise ValueError
+
+    # If the logfile name has been passed in through kwargs (such as
+    # in the ccwrite script), make sure it has precedence.
+    if kwargs.has_key('jobfilename'):
+        jobfilename = kwargs['jobfilename']
+        # Avoid passing multiple times into the main call.
+        del kwargs['jobfilename']
+
     outputobj = outputclass(ccdata, jobfilename=jobfilename, *args, **kwargs)
     output = outputobj.generate_repr()
 

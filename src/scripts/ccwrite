@@ -49,7 +49,7 @@ def main():
     for filename in filenames:
 
         # We might want to use this option in the near future.
-        ccopen_kwargs = {}
+        ccopen_kwargs = dict()
         if future:
             ccopen_kwargs['future'] = True
 
@@ -73,7 +73,11 @@ def main():
 
         # Write out to disk.
         outputdest = '.'.join([os.path.splitext(filename)[0], outputtype])
-        ccwrite(data, outputtype, outputdest)
+        ccwrite_kwargs = dict()
+        if future:
+            ccwrite_kwargs['future'] = True
+        ccwrite_kwargs['jobfilename'] = filename
+        ccwrite(data, outputtype, outputdest, **ccwrite_kwargs)
 
 
 if __name__ == "__main__":

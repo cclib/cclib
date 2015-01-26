@@ -45,6 +45,7 @@ class CML(filewriter.Writer):
         # Create the base molecule.
         molecule = ET.Element('molecule')
         d = {
+            # Write the namespace directly.
             'xmlns': 'http://www.xml-cml.org/schema',
         }
         if self.jobfilename is not None:
@@ -78,7 +79,7 @@ class CML(filewriter.Writer):
 
         _indent(molecule)
 
-        return ET.tostring(molecule)
+        return _tostring(molecule)
 
 
 def _set_attrs(element, d):
@@ -104,6 +105,20 @@ def _indent(elem, level=0):
     else:
         if level and (not elem.tail or not elem.tail.strip()):
             elem.tail = i
+
+
+def _tostring(element, xml_declaration=True, encoding='utf-8', method='xml'):
+    """A reimplementation of tostring() found in ElementTree."""
+    class dummy:
+        pass
+    data = []
+    file = dummy()
+    file.write = data.append
+    ET.ElementTree(element).write(file,
+                                  xml_declaration=xml_declaration,
+                                  encoding=encoding,
+                                  method=method)
+    return ''.join(data)
 
 
 if __name__ == "__main__":
