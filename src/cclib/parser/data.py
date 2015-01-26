@@ -53,7 +53,7 @@ class ccData(object):
         moenergies -- molecular orbital energies (list of arrays[1], eV)
         moments -- molecular multipole moments (list of arrays[], a.u.)
         mosyms -- orbital symmetries (list of lists)
-        mpenergies -- molecular electronic energies with Möller-Plesset corrections (array[2], eV)
+        mpenergies -- molecular electronic energies with Møller-Plesset corrections (array[2], eV)
         mult -- multiplicity of the system (integer)
         natom -- number of atoms (integer)
         nbasis -- number of basis functions (integer)
