@@ -11,6 +11,7 @@
 """Generic file writer and related tools"""
 
 try:
+    from cclib.bridge import makeopenbabel
     import openbabel as ob
     import pybel as pb
     has_openbabel = True
@@ -64,25 +65,13 @@ class Writer(object):
     def _make_openbabel_from_ccdata(self):
         """Create Open Babel and Pybel molecules from ccData.
         """
-        obmol = ob.OBMol()
-        for i in range(len(self.ccdata.atomnos)):
-            # Note that list(atomcoords[i]) is not equivalent!!!
-            # For now, only take the last geometry.
-            # TODO: option to export last geometry or all geometries?
-            coords = self.ccdata.atomcoords[-1][i].tolist()
-            atomno = int(self.ccdata.atomnos[i])
-            obatom = ob.OBAtom()
-            obatom.SetAtomicNum(atomno)
-            obatom.SetVector(*coords)
-            obmol.AddAtom(obatom)
-        obmol.ConnectTheDots()
-        obmol.PerceiveBondOrders()
-        obmol.SetTotalSpinMultiplicity(self.ccdata.mult)
-        obmol.SetTotalCharge(self.ccdata.charge)
+        obmol = makeopenbabel(self.ccdata.atomcoords,
+                              self.ccdata.atomnos,
+                              charge=self.ccdata.charge,
+                              mult=self.ccdata.mult)
         if self.jobfilename is not None:
             obmol.SetTitle(self.jobfilename)
         return (obmol, pb.Molecule(obmol))
-
 
     def _calculate_total_dipole_moment(self):
         """Calculate the total dipole moment."""

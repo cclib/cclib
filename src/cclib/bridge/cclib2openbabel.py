@@ -28,6 +28,8 @@ def makeopenbabel(atomcoords, atomnos, charge=0, mult=1):
     obmol = ob.OBMol()
     for i in range(len(atomnos)):
         # Note that list(atomcoords[i]) is not equivalent!!!
+        # For now, only take the last geometry.
+        # TODO: option to export last geometry or all geometries?
         coords = atomcoords[-1][i].tolist()
         atomno = int(atomnos[i])
         obatom = ob.OBAtom()
