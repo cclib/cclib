@@ -68,7 +68,7 @@ class ccData(object):
         scfenergies -- molecular electronic energies after SCF (Hartree-Fock, DFT) (array[1], eV)
         scftargets -- targets for convergence of the SCF (array[2])
         scfvalues -- current values for convergence of the SCF (list of arrays[2])
-        temperature -- tempature used for Thermochemistry (float, kelvin)
+        temperature -- temperature used for Thermochemistry (float, kelvin)
         vibanharms -- vibrational anharmonicity constants (array[2], 1/cm)
         vibdisps -- cartesian displacement vectors (array[3], delta angstrom)
         vibfreqs -- vibrational frequencies (array[1], 1/cm)
