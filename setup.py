@@ -64,7 +64,7 @@ def setup_cclib():
         platforms = ["Any."],
         packages = cclib_packages,
         package_dir = { 'cclib':'src/cclib' },
-        scripts = ["src/scripts/ccget", "src/scripts/cda"],
+        scripts = ["src/scripts/ccget", "src/scripts/ccwrite", "src/scripts/cda"],
     )
 
 

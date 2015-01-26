@@ -22,6 +22,7 @@ files += ['setup.py']
 source = os.path.join('src', 'cclib')
 files.append(os.path.join(source, "__init__.py"))
 files.append(os.path.join("src", "scripts", "ccget"))
+files.append(os.path.join("src", "scripts", "ccwrite"))
 files.append(os.path.join("src", "scripts", "cda"))
 
 folders = ['bridge', 'method', 'parser', 'progress', 'writer']
