@@ -10,7 +10,11 @@
 
 """A writer for chemical JSON (CJSON) files."""
 
-import openbabel as ob
+try:
+    import openbabel as ob
+    has_openbabel = True
+except ImportError:
+    has_openbabel = False
 
 import os.path
 import json
@@ -36,11 +40,6 @@ class CJSON(filewriter.Writer):
     def generate_repr(self):
         """Generate the CJSON representation of the logfile data."""
 
-        # Generate the Open Babel/Pybel representation of the molecule.
-        # Used for calculating SMILES/InChI, formula, MW, etc.
-        obmol, pbmol = self._make_openbabel_from_ccdata()
-        bond_connectivities = self._make_bond_connectivity_from_openbabel(obmol)
-
         cjson_dict = dict()
         cjson_dict['chemical json'] = 0
 
@@ -49,10 +48,11 @@ class CJSON(filewriter.Writer):
 
         # These are properties that can be collected using Open Babel.
 
-        cjson_dict['smiles'] = pbmol.write('smiles')
-        cjson_dict['inchi'] = pbmol.write('inchi')
-        cjson_dict['inchikey'] = pbmol.write('inchikey')
-        cjson_dict['formula'] = pbmol.formula
+        if has_openbabel:
+            cjson_dict['smiles'] = self.pbmol.write('smiles')
+            cjson_dict['inchi'] = self.pbmol.write('inchi')
+            cjson_dict['inchikey'] = self.pbmol.write('inchikey')
+            cjson_dict['formula'] = self.pbmol.formula
 
         cjson_dict['atoms'] = dict()
         cjson_dict['atoms']['elements'] = dict()
@@ -63,18 +63,22 @@ class CJSON(filewriter.Writer):
         cjson_dict['bonds'] = dict()
         cjson_dict['bonds']['connections'] = dict()
         cjson_dict['bonds']['connections']['index'] = []
-        for bond in bond_connectivities:
-            cjson_dict['bonds']['connections']['index'].append(bond[0] + 1)
-            cjson_dict['bonds']['connections']['index'].append(bond[1] + 1)
-        cjson_dict['bonds']['order'] = [bond[2] for bond in bond_connectivities]
+        if has_openbabel:
+            for bond in self.bond_connectivities:
+                cjson_dict['bonds']['connections']['index'].append(bond[0] + 1)
+                cjson_dict['bonds']['connections']['index'].append(bond[1] + 1)
+            cjson_dict['bonds']['order'] = [bond[2] for bond in self.bond_connectivities]
 
         cjson_dict['properties'] = dict()
-        cjson_dict['properties']['molecular mass'] = pbmol.molwt
+        if has_openbabel:
+            cjson_dict['properties']['molecular mass'] = self.pbmol.molwt
 
-        cjson_dict['atomCount'] = obmol.NumAtoms()
-        cjson_dict['heavyAtomCount'] = obmol.NumHvyAtoms()
+        if has_openbabel:
+            cjson_dict['atomCount'] = self.obmol.NumAtoms()
+            cjson_dict['heavyAtomCount'] = self.obmol.NumHvyAtoms()
 
-        cjson_dict['diagram'] = pbmol.write(format='svg')
+        if has_openbabel:
+            cjson_dict['diagram'] = self.pbmol.write(format='svg')
 
         # These are properties that can be collected using cclib.
 

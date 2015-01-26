@@ -62,7 +62,7 @@ def ccwrite(ccobj, outputtype=None, outputdest=None, returnstr=False,
 
     # If the logfile name has been passed in through kwargs (such as
     # in the ccwrite script), make sure it has precedence.
-    if kwargs.has_key('jobfilename'):
+    if 'jobfilename' in kwargs.keys():
         jobfilename = kwargs['jobfilename']
         # Avoid passing multiple times into the main call.
         del kwargs['jobfilename']

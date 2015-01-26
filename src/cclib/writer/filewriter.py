@@ -10,8 +10,12 @@
 
 """Generic file writer and related tools"""
 
-import openbabel as ob
-import pybel as pb
+try:
+    import openbabel as ob
+    import pybel as pb
+    has_openbabel = True
+except ImportError:
+    has_openbabel = False
 
 from math import sqrt
 
@@ -41,6 +45,13 @@ class Writer(object):
 
         self.pt = PeriodicTable()
         self.elements = [self.pt.element[Z] for Z in self.ccdata.atomnos]
+
+        # Open Babel isn't necessarily present.
+        if has_openbabel:
+            # Generate the Open Babel/Pybel representation of the molecule.
+            # Used for calculating SMILES/InChI, formula, MW, etc.
+            self.obmol, self.pbmol = self._make_openbabel_from_ccdata()
+            self.bond_connectivities = self._make_bond_connectivity_from_openbabel(self.obmol)
 
     def generate_repr(self):
         """Generate the written representation of the logfile data.
