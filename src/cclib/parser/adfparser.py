@@ -773,8 +773,7 @@ class ADF(logfileparser.Logfile):
                 if text[13:20] != "Overlap": # verify this has overlap info
                     break
 
-                col = next(inputfile)
-                row = next(inputfile)
+                self.skip_lines(inputfile, ['b', 'col', 'row'])
 
                 if not hasattr(self,"fooverlaps"): # make sure there is a matrix to store this
                     self.fooverlaps = numpy.zeros((self.nbasis, self.nbasis), "d")
