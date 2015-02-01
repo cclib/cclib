@@ -260,6 +260,55 @@ class ADF(logfileparser.Logfile):
             }
             self.accint = quality2accint[self.grid_quality]
 
+        # Half of the atomic orbital overlap matrix is printed since it is symmetric,
+        # but this requires "PRINT Smat" to be in the input. There are extra blank lines
+        # at the end of the block, which are used to terminate the parsing.
+        #
+        # ======  smat
+        #
+        # column           1                     2                     3                     4
+        # row
+        #    1    1.00000000000000E+00
+        #    2    2.43370854175315E-01  1.00000000000000E+00
+        #    3    0.00000000000000E+00  0.00000000000000E+00  1.00000000000000E+00
+        # ...
+        #
+        if "======  smat" in line:
+
+            # Initialize the matrix with Nones so we can easily check all has been parsed.
+            overlaps = [[None] * self.nbasis for i in range(self.nbasis)]
+
+            self.skip_line(inputfile, 'blank')
+
+            line = inputfile.next()
+            while line.strip():
+
+                colline = line
+                assert colline.split()[0] == "column"
+                columns = [int(i) for i in colline.split()[1:]]
+
+                rowline = inputfile.next()
+                assert rowline.strip() == "row"
+
+                line = inputfile.next()
+                while line.strip():
+
+                    i = int(line.split()[0])
+                    vals = [float(col) for col in line.split()[1:]]
+                    for j, o in enumerate(vals):
+                        k = columns[j]
+                        overlaps[k-1][i-1] = o
+                        overlaps[i-1][k-1] = o
+
+                    line = inputfile.next()
+
+                line = inputfile.next()
+
+            # Now all values should be parsed, and so no Nones remaining.
+            assert all([all([x != None for x in ao]) for ao in overlaps])
+
+            self.set_attribute('aooverlaps', overlaps)
+
         if line[1:11] == "CYCLE    1":
 
             self.updateprogress(inputfile, "QM convergence", self.fupdate)
