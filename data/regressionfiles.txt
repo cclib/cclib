@@ -26,6 +26,7 @@ ADF/ADF2009.01/JOCRUP-sp3-adf09.out
 ADF/ADF2013.01/dvb_gopt_b_unconverged.adfout
 ADF/ADF2013.01/dvb_gopt_b_fullscf.adfout
 ADF/ADF2014.01/dvb_gopt_b_fullscf.out
+DALTON/DALTON-2013.0/b3lyp_energy_dvb_sp_nosym.out
 GAMESS/Firefly7.1/firefly-FailStationary.out
 GAMESS/Firefly7.1/triazole_tddft_c1_b3lyp_631Gdp_sp.out
 GAMESS/Firefly8.0/dvb_gopt_a_unconverged.out
@@ -115,6 +116,7 @@ Gaussian/Gaussian09/encaps1.log
 Gaussian/Gaussian09/irc_point.log
 Gaussian/Gaussian09/Dahlgren_TS.log
 Gaussian/Gaussian03/DCV4T+C60.log
+Gaussian/Gaussian09/OPT_oniom.log
 Gaussian/Gaussian09/OPT_td.out
 Gaussian/Gaussian09/OPT_td_g09.out
 Gaussian/Gaussian09/Ru2bpyen2_H2_freq3.log
@@ -136,6 +138,7 @@ Gaussian/Gaussian09/dvb_un_sp_revA.02.log
 Gaussian/Gaussian09/encaps1.log
 Gaussian/Gaussian09/guessIndo_modified_ALT.out
 Gaussian/Gaussian09/irc_point.log
+Gaussian/Gaussian09/oniom_IR_intensity.log
 Gaussian/Gaussian09/water_gaussian.inp.log
 Gaussian/Gaussian03/AM1_SP.out
 Gaussian/Gaussian03/H2FAs--AsH2F.opt-mp2-cp.log

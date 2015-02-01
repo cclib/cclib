@@ -253,10 +253,10 @@ def testGaussian_Gaussian09_OPT_td_out(logfile):
     assert len(logfile.data.etrotats) == 10
     assert logfile.data.etrotats[0] == -0.4568
 
-def testGaussian_Gaussian09_OPT_oniom(logfile):
+def testGaussian_Gaussian09_OPT_oniom_log(logfile):
     """AO basis extraction broke with ONIOM"""
 
-def testGaussian_Gaussian09_oniom_IR_intensity(logfile):
+def testGaussian_Gaussian09_oniom_IR_intensity_log(logfile):
     """Problem parsing IR intensity from mode 192"""
     assert hasattr(logfile.data, 'vibirs')
     assert len(logfile.data.vibirs) == 216
