@@ -117,27 +117,25 @@ class GenericSPTest(bettertest.TestCase):
         self.assertEquals(self.data.mocoeffs[0].shape,
                           (self.data.nmo, self.data.nbasis))
 
-    def testdimaooverlaps(self):
-        """Are the dims of the overlap matrix consistent with nbasis?"""
-
-        # ADF has the attribute fooverlaps instead of aooverlaps.
-        if not hasattr(self.data, "aooverlaps") and hasattr(self.data, "fooverlaps"):
-            self.data.aooverlaps = self.data.fooverlaps
+    def testaooverlaps(self):
+        """Are the dims and values of the overlap matrix correct?"""
 
         self.assertEquals(self.data.aooverlaps.shape, (self.data.nbasis, self.data.nbasis))
 
-    def testaooverlaps(self):
-        """Is the overlap matrix diagonal with expected values?"""
-
-        # ADF has the attribute fooverlaps instead of aooverlaps.
-        if not hasattr(self.data, "aooverlaps") and hasattr(self.data, "fooverlaps"):
-            self.data.aooverlaps = self.data.fooverlaps
-
+        # The matrix is symmetric.
         row = self.data.aooverlaps[0,:]
         col = self.data.aooverlaps[:,0]
         self.assertEquals(sum(col - row), 0.0)
 
-        self.assertEquals(self.data.aooverlaps[0,0], 1.0)
+        # All values on diagonal should be exactly zero.
+        for i in range(self.data.nbasis):
+            self.assertEquals(self.data.aooverlaps[i,i], 1.0)
+
+        # Check some additional values that don't seem to move around between programs.
+        self.assertInside(self.data.aooverlaps[0, 1], 0.24, 0.01)
+        self.assertInside(self.data.aooverlaps[1, 0], 0.24, 0.01)
+        self.assertEquals(self.data.aooverlaps[2,0], 0.0)
+        self.assertEquals(self.data.aooverlaps[0,2], 0.0)
 
     def testoptdone(self):
         """There should be no optdone attribute set."""
@@ -206,6 +204,19 @@ class ADFSPTest(GenericSPTest):
         """Is the SCF energy within 1eV of -140eV?"""
         self.assertInside(self.data.scfenergies[-1],-140,1,"Final scf energy: %f not -140+-1eV" % self.data.scfenergies[-1])
 
+    def testfoverlaps(self):
+        """Are the dims and values of the fragment orbital overlap matrix correct?"""
+
+        self.assertEquals(self.data.fooverlaps.shape, (self.data.nbasis, self.data.nbasis))
+
+        # The matrix is symmetric.
+        row = self.data.aooverlaps[0,:]
+        col = self.data.aooverlaps[:,0]
+        self.assertEquals(sum(col - row), 0.0)
+
+        # All diagonals should be close to zero.
+        for i in range(self.data.nbasis):
+            self.assertInside(self.data.aooverlaps[i,i], 1.0, 0.001)
 
 class GaussianSPTest(GenericSPTest):
     """Customized restricted single point unittest"""
