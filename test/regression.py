@@ -253,6 +253,14 @@ def testGaussian_Gaussian09_OPT_td_out(logfile):
     assert len(logfile.data.etrotats) == 10
     assert logfile.data.etrotats[0] == -0.4568
 
+def testGaussian_Gaussian09_OPT_oniom(logfile):
+    """AO basis extraction broke with ONIOM"""
+
+def testGaussian_Gaussian09_oniom_IR_intensity(logfile):
+    """Problem parsing IR intensity from mode 192"""
+    assert hasattr(logfile.data, 'vibirs')
+    assert len(logfile.data.vibirs) == 216
+
 def testGaussian_Gaussian09_Ru2bpyen2_H2_freq3_log(logfile):
     """Here atomnos wans't added to the gaussian parser before."""
     assert len(logfile.data.atomnos) == 69
