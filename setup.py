@@ -47,7 +47,7 @@ def setup_cclib():
     from distutils.core import setup
 
     # The list of packages to be installed.
-    cclib_packages = ['cclib', 'cclib.parser', 'cclib.progress', 'cclib.method', 'cclib.bridge']
+    cclib_packages = ['cclib', 'cclib.parser', 'cclib.progress', 'cclib.method', 'cclib.bridge', 'cclib.writer']
 
     setup(
         name = "cclib",
@@ -64,7 +64,7 @@ def setup_cclib():
         platforms = ["Any."],
         packages = cclib_packages,
         package_dir = { 'cclib':'src/cclib' },
-        scripts = ["src/scripts/ccget", "src/scripts/cda"],
+        scripts = ["src/scripts/ccget", "src/scripts/ccwrite", "src/scripts/cda"],
     )
 
 

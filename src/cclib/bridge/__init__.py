@@ -27,4 +27,4 @@ else:
 try:
     from .cclib2biopython import makebiopython
 except ImportError:
-    pass    
+    pass
