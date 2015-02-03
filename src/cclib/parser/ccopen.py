@@ -13,6 +13,10 @@
 
 from __future__ import print_function
 
+import os
+
+from . import data
+
 from . import logfileparser
 
 from . import adfparser
@@ -26,6 +30,19 @@ from . import orcaparser
 from . import psiparser
 from . import qchemparser
 
+from ..bridge import cclib2openbabel
+
+
+def fallback(source):
+    """Attempt to read standard molecular formats using other libraries.
+
+    Currently this will read XYZ files with OpenBabel, but this can easily
+    be extended to other formats and libraries, too.
+    """
+    if isinstance(source, str):
+        ext = os.path.splitext(source)[1][1:].lower()
+        if ext in ('xyz'):
+            return data.ccData(cclib2openbabel.readfile(source, ext))
 
 def ccopen(source, *args, **kargs):
     """Guess the identity of a particular log file and return an instance of it.
@@ -115,8 +132,15 @@ def ccopen(source, *args, **kargs):
     if not isstream:
         inputfile.close()
     
-    # Return an instance of the chosen class.
+    # Return an instance of the chosen class. If there was no success, we can try
+    # a fallback function where we will want to check if the file is some standard
+    # molecular format and open it with some other library if possible.
     try:
         return filetype(source, *args, **kargs)
     except TypeError:
-        print("Log file type not identified.")
+        data = fallback(source)
+        if data:
+            print("Read contents using fallback mechanism.")
+            return data
+        else:
+            print("Log file type not identified.")

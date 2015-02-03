@@ -132,16 +132,22 @@ def main():
         log = ccopen(filename, **ccopen_kwargs)
 
         if log == None:
-            print("Cannot figure out what type of computation chemistry output file '%s' is." % name)
+            print("Cannot figure out what type of computational chemistry output file '%s' is." % name)
             print("Report this to the cclib development team if you think this is an error.")
             print(msg_usage)
             sys.exit()
 
-        if verbose:
-            log.logger.setLevel(logging.INFO)
+        # In some cases ccopen will return a ccData object, for example when
+        # the file is in XYZ and read with OpenBabel.
+        if not isinstance(log, ccData):
+            if verbose:
+                log.logger.setLevel(logging.INFO)
+            else:
+                log.logger.setLevel(logging.ERROR)
+            data = log.parse()
         else:
-            log.logger.setLevel(logging.ERROR)
-        data = log.parse()
+            data = log
+
         if showattr:
             print("cclib can parse the following attributes from %s:" % name)
             for x in ccData._attrlist:
