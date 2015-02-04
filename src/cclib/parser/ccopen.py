@@ -30,7 +30,10 @@ from . import orcaparser
 from . import psiparser
 from . import qchemparser
 
-from ..bridge import cclib2openbabel
+try:
+    from ..bridge import cclib2openbabel
+except ImportError:
+    print("Could not import openbabel, fallback mechanism might not work.")
 
 
 def fallback(source):
