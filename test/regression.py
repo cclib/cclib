@@ -8,10 +8,22 @@
 # received a copy of the license along with cclib. You can also access
 # the full license online at http://www.gnu.org/copyleft/lgpl.html.
 
-"""A combined test framework for regression, ccopen and parsing.
+"""A regression framework for parsing and testing logfiles.
 
-The design here is supposed to make it easy to add new tests or datafiles.
-To run the doctest, just use "python regression.py test".
+The intention here is to make it easy to add new datafiles as bugs
+are fixed and to write specific tests in the form of test functions.
+
+In short, the file called regressionfiles.txt contains a list of regression
+logfiles, which is compared to the files found on disk. All these files
+should be parsed correctly, and if there is an appropriately named function
+defined, that function will be used as a test.
+
+There is also a mechanism for running unit tests on old logfiles, which
+have been moved here from the cclib repository when newer versions
+became available. We still want those logfiles to parse and test correctly,
+although sometimes special modification will be needed.
+
+To run the doctest, just use `python regression.py test`.
 """
 
 from __future__ import print_function
@@ -28,7 +40,16 @@ import unittest
 import numpy
 
 from cclib.parser import ccopen
-from cclib.parser import ADF, GAMESS, GAMESSUK, Gaussian, Jaguar, Molpro, NWChem, ORCA, Psi, QChem
+from cclib.parser import ADF
+from cclib.parser import GAMESS
+from cclib.parser import GAMESSUK
+from cclib.parser import Gaussian
+from cclib.parser import Jaguar
+from cclib.parser import Molpro
+from cclib.parser import NWChem
+from cclib.parser import ORCA
+from cclib.parser import Psi
+from cclib.parser import QChem
 
 import testall
 
@@ -42,7 +63,7 @@ import testall
 
 def testADF_ADF2004_01_Fe_ox3_final_out(logfile):
     """Make sure HOMOS are correct."""
-    assert logfile.data.homos[0]==59 and logfile.data.homos[1]==54
+    assert logfile.data.homos[0] == 59 and logfile.data.homos[1] == 54
 
 def testADF_ADF2013_01_dvb_gopt_b_unconverged_adfout(logfile):
     """An unconverged geometry optimization to test for empty optdone (see #103 for details)."""
@@ -139,12 +160,12 @@ def testGaussian_Gaussian98_water_zmatrix_nosym_log(logfile):
     "Input orientation" or "Standard orientation section".
     As a result it failed to parse. Fixed in r400.
     """
-    assert len(logfile.data.atomcoords)==1
+    assert len(logfile.data.atomcoords) == 1
     assert logfile.data.natom == 3
 
 def testGaussian_Gaussian03_AM1_SP_out(logfile):
     """Previously, caused scfvalue parsing to fail."""
-    assert len(logfile.data.scfvalues[0])==13
+    assert len(logfile.data.scfvalues[0]) == 13
 
 def testGaussian_Gaussian03_anthracene_log(logfile):
     """This file exposed a bug in extracting the vibsyms."""
@@ -167,7 +188,7 @@ def testGaussian_Gaussian03_cyclopropenyl_rhf_g03_cut_log(logfile):
     is not printed. In this case inputcoords are copied by the parser,
     which up till now stored the last coordinates.
     """
-    assert len(logfile.data.atomcoords)==len(logfile.data.geovalues)
+    assert len(logfile.data.atomcoords) == len(logfile.data.geovalues)
 
 def testGaussian_Gaussian03_DCV4T_C60_log(logfile):
     """This is a test for a very large Gaussian file with > 99 atoms.
@@ -343,7 +364,7 @@ def testORCA_ORCA2_9_job_out(logfile):
     Make sure that the sum of such densities is one in this case (or reasonaby close),
     but remember that this attribute is a dictionary, so we must iterate.
     """
-    assert all([abs(sum(v)-1.0) < 0.0001 for k,v in logfile.data.atomspins.items()])
+    assert all([abs(sum(v)-1.0) < 0.0001 for k, v in logfile.data.atomspins.items()])
 
 def testORCA_ORCA3_0_dvb_gopt_unconverged_out(logfile):
     """An unconverged geometry optimization to test for empty optdone (see #103 for details)."""
@@ -472,7 +493,7 @@ def testnoparseGaussian_Gaussian09_coeffs_log(filename):
     parser = Gaussian(filename)
     parser.logger.setLevel(logging.ERROR)
     parser.nmo = 5
-    parser.nbasis  = 1128
+    parser.nbasis = 1128
     
     data = parser.parse()
     assert data.mocoeffs[0].shape == (5, 1128)
@@ -505,7 +526,7 @@ def normalisefilename(filename):
     ans = []
     for y in filename:
         x = y.lower()
-        if (x >= 'a' and x <= 'z') or (x >= '0' and x <='9'):
+        if (x >= 'a' and x <= 'z') or (x >= '0' and x <= '9'):
             ans.append(y)
         else:
             ans.append("_")
@@ -521,7 +542,7 @@ def normalisefilename(filename):
 # and provide the modified version of the test class.
 
 # We're going to need to import all of the unit test modules.
-test_modules = { m : importlib.import_module('test'+m) for m in testall.test_modules }
+test_modules = {m : importlib.import_module('test' + m) for m in testall.test_modules}
 
 # Although there is probably a cleaner way to do this, making the unit class test names
 # global makes reading the dictionary of old unit tests much easier, especially it
@@ -733,9 +754,9 @@ def main(which=[], opt_traceback=False, opt_status=False):
     # It would be nice to fix the structure of this nested list,
     # because in its current form it is not amenable to tweaks.
     regdir = os.path.join("..", "data", "regression")
-    programs = [os.path.join(regdir,testall.get_program_dir(p)) for p in testall.parsers]
+    programs = [os.path.join(regdir, testall.get_program_dir(p)) for p in testall.parsers]
     try:
-        filenames = [[os.path.join(p,version,fn) for version in os.listdir(p) for fn in os.listdir(os.path.join(p,version))] for p in programs]
+        filenames = [[os.path.join(p, version, fn) for version in os.listdir(p) for fn in os.listdir(os.path.join(p,version))] for p in programs]
     except OSError as e:
         print(e)
         print("\nERROR: At least one program direcory is missing.")
@@ -812,7 +833,7 @@ def main(which=[], opt_traceback=False, opt_status=False):
 
             if not test_noparse:
                 try:
-                    logfile  = ccopen(fname)
+                    logfile = ccopen(fname)
                 except:
                     errors += 1
                     print("ccopen error")
@@ -890,7 +911,7 @@ def main(which=[], opt_traceback=False, opt_status=False):
     if opt_status and failures+errors > 0:
         sys.exit(1)
 
-if __name__=="__main__":
+if __name__ == "__main__":
 
     # If 'test' is passed as the first argument, do a doctest on this module.
     # Otherwise, any arguments are used to limit the test to the packages/parsers
