@@ -18,7 +18,8 @@ import logging
 import os
 import sys
 
-from cclib.parser import ccData, ccopen
+from cclib.parser import ccData
+from cclib.parser import ccread
 
 
 msg_usage = """\
@@ -123,41 +124,35 @@ def main():
 
         name = (not multifile)*filename or ", ".join(filename[:-1]) + " and " + filename[-1]
 
-        # We might want to use this option in the near future.
-        ccopen_kwargs = {}
-        if future:
-            ccopen_kwargs['future'] = True
-
-        print("Attempting to parse %s" % name)
-        log = ccopen(filename, **ccopen_kwargs)
-
-        if log == None:
-            print("Cannot figure out what type of computational chemistry output file '%s' is." % name)
-            print("Report this to the cclib development team if you think this is an error.")
-            print(msg_usage)
-            sys.exit()
-
-        # In some cases ccopen will return a ccData object, for example when
-        # the file is in XYZ and read with OpenBabel.
-        if not isinstance(log, ccData):
-            if verbose:
-                log.logger.setLevel(logging.INFO)
-            else:
-                log.logger.setLevel(logging.ERROR)
-            data = log.parse()
+        # The keyword arguments are not used so much. but could be useful for options. For example,
+        # we might use --future for triggering experimental or alternative behavior (as with optdone).
+        kwargs = {}
+        if verbose:
+            kwargs['loglevel'] = logging.INFO
         else:
-            data = log
+            kwargs['loglevel'] = logging.ERROR
+        if future:
+            kwargs['future'] = True
+
+        print("Attempting to read %s" % name)
+        data = ccread(filename, **kwargs)
+
+        if data == None:
+            print("Cannot figure out the format of '%s'" % name)
+            print("Report this to the cclib development team if you think this is an error.")
+            print("\n" + msg_usage)
+            sys.exit()
 
         if showattr:
             print("cclib can parse the following attributes from %s:" % name)
-            for x in ccData._attrlist:
-                if hasattr(data,x):
+            for x in data._attrlist:
+                if hasattr(data, x):
                     print("  %s" % x)
         else:
             invalid = False
             for attr in attrnames:
-                if hasattr(data,attr):
-                    print("%s:\n%s" % (attr,getattr(data,attr)))
+                if hasattr(data, attr):
+                    print("%s:\n%s" % (attr, getattr(data, attr)))
                 else:
                     print("Could not parse %s from this file." % attr)
                     invalid = True

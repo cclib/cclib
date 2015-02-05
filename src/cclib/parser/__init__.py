@@ -29,7 +29,9 @@ from .psiparser import Psi
 from .qchemparser import QChem
 
 # This allow users to type:
-#         from cclib.parser import ccopen
+#   from cclib.parser import ccopen
+#   from cclib.parser import ccread
 from .ccopen import ccopen
+from .ccopen import ccread
 
 from .data import ccData

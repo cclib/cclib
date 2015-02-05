@@ -14,6 +14,7 @@
 from __future__ import print_function
 
 import os
+import sys
 
 from . import data
 
@@ -36,16 +37,20 @@ except ImportError:
     print("Could not import openbabel, fallback mechanism might not work.")
 
 
-def fallback(source):
-    """Attempt to read standard molecular formats using other libraries.
+def ccread(source, *args, **kargs):
+    """Attempt to open and read computational chemistry data from a file.
 
-    Currently this will read XYZ files with OpenBabel, but this can easily
-    be extended to other formats and libraries, too.
+    If the file is not appropriate for cclib parsers, a fallback mechanism
+    will try to recognize some common chemistry formats and read those using
+    the appropriate bridge such as OpenBabel.    
+
+    Inputs:
+        source - a single logfile, a list of logfiles, or an input stream
+    Returns:
+        a ccData object containing cclib data attributes
     """
-    if isinstance(source, str):
-        ext = os.path.splitext(source)[1][1:].lower()
-        if ext in ('xyz'):
-            return data.ccData(cclib2openbabel.readfile(source, ext))
+    log = ccopen(source, *args, **kargs)
+    return log.parse() if log else fallback(source)
 
 def ccopen(source, *args, **kargs):
     """Guess the identity of a particular log file and return an instance of it.
@@ -58,8 +63,6 @@ def ccopen(source, *args, **kargs):
         Psi, QChem, or None (if it cannot figure it out or the file does not
         exist).
     """
-
-    filetype = None
 
     # Try to open the logfile(s), using openlogfile.
     if isinstance(source, str) or \
@@ -78,6 +81,7 @@ def ccopen(source, *args, **kargs):
         raise ValueError
 
     # Read through the logfile(s) and search for a clue.
+    filetype = None
     for line in inputfile:
 
         if line.find("Amsterdam Density Functional") >= 0:
@@ -135,15 +139,17 @@ def ccopen(source, *args, **kargs):
     if not isstream:
         inputfile.close()
     
-    # Return an instance of the chosen class. If there was no success, we can try
-    # a fallback function where we will want to check if the file is some standard
-    # molecular format and open it with some other library if possible.
-    try:
+    # Return an instance of the logfile if one was chosen.
+    if filetype:
         return filetype(source, *args, **kargs)
-    except TypeError:
-        data = fallback(source)
-        if data:
-            print("Read contents using fallback mechanism.")
-            return data
-        else:
-            print("Log file type not identified.")
+
+def fallback(source):
+    """Attempt to read standard molecular formats using other libraries.
+
+    Currently this will read XYZ files with OpenBabel, but this can easily
+    be extended to other formats and libraries, too.
+    """
+    if isinstance(source, str):
+        ext = os.path.splitext(source)[1][1:].lower()
+        if 'cclib.bridge.cclib2openbabel' in sys.modules and ext in ('xyz'):
+            return data.ccData(cclib2openbabel.readfile(source, ext))
