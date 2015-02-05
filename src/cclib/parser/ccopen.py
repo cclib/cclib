@@ -65,6 +65,17 @@ triggers = [
 
 ]
 
+def guess_filetype(inputfile):
+    """Try to guess the filetype by searching for trigger strings."""
+
+    filetype = None
+    for line in inputfile:
+        for parser, phrases, do_break in triggers:
+            if all([line.find(p) >= 0 for p in phrases]):
+                filetype = parser
+                if do_break:
+                    return filetype
+    return filetype
 
 def ccread(source, *args, **kargs):
     """Attempt to open and read computational chemistry data from a file.
@@ -117,15 +128,8 @@ def ccopen(source, *args, **kargs):
     else:
         raise ValueError
 
-    # Read through the logfile(s) and search for a trigger from the list
-    # defined at the top of the file.
-    filetype = None
-    for line in inputfile:
-        for parser, phrases, do_break in triggers:
-            if all([line.find(p) >= 0 for p in phrases]):
-                filetype = parser
-                if do_break:
-                    break
+    # Try to guess the filetype.
+    filetype = guess_filetype(inputfile)
 
     # Need to close file before creating a instance.
     if not isstream:
