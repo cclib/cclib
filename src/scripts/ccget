@@ -128,8 +128,10 @@ def main():
         # we might use --future for triggering experimental or alternative behavior (as with optdone).
         kwargs = {}
         if verbose:
+            kwargs['verbose'] = True
             kwargs['loglevel'] = logging.INFO
         else:
+            kwargs['verbose'] = False
             kwargs['loglevel'] = logging.ERROR
         if future:
             kwargs['future'] = True

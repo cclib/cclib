@@ -50,7 +50,14 @@ def ccread(source, *args, **kargs):
         a ccData object containing cclib data attributes
     """
     log = ccopen(source, *args, **kargs)
-    return log.parse() if log else fallback(source)
+    if log:
+        if kargs['verbose']:
+            print('Identified logfile to be in %s format' % log.logname)
+        return log.parse()
+    else:
+        if kargs['verbose']:
+            print('Attempting to use fallback mechanism to read file')
+        return fallback(source)
 
 def ccopen(source, *args, **kargs):
     """Guess the identity of a particular log file and return an instance of it.
