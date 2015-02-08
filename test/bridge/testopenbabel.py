@@ -3,7 +3,7 @@ from cclib.bridge import cclib2openbabel
 
 
 def test_uracil():
-    data = ccData(cclib2openbabel.readfile("../data/misc/uracil.xyz", "XYZ"))
+    data = ccData(cclib2openbabel.readfile("uracil.xyz", "XYZ"))
     assert data.natom == 12
 
 
