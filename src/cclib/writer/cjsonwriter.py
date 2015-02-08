@@ -73,9 +73,8 @@ class CJSON(filewriter.Writer):
         if has_openbabel:
             cjson_dict['properties']['molecular mass'] = self.pbmol.molwt
 
-        if has_openbabel:
-            cjson_dict['atomCount'] = self.obmol.NumAtoms()
-            cjson_dict['heavyAtomCount'] = self.obmol.NumHvyAtoms()
+        cjson_dict['atomCount'] = len(self.ccdata.atomnos)
+        cjson_dict['heavyAtomCount'] = len((x for x in self.ccdata.atomnos if x > 1))
 
         if has_openbabel:
             cjson_dict['diagram'] = self.pbmol.write(format='svg')
