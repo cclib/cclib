@@ -60,15 +60,17 @@ def makecclib(mol):
         attributes['atomnos'].append(atom.GetAtomicNum())
     return attributes
 
-def readfile(fname, type):
+def readfile(fname, format):
     """Read a file with OpenBabel and extract cclib attributes."""
 
     obc = ob.OBConversion()
-    obc.SetInFormat(type)
-    mol = ob.OBMol()
-    obc.ReadFile(mol, fname)
-    return makecclib(mol)
-
+    if obc.SetInFormat(format):
+        mol = ob.OBMol()
+        obc.ReadFile(mol, fname)
+        return makecclib(mol)
+    else:
+        print("Unable to load the %s reader from OpenBabel." % format)
+        return {}
 
 if __name__ == "__main__":
     import doctest
