@@ -10,12 +10,13 @@
 
 """Example analyses and calculations based on data parsed by cclib."""
 
-from .density import Density
-from .cspa import CSPA
-from .mpa import MPA
-from .lpa import LPA
-from .opa import OPA
-from .mbo import MBO
-from .nuclear import Nuclear
-from .fragments import FragmentAnalysis
 from .cda import CDA
+from .cspa import CSPA
+from .density import Density
+from .fragments import FragmentAnalysis
+from .lpa import LPA
+from .mbo import MBO
+from .mpa import MPA
+from .nuclear import Nuclear
+from .opa import OPA
+from .volume import Volume
