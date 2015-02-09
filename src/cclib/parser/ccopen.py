@@ -149,4 +149,4 @@ def fallback(source):
     if isinstance(source, str):
         ext = os.path.splitext(source)[1][1:].lower()
         if 'cclib.bridge.cclib2openbabel' in sys.modules and ext in ('xyz', ):
-            return data.ccData(cclib2openbabel.readfile(source, ext))
+            return cclib2openbabel.readfile(source, ext)

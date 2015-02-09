@@ -12,6 +12,8 @@
 
 import openbabel as ob
 
+from cclib.parser.data import ccData
+
 
 def makeopenbabel(atomcoords, atomnos, charge=0, mult=1):
     """Create an Open Babel molecule.
@@ -41,7 +43,7 @@ def makeopenbabel(atomcoords, atomnos, charge=0, mult=1):
     return obmol
 
 def makecclib(mol):
-    """Create cclib attributes from an OpenBabel molecule.
+    """Create cclib attributes and return a ccData from an OpenBabel molecule.
 
     Beyond the numbers, masses and coordinates, we could also set the total charge
     and multiplicity, but often these are calculated from atomic formal charges
@@ -58,7 +60,7 @@ def makecclib(mol):
         attributes['atomcoords'].append([atom.GetX(), atom.GetY(), atom.GetZ()])
         attributes['atommasses'].append(atom.GetAtomicMass())
         attributes['atomnos'].append(atom.GetAtomicNum())
-    return attributes
+    return ccData(attributes)
 
 def readfile(fname, format):
     """Read a file with OpenBabel and extract cclib attributes."""
@@ -71,6 +73,7 @@ def readfile(fname, format):
     else:
         print("Unable to load the %s reader from OpenBabel." % format)
         return {}
+
 
 if __name__ == "__main__":
     import doctest
