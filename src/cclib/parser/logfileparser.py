@@ -17,7 +17,6 @@ import bz2
 import fileinput
 import gzip
 import inspect
-import inspect
 import io
 import logging
 import os
@@ -136,7 +135,7 @@ class Logfile(object):
                     logstream=sys.stdout, datatype=ccData, **kwds):
         """Initialise the Logfile object.
 
-        This should be called by a ubclass in its own __init__ method.
+        This should be called by a subclass in its own __init__ method.
 
         Inputs:
             source - a single logfile, a list of logfiles, or input stream
