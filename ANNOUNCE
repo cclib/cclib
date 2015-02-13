@@ -1,4 +1,4 @@
-On behalf of the cclib development team, we are pleased to announce the release of cclib 1.3, which is now available for download from http://cclib.github.io. This version includes three new parsers (for NWchem, Psi and QChem), as well as a number of bug fixes and improvements (see below).
+On behalf of the cclib development team, we are pleased to announce the release of cclib 1.3.1, which is now available for download from http://cclib.github.io. This is a minor update to version 1.3 that includes bug fixes and small improvements.
 
 cclib is an open source library, written in Python, for parsing and interpreting the results of computational chemistry packages. It currently parses output files from ADF, Firefly, GAMESS (US), GAMESS-UK, Gaussian, Jaguar, Molpro, NWChem, ORCA, Psi and QChem.
 
@@ -38,11 +38,9 @@ The cclib development team
 
 ———
 
-Major changes since cclib 1.2:
-    * New parser: cclib can now parse NWChem files
-    * New parser: cclib can now parse Psi (versions 3 and 4) files
-    * New parser: cclib can now parse QChem files (by Eric Berquist)
-    * New method Nuclear, currently calculates nuclear repulsion energy
-    * Replace PC-GAMESS tests with Firefly versions
-    * Many bugfixes, thanks to Martin Rahm, Russell Johnson, Matt Ernst and others
-
+Major changes since cclib 1.3:
+    * New attribute nooccnos for natural orbital occupation numbers (GAMESS, GAMESS-UK, Gaussian)
+    * Add ability to read XYZ files with ccget (OpenBabel is needed)
+    * Improve parsing atomic and molecular orbitals (Molpro, Psi)
+    * Improve parsing TDDFT transitions (QChem)
+    * Bugfixes, thanks to Ben Albrecht, Clyde Fare, Felix Plasser, Axel Schild and others
