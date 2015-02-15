@@ -326,10 +326,6 @@ class QChemSPTest(GenericSPTest):
     def testaooverlaps(self):
         """Are the first row and column of the overlap matrix identical? PASS"""
 
-    # `atombasis` not implemented yet.
-    def testatombasis(self):
-        """Are the indices in atombasis the right amount and unique? PASS"""
-
 
 if __name__=="__main__":
 

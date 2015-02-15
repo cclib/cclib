@@ -46,7 +46,11 @@ class QChem(logfileparser.Logfile):
         self.unrestricted = False
 
         # Compile the dashes-and-or-spaces-only regex.
-        self.dashes_and_spaces = re.compile('^[\s-]+$')
+        self.re_dashes_and_spaces = re.compile('^[\s-]+$')
+
+        # Compile the regex for extracting the atomic index from an
+        # aoname.
+        self.re_atomindex = re.compile('(\d+)_')
 
         # A maximum of 6 columns per block when printing matrices.
         self.ncolsblock = 6
@@ -185,18 +189,16 @@ class QChem(logfileparser.Logfile):
 
             if not hasattr(self, 'atomnos'):
                 self.atomnos = []
+                self.atomelements = []
                 for atomelement in atomelements:
+                    self.atomelements.append(atomelement)
                     if atomelement == 'GH':
                         self.atomnos.append(0)
                     else:
                         self.atomnos.append(utils.PeriodicTable().number[atomelement])
                 self.natom = len(self.atomnos)
-                # Generate the map to go from Q-Chem atom numbering:
-                #  'C1', 'C2', 'C3', 'C4', 'C5', 'C6', 'H1', 'H2', 'H3', 'H4', 'C7', ...
-                # to cclib atom numbering:
-                #  'C1', 'C2', 'C3', 'C4', 'C5', 'C6', 'H7', 'H8', 'H9', 'H10', 'C11', ...
-                # for later use.
-                self.atommap = _generate_atom_map(self.atomnos)
+                self.atommap = self.generate_atom_map()
+                self.formula_histogram = self.generate_formula_histogram()
 
         # Number of electrons.
         # Useful for determining the number of occupied/virtual orbitals.
@@ -593,7 +595,7 @@ class QChem(logfileparser.Logfile):
             line = next(inputfile)
 
             # The end of the block is either a blank line or only dashes.
-            while not self.dashes_and_spaces.search(line):
+            while not self.re_dashes_and_spaces.search(line):
                 if 'Occupied' in line or 'Virtual' in line:
                     # A nice trick to find where the HOMO is.
                     if 'Virtual' in line:
@@ -622,7 +624,7 @@ class QChem(logfileparser.Logfile):
             if self.unrestricted:
                 self.skip_line(inputfile, 'header')
                 line = next(inputfile)
-                while not self.dashes_and_spaces.search(line):
+                while not self.re_dashes_and_spaces.search(line):
                     if 'Occupied' in line or 'Virtual' in line:
                         # This will definitely exist, thanks to the above block.
                         if 'Virtual' in line:
@@ -702,7 +704,7 @@ class QChem(logfileparser.Logfile):
             line = next(inputfile)
 
             # The end of the block is either a blank line or only dashes.
-            while not self.dashes_and_spaces.search(line):
+            while not self.re_dashes_and_spaces.search(line):
                 if 'Occupied' in line or 'Virtual' in line:
                     # A nice trick to find where the HOMO is.
                     if 'Virtual' in line:
@@ -725,7 +727,7 @@ class QChem(logfileparser.Logfile):
             if self.unrestricted:
                 self.skip_lines(inputfile, ['blank'])
                 line = next(inputfile)
-                while not self.dashes_and_spaces.search(line):
+                while not self.re_dashes_and_spaces.search(line):
                     if 'Occupied' in line or 'Virtual' in line:
                         # This will definitely exist, thanks to the above block.
                         if 'Virtual' in line:
@@ -772,7 +774,7 @@ class QChem(logfileparser.Logfile):
             # nothing is gained by it.
 
             mocoeffs = numpy.empty(shape=(self.nbasis, self.norbdisp_alpha))
-            self.parse_matrix(inputfile, mocoeffs, aonames_present=True)
+            self.parse_matrix_aonames(inputfile, mocoeffs)
             # Only use these MO coefficients if we don't have them
             # from `scf_final_print`.
             if len(self.mocoeffs) == 0:
@@ -783,9 +785,16 @@ class QChem(logfileparser.Logfile):
                 # alpha block.
                 self.skip_lines(inputfile, ['blank', 'MOLECULAR ORBITAL COEFFICIENTS'])
                 mocoeffs = numpy.empty(shape=(self.nbasis, self.norbdisp_beta))
-                self.parse_matrix(inputfile, mocoeffs, aonames_present=True)
+                self.parse_matrix_aonames(inputfile, mocoeffs)
                 if len(self.mocoeffs) == 1:
                     self.mocoeffs.append(mocoeffs)
+
+            # Go back through `aonames` to create `atombasis`.
+            assert len(self.aonames) == self.nbasis
+            for aoindex, aoname in enumerate(self.aonames):
+                atomindex = int(self.re_atomindex.search(aoname).groups()[0]) - 1
+                self.atombasis[atomindex].append(aoindex)
+            assert len(self.atombasis) == len(self.atomnos)
 
         # Population analysis.
 
@@ -1072,8 +1081,6 @@ class QChem(logfileparser.Logfile):
                 self.atommasses = numpy.array(atommasses)
 
         # TODO:
-        # 'aonames'
-        # 'atombasis'
         # 'enthalpy' (incorrect)
         # 'freeenergy' (incorrect)
         # 'nocoeffs'
@@ -1109,11 +1116,11 @@ class QChem(logfileparser.Logfile):
         if has_spins:
             self.atomspins[chargetype] = numpy.array(spins)
 
-    def parse_matrix(self, inputfile, npmatrix, aonames_present=False):
-        """Q-Chem prints most matrices in a very standard format; parse the
-        matrix into a preallocated NumPy array of the appropriate shape.
+    def parse_matrix(self, inputfile, nparray):
+        """Q-Chem prints most matrices in a standard format; parse the matrix
+        into a preallocated NumPy array of the appropriate shape.
         """
-        nrows, ncols = npmatrix.shape
+        nrows, ncols = nparray.shape
         line = next(inputfile)
         assert len(line.split()) == min(self.ncolsblock, ncols)
         colcounter = 0
@@ -1121,51 +1128,95 @@ class QChem(logfileparser.Logfile):
             # If the line is just the column header (indices)...
             if line[:5].strip() == '':
                 line = next(inputfile)
-            # This only shows up for the MO coefficient block printed
-            # when `print_orbitals` is set. Do nothing for now.
-            if 'eigenvalues' in line:
-                line = next(inputfile)
             rowcounter = 0
             while rowcounter < nrows:
-                if aonames_present:
-                    row = line.split()
-                    # Only take the AO names on the first time through.
-                    if colcounter == 0:
-                        name = self.atommap.get(row[1] + str(row[2]))
-                        aoname = ''.join([name, '_', row[3].upper()])
-                        self.aonames.append(aoname)
-                    vals = list(map(float, row[4:]))
-                else:
-                    row = list(map(float, line.split()[1:]))
-                    npmatrix[rowcounter][colcounter:colcounter + self.ncolsblock] = row
+                row = list(map(float, line.split()[1:]))
+                assert len(row) == min(self.ncolsblock, (ncols - colcounter))
+                nparray[rowcounter][colcounter:colcounter + self.ncolsblock] = row
                 line = next(inputfile)
                 rowcounter += 1
             colcounter += self.ncolsblock
 
+    def parse_matrix_aonames(self, inputfile, nparray):
+        """Q-Chem prints most matrices in a standard format; parse the matrix
+        into a preallocated NumPy array of the appropriate shape.
 
-def _generate_atom_map(atomnos):
-    """Generate the map to go from Q-Chem atom numbering:
-     'C1', 'C2', 'C3', 'C4', 'C5', 'C6', 'H1', 'H2', 'H3', 'H4', 'C7', ...
-    to cclib atom numbering:
-     'C1', 'C2', 'C3', 'C4', 'C5', 'C6', 'H7', 'H8', 'H9', 'H10', 'C11', ...
-    for later use.
-    """
+        Rather than have one routine for parsing all general matrices
+        and the 'MOLECULAR ORBITAL COEFFICIENTS' block, use a second
+        which handles `aonames`.
+        """
+        bigmom = ('d', 'f', 'g', 'h')
+        nrows, ncols = nparray.shape
+        line = next(inputfile)
+        assert len(line.split()) == min(self.ncolsblock, ncols)
+        colcounter = 0
+        while colcounter < ncols:
+            # If the line is just the column header (indices)...
+            if line[:5].strip() == '':
+                line = next(inputfile)
+            # Do nothing for now.
+            if 'eigenvalues' in line:
+                line = next(inputfile)
+            rowcounter = 0
+            while rowcounter < nrows:
+                row = line.split()
+                # Only take the AO names on the first time through.
+                if colcounter == 0:
+                    if len(self.aonames) != self.nbasis:
+                        # Apply the offset for rows where there is
+                        # more than one atom of any element in the
+                        # molecule.
+                        offset = int(self.formula_histogram[row[1]] != 1)
+                        if offset:
+                            name = self.atommap.get(row[1] + str(row[2]))
+                        else:
+                            name = self.atommap.get(row[1] + '1')
+                        # For l > 1, there is a space between l and m_l.
+                        shell = row[2 + offset]
+                        if shell in bigmom:
+                            shell = ''.join([shell, row[3 + offset]])
+                        aoname = ''.join([name, '_', shell.upper()])
+                        self.aonames.append(aoname)
+                row = list(map(float, row[-min(self.ncolsblock, (ncols - colcounter)):]))
+                nparray[rowcounter][colcounter:colcounter + self.ncolsblock] = row
+                line = next(inputfile)
+                rowcounter += 1
+            colcounter += self.ncolsblock
 
-    # Generate the elemental symbols.
-    elements = [utils.PeriodicTable().element[Z]
-                for Z in atomnos]
-    # Generate the desired order.
-    order_proper = [element + str(num)
-                    for element, num in zip(elements, itertools.count(start=1))]
-    # We need separate counters for each element.
-    element_counters = {element: itertools.count(start=1)
-                        for element in set(elements)}
-    # Generate the Q-Chem printed order.
-    order_qchem = [element + str(next(element_counters[element]))
-                   for element in elements]
-    # Combine the orders into a mapping.
-    atommap = {k:v for k, v, in zip(order_qchem, order_proper)}
-    return atommap
+    def generate_atom_map(self):
+        """Generate the map to go from Q-Chem atom numbering:
+        'C1', 'C2', 'C3', 'C4', 'C5', 'C6', 'H1', 'H2', 'H3', 'H4', 'C7', ...
+        to cclib atom numbering:
+        'C1', 'C2', 'C3', 'C4', 'C5', 'C6', 'H7', 'H8', 'H9', 'H10', 'C11', ...
+        for later use.
+        """
+
+        # Generate the desired order.
+        order_proper = [element + str(num)
+                        for element, num in zip(self.atomelements,
+                                                itertools.count(start=1))]
+        # We need separate counters for each element.
+        element_counters = {element: itertools.count(start=1)
+                            for element in set(self.atomelements)}
+        # Generate the Q-Chem printed order.
+        order_qchem = [element + str(next(element_counters[element]))
+                       for element in self.atomelements]
+        # Combine the orders into a mapping.
+        atommap = {k:v for k, v, in zip(order_qchem, order_proper)}
+        return atommap
+
+    def generate_formula_histogram(self):
+        """From the atomnos, generate a histogram that represents the
+        molecular formula.
+        """
+
+        histogram = dict()
+        for element in self.atomelements:
+            if element in histogram.keys():
+                histogram[element] += 1
+            else:
+                histogram[element] = 1
+        return histogram
 
 
 if __name__ == '__main__':
