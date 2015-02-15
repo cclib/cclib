@@ -1,7 +1,9 @@
+# -*- coding: utf-8 -*-
+#
 # This file is part of cclib (http://cclib.github.io), a library for parsing
 # and interpreting the results of computational chemistry packages.
 #
-# Copyright (C) 2006-2014, the cclib development team
+# Copyright (C) 2014-2015, the cclib development team
 #
 # The library is free software, distributed under the terms of
 # the GNU Lesser General Public version 2.1 or later. You should have
@@ -78,31 +80,37 @@ class QChem(logfileparser.Logfile):
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
 
-        # If the input section is repeated back, parse the $rem
-        # section.
-        if '$rem' in line:
-            while '$end' not in line:
-                line = next(inputfile)
-                if 'print_orbitals' in line.lower():
-                    # Stay with the default value if a number isn't
-                    # specified.
-                    if line.split()[-1].lower() in ('true', 'false'):
-                        continue
-                    else:
-                        norbdisp = int(line.split()[-1])
-                        self.norbdisp_alpha = norbdisp
-                        self.norbdisp_beta = norbdisp
+        # If the input section is repeated back, parse the $rem and
+        # $molecule sections.
+        if line[0:11] == 'User input:':
+            self.skip_line(inputfile, 'd')
+            while list(set(line.strip())) != ['-']:
 
-        # Charge and multiplicity are present in the input file, which is generally
-        # printed once at the beginning. However, it is also prined for fragment
-        # calculations, so make sure we parse only the first occurance.
-        if '$molecule' in line:
-            line = next(inputfile)
-            charge, mult = map(int, line.split())
-            if not hasattr(self, 'charge'):
-                self.set_attribute('charge', charge)
-            if not hasattr(self, 'mult'):
-                self.set_attribute('mult', mult)
+                if '$rem' in line:
+                    while '$end' not in line:
+                        line = next(inputfile)
+                        if 'print_orbitals' in line.lower():
+                            # Stay with the default value if a number isn't
+                            # specified.
+                            if line.split()[-1].lower() in ('true', 'false'):
+                                continue
+                            else:
+                                norbdisp = int(line.split()[-1])
+                                self.norbdisp_alpha = norbdisp
+                                self.norbdisp_beta = norbdisp
+
+                # Charge and multiplicity are present in the input file, which is generally
+                # printed once at the beginning. However, it is also prined for fragment
+                # calculations, so make sure we parse only the first occurance.
+                if '$molecule' in line:
+                    line = next(inputfile)
+                    charge, mult = map(int, line.split())
+                    if not hasattr(self, 'charge'):
+                        self.set_attribute('charge', charge)
+                    if not hasattr(self, 'mult'):
+                        self.set_attribute('mult', mult)
+
+                line = next(inputfile)
 
         # Parse the general basis for `gbasis`.
         if 'Basis set in general basis input format:' in line:
@@ -244,6 +252,14 @@ class QChem(logfileparser.Logfile):
         #    3    -382.2939780242      3.37E-03
         # ...
         #
+        scf_success_messages = (
+            'Convergence criterion met',
+            'corrected energy'
+        )
+        scf_failure_messages = (
+            'SCF failed to converge',
+            'Convergence failure'
+        )
         if 'SCF converges when ' in line:
             if not hasattr(self, 'scftargets'):
                 self.scftargets = []
@@ -259,7 +275,7 @@ class QChem(logfileparser.Logfile):
             values = []
             iter_counter = 1
             line = next(inputfile)
-            while 'Convergence ' not in line:
+            while not any(message in line for message in scf_success_messages):
 
                 # Some trickery to avoid a lot of printing that can occur
                 # between each SCF iteration.
@@ -273,7 +289,7 @@ class QChem(logfileparser.Logfile):
                 line = next(inputfile)
 
                 # We've converged, but still need the last iteration.
-                if 'Convergence criterion met' in line:
+                if any(message in line for message in scf_success_messages):
                     entry = line.split()
                     error = float(entry[2])
                     values.append([error])
@@ -281,7 +297,7 @@ class QChem(logfileparser.Logfile):
 
                 # This is printed in regression QChem4.2/dvb_sp_unconverged.out
                 # so use it to bail out when convergence fails.
-                if "SCF failed to converge" in line or "Convergence failure" in line:
+                if any(message in line for message in scf_failure_messages):
                     break
 
             if not hasattr(self, 'scfvalues'):
