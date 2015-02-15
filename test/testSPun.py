@@ -65,7 +65,7 @@ class GenericSPunTest(bettertest.TestCase):
         shape = (len(self.data.mosyms), len(self.data.mosyms[0]))
         self.assertEquals(shape, (2, self.data.nmo))
 
-        
+
 class ADFSPunTest(GenericSPunTest):
     """Customized unrestricted single point unittest"""
 
@@ -115,7 +115,7 @@ class GaussianSPunTest(GenericSPunTest):
 
 class JaguarSPunTest(GenericSPunTest):
     """Customized unrestricted single point unittest"""
-        
+
     # Data file does not contain enough information. Can we make a new one?
     def testdimaooverlaps(self):
         """Are the dims of the overlap matrix consistent with nbasis? PASS"""
@@ -127,7 +127,7 @@ class JaguarSPunTest(GenericSPunTest):
         self.assertEquals(len(self.data.moenergies), 2)
         self.assertEquals(len(self.data.moenergies[0]), self.data.homos[0]+11)
         self.assertEquals(len(self.data.moenergies[1]), self.data.homos[1]+11)
-        
+
     # Data file does not contain enough information. Can we make a new one?
     def testdimmocoeffs(self):
         """Are the dimensions of mocoeffs equal to 1 x nmo x nbasis? PASS"""
@@ -149,7 +149,7 @@ class MolproSPunTest(GenericSPunTest):
 
 class OrcaSPunTest(GenericSPunTest):
     """Customized unrestricted single point unittest"""
-    
+
     # ORCA has no support for symmetry yet.
     def testmosyms(self):
         """Are the dims of the mosyms equals to 2 x nmo?"""
@@ -159,14 +159,22 @@ class OrcaSPunTest(GenericSPunTest):
 class QChemSPunTest(GenericSPunTest):
     """Customized unrestricted single point unittest"""
 
-    # Q-Chem cannot print the overlap matrix.
+    # By default, Q-Chem doesn't print out an nbasis * nmo dim MO
+    # coefficient matrix, but a nbasis * (nocc + 5) * nbasis matrix.
+    def testdimmocoeffs(self):
+        """Are the dimensions of mocoeffs equal to 2 x nbasis x (nocc + 5)?"""
+        ncols_a = self.data.homos[0] + 1 + 5
+        ncols_b = self.data.homos[1] + 1 + 5
+        self.assertEquals(type(self.data.mocoeffs), type([]))
+        self.assertEquals(len(self.data.mocoeffs), 2)
+        self.assertEquals(self.data.mocoeffs[0].shape,
+                          (self.data.nbasis, ncols_a))
+        self.assertEquals(self.data.mocoeffs[1].shape,
+                          (self.data.nbasis, ncols_b))
+
+        # Q-Chem cannot print the overlap matrix.
     def testdimaooverlaps(self):
         """Are the dims of the overlap matrix consistent with nbasis? PASS"""
-
-    # `mocoeffs` not implemented yet.
-    def testdimmocoeffs(self):
-        """Are the dimensions of mocoeffs equal to 2 x nmo x nbasis? PASS"""
-
 
 
 if __name__=="__main__":

@@ -296,40 +296,12 @@ class QChem(logfileparser.Logfile):
             if not hasattr(self, 'mocoeffs'):
                 self.mocoeffs = []
             mocoeffs = numpy.empty(shape=(self.nbasis, self.norbdisp_alpha))
-            line = next(inputfile)
-            assert len(line.split()) == min(self.ncolsblock, self.nbasis)
-            colcounter = 0
-            while colcounter < self.norbdisp_alpha:
-                # If the line is just the column header (indices)...
-                if line[:5].strip() == '':
-                    ncols = len(line.split())
-                    line = next(inputfile)
-                rowcounter = 0
-                while rowcounter < self.nbasis:
-                    row = list(map(float, line.split()[1:]))
-                    mocoeffs[rowcounter][colcounter:colcounter + ncols] = row
-                    line = next(inputfile)
-                    rowcounter += 1
-                colcounter += ncols
+            self.parse_matrix(inputfile, mocoeffs)
             self.mocoeffs.append(mocoeffs)
 
         if 'Final Beta MO Coefficients' in line:
             mocoeffs = numpy.empty(shape=(self.nbasis, self.norbdisp_beta))
-            line = next(inputfile)
-            assert len(line.split()) == min(self.ncolsblock, self.nbasis)
-            colcounter = 0
-            while colcounter < self.norbdisp_beta:
-                # If the line is just the column header (indices)...
-                if line[:5].strip() == '':
-                    ncols = len(line.split())
-                    line = next(inputfile)
-                rowcounter = 0
-                while rowcounter < self.nbasis:
-                    row = list(map(float, line.split()[1:]))
-                    mocoeffs[rowcounter][colcounter:colcounter + ncols] = row
-                    line = next(inputfile)
-                    rowcounter += 1
-                colcounter += ncols
+            self.parse_matrix(inputfile, mocoeffs)
             self.mocoeffs.append(mocoeffs)
 
         if 'Total energy in the final basis set' in line:
@@ -799,51 +771,21 @@ class QChem(logfileparser.Logfile):
             # We could also attempt to parse `moenergies` here, but
             # nothing is gained by it.
 
-            line = next(inputfile)
-            assert len(line.split()) == min(self.ncolsblock, self.nbasis)
-            colcounter = 0
-            while colcounter < self.norbdisp_alpha:
-                # If the line is just the column header (indices)...
-                if line[:5].strip() == '':
-                    ncols = len(line.split())
-                    line = next(inputfile)
-                if 'eigenvalues' in line:
-                    # Do nothing for now, since these are probably
-                    # incomplete.
-                    line = next(inputfile)
-                rowcounter = 0
-                while rowcounter < self.nbasis:
-                    row = line.split()
-                    # Only take these on the first time through.
-                    if colcounter == 0:
-                        name = self.atommap.get(row[1] + str(row[2]))
-                        aoname = ''.join([name, '_', row[3].upper()])
-                        self.aonames.append(aoname)
-                    vals = list(map(float, row[4:]))
-                    line = next(inputfile)
-                    rowcounter += 1
-                colcounter += ncols
+            mocoeffs = numpy.empty(shape=(self.nbasis, self.norbdisp_alpha))
+            self.parse_matrix(inputfile, mocoeffs, aonames_present=True)
+            # Only use these MO coefficients if we don't have them
+            # from `scf_final_print`.
+            if len(self.mocoeffs) == 0:
+                self.mocoeffs.append(mocoeffs)
+
             if self.unrestricted:
                 # The beta orbital block occurs immediately after the
                 # alpha block.
-                self.skip_lines(inputfile, ['blank', 'blank'])
-                line = next(inputfile)
-                while colcounter < self.norbdisp_beta:
-                # If the line is just the column header (indices)...
-                    if line[:5].strip() == '':
-                        ncols = len(line.split())
-                        line = next(inputfile)
-                    if 'eigenvalues' in line:
-                        # Do nothing for now, since these are probably
-                        # incomplete.
-                        line = next(inputfile)
-                    rowcounter = 0
-                    while rowcounter < self.nbasis:
-                        row = line.split()
-                        vals = list(map(float, row[4:]))
-                        line = next(inputfile)
-                        rowcounter += 1
-                    colcounter += ncols
+                self.skip_lines(inputfile, ['blank', 'MOLECULAR ORBITAL COEFFICIENTS'])
+                mocoeffs = numpy.empty(shape=(self.nbasis, self.norbdisp_beta))
+                self.parse_matrix(inputfile, mocoeffs, aonames_present=True)
+                if len(self.mocoeffs) == 1:
+                    self.mocoeffs.append(mocoeffs)
 
         # Population analysis.
 
@@ -966,20 +908,7 @@ class QChem(logfileparser.Logfile):
             if not hasattr(self, 'grads'):
                 self.grads = []
             grad = numpy.empty(shape=(3, self.natom))
-            line = next(inputfile)
-            assert len(line.split()) == min(self.ncolsblock, self.natom)
-            colcounter = 0
-            while colcounter < self.natom:
-                # If the line is just the column header (indices)...
-                if line[:5].strip() == '':
-                    line = next(inputfile)
-                rowcounter = 0
-                while rowcounter < 3:
-                    row = list(map(float, line.split()[1:]))
-                    grad[rowcounter][colcounter:colcounter + self.ncolsblock] = row
-                    line = next(inputfile)
-                    rowcounter += 1
-                colcounter += self.ncolsblock
+            self.parse_matrix(inputfile, grad)
             self.grads.append(grad.T)
 
         # For IR-related jobs, the Hessian is printed (dim: 3*natom, 3*natom).
@@ -988,18 +917,7 @@ class QChem(logfileparser.Logfile):
             if not hasattr(self, 'hessian'):
                 dim = 3*self.natom
                 self.hessian = numpy.empty(shape=(dim, dim))
-                line = next(inputfile)
-                colcounter = 0
-                while colcounter < dim:
-                    if line[:5].strip() == '':
-                        line = next(inputfile)
-                    rowcounter = 0
-                    while rowcounter < dim:
-                        row = list(map(float, line.split()[1:]))
-                        self.hessian[rowcounter][colcounter:colcounter + self.ncolsblock] = row
-                        line = next(inputfile)
-                        rowcounter += 1
-                    colcounter += self.ncolsblock
+                self.parse_matrix(inputfile, self.hessian)
 
         # Start of the IR/Raman frequency section.
         if 'VIBRATIONAL ANALYSIS' in line:
@@ -1160,10 +1078,6 @@ class QChem(logfileparser.Logfile):
         # 'freeenergy' (incorrect)
         # 'nocoeffs'
         # 'nooccnos'
-        # 'scancoords'
-        # 'scanenergies'
-        # 'scannames'
-        # 'scanparm'
         # 'vibanharms'
 
     def parse_charge_section(self, inputfile, chargetype):
@@ -1194,6 +1108,39 @@ class QChem(logfileparser.Logfile):
         self.atomcharges[chargetype] = numpy.array(charges)
         if has_spins:
             self.atomspins[chargetype] = numpy.array(spins)
+
+    def parse_matrix(self, inputfile, npmatrix, aonames_present=False):
+        """Q-Chem prints most matrices in a very standard format; parse the
+        matrix into a preallocated NumPy array of the appropriate shape.
+        """
+        nrows, ncols = npmatrix.shape
+        line = next(inputfile)
+        assert len(line.split()) == min(self.ncolsblock, ncols)
+        colcounter = 0
+        while colcounter < ncols:
+            # If the line is just the column header (indices)...
+            if line[:5].strip() == '':
+                line = next(inputfile)
+            # This only shows up for the MO coefficient block printed
+            # when `print_orbitals` is set. Do nothing for now.
+            if 'eigenvalues' in line:
+                line = next(inputfile)
+            rowcounter = 0
+            while rowcounter < nrows:
+                if aonames_present:
+                    row = line.split()
+                    # Only take the AO names on the first time through.
+                    if colcounter == 0:
+                        name = self.atommap.get(row[1] + str(row[2]))
+                        aoname = ''.join([name, '_', row[3].upper()])
+                        self.aonames.append(aoname)
+                    vals = list(map(float, row[4:]))
+                else:
+                    row = list(map(float, line.split()[1:]))
+                    npmatrix[rowcounter][colcounter:colcounter + self.ncolsblock] = row
+                line = next(inputfile)
+                rowcounter += 1
+            colcounter += self.ncolsblock
 
 
 def _generate_atom_map(atomnos):
