@@ -1,7 +1,7 @@
 # This file is part of cclib (http://cclib.github.io), a library for parsing
 # and interpreting the results of computational chemistry packages.
 #
-# Copyright (C) 2006-2014, the cclib development team
+# Copyright (C) 2006-2015, the cclib development team
 #
 # The library is free software, distributed under the terms of
 # the GNU Lesser General Public version 2.1 or later. You should have
@@ -12,7 +12,6 @@
 
 
 from __future__ import print_function
-import re
 
 import numpy
 
@@ -50,7 +49,7 @@ class DALTON(logfileparser.Logfile):
 
         self.firststdorient = True # Used to decide whether to wipe the atomcoords clean
         self.scftype = "none" # Type of SCF calculation: BLYP, RHF, ROHF, etc.
-    
+
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
 
@@ -77,7 +76,7 @@ class DALTON(logfileparser.Logfile):
             self.set_attribute("mult", int(temp[-2]))
 
         # -------------------------------------------------
-        if not hasattr(self,"nbasis") and "Total number of orbitals" in line:
+        if not hasattr(self, "nbasis") and "Total number of orbitals" in line:
             temp = line.split()
             self.set_attribute("nbasis", int(temp[4]))
 
@@ -87,7 +86,7 @@ class DALTON(logfileparser.Logfile):
             if not hasattr(self, "scftargets"):
                 self.scftargets = []
             temp = line.split()
-            scftarget = self.float( temp[-1] )
+            scftarget = self.float(temp[-1])
             self.scftargets.append([scftarget])
 
         # -------------------------------------------------
@@ -98,10 +97,10 @@ class DALTON(logfileparser.Logfile):
             iteration = 0
             converged = False
             values = []
-            if not hasattr(self,"scfvalues"):
+            if not hasattr(self, "scfvalues"):
                 self.scfvalues = []
 
-            while( not converged ):
+            while not converged:
                 line = next(inputfile)
                 # each iteration is bracketed by "-------------"
                 if "-------------------" in line:
@@ -112,18 +111,17 @@ class DALTON(logfileparser.Logfile):
                 strcompare = "@{0:>3d}".format(iteration)
                 if strcompare in line:
                     temp = line.split()
-                    values.append( [float(temp[2])] )
+                    values.append([float(temp[2])])
                     #print(line.split())
                 if line[0] == "@" and "converged in" in line:
                     converged = True
 
-            self.scfvalues.append( values )
+            self.scfvalues.append(values)
 
         if "@    Occupied SCF orbitals" in line and not hasattr(self, 'homos'):
             temp = line.split()
             homos = int(temp[4])
             self.set_attribute('homos', [homos-1]) # it is the index (python counting, so -1)
-            
 
         # -------------------------------------------------
         # the molecular geometry requires the use of of
@@ -155,7 +153,7 @@ class DALTON(logfileparser.Logfile):
 
 
                 atomcoords.append([utils.convertor(float(temp[i]), "bohr", "Angstrom") for i in coords])
-            self.atomcoords.append( atomcoords )
+            self.atomcoords.append(atomcoords)
             self.set_attribute('atomnos', atomnos)
 
         # -------------------------------------------------
@@ -194,7 +192,7 @@ class DALTON(logfileparser.Logfile):
             line = next(inputfile)
 
             # now parse nsym symmetries
-            while( nsym > 0 ):
+            while nsym > 0:
 
                 line = next(inputfile)
                 temp = line.split()
@@ -207,23 +205,23 @@ class DALTON(logfileparser.Logfile):
                 # this first line has the orbital symmetry information
                 sym = self.normalisesym(temp[1])
                 temp = [float(t) for t in temp[2:]]
-                moenergies.extend( temp )
-                mosyms.extend(len(temp)*[sym] )
-                while( len(temp) > 0 ):
-                    line = next( inputfile )
+                moenergies.extend(temp)
+                mosyms.extend(len(temp)*[sym])
+                while len(temp) > 0:
+                    line = next(inputfile)
                     temp = [float(col) for col in line.split()]
 
                     if len(temp) == 0:
                         continue
 
-                    moenergies.extend( temp )
-                    mosyms.extend( len(temp)*[sym] )
+                    moenergies.extend(temp)
+                    mosyms.extend(len(temp)*[sym])
 
                 nsym -= 1
 
             # now sort the data about energies and symmetries. see the following post for the magic
             # http://stackoverflow.com/questions/19339/a-transpose-unzip-function-in-python-inverse-of-zip
-            sdata = sorted( zip(moenergies, mosyms), key = lambda x: x[0])
+            sdata = sorted(zip(moenergies, mosyms), key=lambda x: x[0])
             moenergies, mosyms = zip(*sdata)
 
             self.moenergies = [[]]
@@ -238,15 +236,13 @@ class DALTON(logfileparser.Logfile):
 
             self.mocoeffs = [numpy.zeros((self.nmo, self.nbasis), "d")]
 
-
         # -------------------------------------------------
         # extract the center of mass line
         if "Center-of-mass coordinates (a.u.):" in line:
             temp = line.split()
-            reference = [ utils.convertor( float(temp[i]), "bohr", "Angstrom") for i in [3,4,5]]
+            reference = [utils.convertor(float(temp[i]), "bohr", "Angstrom") for i in [3, 4, 5]]
             if not hasattr(self, 'moments'):
                 self.moments = [reference]
-
 
         # -------------------------------------------------
         # Extract the dipole moment
@@ -261,9 +257,10 @@ class DALTON(logfileparser.Logfile):
                 line = next(inputfile)
                 temp = line.split()
                 for i in range(3):
-                    dipole[i] = float(temp[2]) # store the Debye value
+                    dipole[i] = float(temp[2])  # store the Debye value
             if hasattr(self, 'moments'):
-                self.moments.append( dipole )
+                self.moments.append(dipole)
+
 
 if __name__ == "__main__":
     import doctest, daltonparser, sys
@@ -278,4 +275,3 @@ if __name__ == "__main__":
         for i in range(len(sys.argv[2:])):
             if hasattr(data, sys.argv[2 + i]):
                 print(getattr(data, sys.argv[2 + i]))
-
