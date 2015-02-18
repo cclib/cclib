@@ -80,7 +80,7 @@ def openlogfile(filename):
 
     Given the filename of a log file or a gzipped, zipped, or bzipped
     log file, this function returns a regular Python file object.
-    
+
     Given an address starting with http://, this function retrieves the url
     and returns a file object using a temporary file.
 
@@ -92,7 +92,7 @@ def openlogfile(filename):
     if type(filename) in [str, str]:
 
         extension = os.path.splitext(filename)[1]
-        
+
         if extension == ".gz":
             fileobject = myGzipFile(filename, "r")
 
@@ -110,15 +110,15 @@ def openlogfile(filename):
             fileobject = FileWrapper(io.open(filename, "r", errors='ignore'))
 
         return fileobject
-    
+
     elif hasattr(filename, "__iter__"):
-    
+
         # Compression (gzip and bzip) is supported as of Python 2.5.
         if sys.version_info[0] >= 2 and sys.version_info[1] >= 5:
             fileobject = fileinput.input(filename, openhook=fileinput.hook_compressed)
         else:
             fileobject = fileinput.input(filename)
-        
+
         return fileobject
 
 
@@ -128,7 +128,6 @@ class Logfile(object):
     Subclasses defined by cclib:
         ADF, GAMESS, GAMESSUK, Gaussian, Jaguar, Molpro, NWChem, ORCA,
           Psi, QChem
-    
     """
 
     def __init__(self, source, loglevel=logging.INFO, logname="Log",
@@ -189,7 +188,7 @@ class Logfile(object):
 
         # Send info to logger if the attribute is in the list self._attrlist.
         if name in getattr(self, "_attrlist", {}) and hasattr(self, "logger"):
-                    
+
             # Call logger.info() only if the attribute is new.
             if not hasattr(self, name):
                 if type(value) in [numpy.ndarray, list]:
@@ -274,7 +273,7 @@ class Logfile(object):
         # There is the possibility of passing assitional argument via self.data_args, but
         # we use this sparingly in cases where we want to limit the API with options, etc.
         data = self.datatype(attributes=self.__dict__)
-                
+
         # Now make sure that the cclib attributes in the data object are all the correct type,
         # including arrays and lists of arrays.
         data.arrayify()
@@ -345,7 +344,7 @@ class Logfile(object):
         Note that this can be used for scalars and lists alike, whenever we want
         to set a value for an attribute. By default we want to check that
         the value does not change if the attribute already exists, and this function
-        is a good place to add more tests in the future.        
+        is a good place to add more tests in the future.
         """
         if check and hasattr(self, name):
             try:
