@@ -23,6 +23,7 @@ from . import data
 from . import logfileparser
 
 from .adfparser import ADF
+from .daltonparser import DALTON
 from .gamessparser import GAMESS
 from .gamessukparser import GAMESSUK
 from .gaussianparser import Gaussian
@@ -53,6 +54,7 @@ except ImportError:
 triggers = [
 
 (ADF,       ["Amsterdam Density Functional"],                   True),
+(DALTON,    ["DALTON 201"],                                     True),
 (GAMESS,    ["GAMESS"],                                         False),
 (GAMESS,    ["GAMESS VERSION"],                                 True),
 (GAMESSUK,  ["G A M E S S - U K"],                              True),
@@ -109,7 +111,7 @@ def ccopen(source, *args, **kargs):
       source - a single logfile, a list of logfiles, or an input stream
 
     Returns:
-      one of ADF, GAMESS, GAMESS UK, Gaussian, Jaguar, Molpro, NWChem, ORCA,
+      one of ADF, DALTON, GAMESS, GAMESS UK, Gaussian, Jaguar, Molpro, NWChem, ORCA,
         Psi, QChem, or None (if it cannot figure it out or the file does not
         exist).
     """
