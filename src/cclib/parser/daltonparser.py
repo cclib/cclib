@@ -206,12 +206,12 @@ class DALTON(logfileparser.Logfile):
 
                 # this first line has the orbital symmetry information
                 sym = self.normalisesym(temp[1])
-                temp = map(float, temp[2:])
+                temp = [float(t) for t in temp[2:]]
                 moenergies.extend( temp )
-                mosyms.extend( len(temp)*[sym] )
+                mosyms.extend(len(temp)*[sym] )
                 while( len(temp) > 0 ):
                     line = next( inputfile )
-                    temp = map(float, line.split())
+                    temp = [float(col) for col in line.split()]
 
                     if len(temp) == 0:
                         continue
