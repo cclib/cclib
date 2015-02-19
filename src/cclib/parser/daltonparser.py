@@ -234,7 +234,7 @@ class DALTON(logfileparser.Logfile):
                 if len(self.moenergies[0]) != self.nmo:
                     self.set_attribute('nmo', len(self.moenergies[0]))
 
-            self.mocoeffs = [numpy.zeros((self.nmo, self.nbasis), "d")]
+            #self.mocoeffs = [numpy.zeros((self.nmo, self.nbasis), "d")]
 
         # -------------------------------------------------
         # extract the center of mass line
