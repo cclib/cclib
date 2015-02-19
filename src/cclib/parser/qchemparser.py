@@ -46,6 +46,7 @@ class QChem(logfileparser.Logfile):
         # Keep track of whether or not we're performing an
         # (un)restricted calculation.
         self.unrestricted = False
+        self.is_rohf = False
 
         # Compile the dashes-and-or-spaces-only regex.
         self.re_dashes_and_spaces = re.compile('^[\s-]+$')
@@ -58,11 +59,24 @@ class QChem(logfileparser.Logfile):
         self.ncolsblock = 6
 
         # By default, when asked to print orbitals via
-        # `scf_final_print` and/or `print_orbitals`, Q-Chem will print
-        # all occupieds and the first 5 virtuals. Add `nalpha/nbeta`
-        # to this value later to get the correct default value.
-        self.norbdisp_alpha = 5
-        self.norbdisp_beta = 5
+        # `scf_print`/`scf_final_print` and/or `print_orbitals`,
+        # Q-Chem will print all occupieds and the first 5 virtuals.
+        #
+        # When the number is set for `print_orbitals`, that section of
+        # the output will display (NOcc + that many virtual) MOs, but
+        # any other sections present due to
+        # `scf_print`/`scf_final_print` will still only display (NOcc
+        # + 5) MOs.
+        #
+        # Note that the density matrix is always (NBasis * NBasis)!
+        self.norbdisp_alpha = self.norbdisp_beta = 5
+        self.norbdisp_alpha_aonames = self.norbdisp_beta_aonames = 5
+        self.norbdisp_set = False
+
+        self.alpha_mo_coefficient_headers = (
+            'RESTRICTED (RHF) MOLECULAR ORBITAL COEFFICIENTS',
+            'ALPHA MOLECULAR ORBITAL COEFFICIENTS'
+        )
 
     def after_parsing(self):
 
@@ -95,9 +109,10 @@ class QChem(logfileparser.Logfile):
                             if line.split()[-1].lower() in ('true', 'false'):
                                 continue
                             else:
-                                norbdisp = int(line.split()[-1])
-                                self.norbdisp_alpha = norbdisp
-                                self.norbdisp_beta = norbdisp
+                                norbdisp_aonames = int(line.split()[-1])
+                                self.norbdisp_alpha_aonames = norbdisp_aonames
+                                self.norbdisp_beta_aonames = norbdisp_aonames
+                                self.norbdisp_set = True
 
                 # Charge and multiplicity are present in the input file, which is generally
                 # printed once at the beginning. However, it is also prined for fragment
@@ -218,7 +233,9 @@ class QChem(logfileparser.Logfile):
                 self.nalpha = int(match[0][0].strip())
                 self.nbeta = int(match[0][1].strip())
                 self.norbdisp_alpha += self.nalpha
+                self.norbdisp_alpha_aonames += self.nalpha
                 self.norbdisp_beta += self.nbeta
+                self.norbdisp_beta_aonames += self.nbeta
 
         # Number of basis functions.
         # Because Q-Chem's integral recursion scheme is defined using
@@ -240,6 +257,10 @@ class QChem(logfileparser.Logfile):
                 self.unrestricted = False
             if 'unrestricted' in line:
                 self.unrestricted = True
+            if hasattr(self, 'nalpha') and hasattr(self, 'nbeta'):
+                if self.nalpha != self.nbeta:
+                    self.unrestricted = True
+                    self.is_rohf = True
 
         # Section with SCF iterations goes like this:
         #
@@ -635,10 +656,12 @@ class QChem(logfileparser.Logfile):
                 symbols_alpha.extend(symbols)
                 line = next(inputfile)
 
+            line = next(inputfile)
             # Only look at the second block if doing an unrestricted calculation.
             # This might be a problem for ROHF/ROKS.
             if self.unrestricted:
-                self.skip_line(inputfile, 'header')
+                assert 'Beta MOs' in line
+                self.skip_line(inputfile, '-- Occupied --')
                 line = next(inputfile)
                 while not self.re_dashes_and_spaces.search(line):
                     if 'Occupied' in line or 'Virtual' in line:
@@ -741,7 +764,8 @@ class QChem(logfileparser.Logfile):
             # Only look at the second block if doing an unrestricted calculation.
             # This might be a problem for ROHF/ROKS.
             if self.unrestricted:
-                self.skip_lines(inputfile, ['blank'])
+                assert 'Beta MOs' in line
+                self.skip_line(inputfile, '-- Occupied --')
                 line = next(inputfile)
                 while not self.re_dashes_and_spaces.search(line):
                     if 'Occupied' in line or 'Virtual' in line:
@@ -770,13 +794,22 @@ class QChem(logfileparser.Logfile):
                 self.moenergies[1] = numpy.array(energies_beta)
             self.set_attribute('nmo', len(self.moenergies[0]))
 
+        # If we've asked to display more virtual orbitals than there
+        # are MOs present in the molecule, fix that now.
+        if hasattr(self, 'nmo') and hasattr(self, 'nalpha') and hasattr(self, 'nbeta'):
+            if self.norbdisp_alpha_aonames > self.nmo:
+                self.norbdisp_alpha_aonames = self.nmo
+            if self.norbdisp_beta_aonames > self.nmo:
+                self.norbdisp_beta_aonames = self.nmo
+
         # Molecular orbital coefficients.
 
         # This block comes from `print_orbitals = true/{int}`. Less
-        # precision than `scf_final_print = >2` for `mocoeffs`, but
+        # precision than `scf_final_print >= 2` for `mocoeffs`, but
         # important for `aonames` and `atombasis`.
 
-        if 'MOLECULAR ORBITAL COEFFICIENTS' in line:
+        if any(header in line
+               for header in self.alpha_mo_coefficient_headers):
 
             if not hasattr(self, 'mocoeffs'):
                 self.mocoeffs = []
@@ -789,21 +822,12 @@ class QChem(logfileparser.Logfile):
             # We could also attempt to parse `moenergies` here, but
             # nothing is gained by it.
 
-            mocoeffs = numpy.empty(shape=(self.nbasis, self.norbdisp_alpha))
+            mocoeffs = numpy.empty(shape=(self.nbasis, self.norbdisp_alpha_aonames))
             self.parse_matrix_aonames(inputfile, mocoeffs)
             # Only use these MO coefficients if we don't have them
             # from `scf_final_print`.
             if len(self.mocoeffs) == 0:
                 self.mocoeffs.append(mocoeffs)
-
-            if self.unrestricted:
-                # The beta orbital block occurs immediately after the
-                # alpha block.
-                self.skip_lines(inputfile, ['blank', 'MOLECULAR ORBITAL COEFFICIENTS'])
-                mocoeffs = numpy.empty(shape=(self.nbasis, self.norbdisp_beta))
-                self.parse_matrix_aonames(inputfile, mocoeffs)
-                if len(self.mocoeffs) == 1:
-                    self.mocoeffs.append(mocoeffs)
 
             # Go back through `aonames` to create `atombasis`.
             assert len(self.aonames) == self.nbasis
@@ -811,6 +835,13 @@ class QChem(logfileparser.Logfile):
                 atomindex = int(self.re_atomindex.search(aoname).groups()[0]) - 1
                 self.atombasis[atomindex].append(aoindex)
             assert len(self.atombasis) == len(self.atomnos)
+
+        if 'BETA  MOLECULAR ORBITAL COEFFICIENTS' in line:
+
+            mocoeffs = numpy.empty(shape=(self.nbasis, self.norbdisp_beta_aonames))
+            self.parse_matrix_aonames(inputfile, mocoeffs)
+            if len(self.mocoeffs) == 1:
+                self.mocoeffs.append(mocoeffs)
 
         # Population analysis.
 
@@ -1098,6 +1129,7 @@ class QChem(logfileparser.Logfile):
 
         # TODO:
         # 'enthalpy' (incorrect)
+        # 'entropy' (incorrect)
         # 'freeenergy' (incorrect)
         # 'nocoeffs'
         # 'nooccnos'
@@ -1187,7 +1219,8 @@ class QChem(logfileparser.Logfile):
                             name = self.atommap.get(row[1] + str(row[2]))
                         else:
                             name = self.atommap.get(row[1] + '1')
-                        # For l > 1, there is a space between l and m_l.
+                        # For l > 1, there is a space between l and
+                        # m_l when using spherical functions.
                         shell = row[2 + offset]
                         if shell in bigmom:
                             shell = ''.join([shell, row[3 + offset]])

@@ -386,58 +386,6 @@ def testPsi_Psi4_dvb_gopt_hf_unconverged_out(logfile):
 
 # Q-Chem #
 
-def testQChem_QChem4_2_dvb_gopt_unconverged_out(logfile):
-    """An unconverged geometry optimization to test for empty optdone (see #103 for details)."""
-    assert hasattr(logfile.data, 'optdone') and not logfile.data.optdone
-
-def testQChem_QChem4_2_dvb_sp_multipole_10_out(logfile):
-    """Multipole moments up to the 10-th order.
-
-    Since this example has various formats for the moment ranks, we can test
-    the parser by making sure the first moment (pure X) is as expected.
-    """
-    assert hasattr(logfile.data, 'moments') and len(logfile.data.moments) == 11
-    tol = 1.0e-6
-    assert logfile.data.moments[1][0] < tol
-    assert abs(logfile.data.moments[2][0] - -50.9647) < tol
-    assert abs(logfile.data.moments[3][0] - 0.0007) < tol
-    assert abs(logfile.data.moments[4][0] - -1811.1540) < tol
-    assert abs(logfile.data.moments[5][0] - 0.0159) < tol
-    assert abs(logfile.data.moments[6][0] - -57575.0744) < tol
-    assert abs(logfile.data.moments[7][0] - 0.3915) < tol
-    assert numpy.isnan(logfile.data.moments[8][0])
-    assert abs(logfile.data.moments[9][0] - 10.1638) < tol
-    assert numpy.isnan(logfile.data.moments[10][0])
-
-def testQChem_QChem4_2_qchem_tddft_rpa_out(logfile):
-    """An RPA/TD-DFT job.
-
-    Here Q-Chem prints both the TDA and RPA results. These differ somewhat, since
-    TDA allows only X vectors (occupied-virtual transitions) whereas RPA also
-    allows Y vectors (virtual-occupied deexcitations), and the formatting in these
-    two cases is subtly different (see cclib/cclib#154 for details).
-
-    Currently cclib will store the second set of transitions (RPA), but this
-    could change in the future if we support multistep jobs.
-    """
-    assert len(logfile.data.etsecs) == 10
-    assert len(logfile.data.etsecs[0]) == 13
-
-    # Check a few vectors manually, since we know the output. X vectors are transitions
-    # from occupied to virtual orbitals, whereas Y vectors the other way around, so cclib
-    # should be switching the indices. Here is the corresponding fragment in the logfile:
-    #     Excited state 1: excitation energy (eV) = 3.1318
-    #     Total energy for state 1: -382.185270280389
-    #     Multiplicity: Triplet
-    #     Trans. Mom.: 0.0000 X 0.0000 Y 0.0000 Z
-    #     Strength : 0.0000
-    #     X: D( 12) --> V( 13) amplitude = 0.0162
-    #     X: D( 28) --> V( 5) amplitude = 0.1039
-    #     Y: D( 28) --> V( 5) amplitude = 0.0605
-    assert logfile.data.etsecs[0][0] == [(11, 0), (47, 0), 0.0162]
-    assert logfile.data.etsecs[0][1] == [(27, 0), (39, 0), 0.1039]
-    assert logfile.data.etsecs[0][2] == [(39, 0), (27, 0), 0.0605]
-
 def testQChem_QChem4_2_CH3___Na__RS_out(logfile):
     """An unrestricted fragment job with BSSE correction.
 
@@ -509,6 +457,114 @@ def testQChem_QChem4_2_CH4___Na__out(logfile):
     assert len(logfile.data.moenergies[0]) == 42
     assert type(logfile.data.moenergies) == type([])
     assert type(logfile.data.moenergies[0]) == type(numpy.array([]))
+
+def testQChem_QChem4_2_CO2_out(logfile):
+    """A job containing a specific number of orbitals requested for
+    printing.
+    """
+    nbasis = 45
+    nmo = 45
+    nalpha = 11
+    assert logfile.data.nbasis == nbasis
+    assert logfile.data.nmo == nmo
+    assert len(logfile.data.mocoeffs) == 1
+    assert logfile.data.mocoeffs[0].shape == (nbasis, nalpha + 5)
+    assert logfile.data.mocoeffs[0][0, 0] == -0.0001434
+    assert logfile.data.mocoeffs[0][-1, -1] == -0.0000661
+    assert len(logfile.data.moenergies) == 1
+    assert len(logfile.data.moenergies[0]) == nmo
+
+def testQChem_QChem4_2_CO2_cation_UHF_out(logfile):
+    """A job containing a specific number of orbitals requested for
+    printing."""
+    nbasis = 45
+    nmo = 45
+    nalpha = 11
+    nbeta = 10
+    assert logfile.data.nbasis == nbasis
+    assert logfile.data.nmo == nmo
+    assert len(logfile.data.mocoeffs) == 2
+    assert logfile.data.mocoeffs[0].shape == (nbasis, nalpha + 5)
+    assert logfile.data.mocoeffs[1].shape == (nbasis, nbeta + 5)
+    assert logfile.data.mocoeffs[0][0, 0] == -0.0001549
+    assert logfile.data.mocoeffs[0][-1, -1] == -0.0000985
+    assert logfile.data.mocoeffs[1][0, 0] == -0.0001612
+    assert logfile.data.mocoeffs[1][-1, -1] == -0.0027710
+    assert len(logfile.data.moenergies) == 2
+    assert len(logfile.data.moenergies[0]) == nmo
+    assert len(logfile.data.moenergies[1]) == nmo
+
+def testQChem_QChem4_2_CO2_cation_ROHF_bigprint_allvirt_out(logfile):
+    """A job containing a specific number of orbitals requested for
+    printing."""
+    nbasis = 45
+    nmo = 45
+    nalpha = 11
+    nbeta = 10
+    assert logfile.data.nbasis == nbasis
+    assert logfile.data.nmo == nmo
+    assert len(logfile.data.mocoeffs) == 2
+    assert logfile.data.mocoeffs[0].shape == (nbasis, nalpha + 5)
+    assert logfile.data.mocoeffs[1].shape == (nbasis, nbeta + 5)
+    assert logfile.data.mocoeffs[0][0, 0] == -0.0001543
+    assert logfile.data.mocoeffs[0][-1, -3] == -0.0132848
+    assert logfile.data.mocoeffs[1][0, 2] == 0.9927881
+    assert logfile.data.mocoeffs[1][-1, -1] == 0.0018019
+    assert len(logfile.data.moenergies) == 2
+    assert len(logfile.data.moenergies[0]) == nmo
+    assert len(logfile.data.moenergies[1]) == nmo
+
+def testQChem_QChem4_2_dvb_gopt_unconverged_out(logfile):
+    """An unconverged geometry optimization to test for empty optdone (see #103 for details)."""
+    assert hasattr(logfile.data, 'optdone') and not logfile.data.optdone
+
+def testQChem_QChem4_2_dvb_sp_multipole_10_out(logfile):
+    """Multipole moments up to the 10-th order.
+
+    Since this example has various formats for the moment ranks, we can test
+    the parser by making sure the first moment (pure X) is as expected.
+    """
+    assert hasattr(logfile.data, 'moments') and len(logfile.data.moments) == 11
+    tol = 1.0e-6
+    assert logfile.data.moments[1][0] < tol
+    assert abs(logfile.data.moments[2][0] - -50.9647) < tol
+    assert abs(logfile.data.moments[3][0] - 0.0007) < tol
+    assert abs(logfile.data.moments[4][0] - -1811.1540) < tol
+    assert abs(logfile.data.moments[5][0] - 0.0159) < tol
+    assert abs(logfile.data.moments[6][0] - -57575.0744) < tol
+    assert abs(logfile.data.moments[7][0] - 0.3915) < tol
+    assert numpy.isnan(logfile.data.moments[8][0])
+    assert abs(logfile.data.moments[9][0] - 10.1638) < tol
+    assert numpy.isnan(logfile.data.moments[10][0])
+
+def testQChem_QChem4_2_qchem_tddft_rpa_out(logfile):
+    """An RPA/TD-DFT job.
+
+    Here Q-Chem prints both the TDA and RPA results. These differ somewhat, since
+    TDA allows only X vectors (occupied-virtual transitions) whereas RPA also
+    allows Y vectors (virtual-occupied deexcitations), and the formatting in these
+    two cases is subtly different (see cclib/cclib#154 for details).
+
+    Currently cclib will store the second set of transitions (RPA), but this
+    could change in the future if we support multistep jobs.
+    """
+    assert len(logfile.data.etsecs) == 10
+    assert len(logfile.data.etsecs[0]) == 13
+
+    # Check a few vectors manually, since we know the output. X vectors are transitions
+    # from occupied to virtual orbitals, whereas Y vectors the other way around, so cclib
+    # should be switching the indices. Here is the corresponding fragment in the logfile:
+    #     Excited state 1: excitation energy (eV) = 3.1318
+    #     Total energy for state 1: -382.185270280389
+    #     Multiplicity: Triplet
+    #     Trans. Mom.: 0.0000 X 0.0000 Y 0.0000 Z
+    #     Strength : 0.0000
+    #     X: D( 12) --> V( 13) amplitude = 0.0162
+    #     X: D( 28) --> V( 5) amplitude = 0.1039
+    #     Y: D( 28) --> V( 5) amplitude = 0.0605
+    assert logfile.data.etsecs[0][0] == [(11, 0), (47, 0), 0.0162]
+    assert logfile.data.etsecs[0][1] == [(27, 0), (39, 0), 0.1039]
+    assert logfile.data.etsecs[0][2] == [(39, 0), (27, 0), 0.0605]
 
 # These regression tests are for logfiles that are not to be parsed
 # for some reason, and the function should start with 'testnoparse'.
