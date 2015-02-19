@@ -126,7 +126,7 @@ class Logfile(object):
     """Abstract class for logfile objects.
 
     Subclasses defined by cclib:
-        ADF, GAMESS, GAMESSUK, Gaussian, Jaguar, Molpro, NWChem, ORCA,
+        ADF, DALTON, GAMESS, GAMESSUK, Gaussian, Jaguar, Molpro, NWChem, ORCA,
           Psi, QChem
     """
 
