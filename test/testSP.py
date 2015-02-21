@@ -308,16 +308,6 @@ class Psi3SPTest(PsiSPTest):
 class QChemSPTest(GenericSPTest):
     """Customized restricted single point unittest"""
 
-    # By default, Q-Chem doesn't print out an nbasis * nmo dim MO
-    # coefficient matrix, but a nbasis * (nocc + 5) * nbasis matrix.
-    def testdimmocoeffs(self):
-        """Are the dimensions of mocoeffs equal to 1 x nbasis x (nocc + 5)?"""
-        ncols = self.data.homos[0] + 1 + 5
-        self.assertEquals(type(self.data.mocoeffs), type([]))
-        self.assertEquals(len(self.data.mocoeffs), 1)
-        self.assertEquals(self.data.mocoeffs[0].shape,
-                          (self.data.nbasis, ncols))
-
     # Q-Chem cannot print the overlap matrix.
     def testdimaooverlaps(self):
         """Are the dims of the overlap matrix consistent with nbasis? PASS"""
