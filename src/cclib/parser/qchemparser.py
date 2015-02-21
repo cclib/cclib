@@ -91,6 +91,20 @@ class QChem(logfileparser.Logfile):
                                   if len(coords) == correctlen]
         # At the moment, there is no similar correction for other properties!
 
+        # QChem does not print all MO coefficients by default, but rather
+        # up to HOMO+5. So, fill up the missing values with NaNs. If there are
+        # other cases where coefficient are missing, but different ones, this
+        # general afterthought might not be appropriate and the fix will
+        # need to be done while parsing.
+        if hasattr(self, 'mocoeffs'):
+            for im in range(len(self.mocoeffs)):
+                _nmo, _nbasis = self.mocoeffs[im].shape
+                if (_nmo, _nbasis) != (self.nmo, self.nbasis):
+                    coeffs = numpy.empty((self.nmo, self.nbasis))
+                    coeffs[:] = numpy.nan
+                    coeffs[0:_nmo, 0:_nbasis] = self.mocoeffs[im]
+                    self.mocoeffs[im] = coeffs
+
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
 
