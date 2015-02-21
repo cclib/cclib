@@ -336,12 +336,12 @@ class QChem(logfileparser.Logfile):
                 self.mocoeffs = []
             mocoeffs = numpy.empty(shape=(self.nbasis, self.norbdisp_alpha))
             self.parse_matrix(inputfile, mocoeffs)
-            self.mocoeffs.append(mocoeffs)
+            self.mocoeffs.append(mocoeffs.transpose())
 
         if 'Final Beta MO Coefficients' in line:
             mocoeffs = numpy.empty(shape=(self.nbasis, self.norbdisp_beta))
             self.parse_matrix(inputfile, mocoeffs)
-            self.mocoeffs.append(mocoeffs)
+            self.mocoeffs.append(mocoeffs.transpose())
 
         if 'Total energy in the final basis set' in line:
             if not hasattr(self, 'scfenergies'):
@@ -827,7 +827,7 @@ class QChem(logfileparser.Logfile):
             # Only use these MO coefficients if we don't have them
             # from `scf_final_print`.
             if len(self.mocoeffs) == 0:
-                self.mocoeffs.append(mocoeffs)
+                self.mocoeffs.append(mocoeffs.transpose())
 
             # Go back through `aonames` to create `atombasis`.
             assert len(self.aonames) == self.nbasis
@@ -841,7 +841,7 @@ class QChem(logfileparser.Logfile):
             mocoeffs = numpy.empty(shape=(self.nbasis, self.norbdisp_beta_aonames))
             self.parse_matrix_aonames(inputfile, mocoeffs)
             if len(self.mocoeffs) == 1:
-                self.mocoeffs.append(mocoeffs)
+                self.mocoeffs.append(mocoeffs.transpose())
 
         # Population analysis.
 
