@@ -1,3 +1,18 @@
+Changes since cclib-1.3:
+
+Features:
+    * New attribute nooccnos for natural orbital occupation numbers
+    * Read data from XYZ files using OpenBabel bridge
+    * Start basic tests for bridge functionality
+
+Bugfixes:
+
+    * Better handling of ONIOM logfiles in Gaussian (Clyde Fare)
+    * Fix IR intensity bug in Gaussian parser (Clyde Fare)
+    * Fix QChem parser for OpenMP output
+    * Fix parsing TDDFT/RPA transitions (Felix Plasser)
+    * Fix encoding issues for UTF-8 symbols in parsers and bridges
+
 Changes since cclib-1.2:
 
 Features:

@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+#
 # This file is part of cclib (http://cclib.github.io), a library for parsing
 # and interpreting the results of computational chemistry packages.
 #
@@ -340,7 +342,9 @@ class Gaussian(logfileparser.Logfile):
         # Atom C1       Shell     2 SP   3    bf    2 -     5          0.509245180608         -2.664678875191          0.000000000000
         #       0.2941249355D+01 -0.9996722919D-01  0.1559162750D+00
         # ...
-        if line[1:13] == "AO basis set":
+
+        #ONIOM calculations result basis sets reported for atoms that are not in order of atom number which breaks this code (line 390 relies on atoms coming in order)
+        if line[1:13] == "AO basis set" and not self.oniom:
         
             self.gbasis = []
 
@@ -670,10 +674,8 @@ class Gaussian(logfileparser.Logfile):
 
             scanenergies = []
             scanparm = []
-
             colmnames = next(inputfile)
-            self.skip_line(inputfile, 'dashes')
-
+            hyphens = next(inputfile)
             line = next(inputfile)
             while line != hyphens:
                 broken = line.split()
@@ -872,14 +874,27 @@ class Gaussian(logfileparser.Logfile):
                 
                     if not hasattr(self, 'vibirs'):
                         self.vibirs = []
-                    irs = [self.float(f) for f in line[15:].split()]
+
+                    irs = []
+                    for ir in line[15:].split():
+                        try:
+                            irs.append(self.float(ir))
+                        except ValueError:
+                            irs.append(self.float('nan'))
                     self.vibirs.extend(irs)
 
                 if line[1:15] == "Raman Activ --":
                 
                     if not hasattr(self, 'vibramans'):
                         self.vibramans = []
-                    ramans = [self.float(f) for f in line[15:].split()]
+
+                    ramans = []
+                    for raman in line[15:].split():
+                        try:
+                            ramans.append(self.float(raman))
+                        except ValueError:
+                            ramans.append(self.float('nan'))
+
                     self.vibramans.extend(ramans)
                 
                 # Block with displacement should start with this.

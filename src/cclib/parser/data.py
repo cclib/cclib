@@ -53,7 +53,7 @@ class ccData(object):
         moenergies -- molecular orbital energies (list of arrays[1], eV)
         moments -- molecular multipole moments (list of arrays[], a.u.)
         mosyms -- orbital symmetries (list of lists)
-        mpenergies -- molecular electronic energies with Möller-Plesset corrections (array[2], eV)
+        mpenergies -- molecular electronic energies with Møller-Plesset corrections (array[2], eV)
         mult -- multiplicity of the system (integer)
         natom -- number of atoms (integer)
         nbasis -- number of basis functions (integer)
@@ -68,7 +68,7 @@ class ccData(object):
         scfenergies -- molecular electronic energies after SCF (Hartree-Fock, DFT) (array[1], eV)
         scftargets -- targets for convergence of the SCF (array[2])
         scfvalues -- current values for convergence of the SCF (list of arrays[2])
-        temperature -- tempature used for Thermochemistry (float, kelvin)
+        temperature -- temperature used for Thermochemistry (float, kelvin)
         vibanharms -- vibrational anharmonicity constants (array[2], 1/cm)
         vibdisps -- cartesian displacement vectors (array[3], delta angstrom)
         vibfreqs -- vibrational frequencies (array[1], 1/cm)
@@ -148,25 +148,25 @@ class ccData(object):
 
     # Attributes that should be lists of arrays (double precision).
     _listsofarrays = ['mocoeffs', 'moenergies', 'moments', 'scfvalues']
-    
+
     # Attributes that should be dictionaries of arrays (double precision).
     _dictsofarrays = ["atomcharges", "atomspins"]
 
     def __init__(self, attributes={}):
         """Initialize the cclibData object.
-        
+
         Normally called in the parse() method of a Logfile subclass.
-        
+
         Inputs:
             attributes - optional dictionary of attributes to load as data
         """
 
         if attributes:
             self.setattributes(attributes)
-        
+
     def listify(self):
         """Converts all attributes that are arrays or lists/dicts of arrays to lists."""
-        
+
         attrlist = [k for k in self._attrlist if hasattr(self, k)]
         for k in attrlist:
             v = self._attrtypes[k]
@@ -178,10 +178,10 @@ class ccData(object):
                 items = getattr(self, k).iteritems()
                 pairs = [(key, val.tolist()) for key, val in items]
                 setattr(self, k, dict(pairs))
-    
+
     def arrayify(self):
         """Converts appropriate attributes to arrays or lists/dicts of arrays."""
-        
+
         attrlist = [k for k in self._attrlist if hasattr(self, k)]
         for k in attrlist:
             v = self._attrtypes[k]
@@ -200,11 +200,11 @@ class ccData(object):
 
     def getattributes(self, tolists=False):
         """Returns a dictionary of existing data attributes.
-        
+
         Inputs:
             tolists - flag to convert attributes to lists where applicable
         """
-    
+
         if tolists:
             self.listify()
         attributes = {}
@@ -217,20 +217,20 @@ class ccData(object):
 
     def setattributes(self, attributes):
         """Sets data attributes given in a dictionary.
-        
+
         Inputs:
             attributes - dictionary of attributes to set
         Outputs:
             invalid - list of attributes names that were not set, which
                       means they are not specified in self._attrlist
         """
-    
+
         if type(attributes) is not dict:
             raise TypeError("attributes must be in a dictionary")
-    
+
         valid = [a for a in attributes if a in self._attrlist]
         invalid = [a for a in attributes if a not in self._attrlist]
-    
+
         for attr in valid:
             setattr(self, attr, attributes[attr])
 
@@ -258,6 +258,19 @@ class ccData(object):
             except ValueError:
                 args = (attr, type(val), self._attrtypes[attr])
                 raise TypeError("attribute %s is %s instead of %s and could not be converted" % args)
+
+    def write(self, filename=None, *args, **kwargs):
+        """Write parsed attributes to a file.
+
+        Possible extensions:
+          .cjson or .json -  output a chemical JSON file
+          .cml - output a chemical markup language (CML) file
+          .xyz - output a Cartesian XYZ file of the last coordinates available
+        """
+
+        from ..writer import ccwrite
+        outputstr = ccwrite(self, outputdest=filename, *args, **kwargs)
+        return outputstr
 
 
 class ccData_optdone_bool(ccData):
