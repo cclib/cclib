@@ -210,13 +210,13 @@ class ADFSPTest(GenericSPTest):
         self.assertEquals(self.data.fooverlaps.shape, (self.data.nbasis, self.data.nbasis))
 
         # The matrix is symmetric.
-        row = self.data.aooverlaps[0,:]
-        col = self.data.aooverlaps[:,0]
+        row = self.data.fooverlaps[0,:]
+        col = self.data.fooverlaps[:,0]
         self.assertEquals(sum(col - row), 0.0)
 
         # All diagonals should be close to zero.
         for i in range(self.data.nbasis):
-            self.assertInside(self.data.aooverlaps[i,i], 1.0, 0.001)
+            self.assertInside(self.data.fooverlaps[i,i], 1.0, 0.001)
 
 
 class DALTONSPTest(GenericSPTest):
