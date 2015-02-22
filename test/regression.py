@@ -468,9 +468,9 @@ def testQChem_QChem4_2_CO2_out(logfile):
     assert logfile.data.nbasis == nbasis
     assert logfile.data.nmo == nmo
     assert len(logfile.data.mocoeffs) == 1
-    assert logfile.data.mocoeffs[0].shape == (nbasis, nalpha + 5)
+    assert logfile.data.mocoeffs[0].shape == (nmo, nbasis)
     assert logfile.data.mocoeffs[0][0, 0] == -0.0001434
-    assert logfile.data.mocoeffs[0][-1, -1] == -0.0000661
+    assert logfile.data.mocoeffs[0][nalpha + 5 - 1, nbasis - 1] == -0.0000661
     assert len(logfile.data.moenergies) == 1
     assert len(logfile.data.moenergies[0]) == nmo
 
@@ -484,12 +484,12 @@ def testQChem_QChem4_2_CO2_cation_UHF_out(logfile):
     assert logfile.data.nbasis == nbasis
     assert logfile.data.nmo == nmo
     assert len(logfile.data.mocoeffs) == 2
-    assert logfile.data.mocoeffs[0].shape == (nbasis, nalpha + 5)
-    assert logfile.data.mocoeffs[1].shape == (nbasis, nbeta + 5)
+    assert logfile.data.mocoeffs[0].shape == (nmo, nbasis)
+    assert logfile.data.mocoeffs[1].shape == (nmo, nbasis)
     assert logfile.data.mocoeffs[0][0, 0] == -0.0001549
-    assert logfile.data.mocoeffs[0][-1, -1] == -0.0000985
+    assert logfile.data.mocoeffs[0][nalpha + 5 - 1, nbasis - 1] == -0.0000985
     assert logfile.data.mocoeffs[1][0, 0] == -0.0001612
-    assert logfile.data.mocoeffs[1][-1, -1] == -0.0027710
+    assert logfile.data.mocoeffs[1][nbeta + 5 - 1, nbasis - 1] == -0.0027710
     assert len(logfile.data.moenergies) == 2
     assert len(logfile.data.moenergies[0]) == nmo
     assert len(logfile.data.moenergies[1]) == nmo
@@ -504,12 +504,12 @@ def testQChem_QChem4_2_CO2_cation_ROHF_bigprint_allvirt_out(logfile):
     assert logfile.data.nbasis == nbasis
     assert logfile.data.nmo == nmo
     assert len(logfile.data.mocoeffs) == 2
-    assert logfile.data.mocoeffs[0].shape == (nbasis, nalpha + 5)
-    assert logfile.data.mocoeffs[1].shape == (nbasis, nbeta + 5)
+    assert logfile.data.mocoeffs[0].shape == (nmo, nbasis)
+    assert logfile.data.mocoeffs[1].shape == (nmo, nbasis)
     assert logfile.data.mocoeffs[0][0, 0] == -0.0001543
-    assert logfile.data.mocoeffs[0][-1, -3] == -0.0132848
-    assert logfile.data.mocoeffs[1][0, 2] == 0.9927881
-    assert logfile.data.mocoeffs[1][-1, -1] == 0.0018019
+    assert logfile.data.mocoeffs[0][nalpha + 5 - 3, nbasis - 1] == -0.0132848
+    assert logfile.data.mocoeffs[1][2, 0] == 0.9927881
+    assert logfile.data.mocoeffs[1][nbeta + 5 - 1, nbasis - 1] == 0.0018019
     assert len(logfile.data.moenergies) == 2
     assert len(logfile.data.moenergies[0]) == nmo
     assert len(logfile.data.moenergies[1]) == nmo
