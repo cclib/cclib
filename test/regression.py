@@ -659,8 +659,8 @@ old_unittests = {
     "ADF/ADF2004.01/dvb_sp_b.adfout":       ADFSPTest,
     "ADF/ADF2004.01/dvb_sp_c.adfout":       ADFSPTest_nosyms_valence,
     "ADF/ADF2004.01/dvb_sp_d.adfout":       ADFSPTest_nosyms,
-    "ADF/ADF2004.01/dvb_un_sp.adfout":      ADFSPunTest,
-    "ADF/ADF2004.01/dvb_un_sp_c.adfout":    ADFSPunTest,
+    "ADF/ADF2004.01/dvb_un_sp.adfout":      GenericSPunTest,
+    "ADF/ADF2004.01/dvb_un_sp_c.adfout":    GenericSPunTest,
     "ADF/ADF2004.01/dvb_ir.adfout":         GenericIRTest,
 
     "ADF/ADF2006.01/dvb_gopt.adfout":       ADFGeoOptTest,
