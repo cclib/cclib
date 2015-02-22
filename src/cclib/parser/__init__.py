@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+#
 # This file is part of cclib (http://cclib.github.io), a library for parsing
 # and interpreting the results of computational chemistry packages.
 #
@@ -18,6 +20,7 @@
 #         from cclib.parser import Gaussian
 
 from .adfparser import ADF
+from .daltonparser import DALTON
 from .gamessparser import GAMESS
 from .gamessukparser import GAMESSUK
 from .gaussianparser import Gaussian
@@ -29,7 +32,9 @@ from .psiparser import Psi
 from .qchemparser import QChem
 
 # This allow users to type:
-#         from cclib.parser import ccopen
+#   from cclib.parser import ccopen
+#   from cclib.parser import ccread
 from .ccopen import ccopen
+from .ccopen import ccread
 
 from .data import ccData
