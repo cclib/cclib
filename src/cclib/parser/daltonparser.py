@@ -23,9 +23,6 @@ from . import utils
 class DALTON(logfileparser.Logfile):
     """A DALTON log file."""
 
-    # Used to index self.scftargets[].
-    SCFRMS, SCFMAX, SCFENERGY = list(range(3))
-
     def __init__(self, *args, **kwargs):
 
         # Call the __init__ method of the superclass
@@ -42,20 +39,48 @@ class DALTON(logfileparser.Logfile):
     def normalisesym(self, label):
         """Normalise the symmetries used by DALTON."""
 
-        # it appears that DALTON is using the correct labels
+        # It appears that DALTON is using the correct labels.
         return label
 
     def before_parsing(self):
 
-        self.firststdorient = True # Used to decide whether to wipe the atomcoords clean
-        self.scftype = "none" # Type of SCF calculation: BLYP, RHF, ROHF, etc.
+        # Used to decide whether to wipe the atomcoords clean.
+        self.firststdorient = True
 
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
 
-        # Since DALTON sometimes uses symmetry labels (Ag, Au, etc.) and
-        # sometimes the symmetry group index, we need to parse and keep
-        # a mapping between these two for later.
+        # This section is close to the beginning of the file. Currently we parse
+        # jsut natom from this, be we can get a bit more.
+        #
+        #  Atoms and basis sets
+        #  --------------------
+        #
+        #  Number of atom types :    6
+        #  Total number of atoms:   20
+        #
+        #  Basis set used is "STO-3G" from the basis set library.
+        #
+        #  label    atoms   charge   prim   cont     basis
+        #  ----------------------------------------------------------------------
+        #  C           6    6.0000    15     5      [6s3p|2s1p]                                        
+        #  H           4    1.0000     3     1      [3s|1s]                                            
+        #  C           2    6.0000    15     5      [6s3p|2s1p]                                        
+        #  H           2    1.0000     3     1      [3s|1s]                                            
+        #  C           2    6.0000    15     5      [6s3p|2s1p]                                        
+        #  H           4    1.0000     3     1      [3s|1s]                                            
+        #  ----------------------------------------------------------------------
+        #  total:     20   70.0000   180    60
+        #  ----------------------------------------------------------------------
+        #
+        #  Threshold for neglecting AO integrals:  1.00D-12
+        #
+        if "Total number of atoms:" in line:
+            self.set_attribute("natom", int(line.split()[-1]))
+
+        # Since DALTON sometimes uses symmetry labels (Ag, Au, etc.) and sometimes
+        # just the symmetry group index, we need to parse and keep a mapping between
+        # these two for later.
         #
         #  Symmetry Orbitals
         #  -----------------
@@ -89,46 +114,80 @@ class DALTON(logfileparser.Logfile):
                 for i in range(sc):
                     orbital = inputfile.next()
 
-        # -------------------------------------------------
-        if "Final DFT energy" in line or "Final HF energy" in line:
-            if not hasattr(self, "scfenergies"):
-                self.scfenergies = []
-            temp = line.split()
-            self.scfenergies.append(utils.convertor(float(temp[-1]), "hartree", "eV"))
+        #      Wave function specification
+        #      ============================
+        # @    Wave function type        >>> KS-DFT <<<
+        # @    Number of closed shell electrons          70
+        # @    Number of electrons in active shells       0
+        # @    Total charge of the molecule               0
+        #
+        # @    Spin multiplicity and 2 M_S                1         0
+        # @    Total number of symmetries                 4 (point group: C2h)
+        # @    Reference state symmetry                   1 (irrep name : Ag )
+        # 
+        #     This is a DFT calculation of type: B3LYP
+        # ...
+        #
+        if "@    Total charge of the molecule" in line:
+            self.set_attribute("charge", int(line.split()[-1]))
+        if "@    Spin multiplicity and 2 M_S                1         0" in line:
+            self.set_attribute("mult", int(line.split()[-2]))
 
-        # -------------------------------------------------
-        if not hasattr(self, "natom") and "Total number of atoms:" in line:
+        #     Orbital specifications
+        #     ======================
+        #     Abelian symmetry species          All |    1    2    3    4
+        #                                           |  Ag   Au   Bu   Bg 
+        #                                       --- |  ---  ---  ---  ---
+        #     Total number of orbitals           60 |   25    5   25    5
+        #     Number of basis functions          60 |   25    5   25    5
+        #
+        #      ** Automatic occupation of RKS orbitals **
+        #
+        #      -- Initial occupation of symmetries is determined from extended Huckel guess.           
+        #      -- Initial occupation of symmetries is :
+        # @    Occupied SCF orbitals              35 |   15    2   15    3
+        #
+        #     Maximum number of Fock   iterations      0
+        #     Maximum number of DIIS   iterations     60
+        #     Maximum number of QC-SCF iterations     60
+        #     Threshold for SCF convergence     1.00D-05
+        #     This is a DFT calculation of type: B3LYP
+        # ...
+        #
+        if "Total number of orbitals" in line:
+            self.set_attribute("nbasis", int(line.split()[4]))
+        if "@    Occupied SCF orbitals" in line and not hasattr(self, 'homos'):
             temp = line.split()
-            self.set_attribute("natom", int(temp[-1]))
-
-        # -------------------------------------------------
-        if not hasattr(self, "charge") and "@    Total charge of the molecule" in line:
-            temp = line.split()
-            self.set_attribute("charge", int(temp[-1]))
-
-        # -------------------------------------------------
-        if not hasattr(self, "mult") and "@    Spin multiplicity and 2 M_S                1         0" in line:
-            temp = line.split()
-            self.set_attribute("mult", int(temp[-2]))
-
-        # -------------------------------------------------
-        if not hasattr(self, "nbasis") and "Total number of orbitals" in line:
-            temp = line.split()
-            self.set_attribute("nbasis", int(temp[4]))
-
-        # -------------------------------------------------
-        # SCF target threshold
+            homos = int(temp[4])
+            self.set_attribute('homos', [homos-1]) # it is the index (python counting, so -1)
         if "Threshold for SCF convergence" in line:
             if not hasattr(self, "scftargets"):
                 self.scftargets = []
-            temp = line.split()
-            scftarget = self.float(temp[-1])
+            scftarget = self.float(line.split()[-1])
             self.scftargets.append([scftarget])
 
-        # -------------------------------------------------
-        # starting the SCF iterations
+        #  *********************************************
+        #  ***** DIIS optimization of Hartree-Fock *****
+        #  *********************************************
+        # 
+        #  C1-DIIS algorithm; max error vectors =    8
         #
-        # with and without symmetry, the "Total energy" line is shifted a little.
+        #  Automatic occupation of symmetries with  70 electrons.
+        #
+        #  Iter     Total energy    Error norm  Delta(E)    SCF occupation
+        #  -----------------------------------------------------------------------------
+        #       K-S energy, electrons, error :    -46.547567739269  69.9999799123   -2.01D-05
+        # @  1  -381.645762476       4.00D+00  -3.82D+02    15   2  15   3
+        #       Virial theorem: -V/T =      2.008993
+        # @      MULPOP C   _1  0.15; C   _2  0.15; C   _1  0.12; C   _2  0.12; C   _1  0.11; C   _2  0.11; H   _1 -0.15; H   _2 -0.15; H   _1 -0.14; H   _2 -0.14; 
+        # @             C   _1  0.23; C   _2  0.23; H   _1 -0.15; H   _2 -0.15; C   _1  0.08; C   _2  0.08; H   _1 -0.12; H   _2 -0.12; H   _1 -0.13; H   _2 -0.13; 
+        #  -----------------------------------------------------------------------------
+        #       K-S energy, electrons, error :    -46.647668038900  69.9999810430   -1.90D-05
+        # @  2  -381.949410128       1.05D+00  -3.04D-01    15   2  15   3
+        #       Virial theorem: -V/T =      2.013393
+        # ...
+        #
+        # Wwith and without symmetry, the "Total energy" line is shifted a little.
         if "Iter" in line and "Total energy" in line:
             iteration = 0
             converged = False
@@ -153,44 +212,6 @@ class DALTON(logfileparser.Logfile):
                     converged = True
 
             self.scfvalues.append(values)
-
-        if "@    Occupied SCF orbitals" in line and not hasattr(self, 'homos'):
-            temp = line.split()
-            homos = int(temp[4])
-            self.set_attribute('homos', [homos-1]) # it is the index (python counting, so -1)
-
-        # -------------------------------------------------
-        # the molecular geometry requires the use of of
-        # .RUN PROPERTIES
-        if "Molecular geometry (au)" in line:
-            if not hasattr(self, "atomcoords"):
-                self.atomcoords = []
-
-            if self.firststdorient:
-                self.firststdorient = False
-
-            line = next(inputfile)
-            line = next(inputfile)
-            #line = next(inputfile)
-
-            atomcoords = []
-            atomnos = []
-            for i in range(self.natom):
-                line = next(inputfile)
-                temp = line.split()
-                atomnos.append(self.table.number[temp[0]])
-
-                # if symmetry has been enabled, extra labels are printed. if not, the list is one shorter
-                coords = [1, 2, 3]
-                try:
-                    float(temp[1])
-                except ValueError:
-                    coords = [2, 3, 4]
-
-
-                atomcoords.append([utils.convertor(float(temp[i]), "bohr", "Angstrom") for i in coords])
-            self.atomcoords.append(atomcoords)
-            self.set_attribute('atomnos', atomnos)
 
         # DALTON organizes the energies by symmetry, so we need to parser first,
         # and then sort the energies (and labels) before we store them.
@@ -305,6 +326,68 @@ class DALTON(logfileparser.Logfile):
                     self.set_attribute('nmo', len(self.moenergies[0]))
 
             #self.mocoeffs = [numpy.zeros((self.nmo, self.nbasis), "d")]
+
+        #                       .-----------------------------------.
+        #                       | >>> Final results from SIRIUS <<< |
+        #                       `-----------------------------------'
+        #
+        #
+        # @    Spin multiplicity:           1
+        # @    Spatial symmetry:            1 ( irrep  Ag  in C2h )
+        # @    Total charge of molecule:    0
+        #
+        # @    Final DFT energy:           -382.050716652387                 
+        # @    Nuclear repulsion:           445.936979976608
+        # @    Electronic energy:          -827.987696628995
+        #
+        # @    Final gradient norm:           0.000003746706
+        # ...
+        #
+        if "Final DFT energy" in line or "Final HF energy" in line:
+            if not hasattr(self, "scfenergies"):
+                self.scfenergies = []
+            temp = line.split()
+            self.scfenergies.append(utils.convertor(float(temp[-1]), "hartree", "eV"))
+
+        # The molecular geometry requires the use of .RUN PROPERTIES in the input.
+        #
+        #                             Molecular geometry (au)
+        #                             -----------------------
+        #
+        # C   _1     1.3498778652            2.3494125195            0.0000000000
+        # C   _2    -1.3498778652           -2.3494125195            0.0000000000
+        # C   _1     2.6543517307            0.0000000000            0.0000000000
+        # ...
+        #
+        if "Molecular geometry (au)" in line:
+            if not hasattr(self, "atomcoords"):
+                self.atomcoords = []
+
+            if self.firststdorient:
+                self.firststdorient = False
+
+            line = next(inputfile)
+            line = next(inputfile)
+            #line = next(inputfile)
+
+            atomcoords = []
+            atomnos = []
+            for i in range(self.natom):
+                line = next(inputfile)
+                temp = line.split()
+                atomnos.append(self.table.number[temp[0]])
+
+                # if symmetry has been enabled, extra labels are printed. if not, the list is one shorter
+                coords = [1, 2, 3]
+                try:
+                    float(temp[1])
+                except ValueError:
+                    coords = [2, 3, 4]
+
+
+                atomcoords.append([utils.convertor(float(temp[i]), "bohr", "Angstrom") for i in coords])
+            self.atomcoords.append(atomcoords)
+            self.set_attribute('atomnos', atomnos)
 
         # -------------------------------------------------
         # extract the center of mass line
