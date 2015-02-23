@@ -214,9 +214,11 @@ class ADFSPTest(GenericSPTest):
         col = self.data.fooverlaps[:,0]
         self.assertEquals(sum(col - row), 0.0)
 
-        # All diagonals should be close to zero.
-        for i in range(self.data.nbasis):
-            self.assertInside(self.data.fooverlaps[i,i], 1.0, 0.001)
+        # Although the diagonal elements are close to zero, the SFOs
+        # are generally not normalized, so test for a few specific values.
+        self.assertInside(self.data.fooverlaps[0, 0], 1.00003, 0.00001)
+        self.assertInside(self.data.fooverlaps[1, 1], 1.02672, 0.00001)
+        self.assertInside(self.data.fooverlaps[2, 2], 1.03585, 0.00001)
 
 
 class DALTONSPTest(GenericSPTest):
