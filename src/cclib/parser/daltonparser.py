@@ -53,8 +53,44 @@ class DALTON(logfileparser.Logfile):
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
 
+        # Since DALTON sometimes uses symmetry labels (Ag, Au, etc.) and
+        # sometimes the symmetry group index, we need to parse and keep
+        # a mapping between these two for later.
+        #
+        #  Symmetry Orbitals
+        #  -----------------
+        #
+        #  Number of orbitals in each symmetry:          25    5   25    5
+        #
+        #
+        #  Symmetry  Ag ( 1)
+        #
+        #    1     C        1s         1 +    2
+        #    2     C        1s         3 +    4
+        # ...
+        #
+        if line.strip() == "Symmetry Orbitals":
+
+            self.skip_lines(inputfile, ['d', 'b'])
+
+            line = inputfile.next()
+            self.symcounts = [int(c) for c in line.split()[-4:]]
+
+            self.symlabels = []
+            for sc in self.symcounts:
+
+                self.skip_lines(inputfile, ['b', 'b'])
+
+                line = inputfile.next()
+                assert line.split()[0] == "Symmetry"
+                self.symlabels.append(line.split()[1])
+
+                self.skip_line(inputfile, 'blank')
+                for i in range(sc):
+                    orbital = inputfile.next()
+
         # -------------------------------------------------
-        if "Final DFT energy" in line:
+        if "Final DFT energy" in line or "Final HF energy" in line:
             if not hasattr(self, "scfenergies"):
                 self.scfenergies = []
             temp = line.split()
@@ -156,14 +192,39 @@ class DALTON(logfileparser.Logfile):
             self.atomcoords.append(atomcoords)
             self.set_attribute('atomnos', atomnos)
 
-        # -------------------------------------------------
-        # extract MO energies from the finished calculation
-        # DALTON organizes the energies by symmetry, so we need to sort
-        # the energies (and labels) before we store them
+        # DALTON organizes the energies by symmetry, so we need to parser first,
+        # and then sort the energies (and labels) before we store them.
         #
-        # the line:
-        # *** SCF orbital energy analysis ***
-        # triggers the analysis
+        # The formatting varies depending on RHF/DFT and/or version. Here is
+        # an example from a DFT job:
+        #
+        #  *** SCF orbital energy analysis ***
+        #
+        #  Only the five lowest virtual orbital energies printed in each symmetry.
+        #
+        #  Number of electrons :   70
+        #  Orbital occupations :   15    2   15    3
+        #
+        #  Sym       Kohn-Sham orbital energies
+        #
+        # 1 Ag    -10.01616533   -10.00394288   -10.00288640   -10.00209612    -9.98818062
+        #          -0.80583154    -0.71422407    -0.58487249    -0.55551093    -0.50630125
+        # ...
+        #
+        # Here is an example from an RHF job that only has symmetry group indices:
+        #
+        #  *** SCF orbital energy analysis ***
+        #
+        #  Only the five lowest virtual orbital energies printed in each symmetry.
+        #
+        #  Number of electrons :   70
+        #  Orbital occupations :   15    2   15    3
+        #
+        #  Sym       Hartree-Fock orbital energies
+        #
+        #   1    -11.04052518   -11.03158921   -11.02882211   -11.02858563   -11.01747921
+        #         -1.09029777    -0.97492511    -0.79988247    -0.76282547    -0.69677619
+        # ...
         #
         if "*** SCF orbital energy analysis ***" in line:
 
@@ -202,9 +263,18 @@ class DALTON(logfileparser.Logfile):
                 if len(temp) == 0:
                     continue
 
-                # this first line has the orbital symmetry information
-                sym = self.normalisesym(temp[1])
-                temp = [float(t) for t in temp[2:]]
+                # The first line has the orbital symmetry information, but sometimes
+                # it's the label and sometimes it's the index. There are always five
+                # energies per line, though, so we can deduce if we have the labels or
+                # not just the index. In the latter case, we depend on the labels
+                # being read earlier into the list `symlabels`.
+                if len(temp) == 7:
+                    sym = self.normalisesym(temp[1])
+                    temp = [float(t) for t in temp[2:]]
+                if len(temp) == 6:
+                    sym = self.normalisesym(self.symlabels[int(temp[0])-1])
+                    temp = [float(t) for t in temp[1:]]
+
                 moenergies.extend(temp)
                 mosyms.extend(len(temp)*[sym])
                 while len(temp) > 0:
