@@ -622,6 +622,28 @@ class OrcaSPTest_3_21g(OrcaSPTest):
     def testnbasis(self):
         """The basis set here was 3-21G instead of STO-3G."""
         self.assertEquals(self.data.nbasis, 110)
+    def testaooverlaps(self):
+        """The basis set here was 3-21G instead of STO-3G."""
+
+        self.assertEquals(self.data.aooverlaps.shape,
+                            (self.data.nbasis, self.data.nbasis))
+
+        # The matrix is symmetric.
+        row = self.data.aooverlaps[0,:]
+        col = self.data.aooverlaps[:,0]
+        self.assertEquals(sum(col - row), 0.0)
+
+        # All values on diagonal should be exactly zero.
+        for i in range(self.data.nbasis):
+            self.assertEquals(self.data.aooverlaps[i,i], 1.0)
+
+        # Check some additional values that don't seem to move around
+        # between programs.
+        self.assertInside(self.data.aooverlaps[0, 1], 0.19, 0.01)
+        self.assertInside(self.data.aooverlaps[1, 0], 0.19, 0.01)
+        self.assertEquals(self.data.aooverlaps[3,0], 0.0)
+        self.assertEquals(self.data.aooverlaps[0,3], 0.0)
+
 
 class OrcaGeoOptTest_3_21g(OrcaGeoOptTest):
     b3lyp_energy = -10460
