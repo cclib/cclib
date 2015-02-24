@@ -595,6 +595,28 @@ class JaguarSPTest_6_31gss(GenericSPTest):
     def testlengthmoenergies(self):
         """Some tests printed all MO energies apparently."""
         self.assertEquals(len(self.data.moenergies[0]), self.data.nmo)
+    def testaooverlaps(self):
+        """Overlap values are different in 6-31G** than STO-3G."""
+
+        self.assertEquals(self.data.aooverlaps.shape,
+                            (self.data.nbasis, self.data.nbasis))
+
+        # The matrix is symmetric.
+        row = self.data.aooverlaps[0,:]
+        col = self.data.aooverlaps[:,0]
+        self.assertEquals(sum(col - row), 0.0)
+
+        # All values on diagonal should be exactly zero.
+        for i in range(self.data.nbasis):
+            self.assertEquals(self.data.aooverlaps[i,i], 1.0)
+
+        # Check some additional values that don't seem to move around
+        # between programs.
+        self.assertInside(self.data.aooverlaps[0, 1], 0.22, 0.01)
+        self.assertInside(self.data.aooverlaps[1, 0], 0.22, 0.01)
+        self.assertEquals(self.data.aooverlaps[2,0], 0.0)
+        self.assertEquals(self.data.aooverlaps[0,2], 0.0)
+
 
 class JaguarSPunTest_nmo_all(JaguarSPunTest):
     def testmoenergies(self):
