@@ -485,6 +485,14 @@ def testQChem_QChem4_2_CH4___Na__out(logfile):
 # These regression tests are for logfiles that are not to be parsed
 # for some reason, and the function should start with 'testnoparse'.
 
+def testnoparseADF_ADF2004_01_mo_sp_adfout(filename):
+    """This is an ADF file that has a different number of AO functions
+    and SFO functions. Currently nbasis parses the SFO count. This will
+    be discussed and resolved in the future (see issue #170), and can
+    this to get rid of the error in the meantime.
+    """
+    pass
+
 def testnoparseGaussian_Gaussian09_coeffs_log(filename):
     """This is a test for a Gaussian file with more than 999 basis functions.
 
