@@ -54,7 +54,7 @@ except ImportError:
 triggers = [
 
 (ADF,       ["Amsterdam Density Functional"],                   True),
-(DALTON,    ["DALTON 201"],                                     True),
+(DALTON,    ["Dalton - An Electronic Structure Program"],       True),
 (GAMESS,    ["GAMESS"],                                         False),
 (GAMESS,    ["GAMESS VERSION"],                                 True),
 (GAMESSUK,  ["G A M E S S - U K"],                              True),
