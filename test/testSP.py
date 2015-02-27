@@ -198,6 +198,10 @@ class GenericSPTest(bettertest.TestCase):
 class ADFSPTest(GenericSPTest):
     """Customized restricted single point unittest"""
 
+    foverlap00 = 1.00003
+    foverlap11 = 1.02672
+    foverlap22 = 1.03585
+
     # ADF parser does not extract atombasis.
     def testatombasis(self):
         """Are the indices in atombasis the right amount and unique? PASS"""
@@ -219,9 +223,9 @@ class ADFSPTest(GenericSPTest):
 
         # Although the diagonal elements are close to zero, the SFOs
         # are generally not normalized, so test for a few specific values.
-        self.assertInside(self.data.fooverlaps[0, 0], 1.00003, 0.00001)
-        self.assertInside(self.data.fooverlaps[1, 1], 1.02672, 0.00001)
-        self.assertInside(self.data.fooverlaps[2, 2], 1.03585, 0.00001)
+        self.assertInside(self.data.fooverlaps[0, 0], self.foverlap00, 0.00001)
+        self.assertInside(self.data.fooverlaps[1, 1], self.foverlap11, 0.00001)
+        self.assertInside(self.data.fooverlaps[2, 2], self.foverlap22, 0.00001)
 
 
 class DALTONSPTest(GenericSPTest):

@@ -555,6 +555,9 @@ for m, module in test_modules.items():
             globals()[name] = getattr(module, name)
 
 class ADFSPTest_nosyms(test_modules['SP'].ADFSPTest):
+    foverlap00 = 1.00000
+    foverlap11 = 0.99999
+    foverlap22 = 0.99999
     def testsymlabels(self):
         """Symmetry labels were not printed here. PASS"""
 
