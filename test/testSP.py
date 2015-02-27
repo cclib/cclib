@@ -186,8 +186,6 @@ class GenericSPTest(bettertest.TestCase):
             for m in moment32:
                 self.assertInside(m, 0.0, 0.001)
 
-
-
 class ADFSPTest(GenericSPTest):
     """Customized restricted single point unittest"""
 
@@ -203,21 +201,15 @@ class ADFSPTest(GenericSPTest):
 class DALTONSPTest(GenericSPTest):
     """Customized restricted single point unittest"""
 
-    # DALTON does not print the overlap matrix
+    # DALTON does not have any options to print the overlap matrix (as of 2013).
     def testdimaooverlaps(self):
         """Are the dims of the overlap matrix consistent with nbasis? PASS"""
-
-    # DALTON does not print the overlap matrix
     def testaooverlaps(self):
         """Are the first row and column of the overlap matrix identical? PASS"""
 
     # `mocoeffs` not implemented yet.
     def testdimmocoeffs(self):
         """Are the dimensions of mocoeffs equal to 1 x nmo x nbasis? PASS"""
-
-    # `atombasis` not implemented yet.
-    def testatombasis(self):
-        """Are the indices in atombasis the right amount and unique? PASS"""
 
     # DALTON has a very low accuracy for the printed values of all populations (2 decimals rounded
     # in a weird way), so let it slide for now.

@@ -50,8 +50,9 @@ class DALTON(logfileparser.Logfile):
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
 
-        # This section is close to the beginning of the file. Currently we parse
-        # jsut natom from this, be we can get a bit more.
+        # This section is close to the beginning of the file, and can be used
+        # to parse natom, nbasis and atomnos. Note that DALTON operates on the
+        # idea of atom type, which are not necessarily unique.
         #
         #  Atoms and basis sets
         #  --------------------
@@ -75,8 +76,45 @@ class DALTON(logfileparser.Logfile):
         #
         #  Threshold for neglecting AO integrals:  1.00D-12
         #
-        if "Total number of atoms:" in line:
+        if line.strip() == "Atoms and basis sets":
+
+            self.skip_lines(inputfile, ['d', 'b'])
+
+            line = next(inputfile)
+            assert "Number of atom types" in line
+            self.ntypes = int(line.split()[-1])
+
+            line = next(inputfile)
+            assert "Total number of atoms:" in line
             self.set_attribute("natom", int(line.split()[-1]))
+
+            self.skip_lines(inputfile, ['b', 'basisname', 'b'])
+
+            line = next(inputfile)
+            cols = line.split()
+            iatoms = cols.index('atoms')
+            icharge = cols.index('charge')
+            icont = cols.index('cont')
+
+            self.skip_line(inputfile, 'dashes')
+
+            atomnos = []
+            atombasis = []
+            nbasis = 0
+            for itype in range(self.ntypes):
+                line = next(inputfile)
+                cols = line.split()
+                atoms = int(cols[iatoms])
+                charge = float(cols[icharge])
+                assert int(charge) == charge
+                charge = int(charge)
+                cont = int(cols[icont])
+                for at in range(atoms):
+                    atomnos.append(charge)
+                    atombasis.append(list(range(nbasis, nbasis + cont)))
+                    nbasis += cont
+            self.set_attribute('atomnos', atomnos)
+            self.set_attribute('atombasis', atombasis)
 
         # Since DALTON sometimes uses symmetry labels (Ag, Au, etc.) and sometimes
         # just the symmetry group index, we need to parse and keep a mapping between
@@ -350,6 +388,8 @@ class DALTON(logfileparser.Logfile):
             self.scfenergies.append(utils.convertor(float(temp[-1]), "hartree", "eV"))
 
         # The molecular geometry requires the use of .RUN PROPERTIES in the input.
+        # Note that the second column is not the nuclear charge, but the atom type
+        # index used internally by DALTON.
         #
         #                             Molecular geometry (au)
         #                             -----------------------
@@ -371,11 +411,9 @@ class DALTON(logfileparser.Logfile):
             #line = next(inputfile)
 
             atomcoords = []
-            atomnos = []
             for i in range(self.natom):
                 line = next(inputfile)
                 temp = line.split()
-                atomnos.append(self.table.number[temp[0]])
 
                 # if symmetry has been enabled, extra labels are printed. if not, the list is one shorter
                 coords = [1, 2, 3]
@@ -387,7 +425,6 @@ class DALTON(logfileparser.Logfile):
 
                 atomcoords.append([utils.convertor(float(temp[i]), "bohr", "Angstrom") for i in coords])
             self.atomcoords.append(atomcoords)
-            self.set_attribute('atomnos', atomnos)
 
         # -------------------------------------------------
         # extract the center of mass line
