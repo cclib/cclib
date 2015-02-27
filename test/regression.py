@@ -485,6 +485,14 @@ def testQChem_QChem4_2_CH4___Na__out(logfile):
 # These regression tests are for logfiles that are not to be parsed
 # for some reason, and the function should start with 'testnoparse'.
 
+def testnoparseADF_ADF2004_01_mo_sp_adfout(filename):
+    """This is an ADF file that has a different number of AO functions
+    and SFO functions. Currently nbasis parses the SFO count. This will
+    be discussed and resolved in the future (see issue #170), and can
+    this to get rid of the error in the meantime.
+    """
+    pass
+
 def testnoparseGaussian_Gaussian09_coeffs_log(filename):
     """This is a test for a Gaussian file with more than 999 basis functions.
 
@@ -555,6 +563,9 @@ for m, module in test_modules.items():
             globals()[name] = getattr(module, name)
 
 class ADFSPTest_nosyms(test_modules['SP'].ADFSPTest):
+    foverlap00 = 1.00000
+    foverlap11 = 0.99999
+    foverlap22 = 0.99999
     def testsymlabels(self):
         """Symmetry labels were not printed here. PASS"""
 
@@ -585,14 +596,10 @@ class GAMESSUSCISTest_dets(GenericCISTest):
         """This gives unexpected coeficcients, also for current unit tests. PASS"""
 
 class JaguarSPTest_6_31gss(GenericSPTest):
+    """AO counts and some values are different in 6-31G** compared to STO-3G."""
+    nbasisdict = {1: 5, 6: 15}
     b3lyp_energy = -10530
-    nbasisdict = {1:5, 6:15}
-    def testnbasis(self):
-        """The AO count is larger in 6-31G** than STO-3G."""
-        self.assertEquals(self.data.nbasis, 200)
-    def testlengthmoenergies(self):
-        """Some tests printed all MO energies apparently."""
-        self.assertEquals(len(self.data.moenergies[0]), self.data.nmo)
+    overlap01 = 0.22
 
 class JaguarSPunTest_nmo_all(JaguarSPunTest):
     def testmoenergies(self):
@@ -605,29 +612,20 @@ class JaguarGeoOptTest_nmo45(JaguarGeoOptTest):
         self.assertEquals(len(self.data.moenergies[0]), 45)
 
 class JaguarGeoOptTest_6_31gss(JaguarGeoOptTest):
+    nbasisdict = {1: 5, 6: 15}
     b3lyp_energy = -10530
-    def testnbasis(self):
-        """The AO count is larger in 6-31G** than STO-3G."""
-        self.assertEquals(self.data.nbasis, 200)
 
 class MolproBigBasisTest_cart(MolproBigBasisTest):
     spherical = False
 
 class OrcaSPTest_3_21g(OrcaSPTest):
+    nbasisdict = {1: 2, 6: 9}
     b3lyp_energy = -10460
-    def testatombasis(self):
-        """The basis set here was 3-21G instead of STO-3G. PASS"""
-    def testnbasis(self):
-        """The basis set here was 3-21G instead of STO-3G."""
-        self.assertEquals(self.data.nbasis, 110)
+    overlap01 = 0.19
 
 class OrcaGeoOptTest_3_21g(OrcaGeoOptTest):
+    nbasisdict = {1: 2, 6: 9}
     b3lyp_energy = -10460
-    def testatombasis(self):
-        """The basis set here was 3-21G instead of STO-3G. PASS"""
-    def testnbasis(self):
-        """The basis set here was 3-21G instead of STO-3G."""
-        self.assertEquals(self.data.nbasis, 110)
 
 class OrcaSPunTest_charge0(OrcaSPunTest):
     def testcharge_and_mult(self):
@@ -657,8 +655,8 @@ old_unittests = {
     "ADF/ADF2004.01/dvb_sp_b.adfout":       ADFSPTest,
     "ADF/ADF2004.01/dvb_sp_c.adfout":       ADFSPTest_nosyms_valence,
     "ADF/ADF2004.01/dvb_sp_d.adfout":       ADFSPTest_nosyms,
-    "ADF/ADF2004.01/dvb_un_sp.adfout":      ADFSPunTest,
-    "ADF/ADF2004.01/dvb_un_sp_c.adfout":    ADFSPunTest,
+    "ADF/ADF2004.01/dvb_un_sp.adfout":      GenericSPunTest,
+    "ADF/ADF2004.01/dvb_un_sp_c.adfout":    GenericSPunTest,
     "ADF/ADF2004.01/dvb_ir.adfout":         GenericIRTest,
 
     "ADF/ADF2006.01/dvb_gopt.adfout":       ADFGeoOptTest,

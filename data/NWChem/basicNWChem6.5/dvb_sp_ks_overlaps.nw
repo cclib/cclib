@@ -26,8 +26,10 @@
   basis
     *    library sto-3g
   end
-  scf
-    print "final vectors" "final vectors analysis" "ao overlap"
+  dft
+    xc b3lyp
+    grid xfine
+    print "final vectors" "final vectors analysis" "overlap"
   end
   property
     mulliken
@@ -35,5 +37,4 @@
     quadrupole
     octupole
   end
-  task scf property
-
+  task dft property
