@@ -564,8 +564,6 @@ class ADFSPTest_nosyms_valence(ADFSPTest_nosyms):
         self.assertEquals(len(self.data.moenergies[0]), 45)
         self.assertEquals(self.data.moenergies[0][0], 99999.0)
 
-# DALTON #
-
 class DALTONSPTest_nosyms_nolabels(DALTONSPTest):
     def testsymlabels(self):
         """Are all the symmetry labels either Ag/u or Bg/u?. PASS"""
@@ -587,36 +585,10 @@ class GAMESSUSCISTest_dets(GenericCISTest):
         """This gives unexpected coeficcients, also for current unit tests. PASS"""
 
 class JaguarSPTest_6_31gss(GenericSPTest):
+    """AO counts and some values are different in 6-31G** compared to STO-3G."""
+    nbasisdict = {1: 5, 6: 15}
     b3lyp_energy = -10530
-    nbasisdict = {1:5, 6:15}
-    def testnbasis(self):
-        """The AO count is larger in 6-31G** than STO-3G."""
-        self.assertEquals(self.data.nbasis, 200)
-    def testlengthmoenergies(self):
-        """Some tests printed all MO energies apparently."""
-        self.assertEquals(len(self.data.moenergies[0]), self.data.nmo)
-    def testaooverlaps(self):
-        """Overlap values are different in 6-31G** than STO-3G."""
-
-        self.assertEquals(self.data.aooverlaps.shape,
-                            (self.data.nbasis, self.data.nbasis))
-
-        # The matrix is symmetric.
-        row = self.data.aooverlaps[0,:]
-        col = self.data.aooverlaps[:,0]
-        self.assertEquals(sum(col - row), 0.0)
-
-        # All values on diagonal should be exactly zero.
-        for i in range(self.data.nbasis):
-            self.assertEquals(self.data.aooverlaps[i,i], 1.0)
-
-        # Check some additional values that don't seem to move around
-        # between programs.
-        self.assertInside(self.data.aooverlaps[0, 1], 0.22, 0.01)
-        self.assertInside(self.data.aooverlaps[1, 0], 0.22, 0.01)
-        self.assertEquals(self.data.aooverlaps[2,0], 0.0)
-        self.assertEquals(self.data.aooverlaps[0,2], 0.0)
-
+    overlap01 = 0.22
 
 class JaguarSPunTest_nmo_all(JaguarSPunTest):
     def testmoenergies(self):
@@ -629,51 +601,20 @@ class JaguarGeoOptTest_nmo45(JaguarGeoOptTest):
         self.assertEquals(len(self.data.moenergies[0]), 45)
 
 class JaguarGeoOptTest_6_31gss(JaguarGeoOptTest):
+    nbasisdict = {1: 5, 6: 15}
     b3lyp_energy = -10530
-    def testnbasis(self):
-        """The AO count is larger in 6-31G** than STO-3G."""
-        self.assertEquals(self.data.nbasis, 200)
 
 class MolproBigBasisTest_cart(MolproBigBasisTest):
     spherical = False
 
 class OrcaSPTest_3_21g(OrcaSPTest):
+    nbasisdict = {1: 2, 6: 9}
     b3lyp_energy = -10460
-    def testatombasis(self):
-        """The basis set here was 3-21G instead of STO-3G. PASS"""
-    def testnbasis(self):
-        """The basis set here was 3-21G instead of STO-3G."""
-        self.assertEquals(self.data.nbasis, 110)
-    def testaooverlaps(self):
-        """The basis set here was 3-21G instead of STO-3G."""
-
-        self.assertEquals(self.data.aooverlaps.shape,
-                            (self.data.nbasis, self.data.nbasis))
-
-        # The matrix is symmetric.
-        row = self.data.aooverlaps[0,:]
-        col = self.data.aooverlaps[:,0]
-        self.assertEquals(sum(col - row), 0.0)
-
-        # All values on diagonal should be exactly zero.
-        for i in range(self.data.nbasis):
-            self.assertEquals(self.data.aooverlaps[i,i], 1.0)
-
-        # Check some additional values that don't seem to move around
-        # between programs.
-        self.assertInside(self.data.aooverlaps[0, 1], 0.19, 0.01)
-        self.assertInside(self.data.aooverlaps[1, 0], 0.19, 0.01)
-        self.assertEquals(self.data.aooverlaps[3,0], 0.0)
-        self.assertEquals(self.data.aooverlaps[0,3], 0.0)
-
+    overlap01 = 0.19
 
 class OrcaGeoOptTest_3_21g(OrcaGeoOptTest):
+    nbasisdict = {1: 2, 6: 9}
     b3lyp_energy = -10460
-    def testatombasis(self):
-        """The basis set here was 3-21G instead of STO-3G. PASS"""
-    def testnbasis(self):
-        """The basis set here was 3-21G instead of STO-3G."""
-        self.assertEquals(self.data.nbasis, 110)
 
 class OrcaSPunTest_charge0(OrcaSPunTest):
     def testcharge_and_mult(self):
