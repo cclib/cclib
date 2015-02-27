@@ -133,8 +133,8 @@ Scan      Jaguar       JaguarScanTest       basicJaguar8.3        dvb_scan.out
 
 SP        ADF         ADFSPTest             basicADF2007.01       dvb_sp_b.adfout
 SP        ADF         ADFSPTest             basicADF2013.01       dvb_sp_b.adfout
-SP        DALTON      DALTONSPTest          basicDALTON-2013      sp_b3lyp_dvb.out
-SP        DALTON      DALTONSPTest          basicDALTON-2013      sp_rhf_dvb.out
+SP        DALTON      DALTONSPTest          basicDALTON-2013      dvb_sp_hf.out
+SP        DALTON      DALTONSPTest          basicDALTON-2013      dvb_sp_ks.out
 SP        GAMESSUK    GenericSPTest         basicGAMESS-UK7.0     dvb_sp_b.out
 SP        GAMESSUK    GenericSPTest         basicGAMESS-UK8.0     dvb_sp_hf.out
 SP        GAMESSUK    GenericSPTest         basicGAMESS-UK8.0     dvb_sp_ks.out

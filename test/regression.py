@@ -564,8 +564,6 @@ class ADFSPTest_nosyms_valence(ADFSPTest_nosyms):
         self.assertEquals(len(self.data.moenergies[0]), 45)
         self.assertEquals(self.data.moenergies[0][0], 99999.0)
 
-# DALTON #
-
 class DALTONSPTest_nosyms_nolabels(DALTONSPTest):
     def testsymlabels(self):
         """Are all the symmetry labels either Ag/u or Bg/u?. PASS"""
@@ -668,7 +666,9 @@ old_unittests = {
     "ADF/ADF2013.01/dvb_gopt_b_fullscf.adfout":       ADFGeoOptTest,
     "ADF/ADF2014.01/dvb_gopt_b_fullscf.out":       ADFGeoOptTest,
 
-    "DALTON/DALTON-2013.0/b3lyp_energy_dvb_sp_nosym.out":       DALTONSPTest_nosyms_nolabels,
+    "DALTON/DALTON-2013/b3lyp_energy_dvb_sp_nosym.out":       DALTONSPTest_nosyms_nolabels,
+    "DALTON/DALTON-2013/sp_b3lyp_dvb.out":       DALTONSPTest,
+
     "GAMESS/GAMESS-US2005/water_ccd_2005.06.27.r3.out":         GenericCCTest,
     "GAMESS/GAMESS-US2005/water_ccsd_2005.06.27.r3.out":        GenericCCTest,
     "GAMESS/GAMESS-US2005/water_ccsd(t)_2005.06.27.r3.out":     GenericCCTest,
