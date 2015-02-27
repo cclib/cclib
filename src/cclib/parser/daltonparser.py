@@ -144,13 +144,18 @@ class DALTON(logfileparser.Logfile):
 
                 self.skip_lines(inputfile, ['b', 'b'])
 
+                # If the number of orbitals for a symmetry is zero, the printout
+                # is different (see MP2 unittest logfile for an example).
                 line = inputfile.next()
-                assert line.split()[0] == "Symmetry"
-                self.symlabels.append(line.split()[1])
+                if sc == 0:
+                    assert "No orbitals in symmetry" in line
+                else:
+                    assert line.split()[0] == "Symmetry"
+                    self.symlabels.append(line.split()[1])
 
-                self.skip_line(inputfile, 'blank')
-                for i in range(sc):
-                    orbital = inputfile.next()
+                    self.skip_line(inputfile, 'blank')
+                    for i in range(sc):
+                        orbital = inputfile.next()
 
         #      Wave function specification
         #      ============================
@@ -386,6 +391,13 @@ class DALTON(logfileparser.Logfile):
                 self.scfenergies = []
             temp = line.split()
             self.scfenergies.append(utils.convertor(float(temp[-1]), "hartree", "eV"))
+
+        if "@   = MP2 second order energy" in line:
+            energ = utils.convertor(float(line.split()[-1]), 'hartree', 'eV')
+            if not hasattr(self, "mpenergies"):
+                self.mpenergies = []
+            self.mpenergies.append([])
+            self.mpenergies[-1].append(energ)
 
         # The molecular geometry requires the use of .RUN PROPERTIES in the input.
         # Note that the second column is not the nuclear charge, but the atom type

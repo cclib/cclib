@@ -96,6 +96,7 @@ GeoOpt    ORCA        OrcaGeoOptTest        basicORCA3.0          dvb_gopt.out
 GeoOpt    Psi         PsiGeoOptTest         basicPsi4             dvb_gopt_hf.out
 GeoOpt    QChem       GenericGeoOptTest     basicQChem4.2         dvb_gopt.out
 
+MP        DALTON      GenericMP2Test        basicDALTON-2013      water_mp2.out
 MP        GAMESSUK    GenericMP2Test        basicGAMESS-UK7.0     water_mp2.out
 MP        GAMESSUK    GenericMP3Test        basicGAMESS-UK7.0     water_mp3.out
 MP        GAMESSUK    GenericMP2Test        basicGAMESS-UK8.0     water_mp2.out
