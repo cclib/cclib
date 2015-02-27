@@ -25,6 +25,9 @@ class GenericSPTest(bettertest.TestCase):
     # Approximate B3LYP energy of dvb after SCF in STO-3G.
     b3lyp_energy = -10365
 
+    # Overlap first two atomic orbitals.
+    overlap01 = 0.24
+
     def testnatom(self):
         """Is the number of atoms equal to 20?"""
         self.assertEquals(self.data.natom, 20)
@@ -132,10 +135,10 @@ class GenericSPTest(bettertest.TestCase):
             self.assertEquals(self.data.aooverlaps[i,i], 1.0)
 
         # Check some additional values that don't seem to move around between programs.
-        self.assertInside(self.data.aooverlaps[0, 1], 0.24, 0.01)
-        self.assertInside(self.data.aooverlaps[1, 0], 0.24, 0.01)
-        self.assertEquals(self.data.aooverlaps[2,0], 0.0)
-        self.assertEquals(self.data.aooverlaps[0,2], 0.0)
+        self.assertInside(self.data.aooverlaps[0, 1], self.overlap01, 0.02)
+        self.assertInside(self.data.aooverlaps[1, 0], self.overlap01, 0.02)
+        self.assertEquals(self.data.aooverlaps[3,0], 0.0)
+        self.assertEquals(self.data.aooverlaps[0,3], 0.0)
 
     def testoptdone(self):
         """There should be no optdone attribute set."""
@@ -195,6 +198,10 @@ class GenericSPTest(bettertest.TestCase):
 class ADFSPTest(GenericSPTest):
     """Customized restricted single point unittest"""
 
+    foverlap00 = 1.00003
+    foverlap11 = 1.02672
+    foverlap22 = 1.03585
+
     # ADF parser does not extract atombasis.
     def testatombasis(self):
         """Are the indices in atombasis the right amount and unique? PASS"""
@@ -216,9 +223,9 @@ class ADFSPTest(GenericSPTest):
 
         # Although the diagonal elements are close to zero, the SFOs
         # are generally not normalized, so test for a few specific values.
-        self.assertInside(self.data.fooverlaps[0, 0], 1.00003, 0.00001)
-        self.assertInside(self.data.fooverlaps[1, 1], 1.02672, 0.00001)
-        self.assertInside(self.data.fooverlaps[2, 2], 1.03585, 0.00001)
+        self.assertInside(self.data.fooverlaps[0, 0], self.foverlap00, 0.00001)
+        self.assertInside(self.data.fooverlaps[1, 1], self.foverlap11, 0.00001)
+        self.assertInside(self.data.fooverlaps[2, 2], self.foverlap22, 0.00001)
 
 
 class DALTONSPTest(GenericSPTest):
@@ -244,7 +251,6 @@ class DALTONSPTest(GenericSPTest):
     # in a weird way), so let it slide for now.
     def testatomcharges(self):
         """Are atomcharges (at least Mulliken) consistent with natom and sum to zero? PASS"""
-
 
 
 class GaussianSPTest(GenericSPTest):
