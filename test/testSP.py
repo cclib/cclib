@@ -1,16 +1,15 @@
 # This file is part of cclib (http://cclib.github.io), a library for parsing
 # and interpreting the results of computational chemistry packages.
 #
-# Copyright (C) 2006-2014, the cclib development team
+# Copyright (C) 2006-2015, the cclib development team
 #
 # The library is free software, distributed under the terms of
 # the GNU Lesser General Public version 2.1 or later. You should have
 # received a copy of the license along with cclib. You can also access
 # the full license online at http://www.gnu.org/copyleft/lgpl.html.
 
-"""Test single point logfiles in cclib"""
+"""Test single point logfiles in cclib."""
 
-import sys
 import numpy
 
 import bettertest
@@ -21,7 +20,7 @@ class GenericSPTest(bettertest.TestCase):
 
     # In STO-3G, H has 1, C has 5 (1 S and 4 SP).
     nbasisdict = {1:1, 6:5}
-    
+
     # Approximate B3LYP energy of dvb after SCF in STO-3G.
     b3lyp_energy = -10365
 
@@ -31,11 +30,13 @@ class GenericSPTest(bettertest.TestCase):
 
     def testatomnos(self):
         """Are the atomnos correct?"""
-        self.failUnless(numpy.alltrue([numpy.issubdtype(atomno,int) for atomno in self.data.atomnos]))
-        # This will work only for numpy
-        #self.assertEquals(self.data.atomnos.dtype.char, 'i')
+
+        # The nuclear charges should be integer values in a NumPy array.
+        self.failUnless(numpy.alltrue([numpy.issubdtype(atomno, int) for atomno in self.data.atomnos]))
+        self.assertEquals(self.data.atomnos.dtype.char, 'i')
+
         self.assertEquals(self.data.atomnos.shape, (20,) )
-        self.assertEquals(sum(self.data.atomnos==6) + sum(self.data.atomnos==1), 20)
+        self.assertEquals(sum(self.data.atomnos == 6) + sum(self.data.atomnos == 1), 20)
 
     def testatomcharges(self):
         """Are atomcharges (at least Mulliken) consistent with natom and sum to zero?"""
@@ -62,7 +63,7 @@ class GenericSPTest(bettertest.TestCase):
     def testatombasis(self):
         """Are the indices in atombasis the right amount and unique?"""
         all = []
-        for i,atom in enumerate(self.data.atombasis):
+        for i, atom in enumerate(self.data.atombasis):
             self.assertEquals(len(atom), self.nbasisdict[self.data.atomnos[i]])
             all += atom
         # Test if there are as many indices as atomic orbitals.
@@ -81,12 +82,12 @@ class GenericSPTest(bettertest.TestCase):
 
     def testsymlabels(self):
         """Are all the symmetry labels either Ag/u or Bg/u?"""
-        sumwronglabels = sum([x not in ['Ag','Bu','Au','Bg'] for x in self.data.mosyms[0]])
-        self.assertEquals(sumwronglabels,0)
+        sumwronglabels = sum([x not in ['Ag', 'Bu', 'Au', 'Bg'] for x in self.data.mosyms[0]])
+        self.assertEquals(sumwronglabels, 0)
 
     def testhomos(self):
         """Is the index of the HOMO equal to 34?"""
-        self.assertArrayEquals(self.data.homos, numpy.array([34],"i"),"%s != array([34],'i')" % numpy.array_repr(self.data.homos))
+        self.assertArrayEquals(self.data.homos, numpy.array([34],"i"), "%s != array([34],'i')" % numpy.array_repr(self.data.homos))
 
     def testscfvaluetype(self):
         """Are scfvalues and its elements the right type??"""
@@ -99,7 +100,7 @@ class GenericSPTest(bettertest.TestCase):
 
     def testscftargetdim(self):
         """Do the scf targets have the right dimensions?"""
-        self.assertEquals(self.data.scftargets.shape, (len(self.data.scfvalues),len(self.data.scfvalues[0][0])))
+        self.assertEquals(self.data.scftargets.shape, (len(self.data.scfvalues), len(self.data.scfvalues[0][0])))
 
     def testlengthmoenergies(self):
         """Is the number of evalues equal to nmo?"""
@@ -129,8 +130,8 @@ class GenericSPTest(bettertest.TestCase):
         # ADF has the attribute fooverlaps instead of aooverlaps.
         if not hasattr(self.data, "aooverlaps") and hasattr(self.data, "fooverlaps"):
             self.data.aooverlaps = self.data.fooverlaps
-        self.assertEquals(sum(self.data.aooverlaps[0,:] -
-                              self.data.aooverlaps[:,0]),
+        self.assertEquals(sum(self.data.aooverlaps[0, :] -
+                              self.data.aooverlaps[:, 0]),
                           0)
 
     def testoptdone(self):
@@ -170,8 +171,8 @@ class GenericSPTest(bettertest.TestCase):
             for m in octupole:
                 self.assertInside(m, 0.0, 0.001)
 
-        # Hexadecapole should have 15 elements and an XXXX componenet of around -1900 Debye*ang^2,
-        # YYYY component of -330B and ZZZZ component of -50B.
+        # The hexadecapole should have 15 elements, an XXXX component of around -1900 Debye*ang^2,
+        # a YYYY component of -330B and a ZZZZ component of -50B.
         if len(self.data.moments) > 4:
             hexadecapole = self.data.moments[4]
             self.assertEquals(len(hexadecapole), 15)
@@ -341,5 +342,5 @@ class QChemSPTest(GenericSPTest):
 
 if __name__=="__main__":
 
-    from testall import testall
+    from test.testall import testall
     testall(modules=["SP"])
