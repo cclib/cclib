@@ -300,58 +300,54 @@ class DALTON(logfileparser.Logfile):
             mosyms = []
             moenergies = []
 
-            line = next(inputfile)
-            # if the second line has "Only the five" present in it, then we have a reduced output in
-            # the number of orbital energies.
-            line = next(inputfile)  # has number of electrons if we need it
-            if "Only the five" in line:
-                line = next(inputfile)
-                line = next(inputfile)
-            
-            line = next(inputfile)  # has # of orbital symmetries
-            temp = line.split()
-            nsym = len(temp[3:])
+            self.skip_line(inputfile, 'blank')
 
+            # if the second line has "Only the five" present in it, then we have a reduced
+            # number of virtual orbital energies printed. If it does not, then it contains
+            # the number of electrons.
             line = next(inputfile)
+            if "Only the five lowest virtual" in line:
+                self.skip_line(inputfile, 'blank')
+                line = next(inputfile)
+            nelectrons = int(line.split()[-1])
+            
             line = next(inputfile)
-            line = next(inputfile)
+            occupations = [int(o) for o in line.split()[3:]]
+            nsym = len(occupations)
+
+            self.skip_lines(inputfile, ['b', 'header', 'b'])
 
             # now parse nsym symmetries
-            while nsym > 0:
+            for isym in range(nsym):
 
-                line = next(inputfile)
-                temp = line.split()
-
-                # there seems to be an errornous printout of a newline character in DALTON
-                # if the number of orbital energies printed for a given symmetry is 5
-                if len(temp) == 0:
+                # For unoccupied symmetries, nothing is printed here.
+                if occupations[isym] == 0:
                     continue
+
+                # When there are exactly five energies printed (on just one line), it seems
+                # an extra blank line is printed after a block.
+                line = next(inputfile)
+                if not line.strip():
+                    line = next(inputfile)
+                cols = line.split()
 
                 # The first line has the orbital symmetry information, but sometimes
                 # it's the label and sometimes it's the index. There are always five
                 # energies per line, though, so we can deduce if we have the labels or
                 # not just the index. In the latter case, we depend on the labels
                 # being read earlier into the list `symlabels`.
-                if len(temp) == 7:
-                    sym = self.normalisesym(temp[1])
-                    temp = [float(t) for t in temp[2:]]
-                if len(temp) == 6:
-                    sym = self.normalisesym(self.symlabels[int(temp[0])-1])
-                    temp = [float(t) for t in temp[1:]]
+                if 'A' in cols[1] or 'B' in cols[1]:
+                    sym = self.normalisesym(cols[1])
+                    energies = [float(t) for t in cols[2:]]
+                else:
+                    sym = self.normalisesym(self.symlabels[int(cols[0]) - 1])
+                    energies = [float(t) for t in cols[1:]]
 
-                moenergies.extend(temp)
-                mosyms.extend(len(temp)*[sym])
-                while len(temp) > 0:
+                while len(energies) > 0:
+                    moenergies.extend(energies)
+                    mosyms.extend(len(energies)*[sym])
                     line = next(inputfile)
-                    temp = [float(col) for col in line.split()]
-
-                    if len(temp) == 0:
-                        continue
-
-                    moenergies.extend(temp)
-                    mosyms.extend(len(temp)*[sym])
-
-                nsym -= 1
+                    energies = [float(col) for col in line.split()]
 
             # now sort the data about energies and symmetries. see the following post for the magic
             # http://stackoverflow.com/questions/19339/a-transpose-unzip-function-in-python-inverse-of-zip
@@ -398,6 +394,12 @@ class DALTON(logfileparser.Logfile):
                 self.mpenergies = []
             self.mpenergies.append([])
             self.mpenergies[-1].append(energ)
+
+        if "Total energy CCSD(T)" in line:
+            energ = utils.convertor(float(line.split()[-1]), 'hartree', 'eV')
+            if not hasattr(self, "ccenergies"):
+                self.ccenergies = []
+            self.ccenergies.append(energ)
 
         # The molecular geometry requires the use of .RUN PROPERTIES in the input.
         # Note that the second column is not the nuclear charge, but the atom type

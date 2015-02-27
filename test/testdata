@@ -38,6 +38,7 @@ Basis     Molpro      MolproBigBasisTest    basicMolpro2012       C_bigbasis.out
 Basis     NWChem      GenericBigBasisTest   basicNWChem6.0        C_bigbasis.out
 Basis     Psi         GenericBigBasisTest   basicPsi4             C_bigbasis.out
 
+CC        DALTON      GenericCCTest         basicDALTON-2013      water_ccsdt.out
 CC        GAMESS      GenericCCTest         basicGAMESS-US2012    water_ccd.out
 CC        GAMESS      GenericCCTest         basicGAMESS-US2012    water_ccsd.out
 CC        GAMESS      GenericCCTest         basicGAMESS-US2012    water_ccsd(t).out
