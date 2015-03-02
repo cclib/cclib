@@ -1029,7 +1029,14 @@ class NWChem(logfileparser.Logfile):
 
         self.aonames = []
         for i, element in enumerate(elements):
-            shell_text = self.shells[element]
+            try:
+                shell_text = self.shells[element]
+            except KeyError:
+                del self.aonames
+                msg = "Cannot determine aonames for at least one atom."
+                self.logger.warning(msg)
+                break
+
             prefix = "%s%i_" % (element, i + 1) # (e.g. C1_)
 
             matches = pattern.match(shell_text)
