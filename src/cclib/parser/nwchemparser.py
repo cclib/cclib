@@ -226,7 +226,7 @@ class NWChem(logfileparser.Logfile):
                     atomname, desc, shells, funcs, types = line.split()
                     atomelement = self.name2element(atomname)
 
-                    self.shells[atomelement] = types
+                    self.shells[atomname] = types
                     atombasis_dict[atomelement] = int(funcs)
                     line = next(inputfile)
 
