@@ -96,40 +96,6 @@ class NWChem(logfileparser.Logfile):
             natom = int(next(inputfile).strip())
             self.set_attribute('natom', natom)
 
-        # The section we can glean info about aonmaes looks like:
-        #
-        # Summary of "ao basis" -> "ao basis" (cartesian)
-        # ------------------------------------------------------------------------------
-        #       Tag                 Description            Shells   Functions and Types
-        # ---------------- ------------------------------  ------  ---------------------
-        # C                           sto-3g                  3        5   2s1p
-        # H                           sto-3g                  1        1   1s
-        #
-        # However, we need to make sure not to match the following entry lines:
-        #
-        # *  Summary of "ao basis" -> "" (cartesian)
-        # *  Summary of allocated global arrays
-        #
-        # Unfortantely, "ao basis" isn't unique because it can be renamed to anything for
-        # later reference: http://www.nwchem-sw.org/index.php/Basis
-        # It also appears that we have to handle cartesian vs. spherical 
-
-        if line[1:11] == "Summary of":
-            match = re.match(' Summary of "([^\"]*)" -> "([^\"]*)" \((.+)\)', line)
-            if match and match.group(1) == match.group(2):
-
-                self.skip_lines(inputfile, ['d', 'title', 'd'])
-
-                self.shells = {}
-                self.shells["type"] = match.group(3)
-
-                line = next(inputfile)
-                while len(line) > 1:
-                    info = line.split()
-                    elem = info[0]
-                    self.shells[elem] = info[-1]
-                    line = next(inputfile)
-
         if line.strip() == "NWChem Geometry Optimization":
             self.skip_lines(inputfile, ['d', 'b', 'b', 'b', 'b', 'title', 'b', 'b'])
             line = next(inputfile)
@@ -224,28 +190,55 @@ class NWChem(logfileparser.Logfile):
         # listed in this summary of the AO basis. Similar to previous section, here
         # we assume all atoms of the same element have the same basis sets, but
         # this will probably need to be revised later.
-        if line.strip() == """Summary of "ao basis" -> "ao basis" (cartesian)""":
 
-            self.skip_lines(inputfile, ['d', 'headers', 'd'])
+        # The section we can glean info about aonmaes looks like:
+        #
+        # Summary of "ao basis" -> "ao basis" (cartesian)
+        # ------------------------------------------------------------------------------
+        #       Tag                 Description            Shells   Functions and Types
+        # ---------------- ------------------------------  ------  ---------------------
+        # C                           sto-3g                  3        5   2s1p
+        # H                           sto-3g                  1        1   1s
+        #
+        # However, we need to make sure not to match the following entry lines:
+        #
+        # *  Summary of "ao basis" -> "" (cartesian)
+        # *  Summary of allocated global arrays
+        #
+        # Unfortantely, "ao basis" isn't unique because it can be renamed to anything for
+        # later reference: http://www.nwchem-sw.org/index.php/Basis
+        # It also appears that we have to handle cartesian vs. spherical
 
-            atombasis_dict = {}
+        if line[1:11] == "Summary of":
+            match = re.match(' Summary of "([^\"]*)" -> "([^\"]*)" \((.+)\)', line)
 
-            line = next(inputfile)
-            while line.strip():
-                atomname, desc, shells, funcs, types = line.split()
-                atomelement = self.name2element(atomname)
-                atombasis_dict[atomelement] = int(funcs)
+            if match and match.group(1) == match.group(2):
+
+                self.skip_lines(inputfile, ['d', 'title', 'd'])
+
+                self.shells = {}
+                self.shells["type"] = match.group(3)
+
+                atombasis_dict = {}
+
                 line = next(inputfile)
+                while line.strip():
+                    atomname, desc, shells, funcs, types = line.split()
+                    atomelement = self.name2element(atomname)
 
-            last = 0
-            atombasis = []
-            for i in range(self.natom):
-                atomelement = utils.PeriodicTable().element[self.atomnos[i]]
-                nfuncs = atombasis_dict[atomelement]
-                atombasis.append(list(range(last,last+nfuncs)))
-                last = atombasis[-1][-1] + 1
+                    self.shells[atomelement] = types
+                    atombasis_dict[atomelement] = int(funcs)
+                    line = next(inputfile)
 
-            self.set_attribute('atombasis', atombasis)
+                last = 0
+                atombasis = []
+                for atom in self.atomnos:
+                    atomelement = utils.PeriodicTable().element[atom]
+                    nfuncs = atombasis_dict[atomelement]
+                    atombasis.append(list(range(last, last+nfuncs)))
+                    last = atombasis[-1][-1] + 1
+
+                self.set_attribute('atombasis', atombasis)
 
         # This section contains general parameters for Hartree-Fock calculations,
         # which do not contain the 'General Information' section like most jobs.
