@@ -1,0 +1,17 @@
+BASIS
+STO-3G
+Water
+
+AtomTypes=2
+Charge=8.0 Atoms=1
+O   0.0     0.0     0.0
+Charge=1.0 Atoms=2
+H   0.99        0.0         0.0
+H   -0.272881   0.951649    0.0
+
+**DALTON INPUT
+.RUN WAVE FUNCTIONS
+**WAVE FUNCTIONS
+.HF
+.MP2
+**END OF DALTON INPUT

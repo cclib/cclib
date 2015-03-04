@@ -198,7 +198,11 @@ class DALTON(logfileparser.Logfile):
         # ...
         #
         if "Total number of orbitals" in line:
-            self.set_attribute("nbasis", int(line.split()[4]))
+            # DALTON 2015 adds a @ in front of number of orbitals
+            index = 4
+            if "@" in line:
+                index = 5
+            self.set_attribute("nbasis", int(line.split()[index]))
         if "@    Occupied SCF orbitals" in line and not hasattr(self, 'homos'):
             temp = line.split()
             homos = int(temp[4])
@@ -305,8 +309,10 @@ class DALTON(logfileparser.Logfile):
             # if the second line has "Only the five" present in it, then we have a reduced
             # number of virtual orbital energies printed. If it does not, then it contains
             # the number of electrons.
+            # DALTON 2015 increases the output to 20 virtuals, so only check
+            # for a slightly smaller part of the string
             line = next(inputfile)
-            if "Only the five lowest virtual" in line:
+            if "Only the" in line:
                 self.skip_line(inputfile, 'blank')
                 line = next(inputfile)
             nelectrons = int(line.split()[-1])
