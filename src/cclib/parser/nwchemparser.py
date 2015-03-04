@@ -190,28 +190,55 @@ class NWChem(logfileparser.Logfile):
         # listed in this summary of the AO basis. Similar to previous section, here
         # we assume all atoms of the same element have the same basis sets, but
         # this will probably need to be revised later.
-        if line.strip() == """Summary of "ao basis" -> "ao basis" (cartesian)""":
 
-            self.skip_lines(inputfile, ['d', 'headers', 'd'])
+        # The section we can glean info about aonmaes looks like:
+        #
+        # Summary of "ao basis" -> "ao basis" (cartesian)
+        # ------------------------------------------------------------------------------
+        #       Tag                 Description            Shells   Functions and Types
+        # ---------------- ------------------------------  ------  ---------------------
+        # C                           sto-3g                  3        5   2s1p
+        # H                           sto-3g                  1        1   1s
+        #
+        # However, we need to make sure not to match the following entry lines:
+        #
+        # *  Summary of "ao basis" -> "" (cartesian)
+        # *  Summary of allocated global arrays
+        #
+        # Unfortantely, "ao basis" isn't unique because it can be renamed to anything for
+        # later reference: http://www.nwchem-sw.org/index.php/Basis
+        # It also appears that we have to handle cartesian vs. spherical
 
-            atombasis_dict = {}
+        if line[1:11] == "Summary of":
+            match = re.match(' Summary of "([^\"]*)" -> "([^\"]*)" \((.+)\)', line)
 
-            line = next(inputfile)
-            while line.strip():
-                atomname, desc, shells, funcs, types = line.split()
-                atomelement = self.name2element(atomname)
-                atombasis_dict[atomelement] = int(funcs)
+            if match and match.group(1) == match.group(2):
+
+                self.skip_lines(inputfile, ['d', 'title', 'd'])
+
+                self.shells = {}
+                self.shells["type"] = match.group(3)
+
+                atombasis_dict = {}
+
                 line = next(inputfile)
+                while line.strip():
+                    atomname, desc, shells, funcs, types = line.split()
+                    atomelement = self.name2element(atomname)
 
-            last = 0
-            atombasis = []
-            for i in range(self.natom):
-                atomelement = utils.PeriodicTable().element[self.atomnos[i]]
-                nfuncs = atombasis_dict[atomelement]
-                atombasis.append(list(range(last,last+nfuncs)))
-                last = atombasis[-1][-1] + 1
+                    self.shells[atomname] = types
+                    atombasis_dict[atomelement] = int(funcs)
+                    line = next(inputfile)
 
-            self.set_attribute('atombasis', atombasis)
+                last = 0
+                atombasis = []
+                for atom in self.atomnos:
+                    atomelement = utils.PeriodicTable().element[atom]
+                    nfuncs = atombasis_dict[atomelement]
+                    atombasis.append(list(range(last, last+nfuncs)))
+                    last = atombasis[-1][-1] + 1
+
+                self.set_attribute('atombasis', atombasis)
 
         # This section contains general parameters for Hartree-Fock calculations,
         # which do not contain the 'General Information' section like most jobs.
@@ -951,6 +978,71 @@ class NWChem(logfileparser.Logfile):
                 self.ccenergies = []
             self.ccenergies.append([])
             self.ccenergies[-1].append(utils.convertor(ccenerg, "hartree", "eV"))
+
+    def after_parsing(self):
+        """NWChem-specific routines for after parsing file.
+
+        Currently, expands self.shells() into self.aonames.
+        """
+
+        # setup a few necessary things, including a regular expression
+        # for matching the shells
+        table = utils.PeriodicTable()
+        elements = [ table.element[x] for x in self.atomnos ]
+        pattern = re.compile("(\ds)+(\dp)*(\dd)*(\df)*(\dg)*")
+
+        labels = {}
+        labels['s'] = ["%iS"]
+        labels['p'] = ["%iPX", "%iPY", "%iPZ"]
+        if self.shells['type'] == 'spherical':
+            labels['d'] = ['%iD-2', '%iD-1', '%iD0', '%iD1', '%iD2']
+            labels['f'] = ['%iF-3', '%iF-2', '%iF-1', '%iF0',
+                            '%iF1', '%iF2', '%iF3']
+            labels['g'] = ['%iG-4', '%iG-3', '%iG-2', '%iG-1', '%iG0',
+                            '%iG1', '%iG2', '%iG3', '%iG4']
+        elif self.shells['type'] == 'cartesian':
+            labels['d'] = ['%iDXX', '%iDXY', '%iDXZ',
+                            '%iDYY', '%iDYZ',
+                            '%iDZZ']
+            labels['f'] = ['%iFXXX', '%iFXXY', '%iFXXZ',
+                            '%iFXYY', '%iFXYZ', '%iFXZZ',
+                            '%iFYYY', '%iFYYZ', '%iFYZZ',
+                            '%iFZZZ']
+            labels['g'] = ['%iGXXXX', '%iGXXXY', '%iGXXXZ',
+                            '%iGXXYY', '%iGXXYZ', '%iGXXZZ',
+                            '%iGXYYY', '%iGXYYZ', '%iGXYZZ',
+                            '%iGXZZZ', '%iGYYYY', '%iGYYYZ',
+                            '%iGYYZZ', '%iGYZZZ', '%iGZZZZ']
+        else:
+            self.logger.warning("Found a non-standard aoname representation type.")
+            return
+
+        # now actually build aonames
+        # involves expanding 2s1p into appropriate types
+
+        self.aonames = []
+        for i, element in enumerate(elements):
+            try:
+                shell_text = self.shells[element]
+            except KeyError:
+                del self.aonames
+                msg = "Cannot determine aonames for at least one atom."
+                self.logger.warning(msg)
+                break
+
+            prefix = "%s%i_" % (element, i + 1) # (e.g. C1_)
+
+            matches = pattern.match(shell_text)
+            for j, group in enumerate(matches.groups()):
+                if group is None:
+                    continue
+
+                count = int(group[:-1])
+                label = group[-1]
+
+                for k in range(count):
+                    temp = [ x % (j + k + 1) for x in labels[label] ]
+                    self.aonames.extend( [ prefix + x for x in temp ] )
 
 
 if __name__ == "__main__":
