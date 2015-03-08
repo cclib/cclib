@@ -48,7 +48,8 @@ class GenericSPunTest(bettertest.TestCase):
 
     def testhomos(self):
         """Are the homos correct?"""
-        self.assertArrayEquals(self.data.homos, numpy.array([34,33],"i"),"%s != array([34,33],'i')" % numpy.array_repr(self.data.homos))
+        msg = "%s != array([34,33],'i')" % numpy.array_repr(self.data.homos)
+        numpy.testing.assert_array_equal(self.data.homos, numpy.array([34,33],"i"), msg)
 
     def testmoenergies(self):
         """Are the dims of the moenergies equals to 2 x nmo?"""

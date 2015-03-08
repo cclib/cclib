@@ -27,25 +27,6 @@ class TestCase(unittest.TestCase):
     http://mail.python.org/pipermail/python-list/2005-November/311235.html
     """
 
-    def assertArrayEquals(self, first, second, msg=None):
-        """Fails unless two numpy arrays are identical."""
-        
-        errormsg = None
-        if not first.shape == second.shape:
-            errormsg = "Shapes are different: %s != %s" % (first.shape, second.shape)
-        try:
-            type1 = first.dtype
-            type2 = second.dtype
-        except:
-            type1 = first.typecode()
-            type2 = second.typecode()
-        if not type1 == type2:
-            errormsg = "Array types are different: %s != %s" % (type1, type2)
-        if not numpy.alltrue(first == second):
-            errormsg = "Not equal: %s != %s" % (first, second)
-        if errormsg:
-            raise self.failureException(msg or errormsg)
-
     def run(self, result=None):
         """Custom run method for cclib."""
         

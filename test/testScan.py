@@ -42,7 +42,7 @@ class GenericScanTest(bettertest.TestCase):
             geovalues_from_index = self.data.geovalues[indexes]
             temp = numpy.all(self.data.geovalues <= self.data.geotargets, axis=1)
             geovalues = self.data.geovalues[temp]
-            self.assertArrayEquals(geovalues, geovalues_from_index)
+            numpy.testing.assert_array_equal(geovalues, geovalues_from_index)
 
 
 class GaussianScanTest(GenericScanTest):

@@ -28,7 +28,7 @@ class GenericCoreTest(bettertest.TestCase):
         for x in self.data.atomnos:
             ans.append(self.coredict[pt.element[x]])
         ans = numpy.array(ans, "i")
-        self.assertArrayEquals(self.data.coreelectrons, ans)
+        numpy.testing.assert_array_equal(self.data.coreelectrons, ans)
 
 
 class ADFCoreTest(GenericCoreTest):

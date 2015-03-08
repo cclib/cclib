@@ -77,7 +77,7 @@ class GenericSPTest(bettertest.TestCase):
     def testcoreelectrons(self):
         """Are the coreelectrons all 0?"""
         ans = numpy.zeros(self.data.natom, 'i')
-        self.assertArrayEquals(self.data.coreelectrons, ans)
+        numpy.testing.assert_array_equal(self.data.coreelectrons, ans)
 
     def testnormalisesym(self):
         """Did this subclass overwrite normalisesym?"""
@@ -90,7 +90,7 @@ class GenericSPTest(bettertest.TestCase):
 
     def testhomos(self):
         """Is the index of the HOMO equal to 34?"""
-        self.assertArrayEquals(self.data.homos, numpy.array([34],"i"), "%s != array([34],'i')" % numpy.array_repr(self.data.homos))
+        numpy.testing.assert_array_equal(self.data.homos, numpy.array([34],"i"), "%s != array([34],'i')" % numpy.array_repr(self.data.homos))
 
     def testscfvaluetype(self):
         """Are scfvalues and its elements the right type??"""
