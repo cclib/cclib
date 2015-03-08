@@ -159,20 +159,7 @@ class OrcaSPunTest(GenericSPunTest):
 class QChemSPunTest(GenericSPunTest):
     """Customized unrestricted single point unittest"""
 
-    # By default, Q-Chem doesn't print out an nbasis * nmo dim MO
-    # coefficient matrix, but a nbasis * (nocc + 5) * nbasis matrix.
-    def testdimmocoeffs(self):
-        """Are the dimensions of mocoeffs equal to 2 x nbasis x (nocc + 5)?"""
-        ncols_a = self.data.homos[0] + 1 + 5
-        ncols_b = self.data.homos[1] + 1 + 5
-        self.assertEquals(type(self.data.mocoeffs), type([]))
-        self.assertEquals(len(self.data.mocoeffs), 2)
-        self.assertEquals(self.data.mocoeffs[0].shape,
-                          (self.data.nbasis, ncols_a))
-        self.assertEquals(self.data.mocoeffs[1].shape,
-                          (self.data.nbasis, ncols_b))
-
-        # Q-Chem cannot print the overlap matrix.
+    # Q-Chem cannot print the overlap matrix.
     def testdimaooverlaps(self):
         """Are the dims of the overlap matrix consistent with nbasis? PASS"""
 

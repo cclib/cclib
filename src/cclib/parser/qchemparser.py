@@ -91,6 +91,20 @@ class QChem(logfileparser.Logfile):
                                   if len(coords) == correctlen]
         # At the moment, there is no similar correction for other properties!
 
+        # QChem does not print all MO coefficients by default, but rather
+        # up to HOMO+5. So, fill up the missing values with NaNs. If there are
+        # other cases where coefficient are missing, but different ones, this
+        # general afterthought might not be appropriate and the fix will
+        # need to be done while parsing.
+        if hasattr(self, 'mocoeffs'):
+            for im in range(len(self.mocoeffs)):
+                _nmo, _nbasis = self.mocoeffs[im].shape
+                if (_nmo, _nbasis) != (self.nmo, self.nbasis):
+                    coeffs = numpy.empty((self.nmo, self.nbasis))
+                    coeffs[:] = numpy.nan
+                    coeffs[0:_nmo, 0:_nbasis] = self.mocoeffs[im]
+                    self.mocoeffs[im] = coeffs
+
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
 
@@ -336,12 +350,12 @@ class QChem(logfileparser.Logfile):
                 self.mocoeffs = []
             mocoeffs = numpy.empty(shape=(self.nbasis, self.norbdisp_alpha))
             self.parse_matrix(inputfile, mocoeffs)
-            self.mocoeffs.append(mocoeffs)
+            self.mocoeffs.append(mocoeffs.transpose())
 
         if 'Final Beta MO Coefficients' in line:
             mocoeffs = numpy.empty(shape=(self.nbasis, self.norbdisp_beta))
             self.parse_matrix(inputfile, mocoeffs)
-            self.mocoeffs.append(mocoeffs)
+            self.mocoeffs.append(mocoeffs.transpose())
 
         if 'Total energy in the final basis set' in line:
             if not hasattr(self, 'scfenergies'):
@@ -827,7 +841,7 @@ class QChem(logfileparser.Logfile):
             # Only use these MO coefficients if we don't have them
             # from `scf_final_print`.
             if len(self.mocoeffs) == 0:
-                self.mocoeffs.append(mocoeffs)
+                self.mocoeffs.append(mocoeffs.transpose())
 
             # Go back through `aonames` to create `atombasis`.
             assert len(self.aonames) == self.nbasis
@@ -841,7 +855,7 @@ class QChem(logfileparser.Logfile):
             mocoeffs = numpy.empty(shape=(self.nbasis, self.norbdisp_beta_aonames))
             self.parse_matrix_aonames(inputfile, mocoeffs)
             if len(self.mocoeffs) == 1:
-                self.mocoeffs.append(mocoeffs)
+                self.mocoeffs.append(mocoeffs.transpose())
 
         # Population analysis.
 
