@@ -32,10 +32,6 @@ class GenericSPunTest(bettertest.TestCase):
         """Are the dimensions of atomcoords 1 x natom x 3?"""
         self.assertEquals(self.data.atomcoords.shape,(1,self.data.natom,3))
 
-    def testdimaooverlaps(self):
-        """Are the dims of the overlap matrix consistent with nbasis?"""
-        self.assertEquals(self.data.aooverlaps.shape,(self.data.nbasis,self.data.nbasis))
-
     def testdimmocoeffs(self):
         """Are the dimensions of mocoeffs equal to 2 x nmo x nbasis?"""
         self.assertEquals(type(self.data.mocoeffs), type([]))

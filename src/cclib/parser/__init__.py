@@ -20,6 +20,7 @@
 #         from cclib.parser import Gaussian
 
 from .adfparser import ADF
+from .daltonparser import DALTON
 from .gamessparser import GAMESS
 from .gamessukparser import GAMESSUK
 from .gaussianparser import Gaussian

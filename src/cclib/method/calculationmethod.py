@@ -3,23 +3,34 @@
 # This file is part of cclib (http://cclib.github.io), a library for parsing
 # and interpreting the results of computational chemistry packages.
 #
-# Copyright (C) 2006-2014, the cclib development team
+# Copyright (C) 2006-2015, the cclib development team
 #
 # The library is free software, distributed under the terms of
 # the GNU Lesser General Public version 2.1 or later. You should have
 # received a copy of the license along with cclib. You can also access
 # the full license online at http://www.gnu.org/copyleft/lgpl.html.
 
+"""Abstract based class for cclib methods."""
+
 import logging
 import sys
 
-"""Abstract based method class."""
 
 class Method(object):
-    """Abstract class for method classes.
+    """Abstract base class for all cclib method classes.
 
     Subclasses defined by cclib:
-        CDA, CSPA, Density, FragmentAnalysis, LPA, MBO, MPA, Nuclear, OPA, Population, Volume
+        CDA - charde decomposition analysis
+        CSPA - C-squared population analysis
+        Density - density matrix calculation
+        FragmentAnalysis - fragment analysis for ADF output
+        LPA - Löwdin population analysis
+        MBO - Mayer's bond orders
+        MPA - Mulliken population analysis
+        Nuclear - properties of atomic nuclei
+        OPA - overlap population analysis
+        Population - base class for population analyses
+        Volume - volume/grid calculations
 
     All the modules containing methods should be importable:
     >>> import cda, cspa, density, fragments, lpa, mbo, mpa, nuclear, opa, population, volume

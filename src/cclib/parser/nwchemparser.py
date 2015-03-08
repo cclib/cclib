@@ -190,28 +190,55 @@ class NWChem(logfileparser.Logfile):
         # listed in this summary of the AO basis. Similar to previous section, here
         # we assume all atoms of the same element have the same basis sets, but
         # this will probably need to be revised later.
-        if line.strip() == """Summary of "ao basis" -> "ao basis" (cartesian)""":
 
-            self.skip_lines(inputfile, ['d', 'headers', 'd'])
+        # The section we can glean info about aonmaes looks like:
+        #
+        # Summary of "ao basis" -> "ao basis" (cartesian)
+        # ------------------------------------------------------------------------------
+        #       Tag                 Description            Shells   Functions and Types
+        # ---------------- ------------------------------  ------  ---------------------
+        # C                           sto-3g                  3        5   2s1p
+        # H                           sto-3g                  1        1   1s
+        #
+        # However, we need to make sure not to match the following entry lines:
+        #
+        # *  Summary of "ao basis" -> "" (cartesian)
+        # *  Summary of allocated global arrays
+        #
+        # Unfortantely, "ao basis" isn't unique because it can be renamed to anything for
+        # later reference: http://www.nwchem-sw.org/index.php/Basis
+        # It also appears that we have to handle cartesian vs. spherical
 
-            atombasis_dict = {}
+        if line[1:11] == "Summary of":
+            match = re.match(' Summary of "([^\"]*)" -> "([^\"]*)" \((.+)\)', line)
 
-            line = next(inputfile)
-            while line.strip():
-                atomname, desc, shells, funcs, types = line.split()
-                atomelement = self.name2element(atomname)
-                atombasis_dict[atomelement] = int(funcs)
+            if match and match.group(1) == match.group(2):
+
+                self.skip_lines(inputfile, ['d', 'title', 'd'])
+
+                self.shells = {}
+                self.shells["type"] = match.group(3)
+
+                atombasis_dict = {}
+
                 line = next(inputfile)
+                while line.strip():
+                    atomname, desc, shells, funcs, types = line.split()
+                    atomelement = self.name2element(atomname)
 
-            last = 0
-            atombasis = []
-            for i in range(self.natom):
-                atomelement = utils.PeriodicTable().element[self.atomnos[i]]
-                nfuncs = atombasis_dict[atomelement]
-                atombasis.append(list(range(last,last+nfuncs)))
-                last = atombasis[-1][-1] + 1
+                    self.shells[atomname] = types
+                    atombasis_dict[atomelement] = int(funcs)
+                    line = next(inputfile)
 
-            self.set_attribute('atombasis', atombasis)
+                last = 0
+                atombasis = []
+                for atom in self.atomnos:
+                    atomelement = utils.PeriodicTable().element[atom]
+                    nfuncs = atombasis_dict[atomelement]
+                    atombasis.append(list(range(last, last+nfuncs)))
+                    last = atombasis[-1][-1] + 1
+
+                self.set_attribute('atombasis', atombasis)
 
         # This section contains general parameters for Hartree-Fock calculations,
         # which do not contain the 'General Information' section like most jobs.
@@ -270,6 +297,41 @@ class NWChem(logfileparser.Logfile):
                 if not hasattr(self, 'scftargets'):
                     self.scftargets = []
                 self.scftargets.append([target_energy, target_density, target_gradient])
+
+
+        # If the full overlap matrix is printed, it looks like this:
+        #
+        # global array: Temp Over[1:60,1:60],  handle: -996 
+        #
+        #            1           2           3           4           5           6  
+        #       ----------- ----------- ----------- ----------- ----------- -----------
+        #   1       1.00000     0.24836    -0.00000    -0.00000     0.00000     0.00000
+        #   2       0.24836     1.00000     0.00000    -0.00000     0.00000     0.00030
+        #   3      -0.00000     0.00000     1.00000     0.00000     0.00000    -0.00014
+        # ...
+        if "global array: Temp Over[" in line:
+
+            self.set_attribute('nbasis', int(line.split('[')[1].split(',')[0].split(':')[1]))
+            self.set_attribute('nmo', int(line.split(']')[0].split(',')[1].split(':')[1]))
+
+            aooverlaps = []
+            while len(aooverlaps) < self.nbasis:
+
+                self.skip_line(inputfile, 'blank')
+
+                indices = [int(i) for i in inputfile.next().split()]
+                assert indices[0] == len(aooverlaps) + 1
+
+                self.skip_line(inputfile, "dashes")
+                data = [inputfile.next().split() for i in range(self.nbasis)]
+                indices = [int(d[0]) for d in data]
+                assert indices == list(range(1, self.nbasis+1))
+
+                for i in range(1, len(data[0])):
+                    vector = [float(d[i]) for d in data]
+                    aooverlaps.append(vector)
+
+            self.set_attribute('aooverlaps', aooverlaps)
 
         if line.strip() in ("The SCF is already converged", "The DFT is already converged"):
             if self.linesearch:
@@ -659,7 +721,9 @@ class NWChem(logfileparser.Logfile):
                 line = next(inputfile)
             self.atomcharges['mulliken'] = charges
 
-        # If the full overlap matrix is printed, it looks like this:
+        # Not the the 'overlap population' as printed in the Mulliken population analysis,
+        # is not the same thing as the 'overlap matrix'. In fact, it is the overlap matrix
+        # multiplied elementwise times the density matrix.
         #
         #          ----------------------------
         #          Mulliken population analysis
@@ -673,7 +737,7 @@ class NWChem(logfileparser.Logfile):
         #    2   1 C  s           -0.0535883400   0.8281341291   0.0000000000  -0.0000000000   0.0000000000   0.0000039991  -0.0009906747
         # ...
         #
-        # Also, DFT does not seem to print the separate listing of Mulliken charges
+        # DFT does not seem to print the separate listing of Mulliken charges
         # by default, but they are printed by this modules later on. They are also print
         # for Hartree-Fock runs, though, so in that case make sure they are consistent.
         if line.strip() == "Mulliken population analysis":
@@ -703,8 +767,6 @@ class NWChem(logfileparser.Logfile):
                     line = next(inputfile)
 
                 line = next(inputfile)
-
-            self.aooverlaps = overlaps
 
             # This header should be printed later, before the charges are print, which of course
             # are just sums of the overlaps and could be calculated. But we just go ahead and
@@ -916,6 +978,71 @@ class NWChem(logfileparser.Logfile):
                 self.ccenergies = []
             self.ccenergies.append([])
             self.ccenergies[-1].append(utils.convertor(ccenerg, "hartree", "eV"))
+
+    def after_parsing(self):
+        """NWChem-specific routines for after parsing file.
+
+        Currently, expands self.shells() into self.aonames.
+        """
+
+        # setup a few necessary things, including a regular expression
+        # for matching the shells
+        table = utils.PeriodicTable()
+        elements = [ table.element[x] for x in self.atomnos ]
+        pattern = re.compile("(\ds)+(\dp)*(\dd)*(\df)*(\dg)*")
+
+        labels = {}
+        labels['s'] = ["%iS"]
+        labels['p'] = ["%iPX", "%iPY", "%iPZ"]
+        if self.shells['type'] == 'spherical':
+            labels['d'] = ['%iD-2', '%iD-1', '%iD0', '%iD1', '%iD2']
+            labels['f'] = ['%iF-3', '%iF-2', '%iF-1', '%iF0',
+                            '%iF1', '%iF2', '%iF3']
+            labels['g'] = ['%iG-4', '%iG-3', '%iG-2', '%iG-1', '%iG0',
+                            '%iG1', '%iG2', '%iG3', '%iG4']
+        elif self.shells['type'] == 'cartesian':
+            labels['d'] = ['%iDXX', '%iDXY', '%iDXZ',
+                            '%iDYY', '%iDYZ',
+                            '%iDZZ']
+            labels['f'] = ['%iFXXX', '%iFXXY', '%iFXXZ',
+                            '%iFXYY', '%iFXYZ', '%iFXZZ',
+                            '%iFYYY', '%iFYYZ', '%iFYZZ',
+                            '%iFZZZ']
+            labels['g'] = ['%iGXXXX', '%iGXXXY', '%iGXXXZ',
+                            '%iGXXYY', '%iGXXYZ', '%iGXXZZ',
+                            '%iGXYYY', '%iGXYYZ', '%iGXYZZ',
+                            '%iGXZZZ', '%iGYYYY', '%iGYYYZ',
+                            '%iGYYZZ', '%iGYZZZ', '%iGZZZZ']
+        else:
+            self.logger.warning("Found a non-standard aoname representation type.")
+            return
+
+        # now actually build aonames
+        # involves expanding 2s1p into appropriate types
+
+        self.aonames = []
+        for i, element in enumerate(elements):
+            try:
+                shell_text = self.shells[element]
+            except KeyError:
+                del self.aonames
+                msg = "Cannot determine aonames for at least one atom."
+                self.logger.warning(msg)
+                break
+
+            prefix = "%s%i_" % (element, i + 1) # (e.g. C1_)
+
+            matches = pattern.match(shell_text)
+            for j, group in enumerate(matches.groups()):
+                if group is None:
+                    continue
+
+                count = int(group[:-1])
+                label = group[-1]
+
+                for k in range(count):
+                    temp = [ x % (j + k + 1) for x in labels[label] ]
+                    self.aonames.extend( [ prefix + x for x in temp ] )
 
 
 if __name__ == "__main__":
