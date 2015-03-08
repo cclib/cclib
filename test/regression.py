@@ -89,7 +89,7 @@ def testGAMESS_GAMESS_US2008_N2_ROMP2_out(logfile):
     """Check that the new format for GAMESS MP2 is parsed."""
     assert hasattr(logfile.data, "mpenergies")
     assert len(logfile.data.mpenergies) == 1
-    assert abs(logfile.data.mpenergies[0] + 2975.97) < 0.01    
+    assert abs(logfile.data.mpenergies[0] + 2975.97) < 0.01
 
 def testGAMESS_GAMESS_US2009_open_shell_ccsd_test_log(logfile):
     """Parse ccenergies from open shell CCSD calculations."""
@@ -240,8 +240,8 @@ def testGaussian_Gaussian09_25DMF_HRANH_log(logfile):
     N = len(logfile.data.vibfreqs)
     assert 39 == N == anharms.shape[0] == anharms.shape[1]
     assert abs(anharms[0][0] + 43.341) < 0.01
-    assert abs(anharms[N-1][N-1] + 36.481) < 0.01 
-    
+    assert abs(anharms[N-1][N-1] + 36.481) < 0.01
+
 def testGaussian_Gaussian09_534_out(logfile):
     """Previously, caused etenergies parsing to fail."""
     assert logfile.data.etsyms[0] == "Singlet-?Sym"
@@ -388,6 +388,134 @@ def testPsi_Psi4_dvb_gopt_hf_unconverged_out(logfile):
 
 # Q-Chem #
 
+def testQChem_QChem4_2_CH3___Na__RS_out(logfile):
+    """An unrestricted fragment job with BSSE correction.
+
+    Contains only the Roothaan step energies for the CP correction.
+
+    For now, we only keep the final block of MO energies. This corresponds to
+    the section titled 'Done with counterpoise correction on fragments'.
+    """
+
+    assert logfile.data.charge == 1
+    assert logfile.data.mult == 2
+    assert logfile.data.nbasis == logfile.data.nmo == 40
+
+    assert len(logfile.data.atomnos) == 5
+    assert len(logfile.data.moenergies) == 2
+
+    # Fragments: A, B, RS_CP(A), RS_CP(B), Full
+    assert len(logfile.data.scfenergies) == 5
+
+    # There are 40 MOs in the supersystem.
+    assert len(logfile.data.moenergies[0]) == 40
+    assert len(logfile.data.moenergies[1]) == 40
+    assert type(logfile.data.moenergies) == type([])
+    assert type(logfile.data.moenergies[0]) == type(numpy.array([]))
+    assert type(logfile.data.moenergies[1]) == type(numpy.array([]))
+
+def testQChem_QChem4_2_CH3___Na__RS_SCF_out(logfile):
+    """An unrestricted fragment job with BSSE correction.
+
+    Contains both the Roothaan step and full SCF energies for the CP correction.
+
+    For now, we only keep the final block of MO energies. This corresponds to
+    the section titled 'Done with counterpoise correction on fragments'.
+    """
+
+    assert logfile.data.charge == 1
+    assert logfile.data.mult == 2
+    assert logfile.data.nbasis == logfile.data.nmo == 40
+
+    assert len(logfile.data.atomnos) == 5
+    assert len(logfile.data.moenergies) == 2
+
+    # Fragments: A, B, RS_CP(A), RS_CP(B), SCF_CP(A), SCF_CP(B), Full
+    assert len(logfile.data.scfenergies) == 7
+
+    # There are 40 MOs in the supersystem.
+    assert len(logfile.data.moenergies[0]) == 40
+    assert len(logfile.data.moenergies[1]) == 40
+    assert type(logfile.data.moenergies) == type([])
+    assert type(logfile.data.moenergies[0]) == type(numpy.array([]))
+    assert type(logfile.data.moenergies[1]) == type(numpy.array([]))
+
+def testQChem_QChem4_2_CH4___Na__out(logfile):
+    """A restricted fragment job with no BSSE correction.
+
+    For now, we only keep the final block of MO energies. This corresponds to
+    the section titled 'Done with SCF on isolated fragments'.
+    """
+
+    assert logfile.data.charge == 1
+    assert logfile.data.mult == 1
+    assert logfile.data.nbasis == logfile.data.nmo == 42
+
+    assert len(logfile.data.atomnos) == 6
+    assert len(logfile.data.scfenergies) == 3
+    assert len(logfile.data.moenergies) == 1
+
+    # There are 42 MOs in the supersystem.
+    assert len(logfile.data.moenergies[0]) == 42
+    assert type(logfile.data.moenergies) == type([])
+    assert type(logfile.data.moenergies[0]) == type(numpy.array([]))
+
+def testQChem_QChem4_2_CO2_out(logfile):
+    """A job containing a specific number of orbitals requested for
+    printing.
+    """
+    nbasis = 45
+    nmo = 45
+    nalpha = 11
+    assert logfile.data.nbasis == nbasis
+    assert logfile.data.nmo == nmo
+    assert len(logfile.data.mocoeffs) == 1
+    assert logfile.data.mocoeffs[0].shape == (nmo, nbasis)
+    assert logfile.data.mocoeffs[0][0, 0] == -0.0001434
+    assert logfile.data.mocoeffs[0][nalpha + 5 - 1, nbasis - 1] == -0.0000661
+    assert len(logfile.data.moenergies) == 1
+    assert len(logfile.data.moenergies[0]) == nmo
+
+def testQChem_QChem4_2_CO2_cation_UHF_out(logfile):
+    """A job containing a specific number of orbitals requested for
+    printing."""
+    nbasis = 45
+    nmo = 45
+    nalpha = 11
+    nbeta = 10
+    assert logfile.data.nbasis == nbasis
+    assert logfile.data.nmo == nmo
+    assert len(logfile.data.mocoeffs) == 2
+    assert logfile.data.mocoeffs[0].shape == (nmo, nbasis)
+    assert logfile.data.mocoeffs[1].shape == (nmo, nbasis)
+    assert logfile.data.mocoeffs[0][0, 0] == -0.0001549
+    assert logfile.data.mocoeffs[0][nalpha + 5 - 1, nbasis - 1] == -0.0000985
+    assert logfile.data.mocoeffs[1][0, 0] == -0.0001612
+    assert logfile.data.mocoeffs[1][nbeta + 5 - 1, nbasis - 1] == -0.0027710
+    assert len(logfile.data.moenergies) == 2
+    assert len(logfile.data.moenergies[0]) == nmo
+    assert len(logfile.data.moenergies[1]) == nmo
+
+def testQChem_QChem4_2_CO2_cation_ROHF_bigprint_allvirt_out(logfile):
+    """A job containing a specific number of orbitals requested for
+    printing."""
+    nbasis = 45
+    nmo = 45
+    nalpha = 11
+    nbeta = 10
+    assert logfile.data.nbasis == nbasis
+    assert logfile.data.nmo == nmo
+    assert len(logfile.data.mocoeffs) == 2
+    assert logfile.data.mocoeffs[0].shape == (nmo, nbasis)
+    assert logfile.data.mocoeffs[1].shape == (nmo, nbasis)
+    assert logfile.data.mocoeffs[0][0, 0] == -0.0001543
+    assert logfile.data.mocoeffs[0][nalpha + 5 - 3, nbasis - 1] == -0.0132848
+    assert logfile.data.mocoeffs[1][2, 0] == 0.9927881
+    assert logfile.data.mocoeffs[1][nbeta + 5 - 1, nbasis - 1] == 0.0018019
+    assert len(logfile.data.moenergies) == 2
+    assert len(logfile.data.moenergies[0]) == nmo
+    assert len(logfile.data.moenergies[1]) == nmo
+
 def testQChem_QChem4_2_dvb_gopt_unconverged_out(logfile):
     """An unconverged geometry optimization to test for empty optdone (see #103 for details)."""
     assert hasattr(logfile.data, 'optdone') and not logfile.data.optdone
@@ -440,48 +568,6 @@ def testQChem_QChem4_2_qchem_tddft_rpa_out(logfile):
     assert logfile.data.etsecs[0][1] == [(27, 0), (39, 0), 0.1039]
     assert logfile.data.etsecs[0][2] == [(39, 0), (27, 0), 0.0605]
 
-def testQChem_QChem4_2_CH3___Na__out(logfile):
-    """An unrestricted fragment job with BSSE correction.
-
-    For now, we only keep the final block of MO energies. This corresponds to
-    the section titled 'Done with counterpoise correction on fragments'.
-    """
-
-    assert logfile.data.charge == 1
-    assert logfile.data.mult == 2
-    assert logfile.data.nbasis == logfile.data.nmo == 40
-
-    assert len(logfile.data.atomnos) == 5
-    assert len(logfile.data.scfenergies) == 7
-    assert len(logfile.data.moenergies) == 2
-
-    # There are 40 MOs in the supersystem.
-    assert len(logfile.data.moenergies[0]) == 40
-    assert len(logfile.data.moenergies[1]) == 40
-    assert type(logfile.data.moenergies) == type([])
-    assert type(logfile.data.moenergies[0]) == type(numpy.array([]))
-    assert type(logfile.data.moenergies[1]) == type(numpy.array([]))
-
-def testQChem_QChem4_2_CH4___Na__out(logfile):
-    """A restricted fragment job with no BSSE correction.
-
-    For now, we only keep the final block of MO energies. This corresponds to
-    the section titled 'Done with SCF on isolated fragments'.
-    """
-
-    assert logfile.data.charge == 1
-    assert logfile.data.mult == 1
-    assert logfile.data.nbasis == logfile.data.nmo == 42
-
-    assert len(logfile.data.atomnos) == 6
-    assert len(logfile.data.scfenergies) == 3
-    assert len(logfile.data.moenergies) == 1
-
-    # There are 42 MOs in the supersystem.
-    assert len(logfile.data.moenergies[0]) == 42
-    assert type(logfile.data.moenergies) == type([])
-    assert type(logfile.data.moenergies[0]) == type(numpy.array([]))
-
 # These regression tests are for logfiles that are not to be parsed
 # for some reason, and the function should start with 'testnoparse'.
 
@@ -504,7 +590,7 @@ def testnoparseGaussian_Gaussian09_coeffs_log(filename):
     parser.logger.setLevel(logging.ERROR)
     parser.nmo = 5
     parser.nbasis = 1128
-    
+
     data = parser.parse()
     assert data.mocoeffs[0].shape == (5, 1128)
     assert data.aonames[-1] == "Ga71_19D-2"
@@ -891,9 +977,9 @@ def main(which=[], opt_traceback=False, opt_status=False):
                     errors += 1
                 else:
                     print("test passed")
-                
+
         print()
-            
+
     print("Total: %d   Failed: %d  Errors: %d" % (total, failures, errors))
     if not opt_traceback and failures + errors > 0:
         print("\nFor more information on failures/errors, add --traceback as an argument.")

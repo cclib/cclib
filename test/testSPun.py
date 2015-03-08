@@ -61,7 +61,16 @@ class GenericSPunTest(bettertest.TestCase):
         shape = (len(self.data.mosyms), len(self.data.mosyms[0]))
         self.assertEquals(shape, (2, self.data.nmo))
 
-        
+
+class ADFSPunTest(GenericSPunTest):
+    """Customized unrestricted single point unittest"""
+
+    def testdimaooverlaps(self):
+        """Are the dims of the overlap matrix consistent with nbasis?"""
+        #ADF uses fooverlaps
+        self.assertEquals(self.data.fooverlaps.shape,(self.data.nbasis,self.data.nbasis))
+
+
 class GamessUK70SPunTest(GenericSPunTest):
     """Customized unrestricted single point unittest"""
 
@@ -102,14 +111,19 @@ class GaussianSPunTest(GenericSPunTest):
 
 class JaguarSPunTest(GenericSPunTest):
     """Customized unrestricted single point unittest"""
-        
+
+    # Data file does not contain enough information. Can we make a new one?
+    def testdimaooverlaps(self):
+        """Are the dims of the overlap matrix consistent with nbasis? PASS"""
+        self.assertEquals(1,1)
+
     # Why is this test passed?
     def testmoenergies(self):
         """Are the dims of the moenergies equal to 2 x homos+11?"""
         self.assertEquals(len(self.data.moenergies), 2)
         self.assertEquals(len(self.data.moenergies[0]), self.data.homos[0]+11)
         self.assertEquals(len(self.data.moenergies[1]), self.data.homos[1]+11)
-        
+
     # Data file does not contain enough information. Can we make a new one?
     def testdimmocoeffs(self):
         """Are the dimensions of mocoeffs equal to 1 x nmo x nbasis? PASS"""
@@ -131,7 +145,7 @@ class MolproSPunTest(GenericSPunTest):
 
 class OrcaSPunTest(GenericSPunTest):
     """Customized unrestricted single point unittest"""
-    
+
     # ORCA has no support for symmetry yet.
     def testmosyms(self):
         """Are the dims of the mosyms equals to 2 x nmo?"""
@@ -141,10 +155,9 @@ class OrcaSPunTest(GenericSPunTest):
 class QChemSPunTest(GenericSPunTest):
     """Customized unrestricted single point unittest"""
 
-    # `mocoeffs` not implemented yet.
-    def testdimmocoeffs(self):
-        """Are the dimensions of mocoeffs equal to 2 x nmo x nbasis? PASS"""
-
+    # Q-Chem cannot print the overlap matrix.
+    def testdimaooverlaps(self):
+        """Are the dims of the overlap matrix consistent with nbasis? PASS"""
 
 
 if __name__=="__main__":

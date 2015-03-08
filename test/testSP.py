@@ -52,7 +52,7 @@ class GenericSPTest(bettertest.TestCase):
         """Are the dimensions of atomcoords 1 x natom x 3?"""
         expected_shape = (1, self.data.natom, 3)
         self.assertEquals(self.data.atomcoords.shape, expected_shape)
-    
+
     def testcharge_and_mult(self):
         """Are the charge and multiplicity correct?"""
         self.assertEquals(self.data.charge, 0)
@@ -205,7 +205,7 @@ class ADFSPTest(GenericSPTest):
     def testatombasis(self):
         """Are the indices in atombasis the right amount and unique? PASS"""
         self.assertEquals(1, 1)
-       
+
     def testscfenergy(self):
         """Is the SCF energy within 1eV of -140eV?"""
         self.assertInside(self.data.scfenergies[-1],-140,1,"Final scf energy: %f not -140+-1eV" % self.data.scfenergies[-1])
@@ -314,7 +314,7 @@ class MolproSPTest2006(MolproSPTest):
 
 class OrcaSPTest(GenericSPTest):
     """Customized restricted single point unittest"""
-    
+
     # ORCA has no support for symmetry yet.
     def testsymlabels(self):
         """Are all the symmetry labels either Ag/u or Bg/u? PASS"""
@@ -361,13 +361,6 @@ class QChemSPTest(GenericSPTest):
     def testaooverlaps(self):
         """Are the first row and column of the overlap matrix identical? PASS"""
 
-    # `mocoeffs` not implemented yet.
-    def testdimmocoeffs(self):
-        """Are the dimensions of mocoeffs equal to 1 x nmo x nbasis? PASS"""
-
-    # `atombasis` not implemented yet.
-    def testatombasis(self):
-        """Are the indices in atombasis the right amount and unique?"""
 
 if __name__=="__main__":
 

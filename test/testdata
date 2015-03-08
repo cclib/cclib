@@ -29,6 +29,7 @@ Basis     NWChem      GenericBasisTest      basicNWChem6.5        dvb_sp_hf.out
 Basis     NWChem      GenericBasisTest      basicNWChem6.5        dvb_sp_ks.out
 Basis     Psi         GenericBasisTest      basicPsi4             dvb_sp_hf.out
 Basis     Psi         GenericBasisTest      basicPsi4             dvb_sp_ks.out
+Basis     QChem       GenericBasisTest      basicQChem4.2         dvb_sp.out
 
 Basis     GAMESS      GenericBigBasisTest   basicFirefly8.0       C_bigbasis.out
 Basis     GAMESS      GenericBigBasisTest   basicGAMESS-US2012    C_bigbasis.out
@@ -40,6 +41,7 @@ Basis     Molpro      MolproBigBasisTest    basicMolpro2012       C_bigbasis.out
 Basis     NWChem      GenericBigBasisTest   basicNWChem6.0        C_bigbasis.out
 Basis     NWChem      GenericBigBasisTest   basicNWChem6.5        C_bigbasis.out
 Basis     Psi         GenericBigBasisTest   basicPsi4             C_bigbasis.out
+Basis     QChem       QChemBigBasisTest     basicQChem4.2         C_bigbasis.out
 
 CC        DALTON      GenericCCTest         basicDALTON-2013      water_ccsdt.out
 CC        DALTON      GenericCCTest         basicDALTON-2015      water_ccsdt.out
@@ -170,9 +172,9 @@ SP        Psi         Psi3SPTest            basicPsi3             dvb_sp_hf.out
 SP        Psi         PsiSPTest             basicPsi4             dvb_sp_hf.out
 SP        Psi         PsiSPTest             basicPsi4             dvb_sp_ks.out
 SP        QChem       QChemSPTest           basicQChem4.2         dvb_sp.out
-                                            
-SPun      ADF         GenericSPunTest       basicADF2007.01       dvb_un_sp.adfout
-SPun      ADF         GenericSPunTest       basicADF2013.01       dvb_un_sp.adfout
+
+SPun      ADF         ADFSPunTest           basicADF2007.01       dvb_un_sp.adfout
+SPun      ADF         ADFSPunTest           basicADF2013.01       dvb_un_sp.adfout
 SPun      GAMESSUK    GamessUK70SPunTest    basicGAMESS-UK7.0     dvb_un_sp_b.out
 SPun      GAMESSUK    GamessUK80SPunTest    basicGAMESS-UK8.0     dvb_un_sp_hf.out
 SPun      GAMESSUK    GamessUK80SPunTest    basicGAMESS-UK8.0     dvb_un_sp_ks.out

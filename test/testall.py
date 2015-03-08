@@ -38,12 +38,12 @@ def get_program_dir(parser_name):
 
 def getfile(parser, *location, **kwds):
     """Returns a parsed logfile.
-    
+
     Inputs:
         parser - a logfile parser class (subclass of LogFile)
         *location - subdirectory and data filename(s)
         **kwds - currently accepts 'stream' keyword argument
-    
+
     Outputs:
         data - the resulting data object
         logfile - the parser object used for parsing
@@ -63,7 +63,7 @@ def getfile(parser, *location, **kwds):
     logfile = parser(filename, logstream=stream)
     logfile.logger.setLevel(0)
     data = logfile.parse()
-    
+
     return data, logfile
 
 
@@ -129,7 +129,7 @@ def importName(modulename, name):
 
     Taken from Python Cookbook 2nd ed O'Reilly Recipe 16.3.
     Additionally, also returns None if module does not habe attribute name.
-    
+
     Inputs:
         modulename - name of the module
         name - name to be imported

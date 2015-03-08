@@ -3,7 +3,7 @@
 # This file is part of cclib (http://cclib.github.io), a library for parsing
 # and interpreting the results of computational chemistry packages.
 #
-# Copyright (C) 2006-2014, the cclib development team
+# Copyright (C) 2014-2015, the cclib development team
 #
 # The library is free software, distributed under the terms of
 # the GNU Lesser General Public version 2.1 or later. You should have
@@ -16,6 +16,7 @@ from __future__ import print_function
 
 import re
 import numpy
+import itertools
 
 from . import logfileparser
 from . import utils
@@ -45,9 +46,37 @@ class QChem(logfileparser.Logfile):
         # Keep track of whether or not we're performing an
         # (un)restricted calculation.
         self.unrestricted = False
+        self.is_rohf = False
 
         # Compile the dashes-and-or-spaces-only regex.
-        self.dashes_and_spaces = re.compile('^[\s-]+$')
+        self.re_dashes_and_spaces = re.compile('^[\s-]+$')
+
+        # Compile the regex for extracting the atomic index from an
+        # aoname.
+        self.re_atomindex = re.compile('(\d+)_')
+
+        # A maximum of 6 columns per block when printing matrices.
+        self.ncolsblock = 6
+
+        # By default, when asked to print orbitals via
+        # `scf_print`/`scf_final_print` and/or `print_orbitals`,
+        # Q-Chem will print all occupieds and the first 5 virtuals.
+        #
+        # When the number is set for `print_orbitals`, that section of
+        # the output will display (NOcc + that many virtual) MOs, but
+        # any other sections present due to
+        # `scf_print`/`scf_final_print` will still only display (NOcc
+        # + 5) MOs.
+        #
+        # Note that the density matrix is always (NBasis * NBasis)!
+        self.norbdisp_alpha = self.norbdisp_beta = 5
+        self.norbdisp_alpha_aonames = self.norbdisp_beta_aonames = 5
+        self.norbdisp_set = False
+
+        self.alpha_mo_coefficient_headers = (
+            'RESTRICTED (RHF) MOLECULAR ORBITAL COEFFICIENTS',
+            'ALPHA MOLECULAR ORBITAL COEFFICIENTS'
+        )
 
     def after_parsing(self):
 
@@ -62,19 +91,122 @@ class QChem(logfileparser.Logfile):
                                   if len(coords) == correctlen]
         # At the moment, there is no similar correction for other properties!
 
+        # QChem does not print all MO coefficients by default, but rather
+        # up to HOMO+5. So, fill up the missing values with NaNs. If there are
+        # other cases where coefficient are missing, but different ones, this
+        # general afterthought might not be appropriate and the fix will
+        # need to be done while parsing.
+        if hasattr(self, 'mocoeffs'):
+            for im in range(len(self.mocoeffs)):
+                _nmo, _nbasis = self.mocoeffs[im].shape
+                if (_nmo, _nbasis) != (self.nmo, self.nbasis):
+                    coeffs = numpy.empty((self.nmo, self.nbasis))
+                    coeffs[:] = numpy.nan
+                    coeffs[0:_nmo, 0:_nbasis] = self.mocoeffs[im]
+                    self.mocoeffs[im] = coeffs
+
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
 
-        # Charge and multiplicity are present in the input file, which is generally
-        # printed once at the beginning. However, it is also prined for fragment
-        # calculations, so make sure we parse only the first occurance.
-        if '$molecule' in line:
+        # If the input section is repeated back, parse the $rem and
+        # $molecule sections.
+        if line[0:11] == 'User input:':
+            self.skip_line(inputfile, 'd')
+            while list(set(line.strip())) != ['-']:
+
+                if '$rem' in line:
+                    while '$end' not in line:
+                        line = next(inputfile)
+                        if 'print_orbitals' in line.lower():
+                            # Stay with the default value if a number isn't
+                            # specified.
+                            if line.split()[-1].lower() in ('true', 'false'):
+                                continue
+                            else:
+                                norbdisp_aonames = int(line.split()[-1])
+                                self.norbdisp_alpha_aonames = norbdisp_aonames
+                                self.norbdisp_beta_aonames = norbdisp_aonames
+                                self.norbdisp_set = True
+
+                # Charge and multiplicity are present in the input file, which is generally
+                # printed once at the beginning. However, it is also prined for fragment
+                # calculations, so make sure we parse only the first occurance.
+                if '$molecule' in line:
+                    line = next(inputfile)
+                    charge, mult = map(int, line.split())
+                    if not hasattr(self, 'charge'):
+                        self.set_attribute('charge', charge)
+                    if not hasattr(self, 'mult'):
+                        self.set_attribute('mult', mult)
+
+                line = next(inputfile)
+
+        # Parse the general basis for `gbasis`.
+        if 'Basis set in general basis input format:' in line:
+            self.skip_lines(inputfile, ['d', '$basis'])
             line = next(inputfile)
-            charge, mult = map(int, line.split())
-            if not hasattr(self, 'charge'):
-                self.set_attribute('charge', charge)
-            if not hasattr(self, 'mult'):
-                self.set_attribute('mult', mult)
+            if not hasattr(self, 'gbasis'):
+                self.gbasis = []
+            # The end of the general basis block.
+            while '$end' not in line:
+                atom = []
+                # 1. Contains element symbol and atomic index of
+                # basis functions; if 0, applies to all atoms of
+                # same element.
+                assert len(line.split()) == 2
+                line = next(inputfile)
+                # The end of each atomic block.
+                while '****' not in line:
+                    # 2. Contains the type of basis function {S, SP,
+                    # P, D, F, G, H, ...}, the number of primitives,
+                    # and the weight of the final contracted function.
+                    bfsplitline = line.split()
+                    assert len(bfsplitline) == 3
+                    bftype = bfsplitline[0]
+                    nprim = int(bfsplitline[1])
+                    line = next(inputfile)
+                    # 3. The primitive basis functions that compose
+                    # the contracted basis function; there are `nprim`
+                    # of them. The first value is the exponent, and
+                    # the second value is the contraction
+                    # coefficient. If `bftype == 'SP'`, the primitives
+                    # are for both S- and P-type basis functions but
+                    # with separate contraction coefficients,
+                    # resulting in three columns.
+                    if bftype == 'SP':
+                        primitives_S = []
+                        primitives_P = []
+                    else:
+                        primitives = []
+                    # For each primitive in the contracted basis
+                    # function...
+                    for iprim in range(nprim):
+                        primsplitline = line.split()
+                        exponent = float(primsplitline[0])
+                        if bftype == 'SP':
+                            assert len(primsplitline) == 3
+                            coefficient_S = float(primsplitline[1])
+                            coefficient_P = float(primsplitline[2])
+                            primitives_S.append((exponent, coefficient_S))
+                            primitives_P.append((exponent, coefficient_P))
+                        else:
+                            assert len(primsplitline) == 2
+                            coefficient = float(primsplitline[1])
+                            primitives.append((exponent, coefficient))
+                        line = next(inputfile)
+                    if bftype == 'SP':
+                        bf_S = ('S', primitives_S)
+                        bf_P = ('P', primitives_P)
+                        atom.append(bf_S)
+                        atom.append(bf_P)
+                    else:
+                        bf = (bftype, primitives)
+                        atom.append(bf)
+                    # Move to the next contracted basis function
+                    # as long as we don't hit the '****' atom
+                    # delimiter.
+                self.gbasis.append(atom)
+                line = next(inputfile)
 
         # Extract the atomic numbers and coordinates of the atoms.
         if 'Standard Nuclear Orientation (Angstroms)' in line:
@@ -94,12 +226,16 @@ class QChem(logfileparser.Logfile):
 
             if not hasattr(self, 'atomnos'):
                 self.atomnos = []
+                self.atomelements = []
                 for atomelement in atomelements:
+                    self.atomelements.append(atomelement)
                     if atomelement == 'GH':
                         self.atomnos.append(0)
                     else:
                         self.atomnos.append(utils.PeriodicTable().number[atomelement])
                 self.natom = len(self.atomnos)
+                self.atommap = self.generate_atom_map()
+                self.formula_histogram = self.generate_formula_histogram()
 
         # Number of electrons.
         # Useful for determining the number of occupied/virtual orbitals.
@@ -110,6 +246,10 @@ class QChem(logfileparser.Logfile):
                 match = re.findall(nelec_re_string, line.strip())
                 self.nalpha = int(match[0][0].strip())
                 self.nbeta = int(match[0][1].strip())
+                self.norbdisp_alpha += self.nalpha
+                self.norbdisp_alpha_aonames += self.nalpha
+                self.norbdisp_beta += self.nbeta
+                self.norbdisp_beta_aonames += self.nbeta
 
         # Number of basis functions.
         # Because Q-Chem's integral recursion scheme is defined using
@@ -131,6 +271,10 @@ class QChem(logfileparser.Logfile):
                 self.unrestricted = False
             if 'unrestricted' in line:
                 self.unrestricted = True
+            if hasattr(self, 'nalpha') and hasattr(self, 'nbeta'):
+                if self.nalpha != self.nbeta:
+                    self.unrestricted = True
+                    self.is_rohf = True
 
         # Section with SCF iterations goes like this:
         #
@@ -143,6 +287,14 @@ class QChem(logfileparser.Logfile):
         #    3    -382.2939780242      3.37E-03
         # ...
         #
+        scf_success_messages = (
+            'Convergence criterion met',
+            'corrected energy'
+        )
+        scf_failure_messages = (
+            'SCF failed to converge',
+            'Convergence failure'
+        )
         if 'SCF converges when ' in line:
             if not hasattr(self, 'scftargets'):
                 self.scftargets = []
@@ -153,12 +305,12 @@ class QChem(logfileparser.Logfile):
             # but sometimes there are lines before the first dashes.
             while not 'Cycle       Energy' in line:
                 line = next(inputfile)
-            self.skip_lines(inputfile, ['d'])
+            self.skip_line(inputfile, 'd')
 
             values = []
             iter_counter = 1
             line = next(inputfile)
-            while 'energy in the final basis set' not in line:
+            while not any(message in line for message in scf_success_messages):
 
                 # Some trickery to avoid a lot of printing that can occur
                 # between each SCF iteration.
@@ -171,14 +323,39 @@ class QChem(logfileparser.Logfile):
                         iter_counter += 1
                 line = next(inputfile)
 
-                # This is printed in regression Qchem4.2/dvb_sp_unconverged.out
+                # We've converged, but still need the last iteration.
+                if any(message in line for message in scf_success_messages):
+                    entry = line.split()
+                    error = float(entry[2])
+                    values.append([error])
+                    iter_counter += 1
+
+                # This is printed in regression QChem4.2/dvb_sp_unconverged.out
                 # so use it to bail out when convergence fails.
-                if "SCF failed to converge" in line or "Convergence failure" in line:
+                if any(message in line for message in scf_failure_messages):
                     break
 
             if not hasattr(self, 'scfvalues'):
                 self.scfvalues = []
             self.scfvalues.append(numpy.array(values))
+
+        # Molecular orbital coefficients.
+
+        # Try parsing them from this block (which comes from
+        # `scf_final_print = 2``) rather than the combined
+        # aonames/mocoeffs/moenergies block (which comes from
+        # `print_orbitals = true`).
+        if 'Final Alpha MO Coefficients' in line:
+            if not hasattr(self, 'mocoeffs'):
+                self.mocoeffs = []
+            mocoeffs = numpy.empty(shape=(self.nbasis, self.norbdisp_alpha))
+            self.parse_matrix(inputfile, mocoeffs)
+            self.mocoeffs.append(mocoeffs.transpose())
+
+        if 'Final Beta MO Coefficients' in line:
+            mocoeffs = numpy.empty(shape=(self.nbasis, self.norbdisp_beta))
+            self.parse_matrix(inputfile, mocoeffs)
+            self.mocoeffs.append(mocoeffs.transpose())
 
         if 'Total energy in the final basis set' in line:
             if not hasattr(self, 'scfenergies'):
@@ -469,7 +646,7 @@ class QChem(logfileparser.Logfile):
             line = next(inputfile)
 
             # The end of the block is either a blank line or only dashes.
-            while not self.dashes_and_spaces.search(line):
+            while not self.re_dashes_and_spaces.search(line):
                 if 'Occupied' in line or 'Virtual' in line:
                     # A nice trick to find where the HOMO is.
                     if 'Virtual' in line:
@@ -493,12 +670,14 @@ class QChem(logfileparser.Logfile):
                 symbols_alpha.extend(symbols)
                 line = next(inputfile)
 
+            line = next(inputfile)
             # Only look at the second block if doing an unrestricted calculation.
             # This might be a problem for ROHF/ROKS.
             if self.unrestricted:
-                self.skip_line(inputfile, 'header')
+                assert 'Beta MOs' in line
+                self.skip_line(inputfile, '-- Occupied --')
                 line = next(inputfile)
-                while not self.dashes_and_spaces.search(line):
+                while not self.re_dashes_and_spaces.search(line):
                     if 'Occupied' in line or 'Virtual' in line:
                         # This will definitely exist, thanks to the above block.
                         if 'Virtual' in line:
@@ -578,7 +757,7 @@ class QChem(logfileparser.Logfile):
             line = next(inputfile)
 
             # The end of the block is either a blank line or only dashes.
-            while not self.dashes_and_spaces.search(line):
+            while not self.re_dashes_and_spaces.search(line):
                 if 'Occupied' in line or 'Virtual' in line:
                     # A nice trick to find where the HOMO is.
                     if 'Virtual' in line:
@@ -599,9 +778,10 @@ class QChem(logfileparser.Logfile):
             # Only look at the second block if doing an unrestricted calculation.
             # This might be a problem for ROHF/ROKS.
             if self.unrestricted:
-                self.skip_lines(inputfile, ['blank'])
+                assert 'Beta MOs' in line
+                self.skip_line(inputfile, '-- Occupied --')
                 line = next(inputfile)
-                while not self.dashes_and_spaces.search(line):
+                while not self.re_dashes_and_spaces.search(line):
                     if 'Occupied' in line or 'Virtual' in line:
                         # This will definitely exist, thanks to the above block.
                         if 'Virtual' in line:
@@ -627,6 +807,55 @@ class QChem(logfileparser.Logfile):
                 self.moenergies.append([])
                 self.moenergies[1] = numpy.array(energies_beta)
             self.set_attribute('nmo', len(self.moenergies[0]))
+
+        # If we've asked to display more virtual orbitals than there
+        # are MOs present in the molecule, fix that now.
+        if hasattr(self, 'nmo') and hasattr(self, 'nalpha') and hasattr(self, 'nbeta'):
+            if self.norbdisp_alpha_aonames > self.nmo:
+                self.norbdisp_alpha_aonames = self.nmo
+            if self.norbdisp_beta_aonames > self.nmo:
+                self.norbdisp_beta_aonames = self.nmo
+
+        # Molecular orbital coefficients.
+
+        # This block comes from `print_orbitals = true/{int}`. Less
+        # precision than `scf_final_print >= 2` for `mocoeffs`, but
+        # important for `aonames` and `atombasis`.
+
+        if any(header in line
+               for header in self.alpha_mo_coefficient_headers):
+
+            if not hasattr(self, 'mocoeffs'):
+                self.mocoeffs = []
+            if not hasattr(self, 'atombasis'):
+                self.atombasis = []
+                for n in range(self.natom):
+                    self.atombasis.append([])
+            if not hasattr(self, 'aonames'):
+                self.aonames = []
+            # We could also attempt to parse `moenergies` here, but
+            # nothing is gained by it.
+
+            mocoeffs = numpy.empty(shape=(self.nbasis, self.norbdisp_alpha_aonames))
+            self.parse_matrix_aonames(inputfile, mocoeffs)
+            # Only use these MO coefficients if we don't have them
+            # from `scf_final_print`.
+            if len(self.mocoeffs) == 0:
+                self.mocoeffs.append(mocoeffs.transpose())
+
+            # Go back through `aonames` to create `atombasis`.
+            assert len(self.aonames) == self.nbasis
+            for aoindex, aoname in enumerate(self.aonames):
+                atomindex = int(self.re_atomindex.search(aoname).groups()[0]) - 1
+                self.atombasis[atomindex].append(aoindex)
+            assert len(self.atombasis) == len(self.atomnos)
+
+        if 'BETA  MOLECULAR ORBITAL COEFFICIENTS' in line:
+
+            mocoeffs = numpy.empty(shape=(self.nbasis, self.norbdisp_beta_aonames))
+            self.parse_matrix_aonames(inputfile, mocoeffs)
+            if len(self.mocoeffs) == 1:
+                self.mocoeffs.append(mocoeffs.transpose())
 
         # Population analysis.
 
@@ -749,42 +978,16 @@ class QChem(logfileparser.Logfile):
             if not hasattr(self, 'grads'):
                 self.grads = []
             grad = numpy.empty(shape=(3, self.natom))
-            # A maximum of 6 columns/block.
-            ncols = 6
-            line = next(inputfile)
-            colcounter = 0
-            while colcounter < self.natom:
-                if line[:5].strip() == '':
-                    line = next(inputfile)
-                rowcounter = 0
-                while rowcounter < 3:
-                    row = list(map(float, line.split()[1:]))
-                    grad[rowcounter][colcounter:colcounter+ncols] = row
-                    line = next(inputfile)
-                    rowcounter += 1
-                colcounter += ncols
+            self.parse_matrix(inputfile, grad)
             self.grads.append(grad.T)
 
         # For IR-related jobs, the Hessian is printed (dim: 3*natom, 3*natom).
         # Note that this is *not* the mass-weighted Hessian.
         if 'Hessian of the SCF Energy' in line:
             if not hasattr(self, 'hessian'):
-                # A maximum of 6 columns/block.
-                ncols = 6
                 dim = 3*self.natom
                 self.hessian = numpy.empty(shape=(dim, dim))
-                line = next(inputfile)
-                colcounter = 0
-                while colcounter < dim:
-                    if line[:5].strip() == '':
-                        line = next(inputfile)
-                    rowcounter = 0
-                    while rowcounter < dim:
-                        row = list(map(float, line.split()[1:]))
-                        self.hessian[rowcounter][colcounter:colcounter+ncols] = row
-                        line = next(inputfile)
-                        rowcounter += 1
-                    colcounter += ncols
+                self.parse_matrix(inputfile, self.hessian)
 
         # Start of the IR/Raman frequency section.
         if 'VIBRATIONAL ANALYSIS' in line:
@@ -939,20 +1142,12 @@ class QChem(logfileparser.Logfile):
                 self.atommasses = numpy.array(atommasses)
 
         # TODO:
-        # 'aonames'
-        # 'atombasis'
-        # 'freeenergy'
-        # 'fonames'
-        # 'fooverlaps'
-        # 'fragnames'
-        # 'frags'
-        # 'gbasis'
-        # 'mocoeffs'
+        # 'enthalpy' (incorrect)
+        # 'entropy' (incorrect)
+        # 'freeenergy' (incorrect)
         # 'nocoeffs'
-        # 'scancoords'
-        # 'scanenergies'
-        # 'scannames'
-        # 'scanparm'
+        # 'nooccnos'
+        # 'vibanharms'
 
     def parse_charge_section(self, inputfile, chargetype):
         """Parse the population analysis charge block."""
@@ -982,6 +1177,109 @@ class QChem(logfileparser.Logfile):
         self.atomcharges[chargetype] = numpy.array(charges)
         if has_spins:
             self.atomspins[chargetype] = numpy.array(spins)
+
+    def parse_matrix(self, inputfile, nparray):
+        """Q-Chem prints most matrices in a standard format; parse the matrix
+        into a preallocated NumPy array of the appropriate shape.
+        """
+        nrows, ncols = nparray.shape
+        line = next(inputfile)
+        assert len(line.split()) == min(self.ncolsblock, ncols)
+        colcounter = 0
+        while colcounter < ncols:
+            # If the line is just the column header (indices)...
+            if line[:5].strip() == '':
+                line = next(inputfile)
+            rowcounter = 0
+            while rowcounter < nrows:
+                row = list(map(float, line.split()[1:]))
+                assert len(row) == min(self.ncolsblock, (ncols - colcounter))
+                nparray[rowcounter][colcounter:colcounter + self.ncolsblock] = row
+                line = next(inputfile)
+                rowcounter += 1
+            colcounter += self.ncolsblock
+
+    def parse_matrix_aonames(self, inputfile, nparray):
+        """Q-Chem prints most matrices in a standard format; parse the matrix
+        into a preallocated NumPy array of the appropriate shape.
+
+        Rather than have one routine for parsing all general matrices
+        and the 'MOLECULAR ORBITAL COEFFICIENTS' block, use a second
+        which handles `aonames`.
+        """
+        bigmom = ('d', 'f', 'g', 'h')
+        nrows, ncols = nparray.shape
+        line = next(inputfile)
+        assert len(line.split()) == min(self.ncolsblock, ncols)
+        colcounter = 0
+        while colcounter < ncols:
+            # If the line is just the column header (indices)...
+            if line[:5].strip() == '':
+                line = next(inputfile)
+            # Do nothing for now.
+            if 'eigenvalues' in line:
+                line = next(inputfile)
+            rowcounter = 0
+            while rowcounter < nrows:
+                row = line.split()
+                # Only take the AO names on the first time through.
+                if colcounter == 0:
+                    if len(self.aonames) != self.nbasis:
+                        # Apply the offset for rows where there is
+                        # more than one atom of any element in the
+                        # molecule.
+                        offset = int(self.formula_histogram[row[1]] != 1)
+                        if offset:
+                            name = self.atommap.get(row[1] + str(row[2]))
+                        else:
+                            name = self.atommap.get(row[1] + '1')
+                        # For l > 1, there is a space between l and
+                        # m_l when using spherical functions.
+                        shell = row[2 + offset]
+                        if shell in bigmom:
+                            shell = ''.join([shell, row[3 + offset]])
+                        aoname = ''.join([name, '_', shell.upper()])
+                        self.aonames.append(aoname)
+                row = list(map(float, row[-min(self.ncolsblock, (ncols - colcounter)):]))
+                nparray[rowcounter][colcounter:colcounter + self.ncolsblock] = row
+                line = next(inputfile)
+                rowcounter += 1
+            colcounter += self.ncolsblock
+
+    def generate_atom_map(self):
+        """Generate the map to go from Q-Chem atom numbering:
+        'C1', 'C2', 'C3', 'C4', 'C5', 'C6', 'H1', 'H2', 'H3', 'H4', 'C7', ...
+        to cclib atom numbering:
+        'C1', 'C2', 'C3', 'C4', 'C5', 'C6', 'H7', 'H8', 'H9', 'H10', 'C11', ...
+        for later use.
+        """
+
+        # Generate the desired order.
+        order_proper = [element + str(num)
+                        for element, num in zip(self.atomelements,
+                                                itertools.count(start=1))]
+        # We need separate counters for each element.
+        element_counters = {element: itertools.count(start=1)
+                            for element in set(self.atomelements)}
+        # Generate the Q-Chem printed order.
+        order_qchem = [element + str(next(element_counters[element]))
+                       for element in self.atomelements]
+        # Combine the orders into a mapping.
+        atommap = {k:v for k, v, in zip(order_qchem, order_proper)}
+        return atommap
+
+    def generate_formula_histogram(self):
+        """From the atomnos, generate a histogram that represents the
+        molecular formula.
+        """
+
+        histogram = dict()
+        for element in self.atomelements:
+            if element in histogram.keys():
+                histogram[element] += 1
+            else:
+                histogram[element] = 1
+        return histogram
 
 
 if __name__ == '__main__':

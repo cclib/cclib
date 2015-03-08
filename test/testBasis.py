@@ -30,7 +30,7 @@ class GenericBasisTest(bettertest.TestCase):
     def testgbasis(self):
         """Is gbasis the right length?"""
         self.assertEquals(self.data.natom, len(self.data.gbasis))
-    
+
     def testnames(self):
         """Are the name of basis set functions acceptable?"""
         for atom in self.data.gbasis:
@@ -55,7 +55,7 @@ class GenericBasisTest(bettertest.TestCase):
                 total += multiple[ftype]
 
         self.assertEquals(self.data.nbasis, total)
-    
+
     def testcoeffs(self):
         """Are the atomic basis set exponents and coefficients correct?"""
 
@@ -86,7 +86,7 @@ class JaguarBasisTest(GenericBasisTest):
 
 class GenericBigBasisTest(GenericBasisTest):
     """Generic big basis set unittest"""
-    
+
     # Write up a new test, and/or revise the one inherited.
     def testcoeffs(self):
         """Are the basis set coefficients correct? PASS"""
@@ -111,7 +111,12 @@ class MolproBigBasisTest(GenericBigBasisTest):
     """Customized big basis set unittest"""
     spherical = True
 
-              
+
+class QChemBigBasisTest(GenericBigBasisTest):
+    """Customized big basis set unittest"""
+    spherical = True
+
+
 if __name__=="__main__":
 
     from testall import testall

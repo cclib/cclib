@@ -209,8 +209,16 @@ ORCA/ORCA3.0/dvb_gopt_unconverged.out
 Psi/Psi3/water_psi3.log
 Psi/Psi4/dvb_gopt_hf_unconverged.out
 Psi/Psi4/psi4.0b5_samples_scf4.out
-QChem/QChem4.2/CH3---Na+.out
+QChem/QChem4.2/CH3---Na+_RS.out
+QChem/QChem4.2/CH3---Na+_RS_SCF.out
 QChem/QChem4.2/CH4---Na+.out
+QChem/QChem4.2/CO2.out
+QChem/QChem4.2/CO2_cation_ROHF.out
+QChem/QChem4.2/CO2_cation_ROHF_bigprint.out
+QChem/QChem4.2/CO2_cation_ROHF_bigprint_allvirt.out
+QChem/QChem4.2/CO2_cation_UHF.out
+QChem/QChem4.2/CO2_cation_UHF_bigprint.out
+QChem/QChem4.2/CO2_cation_UHF_bigprint_allvirt.out
 QChem/QChem4.2/copper_ax2wat_eq0wat4amm.opt_tzvpp.SOS-CIS_D0.out
 QChem/QChem4.2/dvb_gopt_unconverged.out
 QChem/QChem4.2/dvb_sp_multipole_10.out
