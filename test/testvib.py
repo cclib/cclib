@@ -1,7 +1,7 @@
 # This file is part of cclib (http://cclib.github.io), a library for parsing
 # and interpreting the results of computational chemistry packages.
 #
-# Copyright (C) 2006-2014, the cclib development team
+# Copyright (C) 2006,2007,2012,2014,2015, the cclib development team
 #
 # The library is free software, distributed under the terms of
 # the GNU Lesser General Public version 2.1 or later. You should have
@@ -10,10 +10,10 @@
 
 """Test logfiles with vibration output in cclib"""
 
-import bettertest
+import unittest
 
 
-class GenericIRTest(bettertest.TestCase):
+class GenericIRTest(unittest.TestCase):
     """Generic vibrational frequency unittest"""
 
     # Unit tests should normally give this value for the largest IR intensity.
@@ -108,7 +108,7 @@ class QChemIRTest(GenericIRTest):
         """Do the frequencies from the Hessian match the printed frequencies?"""
 
 
-class GenericIRimgTest(bettertest.TestCase):
+class GenericIRimgTest(unittest.TestCase):
     """Generic imaginary vibrational frequency unittest"""
 
     def testvibdisps(self):
@@ -134,7 +134,7 @@ class GenericIRimgTest(bettertest.TestCase):
 ##        self.assertEqual(max(abs(Cvibdisps).flat), 1.0)
 
 
-class GenericRamanTest(bettertest.TestCase):
+class GenericRamanTest(unittest.TestCase):
     """Generic Raman unittest"""
 
     def testlengths(self):

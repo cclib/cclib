@@ -1,7 +1,7 @@
 # This file is part of cclib (http://cclib.github.io), a library for parsing
 # and interpreting the results of computational chemistry packages.
 #
-# Copyright (C) 2006-2014, the cclib development team
+# Copyright (C) 2006-2015, the cclib development team
 #
 # The library is free software, distributed under the terms of
 # the GNU Lesser General Public version 2.1 or later. You should have
@@ -652,8 +652,9 @@ class ADFSPTest_nosyms(test_modules['SP'].ADFSPTest):
     foverlap00 = 1.00000
     foverlap11 = 0.99999
     foverlap22 = 0.99999
+    @unittest.skip('Symmetry labels were not printed here')
     def testsymlabels(self):
-        """Symmetry labels were not printed here. PASS"""
+        """Symmetry labels were not printed here."""
 
 class ADFSPTest_nosyms_valence(ADFSPTest_nosyms):
     def testlengthmoenergies(self):
@@ -662,24 +663,28 @@ class ADFSPTest_nosyms_valence(ADFSPTest_nosyms):
         self.assertEquals(self.data.moenergies[0][0], 99999.0)
 
 class DALTONSPTest_nosyms_nolabels(DALTONSPTest):
+    @unittest.skip('?')
     def testsymlabels(self):
-        """Are all the symmetry labels either Ag/u or Bg/u?. PASS"""
+        """Are all the symmetry labels either Ag/u or Bg/u?."""
 
 class GAMESSUSSPunTest_charge0(GenericSPunTest):
     def testcharge_and_mult(self):
         """The charge in the input was wrong."""
         self.assertEquals(self.data.charge, 0)
+    @unittest.skip('HOMOs were incorrect due to charge being wrong')
     def testhomos(self):
-        """HOMOs were incorrect due to charge being wrong. PASS"""
+        """HOMOs were incorrect due to charge being wrong."""
 
 class GAMESSUSIRTest_ts(GenericIRTest):
+    @unittest.skip('This is a transition state with different intensities')
     def testirintens(self):
-        """This is a transition state with different intensities. PASS"""
+        """This is a transition state with different intensities."""
 
 class GAMESSUSCISTest_dets(GenericCISTest):
     nstates = 10
+    @unittest.skip('This gives unexpected coeficcients, also for current unit tests.')
     def testetsecsvalues(self):
-        """This gives unexpected coeficcients, also for current unit tests. PASS"""
+        """This gives unexpected coeficcients, also for current unit tests."""
 
 class JaguarSPTest_6_31gss(GenericSPTest):
     """AO counts and some values are different in 6-31G** compared to STO-3G."""
@@ -717,8 +722,9 @@ class OrcaSPunTest_charge0(OrcaSPunTest):
     def testcharge_and_mult(self):
         """The charge in the input was wrong."""
         self.assertEquals(self.data.charge, 0)
+    @unittest.skip('HOMOs were incorrect due to charge being wrong.')
     def testhomos(self):
-        """HOMOs were incorrect due to charge being wrong. PASS"""
+        """HOMOs were incorrect due to charge being wrong."""
 
 class OrcaTDDFTTest_error(OrcaTDDFTTest):
     def testoscs(self):
@@ -727,10 +733,12 @@ class OrcaTDDFTTest_error(OrcaTDDFTTest):
         self.assertAlmostEquals(max(self.data.etoscs), 1.0, delta=0.2)
 
 class OrcaIRTest_old(OrcaIRTest):
+    @unittest.skip('These values were wrong due to wrong input coordinates.')
     def testfreqval(self):
-        """These values were wrong due to wrong input coordinates. PASS"""
+        """These values were wrong due to wrong input coordinates."""
+    @unittest.skip('These values were wrong due to wrong input coordinates.')
     def testirintens(self):
-        """These values were wrong due to wrong input coordinates. PASS"""
+        """These values were wrong due to wrong input coordinates."""
 
 old_unittests = {
 

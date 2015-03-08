@@ -1,7 +1,7 @@
 # This file is part of cclib (http://cclib.github.io), a library for parsing
 # and interpreting the results of computational chemistry packages.
 #
-# Copyright (C) 2007-2014, the cclib development team
+# Copyright (C) 2007,2012,2014,2015, the cclib development team
 #
 # The library is free software, distributed under the terms of
 # the GNU Lesser General Public version 2.1 or later. You should have
@@ -10,13 +10,14 @@
 
 """Test logfiles with core electron data in cclib"""
 
+import unittest
+
 import numpy
 
 from cclib.parser.utils import PeriodicTable
-import bettertest
 
 
-class GenericCoreTest(bettertest.TestCase):
+class GenericCoreTest(unittest.TestCase):
     """Generic core electrons unittest"""
 
     coredict = {'Mo': 28, 'O':0, 'Cl':10}

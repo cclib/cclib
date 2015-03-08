@@ -1,7 +1,7 @@
 # This file is part of cclib (http://cclib.github.io), a library for parsing
 # and interpreting the results of computational chemistry packages.
 #
-# Copyright (C) 2006-2014, the cclib development team
+# Copyright (C) 2006,2007,2012,2014,2015, the cclib development team
 #
 # The library is free software, distributed under the terms of
 # the GNU Lesser General Public version 2.1 or later. You should have
@@ -10,12 +10,12 @@
 
 """Test unrestrictied single point logfiles in cclib"""
 
+import unittest
+
 import numpy
 
-import bettertest
 
-
-class GenericSPunTest(bettertest.TestCase):
+class GenericSPunTest(unittest.TestCase):
     """Generic unrestricted single point unittest"""
 
     def testnatom(self):
@@ -113,52 +113,47 @@ class GaussianSPunTest(GenericSPunTest):
 class JaguarSPunTest(GenericSPunTest):
     """Customized unrestricted single point unittest"""
 
-    # Data file does not contain enough information. Can we make a new one?
+    @unittest.skip('Data file does not contain enough information')
     def testdimaooverlaps(self):
-        """Are the dims of the overlap matrix consistent with nbasis? PASS"""
-        self.assertEquals(1,1)
+        """Are the dims of the overlap matrix consistent with nbasis?"""
 
-    # Why is this test passed?
     def testmoenergies(self):
         """Are the dims of the moenergies equal to 2 x homos+11?"""
         self.assertEquals(len(self.data.moenergies), 2)
         self.assertEquals(len(self.data.moenergies[0]), self.data.homos[0]+11)
         self.assertEquals(len(self.data.moenergies[1]), self.data.homos[1]+11)
 
-    # Data file does not contain enough information. Can we make a new one?
+    @unittest.skip('Data file does not contain enough information')
     def testdimmocoeffs(self):
-        """Are the dimensions of mocoeffs equal to 1 x nmo x nbasis? PASS"""
-        self.assertEquals(1,1)
+        """Are the dimensions of mocoeffs equal to 1 x nmo x nbasis?"""
 
-    # Why is this test passed?
+    @unittest.skip('?')
     def testmosyms(self):
-        """Are the dims of the mosyms equal to 2 x nmo? PASS"""
-        self.assertEquals(1,1)
+        """Are the dims of the mosyms equal to 2 x nmo?"""
 
 
 class MolproSPunTest(GenericSPunTest):
     """Customized unrestricted single point unittest"""
 
+    @unittest.skip('?')
     def testmosyms(self):
-        """Are the dims of the mosyms equal to 2 x nmo? PASS"""
-        self.assertEquals(1,1)
+        """Are the dims of the mosyms equal to 2 x nmo?"""
 
 
 class OrcaSPunTest(GenericSPunTest):
     """Customized unrestricted single point unittest"""
 
-    # ORCA has no support for symmetry yet.
+    @unittest.skip('ORCA has no support for symmetry yet')
     def testmosyms(self):
         """Are the dims of the mosyms equals to 2 x nmo?"""
-        self.assertEquals(1,1)
 
 
 class QChemSPunTest(GenericSPunTest):
     """Customized unrestricted single point unittest"""
 
-    # Q-Chem cannot print the overlap matrix.
+    @unittest.skip('Q-Chem cannot print the overlap matrix')
     def testdimaooverlaps(self):
-        """Are the dims of the overlap matrix consistent with nbasis? PASS"""
+        """Are the dims of the overlap matrix consistent with nbasis?"""
 
 
 if __name__=="__main__":

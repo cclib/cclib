@@ -1,7 +1,7 @@
 # This file is part of cclib (http://cclib.github.io), a library for parsing
 # and interpreting the results of computational chemistry packages.
 #
-# Copyright (C) 2006-2014, the cclib development team
+# Copyright (C) 2006,2007,2009,2012-2015, the cclib development team
 #
 # The library is free software, distributed under the terms of
 # the GNU Lesser General Public version 2.1 or later. You should have
@@ -10,15 +10,12 @@
 
 """Test geometry optimization logfiles in cclib"""
 
-import math
+import unittest
 
 import numpy
 
-import bettertest
-import testSP
 
-
-class GenericGeoOptTest(bettertest.TestCase):
+class GenericGeoOptTest(unittest.TestCase):
     """Generic geometry optimization unittest"""
 
     # In STO-3G, H has 1, C has 3.
@@ -68,7 +65,7 @@ class GenericGeoOptTest(bettertest.TestCase):
                         # Find the distance in the final iteration
                         final_x = self.data.atomcoords[-1][i]
                         final_y = self.data.atomcoords[-1][j]
-                        dist = math.sqrt(sum((final_x - final_y)**2))
+                        dist = numpy.sqrt(sum((final_x - final_y)**2))
                         mindist = min(mindist,dist)
         self.assert_(abs(mindist-1.34)<0.03,"Mindist is %f (not 1.34)" % mindist)
 
@@ -175,19 +172,19 @@ class GaussianGeoOptTest(GenericGeoOptTest):
 class JaguarGeoOptTest(GenericGeoOptTest):
     """Customized geometry optimization unittest"""
 
-    # Data file does not contain enough information. Can we make a new one?
+    @unittest.skip('Data file does not contain enough information. Can we make a new one?')
     def testatombasis(self):
-        """Are the indices in atombasis the right amount and unique? PASS"""
+        """Are the indices in atombasis the right amount and unique?"""
         self.assertEquals(1, 1)
 
-    # We did not print the atomic partial charges in the unit tests for this version.
+    @unittest.skip('We did not print the atomic partial charges in the unit tests for this version.')
     def testatomcharges(self):
-        """Are all atomcharges consistent with natom and do they sum to zero? PASS"""
+        """Are all atomcharges consistent with natom and do they sum to zero?"""
         self.assertEquals(1, 1)
 
-    # Data file does not contain enough information. Can we make a new one?
+    @unittest.skip('Data file does not contain enough information. Can we make a new one?')
     def testdimmocoeffs(self):
-        """Are the dimensions of mocoeffs equal to 1 x nmo x nbasis? PASS"""
+        """Are the dimensions of mocoeffs equal to 1 x nmo x nbasis?"""
 
 
 class MolproGeoOptTest(GenericGeoOptTest):
@@ -200,8 +197,9 @@ class MolproGeoOptTest(GenericGeoOptTest):
     extracoords = 1
     extrascfs = 2
 
+    @unittest.skip('?')
     def testsymlabels(self):
-        """Are all the symmetry labels either Ag/u or Bg/u? PASS"""
+        """Are all the symmetry labels either Ag/u or Bg/u?"""
         self.assertEquals(1,1)
 
     # Here is what the manual has to say about convergence:
@@ -228,8 +226,9 @@ class MolproGeoOptTest2006(MolproGeoOptTest):
     # Same situation as SP -- this is tested for in the 2012 logfiles, but
     # the 2006 logfiles were created before atomcharges was an attribute and
     # we don't have access to Molpro 2006 anymore.
+    @unittest.skip('...')
     def testatomcharges(self):
-        """Are all atomcharges consistent with natom and do they sum to zero? PASS"""
+        """Are all atomcharges consistent with natom and do they sum to zero?"""
         self.assertEquals(1,1)
 
 
@@ -251,9 +250,9 @@ class OrcaGeoOptTest(GenericGeoOptTest):
     extracoords = 1
     extrascfs = 1
 
-    # ORCA has no support for symmetry yet.
+    @unittest.skip('ORCA has no support for symmetry yet.')
     def testsymlabels(self):
-        """Are all the symmetry labels either Ag/u or Bg/u? PASS"""
+        """Are all the symmetry labels either Ag/u or Bg/u?"""
         self.assertEquals(1,1)
 
     # Besides all the geovalues being below their tolerances, ORCA also considers
