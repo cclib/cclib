@@ -39,7 +39,7 @@ class NuclearTest(bettertest.TestCase):
         line = re.search('Nuclear Repulsion Energy = .* hartrees', output).group()
         nre = float(line.split()[4])
         nre = utils.convertor(nre, 'Angstrom', 'bohr')
-        self.assertInside(nuclear.repulsion_energy(), nre, 1E-8)
+        self.assertAlmostEqual(nuclear.repulsion_energy(), nre, places=7)
 
 tests = [NuclearTest]
 

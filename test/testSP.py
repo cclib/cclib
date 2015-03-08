@@ -46,7 +46,7 @@ class GenericSPTest(bettertest.TestCase):
         for type in set(['mulliken'] + list(self.data.atomcharges.keys())):
             charges = self.data.atomcharges[type]
             self.assertEquals(len(charges), self.data.natom)
-            self.assertInside(sum(charges), 0.0, 0.001)
+            self.assertAlmostEquals(sum(charges), 0.0, delta=0.001)
 
     def testatomcoords(self):
         """Are the dimensions of atomcoords 1 x natom x 3?"""
@@ -98,8 +98,8 @@ class GenericSPTest(bettertest.TestCase):
         self.assertEquals(type(self.data.scfvalues[0]),type(numpy.array([])))
 
     def testscfenergy(self):
-        """Is the SCF energy within 40eV of target?"""
-        self.assertInside(self.data.scfenergies[-1], self.b3lyp_energy, 40, "Final scf energy: %f not %i +- 40eV" %(self.data.scfenergies[-1], self.b3lyp_energy))
+        """Is the SCF energy within the target?"""
+        self.assertAlmostEquals(self.data.scfenergies[-1], self.b3lyp_energy, delta=40, msg="Final scf energy: %f not %i +- 40eV" %(self.data.scfenergies[-1], self.b3lyp_energy))
 
     def testscftargetdim(self):
         """Do the scf targets have the right dimensions?"""
@@ -136,8 +136,8 @@ class GenericSPTest(bettertest.TestCase):
             self.assertEquals(self.data.aooverlaps[i,i], 1.0)
 
         # Check some additional values that don't seem to move around between programs.
-        self.assertInside(self.data.aooverlaps[0, 1], self.overlap01, 0.02)
-        self.assertInside(self.data.aooverlaps[1, 0], self.overlap01, 0.02)
+        self.assertAlmostEquals(self.data.aooverlaps[0, 1], self.overlap01, delta=0.01)
+        self.assertAlmostEquals(self.data.aooverlaps[1, 0], self.overlap01, delta=0.01)
         self.assertEquals(self.data.aooverlaps[3,0], 0.0)
         self.assertEquals(self.data.aooverlaps[0,3], 0.0)
 
@@ -154,45 +154,45 @@ class GenericSPTest(bettertest.TestCase):
         reference = self.data.moments[0]
         self.assertEquals(len(reference), 3)
         for x in reference:
-            self.assertInside(x, 0.0, 0.001)
+            self.assertEquals(x, 0.0)
 
         # Length and value of dipole moment should always be correct (zero for this test).
         dipole = self.data.moments[1]
         self.assertEquals(len(dipole), 3)
         for d in dipole:
-            self.assertInside(d, 0.0, 0.001)
+            self.assertAlmostEquals(d, 0.0, places=7)
 
         # If the quadrupole is there, we can expect roughly -50B for the XX moment,
         # -50B for the YY moment and and -60B for the ZZ moment.
         if len(self.data.moments) > 2:
             quadrupole = self.data.moments[2]
             self.assertEquals(len(quadrupole), 6)
-            self.assertInside(quadrupole[0], -50, 5)
-            self.assertInside(quadrupole[3], -50, 5)
-            self.assertInside(quadrupole[5], -60, 5)
+            self.assertAlmostEquals(quadrupole[0], -50, delta=2.5)
+            self.assertAlmostEquals(quadrupole[3], -50, delta=2.5)
+            self.assertAlmostEquals(quadrupole[5], -60, delta=3)
 
         # If the octupole is there, it should have 10 components and be zero.
         if len(self.data.moments) > 3:
             octupole = self.data.moments[3]
             self.assertEquals(len(octupole), 10)
             for m in octupole:
-                self.assertInside(m, 0.0, 0.001)
+                self.assertAlmostEquals(m, 0.0, delta=0.001)
 
         # The hexadecapole should have 15 elements, an XXXX component of around -1900 Debye*ang^2,
         # a YYYY component of -330B and a ZZZZ component of -50B.
         if len(self.data.moments) > 4:
             hexadecapole = self.data.moments[4]
             self.assertEquals(len(hexadecapole), 15)
-            self.assertInside(hexadecapole[0], -1900, 100)
-            self.assertInside(hexadecapole[10], -330, 10)
-            self.assertInside(hexadecapole[14], -50, 5)
+            self.assertAlmostEquals(hexadecapole[0], -1900, delta=90)
+            self.assertAlmostEquals(hexadecapole[10], -330, delta=11)
+            self.assertAlmostEquals(hexadecapole[14], -50, delta=2.5)
 
         # The are 21 unique 32-pole moments, and all are zero in this test case.
         if len(self.data.moments) > 5:
             moment32 = self.data.moments[5]
             self.assertEquals(len(moment32), 21)
             for m in moment32:
-                self.assertInside(m, 0.0, 0.001)
+                self.assertEquals(m, 0.0)
 
 class ADFSPTest(GenericSPTest):
     """Customized restricted single point unittest"""
@@ -201,14 +201,12 @@ class ADFSPTest(GenericSPTest):
     foverlap11 = 1.02672
     foverlap22 = 1.03585
 
+    b3lyp_energy = -140
+
     # ADF parser does not extract atombasis.
     def testatombasis(self):
         """Are the indices in atombasis the right amount and unique? PASS"""
         self.assertEquals(1, 1)
-
-    def testscfenergy(self):
-        """Is the SCF energy within 1eV of -140eV?"""
-        self.assertInside(self.data.scfenergies[-1],-140,1,"Final scf energy: %f not -140+-1eV" % self.data.scfenergies[-1])
 
     def testfoverlaps(self):
         """Are the dims and values of the fragment orbital overlap matrix correct?"""
@@ -222,9 +220,9 @@ class ADFSPTest(GenericSPTest):
 
         # Although the diagonal elements are close to zero, the SFOs
         # are generally not normalized, so test for a few specific values.
-        self.assertInside(self.data.fooverlaps[0, 0], self.foverlap00, 0.00001)
-        self.assertInside(self.data.fooverlaps[1, 1], self.foverlap11, 0.00001)
-        self.assertInside(self.data.fooverlaps[2, 2], self.foverlap22, 0.00001)
+        self.assertAlmostEquals(self.data.fooverlaps[0, 0], self.foverlap00, delta=0.0001)
+        self.assertAlmostEquals(self.data.fooverlaps[1, 1], self.foverlap11, delta=0.0001)
+        self.assertAlmostEquals(self.data.fooverlaps[2, 2], self.foverlap22, delta=0.0001)
 
 
 class DALTONSPTest(GenericSPTest):
@@ -255,7 +253,7 @@ class GaussianSPTest(GenericSPTest):
     def testatommasses(self):
         """Do the atom masses sum up to the molecular mass (130078.25+-0.1mD)?"""
         mm = 1000*sum(self.data.atommasses)
-        self.assertInside(mm, 130078.25, 0.1, "Molecule mass: %f not 130078 +- 0.1mD" %mm)
+        self.assertAlmostEquals(mm, 130078.25, places=10, msg="Molecule mass: %f not 130078 +- 0.1mD" %mm)
 
     def testmoments(self):
         """We don't yet have dipole moments printed in the unit test logfile. PASS"""

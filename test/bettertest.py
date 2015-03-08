@@ -25,15 +25,7 @@ class TestCase(unittest.TestCase):
     It is not possible to test equality of numpy arrays using assertEquals().
     Instead, use assertArrayEquals() as defined below. For the original solution see:
     http://mail.python.org/pipermail/python-list/2005-November/311235.html
-
-    Also, for testing near equality of floats use assertInside.
-    (Taken from Python Cookbook 2nd Ed. Recipe 8.11)
     """
-
-    def assertInside(self, first, second, error, msg=None):
-        """Fail if the second number isn't within a certain error of the first."""
-        if not (second-error) < first < (second+error):
-            raise self.failureException(msg or '%r != %r (+-%r)' % (first,second,error))
 
     def assertArrayEquals(self, first, second, msg=None):
         """Fails unless two numpy arrays are identical."""

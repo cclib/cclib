@@ -30,19 +30,19 @@ class GenericTDTest(bettertest.TestCase):
         # then this will simply pick out the first energy.
         idx_lambdamax = [i for i, x in enumerate(self.data.etoscs)
                          if x==max(self.data.etoscs)][0]
-        self.assertInside(self.data.etenergies[idx_lambdamax], self.expected_l_max, 5000)
+        self.assertAlmostEqual(self.data.etenergies[idx_lambdamax], self.expected_l_max, delta=5000)
     
     def testoscs(self):
         """Is the maximum of etoscs in the right range?"""
         self.assertEqual(len(self.data.etoscs), self.number)
-        self.assertInside(max(self.data.etoscs), 0.67, 0.1)
+        self.assertAlmostEqual(max(self.data.etoscs), 0.67, delta=0.1)
 
     def testsecs(self):
         """Is the sum of etsecs close to 1?"""
         self.assertEqual(len(self.data.etsecs), self.number)
         lowestEtrans = self.data.etsecs[1]
         sumofsec = sum([z*z for (x, y, z) in lowestEtrans])
-        self.assertInside(sumofsec, 1.0, 0.16)
+        self.assertAlmostEqual(sumofsec, 1.0, delta=0.16)
 
     def testsecs_transition(self):
         """Is the lowest E transition from the HOMO or to the LUMO?"""
@@ -71,7 +71,7 @@ class ADFTDDFTTest(GenericTDTest):
 
         #ADF squares the etsecs
         sumofsec = sum([z for (x, y, z) in lowestEtrans])
-        self.assertInside(sumofsec, 1.0, 0.16)
+        self.assertAlmostEqual(sumofsec, 1.0, delta=0.16)
 
 
 class GaussianTDDFTTest(GenericTDTest):
@@ -97,7 +97,7 @@ class JaguarTDDFTTest(GenericTDTest):
     def testoscs(self):
         """Is the maximum of etoscs in the right range?"""
         self.assertEqual(len(self.data.etoscs), self.number)
-        self.assertInside(max(self.data.etoscs), 1.0, 0.2)
+        self.assertAlmostEqual(max(self.data.etoscs), 1.0, delta=0.2)
 
     
 class OrcaTDDFTTest(GenericTDTest):
@@ -109,7 +109,7 @@ class OrcaTDDFTTest(GenericTDTest):
     def testoscs(self):
         """Is the maximum of etoscs in the right range?"""
         self.assertEqual(len(self.data.etoscs), self.number)
-        self.assertInside(max(self.data.etoscs), 1.0, 0.1)
+        self.assertAlmostEqual(max(self.data.etoscs), 1.0, delta=0.1)
 
 
 class GenericTDDFTtrpTest(GenericTDTest):
@@ -121,7 +121,7 @@ class GenericTDDFTtrpTest(GenericTDTest):
     def testoscs(self):
         """Triplet excitations should be disallowed."""
         self.assertEqual(len(self.data.etoscs), self.number)
-        self.assertInside(max(self.data.etoscs), 0.0, 0.01)
+        self.assertAlmostEqual(max(self.data.etoscs), 0.0, delta=0.01)
 
 
 if __name__=="__main__":

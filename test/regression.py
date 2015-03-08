@@ -724,7 +724,7 @@ class OrcaTDDFTTest_error(OrcaTDDFTTest):
     def testoscs(self):
         """These values used to be less accurate, probably due to wrong coordinates."""
         self.assertEqual(len(self.data.etoscs), self.number)
-        self.assertInside(max(self.data.etoscs), 1.0, 0.2)
+        self.assertAlmostEquals(max(self.data.etoscs), 1.0, delta=0.2)
 
 class OrcaIRTest_old(OrcaIRTest):
     def testfreqval(self):

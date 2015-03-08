@@ -108,7 +108,7 @@ class GenericGeoOptTest(bettertest.TestCase):
         ref = self.b3lyp_energy
         tol = self.b3lyp_tolerance
         msg = "Final scf energy: %f not %i +- %ieV" %(scf, ref, tol)
-        self.assertInside(scf, ref, 40, msg)
+        self.assertAlmostEquals(scf, ref, delta=40, msg=msg)
 
     def testscfenergydim(self):
         """Is the number of SCF energies consistent with atomcoords?"""

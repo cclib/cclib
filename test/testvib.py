@@ -33,11 +33,11 @@ class GenericIRTest(bettertest.TestCase):
 
     def testfreqval(self):
         """Is the highest freq value 3630 +/- 200 cm-1?"""
-        self.assertInside(self.data.vibfreqs[-1], 3630, 200)
+        self.assertAlmostEqual(self.data.vibfreqs[-1], 3630, delta=200)
 
     def testirintens(self):
         """Is the maximum IR intensity 100 +/- 10 km mol-1?"""
-        self.assertInside(max(self.data.vibirs), self.max_IR_intensity, 10)
+        self.assertAlmostEqual(max(self.data.vibirs), self.max_IR_intensity, delta=10)
 
 
 class FireflyIRTest(GenericIRTest):
@@ -45,7 +45,7 @@ class FireflyIRTest(GenericIRTest):
 
     def testirintens(self):
         """Is the maximum IR intensity 135 +/- 5 km mol-1?"""
-        self.assertInside(max(self.data.vibirs), 135, 5) 
+        self.assertAlmostEqual(max(self.data.vibirs), 135, delta=5) 
 
 
 class GaussianIRTest(GenericIRTest):
@@ -102,7 +102,7 @@ class QChemIRTest(GenericIRTest):
     def testatommasses(self):
         """Do the atom masses sum up to the molecular mass (130078.25+-0.1mD)?"""
         mm = 1000*sum(self.data.atommasses)
-        self.assertInside(mm, 130078.25, 0.1, "Molecule mass: %f not 130078 +- 0.1mD" %mm)
+        self.assertAlmostEqual(mm, 130078.25, delta=0.1, msg = "Molecule mass: %f not 130078 +- 0.1mD" % mm)
 
     def testhessian(self):
         """Do the frequencies from the Hessian match the printed frequencies?"""
@@ -153,7 +153,7 @@ class GenericRamanTest(bettertest.TestCase):
     # Note also that this value is adjusted for Gaussian - why?
     def testramanintens(self):
         """Is the maximum Raman intensity 575 +/- 8 A**4/amu?"""
-        self.assertInside(max(self.data.vibramans), 575, 8)
+        self.assertAlmostEqual(max(self.data.vibramans), 575, delta=8)
 
         # We used to test this, but it seems to vary wildly between
         # programs... perhaps we could use it if we knew why...
@@ -170,7 +170,7 @@ class GaussianRamanTest(GenericRamanTest):
 
     def testramanintens(self):
         """Is the maximum Raman intensity 1066 +/- 5 A**4/amu?"""
-        self.assertInside(max(self.data.vibramans), 1066, 5)
+        self.assertAlmostEqual(max(self.data.vibramans), 1066, delta=5)
 
 
 class QChemRamanTest(GenericRamanTest):
@@ -181,7 +181,7 @@ class QChemRamanTest(GenericRamanTest):
     # but altering the finite difference step size makes little difference.
     def testramanintens(self):
         """Is the maximum Raman intensity 588 +/- 5 A**4/amu?"""
-        self.assertInside(max(self.data.vibramans), 588, 5)
+        self.assertAlmostEqual(max(self.data.vibramans), 588, delta=5)
 
 
 if __name__=="__main__":

@@ -8,7 +8,7 @@
 # received a copy of the license along with cclib. You can also access
 # the full license online at http://www.gnu.org/copyleft/lgpl.html.
 
-"""Test the various population analyses (MPA, LPA, CSPA) in cclib"
+"""Test the various population analyses (MPA, LPA, CSPA) in cclib"""
 
 import os
 import logging
@@ -33,7 +33,7 @@ class GaussianMPATest(bettertest.TestCase):
         """Do the Mulliken charges sum up to the total formal charge?"""
         formalcharge = sum(self.data.atomnos) - self.data.charge
         totalpopulation = sum(self.analysis.fragcharges)
-        self.assertInside(totalpopulation, formalcharge, 0.001)
+        self.assertAlmostEqual(totalpopulation, formalcharge, delta=0.001)
 
 
 class GaussianLPATest(bettertest.TestCase):
@@ -47,7 +47,7 @@ class GaussianLPATest(bettertest.TestCase):
         """Do the Lowdin charges sum up to the total formal charge?"""
         formalcharge = sum(self.data.atomnos) - self.data.charge
         totalpopulation = sum(self.analysis.fragcharges)
-        self.assertInside(totalpopulation, formalcharge, 0.001)
+        self.assertAlmostEqual(totalpopulation, formalcharge, delta=0.001)
 
 
 class GaussianCSPATest(bettertest.TestCase):
@@ -61,7 +61,7 @@ class GaussianCSPATest(bettertest.TestCase):
         """Do the CSPA charges sum up to the total formal charge?"""
         formalcharge = sum(self.data.atomnos) - self.data.charge
         totalpopulation = sum(self.analysis.fragcharges)
-        self.assertInside(totalpopulation, formalcharge, 0.001)
+        self.assertAlmostEqual(totalpopulation, formalcharge, delta=0.001)
 
 
 tests = [GaussianMPATest, GaussianLPATest, GaussianCSPATest]
