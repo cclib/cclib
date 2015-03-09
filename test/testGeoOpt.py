@@ -169,24 +169,6 @@ class GaussianGeoOptTest(GenericGeoOptTest):
         self.assertEquals(self.data.grads.shape,(len(self.data.geovalues),self.data.natom,3))
 
 
-class JaguarGeoOptTest(GenericGeoOptTest):
-    """Customized geometry optimization unittest"""
-
-    @unittest.skip('Data file does not contain enough information. Can we make a new one?')
-    def testatombasis(self):
-        """Are the indices in atombasis the right amount and unique?"""
-        self.assertEquals(1, 1)
-
-    @unittest.skip('We did not print the atomic partial charges in the unit tests for this version.')
-    def testatomcharges(self):
-        """Are all atomcharges consistent with natom and do they sum to zero?"""
-        self.assertEquals(1, 1)
-
-    @unittest.skip('Data file does not contain enough information. Can we make a new one?')
-    def testdimmocoeffs(self):
-        """Are the dimensions of mocoeffs equal to 1 x nmo x nbasis?"""
-
-
 class MolproGeoOptTest(GenericGeoOptTest):
     """Customized geometry optimization unittest"""
 
@@ -196,11 +178,6 @@ class MolproGeoOptTest(GenericGeoOptTest):
     # both need to be given to the cclib parser (as a list).
     extracoords = 1
     extrascfs = 2
-
-    @unittest.skip('?')
-    def testsymlabels(self):
-        """Are all the symmetry labels either Ag/u or Bg/u?"""
-        self.assertEquals(1,1)
 
     # Here is what the manual has to say about convergence:
     # The standard MOLPRO convergency criterion requires the maximum component of the gradient
@@ -220,18 +197,6 @@ class MolproGeoOptTest(GenericGeoOptTest):
         converged = (value_e < target_e and value_g < target_g) or (value_g < target_g and value_s < target_s)
         self.assertTrue(converged)
 
-class MolproGeoOptTest2006(MolproGeoOptTest):
-    """Customized 2006 geometry optimization unittest"""
-
-    # Same situation as SP -- this is tested for in the 2012 logfiles, but
-    # the 2006 logfiles were created before atomcharges was an attribute and
-    # we don't have access to Molpro 2006 anymore.
-    @unittest.skip('...')
-    def testatomcharges(self):
-        """Are all atomcharges consistent with natom and do they sum to zero?"""
-        self.assertEquals(1,1)
-
-
 class NWChemGeoOptTest(GenericGeoOptTest):
     """Customized restricted single point HF unittest"""
 
@@ -249,11 +214,6 @@ class OrcaGeoOptTest(GenericGeoOptTest):
 
     extracoords = 1
     extrascfs = 1
-
-    @unittest.skip('ORCA has no support for symmetry yet.')
-    def testsymlabels(self):
-        """Are all the symmetry labels either Ag/u or Bg/u?"""
-        self.assertEquals(1,1)
 
     # Besides all the geovalues being below their tolerances, ORCA also considers
     # an optimization finished in some extra cases. These are:

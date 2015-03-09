@@ -14,6 +14,9 @@ import unittest
 
 import numpy
 
+from testall import skipForParser
+from testall import skipForLogfile
+
 
 class GenericSPTest(unittest.TestCase):
     """Generic restricted single point unittest"""
@@ -41,6 +44,10 @@ class GenericSPTest(unittest.TestCase):
         self.assertEquals(self.data.atomnos.shape, (20,) )
         self.assertEquals(sum(self.data.atomnos == 6) + sum(self.data.atomnos == 1), 20)
 
+    @skipForParser('DALTON', 'DALTON has a very low accuracy for the printed values of all populations (2 decimals rounded in a weird way), so let it slide for now')
+    @skipForLogfile('Jaguar/basicJaguar7', 'We did not print the atomic partial charges in the unit tests for this version')
+    @skipForLogfile('Molpro/basicMolpro2006', "These tests were run a long time ago and since we don't have access to Molpro 2006 anymore, we can skip this test (it is tested in 2012)")
+    @skipForLogfile('Psi/basicPsi3', 'Psi3 did not print partial atomic charges')
     def testatomcharges(self):
         """Are atomcharges (at least Mulliken) consistent with natom and sum to zero?"""
         for type in set(['mulliken'] + list(self.data.atomcharges.keys())):
@@ -63,6 +70,8 @@ class GenericSPTest(unittest.TestCase):
         count = sum([self.nbasisdict[n] for n in self.data.atomnos])
         self.assertEquals(self.data.nbasis, count)
 
+    @skipForParser('ADF', 'ADF parser does not extract atombasis')
+    @skipForLogfile('Jaguar/basicJaguar7', 'Data file does not contain enough information. Can we make a new one?')
     def testatombasis(self):
         """Are the indices in atombasis the right amount and unique?"""
         all = []
@@ -83,6 +92,8 @@ class GenericSPTest(unittest.TestCase):
         """Did this subclass overwrite normalisesym?"""
         self.assertNotEquals(self.logfile.normalisesym("A"), "ERROR: This should be overwritten by this subclass")
 
+    @skipForParser('Molpro', '?')
+    @skipForParser('ORCA', 'ORCA has no support for symmetry yet')
     def testsymlabels(self):
         """Are all the symmetry labels either Ag/u or Bg/u?"""
         sumwronglabels = sum([x not in ['Ag', 'Bu', 'Au', 'Bg'] for x in self.data.mosyms[0]])
@@ -114,6 +125,9 @@ class GenericSPTest(unittest.TestCase):
         self.assertEquals(type(self.data.moenergies), type([]))
         self.assertEquals(type(self.data.moenergies[0]), type(numpy.array([])))
 
+    @skipForParser('DALTON', 'mocoeffs` not implemented yet')
+    @skipForLogfile('Jaguar/basicJaguar7', 'Data file does not contain enough information. Can we make a new one?')
+    @skipForLogfile('Psi/basicPsi3', 'MO coefficients are printed separately for each SALC')
     def testdimmocoeffs(self):
         """Are the dimensions of mocoeffs equal to 1 x nmo x nbasis?"""
         self.assertEquals(type(self.data.mocoeffs), type([]))
@@ -121,6 +135,9 @@ class GenericSPTest(unittest.TestCase):
         self.assertEquals(self.data.mocoeffs[0].shape,
                           (self.data.nmo, self.data.nbasis))
 
+    @skipForParser('DALTON', 'DALTON does not have any options to print the overlap matrix as of 2013')
+    @skipForParser('Psi', 'Psi does not currently have the option to print the overlap matrix')
+    @skipForParser('QChem', 'QChem cannot print the overlap matrix')
     def testaooverlaps(self):
         """Are the dims and values of the overlap matrix correct?"""
 
@@ -145,6 +162,8 @@ class GenericSPTest(unittest.TestCase):
         """There should be no optdone attribute set."""
         self.assertFalse(hasattr(self.data, 'optdone'))
 
+    @skipForParser('Gaussian', 'Logfile needs to be updated')
+    @skipForParser('Jaguar', 'No dipole moments in the logfile')
     def testmoments(self):
         """Does the dipole and possible higher molecular moments look reasonable?"""
 
@@ -194,6 +213,7 @@ class GenericSPTest(unittest.TestCase):
             for m in moment32:
                 self.assertEquals(m, 0.0)
 
+
 class ADFSPTest(GenericSPTest):
     """Customized restricted single point unittest"""
 
@@ -202,10 +222,6 @@ class ADFSPTest(GenericSPTest):
     foverlap22 = 1.03585
 
     b3lyp_energy = -140
-
-    @unittest.skip('ADF parser does not extract atombasis')
-    def testatombasis(self):
-        """Are the indices in atombasis the right amount and unique?"""
 
     def testfoverlaps(self):
         """Are the dims and values of the fragment orbital overlap matrix correct?"""
@@ -224,26 +240,6 @@ class ADFSPTest(GenericSPTest):
         self.assertAlmostEquals(self.data.fooverlaps[2, 2], self.foverlap22, delta=0.0001)
 
 
-class DALTONSPTest(GenericSPTest):
-    """Customized restricted single point unittest"""
-
-    @unittest.skip('DALTON does not have any options to print the overlap matrix as of 2013')
-    def testdimaooverlaps(self):
-        """Are the dims of the overlap matrix consistent with nbasis?"""
-
-    @unittest.skip('DALTON does not have any options to print the overlap matrix as of 2013')
-    def testaooverlaps(self):
-        """Are the first row and column of the overlap matrix identical?"""
-
-    @unittest.skip('mocoeffs` not implemented yet')
-    def testdimmocoeffs(self):
-        """Are the dimensions of mocoeffs equal to 1 x nmo x nbasis?"""
-
-    @unittest.skip('DALTON has a very low accuracy for the printed values of all populations (2 decimals rounded in a weird way), so let it slide for now')
-    def testatomcharges(self):
-        """Are atomcharges (at least Mulliken) consistent with natom and sum to zero?"""
-
-
 class GaussianSPTest(GenericSPTest):
     """Customized restricted single point unittest"""
 
@@ -255,108 +251,22 @@ class GaussianSPTest(GenericSPTest):
         mm = 1000*sum(self.data.atommasses)
         self.assertAlmostEquals(mm, 130078.25, places=10, msg="Molecule mass: %f not 130078 +- 0.1mD" %mm)
 
-    @unittest.skip('Logfile needs to be updated')
-    def testmoments(self):
-        """We don't yet have dipole moments printed in the unit test logfile."""
-
 
 class Jaguar7SPTest(GenericSPTest):
     """Customized restricted single point unittest"""
-
-    @unittest.skip('Data file does not contain enough information. Can we make a new one?')
-    def testatombasis(self):
-        """Are the indices in atombasis the right amount and unique?"""
-
-    @unittest.skip('We did not print the atomic partial charges in the unit tests for this version')
-    def testatomcharges(self):
-        """Are all atomcharges consistent with natom and do they sum to zero?"""
 
     # Jaguar prints only 10 virtual MOs by default. Can we re-run with full output?
     def testlengthmoenergies(self):
         """Is the number of evalues equal to the number of occ. MOs + 10?"""
         self.assertEquals(len(self.data.moenergies[0]), self.data.homos[0]+11)
 
-    @unittest.skip('Data file does not contain enough information. Can we make a new one?')
-    def testdimmocoeffs(self):
-        """Are the dimensions of mocoeffs equal to 1 x nmo x nbasis?"""
 
-    @unittest.skip('No dipole moments in the logfile')
-    def testmoments(self):
-        """No dipole moments in the logfile."""
-
-class JaguarSPTest(GenericSPTest):
-    """Customized restricted single point unittest"""
-
-    @unittest.skip('No dipole moments in the logfile')
-    def testmoments(self):
-        """No dipole moments in the logfile."""
-
-
-class MolproSPTest(GenericSPTest):
-    """Customized restricted single point unittest"""
-
-    @unittest.skip('?')
-    def testsymlabels(self):
-        """Are all the symmetry labels either Ag/u or Bg/u?"""
-
-
-class MolproSPTest2006(MolproSPTest):
-    """Customized restricted single point unittest"""
-
-    @unittest.skip("These tests were run a long time ago and since we don't have access to Molpro 2006 anymore, we can skip this test (it is tested in 2012)")
-    def testatomcharges(self):
-        """Are atomcharges (at least Mulliken) consistent with natom and sum to zero?"""
-
-
-class OrcaSPTest(GenericSPTest):
-    """Customized restricted single point unittest"""
-
-    @unittest.skip('ORCA has no support for symmetry yet')
-    def testsymlabels(self):
-        """Are all the symmetry labels either Ag/u or Bg/u?"""
-
-
-class PsiSPTest(GenericSPTest):
-    """Customized restricted single point HF/KS unittest"""
-
-    @unittest.skip('Psi does not currently have the option to print the overlap matrix')
-    def testaooverlaps(self):
-        """Are the first row and colm of the overlap matrix identical?"""
-    @unittest.skip('Psi does not currently have the option to print the overlap matrix')
-    def testdimaooverlaps(self):
-        """Are the dims of the overlap matrix consistent with nbasis?"""
-
-
-class Psi3SPTest(PsiSPTest):
+class Psi3SPTest(GenericSPTest):
     """Customized restricted single point HF/KS unittest"""
 
     # The final energy is also a bit higher here, I think due to the fact
     # that a SALC calculation is done instead of a full LCAO.
     b3lyp_energy = -10300
-
-    @unittest.skip('Psi3 did not print partial atomic charges')
-    def testatomcharges(self):
-        """Are atomcharges (at least Mulliken) consistent with natom and sum to zero?"""
-
-    # The molecular orbitals in Psi3 are printed within each irreducible representation,
-    # but I don't know if that means there is no mixing between them (SALC calculation).
-    # In any case, Psi4 prints a standard LCAO, with coefficients between all basis functions
-    # and molecular orbitals, so we do not parse mocoeffs in Psi3 at all.
-    @unittest.skip('...')
-    def testdimmocoeffs(self):
-        """Are the dimensions of mocoeffs equal to 1 x nmo x nbasis?"""
-
-
-class QChemSPTest(GenericSPTest):
-    """Customized restricted single point unittest"""
-
-    @unittest.skip('Q-Chem cannot print the overlap matrix')
-    def testdimaooverlaps(self):
-        """Are the dims of the overlap matrix consistent with nbasis?"""
-
-    @unittest.skip('Q-Chem cannot print the overlap matrix')
-    def testaooverlaps(self):
-        """Are the first row and column of the overlap matrix identical?"""
 
 
 if __name__=="__main__":

@@ -35,6 +35,7 @@ class GenericSPunTest(unittest.TestCase):
         """Are the dimensions of atomcoords 1 x natom x 3?"""
         self.assertEquals(self.data.atomcoords.shape,(1,self.data.natom,3))
 
+    @skipForParser('Jaguar', 'Data file does not contain enough information')
     def testdimmocoeffs(self):
         """Are the dimensions of mocoeffs equal to 2 x nmo x nbasis?"""
         self.assertEquals(type(self.data.mocoeffs), type([]))
@@ -60,6 +61,9 @@ class GenericSPunTest(unittest.TestCase):
         self.assertEquals(len(self.data.moenergies[0]), self.data.nmo)
         self.assertEquals(len(self.data.moenergies[1]), self.data.nmo)
 
+    @skipForParser('Jaguar', '?')
+    @skipForParser('Molpro', '?')
+    @skipForParser('ORCA', 'ORCA has no support for symmetry yet')
     def testmosyms(self):
         """Are the dims of the mosyms equals to 2 x nmo?"""
         shape = (len(self.data.mosyms), len(self.data.mosyms[0]))
@@ -112,30 +116,6 @@ class JaguarSPunTest(GenericSPunTest):
         self.assertEquals(len(self.data.moenergies), 2)
         self.assertEquals(len(self.data.moenergies[0]), self.data.homos[0]+11)
         self.assertEquals(len(self.data.moenergies[1]), self.data.homos[1]+11)
-
-    @unittest.skip('Data file does not contain enough information')
-    def testdimmocoeffs(self):
-        """Are the dimensions of mocoeffs equal to 1 x nmo x nbasis?"""
-
-    @unittest.skip('?')
-    def testmosyms(self):
-        """Are the dims of the mosyms equal to 2 x nmo?"""
-
-
-class MolproSPunTest(GenericSPunTest):
-    """Customized unrestricted single point unittest"""
-
-    @unittest.skip('?')
-    def testmosyms(self):
-        """Are the dims of the mosyms equal to 2 x nmo?"""
-
-
-class OrcaSPunTest(GenericSPunTest):
-    """Customized unrestricted single point unittest"""
-
-    @unittest.skip('ORCA has no support for symmetry yet')
-    def testmosyms(self):
-        """Are the dims of the mosyms equals to 2 x nmo?"""
 
 
 if __name__=="__main__":

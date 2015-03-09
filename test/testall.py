@@ -29,6 +29,29 @@ test_modules = [ "SP", "SPun", "GeoOpt", "Basis", "Core",   # Basic calculations
                  "vib", "Scan" ]                            # Other property calculations.
 
 
+def skipForParser(parser, msg):
+    """Return a decorator that skips the test for specified parser."""
+    def testdecorator(testfunc):
+        def testwrapper(self, *args, **kwargs):
+            if self.logfile.logname == parser:
+                self.skipTest(msg)
+            else:
+                testfunc(self, *args, **kwargs)
+        return testwrapper
+    return testdecorator
+
+def skipForLogfile(fragment, msg):
+    """Return a decorator that skips the test for logfiles containing fragment."""
+    def testdecorator(testfunc):
+        def testwrapper(self, *args, **kwargs):
+            if fragment in self.logfile.filename:
+                self.skipTest(msg)
+            else:
+                testfunc(self, *args, **kwargs)
+        return testwrapper
+    return testdecorator
+
+
 def get_program_dir(parser_name):
     """In one case the directory is names differently than the parser."""
     if parser_name == "GAMESSUK":

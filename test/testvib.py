@@ -45,6 +45,7 @@ class FireflyIRTest(GenericIRTest):
 
     max_IR_intensity = 135
 
+
 class GaussianIRTest(GenericIRTest):
     """Customized vibrational frequency unittest"""
 

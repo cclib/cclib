@@ -662,7 +662,7 @@ class ADFSPTest_nosyms_valence(ADFSPTest_nosyms):
         self.assertEquals(len(self.data.moenergies[0]), 45)
         self.assertEquals(self.data.moenergies[0][0], 99999.0)
 
-class DALTONSPTest_nosyms_nolabels(DALTONSPTest):
+class DALTONSPTest_nosyms_nolabels(GenericSPTest):
     @unittest.skip('?')
     def testsymlabels(self):
         """Are all the symmetry labels either Ag/u or Bg/u?."""
@@ -697,19 +697,19 @@ class JaguarSPunTest_nmo_all(JaguarSPunTest):
         """Some tests printed all MO energies apparently."""
         self.assertEquals(len(self.data.moenergies[0]), self.data.nmo)
 
-class JaguarGeoOptTest_nmo45(JaguarGeoOptTest):
+class JaguarGeoOptTest_nmo45(GenericGeoOptTest):
     def testlengthmoenergies(self):
         """Without special options, Jaguar only print Homo+10 orbital energies."""
         self.assertEquals(len(self.data.moenergies[0]), 45)
 
-class JaguarGeoOptTest_6_31gss(JaguarGeoOptTest):
+class JaguarGeoOptTest_6_31gss(GenericGeoOptTest):
     nbasisdict = {1: 5, 6: 15}
     b3lyp_energy = -10530
 
 class MolproBigBasisTest_cart(MolproBigBasisTest):
     spherical = False
 
-class OrcaSPTest_3_21g(OrcaSPTest):
+class OrcaSPTest_3_21g(GenericSPTest):
     nbasisdict = {1: 2, 6: 9}
     b3lyp_energy = -10460
     overlap01 = 0.19
@@ -718,7 +718,7 @@ class OrcaGeoOptTest_3_21g(OrcaGeoOptTest):
     nbasisdict = {1: 2, 6: 9}
     b3lyp_energy = -10460
 
-class OrcaSPunTest_charge0(OrcaSPunTest):
+class OrcaSPunTest_charge0(GenericSPunTest):
     def testcharge_and_mult(self):
         """The charge in the input was wrong."""
         self.assertEquals(self.data.charge, 0)
@@ -759,7 +759,7 @@ old_unittests = {
     "ADF/ADF2014.01/dvb_gopt_b_fullscf.out":       ADFGeoOptTest,
 
     "DALTON/DALTON-2013/b3lyp_energy_dvb_sp_nosym.out":       DALTONSPTest_nosyms_nolabels,
-    "DALTON/DALTON-2013/sp_b3lyp_dvb.out":       DALTONSPTest,
+    "DALTON/DALTON-2013/sp_b3lyp_dvb.out":       GenericSPTest,
 
     "GAMESS/GAMESS-US2005/water_ccd_2005.06.27.r3.out":         GenericCCTest,
     "GAMESS/GAMESS-US2005/water_ccsd_2005.06.27.r3.out":        GenericCCTest,
@@ -809,7 +809,7 @@ old_unittests = {
     "Gaussian/Gaussian09/dvb_un_sp_b_revA.02.log":      GaussianSPunTest,
 
     "Jaguar/Jaguar4.2/dvb_gopt.out":    JaguarGeoOptTest_nmo45,
-    "Jaguar/Jaguar4.2/dvb_gopt_b.out":  JaguarGeoOptTest,
+    "Jaguar/Jaguar4.2/dvb_gopt_b.out":  GenericGeoOptTest,
     "Jaguar/Jaguar4.2/dvb_sp.out":      JaguarGeoOptTest_nmo45,
     "Jaguar/Jaguar4.2/dvb_sp_b.out":    JaguarGeoOptTest_nmo45,
     "Jaguar/Jaguar4.2/dvb_un_sp.out":   JaguarSPunTest_nmo_all,
@@ -832,7 +832,7 @@ old_unittests = {
     "ORCA/ORCA2.6/dvb_ir.out":      OrcaIRTest,
 
     "ORCA/ORCA2.8/dvb_gopt.out":    OrcaGeoOptTest,
-    "ORCA/ORCA2.8/dvb_sp.out":      OrcaSPTest,
+    "ORCA/ORCA2.8/dvb_sp.out":      GenericSPTest,
     "ORCA/ORCA2.8/dvb_sp_un.out":   OrcaSPunTest_charge0,
     "ORCA/ORCA2.8/dvb_td.out":      OrcaTDDFTTest,
     "ORCA/ORCA2.8/dvb_ir.out":      OrcaIRTest_old,
