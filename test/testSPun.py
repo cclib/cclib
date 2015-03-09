@@ -14,6 +14,9 @@ import unittest
 
 import numpy
 
+from testall import skipForParser
+from testall import skipForLogfile
+
 
 class GenericSPunTest(unittest.TestCase):
     """Generic unrestricted single point unittest"""
@@ -63,15 +66,6 @@ class GenericSPunTest(unittest.TestCase):
         self.assertEquals(shape, (2, self.data.nmo))
 
 
-class ADFSPunTest(GenericSPunTest):
-    """Customized unrestricted single point unittest"""
-
-    def testdimaooverlaps(self):
-        """Are the dims of the overlap matrix consistent with nbasis?"""
-        #ADF uses fooverlaps
-        self.assertEquals(self.data.fooverlaps.shape,(self.data.nbasis,self.data.nbasis))
-
-
 class GamessUK70SPunTest(GenericSPunTest):
     """Customized unrestricted single point unittest"""
 
@@ -113,10 +107,6 @@ class GaussianSPunTest(GenericSPunTest):
 class JaguarSPunTest(GenericSPunTest):
     """Customized unrestricted single point unittest"""
 
-    @unittest.skip('Data file does not contain enough information')
-    def testdimaooverlaps(self):
-        """Are the dims of the overlap matrix consistent with nbasis?"""
-
     def testmoenergies(self):
         """Are the dims of the moenergies equal to 2 x homos+11?"""
         self.assertEquals(len(self.data.moenergies), 2)
@@ -146,14 +136,6 @@ class OrcaSPunTest(GenericSPunTest):
     @unittest.skip('ORCA has no support for symmetry yet')
     def testmosyms(self):
         """Are the dims of the mosyms equals to 2 x nmo?"""
-
-
-class QChemSPunTest(GenericSPunTest):
-    """Customized unrestricted single point unittest"""
-
-    @unittest.skip('Q-Chem cannot print the overlap matrix')
-    def testdimaooverlaps(self):
-        """Are the dims of the overlap matrix consistent with nbasis?"""
 
 
 if __name__=="__main__":
