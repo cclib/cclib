@@ -56,10 +56,7 @@ class JaguarScanTest(GenericScanTest):
 
 class OrcaScanTest(GenericScanTest):
     """Customized relaxed potential energy surface scan unittest"""
-
-    def testindices(self):
-        """Do the indices match the results from geovalues. PASS"""
-        self.assertEquals(1, 1)
+    extra = 1
 
 
 if __name__=="__main__":

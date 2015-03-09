@@ -142,6 +142,7 @@ MP        QChem       QChemMP4SDTQTest      basicQChem4.2         water_mp4.out
 
 Scan      Gaussian     GaussianScanTest     basicGaussian09       dvb_scan.log
 Scan      ORCA         OrcaScanTest         basicORCA2.9          dvb_scan.out
+Scan      ORCA         OrcaScanTest         basicORCA3.0          dvb_scan.out
 Scan      Jaguar       JaguarScanTest       basicJaguar8.3        dvb_scan.out
 
 SP        ADF         ADFSPTest             basicADF2007.01       dvb_sp_b.adfout
