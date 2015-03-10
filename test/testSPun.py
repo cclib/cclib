@@ -61,7 +61,6 @@ class GenericSPunTest(unittest.TestCase):
         self.assertEquals(len(self.data.moenergies[0]), self.data.nmo)
         self.assertEquals(len(self.data.moenergies[1]), self.data.nmo)
 
-    @skipForParser('Jaguar', '?')
     @skipForParser('Molpro', '?')
     @skipForParser('ORCA', 'ORCA has no support for symmetry yet')
     def testmosyms(self):
@@ -116,6 +115,13 @@ class JaguarSPunTest(GenericSPunTest):
         self.assertEquals(len(self.data.moenergies), 2)
         self.assertEquals(len(self.data.moenergies[0]), self.data.homos[0]+11)
         self.assertEquals(len(self.data.moenergies[1]), self.data.homos[1]+11)
+
+    def testmosyms(self):
+        """Are the dims of the mosyms equals to 2 x nmo?"""
+        shape0 = (len(self.data.mosyms), len(self.data.mosyms[0]))
+        shape1 = (len(self.data.mosyms), len(self.data.mosyms[1]))
+        self.assertEquals(shape0, (2, self.data.homos[0]+11))
+        self.assertEquals(shape1, (2, self.data.homos[1]+11))
 
 
 if __name__=="__main__":

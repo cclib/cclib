@@ -31,7 +31,6 @@ class GenericScanTest(unittest.TestCase):
         else:
             self.assertEquals(len(self.data.optdone), 12 + self.extra)
 
-    @skipForParser('ORCA', "?")
     def testindices(self):
         """Do the indices match the results from geovalues."""
 
@@ -57,7 +56,6 @@ class JaguarScanTest(GenericScanTest):
 
 class OrcaScanTest(GenericScanTest):
     """Customized relaxed potential energy surface scan unittest"""
-
     extra = 1
 
 
