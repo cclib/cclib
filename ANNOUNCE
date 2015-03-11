@@ -1,6 +1,6 @@
-On behalf of the cclib development team, I am pleased to announce the release of cclib 1.2b, which is now available for download from http://cclib.github.io. This beta version marks the first release to target Python 3, and includes several new features and bug fixes (see below).
+On behalf of the cclib development team, we are pleased to announce the release of cclib 1.3.1, which is now available for download from http://cclib.github.io. This is a minor update to version 1.3 that includes bug fixes and small improvements.
 
-cclib is an open source library, written in Python, for parsing and interpreting the results of computational chemistry packages. It currently parses output files from ADF, Firefly, GAMESS (US), GAMESS-UK, Gaussian, Jaguar, Molpro and ORCA.
+cclib is an open source library, written in Python, for parsing and interpreting the results of computational chemistry packages. It currently parses output files from ADF, Firefly, GAMESS (US), GAMESS-UK, Gaussian, Jaguar, Molpro, NWChem, ORCA, Psi and QChem.
 
 Among other data, cclib extracts:
 
@@ -9,7 +9,8 @@ Among other data, cclib extracts:
     * atomic orbital information
     * molecular orbital information
     * information on vibrational modes
-    * the results of a TD-DFT calculation 
+    * the results of a TD-DFT calculation
+    * charges and mutlipole moments
 
 (For a complete list see http://cclib.github.io/data.html).
 
@@ -22,27 +23,24 @@ cclib also provides some calculation methods for interpreting the electronic pro
 (For a complete list see http://cclib.github.io/methods.html).
 
 For information on how to use cclib, see
-      http://cclib.github.io/tutorial.html
+    http://cclib.github.io/tutorial.html
 
 If you need help, find a bug, want new features or have any questions, please send an email to our mailing list:
-	https://lists.sourceforge.net/lists/listinfo/cclib-users
+    https://lists.sourceforge.net/lists/listinfo/cclib-users
 
 If your published work uses cclib, please support its development by citing the following article:
     N. M. O'Boyle, A. L. Tenderholt, K. M. Langner, cclib: a library for package-independent computational chemistry algorithms, J. Comp. Chem. 29 (5), 839-845 (2008)
+You can also specifically reference the newest stable version of cclib as:
+    Eric Berquist, Karol M. Langner, Noel M. O'Boyle, and Adam L. Tenderholt. Release of cclib version 1.3.1. 2015. http://dx.doi.org/10.5281/zenodo.15108
 
 Regards,
+The cclib development team
 
- The cclib development team
+———
 
-——-
-
-Major changes since cclib 1.1:
-
-    * Move project to github
-    * Transition to Python 3 (Python 2.7 will still work)
-    * Add a multifile mode to ccget script
-    * Extract vibrational displacements for ORCA
-    * Extract natural atom charges for Gaussian (Fedor Zhuravlev)
-    * Updated test file versions to ADF2013.01, GAMESS-US 2012, Gaussian09, Molpro 2012 and ORCA 3.0.1
-    * Many bugfixes, thanks to Scott McKechnie, Tamilmani S, Melchor Sanchez, Clyde Fare, Julien Idé and Andrew Warden
-
+Major changes since cclib 1.3:
+    * New attribute nooccnos for natural orbital occupation numbers (GAMESS, GAMESS-UK, Gaussian)
+    * Add ability to read XYZ files with ccget (OpenBabel is needed)
+    * Improve parsing atomic and molecular orbitals (Molpro, Psi)
+    * Improve parsing TDDFT transitions (QChem)
+    * Bugfixes, thanks to Ben Albrecht, Clyde Fare, Felix Plasser, Axel Schild and others

@@ -1,4 +1,6 @@
-# This file is part of cclib (http://cclib.sf.net), a library for parsing
+# -*- coding: utf-8 -*-
+#
+# This file is part of cclib (http://cclib.github.io), a library for parsing
 # and interpreting the results of computational chemistry packages.
 #
 # Copyright (C) 2006-2014, the cclib development team
@@ -7,6 +9,8 @@
 # the GNU Lesser General Public version 2.1 or later. You should have
 # received a copy of the license along with cclib. You can also access
 # the full license online at http://www.gnu.org/copyleft/lgpl.html.
+
+"""Parser for ADF output files"""
 
 from __future__ import print_function
 
@@ -106,32 +110,33 @@ class ADF(logfileparser.Logfile):
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
 
-        # Check to make sure we aren't parsing Create jobs
-        if line.find("INPUT FILE") >= 0:
-            while line:
+        # If a file contains multiple calculations, currently we want to print a warning
+        # and skip to the end of the file, since cclib parses only the main system, which
+        # is usually the largest. Here we test this by checking if scftargets has already
+        # been parsed when another INPUT FILE segment is found, although this might
+        # not always be the best indicator.
+        if line.strip() == "(INPUT FILE)" and hasattr(self, "scftargets"):
+            self.logger.warning("Skipping remaining calculations")
+            inputfile.seek(0, 2)
+            return
 
+        # We also want to check to make sure we aren't parsing "Create" jobs,
+        # which normally come before the calculation we actually want to parse.
+        if line.strip() == "(INPUT FILE)":
+            while True:
                 self.updateprogress(inputfile, "Unsupported Information", self.fupdate)
-
-                # Does this file contain multiple calculations?
-                # If so, print a warning and skip to end of file.
-                if line.find("INPUT FILE") >=0 and hasattr(self,"scftargets"):
-                    self.logger.warning("Skipping remaining calculations")
-                    inputfile.seek(0, 2)
+                line = next(inputfile) if line.strip() == "(INPUT FILE)" else None
+                if line and not line[:6] in ("Create", "create"):
                     break
-
-                if line.find("INPUT FILE") >= 0:
-                    line2 = next(inputfile)
-                else:
-                    line2 = None
-
-                if line2 and len(line2) <= 2:
-                #make sure that it's not blank like in the NiCO4 regression
-                    line2 = next(inputfile)
-
-                if line2 and (line2.find("Create") < 0 and line2.find("create") < 0):
-                    break
-
                 line = next(inputfile)
+
+        # In ADF 2014.01, there are (INPUT FILE) messages, so we need to use just
+        # the lines that start with 'Create' and run until the title or something
+        # else we are sure is is the calculation proper. It would be good to combine
+        # this with the previous block, if possible.
+        if line[:6] == "Create":
+            while line[:5] != "title":
+                line = inputfile.next()
 
         if line[1:10] == "Symmetry:":
             info = line.split()
@@ -161,27 +166,29 @@ class ADF(logfileparser.Logfile):
         # and the atommasses (previously called vibmasses)
             self.updateprogress(inputfile, "Attributes", self.cupdate)
 
-            self.atomnos = []
-            self.atommasses = []
             self.atomcoords = []
-            self.coreelectrons = []
 
             self.skip_lines(inputfile, ['header1', 'header2', 'header3'])
 
+            atomnos = []
+            atommasses = []
             atomcoords = []
+            coreelectrons = []
             line = next(inputfile)
             while len(line)>2: #ensure that we are reading no blank lines
                 info = line.split()
                 element = info[1].split('.')[0]
-                self.atomnos.append(self.table.number[element])
+                atomnos.append(self.table.number[element])
                 atomcoords.append(list(map(float, info[2:5])))
-                self.coreelectrons.append(int(float(info[5]) - float(info[6])))
-                self.atommasses.append(float(info[7]))
+                coreelectrons.append(int(float(info[5]) - float(info[6])))
+                atommasses.append(float(info[7]))
                 line = next(inputfile)
             self.atomcoords.append(atomcoords)
 
-            self.natom = len(self.atomnos)
-            self.atomnos = numpy.array(self.atomnos, "i")
+            self.set_attribute('natom', len(atomnos))
+            self.set_attribute('atomnos', atomnos)
+            self.set_attribute('atommasses', atommasses)
+            self.set_attribute('coreelectrons', coreelectrons)
 
         if line[1:10] == "FRAGMENTS":
             header = next(inputfile)
@@ -207,7 +214,7 @@ class ADF(logfileparser.Logfile):
         if line[1:11] == "Net Charge":
 
             charge = int(line.split()[2])
-            self.set_scalar('charge', charge)
+            self.set_attribute('charge', charge)
 
             line = next(inputfile)
             if len(line.strip()):
@@ -216,7 +223,7 @@ class ADF(logfileparser.Logfile):
                 mult = int(line.split()[2]) + 1
             else:
                 mult = 1
-            self.set_scalar('mult', mult)
+            self.set_attribute('mult', mult)
 
         if line[1:22] == "S C F   U P D A T E S":
         # find targets for SCF convergence
@@ -234,7 +241,7 @@ class ADF(logfileparser.Logfile):
         # In ADF 2013, the default numerical integration method is fuzzy cells,
         # although it used to be Voronoi polyhedra. Both methods apparently set
         # the accint parameter, although the latter does so indirectly, based on
-        # a 'grid quality' setting. This is translated into accing using a
+        # a 'grid quality' setting. This is translated into accint using a
         # dictionary with values taken from the documentation.
         if "Numerical Integration : Voronoi Polyhedra (Te Velde)" in line:
             self.integration_method = "voronoi_polyhedra"
@@ -254,6 +261,55 @@ class ADF(logfileparser.Logfile):
                 'EXCELLENT' : 10.0,
             }
             self.accint = quality2accint[self.grid_quality]
+
+        # Half of the atomic orbital overlap matrix is printed since it is symmetric,
+        # but this requires "PRINT Smat" to be in the input. There are extra blank lines
+        # at the end of the block, which are used to terminate the parsing.
+        #
+        # ======  smat
+        #
+        # column           1                     2                     3                     4
+        # row
+        #    1    1.00000000000000E+00
+        #    2    2.43370854175315E-01  1.00000000000000E+00
+        #    3    0.00000000000000E+00  0.00000000000000E+00  1.00000000000000E+00
+        # ...
+        #
+        if "======  smat" in line:
+
+            # Initialize the matrix with Nones so we can easily check all has been parsed.
+            overlaps = [[None] * self.nbasis for i in range(self.nbasis)]
+
+            self.skip_line(inputfile, 'blank')
+
+            line = inputfile.next()
+            while line.strip():
+
+                colline = line
+                assert colline.split()[0] == "column"
+                columns = [int(i) for i in colline.split()[1:]]
+
+                rowline = inputfile.next()
+                assert rowline.strip() == "row"
+
+                line = inputfile.next()
+                while line.strip():
+
+                    i = int(line.split()[0])
+                    vals = [float(col) for col in line.split()[1:]]
+                    for j, o in enumerate(vals):
+                        k = columns[j]
+                        overlaps[k-1][i-1] = o
+                        overlaps[i-1][k-1] = o
+
+                    line = inputfile.next()
+
+                line = inputfile.next()
+
+            # Now all values should be parsed, and so no Nones remaining.
+            assert all([all([x != None for x in ao]) for ao in overlaps])
+
+            self.set_attribute('aooverlaps', overlaps)
 
         if line[1:11] == "CYCLE    1":
 
@@ -333,9 +389,10 @@ class ADF(logfileparser.Logfile):
                 self.atomcoords = []
             self.atomcoords.append(atomcoords)
 
-            if self.finalgeometry == self.GETLAST: # Don't get any more coordinates
+            # Don't get any more coordinates in this case.
+            # KML: I think we could combine this with optdone (see below).
+            if self.finalgeometry == self.GETLAST:
                 self.finalgeometry = self.NOMORE
-                self.optdone = True
 
         # There have been some changes in the format of the geometry convergence information,
         # and this is how it is printed in older versions (2007.01 unit tests).
@@ -383,6 +440,21 @@ class ADF(logfileparser.Logfile):
 
             self.geovalues.append(values)
 
+            # This is to make geometry optimization always have the optdone attribute,
+            # even if it is to be empty for unconverged runs.
+            if not hasattr(self, 'optdone'):
+                self.optdone = []
+
+        # After the test, there is a message if the search is converged:
+        #
+        # ***************************************************************************************************
+        #                             Geometry CONVERGED
+        # ***************************************************************************************************
+        #
+        if line.strip() == "Geometry CONVERGED":
+            self.skip_line(inputfile, 'stars')
+            self.optdone.append(len(self.geovalues) - 1)
+
         # Here is the corresponding geometry convergence info from the 2013.01 unit test.
         # Note that the step number is given, which it will be prudent to use in an assertion.
         #
@@ -401,8 +473,16 @@ class ADF(logfileparser.Logfile):
 
             stepno = int(line.split()[4])
 
+            # This is to make geometry optimization always have the optdone attribute,
+            # even if it is to be empty for unconverged runs.
+            if not hasattr(self, 'optdone'):
+                self.optdone = []
+
+            # The convergence message is inline in this block, not later as it was before.
             if "** CONVERGED **" in line:
-                self.optdone = True
+                if not hasattr(self, 'optdone'):
+                    self.optdone = []
+                self.optdone.append(len(self.geovalues) - 1)
 
             self.skip_line(inputfile, 'dashes')
 
@@ -468,11 +548,10 @@ class ADF(logfileparser.Logfile):
                 self.mosyms[0].append('A')
                 self.moenergies[0].append(utils.convertor(float(info[2]), 'hartree', 'eV'))
                 if info[1] == '0.000' and not hasattr(self, 'homos'):
-                    self.homos = [len(self.moenergies[0]) - 2]
+                    self.set_attribute('homos', [len(self.moenergies[0]) - 2])
                 line = next(inputfile)
 
             self.moenergies = [numpy.array(self.moenergies[0], "d")]
-            self.homos = numpy.array(self.homos, "i")
 
         if line[1:29] == 'Orbital Energies, both Spins' and not hasattr(self, "mosyms") and self.nosymflag and self.unrestrictedflag:
         #Extracting orbital symmetries and energies, homos for nosym case
@@ -505,7 +584,8 @@ class ADF(logfileparser.Logfile):
                 line = next(inputfile)
 
             self.moenergies = [numpy.array(x, "d") for x in moenergies]
-            self.homos = numpy.array([homoa, homob], "i")
+
+            self.set_attribute('homos', [homoa, homob])
 
 
         # Extracting orbital symmetries and energies, homos.
@@ -515,7 +595,7 @@ class ADF(logfileparser.Logfile):
             self.mosyms = [[]]
             self.moenergies = [[]]
 
-            self.skip_lines(inputfile, ['d', 'b', 'header', 'd'])
+            self.skip_lines(inputfile, ['e', 'b', 'header', 'd'])
 
             homoa = None
             homob = None
@@ -602,10 +682,9 @@ class ADF(logfileparser.Logfile):
                     print(("Error", info))
 
             if len(info) == 6: #still unrestricted, despite being out of loop
-                self.homos = [homoa, homob]
+                self.set_attribute('homos', [homoa, homob])
 
             self.moenergies = [numpy.array(x, "d") for x in self.moenergies]
-            self.homos = numpy.array(self.homos, "i")
 
         # Section on extracting vibdisps
         # Also contains vibfreqs, but these are extracted in the
@@ -655,7 +734,7 @@ class ADF(logfileparser.Logfile):
         # Extract the number of basis sets
         if line[1:49] == "Total nr. of (C)SFOs (summation over all irreps)":
             nbasis = int(line.split(":")[1].split()[0])
-            self.set_scalar('nbasis', nbasis)
+            self.set_attribute('nbasis', nbasis)
 
         # now that we're here, let's extract aonames
 
@@ -745,8 +824,7 @@ class ADF(logfileparser.Logfile):
                 if text[13:20] != "Overlap": # verify this has overlap info
                     break
 
-                col = next(inputfile)
-                row = next(inputfile)
+                self.skip_lines(inputfile, ['b', 'col', 'row'])
 
                 if not hasattr(self,"fooverlaps"): # make sure there is a matrix to store this
                     self.fooverlaps = numpy.zeros((self.nbasis, self.nbasis), "d")
@@ -1012,6 +1090,42 @@ class ADF(logfileparser.Logfile):
                 mulliken.append(float(line.split()[2]))
                 line = next(inputfile)
             self.atomcharges["mulliken"] = mulliken
+
+        # Dipole moment is always printed after a point calculation,
+        # and the reference point for this is always the origin (0,0,0)
+        # and not necessarily the center of mass, as explained on the
+        # ADF user mailing list (see cclib/cclib#113 for details).
+        #
+        # =============
+        # Dipole Moment  ***  (Debye)  ***
+        # =============
+        #  
+        # Vector   :         0.00000000      0.00000000      0.00000000
+        # Magnitude:         0.00000000
+        #
+        if line.strip()[:13] == "Dipole Moment":
+
+            self.skip_line(inputfile, 'equals')
+
+            # There is not always a blank line here, for example when the dipole and quadrupole
+            # moments are printed after the multipole derived atomic charges. Still, to the best
+            # of my knowledge (KML) the values are still in Debye.
+            line = next(inputfile)
+            if not line.strip():
+                line = next(inputfile)
+
+            assert line.split()[0] == "Vector"
+            dipole = [float(d) for d in line.split()[-3:]]
+
+            reference = [0.0, 0.0, 0.0]
+            if not hasattr(self, 'moments'):
+                self.moments = [reference, dipole]
+            else:
+                try:
+                    assert self.moments[1] == dipole
+                except AssertionError:
+                    self.logger.warning('Overwriting previous multipole moments with new values')
+                    self.moments = [reference, dipole]
 
 
 if __name__ == "__main__":

@@ -1,0 +1,482 @@
+
+Running Job 1 of 1 water_mp4.in
+qchem water_mp4.in_2232.0 /home/eric/scratch/qchem/qchem2232/ 1
+                  Welcome to Q-Chem
+     A Quantum Leap Into The Future Of Chemistry
+
+
+ Q-Chem 4.2, Q-Chem, Inc., Pleasanton, CA (2014).
+
+ Y. Shao,  Z. Gan,  E. Epifanovsky,  A. T. B. Gilbert,  M. Wormit,  
+ J. Kussmann,  A. W. Lange,  A. Behn,  J. Deng,  X. Feng,  D. Ghosh,  
+ M. Goldey,  P. R. Horn,  L. D. Jacobson,  I. Kaliman,  R. Z. Khaliullin,  
+ T. Kus,  A. Landau,  J. Liu,  E. I. Proynov,  Y. M. Rhee,  R. M. Richard,  
+ M. A. Rohrdanz,  R. P. Steele,  E. J. Sundstrom,  H. L. Woodcock III,  
+ P. M. Zimmerman,  D. Zuev,  B. Albrecht,  E. Alguire,  B. Austin,  
+ G. J. O. Beran,  Y. A. Bernard,  E. Berquist,  K. Brandhorst,  
+ K. B. Bravaya,  S. T. Brown,  D. Casanova,  C.-M. Chang,  Y. Chen,  
+ S. H. Chien,  K. D. Closser,  D. L. Crittenden,  M. Diedenhofen,  
+ R. A. DiStasio Jr.,  H. Do,  A. D. Dutoi,  R. G. Edgar,  S. Fatehi,  
+ L. Fusti-Molnar,  A. Ghysels,  A. Golubeva-Zadorozhnaya,  J. Gomes,  
+ M. W. D. Hanson-Heine,  P. H. P. Harbach,  A. W. Hauser,  E. G. Hohenstein,  
+ Z. C. Holden,  T.-C. Jagau,  H. Ji,  B. Kaduk,  K. Khistyaev,  Jaehoon Kim,  
+ Jihan Kim,  R. A. King,  P. Klunzinger,  D. Kosenkov,  T. Kowalczyk,  
+ C. M. Krauter,  K. U. Lao,  A. Laurent,  K. V. Lawler,  S. V. Levchenko,  
+ C. Y. Lin,  F. Liu,  E. Livshits,  R. C. Lochan,  A. Luenser,  P. Manohar,  
+ S. F. Manzer,  S.-P. Mao,  N. Mardirossian,  A. V. Marenich,  S. A. Maurer,  
+ N. J. Mayhall,  C. M. Oana,  R. Olivares-Amaya,  D. P. O'Neill,  
+ J. A. Parkhill,  T. M. Perrine,  R. Peverati,  P. A. Pieniazek,  A. Prociuk,  
+ D. R. Rehn,  E. Rosta,  N. J. Russ,  N. Sergueev,  S. M. Sharada,  
+ S. Sharma,  D. W. Small,  A. Sodt,  T. Stein,  D. Stuck,  Y.-C. Su,  
+ A. J. W. Thom,  T. Tsuchimochi,  L. Vogt,  O. Vydrov,  T. Wang,  
+ M. A. Watson,  J. Wenzel,  A. White,  C. F. Williams,  V. Vanovschi,  
+ S. Yeganeh,  S. R. Yost,  Z.-Q. You,  I. Y. Zhang,  X. Zhang,  Y. Zhao,  
+ B. R. Brooks,  G. K. L. Chan,  D. M. Chipman,  C. J. Cramer,  
+ W. A. Goddard III,  M. S. Gordon,  W. J. Hehre,  A. Klamt,  
+ H. F. Schaefer III,  M. W. Schmidt,  C. D. Sherrill,  D. G. Truhlar,  
+ A. Warshel,  X. Xu,  A. Aspuru-Guzik,  R. Baer,  A. T. Bell,  N. A. Besley,  
+ J.-D. Chai,  A. Dreuw,  B. D. Dunietz,  T. R. Furlani,  S. R. Gwaltney,  
+ C.-P. Hsu,  Y. Jung,  J. Kong,  D. S. Lambrecht,  W. Liang,  C. Ochsenfeld,  
+ V. A. Rassolov,  L. V. Slipchenko,  J. E. Subotnik,  T. Van Voorhis,  
+ J. M. Herbert,  A. I. Krylov,  P. M. W. Gill,  M. Head-Gordon
+
+ Contributors to earlier versions of Q-Chem not listed above: 
+ R. D. Adamson,  J. Baker,  E. F. C. Byrd,  A. K. Chakraborty,  C.-L. Cheng,  
+ H. Dachsel,  R. J. Doerksen,  G. Hawkins,  A. Heyden,  S. Hirata,  
+ G. Kedziora,  F. J. Keil,  C. Kelley,  P. P. Korambath,  W. Kurlancheek,  
+ A. M. Lee,  M. S. Lee,  D. Liotard,  I. Lotan,  P. E. Maslen,  N. Nair,  
+ D. Neuhauser,  R. Olson,  B. Peters,  J. Ritchie,  N. E. Schultz,  
+ N. Shenvi,  A. C. Simmonett,  K. S. Thanthiriwatte,  Q. Wu,  W. Zhang
+
+ Q-Chem 4.2.0 for Intel X86 Linux
+
+ Parts of Q-Chem use Armadillo 4.100.2 (Dirt Cruiser).
+ http://arma.sourceforge.net/
+
+ Q-Chem begins on Sun Jul  6 12:46:32 2014  
+
+Host: 
+0
+
+     Scratch files written to /home/eric/scratch/qchem/qchem2232//
+ May1314 814_zgan -1
+Finally everything over in PARseQInput
+
+--------------------------------------------------------------
+User input:
+--------------------------------------------------------------
+$comment
+Water, single point, RMP4/STO-3G
+$end
+
+$rem
+method = mp4
+basis = sto-3g
+$end
+
+$molecule
+0 1
+O
+H 1 R1
+H 1 R1 2 A1
+
+R1=0.99
+A1=106.0
+$end
+--------------------------------------------------------------
+ ----------------------------------------------------------------
+             Standard Nuclear Orientation (Angstroms)
+    I     Atom           X                Y                Z
+ ----------------------------------------------------------------
+    1      O       0.0000000000     0.0000000000     0.1191593746
+    2      H      -0.7906491549     0.0000000000    -0.4766374983
+    3      H       0.7906491549     0.0000000000    -0.4766374983
+ ----------------------------------------------------------------
+ Molecular Point Group                 C2v   NOp =  4
+ Largest Abelian Subgroup              C2v   NOp =  4
+ Nuclear Repulsion Energy =     8.8870062630 hartrees
+ There are        5 alpha and        5 beta electrons
+ Requested basis set is STO-3G
+ There are 4 shells and 7 basis functions
+Total memory of 1801MB is distributed as follows: 
+   QALLOC including MEM_STATIC uses 1301MB
+   MEM_STATIC is set to 301MB
+   CCMAN JOB total memory use is  1500MB
+Warning: actual memory use might exceed 1801MB
+
+Total QAlloc Memory Limit   1301 MB
+Mega-Array Size       295 MB
+MEM_STATIC part       301 MB
+
+                       Distance Matrix (Angstroms)
+             O (  1)   H (  2)
+   H (  2)  0.990000
+   H (  3)  0.990000  1.581298
+ 
+ A cutoff of  1.0D-14 yielded     10 shell pairs
+ There are        34 function pairs
+ Smallest overlap matrix eigenvalue = 3.64E-01
+
+  Scale SEOQF with 1.000000e+00/1.000000e+00/1.000000e+00
+
+ Standard Electronic Orientation quadrupole field applied
+ Nucleus-field energy     =    -0.0000000002 hartrees
+ Guess from superposition of atomic densities
+ Warning:  Energy on first SCF cycle will be non-variational
+ A restricted Hartree-Fock SCF calculation will be
+ performed using Pulay DIIS extrapolation
+ SCF converges when DIIS error is below 1.0E-08
+ ---------------------------------------
+  Cycle       Energy         DIIS Error
+ ---------------------------------------
+    1     -74.6004034219      3.98E-01
+    2     -74.9231294862      6.68E-02
+    3     -74.9638278706      8.22E-03
+    4     -74.9643050866      1.60E-03
+    5     -74.9643287511      2.83E-05
+    6     -74.9643287654      8.23E-06
+    7     -74.9643287668      1.04E-07
+    8     -74.9643287668      5.45E-11 Convergence criterion met
+ ---------------------------------------
+ SCF time:  CPU 0.01 s  wall 0.01 s
+ SCF   energy in the final basis set = -74.9643287668
+ Total energy in the final basis set = -74.9643287668
+
+******************************************************
+*                    C C M A N                       *
+*                                                    *
+*                   Anna I. Krylov                   *
+*                  C. David Sherrill                 *
+*                  Steven R. Gwaltney                *
+*                  Edward F. C. Byrd                 *
+*                     June 2000                      *
+*                                                    *
+*                     AND                            *
+*                                                    *
+*                  Sergey V. Levchenko               *
+*                  Lyudmila V. Slipchenko            *
+*                  Tao Wang                          *
+*                  Ana-Maria C. Cristian             *
+*                                                    *
+*                     November 2003                  *
+*                                                    *
+*                    AND                             *
+*                                                    *
+*          Piotr A. Pieniazek                        *
+*          C. Melania Oana                           *
+*          E. Epifanovsky                            *
+*                                                    *
+*                    October 2007                    *
+*                                                    *
+*                                                    *
+******************************************************
+
+
+
+blck_tnsr_buffsz = 1404
+ccjobtype = sp
+ccman2 = 0
+do_efp = 0
+do_ri = 0
+eomcorr = none
+print_lvl = 1
+refcorr = mp4
+test_mode = 0
+threads = 1
+tmp_maxbuffsz = 96
+unrestricted = 0
+ccsd.dOV_threshold = 0
+ccsd.diis_freq = 1
+ccsd.diis_max_overlap = 1
+ccsd.diis_min_overlap = 1e-11
+ccsd.diis_size = 7
+ccsd.diis_start = 3
+ccsd.energy_convergence = 1e-08
+ccsd.maxiter = 100
+ccsd.restart = 0
+ccsd.saveampl = 0
+ccsd.scale_amp = 1
+ccsd.solver = diis
+ccsd.t_convergence = 1e-08
+ccsd.z_convergence = 1e-08
+eom.convergence = 1e-06
+eom.do_fake_ipea = 0
+eom.dthreshold = 1e-06
+eom.filter_ipea = 0
+eom.maxiter = 30
+eom.maxvectors = 60
+eom.nguess_doubles = 0
+eom.nguess_singles = 0
+eom.preconv_doubles = 0
+eom.preconv_sd = 0
+eom.preconv_singles = 0
+eom.use_exdiag = 0
+mgc.amodel = 0
+mgc.canonize = 0
+mgc.canonize_final = 0
+mgc.canonize_freq = 50
+mgc.dOV_threshold = 0
+mgc.diis = 0
+mgc.diis12_switch = 1e-05
+mgc.diis_freq = 2
+mgc.diis_max_overlap = 1
+mgc.diis_min_overlap = 1e-11
+mgc.diis_size = 7
+mgc.diis_start = 2
+mgc.do_ed_ccd = 0
+mgc.do_qccd = 0
+mgc.energy_convergence = 1e-08
+mgc.hess_threshold = 0.01
+mgc.iterate_ov = 0
+mgc.maxiter = 100
+mgc.maxtrank = 0
+mgc.mgc_ampread = 0
+mgc.mgc_amps = 2
+mgc.mgc_ampscale = 0
+mgc.mgc_cc_gvb_guess = 0
+mgc.mgc_create_dm = 0
+mgc.mgc_eom = 0
+mgc.mgc_frzn_core = 0
+mgc.mgc_gvb_n_pairs = 0
+mgc.mgc_ip = 0
+mgc.mgc_localinter = 0
+mgc.mgc_localints = 1
+mgc.mgc_oo_type = 0
+mgc.mgc_ph = 0
+mgc.mgc_renorm = 0
+mgc.mgc_skip_ae = 0
+mgc.mgc_write_ints = 0
+mgc.nlpairs = 2
+mgc.preconv_frozen = 0
+mgc.preconv_t2z = 0
+mgc.preconv_t2z_each = 0
+mgc.reset_theta = 15
+mgc.restart = 0
+mgc.saveampl = 0
+mgc.scale_amp = 1
+mgc.solver = diis
+mgc.t_convergence = 1e-08
+mgc.theta_convergence = 0.0001
+mgc.theta_grad_convergence = 0.0001
+mgc.theta_grad_threshold = 0.01
+mgc.theta_stepsize = 1
+mgc.turn_on_qccd = 0.01
+mgc.z_convergence = 1e-08
+ooccd.canonize_final = 0
+ooccd.canonize_freq = 50
+ooccd.dOV_threshold = 0
+ooccd.diis = 0
+ooccd.diis12_switch = 1e-05
+ooccd.diis_freq = 2
+ooccd.diis_max_overlap = 1
+ooccd.diis_min_overlap = 1e-11
+ooccd.diis_size = 7
+ooccd.diis_start = 2
+ooccd.do_ed_ccd = 0
+ooccd.do_qccd = 0
+ooccd.energy_convergence = 1e-08
+ooccd.hess_threshold = 0.01
+ooccd.iterate_ov = 0
+ooccd.maxiter = 100
+ooccd.preconv_frozen = 0
+ooccd.preconv_t2z = 0
+ooccd.preconv_t2z_each = 0
+ooccd.reset_theta = 15
+ooccd.restart = 0
+ooccd.saveampl = 0
+ooccd.scale_amp = 1
+ooccd.solver = diis
+ooccd.t_convergence = 1e-08
+ooccd.theta_convergence = 0.0001
+ooccd.theta_grad_convergence = 0.0001
+ooccd.theta_grad_threshold = 0.01
+ooccd.theta_stepsize = 1
+ooccd.turn_on_qccd = 0.01
+ooccd.z_convergence = 1e-08
+orbitals.canonize = 1
+orbitals.do_fno = 0
+orbitals.mp2_grad = 0
+orbitals.mp2no_guess = 0
+orbitals.reorthogonalize_mo = 0
+orbitals.restart_no_scf = 0
+orbitals.restricted_amplitudes = 1
+orbitals.restricted_triples = 0
+pt_corr.incl_core_corr = 1
+pt_corr.incl_virt_corr = 1
+pt_corr.sd_corr_only = 0
+solvent_model.cc_solvent = 0
+svd.analyze_t2 = 0
+svd.d1_d2_diag = 0
+svd.energy_decomp = 0
+svd.svd_algorithm = 1
+svd.svd_decompose_geminals = 0
+svd.svd_first_geminal = 0
+svd.svd_incl_singles = 1
+svd.svd_n_values = 1
+svd.svd_plot_geminals = 0
+svd.t2_lowrank = 0
+
+Testing symmetry... Orbitals in the original order:
+ 
+ Alpha MOs, Restricted
+ -- Occupied --                  
+-20.244  -1.251  -0.603  -0.445  -0.388
+  1 A1    2 A1    1 B1    3 A1    1 B2                                         
+ -- Virtual --                   
+  0.571   0.709
+  4 A1    2 B1                                                                 
+ 
+ Beta MOs, Restricted
+ -- Occupied --                  
+-20.244  -1.251  -0.603  -0.445  -0.388
+  1 A1    2 A1    1 B1    3 A1    1 B2                                         
+ -- Virtual --                   
+  0.571   0.709
+  4 A1    2 B1                                                                 
+Setting symmetry... Orbitals will be reordered.
+No MO reordering is requested
+
+The orbitals are ordered and numbered as follows:
+Alpha orbitals:
+Number  Energy    Type    Symmetry  ANLMAN number  Total number:
+  0    -20.244     AOCC      A1      1A1     1
+  1     -1.251     AOCC      A1      2A1     2
+  2     -0.445     AOCC      A1      3A1     3
+  3     -0.603     AOCC      B1      1B1     4
+  4     -0.388     AOCC      B2      1B2     5
+
+  0      0.571     AVIRT     A1      4A1     6
+  1      0.709     AVIRT     B1      2B1     7
+
+
+MOLECULAR PARAMETERS: 
+ORB SYMM INFO:
+     POINT GROUP=C2v               NIRREPS   =  4
+     MOL ORB=  7
+
+     IRREPS =   A1   A2   B1   B2  
+     ORBSPI =    4    0    2    1 
+     DOCC   =    3    0    1    1 
+     SOCC   =    0    0    0    0 
+
+     FDOCC  =    0    0    0    0 
+     RDOCC  =    0    0    0    0 
+     AAOCC  =    3    0    1    1 
+     BAOCC  =    3    0    1    1 
+     AAVIRT =    1    0    1    0 
+     BAVIRT =    1    0    1    0 
+     RUOCC  =    0    0    0    0 
+     FUOCC  =    0    0    0    0 
+
+     IRREP MULT TABLE:
+       0   1   2   3 
+       1   0   3   2 
+       2   3   0   1 
+       3   2   1   0 
+
+     ORBSYM ALPHA= A1   A1   A1   B1   B2   A1   B1   
+     ORBSYM BETA = A1   A1   A1   B1   B2   A1   B1   
+
+
+   BASIS ORBS   =       7      MOL ORBS     =       7
+   NAUXBASIS    =       0
+   FROZEN OCC   =       0      FROZEN VIR   =       0
+   CORR ORBS    =       7      CORR SP ORBS =      14
+   NUM ALP ELEC =       5      NUM BET ELEC =       5
+   NUM ALP EXPL =       5      NUM BET EXPL =       5
+   NUM SO OCC   =      10      NUM SO VIR   =       4
+   NUM RESTR DOCC=      0      NUM RESTR DVIRT=     0
+   ORBS PER BLCK =     16      RESTRICTED_REF =    1
+
+BLOCKING PARAMETERS: 
+   NUM ROCC BLOCKS =     0      NUM AOCC  BLOCKS=     3
+   NUM AVIRT BLOCKS=     2      NUM RVIRT BLOCKS=     0
+
+   ORBITALS/BLOCK =   3   1   1   3   1   1   1   1   1   1 
+
+BIRREP = A1   B1   B2   A1   B1   B2   A1   B1   A1   B1   
+ 
+EHF                    =   -74.964328767
+EMP2                   =   -75.002378705
+EMP3                   =   -75.012879231
+EMP4SDQ                =   -75.016089019
+
+
+ CCSD or (V)OO-CCD job:  CPU 0.02 s  wall 0.02 s
+Doing only closed-shell triples contributions
+EMP4                   =   -75.016143404
+
+
+ (2) or (T) job:  CPU 0.02 s  wall 0.04 s
+
+
+ CCMAN JOB: ALL  CPU 0.04 s  wall 0.06 s
+ Analysis of SCF Wavefunction
+ 
+ --------------------------------------------------------------
+             Orbital Energies (a.u.) and Symmetries
+ --------------------------------------------------------------
+ 
+ Alpha MOs, Restricted
+ -- Occupied --                  
+-20.244  -1.251  -0.445  -0.603  -0.388
+  1 A1    2 A1    3 A1    1 B1    1 B2                                         
+ -- Virtual --                   
+  0.571   0.709
+  4 A1    2 B1                                                                 
+ 
+ Beta MOs, Restricted
+ -- Occupied --                  
+-20.244  -1.251  -0.445  -0.603  -0.388
+  1 A1    2 A1    3 A1    1 B1    1 B2                                         
+ -- Virtual --                   
+  0.571   0.709
+  4 A1    2 B1                                                                 
+ --------------------------------------------------------------
+ 
+          Ground-State Mulliken Net Atomic Charges
+
+     Atom                 Charge (a.u.)
+  ----------------------------------------
+      1 O                    -0.339214
+      2 H                     0.169607
+      3 H                     0.169607
+  ----------------------------------------
+  Sum of atomic charges =     0.000000
+
+ -----------------------------------------------------------------
+                    Cartesian Multipole Moments
+ -----------------------------------------------------------------
+    Charge (ESU x 10^10)
+                 0.0000
+    Dipole Moment (Debye)
+         X       0.0000      Y       0.0000      Z      -1.6735
+       Tot       1.6735
+    Quadrupole Moments (Debye-Ang)
+        XX      -4.2950     XY       0.0000     YY      -6.1213
+        XZ       0.0000     YZ       0.0000     ZZ      -5.4175
+    Octopole Moments (Debye-Ang^2)
+       XXX       0.0000    XXY       0.0000    XYY       0.0000
+       YYY       0.0000    XXZ      -0.5848    XYZ       0.0000
+       YYZ       0.0136    XZZ       0.0000    YZZ       0.0000
+       ZZZ      -0.1457
+    Hexadecapole Moments (Debye-Ang^3)
+      XXXX      -6.8264   XXXY       0.0000   XXYY      -1.8585
+      XYYY       0.0000   YYYY      -3.2614   XXXZ       0.0000
+      XXYZ       0.0000   XYYZ       0.0000   YYYZ       0.0000
+      XXZZ      -1.7504   XYZZ       0.0000   YYZZ      -1.4123
+      XZZZ       0.0000   YZZZ       0.0000   ZZZZ      -4.9965
+ -----------------------------------------------------------------
+Archival summary:
+1\1\gold\SP\ProcedureUnspecified\STO-3G\12\eric\SunJul612:46:322014SunJul612:46:322014\0\\#,ProcedureUnspecified,STO-3G,\\0,1\O\H,1,0.99\H,1,0.99,2,106\\HF=-74.9643288\\@
+
+ Total job time:  0.16s(wall), 0.14s(cpu) 
+ Sun Jul  6 12:46:32 2014
+
+        *************************************************************
+        *                                                           *
+        *  Thank you very much for using Q-Chem.  Have a nice day.  *
+        *                                                           *
+        *************************************************************
+
+

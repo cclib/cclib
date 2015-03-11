@@ -1,4 +1,6 @@
-# This file is part of cclib (http://cclib.sf.net), a library for parsing
+# -*- coding: utf-8 -*-
+#
+# This file is part of cclib (http://cclib.github.io), a library for parsing
 # and interpreting the results of computational chemistry packages.
 #
 # Copyright (C) 2006-2014, the cclib development team
@@ -8,6 +10,8 @@
 # received a copy of the license along with cclib. You can also access
 # the full license online at http://www.gnu.org/copyleft/lgpl.html.
 
+"""Calculation of Mulliken population analysis (MPA) based on data parsed by cclib."""
+
 import random
 
 import numpy
@@ -16,7 +20,7 @@ from .population import Population
 
 
 class MPA(Population):
-    """The Mulliken population analysis."""
+    """Mulliken population analysis."""
     
     def __init__(self, *args):
 

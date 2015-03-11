@@ -1,3 +1,38 @@
+Changes since cclib-1.3:
+
+Features:
+    * New attribute nooccnos for natural orbital occupation numbers
+    * Read data from XYZ files using OpenBabel bridge
+    * Start basic tests for bridge functionality
+
+Bugfixes:
+
+    * Better handling of ONIOM logfiles in Gaussian (Clyde Fare)
+    * Fix IR intensity bug in Gaussian parser (Clyde Fare)
+    * Fix QChem parser for OpenMP output
+    * Fix parsing TDDFT/RPA transitions (Felix Plasser)
+    * Fix encoding issues for UTF-8 symbols in parsers and bridges
+
+Changes since cclib-1.2:
+
+Features:
+    * New parser: cclib can now parse NWChem files
+    * New parser: cclib can now parse Psi (versions 3 and 4) files
+    * New parser: cclib can now parse QChem files (by Eric Berquist)
+    * New method: Nuclear (currently calculates the repulsion energy)
+    * Handle Gaussian basis set output with GFPRINT keyword
+    * Attribute optdone reverted to single Boolean value by default
+    * Add --verbose and --future options to ccget and parsers
+    * Replaced PC-GAMESS test files with newer Firefly versions
+    * Updated test file versions to GAMESS-UK 8.0
+
+Bugfixes:
+    * Handle GAMESS-US file with LZ value analysis (Martin Rahm)
+    * Handle Gaussian jobs with stars in output (Russell Johnson, NIST)
+    * Handle ORCA singlet-only TD calculations (May A.)
+    * Fix parsing of Gaussian jobs with fragments and ONIOM output
+    * Use UTF-8 encodings for files that need them (Matt Ernst)
+
 Changes since cclib-1.1:
 
 Features:
@@ -6,6 +41,7 @@ Features:
     * Add a multifile mode to ccget script
     * Extract vibrational displacements for ORCA
     * Extract natural atom charges for Gaussian (Fedor Zhuravlev)
+    * New attribute optdone flags converged geometry optimization
     * Updated test file versions to ADF2013.01, GAMESS-US 2012,
     Gaussian09, Molpro 2012 and ORCA 3.0.1
 

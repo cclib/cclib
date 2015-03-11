@@ -1,4 +1,6 @@
-# This file is part of cclib (http://cclib.sf.net), a library for parsing
+# -*- coding: utf-8 -*-
+#
+# This file is part of cclib (http://cclib.github.io), a library for parsing
 # and interpreting the results of computational chemistry packages.
 #
 # Copyright (C) 2008-2014, the cclib development team
@@ -7,6 +9,8 @@
 # the GNU Lesser General Public version 2.1 or later. You should have
 # received a copy of the license along with cclib. You can also access
 # the full license online at http://www.gnu.org/copyleft/lgpl.html.
+
+"""Parser for NWChem output files"""
 
 
 import itertools
@@ -49,7 +53,7 @@ class NWChem(logfileparser.Logfile):
         # FIXME if necessary
         return label
 
-    name2element = lambda self, lbl: "".join(itertools.takewhile(str.isalpha, lbl))
+    name2element = lambda self, lbl: "".join(itertools.takewhile(str.isalpha, str(lbl)))
 
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
@@ -80,18 +84,17 @@ class NWChem(logfileparser.Logfile):
                 coords.append(list(map(float, [x,y,z])))
                 atomnos.append(int(float(nuclear)))
                 line = next(inputfile)
+
             self.atomcoords.append(coords)
-            if hasattr(self, 'atomnos'):
-                assert atomnos == self.atomnos
-            else:
-                self.atomnos = atomnos
+
+            self.set_attribute('atomnos', atomnos)
 
         # If the geometry is printed in XYZ format, it will have the number of atoms.
         if line[12:31] == "XYZ format geometry":
 
             self.skip_line(inputfile, 'dashes')
             natom = int(next(inputfile).strip())
-            self.set_scalar('natom', natom)
+            self.set_attribute('natom', natom)
 
         if line.strip() == "NWChem Geometry Optimization":
             self.skip_lines(inputfile, ['d', 'b', 'b', 'b', 'b', 'title', 'b', 'b'])
@@ -106,10 +109,8 @@ class NWChem(logfileparser.Logfile):
                 if "rms cartesian step threshold" in line:
                     xrms = float(line.split()[-1])
                 line = next(inputfile)
-            if not hasattr(self, 'geotargets'):
-                self.geotargets = [gmax, grms, xmax, xrms]
-            else:
-                assert self.geotargets == [gmax, grms, xmax, xrms]
+
+            self.set_attribute('geotargets', [gmax, grms, xmax, xrms])
 
         # NWChem does not normally print the basis set for each atom, but rather
         # chooses the concise option of printing Gaussian coefficients for each
@@ -174,14 +175,13 @@ class NWChem(logfileparser.Logfile):
                     shells.append(shell)
                     line = next(inputfile)
                 gbasis_dict[atomelement].extend(shells)
+
             gbasis = []
             for i in range(self.natom):
                 atomtype = utils.PeriodicTable().element[self.atomnos[i]]
                 gbasis.append(gbasis_dict[atomtype])
-            if not hasattr(self, 'gbasis'):
-                self.gbasis = gbasis
-            else:
-                assert self.gbasis == gbasis
+
+            self.set_attribute('gbasis', gbasis)
 
         # Normally the indexes of AOs assigned to specific atoms are also not printed,
         # so we need to infer that. We could do that from the previous section,
@@ -190,26 +190,55 @@ class NWChem(logfileparser.Logfile):
         # listed in this summary of the AO basis. Similar to previous section, here
         # we assume all atoms of the same element have the same basis sets, but
         # this will probably need to be revised later.
-        if line.strip() == """Summary of "ao basis" -> "ao basis" (cartesian)""":
-            self.skip_lines(inputfile, ['d', 'headers', 'd'])
-            atombasis_dict = {}
-            line = next(inputfile)
-            while line.strip():
-                atomname, desc, shells, funcs, types = line.split()
-                atomelement = self.name2element(atomname)
-                atombasis_dict[atomelement] = int(funcs)
+
+        # The section we can glean info about aonmaes looks like:
+        #
+        # Summary of "ao basis" -> "ao basis" (cartesian)
+        # ------------------------------------------------------------------------------
+        #       Tag                 Description            Shells   Functions and Types
+        # ---------------- ------------------------------  ------  ---------------------
+        # C                           sto-3g                  3        5   2s1p
+        # H                           sto-3g                  1        1   1s
+        #
+        # However, we need to make sure not to match the following entry lines:
+        #
+        # *  Summary of "ao basis" -> "" (cartesian)
+        # *  Summary of allocated global arrays
+        #
+        # Unfortantely, "ao basis" isn't unique because it can be renamed to anything for
+        # later reference: http://www.nwchem-sw.org/index.php/Basis
+        # It also appears that we have to handle cartesian vs. spherical
+
+        if line[1:11] == "Summary of":
+            match = re.match(' Summary of "([^\"]*)" -> "([^\"]*)" \((.+)\)', line)
+
+            if match and match.group(1) == match.group(2):
+
+                self.skip_lines(inputfile, ['d', 'title', 'd'])
+
+                self.shells = {}
+                self.shells["type"] = match.group(3)
+
+                atombasis_dict = {}
+
                 line = next(inputfile)
-            atombasis = []
-            last = 0
-            for i in range(self.natom):
-                atomelement = utils.PeriodicTable().element[self.atomnos[i]]
-                nfuncs = atombasis_dict[atomelement]
-                atombasis.append(list(range(last,last+nfuncs)))
-                last = atombasis[-1][-1] + 1
-            if not hasattr(self, 'atombasis'):
-                self.atombasis = atombasis
-            else:
-                assert self.atombasis == atombasis
+                while line.strip():
+                    atomname, desc, shells, funcs, types = line.split()
+                    atomelement = self.name2element(atomname)
+
+                    self.shells[atomname] = types
+                    atombasis_dict[atomelement] = int(funcs)
+                    line = next(inputfile)
+
+                last = 0
+                atombasis = []
+                for atom in self.atomnos:
+                    atomelement = utils.PeriodicTable().element[atom]
+                    nfuncs = atombasis_dict[atomelement]
+                    atombasis.append(list(range(last, last+nfuncs)))
+                    last = atombasis[-1][-1] + 1
+
+                self.set_attribute('atombasis', atombasis)
 
         # This section contains general parameters for Hartree-Fock calculations,
         # which do not contain the 'General Information' section like most jobs.
@@ -219,16 +248,16 @@ class NWChem(logfileparser.Logfile):
             while line.strip():
                 if line[2:8] == "charge":
                     charge = int(float(line.split()[-1]))
-                    self.set_scalar('charge', charge)
+                    self.set_attribute('charge', charge)
                 if line[2:13] == "open shells":
                     unpaired = int(line.split()[-1])
-                    self.set_scalar('mult', 2*unpaired + 1)
+                    self.set_attribute('mult', 2*unpaired + 1)
                 if line[2:7] == "atoms":
                     natom = int(line.split()[-1])
-                    self.set_scalar('natom', natom)
+                    self.set_attribute('natom', natom)
                 if line[2:11] == "functions":
                     nfuncs = int(line.split()[-1])
-                    self.set_scalar("nbasis", nfuncs)
+                    self.set_attribute("nbasis", nfuncs)
                 line = next(inputfile)
 
         # This section contains general parameters for DFT calculations, as well as
@@ -241,17 +270,17 @@ class NWChem(logfileparser.Logfile):
             while line.strip():
 
                 if "No. of atoms" in line:
-                    self.set_scalar('natom', int(line.split()[-1]))
+                    self.set_attribute('natom', int(line.split()[-1]))
                 if "Charge" in line:
-                    self.set_scalar('charge', int(line.split()[-1]))
+                    self.set_attribute('charge', int(line.split()[-1]))
                 if "Spin multiplicity" in line:
                     mult = line.split()[-1]
                     if mult == "singlet":
                         mult = 1
-                    self.set_scalar('mult', int(mult))
+                    self.set_attribute('mult', int(mult))
                 if "AO basis - number of function" in line:
                     nfuncs = int(line.split()[-1])
-                    self.set_scalar('nbasis', nfuncs)
+                    self.set_attribute('nbasis', nfuncs)
 
                 # These will be present only in the DFT module.
                 if "Convergence on energy requested" in line:
@@ -268,6 +297,41 @@ class NWChem(logfileparser.Logfile):
                 if not hasattr(self, 'scftargets'):
                     self.scftargets = []
                 self.scftargets.append([target_energy, target_density, target_gradient])
+
+
+        # If the full overlap matrix is printed, it looks like this:
+        #
+        # global array: Temp Over[1:60,1:60],  handle: -996 
+        #
+        #            1           2           3           4           5           6  
+        #       ----------- ----------- ----------- ----------- ----------- -----------
+        #   1       1.00000     0.24836    -0.00000    -0.00000     0.00000     0.00000
+        #   2       0.24836     1.00000     0.00000    -0.00000     0.00000     0.00030
+        #   3      -0.00000     0.00000     1.00000     0.00000     0.00000    -0.00014
+        # ...
+        if "global array: Temp Over[" in line:
+
+            self.set_attribute('nbasis', int(line.split('[')[1].split(',')[0].split(':')[1]))
+            self.set_attribute('nmo', int(line.split(']')[0].split(',')[1].split(':')[1]))
+
+            aooverlaps = []
+            while len(aooverlaps) < self.nbasis:
+
+                self.skip_line(inputfile, 'blank')
+
+                indices = [int(i) for i in inputfile.next().split()]
+                assert indices[0] == len(aooverlaps) + 1
+
+                self.skip_line(inputfile, "dashes")
+                data = [inputfile.next().split() for i in range(self.nbasis)]
+                indices = [int(d[0]) for d in data]
+                assert indices == list(range(1, self.nbasis+1))
+
+                for i in range(1, len(data[0])):
+                    vector = [float(d[i]) for d in data]
+                    aooverlaps.append(vector)
+
+            self.set_attribute('aooverlaps', aooverlaps)
 
         if line.strip() in ("The SCF is already converged", "The DFT is already converged"):
             if self.linesearch:
@@ -417,6 +481,22 @@ class NWChem(logfileparser.Logfile):
             self.geovalues.append([gmax, grms, xmax, xrms])
             self.linesearch = True
 
+        # There is a clear message when the geometry optimization has converged:
+        #
+        #      ----------------------
+        #      Optimization converged
+        #      ----------------------
+        #
+        if line.strip() == "Optimization converged":
+            self.skip_line(inputfile, 'dashes')
+            if not hasattr(self, 'optdone'):
+                self.optdone = []
+            self.optdone.append(len(self.geovalues) - 1)
+
+        if "Failed to converge" in line and hasattr(self, 'geovalues'):
+            if not hasattr(self, 'optdone'):
+                self.optdone = []
+
         # The line containing the final SCF energy seems to be always identifiable like this.
         if "Total SCF energy" in line or "Total DFT energy" in line:
 
@@ -472,8 +552,8 @@ class NWChem(logfileparser.Logfile):
         # The same format is used for HF and DFT molecular orbital analysis. We want to parse
         # the MO energies from this section, although it is printed already before this with
         # less precision (might be useful to parse that if this is not available). Also, this
-        # section contains coefficients for the leading AO contributions, so it would also
-        # be good to parse and use those values if the full vectors are not printed.
+        # section contains coefficients for the leading AO contributions, so it might also
+        # be useful to parse and use those values if the full vectors are not printed.
         #
         # The block looks something like this (two separate alpha/beta blocks in the unrestricted case):
         #
@@ -505,13 +585,6 @@ class NWChem(logfileparser.Logfile):
             alphabeta = int("Beta" in line)
 
             self.skip_lines(inputfile, ['dashes', 'blank'])
-
-            if not hasattr(self, "moenergies"):
-                self.moenergies = []
-            if not hasattr(self, 'mosyms'):
-                self.mosyms = []
-            if not hasattr(self, 'homos'):
-                self.homos = []
 
             energies = []
             symmetries = [None]*self.nbasis
@@ -552,24 +625,19 @@ class NWChem(logfileparser.Logfile):
                     line = next(inputfile)
                 line = next(inputfile)
 
+            self.set_attribute('nmo', nvector)
+
+            if not hasattr(self, 'moenergies') or (len(self.moenergies) > alphabeta):
+                self.moenergies = []
             self.moenergies.append(energies)
-            self.set_scalar('nmo', nvector)
 
-            if any(symmetries):
-                if len(self.mosyms) == alphabeta + 1:
-                    for i,s in enumerate(self.mosyms[alphabeta]):
-                        if s:
-                            if symmetries[i]:
-                                assert s == symmetries[i]
-                        elif symmetries[i]:
-                            self.mosyms[alphabeta][i] = symmetries[i]
-                else:
-                    self.mosyms.append(symmetries)
+            if not hasattr(self, 'mosyms') or (len(self.mosyms) > alphabeta):
+                self.mosyms = []
+            self.mosyms.append(symmetries)
 
-            if len(self.homos) == alphabeta + 1:
-                assert self.homos[alphabeta] == homo
-            else:
-                self.homos.append(homo)
+            if not hasattr(self, 'homos') or (len(self.homos) > alphabeta):
+                self.homos = []
+            self.homos.append(homo)
 
         # This is where the full MO vectors are printed, but a special directive is needed for it:
         #
@@ -603,8 +671,8 @@ class NWChem(logfileparser.Logfile):
                 size = array_info.split('[')[1].split(']')[0]
                 nbasis = int(size.split(',')[0].split(':')[1])
                 nmo = int(size.split(',')[1].split(':')[1])
-                self.set_scalar('nbasis', nbasis)
-                self.set_scalar('nmo', nmo)
+                self.set_attribute('nbasis', nbasis)
+                self.set_attribute('nmo', nmo)
             
                 self.skip_line(inputfile, 'blank')
                 mocoeffs = []
@@ -653,7 +721,9 @@ class NWChem(logfileparser.Logfile):
                 line = next(inputfile)
             self.atomcharges['mulliken'] = charges
 
-        # If the full overlap matrix is printed, it looks like this:
+        # Not the the 'overlap population' as printed in the Mulliken population analysis,
+        # is not the same thing as the 'overlap matrix'. In fact, it is the overlap matrix
+        # multiplied elementwise times the density matrix.
         #
         #          ----------------------------
         #          Mulliken population analysis
@@ -667,7 +737,7 @@ class NWChem(logfileparser.Logfile):
         #    2   1 C  s           -0.0535883400   0.8281341291   0.0000000000  -0.0000000000   0.0000000000   0.0000039991  -0.0009906747
         # ...
         #
-        # Also, DFT does not seem to print the separate listing of Mulliken charges
+        # DFT does not seem to print the separate listing of Mulliken charges
         # by default, but they are printed by this modules later on. They are also print
         # for Hartree-Fock runs, though, so in that case make sure they are consistent.
         if line.strip() == "Mulliken population analysis":
@@ -698,8 +768,6 @@ class NWChem(logfileparser.Logfile):
 
                 line = next(inputfile)
 
-            self.aooverlaps = overlaps
-
             # This header should be printed later, before the charges are print, which of course
             # are just sums of the overlaps and could be calculated. But we just go ahead and
             # parse them, make sure they're consistent with previously parsed values and
@@ -725,6 +793,178 @@ class NWChem(logfileparser.Logfile):
                 assert max(self.atomcharges['mulliken'] - numpy.array(charges)) < 0.01
                 self.atomcharges['mulliken'] = charges
 
+        # NWChem prints the dipole moment in atomic units first, and we could just fast forward
+        # to the values in Debye, which are also printed. But we can also just convert them
+        # right away and so parse a little bit less. Note how the reference point is print
+        # here within the block nicely, as it is for all moment later.
+        # 
+        #          -------------
+        #          Dipole Moment
+        #          -------------
+        #
+        # Center of charge (in au) is the expansion point
+        #         X =       0.0000000 Y =       0.0000000 Z =       0.0000000
+        #
+        #   Dipole moment        0.0000000000 Debye(s)
+        #             DMX        0.0000000000 DMXEFC        0.0000000000
+        #             DMY        0.0000000000 DMYEFC        0.0000000000
+        #             DMZ       -0.0000000000 DMZEFC        0.0000000000
+        #
+        # ...
+        #
+        if line.strip() == "Dipole Moment":
+
+            self.skip_lines(inputfile, ['d', 'b'])
+
+            reference_comment = next(inputfile)
+            assert "(in au)" in reference_comment
+            reference = next(inputfile).split()
+            self.reference = [reference[-7], reference[-4], reference[-1]]
+            self.reference = numpy.array([float(x) for x in self.reference])
+            self.reference = utils.convertor(self.reference, 'bohr', 'Angstrom')
+
+            self.skip_line(inputfile, 'blank')
+
+            magnitude = next(inputfile)
+            assert magnitude.split()[-1] == "A.U."
+
+            dipole = []
+            for i in range(3):
+                line = next(inputfile)
+                dipole.append(float(line.split()[1]))
+
+            dipole = utils.convertor(numpy.array(dipole), "ebohr", "Debye")
+
+            if not hasattr(self, 'moments'):
+                self.moments = [self.reference, dipole]
+            else:
+                self.moments[1] == dipole
+
+        # The quadrupole moment is pretty straightforward to parse. There are several
+        # blocks printed, and the first one called 'second moments' contains the raw
+        # moments, and later traceless values are printed. The moments, however, are
+        # not in lexicographical order, so we need to sort them. Also, the first block
+        # is in atomic units, so remember to convert to Buckinghams along the way.
+        #
+        #          -----------------
+        #          Quadrupole Moment
+        #          -----------------
+        #
+        # Center of charge (in au) is the expansion point
+        #         X =       0.0000000 Y =       0.0000000 Z =       0.0000000
+        #
+        # < R**2 > = ********** a.u.  ( 1 a.u. = 0.280023 10**(-16) cm**2 ) 
+        # ( also called diamagnetic susceptibility ) 
+        #
+        #   Second moments in atomic units
+        #
+        #   Component  Electronic+nuclear     Point charges             Total
+        #  --------------------------------------------------------------------------
+        #      XX          -38.3608511210          0.0000000000        -38.3608511210
+        #      YY          -39.0055467347          0.0000000000        -39.0055467347
+        # ...
+        #
+        if line.strip() == "Quadrupole Moment":
+
+            self.skip_lines(inputfile, ['d', 'b'])
+
+            reference_comment = next(inputfile)
+            assert "(in au)" in reference_comment
+            reference = next(inputfile).split()
+            self.reference = [reference[-7], reference[-4], reference[-1]]
+            self.reference = numpy.array([float(x) for x in self.reference])
+            self.reference = utils.convertor(self.reference, 'bohr', 'Angstrom')
+
+            self.skip_lines(inputfile, ['b', 'units', 'susc', 'b'])
+
+            line = next(inputfile)
+            assert line.strip() == "Second moments in atomic units"
+
+            self.skip_lines(inputfile, ['b', 'header', 'd'])
+
+            # Parse into a dictionary and then sort by the component key.
+            quadrupole = {}
+            for i in range(6):
+                line = next(inputfile)
+                quadrupole[line.split()[0]] = float(line.split()[-1])
+            lex = sorted(quadrupole.keys())
+            quadrupole = [quadrupole[key] for key in lex]
+
+            quadrupole = utils.convertor(numpy.array(quadrupole), "ebohr2", "Buckingham")
+
+            # The checking of potential previous values if a bit more involved here,
+            # because it turns out NWChem has separate keywords for dipole, quadrupole
+            # and octupole output. So, it is perfectly possible to print the quadrupole
+            # and not the dipole... if that is the case set the former to None and
+            # issue a warning. Also, a regression has been added to cover this case.
+            if not hasattr(self, 'moments') or len(self.moments) <2:
+                self.logger.warning("Found quadrupole moments but no previous dipole")
+                self.moments = [self.reference, None, quadrupole]
+            else:
+                if len(self.moments) == 2:
+                    self.moments.append(quadrupole)
+                else:
+                    assert self.moments[2] == quadrupole
+
+        # The octupole moment is analogous to the quadrupole, but there are more components
+        # and the checking of previously parsed dipole and quadrupole moments is more involved,
+        # with a corresponding test also added to regressions.
+        #
+        #          ---------------
+        #          Octupole Moment
+        #          ---------------
+        #
+        # Center of charge (in au) is the expansion point
+        #         X =       0.0000000 Y =       0.0000000 Z =       0.0000000
+        #
+        #   Third moments in atomic units
+        #
+        #   Component  Electronic+nuclear     Point charges             Total
+        #  --------------------------------------------------------------------------
+        #      XXX          -0.0000000000          0.0000000000         -0.0000000000
+        #      YYY          -0.0000000000          0.0000000000         -0.0000000000
+        # ...
+        #
+        if line.strip() == "Octupole Moment":
+
+            self.skip_lines(inputfile, ['d', 'b'])
+
+            reference_comment = next(inputfile)
+            assert "(in au)" in reference_comment
+            reference = next(inputfile).split()
+            self.reference = [reference[-7], reference[-4], reference[-1]]
+            self.reference = numpy.array([float(x) for x in self.reference])
+            self.reference = utils.convertor(self.reference, 'bohr', 'Angstrom')
+
+            self.skip_line(inputfile, 'blank')
+
+            line = next(inputfile)
+            assert line.strip() == "Third moments in atomic units"
+
+            self.skip_lines(inputfile, ['b', 'header', 'd'])
+
+            octupole = {}
+            for i in range(10):
+                line = next(inputfile)
+                octupole[line.split()[0]] = float(line.split()[-1])
+            lex = sorted(octupole.keys())
+            octupole = [octupole[key] for key in lex]
+
+            octupole = utils.convertor(numpy.array(octupole), "ebohr3", "Debye.ang2")
+
+            if not hasattr(self, 'moments') or len(self.moments) < 2:
+                self.logger.warning("Found octupole moments but no previous dipole or quadrupole moments")
+                self.moments = [self.reference, None, None, octupole]
+            elif len(self.moments) == 2:
+                self.logger.warning("Found octupole moments but no previous quadrupole moments")
+                self.moments.append(None)
+                self.moments.append(octupole)
+            else:
+                if len(self.moments) == 3:
+                    self.moments.append(octupole)
+                else:
+                    assert self.moments[3] == octupole
+
         if "Total MP2 energy" in line:
             mpenerg = float(line.split()[-1])
             if not hasattr(self, "mpenergies"):
@@ -738,6 +978,71 @@ class NWChem(logfileparser.Logfile):
                 self.ccenergies = []
             self.ccenergies.append([])
             self.ccenergies[-1].append(utils.convertor(ccenerg, "hartree", "eV"))
+
+    def after_parsing(self):
+        """NWChem-specific routines for after parsing file.
+
+        Currently, expands self.shells() into self.aonames.
+        """
+
+        # setup a few necessary things, including a regular expression
+        # for matching the shells
+        table = utils.PeriodicTable()
+        elements = [ table.element[x] for x in self.atomnos ]
+        pattern = re.compile("(\ds)+(\dp)*(\dd)*(\df)*(\dg)*")
+
+        labels = {}
+        labels['s'] = ["%iS"]
+        labels['p'] = ["%iPX", "%iPY", "%iPZ"]
+        if self.shells['type'] == 'spherical':
+            labels['d'] = ['%iD-2', '%iD-1', '%iD0', '%iD1', '%iD2']
+            labels['f'] = ['%iF-3', '%iF-2', '%iF-1', '%iF0',
+                            '%iF1', '%iF2', '%iF3']
+            labels['g'] = ['%iG-4', '%iG-3', '%iG-2', '%iG-1', '%iG0',
+                            '%iG1', '%iG2', '%iG3', '%iG4']
+        elif self.shells['type'] == 'cartesian':
+            labels['d'] = ['%iDXX', '%iDXY', '%iDXZ',
+                            '%iDYY', '%iDYZ',
+                            '%iDZZ']
+            labels['f'] = ['%iFXXX', '%iFXXY', '%iFXXZ',
+                            '%iFXYY', '%iFXYZ', '%iFXZZ',
+                            '%iFYYY', '%iFYYZ', '%iFYZZ',
+                            '%iFZZZ']
+            labels['g'] = ['%iGXXXX', '%iGXXXY', '%iGXXXZ',
+                            '%iGXXYY', '%iGXXYZ', '%iGXXZZ',
+                            '%iGXYYY', '%iGXYYZ', '%iGXYZZ',
+                            '%iGXZZZ', '%iGYYYY', '%iGYYYZ',
+                            '%iGYYZZ', '%iGYZZZ', '%iGZZZZ']
+        else:
+            self.logger.warning("Found a non-standard aoname representation type.")
+            return
+
+        # now actually build aonames
+        # involves expanding 2s1p into appropriate types
+
+        self.aonames = []
+        for i, element in enumerate(elements):
+            try:
+                shell_text = self.shells[element]
+            except KeyError:
+                del self.aonames
+                msg = "Cannot determine aonames for at least one atom."
+                self.logger.warning(msg)
+                break
+
+            prefix = "%s%i_" % (element, i + 1) # (e.g. C1_)
+
+            matches = pattern.match(shell_text)
+            for j, group in enumerate(matches.groups()):
+                if group is None:
+                    continue
+
+                count = int(group[:-1])
+                label = group[-1]
+
+                for k in range(count):
+                    temp = [ x % (j + k + 1) for x in labels[label] ]
+                    self.aonames.extend( [ prefix + x for x in temp ] )
 
 
 if __name__ == "__main__":

@@ -1,4 +1,6 @@
-# This file is part of cclib (http://cclib.sf.net), a library for parsing
+# -*- coding: utf-8 -*-
+#
+# This file is part of cclib (http://cclib.github.io), a library for parsing
 # and interpreting the results of computational chemistry packages.
 #
 # Copyright (C) 2007-2014, the cclib development team
@@ -8,11 +10,15 @@
 # received a copy of the license along with cclib. You can also access
 # the full license online at http://www.gnu.org/copyleft/lgpl.html.
 
+"""Parser for ORCA output files"""
+
+
 from __future__ import print_function
 
 import numpy
 
 from . import logfileparser
+from . import utils
 
 
 class ORCA(logfileparser.Logfile):
@@ -50,8 +56,8 @@ class ORCA(logfileparser.Logfile):
         # we parse a cycle (so it will be larger than zero().
         self.gopt_cycle = 0
 
-        # Keep track of when geometry optimizations finish
-        self.optdone = []
+        # Keep track of whether this is a relaxed scan calculation
+        self.is_relaxed_scan = False
 
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
@@ -59,17 +65,17 @@ class ORCA(logfileparser.Logfile):
         if line[0:15] == "Number of atoms":
 
             natom = int(line.split()[-1])
-            self.set_scalar('natom', natom)
+            self.set_attribute('natom', natom)
 
         if line[1:13] == "Total Charge":
 
             charge = int(line.split()[-1])
-            self.set_scalar('charge', charge)
+            self.set_attribute('charge', charge)
 
             line = next(inputfile)
 
             mult = int(line.split()[-1])
-            self.set_scalar('mult', mult)
+            self.set_attribute('mult', mult)
 
         # SCF convergence output begins with:
         #
@@ -82,11 +88,12 @@ class ORCA(logfileparser.Logfile):
 
             self.skip_line(inputfile, 'dashes')
 
-            line = next(inputfile).split()
-            if line[1] == "Energy":
-                self.parse_scf_condensed_format(inputfile, line)
-            elif line[1] == "Starting":
-                self.parse_scf_expanded_format(inputfile, line)
+            line = next(inputfile)
+            colums = line.split()
+            if colums[1] == "Energy":
+                self.parse_scf_condensed_format(inputfile, colums)
+            elif colums[1] == "Starting":
+                self.parse_scf_expanded_format(inputfile, colums)
 
         # Information about the final iteration, which also includes the convergence
         # targets and the convergence values, is printed separately, in a section like this:
@@ -149,39 +156,148 @@ class ORCA(logfileparser.Logfile):
 
             self._append_scfvalues_scftargets(inputfile, line)  
 
-        if line[25:50] == "Geometry Optimization Run" or line[28:48] == "Relaxed Surface Scan":
+        # The convergence targets for geometry optimizations are printed at the
+        # beginning of the output, although the order and their description is
+        # different than later on. So, try to standardize the names of the criteria
+        # and save them for later so that we can get the order right.
+        #
+        #                        *****************************
+        #                        * Geometry Optimization Run *
+        #                        *****************************
+        #
+        # Geometry optimization settings:
+        # Update method            Update   .... BFGS
+        # Choice of coordinates    CoordSys .... Redundant Internals
+        # Initial Hessian          InHess   .... Almoef's Model
+        #
+        # Convergence Tolerances:
+        # Energy Change            TolE     ....  5.0000e-06 Eh
+        # Max. Gradient            TolMAXG  ....  3.0000e-04 Eh/bohr
+        # RMS Gradient             TolRMSG  ....  1.0000e-04 Eh/bohr
+        # Max. Displacement        TolMAXD  ....  4.0000e-03 bohr
+        # RMS Displacement         TolRMSD  ....  2.0000e-03 bohr
+        #
+        if line[25:50] == "Geometry Optimization Run":
+
+            stars = next(inputfile)
+            blank = next(inputfile)
 
             line = next(inputfile)
             while line[0:23] != "Convergence Tolerances:":
                 line = next(inputfile)
 
-            self.geotargets = numpy.zeros((5,), "d")
+            if hasattr(self, 'geotargets'):
+                self.logger.warning('The geotargets attribute should not exist yet. There is a problem in the parser.')
+            self.geotargets = []
+            self.geotargets_names = []
+
+            # There should always be five tolerance values printed here.
             for i in range(5):
                 line = next(inputfile)
-                self.geotargets[i] = float(line.split()[-2])
+                name = line[:25].strip().lower().replace('.','').replace('displacement', 'step')
+                target = float(line.split()[-2])
+                self.geotargets_names.append(name)
+                self.geotargets.append(target)
 
-        #get geometry convergence criteria
+        # The convergence targets for relaxed surface scan steps are printed at the
+        # beginning of the output, although the order and their description is
+        # different than later on. So, try to standardize the names of the criteria
+        # and save them for later so that we can get the order right.
+        #
+        #         *************************************************************
+        #         *               RELAXED SURFACE SCAN STEP  12               *
+        #         *                                                           *
+        #         *   Dihedral ( 11,  10,   3,   4)  : 180.00000000           *
+        #         *************************************************************
+        #
+        # Geometry optimization settings:
+        # Update method            Update   .... BFGS
+        # Choice of coordinates    CoordSys .... Redundant Internals
+        # Initial Hessian          InHess   .... Almoef's Model
+        #
+        # Convergence Tolerances:
+        # Energy Change            TolE     ....  5.0000e-06 Eh
+        # Max. Gradient            TolMAXG  ....  3.0000e-04 Eh/bohr
+        # RMS Gradient             TolRMSG  ....  1.0000e-04 Eh/bohr
+        # Max. Displacement        TolMAXD  ....  4.0000e-03 bohr
+        # RMS Displacement         TolRMSD  ....  2.0000e-03 bohr
+        if line[25:50] == "RELAXED SURFACE SCAN STEP":
+
+           self.is_relaxed_scan = True
+           blank = next(inputfile)
+           info = next(inputfile)
+           stars = next(inputfile)
+           blank = next(inputfile)
+
+           line = next(inputfile)
+           while line[0:23] != "Convergence Tolerances:":
+               line = next(inputfile)
+
+           self.geotargets = []
+           self.geotargets_names = []
+
+           # There should always be five tolerance values printed here.
+           for i in range(5):
+               line = next(inputfile)
+               name = line[:25].strip().lower().replace('.','').replace('displacement', 'step')
+               target = float(line.split()[-2])
+               self.geotargets_names.append(name)
+               self.geotargets.append(target)
+
+        # After each geometry optimization step, ORCA prints the current convergence
+        # parameters and the targets (again), so it is a good idea to check that they
+        # have not changed. Note that the order of these criteria here are different
+        # than at the beginning of the output, so make use of the geotargets_names created
+        # before and save the new geovalues in correct order.
+        #
+        #          ----------------------|Geometry convergence|---------------------
+        #          Item                value                 Tolerance   Converged
+        #          -----------------------------------------------------------------
+        #          Energy change       0.00006021            0.00000500      NO
+        #          RMS gradient        0.00031313            0.00010000      NO
+        #          RMS step            0.01596159            0.00200000      NO
+        #          MAX step            0.04324586            0.00400000      NO
+        #          ....................................................
+        #          Max(Bonds)      0.0218      Max(Angles)    2.48
+        #          Max(Dihed)        0.00      Max(Improp)    0.00
+        #          -----------------------------------------------------------------
+        #
         if line[33:53] == "Geometry convergence":
-            if not hasattr(self, "geovalues"):
-                self.geovalues = [ ]
-            
-            newlist = []
-            self.skip_lines(inputfile, ['headers', 'd'])
-            
-            #check if energy change is present (steps > 1)
-            line = next(inputfile)
-            if line.find("Energy change") > 0:
-                newlist.append(float(line.split()[2]))
-                line = next(inputfile)
-            else:
-                newlist.append(0.0)
 
-            #get rest of info
-            for i in range(4):
-                newlist.append(float(line.split()[2]))
-                line = next(inputfile)
+            if not hasattr(self, "geovalues"):
+                self.geovalues = []
             
-            self.geovalues.append(newlist)
+            headers = next(inputfile)
+            dashes = next(inputfile)
+
+            names = []
+            values = []
+            targets = []
+            line = next(inputfile)
+            while list(set(line.strip())) != ["."]:
+                name = line[10:28].strip().lower()
+                value = float(line.split()[2])
+                target = float(line.split()[3])
+                names.append(name)
+                values.append(value)
+                targets.append(target)
+                line = next(inputfile)
+
+            # The energy change is normally not printed in the first iteration, because
+            # there was no previous energy -- in that case assume zero, but check that
+            # no previous geovalues were parsed.
+            newvalues = []
+
+            for i, n in enumerate(self.geotargets_names):
+                if (n == "energy change") and (n not in names):
+                    if not self.is_relaxed_scan:
+                        assert len(self.geovalues) == 0
+                    newvalues.append(0.0)
+                else:
+                    newvalues.append(values[names.index(n)])
+                    assert targets[names.index(n)] == self.geotargets[i]
+            
+            self.geovalues.append(newvalues)
 
         #if not an optimization, determine structure used
         if line[0:21] == "CARTESIAN COORDINATES" and not hasattr(self, "atomcoords"):
@@ -197,9 +313,9 @@ class ORCA(logfileparser.Logfile):
                 atomcoords.append(list(map(float, broken[1:4])))
                 line = next(inputfile)
 
-            if not hasattr(self, "atomnos"):
-                self.atomnos = atomnos
-                self.set_scalar('natom', len(atomnos))
+            self.set_attribute('natom', len(atomnos))
+            self.set_attribute('atomnos', atomnos)
+
             self.atomcoords = [atomcoords]
 
         # There's always a banner announcing the next geometry optimization cycle,
@@ -228,16 +344,14 @@ class ORCA(logfileparser.Logfile):
                 atomcoords.append(list(map(float, broken[1:4])))
             
             self.atomcoords.append(atomcoords)
-            if not hasattr(self, "atomnos"):
-                self.atomnos = numpy.array(atomnos,'i')
 
-        # This was for optdone in v1.2.
-        #if line[31:61] == "THE OPTIMIZATION HAS CONVERGED":
-        #    self.optdone = True
+            self.set_attribute('atomnos', atomnos)
 
         if line[21:68] == "FINAL ENERGY EVALUATION AT THE STATIONARY POINT":
-            count = len(self.atomcoords)
-            self.optdone.append(count)
+
+            if not hasattr(self, 'optdone'):
+                self.optdone = []
+            self.optdone.append(len(self.atomcoords))
 
             self.skip_lines(inputfile, ['text', 's', 'd', 'text', 'd'])
 
@@ -248,6 +362,10 @@ class ORCA(logfileparser.Logfile):
                 atomcoords.append(list(map(float, broken[1:4])))
 
             self.atomcoords.append(atomcoords)
+
+        if "The optimization did not converge" in line:
+            if not hasattr(self, 'optdone'):
+                self.optdone = []
 
         if line[0:16] == "ORBITAL ENERGIES":
 
@@ -286,9 +404,9 @@ class ORCA(logfileparser.Logfile):
         # For this reason, also check for the second patterns, and use it as an assert
         # if nbasis was already parsed. Regression PCB_1_122.out covers this test case.
         if line[1:32] == "# of contracted basis functions":
-            self.set_scalar('nbasis', int(line.split()[-1]))
+            self.set_attribute('nbasis', int(line.split()[-1]))
         if line[1:27] == "Basis Dimension        Dim":
-            self.set_scalar('nbasis', int(line.split()[-1]))
+            self.set_attribute('nbasis', int(line.split()[-1]))
 
         if line[0:14] == "OVERLAP MATRIX":
 
@@ -356,12 +474,19 @@ class ORCA(logfileparser.Logfile):
             self.mocoeffs = mocoeffs
 
         if line[0:18] == "TD-DFT/TDA EXCITED":
-            sym = "Triplet" # Could be singlets or triplets
+            # Could be singlets or triplets
             if line.find("SINGLETS") >= 0:
                 sym = "Singlet"
+            elif line.find("TRIPLETS") >= 0:
+                sym = "Triplet"
+            else:
+                sym = "Not specified"
+
+            if not hasattr(self, "etenergies"):
                 self.etsecs = []
                 self.etenergies = []
                 self.etsyms = []
+
             lookup = {'a':0, 'b':1}
             line = next(inputfile)
             while line.find("STATE") < 0:
@@ -549,6 +674,41 @@ class ORCA(logfileparser.Logfile):
             if has_spins:
                 self.atomspins["lowdin"] = spins
 
+        # It is not stated explicitely, but the dipole moment components printed by ORCA
+        # seem to be in atomic units, so they will need to be converted. Also, they
+        # are most probably calculated with respect to the origin .
+        #
+        # -------------
+        # DIPOLE MOMENT
+        # -------------
+        #                                 X             Y             Z
+        # Electronic contribution:      0.00000      -0.00000      -0.00000
+        # Nuclear contribution   :      0.00000       0.00000       0.00000
+        #                         -----------------------------------------
+        # Total Dipole Moment    :      0.00000      -0.00000      -0.00000
+        #                         -----------------------------------------
+        # Magnitude (a.u.)       :      0.00000
+        # Magnitude (Debye)      :      0.00000
+        #
+        if line.strip() == "DIPOLE MOMENT":
+
+            self.skip_lines(inputfile, ['d', 'XYZ', 'electronic', 'nuclear', 'd'])
+            total = next(inputfile)
+            assert "Total Dipole Moment" in total
+
+            reference = [0.0, 0.0, 0.0]
+            dipole = numpy.array([float(d) for d in total.split()[-3:]])
+            dipole = utils.convertor(dipole, "ebohr", "Debye")
+
+            if not hasattr(self, 'moments'):
+                self.moments = [reference, dipole]
+            else:
+                try:
+                    assert numpy.all(self.moments[1] == dipole)
+                except AssertionError:
+                    self.logger.warning('Overwriting previous multipole moments with new values')
+                    self.moments = [reference, dipole]
+
     def parse_scf_condensed_format(self, inputfile, line):
         """ Parse the SCF convergence information in condensed format """
 
@@ -691,6 +851,7 @@ class ORCA(logfileparser.Logfile):
                 assert maxDP_target == self.scftargets[-1][1]
             self.scfvalues[-1].append([deltaE_value, maxDP_value, rmsDP_value])
             self.scftargets.append([deltaE_target, maxDP_target, rmsDP_target])
+
 
 if __name__ == "__main__":
     import sys

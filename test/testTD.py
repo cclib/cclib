@@ -1,39 +1,48 @@
-# This file is part of cclib (http://cclib.sf.net), a library for parsing
+# This file is part of cclib (http://cclib.github.io), a library for parsing
 # and interpreting the results of computational chemistry packages.
 #
-# Copyright (C) 2007-2014, the cclib development team
+# Copyright (C) 2007,2008,2012,2014,2015, the cclib development team
 #
 # The library is free software, distributed under the terms of
 # the GNU Lesser General Public version 2.1 or later. You should have
 # received a copy of the license along with cclib. You can also access
 # the full license online at http://www.gnu.org/copyleft/lgpl.html.
 
+"""Test single point time-dependent logfiles in cclib"""
+
+import unittest
+
 import numpy
 
-import bettertest
 
+class GenericTDTest(unittest.TestCase):
+    """Generic time-dependent HF/DFT unittest"""
 
-class GenericTDTest(bettertest.TestCase):
-    """Time-dependent HF/DFT unittest."""
+    number = 5
+    expected_l_max = 41000
 
     def testenergies(self):
         """Is the l_max reasonable?"""
+
         self.assertEqual(len(self.data.etenergies), self.number)
+
+        # Note that if all oscillator strengths are zero (like for triplets)
+        # then this will simply pick out the first energy.
         idx_lambdamax = [i for i, x in enumerate(self.data.etoscs)
                          if x==max(self.data.etoscs)][0]
-        self.assertInside(self.data.etenergies[idx_lambdamax], 41000, 5000)
+        self.assertAlmostEqual(self.data.etenergies[idx_lambdamax], self.expected_l_max, delta=5000)
     
     def testoscs(self):
-        """Is the maximum of eotscs in the right range?"""
+        """Is the maximum of etoscs in the right range?"""
         self.assertEqual(len(self.data.etoscs), self.number)
-        self.assertInside(max(self.data.etoscs), 0.67, 0.1)
+        self.assertAlmostEqual(max(self.data.etoscs), 0.67, delta=0.1)
 
     def testsecs(self):
         """Is the sum of etsecs close to 1?"""
         self.assertEqual(len(self.data.etsecs), self.number)
         lowestEtrans = self.data.etsecs[1]
         sumofsec = sum([z*z for (x, y, z) in lowestEtrans])
-        self.assertInside(sumofsec, 1.0, 0.16)
+        self.assertAlmostEqual(sumofsec, 1.0, delta=0.16)
 
     def testsecs_transition(self):
         """Is the lowest E transition from the HOMO or to the LUMO?"""
@@ -52,7 +61,7 @@ class GenericTDTest(bettertest.TestCase):
 
 
 class ADFTDDFTTest(GenericTDTest):
-    """ADF time-dependent DFT unittest."""
+    """Customized time-dependent DFT unittest"""
     number = 5
 
     def testsecs(self):
@@ -62,84 +71,57 @@ class ADFTDDFTTest(GenericTDTest):
 
         #ADF squares the etsecs
         sumofsec = sum([z for (x, y, z) in lowestEtrans])
-        self.assertInside(sumofsec, 1.0, 0.16)
+        self.assertAlmostEqual(sumofsec, 1.0, delta=0.16)
 
 
 class GaussianTDDFTTest(GenericTDTest):
-    """Gaussian time-dependent HF/DFT unittest."""
-    number = 5
+    """Customized time-dependent HF/DFT unittest"""
+
+    expected_l_max = 48000
 
     def testrotatsnumber(self):
         """Is the length of etrotats correct?"""
         self.assertEqual(len(self.data.etrotats), self.number)
 
 
-class JaguarTDDFTTest(GenericTDTest):
-    """Jaguar time-dependent HF/DFT unittest."""
-    number = 5
-
-
 class GAMESSUSTDDFTTest(GenericTDTest):
-    """GAMESS time-dependent HF/DFT unittest."""
-
+    """Customized time-dependent HF/DFT unittest"""
     number = 10
 
-    old_tests = ["GAMESS/WinGAMESS/dvb_td_2007.03.24.r1.out.gz"]
 
+class JaguarTDDFTTest(GenericTDTest):
+    """Customized time-dependent HF/DFT unittest"""
 
-class PCGamessTDDFTTest(GenericTDTest):
-    """PC-GAMESS time-dependent HF/DFT unittest."""
-    number = 5
+    expected_l_max = 48000
+
+    def testoscs(self):
+        """Is the maximum of etoscs in the right range?"""
+        self.assertEqual(len(self.data.etoscs), self.number)
+        self.assertAlmostEqual(max(self.data.etoscs), 1.0, delta=0.2)
 
     
 class OrcaTDDFTTest(GenericTDTest):
-    """ORCA time-dependent HF/DFT unittest."""
-    number = 10
+    """Customized time-dependent HF/DFT unittest"""
 
-    def testenergies(self):
-        """Is the l_max reasonable?"""
-        self.assertEqual(len(self.data.etenergies), self.number)
-        idx_lambdamax = [i for i, x in enumerate(self.data.etoscs)
-                         if x==max(self.data.etoscs)][0]
-        self.assertInside(self.data.etenergies[idx_lambdamax], 48000, 5000)
+    number = 10
+    expected_l_max = 48000
 
     def testoscs(self):
-        """Is the maximum of eotscs in the right range?"""
+        """Is the maximum of etoscs in the right range?"""
         self.assertEqual(len(self.data.etoscs), self.number)
-        self.assertInside(max(self.data.etoscs), 1.0, 0.1)
+        self.assertAlmostEqual(max(self.data.etoscs), 1.0, delta=0.1)
 
 
-class GenericTDTesttrp(GenericTDTest):
-    """Time-dependent HF/DFT (triplet) unittest."""
+class GenericTDDFTtrpTest(GenericTDTest):
+    """Generic time-dependent HF/DFT (triplet) unittest"""
 
-    def testenergies(self):
-        """Is the l_max reasonable?"""
-        self.assertEqual(len(self.data.etenergies), self.number)
-        idx_lambdamax = [i for i, x in enumerate(self.data.etoscs)
-                         if x==max(self.data.etoscs)][0]
-        self.assertInside(self.data.etenergies[idx_lambdamax], 24500, 100)
+    number = 5
+    expected_l_max = 24500
     
     def testoscs(self):
         """Triplet excitations should be disallowed."""
         self.assertEqual(len(self.data.etoscs), self.number)
-        self.assertInside(max(self.data.etoscs), 0.0, 0.01)
-
-
-class GAMESSUSTDDFTtrpTest(GenericTDTesttrp):
-    """GAMESS TD DFT (restricted) triplet unittest."""
-
-    number = 5
-
-    #old_tests = ["GAMESS/WinGAMESS/dvb_td_trplet_2007.03.24.r1.out.gz"]
-
-    def testsymsnumber(self):
-        """Is the length of etsyms correct? PASS"""
-        pass
-
-
-class PCGamessTDDFTtrpTest(GenericTDTesttrp):
-    """PC-GAMESS TD DFT (restricted) triplet unittest."""
-    number = 5
+        self.assertAlmostEqual(max(self.data.etoscs), 0.0, delta=0.01)
 
 
 if __name__=="__main__":

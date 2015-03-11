@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 #
-# This file is part of cclib (http://cclib.sf.net), a library for parsing
+# This file is part of cclib (http://cclib.github.io), a library for parsing
 # and interpreting the results of computational chemistry packages.
 #
-# Copyright (C) 2006-2014, the cclib development team
+# Copyright (C) 2006-2015, the cclib development team
 #
 # The library is free software, distributed under the terms of
 # the GNU Lesser General Public version 2.1 or later. You should have
@@ -31,7 +31,7 @@ Programming Language :: Python
 Topic :: Scientific/Engineering :: Chemistry
 Topic :: Software Development :: Libraries :: Python Modules"""
 
-programs = ['ADF', 'GAMESS', 'GAMESS-UK', 'Gaussian', 'Jaguar', 'Molpro', 'ORCA']
+programs = ['ADF', 'GAMESS', 'GAMESS-UK', 'Gaussian', 'Jaguar', 'Molpro', 'NWChem', 'ORCA', 'Psi', 'QChem']
 
 
 def setup_cclib():
@@ -47,16 +47,16 @@ def setup_cclib():
     from distutils.core import setup
 
     # The list of packages to be installed.
-    cclib_packages = ['cclib', 'cclib.parser', 'cclib.progress', 'cclib.method', 'cclib.bridge']
+    cclib_packages = ['cclib', 'cclib.parser', 'cclib.progress', 'cclib.method', 'cclib.bridge', 'cclib.writer']
 
     setup(
         name = "cclib",
-        version = "1.2b",
+        version = "1.3.1",
         url = "http://cclib.github.io/",
         author = "cclib development team",
         author_email = "cclib-users@lists.sourceforge.net",
         maintainer = "cclib development team",
-        maintainer_email = "cclib development team",
+        maintainer_email = "cclib-users@lists.sourceforge.net",
         license = "LGPL",
         description = doclines[0],
         long_description = "\n".join(doclines[2:]),      
@@ -64,7 +64,7 @@ def setup_cclib():
         platforms = ["Any."],
         packages = cclib_packages,
         package_dir = { 'cclib':'src/cclib' },
-        scripts = ["src/scripts/ccget", "src/scripts/cda"],
+        scripts = ["src/scripts/ccget", "src/scripts/ccwrite", "src/scripts/cda"],
     )
 
 

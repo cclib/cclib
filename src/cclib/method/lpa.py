@@ -1,4 +1,6 @@
-# This file is part of cclib (http://cclib.sf.net), a library for parsing
+# -*- coding: utf-8 -*-
+#
+# This file is part of cclib (http://cclib.github.io), a library for parsing
 # and interpreting the results of computational chemistry packages.
 #
 # Copyright (C) 2007-2014, the cclib development team
@@ -8,6 +10,8 @@
 # received a copy of the license along with cclib. You can also access
 # the full license online at http://www.gnu.org/copyleft/lgpl.html.
 
+"""Löwdin population analysis."""
+
 import random
 
 import numpy
@@ -16,7 +20,7 @@ from .population import Population
 
 
 class LPA(Population):
-    """The Lowdin population analysis"""
+    """The Löwdin population analysis"""
     def __init__(self, *args):
 
         # Call the __init__ method of the superclass.
@@ -31,7 +35,7 @@ class LPA(Population):
         return 'LPA("%s")' % (self.data)
 
     def calculate(self, indices=None, x=0.5, fupdate=0.05):
-        """Perform a calculation of Lowdin population analysis.
+        """Perform a calculation of Löwdin population analysis.
         
         Inputs:
           indices - list of lists containing atomic orbital indices of fragments

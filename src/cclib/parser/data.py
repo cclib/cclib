@@ -1,4 +1,6 @@
-# This file is part of cclib (http://cclib.sf.net), a library for parsing
+# -*- coding: utf-8 -*-
+#
+# This file is part of cclib (http://cclib.github.io), a library for parsing
 # and interpreting the results of computational chemistry packages.
 #
 # Copyright (C) 2007-2014, the cclib development team
@@ -8,11 +10,14 @@
 # received a copy of the license along with cclib. You can also access
 # the full license online at http://www.gnu.org/copyleft/lgpl.html.
 
+"""Classes and tools for storing and handling parsed data"""
+
+
 import numpy
 
 
 class ccData(object):
-    """Class for objects containing data from cclib parsers and methods.
+    """Stores data extracted by cclib parsers
 
     Description of cclib attributes:
         aonames -- atomic orbital names (list of strings)
@@ -26,14 +31,14 @@ class ccData(object):
         charge -- net charge of the system (integer)
         ccenergies -- molecular energies with Coupled-Cluster corrections (array[2], eV)
         coreelectrons -- number of core electrons in atom pseudopotentials (array[1])
-        enthalpy -- sum of electronic and thermal enthalpies (float hartree/particle)
-        entropy -- entropy (float hartree/particle)
+        enthalpy -- sum of electronic and thermal enthalpies (float, hartree/particle)
+        entropy -- entropy (float, hartree/particle)
         etenergies -- energies of electronic transitions (array[1], 1/cm)
         etoscs -- oscillator strengths of electronic transitions (array[1])
         etrotats -- rotatory strengths of electronic transitions (array[1], ??)
         etsecs -- singly-excited configurations for electronic transitions (list of lists)
         etsyms -- symmetries of electronic transitions (list of string)
-        freeenergy -- sum of electronic and thermal free energies (float hartree/particle)
+        freeenergy -- sum of electronic and thermal free energies (float, hartree/particle)
         fonames -- fragment orbital names (list of strings)
         fooverlaps -- fragment orbital overlap matrix (array[2])
         fragnames -- names of fragments (list of strings)
@@ -46,14 +51,16 @@ class ccData(object):
         homos -- molecular orbital indices of HOMO(s) (array[1])
         mocoeffs -- molecular orbital coefficients (list of arrays[2])
         moenergies -- molecular orbital energies (list of arrays[1], eV)
+        moments -- molecular multipole moments (list of arrays[], a.u.)
         mosyms -- orbital symmetries (list of lists)
-        mpenergies -- molecular electronic energies with Möller-Plesset corrections (array[2], eV)
+        mpenergies -- molecular electronic energies with Møller-Plesset corrections (array[2], eV)
         mult -- multiplicity of the system (integer)
         natom -- number of atoms (integer)
         nbasis -- number of basis functions (integer)
         nmo -- number of molecular orbitals (integer)
         nocoeffs -- natural orbital coefficients (array[2])
-        optdone -- indexes corresponding to energies/coords when optimizations have converged (list)
+        nooccnos -- natural orbital occupation numbers (array[1])
+        optdone -- flags whether an optimization has converged (Boolean)
         scancoords -- geometries of each scan step (array[3], angstroms)
         scanenergies -- energies of potential energy surface (list)
         scannames -- names of varaibles scanned (list of strings)
@@ -61,7 +68,7 @@ class ccData(object):
         scfenergies -- molecular electronic energies after SCF (Hartree-Fock, DFT) (array[1], eV)
         scftargets -- targets for convergence of the SCF (array[2])
         scfvalues -- current values for convergence of the SCF (list of arrays[2])
-        temperature -- tempature used for Thermochemistry (float kelvin)
+        temperature -- temperature used for Thermochemistry (float, kelvin)
         vibanharms -- vibrational anharmonicity constants (array[2], 1/cm)
         vibdisps -- cartesian displacement vectors (array[3], delta angstrom)
         vibfreqs -- vibrational frequencies (array[1], 1/cm)
@@ -87,7 +94,7 @@ class ccData(object):
         "ccenergies":     numpy.ndarray,
         "charge":         int,
         "coreelectrons":  numpy.ndarray,
-        "enthaply":       float,
+        "enthalpy":       float,
         "entropy":        float,
         "etenergies":     numpy.ndarray,
         "etoscs":         numpy.ndarray,
@@ -107,6 +114,7 @@ class ccData(object):
         "homos":          numpy.ndarray,
         "mocoeffs":       list,
         "moenergies":     list,
+        "moments":        list,
         "mosyms":         list,
         "mpenergies":     numpy.ndarray,
         "mult":           int,
@@ -114,6 +122,7 @@ class ccData(object):
         "nbasis":         int,
         "nmo":            int,
         "nocoeffs":       numpy.ndarray,
+        "nooccnos":       numpy.ndarray,
         "optdone":        bool,
         "scancoords":     numpy.ndarray,
         "scanenergies":   list,
@@ -132,31 +141,32 @@ class ccData(object):
     }
 
     # The name of all attributes can be generated from the dictionary above.
-    _attrlist = _attrtypes.keys()
+    _attrlist = sorted(_attrtypes.keys())
 
     # Arrays are double precision by default, but these will be integer arrays.
     _intarrays = ['atomnos', 'coreelectrons', 'homos']
 
     # Attributes that should be lists of arrays (double precision).
-    _listsofarrays = ['mocoeffs', 'moenergies', 'scfvalues']
-    
+    _listsofarrays = ['mocoeffs', 'moenergies', 'moments', 'scfvalues']
+
     # Attributes that should be dictionaries of arrays (double precision).
     _dictsofarrays = ["atomcharges", "atomspins"]
 
-    def __init__(self, attributes=None):
+    def __init__(self, attributes={}):
         """Initialize the cclibData object.
-        
+
         Normally called in the parse() method of a Logfile subclass.
-        
+
         Inputs:
-            attributes - dictionary of attributes to load
+            attributes - optional dictionary of attributes to load as data
         """
+
         if attributes:
             self.setattributes(attributes)
-        
+
     def listify(self):
         """Converts all attributes that are arrays or lists/dicts of arrays to lists."""
-        
+
         attrlist = [k for k in self._attrlist if hasattr(self, k)]
         for k in attrlist:
             v = self._attrtypes[k]
@@ -168,10 +178,10 @@ class ccData(object):
                 items = getattr(self, k).iteritems()
                 pairs = [(key, val.tolist()) for key, val in items]
                 setattr(self, k, dict(pairs))
-    
+
     def arrayify(self):
         """Converts appropriate attributes to arrays or lists/dicts of arrays."""
-        
+
         attrlist = [k for k in self._attrlist if hasattr(self, k)]
         for k in attrlist:
             v = self._attrtypes[k]
@@ -190,11 +200,11 @@ class ccData(object):
 
     def getattributes(self, tolists=False):
         """Returns a dictionary of existing data attributes.
-        
+
         Inputs:
             tolists - flag to convert attributes to lists where applicable
         """
-    
+
         if tolists:
             self.listify()
         attributes = {}
@@ -207,20 +217,20 @@ class ccData(object):
 
     def setattributes(self, attributes):
         """Sets data attributes given in a dictionary.
-        
+
         Inputs:
             attributes - dictionary of attributes to set
         Outputs:
             invalid - list of attributes names that were not set, which
                       means they are not specified in self._attrlist
         """
-    
+
         if type(attributes) is not dict:
             raise TypeError("attributes must be in a dictionary")
-    
+
         valid = [a for a in attributes if a in self._attrlist]
         invalid = [a for a in attributes if a not in self._attrlist]
-    
+
         for attr in valid:
             setattr(self, attr, attributes[attr])
 
@@ -248,3 +258,35 @@ class ccData(object):
             except ValueError:
                 args = (attr, type(val), self._attrtypes[attr])
                 raise TypeError("attribute %s is %s instead of %s and could not be converted" % args)
+
+    def write(self, filename=None, *args, **kwargs):
+        """Write parsed attributes to a file.
+
+        Possible extensions:
+          .cjson or .json -  output a chemical JSON file
+          .cml - output a chemical markup language (CML) file
+          .xyz - output a Cartesian XYZ file of the last coordinates available
+        """
+
+        from ..writer import ccwrite
+        outputstr = ccwrite(self, outputdest=filename, *args, **kwargs)
+        return outputstr
+
+
+class ccData_optdone_bool(ccData):
+    """This is the version of ccData where optdone is a Boolean."""
+
+    def __init__(self, *args, **kwargs):
+
+        super(ccData_optdone_bool, self).__init__(*args, **kwargs)
+
+        self._attrtypes['optdone'] = bool
+
+    def setattributes(self, *args, **kwargs):
+
+        invalid = super(ccData_optdone_bool, self).setattributes(*args, **kwargs)
+
+        # Reduce optdone to a Boolean, because it will be parsed as a list. If this list has any element,
+        # it means that there was an optimized structure and optdone should be True.
+        if hasattr(self, 'optdone'):
+            self.optdone = len(self.optdone) > 0

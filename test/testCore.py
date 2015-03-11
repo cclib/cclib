@@ -1,21 +1,26 @@
-# This file is part of cclib (http://cclib.sf.net), a library for parsing
+# This file is part of cclib (http://cclib.github.io), a library for parsing
 # and interpreting the results of computational chemistry packages.
 #
-# Copyright (C) 2007-2014, the cclib development team
+# Copyright (C) 2007,2012,2014,2015, the cclib development team
 #
 # The library is free software, distributed under the terms of
 # the GNU Lesser General Public version 2.1 or later. You should have
 # received a copy of the license along with cclib. You can also access
 # the full license online at http://www.gnu.org/copyleft/lgpl.html.
 
+"""Test logfiles with core electron data in cclib"""
+
+import unittest
+
 import numpy
 
 from cclib.parser.utils import PeriodicTable
-import bettertest
 
 
-class GenericCoreTest(bettertest.TestCase):
-    """Core electrons unittest."""
+class GenericCoreTest(unittest.TestCase):
+    """Generic core electrons unittest"""
+
+    coredict = {'Mo': 28, 'O':0, 'Cl':10}
 
     def testcorrect(self):
         """Is coreelectrons equal to what it should be?"""
@@ -24,39 +29,22 @@ class GenericCoreTest(bettertest.TestCase):
         for x in self.data.atomnos:
             ans.append(self.coredict[pt.element[x]])
         ans = numpy.array(ans, "i")
-        self.assertArrayEquals(self.data.coreelectrons, ans)
+        numpy.testing.assert_array_equal(self.data.coreelectrons, ans)
 
 
 class ADFCoreTest(GenericCoreTest):
-    """ADF core electrons unittest."""
+    """Customized core electrons unittest"""
 
+    # For some reason ADF does not have a core in this test for chlorine atoms.
+    # This might be fixable in the input.
     coredict = {'Mo': 28, 'O':0, 'Cl':0}
 
 
-class GAMESSUKCoreTest(GenericCoreTest):
-    """GAMESS-UK core electrons unittest."""
-
-    coredict = {'Mo': 28, 'O':0, 'Cl':10}
-
-
-class GAMESSUSCoreTest(GenericCoreTest):
-    """GAMESS-US core electrons unittest."""
-
-    old_tests = ["GAMESS/GAMESS-US/C_bigbasis_2006.02.22.r3.out.gz"]
-
-    coredict = {'Mo': 28, 'O':0, 'Cl':10}
-
-
-class GaussianCoreTest(GenericCoreTest):
-    """Gaussian core electrons unittest."""
-
-    coredict = {'Mo': 28, 'O':0, 'Cl':10}
-
-
 class JaguarCoreTest(GenericCoreTest):
-    """Jaguar core electrons unittest."""
+    """Customized core electrons unittest"""
 
-    coredict = {'Mo': 28, 'O':0, 'Cl':10}
+    # This test was done using LanL2DZ instead of the smaller variant.
+    coredict = {'Mo': 36, 'O':0, 'Cl':10}
 
            
 if __name__=="__main__":

@@ -2,10 +2,11 @@ psi: (
     wfn = scf
     reference = rhf
     label = "dvb"
-    jobtype = sp
+    jobtype = oeprop
     basis = "STO-3G"
     units = angstroms
     print_mos = true
+    mpmax = 3
     geometry = (
         (C    -1.4152533224   0.2302217854   0.0000000000)
         (C     1.4152533224  -0.2302217854   0.0000000000)

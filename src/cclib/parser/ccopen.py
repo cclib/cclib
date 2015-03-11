@@ -1,4 +1,6 @@
-# This file is part of cclib (http://cclib.sf.net), a library for parsing
+# -*- coding: utf-8 -*-
+#
+# This file is part of cclib (http://cclib.github.io), a library for parsing
 # and interpreting the results of computational chemistry packages.
 #
 # Copyright (C) 2009-2014, the cclib development team
@@ -8,33 +10,111 @@
 # received a copy of the license along with cclib. You can also access
 # the full license online at http://www.gnu.org/copyleft/lgpl.html.
 
+"""Tools for identifying and working with files and streams for any supported program"""
+
+
 from __future__ import print_function
+
+import os
+import sys
+
+from . import data
 
 from . import logfileparser
 
-from . import adfparser
-from . import gamessparser
-from . import gamessukparser
-from . import gaussianparser
-from . import jaguarparser
-from . import molproparser
-from . import nwchemparser
-from . import orcaparser
-from . import psiparser
+from .adfparser import ADF
+from .daltonparser import DALTON
+from .gamessparser import GAMESS
+from .gamessukparser import GAMESSUK
+from .gaussianparser import Gaussian
+from .jaguarparser import Jaguar
+from .molproparser import Molpro
+from .nwchemparser import NWChem
+from .orcaparser import ORCA
+from .psiparser import Psi
+from .qchemparser import QChem
 
+try:
+    from ..bridge import cclib2openbabel
+except ImportError:
+    print("Could not import openbabel, fallback mechanism might not work.")
+
+
+# Parser choice is triggered by certain phrases occuring the logfile. Where these
+# strings are unique, we can set the parser and break. In other cases, the situation
+# is a little but more complicated. Here are the exceptions:
+#   1. The GAMESS trigger also works for GAMESS-UK files, so we can't break
+#      after finding GAMESS in case the more specific phrase is found.
+#   2. Molro log files don't have the program header, but always contain
+#      the generic string 1PROGRAM, so don't break here either to be cautious.
+#   3. The Psi header has two different strings with some variation
+#
+# The triggers are defined by the tuples in the list below like so:
+#   (parser, phrases, flag whether we should break)
+triggers = [
+
+(ADF,       ["Amsterdam Density Functional"],                   True),
+(DALTON,    ["Dalton - An Electronic Structure Program"],       True),
+(GAMESS,    ["GAMESS"],                                         False),
+(GAMESS,    ["GAMESS VERSION"],                                 True),
+(GAMESSUK,  ["G A M E S S - U K"],                              True),
+(Gaussian,  ["Gaussian, Inc."],                                 True),
+(Jaguar,    ["Jaguar"],                                         True),
+(Molpro,    ["PROGRAM SYSTEM MOLPRO"],                          True),
+(Molpro,    ["1PROGRAM"],                                       False),
+(NWChem,    ["Northwest Computational Chemistry Package"],      True),
+(ORCA,      ["O   R   C   A"],                                  True),
+(Psi,       ["PSI", "Ab Initio Electronic Structure"],          True),
+(QChem,     ["A Quantum Leap Into The Future Of Chemistry"],    True),
+
+]
+
+def guess_filetype(inputfile):
+    """Try to guess the filetype by searching for trigger strings."""
+
+    filetype = None
+    for line in inputfile:
+        for parser, phrases, do_break in triggers:
+            if all([line.find(p) >= 0 for p in phrases]):
+                filetype = parser
+                if do_break:
+                    return filetype
+    return filetype
+
+def ccread(source, *args, **kargs):
+    """Attempt to open and read computational chemistry data from a file.
+
+    If the file is not appropriate for cclib parsers, a fallback mechanism
+    will try to recognize some common chemistry formats and read those using
+    the appropriate bridge such as OpenBabel.
+
+    Inputs:
+        source - a single logfile, a list of logfiles, or an input stream
+    Returns:
+        a ccData object containing cclib data attributes
+    """
+
+    log = ccopen(source, *args, **kargs)
+    if log:
+        if kargs['verbose']:
+            print('Identified logfile to be in %s format' % log.logname)
+        return log.parse()
+    else:
+        if kargs['verbose']:
+            print('Attempting to use fallback mechanism to read file')
+        return fallback(source)
 
 def ccopen(source, *args, **kargs):
     """Guess the identity of a particular log file and return an instance of it.
-    
+
     Inputs:
       source - a single logfile, a list of logfiles, or an input stream
 
     Returns:
-      one of ADF, GAMESS, GAMESS UK, Gaussian, Jaguar, Molpro, ORCA, or
-        None (if it cannot figure it out or the file does not exist).
+      one of ADF, DALTON, GAMESS, GAMESS UK, Gaussian, Jaguar, Molpro, NWChem, ORCA,
+        Psi, QChem, or None (if it cannot figure it out or the file does not
+        exist).
     """
-
-    filetype = None
 
     # Try to open the logfile(s), using openlogfile.
     if isinstance(source, str) or \
@@ -52,62 +132,25 @@ def ccopen(source, *args, **kargs):
     else:
         raise ValueError
 
-    # Read through the logfile(s) and search for a clue.
-    for line in inputfile:
-
-        if line.find("Amsterdam Density Functional") >= 0:
-            filetype = adfparser.ADF
-            break
-
-        # Don't break in this case as it may be a GAMESS-UK file.
-        elif line.find("GAMESS") >= 0:
-            filetype = gamessparser.GAMESS
-
-        # This can break, since it is non-GAMESS-UK specific.
-        elif line.find("GAMESS VERSION") >= 0:
-            filetype = gamessparser.GAMESS
-            break
-
-        elif line.find("G A M E S S - U K") >= 0:
-            filetype = gamessukparser.GAMESSUK
-            break
-
-        elif line.find("Gaussian, Inc.") >= 0:
-            filetype = gaussianparser.Gaussian
-            break
-
-        elif line.find("Jaguar") >= 0:
-            filetype = jaguarparser.Jaguar
-            break
-
-        elif line.find("PROGRAM SYSTEM MOLPRO") >= 0:
-            filetype = molproparser.Molpro
-            break
-
-        # Molpro log files don't have the line above. Set this only if
-        #   nothing else is detected, and notice it can be overwritten,
-        #   since it does not break the loop.
-        elif line[0:8] == "1PROGRAM" and not filetype:
-            filetype = molproparser.Molpro
-
-        elif line.find("Northwest Computational Chemistry Package") >= 0:
-            filetype = nwchemparser.NWChem
-            break
-
-        elif line.find("O   R   C   A") >= 0:
-            filetype = orcaparser.ORCA
-            break
-
-        elif line.find("PSI") >= 0 and line.find("Ab Initio Electronic Structure") >= 0:
-            filetype = psiparser.Psi
-            break
+    # Try to guess the filetype.
+    filetype = guess_filetype(inputfile)
 
     # Need to close file before creating a instance.
     if not isstream:
         inputfile.close()
-    
-    # Return an instance of the chosen class.
-    try:
+
+    # Return an instance of the logfile if one was chosen.
+    if filetype:
         return filetype(source, *args, **kargs)
-    except TypeError:
-        print("Log file type not identified.")
+
+def fallback(source):
+    """Attempt to read standard molecular formats using other libraries.
+
+    Currently this will read XYZ files with OpenBabel, but this can easily
+    be extended to other formats and libraries, too.
+    """
+
+    if isinstance(source, str):
+        ext = os.path.splitext(source)[1][1:].lower()
+        if 'cclib.bridge.cclib2openbabel' in sys.modules and ext in ('xyz', ):
+            return cclib2openbabel.readfile(source, ext)
