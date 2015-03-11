@@ -1,7 +1,7 @@
 # This file is part of cclib (http://cclib.github.io), a library for parsing
 # and interpreting the results of computational chemistry packages.
 #
-# Copyright (C) 2006-2014, the cclib development team
+# Copyright (C) 2006,2007,2012,2014,2015, the cclib development team
 #
 # The library is free software, distributed under the terms of
 # the GNU Lesser General Public version 2.1 or later. You should have
@@ -10,10 +10,10 @@
 
 """Test logfiles related to basis sets"""
 
-import bettertest
+import unittest
 
 
-class GenericBasisTest(bettertest.TestCase):
+class GenericBasisTest(unittest.TestCase):
     """Generic basis set unittest"""
 
     names = ['S', 'P', 'D', 'F', 'G']
@@ -87,9 +87,9 @@ class JaguarBasisTest(GenericBasisTest):
 class GenericBigBasisTest(GenericBasisTest):
     """Generic big basis set unittest"""
 
-    # Write up a new test, and/or revise the one inherited.
+    @unittest.skip('Write up a new test, and/or revise the one inherited.')
     def testcoeffs(self):
-        """Are the basis set coefficients correct? PASS"""
+        """Are the basis set coefficients correct?"""
         self.assertEqual(1, 1)
 
 

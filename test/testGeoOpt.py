@@ -1,7 +1,7 @@
 # This file is part of cclib (http://cclib.github.io), a library for parsing
 # and interpreting the results of computational chemistry packages.
 #
-# Copyright (C) 2006-2014, the cclib development team
+# Copyright (C) 2006,2007,2009,2012-2015, the cclib development team
 #
 # The library is free software, distributed under the terms of
 # the GNU Lesser General Public version 2.1 or later. You should have
@@ -10,15 +10,12 @@
 
 """Test geometry optimization logfiles in cclib"""
 
-import math
+import unittest
 
 import numpy
 
-import bettertest
-import testSP
 
-
-class GenericGeoOptTest(bettertest.TestCase):
+class GenericGeoOptTest(unittest.TestCase):
     """Generic geometry optimization unittest"""
 
     # In STO-3G, H has 1, C has 3.
@@ -68,7 +65,7 @@ class GenericGeoOptTest(bettertest.TestCase):
                         # Find the distance in the final iteration
                         final_x = self.data.atomcoords[-1][i]
                         final_y = self.data.atomcoords[-1][j]
-                        dist = math.sqrt(sum((final_x - final_y)**2))
+                        dist = numpy.sqrt(sum((final_x - final_y)**2))
                         mindist = min(mindist,dist)
         self.assert_(abs(mindist-1.34)<0.03,"Mindist is %f (not 1.34)" % mindist)
 
@@ -85,7 +82,7 @@ class GenericGeoOptTest(bettertest.TestCase):
     def testcoreelectrons(self):
         """Are the coreelectrons all 0?"""
         ans = numpy.zeros(self.data.natom, 'i')
-        self.assertArrayEquals(self.data.coreelectrons, ans)
+        numpy.testing.assert_array_equal(self.data.coreelectrons, ans)
 
     def testnormalisesym(self):
         """Did this subclass overwrite normalisesym?"""
@@ -95,7 +92,7 @@ class GenericGeoOptTest(bettertest.TestCase):
         """Is the index of the HOMO equal to 34?"""
         ref = numpy.array([34], "i")
         msg = "%s != array([34], 'i')" % numpy.array_repr(self.data.homos)
-        self.assertArrayEquals(self.data.homos, ref, msg)
+        numpy.testing.assert_array_equal(self.data.homos, ref, msg)
 
     def testscfvaluetype(self):
         """Are scfvalues and its elements the right type?"""
@@ -108,7 +105,7 @@ class GenericGeoOptTest(bettertest.TestCase):
         ref = self.b3lyp_energy
         tol = self.b3lyp_tolerance
         msg = "Final scf energy: %f not %i +- %ieV" %(scf, ref, tol)
-        self.assertInside(scf, ref, 40, msg)
+        self.assertAlmostEquals(scf, ref, delta=40, msg=msg)
 
     def testscfenergydim(self):
         """Is the number of SCF energies consistent with atomcoords?"""
@@ -172,24 +169,6 @@ class GaussianGeoOptTest(GenericGeoOptTest):
         self.assertEquals(self.data.grads.shape,(len(self.data.geovalues),self.data.natom,3))
 
 
-class JaguarGeoOptTest(GenericGeoOptTest):
-    """Customized geometry optimization unittest"""
-
-    # Data file does not contain enough information. Can we make a new one?
-    def testatombasis(self):
-        """Are the indices in atombasis the right amount and unique? PASS"""
-        self.assertEquals(1, 1)
-
-    # We did not print the atomic partial charges in the unit tests for this version.
-    def testatomcharges(self):
-        """Are all atomcharges consistent with natom and do they sum to zero? PASS"""
-        self.assertEquals(1, 1)
-
-    # Data file does not contain enough information. Can we make a new one?
-    def testdimmocoeffs(self):
-        """Are the dimensions of mocoeffs equal to 1 x nmo x nbasis? PASS"""
-
-
 class MolproGeoOptTest(GenericGeoOptTest):
     """Customized geometry optimization unittest"""
 
@@ -199,10 +178,6 @@ class MolproGeoOptTest(GenericGeoOptTest):
     # both need to be given to the cclib parser (as a list).
     extracoords = 1
     extrascfs = 2
-
-    def testsymlabels(self):
-        """Are all the symmetry labels either Ag/u or Bg/u? PASS"""
-        self.assertEquals(1,1)
 
     # Here is what the manual has to say about convergence:
     # The standard MOLPRO convergency criterion requires the maximum component of the gradient
@@ -222,17 +197,6 @@ class MolproGeoOptTest(GenericGeoOptTest):
         converged = (value_e < target_e and value_g < target_g) or (value_g < target_g and value_s < target_s)
         self.assertTrue(converged)
 
-class MolproGeoOptTest2006(MolproGeoOptTest):
-    """Customized 2006 geometry optimization unittest"""
-
-    # Same situation as SP -- this is tested for in the 2012 logfiles, but
-    # the 2006 logfiles were created before atomcharges was an attribute and
-    # we don't have access to Molpro 2006 anymore.
-    def testatomcharges(self):
-        """Are all atomcharges consistent with natom and do they sum to zero? PASS"""
-        self.assertEquals(1,1)
-
-
 class NWChemGeoOptTest(GenericGeoOptTest):
     """Customized restricted single point HF unittest"""
 
@@ -250,11 +214,6 @@ class OrcaGeoOptTest(GenericGeoOptTest):
 
     extracoords = 1
     extrascfs = 1
-
-    # ORCA has no support for symmetry yet.
-    def testsymlabels(self):
-        """Are all the symmetry labels either Ag/u or Bg/u? PASS"""
-        self.assertEquals(1,1)
 
     # Besides all the geovalues being below their tolerances, ORCA also considers
     # an optimization finished in some extra cases. These are:

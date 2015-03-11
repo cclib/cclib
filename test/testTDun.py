@@ -1,7 +1,7 @@
 # This file is part of cclib (http://cclib.github.io), a library for parsing
 # and interpreting the results of computational chemistry packages.
 #
-# Copyright (C) 2007-2014, the cclib development team
+# Copyright (C) 2007,2012,2014,2015, the cclib development team
 #
 # The library is free software, distributed under the terms of
 # the GNU Lesser General Public version 2.1 or later. You should have
@@ -10,12 +10,12 @@
 
 """Test single point, unrestricted time-dependent logfiles in cclib"""
 
+import unittest
+
 import numpy
 
-import bettertest
 
-
-class GenericTDunTest(bettertest.TestCase):
+class GenericTDunTest(unittest.TestCase):
     """Generic time-dependent unrestricted HF/DFT unittest"""
 
     number = 24

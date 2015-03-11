@@ -1,7 +1,7 @@
 # This file is part of cclib (http://cclib.github.io), a library for parsing
 # and interpreting the results of computational chemistry packages.
 #
-# Copyright (C) 2006-2014, the cclib development team
+# Copyright (C) 2006,2007,2012-2015, the cclib development team
 #
 # The library is free software, distributed under the terms of
 # the GNU Lesser General Public version 2.1 or later. You should have
@@ -27,6 +27,29 @@ parsers = [ "ADF", "DALTON", "GAMESS", "GAMESSUK", "Gaussian", "Jaguar", "Molpro
 test_modules = [ "SP", "SPun", "GeoOpt", "Basis", "Core",   # Basic calculations.
                  "MP", "CC", "CI", "TD", "TDun",            # Post-SCF calculations.
                  "vib", "Scan" ]                            # Other property calculations.
+
+
+def skipForParser(parser, msg):
+    """Return a decorator that skips the test for specified parser."""
+    def testdecorator(testfunc):
+        def testwrapper(self, *args, **kwargs):
+            if self.logfile.logname == parser:
+                self.skipTest(msg)
+            else:
+                testfunc(self, *args, **kwargs)
+        return testwrapper
+    return testdecorator
+
+def skipForLogfile(fragment, msg):
+    """Return a decorator that skips the test for logfiles containing fragment."""
+    def testdecorator(testfunc):
+        def testwrapper(self, *args, **kwargs):
+            if fragment in self.logfile.filename:
+                self.skipTest(msg)
+            else:
+                testfunc(self, *args, **kwargs)
+        return testwrapper
+    return testdecorator
 
 
 def get_program_dir(parser_name):

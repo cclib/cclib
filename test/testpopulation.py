@@ -1,14 +1,14 @@
 # This file is part of cclib (http://cclib.github.io), a library for parsing
 # and interpreting the results of computational chemistry packages.
 #
-# Copyright (C) 2007-2014, the cclib development team
+# Copyright (C) 2007,2012,2014,2015, the cclib development team
 #
 # The library is free software, distributed under the terms of
 # the GNU Lesser General Public version 2.1 or later. You should have
 # received a copy of the license along with cclib. You can also access
 # the full license online at http://www.gnu.org/copyleft/lgpl.html.
 
-"""Test the various population analyses (MPA, LPA, CSPA) in cclib"
+"""Test the various population analyses (MPA, LPA, CSPA) in cclib"""
 
 import os
 import logging
@@ -16,13 +16,12 @@ import unittest
 
 import numpy
 
-import bettertest
 from testall import getfile
 from cclib.method import MPA, LPA, CSPA
 from cclib.parser import Gaussian
 
 
-class GaussianMPATest(bettertest.TestCase):
+class GaussianMPATest(unittest.TestCase):
     """Mulliken Population Analysis test"""
     def setUp(self):
         self.data, self.logfile = getfile(Gaussian, "basicGaussian03", "dvb_sp.out")
@@ -33,10 +32,10 @@ class GaussianMPATest(bettertest.TestCase):
         """Do the Mulliken charges sum up to the total formal charge?"""
         formalcharge = sum(self.data.atomnos) - self.data.charge
         totalpopulation = sum(self.analysis.fragcharges)
-        self.assertInside(totalpopulation, formalcharge, 0.001)
+        self.assertAlmostEqual(totalpopulation, formalcharge, delta=0.001)
 
 
-class GaussianLPATest(bettertest.TestCase):
+class GaussianLPATest(unittest.TestCase):
     """Lowdin Population Analysis test"""
     def setUp(self):
         self.data, self.logfile = getfile(Gaussian, "basicGaussian03", "dvb_sp.out")
@@ -47,10 +46,10 @@ class GaussianLPATest(bettertest.TestCase):
         """Do the Lowdin charges sum up to the total formal charge?"""
         formalcharge = sum(self.data.atomnos) - self.data.charge
         totalpopulation = sum(self.analysis.fragcharges)
-        self.assertInside(totalpopulation, formalcharge, 0.001)
+        self.assertAlmostEqual(totalpopulation, formalcharge, delta=0.001)
 
 
-class GaussianCSPATest(bettertest.TestCase):
+class GaussianCSPATest(unittest.TestCase):
     """C-squared Population Analysis test"""
     def setUp(self):
         self.data, self.logfile = getfile(Gaussian, "basicGaussian03", "dvb_sp.out")
@@ -61,7 +60,7 @@ class GaussianCSPATest(bettertest.TestCase):
         """Do the CSPA charges sum up to the total formal charge?"""
         formalcharge = sum(self.data.atomnos) - self.data.charge
         totalpopulation = sum(self.analysis.fragcharges)
-        self.assertInside(totalpopulation, formalcharge, 0.001)
+        self.assertAlmostEqual(totalpopulation, formalcharge, delta=0.001)
 
 
 tests = [GaussianMPATest, GaussianLPATest, GaussianCSPATest]

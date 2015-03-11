@@ -1,7 +1,7 @@
 # This file is part of cclib (http://cclib.github.io), a library for parsing
 # and interpreting the results of computational chemistry packages.
 #
-# Copyright (C) 2007-2014, the cclib development team
+# Copyright (C) 2007,2008,2012,2014,2015, the cclib development team
 #
 # The library is free software, distributed under the terms of
 # the GNU Lesser General Public version 2.1 or later. You should have
@@ -10,12 +10,12 @@
 
 """Test configuration interaction (CI) logfiles in cclib"""
 
+import unittest
+
 import numpy
 
-import bettertest
 
-
-class GenericCISTest(bettertest.TestCase):
+class GenericCISTest(unittest.TestCase):
     """Generic CIS(RHF)/STO-3G water unittest"""
 
     nstates = 5
@@ -63,7 +63,7 @@ class GenericCISTest(bettertest.TestCase):
         """Is the sum of etsecs close to 1?"""
         etsec = self.data.etsecs[2] # Pick one with several contributors
         sumofsec = sum([z*z for (x, y, z) in etsec])
-        self.assertInside(sumofsec, 1.0, 0.02)
+        self.assertAlmostEquals(sumofsec, 1.0, delta=0.02)
 
     def testetsecsvalues(self):
         """ Are etsecs correct and coefficients close to the correct values?"""
@@ -78,7 +78,7 @@ class GenericCISTest(bettertest.TestCase):
                 for s in singlets[i]:
                     if s[0][0] == exc[0] and s[1][0] == exc[1]:
                         found = True
-                        self.assertInside(abs(s[2]), abs(exc[2]), self.etsecs_precision)
+                        self.assertAlmostEquals(abs(s[2]), abs(exc[2]), delta=self.etsecs_precision)
                 if not found:
                     self.fail("Excitation %i->%s not found (singlet state %i)" %(exc[0], exc[1], i))
         # Not all programs do triplets (i.e. Jaguar).
@@ -89,7 +89,7 @@ class GenericCISTest(bettertest.TestCase):
                     for s in triplets[i]:
                         if s[0][0] == exc[0] and s[1][0] == exc[1]:
                             found = True
-                            self.assertInside(abs(s[2]), abs(exc[2]), self.etsecs_precision)
+                            self.assertAlmostEquals(abs(s[2]), abs(exc[2]), delta=self.etsecs_precision)
                     if not found:
                         self.fail("Excitation %i->%s not found (triplet state %i)" %(exc[0], exc[1], i))
 

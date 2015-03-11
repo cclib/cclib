@@ -1,7 +1,7 @@
 # This file is part of cclib (http://cclib.github.io), a library for parsing
 # and interpreting the results of computational chemistry packages.
 #
-# Copyright (C) 2006-2014, the cclib development team
+# Copyright (C) 2006,2007,2012,2014,2015, the cclib development team
 #
 # The library is free software, distributed under the terms of
 # the GNU Lesser General Public version 2.1 or later. You should have
@@ -10,12 +10,15 @@
 
 """Test unrestrictied single point logfiles in cclib"""
 
+import unittest
+
 import numpy
 
-import bettertest
+from testall import skipForParser
+from testall import skipForLogfile
 
 
-class GenericSPunTest(bettertest.TestCase):
+class GenericSPunTest(unittest.TestCase):
     """Generic unrestricted single point unittest"""
 
     def testnatom(self):
@@ -32,6 +35,7 @@ class GenericSPunTest(bettertest.TestCase):
         """Are the dimensions of atomcoords 1 x natom x 3?"""
         self.assertEquals(self.data.atomcoords.shape,(1,self.data.natom,3))
 
+    @skipForParser('Jaguar', 'Data file does not contain enough information')
     def testdimmocoeffs(self):
         """Are the dimensions of mocoeffs equal to 2 x nmo x nbasis?"""
         self.assertEquals(type(self.data.mocoeffs), type([]))
@@ -48,7 +52,8 @@ class GenericSPunTest(bettertest.TestCase):
 
     def testhomos(self):
         """Are the homos correct?"""
-        self.assertArrayEquals(self.data.homos, numpy.array([34,33],"i"),"%s != array([34,33],'i')" % numpy.array_repr(self.data.homos))
+        msg = "%s != array([34,33],'i')" % numpy.array_repr(self.data.homos)
+        numpy.testing.assert_array_equal(self.data.homos, numpy.array([34,33],"i"), msg)
 
     def testmoenergies(self):
         """Are the dims of the moenergies equals to 2 x nmo?"""
@@ -56,19 +61,12 @@ class GenericSPunTest(bettertest.TestCase):
         self.assertEquals(len(self.data.moenergies[0]), self.data.nmo)
         self.assertEquals(len(self.data.moenergies[1]), self.data.nmo)
 
+    @skipForParser('Molpro', '?')
+    @skipForParser('ORCA', 'ORCA has no support for symmetry yet')
     def testmosyms(self):
         """Are the dims of the mosyms equals to 2 x nmo?"""
         shape = (len(self.data.mosyms), len(self.data.mosyms[0]))
         self.assertEquals(shape, (2, self.data.nmo))
-
-
-class ADFSPunTest(GenericSPunTest):
-    """Customized unrestricted single point unittest"""
-
-    def testdimaooverlaps(self):
-        """Are the dims of the overlap matrix consistent with nbasis?"""
-        #ADF uses fooverlaps
-        self.assertEquals(self.data.fooverlaps.shape,(self.data.nbasis,self.data.nbasis))
 
 
 class GamessUK70SPunTest(GenericSPunTest):
@@ -112,52 +110,18 @@ class GaussianSPunTest(GenericSPunTest):
 class JaguarSPunTest(GenericSPunTest):
     """Customized unrestricted single point unittest"""
 
-    # Data file does not contain enough information. Can we make a new one?
-    def testdimaooverlaps(self):
-        """Are the dims of the overlap matrix consistent with nbasis? PASS"""
-        self.assertEquals(1,1)
-
-    # Why is this test passed?
     def testmoenergies(self):
         """Are the dims of the moenergies equal to 2 x homos+11?"""
         self.assertEquals(len(self.data.moenergies), 2)
         self.assertEquals(len(self.data.moenergies[0]), self.data.homos[0]+11)
         self.assertEquals(len(self.data.moenergies[1]), self.data.homos[1]+11)
 
-    # Data file does not contain enough information. Can we make a new one?
-    def testdimmocoeffs(self):
-        """Are the dimensions of mocoeffs equal to 1 x nmo x nbasis? PASS"""
-        self.assertEquals(1,1)
-
-    # Why is this test passed?
-    def testmosyms(self):
-        """Are the dims of the mosyms equal to 2 x nmo? PASS"""
-        self.assertEquals(1,1)
-
-
-class MolproSPunTest(GenericSPunTest):
-    """Customized unrestricted single point unittest"""
-
-    def testmosyms(self):
-        """Are the dims of the mosyms equal to 2 x nmo? PASS"""
-        self.assertEquals(1,1)
-
-
-class OrcaSPunTest(GenericSPunTest):
-    """Customized unrestricted single point unittest"""
-
-    # ORCA has no support for symmetry yet.
     def testmosyms(self):
         """Are the dims of the mosyms equals to 2 x nmo?"""
-        self.assertEquals(1,1)
-
-
-class QChemSPunTest(GenericSPunTest):
-    """Customized unrestricted single point unittest"""
-
-    # Q-Chem cannot print the overlap matrix.
-    def testdimaooverlaps(self):
-        """Are the dims of the overlap matrix consistent with nbasis? PASS"""
+        shape0 = (len(self.data.mosyms), len(self.data.mosyms[0]))
+        shape1 = (len(self.data.mosyms), len(self.data.mosyms[1]))
+        self.assertEquals(shape0, (2, self.data.homos[0]+11))
+        self.assertEquals(shape1, (2, self.data.homos[1]+11))
 
 
 if __name__=="__main__":
