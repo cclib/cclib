@@ -56,6 +56,7 @@ from cclib.parser import ORCA
 from cclib.parser import Psi
 from cclib.parser import QChem
 
+sys.path.append("../../test")
 import testall
 
 
@@ -853,11 +854,10 @@ def make_regression_from_old_unittest(test_class):
     return old_unit_test
 
 
-def main(which=[], opt_traceback=False, opt_status=False):
+def main(which=[], opt_traceback=False, opt_status=False, regdir="."):
 
     # It would be nice to fix the structure of this nested list,
     # because in its current form it is not amenable to tweaks.
-    regdir = os.path.join("..", "data", "regression")
     programs = [os.path.join(regdir, testall.get_program_dir(p)) for p in testall.parsers]
     try:
         filenames = [[os.path.join(p, version, fn) for version in os.listdir(p) for fn in os.listdir(os.path.join(p,version))] for p in programs]
@@ -870,7 +870,7 @@ def main(which=[], opt_traceback=False, opt_status=False):
     # This file should contain the paths to all regresssion test files we have gathered
     # over the years. It is not really necessary, since we can discover them on the disk,
     # but we keep it as a legacy and a way to track double check the regression tests.
-    regfile = open(os.path.join("..", "data", "regressionfiles.txt"), "r")
+    regfile = open(os.path.join(regdir, "regressionfiles.txt"), "r")
     regfilenames = [os.sep.join(x.strip().split("/")) for x in regfile.readlines()]
     regfile.close()
 
