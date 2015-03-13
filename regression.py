@@ -24,6 +24,9 @@ became available. We still want those logfiles to parse and test correctly,
 although sometimes special modification will be needed.
 
 To run the doctest, just use `python regression.py test`.
+
+Note that this script was moved from the main cclib repository in Feb 2015
+in order for it to be close to the data, so look there for previous history.
 """
 
 from __future__ import print_function
