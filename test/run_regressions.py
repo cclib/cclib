@@ -22,7 +22,6 @@ if __name__ == "__main__":
 
     # Assume the cclib-data repository is cloned in this directory.
     regression_dir = os.path.join("..", "data", "regression")
-
     sys.path.append(regression_dir)
     import regression
 
