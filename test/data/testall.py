@@ -1,7 +1,7 @@
 # This file is part of cclib (http://cclib.github.io), a library for parsing
 # and interpreting the results of computational chemistry packages.
 #
-# Copyright (C) 2006,2007,2012-2015, the cclib development team
+# Copyright (C) 2006-2008,2012-2015, the cclib development team
 #
 # The library is free software, distributed under the terms of
 # the GNU Lesser General Public version 2.1 or later. You should have
@@ -72,16 +72,16 @@ def getfile(parser, *location, **kwds):
         logfile - the parser object used for parsing
     """
 
-    location = os.path.join(("..", "data", get_program_dir(parser.__name__)) + location)
+    location = os.path.join(("..", "..", "data", get_program_dir(parser.__name__)) + location)
     stream = kwds.get('stream', sys.stdout)
 
     # Construct the proper full path(s). Multiple paths will be in a list only if more than one
     # data file given. Presently, location contains only one subdirectory (basic*), so this is easy
-    # since there are normally 5 elements in location.
-    if len(location) == 5:
+    # since there are normally 6 elements in location.
+    if len(location) == 6:
         filename = os.path.join(*location)
     else:
-        filename = [os.path.join(*(location[:4]+location[n:n+1])) for n in range(4,len(location))]
+        filename = [os.path.join(*(location[:5]+location[n:n+1])) for n in range(5,len(location))]
 
     logfile = parser(filename, logstream=stream)
     logfile.logger.setLevel(0)
@@ -125,6 +125,13 @@ def gettestdata(module=None):
 def visualtests(stream=sys.stdout):
     """These are not formal tests -- but they should be eyeballed."""
 
+    # Make sure we are in the test directory of this script, so that getfile()
+    # can access the data files.
+    curdir = os.path.abspath(os.curdir)
+    destdir = os.path.dirname(__file__)
+    if destdir:
+        os.chdir(destdir)
+
     parsers_to_test = {
         'ADF2013.01' : getfile(ADF, "basicADF2013.01", "dvb_gopt.adfout")[0],
         'Firefly8.0' : getfile(GAMESS, "basicFirefly8.0", "dvb_gopt_a.out")[0],
@@ -145,6 +152,9 @@ def visualtests(stream=sys.stdout):
     print("HOMO", "   ".join(["%+9.4f" % out.moenergies[0][out.homos[0]] for out in output]), file=stream)
     print("LUMO", "   ".join(["%+9.4f" % out.moenergies[0][out.homos[0]+1] for out in output]), file=stream)
     print("H-L ", "   ".join(["%9.4f" % (out.moenergies[0][out.homos[0]+1]-out.moenergies[0][out.homos[0]],) for out in output]), file=stream)
+
+    if destdir:
+        os.chdir(curdir)
 
 
 def importName(modulename, name):
