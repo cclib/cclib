@@ -8,6 +8,4 @@
 # received a copy of the license along with cclib. You can also access
 # the full license online at http://www.gnu.org/copyleft/lgpl.html.
 
-"""Parser unit tests and data tests for cclib."""
-
-from testall import parsers, testall, test_modules, visualtests
+"""Data tests for cclib."""

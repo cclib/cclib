@@ -14,8 +14,8 @@ import unittest
 
 import numpy
 
-from testall import skipForParser
-from testall import skipForLogfile
+from skip import skipForParser
+from skip import skipForLogfile
 
 
 class GenericSPTest(unittest.TestCase):

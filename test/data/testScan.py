@@ -14,7 +14,7 @@ import unittest
 
 import numpy
 
-from testall import skipForParser
+from skip import skipForParser
 
 
 class GenericScanTest(unittest.TestCase):
