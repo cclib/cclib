@@ -45,6 +45,7 @@ def get_program_dir(parser_name):
         return "GAMESS-UK"
     return parser_name
 
+
 def getfile(parser, *location, **kwds):
     """Returns a parsed logfile.
 
@@ -58,24 +59,27 @@ def getfile(parser, *location, **kwds):
         logfile - the parser object used for parsing
     """
 
+    # Convert any string into the parser object we will be using.
     if isinstance(parser, str):
         parser = all_parsers[parser]
 
-    location = os.path.join(("..", "data", get_program_dir(parser.__name__)) + location)
+    datadir = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "data"))
+
+    # The first element of location is the subdirectory, and the remaining elements
+    # containg files in that subdirectory representing the job.
+    programdir = os.path.join(get_program_dir(parser.__name__), location[0])
+    inputs = [os.path.join(datadir, programdir, fn) for fn in location[1:]]
+
+    # We should be able to pass a list of length one here, but for some reason
+    # this does not work with some parsers and we get errors.
+    if len(inputs) == 1:
+        inputs = inputs[0]
+
     stream = kwds.get('stream', sys.stdout)
-
-    # Construct the proper full path(s). Multiple paths will be in a list only if more than one
-    # data file given. Presently, location contains only one subdirectory (basic*), so this is easy
-    # since there are normally 5 elements in location.
-    if len(location) == 5:
-        filename = os.path.join(*location)
-    else:
-        filename = [os.path.join(*(location[:4]+location[n:n+1])) for n in range(4, len(location))]
-
-    logfile = parser(filename, logstream=stream)
+    logfile = parser(inputs, logstream=stream)
     logfile.logger.setLevel(0)
-    data = logfile.parse()
 
+    data = logfile.parse()
     return data, logfile
 
 
@@ -91,6 +95,13 @@ class DataSuite(object):
 
         if argv:
             self.argparse(argv)
+
+        # We want to gather the unit tests and results in several lists/dicts,
+        # in order to easily generate summaries at the end.
+        self.errors = []
+        self.failures = []
+        self.alltests = []
+        self.perpackage = {}
 
     def argparse(self, argv):
         """Parse a list of command line arguments tfor anything relevant."""
@@ -108,7 +119,7 @@ class DataSuite(object):
         """Return a dict of test files for a given module."""
 
         testdatadir = os.path.dirname(os.path.realpath(sys.argv[0]))
-        lines = open(testdatadir+'/testdata').readlines()
+        lines = open(testdatadir + '/testdata').readlines()
 
         # Remove blank lines and those starting with '#'.
         lines = [line for line in lines if (line.strip() and line[0] != '#')]
@@ -141,20 +152,6 @@ class DataSuite(object):
         Run unit tests for all or a subset of parsers and modules. Arguments:
             stream - stream used for all output
         """
-
-        # Make sure we are in the test directory of this script, so that getfile()
-        # can access the data files.
-        curdir = os.path.abspath(os.curdir)
-        destdir = os.path.dirname(__file__)
-        if destdir:
-            os.chdir(destdir)
-
-        # We want to gather the unit tests and results in several lists/dicts,
-        # in order to easily generate summaries at the end.
-        self.errors = []
-        self.failures = []
-        self.alltests = []
-        self.perpackage = {}
 
         stream_test = stream
         if self.terse:
@@ -234,9 +231,6 @@ class DataSuite(object):
         print("TOTAL: %d\tPASSED: %d\tFAILED: %d\tERRORS: %d\tSKIPPED: %d" \
                 %(total[0], total[0]-(total[1]+total[2]+total[3]), total[2], total[1], total[3]), file=stream)
 
-        if destdir:
-            os.chdir(curdir)
-
         if self.status and len(self.errors) > 0:
             sys.exit(1)
 
@@ -244,13 +238,6 @@ class DataSuite(object):
 
     def visualtests(self, stream=sys.stdout):
         """These are not formal tests -- but they should be eyeballed."""
-
-        # Make sure we are in the test directory of this script, so that getfile()
-        # can access the data files.
-        curdir = os.path.abspath(os.curdir)
-        destdir = os.path.dirname(__file__)
-        if destdir:
-            os.chdir(destdir)
 
         parsers_to_test = {
             'ADF2013.01' : getfile('ADF', "basicADF2013.01", "dvb_gopt.adfout")[0],
@@ -272,9 +259,6 @@ class DataSuite(object):
         print("HOMO", "   ".join(["%+9.4f" % out.moenergies[0][out.homos[0]] for out in output]), file=stream)
         print("LUMO", "   ".join(["%+9.4f" % out.moenergies[0][out.homos[0]+1] for out in output]), file=stream)
         print("H-L ", "   ".join(["%9.4f" % (out.moenergies[0][out.homos[0]+1]-out.moenergies[0][out.homos[0]],) for out in output]), file=stream)
-
-        if destdir:
-            os.chdir(curdir)
 
 
 if __name__ == "__main__":
