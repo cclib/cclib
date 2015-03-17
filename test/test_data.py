@@ -8,7 +8,7 @@
 # received a copy of the license along with cclib. You can also access
 # the full license online at http://www.gnu.org/copyleft/lgpl.html.
 
-"""Run parser tests for cclib."""
+"""Run data tests for cclib."""
 
 from __future__ import print_function
 
