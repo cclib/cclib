@@ -25,10 +25,18 @@ class LogfileTest(unittest.TestCase):
     logfile = cclib.parser.logfileparser.Logfile('')
 
     def test_float(self):
-        self.assertTrue(self.logfile.float("1.0"), 1.0)
-        self.assertTrue(self.logfile.float("1.2345E+02"), 123.45)
-        self.assertTrue(self.logfile.float("1.2345D+02"), 123.45)
-        self.assertTrue(self.logfile.float("*****"), numpy.nan)
+        """Are floats converted from strings correctly?"""
+        self.assertEqual(self.logfile.float("0.0"), 0.0)
+        self.assertEqual(self.logfile.float("1.0"), 1.0)
+        self.assertEqual(self.logfile.float("-1.0"), -1.0)
+        self.assertEqual(self.logfile.float("1.2345E+02"), 123.45)
+        self.assertEqual(self.logfile.float("1.2345D+02"), 123.45)
+        self.assertTrue(numpy.isnan(self.logfile.float("*")))
+        self.assertTrue(numpy.isnan(self.logfile.float("*****")))
+
+    def test_normalisesym(self):
+        """Does this method return ERROR in base class?"""
+        self.assertTrue("ERROR" in self.logfile.normalisesym(""))
 
 
 if __name__ == "__main__":
