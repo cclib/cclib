@@ -105,6 +105,28 @@ class QChem(logfileparser.Logfile):
                     coeffs[0:_nmo, 0:_nbasis] = self.mocoeffs[im]
                     self.mocoeffs[im] = coeffs
 
+        # When parsing the 'MOLECULAR ORBITAL COEFFICIENTS' block for
+        # `aonames`, Q-Chem doesn't print the principal quantum number
+        # for each shell; this needs to be added.
+        if hasattr(self, 'aonames') and hasattr(self, 'atombasis'):
+            angmom = ('', 'S', 'P', 'D', 'F', 'G', 'H', 'I')
+            for atom in self.atombasis:
+                bfcounts = dict()
+                for bfindex in atom:
+                    atomname, bfname = self.aonames[bfindex].split('_')
+                    # Keep track of how many times each shell type has
+                    # appeared.
+                    if bfname in bfcounts:
+                        bfcounts[bfname] += 1
+                    else:
+                        # Make sure the starting number for type of
+                        # angular momentum begins at the appropriate
+                        # principal quantum number (1S, 2P, 3D, 4F,
+                        # ...).
+                        bfcounts[bfname] = angmom.index(bfname[0])
+                    newbfname = '{}{}'.format(bfcounts[bfname], bfname)
+                    self.aonames[bfindex] = '_'.join([atomname, newbfname])
+
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
 
@@ -141,7 +163,8 @@ class QChem(logfileparser.Logfile):
 
                 line = next(inputfile)
 
-        # Parse the general basis for `gbasis`.
+        # Parse the general basis for `gbasis`, in the style used by
+        # Gaussian.
         if 'Basis set in general basis input format:' in line:
             self.skip_lines(inputfile, ['d', '$basis'])
             line = next(inputfile)
