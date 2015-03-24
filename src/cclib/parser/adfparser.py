@@ -528,7 +528,7 @@ class ADF(logfileparser.Logfile):
 
             self.moenergies = [[]]
 
-            self.skip_lines(inputfile, ['e', 'header', 'e', 'label'])
+            self.skip_lines(inputfile, ['e', 'header', 'd', 'label'])
 
             line = next(inputfile)
             info = line.split()
