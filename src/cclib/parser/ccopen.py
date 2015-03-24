@@ -36,8 +36,9 @@ from .qchemparser import QChem
 
 try:
     from ..bridge import cclib2openbabel
+    _has_cclib2openbabel = True
 except ImportError:
-    print("Could not import openbabel, fallback mechanism might not work.")
+    _has_cclib2openbabel = False
 
 
 # Parser choice is triggered by certain phrases occuring the logfile. Where these
@@ -152,5 +153,8 @@ def fallback(source):
 
     if isinstance(source, str):
         ext = os.path.splitext(source)[1][1:].lower()
-        if 'cclib.bridge.cclib2openbabel' in sys.modules and ext in ('xyz', ):
-            return cclib2openbabel.readfile(source, ext)
+        if _has_cclib2openbabel:
+            if ext in ('xyz', ):
+                return cclib2openbabel.readfile(source, ext)
+        else:
+            print("Could not import openbabel, fallback mechanism might not work.")
