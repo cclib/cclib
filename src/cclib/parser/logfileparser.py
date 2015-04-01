@@ -113,6 +113,10 @@ def openlogfile(filename):
 
     elif hasattr(filename, "__iter__"):
 
+        # This is needed, because fileinput will assume stdin when filename is empty.
+        if len(filename) == 0:
+            return None
+
         # Compression (gzip and bzip) is supported as of Python 2.5.
         if sys.version_info[0] >= 2 and sys.version_info[1] >= 5:
             fileobject = fileinput.input(filename, openhook=fileinput.hook_compressed)
