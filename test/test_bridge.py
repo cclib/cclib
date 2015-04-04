@@ -10,10 +10,7 @@
 
 """Run bridge unit tests for cclib."""
 
-from __future__ import print_function
-
 import sys
-
 import unittest
 
 sys.path.append("bridge")
