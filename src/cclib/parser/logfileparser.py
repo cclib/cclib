@@ -64,8 +64,8 @@ class FileWrapper(object):
 
             self.src.seek(0, 2)
             self.size = self.src.tell()
-            self.src.seek(0, 0)
-            self.pos = 0
+            self.src.seek(pos, 0)
+            self.pos = pos
 
         except:
 
@@ -73,8 +73,8 @@ class FileWrapper(object):
             if hasattr(self.src, 'headers') and 'content-length' in self.src.headers:
                 self.size = int(self.src.headers['content-length'])
 
-        # Assume we are at the beginning in any case.
-        self.pos = 0
+            # Assume the position is what was passed to the constructor.
+            self.pos = pos
 
     def next(self):
         line = next(self.src)
