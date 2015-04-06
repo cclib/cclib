@@ -68,6 +68,10 @@ from test_data import parser_names
 from test_data import get_program_dir
 
 
+# We need this to point to files relative to this script.
+__filedir__ = os.path.abspath(os.path.dirname(__file__))
+
+
 # The following regression test functions were manually written, because they
 # contain custom checks that were determined on a per-file basis. Care needs to be taken
 # that the function name corresponds to the path of the logfile, with some characters
@@ -598,7 +602,7 @@ def testnoparseGaussian_Gaussian09_coeffs_log(filename):
     parsing, we set some attributes of the parser so that it all goes smoothly.
     """
 
-    parser = Gaussian(filename)
+    parser = Gaussian(os.path.join(__filedir__, filename))
     parser.logger.setLevel(logging.ERROR)
     parser.nmo = 5
     parser.nbasis = 1128
@@ -862,14 +866,13 @@ def make_regression_from_old_unittest(test_class):
 def main(which=[], opt_traceback=False, opt_status=False, regdir="."):
 
     # Build a list of regression files that can be found.
-    scriptdir = os.path.abspath(os.path.dirname(__file__))
     try:
         filenames = {}
         for p in parser_names:
             filenames[p] = []
             pdir = get_program_dir(p)
-            for version in os.listdir(os.path.join(scriptdir, pdir)):
-                for fn in os.listdir(os.path.join(scriptdir, pdir, version)):
+            for version in os.listdir(os.path.join(__filedir__, pdir)):
+                for fn in os.listdir(os.path.join(__filedir__, pdir, version)):
                     fpath = os.path.join(pdir, version, fn)
                     filenames[p].append(fpath)
     except OSError as e:
@@ -893,10 +896,10 @@ def main(which=[], opt_traceback=False, opt_status=False, regdir="."):
     missing_on_disk = []
     missing_in_list = []
     for fn in regfilenames:
-        if not os.path.isfile(os.path.join(scriptdir, fn)):
+        if not os.path.isfile(os.path.join(__filedir__, fn)):
             missing_on_disk.append(fn)
-    for fn in glob.glob(os.path.join(scriptdir, '*', '*', '*')):
-        fn = fn.replace(scriptdir, '').strip('/')
+    for fn in glob.glob(os.path.join(__filedir__, '*', '*', '*')):
+        fn = fn.replace(__filedir__, '').strip('/')
         if fn not in regfilenames:
             missing_in_list.append(fn)
 
@@ -948,7 +951,7 @@ def main(which=[], opt_traceback=False, opt_status=False, regdir="."):
 
             if not test_noparse:
                 try:
-                    logfile = ccopen(os.path.join(scriptdir, fname))
+                    logfile = ccopen(os.path.join(__filedir__, fname))
                 except:
                     errors += 1
                     print("ccopen error")
@@ -997,6 +1000,8 @@ def main(which=[], opt_traceback=False, opt_status=False, regdir="."):
                 except:
                     print("parse error")
                     errors += 1
+                    if opt_traceback:
+                        print(traceback.format_exc())
                 else:
                     print("test passed")
 
