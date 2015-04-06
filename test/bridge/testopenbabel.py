@@ -18,4 +18,5 @@ class OpenbabelTest(unittest.TestCase):
 
 
 if __name__ == "__main__":
-    test_uracil()
+
+    unittest.main()

@@ -10,9 +10,13 @@
 
 """Test geometry optimization logfiles in cclib"""
 
+import os
 import unittest
 
 import numpy
+
+
+__filedir__ = os.path.realpath(os.path.dirname(__file__))
 
 
 class GenericGeoOptTest(unittest.TestCase):
@@ -272,5 +276,9 @@ class PsiGeoOptTest(GenericGeoOptTest):
 
 if __name__=="__main__":
 
-    from testall import testall
-    testall(modules=["GeoOpt"])
+    import sys
+    sys.path.append(os.path.join(__filedir__, ".."))
+
+    from test_data import DataSuite
+    suite = DataSuite(['GeoOpt'])
+    suite.testall()

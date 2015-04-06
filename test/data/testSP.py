@@ -10,12 +10,16 @@
 
 """Test single point logfiles in cclib."""
 
+import os
 import unittest
 
 import numpy
 
 from skip import skipForParser
 from skip import skipForLogfile
+
+
+__filedir__ = os.path.realpath(os.path.dirname(__file__))
 
 
 class GenericSPTest(unittest.TestCase):
@@ -271,5 +275,9 @@ class Psi3SPTest(GenericSPTest):
 
 if __name__=="__main__":
 
-    from testall import testall
-    testall(modules=["SP"])
+    import sys
+    sys.path.append(os.path.join(__filedir__, ".."))
+
+    from test_data import DataSuite
+    suite = DataSuite(['SP'])
+    suite.testall()

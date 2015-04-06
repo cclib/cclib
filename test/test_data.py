@@ -20,6 +20,14 @@ import unittest
 import cclib
 
 
+__filedir__ = os.path.realpath(os.path.dirname(__file__))
+
+
+# We need this in Python3 for importing things from the same directory
+# within the unit test files.
+sys.path.append(os.path.join(__filedir__, 'data'))
+
+
 parser_names = [
     "ADF", "DALTON", "GAMESS", "GAMESSUK", "Gaussian",
     "Jaguar", "Molpro", "NWChem", "ORCA", "Psi", "QChem",
@@ -38,7 +46,7 @@ all_modules = {tn: importlib.import_module('data.test' + tn) for tn in module_na
 def gettestdata():
     """Return a dict of the test file data."""
 
-    testdatadir = os.path.dirname(os.path.realpath(sys.argv[0]))
+    testdatadir = os.path.dirname(os.path.realpath(__file__))
     lines = open(testdatadir + '/testdata').readlines()
 
     # Remove blank lines and those starting with '#'.

@@ -53,13 +53,13 @@ class PeriodicTableTest(unittest.TestCase):
 
     def test_elements(self):
         """Does the periodic table give correct elements?"""
-        self.assertEquals(self.pt.element[6], 'C')
-        self.assertEquals(self.pt.element[44], 'Ru')
+        self.assertEqual(self.pt.element[6], 'C')
+        self.assertEqual(self.pt.element[44], 'Ru')
 
     def test_elements(self):
         """Does the periodic table give correct atom numbers?"""
-        self.assertEquals(self.pt.number['C'], 6)
-        self.assertEquals(self.pt.number['Au'], 79)
+        self.assertEqual(self.pt.number['C'], 6)
+        self.assertEqual(self.pt.number['Au'], 79)
 
 
 if __name__ == "__main__":

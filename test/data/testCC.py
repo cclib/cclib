@@ -10,9 +10,13 @@
 
 """Test coupled cluster logfiles"""
 
+import os
 import unittest
 
 import numpy
+
+
+__filedir__ = os.path.realpath(os.path.dirname(__file__))
 
 
 class GenericCCTest(unittest.TestCase):
@@ -26,5 +30,9 @@ class GenericCCTest(unittest.TestCase):
 
 if __name__ == "__main__":
 
-    from testall import testall
-    testall(modules=["CC"])
+    import sys
+    sys.path.append(os.path.join(__filedir__, ".."))
+
+    from test_data import DataSuite
+    suite = DataSuite(['CC'])
+    suite.testall()

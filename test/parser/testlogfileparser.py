@@ -10,9 +10,16 @@
 
 """Unit tests for parser logfileparser module."""
 
+import io
 import os
+import sys
 import unittest
-import urllib2
+
+# The structure of urllib changed in Python3.
+try:
+    from urllib.request import urlopen
+except ImportError:
+    from urllib import urlopen
 
 import numpy
 
@@ -28,24 +35,35 @@ class FileWrapperTest(unittest.TestCase):
     def test_file_seek(self):
         """Can we seek anywhere in a file object?"""
         fpath = os.path.join(__datadir__,"data/ADF/basicADF2007.01/dvb_gopt.adfout")
-        fobject = open(fpath, 'r')
-        wrapper = cclib.parser.logfileparser.FileWrapper(fobject)
-        wrapper.seek(0, 0)
-        self.assertEqual(wrapper.pos, 0)
-        wrapper.seek(10, 1)
-        self.assertEqual(wrapper.pos, 10)
-        wrapper.seek(0, 2)
-        self.assertEqual(wrapper.pos, wrapper.size)
+        with open(fpath, 'r') as fobject:
+            wrapper = cclib.parser.logfileparser.FileWrapper(fobject)
+            wrapper.seek(0, 0)
+            self.assertEqual(wrapper.pos, 0)
+            wrapper.seek(10, 0)
+            self.assertEqual(wrapper.pos, 10)
+            wrapper.seek(0, 2)
+            self.assertEqual(wrapper.pos, wrapper.size)
 
     def test_url_seek(self):
         """Can we seek only to the end of an url stream?"""
+
         url = "https://raw.githubusercontent.com/cclib/cclib/master/data/ADF/basicADF2007.01/dvb_gopt.adfout"
-        stream = urllib2.urlopen(url)
+        stream = urlopen(url)
         wrapper = cclib.parser.logfileparser.FileWrapper(stream)
-        wrapper.seek(0, 2)
-        self.assertEqual(wrapper.pos, wrapper.size)
-        self.assertRaises(AttributeError, wrapper.seek, 0, 0)
-        self.assertRaises(AttributeError, wrapper.seek, 0, 1)
+
+        # Unfortunately, the behavior of this wrapper differs between Python 2 and 3,
+        # so we need to diverge the assertions. We should try to keep the code as
+        # consistent as possible, but the Errors raised are actually different.
+        if sys.version_info[0] == "2":
+            wrapper.seek(0, 2)
+            self.assertEqual(wrapper.pos, wrapper.size)
+            self.assertRaises(AttributeError, wrapper.seek, 0, 0)
+            self.assertRaises(AttributeError, wrapper.seek, 0, 1)
+        elif sys.version_info[0] == "3":
+            wrapper.seek(0, 2)
+            self.assertEqual(wrapper.pos, wrapper.size)
+            self.assertRaises(io.UnsupportedOperation, wrapper.seek, 0, 0)
+            self.assertRaises(io.UnsupportedOperation, wrapper.seek, 0, 1)
 
 
 class LogfileTest(unittest.TestCase):

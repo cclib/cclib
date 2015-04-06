@@ -50,20 +50,28 @@ class myGzipFile(gzip.GzipFile):
 class FileWrapper(object):
     """Wrap a file-like object or stream with some custom tweaks"""
 
-    def __init__(self, source):
+    def __init__(self, source, pos=0):
 
         self.src = source
 
-        # Most file-like objects have these two methods.
-        if hasattr(self.src, 'seek') and hasattr(self.src, 'tell'):
+        # Most file-like objects have seek and tell methods, but streams returned
+        # by urllib.urlopen in Python2 do not, which will raise an AttributeError
+        # in this code. On the other hand, in Python3 these methods do exist since
+        # urllib uses the stream class in the io library, but they raise a different
+        # error, namely is.UnsupportedOperation. That is why it is hard to be more
+        # specific with except block here.
+        try:
+
             self.src.seek(0, 2)
             self.size = self.src.tell()
             self.src.seek(0, 0)
             self.pos = 0
 
-        # Stream returned by urllib.urlopen should have size information.
-        elif hasattr(self.src, 'headers') and 'content-length' in self.src.headers:
-            self.size = int(self.src.headers['content-length'])
+        except:
+
+            # Stream returned by urllib should have size information.
+            if hasattr(self.src, 'headers') and 'content-length' in self.src.headers:
+                self.size = int(self.src.headers['content-length'])
 
         # Assume we are at the beginning in any case.
         self.pos = 0
@@ -84,10 +92,12 @@ class FileWrapper(object):
 
     def seek(self, pos, ref):
 
-        # If we are seeking to end, we can emulate it.
+        # If we are seeking to end, we can emulate it usually. As explained above,
+        # we cannot be too specific with the except clause due to differences
+        # between Python2 and 3. Yet another reason to drop Python 2 soon!
         try:
             self.src.seek(pos, ref)
-        except AttributeError:
+        except:
             if ref == 2:
                 self.src.read()
             else:

@@ -13,9 +13,9 @@
 import sys
 import unittest
 
-sys.path.append("bridge")
-from testopenbabel import *
-
 
 if __name__ == "__main__":
+
+    sys.path.append("bridge")
+    from testopenbabel import *
     unittest.main()
