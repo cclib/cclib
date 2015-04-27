@@ -6,6 +6,8 @@
 [![build status](http://img.shields.io/travis/cclib/cclib/master.svg?style=flat)](https://travis-ci.org/cclib/cclib)
 [![license](http://img.shields.io/badge/license-LGPLv2.1-blue.svg?style=flat)](https://github.com/cclib/cclib/blob/master/LICENSE)
 
+<img src="./logo.png" alt="cclib logo" width="100" />
+
 cclib is a Python library that provides parsers for output files of computational chemistry packages. It also provides a platform for computational chemists to implement algorithms in a platform-independent way.
 
 For more information, go to [http://cclib.github.io](http://cclib.github.io). There is a mailing list for questions at [cclib-users@lists.sourceforge.net](cclib-users@lists.sourceforge.net).
