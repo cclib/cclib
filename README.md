@@ -1,4 +1,4 @@
-# cclib
+### cclib
 
 [![DOI](https://zenodo.org/badge/doi/10.5281/zenodo.15108.svg)](http://dx.doi.org/10.5281/zenodo.15108)
 [![PyPI version](http://img.shields.io/pypi/v/cclib.svg?style=flat)](https://pypi.python.org/pypi/cclib)
