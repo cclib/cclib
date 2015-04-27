@@ -127,6 +127,7 @@ def visualtests(stream=sys.stdout):
 
     parsers_to_test = {
         'ADF2013.01' : getfile(ADF, "basicADF2013.01", "dvb_gopt.adfout")[0],
+        'DALTON2013' : getfile(DALTON, "basicDALTON-2013", "dvb_gopt_ks.out")[0],
         'Firefly8.0' : getfile(GAMESS, "basicFirefly8.0", "dvb_gopt_a.out")[0],
         'Gaussian09' : getfile(Gaussian, "basicGaussian09", "dvb_gopt.out")[0],
         'GAMESS-US' : getfile(GAMESS, "basicGAMESS-US2012", "dvb_gopt_a.out")[0],
