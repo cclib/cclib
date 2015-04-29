@@ -7,7 +7,7 @@ virtualenv:
 before_install:
   - if [[ $TRAVIS_PYTHON_VERSION == 2* ]]; then sudo apt-get install python-numpy; fi
   - if [[ $TRAVIS_PYTHON_VERSION == 3* ]]; then sudo apt-get install python3-numpy; fi
-  - sudo apt-get install libopenbabel4
+  - sudo apt-get install openbabel libopenbabel-dev swig
   - pip install -r requirements.txt
 install:
   - if [[ $TRAVIS_PYTHON_VERSION == 2* ]]; then python setup.py install; fi
