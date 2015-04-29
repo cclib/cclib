@@ -56,8 +56,20 @@ from cclib.parser import ORCA
 from cclib.parser import Psi
 from cclib.parser import QChem
 
-sys.path.append("../../test")
-import testall
+# This assume that the cclib-data repository is located at a specific location
+# within the cclib repository. It would be better to figure out a more natural
+# way to import the relevant tests from cclib here.
+test_dir = os.path.realpath(os.path.dirname(__file__)) + "/../../test"
+sys.path.append(os.path.abspath(test_dir))
+from test_data import all_modules
+from test_data import all_parsers
+from test_data import module_names
+from test_data import parser_names
+from test_data import get_program_dir
+
+
+# We need this to point to files relative to this script.
+__filedir__ = os.path.abspath(os.path.dirname(__file__))
 
 
 # The following regression test functions were manually written, because they
@@ -590,7 +602,7 @@ def testnoparseGaussian_Gaussian09_coeffs_log(filename):
     parsing, we set some attributes of the parser so that it all goes smoothly.
     """
 
-    parser = Gaussian(filename)
+    parser = Gaussian(os.path.join(__filedir__, filename))
     parser.logger.setLevel(logging.ERROR)
     parser.nmo = 5
     parser.nbasis = 1128
@@ -641,18 +653,15 @@ def normalisefilename(filename):
 # are necessary due to developments in the unit test class, tweak it here
 # and provide the modified version of the test class.
 
-# We're going to need to import all of the unit test modules.
-test_modules = {m : importlib.import_module('test' + m) for m in testall.test_modules}
-
 # Although there is probably a cleaner way to do this, making the unit class test names
 # global makes reading the dictionary of old unit tests much easier, especially it
 # will contain some classes defined here.
-for m, module in test_modules.items():
+for m, module in all_modules.items():
     for name in dir(module):
         if name[-4:] == "Test":
             globals()[name] = getattr(module, name)
 
-class ADFSPTest_nosyms(test_modules['SP'].ADFSPTest):
+class ADFSPTest_nosyms(ADFSPTest):
     foverlap00 = 1.00000
     foverlap11 = 0.99999
     foverlap22 = 0.99999
@@ -856,15 +865,20 @@ def make_regression_from_old_unittest(test_class):
 
 def main(which=[], opt_traceback=False, opt_status=False, regdir="."):
 
-    # It would be nice to fix the structure of this nested list,
-    # because in its current form it is not amenable to tweaks.
-    programs = [os.path.join(regdir, testall.get_program_dir(p)) for p in testall.parsers]
+    # Build a list of regression files that can be found.
     try:
-        filenames = [[os.path.join(p, version, fn) for version in os.listdir(p) for fn in os.listdir(os.path.join(p,version))] for p in programs]
+        filenames = {}
+        for p in parser_names:
+            filenames[p] = []
+            pdir = get_program_dir(p)
+            for version in os.listdir(os.path.join(__filedir__, pdir)):
+                for fn in os.listdir(os.path.join(__filedir__, pdir, version)):
+                    fpath = os.path.join(pdir, version, fn)
+                    filenames[p].append(fpath)
     except OSError as e:
         print(e)
         print("\nERROR: At least one program direcory is missing.")
-        print("Run regression_download.sh in the ../data directory to update.")
+        print("Run 'git pull' or regression_download.sh in cclib to update.")
         sys.exit(1)
 
     # This file should contain the paths to all regresssion test files we have gathered
@@ -882,10 +896,11 @@ def main(which=[], opt_traceback=False, opt_status=False, regdir="."):
     missing_on_disk = []
     missing_in_list = []
     for fn in regfilenames:
-        if not os.path.isfile(os.path.join("..", "data", "regression", fn)):
+        if not os.path.isfile(os.path.join(__filedir__, fn)):
             missing_on_disk.append(fn)
-    for fn in glob.glob(os.path.join('..', 'data', 'regression', '*', '*', '*')):
-        if os.path.join(*fn.split(os.path.sep)[3:]) not in regfilenames:
+    for fn in glob.glob(os.path.join(__filedir__, '*', '*', '*')):
+        fn = fn.replace(__filedir__, '').strip('/')
+        if fn not in regfilenames:
             missing_in_list.append(fn)
 
     # Create the regression test functions from logfiles that were old unittests.
@@ -897,26 +912,25 @@ def main(which=[], opt_traceback=False, opt_status=False, regdir="."):
     # Gather orphaned tests - functions starting with 'test' and not corresponding
     # to any regression file name.
     orphaned_tests = []
-    for ip, parser in enumerate(testall.parsers):
-        prefix = "test%s_%s" % (parser, parser)
+    for pn in parser_names:
+        prefix = "test%s_%s" % (pn, pn)
         tests = [fn for fn in globals() if fn[:len(prefix)] == prefix]
-        normalize = lambda fn: normalisefilename("_".join(fn.split(os.sep)[3:]))
-        normalized = [normalize(fname) for fname in filenames[ip]]
+        normalized = [normalisefilename(fn) for fn in filenames[pn]]
         orphaned = [t for t in tests if t[4:] not in normalized]
         orphaned_tests.extend(orphaned)
 
     failures = errors = total = 0
-    for iname, name in enumerate(testall.parsers):
+    for pn in parser_names:
 
-        parser_class = eval(name)
+        parser_class = eval(pn)
 
         # Continue to next iteration if we are limiting the regression and the current
         #   name was not explicitely chosen (that is, passed as an argument).
-        if len(which) > 0 and not name in which:
+        if len(which) > 0 and not pn in which:
             continue;
 
         print("Are the %s files ccopened and parsed correctly?" % name)
-        current_filenames = filenames[iname]
+        current_filenames = filenames[pn]
         current_filenames.sort()
         for fname in current_filenames:
             total += 1
@@ -927,7 +941,7 @@ def main(which=[], opt_traceback=False, opt_status=False, regdir="."):
             # correctly parsed (for fragments, for example), and these test need
             # to be additionaly prepended with 'testnoparse'.
             test_this = test_noparse = False
-            fname_norm = normalisefilename("_".join(fname.split(os.sep)[3:]))
+            fname_norm = normalisefilename(fname)
 
             funcname = "test" + fname_norm
             test_this = funcname in globals()
@@ -937,7 +951,7 @@ def main(which=[], opt_traceback=False, opt_status=False, regdir="."):
 
             if not test_noparse:
                 try:
-                    logfile = ccopen(fname)
+                    logfile = ccopen(os.path.join(__filedir__, fname))
                 except:
                     errors += 1
                     print("ccopen error")
@@ -986,6 +1000,8 @@ def main(which=[], opt_traceback=False, opt_status=False, regdir="."):
                 except:
                     print("parse error")
                     errors += 1
+                    if opt_traceback:
+                        print(traceback.format_exc())
                 else:
                     print("test passed")
 
