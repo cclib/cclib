@@ -5,6 +5,7 @@ python:
 virtualenv:
   system_site_packages: true
 before_install:
+  - sudo apt-get update
   - if [[ $TRAVIS_PYTHON_VERSION == 2* ]]; then sudo apt-get install python-numpy; fi
   - if [[ $TRAVIS_PYTHON_VERSION == 3* ]]; then sudo apt-get install python3-numpy; fi
   - sudo apt-get install openbabel libopenbabel-dev swig
