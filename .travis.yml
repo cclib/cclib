@@ -5,7 +5,7 @@ python:
 virtualenv:
   system_site_packages: true
 before_install:
-  - if [[ $TRAVIS_PYTHON_VERSION == 2* ]]; then sudo apt-get install python-numpy; fi
+  - if [[ $TRAVIS_PYTHON_VERSION == 2* ]]; then sudo apt-get install python-numpy python-openbabel; fi
   - if [[ $TRAVIS_PYTHON_VERSION == 3* ]]; then sudo apt-get install python3-numpy; fi
 install:
   - if [[ $TRAVIS_PYTHON_VERSION == 2* ]]; then python setup.py install; fi
