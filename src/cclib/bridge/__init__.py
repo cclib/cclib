@@ -12,7 +12,7 @@
 
 try:
     import openbabel
-except Exception:
+except ImportError:
     pass
 else:
     from .cclib2openbabel import makeopenbabel
@@ -25,6 +25,8 @@ else:
     from .cclib2pyquante import makepyquante
 
 try:
-    from .cclib2biopython import makebiopython
+    import Bio
 except ImportError:
     pass
+else:
+    from .cclib2biopython import makebiopython

@@ -17,7 +17,8 @@ import sys
 try:
     from PyQuante.Molecule import Molecule
 except ImportError:
-    print("PyQuante could not be imported.")
+    # Fail silently for now.
+    pass
 
 
 def makepyquante(atomcoords, atomnos, charge=0, mult=1):
