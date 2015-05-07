@@ -2,21 +2,17 @@ language: python
 python:
   - 2.7
   - 3.2
-virtualenv:
-  system_site_packages: true
 before_install:
   - sudo apt-get update
   - if [[ $TRAVIS_PYTHON_VERSION == 2* ]]; then sudo apt-get install python-numpy; fi
   - if [[ $TRAVIS_PYTHON_VERSION == 3* ]]; then sudo apt-get install python3-numpy; fi
-  - sudo apt-get install openbabel libopenbabel-dev swig
-  - pip install -r requirements.txt
 install:
   - if [[ $TRAVIS_PYTHON_VERSION == 2* ]]; then python setup.py install; fi
   - if [[ $TRAVIS_PYTHON_VERSION == 3* ]]; then python setup.py install; fi
 script:
   - cd test
-  - python test_bridge.py
   - python test_parser.py
   - python test_data.py --status --terse
   - cd ../data && bash regression_download.sh
   - cd ../test && python run_regressions.py --status --traceback
+  - python test_writer.py
