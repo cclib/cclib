@@ -153,6 +153,7 @@ Gaussian/Gaussian09/encaps1.log
 Gaussian/Gaussian09/guessIndo_modified_ALT.out
 Gaussian/Gaussian09/irc_point.log
 Gaussian/Gaussian09/irc_point.log
+Gaussian/Gaussian09/jos.teunissen.out
 Gaussian/Gaussian09/oniom_IR_intensity.log
 Gaussian/Gaussian09/OPT_oniom.log
 Gaussian/Gaussian09/OPT_td_g09.out
