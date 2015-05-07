@@ -10,7 +10,12 @@
 
 """Bridge for using cclib data in biopython (http://biopython.org)."""
 
-from Bio.PDB.Atom import Atom
+try:
+    from Bio.PDB.Atom import Atom
+except ImportError:
+    # Fail silently for now.
+    pass
+
 from cclib.parser.utils import PeriodicTable
 
 

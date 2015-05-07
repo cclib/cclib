@@ -10,7 +10,11 @@
 
 """Bridge between cclib data and openbabel (http://openbabel.org)."""
 
-import openbabel as ob
+try:
+    import openbabel as ob
+except ImportError:
+    # Fail silently for now.
+    pass
 
 from cclib.parser.data import ccData
 

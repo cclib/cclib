@@ -17,7 +17,8 @@ chemistry log files. It also provides a platform to implement
 algorithms in a package-independent manner.
 """
 
-doclines = __doc__.split("\n")
+import sys
+
 
 # Chosen from http://www.python.org/pypi?:action=list_classifiers
 classifiers = """Development Status :: 5 - Production/Stable
@@ -31,13 +32,8 @@ Programming Language :: Python
 Topic :: Scientific/Engineering :: Chemistry
 Topic :: Software Development :: Libraries :: Python Modules"""
 
-programs = ['ADF', 'GAMESS', 'GAMESS-UK', 'Gaussian', 'Jaguar', 'Molpro', 'NWChem', 'ORCA', 'Psi', 'QChem']
-
 
 def setup_cclib():
-
-    import os
-    import sys
 
     # Import from setuptools only if requested.
     if 'egg' in sys.argv:
@@ -47,7 +43,16 @@ def setup_cclib():
     from distutils.core import setup
 
     # The list of packages to be installed.
-    cclib_packages = ['cclib', 'cclib.parser', 'cclib.progress', 'cclib.method', 'cclib.bridge', 'cclib.writer']
+    cclib_packages = [
+        'cclib',
+        'cclib.parser',
+        'cclib.progress',
+        'cclib.method',
+        'cclib.bridge',
+        'cclib.writer'
+    ]
+
+    doclines = __doc__.split("\n")
 
     setup(
         name = "cclib",
@@ -69,4 +74,5 @@ def setup_cclib():
 
 
 if __name__ == '__main__':
+
     setup_cclib()

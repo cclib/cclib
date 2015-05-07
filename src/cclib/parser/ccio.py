@@ -73,6 +73,9 @@ triggers = [
 def guess_filetype(inputfile):
     """Try to guess the filetype by searching for trigger strings."""
 
+    if not inputfile:
+        return None
+
     filetype = None
     for line in inputfile:
         for parser, phrases, do_break in triggers:
@@ -97,11 +100,11 @@ def ccread(source, *args, **kargs):
 
     log = ccopen(source, *args, **kargs)
     if log:
-        if kargs['verbose']:
+        if kargs.get('verbose', None):
             print('Identified logfile to be in %s format' % log.logname)
         return log.parse()
     else:
-        if kargs['verbose']:
+        if kargs.get('verbose', None):
             print('Attempting to use fallback mechanism to read file')
         return fallback(source)
 
@@ -117,31 +120,32 @@ def ccopen(source, *args, **kargs):
         exist).
     """
 
-    # Try to open the logfile(s), using openlogfile.
-    if isinstance(source, str) or \
-       isinstance(source, list) and all([isinstance(s, str) for s in source]):
+    inputfile = None
+    isstream = False
+    is_string = isinstance(source, str)
+    is_listofstrings = isinstance(source, list) and all([isinstance(s, str) for s in source])
+
+    # Try to open the logfile(s), using openlogfile, if the source if a string (filename)
+    # or list of filenames. If it can be read, assume it is an open file object/stream.
+    if is_string or is_listofstrings:
         try:
             inputfile = logfileparser.openlogfile(source)
         except IOError as error:
-            (errno, strerror) = error.args
-            print("I/O error %s (%s): %s" % (errno, source, strerror))
+            if not kargs.get('quiet', False):
+                (errno, strerror) = error.args
+                print("I/O error %s (%s): %s" % (errno, source, strerror))
             return None
-        isstream = False
     elif hasattr(source, "read"):
         inputfile = source
         isstream = True
-    else:
-        raise ValueError
 
-    # Try to guess the filetype.
+    # Proceed to return an instance of the logfile parser only if the filetype
+    # could be guessed. Need to make sure the input file is closed before creating
+    # an instance, because parsers will handle opening/closing on their own.
     filetype = guess_filetype(inputfile)
-
-    # Need to close file before creating a instance.
-    if not isstream:
-        inputfile.close()
-
-    # Return an instance of the logfile if one was chosen.
     if filetype:
+        if not isstream:
+            inputfile.close()
         return filetype(source, *args, **kargs)
 
 def fallback(source):

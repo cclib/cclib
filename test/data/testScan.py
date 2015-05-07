@@ -10,11 +10,15 @@
 
 """Test scan logfiles in cclib"""
 
+import os
 import unittest
 
 import numpy
 
-from testall import skipForParser
+from skip import skipForParser
+
+
+__filedir__ = os.path.realpath(os.path.dirname(__file__))
 
 
 class GenericScanTest(unittest.TestCase):
@@ -61,5 +65,9 @@ class OrcaScanTest(GenericScanTest):
 
 if __name__=="__main__":
 
-    from testall import testall
-    testall(modules=["Scan"])
+    import sys
+    sys.path.append(os.path.join(__filedir__, ".."))
+
+    from test_data import DataSuite
+    suite = DataSuite(['Scan'])
+    suite.testall()

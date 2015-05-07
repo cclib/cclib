@@ -248,7 +248,7 @@ if __name__=="__main__":
     except ImportError:
         pass
 
-    from cclib.parser import ccopen
+    from cclib.io import ccopen
     import logging
     a = ccopen("../../../data/Gaussian/basicGaussian03/dvb_sp_basis.log")
     a.logger.setLevel(logging.ERROR)

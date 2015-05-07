@@ -10,11 +10,15 @@
 
 """Test logfiles with core electron data in cclib"""
 
+import os
 import unittest
 
 import numpy
 
 from cclib.parser.utils import PeriodicTable
+
+
+__filedir__ = os.path.realpath(os.path.dirname(__file__))
 
 
 class GenericCoreTest(unittest.TestCase):
@@ -49,5 +53,9 @@ class JaguarCoreTest(GenericCoreTest):
            
 if __name__=="__main__":
 
-    from testall import testall
-    testall(modules=["Core"])
+    import sys
+    sys.path.append(os.path.join(__filedir__, ".."))
+
+    from test_data import DataSuite
+    suite = DataSuite(['Suite'])
+    suite.testall()
