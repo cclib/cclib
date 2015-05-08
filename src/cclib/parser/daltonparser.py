@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+#
 # This file is part of cclib (http://cclib.github.io), a library for parsing
 # and interpreting the results of computational chemistry packages.
 #
@@ -64,12 +66,12 @@ class DALTON(logfileparser.Logfile):
         #
         #  label    atoms   charge   prim   cont     basis
         #  ----------------------------------------------------------------------
-        #  C           6    6.0000    15     5      [6s3p|2s1p]                                        
-        #  H           4    1.0000     3     1      [3s|1s]                                            
-        #  C           2    6.0000    15     5      [6s3p|2s1p]                                        
-        #  H           2    1.0000     3     1      [3s|1s]                                            
-        #  C           2    6.0000    15     5      [6s3p|2s1p]                                        
-        #  H           4    1.0000     3     1      [3s|1s]                                            
+        #  C           6    6.0000    15     5      [6s3p|2s1p]
+        #  H           4    1.0000     3     1      [3s|1s]
+        #  C           2    6.0000    15     5      [6s3p|2s1p]
+        #  H           2    1.0000     3     1      [3s|1s]
+        #  C           2    6.0000    15     5      [6s3p|2s1p]
+        #  H           4    1.0000     3     1      [3s|1s]
         #  ----------------------------------------------------------------------
         #  total:     20   70.0000   180    60
         #  ----------------------------------------------------------------------
@@ -137,7 +139,7 @@ class DALTON(logfileparser.Logfile):
             self.skip_lines(inputfile, ['d', 'b'])
 
             line = inputfile.next()
-            self.symcounts = [int(c) for c in line.split()[-4:]]
+            self.symcounts = [int(c) for c in line.split()[6:]]
 
             self.symlabels = []
             for sc in self.symcounts:
@@ -147,12 +149,12 @@ class DALTON(logfileparser.Logfile):
                 # If the number of orbitals for a symmetry is zero, the printout
                 # is different (see MP2 unittest logfile for an example).
                 line = inputfile.next()
+
                 if sc == 0:
                     assert "No orbitals in symmetry" in line
                 else:
                     assert line.split()[0] == "Symmetry"
                     self.symlabels.append(line.split()[1])
-
                     self.skip_line(inputfile, 'blank')
                     for i in range(sc):
                         orbital = inputfile.next()
@@ -167,7 +169,7 @@ class DALTON(logfileparser.Logfile):
         # @    Spin multiplicity and 2 M_S                1         0
         # @    Total number of symmetries                 4 (point group: C2h)
         # @    Reference state symmetry                   1 (irrep name : Ag )
-        # 
+        #
         #     This is a DFT calculation of type: B3LYP
         # ...
         #
@@ -179,14 +181,14 @@ class DALTON(logfileparser.Logfile):
         #     Orbital specifications
         #     ======================
         #     Abelian symmetry species          All |    1    2    3    4
-        #                                           |  Ag   Au   Bu   Bg 
+        #                                           |  Ag   Au   Bu   Bg
         #                                       --- |  ---  ---  ---  ---
         #     Total number of orbitals           60 |   25    5   25    5
         #     Number of basis functions          60 |   25    5   25    5
         #
         #      ** Automatic occupation of RKS orbitals **
         #
-        #      -- Initial occupation of symmetries is determined from extended Huckel guess.           
+        #      -- Initial occupation of symmetries is determined from extended Huckel guess.
         #      -- Initial occupation of symmetries is :
         # @    Occupied SCF orbitals              35 |   15    2   15    3
         #
@@ -216,7 +218,7 @@ class DALTON(logfileparser.Logfile):
         #  *********************************************
         #  ***** DIIS optimization of Hartree-Fock *****
         #  *********************************************
-        # 
+        #
         #  C1-DIIS algorithm; max error vectors =    8
         #
         #  Automatic occupation of symmetries with  70 electrons.
@@ -226,8 +228,8 @@ class DALTON(logfileparser.Logfile):
         #       K-S energy, electrons, error :    -46.547567739269  69.9999799123   -2.01D-05
         # @  1  -381.645762476       4.00D+00  -3.82D+02    15   2  15   3
         #       Virial theorem: -V/T =      2.008993
-        # @      MULPOP C   _1  0.15; C   _2  0.15; C   _1  0.12; C   _2  0.12; C   _1  0.11; C   _2  0.11; H   _1 -0.15; H   _2 -0.15; H   _1 -0.14; H   _2 -0.14; 
-        # @             C   _1  0.23; C   _2  0.23; H   _1 -0.15; H   _2 -0.15; C   _1  0.08; C   _2  0.08; H   _1 -0.12; H   _2 -0.12; H   _1 -0.13; H   _2 -0.13; 
+        # @      MULPOP C   _1  0.15; C   _2  0.15; C   _1  0.12; C   _2  0.12; C   _1  0.11; C   _2  0.11; H   _1 -0.15; H   _2 -0.15; H   _1 -0.14; H   _2 -0.14;
+        # @             C   _1  0.23; C   _2  0.23; H   _1 -0.15; H   _2 -0.15; C   _1  0.08; C   _2  0.08; H   _1 -0.12; H   _2 -0.12; H   _1 -0.13; H   _2 -0.13;
         #  -----------------------------------------------------------------------------
         #       K-S energy, electrons, error :    -46.647668038900  69.9999810430   -1.90D-05
         # @  2  -381.949410128       1.05D+00  -3.04D-01    15   2  15   3
@@ -305,18 +307,14 @@ class DALTON(logfileparser.Logfile):
             moenergies = []
 
             self.skip_line(inputfile, 'blank')
-
-            # if the second line has "Only the five" present in it, then we have a reduced
-            # number of virtual orbital energies printed. If it does not, then it contains
-            # the number of electrons.
-            # DALTON 2015 increases the output to 20 virtuals, so only check
-            # for a slightly smaller part of the string
             line = next(inputfile)
-            if "Only the" in line:
-                self.skip_line(inputfile, 'blank')
+
+            # There is some extra text between the section header and
+            # the number of electrons for open-shell calculations.
+            while "Number of electrons" not in line:
                 line = next(inputfile)
             nelectrons = int(line.split()[-1])
-            
+
             line = next(inputfile)
             occupations = [int(o) for o in line.split()[3:]]
             nsym = len(occupations)
@@ -361,7 +359,7 @@ class DALTON(logfileparser.Logfile):
             moenergies, mosyms = zip(*sdata)
 
             self.moenergies = [[]]
-            self.moenergies[0] = moenergies
+            self.moenergies[0] = [utils.convertor(moenergy, 'hartree', 'eV') for moenergy in moenergies]
             self.mosyms = [[]]
             self.mosyms[0] = mosyms
 
@@ -381,7 +379,7 @@ class DALTON(logfileparser.Logfile):
         # @    Spatial symmetry:            1 ( irrep  Ag  in C2h )
         # @    Total charge of molecule:    0
         #
-        # @    Final DFT energy:           -382.050716652387                 
+        # @    Final DFT energy:           -382.050716652387
         # @    Nuclear repulsion:           445.936979976608
         # @    Electronic energy:          -827.987696628995
         #
