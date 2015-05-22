@@ -48,17 +48,36 @@ class myGzipFile(gzip.GzipFile):
 
 
 class FileWrapper(object):
-    """Wrap a file object so that we can maintain position"""
+    """Wrap a file-like object or stream with some custom tweaks"""
 
-    def __init__(self, file):
-        self.file = file
-        self.pos = 0
-        self.file.seek(0, 2)
-        self.size = self.file.tell()
-        self.file.seek(0, 0)
+    def __init__(self, source, pos=0):
+
+        self.src = source
+
+        # Most file-like objects have seek and tell methods, but streams returned
+        # by urllib.urlopen in Python2 do not, which will raise an AttributeError
+        # in this code. On the other hand, in Python3 these methods do exist since
+        # urllib uses the stream class in the io library, but they raise a different
+        # error, namely is.UnsupportedOperation. That is why it is hard to be more
+        # specific with except block here.
+        try:
+
+            self.src.seek(0, 2)
+            self.size = self.src.tell()
+            self.src.seek(pos, 0)
+            self.pos = pos
+
+        except:
+
+            # Stream returned by urllib should have size information.
+            if hasattr(self.src, 'headers') and 'content-length' in self.src.headers:
+                self.size = int(self.src.headers['content-length'])
+
+            # Assume the position is what was passed to the constructor.
+            self.pos = pos
 
     def next(self):
-        line = next(self.file)
+        line = next(self.src)
         self.pos += len(line)
         return line
 
@@ -69,20 +88,34 @@ class FileWrapper(object):
         return self
 
     def close(self):
-        self.file.close()
+        self.src.close()
 
     def seek(self, pos, ref):
-        self.file.seek(pos, ref)
+
+        # If we are seeking to end, we can emulate it usually. As explained above,
+        # we cannot be too specific with the except clause due to differences
+        # between Python2 and 3. Yet another reason to drop Python 2 soon!
+        try:
+            self.src.seek(pos, ref)
+        except:
+            if ref == 2:
+                self.src.read()
+            else:
+                raise
+
+        if ref == 0:
+            self.pos = pos
+        if ref == 1:
+            self.pos += pos
+        if ref == 2 and hasattr(self, 'size'):
+            self.pos = self.size
 
 
 def openlogfile(filename):
     """Return a file object given a filename.
 
     Given the filename of a log file or a gzipped, zipped, or bzipped
-    log file, this function returns a regular Python file object.
-
-    Given an address starting with http://, this function retrieves the url
-    and returns a file object using a temporary file.
+    log file, this function returns a file-like object.
 
     Given a list of filenames, this function returns a FileInput object,
     which can be used for seamless iteration without concatenation.
@@ -113,6 +146,10 @@ def openlogfile(filename):
 
     elif hasattr(filename, "__iter__"):
 
+        # This is needed, because fileinput will assume stdin when filename is empty.
+        if len(filename) == 0:
+            return None
+
         # Compression (gzip and bzip) is supported as of Python 2.5.
         if sys.version_info[0] >= 2 and sys.version_info[1] >= 5:
             fileobject = fileinput.input(filename, openhook=fileinput.hook_compressed)
@@ -137,12 +174,16 @@ class Logfile(object):
         This should be called by a subclass in its own __init__ method.
 
         Inputs:
-            source - a single logfile, a list of logfiles, or input stream
+            source - a logfile, list of logfiles, or stream with at least a read method
+            loglevel - integer corresponding to a log level from the logging module
+            logname - name of the source logfile passed to this constructor
+            logstream - where to output the logging information
+            datatype - class to use for gathering data attributes
         """
 
-        # Set the filename to source if it is a string or a list of filenames.
-        # In the case of an input stream, set some arbitrary name and the stream.
-        # Elsewise, raise an Exception.
+        # Set the filename to source if it is a string or a list of strings, which are
+        # assumed to be filenames. Otherwise, assume the source is a file-like object
+        # if it has a read method, and we will try to use it like a stream.
         if isinstance(source, str):
             self.filename = source
             self.isstream = False
@@ -220,7 +261,7 @@ class Logfile(object):
         if not self.isstream:
             inputfile = openlogfile(self.filename)
         else:
-            inputfile = self.stream
+            inputfile = FileWrapper(self.stream)
 
         # Intialize self.progress
         is_compressed = isinstance(inputfile, myGzipFile) or isinstance(inputfile, myBZ2File)

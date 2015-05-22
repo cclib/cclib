@@ -10,9 +10,13 @@
 
 """Test geometry optimization logfiles in cclib"""
 
+import os
 import unittest
 
 import numpy
+
+
+__filedir__ = os.path.realpath(os.path.dirname(__file__))
 
 
 class GenericGeoOptTest(unittest.TestCase):
@@ -161,6 +165,16 @@ class ADFGeoOptTest(GenericGeoOptTest):
     b3lyp_tolerance = 1
 
 
+class DALTONGeoOptTest(GenericGeoOptTest):
+    """Customzed geometry optimziation unittest"""
+
+    # DALTON will normally print the geometry several extra times as the "final geometry"
+    # when an optimziation converges. We don't parse those coordinates, but the parser
+    # does catch the geometry printed in the final static property calculation when
+    # that is done for the final geometry (presumably always).
+    extracoords = 1
+
+
 class GaussianGeoOptTest(GenericGeoOptTest):
     """Customized geometry optimization unittest"""
 
@@ -196,6 +210,7 @@ class MolproGeoOptTest(GenericGeoOptTest):
         value_e, value_g, value_s = self.data.geovalues[-1]
         converged = (value_e < target_e and value_g < target_g) or (value_g < target_g and value_s < target_s)
         self.assertTrue(converged)
+
 
 class NWChemGeoOptTest(GenericGeoOptTest):
     """Customized restricted single point HF unittest"""
@@ -272,5 +287,9 @@ class PsiGeoOptTest(GenericGeoOptTest):
 
 if __name__=="__main__":
 
-    from testall import testall
-    testall(modules=["GeoOpt"])
+    import sys
+    sys.path.append(os.path.join(__filedir__, ".."))
+
+    from test_data import DataSuite
+    suite = DataSuite(['GeoOpt'])
+    suite.testall()

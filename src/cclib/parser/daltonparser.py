@@ -49,8 +49,59 @@ class DALTON(logfileparser.Logfile):
         # Used to decide whether to wipe the atomcoords clean.
         self.firststdorient = True
 
+    def parse_geometry(self, lines):
+        """Parse DALTON geometry lines into an atomcoords array."""
+
+        coords = []
+        for lin in lines:
+
+            # Without symmetry there are simply four columns, and with symmetry
+            # an extra label is printed after the atom type.
+            cols = lin.split()
+            if cols[1][0] == "_":
+                xyz = cols[2:]
+            else:
+                xyz = cols[1:]
+
+            # The assumption is that DALTON always print in atomic units.
+            xyz = [utils.convertor(float(x), 'bohr', 'Angstrom') for x in xyz]
+            coords.append(xyz)
+
+        return coords
+
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
+
+        # This section at the start of geometry optimization jobs gives us information
+        # about optimization targets (geotargets) and possibly other things as well.
+        #
+        # Chosen parameters for *OPTIMI :
+        # -------------------------------
+        #
+        # Default 1st order method will be used:   BFGS update.
+        # Optimization will be performed in redundant internal coordinates (by default).
+        # Model Hessian will be used as initial Hessian.
+        # The model Hessian parameters of Roland Lindh will be used.
+        # 
+        # 
+        # Trust region method will be used to control step (default).
+        # 
+        # Convergence threshold for gradient set to :      1.00D-04
+        # Convergence threshold for energy set to   :      1.00D-06
+        # Convergence threshold for step set to     :      1.00D-04
+        # Number of convergence criteria set to     :   2
+        #
+        if line.strip()[:25] == "Convergence threshold for":
+
+            if not hasattr(self, 'geotargets'):
+                self.geotargets = []
+                self.geotargets_names = []
+
+            target = self.float(line.split()[-1])
+            name = line.strip()[25:].split()[0]
+
+            self.geotargets.append(target)
+            self.geotargets_names.append(name)
 
         # This section is close to the beginning of the file, and can be used
         # to parse natom, nbasis and atomnos. Note that DALTON operates on the
@@ -120,7 +171,7 @@ class DALTON(logfileparser.Logfile):
 
         # Since DALTON sometimes uses symmetry labels (Ag, Au, etc.) and sometimes
         # just the symmetry group index, we need to parse and keep a mapping between
-        # these two for later.
+        # these two for later use.
         #
         #  Symmetry Orbitals
         #  -----------------
@@ -236,8 +287,9 @@ class DALTON(logfileparser.Logfile):
         #       Virial theorem: -V/T =      2.013393
         # ...
         #
-        # Wwith and without symmetry, the "Total energy" line is shifted a little.
+        # With and without symmetry, the "Total energy" line is shifted a little.
         if "Iter" in line and "Total energy" in line:
+
             iteration = 0
             converged = False
             values = []
@@ -245,7 +297,9 @@ class DALTON(logfileparser.Logfile):
                 self.scfvalues = []
 
             while not converged:
+
                 line = next(inputfile)
+
                 # each iteration is bracketed by "-------------"
                 if "-------------------" in line:
                     iteration += 1
@@ -255,14 +309,21 @@ class DALTON(logfileparser.Logfile):
                 strcompare = "@{0:>3d}".format(iteration)
                 if strcompare in line:
                     temp = line.split()
-                    values.append([float(temp[2])])
-                    #print(line.split())
+                    val = self.float(temp[3])
+                    values.append([val])
+
                 if line[0] == "@" and "converged in" in line:
                     converged = True
 
+            # It seems DALTON does change the SCF convergence criteria during a
+            # geometry optimization, but also does not print them. So, assume they
+            # are unchanged and copy the initial values after the first step. However,
+            # it would be good to check up on this - perhaps it is possible to print.
             self.scfvalues.append(values)
+            if len(self.scfvalues) > 1:
+                self.scftargets.append(self.scftargets[-1])
 
-        # DALTON organizes the energies by symmetry, so we need to parser first,
+        # DALTON organizes the energies by symmetry, so we need to parse first,
         # and then sort the energies (and labels) before we store them.
         #
         # The formatting varies depending on RHF/DFT and/or version. Here is
@@ -418,31 +479,90 @@ class DALTON(logfileparser.Logfile):
         # ...
         #
         if "Molecular geometry (au)" in line:
+
             if not hasattr(self, "atomcoords"):
                 self.atomcoords = []
 
             if self.firststdorient:
                 self.firststdorient = False
 
-            line = next(inputfile)
-            line = next(inputfile)
-            #line = next(inputfile)
+            self.skip_lines(inputfile, ['b' ,'b'])
 
-            atomcoords = []
-            for i in range(self.natom):
-                line = next(inputfile)
-                temp = line.split()
-
-                # if symmetry has been enabled, extra labels are printed. if not, the list is one shorter
-                coords = [1, 2, 3]
-                try:
-                    float(temp[1])
-                except ValueError:
-                    coords = [2, 3, 4]
-
-
-                atomcoords.append([utils.convertor(float(temp[i]), "bohr", "Angstrom") for i in coords])
+            lines = [next(inputfile) for i in range(self.natom)]
+            atomcoords = self.parse_geometry(lines)
             self.atomcoords.append(atomcoords)
+
+        # During geometry optimizations the geometry is printed in the section
+        # that is titles "Optimization Control Center". Note that after an optimizations
+        # finishes, DALTON normally runs another "static property section (ABACUS)",
+        # so the final geometry will be repeated in atomcoords.
+        #
+        #                                Next geometry (au)
+        #                                ------------------
+        #
+        # C   _1     1.3203201560            2.3174808341            0.0000000000
+        # C   _2    -1.3203201560           -2.3174808341            0.0000000000
+        # ...
+        if line.strip() == "Next geometry (au)":
+
+            self.skip_lines(inputfile, ['d', 'b'])
+
+            lines = [next(inputfile) for i in range(self.natom)]
+            coords = self.parse_geometry(lines)
+            self.atomcoords.append(coords)
+
+        # This section contains data for optdone and geovalues, although we could use
+        # it to double check some atttributes that were parsed before.
+        #
+        #                             Optimization information
+        #                             ------------------------
+        #
+        # Iteration number               :       4
+        # End of optimization            :       T 
+        # Energy at this geometry is     :    -379.777956
+        # Energy change from last geom.  :      -0.000000
+        # Predicted change               :      -0.000000
+        # Ratio, actual/predicted change :       0.952994
+        # Norm of gradient               :       0.000058
+        # Norm of step                   :       0.000643
+        # Updated trust radius           :       0.714097
+        # Total Hessian index            :       0
+        #
+        if line.strip() == "Optimization information":
+
+            self.skip_lines(inputfile, ['d', 'b', 'iteration number'])
+            
+            line = next(inputfile)
+            assert 'End of optimization' in line
+            if not hasattr(self, 'optdone'):
+                self.optdone = []
+            self.optdone.append(line.split()[-1] == 'T')
+
+            # We need a way to map between lines here and the targets stated at the
+            # beginning of the file in 'Chosen parameters for *OPTIMI (see above),
+            # and this dictionary facilitates that. The keys are target names parsed
+            # in that initial section after input processing, and the values are
+            # substrings that should appear in the lines in this section.
+            targets_labels = {
+                'gradient': 'Norm of gradient',
+                'energy': 'Energy change from last',
+                'step': 'Norm of step',
+            }
+            values = [numpy.nan] * len(self.geotargets)
+            while line.strip():
+                for tgt, lbl in targets_labels.items():
+                    if lbl in line and tgt in self.geotargets_names:
+                        index = self.geotargets_names.index(tgt)
+                        values[index] = self.float(line.split()[-1])
+                line = next(inputfile)
+
+            # If we're missing something above, throw away the partial geovalues since
+            # we don't want artificial NaNs getting into cclib. Instead, fix the dictionary
+            # to make things work.
+            if not numpy.nan in values:
+                if not hasattr(self, 'geovalues'):
+                    self.geovalues = []
+                self.geovalues.append(values)
 
         # -------------------------------------------------
         # extract the center of mass line

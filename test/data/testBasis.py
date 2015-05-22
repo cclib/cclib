@@ -10,7 +10,11 @@
 
 """Test logfiles related to basis sets"""
 
+import os
 import unittest
+
+
+__filedir__ = os.path.realpath(os.path.dirname(__file__))
 
 
 class GenericBasisTest(unittest.TestCase):
@@ -119,5 +123,9 @@ class QChemBigBasisTest(GenericBigBasisTest):
 
 if __name__=="__main__":
 
-    from testall import testall
-    testall(modules=["Basis"])
+    import sys
+    sys.path.append(os.path.join(__filedir__, ".."))
+
+    from test_data import DataSuite
+    suite = DataSuite(['Basis'])
+    suite.testall()
