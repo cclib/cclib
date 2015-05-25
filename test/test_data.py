@@ -41,7 +41,7 @@ module_names = [
     "vib", "Scan",                              # Other property calculations.
 ]
 all_modules = {tn: importlib.import_module('data.test' + tn) for tn in module_names}
-    
+
 
 def gettestdata():
     """Return a dict of the test file data."""

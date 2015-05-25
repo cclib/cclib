@@ -82,10 +82,10 @@ class DALTON(logfileparser.Logfile):
         # Optimization will be performed in redundant internal coordinates (by default).
         # Model Hessian will be used as initial Hessian.
         # The model Hessian parameters of Roland Lindh will be used.
-        # 
-        # 
+        #
+        #
         # Trust region method will be used to control step (default).
-        # 
+        #
         # Convergence threshold for gradient set to :      1.00D-04
         # Convergence threshold for energy set to   :      1.00D-06
         # Convergence threshold for step set to     :      1.00D-04
@@ -570,10 +570,10 @@ class DALTON(logfileparser.Logfile):
         # Updated trust radius           :       0.714097
         # Total Hessian index            :       0
         #
-        if line.strip() == "Optimization information":
+        if line[29:53] == "Optimization information":
 
             self.skip_lines(inputfile, ['d', 'b', 'iteration number'])
-            
+
             line = next(inputfile)
             assert 'End of optimization' in line
             if not hasattr(self, 'optdone'):
@@ -630,6 +630,66 @@ class DALTON(logfileparser.Logfile):
                     dipole[i] = float(temp[2])  # store the Debye value
             if hasattr(self, 'moments'):
                 self.moments.append(dipole)
+
+
+        # TODO:
+        # aonames
+        # aooverlaps
+        # atombasis
+        # atomcharges
+        # atomcoords
+        # atommasses
+        # atomnos
+        # atomspins
+        # charge
+        # ccenergies
+        # coreelectrons
+        # enthalpy
+        # entropy
+        # etenergies
+        # etoscs
+        # etrotats
+        # etsecs
+        # etsyms
+        # freeenergy
+        # gbasis
+        # geotargets
+        # geovalues
+        # grads
+        # hessian
+        # homos
+        # mocoeffs
+        # moenergies
+        # moments
+        # mosyms
+        # mult
+        # natom
+        # nbasis
+        # nmo
+        # nocoeffs
+        # nooccnos
+        # optdone
+        # scancoords
+        # scanenergies
+        # scannames
+        # scanparm
+        # scfenergies
+        # scftargets
+        # scfvalues
+        # temperature
+        # vibanharms
+        # vibdisps
+        # vibfreqs
+        # vibirs
+        # vibramans
+        # vibsyms
+
+        # N/A:
+        # fonames
+        # fooverlaps
+        # fragnames
+        # frags
+
 
 
 if __name__ == "__main__":
