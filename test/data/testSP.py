@@ -25,6 +25,10 @@ __filedir__ = os.path.realpath(os.path.dirname(__file__))
 class GenericSPTest(unittest.TestCase):
     """Generic restricted single point unittest"""
 
+    # Molecular mass of DVB in mD, and expected precision.
+    molecularmass = 130078.25
+    mass_precision = 0.10
+
     # In STO-3G, H has 1, C has 5 (1 S and 4 SP).
     nbasisdict = {1:1, 6:5}
 
@@ -87,6 +91,20 @@ class GenericSPTest(unittest.TestCase):
         # Check if all are different (every orbital indexed once).
         self.assertEquals(len(set(all)), len(all))
 
+    @skipForParser('GAMESS', 'atommasses not implemented yet')
+    @skipForParser('GAMESSUK', 'atommasses not implemented yet')
+    @skipForParser('Jaguar', 'atommasses not implemented yet')
+    @skipForParser('Molpro', 'atommasses not implemented yet')
+    @skipForParser('NWChem', 'atommasses not implemented yet')
+    @skipForParser('ORCA', 'atommasses not implemented yet')
+    @skipForParser('Psi', 'atommasses not implemented yet')
+    @skipForParser('QChem', 'atommasses not implemented yet')
+    def testatommasses(self):
+        """Do the atom masses sum up to the molecular mass?"""
+        mm = 1000*sum(self.data.atommasses)
+        msg = "Molecule mass: %f not %f +- %fmD" % (mm, self.molecularmass, self.mass_precision)
+        self.assertAlmostEquals(mm, self.molecularmass, delta=self.mass_precision, msg=msg)
+
     def testcoreelectrons(self):
         """Are the coreelectrons all 0?"""
         ans = numpy.zeros(self.data.natom, 'i')
@@ -129,7 +147,7 @@ class GenericSPTest(unittest.TestCase):
         self.assertEquals(type(self.data.moenergies), type([]))
         self.assertEquals(type(self.data.moenergies[0]), type(numpy.array([])))
 
-    @skipForParser('DALTON', 'mocoeffs` not implemented yet')
+    @skipForParser('DALTON', 'mocoeffs not implemented yet')
     @skipForLogfile('Jaguar/basicJaguar7', 'Data file does not contain enough information. Can we make a new one?')
     @skipForLogfile('Psi/basicPsi3', 'MO coefficients are printed separately for each SALC')
     def testdimmocoeffs(self):
@@ -221,6 +239,9 @@ class GenericSPTest(unittest.TestCase):
 class ADFSPTest(GenericSPTest):
     """Customized restricted single point unittest"""
 
+    # ADF only prints up to 0.1mD per atom, so the precision here is worse than 0.1mD.
+    mass_precision = 0.3
+
     foverlap00 = 1.00003
     foverlap11 = 1.02672
     foverlap22 = 1.03585
@@ -242,18 +263,6 @@ class ADFSPTest(GenericSPTest):
         self.assertAlmostEquals(self.data.fooverlaps[0, 0], self.foverlap00, delta=0.0001)
         self.assertAlmostEquals(self.data.fooverlaps[1, 1], self.foverlap11, delta=0.0001)
         self.assertAlmostEquals(self.data.fooverlaps[2, 2], self.foverlap22, delta=0.0001)
-
-
-class GaussianSPTest(GenericSPTest):
-    """Customized restricted single point unittest"""
-
-    # Molecular mass of DVB in mD.
-    molecularmass = 130078.25
-
-    def testatommasses(self):
-        """Do the atom masses sum up to the molecular mass (130078.25+-0.1mD)?"""
-        mm = 1000*sum(self.data.atommasses)
-        self.assertAlmostEquals(mm, 130078.25, places=10, msg="Molecule mass: %f not 130078 +- 0.1mD" %mm)
 
 
 class Jaguar7SPTest(GenericSPTest):

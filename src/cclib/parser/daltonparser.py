@@ -103,6 +103,48 @@ class DALTON(logfileparser.Logfile):
             self.geotargets.append(target)
             self.geotargets_names.append(name)
 
+        # This is probably the first place where atomic symmetry labels are printed,
+        # somewhere afer the SYMGRP point group information section. We need to know
+        # which atom is in which symmetry, since this influences how some things are
+        # print later on. We can also get some generic attributes along the way.
+        #
+        #                                 Isotopic Masses
+        #                                 ---------------
+        #
+        #                           C   _1     12.000000
+        #                           C   _2     12.000000
+        #                           C   _1     12.000000
+        #                           C   _2     12.000000
+        #                           ...
+        #
+        # Note that often, when there is no symmetry, there are only two columns here.
+        #
+        if line.strip() == "Isotopic Masses":
+
+            self.skip_lines(inputfile, ['d', 'b'])
+
+            atomnos = []
+            symmetry_atoms = []
+            atommasses = []
+
+            line = next(inputfile)
+            while line.strip():
+                cols = line.split()
+                atomnos.append(self.table.number[cols[0]])
+                if len(cols) == 3:
+                    symmetry_atoms.append(line.split()[1])
+                    atommasses.append(float(line.split()[2]))
+                else:
+                    atommasses.append(float(line.split()[1]))
+                line = next(inputfile)
+
+            self.set_attribute('atomnos', atomnos)
+            self.set_attribute('atommasses', atommasses)
+
+            # Save this for later if there were any labels.
+            if symmetry_atoms:
+                self.symmetry_atoms = symmetry_atoms
+
         # This section is close to the beginning of the file, and can be used
         # to parse natom, nbasis and atomnos. Note that DALTON operates on the
         # idea of atom type, which are not necessarily unique.
