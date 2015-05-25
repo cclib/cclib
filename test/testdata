@@ -166,8 +166,8 @@ SP        GAMESSUK    GenericSPTest         basicGAMESS-UK8.0     dvb_sp_hf.out
 SP        GAMESSUK    GenericSPTest         basicGAMESS-UK8.0     dvb_sp_ks.out
 SP        GAMESS      GenericSPTest         basicFirefly8.0       dvb_sp.out
 SP        GAMESS      GenericSPTest         basicGAMESS-US2012    dvb_sp.out
-SP        Gaussian    GaussianSPTest        basicGaussian03       dvb_sp.out
-SP        Gaussian    GaussianSPTest        basicGaussian09       dvb_sp.out
+SP        Gaussian    GenericSPTest         basicGaussian03       dvb_sp.out
+SP        Gaussian    GenericSPTest         basicGaussian09       dvb_sp.out
 SP        Jaguar      Jaguar7SPTest         basicJaguar7.0        dvb_sp.out
 SP        Jaguar      GenericSPTest         basicJaguar8.3        dvb_sp_hf.out
 SP        Jaguar      GenericSPTest         basicJaguar8.3        dvb_sp_ks.out

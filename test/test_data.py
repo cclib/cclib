@@ -182,7 +182,7 @@ class DataSuite(object):
             # By overriding __getattribute__ temporarily with a custom method, we collect
             # coverage information for data attributes while the tests are run. This slightly
             # hacky approach is very convenient since it is self-contained and we don't
-            # need to worry about it when writing the actual test bases.
+            # need to worry about it when writing the actual test cases.
             test.data.__class__.__getattribute__ = ccdata_getattribute_with_coverage
 
             # Here we actually run the tests for this line in testdata.
