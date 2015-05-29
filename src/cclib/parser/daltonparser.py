@@ -641,6 +641,50 @@ class DALTON(logfileparser.Logfile):
             if hasattr(self, 'moments'):
                 self.moments.append(dipole)
 
+        ## 'vibfreqs', 'vibirs', and 'vibsyms' appear in ABACUS.
+        # Vibrational Frequencies and IR Intensities
+        # ------------------------------------------
+
+        # mode   irrep        frequency             IR intensity
+        # ============================================================
+        #                 cm-1       hartrees     km/mol   (D/A)**2/amu
+        # ------------------------------------------------------------
+        #  1      A      3546.72    0.016160      0.000   0.0000
+        #  2      A      3546.67    0.016160      0.024   0.0006
+        # ...
+        if "Vibrational Frequencies and IR Intensities" in line:
+
+            self.skip_lines(inputfile, ['dashes', 'blank'])
+            line = next(inputfile)
+            assert line.strip() == "mode   irrep        frequency             IR intensity"
+            self.skip_line(inputfile, 'equals')
+            line = next(inputfile)
+            assert line.strip() == "cm-1       hartrees     km/mol   (D/A)**2/amu"
+            self.skip_line(inputfile, 'dashes')
+            line = next(inputfile)
+
+            # The normal modes are in order of decreasing IR
+            # frequency, so they can't be added directly to
+            # attributes; they must be grouped together first, sorted
+            # in order of increasing frequency, then added to their
+            # respective attributes.
+
+            vibdata = []
+
+            while line.strip():
+                sline = line.split()
+                vibsym = sline[1]
+                vibfreq = float(sline[2])
+                vibir = float(sline[4])
+                vibdata.append((vibfreq, vibir, vibsym))
+                line = next(inputfile)
+
+            vibdata.sort(key=lambda normalmode: normalmode[0])
+
+            self.vibfreqs = [normalmode[0] for normalmode in vibdata]
+            self.vibirs = [normalmode[1] for normalmode in vibdata]
+            self.vibsyms = [normalmode[2] for normalmode in vibdata]
+
 
         # TODO:
         # aonames
@@ -689,10 +733,7 @@ class DALTON(logfileparser.Logfile):
         # temperature
         # vibanharms
         # vibdisps
-        # vibfreqs
-        # vibirs
         # vibramans
-        # vibsyms
 
         # N/A:
         # fonames
