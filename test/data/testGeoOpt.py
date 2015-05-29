@@ -145,8 +145,7 @@ class GenericGeoOptTest(unittest.TestCase):
     def testoptdone(self):
         """Has the geometry converged and set optdone to True?"""
         self.assertTrue(self.data.optdone)
-        temp = numpy.all(numpy.abs(self.data.geovalues) <= self.data.geotargets, axis=1)
-        self.assertTrue(temp[-1])
+        self.assertTrue(numpy.all(numpy.abs(self.data.geovalues[-1]) <= self.data.geotargets))
 
     def testmoenergies(self):
         """Are only the final MOs parsed?"""
@@ -174,6 +173,14 @@ class DALTONGeoOptTest(GenericGeoOptTest):
     # that is done for the final geometry (presumably always).
     extracoords = 1
 
+    # Although DALTON generally has three criteria for convergence, it normally only
+    # requires two of them to end a geometry optimization. This is printed in the output
+    # and can probably be tweaked in the input, but we don't parsed that in cclib.
+    def testoptdone(self):
+        """Has the geometry converged and set optdone to True?"""
+        self.assertTrue(self.data.optdone)
+        convergence = numpy.abs(self.data.geovalues[-1]) <= self.data.geotargets
+        self.assertTrue(sum(convergence) >= 2)
 
 class GaussianGeoOptTest(GenericGeoOptTest):
     """Customized geometry optimization unittest"""

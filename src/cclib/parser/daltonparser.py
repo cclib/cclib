@@ -74,6 +74,8 @@ class DALTON(logfileparser.Logfile):
 
         # This section at the start of geometry optimization jobs gives us information
         # about optimization targets (geotargets) and possibly other things as well.
+        # Notice how the number of criteria required to converge is set to 2 here,
+        # but this parameter can (probably) be tweaked in the input.
         #
         # Chosen parameters for *OPTIMI :
         # -------------------------------
@@ -572,7 +574,11 @@ class DALTON(logfileparser.Logfile):
         #
         if line.strip() == "Optimization information":
 
-            self.skip_lines(inputfile, ['d', 'b', 'iteration number'])
+            self.skip_lines(inputfile, ['d', 'b'])
+
+            line = next(inputfile)
+            assert 'Iteration number' in line
+            iteration = int(line.split()[-1])
             
             line = next(inputfile)
             assert 'End of optimization' in line
@@ -584,7 +590,9 @@ class DALTON(logfileparser.Logfile):
             # beginning of the file in 'Chosen parameters for *OPTIMI (see above),
             # and this dictionary facilitates that. The keys are target names parsed
             # in that initial section after input processing, and the values are
-            # substrings that should appear in the lines in this section.
+            # substrings that should appear in the lines in this section. Make an
+            # exception for the energy at iteration zero where there is no gradient,
+            # and take the total energy for geovalues.
             targets_labels = {
                 'gradient': 'Norm of gradient',
                 'energy': 'Energy change from last',
@@ -592,6 +600,9 @@ class DALTON(logfileparser.Logfile):
             }
             values = [numpy.nan] * len(self.geotargets)
             while line.strip():
+                if iteration == 0 and "Energy at this geometry" in line:
+                    index = self.geotargets_names.index('energy')
+                    values[index] = self.float(line.split()[-1])
                 for tgt, lbl in targets_labels.items():
                     if lbl in line and tgt in self.geotargets_names:
                         index = self.geotargets_names.index(tgt)
