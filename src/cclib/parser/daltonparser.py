@@ -530,7 +530,7 @@ class DALTON(logfileparser.Logfile):
             if self.firststdorient:
                 self.firststdorient = False
 
-            self.skip_lines(inputfile, ['b' ,'b'])
+            self.skip_lines(inputfile, ['d' ,'b'])
 
             lines = [next(inputfile) for i in range(self.natom)]
             atomcoords = self.parse_geometry(lines)
@@ -707,7 +707,7 @@ class DALTON(logfileparser.Logfile):
             self.skip_line(inputfile, 'd')
             line = next(inputfile)
 
-            self.vibdisps = numpy.empty(shape=(len(self.vibirs), self.natom, 3))
+            vibdisps = numpy.empty(shape=(len(self.vibirs), self.natom, 3))
 
             ndisps = 0
             while ndisps < len(self.vibirs):
@@ -724,11 +724,42 @@ class DALTON(logfileparser.Logfile):
                 for w in range(self.natom):
                     for coord in range(3):
                         line = next(inputfile)
-                        self.vibdisps[mode_min:mode_max, w, coord] = map(float, line.split()[2:])
+                        vibdisps[mode_min:mode_max, w, coord] = map(float, line.split()[2:])
                     # Skip a blank line.
                     line = next(inputfile)
                 ndisps += ndisps_block
 
+            # The vibrational displacements are in the wrong order;
+            # reverse them.
+            self.vibdisps = vibdisps[::-1, :, :]
+
+        ## 'vibramans'
+        #     Raman related properties for freq.  0.000000 au  = Infinity nm
+        #     ---------------------------------------------------------------
+        #
+        # Mode    Freq.     Alpha**2   Beta(a)**2   Pol.Int.   Depol.Int.  Dep. Ratio 
+        #
+        #    1   3546.72    0.379364   16.900089   84.671721   50.700268    0.598786
+        #    2   3546.67    0.000000    0.000000    0.000000    0.000000    0.599550
+        if "Raman related properties for freq." in line:
+
+            self.skip_lines(inputfile, ['d', 'b'])
+            line = next(inputfile)
+            assert line[1:76] == "Mode    Freq.     Alpha**2   Beta(a)**2   Pol.Int.   Depol.Int.  Dep. Ratio"
+            self.skip_line(inputfile, 'b')
+            line = next(inputfile)
+
+            vibramans = []
+
+            # The Raman intensities appear under the "Pol.Int."
+            # (polarization intensity) column.
+            for m in range(len(self.vibfreqs)):
+                vibramans.append(float(line.split()[4]))
+                line = next(inputfile)
+
+            # All vibrational properties in DALTON appear in reverse
+            # order.
+            self.vibramans = vibramans[::-1]
 
         # TODO:
         # aonames
@@ -776,7 +807,6 @@ class DALTON(logfileparser.Logfile):
         # scfvalues
         # temperature
         # vibanharms
-        # vibramans
 
         # N/A:
         # fonames

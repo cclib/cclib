@@ -246,8 +246,7 @@ vib       QChem       QChemIRTest           basicQChem4.2         dvb_ir.out
 
 vib       GAMESS      GenericIRimgTest      basicGAMESS-US2012    nh3_ts_ir.out
 
-# vib       DALTON      GenericRamanTest      basicDALTON-2013      dvb_raman.out
-# vib       DALTON      GenericRamanTest      basicDALTON-2015      dvb_raman.out
+vib       DALTON      DALTONRamanTest       basicDALTON-2013      dvb_raman.out
 vib       GAMESSUK    GenericRamanTest      basicGAMESS-UK7.0     dvb_raman.out
 vib       GAMESSUK    GenericRamanTest      basicGAMESS-UK8.0     dvb_raman.out
 vib       GAMESS      GenericRamanTest      basicFirefly8.0       dvb_raman.out
