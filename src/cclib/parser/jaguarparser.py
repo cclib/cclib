@@ -28,7 +28,7 @@ class Jaguar(logfileparser.Logfile):
 
         # Call the __init__ method of the superclass
         super(Jaguar, self).__init__(logname="Jaguar", *args, **kwargs)
-        
+
     def __str__(self):
         """Return a string representation of the object."""
         return "Jaguar output file %s" % (self.filename)

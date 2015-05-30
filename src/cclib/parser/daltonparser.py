@@ -644,7 +644,7 @@ class DALTON(logfileparser.Logfile):
         ## 'vibfreqs', 'vibirs', and 'vibsyms' appear in ABACUS.
         # Vibrational Frequencies and IR Intensities
         # ------------------------------------------
-
+        #
         # mode   irrep        frequency             IR intensity
         # ============================================================
         #                 cm-1       hartrees     km/mol   (D/A)**2/amu
@@ -684,6 +684,50 @@ class DALTON(logfileparser.Logfile):
             self.vibfreqs = [normalmode[0] for normalmode in vibdata]
             self.vibirs = [normalmode[1] for normalmode in vibdata]
             self.vibsyms = [normalmode[2] for normalmode in vibdata]
+
+            # Now extract the normal mode displacements.
+            self.skip_lines(inputfile, ['b', 'b'])
+            line = next(inputfile)
+            assert line.strip() == "Normal Coordinates (bohrs*amu**(1/2)):"
+
+            # Normal Coordinates (bohrs*amu**(1/2)):
+            # --------------------------------------
+            #
+            #
+            #               1  3547     2  3547     3  3474     4  3471     5  3451 
+            # ----------------------------------------------------------------------
+            #
+            #   C      x   -0.000319   -0.000314    0.002038    0.000003   -0.001599
+            #   C      y   -0.000158   -0.000150   -0.001446    0.003719   -0.002576
+            #   C      z    0.000000   -0.000000   -0.000000    0.000000   -0.000000
+            #
+            #   C      x    0.000319   -0.000315   -0.002038    0.000003    0.001600
+            #   C      y    0.000157   -0.000150    0.001448    0.003717    0.002577
+            # ...
+            self.skip_line(inputfile, 'd')
+            line = next(inputfile)
+
+            self.vibdisps = numpy.empty(shape=(len(self.vibirs), self.natom, 3))
+
+            ndisps = 0
+            while ndisps < len(self.vibirs):
+                # Skip two blank lines.
+                line = next(inputfile)
+                line = next(inputfile)
+                # Use the header with the normal mode indices and
+                # frequencies to update where we are.
+                ndisps_block = (len(line.split()) // 2)
+                mode_min, mode_max = ndisps, ndisps + ndisps_block
+                # Skip a line of dashes and a blank line.
+                line = next(inputfile)
+                line = next(inputfile)
+                for w in range(self.natom):
+                    for coord in range(3):
+                        line = next(inputfile)
+                        self.vibdisps[mode_min:mode_max, w, coord] = map(float, line.split()[2:])
+                    # Skip a blank line.
+                    line = next(inputfile)
+                ndisps += ndisps_block
 
 
         # TODO:
@@ -732,7 +776,6 @@ class DALTON(logfileparser.Logfile):
         # scfvalues
         # temperature
         # vibanharms
-        # vibdisps
         # vibramans
 
         # N/A:
