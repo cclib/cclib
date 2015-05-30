@@ -724,7 +724,7 @@ class DALTON(logfileparser.Logfile):
                 for w in range(self.natom):
                     for coord in range(3):
                         line = next(inputfile)
-                        vibdisps[mode_min:mode_max, w, coord] = map(float, line.split()[2:])
+                        vibdisps[mode_min:mode_max, w, coord] = [float(i) for i in  line.split()[2:]]
                     # Skip a blank line.
                     line = next(inputfile)
                 ndisps += ndisps_block

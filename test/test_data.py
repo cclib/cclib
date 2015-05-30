@@ -241,6 +241,7 @@ class DataSuite(object):
 
         parsers_to_test = {
             'ADF2013.01' : getdatafile('ADF', "basicADF2013.01", "dvb_gopt.adfout")[0],
+            'DALTON2015' : getdatafile('DALTON', "basicDALTON-2015", "dvb_gopt_ks.out")[0],
             'Firefly8.0' : getdatafile('GAMESS', "basicFirefly8.0", "dvb_gopt_a.out")[0],
             'Gaussian09' : getdatafile('Gaussian', "basicGaussian09", "dvb_gopt.out")[0],
             'GAMESS-US' : getdatafile('GAMESS', "basicGAMESS-US2012", "dvb_gopt_a.out")[0],
