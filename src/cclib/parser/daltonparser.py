@@ -984,14 +984,8 @@ class DALTON(logfileparser.Logfile):
         # TODO:
         # aonames
         # aooverlaps
-        # atombasis
         # atomcharges
-        # atomcoords
-        # atommasses
-        # atomnos
         # atomspins
-        # charge
-        # ccenergies
         # coreelectrons
         # enthalpy
         # entropy
@@ -1001,29 +995,15 @@ class DALTON(logfileparser.Logfile):
         # etsecs
         # etsyms
         # freeenergy
-        # geotargets
-        # geovalues
         # grads
         # hessian
-        # homos
         # mocoeffs
-        # moenergies
-        # moments
-        # mosyms
-        # mult
-        # natom
-        # nbasis
-        # nmo
         # nocoeffs
         # nooccnos
-        # optdone
         # scancoords
         # scanenergies
         # scannames
         # scanparm
-        # scfenergies
-        # scftargets
-        # scfvalues
         # temperature
         # vibanharms
 
