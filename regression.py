@@ -816,7 +816,7 @@ old_unittests = {
     "Gaussian/Gaussian09/dvb_scan_revA.02.log":         GaussianScanTest,
     "Gaussian/Gaussian09/dvb_sp_basis_b_gfprint.log":   GenericBasisTest,
     "Gaussian/Gaussian09/dvb_sp_basis_gfinput.log":     GenericBasisTest,
-    "Gaussian/Gaussian09/dvb_sp_revA.02.out":           GaussianSPTest,
+    "Gaussian/Gaussian09/dvb_sp_revA.02.out":           GenericSPTest,
     "Gaussian/Gaussian09/dvb_td_revA.02.out":           GaussianTDDFTTest,
     "Gaussian/Gaussian09/dvb_un_sp_revA.02.log":        GaussianSPunTest,
     "Gaussian/Gaussian09/dvb_un_sp_b_revA.02.log":      GaussianSPunTest,
