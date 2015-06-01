@@ -66,8 +66,8 @@ class GenericBasisTest(unittest.TestCase):
         for iatom,atom in enumerate(self.data.gbasis):
             if self.data.atomnos[iatom] == 1:
                 coeffs = atom[0][1]
-                self.assertAlmostEqual(coeffs[0][0], self.gbasis_H_1s_func0[0], 5)
-                self.assertAlmostEqual(coeffs[0][1], self.gbasis_H_1s_func0[1], 5)
+                self.assertAlmostEqual(coeffs[0][0], self.gbasis_H_1s_func0[0], 4)
+                self.assertAlmostEqual(coeffs[0][1], self.gbasis_H_1s_func0[1], 4)
             else:
                 self.assertEquals(len(atom), 3)
                 s_coeffs = atom[1][1]
@@ -95,6 +95,11 @@ class GenericBigBasisTest(GenericBasisTest):
     def testcoeffs(self):
         """Are the basis set coefficients correct?"""
         self.assertEqual(1, 1)
+
+
+class DALTONBigBasisTest(GenericBigBasisTest):
+    """Customized big basis set unittest"""
+    spherical = True
 
 
 class GaussianBigBasisTest(GenericBigBasisTest):
