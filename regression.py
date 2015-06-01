@@ -771,8 +771,9 @@ old_unittests = {
     "ADF/ADF2013.01/dvb_gopt_b_fullscf.adfout":       ADFGeoOptTest,
     "ADF/ADF2014.01/dvb_gopt_b_fullscf.out":       ADFGeoOptTest,
 
-    "DALTON/DALTON-2013/b3lyp_energy_dvb_sp_nosym.out":       DALTONSPTest_nosyms_nolabels,
-    "DALTON/DALTON-2013/sp_b3lyp_dvb.out":       GenericSPTest,
+    "DALTON/DALTON-2013/dvb_sp_hf_nosym.out":               GenericSPTest,
+    "DALTON/DALTON-2013/b3lyp_energy_dvb_sp_nosym.out":     DALTONSPTest_nosyms_nolabels,
+    "DALTON/DALTON-2013/sp_b3lyp_dvb.out":                  GenericSPTest,
 
     "GAMESS/GAMESS-US2005/water_ccd_2005.06.27.r3.out":         GenericCCTest,
     "GAMESS/GAMESS-US2005/water_ccsd_2005.06.27.r3.out":        GenericCCTest,
