@@ -1,7 +1,7 @@
 #!/bin/bash
 
 if [ -d regression/.git ]; then
-    if [ -e regression/README.md ] && [ `head -1 regression/README.md` == "cclib-data" ]; then
+    if [ -e regression/README.md ] && [ $(head -1 regression/README.md | cut -d " " -f 2) == "cclib-data" ]; then
         echo "Updating regression files..."
         cd regression
         if [[ -n $(git status -s) ]]; then
@@ -18,4 +18,3 @@ else
     echo "Downloading repository of regression files..."
     git clone https://github.com/cclib/cclib-data.git regression
 fi
-
