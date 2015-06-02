@@ -675,6 +675,10 @@ class ADFSPTest_nosyms_valence(ADFSPTest_nosyms):
         self.assertEquals(len(self.data.moenergies[0]), 45)
         self.assertEquals(self.data.moenergies[0][0], 99999.0)
 
+class DALTONBigBasisTest_aug_cc_pCVQZ(GenericBigBasisTest):
+    contractions = { 6: 29 }
+    spherical = True
+
 class DALTONSPTest_nosyms_nolabels(GenericSPTest):
     @unittest.skip('?')
     def testsymlabels(self):
@@ -771,8 +775,10 @@ old_unittests = {
     "ADF/ADF2013.01/dvb_gopt_b_fullscf.adfout":       ADFGeoOptTest,
     "ADF/ADF2014.01/dvb_gopt_b_fullscf.out":       ADFGeoOptTest,
 
-    "DALTON/DALTON-2013/b3lyp_energy_dvb_sp_nosym.out":       DALTONSPTest_nosyms_nolabels,
-    "DALTON/DALTON-2013/sp_b3lyp_dvb.out":       GenericSPTest,
+    "DALTON/DALTON-2013/C_bigbasis.aug-cc-pCVQZ.out":       DALTONBigBasisTest_aug_cc_pCVQZ,
+    "DALTON/DALTON-2013/b3lyp_energy_dvb_sp_nosym.out":     DALTONSPTest_nosyms_nolabels,
+    "DALTON/DALTON-2013/dvb_sp_hf_nosym.out":               GenericSPTest,
+    "DALTON/DALTON-2013/sp_b3lyp_dvb.out":                  GenericSPTest,
 
     "GAMESS/GAMESS-US2005/water_ccd_2005.06.27.r3.out":         GenericCCTest,
     "GAMESS/GAMESS-US2005/water_ccsd_2005.06.27.r3.out":        GenericCCTest,
@@ -816,7 +822,7 @@ old_unittests = {
     "Gaussian/Gaussian09/dvb_scan_revA.02.log":         GaussianScanTest,
     "Gaussian/Gaussian09/dvb_sp_basis_b_gfprint.log":   GenericBasisTest,
     "Gaussian/Gaussian09/dvb_sp_basis_gfinput.log":     GenericBasisTest,
-    "Gaussian/Gaussian09/dvb_sp_revA.02.out":           GaussianSPTest,
+    "Gaussian/Gaussian09/dvb_sp_revA.02.out":           GenericSPTest,
     "Gaussian/Gaussian09/dvb_td_revA.02.out":           GaussianTDDFTTest,
     "Gaussian/Gaussian09/dvb_un_sp_revA.02.log":        GaussianSPunTest,
     "Gaussian/Gaussian09/dvb_un_sp_b_revA.02.log":      GaussianSPunTest,
