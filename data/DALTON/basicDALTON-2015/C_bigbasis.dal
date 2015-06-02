@@ -1,5 +1,5 @@
 BASIS
-aug-cc-pCVQZ
+aug-cc-pVQZ
 Carbon atom
 
 AtomTypes=1 Angstrom
@@ -8,6 +8,9 @@ C   0.0 0.0 0.0
 
 **DALTON
 .RUN WAVE FUNCTIONS
+*MOLBAS
+.PRINT
+  2
 **WAVE FUNCTIONS
 .HF
 **END OF

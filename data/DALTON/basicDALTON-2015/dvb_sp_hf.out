@@ -50,7 +50,7 @@
     and
     
        Dalton, a Molecular Electronic Structure Program,
-       Release DALTON2015.alpha (2015), see http://daltonprogram.org
+       Release DALTON2014.0 (2015), see http://daltonprogram.org
    ----------------------------------------------------------------------------
 
     Authors in alphabetical order (major contribution(s) in parenthesis):
@@ -136,36 +136,38 @@
   Hans Agren,               KTH Stockholm,                Sweden      (SIRIUS module, RESPONS, MC-SCRF solvation model)
  --------------------------------------------------------------------------------
 
-     Date and time (Linux)  : Mon Mar  2 08:06:57 2015
-     Host name              : sparta                                  
+     Date and time (Linux)  : Tue Jun  2 11:50:08 2015
+     Host name              : copper                                  
 
  * Work memory size             :    64000000 =  488.28 megabytes.
 
  * Directories for basis set searches:
-   1) /home/cstein/Development/python/cclib/data/DALTON/basicDALTON-2015
-   2) /home/cstein/Development/fortran/dalton/build_master_gfortran_noblas_nolapack/basis
+   1) /home/eric/development/cclib_berquist/data/DALTON/basicDALTON-2015
+   2) /home/eric/opt/apps/dalton/2015-i2013.sp1.1-mkl-omp/dalton/basis
 
 
 Compilation information
 -----------------------
 
- Who compiled             | cstein
- Host                     | sparta
- System                   | Linux-3.13.0-27-generic
+ Who compiled             | eric
+ Host                     | copper
+ System                   | Linux-3.13.0-46-generic
  CMake generator          | Unix Makefiles
  Processor                | x86_64
  64-bit integers          | OFF
  MPI                      | OFF
- Fortran compiler         | /usr/bin/gfortran
- Fortran compiler version | GNU Fortran (Ubuntu 4.8.2-19ubuntu1) 4.8.2
- C compiler               | /usr/bin/gcc
- C compiler version       | gcc (Ubuntu 4.8.2-19ubuntu1) 4.8.2
- C++ compiler             | /usr/bin/g++
- C++ compiler version     | g++ (Ubuntu 4.8.2-19ubuntu1) 4.8.2
+ Fortran compiler         | /home/eric/opt/apps/intel/2013_sp1_update1/compose
+                          | r_xe_2013_sp1.1.106/bin/intel64/ifort
+ Fortran compiler version | ifort (IFORT) 14.0.1 20131008
+ C compiler               | /home/eric/opt/apps/intel/2013_sp1_update1/compose
+                          | r_xe_2013_sp1.1.106/bin/intel64/icc
+ C compiler version       | icc (ICC) 14.0.1 20131008
+ C++ compiler             | /home/eric/opt/apps/intel/2013_sp1_update1/compose
+                          | r_xe_2013_sp1.1.106/bin/intel64/icpc
+ C++ compiler version     | icpc (ICC) 14.0.1 20131008
  Static linking           | OFF
- Last Git revision        | 180cf85e83d00918fd66d77273b5a76226f083a0
- Git branch               | master
- Configuration time       | 2015-02-03 12:33:48.879456
+ Last Git revision        | d34efb170c481236ad60c789dea90a4c857c6bab
+ Configuration time       | 2015-03-16 13:50:41.378554
 
 
    Content of the .dal input file
@@ -206,6 +208,9 @@ H            -4.9316453546   -0.0711049543    0.00
 **DALTON                                          
 .RUN WAVE FUNCTIONS                               
 .RUN PROPERTIES                                   
+*MOLBAS                                           
+.PRINT                                            
+  2                                               
 **WAVE FUNCTIONS                                  
 .HF                                               
 **END OF                                          
@@ -226,10 +231,19 @@ H            -4.9316453546   -0.0711049543    0.00
  --------------------------------------------------------------------------------
 
 
+ Changes of defaults for *MOLBAS:
+ --------------------------------
+
+ Print level in molecule setup (READIN):    2
+
+
+
    ****************************************************************************
    *************** Output of molecule and basis set information ***************
    ****************************************************************************
 
+
+ Basis set 1 is  "STO-3G" from the basis set library.
 
     The two title cards from your ".mol" input:
     ------------------------------------------------------------------------
@@ -246,7 +260,11 @@ H            -4.9316453546   -0.0711049543    0.00
   Number of symmetry independent centers:    6
   Number of basis sets to read;    2
   Basis set file used for this atomic type with Z =   6 :
-     "/home/cstein/Development/fortran/dalton/build_master_gfortran_noblas_nolapack/basis/STO-3G"
+  Trying file: "/home/eric/development/cclib_berquist/data/DALTON/basicDALTON-2015/STO-3G"
+  Trying file: "/home/eric/opt/apps/dalton/2015-i2013.sp1.1-mkl-omp/dalton/basis/STO-3G"
+     "/home/eric/opt/apps/dalton/2015-i2013.sp1.1-mkl-omp/dalton/basis/STO-3G"
+  Basis set file used for this atomic type with Z =   6 :
+     "/home/eric/opt/apps/dalton/2015-i2013.sp1.1-mkl-omp/dalton/basis/ano-4"
 
   Atomic type no.    2
   --------------------
@@ -254,7 +272,11 @@ H            -4.9316453546   -0.0711049543    0.00
   Number of symmetry independent centers:    4
   Number of basis sets to read;    2
   Basis set file used for this atomic type with Z =   1 :
-     "/home/cstein/Development/fortran/dalton/build_master_gfortran_noblas_nolapack/basis/STO-3G"
+  Trying file: "/home/eric/development/cclib_berquist/data/DALTON/basicDALTON-2015/STO-3G"
+  Trying file: "/home/eric/opt/apps/dalton/2015-i2013.sp1.1-mkl-omp/dalton/basis/STO-3G"
+     "/home/eric/opt/apps/dalton/2015-i2013.sp1.1-mkl-omp/dalton/basis/STO-3G"
+  Basis set file used for this atomic type with Z =   1 :
+     "/home/eric/opt/apps/dalton/2015-i2013.sp1.1-mkl-omp/dalton/basis/ano-4"
 
   Atomic type no.    3
   --------------------
@@ -262,7 +284,11 @@ H            -4.9316453546   -0.0711049543    0.00
   Number of symmetry independent centers:    2
   Number of basis sets to read;    2
   Basis set file used for this atomic type with Z =   6 :
-     "/home/cstein/Development/fortran/dalton/build_master_gfortran_noblas_nolapack/basis/STO-3G"
+  Trying file: "/home/eric/development/cclib_berquist/data/DALTON/basicDALTON-2015/STO-3G"
+  Trying file: "/home/eric/opt/apps/dalton/2015-i2013.sp1.1-mkl-omp/dalton/basis/STO-3G"
+     "/home/eric/opt/apps/dalton/2015-i2013.sp1.1-mkl-omp/dalton/basis/STO-3G"
+  Basis set file used for this atomic type with Z =   6 :
+     "/home/eric/opt/apps/dalton/2015-i2013.sp1.1-mkl-omp/dalton/basis/ano-4"
 
   Atomic type no.    4
   --------------------
@@ -270,7 +296,11 @@ H            -4.9316453546   -0.0711049543    0.00
   Number of symmetry independent centers:    2
   Number of basis sets to read;    2
   Basis set file used for this atomic type with Z =   1 :
-     "/home/cstein/Development/fortran/dalton/build_master_gfortran_noblas_nolapack/basis/STO-3G"
+  Trying file: "/home/eric/development/cclib_berquist/data/DALTON/basicDALTON-2015/STO-3G"
+  Trying file: "/home/eric/opt/apps/dalton/2015-i2013.sp1.1-mkl-omp/dalton/basis/STO-3G"
+     "/home/eric/opt/apps/dalton/2015-i2013.sp1.1-mkl-omp/dalton/basis/STO-3G"
+  Basis set file used for this atomic type with Z =   1 :
+     "/home/eric/opt/apps/dalton/2015-i2013.sp1.1-mkl-omp/dalton/basis/ano-4"
 
   Atomic type no.    5
   --------------------
@@ -278,7 +308,11 @@ H            -4.9316453546   -0.0711049543    0.00
   Number of symmetry independent centers:    2
   Number of basis sets to read;    2
   Basis set file used for this atomic type with Z =   6 :
-     "/home/cstein/Development/fortran/dalton/build_master_gfortran_noblas_nolapack/basis/STO-3G"
+  Trying file: "/home/eric/development/cclib_berquist/data/DALTON/basicDALTON-2015/STO-3G"
+  Trying file: "/home/eric/opt/apps/dalton/2015-i2013.sp1.1-mkl-omp/dalton/basis/STO-3G"
+     "/home/eric/opt/apps/dalton/2015-i2013.sp1.1-mkl-omp/dalton/basis/STO-3G"
+  Basis set file used for this atomic type with Z =   6 :
+     "/home/eric/opt/apps/dalton/2015-i2013.sp1.1-mkl-omp/dalton/basis/ano-4"
 
   Atomic type no.    6
   --------------------
@@ -286,7 +320,11 @@ H            -4.9316453546   -0.0711049543    0.00
   Number of symmetry independent centers:    4
   Number of basis sets to read;    2
   Basis set file used for this atomic type with Z =   1 :
-     "/home/cstein/Development/fortran/dalton/build_master_gfortran_noblas_nolapack/basis/STO-3G"
+  Trying file: "/home/eric/development/cclib_berquist/data/DALTON/basicDALTON-2015/STO-3G"
+  Trying file: "/home/eric/opt/apps/dalton/2015-i2013.sp1.1-mkl-omp/dalton/basis/STO-3G"
+     "/home/eric/opt/apps/dalton/2015-i2013.sp1.1-mkl-omp/dalton/basis/STO-3G"
+  Basis set file used for this atomic type with Z =   1 :
+     "/home/eric/opt/apps/dalton/2015-i2013.sp1.1-mkl-omp/dalton/basis/ano-4"
 
 
                       SYMADD: Requested addition of symmetry
@@ -409,10 +447,108 @@ H            -4.9316453546   -0.0711049543    0.00
   Threshold for neglecting AO integrals:  1.00D-12
 
 
+  Cartesian Coordinates (a.u.)
+  ----------------------------
+
+  Total number of coordinates:   60
+  C   / 1 :     1  x   1.3498778652    2  y   2.3494125195    3  z   0.0000000000
+  C   / 2 :     4  x  -1.3498778652    5  y  -2.3494125195    6  z   0.0000000000
+  C   / 1 :     7  x   2.6543517307    8  y   0.0000000000    9  z   0.0000000000
+  C   / 2 :    10  x  -2.6543517307   11  y   0.0000000000   12  z   0.0000000000
+  C   / 1 :    13  x  -1.3367982295   14  y   2.2995721175   15  z   0.0000000000
+  C   / 2 :    16  x   1.3367982295   17  y  -2.2995721175   18  z   0.0000000000
+  H   / 1 :    19  x   4.7306196354   20  y  -0.0058186464   21  z   0.0000000000
+  H   / 2 :    22  x  -4.7306196354   23  y   0.0058186464   24  z   0.0000000000
+  H   / 1 :    25  x  -2.3885048563   26  y   4.0860406779   27  z   0.0000000000
+  H   / 2 :    28  x   2.3885048563   29  y  -4.0860406779   30  z   0.0000000000
+  C   / 1 :    31  x   2.8430264287   32  y   4.7540595214   33  z   0.0000000000
+  C   / 2 :    34  x  -2.8430264287   35  y  -4.7540595214   36  z   0.0000000000
+  H   / 1 :    37  x   4.9071474598   38  y   4.4929934306   39  z   0.0000000000
+  H   / 2 :    40  x  -4.9071474598   41  y  -4.4929934306   42  z   0.0000000000
+  C   / 1 :    43  x   1.9086393269   44  y   7.1162009972   45  z   0.0000000000
+  C   / 2 :    46  x  -1.9086393269   47  y  -7.1162009972   48  z   0.0000000000
+  H   / 1 :    49  x  -0.1250674415   50  y   7.5079422078   51  z   0.0000000000
+  H   / 2 :    52  x   0.1250674415   53  y  -7.5079422078   54  z   0.0000000000
+  H   / 1 :    55  x   3.1593903009   56  y   8.7686159229   57  z   0.0000000000
+  H   / 2 :    58  x  -3.1593903009   59  y  -8.7686159229   60  z   0.0000000000
+
+
   Symmetry Coordinates
   --------------------
 
   Number of coordinates in each symmetry:    20   10   20   10
+
+  Symmetry  Ag  ( 1)
+
+    1   C     x    [  1  -    4 ]/2
+    2   C     y    [  2  -    5 ]/2
+    3   C     x    [  7  -   10 ]/2
+    4   C     y    [  8  -   11 ]/2
+    5   C     x    [ 13  -   16 ]/2
+    6   C     y    [ 14  -   17 ]/2
+    7   H     x    [ 19  -   22 ]/2
+    8   H     y    [ 20  -   23 ]/2
+    9   H     x    [ 25  -   28 ]/2
+   10   H     y    [ 26  -   29 ]/2
+   11   C     x    [ 31  -   34 ]/2
+   12   C     y    [ 32  -   35 ]/2
+   13   H     x    [ 37  -   40 ]/2
+   14   H     y    [ 38  -   41 ]/2
+   15   C     x    [ 43  -   46 ]/2
+   16   C     y    [ 44  -   47 ]/2
+   17   H     x    [ 49  -   52 ]/2
+   18   H     y    [ 50  -   53 ]/2
+   19   H     x    [ 55  -   58 ]/2
+   20   H     y    [ 56  -   59 ]/2
+
+  Symmetry  Au  ( 2)
+
+   21   C     z    [  3  +    6 ]/2
+   22   C     z    [  9  +   12 ]/2
+   23   C     z    [ 15  +   18 ]/2
+   24   H     z    [ 21  +   24 ]/2
+   25   H     z    [ 27  +   30 ]/2
+   26   C     z    [ 33  +   36 ]/2
+   27   H     z    [ 39  +   42 ]/2
+   28   C     z    [ 45  +   48 ]/2
+   29   H     z    [ 51  +   54 ]/2
+   30   H     z    [ 57  +   60 ]/2
+
+  Symmetry  Bu  ( 3)
+
+   31   C     x    [  1  +    4 ]/2
+   32   C     y    [  2  +    5 ]/2
+   33   C     x    [  7  +   10 ]/2
+   34   C     y    [  8  +   11 ]/2
+   35   C     x    [ 13  +   16 ]/2
+   36   C     y    [ 14  +   17 ]/2
+   37   H     x    [ 19  +   22 ]/2
+   38   H     y    [ 20  +   23 ]/2
+   39   H     x    [ 25  +   28 ]/2
+   40   H     y    [ 26  +   29 ]/2
+   41   C     x    [ 31  +   34 ]/2
+   42   C     y    [ 32  +   35 ]/2
+   43   H     x    [ 37  +   40 ]/2
+   44   H     y    [ 38  +   41 ]/2
+   45   C     x    [ 43  +   46 ]/2
+   46   C     y    [ 44  +   47 ]/2
+   47   H     x    [ 49  +   52 ]/2
+   48   H     y    [ 50  +   53 ]/2
+   49   H     x    [ 55  +   58 ]/2
+   50   H     y    [ 56  +   59 ]/2
+
+  Symmetry  Bg  ( 4)
+
+   51   C     z    [  3  -    6 ]/2
+   52   C     z    [  9  -   12 ]/2
+   53   C     z    [ 15  -   18 ]/2
+   54   H     z    [ 21  -   24 ]/2
+   55   H     z    [ 27  -   30 ]/2
+   56   C     z    [ 33  -   36 ]/2
+   57   H     z    [ 39  -   42 ]/2
+   58   C     z    [ 45  -   48 ]/2
+   59   H     z    [ 51  -   54 ]/2
+   60   H     z    [ 57  -   60 ]/2
 
   Max    interatomic separation is    9.8643 Angstrom (   18.6409 Bohr)
   between atoms   20 and   19, "H   _2" and "H   _1".
@@ -510,6 +646,308 @@ H            -4.9316453546   -0.0711049543    0.00
 @  Nuclear repulsion energy :  445.936979976608 Hartree
 
 
+  Orbital exponents and contraction coefficients
+  ----------------------------------------------
+
+
+  C   #1 1s      1       71.616837      0.1543    0.0000
+   seg. cont.    2       13.045096      0.5353    0.0000
+                 3        3.530512      0.4446    0.0000
+                 4        2.941249      0.0000   -0.1000
+                 5        0.683483      0.0000    0.3995
+                 6        0.222290      0.0000    0.7001
+
+  C   #2 1s      7       71.616837      0.1543    0.0000
+   seg. cont.    8       13.045096      0.5353    0.0000
+                 9        3.530512      0.4446    0.0000
+                10        2.941249      0.0000   -0.1000
+                11        0.683483      0.0000    0.3995
+                12        0.222290      0.0000    0.7001
+
+  C   #1 2px    13        2.941249      0.1559
+   seg. cont.   14        0.683483      0.6077
+                15        0.222290      0.3920
+
+  C   #2 2px    16        2.941249      0.1559
+   seg. cont.   17        0.683483      0.6077
+                18        0.222290      0.3920
+
+  C   #1 2py    19        2.941249      0.1559
+   seg. cont.   20        0.683483      0.6077
+                21        0.222290      0.3920
+
+  C   #2 2py    22        2.941249      0.1559
+   seg. cont.   23        0.683483      0.6077
+                24        0.222290      0.3920
+
+  C   #1 2pz    25        2.941249      0.1559
+   seg. cont.   26        0.683483      0.6077
+                27        0.222290      0.3920
+
+  C   #2 2pz    28        2.941249      0.1559
+   seg. cont.   29        0.683483      0.6077
+                30        0.222290      0.3920
+
+  C   #1 1s     31       71.616837      0.1543    0.0000
+   seg. cont.   32       13.045096      0.5353    0.0000
+                33        3.530512      0.4446    0.0000
+                34        2.941249      0.0000   -0.1000
+                35        0.683483      0.0000    0.3995
+                36        0.222290      0.0000    0.7001
+
+  C   #2 1s     37       71.616837      0.1543    0.0000
+   seg. cont.   38       13.045096      0.5353    0.0000
+                39        3.530512      0.4446    0.0000
+                40        2.941249      0.0000   -0.1000
+                41        0.683483      0.0000    0.3995
+                42        0.222290      0.0000    0.7001
+
+  C   #1 2px    43        2.941249      0.1559
+   seg. cont.   44        0.683483      0.6077
+                45        0.222290      0.3920
+
+  C   #2 2px    46        2.941249      0.1559
+   seg. cont.   47        0.683483      0.6077
+                48        0.222290      0.3920
+
+  C   #1 2py    49        2.941249      0.1559
+   seg. cont.   50        0.683483      0.6077
+                51        0.222290      0.3920
+
+  C   #2 2py    52        2.941249      0.1559
+   seg. cont.   53        0.683483      0.6077
+                54        0.222290      0.3920
+
+  C   #1 2pz    55        2.941249      0.1559
+   seg. cont.   56        0.683483      0.6077
+                57        0.222290      0.3920
+
+  C   #2 2pz    58        2.941249      0.1559
+   seg. cont.   59        0.683483      0.6077
+                60        0.222290      0.3920
+
+  C   #1 1s     61       71.616837      0.1543    0.0000
+   seg. cont.   62       13.045096      0.5353    0.0000
+                63        3.530512      0.4446    0.0000
+                64        2.941249      0.0000   -0.1000
+                65        0.683483      0.0000    0.3995
+                66        0.222290      0.0000    0.7001
+
+  C   #2 1s     67       71.616837      0.1543    0.0000
+   seg. cont.   68       13.045096      0.5353    0.0000
+                69        3.530512      0.4446    0.0000
+                70        2.941249      0.0000   -0.1000
+                71        0.683483      0.0000    0.3995
+                72        0.222290      0.0000    0.7001
+
+  C   #1 2px    73        2.941249      0.1559
+   seg. cont.   74        0.683483      0.6077
+                75        0.222290      0.3920
+
+  C   #2 2px    76        2.941249      0.1559
+   seg. cont.   77        0.683483      0.6077
+                78        0.222290      0.3920
+
+  C   #1 2py    79        2.941249      0.1559
+   seg. cont.   80        0.683483      0.6077
+                81        0.222290      0.3920
+
+  C   #2 2py    82        2.941249      0.1559
+   seg. cont.   83        0.683483      0.6077
+                84        0.222290      0.3920
+
+  C   #1 2pz    85        2.941249      0.1559
+   seg. cont.   86        0.683483      0.6077
+                87        0.222290      0.3920
+
+  C   #2 2pz    88        2.941249      0.1559
+   seg. cont.   89        0.683483      0.6077
+                90        0.222290      0.3920
+
+  H   #1 1s     91        3.425251      0.1543
+   seg. cont.   92        0.623914      0.5353
+                93        0.168855      0.4446
+
+  H   #2 1s     94        3.425251      0.1543
+   seg. cont.   95        0.623914      0.5353
+                96        0.168855      0.4446
+
+  H   #1 1s     97        3.425251      0.1543
+   seg. cont.   98        0.623914      0.5353
+                99        0.168855      0.4446
+
+  H   #2 1s    100        3.425251      0.1543
+   seg. cont.  101        0.623914      0.5353
+               102        0.168855      0.4446
+
+  C   #1 1s    103       71.616837      0.1543    0.0000
+   seg. cont.  104       13.045096      0.5353    0.0000
+               105        3.530512      0.4446    0.0000
+               106        2.941249      0.0000   -0.1000
+               107        0.683483      0.0000    0.3995
+               108        0.222290      0.0000    0.7001
+
+  C   #2 1s    109       71.616837      0.1543    0.0000
+   seg. cont.  110       13.045096      0.5353    0.0000
+               111        3.530512      0.4446    0.0000
+               112        2.941249      0.0000   -0.1000
+               113        0.683483      0.0000    0.3995
+               114        0.222290      0.0000    0.7001
+
+  C   #1 2px   115        2.941249      0.1559
+   seg. cont.  116        0.683483      0.6077
+               117        0.222290      0.3920
+
+  C   #2 2px   118        2.941249      0.1559
+   seg. cont.  119        0.683483      0.6077
+               120        0.222290      0.3920
+
+  C   #1 2py   121        2.941249      0.1559
+   seg. cont.  122        0.683483      0.6077
+               123        0.222290      0.3920
+
+  C   #2 2py   124        2.941249      0.1559
+   seg. cont.  125        0.683483      0.6077
+               126        0.222290      0.3920
+
+  C   #1 2pz   127        2.941249      0.1559
+   seg. cont.  128        0.683483      0.6077
+               129        0.222290      0.3920
+
+  C   #2 2pz   130        2.941249      0.1559
+   seg. cont.  131        0.683483      0.6077
+               132        0.222290      0.3920
+
+  H   #1 1s    133        3.425251      0.1543
+   seg. cont.  134        0.623914      0.5353
+               135        0.168855      0.4446
+
+  H   #2 1s    136        3.425251      0.1543
+   seg. cont.  137        0.623914      0.5353
+               138        0.168855      0.4446
+
+  C   #1 1s    139       71.616837      0.1543    0.0000
+   seg. cont.  140       13.045096      0.5353    0.0000
+               141        3.530512      0.4446    0.0000
+               142        2.941249      0.0000   -0.1000
+               143        0.683483      0.0000    0.3995
+               144        0.222290      0.0000    0.7001
+
+  C   #2 1s    145       71.616837      0.1543    0.0000
+   seg. cont.  146       13.045096      0.5353    0.0000
+               147        3.530512      0.4446    0.0000
+               148        2.941249      0.0000   -0.1000
+               149        0.683483      0.0000    0.3995
+               150        0.222290      0.0000    0.7001
+
+  C   #1 2px   151        2.941249      0.1559
+   seg. cont.  152        0.683483      0.6077
+               153        0.222290      0.3920
+
+  C   #2 2px   154        2.941249      0.1559
+   seg. cont.  155        0.683483      0.6077
+               156        0.222290      0.3920
+
+  C   #1 2py   157        2.941249      0.1559
+   seg. cont.  158        0.683483      0.6077
+               159        0.222290      0.3920
+
+  C   #2 2py   160        2.941249      0.1559
+   seg. cont.  161        0.683483      0.6077
+               162        0.222290      0.3920
+
+  C   #1 2pz   163        2.941249      0.1559
+   seg. cont.  164        0.683483      0.6077
+               165        0.222290      0.3920
+
+  C   #2 2pz   166        2.941249      0.1559
+   seg. cont.  167        0.683483      0.6077
+               168        0.222290      0.3920
+
+  H   #1 1s    169        3.425251      0.1543
+   seg. cont.  170        0.623914      0.5353
+               171        0.168855      0.4446
+
+  H   #2 1s    172        3.425251      0.1543
+   seg. cont.  173        0.623914      0.5353
+               174        0.168855      0.4446
+
+  H   #1 1s    175        3.425251      0.1543
+   seg. cont.  176        0.623914      0.5353
+               177        0.168855      0.4446
+
+  H   #2 1s    178        3.425251      0.1543
+   seg. cont.  179        0.623914      0.5353
+               180        0.168855      0.4446
+
+
+  Contracted Orbitals
+  -------------------
+
+    1  C   #1  1s      1    2    3
+    2  C   #2  1s      7    8    9
+    3  C   #1  1s      4    5    6
+    4  C   #2  1s     10   11   12
+    5  C   #1  2px    13   14   15
+    6  C   #2  2px    16   17   18
+    7  C   #1  2py    19   20   21
+    8  C   #2  2py    22   23   24
+    9  C   #1  2pz    25   26   27
+   10  C   #2  2pz    28   29   30
+   11  C   #1  1s     31   32   33
+   12  C   #2  1s     37   38   39
+   13  C   #1  1s     34   35   36
+   14  C   #2  1s     40   41   42
+   15  C   #1  2px    43   44   45
+   16  C   #2  2px    46   47   48
+   17  C   #1  2py    49   50   51
+   18  C   #2  2py    52   53   54
+   19  C   #1  2pz    55   56   57
+   20  C   #2  2pz    58   59   60
+   21  C   #1  1s     61   62   63
+   22  C   #2  1s     67   68   69
+   23  C   #1  1s     64   65   66
+   24  C   #2  1s     70   71   72
+   25  C   #1  2px    73   74   75
+   26  C   #2  2px    76   77   78
+   27  C   #1  2py    79   80   81
+   28  C   #2  2py    82   83   84
+   29  C   #1  2pz    85   86   87
+   30  C   #2  2pz    88   89   90
+   31  H   #1  1s     91   92   93
+   32  H   #2  1s     94   95   96
+   33  H   #1  1s     97   98   99
+   34  H   #2  1s    100  101  102
+   35  C   #1  1s    103  104  105
+   36  C   #2  1s    109  110  111
+   37  C   #1  1s    106  107  108
+   38  C   #2  1s    112  113  114
+   39  C   #1  2px   115  116  117
+   40  C   #2  2px   118  119  120
+   41  C   #1  2py   121  122  123
+   42  C   #2  2py   124  125  126
+   43  C   #1  2pz   127  128  129
+   44  C   #2  2pz   130  131  132
+   45  H   #1  1s    133  134  135
+   46  H   #2  1s    136  137  138
+   47  C   #1  1s    139  140  141
+   48  C   #2  1s    145  146  147
+   49  C   #1  1s    142  143  144
+   50  C   #2  1s    148  149  150
+   51  C   #1  2px   151  152  153
+   52  C   #2  2px   154  155  156
+   53  C   #1  2py   157  158  159
+   54  C   #2  2py   160  161  162
+   55  C   #1  2pz   163  164  165
+   56  C   #2  2pz   166  167  168
+   57  H   #1  1s    169  170  171
+   58  H   #2  1s    172  173  174
+   59  H   #1  1s    175  176  177
+   60  H   #2  1s    178  179  180
+
+
+
+
   Symmetry Orbitals
   -----------------
 
@@ -596,6 +1034,37 @@ H            -4.9316453546   -0.0711049543    0.00
   Symmetries of magnetic field:  Bg (4)  Bg (4)  Ag (1)
 
 
+ Copy of .mol input
+ ------------------
+
+ - as modified by symmetry addition module
+
+--------------------------------------------------------------------------------
+BASIS                                                                           
+STO-3G                                                                          
+divinylbenzene                                                                  
+Generated by Open Babel                                                         
+ATOMTYPES=6 GENERATORS=2 Z  XY                                                  
+Charge=6.0 Atoms=3                                                              
+C      1.349877865210908   2.349412519535571   0.000000000000000                
+C      2.654351730674722   0.000000000000000   0.000000000000000                
+C     -1.336798229463051   2.299572117470633   0.000000000000000                
+Charge=1.0 Atoms=2                                                              
+H      4.730619635363026  -0.005818646397872   0.000000000000000                
+H     -2.388504856260325   4.086040677854972   0.000000000000000                
+Charge=6.0 Atoms=1                                                              
+C      2.843026428670058   4.754059521358201   0.000000000000000                
+Charge=1.0 Atoms=1                                                              
+H      4.907147459786318   4.492993430609888   0.000000000000000                
+Charge=6.0 Atoms=1                                                              
+C      1.908639326929594   7.116200997209828   0.000000000000000                
+Charge=1.0 Atoms=2                                                              
+H     -0.125067441493340   7.507942207756005   0.000000000000000                
+H      3.159390300928344   8.768615922931430   0.000000000000000                
+--------------------------------------------------------------------------------
+
+
+
                      .---------------------------------------.
                      | Starting in Integral Section (HERMIT) |
                      `---------------------------------------'
@@ -630,9 +1099,9 @@ H            -4.9316453546   -0.0711049543    0.00
  HERMIT - Number of two-electron integrals written:      491917 ( 29.4% )
  HERMIT - Megabytes written:                              5.634
 
- >>>  Time used in TWOINT     is   1.39 seconds
- >>>> Total CPU  time used in HERMIT:   1.45 seconds
- >>>> Total wall time used in HERMIT:   1.46 seconds
+ >>>  Time used in TWOINT     is   1.90 seconds
+ >>>> Total CPU  time used in HERMIT:   1.97 seconds
+ >>>> Total wall time used in HERMIT:   0.80 seconds
 
 
                         .----------------------------------.
@@ -677,8 +1146,8 @@ H            -4.9316453546   -0.0711049543    0.00
  **********************************************************************
 
  
-     Date and time (Linux)  : Mon Mar  2 08:06:59 2015
-     Host name              : sparta                                  
+     Date and time (Linux)  : Tue Jun  2 11:50:09 2015
+     Host name              : copper                                  
 
  Title lines from ".mol" input file:
      divinylbenzene                                                          
@@ -735,6 +1204,7 @@ H            -4.9316453546   -0.0711049543    0.00
  -----------------------------------------------------------------------------
      (Precalculated two-electron integrals are transformed to P-supermatrix elements.
       Threshold for discarding integrals :  1.00D-12 )
+ >>>  Time used in FORMSUP    is   0.22 seconds
 @  1  -379.400405099       3.72D+00  -3.79D+02    15   2  15   3
       Virial theorem: -V/T =      2.003057
 @      MULPOP C   _1  0.15; C   _2  0.15; C   _1  0.12; C   _2  0.12; C   _1  0.11; C   _2  0.11; H   _1 -0.15; H   _2 -0.15; H   _1 -0.14; H   _2 -0.14; 
@@ -775,15 +1245,15 @@ H            -4.9316453546   -0.0711049543    0.00
 @      MULPOP C   _1  0.00; C   _2  0.00; C   _1 -0.06; C   _2 -0.06; C   _1 -0.06; C   _2 -0.06; H   _1  0.06; H   _2  0.06; H   _1  0.06; H   _2  0.06; 
 @             C   _1 -0.06; C   _2 -0.06; H   _1  0.06; H   _2  0.06; C   _1 -0.12; C   _2 -0.12; H   _1  0.06; H   _2  0.06; H   _1  0.06; H   _2  0.06; 
  -----------------------------------------------------------------------------
-@  9  -379.768962931       4.46D-05  -3.77D-09    15   2  15   3
+@  9  -379.768962931       4.46D-05  -3.76D-09    15   2  15   3
       Virial theorem: -V/T =      2.009138
 @      MULPOP C   _1  0.00; C   _2  0.00; C   _1 -0.06; C   _2 -0.06; C   _1 -0.06; C   _2 -0.06; H   _1  0.06; H   _2  0.06; H   _1  0.06; H   _2  0.06; 
 @             C   _1 -0.06; C   _2 -0.06; H   _1  0.06; H   _2  0.06; C   _1 -0.12; C   _2 -0.12; H   _1  0.06; H   _2  0.06; H   _1  0.06; H   _2  0.06; 
  -----------------------------------------------------------------------------
-@ 10  -379.768962931       6.05D-06  -4.07D-10    15   2  15   3
+@ 10  -379.768962931       6.05D-06  -4.08D-10    15   2  15   3
 
 @ *** DIIS converged in  10 iterations !
-@     Converged SCF energy, gradient:   -379.768962931195    6.05D-06
+@     Converged SCF energy, gradient:   -379.768962931196    6.05D-06
     - total time used in SIRFCK :              0.00 seconds
 
 
@@ -821,7 +1291,7 @@ H            -4.9316453546   -0.0711049543    0.00
 
  >>> Writing SIRIFC interface file
 
- >>>> CPU and wall time for SCF :       0.059       0.061
+ >>>> CPU and wall time for SCF :       0.420       0.060
 
 
                        .-----------------------------------.
@@ -833,17 +1303,17 @@ H            -4.9316453546   -0.0711049543    0.00
 @    Spatial symmetry:            1 ( irrep  Ag  in C2h )
 @    Total charge of molecule:    0
 
-@    Final HF energy:            -379.768962931195                 
+@    Final HF energy:            -379.768962931196                 
 @    Nuclear repulsion:           445.936979976608
-@    Electronic energy:          -825.705942907803
+@    Electronic energy:          -825.705942907804
 
 @    Final gradient norm:           0.000006052820
 
  
-     Date and time (Linux)  : Mon Mar  2 08:06:59 2015
-     Host name              : sparta                                  
+     Date and time (Linux)  : Tue Jun  2 11:50:09 2015
+     Host name              : copper                                  
 
-File label for MO orbitals:   2Mar15   FOCKDIIS
+File label for MO orbitals:   2Jun15   FOCKDIIS
 
  (Only coefficients >0.0100 are printed.)
 
@@ -1037,12 +1507,12 @@ File label for MO orbitals:   2Mar15   FOCKDIIS
 
 
 
- >>>> Total CPU  time used in SIRIUS :      0.07 seconds
+ >>>> Total CPU  time used in SIRIUS :      0.57 seconds
  >>>> Total wall time used in SIRIUS :      0.08 seconds
 
  
-     Date and time (Linux)  : Mon Mar  2 08:06:59 2015
-     Host name              : sparta                                  
+     Date and time (Linux)  : Tue Jun  2 11:50:09 2015
+     Host name              : copper                                  
 
 
                      .---------------------------------------.
@@ -1061,8 +1531,8 @@ File label for MO orbitals:   2Mar15   FOCKDIIS
 
 
  
-     Date and time (Linux)  : Mon Mar  2 08:06:59 2015
-     Host name              : sparta                                  
+     Date and time (Linux)  : Tue Jun  2 11:50:09 2015
+     Host name              : copper                                  
 
 
    ***************************************************************************
@@ -1071,8 +1541,8 @@ File label for MO orbitals:   2Mar15   FOCKDIIS
 
 
  
-     Date and time (Linux)  : Mon Mar  2 08:06:59 2015
-     Host name              : sparta                                  
+     Date and time (Linux)  : Tue Jun  2 11:50:09 2015
+     Host name              : copper                                  
 
 
                              Molecular geometry (au)
@@ -1081,7 +1551,7 @@ File label for MO orbitals:   2Mar15   FOCKDIIS
  C   _1     1.3498778652            2.3494125195            0.0000000000
  C   _2    -1.3498778652           -2.3494125195            0.0000000000
  C   _1     2.6543517307            0.0000000000            0.0000000000
- C   _2    -2.6543517307           -0.0000000000            0.0000000000
+ C   _2    -2.6543517307            0.0000000000            0.0000000000
  C   _1    -1.3367982295            2.2995721175            0.0000000000
  C   _2     1.3367982295           -2.2995721175            0.0000000000
  H   _1     4.7306196354           -0.0058186464            0.0000000000
@@ -1230,7 +1700,7 @@ File label for MO orbitals:   2Mar15   FOCKDIIS
 
 
 
- >>>> Total CPU  time used in ABACUS:   0.03 seconds
+ >>>> Total CPU  time used in ABACUS:   0.20 seconds
  >>>> Total wall time used in ABACUS:   0.03 seconds
 
 
@@ -1238,9 +1708,9 @@ File label for MO orbitals:   2Mar15   FOCKDIIS
                    | End of Static Property Section (ABACUS) - |
                    `-------------------------------------------'
 
- >>>> Total CPU  time used in DALTON:   1.57 seconds
- >>>> Total wall time used in DALTON:   1.60 seconds
+ >>>> Total CPU  time used in DALTON:   3.25 seconds
+ >>>> Total wall time used in DALTON:   1.01 seconds
 
  
-     Date and time (Linux)  : Mon Mar  2 08:06:59 2015
-     Host name              : sparta                                  
+     Date and time (Linux)  : Tue Jun  2 11:50:09 2015
+     Host name              : copper                                  
