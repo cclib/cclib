@@ -136,24 +136,42 @@ class DALTON(logfileparser.Logfile):
         # generated on the fly when writing the output. We will save the symmetry indices
         # here for later use.
         #
+        # Additional note: the symmetry labels are printed only for atoms that have
+        # symmetry images... so assume "_1" if a label is missing. For example, there will
+        # be no label for atoms on an axes, such as the oxygen in water in C2v:
+        #
+        #                           O          15.994915
+        #                           H   _1      1.007825
+        #                           H   _2      1.007825
+        #
         if line.strip() == "Isotopic Masses":
 
             self.skip_lines(inputfile, ['d', 'b'])
 
+            # Since some symmetry labels may be missing, read in all lines first.
+            lines = []
+            line = next(inputfile)
+            while line.strip():
+                lines.append(line)
+                line = next(inputfile)
+
+            # Split lines into columsn and dd any missing symmetry labels, if needed.
+            lines = [l.split() for l in lines]
+            if any([len(l) == 3 for l in lines]):
+                for il, l in enumerate(lines):
+                    if len(l) == 2:
+                        lines[il] = [l[0], "_1", l[1]]
+
             atomnos = []
             symmetry_atoms = []
             atommasses = []
-
-            line = next(inputfile)
-            while line.strip():
-                cols = line.split()
+            for cols in lines:
                 atomnos.append(self.table.number[cols[0]])
                 if len(cols) == 3:
-                    symmetry_atoms.append(int(line.split()[1][1]))
-                    atommasses.append(float(line.split()[2]))
+                    symmetry_atoms.append(int(cols[1][1]))
+                    atommasses.append(float(cols[2]))
                 else:
-                    atommasses.append(float(line.split()[1]))
-                line = next(inputfile)
+                    atommasses.append(float(cols[1]))
 
             self.set_attribute('atomnos', atomnos)
             self.set_attribute('atommasses', atommasses)
@@ -246,7 +264,7 @@ class DALTON(logfileparser.Logfile):
                         # for this atoms with basis functions for all symmetry atoms.
                         if self.symmetry_atoms[at] == 1:
                             nsyms = 1
-                            while self.symmetry_atoms[at + nsyms] == nsyms + 1:
+                            while (at + nsyms < self.natom) and self.symmetry_atoms[at + nsyms] == nsyms + 1:
                                 nsyms += 1
                             for isym in range(nsyms):
                                 istart = nbasis + isym
