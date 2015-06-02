@@ -1,12 +1,17 @@
-# This file is part of cclib (http://cclib.sf.net), a library for parsing
+# -*- coding: utf-8 -*-
+#
+# This file is part of cclib (http://cclib.github.io), a library for parsing
 # and interpreting the results of computational chemistry packages.
 #
-# Copyright (C) 2006, the cclib development team
+# Copyright (C) 2006-2014, the cclib development team
 #
 # The library is free software, distributed under the terms of
 # the GNU Lesser General Public version 2.1 or later. You should have
 # received a copy of the license along with cclib. You can also access
 # the full license online at http://www.gnu.org/copyleft/lgpl.html.
+
+"""Parser for GAMESS-UK output files"""
+
 
 import re
 
@@ -49,10 +54,6 @@ class GAMESSUK(logfileparser.Logfile):
 
     def before_parsing(self):
 
-        # This will be used to detect the first set of "nuclear coordinates" in
-        # a geometry-optimization
-        self.firstnuccoords = True
-
         # used for determining whether to add a second mosyms, etc.
         self.betamosyms = self.betamoenergies = self.betamocoeffs = False
 
@@ -60,8 +61,8 @@ class GAMESSUK(logfileparser.Logfile):
         """Extract information from the file object inputfile."""
 
         if line[1:22] == "total number of atoms":
-            if not hasattr(self, "natom"):
-                self.natom = int(line.split()[-1])
+            natom = int(line.split()[-1])
+            self.set_attribute('natom', natom)
 
         if line[3:44] == "convergence threshold in optimization run":
             # Assuming that this is only found in the case of OPTXYZ
@@ -91,82 +92,125 @@ class GAMESSUK(logfileparser.Logfile):
             if not self.geotargets:
                 self.geotargets = geotargets
         
-        if line[40:58] == "molecular geometry":
-            # Only one set of atomcoords is taken from this section
-            # For geo-opts, more coordinates are taken from the "nuclear coordinates"
+        # This is the only place coordinates are printed in single point calculations. Note that
+        # in the following fragment, the basis set selection is not always printed:
+        #
+        #                                        ******************
+        #                                        molecular geometry
+        #                                        ******************
+        #
+        # ****************************************
+        # * basis selected is sto     sto3g      *
+        # ****************************************
+        #
+        #         *******************************************************************************
+        #         *                                                                             *
+        #         *     atom   atomic                coordinates                 number of      *
+        #         *            charge       x             y              z       shells         *
+        #         *                                                                             *
+        #         *******************************************************************************
+        #         *                                                                             *
+        #         *                                                                             *
+        #         *    c         6.0   0.0000000     -2.6361501      0.0000000       2          *
+        #         *                                                                1s  2sp      *
+        #         *                                                                             *
+        #         *                                                                             *
+        #         *    c         6.0   0.0000000      2.6361501      0.0000000       2          *
+        #         *                                                                1s  2sp      *
+        #         *                                                                             *
+        # ...
+        #
+        if line.strip() == "molecular geometry":
+
+            self.updateprogress(inputfile, "Coordinates")
+
+            self.skip_lines(inputfile, ['s', 'b', 's'])
+            line = next(inputfile)
+            if "basis selected is" in line:
+                self.skip_lines(inputfile, ['s', 'b', 's', 's'])
+
+            self.skip_lines(inputfile, ['header1', 'header2', 's', 's'])
+
+            atomnos = []
+            atomcoords = []
+            line = next(inputfile)
+            while line.strip():
+                line = next(inputfile)
+                if line.strip()[1:10].strip() and list(set(line.strip())) != ['*']:
+                    atomcoords.append(list(map(float, line.split()[3:6])))
+                    atomnos.append(int(round(float(line.split()[2]))))
+            
             if not hasattr(self, "atomcoords"):
                 self.atomcoords = []
-            self.atomnos = []
-            
-            stop = " "*9 + "*"*79
-            line = next(inputfile)
-            while not line.startswith(stop):
-                line = next(inputfile)
-            line = next(inputfile)
-            while not line.startswith(stop):
-                line = next(inputfile)
-            empty = next(inputfile)
-
-            atomcoords = []
-            empty = next(inputfile)
-            while not empty.startswith(stop):
-                line = next(inputfile).split() # the coordinate data
-                atomcoords.append(list(map(float,line[3:6])))
-                self.atomnos.append(int(round(float(line[2]))))
-                while line!=empty:
-                    line = next(inputfile)
-                # at this point, line is an empty line, right after
-                # 1 or more lines containing basis set information
-                empty = next(inputfile)
-                # empty is either a row of asterisks or the empty line
-                # before the row of coordinate data
-            
             self.atomcoords.append(atomcoords)
-            self.atomnos = numpy.array(self.atomnos, "i")
+            self.set_attribute('atomnos', atomnos)
 
+        # Each step of a geometry optimization will also print the coordinates:
+        #
+        # search  0
+        #                                        *******************
+        # point   0                              nuclear coordinates
+        #                                        *******************
+        #
+        #         x              y              z            chg  tag
+        #  ============================================================
+        #        0.0000000     -2.6361501      0.0000000    6.00  c       
+        #        0.0000000      2.6361501      0.0000000    6.00  c  
+        # ..
+        #
         if line[40:59] == "nuclear coordinates":
-            # We need not remember the first geometry in the geo-opt as this will
-            # be recorded already, in the "molecular geometry" section
-            # (note: single-point calculations have no "nuclear coordinates" only
-            # "molecular geometry")
-            if self.progress:
-                self.updateprogress(inputfile, "Coordinates")
 
-            if self.firstnuccoords:
+            self.updateprogress(inputfile, "Coordinates")
+
+            # We need not remember the first geometry in geometry optimizations, as this will
+            # be already parsed from the "molecular geometry" section (see above).
+            if not hasattr(self, 'firstnuccoords') or self.firstnuccoords:
                 self.firstnuccoords = False
                 return
-                # This was continue (in loop) before parser refactoring.
-                # continue
-            if not hasattr(self, "atomcoords"):
-                self.atomcoords = []
-                self.atomnos = []
-                
-            asterisk = next(inputfile)
-            blank = next(inputfile)
-            colmname = next(inputfile)
-            equals = next(inputfile)
+
+            self.skip_lines(inputfile, ['s', 'b', 'colname', 'e'])
 
             atomcoords = []
             atomnos = []
             line = next(inputfile)
-            while line != equals:
-                temp = line.strip().split()
-                atomcoords.append([utils.convertor(float(x), "bohr", "Angstrom") for x in temp[0:3]])
-                if not hasattr(self, "atomnos") or len(self.atomnos) == 0:
-                    atomnos.append(int(float(temp[3])))
-                    
+            while list(set(line.strip())) != ['=']:
+
+                cols = line.split()
+                atomcoords.append([utils.convertor(float(x), "bohr", "Angstrom") for x in cols[0:3]])
+                atomnos.append(int(float(cols[3])))
+
                 line = next(inputfile)
 
+            if not hasattr(self, "atomcoords"):
+                self.atomcoords = []
             self.atomcoords.append(atomcoords)
-            if not hasattr(self, "atomnos") or len(self.atomnos) == 0:
-                self.atomnos = atomnos
+            self.set_attribute('atomnos', atomnos)
+
+        # This is printed when a geometry optimization succeeds, after the last gradient of the energy.
+        if line[40:62] == "optimization converged":
+            self.skip_line(inputfile, 's')
+            if not hasattr(self, 'optdone'):
+                self.optdone = []
+            self.optdone.append(len(self.geovalues)-1)
+
+        # This is apparently printed when a geometry optimization is not converged but the job ends.
+        if "minimisation not converging" in line:
+            self.skip_line(inputfile, 's')
+            self.optdone = []
 
         if line[1:32] == "total number of basis functions":
-            self.nbasis = int(line.split()[-1])
+
+            nbasis = int(line.split()[-1])
+            self.set_attribute('nbasis', nbasis)
+
             while line.find("charge of molecule")<0:
                 line = next(inputfile)
-            self.charge = int(line.split()[-1])
-            self.mult = int(next(inputfile).split()[-1])
+
+            charge = int(line.split()[-1])
+            self.set_attribute('charge', charge)
+
+            mult = int(next(inputfile).split()[-1])
+            self.set_attribute('mult', mult)
 
             alpha = int(next(inputfile).split()[-1])-1
             beta = int(next(inputfile).split()[-1])-1
@@ -178,18 +222,13 @@ class GAMESSUK(logfileparser.Logfile):
         if line[37:69] == "s-matrix over gaussian basis set":
             self.aooverlaps = numpy.zeros((self.nbasis, self.nbasis), "d")
 
-            minus = next(inputfile)
-            blank = next(inputfile)
+            self.skip_lines(inputfile, ['d', 'b'])
+
             i = 0
             while i < self.nbasis:
-                if self.progress:
-                    self.updateprogress(inputfile, "Overlap")
+                self.updateprogress(inputfile, "Overlap")
 
-                blank = next(inputfile)
-                blank = next(inputfile)
-                header = next(inputfile)
-                blank = next(inputfile)
-                blank = next(inputfile)
+                self.skip_lines(inputfile, ['b', 'b', 'header', 'b', 'b'])
 
                 for j in range(self.nbasis):
                     temp = list(map(float, next(inputfile).split()[1:]))
@@ -198,8 +237,10 @@ class GAMESSUK(logfileparser.Logfile):
                 i += len(temp)
 
         if line[18:43] == 'EFFECTIVE CORE POTENTIALS':
+
+            self.skip_line(inputfile, 'stars')
+
             self.coreelectrons = numpy.zeros(self.natom, 'i')
-            asterisk = next(inputfile)
             line = next(inputfile)
             while line[15:46] != "*"*31:
                 if line.find("for atoms ...")>=0:
@@ -238,19 +279,15 @@ class GAMESSUK(logfileparser.Logfile):
             self.vibirs = self.vibirs[-len(self.vibdisps):]
 
         if line[44:73] == "normalised normal coordinates":
+
+            self.skip_lines(inputfile, ['e', 'b', 'b'])
+
             self.vibdisps = []
-            equals = next(inputfile)
-            blank = next(inputfile)
-            blank = next(inputfile)
             freqnum = next(inputfile)
             while freqnum.find("=")<0:
-                blank = next(inputfile)
-                equals = next(inputfile)
-                freqs = next(inputfile)
-                equals = next(inputfile)
-                blank = next(inputfile)
-                header = next(inputfile)
-                equals = next(inputfile)
+
+                self.skip_lines(inputfile, ['b', 'e', 'freqs', 'e', 'b', 'header', 'e'])
+
                 p = [ [] for x in range(9) ]
                 for i in range(len(self.atomnos)):
                     brokenx = list(map(float, next(inputfile)[25:].split()))
@@ -260,22 +297,19 @@ class GAMESSUK(logfileparser.Logfile):
                         p[j].append(x)
                 self.vibdisps.extend(p)
         
-                blank = next(inputfile)
-                blank = next(inputfile)
+                self.skip_lines(inputfile, ['b', 'b'])
+
                 freqnum = next(inputfile)                    
 
         if line[26:36] == "raman data":
             self.vibramans = []
 
-            stars = next(inputfile)
-            blank = next(inputfile)
-            header = next(inputfile)
+            self.skip_lines(inputfile, ['s', 'b', 'header', 'b'])
 
-            blank = next(inputfile)
             line = next(inputfile)
             while line[1]!="*":
                 self.vibramans.append(float(line.split()[3]))
-                blank = next(inputfile)
+                self.skip_line(inputfile, 'blank')
                 line = next(inputfile)
             # Use the length of the vibdisps to figure out
             # how many rotations and translations to remove
@@ -445,23 +479,17 @@ class GAMESSUK(logfileparser.Logfile):
                     self.atombasis.append([])
                 readatombasis = True
 
-            blank = next(inputfile)
-            blank = next(inputfile)
-            evalues = next(inputfile)
+            self.skip_lines(inputfile, ['b', 'b', 'evalues'])
 
             p = re.compile(r"\d+\s+(\d+)\s*(\w+) (\w+)")
             oldatomname = "DUMMY VALUE"
 
             mo = 0
             while mo < self.nmo:
-                if self.progress:
-                    self.updateprogress(inputfile, "Coefficients")
+                self.updateprogress(inputfile, "Coefficients")
 
-                blank = next(inputfile)
-                blank = next(inputfile)
-                nums = next(inputfile)
-                blank = next(inputfile)
-                blank = next(inputfile)
+                self.skip_lines(inputfile, ['b', 'b', 'nums', 'b', 'b'])
+
                 for basis in range(self.nbasis):
                     line = next(inputfile)
                     # Fill atombasis only first time around.
@@ -488,7 +516,7 @@ class GAMESSUK(logfileparser.Logfile):
                     self.aonames = aonames
 
                 line = next(inputfile) # blank line
-                while line == blank:
+                while not line.strip():
                     line = next(inputfile)
                 evalues = line
                 if evalues[:17].strip(): # i.e. if these aren't evalues
@@ -528,7 +556,51 @@ class GAMESSUK(logfileparser.Logfile):
                 self.moenergies = [moenergies, moenergies]
             else:
                 self.moenergies = [moenergies]
-                
+
+        # The dipole moment is printed by default at the beginning of the wavefunction analysis,
+        # but the value is in atomic units, so we need to convert to Debye. It seems pretty
+        # evident that the reference point is the origin (0,0,0) which is also the center
+        # of mass after reorientation at the beginning of the job, although this is not
+        # stated anywhere (would be good to check).
+        #
+        #                                        *********************
+        #                                        wavefunction analysis
+        #                                        *********************
+        #
+        # commence analysis at     24.61 seconds
+        #
+        #                 dipole moments
+        #
+        #
+        #           nuclear      electronic           total
+        #
+        # x       0.0000000       0.0000000       0.0000000
+        # y       0.0000000       0.0000000       0.0000000
+        # z       0.0000000       0.0000000       0.0000000
+        #
+        if line.strip() == "dipole moments":
+
+            # In older version there is only one blank line before the header,
+            # and newer version there are two.
+            self.skip_line(inputfile, 'blank')
+            line = next(inputfile)
+            if not line.strip():
+                line = next(inputfile)
+            self.skip_line(inputfile, 'blank')
+
+            dipole = []
+            for i in range(3):
+                line = next(inputfile)
+                dipole.append(float(line.split()[-1]))
+
+            reference = [0.0, 0.0, 0.0]
+            dipole = utils.convertor(numpy.array(dipole), "ebohr", "Debye")
+
+            if not hasattr(self, 'moments'):
+                self.moments = [reference, dipole]
+            else:
+                assert self.moments[1] == dipole
+
         # Net atomic charges are not printed at all, it seems,
         # but you can get at them from nuclear charges and
         # electron populations, which are printed like so:
@@ -557,7 +629,8 @@ class GAMESSUK(logfileparser.Logfile):
             while not "total gross population on atoms" in line:
                 line = next(inputfile)
 
-            blank = next(inputfile)
+            self.skip_line(inputfile, 'blank')
+
             line = next(inputfile)
             mulliken, lowdin = [], []
             while line.strip():
@@ -569,7 +642,28 @@ class GAMESSUK(logfileparser.Logfile):
             self.atomcharges["mulliken"] = mulliken
             self.atomcharges["lowdin"] = lowdin
 
-             
+        #          ----- spinfree UHF natural orbital occupations -----
+        #
+        #               2.0000000     2.0000000     2.0000000     2.0000000     2.0000000     2.0000000     2.0000000
+        #
+        #               2.0000000     2.0000000     2.0000000     2.0000000     2.0000000     1.9999997     1.9999997
+        # ...
+        if "natural orbital occupations" in line:
+
+            occupations = []
+
+            self.skip_line(inputfile, "blank")
+            line = inputfile.next()
+
+            while line.strip():
+                occupations += map(float, line.split())
+
+                self.skip_line(inputfile, "blank")
+                line = inputfile.next()
+
+            self.set_attribute('nooccnos', occupations)
+
+
 if __name__ == "__main__":
     import doctest
     doctest.testmod()

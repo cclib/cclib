@@ -1,14 +1,25 @@
-# This file is part of cclib (http://cclib.sf.net), a library for parsing
+# This file is part of cclib (http://cclib.github.io), a library for parsing
 # and interpreting the results of computational chemistry packages.
 #
-# Copyright (C) 2006, the cclib development team
+# Copyright (C) 2006-2013, the cclib development team
 #
 # The library is free software, distributed under the terms of
 # the GNU Lesser General Public version 2.1 or later. You should have
 # received a copy of the license along with cclib. You can also access
 # the full license online at http://www.gnu.org/copyleft/lgpl.html.
 
-from PyQuante.Molecule import Molecule
+"""Bridge for using cclib data in PyQuante (http://pyquante.sourceforge.net)."""
+
+from __future__ import print_function
+
+import sys
+
+try:
+    from PyQuante.Molecule import Molecule
+except ImportError:
+    # Fail silently for now.
+    pass
+
 
 def makepyquante(atomcoords, atomnos, charge=0, mult=1):
     """Create a PyQuante Molecule.
@@ -24,6 +35,7 @@ def makepyquante(atomcoords, atomnos, charge=0, mult=1):
     """
     return Molecule("notitle", list(zip(atomnos, atomcoords)), units="Angstrom",
                     charge=charge, multiplicity=mult)
+
 
 if __name__ == "__main__":
     import doctest

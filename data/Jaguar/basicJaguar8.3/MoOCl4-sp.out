@@ -1,0 +1,483 @@
+Job MoOCl4 started on silenziosa at Wed Apr  9 23:56:29 2014
+jobid: silenziosa-0-5346166c
+
+  +--------------------------------------------------------------------+
+  |  Jaguar version 8.3, release  13                                   |
+  |                                                                    |
+  |  Copyright Schrodinger, Inc.                                       |
+  |  All Rights Reserved.                                              |
+  |                                                                    |
+  |  The following have contributed to Jaguar (listed alphabetically): |
+  |  Mike Beachy, Art Bochevarov, Dale Braden, Yixiang Cao,            |
+  |  Chris Cortis, Rich Friesner, Bill Goddard, Hod Greeley,           |
+  |  Tom Hughes, Jean-Marc Langlois, Daniel Mainz, Rob Murphy,         |
+  |  Dean Philipp, Tom Pollard, Murco Ringnalda.                       |
+  |                                                                    |
+  |  Use of this program should be acknowledged in publications as:    |
+  |                                                                    |
+  |  Jaguar, version 8.3, Schrodinger, Inc., New York, NY, 2014.       |
+  |                                                                    |
+  |  A. D. Bochevarov, E. Harder, T. F. Hughes, J. R. Greenwood,       |
+  |  D. A. Braden, D. M. Philipp, D. Rinaldo, M. D. Halls,             |
+  |  J. Zhang, R. A. Friesner, "Jaguar: A High-Performance Quantum     |
+  |  Chemistry Software Program with Strengths in Life and Materials   |
+  |  Sciences", Int. J. Quantum Chem., 2013, 113(18), 2110-2142.       |
+  +--------------------------------------------------------------------+
+  
+  start of program pre
+  
+  Job name: MoOCl4
+  Executables used: /usr/local/lib/schrodinger2014-1/jaguar-v83013/bin/Linux-x86_64
+  Temporary files : /home/kml/MoOCl4
+  
+  
+  basis set:             lav2d           
+  net molecular charge:   -2
+  multiplicity:            1
+  
+  This run will use ECP on            5  atoms
+  number of basis functions....           59
+  
+  Basis set name for each atom
+  
+  Atom     Basis 
+  Mo       lav2d           
+  O        d95v            
+  Cl       lav2d           
+  Cl       lav2d           
+  Cl       lav2d           
+  Cl       lav2d           
+  
+  Gaussian basis set information
+  
+                                                        renorm    mfac*renorm
+   atom    fn   prim  L        z            coef         coef         coef
+ -------- ----- ---- --- -------------  -----------  -----------  -----------
+ Mo           1    1   S  2.768000E-01  -3.0265E+00  -8.2315E-01  -8.2315E-01
+ Mo           1    2   S  1.681000E-01   3.3284E+00   6.2276E-01   6.2276E-01
+ Mo           2    3   S  4.230000E-02   1.0000E+00   6.6476E-02   6.6476E-02
+ Mo           3    4   X  4.995000E-01  -1.0000E+00  -5.9856E-01  -5.9856E-01
+              4        Y                                          -5.9856E-01
+              5        Z                                          -5.9856E-01
+ Mo           3    5   X  7.800000E-02   1.0000E+00   5.8757E-02   5.8757E-02
+              4        Y                                           5.8757E-02
+              5        Z                                           5.8757E-02
+ Mo           6    6   X  2.470000E-02   1.0000E+00   1.3958E-02   1.3958E-02
+              7        Y                                           1.3958E-02
+              8        Z                                           1.3958E-02
+ Mo           9    7  XX  2.993000E+00   6.7150E-02   7.5274E-01   7.5274E-01
+             10       YY                                           7.5274E-01
+             11       ZZ                                           7.5274E-01
+             12       XY                                           1.3038E+00
+             13       XZ                                           1.3038E+00
+             14       YZ                                           1.3038E+00
+ Mo           9    8  XX  1.063000E+00   4.8099E-01   8.8101E-01   8.8101E-01
+             10       YY                                           8.8101E-01
+             11       ZZ                                           8.8101E-01
+             12       XY                                           1.5260E+00
+             13       XZ                                           1.5260E+00
+             14       YZ                                           1.5260E+00
+ Mo           9    9  XX  3.721000E-01   5.9085E-01   1.7240E-01   1.7240E-01
+             10       YY                                           1.7240E-01
+             11       ZZ                                           1.7240E-01
+             12       XY                                           2.9861E-01
+             13       XZ                                           2.9861E-01
+             14       YZ                                           2.9861E-01
+ Mo          15   10  XX  1.178000E-01   1.0000E+00   3.8986E-02   3.8986E-02
+             16       YY                                           3.8986E-02
+             17       ZZ                                           3.8986E-02
+             18       XY                                           6.7527E-02
+             19       XZ                                           6.7527E-02
+             20       YZ                                           6.7527E-02
+ O           21    1   S  7.816540E+03   1.1760E-03   6.9676E-01   6.9676E-01
+ O           21    2   S  1.175820E+03   8.9681E-03   1.2834E+00   1.2834E+00
+ O           21    3   S  2.731880E+02   4.2868E-02   2.0530E+00   2.0530E+00
+ O           21    4   S  8.116960E+01   1.4393E-01   2.7740E+00   2.7740E+00
+ O           21    5   S  2.718360E+01   3.5563E-01   3.0175E+00   3.0175E+00
+ O           21    6   S  9.532230E+00   4.6125E-01   1.7834E+00   1.7834E+00
+ O           21    7   S  3.413640E+00   1.4021E-01   2.5095E-01   2.5095E-01
+ O           22    8   S  9.532230E+00  -1.5415E-01  -5.9602E-01  -5.9602E-01
+ O           22    9   S  9.397800E-01   1.0569E+00   7.1898E-01   7.1898E-01
+ O           23   10   S  2.846100E-01   1.0000E+00   2.7771E-01   2.7771E-01
+ O           24   11   X  3.518320E+01   1.9580E-02   2.3915E+00   2.3915E+00
+             25        Y                                           2.3915E+00
+             26        Z                                           2.3915E+00
+ O           24   12   X  7.904030E+00   1.2420E-01   2.3463E+00   2.3463E+00
+             25        Y                                           2.3463E+00
+             26        Z                                           2.3463E+00
+ O           24   13   X  2.305120E+00   3.9472E-01   1.5981E+00   1.5981E+00
+             25        Y                                           1.5981E+00
+             26        Z                                           1.5981E+00
+ O           24   14   X  7.170600E-01   6.2738E-01   5.9009E-01   5.9009E-01
+             25        Y                                           5.9009E-01
+             26        Z                                           5.9009E-01
+ O           27   15   X  2.137300E-01   1.0000E+00   2.0714E-01   2.0714E-01
+             28        Y                                           2.0714E-01
+             29        Z                                           2.0714E-01
+ Cl          30    1   S  2.231000E+00  -4.9006E-01  -6.3758E-01  -6.3758E-01
+ Cl          30    2   S  4.720000E-01   1.2543E+00   5.0905E-01   5.0905E-01
+ Cl          31    3   S  1.631000E-01   1.0000E+00   1.8292E-01   1.8292E-01
+ Cl          32    4   X  6.296000E+00  -6.3564E-02  -9.0361E-01  -9.0361E-01
+             33        Y                                          -9.0361E-01
+             34        Z                                          -9.0361E-01
+ Cl          32    5   X  6.333000E-01   1.0141E+00   8.1667E-01   8.1667E-01
+             33        Y                                           8.1667E-01
+             34        Z                                           8.1667E-01
+ Cl          35    6   X  1.819000E-01   1.0000E+00   1.6933E-01   1.6933E-01
+             36        Y                                           1.6933E-01
+             37        Z                                           1.6933E-01
+ Cl          38    1   S  2.231000E+00  -4.9006E-01  -6.3758E-01  -6.3758E-01
+ Cl          38    2   S  4.720000E-01   1.2543E+00   5.0905E-01   5.0905E-01
+ Cl          39    3   S  1.631000E-01   1.0000E+00   1.8292E-01   1.8292E-01
+ Cl          40    4   X  6.296000E+00  -6.3564E-02  -9.0361E-01  -9.0361E-01
+             41        Y                                          -9.0361E-01
+             42        Z                                          -9.0361E-01
+ Cl          40    5   X  6.333000E-01   1.0141E+00   8.1667E-01   8.1667E-01
+             41        Y                                           8.1667E-01
+             42        Z                                           8.1667E-01
+ Cl          43    6   X  1.819000E-01   1.0000E+00   1.6933E-01   1.6933E-01
+             44        Y                                           1.6933E-01
+             45        Z                                           1.6933E-01
+ Cl          46    1   S  2.231000E+00  -4.9006E-01  -6.3758E-01  -6.3758E-01
+ Cl          46    2   S  4.720000E-01   1.2543E+00   5.0905E-01   5.0905E-01
+ Cl          47    3   S  1.631000E-01   1.0000E+00   1.8292E-01   1.8292E-01
+ Cl          48    4   X  6.296000E+00  -6.3564E-02  -9.0361E-01  -9.0361E-01
+             49        Y                                          -9.0361E-01
+             50        Z                                          -9.0361E-01
+ Cl          48    5   X  6.333000E-01   1.0141E+00   8.1667E-01   8.1667E-01
+             49        Y                                           8.1667E-01
+             50        Z                                           8.1667E-01
+ Cl          51    6   X  1.819000E-01   1.0000E+00   1.6933E-01   1.6933E-01
+             52        Y                                           1.6933E-01
+             53        Z                                           1.6933E-01
+ Cl          54    1   S  2.231000E+00  -4.9006E-01  -6.3758E-01  -6.3758E-01
+ Cl          54    2   S  4.720000E-01   1.2543E+00   5.0905E-01   5.0905E-01
+ Cl          55    3   S  1.631000E-01   1.0000E+00   1.8292E-01   1.8292E-01
+ Cl          56    4   X  6.296000E+00  -6.3564E-02  -9.0361E-01  -9.0361E-01
+             57        Y                                          -9.0361E-01
+             58        Z                                          -9.0361E-01
+ Cl          56    5   X  6.333000E-01   1.0141E+00   8.1667E-01   8.1667E-01
+             57        Y                                           8.1667E-01
+             58        Z                                           8.1667E-01
+ Cl          59    6   X  1.819000E-01   1.0000E+00   1.6933E-01   1.6933E-01
+             60        Y                                           1.6933E-01
+             61        Z                                           1.6933E-01
+  
+  Effective Core Potential 
+  
+  Atom      Electrons represented by ECP
+ Mo                    36
+              Maximum angular term         3
+ F Potential      1/r^n   Exponent  Coefficient
+                  -----   --------  -----------
+                    0  140.4577691   -0.0469492
+                    1   89.4739342  -24.9754989
+                    2   26.1462922 -104.0253691
+                    2   13.3034210  -18.6448797
+                    2    5.7109321  -26.2555763
+                    2    1.5161163   -6.5246802
+                    2    0.4925250   -0.4606047
+ S-F Potential    1/r^n   Exponent  Coefficient
+                  -----   --------  -----------
+                    0   33.7771969    2.9278406
+                    1   10.0120020   34.3483716
+                    2    3.2351392   35.5827749
+                    2    0.6672350   17.6822057
+                    2    0.5518063   -6.2317738
+ P-F Potential    1/r^n   Exponent  Coefficient
+                  -----   --------  -----------
+                    0   27.8974995    1.9683670
+                    1    8.2676943   30.3775276
+                    2    2.2776224   25.5509616
+                    2    0.5624478    7.7414851
+ D-F Potential    1/r^n   Exponent  Coefficient
+                  -----   --------  -----------
+                    0   50.9491474    2.9811493
+                    1   43.9395130   21.3037310
+                    2   16.9218563  136.4686418
+                    2    2.4215559   36.6796104
+                    2    1.9637047  -18.2198346
+                    2    0.3327274   -0.2024621
+ O                      0
+ Cl                    10
+              Maximum angular term         2
+ D Potential      1/r^n   Exponent  Coefficient
+                  -----   --------  -----------
+                    1   94.8130000  -10.0000000
+                    2  165.6440000   66.2729170
+                    2   30.8317000  -28.9685950
+                    2   10.5841000  -12.8663370
+                    2    3.7704000   -1.7102170
+ S-D Potential    1/r^n   Exponent  Coefficient
+                  -----   --------  -----------
+                    0  128.8391000    3.0000000
+                    1  120.3786000   12.8528510
+                    2   63.5622000  275.6723980
+                    2   18.0695000  115.6777120
+                    2    3.8142000   35.0606090
+ P-D Potential    1/r^n   Exponent  Coefficient
+                  -----   --------  -----------
+                    0  216.5263000    5.0000000
+                    1   46.5723000    7.4794860
+                    2  147.4685000  613.0320000
+                    2   48.9869000  280.8006850
+                    2   13.2096000  107.8788240
+                    2    3.1831000   15.3439560
+ Cl                    10
+              Maximum angular term         2
+ D Potential      1/r^n   Exponent  Coefficient
+                  -----   --------  -----------
+                    1   94.8130000  -10.0000000
+                    2  165.6440000   66.2729170
+                    2   30.8317000  -28.9685950
+                    2   10.5841000  -12.8663370
+                    2    3.7704000   -1.7102170
+ S-D Potential    1/r^n   Exponent  Coefficient
+                  -----   --------  -----------
+                    0  128.8391000    3.0000000
+                    1  120.3786000   12.8528510
+                    2   63.5622000  275.6723980
+                    2   18.0695000  115.6777120
+                    2    3.8142000   35.0606090
+ P-D Potential    1/r^n   Exponent  Coefficient
+                  -----   --------  -----------
+                    0  216.5263000    5.0000000
+                    1   46.5723000    7.4794860
+                    2  147.4685000  613.0320000
+                    2   48.9869000  280.8006850
+                    2   13.2096000  107.8788240
+                    2    3.1831000   15.3439560
+ Cl                    10
+              Maximum angular term         2
+ D Potential      1/r^n   Exponent  Coefficient
+                  -----   --------  -----------
+                    1   94.8130000  -10.0000000
+                    2  165.6440000   66.2729170
+                    2   30.8317000  -28.9685950
+                    2   10.5841000  -12.8663370
+                    2    3.7704000   -1.7102170
+ S-D Potential    1/r^n   Exponent  Coefficient
+                  -----   --------  -----------
+                    0  128.8391000    3.0000000
+                    1  120.3786000   12.8528510
+                    2   63.5622000  275.6723980
+                    2   18.0695000  115.6777120
+                    2    3.8142000   35.0606090
+ P-D Potential    1/r^n   Exponent  Coefficient
+                  -----   --------  -----------
+                    0  216.5263000    5.0000000
+                    1   46.5723000    7.4794860
+                    2  147.4685000  613.0320000
+                    2   48.9869000  280.8006850
+                    2   13.2096000  107.8788240
+                    2    3.1831000   15.3439560
+ Cl                    10
+              Maximum angular term         2
+ D Potential      1/r^n   Exponent  Coefficient
+                  -----   --------  -----------
+                    1   94.8130000  -10.0000000
+                    2  165.6440000   66.2729170
+                    2   30.8317000  -28.9685950
+                    2   10.5841000  -12.8663370
+                    2    3.7704000   -1.7102170
+ S-D Potential    1/r^n   Exponent  Coefficient
+                  -----   --------  -----------
+                    0  128.8391000    3.0000000
+                    1  120.3786000   12.8528510
+                    2   63.5622000  275.6723980
+                    2   18.0695000  115.6777120
+                    2    3.8142000   35.0606090
+ P-D Potential    1/r^n   Exponent  Coefficient
+                  -----   --------  -----------
+                    0  216.5263000    5.0000000
+                    1   46.5723000    7.4794860
+                    2  147.4685000  613.0320000
+                    2   48.9869000  280.8006850
+                    2   13.2096000  107.8788240
+                    2    3.1831000   15.3439560
+  
+  no dealiasing set available for atom            1
+  switch to all-analytic calculation
+  
+  input atom labels were not unique
+  original atom labels:
+ Mo       O        Cl       Cl       Cl       Cl      
+  new atom labels:
+ Mo1      O2       Cl3      Cl4      Cl5      Cl6     
+ 
+  
+ Input geometry:
+                                   angstroms
+  atom               x                 y                 z
+  Mo1           0.0003250000     -0.0003250000      0.0518100000 
+  O2            0.0002060000     -0.0002060000      1.7415040000 
+  Cl3           1.7117270000     -1.7117270000     -0.6598460000 
+  Cl4          -1.7109920000     -1.7117380000     -0.6600790000 
+  Cl5          -1.7110040000      1.7110040000     -0.6603110000 
+  Cl6           1.7117380000      1.7109920000     -0.6600790000 
+   
+  principal moments of inertia:
+        amu*angstrom^2:      505.47599      505.47623      819.32610
+                g*cm^2: 8.39362524E-38 8.39362928E-38 1.36052283E-37
+   
+  rotational constants:
+               cm^(-1):      0.03335001      0.03334999      0.02057499
+                   GHz:      0.99980814      0.99980766      0.61682278
+   
+  Molecular weight:     253.78 amu
+   
+  Stoichiometry: MoCl4O
+  Molecular Point Group: C4v     
+	Molecule translated to center of mass 
+	Molecule reoriented along symmetry axes
+  Point Group used: C4v
+  
+  
+ Symmetrized geometry:
+                                   angstroms
+  atom               x                 y                 z
+  Mo1           0.0000000000      0.0000000000     -0.2858792650 
+  O2            0.0000000000      0.0000000000     -1.9755732650 
+  Cl3           1.7113652500      1.7113652500      0.4260094850 
+  Cl4          -1.7113652500      1.7113652500      0.4260094850 
+  Cl5          -1.7113652500     -1.7113652500      0.4260094850 
+  Cl6           1.7113652500     -1.7113652500      0.4260094850 
+   
+  nuclear repulsion energy.......     126.054710722 hartrees
+  
+  Detected an organometallic with only one TM atom. 
+  
+  Oxidation state on metal       1 is     2
+  Formal multiplet on metal      1 is     1
+  Formal charge on ligand        3 is    -1
+  Formal multiplet on ligand     3 is     1
+  Formal charge on ligand        4 is    -1
+  Formal multiplet on ligand     4 is     1
+  Formal charge on ligand        5 is    -1
+  Formal multiplet on ligand     5 is     1
+  Formal charge on ligand        6 is    -1
+  Formal multiplet on ligand     6 is     1
+  
+ 
+  Will use High-Quality Initial guess for organometallics
+       including d-d repulsion (iguess=30)
+ 
+ Non-default options chosen:
+  
+ Non-default print settings:
+      1=  2
+  
+ Temporary integer options set:
+     73=  2
+  
+  Peak memory usage:    479 Mb
+  
+  end of program pre
+   
+ Time(pre)  user:        0.0  user+sys:        0.0  wallclock:        0.1
+  
+  start of program onee
+  
+  smallest eigenvalue of S:    2.120E-02
+  number of canonical orbitals.....           59
+  Peak memory usage:    621 Mb
+  
+  end of program onee
+   
+ Time(onee)  user:        0.0  user+sys:        0.0  wallclock:        0.3
+  
+  start of program hfig
+  
+  initial wavefunction generated automatically from atomic wavefunctions
+  Only one state below 0.010000
+  Skip d-d repulsion considerations 
+ 
+  Irreducible     Total no   No of occupied orbitals 
+  representation  orbitals   Shell_1  Shell_2    ...
+  A1                17          6
+  A2                 2          1
+  B1                 4          2
+  B2                 8          3
+  E/Ap              14          5
+  E/App             14          5
+  ------------------------
+  Orbital occupation/shell    1.000
+ 
+  Peak memory usage:    560 Mb
+  
+  end of program hfig
+   
+ Time(hfig)  user:        0.0  user+sys:        0.0  wallclock:        0.2
+  
+  start of program probe
+  
+  Peak memory usage:    560 Mb
+  
+  end of program probe
+   
+ Time(probe)  user:        0.0  user+sys:        0.0  wallclock:        0.1
+  
+  start of program scf
+  
+ number of electrons..........         44
+ number of alpha electrons....         22
+ number of beta electrons.....         22
+ number of orbitals, total....         59
+ number of doubly-occ'd orbs..         22
+ number of open shell orbs....          0
+ number of occupied orbitals..         22
+ number of virtual orbitals...         37
+ number of hamiltonians.......          1
+ number of shells.............          1
+ SCF type: HF
+  
+       i  u  d  i  g                   
+       t  p  i  c  r                                 RMS    maximum
+       e  d  i  u  i                       energy  density   DIIS  
+       r  t  s  t  d       total energy    change  change    error 
+  
+etot    1  N  N  0  N    -141.06731977860           1.4E-02  1.8E-01
+etot    2  Y  Y  0  N    -141.57630860886  5.1E-01  7.0E-03  1.7E-01
+etot    3  Y  Y  0  N    -141.66639178810  9.0E-02  3.5E-03  1.1E-01
+etot    4  N  Y  0  N    -141.74132176675  7.5E-02  1.9E-03  3.8E-02
+etot    5  Y  Y  0  N    -141.75374198915  1.2E-02  1.6E-03  1.1E-02
+etot    6  N  Y  0  N    -141.75837722658  4.6E-03  6.3E-04  3.8E-03
+etot    7  Y  Y  0  N    -141.75891312128  5.4E-04  1.7E-04  8.7E-04
+etot    8  Y  Y  0  N    -141.75894933713  3.6E-05  2.8E-05  2.4E-04
+etot    9  N  N  0  N    -141.75895967906  1.0E-05  0.0E+00  0.0E+00
+  
+  
+ Energy components, in hartrees:
+   (A)  Nuclear repulsion............     126.05471072203
+   (E)  Total one-electron terms.....    -482.33002834701
+   (I)  Total two-electron terms.....     214.51635794593
+   (L)  Electronic energy............    -267.81367040109  (E+I)
+   (N)  Total energy.................    -141.75895967906  (A+L)
+  
+ SCFE: SCF energy: HF      -141.75895967906 hartrees   iterations:   9
+  
+ 
+ HOMO energy:    -0.07506
+ LUMO energy:     0.31864
+ 
+  Orbital energies (hartrees)/symmetry label: 
+   -20.29586 A1         -0.96934 A1         -0.72055 A1         -0.70621 E/App  
+    -0.70621 E/Ap       -0.70313 B2         -0.27407 A1         -0.24303 E/Ap   
+    -0.24303 E/App      -0.20529 B1         -0.18968 A1         -0.17040 B2     
+    -0.16063 E/Ap       -0.16063 E/App      -0.14445 A1         -0.12402 E/App  
+    -0.12402 E/Ap       -0.11403 B2         -0.11178 E/App      -0.11178 E/Ap   
+    -0.09548 A2         -0.07506 B1          0.31864 A1          0.33600 E/Ap   
+     0.33600 E/App       0.37170 E/Ap        0.37170 E/App       0.39353 A1     
+     0.40305 B2          0.46138 A1          0.64083 A1          0.67747 E/Ap   
+ 
+  Peak memory usage:    653 Mb
+  
+  end of program scf
+   
+ Time(scf)  user:        1.0  user+sys:        1.0  wallclock:        1.0
+
+ Total cpu seconds     user:       1.000   user+sys:       1.000
+  
+ Total elapsed time:    2 seconds
+
+Job MoOCl4 completed on silenziosa at Wed Apr  9 23:56:31 2014

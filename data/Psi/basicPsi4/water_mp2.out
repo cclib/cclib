@@ -1,0 +1,333 @@
+    -----------------------------------------------------------------------
+          PSI4: An Open-Source Ab Initio Electronic Structure Package
+                              PSI 4.0.0-beta5 Driver
+
+    J. M. Turney, A. C. Simmonett, R. M. Parrish, E. G. Hohenstein,
+    F. A. Evangelista, J. T. Fermann, B. J. Mintz, L. A. Burns, J. J. Wilke,
+    M. L. Abrams, N. J. Russ, M. L. Leininger, C. L. Janssen, E. T. Seidl,
+    W. D. Allen, H. F. Schaefer, R. A. King, E. F. Valeev, C. D. Sherrill,
+    and T. D. Crawford, WIREs Comput. Mol. Sci., (2011) (doi: 10.1002/wcms.93)
+
+                         Additional Contributions by
+    A. E. DePrince, M. Saitow, U. Bozkaya, A. Yu. Sokolov
+    -----------------------------------------------------------------------
+
+    Process ID:  30348
+    PSI4DATADIR: /usr/local/share/psi
+
+    Using LocalCommunicator (Number of processes = 1)
+
+    Memory level set to 256.000 MB
+
+  ==> Input File <==
+
+--------------------------------------------------------------------------
+molecule water {
+0 1
+O
+H 1 0.99
+H 1 0.99 2 106.0
+}
+
+set {
+    basis sto-3g
+}
+
+energy('conv-mp2')
+--------------------------------------------------------------------------
+
+*** tstart() called on helena
+*** at Wed Apr 23 16:34:54 2014
+
+
+         ---------------------------------------------------------
+                                   SCF
+            by Justin Turney, Rob Parrish, and Andy Simmonett
+                              RHF Reference
+                        1 Threads,    256 MiB Core
+         ---------------------------------------------------------
+
+  ==> Geometry <==
+
+    Molecular point group: c2v
+    Full point group: C2v
+
+    Geometry (in Angstrom), charge = 0, multiplicity = 1:
+
+       Center              X                  Y                   Z       
+    ------------   -----------------  -----------------  -----------------
+           O          0.000000000000     0.000000000000    -0.066678531529
+           H          0.000000000000    -0.790649154947     0.529118341392
+           H          0.000000000000     0.790649154947     0.529118341392
+
+  Running in c2v symmetry.
+
+  Nuclear repulsion =    8.887006225878341
+
+  Charge       = 0
+  Multiplicity = 1
+  Electrons    = 10
+  Nalpha       = 5
+  Nbeta        = 5
+
+  ==> Algorithm <==
+
+  SCF Algorithm Type is PK.
+  DIIS enabled.
+  MOM disabled.
+  Fractional occupation disabled.
+  Guess Type is CORE.
+  Energy threshold   = 1.00e-08
+  Density threshold  = 1.00e-08
+  Integral threshold = 0.00e+00
+
+  ==> Primary Basis <==
+
+  Basis Set: STO-3G
+    Number of shells: 5
+    Number of basis function: 7
+    Number of Cartesian functions: 7
+    Spherical Harmonics?: true
+    Max angular momentum: 1
+
+  ==> Pre-Iterations <==
+
+   -------------------------------------------------------
+    Irrep   Nso     Nmo     Nalpha   Nbeta   Ndocc  Nsocc
+   -------------------------------------------------------
+     A1         4       4       0       0       0       0
+     A2         0       0       0       0       0       0
+     B1         1       1       0       0       0       0
+     B2         2       2       0       0       0       0
+   -------------------------------------------------------
+    Total       7       7       5       5       5       0
+   -------------------------------------------------------
+
+  Starting with a DF guess...
+
+ OEINTS: Wrapper to libmints.
+   by Justin Turney
+
+   Calculation information:
+      Number of atoms:                   3
+      Number of AO shells:               5
+      Number of SO shells:               4
+      Number of primitives:             15
+      Number of atomic orbitals:         7
+      Number of basis functions:         7
+
+      Number of irreps:                  4
+      Number of functions per irrep: [   4    0    1    2 ]
+
+      Overlap, kinetic, potential, dipole, and quadrupole integrals
+        stored in file 35.
+
+  ==> Integral Setup <==
+
+  ==> DFJK: Density-Fitted J/K Matrices <==
+
+    J tasked:                  Yes
+    K tasked:                  Yes
+    wK tasked:                  No
+    OpenMP threads:              1
+    Integrals threads:           1
+    Memory (MB):               183
+    Algorithm:                Core
+    Integral Cache:           NONE
+    Schwarz Cutoff:          1E-12
+    Fitting Condition:       1E-12
+
+   => Auxiliary Basis Set <=
+
+  Basis Set: CC-PVDZ-JKFIT
+    Number of shells: 42
+    Number of basis function: 116
+    Number of Cartesian functions: 131
+    Spherical Harmonics?: true
+    Max angular momentum: 3
+
+  Minimum eigenvalue in the overlap matrix is 3.6393052139E-01.
+  Using Symmetric Orthogonalization.
+  SCF Guess: Core (One-Electron) Hamiltonian.
+
+  ==> Iterations <==
+
+                           Total Energy        Delta E     RMS |[F,P]|
+
+   @DF-RHF iter   1:   -73.25096728517144   -7.32510e+01   2.17211e-01 
+   @DF-RHF iter   2:   -74.93768469164625   -1.68672e+00   3.84449e-02 DIIS
+   @DF-RHF iter   3:   -74.96310513030008   -2.54204e-02   7.19062e-03 DIIS
+   @DF-RHF iter   4:   -74.96429706845539   -1.19194e-03   1.33957e-03 DIIS
+   @DF-RHF iter   5:   -74.96435114434637   -5.40759e-05   3.44107e-04 DIIS
+   @DF-RHF iter   6:   -74.96435493216052   -3.78781e-06   3.18024e-05 DIIS
+   @DF-RHF iter   7:   -74.96435496124398   -2.90835e-08   5.41729e-08 DIIS
+   @DF-RHF iter   8:   -74.96435496124398    0.00000e+00   1.02476e-09 DIIS
+
+  DF guess converged.
+
+  ==> Integral Setup <==
+
+ MINTS: Wrapper to libmints.
+   by Justin Turney
+
+   Calculation information:
+      Number of atoms:                   3
+      Number of AO shells:               5
+      Number of SO shells:               4
+      Number of primitives:             15
+      Number of atomic orbitals:         7
+      Number of basis functions:         7
+
+      Number of irreps:                  4
+      Integral cutoff                 0.00e+00
+      Number of functions per irrep: [   4    0    1    2 ]
+
+      Overlap, kinetic, potential, dipole, and quadrupole integrals
+        stored in file 35.
+
+      Computing two-electron integrals...done
+      Computed 138 non-zero two-electron integrals.
+        Stored in file 33.
+
+	Batch   1 pq = [       0,      14] index = [             0,105]
+  ==> DiskJK: Disk-Based J/K Matrices <==
+
+    J tasked:                  Yes
+    K tasked:                  Yes
+    wK tasked:                  No
+    Memory (MB):               183
+    Schwarz Cutoff:          1E-12
+
+   @RHF iter   9:   -74.96432876643352    2.61948e-05   3.56502e-06 DIIS
+   @RHF iter  10:   -74.96432876666806   -2.34536e-10   8.29543e-07 DIIS
+   @RHF iter  11:   -74.96432876667900   -1.09424e-11   2.20894e-07 DIIS
+   @RHF iter  12:   -74.96432876668037   -1.36424e-12   4.50452e-08 DIIS
+   @RHF iter  13:   -74.96432876668037    0.00000e+00   1.89116e-09 DIIS
+
+  ==> Post-Iterations <==
+
+	Orbital Energies (a.u.)
+	-----------------------
+
+	Doubly Occupied:                                                      
+
+	   1A1   -20.243755     2A1    -1.250645     1B2    -0.603166  
+	   3A1    -0.445470     1B1    -0.388215  
+
+	Virtual:                                                              
+
+	   4A1     0.570748     2B2     0.708592  
+
+	Final Occupation by Irrep:
+	         A1    A2    B1    B2 
+	DOCC [     3,    0,    1,    1 ]
+
+  Energy converged.
+
+  @RHF Final Energy:   -74.96432876668037
+
+   => Energetics <=
+
+    Nuclear Repulsion Energy =              8.8870062258783413
+    One-Electron Energy =                -121.8401691803099425
+    Two-Electron Energy =                  37.9888341877512232
+    DFT Exchange-Correlation Energy =       0.0000000000000000
+    Empirical Dispersion Energy =           0.0000000000000000
+    Total Energy =                        -74.9643287666803815
+
+
+
+Properties will be evaluated at   0.000000,   0.000000,   0.000000 Bohr
+  ==> Properties <==
+
+
+Properties computed using the SCF density density matrix
+  Nuclear Dipole Moment: (a.u.)
+     X:     0.0000      Y:     0.0000      Z:     0.9917
+
+  Electronic Dipole Moment: (a.u.)
+     X:     0.0000      Y:     0.0000      Z:    -0.3333
+
+  Dipole Moment: (a.u.)
+     X:     0.0000      Y:     0.0000      Z:     0.6584     Total:     0.6584
+
+  Dipole Moment: (Debye)
+     X:     0.0000      Y:     0.0000      Z:     1.6735     Total:     1.6735
+
+
+  Saving occupied orbitals to File 180.
+
+*** tstop() called on helena at Wed Apr 23 16:34:55 2014
+Module time:
+	user time   =       0.09 seconds =       0.00 minutes
+	system time =       0.01 seconds =       0.00 minutes
+	total time  =          1 seconds =       0.02 minutes
+Total time:
+	user time   =       0.09 seconds =       0.00 minutes
+	system time =       0.01 seconds =       0.00 minutes
+	total time  =          1 seconds =       0.02 minutes
+
+*** tstart() called on helena
+*** at Wed Apr 23 16:34:55 2014
+
+
+ ============================================================================== 
+ ============================================================================== 
+ ============================================================================== 
+
+                       MP2   
+              Program Written by Ugur Bozkaya,
+              Latest Revision Jun 09, 2013.
+
+ ============================================================================== 
+ ============================================================================== 
+ ============================================================================== 
+
+	RMS orbital gradient is changed to :     1.00e-05
+	MAX orbital gradient is changed to :     3.16e-04
+	MO spaces per irreps... 
+
+	IRREP   FC    OCC   VIR  FV 
+	==============================
+	  A1     0     3     1    0
+	  A2     0     0     0    0
+	  B1     0     1     0    0
+	  B2     0     1     1    0
+	==============================
+
+	Memory is    256 MB 
+	Cost of iabc is      0 MB 
+	Cost of abcd is      0 MB 
+	Switching to the incore algoritm for iabc..
+	Switching to the incore algoritm for abcd..
+
+	Computing MP2 energy using SCF MOs (Canonical MP2)... 
+	============================================================================== 
+	Nuclear Repulsion Energy (a.u.)    :     8.88700622587834
+	SCF Energy (a.u.)                  :   -74.96432876668037
+	REF Energy (a.u.)                  :   -74.96432876668037
+	Alpha-Alpha Contribution (a.u.)    :    -0.00109327559716
+	Alpha-Beta Contribution (a.u.)     :    -0.03586338754590
+	Beta-Beta Contribution (a.u.)      :    -0.00109327559716
+	Scaled_SS Correlation Energy (a.u.):    -0.00072885039811
+	Scaled_OS Correlation Energy (a.u.):    -0.04303606505508
+	SCS-MP2 Total Energy (a.u.)        :   -75.00809368213356
+	SOS-MP2 Total Energy (a.u.)        :   -74.96432876668037
+	SCSN-MP2 Total Energy (a.u.)       :   -74.96817709678236
+	SCS-MP2-VDW Total Energy (a.u.)    :   -75.01132717833629
+	SOS-PI-MP2 Total Energy (a.u.)     :   -75.01453750924463
+	MP2 Correlation Energy (a.u.)      :    -0.03804993874022
+	MP2 Total Energy (a.u.)            :   -75.00237870542058
+	============================================================================== 
+
+*** tstop() called on helena at Wed Apr 23 16:34:55 2014
+Module time:
+	user time   =       0.00 seconds =       0.00 minutes
+	system time =       0.00 seconds =       0.00 minutes
+	total time  =          0 seconds =       0.00 minutes
+Total time:
+	user time   =       0.09 seconds =       0.00 minutes
+	system time =       0.01 seconds =       0.00 minutes
+	total time  =          1 seconds =       0.02 minutes
+
+*** PSI4 exiting successfully. Buy a developer a beer!

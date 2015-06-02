@@ -1,0 +1,11 @@
+  start carbon
+  title "C atom"
+
+  geometry units angstroms
+    C          -1.4152533224   0.2302217854   0.0000000000
+  end
+  basis
+    *    library aug-cc-pVQZ
+  end
+  task scf
+

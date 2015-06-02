@@ -1,0 +1,18 @@
+language: python
+python:
+  - 2.7
+  - 3.2
+before_install:
+  - sudo apt-get update
+  - if [[ $TRAVIS_PYTHON_VERSION == 2* ]]; then sudo apt-get install python-numpy; fi
+  - if [[ $TRAVIS_PYTHON_VERSION == 3* ]]; then sudo apt-get install python3-numpy; fi
+install:
+  - if [[ $TRAVIS_PYTHON_VERSION == 2* ]]; then python setup.py install; fi
+  - if [[ $TRAVIS_PYTHON_VERSION == 3* ]]; then python setup.py install; fi
+script:
+  - cd test
+  - python test_parser.py
+  - python test_data.py --status --terse
+  - cd ../data && bash regression_download.sh
+  - cd ../test && python run_regressions.py --status --traceback
+  - python test_writer.py

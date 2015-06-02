@@ -1,10 +1,10 @@
 == cclib installation instructions ==
-
+	
 === Requirements ===
 
 Before you install cclib, you need to make sure that you have the following:
-*   Python (at least version 2.4)
-*   NumPy (at least version 1.0 is recommended).
+*   Python (version 3.0 and up, although 2.7 will still work)
+*   NumPy (at least version 1.5 is recommended).
 
 Python is an open-source programming language available from http://www.python.org and it is included in many Linux distributions. In Debian it is installed as follows: (as root)
 	
@@ -24,34 +24,38 @@ If Python is not on the PATH and you use Windows, add the full path to the direc
 
 To test, try importing NumPy at the Python prompt. You should see something similar to the following:
 
-        $ python
-        Python 2.5 (r25:51908, Apr 18 2007, 13:15:19) 
-        [GCC 3.4.6 (Debian 3.4.6-5)] on linux2
-        Type "help", "copyright", "credits" or "license" for more information.
-        >>> import numpy
-        >>> numpy.__version__
-        '1.0.2'
+        $ python3
+        Python 3.2.3 (default, Feb 27 2014, 21:31:18) 
+	[GCC 4.6.3] on linux2
+	Type "help", "copyright", "credits" or "license" for more information.
+	>>> import numpy
+	>>> numpy.__version__
+	'1.6.1'
 
 (To exit, press CTRL+Z in Windows or CTRL+D in Linux)
 
 === Installing cclib ===
 
-Extract the cclib tar file or zip file at an appropriate location, which we will call INSTALLDIR. Open a command prompt and change directory to INSTALLDIR. Next, run the following commands:
+On Debian, Ubuntu and other derived Linux distribution, cclib can be quickly installed with the command:
+
+	aptitude install cclib
+
+The version installed from a distribuion might not be the most recent one. To install the most recent version, first download the source code of cclib. Extract the cclib tar file or zip file at an appropriate location, which we will call INSTALLDIR. Open a command prompt and change directory to INSTALLDIR. Next, run the following commands:
 
 	python setup.py build
 	python setup.py install (as root)
 
 To test, trying importing cclib at the Python prompt. You should see something similar to the following:
 
-	$ python
-	Python 2.4.1
-	[GCC 3.3.5 (Debian 1:3.3.5-13)] on linux2
+        $ python3
+        Python 3.2.3 (default, Feb 27 2014, 21:31:18) 
+	[GCC 4.6.3] on linux2
 	Type "help", "copyright", "credits" or "license" for more information.
 	  Press ESC for command-line completion (twice for guesses).
 	  History is saved to ~/.pyhistory.
 	>>> import cclib
 	>>> cclib.__version__
-	'0.8'
+	'1.3'
 
 To run the unit tests, change directory into INSTALLDIR/test and run the following command:
 
@@ -62,8 +66,8 @@ This tests the program using the example data files included in the INSTALLDIR/d
 === What next? ===
 
 * Read the tutorial at:
-	http://sourceforge.net/apps/mediawiki/cclib/index.php?title=Using_cclib
+	http://cclib.github.io/tutorial.html
 * Read the list and specifications of the extracted data at:
-	http://sourceforge.net/apps/mediawiki/cclib/index.php?title=Parsed_Data
+	http://cclib.github.io/data.html
 * Send any questions to the cclib-users mailing list at:
 	https://lists.sourceforge.net/lists/listinfo/cclib-users.

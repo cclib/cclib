@@ -1,0 +1,13 @@
+BASIS
+aug-cc-pCVQZ
+Carbon atom
+
+AtomTypes=1 Angstrom
+Charge=6.0 Atoms=1
+C   0.0 0.0 0.0
+
+**DALTON
+.RUN WAVE FUNCTIONS
+**WAVE FUNCTIONS
+.HF
+**END OF

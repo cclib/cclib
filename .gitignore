@@ -1,2 +1,6 @@
 __pycache__
+MANIFEST
 build
+dist
+*.pyc
+MANIFEST

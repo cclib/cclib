@@ -1,13 +1,19 @@
-# This file is part of cclib (http://cclib.sf.net), a library for parsing
+# -*- coding: utf-8 -*-
+#
+# This file is part of cclib (http://cclib.github.io), a library for parsing
 # and interpreting the results of computational chemistry packages.
 #
-# Copyright (C) 2006, the cclib development team
+# Copyright (C) 2006-2014, the cclib development team
 #
 # The library is free software, distributed under the terms of
 # the GNU Lesser General Public version 2.1 or later. You should have
 # received a copy of the license along with cclib. You can also access
 # the full license online at http://www.gnu.org/copyleft/lgpl.html.
 
+"""Parser for Gaussian output files"""
+
+
+from __future__ import print_function
 import re
 
 import numpy
@@ -62,9 +68,6 @@ class Gaussian(logfileparser.Logfile):
         # Used to index self.scftargets[].
         SCFRMS, SCFMAX, SCFENERGY = list(range(3))
 
-        # Flag that indicates whether it has reached the end of a geoopt.
-        self.optfinished = False
-        
         # Flag for identifying Coupled Cluster runs.
         self.coupledcluster = False
 
@@ -84,89 +87,137 @@ class Gaussian(logfileparser.Logfile):
             new_etsecs = [[(x[0], x[1], x[2] * numpy.sqrt(2)) for x in etsec]
                           for etsec in self.etsecs]
             self.etsecs = new_etsecs
+
         if hasattr(self, "scanenergies"):
             self.scancoords = []
             self.scancoords = self.atomcoords
-        if (hasattr(self, 'enthaply') and hasattr(self, 'temperature') 
+
+        if (hasattr(self, 'enthalpy') and hasattr(self, 'temperature') 
                 and hasattr(self, 'freeenergy')):
-            self.entropy = (self.enthaply - self.freeenergy)/self.temperature
+            self.set_attribute('entropy', (self.enthalpy - self.freeenergy) / self.temperature)
+
+        # This bit is needed in order to trim coordinates that are printed a second time
+        # at the end of geometry optimizations. Note that we need to do this for both atomcoords
+        # and inputcoords. The reason is that normally a standard orientation is printed and that
+        # is what we parse into atomcoords, but inputcoords stores the input (unmodified) coordinates
+        # and that is copied over to atomcoords if no standard oritentation was printed, which happens
+        # for example for jobs with no symmetry. This last step, however, is now generic for all parsers.
+        # Perhaps then this part should also be generic code...
+        # Regression that tests this: Gaussian03/cyclopropenyl.rhf.g03.cut.log
+        if hasattr(self, 'optdone') and len(self.optdone) > 0:
+            last_point = self.optdone[-1]
+            if hasattr(self, 'atomcoords'):
+                self.atomcoords = self.atomcoords[:last_point + 1]
+            if hasattr(self, 'inputcoords'):
+                self.inputcoords = self.inputcoords[:last_point + 1]
             
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
 
-        #Extract PES scan data
-        #Summary of the potential surface scan:
-        #  N       A          SCF
-        #----  ---------  -----------
-        #   1   109.0000    -76.43373
-        #   2   119.0000    -76.43011
-        #   3   129.0000    -76.42311
-        #   4   139.0000    -76.41398
-        #   5   149.0000    -76.40420
-        #   6   159.0000    -76.39541
-        #   7   169.0000    -76.38916
-        #   8   179.0000    -76.38664
-        #   9   189.0000    -76.38833
-        #  10   199.0000    -76.39391
-        #  11   209.0000    -76.40231
-        #----  ---------  -----------
-        if "Summary of the potential surface scan:" in line:
-            scanenergies = []
-            scanparm = []
-            colmnames = next(inputfile)
-            hyphens = next(inputfile)
-            line = next(inputfile)
-            while line != hyphens:
-                broken = line.split()
-                scanenergies.append(float(broken[-1]))
-                scanparm.append(map(float, broken[1:-1]))
-                line = next(inputfile)
-            if not hasattr(self, "scanenergies"):
-                self.scanenergies = []
-                self.scanenergies = scanenergies
-            if not hasattr(self, "scanparm"):
-                self.scanparm = []
-                self.scanparm = scanparm
-            if not hasattr(self, "scannames"):
-                self.scannames = colmnames.split()[1:-1]
+        # This block contains some general information as well as coordinates,
+        # which could be parsed in the future:
+        #
+        # Symbolic Z-matrix:
+        # Charge =  0 Multiplicity = 1
+        # C                     0.73465   0.        0. 
+        # C                     1.93465   0.        0. 
+        # C 
+        # ...
+        #
+        # It also lists fragments, if there are any, which is potentially valuable:
+        #
+        # Symbolic Z-matrix:
+        # Charge =  0 Multiplicity = 1 in supermolecule
+        # Charge =  0 Multiplicity = 1 in fragment      1.
+        # Charge =  0 Multiplicity = 1 in fragment      2.
+        # B(Fragment=1)         0.06457  -0.0279    0.01364 
+        # H(Fragment=1)         0.03117  -0.02317   1.21604 
+        # ...
+        #
+        # Note, however, that currently we only parse information for the whole system
+        # or supermolecule as Gaussian calls it.
+        if line.strip() == "Symbolic Z-matrix:":
 
-        #Extract Thermochemistry
-        #Temperature   298.150 Kelvin.  Pressure   1.00000 Atm.
-        #Zero-point correction=                           0.342233 (Hartree/
-        #Thermal correction to Energy=                    0.
-        #Thermal correction to Enthalpy=                  0.
-        #Thermal correction to Gibbs Free Energy=         0.302940
-        #Sum of electronic and zero-point Energies=           -563.649744
-        #Sum of electronic and thermal Energies=              -563.636699
-        #Sum of electronic and thermal Enthalpies=            -563.635755
-        #Sum of electronic and thermal Free Energies=         -563.689037
-        if "Sum of electronic and thermal Enthalpies" in line:
-            if not hasattr(self, 'enthaply'):
-                self.enthaply = float(line.split()[6])
-        if "Sum of electronic and thermal Free Energies=" in line:
-            if not hasattr(self, 'freeenergy'):
-                self.freeenergy = float(line.split()[7])
-        if line[1:12] == "Temperature":
-            if not hasattr(self, 'temperature'):
-                self.temperature = float(line.split()[1])
-        
-        # Number of atoms.
+            self.updateprogress(inputfile, "Symbolic Z-matrix", self.fupdate)
+
+            line = inputfile.next()
+            while line.split()[0] == 'Charge':
+
+                # For the supermolecule, we can parse the charge and multicplicity.
+                regex = ".*=(.*)Mul.*=\s*-?(\d+).*"
+                match = re.match(regex, line)
+                assert match, "Something unusual about the line: '%s'" % line
+                
+                self.set_attribute('charge', int(match.groups()[0]))
+                self.set_attribute('mult', int(match.groups()[1]))
+
+                if line.split()[-2] == "fragment":
+                    self.nfragments = int(line.split()[-1].strip('.'))
+
+                if line.strip()[-13:] == "model system.":
+                    self.nmodels = getattr(self, 'nmodels', 0) + 1
+
+                line = inputfile.next()
+
+            # The remaining part will allow us to get the atom count.
+            # When coordinates are given, there is a blank line at the end, but if
+            # there is a Z-matrix here, there will also be variables and we need to
+            # stop at those to get the right atom count.
+            # Also, in older versions there is bo blank line (G98 regressions),
+            # so we need to watch out for leaving the link.
+            natom = 0
+            while line.split() and not "Variables" in line and not "Leave Link" in line:
+                natom += 1
+                line = inputfile.next()
+            self.set_attribute('natom', natom)
+
+        # Continuing from above, there is not always a symbolic matrix, for example
+        # if the Z-matrix was in the input file. In such cases, try to match the
+        # line and get at the charge and multiplicity.
+        # 
+        #   Charge =  0 Multiplicity = 1 in supermolecule
+        #   Charge =  0 Multiplicity = 1 in fragment  1.
+        #   Charge =  0 Multiplicity = 1 in fragment  2.
+        if line[1:7] == 'Charge' and line.find("Multiplicity") >= 0:
+
+            self.updateprogress(inputfile, "Charge and Multiplicity", self.fupdate)
+
+            if line.split()[-1] == "supermolecule" or not "fragment" in line:
+
+                regex = ".*=(.*)Mul.*=\s*-?(\d+).*"
+                match = re.match(regex, line)
+                assert match, "Something unusual about the line: '%s'" % line
+                
+                self.set_attribute('charge', int(match.groups()[0]))
+                self.set_attribute('mult', int(match.groups()[1]))
+
+            if line.split()[-2] == "fragment":
+                self.nfragments = int(line.split()[-1].strip('.'))
+
+        # Number of atoms is also explicitely printed after the above.
         if line[1:8] == "NAtoms=":
 
             self.updateprogress(inputfile, "Attributes", self.fupdate)
                     
             natom = int(line.split()[1])
-            if not hasattr(self, "natom"):
-                self.natom = natom
+            self.set_attribute('natom', natom)
 
         # Catch message about completed optimization.
         if line[1:23] == "Optimization completed":
-            self.optfinished = True
-            self.optdone = True
+
+            if not hasattr(self, 'optdone'):
+                self.optdone = []
+
+            self.optdone.append(len(self.geovalues) - 1)
+
+        # Catch message about stopped optimization (not converged).
+        if line[1:21] == "Optimization stopped":
+            if not hasattr(self, "optdone"):
+                self.optdone = []
         
         # Extract the atomic numbers and coordinates from the input orientation,
         #   in the event the standard orientation isn't available.
-        if not self.optfinished and line.find("Input orientation") > -1 or line.find("Z-Matrix orientation") > -1:
+        if line.find("Input orientation") > -1 or line.find("Z-Matrix orientation") > -1:
 
             # If this is a counterpoise calculation, this output means that
             #   the supermolecule is now being considered, so we can set:
@@ -177,15 +228,12 @@ class Gaussian(logfileparser.Logfile):
             if not hasattr(self, "inputcoords"):
                 self.inputcoords = []
             self.inputatoms = []
-            
-            hyphens = next(inputfile)
-            colmNames = next(inputfile)
-            colmNames = next(inputfile)
-            hyphens = next(inputfile)
+
+            self.skip_lines(inputfile, ['d', 'cols', 'cols', 'd'])
             
             atomcoords = []
             line = next(inputfile)
-            while line != hyphens:
+            while list(set(line.strip())) != ["-"]:
                 broken = line.split()
                 self.inputatoms.append(int(broken[1]))
                 atomcoords.append(list(map(float, broken[3:6])))
@@ -193,9 +241,8 @@ class Gaussian(logfileparser.Logfile):
 
             self.inputcoords.append(atomcoords)
 
-            if not hasattr(self, "atomnos"):
-                self.atomnos = numpy.array(self.inputatoms, 'i')
-                self.natom = len(self.atomnos)
+            self.set_attribute('atomnos', self.inputatoms)
+            self.set_attribute('natom', len(self.inputatoms))
 
         # Extract the atomic masses.
         # Typical section:
@@ -225,7 +272,7 @@ class Gaussian(logfileparser.Logfile):
                 line = next(inputfile)
 
         # Extract the atomic numbers and coordinates of the atoms.
-        if not self.optfinished and line.strip() == "Standard orientation:":
+        if line.strip() == "Standard orientation:":
 
             self.updateprogress(inputfile, "Attributes", self.cupdate)
 
@@ -235,29 +282,128 @@ class Gaussian(logfileparser.Logfile):
 
             if not hasattr(self, "atomcoords"):
                 self.atomcoords = []
-            
-            hyphens = next(inputfile)
-            colmNames = next(inputfile)
-            colmNames = next(inputfile)
-            hyphens = next(inputfile)
+
+            self.skip_lines(inputfile, ['d', 'cols', 'cols', 'd'])
             
             atomnos = []
             atomcoords = []
             line = next(inputfile)
-            while line != hyphens:
+            while list(set(line.strip())) != ["-"]:
                 broken = line.split()
                 atomnos.append(int(broken[1]))
                 atomcoords.append(list(map(float, broken[-3:])))
                 line = next(inputfile)
             self.atomcoords.append(atomcoords)
 
-            if not hasattr(self, "natom"):
-                self.atomnos = numpy.array(atomnos, 'i')
-                self.natom = len(self.atomnos)
+            self.set_attribute('natom', len(atomnos))
+            self.set_attribute('atomnos', atomnos)
 
-            # make sure atomnos is added for the case where natom has already been set
-            elif not hasattr(self, "atomnos"):
-                self.atomnos = numpy.array(atomnos, 'i')
+        # This is a bit of a hack for regression Gaussian09/BH3_fragment_guess.pop_minimal.log
+        # to skip output for all fragments, assuming the supermolecule is always printed first.
+        # Eventually we want to make this more general, or even better parse the output for
+        # all fragment, but that will happen in a newer version of cclib.
+        if line[1:16] == "Fragment guess:" and getattr(self, 'nfragments', 0) > 1:
+            if not "full" in line:
+                inputfile.seek(0, 2)
+
+        # Another hack for regression Gaussian03/ortho_prod_prod_freq.log, which is an ONIOM job.
+        # Basically for now we stop parsing after the output for the real system, because
+        # currently we don't support changes in system size or fragments in cclib. When we do,
+        # we will want to parse the model systems, too, and that is what nmodels could track.
+        if "ONIOM: generating point" in line and line.strip()[-13:] == 'model system.' and getattr(self, 'nmodels', 0) > 0:
+            inputfile.seek(0,2)
+
+        # With the gfinput keyword, the atomic basis set functios are:
+        #
+        # AO basis set in the form of general basis input (Overlap normalization):
+        #  1 0
+        # S   3 1.00       0.000000000000
+        #      0.7161683735D+02  0.1543289673D+00
+        #      0.1304509632D+02  0.5353281423D+00
+        #      0.3530512160D+01  0.4446345422D+00
+        # SP   3 1.00       0.000000000000
+        #      0.2941249355D+01 -0.9996722919D-01  0.1559162750D+00
+        #      0.6834830964D+00  0.3995128261D+00  0.6076837186D+00
+        #      0.2222899159D+00  0.7001154689D+00  0.3919573931D+00
+        # ****
+        #  2 0
+        # S   3 1.00       0.000000000000
+        #      0.7161683735D+02  0.1543289673D+00
+        # ...
+        #
+        # The same is also printed when the gfprint keyword is used, but the
+        # interstitial lines differ and there are no stars between atoms:
+        #
+        # AO basis set (Overlap normalization):
+        # Atom C1       Shell     1 S   3     bf    1 -     1          0.509245180608         -2.664678875191          0.000000000000
+        #       0.7161683735D+02  0.1543289673D+00
+        #       0.1304509632D+02  0.5353281423D+00
+        #       0.3530512160D+01  0.4446345422D+00
+        # Atom C1       Shell     2 SP   3    bf    2 -     5          0.509245180608         -2.664678875191          0.000000000000
+        #       0.2941249355D+01 -0.9996722919D-01  0.1559162750D+00
+        # ...
+
+        #ONIOM calculations result basis sets reported for atoms that are not in order of atom number which breaks this code (line 390 relies on atoms coming in order)
+        if line[1:13] == "AO basis set" and not self.oniom:
+        
+            self.gbasis = []
+
+            # For counterpoise fragment calcualtions, skip these lines.
+            if self.counterpoise != 0: return
+
+            atom_line = inputfile.next()
+            self.gfprint = atom_line.split()[0] == "Atom"
+            self.gfinput = not self.gfprint
+
+            # Note how the shell information is on a separate line for gfinput,
+            # whereas for gfprint it is on the same line as atom information.
+            if self.gfinput:
+                shell_line = inputfile.next()
+
+            shell = []
+            while len(self.gbasis) < self.natom:
+
+                if self.gfprint:
+                    cols = atom_line.split()
+                    subshells = cols[4]
+                    ngauss = int(cols[5])
+                else:
+                    cols = shell_line.split()
+                    subshells = cols[0]
+                    ngauss = int(cols[1])
+
+                parameters = []
+                for ig in range(ngauss):
+                    line = inputfile.next()
+                    parameters.append(list(map(self.float, line.split())))
+                for iss, ss in enumerate(subshells):
+                    contractions = []
+                    for param in parameters:
+                        exponent = param[0]
+                        coefficient = param[iss+1]
+                        contractions.append((exponent, coefficient))
+                    subshell = (ss, contractions)
+                    shell.append(subshell)
+
+                if self.gfprint:
+                    line = inputfile.next()
+                    if line.split()[0] == "Atom":
+                        atomnum = int(re.sub(r"\D", "", line.split()[1]))
+                        if atomnum == len(self.gbasis) + 2:
+                            self.gbasis.append(shell)
+                            shell = []
+                        atom_line = line
+                    else:
+                        self.gbasis.append(shell)
+                else:
+                    line = inputfile.next()
+                    if line.strip() == "****":
+                        self.gbasis.append(shell)
+                        shell = []
+                        atom_line = inputfile.next()
+                        shell_line = inputfile.next()
+                    else:
+                        shell_line = line
 
         # Find the targets for SCF convergence (QM calcs).
         if line[1:44] == 'Requested convergence on RMS density matrix':
@@ -323,25 +469,44 @@ class Gaussian(logfileparser.Logfile):
 
             self.scfvalues.append(scfvalues)
 
-        # Extract SCF convergence information (AM1 calcs).
+        # Extract SCF convergence information (AM1, INDO and other semi-empirical calcs).
+        # The output (for AM1) looks like this:
+        # Ext34=T Pulay=F Camp-King=F BShift= 0.00D+00
+        # It=  1 PL= 0.103D+01 DiagD=T ESCF=     31.564733 Diff= 0.272D+02 RMSDP= 0.152D+00.
+        # It=  2 PL= 0.114D+00 DiagD=T ESCF=      7.265370 Diff=-0.243D+02 RMSDP= 0.589D-02.
+        # ...
+        # It= 11 PL= 0.184D-04 DiagD=F ESCF=      4.687669 Diff= 0.260D-05 RMSDP= 0.134D-05.
+        # It= 12 PL= 0.105D-04 DiagD=F ESCF=      4.687669 Diff=-0.686D-07 RMSDP= 0.215D-05.
+        # 4-point extrapolation.
+        # It= 13 PL= 0.110D-05 DiagD=F ESCF=      4.687669 Diff=-0.111D-06 RMSDP= 0.653D-07.
+        # Energy=    0.172272018655 NIter=  14.
         if line[1:4] == 'It=':
-                    
-            self.scftargets = numpy.array([1E-7], "d") # This is the target value for the rms
-            self.scfvalues = [[]]
 
-            line = next(inputfile)
+            scftargets = numpy.array([1E-7], "d") # This is the target value for the rms
+            scfvalues = [[]]
+
             while line.find(" Energy") == -1:
             
-                if self.progress:
-                    step = inputfile.tell()
-                    if step != oldstep:
-                        self.progress.update(step, "AM1 Convergence")
-                        oldstep = step
+                self.updateprogress(inputfile, "AM1 Convergence")
+
                         
                 if line[1:4] == "It=":
                     parts = line.strip().split()
-                    self.scfvalues[0].append(self.float(parts[-1][:-1]))
+                    scfvalues[0].append(self.float(parts[-1][:-1]))
+
                 line = next(inputfile)
+
+                # If an AM1 or INDO guess is used (Guess=INDO in the input, for example),
+                # this will be printed after a single iteration, so that is the line
+                # that should trigger a break from this loop. At least that's what we see
+                # for regression Gaussian/Gaussian09/guessIndo_modified_ALT.out
+                if line[:14] == " Initial guess":
+                    break
+
+            # Attach the attributes to the object Only after the energy is found .
+            if line.find(" Energy") == 0:
+                self.scftargets = scftargets
+                self.scfvalues = scfvalues
 
         # Note: this needs to follow the section where 'SCF Done' is used
         #   to terminate a loop when extracting SCF convergence information.
@@ -474,11 +639,11 @@ class Gaussian(logfileparser.Logfile):
             if not hasattr(self, "grads"):
                 self.grads = []
 
-            header = next(inputfile)
-            dashes = next(inputfile)
-            line = next(inputfile)
+            self.skip_lines(inputfile, ['header', 'd'])
+
             forces = []
-            while line != dashes:
+            line = next(inputfile)
+            while list(set(line.strip())) != ['-']:
                 tmpforces = []
                 for N in range(3): # Fx, Fy, Fz
                     force = line[23+N*15:38+N*15]
@@ -489,22 +654,42 @@ class Gaussian(logfileparser.Logfile):
                 line = next(inputfile)
             self.grads.append(forces)
 
-        # Charge and multiplicity.
-        # If counterpoise correction is used, multiple lines match.
-        # The first one contains charge/multiplicity of the whole molecule.:
-        #   Charge =  0 Multiplicity = 1 in supermolecule
-        #   Charge =  0 Multiplicity = 1 in fragment  1.
-        #   Charge =  0 Multiplicity = 1 in fragment  2.
-        if line[1:7] == 'Charge' and line.find("Multiplicity")>=0:
+        #Extract PES scan data
+        #Summary of the potential surface scan:
+        #  N       A          SCF
+        #----  ---------  -----------
+        #   1   109.0000    -76.43373
+        #   2   119.0000    -76.43011
+        #   3   129.0000    -76.42311
+        #   4   139.0000    -76.41398
+        #   5   149.0000    -76.40420
+        #   6   159.0000    -76.39541
+        #   7   169.0000    -76.38916
+        #   8   179.0000    -76.38664
+        #   9   189.0000    -76.38833
+        #  10   199.0000    -76.39391
+        #  11   209.0000    -76.40231
+        #----  ---------  -----------
+        if "Summary of the potential surface scan:" in line:
 
-            regex = ".*=(.*)Mul.*=\s*-?(\d+).*"
-            match = re.match(regex, line)
-            assert match, "Something unusual about the line: '%s'" % line
-            
-            if not hasattr(self, "charge"):
-                self.charge = int(match.groups()[0])
-            if not hasattr(self, "mult"):
-                self.mult = int(match.groups()[1])
+            scanenergies = []
+            scanparm = []
+            colmnames = next(inputfile)
+            hyphens = next(inputfile)
+            line = next(inputfile)
+            while line != hyphens:
+                broken = line.split()
+                scanenergies.append(float(broken[-1]))
+                scanparm.append(map(float, broken[1:-1]))
+                line = next(inputfile)
+            if not hasattr(self, "scanenergies"):
+                self.scanenergies = []
+                self.scanenergies = scanenergies
+            if not hasattr(self, "scanparm"):
+                self.scanparm = []
+                self.scanparm = scanparm
+            if not hasattr(self, "scannames"):
+                self.scannames = colmnames.split()[1:-1]
 
         # Orbital symmetries.
         if line[1:20] == 'Orbital symmetries:' and not hasattr(self, "mosyms"):
@@ -557,6 +742,12 @@ class Gaussian(logfileparser.Logfile):
                         self.mosyms[1].append(self.normalisesym(x.strip('()')))
                         i += 1
                     line = next(inputfile)
+
+            # Some calculations won't explicitely print the number of basis sets used,
+            # and will occasionally drop some without warning. We can infer the number,
+            # however, from the MO symmetries printed here. Specifically, this fixes
+            # regression Gaussian/Gaussian09/dvb_sp_terse.log (#23 on github).
+            self.set_attribute('nmo', len(self.mosyms[-1]))
 
         # Alpha/Beta electron eigenvalues.
         if line[1:6] == "Alpha" and line.find("eigenvalues") >= 0:
@@ -628,43 +819,6 @@ class Gaussian(logfileparser.Logfile):
                 line = next(inputfile)
 
             self.moenergies = [numpy.array(x, "d") for x in self.moenergies]
-            
-        # Gaussian Rev <= B.0.3 (?)
-        # AO basis set in the form of general basis input:
-        #  1 0
-        # S   3 1.00       0.000000000000
-        #      0.7161683735D+02  0.1543289673D+00
-        #      0.1304509632D+02  0.5353281423D+00
-        #      0.3530512160D+01  0.4446345422D+00
-        # SP   3 1.00       0.000000000000
-        #      0.2941249355D+01 -0.9996722919D-01  0.1559162750D+00
-        #      0.6834830964D+00  0.3995128261D+00  0.6076837186D+00
-        #      0.2222899159D+00  0.7001154689D+00  0.3919573931D+00
-        if line[1:16] == "AO basis set in":
-        
-            # For counterpoise fragment calcualtions, skip these lines.
-            if self.counterpoise != 0: return
-        
-            self.gbasis = []
-            line = next(inputfile)
-            while line.strip():
-                gbasis = []
-                line = next(inputfile)
-                while line.find("*")<0:
-                    temp = line.split()
-                    symtype = temp[0]
-                    numgau = int(temp[1])
-                    gau = []
-                    for i in range(numgau):
-                        temp = list(map(self.float, next(inputfile).split()))
-                        gau.append(temp)
-                        
-                    for i, x in enumerate(symtype):
-                        newgau = [(z[0], z[i+1]) for z in gau]
-                        gbasis.append((x, newgau))
-                    line = next(inputfile) # i.e. "****" or "SP ...."
-                self.gbasis.append(gbasis)
-                line = next(inputfile) # i.e. "20 0" or blank line
 
         # Start of the IR/Raman frequency section.
         # Caution is advised here, as additional frequency blocks
@@ -720,14 +874,27 @@ class Gaussian(logfileparser.Logfile):
                 
                     if not hasattr(self, 'vibirs'):
                         self.vibirs = []
-                    irs = [self.float(f) for f in line[15:].split()]
+
+                    irs = []
+                    for ir in line[15:].split():
+                        try:
+                            irs.append(self.float(ir))
+                        except ValueError:
+                            irs.append(self.float('nan'))
                     self.vibirs.extend(irs)
 
                 if line[1:15] == "Raman Activ --":
                 
                     if not hasattr(self, 'vibramans'):
                         self.vibramans = []
-                    ramans = [self.float(f) for f in line[15:].split()]
+
+                    ramans = []
+                    for raman in line[15:].split():
+                        try:
+                            ramans.append(self.float(raman))
+                        except ValueError:
+                            ramans.append(self.float('nan'))
+
                     self.vibramans.extend(ramans)
                 
                 # Block with displacement should start with this.
@@ -748,44 +915,6 @@ class Gaussian(logfileparser.Logfile):
                 
                 line = next(inputfile)
 
-# Below is the old code for the IR/Raman frequency block, can probably be removed.
-#            while len(line[:15].split()) == 0:
-#                self.logger.debug(line)
-#                self.vibsyms.extend(line.split()) # Adding new symmetry
-#                line = inputfile.next()
-#                # Read in frequencies.
-#                freqs = [self.float(f) for f in line.split()[2:]]
-#                self.vibfreqs.extend(freqs)
-#                line = inputfile.next()
-#                line = inputfile.next()
-#                line = inputfile.next()
-#                irs = [self.float(f) for f in line.split()[3:]]
-#                self.vibirs.extend(irs)
-#                line = inputfile.next() # Either the header or a Raman line
-#                if line.find("Raman") >= 0:
-#                    if not hasattr(self, "vibramans"):
-#                        self.vibramans = []
-#                    ramans = [self.float(f) for f in line.split()[3:]]
-#                    self.vibramans.extend(ramans)
-#                    line = inputfile.next() # Depolar (P)
-#                    line = inputfile.next() # Depolar (U)
-#                    line = inputfile.next() # Header
-#                line = inputfile.next() # First line of cartesian displacement vectors
-#                p = [[], [], []]
-#                while len(line[:15].split()) > 0:
-#                    # Store the cartesian displacement vectors
-#                    broken = map(float, line.strip().split()[2:])
-#                    for i in range(0, len(broken), 3):
-#                        p[i/3].append(broken[i:i+3])
-#                    line = inputfile.next()
-#                self.vibdisps.extend(p[0:len(broken)/3])
-#                line = inputfile.next() # Should be the line with symmetries
-#            self.vibfreqs = numpy.array(self.vibfreqs, "d")
-#            self.vibirs = numpy.array(self.vibirs, "d")
-#            self.vibdisps = numpy.array(self.vibdisps, "d")
-#            if hasattr(self, "vibramans"):
-#                self.vibramans = numpy.array(self.vibramans, "d")
-                
         # Electronic transitions.
         if line[1:14] == "Excited State":
         
@@ -794,6 +923,7 @@ class Gaussian(logfileparser.Logfile):
                 self.etoscs = []
                 self.etsyms = []
                 self.etsecs = []
+
             # Need to deal with lines like:
             # (restricted calc)
             # Excited State   1:   Singlet-BU     5.3351 eV  232.39 nm  f=0.1695
@@ -837,33 +967,34 @@ class Gaussian(logfileparser.Logfile):
                 line = next(inputfile)
             self.etsecs.append(CIScontrib)
 
-# Circular dichroism data (different for G03 vs G09)
-
-# G03
-
-## <0|r|b> * <b|rxdel|0>  (Au), Rotatory Strengths (R) in
-## cgs (10**-40 erg-esu-cm/Gauss)
-##       state          X           Y           Z     R(length)
-##         1         0.0006      0.0096     -0.0082     -0.4568
-##         2         0.0251     -0.0025      0.0002     -5.3846
-##         3         0.0168      0.4204     -0.3707    -15.6580
-##         4         0.0721      0.9196     -0.9775     -3.3553
-
-# G09
-
-## 1/2[<0|r|b>*<b|rxdel|0> + (<0|rxdel|b>*<b|r|0>)*]
-## Rotatory Strengths (R) in cgs (10**-40 erg-esu-cm/Gauss)
-##       state          XX          YY          ZZ     R(length)     R(au)
-##         1        -0.3893     -6.7546      5.7736     -0.4568     -0.0010
-##         2       -17.7437      1.7335     -0.1435     -5.3845     -0.0114
-##         3       -11.8655   -297.2604    262.1519    -15.6580     -0.0332
-
+        # Circular dichroism data (different for G03 vs G09)
+        # 
+        # G03
+        # 
+        # ## <0|r|b> * <b|rxdel|0>  (Au), Rotatory Strengths (R) in
+        # ## cgs (10**-40 erg-esu-cm/Gauss)
+        # ##       state          X           Y           Z     R(length)
+        # ##         1         0.0006      0.0096     -0.0082     -0.4568
+        # ##         2         0.0251     -0.0025      0.0002     -5.3846
+        # ##         3         0.0168      0.4204     -0.3707    -15.6580
+        # ##         4         0.0721      0.9196     -0.9775     -3.3553
+        # 
+        # G09
+        # 
+        # ## 1/2[<0|r|b>*<b|rxdel|0> + (<0|rxdel|b>*<b|r|0>)*]
+        # ## Rotatory Strengths (R) in cgs (10**-40 erg-esu-cm/Gauss)
+        # ##       state          XX          YY          ZZ     R(length)     R(au)
+        # ##         1        -0.3893     -6.7546      5.7736     -0.4568     -0.0010
+        # ##         2       -17.7437      1.7335     -0.1435     -5.3845     -0.0114
+        # ##         3       -11.8655   -297.2604    262.1519    -15.6580     -0.0332
         if (line[1:52] == "<0|r|b> * <b|rxdel|0>  (Au), Rotatory Strengths (R)" or
             line[1:50] == "1/2[<0|r|b>*<b|rxdel|0> + (<0|rxdel|b>*<b|r|0>)*]"):
 
             self.etrotats = []
-            next(inputfile) # Units
-            headers = next(inputfile) # Headers
+
+            self.skip_lines(inputfile, ['units'])
+
+            headers = next(inputfile)
             Ncolms = len(headers.split())
             line = next(inputfile)
             parts = line.strip().split()
@@ -896,13 +1027,17 @@ class Gaussian(logfileparser.Logfile):
             # For ONIOM calcs, ignore this section in order to bypass assertion failure.
             if self.oniom: return
 
-            # If nbasis was already parsed, check if it changed.
+            # If nbasis was already parsed, check if it changed. If it did, issue a warning.
+            # In the future, we will probably want to have nbasis, as well as nmo below,
+            # as a list so that we don't need to pick one value when it changes.
             nbasis = int(line.split('=')[1].split()[0])
             if hasattr(self, "nbasis"):
-                assert nbasis == self.nbasis
-            else:
-                self.nbasis = nbasis
-                
+                try:
+                    assert nbasis == self.nbasis
+                except AssertionError:
+                    self.logger.warning("Number of basis functions (nbasis) has changed from %i to %i" % (self.nbasis, nbasis))
+            self.nbasis = nbasis
+
         # Number of linearly-independent basis sets.
         if line[1:7] == "NBsUse":
 
@@ -913,20 +1048,14 @@ class Gaussian(logfileparser.Logfile):
             if self.oniom: return
 
             nmo = int(line.split('=')[1].split()[0])
-            if hasattr(self, "nmo"):
-                assert nmo == self.nmo
-            else:
-                self.nmo = nmo
+            self.set_attribute('nmo', nmo)
 
         # For AM1 calculations, set nbasis by a second method,
         #   as nmo may not always be explicitly stated.
         if line[7:22] == "basis functions, ":
         
             nbasis = int(line.split()[0])
-            if hasattr(self, "nbasis"):
-                assert nbasis == self.nbasis
-            else:
-                self.nbasis = nbasis
+            self.set_attribute('nbasis', nbasis)
 
         # Molecular orbital overlap matrix.
         # Has to deal with lines such as:
@@ -1036,20 +1165,31 @@ class Gaussian(logfileparser.Logfile):
             if not self.popregular and not beta:
                 self.mocoeffs = mocoeffs
 
-        # Natural Orbital Coefficients (nocoeffs) - alternative for mocoeffs.
-        # Most extensively formed after CI calculations, but not only.
-        # Like for mocoeffs, this is also where aonames and atombasis are parsed.
+        # Natural orbital coefficients (nocoeffs) and occupation numbers (nooccnos),
+        # which are respectively define the eigenvectors and eigenvalues of the
+        # diagnolized one-electron density matrix. These orbitals are formed after
+        # configuration interact (CI) calculations, but not only. Similarly to mocoeffs,
+        # we can parse and check aonames and atombasis here.
+        #
+        #     Natural Orbital Coefficients:
+        #                           1         2         3         4         5
+        #     Eigenvalues --     2.01580   2.00363   2.00000   2.00000   1.00000
+        #   1 1   O  1S          0.00000  -0.15731  -0.28062   0.97330   0.00000
+        #   2        2S          0.00000   0.75440   0.57746   0.07245   0.00000
+        # ...
+        #
         if line[5:33] == "Natural Orbital Coefficients":
 
             self.aonames = []
             self.atombasis = []
             nocoeffs = numpy.zeros((self.nmo, self.nbasis), "d")
+            nooccnos = []
 
             base = 0
             self.popregular = False
             for base in range(0, self.nmo, 5):
                 
-                self.updateprogress(inputfile, "Coefficients", self.fupdate)
+                self.updateprogress(inputfile, "Natural orbitals", self.fupdate)
                          
                 colmNames = next(inputfile)   
                 if base == 0 and int(colmNames.split()[0]) != 1:
@@ -1057,9 +1197,8 @@ class Gaussian(logfileparser.Logfile):
                     # and so, only aonames (not mocoeffs) will be extracted
                     self.popregular = True
 
-                # No symmetry line for natural orbitals.
-                # symmetries = inputfile.next()
                 eigenvalues = next(inputfile)
+                nooccnos.extend(map(float, eigenvalues.split()[2:]))
 
                 for i in range(self.nbasis):
                                    
@@ -1098,6 +1237,7 @@ class Gaussian(logfileparser.Logfile):
 
             if not self.popregular:
                 self.nocoeffs = nocoeffs
+                self.nooccnos = nooccnos
 
         # For FREQ=Anharm, extract anharmonicity constants
         if line[1:40] == "X matrix of Anharmonic Constants (cm-1)":
@@ -1121,10 +1261,7 @@ class Gaussian(logfileparser.Logfile):
         # Pseudopotential charges.
         if line.find("Pseudopotential Parameters") > -1:
 
-            dashes = next(inputfile)
-            label1 = next(inputfile)
-            label2 = next(inputfile)
-            dashes = next(inputfile)
+            self.skip_lines(inputfile, ['e', 'label1', 'label2', 'e'])
 
             line = next(inputfile)
             if line.find("Centers:") < 0:
@@ -1177,22 +1314,43 @@ class Gaussian(logfileparser.Logfile):
         if line[1:7] == "ONIOM:":
             self.oniom = True
 
-        if (line[1:24] == "Mulliken atomic charges" or
-            line[1:22] == "Lowdin Atomic Charges"):
+        # Atomic charges are straightforward to parse, although the header
+        # has changed over time somewhat.
+        #
+        # Mulliken charges:
+        #                1
+        #     1  C   -0.004513
+        #     2  C   -0.077156
+        # ...
+        # Sum of Mulliken charges =   0.00000
+        # Mulliken charges with hydrogens summed into heavy atoms:
+        #               1
+        #     1  C   -0.004513
+        #     2  C    0.002063
+        # ...
+        #
+        if line[1:25] == "Mulliken atomic charges:" or line[1:18] == "Mulliken charges:" or \
+           line[1:23] == "Lowdin Atomic Charges:" or line[1:16] == "Lowdin charges:":
+
             if not hasattr(self, "atomcharges"):
                 self.atomcharges = {}
+
             ones = next(inputfile)
+
             charges = []
             nline = next(inputfile)
             while not "Sum of" in nline:
                 charges.append(float(nline.split()[2]))
                 nline = next(inputfile)
+
             if "Mulliken" in line:
                 self.atomcharges["mulliken"] = charges
             else:
                 self.atomcharges["lowdin"] = charges
 
         if line.strip() == "Natural Population":
+            if not hasattr(self, 'atomcharges'):
+                self.atomcharges = {}
             line1 = next(inputfile)
             line2 = next(inputfile)
             if line1.split()[0] == 'Natural' and line2.split()[2] == 'Charge':
@@ -1203,6 +1361,22 @@ class Gaussian(logfileparser.Logfile):
                     charges.append(float(nline.split()[2]))
                 self.atomcharges["natural"] = charges
 
+        #Extract Thermochemistry
+        #Temperature   298.150 Kelvin.  Pressure   1.00000 Atm.
+        #Zero-point correction=                           0.342233 (Hartree/
+        #Thermal correction to Energy=                    0.
+        #Thermal correction to Enthalpy=                  0.
+        #Thermal correction to Gibbs Free Energy=         0.302940
+        #Sum of electronic and zero-point Energies=           -563.649744
+        #Sum of electronic and thermal Energies=              -563.636699
+        #Sum of electronic and thermal Enthalpies=            -563.635755
+        #Sum of electronic and thermal Free Energies=         -563.689037
+        if "Sum of electronic and thermal Enthalpies" in line:
+            self.set_attribute('enthalpy', float(line.split()[6]))
+        if "Sum of electronic and thermal Free Energies=" in line:
+            self.set_attribute('freenergy', float(line.split()[7]))
+        if line[1:12] == "Temperature":
+            self.set_attribute('temperature', float(line.split()[1]))
 
 
 if __name__ == "__main__":

@@ -1,19 +1,25 @@
-# This file is part of cclib (http://cclib.sf.net), a library for parsing
+# -*- coding: utf-8 -*-
+#
+# This file is part of cclib (http://cclib.github.io), a library for parsing
 # and interpreting the results of computational chemistry packages.
 #
-# Copyright (C) 2006, the cclib development team
+# Copyright (C) 2006-2014, the cclib development team
 #
 # The library is free software, distributed under the terms of
 # the GNU Lesser General Public version 2.1 or later. You should have
 # received a copy of the license along with cclib. You can also access
 # the full license online at http://www.gnu.org/copyleft/lgpl.html.
 
+"""Calculation methods related to volume based on cclib data."""
+
+from __future__ import print_function
 import copy
 
 import numpy
 
 try:
     from PyQuante.CGBF import CGBF
+    from cclib.bridge import cclib2pyquante
     module_pyq = True
 except:
     module_pyq = False
@@ -25,7 +31,6 @@ try:
 except:
     module_pyvtk = False
 
-from cclib.bridge import makepyquante
 from cclib.parser.utils import convertor
 
 
@@ -243,7 +248,7 @@ if __name__=="__main__":
     except ImportError:
         pass
 
-    from cclib.parser import ccopen
+    from cclib.io import ccopen
     import logging
     a = ccopen("../../../data/Gaussian/basicGaussian03/dvb_sp_basis.log")
     a.logger.setLevel(logging.ERROR)

@@ -1,31 +1,26 @@
-# This file is part of cclib (http://cclib.sf.net), a library for parsing
+# -*- coding: utf-8 -*-
+#
+# This file is part of cclib (http://cclib.github.io), a library for parsing
 # and interpreting the results of computational chemistry packages.
 #
-# Copyright (C) 2006, the cclib development team
+# Copyright (C) 2006-2014, the cclib development team
 #
 # The library is free software, distributed under the terms of
 # the GNU Lesser General Public version 2.1 or later. You should have
 # received a copy of the license along with cclib. You can also access
 # the full license online at http://www.gnu.org/copyleft/lgpl.html.
 
-import io
-import collections
+"""Generic output file parser and related tools"""
 
-try:
-    import bz2 # New in Python 2.3.
-except ImportError:
-    bz2 = None
+
+import bz2
 import fileinput
 import gzip
 import inspect
+import io
 import logging
-logging.logMultiprocessing =  0 # To avoid a problem with Avogadro
 import os
 import random
-try:
-    set # Standard type from Python 2.4+.
-except NameError:
-    from sets import Set as set
 import sys
 import zipfile
 
@@ -34,25 +29,93 @@ import numpy
 from . import utils
 from .data import ccData
 
+
+# This seems to avoid a problem with Avogadro.
+logging.logMultiprocessing =  0
+
+
 class myBZ2File(bz2.BZ2File):
     """Return string instead of bytes"""
     def __next__(self):
         line = super().__next__()
         return line.decode("ascii", "replace")
+
 class myGzipFile(gzip.GzipFile):
     """Return string instead of bytes"""
     def __next__(self):
         line = super().__next__()
         return line.decode("ascii", "replace")
 
+
+class FileWrapper(object):
+    """Wrap a file-like object or stream with some custom tweaks"""
+
+    def __init__(self, source, pos=0):
+
+        self.src = source
+
+        # Most file-like objects have seek and tell methods, but streams returned
+        # by urllib.urlopen in Python2 do not, which will raise an AttributeError
+        # in this code. On the other hand, in Python3 these methods do exist since
+        # urllib uses the stream class in the io library, but they raise a different
+        # error, namely is.UnsupportedOperation. That is why it is hard to be more
+        # specific with except block here.
+        try:
+
+            self.src.seek(0, 2)
+            self.size = self.src.tell()
+            self.src.seek(pos, 0)
+            self.pos = pos
+
+        except:
+
+            # Stream returned by urllib should have size information.
+            if hasattr(self.src, 'headers') and 'content-length' in self.src.headers:
+                self.size = int(self.src.headers['content-length'])
+
+            # Assume the position is what was passed to the constructor.
+            self.pos = pos
+
+    def next(self):
+        line = next(self.src)
+        self.pos += len(line)
+        return line
+
+    def __next__(self):
+        return self.next()
+
+    def __iter__(self):
+        return self
+
+    def close(self):
+        self.src.close()
+
+    def seek(self, pos, ref):
+
+        # If we are seeking to end, we can emulate it usually. As explained above,
+        # we cannot be too specific with the except clause due to differences
+        # between Python2 and 3. Yet another reason to drop Python 2 soon!
+        try:
+            self.src.seek(pos, ref)
+        except:
+            if ref == 2:
+                self.src.read()
+            else:
+                raise
+
+        if ref == 0:
+            self.pos = pos
+        if ref == 1:
+            self.pos += pos
+        if ref == 2 and hasattr(self, 'size'):
+            self.pos = self.size
+
+
 def openlogfile(filename):
     """Return a file object given a filename.
 
     Given the filename of a log file or a gzipped, zipped, or bzipped
-    log file, this function returns a regular Python file object.
-    
-    Given an address starting with http://, this function retrieves the url
-    and returns a file object using a temporary file.
+    log file, this function returns a file-like object.
 
     Given a list of filenames, this function returns a FileInput object,
     which can be used for seamless iteration without concatenation.
@@ -62,14 +125,14 @@ def openlogfile(filename):
     if type(filename) in [str, str]:
 
         extension = os.path.splitext(filename)[1]
-        
+
         if extension == ".gz":
             fileobject = myGzipFile(filename, "r")
 
         elif extension == ".zip":
             zip = zipfile.ZipFile(filename, "r")
             assert len(zip.namelist()) == 1, "ERROR: Zip file contains more than 1 file"
-            fileobject = io.StringIO(zip.read(zip.namelist()[0]).decode("ascii"))
+            fileobject = io.StringIO(zip.read(zip.namelist()[0]).decode("ascii", "ignore"))
 
         elif extension in ['.bz', '.bz2']:
             # Module 'bz2' is not always importable.
@@ -77,18 +140,22 @@ def openlogfile(filename):
             fileobject = myBZ2File(filename, "r")
 
         else:
-            fileobject = open(filename, "r")
+            fileobject = FileWrapper(io.open(filename, "r", errors='ignore'))
 
         return fileobject
-    
+
     elif hasattr(filename, "__iter__"):
-    
+
+        # This is needed, because fileinput will assume stdin when filename is empty.
+        if len(filename) == 0:
+            return None
+
         # Compression (gzip and bzip) is supported as of Python 2.5.
         if sys.version_info[0] >= 2 and sys.version_info[1] >= 5:
             fileobject = fileinput.input(filename, openhook=fileinput.hook_compressed)
         else:
             fileobject = fileinput.input(filename)
-        
+
         return fileobject
 
 
@@ -96,25 +163,27 @@ class Logfile(object):
     """Abstract class for logfile objects.
 
     Subclasses defined by cclib:
-        ADF, GAMESS, GAMESSUK, Gaussian, Jaguar, Molpro, ORCA
-    
+        ADF, DALTON, GAMESS, GAMESSUK, Gaussian, Jaguar, Molpro, NWChem, ORCA,
+          Psi, QChem
     """
 
-    def __init__(self, source, progress=None,
-                       loglevel=logging.INFO, logname="Log", logstream=sys.stdout,
-                       fupdate=0.05, cupdate=0.002, 
-                       datatype=ccData):
+    def __init__(self, source, loglevel=logging.INFO, logname="Log",
+                    logstream=sys.stdout, datatype=ccData, **kwds):
         """Initialise the Logfile object.
 
-        This should be called by a ubclass in its own __init__ method.
+        This should be called by a subclass in its own __init__ method.
 
         Inputs:
-            source - a single logfile, a list of logfiles, or input stream
+            source - a logfile, list of logfiles, or stream with at least a read method
+            loglevel - integer corresponding to a log level from the logging module
+            logname - name of the source logfile passed to this constructor
+            logstream - where to output the logging information
+            datatype - class to use for gathering data attributes
         """
 
-        # Set the filename to source if it is a string or a list of filenames.
-        # In the case of an input stream, set some arbitrary name and the stream.
-        # Elsewise, raise an Exception.
+        # Set the filename to source if it is a string or a list of strings, which are
+        # assumed to be filenames. Otherwise, assume the source is a file-like object
+        # if it has a read method, and we will try to use it like a stream.
         if isinstance(source, str):
             self.filename = source
             self.isstream = False
@@ -127,11 +196,6 @@ class Logfile(object):
             self.stream = source
         else:
             raise ValueError
-
-        # Progress indicator.
-        self.progress = progress
-        self.fupdate = fupdate
-        self.cupdate = cupdate
 
         # Set up the logger.
         # Note that calling logging.getLogger() with one name always returns the same instance.
@@ -149,15 +213,23 @@ class Logfile(object):
         # Periodic table of elements.
         self.table = utils.PeriodicTable()
 
-        # This is the class that will be used in the data object returned by parse(),
-        #   and should normally be ccData or a subclass.
+        # This is the class that will be used in the data object returned by parse(), and should
+        # normally be ccData or a subclass of it.
         self.datatype = datatype
+
+        # Change the class used if we want optdone to be a list or if the 'future' option
+        # is used, which might have more consequences in the future.
+        optdone_as_list = kwds.get("optdone_as_list", False) or kwds.get("future", False)
+        optdone_as_list = optdone_as_list if isinstance(optdone_as_list, bool) else False
+        if not optdone_as_list:
+            from .data import ccData_optdone_bool
+            self.datatype = ccData_optdone_bool
 
     def __setattr__(self, name, value):
 
         # Send info to logger if the attribute is in the list self._attrlist.
         if name in getattr(self, "_attrlist", {}) and hasattr(self, "logger"):
-                    
+
             # Call logger.info() only if the attribute is new.
             if not hasattr(self, name):
                 if type(value) in [numpy.ndarray, list]:
@@ -168,7 +240,7 @@ class Logfile(object):
         # Set the attribute.
         object.__setattr__(self, name, value)
 
-    def parse(self, fupdate=None, cupdate=None):
+    def parse(self, progress=None, fupdate=0.05, cupdate=0.002):
         """Parse the logfile, using the assumed extract method of the child."""
 
         # Check that the sub-class has an extract attribute,
@@ -189,30 +261,17 @@ class Logfile(object):
         if not self.isstream:
             inputfile = openlogfile(self.filename)
         else:
-            inputfile = self.stream
+            inputfile = FileWrapper(self.stream)
 
-        # Intialize self.progress.
-        if self.progress:
-            inputfile.seek(0, 2)
-            nstep = inputfile.tell()
-            inputfile.seek(0)
-            self.progress.initialize(nstep)
+        # Intialize self.progress
+        is_compressed = isinstance(inputfile, myGzipFile) or isinstance(inputfile, myBZ2File)
+        if progress and not (is_compressed):
+            self.progress = progress
+            self.progress.initialize(inputfile.size)
             self.progress.step = 0
-            if fupdate:
-                self.fupdate = fupdate
-            if cupdate:
-                self.cupdate = cupdate
+        self.fupdate = fupdate
+        self.cupdate = cupdate
 
-        # Initialize the ccData object that will be returned.
-        # This is normally ccData, but can be changed by passing
-        #   the datatype argument to __init__().
-        data = self.datatype()
-        
-        # Copy the attribute list, so that the parser knows what to expect,
-        #   specifically in __setattr__().
-        # The class self.datatype (normally ccData) must have this attribute.
-        self._attrlist = data._attrlist
-        
         # Maybe the sub-class has something to do before parsing.
         self.before_parsing()
 
@@ -248,43 +307,43 @@ class Logfile(object):
         if not hasattr(self, "coreelectrons") and hasattr(self, "natom"):
             self.coreelectrons = numpy.zeros(self.natom, "i")
 
-        # Move all cclib attributes to the ccData object.
-        # To be moved, an attribute must be in data._attrlist.
-        for attr in data._attrlist:
-            if hasattr(self, attr):
-                setattr(data, attr, getattr(self, attr))
-                
-        # Now make sure that the cclib attributes in the data object
-        #   are all the correct type (including arrays and lists of arrays).
+        # Create the data object we want to return. This is normally ccData, but can be changed
+        # by passing the datatype argument to the constructor. All supported cclib attributes
+        # are copied to this object, but beware that in order to be moved an attribute must be
+        # included in the data._attrlist of ccData (or whatever else).
+        # There is the possibility of passing assitional argument via self.data_args, but
+        # we use this sparingly in cases where we want to limit the API with options, etc.
+        data = self.datatype(attributes=self.__dict__)
+
+        # Now make sure that the cclib attributes in the data object are all the correct type,
+        # including arrays and lists of arrays.
         data.arrayify()
 
         # Delete all temporary attributes (including cclib attributes).
-        # All attributes should have been moved to a data object,
-        #   which will be returned.
+        # All attributes should have been moved to a data object, which will be returned.
         for attr in list(self.__dict__.keys()):
             if not attr in _nodelete:
                 self.__delattr__(attr)
 
         # Update self.progress as done.
-        if self.progress:
-            self.progress.update(nstep, "Done")
+        if hasattr(self, "progress"):
+            self.progress.update(inputfile.size, "Done")
 
-        # Return the ccData object that was generated.
         return data
 
     def before_parsing(self):
-
+        """Set parser-specific variables and do other initial things here."""
         pass
 
     def after_parsing(self):
-
+        """Correct data or do parser-specific validation after parsing is finished."""
         pass
 
     def updateprogress(self, inputfile, msg, xupdate=0.05):
         """Update progress."""
 
-        if self.progress and random.random() < xupdate:
-            newstep = inputfile.tell()
+        if hasattr(self, "progress") and random.random() < xupdate:
+            newstep = inputfile.pos
             if newstep != self.progress.step:
                 self.progress.update(newstep, msg)
                 self.progress.step = newstep
@@ -299,16 +358,94 @@ class Logfile(object):
         return "ERROR: This should be overwritten by this subclass"
 
     def float(self, number):
-        """Convert a string to a float avoiding the problem with Ds.
+        """Convert a string to a float.
+
+        This method should perform certain checks that are specific to cclib,
+        including avoiding the problem with Ds instead of Es in scientific notation.
+        Another point is converting string signifying numerical problems (*****)
+        to something we can manage (Numpy's NaN).
 
         >>> t = Logfile("dummyfile")
         >>> t.float("123.2323E+02")
         12323.23
         >>> t.float("123.2323D+02")
         12323.23
+        >>> t.float("*****")
+        nan
         """
-        number = number.replace("D","E")
-        return float(number)
+
+        if list(set(number)) == ['*']:
+            return numpy.nan
+
+        return float(number.replace("D","E"))
+
+    def set_attribute(self, name, value, check=True):
+        """Set an attribute and perform a check when it already exists.
+
+        Note that this can be used for scalars and lists alike, whenever we want
+        to set a value for an attribute. By default we want to check that
+        the value does not change if the attribute already exists, and this function
+        is a good place to add more tests in the future.
+        """
+        if check and hasattr(self, name):
+            try:
+                assert getattr(self, name) == value
+            except AssertionError:
+                self.logger.warning("Attribute %s changed value (%s -> %s)" % (name, getattr(self, name), value))
+        setattr(self, name, value)
+
+    def skip_lines(self, inputfile, sequence):
+        """Read trivial line types and check they are what they are supposed to be.
+
+        This function will read len(sequence) lines and do certain checks on them,
+        when the elements of sequence have the appropriate values. Currently the
+        following elements trigger checks:
+            'blank' or 'b'      - the line should be blank
+            'dashes' or 'd'     - the line should contain only dashes (or spaces)
+            'equals' or 'e'     - the line should contain only equal signs (or spaces)
+            'stars' or 's'      - the line should contain only stars (or spaces)
+        """
+
+        expected_characters = {
+            '-' : ['dashes', 'd'],
+            '=' : ['equals', 'e'],
+            '*' : ['stars', 's'],
+        }
+
+        lines = []
+        for expected in sequence:
+
+            # Read the line we want to skip.
+            line = next(inputfile)
+
+            # Blank lines are perhaps the most common thing we want to check for.
+            if expected in ["blank", "b"]:
+                try:
+                    assert line.strip() == ""
+                except AssertionError:
+                    frame, fname, lno, funcname, funcline, index = inspect.getouterframes(inspect.currentframe())[1]
+                    parser = fname.split('/')[-1]
+                    msg = "In %s, line %i, line not blank as expected: %s" % (parser, lno, line.strip())
+                    self.logger.warning(msg)
+
+            # All cases of heterogeneous lines can be dealt with by the same code.
+            for character, keys in expected_characters.items():
+                if expected in keys:
+                    try:
+                        assert all([c == character for c in line.strip() if c != ' '])
+                    except AssertionError:
+                        frame, fname, lno, funcname, funcline, index = inspect.getouterframes(inspect.currentframe())[1]
+                        parser = fname.split('/')[-1]
+                        msg = "In %s, line %i, line not all %s as expected: %s" % (parser, lno, keys[0], line.strip())
+                        self.logger.warning(msg)
+                        continue
+
+            # Save the skipped line, and we will return the whole list.
+            lines.append(line)
+
+        return lines
+
+    skip_line = lambda self, inputfile, expected: self.skip_lines(inputfile, [expected])
 
 
 if __name__ == "__main__":
