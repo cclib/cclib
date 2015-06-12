@@ -243,7 +243,12 @@ class NWChem(logfileparser.Logfile):
         # This section contains general parameters for Hartree-Fock calculations,
         # which do not contain the 'General Information' section like most jobs.
         if line.strip() == "NWChem SCF Module":
-            self.skip_lines(inputfile, ['d', 'b', 'b', 'title', 'b', 'b', 'b'])
+            # If the calculation doesn't have a title specified, there
+            # aren't as many lines to skip here.
+            self.skip_lines(inputfile, ['d', 'b', 'b'])
+            line = next(inputfile)
+            if line.strip():
+                self.skip_lines(inputfile, ['b', 'b', 'b'])
             line = next(inputfile)
             while line.strip():
                 if line[2:8] == "charge":
