@@ -834,14 +834,14 @@ class Gaussian(logfileparser.Logfile):
             while line.strip() != "":
 
                 # The line with indices
-                if line[1:15].strip() == "" and line[15:23].strip().isdigit():
-                    freqbase = int(line[15:23])
+                if line[1:15].strip() == "" and line[15:60].split()[0].isdigit():
+                    freqbase = int(line[15:60].split()[0])
                     if freqbase == 1 and hasattr(self, 'vibfreqs'):
                         # This is a reparse of this information
                         removeold = True
 
                 # Lines with symmetries and symm. indices begin with whitespace.
-                if line[1:15].strip() == "" and not line[15:23].strip().isdigit():
+                if line[1:15].strip() == "" and not line[15:60].split()[0].isdigit():
 
                     if not hasattr(self, 'vibsyms'):
                         self.vibsyms = []
