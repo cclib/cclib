@@ -825,21 +825,42 @@ class Gaussian(logfileparser.Logfile):
         #   can be printed by Gaussian (with slightly different formats),
         #   often doubling the information printed.
         # See, for a non-standard exmaple, regression Gaussian98/test_H2.log
-        if line[1:14] == "Harmonic freq":
-
+        # If either the Gaussian freq=hpmodes keyword or IOP(7/33=1) is used,
+        # an extra frequency block with higher-precision vibdisps is 
+        # printed before the normal frequency block.
+        # Note that the code parses only the vibsyms and vibdisps
+        # from the high-precision block, but parses vibsyms, vibfreqs,
+        # vibramans and vibirs from the normal block. vibsyms parsed 
+        # from the high-precision block are discarded and replaced by those
+        # from the normal block while the high-precision vibdisps, if present, 
+        # are used to overwrite default-precision vibdisps at the end of the parse. 
+        if line[1:14] == "Harmonic freq": #This matches in both freq block types 
+            
             self.updateprogress(inputfile, "Frequency Information", self.fupdate)
-            removeold = False
-
+            
             # The whole block should not have any blank lines.
             while line.strip() != "":
 
                 # The line with indices
                 if line[1:15].strip() == "" and line[15:60].split()[0].isdigit():
                     freqbase = int(line[15:60].split()[0])
-                    if freqbase == 1 and hasattr(self, 'vibfreqs'):
-                        # This is a reparse of this information
-                        removeold = True
-
+                    if freqbase == 1 and hasattr(self, 'vibsyms'):
+                        # we are coming accross duplicated information. 
+                        # We might be be parsing a default-precision block having
+                        # already parsed (only) vibsyms and displacements from 
+                        # the high-precision block, or might be encountering
+                        # a second low-precision block (see e.g. 25DMF_HRANH.log
+                        # regression). 
+                        self.vibsyms = []
+                        if hasattr(self, "vibirs"):     
+                            self.vibirs = []     
+                        if hasattr(self, 'vibfreqs'):     
+                            self.vibfreqs = []     
+                        if hasattr(self, 'vibramans'):     
+                            self.vibramans = []     
+                        if hasattr(self, 'vibdisps'):     
+                            self.vibdisps = []     
+                        
                 # Lines with symmetries and symm. indices begin with whitespace.
                 if line[1:15].strip() == "" and not line[15:60].split()[0].isdigit():
 
@@ -847,30 +868,16 @@ class Gaussian(logfileparser.Logfile):
                         self.vibsyms = []
                     syms = line.split()
                     self.vibsyms.extend(syms)
-            
-                if line[1:15] == "Frequencies --":
+                            
+                if line[1:15] == "Frequencies --": # note: matches low-precision block, and 
                 
                     if not hasattr(self, 'vibfreqs'):
-                        self.vibfreqs = []
-                        
-                    if removeold: # This is a reparse, so throw away the old info
-                        if hasattr(self, "vibsyms"):
-                            # We have already parsed the vibsyms so don't throw away!
-                            self.vibsyms = self.vibsyms[-len(line[15:].split()):]
-                        if hasattr(self, "vibirs"):
-                            self.vibirs = []
-                        if hasattr(self, 'vibfreqs'):
-                            self.vibfreqs = []
-                        if hasattr(self, 'vibramans'):
-                            self.vibramans = []
-                        if hasattr(self, 'vibdisps'):
-                            self.vibdisps = []
-                        removeold = False
+                        self.vibfreqs = []    
                         
                     freqs = [self.float(f) for f in line[15:].split()]
                     self.vibfreqs.extend(freqs)
             
-                if line[1:15] == "IR Inten    --":
+                if line[1:15] == "IR Inten    --": # note: matches only low-precision block
                 
                     if not hasattr(self, 'vibirs'):
                         self.vibirs = []
@@ -883,7 +890,7 @@ class Gaussian(logfileparser.Logfile):
                             irs.append(self.float('nan'))
                     self.vibirs.extend(irs)
 
-                if line[1:15] == "Raman Activ --":
+                if line[1:15] == "Raman Activ --": # note: matches only low-precision block
                 
                     if not hasattr(self, 'vibramans'):
                         self.vibramans = []
