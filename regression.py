@@ -304,6 +304,15 @@ def testGaussian_Gaussian09_Ru2bpyen2_H2_freq3_log(logfile):
     """Here atomnos wans't added to the gaussian parser before."""
     assert len(logfile.data.atomnos) == 69
 
+def testGaussian_Gaussian09_benzene_HPfreq_log(logfile):
+    """Check that higher precision vib displacements obtained with freq=hpmodes) are parsed correctly."""
+    assert abs(logfile.data.vibdisps[0,0,2] - (-0.04497)) < 0.00001
+
+def testGaussian_Gaussian09_benzene_freq_log(logfile):
+    """Check that default precision vib displacements are parsed correctly."""
+    assert abs(logfile.data.vibdisps[0,0,2] - (-0.04)) < 0.00001
+
+
 # Jaguar #
 
 # It would be good to have an unconverged geometry optimization so that
