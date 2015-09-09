@@ -841,7 +841,7 @@ class GAMESS(logfileparser.Logfile):
         #   55  C  1 XYZ   0.000000   0.000000   0.000000   0.000000   0.000000
         #   56  C  1XXXX  -0.000014  -0.000067   0.000000   0.000000   0.000000
         #
-        if line.find("EIGENVECTORS") == 10 or line.find("MOLECULAR OBRITALS") == 10:
+        if line.find("EIGENVECTORS") == 10 or line.find("MOLECULAR ORBITALS") == 10:
 
             # This is the stuff that we can read from these blocks.
             self.moenergies = [[]]
