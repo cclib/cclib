@@ -1,0 +1,484 @@
+    nwchem, len=6
+UHF_cc-pVDZ.in, len=14
+ argument  1 = UHF_cc-pVDZ.in
+
+
+
+============================== echo of input deck ==============================
+echo
+
+geometry
+ H 0.00 0.00 0.00
+end
+
+basis
+ * library cc-pvdz
+end
+
+scf
+ uhf
+ doublet
+end
+
+task scf energy
+================================================================================
+
+
+                                         
+                                         
+
+
+              Northwest Computational Chemistry Package (NWChem) 6.0
+              ------------------------------------------------------
+
+
+                    Environmental Molecular Sciences Laboratory
+                       Pacific Northwest National Laboratory
+                                Richland, WA 99352
+
+                              Copyright (c) 1994-2010
+                       Pacific Northwest National Laboratory
+                            Battelle Memorial Institute
+
+             NWChem is an open-source computational chemistry package
+                        distributed under the terms of the
+                      Educational Community License (ECL) 2.0
+             A copy of the license is included with this distribution
+                              in the LICENSE.TXT file
+
+                                  ACKNOWLEDGMENT
+                                  --------------
+
+            This software and its documentation were developed at the
+            EMSL at Pacific Northwest National Laboratory, a multiprogram
+            national laboratory, operated for the U.S. Department of Energy
+            by Battelle under Contract Number DE-AC05-76RL01830. Support
+            for this work was provided by the Department of Energy Office
+            of Biological and Environmental Research, Office of Basic
+            Energy Sciences, and the Office of Advanced Scientific Computing.
+
+
+           Job information
+           ---------------
+
+    hostname      = copper
+    program       = nwchem
+    date          = Tue Jun  9 09:25:20 2015
+
+    compiled      = Tue_Nov_09_10:54:15_2010
+    source        = /home/d3y133/nwchem-releases/nwchem-6.0-linux
+    nwchem branch = 6.0
+    input         = UHF_cc-pVDZ.in
+    prefix        = UHF_cc-pVDZ.
+    data base     = ./UHF_cc-pVDZ.db
+    status        = restart
+    nproc         =        1
+    time left     =     -1s
+
+
+
+           Memory information
+           ------------------
+
+    heap     =   13107201 doubles =    100.0 Mbytes
+    stack    =   13107201 doubles =    100.0 Mbytes
+    global   =   26214400 doubles =    200.0 Mbytes (distinct from heap & stack)
+    total    =   52428802 doubles =    400.0 Mbytes
+    verify   = yes
+    hardfail = no 
+
+
+           Directory information
+           ---------------------
+
+  0 permanent = .
+  0 scratch   = .
+
+
+           Previous task information
+           -------------------------
+
+    Theory    = scf                             
+    Operation = energy                        
+    Status    = ok                            
+    Qmmm      = F
+    Ignore    = F
+
+
+           Geometries in the database
+           --------------------------
+
+       Name                              Natoms  Last Modified
+       --------------------------------  ------  ------------------------
+    1  geometry                               1  Tue Jun  9 09:24:47 2015  
+
+  The geometry named "geometry" is the default for restart
+
+
+
+           Basis sets in the database
+           --------------------------
+
+       Name                              Natoms  Last Modified
+        --------------------------------  ------  ------------------------
+    1  ao basis                               0  Tue Jun  9 09:24:47 2015  
+
+  The basis set named "ao basis" is the default AO basis for restart
+
+
+
+
+                                NWChem Input Module
+                                -------------------
+
+
+
+ Scaling coordinates for geometry "geometry" by  1.889725989
+ (inverse scale =  0.529177249)
+
+
+
+                             Geometry "geometry" -> ""
+                             -------------------------
+
+ Output coordinates in angstroms (scale by  1.889725989 to convert to a.u.)
+
+  No.       Tag          Charge          X              Y              Z
+ ---- ---------------- ---------- -------------- -------------- --------------
+    1 H                    1.0000     0.00000000     0.00000000     0.00000000
+
+      Atomic Mass 
+      ----------- 
+
+      H                  1.007825
+
+
+ Effective nuclear repulsion energy (a.u.)       0.0000000000
+
+            Nuclear Dipole moment (a.u.) 
+            ----------------------------
+        X                 Y               Z
+ ---------------- ---------------- ----------------
+     0.0000000000     0.0000000000     0.0000000000
+
+
+            XYZ format geometry
+            -------------------
+     1
+ geometry
+ H                     0.00000000     0.00000000     0.00000000
+
+  library name resolved from: environment
+  library file name is: </home/eric/opt/apps/nwchem/6.0-binary/usr.local.lib.nwchem/libraries/>
+  
+
+
+ Summary of "ao basis" -> "" (cartesian)
+ ------------------------------------------------------------------------------
+       Tag                 Description            Shells   Functions and Types
+ ---------------- ------------------------------  ------  ---------------------
+ *                          cc-pvdz                   on all atoms 
+
+
+                      Basis "ao basis" -> "ao basis" (cartesian)
+                      -----
+  H (Hydrogen)
+  ------------
+            Exponent  Coefficients 
+       -------------- ---------------------------------------------------------
+  1 S  1.30100000E+01  0.019685
+  1 S  1.96200000E+00  0.137977
+  1 S  4.44600000E-01  0.478148
+
+  2 S  1.22000000E-01  1.000000
+
+  3 P  7.27000000E-01  1.000000
+
+
+
+ Summary of "ao basis" -> "ao basis" (cartesian)
+ ------------------------------------------------------------------------------
+       Tag                 Description            Shells   Functions and Types
+ ---------------- ------------------------------  ------  ---------------------
+ H                          cc-pvdz                  3        5   2s1p
+
+
+                                 NWChem SCF Module
+                                 -----------------
+
+
+
+  ao basis        = "ao basis"
+  functions       =     5
+  atoms           =     1
+  alpha electrons =     1
+  beta  electrons =     0
+  charge          =   0.00
+  wavefunction    = UHF 
+  input vectors   = ./UHF_cc-pVDZ.movecs
+  output vectors  = ./UHF_cc-pVDZ.movecs
+  use symmetry    = F
+  symmetry adapt  = F
+
+
+ Summary of "ao basis" -> "ao basis" (cartesian)
+ ------------------------------------------------------------------------------
+       Tag                 Description            Shells   Functions and Types
+ ---------------- ------------------------------  ------  ---------------------
+ H                          cc-pvdz                  3        5   2s1p
+
+
+
+ Forming initial guess at       0.0s
+
+
+ Loading old vectors from job with title :
+
+
+
+
+ Starting SCF solution at       0.0s
+
+
+
+ ----------------------------------------------
+         Quadratically convergent UHF
+
+ Convergence threshold     :          1.000E-04
+ Maximum no. of iterations :           30
+ Integral*density screening:          1.000E-07
+ ----------------------------------------------
+
+
+ #quartets = 2.100D+01 #integrals = 4.500D+01 #direct =  0.0% #cached =100.0%
+
+
+ Integral file          = ./UHF_cc-pVDZ.aoints.0
+ Record size in doubles =  65536        No. of integs per rec  =  43688
+ Max. records in memory =      2        Max. records in file   = 109842
+ No. of bits per label  =      8        No. of bits per value  =     64
+
+
+              iter       energy          gnorm     gmax       time
+             ----- ------------------- --------- --------- --------
+                 1       -0.4992784034  1.11D-15  1.11D-15      0.0
+
+
+       Final UHF  results 
+       ------------------ 
+
+         Total SCF energy =     -0.499278403420
+      One electron energy =     -0.499278403420
+      Two electron energy =      0.000000000000
+ Nuclear repulsion energy =      0.000000000000
+
+                       Sz =      0.5000
+                 Sz(Sz+1) =      0.7500
+                      S^2 =      0.7500
+
+        Time for solution =      0.0s
+
+
+          Final alpha eigenvalues
+          -----------------------
+
+              1      
+    1   -0.4993
+    2    0.5724
+    3    1.4430
+    4    1.4430
+    5    1.4430
+
+          Final beta eigenvalues
+          ----------------------
+
+              1      
+    1    0.0733
+    2    0.7533
+    3    1.5736
+    4    1.5736
+    5    1.5736
+
+                    UHF Final Alpha Molecular Orbital Analysis
+                    ------------------------------------------
+
+ Vector    1  Occ=1.000000D+00  E=-4.992784D-01
+              MO Center=  0.0D+00,  1.9D-18,  0.0D+00, r^2= 8.3D-01
+   Bfn.  Coefficient  Atom+Function         Bfn.  Coefficient  Atom+Function  
+  ----- ------------  ---------------      ----- ------------  ---------------
+     1      0.587634  1 H  s                  2      0.501239  1 H  s          
+
+ Vector    2  Occ=0.000000D+00  E= 5.724449D-01
+              MO Center=  1.0D-18, -4.0D-18,  1.2D-19, r^2= 1.9D+00
+   Bfn.  Coefficient  Atom+Function         Bfn.  Coefficient  Atom+Function  
+  ----- ------------  ---------------      ----- ------------  ---------------
+     2      1.277544  1 H  s                  1     -1.240179  1 H  s          
+
+ Vector    3  Occ=0.000000D+00  E= 1.443027D+00
+              MO Center= -2.2D-18,  2.0D-18,  3.1D-19, r^2= 4.8D-01
+   Bfn.  Coefficient  Atom+Function         Bfn.  Coefficient  Atom+Function  
+  ----- ------------  ---------------      ----- ------------  ---------------
+     3      0.742796  1 H  px                 4     -0.661527  1 H  py         
+
+ Vector    4  Occ=0.000000D+00  E= 1.443027D+00
+              MO Center= -3.1D-20,  1.3D-20, -3.1D-19, r^2= 4.8D-01
+   Bfn.  Coefficient  Atom+Function         Bfn.  Coefficient  Atom+Function  
+  ----- ------------  ---------------      ----- ------------  ---------------
+     5      0.993996  1 H  pz         
+
+ Vector    5  Occ=0.000000D+00  E= 1.443027D+00
+              MO Center= -2.8D-18, -3.2D-18,  1.6D-19, r^2= 4.8D-01
+   Bfn.  Coefficient  Atom+Function         Bfn.  Coefficient  Atom+Function  
+  ----- ------------  ---------------      ----- ------------  ---------------
+     4      0.748794  1 H  py                 3      0.661795  1 H  px         
+
+
+                     UHF Final Beta Molecular Orbital Analysis
+                     -----------------------------------------
+
+ Vector    1  Occ=0.000000D+00  E= 7.334748D-02
+              MO Center=  9.3D-17,  1.4D-16,  1.0D-16, r^2= 1.4D+00
+   Bfn.  Coefficient  Atom+Function         Bfn.  Coefficient  Atom+Function  
+  ----- ------------  ---------------      ----- ------------  ---------------
+     2      0.836903  1 H  s                  1      0.219370  1 H  s          
+
+ Vector    2  Occ=0.000000D+00  E= 7.532916D-01
+              MO Center= -3.0D-17,  3.0D-17, -2.6D-16, r^2= 1.3D+00
+   Bfn.  Coefficient  Atom+Function         Bfn.  Coefficient  Atom+Function  
+  ----- ------------  ---------------      ----- ------------  ---------------
+     1      1.354708  1 H  s                  2     -1.087635  1 H  s          
+
+ Vector    3  Occ=0.000000D+00  E= 1.573636D+00
+              MO Center= -7.5D-18,  2.9D-17,  5.7D-18, r^2= 4.8D-01
+   Bfn.  Coefficient  Atom+Function         Bfn.  Coefficient  Atom+Function  
+  ----- ------------  ---------------      ----- ------------  ---------------
+     4      0.950655  1 H  py                 3     -0.246661  1 H  px         
+     5      0.188184  1 H  pz         
+
+ Vector    4  Occ=0.000000D+00  E= 1.573636D+00
+              MO Center= -1.6D-16, -4.0D-17, -6.6D-18, r^2= 4.8D-01
+   Bfn.  Coefficient  Atom+Function         Bfn.  Coefficient  Atom+Function  
+  ----- ------------  ---------------      ----- ------------  ---------------
+     3      0.969076  1 H  px                 4      0.243380  1 H  py         
+
+ Vector    5  Occ=0.000000D+00  E= 1.573636D+00
+              MO Center=  4.2D-19, -1.1D-17,  5.8D-17, r^2= 4.8D-01
+   Bfn.  Coefficient  Atom+Function         Bfn.  Coefficient  Atom+Function  
+  ----- ------------  ---------------      ----- ------------  ---------------
+     5      0.981289  1 H  pz                 4     -0.192409  1 H  py         
+
+
+ center of mass
+ --------------
+ x =   0.00000000 y =   0.00000000 z =   0.00000000
+
+ moments of inertia (a.u.)
+ ------------------
+           0.000000000000           0.000000000000           0.000000000000
+           0.000000000000           0.000000000000           0.000000000000
+           0.000000000000           0.000000000000           0.000000000000
+
+  Mulliken analysis of the total density
+  --------------------------------------
+
+    Atom       Charge   Shell Charges
+ -----------   ------   -------------------------------------------------------
+    1 H    1     1.00   0.55  0.45  0.00
+
+  Mulliken analysis of the alpha density
+  --------------------------------------
+
+    Atom       Charge   Shell Charges
+ -----------   ------   -------------------------------------------------------
+    1 H    1     1.00   0.55  0.45  0.00
+
+       Multipole analysis of the density wrt the origin
+       ------------------------------------------------
+
+     L   x y z        total         alpha         beta         nuclear
+     -   - - -        -----         -----         ----         -------
+     0   0 0 0      0.000000     -1.000000      0.000000      1.000000
+
+     1   1 0 0      0.000000      0.000000      0.000000      0.000000
+     1   0 1 0      0.000000      0.000000      0.000000      0.000000
+     1   0 0 1      0.000000      0.000000      0.000000      0.000000
+
+     2   2 0 0     -0.990852     -0.990852      0.000000      0.000000
+     2   1 1 0      0.000000      0.000000      0.000000      0.000000
+     2   1 0 1      0.000000      0.000000      0.000000      0.000000
+     2   0 2 0     -0.990852     -0.990852      0.000000      0.000000
+     2   0 1 1      0.000000      0.000000      0.000000      0.000000
+     2   0 0 2     -0.990852     -0.990852      0.000000      0.000000
+
+
+ Parallel integral file used       1 records with       0 large values
+
+
+ Task  times  cpu:        0.0s     wall:        0.1s
+ Summary of allocated global arrays
+-----------------------------------
+  No active global arrays
+
+
+
+                         GA Statistics for process    0
+                         ------------------------------
+
+       create   destroy   get      put      acc     scatter   gather  read&inc
+calls:   58       58      327      205       10        0        0        0     
+number of processes/call 1.00e+00 1.00e+00 1.00e+00 0.00e+00 0.00e+00
+bytes total:             2.76e+04 1.33e+04 3.36e+02 0.00e+00 0.00e+00 0.00e+00
+bytes remote:            0.00e+00 0.00e+00 0.00e+00 0.00e+00 0.00e+00 0.00e+00
+Max memory consumed for GA by this process: 3096 bytes
+MA_summarize_allocated_blocks: starting scan ...
+MA_summarize_allocated_blocks: scan completed: 0 heap blocks, 0 stack blocks
+MA usage statistics:
+
+	allocation statistics:
+					      heap	     stack
+					      ----	     -----
+	current number of blocks	         0	         0
+	maximum number of blocks	        17	        14
+	current total bytes		         0	         0
+	maximum total bytes		   1052240	  16000624
+	maximum total K-bytes		      1053	     16001
+	maximum total M-bytes		         2	        17
+
+
+                                NWChem Input Module
+                                -------------------
+
+
+
+
+
+                                     CITATION
+                                     --------
+                Please cite the following reference when publishing
+                           results obtained with NWChem:
+
+                 M. Valiev, E.J. Bylaska, N. Govind, K. Kowalski,
+              T.P. Straatsma, H.J.J. van Dam, D. Wang, J. Nieplocha,
+                        E. Apra, T.L. Windus, W.A. de Jong
+                 "NWChem: a comprehensive and scalable open-source
+                  solution for large scale molecular simulations"
+                      Comput. Phys. Commun. 181, 1477 (2010)
+                           doi:10.1016/j.cpc.2010.04.018
+
+                              AUTHORS & CONTRIBUTORS
+                              ----------------------
+      E. J. Bylaska, W. A. de Jong, N. Govind, K. Kowalski, T. P. Straatsma,
+     M. Valiev, H. J. J. van Dam, D. Wang, E. Apra, T. L. Windus, J. Hammond,
+     J. Autschbach, P. Nichols, S. Hirata, M. T. Hackler, Y. Zhao, P.-D. Fan,
+      R. J. Harrison, M. Dupuis, D. M. A. Smith, K. Glaesemann, J. Nieplocha,
+      V. Tipparaju, M. Krishnan, A. Vazquez-Mayagoitia, L. Jensen, M. Swart,
+      Q. Wu, T. Van Voorhis, A. A. Auer, M. Nooijen, L. D. Crosby, E. Brown,
+             G. Cisneros, G. I. Fann, H. Fruchtl, J. Garza, K. Hirao,
+        R. Kendall, J. A. Nichols, K. Tsemekhman, K. Wolinski, J. Anchell,
+       D. Bernholdt, P. Borowski, T. Clark, D. Clerc, H. Dachsel, M. Deegan,
+        K. Dyall, D. Elwood, E. Glendening, M. Gutowski, A. Hess, J. Jaffe,
+        B. Johnson, J. Ju, R. Kobayashi, R. Kutteh, Z. Lin, R. Littlefield,
+    X. Long, B. Meng, T. Nakajima, S. Niu, L. Pollack, M. Rosing, G. Sandrone,
+       M. Stave, H. Taylor, G. Thomas, J. H. van Lenthe, A. Wong, Z. Zhang.
+
+ Total times  cpu:        0.0s     wall:        0.1s

@@ -368,6 +368,24 @@ def testNWChem_NWChem6_0_dvb_sp_hf_moments_only_octupole_out(logfile):
     assert not logfile.data.moments[2].shape
     assert len(logfile.data.moments[3]) == 10
 
+def testNWChem_NWChem6_0_hydrogen_atom_UHF_cc_pVDZ_out(logfile):
+    """A lone hydrogen atom is a common edge case; it has no beta
+    electrons.
+
+    Additionally, this calculations has no title, which caused some
+    issues with skip_lines().
+    """
+    assert logfile.data.charge == 0
+    assert logfile.data.natom == 1
+    assert logfile.data.nbasis == 5
+    assert logfile.data.nmo == 5
+    assert len(logfile.data.moenergies) == 2
+    assert logfile.data.moenergies[0].shape == (5,)
+    assert logfile.data.moenergies[1].shape == (5,)
+    assert logfile.data.homos.shape == (2,)
+    assert logfile.data.homos[0] == 0
+    assert logfile.data.homos[1] == 0
+
 # ORCA #
 
 def testORCA_ORCA2_8_co_cosmo_out(logfile):
