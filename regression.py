@@ -93,6 +93,10 @@ def testGAMESS_Firefly8_0_dvb_gopt_a_unconverged_out(logfile):
     """An unconverged geometry optimization to test for empty optdone (see #103 for details)."""
     assert hasattr(logfile.data, 'optdone') and not logfile.data.optdone
 
+def testGAMESS_Firefly8_0_h2o_log(logfile):
+    """Check that molecular orbitals are parsed correctly (cclib/cclib#208)."""
+    assert logfile.data.mocoeffs[0][0][0] == -0.994216
+
 # GAMESS #
 
 def testGAMESS_GAMESS_US2008_N2_UMP2_out(logfile):
