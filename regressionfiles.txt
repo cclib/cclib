@@ -34,6 +34,7 @@ DALTON/DALTON-2013/td_b3lyp_dvb.out
 GAMESS/Firefly7.1/firefly-FailStationary.out
 GAMESS/Firefly7.1/triazole_tddft_c1_b3lyp_631Gdp_sp.out
 GAMESS/Firefly8.0/dvb_gopt_a_unconverged.out
+GAMESS/Firefly8.0/h2o.log
 GAMESS/GAMESS-US2003/bv6010sup1molecule_4.inp.cml_.log
 GAMESS/GAMESS-US2004/exam01.out
 GAMESS/GAMESS-US2004/ex.out
