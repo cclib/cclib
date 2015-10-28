@@ -33,6 +33,7 @@ from .nwchemparser import NWChem
 from .orcaparser import ORCA
 from .psiparser import Psi
 from .qchemparser import QChem
+from .turbomoleparser import Turbomole
 
 try:
     from ..bridge import cclib2openbabel
@@ -67,6 +68,7 @@ triggers = [
 (ORCA,      ["O   R   C   A"],                                  True),
 (Psi,       ["PSI", "Ab Initio Electronic Structure"],          True),
 (QChem,     ["A Quantum Leap Into The Future Of Chemistry"],    True),
+(Turbomole, ["T U R B O M O L E"],                              True),
 
 ]
 
@@ -116,7 +118,7 @@ def ccopen(source, *args, **kargs):
 
     Returns:
       one of ADF, DALTON, GAMESS, GAMESS UK, Gaussian, Jaguar, Molpro, NWChem, ORCA,
-        Psi, QChem, or None (if it cannot figure it out or the file does not
+        Psi, QChem, Turbomole or None (if it cannot figure it out or the file does not
         exist).
     """
 

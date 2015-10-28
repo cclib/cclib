@@ -30,6 +30,7 @@ from .nwchemparser import NWChem
 from .orcaparser import ORCA
 from .psiparser import Psi
 from .qchemparser import QChem
+from .turbomoleparser import Turbomole
 
 # This allow users to type:
 #   from cclib.parser import ccopen
