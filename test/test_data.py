@@ -210,11 +210,11 @@ class DataSuite(object):
 
         if self.errors:
             print("\n********* SUMMARY OF ERRORS *********\n", file=self.stream)
-            print("\n".join(self.errors), file=stream)
+            print("\n".join(self.errors), file=self.stream)
 
         if self.failures:
             print("\n********* SUMMARY OF FAILURES *********\n", file=self.stream)
-            print("\n".join(self.failures), file=stream)
+            print("\n".join(self.failures), file=self.stream)
 
         print("\n********* SUMMARY PER PACKAGE ****************", file=self.stream)
         names = sorted(self.perpackage.keys())
