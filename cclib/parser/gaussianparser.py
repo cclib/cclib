@@ -1307,6 +1307,63 @@ class Gaussian(logfileparser.Logfile):
                 line = next(inputfile)
             self.etsecs.append(CIScontrib)
 
+        # Electronic transition transition-dipole data
+        #
+        # Ground to excited state transition electric dipole moments (Au):
+        #       state          X           Y           Z        Dip. S.      Osc.
+        #         1         0.0008     -0.0963      0.0000      0.0093      0.0005
+        #         2         0.0553      0.0002      0.0000      0.0031      0.0002
+        #         3         0.0019      2.3193      0.0000      5.3790      0.4456
+        # Ground to excited state transition velocity dipole moments (Au):
+        #       state          X           Y           Z        Dip. S.      Osc.
+        #         1        -0.0001      0.0032      0.0000      0.0000      0.0001
+        #         2        -0.0081      0.0000      0.0000      0.0001      0.0005
+        #         3        -0.0002     -0.2692      0.0000      0.0725      0.3887
+        # Ground to excited state transition magnetic dipole moments (Au):
+        #       state          X           Y           Z
+        #         1         0.0000      0.0000     -0.0003
+        #         2         0.0000      0.0000      0.0000
+        #         3         0.0000      0.0000      0.0035
+        #
+        # NOTE: In Gaussian03, there were some inconsitancies in the use of
+        # small / capital letters: e.g.
+        # Ground to excited state Transition electric dipole moments (Au)
+        # Ground to excited state transition velocity dipole Moments (Au)
+        # so to look for a match, we will lower() everything.
+
+        if line[1:51].lower() == "ground to excited state transition electric dipole":
+            if not hasattr(self, "eteltrdips"):
+                self.eteltrdips = []
+                self.etveleltrdips = []
+                self.etmagtrdips = []
+                self.netroot = 0
+            etrootcount = 0  # to count number of et roots
+
+            # now loop over lines reading eteltrdips until we find eteltrdipvel
+            line = next(inputfile)  # state          X ...
+            line = next(inputfile)  # 1        -0.0001 ...
+            while line[1:40].lower() != "ground to excited state transition velo":
+                self.eteltrdips.append(list(map(float, line.split()[1:4])))
+                etrootcount += 1
+                line = next(inputfile)
+            if not self.netroot:
+                self.netroot = etrootcount
+
+            # now loop over lines reading etveleltrdips until we find
+            # etmagtrdip
+            line = next(inputfile)  # state          X ...
+            line = next(inputfile)  # 1        -0.0001 ...
+            while line[1:40].lower() != "ground to excited state transition magn":
+                self.etveleltrdips.append(list(map(float, line.split()[1:4])))
+                line = next(inputfile)
+
+            # now loop over lines while the line starts with at least 3 spaces
+            line = next(inputfile)  # state          X ...
+            line = next(inputfile)  # 1        -0.0001 ...
+            while line[0:3] == "   ":
+                self.etmagtrdips.append(list(map(float, line.split()[1:4])))
+                line = next(inputfile)
+
         # Circular dichroism data (different for G03 vs G09)
         #
         # G03
