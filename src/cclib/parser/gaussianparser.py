@@ -117,6 +117,13 @@ class Gaussian(logfileparser.Logfile):
             self.vibdisps = self.vibdispshp
             del self.vibdispshp
 
+        # If this is a numerical TD/CIS excited state freqency calculation
+        # calculate numerical derivatives of the various transition dipoles 
+        # which are useful in e.g. Herzberg-Teller vibronic coupling models
+        if hasattr(self,'vibdisps') and hasattr(self,'numnucstep'):
+            if hasattr(self,'eteltrdips'):
+                self._calc_etdipgrads()
+
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
 
@@ -303,6 +310,15 @@ class Gaussian(logfileparser.Logfile):
 
             self.set_attribute('natom', len(atomnos))
             self.set_attribute('atomnos', atomnos)
+
+        # If this is a numerical evaluation of force-constants (Freq=Numer) calc
+        # parse the step size (relevant to numerical gradient calcs)
+        if line.strip() == 'Numerical evaluation of force-constants.':
+            line = next(inputfile) # Nuclear step= 0.001000 Angstroms
+            if line[1:13] == 'Nuclear step': 
+                self.numnucstep = float(line.split()[2])
+                if 'Angstroms' not in line: # step size could be in Angstrom or bohr 
+                    self.numnucstep = utils.convertor(self.numnucstep, "bohr","Angstrom")
 
         # This is a bit of a hack for regression Gaussian09/BH3_fragment_guess.pop_minimal.log
         # to skip output for all fragments, assuming the supermolecule is always printed first.
@@ -1028,6 +1044,61 @@ class Gaussian(logfileparser.Logfile):
                 line = next(inputfile)
             self.etsecs.append(CIScontrib)
 
+        # Electronic transition transition-dipole data
+        # 
+        # Ground to excited state transition electric dipole moments (Au):               
+        #       state          X           Y           Z        Dip. S.      Osc.        
+        #         1         0.0008     -0.0963      0.0000      0.0093      0.0005       
+        #         2         0.0553      0.0002      0.0000      0.0031      0.0002       
+        #         3         0.0019      2.3193      0.0000      5.3790      0.4456       
+        # Ground to excited state transition velocity dipole moments (Au):               
+        #       state          X           Y           Z        Dip. S.      Osc.        
+        #         1        -0.0001      0.0032      0.0000      0.0000      0.0001       
+        #         2        -0.0081      0.0000      0.0000      0.0001      0.0005       
+        #         3        -0.0002     -0.2692      0.0000      0.0725      0.3887       
+        # Ground to excited state transition magnetic dipole moments (Au):               
+        #       state          X           Y           Z                                 
+        #         1         0.0000      0.0000     -0.0003                               
+        #         2         0.0000      0.0000      0.0000                               
+        #         3         0.0000      0.0000      0.0035                              
+        # 
+        # NOTE: In Gaussian03, there were some inconsitancies in the use of 
+        # small / capital letters: e.g. 
+        # Ground to excited state Transition electric dipole moments (Au)
+        # Ground to excited state transition velocity dipole Moments (Au)
+        # so to look for a match, we will lower() everything. 
+ 
+        if line[1:51].lower() == "ground to excited state transition electric dipole":
+            if not hasattr(self, "eteltrdips"):
+                self.eteltrdips = []
+                self.etveleltrdips = []
+                self.etmagtrdips  = []
+                self.netroot = 0
+            etrootcount = 0 # to count number of et roots
+
+            # now loop over lines reading eteltrdips until we find eteltrdipvel
+            line = next(inputfile) # state          X ...
+            line = next(inputfile) # 1        -0.0001 ...
+            while line[1:40].lower() != "ground to excited state transition velo": 
+                self.eteltrdips.append(list(map(float,line.split()[1:4])))
+                etrootcount += 1
+                line = next(inputfile)
+            if not self.netroot: self.netroot = etrootcount
+
+            # now loop over lines reading etveleltrdips until we find etmagtrdip
+            line = next(inputfile) # state          X ...
+            line = next(inputfile) # 1        -0.0001 ...
+            while line[1:40].lower() != "ground to excited state transition magn": 
+                self.etveleltrdips.append(list(map(float,line.split()[1:4])))
+                line = next(inputfile)
+
+            # now loop over lines while the line starts with at least 3 spaces
+            line = next(inputfile) # state          X ...
+            line = next(inputfile) # 1        -0.0001 ...
+            while line[0:3] == "   ":
+                self.etmagtrdips.append(list(map(float,line.split()[1:4])))
+                line = next(inputfile)
+
         # Circular dichroism data (different for G03 vs G09)
         #
         # G03
@@ -1445,6 +1516,69 @@ class Gaussian(logfileparser.Logfile):
         if line[1:12] == "Temperature":
             self.set_attribute('temperature', float(line.split()[1]))
 
+    def _calc_etdipgrads(self):
+        """Calculate numerical gradients of the various transition dipole 
+        moments of electronic transitions (useful for e.g. Herzberg-Teller
+        vibronic coupling models)."""
+        
+        # During a numerical TD/CIS frequency calculation (with default options)
+        # Gaussian will calculate excited state properties at the reference 
+        # geometry and then at 6N displaced geometries in the following order:
+        # +x1,-x1,+y1,-y1,+z1,-z1 ... +zN,-zN
+        # hence we should have 6N + 1 values of all excited state properties
+        # from which gradients along each degree of freedom can be calculated. 
+        # Check that we have the default TwoPoint numerical differenciation 
+        # FIXME/TODO : This could be extended to support freq=FourPoint calcs
+        ngeom = 6*self.natom+1
+        nroot = len(self.etenergies)/ngeom
+        # since dipoles are in ebohr and we want dipole derivatives in e, 
+        # we want step to be in bohr
+        numnucstepbohr = utils.convertor(self.numnucstep,"Angstrom","bohr")
+        if self.netroot == nroot: # false if FourPoint
+            dipattrs = {'eteltrdips':'eteltrdipgrads',
+                        'etveleltrdips':'etveleltrdipgrads',
+                        'etmagtrdips':'etmagtrdipgrads'} 
+            for dipattr,dipgradattr in iter(dipattrs.items()):
+                if hasattr(self,dipattr):
+                    # to begin with we have one long 1D array of dipoles starting with 
+                    # all the roots for the ref geom, then all roots for first
+                    # displaced geom etc. The first step is to reorganize the data so
+                    # the first axis is geometry, 2nd axis root, 3rd xyz components
+                    # To do this we need to know number of excited state roots 
+                    dips3d = numpy.array(getattr(self,dipattr)).reshape(ngeom,nroot,3)
+                    # now calc grads. 
+                    # grads will be structured [atoms,xyzcoord,root,trdipcomponent]
+                    grads = self._calc_grad(dips3d,numnucstepbohr)
+                    # now reorder axes to we have [root,atoms,xyzcoord,trdipcomponent]
+                    grads = numpy.transpose(grads,(2,0,1,3))
+                    setattr(self,dipgradattr,grads)
+    @staticmethod    
+    def _calc_grad(vals,step):
+        """Calculate numerical gradients of a given property from 
+        values over a set of geometries obtained from a TwoPoint numerical 
+        frequency calculation. The data should be organized as follows:
+        prop[0]: Property at reference geometry
+        prop[1:6N]: property at 6N displaced geometries in the following order:  
+        # +x1,-x1,+y1,-y1,+z1,-z1 ... +zN,-zN
+        Note: properties can be scalors or vectors.  
+
+        >>> Gaussian._calc_grad(numpy.array([[0,0,0],[1,2,3],[-1,2,-3]]),0.1)
+        array([[ 10.,   0.,  30.]])
+        """
+        posdispsvals = vals[1::2] # values at positively displaced geometries
+        negdispsvals = vals[2::2] # values at negatively displaced geometries
+        # Note: We assume sign/phase of property is not (randomly) flipped at 
+        # different geometries, which seems to be the case. However, if an 
+        # example is found for which the phase of the property is (randomly) 
+        # flipped, one could try to correct for that.
+        grads = (0.5/step)*(posdispsvals - negdispsvals)
+        # now reshape the grads so that we have grad[atom,axis] in a general
+        # way allowing for further axes (e.g. dipole vectors)
+        grads_shape = list(numpy.shape(grads))
+        grads_shape[0] = len(grads)/3
+        grads_shape.insert(1,3)
+        grads = numpy.reshape(grads,tuple(grads_shape))
+        return grads 
 
 if __name__ == "__main__":
     import doctest, gaussianparser, sys
