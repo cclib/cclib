@@ -35,6 +35,12 @@ class ccData(object):
         entropy -- entropy (float, hartree/particle)
         etenergies -- energies of electronic transitions (array[1], 1/cm)
         etoscs -- oscillator strengths of electronic transitions (array[1])
+        eteltrdips -- electric transition dipoles of electronic transitions (array[2], ebohr)
+        etveleltrdips -- velocity-gauge electric transition dipoles of electronic transitions (array[2], ebohr)
+        etmagtrdips -- magnetic transition dipoles of electronic transitions (array[2], ebohr)
+        eteltrdipgrads -- gradients of electric transition dipoles of electronic transitions (array[3], e)
+        etveleltrdipgrads -- gradients of velocity-gauge electric transition dipoles of electronic transitions (array[3], e)
+        etmagtrdipgrads -- gradients of magnetic transition dipoles of electronic transitions (array[3], e)
         etrotats -- rotatory strengths of electronic transitions (array[1], ??)
         etsecs -- singly-excited configurations for electronic transitions (list of lists)
         etsyms -- symmetries of electronic transitions (list of string)
@@ -75,6 +81,7 @@ class ccData(object):
         vibirs -- IR intensities (array[1], km/mol)
         vibramans -- Raman intensities (array[1], A^4/Da)
         vibsyms -- symmetries of vibrations (list of strings)
+        numnucstep -- nuclear step size used in numerical differentiation (angstrom) 
     (1) The term 'array' refers to a numpy array
     (2) The number of dimensions of an array is given in square brackets
     (3) Python indexes arrays/lists starting at zero, so if homos==[10], then
@@ -98,6 +105,12 @@ class ccData(object):
         "entropy":        float,
         "etenergies":     numpy.ndarray,
         "etoscs":         numpy.ndarray,
+        "eteltrdips":     numpy.ndarray, 
+        "etveleltrdips":  numpy.ndarray,
+        "etmagtrdips":    numpy.ndarray,
+        "eteltrdipgrads": numpy.ndarray,
+        "etveleltrdipgrads": numpy.ndarray,
+        "etmagtrdipgrads": numpy.ndarray,
         "etrotats":       numpy.ndarray,
         "etsecs":         list,
         "etsyms":         list,
@@ -138,6 +151,7 @@ class ccData(object):
         "vibirs":         numpy.ndarray,
         "vibramans":      numpy.ndarray,
         "vibsyms":        list,
+        "numnucstep":     float,
     }
 
     # The name of all attributes can be generated from the dictionary above.

@@ -237,3 +237,5 @@ vib       Gaussian    GaussianRamanTest     basicGaussian09       dvb_raman.out
 vib       ORCA        GenericRamanTest      basicORCA2.9          dvb_raman.out
 vib       ORCA        GenericRamanTest      basicORCA3.0          dvb_raman.out
 vib       QChem       QChemRamanTest        basicQChem4.2         dvb_raman.out
+
+HT        Gaussian    GaussianHTTest        basicGaussian09       dvb_td_freq.out.gz  
