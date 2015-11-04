@@ -35,6 +35,9 @@ class ccData(object):
         entropy -- entropy (float, hartree/particle)
         etenergies -- energies of electronic transitions (array[1], 1/cm)
         etoscs -- oscillator strengths of electronic transitions (array[1])
+        eteltrdips -- electric transition dipoles of electronic transitions (array[2], ebohr)
+        etveleltrdips -- velocity-gauge electric transition dipoles of electronic transitions (array[2], ebohr)
+        etmagtrdips -- magnetic transition dipoles of electronic transitions (array[2], ebohr)
         etrotats -- rotatory strengths of electronic transitions (array[1], ??)
         etsecs -- singly-excited configurations for electronic transitions (list of lists)
         etsyms -- symmetries of electronic transitions (list of string)
@@ -99,6 +102,9 @@ class ccData(object):
         "entropy":        float,
         "etenergies":     numpy.ndarray,
         "etoscs":         numpy.ndarray,
+        "eteltrdips":     numpy.ndarray,
+        "etveleltrdips":  numpy.ndarray,
+        "etmagtrdips":    numpy.ndarray,
         "etrotats":       numpy.ndarray,
         "etsecs":         list,
         "etsyms":         list,
