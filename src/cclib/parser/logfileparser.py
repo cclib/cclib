@@ -399,20 +399,63 @@ class Logfile(object):
 
         return float(number.replace("D","E"))
 
-    def set_attribute(self, name, value, check=True):
+    def set_attribute(self, name, value, check=True, rtol = None, atol = None):
         """Set an attribute and perform a check when it already exists.
 
         Note that this can be used for scalars and lists alike, whenever we want
         to set a value for an attribute. By default we want to check that
         the value does not change if the attribute already exists, and this function
-        is a good place to add more tests in the future.
+        is a good place to add more tests in the future. If we to log a warning 
+        only if two values differ by certain tollerances numpy.allclose arguments
+        rtol atol can be set. 
         """
         if check and hasattr(self, name):
             try:
                 assert getattr(self, name) == value
             except AssertionError:
-                self.logger.warning("Attribute %s changed value (%s -> %s)" % (name, getattr(self, name), value))
+                log_changed = True 
+                if rtol is not None or atol is not None:
+                    if rtol is None: rtol = 1e-05
+                    if atol is None: atol = 1e-08
+                try: # can we turn it into a numpy array ?
+                    new_value_arr = numpy.array(value)
+                    curr_value_arr = numpy.array(getattr(self, name))
+                    try: # can we use numpy.allclose ?
+                        allclose = numpy.allclose(curr_value_arr,new_value_arr,
+                                                            rtol=rtol,atol=atol)
+                        if not allclose:
+                            self.logger.warning("Attribute {} changed by more "
+                                "than the numerical tollerances, value "
+                                "({} -> {})".format(name, getattr(self, name),
+                                value))
+                        else:
+                            self.logger.warning("Attribute {}".format(name) +
+                                "changed by an amount within the numerical " 
+                                "tollerances.")
+                            
+                        log_changed = False 
+                    except TypeError: # not implemented for strings / objects
+                        pass
+                except ValueError: # If can't turn into array
+                    pass
+                if log_changed:
+                    self.logger.warning(
+                        "Attribute {} changed value ({} -> {})".format(
+                        name, getattr(self, name), value))
         setattr(self, name, value)
+
+    def extend_attribute(self, name, values):
+        """Extend a list-attribute with values if it exists, else set it to values.
+        
+        One could add tests to e.g. make sure the new values are of the same type. 
+        """
+        if isinstance(values,numpy.ndarray):
+            values = values.tolist()
+
+        if hasattr(self,name):
+            getattr(self,name).extend(values)
+        else:
+            setattr(self,name,values)
 
     def skip_lines(self, inputfile, sequence):
         """Read trivial line types and check they are what they are supposed to be.
