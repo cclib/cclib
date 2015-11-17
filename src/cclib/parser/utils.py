@@ -21,7 +21,7 @@ def convertor(value, fromunits, tounits):
         Documentation of GAMESS-US or other programs as noted
 
     >>> print "%.1f" % convertor(8, "eV", "cm-1")
-    64524.8
+    64524.4
     """
 
     _convertor = {
