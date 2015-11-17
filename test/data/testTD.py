@@ -18,9 +18,8 @@ import numpy
 
 __filedir__ = os.path.realpath(os.path.dirname(__file__))
 
-
-class GenericTDTest(unittest.TestCase):
-    """Generic time-dependent HF/DFT unittest"""
+class MinimalTDTest(unittest.TestCase):
+    """Energies and oscillator strength time-dependent HF/DFT unittest"""
 
     number = 5
     expected_l_max = 41000
@@ -34,12 +33,35 @@ class GenericTDTest(unittest.TestCase):
         # then this will simply pick out the first energy.
         idx_lambdamax = [i for i, x in enumerate(self.data.etoscs)
                          if x==max(self.data.etoscs)][0]
-        self.assertAlmostEqual(self.data.etenergies[idx_lambdamax], self.expected_l_max, delta=5000)
+        self.assertAlmostEqual(self.data.etenergies[idx_lambdamax], 
+                                   self.expected_l_max, delta=5000)
     
     def testoscs(self):
         """Is the maximum of etoscs in the right range?"""
         self.assertEqual(len(self.data.etoscs), self.number)
         self.assertAlmostEqual(max(self.data.etoscs), 0.67, delta=0.1)
+
+class TrdipTDTest(unittest.TestCase):
+    """Transition dipoles time-dependent HF/DFT unittest"""
+
+    number = 5
+    def testeteltrdipsshape(self):
+        """Is the shape of eteltrdips correct?""" 
+        self.assertEqual(numpy.shape(self.data.eteltrdips), (self.number,3))
+
+    def testetveleltrdipsshape(self):
+        """Is the shape of etveleltrdips correct?""" 
+        self.assertEqual(numpy.shape(self.data.etveleltrdips), (self.number,3))
+
+    def testetmagtrdipsshape(self):
+        """Is the shape of etmagtrdips correct?"""
+        self.assertEqual(numpy.shape(self.data.etmagtrdips), (self.number,3))
+
+class GenericTDTest(MinimalTDTest):
+    """Generic time-dependent HF/DFT unittest"""
+
+    number = 5
+    expected_l_max = 41000
 
     def testsecs(self):
         """Is the sum of etsecs close to 1?"""
@@ -78,7 +100,7 @@ class ADFTDDFTTest(GenericTDTest):
         self.assertAlmostEqual(sumofsec, 1.0, delta=0.16)
 
 
-class GaussianTDDFTTest(GenericTDTest):
+class GaussianTDDFTTest(GenericTDTest,TrdipTDTest):
     """Customized time-dependent HF/DFT unittest"""
 
     expected_l_max = 48000
@@ -87,17 +109,8 @@ class GaussianTDDFTTest(GenericTDTest):
         """Is the length of etrotats correct?"""
         self.assertEqual(len(self.data.etrotats), self.number)
 
-    def testeteltrdipsshape(self):
-        """Is the shape of eteltrdips correct?""" 
-        self.assertEqual(numpy.shape(self.data.eteltrdips), (self.number,3))
-
-    def testetveleltrdipsshape(self):
-        """Is the shape of etveleltrdips correct?""" 
-        self.assertEqual(numpy.shape(self.data.etveleltrdips), (self.number,3))
-
-    def testetmagtrdipsshape(self):
-        """Is the shape of etmagtrdips correct?"""
-        self.assertEqual(numpy.shape(self.data.etmagtrdips), (self.number,3))
+class GaussianfcTDDFTTest(MinimalTDTest,TrdipTDTest):
+    """Customized time-dependent HF/DFT unittest"""
 
 class GAMESSUSTDDFTTest(GenericTDTest):
     """Customized time-dependent HF/DFT unittest"""

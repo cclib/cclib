@@ -44,6 +44,11 @@ class GaussianHTTest(GenericHTTest):
         self.assertEqual(numpy.shape(self.data.etmagtrdipgrads),
                               (self.number,self.data.natom,3,3))
 
+class GaussianfcHTTest(GaussianHTTest):
+    """Customized TD/CIS num freq HT unittest"""
+
+    number = 1 # fchk only contains HT grads for root of interest 
+
 if __name__=="__main__":
 
     import sys

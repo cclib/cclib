@@ -47,8 +47,10 @@ except ImportError:
 # is a little but more complicated. Here are the exceptions:
 #   1. The GAMESS trigger also works for GAMESS-UK files, so we can't break
 #      after finding GAMESS in case the more specific phrase is found.
-#   2. Molro log files don't have the program header, but always contain
+#   2. Molpro log files don't have the program header, but always contain
 #      the generic string 1PROGRAM, so don't break here either to be cautious.
+#      Gaussian formatted checkpoint files similarly have the generic string
+#      'Info1-9                                    I   N='.
 #   3. The Psi header has two different strings with some variation
 #
 # The triggers are defined by the tuples in the list below like so:
@@ -61,6 +63,7 @@ triggers = [
 (GAMESS,    ["GAMESS VERSION"],                                 True),
 (GAMESSUK,  ["G A M E S S - U K"],                              True),
 (Gaussian,  ["Gaussian, Inc."],                                 True),
+(Gaussian,  ["Info1-9                                    I   N="], False),
 (Jaguar,    ["Jaguar"],                                         True),
 (Molpro,    ["PROGRAM SYSTEM MOLPRO"],                          True),
 (Molpro,    ["1PROGRAM"],                                       False),

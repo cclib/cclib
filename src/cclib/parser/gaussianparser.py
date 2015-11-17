@@ -63,6 +63,299 @@ class Gaussian(logfileparser.Logfile):
         ans = label.replace("U", "u").replace("G", "g") 
         return ans
 
+    def setup_fchk_parsers(self):
+        """Set up a list of parser objects that will parse chunks of a Gaussian 
+        formatted checkpoint (.fchk) file. """
+       
+        # We have two generic parser types: FchkLineParser, to parse one line
+        # and extract the last value of the line, and FchkLinesParser to parse
+        # a single multi-line block, as well as specialized parsers for mixed
+        # data blocks (e.g. VibPropParser and ETPropParser). 
+        # reshape and convertfromto options allow for  reshaping of the data and 
+        # unit conversion (see FchkAttrParser, and derived classes for details).  
+        # To parse a new property, add a parser to the list self.fchkattrparsers
+
+        self.fchkattrparsers = [ 
+            self.FchkLineParser('fchknatom','Number of atoms',int),
+            self.FchkLineParser('fchkcharge','Charge',int), 
+            self.FchkLineParser('fchkmult','Multiplicity',int),
+            self.FchkLinesParser('fchkatomnos','Atomic numbers',int),
+            self.FchkLinesParser('fchkatomcoords','Current cartesian coordinates',
+                float, reshape=[1,'fchknatom',3], convertfromto=("bohr","Angstrom")),
+            self.FchkLinesParser('fchkatomnos','Atomic numbers',int),
+            self.FchkLinesParser('fchkatommasses','Real atomic weights',float), 
+            self.FchkLinesParser('fchkatommasses','Vib-AtMass', float), 
+            self.FchkLineParser('fchkscfenergies','SCF Energy', float, reshape=[1], 
+                    convertfromto= ('hartree', 'eV')),
+            self.FchkLinesParser('fchkgrads','Cartesian Gradient',float, 
+                    reshape=[1,len,3]), 
+            self.FchkLinesParser('fchkmoenergies','Alpha Orbital Energies',float,
+                   reshape=[1,len], convertfromto= ("hartree", "eV")),
+            self.FchkLineParser('fchknvib','Number of Normal Modes',int),
+            self.FchkLineParser('fchknvibatom','Vib-NDim',int),
+            # vibdata needs special class to split data into correct attributes
+            self.VibPropParser('fchkvibdata','Vib-E2',float,
+                                                    reshape=[len,'fchknvib']),
+            self.FchkLinesParser('fchkvibdisps','Vib-Modes',float,
+                    reshape=['fchknvib','fchknatom',3]),
+            self.FchkLineParser('fchknet','ETran spin',int),
+            self.FchkLineParser('fchketrootenergy','CIS Energy',float),
+            # etdata needs special class to split data into correct attributes
+            self.ETPropParser('fchketdata','ETran state values',float)
+            ]
+
+    class FchkAttrParser(object):
+        """A base class for classes which parse blocks/chunks of a formatted 
+        checkpoint file
+        """
+        def __init__(self, attr, matchstr, dtype, reshape = None,
+                                            convertfromto = None):
+            """Initialise the FchkAttrParser object.
+        
+            Inputs:
+                attr - str defining the attribute to which the parsed data will
+                    be assigned
+                matchstr - str containing start of the fchk line to identify the 
+                    data block. 
+                dtype - type, data type for the parsed data.
+                reshape - list, Option to reshape data. If a list of ints is 
+                    provided, the data is reshaped accordingly. If strings are 
+                    found in the list, it will be assumed that these refer to 
+                    already-parsed attributes (such as 'natom'). If the function
+                    len is in the list, the length of this axis will be
+                    determined from the length of the original 1D vector and the 
+                    product of the length of the other axes. 
+                convertfromto - tuple of str, option to convert units, using
+                    utils.convertor, e.g. ('hartree','eV').        
+            """
+            self.attr = attr
+            self.matchstr = matchstr
+            self.dtype = dtype
+            self.reshape = reshape
+            self.convertfromto = convertfromto
+            # set up matchstrend which can be used in derived classes
+            # to make the match str more specific
+            self.dtypesym = ''
+            if self.dtype == int : self.dtypesym = 'I'
+            elif self.dtype == float : self.dtypesym = 'R'
+            self.improvematchstr() # make matchstr more specific 
+
+        def improvematchstr(self):
+            pass # to be overwritten in subclasses
+
+        def reshapedata(self,alldata):
+            """Reshape data from 1D array into multi-dimensional array.
+            
+            Inputs: 
+                alldata - object containing data already parsed
+            
+            """ 
+            lengths = [] # this will contain new axis lengths 
+            uselenfunc = False # Use len func to determine length of 1 axis
+            for axis,length in enumerate(self.reshape):
+                if isinstance(length,int):
+                    lengths.append(length)
+                elif length == len:
+                    # we want to set the length to len(self.data/( lengths of 
+                    # other dimensions multiplied together)). 
+                    # To do this we will have to calculate the denominator later
+                    lengths.append(len) # we will replace this later
+                    uselenfunc = True 
+                    axislentocalc = axis # index of axis length to calculate
+                else: # we should have something like 'natom' 'nvibs' or 'net'
+                    lengths.append(getattr(alldata,length))
+            if uselenfunc:
+                lendenominator = 1 # what will divide len(self.data) by 
+                for length in lengths:
+                    if length != len: lendenominator = lendenominator * length
+                lengths[axislentocalc] = len(self.data)/lendenominator
+
+            # If we have parsed a single value which is not yet an array, 
+            # make it into an array 
+            if not isinstance(self.data,numpy.ndarray):
+                self.data = numpy.array(self.data)
+            
+            self.data = self.data.reshape(tuple(lengths))
+
+        def convertunits(self):
+            """Convert between any units supported by utils.convertor.
+            """
+            convertfrom, convertto = self.convertfromto
+            self.data = utils.convertor(self.data, convertfrom, convertto)
+
+        def parse(self,alldata,line,inputfile=None):
+            """Perform all tasks to extract data and assign attribute 
+            to alldata
+
+            Inputs:
+                alldata - object containing data parsed so far
+                line - current line
+                inputfile - iterator stream 
+                    (needed only if we want to access further lines)
+            """
+            newline = self.txt2data(line,inputfile)
+            if self.reshape is not None: self.reshapedata(alldata)
+            if self.convertfromto is not None: self.convertunits()
+            # If data is a numpy array, make it into a list. 
+            if isinstance(self.data,numpy.ndarray):
+                self.data = self.data.tolist()
+
+            alldata.set_attribute(self.attr,self.data)
+
+    class FchkLineParser(FchkAttrParser):
+        """Class to parse 1 value from the last column of the current line of a 
+        formatted checkpoint file."""
+        def improvematchstr(self):
+            """Make matchstr as specific as possible using self.dtypesym
+            >>> parser = Gaussian("dummyfile")
+            >>> parser.FchkLineParser('natom','Number of atoms',int).matchstr
+            'Number of atoms                            I'
+            """
+            self.matchstr = '{:43}{:1}'.format(self.matchstr, self.dtypesym)
+ 
+        def txt2data(self,line,inputfile=None):
+            """Extract and convert data from a single line of txt
+  
+            Inputs: 
+                line - str, current line containing data description and number
+                    values to parse
+                inputfile - Not needed here. 
+   
+            >>> parser = Gaussian("dummyfile")
+            >>> lparser = parser.FchkLineParser('natom','Number of atoms',int)
+            >>> line = 'Number of atoms   I     10'
+            >>> lparser.txt2data(line)
+            >>> lparser.data
+            10
+            """
+            self.data = self.dtype(line.split()[-1])
+
+    class FchkLinesParser(FchkAttrParser):
+        """Class to parse 1 multi-line block of a formatted checkpoint file. The
+        last column of the current indicates the number of values to parse."""
+
+        def improvematchstr(self):
+            """Make matchstr as specific as possible using self.dtypesym
+            >>> parser = Gaussian("dummyfile")
+            >>> parser.FchkLinesParser('atomnos','Atomic numbers',int).matchstr
+            'Atomic numbers                             I'
+            """
+            self.matchstr = '{:43}{:1}'.format(self.matchstr, self.dtypesym) 
+
+        def txt2data(self,line,inputfile):
+            """
+            Read a block of data starting at the current line into a list.
+  
+            Inputs: 
+                inputfile - iterator stream.
+                line - str, current line containing data description and number
+                    values to parse
+                dtype, - type,  data type, e.g. int, float etc. 
+   
+            >>> parser = Gaussian("dummyfile")
+            >>> lparser = parser.FchkLinesParser('atomnos','Atomic numbers',int)
+            >>> line = 'Atomic numbers                      I   N=          10'
+            >>> iterator = iter(['1 2 3 4 5 6','7 8 9 10','next line'])
+            >>> lparser.txt2data(line,iterator)
+            >>> lparser.data
+            array([ 1,  2,  3,  4,  5,  6,  7,  8,  9, 10])
+            """
+            n_vals = int(line.split()[-1])
+            vals = []
+            while(len(vals) < n_vals):
+                line = inputfile.next()
+                vals.extend(line.split())
+            self.data = numpy.array(vals,self.dtype)
+
+    class VibPropParser(FchkLinesParser):
+        """Parser for 'Vib-E2' block of a formatted checkpoint file containing 
+        vibfreqs and vibirs."""
+
+        def parse(self,alldata,line,inputfile=None):
+            alldata.updateprogress(inputfile, "Fchk Frequency Information", 
+                                                            alldata.fupdate)
+            self.txt2data(line,inputfile)
+            if self.reshape is not None: self.reshapedata(alldata)
+            if self.convertfromto is not None: self.convertunits()
+            alldata.set_attribute('fchkvibfreqs',self.data[0].tolist())     
+            alldata.set_attribute('fchkvibirs',self.data[3].tolist())     
+
+    class ETPropParser(FchkLinesParser):
+        """Parser for 'ETran state values' block of a formatted checkpoing file
+        containing electronic transition data."""
+
+        def parse(self,alldata,line,inputfile=None):
+            self.txt2data(line,inputfile)
+            # If this is a numerical TD/CIS calculation, numerical gradients of
+            # ET properties of the 1st root will be written after the properties
+            # We can check the number of values to determine this - if we have
+            # just a single point calculation, we'll have around 16 values per 
+            # root (though this seems to vary within different versions of 
+            # Gaussian09, while if grads are present, we will have an extra 
+            # 16*net values (all zero) then 3N values.
+            alldata.updateprogress(inputfile, "Fchk Electronic Transitions", 
+                                                            alldata.fupdate)
+            grads = False
+            if ( len(self.data) > 16*alldata.fchknet 
+                    and len(self.data) > 3*alldata.fchknatom*16 ) :
+                netprop = len(self.data)/(2*alldata.fchknet+3*alldata.fchknatom)
+                grads = True
+            else:
+                netprop = len(self.data) / alldata.fchknet
+            etprops = self.data[0:alldata.fchknet*netprop].reshape(
+                                                    alldata.fchknet,netprop)
+            # energies are state energies in hartree - to get et energies, need 
+            # to convert to cm-1 and subtract ground state scf energy (in eV) 
+            es_enrgs_hartree = etprops[:,0]
+            gs_enrg_hartree = utils.convertor(alldata.fchkscfenergies[-1],'eV',
+                                                                     'hartree')
+            et_enrgs_hartree = es_enrgs_hartree - gs_enrg_hartree
+            et_enrgs_icm = utils.convertor(et_enrgs_hartree,'hartree','cm-1')
+            alldata.set_attribute("fchketenergies", et_enrgs_icm.tolist())
+
+            # now try to figure out what root is the root of interest (etroot)
+            # by matching the value of etrootenergy (CIS Energy in the fchk) to 
+            # to one of the values in es_enrgs_hartree
+            delta_tollerance = abs(alldata.fchketrootenergy)*(10**-8)
+            for rootnum, energy in enumerate(es_enrgs_hartree):
+                if abs(alldata.fchketrootenergy - energy) < delta_tollerance:
+                    alldata.set_attribute('fchketroot',rootnum)
+            alldata.set_attribute('fchknetroot',len(es_enrgs_hartree))
+                    
+            # Transition dipoles 
+            eteltrdips = etprops[:,1:4]
+            alldata.set_attribute("fchketeltrdips", eteltrdips.tolist())
+            alldata.set_attribute("fchketveleltrdips", etprops[:,4:7].tolist()) 
+            alldata.set_attribute("fchketmagtrdips", etprops[:,7:10].tolist()) 
+
+            # oscillator strengths are not printed in fchk, but it is easy to 
+            # calculate them from eteltrdips and etenergies. 
+            # f[i] = 2/3 * etenergies[i] * |eteltrdips[i]|**2 if everything is 
+            # in atomic units.
+            eltrdiplengths = numpy.linalg.norm(eteltrdips,axis=1)
+            oscs = (2.0/3.0)*et_enrgs_hartree*numpy.square(eltrdiplengths)
+            alldata.set_attribute("fchketoscs",oscs.tolist())
+
+            # If this was a TD/CIS numerical vib freq calculation, we will have
+            # numerical gradients of the et properties (useful for e.g. Herzberg
+            # Teller vibronic coupling calculations. Gradients are for root of 
+            # interest (Gaussian root=n option)
+            # First the gradients of the netprop along the x coordinate of atom
+            # 1 are printed, then the netprop along the y of atom 1, then z of 
+            # atom 1, then x of atom 2... 
+            # we reshape to (number of states for which we have gradients, 
+            # natom, axis index (dx=0,dy=1,dz=2), and trdip components 
+            # dtrx,dtry,dtrz), i.e. reshape(1,alldata.natom,3,3)
+            if grads:                                                           
+                etgrads = self.data[2*alldata.fchknet*netprop:].reshape(
+                                            3*alldata.fchknatom,netprop)
+                alldata.set_attribute('fchketeltrdipgrads', 
+                    etgrads[:,1:4].reshape(1,alldata.fchknatom,3,3).tolist())
+                alldata.set_attribute('fchketveleltrdipgrads', 
+                    etgrads[:,4:7].reshape(1,alldata.fchknatom,3,3).tolist())
+                alldata.set_attribute('fchketmagtrdipgrads', 
+                    etgrads[:,7:10].reshape(1,alldata.fchknatom,3,3).tolist())
+
     def before_parsing(self):
 
         # Used to index self.scftargets[].
@@ -77,7 +370,10 @@ class Gaussian(logfileparser.Logfile):
 
         # Flag for identifying ONIOM calculations.
         self.oniom = False
-
+        
+        # setup objects to parser attributes from formatted checkpoint files
+        self.setup_fchk_parsers()    
+    
     def after_parsing(self):
 
         # Correct the percent values in the etsecs in the case of
@@ -111,8 +407,8 @@ class Gaussian(logfileparser.Logfile):
             if hasattr(self, 'inputcoords'):
                 self.inputcoords = self.inputcoords[:last_point + 1]
                      
-        # If we parsed high-precision vibrational displacements, overwrite 
-        # lower-precision displacements in self.vibdisps
+        # If we parsed high-precision vibrational displacements from a log file,
+        # overwrite lower-precision displacements in self.vibdisps
         if hasattr(self, 'vibdispshp'):
             self.vibdisps = self.vibdispshp
             del self.vibdispshp
@@ -120,10 +416,34 @@ class Gaussian(logfileparser.Logfile):
         # If this is a numerical TD/CIS excited state freqency calculation
         # calculate numerical derivatives of the various transition dipoles 
         # which are useful in e.g. Herzberg-Teller vibronic coupling models
-        if hasattr(self,'vibdisps') and hasattr(self,'numnucstep'):
-            if hasattr(self,'eteltrdips'):
-                self._calc_etdipgrads()
-
+        if  hasattr(self,'vibdisps') and hasattr(self,'numnucstep'):
+            # if we already have eteltrdipgrads, we must have parsed more than 
+            # 1 file, so eteltrdips[0:6N] might not correspond to what we need
+            # to calculate gradients. 
+            if not hasattr(self,'eteltrdipgrads'):  
+                if hasattr(self,'eteltrdips'):
+                    self._calc_etdipgrads()
+        # Any attributes parsed from a fchk file will have an attribute name 
+        # starting with fchk, e.g. 'fchknatom'. Now transfer them to attributes
+        # without the fchk prefix after doing some tests.
+        atol, rtol = 1e-3, 1e-3 # numerical tollerances for set_attribute
+        fcattrs = [ attr for attr in dir(self) if attr.startswith('fchk') ]
+        for fcattr in fcattrs:
+            attr = fcattr.replace('fchk','')
+            if hasattr(self,attr):
+                try:  #treat object as iterable
+                    fcattr_len = len(getattr(self,fcattr))
+                    attr_len = len(getattr(self,attr))
+                    if fcattr_len == attr_len:
+                        # replace - assume same data, maybe higher precision
+                        self.set_attribute(attr,getattr(self,fcattr),atol,rtol)
+                    else: # append
+                        self.extend_attribute(attr,getattr(self,fcattr))
+                except TypeError as e: #object is not actually iterable
+                    self.set_attribute(attr,getattr(self,fcattr),atol,rtol)
+            else: # if self does not have attr
+                self.set_attribute(attr,getattr(self,fcattr))
+        
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
 
@@ -317,8 +637,9 @@ class Gaussian(logfileparser.Logfile):
             line = next(inputfile) # Nuclear step= 0.001000 Angstroms
             if line[1:13] == 'Nuclear step': 
                 self.numnucstep = float(line.split()[2])
-                if 'Angstroms' not in line: # step size could be in Angstrom or bohr 
-                    self.numnucstep = utils.convertor(self.numnucstep, "bohr","Angstrom")
+                if 'Angstroms' not in line: # step size could be in Ang or bohr
+                    self.numnucstep = utils.convertor(self.numnucstep, 
+                                                   "bohr", "Angstrom")
 
         # This is a bit of a hack for regression Gaussian09/BH3_fragment_guess.pop_minimal.log
         # to skip output for all fragments, assuming the supermolecule is always printed first.
@@ -840,7 +1161,7 @@ class Gaussian(logfileparser.Logfile):
                     i += 1
                 line = next(inputfile)
 
-            self.moenergies = [numpy.array(x, "d") for x in self.moenergies]
+            #self.moenergies = [numpy.array(x, "d") for x in self.moenergies]
 
         # Start of the IR/Raman frequency section.
         # Caution is advised here, as additional frequency blocks
@@ -993,11 +1314,9 @@ class Gaussian(logfileparser.Logfile):
         # Electronic transitions.
         if line[1:14] == "Excited State":
         
-            if not hasattr(self, "etenergies"):
-                self.etenergies = []
-                self.etoscs = []
-                self.etsyms = []
-                self.etsecs = []
+            for etattr in ['etenergies','etoscs','etsyms','etsecs']:
+                if not hasattr(self, etattr): 
+                    setattr(self,etattr,[])
 
             # Need to deal with lines like:
             # (restricted calc)
@@ -1041,6 +1360,10 @@ class Gaussian(logfileparser.Logfile):
                 CIScontrib.append([(fromMO, frommoindex), (toMO, tomoindex), percent])
                 line = next(inputfile)
             self.etsecs.append(CIScontrib)
+        # Record which et is the state of interest for density / geom opt / vibs etc
+        if line[:60] == " This state for optimization and/or second-order correction.":
+            if not hasattr(self,'etroot'): # if this is the first geom opt step
+                self.etroot = len(self.etenergies) - 1 # index starts at zero
 
         # Electronic transition transition-dipole data
         # 
@@ -1067,11 +1390,10 @@ class Gaussian(logfileparser.Logfile):
         # so to look for a match, we will lower() everything. 
  
         if line[1:51].lower() == "ground to excited state transition electric dipole":
-            if not hasattr(self, "eteltrdips"):
-                self.eteltrdips = []
-                self.etveleltrdips = []
-                self.etmagtrdips  = []
-                self.netroot = 0
+            for attr in ["eteltrdips","etveleltrdips","etmagtrdips"]:
+                if not hasattr(self, attr):
+                    setattr(self,attr,[])
+            if not hasattr(self, "netroot"): self.netroot = 0
             etrootcount = 0 # to count number of et roots
 
             # now loop over lines reading eteltrdips until we find eteltrdipvel
@@ -1222,7 +1544,9 @@ class Gaussian(logfileparser.Logfile):
         # Molecular orbital coefficients (mocoeffs).
         # Essentially only produced for SCF calculations.
         # This is also the place where aonames and atombasis are parsed.
-        if line[5:35] == "Molecular Orbital Coefficients" or line[5:41] == "Alpha Molecular Orbital Coefficients" or line[5:40] == "Beta Molecular Orbital Coefficients":
+        if ( line[5:35] == "Molecular Orbital Coefficients" or 
+             line[5:41] == "Alpha Molecular Orbital Coefficients" or 
+             line[5:40] == "Beta Molecular Orbital Coefficients" ):
 
             # If counterpoise fragment, return without parsing orbital info
             if self.counterpoise != 0: return
@@ -1507,7 +1831,47 @@ class Gaussian(logfileparser.Logfile):
             self.set_attribute('freenergy', float(line.split()[7]))
         if line[1:12] == "Temperature":
             self.set_attribute('temperature', float(line.split()[1]))
-            
+        
+        # ---------------------------------------------------------------------
+        # Extract data from a formatted checkpoint (.fchk) file generated with 
+        # the Gaussian formchk utility to extract data with higher precision.
+        # ---------------------------------------------------------------------     
+        # This is how the formatted checkpoint file starts, with some general
+        # info, and the first data block containing atomic numbers: 
+        # Title                                                                           
+        # Freq      RB3LYP                                                      STO-3G    
+        # Number of atoms                            I               20                   
+        # Info1-9                                    I   N=           9                   
+        #           29          29           0           0           0         100        
+        #            6          18        -502                                            
+        # Charge                                     I                0                   
+        # Multiplicity                               I                1                   
+        # Number of electrons                        I               70                   
+        # Number of alpha electrons                  I               35                   
+        # Number of beta electrons                   I               35                   
+        # Number of basis functions                  I               60                   
+        # Number of independent functions            I               60                   
+        # Number of point charges in /Mol/           I                0                   
+        # Number of translation vectors              I                0                   
+        # Atomic numbers                             I   N=          20                   
+        #   6           6           6           6           6           1        
+        #   1           1           6           6           1           1        
+        #   1           6           1           6           1           1        
+        #   6           1                                                        
+       
+        # As the data is quite well structured in a fchk file, we can easily
+        # define generic parser objects to parse different attributes. 
+        # The two main types of fields are 1) a single value as the last column 
+        # of a line, or 2) a multi-line block - the number of values is the last
+        # column of the first line of the block, and the values are printed
+        # over multiple lines below (see e.g. the example above, Atomic numbers, 
+        # contains 20 values spread over the 4 lines below). See the 
+        # FchkAttrParser class and subclass definitions for further details.  
+        for index,attrparser in enumerate(self.fchkattrparsers):
+            if line.startswith(attrparser.matchstr):
+                attrparser.parse(self,line,inputfile)
+                break
+
     def _calc_etdipgrads(self):
         """Calculate numerical gradients of the various transition dipole 
         moments of electronic transitions (useful for e.g. Herzberg-Teller
@@ -1521,29 +1885,33 @@ class Gaussian(logfileparser.Logfile):
         # from which gradients along each degree of freedom can be calculated. 
         # Check that we have the default TwoPoint numerical differenciation 
         # FIXME/TODO : This could be extended to support freq=FourPoint calcs
-        ngeom = 6*self.natom+1
-        nroot = len(self.etenergies)/ngeom
+        ncalcstwopoint = 6*self.natom+1
+        ncalcsfourpoint = 12*self.natom+1
+        netsets = len(self.etenergies)/self.netroot # num seperate TD/CIS calcs
         # since dipoles are in ebohr and we want dipole derivatives in e, 
         # we want step to be in bohr
         numnucstepbohr = utils.convertor(self.numnucstep,"Angstrom","bohr")
-        if self.netroot == nroot: # false if FourPoint
+        if netsets == ncalcstwopoint : # false if FourPoint, or if geom opt
             dipattrs = {'eteltrdips':'eteltrdipgrads',
                         'etveleltrdips':'etveleltrdipgrads',
                         'etmagtrdips':'etmagtrdipgrads'} 
             for dipattr,dipgradattr in iter(dipattrs.items()):
                 if hasattr(self,dipattr):
-                    # to begin with we have one long 1D array of dipoles starting with 
-                    # all the roots for the ref geom, then all roots for first
-                    # displaced geom etc. The first step is to reorganize the data so
-                    # the first axis is geometry, 2nd axis root, 3rd xyz components
-                    # To do this we need to know number of excited state roots 
-                    dips3d = numpy.array(getattr(self,dipattr)).reshape(ngeom,nroot,3)
+                    # to begin with we have one long 1D array of dipoles 
+                    # starting with all the roots for the ref geom, then all 
+                    # roots for first displaced geom etc. The first step is to 
+                    # reorganize the data so the first axis is geometry, 2nd 
+                    # axis root, 3rd xyz components.
+                    # To do this we need to know number of excited state roots. 
+                    dips3d = numpy.array(
+                           getattr(self,dipattr)[0:ncalcstwopoint*self.netroot])
+                    dips3d = dips3d.reshape(ncalcstwopoint,self.netroot,3)
                     # now calc grads. 
-                    # grads will be structured [atoms,xyzcoord,root,trdipcomponent]
+                    # grads will be structured [atoms,xyzcoord,root,trdipxyz]
                     grads = self._calc_grad(dips3d,numnucstepbohr)
-                    # now reorder axes to we have [root,atoms,xyzcoord,trdipcomponent]
+                    # now reorder axes to we have [root,atoms,xyzcoord,trdipxyz]
                     grads = numpy.transpose(grads,(2,0,1,3))
-                    setattr(self,dipgradattr,grads)
+                    self.set_attribute(dipgradattr,grads.tolist())
     @staticmethod    
     def _calc_grad(vals,step):
         """Calculate numerical gradients of a given property from 
@@ -1554,8 +1922,12 @@ class Gaussian(logfileparser.Logfile):
         # +x1,-x1,+y1,-y1,+z1,-z1 ... +zN,-zN
         Note: properties can be scalors or vectors.  
 
-        >>> Gaussian._calc_grad(numpy.array([[0,0,0],[1,2,3],[-1,2,-3]]),0.1)
-        array([[ 10.,   0.,  30.]])
+        >>> d = [[0,0,0],[1,2,3],[-1,2,-3],[1,2,3],[-1,2,-3],[1,2,3],[-1,2,-3]]
+        >>> d = numpy.array(d)
+        >>> Gaussian._calc_grad(d,0.1)
+        array([[[ 10.,   0.,  30.],
+                [ 10.,   0.,  30.],
+                [ 10.,   0.,  30.]]])
         """
         posdispsvals = vals[1::2] # values at positively displaced geometries
         negdispsvals = vals[2::2] # values at negatively displaced geometries
