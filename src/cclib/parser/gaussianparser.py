@@ -110,6 +110,12 @@ class Gaussian(logfileparser.Logfile):
                 self.atomcoords = self.atomcoords[:last_point + 1]
             if hasattr(self, 'inputcoords'):
                 self.inputcoords = self.inputcoords[:last_point + 1]
+                     
+        # If we parsed high-precision vibrational displacements, overwrite 
+        # lower-precision displacements in self.vibdisps
+        if hasattr(self, 'vibdispshp'):
+            self.vibdisps = self.vibdispshp
+            del self.vibdispshp
             
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
@@ -1430,12 +1436,6 @@ class Gaussian(logfileparser.Logfile):
             self.set_attribute('freenergy', float(line.split()[7]))
         if line[1:12] == "Temperature":
             self.set_attribute('temperature', float(line.split()[1]))
-                     
-        # If we parsed high-precision vibrational displacements, overwrite 
-        # lower-precision displacements in self.vibdisps
-        if hasattr(self, 'vibdispshp'):
-            self.vibdisps = self.vibdispshp
-            del self.vibdispshp
             
             
 
