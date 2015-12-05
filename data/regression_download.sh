@@ -19,3 +19,10 @@ else
     git clone https://github.com/cclib/cclib-data.git regression
 fi
 
+# If one argument is given, it is the commit we want to checkout.
+if [ $# -eq 1 ]; then
+    echo "Checking out a previous commit: $1"
+    cd regression
+    git checkout $1
+    cd ..
+fi
