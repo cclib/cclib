@@ -49,7 +49,7 @@ def getfile(parser, *location, **kwds):
         logfile - the parser object used for parsing
     """
 
-    location = ("..", "data", get_program_dir(parser.__name__) + location
+    location = ("..", "data", get_program_dir(parser.__name__)) + location
     stream = kwds.get('stream', sys.stdout)
 
     # Construct the proper full path(s). Multiple paths will be in a list only if more than one
