@@ -137,7 +137,7 @@ class DALTON(logfileparser.Logfile):
             self.skip_lines(inputfile, ['d', 'b'])
 
             line = inputfile.next()
-            self.symcounts = [int(c) for c in line.split()[-4:]]
+            self.symcounts = [int(c) for c in line.split(':')[1].split()]
 
             self.symlabels = []
             for sc in self.symcounts:
