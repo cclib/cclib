@@ -341,12 +341,17 @@ class DALTON(logfileparser.Logfile):
                 # it's the label and sometimes it's the index. There are always five
                 # energies per line, though, so we can deduce if we have the labels or
                 # not just the index. In the latter case, we depend on the labels
-                # being read earlier into the list `symlabels`.
+                # being read earlier into the list `symlabels`. Finally, if no symlabels
+                # were read that implies there is only one symmetry, namely Ag.
                 if 'A' in cols[1] or 'B' in cols[1]:
                     sym = self.normalisesym(cols[1])
                     energies = [float(t) for t in cols[2:]]
                 else:
-                    sym = self.normalisesym(self.symlabels[int(cols[0]) - 1])
+                    if hasattr(self, 'symlabels'):
+					    sym = self.normalisesym(self.symlabels[int(cols[0]) - 1])
+                    else:
+					    assert cols[0] == '1'
+					    sym = "Ag"
                     energies = [float(t) for t in cols[1:]]
 
                 while len(energies) > 0:
