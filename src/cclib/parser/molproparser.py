@@ -662,8 +662,14 @@ class Molpro(logfileparser.Logfile):
             while line.strip():
 
                 if line[1:25].isspace():
-                    numbers = list(map(int, line.split()[::2]))
-                    vibsyms = line.split()[1::2]
+                    if not islow: # vibsyms not printed for low freq modes
+                        numbers = list(map(int, line.split()[::2]))
+                        vibsyms = line.split()[1::2]
+                    else:
+                        # give low freq modes an empty str as vibsym
+                        # note there could be other possibilities.. 
+                        numbers = list(map(int, line.split()))
+                        vibsyms = ['']*len(numbers) 
 
                 if line[1:12] == "Wavenumbers":
                     vibfreqs = list(map(float, line.strip().split()[2:]))

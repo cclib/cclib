@@ -30,10 +30,12 @@ class GenericIRTest(unittest.TestCase):
                         (numvib, len(self.data.atomnos), 3))
 
     def testlengths(self):
-        """Are the lengths of vibfreqs and vibirs correct?"""
+        """Are the lengths of vibfreqs and vibirs (and if present, vibsyms) correct?"""
         numvib = 3*len(self.data.atomnos) - 6
         self.assertEqual(len(self.data.vibfreqs), numvib)
         self.assertEqual(len(self.data.vibirs), numvib)
+        if hasattr(self.data,'vibsyms'):
+            self.assertEqual(len(self.data.vibsyms), numvib)
 
     def testfreqval(self):
         """Is the highest freq value 3630 +/- 200 cm-1?"""
