@@ -157,7 +157,7 @@ class GenericSPTest(unittest.TestCase):
         self.assertEquals(self.data.mocoeffs[0].shape,
                           (self.data.nmo, self.data.nbasis))
 
-    @skipForParser('DALTON', 'DALTON does not have any options to print the overlap matrix as of 2013')
+    @skipForParser('DALTON', 'To print: **INTEGRALS\n.PROPRI')
     @skipForParser('Psi', 'Psi does not currently have the option to print the overlap matrix')
     @skipForParser('QChem', 'QChem cannot print the overlap matrix')
     def testaooverlaps(self):

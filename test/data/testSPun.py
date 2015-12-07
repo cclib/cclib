@@ -76,6 +76,7 @@ class GenericSPunTest(unittest.TestCase):
 class GenericROSPTest(GenericSPunTest):
     """Customized restricted open-shell single point unittest"""
 
+    @skipForParser('DALTON', 'mocoeffs not implemented yet')
     def testdimmocoeffs(self):
         """Are the dimensions of mocoeffs equal to 1 x nmo x nbasis?"""
         self.assertEquals(type(self.data.mocoeffs), type([]))

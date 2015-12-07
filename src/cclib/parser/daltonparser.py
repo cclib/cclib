@@ -525,10 +525,13 @@ class DALTON(logfileparser.Logfile):
         #
         if "Total number of orbitals" in line:
             # DALTON 2015 adds a @ in front of number of orbitals
+            chomp = line.split()
             index = 4
-            if "@" in line:
+            if "@" in chomp:
                 index = 5
-            self.set_attribute("nbasis", int(line.split()[index]))
+            self.set_attribute("nbasis", int(chomp[index]))
+            self.nmo_per_symmetry = list(map(int, chomp[index+2:]))
+            assert self.nbasis == sum(self.nmo_per_symmetry)
         if "@    Occupied SCF orbitals" in line and not hasattr(self, 'homos'):
             temp = line.split()
             homos = int(temp[4])
@@ -708,8 +711,6 @@ class DALTON(logfileparser.Logfile):
                 self.nmo = self.nbasis
                 if len(self.moenergies[0]) != self.nmo:
                     self.set_attribute('nmo', len(self.moenergies[0]))
-
-            #self.mocoeffs = [numpy.zeros((self.nmo, self.nbasis), "d")]
 
         #                       .-----------------------------------.
         #                       | >>> Final results from SIRIUS <<< |
