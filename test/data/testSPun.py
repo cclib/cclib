@@ -73,6 +73,32 @@ class GenericSPunTest(unittest.TestCase):
         self.assertEquals(shape, (2, self.data.nmo))
 
 
+class GenericROSPTest(GenericSPunTest):
+    """Customized restricted open-shell single point unittest"""
+
+    def testdimmocoeffs(self):
+        """Are the dimensions of mocoeffs equal to 1 x nmo x nbasis?"""
+        self.assertEquals(type(self.data.mocoeffs), type([]))
+        self.assertEquals(len(self.data.mocoeffs), 1)
+        self.assertEquals(self.data.mocoeffs[0].shape,
+                          (self.data.nmo, self.data.nbasis))
+
+    def testhomos(self):
+        """Is the index of the HOMO equal to 34?"""
+        msg = "%s != array([34],'i')" % numpy.array_repr(self.data.homos)
+        numpy.testing.assert_array_equal(self.data.homos, numpy.array([34],"i"), msg)
+
+    def testmoenergies(self):
+        """Are the dims of the moenergies equals to 1 x nmo?"""
+        self.assertEquals(len(self.data.moenergies), 1)
+        self.assertEquals(len(self.data.moenergies[0]), self.data.nmo)
+
+    def testmosyms(self):
+        """Are the dims of the mosyms equals to 1 x nmo?"""
+        shape = (len(self.data.mosyms), len(self.data.mosyms[0]))
+        self.assertEquals(shape, (1, self.data.nmo))
+
+
 class GamessUK70SPunTest(GenericSPunTest):
     """Customized unrestricted single point unittest"""
 

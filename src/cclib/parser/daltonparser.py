@@ -495,9 +495,11 @@ class DALTON(logfileparser.Logfile):
         #     This is a DFT calculation of type: B3LYP
         # ...
         #
+        if "@    Number of electrons in active shells" in line:
+            self.unpaired_electrons = int(line.split()[-1])
         if "@    Total charge of the molecule" in line:
             self.set_attribute("charge", int(line.split()[-1]))
-        if "@    Spin multiplicity and 2 M_S                1         0" in line:
+        if "@    Spin multiplicity and 2 M_S" in line:
             self.set_attribute("mult", int(line.split()[-2]))
 
         #     Orbital specifications
@@ -530,7 +532,7 @@ class DALTON(logfileparser.Logfile):
         if "@    Occupied SCF orbitals" in line and not hasattr(self, 'homos'):
             temp = line.split()
             homos = int(temp[4])
-            self.set_attribute('homos', [homos-1]) # it is the index (python counting, so -1)
+            self.set_attribute('homos', [homos - 1 + self.unpaired_electrons])
         if "Threshold for SCF convergence" in line:
             if not hasattr(self, "scftargets"):
                 self.scftargets = []
@@ -764,7 +766,7 @@ class DALTON(logfileparser.Logfile):
             if self.firststdorient:
                 self.firststdorient = False
 
-            self.skip_lines(inputfile, ['d' ,'b'])
+            self.skip_lines(inputfile, ['d', 'b'])
 
             lines = [next(inputfile) for i in range(self.natom)]
             atomcoords = self.parse_geometry(lines)
@@ -800,7 +802,7 @@ class DALTON(logfileparser.Logfile):
         #                             ------------------------
         #
         # Iteration number               :       4
-        # End of optimization            :       T 
+        # End of optimization            :       T
         # Energy at this geometry is     :    -379.777956
         # Energy change from last geom.  :      -0.000000
         # Predicted change               :      -0.000000
@@ -999,6 +1001,67 @@ class DALTON(logfileparser.Logfile):
             # order.
             self.vibramans = vibramans[::-1]
 
+        # Electronic excitations: single residues of the linear
+        # response equations.
+        if "Linear Response single residue calculation" in line:
+
+            etsyms = []
+            etenergies = []
+            # etoscs = []
+            etsecs = []
+
+            symmap = {"T": "Triplet", "F": "Singlet"}
+
+            while "End of Dynamic Property Section (RESPONS)" not in line:
+
+                line = next(inputfile)
+
+                if "Operator symmetry" in line:
+                    do_triplet = line[-2]
+
+                if "@ Excited state no:" in line:
+                    etsym = line.split()[9] # -2
+                    etsyms.append(symmap[do_triplet] + "-" + etsym)
+                    self.skip_lines(inputfile, ['d', 'b', 'Excitation energy in a.u.'])
+                    line = next(inputfile)
+                    etenergy = float(line.split()[1])
+                    etenergies.append(etenergy)
+
+                    while "The dominant contributions" not in line:
+                        line = next(inputfile)
+
+                    self.skip_line(inputfile, 'b')
+                    line = next(inputfile)
+                    # [0] is the starting (occupied) MO
+                    # [1] is the ending (unoccupied) MO
+                    # [2] and [3] are the excitation/deexcitation coefficients
+                    # [4] is the orbital overlap
+                    # [5] is the ...
+                    # [6] is the ...
+                    # [7] is the ...
+                    assert "I    A    K_IA      K_AI   <|I|*|A|> <I^2*A^2>    Weight   Contrib" in line
+                    self.skip_line(inputfile, 'b')
+                    line = next(inputfile)
+                    sec = []
+
+                    while line.strip():
+                        chomp = line.split()
+                        startidx = int(chomp[0]) - 1
+                        endidx = int(chomp[1]) - 1
+                        contrib = float(chomp[2])
+                        # Since DALTON is restricted open-shell only,
+                        # there is not distinction between alpha and
+                        # beta spin.
+                        sec.append([(startidx, 0), (endidx, 0), contrib])
+                        line = next(inputfile)
+
+                    etsecs.append(sec)
+
+            self.set_attribute('etsyms', etsyms)
+            self.set_attribute('etenergies', etenergies)
+            # self.set_attribute('etoscs', etoscs)
+            self.set_attribute('etsecs', etsecs)
+
         # TODO:
         # aonames
         # aooverlaps
@@ -1007,11 +1070,8 @@ class DALTON(logfileparser.Logfile):
         # coreelectrons
         # enthalpy
         # entropy
-        # etenergies
         # etoscs
         # etrotats
-        # etsecs
-        # etsyms
         # freeenergy
         # grads
         # hessian

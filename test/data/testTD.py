@@ -35,7 +35,7 @@ class GenericTDTest(unittest.TestCase):
         idx_lambdamax = [i for i, x in enumerate(self.data.etoscs)
                          if x==max(self.data.etoscs)][0]
         self.assertAlmostEqual(self.data.etenergies[idx_lambdamax], self.expected_l_max, delta=5000)
-    
+
     def testoscs(self):
         """Is the maximum of etoscs in the right range?"""
         self.assertEqual(len(self.data.etoscs), self.number)
@@ -55,10 +55,10 @@ class GenericTDTest(unittest.TestCase):
         sec = self.data.etsecs[idx_minenergy]
         t = [(c*c, s, e) for (s, e, c) in sec]
         t.sort()
-        t.reverse()        
+        t.reverse()
         self.assert_(t[0][1][0]==self.data.homos[0] or
                     t[0][2][0]==self.data.homos[0]+1, t[0])
-        
+
     def testsymsnumber(self):
         """Is the length of etsyms correct?"""
         self.assertEqual(len(self.data.etsyms), self.number)
@@ -76,6 +76,12 @@ class ADFTDDFTTest(GenericTDTest):
         #ADF squares the etsecs
         sumofsec = sum([z for (x, y, z) in lowestEtrans])
         self.assertAlmostEqual(sumofsec, 1.0, delta=0.16)
+
+
+class DALTONTDTest(GenericTDTest):
+    """Customized time-dependent HF/DFT unittest"""
+
+    number = 20
 
 
 class GaussianTDDFTTest(GenericTDTest):
@@ -103,7 +109,7 @@ class JaguarTDDFTTest(GenericTDTest):
         self.assertEqual(len(self.data.etoscs), self.number)
         self.assertAlmostEqual(max(self.data.etoscs), 1.0, delta=0.2)
 
-    
+
 class OrcaTDDFTTest(GenericTDTest):
     """Customized time-dependent HF/DFT unittest"""
 
@@ -121,7 +127,7 @@ class GenericTDDFTtrpTest(GenericTDTest):
 
     number = 5
     expected_l_max = 24500
-    
+
     def testoscs(self):
         """Triplet excitations should be disallowed."""
         self.assertEqual(len(self.data.etoscs), self.number)
