@@ -669,7 +669,7 @@ class Molpro(logfileparser.Logfile):
                         # give low freq modes an empty str as vibsym
                         # note there could be other possibilities.. 
                         numbers = list(map(int, line.split()))
-                        vibsyms = [u'']*len(numbers) 
+                        vibsyms = ['']*len(numbers) 
 
                 if line[1:12] == "Wavenumbers":
                     vibfreqs = list(map(float, line.strip().split()[2:]))
