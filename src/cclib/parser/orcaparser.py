@@ -28,7 +28,7 @@ class ORCA(logfileparser.Logfile):
 
         # Call the __init__ method of the superclass
         super(ORCA, self).__init__(logname="ORCA", *args, **kwargs)
-        
+
     def __str__(self):
         """Return a string representation of the object."""
         return "ORCA log file %s" % (self.filename)
@@ -36,7 +36,7 @@ class ORCA(logfileparser.Logfile):
     def __repr__(self):
         """Return a representation of the object."""
         return 'ORCA("%s")' % (self.filename)
-    
+
     def normalisesym(self, label):
         """Use standard symmetry labels instead of Gaussian labels.
 
@@ -82,7 +82,7 @@ class ORCA(logfileparser.Logfile):
         # --------------
         # SCF ITERATIONS
         # --------------
-        # 
+        #
         # However, there are two common formats which need to be handled, implemented as separate functions.
         if "SCF ITERATIONS" in line:
 
@@ -154,7 +154,7 @@ class ORCA(logfileparser.Logfile):
             energy = self.scfvalues[-1][-1][0]
             self.scfenergies.append(energy)
 
-            self._append_scfvalues_scftargets(inputfile, line)  
+            self._append_scfvalues_scftargets(inputfile, line)
 
         # The convergence targets for geometry optimizations are printed at the
         # beginning of the output, although the order and their description is
@@ -194,7 +194,7 @@ class ORCA(logfileparser.Logfile):
             # There should always be five tolerance values printed here.
             for i in range(5):
                 line = next(inputfile)
-                name = line[:25].strip().lower().replace('.','').replace('displacement', 'step')
+                name = line[:25].strip().lower().replace('.', '').replace('displacement', 'step')
                 target = float(line.split()[-2])
                 self.geotargets_names.append(name)
                 self.geotargets.append(target)
@@ -223,26 +223,26 @@ class ORCA(logfileparser.Logfile):
         # RMS Displacement         TolRMSD  ....  2.0000e-03 bohr
         if line[25:50] == "RELAXED SURFACE SCAN STEP":
 
-           self.is_relaxed_scan = True
-           blank = next(inputfile)
-           info = next(inputfile)
-           stars = next(inputfile)
-           blank = next(inputfile)
+            self.is_relaxed_scan = True
+            blank = next(inputfile)
+            info = next(inputfile)
+            stars = next(inputfile)
+            blank = next(inputfile)
 
-           line = next(inputfile)
-           while line[0:23] != "Convergence Tolerances:":
-               line = next(inputfile)
+            line = next(inputfile)
+            while line[0:23] != "Convergence Tolerances:":
+                line = next(inputfile)
 
-           self.geotargets = []
-           self.geotargets_names = []
+            self.geotargets = []
+            self.geotargets_names = []
 
-           # There should always be five tolerance values printed here.
-           for i in range(5):
-               line = next(inputfile)
-               name = line[:25].strip().lower().replace('.','').replace('displacement', 'step')
-               target = float(line.split()[-2])
-               self.geotargets_names.append(name)
-               self.geotargets.append(target)
+            # There should always be five tolerance values printed here.
+            for i in range(5):
+                line = next(inputfile)
+                name = line[:25].strip().lower().replace('.', '').replace('displacement', 'step')
+                target = float(line.split()[-2])
+                self.geotargets_names.append(name)
+                self.geotargets.append(target)
 
         # After each geometry optimization step, ORCA prints the current convergence
         # parameters and the targets (again), so it is a good idea to check that they
@@ -266,7 +266,7 @@ class ORCA(logfileparser.Logfile):
 
             if not hasattr(self, "geovalues"):
                 self.geovalues = []
-            
+
             headers = next(inputfile)
             dashes = next(inputfile)
 
@@ -296,14 +296,14 @@ class ORCA(logfileparser.Logfile):
                 else:
                     newvalues.append(values[names.index(n)])
                     assert targets[names.index(n)] == self.geotargets[i]
-            
+
             self.geovalues.append(newvalues)
 
         #if not an optimization, determine structure used
         if line[0:21] == "CARTESIAN COORDINATES" and not hasattr(self, "atomcoords"):
 
             self.skip_line(inputfile, 'dashes')
-            
+
             atomnos = []
             atomcoords = []
             line = next(inputfile)
@@ -331,8 +331,8 @@ class ORCA(logfileparser.Logfile):
             self.gopt_cycle = int(line.split()[4])
 
             self.skip_lines(inputfile, ['s', 'd', 'text', 'd'])
-           
-            if not hasattr(self,"atomcoords"):
+
+            if not hasattr(self, "atomcoords"):
                 self.atomcoords = []
 
             atomnos = []
@@ -342,7 +342,7 @@ class ORCA(logfileparser.Logfile):
                 broken = line.split()
                 atomnos.append(self.table.number[broken[0]])
                 atomcoords.append(list(map(float, broken[1:4])))
-            
+
             self.atomcoords.append(atomcoords)
 
             self.set_attribute('atomnos', atomnos)
@@ -375,10 +375,10 @@ class ORCA(logfileparser.Logfile):
             self.homos = [[0]]
 
             line = next(inputfile)
-            while len(line) > 20: #restricted calcs are terminated by ------
+            while len(line) > 20:  # restricted calcs are terminated by ------
                 info = line.split()
                 self.moenergies[0].append(float(info[3]))
-                if float(info[1]) > 0.00: #might be 1 or 2, depending on restricted-ness
+                if float(info[1]) > 0.00:  # might be 1 or 2, depending on restricted-ness
                     self.homos[0] = int(info[0])
                 line = next(inputfile)
 
@@ -392,7 +392,7 @@ class ORCA(logfileparser.Logfile):
                 self.homos.append(0)
 
                 line = next(inputfile)
-                while len(line) > 20: #actually terminated by ------
+                while len(line) > 20:  # actually terminated by ------
                     info = line.split()
                     self.moenergies[1].append(float(info[3]))
                     if float(info[1]) == 1.00:
@@ -412,7 +412,7 @@ class ORCA(logfileparser.Logfile):
 
             self.skip_line(inputfile, 'dashes')
 
-            self.aooverlaps = numpy.zeros( (self.nbasis, self.nbasis), "d")
+            self.aooverlaps = numpy.zeros((self.nbasis, self.nbasis), "d")
             for i in range(0, self.nbasis, 6):
                 self.updateprogress(inputfile, "Overlap")
 
@@ -430,7 +430,7 @@ class ORCA(logfileparser.Logfile):
 
             self.skip_line(inputfile, 'dashes')
 
-            mocoeffs = [ numpy.zeros((self.nbasis, self.nbasis), "d") ]
+            mocoeffs = [numpy.zeros((self.nbasis, self.nbasis), "d")]
             self.aonames = []
             self.atombasis = []
             for n in range(self.natom):
@@ -461,12 +461,12 @@ class ORCA(logfileparser.Logfile):
                             atomname = line[3:5].split()[0]
                             num = int(line[0:3])
                             orbital = broken[1].upper()
-                            
-                            self.aonames.append("%s%i_%s"%(atomname, num+1, orbital))
+
+                            self.aonames.append("%s%i_%s" % (atomname, num+1, orbital))
                             self.atombasis[num].append(j)
 
                         temp = []
-                        vals = line[16:-1] #-1 to remove the last blank space
+                        vals = line[16:-1]  # -1 to remove the last blank space
                         for k in range(0, len(vals), 10):
                             temp.append(float(vals[k:k+10]))
                         mocoeffs[spin][i:i+size, j] = temp
@@ -487,7 +487,7 @@ class ORCA(logfileparser.Logfile):
                 self.etenergies = []
                 self.etsyms = []
 
-            lookup = {'a':0, 'b':1}
+            lookup = {'a': 0, 'b': 1}
             line = next(inputfile)
             while line.find("STATE") < 0:
                 line = next(inputfile)
@@ -515,26 +515,24 @@ class ORCA(logfileparser.Logfile):
         # the other based on the velocity form. Although these should be identical
         # in the basis set limit, in practice they are rarely the same. Here we will
         # effectively parse just the spectrum based on the length-form.
-        if (line[25:44] == "ABSORPTION SPECTRUM" or \
-                line[9:28] == "ABSORPTION SPECTRUM") and not hasattr(self,
-                                                                    "etoscs"):
+        if (line[25:44] == "ABSORPTION SPECTRUM" or line[9:28] == "ABSORPTION SPECTRUM") and not hasattr(self, "etoscs"):
 
             self.skip_lines(inputfile, ['d', 'header', 'header', 'd'])
 
             self.etoscs = []
-            for x in self.etsyms:                
+            for x in self.etsyms:
                 osc = next(inputfile).split()[3]
-                if osc == "spin": # "spin forbidden"    
+                if osc == "spin":  # "spin forbidden"
                     osc = 0
                 else:
                     osc = float(osc)
                 self.etoscs.append(osc)
-                
+
         if line[0:23] == "VIBRATIONAL FREQUENCIES":
 
             self.skip_lines(inputfile, ['d', 'b'])
 
-            self.vibfreqs = numpy.zeros((3 * self.natom,),"d")
+            self.vibfreqs = numpy.zeros((3 * self.natom,), "d")
 
             for i in range(3 * self.natom):
                 line = next(inputfile)
@@ -556,14 +554,14 @@ class ORCA(logfileparser.Logfile):
             M(i,i)=1/sqrt(m[i]) where m[i] is the mass of the displaced atom
             Thus, these vectors are normalized but *not* orthogonal
 
-                              0          1          2          3          4          5    
+                              0          1          2          3          4          5
                   0       0.000000   0.000000   0.000000   0.000000   0.000000   0.000000
                   1       0.000000   0.000000   0.000000   0.000000   0.000000   0.000000
                   2       0.000000   0.000000   0.000000   0.000000   0.000000   0.000000
             ...
             """
 
-            self.vibdisps = numpy.zeros(( 3 * self.natom, self.natom, 3), "d")
+            self.vibdisps = numpy.zeros((3 * self.natom, self.natom, 3), "d")
 
             self.skip_lines(inputfile, ['d', 'b', 'text', 'text', 'text', 'b'])
 
@@ -584,7 +582,7 @@ class ORCA(logfileparser.Logfile):
 
             self.skip_lines(inputfile, ['d', 'b', 'header', 'd'])
 
-            self.vibirs = numpy.zeros((3 * self.natom,),"d")
+            self.vibirs = numpy.zeros((3 * self.natom,), "d")
 
             line = next(inputfile)
             while len(line) > 2:
@@ -598,7 +596,7 @@ class ORCA(logfileparser.Logfile):
 
             self.skip_lines(inputfile, ['d', 'b', 'header', 'd'])
 
-            self.vibramans = numpy.zeros((3 * self.natom,),"d")
+            self.vibramans = numpy.zeros((3 * self.natom,), "d")
 
             line = next(inputfile)
             while len(line) > 2:
@@ -629,7 +627,7 @@ class ORCA(logfileparser.Logfile):
             has_spins = "AND SPIN POPULATIONS" in line
 
             if not hasattr(self, "atomcharges"):
-                self.atomcharges = { }
+                self.atomcharges = {}
             if has_spins and not hasattr(self, "atomspins"):
                 self.atomspins = {}
 
@@ -647,7 +645,7 @@ class ORCA(logfileparser.Logfile):
             self.atomcharges["mulliken"] = charges
             if has_spins:
                 self.atomspins["mulliken"] = spins
-            
+
         # Things are the same for Lowdin populations, except that the sums
         #   are not printed (there is a blank line at the end).
         if line[:22] == "LOEWDIN ATOMIC CHARGES":
@@ -655,7 +653,7 @@ class ORCA(logfileparser.Logfile):
             has_spins = "AND SPIN POPULATIONS" in line
 
             if not hasattr(self, "atomcharges"):
-                self.atomcharges = { }
+                self.atomcharges = {}
             if has_spins and not hasattr(self, "atomspins"):
                 self.atomspins = {}
 
@@ -760,52 +758,51 @@ class ORCA(logfileparser.Logfile):
     def parse_scf_expanded_format(self, inputfile, line):
         """ Parse SCF convergence when in expanded format. """
 
-
-# The following is an example of the format
-# -----------------------------------------
-#
-#               ***  Starting incremental Fock matrix formation  ***
-#
-#                         ----------------------------
-#                         !        ITERATION     0   !
-#                         ----------------------------
-#   Total Energy        :    -377.960836651297 Eh
-#   Energy Change       :    -377.960836651297 Eh
-#   MAX-DP              :       0.100175793695
-#   RMS-DP              :       0.004437973661
-#   Actual Damping      :       0.7000
-#   Actual Level Shift  :       0.2500 Eh
-#   Int. Num. El.       :    43.99982197 (UP=   21.99991099 DN=   21.99991099)
-#   Exchange            :   -34.27550826
-#   Correlation         :    -2.02540957
-#
-#
-#                         ----------------------------
-#                         !        ITERATION     1   !
-#                         ----------------------------
-#   Total Energy        :    -378.118458080109 Eh
-#   Energy Change       :      -0.157621428812 Eh
-#   MAX-DP              :       0.053240648588
-#   RMS-DP              :       0.002375092508
-#   Actual Damping      :       0.7000
-#   Actual Level Shift  :       0.2500 Eh
-#   Int. Num. El.       :    43.99994143 (UP=   21.99997071 DN=   21.99997071)
-#   Exchange            :   -34.00291075
-#   Correlation         :    -2.01607243
-#
-#                               ***Turning on DIIS***
-#
-#                         ----------------------------
-#                         !        ITERATION     2   !
-#                         ----------------------------
-# ....
-#
+        # The following is an example of the format
+        # -----------------------------------------
+        #
+        #               ***  Starting incremental Fock matrix formation  ***
+        #
+        #                         ----------------------------
+        #                         !        ITERATION     0   !
+        #                         ----------------------------
+        #   Total Energy        :    -377.960836651297 Eh
+        #   Energy Change       :    -377.960836651297 Eh
+        #   MAX-DP              :       0.100175793695
+        #   RMS-DP              :       0.004437973661
+        #   Actual Damping      :       0.7000
+        #   Actual Level Shift  :       0.2500 Eh
+        #   Int. Num. El.       :    43.99982197 (UP=   21.99991099 DN=   21.99991099)
+        #   Exchange            :   -34.27550826
+        #   Correlation         :    -2.02540957
+        #
+        #
+        #                         ----------------------------
+        #                         !        ITERATION     1   !
+        #                         ----------------------------
+        #   Total Energy        :    -378.118458080109 Eh
+        #   Energy Change       :      -0.157621428812 Eh
+        #   MAX-DP              :       0.053240648588
+        #   RMS-DP              :       0.002375092508
+        #   Actual Damping      :       0.7000
+        #   Actual Level Shift  :       0.2500 Eh
+        #   Int. Num. El.       :    43.99994143 (UP=   21.99997071 DN=   21.99997071)
+        #   Exchange            :   -34.00291075
+        #   Correlation         :    -2.01607243
+        #
+        #                               ***Turning on DIIS***
+        #
+        #                         ----------------------------
+        #                         !        ITERATION     2   !
+        #                         ----------------------------
+        # ....
+        #
         if not hasattr(self, "scfvalues"):
             self.scfvalues = []
 
         self.scfvalues.append([])
 
-        line = "Foo" # dummy argument to enter loop
+        line = "Foo"  # dummy argument to enter loop
         while line.find("******") < 0:
             line = next(inputfile)
             info = line.split()
@@ -868,4 +865,3 @@ if __name__ == "__main__":
         for i in range(len(sys.argv[2:])):
             if hasattr(data, sys.argv[2 + i]):
                 print(getattr(data, sys.argv[2 + i]))
-

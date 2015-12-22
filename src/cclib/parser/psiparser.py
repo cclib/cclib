@@ -28,7 +28,7 @@ class Psi(logfileparser.Logfile):
 
         # Call the __init__ method of the superclass
         super(Psi, self).__init__(logname="Psi", *args, **kwargs)
-        
+
     def __str__(self):
         """Return a string representation of the object."""
         return "Psi log file %s" % (self.filename)
@@ -95,7 +95,7 @@ class Psi(logfileparser.Logfile):
                 x = float(line.split()[1])
                 y = float(line.split()[2])
                 z = float(line.split()[3])
-                coords.append([x,y,z])
+                coords.append([x, y, z])
 
                 line = next(inputfile)
 
@@ -113,7 +113,7 @@ class Psi(logfileparser.Logfile):
         #
         #    Geometry (in Angstrom), charge = 0, multiplicity = 1:
         #
-        #       Center              X                  Y                   Z       
+        #       Center              X                  Y                   Z
         #    ------------   -----------------  -----------------  -----------------
         #           C         -1.415253322400     0.230221785400     0.000000000000
         #           C          1.415253322400    -0.230221785400     0.000000000000
@@ -169,7 +169,7 @@ class Psi(logfileparser.Logfile):
             while line.strip():
                 if "Number of AO" in line:
                     self.set_attribute('nbasis', int(line.split()[-1]))
-                line = next(inputfile)            
+                line = next(inputfile)
 
         # Psi4 repeats the charge and multiplicity after the geometry.
         if (self.section == "Geometry") and (line[2:16].lower() == "charge       ="):
@@ -268,9 +268,9 @@ class Psi(logfileparser.Logfile):
         #  -Contraction Scheme:
         #    Atom   Type   All Primitives // Shells:
         #   ------ ------ --------------------------
-        #       1     C     6s 3p // 2s 1p 
-        #       2     C     6s 3p // 2s 1p 
-        #       3     C     6s 3p // 2s 1p 
+        #       1     C     6s 3p // 2s 1p
+        #       2     C     6s 3p // 2s 1p
+        #       3     C     6s 3p // 2s 1p
         # ...
         if (self.section == "Primary Basis" or self.section == "DFT Potential") and line.strip() == "-Contraction Scheme:":
 
@@ -294,7 +294,7 @@ class Psi(logfileparser.Logfile):
                 shells = line.split('//')[1].split()
                 for s in shells:
                     count, type = s
-                    multiplier = 3*(type=='p') or 1
+                    multiplier = 3*(type == 'p') or 1
                     ao_count += multiplier*int(count)
 
                 if len(atombasis) > 0:
@@ -339,6 +339,7 @@ class Psi(logfileparser.Logfile):
                 return gbasis[last_same]
 
             dfact = lambda n: (n <= 0) or n * dfact(n-2)
+
             def get_normalization_factor(exp, lx, ly, lz):
                 norm_s = (2*exp/numpy.pi)**0.75
                 if lx + ly + lz > 0:
@@ -381,7 +382,7 @@ class Psi(logfileparser.Logfile):
                     nprimitives = int(nprimitives)
 
                     # Get the angular momentum for this shell type.
-                    momentum = { 'S' : 0, 'P' : 1, 'D' : 2, 'F' : 3, 'G' : 4 }[shell_type.upper()]
+                    momentum = {'S': 0, 'P': 1, 'D': 2, 'F': 3, 'G': 4}[shell_type.upper()]
 
                     # Read in the primitives.
                     primitives_lines = [next(inputfile) for i in range(nprimitives)]
@@ -471,20 +472,20 @@ class Psi(logfileparser.Logfile):
         #	Orbital Energies (a.u.)
         #	-----------------------
         #
-        #	Doubly Occupied:                                                      
+        #	Doubly Occupied:
         #
-        #	   1Bu   -11.040586     1Ag   -11.040524     2Bu   -11.031589  
-        #	   2Ag   -11.031589     3Bu   -11.028950     3Ag   -11.028820 
+        #	   1Bu   -11.040586     1Ag   -11.040524     2Bu   -11.031589
+        #	   2Ag   -11.031589     3Bu   -11.028950     3Ag   -11.028820
         # (...)
-        #	  15Ag    -0.415620     1Bg    -0.376962     2Au    -0.315126  
-        #	   2Bg    -0.278361     3Bg    -0.222189  
+        #	  15Ag    -0.415620     1Bg    -0.376962     2Au    -0.315126
+        #	   2Bg    -0.278361     3Bg    -0.222189
         #
-        #	Virtual:                                                              
+        #	Virtual:
         #
-        #	   3Au     0.198995     4Au     0.268517     4Bg     0.308826  
-        #	   5Au     0.397078     5Bg     0.521759    16Ag     0.565017 
+        #	   3Au     0.198995     4Au     0.268517     4Bg     0.308826
+        #	   5Au     0.397078     5Bg     0.521759    16Ag     0.565017
         # (...)
-        #	  24Ag     0.990287    24Bu     1.027266    25Ag     1.107702  
+        #	  24Ag     0.990287    24Bu     1.027266    25Ag     1.107702
         #	  25Bu     1.124938
         #
         # The case is different in the trigger string.
@@ -593,7 +594,7 @@ class Psi(logfileparser.Logfile):
                 while line.strip():
                     iao = int(line.split()[0])
                     coeffs = [float(c) for c in line.split()[1:]]
-                    for i,c in enumerate(coeffs):
+                    for i, c in enumerate(coeffs):
                         mocoeffs[indices[i]-1].append(c)
                     line = next(inputfile)
 
@@ -660,7 +661,7 @@ class Psi(logfileparser.Logfile):
         #  Measures of convergence in internal coordinates in au.
         #  Criteria marked as inactive (o), active & met (*), and active & unmet ( ).
         #  ---------------------------------------------------------------------------------------------
-        #   Step     Total Energy     Delta E     MAX Force     RMS Force      MAX Disp      RMS Disp   
+        #   Step     Total Energy     Delta E     MAX Force     RMS Force      MAX Disp      RMS Disp
         #  ---------------------------------------------------------------------------------------------
         #    Convergence Criteria    1.00e-06 *    3.00e-04 *             o    1.20e-03 *             o
         #  ---------------------------------------------------------------------------------------------
@@ -794,8 +795,8 @@ class Psi(logfileparser.Logfile):
                 while line.strip():
 
                     value = float(line.split()[-1])
-                    fromunits = "ebohr" + (rank>1)*("%i" % rank)
-                    tounits = "Debye" + (rank>1)*".ang" + (rank>2)*("%i" % (rank-1))
+                    fromunits = "ebohr" + (rank > 1)*("%i" % rank)
+                    tounits = "Debye" + (rank > 1)*".ang" + (rank > 2)*("%i" % (rank-1))
                     value = utils.convertor(value, fromunits, tounits)
                     multipole.append(value)
 
@@ -808,7 +809,7 @@ class Psi(logfileparser.Logfile):
             if not hasattr(self, 'moments'):
                 self.moments = moments
             else:
-                for im,m in enumerate(moments):
+                for im, m in enumerate(moments):
                     if len(self.moments) <= im:
                         self.moments.append(m)
                     else:

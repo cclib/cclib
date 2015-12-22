@@ -54,21 +54,22 @@ except ImportError:
 #   (parser, phrases, flag whether we should break)
 triggers = [
 
-(ADF,       ["Amsterdam Density Functional"],                   True),
-(DALTON,    ["Dalton - An Electronic Structure Program"],       True),
-(GAMESS,    ["GAMESS"],                                         False),
-(GAMESS,    ["GAMESS VERSION"],                                 True),
-(GAMESSUK,  ["G A M E S S - U K"],                              True),
-(Gaussian,  ["Gaussian, Inc."],                                 True),
-(Jaguar,    ["Jaguar"],                                         True),
-(Molpro,    ["PROGRAM SYSTEM MOLPRO"],                          True),
-(Molpro,    ["1PROGRAM"],                                       False),
-(NWChem,    ["Northwest Computational Chemistry Package"],      True),
-(ORCA,      ["O   R   C   A"],                                  True),
-(Psi,       ["PSI", "Ab Initio Electronic Structure"],          True),
-(QChem,     ["A Quantum Leap Into The Future Of Chemistry"],    True),
+    (ADF,       ["Amsterdam Density Functional"],                   True),
+    (DALTON,    ["Dalton - An Electronic Structure Program"],       True),
+    (GAMESS,    ["GAMESS"],                                         False),
+    (GAMESS,    ["GAMESS VERSION"],                                 True),
+    (GAMESSUK,  ["G A M E S S - U K"],                              True),
+    (Gaussian,  ["Gaussian, Inc."],                                 True),
+    (Jaguar,    ["Jaguar"],                                         True),
+    (Molpro,    ["PROGRAM SYSTEM MOLPRO"],                          True),
+    (Molpro,    ["1PROGRAM"],                                       False),
+    (NWChem,    ["Northwest Computational Chemistry Package"],      True),
+    (ORCA,      ["O   R   C   A"],                                  True),
+    (Psi,       ["PSI", "Ab Initio Electronic Structure"],          True),
+    (QChem,     ["A Quantum Leap Into The Future Of Chemistry"],    True),
 
 ]
+
 
 def guess_filetype(inputfile):
     """Try to guess the filetype by searching for trigger strings."""
@@ -84,6 +85,7 @@ def guess_filetype(inputfile):
                 if do_break:
                     return filetype
     return filetype
+
 
 def ccread(source, *args, **kargs):
     """Attempt to open and read computational chemistry data from a file.
@@ -107,6 +109,7 @@ def ccread(source, *args, **kargs):
         if kargs.get('verbose', None):
             print('Attempting to use fallback mechanism to read file')
         return fallback(source)
+
 
 def ccopen(source, *args, **kargs):
     """Guess the identity of a particular log file and return an instance of it.
@@ -147,6 +150,7 @@ def ccopen(source, *args, **kargs):
         if not isstream:
             inputfile.close()
         return filetype(source, *args, **kargs)
+
 
 def fallback(source):
     """Attempt to read standard molecular formats using other libraries.
