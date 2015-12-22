@@ -64,7 +64,7 @@ class ADF(logfileparser.Logfile):
             ans = temp
 
         l = len(ans)
-        if l > 1 and ans[0] == ans[1]: # Python only tests the second condition if the first is true
+        if l > 1 and ans[0] == ans[1]:  # Python only tests the second condition if the first is true
             if l > 2 and ans[1] == ans[2]:
                 ans = ans.replace(ans[0]*3, ans[0]) + '"'
             else:
@@ -80,8 +80,10 @@ class ADF(logfileparser.Logfile):
         """
 
         if not ndict:
-          ndict = { 'P': {0:"P:x", 1:"P:y", 2:"P:z"}, \
-                    'D': {0:"D:z2", 1:"D:x2-y2", 2:"D:xy", 3:"D:xz", 4:"D:yz"}}
+            ndict = {
+                'P': {0: "P:x", 1: "P:y", 2: "P:z"},
+                'D': {0: "D:z2", 1: "D:x2-y2", 2: "D:xy", 3: "D:xz", 4: "D:yz"}
+            }
 
         if label in ndict:
             if num in ndict[label]:
@@ -95,7 +97,7 @@ class ADF(logfileparser.Logfile):
 
         # Used to avoid extracting the final geometry twice in a GeoOpt
         self.NOTFOUND, self.GETLAST, self.NOMORE = list(range(3))
-        self.finalgeometry = self.NOTFOUND 
+        self.finalgeometry = self.NOTFOUND
 
         # Used for calculating the scftarget (variables names taken from the ADF manual)
         self.accint = self.SCFconv = self.sconv2 = None
@@ -104,8 +106,8 @@ class ADF(logfileparser.Logfile):
         self.nosymflag = False
         self.unrestrictedflag = False
 
-        SCFCNV, SCFCNV2 = list(range(2)) #used to index self.scftargets[]
-        maxelem, norm = list(range(2)) # used to index scf.values
+        SCFCNV, SCFCNV2 = list(range(2))  # used to index self.scftargets[]
+        maxelem, norm = list(range(2))  # used to index scf.values
 
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
@@ -175,7 +177,7 @@ class ADF(logfileparser.Logfile):
             atomcoords = []
             coreelectrons = []
             line = next(inputfile)
-            while len(line)>2: #ensure that we are reading no blank lines
+            while len(line) > 2:  # ensure that we are reading no blank lines
                 info = line.split()
                 element = info[1].split('.')[0]
                 atomnos.append(self.table.number[element])
@@ -197,15 +199,15 @@ class ADF(logfileparser.Logfile):
             self.fragnames = []
 
             line = next(inputfile)
-            while len(line) > 2: #ensure that we are reading no blank lines
+            while len(line) > 2:  # ensure that we are reading no blank lines
                 info = line.split()
 
-                if len(info) == 7: #fragment name is listed here
+                if len(info) == 7:  # fragment name is listed here
                     self.fragnames.append("%s_%s" % (info[1], info[0]))
                     self.frags.append([])
                     self.frags[-1].append(int(info[2]) - 1)
 
-                elif len(info) == 5: #add atoms into last fragment
+                elif len(info) == 5:  # add atoms into last fragment
                     self.frags[-1].append(int(info[0]) - 1)
 
                 line = next(inputfile)
@@ -228,7 +230,7 @@ class ADF(logfileparser.Logfile):
         if line[1:22] == "S C F   U P D A T E S":
         # find targets for SCF convergence
 
-            if not hasattr(self,"scftargets"):
+            if not hasattr(self, "scftargets"):
                 self.scftargets = []
 
             self.skip_lines(inputfile, ['e', 'b', 'numbers'])
@@ -254,11 +256,11 @@ class ADF(logfileparser.Logfile):
         if line[1:19] == "Becke grid quality":
             self.grid_quality = line.split()[-1]
             quality2accint = {
-                'BASIC' : 2.0,
-                'NORMAL' : 4.0,
-                'GOOD' : 6.0,
-                'VERYGOOD' : 8.0,
-                'EXCELLENT' : 10.0,
+                'BASIC': 2.0,
+                'NORMAL': 4.0,
+                'GOOD': 6.0,
+                'VERYGOOD': 8.0,
+                'EXCELLENT': 10.0,
             }
             self.accint = quality2accint[self.grid_quality]
 
@@ -307,7 +309,7 @@ class ADF(logfileparser.Logfile):
                 line = inputfile.next()
 
             # Now all values should be parsed, and so no Nones remaining.
-            assert all([all([x != None for x in ao]) for ao in overlaps])
+            assert all([all([x is not None for x in ao]) for ao in overlaps])
 
             self.set_attribute('aooverlaps', overlaps)
 
@@ -318,7 +320,7 @@ class ADF(logfileparser.Logfile):
             newlist = []
             line = next(inputfile)
 
-            if not hasattr(self,"geovalues"):
+            if not hasattr(self, "geovalues"):
                 # This is the first SCF cycle
                 self.scftargets.append([self.sconv2*10, self.sconv2])
             elif self.finalgeometry in [self.GETLAST, self.NOMORE]:
@@ -345,9 +347,9 @@ class ADF(logfileparser.Logfile):
                     newlist.append([float(info[4]), abs(float(info[6]))])
                 try:
                     line = next(inputfile)
-                except StopIteration: #EOF reached?
+                except StopIteration:  # EOF reached?
                     self.logger.warning("SCF did not converge, so attributes may be missing")
-                    break            
+                    break
 
             if line.find("SCF not fully converged, result acceptable") > 0:
                 self.logger.warning("SCF not fully converged, results acceptable")
@@ -400,7 +402,7 @@ class ADF(logfileparser.Logfile):
         # ==========================
         # Geometry Convergence Tests
         # ==========================
-        #  
+        #
         # Energy  old :         -5.14170647
         #         new :         -5.15951374
         #
@@ -568,7 +570,7 @@ class ADF(logfileparser.Logfile):
             line = next(inputfile)
             while len(line) > 5:
                 info = line.split()
-                if info[2] == 'A': 
+                if info[2] == 'A':
                     self.mosyms[0].append('A')
                     moenergies[0].append(utils.convertor(float(info[4]), 'hartree', 'eV'))
                     if info[3] != '0.00':
@@ -586,7 +588,6 @@ class ADF(logfileparser.Logfile):
             self.moenergies = [numpy.array(x, "d") for x in moenergies]
 
             self.set_attribute('homos', [homoa, homob])
-
 
         # Extracting orbital symmetries and energies, homos.
         if line[1:29] == 'Orbital Energies, all Irreps' and not hasattr(self, "mosyms"):
@@ -614,15 +615,15 @@ class ADF(logfileparser.Logfile):
             line = next(inputfile)
             while line.strip():
                 info = line.split()
-                if len(info) == 5: #this is restricted
+                if len(info) == 5:  # this is restricted
                     #count = multiple.get(info[0][0],1)
                     count = multiple.get(info[0], 1)
-                    for repeat in range(count): # i.e. add E's twice, T's thrice
+                    for repeat in range(count):  # i.e. add E's twice, T's thrice
                         self.mosyms[0].append(self.normalisesym(info[0]))
                         self.moenergies[0].append(utils.convertor(float(info[3]), 'hartree', 'eV'))
 
                         sym = info[0]
-                        if count > 1: # add additional sym label
+                        if count > 1:   # add additional sym label
                             sym = self.normalisedegenerates(info[0], repeat, ndict=irrepspecies)
 
                         try:
@@ -632,21 +633,21 @@ class ADF(logfileparser.Logfile):
                             self.symlist[sym][0].append(len(self.moenergies[0])-1)
 
                     if info[2] == '0.00' and not hasattr(self, 'homos'):
-                        self.homos = [len(self.moenergies[0]) - (count + 1)] #count, because need to handle degenerate cases
+                        self.homos = [len(self.moenergies[0]) - (count + 1)]  # count, because need to handle degenerate cases
                     line = next(inputfile)
-                elif len(info) == 6: #this is unrestricted
-                    if len(self.moenergies) < 2: #if we don't have space, create it
+                elif len(info) == 6:  # this is unrestricted
+                    if len(self.moenergies) < 2:  # if we don't have space, create it
                         self.moenergies.append([])
                         self.mosyms.append([])
 #                    count = multiple.get(info[0][0], 1)
                     count = multiple.get(info[0], 1)
                     if info[2] == 'A':
-                        for repeat in range(count): # i.e. add E's twice, T's thrice
+                        for repeat in range(count):  # i.e. add E's twice, T's thrice
                             self.mosyms[0].append(self.normalisesym(info[0]))
                             self.moenergies[0].append(utils.convertor(float(info[4]), 'hartree', 'eV'))
 
                             sym = info[0]
-                            if count > 1: #add additional sym label
+                            if count > 1:  # add additional sym label
                                 sym = self.normalisedegenerates(info[0], repeat)
 
                             try:
@@ -655,16 +656,16 @@ class ADF(logfileparser.Logfile):
                                 self.symlist[sym] = [[], []]
                                 self.symlist[sym][0].append(len(self.moenergies[0])-1)
 
-                        if info[3] == '0.00' and homoa == None:
-                            homoa = len(self.moenergies[0]) - (count + 1) #count because degenerate cases need to be handled
+                        if info[3] == '0.00' and homoa is None:
+                            homoa = len(self.moenergies[0]) - (count + 1)  # count because degenerate cases need to be handled
 
                     if info[2] == 'B':
-                        for repeat in range(count): # i.e. add E's twice, T's thrice
+                        for repeat in range(count):  # i.e. add E's twice, T's thrice
                             self.mosyms[1].append(self.normalisesym(info[0]))
                             self.moenergies[1].append(utils.convertor(float(info[4]), 'hartree', 'eV'))
 
                             sym = info[0]
-                            if count > 1: #add additional sym label
+                            if count > 1:  # add additional sym label
                                 sym = self.normalisedegenerates(info[0], repeat)
 
                             try:
@@ -673,15 +674,15 @@ class ADF(logfileparser.Logfile):
                                 self.symlist[sym] = [[], []]
                                 self.symlist[sym][1].append(len(self.moenergies[1])-1)
 
-                        if info[3] == '0.00' and homob == None:
+                        if info[3] == '0.00' and homob is None:
                             homob = len(self.moenergies[1]) - (count + 1)
 
                     line = next(inputfile)
 
-                else: #different number of lines
+                else:  # different number of lines
                     print(("Error", info))
 
-            if len(info) == 6: #still unrestricted, despite being out of loop
+            if len(info) == 6:  # still unrestricted, despite being out of loop
                 self.set_attribute('homos', [homoa, homob])
 
             self.moenergies = [numpy.array(x, "d") for x in self.moenergies]
@@ -696,9 +697,9 @@ class ADF(logfileparser.Logfile):
             self.skip_lines(inputfile, ['e', 'b', 'header', 'header', 'b', 'b'])
 
             freqs = next(inputfile)
-            while freqs.strip()!="":
+            while freqs.strip() != "":
                 minus = next(inputfile)
-                p = [ [], [], [] ]
+                p = [[], [], []]
                 for i in range(len(self.atomnos)):
                     broken = list(map(float, next(inputfile).split()[1:]))
                     for j in range(0, len(broken), 3):
@@ -712,7 +713,7 @@ class ADF(logfileparser.Logfile):
         # Start of the IR/Raman frequency section
             self.updateprogress(inputfile, "Frequency information", self.fupdate)
 
-        #                 self.vibsyms = [] # Need to look into this a bit more
+        #                 self.vibsyms = []  # Need to look into this a bit more
             self.vibirs = []
             self.vibfreqs = []
             for i in range(8):
@@ -720,14 +721,13 @@ class ADF(logfileparser.Logfile):
             line = next(inputfile).strip()
             while line:
                 temp = line.split()
-                self.vibfreqs.append(float(temp[0]))                    
-                self.vibirs.append(float(temp[2])) # or is it temp[1]?
+                self.vibfreqs.append(float(temp[0]))
+                self.vibirs.append(float(temp[2]))  # or is it temp[1]?
                 line = next(inputfile).strip()
             self.vibfreqs = numpy.array(self.vibfreqs, "d")
             self.vibirs = numpy.array(self.vibirs, "d")
             if hasattr(self, "vibramans"):
                 self.vibramans = numpy.array(self.vibramans, "d")
-
 
         #******************************************************************************************************************8
         #delete this after new implementation using smat, eigvec print,eprint?
@@ -748,7 +748,7 @@ class ADF(logfileparser.Logfile):
 
             self.skip_line(inputfile, 'blank')
             line = next(inputfile)
-            if len(line) > 2: #fix for ADF2006.01 as it has another note
+            if len(line) > 2:  # fix for ADF2006.01 as it has another note
                 self.skip_line(inputfile, 'blank')
                 line = next(inputfile)
             self.skip_line(inputfile, 'blank')
@@ -766,7 +766,7 @@ class ADF(logfileparser.Logfile):
                 while line.find('-----') < 0:
                     line = next(inputfile)
 
-                line = next(inputfile) # the start of the first SFO
+                line = next(inputfile)  # the start of the first SFO
 
                 while len(self.fonames) < symoffset + num:
                     info = line.split()
@@ -785,10 +785,10 @@ class ADF(logfileparser.Logfile):
                     coeff = float(info[6])
 
                     line = next(inputfile)
-                    while line.strip() and not line[:7].strip(): # while it's the same SFO
+                    while line.strip() and not line[:7].strip():  # while it's the same SFO
                         # i.e. while not completely blank, but blank at the start
                         info = line[43:].split()
-                        if len(info)>0: # len(info)==0 for the second line of dvb_ir.adfout
+                        if len(info) > 0:  # len(info)==0 for the second line of dvb_ir.adfout
                             frag += "+" + fragname + info[-1]
                             coeff = float(info[-4])
                             if coeff < 0:
@@ -803,7 +803,8 @@ class ADF(logfileparser.Logfile):
                 symoffset += num
 
                 # blankline blankline
-                next(inputfile); next(inputfile)
+                next(inputfile)
+                next(inputfile)
 
         if line[1:32] == "S F O   P O P U L A T I O N S ,":
         #Extract overlap matrix
@@ -815,22 +816,22 @@ class ADF(logfileparser.Logfile):
             for nosymrep in self.nosymreps:
 
                 line = next(inputfile)
-                while line.find('===') < 10: #look for the symmetry labels
+                while line.find('===') < 10:  # look for the symmetry labels
                     line = next(inputfile)
 
                 self.skip_lines(inputfile, ['b', 'b'])
 
                 text = next(inputfile)
-                if text[13:20] != "Overlap": # verify this has overlap info
+                if text[13:20] != "Overlap":  # verify this has overlap info
                     break
 
                 self.skip_lines(inputfile, ['b', 'col', 'row'])
 
-                if not hasattr(self,"fooverlaps"): # make sure there is a matrix to store this
+                if not hasattr(self, "fooverlaps"):  # make sure there is a matrix to store this
                     self.fooverlaps = numpy.zeros((self.nbasis, self.nbasis), "d")
 
                 base = 0
-                while base < nosymrep: #have we read all the columns?
+                while base < nosymrep:  # have we read all the columns?
 
                     for i in range(nosymrep - base):
 
@@ -839,7 +840,7 @@ class ADF(logfileparser.Logfile):
                         parts = line.split()[1:]
                         for j in range(len(parts)):
                             k = float(parts[j])
-                            self.fooverlaps[base + symoffset + j, base + symoffset +i] = k
+                            self.fooverlaps[base + symoffset + j, base + symoffset + i] = k
                             self.fooverlaps[base + symoffset + i, base + symoffset + j] = k
 
                     #blank, blank, column
@@ -889,7 +890,7 @@ class ADF(logfileparser.Logfile):
             while line[0] != "1":
                 line = next(inputfile)
 
-                # If spin is specified, then there will be two coefficient matrices. 
+                # If spin is specified, then there will be two coefficient matrices.
                 if line.strip() == "***** SPIN 1 *****":
                     self.mocoeffs = [numpy.zeros((self.nbasis, self.nbasis), "d"),
                                      numpy.zeros((self.nbasis, self.nbasis), "d")]
@@ -945,8 +946,8 @@ class ADF(logfileparser.Logfile):
         # *                                                                        *
         # **************************************************************************
         #
-        #     Number of loops in Davidson routine     =   20                    
-        #     Number of matrix-vector multiplications =   24                    
+        #     Number of loops in Davidson routine     =   20
+        #     Number of matrix-vector multiplications =   24
         #     Type of excitations = SINGLET-SINGLET
         #
         # Symmetry B.u
@@ -1013,7 +1014,7 @@ class ADF(logfileparser.Logfile):
                 syms.append(str(counts[mosym]) + mosym)
 
             etsecs = []
-            printed_warning = False 
+            printed_warning = False
             for i in range(len(etenergies)):
 
                 etsec = []
@@ -1099,7 +1100,7 @@ class ADF(logfileparser.Logfile):
         # =============
         # Dipole Moment  ***  (Debye)  ***
         # =============
-        #  
+        #
         # Vector   :         0.00000000      0.00000000      0.00000000
         # Magnitude:         0.00000000
         #

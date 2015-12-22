@@ -64,12 +64,12 @@ class DALTON(logfileparser.Logfile):
         #
         #  label    atoms   charge   prim   cont     basis
         #  ----------------------------------------------------------------------
-        #  C           6    6.0000    15     5      [6s3p|2s1p]                                        
-        #  H           4    1.0000     3     1      [3s|1s]                                            
-        #  C           2    6.0000    15     5      [6s3p|2s1p]                                        
-        #  H           2    1.0000     3     1      [3s|1s]                                            
-        #  C           2    6.0000    15     5      [6s3p|2s1p]                                        
-        #  H           4    1.0000     3     1      [3s|1s]                                            
+        #  C           6    6.0000    15     5      [6s3p|2s1p]
+        #  H           4    1.0000     3     1      [3s|1s]
+        #  C           2    6.0000    15     5      [6s3p|2s1p]
+        #  H           2    1.0000     3     1      [3s|1s]
+        #  C           2    6.0000    15     5      [6s3p|2s1p]
+        #  H           4    1.0000     3     1      [3s|1s]
         #  ----------------------------------------------------------------------
         #  total:     20   70.0000   180    60
         #  ----------------------------------------------------------------------
@@ -167,7 +167,7 @@ class DALTON(logfileparser.Logfile):
         # @    Spin multiplicity and 2 M_S                1         0
         # @    Total number of symmetries                 4 (point group: C2h)
         # @    Reference state symmetry                   1 (irrep name : Ag )
-        # 
+        #
         #     This is a DFT calculation of type: B3LYP
         # ...
         #
@@ -179,14 +179,14 @@ class DALTON(logfileparser.Logfile):
         #     Orbital specifications
         #     ======================
         #     Abelian symmetry species          All |    1    2    3    4
-        #                                           |  Ag   Au   Bu   Bg 
+        #                                           |  Ag   Au   Bu   Bg
         #                                       --- |  ---  ---  ---  ---
         #     Total number of orbitals           60 |   25    5   25    5
         #     Number of basis functions          60 |   25    5   25    5
         #
         #      ** Automatic occupation of RKS orbitals **
         #
-        #      -- Initial occupation of symmetries is determined from extended Huckel guess.           
+        #      -- Initial occupation of symmetries is determined from extended Huckel guess.
         #      -- Initial occupation of symmetries is :
         # @    Occupied SCF orbitals              35 |   15    2   15    3
         #
@@ -206,7 +206,7 @@ class DALTON(logfileparser.Logfile):
         if "@    Occupied SCF orbitals" in line and not hasattr(self, 'homos'):
             temp = line.split()
             homos = int(temp[4])
-            self.set_attribute('homos', [homos-1]) # it is the index (python counting, so -1)
+            self.set_attribute('homos', [homos-1])  # it is the index (python counting, so -1)
         if "Threshold for SCF convergence" in line:
             if not hasattr(self, "scftargets"):
                 self.scftargets = []
@@ -216,7 +216,7 @@ class DALTON(logfileparser.Logfile):
         #  *********************************************
         #  ***** DIIS optimization of Hartree-Fock *****
         #  *********************************************
-        # 
+        #
         #  C1-DIIS algorithm; max error vectors =    8
         #
         #  Automatic occupation of symmetries with  70 electrons.
@@ -226,8 +226,8 @@ class DALTON(logfileparser.Logfile):
         #       K-S energy, electrons, error :    -46.547567739269  69.9999799123   -2.01D-05
         # @  1  -381.645762476       4.00D+00  -3.82D+02    15   2  15   3
         #       Virial theorem: -V/T =      2.008993
-        # @      MULPOP C   _1  0.15; C   _2  0.15; C   _1  0.12; C   _2  0.12; C   _1  0.11; C   _2  0.11; H   _1 -0.15; H   _2 -0.15; H   _1 -0.14; H   _2 -0.14; 
-        # @             C   _1  0.23; C   _2  0.23; H   _1 -0.15; H   _2 -0.15; C   _1  0.08; C   _2  0.08; H   _1 -0.12; H   _2 -0.12; H   _1 -0.13; H   _2 -0.13; 
+        # @      MULPOP C   _1  0.15; C   _2  0.15; C   _1  0.12; C   _2  0.12; C   _1  0.11; C   _2  0.11; H   _1 -0.15; H   _2 -0.15; H   _1 -0.14; H   _2 -0.14;
+        # @             C   _1  0.23; C   _2  0.23; H   _1 -0.15; H   _2 -0.15; C   _1  0.08; C   _2  0.08; H   _1 -0.12; H   _2 -0.12; H   _1 -0.13; H   _2 -0.13;
         #  -----------------------------------------------------------------------------
         #       K-S energy, electrons, error :    -46.647668038900  69.9999810430   -1.90D-05
         # @  2  -381.949410128       1.05D+00  -3.04D-01    15   2  15   3
@@ -316,7 +316,7 @@ class DALTON(logfileparser.Logfile):
                 self.skip_line(inputfile, 'blank')
                 line = next(inputfile)
             nelectrons = int(line.split()[-1])
-            
+
             line = next(inputfile)
             occupations = [int(o) for o in line.split()[3:]]
             nsym = len(occupations)
@@ -348,10 +348,10 @@ class DALTON(logfileparser.Logfile):
                     energies = [float(t) for t in cols[2:]]
                 else:
                     if hasattr(self, 'symlabels'):
-                    	sym = self.normalisesym(self.symlabels[int(cols[0]) - 1])
+                        sym = self.normalisesym(self.symlabels[int(cols[0]) - 1])
                     else:
-                    	assert cols[0] == '1'
-                    	sym = "Ag"
+                        assert cols[0] == '1'
+                        sym = "Ag"
                     energies = [float(t) for t in cols[1:]]
 
                 while len(energies) > 0:
@@ -386,7 +386,7 @@ class DALTON(logfileparser.Logfile):
         # @    Spatial symmetry:            1 ( irrep  Ag  in C2h )
         # @    Total charge of molecule:    0
         #
-        # @    Final DFT energy:           -382.050716652387                 
+        # @    Final DFT energy:           -382.050716652387
         # @    Nuclear repulsion:           445.936979976608
         # @    Electronic energy:          -827.987696628995
         #
@@ -446,7 +446,6 @@ class DALTON(logfileparser.Logfile):
                     float(temp[1])
                 except ValueError:
                     coords = [2, 3, 4]
-
 
                 atomcoords.append([utils.convertor(float(temp[i]), "bohr", "Angstrom") for i in coords])
             self.atomcoords.append(atomcoords)
