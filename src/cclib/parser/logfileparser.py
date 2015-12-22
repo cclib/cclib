@@ -37,14 +37,34 @@ logging.logMultiprocessing =  0
 class myBZ2File(bz2.BZ2File):
     """Return string instead of bytes"""
     def __next__(self):
-        line = super().__next__()
+        line = super(bz2.BZ2File,self).__next__()
         return line.decode("ascii", "replace")
+
+    def next(self):
+        line = self.__next__()
+        return line
+
 
 class myGzipFile(gzip.GzipFile):
     """Return string instead of bytes"""
     def __next__(self):
-        line = super().__next__()
+        super_ob = super(gzip.GzipFile,self)
+        # seemingly different versions of gzip can have either next or __next__
+        if hasattr(super_ob,'next'):
+            line = super_ob.next()
+        else: line = super_ob.__next__()
         return line.decode("ascii", "replace")
+
+    def next(self):
+        line = self.__next__()
+        return line
+
+
+class myFileinputFile(fileinput.FileInput):
+    """Implement next() method"""
+    def next(self):
+        line = next(self)
+        return line
 
 
 class FileWrapper(object):
@@ -154,7 +174,7 @@ def openlogfile(filename):
         if sys.version_info[0] >= 2 and sys.version_info[1] >= 5:
             fileobject = fileinput.input(filename, openhook=fileinput.hook_compressed)
         else:
-            fileobject = fileinput.input(filename)
+            fileobject = myFileinputFile(filename)
 
         return fileobject
 
