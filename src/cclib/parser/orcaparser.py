@@ -49,6 +49,7 @@ class ORCA(logfileparser.Logfile):
         >>> map(sym, labels)
         ['A1', 'Ag', 'A1g', 'sigma', 'pi', 'phi', 'delta', 'delta.u', 'sigma.g']
         """
+        # FIXME
 
     def before_parsing(self):
 

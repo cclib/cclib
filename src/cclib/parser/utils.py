@@ -21,7 +21,7 @@ def convertor(value, fromunits, tounits):
         Documentation of GAMESS-US or other programs as noted
 
     >>> print "%.1f" % convertor(8, "eV", "cm-1")
-    64524.8
+    64524.4
     """
 
     _convertor = {
@@ -72,10 +72,24 @@ def convertor(value, fromunits, tounits):
         "ebohr4_to_Debye.ang3": lambda x: x * 0.3766479268,
         "ebohr5_to_Debye.ang4": lambda x: x * 0.1993134985,
 
+        # Conversion for masses. NIST 2010.                                         
+        # electron_mass = 9.10938291 10 -31             kg                          
+        # atomic_mass_constant 1.660538921 10 -27            kg                     
+        # Dalton_to_emass = atomic_mass_constant/electron_mass                      
+        "Dalton_to_emass": lambda x: x * 1822.88848477004,                          
+        "emass_to_Dalton": lambda x: x / 1822.88848477004,          
+
     }
 
-    return _convertor["%s_to_%s" % (fromunits, tounits)] (value)
-
+    if fromunits == tounits: converted = value                                  
+    else:                                                                       
+        from_to_str = "%s_to_%s" % (fromunits, tounits)                         
+        if from_to_str in _convertor:                                           
+            converted = _convertor[from_to_str] (value)                         
+        else:                                                                   
+            raise ValueError('I do not know how to convert from {} to {}. '    
+                              'Check your units.\n'.format(fromunits,tounits))  
+    return converted                                          
 
 class PeriodicTable(object):
     """Allows conversion between element name and atomic no.

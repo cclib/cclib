@@ -202,6 +202,8 @@ TD        GAMESS      GAMESSUSTDDFTTest     basicGAMESS-US2012    dvb_td.out
 TD        GAMESS      GenericTDDFTtrpTest   basicGAMESS-US2012    dvb_td_trplet.out
 TD        Gaussian    GaussianTDDFTTest     basicGaussian03       dvb_td.out
 TD        Gaussian    GaussianTDDFTTest     basicGaussian09       dvb_td.out
+TD        Gaussian    GaussianfcTDDFTTest   basicGaussian09       dvb_td.fchk
+TD        Gaussian    GaussianTDDFTTest     basicGaussian09       dvb_td.out            dvb_td.fchk
 TD        Jaguar      JaguarTDDFTTest       basicJaguar8.3        dvb_td.out
 TD        ORCA        OrcaTDDFTTest         basicORCA2.9          dvb_td.out
 TD        ORCA        OrcaTDDFTTest         basicORCA3.0          dvb_td.out
@@ -218,13 +220,16 @@ vib       GAMESS      FireflyIRTest         basicFirefly8.0       dvb_ir.out
 vib       GAMESS      GenericIRTest         basicGAMESS-US2012    dvb_ir.out
 vib       Gaussian    GaussianIRTest        basicGaussian03       dvb_ir.out
 vib       Gaussian    GaussianIRTest        basicGaussian09       dvb_ir.out
+vib       Gaussian    GaussianIRTest        basicGaussian09       dvb_ir.out            dvb_ir.fchk
+vib       Gaussian    GenericIRTest         basicGaussian09       dvb_ir.fchk
 vib       Jaguar      JaguarIRTest          basicJaguar7.0        dvb_ir.out
 vib       Jaguar      JaguarIRTest          basicJaguar8.3        dvb_ir.out
-vib       Molpro      GenericIRTest         basicMolpro2006       dvb_ir.out            dvb_ir.log
-vib       Molpro      GenericIRTest         basicMolpro2012       dvb_ir.out            dvb_ir.log
+vib       Molpro      MolproIRTest          basicMolpro2006       dvb_ir.out            dvb_ir.log
+vib       Molpro      MolproIRTest          basicMolpro2012       dvb_ir.out            dvb_ir.log
 vib       ORCA        OrcaIRTest            basicORCA2.9          dvb_ir.out
 vib       ORCA        OrcaIRTest            basicORCA3.0          dvb_ir.out
 vib       QChem       QChemIRTest           basicQChem4.2         dvb_ir.out
+vib       Turbomole   GenericIRTest         basicTurbomole6.0     dvb_ir.out
 
 vib       GAMESS      GenericIRimgTest      basicGAMESS-US2012    nh3_ts_ir.out
 
@@ -236,3 +241,6 @@ vib       Gaussian    GaussianRamanTest     basicGaussian09       dvb_raman.out
 vib       ORCA        GenericRamanTest      basicORCA2.9          dvb_raman.out
 vib       ORCA        GenericRamanTest      basicORCA3.0          dvb_raman.out
 vib       QChem       QChemRamanTest        basicQChem4.2         dvb_raman.out
+
+HT        Gaussian    GaussianHTTest        basicGaussian09       dvb_td_freq.out.gz  
+HT        Gaussian    GaussianfcHTTest      basicGaussian09       dvb_td_freq.fchk

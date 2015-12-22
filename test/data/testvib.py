@@ -12,7 +12,7 @@
 
 import os
 import unittest
-
+import numpy
 
 __filedir__ = os.path.realpath(os.path.dirname(__file__))
 
@@ -30,12 +30,10 @@ class GenericIRTest(unittest.TestCase):
                         (numvib, len(self.data.atomnos), 3))
 
     def testlengths(self):
-        """Are the lengths of vibfreqs and vibirs (and if present, vibsyms) correct?"""
+        """Are the lengths of vibfreqs and vibirs correct?"""
         numvib = 3*len(self.data.atomnos) - 6
         self.assertEqual(len(self.data.vibfreqs), numvib)
         self.assertEqual(len(self.data.vibirs), numvib)
-        if hasattr(self.data,'vibsyms'):
-            self.assertEqual(len(self.data.vibsyms), numvib)
 
     def testfreqval(self):
         """Is the highest freq value 3630 +/- 200 cm-1?"""
@@ -44,7 +42,34 @@ class GenericIRTest(unittest.TestCase):
     def testirintens(self):
         """Is the maximum IR intensity 100 +/- 10 km mol-1?"""
         self.assertAlmostEqual(max(self.data.vibirs), self.max_IR_intensity, delta=10)
+    
+    def testatomcoords(self):                                                   
+        """Are atomcoords consistent with natom and Angstroms?"""               
+        natom = len(self.data.atomcoords[0])                                    
+        ref = self.data.natom                                                   
+        msg = "natom is %d but len(atomcoords[0]) is %d" % (ref, natom)         
+        self.assertEquals(natom, ref, msg)                                      
+                                                                                
+        # Find the minimum distance between two C atoms.                        
+        mindist = 999                                                           
+        for i in range(self.data.natom-1):                                      
+            if self.data.atomnos[i]==6:                                         
+                for j in range(i+1,self.data.natom):                            
+                    if self.data.atomnos[j]==6:                                 
+                        # Find the distance in the final iteration              
+                        final_x = self.data.atomcoords[-1][i]                   
+                        final_y = self.data.atomcoords[-1][j]                   
+                        dist = numpy.sqrt(sum((final_x - final_y)**2))          
+                        mindist = min(mindist,dist)                             
+        self.assert_(abs(mindist-1.34)<0.03,"Mindist is %f (not 1.34)" % mindist)
 
+
+class VibSymsTest(unittest.TestCase):
+    """Is the length of vibsyms correct?"""
+    def testvibsyms(self):
+        """Is the length of vibsyms correct?"""
+        numvib = 3*len(self.data.atomnos) - 6
+        self.assertEqual(len(self.data.vibsyms), numvib)
 
 class FireflyIRTest(GenericIRTest):
     """Customized vibrational frequency unittest"""
@@ -52,24 +77,18 @@ class FireflyIRTest(GenericIRTest):
     max_IR_intensity = 135
 
 
-class GaussianIRTest(GenericIRTest):
+class GaussianIRTest(GenericIRTest,VibSymsTest):
     """Customized vibrational frequency unittest"""
-
-    def testvibsyms(self):
-        """Is the length of vibsyms correct?"""
-        numvib = 3*len(self.data.atomnos) - 6        
-        self.assertEqual(len(self.data.vibsyms), numvib)
+       
+       
+class JaguarIRTest(GenericIRTest,VibSymsTest):
+    """Customized vibrational frequency unittest"""
 
        
-class JaguarIRTest(GenericIRTest):
+class MolproIRTest(GenericIRTest,VibSymsTest):
     """Customized vibrational frequency unittest"""
 
-    def testvibsyms(self):
-        """Is the length of vibsyms correct?"""
-        numvib = 3*len(self.data.atomnos) - 6
-        self.assertEqual(len(self.data.vibsyms), numvib)
-
-
+       
 class OrcaIRTest(GenericIRTest):
     """Customized vibrational frequency unittest"""
 

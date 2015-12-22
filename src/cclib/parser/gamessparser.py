@@ -52,8 +52,7 @@ class GAMESS(logfileparser.Logfile):
 
         >>> t = GAMESS("dummyfile").normalisesym
         >>> labels = ['A', 'A1', 'A1G', "A'", "A''", "AG"]
-        >>> answers = map(t, labels)
-        >>> print answers
+        >>> map(t, labels)
         ['A', 'A1', 'A1g', "A'", 'A"', 'Ag']
         """
 

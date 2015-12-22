@@ -30,7 +30,7 @@ sys.path.append(os.path.join(__filedir__, 'data'))
 
 parser_names = [
     "ADF", "DALTON", "GAMESS", "GAMESSUK", "Gaussian",
-    "Jaguar", "Molpro", "NWChem", "ORCA", "Psi", "QChem",
+    "Jaguar", "Molpro", "NWChem", "ORCA", "Psi", "QChem", "Turbomole",
 ]
 all_parsers = {name: getattr(cclib.parser, name) for name in parser_names}
 
@@ -38,7 +38,7 @@ all_parsers = {name: getattr(cclib.parser, name) for name in parser_names}
 module_names = [
     "SP", "SPun", "GeoOpt", "Basis", "Core",    # Basic calculations.
     "MP", "CC", "CI", "TD", "TDun",             # Post-SCF calculations.
-    "vib", "Scan",                              # Other property calculations.
+    "vib", "Scan", "HT"                         # Other property calculations.
 ]
 all_modules = {tn: importlib.import_module('data.test' + tn) for tn in module_names}
     

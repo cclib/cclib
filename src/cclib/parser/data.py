@@ -35,6 +35,13 @@ class ccData(object):
         entropy -- entropy (float, hartree/particle)
         etenergies -- energies of electronic transitions (array[1], 1/cm)
         etoscs -- oscillator strengths of electronic transitions (array[1])
+        eteltrdips -- electric transition dipoles of electronic transitions (array[2], ebohr)
+        etveleltrdips -- velocity-gauge electric transition dipoles of electronic transitions (array[2], ebohr)
+        etmagtrdips -- magnetic transition dipoles of electronic transitions (array[2], ebohr)
+        eteltrdipgrads -- gradients of electric transition dipoles of electronic transitions (array[3], e)
+        etveleltrdipgrads -- gradients of velocity-gauge electric transition dipoles of electronic transitions (array[3], e)
+        etmagtrdipgrads -- gradients of magnetic transition dipoles of electronic transitions (array[3], e)
+        etroot -- root number of electronic transition of interest (for e.g. geom opt / gradients) (integer)
         etrotats -- rotatory strengths of electronic transitions (array[1], ??)
         etsecs -- singly-excited configurations for electronic transitions (list of lists)
         etsyms -- symmetries of electronic transitions (list of string)
@@ -56,6 +63,7 @@ class ccData(object):
         mpenergies -- molecular electronic energies with Møller-Plesset corrections (array[2], eV)
         mult -- multiplicity of the system (integer)
         natom -- number of atoms (integer)
+        netroot -- number of electronic transition roots (integer)
         nbasis -- number of basis functions (integer)
         nmo -- number of molecular orbitals (integer)
         nocoeffs -- natural orbital coefficients (array[2])
@@ -75,6 +83,7 @@ class ccData(object):
         vibirs -- IR intensities (array[1], km/mol)
         vibramans -- Raman intensities (array[1], A^4/Da)
         vibsyms -- symmetries of vibrations (list of strings)
+        numnucstep -- nuclear step size used in numerical differentiation (float, angstrom) 
     (1) The term 'array' refers to a numpy array
     (2) The number of dimensions of an array is given in square brackets
     (3) Python indexes arrays/lists starting at zero, so if homos==[10], then
@@ -98,7 +107,14 @@ class ccData(object):
         "entropy":        float,
         "etenergies":     numpy.ndarray,
         "etoscs":         numpy.ndarray,
+        "eteltrdips":     numpy.ndarray, 
+        "etveleltrdips":  numpy.ndarray,
+        "etmagtrdips":    numpy.ndarray,
+        "eteltrdipgrads": numpy.ndarray,
+        "etveleltrdipgrads": numpy.ndarray,
+        "etmagtrdipgrads": numpy.ndarray,
         "etrotats":       numpy.ndarray,
+        "etroot":         int,
         "etsecs":         list,
         "etsyms":         list,
         "freeenergy":     float,
@@ -120,6 +136,7 @@ class ccData(object):
         "mult":           int,
         "natom":          int,
         "nbasis":         int,
+        "netroot":        int,
         "nmo":            int,
         "nocoeffs":       numpy.ndarray,
         "nooccnos":       numpy.ndarray,
@@ -138,6 +155,7 @@ class ccData(object):
         "vibirs":         numpy.ndarray,
         "vibramans":      numpy.ndarray,
         "vibsyms":        list,
+        "numnucstep":     float,
     }
 
     # The name of all attributes can be generated from the dictionary above.
@@ -189,7 +207,6 @@ class ccData(object):
             if k in self._intarrays:
                 precision = 'i'
             if v == numpy.ndarray:
-                a = getattr(self, k)
                 setattr(self, k, numpy.array(getattr(self, k), precision))
             elif v == list and k in self._listsofarrays:
                 setattr(self, k, [numpy.array(x, precision) for x in getattr(self, k)])

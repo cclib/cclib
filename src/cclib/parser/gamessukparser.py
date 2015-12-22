@@ -137,11 +137,11 @@ class GAMESSUK(logfileparser.Logfile):
             while line.strip():
                 line = next(inputfile)
                 if line.strip()[1:10].strip() and list(set(line.strip())) != ['*']:
-                    atomcoords.append(list(map(float, line.split()[3:6])))
+                    atomcoords.append([utils.convertor(float(x), "bohr", "Angstrom") for x in line.split()[3:6]])
                     atomnos.append(int(round(float(line.split()[2]))))
-            
             if not hasattr(self, "atomcoords"):
                 self.atomcoords = []
+        
             self.atomcoords.append(atomcoords)
             self.set_attribute('atomnos', atomnos)
 
