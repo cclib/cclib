@@ -690,10 +690,10 @@ class DALTON(logfileparser.Logfile):
                     energies = [float(t) for t in cols[2:]]
                 else:
                     if hasattr(self, 'symlabels'):
-                    	sym = self.normalisesym(self.symlabels[int(cols[0]) - 1])
+                        sym = self.normalisesym(self.symlabels[int(cols[0]) - 1])
                     else:
-                    	assert cols[0] == '1'
-                    	sym = "Ag"
+                        assert cols[0] == '1'
+                        sym = "Ag"
                     energies = [float(t) for t in cols[1:]]
 
                 while len(energies) > 0:
@@ -795,6 +795,7 @@ class DALTON(logfileparser.Logfile):
         # ...
         if self.section == "OPT" and line.strip() == "Next geometry (au)":
 
+<<<<<<< HEAD
             self.skip_lines(inputfile, ['d', 'b'])
 
             lines = [next(inputfile) for i in range(self.natom)]
