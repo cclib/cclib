@@ -1016,9 +1016,8 @@ class QChem(logfileparser.Logfile):
         if 'VIBRATIONAL ANALYSIS' in line:
 
             while 'STANDARD THERMODYNAMIC QUANTITIES' not in line:
-
                 ## IR, optional Raman:
-
+                #
                 # **********************************************************************
                 # **                                                                  **
                 # **                       VIBRATIONAL ANALYSIS                       **
@@ -1030,8 +1029,8 @@ class QChem(logfileparser.Logfile):
                 ##** RAMAN SCATTERING ACTIVITIES (A**4/AMU) AND DEPOLARIZATION RATIOS **
                 # **                                                                  **
                 # **********************************************************************
-
-
+                #
+                #
                 # Mode:                 1                      2                      3
                 # Frequency:      -106.88                -102.91                 161.77
                 # Force Cnst:      0.0185                 0.0178                 0.0380
@@ -1063,15 +1062,14 @@ class QChem(logfileparser.Logfile):
                 # H         -0.000 -0.000  0.140   -0.000 -0.000  0.261    0.000  0.000  0.241
                 # H         -0.000 -0.000  0.422   -0.000 -0.000  0.499    0.000  0.000 -0.285
                 # TransDip   0.000 -0.000 -0.000    0.000 -0.000 -0.000   -0.000  0.000  0.021
-
+                #
                 # Mode:                 4                      5                      6
                 # ...
-
+                #
                 # There isn't any symmetry information for normal modes present
                 # in Q-Chem.
                 # if not hasattr(self, 'vibsyms'):
                 #     self.vibsyms = []
-
                 if 'Frequency:' in line:
                     if not hasattr(self, 'vibfreqs'):
                         self.vibfreqs = []
@@ -1288,7 +1286,7 @@ class QChem(logfileparser.Logfile):
         order_qchem = [element + str(next(element_counters[element]))
                        for element in self.atomelements]
         # Combine the orders into a mapping.
-        atommap = {k:v for k, v, in zip(order_qchem, order_proper)}
+        atommap = {k: v for k, v, in zip(order_qchem, order_proper)}
         return atommap
 
     def generate_formula_histogram(self):

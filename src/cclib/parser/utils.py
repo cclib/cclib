@@ -25,25 +25,25 @@ def convertor(value, fromunits, tounits):
     """
 
     _convertor = {
-        
+
         "Angstrom_to_bohr": lambda x: x * 1.8897261245,
         "bohr_to_Angstrom": lambda x: x * 0.5291772109,
-    
+
         "cm-1_to_eV":       lambda x: x / 8065.54429,
         "cm-1_to_hartree":  lambda x: x / 219474.6313708,
         "cm-1_to_kcal":     lambda x: x / 349.7550112,
         "cm-1_to_kJmol-1":  lambda x: x / 83.5934722814,
         "cm-1_to_nm":       lambda x: 1e7 / x,
-        
+
         "eV_to_cm-1":       lambda x: x * 8065.54429,
         "eV_to_hartree":    lambda x: x / 27.21138505,
         "eV_to_kcal":       lambda x: x * 23.060548867,
         "eV_to_kJmol-1":    lambda x: x * 96.4853364596,
 
-        "hartree_to_cm-1":  lambda x: x * 219474.6313708,
-        "hartree_to_eV":    lambda x: x * 27.21138505,
-        "hartree_to_kcal":  lambda x: x * 627.50947414,
-        "hartree_to_kJmol-1":lambda x: x * 2625.4996398,
+        "hartree_to_cm-1":      lambda x: x * 219474.6313708,
+        "hartree_to_eV":        lambda x: x * 27.21138505,
+        "hartree_to_kcal":      lambda x: x * 627.50947414,
+        "hartree_to_kJmol-1":   lambda x: x * 2625.4996398,
 
         "kcal_to_cm-1":     lambda x: x * 349.7550112,
         "kcal_to_eV":       lambda x: x / 23.060548867,
@@ -61,8 +61,8 @@ def convertor(value, fromunits, tounits):
         "Debye^2/amu-Angstrom^2_to_km/mol": lambda x: x * 42.255,
 
         # Conversion for charges and multipole moments.
-        "e_to_coulomb":         lambda x: x * 1.602176565 * 1e-19,
-        "e_to_statcoulomb":     lambda x: x * 4.80320425  * 1e-10,
+        "e_to_coulomb":         lambda x: x * 1.602176565  * 1e-19,
+        "e_to_statcoulomb":     lambda x: x * 4.80320425   * 1e-10,
         "coulomb_to_e":         lambda x: x * 0.6241509343 * 1e19,
         "statcoulomb_to_e":     lambda x: x * 0.2081943527 * 1e10,
         "ebohr_to_Debye":       lambda x: x * 2.5417462300,
@@ -74,7 +74,7 @@ def convertor(value, fromunits, tounits):
 
     }
 
-    return _convertor["%s_to_%s" % (fromunits, tounits)] (value)
+    return _convertor["%s_to_%s" % (fromunits, tounits)](value)
 
 
 class PeriodicTable(object):
@@ -90,9 +90,10 @@ class PeriodicTable(object):
     >>> t.number['Au']
     79
     """
-    
+
     def __init__(self):
-        self.element = [None,
+        self.element = [
+            None,
             'H', 'He',
             'Li', 'Be',
             'B', 'C', 'N', 'O', 'F', 'Ne',

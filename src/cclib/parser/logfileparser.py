@@ -31,20 +31,41 @@ from .data import ccData
 
 
 # This seems to avoid a problem with Avogadro.
-logging.logMultiprocessing =  0
+logging.logMultiprocessing = 0
 
 
 class myBZ2File(bz2.BZ2File):
     """Return string instead of bytes"""
     def __next__(self):
-        line = super().__next__()
+        line = super(bz2.BZ2File, self).__next__()
         return line.decode("ascii", "replace")
+
+    def next(self):
+        line = self.__next__()
+        return line
+
 
 class myGzipFile(gzip.GzipFile):
     """Return string instead of bytes"""
     def __next__(self):
-        line = super().__next__()
+        super_ob = super(gzip.GzipFile, self)
+        # seemingly different versions of gzip can have either next or __next__
+        if hasattr(super_ob, 'next'):
+            line = super_ob.next()
+        else:
+            line = super_ob.__next__()
         return line.decode("ascii", "replace")
+
+    def next(self):
+        line = self.__next__()
+        return line
+
+
+class myFileinputFile(fileinput.FileInput):
+    """Implement next() method"""
+    def next(self):
+        line = next(self)
+        return line
 
 
 class FileWrapper(object):
@@ -136,7 +157,7 @@ def openlogfile(filename):
 
         elif extension in ['.bz', '.bz2']:
             # Module 'bz2' is not always importable.
-            assert bz2 != None, "ERROR: module bz2 cannot be imported"
+            assert bz2 is not None, "ERROR: module bz2 cannot be imported"
             fileobject = myBZ2File(filename, "r")
 
         else:
@@ -154,7 +175,7 @@ def openlogfile(filename):
         if sys.version_info[0] >= 2 and sys.version_info[1] >= 5:
             fileobject = fileinput.input(filename, openhook=fileinput.hook_compressed)
         else:
-            fileobject = fileinput.input(filename)
+            fileobject = myFileinputFile(filename)
 
         return fileobject
 
@@ -168,7 +189,7 @@ class Logfile(object):
     """
 
     def __init__(self, source, loglevel=logging.INFO, logname="Log",
-                    logstream=sys.stdout, datatype=ccData, **kwds):
+                 logstream=sys.stdout, datatype=ccData, **kwds):
         """Initialise the Logfile object.
 
         This should be called by a subclass in its own __init__ method.
@@ -202,7 +223,7 @@ class Logfile(object):
         # Presently in cclib, all parser instances of the same class use the same logger,
         #   which means that care needs to be taken not to duplicate handlers.
         self.loglevel = loglevel
-        self.logname  = logname
+        self.logname = logname
         self.logger = logging.getLogger('%s %s' % (self.logname, self.filename))
         self.logger.setLevel(self.loglevel)
         if len(self.logger.handlers) == 0:
@@ -233,9 +254,9 @@ class Logfile(object):
             # Call logger.info() only if the attribute is new.
             if not hasattr(self, name):
                 if type(value) in [numpy.ndarray, list]:
-                    self.logger.info("Creating attribute %s[]" %name)
+                    self.logger.info("Creating attribute %s[]" % name)
                 else:
-                    self.logger.info("Creating attribute %s: %s" %(name, str(value)))
+                    self.logger.info("Creating attribute %s: %s" % (name, str(value)))
 
         # Set the attribute.
         object.__setattr__(self, name, value)
@@ -246,11 +267,11 @@ class Logfile(object):
         # Check that the sub-class has an extract attribute,
         #  that is callable with the proper number of arguemnts.
         if not hasattr(self, "extract"):
-            raise AttributeError("Class %s has no extract() method." %self.__class__.__name__)
+            raise AttributeError("Class %s has no extract() method." % self.__class__.__name__)
         if not callable(self.extract):
-            raise AttributeError("Method %s._extract not callable." %self.__class__.__name__)
+            raise AttributeError("Method %s._extract not callable." % self.__class__.__name__)
         if len(inspect.getargspec(self.extract)[0]) != 3:
-            raise AttributeError("Method %s._extract takes wrong number of arguments." %self.__class__.__name__)
+            raise AttributeError("Method %s._extract takes wrong number of arguments." % self.__class__.__name__)
 
         # Save the current list of attributes to keep after parsing.
         # The dict of self should be the same after parsing.
@@ -377,7 +398,7 @@ class Logfile(object):
         if list(set(number)) == ['*']:
             return numpy.nan
 
-        return float(number.replace("D","E"))
+        return float(number.replace("D", "E"))
 
     def set_attribute(self, name, value, check=True):
         """Set an attribute and perform a check when it already exists.
@@ -407,9 +428,9 @@ class Logfile(object):
         """
 
         expected_characters = {
-            '-' : ['dashes', 'd'],
-            '=' : ['equals', 'e'],
-            '*' : ['stars', 's'],
+            '-': ['dashes', 'd'],
+            '=': ['equals', 'e'],
+            '*': ['stars', 's'],
         }
 
         lines = []

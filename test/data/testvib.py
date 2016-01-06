@@ -39,7 +39,7 @@ class GenericIRTest(unittest.TestCase):
 
     def testfreqval(self):
         """Is the highest freq value 3630 +/- 200 cm-1?"""
-        self.assertAlmostEqual(self.data.vibfreqs[-1], 3630, delta=200)
+        self.assertAlmostEqual(max(self.data.vibfreqs), 3630, delta=200)
 
     def testirintens(self):
         """Is the maximum IR intensity 100 +/- 10 km mol-1?"""
