@@ -216,9 +216,7 @@ class Gaussian(logfileparser.Logfile):
                 self.optdone = []
             self.optdone.append(len(self.geovalues) - 1)
 
-            if not hasattr(self, 'optstatus'):
-                self.optstatus = []
-            assert len(self.optstatus) > 0
+            assert hasattr(self, "optstatus") and len(self.optstatus) > 0
             self.optstatus[-1] = data.ccData.OPT_DONE
 
         # Catch message about stopped optimization (not converged).
@@ -227,9 +225,7 @@ class Gaussian(logfileparser.Logfile):
             if not hasattr(self, "optdone"):
                 self.optdone = []
 
-            if not hasattr(self, "optstatus"):
-                self.optstatus = []
-            assert len(self.optstatus) > 0
+            assert hasattr(self, "optstatus") and len(self.optstatus) > 0
             self.optstatus[-1] = data.ccData.OPT_UNCONVERGED
 
         # Extract the atomic numbers and coordinates from the input orientation,
