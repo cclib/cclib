@@ -195,6 +195,7 @@ def testGaussian_Gaussian03_anthracene_log(logfile):
 
 def testGaussian_Gaussian03_borane_opt_log(logfile):
     """An example of changing molecular orbital count."""
+    assert logfile.data.optstatus[-1] == logfile.data.OPT_DONE
     assert logfile.data.nmo == 609
 
 def testGaussian_Gaussian03_chn1_log(logfile):
@@ -243,6 +244,7 @@ def testGaussian_Gaussian03_Mo4OSibdt2_opt_log(logfile):
     This file had no atomcoords as it did not contain any
     "Input orientation" sections, only "Standard orientation".
     """
+    assert logfile.data.optstatus[-1] == logfile.data.OPT_DONE
     assert hasattr(logfile.data, "atomcoords")
 
 def testGaussian_Gaussian03_orbgs_log(logfile):
@@ -270,6 +272,7 @@ def testGaussian_Gaussian09_534_out(logfile):
 def testGaussian_Gaussian09_dvb_gopt_unconverged_log(logfile):
     """An unconverged geometry optimization to test for empty optdone (see #103 for details)."""
     assert hasattr(logfile.data, 'optdone') and not logfile.data.optdone
+    assert logfile.data.optstatus[-1] == logfile.data.OPT_UNCONVERGED
 
 def testGaussian_Gaussian09_dvb_lowdin_log(logfile):
     """Check if both Mulliken and Lowdin charges are parsed."""
