@@ -24,27 +24,28 @@ __filedir__ = os.path.realpath(os.path.dirname(__file__))
 class GenericHTTest(unittest.TestCase):
     """Generic TD/CIS num freq HT unittest"""
 
-    number = 3 
+    number = 3
 
     def testeteltrdipgradsshape(self):
         """Is eteltrdips the right shape?"""
-        self.assertEqual(numpy.shape(self.data.eteltrdipgrads), 
-                             (self.number,self.data.natom,3,3))
+        self.assertEqual(numpy.shape(self.data.eteltrdipgrads),
+                         (self.number, self.data.natom, 3, 3))
+
 
 class GaussianHTTest(GenericHTTest):
     """Customized TD/CIS num freq HT unittest"""
 
     def testetveleltrdipgradsshape(self):
         """Is etveleltrdipgrads the right shape?"""
-        self.assertEqual(numpy.shape(self.data.etveleltrdipgrads), 
-                                (self.number,self.data.natom,3,3))
+        self.assertEqual(numpy.shape(self.data.etveleltrdipgrads),
+                         (self.number, self.data.natom, 3, 3))
 
     def testetmagtrdipgradsshape(self):
         """Is etmagtrdipgrads the right shape?"""
         self.assertEqual(numpy.shape(self.data.etmagtrdipgrads),
-                              (self.number,self.data.natom,3,3))
+                         (self.number, self.data.natom, 3, 3))
 
-if __name__=="__main__":
+if __name__ == "__main__":
 
     import sys
     sys.path.append(os.path.join(__filedir__, ".."))

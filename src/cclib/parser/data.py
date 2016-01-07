@@ -105,7 +105,7 @@ class ccData(object):
         "entropy":        float,
         "etenergies":     numpy.ndarray,
         "etoscs":         numpy.ndarray,
-        "eteltrdips":     numpy.ndarray, 
+        "eteltrdips":     numpy.ndarray,
         "etveleltrdips":  numpy.ndarray,
         "etmagtrdips":    numpy.ndarray,
         "eteltrdipgrads": numpy.ndarray,
