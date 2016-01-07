@@ -18,6 +18,7 @@ import re
 
 import numpy
 
+from . import data
 from . import logfileparser
 from . import utils
 
@@ -213,13 +214,23 @@ class Gaussian(logfileparser.Logfile):
 
             if not hasattr(self, 'optdone'):
                 self.optdone = []
-
             self.optdone.append(len(self.geovalues) - 1)
+
+            if not hasattr(self, 'optstatus'):
+                self.optstatus = []
+            assert len(self.optstatus) > 0
+            self.optstatus[-1] = data.ccData.OPT_DONE
 
         # Catch message about stopped optimization (not converged).
         if line[1:21] == "Optimization stopped":
+
             if not hasattr(self, "optdone"):
                 self.optdone = []
+
+            if not hasattr(self, "optstatus"):
+                self.optstatus = []
+            assert len(self.optstatus) > 0
+            self.optstatus[-1] = data.ccData.OPT_UNCONVERGED
 
         # Extract the atomic numbers and coordinates from the input orientation,
         #   in the event the standard orientation isn't available.
@@ -594,6 +605,13 @@ class Gaussian(logfileparser.Logfile):
                 self.ccenergies.append(utils.convertor(self.ccenergy, "hartree", "eV"))
                 del self.ccenergy
 
+        if " Step number" in line:
+            step = int(line.split()[2])
+            if step == 1:
+                if not hasattr(self, "optstatus"):
+                    self.optstatus = []
+                self.optstatus.append(data.ccData.OPT_NEW)
+
         # Geometry convergence information.
         if line[49:59] == 'Converged?':
 
@@ -615,6 +633,13 @@ class Gaussian(logfileparser.Logfile):
                 self.geotargets[i] = self.float(parts[3])
 
             self.geovalues.append(newlist)
+
+            if not hasattr(self, "optstatus"):
+                self.optstatus = []
+            if len(self.optstatus) == len(self.geovalues) - 1:
+                self.optstatus.append(data.ccData.OPT_UNKNOWN)
+            else:
+                assert self.optstatus[-1] == data.ccData.OPT_NEW
 
         # Gradients.
         # Read in the cartesian energy gradients (forces) from a block like this:

@@ -15,6 +15,7 @@ import unittest
 
 import numpy
 
+from skip import skipForParser
 
 __filedir__ = os.path.realpath(os.path.dirname(__file__))
 
@@ -147,6 +148,22 @@ class GenericGeoOptTest(unittest.TestCase):
         self.assertTrue(self.data.optdone)
         temp = numpy.all(numpy.abs(self.data.geovalues) <= self.data.geotargets, axis=1)
         self.assertTrue(temp[-1])
+
+    @skipForParser("ADF", "Not implemented.")
+    @skipForParser("DALTON", "Not implemented.")
+    @skipForParser("GAMESS", "Not implemented.")
+    @skipForParser("GAMESSUK", "Not implemented.")
+    @skipForParser("Jaguar", "Not implemented.")
+    @skipForParser("Molpro", "Not implemented.")
+    @skipForParser("NWChem", "Not implemented.")
+    @skipForParser("ORCA", "Not implemented.")
+    @skipForParser("Psi", "Not implemented.")
+    @skipForParser("QChem", "Not implemented.")
+    def testoptstatus(self):
+        """Is optstatus consistent with geovalues and reasonable?"""
+        self.assertEqual(len(self.data.optstatus), len(self.data.geovalues))
+        self.assertEqual(self.data.optstatus[0], self.data.OPT_NEW)
+        self.assertEqual(self.data.optstatus[-1], self.data.OPT_DONE)
 
     def testmoenergies(self):
         """Are only the final MOs parsed?"""
