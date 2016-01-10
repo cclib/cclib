@@ -47,6 +47,25 @@ class GenericScanTest(unittest.TestCase):
             geovalues = self.data.geovalues[temp]
             numpy.testing.assert_array_equal(geovalues, geovalues_from_index)
 
+    @skipForParser("Jaguar", "Not implemented")
+    @skipForParser("ORCA", "Not implemented")
+    def testoptstatus(self):
+        """Does optstatus contain expected values?"""
+        OPT_NEW = self.data.OPT_NEW
+        OPT_DONE = self.data.OPT_DONE
+
+        # The input coordinates were at a stationary point.
+        self.assertEquals(self.data.optstatus[0], OPT_DONE)
+
+        if self.data._attrtypes["optdone"] is bool:
+            self.assertEquals(self.data.optstatus[-1], OPT_DONE)
+        else:
+            self.assertEqual(len(self.data.optstatus), len(optdone))
+            for idone in self.data.optdone:
+                self.assertEquals(self.data.optstatus[idone], OPT_DONE)
+                if idone != len(self.data.optdone) - 1:
+                    self.assertEquals(self.data.optstatus[idone+1], OPT_NEW)
+
 
 class GaussianScanTest(GenericScanTest):
     """Customized relaxed potential energy surface scan unittest"""

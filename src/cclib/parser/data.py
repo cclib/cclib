@@ -61,6 +61,7 @@ class ccData(object):
         nocoeffs -- natural orbital coefficients (array[2])
         nooccnos -- natural orbital occupation numbers (array[1])
         optdone -- flags whether an optimization has converged (Boolean)
+        optstatus -- optimization status for each set of atomic coordinates (array[1])
         scancoords -- geometries of each scan step (array[3], angstroms)
         scanenergies -- energies of potential energy surface (list)
         scannames -- names of varaibles scanned (list of strings)
@@ -124,6 +125,7 @@ class ccData(object):
         "nocoeffs":       numpy.ndarray,
         "nooccnos":       numpy.ndarray,
         "optdone":        bool,
+        "optstatus":      numpy.ndarray,
         "scancoords":     numpy.ndarray,
         "scanenergies":   list,
         "scannames":      list,
@@ -144,13 +146,19 @@ class ccData(object):
     _attrlist = sorted(_attrtypes.keys())
 
     # Arrays are double precision by default, but these will be integer arrays.
-    _intarrays = ['atomnos', 'coreelectrons', 'homos']
+    _intarrays = ['atomnos', 'coreelectrons', 'homos', 'optstatus']
 
     # Attributes that should be lists of arrays (double precision).
     _listsofarrays = ['mocoeffs', 'moenergies', 'moments', 'scfvalues']
 
     # Attributes that should be dictionaries of arrays (double precision).
     _dictsofarrays = ["atomcharges", "atomspins"]
+
+    # Possible statuses for optimization steps.
+    OPT_UNKNOWN = 0
+    OPT_NEW = 1
+    OPT_DONE = 2
+    OPT_UNCONVERGED = 3
 
     def __init__(self, attributes={}):
         """Initialize the cclibData object.
