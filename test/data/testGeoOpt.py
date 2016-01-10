@@ -145,8 +145,7 @@ class GenericGeoOptTest(unittest.TestCase):
     def testoptdone(self):
         """Has the geometry converged and set optdone to True?"""
         self.assertTrue(self.data.optdone)
-        temp = numpy.all(numpy.abs(self.data.geovalues) <= self.data.geotargets, axis=1)
-        self.assertTrue(temp[-1])
+        self.assertTrue(numpy.all(numpy.abs(self.data.geovalues[-1]) <= self.data.geotargets))
 
     def testmoenergies(self):
         """Are only the final MOs parsed?"""
@@ -164,6 +163,24 @@ class ADFGeoOptTest(GenericGeoOptTest):
     b3lyp_energy = -140
     b3lyp_tolerance = 1
 
+
+class DALTONGeoOptTest(GenericGeoOptTest):
+    """Customzed geometry optimziation unittest"""
+
+    # DALTON will normally print the geometry several extra times as the "final geometry"
+    # when an optimziation converges. We don't parse those coordinates, but the parser
+    # does catch the geometry printed in the final static property calculation when
+    # that is done for the final geometry (presumably always).
+    extracoords = 1
+
+    # Although DALTON generally has three criteria for convergence, it normally only
+    # requires two of them to end a geometry optimization. This is printed in the output
+    # and can probably be tweaked in the input, but we don't parsed that in cclib.
+    def testoptdone(self):
+        """Has the geometry converged and set optdone to True?"""
+        self.assertTrue(self.data.optdone)
+        convergence = numpy.abs(self.data.geovalues[-1]) <= self.data.geotargets
+        self.assertTrue(sum(convergence) >= 2)
 
 class GaussianGeoOptTest(GenericGeoOptTest):
     """Customized geometry optimization unittest"""
@@ -200,6 +217,7 @@ class MolproGeoOptTest(GenericGeoOptTest):
         value_e, value_g, value_s = self.data.geovalues[-1]
         converged = (value_e < target_e and value_g < target_g) or (value_g < target_g and value_s < target_s)
         self.assertTrue(converged)
+
 
 class NWChemGeoOptTest(GenericGeoOptTest):
     """Customized restricted single point HF unittest"""

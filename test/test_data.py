@@ -41,7 +41,7 @@ module_names = [
     "vib", "Scan",                              # Other property calculations.
 ]
 all_modules = {tn: importlib.import_module('data.test' + tn) for tn in module_names}
-    
+
 
 def gettestdata():
     """Return a dict of the test file data."""
@@ -182,7 +182,7 @@ class DataSuite(object):
             # By overriding __getattribute__ temporarily with a custom method, we collect
             # coverage information for data attributes while the tests are run. This slightly
             # hacky approach is very convenient since it is self-contained and we don't
-            # need to worry about it when writing the actual test bases.
+            # need to worry about it when writing the actual test cases.
             test.data.__class__.__getattribute__ = ccdata_getattribute_with_coverage
 
             # Here we actually run the tests for this line in testdata.
@@ -241,6 +241,7 @@ class DataSuite(object):
 
         parsers_to_test = {
             'ADF2013.01' : getdatafile('ADF', "basicADF2013.01", "dvb_gopt.adfout")[0],
+            'DALTON2015' : getdatafile('DALTON', "basicDALTON-2015", "dvb_gopt_ks.out")[0],
             'Firefly8.0' : getdatafile('GAMESS', "basicFirefly8.0", "dvb_gopt_a.out")[0],
             'Gaussian09' : getdatafile('Gaussian', "basicGaussian09", "dvb_gopt.out")[0],
             'GAMESS-US' : getdatafile('GAMESS', "basicGAMESS-US2012", "dvb_gopt_a.out")[0],

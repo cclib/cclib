@@ -178,7 +178,7 @@ class NWChem(logfileparser.Logfile):
 
             gbasis = []
             for i in range(self.natom):
-                atomtype = utils.PeriodicTable().element[self.atomnos[i]]
+                atomtype = self.table.element[self.atomnos[i]]
                 gbasis.append(gbasis_dict[atomtype])
 
             self.set_attribute('gbasis', gbasis)
@@ -233,7 +233,7 @@ class NWChem(logfileparser.Logfile):
                 last = 0
                 atombasis = []
                 for atom in self.atomnos:
-                    atomelement = utils.PeriodicTable().element[atom]
+                    atomelement = self.table.element[atom]
                     nfuncs = atombasis_dict[atomelement]
                     atombasis.append(list(range(last, last+nfuncs)))
                     last = atombasis[-1][-1] + 1

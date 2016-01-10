@@ -255,7 +255,7 @@ class QChem(logfileparser.Logfile):
                     if atomelement == 'GH':
                         self.atomnos.append(0)
                     else:
-                        self.atomnos.append(utils.PeriodicTable().number[atomelement])
+                        self.atomnos.append(self.table.number[atomelement])
                 self.natom = len(self.atomnos)
                 self.atommap = self.generate_atom_map()
                 self.formula_histogram = self.generate_formula_histogram()

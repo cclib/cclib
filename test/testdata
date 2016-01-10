@@ -11,6 +11,10 @@
 # a special keyword, and we can test both HF and DFT outputs. Gaussian is an
 # exception, as it has at least two different formats for printing basis set
 # information, and so we made dedicated unit test logfiles in that case.
+Basis     DALTON      GenericBasisTest      basicDALTON-2013      dvb_sp_hf.out
+Basis     DALTON      GenericBasisTest      basicDALTON-2015      dvb_sp_hf.out
+Basis     DALTON      GenericBasisTest      basicDALTON-2013      dvb_sp_ks.out
+Basis     DALTON      GenericBasisTest      basicDALTON-2015      dvb_sp_ks.out
 Basis     GAMESSUK    GenericBasisTest      basicGAMESS-UK7.0     dvb_sp_b.out
 Basis     GAMESSUK    GenericBasisTest      basicGAMESS-UK8.0     dvb_sp_hf.out
 Basis     GAMESSUK    GenericBasisTest      basicGAMESS-UK8.0     dvb_sp_ks.out
@@ -19,7 +23,7 @@ Basis     GAMESS      GenericBasisTest      basicFirefly8.0       dvb_sp.out
 Basis     Gaussian    GenericBasisTest      basicGaussian03       dvb_sp_basis.log
 Basis     Gaussian    GenericBasisTest      basicGaussian03       dvb_sp_basis_b.log
 Basis     Gaussian    GenericBasisTest      basicGaussian09       dvb_sp.out
-Basis     Jaguar      JaguarBasisTest       basicJaguar8.3        dvb_sp_hf.out         
+Basis     Jaguar      JaguarBasisTest       basicJaguar8.3        dvb_sp_hf.out
 Basis     Jaguar      JaguarBasisTest       basicJaguar8.3        dvb_sp_ks.out
 Basis     Molpro      GenericBasisTest      basicMolpro2006       dvb_sphf.out
 Basis     Molpro      GenericBasisTest      basicMolpro2012       dvb_sphf.out
@@ -31,6 +35,8 @@ Basis     Psi         GenericBasisTest      basicPsi4             dvb_sp_hf.out
 Basis     Psi         GenericBasisTest      basicPsi4             dvb_sp_ks.out
 Basis     QChem       GenericBasisTest      basicQChem4.2         dvb_sp.out
 
+Basis     DALTON      DALTONBigBasisTest    basicDALTON-2013      C_bigbasis.out
+Basis     DALTON      DALTONBigBasisTest    basicDALTON-2015      C_bigbasis.out
 Basis     GAMESS      GenericBigBasisTest   basicFirefly8.0       C_bigbasis.out
 Basis     GAMESS      GenericBigBasisTest   basicGAMESS-US2012    C_bigbasis.out
 Basis     Gaussian    GaussianBigBasisTest  basicGaussian03       C_bigbasis.out
@@ -85,6 +91,10 @@ Core      Jaguar      JaguarCoreTest        basicJaguar8.3        MoOCl4-sp.out
 
 GeoOpt    ADF         ADFGeoOptTest         basicADF2007.01       dvb_gopt_b.adfout
 GeoOpt    ADF         ADFGeoOptTest         basicADF2013.01       dvb_gopt_b.adfout
+GeoOpt    DALTON      DALTONGeoOptTest      basicDALTON-2013      dvb_gopt_hf.out
+GeoOpt    DALTON      DALTONGeoOptTest      basicDALTON-2013      dvb_gopt_ks.out
+GeoOpt    DALTON      DALTONGeoOptTest      basicDALTON-2015      dvb_gopt_hf.out
+GeoOpt    DALTON      DALTONGeoOptTest      basicDALTON-2015      dvb_gopt_ks.out
 GeoOpt    GAMESSUK    GenericGeoOptTest     basicGAMESS-UK7.0     dvb_gopt_d.out
 GeoOpt    GAMESSUK    GenericGeoOptTest     basicGAMESS-UK8.0     dvb_gopt_hf.out
 GeoOpt    GAMESSUK    GenericGeoOptTest     basicGAMESS-UK8.0     dvb_gopt_ks.out
@@ -156,8 +166,8 @@ SP        GAMESSUK    GenericSPTest         basicGAMESS-UK8.0     dvb_sp_hf.out
 SP        GAMESSUK    GenericSPTest         basicGAMESS-UK8.0     dvb_sp_ks.out
 SP        GAMESS      GenericSPTest         basicFirefly8.0       dvb_sp.out
 SP        GAMESS      GenericSPTest         basicGAMESS-US2012    dvb_sp.out
-SP        Gaussian    GaussianSPTest        basicGaussian03       dvb_sp.out
-SP        Gaussian    GaussianSPTest        basicGaussian09       dvb_sp.out
+SP        Gaussian    GenericSPTest         basicGaussian03       dvb_sp.out
+SP        Gaussian    GenericSPTest         basicGaussian09       dvb_sp.out
 SP        Jaguar      Jaguar7SPTest         basicJaguar7.0        dvb_sp.out
 SP        Jaguar      GenericSPTest         basicJaguar8.3        dvb_sp_hf.out
 SP        Jaguar      GenericSPTest         basicJaguar8.3        dvb_sp_ks.out
@@ -176,6 +186,10 @@ SP        QChem       GenericSPTest         basicQChem4.2         dvb_sp.out
 
 SPun      ADF         GenericSPunTest       basicADF2007.01       dvb_un_sp.adfout
 SPun      ADF         GenericSPunTest       basicADF2013.01       dvb_un_sp.adfout
+SPun      DALTON      GenericROSPTest       basicDALTON-2013      dvb_sp_un_hf.out
+SPun      DALTON      GenericROSPTest       basicDALTON-2013      dvb_sp_un_ks.out
+SPun      DALTON      GenericROSPTest       basicDALTON-2015      dvb_sp_un_hf.out
+SPun      DALTON      GenericROSPTest       basicDALTON-2015      dvb_sp_un_ks.out
 SPun      GAMESSUK    GamessUK70SPunTest    basicGAMESS-UK7.0     dvb_un_sp_b.out
 SPun      GAMESSUK    GamessUK80SPunTest    basicGAMESS-UK8.0     dvb_un_sp_hf.out
 SPun      GAMESSUK    GamessUK80SPunTest    basicGAMESS-UK8.0     dvb_un_sp_ks.out
@@ -196,6 +210,8 @@ SPun      QChem       GenericSPunTest       basicQChem4.2         dvb_sp_un.out
 
 TD        ADF         ADFTDDFTTest          basicADF2007.01       dvb_td.adfout
 TD        ADF         ADFTDDFTTest          basicADF2013.01       dvb_td.adfout
+TD        DALTON      DALTONTDTest          basicDALTON-2013      dvb_td.out
+TD        DALTON      DALTONTDTest          basicDALTON-2015      dvb_td.out
 TD        GAMESS      GenericTDTest         basicFirefly8.0       dvb_td.out
 TD        GAMESS      GenericTDDFTtrpTest   basicFirefly8.0       dvb_td_trplet.out
 TD        GAMESS      GAMESSUSTDDFTTest     basicGAMESS-US2012    dvb_td.out
@@ -212,6 +228,8 @@ TDun      Gaussian    GenericTDunTest       basicGaussian09       CO_TD_delta.lo
 
 vib       ADF         GenericIRTest         basicADF2007.01       dvb_ir.adfout
 vib       ADF         GenericIRTest         basicADF2013.01       dvb_ir.adfout
+vib       DALTON      GenericIRTest         basicDALTON-2013      dvb_ir.out
+vib       DALTON      GenericIRTest         basicDALTON-2015      dvb_ir.out
 vib       GAMESSUK    GenericIRTest         basicGAMESS-UK7.0     dvb_ir.out
 vib       GAMESSUK    GenericIRTest         basicGAMESS-UK8.0     dvb_ir.out
 vib       GAMESS      FireflyIRTest         basicFirefly8.0       dvb_ir.out
@@ -228,6 +246,7 @@ vib       QChem       QChemIRTest           basicQChem4.2         dvb_ir.out
 
 vib       GAMESS      GenericIRimgTest      basicGAMESS-US2012    nh3_ts_ir.out
 
+vib       DALTON      DALTONRamanTest       basicDALTON-2013      dvb_raman.out
 vib       GAMESSUK    GenericRamanTest      basicGAMESS-UK7.0     dvb_raman.out
 vib       GAMESSUK    GenericRamanTest      basicGAMESS-UK8.0     dvb_raman.out
 vib       GAMESS      GenericRamanTest      basicFirefly8.0       dvb_raman.out

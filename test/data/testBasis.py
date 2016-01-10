@@ -20,9 +20,15 @@ __filedir__ = os.path.realpath(os.path.dirname(__file__))
 class GenericBasisTest(unittest.TestCase):
     """Generic basis set unittest"""
 
+    # The number of contraction per atom, by atom number.
+    contractions = { 1: 1, 6: 3 }
+
+    # Number of components in each contraction by subshell type,
+    # so that we can infer nbasis from gbasis. Note how we assume
+    # the basis set is not is spherical representation.
     names = ['S', 'P', 'D', 'F', 'G']
-    multiple = {'S':1, 'P':3, 'D':6, 'F':10, 'G':15}
-    multiple_spher = {'S':1, 'P':3, 'D':5, 'F':7, 'G':9}
+    multiple = {'S': 1, 'P': 3, 'D': 6, 'F': 10, 'G': 15}
+    multiple_spher = {'S': 1, 'P': 3, 'D': 5, 'F': 7, 'G': 9}
     spherical = False
 
     # These are the expected exponents and coefficients for the first
@@ -46,19 +52,25 @@ class GenericBasisTest(unittest.TestCase):
         """Is the basis set the correct size?"""
 
         total = 0
-        multiple = self.multiple
-        if self.spherical:
-            multiple = self.multiple_spher
-
+        multiple = self.multiple_spher if self.spherical else self.multiple
         for atom in self.data.gbasis:
-
-            for fns in atom:
-
-                 # Add 3 for P, 5 or 6 for D, and so forth.
-                ftype = fns[0]
+            for (ftype, contraction) in atom:
                 total += multiple[ftype]
 
         self.assertEquals(self.data.nbasis, total)
+
+    def testcontractions(self):
+        """Are the number of contractions on all atoms correct?"""
+        for iatom, atom in enumerate(self.data.gbasis):
+            atomno = self.data.atomnos[iatom]
+            self.assertEquals(len(atom), self.contractions[atomno])
+
+    def testprimitives(self):
+        """Are all primitives 2-tuples?"""
+        for atom in self.data.gbasis:
+            for ftype, contraction in atom:
+                for primitive in contraction:
+                    self.assertEquals(len(primitive), 2)
 
     def testcoeffs(self):
         """Are the atomic basis set exponents and coefficients correct?"""
@@ -66,10 +78,9 @@ class GenericBasisTest(unittest.TestCase):
         for iatom,atom in enumerate(self.data.gbasis):
             if self.data.atomnos[iatom] == 1:
                 coeffs = atom[0][1]
-                self.assertAlmostEqual(coeffs[0][0], self.gbasis_H_1s_func0[0], 5)
-                self.assertAlmostEqual(coeffs[0][1], self.gbasis_H_1s_func0[1], 5)
+                self.assertAlmostEqual(coeffs[0][0], self.gbasis_H_1s_func0[0], 4)
+                self.assertAlmostEqual(coeffs[0][1], self.gbasis_H_1s_func0[1], 4)
             else:
-                self.assertEquals(len(atom), 3)
                 s_coeffs = atom[1][1]
                 p_coeffs = atom[2][1]
                 self.assertAlmostEqual(s_coeffs[0][0], self.gbasis_C_2s_func0[0], 4)
@@ -91,10 +102,22 @@ class JaguarBasisTest(GenericBasisTest):
 class GenericBigBasisTest(GenericBasisTest):
     """Generic big basis set unittest"""
 
+    contractions = { 6: 20 }
+
     @unittest.skip('Write up a new test, and/or revise the one inherited.')
     def testcoeffs(self):
         """Are the basis set coefficients correct?"""
         self.assertEqual(1, 1)
+
+    @unittest.skip('# of contractions is 20 for VQZ, but 29 for CVQZ; unify files first.')
+    def testcontractions(self):
+        """"""
+        self.assertEqual(1, 1)
+
+
+class DALTONBigBasisTest(GenericBigBasisTest):
+    """Customized big basis set unittest"""
+    spherical = True
 
 
 class GaussianBigBasisTest(GenericBigBasisTest):

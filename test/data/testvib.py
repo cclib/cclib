@@ -157,7 +157,7 @@ class GenericRamanTest(unittest.TestCase):
     # unit test jobs should be made more comparable. With cclib, we first
     # of all want to succeed in parsing, but would also like to remain
     # as comparable between programs as possible (for these tests).
-    # Note also that this value is adjusted for Gaussian - why?
+    # Note also that this value is adjusted for Gaussian and DALTON - why?
     def testramanintens(self):
         """Is the maximum Raman intensity correct?"""
         self.assertAlmostEqual(max(self.data.vibramans), self.max_raman_intensity, delta=8)
@@ -170,6 +170,12 @@ class GenericRamanTest(unittest.TestCase):
         """Is the length and value of vibdisps correct?"""
         assert hasattr(self.data, "vibdisps")
         assert len(self.data.vibdisps) == 54
+
+
+class DALTONRamanTest(GenericRamanTest):
+    """Customized Raman unittest"""
+
+    max_raman_intensity = 745
 
 
 class GaussianRamanTest(GenericRamanTest):
