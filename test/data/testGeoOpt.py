@@ -15,6 +15,8 @@ import unittest
 
 import numpy
 
+from common import get_minimum_carbon_separation
+
 from skip import skipForParser
 
 __filedir__ = os.path.realpath(os.path.dirname(__file__))
@@ -61,18 +63,11 @@ class GenericGeoOptTest(unittest.TestCase):
         msg = "natom is %d but len(atomcoords[0]) is %d" % (ref, natom)
         self.assertEquals(natom, ref, msg)
 
-        # Find the minimum distance between two C atoms.
-        mindist = 999
-        for i in range(self.data.natom-1):
-            if self.data.atomnos[i]==6:
-                for j in range(i+1,self.data.natom):
-                    if self.data.atomnos[j]==6:
-                        # Find the distance in the final iteration
-                        final_x = self.data.atomcoords[-1][i]
-                        final_y = self.data.atomcoords[-1][j]
-                        dist = numpy.sqrt(sum((final_x - final_y)**2))
-                        mindist = min(mindist,dist)
-        self.assert_(abs(mindist-1.34)<0.03,"Mindist is %f (not 1.34)" % mindist)
+    def testatomcoords_units(self):
+        """Are atomcoords consistent with Angstroms?"""
+        min_carbon_dist = get_minimum_carbon_separation(self.data)
+        dev = abs(min_carbon_dist - 1.34)
+        self.assertTrue(dev < 0.15, "Minimum carbon dist is %.2f (not 1.34)" % min_carbon_dist)
 
     def testcharge_and_mult(self):
         """Are the charge and multiplicity correct?"""
