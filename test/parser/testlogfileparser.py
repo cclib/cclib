@@ -54,14 +54,12 @@ class FileWrapperTest(unittest.TestCase):
         # Unfortunately, the behavior of this wrapper differs between Python 2 and 3,
         # so we need to diverge the assertions. We should try to keep the code as
         # consistent as possible, but the Errors raised are actually different.
-        if sys.version_info[0] == "2":
-            wrapper.seek(0, 2)
-            self.assertEqual(wrapper.pos, wrapper.size)
+        wrapper.seek(0, 2)
+        self.assertEqual(wrapper.pos, wrapper.size)
+        if sys.version_info[0] == 2:
             self.assertRaises(AttributeError, wrapper.seek, 0, 0)
             self.assertRaises(AttributeError, wrapper.seek, 0, 1)
-        elif sys.version_info[0] == "3":
-            wrapper.seek(0, 2)
-            self.assertEqual(wrapper.pos, wrapper.size)
+        else:
             self.assertRaises(io.UnsupportedOperation, wrapper.seek, 0, 0)
             self.assertRaises(io.UnsupportedOperation, wrapper.seek, 0, 1)
 
