@@ -15,11 +15,11 @@ Cartesian coordinates."""
 import os.path
 import sys
 # Python 2->3 changes the default file object hierarchy.
-if sys.version_info[0] == 3:
+if sys.version_info[0] == 2:
+    fileclass = file
+else:
     import io
     fileclass = io.IOBase
-else:
-    fileclass = file
 
 from .. import parser
 

@@ -11,7 +11,6 @@
 """Unit tests for writer xyzwriter module."""
 
 import os
-import sys
 import unittest
 
 import cclib
@@ -29,11 +28,11 @@ class XYZTest(unittest.TestCase):
 
     def test_init(self):
         """Does the class initialize correctly?"""
-        fpath = os.path.join(__datadir__,"data/ADF/basicADF2007.01/dvb_gopt.adfout")
+        fpath = os.path.join(__datadir__, "data/ADF/basicADF2007.01/dvb_gopt.adfout")
         data = cclib.parser.ccopen(fpath).parse()
         xyz = cclib.writer.xyzwriter.XYZ(data)
 
-        # The object should keep the ccData instnace passed to its constructor.
+        # The object should keep the ccData instance passed to its constructor.
         self.assertEqual(xyz.ccdata, data)
 
 
