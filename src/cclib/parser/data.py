@@ -280,6 +280,16 @@ class ccData(object):
         outputstr = ccwrite(self, outputdest=filename, *args, **kwargs)
         return outputstr
 
+    def writejson(self, filename=None):
+        """Write parsed attributes to a JSON file."""
+        return self.write(filename=filename, outputtype='cjson')
+    def writejson(self, filename=None):
+        """Write parsed attributes to a CML file."""
+        return self.write(filename=filename, outputtype='cml')
+    def writexyz(self, filename=None):
+        """Write parsed attributes to an XML file."""
+        return self.write(filename=filename, outputtype='xyz')
+
 
 class ccData_optdone_bool(ccData):
     """This is the version of ccData where optdone is a Boolean."""
