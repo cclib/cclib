@@ -12,6 +12,7 @@
 
 """Parser for Q-Chem output files"""
 
+from __future__ import division
 from __future__ import print_function
 
 import re
@@ -51,6 +52,17 @@ class QChem(logfileparser.Logfile):
         # Keep track of whether or not this is a fragment calculation,
         # so that only the supersystem is parsed.
         self.is_fragment_section = False
+        # These headers identify when a fragment section is
+        # entered/exited.
+        self.fragment_section_headers = (
+            'Guess MOs from converged MOs on fragments',
+            'CP correction for fragment',
+        )
+        self.supersystem_section_headers = (
+            'Done with SCF on isolated fragments',
+            'Done with counterpoise correction on fragments',
+        )
+
 
         # Compile the dashes-and-or-spaces-only regex.
         self.re_dashes_and_spaces = re.compile('^[\s-]+$')
@@ -135,18 +147,9 @@ class QChem(logfileparser.Logfile):
         """Extract information from the file object inputfile."""
 
         # Disable/enable parsing for fragment sections.
-        fragment_section_headers = (
-            'Guess MOs from converged MOs on fragments',
-            'CP correction for fragment',
-        )
-        supersystem_section_headers = (
-            'Done with SCF on isolated fragments',
-            'Done with counterpoise correction on fragments',
-        )
-
-        if any(message in line for message in fragment_section_headers):
+        if any(message in line for message in self.fragment_section_headers):
             self.is_fragment_section = True
-        if any(message in line for message in supersystem_section_headers):
+        if any(message in line for message in self.supersystem_section_headers):
             self.is_fragment_section = False
 
         if not self.is_fragment_section:
