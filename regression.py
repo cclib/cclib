@@ -770,6 +770,21 @@ def testQChem_QChem4_2_qchem_tddft_rpa_out(logfile):
     assert logfile.data.etsecs[0][1] == [(27, 0), (39, 0), 0.1039]
     assert logfile.data.etsecs[0][2] == [(39, 0), (27, 0), 0.0605]
 
+
+def testQChem_QChem4_2_read_molecule_out(logfile):
+    """A two-calculation output with the charge/multiplicity not specified
+    in the user section."""
+
+    # These correspond to the second calculation.
+    assert logfile.data.charge == 1
+    assert logfile.data.mult == 2
+    assert len(logfile.data.moenergies) == 2
+
+    # However, we currently take data from both, since they aren't
+    # exactly fragment calculations.
+    assert len(logfile.data.scfenergies) == 2
+
+
 # These regression tests are for logfiles that are not to be parsed
 # for some reason, and the function should start with 'testnoparse'.
 
