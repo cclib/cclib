@@ -3,7 +3,7 @@
 # This file is part of cclib (http://cclib.github.io), a library for parsing
 # and interpreting the results of computational chemistry packages.
 #
-# Copyright (C) 2014-2015, the cclib development team
+# Copyright (C) 2014-2016, the cclib development team
 #
 # The library is free software, distributed under the terms of
 # the GNU Lesser General Public version 2.1 or later. You should have
@@ -47,6 +47,10 @@ class QChem(logfileparser.Logfile):
         # (un)restricted calculation.
         self.unrestricted = False
         self.is_rohf = False
+
+        # Keep track of whether or not this is a fragment calculation,
+        # so that only the supersystem is parsed.
+        self.is_fragment_calculation = False
 
         # Compile the dashes-and-or-spaces-only regex.
         self.re_dashes_and_spaces = re.compile('^[\s-]+$')
@@ -150,17 +154,6 @@ class QChem(logfileparser.Logfile):
                                 self.norbdisp_beta_aonames = norbdisp_aonames
                                 self.norbdisp_set = True
 
-                # Charge and multiplicity are present in the input file, which is generally
-                # printed once at the beginning. However, it is also prined for fragment
-                # calculations, so make sure we parse only the first occurance.
-                if '$molecule' in line:
-                    line = next(inputfile)
-                    charge, mult = map(int, line.split())
-                    if not hasattr(self, 'charge'):
-                        self.set_attribute('charge', charge)
-                    if not hasattr(self, 'mult'):
-                        self.set_attribute('mult', mult)
-
                 line = next(inputfile)
 
         # Parse the general basis for `gbasis`, in the style used by
@@ -247,32 +240,43 @@ class QChem(logfileparser.Logfile):
 
             self.atomcoords.append(atomcoords)
 
-            if not hasattr(self, 'atomnos'):
-                self.atomnos = []
-                self.atomelements = []
-                for atomelement in atomelements:
-                    self.atomelements.append(atomelement)
-                    if atomelement == 'GH':
-                        self.atomnos.append(0)
-                    else:
-                        self.atomnos.append(self.table.number[atomelement])
-                self.natom = len(self.atomnos)
-                self.atommap = self.generate_atom_map()
-                self.formula_histogram = self.generate_formula_histogram()
+            # We calculate and handle atomnos no matter what, since in
+            # the case of fragment calculations the atoms may change,
+            # along with the charge and spin multiplicity.
+            self.atomnos = []
+            self.atomelements = []
+            for atomelement in atomelements:
+                self.atomelements.append(atomelement)
+                if atomelement == 'GH':
+                    self.atomnos.append(0)
+                else:
+                    self.atomnos.append(self.table.number[atomelement])
+            self.natom = len(self.atomnos)
+            self.atommap = self.generate_atom_map()
+            self.formula_histogram = self.generate_formula_histogram()
 
         # Number of electrons.
         # Useful for determining the number of occupied/virtual orbitals.
         if 'Nuclear Repulsion Energy' in line:
-            if not hasattr(self, 'nalpha'):
-                line = next(inputfile)
-                nelec_re_string = 'There are(\s+[0-9]+) alpha and(\s+[0-9]+) beta electrons'
-                match = re.findall(nelec_re_string, line.strip())
-                self.nalpha = int(match[0][0].strip())
-                self.nbeta = int(match[0][1].strip())
-                self.norbdisp_alpha += self.nalpha
-                self.norbdisp_alpha_aonames += self.nalpha
-                self.norbdisp_beta += self.nbeta
-                self.norbdisp_beta_aonames += self.nbeta
+            line = next(inputfile)
+            nelec_re_string = 'There are(\s+[0-9]+) alpha and(\s+[0-9]+) beta electrons'
+            match = re.findall(nelec_re_string, line.strip())
+            self.set_attribute('nalpha', int(match[0][0].strip()))
+            self.set_attribute('nbeta', int(match[0][1].strip()))
+            self.norbdisp_alpha += self.nalpha
+            self.norbdisp_alpha_aonames += self.nalpha
+            self.norbdisp_beta += self.nbeta
+            self.norbdisp_beta_aonames += self.nbeta
+            # Calculate the spin multiplicity (2S + 1), where S is the
+            # total spin of the system.
+            S = (self.nalpha - self.nbeta) / 2
+            mult = int(2 * S + 1)
+            self.set_attribute('mult', mult)
+            # Calculate the molecular charge as the difference between
+            # the atomic numbers and the number of electrons.
+            if hasattr(self, 'atomnos'):
+                charge = sum(self.atomnos) - (self.nalpha + self.nbeta)
+                self.set_attribute('charge', charge)
 
         # Number of basis functions.
         # Because Q-Chem's integral recursion scheme is defined using
@@ -286,6 +290,14 @@ class QChem(logfileparser.Logfile):
         if 'basis functions' in line:
             if not hasattr(self, 'nbasis'):
                 self.set_attribute('nbasis', int(line.split()[-3]))
+
+        # Where do the guess MOs come from? We don't care, but they
+        # identify fragment calculations.
+        if 'Guess MOs from converged MOs on fragments' in line:
+            self.is_fragment_calculation = True
+
+        if 'Done with SCF on isolated fragments' in line:
+            self.is_fragment_calculation = False
 
         # Check for whether or not we're peforming an
         # (un)restricted calculation.
