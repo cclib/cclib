@@ -283,7 +283,7 @@ class ccData(object):
     def writejson(self, filename=None):
         """Write parsed attributes to a JSON file."""
         return self.write(filename=filename, outputtype='cjson')
-    def writejson(self, filename=None):
+    def writecml(self, filename=None):
         """Write parsed attributes to a CML file."""
         return self.write(filename=filename, outputtype='cml')
     def writexyz(self, filename=None):
