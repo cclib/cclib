@@ -297,7 +297,11 @@ class Jaguar(logfileparser.Logfile):
                     values.append([denergy, ddensity])
                 else:
                     values.append([ddensity])
-                line = next(inputfile)
+                try:
+                    line = next(inputfile)
+                except StopIteration:
+                    self.logger.warning('File terminated before end of last SCF! Last error: {}'.format(maxdiiserr))
+                    break
             self.scfvalues.append(values)
 
         # MO energies and symmetries.

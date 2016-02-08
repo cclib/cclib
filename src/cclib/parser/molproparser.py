@@ -272,10 +272,12 @@ class Molpro(logfileparser.Logfile):
             energy = 0.0
             scfvalues = []
             while line.strip() != "":
-                if line.split()[0].isdigit():
+                chomp = line.split()
+                if chomp[0].isdigit():
 
-                    ddiff = float(line.split()[1].replace('D', 'E'))
-                    newenergy = float(line.split()[3])
+                    ddiff = float(chomp[1].replace('D', 'E'))
+                    grad = float(chomp[2].replace('D', 'E'))
+                    newenergy = float(chomp[3])
                     ediff = newenergy - energy
                     energy = newenergy
 
@@ -290,7 +292,11 @@ class Molpro(logfileparser.Logfile):
                             values[n] = ddiff
                     scfvalues.append(values)
 
-                line = next(inputfile)
+                try:
+                    line = next(inputfile)
+                except StopIteration:
+                    self.logger.warning('File terminated before end of last SCF! Last gradient: {}'.format(grad))
+                    break
             self.scfvalues.append(numpy.array(scfvalues))
 
         # SCF result - RHF/UHF and DFT (RKS) energies.
