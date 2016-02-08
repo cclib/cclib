@@ -1,0 +1,396 @@
+    -----------------------------------------------------------------------
+          PSI4: An Open-Source Ab Initio Electronic Structure Package
+                              PSI 4.0.0-beta5 Driver
+
+    J. M. Turney, A. C. Simmonett, R. M. Parrish, E. G. Hohenstein,
+    F. A. Evangelista, J. T. Fermann, B. J. Mintz, L. A. Burns, J. J. Wilke,
+    M. L. Abrams, N. J. Russ, M. L. Leininger, C. L. Janssen, E. T. Seidl,
+    W. D. Allen, H. F. Schaefer, R. A. King, E. F. Valeev, C. D. Sherrill,
+    and T. D. Crawford, WIREs Comput. Mol. Sci., (2011) (doi: 10.1002/wcms.93)
+
+                         Additional Contributions by
+    A. E. DePrince, M. Saitow, U. Bozkaya, A. Yu. Sokolov
+    -----------------------------------------------------------------------
+
+    Process ID:  31495
+    PSI4DATADIR: /usr/local/share/psi
+
+    Using LocalCommunicator (Number of processes = 1)
+
+    Memory level set to 256.000 MB
+
+  ==> Input File <==
+
+--------------------------------------------------------------------------
+molecule dvb {
+    C    -1.4152533224   0.2302217854   0.0000000000
+    C     1.4152533224  -0.2302217854   0.0000000000
+    C    -0.4951331558   1.3144608674   0.0000000000
+    C     0.4951331558  -1.3144608674   0.0000000000
+    C     0.8894090436   1.0909493743   0.0000000000
+    C    -0.8894090436  -1.0909493743   0.0000000000
+    H    -0.8795511985   2.3437343748   0.0000000000
+    H     0.8795511985  -2.3437343748   0.0000000000
+    H     1.5779041557   1.9450061275   0.0000000000
+    H    -1.5779041557  -1.9450061275   0.0000000000
+    C     2.8845844962  -0.5210893778   0.0000000000
+    C    -2.8845844962   0.5210893778   0.0000000000
+    H     3.1403356810  -1.5919605685   0.0000000000
+    H    -3.1403356810   1.5919605685   0.0000000000
+    C     3.8800428103   0.3822535424   0.0000000000
+    C    -3.8800428103  -0.3822535424   0.0000000000
+    H     3.6946765858   1.4624389570   0.0000000000
+    H    -3.6946765858  -1.4624389570   0.0000000000
+    H     4.9316453546   0.0711049543   0.0000000000
+    H    -4.9316453546  -0.0711049543   0.0000000000
+}
+
+set {
+    basis sto-3g
+    guess sad
+    reference rks
+    scf_type pk
+    dft_functional b3lyp
+    print_basis true
+    print_mos true
+}
+
+energy('scf')
+oeprop('MULLIKEN_CHARGES', 'LOWDIN_CHARGES', 'MULTIPOLES(5)')
+--------------------------------------------------------------------------
+
+*** tstart() called on helena
+*** at Fri May  9 15:20:35 2014
+
+	There are an even number of electrons - assuming singlet.
+	Specify the multiplicity with the MULTP option in the
+	input if this is incorrect
+
+
+         ---------------------------------------------------------
+                                   SCF
+            by Justin Turney, Rob Parrish, and Andy Simmonett
+                              RKS Reference
+                        1 Threads,    256 MiB Core
+         ---------------------------------------------------------
+
+  ==> Geometry <==
+
+    Molecular point group: c2h
+    Full point group: C2h
+
+    Geometry (in Angstrom), charge = 0, multiplicity = 1:
+
+       Center              X                  Y                   Z       
+    ------------   -----------------  -----------------  -----------------
+           C         -1.415253322400     0.230221785400     0.000000000000
+           C          1.415253322400    -0.230221785400     0.000000000000
+           C         -0.495133155800     1.314460867400     0.000000000000
+           C          0.495133155800    -1.314460867400     0.000000000000
+           C          0.889409043600     1.090949374300     0.000000000000
+           C         -0.889409043600    -1.090949374300     0.000000000000
+           H         -0.879551198500     2.343734374800     0.000000000000
+           H          0.879551198500    -2.343734374800     0.000000000000
+           H          1.577904155700     1.945006127500     0.000000000000
+           H         -1.577904155700    -1.945006127500     0.000000000000
+           C          2.884584496200    -0.521089377800     0.000000000000
+           C         -2.884584496200     0.521089377800     0.000000000000
+           H          3.140335681000    -1.591960568500     0.000000000000
+           H         -3.140335681000     1.591960568500     0.000000000000
+           C          3.880042810300     0.382253542400     0.000000000000
+           C         -3.880042810300    -0.382253542400     0.000000000000
+           H          3.694676585800     1.462438957000     0.000000000000
+           H         -3.694676585800    -1.462438957000     0.000000000000
+           H          4.931645354600     0.071104954300     0.000000000000
+           H         -4.931645354600    -0.071104954300     0.000000000000
+
+  Running in c2h symmetry.
+
+  Nuclear repulsion =  445.936978114243459
+
+  Charge       = 0
+  Multiplicity = 1
+  Electrons    = 70
+  Nalpha       = 35
+  Nbeta        = 35
+
+  ==> Algorithm <==
+
+  SCF Algorithm Type is PK.
+  DIIS enabled.
+  MOM disabled.
+  Fractional occupation disabled.
+  Guess Type is SAD.
+  Energy threshold   = 1.00e-06
+  Density threshold  = 1.00e-06
+  Integral threshold = 0.00e+00
+
+  ==> Primary Basis <==
+
+  Basis Set: STO-3G
+    Number of shells: 40
+    Number of basis function: 60
+    Number of Cartesian functions: 60
+    Spherical Harmonics?: true
+    Max angular momentum: 1
+
+  ==> DFT Potential <==
+
+   => B3LYP Composite Functional <= 
+
+    B3LYP Hybrid-GGA Exchange-Correlation Functional
+
+    P.J. Stephens et. al., J. Phys. Chem., 98, 11623-11627, 1994
+
+    Points   =           5000
+    Deriv    =              1
+    GGA      =           TRUE
+    Meta     =          FALSE
+
+    X_LRC        =          FALSE
+    X_Hybrid     =           TRUE
+    X_Alpha      =   2.000000E-01
+    X_Omega      =   0.000000E+00
+    C_LRC        =          FALSE
+    C_Hybrid     =          FALSE
+    C_SCS_Hybrid =          FALSE
+    C_Alpha      =   0.000000E+00
+    C_SS_Alpha   =   0.000000E+00
+    C_OS_Alpha   =   0.000000E+00
+
+   => Exchange Functionals <=
+
+    0.8000  B3_X
+    0.2000    HF 
+
+   => Correlation Functionals <=
+
+    0.1900 VWN3RPA_C
+    0.8100 LYP_C
+    0.0000 DF-MP2 
+
+   => Molecular Quadrature <=
+
+    Radial Scheme    =       TREUTLER
+    Pruning Scheme   =           FLAT
+    Nuclear Scheme   =       TREUTLER
+
+    BS radius alpha  =              1
+    Pruning alpha    =              1
+    Radial Points    =             75
+    Spherical Points =            302
+    Total Points     =         437558
+    Total Blocks     =            708
+    Max Points       =            996
+    Max Functions    =             56
+
+  -AO BASIS SET INFORMATION:
+    Name                   = STO-3G
+    Total number of shells = 40
+    Number of primitives   = 120
+    Number of AO           = 60
+    Number of SO           = 60
+    Maximum AM             = 1
+    Spherical Harmonics    = TRUE
+
+  -Contraction Scheme:
+    Atom   Type   All Primitives // Shells:
+   ------ ------ --------------------------
+       1     C     6s 3p // 2s 1p 
+       2     C     6s 3p // 2s 1p 
+       3     C     6s 3p // 2s 1p 
+       4     C     6s 3p // 2s 1p 
+       5     C     6s 3p // 2s 1p 
+       6     C     6s 3p // 2s 1p 
+       7     H     3s // 1s 
+       8     H     3s // 1s 
+       9     H     3s // 1s 
+      10     H     3s // 1s 
+      11     C     6s 3p // 2s 1p 
+      12     C     6s 3p // 2s 1p 
+      13     H     3s // 1s 
+      14     H     3s // 1s 
+      15     C     6s 3p // 2s 1p 
+      16     C     6s 3p // 2s 1p 
+      17     H     3s // 1s 
+      18     H     3s // 1s 
+      19     H     3s // 1s 
+      20     H     3s // 1s 
+
+  ==> AO Basis Functions <==
+
+    [ STO-3G ]
+    spherical
+    ****
+    C   1
+    S   3 1.00
+                        71.61683700           2.70781445
+                        13.04509600           2.61888016
+                         3.53051220           0.81619058
+    S   3 1.00
+                         2.94124940          -0.16001719
+                         0.68348310           0.21403592
+                         0.22228990           0.16153609
+    P   3 1.00
+                         2.94124940           0.85604451
+                         0.68348310           0.53830377
+                         0.22228990           0.08527635
+    ****
+    C   3
+    S   3 1.00
+                        71.61683700           2.70781445
+                        13.04509600           2.61888016
+                         3.53051220           0.81619058
+    S   3 1.00
+                         2.94124940          -0.16001719
+                         0.68348310           0.21403592
+                         0.22228990           0.16153609
+    P   3 1.00
+                         2.94124940           0.85604451
+                         0.68348310           0.53830377
+                         0.22228990           0.08527635
+    ****
+    C   5
+    S   3 1.00
+                        71.61683700           2.70781445
+                        13.04509600           2.61888016
+                         3.53051220           0.81619058
+    S   3 1.00
+                         2.94124940          -0.16001719
+                         0.68348310           0.21403592
+                         0.22228990           0.16153609
+    P   3 1.00
+                         2.94124940           0.85604451
+                         0.68348310           0.53830377
+                         0.22228990           0.08527635
+    ****
+    H   7
+    S   3 1.00
+                         3.42525091           0.27693436
+                         0.62391373           0.26783885
+                         0.16885540           0.08347367
+    ****
+    H   9
+    S   3 1.00
+                         3.42525091           0.27693436
+                         0.62391373           0.26783885
+                         0.16885540           0.08347367
+    ****
+    C  11
+    S   3 1.00
+                        71.61683700           2.70781445
+                        13.04509600           2.61888016
+                         3.53051220           0.81619058
+    S   3 1.00
+                         2.94124940          -0.16001719
+                         0.68348310           0.21403592
+                         0.22228990           0.16153609
+    P   3 1.00
+                         2.94124940           0.85604451
+                         0.68348310           0.53830377
+                         0.22228990           0.08527635
+    ****
+    H  13
+    S   3 1.00
+                         3.42525091           0.27693436
+                         0.62391373           0.26783885
+                         0.16885540           0.08347367
+    ****
+    C  15
+    S   3 1.00
+                        71.61683700           2.70781445
+                        13.04509600           2.61888016
+                         3.53051220           0.81619058
+    S   3 1.00
+                         2.94124940          -0.16001719
+                         0.68348310           0.21403592
+                         0.22228990           0.16153609
+    P   3 1.00
+                         2.94124940           0.85604451
+                         0.68348310           0.53830377
+                         0.22228990           0.08527635
+    ****
+    H  17
+    S   3 1.00
+                         3.42525091           0.27693436
+                         0.62391373           0.26783885
+                         0.16885540           0.08347367
+    ****
+    H  19
+    S   3 1.00
+                         3.42525091           0.27693436
+                         0.62391373           0.26783885
+                         0.16885540           0.08347367
+    ****
+
+  ==> Pre-Iterations <==
+
+   -------------------------------------------------------
+    Irrep   Nso     Nmo     Nalpha   Nbeta   Ndocc  Nsocc
+   -------------------------------------------------------
+     Ag        25      25       0       0       0       0
+     Bg         5       5       0       0       0       0
+     Au         5       5       0       0       0       0
+     Bu        25      25       0       0       0       0
+   -------------------------------------------------------
+    Total      60      60      35      35      35       0
+   -------------------------------------------------------
+
+  Starting with a DF guess...
+
+ OEINTS: Wrapper to libmints.
+   by Justin Turney
+
+   Calculation information:
+      Number of atoms:                  20
+      Number of AO shells:              40
+      Number of SO shells:              20
+      Number of primitives:            120
+      Number of atomic orbitals:        60
+      Number of basis functions:        60
+
+      Number of irreps:                  4
+      Number of functions per irrep: [  25    5    5   25 ]
+
+      Overlap, kinetic, potential, dipole, and quadrupole integrals
+        stored in file 35.
+
+  ==> Integral Setup <==
+
+  ==> DFJK: Density-Fitted J/K Matrices <==
+
+    J tasked:                  Yes
+    K tasked:                  Yes
+    wK tasked:                  No
+    OpenMP threads:              1
+    Integrals threads:           1
+    Memory (MB):               183
+    Algorithm:                Core
+    Integral Cache:           NONE
+    Schwarz Cutoff:          1E-12
+    Fitting Condition:       1E-12
+
+   => Auxiliary Basis Set <=
+
+  Basis Set: CC-PVDZ-JKFIT
+    Number of shells: 330
+    Number of basis function: 930
+    Number of Cartesian functions: 1060
+    Spherical Harmonics?: true
+    Max angular momentum: 3
+
+  Minimum eigenvalue in the overlap matrix is 1.8147107108E-01.
+  Using Symmetric Orthogonalization.
+  SCF Guess: Superposition of Atomic Densities via on-the-fly atomic UHF.
+
+  ==> Iterations <==
+
+                           Total Energy        Delta E     RMS |[F,P]|
+
+   @DF-RKS iter   0:  -381.35252418348273   -3.81353e+02   1.16235e-01 
+   @DF-RKS iter   1:  -382.26849617080887   -9.15972e-01   6.26011e-03 
+   @DF-RKS iter   2:  -382.27580611199778   -7.30994e-03   6.25370e-03 DIIS
+   @DF-RKS iter   3:  -382.30224712064404   -2.64410e-02   2.71411e-03 DIIS
+   @DF-RKS iter   4:  -382.30827545228237   -6.02833e-03   3.52284e-04 DIIS
+   @DF-RKS iter   5:  -382.30837495646773   -9.95042e-05   1.22890e-04 DIIS
+   @DF-RKS iter   6:  -382.30838703699055   -1.20805e-05   2.39962e-05 DIIS

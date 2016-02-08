@@ -438,15 +438,6 @@ def testPsi_Psi4_dvb_gopt_hf_unconverged_out(logfile):
 
 # Q-Chem #
 
-def testQChem_QChem4_2_1e1a_active_0_2_out(logfile):
-    """A calculation that ends during SCF.
-    """
-
-    assert not hasattr(logfile.data, 'scfenergies')
-    assert hasattr(logfile.data, 'scftargets')
-    assert hasattr(logfile.data, 'scfvalues')
-
-
 def testQChem_QChem4_2_CH3___Na__RS_out(logfile):
     """An unrestricted fragment job with BSSE correction.
 
