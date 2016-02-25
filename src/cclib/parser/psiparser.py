@@ -68,7 +68,7 @@ class Psi(logfileparser.Logfile):
         # The version should always be detected.
         if "PSI3: An Open-Source Ab Initio" in line:
             self.version = 3
-        if "PSI4: An Open-Source Ab Initio" in line:
+        if "PSI4: An Open-Source Ab Initio".lower() in line.lower():
             self.version = 4
 
         # This will automatically change the section attribute for Psi4, when encountering
@@ -141,7 +141,7 @@ class Psi(logfileparser.Logfile):
             elements = []
             coords = []
             while line.strip():
-                el, x, y, z = line.split()
+                el, x, y, z = line.split()[:4]
                 elements.append(el)
                 coords.append([float(x), float(y), float(z)])
                 line = next(inputfile)
