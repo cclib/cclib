@@ -80,7 +80,7 @@ def guess_filetype(inputfile):
     filetype = None
     for line in inputfile:
         for parser, phrases, do_break in triggers:
-            if all([line.find(p) >= 0 for p in phrases]):
+            if all([line.lower().find(p.lower()) >= 0 for p in phrases]):
                 filetype = parser
                 if do_break:
                     return filetype
