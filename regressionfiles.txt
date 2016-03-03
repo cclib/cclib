@@ -219,6 +219,9 @@ Psi/Psi4/psi4.0b5_samples_scf4.out
 QChem/QChem4.2/CH3---Na+_RS.out
 QChem/QChem4.2/CH3---Na+_RS_SCF.out
 QChem/QChem4.2/CH4---Na+.out
+QChem/QChem4.2/CH3---Na+_RS_SCF_noprint.out
+QChem/QChem4.2/CH3---Na+_RS_noprint.out
+QChem/QChem4.2/CH4---Na+_noprint.out
 QChem/QChem4.2/CO2.out
 QChem/QChem4.2/CO2_cation_ROHF.out
 QChem/QChem4.2/CO2_cation_ROHF_bigprint.out
@@ -231,4 +234,10 @@ QChem/QChem4.2/dvb_gopt_unconverged.out
 QChem/QChem4.2/dvb_sp_multipole_10.out
 QChem/QChem4.2/dvb_sp_omp.out
 QChem/QChem4.2/dvb_sp_unconverged.out
+QChem/QChem4.2/print_frgm_false_opt.out
+QChem/QChem4.2/print_frgm_true_opt.out
+QChem/QChem4.2/print_frgm_false_sp.out
+QChem/QChem4.2/print_frgm_true_sp.out
+QChem/QChem4.2/print_frgm_true_sp_ccsdt.out
 QChem/QChem4.2/qchem_tddft_rpa.out
+QChem/QChem4.2/read_molecule.out
