@@ -473,6 +473,56 @@ class ORCA(logfileparser.Logfile):
 
             self.mocoeffs = mocoeffs
 
+        # Basis set information
+        # ORCA prints this out in a somewhat indirect fashion.
+        # Therefore, parsing occurs in several steps:
+        # 1. read which atom belongs to which basis set group
+        if line[0:21] == "BASIS SET INFORMATION":
+            line = next(inputfile)
+            line = next(inputfile)
+
+            self.tmp_atnames = [] # temporary attribute, needed later
+            while(not line[0:5] == '-----'):
+                if line[0:4] == "Atom":
+                    self.tmp_atnames.append(line[8:12].strip())
+                line = next(inputfile)
+
+        # 2. Read information for the basis set groups
+        if line[0:25] == "BASIS SET IN INPUT FORMAT":
+            line = next(inputfile)
+            line = next(inputfile)
+
+            # loop over basis set groups
+            gbasis_tmp = {}
+            while(not line[0:5] == '-----'):
+                if line[1:7] == 'NewGTO':
+                    bas_atname = line.split()[1]
+                    gbasis_tmp[bas_atname] = []
+
+                    line = next(inputfile)
+                    # loop over contracted GTOs
+                    while(not line[0:6] == '  end;'):
+                        words = line.split()
+                        ang = words[0]
+                        nprim = int(words[1])
+
+                        # loop over primitives
+                        coeff = []
+                        for iprim in range(nprim):
+                            words = next(inputfile).split()
+                            coeff.append( (float(words[1]), float(words[2])) )
+                        gbasis_tmp[bas_atname].append((ang, coeff))
+
+                        line = next(inputfile)
+                line = next(inputfile)
+
+            # 3. Assign the basis sets to gbasis
+            self.gbasis = []
+            for bas_atname in self.tmp_atnames:
+                self.gbasis.append(gbasis_tmp[bas_atname])
+            del self.tmp_atnames
+
+        # Read TDDFT information
         if line[0:18] == "TD-DFT/TDA EXCITED":
             # Could be singlets or triplets
             if line.find("SINGLETS") >= 0:
