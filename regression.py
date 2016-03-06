@@ -889,6 +889,9 @@ old_unittests = {
     "ORCA/ORCA2.8/dvb_sp_un.out":   OrcaSPunTest_charge0,
     "ORCA/ORCA2.8/dvb_td.out":      OrcaTDDFTTest,
     "ORCA/ORCA2.8/dvb_ir.out":      OrcaIRTest_old,
+
+    "Psi/Psi4/dvb_sp_hf_git.out": GenericBasisTest,
+    "Psi/Psi4/dvb_sp_hf_git.out": GenericSPTest,
 }
 
 def make_regression_from_old_unittest(test_class):
