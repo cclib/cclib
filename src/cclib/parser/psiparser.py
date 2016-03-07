@@ -3,7 +3,7 @@
 # This file is part of cclib (http://cclib.github.io), a library for parsing
 # and interpreting the results of computational chemistry packages.
 #
-# Copyright (C) 2008-2014, the cclib development team
+# Copyright (C) 2008-2016, the cclib development team
 #
 # The library is free software, distributed under the terms of
 # the GNU Lesser General Public version 2.1 or later. You should have
@@ -142,6 +142,8 @@ class Psi(logfileparser.Logfile):
             coords = []
             while line.strip():
                 el, x, y, z = line.split()[:4]
+                if len(el) > 1:
+                    el = el[0] + el[1:].lower()
                 elements.append(el)
                 coords.append([float(x), float(y), float(z)])
                 line = next(inputfile)
@@ -283,6 +285,8 @@ class Psi(logfileparser.Logfile):
             while line.strip():
 
                 element = line.split()[1]
+                if len(element) > 1:
+                    element = element[0] + element[1:].lower()
                 atomnos.append(self.table.number[element])
 
                 # To count the number of atomic orbitals for the atom, sum up the orbitals
@@ -364,6 +368,8 @@ class Psi(logfileparser.Logfile):
             while line.strip():
 
                 element, index = line.split()
+                if len(element) > 1:
+                    element = element[0] + element[1:].lower()
                 atomno = self.table.number[element]
                 index = int(index)
 
@@ -382,7 +388,7 @@ class Psi(logfileparser.Logfile):
                     nprimitives = int(nprimitives)
 
                     # Get the angular momentum for this shell type.
-                    momentum = {'S': 0, 'P': 1, 'D': 2, 'F': 3, 'G': 4}[shell_type.upper()]
+                    momentum = {'S': 0, 'P': 1, 'D': 2, 'F': 3, 'G': 4, 'H': 5, 'I': 6}[shell_type.upper()]
 
                     # Read in the primitives.
                     primitives_lines = [next(inputfile) for i in range(nprimitives)]
@@ -583,6 +589,9 @@ class Psi(logfileparser.Logfile):
             mocoeffs = []
             indices = next(inputfile)
             while indices.strip():
+
+                if indices[:3] == '***':
+                    break
 
                 indices = [int(i) for i in indices.split()]
 
@@ -817,7 +826,7 @@ class Psi(logfileparser.Logfile):
                     if len(self.moments) <= im:
                         self.moments.append(m)
                     else:
-                        assert numpy.all(self.moments[im] == m)
+                        assert numpy.allclose(self.moments[im], m, atol=1.0e4)
 
         # We can also get some higher moments in Psi3, although here the dipole is not printed
         # separately and the order is not lexicographical. However, the numbers seem
