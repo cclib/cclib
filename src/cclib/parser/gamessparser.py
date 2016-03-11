@@ -71,6 +71,7 @@ class GAMESS(logfileparser.Logfile):
 
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
+        
         if line[1:12] == "INPUT CARD>":
             return
 
@@ -634,6 +635,7 @@ class GAMESS(logfileparser.Logfile):
         # PLEASE VERIFY THE PROGRAM'S DECISION MANUALLY!
         #
         if "NORMAL COORDINATE ANALYSIS IN THE HARMONIC APPROXIMATION" in line:
+            
             self.vibfreqs = []
             self.vibirs = []
             self.vibdisps = []
@@ -643,6 +645,7 @@ class GAMESS(logfileparser.Logfile):
             # Pass the warnings to the logger if they are there.
             while not "MODES" in line:
                 self.updateprogress(inputfile, "Frequency Information")
+                
                 line = next(inputfile)
                 
                 # Typical Atomic Masses section printed in GAMESS
