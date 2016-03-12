@@ -235,7 +235,7 @@ vib       DALTON      GenericIRTest         basicDALTON-2015      dvb_ir.out
 vib       GAMESSUK    GenericIRTest         basicGAMESS-UK7.0     dvb_ir.out
 vib       GAMESSUK    GenericIRTest         basicGAMESS-UK8.0     dvb_ir.out
 vib       GAMESS      FireflyIRTest         basicFirefly8.0       dvb_ir.out
-vib       GAMESS      GenericIRTest         basicGAMESS-US2012    dvb_ir.out
+vib       GAMESS      GamessIRTest          basicGAMESS-US2012    dvb_ir.out
 vib       Gaussian    GaussianIRTest        basicGaussian03       dvb_ir.out
 vib       Gaussian    GaussianIRTest        basicGaussian09       dvb_ir.out
 vib       Jaguar      JaguarIRTest          basicJaguar7.0        dvb_ir.out
