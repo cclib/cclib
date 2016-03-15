@@ -258,7 +258,7 @@ def testGaussian_Gaussian03_orbgs_log(logfile):
     assert logfile.data.coreelectrons[23] == 10
 
 def testGaussian_Gaussian09_100_g09(logfile):
-    """Check that the final system is the one parsed."""
+    """Check that the final system is the one parsed (cclib/cclib#243)."""
     assert logfile.data.natom == 54
     assert logfile.data.homos == [104]
 
