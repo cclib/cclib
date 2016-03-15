@@ -131,6 +131,7 @@ Gaussian/Gaussian03/orbgs.log
 Gaussian/Gaussian03/ortho_prod_freq.log
 Gaussian/Gaussian03/QVGXLLKOCUKJST-UHFFFAOYAJmult3Fixed.out
 Gaussian/Gaussian03/tms_nmr.log
+Gaussian/Gaussian09/100.g09
 Gaussian/Gaussian09/25DMF_HRANH.log
 Gaussian/Gaussian09/534.out
 Gaussian/Gaussian09/BH3CO_fragment_guess.log
