@@ -25,6 +25,7 @@ from .. import parser
 
 from . import cjsonwriter
 from . import cmlwriter
+from . import csxwriter
 from . import xyzwriter
 
 
@@ -76,7 +77,10 @@ def ccwrite(ccobj, outputtype=None, outputdest=None, returnstr=False,
             with open(outputdest, 'w') as outputobj:
                 outputobj.write(output)
         elif isinstance(outputdest, fileclass):
-            outputdest.write(output)
+            if outputtype != 'csx':
+                outputdest.write(output)
+            else:
+                pass
         else:
             raise ValueError
     # If outputdest is None, return a string representation of the output.
@@ -109,6 +113,8 @@ def _determine_output_format(outputtype, outputdest):
             outputclass = cjsonwriter.CJSON
         elif outputtype.lower() == 'cml':
             outputclass = cmlwriter.CML
+        elif outputtype.lower() == 'csx':
+            outputclass = csxwriter.CSX
         elif outputtype.lower() == 'xyz':
             outputclass = xyzwriter.XYZ
     else:
@@ -123,6 +129,8 @@ def _determine_output_format(outputtype, outputdest):
             outputclass = cjsonwriter.CJSON
         elif extension.lower() == '.cml':
             outputclass = cmlwriter.CML
+        elif extension.lower() == '.csx':
+            outputclass = csxwriter.CSX
         elif extension.lower() == '.xyz':
             outputclass = xyzwriter.XYZ
         else:

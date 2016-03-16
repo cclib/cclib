@@ -13,6 +13,7 @@
 
 from .cjsonwriter import CJSON
 from .cmlwriter import CML
+from .csxwriter import CSX
 from .xyzwriter import XYZ
 
 # This allows users to type:

@@ -28,6 +28,7 @@ class ccData(object):
         atommasses -- atom masses (array[1], daltons)
         atomnos -- atomic numbers (array[1])
         atomspins -- atomic spin densities (dict of arrays[1])
+        basisname -- name of the standard basis set (string)
         charge -- net charge of the system (integer)
         ccenergies -- molecular energies with Coupled-Cluster corrections (array[2], eV)
         coreelectrons -- number of core electrons in atom pseudopotentials (array[1])
@@ -43,11 +44,13 @@ class ccData(object):
         fooverlaps -- fragment orbital overlap matrix (array[2])
         fragnames -- names of fragments (list of strings)
         frags -- indices of atoms in a fragment (list of lists)
+        functional -- name of DFT functionals (string)
         gbasis -- coefficients and exponents of Gaussian basis functions (PyQuante format)
         geotargets -- targets for convergence of geometry optimization (array[1])
         geovalues -- current values for convergence of geometry optmization (array[1])
         grads -- current values of forces (gradients) in geometry optimization (array[3])
         hessian -- elements of the force constant matrix (array[1])
+        hofenergies -- heat of formation after semiempirical calculation (array[1], eV)
         homos -- molecular orbital indices of HOMO(s) (array[1])
         mocoeffs -- molecular orbital coefficients (list of arrays[2])
         moenergies -- molecular orbital energies (list of arrays[1], eV)
@@ -58,10 +61,13 @@ class ccData(object):
         natom -- number of atoms (integer)
         nbasis -- number of basis functions (integer)
         nmo -- number of molecular orbitals (integer)
+        nmriso -- NMR isotropic chemical shieldings (arragy[1], ppm)
+        nmranis -- NMR anisotropic chemical shieldings (arragy[1], ppm)
         nocoeffs -- natural orbital coefficients (array[2])
         nooccnos -- natural orbital occupation numbers (array[1])
         optdone -- flags whether an optimization has converged (Boolean)
         optstatus -- optimization status for each set of atomic coordinates (array[1])
+        package -- name of the quantum chemistry package (string)
         scancoords -- geometries of each scan step (array[3], angstroms)
         scanenergies -- energies of potential energy surface (list)
         scannames -- names of varaibles scanned (list of strings)
@@ -70,6 +76,8 @@ class ccData(object):
         scftargets -- targets for convergence of the SCF (array[2])
         scfvalues -- current values for convergence of the SCF (list of arrays[2])
         temperature -- temperature used for Thermochemistry (float, kelvin)
+        theory -- name of the quantum chemistry methodology (string)
+        version -- the version number for quantum chemistry package (string)
         vibanharms -- vibrational anharmonicity constants (array[2], 1/cm)
         vibdisps -- cartesian displacement vectors (array[3], delta angstrom)
         vibfreqs -- vibrational frequencies (array[1], 1/cm)
@@ -92,6 +100,7 @@ class ccData(object):
         "atommasses":     numpy.ndarray,
         "atomnos":        numpy.ndarray,
         "atomspins":      dict,
+        "basisname":      str,
         "ccenergies":     numpy.ndarray,
         "charge":         int,
         "coreelectrons":  numpy.ndarray,
@@ -107,11 +116,13 @@ class ccData(object):
         "fooverlaps":     numpy.ndarray,
         "fragnames":      list,
         "frags":          list,
+        "functional":     str,
         'gbasis':         list,
         "geotargets":     numpy.ndarray,
         "geovalues":      numpy.ndarray,
         "grads":          numpy.ndarray,
         "hessian":        numpy.ndarray,
+        "hofenergies":    numpy.ndarray,
         "homos":          numpy.ndarray,
         "mocoeffs":       list,
         "moenergies":     list,
@@ -122,10 +133,13 @@ class ccData(object):
         "natom":          int,
         "nbasis":         int,
         "nmo":            int,
+        "nmriso":         numpy.ndarray,
+        "nmranis":        numpy.ndarray,
         "nocoeffs":       numpy.ndarray,
         "nooccnos":       numpy.ndarray,
         "optdone":        bool,
         "optstatus":      numpy.ndarray,
+        "package":        str,
         "scancoords":     numpy.ndarray,
         "scanenergies":   list,
         "scannames":      list,
@@ -134,6 +148,8 @@ class ccData(object):
         "scftargets":     numpy.ndarray,
         "scfvalues":      list,
         "temperature":    float,
+        "theory":         str,
+        "version":        str,
         "vibanharms":     numpy.ndarray,
         "vibdisps":       numpy.ndarray,
         "vibfreqs":       numpy.ndarray,

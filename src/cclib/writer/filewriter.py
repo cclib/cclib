@@ -27,7 +27,7 @@ class Writer(object):
     """Abstract class for writer objects.
 
     Subclasses defined by cclib:
-        CJSON, CML, XYZ
+        CJSON, CML, CSX, XYZ
     """
 
     def __init__(self, ccdata, jobfilename=None,
@@ -48,6 +48,7 @@ class Writer(object):
         self.elements = [self.pt.element[Z] for Z in self.ccdata.atomnos]
 
         # Open Babel isn't necessarily present.
+        has_openbabel = False
         if has_openbabel:
             # Generate the Open Babel/Pybel representation of the molecule.
             # Used for calculating SMILES/InChI, formula, MW, etc.
