@@ -402,7 +402,7 @@ class CSX(filewriter.Writer):
                     ccsd_t1.set_properties(prop2)
                 if hasFreq:
                     ccsd_t1.set_vibrationalAnalysis(vib1)
-                mdm1.set_ccsd(ccsd_t1)
+                mdm1.set_ccsd_t(ccsd_t1)
             else:
                 print ('The current CSX does not support this method')
             srs1.set_multipleDeterminant(mdm1)

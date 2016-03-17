@@ -83,7 +83,7 @@ class DALTON(logfileparser.Logfile):
         """Extract information from the file object inputfile."""
         # extract the version number first
         if line[4:30] == "This is output from DALTON":
-            if line.split()[5] == "release":
+            if line.split()[5] == "release" or line.split()[5] == "(Release":
                 self.version = line.split()[6][6:]
             else:
                 self.version = line.split()[5]
@@ -556,6 +556,27 @@ class DALTON(logfileparser.Logfile):
             scftarget = self.float(line.split()[-1])
             self.scftargets.append([scftarget])
 
+        #the first try to extract atomic coordinates 
+        if "Cartesian Coordinates (a.u.)" in line:
+            if not hasattr(self, "atomcoords"):
+                self.atomcoords = []
+
+            line = next(inputfile)
+            line = next(inputfile)
+            line = next(inputfile)
+
+            atomcoords = []
+            for i in range(self.natom):
+                line = next(inputfile)
+                temp = line.split()
+
+                if len(temp) == 11:
+                    coords = [4, 7, 10]
+                else:
+                    coords = [6, 9, 12]
+                atomcoords.append([utils.convertor(float(temp[i]), "bohr", "Angstrom") for i in coords])
+            self.atomcoords.append(atomcoords)
+
         #                   .--------------------------------------------.
         #                   | Starting in Wave Function Section (SIRIUS) |
         #                   `--------------------------------------------'
@@ -757,7 +778,8 @@ class DALTON(logfileparser.Logfile):
             imo = 0
             while imo < self.nmo:
                 line = next(inputfile)
-                if "Total CPU  time used in SIRIUS" in line:
+                if "Total CPU  time used in SIRIUS" in line \
+                 or "Molecular orbitals for symmetry species" in line:
                     break
                 cmo = len(line.split())-1
                 ibas = 0
@@ -936,29 +958,6 @@ class DALTON(logfileparser.Logfile):
                     self.geovalues = []
                 self.geovalues.append(values)
 
-        #extract atomic coordinates
-        if "Cartesian Coordinates (a.u.)" in line:
-            if not hasattr(self, "atomcoords"):
-                self.atomcoords = []
-
-            line = next(inputfile)
-            line = next(inputfile)
-            line = next(inputfile)
-
-            atomcoords = []
-            for i in range(self.natom):
-                line = next(inputfile)
-                temp = line.split()
-
-                if self.version == "2016.0":
-                    coords = [4, 7, 10]
-                else:
-                    if i == 0:
-                        coords = [4, 7, 10]
-                    else:
-                        coords = [6, 9, 12]
-                atomcoords.append([utils.convertor(float(temp[i]), "bohr", "Angstrom") for i in coords])
-            self.atomcoords.append(atomcoords)
         # -------------------------------------------------
         # extract the center of mass line
         if "Center-of-mass coordinates (a.u.):" in line:
@@ -971,12 +970,14 @@ class DALTON(logfileparser.Logfile):
         # Extract the dipole moment
         if "Dipole moment components" in line:
             dipole = []
-            self.skip_lines(inputfile, ['d','b','header','b'])
+            self.skip_lines(inputfile, ['d','b'])
             line = next(inputfile)
 
             if "zero by symmetry" in line:
                 dipole = [0.0, 0.0, 0.0]
             else:
+                line = next(inputfile)
+                line = next(inputfile)
                 while line.strip():
                     temp = line.split()
                     dipole.append(float(temp[2])) # store the Debye value
