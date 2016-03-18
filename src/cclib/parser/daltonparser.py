@@ -862,7 +862,7 @@ class DALTON(logfileparser.Logfile):
         #
         if "Molecular geometry (au)" in line:
 
-            if not hasattr(self, "atomcoords"):
+            if not hasattr(self, "atomcoords") or len(self.atomcoords) == 1:
                 self.atomcoords = []
 
             if self.firststdorient:
