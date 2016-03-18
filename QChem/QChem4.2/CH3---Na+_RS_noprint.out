@@ -1,0 +1,436 @@
+/home/eric/data/opt/apps/qchem/trunk_intel_release_r18414_20150613/exe/qcprog.exe .CH3---Na+_RS_noprint.in.1263.qcin.1 /tmp/qchem/qchem1263/
+
+                  Welcome to Q-Chem
+     A Quantum Leap Into The Future Of Chemistry
+
+
+ Q-Chem 4.3, Q-Chem, Inc., Pleasanton, CA (2015)
+
+ Y. Shao,  Z. Gan,  E. Epifanovsky,  A. T. B. Gilbert,  M. Wormit,  
+ J. Kussmann,  A. W. Lange,  A. Behn,  J. Deng,  X. Feng,  D. Ghosh,  
+ M. Goldey,  P. R. Horn,  L. D. Jacobson,  I. Kaliman,  R. Z. Khaliullin,  
+ T. Kus,  A. Landau,  J. Liu,  E. I. Proynov,  Y. M. Rhee,  R. M. Richard,  
+ M. A. Rohrdanz,  R. P. Steele,  E. J. Sundstrom,  H. L. Woodcock III,  
+ P. M. Zimmerman,  D. Zuev,  B. Albrecht,  E. Alguire,  B. Austin,  
+ S. A. Baeppler,  G. J. O. Beran,  Y. A. Bernard,  E. Berquist,  
+ K. Brandhorst,  K. B. Bravaya,  S. T. Brown,  D. Casanova,  C.-M. Chang,  
+ Y. Chen,  S. H. Chien,  K. D. Closser,  D. L. Crittenden,  M. Diedenhofen,  
+ R. A. DiStasio Jr.,  H. Do,  A. D. Dutoi,  R. G. Edgar,  P.-T. Fang,  
+ S. Fatehi,  Q. Feng,  L. Fusti-Molnar,  A. Ghysels,  
+ A. Golubeva-Zadorozhnaya,  J. Gomes,  A. Gunina,  M. W. D. Hanson-Heine,  
+ P. H. P. Harbach,  A. W. Hauser,  E. G. Hohenstein,  Z. C. Holden,  K. Hui,  
+ T.-C. Jagau,  H. Ji,  B. Kaduk,  K. Khistyaev,  Jaehoon Kim,  Jihan Kim,  
+ R. A. King,  P. Klunzinger,  D. Kosenkov,  T. Kowalczyk,  C. M. Krauter,  
+ K. U. Lao,  A. Laurent,  K. V. Lawler,  S. Lehtola,  S. V. Levchenko,  
+ C. Y. Lin,  Y.-S. Lin,  F. Liu,  E. Livshits,  R. C. Lochan,  A. Luenser,  
+ P. Manohar,  S. F. Manzer,  S.-P. Mao,  N. Mardirossian,  A. V. Marenich,  
+ L. A. Martinez-Martinez,  S. A. Maurer,  N. J. Mayhall,  K. Nanda,  
+ C. M. Oana,  R. Olivares-Amaya,  D. P. O'Neill,  J. A. Parkhill,  
+ T. M. Perrine,  R. Peverati,  P. A. Pieniazek,  F. Plasser,  A. Prociuk,  
+ D. R. Rehn,  E. Rosta,  N. J. Russ,  N. Sergueev,  S. M. Sharada,  
+ S. Sharma,  D. W. Small,  A. Sodt,  T. Stauch,  T. Stein,  D. Stuck,  
+ Y.-C. Su,  A. J. W. Thom,  T. Tsuchimochi,  L. Vogt,  O. Vydrov,  T. Wang,  
+ M. A. Watson,  J. Wenzel,  A. White,  C. F. Williams,  V. Vanovschi,  
+ S. Yeganeh,  S. R. Yost,  Z.-Q. You,  I. Y. Zhang,  X. Zhang,  Y. Zhao,  
+ B. R. Brooks,  G. K. L. Chan,  D. M. Chipman,  C. J. Cramer,  
+ W. A. Goddard III,  M. S. Gordon,  W. J. Hehre,  A. Klamt,  
+ H. F. Schaefer III,  M. W. Schmidt,  C. D. Sherrill,  D. G. Truhlar,  
+ A. Warshel,  X. Xu,  A. Aspuru-Guzik,  R. Baer,  A. T. Bell,  N. A. Besley,  
+ J.-D. Chai,  A. Dreuw,  B. D. Dunietz,  T. R. Furlani,  S. R. Gwaltney,  
+ C.-P. Hsu,  Y. Jung,  J. Kong,  D. S. Lambrecht,  W. Liang,  C. Ochsenfeld,  
+ V. A. Rassolov,  L. V. Slipchenko,  J. E. Subotnik,  T. Van Voorhis,  
+ J. M. Herbert,  A. I. Krylov,  P. M. W. Gill,  M. Head-Gordon
+
+ Contributors to earlier versions of Q-Chem not listed above: 
+ R. D. Adamson,  J. Baker,  E. F. C. Byrd,  A. K. Chakraborty,  C.-L. Cheng,  
+ H. Dachsel,  R. J. Doerksen,  G. Hawkins,  A. Heyden,  S. Hirata,  
+ G. Kedziora,  F. J. Keil,  C. Kelley,  P. P. Korambath,  W. Kurlancheek,  
+ A. M. Lee,  M. S. Lee,  D. Liotard,  I. Lotan,  P. E. Maslen,  N. Nair,  
+ D. Neuhauser,  R. Olson,  B. Peters,  J. Ritchie,  N. E. Schultz,  
+ N. Shenvi,  A. C. Simmonett,  K. S. Thanthiriwatte,  Q. Wu,  W. Zhang
+
+ Please cite Q-Chem as follows:
+ Y. Shao et al., Mol. Phys. 113, 184-215 (2014)
+ DOI: 10.1080/00268976.2014.952696
+
+ Q-Chem 4.3.0 for Intel X86 EM64T Linux
+
+ Parts of Q-Chem use Armadillo 5.200.1 (Boston Tea Smuggler).
+ http://arma.sourceforge.net/
+
+ Q-Chem begins on Sun Jan 24 11:12:17 2016  
+
+Host: osmium
+0
+
+     Scratch files written to /tmp/qchem/qchem1263//
+ Jun1415 |home|eric|data|opt|apps|qchem|trunk_RNUM -1
+
+Checking the input file for inconsistencies...	...done.
+
+--------------------------------------------------------------
+User input:
+--------------------------------------------------------------
+$molecule
+1 2
+--
+0 2
+C -1.447596 -0.000023  0.000019
+H -1.562749  0.330361 -1.023835
+H -1.561982  0.721445  0.798205
+H -1.561187 -1.052067  0.225866
+--
+1 1
+Na 1.215591  0.000036 -0.000032
+$end
+
+$rem
+jobtype              eda
+exchange             b3lyp
+basis                6-31g*
+unrestricted         true
+scf_guess            fragmo
+frgm_method          stoll
+frgm_lpcorr          rs
+eda_bsse             true
+diis_separate_errvec 1
+scf_print_frgm       false
+$end
+--------------------------------------------------------------
+ ----------------------------------------------------------------
+             Standard Nuclear Orientation (Angstroms)
+    I     Atom           X                Y                Z
+ ----------------------------------------------------------------
+    1      C      -1.4475963500    -0.0000229678     0.0000191465
+    2      H      -1.5627494575     0.3344866290    -1.0224943770
+    3      H      -1.5619822935     0.7182207953     0.8011077030
+    4      H      -1.5611872989    -1.0529690576     0.2216223708
+    5      Na      1.2155906500     0.0000363127    -0.0000318705
+ ----------------------------------------------------------------
+ Molecular Point Group                 C1    NOp =  1
+ Largest Abelian Subgroup              C1    NOp =  1
+ Nuclear Repulsion Energy =    28.6321722722 hartrees
+ There are       10 alpha and        9 beta electrons
+ Requested basis set is 6-31G(d)
+ There are 15 shells and 40 basis functions
+
+Total QAlloc Memory Limit   2000 MB
+Mega-Array Size        61 MB
+MEM_STATIC part        62 MB
+
+                       Distance Matrix (Angstroms)
+             C (  1)   H (  2)   H (  3)   H (  4)
+   H (  2)  1.081985
+   H (  3)  1.081989  1.863539
+   H (  4)  1.081992  1.863562  1.863577
+   Na(  5)  2.663187  2.979339  2.978678  2.977994
+ 
+ A cutoff of  1.0D-08 yielded    116 shell pairs
+ There are       876 function pairs
+ 
+ -------------------------------------------------------
+ OpenMP Integral Computing Module                       
+ Release: version 1.0, May 2013, Q-Chem Inc. Pittsburgh 
+ -------------------------------------------------------
+ Integral Job Info:
+ Integral job number is                      11
+ Integral operator is                         1
+ short-range coefficients                     0
+ long-range coefficients              100000000
+ Omega coefficients                           0
+ if combine SR and LR in K                    0
+ Integral screening is                        0
+ Integral computing path is                   2
+ max size of driver memory is            800000
+ size of driver memory is                593474
+ size of scratch memory is             15166112
+ max col of scratch BK array               1296
+ max len of scratch array in speh3          155
+ max len of scratch index in speh4           18
+ max int batch size is                      520
+ min int batch size is                       52
+ fixed nKL is                                52
+ max L of basis functions is                  2
+ order of int derivative is                   0
+ number of shells is                         15
+ number of basis is                          40
+ number of cartesian basis is                40
+ number of contracted shell pairs           116
+ number of primitive shell pairs            658
+ maxK2 (contraction) of shell pair           36
+ max number of K2 of shell pair               1
+ max number of CS2 of shell pair             12
+ max number of PS2 of shell pair             72
+ mem total for path MDJ                   10660
+ -------------------------------------------------------
+ Smallest overlap matrix eigenvalue = 9.36E-03
+
+  Scale SEOQF with 1.000000e-01/1.000000e-01/1.000000e-01
+
+ Standard Electronic Orientation quadrupole field applied
+ Nucleus-field energy     =     0.0000000012 hartrees
+ Guess MOs from converged MOs on fragments
+
+-----------------------------------------------------------------
+ SCF on fragment 1 out of 2
+/home/eric/data/opt/apps/qchem/trunk_intel_release_r18414_20150613/bin/xr.csh  /tmp/qchem/qchem1263/Frg1.input  /dev/null  Frg1
+/home/eric/data/opt/apps/qchem/trunk_intel_release_r18414_20150613/bin/xr.csh /tmp/qchem/qchem1263/Frg1.input /dev/null Frg1
+QCSCRATCH is /tmp/qchem/qchem1263/Frg1
+QCFILEPREF is /tmp/qchem/qchem1263/Frg1/
+-- Serial fragment SCF job
+/home/eric/data/opt/apps/qchem/trunk_intel_release_r18414_20150613/exe/qcprog.exe /tmp/qchem/qchem1263/Frg1.input /tmp/qchem/qchem1263/Frg1/
+ SCF on fragment 2 out of 2
+/home/eric/data/opt/apps/qchem/trunk_intel_release_r18414_20150613/bin/xr.csh  /tmp/qchem/qchem1263/Frg2.input  /dev/null  Frg2
+/home/eric/data/opt/apps/qchem/trunk_intel_release_r18414_20150613/bin/xr.csh /tmp/qchem/qchem1263/Frg2.input /dev/null Frg2
+QCSCRATCH is /tmp/qchem/qchem1263/Frg2
+QCFILEPREF is /tmp/qchem/qchem1263/Frg2/
+-- Serial fragment SCF job
+/home/eric/data/opt/apps/qchem/trunk_intel_release_r18414_20150613/exe/qcprog.exe /tmp/qchem/qchem1263/Frg2.input /tmp/qchem/qchem1263/Frg2/
+-----------------------------------------------------------------
+ Done with SCF on isolated fragments
+-----------------------------------------------------------------
+
+ User-specified occupied guess orbitals will be used
+ An unrestricted hybrid HF-DFT SCF calculation will be
+ performed using Pulay DIIS extrapolation
+ Locally projected approximation of Stoll
+ with single Roothaan step correction
+ Exchange:     0.2000 Hartree-Fock + 0.0800 Slater + 0.7200 B88
+ Correlation:  0.1900 VWN1RPA + 0.8100 LYP
+ Using SG-1 standard quadrature grid
+ SCF converges when DIIS error is below 1.0E-05
+ CPU 0.00 s  wall 0.00 s
+ CPU 0.14 s  wall 0.14 s
+
+ Total DFTman time = 0.14 CPUs 0.14 Wall
+ ---------------------------------------
+  Cycle       Energy         DIIS Error
+ ---------------------------------------
+    1    -201.9268311993      4.17E-03
+ CPU 0.00 s  wall 0.00 s
+ CPU 0.10 s  wall 0.10 s
+
+ Total DFTman time = 0.10 CPUs 0.10 Wall
+    2    -201.9309276895      1.67E-03
+ CPU 0.00 s  wall 0.00 s
+ CPU 0.10 s  wall 0.10 s
+
+ Total DFTman time = 0.10 CPUs 0.10 Wall
+    3    -201.9314291296      4.42E-04
+ CPU 0.00 s  wall 0.00 s
+ CPU 0.13 s  wall 0.13 s
+
+ Total DFTman time = 0.13 CPUs 0.13 Wall
+    4    -201.9314721935      1.72E-04
+ CPU 0.00 s  wall 0.00 s
+ CPU 0.12 s  wall 0.12 s
+
+ Total DFTman time = 0.12 CPUs 0.12 Wall
+    5    -201.9314799739      2.45E-05
+ CPU 0.00 s  wall 0.00 s
+ CPU 0.08 s  wall 0.08 s
+
+ Total DFTman time = 0.08 CPUs 0.08 Wall
+Last iteration: RS correction
+SCF MI energy: -201.9314799308
+SCF MI(RS) energy: -201.9388582085
+    6    -201.9388582085      5.72E-06 Convergence criterion met
+ ---------------------------------------
+ <S^2> = 0.7482
+ SCF time:  CPU 0.93 s  wall 0.93 s
+
+-----------------------------------------------------------------
+ RS CP correction for fragment 1 out of 2
+/home/eric/data/opt/apps/qchem/trunk_intel_release_r18414_20150613/bin/xr.csh  /tmp/qchem/qchem1263/Frg1.input  /dev/null  Frg1ARSBSSE
+/home/eric/data/opt/apps/qchem/trunk_intel_release_r18414_20150613/bin/xr.csh /tmp/qchem/qchem1263/Frg1.input /dev/null Frg1ARSBSSE
+QCSCRATCH is /tmp/qchem/qchem1263/Frg1ARSBSSE
+QCFILEPREF is /tmp/qchem/qchem1263/Frg1ARSBSSE/
+-- Serial fragment SCF job
+/home/eric/data/opt/apps/qchem/trunk_intel_release_r18414_20150613/exe/qcprog.exe /tmp/qchem/qchem1263/Frg1.input /tmp/qchem/qchem1263/Frg1ARSBSSE/
+ RS CP correction for fragment 2 out of 2
+/home/eric/data/opt/apps/qchem/trunk_intel_release_r18414_20150613/bin/xr.csh  /tmp/qchem/qchem1263/Frg2.input  /dev/null  Frg2ARSBSSE
+/home/eric/data/opt/apps/qchem/trunk_intel_release_r18414_20150613/bin/xr.csh /tmp/qchem/qchem1263/Frg2.input /dev/null Frg2ARSBSSE
+QCSCRATCH is /tmp/qchem/qchem1263/Frg2ARSBSSE
+QCFILEPREF is /tmp/qchem/qchem1263/Frg2ARSBSSE/
+-- Serial fragment SCF job
+/home/eric/data/opt/apps/qchem/trunk_intel_release_r18414_20150613/exe/qcprog.exe /tmp/qchem/qchem1263/Frg2.input /tmp/qchem/qchem1263/Frg2ARSBSSE/
+-----------------------------------------------------------------
+ Done with counterpoise correction on fragments
+-----------------------------------------------------------------
+
+ SCF   energy in the final basis set = -201.9388582085
+ Total energy in the final basis set = -201.9388582085
+ Analysis of SCF Wavefunction
+ 
+ --------------------------------------------------------------
+ 
+                    Orbital Energies (a.u.)
+ --------------------------------------------------------------
+ 
+ Alpha MOs
+ -- Occupied --
+-10.376  -0.870  -0.598  -0.598  -0.433 -38.769  -2.501  -1.433
+ -1.432  -1.432
+ -- Virtual --
+ -0.050   0.014   0.014   0.329   0.354   0.354   0.511   0.738
+  0.738   0.782   1.457   1.457   1.804   2.011   2.011   3.879
+ -0.226  -0.141  -0.141  -0.099  -0.050  -0.025  -0.025  -0.010
+  0.140   0.140   0.145   0.145   0.161   0.322
+ 
+ Beta MOs
+ -- Occupied --
+-10.363  -0.829  -0.588  -0.588 -38.769  -2.501  -1.432  -1.432
+ -1.432
+ -- Virtual --
+ -0.259  -0.035   0.020   0.020   0.363   0.363   0.405   0.537
+  0.744   0.744   0.808   1.523   1.523   1.887   2.024   2.024
+  3.915  -0.238  -0.141  -0.141  -0.111  -0.085  -0.038  -0.025
+ -0.025   0.138   0.142   0.142   0.144   0.144   0.324
+ --------------------------------------------------------------
+ 
+          Ground-State Mulliken Net Atomic Charges
+
+     Atom                 Charge (a.u.)    Spin (a.u.)
+  --------------------------------------------------------
+      1 C                    -0.534888       1.014842
+      2 H                     0.225266      -0.041886
+      3 H                     0.225212      -0.041873
+      4 H                     0.225200      -0.041867
+      5 Na                    0.859210       0.110783
+  --------------------------------------------------------
+  Sum of atomic charges =     1.000000
+  Sum of spin   charges =     1.000000
+
+ -----------------------------------------------------------------
+                    Cartesian Multipole Moments
+ -----------------------------------------------------------------
+    Charge (ESU x 10^10)
+                 4.8032
+    Dipole Moment (Debye)
+         X       4.3469      Y       0.0001      Z       0.0001
+       Tot       4.3469
+    Quadrupole Moments (Debye-Ang)
+        XX      -1.2160     XY      -0.0007     YY      -9.9973
+        XZ       0.0006     YZ      -0.0001     ZZ      -9.9972
+    Octopole Moments (Debye-Ang^2)
+       XXX      27.6937    XXY       0.0034    XYY       5.8197
+       YYY      -0.8009    XXZ      -0.0030    XYZ       0.0001
+       YYZ       0.5747    XZZ       5.8179    YZZ       0.8015
+       ZZZ      -0.5749
+    Hexadecapole Moments (Debye-Ang^3)
+      XXXX    -119.6612   XXXY      -0.0066   XXYY     -22.3357
+      XYYY       1.2918   YYYY     -15.0781   XXXZ       0.0061
+      XXYZ      -0.0004   XYYZ      -0.9269   YYYZ      -0.0003
+      XXZZ     -22.3301   XYZZ      -1.2930   YYZZ      -5.0261
+      XZZZ       0.9280   YZZZ       0.0001   ZZZZ     -15.0778
+ -----------------------------------------------------------------
+
+ ---------------------------------------------------------------------
+ *                   Energy decomposition analysis                   *
+ *  R.Z.Khaliullin, E.A.Cobar, R.C.Lochan, A.T.Bell, M.Head-Gordon   *
+ *              J. Phys. Chem. A, 2007, 111, 8753-8765.              *
+ ---------------------------------------------------------------------
+   Fragment           E(TOTAL)      E(RS CP-CORR)
+ ---------------------------------------------------------------------
+          1     -39.8377833972     -39.8396233371
+          2    -162.0812279270    -162.0812296529
+ ---------------------------------------------------------------------
+   initial     -201.9268311993
+    SCF MI     -201.9314799308
+        RS     -201.9388582085
+ ---------------------------------------------------------------------
+                                       Energy term         DE, kJ/mol
+ ---------------------------------------------------------------------
+                            Frozen Density ( FRZ )          -20.53133
+                              Polarization ( POL )          -12.20539
+                         RS Delocalization ( DEL )          -19.37190
+         RS Basis set superposition error ( BSSE )            4.83535
+            RS Charge-transfer ( CT = DEL + BSSE )          -14.53655
+ ---------------------------------------------------------------------
+                 RS Total ( TOT = FRZ + POL + CT )          -47.27326
+
+ *-------------------------------------------------------------------* 
+ *      Energy decomposition of the delocalization term, kJ/mol      * 
+ *-------------------------------------------------------------------* 
+                DEL from fragment(row) to fragment(col)                
+  -------------------------------------------------------------------    
+             1           2
+    1    -0.00299   -19.26957
+    2    -0.09786    -0.00024
+  -------------------------------------------------------------------  
+                BSSE from fragment(row) to fragment(col)               
+                  Grid superposition error: -0.05519
+  -------------------------------------------------------------------    
+             1           2
+    1     0.00001     4.82375
+    2     0.06675     0.00003
+  -------------------------------------------------------------------  
+                 CT from fragment(row) to fragment(col)                
+                  Grid superposition error: -0.05641
+  -------------------------------------------------------------------    
+             1           2
+    1    -0.00299   -14.44583
+    2    -0.03111    -0.00021
+ ---------------------------------------------------------------------
+
+
+ --------------------------------------------------------------------- 
+ *                     Charge transfer analysis                      * 
+ *             R.Z.Khaliullin, A.T. Bell, M.Head-Gordon              * 
+ *                J. Chem. Phys., 2008, 128, 184112                  * 
+ *-------------------------------------------------------------------* 
+                       Fragment population, a.u.                       
+ --------------------------------------------------------------------- 
+    Method   Fragment         Occ         Vir     Occ+Vir    Isolated
+ --------------------------------------------------------------------- 
+    SCF MI          1    9.000000    0.000000    9.000000    9.000000
+                    2   10.000000    0.000000   10.000000   10.000000
+ --------------------------------------------------------------------- 
+        RS          1    8.978345   -0.003092    8.975253    9.000000
+                    2    9.999990    0.024757   10.024747   10.000000
+ --------------------------------------------------------------------- 
+   BSSE RS          1    8.995570   -0.000332    8.995238    9.000000
+                    2    9.999994    0.004768   10.004762   10.000000
+ --------------------------------------------------------------------- 
+                           Total electron transfer            DQ, me-
+ --------------------------------------------------------------------- 
+                                 RS Delocalization          21.665021
+                  RS Basis set superposition error           4.436654
+ --------------------------------------------------------------------- 
+                                RS Charge-transfer          17.228368
+
+ *-------------------------------------------------------------------* 
+ *      Decomposition of the total RS charge-transfer term, me-      * 
+ *-------------------------------------------------------------------* 
+           Delocalization from fragment(row) to fragment(col)          
+  -------------------------------------------------------------------    
+             1           2
+    1    -3.10413    24.75944
+    2     0.01213    -0.00242
+  -------------------------------------------------------------------  
+                BSSE from fragment(row) to fragment(col)               
+  -------------------------------------------------------------------    
+             1           2
+    1    -0.33785     4.76808
+    2     0.00633     0.00009
+  -------------------------------------------------------------------  
+         Electron transfer from fragment(row) to fragment(col)         
+  -------------------------------------------------------------------    
+             1           2
+    1    -2.76628    19.99136
+    2     0.00580    -0.00251
+  -------------------------------------------------------------------  
+
+Archival summary:
+1\1\osmium\SP\ProcedureUnspecified\6-31G*\a113(1+,2)\eric\SunJan2411:12:212016SunJan2411:12:212016\0\\#,ProcedureUnspecified,6-31G*,\\1,2\C\H,1,1.08198\H,1,1.08199,2,118.895\H,1,1.08199,2,118.897,3,-159.249,0\Na,1,2.66319,2,96.108,3,100.399,0\\\@
+
+ Total job time:  4.37s(wall), 1.05s(cpu) 
+ Sun Jan 24 11:12:21 2016
+
+        *************************************************************
+        *                                                           *
+        *  Thank you very much for using Q-Chem.  Have a nice day.  *
+        *                                                           *
+        *************************************************************
+
+

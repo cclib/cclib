@@ -42,6 +42,8 @@ import unittest
 
 import numpy
 
+from cclib.parser.utils import convertor
+
 from cclib.parser import ccopen
 
 from cclib.parser import ADF
@@ -255,6 +257,11 @@ def testGaussian_Gaussian03_orbgs_log(logfile):
     assert logfile.data.coreelectrons[20] == 10
     assert logfile.data.coreelectrons[23] == 10
 
+def testGaussian_Gaussian09_100_g09(logfile):
+    """Check that the final system is the one parsed (cclib/cclib#243)."""
+    assert logfile.data.natom == 54
+    assert logfile.data.homos == [104]
+
 def testGaussian_Gaussian09_25DMF_HRANH_log(logfile):
     """Check that the anharmonicities are being parsed correctly."""
     assert hasattr(logfile.data, "vibanharms"), "Missing vibanharms"
@@ -443,21 +450,23 @@ def testQChem_QChem4_2_CH3___Na__RS_out(logfile):
 
     Contains only the Roothaan step energies for the CP correction.
 
-    For now, we only keep the final block of MO energies. This corresponds to
-    the section titled 'Done with counterpoise correction on fragments'.
+    The fragment SCF sections are printed.
+
+    This is to ensure only the supersystem is parsed.
     """
 
     assert logfile.data.charge == 1
     assert logfile.data.mult == 2
-    assert logfile.data.nbasis == logfile.data.nmo == 40
-
-    assert len(logfile.data.atomnos) == 5
     assert len(logfile.data.moenergies) == 2
+    assert len(logfile.data.atomcoords[0]) == 5
+    assert len(logfile.data.atomnos) == 5
 
     # Fragments: A, B, RS_CP(A), RS_CP(B), Full
-    assert len(logfile.data.scfenergies) == 5
+    assert len(logfile.data.scfenergies) == 1
+    scfenergy = convertor(-201.9388745658, "hartree", "eV")
+    assert abs(logfile.data.scfenergies[0] - scfenergy) < 1.0e-10
 
-    # There are 40 MOs in the supersystem.
+    assert logfile.data.nbasis == logfile.data.nmo == 40
     assert len(logfile.data.moenergies[0]) == 40
     assert len(logfile.data.moenergies[1]) == 40
     assert type(logfile.data.moenergies) == type([])
@@ -469,21 +478,23 @@ def testQChem_QChem4_2_CH3___Na__RS_SCF_out(logfile):
 
     Contains both the Roothaan step and full SCF energies for the CP correction.
 
-    For now, we only keep the final block of MO energies. This corresponds to
-    the section titled 'Done with counterpoise correction on fragments'.
+    The fragment SCF sections are printed.
+
+    This is to ensure only the supersystem is printed.
     """
 
     assert logfile.data.charge == 1
     assert logfile.data.mult == 2
-    assert logfile.data.nbasis == logfile.data.nmo == 40
-
-    assert len(logfile.data.atomnos) == 5
     assert len(logfile.data.moenergies) == 2
+    assert len(logfile.data.atomcoords[0]) == 5
+    assert len(logfile.data.atomnos) == 5
 
     # Fragments: A, B, RS_CP(A), RS_CP(B), SCF_CP(A), SCF_CP(B), Full
-    assert len(logfile.data.scfenergies) == 7
+    assert len(logfile.data.scfenergies) == 1
+    scfenergy = convertor(-201.9396979324, "hartree", "eV")
+    assert abs(logfile.data.scfenergies[0] - scfenergy) < 1.0e-10
 
-    # There are 40 MOs in the supersystem.
+    assert logfile.data.nbasis == logfile.data.nmo == 40
     assert len(logfile.data.moenergies[0]) == 40
     assert len(logfile.data.moenergies[1]) == 40
     assert type(logfile.data.moenergies) == type([])
@@ -493,22 +504,107 @@ def testQChem_QChem4_2_CH3___Na__RS_SCF_out(logfile):
 def testQChem_QChem4_2_CH4___Na__out(logfile):
     """A restricted fragment job with no BSSE correction.
 
-    For now, we only keep the final block of MO energies. This corresponds to
-    the section titled 'Done with SCF on isolated fragments'.
+    The fragment SCF sections are printed.
+
+    This is to ensure only the supersystem is parsed.
     """
 
     assert logfile.data.charge == 1
     assert logfile.data.mult == 1
-    assert logfile.data.nbasis == logfile.data.nmo == 42
-
-    assert len(logfile.data.atomnos) == 6
-    assert len(logfile.data.scfenergies) == 3
     assert len(logfile.data.moenergies) == 1
+    assert len(logfile.data.atomcoords[0]) == 6
+    assert len(logfile.data.atomnos) == 6
 
-    # There are 42 MOs in the supersystem.
+    # Fragments: A, B, Full
+    assert len(logfile.data.scfenergies) == 1
+    scfenergy = convertor(-202.6119443654, "hartree", "eV")
+    assert abs(logfile.data.scfenergies[0] - scfenergy) < 1.0e-10
+
+    assert logfile.data.nbasis == logfile.data.nmo == 42
     assert len(logfile.data.moenergies[0]) == 42
     assert type(logfile.data.moenergies) == type([])
     assert type(logfile.data.moenergies[0]) == type(numpy.array([]))
+
+
+def testQChem_QChem4_2_CH3___Na__RS_SCF_noprint_out(logfile):
+    """An unrestricted fragment job with BSSE correction.
+
+    Contains both the Roothaan step and full SCF energies for the CP correction.
+
+    The fragment SCF sections are not printed.
+
+    This is to ensure only the supersystem is parsed.
+    """
+
+    assert logfile.data.charge == 1
+    assert logfile.data.mult == 2
+    assert len(logfile.data.moenergies) == 2
+    assert len(logfile.data.atomcoords[0]) == 5
+    assert len(logfile.data.atomnos) == 5
+
+    assert len(logfile.data.scfenergies) == 1
+    scfenergy = convertor(-201.9396979324, "hartree", "eV")
+    assert abs(logfile.data.scfenergies[0] - scfenergy) < 1.0e-10
+
+    assert logfile.data.nbasis == logfile.data.nmo == 40
+    assert len(logfile.data.moenergies[0]) == 40
+    assert len(logfile.data.moenergies[1]) == 40
+    assert type(logfile.data.moenergies) == type([])
+    assert type(logfile.data.moenergies[0]) == type(numpy.array([]))
+    assert type(logfile.data.moenergies[1]) == type(numpy.array([]))
+
+
+def testQChem_QChem4_2_CH3___Na__RS_noprint_out(logfile):
+    """An unrestricted fragment job with BSSE correction.
+
+    Contains only the Roothaan step energies for the CP correction.
+
+    The fragment SCF sections are not printed.
+
+    This is to ensure only the supersystem is parsed.
+    """
+
+    assert logfile.data.charge == 1
+    assert logfile.data.mult == 2
+    assert len(logfile.data.moenergies) == 2
+    assert len(logfile.data.atomcoords[0]) == 5
+    assert len(logfile.data.atomnos) == 5
+
+    assert len(logfile.data.scfenergies) == 1
+    scfenergy = convertor(-201.9388582085, "hartree", "eV")
+    assert abs(logfile.data.scfenergies[0] - scfenergy) < 1.0e-10
+
+    assert logfile.data.nbasis == logfile.data.nmo == 40
+    assert len(logfile.data.moenergies[0]) == 40
+    assert len(logfile.data.moenergies[1]) == 40
+    assert type(logfile.data.moenergies) == type([])
+    assert type(logfile.data.moenergies[0]) == type(numpy.array([]))
+    assert type(logfile.data.moenergies[1]) == type(numpy.array([]))
+
+
+def testQChem_QChem4_2_CH4___Na__noprint_out(logfile):
+    """A restricted fragment job with no BSSE correction.
+
+    The fragment SCF sections are not printed.
+
+    This is to ensure only the supersystem is parsed.
+    """
+
+    assert logfile.data.charge == 1
+    assert logfile.data.mult == 1
+    assert len(logfile.data.moenergies) == 1
+    assert len(logfile.data.atomcoords[0]) == 6
+    assert len(logfile.data.atomnos) == 6
+
+    assert len(logfile.data.scfenergies) == 1
+    scfenergy = convertor(-202.6119443654, "hartree", "eV")
+    assert abs(logfile.data.scfenergies[0] - scfenergy) < 1.0e-10
+
+    assert logfile.data.nbasis == logfile.data.nmo == 42
+    assert len(logfile.data.moenergies[0]) == 42
+    assert type(logfile.data.moenergies) == type([])
+    assert type(logfile.data.moenergies[0]) == type(numpy.array([]))
+
 
 def testQChem_QChem4_2_CO2_out(logfile):
     """A job containing a specific number of orbitals requested for
@@ -589,6 +685,67 @@ def testQChem_QChem4_2_dvb_sp_multipole_10_out(logfile):
     assert abs(logfile.data.moments[9][0] - 10.1638) < tol
     assert numpy.isnan(logfile.data.moments[10][0])
 
+
+def testQChem_QChem4_2_print_frgm_false_opt_out(logfile):
+    """Fragment calculation: geometry optimization.
+
+    Fragment sections are not printed.
+    """
+
+    assert logfile.data.charge == -1
+    assert logfile.data.mult == 1
+
+    assert len(logfile.data.scfenergies) == 11
+    assert len(logfile.data.grads) == 11
+
+
+def testQChem_QChem4_2_print_frgm_true_opt_out(logfile):
+    """Fragment calculation: geometry optimization.
+
+    Fragment sections are printed.
+    """
+
+    assert logfile.data.charge == -1
+    assert logfile.data.mult == 1
+
+    assert len(logfile.data.scfenergies) == 11
+    assert len(logfile.data.grads) == 11
+
+
+def testQChem_QChem4_2_print_frgm_false_sp_out(logfile):
+    """Fragment calculation: single point energy.
+
+    Fragment sections are not printed.
+    """
+
+    assert logfile.data.charge == -1
+    assert logfile.data.mult == 1
+
+    assert len(logfile.data.scfenergies) == 1
+
+
+def testQChem_QChem4_2_print_frgm_true_sp_out(logfile):
+    """Fragment calculation: single point energy.
+
+    Fragment sections are printed.
+    """
+
+    assert logfile.data.charge == -1
+    assert logfile.data.mult == 1
+
+    assert len(logfile.data.scfenergies) == 1
+
+
+def testQChem_QChem4_2_print_frgm_true_sp_ccsdt_out(logfile):
+    """Fragment calculation: single point energy, CCSD(T).
+
+    Fragment sections are printed.
+    """
+
+    assert len(logfile.data.mpenergies[0]) == 1
+    assert len(logfile.data.ccenergies) == 1
+
+
 def testQChem_QChem4_2_qchem_tddft_rpa_out(logfile):
     """An RPA/TD-DFT job.
 
@@ -617,6 +774,21 @@ def testQChem_QChem4_2_qchem_tddft_rpa_out(logfile):
     assert logfile.data.etsecs[0][0] == [(11, 0), (47, 0), 0.0162]
     assert logfile.data.etsecs[0][1] == [(27, 0), (39, 0), 0.1039]
     assert logfile.data.etsecs[0][2] == [(39, 0), (27, 0), 0.0605]
+
+
+def testQChem_QChem4_2_read_molecule_out(logfile):
+    """A two-calculation output with the charge/multiplicity not specified
+    in the user section."""
+
+    # These correspond to the second calculation.
+    assert logfile.data.charge == 1
+    assert logfile.data.mult == 2
+    assert len(logfile.data.moenergies) == 2
+
+    # However, we currently take data from both, since they aren't
+    # exactly fragment calculations.
+    assert len(logfile.data.scfenergies) == 2
+
 
 # These regression tests are for logfiles that are not to be parsed
 # for some reason, and the function should start with 'testnoparse'.
