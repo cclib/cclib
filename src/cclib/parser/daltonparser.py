@@ -786,7 +786,7 @@ class DALTON(logfileparser.Logfile):
                 coeffs = []
                 line = next(inputfile)
                 while line.strip():
-                    coeffs = map(float, line.split()[3:])
+                    coeffs = list(map(float, line.split()[3:]))
                     mocoeffs[0][imo:cmo+imo,ibas] = coeffs
                     ibas += 1
                     line = next(inputfile)
