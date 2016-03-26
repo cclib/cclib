@@ -89,6 +89,45 @@ def testADF_ADF2013_01_dvb_gopt_b_unconverged_adfout(logfile):
     """An unconverged geometry optimization to test for empty optdone (see #103 for details)."""
     assert hasattr(logfile.data, 'optdone') and not logfile.data.optdone
 
+# def testADF_ADF2013_01_stopiter_dvb_sp_adfout(logfile):
+#     """Check to ensure that an incomplete SCF is handled correctly."""
+#     assert len(logfile.data.scfvalues[0]) == 10
+
+def testADF_ADF2013_01_stopiter_dvb_sp_b_adfout(logfile):
+    """Check to ensure that an incomplete SCF is handled correctly."""
+    # Why is this not 3?
+    assert len(logfile.data.scfvalues[0]) == 2
+
+# def testADF_ADF2013_01_stopiter_dvb_sp_c_adfout(logfile):
+#     """Check to ensure that an incomplete SCF is handled correctly."""
+#     assert len(logfile.data.scfvalues[0]) == 6
+
+# def testADF_ADF2013_01_stopiter_dvb_sp_d_adfout(logfile):
+#     """Check to ensure that an incomplete SCF is handled correctly."""
+#     assert len(logfile.data.scfvalues[0]) == 7
+
+# def testADF_ADF2013_01_stopiter_dvb_un_sp_adfout(logfile):
+#     """Check to ensure that an incomplete SCF is handled correctly."""
+#     assert len(logfile.data.scfvalues[0]) == 7
+
+# def testADF_ADF2013_01_stopiter_dvb_un_sp_c_adfout(logfile):
+#     """Check to ensure that an incomplete SCF is handled correctly."""
+#     assert len(logfile.data.scfvalues[0]) == 10
+
+# def testADF_ADF2013_01_stopiter_MoOCl4_sp_adfout(logfile):
+#     """Check to ensure that an incomplete SCF is handled correctly."""
+#     assert len(logfile.data.scfvalues[0]) == 11
+
+# DALTON #
+
+def testDALTON_DALTON_2015_stopiter_dalton_dft_out(logfile):
+    """Check to ensure that an incomplete SCF is handled correctly."""
+    assert len(logfile.data.scfvalues[0]) == 8
+
+def testDALTON_DALTON_2015_stopiter_dalton_hf_out(logfile):
+    """Check to ensure that an incomplete SCF is handled correctly."""
+    assert len(logfile.data.scfvalues[0]) == 5
+
 # Firefly #
 
 def testGAMESS_Firefly8_0_dvb_gopt_a_unconverged_out(logfile):
@@ -98,6 +137,10 @@ def testGAMESS_Firefly8_0_dvb_gopt_a_unconverged_out(logfile):
 def testGAMESS_Firefly8_0_h2o_log(logfile):
     """Check that molecular orbitals are parsed correctly (cclib/cclib#208)."""
     assert logfile.data.mocoeffs[0][0][0] == -0.994216
+
+def testGAMESS_Firefly8_0_stopiter_firefly_out(logfile):
+    """Check to ensure that an incomplete SCF is handled correctly."""
+    assert len(logfile.data.scfvalues[0]) == 6
 
 # GAMESS #
 
@@ -129,6 +172,10 @@ def testGAMESS_GAMESS_US2012_dvb_gopt_a_unconverged_out(logfile):
     """An unconverged geometry optimization to test for empty optdone (see #103 for details)."""
     assert hasattr(logfile.data, 'optdone') and not logfile.data.optdone
 
+def testGAMESS_GAMESS_US2012_stopiter_gamess_out(logfile):
+    """Check to ensure that an incomplete SCF is handled correctly."""
+    assert len(logfile.data.scfvalues[0]) == 10
+
 def testGAMESS_GAMESS_US2013_N_UHF_out(logfile):
     """An UHF job that has an LZ value analysis between the alpha and beta orbitals."""
     assert len(logfile.data.moenergies) == 2
@@ -152,6 +199,14 @@ def testGAMESS_WinGAMESS_dvb_td_trplet_2007_03_24_r1_out(logfile):
 
 def testGAMESS_UK_GAMESS_UK8_0_dvb_gopt_hf_unconverged_out(logfile):
     assert hasattr(logfile.data, 'optdone') and not logfile.data.optdone
+
+def testGAMESS_UK_GAMESS_UK8_0_stopiter_gamessuk_dft_out(logfile):
+    """Check to ensure that an incomplete SCF is handled correctly."""
+    assert len(logfile.data.scfvalues[0]) == 7
+
+def testGAMESS_UK_GAMESS_UK8_0_stopiter_gamessuk_hf_out(logfile):
+    """Check to ensure that an incomplete SCF is handled correctly."""
+    assert len(logfile.data.scfvalues[0]) == 5
 
 # Gaussian #
 
@@ -326,6 +381,9 @@ def testGaussian_Gaussian09_benzene_freq_log(logfile):
     """Check that default precision vib displacements are parsed correctly."""
     assert abs(logfile.data.vibdisps[0,0,2] - (-0.04)) < 0.00001
 
+def testGaussian_Gaussian09_stopiter_gaussian_out(logfile):
+    """Check to ensure that an incomplete SCF is handled correctly."""
+    assert len(logfile.data.scfvalues[0]) == 4
 
 # Jaguar #
 
@@ -333,6 +391,14 @@ def testGaussian_Gaussian09_benzene_freq_log(logfile):
 # we can test that optdone is set properly.
 #def testJaguarX.X_dvb_gopt_unconverged:
 #    assert hasattr(logfile.data, 'optdone') and not logfile.data.optdone
+
+def testJaguar_Jaguar8_3_stopiter_jaguar_dft_out(logfile):
+    """Check to ensure that an incomplete SCF is handled correctly."""
+    assert len(logfile.data.scfvalues[0]) == 4
+
+def testJaguar_Jaguar8_3_stopiter_jaguar_hf_out(logfile):
+    """Check to ensure that an incomplete SCF is handled correctly."""
+    assert len(logfile.data.scfvalues[0]) == 3
 
 # Molpro #
 
@@ -360,6 +426,14 @@ def testMolpro_Molpro2008_ch2o_molpro_casscf_out(logfile):
 def testMolpro_Molpro2012_dvb_gopt_unconverged_out(logfile):
     """An unconverged geometry optimization to test for empty optdone (see #103 for details)."""
     assert hasattr(logfile.data, 'optdone') and not logfile.data.optdone
+
+def testMolpro_Molpro2012_stopiter_molpro_dft_out(logfile):
+    """Check to ensure that an incomplete SCF is handled correctly."""
+    assert len(logfile.data.scfvalues[0]) == 6
+
+def testMolpro_Molpro2012_stopiter_molpro_hf_out(logfile):
+    """Check to ensure that an incomplete SCF is handled correctly."""
+    assert len(logfile.data.scfvalues[0]) == 6
 
 # NWChem #
 
@@ -400,6 +474,14 @@ def testNWChem_NWChem6_0_hydrogen_atom_UHF_cc_pVDZ_out(logfile):
     assert logfile.data.homos[0] == 0
     assert logfile.data.homos[1] == 0
 
+def testNWChem_NWChem6_5_stopiter_nwchem_dft_out(logfile):
+    """Check to ensure that an incomplete SCF is handled correctly."""
+    assert len(logfile.data.scfvalues[0]) == 3
+
+def testNWChem_NWChem6_5_stopiter_nwchem_hf_out(logfile):
+    """Check to ensure that an incomplete SCF is handled correctly."""
+    assert len(logfile.data.scfvalues[0]) == 2
+
 # ORCA #
 
 def testORCA_ORCA2_8_co_cosmo_out(logfile):
@@ -429,6 +511,14 @@ def testORCA_ORCA3_0_dvb_gopt_unconverged_out(logfile):
     """An unconverged geometry optimization to test for empty optdone (see #103 for details)."""
     assert hasattr(logfile.data, 'optdone') and not logfile.data.optdone
 
+def testORCA_ORCA3_0_stopiter_orca_scf_compact_out(logfile):
+    """Check to ensure that an incomplete SCF is handled correctly."""
+    assert len(logfile.data.scfvalues[0]) == 1
+
+def testORCA_ORCA3_0_stopiter_orca_scf_large_out(logfile):
+    """Check to ensure that an incomplete SCF is handled correctly."""
+    assert len(logfile.data.scfvalues[0]) == 9
+
 # PSI #
 
 def testPsi_Psi3_water_psi3_log(logfile):
@@ -442,6 +532,14 @@ def testPsi_Psi3_water_psi3_log(logfile):
 def testPsi_Psi4_dvb_gopt_hf_unconverged_out(logfile):
     """An unconverged geometry optimization to test for empty optdone (see #103 for details)."""
     assert hasattr(logfile.data, 'optdone') and not logfile.data.optdone
+
+def testPsi_Psi4_stopiter_psi_dft_out(logfile):
+    """Check to ensure that an incomplete SCF is handled correctly."""
+    assert len(logfile.data.scfvalues[0]) == 7
+
+def testPsi_Psi4_stopiter_psi_hf_out(logfile):
+    """Check to ensure that an incomplete SCF is handled correctly."""
+    assert len(logfile.data.scfvalues[0]) == 6
 
 # Q-Chem #
 
@@ -789,6 +887,9 @@ def testQChem_QChem4_2_read_molecule_out(logfile):
     # exactly fragment calculations.
     assert len(logfile.data.scfenergies) == 2
 
+def testQChem_QChem4_2_stopiter_qchem_out(logfile):
+    """Check to ensure that an incomplete SCF is handled correctly."""
+    assert len(logfile.data.scfvalues[0]) == 7
 
 # These regression tests are for logfiles that are not to be parsed
 # for some reason, and the function should start with 'testnoparse'.
