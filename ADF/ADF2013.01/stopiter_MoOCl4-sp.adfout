@@ -1,0 +1,1261 @@
+(INPUT FILE)
+
+title MoOCl4, sp bp86 with double zeta basis sets
+
+MAXMEMORYUSAGE 600MB
+
+
+fragments
+  Mo Mo.t21
+  O  O.t21
+  Cl  Cl.t21
+end
+
+charge 0 0
+unrestricted
+
+atoms cartesian
+ Mo        0.00000        0.00000        0.00000
+  O        0.00000        0.00000        1.69619
+ Cl       -1.59632       -1.59159       -0.59213
+ Cl       -1.59653        1.59164       -0.59132
+ Cl        1.59653       -1.59164       -0.59132
+ Cl        1.59632        1.59159       -0.59213
+end
+
+scf
+:: iterations 150
+:: converge 0.00000001
+:: mixing 0.100000000
+end
+
+::occupation keeporbital=150
+
+::EPRINT
+::   ORBPOPER -300.0 300.0
+::END
+
+PRINT Core
+
+EPRINT
+ATOMPOP none
+BASPOP none
+FRAGPOP none
+END
+
+integration  5.0
+
+XC
+GGA Becke Perdew
+END
+
+::SOLVATION
+::   Solvent        epsilon=78.8 radius=1.4
+::   SurfaceType    esurf
+::  DivisionLevel  ND=4  min=0.5  Ofac=0.8
+::   ChargeUpdate   Method=conjugate-gradient corr
+::   SCF            Variational
+::   C-Matrix       POTENTIAL
+::   RADII
+::     Cu=1.72
+::     Cl=1.70
+::   SUBEND
+::END
+
+
+::geometry
+:: optimize
+:: converge E=0.0001 Grad=0.001
+:: step rad=0.04 angle=8.0
+:: iterations 60
+:: frequencies
+::end
+
+end input
+
+ *******************************************************************************
+ *                                                                             *
+ *  -------------------------------------                                      *
+ *   Amsterdam Density Functional  (ADF)         2013.01   April 2, 2013       *
+ *  -------------------------------------                                      *
+ *                                               Build 201309012319            *
+ *                                                                             *
+ *                                                                             *
+ *                              =================                              *
+ *                              |               |                              *
+ *                              |     A D F     |                              *
+ *                              |               |                              *
+ *                              =================                              *
+ *                                                                             *
+ *                                                                             *
+ *   Online information and documentation:  http://www.scm.com                 *
+ *   E-mail:  support@scm.com   info@scm.com                                   *
+ *                                                                             *
+ *   Scientific publications using ADF results must be properly referenced     *
+ *   See the User Manuals (or the web site) for recommended citations          *
+ *   The terms and conditions of the End User License Agreement apply to       *
+ *   the use of ADF, http://www.scm.com/Sales/LicAgreement.html                *
+ *                                                                             *
+ ********************  x86_64_linux_intel / platform_mpi  **********************
+ 
+ ADF 2013.01  RunTime: Feb19-2014 14:23:11  Nodes: 1  Procs: 1
+
+ MAXMEMORYUSAGE option has been removed in this version
+ MoOCl4, sp bp86 with double zeta basis sets
+
+
+
+ ===========================
+ A T T A C H E D   F I L E S
+ ===========================
+  
+
+
+
+ ===============================
+ M O D E L   P A R A M E T E R S
+ ===============================
+  
+ DENSITY FUNCTIONAL POTENTIAL (scf)
+    LDA:                               VWN                                      
+    Gradient Corrections:              Becke88 Perdew86                        == Not Default ==
+
+ SPIN  (restricted / unrestr.)
+    Molecule:                          UNrestricted                            == Not Default ==
+    Fragments:                         Restricted                               
+
+ OTHER ASPECTS
+    Relativistic Corrections:          ---                                      
+
+    Nuclear Charge Density Model:      Point Charge Nuclei                                                                                                                                                                                     
+    Core Treatment:                    Frozen Orbital(s)                        
+
+    Hyperfine or Zeeman Interaction:   ---                                      
+
+
+ Fragment File(s)
+ ----------------
+ Mo:
+         file : Mo.t21
+         jobid: ADF 2013.01  RunTime: Feb19-2014 14:23:09  Nodes: 1  Procs: 1
+         title: Molybdenum (DZ, 3d frozen)
+ O:
+         file : O.t21
+         jobid: ADF 2013.01  RunTime: Feb19-2014 14:23:10  Nodes: 1  Procs: 1
+         title: Oxygen (DZ)
+ Cl:
+         file : Cl.t21
+         jobid: ADF 2013.01  RunTime: Feb19-2014 14:23:10  Nodes: 1  Procs: 1
+         title: Chlorine (DZ)
+
+
+
+                                        ************************************
+                                        *  R U N   T Y P E : SINGLE POINT  *
+                                        ************************************
+  
+
+
+
+ ===============
+ G E O M E T R Y  ***  3D  Molecule  ***
+ ===============
+  
+
+ ATOMS
+ =====                            X Y Z                    CHARGE
+                                (Angstrom)             Nucl     +Core       At.Mass
+                       --------------------------    ----------------       -------
+    1  Mo              0.0000    0.0000    0.0000     42.00     14.00       97.9054
+    2  O               0.0000    0.0000    1.6962      8.00      8.00       15.9949
+    3  Cl             -1.5963   -1.5916   -0.5921     17.00     17.00       34.9689
+    4  Cl             -1.5965    1.5916   -0.5913     17.00     17.00       34.9689
+    5  Cl              1.5965   -1.5916   -0.5913     17.00     17.00       34.9689
+    6  Cl              1.5963    1.5916   -0.5921     17.00     17.00       34.9689
+
+
+ FRAGMENTS
+ =========                                     Atoms in this Fragment     Cart. coord.s (Angstrom)
+                                               -------------------------------------------------------
+    1  Mo                                                1  Mo           0.0000    0.0000    0.0000
+    2  O                                                 2  O            0.0000    0.0000    1.6962
+    3  Cl                                                3  Cl          -1.5963   -1.5916   -0.5921
+    4  Cl                                                4  Cl          -1.5965    1.5916   -0.5913
+    5  Cl                                                5  Cl           1.5965   -1.5916   -0.5913
+    6  Cl                                                6  Cl           1.5963    1.5916   -0.5921
+
+
+ Interatomic Distance Matrix (Angstrom)
+ --------------------------------------
+
+   1)     0.000
+   2)     1.696   0.000
+   3)     2.331   3.212   0.000
+   4)     2.331   3.212   3.183   0.000
+   5)     2.331   3.212   3.193   4.509   0.000
+   6)     2.331   3.212   4.508   3.193   3.183   0.000
+
+ Min. Distance =    1.6962
+ Max. Distance =    4.5088
+
+
+
+ =====================================
+ S Y M M E T R Y ,   E L E C T R O N S
+ =====================================
+  
+ Symmetry: C(2)
+
+ Irreducible Representations, including subspecies
+ -------------------------------------------------
+ A
+ B
+
+
+ Configuration of Valence Electrons
+ ==================================
+ ( determined in the SCF procedure )
+
+ Total:   45 (Spin-A)  + 45 (Spin-B)
+
+ Net Charge: 0 (Nuclei minus Electrons)
+ Spin polar: 0 (Spin_A minus Spin_B electrons)
+
+ Aufbau principle for MO occupations will be applied through SCF cycle no.      30
+ Thereafter, the program will assign electrons to MOs that are spatially
+ similar to the occupied MOs in a "reference" cycle ("KeepOrbitals").
+ The reference cycle is always the PREVIOUS cycle: it will evolve with
+ the SCF procedure.
+1
+ ***************************************************************************************************
+
+
+
+                                      ****************************************
+                                      *  B U I L D : (Fragments, Functions)  *
+                                      ****************************************
+  
+
+
+
+ =======
+ S F O s  ***  (Symmetrized Fragment Orbitals)  ***
+ =======
+  
+ SFOs are linear combinations of (valence) Fragment Orbitals (FOs), such that the SFOs transform as the
+ irreducible representations of the (molecular) symmetry group. Each SFO is therefore characterized by
+ an irrep of the molecule and by a few (or only one) generating FOs.
+ The SFOs constitute a symmetry-adapted basis for the Fock matrix. The MO eigenvector coefficients in
+ this basis provide a direct interpretation of the MOs in terms of Frontier Orbital Theory.
+
+ The SFOs are combined with auxiliary Core Functions (CFs) to ensure orthogonalization on the (frozen)
+ Core Orbitals (COs). The Core-orthogonalized SFOs (CSFOs) constitute the true Fock basis.
+
+ The FOs, and hence also the (C)SFOs are combinations of the elementary basis functions (BAS). The basis
+ functions that participate in the description of the SFOs depend on the irrep. The indices of the
+ involved functions are printed below for each irrep.
+ (The complete list of primitive basis functions is printed in another section)
+
+ Total nr. of (C)SFOs (summation over all irreps) :   105
+
+ NOTE: a (C)SFO that is defined as a combination of more than one FO is usually NOT normalized.
+
+
+
+                                       === A ===
+ Nr. of SFOs :   55
+ Cartesian basis functions that participate in this irrep (total number =   102) :
+      1     2     3     6     9    15    10    11    13    16
+     17    36    37    20    23    40    29    35    24    25
+     27    30    31    33    41    42    43    44    47    50
+     51   105    52   106    53   107    54   108    55   109
+     56   110    59   113    62   116    65   119    68   122
+     57    58   111   112    60    61   114   115    63    64
+    117   118    66    67   120   121    69    87    70    88
+     71    89    72    90    73    91    74    92    77    95
+     80    98    83   101    86   104    75    76    93    94
+     78    79    96    97    81    82    99   100    84    85
+    102   103
+
+    SFO  (index         Fragment          Generating    Expansion in Fragment Orbitals
+  indx  incl.CFs)   Occup   Orb.Energy   FragmentType  Coeff.   Orbital     on Fragment
+ --------------------------------------------------------------------------------------
+     1      10      2.000      -2.261 au  Mo            1.00      1 S               1
+                        (     -61.519 eV)
+     2      11      1.000      -0.152 au  Mo            1.00      2 S               1
+                        (      -4.126 eV)
+     3      12       --         0.083 au  Mo            1.00      3 S               1
+                        (       2.249 eV)
+     4      13       --         1.956 au  Mo            1.00      4 S               1
+                        (      53.224 eV)
+     5      14      2.000      -1.411 au  Mo            1.00      1 P:z             1
+                        (     -38.401 eV)
+     6      15       --        -0.030 au  Mo            1.00      2 P:z             1
+                        (      -0.821 eV)
+     7      16       --         1.165 au  Mo            1.00      3 P:z             1
+                        (      31.698 eV)
+     8      17      1.000      -0.158 au  Mo            1.00      1 D:z2            1
+                        (      -4.304 eV)
+     9      18       --         0.330 au  Mo            1.00      2 D:z2            1
+                        (       8.991 eV)
+    10      19      1.000      -0.158 au  Mo            1.00      1 D:x2-y2         1
+                        (      -4.304 eV)
+    11      20       --         0.330 au  Mo            1.00      2 D:x2-y2         1
+                        (       8.991 eV)
+    12      21      1.000      -0.158 au  Mo            1.00      1 D:xy            1
+                        (      -4.304 eV)
+    13      22       --         0.330 au  Mo            1.00      2 D:xy            1
+                        (       8.991 eV)
+    14      23      2.000     -18.950 au  O             1.00      1 S               2
+                        (    -515.656 eV)
+    15      24      2.000      -0.894 au  O             1.00      2 S               2
+                        (     -24.327 eV)
+    16      25       --         0.854 au  O             1.00      3 S               2
+                        (      23.229 eV)
+    17      26       --        37.403 au  O             1.00      4 S               2
+                        (    1017.789 eV)
+    18      27      1.333      -0.341 au  O             1.00      1 P:z             2
+                        (      -9.292 eV)
+    19      28       --         0.818 au  O             1.00      2 P:z             2
+                        (      22.261 eV)
+    20      29      2.000    -100.768 au  Cl            0.71      1 S               3
+                        (   -2742.024 eV)               0.71      1 S               6
+    21      30      2.000      -9.238 au  Cl            0.71      2 S               3
+                        (    -251.383 eV)               0.71      2 S               6
+    22      31      2.000      -0.761 au  Cl            0.71      3 S               3
+                        (     -20.709 eV)               0.71      3 S               6
+    23      32       --         0.458 au  Cl            0.71      4 S               3
+                        (      12.474 eV)               0.71      4 S               6
+    24      33       --         7.660 au  Cl            0.71      5 S               3
+                        (     208.434 eV)               0.71      5 S               6
+    25      34       --       193.692 au  Cl            0.71      6 S               3
+                        (    5270.625 eV)               0.71      6 S               6
+    26      35      2.000      -7.053 au  Cl            0.71      1 P:x             3
+                        (    -191.919 eV)              -0.71      1 P:x             6
+    27      36      1.667      -0.323 au  Cl            0.71      2 P:x             3
+                        (      -8.777 eV)              -0.71      2 P:x             6
+    28      37       --         0.403 au  Cl            0.71      3 P:x             3
+                        (      10.973 eV)              -0.71      3 P:x             6
+    29      38       --        12.782 au  Cl            0.71      4 P:x             3
+                        (     347.827 eV)              -0.71      4 P:x             6
+    30      39      2.000      -7.053 au  Cl            0.71      1 P:y             3
+                        (    -191.919 eV)              -0.71      1 P:y             6
+    31      40      1.667      -0.323 au  Cl            0.71      2 P:y             3
+                        (      -8.777 eV)              -0.71      2 P:y             6
+    32      41       --         0.403 au  Cl            0.71      3 P:y             3
+                        (      10.973 eV)              -0.71      3 P:y             6
+    33      42       --        12.782 au  Cl            0.71      4 P:y             3
+                        (     347.827 eV)              -0.71      4 P:y             6
+    34      43      2.000      -7.053 au  Cl            0.71      1 P:z             3
+                        (    -191.919 eV)               0.71      1 P:z             6
+    35      44      1.667      -0.323 au  Cl            0.71      2 P:z             3
+                        (      -8.777 eV)               0.71      2 P:z             6
+    36      45       --         0.403 au  Cl            0.71      3 P:z             3
+                        (      10.973 eV)               0.71      3 P:z             6
+    37      46       --        12.782 au  Cl            0.71      4 P:z             3
+                        (     347.827 eV)               0.71      4 P:z             6
+    38      47      2.000    -100.768 au  Cl            0.71      1 S               4
+                        (   -2742.024 eV)               0.71      1 S               5
+    39      48      2.000      -9.238 au  Cl            0.71      2 S               4
+                        (    -251.383 eV)               0.71      2 S               5
+    40      49      2.000      -0.761 au  Cl            0.71      3 S               4
+                        (     -20.709 eV)               0.71      3 S               5
+    41      50       --         0.458 au  Cl            0.71      4 S               4
+                        (      12.474 eV)               0.71      4 S               5
+    42      51       --         7.660 au  Cl            0.71      5 S               4
+                        (     208.434 eV)               0.71      5 S               5
+    43      52       --       193.692 au  Cl            0.71      6 S               4
+                        (    5270.625 eV)               0.71      6 S               5
+    44      53      2.000      -7.053 au  Cl            0.71      1 P:x             4
+                        (    -191.919 eV)              -0.71      1 P:x             5
+    45      54      1.667      -0.323 au  Cl            0.71      2 P:x             4
+                        (      -8.777 eV)              -0.71      2 P:x             5
+    46      55       --         0.403 au  Cl            0.71      3 P:x             4
+                        (      10.973 eV)              -0.71      3 P:x             5
+    47      56       --        12.782 au  Cl            0.71      4 P:x             4
+                        (     347.827 eV)              -0.71      4 P:x             5
+    48      57      2.000      -7.053 au  Cl            0.71      1 P:y             4
+                        (    -191.919 eV)              -0.71      1 P:y             5
+    49      58      1.667      -0.323 au  Cl            0.71      2 P:y             4
+                        (      -8.777 eV)              -0.71      2 P:y             5
+    50      59       --         0.403 au  Cl            0.71      3 P:y             4
+                        (      10.973 eV)              -0.71      3 P:y             5
+    51      60       --        12.782 au  Cl            0.71      4 P:y             4
+                        (     347.827 eV)              -0.71      4 P:y             5
+    52      61      2.000      -7.053 au  Cl            0.71      1 P:z             4
+                        (    -191.919 eV)               0.71      1 P:z             5
+    53      62      1.667      -0.323 au  Cl            0.71      2 P:z             4
+                        (      -8.777 eV)               0.71      2 P:z             5
+    54      63       --         0.403 au  Cl            0.71      3 P:z             4
+                        (      10.973 eV)               0.71      3 P:z             5
+    55      64       --        12.782 au  Cl            0.71      4 P:z             4
+                        (     347.827 eV)               0.71      4 P:z             5
+
+
+
+                                       === B ===
+ Nr. of SFOs :   50
+ Cartesian basis functions that participate in this irrep (total number =    92) :
+      4     5     7     8    12    14    18    19    21    22
+     38    39    26    28    32    34    45    46    48    49
+     51   105    52   106    53   107    54   108    55   109
+     56   110    59   113    62   116    65   119    68   122
+     57    58   111   112    60    61   114   115    63    64
+    117   118    66    67   120   121    69    87    70    88
+     71    89    72    90    73    91    74    92    77    95
+     80    98    83   101    86   104    75    76    93    94
+     78    79    96    97    81    82    99   100    84    85
+    102   103
+
+    SFO  (index         Fragment          Generating    Expansion in Fragment Orbitals
+  indx  incl.CFs)   Occup   Orb.Energy   FragmentType  Coeff.   Orbital     on Fragment
+ --------------------------------------------------------------------------------------
+     1       7      2.000      -1.411 au  Mo            1.00      1 P:x             1
+                        (     -38.401 eV)
+     2       8       --        -0.030 au  Mo            1.00      2 P:x             1
+                        (      -0.821 eV)
+     3       9       --         1.165 au  Mo            1.00      3 P:x             1
+                        (      31.698 eV)
+     4      10      2.000      -1.411 au  Mo            1.00      1 P:y             1
+                        (     -38.401 eV)
+     5      11       --        -0.030 au  Mo            1.00      2 P:y             1
+                        (      -0.821 eV)
+     6      12       --         1.165 au  Mo            1.00      3 P:y             1
+                        (      31.698 eV)
+     7      13      1.000      -0.158 au  Mo            1.00      1 D:xz            1
+                        (      -4.304 eV)
+     8      14       --         0.330 au  Mo            1.00      2 D:xz            1
+                        (       8.991 eV)
+     9      15      1.000      -0.158 au  Mo            1.00      1 D:yz            1
+                        (      -4.304 eV)
+    10      16       --         0.330 au  Mo            1.00      2 D:yz            1
+                        (       8.991 eV)
+    11      17      1.333      -0.341 au  O             1.00      1 P:x             2
+                        (      -9.292 eV)
+    12      18       --         0.818 au  O             1.00      2 P:x             2
+                        (      22.261 eV)
+    13      19      1.333      -0.341 au  O             1.00      1 P:y             2
+                        (      -9.292 eV)
+    14      20       --         0.818 au  O             1.00      2 P:y             2
+                        (      22.261 eV)
+    15      21      2.000    -100.768 au  Cl            0.71      1 S               3
+                        (   -2742.024 eV)              -0.71      1 S               6
+    16      22      2.000      -9.238 au  Cl            0.71      2 S               3
+                        (    -251.383 eV)              -0.71      2 S               6
+    17      23      2.000      -0.761 au  Cl            0.71      3 S               3
+                        (     -20.709 eV)              -0.71      3 S               6
+    18      24       --         0.458 au  Cl            0.71      4 S               3
+                        (      12.474 eV)              -0.71      4 S               6
+    19      25       --         7.660 au  Cl            0.71      5 S               3
+                        (     208.434 eV)              -0.71      5 S               6
+    20      26       --       193.692 au  Cl            0.71      6 S               3
+                        (    5270.625 eV)              -0.71      6 S               6
+    21      27      2.000      -7.053 au  Cl            0.71      1 P:x             3
+                        (    -191.919 eV)               0.71      1 P:x             6
+    22      28      1.667      -0.323 au  Cl            0.71      2 P:x             3
+                        (      -8.777 eV)               0.71      2 P:x             6
+    23      29       --         0.403 au  Cl            0.71      3 P:x             3
+                        (      10.973 eV)               0.71      3 P:x             6
+    24      30       --        12.782 au  Cl            0.71      4 P:x             3
+                        (     347.827 eV)               0.71      4 P:x             6
+    25      31      2.000      -7.053 au  Cl            0.71      1 P:y             3
+                        (    -191.919 eV)               0.71      1 P:y             6
+    26      32      1.667      -0.323 au  Cl            0.71      2 P:y             3
+                        (      -8.777 eV)               0.71      2 P:y             6
+    27      33       --         0.403 au  Cl            0.71      3 P:y             3
+                        (      10.973 eV)               0.71      3 P:y             6
+    28      34       --        12.782 au  Cl            0.71      4 P:y             3
+                        (     347.827 eV)               0.71      4 P:y             6
+    29      35      2.000      -7.053 au  Cl            0.71      1 P:z             3
+                        (    -191.919 eV)              -0.71      1 P:z             6
+    30      36      1.667      -0.323 au  Cl            0.71      2 P:z             3
+                        (      -8.777 eV)              -0.71      2 P:z             6
+    31      37       --         0.403 au  Cl            0.71      3 P:z             3
+                        (      10.973 eV)              -0.71      3 P:z             6
+    32      38       --        12.782 au  Cl            0.71      4 P:z             3
+                        (     347.827 eV)              -0.71      4 P:z             6
+    33      39      2.000    -100.768 au  Cl            0.71      1 S               4
+                        (   -2742.024 eV)              -0.71      1 S               5
+    34      40      2.000      -9.238 au  Cl            0.71      2 S               4
+                        (    -251.383 eV)              -0.71      2 S               5
+    35      41      2.000      -0.761 au  Cl            0.71      3 S               4
+                        (     -20.709 eV)              -0.71      3 S               5
+    36      42       --         0.458 au  Cl            0.71      4 S               4
+                        (      12.474 eV)              -0.71      4 S               5
+    37      43       --         7.660 au  Cl            0.71      5 S               4
+                        (     208.434 eV)              -0.71      5 S               5
+    38      44       --       193.692 au  Cl            0.71      6 S               4
+                        (    5270.625 eV)              -0.71      6 S               5
+    39      45      2.000      -7.053 au  Cl            0.71      1 P:x             4
+                        (    -191.919 eV)               0.71      1 P:x             5
+    40      46      1.667      -0.323 au  Cl            0.71      2 P:x             4
+                        (      -8.777 eV)               0.71      2 P:x             5
+    41      47       --         0.403 au  Cl            0.71      3 P:x             4
+                        (      10.973 eV)               0.71      3 P:x             5
+    42      48       --        12.782 au  Cl            0.71      4 P:x             4
+                        (     347.827 eV)               0.71      4 P:x             5
+    43      49      2.000      -7.053 au  Cl            0.71      1 P:y             4
+                        (    -191.919 eV)               0.71      1 P:y             5
+    44      50      1.667      -0.323 au  Cl            0.71      2 P:y             4
+                        (      -8.777 eV)               0.71      2 P:y             5
+    45      51       --         0.403 au  Cl            0.71      3 P:y             4
+                        (      10.973 eV)               0.71      3 P:y             5
+    46      52       --        12.782 au  Cl            0.71      4 P:y             4
+                        (     347.827 eV)               0.71      4 P:y             5
+    47      53      2.000      -7.053 au  Cl            0.71      1 P:z             4
+                        (    -191.919 eV)              -0.71      1 P:z             5
+    48      54      1.667      -0.323 au  Cl            0.71      2 P:z             4
+                        (      -8.777 eV)              -0.71      2 P:z             5
+    49      55       --         0.403 au  Cl            0.71      3 P:z             4
+                        (      10.973 eV)              -0.71      3 P:z             5
+    50      56       --        12.782 au  Cl            0.71      4 P:z             4
+                        (     347.827 eV)              -0.71      4 P:z             5
+
+
+
+ ================================
+ (Slater-type)  F U N C T I O N S  ***  (Basis, Frozen Core, Fit)  ***
+ ================================
+  
+
+ Atom Type    1  (Mo)
+ ==============
+
+ Valence Basis Sets:  15
+ -----------------------
+   1 S   28.300000
+   2 S   16.400000
+   3 S    8.800000
+   2 P   18.950000
+   3 P    8.700000
+   3 D   10.750000
+   4 S    3.250000
+   4 S    4.850000
+   4 P    2.650000
+   4 P    4.350000
+   4 D    1.300000
+   4 D    3.050000
+   5 S    1.000000
+   5 S    1.800000
+   5 P    1.360000
+
+ Frozen Core Expansion Sets:  22
+ -------------------------------
+   1 S   39.600000
+   1 S   48.950000
+   2 S   17.100000
+   3 S    5.350000
+   3 S    8.700000
+   4 S    3.200000
+   4 S    4.950000
+   5 S    0.850000
+   5 S    1.350000
+   5 S    2.200000
+   2 P   16.300000
+   2 P   23.600000
+   3 P    7.000000
+   3 P   10.050000
+   4 P    2.350000
+   4 P    3.400000
+   4 P    5.000000
+   3 D    6.500000
+   3 D   11.850000
+   4 D    1.050000
+   4 D    2.050000
+   4 D    3.900000
+
+ Frozen Core Shells
+ ------------------
+    S:  3
+    P:  2
+    D:  1
+
+ Frozen Core Expansion Coefficients
+ ----------------------------------
+   1 S:    8.02082935E-01  2.00524909E-01  2.05712409E-04  7.30531332E-04 -4.07439218E-04
+           2.23379710E-04 -6.13095027E-04 -1.53131207E-05  4.41221519E-05 -8.96759839E-05
+   2 S:   -6.65221838E-01  2.37373643E-01  1.11745473E+00 -1.86513455E-02  9.48649471E-03
+          -7.35554323E-03  1.75143358E-02  5.98634756E-04 -1.67623560E-03  3.23733022E-03
+   3 S:    3.63572685E-01 -1.60934600E-01 -6.28025085E-01  1.56107509E-01  1.05799107E+00
+           3.68008219E-02 -9.10484147E-02 -3.41025218E-03  9.35690549E-03 -1.73593309E-02
+   2 P:    6.78865741E-01  3.39780620E-01 -1.16657007E-03  5.34947332E-04  5.09263630E-04
+          -1.35676108E-03  1.60470810E-03
+   3 P:   -3.95612279E-01 -1.07793188E-01  5.14563406E-01  6.46213108E-01  1.56879522E-04
+           4.10977953E-04 -1.36816795E-03
+   3 D:    5.89776435E-01  4.86206229E-01 -2.39972914E-03  6.48346138E-03 -6.98817841E-03
+
+ Nr. of Electrons in the Core : 28.0
+
+ Charge Fitting Sets (for the computation of the Coulomb Potential):  52
+ -----------------------------------------------------------------------
+   1 S   57.900000
+   2 S   56.840000
+   3 S   51.070000
+   4 S   44.570000
+   5 S   38.470000
+   5 S   27.530000
+   6 S   23.670000
+   6 S   17.400000
+   7 S   14.950000
+   7 S   11.230000
+   7 S    8.430000
+   8 S    7.250000
+   8 S    5.540000
+   8 S    4.230000
+   9 S    3.650000
+   9 S    2.830000
+   9 S    2.190000
+   9 S    1.700000
+   2 P   47.950000
+   3 P   35.820000
+   4 P   26.680000
+   5 P   20.000000
+   6 P   15.120000
+   7 P   11.530000
+   7 P    7.710000
+   8 P    5.940000
+   8 P    4.070000
+   9 P    3.160000
+   9 P    2.210000
+   3 D   39.700000
+   4 D   30.020000
+   5 D   22.810000
+   6 D   17.460000
+   7 D   13.470000
+   7 D    9.110000
+   8 D    7.090000
+   8 D    4.910000
+   9 D    3.850000
+   9 D    2.720000
+   4 F   29.750000
+   5 F   19.710000
+   6 F   13.310000
+   7 F    9.150000
+   7 F    5.530000
+   8 F    3.860000
+   8 F    2.410000
+   5 G   21.500000
+   5 G   12.130000
+   6 G    8.320000
+   6 G    4.920000
+   7 G    3.430000
+   7 G    2.100000
+
+ Atom Type    2  (O)
+ ==============
+
+ Valence Basis Sets:   6
+ -----------------------
+   1 S    9.800000
+   1 S    6.800000
+   2 S    1.700000
+   2 S    2.820000
+   2 P    3.060000
+   2 P    1.300000
+
+ Frozen Core Expansion Sets:   0
+ -------------------------------
+
+ Charge Fitting Sets (for the computation of the Coulomb Potential):  22
+ -----------------------------------------------------------------------
+   1 S   19.600000
+   2 S   22.600000
+   2 S   15.680000
+   2 S   10.890000
+   2 S    7.560000
+   3 S    7.690000
+   3 S    5.650000
+   3 S    4.150000
+   3 S    3.050000
+   3 S    2.240000
+   2 P   12.860000
+   2 P    7.680000
+   3 P    6.780000
+   3 P    4.390000
+   3 P    2.840000
+   3 D    8.800000
+   3 D    5.580000
+   3 D    3.530000
+   3 D    2.240000
+   4 F    6.200000
+   4 F    3.700000
+   5 G    4.500000
+
+ Atom Type    3  (Cl)
+ ==============
+
+ Valence Basis Sets:  10
+ -----------------------
+   1 S   20.300000
+   1 S   15.250000
+   2 S    6.250000
+   2 S    4.450000
+   3 S    2.850000
+   3 S    1.750000
+   2 P    8.850000
+   2 P    5.050000
+   3 P    2.500000
+   3 P    1.300000
+
+ Frozen Core Expansion Sets:   0
+ -------------------------------
+
+ Charge Fitting Sets (for the computation of the Coulomb Potential):  30
+ -----------------------------------------------------------------------
+   1 S   40.600000
+   1 S   24.830000
+   2 S   28.080000
+   2 S   19.200000
+   3 S   19.250000
+   3 S   13.970000
+   3 S   10.130000
+   4 S    9.710000
+   4 S    7.320000
+   4 S    5.510000
+   5 S    5.170000
+   5 S    4.000000
+   5 S    3.100000
+   5 S    2.400000
+   2 P   29.150000
+   3 P   21.740000
+   4 P   16.160000
+   4 P    9.600000
+   5 P    7.180000
+   5 P    4.480000
+   5 P    2.800000
+   3 D   21.950000
+   4 D   15.750000
+   4 D    9.040000
+   5 D    6.550000
+   5 D    3.960000
+   5 D    2.400000
+   4 F    5.000000
+   4 F    3.000000
+   5 G    3.500000
+
+
+ BAS: List of all Elementary Cartesian Basis Functions
+ =====================================================
+
+ The numbering in the list below (to the right of the function characteristics) is referred
+ to in print-outs of MO eigenvectors and Mulliken populations in the BAS representation
+ (as contrasted to the SFO representation).
+
+ Notes:
+ 1. The functions are characterized by a polynomial prefactor (powers of x,y,z and r) and
+    an exponential decay factor alpha.
+ 2. Since the basis sets are specific for an atom TYPE, the individual functions occur on
+    all atoms of that type.
+ 3. The word 'Core' in the left margin signals that it is a Core Function (CF) : not a
+    degree of freedom in the valence set, but only used to ensure orthogonalization of
+    the other valence basis functions on the frozen Core Orbitals.
+
+
+ (power of) X  Y  Z  R     Alpha  on Atom
+            ==========     =====     ==========
+
+ Mo                                   1
+                                  ---------------------------------------------------------------------------
+    Core    0  0  0  0    28.300      1
+    Core    0  0  0  1    16.400      2
+    Core    0  0  0  2     8.800      3
+    Core    1  0  0  0    18.950      4
+    Core    0  1  0  0    18.950      5
+    Core    0  0  1  0    18.950      6
+    Core    1  0  0  1     8.700      7
+    Core    0  1  0  1     8.700      8
+    Core    0  0  1  1     8.700      9
+    Core    2  0  0  0    10.750     10
+    Core    1  1  0  0    10.750     11
+    Core    1  0  1  0    10.750     12
+    Core    0  2  0  0    10.750     13
+    Core    0  1  1  0    10.750     14
+    Core    0  0  2  0    10.750     15
+            0  0  0  3     3.250     16
+            0  0  0  3     4.850     17
+            1  0  0  2     2.650     18
+            0  1  0  2     2.650     19
+            0  0  1  2     2.650     20
+            1  0  0  2     4.350     21
+            0  1  0  2     4.350     22
+            0  0  1  2     4.350     23
+            2  0  0  1     1.300     24
+            1  1  0  1     1.300     25
+            1  0  1  1     1.300     26
+            0  2  0  1     1.300     27
+            0  1  1  1     1.300     28
+            0  0  2  1     1.300     29
+            2  0  0  1     3.050     30
+            1  1  0  1     3.050     31
+            1  0  1  1     3.050     32
+            0  2  0  1     3.050     33
+            0  1  1  1     3.050     34
+            0  0  2  1     3.050     35
+            0  0  0  4     1.000     36
+            0  0  0  4     1.800     37
+            1  0  0  3     1.360     38
+            0  1  0  3     1.360     39
+            0  0  1  3     1.360     40
+
+ O                                    2
+                                  ---------------------------------------------------------------------------
+            0  0  0  0     9.800     41
+            0  0  0  0     6.800     42
+            0  0  0  1     1.700     43
+            0  0  0  1     2.820     44
+            1  0  0  0     3.060     45
+            0  1  0  0     3.060     46
+            0  0  1  0     3.060     47
+            1  0  0  0     1.300     48
+            0  1  0  0     1.300     49
+            0  0  1  0     1.300     50
+
+ Cl                                   3    4    5    6
+                                  ---------------------------------------------------------------------------
+            0  0  0  0    20.300     51   69   87  105
+            0  0  0  0    15.250     52   70   88  106
+            0  0  0  1     6.250     53   71   89  107
+            0  0  0  1     4.450     54   72   90  108
+            0  0  0  2     2.850     55   73   91  109
+            0  0  0  2     1.750     56   74   92  110
+            1  0  0  0     8.850     57   75   93  111
+            0  1  0  0     8.850     58   76   94  112
+            0  0  1  0     8.850     59   77   95  113
+            1  0  0  0     5.050     60   78   96  114
+            0  1  0  0     5.050     61   79   97  115
+            0  0  1  0     5.050     62   80   98  116
+            1  0  0  1     2.500     63   81   99  117
+            0  1  0  1     2.500     64   82  100  118
+            0  0  1  1     2.500     65   83  101  119
+            1  0  0  1     1.300     66   84  102  120
+            0  1  0  1     1.300     67   85  103  121
+            0  0  1  1     1.300     68   86  104  122
+
+ Total number of charge fitting functions (nprimf)       779
+ Total number of Cartesian basis functions (naos)        122
+ Total number of Cartesian core functions  (ncos)         15
+
+1
+ ***************************************************************************************************
+
+
+
+                                              ***********************
+                                              *  T E C H N I C A L  *
+                                              ***********************
+  
+
+
+
+ =============================================================
+ P A R A L L E L I Z A T I O N  and  V E C T O R I Z A T I O N
+ =============================================================
+  
+ Nr of parallel processes:                                1
+ Maximum vector length in NumInt loops:                 128
+
+
+
+ ===============
+ I O  vs.  C P U  ***  (store numerical data on disk or recalculate)  ***
+ ===============
+  
+ Basis functions:   recalculate when needed
+ Fit functions:     recalculate when needed
+
+ IO buffersize (Mb):                                     64.000000
+
+
+
+ =====================
+ S C F   U P D A T E S
+ =====================
+  
+ Max. nr. of cycles:                               300
+ Convergence criterion:                              0.0000010000
+   secondary criterion:                              0.0010000000
+
+ Mix parameter (when DIIS does not apply):           0.2000000000
+
+
+ DIIS (Direct Inversion in Iteration Space)
+    Replace damping when SCF Error is below:         0.5000000000
+    Apply anyway after SCF cycle:
+                                                     5
+    (Max.) nr. of expansion vectors:                10
+
+    Upperbound on expansion coefficients:            5.0000000000
+    (when exceeded, IterationSpace is re-built)
+    2nd Upperbound on coefficients:                 25.0000000000
+    (when exceeded, simple damping will be used)
+ Automatic ElectronSmearing (in case of problematic SCF convergence) disabled
+
+
+
+ =================
+ P R E C I S I O N  ***  (General: NumInt, NeglectFunctionTails, ...)  ***
+ =================
+  
+
+ NumInt:           Target precision:                 5.0000000000
+ -------           Initial precision:                5.0000000000
+                   Min. precision (optimization):    5.0000000000
+
+ Neglect Functions:          Basis functions:        0.1000000000E-06
+ ------------------          Fit functions:          0.1000000000E-06
+
+
+
+ ===========================
+ L I N E A R   S C A L I N G
+ ===========================
+  
+
+ Cut-off radii density fit:                        0.1000000000E-08
+ Overlap cut-off criterion AO matrix elements:     0.1000000000E-06
+ Cut-offs for Coulomb potential and fitted density:0.1000000000E-08
+ Cut-off criterion for Coulomb multipole terms:    0.1000000000E-08
+ Progressive Convergence parameter:                 0.000000000    
+1
+ ***************************************************************************************************
+
+
+
+                                            ***************************
+                                            *  C O M P U T A T I O N  *
+                                            ***************************
+  
+
+ Number of elements of the density matrix on this node (used, total):      4713      7503
+
+
+
+ ====================================================
+ Numerical Integration : Voronoi Polyhedra (Te Velde)
+ ====================================================
+  
+ General Accuracy Parameter :                          5.00
+
+ Symmetry used in the points section:  C(2)  
+
+
+ Summary of the Symmetry Unique Points:
+ --------------------------------------
+    Nr. of used Symmetry Operators                     2
+
+    Points in the Atomic Spheres                    3954
+    Points in the Atomic Polyhedra                 21752
+    Points in the Outer Region                      6727
+    ----------------------------------------------------
+    Total                                          32433
+
+    Sum of Weights                                116956.318522
+
+ Total nr. of points:      32433
+ Nr. of blocks:              254
+ Block length:               128
+ Nr. of dummy points:         79
+
+
+ Test of Precision of the Numerical Integration Grid
+ ===================================================
+
+ Integral of the Total Core Density:                  27.99999987096056
+ Relative Error:                                      -4.609E-09
+
+
+
+ =====
+ S C F
+ =====
+  
+
+ CYCLE    1
+ ***** SPIN 1 *****
+ orbitals (Q,E):
+ ---------------
+ A :14...33          ( 1.00    -0.9782)  ( 1.00    -0.8063)  ( 1.00    -0.7902)  ( 1.00    -0.4647)
+                     ( 1.00    -0.4046)  ( 1.00    -0.3982)  ( 1.00    -0.3954)  ( 1.00    -0.3620)
+                     ( 1.00    -0.3343)  ( 1.00    -0.3145)  ( 0.00    -0.1658)  ( 0.00    -0.0751)
+                     ( 0.00    -0.0668)  ( 0.00    -0.0237)  ( 0.00     0.0975)  ( 0.00     0.1607)
+                     ( 0.00     0.3118)  ( 0.00     0.3165)  ( 0.00     0.3503)  ( 0.00     0.4462)
+ B :13...32          ( 1.00    -0.7899)  ( 1.00    -0.7897)  ( 1.00    -0.4572)  ( 1.00    -0.4572)
+                     ( 1.00    -0.3784)  ( 1.00    -0.3781)  ( 1.00    -0.3474)  ( 1.00    -0.3472)
+                     ( 1.00    -0.3342)  ( 1.00    -0.3336)  ( 0.00    -0.1235)  ( 0.00    -0.1235)
+                     ( 0.00     0.0956)  ( 0.00     0.0960)  ( 0.00     0.3427)  ( 0.00     0.3428)
+                     ( 0.00     0.4209)  ( 0.00     0.4211)  ( 0.00     0.4922)  ( 0.00     0.4930)
+ ***** SPIN 2 *****
+ orbitals (Q,E):
+ ---------------
+ A :14...33          ( 1.00    -0.9782)  ( 1.00    -0.8063)  ( 1.00    -0.7902)  ( 1.00    -0.4647)
+                     ( 1.00    -0.4046)  ( 1.00    -0.3982)  ( 1.00    -0.3954)  ( 1.00    -0.3620)
+                     ( 1.00    -0.3343)  ( 1.00    -0.3145)  ( 0.00    -0.1658)  ( 0.00    -0.0751)
+                     ( 0.00    -0.0668)  ( 0.00    -0.0237)  ( 0.00     0.0975)  ( 0.00     0.1607)
+                     ( 0.00     0.3118)  ( 0.00     0.3165)  ( 0.00     0.3503)  ( 0.00     0.4462)
+ B :13...32          ( 1.00    -0.7899)  ( 1.00    -0.7897)  ( 1.00    -0.4572)  ( 1.00    -0.4572)
+                     ( 1.00    -0.3784)  ( 1.00    -0.3781)  ( 1.00    -0.3474)  ( 1.00    -0.3472)
+                     ( 1.00    -0.3342)  ( 1.00    -0.3336)  ( 0.00    -0.1235)  ( 0.00    -0.1235)
+                     ( 0.00     0.0956)  ( 0.00     0.0960)  ( 0.00     0.3427)  ( 0.00     0.3428)
+                     ( 0.00     0.4209)  ( 0.00     0.4211)  ( 0.00     0.4922)  ( 0.00     0.4930)
+  
+ Spin polar: 0 (Spin_A minus Spin_B electrons)
+
+ CYCLE    2
+ d-Pmat  mean:  0.25E-01
+ imax=     34:  0.18E+00
+ d-Pmat  mean:  0.25E-01
+ imax=     34:  0.18E+00
+ ***** SPIN 1 *****
+ orbitals (Q,E):
+ ---------------
+ A :14...24          ( 1.00    -0.9397)  ( 1.00    -0.8188)  ( 1.00    -0.8007)  ( 1.00    -0.4622)
+                     ( 1.00    -0.4469)  ( 1.00    -0.4316)  ( 1.00    -0.4156)  ( 1.00    -0.3667)
+                     ( 1.00    -0.3368)  ( 1.00    -0.3150)  ( 0.00    -0.2825)
+ B :13...23          ( 1.00    -0.7989)  ( 1.00    -0.7986)  ( 1.00    -0.4561)  ( 1.00    -0.4559)
+                     ( 1.00    -0.3868)  ( 1.00    -0.3865)  ( 1.00    -0.3460)  ( 1.00    -0.3458)
+                     ( 1.00    -0.3366)  ( 1.00    -0.3361)  ( 0.00    -0.2192)
+ ***** SPIN 2 *****
+ orbitals (Q,E):
+ ---------------
+ A :14...24          ( 1.00    -0.9397)  ( 1.00    -0.8188)  ( 1.00    -0.8007)  ( 1.00    -0.4622)
+                     ( 1.00    -0.4469)  ( 1.00    -0.4316)  ( 1.00    -0.4156)  ( 1.00    -0.3667)
+                     ( 1.00    -0.3368)  ( 1.00    -0.3150)  ( 0.00    -0.2825)
+ B :13...23          ( 1.00    -0.7989)  ( 1.00    -0.7986)  ( 1.00    -0.4561)  ( 1.00    -0.4559)
+                     ( 1.00    -0.3868)  ( 1.00    -0.3865)  ( 1.00    -0.3460)  ( 1.00    -0.3458)
+                     ( 1.00    -0.3366)  ( 1.00    -0.3361)  ( 0.00    -0.2192)
+  
+ Spin polar: 0 (Spin_A minus Spin_B electrons)
+
+ CYCLE    3
+ d-Pmat  mean:  0.24E-01
+ imax=     33:  0.36E+00
+ d-Pmat  mean:  0.24E-01
+ imax=     33:  0.36E+00
+ ***** SPIN 1 *****
+ orbitals (Q,E):
+ ---------------
+ A :14...24          ( 1.00    -1.0213)  ( 1.00    -0.8075)  ( 1.00    -0.7888)  ( 1.00    -0.5154)
+                     ( 1.00    -0.4566)  ( 1.00    -0.4463)  ( 1.00    -0.4175)  ( 1.00    -0.3586)
+                     ( 1.00    -0.3177)  ( 1.00    -0.2959)  ( 0.00    -0.2958)
+ B :13...23          ( 1.00    -0.7846)  ( 1.00    -0.7843)  ( 1.00    -0.5110)  ( 1.00    -0.5110)
+                     ( 1.00    -0.3895)  ( 1.00    -0.3893)  ( 1.00    -0.3382)  ( 1.00    -0.3380)
+                     ( 1.00    -0.3233)  ( 1.00    -0.3227)  ( 0.00    -0.2574)
+ ***** SPIN 2 *****
+ orbitals (Q,E):
+ ---------------
+ A :14...24          ( 1.00    -1.0213)  ( 1.00    -0.8075)  ( 1.00    -0.7888)  ( 1.00    -0.5154)
+                     ( 1.00    -0.4566)  ( 1.00    -0.4463)  ( 1.00    -0.4175)  ( 1.00    -0.3586)
+                     ( 1.00    -0.3177)  ( 1.00    -0.2959)  ( 0.00    -0.2958)
+ B :13...23          ( 1.00    -0.7846)  ( 1.00    -0.7843)  ( 1.00    -0.5110)  ( 1.00    -0.5110)
+                     ( 1.00    -0.3895)  ( 1.00    -0.3893)  ( 1.00    -0.3382)  ( 1.00    -0.3380)
+                     ( 1.00    -0.3233)  ( 1.00    -0.3227)  ( 0.00    -0.2574)
+  
+ Spin polar: 0 (Spin_A minus Spin_B electrons)
+
+ CYCLE    4
+ d-Pmat  mean:  0.19E-01
+ imax=     33: -0.34E+00
+ d-Pmat  mean:  0.19E-01
+ imax=     33: -0.34E+00
+ ***** SPIN 1 *****
+ orbitals (Q,E):
+ ---------------
+ A :14...24          ( 1.00    -0.9671)  ( 1.00    -0.8118)  ( 1.00    -0.7930)  ( 1.00    -0.4729)
+                     ( 1.00    -0.4451)  ( 1.00    -0.4320)  ( 1.00    -0.4134)  ( 1.00    -0.3592)
+                     ( 1.00    -0.3245)  ( 1.00    -0.3037)  ( 0.00    -0.2823)
+ B :13...23          ( 1.00    -0.7909)  ( 1.00    -0.7893)  ( 1.00    -0.4713)  ( 1.00    -0.4710)
+                     ( 1.00    -0.3840)  ( 1.00    -0.3832)  ( 1.00    -0.3382)  ( 1.00    -0.3370)
+                     ( 1.00    -0.3287)  ( 1.00    -0.3276)  ( 0.00    -0.2294)
+ ***** SPIN 2 *****
+ orbitals (Q,E):
+ ---------------
+ A :14...24          ( 1.00    -0.9671)  ( 1.00    -0.8118)  ( 1.00    -0.7930)  ( 1.00    -0.4729)
+                     ( 1.00    -0.4451)  ( 1.00    -0.4320)  ( 1.00    -0.4134)  ( 1.00    -0.3592)
+                     ( 1.00    -0.3245)  ( 1.00    -0.3037)  ( 0.00    -0.2823)
+ B :13...23          ( 1.00    -0.7909)  ( 1.00    -0.7893)  ( 1.00    -0.4713)  ( 1.00    -0.4710)
+                     ( 1.00    -0.3840)  ( 1.00    -0.3832)  ( 1.00    -0.3382)  ( 1.00    -0.3370)
+                     ( 1.00    -0.3287)  ( 1.00    -0.3276)  ( 0.00    -0.2294)
+  
+ Spin polar: 0 (Spin_A minus Spin_B electrons)
+
+ CYCLE    5
+ d-Pmat  mean:  0.28E-02
+ imax=    100:  0.20E-01
+ d-Pmat  mean:  0.28E-02
+ imax=    100:  0.20E-01
+ ***** SPIN 1 *****
+ orbitals (Q,E):
+ ---------------
+ A :14...24          ( 1.00    -0.9532)  ( 1.00    -0.8144)  ( 1.00    -0.7951)  ( 1.00    -0.4647)
+                     ( 1.00    -0.4451)  ( 1.00    -0.4308)  ( 1.00    -0.4132)  ( 1.00    -0.3603)
+                     ( 1.00    -0.3274)  ( 1.00    -0.3068)  ( 0.00    -0.2809)
+ B :13...23          ( 1.00    -0.7957)  ( 1.00    -0.7899)  ( 1.00    -0.4630)  ( 1.00    -0.4622)
+                     ( 1.00    -0.3852)  ( 1.00    -0.3826)  ( 1.00    -0.3410)  ( 1.00    -0.3371)
+                     ( 1.00    -0.3314)  ( 1.00    -0.3285)  ( 0.00    -0.2236)
+ ***** SPIN 2 *****
+ orbitals (Q,E):
+ ---------------
+ A :14...24          ( 1.00    -0.9532)  ( 1.00    -0.8144)  ( 1.00    -0.7951)  ( 1.00    -0.4647)
+                     ( 1.00    -0.4451)  ( 1.00    -0.4308)  ( 1.00    -0.4132)  ( 1.00    -0.3603)
+                     ( 1.00    -0.3274)  ( 1.00    -0.3068)  ( 0.00    -0.2809)
+ B :13...23          ( 1.00    -0.7957)  ( 1.00    -0.7899)  ( 1.00    -0.4630)  ( 1.00    -0.4622)
+                     ( 1.00    -0.3852)  ( 1.00    -0.3826)  ( 1.00    -0.3410)  ( 1.00    -0.3371)
+                     ( 1.00    -0.3314)  ( 1.00    -0.3285)  ( 0.00    -0.2236)
+  
+ Spin polar: 0 (Spin_A minus Spin_B electrons)
+
+ CYCLE    6
+ d-Pmat  mean:  0.15E-02
+ imax=    118:  0.12E-01
+ d-Pmat  mean:  0.15E-02
+ imax=    118:  0.12E-01
+ ***** SPIN 1 *****
+ orbitals (Q,E):
+ ---------------
+ A :14...24          ( 1.00    -0.9530)  ( 1.00    -0.8139)  ( 1.00    -0.7954)  ( 1.00    -0.4644)
+                     ( 1.00    -0.4447)  ( 1.00    -0.4304)  ( 1.00    -0.4133)  ( 1.00    -0.3601)
+                     ( 1.00    -0.3276)  ( 1.00    -0.3067)  ( 0.00    -0.2806)
+ B :13...23          ( 1.00    -0.7933)  ( 1.00    -0.7922)  ( 1.00    -0.4623)  ( 1.00    -0.4621)
+                     ( 1.00    -0.3840)  ( 1.00    -0.3835)  ( 1.00    -0.3393)  ( 1.00    -0.3385)
+                     ( 1.00    -0.3305)  ( 1.00    -0.3298)  ( 0.00    -0.2227)
+ ***** SPIN 2 *****
+ orbitals (Q,E):
+ ---------------
+ A :14...24          ( 1.00    -0.9530)  ( 1.00    -0.8139)  ( 1.00    -0.7954)  ( 1.00    -0.4644)
+                     ( 1.00    -0.4447)  ( 1.00    -0.4304)  ( 1.00    -0.4133)  ( 1.00    -0.3601)
+                     ( 1.00    -0.3276)  ( 1.00    -0.3067)  ( 0.00    -0.2806)
+ B :13...23          ( 1.00    -0.7933)  ( 1.00    -0.7922)  ( 1.00    -0.4623)  ( 1.00    -0.4621)
+                     ( 1.00    -0.3840)  ( 1.00    -0.3835)  ( 1.00    -0.3393)  ( 1.00    -0.3385)
+                     ( 1.00    -0.3305)  ( 1.00    -0.3298)  ( 0.00    -0.2227)
+  
+ Spin polar: 0 (Spin_A minus Spin_B electrons)
+
+ CYCLE    7
+ d-Pmat  mean:  0.14E-02
+ imax=     33: -0.10E-01
+ d-Pmat  mean:  0.14E-02
+ imax=     33: -0.10E-01
+ ***** SPIN 1 *****
+ orbitals (Q,E):
+ ---------------
+ A :14...24          ( 1.00    -0.9530)  ( 1.00    -0.8132)  ( 1.00    -0.7947)  ( 1.00    -0.4634)
+                     ( 1.00    -0.4423)  ( 1.00    -0.4278)  ( 1.00    -0.4128)  ( 1.00    -0.3598)
+                     ( 1.00    -0.3274)  ( 1.00    -0.3069)  ( 0.00    -0.2772)
+ B :13...23          ( 1.00    -0.7933)  ( 1.00    -0.7912)  ( 1.00    -0.4604)  ( 1.00    -0.4602)
+                     ( 1.00    -0.3839)  ( 1.00    -0.3830)  ( 1.00    -0.3396)  ( 1.00    -0.3382)
+                     ( 1.00    -0.3307)  ( 1.00    -0.3296)  ( 0.00    -0.2201)
+ ***** SPIN 2 *****
+ orbitals (Q,E):
+ ---------------
+ A :14...24          ( 1.00    -0.9530)  ( 1.00    -0.8132)  ( 1.00    -0.7947)  ( 1.00    -0.4634)
+                     ( 1.00    -0.4423)  ( 1.00    -0.4278)  ( 1.00    -0.4128)  ( 1.00    -0.3598)
+                     ( 1.00    -0.3274)  ( 1.00    -0.3069)  ( 0.00    -0.2772)
+ B :13...23          ( 1.00    -0.7933)  ( 1.00    -0.7912)  ( 1.00    -0.4604)  ( 1.00    -0.4602)
+                     ( 1.00    -0.3839)  ( 1.00    -0.3830)  ( 1.00    -0.3396)  ( 1.00    -0.3382)
+                     ( 1.00    -0.3307)  ( 1.00    -0.3296)  ( 0.00    -0.2201)
+  
+ Spin polar: 0 (Spin_A minus Spin_B electrons)
+
+ CYCLE    8
+ d-Pmat  mean:  0.24E-02
+ imax=     33: -0.18E-01
+ d-Pmat  mean:  0.24E-02
+ imax=     33: -0.18E-01
+ ***** SPIN 1 *****
+ orbitals (Q,E):
+ ---------------
+ A :14...24          ( 1.00    -0.9526)  ( 1.00    -0.8142)  ( 1.00    -0.7959)  ( 1.00    -0.4609)
+                     ( 1.00    -0.4399)  ( 1.00    -0.4251)  ( 1.00    -0.4135)  ( 1.00    -0.3609)
+                     ( 1.00    -0.3293)  ( 1.00    -0.3088)  ( 0.00    -0.2723)
+ B :13...23          ( 1.00    -0.7938)  ( 1.00    -0.7935)  ( 1.00    -0.4572)  ( 1.00    -0.4571)
+                     ( 1.00    -0.3845)  ( 1.00    -0.3843)  ( 1.00    -0.3406)  ( 1.00    -0.3404)
+                     ( 1.00    -0.3321)  ( 1.00    -0.3315)  ( 0.00    -0.2149)
+ ***** SPIN 2 *****
+ orbitals (Q,E):
+ ---------------
+ A :14...24          ( 1.00    -0.9526)  ( 1.00    -0.8142)  ( 1.00    -0.7959)  ( 1.00    -0.4609)
+                     ( 1.00    -0.4399)  ( 1.00    -0.4251)  ( 1.00    -0.4135)  ( 1.00    -0.3609)
+                     ( 1.00    -0.3293)  ( 1.00    -0.3088)  ( 0.00    -0.2723)
+ B :13...23          ( 1.00    -0.7938)  ( 1.00    -0.7935)  ( 1.00    -0.4572)  ( 1.00    -0.4571)
+                     ( 1.00    -0.3845)  ( 1.00    -0.3843)  ( 1.00    -0.3406)  ( 1.00    -0.3404)
+                     ( 1.00    -0.3321)  ( 1.00    -0.3315)  ( 0.00    -0.2149)
+  
+ Spin polar: 0 (Spin_A minus Spin_B electrons)
+
+ CYCLE    9
+ d-Pmat  mean:  0.46E-03
+ imax=     34: -0.36E-02
+ d-Pmat  mean:  0.46E-03
+ imax=     34: -0.36E-02
+ ***** SPIN 1 *****
+ orbitals (Q,E):
+ ---------------
+ A :14...24          ( 1.00    -0.9526)  ( 1.00    -0.8128)  ( 1.00    -0.7946)  ( 1.00    -0.4601)
+                     ( 1.00    -0.4382)  ( 1.00    -0.4235)  ( 1.00    -0.4126)  ( 1.00    -0.3600)
+                     ( 1.00    -0.3282)  ( 1.00    -0.3077)  ( 0.00    -0.2701)
+ B :13...23          ( 1.00    -0.7925)  ( 1.00    -0.7922)  ( 1.00    -0.4562)  ( 1.00    -0.4561)
+                     ( 1.00    -0.3836)  ( 1.00    -0.3833)  ( 1.00    -0.3397)  ( 1.00    -0.3394)
+                     ( 1.00    -0.3311)  ( 1.00    -0.3305)  ( 0.00    -0.2131)
+ ***** SPIN 2 *****
+ orbitals (Q,E):
+ ---------------
+ A :14...24          ( 1.00    -0.9526)  ( 1.00    -0.8128)  ( 1.00    -0.7946)  ( 1.00    -0.4601)
+                     ( 1.00    -0.4382)  ( 1.00    -0.4235)  ( 1.00    -0.4126)  ( 1.00    -0.3600)
+                     ( 1.00    -0.3282)  ( 1.00    -0.3077)  ( 0.00    -0.2701)
+ B :13...23          ( 1.00    -0.7925)  ( 1.00    -0.7922)  ( 1.00    -0.4562)  ( 1.00    -0.4561)
+                     ( 1.00    -0.3836)  ( 1.00    -0.3833)  ( 1.00    -0.3397)  ( 1.00    -0.3394)
+                     ( 1.00    -0.3311)  ( 1.00    -0.3305)  ( 0.00    -0.2131)
+  
+ Spin polar: 0 (Spin_A minus Spin_B electrons)
+
+ CYCLE   10
+ d-Pmat  mean:  0.94E-04
+ imax=     33:  0.67E-03
+ d-Pmat  mean:  0.94E-04
+ imax=     33:  0.67E-03
+ ***** SPIN 1 *****
+ orbitals (Q,E):
+ ---------------
+ A :14...24          ( 1.00    -0.9530)  ( 1.00    -0.8131)  ( 1.00    -0.7948)  ( 1.00    -0.4605)
+                     ( 1.00    -0.4385)  ( 1.00    -0.4238)  ( 1.00    -0.4128)  ( 1.00    -0.3602)
+                     ( 1.00    -0.3284)  ( 1.00    -0.3079)  ( 0.00    -0.2705)
+ B :13...23          ( 1.00    -0.7927)  ( 1.00    -0.7924)  ( 1.00    -0.4567)  ( 1.00    -0.4565)
+                     ( 1.00    -0.3838)  ( 1.00    -0.3836)  ( 1.00    -0.3398)  ( 1.00    -0.3396)
+                     ( 1.00    -0.3312)  ( 1.00    -0.3307)  ( 0.00    -0.2136)
+ ***** SPIN 2 *****
+ orbitals (Q,E):
+ ---------------
+ A :14...24          ( 1.00    -0.9530)  ( 1.00    -0.8131)  ( 1.00    -0.7948)  ( 1.00    -0.4605)
+                     ( 1.00    -0.4385)  ( 1.00    -0.4238)  ( 1.00    -0.4128)  ( 1.00    -0.3602)
+                     ( 1.00    -0.3284)  ( 1.00    -0.3079)  ( 0.00    -0.2705)
+ B :13...23          ( 1.00    -0.7927)  ( 1.00    -0.7924)  ( 1.00    -0.4567)  ( 1.00    -0.4565)
+                     ( 1.00    -0.3838)  ( 1.00    -0.3836)  ( 1.00    -0.3398)  ( 1.00    -0.3396)
+                     ( 1.00    -0.3312)  ( 1.00    -0.3307)  ( 0.00    -0.2136)
+  
+ Spin polar: 0 (Spin_A minus Spin_B electrons)
+
+ CYCLE   11
+ d-Pmat  mean:  0.17E-04
+ imax=    100:  0.12E-03
+ d-Pmat  mean:  0.17E-04
+ imax=    100:  0.12E-03
+ ***** SPIN 1 *****
+ orbitals (Q,E):
+ ---------------
+ A :14...24          ( 1.00    -0.9530)  ( 1.00    -0.8131)  ( 1.00    -0.7948)  ( 1.00    -0.4605)
+                     ( 1.00    -0.4385)  ( 1.00    -0.4238)  ( 1.00    -0.4128)  ( 1.00    -0.3602)
+                     ( 1.00    -0.3284)  ( 1.00    -0.3079)  ( 0.00    -0.2705)
+ B :13...23          ( 1.00    -0.7927)  ( 1.00    -0.7925)  ( 1.00    -0.4566)  ( 1.00    -0.4565)
+                     ( 1.00    -0.3838)  ( 1.00    -0.3836)  ( 1.00    -0.3398)  ( 1.00    -0.3397)
+                     ( 1.00    -0.3313)  ( 1.00    -0.3307)  ( 0.00    -0.2136)
+ ***** SPIN 2 *****
+ orbitals (Q,E):
+ ---------------
+ A :14...24          ( 1.00    -0.9530)  ( 1.00    -0.8131)  ( 1.00    -0.7948)  ( 1.00    -0.4605)
+                     ( 1.00    -0.4385)  ( 1.00    -0.4238)  ( 1.00    -0.4128)  ( 1.00    -0.3602)
+                     ( 1.00    -0.3284)  ( 1.00    -0.3079)  ( 0.00    -0.2705)
+ B :13...23          ( 1.00    -0.7927)  ( 1.00    -0.7925)  ( 1.00    -0.4566)  ( 1.00    -0.4565)
+                     ( 1.00    -0.3838)  ( 1.00    -0.3836)  ( 1.00    -0.3398)  ( 1.00    -0.3397)
+                     ( 1.00    -0.3313)  ( 1.00    -0.3307)  ( 0.00    -0.2136)
+  
+ Spin polar: 0 (Spin_A minus Spin_B electrons)

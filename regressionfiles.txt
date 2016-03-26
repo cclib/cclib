@@ -25,6 +25,13 @@ ADF/ADF2006.01/HgMeBr_zso_orig.out
 ADF/ADF2009.01/JOCRUP-sp3-adf09.out
 ADF/ADF2013.01/dvb_gopt_b_fullscf.adfout
 ADF/ADF2013.01/dvb_gopt_b_unconverged.adfout
+ADF/ADF2013.01/stopiter_MoOCl4-sp.adfout
+ADF/ADF2013.01/stopiter_dvb_sp.adfout
+ADF/ADF2013.01/stopiter_dvb_sp_b.adfout
+ADF/ADF2013.01/stopiter_dvb_sp_c.adfout
+ADF/ADF2013.01/stopiter_dvb_sp_d.adfout
+ADF/ADF2013.01/stopiter_dvb_un_sp.adfout
+ADF/ADF2013.01/stopiter_dvb_un_sp_c.adfout
 ADF/ADF2014.01/dvb_gopt_b_fullscf.out
 DALTON/DALTON-2013/C_bigbasis.aug-cc-pCVQZ.out
 DALTON/DALTON-2013/b3lyp_energy_dvb_sp_nosym.out
