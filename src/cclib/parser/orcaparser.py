@@ -803,7 +803,11 @@ class ORCA(logfileparser.Logfile):
                 maxDP = float(line[5])
                 rmsDP = float(line[6])
                 self.scfvalues[-1].append([deltaE, maxDP, rmsDP])
-            line = next(inputfile).split()
+            try:
+                line = next(inputfile).split()
+            except StopIteration:
+                self.logger.warning('File terminated before end of last SCF! Last Max-DP: {}'.format(maxDP))
+                break
 
     def parse_scf_expanded_format(self, inputfile, line):
         """ Parse SCF convergence when in expanded format. """
@@ -854,7 +858,11 @@ class ORCA(logfileparser.Logfile):
 
         line = "Foo"  # dummy argument to enter loop
         while line.find("******") < 0:
-            line = next(inputfile)
+            try:
+                line = next(inputfile)
+            except StopIteration:
+                self.logger.warning('File terminated before end of last SCF!')
+                break
             info = line.split()
             if len(info) > 1 and info[1] == "ITERATION":
                 dashes = next(inputfile)

@@ -335,10 +335,14 @@ class GAMESSUK(logfileparser.Logfile):
             scfvalues = []
             line = next(inputfile)
             while line.strip():
+                # e.g. **** recalulation of fock matrix on iteration  4 (examples/chap12/pyridine.out)
                 if line[2:6] != "****":
-            # e.g. **** recalulation of fock matrix on iteration  4 (examples/chap12/pyridine.out)
                     scfvalues.append([float(line[tester-5:tester+6])])
-                line = next(inputfile)
+                try:
+                    line = next(inputfile)
+                except StopIteration:
+                    self.logger.warning('File terminated before end of last SCF! Last tester: {}'.format(line.split()[5]))
+                    break
             self.scfvalues.append(scfvalues)
 
         if line[10:22] == "total energy" and len(line.split()) == 3:

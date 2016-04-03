@@ -581,7 +581,11 @@ class DALTON(logfileparser.Logfile):
 
             while not converged:
 
-                line = next(inputfile)
+                try:
+                    line = next(inputfile)
+                except StopIteration:
+                    self.logger.warning('File terminated before end of last SCF!')
+                    break
 
                 # each iteration is bracketed by "-------------"
                 if "-------------------" in line:
@@ -592,8 +596,8 @@ class DALTON(logfileparser.Logfile):
                 strcompare = "@{0:>3d}".format(iteration)
                 if strcompare in line:
                     temp = line.split()
-                    val = self.float(temp[3])
-                    values.append([val])
+                    error_norm = self.float(temp[3])
+                    values.append([error_norm])
 
                 if line[0] == "@" and "converged in" in line:
                     converged = True

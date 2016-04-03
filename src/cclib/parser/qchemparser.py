@@ -367,7 +367,13 @@ class QChem(logfileparser.Logfile):
                             error = float(entry[2])
                             values.append([error])
                             iter_counter += 1
-                    line = next(inputfile)
+
+                    try:
+                        line = next(inputfile)
+                    # Is this the end of the file for some reason?
+                    except StopIteration:
+                        self.logger.warning('File terminated before end of last SCF! Last error: {}'.format(error))
+                        break
 
                     # We've converged, but still need the last iteration.
                     if any(message in line for message in scf_success_messages):

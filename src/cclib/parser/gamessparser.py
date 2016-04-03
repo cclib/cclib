@@ -547,7 +547,11 @@ class GAMESS(logfileparser.Logfile):
                     pass
                 else:
                     values.append([float(line.split()[self.scf_valcol])])
-                line = next(inputfile)
+                try:
+                    line = next(inputfile)
+                except StopIteration:
+                    self.logger.warning('File terminated before end of last SCF!')
+                    break
             self.scfvalues.append(values)
 
         # Sometimes, only the first SCF cycle has the banner parsed for above,

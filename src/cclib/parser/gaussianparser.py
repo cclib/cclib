@@ -479,6 +479,7 @@ class Gaussian(logfileparser.Logfile):
                     line = next(inputfile)
                 # May be interupted by EOF.
                 except StopIteration:
+                    self.logger.warning('File terminated before end of last SCF!')
                     break
 
             self.scfvalues.append(scfvalues)

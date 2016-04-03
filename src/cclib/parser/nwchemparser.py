@@ -374,12 +374,22 @@ class NWChem(logfileparser.Logfile):
                         it, energy, gnorm, gmax, time = line.split()
                         gnorm = float(gnorm.replace('D', 'E'))
                         values.append([gnorm])
-                        line = next(inputfile)
+                        try:
+                            line = next(inputfile)
+                        # Is this the end of the file for some reason?
+                        except StopIteration:
+                            self.logger.warning('File terminated before end of last SCF! Last gradient norm: {}'.format(gnorm))
+                            break
                     if not hasattr(self, 'scfvalues'):
                         self.scfvalues = []
                     self.scfvalues.append(values)
 
-                line = next(inputfile)
+                # this is totally and utterly broken right now
+                try:
+                    line = next(inputfile)
+                except StopIteration:
+                    self.logger.warning('blech')
+                    break
 
         # The SCF for DFT does not use the same algorithm as Hartree-Fock, but always
         # seems to use the following format to report SCF convergence:
@@ -418,7 +428,12 @@ class NWChem(logfileparser.Logfile):
                     val_gradient = float(diis.replace('D', 'E'))
                     values.append([val_energy, val_density, val_gradient])
 
-                line = next(inputfile)
+                try:
+                    line = next(inputfile)
+                # Is this the end of the file for some reason?
+                except StopIteration:
+                    self.logger.warning('File terminated before end of last SCF! Last error: {}'.format(diis))
+                    break
 
             if not hasattr(self, 'scfvalues'):
                 self.scfvalues = []
