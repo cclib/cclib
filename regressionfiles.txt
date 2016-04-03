@@ -216,7 +216,9 @@ ORCA/ORCA3.0/benzene_td_singlets.out
 ORCA/ORCA3.0/dvb_gopt_unconverged.out
 Psi/Psi3/water_psi3.log
 Psi/Psi4/dvb_gopt_hf_unconverged.out
+Psi/Psi4/dvb_sp_hf_git.out
 Psi/Psi4/psi4.0b5_samples_scf4.out
+Psi/Psi4/psi4_git_20160224.out
 QChem/QChem4.2/CH3---Na+_RS.out
 QChem/QChem4.2/CH3---Na+_RS_SCF.out
 QChem/QChem4.2/CH4---Na+.out
