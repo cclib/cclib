@@ -39,8 +39,8 @@ class CSX(filewriter.Writer):
         #cmlfile = open( fileName + '.cml', 'w')
         #xyz = ccwrite(data, 'cml', cmlfile)
         atomNum = data.natom
-        if (hasattr(data, 'basisname')):
-            basisName = data.basisname
+        if ('basisname' in data.metadata):
+            basisName = data.metadata['basisname']
         else:
             basisName = 'none'
         molCharge = data.charge
@@ -52,15 +52,15 @@ class CSX(filewriter.Writer):
         hasProp = True if (hasattr(data, 'moments')) else False
         hasNMR = True if (hasattr(data, 'nmriso')) else False
         hasElec = True if (hasattr(data, 'etoscs')) else False
+        molSpin = data.metadata['spintype'] if ('spintype' in data.metadata) else 'RHF'
         if molMulti == 1 :
-            molSpin = 'RHF'
             wfnRestricted = True
         else:
-            molSpin = 'UHF'
-            if data.package == "DALTON":
-                molSpin = 'ROHF'
+            if molSpin == 'ROHF':
                 wfnRestricted = True
-        calcType = data.theory
+            else:
+                molSpin = 'UHF'
+        calcType = data.metadata['theory']
         molEE = data.scfenergies[-1]
         #Wavefunction
         if hasOrb:
@@ -73,7 +73,15 @@ class CSX(filewriter.Writer):
                     orbSym = data.mosyms
                     orbSymString = ' '.join( x for x in orbSym[0])
                 for iorb in range (orbNum):
-                    elecNum = 2 if iorb < int(data.homos) else 0
+                    if molSpin == "ROHF":
+                        if iorb < int(data.homos[0]):
+                            elecNum = 2
+                        elif iorb == int(data.homos[0]):
+                            elecNum = 1
+                        else:
+                            elecNum = 0
+                    else:
+                        elecNum = 0 if iorb > int(data.homos) else 2
                     orbOcc.append(elecNum)
                 orbOccString = ' '.join(str(x) for x in sorted(orbOcc,reverse=True))
                 wfn1 = api.waveFunctionType(orbitalCount=orbNum, \
@@ -220,9 +228,10 @@ class CSX(filewriter.Writer):
                 status='default status', \
                 category=1, \
                 visibility=0, \
-                tags=data.package, \
+                tags=data.metadata['package'], \
                 key=1 )
-        source1 = api.sourcePackageType(name=data.package, version=data.version)
+        source1 = api.sourcePackageType(name=data.metadata['package'], \
+                version=data.metadata['version'])
         mp1.set_sourcePackage(source1)
         ath1 = api.authorType(creator='Wang', \
                 type_='cs:corresponding', \
@@ -298,7 +307,8 @@ class CSX(filewriter.Writer):
             #DFT
             elif (calcType == 'DFT'):
                 dft1 = api.resultType(methodology='cs:normal',spinType='cs:'+molSpin, \
-                        basisSet='bse:'+basisName, dftFunctional='cs:'+data.functional)
+                        basisSet='bse:'+basisName, \
+                        dftFunctional='cs:'+data.metadata['functional'])
                 ene1 = api.energiesType(unit='cs:eV')
                 ee_ene1 = api.energyType(type_='cs:totalPotential')
                 ee_ene1.set_valueOf_(float(molEE))
@@ -402,7 +412,7 @@ class CSX(filewriter.Writer):
                     ccsd_t1.set_properties(prop2)
                 if hasFreq:
                     ccsd_t1.set_vibrationalAnalysis(vib1)
-                mdm1.set_ccsd_t(ccsd_t1)
+                mdm1.set_ccsd(ccsd_t1)
             else:
                 print ('The current CSX does not support this method')
             srs1.set_multipleDeterminant(mdm1)
