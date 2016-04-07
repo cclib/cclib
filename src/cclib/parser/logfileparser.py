@@ -184,8 +184,8 @@ class Logfile(object):
     """Abstract class for logfile objects.
 
     Subclasses defined by cclib:
-        ADF, DALTON, GAMESS, GAMESSUK, Gaussian, Jaguar, Molpro, NWChem, ORCA,
-          Psi, QChem
+        ADF, DALTON, GAMESS, GAMESSUK, Gaussian, Jaguar, Molpro, MOPAC,
+        NWChem, ORCA, Psi, Q-Chem
     """
 
     def __init__(self, source, loglevel=logging.INFO, logname="Log",

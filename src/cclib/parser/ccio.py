@@ -29,6 +29,7 @@ from .gamessukparser import GAMESSUK
 from .gaussianparser import Gaussian
 from .jaguarparser import Jaguar
 from .molproparser import Molpro
+from .mopacparser import MOPAC
 from .nwchemparser import NWChem
 from .orcaparser import ORCA
 from .psiparser import Psi
@@ -63,6 +64,7 @@ triggers = [
     (Jaguar,    ["Jaguar"],                                         True),
     (Molpro,    ["PROGRAM SYSTEM MOLPRO"],                          True),
     (Molpro,    ["1PROGRAM"],                                       False),
+    (MOPAC,     ["MOPAC"],                                          True),
     (NWChem,    ["Northwest Computational Chemistry Package"],      True),
     (ORCA,      ["O   R   C   A"],                                  True),
     (Psi,       ["PSI", "Ab Initio Electronic Structure"],          True),
@@ -118,9 +120,9 @@ def ccopen(source, *args, **kargs):
       source - a single logfile, a list of logfiles, or an input stream
 
     Returns:
-      one of ADF, DALTON, GAMESS, GAMESS UK, Gaussian, Jaguar, Molpro, NWChem, ORCA,
-        Psi, QChem, or None (if it cannot figure it out or the file does not
-        exist).
+      one of ADF, DALTON, GAMESS, GAMESS UK, Gaussian, Jaguar, Molpro, MOPAC,
+        NWChem, ORCA, Psi, QChem, or None (if it cannot figure it out or
+        the file does not exist).
     """
 
     inputfile = None
