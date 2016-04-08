@@ -50,6 +50,7 @@ except ImportError:
 #   2. Molro log files don't have the program header, but always contain
 #      the generic string 1PROGRAM, so don't break here either to be cautious.
 #   3. The Psi header has two different strings with some variation
+#   4. "MOPAC" is used in some packages like GAMESS, so match MOPAC20##
 #
 # The triggers are defined by the tuples in the list below like so:
 #   (parser, phrases, flag whether we should break)
@@ -64,7 +65,7 @@ triggers = [
     (Jaguar,    ["Jaguar"],                                         True),
     (Molpro,    ["PROGRAM SYSTEM MOLPRO"],                          True),
     (Molpro,    ["1PROGRAM"],                                       False),
-    (MOPAC,     ["MOPAC"],                                          True),
+    (MOPAC,     ["MOPAC20"],                                        True),
     (NWChem,    ["Northwest Computational Chemistry Package"],      True),
     (ORCA,      ["O   R   C   A"],                                  True),
     (Psi,       ["PSI", "Ab Initio Electronic Structure"],          True),
