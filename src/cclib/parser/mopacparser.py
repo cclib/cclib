@@ -85,10 +85,6 @@ class MOPAC(logfileparser.Logfile):
                           'OCTET': 8,
                           'NONET': 9}
 
-    def after_parsing(self):
-        #TODO
-
-
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
 
@@ -160,8 +156,8 @@ class MOPAC(logfileparser.Logfile):
         #    35       H          2.01935375  *  -1.03805729  *   2.35810565  *
         #    36       H          1.60901654  *  -2.53904354  *   3.20705714  *
         #    37       H          0.97814118  *  -0.98964976  *   3.78695207  *
-        if line.find("NUMBER    SYMBOL      (ANGSTROMS)     (ANGSTROMS)     (ANGSTROMS)") > -1
-            or line.find("NUMBER   SYMBOL      (ANGSTROMS)     (ANGSTROMS)     (ANGSTROMS)") > -1:
+        if (line.find("NUMBER    SYMBOL      (ANGSTROMS)     (ANGSTROMS)     (ANGSTROMS)") > -1
+            or line.find("NUMBER   SYMBOL      (ANGSTROMS)     (ANGSTROMS)     (ANGSTROMS)") > -1):
 
             self.updateprogress(inputfile, "Attributes", self.cupdate)
 
@@ -172,7 +168,6 @@ class MOPAC(logfileparser.Logfile):
 
             atomcoords = []
             line = inputfile.next()
-           # while line != blankline:
             while len(line.split()) > 6:
                 # MOPAC Version 14.019L 64BITS suddenly appends this block with
                 # "CARTESIAN COORDINATES" block with no blank line.
