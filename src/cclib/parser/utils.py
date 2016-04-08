@@ -34,6 +34,7 @@ def convertor(value, fromunits, tounits):
         "cm-1_to_kcal":     lambda x: x / 349.7550112,
         "cm-1_to_kJmol-1":  lambda x: x / 83.5934722814,
         "cm-1_to_nm":       lambda x: 1e7 / x,
+        "cm-1_to_Hz":       lambda x: x * 29.9792458,
 
         "eV_to_cm-1":       lambda x: x * 8065.54429,
         "eV_to_hartree":    lambda x: x / 27.21138505,
@@ -111,7 +112,8 @@ class PeriodicTable(object):
             'Tl', 'Pb', 'Bi', 'Po', 'At', 'Rn',
             'Fr', 'Ra',
             'Ac', 'Th', 'Pa', 'U', 'Np', 'Pu', 'Am', 'Cm', 'Bk', 'Cf', 'Es', 'Fm', 'Md', 'No',
-            'Lr', 'Rf', 'Db', 'Sg', 'Bh', 'Hs', 'Mt', 'Ds', 'Rg', 'Uub']
+            'Lr', 'Rf', 'Db', 'Sg', 'Bh', 'Hs', 'Mt', 'Ds', 'Rg', 'Cn',
+            'Uut', 'Fl', 'Uup', 'Lv', 'Uus', 'Uuo']
         self.number = {}
         for i in range(1, len(self.element)):
             self.number[self.element[i]] = i
