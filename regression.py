@@ -1,7 +1,7 @@
 # This file is part of cclib (http://cclib.github.io), a library for parsing
 # and interpreting the results of computational chemistry packages.
 #
-# Copyright (C) 2006-2015, the cclib development team
+# Copyright (C) 2006-2016, the cclib development team
 #
 # The library is free software, distributed under the terms of
 # the GNU Lesser General Public version 2.1 or later. You should have
@@ -45,6 +45,7 @@ import numpy
 from cclib.parser.utils import convertor
 
 from cclib.parser import ccopen
+from cclib.parser import ccData
 
 from cclib.parser import ADF
 from cclib.parser import DALTON
@@ -270,6 +271,14 @@ def testGaussian_Gaussian09_25DMF_HRANH_log(logfile):
     assert 39 == N == anharms.shape[0] == anharms.shape[1]
     assert abs(anharms[0][0] + 43.341) < 0.01
     assert abs(anharms[N-1][N-1] + 36.481) < 0.01
+
+def testGaussian_Gaussian09_2D_PES_all_converged_log(logfile):
+	"""Check that optstatus has no UNCOVERGED values."""
+	assert ccData.OPT_UNCONVERGED not in logfile.data.optstatus
+
+def testGaussian_Gaussian09_2D_PES_one_unconverged_log(logfile):
+	"""Check that optstatus contains UNCOVERGED values."""
+	assert ccData.OPT_UNCONVERGED in logfile.data.optstatus
 
 def testGaussian_Gaussian09_534_out(logfile):
     """Previously, caused etenergies parsing to fail."""
