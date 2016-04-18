@@ -186,6 +186,7 @@ Jaguar/Jaguar6.5/dvb_sp.out
 Jaguar/Jaguar6.5/dvb_un_sp.out
 Molpro/Molpro2006/C_bigbasis_cart.out
 Molpro/Molpro2006/thymine.scf.out
+Molpro/Molpro2008/CHONHSH_HF_STO-3G.out
 Molpro/Molpro2008/ch2o_molpro_casscf.out
 Molpro/Molpro2008/water_molpro.out
 Molpro/Molpro2012/dvb_gopt_unconverged.out
