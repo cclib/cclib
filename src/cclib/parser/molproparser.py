@@ -155,7 +155,7 @@ class Molpro(logfileparser.Logfile):
                 # are always available. In fact, components not being there has some meaning (see below).
                 line_nr = line[1:6].strip()
                 line_sym = line[7:9].strip()
-                line_nuc = line[11:14].strip()
+                line_nuc = line[11:15].strip()
                 line_type = line[16:22].strip()
                 line_exp = line[25:38].strip()
                 line_coeffs = line[38:].strip()
