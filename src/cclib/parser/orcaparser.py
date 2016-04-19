@@ -284,15 +284,17 @@ class ORCA(logfileparser.Logfile):
                 line = next(inputfile)
 
             # The energy change is normally not printed in the first iteration, because
-            # there was no previous energy -- in that case assume zero, but check that
-            # no previous geovalues were parsed.
+            # there was no previous energy -- in that case assume zero. There are also some
+            # edge cases where the energy change is not printed, for example when internal
+            # angles become improper and internal coordinates are rebuilt as in regression
+            # CuI-MePY2-CH3CN_optxes, and in such cases use NaN.
             newvalues = []
-
             for i, n in enumerate(self.geotargets_names):
                 if (n == "energy change") and (n not in names):
-                    if not self.is_relaxed_scan:
-                        assert len(self.geovalues) == 0
-                    newvalues.append(0.0)
+                    if self.is_relaxed_scan:
+                      newvalues.append(0.0)
+                    else:
+                      newvalues.append(numpy.nan)
                 else:
                     newvalues.append(values[names.index(n)])
                     assert targets[names.index(n)] == self.geotargets[i]
