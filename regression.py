@@ -345,17 +345,6 @@ def testGaussian_Gaussian09_benzene_freq_log(logfile):
 
 # Molpro #
 
-def testMolpro_Molpro2008_CHONHSH_HF_STO_3G_out(logfile):
-	"""Formatting of the basis function is slightly different than expected."""
-	assert len(logfile.data.gbasis) == 7
-	assert len(logfile.data.gbasis[0]) == 3 # C
-	assert len(logfile.data.gbasis[1]) == 3 # N
-	assert len(logfile.data.gbasis[2]) == 3 # O
-	assert len(logfile.data.gbasis[3]) == 5 # S
-	assert len(logfile.data.gbasis[4]) == 1 # H
-	assert len(logfile.data.gbasis[5]) == 1 # H
-	assert len(logfile.data.gbasis[6]) == 1 # H
-
 def testMolpro_Molpro2008_ch2o_molpro_casscf_out(logfile):
     """A CASSCF job with symmetry and natural orbitals."""
 
@@ -376,6 +365,17 @@ def testMolpro_Molpro2008_ch2o_molpro_casscf_out(logfile):
     # These coefficients should be zero due to symmetry.
     assert logfile.data.mocoeffs[0][-2][0] == 0.0
     assert logfile.data.mocoeffs[0][0][-2] == 0.0
+
+def testMolpro_Molpro2012_CHONHSH_HF_STO_3G_out(logfile):
+	"""Formatting of the basis function is slightly different than expected."""
+	assert len(logfile.data.gbasis) == 7
+	assert len(logfile.data.gbasis[0]) == 3 # C
+	assert len(logfile.data.gbasis[1]) == 3 # N
+	assert len(logfile.data.gbasis[2]) == 3 # O
+	assert len(logfile.data.gbasis[3]) == 5 # S
+	assert len(logfile.data.gbasis[4]) == 1 # H
+	assert len(logfile.data.gbasis[5]) == 1 # H
+	assert len(logfile.data.gbasis[6]) == 1 # H
 
 def testMolpro_Molpro2012_dvb_gopt_unconverged_out(logfile):
     """An unconverged geometry optimization to test for empty optdone (see #103 for details)."""
