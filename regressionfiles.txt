@@ -146,6 +146,8 @@ Gaussian/Gaussian03/QVGXLLKOCUKJST-UHFFFAOYAJmult3Fixed.out
 Gaussian/Gaussian03/tms_nmr.log
 Gaussian/Gaussian09/100.g09
 Gaussian/Gaussian09/25DMF_HRANH.log
+Gaussian/Gaussian09/2D-PES-all-converged.log
+Gaussian/Gaussian09/2D-PES-one-unconverged.log
 Gaussian/Gaussian09/534.out
 Gaussian/Gaussian09/BH3CO_fragment_guess.log
 Gaussian/Gaussian09/BH3CO_fragment_guess.pop_minimal.log
@@ -202,6 +204,7 @@ Jaguar/Jaguar8.3/stopiter_jaguar_dft.out
 Jaguar/Jaguar8.3/stopiter_jaguar_hf.out
 Molpro/Molpro2006/C_bigbasis_cart.out
 Molpro/Molpro2006/thymine.scf.out
+Molpro/Molpro2008/CHONHSH_HF_STO-3G.out
 Molpro/Molpro2008/ch2o_molpro_casscf.out
 Molpro/Molpro2008/water_molpro.out
 Molpro/Molpro2012/dvb_gopt_unconverged.out
@@ -233,12 +236,15 @@ ORCA/ORCA2.9/job.out
 ORCA/ORCA2.9/PCB_1_122.out
 ORCA/ORCA2.9/prova.out
 ORCA/ORCA3.0/benzene_td_singlets.out
+ORCA/ORCA3.0/CuI-MePY2-CH3CN_optxes.out
 ORCA/ORCA3.0/dvb_gopt_unconverged.out
 ORCA/ORCA3.0/stopiter_orca_scf_compact.out
 ORCA/ORCA3.0/stopiter_orca_scf_large.out
 Psi/Psi3/water_psi3.log
 Psi/Psi4/dvb_gopt_hf_unconverged.out
+Psi/Psi4/dvb_sp_hf_git.out
 Psi/Psi4/psi4.0b5_samples_scf4.out
+Psi/Psi4/psi4_git_20160224.out
 Psi/Psi4/stopiter_psi_dft.out
 Psi/Psi4/stopiter_psi_hf.out
 QChem/QChem4.2/CH3---Na+_RS.out

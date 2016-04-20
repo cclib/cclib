@@ -1,7 +1,7 @@
 # This file is part of cclib (http://cclib.github.io), a library for parsing
 # and interpreting the results of computational chemistry packages.
 #
-# Copyright (C) 2006-2015, the cclib development team
+# Copyright (C) 2006-2016, the cclib development team
 #
 # The library is free software, distributed under the terms of
 # the GNU Lesser General Public version 2.1 or later. You should have
@@ -45,6 +45,7 @@ import numpy
 from cclib.parser.utils import convertor
 
 from cclib.parser import ccopen
+from cclib.parser import ccData
 
 from cclib.parser import ADF
 from cclib.parser import DALTON
@@ -338,6 +339,14 @@ def testGaussian_Gaussian09_25DMF_HRANH_log(logfile):
     assert abs(anharms[0][0] + 43.341) < 0.01
     assert abs(anharms[N-1][N-1] + 36.481) < 0.01
 
+def testGaussian_Gaussian09_2D_PES_all_converged_log(logfile):
+	"""Check that optstatus has no UNCOVERGED values."""
+	assert ccData.OPT_UNCONVERGED not in logfile.data.optstatus
+
+def testGaussian_Gaussian09_2D_PES_one_unconverged_log(logfile):
+	"""Check that optstatus contains UNCOVERGED values."""
+	assert ccData.OPT_UNCONVERGED in logfile.data.optstatus
+
 def testGaussian_Gaussian09_534_out(logfile):
     """Previously, caused etenergies parsing to fail."""
     assert logfile.data.etsyms[0] == "Singlet-?Sym"
@@ -413,6 +422,17 @@ def testJaguar_Jaguar8_3_stopiter_jaguar_hf_out(logfile):
     assert len(logfile.data.scfvalues[0]) == 3
 
 # Molpro #
+
+def testMolpro_Molpro2008_CHONHSH_HF_STO_3G_out(logfile):
+	"""Formatting of the basis function is slightly different than expected."""
+	assert len(logfile.data.gbasis) == 7
+	assert len(logfile.data.gbasis[0]) == 3 # C
+	assert len(logfile.data.gbasis[1]) == 3 # N
+	assert len(logfile.data.gbasis[2]) == 3 # O
+	assert len(logfile.data.gbasis[3]) == 5 # S
+	assert len(logfile.data.gbasis[4]) == 1 # H
+	assert len(logfile.data.gbasis[5]) == 1 # H
+	assert len(logfile.data.gbasis[6]) == 1 # H
 
 def testMolpro_Molpro2008_ch2o_molpro_casscf_out(logfile):
     """A CASSCF job with symmetry and natural orbitals."""
@@ -1174,6 +1194,9 @@ old_unittests = {
     "ORCA/ORCA2.8/dvb_sp_un.out":   OrcaSPunTest_charge0,
     "ORCA/ORCA2.8/dvb_td.out":      OrcaTDDFTTest,
     "ORCA/ORCA2.8/dvb_ir.out":      OrcaIRTest_old,
+
+    "Psi/Psi4/dvb_sp_hf_git.out": GenericBasisTest,
+    "Psi/Psi4/dvb_sp_hf_git.out": GenericSPTest,
 }
 
 def make_regression_from_old_unittest(test_class):
