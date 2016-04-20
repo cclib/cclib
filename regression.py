@@ -89,34 +89,46 @@ def testADF_ADF2013_01_dvb_gopt_b_unconverged_adfout(logfile):
     """An unconverged geometry optimization to test for empty optdone (see #103 for details)."""
     assert hasattr(logfile.data, 'optdone') and not logfile.data.optdone
 
-# def testADF_ADF2013_01_stopiter_dvb_sp_adfout(logfile):
-#     """Check to ensure that an incomplete SCF is handled correctly."""
-#     assert len(logfile.data.scfvalues[0]) == 10
+def testADF_ADF2013_01_stopiter_dvb_sp_adfout(logfile):
+    """This logfile has not SCF test lines so we have no way to check what happens."""
+    # This is what we would have checked:
+    # len(logfile.data.scfvalues[0]) == 10
+    assert not hasattr(logfile.data, "scfvalues")
 
 def testADF_ADF2013_01_stopiter_dvb_sp_b_adfout(logfile):
     """Check to ensure that an incomplete SCF is handled correctly."""
     # Why is this not 3?
     assert len(logfile.data.scfvalues[0]) == 2
 
-# def testADF_ADF2013_01_stopiter_dvb_sp_c_adfout(logfile):
-#     """Check to ensure that an incomplete SCF is handled correctly."""
-#     assert len(logfile.data.scfvalues[0]) == 6
+def testADF_ADF2013_01_stopiter_dvb_sp_c_adfout(logfile):
+    """This logfile has not SCF test lines so we have no way to check what happens."""
+    # This is what we would have checked:
+    # len(logfile.data.scfvalues[0]) == 6
+    assert not hasattr(logfile.data, "scfvalues")
 
-# def testADF_ADF2013_01_stopiter_dvb_sp_d_adfout(logfile):
-#     """Check to ensure that an incomplete SCF is handled correctly."""
-#     assert len(logfile.data.scfvalues[0]) == 7
+def testADF_ADF2013_01_stopiter_dvb_sp_d_adfout(logfile):
+    """This logfile has not SCF test lines so we have no way to check what happens."""
+    # This is what we would have checked:
+    # len(logfile.data.scfvalues[0]) == 7
+    assert not hasattr(logfile.data, "scfvalues")
 
-# def testADF_ADF2013_01_stopiter_dvb_un_sp_adfout(logfile):
-#     """Check to ensure that an incomplete SCF is handled correctly."""
-#     assert len(logfile.data.scfvalues[0]) == 7
+def testADF_ADF2013_01_stopiter_dvb_un_sp_adfout(logfile):
+    """This logfile has not SCF test lines so we have no way to check what happens."""
+    # This is what we would have checked:
+    # len(logfile.data.scfvalues[0]) == 7
+    assert not hasattr(logfile.data, "scfvalues")
 
-# def testADF_ADF2013_01_stopiter_dvb_un_sp_c_adfout(logfile):
-#     """Check to ensure that an incomplete SCF is handled correctly."""
-#     assert len(logfile.data.scfvalues[0]) == 10
+def testADF_ADF2013_01_stopiter_dvb_un_sp_c_adfout(logfile):
+    """This logfile has not SCF test lines so we have no way to check what happens."""
+    # This is what we would have checked:
+    # len(logfile.data.scfvalues[0]) == 10
+    assert not hasattr(logfile.data, "scfvalues")
 
-# def testADF_ADF2013_01_stopiter_MoOCl4_sp_adfout(logfile):
-#     """Check to ensure that an incomplete SCF is handled correctly."""
-#     assert len(logfile.data.scfvalues[0]) == 11
+def testADF_ADF2013_01_stopiter_MoOCl4_sp_adfout(logfile):
+    """This logfile has not SCF test lines so we have no way to check what happens."""
+    # This is what we would have checked:
+    # len(logfile.data.scfvalues[0]) == 11
+    assert not hasattr(logfile.data, "scfvalues")
 
 # DALTON #
 
