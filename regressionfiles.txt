@@ -136,6 +136,7 @@ Gaussian/Gaussian09/25DMF_HRANH.log
 Gaussian/Gaussian09/534.out
 Gaussian/Gaussian09/BH3CO_fragment_guess.log
 Gaussian/Gaussian09/BH3CO_fragment_guess.pop_minimal.log
+Gaussian/Gaussian09/BSL_opt_freq_DFT.out
 Gaussian/Gaussian09/coeffs.log
 Gaussian/Gaussian09/Dahlgren_TS.log
 Gaussian/Gaussian09/di-iodophenyl.log
