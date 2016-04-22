@@ -418,19 +418,18 @@ class QChem(logfileparser.Logfile):
             # Geometry optimization.
 
             if 'Maximum     Tolerance    Cnvgd?' in line:
-                line_g = list(map(float, next(inputfile).split()[1:3]))
-                line_d = list(map(float, next(inputfile).split()[1:3]))
+                line_g = next(inputfile).split()[1:3]
+                line_d = next(inputfile).split()[1:3]
                 line_e = next(inputfile).split()[2:4]
 
                 if not hasattr(self, 'geotargets'):
                     self.geotargets = [line_g[1], line_d[1], self.float(line_e[1])]
                 if not hasattr(self, 'geovalues'):
                     self.geovalues = []
-                try:
-                    ediff = abs(self.float(line_e[0]))
-                except ValueError:
-                    ediff = numpy.nan
-                geovalues = [line_g[0], line_d[0], ediff]
+                maxg = self.float(line_g[0])
+                maxd = self.float(line_d[0])
+                ediff = self.float(line_e[0])
+                geovalues = [maxg, maxd, ediff]
                 self.geovalues.append(geovalues)
 
             if '**  OPTIMIZATION CONVERGED  **' in line:
