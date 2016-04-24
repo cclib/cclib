@@ -155,7 +155,7 @@ class Molpro(logfileparser.Logfile):
                 # are always available. In fact, components not being there has some meaning (see below).
                 line_nr = line[1:6].strip()
                 line_sym = line[7:9].strip()
-                line_nuc = line[11:14].strip()
+                line_nuc = line[11:15].strip()
                 line_type = line[16:22].strip()
                 line_exp = line[25:38].strip()
                 line_coeffs = line[38:].strip()
@@ -272,10 +272,12 @@ class Molpro(logfileparser.Logfile):
             energy = 0.0
             scfvalues = []
             while line.strip() != "":
-                if line.split()[0].isdigit():
+                chomp = line.split()
+                if chomp[0].isdigit():
 
-                    ddiff = float(line.split()[1].replace('D', 'E'))
-                    newenergy = float(line.split()[3])
+                    ddiff = float(chomp[1].replace('D', 'E'))
+                    grad = float(chomp[2].replace('D', 'E'))
+                    newenergy = float(chomp[3])
                     ediff = newenergy - energy
                     energy = newenergy
 
@@ -290,7 +292,11 @@ class Molpro(logfileparser.Logfile):
                             values[n] = ddiff
                     scfvalues.append(values)
 
-                line = next(inputfile)
+                try:
+                    line = next(inputfile)
+                except StopIteration:
+                    self.logger.warning('File terminated before end of last SCF! Last gradient: {}'.format(grad))
+                    break
             self.scfvalues.append(numpy.array(scfvalues))
 
         # SCF result - RHF/UHF and DFT (RKS) energies.

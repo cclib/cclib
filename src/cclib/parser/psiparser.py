@@ -458,7 +458,11 @@ class Psi(logfileparser.Logfile):
                     denergy = float(line.split()[4])
                     ddensity = float(line.split()[5])
                     scfvals.append([denergy, ddensity])
-                line = next(inputfile)
+                try:
+                    line = next(inputfile)
+                except StopIteration:
+                    self.logger.warning('File terminated before end of last SCF! Last density err: {}'.format(ddensity))
+                    break
             self.section = "Post-Iterations"
             self.scfvalues.append(scfvals)
 

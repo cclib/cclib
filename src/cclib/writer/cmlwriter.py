@@ -1,7 +1,7 @@
 # This file is part of cclib (http://cclib.github.io), a library for parsing
 # and interpreting the results of computational chemistry packages.
 #
-# Copyright (C) 2014, the cclib development team
+# Copyright (C) 2014-2016, the cclib development team
 #
 # The library is free software, distributed under the terms of
 # the GNU Lesser General Public version 2.1 or later. You should have
@@ -51,17 +51,18 @@ class CML(filewriter.Writer):
 
         # Form the listing of all the atoms present.
         atomArray = ET.SubElement(molecule, 'atomArray')
-        for atomid in range(self.ccdata.natom):
-            atom = ET.SubElement(atomArray, 'atom')
-            x, y, z = self.ccdata.atomcoords[-1][atomid].tolist()
-            d = {
-                'id': 'a{}'.format(atomid + 1),
-                'elementType': self.elements[atomid],
-                'x3': '{:.10f}'.format(x),
-                'y3': '{:.10f}'.format(y),
-                'z3': '{:.10f}'.format(z),
-            }
-            _set_attrs(atom, d)
+        if hasattr(self.ccdata, 'atomcoords'):
+            for atomid in range(self.ccdata.natom):
+                atom = ET.SubElement(atomArray, 'atom')
+                x, y, z = self.ccdata.atomcoords[-1][atomid].tolist()
+                d = {
+                    'id': 'a{}'.format(atomid + 1),
+                    'elementType': self.elements[atomid],
+                    'x3': '{:.10f}'.format(x),
+                    'y3': '{:.10f}'.format(y),
+                    'z3': '{:.10f}'.format(z),
+                }
+                _set_attrs(atom, d)
 
         # Form the listing of all the bonds present.
         bondArray = ET.SubElement(molecule, 'bondArray')

@@ -54,23 +54,25 @@ class XYZ(filewriter.Writer):
 
         xyzblock = []
 
-        lencoords = len(self.ccdata.atomcoords)
+        if hasattr(self.ccdata, 'atomcoords'):
 
-        if lencoords == 1:
-            xyzblock.append(self._xyz_from_ccdata(-1))
-        elif self.do_allgeom:
-            for index in range(lencoords):
-                xyzblock.append(self._xyz_from_ccdata(index))
-        elif self.do_firstgeom and self.do_lastgeom:
-            xyzblock.append(self._xyz_from_ccdata(0))
-            xyzblock.append(self._xyz_from_ccdata(-1))
-        elif self.do_firstgeom:
-            xyzblock.append(self._xyz_from_ccdata(0))
-        elif self.do_lastgeom:
-            xyzblock.append(self._xyz_from_ccdata(-1))
-        # If none of the options are set, return the empty string.
-        else:
-            xyzblock.append("")
+            lencoords = len(self.ccdata.atomcoords)
+
+            if lencoords == 1:
+                xyzblock.append(self._xyz_from_ccdata(-1))
+            elif self.do_allgeom:
+                for index in range(lencoords):
+                    xyzblock.append(self._xyz_from_ccdata(index))
+            elif self.do_firstgeom and self.do_lastgeom:
+                xyzblock.append(self._xyz_from_ccdata(0))
+                xyzblock.append(self._xyz_from_ccdata(-1))
+            elif self.do_firstgeom:
+                xyzblock.append(self._xyz_from_ccdata(0))
+            elif self.do_lastgeom:
+                xyzblock.append(self._xyz_from_ccdata(-1))
+            # If none of the options are set, return the empty string.
+            else:
+                xyzblock.append("")
 
         return '\n'.join(xyzblock)
 

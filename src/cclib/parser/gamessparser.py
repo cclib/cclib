@@ -71,7 +71,7 @@ class GAMESS(logfileparser.Logfile):
 
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
-
+        
         if line[1:12] == "INPUT CARD>":
             return
 
@@ -547,7 +547,11 @@ class GAMESS(logfileparser.Logfile):
                     pass
                 else:
                     values.append([float(line.split()[self.scf_valcol])])
-                line = next(inputfile)
+                try:
+                    line = next(inputfile)
+                except StopIteration:
+                    self.logger.warning('File terminated before end of last SCF!')
+                    break
             self.scfvalues.append(values)
 
         # Sometimes, only the first SCF cycle has the banner parsed for above,
@@ -635,7 +639,7 @@ class GAMESS(logfileparser.Logfile):
         # PLEASE VERIFY THE PROGRAM'S DECISION MANUALLY!
         #
         if "NORMAL COORDINATE ANALYSIS IN THE HARMONIC APPROXIMATION" in line:
-
+            
             self.vibfreqs = []
             self.vibirs = []
             self.vibdisps = []
@@ -645,8 +649,26 @@ class GAMESS(logfileparser.Logfile):
             # Pass the warnings to the logger if they are there.
             while not "MODES" in line:
                 self.updateprogress(inputfile, "Frequency Information")
-
+                
                 line = next(inputfile)
+                
+                # Typical Atomic Masses section printed in GAMESS
+                #               ATOMIC WEIGHTS (AMU)
+                #
+                # 1     O                15.99491
+                # 2     H                 1.00782
+                # 3     H                 1.00782
+                if "ATOMIC WEIGHTS" in line:
+                    atommasses = []
+                    self.skip_line(inputfile,['b'])
+                    # There is a blank line after ATOMIC WEIGHTS
+                    line = next(inputfile)
+                    while line.strip():
+                        temp = line.strip().split()
+                        atommasses.append(float(temp[2]))
+                        line = next(inputfile)
+                    self.set_attribute('atommasses', atommasses)
+
                 if "THIS IS NOT A STATIONARY POINT" in line:
                     msg = "\n   This is not a stationary point on the molecular PES"
                     msg += "\n   The vibrational analysis is not valid!!!"

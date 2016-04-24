@@ -31,6 +31,8 @@ Basis     NWChem      GenericBasisTest      basicNWChem6.0        dvb_sp_hf.out
 Basis     NWChem      GenericBasisTest      basicNWChem6.0        dvb_sp_ks.out
 Basis     NWChem      GenericBasisTest      basicNWChem6.5        dvb_sp_hf.out
 Basis     NWChem      GenericBasisTest      basicNWChem6.5        dvb_sp_ks.out
+Basis     ORCA        GenericBasisTest      basicORCA2.9          dvb_sp.out
+Basis     ORCA        GenericBasisTest      basicORCA3.0          dvb_sp.out
 Basis     Psi         GenericBasisTest      basicPsi4             dvb_sp_hf.out
 Basis     Psi         GenericBasisTest      basicPsi4             dvb_sp_ks.out
 Basis     QChem       GenericBasisTest      basicQChem4.2         dvb_sp.out
@@ -233,7 +235,7 @@ vib       DALTON      GenericIRTest         basicDALTON-2015      dvb_ir.out
 vib       GAMESSUK    GenericIRTest         basicGAMESS-UK7.0     dvb_ir.out
 vib       GAMESSUK    GenericIRTest         basicGAMESS-UK8.0     dvb_ir.out
 vib       GAMESS      FireflyIRTest         basicFirefly8.0       dvb_ir.out
-vib       GAMESS      GenericIRTest         basicGAMESS-US2012    dvb_ir.out
+vib       GAMESS      GamessIRTest          basicGAMESS-US2012    dvb_ir.out
 vib       Gaussian    GaussianIRTest        basicGaussian03       dvb_ir.out
 vib       Gaussian    GaussianIRTest        basicGaussian09       dvb_ir.out
 vib       Jaguar      JaguarIRTest          basicJaguar7.0        dvb_ir.out

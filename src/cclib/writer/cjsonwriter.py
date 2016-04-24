@@ -1,7 +1,7 @@
 # This file is part of cclib (http://cclib.github.io), a library for parsing
 # and interpreting the results of computational chemistry packages.
 #
-# Copyright (C) 2014, the cclib development team
+# Copyright (C) 2014-2016, the cclib development team
 #
 # The library is free software, distributed under the terms of
 # the GNU Lesser General Public version 2.1 or later. You should have
@@ -56,9 +56,14 @@ class CJSON(filewriter.Writer):
 
         cjson_dict['atoms'] = dict()
         cjson_dict['atoms']['elements'] = dict()
-        cjson_dict['atoms']['elements']['number'] = self.ccdata.atomnos.tolist()
+        if hasattr(self.ccdata, 'atomnos'):
+            cjson_dict['atoms']['elements']['number'] = self.ccdata.atomnos.tolist()
         cjson_dict['atoms']['coords'] = dict()
-        cjson_dict['atoms']['coords']['3d'] = self.ccdata.atomcoords[-1].flatten().tolist()
+        if hasattr(self.ccdata, 'atomcoords'):
+            cjson_dict['atoms']['coords']['3d'] = self.ccdata.atomcoords[-1].flatten().tolist()
+        if hasattr(self.ccdata, 'atomnos'):
+            cjson_dict['atomCount'] = len(self.ccdata.atomnos)
+            cjson_dict['heavyAtomCount'] = len([x for x in self.ccdata.atomnos if x > 1])
 
         cjson_dict['bonds'] = dict()
         cjson_dict['bonds']['connections'] = dict()
@@ -73,40 +78,34 @@ class CJSON(filewriter.Writer):
         if has_openbabel:
             cjson_dict['properties']['molecular mass'] = self.pbmol.molwt
 
-        cjson_dict['atomCount'] = len(self.ccdata.atomnos)
-        cjson_dict['heavyAtomCount'] = len([x for x in self.ccdata.atomnos if x > 1])
-
         if has_openbabel:
             cjson_dict['diagram'] = self.pbmol.write(format='svg')
 
         # These are properties that can be collected using cclib.
 
         # Do there need to be any unit conversions here?
-        homo_idx_alpha = int(self.ccdata.homos[0])
-        homo_idx_beta = int(self.ccdata.homos[-1])
-        energy_alpha_homo = self.ccdata.moenergies[0][homo_idx_alpha]
-        energy_alpha_lumo = self.ccdata.moenergies[0][homo_idx_alpha + 1]
-        energy_alpha_gap = energy_alpha_lumo - energy_alpha_homo
-        energy_beta_homo = self.ccdata.moenergies[-1][homo_idx_beta]
-        energy_beta_lumo = self.ccdata.moenergies[-1][homo_idx_beta + 1]
-        energy_beta_gap = energy_beta_lumo - energy_beta_homo
-        cjson_dict['energy'] = dict()
-        cjson_dict['energy']['total'] = self.ccdata.scfenergies[-1]
-        cjson_dict['energy']['alpha'] = dict()
-        cjson_dict['energy']['alpha']['homo'] = energy_alpha_homo
-        cjson_dict['energy']['alpha']['lumo'] = energy_alpha_lumo
-        cjson_dict['energy']['alpha']['gap'] = energy_alpha_gap
-        cjson_dict['energy']['beta'] = dict()
-        cjson_dict['energy']['beta']['homo'] = energy_beta_homo
-        cjson_dict['energy']['beta']['lumo'] = energy_beta_lumo
-        cjson_dict['energy']['beta']['gap'] = energy_beta_gap
+        if hasattr(self.ccdata, 'moenergies') and hasattr(self.ccdata, 'homos'):
+            homo_idx_alpha = int(self.ccdata.homos[0])
+            homo_idx_beta = int(self.ccdata.homos[-1])
+            energy_alpha_homo = self.ccdata.moenergies[0][homo_idx_alpha]
+            energy_alpha_lumo = self.ccdata.moenergies[0][homo_idx_alpha + 1]
+            energy_alpha_gap = energy_alpha_lumo - energy_alpha_homo
+            energy_beta_homo = self.ccdata.moenergies[-1][homo_idx_beta]
+            energy_beta_lumo = self.ccdata.moenergies[-1][homo_idx_beta + 1]
+            energy_beta_gap = energy_beta_lumo - energy_beta_homo
+            cjson_dict['energy'] = dict()
+            cjson_dict['energy']['total'] = self.ccdata.scfenergies[-1]
+            cjson_dict['energy']['alpha'] = dict()
+            cjson_dict['energy']['alpha']['homo'] = energy_alpha_homo
+            cjson_dict['energy']['alpha']['lumo'] = energy_alpha_lumo
+            cjson_dict['energy']['alpha']['gap'] = energy_alpha_gap
+            cjson_dict['energy']['beta'] = dict()
+            cjson_dict['energy']['beta']['homo'] = energy_beta_homo
+            cjson_dict['energy']['beta']['lumo'] = energy_beta_lumo
+            cjson_dict['energy']['beta']['gap'] = energy_beta_gap
 
-        cjson_dict['totalDipoleMoment'] = self._calculate_total_dipole_moment()
-
-        # Can/should we append the entire original log file?
-        # cjson_dict['files'] = dict()
-        # cjson_dict['files']['log'] = []
-        # cjson_dict['files']['log'].append()
+        if hasattr(self.ccdata, 'moments'):
+            cjson_dict['totalDipoleMoment'] = self._calculate_total_dipole_moment()
 
         return json.dumps(cjson_dict)
 

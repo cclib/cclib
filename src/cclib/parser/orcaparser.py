@@ -284,15 +284,17 @@ class ORCA(logfileparser.Logfile):
                 line = next(inputfile)
 
             # The energy change is normally not printed in the first iteration, because
-            # there was no previous energy -- in that case assume zero, but check that
-            # no previous geovalues were parsed.
+            # there was no previous energy -- in that case assume zero. There are also some
+            # edge cases where the energy change is not printed, for example when internal
+            # angles become improper and internal coordinates are rebuilt as in regression
+            # CuI-MePY2-CH3CN_optxes, and in such cases use NaN.
             newvalues = []
-
             for i, n in enumerate(self.geotargets_names):
                 if (n == "energy change") and (n not in names):
-                    if not self.is_relaxed_scan:
-                        assert len(self.geovalues) == 0
-                    newvalues.append(0.0)
+                    if self.is_relaxed_scan:
+                      newvalues.append(0.0)
+                    else:
+                      newvalues.append(numpy.nan)
                 else:
                     newvalues.append(values[names.index(n)])
                     assert targets[names.index(n)] == self.geotargets[i]
@@ -473,6 +475,56 @@ class ORCA(logfileparser.Logfile):
 
             self.mocoeffs = mocoeffs
 
+        # Basis set information
+        # ORCA prints this out in a somewhat indirect fashion.
+        # Therefore, parsing occurs in several steps:
+        # 1. read which atom belongs to which basis set group
+        if line[0:21] == "BASIS SET INFORMATION":
+            line = next(inputfile)
+            line = next(inputfile)
+
+            self.tmp_atnames = [] # temporary attribute, needed later
+            while(not line[0:5] == '-----'):
+                if line[0:4] == "Atom":
+                    self.tmp_atnames.append(line[8:12].strip())
+                line = next(inputfile)
+
+        # 2. Read information for the basis set groups
+        if line[0:25] == "BASIS SET IN INPUT FORMAT":
+            line = next(inputfile)
+            line = next(inputfile)
+
+            # loop over basis set groups
+            gbasis_tmp = {}
+            while(not line[0:5] == '-----'):
+                if line[1:7] == 'NewGTO':
+                    bas_atname = line.split()[1]
+                    gbasis_tmp[bas_atname] = []
+
+                    line = next(inputfile)
+                    # loop over contracted GTOs
+                    while(not line[0:6] == '  end;'):
+                        words = line.split()
+                        ang = words[0]
+                        nprim = int(words[1])
+
+                        # loop over primitives
+                        coeff = []
+                        for iprim in range(nprim):
+                            words = next(inputfile).split()
+                            coeff.append( (float(words[1]), float(words[2])) )
+                        gbasis_tmp[bas_atname].append((ang, coeff))
+
+                        line = next(inputfile)
+                line = next(inputfile)
+
+            # 3. Assign the basis sets to gbasis
+            self.gbasis = []
+            for bas_atname in self.tmp_atnames:
+                self.gbasis.append(gbasis_tmp[bas_atname])
+            del self.tmp_atnames
+
+        # Read TDDFT information
         if line[0:18] == "TD-DFT/TDA EXCITED":
             # Could be singlets or triplets
             if line.find("SINGLETS") >= 0:
@@ -753,7 +805,11 @@ class ORCA(logfileparser.Logfile):
                 maxDP = float(line[5])
                 rmsDP = float(line[6])
                 self.scfvalues[-1].append([deltaE, maxDP, rmsDP])
-            line = next(inputfile).split()
+            try:
+                line = next(inputfile).split()
+            except StopIteration:
+                self.logger.warning('File terminated before end of last SCF! Last Max-DP: {}'.format(maxDP))
+                break
 
     def parse_scf_expanded_format(self, inputfile, line):
         """ Parse SCF convergence when in expanded format. """
@@ -804,7 +860,11 @@ class ORCA(logfileparser.Logfile):
 
         line = "Foo"  # dummy argument to enter loop
         while line.find("******") < 0:
-            line = next(inputfile)
+            try:
+                line = next(inputfile)
+            except StopIteration:
+                self.logger.warning('File terminated before end of last SCF!')
+                break
             info = line.split()
             if len(info) > 1 and info[1] == "ITERATION":
                 dashes = next(inputfile)

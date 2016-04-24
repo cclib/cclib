@@ -112,6 +112,17 @@ class QChemIRTest(GenericIRTest):
         """Do the frequencies from the Hessian match the printed frequencies?"""
 
 
+class GamessIRTest(GenericIRTest):
+    """Customized vibrational frequency unittest"""
+    # Molecular mass of DVB in mD.
+    molecularmass = 130078.25
+
+    def testatommasses(self):
+        """Do the atom masses sum up to the molecular mass (130078.25+-0.1mD)?"""
+        mm = 1000*sum(self.data.atommasses)
+        self.assertAlmostEqual(mm, 130078.25, delta=0.1, msg = "Molecule mass: %f not 130078 +- 0.1mD" % mm)
+
+
 class GenericIRimgTest(unittest.TestCase):
     """Generic imaginary vibrational frequency unittest"""
 
