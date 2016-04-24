@@ -1,4 +1,4 @@
-Changes in cclib-1.4 since cclib-1.3.1:
+Changes in cclib-1.4:
 
 Features:
     * New parser: cclib can now parse DALTON files 
@@ -24,7 +24,7 @@ Bugfixes:
     * Fix parsing egenvectors in GAMESS-US (Alexis Otero-Calvis)
     * Fix duplicate parsing of symmetry labels for Gaussian (Martin Peeks)
 
-Changes in cclib-1.3.1 since cclib-1.3:
+Changes in cclib-1.3.1:
 
 Features:
     * New attribute nooccnos for natural orbital occupation numbers
@@ -38,7 +38,7 @@ Bugfixes:
     * Fix parsing TDDFT/RPA transitions (Felix Plasser)
     * Fix encoding issues for UTF-8 symbols in parsers and bridges
 
-Changes in cclib-1.3 since cclib-1.2:
+Changes in cclib-1.3:
 
 Features:
     * New parser: cclib can now parse NWChem files
@@ -58,7 +58,7 @@ Bugfixes:
     * Fix parsing of Gaussian jobs with fragments and ONIOM output
     * Use UTF-8 encodings for files that need them (Matt Ernst)
 
-Changes in cclib-1.2 since cclib-1.1:
+Changes in cclib-1.2:
 
 Features:
     * Move project to github
@@ -80,7 +80,7 @@ Bugfixes:
     * Handle ORCA file with AM1 output (Julien Idé)
     * Handle GAMESS-US output with irregular frequency format (Andrew Warden)
 
-Changes in cclib-1.1 since cclib-1.0.1:
+Changes in cclib-1.1:
 
 Features:
 	* Add progress info for all parsers
@@ -116,7 +116,7 @@ Bugfixes:
 	* Handle Gaussian files with more than 99 atoms having pseudopotentials
 	(Björn Baumeier)
 
-Changes in cclib-1.0.1 since cclib-1.0:
+Changes in cclib-1.0.1:
 
 Features:
 	* New attribute atommasses - atomic masses in Dalton
@@ -133,7 +133,7 @@ Bugfixes:
 	* Handle parsing Firefly calculations that fail
 	* Fix parsing of ORCA calculation (Marius Retegan)
 
-Change in cclib-1.0 since cclib-0.9:
+Changes in cclib-1.0:
 
 Features:
 	* Handle PBC calculations from Gaussian
@@ -146,7 +146,7 @@ Features:
 Bugfixes:
 	* Many many additional files parsed thanks to bugs reported by users
 
-Change in cclib-0.9 since cclib-0.8:
+Changes in cclib-0.9:
 
 Features:
 	* New parser: cclib can now parse ORCA files
@@ -158,7 +158,7 @@ Features:
 Bugfixes:
 	* A small number of parsing errors were fixed
 
-Change in cclib-0.8 since cclib-0.7:
+Changes in cclib-0.8:
 
 Features:
 	* New parser: cclib can now parse Molpro files
@@ -182,7 +182,7 @@ Bugfixes:
 	* Fixed some methods to work with different numbers of alpha and beta
 	MO coefficients in mocoeffs (MPA, CSPA, OPA)
 
-Changes in cclib-0.7 since cclib-0.6.1:
+Changes in cclib-0.7:
 
 Features:
 	* New parser: cclib can now parse Jaguar files
@@ -217,7 +217,7 @@ Bugfixes:
 		Rotations and translations now not included in frequencies
 	* bridge to OpenBabel: No longer dependent on pyopenbabel
 
-Changes in cclib-0.6.1 since cclib-0.6.0:
+Changes in cclib-0.6.1:
 
 Bugfixes:
 	* cclib: The "import cclib.parsers" statement failed due to
@@ -225,7 +225,7 @@ Bugfixes:
 	* Gaussian parser: Failed to parse single point calculations
 	where the input coords are a z-matrix, and symmetry is turned off.
 
-Changes in cclib-0.6 since cclib-0.6b:
+Changes in cclib-0.6:
 
 Features
 	* ADF parser: If some MO eigenvalues are not present, the parser
@@ -240,7 +240,7 @@ Bugfixes
 	Parser failed if standard orientation not found
 	* ccget: aooverlaps not included when using --list option
 
-Changes in cclib-0.6b since cclib-0.5:
+Changes in cclib-0.6b:
 
 Features
 	* New parser: GAMESS-UK parser
@@ -266,7 +266,7 @@ Bugfixes
 	  Was extracting Depolar P instead of Raman activity
 	* ccopen: Minor problems fixed with identification of log files
 
-Changes in cclib-0.6b since cclib-0.5b:
+Changes in cclib-0.5:
 
 Features
 	* src/scripts/ccget: Added handling of multiple filenames.
