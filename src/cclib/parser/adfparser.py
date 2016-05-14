@@ -740,6 +740,7 @@ class ADF(logfileparser.Logfile):
 
             self.fonames = []
             self.start_indeces = {}
+            self.atombasis = [[] for frag in self.frags] # parse atombasis in the case of trivial SFOs
 
             self.skip_line(inputfile, 'blank')
 
@@ -783,6 +784,17 @@ class ADF(logfileparser.Logfile):
                     frag = fragname + info[9]
 
                     coeff = float(info[6])
+
+                    # parse atombasis only in the case that all coefficients are 1
+                    #    and delete it otherwise
+                    if hasattr(self, 'atombasis'):
+                        if coeff == 1.:
+                            ibas  = int(info[0]) - 1
+                            ifrag = int(info[9]) - 1
+                            iat = self.frags[ifrag][0]
+                            self.atombasis[iat].append(ibas)
+                        else:
+                            del self.atombasis
 
                     line = next(inputfile)
                     while line.strip() and not line[:7].strip():  # while it's the same SFO

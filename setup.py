@@ -3,7 +3,7 @@
 # This file is part of cclib (http://cclib.github.io), a library for parsing
 # and interpreting the results of computational chemistry packages.
 #
-# Copyright (C) 2006-2015, the cclib development team
+# Copyright (C) 2006-2016, the cclib development team
 #
 # The library is free software, distributed under the terms of
 # the GNU Lesser General Public version 2.1 or later. You should have
@@ -56,7 +56,7 @@ def setup_cclib():
 
     setup(
         name = "cclib",
-        version = "1.3.1",
+        version = "1.4",
         url = "http://cclib.github.io/",
         author = "cclib development team",
         author_email = "cclib-users@lists.sourceforge.net",
