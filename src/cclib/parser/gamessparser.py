@@ -904,6 +904,7 @@ class GAMESS(logfileparser.Logfile):
                 # If not all coefficients are printed, the logfile will go right to
                 # the beta section if there is one, so break out in that case.
                 if "BETA SET" in numbers:
+                    line = numbers
                     break
 
                 # Sometimes there are some blank lines here.
@@ -976,8 +977,6 @@ class GAMESS(logfileparser.Logfile):
                         self.mocoeffs[0][base+j, i] = float(coeffs[j * 11:(j + 1) * 11])
                         j += 1
 
-            line = next(inputfile)
-
             # If it's a restricted calc and no more properties, we have:
             #
             #  ...... END OF RHF/DFT CALCULATION ......
@@ -996,7 +995,9 @@ class GAMESS(logfileparser.Logfile):
             #                      1          2          3          4          5
             # ...
             #
-            line = next(inputfile)
+            if "BETA SET" not in line:
+                line = next(inputfile)
+                line = next(inputfile)
 
             # This can come in between the alpha and beta orbitals (see #130).
             if line.strip() == "LZ VALUE ANALYSIS FOR THE MOS":
@@ -1015,13 +1016,16 @@ class GAMESS(logfileparser.Logfile):
                 # Sometimes EIGENVECTORS is missing, so rely on dashes to signal it.
                 if set(line.strip()) == {'-'}:
                     self.skip_lines(inputfile, ['EIGENVECTORS', 'd', 'b'])
+                    line = next(inputfile)
 
                 for base in range(0, self.nmo, 5):
                     self.updateprogress(inputfile, "Coefficients")
                     if base != 0:
-                        blank = next(inputfile)
-                    line = next(inputfile)  # Eigenvector no
+                        line = next(inputfile)
+                        line = next(inputfile)
                     line = next(inputfile)
+                    if "PROPERTIES" in line:
+                        break
                     self.moenergies[1].extend([utils.convertor(float(x), "hartree", "eV") for x in line.split()])
                     line = next(inputfile)
                     self.mosyms[1].extend(list(map(self.normalisesym, line.split())))
