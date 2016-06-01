@@ -122,22 +122,22 @@ class CJSON(filewriter.Writer):
             cjson_dict['formula'] = self.pbmol.formula
         
         #Helpers functions which use properties provided by cclib      
-        self.generateProperties(cjson_dict)
-        self.generateAtoms(cjson_dict)
-        self.generateOptimization(cjson_dict)
-        self.generateVibrations(cjson_dict)
-        self.generateBonds(cjson_dict)
-        self.generateTransitions(cjson_dict)
-        self.generateFragments(cjson_dict)
+        self.generate_properties(cjson_dict)
+        self.generate_atoms(cjson_dict)
+        self.generate_optimization(cjson_dict)
+        self.generate_vibrations(cjson_dict)
+        self.generate_bonds(cjson_dict)
+        self.generate_transitions(cjson_dict)
+        self.generate_fragments(cjson_dict)
      
         if has_openbabel:
             cjson_dict['diagram'] = self.pbmol.write(format='svg')
             
                  
-        return json.dumps(cjson_dict, cls=NumpyEncoder)
+        return json.dumps(cjson_dict, cls = NumpyAwareJSONEncoder)
 
     
-    def hasData(self, attrNames):
+    def has_data(self, attrNames):
         """Returns true if any of the attributes 
            exist in ccData
         """ 
@@ -149,19 +149,19 @@ class CJSON(filewriter.Writer):
                 return True
         return False
     
-    def getAttrList(self, attrList):
+    def get_attr_list(self, attr_list):
         """Returns a list of attributes which can 
            be parsed by cclib
         """
         list = []
-        for name in attrList:
+        for name in attr_list:
             if hasattr(self.ccdata, name):
                 list.append(name)
         return list
         
         
             
-    def generateProperties(self, cjson_dict):
+    def generate_properties(self, cjson_dict):
         """ Appends the Properties object into the cjson
         Properties table:
             1) Molecular Mass
@@ -199,12 +199,12 @@ class CJSON(filewriter.Writer):
             cjson_dict['Properties']['molecularMass'] = self.pbmol.molwt
             
         if hasattr(self.ccdata, 'charge'):
-            cjson_dict['Properties']['charge'] = self.ccdata.charge
+            cjson_dict['Properties'][self._attrkeynames['charge']] = self.ccdata.charge
         if hasattr(self.ccdata, 'mult'):
-            cjson_dict['Properties']['mult'] = self.ccdata.mult
+            cjson_dict['Properties'][self._attrkeynames['mult']] = self.ccdata.mult
         
         energyAttr = ['moenergies', 'freeenergy', 'mpenergies', 'ccenergies' ]
-        if self.hasData(energyAttr):
+        if self.has_data(energyAttr):
             cjson_dict['Properties']['Energy'] = dict()
             
             if (hasattr(self.ccdata, 'moenergies') and hasattr(self.ccdata, 'homos')):            
@@ -227,39 +227,41 @@ class CJSON(filewriter.Writer):
                 cjson_dict['Properties']['Energy']['total'] = self.ccdata.scfenergies[-1]
             
             if hasattr(self.ccdata, 'freeenergy'):
-                cjson_dict['Properties']['Energy']['freeEnergy'] = self.ccdata.freeenergy
+                cjson_dict['Properties']['Energy'][self._attrkeynames['freeenergy']] = self.ccdata.freeenergy
             
             # Check if we need to pass the entire ndarray or can we just pass the last value of the nD array
             if hasattr(self.ccdata, 'mpenergies'):
-                cjson_dict['Properties']['Energy']['mollerPlesset'] = self.ccdata.mpenergies
+                cjson_dict['Properties']['Energy'][self._attrkeynames['mpenergies']] = self.ccdata.mpenergies
             
             #Same point as above
             if hasattr(self.ccdata, 'ccenergies'):
-                cjson_dict['Properties']['Energy']['coupledCluster'] = self.ccdata.mpenergies
+                cjson_dict['Properties']['Energy'][self._attrkeynames['ccenergies']] = self.ccdata.ccenergies
         
         if hasattr(self.ccdata, 'natom'):
-            cjson_dict['Properties']['number of atoms'] = self.ccdata.natom
+            cjson_dict['Properties'][self._attrkeynames['natom']] = self.ccdata.natom
             
-        propertyAttr = ['enthalpy', 'entropy','temperature', 'atomcharges']
-        existAttr = self.getAttrList(propertyAttr)
-        
         if hasattr(self.ccdata, 'moments'):
             cjson_dict['totalDipoleMoment'] = self._calculate_total_dipole_moment()
+        if hasattr(self.ccdata, 'atomcharges'):
+            cjson_dict['Properties']['PartialCharges'][self._attrkeynames['atomcharges']] = self.ccdata.atomcharges
         
-        for attribute in existAttr:
-            cjson_dict['Properties'][attribute] = getattr(self.ccdata, attribute)
+        propertyAttr = ['enthalpy', 'entropy','temperature']
+        exist_attr = self.get_attr_list(propertyAttr)
         
-        orbitalAttr = ['homos', 'moenergies', 'aooverlaps', 'mosyms', 'mocoeffs']
-        if self.hasData(orbitalAttr):
+        for attribute in exist_attr:
+            cjson_dict['Properties'][self._attrkeynames[attribute]] = getattr(self.ccdata, attribute)
+        
+        orbital_attr = ['homos', 'moenergies', 'aooverlaps', 'mosyms', 'mocoeffs']
+        if self.has_data(orbital_attr):
             cjson_dict['Properties']['Orbitals'] = dict()
             
             # I will be sacrificing descriptive attribute names for code brevity - Check
-            existOrbitalAttr = self.getAttrList(orbitalAttr)
-            for attribute in existOrbitalAttr:
-                cjson_dict['Properties'][attribute] = getattr(self.ccdata, attribute)
+            exist_orbital_attr = self.get_attr_list(orbital_attr)
+            for attribute in exist_orbital_attr:
+                cjson_dict['Properties']['Orbitals'][self._attrkeynames[attribute]] = getattr(self.ccdata, attribute)
                 
                 
-    def generateAtoms(self,cjson_dict):
+    def generate_atoms(self,cjson_dict):
         """ Appends the Atoms object into the cjson
         Atoms Table:
             1) Elements
@@ -280,7 +282,7 @@ class CJSON(filewriter.Writer):
         
         if hasattr(self.ccdata, 'atomnos'):
             cjson_dict['Atoms']['Elements'] = dict()
-            cjson_dict['Atoms']['Elements']['atomicNumber'] = self.ccdata.atomnos.tolist()
+            cjson_dict['Atoms']['Elements'][self._attrkeynames['atomnos']] = self.ccdata.atomnos.tolist()
             cjson_dict['Atoms']['Elements']['atomCount'] = len(self.ccdata.atomnos)
             cjson_dict['Atoms']['Elements']['heavyAtomCount'] = len([x for x in self.ccdata.atomnos if x > 1])
         
@@ -288,25 +290,25 @@ class CJSON(filewriter.Writer):
             cjson_dict['Atoms']['Coords'] = dict()
             cjson_dict['Atoms']['Coords']['3d'] = self.ccdata.atomcoords[-1].flatten().tolist()
             
-        orbitalList = ['aonames', 'atombasis']
-        if self.hasData(orbitalList):
+        orbital_list = ['aonames', 'atombasis']
+        if self.has_data(orbital_list):
             cjson_dict['Atoms']['Orbitals'] = dict()
             if hasattr(self.ccdata, 'aonames'):
-                cjson_dict['Atoms']['Orbitals']['names'] = self.ccdata.aonames
+                cjson_dict['Atoms']['Orbitals'][self._attrkeynames['aonames']] = self.ccdata.aonames
             if hasattr(self.ccdata, 'atombasis'):
-                cjson_dict['Atoms']['Orbitals']['Indices'] = self.ccdata.atombasis
+                cjson_dict['Atoms']['Orbitals'][self._attrkeynames['atombasis']] = self.ccdata.atombasis
                 
         if hasattr(self.ccdata, 'coreelectrons'):
-            cjson_dict['Atoms']['coreElectrons'] = self.ccdata.coreelectrons.tolist()
+            cjson_dict['Atoms'][self._attrkeynames['coreelectrons']] = self.ccdata.coreelectrons.tolist()
             
         if hasattr(self.ccdata, 'atommasses'):
-            cjson_dict['Atoms']['atomicMasses'] = self.ccdata.atommasses.tolist()
+            cjson_dict['Atoms'][self._attrkeynames['atommasses']] = self.ccdata.atommasses.tolist()
             
         if hasattr(self.ccdata, 'atomspins'):
-            cjson_dict['Atoms']['atomicSpins'] = self.ccdata.atomspins
+            cjson_dict['Atoms'][self._attrkeynames['atomspins']] = self.ccdata.atomspins
             
         
-    def generateOptimization(self,cjson_dict):
+    def generate_optimization(self,cjson_dict):
         """ Appends the Optimization object into the cjson
             Optimization table:
                 1) Done 
@@ -326,33 +328,32 @@ class CJSON(filewriter.Writer):
                     d) PES Parameter Values 
         
         """
-        optiAttr = ['optdone', 'geotargets','nbasis', 'nmo', 'scfenergies', 'scancoords', 'scannames']
-        if self.hasData(optiAttr):
+        opti_attr = ['optdone', 'geotargets','nbasis', 'nmo', 'scfenergies', 'scancoords', 'scannames']
+        if self.has_data(opti_attr):
             cjson_dict['Optimization'] = dict()
-            attrList = ['optdone', 'optstatus', 'geotargets', 'geovalues', 'nbasis', 'nmo' ]
-            existAttr = self.getAttrList(attrList)
+            attr_list = ['optdone', 'optstatus', 'geotargets', 'geovalues', 'nbasis', 'nmo' ]
+            exist_attr = self.get_attr_list(attr_list)
             
-            for attribute in existAttr:
-                cjson_dict['Optimization'][attribute] = getattr(self.ccdata, attribute)
+            for attribute in exist_attr:
+                cjson_dict['Optimization'][self._attrkeynames[attribute]] = getattr(self.ccdata, attribute)
             
             #assumption: If SCFenergies exist, then scftargets will also exist
             if hasattr(self.ccdata, 'scfenergies'):
                 cjson_dict['Optimization']['SCF'] = dict()
-                cjson_dict['Optimization']['SCF']['energies'] = self.ccdata.scfenergies
-                cjson_dict['Optimization']['SCF']['targets'] = self.ccdata.scftargets
+                cjson_dict['Optimization']['SCF'][self._attrkeynames['scfenergies']] = self.ccdata.scfenergies
+                cjson_dict['Optimization']['SCF'][self._attrkeynames['scftargets']] = self.ccdata.scftargets
             if hasattr(self.ccdata, 'scfvalues'):
-                cjson_dict['Optimization']['SCF']['values'] = self.ccdata.scfvalues
+                cjson_dict['Optimization']['SCF'][self._attrkeynames['scfvalues']] = self.ccdata.scfvalues
             
             #Same assumption as above
             if hasattr(self.ccdata, 'scanenergies'):
                 cjson_dict['Optimization']['Scan'] = dict()
-                cjson_dict['Optimization']['Scan']['stepGeometry'] = self.ccdata.scancoords.scancoords
-                cjson_dict['Optimization']['Scan']['PES-energies'] = self.ccdata.scancoords.scanenergies
-                cjson_dict['Optimization']['Scan']['variableNames'] = self.ccdata.scancoords.scannames
-                cjson_dict['Optimization']['Scan']['PES-params'] = self.ccdata.scancoords.scanparm
+                attr_list = ['scancoords', 'scanenergies', 'scannames', 'scanparm']
+                for attr in attr_list:
+                    cjson_dict['Optimization']['Scan'][self._attrkeynames[attr]] = getattr(self.ccdata, attr)
                 
              
-    def generateVibrations(self,cjson_dict):
+    def generate_vibrations(self,cjson_dict):
         """ Appends the Vibrations object into the cjson
             Vibrations table:
                 1) Anharmonicity constants 
@@ -364,15 +365,15 @@ class CJSON(filewriter.Writer):
                 5) Hessian matrix 
                 6) Displacement               
         """
-        vibAttr = ['vibanharms', 'vibanharms', 'vibirs', 'vibramans', 'vibsyms', 'hessian', 'vibdisps' ]
-        if self.hasData(vibAttr):
+        vib_attr = ['vibanharms', 'vibanharms', 'vibirs', 'vibramans', 'vibsyms', 'hessian', 'vibdisps' ]
+        if self.has_data(vib_attr):
             cjson_dict['Vibrations'] = dict()
             
-            if hasattr(self.ccdata, 'vibanharms'):
-                cjson_dict['Vibrations']['anharmonicityConstants'] = self.ccdata.vibanharms
+            attr_list = ['vibanharms','vibfreqs' ,'vibsyms', 'hessian', 'vibdisps']
+            available_attr_list = self.get_attr_list(attr_list)
             
-            if hasattr(self.ccdata, 'vibfreqs'):
-                cjson_dict['Vibrations']['frequencies'] = self.ccdata.vibfreqs
+            for attribute in available_attr_list:
+                cjson_dict['Vibrations'][self._attrkeynames[attribute]] = getattr(self.ccdata, attribute)
             
             if hasattr(self.ccdata, 'vibirs') or hasattr(self.ccdata, 'vibramans'):
                 cjson_dict['Vibrations']['Intensities'] = dict()
@@ -380,14 +381,9 @@ class CJSON(filewriter.Writer):
                     cjson_dict['Vibrations']['Intensities']['IR'] = self.ccdata.vibirs
                 else:
                     cjson_dict['Vibrations']['Intensities']['Raman'] = self.ccdata.vibramans
-                
-            attrList = ['vibsyms', 'hessian', 'vibdisps']
-            availableAttrList = self.getAttrList(attrList)
             
-            for attribute in availableAttrList:
-                cjson_dict['Vibrations'][attribute] = getattr(self.ccdata, attribute)
             
-    def generateBonds(self,cjson_dict):
+    def generate_bonds(self,cjson_dict):
         """ Appends the Bonds object into the cjson
             Bonds table:
                 1) Connections 
@@ -403,7 +399,7 @@ class CJSON(filewriter.Writer):
                 cjson_dict['bonds']['connections']['index'].append(bond[1] + 1)
             cjson_dict['bonds']['order'] = [bond[2] for bond in self.bond_connectivities]
             
-    def generateTransitions(self,cjson_dict):
+    def generate_transitions(self,cjson_dict):
         """ Appends the Transition object into the cjson
             Transitions table:
                1) Electronic Transitions 
@@ -412,15 +408,15 @@ class CJSON(filewriter.Writer):
                4) 1-excited-config  
                5) Symmetry 
         """
-        attrList = ['etenergies', 'etoscs', 'etrotats', 'etsecs', 'etsyms' ]
-        if self.hasData(attrList):
+        attr_list = ['etenergies', 'etoscs', 'etrotats', 'etsecs', 'etsyms' ]
+        if self.has_data(attr_list):
             cjson_dict['Transitions'] = dict()
-            availableAttr = self.getAttrList(attrList)
+            available_attr = self.get_attr_list(attr_list)
             
-            for attribute in availableAttr:
-                cjson_dict['Transitions'][attribute] = getattr(self.ccdata, attribute)
+            for attribute in available_attr:
+                cjson_dict['Transitions'][self._attrkeynames[attribute]] = getattr(self.ccdata, attribute)
                 
-    def generateFragments(self,cjson_dict):
+    def generate_fragments(self,cjson_dict):
         """ Appends the Fragments object into the cjson
             Fragments table:
                1) Names 
@@ -428,46 +424,55 @@ class CJSON(filewriter.Writer):
                3) Orbital Names 
                4) Orbital Overlap 
         """
-        attrList = ['fragnames', 'frags', 'fonames', 'fooverlaps' ]
-        if self.hasData(attrList):
+        attr_list = ['fragnames', 'frags', 'fonames', 'fooverlaps' ]
+        if self.has_data(attr_list):
             cjson_dict['Fragments'] = dict()
-            availableAttr = self.getAttrList(attrList)
+            available_attr = self.get_attr_list(attr_list)
             
-            for attribute in availableAttr:
-                cjson_dict['Fragments'][attribute] = getattr(self.ccdata, attribute)
+            for attribute in available_attr:
+                cjson_dict['Fragments'][self._attrkeynames[attribute]] = getattr(self.ccdata, attribute)
     
 
-class NumpyEncoder(json.JSONEncoder):
-
+class NumpyAwareJSONEncoder(json.JSONEncoder):
     def default(self, obj):
-        """If input object is an ndarray it will be converted into a dict 
-        holding dtype, shape and the data, base64 encoded.
-        """
         if isinstance(obj, np.ndarray):
-            if obj.flags['C_CONTIGUOUS']:
-                obj_data = obj.data
+            if obj.ndim == 1:
+                return obj.tolist()
             else:
-                cont_obj = np.ascontiguousarray(obj)
-                assert(cont_obj.flags['C_CONTIGUOUS'])
-                obj_data = cont_obj.data
-            data_b64 = base64.b64encode(obj_data)
-            return dict(__ndarray__=data_b64,
-                        dtype=str(obj.dtype),
-                        shape=obj.shape)
-        # Let the base class default method raise the TypeError
-        return json.JSONEncoder(self, obj)
+                return [self.default(obj[i]) for i in range(obj.shape[0])]
+        return json.JSONEncoder.default(self, obj)
 
-
-    def json_numpy_obj_hook(dct):
-        """Decodes a previously encoded numpy ndarray with proper shape and dtype.
-    
-        :param dct: (dict) json encoded ndarray
-        :return: (ndarray) if input was an encoded ndarray
-        """
-        if isinstance(dct, dict) and '__ndarray__' in dct:
-            data = base64.b64decode(dct['__ndarray__'])
-            return np.frombuffer(data, dct['dtype']).reshape(dct['shape'])
-        return dct
+# class NumpyEncoder(json.JSONEncoder):
+# 
+#     def default(self, obj):
+#         """If input object is an ndarray it will be converted into a dict 
+#         holding dtype, shape and the data, base64 encoded.
+#         """
+#         if isinstance(obj, np.ndarray):
+#             if obj.flags['C_CONTIGUOUS']:
+#                 obj_data = obj.data
+#             else:
+#                 cont_obj = np.ascontiguousarray(obj)
+#                 assert(cont_obj.flags['C_CONTIGUOUS'])
+#                 obj_data = cont_obj.data
+#             data_b64 = base64.b64encode(obj_data)
+#             return dict(__ndarray__=data_b64,
+#                         dtype=str(obj.dtype),
+#                         shape=obj.shape)
+#         # Let the base class default method raise the TypeError
+#         return json.JSONEncoder(self, obj)
+# 
+# 
+#     def json_numpy_obj_hook(dct):
+#         """Decodes a previously encoded numpy ndarray with proper shape and dtype.
+#     
+#         :param dct: (dict) json encoded ndarray
+#         :return: (ndarray) if input was an encoded ndarray
+#         """
+#         if isinstance(dct, dict) and '__ndarray__' in dct:
+#             data = base64.b64decode(dct['__ndarray__'])
+#             return np.frombuffer(data, dct['dtype']).reshape(dct['shape'])
+#         return dct
                 
 if __name__ == "__main__":
     pass
