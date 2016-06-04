@@ -7,7 +7,6 @@
 # the GNU Lesser General Public version 2.1 or later. You should have
 # received a copy of the license along with cclib. You can also access
 # the full license online at http://www.gnu.org/copyleft/lgpl.html.
-from scipy.constants.constants import alpha
 
 """A writer for chemical JSON (CJSON) files."""
 
