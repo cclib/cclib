@@ -18,7 +18,6 @@ except ImportError:
 
 import os.path
 import json
-import base64
 import numpy as np
 
 from . import filewriter
@@ -86,7 +85,6 @@ class CJSON(filewriter.Writer):
         "vibramans":      'raman',
         "vibsyms":        'symmetry',
     }
-    
 
     def __init__(self, ccdata, *args, **kwargs):
         """Initialize the chemical JSON writer object.
@@ -99,20 +97,17 @@ class CJSON(filewriter.Writer):
         super(CJSON, self).__init__(ccdata, *args, **kwargs)
 
         self.generate_repr()
-    
-    
+
     def generate_repr(self):
         """Generate the CJSON representation of the logfile data.
            Naming Convention followed:
               Dictionary object have names first letter Capitalized
               Attribute names have all lower characters
         """
-
         cjson_dict = dict()
         
-        #Need to decide on a number format
+        # Need to decide on a number format
         cjson_dict['chemical json'] = 0
-
         if self.jobfilename is not None:
             cjson_dict['name'] = os.path.splitext(self.jobfilename)[0]
 
@@ -123,9 +118,9 @@ class CJSON(filewriter.Writer):
             cjson_dict['inchikey'] = self.pbmol.write('inchikey')
             cjson_dict['formula'] = self.pbmol.formula
             
-        #Incorporate Unit Cell into the chemical JSON
-        
-        #Helpers functions which use properties provided by cclib      
+        # Incorporate Unit Cell into the chemical JSON
+
+        # Helpers functions which use properties provided by cclib
         self.generate_properties(cjson_dict)
         self.generate_atoms(cjson_dict)
         self.generate_optimization(cjson_dict)
@@ -137,14 +132,13 @@ class CJSON(filewriter.Writer):
         if has_openbabel:
             cjson_dict['diagram'] = self.pbmol.write(format='svg')
                  
-        return json.dumps(cjson_dict, cls = NumpyAwareJSONEncoder)
-
+        return json.dumps(cjson_dict, cls=JSONIndentEncoder, sort_keys=True, indent=4)
 
     def set_JSON_attribute(self, object, list):
         """
         Args:
             object: Python dictionary which is being appended with the key value
-            key: list of cclib attribute name
+            list: list of cclib attribute name
 
         Returns: 
             None. The dictionary is modified to contain the attribute with the
@@ -154,7 +148,6 @@ class CJSON(filewriter.Writer):
             if hasattr(self.ccdata, key):
                 object[self._attrkeynames[key]] = getattr(self.ccdata, key)
 
-    
     def has_data(self, attr_names):
         """
         Args:
@@ -168,7 +161,6 @@ class CJSON(filewriter.Writer):
                 return True
         return False
         
-                   
     def generate_properties(self, cjson_dict):
         """ Appends the Properties object into the cjson
         Properties table:
@@ -205,13 +197,13 @@ class CJSON(filewriter.Writer):
         if has_openbabel:
             cjson_dict['Properties']['molecularMass'] = self.pbmol.molwt
             
-        self.set_JSON_attribute(cjson_dict['Properties'],['charge','mult'])
+        self.set_JSON_attribute(cjson_dict['Properties'], ['charge', 'mult'])
         
-        energyAttr = ['moenergies', 'freeenergy', 'mpenergies', 'ccenergies' ]
-        if self.has_data(energyAttr):
+        energy_attr = ['moenergies', 'freeenergy', 'mpenergies', 'ccenergies']
+        if self.has_data(energy_attr):
             cjson_dict['Properties']['Energy'] = dict()
             
-            if (hasattr(self.ccdata, 'moenergies') and hasattr(self.ccdata, 'homos')):            
+            if hasattr(self.ccdata, 'moenergies') and hasattr(self.ccdata, 'homos'):
                 cjson_dict['Properties']['Energy']['Alpha'] = dict()
                 cjson_dict['Properties']['Energy']['Beta'] = dict()
                 
@@ -230,9 +222,9 @@ class CJSON(filewriter.Writer):
                 cjson_dict['Properties']['Energy']['Beta']['gap'] = energy_beta_gap
                 cjson_dict['Properties']['Energy']['total'] = self.ccdata.scfenergies[-1]
 
-            self.set_JSON_attribute(cjson_dict['Properties']['Energy'], ['freeenergy','mpenergies', 'ccenergies'])
+            self.set_JSON_attribute(cjson_dict['Properties']['Energy'], ['freeenergy', 'mpenergies', 'ccenergies'])
 
-        self.set_JSON_attribute(cjson_dict['Properties'], ['enthalpy', 'entropy', 'natom','temperature'])
+        self.set_JSON_attribute(cjson_dict['Properties'], ['enthalpy', 'entropy', 'natom', 'temperature'])
 
         if hasattr(self.ccdata, 'moments'):
             cjson_dict['Properties'][self._attrkeynames['moments']] = self._calculate_total_dipole_moment()
@@ -246,8 +238,7 @@ class CJSON(filewriter.Writer):
             cjson_dict['Properties']['Orbitals'] = dict()
             self.set_JSON_attribute(cjson_dict['Properties']['Orbitals'], orbital_attr)
 
-                
-    def generate_atoms(self,cjson_dict):
+    def generate_atoms(self, cjson_dict):
         """ Appends the Atoms object into the cjson
         Atoms Table:
             1) Elements
@@ -282,8 +273,7 @@ class CJSON(filewriter.Writer):
 
         self.set_JSON_attribute(cjson_dict['Atoms'], ['coreelectrons', 'atommasses', 'atomspins'])
 
-                   
-    def generate_optimization(self,cjson_dict):
+    def generate_optimization(self, cjson_dict):
         """ Appends the Optimization object into the cjson
             Optimization table:
                 1) Done 
@@ -302,26 +292,25 @@ class CJSON(filewriter.Writer):
                     c) Variable names 
                     d) PES Parameter Values 
         """
-        opti_attr = ['optdone', 'geotargets','nbasis', 'nmo', 'scfenergies', 'scancoords', 'scannames']
+        opti_attr = ['optdone', 'geotargets', 'nbasis', 'nmo', 'scfenergies', 'scancoords', 'scannames']
         if self.has_data(opti_attr):
             cjson_dict['Optimization'] = dict()
-            attr_list = ['optdone', 'optstatus', 'geotargets', 'geovalues', 'nbasis', 'nmo' ]
+            attr_list = ['optdone', 'optstatus', 'geotargets', 'geovalues', 'nbasis', 'nmo']
             self.set_JSON_attribute(cjson_dict['Optimization'], attr_list)
 
-            #assumption: If SCFenergies exist, then scftargets will also exist
+            # assumption: If SCFenergies exist, then scftargets will also exist
             if hasattr(self.ccdata, 'scfenergies') or hasattr(self.ccdata, 'scfvalues'):
                 cjson_dict['Optimization']['SCF'] = dict()
-                attr_list = ['scfenergies','scftargets','scfvalues']
+                attr_list = ['scfenergies', 'scftargets', 'scfvalues']
                 self.set_JSON_attribute(cjson_dict['Optimization']['SCF'], attr_list)
                 
-            #Same assumption as above
+            # Same assumption as above
             if hasattr(self.ccdata, 'scanenergies'):
                 cjson_dict['Optimization']['Scan'] = dict()
                 attr_list = ['scancoords', 'scanenergies', 'scannames', 'scanparm']
                 self.set_JSON_attribute(cjson_dict['Optimization']['Scan'], attr_list)
                 
-             
-    def generate_vibrations(self,cjson_dict):
+    def generate_vibrations(self, cjson_dict):
         """ Appends the Vibrations object into the cjson
             Vibrations table:
                 1) Anharmonicity constants 
@@ -333,11 +322,11 @@ class CJSON(filewriter.Writer):
                     a)IR 
                     b) Raman               
         """
-        vib_attr = ['vibanharms', 'vibanharms', 'vibirs', 'vibramans', 'vibsyms', 'hessian', 'vibdisps' ]
+        vib_attr = ['vibanharms', 'vibanharms', 'vibirs', 'vibramans', 'vibsyms', 'hessian', 'vibdisps']
         if self.has_data(vib_attr):
             cjson_dict['Vibrations'] = dict()
             
-            attr_list = ['vibanharms','vibfreqs' ,'vibsyms', 'hessian', 'vibdisps']
+            attr_list = ['vibanharms', 'vibfreqs', 'vibsyms', 'hessian', 'vibdisps']
             self.set_JSON_attribute(cjson_dict['Vibrations'], attr_list)
             
             if hasattr(self.ccdata, 'vibirs') or hasattr(self.ccdata, 'vibramans'):
@@ -345,8 +334,7 @@ class CJSON(filewriter.Writer):
                 attr_list = ['vibirs', 'vibramans']
                 self.set_JSON_attribute(cjson_dict['Vibrations']['Intensities'], attr_list)
             
-            
-    def generate_bonds(self,cjson_dict):
+    def generate_bonds(self, cjson_dict):
         """ Appends the Bonds object into the cjson
             Bonds table:
                 1) Connections 
@@ -362,8 +350,7 @@ class CJSON(filewriter.Writer):
                 cjson_dict['Bonds']['Connections']['index'].append(bond[1] + 1)
             cjson_dict['Bonds']['order'] = [bond[2] for bond in self.bond_connectivities]
             
-            
-    def generate_transitions(self,cjson_dict):
+    def generate_transitions(self, cjson_dict):
         """ Appends the Transition object into the cjson
             Transitions table:
                1) Electronic Transitions 
@@ -372,13 +359,12 @@ class CJSON(filewriter.Writer):
                4) 1-excited-config  
                5) Symmetry 
         """
-        attr_list = ['etenergies', 'etoscs', 'etrotats', 'etsecs', 'etsyms' ]
+        attr_list = ['etenergies', 'etoscs', 'etrotats', 'etsecs', 'etsyms']
         if self.has_data(attr_list):
             cjson_dict['Transitions'] = dict()
             self.set_JSON_attribute(cjson_dict['Transitions'], attr_list)
                 
-                
-    def generate_fragments(self,cjson_dict):
+    def generate_fragments(self, cjson_dict):
         """ Appends the Fragments object into the cjson
             Fragments table:
                1) Names 
@@ -386,7 +372,7 @@ class CJSON(filewriter.Writer):
                3) Orbital Names 
                4) Orbital Overlap 
         """
-        attr_list = ['fragnames', 'frags', 'fonames', 'fooverlaps' ]
+        attr_list = ['fragnames', 'frags', 'fonames', 'fooverlaps']
         if self.has_data(attr_list):
             cjson_dict['Fragments'] = dict()
             self.set_JSON_attribute(cjson_dict['Fragments'], attr_list)
@@ -400,7 +386,48 @@ class NumpyAwareJSONEncoder(json.JSONEncoder):
             else:
                 return [self.default(obj[i]) for i in range(obj.shape[0])]
         return json.JSONEncoder.default(self, obj)
-    
-                
+
+
+class JSONIndentEncoder(json.JSONEncoder):
+    def __init__(self, *args, **kwargs):
+        super(JSONIndentEncoder, self).__init__(*args, **kwargs)
+        self.current_indent = 0
+        self.current_indent_str = ""
+
+    def encode(self, o):
+        # Special Processing for lists
+        if isinstance(o, (list, tuple)):
+            primitives_only = True
+            for item in o:
+                if isinstance(item, (list, tuple, dict)):
+                    primitives_only = False
+                    break
+            output = []
+            if primitives_only:
+                for item in o:
+                    output.append(json.dumps(item,  cls=NumpyAwareJSONEncoder))
+                return "[ " + ", ".join(output) + " ]"
+            else:
+                self.current_indent += self.indent
+                self.current_indent_str = "".join([" " for x in range(self.current_indent)])
+                for item in o:
+                    output.append(self.current_indent_str + self.encode(item))
+                self.current_indent -= self.indent
+                self.current_indent_str = "".join([" " for x in range(self.current_indent)])
+                return "[\n" + ",\n".join(output) + "\n" + self.current_indent_str + "]"
+        elif isinstance(o, dict):
+            output = []
+            self.current_indent += self.indent
+            self.current_indent_str = "".join([" " for x in range(self.current_indent)])
+            for key, value in o.iteritems():
+                output.append(self.current_indent_str + json.dumps(key, cls=NumpyAwareJSONEncoder) + ": " +
+                              str(self.encode(value)))
+            self.current_indent -= self.indent
+            self.current_indent_str = "".join([" " for x in range(self.current_indent)])
+            return "{\n" + ",\n".join(output) + "\n" + self.current_indent_str + "}"
+        else:
+            return json.dumps(o, cls=NumpyAwareJSONEncoder)
+
+
 if __name__ == "__main__":
     pass
