@@ -358,9 +358,9 @@ class CJSON(filewriter.Writer):
             cjson_dict['Bonds']['Connections'] = dict()
             cjson_dict['Bonds']['Connections']['index'] = []
             for bond in self.bond_connectivities:
-                cjson_dict['bonds']['connections']['index'].append(bond[0] + 1)
-                cjson_dict['bonds']['connections']['index'].append(bond[1] + 1)
-            cjson_dict['bonds']['order'] = [bond[2] for bond in self.bond_connectivities]
+                cjson_dict['Bonds']['Connections']['index'].append(bond[0] + 1)
+                cjson_dict['Bonds']['Connections']['index'].append(bond[1] + 1)
+            cjson_dict['Bonds']['order'] = [bond[2] for bond in self.bond_connectivities]
             
             
     def generate_transitions(self,cjson_dict):
