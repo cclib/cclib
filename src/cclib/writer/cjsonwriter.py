@@ -341,7 +341,7 @@ class CJSON(filewriter.Writer):
                     a) Index
                 2) Order    
         """
-        if has_openbabel:
+        if has_openbabel and (len(self.ccdata.atomnos) > 1):
             cjson_dict['Bonds'] = dict()
             cjson_dict['Bonds']['Connections'] = dict()
             cjson_dict['Bonds']['Connections']['index'] = []
