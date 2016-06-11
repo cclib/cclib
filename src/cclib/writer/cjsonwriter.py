@@ -36,49 +36,49 @@ class CJSON(filewriter.Writer):
         "atommasses":     'mass',
         "atomnos":        'number',
         "atomspins":      'spins',
-        "ccenergies":     'coupledCluster',
+        "ccenergies":     'coupled cluster',
         "charge":         'charge',
-        "coreelectrons":  'coreElectrons',
+        "coreelectrons":  'core electrons',
         "enthalpy":       'enthalpy',
         "entropy":        'entropy',
-        "etenergies":     'electronicTransitions',
-        "etoscs":         'oscillatorStrength',
-        "etrotats":       'rotatoryStrength',
-        "etsecs":         'oneExcitedConfig',
+        "etenergies":     'electronic transitions',
+        "etoscs":         'oscillator strength',
+        "etrotats":       'rotatory strength',
+        "etsecs":         'one excited config',
         "etsyms":         'symmetry',
-        "freeenergy":     'freeEnergy',
-        "fonames":        'orbitalNames',
-        "fooverlaps":     'orbitalOverlap',
+        "freeenergy":     'free energy',
+        "fonames":        'orbital names',
+        "fooverlaps":     'orbital overlap',
         "fragnames":      'names',
-        "frags":          'atomIndices',
+        "frags":          'atom indices',
         'gbasis':         'TBD',
-        "geotargets":     'geometricTargets',
-        "geovalues":      'geometricValues',
+        "geotargets":     'geometric targets',
+        "geovalues":      'geometric values',
         "grads":          'TBD',
-        "hessian":        'hessianMatrix',
+        "hessian":        'hessian matrix',
         "homos":          'homos',
         "mocoeffs":       'coeffs',
         "moenergies":     'energies',
-        "moments":        'totalDipoleMoment',
+        "moments":        'total dipole moment',
         "mosyms":         'symmetry',
-        "mpenergies":     'mollerPlesset',
+        "mpenergies":     'moller plesset',
         "mult":           'multiplicity',
-        "natom":          'numberOfAtoms',
-        "nbasis":         'basisNumber',
-        "nmo":            'MO-number',
+        "natom":          'number of atoms',
+        "nbasis":         'basis number',
+        "nmo":            'MO number',
         "nocoeffs":       'TBD',
         "nooccnos":       'TBD',
         "optdone":        'done',
-        "optstatus":      'Status',
-        "scancoords":     'stepGeometry',
-        "scanenergies":   'PES-energies',
-        "scannames":      'variableNames',
-        "scanparm":       'PES-parameterValues',
+        "optstatus":      'status',
+        "scancoords":     'step geometry',
+        "scanenergies":   'PES energies',
+        "scannames":      'variable names',
+        "scanparm":       'PES parameter values',
         "scfenergies":    'energies',
         "scftargets":     'targets',
         "scfvalues":      'values',
         "temperature":    'temperature',
-        "vibanharms":     'anharmonicityConstants',
+        "vibanharms":     'anharmonicity constants',
         "vibdisps":       'displacement',
         "vibfreqs":       'frequencies',
         "vibirs":         'IR',
@@ -169,11 +169,11 @@ class CJSON(filewriter.Writer):
             3) Multiplicity
             4) Energy
                  i) alpha
-                     a) Homo  
-                     b) Gap   
-                 ii) Beta        
-                     a) Homo        
-                     b) Gap         
+                     a) homo
+                     b) gap
+                 ii) beta        
+                     a) homo
+                     b) gap
                 iii) Total       
                  iv) Free Energy 
                   v) Moller - Plesset 
@@ -192,20 +192,20 @@ class CJSON(filewriter.Writer):
                 iv) Symmetry 
                  v) Coeffs
         """
-        cjson_dict['Properties'] = dict()
+        cjson_dict['properties'] = dict()
         
         if has_openbabel:
-            cjson_dict['Properties']['molecularMass'] = self.pbmol.molwt
+            cjson_dict['properties']['molecular mass'] = self.pbmol.molwt
             
-        self.set_JSON_attribute(cjson_dict['Properties'], ['charge', 'mult'])
+        self.set_JSON_attribute(cjson_dict['properties'], ['charge', 'mult'])
         
         energy_attr = ['moenergies', 'freeenergy', 'mpenergies', 'ccenergies']
         if self.has_data(energy_attr):
-            cjson_dict['Properties']['Energy'] = dict()
+            cjson_dict['properties']['energy'] = dict()
             
             if hasattr(self.ccdata, 'moenergies') and hasattr(self.ccdata, 'homos'):
-                cjson_dict['Properties']['Energy']['Alpha'] = dict()
-                cjson_dict['Properties']['Energy']['Beta'] = dict()
+                cjson_dict['properties']['energy']['alpha'] = dict()
+                cjson_dict['properties']['energy']['beta'] = dict()
                 
                 homo_idx_alpha = int(self.ccdata.homos[0])
                 homo_idx_beta = int(self.ccdata.homos[-1])
@@ -216,27 +216,27 @@ class CJSON(filewriter.Writer):
                 energy_beta_lumo = self.ccdata.moenergies[-1][homo_idx_beta + 1]
                 energy_beta_gap = energy_beta_lumo - energy_beta_homo
                 
-                cjson_dict['Properties']['Energy']['Alpha']['homo'] = energy_alpha_homo
-                cjson_dict['Properties']['Energy']['Alpha']['gap'] = energy_alpha_gap
-                cjson_dict['Properties']['Energy']['Beta']['homo'] = energy_beta_homo
-                cjson_dict['Properties']['Energy']['Beta']['gap'] = energy_beta_gap
-                cjson_dict['Properties']['Energy']['total'] = self.ccdata.scfenergies[-1]
+                cjson_dict['properties']['energy']['alpha']['homo'] = energy_alpha_homo
+                cjson_dict['properties']['energy']['alpha']['gap'] = energy_alpha_gap
+                cjson_dict['properties']['energy']['beta']['homo'] = energy_beta_homo
+                cjson_dict['properties']['energy']['beta']['gap'] = energy_beta_gap
+                cjson_dict['properties']['energy']['total'] = self.ccdata.scfenergies[-1]
 
-            self.set_JSON_attribute(cjson_dict['Properties']['Energy'], ['freeenergy', 'mpenergies', 'ccenergies'])
+            self.set_JSON_attribute(cjson_dict['properties']['energy'], ['freeenergy', 'mpenergies', 'ccenergies'])
 
-        self.set_JSON_attribute(cjson_dict['Properties'], ['enthalpy', 'entropy', 'natom', 'temperature'])
+        self.set_JSON_attribute(cjson_dict['properties'], ['enthalpy', 'entropy', 'natom', 'temperature'])
 
         if hasattr(self.ccdata, 'moments'):
-            cjson_dict['Properties'][self._attrkeynames['moments']] = self._calculate_total_dipole_moment()
+            cjson_dict['properties'][self._attrkeynames['moments']] = self._calculate_total_dipole_moment()
 
         if hasattr(self.ccdata, 'atomcharges'):
-            cjson_dict['Properties']['PartialCharges'] = dict()
-            cjson_dict['Properties']['PartialCharges'] = self.ccdata.atomcharges
+            cjson_dict['properties']['partial charges'] = dict()
+            cjson_dict['properties']['partial charges'] = self.ccdata.atomcharges
         
         orbital_attr = ['homos', 'moenergies', 'aooverlaps', 'mosyms', 'mocoeffs']
         if self.has_data(orbital_attr):
-            cjson_dict['Properties']['Orbitals'] = dict()
-            self.set_JSON_attribute(cjson_dict['Properties']['Orbitals'], orbital_attr)
+            cjson_dict['properties']['orbitals'] = dict()
+            self.set_JSON_attribute(cjson_dict['properties']['orbitals'], orbital_attr)
 
     def generate_atoms(self, cjson_dict):
         """ Appends the Atoms object into the cjson
@@ -254,24 +254,24 @@ class CJSON(filewriter.Writer):
             5) Mass
             6) Spins
         """
-        cjson_dict['Atoms'] = dict()
+        cjson_dict['atoms'] = dict()
         
         if hasattr(self.ccdata, 'atomnos'):
-            cjson_dict['Atoms']['Elements'] = dict()
-            cjson_dict['Atoms']['Elements'][self._attrkeynames['atomnos']] = self.ccdata.atomnos
-            cjson_dict['Atoms']['Elements']['atomCount'] = len(self.ccdata.atomnos)
-            cjson_dict['Atoms']['Elements']['heavyAtomCount'] = len([x for x in self.ccdata.atomnos if x > 1])
+            cjson_dict['atoms']['elements'] = dict()
+            cjson_dict['atoms']['elements'][self._attrkeynames['atomnos']] = self.ccdata.atomnos
+            cjson_dict['atoms']['elements']['atom count'] = len(self.ccdata.atomnos)
+            cjson_dict['atoms']['elements']['heavy atom count'] = len([x for x in self.ccdata.atomnos if x > 1])
         
         if hasattr(self.ccdata, 'atomcoords'):
-            cjson_dict['Atoms']['Coords'] = dict()
-            cjson_dict['Atoms']['Coords']['3d'] = self.ccdata.atomcoords[-1].flatten().tolist()
+            cjson_dict['atoms']['coords'] = dict()
+            cjson_dict['atoms']['coords']['3d'] = self.ccdata.atomcoords[-1].flatten().tolist()
             
         orbital_list = ['aonames', 'atombasis']
         if self.has_data(orbital_list):
-            cjson_dict['Atoms']['Orbitals'] = dict()
-            self.set_JSON_attribute(cjson_dict['Atoms']['Orbitals'], orbital_list)
+            cjson_dict['atoms']['orbitals'] = dict()
+            self.set_JSON_attribute(cjson_dict['atoms']['orbitals'], orbital_list)
 
-        self.set_JSON_attribute(cjson_dict['Atoms'], ['coreelectrons', 'atommasses', 'atomspins'])
+        self.set_JSON_attribute(cjson_dict['atoms'], ['coreelectrons', 'atommasses', 'atomspins'])
 
     def generate_optimization(self, cjson_dict):
         """ Appends the Optimization object into the cjson
@@ -294,21 +294,21 @@ class CJSON(filewriter.Writer):
         """
         opti_attr = ['optdone', 'geotargets', 'nbasis', 'nmo', 'scfenergies', 'scancoords', 'scannames']
         if self.has_data(opti_attr):
-            cjson_dict['Optimization'] = dict()
+            cjson_dict['optimization'] = dict()
             attr_list = ['optdone', 'optstatus', 'geotargets', 'geovalues', 'nbasis', 'nmo']
-            self.set_JSON_attribute(cjson_dict['Optimization'], attr_list)
+            self.set_JSON_attribute(cjson_dict['optimization'], attr_list)
 
             # assumption: If SCFenergies exist, then scftargets will also exist
             if hasattr(self.ccdata, 'scfenergies') or hasattr(self.ccdata, 'scfvalues'):
-                cjson_dict['Optimization']['SCF'] = dict()
+                cjson_dict['optimization']['scf'] = dict()
                 attr_list = ['scfenergies', 'scftargets', 'scfvalues']
-                self.set_JSON_attribute(cjson_dict['Optimization']['SCF'], attr_list)
+                self.set_JSON_attribute(cjson_dict['optimization']['scf'], attr_list)
                 
-            # Same assumption as above
+            # Similar assumption as above
             if hasattr(self.ccdata, 'scanenergies'):
-                cjson_dict['Optimization']['Scan'] = dict()
+                cjson_dict['optimization']['scan'] = dict()
                 attr_list = ['scancoords', 'scanenergies', 'scannames', 'scanparm']
-                self.set_JSON_attribute(cjson_dict['Optimization']['Scan'], attr_list)
+                self.set_JSON_attribute(cjson_dict['optimization']['scan'], attr_list)
                 
     def generate_vibrations(self, cjson_dict):
         """ Appends the Vibrations object into the cjson
@@ -324,15 +324,15 @@ class CJSON(filewriter.Writer):
         """
         vib_attr = ['vibanharms', 'vibanharms', 'vibirs', 'vibramans', 'vibsyms', 'hessian', 'vibdisps']
         if self.has_data(vib_attr):
-            cjson_dict['Vibrations'] = dict()
+            cjson_dict['vibrations'] = dict()
             
             attr_list = ['vibanharms', 'vibfreqs', 'vibsyms', 'hessian', 'vibdisps']
-            self.set_JSON_attribute(cjson_dict['Vibrations'], attr_list)
+            self.set_JSON_attribute(cjson_dict['vibrations'], attr_list)
             
             if hasattr(self.ccdata, 'vibirs') or hasattr(self.ccdata, 'vibramans'):
-                cjson_dict['Vibrations']['Intensities'] = dict()
+                cjson_dict['vibrations']['intensities'] = dict()
                 attr_list = ['vibirs', 'vibramans']
-                self.set_JSON_attribute(cjson_dict['Vibrations']['Intensities'], attr_list)
+                self.set_JSON_attribute(cjson_dict['vibrations']['intensities'], attr_list)
             
     def generate_bonds(self, cjson_dict):
         """ Appends the Bonds object into the cjson
@@ -342,13 +342,13 @@ class CJSON(filewriter.Writer):
                 2) Order    
         """
         if has_openbabel and (len(self.ccdata.atomnos) > 1):
-            cjson_dict['Bonds'] = dict()
-            cjson_dict['Bonds']['Connections'] = dict()
-            cjson_dict['Bonds']['Connections']['index'] = []
+            cjson_dict['bonds'] = dict()
+            cjson_dict['bonds']['connections'] = dict()
+            cjson_dict['bonds']['connections']['index'] = []
             for bond in self.bond_connectivities:
-                cjson_dict['Bonds']['Connections']['index'].append(bond[0] + 1)
-                cjson_dict['Bonds']['Connections']['index'].append(bond[1] + 1)
-            cjson_dict['Bonds']['order'] = [bond[2] for bond in self.bond_connectivities]
+                cjson_dict['bonds']['connections']['index'].append(bond[0] + 1)
+                cjson_dict['bonds']['connections']['index'].append(bond[1] + 1)
+            cjson_dict['bonds']['order'] = [bond[2] for bond in self.bond_connectivities]
             
     def generate_transitions(self, cjson_dict):
         """ Appends the Transition object into the cjson
@@ -361,8 +361,8 @@ class CJSON(filewriter.Writer):
         """
         attr_list = ['etenergies', 'etoscs', 'etrotats', 'etsecs', 'etsyms']
         if self.has_data(attr_list):
-            cjson_dict['Transitions'] = dict()
-            self.set_JSON_attribute(cjson_dict['Transitions'], attr_list)
+            cjson_dict['transitions'] = dict()
+            self.set_JSON_attribute(cjson_dict['transitions'], attr_list)
                 
     def generate_fragments(self, cjson_dict):
         """ Appends the Fragments object into the cjson
@@ -374,8 +374,8 @@ class CJSON(filewriter.Writer):
         """
         attr_list = ['fragnames', 'frags', 'fonames', 'fooverlaps']
         if self.has_data(attr_list):
-            cjson_dict['Fragments'] = dict()
-            self.set_JSON_attribute(cjson_dict['Fragments'], attr_list)
+            cjson_dict['fragments'] = dict()
+            self.set_JSON_attribute(cjson_dict['fragments'], attr_list)
 
 
 class NumpyAwareJSONEncoder(json.JSONEncoder):
