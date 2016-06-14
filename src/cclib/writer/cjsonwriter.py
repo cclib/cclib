@@ -17,6 +17,7 @@ except ImportError:
     has_openbabel = False
 
 import os.path
+import ntpath
 import json
 import numpy as np
 
@@ -98,18 +99,24 @@ class CJSON(filewriter.Writer):
 
         self.generate_repr()
 
-    def generate_repr(self):
-        """Generate the CJSON representation of the logfile data.
-           Naming Convention followed:
-              Dictionary object have names first letter Capitalized
-              Attribute names have all lower characters
+    def pathname(self, path):
         """
+        This function is OS independent and returns the file name irrespective of
+        the file path containing forward slash or backward slash - which is valid
+        in Windows
+        """
+        head, tail = ntpath.split(path)
+        return tail or ntpath.basename(head)
+
+    def generate_repr(self):
+        """Generate the CJSON representation of the logfile data"""
+        
         cjson_dict = dict()
         
         # Need to decide on a number format
         cjson_dict['chemical json'] = 0
         if self.jobfilename is not None:
-            cjson_dict['name'] = os.path.splitext(self.jobfilename)[0]
+            cjson_dict['name'] = self.pathname(os.path.splitext(self.jobfilename)[0])
 
         # These are properties that can be collected using Open Babel.
         if has_openbabel:
