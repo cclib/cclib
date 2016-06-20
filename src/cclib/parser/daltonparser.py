@@ -16,6 +16,7 @@
 from __future__ import print_function
 
 import numpy
+import re
 
 
 from . import logfileparser
@@ -29,6 +30,9 @@ class DALTON(logfileparser.Logfile):
 
         # Call the __init__ method of the superclass
         super(DALTON, self).__init__(logname="DALTON", *args, **kwargs)
+        if not hasattr(self, "metadata"):
+            self.metadata = {}
+            self.metadata["package"] = self.logname
 
     def __str__(self):
         """Return a string representation of the object."""
@@ -79,6 +83,12 @@ class DALTON(logfileparser.Logfile):
 
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
+        # extract the version number first
+        if line[4:30] == "This is output from DALTON":
+            if line.split()[5] == "release" or line.split()[5] == "(Release":
+                self.metadata["version"] = line.split()[6][6:]
+            else:
+                self.metadata["version"] = line.split()[5]
 
         # This section at the start of geometry optimization jobs gives us information
         # about optimization targets (geotargets) and possibly other things as well.
@@ -166,7 +176,8 @@ class DALTON(logfileparser.Logfile):
             symmetry_atoms = []
             atommasses = []
             for cols in lines:
-                atomnos.append(self.table.number[cols[0]])
+                cols0 = ''.join([i for i in cols[0] if not i.isdigit()]) #remove numbers
+                atomnos.append(self.table.number[cols0])
                 if len(cols) == 3:
                     symmetry_atoms.append(int(cols[1][1]))
                     atommasses.append(float(cols[2]))
@@ -210,6 +221,7 @@ class DALTON(logfileparser.Logfile):
         #
         #  Threshold for neglecting AO integrals:  1.00D-12
         #
+
         if line.strip() == "Atoms and basis sets":
 
             self.skip_lines(inputfile, ['d', 'b'])
@@ -222,7 +234,11 @@ class DALTON(logfileparser.Logfile):
             assert "Total number of atoms:" in line
             self.set_attribute("natom", int(line.split()[-1]))
 
-            self.skip_lines(inputfile, ['b', 'basisname', 'b'])
+            #self.skip_lines(inputfile, ['b', 'basisname', 'b'])
+            line = next(inputfile)
+            line = next(inputfile)
+            self.metadata["basisname"] = re.findall(r'"([^"]*)"', line)[0]
+            line = next(inputfile)
 
             line = next(inputfile)
             cols = line.split()
@@ -501,6 +517,10 @@ class DALTON(logfileparser.Logfile):
             self.set_attribute("charge", int(line.split()[-1]))
         if "@    Spin multiplicity and 2 M_S" in line:
             self.set_attribute("mult", int(line.split()[-2]))
+            # Dalton only has ROHF, no UHF
+            if self.mult != 1:
+                self.metadata["spintype"] = "ROHF"
+
 
         #     Orbital specifications
         #     ======================
@@ -541,6 +561,27 @@ class DALTON(logfileparser.Logfile):
                 self.scftargets = []
             scftarget = self.float(line.split()[-1])
             self.scftargets.append([scftarget])
+
+        #the first try to extract atomic coordinates 
+        if "Cartesian Coordinates (a.u.)" in line:
+            if not hasattr(self, "atomcoords"):
+                self.atomcoords = []
+
+            line = next(inputfile)
+            line = next(inputfile)
+            line = next(inputfile)
+
+            atomcoords = []
+            for i in range(self.natom):
+                line = next(inputfile)
+                temp = line.split()
+
+                if len(temp) == 11:
+                    coords = [4, 7, 10]
+                else:
+                    coords = [6, 9, 12]
+                atomcoords.append([utils.convertor(float(temp[i]), "bohr", "Angstrom") for i in coords])
+            self.atomcoords.append(atomcoords)
 
         #                   .--------------------------------------------.
         #                   | Starting in Wave Function Section (SIRIUS) |
@@ -721,6 +762,51 @@ class DALTON(logfileparser.Logfile):
                 if len(self.moenergies[0]) != self.nmo:
                     self.set_attribute('nmo', len(self.moenergies[0]))
 
+        if "Hartree-Fock orbital energies, symmetry" in line:
+            if not hasattr(self, 'moenergies'):
+                self.moenergies = [[]]
+
+            line = next(inputfile)
+            line = next(inputfile)
+
+            moenergies = []
+            while line.strip():
+                moenergies = map(float, line.split())
+                self.moenergies[0].extend(moenergies)
+                line = next(inputfile)
+
+        if "Molecular orbitals for symmetry species" in line:
+            if not hasattr(self, "nmo"):
+                self.nmo = self.nbasis
+                if len(self.moenergies[0]) != self.nmo:
+                    self.set_attribute('nmo', len(self.moenergies[0]))
+
+            mocoeffs = [numpy.zeros((self.nmo, self.nbasis), "d")]
+
+            self.skip_lines(inputfile, ['d','b'])
+
+            imo = 0
+            while imo < self.nmo:
+                line = next(inputfile)
+                if "Total CPU  time used in SIRIUS" in line \
+                 or "Molecular orbitals for symmetry species" in line:
+                    break
+                cmo = len(line.split())-1
+                ibas = 0
+                coeffs = []
+                line = next(inputfile)
+                while line.strip():
+                    coeffs = list(map(float, line.split()[3:]))
+                    mocoeffs[0][imo:cmo+imo,ibas] = coeffs
+                    ibas += 1
+                    line = next(inputfile)
+
+                imo += cmo
+
+            self.mocoeffs = mocoeffs
+            if imo != self.nmo:
+                delattr(self, "mocoeffs")
+
         #                       .-----------------------------------.
         #                       | >>> Final results from SIRIUS <<< |
         #                       `-----------------------------------'
@@ -737,6 +823,13 @@ class DALTON(logfileparser.Logfile):
         # @    Final gradient norm:           0.000003746706
         # ...
         #
+        if "Final HF energy" in line and not (hasattr(self, "mpenergies") or hasattr(self, "ccenergies")):
+            self.metadata["theory"] = "HF"
+        if "Final DFT energy" in line:
+            self.metadata["theory"] = "DFT"
+        if "This is a DFT calculation of type" in line:
+            self.metadata["functional"] = line.split()[-1]
+
         if "Final DFT energy" in line or "Final HF energy" in line:
             if not hasattr(self, "scfenergies"):
                 self.scfenergies = []
@@ -744,13 +837,22 @@ class DALTON(logfileparser.Logfile):
             self.scfenergies.append(utils.convertor(float(temp[-1]), "hartree", "eV"))
 
         if "@   = MP2 second order energy" in line:
+            self.metadata["theory"] = "MP2"
             energ = utils.convertor(float(line.split()[-1]), 'hartree', 'eV')
             if not hasattr(self, "mpenergies"):
                 self.mpenergies = []
             self.mpenergies.append([])
             self.mpenergies[-1].append(energ)
 
+        if "Total CC2   energy:" in line:
+            self.metadata["theory"] = "CCSD"
+            energ = utils.convertor(float(line.split()[-1]), 'hartree', 'eV')
+            if not hasattr(self, "ccenergies"):
+                self.ccenergies = []
+            self.ccenergies.append(energ)
+
         if "Total energy CCSD(T)" in line:
+            self.metadata["theory"] = "CCSD-T"
             energ = utils.convertor(float(line.split()[-1]), 'hartree', 'eV')
             if not hasattr(self, "ccenergies"):
                 self.ccenergies = []
@@ -770,7 +872,7 @@ class DALTON(logfileparser.Logfile):
         #
         if "Molecular geometry (au)" in line:
 
-            if not hasattr(self, "atomcoords"):
+            if not hasattr(self, "atomcoords") or len(self.atomcoords) == 1:
                 self.atomcoords = []
 
             if self.firststdorient:
@@ -877,17 +979,19 @@ class DALTON(logfileparser.Logfile):
         # -------------------------------------------------
         # Extract the dipole moment
         if "Dipole moment components" in line:
-            dipole = numpy.zeros(3)
+            dipole = []
+            self.skip_lines(inputfile, ['d','b'])
             line = next(inputfile)
-            line = next(inputfile)
-            line = next(inputfile)
-            if not "zero by symmetry" in line:
-                line = next(inputfile)
 
+            if "zero by symmetry" in line:
+                dipole = [0.0, 0.0, 0.0]
+            else:
                 line = next(inputfile)
-                temp = line.split()
-                for i in range(3):
-                    dipole[i] = float(temp[2])  # store the Debye value
+                line = next(inputfile)
+                while line.strip():
+                    temp = line.split()
+                    dipole.append(float(temp[2])) # store the Debye value
+                    line = next(inputfile)
             if hasattr(self, 'moments'):
                 self.moments.append(dipole)
 
@@ -1071,6 +1175,19 @@ class DALTON(logfileparser.Logfile):
             self.set_attribute('etenergies', etenergies)
             # self.set_attribute('etoscs', etoscs)
             self.set_attribute('etsecs', etsecs)
+
+        #NMR information
+        if "@2 atom   shielding" in line:
+            if not hasattr(self, 'nmriso'):
+                self.nmriso = []
+            if not hasattr(self, 'nmranis'):
+                self.nmranis = []
+            line = next(inputfile)
+            line = next(inputfile)
+            while line.strip():
+                self.nmriso.append(float(line.split()[2]))
+                self.nmranis.append(float(line.split()[5]))
+                line = next(inputfile)
 
         # TODO:
         # aonames

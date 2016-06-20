@@ -48,7 +48,9 @@ class ccData(object):
         geovalues -- current values for convergence of geometry optmization (array[1])
         grads -- current values of forces (gradients) in geometry optimization (array[3])
         hessian -- elements of the force constant matrix (array[1])
+        hofenergies -- heat of formation after semiempirical calculation (array[1], eV)
         homos -- molecular orbital indices of HOMO(s) (array[1])
+        metadata -- some metadata for the calculation (dict of string)
         mocoeffs -- molecular orbital coefficients (list of arrays[2])
         moenergies -- molecular orbital energies (list of arrays[1], eV)
         moments -- molecular multipole moments (list of arrays[], a.u.)
@@ -58,6 +60,8 @@ class ccData(object):
         natom -- number of atoms (integer)
         nbasis -- number of basis functions (integer)
         nmo -- number of molecular orbitals (integer)
+        nmriso -- NMR isotropic chemical shieldings (arragy[1], ppm)
+        nmranis -- NMR anisotropic chemical shieldings (arragy[1], ppm)
         nocoeffs -- natural orbital coefficients (array[2])
         nooccnos -- natural orbital occupation numbers (array[1])
         optdone -- flags whether an optimization has converged (Boolean)
@@ -112,7 +116,9 @@ class ccData(object):
         "geovalues":      numpy.ndarray,
         "grads":          numpy.ndarray,
         "hessian":        numpy.ndarray,
+        "hofenergies":    numpy.ndarray,
         "homos":          numpy.ndarray,
+        "metadata":       dict,
         "mocoeffs":       list,
         "moenergies":     list,
         "moments":        list,
@@ -122,6 +128,8 @@ class ccData(object):
         "natom":          int,
         "nbasis":         int,
         "nmo":            int,
+        "nmriso":         numpy.ndarray,
+        "nmranis":        numpy.ndarray,
         "nocoeffs":       numpy.ndarray,
         "nooccnos":       numpy.ndarray,
         "optdone":        bool,
