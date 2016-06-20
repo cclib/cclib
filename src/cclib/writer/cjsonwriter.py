@@ -97,8 +97,6 @@ class CJSON(filewriter.Writer):
         # Call the __init__ method of the superclass
         super(CJSON, self).__init__(ccdata, cjsonterse=cjsonterse, *args, **kwargs)
 
-        self.generate_repr()
-
     def pathname(self, path):
         """
         This function is OS independent and returns the file name irrespective of
