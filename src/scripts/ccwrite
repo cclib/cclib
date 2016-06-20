@@ -35,6 +35,11 @@ def main():
     parser.add_argument('-v', '--verbose',
                         action='store_true',
                         help='more verbose parsing output (only errors by default)')
+
+    parser.add_argument('-ct', '--cjsonterse',
+                        action='store_true',
+                        help='CJSON is not indented for readability, saves space (indented for readability\'s sake)')
+
     parser.add_argument('-u', '--future',
                         action='store_true',
                         help='use experimental features (currently optdone_as_list)')
@@ -44,7 +49,9 @@ def main():
     outputtype = args.outputtype
     filenames = args.compchemlogfile
     verbose = args.verbose
+    cjsonterse = args.cjsonterse
     future = args.future
+
 
     for filename in filenames:
 
@@ -77,8 +84,11 @@ def main():
         if future:
             ccwrite_kwargs['future'] = True
         ccwrite_kwargs['jobfilename'] = filename
-        ccwrite(data, outputtype, outputdest, **ccwrite_kwargs)
 
+        if cjsonterse and outputtype in ('json', 'cjson'):
+            ccwrite(data, outputtype, outputdest, True, **ccwrite_kwargs)
+        else:
+            ccwrite(data, outputtype, outputdest, **ccwrite_kwargs)
 
 if __name__ == "__main__":
     main()

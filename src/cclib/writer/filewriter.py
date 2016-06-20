@@ -30,7 +30,7 @@ class Writer(object):
         CJSON, CML, XYZ
     """
 
-    def __init__(self, ccdata, jobfilename=None,
+    def __init__(self, ccdata, jobfilename=None, cjsonterse=False,
                  *args, **kwargs):
         """Initialize the Writer object.
 
@@ -43,6 +43,7 @@ class Writer(object):
 
         self.ccdata = ccdata
         self.jobfilename = jobfilename
+        self.cjsonterse = cjsonterse
 
         self.pt = PeriodicTable()
         self.elements = [self.pt.element[Z] for Z in self.ccdata.atomnos]

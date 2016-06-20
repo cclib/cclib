@@ -87,7 +87,7 @@ class CJSON(filewriter.Writer):
         "vibsyms":        'symmetry',
     }
 
-    def __init__(self, ccdata, *args, **kwargs):
+    def __init__(self, ccdata, cjsonterse=False, *args, **kwargs):
         """Initialize the chemical JSON writer object.
 
         Inputs:
@@ -95,7 +95,7 @@ class CJSON(filewriter.Writer):
         """
 
         # Call the __init__ method of the superclass
-        super(CJSON, self).__init__(ccdata, *args, **kwargs)
+        super(CJSON, self).__init__(ccdata, cjsonterse=cjsonterse, *args, **kwargs)
 
         self.generate_repr()
 
@@ -110,7 +110,7 @@ class CJSON(filewriter.Writer):
 
     def generate_repr(self):
         """Generate the CJSON representation of the logfile data"""
-        
+
         cjson_dict = dict()
         
         # Need to decide on a number format
@@ -138,8 +138,11 @@ class CJSON(filewriter.Writer):
 
         if has_openbabel:
             cjson_dict['diagram'] = self.pbmol.write(format='svg')
-                 
-        return json.dumps(cjson_dict, cls=JSONIndentEncoder, sort_keys=True, indent=4)
+
+        if self.cjsonterse:
+            return json.dumps(cjson_dict, cls=NumpyAwareJSONEncoder)
+        else:
+            return json.dumps(cjson_dict, cls=JSONIndentEncoder, sort_keys=True, indent=4)
 
     def set_JSON_attribute(self, object, list):
         """
