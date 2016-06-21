@@ -86,9 +86,9 @@ class DALTON(logfileparser.Logfile):
         # extract the version number first
         if line[4:30] == "This is output from DALTON":
             if line.split()[5] == "release" or line.split()[5] == "(Release":
-                self.metadata["version"] = line.split()[6][6:]
+                self.metadata["program_version"] = line.split()[6][6:]
             else:
-                self.metadata["version"] = line.split()[5]
+                self.metadata["program_version"] = line.split()[5]
 
         # This section at the start of geometry optimization jobs gives us information
         # about optimization targets (geotargets) and possibly other things as well.
@@ -235,7 +235,7 @@ class DALTON(logfileparser.Logfile):
             #self.skip_lines(inputfile, ['b', 'basisname', 'b'])
             line = next(inputfile)
             line = next(inputfile)
-            self.metadata["basisname"] = re.findall(r'"([^"]*)"', line)[0]
+            self.metadata["basis_set_name"] = re.findall(r'"([^"]*)"', line)[0]
             line = next(inputfile)
 
             line = next(inputfile)
@@ -755,9 +755,9 @@ class DALTON(logfileparser.Logfile):
         # ...
         #
         if "Final HF energy" in line and not (hasattr(self, "mpenergies") or hasattr(self, "ccenergies")):
-            self.metadata["theory"] = "HF"
+            self.metadata["methods"] = "HF"
         if "Final DFT energy" in line:
-            self.metadata["theory"] = "DFT"
+            self.metadata["methods"] = "DFT"
         if "This is a DFT calculation of type" in line:
             self.metadata["functional"] = line.split()[-1]
 
@@ -768,7 +768,7 @@ class DALTON(logfileparser.Logfile):
             self.scfenergies.append(utils.convertor(float(temp[-1]), "hartree", "eV"))
 
         if "@   = MP2 second order energy" in line:
-            self.metadata["theory"] = "MP2"
+            self.metadata["methods"] = "MP2"
             energ = utils.convertor(float(line.split()[-1]), 'hartree', 'eV')
             if not hasattr(self, "mpenergies"):
                 self.mpenergies = []
@@ -776,14 +776,14 @@ class DALTON(logfileparser.Logfile):
             self.mpenergies[-1].append(energ)
 
         if "Total CC2   energy:" in line:
-            self.metadata["theory"] = "CCSD"
+            self.metadata["methods"] = "CCSD"
             energ = utils.convertor(float(line.split()[-1]), 'hartree', 'eV')
             if not hasattr(self, "ccenergies"):
                 self.ccenergies = []
             self.ccenergies.append(energ)
 
         if "Total energy CCSD(T)" in line:
-            self.metadata["theory"] = "CCSD-T"
+            self.metadata["methods"] = "CCSD(T)"
             energ = utils.convertor(float(line.split()[-1]), 'hartree', 'eV')
             if not hasattr(self, "ccenergies"):
                 self.ccenergies = []
