@@ -22,71 +22,11 @@ import json
 import numpy as np
 
 from . import filewriter
-
+from cclib.parser import ccData
 
 class CJSON(filewriter.Writer):
     """A writer for chemical JSON (CJSON) files."""
     
-    # The expected Key names for all supported attributes.
-    _attrkeynames = {
-        "aonames":        'names',
-        "aooverlaps":     'overlaps',
-        "atombasis":      'indices',
-        "atomcharges":    'dict',
-        "atomcoords":     'coords',
-        "atommasses":     'mass',
-        "atomnos":        'number',
-        "atomspins":      'spins',
-        "ccenergies":     'coupled cluster',
-        "charge":         'charge',
-        "coreelectrons":  'core electrons',
-        "enthalpy":       'enthalpy',
-        "entropy":        'entropy',
-        "etenergies":     'electronic transitions',
-        "etoscs":         'oscillator strength',
-        "etrotats":       'rotatory strength',
-        "etsecs":         'one excited config',
-        "etsyms":         'symmetry',
-        "freeenergy":     'free energy',
-        "fonames":        'orbital names',
-        "fooverlaps":     'orbital overlap',
-        "fragnames":      'names',
-        "frags":          'atom indices',
-        'gbasis':         'TBD',
-        "geotargets":     'geometric targets',
-        "geovalues":      'geometric values',
-        "grads":          'TBD',
-        "hessian":        'hessian matrix',
-        "homos":          'homos',
-        "mocoeffs":       'coeffs',
-        "moenergies":     'energies',
-        "moments":        'total dipole moment',
-        "mosyms":         'symmetry',
-        "mpenergies":     'moller plesset',
-        "mult":           'multiplicity',
-        "natom":          'number of atoms',
-        "nbasis":         'basis number',
-        "nmo":            'MO number',
-        "nocoeffs":       'TBD',
-        "nooccnos":       'TBD',
-        "optdone":        'done',
-        "optstatus":      'status',
-        "scancoords":     'step geometry',
-        "scanenergies":   'PES energies',
-        "scannames":      'variable names',
-        "scanparm":       'PES parameter values',
-        "scfenergies":    'energies',
-        "scftargets":     'targets',
-        "scfvalues":      'values',
-        "temperature":    'temperature',
-        "vibanharms":     'anharmonicity constants',
-        "vibdisps":       'displacement',
-        "vibfreqs":       'frequencies',
-        "vibirs":         'IR',
-        "vibramans":      'raman',
-        "vibsyms":        'symmetry',
-    }
-
     def __init__(self, ccdata, terse=False, *args, **kwargs):
         """Initialize the chemical JSON writer object.
 
@@ -154,7 +94,7 @@ class CJSON(filewriter.Writer):
         """
         for key in list:
             if hasattr(self.ccdata, key):
-                object[self._attrkeynames[key]] = getattr(self.ccdata, key)
+                object[ccData._attributes[key].jsonKey] = getattr(self.ccdata, key)
 
     def has_data(self, attr_names):
         """
@@ -235,7 +175,7 @@ class CJSON(filewriter.Writer):
         self.set_JSON_attribute(cjson_dict['properties'], ['enthalpy', 'entropy', 'natom', 'temperature'])
 
         if hasattr(self.ccdata, 'moments'):
-            cjson_dict['properties'][self._attrkeynames['moments']] = self._calculate_total_dipole_moment()
+            cjson_dict['properties'][ccData._attributes['moments'].jsonKey] = self._calculate_total_dipole_moment()
 
         if hasattr(self.ccdata, 'atomcharges'):
             cjson_dict['properties']['partial charges'] = dict()
@@ -266,7 +206,7 @@ class CJSON(filewriter.Writer):
         
         if hasattr(self.ccdata, 'atomnos'):
             cjson_dict['atoms']['elements'] = dict()
-            cjson_dict['atoms']['elements'][self._attrkeynames['atomnos']] = self.ccdata.atomnos
+            cjson_dict['atoms']['elements'][ccData._attributes['atomnos'].jsonKey] = self.ccdata.atomnos
             cjson_dict['atoms']['elements']['atom count'] = len(self.ccdata.atomnos)
             cjson_dict['atoms']['elements']['heavy atom count'] = len([x for x in self.ccdata.atomnos if x > 1])
         
