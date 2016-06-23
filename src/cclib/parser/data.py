@@ -84,6 +84,8 @@ class ccData(object):
     """
 
     # The expected types for all supported attributes.
+    # The jsonKey is the key name used for attributes in the CJSON/JSON format
+    # 'TBD' - To Be Decided are the key names of attributes which haven't been included in the cjson format
     Attribute = namedtuple('Attribute', ['type','jsonKey'])
     _attributes = {
        "aonames":          Attribute( list,             'names'),
@@ -109,7 +111,7 @@ class ccData(object):
        "fooverlaps":       Attribute( numpy.ndarray,    'orbital overlap'),
        "fragnames":        Attribute( list,             'names'),
        "frags":            Attribute( list,             'atom indices'),
-       "gbasis'":          Attribute( list,             'TBD'),
+       "gbasis":           Attribute( list,             'TBD'),
        "geotargets":       Attribute( numpy.ndarray,    'geometric targets'),
        "geovalues":        Attribute( numpy.ndarray,    'geometric values'),
        "grads":            Attribute( numpy.ndarray,    'TBD'),
