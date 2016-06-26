@@ -367,7 +367,7 @@ class JSONIndentEncoder(json.JSONEncoder):
             output = []
             self.current_indent += self.indent
             self.current_indent_str = "".join([" " for x in range(self.current_indent)])
-            for key, value in o.iteritems():
+            for key, value in o.items():
                 output.append(self.current_indent_str + json.dumps(key, cls=NumpyAwareJSONEncoder) + ": " +
                               str(self.encode(value)))
             self.current_indent -= self.indent
