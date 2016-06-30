@@ -30,7 +30,7 @@ class GenericScanTest(unittest.TestCase):
     def testnumindices(self):
         """Do the number of indices match number of scan points."""
 
-        if self.data._attrtypes["optdone"] is bool:
+        if self.data._attributes["optdone"].type is bool:
             self.assertEquals(self.data.optdone, True)
         else:
             self.assertEquals(len(self.data.optdone), 12 + self.extra)
@@ -38,7 +38,7 @@ class GenericScanTest(unittest.TestCase):
     def testindices(self):
         """Do the indices match the results from geovalues."""
 
-        if self.data._attrtypes["optdone"] is bool:
+        if self.data._attributes["optdone"].type is bool:
             assert self.data.optdone and numpy.all(self.data.geovalues[-1] <= self.data.geotargets)
         else:
             indexes = self.data.optdone
@@ -57,7 +57,7 @@ class GenericScanTest(unittest.TestCase):
         # The input coordinates were at a stationary point.
         self.assertEquals(self.data.optstatus[0], OPT_DONE)
 
-        if self.data._attrtypes["optdone"] is bool:
+        if self.data._attributes["optdone"].type is bool:
             self.assertEquals(self.data.optstatus[-1], OPT_DONE)
         else:
             self.assertEqual(len(self.data.optstatus), len(optdone))
