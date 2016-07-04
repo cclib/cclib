@@ -532,6 +532,86 @@ class Molpro(logfileparser.Logfile):
                     self.aooverlaps[-1] += elements[-n:]
                 line = next(inputfile)
 
+        # If an MCSCF calculation was performed, the natural orbitals
+        # (coefficients and occupation numbers) are printed in a
+        # format nearly identical to the ELECTRON ORBITALS section.
+        #
+        # NATURAL ORBITALS (state averaged)
+        # =================================
+        #
+        #   Orb     Occ        Energy       Coefficients
+        #
+        #                                   1 s       1 s       1 s       1 z       1 z       1 xx      1 yy      1 zz      2 s       2 s
+        #                                   2 s       2 z       2 z       2 xx      2 yy      2 zz      3 s       3 s       3 z       3 y
+        #
+        #   1.1  2.00000   -20.678730     0.000141 -0.000057  0.001631 -0.001377  0.001117  0.000029  0.000293 -0.000852  1.000748  0.001746
+        #                                -0.002552 -0.002005  0.001658 -0.001266 -0.001274 -0.001001  0.000215 -0.000131 -0.000242 -0.000126
+        #
+        #   2.1  2.00000   -11.322823     1.000682  0.004626 -0.000485  0.006634 -0.002096 -0.003072 -0.003282 -0.001724 -0.000181  0.006734
+        #                                -0.002398 -0.000527  0.001335  0.000091  0.000058  0.000396 -0.003219  0.000981  0.000250 -0.000191
+        # (...)
+        if line[1:17] == "NATURAL ORBITALS":
+
+            self.skip_lines(inputfile, ['equals', 'b', 'headers', 'b'])
+
+            nonames = []
+            atombasis = [[] for i in range(self.natom)]
+            nocoeffs = []
+            nooccs = []
+            line = next(inputfile)
+
+            while line.strip():
+                is_nonames = line[:25].strip() == ''
+                if is_nonames:
+                    offset = len(nonames)
+                    nonum = len(nonames)
+                    while line.strip():
+                        for s in line.split():
+                            if s.isdigit():
+                                atomno = int(s)
+                                atombasis[atomno-1].append(nonum)
+                                nonum += 1
+                            else:
+                                functype = s
+                                element = self.table.element[self.atomnos[atomno-1]]
+                                noname = "%s%i_%s" % (element, atomno, functype)
+                                nonames.append(noname)
+                        line = next(inputfile)
+                    while not line.strip():
+                        line = next(inputfile)
+                if 'Natural orbital dump' in line:
+                    break
+                coeffs = [0.0 for _ in range(offset)]
+                while line.strip() != "":
+                    if line[:31].rstrip():
+                        # Normally, taking the energy would go here, but we take the occupation numbers instead.
+                        tokens = line.split()
+                        occ = float(tokens[1])
+                        nooccs.append(occ)
+                    str_coeffs = line[31:]
+                    ncoeffs = len(str_coeffs) // 10
+                    coeff = []
+                    for ic in range(ncoeffs):
+                        p = str_coeffs[ic*10:(ic+1)*10]
+                        try:
+                            c = float(p)
+                        except ValueError as detail:
+                            self.logger.warn("setting nocoeff element to zero: %s" % detail)
+                            c = 0.0
+                        coeff.append(c)
+                    coeffs.extend(coeff)
+                    line = next(inputfile)
+                nocoeffs.append(coeffs)
+                line = next(inputfile)
+                if not line.strip():
+                    line = next(inputfile)
+            if offset > 0:
+                for im, m in enumerate(nocoeffs):
+                    if len(m) < self.nbasis:
+                        nocoeffs[im] = m + [0.0 for i in range(self.nbasis - len(m))]
+            self.nocoeffs = nocoeffs
+            self.nooccnos = nooccs
+
         # Thresholds are printed only if the defaults are changed with GTHRESH.
         # In that case, we can fill geotargets with non-default values.
         # The block should look like this as of Molpro 2006.1:
