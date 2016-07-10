@@ -138,6 +138,22 @@ def testADF_ADF2016_fa2_adf_out(logfile):
 
 # DALTON #
 
+def testDALTON_DALTON_2015_dalton_atombasis_out(logfile):
+    """This logfile didn't parse due to the absence of a line in the basis
+    set section.
+    """
+    assert hasattr(logfile.data, "nbasis")
+    assert logfile.data.nbasis == 37
+    assert hasattr(logfile.data, "atombasis")
+
+def testDALTON_DALTON_2015_dalton_intgrl_out(logfile):
+    """This logfile didn't parse due to the absence of a line in the basis
+    set section.
+    """
+    assert hasattr(logfile.data, "nbasis")
+    assert logfile.data.nbasis == 4
+    assert hasattr(logfile.data, "atombasis")
+
 def testDALTON_DALTON_2015_stopiter_dalton_dft_out(logfile):
     """Check to ensure that an incomplete SCF is handled correctly."""
     assert len(logfile.data.scfvalues[0]) == 8
