@@ -94,6 +94,17 @@ class QChem(logfileparser.Logfile):
             'ALPHA MOLECULAR ORBITAL COEFFICIENTS'
         )
 
+        self.gradient_headers = (
+            'Full Analytical Gradient',
+            'Gradient of SCF Energy',
+            'Gradient of MP2 Energy',
+        )
+
+        self.hessian_headers = (
+            'Hessian of the SCF Energy',
+            'Final Hessian.',
+        )
+
     def after_parsing(self):
 
         # If parsing a fragment job, each of the geometries appended to
@@ -401,12 +412,12 @@ class QChem(logfileparser.Logfile):
                 if not hasattr(self, 'mocoeffs'):
                     self.mocoeffs = []
                 mocoeffs = numpy.empty(shape=(self.nbasis, self.norbdisp_alpha))
-                self.parse_matrix(inputfile, mocoeffs)
+                parse_matrix(inputfile, mocoeffs, self.ncolsblock)
                 self.mocoeffs.append(mocoeffs.transpose())
 
             if 'Final Beta MO Coefficients' in line:
                 mocoeffs = numpy.empty(shape=(self.nbasis, self.norbdisp_beta))
-                self.parse_matrix(inputfile, mocoeffs)
+                parse_matrix(inputfile, mocoeffs, self.ncolsblock)
                 self.mocoeffs.append(mocoeffs.transpose())
 
             if 'Total energy in the final basis set' in line:
@@ -1025,20 +1036,23 @@ class QChem(logfileparser.Logfile):
 
             # For `method = force` or geometry optimizations,
             # the gradient is printed.
-            if 'Gradient of SCF Energy' in line:
+            if any(header in line for header in self.gradient_headers):
                 if not hasattr(self, 'grads'):
                     self.grads = []
                 grad = numpy.empty(shape=(3, self.natom))
-                self.parse_matrix(inputfile, grad)
+                if 'SCF' in line:
+                    parse_matrix(inputfile, grad, self.ncolsblock)
+                else:
+                    parse_matrix(inputfile, grad, 5)
                 self.grads.append(grad.T)
 
             # For IR-related jobs, the Hessian is printed (dim: 3*natom, 3*natom).
             # Note that this is *not* the mass-weighted Hessian.
-            if 'Hessian of the SCF Energy' in line:
+            if any(header in line for header in self.hessian_headers):
                 if not hasattr(self, 'hessian'):
                     dim = 3*self.natom
                     self.hessian = numpy.empty(shape=(dim, dim))
-                    self.parse_matrix(inputfile, self.hessian)
+                    parse_matrix(inputfile, self.hessian, self.ncolsblock)
 
             # Start of the IR/Raman frequency section.
             if 'VIBRATIONAL ANALYSIS' in line:
@@ -1072,22 +1086,7 @@ class QChem(logfileparser.Logfile):
                     # C          0.000  0.000 -0.100   -0.000  0.000 -0.070   -0.000 -0.000 -0.027
                     # C          0.000  0.000  0.045   -0.000  0.000 -0.074    0.000 -0.000 -0.109
                     # C          0.000  0.000  0.148   -0.000 -0.000 -0.074    0.000  0.000 -0.121
-                    # C          0.000  0.000  0.100   -0.000 -0.000 -0.070    0.000  0.000 -0.027
-                    # C          0.000  0.000 -0.045    0.000 -0.000 -0.074   -0.000 -0.000 -0.109
-                    # C          0.000  0.000 -0.148    0.000  0.000 -0.074   -0.000 -0.000 -0.121
-                    # H         -0.000  0.000  0.086   -0.000  0.000 -0.082    0.000 -0.000 -0.102
-                    # H          0.000  0.000  0.269   -0.000 -0.000 -0.091    0.000  0.000 -0.118
-                    # H          0.000  0.000 -0.086    0.000 -0.000 -0.082   -0.000  0.000 -0.102
-                    # H         -0.000  0.000 -0.269    0.000  0.000 -0.091   -0.000 -0.000 -0.118
-                    # C          0.000 -0.000  0.141   -0.000 -0.000 -0.062   -0.000  0.000  0.193
-                    # C         -0.000 -0.000 -0.160    0.000  0.000  0.254   -0.000  0.000  0.043
-                    # H          0.000 -0.000  0.378   -0.000  0.000 -0.289    0.000  0.000  0.519
-                    # H         -0.000 -0.000 -0.140    0.000  0.000  0.261   -0.000 -0.000  0.241
-                    # H         -0.000 -0.000 -0.422    0.000  0.000  0.499   -0.000  0.000 -0.285
-                    # C          0.000 -0.000 -0.141    0.000  0.000 -0.062   -0.000 -0.000  0.193
-                    # C         -0.000 -0.000  0.160   -0.000 -0.000  0.254    0.000  0.000  0.043
-                    # H          0.000 -0.000 -0.378    0.000 -0.000 -0.289   -0.000  0.000  0.519
-                    # H         -0.000 -0.000  0.140   -0.000 -0.000  0.261    0.000  0.000  0.241
+                    # (...)
                     # H         -0.000 -0.000  0.422   -0.000 -0.000  0.499    0.000  0.000 -0.285
                     # TransDip   0.000 -0.000 -0.000    0.000 -0.000 -0.000   -0.000  0.000  0.021
                     #
@@ -1227,27 +1226,6 @@ class QChem(logfileparser.Logfile):
         if has_spins:
             self.atomspins[chargetype] = numpy.array(spins)
 
-    def parse_matrix(self, inputfile, nparray):
-        """Q-Chem prints most matrices in a standard format; parse the matrix
-        into a preallocated NumPy array of the appropriate shape.
-        """
-        nrows, ncols = nparray.shape
-        line = next(inputfile)
-        assert len(line.split()) == min(self.ncolsblock, ncols)
-        colcounter = 0
-        while colcounter < ncols:
-            # If the line is just the column header (indices)...
-            if line[:5].strip() == '':
-                line = next(inputfile)
-            rowcounter = 0
-            while rowcounter < nrows:
-                row = list(map(float, line.split()[1:]))
-                assert len(row) == min(self.ncolsblock, (ncols - colcounter))
-                nparray[rowcounter][colcounter:colcounter + self.ncolsblock] = row
-                line = next(inputfile)
-                rowcounter += 1
-            colcounter += self.ncolsblock
-
     def parse_matrix_aonames(self, inputfile, nparray):
         """Q-Chem prints most matrices in a standard format; parse the matrix
         into a preallocated NumPy array of the appropriate shape.
@@ -1329,6 +1307,30 @@ class QChem(logfileparser.Logfile):
             else:
                 histogram[element] = 1
         return histogram
+
+
+def parse_matrix(inputfile, nparray, ncolsblock):
+    """Q-Chem prints most matrices in a standard format; parse the matrix
+    into a preallocated NumPy array of the appropriate shape.
+    """
+    nrows, ncols = nparray.shape
+    line = next(inputfile)
+    assert len(line.split()) == min(ncolsblock, ncols)
+    colcounter = 0
+    while colcounter < ncols:
+        # If the line is just the column header (indices)...
+        if line[:5].strip() == '':
+            line = next(inputfile)
+        rowcounter = 0
+        while rowcounter < nrows:
+            row = list(map(float, line.split()[1:]))
+            assert len(row) == min(ncolsblock, (ncols - colcounter))
+            nparray[rowcounter][colcounter:colcounter + ncolsblock] = row
+            line = next(inputfile)
+            rowcounter += 1
+        colcounter += ncolsblock
+    return
+
 
 
 if __name__ == '__main__':
