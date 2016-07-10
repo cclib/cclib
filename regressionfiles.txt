@@ -39,6 +39,8 @@ DALTON/DALTON-2013/b3lyp_energy_dvb_sp_nosym.out
 DALTON/DALTON-2013/dvb_sp_hf_nosym.out
 DALTON/DALTON-2013/sp_b3lyp_dvb.out
 DALTON/DALTON-2013/td_b3lyp_dvb.out
+DALTON/DALTON-2015/dalton_atombasis.out
+DALTON/DALTON-2015/dalton_intgrl.out
 DALTON/DALTON-2015/stopiter_dalton_dft.out
 DALTON/DALTON-2015/stopiter_dalton_hf.out
 GAMESS/Firefly7.1/firefly-FailStationary.out
