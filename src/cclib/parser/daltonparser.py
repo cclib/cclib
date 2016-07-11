@@ -61,6 +61,10 @@ class DALTON(logfileparser.Logfile):
         # If there is no symmetry, assume this.
         self.symlabels = ['Ag']
 
+        # Is the basis set from a single library file? This is true
+        # when the first line is BASIS, false for INTGRL/ATOMBASIS.
+        self.basislibrary = True
+
     def parse_geometry(self, lines):
         """Parse DALTON geometry lines into an atomcoords array."""
 
@@ -89,6 +93,11 @@ class DALTON(logfileparser.Logfile):
                 self.metadata["program_version"] = line.split()[6][6:]
             else:
                 self.metadata["program_version"] = line.split()[5]
+
+        # Is the basis set from a single library file, or is it
+        # manually specified? See before_parsing().
+        if line[:6] == 'INTGRL'or line[:9] == 'ATOMBASIS':
+            self.basislibrary = False
 
         # This section at the start of geometry optimization jobs gives us information
         # about optimization targets (geotargets) and possibly other things as well.
@@ -232,11 +241,17 @@ class DALTON(logfileparser.Logfile):
             assert "Total number of atoms:" in line
             self.set_attribute("natom", int(line.split()[-1]))
 
-            #self.skip_lines(inputfile, ['b', 'basisname', 'b'])
-            line = next(inputfile)
-            line = next(inputfile)
-            self.metadata["basis_set_name"] = re.findall(r'"([^"]*)"', line)[0]
-            line = next(inputfile)
+            # When using the INTGRL keyword and not pulling from the
+            # basis set library, the "Basis set used" line doesn't
+            # appear.
+            if not self.basislibrary:
+                self.skip_line(inputfile, 'b')
+            else:
+                #self.skip_lines(inputfile, ['b', 'basisname', 'b'])
+                line = next(inputfile)
+                line = next(inputfile)
+                self.metadata["basis_set_name"] = re.findall(r'"([^"]*)"', line)[0]
+                line = next(inputfile)
 
             line = next(inputfile)
             cols = line.split()
