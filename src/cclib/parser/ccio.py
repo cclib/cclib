@@ -34,6 +34,7 @@ from .nwchemparser import NWChem
 from .orcaparser import ORCA
 from .psiparser import Psi
 from .qchemparser import QChem
+from .cjsonreader import CJSON
 
 try:
     from ..bridge import cclib2openbabel
@@ -47,7 +48,7 @@ except ImportError:
 # is a little but more complicated. Here are the exceptions:
 #   1. The GAMESS trigger also works for GAMESS-UK files, so we can't break
 #      after finding GAMESS in case the more specific phrase is found.
-#   2. Molro log files don't have the program header, but always contain
+#   2. Molpro log files don't have the program header, but always contain
 #      the generic string 1PROGRAM, so don't break here either to be cautious.
 #   3. The Psi header has two different strings with some variation
 #
@@ -68,13 +69,13 @@ triggers = [
     (ORCA,      ["O   R   C   A"],                                  True),
     (Psi,       ["PSI", "Ab Initio Electronic Structure"],          True),
     (QChem,     ["A Quantum Leap Into The Future Of Chemistry"],    True),
+    (CJSON,     ["chemical json"],                                  True)
 
 ]
 
 
 def guess_filetype(inputfile):
     """Try to guess the filetype by searching for trigger strings."""
-
     if not inputfile:
         return None
 
@@ -120,7 +121,7 @@ def ccopen(source, *args, **kargs):
 
     Returns:
       one of ADF, DALTON, GAMESS, GAMESS UK, Gaussian, Jaguar, Molpro, NWChem, ORCA,
-        Psi, QChem, or None (if it cannot figure it out or the file does not
+        Psi, QChem, CJSON or None (if it cannot figure it out or the file does not
         exist).
     """
 
@@ -129,7 +130,7 @@ def ccopen(source, *args, **kargs):
     is_string = isinstance(source, str)
     is_listofstrings = isinstance(source, list) and all([isinstance(s, str) for s in source])
 
-    # Try to open the logfile(s), using openlogfile, if the source if a string (filename)
+    # Try to open the logfile(s), using openlogfile, if the source is a string (filename)
     # or list of filenames. If it can be read, assume it is an open file object/stream.
     if is_string or is_listofstrings:
         try:
