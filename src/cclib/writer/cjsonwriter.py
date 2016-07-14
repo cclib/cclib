@@ -178,7 +178,6 @@ class CJSON(filewriter.Writer):
             cjson_dict['properties'][ccData._attributes['moments'].jsonKey] = self._calculate_total_dipole_moment()
 
         if hasattr(self.ccdata, 'atomcharges'):
-            cjson_dict['properties']['partial charges'] = dict()
             cjson_dict['properties']['partial charges'] = self.ccdata.atomcharges
         
         orbital_attr = ['homos', 'moenergies', 'aooverlaps', 'mosyms', 'mocoeffs']
