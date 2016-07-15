@@ -36,6 +36,8 @@ Usage:  ccget <attribute> [<attribute>] <compchemlogfile> [<compchemlogfile>]
     from each of the compchemlogfiles.
 For a list of attributes available in a file, use --list (or -l):
     ccget --list <compchemlogfile>
+To extract attributes available in a CJSON file, use --json (or -j):
+    ccget --json  <attr> [<attr>]  <compchemlogfile>
 To parse multiple files as one input stream, use --multi (or -m):
     ccget --multi <attr> [<attr>]  <cclogfile> <cclogfile> [<cclogfile>]
 Additional options:
@@ -44,8 +46,8 @@ Additional options:
 """
 
 # These are the options ccget accepts and their one letter versions.
-OPTS_LONG = ["help", "list", "multi", "verbose", "future"]
-OPTS_SHORT = "hlmvu"
+OPTS_LONG = ["help", "list", "json", "multi", "verbose", "future"]
+OPTS_SHORT = "hljmvu"
 
 
 def ccget():
@@ -61,6 +63,7 @@ def ccget():
 
     future = False
     showattr = False
+    cjsonfile = False
     multifile = False
     verbose = False
     for opt, arg in optlist:
@@ -69,6 +72,8 @@ def ccget():
             sys.exit()
         if opt in ("-l", "--list"):
             showattr = True
+        if opt in ("-j", "--json"):
+            cjsonfile = True
         if opt in ("-m", "--multi"):
             multifile = True
         if opt in ("-v", "--verbose"):
@@ -148,6 +153,8 @@ def ccget():
             kwargs['loglevel'] = logging.ERROR
         if future:
             kwargs['future'] = True
+        if cjsonfile:
+            kwargs['cjson'] = True
 
         print("Attempting to read %s" % name)
         data = ccread(filename, **kwargs)

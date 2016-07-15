@@ -6,8 +6,8 @@
 ******************************************************************************/
 """
 import json
-from .cjsonHolder import cjsonHolder
-from .data import ccData
+from ..parser.cjsonHolder import cjsonHolder
+from ..parser.data import ccData
 
 
 class CJSON:

@@ -16,9 +16,6 @@
 from __future__ import print_function
 
 import os
-import sys
-
-from . import data
 
 from . import logfileparser
 
@@ -33,7 +30,7 @@ from .nwchemparser import NWChem
 from .orcaparser import ORCA
 from .psiparser import Psi
 from .qchemparser import QChem
-from .cjsonreader import CJSON
+from ..writer.cjsonreader import CJSON
 
 try:
     from ..bridge import cclib2openbabel
@@ -68,7 +65,6 @@ triggers = [
     (ORCA,      ["O   R   C   A"],                                  True),
     (Psi,       ["PSI", "Ab Initio Electronic Structure"],          True),
     (QChem,     ["A Quantum Leap Into The Future Of Chemistry"],    True),
-    (CJSON,     ["chemical json"],                                  True)
 
 ]
 
@@ -105,7 +101,12 @@ def ccread(source, *args, **kargs):
     if log:
         if kargs.get('verbose', None):
             print('Identified logfile to be in %s format' % log.logname)
-        return log.parse()
+        # If the input file is a CJSON file and not a standard compchemlog file
+        cjson_as_input = kargs.get("cjson", False)
+        if cjson_as_input:
+            return log.open_cjson()
+        else:
+            return log.parse()
     else:
         if kargs.get('verbose', None):
             print('Attempting to use fallback mechanism to read file')
@@ -146,7 +147,14 @@ def ccopen(source, *args, **kargs):
     # Proceed to return an instance of the logfile parser only if the filetype
     # could be guessed. Need to make sure the input file is closed before creating
     # an instance, because parsers will handle opening/closing on their own.
-    filetype = guess_filetype(inputfile)
+    # If the input file is a CJSON file and not a standard compchemlog file, don't
+    # guess the file
+    cjson_as_input = kargs.get("cjson", False)
+    if cjson_as_input:
+        filetype = CJSON
+    else:
+        filetype = guess_filetype(inputfile)
+
     if filetype:
         if not isstream:
             inputfile.close()
