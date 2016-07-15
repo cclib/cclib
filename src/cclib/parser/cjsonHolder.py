@@ -118,12 +118,26 @@ class cjsonHolder:
             return [v for v in (self.purge_cjson(v) for v in input_dict) if v]
         return {k: v for k, v in ((k, self.purge_cjson(v)) for k, v in input_dict.items()) if v}
 
+    def compress(self):
+        self.cjson = self.purge_cjson(self.cjson)
+        #print(self.cjson)
 
     def __getitem__(self, key):
         return getattr(self, key)
 
     def __setitem__(self, key, item):
         return setattr(self, key, item)
+
+    def __finditem__(self, obj, key):
+        if key in obj: return obj[key]
+        for k, v in obj.items():
+            if isinstance(v, dict):
+                item = self.__finditem__(v, key)
+                if item is not None:
+                    return item
+
+    def __getattr__(self, name):
+        return self.__finditem__(self.cjson, ccData._attributes[name].jsonKey)
 
     def __init__(self):
         self.cjson = dict()
