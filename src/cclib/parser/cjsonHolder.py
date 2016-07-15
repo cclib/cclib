@@ -11,7 +11,7 @@ from .data import ccData
 class cjsonHolder:
     # replicate the structure of a CJSON format found here:
     # https://docs.google.com/document/d/1_RYFXzhxHK525id0A930Pa1y38Ui2X5GgtAo68iE5Oc/edit?usp=sharing
-    CONST_VALUE = "Placeholder_value"
+    CONST_VALUE = None
 
     def construct_cjson(self):
         # Initial values
@@ -112,15 +112,12 @@ class cjsonHolder:
         self.set_default_value(self.cjson['fragments'], attr_list)
 
     def purge_cjson(self, input_dict):
-        for key, val in input_dict.items():
-            if isinstance(val, dict):
-                val = self.purge_cjson(val)
-            if val == self.CONST_VALUE:
-                input_dict.pop(key, None)
-                return input_dict
+        if not isinstance(input_dict, (dict, list)):
+            return input_dict
+        if isinstance(input_dict, list):
+            return [v for v in (self.purge_cjson(v) for v in input_dict) if v]
+        return {k: v for k, v in ((k, self.purge_cjson(v)) for k, v in input_dict.items()) if v}
 
-    def purge(self):
-        self.purge_cjson(self.cjson)
 
     def __getitem__(self, key):
         return getattr(self, key)
