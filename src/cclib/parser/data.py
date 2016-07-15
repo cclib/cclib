@@ -111,7 +111,7 @@ class ccData(object):
        "freeenergy":       Attribute( float,            'free energy'),
        "fonames":          Attribute( list,             'orbital names'),
        "fooverlaps":       Attribute( numpy.ndarray,    'orbital overlap'),
-       "fragnames":        Attribute( list,             'names'),
+       "fragnames":        Attribute( list,             'fragment names'),
        "frags":            Attribute( list,             'atom indices'),
        "gbasis":           Attribute( list,             'basis functions'),
        "geotargets":       Attribute( numpy.ndarray,    'geometric targets'),
@@ -123,7 +123,7 @@ class ccData(object):
        "mocoeffs":         Attribute( list,             'coeffs'),
        "moenergies":       Attribute( list,             'energies'),
        "moments":          Attribute( list,             'total dipole moment'),
-       "mosyms":           Attribute( list,             'symmetry'),
+       "mosyms":           Attribute( list,             'molecular orbital symmetry'),
        "mpenergies":       Attribute( numpy.ndarray,    'moller plesset'),
        "mult":             Attribute( int,              'multiplicity'),
        "natom":            Attribute( int,              'number of atoms'),
@@ -137,7 +137,7 @@ class ccData(object):
        "scanenergies":     Attribute( list,             'PES energies'),
        "scannames":        Attribute( list,             'variable names'),
        "scanparm":         Attribute( list,             'PES parameter values'),
-       "scfenergies":      Attribute( numpy.ndarray,    'energies'),
+       "scfenergies":      Attribute( numpy.ndarray,    'scf energies'),
        "scftargets":       Attribute( numpy.ndarray,    'targets'),
        "scfvalues":        Attribute( list,             'values'),
        "temperature":      Attribute( float,            'temperature'),
@@ -147,7 +147,7 @@ class ccData(object):
        "vibfreqs":         Attribute( numpy.ndarray,    'frequencies'),
        "vibirs":           Attribute( numpy.ndarray,    'IR'),
        "vibramans":        Attribute( numpy.ndarray,    'raman'),
-       "vibsyms":          Attribute( list,             'symmetry')
+       "vibsyms":          Attribute( list,             'vibration symmetry')
     }
 
     # The name of all attributes can be generated from the dictionary above.
