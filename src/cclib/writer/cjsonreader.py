@@ -25,23 +25,21 @@ class CJSON:
 
         self.datatype = cjsonHolder().cjson
 
-
-
-    def parse(self):
+    def open_cjson(self):
         inputfile = self.filename
 
         # Actual update of cjsonHolder happens here
         json_data = open(inputfile).read()
-        self.extract(json_data)
+        self.construct(json_data)
 
         # Removal of the keys with the Placeholder values
-        cjsonHolder().purge_cjson(self.datatype)
+        self.datatype = cjsonHolder().purge_cjson(self.datatype)
 
         # Debugging statement. To-Do: Remove
         print(self.datatype)
 
 
-    def extract(self,input_file):
+    def construct(self,input_file):
         # if input_file is None:
         #     raise TypeError
         data = json.loads(input_file)
