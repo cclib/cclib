@@ -49,7 +49,7 @@ def setup_cclib():
         'cclib.progress',
         'cclib.method',
         'cclib.bridge',
-        'cclib.writer'
+        'cclib.io'
     ]
 
     doclines = __doc__.split("\n")

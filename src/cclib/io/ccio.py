@@ -3,34 +3,47 @@
 # This file is part of cclib (http://cclib.github.io), a library for parsing
 # and interpreting the results of computational chemistry packages.
 #
-# Copyright (C) 2009-2014, the cclib development team
+# Copyright (C) 2009-2016, the cclib development team
 #
 # The library is free software, distributed under the terms of
 # the GNU Lesser General Public version 2.1 or later. You should have
 # received a copy of the license along with cclib. You can also access
 # the full license online at http://www.gnu.org/copyleft/lgpl.html.
 
-"""Tools for identifying and working with files and streams for any supported program"""
+"""Tools for identifying, reading and writing files and streams."""
 
 
 from __future__ import print_function
 
 import os
+import sys
 
-from . import logfileparser
+# Python 2->3 changes the default file object hierarchy.
+if sys.version_info[0] == 2:
+    fileclass = file
+else:
+    import io
+    fileclass = io.IOBase
 
-from .adfparser import ADF
-from .daltonparser import DALTON
-from .gamessparser import GAMESS
-from .gamessukparser import GAMESSUK
-from .gaussianparser import Gaussian
-from .jaguarparser import Jaguar
-from .molproparser import Molpro
-from .nwchemparser import NWChem
-from .orcaparser import ORCA
-from .psiparser import Psi
-from .qchemparser import QChem
-from ..writer.cjsonreader import CJSON
+from ..parser import logfileparser
+from ..parser import data
+
+from ..parser.adfparser import ADF
+from ..parser.daltonparser import DALTON
+from ..parser.gamessparser import GAMESS
+from ..parser.gamessukparser import GAMESSUK
+from ..parser.gaussianparser import Gaussian
+from ..parser.jaguarparser import Jaguar
+from ..parser.molproparser import Molpro
+from ..parser.nwchemparser import NWChem
+from ..parser.orcaparser import ORCA
+from ..parser.psiparser import Psi
+from ..parser.qchemparser import QChem
+
+from . import cjsonreader
+from . import cjsonwriter
+from . import cmlwriter
+from . import xyzwriter
 
 try:
     from ..bridge import cclib2openbabel
@@ -175,3 +188,107 @@ def fallback(source):
                 return cclib2openbabel.readfile(source, ext)
         else:
             print("Could not import openbabel, fallback mechanism might not work.")
+
+
+def ccwrite(ccobj, outputtype=None, outputdest=None, terse=False , returnstr=False,
+            *args, **kwargs):
+    """Write the parsed data from an outputfile to a standard chemical
+    representation.
+
+    Inputs:
+        ccobj - Either a job (from ccopen) or a data (from job.parse()) object
+        outputtype - The output format (should be one of 'cjson', 'cml', 'xyz')
+        outputdest - A filename or file object for writing
+        terse -  This option is currently limited to the cjson/json format. Whether to indent the cjson/json or not
+        returnstr - Whether or not to return a string representation.
+
+    The different writers may take additional arguments, which are
+    documented in their respective docstrings.
+
+    Returns:
+        the string representation of the chemical datatype
+          requested, or None.
+    """
+
+    # Determine the correct output format.
+    outputclass = _determine_output_format(outputtype, outputdest)
+
+    # Is ccobj an job object (unparsed), or is it a ccdata object (parsed)?
+    if isinstance(ccobj, logfileparser.Logfile):
+        jobfilename = ccobj.filename
+        ccdata = ccobj.parse()
+    elif isinstance(ccobj, data.ccData):
+        jobfilename = None
+        ccdata = ccobj
+    else:
+        raise ValueError
+
+    # If the logfile name has been passed in through kwargs (such as
+    # in the ccwrite script), make sure it has precedence.
+    if 'jobfilename' in kwargs.keys():
+        jobfilename = kwargs['jobfilename']
+        # Avoid passing multiple times into the main call.
+        del kwargs['jobfilename']
+
+    outputobj = outputclass(ccdata, jobfilename=jobfilename, terse=terse, *args, **kwargs)
+    output = outputobj.generate_repr()
+
+    # If outputdest isn't None, write the output to disk.
+    if outputdest is not None:
+        if isinstance(outputdest, str):
+            with open(outputdest, 'w') as outputobj:
+                outputobj.write(output)
+        elif isinstance(outputdest, fileclass):
+            outputdest.write(output)
+        else:
+            raise ValueError
+    # If outputdest is None, return a string representation of the output.
+    else:
+        return output
+
+    if returnstr:
+        return output
+
+
+def _determine_output_format(outputtype, outputdest):
+    """
+    Determine the correct output format.
+
+    Inputs:
+      outputtype - a string corresponding to the file type
+        (one of cjson/json, cml, xyz)
+      outputdest - a filename string or file handle
+    Returns:
+      outputclass - the class corresponding to the correct output format
+    """
+
+    # Priority for determining the correct output format:
+    #  1. outputtype
+    #  2. outputdest
+
+    # First check outputtype.
+    if isinstance(outputtype, str):
+        if outputtype.lower() in ('cjson', 'json'):
+            outputclass = cjsonwriter.CJSON
+        elif outputtype.lower() == 'cml':
+            outputclass = cmlwriter.CML
+        elif outputtype.lower() == 'xyz':
+            outputclass = xyzwriter.XYZ
+    else:
+        # Then checkout outputdest.
+        if isinstance(outputdest, str):
+            extension = os.path.splitext(outputdest)[1]
+        elif isinstance(outputdest, fileclass):
+            extension = os.path.splitext(outputdest.name)[1]
+        else:
+            raise ValueError
+        if extension.lower() in ('.cjson', '.json'):
+            outputclass = cjsonwriter.CJSON
+        elif extension.lower() == '.cml':
+            outputclass = cmlwriter.CML
+        elif extension.lower() == '.xyz':
+            outputclass = xyzwriter.XYZ
+        else:
+            raise ValueError
+
+    return outputclass

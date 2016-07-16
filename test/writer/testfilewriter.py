@@ -26,8 +26,8 @@ class WriterTest(unittest.TestCase):
     def test_init(self):
         """Does the class initialize correctly?"""
         fpath = os.path.join(__datadir__, "data/ADF/basicADF2007.01/dvb_gopt.adfout")
-        data = cclib.parser.ccopen(fpath).parse()
-        writer = cclib.writer.filewriter.Writer(data)
+        data = cclib.io.ccopen(fpath).parse()
+        writer = cclib.io.filewriter.Writer(data)
 
         # The object should keep the ccData instance passed to its constructor.
         self.assertEqual(writer.ccdata, data)

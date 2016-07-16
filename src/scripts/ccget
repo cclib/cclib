@@ -22,7 +22,7 @@ import os.path
 import sys
 
 from cclib.parser import ccData
-from cclib.parser import ccread
+from cclib.io import ccread
 
 
 MSG_USAGE = """\
