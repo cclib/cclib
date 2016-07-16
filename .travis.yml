@@ -16,4 +16,4 @@ script:
   - python test_data.py --status --terse
   - cd ../data && bash regression_download.sh
   - cd ../test && python run_regressions.py --status --traceback
-  - python test_writer.py
+  - python test_io.py

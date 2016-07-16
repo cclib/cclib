@@ -1,7 +1,7 @@
 # This file is part of cclib (http://cclib.github.io), a library for parsing
 # and interpreting the results of computational chemistry packages.
 #
-# Copyright (C) 2015, the cclib development team
+# Copyright (C) 2015-2016, the cclib development team
 #
 # The library is free software, distributed under the terms of
 # the GNU Lesser General Public version 2.1 or later. You should have
@@ -21,16 +21,19 @@ __filepath__ = os.path.realpath(__filedir__)
 __datadir__ = os.path.join(__filepath__, "..", "..")
 
 
-class WriterTest(unittest.TestCase):
+class XYZTest(unittest.TestCase):
+
+    def setUp(self):
+        self.XYZ = cclib.io.XYZ
 
     def test_init(self):
         """Does the class initialize correctly?"""
         fpath = os.path.join(__datadir__, "data/ADF/basicADF2007.01/dvb_gopt.adfout")
         data = cclib.io.ccopen(fpath).parse()
-        writer = cclib.io.filewriter.Writer(data)
+        xyz = cclib.io.xyzwriter.XYZ(data)
 
         # The object should keep the ccData instance passed to its constructor.
-        self.assertEqual(writer.ccdata, data)
+        self.assertEqual(xyz.ccdata, data)
 
 
 if __name__ == "__main__":

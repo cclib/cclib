@@ -14,7 +14,6 @@ import sys
 import unittest
 
 sys.path.append('parser')
-from testccio import *
 from testdata import *
 from testlogfileparser import *
 from testutils import *
