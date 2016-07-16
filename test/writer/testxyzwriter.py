@@ -24,12 +24,12 @@ __datadir__ = os.path.join(__filepath__, "..", "..")
 class XYZTest(unittest.TestCase):
 
     def setUp(self):
-        self.XYZ = cclib.writer.XYZ
+        self.XYZ = cclib.io.XYZ
 
     def test_init(self):
         """Does the class initialize correctly?"""
         fpath = os.path.join(__datadir__, "data/ADF/basicADF2007.01/dvb_gopt.adfout")
-        data = cclib.parser.ccopen(fpath).parse()
+        data = cclib.io.ccopen(fpath).parse()
         xyz = cclib.writer.xyzwriter.XYZ(data)
 
         # The object should keep the ccData instance passed to its constructor.
