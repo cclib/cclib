@@ -22,7 +22,7 @@ import json
 import numpy as np
 
 from . import filewriter
-from cclib.parser import ccData
+from cclib.parser.data import ccData
 
 class CJSON(filewriter.Writer):
     """A writer for chemical JSON (CJSON) files."""
@@ -178,7 +178,6 @@ class CJSON(filewriter.Writer):
             cjson_dict['properties'][ccData._attributes['moments'].jsonKey] = self._calculate_total_dipole_moment()
 
         if hasattr(self.ccdata, 'atomcharges'):
-            cjson_dict['properties']['partial charges'] = dict()
             cjson_dict['properties']['partial charges'] = self.ccdata.atomcharges
         
         orbital_attr = ['homos', 'moenergies', 'aooverlaps', 'mosyms', 'mocoeffs']

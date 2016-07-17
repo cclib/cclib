@@ -1,7 +1,7 @@
 # This file is part of cclib (http://cclib.github.io), a library for parsing
 # and interpreting the results of computational chemistry packages.
 #
-# Copyright (C) 2015, the cclib development team
+# Copyright (C) 2015-2016, the cclib development team
 #
 # The library is free software, distributed under the terms of
 # the GNU Lesser General Public version 2.1 or later. You should have
@@ -19,7 +19,7 @@ import cclib
 class guess_fileypeTest(unittest.TestCase):
 
     def setUp(self):
-        self.guess = cclib.parser.ccio.guess_filetype
+        self.guess = cclib.io.ccio.guess_filetype
 
     def test_fail(self):
         """Does the function fail as expected?"""
@@ -46,7 +46,7 @@ class guess_fileypeTest(unittest.TestCase):
 class ccreadTest(unittest.TestCase):
 
     def setUp(self):
-        self.ccread = cclib.parser.ccio.ccread
+        self.ccread = cclib.io.ccio.ccread
 
     def test_fail(self):
         """Does the function fail as expected?"""
@@ -58,7 +58,7 @@ class ccreadTest(unittest.TestCase):
 class ccopenTest(unittest.TestCase):
 
     def setUp(self):
-        self.ccopen = cclib.parser.ccio.ccopen
+        self.ccopen = cclib.io.ccio.ccopen
 
     def test_ccopen_fail(self):
         """Does the function fail as expected?"""
@@ -70,7 +70,7 @@ class ccopenTest(unittest.TestCase):
 class fallbackTest(unittest.TestCase):
 
     def setUp(self):
-        self.fallback = cclib.parser.ccio.fallback
+        self.fallback = cclib.io.ccio.fallback
 
     def test_fallback_fail(self):
         """Does the functin fail as expected?"""
