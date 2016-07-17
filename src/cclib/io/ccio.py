@@ -41,7 +41,7 @@ from ..parser.orcaparser import ORCA
 from ..parser.psiparser import Psi
 from ..parser.qchemparser import QChem
 
-from . import cjsonreader
+from .cjsonreader import CJSON
 from . import cjsonwriter
 from . import cmlwriter
 from . import xyzwriter
