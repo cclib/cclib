@@ -48,6 +48,9 @@ GAMESS/Firefly7.1/triazole_tddft_c1_b3lyp_631Gdp_sp.out
 GAMESS/Firefly8.0/dvb_gopt_a_unconverged.out
 GAMESS/Firefly8.0/h2o.log
 GAMESS/Firefly8.0/stopiter_firefly.out
+GAMESS/Firefly8.1/benzene_am1.log
+GAMESS/Firefly8.1/naphtalene_t_0.out
+GAMESS/Firefly8.1/naphtalene_t_0_SP.out
 GAMESS/GAMESS-US2003/bv6010sup1molecule_4.inp.cml_.log
 GAMESS/GAMESS-US2004/exam01.out
 GAMESS/GAMESS-US2004/ex.out

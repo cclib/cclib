@@ -176,6 +176,18 @@ def testGAMESS_Firefly8_0_stopiter_firefly_out(logfile):
     """Check to ensure that an incomplete SCF is handled correctly."""
     assert len(logfile.data.scfvalues[0]) == 6
 
+def testGAMESS_Firefly8_1_benzene_am1_log(logfile):
+	"""Molecular orbitals were not parsed (cclib/cclib#228)."""
+	assert hasattr(logfile.data, 'mocoeffs')
+
+def testGAMESS_Firefly8_1_naphtalene_t_0_out(logfile):
+	"""Molecular orbitals were not parsed (cclib/cclib#228)."""
+	assert hasattr(logfile.data, 'mocoeffs')
+
+def testGAMESS_Firefly8_1_naphtalene_t_0_SP_out(logfile):
+	"""Molecular orbitals were not parsed (cclib/cclib#228)."""
+	assert hasattr(logfile.data, 'mocoeffs')
+
 # GAMESS #
 
 def testGAMESS_GAMESS_US2008_N2_UMP2_out(logfile):
