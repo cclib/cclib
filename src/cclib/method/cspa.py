@@ -3,7 +3,7 @@
 # This file is part of cclib (http://cclib.github.io), a library for parsing
 # and interpreting the results of computational chemistry packages.
 #
-# Copyright (C) 2006-2014, the cclib development team
+# Copyright (C) 2006-2016, the cclib development team
 #
 # The library is free software, distributed under the terms of
 # the GNU Lesser General Public version 2.1 or later. You should have
@@ -21,12 +21,12 @@ from .population import Population
 
 class CSPA(Population):
     """The C-squared population analysis."""
-    
+
     def __init__(self, *args):
 
         # Call the __init__ method of the superclass.
         super(CSPA, self).__init__(logname="CSPA", *args)
-        
+
     def __str__(self):
         """Return a string representation of the object."""
         return "CSPA of" % (self.data)
@@ -34,14 +34,14 @@ class CSPA(Population):
     def __repr__(self):
         """Return a representation of the object."""
         return 'CSPA("%s")' % (self.data)
-    
+
     def calculate(self, indices=None, fupdate=0.05):
         """Perform the C squared population analysis.
-        
+
         Inputs:
            indices - list of lists containing atomic orbital indices of fragments
         """
-    
+
         # Do we have the needed info in the parser?
         if not hasattr(self.data, "mocoeffs"):
             self.logger.error("Missing mocoeffs")
@@ -99,16 +99,26 @@ class CSPA(Population):
         self.logger.info("Creating fragcharges: array[1]")
         size = len(self.fragresults[0][0])
         self.fragcharges = numpy.zeros([size], "d")
-        
+        alpha = numpy.zeros([size], "d")
+        if unrestricted:
+            beta = numpy.zeros([size], "d")
+
         for spin in range(len(self.fragresults)):
 
             for i in range(self.data.homos[spin] + 1):
 
                 temp = numpy.reshape(self.fragresults[spin][i], (size,))
                 self.fragcharges = numpy.add(self.fragcharges, temp)
-        
+                if spin == 0:
+                    alpha = numpy.add(alpha, temp)
+                elif spin == 1:
+                    beta = numpy.add(beta, temp)
+
         if not unrestricted:
             self.fragcharges = numpy.multiply(self.fragcharges, 2)
+        else:
+            self.logger.info("Creating fragspins: array[1]")
+            self.fragspins = numpy.subtract(alpha, beta)
 
         return True
 

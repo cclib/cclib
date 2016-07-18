@@ -23,12 +23,12 @@ from .fragments import FragmentAnalysis
 
 class CDA(FragmentAnalysis):
     """Charge Decomposition Analysis (CDA)"""
-    
+
     def __init__(self, *args):
-    
+
         # Call the __init__ method of the superclass.
         super(FragmentAnalysis, self).__init__(logname="CDA", *args)
-        
+
     def __str__(self):
         """Return a string representation of the object."""
         return "CDA of" % (self.data)
@@ -36,14 +36,14 @@ class CDA(FragmentAnalysis):
     def __repr__(self):
         """Return a representation of the object."""
         return 'CDA("%s")' % (self.data)
-    
+
     def calculate(self, fragments, cupdate=0.05):
         """Perform the charge decomposition analysis.
-        
+
         Inputs:
             fragments - list of ccData data objects
         """
-    
+
 
         retval = super(CDA, self).calculate(fragments, cupdate)
         if not retval:
@@ -86,7 +86,7 @@ class CDA(FragmentAnalysis):
             else:
                 homob = fragments[1].homos[0]
 
-            print("handling spin unrestricted")
+            self.logger.info("handling spin unrestricted")
             if spin == 0:
                 fooverlaps = self.fooverlaps
             elif spin == 1 and hasattr(self, "fooverlaps2"):
