@@ -578,6 +578,12 @@ def testORCA_ORCA2_9_job_out(logfile):
     """
     assert all([abs(sum(v)-1.0) < 0.0001 for k, v in logfile.data.atomspins.items()])
 
+def testORCA_ORCA2_9_qmspeedtest_hf_out(logfile):
+	"""Check precision of SCF energies (cclib/cclib#210)."""
+	energy = logfile.data.scfenergies[-1]
+	expected = -17542.5188694
+	assert abs(energy - expected) < 10**-6
+
 def testORCA_ORCA3_0_dvb_gopt_unconverged_out(logfile):
     """An unconverged geometry optimization to test for empty optdone (see #103 for details)."""
     assert hasattr(logfile.data, 'optdone') and not logfile.data.optdone
