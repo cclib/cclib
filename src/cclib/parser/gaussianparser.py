@@ -78,6 +78,12 @@ class Gaussian(logfileparser.Logfile):
 
         # Flag for identifying ONIOM calculations.
         self.oniom = False
+        
+        # Flag for identifying BOMD calculations.
+        # These calculations have a back-integration algorithm so that not all
+        # geometries should be kept.
+        # We also add a "time" attribute to the parser.
+        self.BOMD = False
 
     def after_parsing(self):
 
@@ -117,6 +123,14 @@ class Gaussian(logfileparser.Logfile):
         if hasattr(self, 'vibdispshp'):
             self.vibdisps = self.vibdispshp
             del self.vibdispshp
+        if hasattr(self, 'time'):
+            self.time = [self.time[i] for i in sorted(self.time.keys())]
+        if hasattr(self, 'energies_BOMD'):
+            self.set_attribute('scfenergies', 
+              [self.energies_BOMD[i] for i in sorted(self.energies_BOMD.keys())])
+        if hasattr(self, 'atomcoords_BOMD'):
+            self.atomcoords= \
+              [self.atomcoords_BOMD[i] for i in sorted(self.atomcoords_BOMD.keys())]
 
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
@@ -230,6 +244,8 @@ class Gaussian(logfileparser.Logfile):
 
         # Extract the atomic numbers and coordinates from the input orientation,
         #   in the event the standard orientation isn't available.
+        # Don't extract from Input or Z-matrix orientation in a BOMD run, as only
+        #   the final geometry should be kept but extract inputatoms.
         if line.find("Input orientation") > -1 or line.find("Z-Matrix orientation") > -1:
 
             # If this is a counterpoise calculation, this output means that
@@ -238,7 +254,7 @@ class Gaussian(logfileparser.Logfile):
 
             self.updateprogress(inputfile, "Attributes", self.cupdate)
 
-            if not hasattr(self, "inputcoords"):
+            if not self.BOMD and  not hasattr(self, "inputcoords"):
                 self.inputcoords = []
             self.inputatoms = []
 
@@ -252,10 +268,55 @@ class Gaussian(logfileparser.Logfile):
                 atomcoords.append(list(map(float, broken[3:6])))
                 line = next(inputfile)
 
-            self.inputcoords.append(atomcoords)
+            if not self.BOMD: self.inputcoords.append(atomcoords)
 
             self.set_attribute('atomnos', self.inputatoms)
             self.set_attribute('natom', len(self.inputatoms))
+
+        if self.BOMD and line.startswith(' Summary information for step'):
+            
+            # We keep time and energies_BOMD and coordinates in a dictionary 
+            #  because steps can be recalculated, and we need to overwite the 
+            #  previous data
+
+            broken = line.split()
+            step = int(broken[-1])
+            line = next(inputfile)
+            broken = line.split()
+            if not hasattr(self, "time"):
+                self.set_attribute('time', {step:float(broken[-1])})
+            else:
+                self.time[step] = float(broken[-1])
+           
+            line = next(inputfile)
+            broken = line.split(';')[1].split()
+            ene = utils.convertor(self.float(broken[-1]), "hartree", "eV")
+            if not hasattr(self, "energies_BOMD"):
+                self.set_attribute('energies_BOMD', {step:ene})
+            else:
+                self.energies_BOMD[step] = ene        
+                
+            self.updateprogress(inputfile, "Attributes", self.cupdate)
+
+            if not hasattr(self, "atomcoords_BOMD"):
+                self.atomcoords_BOMD = {}
+            #self.inputatoms = []
+
+            self.skip_lines(inputfile, ['EKin', 'Angular', 'JX', 'Total', 'Total', 'Cartesian'])
+
+            atomcoords = []
+            line = next(inputfile)
+            while not "MW cartesian" in line:
+                broken = line.split()
+                atomcoords.append(list(map(self.float, (broken[3], broken[5], broken[7]))))
+            #    self.inputatoms.append(int(broken[1]))
+                line = next(inputfile)
+
+            self.atomcoords_BOMD[step] = atomcoords
+
+            #self.set_attribute('atomnos', self.inputatoms)
+            #self.set_attribute('natom', len(self.inputatoms))
+
 
         # Extract the atomic masses.
         # Typical section:
@@ -420,7 +481,8 @@ class Gaussian(logfileparser.Logfile):
                         shell_line = line
 
         # Find the targets for SCF convergence (QM calcs).
-        if line[1:44] == 'Requested convergence on RMS density matrix':
+        # Not for BOMD as targets are not available in the summary
+        if not self.BOMD and line[1:44] == 'Requested convergence on RMS density matrix':
 
             if not hasattr(self, "scftargets"):
                 self.scftargets = []
@@ -524,7 +586,7 @@ class Gaussian(logfileparser.Logfile):
 
         # Note: this needs to follow the section where 'SCF Done' is used
         #   to terminate a loop when extracting SCF convergence information.
-        if line[1:9] == 'SCF Done':
+        if not self.BOMD and line[1:9] == 'SCF Done':
 
             if not hasattr(self, "scfenergies"):
                 self.scfenergies = []
@@ -662,7 +724,11 @@ class Gaussian(logfileparser.Logfile):
         #   hch        1.75406   0.09547   0.00000   0.24861   0.24861   2.00267
         #   hchh       2.09614   0.01261   0.00000   0.16875   0.16875   2.26489
         #         Item               Value     Threshold  Converged?
-        if line[37:43] == "Forces":
+        
+        # We could get the gradients in BOMD, but it is more complex because
+        #   they are not in the summary, and they are not as relevant as for
+        #   an optimization
+        if not self.BOMD and line[37:43] == "Forces":
 
             if not hasattr(self, "grads"):
                 self.grads = []
@@ -1395,6 +1461,10 @@ class Gaussian(logfileparser.Logfile):
         # that will allow assertion failures to be bypassed in the code.
         if line[1:7] == "ONIOM:":
             self.oniom = True
+
+        # This will be printed only during BOMD calcs;
+        if line.startswith(" INPUT DATA FOR L118"):
+            self.BOMD = True
 
         # Atomic charges are straightforward to parse, although the header
         # has changed over time somewhat.

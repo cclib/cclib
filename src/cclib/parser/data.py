@@ -3,7 +3,7 @@
 # This file is part of cclib (http://cclib.github.io), a library for parsing
 # and interpreting the results of computational chemistry packages.
 #
-# Copyright (C) 2007-2014, the cclib development team
+# Copyright (C) 2007-2016, the cclib development team
 #
 # The library is free software, distributed under the terms of
 # the GNU Lesser General Public version 2.1 or later. You should have
@@ -71,6 +71,7 @@ class ccData(object):
         scftargets -- targets for convergence of the SCF (array[2])
         scfvalues -- current values for convergence of the SCF (list of arrays[2])
         temperature -- temperature used for Thermochemistry (float, kelvin)
+        time -- time in molecular dynamic trajectories (array[1], fs)
         vibanharms -- vibrational anharmonicity constants (array[2], 1/cm)
         vibdisps -- cartesian displacement vectors (array[3], delta angstrom)
         vibfreqs -- vibrational frequencies (array[1], 1/cm)
@@ -138,6 +139,7 @@ class ccData(object):
        "scftargets":       Attribute( numpy.ndarray,    'targets'),
        "scfvalues":        Attribute( list,             'values'),
        "temperature":      Attribute( float,            'temperature'),
+       "time":			   Attribute( numpy.ndarray,    'time'),
        "vibanharms":       Attribute( numpy.ndarray,    'anharmonicity constants'),
        "vibdisps":         Attribute( numpy.ndarray,    'displacement'),
        "vibfreqs":         Attribute( numpy.ndarray,    'frequencies'),
