@@ -3,7 +3,7 @@
 # This file is part of cclib (http://cclib.github.io), a library for parsing
 # and interpreting the results of computational chemistry packages.
 #
-# Copyright (C) 2006-2014, the cclib development team
+# Copyright (C) 2006-2016, the cclib development team
 #
 # The library is free software, distributed under the terms of
 # the GNU Lesser General Public version 2.1 or later. You should have
@@ -21,12 +21,12 @@ from .population import Population
 
 class MPA(Population):
     """Mulliken population analysis."""
-    
+
     def __init__(self, *args):
 
         # Call the __init__ method of the superclass.
         super(MPA, self).__init__(logname="MPA", *args)
-        
+
     def __str__(self):
         """Return a string representation of the object."""
         return "MPA of" % (self.data)
@@ -34,10 +34,10 @@ class MPA(Population):
     def __repr__(self):
         """Return a representation of the object."""
         return 'MPA("%s")' % (self.data)
-    
+
     def calculate(self, indices=None, fupdate=0.05):
         """Perform a Mulliken population analysis."""
-    
+
         # Do we have the needed attributes in the data object?
         if not hasattr(self.data, "mocoeffs"):
             self.logger.error("Missing mocoeffs")
@@ -78,9 +78,9 @@ class MPA(Population):
                 if self.progress and random.random() < fupdate:
                     self.progress.update(step, "Mulliken Population Analysis")
 
-                #X_{ai} = \sum_b c_{ai} c_{bi} S_{ab}
-                #       = c_{ai} \sum_b c_{bi} S_{ab}
-                #       = c_{ai} C(i) \cdot S(a)
+                # X_{ai} = \sum_b c_{ai} c_{bi} S_{ab}
+                #        = c_{ai} \sum_b c_{bi} S_{ab}
+                #        = c_{ai} C(i) \cdot S(a)
                 # X = C(i) * [C(i) \cdot S]
                 # C(i) is 1xn and S is nxn, result of matrix mult is 1xn
 
@@ -88,7 +88,7 @@ class MPA(Population):
                 if hasattr(self.data, "aooverlaps"):
                     temp = numpy.dot(ci, self.data.aooverlaps)
 
-                #handle spin-unrestricted beta case
+                # handle spin-unrestricted beta case
                 elif hasattr(self.data, "fooverlaps2") and spin == 1:
                     temp = numpy.dot(ci, self.data.fooverlaps2)
 
@@ -108,20 +108,30 @@ class MPA(Population):
             self.logger.error("Error in partitioning results")
             return False
 
-        # Create array for mulliken charges.
+        # Create array for Mulliken charges.
         self.logger.info("Creating fragcharges: array[1]")
         size = len(self.fragresults[0][0])
         self.fragcharges = numpy.zeros([size], "d")
-        
+        alpha = numpy.zeros([size], "d")
+        if unrestricted:
+            beta = numpy.zeros([size], "d")
+
         for spin in range(len(self.fragresults)):
 
             for i in range(self.data.homos[spin] + 1):
 
                 temp = numpy.reshape(self.fragresults[spin][i], (size,))
                 self.fragcharges = numpy.add(self.fragcharges, temp)
-        
+                if spin == 0:
+                    alpha = numpy.add(alpha, temp)
+                elif spin == 1:
+                    beta = numpy.add(beta, temp)
+
         if not unrestricted:
             self.fragcharges = numpy.multiply(self.fragcharges, 2)
+        else:
+            self.logger.info("Creating fragspins: array[1]")
+            self.fragspins = numpy.subtract(alpha, beta)
 
         return True
 
