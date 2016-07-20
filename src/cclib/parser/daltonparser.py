@@ -249,7 +249,7 @@ class DALTON(logfileparser.Logfile):
                 #self.skip_lines(inputfile, ['b', 'basisname', 'b'])
                 line = next(inputfile)
                 line = next(inputfile)
-                self.metadata["basis_set_name"] = line.split()[4][1:-1]
+                self.metadata["basis_set_name"] = line.split()[4].strip('\"')
                 line = next(inputfile)
 
             line = next(inputfile)
