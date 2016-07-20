@@ -16,7 +16,6 @@
 from __future__ import print_function
 
 import numpy
-import re
 
 
 from . import logfileparser
@@ -90,9 +89,9 @@ class DALTON(logfileparser.Logfile):
         # extract the version number first
         if line[4:30] == "This is output from DALTON":
             if line.split()[5] == "release" or line.split()[5] == "(Release":
-                self.metadata["program_version"] = line.split()[6][6:]
+                self.metadata["version"] = line.split()[6][6:]
             else:
-                self.metadata["program_version"] = line.split()[5]
+                self.metadata["version"] = line.split()[5]
 
         # Is the basis set from a single library file, or is it
         # manually specified? See before_parsing().
@@ -250,7 +249,7 @@ class DALTON(logfileparser.Logfile):
                 #self.skip_lines(inputfile, ['b', 'basisname', 'b'])
                 line = next(inputfile)
                 line = next(inputfile)
-                self.metadata["basis_set_name"] = re.findall(r'"([^"]*)"', line)[0]
+                self.metadata["basis_set_name"] = line.split()[4][1:-1]
                 line = next(inputfile)
 
             line = next(inputfile)
