@@ -242,6 +242,7 @@ ORCA/ORCA2.8/dvb_td.out
 ORCA/ORCA2.9/job.out
 ORCA/ORCA2.9/PCB_1_122.out
 ORCA/ORCA2.9/prova.out
+ORCA/ORCA2.9/qmspeedtest_hf.out
 ORCA/ORCA3.0/benzene_td_singlets.out
 ORCA/ORCA3.0/CuI-MePY2-CH3CN_optxes.out
 ORCA/ORCA3.0/dvb_gopt_unconverged.out
