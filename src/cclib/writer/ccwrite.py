@@ -28,7 +28,7 @@ from . import cmlwriter
 from . import xyzwriter
 
 
-def ccwrite(ccobj, outputtype=None, outputdest=None, returnstr=False,
+def ccwrite(ccobj, outputtype=None, outputdest=None, terse=False , returnstr=False,
             *args, **kwargs):
     """Write the parsed data from an outputfile to a standard chemical
     representation.
@@ -37,6 +37,7 @@ def ccwrite(ccobj, outputtype=None, outputdest=None, returnstr=False,
         ccobj - Either a job (from ccopen) or a data (from job.parse()) object
         outputtype - The output format (should be one of 'cjson', 'cml', 'xyz')
         outputdest - A filename or file object for writing
+        terse -  This option is currently limited to the cjson/json format. Whether to indent the cjson/json or not
         returnstr - Whether or not to return a string representation.
 
     The different writers may take additional arguments, which are
@@ -67,7 +68,7 @@ def ccwrite(ccobj, outputtype=None, outputdest=None, returnstr=False,
         # Avoid passing multiple times into the main call.
         del kwargs['jobfilename']
 
-    outputobj = outputclass(ccdata, jobfilename=jobfilename, *args, **kwargs)
+    outputobj = outputclass(ccdata, jobfilename=jobfilename, terse=terse, *args, **kwargs)
     output = outputobj.generate_repr()
 
     # If outputdest isn't None, write the output to disk.

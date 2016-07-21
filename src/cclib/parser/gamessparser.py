@@ -911,6 +911,11 @@ class GAMESS(logfileparser.Logfile):
                 while not line.strip():
                     line = next(inputfile)
 
+                # Geometry optimizations don't have END OF RHF/DFT
+                # CALCULATION, they head right into the next section.
+                if "--------" in line:
+                    break
+
                 # Eigenvalues for these orbitals (in hartrees).
                 try:
                     self.moenergies[0].extend([utils.convertor(float(x), "hartree", "eV") for x in line.split()])
@@ -1024,7 +1029,7 @@ class GAMESS(logfileparser.Logfile):
                         line = next(inputfile)
                         line = next(inputfile)
                     line = next(inputfile)
-                    if "PROPERTIES" in line:
+                    if "properties" in line.lower():
                         break
                     self.moenergies[1].extend([utils.convertor(float(x), "hartree", "eV") for x in line.split()])
                     line = next(inputfile)

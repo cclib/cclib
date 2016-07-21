@@ -36,7 +36,6 @@ class XYZ(filewriter.Writer):
         self.do_lastgeom = lastgeom
         self.do_allgeom = allgeom
 
-        self.generate_repr()
 
     def generate_repr(self):
         """Generate the XYZ representation of the logfile data."""

@@ -34,8 +34,6 @@ class CML(filewriter.Writer):
         # Call the __init__ method of the superclass
         super(CML, self).__init__(ccdata, *args, **kwargs)
 
-        self.generate_repr()
-
     def generate_repr(self):
         """Generate the CML representation of the logfile data."""
 

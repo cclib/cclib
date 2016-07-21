@@ -30,7 +30,7 @@ class Writer(object):
         CJSON, CML, XYZ
     """
 
-    def __init__(self, ccdata, jobfilename=None,
+    def __init__(self, ccdata, jobfilename=None, terse=False,
                  *args, **kwargs):
         """Initialize the Writer object.
 
@@ -39,10 +39,12 @@ class Writer(object):
         Inputs:
           ccdata - An instance of ccData, parsed from a logfile.
           jobfilename - The filename of the parsed logfile.
+          terse - Whether to print the terse version of the output file - currently limited to cjson/json formats
         """
 
         self.ccdata = ccdata
         self.jobfilename = jobfilename
+        self.terse = terse
 
         self.pt = PeriodicTable()
         self.elements = [self.pt.element[Z] for Z in self.ccdata.atomnos]

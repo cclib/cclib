@@ -128,7 +128,7 @@ class ORCA(logfileparser.Logfile):
 
             while not "Total Energy       :" in line:
                 line = next(inputfile)
-            energy = float(line.split()[5])
+            energy = utils.convertor(float(line.split()[3]), "hartree", "eV")
             self.scfenergies.append(energy)
 
             self._append_scfvalues_scftargets(inputfile, line)
@@ -151,7 +151,7 @@ class ORCA(logfileparser.Logfile):
             if not hasattr(self, "scftargets"):
                 self.scftargets = []
 
-            energy = self.scfvalues[-1][-1][0]
+            energy = utils.convertor(self.scfvalues[-1][-1][0], "hartree", "eV")
             self.scfenergies.append(energy)
 
             self._append_scfvalues_scftargets(inputfile, line)
@@ -379,8 +379,8 @@ class ORCA(logfileparser.Logfile):
             line = next(inputfile)
             while len(line) > 20:  # restricted calcs are terminated by ------
                 info = line.split()
-                self.moenergies[0].append(float(info[3]))
-                if float(info[1]) > 0.00:  # might be 1 or 2, depending on restricted-ness
+                self.moenergies[0].append(utils.convertor(float(info[2]), "hartree", "eV"))
+                if float(info[1]) > 0.00: # might be 1 or 2, depending on restricted-ness
                     self.homos[0] = int(info[0])
                 line = next(inputfile)
 
@@ -396,7 +396,7 @@ class ORCA(logfileparser.Logfile):
                 line = next(inputfile)
                 while len(line) > 20:  # actually terminated by ------
                     info = line.split()
-                    self.moenergies[1].append(float(info[3]))
+                    self.moenergies[1].append(utils.convertor(float(info[2]), "hartree", "eV"))
                     if float(info[1]) == 1.00:
                         self.homos[1] = int(info[0])
                     line = next(inputfile)
