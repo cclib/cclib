@@ -33,6 +33,7 @@ ADF/ADF2013.01/stopiter_dvb_un_sp.adfout
 ADF/ADF2013.01/stopiter_dvb_un_sp_c.adfout
 ADF/ADF2013.01/stopiter_MoOCl4-sp.adfout
 ADF/ADF2014.01/dvb_gopt_b_fullscf.out
+ADF/ADF2016/fa2.adf.out
 DALTON/DALTON-2013/C_bigbasis.aug-cc-pCVQZ.out
 DALTON/DALTON-2013/b3lyp_energy_dvb_sp_nosym.out
 DALTON/DALTON-2013/dvb_sp_hf_nosym.out

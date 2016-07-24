@@ -131,6 +131,11 @@ def testADF_ADF2013_01_stopiter_MoOCl4_sp_adfout(logfile):
     # len(logfile.data.scfvalues[0]) == 11
     assert not hasattr(logfile.data, "scfvalues")
 
+def testADF_ADF2016_fa2_adf_out(logfile):		
+    """This logfile, without symmetry, should get atombasis parsed."""		
+    assert hasattr(logfile.data, "atombasis")		
+    assert [b for ab in logfile.data.atombasis for b in ab] == list(range(logfile.data.nbasis))
+
 # DALTON #
 
 def testDALTON_DALTON_2015_dalton_atombasis_out(logfile):
