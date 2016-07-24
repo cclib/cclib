@@ -531,7 +531,7 @@ class DALTON(logfileparser.Logfile):
             self.set_attribute("mult", int(line.split()[-2]))
         # Dalton only has ROHF, no UHF
             if self.mult != 1:
-                self.metadata["spintype"] = "ROHF"
+                self.metadata["unrestricted"] = True
 
         #     Orbital specifications
         #     ======================
