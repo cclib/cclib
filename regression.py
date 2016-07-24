@@ -131,11 +131,6 @@ def testADF_ADF2013_01_stopiter_MoOCl4_sp_adfout(logfile):
     # len(logfile.data.scfvalues[0]) == 11
     assert not hasattr(logfile.data, "scfvalues")
 
-def testADF_ADF2016_fa2_adf_out(logfile):
-    """This logfile, without symmetry, should get atombasis parsed."""
-    assert hasattr(logfile.data, "atombasis")
-    assert [b for ab in logfile.data.atombasis for b in ab] == list(range(logfile.data.nbasis))
-
 # DALTON #
 
 def testDALTON_DALTON_2015_dalton_atombasis_out(logfile):
@@ -438,6 +433,15 @@ def testGaussian_Gaussian09_benzene_freq_log(logfile):
 def testGaussian_Gaussian09_stopiter_gaussian_out(logfile):
     """Check to ensure that an incomplete SCF is handled correctly."""
     assert len(logfile.data.scfvalues[0]) == 4
+
+def testGaussian_Gaussian09_dvb_bomd_out(logfile):
+    """
+    Check that the number of energies and geometries corresponds to 
+    integrated steps, and not all the energies and geometries found in the file.
+    """
+    assert logfile.data.scfenergies.shape == (35,)
+    assert logfile.data.atomcoords.shape == (35,20,3)
+    assert logfile.data.time.shape == (35,)
 
 # Jaguar #
 
