@@ -64,6 +64,8 @@ class DALTON(logfileparser.Logfile):
         # when the first line is BASIS, false for INTGRL/ATOMBASIS.
         self.basislibrary = True
 
+        self.metadata['methods'] = []
+
     def parse_geometry(self, lines):
         """Parse DALTON geometry lines into an atomcoords array."""
 
@@ -769,9 +771,9 @@ class DALTON(logfileparser.Logfile):
         # ...
         #
         if "Final HF energy" in line and not (hasattr(self, "mpenergies") or hasattr(self, "ccenergies")):
-            self.metadata["methods"] = "HF"
+            self.metadata["methods"].append("HF")
         if "Final DFT energy" in line:
-            self.metadata["methods"] = "DFT"
+            self.metadata["methods"].append("DFT")
         if "This is a DFT calculation of type" in line:
             self.metadata["functional"] = line.split()[-1]
 
@@ -782,7 +784,7 @@ class DALTON(logfileparser.Logfile):
             self.scfenergies.append(utils.convertor(float(temp[-1]), "hartree", "eV"))
 
         if "@   = MP2 second order energy" in line:
-            self.metadata["methods"] = "MP2"
+            self.metadata["methods"].append("MP2")
             energ = utils.convertor(float(line.split()[-1]), 'hartree', 'eV')
             if not hasattr(self, "mpenergies"):
                 self.mpenergies = []
@@ -790,14 +792,14 @@ class DALTON(logfileparser.Logfile):
             self.mpenergies[-1].append(energ)
 
         if "Total CCSD  energy:" in line:
-            self.metadata["methods"] = "CCSD"
+            self.metadata["methods"].append("CCSD")
             energ = utils.convertor(float(line.split()[-1]), 'hartree', 'eV')
             if not hasattr(self, "ccenergies"):
                 self.ccenergies = []
             self.ccenergies.append(energ)
 
         if "Total energy CCSD(T)" in line:
-            self.metadata["methods"] = "CCSD(T)"
+            self.metadata["methods"].append("CCSD(T)")
             energ = utils.convertor(float(line.split()[-1]), 'hartree', 'eV')
             if not hasattr(self, "ccenergies"):
                 self.ccenergies = []
