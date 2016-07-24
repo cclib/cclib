@@ -89,9 +89,9 @@ class DALTON(logfileparser.Logfile):
         # extract the version number first
         if line[4:30] == "This is output from DALTON":
             if line.split()[5] == "release" or line.split()[5] == "(Release":
-                self.metadata["version"] = line.split()[6][6:]
+                self.metadata["package_version"] = line.split()[6][6:]
             else:
-                self.metadata["version"] = line.split()[5]
+                self.metadata["package_version"] = line.split()[5]
 
         # Is the basis set from a single library file, or is it
         # manually specified? See before_parsing().
