@@ -50,6 +50,7 @@ class ccData(object):
         grads -- current values of forces (gradients) in geometry optimization (array[3])
         hessian -- elements of the force constant matrix (array[1])
         homos -- molecular orbital indices of HOMO(s) (array[1])
+        metadata -- some metadata for the current calculation (dict of string) 
         mocoeffs -- molecular orbital coefficients (list of arrays[2])
         moenergies -- molecular orbital energies (list of arrays[1], eV)
         moments -- molecular multipole moments (list of arrays[], a.u.)
@@ -118,6 +119,7 @@ class ccData(object):
        "grads":            Attribute( numpy.ndarray,    'TBD'),
        "hessian":          Attribute( numpy.ndarray,    'hessian matrix'),
        "homos":            Attribute( numpy.ndarray,    'homos'),
+       "metadata":         Attribute( dict,             'TBD'),
        "mocoeffs":         Attribute( list,             'coeffs'),
        "moenergies":       Attribute( list,             'energies'),
        "moments":          Attribute( list,             'total dipole moment'),

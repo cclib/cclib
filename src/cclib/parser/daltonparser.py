@@ -29,6 +29,9 @@ class DALTON(logfileparser.Logfile):
 
         # Call the __init__ method of the superclass
         super(DALTON, self).__init__(logname="DALTON", *args, **kwargs)
+        if not hasattr(self, "metadata"):
+            self.metadata = {}
+            self.metadata["package"] = self.logname
 
     def __str__(self):
         """Return a string representation of the object."""
@@ -83,6 +86,12 @@ class DALTON(logfileparser.Logfile):
 
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
+        # extract the version number first
+        if line[4:30] == "This is output from DALTON":
+            if line.split()[5] == "release" or line.split()[5] == "(Release":
+                self.metadata["version"] = line.split()[6][6:]
+            else:
+                self.metadata["version"] = line.split()[5]
 
         # Is the basis set from a single library file, or is it
         # manually specified? See before_parsing().
@@ -237,7 +246,11 @@ class DALTON(logfileparser.Logfile):
             if not self.basislibrary:
                 self.skip_line(inputfile, 'b')
             else:
-                self.skip_lines(inputfile, ['b', 'basisname', 'b'])
+                #self.skip_lines(inputfile, ['b', 'basisname', 'b'])
+                line = next(inputfile)
+                line = next(inputfile)
+                self.metadata["basis_set_name"] = line.split()[4].strip('\"')
+                line = next(inputfile)
 
             line = next(inputfile)
             cols = line.split()
@@ -516,6 +529,9 @@ class DALTON(logfileparser.Logfile):
             self.set_attribute("charge", int(line.split()[-1]))
         if "@    Spin multiplicity and 2 M_S" in line:
             self.set_attribute("mult", int(line.split()[-2]))
+        # Dalton only has ROHF, no UHF
+            if self.mult != 1:
+                self.metadata["spintype"] = "ROHF"
 
         #     Orbital specifications
         #     ======================
@@ -752,6 +768,13 @@ class DALTON(logfileparser.Logfile):
         # @    Final gradient norm:           0.000003746706
         # ...
         #
+        if "Final HF energy" in line and not (hasattr(self, "mpenergies") or hasattr(self, "ccenergies")):
+            self.metadata["methods"] = "HF"
+        if "Final DFT energy" in line:
+            self.metadata["methods"] = "DFT"
+        if "This is a DFT calculation of type" in line:
+            self.metadata["functional"] = line.split()[-1]
+
         if "Final DFT energy" in line or "Final HF energy" in line:
             if not hasattr(self, "scfenergies"):
                 self.scfenergies = []
@@ -759,13 +782,22 @@ class DALTON(logfileparser.Logfile):
             self.scfenergies.append(utils.convertor(float(temp[-1]), "hartree", "eV"))
 
         if "@   = MP2 second order energy" in line:
+            self.metadata["methods"] = "MP2"
             energ = utils.convertor(float(line.split()[-1]), 'hartree', 'eV')
             if not hasattr(self, "mpenergies"):
                 self.mpenergies = []
             self.mpenergies.append([])
             self.mpenergies[-1].append(energ)
 
+        if "Total CCSD  energy:" in line:
+            self.metadata["methods"] = "CCSD"
+            energ = utils.convertor(float(line.split()[-1]), 'hartree', 'eV')
+            if not hasattr(self, "ccenergies"):
+                self.ccenergies = []
+            self.ccenergies.append(energ)
+
         if "Total energy CCSD(T)" in line:
+            self.metadata["methods"] = "CCSD(T)"
             energ = utils.convertor(float(line.split()[-1]), 'hartree', 'eV')
             if not hasattr(self, "ccenergies"):
                 self.ccenergies = []
