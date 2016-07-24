@@ -50,7 +50,7 @@ class ccData(object):
         grads -- current values of forces (gradients) in geometry optimization (array[3])
         hessian -- elements of the force constant matrix (array[1])
         homos -- molecular orbital indices of HOMO(s) (array[1])
-        metadata -- some metadata for the current calculation (dict of string) 
+        metadata -- various metadata about the package and computation (dict) 
         mocoeffs -- molecular orbital coefficients (list of arrays[2])
         moenergies -- molecular orbital energies (list of arrays[1], eV)
         moments -- molecular multipole moments (list of arrays[], a.u.)
