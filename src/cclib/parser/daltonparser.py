@@ -1073,6 +1073,60 @@ class DALTON(logfileparser.Logfile):
             # order.
             self.vibramans = vibramans[::-1]
 
+        # Static polarizability from **PROPERTIES/.POLARI.
+        if line.strip() == "Static polarizabilities (au)":
+            if not hasattr(self, 'polarizabilities'):
+                self.polarizabilities = []
+            polarizability = []
+            self.skip_lines(inputfile, ['d', 'b', 'directions', 'b'])
+            for _ in range(3):
+                line = next(inputfile)
+                polarizability.append(line.split()[1:])
+            self.polarizabilities.append(numpy.array(polarizability))
+
+        # Static and dynamic polarizability from **PROPERTIES/.ALPHA/*ABALNR.
+        if "Polarizability tensor for frequency" in line:
+            if not hasattr(self, 'polarizabilities'):
+                self.polarizabilities = []
+            polarizability = []
+            self.skip_lines(inputfile, ['d', 'directions', 'b'])
+            for _ in range(3):
+                line = next(inputfile)
+                polarizability.append(line.split()[1:])
+            self.polarizabilities.append(numpy.array(polarizability))
+
+        # Static and dynamic polarizability from **RESPONSE/*LINEAR.
+        # This section is *very* general and will need to be expanded later.
+        # For now, only form the matrix from dipole (length gauge) values.
+        if "@ FREQUENCY INDEPENDENT SECOND ORDER PROPERTIES" in line:
+
+            coord_to_idx = {'X': 0, 'Y': 1, 'Z': 2}
+
+            self.skip_line(inputfile, 'b')
+            line = next(inputfile)
+
+            polarizability_diplen = numpy.empty(shape=(3, 3))
+
+            while "Time used in linear response calculation is" not in line:
+                tokens = line.split()
+                if line.count("DIPLEN") == 2:
+                    assert len(tokens) == 8
+                    if not hasattr(self, 'polarizabilities'):
+                        self.polarizabilities = []
+                    i, j = coord_to_idx[tokens[2][0]], coord_to_idx[tokens[4][0]]
+                    polarizability_diplen[i, j] = self.float(tokens[7])
+                line = next(inputfile)
+
+            # Only the lower triangle is printed, because the
+            # polarizability tensor is symmetric, so it can safely be
+            # reflected.
+            for i in range(3):
+                for j in range(i+1, 3):
+                    polarizability_diplen[i, j] = polarizability_diplen[j, i]
+
+            if hasattr(self, 'polarizabilities'):
+                self.polarizabilities.append(polarizability_diplen)
+
         # Electronic excitations: single residues of the linear
         # response equations.
         if "Linear Response single residue calculation" in line:

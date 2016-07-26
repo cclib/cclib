@@ -1012,6 +1012,21 @@ class NWChem(logfileparser.Logfile):
             self.ccenergies.append([])
             self.ccenergies[-1].append(utils.convertor(ccenerg, "hartree", "eV"))
 
+        # Static and dynamic polarizability.
+        if "Linear Response polarizability / au" in line:
+            if not hasattr(self, "polarizabilities"):
+                self.polarizabilities = []
+            polarizability = []
+            line = next(inputfile)
+            assert line.split()[0] == "Frequency"
+            line = next(inputfile)
+            assert line.split()[0] == "Wavelength"
+            self.skip_lines(inputfile, ['coordinates', 'd'])
+            for _ in range(3):
+                line = next(inputfile)
+                polarizability.append(line.split()[1:])
+            self.polarizabilities.append(numpy.array(polarizability))
+
     def after_parsing(self):
         """NWChem-specific routines for after parsing file.
 
