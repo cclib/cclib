@@ -121,7 +121,7 @@ class GaussianCISTest(GenericCISTest):
     def testnooccnos(self):
         """Are natural orbital occupation numbers the right size?"""
         self.assertEquals(self.data.nooccnos.shape, (self.data.nmo, ))
-        
+
 
 
 class Jaguar83CISTest(GenericCISTest):

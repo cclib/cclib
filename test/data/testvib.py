@@ -57,10 +57,10 @@ class GaussianIRTest(GenericIRTest):
 
     def testvibsyms(self):
         """Is the length of vibsyms correct?"""
-        numvib = 3*len(self.data.atomnos) - 6        
+        numvib = 3*len(self.data.atomnos) - 6
         self.assertEqual(len(self.data.vibsyms), numvib)
 
-       
+
 class JaguarIRTest(GenericIRTest):
     """Customized vibrational frequency unittest"""
 
@@ -78,7 +78,7 @@ class OrcaIRTest(GenericIRTest):
     # the basis set seems close enough to other programs. It would be nice
     # to determine whether this difference is algorithmic in nature,
     # but in the meanwhile we will expect to parse this value.
-    max_IR_intensity = 215    
+    max_IR_intensity = 215
 
 
 class QChemIRTest(GenericIRTest):
