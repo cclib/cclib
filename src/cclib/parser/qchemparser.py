@@ -1198,7 +1198,8 @@ class QChem(logfileparser.Logfile):
                 self.skip_line(inputfile, 'index header')
                 for _ in range(3):
                     line = next(inputfile)
-                    polarizability.append(line.split()[1:])
+                    ss = line.strip()[1:]
+                    polarizability.append([ss[0:12], ss[13:24], ss[25:36]])
                 # For some reason the sign is inverted.
                 self.polarizabilities.append(-numpy.array(polarizability, dtype=float))
 
