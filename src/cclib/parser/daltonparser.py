@@ -1117,12 +1117,12 @@ class DALTON(logfileparser.Logfile):
                     polarizability_diplen[i, j] = self.float(tokens[7])
                 line = next(inputfile)
 
-            # Only the lower triangle is printed, because the
+            # Only the upper triangle is printed, because the
             # polarizability tensor is symmetric, so it can safely be
             # reflected.
             for i in range(3):
                 for j in range(i+1, 3):
-                    polarizability_diplen[i, j] = polarizability_diplen[j, i]
+                    polarizability_diplen[j, i] = polarizability_diplen[i, j]
 
             if hasattr(self, 'polarizabilities'):
                 self.polarizabilities.append(polarizability_diplen)
