@@ -2,7 +2,7 @@ BASIS
 STO-3G
 tryptophan static polarizability
 ---
-Atomtypes=18 Angstrom Charge=0
+Atomtypes=18 Angstrom Charge=0 Nosymmetry
 Charge=7.0 Atoms=1
 N     -0.0699826875    0.3321987191    0.2821283177
 Charge=6.0 Atoms=2

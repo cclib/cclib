@@ -22,9 +22,9 @@ __filedir__ = os.path.realpath(os.path.dirname(__file__))
 class GenericPolarTest(unittest.TestCase):
     """Generic static polarizability unittest"""
 
-    # Reference values are from DALTON 2015/Trp_polar_abalnr.out
-    min_component = -22.538044
-    max_component = 92.329638
+    # Reference values are from DALTON2015/Trp_polar_abalnr.out
+    min_component = -3.77586
+    max_component = 95.11544
     principal_components = [30.29430402, 91.53628235, 100.54212364]
 
     def testshape(self):
@@ -32,17 +32,20 @@ class GenericPolarTest(unittest.TestCase):
         for polarizability_tensor in self.data.polarizabilities:
             self.assertEqual(polarizability_tensor.shape, (3, 3))
 
-    # def testmaxcomponent(self):
-    #     """Is the max component of the polarizbality +/- 1 from a reference?"""
-    #     self.assertAlmostEqual(np.max(self.data.polarizabilities[0]),
-    #                            self.max_component,
-    #                            delta=1.0)
+    def testmaxcomponent(self):
+        """Is the max component of the polarizability +/- 0.01 from a
+reference?"""
+        self.assertAlmostEqual(numpy.max(self.data.polarizabilities[0]),
+                               self.max_component,
+                               delta=0.01)
 
-    # def testmincomponent(self):
-    #     """Is the min component of the polarizbality +/- 1 from a reference?"""
-    #     self.assertAlmostEqual(np.min(self.data.polarizabilities[0]),
-    #                            self.min_component,
-    #                            delta=1.0)
+    def testmincomponent(self):
+        """Is the min component of the polarizability +/- 0.01 from a
+        reference?
+        """
+        self.assertAlmostEqual(numpy.min(self.data.polarizabilities[0]),
+                               self.min_component,
+                               delta=0.01)
 
     def testprincomponents(self):
         """Are each of the principal components (eigenvalues) of the

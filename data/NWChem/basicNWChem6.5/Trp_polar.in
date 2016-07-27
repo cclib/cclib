@@ -1,6 +1,7 @@
 echo
 
-geometry units angstrom
+geometry units angstrom noautoz nocenter
+symmetry c1
 N     -0.0699826875    0.3321987191    0.2821283177
 C      1.3728035449    0.0970713322   -0.0129587739
 C      2.0969275417   -0.0523593054    1.3682652221
