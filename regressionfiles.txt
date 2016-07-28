@@ -189,6 +189,7 @@ Gaussian/Gaussian09/water_gaussian.inp.log
 Gaussian/Gaussian09/benzene_freq.log
 Gaussian/Gaussian09/benzene_HPfreq.log
 Gaussian/Gaussian09/stopiter_gaussian.out
+Gaussian/Gaussian09/dvb_bomd.out
 Gaussian/Gaussian98/C_bigmult.log
 Gaussian/Gaussian98/oo-LAN.out
 Gaussian/Gaussian98/test_Cu2.log
