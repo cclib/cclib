@@ -33,11 +33,14 @@ ADF/ADF2013.01/stopiter_dvb_un_sp.adfout
 ADF/ADF2013.01/stopiter_dvb_un_sp_c.adfout
 ADF/ADF2013.01/stopiter_MoOCl4-sp.adfout
 ADF/ADF2014.01/dvb_gopt_b_fullscf.out
+ADF/ADF2016/fa2.adf.out
 DALTON/DALTON-2013/C_bigbasis.aug-cc-pCVQZ.out
 DALTON/DALTON-2013/b3lyp_energy_dvb_sp_nosym.out
 DALTON/DALTON-2013/dvb_sp_hf_nosym.out
 DALTON/DALTON-2013/sp_b3lyp_dvb.out
 DALTON/DALTON-2013/td_b3lyp_dvb.out
+DALTON/DALTON-2015/dalton_atombasis.out
+DALTON/DALTON-2015/dalton_intgrl.out
 DALTON/DALTON-2015/stopiter_dalton_dft.out
 DALTON/DALTON-2015/stopiter_dalton_hf.out
 GAMESS/Firefly7.1/firefly-FailStationary.out
@@ -45,6 +48,9 @@ GAMESS/Firefly7.1/triazole_tddft_c1_b3lyp_631Gdp_sp.out
 GAMESS/Firefly8.0/dvb_gopt_a_unconverged.out
 GAMESS/Firefly8.0/h2o.log
 GAMESS/Firefly8.0/stopiter_firefly.out
+GAMESS/Firefly8.1/benzene_am1.log
+GAMESS/Firefly8.1/naphtalene_t_0.out
+GAMESS/Firefly8.1/naphtalene_t_0_SP.out
 GAMESS/GAMESS-US2003/bv6010sup1molecule_4.inp.cml_.log
 GAMESS/GAMESS-US2004/exam01.out
 GAMESS/GAMESS-US2004/ex.out
@@ -237,6 +243,7 @@ ORCA/ORCA2.8/dvb_td.out
 ORCA/ORCA2.9/job.out
 ORCA/ORCA2.9/PCB_1_122.out
 ORCA/ORCA2.9/prova.out
+ORCA/ORCA2.9/qmspeedtest_hf.out
 ORCA/ORCA3.0/benzene_td_singlets.out
 ORCA/ORCA3.0/CuI-MePY2-CH3CN_optxes.out
 ORCA/ORCA3.0/dvb_gopt_unconverged.out
@@ -267,6 +274,7 @@ QChem/QChem4.2/dvb_gopt_unconverged.out
 QChem/QChem4.2/dvb_sp_multipole_10.out
 QChem/QChem4.2/dvb_sp_omp.out
 QChem/QChem4.2/dvb_sp_unconverged.out
+QChem/QChem4.2/opt_ZZZZ_+1.000.out
 QChem/QChem4.2/print_frgm_false_opt.out
 QChem/QChem4.2/print_frgm_true_opt.out
 QChem/QChem4.2/print_frgm_false_sp.out

@@ -131,7 +131,28 @@ def testADF_ADF2013_01_stopiter_MoOCl4_sp_adfout(logfile):
     # len(logfile.data.scfvalues[0]) == 11
     assert not hasattr(logfile.data, "scfvalues")
 
+def testADF_ADF2016_fa2_adf_out(logfile):		
+    """This logfile, without symmetry, should get atombasis parsed."""		
+    assert hasattr(logfile.data, "atombasis")		
+    assert [b for ab in logfile.data.atombasis for b in ab] == list(range(logfile.data.nbasis))
+
 # DALTON #
+
+def testDALTON_DALTON_2015_dalton_atombasis_out(logfile):
+    """This logfile didn't parse due to the absence of a line in the basis
+    set section.
+    """
+    assert hasattr(logfile.data, "nbasis")
+    assert logfile.data.nbasis == 37
+    assert hasattr(logfile.data, "atombasis")
+
+def testDALTON_DALTON_2015_dalton_intgrl_out(logfile):
+    """This logfile didn't parse due to the absence of a line in the basis
+    set section.
+    """
+    assert hasattr(logfile.data, "nbasis")
+    assert logfile.data.nbasis == 4
+    assert hasattr(logfile.data, "atombasis")
 
 def testDALTON_DALTON_2015_stopiter_dalton_dft_out(logfile):
     """Check to ensure that an incomplete SCF is handled correctly."""
@@ -154,6 +175,18 @@ def testGAMESS_Firefly8_0_h2o_log(logfile):
 def testGAMESS_Firefly8_0_stopiter_firefly_out(logfile):
     """Check to ensure that an incomplete SCF is handled correctly."""
     assert len(logfile.data.scfvalues[0]) == 6
+
+def testGAMESS_Firefly8_1_benzene_am1_log(logfile):
+	"""Molecular orbitals were not parsed (cclib/cclib#228)."""
+	assert hasattr(logfile.data, 'mocoeffs')
+
+def testGAMESS_Firefly8_1_naphtalene_t_0_out(logfile):
+	"""Molecular orbitals were not parsed (cclib/cclib#228)."""
+	assert hasattr(logfile.data, 'mocoeffs')
+
+def testGAMESS_Firefly8_1_naphtalene_t_0_SP_out(logfile):
+	"""Molecular orbitals were not parsed (cclib/cclib#228)."""
+	assert hasattr(logfile.data, 'mocoeffs')
 
 # GAMESS #
 
@@ -453,16 +486,22 @@ def testMolpro_Molpro2008_ch2o_molpro_casscf_out(logfile):
     assert logfile.data.mocoeffs[0][-2][0] == 0.0
     assert logfile.data.mocoeffs[0][0][-2] == 0.0
 
+    assert isinstance(logfile.data.nocoeffs, numpy.ndarray)
+    assert isinstance(logfile.data.nooccnos, numpy.ndarray)
+    assert logfile.data.nocoeffs.shape == logfile.data.mocoeffs[0].shape
+    assert len(logfile.data.nooccnos) == logfile.data.nmo
+    assert logfile.data.nooccnos[27] == 1.95640
+
 def testMolpro_Molpro2012_CHONHSH_HF_STO_3G_out(logfile):
-	"""Formatting of the basis function is slightly different than expected."""
-	assert len(logfile.data.gbasis) == 7
-	assert len(logfile.data.gbasis[0]) == 3 # C
-	assert len(logfile.data.gbasis[1]) == 3 # N
-	assert len(logfile.data.gbasis[2]) == 3 # O
-	assert len(logfile.data.gbasis[3]) == 5 # S
-	assert len(logfile.data.gbasis[4]) == 1 # H
-	assert len(logfile.data.gbasis[5]) == 1 # H
-	assert len(logfile.data.gbasis[6]) == 1 # H
+    """Formatting of the basis function is slightly different than expected."""
+    assert len(logfile.data.gbasis) == 7
+    assert len(logfile.data.gbasis[0]) == 3 # C
+    assert len(logfile.data.gbasis[1]) == 3 # N
+    assert len(logfile.data.gbasis[2]) == 3 # O
+    assert len(logfile.data.gbasis[3]) == 5 # S
+    assert len(logfile.data.gbasis[4]) == 1 # H
+    assert len(logfile.data.gbasis[5]) == 1 # H
+    assert len(logfile.data.gbasis[6]) == 1 # H
 
 def testMolpro_Molpro2012_dvb_gopt_unconverged_out(logfile):
     """An unconverged geometry optimization to test for empty optdone (see #103 for details)."""
@@ -547,6 +586,12 @@ def testORCA_ORCA2_9_job_out(logfile):
     but remember that this attribute is a dictionary, so we must iterate.
     """
     assert all([abs(sum(v)-1.0) < 0.0001 for k, v in logfile.data.atomspins.items()])
+
+def testORCA_ORCA2_9_qmspeedtest_hf_out(logfile):
+	"""Check precision of SCF energies (cclib/cclib#210)."""
+	energy = logfile.data.scfenergies[-1]
+	expected = -17542.5188694
+	assert abs(energy - expected) < 10**-6
 
 def testORCA_ORCA3_0_dvb_gopt_unconverged_out(logfile):
     """An unconverged geometry optimization to test for empty optdone (see #103 for details)."""
