@@ -1,3 +1,15 @@
+Changes in cclib-1.4.1:
+
+Features:
+    * Preliminary support for writing CJSON (Sanjeed Schamnad)
+    * Tentative support for BOMD trajectories in Gaussian (Ramon Crehuet)
+    * Support for atombasis in ADF (Felix Plasser)
+    * Support for nocoeffs and nooccnos  in Molpro
+
+Bugfixes:
+    * Fix for non-standard basis sets in DALTON
+    * Fix for non-standard MO coefficient printin in GAMESS
+
 Changes in cclib-1.4:
 
 Features:
