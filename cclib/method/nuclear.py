@@ -37,7 +37,8 @@ class Nuclear(Method):
         pt = PeriodicTable()
         formula = ""
         for ano in sorted(set(self.data.atomnos), reverse=True):
-            formula += "%s%i" % (pt.element[ano], self.data.atomnos.count(ano))
+            count = numpy.count_nonzero(self.data.atomnos == ano)
+            formula += "%s%i" % (pt.element[ano], count)
         return formula
 
     def repulsion_energy(self):
