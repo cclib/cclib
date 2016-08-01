@@ -41,7 +41,7 @@ from ..parser.orcaparser import ORCA
 from ..parser.psiparser import Psi
 from ..parser.qchemparser import QChem
 
-from .cjsonreader import CJSON
+from . import cjsonreader
 from . import cjsonwriter
 from . import cmlwriter
 from . import xyzwriter
@@ -181,7 +181,7 @@ def ccopen(source, *args, **kargs):
     # If the input file is a CJSON file and not a standard compchemlog file, don't
     # guess the file.
     if kargs.get("cjson", False):
-        filetype = CJSON
+        filetype = cjsonreader.CJSON
     else:
         filetype = guess_filetype(inputfile)
 
