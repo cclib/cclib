@@ -143,7 +143,6 @@ class ccData(object):
        "scfenergies":       Attribute( numpy.ndarray,    'energies'),
        "scftargets":        Attribute( numpy.ndarray,    'targets'),
        "scfvalues":         Attribute( list,             'values'),
-       "stoichiometry":     Attribute( str,              'stoichiometry'),
        "temperature":       Attribute( float,            'temperature'),
        "thermalenergies":   Attribute( float,            'thermal energies'),
        "time":              Attribute( numpy.ndarray,    'time'),
