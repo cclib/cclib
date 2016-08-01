@@ -11,7 +11,10 @@
 """Unit tests for parser ccio module."""
 
 import os
+import tempfile
 import unittest
+
+import StringIO
 
 import cclib
 
@@ -65,6 +68,16 @@ class ccopenTest(unittest.TestCase):
         self.assertIsNone(self.ccopen("", quiet=True))
         self.assertIsNone(self.ccopen([], quiet=True))
         self.assertIsNone(self.ccopen(None, quiet=True))
+
+    def test_cjson_empty_tempfile(self):
+        """Do we get a CJSON object when the keyword argument used?"""
+        with tempfile.NamedTemporaryFile() as tf:
+            self.assertIsInstance(self.ccopen(tf.name, cjson=True), cclib.io.cjsonreader.CJSON)
+
+    # This should also work if cjsonreader supported streams.
+    #def test_cjson(self):
+    #    """Do we get a CJSON object then keyword argument used?"""
+    #    self.assertIsInstance(self.ccopen(StringIO.StringIO(""), cjson=True), cclib.io.cjsonreader.CJSON)
 
 
 class fallbackTest(unittest.TestCase):

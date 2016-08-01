@@ -139,12 +139,12 @@ def ccopen(source, *args, **kargs):
     """
 
     inputfile = None
-    isstream = False
-    is_string = isinstance(source, str)
-    is_listofstrings = isinstance(source, list) and all([isinstance(s, str) for s in source])
+    is_stream = False
 
     # Try to open the logfile(s), using openlogfile, if the source is a string (filename)
     # or list of filenames. If it can be read, assume it is an open file object/stream.
+    is_string = isinstance(source, str)
+    is_listofstrings = isinstance(source, list) and all([isinstance(s, str) for s in source])
     if is_string or is_listofstrings:
         try:
             inputfile = logfileparser.openlogfile(source)
@@ -155,21 +155,20 @@ def ccopen(source, *args, **kargs):
             return None
     elif hasattr(source, "read"):
         inputfile = source
-        isstream = True
+        is_stream = True
 
-    # Proceed to return an instance of the logfile parser only if the filetype
-    # could be guessed. Need to make sure the input file is closed before creating
-    # an instance, because parsers will handle opening/closing on their own.
     # If the input file is a CJSON file and not a standard compchemlog file, don't
-    # guess the file
-    cjson_as_input = kargs.get("cjson", False)
-    if cjson_as_input:
+    # guess the file.
+    if kargs.get("cjson", False):
         filetype = CJSON
     else:
         filetype = guess_filetype(inputfile)
 
+    # Proceed to return an instance of the logfile parser only if the filetype
+    # could be guessed. Need to make sure the input file is closed before creating
+    # an instance, because parsers will handle opening/closing on their own.
     if filetype:
-        if not isstream:
+        if not is_stream:
             inputfile.close()
         return filetype(source, *args, **kargs)
 
