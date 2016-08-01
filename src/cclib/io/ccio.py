@@ -140,12 +140,12 @@ def ccopen(source, *args, **kargs):
     """
 
     inputfile = None
-    isstream = False
-    is_string = isinstance(source, str)
-    is_listofstrings = isinstance(source, list) and all([isinstance(s, str) for s in source])
+    is_stream = False
 
     # Try to open the logfile(s), using openlogfile, if the source is a string (filename)
     # or list of filenames. If it can be read, assume it is an open file object/stream.
+    is_string = isinstance(source, str)
+    is_listofstrings = isinstance(source, list) and all([isinstance(s, str) for s in source])
     if is_string or is_listofstrings:
         try:
             inputfile = logfileparser.openlogfile(source)
@@ -155,7 +155,7 @@ def ccopen(source, *args, **kargs):
             return None
     elif hasattr(source, "read"):
         inputfile = source
-        isstream = True
+        is_stream = True
 
     # Streams are tricky since they don't have seek methods or seek won't work
     # by design even if it is present. We solve this now by reading in the
@@ -164,7 +164,7 @@ def ccopen(source, *args, **kargs):
     # the parsing is not instantaneous, but we'll deal with such edge cases
     # as they arise. Ideally, in the future we'll create a class dedicated to
     # dealing with these issues, supporting both files and streams.
-    if isstream:
+    if is_stream:
         try:
             inputfile.seek(0, 0)
         except (AttributeError, IOError):
@@ -179,16 +179,18 @@ def ccopen(source, *args, **kargs):
     # could be guessed. Need to make sure the input file is closed before creating
     # an instance, because parsers will handle opening/closing on their own.
     # If the input file is a CJSON file and not a standard compchemlog file, don't
-    # guess the file
-    cjson_as_input = kargs.get("cjson", False)
-    if cjson_as_input:
+    # guess the file.
+    if kargs.get("cjson", False):
         filetype = CJSON
     else:
         filetype = guess_filetype(inputfile)
 
+    # Proceed to return an instance of the logfile parser only if the filetype
+    # could be guessed. Need to make sure the input file is closed before creating
+    # an instance, because parsers will handle opening/closing on their own.
     if filetype:
         inputfile.seek(0, 0)
-        if not isstream:
+        if not is_stream:
             inputfile.close()
             return filetype(source, *args, **kargs)
         return filetype(inputfile, *args, **kargs)
