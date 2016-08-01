@@ -1523,13 +1523,24 @@ class Gaussian(logfileparser.Logfile):
         #Sum of electronic and thermal Energies=              -563.636699
         #Sum of electronic and thermal Enthalpies=            -563.635755
         #Sum of electronic and thermal Free Energies=         -563.689037
+        if line[1:12] == "Temperature":
+            self.set_attribute('temperature', float(line.split()[1]))
+        if "Stoichiometry" in line:
+                self.set_attribute('stoichiometry', line.split()[-1])
+        if "Sum of electronic and zero-point Energies=" in line:
+            self.set_attribute('zeropointenergies', float(line.split()[6]))
+        if "Sum of electronic and thermal Energies" in line:
+            self.set_attribute('thermalenergies', float(line.split()[6]))
         if "Sum of electronic and thermal Enthalpies" in line:
             self.set_attribute('enthalpy', float(line.split()[6]))
         if "Sum of electronic and thermal Free Energies=" in line:
             self.set_attribute('freeenergy', float(line.split()[7]))
-        if line[1:12] == "Temperature":
-            self.set_attribute('temperature', float(line.split()[1]))
-
+        if "imaginary frequencies (negative Signs)" in line:
+            self.set_attribute('imaginaryfreqs', int(line.split()[1]))
+        if "alpha electrons" in line:
+            electrons = line.split()
+            self.set_attribute('alphaelectrons', int(electrons[0]))
+            self.set_attribute('betaelectrons', int(electrons[3]))
 
 if __name__ == "__main__":
     import doctest, gaussianparser, sys
