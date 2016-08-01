@@ -1,0 +1,254 @@
+ Entering Gaussian System, Link 0=g09
+ Input=trithiolane.com
+ Output=trithiolane.g09
+ Initial command:
+ /usr/local/g09/l1.exe /tmp/Gau-9350.inp -scrdir=/tmp/
+ Entering Link 1 = /usr/local/g09/l1.exe PID=      9351.
+  
+ Copyright (c) 1988,1990,1992,1993,1995,1998,2003,2009, Gaussian, Inc.
+                  All Rights Reserved.
+  
+ This is part of the Gaussian(R) 09 program.  It is based on
+ the Gaussian(R) 03 system (copyright 2003, Gaussian, Inc.),
+ the Gaussian(R) 98 system (copyright 1998, Gaussian, Inc.),
+ the Gaussian(R) 94 system (copyright 1995, Gaussian, Inc.),
+ the Gaussian 92(TM) system (copyright 1992, Gaussian, Inc.),
+ the Gaussian 90(TM) system (copyright 1990, Gaussian, Inc.),
+ the Gaussian 88(TM) system (copyright 1988, Gaussian, Inc.),
+ the Gaussian 86(TM) system (copyright 1986, Carnegie Mellon
+ University), and the Gaussian 82(TM) system (copyright 1983,
+ Carnegie Mellon University). Gaussian is a federally registered
+ trademark of Gaussian, Inc.
+  
+ This software contains proprietary and confidential information,
+ including trade secrets, belonging to Gaussian, Inc.
+  
+ This software is provided under written license and may be
+ used, copied, transmitted, or stored only in accord with that
+ written license.
+  
+ The following legend is applicable only to US Government
+ contracts under FAR:
+  
+                    RESTRICTED RIGHTS LEGEND
+  
+ Use, reproduction and disclosure by the US Government is
+ subject to restrictions as set forth in subparagraphs (a)
+ and (c) of the Commercial Computer Software - Restricted
+ Rights clause in FAR 52.227-19.
+  
+ Gaussian, Inc.
+ 340 Quinnipiac St., Bldg. 40, Wallingford CT 06492
+  
+  
+ ---------------------------------------------------------------
+ Warning -- This program may not be used in any manner that
+ competes with the business of Gaussian, Inc. or will provide
+ assistance to any competitor of Gaussian, Inc.  The licensee
+ of this program is prohibited from giving any competitor of
+ Gaussian, Inc. access to this program.  By using this program,
+ the user acknowledges that Gaussian, Inc. is engaged in the
+ business of creating and licensing software in the field of
+ computational chemistry and represents and warrants to the
+ licensee that it is not a competitor of Gaussian, Inc. and that
+ it will not use this program in any manner prohibited above.
+ ---------------------------------------------------------------
+  
+
+ Cite this work as:
+ Gaussian 09, Revision A.02,
+ M. J. Frisch, G. W. Trucks, H. B. Schlegel, G. E. Scuseria, 
+ M. A. Robb, J. R. Cheeseman, G. Scalmani, V. Barone, B. Mennucci, 
+ G. A. Petersson, H. Nakatsuji, M. Caricato, X. Li, H. P. Hratchian, 
+ A. F. Izmaylov, J. Bloino, G. Zheng, J. L. Sonnenberg, M. Hada, 
+ M. Ehara, K. Toyota, R. Fukuda, J. Hasegawa, M. Ishida, T. Nakajima, 
+ Y. Honda, O. Kitao, H. Nakai, T. Vreven, J. A. Montgomery, Jr., 
+ J. E. Peralta, F. Ogliaro, M. Bearpark, J. J. Heyd, E. Brothers, 
+ K. N. Kudin, V. N. Staroverov, R. Kobayashi, J. Normand, 
+ K. Raghavachari, A. Rendell, J. C. Burant, S. S. Iyengar, J. Tomasi, 
+ M. Cossi, N. Rega, J. M. Millam, M. Klene, J. E. Knox, J. B. Cross, 
+ V. Bakken, C. Adamo, J. Jaramillo, R. Gomperts, R. E. Stratmann, 
+ O. Yazyev, A. J. Austin, R. Cammi, C. Pomelli, J. W. Ochterski, 
+ R. L. Martin, K. Morokuma, V. G. Zakrzewski, G. A. Voth, 
+ P. Salvador, J. J. Dannenberg, S. Dapprich, A. D. Daniels, 
+ O. Farkas, J. B. Foresman, J. V. Ortiz, J. Cioslowski, 
+ and D. J. Fox, Gaussian, Inc., Wallingford CT, 2009.
+ 
+ ******************************************
+ Gaussian 09:  EM64M-G09RevA.02 11-Jun-2009
+                27-Jul-2016 
+ ******************************************
+ %chk=trithiolane
+ %nproc=4
+ Will use up to    4 processors via shared memory.
+ Default route:  MaxDisk=10GB
+ ---------------------
+ #t B3LYP/6-31G* Polar
+ ---------------------
+ ---------------
+ trithiolane.g09
+ ---------------
+ Symbolic Z-matrix:
+ Charge =  0 Multiplicity = 1
+ S                    -1.71956  -0.00008  -0.00009 
+ S                     1.13397   0.99623   0.32378 
+ S                     1.13395  -0.99624  -0.32388 
+ C                    -0.51264   1.34934  -0.3893 
+ C                    -0.51251  -1.34919   0.38961 
+ H                    -0.43862   1.46792  -1.47144 
+ H                    -0.87301   2.27578   0.06671 
+ H                    -0.43822  -1.4673    1.47178 
+ H                    -0.87299  -2.27583  -0.06589 
+ 
+                    Distance matrix (angstroms):
+                    1          2          3          4          5
+     1  S    0.000000
+     2  S    3.039763   0.000000
+     3  S    3.039687   2.095090   0.000000
+     4  C    1.851776   1.828796   2.866581   0.000000
+     5  C    1.851738   2.866396   1.828790   2.808695   0.000000
+     6  H    2.441455   2.432765   3.140375   1.091131   3.377140
+     7  H    2.429125   2.394014   3.858311   1.093665   3.657134
+     8  H    2.441509   3.139851   2.432696   3.376776   1.091128
+     9  H    2.429002   3.858252   2.394101   3.657363   1.093658
+                    6          7          8          9
+     6  H    0.000000
+     7  H    1.790876   0.000000
+     8  H    4.156689   4.021680   0.000000
+     9  H    4.022426   4.553541   1.790859   0.000000
+ Framework group  C1[X(C2H4S3)]
+ Deg. of freedom    21
+                         Standard orientation:                         
+ ---------------------------------------------------------------------
+ Center     Atomic      Atomic             Coordinates (Angstroms)
+ Number     Number       Type             X           Y           Z
+ ---------------------------------------------------------------------
+      1         16           0       -1.719560   -0.000083   -0.000090
+      2         16           0        1.133968    0.996231    0.323780
+      3         16           0        1.133951   -0.996239   -0.323880
+      4          6           0       -0.512642    1.349339   -0.389300
+      5          6           0       -0.512508   -1.349191    0.389610
+      6          1           0       -0.438622    1.467919   -1.471440
+      7          1           0       -0.873014    2.275778    0.066710
+      8          1           0       -0.438218   -1.467301    1.471780
+      9          1           0       -0.872987   -2.275832   -0.065890
+ ---------------------------------------------------------------------
+ Rotational constants (GHZ):      3.6981615      2.5331054      1.6460769
+    95 basis functions,   228 primitive gaussians,    95 cartesian basis functions
+    32 alpha electrons       32 beta electrons
+       nuclear repulsion energy       360.5083960340 Hartrees.
+ NAtoms=    9 NActive=    9 NUniq=    9 SFac= 7.50D-01 NAtFMM=   80 NAOKFM=F Big=F
+ Harris functional with IExCor=  402 diagonalized for initial guess.
+ ExpMin= 1.17D-01 ExpMax= 2.19D+04 ExpMxC= 3.30D+03 IAcc=1 IRadAn=         1 AccDes= 0.00D+00
+ HarFok:  IExCor=  402 AccDes= 0.00D+00 IRadAn=         1 IDoV= 1
+ ScaDFX=  1.000000  1.000000  1.000000  1.000000
+ FoFCou: FMM=F IPFlag=           0 FMFlag=      100000 FMFlg1=           0
+         NFxFlg=           0 DoJE=T BraDBF=F KetDBF=T FulRan=T
+         Omega=  0.000000  0.000000  1.000000  0.000000  0.000000 ICntrl=     500 IOpCl=  0
+         NMat0=    1 NMatS0=    1 NMatT0=    0 NMatD0=    1 NMtDS0=    0 NMtDT0=    0
+         I1Cent=           4 NGrid=           0.
+ Petite list used in FoFCou.
+ Initial guess orbital symmetries:
+       Occupied  (A) (A) (A) (A) (A) (A) (A) (A) (A) (A) (A) (A)
+                 (A) (A) (A) (A) (A) (A) (A) (A) (A) (A) (A) (A)
+                 (A) (A) (A) (A) (A) (A) (A) (A)
+       Virtual   (A) (A) (A) (A) (A) (A) (A) (A) (A) (A) (A) (A)
+                 (A) (A) (A) (A) (A) (A) (A) (A) (A) (A) (A) (A)
+                 (A) (A) (A) (A) (A) (A) (A) (A) (A) (A) (A) (A)
+                 (A) (A) (A) (A) (A) (A) (A) (A) (A) (A) (A) (A)
+                 (A) (A) (A) (A) (A) (A) (A) (A) (A) (A) (A) (A)
+                 (A) (A) (A)
+ The electronic state of the initial guess is 1-A.
+ Integral accuracy reduced to 1.0D-05 until final iterations.
+ Initial convergence to 1.0D-05 achieved.  Increase integral accuracy.
+ SCF Done:  E(RB3LYP) =  -1273.17862462     A.U. after   14 cycles
+             Convg  =    0.4242D-08             -V/T =  2.0036
+ NROrb=     95 NOA=    32 NOB=    32 NVA=    63 NVB=    63
+          Electric field/nuclear overlap derivatives assumed to be zero.
+ Isotropic polarizability for W=    0.000000       66.10 Bohr**3.
+ End of Minotr Frequency-dependent properties file   721 does not exist.
+ End of Minotr Frequency-dependent properties file   722 does not exist.
+
+ **********************************************************************
+
+            Population analysis using the SCF density.
+
+ **********************************************************************
+
+ Orbital symmetries:
+       Occupied  (A) (A) (A) (A) (A) (A) (A) (A) (A) (A) (A) (A)
+                 (A) (A) (A) (A) (A) (A) (A) (A) (A) (A) (A) (A)
+                 (A) (A) (A) (A) (A) (A) (A) (A)
+       Virtual   (A) (A) (A) (A) (A) (A) (A) (A) (A) (A) (A) (A)
+                 (A) (A) (A) (A) (A) (A) (A) (A) (A) (A) (A) (A)
+                 (A) (A) (A) (A) (A) (A) (A) (A) (A) (A) (A) (A)
+                 (A) (A) (A) (A) (A) (A) (A) (A) (A) (A) (A) (A)
+                 (A) (A) (A) (A) (A) (A) (A) (A) (A) (A) (A) (A)
+                 (A) (A) (A)
+ The electronic state is 1-A.
+ Alpha  occ. eigenvalues --  -88.90946 -88.90946 -88.89049 -10.25832 -10.25832
+ Alpha  occ. eigenvalues --   -7.97123  -7.97121  -7.95162  -5.93674  -5.93664
+ Alpha  occ. eigenvalues --   -5.93299  -5.93295  -5.92472  -5.92471  -5.91712
+ Alpha  occ. eigenvalues --   -5.91340  -5.90548  -0.86406  -0.76526  -0.75399
+ Alpha  occ. eigenvalues --   -0.60898  -0.60868  -0.47530  -0.46294  -0.44628
+ Alpha  occ. eigenvalues --   -0.40281  -0.37496  -0.37454  -0.31967  -0.28671
+ Alpha  occ. eigenvalues --   -0.23875  -0.23198
+ Alpha virt. eigenvalues --   -0.05184   0.00096   0.01396   0.04631   0.08081
+ Alpha virt. eigenvalues --    0.10766   0.11290   0.13088   0.13492   0.30679
+ Alpha virt. eigenvalues --    0.33046   0.33216   0.34757   0.35325   0.36464
+ Alpha virt. eigenvalues --    0.37208   0.38982   0.40141   0.42153   0.42185
+ Alpha virt. eigenvalues --    0.45476   0.45613   0.51052   0.52721   0.57162
+ Alpha virt. eigenvalues --    0.62059   0.66730   0.68183   0.73264   0.74279
+ Alpha virt. eigenvalues --    0.77781   0.81685   0.82686   0.85661   0.85774
+ Alpha virt. eigenvalues --    0.88719   0.89178   0.90446   0.91214   0.94081
+ Alpha virt. eigenvalues --    0.97020   0.97621   1.01896   1.05013   1.08725
+ Alpha virt. eigenvalues --    1.18273   1.28189   1.37345   1.69522   1.70473
+ Alpha virt. eigenvalues --    1.73321   1.74999   2.05873   2.12094   2.12532
+ Alpha virt. eigenvalues --    2.17327   2.20966   2.23636   3.79323   3.92203
+ Alpha virt. eigenvalues --    3.92602   4.17233   4.18140
+          Condensed to atoms (all electrons):
+ Mulliken atomic charges:
+              1
+     1  S    0.144099
+     2  S    0.064996
+     3  S    0.064999
+     4  C   -0.580045
+     5  C   -0.580053
+     6  H    0.224723
+     7  H    0.218276
+     8  H    0.224728
+     9  H    0.218277
+ Sum of Mulliken atomic charges =   0.00000
+ Mulliken charges with hydrogens summed into heavy atoms:
+              1
+     1  S    0.144099
+     2  S    0.064996
+     3  S    0.064999
+     4  C   -0.137046
+     5  C   -0.137048
+ Sum of Mulliken charges with hydrogens summed into heavy atoms =   0.00000
+ Electronic spatial extent (au):  <R**2>=            726.8563
+ Charge=              0.0000 electrons
+ Dipole moment (field-independent basis, Debye):
+    X=             -0.5831    Y=              0.0001    Z=              0.0006  Tot=              0.5831
+  Exact polarizability:  75.498   0.000  75.999   0.000   1.520  46.789
+ Approx polarizability: 122.168   0.000 131.536   0.000   5.918  74.593
+ 1\1\GINC-GEOFFH-DESKTOP\SP\RB3LYP\6-31G(d)\C2H4S3\GHUTCHIS\27-Jul-2016
+ \0\\#t B3LYP/6-31G* Polar\\trithiolane.g09\\0,1\S,0,-1.71956,-0.00008,
+ -0.00009\S,0,1.13397,0.99623,0.32378\S,0,1.13395,-0.99624,-0.32388\C,0
+ ,-0.51264,1.34934,-0.3893\C,0,-0.51251,-1.34919,0.38961\H,0,-0.43862,1
+ .46792,-1.47144\H,0,-0.87301,2.27578,0.06671\H,0,-0.43822,-1.4673,1.47
+ 178\H,0,-0.87299,-2.27583,-0.06589\\Version=EM64M-G09RevA.02\State=1-A
+ \HF=-1273.1786246\RMSD=4.242e-09\Dipole=-0.2293987,0.0000554,0.0002286
+ \Polar=75.4981402,0.000165,75.9992882,0.0000231,1.5200913,46.7891892\H
+ yperPolar=-2.8382149,-0.0243539,-13.2986357,-0.0215633,-0.0185925,9.19
+ 30539,0.0033198,0.0888821,0.0143829,0.0090309\Quadrupole=-3.5098271,4.
+ 6042917,-1.0944647,-0.0003159,-0.0001973,-1.4141529\PG=C01 [X(C2H4S3)]
+ \\@
+
+
+ IMAGINATION WILL OFTEN CARRY US TO WORLDS THAT NEVER WERE.
+ BUT WITHOUT IT, WE GO NOWHERE. -- CARL SAGAN (COSMOS)
+ Job cpu time:  0 days  0 hours  0 minutes 37.7 seconds.
+ File lengths (MBytes):  RWF=      9 Int=      0 D2E=      0 Chk=      1 Scr=      1
+ Normal termination of Gaussian 09 at Wed Jul 27 17:00:38 2016.
