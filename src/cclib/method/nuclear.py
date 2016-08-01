@@ -3,7 +3,7 @@
 # This file is part of cclib (http://cclib.github.io), a library for parsing
 # and interpreting the results of computational chemistry packages.
 #
-# Copyright (C) 2006-2014, the cclib development team
+# Copyright (C) 2006-2016, the cclib development team
 #
 # The library is free software, distributed under the terms of
 # the GNU Lesser General Public version 2.1 or later. You should have
@@ -41,7 +41,8 @@ class Nuclear(Method):
         pt = PeriodicTable()
         formula = ""
         for ano in sorted(set(self.data.atomnos), reverse=True):
-            formula += "%s%i" % (pt.element[ano], self.data.atomnos.count(ano))
+            count = numpy.count_nonzero(self.data.atomnos == ano)
+            formula += "%s%i" % (pt.element[ano], count)
         return formula
 
     def repulsion_energy(self):
