@@ -16,6 +16,7 @@ import unittest
 import numpy
 
 from cclib.method import Nuclear
+from cclib.parser import ccData
 from cclib.parser import QChem
 from cclib.parser import utils
 
@@ -25,6 +26,12 @@ from ..test_data import getdatafile
 
 
 class NuclearTest(unittest.TestCase):
+
+    def test_stoichiometry(self):
+        """Testing stoichoimetry generation."""
+        data = ccData()
+        data.atomnos = [6, 1, 6, 1, 1, 1]
+        self.assertEqual(Nuclear(data).stoichoimetry(), "C2H4")
 
     def test_nre(self):
         """Testing nuclear repulsion energy for one logfile where it is printed."""

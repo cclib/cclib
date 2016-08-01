@@ -12,6 +12,7 @@ import logging
 import numpy
 
 from cclib.method.calculationmethod import Method
+from cclib.parser.utils import PeriodicTable
 
 
 class Nuclear(Method):
@@ -30,6 +31,14 @@ class Nuclear(Method):
     def __repr__(self):
         """Return a representation of the object."""
         return "Nuclear"
+
+    def stoichoimetry(self):
+        """Return the stoichemistry of the object."""
+        pt = PeriodicTable()
+        formula = ""
+        for ano in sorted(set(self.data.atomnos), reverse=True):
+            formula += "%s%i" % (pt.element[ano], self.data.atomnos.count(ano))
+        return formula
 
     def repulsion_energy(self):
         """Return the nuclear repulsion energy."""
