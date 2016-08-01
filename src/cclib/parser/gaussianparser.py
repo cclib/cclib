@@ -1538,9 +1538,12 @@ class Gaussian(logfileparser.Logfile):
         if "imaginary frequencies (negative Signs)" in line:
             self.set_attribute('imaginaryfreqs', int(line.split()[1]))
         if "alpha electrons" in line:
-            electrons = line.split()
-            self.set_attribute('alphaelectrons', int(electrons[0]))
-            self.set_attribute('betaelectrons', int(electrons[3]))
+            fields = line.split()
+            alpha_index = fields.index('alpha')
+            beta_index = fields.index('beta')
+            self.set_attribute('alphaelectrons', int(fields[alpha_index-1]))
+            self.set_attribute('betaelectrons', int(fields[beta_index-1]))
+
 
 if __name__ == "__main__":
     import doctest, gaussianparser, sys
