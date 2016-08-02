@@ -45,6 +45,11 @@ class ORCA(logfileparser.Logfile):
         >>> map(sym, labels)
         ['A1', 'Ag', 'A1g', 'sigma', 'pi', 'phi', 'delta', 'delta.u', 'sigma.g']
         """
+        # TODO
+        # 1. change docstring
+        # 2. implement?
+
+        return label
 
     def before_parsing(self):
 
@@ -76,6 +81,24 @@ class ORCA(logfileparser.Logfile):
 
             mult = int(line.split()[-1])
             self.set_attribute('mult', mult)
+
+        if line[1:18] == "Symmetry handling":
+            line = next(inputfile)
+            assert "Point group" in line
+            point_group_full = line.split()[3]
+            line = next(inputfile)
+            assert "Used point group" in line
+            point_group_abelian = line.split()[4]
+            line = next(inputfile)
+            assert "Number of irreps" in line
+            nirrep = int(line.split()[4])
+            for n in range(nirrep):
+                line = next(inputfile)
+                assert "symmetry adapted basis functions" in line
+                irrep = line[8:13]
+                if not hasattr(self, 'symlabels'):
+                    self.symlabels = []
+                self.symlabels.append(self.normalisesym(irrep))
 
         # SCF convergence output begins with:
         #

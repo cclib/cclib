@@ -269,6 +269,9 @@ class Molpro(logfileparser.Logfile):
         if "Version" in line:
             self.metadata["package_version"] = line.split()[1]
 
+        if line[1:12] == "Point group":
+            point_group_full = line.split()[-1]
+
         if line[1:19] == "ATOMIC COORDINATES":
 
             if not hasattr(self, "atomcoords"):

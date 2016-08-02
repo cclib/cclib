@@ -486,6 +486,21 @@ class Gaussian(logfileparser.Logfile):
                     self.atommasses.extend(list(map(float, line.split()[1:])))
                 line = next(inputfile)
 
+        # Symmetry: point group
+        if "Full point group" in line:
+            point_group_full = line.split()[3].lower()
+            line = next(inputfile)
+            line = next(inputfile)
+            assert "Largest Abelian subgroup" in line
+            point_group_abelian = line.split()[3].lower()
+
+        # Symmetry: ordering of irreducible representations
+        if "symmetry adapted cartesian basis functions" in line:
+            if not hasattr(self, 'symlabels'):
+                self.symlabels = []
+            irrep = self.normalisesym(line.split()[-2])
+            self.symlabels.append(irrep)
+
         # Extract the atomic numbers and coordinates of the atoms.
         if line.strip() == "Standard orientation:":
 

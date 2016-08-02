@@ -91,7 +91,8 @@ class GAMESS(logfileparser.Logfile):
         
         # extract the version number first
         if line.find("GAMESS VERSION") >= 0:
-            self.metadata["package_version"] = line.split()[4] + line.split()[5] + line.split()[6]
+            tokens = line.split()
+            self.metadata["package_version"] = ''.join(tokens[4:7])
 
         if line[1:12] == "INPUT CARD>":
             return
@@ -167,6 +168,18 @@ class GAMESS(logfileparser.Logfile):
                                 self.metadata["basis_set"] = "6-311G**"
                     if line.split()[2] == "6" and line.split()[3] == "POLAR=NONE":
                         self.metadata["basis_set"] = "6-311G"
+
+        # Symmetry: point group
+        if " THE POINT GROUP OF THE MOLECULE IS" in line:
+            pg = line.split()[-1]
+            line = next(inputfile)
+            order = line.split()[-1]
+            point_group = pg.replace('N', order)
+
+        # Symmetry: ordering of irreducible representations
+        if line.strip() == "DIMENSIONS OF THE SYMMETRY SUBSPACES ARE":
+            line = next(inputfile)
+            symlabels = [self.normalisesym(label) for label in line.split()[::3]]
 
         # We are looking for this line:
         #           PARAMETERS CONTROLLING GEOMETRY SEARCH ARE

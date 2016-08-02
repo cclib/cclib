@@ -140,6 +140,8 @@ class ADF(logfileparser.Logfile):
             info = line.split()
             if info[1] == "NOSYM":
                 self.nosymflag = True
+            else:
+                point_group = info[1].replace('(', '').replace(')', '').lower()
 
         # Use this to read the subspecies of irreducible representations.
         # It will be a list, with each element representing one irrep.
