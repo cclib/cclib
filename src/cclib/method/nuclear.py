@@ -36,13 +36,18 @@ class Nuclear(Method):
         """Return a representation of the object."""
         return "Nuclear"
 
-    def stoichoimetry(self):
+    def stoichiometry(self):
         """Return the stoichemistry of the object."""
         pt = PeriodicTable()
         formula = ""
         for ano in sorted(set(self.data.atomnos), reverse=True):
             count = numpy.count_nonzero(self.data.atomnos == ano)
             formula += "%s%i" % (pt.element[ano], count)
+        if hasattr(self.data, 'charge'):
+            if self.data.charge == 1:
+                formula += "(+1)"
+            elif self.data.charge == -1:
+                formula += "(-1)"
         return formula
 
     def repulsion_energy(self):
