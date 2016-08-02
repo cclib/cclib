@@ -1526,13 +1526,13 @@ class Gaussian(logfileparser.Logfile):
         if line[1:12] == "Temperature":
             self.set_attribute('temperature', float(line.split()[1]))
         if "Sum of electronic and zero-point Energies=" in line:
-            self.set_attribute('zeropointenergies', utils.convertor(float(line.split()[6], 'hartree', 'eV')))
+            self.set_attribute('zeropointenergies', utils.convertor(float(line.split()[6]), 'hartree', 'eV'))
         if "Sum of electronic and thermal Energies" in line:
-            self.set_attribute('thermalenergies', utils.convertor(float(line.split()[6], 'hartree', 'eV')))
+            self.set_attribute('thermalenergies', utils.convertor(float(line.split()[6]), 'hartree', 'eV'))
         if "Sum of electronic and thermal Enthalpies" in line:
-            self.set_attribute('enthalpy', utils.convertor(float(line.split()[6], 'hartree', 'eV')))
+            self.set_attribute('enthalpy', utils.convertor(float(line.split()[6]), 'hartree', 'eV'))
         if "Sum of electronic and thermal Free Energies=" in line:
-            self.set_attribute('freeenergy', utils.convertor(float(line.split()[7], 'hartree', 'eV')))
+            self.set_attribute('freeenergy', utils.convertor(float(line.split()[7]), 'hartree', 'eV'))
         if "imaginary frequencies (negative Signs)" in line:
             self.set_attribute('imaginaryfreqs', int(line.split()[1]))
         if "alpha electrons" in line:
