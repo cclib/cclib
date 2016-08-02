@@ -1666,8 +1666,9 @@ class Gaussian(logfileparser.Logfile):
         if line[1:12] == "Temperature":
             self.set_attribute('temperature', float(line.split()[1]))
 
-        # Static polarizability, lower triangular matrix.
-        if "SCF Polarizability for W=" in line:
+        # Static polarizability (from `polar`), lower triangular
+        # matrix.
+        if line[1:26] == "SCF Polarizability for W=":
             self.hp_polarizability = True
             if not hasattr(self, 'polarizabilities'):
                 self.polarizabilities = []
@@ -1685,16 +1686,38 @@ class Gaussian(logfileparser.Logfile):
                     polarizability[i, j] = polarizability[j, i]
             self.polarizabilities.append(polarizability)
 
+        # Static polarizability (from `freq`), lower triangular matrix.
+        if line[1:16] == "Polarizability=":
+            self.hp_polarizability = True
+            if not hasattr(self, 'polarizabilities'):
+                self.polarizabilities = []
+            polarizability = numpy.zeros(shape=(3, 3))
+            polarizability_list = []
+            polarizability_list.extend([line[16:31], line[31:46], line[46:61]])
+            line = next(inputfile)
+            polarizability_list.extend([line[16:31], line[31:46], line[46:61]])
+            indices = numpy.tril_indices(3)
+            polarizability[indices] = [self.float(x) for x in polarizability_list]
+
+            # Only the lower triangle is printed, beause the
+            # polarizability tensor is symmetric, so it can safely be
+            # reflected.
+            for i in range(3):
+                for j in range(i+1, 3):
+                    polarizability[i, j] = polarizability[j, i]
+            self.polarizabilities.append(polarizability)
+
         # Static polarizability, compressed into a single line from
         # terse printing.
         # Order is XX, YX, YY, ZX, ZY, ZZ (lower triangle).
-        if "Exact polarizability" in line:
+        if line[2:23] == "Exact polarizability:":
             if not self.hp_polarizabilities:
                 if not hasattr(self, 'polarizabilities'):
                     self.polarizabilities = []
                 polarizability = numpy.zeros(shape=(3, 3))
                 indices = numpy.tril_indices(3)
-                polarizability[indices] = [self.float(x) for x in line.split()[2:]]
+                polarizability[indices] = [self.float(x) for x in
+                                           [line[23:31], line[31:39], line[39:47], line[47:55], line[55:63], line[63:71]]]
 
                 # Only the lower triangle is printed, beause the
                 # polarizability tensor is symmetric, so it can safely be
