@@ -12,6 +12,33 @@
 
 """Utilities often used by cclib parsers and scripts"""
 
+import numpy
+
+
+def symmetrize(m, use_triangle='lower'):
+    """In place, symmetrize a square NumPy array by reflecting one
+    triangular section across the diagonal to the other.
+    """
+
+    if use_triangle not in ('lower', 'upper'):
+        raise ValueError
+    if not len(m.shape) == 2:
+        raise ValueError
+    if not (m.shape[0] == m.shape[1]):
+        raise ValueError
+
+    dim = m.shape[0]
+
+    lower_indices = numpy.tril_indices(dim, k=-1)
+    upper_indices = numpy.triu_indices(dim, k=1)
+
+    if use_triangle == 'lower':
+        m[upper_indices] = m[lower_indices]
+    if use_triangle == 'upper':
+        m[lower_indices] = m[upper_indices]
+
+    return
+
 
 def convertor(value, fromunits, tounits):
     """Convert from one set of units to another.

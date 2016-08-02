@@ -781,14 +781,11 @@ class ORCA(logfileparser.Logfile):
 
         # Static polarizability.
         if line.strip() == "THE POLARIZABILITY TENSOR":
-
             if not hasattr(self, 'polarizabilities'):
                 self.polarizabilities = []
-
             self.skip_lines(inputfile, ['d', 'b'])
             line = next(inputfile)
             assert line.strip() == "The raw cartesian tensor (atomic units):"
-
             polarizability = []
             for _ in range(3):
                 line = next(inputfile)

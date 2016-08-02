@@ -1294,7 +1294,8 @@ class GAMESS(logfileparser.Logfile):
                     self.logger.warning('This could be from post-HF properties or geometry optimization')
                     self.moments = [reference, dipole]
 
-        # Static polarizability from a harmonic frequency calculation.
+        # Static polarizability from a harmonic frequency calculation
+        # with $CPHF/POLAR=.TRUE.
         if line.strip() == 'ALPHA POLARIZABILITY TENSOR (ANGSTROMS**3)':
             if not hasattr(self, 'polarizabilities'):
                 self.polarizabilities = []
@@ -1303,12 +1304,7 @@ class GAMESS(logfileparser.Logfile):
             for i in range(3):
                 line = next(inputfile)
                 polarizability[i, :i+1] = [float(x) for x in line.split()[1:]]
-            # Only the lower triangle is printed, because the
-            # polarizability tensor is symmetric, so it can safely be
-            # reflected.
-            for i in range(3):
-                for j in range(i+1, 3):
-                    polarizability[i, j] = polarizability[j, i]
+            utils.symmetrize(polarizability, use_triangle='lower')
             # Convert from Angstrom**3 to bohr**3 (a.u.**3).
             volume_convert = numpy.vectorize(lambda x: utils.convertor(x, 'Angstrom3', 'bohr3'))
             polarizability = volume_convert(polarizability)
