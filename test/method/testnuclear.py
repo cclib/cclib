@@ -30,8 +30,12 @@ class NuclearTest(unittest.TestCase):
     def test_stoichiometry(self):
         """Testing stoichoimetry generation."""
         data = ccData()
-        data.atomnos = numpy.areray([6, 1, 6, 1, 1, 1])
-        self.assertEqual(Nuclear(data).stoichoimetry(), "C2H4")
+        data.atomnos = numpy.array([6, 1, 6, 1, 1, 1])
+        self.assertEqual(Nuclear(data).stoichiometry(), "C2H4")
+        data.charge = 1
+        self.assertEqual(Nuclear(data).stoichiometry(), "C2H4(+1)")
+        data.charge = -1
+        self.assertEqual(Nuclear(data).stoichiometry(), "C2H4(-1)")
 
     def test_nre(self):
         """Testing nuclear repulsion energy for one logfile where it is printed."""
