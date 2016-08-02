@@ -22,7 +22,7 @@ __filedir__ = os.path.realpath(os.path.dirname(__file__))
 
 
 class GenericScanTest(unittest.TestCase):
-    """Generic relaxed potential energy surfance scan unittest"""
+    """Generic relaxed potential energy surface scan unittest"""
 
     # extra indices
     extra = 0
