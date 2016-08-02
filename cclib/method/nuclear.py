@@ -39,11 +39,10 @@ class Nuclear(Method):
         for ano in sorted(set(self.data.atomnos), reverse=True):
             count = numpy.count_nonzero(self.data.atomnos == ano)
             formula += "%s%i" % (pt.element[ano], count)
-        if hasattr(self.data, 'charge'):
-            if self.data.charge == 1:
-                formula += "(+1)"
-            elif self.data.charge == -1:
-                formula += "(-1)"
+        if getattr(self.data, 'charge', 0):
+            magnitude = abs(self.data.charge)
+            sign = "+" if self.data.charge > 0 else "-"
+            formula += "(%s%i)" % (sign, magnitude)
         return formula
 
     def repulsion_energy(self):
