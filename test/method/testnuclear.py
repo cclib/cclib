@@ -39,6 +39,10 @@ class NuclearTest(unittest.TestCase):
         self.assertEqual(Nuclear(data).stoichiometry(), "C2H4(+1)")
         data.charge = -1
         self.assertEqual(Nuclear(data).stoichiometry(), "C2H4(-1)")
+        data.charge = 2
+        self.assertEqual(Nuclear(data).stoichiometry(), "C2H4(+2)")
+        data.charge = 9
+        self.assertEqual(Nuclear(data).stoichiometry(), "C2H4(+9)")
 
     def test_nre(self):
         """Testing nuclear repulsion energy for one logfile where it is printed."""
