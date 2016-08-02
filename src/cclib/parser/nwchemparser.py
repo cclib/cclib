@@ -1012,6 +1012,15 @@ class NWChem(logfileparser.Logfile):
             self.ccenergies.append([])
             self.ccenergies[-1].append(utils.convertor(ccenerg, "hartree", "eV"))
 
+        if "QMD Run Information" in line:
+            self.skip_line(inputfile, 'd')
+            line = next(inputfile)
+            assert "Time elapsed (fs)" in line
+            time = float(line.split()[4])
+            if not hasattr(self, 'time'):
+                self.time = []
+            self.time.append(time)
+
     def after_parsing(self):
         """NWChem-specific routines for after parsing file.
 

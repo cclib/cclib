@@ -779,6 +779,15 @@ class ORCA(logfileparser.Logfile):
                     self.logger.warning('Overwriting previous multipole moments with new values')
                     self.moments = [reference, dipole]
 
+        if "Molecular Dynamics Iteration" in line:
+            self.skip_lines(inputfile, ['d', 'ORCA MD', 'd', 'New Coordinates'])
+            line = next(inputfile)
+            tokens = line.split()
+            assert tokens[0] == "time"
+            if not hasattr(self, 'time'):
+                self.time = []
+            self.time.append(utils.convertor(float(tokens[2]), "au", "fs"))
+
     def parse_scf_condensed_format(self, inputfile, line):
         """ Parse the SCF convergence information in condensed format """
 

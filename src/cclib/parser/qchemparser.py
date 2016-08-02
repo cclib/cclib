@@ -389,6 +389,12 @@ class QChem(logfileparser.Logfile):
                     self.gbasis.append(atom)
                     line = next(inputfile)
 
+            if 'TIME STEP #' in line:
+                tokens = line.split()
+                if not hasattr(self, 'time'):
+                    self.time = []
+                self.time.append(float(tokens[8]))
+
             # Extract the atomic numbers and coordinates of the atoms.
             if 'Standard Nuclear Orientation (Angstroms)' in line:
                 if not hasattr(self, 'atomcoords'):
