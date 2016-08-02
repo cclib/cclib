@@ -23,41 +23,44 @@ class GenericPolarTest(unittest.TestCase):
     """Generic static polarizability unittest"""
 
     # Reference values are from DALTON2015/Trp_polar_abalnr.out
-    min_component = -3.77586
-    max_component = 95.11544
-    principal_components = [30.29430402, 91.53628235, 100.54212364]
+    isotropic = 74.12424
+    principal_components = [30.29431523, 91.5361917, 100.54220307]
 
     def testshape(self):
-        """Is the dimension of each polarizability tensor 3 x 3?"""
-        for polarizability_tensor in self.data.polarizabilities:
-            self.assertEqual(polarizability_tensor.shape, (3, 3))
+        """Is the dimension of the polarizability tensor 3 x 3?"""
+        self.assertEqual(len(self.data.polarizabilities), 1)
+        self.assertEqual(self.data.polarizabilities[0].shape, (3, 3))
 
-    def testmaxcomponent(self):
-        """Is the max component of the polarizability +/- 0.01 from a
-reference?"""
-        self.assertAlmostEqual(numpy.max(self.data.polarizabilities[0]),
-                               self.max_component,
-                               delta=0.01)
-
-    def testmincomponent(self):
-        """Is the min component of the polarizability +/- 0.01 from a
-        reference?
+    def testisotropic(self):
+        """Is the isotropic polarizability (average of the diagonal elements)
+        +/- 0.01 from a reference?
         """
-        self.assertAlmostEqual(numpy.min(self.data.polarizabilities[0]),
-                               self.min_component,
-                               delta=0.01)
+        isotropic = numpy.average(numpy.diag(self.data.polarizabilities[0]))
+        self.assertAlmostEqual(isotropic, self.isotropic, delta=0.01)
 
     def testprincomponents(self):
         """Are each of the principal components (eigenvalues) of the
         polarizability tensor +/- 0.01 from a reference?
         """
         # It is much easier to compare the the eigenvalues of the
-        # matrix rather than its individual components.
+        # matrix rather than its individual components due to
+        # orientation dependence.
         principal_components = numpy.linalg.eigvalsh(self.data.polarizabilities[0])
         for c in range(3):
             self.assertAlmostEqual(principal_components[c],
                                    self.principal_components[c],
                                    delta=0.01)
+
+
+class GaussianPolarTest(GenericPolarTest):
+    """Customized static polarizability unittest"""
+
+    # Reference values are from Q-Chem 4.2/trithiolane_freq.out, since
+    # with symmetry enabled Q-Chem reorients molecules similarly to
+    # Gaussian.
+    isotropic = 66.0955766
+    principal_components = [46.71020322, 75.50778705, 76.06873953]
+
 
 if __name__=="__main__":
 

@@ -157,9 +157,11 @@ Polar     DALTON      GenericPolarTest      basicDALTON-2015      Trp_polar_resp
 Polar     DALTON      GenericPolarTest      basicDALTON-2015      Trp_polar_static.out
 Polar     GAMESS      GenericPolarTest      basicGAMESS-US2012    Trp_polar_freq.out
 Polar     GAMESS      GenericPolarTest      basicGAMESS-US2012    Trp_polar_tdhf.out
+Polar     Gaussian    GaussianPolarTest     basicGaussian09       trithiolane_polar.log
 Polar     Molpro      GenericPolarTest      basicMolpro2012       Trp_polar.out
 Polar     NWChem      GenericPolarTest      basicNWChem6.5        Trp_polar.out
 Polar     ORCA        GenericPolarTest      basicORCA3.0          Trp_polar.out
+Polar     QChem       GaussianPolarTest     basicQChem4.2         trithiolane_freq.out
 Polar     QChem       GenericPolarTest      basicQChem4.2         Trp_freq.out
 Polar     QChem       GenericPolarTest      basicQChem4.2         Trp_polar.out
 
