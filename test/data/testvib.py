@@ -13,6 +13,8 @@
 import os
 import unittest
 
+from skip import skipForParser
+
 
 __filedir__ = os.path.realpath(os.path.dirname(__file__))
 
@@ -33,14 +35,16 @@ class GenericIRTest(unittest.TestCase):
         """Are the lengths of vibfreqs and vibirs (and if present, vibsyms) correct?"""
         numvib = 3*len(self.data.atomnos) - 6
         self.assertEqual(len(self.data.vibfreqs), numvib)
-        self.assertEqual(len(self.data.vibirs), numvib)
-        if hasattr(self.data,'vibsyms'):
+        if hasattr(self.data, 'vibirs'):
+            self.assertEqual(len(self.data.vibirs), numvib)
+        if hasattr(self.data, 'vibsyms'):
             self.assertEqual(len(self.data.vibsyms), numvib)
 
     def testfreqval(self):
         """Is the highest freq value 3630 +/- 200 cm-1?"""
         self.assertAlmostEqual(max(self.data.vibfreqs), 3630, delta=200)
 
+    @skipForParser('Psi', 'Psi cannot print IR intensities')
     def testirintens(self):
         """Is the maximum IR intensity 100 +/- 10 km mol-1?"""
         self.assertAlmostEqual(max(self.data.vibirs), self.max_IR_intensity, delta=10)

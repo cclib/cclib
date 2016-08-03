@@ -27,10 +27,10 @@ class GenericGeoOptTest(unittest.TestCase):
 
     # In STO-3G, H has 1, C has 3.
     nbasisdict = {1:1, 6:5}
-    
+
     # Some programs print surplus atom coordinates by default.
     extracoords = 0
-    
+
     # Some programs do surplus SCF cycles by default.
     extrascfs = 0
 
@@ -125,7 +125,7 @@ class GenericGeoOptTest(unittest.TestCase):
         count_coords = len(self.data.atomcoords) - self.extracoords
         msg = "len(atomcoords) is %d but len(geovalues) is %d" % (count_coords, count_geovalues)
         self.assertEquals(count_geovalues, count_coords, msg)
-        
+
     def testgeovalues_scfvalues(self):
         """Are scfvalues consistent with geovalues?"""
         count_scfvalues = len(self.data.scfvalues) - self.extrascfs
@@ -151,7 +151,6 @@ class GenericGeoOptTest(unittest.TestCase):
     @skipForParser("Molpro", "Not implemented.")
     @skipForParser("NWChem", "Not implemented.")
     @skipForParser("ORCA", "Not implemented.")
-    @skipForParser("Psi", "Not implemented.")
     @skipForParser("QChem", "Not implemented.")
     def testoptstatus(self):
         """Is optstatus consistent with geovalues and reasonable?"""

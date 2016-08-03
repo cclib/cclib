@@ -1,0 +1,10 @@
+molecule C_atom {
+    C    0.0    0.0     0.0
+}
+
+set {
+    basis aug-cc-pVQZ
+    print_basis true
+}
+
+energy('scf')

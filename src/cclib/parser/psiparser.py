@@ -47,6 +47,10 @@ class Psi(logfileparser.Logfile):
         # with changes triggered by ==> things like this <== (Psi3 does not have this)
         self.section = None
 
+        # Keep track of whether or not we're performing an
+        # (un)restricted calculation.
+        self.reference = 'RHF'
+
     def normalisesym(self, label):
         """Use standard symmetry labels instead of NWChem labels.
 
@@ -76,7 +80,14 @@ class Psi(logfileparser.Logfile):
         if (line.strip()[:3] == "==>") and (line.strip()[-3:] == "<=="):
             self.section = line.strip()[4:-4]
 
-        # Psi3 print the coordinates in several configurations, and we will parse the
+        # Determine whether or not the reference wavefunction is
+        # restricted, unrestricted, or restricted open-shell.
+        if line.strip() == "SCF":
+            self.skip_line(inputfile, 'author list')
+            line = next(inputfile)
+            self.reference = line.split()[0]
+
+        # Psi3 prints the coordinates in several configurations, and we will parse the
         # the canonical coordinates system in Angstroms as the first coordinate set,
         # although ir is actually somewhere later in the input, after basis set, etc.
         # We can also get or verify he number of atoms and atomic numbers from this block.
@@ -140,12 +151,16 @@ class Psi(logfileparser.Logfile):
 
             elements = []
             coords = []
+            atommasses = []
             while line.strip():
-                el, x, y, z = line.split()[:4]
+                chomp = line.split()
+                el, x, y, z = chomp[:4]
                 if len(el) > 1:
                     el = el[0] + el[1:].lower()
                 elements.append(el)
                 coords.append([float(x), float(y), float(z)])
+                if len(chomp) == 5:
+                    atommasses.append(float(chomp[4]))
                 line = next(inputfile)
 
             self.set_attribute('atomnos', [self.table.number[el] for el in elements])
@@ -159,6 +174,10 @@ class Psi(logfileparser.Logfile):
             if len(self.atomcoords) == 0 or self.atomcoords[-1] != coords:
                 self.atomcoords.append(coords)
 
+            if len(atommasses) > 0:
+                if not hasattr(self, 'atommasses'):
+                    self.atommasses = atommasses
+
         # In Psi3 there are these two helpful sections.
         if (self.version == 3) and (line.strip() == '-SYMMETRY INFORMATION:'):
             line = next(inputfile)
@@ -169,7 +188,7 @@ class Psi(logfileparser.Logfile):
         if (self.version == 3) and (line.strip() == "-BASIS SET INFORMATION:"):
             line = next(inputfile)
             while line.strip():
-                if "Number of AO" in line:
+                if "Number of SO" in line:
                     self.set_attribute('nbasis', int(line.split()[-1]))
                 line = next(inputfile)
 
@@ -220,7 +239,7 @@ class Psi(logfileparser.Logfile):
                 if "Number of atoms" in line:
                     natom = int(line.split()[-1])
                     self.set_attribute('natom', natom)
-                if "Number of atomic orbitals" in line:
+                if "Number of symmetry orbitals" in line:
                     nbasis = int(line.split()[-1])
                     self.set_attribute('nbasis', nbasis)
                 line = next(inputfile)
@@ -423,6 +442,10 @@ class Psi(logfileparser.Logfile):
         if (self.section == "Pre-Iterations") and ("Number of atomic orbitals" in line):
             nbasis = int(line.split()[-1])
             self.set_attribute('nbasis', nbasis)
+        if (self.section == "Pre-Iterations") and ("Total" in line):
+            chomp = line.split()
+            nbasis = int(chomp[1])
+            self.set_attribute('nbasis', nbasis)
 
         #  ==> Iterations <==
 
@@ -513,19 +536,21 @@ class Psi(logfileparser.Logfile):
             self.skip_line(inputfile, 'blank')
 
             # Both versions have this case insensisitive substring.
-            doubly = next(inputfile)
-            assert "doubly occupied" in doubly.lower()
+            occupied = next(inputfile)
+            if self.reference[0:2] == 'RO':
+                assert 'doubly occupied' in occupied.lower()
+            elif self.reference[0:1] == 'R':
+                assert 'doubly occupied' in occupied.lower()
+            elif self.reference[0:1] == 'U':
+                assert 'alpha occupied' in occupied.lower()
+            else:
+                sys.exit(1)
 
             # Psi4 now has a blank line, Psi3 does not.
             if self.version == 4:
                 self.skip_line(inputfile, 'blank')
 
-            line = next(inputfile)
-            while line.strip():
-                for i in range(len(line.split())//2):
-                    self.mosyms[0].append(line.split()[i*2][-2:])
-                    self.moenergies[0].append(line.split()[i*2+1])
-                line = next(inputfile)
+            self._parse_mosyms_moenergies(inputfile, 0)
 
             # The last orbital energy here represented the HOMO.
             self.homos = [len(self.moenergies[0])-1]
@@ -534,23 +559,42 @@ class Psi(logfileparser.Logfile):
             if self.version == 3:
                 self.skip_line(inputfile, 'blank')
 
-            # The header for virtual orbitals is different for the two versions.
             unoccupied = next(inputfile)
-            if self.version == 3:
-                assert unoccupied.strip() == "Unoccupied orbitals"
-            else:
-                assert unoccupied.strip() == "Virtual:"
+            if self.reference[0:2] == 'RO':
+                assert unoccupied.strip() == 'Singly Occupied:'
+            elif self.reference[0:1] == 'R':
+                # The header for virtual orbitals is different for
+                # Psi3 and Psi4.
+                if self.version == 3:
+                    assert unoccupied.strip() == 'Unoccupied orbitals'
+                else:
+                    assert unoccupied.strip() == 'Virtual:'
+            elif self.reference[0:1] == 'U':
+                assert unoccupied.strip() == 'Alpha Virtual:'
 
             # Psi4 now has a blank line, Psi3 does not.
             if self.version == 4:
                 self.skip_line(inputfile, 'blank')
 
+            self._parse_mosyms_moenergies(inputfile, 0)
+
             line = next(inputfile)
-            while line.strip():
-                for i in range(len(line.split())//2):
-                    self.mosyms[0].append(line.split()[i*2][-2:])
-                    self.moenergies[0].append(line.split()[i*2+1])
+            # Here is where we handle the Beta or Singly occupied orbitals.
+            if self.reference[0:1] == 'U':
+                self.mosyms.append([])
+                self.moenergies.append([])
+                assert line.strip() == 'Beta Occupied:'
+                self.skip_line(inputfile, 'blank')
+                self._parse_mosyms_moenergies(inputfile, 1)
+                self.homos.append(len(self.moenergies[1])-1)
                 line = next(inputfile)
+                assert line.strip() == 'Beta Virtual:'
+                self.skip_line(inputfile, 'blank')
+                self._parse_mosyms_moenergies(inputfile, 1)
+            elif self.reference[0:2] == 'RO':
+                assert line.strip() == 'Virtual:'
+                self.skip_line(inputfile, 'blank')
+                self._parse_mosyms_moenergies(inputfile, 0)
 
         # Both Psi3 and Psi4 print the final SCF energy right after the orbital energies,
         # but the label is different. Psi4 also does DFT, and the label is also different in that case.
@@ -648,9 +692,18 @@ class Psi(logfileparser.Logfile):
                     line = next(inputfile)
                 self.atomcharges[pop_type.lower()] = charges
 
+        # This is for the older conventional MP2 code in 4.0b5.
         mp_trigger = "MP2 Total Energy (a.u.)"
         if line.strip()[:len(mp_trigger)] == mp_trigger:
             mpenergy = utils.convertor(float(line.split()[-1]), 'hartree', 'eV')
+            if not hasattr(self, 'mpenergies'):
+                self.mpenergies = []
+            self.mpenergies.append([mpenergy])
+        # This is for the newer DF-MP2 code in 4.0.
+        if 'DF-MP2 Energies' in line:
+            while 'Total Energy' not in line:
+                line = next(inputfile)
+            mpenergy = utils.convertor(float(line.split()[3]), 'hartree', 'eV')
             if not hasattr(self, 'mpenergies'):
                 self.mpenergies = []
             self.mpenergies.append([mpenergy])
@@ -737,9 +790,9 @@ class Psi(logfileparser.Logfile):
         # Properties will be evaluated at   0.000000,   0.000000,   0.000000 Bohr
         #
         if (self.version == 4) and ("Properties will be evaluated at" in line.strip()):
-            self.reference = numpy.array([float(x.strip(',')) for x in line.split()[-4:-1]])
+            self.origin = numpy.array([float(x.strip(',')) for x in line.split()[-4:-1]])
             assert line.split()[-1] == "Bohr"
-            self.reference = utils.convertor(self.reference, 'bohr', 'Angstrom')
+            self.origin = utils.convertor(self.origin, 'bohr', 'Angstrom')
 
         # The properties section print the molecular dipole moment:
         #
@@ -763,14 +816,14 @@ class Psi(logfileparser.Logfile):
             dipole = utils.convertor(dipole, "ebohr", "Debye")
 
             if not hasattr(self, 'moments'):
-                self.moments = [self.reference, dipole]
+                self.moments = [self.origin, dipole]
             else:
                 try:
                     assert numpy.all(self.moments[1] == dipole)
                 except AssertionError:
                     self.logger.warning('Overwriting previous multipole moments with new values')
                     self.logger.warning('This could be from post-HF properties or geometry optimization')
-                    self.moments = [self.reference, dipole]
+                    self.moments = [self.origin, dipole]
 
         # Higher multipole moments are printed separately, on demand, in lexicographical order.
         #
@@ -796,7 +849,7 @@ class Psi(logfileparser.Logfile):
 
             # The reference used here should have been printed somewhere
             # before the properties and parsed above.
-            moments = [self.reference]
+            moments = [self.origin]
 
             line = next(inputfile)
             while "----------" not in line.strip():
@@ -866,8 +919,8 @@ class Psi(logfileparser.Logfile):
             assert coordinates.split()[-2] == "(a.u.)"
             self.skip_lines(inputfile, ['xyz', 'd'])
             line = next(inputfile)
-            self.reference = numpy.array([float(x) for x in line.split()])
-            self.reference = utils.convertor(self.reference, 'bohr', 'Angstrom')
+            self.origin = numpy.array([float(x) for x in line.split()])
+            self.origin = utils.convertor(self.origin, 'bohr', 'Angstrom')
 
             self.skip_line(inputfile, "blank")
             line = next(inputfile)
@@ -881,10 +934,109 @@ class Psi(logfileparser.Logfile):
                 dipole.append(float(line.split()[2]))
 
             if not hasattr(self, 'moments'):
-                self.moments = [self.reference, dipole]
+                self.moments = [self.origin, dipole]
             else:
                 assert self.moments[1] == dipole
 
+        ## Harmonic frequencies.
+
+        # -------------------------------------------------------------
+
+        #   Computing second-derivative from gradients using projected,
+        #   symmetry-adapted, cartesian coordinates (fd_freq_1).
+
+        #   74 gradients passed in, including the reference geometry.
+        #   Generating complete list of displacements from unique ones.
+
+        #       Operation 2 takes plus displacements of irrep Bg to minus ones.
+        #       Operation 3 takes plus displacements of irrep Au to minus ones.
+        #       Operation 2 takes plus displacements of irrep Bu to minus ones.
+
+        #         Irrep      Harmonic Frequency
+        #                         (cm-1)
+        #       -----------------------------------------------
+        #            Au          137.2883
+        if line.strip() == 'Irrep      Harmonic Frequency':
+
+            if not hasattr(self, 'vibfreqs'):
+                self.vibfreqs = []
+            if not hasattr(self, 'vibsyms'):
+                self.vibsyms = []
+
+            self.skip_lines(inputfile, ['(cm-1)', 'dashes'])
+
+            ## The first section contains the symmetry of each normal
+            ## mode and its frequency.
+            line = next(inputfile)
+            while '---' not in line:
+                chomp = line.split()
+                vibsym = chomp[0]
+                vibfreq = float(chomp[1])
+                self.vibsyms.append(vibsym)
+                self.vibfreqs.append(vibfreq)
+                line = next(inputfile)
+
+            line = next(inputfile)
+            assert line.strip() == ''
+            line = next(inputfile)
+            assert line.strip() == 'Normal Modes (non-mass-weighted).'
+            line = next(inputfile)
+            assert 'Molecular mass is' in line
+            if hasattr(self, 'atommasses'):
+                assert abs(float(line.split()[3]) - sum(self.atommasses)) < 1.0e-4
+            line = next(inputfile)
+            assert line.strip() == 'Frequencies in cm^-1; force constants in au.'
+            line = next(inputfile)
+            assert line.strip() == ''
+            line = next(inputfile)
+
+            ## The second section contains the frequency, force
+            ## constant, and displacement for each normal mode, along
+            ## with the atomic masses.
+
+            #       Normal Modes (non-mass-weighted).
+            #       Molecular mass is  130.07825 amu.
+            #       Frequencies in cm^-1; force constants in au.
+
+            #  Frequency:        137.29
+            #  Force constant:   0.0007
+            #            X       Y       Z           mass
+            # C      0.000   0.000   0.050      12.000000
+            # C      0.000   0.000   0.050      12.000000
+            for vibfreq in self.vibfreqs:
+                _vibfreq = float(line[13:].strip())
+                assert abs(vibfreq - _vibfreq) < 1.0e-2
+                line = next(inputfile)
+                # Can't do anything with this for now.
+                assert 'Force constant:' in line
+                line = next(inputfile)
+                assert 'X       Y       Z           mass' in line
+                line = next(inputfile)
+                if not hasattr(self, 'vibdisps'):
+                    self.vibdisps = []
+                normal_mode_disps = []
+                # for k in range(self.natom):
+                while line.strip():
+                    chomp = line.split()
+                    # Do nothing with this for now.
+                    atomsym = chomp[0]
+                    atomcoords = [float(x) for x in chomp[1:4]]
+                    # Do nothing with this for now.
+                    atommass = float(chomp[4])
+                    normal_mode_disps.append(atomcoords)
+                    line = next(inputfile)
+                self.vibdisps.append(normal_mode_disps)
+                line = next(inputfile)
+
+    def _parse_mosyms_moenergies(self, inputfile, spinidx):
+        """"""
+        line = next(inputfile)
+        while line.strip():
+            for i in range(len(line.split())//2):
+                self.mosyms[spinidx].append(line.split()[i*2][-2:])
+                self.moenergies[spinidx].append(line.split()[i*2+1])
+            line = next(inputfile)
+        return
 
 if __name__ == "__main__":
     import doctest, psiparser

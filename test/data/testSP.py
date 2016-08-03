@@ -105,7 +105,8 @@ class GenericSPTest(unittest.TestCase):
     @skipForParser('Molpro', 'atommasses not implemented yet')
     @skipForParser('NWChem', 'atommasses not implemented yet')
     @skipForParser('ORCA', 'atommasses not implemented yet')
-    @skipForParser('Psi', 'atommasses not implemented yet')
+    @skipForLogfile('Psi/basicPsi3', 'atommasses not implemented yet')
+    @skipForLogfile('Psi/basicPsi4.0b5', 'atommasses not implemented yet')
     @skipForParser('QChem', 'atommasses not implemented yet')
     def testatommasses(self):
         """Do the atom masses sum up to the molecular mass?"""
