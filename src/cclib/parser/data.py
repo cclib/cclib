@@ -12,6 +12,7 @@ import numpy
 from collections import namedtuple
 
 from cclib.method import Electrons
+from cclib.method import orbitals
 
 
 class ccData(object):
@@ -302,6 +303,10 @@ class ccData(object):
     @property
     def nelectrons(self):
         return Electrons(self).count()
+
+    @property
+    def closed_shell(self):
+        return orbitals.orbitals(self).closed_shell()
 
 
 class ccData_optdone_bool(ccData):
