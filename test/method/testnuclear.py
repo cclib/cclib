@@ -33,16 +33,32 @@ class NuclearTest(unittest.TestCase):
     def test_stoichiometry(self):
         """Testing stoichoimetry generation."""
         data = ccData()
-        data.atomnos = numpy.array([6, 1, 6, 1, 1, 1])
-        self.assertEqual(Nuclear(data).stoichiometry(), "C2H4")
-        data.charge = 1
-        self.assertEqual(Nuclear(data).stoichiometry(), "C2H4(+1)")
-        data.charge = -1
-        self.assertEqual(Nuclear(data).stoichiometry(), "C2H4(-1)")
-        data.charge = 2
-        self.assertEqual(Nuclear(data).stoichiometry(), "C2H4(+2)")
-        data.charge = 9
-        self.assertEqual(Nuclear(data).stoichiometry(), "C2H4(+9)")
+
+        def check(atomnos, formula, charge=0):
+            data.atomnos = numpy.array(atomnos)
+            data.charge = charge
+            self.assertEqual(Nuclear(data).stoichiometry(), formula)
+
+        # Basics and permutations.
+        check([], "")
+        check([6, 1, 6, 1, 1, 1], "C2H4")
+        check([1, 1, 1, 6, 1, 6], "C2H4")
+       
+        # Charges.
+        check([8], "O", charge=0)
+        check([8], "O(+1)", charge=1)
+        check([8], "O(-1)", charge=-1)
+        check([8], "O(+2)", charge=2)
+        check([8], "O(+9)", charge=9)
+
+        # Element counts.
+        check([6, 1], "CH")
+        check([6] * 60, "C60")
+
+        # Test the Hill system.
+        check([8, 1, 1], "H2O")
+        check([6, 8, 8, 1, 1], "CH2O2")
+        check([16, 16, 8, 8], "O2S2")
 
     def test_nre(self):
         """Testing nuclear repulsion energy for one logfile where it is printed."""
