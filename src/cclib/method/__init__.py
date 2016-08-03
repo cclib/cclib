@@ -17,4 +17,5 @@ from .mbo import MBO
 from .mpa import MPA
 from .nuclear import Nuclear
 from .opa import OPA
+from .orbitals import Orbitals
 from .volume import Volume
