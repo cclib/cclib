@@ -657,6 +657,7 @@ def testQChem_QChem4_2_CH3___Na__RS_out(logfile):
     assert type(logfile.data.moenergies[0]) == type(numpy.array([]))
     assert type(logfile.data.moenergies[1]) == type(numpy.array([]))
 
+
 def testQChem_QChem4_2_CH3___Na__RS_SCF_out(logfile):
     """An unrestricted fragment job with BSSE correction.
 
@@ -684,6 +685,7 @@ def testQChem_QChem4_2_CH3___Na__RS_SCF_out(logfile):
     assert type(logfile.data.moenergies) == type([])
     assert type(logfile.data.moenergies[0]) == type(numpy.array([]))
     assert type(logfile.data.moenergies[1]) == type(numpy.array([]))
+
 
 def testQChem_QChem4_2_CH4___Na__out(logfile):
     """A restricted fragment job with no BSSE correction.
@@ -806,6 +808,7 @@ def testQChem_QChem4_2_CO2_out(logfile):
     assert len(logfile.data.moenergies) == 1
     assert len(logfile.data.moenergies[0]) == nmo
 
+
 def testQChem_QChem4_2_CO2_cation_UHF_out(logfile):
     """A job containing a specific number of orbitals requested for
     printing."""
@@ -825,6 +828,7 @@ def testQChem_QChem4_2_CO2_cation_UHF_out(logfile):
     assert len(logfile.data.moenergies) == 2
     assert len(logfile.data.moenergies[0]) == nmo
     assert len(logfile.data.moenergies[1]) == nmo
+
 
 def testQChem_QChem4_2_CO2_cation_ROHF_bigprint_allvirt_out(logfile):
     """A job containing a specific number of orbitals requested for
@@ -846,9 +850,11 @@ def testQChem_QChem4_2_CO2_cation_ROHF_bigprint_allvirt_out(logfile):
     assert len(logfile.data.moenergies[0]) == nmo
     assert len(logfile.data.moenergies[1]) == nmo
 
+
 def testQChem_QChem4_2_dvb_gopt_unconverged_out(logfile):
     """An unconverged geometry optimization to test for empty optdone (see #103 for details)."""
     assert hasattr(logfile.data, 'optdone') and not logfile.data.optdone
+
 
 def testQChem_QChem4_2_dvb_sp_multipole_10_out(logfile):
     """Multipole moments up to the 10-th order.
@@ -972,6 +978,7 @@ def testQChem_QChem4_2_read_molecule_out(logfile):
     # However, we currently take data from both, since they aren't
     # exactly fragment calculations.
     assert len(logfile.data.scfenergies) == 2
+
 
 def testQChem_QChem4_2_stopiter_qchem_out(logfile):
     """Check to ensure that an incomplete SCF is handled correctly."""
@@ -1449,7 +1456,7 @@ def main(which=[], opt_traceback=False, opt_status=False, regdir="."):
         current_filenames.sort()
         for fname in current_filenames:
             total += 1
-            print("  %s..."  % fname, end=" ")
+            print("  %s ..."  % fname, end=" ")
 
             # Check if there is a test (needs to be an appropriately named function).
             # If not, there can also be a test that does not assume the file is
