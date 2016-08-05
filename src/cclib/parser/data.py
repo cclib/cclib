@@ -16,6 +16,8 @@
 import numpy
 from collections import namedtuple
 
+from cclib.method import Electrons
+
 
 class ccData(object):
     """Stores data extracted by cclib parsers
@@ -297,6 +299,10 @@ class ccData(object):
     def writexyz(self, filename=None):
         """Write parsed attributes to an XML file."""
         return self.write(filename=filename, outputtype='xyz')
+
+    @property
+    def electrons(self):
+        return Electrons(self).count()
 
 
 class ccData_optdone_bool(ccData):
