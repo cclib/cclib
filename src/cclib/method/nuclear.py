@@ -36,13 +36,27 @@ class Nuclear(Method):
         """Return a representation of the object."""
         return "Nuclear"
 
-    def stoichoimetry(self):
-        """Return the stoichemistry of the object."""
+    def stoichiometry(self):
+        """Return the stoichemistry of the object according to the Hill system"""
         pt = PeriodicTable()
+        elements = [pt.element[ano] for ano in self.data.atomnos]
+        counts = {el: elements.count(el) for el in set(elements)}
+
         formula = ""
-        for ano in sorted(set(self.data.atomnos), reverse=True):
-            count = numpy.count_nonzero(self.data.atomnos == ano)
-            formula += "%s%i" % (pt.element[ano], count)
+        elcount = lambda el, c: "%s%i" % (el, c) if c > 1 else el
+        if 'C' in elements:
+            formula += elcount('C', counts['C'])
+            counts.pop('C')
+            if 'H' in elements:
+              formula += elcount('H', counts['H'])
+              counts.pop('H')
+        for el, c in sorted(counts.items()):
+            formula += elcount(el, c)
+
+        if getattr(self.data, 'charge', 0):
+            magnitude = abs(self.data.charge)
+            sign = "+" if self.data.charge > 0 else "-"
+            formula += "(%s%i)" % (sign, magnitude)
         return formula
 
     def repulsion_energy(self):
