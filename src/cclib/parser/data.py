@@ -305,6 +305,7 @@ class ccData(object):
         """Write parsed attributes to an XML file."""
         return self.write(filename=filename, outputtype='xyz')
 
+    @property
     def stoichiometry(self):
         return nuclear.Nuclear(self).stoichiometry()
 
