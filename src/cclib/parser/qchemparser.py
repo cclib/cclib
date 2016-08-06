@@ -184,11 +184,11 @@ class QChem(logfileparser.Logfile):
             self.atomspins[chargetype] = numpy.array(spins)
 
     @staticmethod
-    def parse_matrix(inputfile, nparray, ncolsblock):
+    def parse_matrix(inputfile, nrows, ncols, ncolsblock):
         """Q-Chem prints most matrices in a standard format; parse the matrix
-        into a preallocated NumPy array of the appropriate shape.
+        into a NumPy array of the appropriate shape.
         """
-        nrows, ncols = nparray.shape
+        nparray = numpy.empty(shape=(nrows, ncols))
         line = next(inputfile)
         assert len(line.split()) == min(ncolsblock, ncols)
         colcounter = 0
@@ -204,9 +204,9 @@ class QChem(logfileparser.Logfile):
                 line = next(inputfile)
                 rowcounter += 1
             colcounter += ncolsblock
-        return
+        return nparray
 
-    def parse_matrix_aonames(self, inputfile, nparray):
+    def parse_matrix_aonames(self, inputfile, nrows, ncols):
         """Q-Chem prints most matrices in a standard format; parse the matrix
         into a preallocated NumPy array of the appropriate shape.
 
@@ -215,7 +215,7 @@ class QChem(logfileparser.Logfile):
         which handles `aonames`.
         """
         bigmom = ('d', 'f', 'g', 'h')
-        nrows, ncols = nparray.shape
+        nparray = numpy.empty(shape=(nrows, ncols))
         line = next(inputfile)
         assert len(line.split()) == min(self.ncolsblock, ncols)
         colcounter = 0
@@ -252,6 +252,7 @@ class QChem(logfileparser.Logfile):
                 line = next(inputfile)
                 rowcounter += 1
             colcounter += self.ncolsblock
+        return nparray
 
     def generate_atom_map(self):
         """Generate the map to go from Q-Chem atom numbering:
@@ -545,13 +546,11 @@ class QChem(logfileparser.Logfile):
             if 'Final Alpha MO Coefficients' in line:
                 if not hasattr(self, 'mocoeffs'):
                     self.mocoeffs = []
-                mocoeffs = numpy.empty(shape=(self.nbasis, self.norbdisp_alpha))
-                QChem.parse_matrix(inputfile, mocoeffs, self.ncolsblock)
+                mocoeffs = QChem.parse_matrix(inputfile, self.nbasis, self.norbdisp_alpha, self.ncolsblock)
                 self.mocoeffs.append(mocoeffs.transpose())
 
             if 'Final Beta MO Coefficients' in line:
-                mocoeffs = numpy.empty(shape=(self.nbasis, self.norbdisp_beta))
-                QChem.parse_matrix(inputfile, mocoeffs, self.ncolsblock)
+                mocoeffs = QChem.parse_matrix(inputfile, self.nbasis, self.norbdisp_beta, self.ncolsblock)
                 self.mocoeffs.append(mocoeffs.transpose())
 
             if 'Total energy in the final basis set' in line:
@@ -1032,8 +1031,7 @@ class QChem(logfileparser.Logfile):
                 # We could also attempt to parse `moenergies` here, but
                 # nothing is gained by it.
 
-                mocoeffs = numpy.empty(shape=(self.nbasis, self.norbdisp_alpha_aonames))
-                self.parse_matrix_aonames(inputfile, mocoeffs)
+                mocoeffs = self.parse_matrix_aonames(inputfile, self.nbasis, self.norbdisp_alpha_aonames)
                 # Only use these MO coefficients if we don't have them
                 # from `scf_final_print`.
                 if len(self.mocoeffs) == 0:
@@ -1048,8 +1046,7 @@ class QChem(logfileparser.Logfile):
 
             if 'BETA  MOLECULAR ORBITAL COEFFICIENTS' in line:
 
-                mocoeffs = numpy.empty(shape=(self.nbasis, self.norbdisp_beta_aonames))
-                self.parse_matrix_aonames(inputfile, mocoeffs)
+                mocoeffs = self.parse_matrix_aonames(inputfile, self.nbasis, self.norbdisp_beta_aonames)
                 if len(self.mocoeffs) == 1:
                     self.mocoeffs.append(mocoeffs.transpose())
 
@@ -1173,11 +1170,11 @@ class QChem(logfileparser.Logfile):
             if any(header in line for header in self.gradient_headers):
                 if not hasattr(self, 'grads'):
                     self.grads = []
-                grad = numpy.empty(shape=(3, self.natom))
                 if 'SCF' in line:
-                    QChem.parse_matrix(inputfile, grad, self.ncolsblock)
+                    ncolsblock = self.ncolsblock
                 else:
-                    QChem.parse_matrix(inputfile, grad, 5)
+                    ncolsblock = 5
+                grad = QChem.parse_matrix(inputfile, 3, self.natom, ncolsblock)
                 self.grads.append(grad.T)
 
             # For IR-related jobs, the Hessian is printed (dim: 3*natom, 3*natom).
@@ -1185,8 +1182,7 @@ class QChem(logfileparser.Logfile):
             if any(header in line for header in self.hessian_headers):
                 if not hasattr(self, 'hessian'):
                     dim = 3*self.natom
-                    self.hessian = numpy.empty(shape=(dim, dim))
-                    QChem.parse_matrix(inputfile, self.hessian, self.ncolsblock)
+                    self.hessian = QChem.parse_matrix(inputfile, dim, dim, self.ncolsblock)
 
             # Start of the IR/Raman frequency section.
             if 'VIBRATIONAL ANALYSIS' in line:
