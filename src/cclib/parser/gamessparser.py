@@ -1306,7 +1306,7 @@ class GAMESS(logfileparser.Logfile):
                 polarizability[i, :i+1] = [float(x) for x in line.split()[1:]]
             polarizability = utils.symmetrize(polarizability, use_triangle='lower')
             # Convert from Angstrom**3 to bohr**3 (a.u.**3).
-            volume_convert = numpy.vectorize(lambda x: utils.convertor(x, 'Angstrom3', 'bohr3'))
+            volume_convert = numpy.vectorize(lambda x: x * utils.convertor(1, 'Angstrom', 'bohr') ** 3)
             polarizability = volume_convert(polarizability)
             self.polarizabilities.append(polarizability)
 
