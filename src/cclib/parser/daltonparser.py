@@ -1117,7 +1117,7 @@ class DALTON(logfileparser.Logfile):
                     polarizability_diplen[i, j] = self.float(tokens[7])
                 line = next(inputfile)
 
-            utils.symmetrize(polarizability_diplen, use_triangle='upper')
+            polarizability_diplen = utils.symmetrize(polarizability_diplen, use_triangle='upper')
             if hasattr(self, 'polarizabilities'):
                 self.polarizabilities.append(polarizability_diplen)
 

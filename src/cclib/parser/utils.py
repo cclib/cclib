@@ -16,8 +16,8 @@ import numpy
 
 
 def symmetrize(m, use_triangle='lower'):
-    """In place, symmetrize a square NumPy array by reflecting one
-    triangular section across the diagonal to the other.
+    """Symmetrize a square NumPy array by reflecting one triangular
+    section across the diagonal to the other.
     """
 
     if use_triangle not in ('lower', 'upper'):
@@ -32,12 +32,14 @@ def symmetrize(m, use_triangle='lower'):
     lower_indices = numpy.tril_indices(dim, k=-1)
     upper_indices = numpy.triu_indices(dim, k=1)
 
-    if use_triangle == 'lower':
-        m[upper_indices] = m[lower_indices]
-    if use_triangle == 'upper':
-        m[lower_indices] = m[upper_indices]
+    ms = m.copy()
 
-    return
+    if use_triangle == 'lower':
+        ms[upper_indices] = ms[lower_indices]
+    if use_triangle == 'upper':
+        ms[lower_indices] = ms[upper_indices]
+
+    return ms
 
 
 def convertor(value, fromunits, tounits):
@@ -55,8 +57,8 @@ def convertor(value, fromunits, tounits):
 
         "Angstrom_to_bohr":   lambda x: x * 1.8897261245,
         "bohr_to_Angstrom":   lambda x: x * 0.5291772109,
-        "Angstrom3_to_bohr3": lambda x: x * (1.8897261245)**3,
-        "bohr3_to_Angstrom3": lambda x: x * (0.5291772109)**3,
+        "Angstrom3_to_bohr3":   lambda x: x * 1.8897261245 ** 3,
+        "bohr3_to_Angstrom3":   lambda x: x * 0.5291772109 ** 3,
 
         "cm-1_to_eV":       lambda x: x / 8065.54429,
         "cm-1_to_hartree":  lambda x: x / 219474.6313708,

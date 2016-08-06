@@ -1678,7 +1678,7 @@ class Gaussian(logfileparser.Logfile):
                 line = next(inputfile)
                 polarizability[i, :i+1] = [self.float(x) for x in line.split()[1:]]
 
-            utils.symmetrize(polarizability, use_triangle='lower')
+            polarizability = utils.symmetrize(polarizability, use_triangle='lower')
             self.polarizabilities.append(polarizability)
 
         # Static polarizability (from `freq`), lower triangular matrix.
@@ -1693,7 +1693,7 @@ class Gaussian(logfileparser.Logfile):
             polarizability_list.extend([line[16:31], line[31:46], line[46:61]])
             indices = numpy.tril_indices(3)
             polarizability[indices] = [self.float(x) for x in polarizability_list]
-            utils.symmetrize(polarizability, use_triangle='lower')
+            polarizability = utils.symmetrize(polarizability, use_triangle='lower')
             self.polarizabilities.append(polarizability)
 
         # Static polarizability, compressed into a single line from
@@ -1707,7 +1707,7 @@ class Gaussian(logfileparser.Logfile):
                 indices = numpy.tril_indices(3)
                 polarizability[indices] = [self.float(x) for x in
                                            [line[23:31], line[31:39], line[39:47], line[47:55], line[55:63], line[63:71]]]
-                utils.symmetrize(polarizability, use_triangle='lower')
+                polarizability = utils.symmetrize(polarizability, use_triangle='lower')
                 self.polarizabilities.append(polarizability)
 
 
