@@ -132,9 +132,22 @@ def testADF_ADF2013_01_stopiter_MoOCl4_sp_adfout(logfile):
     # len(logfile.data.scfvalues[0]) == 11
     assert not hasattr(logfile.data, "scfvalues")
 
-def testADF_ADF2016_fa2_adf_out(logfile):		
-    """This logfile, without symmetry, should get atombasis parsed."""		
-    assert hasattr(logfile.data, "atombasis")		
+def testADF_ADF2014_01_DMO_ORD_orig_out(logfile):
+    """In lieu of a unit test, make sure the polarizability (and
+    potentially later the optical rotation) is properly parsed.
+    """
+    assert hasattr(logfile.data, 'polarizabilities')
+    assert len(logfile.data.polarizabilities) == 1
+    assert logfile.data.polarizabilities[0].shape == (3, 3)
+
+    # isotropic polarizability
+    isotropic_calc = numpy.average(numpy.diag(logfile.data.polarizabilities[0]))
+    isotropic_ref = 51.3359
+    assert abs(isotropic_calc - isotropic_ref) < 1.0e-4
+
+def testADF_ADF2016_fa2_adf_out(logfile):
+    """This logfile, without symmetry, should get atombasis parsed."""
+    assert hasattr(logfile.data, "atombasis")
     assert [b for ab in logfile.data.atombasis for b in ab] == list(range(logfile.data.nbasis))
 
 # DALTON #
@@ -1319,8 +1332,8 @@ old_unittests = {
     "DALTON/DALTON-2015/trithiolane_polar_abalnr.out":      GaussianPolarTest,
     "DALTON/DALTON-2015/trithiolane_polar_response.out":    GaussianPolarTest,
     "DALTON/DALTON-2015/trithiolane_polar_static.out":      GaussianPolarTest,
-    "DALTON/DALTON-2015/Trp_polar_response.out":            GenericPolarTest,
-    "DALTON/DALTON-2015/Trp_polar_static.out":              GenericPolarTest,
+    "DALTON/DALTON-2015/Trp_polar_response.out":            ReferencePolarTest,
+    "DALTON/DALTON-2015/Trp_polar_static.out":              ReferencePolarTest,
 
     "GAMESS/GAMESS-US2005/water_ccd_2005.06.27.r3.out":         GenericCCTest,
     "GAMESS/GAMESS-US2005/water_ccsd_2005.06.27.r3.out":        GenericCCTest,
@@ -1343,9 +1356,9 @@ old_unittests = {
     "GAMESS/GAMESS-US2010/dvb_td.log":      GAMESSUSTDDFTTest,
     "GAMESS/GAMESS-US2010/dvb_ir.log":      GenericIRTest,
 
-    "GAMESS/GAMESS-US2014/Trp_polar_freq.out":         GenericPolarTest,
+    "GAMESS/GAMESS-US2014/Trp_polar_freq.out":         ReferencePolarTest,
     "GAMESS/GAMESS-US2014/trithiolane_polar_freq.out": GaussianPolarTest,
-    "GAMESS/GAMESS-US2014/trithiolane_polar_tdhf.out": GaussianPolarTest,
+    "GAMESS/GAMESS-US2014/trithiolane_polar_tdhf.out": GenericPolarTest,
 
     "GAMESS/PCGAMESS/C_bigbasis.out":       GenericBigBasisTest,
     "GAMESS/PCGAMESS/dvb_gopt_b.out":       GenericGeoOptTest,
@@ -1390,7 +1403,7 @@ old_unittests = {
     "Jaguar/Jaguar6.5/dvb_ir.out":      JaguarIRTest,
 
     "Molpro/Molpro2006/C_bigbasis_cart.out":    MolproBigBasisTest_cart,
-    "Molpro/Molpro2012/trithiolane_polar.out":  GaussianPolarTest,
+    "Molpro/Molpro2012/trithiolane_polar.out":  GenericPolarTest,
 
     "NWChem/NWChem6.6/trithiolane_polar.out": GaussianPolarTest,
 
@@ -1416,7 +1429,7 @@ old_unittests = {
     "Psi/Psi4.0b5/water_ccsd.out":   GenericCCTest,
     "Psi/Psi4.0b5/water_mp2.out":    GenericMP2Test,
 
-    "QChem/QChem4.2/Trp_freq.out":          GenericPolarTest,
+    "QChem/QChem4.2/Trp_freq.out":          ReferencePolarTest,
     "QChem/QChem4.2/trithiolane_polar.out": GaussianPolarTest,
     "QChem/QChem4.2/trithiolane_freq.out":  GaussianPolarTest,
 
