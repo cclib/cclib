@@ -44,6 +44,10 @@ class Psi(logfileparser.Logfile):
         # so it will be useful to register which one we are dealing with.
         self.version = None
 
+        # Early beta versions of Psi4 normalize basis function
+        # coefficients when printing.
+        self.version_4_beta = False
+
         # This is just used to track which part of the output we are in for Psi4,
         # with changes triggered by ==> things like this <== (Psi3 does not have this)
         self.section = None
@@ -82,6 +86,11 @@ class Psi(logfileparser.Logfile):
             self.version = 3
         if "PSI4: An Open-Source Ab Initio".lower() in line.lower():
             self.version = 4
+            # A more detailed version (minor and patch level) appears
+            # on the next line.
+            line = next(inputfile)
+            if "beta" in line:
+                self.version_4_beta = True
 
         # This will automatically change the section attribute for Psi4, when encountering
         # a line that <== looks like this ==>, to whatever is in between.
@@ -371,14 +380,19 @@ class Psi(logfileparser.Logfile):
 
             dfact = lambda n: (n <= 0) or n * dfact(n-2)
 
-            def get_normalization_factor(exp, lx, ly, lz):
-                norm_s = (2*exp/numpy.pi)**0.75
-                if lx + ly + lz > 0:
-                    nom = (4*exp)**((lx+ly+lz)/2.0)
-                    den = numpy.sqrt(dfact(2*lx-1) * dfact(2*ly-1) * dfact(2*lz-1))
-                    return norm_s * nom / den
-                else:
-                    return norm_s
+            # Early beta versions of Psi4 normalize basis function
+            # coefficients when printing.
+            if self.version_4_beta:
+                def get_normalization_factor(exp, lx, ly, lz):
+                    norm_s = (2*exp/numpy.pi)**0.75
+                    if lx + ly + lz > 0:
+                        nom = (4*exp)**((lx+ly+lz)/2.0)
+                        den = numpy.sqrt(dfact(2*lx-1) * dfact(2*ly-1) * dfact(2*lz-1))
+                        return norm_s * nom / den
+                    else:
+                        return norm_s
+            else:
+                get_normalization_factor = lambda exp, lx, ly, lz: 1
 
             self.skip_lines(inputfile, ['b', 'basisname'])
 
