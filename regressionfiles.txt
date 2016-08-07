@@ -283,3 +283,11 @@ QChem/QChem4.2/print_frgm_true_sp_ccsdt.out
 QChem/QChem4.2/qchem_tddft_rpa.out
 QChem/QChem4.2/read_molecule.out
 QChem/QChem4.2/stopiter_qchem.out
+QChem/QChem4.3/R_propylene_oxide_force_hf_numerical_energies.out
+QChem/QChem4.3/R_propylene_oxide_force_ccsd.out
+QChem/QChem4.3/R_propylene_oxide_force_mp2.out
+QChem/QChem4.3/R_propylene_oxide_force_rimp2.out
+QChem/QChem4.3/R_propylene_oxide_freq_ccsd.out
+QChem/QChem4.3/R_propylene_oxide_freq_hf_numerical_gradients.out
+QChem/QChem4.3/R_propylene_oxide_freq_mp2.out
+QChem/QChem4.3/R_propylene_oxide_freq_rimp2.out

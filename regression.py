@@ -657,6 +657,7 @@ def testQChem_QChem4_2_CH3___Na__RS_out(logfile):
     assert type(logfile.data.moenergies[0]) == type(numpy.array([]))
     assert type(logfile.data.moenergies[1]) == type(numpy.array([]))
 
+
 def testQChem_QChem4_2_CH3___Na__RS_SCF_out(logfile):
     """An unrestricted fragment job with BSSE correction.
 
@@ -684,6 +685,7 @@ def testQChem_QChem4_2_CH3___Na__RS_SCF_out(logfile):
     assert type(logfile.data.moenergies) == type([])
     assert type(logfile.data.moenergies[0]) == type(numpy.array([]))
     assert type(logfile.data.moenergies[1]) == type(numpy.array([]))
+
 
 def testQChem_QChem4_2_CH4___Na__out(logfile):
     """A restricted fragment job with no BSSE correction.
@@ -806,6 +808,7 @@ def testQChem_QChem4_2_CO2_out(logfile):
     assert len(logfile.data.moenergies) == 1
     assert len(logfile.data.moenergies[0]) == nmo
 
+
 def testQChem_QChem4_2_CO2_cation_UHF_out(logfile):
     """A job containing a specific number of orbitals requested for
     printing."""
@@ -825,6 +828,7 @@ def testQChem_QChem4_2_CO2_cation_UHF_out(logfile):
     assert len(logfile.data.moenergies) == 2
     assert len(logfile.data.moenergies[0]) == nmo
     assert len(logfile.data.moenergies[1]) == nmo
+
 
 def testQChem_QChem4_2_CO2_cation_ROHF_bigprint_allvirt_out(logfile):
     """A job containing a specific number of orbitals requested for
@@ -846,9 +850,11 @@ def testQChem_QChem4_2_CO2_cation_ROHF_bigprint_allvirt_out(logfile):
     assert len(logfile.data.moenergies[0]) == nmo
     assert len(logfile.data.moenergies[1]) == nmo
 
+
 def testQChem_QChem4_2_dvb_gopt_unconverged_out(logfile):
     """An unconverged geometry optimization to test for empty optdone (see #103 for details)."""
     assert hasattr(logfile.data, 'optdone') and not logfile.data.optdone
+
 
 def testQChem_QChem4_2_dvb_sp_multipole_10_out(logfile):
     """Multipole moments up to the 10-th order.
@@ -973,9 +979,123 @@ def testQChem_QChem4_2_read_molecule_out(logfile):
     # exactly fragment calculations.
     assert len(logfile.data.scfenergies) == 2
 
+
 def testQChem_QChem4_2_stopiter_qchem_out(logfile):
     """Check to ensure that an incomplete SCF is handled correctly."""
     assert len(logfile.data.scfvalues[0]) == 7
+
+
+def testQChem_QChem4_3_R_propylene_oxide_force_ccsd_out(logfile):
+    """Check to see that the CCSD gradient (not the HF gradient) is being
+    parsed.
+    """
+    assert hasattr(logfile.data, 'grads')
+    assert logfile.data.grads.shape == (1, logfile.data.natom, 3)
+    # atom 9, y-coordinate.
+    idx = (0, 8, 1)
+    assert logfile.data.grads[idx] == 0.00584973
+
+
+def testQChem_QChem4_3_R_propylene_oxide_force_hf_numerical_energies_out(logfile):
+    """Check to see that the HF numerical gradient (from energies) is
+    being parsed.
+    """
+    # This isn't implemented yet.
+    pass
+
+
+def testQChem_QChem4_3_R_propylene_oxide_force_mp2_out(logfile):
+    """Check to see that the MP2 gradient (not the HF gradient) is
+    being parsed.
+    """
+    assert hasattr(logfile.data, 'grads')
+    assert logfile.data.grads.shape == (1, logfile.data.natom, 3)
+    # atom 9, y-coordinate.
+    idx = (0, 8, 1)
+    assert logfile.data.grads[idx] == 0.00436177
+
+
+def testQChem_QChem4_3_R_propylene_oxide_force_rimp2_out(logfile):
+    """Check to see that the RI-MP2 gradient (not the HF gradient) is
+    being parsed.
+    """
+    assert hasattr(logfile.data, 'grads')
+    assert logfile.data.grads.shape == (1, logfile.data.natom, 3)
+    # atom 9, y-coordinate.
+    idx = (0, 8, 1)
+    assert logfile.data.grads[idx] == 0.00436172
+
+
+def testQChem_QChem4_3_R_propylene_oxide_freq_ccsd_out(logfile):
+    """Check to see that the CCSD (numerical) Hessian is being parsed.
+    """
+
+    # The gradient of the initial geometry in a Hessian calculated
+    # from finite difference of gradients should be the same as in a
+    # force calculation.
+    assert hasattr(logfile.data, 'grads')
+    ngrads = 1 + 6*logfile.data.natom
+    assert logfile.data.grads.shape == (ngrads, logfile.data.natom, 3)
+    # atom 9, y-coordinate.
+    idx = (0, 8, 1)
+    assert logfile.data.grads[idx] == 0.00584973
+
+    assert hasattr(logfile.data, 'hessian')
+    assert logfile.data.hessian.shape == (3*logfile.data.natom, 3*logfile.data.natom)
+    # atom 4, x-coordinate.
+    idx = (9, 9)
+    assert logfile.data.hessian[idx] == 0.3561243
+
+
+def testQChem_QChem4_3_R_propylene_oxide_freq_hf_numerical_gradients_out(logfile):
+    """Check to see that the HF Hessian (from gradients) is being parsed.
+    """
+    # This isn't implemented yet.
+    pass
+
+
+def testQChem_QChem4_3_R_propylene_oxide_freq_mp2_out(logfile):
+    """Check to see that the MP2 (numerical) Hessian is being parsed.
+    """
+
+    # The gradient of the initial geometry in a Hessian calculated
+    # from finite difference of gradients should be the same as in a
+    # force calculation.
+    assert hasattr(logfile.data, 'grads')
+    ngrads = 1 + 6*logfile.data.natom
+    assert logfile.data.grads.shape == (ngrads, logfile.data.natom, 3)
+    # atom 9, y-coordinate.
+    idx = (0, 8, 1)
+    assert logfile.data.grads[idx] == 0.00436177
+
+    assert hasattr(logfile.data, 'hessian')
+    assert logfile.data.hessian.shape == (3*logfile.data.natom, 3*logfile.data.natom)
+    # atom 4, x-coordinate.
+    idx = (9, 9)
+    assert logfile.data.hessian[idx] == 0.3520255
+
+
+def testQChem_QChem4_3_R_propylene_oxide_freq_rimp2_out(logfile):
+    """Check to see that the RI-MP2 (numerical) Hessian is being parsed.
+    """
+
+    # The gradient of the initial geometry in a Hessian calculated
+    # from finite difference of gradients should be the same as in a
+    # force calculation.
+    assert hasattr(logfile.data, 'grads')
+    ngrads = 1 + 6*logfile.data.natom
+    assert logfile.data.grads.shape == (ngrads, logfile.data.natom, 3)
+    # atom 9, y-coordinate.
+    idx = (0, 8, 1)
+    # Well, not quite in this case...
+    assert logfile.data.grads[idx] == 0.00436167
+
+    assert hasattr(logfile.data, 'hessian')
+    assert logfile.data.hessian.shape == (3*logfile.data.natom, 3*logfile.data.natom)
+    # atom 4, x-coordinate.
+    idx = (9, 9)
+    assert logfile.data.hessian[idx] == 0.3520538
+
 
 # These regression tests are for logfiles that are not to be parsed
 # for some reason, and the function should start with 'testnoparse'.
@@ -1336,7 +1456,7 @@ def main(which=[], opt_traceback=False, opt_status=False, regdir="."):
         current_filenames.sort()
         for fname in current_filenames:
             total += 1
-            print("  %s..."  % fname, end=" ")
+            print("  %s ..."  % fname, end=" ")
 
             # Check if there is a test (needs to be an appropriately named function).
             # If not, there can also be a test that does not assume the file is
