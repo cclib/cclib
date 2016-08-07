@@ -1308,15 +1308,19 @@ old_unittests = {
     "ADF/ADF2004.01/dvb_un_sp_c.adfout":    GenericSPunTest,
     "ADF/ADF2004.01/dvb_ir.adfout":         GenericIRTest,
 
-    "ADF/ADF2006.01/dvb_gopt.adfout":       ADFGeoOptTest,
-
-    "ADF/ADF2013.01/dvb_gopt_b_fullscf.adfout":       ADFGeoOptTest,
+    "ADF/ADF2006.01/dvb_gopt.adfout":              ADFGeoOptTest,
+    "ADF/ADF2013.01/dvb_gopt_b_fullscf.adfout":    ADFGeoOptTest,
     "ADF/ADF2014.01/dvb_gopt_b_fullscf.out":       ADFGeoOptTest,
 
     "DALTON/DALTON-2013/C_bigbasis.aug-cc-pCVQZ.out":       DALTONBigBasisTest_aug_cc_pCVQZ,
     "DALTON/DALTON-2013/b3lyp_energy_dvb_sp_nosym.out":     DALTONSPTest_nosyms_nolabels,
     "DALTON/DALTON-2013/dvb_sp_hf_nosym.out":               GenericSPTest,
     "DALTON/DALTON-2013/sp_b3lyp_dvb.out":                  GenericSPTest,
+    "DALTON/DALTON-2015/trithiolane_polar_abalnr.out":      GaussianPolarTest,
+    "DALTON/DALTON-2015/trithiolane_polar_response.out":    GaussianPolarTest,
+    "DALTON/DALTON-2015/trithiolane_polar_static.out":      GaussianPolarTest,
+    "DALTON/DALTON-2015/Trp_polar_response.out":            GenericPolarTest,
+    "DALTON/DALTON-2015/Trp_polar_static.out":              GenericPolarTest,
 
     "GAMESS/GAMESS-US2005/water_ccd_2005.06.27.r3.out":         GenericCCTest,
     "GAMESS/GAMESS-US2005/water_ccsd_2005.06.27.r3.out":        GenericCCTest,
@@ -1338,6 +1342,10 @@ old_unittests = {
     "GAMESS/GAMESS-US2010/dvb_sp_un.log":   GAMESSUSSPunTest_charge0,
     "GAMESS/GAMESS-US2010/dvb_td.log":      GAMESSUSTDDFTTest,
     "GAMESS/GAMESS-US2010/dvb_ir.log":      GenericIRTest,
+
+    "GAMESS/GAMESS-US2014/Trp_polar_freq.out":         GenericPolarTest,
+    "GAMESS/GAMESS-US2014/trithiolane_polar_freq.out": GaussianPolarTest,
+    "GAMESS/GAMESS-US2014/trithiolane_polar_tdhf.out": GaussianPolarTest,
 
     "GAMESS/PCGAMESS/C_bigbasis.out":       GenericBigBasisTest,
     "GAMESS/PCGAMESS/dvb_gopt_b.out":       GenericGeoOptTest,
@@ -1382,6 +1390,9 @@ old_unittests = {
     "Jaguar/Jaguar6.5/dvb_ir.out":      JaguarIRTest,
 
     "Molpro/Molpro2006/C_bigbasis_cart.out":    MolproBigBasisTest_cart,
+    "Molpro/Molpro2012/trithiolane_polar.out":  GaussianPolarTest,
+
+    "NWChem/NWChem6.6/trithiolane_polar.out": GaussianPolarTest,
 
     "ORCA/ORCA2.6/dvb_gopt.out":    OrcaGeoOptTest_3_21g,
     "ORCA/ORCA2.6/dvb_sp.out":      OrcaSPTest_3_21g,
@@ -1394,6 +1405,8 @@ old_unittests = {
     "ORCA/ORCA2.8/dvb_td.out":      OrcaTDDFTTest,
     "ORCA/ORCA2.8/dvb_ir.out":      OrcaIRTest_old,
 
+    "ORCA/ORCA3.0/trithiolane_polar.out": GaussianPolarTest,
+
     "Psi/Psi4.0b5/C_bigbasis.out":   GenericBigBasisTest,
     "Psi/Psi4.0b5/dvb_gopt_hf.out":  PsiGeoOptTest,
     "Psi/Psi4.0b5/dvb_sp_hf.out":    GenericBasisTest,
@@ -1402,6 +1415,11 @@ old_unittests = {
     "Psi/Psi4.0b5/dvb_sp_ks.out":    GenericSPTest,
     "Psi/Psi4.0b5/water_ccsd.out":   GenericCCTest,
     "Psi/Psi4.0b5/water_mp2.out":    GenericMP2Test,
+
+    "QChem/QChem4.2/Trp_freq.out":          GenericPolarTest,
+    "QChem/QChem4.2/trithiolane_polar.out": GaussianPolarTest,
+    "QChem/QChem4.2/trithiolane_freq.out":  GaussianPolarTest,
+
 }
 
 def make_regression_from_old_unittest(test_class):
