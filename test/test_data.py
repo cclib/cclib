@@ -249,7 +249,7 @@ class DataSuite(object):
             'Molpro2012' : getdatafile('Molpro', "basicMolpro2012", "dvb_gopt.log", "dvb_gopt.out")[0],
             'NWChem6.5' : getdatafile('NWChem', "basicNWChem6.5", "dvb_gopt_ks.out")[0],
             'ORCA3.0' : getdatafile('ORCA', "basicORCA3.0", "dvb_gopt.out")[0],
-            'Psi4' : getdatafile('Psi', "basicPsi4.0", "dvb_gopt_ks.out")[0],
+            'Psi4.0' : getdatafile('Psi', "basicPsi4.0", "dvb_gopt_rks.out")[0],
             'QChem4.2' : getdatafile('QChem', "basicQChem4.2", "dvb_gopt.out")[0],
         }
         parser_names = sorted(parsers_to_test.keys())

@@ -17,6 +17,7 @@ import re
 
 import numpy
 
+from . import data
 from . import logfileparser
 from . import utils
 
@@ -51,8 +52,15 @@ class Psi(logfileparser.Logfile):
         # (un)restricted calculation.
         self.reference = 'RHF'
 
+    def after_parsing(self):
+
+        # Newer versions of Psi4 don't explicitly print the number of atoms.
+        if not hasattr(self, 'natom'):
+            if hasattr(self, 'atomnos'):
+                self.set_attribute('natom', len(self.atomnos))
+
     def normalisesym(self, label):
-        """Use standard symmetry labels instead of NWChem labels.
+        """Use standard symmetry labels instead of Psi labels.
 
         To normalise:
         (1) If label is one of [SG, PI, PHI, DLTA], replace by [sigma, pi, phi, delta]
@@ -89,8 +97,8 @@ class Psi(logfileparser.Logfile):
 
         # Psi3 prints the coordinates in several configurations, and we will parse the
         # the canonical coordinates system in Angstroms as the first coordinate set,
-        # although ir is actually somewhere later in the input, after basis set, etc.
-        # We can also get or verify he number of atoms and atomic numbers from this block.
+        # although it is actually somewhere later in the input, after basis set, etc.
+        # We can also get or verify the number of atoms and atomic numbers from this block.
         if (self.version == 3) and (line.strip() == "-Geometry in the canonical coordinate system (Angstrom):"):
 
             self.skip_lines(inputfile, ['header', 'd'])
@@ -483,7 +491,7 @@ class Psi(logfileparser.Logfile):
             self.skip_line(inputfile, 'blank')
             line = next(inputfile)
             while line.strip() != "==> Post-Iterations <==":
-                if line.strip() and line.split()[0] in ["@DF-RHF", "@RHF", "@DF-RKS", "@RKS"]:
+                if line.strip() and line.split()[0][0] == '@':
                     denergy = float(line.split()[4])
                     ddensity = float(line.split()[5])
                     scfvals.append([denergy, ddensity])
@@ -535,11 +543,9 @@ class Psi(logfileparser.Logfile):
                 self.skip_line(inputfile, 'dashes')
             self.skip_line(inputfile, 'blank')
 
-            # Both versions have this case insensisitive substring.
+            # Both versions have this case-insensitive substring.
             occupied = next(inputfile)
-            if self.reference[0:2] == 'RO':
-                assert 'doubly occupied' in occupied.lower()
-            elif self.reference[0:1] == 'R':
+            if self.reference[0:2] == 'RO' or self.reference[0:1] == 'R':
                 assert 'doubly occupied' in occupied.lower()
             elif self.reference[0:1] == 'U':
                 assert 'alpha occupied' in occupied.lower()
@@ -550,10 +556,16 @@ class Psi(logfileparser.Logfile):
             if self.version == 4:
                 self.skip_line(inputfile, 'blank')
 
+            # Parse the occupied MO symmetries and energies.
             self._parse_mosyms_moenergies(inputfile, 0)
 
-            # The last orbital energy here represented the HOMO.
+            # The last orbital energy here represents the HOMO.
             self.homos = [len(self.moenergies[0])-1]
+            # For a restricted open-shell calculation, this is the
+            # beta HOMO, and we assume the singly-occupied orbitals
+            # are all alpha, which are handled next.
+            if self.reference[0:2] == 'RO':
+                self.homos.append(self.homos[0])
 
             # Different numbers of blank lines in Psi3 and Psi4.
             if self.version == 3:
@@ -576,13 +588,14 @@ class Psi(logfileparser.Logfile):
             if self.version == 4:
                 self.skip_line(inputfile, 'blank')
 
+            # Parse the unoccupied MO symmetries and energies.
             self._parse_mosyms_moenergies(inputfile, 0)
 
-            line = next(inputfile)
             # Here is where we handle the Beta or Singly occupied orbitals.
             if self.reference[0:1] == 'U':
                 self.mosyms.append([])
                 self.moenergies.append([])
+                line = next(inputfile)
                 assert line.strip() == 'Beta Occupied:'
                 self.skip_line(inputfile, 'blank')
                 self._parse_mosyms_moenergies(inputfile, 1)
@@ -592,14 +605,33 @@ class Psi(logfileparser.Logfile):
                 self.skip_line(inputfile, 'blank')
                 self._parse_mosyms_moenergies(inputfile, 1)
             elif self.reference[0:2] == 'RO':
+                line = next(inputfile)
                 assert line.strip() == 'Virtual:'
                 self.skip_line(inputfile, 'blank')
                 self._parse_mosyms_moenergies(inputfile, 0)
 
+            if self.version == 4:
+                line = next(inputfile)
+                assert line.strip() == 'Final Occupation by Irrep:'
+                line = next(inputfile)
+                irreps = line.split()
+                line = next(inputfile)
+                tokens = line.split()
+                assert tokens[0] == 'DOCC'
+                docc = sum([int(x.replace(',', '')) for x in tokens[2:-1]])
+                line = next(inputfile)
+                if line.strip():
+                    tokens = line.split()
+                    assert tokens[0] == 'SOCC'
+                    socc = sum([int(x.replace(',', '')) for x in tokens[2:-1]])
+                    # Fix up the restricted open-shell alpha HOMO.
+                    if self.reference[0:2] == 'RO':
+                        self.homos[0] += socc
+
         # Both Psi3 and Psi4 print the final SCF energy right after the orbital energies,
         # but the label is different. Psi4 also does DFT, and the label is also different in that case.
         if (self.version == 3 and "* SCF total energy" in line) or \
-           (self.section == "Post-Iterations" and ("@RHF Final Energy:" in line or "@RKS Final Energy" in line)):
+           (self.section == "Post-Iterations" and "Final Energy:" in line):
             e = float(line.split()[-1])
             if not hasattr(self, 'scfenergies'):
                 self.scfenergies = []
@@ -626,7 +658,8 @@ class Psi(logfileparser.Logfile):
         #    2   -0.2753689   -0.2708037   -0.0102079   -0.0329973   -0.2790813
         # ...
         #
-        if (self.section == "Molecular Orbitals") and (line.strip() == "==> Molecular Orbitals <=="):
+        if (self.section) and ("Molecular Orbitals" in self.section) \
+           and ("Molecular Orbitals" in line):
 
             self.skip_line(inputfile, 'blank')
 
@@ -757,6 +790,10 @@ class Psi(logfileparser.Logfile):
                 if values[istart:istart+9].strip():
                     geovalues.append(float(values[istart:istart+9]))
 
+            if not hasattr(self, "optstatus"):
+                self.optstatus = []
+            self.optstatus.append(data.ccData.OPT_NEW)
+
             # This assertion may be too restrictive, but we haven't seen the geotargets change.
             # If such an example comes up, update the value since we're interested in the last ones.
             if not hasattr(self, 'geotargets'):
@@ -771,16 +808,23 @@ class Psi(logfileparser.Logfile):
         # This message signals a converged optimization, in which case we want
         # to append the index for this step to optdone, which should be equal
         # to the number of geovalues gathered so far.
-        if line.strip() == "**** Optimization is complete! ****":
+        if "Optimization is complete!" in line:
+
             if not hasattr(self, 'optdone'):
                 self.optdone = []
             self.optdone.append(len(self.geovalues))
+
+            assert hasattr(self, "optstatus") and len(self.optstatus) > 0
+            self.optstatus[-1] = data.ccData.OPT_DONE
 
         # This message means that optimization has stopped for some reason, but we
         # still want optdone to exist in this case, although it will be an empty list.
         if line.strip() == "Optimizer: Did not converge!":
             if not hasattr(self, 'optdone'):
                 self.optdone = []
+
+            assert hasattr(self, "optstatus") and len(self.optstatus) > 0
+            self.optstatus[-1] = data.ccData.OPT_UNCONVERGED
 
         # The reference point at which properties are evaluated in Psi4 is explicitely stated,
         # so we can save it for later. It is not, however, a part of the Properties section,
@@ -1029,10 +1073,12 @@ class Psi(logfileparser.Logfile):
                 line = next(inputfile)
 
     def _parse_mosyms_moenergies(self, inputfile, spinidx):
-        """"""
+        """Parse molecular orbital symmetries and energies from the
+        'Post-Iterations' section.
+        """
         line = next(inputfile)
         while line.strip():
-            for i in range(len(line.split())//2):
+            for i in range(len(line.split()) // 2):
                 self.mosyms[spinidx].append(line.split()[i*2][-2:])
                 self.moenergies[spinidx].append(line.split()[i*2+1])
             line = next(inputfile)
