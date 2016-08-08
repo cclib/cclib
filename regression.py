@@ -630,15 +630,15 @@ def testPsi_Psi3_water_psi3_log(logfile):
     assert logfile.data.nbasis == 25
     assert [len(ab) for ab in logfile.data.atombasis] == [15, 5, 5]
 
-def testPsi_Psi4_dvb_gopt_hf_unconverged_out(logfile):
+def testPsi_Psi4_0b5_dvb_gopt_hf_unconverged_out(logfile):
     """An unconverged geometry optimization to test for empty optdone (see #103 for details)."""
     assert hasattr(logfile.data, 'optdone') and not logfile.data.optdone
 
-def testPsi_Psi4_stopiter_psi_dft_out(logfile):
+def testPsi_Psi4_0b5_stopiter_psi_dft_out(logfile):
     """Check to ensure that an incomplete SCF is handled correctly."""
     assert len(logfile.data.scfvalues[0]) == 7
 
-def testPsi_Psi4_stopiter_psi_hf_out(logfile):
+def testPsi_Psi4_0b5_stopiter_psi_hf_out(logfile):
     """Check to ensure that an incomplete SCF is handled correctly."""
     assert len(logfile.data.scfvalues[0]) == 6
 
@@ -1384,8 +1384,14 @@ old_unittests = {
     "ORCA/ORCA2.8/dvb_td.out":      OrcaTDDFTTest,
     "ORCA/ORCA2.8/dvb_ir.out":      OrcaIRTest_old,
 
-    "Psi/Psi4/dvb_sp_hf_git.out": GenericBasisTest,
-    "Psi/Psi4/dvb_sp_hf_git.out": GenericSPTest,
+    "Psi/Psi4.0b5/C_bigbasis.out":   GenericBigBasisTest,
+    "Psi/Psi4.0b5/dvb_gopt_hf.out":  PsiGeoOptTest,
+    "Psi/Psi4.0b5/dvb_sp_hf.out":    GenericBasisTest,
+    "Psi/Psi4.0b5/dvb_sp_hf.out":    GenericSPTest,
+    "Psi/Psi4.0b5/dvb_sp_ks.out":    GenericBasisTest,
+    "Psi/Psi4.0b5/dvb_sp_ks.out":    GenericSPTest,
+    "Psi/Psi4.0b5/water_ccsd.out":   GenericCCTest,
+    "Psi/Psi4.0b5/water_mp2.out":    GenericMP2Test,
 }
 
 def make_regression_from_old_unittest(test_class):
