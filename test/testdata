@@ -33,8 +33,6 @@ Basis     NWChem      GenericBasisTest      basicNWChem6.5        dvb_sp_hf.out
 Basis     NWChem      GenericBasisTest      basicNWChem6.5        dvb_sp_ks.out
 Basis     ORCA        GenericBasisTest      basicORCA2.9          dvb_sp.out
 Basis     ORCA        GenericBasisTest      basicORCA3.0          dvb_sp.out
-Basis     Psi         GenericBasisTest      basicPsi4.0b5         dvb_sp_hf.out
-Basis     Psi         GenericBasisTest      basicPsi4.0b5         dvb_sp_ks.out
 Basis     Psi         GenericBasisTest      basicPsi4.0           dvb_sp_rhf.out
 Basis     Psi         GenericBasisTest      basicPsi4.0           dvb_sp_rks.out
 Basis     QChem       GenericBasisTest      basicQChem4.2         dvb_sp.out
@@ -50,7 +48,6 @@ Basis     Molpro      MolproBigBasisTest    basicMolpro2006       C_bigbasis.out
 Basis     Molpro      MolproBigBasisTest    basicMolpro2012       C_bigbasis.out
 Basis     NWChem      GenericBigBasisTest   basicNWChem6.0        C_bigbasis.out
 Basis     NWChem      GenericBigBasisTest   basicNWChem6.5        C_bigbasis.out
-Basis     Psi         GenericBigBasisTest   basicPsi4.0b5         C_bigbasis.out
 Basis     Psi         PsiBigBasisTest       basicPsi4.0           C_bigbasis.out
 Basis     QChem       QChemBigBasisTest     basicQChem4.2         C_bigbasis.out
 
@@ -73,7 +70,6 @@ CC        Molpro      GenericCCTest         basicMolpro2006       h2o_ccsd(t).ou
 CC        Molpro      GenericCCTest         basicMolpro2012       h2o_ccsdt.out
 CC        NWChem      GenericCCTest         basicNWChem6.0        water_ccsd(t).out
 CC        NWChem      GenericCCTest         basicNWChem6.5        water_ccsd(t).out
-CC        Psi         GenericCCTest         basicPsi4.0b5         water_ccsd.out
 CC        Psi         GenericCCTest         basicPsi4.0           water_ccsd.out
 CC        Psi         GenericCCTest         basicPsi4.0           water_ccsd(t).out
 CC        QChem       GenericCCTest         basicQChem4.2         water_ccd.out
@@ -120,7 +116,6 @@ GeoOpt    NWChem      NWChemGeoOptTest      basicNWChem6.5        dvb_gopt_hf.ou
 GeoOpt    NWChem      NWChemGeoOptTest      basicNWChem6.5        dvb_gopt_ks.out
 GeoOpt    ORCA        OrcaGeoOptTest        basicORCA2.9          dvb_gopt.out
 GeoOpt    ORCA        OrcaGeoOptTest        basicORCA3.0          dvb_gopt.out
-GeoOpt    Psi         PsiGeoOptTest         basicPsi4.0b5         dvb_gopt_hf.out
 GeoOpt    Psi         PsiGeoOptTest         basicPsi4.0           dvb_gopt_rhf.out
 GeoOpt    Psi         PsiGeoOptTest         basicPsi4.0           dvb_gopt_rks.out
 GeoOpt    QChem       GenericGeoOptTest     basicQChem4.2         dvb_gopt.out
@@ -153,7 +148,6 @@ MP        Molpro      GenericMP4SDTQTest    basicMolpro2006       h2o_mp4.out
 MP        Molpro      GenericMP4SDTQTest    basicMolpro2012       h2o_mp4.out
 MP        NWChem      GenericMP2Test        basicNWChem6.0        water_mp2.out
 MP        NWChem      GenericMP2Test        basicNWChem6.5        water_mp2.out
-MP        Psi         GenericMP2Test        basicPsi4.0b5         water_mp2.out
 MP        Psi         GenericMP2Test        basicPsi4.0           water_mp2.out
 MP        QChem       GenericMP2Test        basicQChem4.2         water_mp2.out
 MP        QChem       GenericMP3Test        basicQChem4.2         water_mp3.out
@@ -190,8 +184,6 @@ SP        NWChem      GenericSPTest         basicNWChem6.5        dvb_sp_ks.out
 SP        ORCA        GenericSPTest         basicORCA2.9          dvb_sp.out
 SP        ORCA        GenericSPTest         basicORCA3.0          dvb_sp.out
 SP        Psi         Psi3SPTest            basicPsi3             dvb_sp_hf.out
-SP        Psi         GenericSPTest         basicPsi4.0b5         dvb_sp_hf.out
-SP        Psi         GenericSPTest         basicPsi4.0b5         dvb_sp_ks.out
 SP        Psi         GenericSPTest         basicPsi4.0           dvb_sp_rhf.out
 SP        Psi         GenericSPTest         basicPsi4.0           dvb_sp_rks.out
 SP        QChem       GenericSPTest         basicQChem4.2         dvb_sp.out
