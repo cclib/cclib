@@ -511,29 +511,8 @@ class DALTON(logfileparser.Logfile):
                     for i in range(sc):
                         orbital = inputfile.next()
 
-        #      Wave function specification
-        #      ============================
-        # @    Wave function type        >>> KS-DFT <<<
-        # @    Number of closed shell electrons          70
-        # @    Number of electrons in active shells       0
-        # @    Total charge of the molecule               0
-        #
-        # @    Spin multiplicity and 2 M_S                1         0
-        # @    Total number of symmetries                 4 (point group: C2h)
-        # @    Reference state symmetry                   1 (irrep name : Ag )
-        #
-        #     This is a DFT calculation of type: B3LYP
-        # ...
-        #
-        if "@    Number of electrons in active shells" in line:
-            self.unpaired_electrons = int(line.split()[-1])
-        if "@    Total charge of the molecule" in line:
-            self.set_attribute("charge", int(line.split()[-1]))
-        if "@    Spin multiplicity and 2 M_S" in line:
-            self.set_attribute("mult", int(line.split()[-2]))
-        # Dalton only has ROHF, no UHF
-            if self.mult != 1:
-                self.metadata["unrestricted"] = True
+        if "Starting in Wave Function Section (SIRIUS)" in line:
+            self.section = "SIRIUS"
 
         #     Orbital specifications
         #     ======================
@@ -565,22 +544,56 @@ class DALTON(logfileparser.Logfile):
             self.set_attribute("nbasis", int(chomp[index]))
             self.nmo_per_symmetry = list(map(int, chomp[index+2:]))
             assert self.nbasis == sum(self.nmo_per_symmetry)
-        if "@    Occupied SCF orbitals" in line and not hasattr(self, 'homos'):
-            temp = line.split()
-            homos = int(temp[4])
-            self.set_attribute('homos', [homos - 1 + self.unpaired_electrons])
         if "Threshold for SCF convergence" in line:
             if not hasattr(self, "scftargets"):
                 self.scftargets = []
             scftarget = self.float(line.split()[-1])
             self.scftargets.append([scftarget])
 
-        #                   .--------------------------------------------.
-        #                   | Starting in Wave Function Section (SIRIUS) |
-        #                   `--------------------------------------------'
+        #      Wave function specification
+        #      ============================
+        # @    Wave function type        >>> KS-DFT <<<
+        # @    Number of closed shell electrons          70
+        # @    Number of electrons in active shells       0
+        # @    Total charge of the molecule               0
         #
-        if "Starting in Wave Function Section (SIRIUS)" in line:
-            self.section = "SIRIUS"
+        # @    Spin multiplicity and 2 M_S                1         0
+        # @    Total number of symmetries                 4 (point group: C2h)
+        # @    Reference state symmetry                   1 (irrep name : Ag )
+        #
+        #     This is a DFT calculation of type: B3LYP
+        # ...
+        #
+        if line.strip() == "Wave function specification":
+            self.skip_line(inputfile, 'e')
+            line = next(inputfile)
+            # Must be a coupled cluster calculation.
+            if line.strip() == '':
+                self.skip_lines(inputfile, ['b', 'Coupled Cluster', 'b'])
+            else:
+                assert "wave function" in line.lower()
+            line = next(inputfile)
+            assert "Number of closed shell electrons" in line
+            self.paired_electrons = int(line.split()[-1])
+            line = next(inputfile)
+            assert "Number of electrons in active shells" in line
+            self.unpaired_electrons = int(line.split()[-1])
+            line = next(inputfile)
+            assert "Total charge of the molecule" in line
+            self.set_attribute("charge", int(line.split()[-1]))
+            self.skip_line(inputfile, 'b')
+            line = next(inputfile)
+            assert "Spin multiplicity and 2 M_S" in line
+            self.set_attribute("mult", int(line.split()[-2]))
+            # Dalton only has ROHF, no UHF
+            if self.mult != 1:
+                self.metadata["unrestricted"] = True
+
+            if not hasattr(self, 'homos'):
+                self.set_attribute('homos', [(self.paired_electrons // 2) - 1])
+                if self.unpaired_electrons > 0:
+                    self.homos.append(self.homos[0])
+                    self.homos[0] += self.unpaired_electrons
 
         #  *********************************************
         #  ***** DIIS optimization of Hartree-Fock *****
