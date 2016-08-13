@@ -26,7 +26,6 @@ from cclib.parser import ccData
 
 class CJSON(filewriter.Writer):
     """A writer for chemical JSON (CJSON) files."""
-    
     def __init__(self, ccdata, terse=False, *args, **kwargs):
         """Initialize the chemical JSON writer object.
 
@@ -50,7 +49,6 @@ class CJSON(filewriter.Writer):
         """Generate the CJSON representation of the logfile data"""
 
         cjson_dict = dict()
-        
         # Need to decide on a number format
         cjson_dict['chemical json'] = 0
         if self.jobfilename is not None:
@@ -62,7 +60,6 @@ class CJSON(filewriter.Writer):
             cjson_dict['inchi'] = self.pbmol.write('inchi')
             cjson_dict['inchikey'] = self.pbmol.write('inchikey')
             cjson_dict['formula'] = self.pbmol.formula
-            
         # Incorporate Unit Cell into the chemical JSON
 
         # Helpers functions which use properties provided by cclib
@@ -199,7 +196,8 @@ class CJSON(filewriter.Writer):
                 a) 3d                    
             3) Orbitals
                 a) Names
-                b) Indices
+                b) basis functions
+                c) Indices
             4) Coreelectrons
             5) Mass
             6) Spins
