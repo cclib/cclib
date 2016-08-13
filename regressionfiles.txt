@@ -251,6 +251,14 @@ ORCA/ORCA3.0/dvb_gopt_unconverged.out
 ORCA/ORCA3.0/stopiter_orca_scf_compact.out
 ORCA/ORCA3.0/stopiter_orca_scf_large.out
 Psi/Psi3/water_psi3.log
+Psi/Psi4.0/sample_psithon2.out
+Psi/Psi4.0/sample_props1.out
+Psi/Psi4.0/sample_fd-freq-gradient.out
+Psi/Psi4.0/sample_scf5.out
+Psi/Psi4.0/sample_opt10.out
+Psi/Psi4.0/sample_mom.out
+Psi/Psi4.0/sample_psimrcc-fd-freq2.out
+Psi/Psi4.0/sample_opt-irc-2.out
 Psi/Psi4.0b5/C_bigbasis.out
 Psi/Psi4.0b5/dvb_gopt_hf.out
 Psi/Psi4.0b5/dvb_gopt_hf_unconverged.out
@@ -259,6 +267,7 @@ Psi/Psi4.0b5/dvb_sp_hf.out
 Psi/Psi4.0b5/dvb_sp_ks.out
 Psi/Psi4.0b5/dvb_sp_ks.out
 Psi/Psi4.0b5/psi4.0b5_samples_scf4.out
+Psi/Psi4.0b5/sample_cc54.0.01_0.1_0.1.out
 Psi/Psi4.0b5/stopiter_psi_dft.out
 Psi/Psi4.0b5/stopiter_psi_hf.out
 Psi/Psi4.0b5/water_ccsd.out
