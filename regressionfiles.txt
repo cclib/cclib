@@ -222,6 +222,7 @@ NWChem/NWChem6.0/dvb_gopt_hf_unconverged.out
 NWChem/NWChem6.0/dvb_sp_hf_moments_only_octupole.out
 NWChem/NWChem6.0/dvb_sp_hf_moments_only_quadrupole.out
 NWChem/NWChem6.0/dvb_sp_ks_warnings.out
+NWChem/NWChem6.0/hydrogen_atom_ROHF_cc-pVDZ.out
 NWChem/NWChem6.0/hydrogen_atom_UHF_cc-pVDZ.out
 NWChem/NWChem6.5/stopiter_nwchem_dft.out
 NWChem/NWChem6.5/stopiter_nwchem_hf.out
