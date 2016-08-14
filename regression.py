@@ -552,7 +552,7 @@ def testNWChem_NWChem6_0_hydrogen_atom_UHF_cc_pVDZ_out(logfile):
     assert logfile.data.moenergies[1].shape == (5,)
     assert logfile.data.homos.shape == (2,)
     assert logfile.data.homos[0] == 0
-    assert logfile.data.homos[1] == 0
+    assert logfile.data.homos[1] == -1
 
 def testNWChem_NWChem6_5_stopiter_nwchem_dft_out(logfile):
     """Check to ensure that an incomplete SCF is handled correctly."""
