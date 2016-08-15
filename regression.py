@@ -536,6 +536,20 @@ def testNWChem_NWChem6_0_dvb_sp_hf_moments_only_octupole_out(logfile):
     assert not logfile.data.moments[2].shape
     assert len(logfile.data.moments[3]) == 10
 
+def testNWChem_NWChem6_0_hydrogen_atom_ROHF_cc_pVDZ_out(logfile):
+    """A lone hydrogen atom is a common edge case; it has no beta
+    electrons.
+    """
+    assert logfile.data.charge == 0
+    assert logfile.data.natom == 1
+    assert logfile.data.nbasis == 5
+    assert logfile.data.nmo == 5
+    assert len(logfile.data.moenergies) == 1
+    assert logfile.data.moenergies[0].shape == (5,)
+    assert logfile.data.homos.shape == (2,)
+    assert logfile.data.homos[0] == 0
+    assert logfile.data.homos[1] == -1
+
 def testNWChem_NWChem6_0_hydrogen_atom_UHF_cc_pVDZ_out(logfile):
     """A lone hydrogen atom is a common edge case; it has no beta
     electrons.
@@ -552,7 +566,7 @@ def testNWChem_NWChem6_0_hydrogen_atom_UHF_cc_pVDZ_out(logfile):
     assert logfile.data.moenergies[1].shape == (5,)
     assert logfile.data.homos.shape == (2,)
     assert logfile.data.homos[0] == 0
-    assert logfile.data.homos[1] == 0
+    assert logfile.data.homos[1] == -1
 
 def testNWChem_NWChem6_5_stopiter_nwchem_dft_out(logfile):
     """Check to ensure that an incomplete SCF is handled correctly."""
