@@ -112,7 +112,7 @@ class ccData(object):
        "fonames":          Attribute(list,             'orbital names',               'fragments'),
        "fooverlaps":       Attribute(numpy.ndarray,    'orbital overlap',             'fragments'),
        "fragnames":        Attribute(list,             'fragment names',              'fragments'),
-       "frags":            Attribute(list,             'atom indices'                 'fragments'),
+       "frags":            Attribute(list,             'atom indices',                'fragments'),
        "gbasis":           Attribute(list,             'basis functions',             'atoms:orbitals'),
        "geotargets":       Attribute(numpy.ndarray,    'geometric targets',           'optimization'),
        "geovalues":        Attribute(numpy.ndarray,    'geometric values',            'optimization'),
@@ -290,9 +290,11 @@ class ccData(object):
     def writejson(self, filename=None):
         """Write parsed attributes to a JSON file."""
         return self.write(filename=filename, outputtype='cjson')
+
     def writecml(self, filename=None):
         """Write parsed attributes to a CML file."""
         return self.write(filename=filename, outputtype='cml')
+
     def writexyz(self, filename=None):
         """Write parsed attributes to an XML file."""
         return self.write(filename=filename, outputtype='xyz')
@@ -305,9 +307,7 @@ class ccData_optdone_bool(ccData):
 
         super(ccData_optdone_bool, self).__init__(*args, **kwargs)
 
-
     def setattributes(self, *args, **kwargs):
-
         invalid = super(ccData_optdone_bool, self).setattributes(*args, **kwargs)
 
         # Reduce optdone to a Boolean, because it will be parsed as a list. If this list has any element,
