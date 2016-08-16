@@ -19,9 +19,8 @@ class CJSON:
 
     def __init__(self, source, *args, **kwargs):
 
-        # Set the filename to source if it is a string or a list of strings, which are
-        # assumed to be filenames. Otherwise, assume the source is a file-like object
-        # if it has a read method, and we will try to use it like a stream.
+        # Set the filename to source if it is a string.
+        # To Do: Add functionality to accept multiple cjson files and streams
         if isinstance(source, str):
             self.filename = source
         else:
