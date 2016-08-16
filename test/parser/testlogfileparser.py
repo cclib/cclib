@@ -1,7 +1,7 @@
 # This file is part of cclib (http://cclib.github.io), a library for parsing
 # and interpreting the results of computational chemistry packages.
 #
-# Copyright (C) 2015, the cclib development team
+# Copyright (C) 2015-2016, the cclib development team
 #
 # The library is free software, distributed under the terms of
 # the GNU Lesser General Public version 2.1 or later. You should have
@@ -62,6 +62,27 @@ class FileWrapperTest(unittest.TestCase):
         else:
             self.assertRaises(io.UnsupportedOperation, wrapper.seek, 0, 0)
             self.assertRaises(io.UnsupportedOperation, wrapper.seek, 0, 1)
+
+    def test_stdin_seek(self):
+        """We shouldn't be able to seek anywhere in standard input."""
+        wrapper = cclib.parser.logfileparser.FileWrapper(sys.stdin)
+        self.assertRaises(IOError, wrapper.seek, 0, 0)
+        self.assertRaises(IOError, wrapper.seek, 0, 1)
+
+    def test_data_stdin(self):
+        """Check that the same attributes are parsed when a file is piped through standard input."""
+        logfiles = [
+            "data/ADF/basicADF2007.01/dvb_gopt.adfout",
+            "data/GAMESS/basicGAMESS-US2012/C_bigbasis.out",
+        ]
+        get_attributes = lambda data: [a for a in data._attrlist if hasattr(data, a)]
+        for lf in logfiles:
+            path = "%s/%s" % (__datadir__, lf)
+            expected_attributes = get_attributes(cclib.parser.ccopen(path).parse())
+            stdin = io.StringIO(unicode(open(path).read()))
+            stdin.seek = sys.stdin.seek
+            data = cclib.parser.ccopen(stdin).parse()
+            self.assertEqual(get_attributes(data), expected_attributes)
 
 
 class LogfileTest(unittest.TestCase):
