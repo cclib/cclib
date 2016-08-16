@@ -13,7 +13,6 @@ import json
 
 from ..parser.data import ccData
 
-
 class CJSON:
     """ CJSON log file"""
 
