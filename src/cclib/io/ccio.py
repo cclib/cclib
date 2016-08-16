@@ -117,7 +117,7 @@ def ccread(source, *args, **kargs):
         # If the input file is a CJSON file and not a standard compchemlog file
         cjson_as_input = kargs.get("cjson", False)
         if cjson_as_input:
-            return log.open_cjson()
+            return log.read_cjson()
         else:
             return log.parse()
     else:
