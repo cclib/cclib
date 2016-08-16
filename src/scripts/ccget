@@ -167,17 +167,27 @@ def ccget():
 
         if showattr:
             print("cclib can parse the following attributes from %s:" % name)
+            if cjsonfile:
+                for key in data:
+                    print(key)
+                break
             for attr in data._attrlist:
                 if hasattr(data, attr):
                     print("  %s" % attr)
         else:
             invalid = False
             for attr in attrnames:
-                if hasattr(data, attr):
-                    print("%s:\n%s" % (attr, getattr(data, attr)))
+                if cjsonfile:
+                    if attr in data:
+                        print("%s:\n%s" % (attr, data[attr]))
+                        continue
                 else:
-                    print("Could not parse %s from this file." % attr)
-                    invalid = True
+                    if hasattr(data, attr):
+                        print("%s:\n%s" % (attr, getattr(data, attr)))
+                        continue
+
+                print("Could not parse %s from this file." % attr)
+                invalid = True
             if invalid:
                 print(MSG_USAGE_LONG)
 
