@@ -113,7 +113,7 @@ class ccData(object):
        "fooverlaps":       Attribute( numpy.ndarray,    'orbital overlap'),
        "fragnames":        Attribute( list,             'names'),
        "frags":            Attribute( list,             'atom indices'),
-       "gbasis":           Attribute( list,             'TBD'),
+       "gbasis":           Attribute( list,             'basis functions'),
        "geotargets":       Attribute( numpy.ndarray,    'geometric targets'),
        "geovalues":        Attribute( numpy.ndarray,    'geometric values'),
        "grads":            Attribute( numpy.ndarray,    'TBD'),
