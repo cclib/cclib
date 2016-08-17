@@ -79,7 +79,12 @@ class FileWrapperTest(unittest.TestCase):
         for lf in logfiles:
             path = "%s/%s" % (__datadir__, lf)
             expected_attributes = get_attributes(cclib.parser.ccopen(path).parse())
-            stdin = io.StringIO(unicode(open(path).read()))
+            contents = open(path).read()
+            # This is fix strings not being unicode in Python2.
+            try:
+              stdin = io.StringIO(contents)
+            except TypeError:
+              stdin = io.StringIO(unicode(contents))
             stdin.seek = sys.stdin.seek
             data = cclib.parser.ccopen(stdin).parse()
             self.assertEqual(get_attributes(data), expected_attributes)
