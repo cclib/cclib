@@ -268,6 +268,64 @@ class Gaussian(logfileparser.Logfile):
                 else:
                     assert self.moments[2] == quadrupole
 
+        if line[1:41] == "Octapole moment (field-independent basis":
+        # e.g.
+        # Octapole moment (field-independent basis, Debye-Ang**2):
+        #  XXX=              0.0000  YYY=              0.0000  ZZZ=             -0.1457  XYY=              0.0000
+        #  XXY=              0.0000  XXZ=              0.0136  XZZ=              0.0000  YZZ=              0.0000
+        #  YYZ=             -0.5848  XYZ=              0.0000
+            octapole = {}
+            tokens = inputfile.next().split()
+            for i in (0, 2, 4, 6):
+                octapole[tokens[i]] = float(tokens[i+1])
+            tokens = inputfile.next().split()
+            for i in (0, 2, 4, 6):
+                octapole[tokens[i]] = float(tokens[i+1])
+            tokens = inputfile.next().split()
+            for i in (0, 2): # last line only 4 tokens
+                octapole[tokens[i]] = float(tokens[i+1])
+
+            lex = sorted(octapole.keys())
+            octapole = [octapole[key] for key in lex]
+
+            if not hasattr(self, 'moments') or len(self.moments) < 3:
+                self.logger.warning("Found octapole moments but no previous dipole or quadrupole")
+                self.moments = [self.reference, None, None, octapole]
+            else:
+                if len(self.moments) == 3:
+                    self.moments.append(octapole)
+                else:
+                    assert self.moments[3] == octapole
+
+        if line[1:20] == "Hexadecapole moment":
+        # e.g.
+        # Hexadecapole moment (field-independent basis, Debye-Ang**3):
+        # XXXX=             -3.2614 YYYY=             -6.8264 ZZZZ=             -4.9965 XXXY=              0.0000
+        # XXXZ=              0.0000 YYYX=              0.0000 YYYZ=              0.0000 ZZZX=              0.0000
+        # ZZZY=              0.0000 XXYY=             -1.8585 XXZZ=             -1.4123 YYZZ=             -1.7504
+        # XXYZ=              0.0000 YYXZ=              0.0000 ZZXY=              0.0000
+            hexadecapole = {}
+            # read three lines worth of 4 moments per line
+            for j in range(3):
+                tokens = inputfile.next().split()
+                for i in (0, 2, 4, 6):
+                    hexadecapole[tokens[i]] = float(tokens[i+1])
+            # last line only 6 tokens
+            tokens = inputfile.next().split()
+            for i in (0, 2, 4):
+                hexadecapole[tokens[i]] = float(tokens[i+1])
+
+            lex = sorted(hexadecapole.keys())
+            hexadecapole = [hexadecapole[key] for key in lex]
+
+            if not hasattr(self, 'moments') or len(self.moments) < 4:
+                self.moments = [self.reference, None, None, None, hexadecapole]
+            else:
+                if len(self.moments) == 4:
+                    self.moments.append(hexadecapole)
+                else:
+                    assert self.moments[4] == hexadecapole
+
         # Catch message about completed optimization.
         if line[1:23] == "Optimization completed":
 
