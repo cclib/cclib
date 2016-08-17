@@ -79,23 +79,22 @@ class FileWrapper(object):
         # by urllib.urlopen in Python2 do not, which will raise an AttributeError
         # in this code. On the other hand, in Python3 these methods do exist since
         # urllib uses the stream class in the io library, but they raise a different
-        # error, namely is.UnsupportedOperation. That is why it is hard to be more
+        # error, namely io.UnsupportedOperation. That is why it is hard to be more
         # specific with except block here.
         try:
-
             self.src.seek(0, 2)
             self.size = self.src.tell()
             self.src.seek(pos, 0)
-            self.pos = pos
 
-        except:
-
+        except (AttributeError, IOError, io.UnsupportedOperation):
             # Stream returned by urllib should have size information.
             if hasattr(self.src, 'headers') and 'content-length' in self.src.headers:
                 self.size = int(self.src.headers['content-length'])
+            else:
+                self.size = pos
 
-            # Assume the position is what was passed to the constructor.
-            self.pos = pos
+        # Assume the position is what was passed to the constructor.
+        self.pos = pos
 
     def next(self):
         line = next(self.src)
@@ -299,7 +298,6 @@ class Logfile(object):
         # Loop over lines in the file object and call extract().
         # This is where the actual parsing is done.
         for line in inputfile:
-
             self.updateprogress(inputfile, "Unsupported information", cupdate)
 
             # This call should check if the line begins a section of extracted data.

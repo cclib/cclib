@@ -3,7 +3,7 @@
 # This file is part of cclib (http://cclib.github.io), a library for parsing
 # and interpreting the results of computational chemistry packages.
 #
-# Copyright (C) 2009-2014, the cclib development team
+# Copyright (C) 2009-2016, the cclib development team
 #
 # The library is free software, distributed under the terms of
 # the GNU Lesser General Public version 2.1 or later. You should have
@@ -15,6 +15,7 @@
 
 from __future__ import print_function
 
+import io
 import os
 import sys
 
@@ -136,20 +137,36 @@ def ccopen(source, *args, **kargs):
         except IOError as error:
             if not kargs.get('quiet', False):
                 (errno, strerror) = error.args
-                print("I/O error %s (%s): %s" % (errno, source, strerror))
             return None
     elif hasattr(source, "read"):
         inputfile = source
         isstream = True
+
+    # Streams are tricky since they don't have seek methods or seek won't work
+    # by design even if it is present. We solve this now by reading in the
+    # entire stream and using a StringIO buffer for parsing. This might be
+    # problematic for very large streams. Slow streams might also be an issue if
+    # the parsing is not instantaneous, but we'll deal with such edge cases
+    # as they arise. Ideally, in the future we'll create a class dedicated to
+    # dealing with these issues, supporting both files and streams.
+    if isstream:
+        try:
+            inputfile.seek(0, 0)
+        except (AttributeError, IOError):
+            contents = inputfile.read()
+            inputfile = io.StringIO(contents)
+            inputfile.seek(0, 0)
 
     # Proceed to return an instance of the logfile parser only if the filetype
     # could be guessed. Need to make sure the input file is closed before creating
     # an instance, because parsers will handle opening/closing on their own.
     filetype = guess_filetype(inputfile)
     if filetype:
+        inputfile.seek(0, 0)
         if not isstream:
             inputfile.close()
-        return filetype(source, *args, **kargs)
+            return filetype(source, *args, **kargs)
+        return filetype(inputfile, *args, **kargs)
 
 
 def fallback(source):
