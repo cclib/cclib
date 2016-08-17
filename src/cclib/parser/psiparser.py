@@ -563,8 +563,6 @@ class Psi(logfileparser.Logfile):
                 assert 'doubly occupied' in occupied.lower()
             elif self.reference[0:1] == 'U':
                 assert 'alpha occupied' in occupied.lower()
-            else:
-                sys.exit(1)
 
             # Psi4 now has a blank line, Psi3 does not.
             if self.version == 4:
@@ -1094,7 +1092,8 @@ class Psi(logfileparser.Logfile):
         while line.strip():
             for i in range(len(line.split()) // 2):
                 self.mosyms[spinidx].append(line.split()[i*2][-2:])
-                self.moenergies[spinidx].append(line.split()[i*2+1])
+                moenergy = utils.convertor(float(line.split()[i*2+1]), "hartree", "eV")
+                self.moenergies[spinidx].append(moenergy)
             line = next(inputfile)
         return
 
