@@ -78,7 +78,7 @@ class Gaussian(logfileparser.Logfile):
 
         # Flag for identifying ONIOM calculations.
         self.oniom = False
-        
+
         # Flag for identifying BOMD calculations.
         # These calculations have a back-integration algorithm so that not all
         # geometries should be kept.
@@ -126,7 +126,7 @@ class Gaussian(logfileparser.Logfile):
         if hasattr(self, 'time'):
             self.time = [self.time[i] for i in sorted(self.time.keys())]
         if hasattr(self, 'energies_BOMD'):
-            self.set_attribute('scfenergies', 
+            self.set_attribute('scfenergies',
               [self.energies_BOMD[i] for i in sorted(self.energies_BOMD.keys())])
         if hasattr(self, 'atomcoords_BOMD'):
             self.atomcoords= \
@@ -223,6 +223,51 @@ class Gaussian(logfileparser.Logfile):
             natom = int(line.split()[1])
             self.set_attribute('natom', natom)
 
+        # Dipole moment
+        # e.g.
+        #  Dipole moment (field-independent basis, Debye):
+        #    X=              0.0000    Y=              0.0000    Z=              0.0930
+        if line[1:39] == "Dipole moment (field-independent basis":
+
+            self.updateprogress(inputfile, "Dipole and Higher Moments", self.fupdate)
+
+            self.reference = [0.0, 0.0, 0.0]
+            self.moments = [self.reference]
+
+            tokens = inputfile.next().split()
+            if len(tokens) >= 6:
+                dipole = (float(tokens[1]), float(tokens[3]), float(tokens[5]))
+
+                if not hasattr(self, 'moments'):
+                    self.moments = [self.reference, dipole]
+                else:
+                    self.moments.append(dipole)
+
+        if line[1:43] == "Quadrupole moment (field-independent basis":
+        # e.g.
+        # Quadrupole moment (field-independent basis, Debye-Ang):
+        #   XX=             -6.1213   YY=             -4.2950   ZZ=             -5.4175
+        #   XY=              0.0000   XZ=              0.0000   YZ=              0.0000
+            quadrupole = {}
+            tokens = inputfile.next().split()
+            for i in (0, 2, 4):
+                quadrupole[tokens[i]] = float(tokens[i+1])
+            tokens = inputfile.next().split()
+            for i in (0, 2, 4):
+                quadrupole[tokens[i]] = float(tokens[i+1])
+
+            lex = sorted(quadrupole.keys())
+            quadrupole = [quadrupole[key] for key in lex]
+
+            if not hasattr(self, 'moments') or len(self.moments) < 2:
+                self.logger.warning("Found quadrupole moments but no previous dipole")
+                self.moments = [self.reference, None, quadrupole]
+            else:
+                if len(self.moments) == 2:
+                    self.moments.append(quadrupole)
+                else:
+                    assert self.moments[2] == quadrupole
+
         # Catch message about completed optimization.
         if line[1:23] == "Optimization completed":
 
@@ -274,9 +319,9 @@ class Gaussian(logfileparser.Logfile):
             self.set_attribute('natom', len(self.inputatoms))
 
         if self.BOMD and line.startswith(' Summary information for step'):
-            
-            # We keep time and energies_BOMD and coordinates in a dictionary 
-            #  because steps can be recalculated, and we need to overwite the 
+
+            # We keep time and energies_BOMD and coordinates in a dictionary
+            #  because steps can be recalculated, and we need to overwite the
             #  previous data
 
             broken = line.split()
@@ -287,15 +332,15 @@ class Gaussian(logfileparser.Logfile):
                 self.set_attribute('time', {step:float(broken[-1])})
             else:
                 self.time[step] = float(broken[-1])
-           
+
             line = next(inputfile)
             broken = line.split(';')[1].split()
             ene = utils.convertor(self.float(broken[-1]), "hartree", "eV")
             if not hasattr(self, "energies_BOMD"):
                 self.set_attribute('energies_BOMD', {step:ene})
             else:
-                self.energies_BOMD[step] = ene        
-                
+                self.energies_BOMD[step] = ene
+
             self.updateprogress(inputfile, "Attributes", self.cupdate)
 
             if not hasattr(self, "atomcoords_BOMD"):
@@ -724,7 +769,7 @@ class Gaussian(logfileparser.Logfile):
         #   hch        1.75406   0.09547   0.00000   0.24861   0.24861   2.00267
         #   hchh       2.09614   0.01261   0.00000   0.16875   0.16875   2.26489
         #         Item               Value     Threshold  Converged?
-        
+
         # We could get the gradients in BOMD, but it is more complex because
         #   they are not in the summary, and they are not as relevant as for
         #   an optimization
