@@ -154,7 +154,10 @@ def ccopen(source, *args, **kargs):
             inputfile.seek(0, 0)
         except (AttributeError, IOError):
             contents = inputfile.read()
-            inputfile = io.StringIO(contents)
+            try:
+              inputfile = io.StringIO(contents)
+            except:
+              inputfile = io.StringIO(unicode(contents))
             inputfile.seek(0, 0)
 
     # Proceed to return an instance of the logfile parser only if the filetype
