@@ -224,9 +224,12 @@ class Gaussian(logfileparser.Logfile):
             self.set_attribute('natom', natom)
 
         # Dipole moment
-        # e.g.
+        # e.g. from G09
         #  Dipole moment (field-independent basis, Debye):
         #    X=              0.0000    Y=              0.0000    Z=              0.0930
+        # e.g. from G03
+        #     X=     0.0000    Y=     0.0000    Z=    -1.6735  Tot=     1.6735
+        # need the "field independent" part - ONIOM and other calc use diff formats
         if line[1:39] == "Dipole moment (field-independent basis":
 
             self.updateprogress(inputfile, "Dipole and Higher Moments", self.fupdate)
@@ -235,32 +238,39 @@ class Gaussian(logfileparser.Logfile):
             self.moments = [self.reference]
 
             tokens = inputfile.next().split()
+            # split - dipole would need to be *huge* to fail a split
+            # and G03 and G09 use different spacing
             if len(tokens) >= 6:
                 dipole = (float(tokens[1]), float(tokens[3]), float(tokens[5]))
 
-                if not hasattr(self, 'moments'):
-                    self.moments = [self.reference, dipole]
-                else:
-                    self.moments.append(dipole)
+            if not hasattr(self, 'moments'):
+                self.moments = [self.reference, dipole]
+            else:
+                self.moments.append(dipole)
 
         if line[1:43] == "Quadrupole moment (field-independent basis":
-        # e.g.
+        # e.g. (g09)
         # Quadrupole moment (field-independent basis, Debye-Ang):
         #   XX=             -6.1213   YY=             -4.2950   ZZ=             -5.4175
         #   XY=              0.0000   XZ=              0.0000   YZ=              0.0000
+        # or from g03
+        #   XX=    -6.1213   YY=    -4.2950   ZZ=    -5.4175
             quadrupole = {}
-            tokens = inputfile.next().split()
-            for i in (0, 2, 4):
-                quadrupole[tokens[i]] = float(tokens[i+1])
-            tokens = inputfile.next().split()
-            for i in (0, 2, 4):
-                quadrupole[tokens[i]] = float(tokens[i+1])
+            for j in range(2): # two rows
+                line = inputfile.next()
+                if line[22] == '=': # g03 file
+                    for i in (1, 18, 35):
+                        quadrupole[line[i:i+4]] = float(line[i+5:i+16])
+                else:
+                    for i in (1, 27, 53):
+                        quadrupole[line[i:i+4]] = float(line[i+5:i+25])
 
             lex = sorted(quadrupole.keys())
             quadrupole = [quadrupole[key] for key in lex]
 
             if not hasattr(self, 'moments') or len(self.moments) < 2:
                 self.logger.warning("Found quadrupole moments but no previous dipole")
+                self.reference = [0.0, 0.0, 0.0]
                 self.moments = [self.reference, None, quadrupole]
             else:
                 if len(self.moments) == 2:
@@ -275,21 +285,30 @@ class Gaussian(logfileparser.Logfile):
         #  XXY=              0.0000  XXZ=              0.0136  XZZ=              0.0000  YZZ=              0.0000
         #  YYZ=             -0.5848  XYZ=              0.0000
             octapole = {}
-            tokens = inputfile.next().split()
-            for i in (0, 2, 4, 6):
-                octapole[tokens[i]] = float(tokens[i+1])
-            tokens = inputfile.next().split()
-            for i in (0, 2, 4, 6):
-                octapole[tokens[i]] = float(tokens[i+1])
-            tokens = inputfile.next().split()
-            for i in (0, 2): # last line only 4 tokens
-                octapole[tokens[i]] = float(tokens[i+1])
+            for j in range(2): # two rows
+                line = inputfile.next()
+                if line[22] == '=': # g03 file
+                    for i in (1, 18, 35, 52):
+                        octapole[line[i:i+4]] = float(line[i+5:i+16])
+                else:
+                    for i in (1, 27, 53, 79):
+                        octapole[line[i:i+4]] = float(line[i+5:i+25])
+
+            # last line only 2 moments
+            line = inputfile.next()
+            if line[22] == '=': # g03 file
+                for i in (1, 18):
+                    octapole[line[i:i+4]] = float(line[i+5:i+16])
+            else:
+                for i in (1, 27):
+                    octapole[line[i:i+4]] = float(line[i+5:i+25])
 
             lex = sorted(octapole.keys())
             octapole = [octapole[key] for key in lex]
 
             if not hasattr(self, 'moments') or len(self.moments) < 3:
                 self.logger.warning("Found octapole moments but no previous dipole or quadrupole")
+                self.reference = [0.0, 0.0, 0.0]
                 self.moments = [self.reference, None, None, octapole]
             else:
                 if len(self.moments) == 3:
@@ -307,18 +326,28 @@ class Gaussian(logfileparser.Logfile):
             hexadecapole = {}
             # read three lines worth of 4 moments per line
             for j in range(3):
-                tokens = inputfile.next().split()
-                for i in (0, 2, 4, 6):
-                    hexadecapole[tokens[i]] = float(tokens[i+1])
-            # last line only 6 tokens
-            tokens = inputfile.next().split()
-            for i in (0, 2, 4):
-                hexadecapole[tokens[i]] = float(tokens[i+1])
+                line = inputfile.next()
+                if line[22] == '=': # g03 file
+                    for i in (1, 18, 35, 52):
+                        hexadecapole[line[i:i+4]] = float(line[i+5:i+16])
+                else:
+                    for i in (1, 27, 53, 79):
+                        hexadecapole[line[i:i+4]] = float(line[i+5:i+25])
+
+            # last line only 3 moments
+            line = inputfile.next()
+            if line[22] == '=': # g03 file
+                for i in (1, 18, 35):
+                    hexadecapole[line[i:i+4]] = float(line[i+5:i+16])
+            else:
+                for i in (1, 27, 53):
+                    hexadecapole[line[i:i+4]] = float(line[i+5:i+25])
 
             lex = sorted(hexadecapole.keys())
             hexadecapole = [hexadecapole[key] for key in lex]
 
             if not hasattr(self, 'moments') or len(self.moments) < 4:
+                self.reference = [0.0, 0.0, 0.0]
                 self.moments = [self.reference, None, None, None, hexadecapole]
             else:
                 if len(self.moments) == 4:
