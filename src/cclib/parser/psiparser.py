@@ -53,7 +53,8 @@ class Psi(logfileparser.Logfile):
         self.section = None
 
         # Keep track of whether or not we're performing an
-        # (un)restricted calculation.
+        # (un)restricted calculation. Can be ('RHF', 'UHF', 'ROHF',
+        # 'CUHF').
         self.reference = 'RHF'
 
     def after_parsing(self):
@@ -64,18 +65,8 @@ class Psi(logfileparser.Logfile):
                 self.set_attribute('natom', len(self.atomnos))
 
     def normalisesym(self, label):
-        """Use standard symmetry labels instead of Psi labels.
-
-        To normalise:
-        (1) If label is one of [SG, PI, PHI, DLTA], replace by [sigma, pi, phi, delta]
-        (2) replace any G or U by their lowercase equivalent
-
-        >>> sym = NWChem("dummyfile").normalisesym
-        >>> labels = ['A1', 'AG', 'A1G', "SG", "PI", "PHI", "DLTA", 'DLTU', 'SGG']
-        >>> map(sym, labels)
-        ['A1', 'Ag', 'A1g', 'sigma', 'pi', 'phi', 'delta', 'delta.u', 'sigma.g']
-        """
-        # FIXME if necessary
+        """Use standard symmetry labels instead of Psi labels."""
+        # Psi uses the correct labels.
         return label
 
     def extract(self, inputfile, line):
@@ -89,6 +80,7 @@ class Psi(logfileparser.Logfile):
             # A more detailed version (minor and patch level) appears
             # on the next line.
             line = next(inputfile)
+            # Keep track of early versions of Psi4.
             if "beta" in line:
                 self.version_4_beta = True
 
@@ -103,6 +95,9 @@ class Psi(logfileparser.Logfile):
             self.skip_line(inputfile, 'author list')
             line = next(inputfile)
             self.reference = line.split()[0]
+            # Work with a complex reference as if it's real.
+            if self.reference[0] == 'C':
+                self.reference = self.reference[1:]
 
         # Psi3 prints the coordinates in several configurations, and we will parse the
         # the canonical coordinates system in Angstroms as the first coordinate set,
@@ -117,12 +112,14 @@ class Psi(logfileparser.Logfile):
             line = next(inputfile)
             while line.strip():
 
-                element = line.split()[0]
+                tokens = line.split()
+
+                element = tokens[0]
                 numbers.append(self.table.number[element])
 
-                x = float(line.split()[1])
-                y = float(line.split()[2])
-                z = float(line.split()[3])
+                x = float(tokens[1])
+                y = float(tokens[2])
+                z = float(tokens[3])
                 coords.append([x, y, z])
 
                 line = next(inputfile)
@@ -176,11 +173,13 @@ class Psi(logfileparser.Logfile):
                     el = el[0] + el[1:].lower()
                 elements.append(el)
                 coords.append([float(x), float(y), float(z)])
+                # Newer versions of Psi4 print atomic masses.
                 if len(chomp) == 5:
                     atommasses.append(float(chomp[4]))
                 line = next(inputfile)
 
-            self.set_attribute('atomnos', [self.table.number[el] for el in elements])
+            # The 0 is to handle the presence of ghost atoms.
+            self.set_attribute('atomnos', [self.table.number.get(el, 0) for el in elements])
 
             if not hasattr(self, 'atomcoords'):
                 self.atomcoords = []
@@ -496,14 +495,11 @@ class Psi(logfileparser.Logfile):
 
             if not hasattr(self, 'scfvalues'):
                 self.scfvalues = []
-
-            self.skip_line(inputfile, 'blank')
-            header = next(inputfile)
-            assert header.strip() == "Total Energy        Delta E     RMS |[F,P]|"
-
             scfvals = []
-            self.skip_line(inputfile, 'blank')
+
+            self.skip_lines(inputfile, ['b', 'header', 'b'])
             line = next(inputfile)
+            # Read each SCF iteration.
             while line.strip() != "==> Post-Iterations <==":
                 if line.strip() and line.split()[0][0] == '@':
                     denergy = float(line.split()[4])
@@ -634,7 +630,7 @@ class Psi(logfileparser.Logfile):
                 line = next(inputfile)
                 if line.strip():
                     tokens = line.split()
-                    assert tokens[0] == 'SOCC'
+                    assert tokens[0] in ('SOCC', 'NA')
                     socc = sum([int(x.replace(',', '')) for x in tokens[2:-1]])
                     # Fix up the restricted open-shell alpha HOMO.
                     if self.reference[0:2] == 'RO':
@@ -644,7 +640,10 @@ class Psi(logfileparser.Logfile):
         # but the label is different. Psi4 also does DFT, and the label is also different in that case.
         if (self.version == 3 and "* SCF total energy" in line) or \
            (self.section == "Post-Iterations" and "Final Energy:" in line):
-            e = float(line.split()[-1])
+            if self.version == 3:
+                e = float(line.split()[-1])
+            else:
+                e = float(line.split()[3])
             if not hasattr(self, 'scfenergies'):
                 self.scfenergies = []
             self.scfenergies.append(utils.convertor(e, 'hartree', 'eV'))
@@ -822,12 +821,17 @@ class Psi(logfileparser.Logfile):
         # to the number of geovalues gathered so far.
         if "Optimization is complete!" in line:
 
-            if not hasattr(self, 'optdone'):
-                self.optdone = []
-            self.optdone.append(len(self.geovalues))
+            # This is a workaround for Psi4.0/sample_opt-irc-2.out;
+            # IRC calculations currently aren't parsed properly for
+            # optimization parameters.
+            if hasattr(self, 'geovalues'):
 
-            assert hasattr(self, "optstatus") and len(self.optstatus) > 0
-            self.optstatus[-1] = data.ccData.OPT_DONE
+                if not hasattr(self, 'optdone'):
+                    self.optdone = []
+                self.optdone.append(len(self.geovalues))
+
+                assert hasattr(self, "optstatus") and len(self.optstatus) > 0
+                self.optstatus[-1] = data.ccData.OPT_DONE
 
         # This message means that optimization has stopped for some reason, but we
         # still want optdone to exist in this case, although it will be an empty list.
@@ -872,6 +876,10 @@ class Psi(logfileparser.Logfile):
             dipole = utils.convertor(dipole, "ebohr", "Debye")
 
             if not hasattr(self, 'moments'):
+                # Old versions of Psi4 don't print the origin; assume
+                # it's at zero.
+                if not hasattr(self, 'origin'):
+                    self.origin = numpy.array([0.0, 0.0, 0.0])
                 self.moments = [self.origin, dipole]
             else:
                 try:
@@ -1014,10 +1022,8 @@ class Psi(logfileparser.Logfile):
         #            Au          137.2883
         if line.strip() == 'Irrep      Harmonic Frequency':
 
-            if not hasattr(self, 'vibfreqs'):
-                self.vibfreqs = []
-            if not hasattr(self, 'vibsyms'):
-                self.vibsyms = []
+            vibsyms = []
+            vibfreqs = []
 
             self.skip_lines(inputfile, ['(cm-1)', 'dashes'])
 
@@ -1027,15 +1033,18 @@ class Psi(logfileparser.Logfile):
             while '---' not in line:
                 chomp = line.split()
                 vibsym = chomp[0]
-                vibfreq = float(chomp[1])
-                self.vibsyms.append(vibsym)
-                self.vibfreqs.append(vibfreq)
+                vibfreq = Psi.parse_vibfreq(chomp[1])
+                vibsyms.append(vibsym)
+                vibfreqs.append(vibfreq)
                 line = next(inputfile)
+
+            self.set_attribute('vibsyms', vibsyms)
+            self.set_attribute('vibfreqs', vibfreqs)
 
             line = next(inputfile)
             assert line.strip() == ''
             line = next(inputfile)
-            assert line.strip() == 'Normal Modes (non-mass-weighted).'
+            assert 'Normal Modes' in line
             line = next(inputfile)
             assert 'Molecular mass is' in line
             if hasattr(self, 'atommasses'):
@@ -1060,7 +1069,7 @@ class Psi(logfileparser.Logfile):
             # C      0.000   0.000   0.050      12.000000
             # C      0.000   0.000   0.050      12.000000
             for vibfreq in self.vibfreqs:
-                _vibfreq = float(line[13:].strip())
+                _vibfreq = Psi.parse_vibfreq(line[13:].strip())
                 assert abs(vibfreq - _vibfreq) < 1.0e-2
                 line = next(inputfile)
                 # Can't do anything with this for now.
@@ -1096,6 +1105,18 @@ class Psi(logfileparser.Logfile):
                 self.moenergies[spinidx].append(moenergy)
             line = next(inputfile)
         return
+
+    @staticmethod
+    def parse_vibfreq(vibfreq):
+        """Imaginary frequencies are printed as '12.34i', rather than
+        '-12.34'.
+        """
+        is_imag = vibfreq[-1] == 'i'
+        if is_imag:
+            return -float(vibfreq[:-1])
+        else:
+            return float(vibfreq)
+
 
 if __name__ == "__main__":
     import doctest, psiparser
