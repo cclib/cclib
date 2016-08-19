@@ -14,8 +14,6 @@ import os
 import tempfile
 import unittest
 
-import StringIO
-
 import cclib
 
 
