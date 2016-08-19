@@ -28,6 +28,9 @@ class Jaguar(logfileparser.Logfile):
 
         # Call the __init__ method of the superclass
         super(Jaguar, self).__init__(logname="Jaguar", *args, **kwargs)
+        if not hasattr(self, "metadata"):
+            self.metadata = {}
+            self.metadata["package"] = self.logname
 
     def __str__(self):
         """Return a string representation of the object."""
@@ -60,6 +63,8 @@ class Jaguar(logfileparser.Logfile):
         # to parse SCF targets/values correctly.
         self.geoopt = False
 
+        self.metadata['methods'] = []
+
     def after_parsing(self):
 
         # This is to make sure we always have optdone after geometry optimizations,
@@ -70,6 +75,14 @@ class Jaguar(logfileparser.Logfile):
 
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
+
+        # Extract the version number first
+        if "Jaguar version" in line:
+            self.metadata["package_version"] = line.split()[3][:-1]
+
+        # Extract the basis set name
+        if line[2:12] == "basis set:":
+            self.metadata["basis_set"] = line.split()[2]
 
         # Extract charge and multiplicity
         if line[2:22] == "net molecular charge":
@@ -220,6 +233,7 @@ class Jaguar(logfileparser.Logfile):
 
         # Hartree-Fock energy after SCF
         if line[1:18] == "SCFE: SCF energy:":
+            self.metadata["methods"].append("HF")
             if not hasattr(self, "scfenergies"):
                 self.scfenergies = []
             temp = line.strip().split()
@@ -229,6 +243,7 @@ class Jaguar(logfileparser.Logfile):
 
         # Energy after LMP2 correction
         if line[1:18] == "Total LMP2 Energy":
+            self.metadata["methods"].append("LMP2")
             if not hasattr(self, "mpenergies"):
                 self.mpenergies = [[]]
             lmp2energy = float(line.split()[-1])

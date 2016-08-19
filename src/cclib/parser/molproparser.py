@@ -60,6 +60,9 @@ class Molpro(logfileparser.Logfile):
     def __init__(self, *args, **kwargs):
         # Call the __init__ method of the superclass
         super(Molpro, self).__init__(logname="Molpro", *args, **kwargs)
+        if not hasattr(self, "metadata"):
+            self.metadata = {}
+            self.metadata["package"] = self.logname
 
     def __str__(self):
         """Return a string representation of the object."""
@@ -78,6 +81,7 @@ class Molpro(logfileparser.Logfile):
 
         self.electronorbitals = ""
         self.insidescf = False
+        self.metadata['methods'] = []
 
     def after_parsing(self):
 
@@ -270,6 +274,10 @@ class Molpro(logfileparser.Logfile):
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
 
+        # extract the version number first
+        if "Version" in line:
+            self.metadata["package_version"] = line.split()[1]
+
         if line[1:19] == "ATOMIC COORDINATES":
 
             if not hasattr(self, "atomcoords"):
@@ -397,10 +405,15 @@ class Molpro(logfileparser.Logfile):
             nbasis = int(line.split()[3])
             self.set_attribute('nbasis', nbasis)
 
+        # Basis set name
+        if line[1:8] == "Library":
+            self.metadata["basis_set"] = line.split()[4]
+
         # This is used to signalize whether we are inside an SCF calculation.
         if line[1:8] == "PROGRAM" and line[14:18] == "-SCF":
 
             self.insidescf = True
+            self.metadata["methods"].append("HF")
 
         # Use this information instead of 'SETTING ...', in case the defaults are standard.
         # Note that this is sometimes printed in each geometry optimization step.
@@ -486,6 +499,8 @@ class Molpro(logfileparser.Logfile):
         # MP2 energies.
         if line[1:5] == "!MP2":
 
+            self.metadata["methods"].append("MP2")
+
             if not hasattr(self, 'mpenergies'):
                 self.mpenergies = []
             mp2energy = float(line.split()[-1])
@@ -495,6 +510,7 @@ class Molpro(logfileparser.Logfile):
         # MP2 energies if MP3 or MP4 is also calculated.
         if line[1:5] == "MP2:":
 
+            self.metadata["methods"].append("MP2")
             if not hasattr(self, 'mpenergies'):
                 self.mpenergies = []
             mp2energy = float(line.split()[2])
@@ -504,14 +520,17 @@ class Molpro(logfileparser.Logfile):
         # MP3 (D) and MP4 (DQ or SDQ) energies.
         if line[1:8] == "MP3(D):":
 
+            self.metadata["methods"].append("MP3")
             mp3energy = float(line.split()[2])
             mp2energy = utils.convertor(mp3energy, "hartree", "eV")
             line = next(inputfile)
             self.mpenergies[-1].append(mp2energy)
             if line[1:9] == "MP4(DQ):":
+                self.metadata["methods"].append("MP4")
                 mp4energy = float(line.split()[2])
                 line = next(inputfile)
                 if line[1:10] == "MP4(SDQ):":
+                    self.metadata["methods"].append("MP4")
                     mp4energy = float(line.split()[2])
                 mp4energy = utils.convertor(mp4energy, "hartree", "eV")
                 self.mpenergies[-1].append(mp4energy)
@@ -519,6 +538,7 @@ class Molpro(logfileparser.Logfile):
         # The CCSD program operates all closed-shel coupled cluster runs.
         if line[1:15] == "PROGRAM * CCSD":
 
+            self.metadata["methods"].append("CCSD")
             if not hasattr(self, "ccenergies"):
                 self.ccenergies = []
             while line[1:20] != "Program statistics:":

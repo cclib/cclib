@@ -30,6 +30,9 @@ class Gaussian(logfileparser.Logfile):
 
         # Call the __init__ method of the superclass
         super(Gaussian, self).__init__(logname="Gaussian", *args, **kwargs)
+        if not hasattr(self, "metadata"):
+            self.metadata = {}
+            self.metadata["package"] = self.logname
 
     def __str__(self):
         """Return a string representation of the object."""
@@ -85,6 +88,9 @@ class Gaussian(logfileparser.Logfile):
         # We also add a "time" attribute to the parser.
         self.BOMD = False
 
+        # Methods could have multiple values
+        self.metadata['methods'] = []
+
     def after_parsing(self):
 
         # Correct the percent values in the etsecs in the case of
@@ -134,6 +140,12 @@ class Gaussian(logfileparser.Logfile):
 
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
+
+        # Extract the version number first
+        if line.strip() == "Cite this work as:":
+            line = inputfile.next()
+            self.metadata["package_version"] = line.split()[1][:-1]+ \
+                    'revision'+line.split()[-1][:-1]
 
         # This block contains some general information as well as coordinates,
         # which could be parsed in the future:
@@ -222,6 +234,10 @@ class Gaussian(logfileparser.Logfile):
 
             natom = int(line.split()[1])
             self.set_attribute('natom', natom)
+
+        # Basis set name
+        if line[1:15] == "Standard basis":
+            self.metadata["basis_set"] = line.split()[2]
 
         # Catch message about completed optimization.
         if line[1:23] == "Optimization completed":
@@ -588,6 +604,13 @@ class Gaussian(logfileparser.Logfile):
         #   to terminate a loop when extracting SCF convergence information.
         if not self.BOMD and line[1:9] == 'SCF Done':
 
+            t1 = line.split()[2]
+            if t1 == 'E(RHF)':
+                self.metadata["methods"].append("HF")
+            else:
+                self.metadata["methods"].append("DFT")
+                self.metadata["functional"] = t1[t1.index("(") + 2:t1.rindex(")")]
+
             if not hasattr(self, "scfenergies"):
                 self.scfenergies = []
 
@@ -609,6 +632,7 @@ class Gaussian(logfileparser.Logfile):
         #  E2 =    -0.9505918144D+00 EUMP2 =    -0.28670924198852D+03
         # Warning! this output line is subtly different for MP3/4/5 runs
         if "EUMP2" in line[27:34]:
+            self.metadata["methods"].append("MP2")
 
             if not hasattr(self, "mpenergies"):
                 self.mpenergies = []
@@ -619,6 +643,7 @@ class Gaussian(logfileparser.Logfile):
         # Example MP3 output line:
         #  E3=       -0.10518801D-01     EUMP3=      -0.75012800924D+02
         if line[34:39] == "EUMP3":
+            self.metadata["methods"].append("MP3")
 
             mp3energy = self.float(line.split("=")[2])
             self.mpenergies[-1].append(utils.convertor(mp3energy, "hartree", "eV"))
@@ -629,6 +654,7 @@ class Gaussian(logfileparser.Logfile):
         #  E4(SDTQ)= -0.32671209D-02        UMP4(SDTQ)= -0.75016068045D+02
         # Energy for most substitutions is used only (SDTQ by default)
         if line[34:42] == "UMP4(DQ)":
+            self.metadata["methods"].append("MP4")
 
             mp4energy = self.float(line.split("=")[2])
             line = next(inputfile)
@@ -642,6 +668,7 @@ class Gaussian(logfileparser.Logfile):
         # Example MP5 output line:
         #  DEMP5 =  -0.11048812312D-02 MP5 =  -0.75017172926D+02
         if line[29:32] == "MP5":
+            self.metadata["methods"].append("MP5")
             mp5energy = self.float(line.split("=")[2])
             self.mpenergies[-1].append(utils.convertor(mp5energy, "hartree", "eV"))
 
@@ -652,10 +679,12 @@ class Gaussian(logfileparser.Logfile):
         # but append only the last one to ccenergies.
         # Only the highest level energy is appended - ex. CCSD(T), not CCSD.
         if line[1:10] == "DE(Corr)=" and line[27:35] == "E(CORR)=":
+            self.metadata["methods"].append("CCSD")
             self.ccenergy = self.float(line.split()[3])
         if line[1:10] == "T5(CCSD)=":
             line = next(inputfile)
             if line[1:9] == "CCSD(T)=":
+                self.metadata["methods"].append("CCSD-T")
                 self.ccenergy = self.float(line.split()[1])
         if line[12:53] == "Population analysis using the SCF density":
             if hasattr(self, "ccenergy"):

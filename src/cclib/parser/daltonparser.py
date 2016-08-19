@@ -186,7 +186,8 @@ class DALTON(logfileparser.Logfile):
             symmetry_atoms = []
             atommasses = []
             for cols in lines:
-                atomnos.append(self.table.number[cols[0]])
+                cols0 = ''.join([i for i in cols[0] if not i.isdigit()]) #remove numbers
+                atomnos.append(self.table.number[cols0])
                 if len(cols) == 3:
                     symmetry_atoms.append(int(cols[1][1]))
                     atommasses.append(float(cols[2]))

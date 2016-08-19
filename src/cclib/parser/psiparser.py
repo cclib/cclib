@@ -28,6 +28,9 @@ class Psi(logfileparser.Logfile):
 
         # Call the __init__ method of the superclass
         super(Psi, self).__init__(logname="Psi", *args, **kwargs)
+        if not hasattr(self, "metadata"):
+            self.metadata = {}
+            self.metadata["package"] = self.logname
 
     def __str__(self):
         """Return a string representation of the object."""
@@ -46,6 +49,8 @@ class Psi(logfileparser.Logfile):
         # This is just used to track which part of the output we are in for Psi4,
         # with changes triggered by ==> things like this <== (Psi3 does not have this)
         self.section = None
+
+        self.metadata['methods'] = []
 
     def normalisesym(self, label):
         """Use standard symmetry labels instead of NWChem labels.
@@ -70,11 +75,14 @@ class Psi(logfileparser.Logfile):
             self.version = 3
         if "PSI4: An Open-Source Ab Initio".lower() in line.lower():
             self.version = 4
+        self.metadata["package_version"] = self.version
 
         # This will automatically change the section attribute for Psi4, when encountering
         # a line that <== looks like this ==>, to whatever is in between.
         if (line.strip()[:3] == "==>") and (line.strip()[-3:] == "<=="):
             self.section = line.strip()[4:-4]
+            if self.section == "DFT Potential":
+                self.metadata["methods"].append("DFT")
 
         # Psi3 print the coordinates in several configurations, and we will parse the
         # the canonical coordinates system in Angstroms as the first coordinate set,
@@ -272,6 +280,10 @@ class Psi(logfileparser.Logfile):
         #       2     C     6s 3p // 2s 1p
         #       3     C     6s 3p // 2s 1p
         # ...
+        if self.section == "Primary Basis" :
+            if line[2:12] == "Basis Set:" :
+                self.metadata["basis_set"] = line.split()[2]
+
         if (self.section == "Primary Basis" or self.section == "DFT Potential") and line.strip() == "-Contraction Scheme:":
 
             self.skip_lines(inputfile, ['headers', 'd'])
@@ -641,6 +653,7 @@ class Psi(logfileparser.Logfile):
 
         mp_trigger = "MP2 Total Energy (a.u.)"
         if line.strip()[:len(mp_trigger)] == mp_trigger:
+            self.metadata["methods"].append("MP2")
             mpenergy = utils.convertor(float(line.split()[-1]), 'hartree', 'eV')
             if not hasattr(self, 'mpenergies'):
                 self.mpenergies = []
@@ -649,6 +662,7 @@ class Psi(logfileparser.Logfile):
         # Note this is just a start and needs to be modified for CCSD(T), etc.
         ccsd_trigger = "* CCSD total energy"
         if line.strip()[:len(ccsd_trigger)] == ccsd_trigger:
+            self.metadata["methods"].append("CCSD")
             ccsd_energy = utils.convertor(float(line.split()[-1]), 'hartree', 'eV')
             if not hasattr(self, "ccenergis"):
                 self.ccenergies = []

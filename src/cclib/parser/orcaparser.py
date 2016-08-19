@@ -28,6 +28,10 @@ class ORCA(logfileparser.Logfile):
 
         # Call the __init__ method of the superclass
         super(ORCA, self).__init__(logname="ORCA", *args, **kwargs)
+        if not hasattr(self, "metadata"):
+            self.metadata = {}
+            self.metadata["package"] = self.logname
+
 
     def __str__(self):
         """Return a string representation of the object."""
@@ -59,8 +63,14 @@ class ORCA(logfileparser.Logfile):
         # Keep track of whether this is a relaxed scan calculation
         self.is_relaxed_scan = False
 
+        self.metadata['methods'] = []
+
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
+
+        #  extract the version number first
+        if "Program Version" in line:
+            self.metadata["package_version"] = line.split()[2]
 
         if line[0:15] == "Number of atoms":
 
