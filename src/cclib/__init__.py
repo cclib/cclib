@@ -32,7 +32,7 @@ from . import parser
 from . import progress
 from . import method
 from . import bridge
-from . import writer
+from . import io
 
 # The test module can be imported if it was installed with cclib.
 try:

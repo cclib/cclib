@@ -3,7 +3,7 @@
 # This file is part of cclib (http://cclib.github.io), a library for parsing
 # and interpreting the results of computational chemistry packages.
 #
-# Copyright (C) 2006-2015, the cclib development team
+# Copyright (C) 2006-2016, the cclib development team
 #
 # The library is free software, distributed under the terms of
 # the GNU Lesser General Public version 2.1 or later. You should have
@@ -22,7 +22,7 @@ import os.path
 import sys
 
 from cclib.parser import ccData
-from cclib.parser import ccread
+from cclib.io import ccread
 
 
 MSG_USAGE = """\
@@ -36,6 +36,8 @@ Usage:  ccget <attribute> [<attribute>] <compchemlogfile> [<compchemlogfile>]
     from each of the compchemlogfiles.
 For a list of attributes available in a file, use --list (or -l):
     ccget --list <compchemlogfile>
+To extract attributes available in a CJSON file, use --json (or -j):
+    ccget --json  <attr> [<attr>]  <compchemlogfile>
 To parse multiple files as one input stream, use --multi (or -m):
     ccget --multi <attr> [<attr>]  <cclogfile> <cclogfile> [<cclogfile>]
 Additional options:
@@ -44,8 +46,8 @@ Additional options:
 """
 
 # These are the options ccget accepts and their one letter versions.
-OPTS_LONG = ["help", "list", "multi", "verbose", "future"]
-OPTS_SHORT = "hlmvu"
+OPTS_LONG = ["help", "list", "json", "multi", "verbose", "future"]
+OPTS_SHORT = "hljmvu"
 
 
 def ccget():
@@ -61,6 +63,7 @@ def ccget():
 
     future = False
     showattr = False
+    cjsonfile = False
     multifile = False
     verbose = False
     for opt, arg in optlist:
@@ -69,6 +72,8 @@ def ccget():
             sys.exit()
         if opt in ("-l", "--list"):
             showattr = True
+        if opt in ("-j", "--json"):
+            cjsonfile = True
         if opt in ("-m", "--multi"):
             multifile = True
         if opt in ("-v", "--verbose"):
@@ -148,6 +153,8 @@ def ccget():
             kwargs['loglevel'] = logging.ERROR
         if future:
             kwargs['future'] = True
+        if cjsonfile:
+            kwargs['cjson'] = True
 
         print("Attempting to read %s" % name)
         data = ccread(filename, **kwargs)
@@ -160,17 +167,27 @@ def ccget():
 
         if showattr:
             print("cclib can parse the following attributes from %s:" % name)
+            if cjsonfile:
+                for key in data:
+                    print(key)
+                break
             for attr in data._attrlist:
                 if hasattr(data, attr):
                     print("  %s" % attr)
         else:
             invalid = False
             for attr in attrnames:
-                if hasattr(data, attr):
-                    print("%s:\n%s" % (attr, getattr(data, attr)))
+                if cjsonfile:
+                    if attr in data:
+                        print("%s:\n%s" % (attr, data[attr]))
+                        continue
                 else:
-                    print("Could not parse %s from this file." % attr)
-                    invalid = True
+                    if hasattr(data, attr):
+                        print("%s:\n%s" % (attr, getattr(data, attr)))
+                        continue
+
+                print("Could not parse %s from this file." % attr)
+                invalid = True
             if invalid:
                 print(MSG_USAGE_LONG)
 
