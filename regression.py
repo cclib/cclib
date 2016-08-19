@@ -374,17 +374,27 @@ def testGaussian_Gaussian09_25DMF_HRANH_log(logfile):
     assert abs(anharms[N-1][N-1] + 36.481) < 0.01
 
 def testGaussian_Gaussian09_2D_PES_all_converged_log(logfile):
-	"""Check that optstatus has no UNCOVERGED values."""
-	assert ccData.OPT_UNCONVERGED not in logfile.data.optstatus
+    """Check that optstatus has no UNCOVERGED values."""
+    assert ccData.OPT_UNCONVERGED not in logfile.data.optstatus
 
 def testGaussian_Gaussian09_2D_PES_one_unconverged_log(logfile):
-	"""Check that optstatus contains UNCOVERGED values."""
-	assert ccData.OPT_UNCONVERGED in logfile.data.optstatus
+    """Check that optstatus contains UNCOVERGED values."""
+    assert ccData.OPT_UNCONVERGED in logfile.data.optstatus
 
 def testGaussian_Gaussian09_534_out(logfile):
     """Previously, caused etenergies parsing to fail."""
     assert logfile.data.etsyms[0] == "Singlet-?Sym"
     assert abs(logfile.data.etenergies[0] - 20920.55328) < 1.0
+
+def testGaussian_Gaussian09_BSL_opt_freq_DFT_out(logfile):
+    """Failed for converting to CJSON when moments weren't parsed for
+    Gaussian.
+    """
+    assert hasattr(logfile.data, 'moments')
+    # dipole Y
+    assert logfile.data.moments[1][1] == 0.5009
+    # hexadecapole ZZZZ
+    assert logfile.data.moments[4][-1] == -77.9600
 
 def testGaussian_Gaussian09_dvb_gopt_unconverged_log(logfile):
     """An unconverged geometry optimization to test for empty optdone (see #103 for details)."""
