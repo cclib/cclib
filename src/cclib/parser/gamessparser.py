@@ -86,13 +86,14 @@ class GAMESS(logfileparser.Logfile):
         # extract the methods 
         if line[1:7] == "SCFTYP":
             method = line.split()[0][7:]
-            self.metadata["methods"].append(method)
+            if len(self.metadata["methods"]) == 0:
+                self.metadata["methods"].append(method)
 
         # extract the basis set name
         if line[5:11] == "GBASIS":
             basnm1 = line.split()[0][7:]
             if basnm1 == "PM3" or basnm1 == "AM1":
-                self.metadata["methods"] = basnm1
+                self.metadata["methods"].append(basnm1)
             if basnm1 == "STO" :
                 if line.split()[2] == "2":
                     self.metadata["basis_set"] = "STO-2G"
