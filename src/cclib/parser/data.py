@@ -301,7 +301,7 @@ class ccData(object):
         return self.write(filename=filename, outputtype='xyz')
 
     @property
-    def electrons(self):
+    def nelectrons(self):
         return Electrons(self).count()
 
 
