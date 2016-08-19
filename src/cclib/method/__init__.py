@@ -15,6 +15,7 @@
 from .cda import CDA
 from .cspa import CSPA
 from .density import Density
+from .electrons import Electrons
 from .fragments import FragmentAnalysis
 from .lpa import LPA
 from .mbo import MBO
