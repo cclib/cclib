@@ -44,7 +44,6 @@ import numpy
 
 from cclib.parser.utils import convertor
 
-from cclib.parser import ccopen
 from cclib.parser import ccData
 
 from cclib.parser import ADF
@@ -58,6 +57,8 @@ from cclib.parser import NWChem
 from cclib.parser import ORCA
 from cclib.parser import Psi
 from cclib.parser import QChem
+
+from cclib.io import ccopen
 
 # This assume that the cclib-data repository is located at a specific location
 # within the cclib repository. It would be better to figure out a more natural
