@@ -300,11 +300,11 @@ class NWChem(logfileparser.Logfile):
 
                 # These will be present only in the DFT module.
                 if "Convergence on energy requested" in line:
-                    target_energy = float(line.split()[-1].replace('D', 'E'))
+                    target_energy = self.float(line.split()[-1])
                 if "Convergence on density requested" in line:
-                    target_density = float(line.split()[-1].replace('D', 'E'))
+                    target_density = self.float(line.split()[-1])
                 if "Convergence on gradient requested" in line:
-                    target_gradient = float(line.split()[-1].replace('D', 'E'))
+                    target_gradient = self.float(line.split()[-1])
 
                 line = next(inputfile)
 
@@ -389,7 +389,7 @@ class NWChem(logfileparser.Logfile):
                     line = next(inputfile)
                     while line.strip():
                         it, energy, gnorm, gmax, time = line.split()
-                        gnorm = float(gnorm.replace('D', 'E'))
+                        gnorm = self.float(gnorm)
                         values.append([gnorm])
                         try:
                             line = next(inputfile)
@@ -401,11 +401,10 @@ class NWChem(logfileparser.Logfile):
                         self.scfvalues = []
                     self.scfvalues.append(values)
 
-                # this is totally and utterly broken right now
                 try:
                     line = next(inputfile)
                 except StopIteration:
-                    self.logger.warning('blech')
+                    self.logger.warning('File terminated?')
                     break
 
         # The SCF for DFT does not use the same algorithm as Hartree-Fock, but always
@@ -440,9 +439,9 @@ class NWChem(logfileparser.Logfile):
                 # ...
                 if len(line[17:].split()) == 6:
                     iter, energy, deltaE, dens, diis, time = line[17:].split()
-                    val_energy = float(deltaE.replace('D', 'E'))
-                    val_density = float(dens.replace('D', 'E'))
-                    val_gradient = float(diis.replace('D', 'E'))
+                    val_energy = self.float(deltaE)
+                    val_density = self.float(dens)
+                    val_gradient = self.float(diis)
                     values.append([val_energy, val_density, val_gradient])
 
                 try:
@@ -628,25 +627,27 @@ class NWChem(logfileparser.Logfile):
 
             self.skip_lines(inputfile, ['dashes', 'blank'])
 
+            nvectors = []
+            mooccnos = []
             energies = []
             symmetries = [None]*self.nbasis
             line = next(inputfile)
-            homo = 0
             while line[:7] == " Vector":
 
                 # Note: the vector count starts from 1 in NWChem.
                 nvector = int(line[7:12])
+                nvectors.append(nvector)
 
                 # A nonzero occupancy for SCF jobs means the orbital is occupied.
-                if ("Occ=2.0" in line) or ("Occ=1.0" in line):
-                    homo = nvector-1
+                mooccno = int(self.float(line[18:30]))
+                mooccnos.append(mooccno)
 
                 # If the printout does not start from the first MO, assume None for all previous orbitals.
                 if len(energies) == 0 and nvector > 1:
                     for i in range(1, nvector):
                         energies.append(None)
 
-                energy = float(line[34:47].replace('D', 'E'))
+                energy = self.float(line[34:47])
                 energy = utils.convertor(energy, "hartree", "eV")
                 energies.append(energy)
 
@@ -679,7 +680,20 @@ class NWChem(logfileparser.Logfile):
 
             if not hasattr(self, 'homos') or (len(self.homos) > alphabeta):
                 self.homos = []
-            self.homos.append(homo)
+            nvector_index = mooccnos.index(0) - 1
+            if nvector_index > -1:
+                self.homos.append(nvectors[nvector_index] - 1)
+            else:
+                self.homos.append(-1)
+            # If this was a restricted open-shell calculation, append
+            # to HOMOs twice since only one Molecular Orbital Analysis
+            # section is in the output file.
+            if (not unrestricted) and (1 in mooccnos):
+                nvector_index = mooccnos.index(1) - 1
+                if nvector_index > -1:
+                    self.homos.append(nvectors[nvector_index] - 1)
+                else:
+                    self.homos.append(-1)
 
         # This is where the full MO vectors are printed, but a special directive is needed for it:
         #

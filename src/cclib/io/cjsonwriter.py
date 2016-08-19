@@ -22,11 +22,10 @@ import json
 import numpy as np
 
 from . import filewriter
-from cclib.parser import ccData
+from cclib.parser.data import ccData
 
 class CJSON(filewriter.Writer):
     """A writer for chemical JSON (CJSON) files."""
-    
     def __init__(self, ccdata, terse=False, *args, **kwargs):
         """Initialize the chemical JSON writer object.
 
@@ -50,7 +49,6 @@ class CJSON(filewriter.Writer):
         """Generate the CJSON representation of the logfile data"""
 
         cjson_dict = dict()
-        
         # Need to decide on a number format
         cjson_dict['chemical json'] = 0
         if self.jobfilename is not None:
@@ -62,7 +60,6 @@ class CJSON(filewriter.Writer):
             cjson_dict['inchi'] = self.pbmol.write('inchi')
             cjson_dict['inchikey'] = self.pbmol.write('inchikey')
             cjson_dict['formula'] = self.pbmol.formula
-            
         # Incorporate Unit Cell into the chemical JSON
 
         # Helpers functions which use properties provided by cclib
@@ -139,6 +136,8 @@ class CJSON(filewriter.Writer):
                iii) Overlaps 
                 iv) Symmetry 
                  v) Coeffs
+                 vi) Basis number
+                 vii) MO number
         """
         cjson_dict['properties'] = dict()
         
@@ -178,10 +177,9 @@ class CJSON(filewriter.Writer):
             cjson_dict['properties'][ccData._attributes['moments'].jsonKey] = self._calculate_total_dipole_moment()
 
         if hasattr(self.ccdata, 'atomcharges'):
-            cjson_dict['properties']['partial charges'] = dict()
             cjson_dict['properties']['partial charges'] = self.ccdata.atomcharges
-        
-        orbital_attr = ['homos', 'moenergies', 'aooverlaps', 'mosyms', 'mocoeffs']
+
+        orbital_attr = ['homos', 'moenergies', 'aooverlaps', 'mosyms', 'mocoeffs', 'nbasis', 'nmo']
         if self.has_data(orbital_attr):
             cjson_dict['properties']['orbitals'] = dict()
             self.set_JSON_attribute(cjson_dict['properties']['orbitals'], orbital_attr)
@@ -197,7 +195,8 @@ class CJSON(filewriter.Writer):
                 a) 3d                    
             3) Orbitals
                 a) Names
-                b) Indices
+                b) basis functions
+                c) Indices
             4) Coreelectrons
             5) Mass
             6) Spins
@@ -228,22 +227,20 @@ class CJSON(filewriter.Writer):
                 2) Status  
                 3) Geometric Targets 
                 4) Geometric Values 
-                5) Basis number 
-                6) MO number 
-                7) SCF 
+                5) SCF
                     a) Energies 
                     b) Targets 
                     c) Values 
-                8) Scan 
+                6) Scan
                     a) Step Geometry 
                     b) Potential Energy Surface - energies     
                     c) Variable names 
                     d) PES Parameter Values 
         """
-        opti_attr = ['optdone', 'geotargets', 'nbasis', 'nmo', 'scfenergies', 'scancoords', 'scannames']
+        opti_attr = ['optdone', 'geotargets', 'scfenergies', 'scancoords', 'scannames']
         if self.has_data(opti_attr):
             cjson_dict['optimization'] = dict()
-            attr_list = ['optdone', 'optstatus', 'geotargets', 'geovalues', 'nbasis', 'nmo']
+            attr_list = ['optdone', 'optstatus', 'geotargets', 'geovalues']
             self.set_JSON_attribute(cjson_dict['optimization'], attr_list)
 
             # assumption: If SCFenergies exist, then scftargets will also exist

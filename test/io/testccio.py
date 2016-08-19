@@ -1,7 +1,7 @@
 # This file is part of cclib (http://cclib.github.io), a library for parsing
 # and interpreting the results of computational chemistry packages.
 #
-# Copyright (C) 2015, the cclib development team
+# Copyright (C) 2015-2016, the cclib development team
 #
 # The library is free software, distributed under the terms of
 # the GNU Lesser General Public version 2.1 or later. You should have
@@ -11,6 +11,7 @@
 """Unit tests for parser ccio module."""
 
 import os
+import tempfile
 import unittest
 
 import cclib
@@ -19,7 +20,7 @@ import cclib
 class guess_fileypeTest(unittest.TestCase):
 
     def setUp(self):
-        self.guess = cclib.parser.ccio.guess_filetype
+        self.guess = cclib.io.ccio.guess_filetype
 
     def test_fail(self):
         """Does the function fail as expected?"""
@@ -46,7 +47,7 @@ class guess_fileypeTest(unittest.TestCase):
 class ccreadTest(unittest.TestCase):
 
     def setUp(self):
-        self.ccread = cclib.parser.ccio.ccread
+        self.ccread = cclib.io.ccio.ccread
 
     def test_fail(self):
         """Does the function fail as expected?"""
@@ -58,7 +59,7 @@ class ccreadTest(unittest.TestCase):
 class ccopenTest(unittest.TestCase):
 
     def setUp(self):
-        self.ccopen = cclib.parser.ccio.ccopen
+        self.ccopen = cclib.io.ccio.ccopen
 
     def test_ccopen_fail(self):
         """Does the function fail as expected?"""
@@ -66,11 +67,21 @@ class ccopenTest(unittest.TestCase):
         self.assertIsNone(self.ccopen([], quiet=True))
         self.assertIsNone(self.ccopen(None, quiet=True))
 
+    def test_cjson_empty_tempfile(self):
+        """Do we get a CJSON object when the keyword argument used?"""
+        with tempfile.NamedTemporaryFile() as tf:
+            self.assertIsInstance(self.ccopen(tf.name, cjson=True), cclib.io.cjsonreader.CJSON)
+
+    # This should also work if cjsonreader supported streams.
+    #def test_cjson(self):
+    #    """Do we get a CJSON object then keyword argument used?"""
+    #    self.assertIsInstance(self.ccopen(StringIO.StringIO(""), cjson=True), cclib.io.cjsonreader.CJSON)
+
 
 class fallbackTest(unittest.TestCase):
 
     def setUp(self):
-        self.fallback = cclib.parser.ccio.fallback
+        self.fallback = cclib.io.ccio.fallback
 
     def test_fallback_fail(self):
         """Does the functin fail as expected?"""
