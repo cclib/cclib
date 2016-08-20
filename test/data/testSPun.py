@@ -91,6 +91,7 @@ class GenericROSPTest(GenericSPunTest):
         msg = "%s != array([34, 33], 'i')" % numpy.array_repr(self.data.homos)
         numpy.testing.assert_array_equal(self.data.homos, numpy.array([34, 33], "i"), msg)
 
+    @skipForParser('QChem', 'prints 2 sets of different MO energies?')
     def testmoenergies(self):
         """Are the dims of the moenergies equals to 1 x nmo?"""
         self.assertEquals(len(self.data.moenergies), 1)

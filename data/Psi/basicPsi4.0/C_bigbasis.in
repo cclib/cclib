@@ -1,4 +1,4 @@
-molecule dvb {
+molecule C_atom {
     C    0.0    0.0     0.0
 }
 
