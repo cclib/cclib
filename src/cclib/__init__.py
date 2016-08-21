@@ -1,7 +1,7 @@
 # This file is part of cclib (http://cclib.github.io), a library for parsing
 # and interpreting the results of computational chemistry packages.
 #
-# Copyright (C) 2006-2015 the cclib development team
+# Copyright (C) 2006-2016 the cclib development team
 #
 # The library is free software, distributed under the terms of
 # the GNU Lesser General Public version 2.1 or later. You should have
@@ -26,13 +26,13 @@ To this end, cclib provides a number of bridges to help transfer data to other l
 as well as example methods that take parsed data as input.
 """
 
-__version__ = "1.3.1"
+__version__ = "1.4.1"
 
 from . import parser
 from . import progress
 from . import method
 from . import bridge
-from . import writer
+from . import io
 
 # The test module can be imported if it was installed with cclib.
 try:

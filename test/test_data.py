@@ -247,8 +247,9 @@ class DataSuite(object):
             'GAMESS-US' : getdatafile('GAMESS', "basicGAMESS-US2012", "dvb_gopt_a.out")[0],
             'Jaguar8.0' : getdatafile('Jaguar', "basicJaguar8.3", "dvb_gopt_ks.out")[0],
             'Molpro2012' : getdatafile('Molpro', "basicMolpro2012", "dvb_gopt.log", "dvb_gopt.out")[0],
-            'NWChem6.0' : getdatafile('NWChem', "basicNWChem6.0", "dvb_gopt_ks.out")[0],
+            'NWChem6.5' : getdatafile('NWChem', "basicNWChem6.5", "dvb_gopt_ks.out")[0],
             'ORCA3.0' : getdatafile('ORCA', "basicORCA3.0", "dvb_gopt.out")[0],
+            'Psi4.0' : getdatafile('Psi', "basicPsi4.0", "dvb_gopt_rks.out")[0],
             'QChem4.2' : getdatafile('QChem', "basicQChem4.2", "dvb_gopt.out")[0],
         }
         parser_names = sorted(parsers_to_test.keys())
@@ -258,7 +259,7 @@ class DataSuite(object):
         print("MO energies of optimised dvb", file=self.stream)
         print("      ", "".join(["%-12s" % pn for pn in parser_names]), file=self.stream)
         print("HOMO", "   ".join(["%+9.4f" % out.moenergies[0][out.homos[0]] for out in output]), file=self.stream)
-        print("LUMO", "   ".join(["%+9.4f" % out.moenergies[0][out.homos[0]+1] for out in output]), file=stream)
+        print("LUMO", "   ".join(["%+9.4f" % out.moenergies[0][out.homos[0]+1] for out in output]), file=self.stream)
         print("H-L ", "   ".join(["%9.4f" % (out.moenergies[0][out.homos[0]+1]-out.moenergies[0][out.homos[0]],) for out in output]), file=self.stream)
 
 

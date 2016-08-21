@@ -94,6 +94,17 @@ class QChem(logfileparser.Logfile):
             'ALPHA MOLECULAR ORBITAL COEFFICIENTS'
         )
 
+        self.gradient_headers = (
+            'Full Analytical Gradient',
+            'Gradient of SCF Energy',
+            'Gradient of MP2 Energy',
+        )
+
+        self.hessian_headers = (
+            'Hessian of the SCF Energy',
+            'Final Hessian.',
+        )
+
     def after_parsing(self):
 
         # If parsing a fragment job, each of the geometries appended to
@@ -142,6 +153,141 @@ class QChem(logfileparser.Logfile):
                         bfcounts[bfname] = angmom.index(bfname[0])
                     newbfname = '{}{}'.format(bfcounts[bfname], bfname)
                     self.aonames[bfindex] = '_'.join([atomname, newbfname])
+
+    def parse_charge_section(self, inputfile, chargetype):
+        """Parse the population analysis charge block."""
+        self.skip_line(inputfile, 'blank')
+        line = next(inputfile)
+        has_spins = False
+        if 'Spin' in line:
+            if not hasattr(self, 'atomspins'):
+                self.atomspins = dict()
+            has_spins = True
+            spins = []
+        self.skip_line(inputfile, 'dashes')
+        if not hasattr(self, 'atomcharges'):
+            self.atomcharges = dict()
+        charges = []
+        line = next(inputfile)
+
+        while list(set(line.strip())) != ['-']:
+            elements = line.split()
+            charge = self.float(elements[2])
+            charges.append(charge)
+            if has_spins:
+                spin = self.float(elements[3])
+                spins.append(spin)
+            line = next(inputfile)
+
+        self.atomcharges[chargetype] = numpy.array(charges)
+        if has_spins:
+            self.atomspins[chargetype] = numpy.array(spins)
+
+    @staticmethod
+    def parse_matrix(inputfile, nrows, ncols, ncolsblock):
+        """Q-Chem prints most matrices in a standard format; parse the matrix
+        into a NumPy array of the appropriate shape.
+        """
+        nparray = numpy.empty(shape=(nrows, ncols))
+        line = next(inputfile)
+        assert len(line.split()) == min(ncolsblock, ncols)
+        colcounter = 0
+        while colcounter < ncols:
+            # If the line is just the column header (indices)...
+            if line[:5].strip() == '':
+                line = next(inputfile)
+            rowcounter = 0
+            while rowcounter < nrows:
+                row = list(map(float, line.split()[1:]))
+                assert len(row) == min(ncolsblock, (ncols - colcounter))
+                nparray[rowcounter][colcounter:colcounter + ncolsblock] = row
+                line = next(inputfile)
+                rowcounter += 1
+            colcounter += ncolsblock
+        return nparray
+
+    def parse_matrix_aonames(self, inputfile, nrows, ncols):
+        """Q-Chem prints most matrices in a standard format; parse the matrix
+        into a preallocated NumPy array of the appropriate shape.
+
+        Rather than have one routine for parsing all general matrices
+        and the 'MOLECULAR ORBITAL COEFFICIENTS' block, use a second
+        which handles `aonames`.
+        """
+        bigmom = ('d', 'f', 'g', 'h')
+        nparray = numpy.empty(shape=(nrows, ncols))
+        line = next(inputfile)
+        assert len(line.split()) == min(self.ncolsblock, ncols)
+        colcounter = 0
+        while colcounter < ncols:
+            # If the line is just the column header (indices)...
+            if line[:5].strip() == '':
+                line = next(inputfile)
+            # Do nothing for now.
+            if 'eigenvalues' in line:
+                line = next(inputfile)
+            rowcounter = 0
+            while rowcounter < nrows:
+                row = line.split()
+                # Only take the AO names on the first time through.
+                if colcounter == 0:
+                    if len(self.aonames) != self.nbasis:
+                        # Apply the offset for rows where there is
+                        # more than one atom of any element in the
+                        # molecule.
+                        offset = int(self.formula_histogram[row[1]] != 1)
+                        if offset:
+                            name = self.atommap.get(row[1] + str(row[2]))
+                        else:
+                            name = self.atommap.get(row[1] + '1')
+                        # For l > 1, there is a space between l and
+                        # m_l when using spherical functions.
+                        shell = row[2 + offset]
+                        if shell in bigmom:
+                            shell = ''.join([shell, row[3 + offset]])
+                        aoname = ''.join([name, '_', shell.upper()])
+                        self.aonames.append(aoname)
+                row = list(map(float, row[-min(self.ncolsblock, (ncols - colcounter)):]))
+                nparray[rowcounter][colcounter:colcounter + self.ncolsblock] = row
+                line = next(inputfile)
+                rowcounter += 1
+            colcounter += self.ncolsblock
+        return nparray
+
+    def generate_atom_map(self):
+        """Generate the map to go from Q-Chem atom numbering:
+        'C1', 'C2', 'C3', 'C4', 'C5', 'C6', 'H1', 'H2', 'H3', 'H4', 'C7', ...
+        to cclib atom numbering:
+        'C1', 'C2', 'C3', 'C4', 'C5', 'C6', 'H7', 'H8', 'H9', 'H10', 'C11', ...
+        for later use.
+        """
+
+        # Generate the desired order.
+        order_proper = [element + str(num)
+                        for element, num in zip(self.atomelements,
+                                                itertools.count(start=1))]
+        # We need separate counters for each element.
+        element_counters = {element: itertools.count(start=1)
+                            for element in set(self.atomelements)}
+        # Generate the Q-Chem printed order.
+        order_qchem = [element + str(next(element_counters[element]))
+                       for element in self.atomelements]
+        # Combine the orders into a mapping.
+        atommap = {k: v for k, v, in zip(order_qchem, order_proper)}
+        return atommap
+
+    def generate_formula_histogram(self):
+        """From the atomnos, generate a histogram that represents the
+        molecular formula.
+        """
+
+        histogram = dict()
+        for element in self.atomelements:
+            if element in histogram.keys():
+                histogram[element] += 1
+            else:
+                histogram[element] = 1
+        return histogram
 
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
@@ -400,13 +546,11 @@ class QChem(logfileparser.Logfile):
             if 'Final Alpha MO Coefficients' in line:
                 if not hasattr(self, 'mocoeffs'):
                     self.mocoeffs = []
-                mocoeffs = numpy.empty(shape=(self.nbasis, self.norbdisp_alpha))
-                self.parse_matrix(inputfile, mocoeffs)
+                mocoeffs = QChem.parse_matrix(inputfile, self.nbasis, self.norbdisp_alpha, self.ncolsblock)
                 self.mocoeffs.append(mocoeffs.transpose())
 
             if 'Final Beta MO Coefficients' in line:
-                mocoeffs = numpy.empty(shape=(self.nbasis, self.norbdisp_beta))
-                self.parse_matrix(inputfile, mocoeffs)
+                mocoeffs = QChem.parse_matrix(inputfile, self.nbasis, self.norbdisp_beta, self.ncolsblock)
                 self.mocoeffs.append(mocoeffs.transpose())
 
             if 'Total energy in the final basis set' in line:
@@ -418,19 +562,18 @@ class QChem(logfileparser.Logfile):
             # Geometry optimization.
 
             if 'Maximum     Tolerance    Cnvgd?' in line:
-                line_g = list(map(float, next(inputfile).split()[1:3]))
-                line_d = list(map(float, next(inputfile).split()[1:3]))
+                line_g = next(inputfile).split()[1:3]
+                line_d = next(inputfile).split()[1:3]
                 line_e = next(inputfile).split()[2:4]
 
                 if not hasattr(self, 'geotargets'):
                     self.geotargets = [line_g[1], line_d[1], self.float(line_e[1])]
                 if not hasattr(self, 'geovalues'):
                     self.geovalues = []
-                try:
-                    ediff = abs(self.float(line_e[0]))
-                except ValueError:
-                    ediff = numpy.nan
-                geovalues = [line_g[0], line_d[0], ediff]
+                maxg = self.float(line_g[0])
+                maxd = self.float(line_d[0])
+                ediff = self.float(line_e[0])
+                geovalues = [maxg, maxd, ediff]
                 self.geovalues.append(geovalues)
 
             if '**  OPTIMIZATION CONVERGED  **' in line:
@@ -888,8 +1031,7 @@ class QChem(logfileparser.Logfile):
                 # We could also attempt to parse `moenergies` here, but
                 # nothing is gained by it.
 
-                mocoeffs = numpy.empty(shape=(self.nbasis, self.norbdisp_alpha_aonames))
-                self.parse_matrix_aonames(inputfile, mocoeffs)
+                mocoeffs = self.parse_matrix_aonames(inputfile, self.nbasis, self.norbdisp_alpha_aonames)
                 # Only use these MO coefficients if we don't have them
                 # from `scf_final_print`.
                 if len(self.mocoeffs) == 0:
@@ -904,8 +1046,7 @@ class QChem(logfileparser.Logfile):
 
             if 'BETA  MOLECULAR ORBITAL COEFFICIENTS' in line:
 
-                mocoeffs = numpy.empty(shape=(self.nbasis, self.norbdisp_beta_aonames))
-                self.parse_matrix_aonames(inputfile, mocoeffs)
+                mocoeffs = self.parse_matrix_aonames(inputfile, self.nbasis, self.norbdisp_beta_aonames)
                 if len(self.mocoeffs) == 1:
                     self.mocoeffs.append(mocoeffs.transpose())
 
@@ -1026,20 +1167,22 @@ class QChem(logfileparser.Logfile):
 
             # For `method = force` or geometry optimizations,
             # the gradient is printed.
-            if 'Gradient of SCF Energy' in line:
+            if any(header in line for header in self.gradient_headers):
                 if not hasattr(self, 'grads'):
                     self.grads = []
-                grad = numpy.empty(shape=(3, self.natom))
-                self.parse_matrix(inputfile, grad)
+                if 'SCF' in line:
+                    ncolsblock = self.ncolsblock
+                else:
+                    ncolsblock = 5
+                grad = QChem.parse_matrix(inputfile, 3, self.natom, ncolsblock)
                 self.grads.append(grad.T)
 
             # For IR-related jobs, the Hessian is printed (dim: 3*natom, 3*natom).
             # Note that this is *not* the mass-weighted Hessian.
-            if 'Hessian of the SCF Energy' in line:
+            if any(header in line for header in self.hessian_headers):
                 if not hasattr(self, 'hessian'):
                     dim = 3*self.natom
-                    self.hessian = numpy.empty(shape=(dim, dim))
-                    self.parse_matrix(inputfile, self.hessian)
+                    self.hessian = QChem.parse_matrix(inputfile, dim, dim, self.ncolsblock)
 
             # Start of the IR/Raman frequency section.
             if 'VIBRATIONAL ANALYSIS' in line:
@@ -1073,22 +1216,7 @@ class QChem(logfileparser.Logfile):
                     # C          0.000  0.000 -0.100   -0.000  0.000 -0.070   -0.000 -0.000 -0.027
                     # C          0.000  0.000  0.045   -0.000  0.000 -0.074    0.000 -0.000 -0.109
                     # C          0.000  0.000  0.148   -0.000 -0.000 -0.074    0.000  0.000 -0.121
-                    # C          0.000  0.000  0.100   -0.000 -0.000 -0.070    0.000  0.000 -0.027
-                    # C          0.000  0.000 -0.045    0.000 -0.000 -0.074   -0.000 -0.000 -0.109
-                    # C          0.000  0.000 -0.148    0.000  0.000 -0.074   -0.000 -0.000 -0.121
-                    # H         -0.000  0.000  0.086   -0.000  0.000 -0.082    0.000 -0.000 -0.102
-                    # H          0.000  0.000  0.269   -0.000 -0.000 -0.091    0.000  0.000 -0.118
-                    # H          0.000  0.000 -0.086    0.000 -0.000 -0.082   -0.000  0.000 -0.102
-                    # H         -0.000  0.000 -0.269    0.000  0.000 -0.091   -0.000 -0.000 -0.118
-                    # C          0.000 -0.000  0.141   -0.000 -0.000 -0.062   -0.000  0.000  0.193
-                    # C         -0.000 -0.000 -0.160    0.000  0.000  0.254   -0.000  0.000  0.043
-                    # H          0.000 -0.000  0.378   -0.000  0.000 -0.289    0.000  0.000  0.519
-                    # H         -0.000 -0.000 -0.140    0.000  0.000  0.261   -0.000 -0.000  0.241
-                    # H         -0.000 -0.000 -0.422    0.000  0.000  0.499   -0.000  0.000 -0.285
-                    # C          0.000 -0.000 -0.141    0.000  0.000 -0.062   -0.000 -0.000  0.193
-                    # C         -0.000 -0.000  0.160   -0.000 -0.000  0.254    0.000  0.000  0.043
-                    # H          0.000 -0.000 -0.378    0.000 -0.000 -0.289   -0.000  0.000  0.519
-                    # H         -0.000 -0.000  0.140   -0.000 -0.000  0.261    0.000  0.000  0.241
+                    # (...)
                     # H         -0.000 -0.000  0.422   -0.000 -0.000  0.499    0.000  0.000 -0.285
                     # TransDip   0.000 -0.000 -0.000    0.000 -0.000 -0.000   -0.000  0.000  0.021
                     #
@@ -1198,138 +1326,6 @@ class QChem(logfileparser.Logfile):
         # 'nocoeffs'
         # 'nooccnos'
         # 'vibanharms'
-
-    def parse_charge_section(self, inputfile, chargetype):
-        """Parse the population analysis charge block."""
-        self.skip_line(inputfile, 'blank')
-        line = next(inputfile)
-        has_spins = False
-        if 'Spin' in line:
-            if not hasattr(self, 'atomspins'):
-                self.atomspins = dict()
-            has_spins = True
-            spins = []
-        self.skip_line(inputfile, 'dashes')
-        if not hasattr(self, 'atomcharges'):
-            self.atomcharges = dict()
-        charges = []
-        line = next(inputfile)
-
-        while list(set(line.strip())) != ['-']:
-            elements = line.split()
-            charge = self.float(elements[2])
-            charges.append(charge)
-            if has_spins:
-                spin = self.float(elements[3])
-                spins.append(spin)
-            line = next(inputfile)
-
-        self.atomcharges[chargetype] = numpy.array(charges)
-        if has_spins:
-            self.atomspins[chargetype] = numpy.array(spins)
-
-    def parse_matrix(self, inputfile, nparray):
-        """Q-Chem prints most matrices in a standard format; parse the matrix
-        into a preallocated NumPy array of the appropriate shape.
-        """
-        nrows, ncols = nparray.shape
-        line = next(inputfile)
-        assert len(line.split()) == min(self.ncolsblock, ncols)
-        colcounter = 0
-        while colcounter < ncols:
-            # If the line is just the column header (indices)...
-            if line[:5].strip() == '':
-                line = next(inputfile)
-            rowcounter = 0
-            while rowcounter < nrows:
-                row = list(map(float, line.split()[1:]))
-                assert len(row) == min(self.ncolsblock, (ncols - colcounter))
-                nparray[rowcounter][colcounter:colcounter + self.ncolsblock] = row
-                line = next(inputfile)
-                rowcounter += 1
-            colcounter += self.ncolsblock
-
-    def parse_matrix_aonames(self, inputfile, nparray):
-        """Q-Chem prints most matrices in a standard format; parse the matrix
-        into a preallocated NumPy array of the appropriate shape.
-
-        Rather than have one routine for parsing all general matrices
-        and the 'MOLECULAR ORBITAL COEFFICIENTS' block, use a second
-        which handles `aonames`.
-        """
-        bigmom = ('d', 'f', 'g', 'h')
-        nrows, ncols = nparray.shape
-        line = next(inputfile)
-        assert len(line.split()) == min(self.ncolsblock, ncols)
-        colcounter = 0
-        while colcounter < ncols:
-            # If the line is just the column header (indices)...
-            if line[:5].strip() == '':
-                line = next(inputfile)
-            # Do nothing for now.
-            if 'eigenvalues' in line:
-                line = next(inputfile)
-            rowcounter = 0
-            while rowcounter < nrows:
-                row = line.split()
-                # Only take the AO names on the first time through.
-                if colcounter == 0:
-                    if len(self.aonames) != self.nbasis:
-                        # Apply the offset for rows where there is
-                        # more than one atom of any element in the
-                        # molecule.
-                        offset = int(self.formula_histogram[row[1]] != 1)
-                        if offset:
-                            name = self.atommap.get(row[1] + str(row[2]))
-                        else:
-                            name = self.atommap.get(row[1] + '1')
-                        # For l > 1, there is a space between l and
-                        # m_l when using spherical functions.
-                        shell = row[2 + offset]
-                        if shell in bigmom:
-                            shell = ''.join([shell, row[3 + offset]])
-                        aoname = ''.join([name, '_', shell.upper()])
-                        self.aonames.append(aoname)
-                row = list(map(float, row[-min(self.ncolsblock, (ncols - colcounter)):]))
-                nparray[rowcounter][colcounter:colcounter + self.ncolsblock] = row
-                line = next(inputfile)
-                rowcounter += 1
-            colcounter += self.ncolsblock
-
-    def generate_atom_map(self):
-        """Generate the map to go from Q-Chem atom numbering:
-        'C1', 'C2', 'C3', 'C4', 'C5', 'C6', 'H1', 'H2', 'H3', 'H4', 'C7', ...
-        to cclib atom numbering:
-        'C1', 'C2', 'C3', 'C4', 'C5', 'C6', 'H7', 'H8', 'H9', 'H10', 'C11', ...
-        for later use.
-        """
-
-        # Generate the desired order.
-        order_proper = [element + str(num)
-                        for element, num in zip(self.atomelements,
-                                                itertools.count(start=1))]
-        # We need separate counters for each element.
-        element_counters = {element: itertools.count(start=1)
-                            for element in set(self.atomelements)}
-        # Generate the Q-Chem printed order.
-        order_qchem = [element + str(next(element_counters[element]))
-                       for element in self.atomelements]
-        # Combine the orders into a mapping.
-        atommap = {k: v for k, v, in zip(order_qchem, order_proper)}
-        return atommap
-
-    def generate_formula_histogram(self):
-        """From the atomnos, generate a histogram that represents the
-        molecular formula.
-        """
-
-        histogram = dict()
-        for element in self.atomelements:
-            if element in histogram.keys():
-                histogram[element] += 1
-            else:
-                histogram[element] = 1
-        return histogram
 
 
 if __name__ == '__main__':

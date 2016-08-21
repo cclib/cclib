@@ -128,7 +128,7 @@ class ORCA(logfileparser.Logfile):
 
             while not "Total Energy       :" in line:
                 line = next(inputfile)
-            energy = float(line.split()[5])
+            energy = utils.convertor(float(line.split()[3]), "hartree", "eV")
             self.scfenergies.append(energy)
 
             self._append_scfvalues_scftargets(inputfile, line)
@@ -151,7 +151,7 @@ class ORCA(logfileparser.Logfile):
             if not hasattr(self, "scftargets"):
                 self.scftargets = []
 
-            energy = self.scfvalues[-1][-1][0]
+            energy = utils.convertor(self.scfvalues[-1][-1][0], "hartree", "eV")
             self.scfenergies.append(energy)
 
             self._append_scfvalues_scftargets(inputfile, line)
@@ -284,15 +284,17 @@ class ORCA(logfileparser.Logfile):
                 line = next(inputfile)
 
             # The energy change is normally not printed in the first iteration, because
-            # there was no previous energy -- in that case assume zero, but check that
-            # no previous geovalues were parsed.
+            # there was no previous energy -- in that case assume zero. There are also some
+            # edge cases where the energy change is not printed, for example when internal
+            # angles become improper and internal coordinates are rebuilt as in regression
+            # CuI-MePY2-CH3CN_optxes, and in such cases use NaN.
             newvalues = []
-
             for i, n in enumerate(self.geotargets_names):
                 if (n == "energy change") and (n not in names):
-                    if not self.is_relaxed_scan:
-                        assert len(self.geovalues) == 0
-                    newvalues.append(0.0)
+                    if self.is_relaxed_scan:
+                      newvalues.append(0.0)
+                    else:
+                      newvalues.append(numpy.nan)
                 else:
                     newvalues.append(values[names.index(n)])
                     assert targets[names.index(n)] == self.geotargets[i]
@@ -371,33 +373,53 @@ class ORCA(logfileparser.Logfile):
 
             self.skip_lines(inputfile, ['d', 'text', 'text'])
 
+            self.mooccnos = [[]]
             self.moenergies = [[]]
-            self.homos = [[0]]
 
             line = next(inputfile)
             while len(line) > 20:  # restricted calcs are terminated by ------
                 info = line.split()
-                self.moenergies[0].append(float(info[3]))
-                if float(info[1]) > 0.00:  # might be 1 or 2, depending on restricted-ness
-                    self.homos[0] = int(info[0])
+                mooccno = int(float(info[1]))
+                moenergy = float(info[2])
+                self.mooccnos[0].append(mooccno)
+                self.moenergies[0].append(utils.convertor(moenergy, "hartree", "eV"))
                 line = next(inputfile)
 
             line = next(inputfile)
 
-            #handle beta orbitals
+            # handle beta orbitals for UHF
             if line[17:35] == "SPIN DOWN ORBITALS":
                 text = next(inputfile)
 
+                self.mooccnos.append([])
                 self.moenergies.append([])
-                self.homos.append(0)
 
                 line = next(inputfile)
                 while len(line) > 20:  # actually terminated by ------
                     info = line.split()
-                    self.moenergies[1].append(float(info[3]))
-                    if float(info[1]) == 1.00:
-                        self.homos[1] = int(info[0])
+                    mooccno = int(float(info[1]))
+                    moenergy = float(info[2])
+                    self.mooccnos[1].append(mooccno)
+                    self.moenergies[1].append(utils.convertor(moenergy, "hartree", "eV"))
                     line = next(inputfile)
+
+            if not hasattr(self, 'homos'):
+                doubly_occupied = self.mooccnos[0].count(2)
+                singly_occupied = self.mooccnos[0].count(1)
+                # Restricted closed-shell.
+                if doubly_occupied > 0 and singly_occupied == 0:
+                    self.set_attribute('homos', [doubly_occupied - 1])
+                # Restricted open-shell.
+                elif doubly_occupied > 0 and singly_occupied > 0:
+                    self.set_attribute('homos', [doubly_occupied + singly_occupied - 1,
+                                                 doubly_occupied - 1])
+                # Unrestricted.
+                else:
+                    assert len(self.moenergies) == 2
+                    assert doubly_occupied == 0
+                    assert self.mooccnos[1].count(2) == 0
+                    nbeta = self.mooccnos[1].count(1)
+                    self.set_attribute('homos', [singly_occupied - 1, nbeta - 1])
 
         # So nbasis was parsed at first with the first pattern, but it turns out that
         # semiempirical methods (at least AM1 as reported by Julien Idé) do not use this.
