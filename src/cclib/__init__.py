@@ -17,7 +17,7 @@ and provides a consistent interface to access them.
 
 Currently supported programs:
     ADF, Firefly, GAMESS(US), GAMESS-UK, Gaussian,
-    Jaguar, Molpro, NWChem, ORCA, Psi, Q-Chem
+    Jaguar, Molpro, MOPAC, NWChem, ORCA, Psi, Q-Chem
 
 Another aim is to facilitate the implementation of algorithms that are not specific
 to any particular computational chemistry package and to maximise interoperability
@@ -26,7 +26,7 @@ To this end, cclib provides a number of bridges to help transfer data to other l
 as well as example methods that take parsed data as input.
 """
 
-__version__ = "1.4.1"
+__version__ = "1.5"
 
 from . import parser
 from . import progress
