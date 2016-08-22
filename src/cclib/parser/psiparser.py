@@ -279,6 +279,8 @@ class Psi(logfileparser.Logfile):
                     self.set_attribute('charge', charge)
                 if line.split()[0] == "convergence":
                     conv = float(line.split()[-1])
+                if line.split()[0] == "reference":
+                    self.reference = line.split()[-1]
                 line = next(inputfile)
 
             if not hasattr(self, 'scftargets'):
