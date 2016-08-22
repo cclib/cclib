@@ -775,6 +775,19 @@ class QChem(logfileparser.Logfile):
                 self.set_attribute('etoscs', etoscs)
                 self.set_attribute('etsecs', etsecs)
 
+            # Static and dynamic polarizability from mopropman.
+            if 'Polarizability (a.u.)' in line:
+                if not hasattr(self, 'polarizabilities'):
+                    self.polarizabilities = []
+                polarizability = []
+                while 'Full Tensor' not in line:
+                    line = next(inputfile)
+                self.skip_line(inputfile, 'blank')
+                for _ in range(3):
+                    line = next(inputfile)
+                    polarizability.append(line.split())
+                self.polarizabilities.append(numpy.array(polarizability))
+
             # Molecular orbital energies and symmetries.
             if 'Orbital Energies (a.u.) and Symmetries' in line:
 
@@ -1176,6 +1189,19 @@ class QChem(logfileparser.Logfile):
                     ncolsblock = 5
                 grad = QChem.parse_matrix(inputfile, 3, self.natom, ncolsblock)
                 self.grads.append(grad.T)
+
+            # (Static) polarizability from frequency calculations.
+            if 'Polarizability Matrix (a.u.)' in line:
+                if not hasattr(self, 'polarizabilities'):
+                    self.polarizabilities = []
+                polarizability = []
+                self.skip_line(inputfile, 'index header')
+                for _ in range(3):
+                    line = next(inputfile)
+                    ss = line.strip()[1:]
+                    polarizability.append([ss[0:12], ss[13:24], ss[25:36]])
+                # For some reason the sign is inverted.
+                self.polarizabilities.append(-numpy.array(polarizability, dtype=float))
 
             # For IR-related jobs, the Hessian is printed (dim: 3*natom, 3*natom).
             # Note that this is *not* the mass-weighted Hessian.

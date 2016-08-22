@@ -14,6 +14,7 @@
 
 from __future__ import print_function
 
+import itertools
 import re
 
 import numpy
@@ -1139,6 +1140,27 @@ class ADF(logfileparser.Logfile):
                 except AssertionError:
                     self.logger.warning('Overwriting previous multipole moments with new values')
                     self.moments = [reference, dipole]
+
+        # Molecular response properties.
+        if line.strip()[1:-1].strip() == "RESPONSE program part":
+
+            while line.strip() != "Normal termination of RESPONSE program part":
+
+                if "THE DIPOLE-DIPOLE POLARIZABILITY TENSOR:" in line:
+                    if not hasattr(self, 'polarizabilities'):
+                        self.polarizabilities = []
+                    polarizability = numpy.empty(shape=(3, 3))
+                    self.skip_lines(inputfile, ['b', 'FREQUENCY', 'coordinates'])
+                    # Ordering of rows/columns is Y, Z, X.
+                    ordering = [1, 2, 0]
+                    indices = list(itertools.product(ordering, ordering))
+                    for i in range(3):
+                        tokens = next(inputfile).split()
+                        for j in range(3):
+                            polarizability[indices[(i*3)+j]] = tokens[j]
+                    self.polarizabilities.append(polarizability)
+
+                line = next(inputfile)
 
 
 if __name__ == "__main__":

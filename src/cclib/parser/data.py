@@ -66,6 +66,7 @@ class ccData(object):
         nooccnos -- natural orbital occupation numbers (array[1])
         optdone -- flags whether an optimization has converged (Boolean)
         optstatus -- optimization status for each set of atomic coordinates (array[1])
+        polarizabilities -- (dipole) polarizabilities, static or dynamic (list of arrays[2])
         scancoords -- geometries of each scan step (array[3], angstroms)
         scanenergies -- energies of potential energy surface (list)
         scannames -- names of varaibles scanned (list of strings)
@@ -135,6 +136,7 @@ class ccData(object):
        "nooccnos":         Attribute(numpy.ndarray,    'TBD',                         'N/A'),
        "optdone":          Attribute(bool,             'done',                        'optimization'),
        "optstatus":        Attribute(numpy.ndarray,    'status',                      'optimization'),
+       "polarizabilities": Attribute(list,             'polarizabilities',            'N/A'),
        "scancoords":       Attribute(numpy.ndarray,    'step geometry',               'optimization:scan'),
        "scanenergies":     Attribute(list,             'PES energies',                'optimization:scan'),
        "scannames":        Attribute(list,             'variable names',              'optimization:scan'),
@@ -159,7 +161,7 @@ class ccData(object):
     _intarrays = ['atomnos', 'coreelectrons', 'homos', 'optstatus']
 
     # Attributes that should be lists of arrays (double precision).
-    _listsofarrays = ['mocoeffs', 'moenergies', 'moments', 'scfvalues']
+    _listsofarrays = ['mocoeffs', 'moenergies', 'moments', 'polarizabilities', 'scfvalues']
 
     # Attributes that should be dictionaries of arrays (double precision).
     _dictsofarrays = ["atomcharges", "atomspins"]

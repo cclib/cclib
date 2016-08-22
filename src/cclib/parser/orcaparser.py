@@ -779,6 +779,19 @@ class ORCA(logfileparser.Logfile):
                     self.logger.warning('Overwriting previous multipole moments with new values')
                     self.moments = [reference, dipole]
 
+        # Static polarizability.
+        if line.strip() == "THE POLARIZABILITY TENSOR":
+            if not hasattr(self, 'polarizabilities'):
+                self.polarizabilities = []
+            self.skip_lines(inputfile, ['d', 'b'])
+            line = next(inputfile)
+            assert line.strip() == "The raw cartesian tensor (atomic units):"
+            polarizability = []
+            for _ in range(3):
+                line = next(inputfile)
+                polarizability.append(line.split())
+            self.polarizabilities.append(numpy.array(polarizability))
+
     def parse_scf_condensed_format(self, inputfile, line):
         """ Parse the SCF convergence information in condensed format """
 

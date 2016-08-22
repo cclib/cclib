@@ -85,6 +85,10 @@ class Gaussian(logfileparser.Logfile):
         # We also add a "time" attribute to the parser.
         self.BOMD = False
 
+        # Do we have high-precision polarizabilities printed from a
+        # dedicated `polar` job? If so, avoid duplicate parsing.
+        self.hp_polarizabilities = False
+
     def after_parsing(self):
 
         # Correct the percent values in the etsecs in the case of
@@ -1661,6 +1665,51 @@ class Gaussian(logfileparser.Logfile):
             self.set_attribute('freenergy', float(line.split()[7]))
         if line[1:12] == "Temperature":
             self.set_attribute('temperature', float(line.split()[1]))
+
+        # Static polarizability (from `polar`), lower triangular
+        # matrix.
+        if line[1:26] == "SCF Polarizability for W=":
+            self.hp_polarizabilities = True
+            if not hasattr(self, 'polarizabilities'):
+                self.polarizabilities = []
+            polarizability = numpy.zeros(shape=(3, 3))
+            self.skip_line(inputfile, 'directions')
+            for i in range(3):
+                line = next(inputfile)
+                polarizability[i, :i+1] = [self.float(x) for x in line.split()[1:]]
+
+            polarizability = utils.symmetrize(polarizability, use_triangle='lower')
+            self.polarizabilities.append(polarizability)
+
+        # Static polarizability (from `freq`), lower triangular matrix.
+        if line[1:16] == "Polarizability=":
+            self.hp_polarizabilities = True
+            if not hasattr(self, 'polarizabilities'):
+                self.polarizabilities = []
+            polarizability = numpy.zeros(shape=(3, 3))
+            polarizability_list = []
+            polarizability_list.extend([line[16:31], line[31:46], line[46:61]])
+            line = next(inputfile)
+            polarizability_list.extend([line[16:31], line[31:46], line[46:61]])
+            indices = numpy.tril_indices(3)
+            polarizability[indices] = [self.float(x) for x in polarizability_list]
+            polarizability = utils.symmetrize(polarizability, use_triangle='lower')
+            self.polarizabilities.append(polarizability)
+
+        # Static polarizability, compressed into a single line from
+        # terse printing.
+        # Order is XX, YX, YY, ZX, ZY, ZZ (lower triangle).
+        if line[2:23] == "Exact polarizability:":
+            if not self.hp_polarizabilities:
+                if not hasattr(self, 'polarizabilities'):
+                    self.polarizabilities = []
+                polarizability = numpy.zeros(shape=(3, 3))
+                indices = numpy.tril_indices(3)
+                polarizability[indices] = [self.float(x) for x in
+                                           [line[23:31], line[31:39], line[39:47], line[47:55], line[55:63], line[63:71]]]
+                polarizability = utils.symmetrize(polarizability, use_triangle='lower')
+                self.polarizabilities.append(polarizability)
+
 
 
 if __name__ == "__main__":

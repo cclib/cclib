@@ -12,6 +12,35 @@
 
 """Utilities often used by cclib parsers and scripts"""
 
+import numpy
+
+
+def symmetrize(m, use_triangle='lower'):
+    """Symmetrize a square NumPy array by reflecting one triangular
+    section across the diagonal to the other.
+    """
+
+    if use_triangle not in ('lower', 'upper'):
+        raise ValueError
+    if not len(m.shape) == 2:
+        raise ValueError
+    if not (m.shape[0] == m.shape[1]):
+        raise ValueError
+
+    dim = m.shape[0]
+
+    lower_indices = numpy.tril_indices(dim, k=-1)
+    upper_indices = numpy.triu_indices(dim, k=1)
+
+    ms = m.copy()
+
+    if use_triangle == 'lower':
+        ms[upper_indices] = ms[lower_indices]
+    if use_triangle == 'upper':
+        ms[lower_indices] = ms[upper_indices]
+
+    return ms
+
 
 def convertor(value, fromunits, tounits):
     """Convert from one set of units to another.
@@ -26,8 +55,8 @@ def convertor(value, fromunits, tounits):
 
     _convertor = {
 
-        "Angstrom_to_bohr": lambda x: x * 1.8897261245,
-        "bohr_to_Angstrom": lambda x: x * 0.5291772109,
+        "Angstrom_to_bohr":   lambda x: x * 1.8897261245,
+        "bohr_to_Angstrom":   lambda x: x * 0.5291772109,
 
         "cm-1_to_eV":       lambda x: x / 8065.54429,
         "cm-1_to_hartree":  lambda x: x / 219474.6313708,

@@ -554,6 +554,17 @@ class Molpro(logfileparser.Logfile):
             else:
                 self.moments[1] == dipole
 
+        # Static dipole polarizability.
+        if line.strip() == "SCF dipole polarizabilities":
+            if not hasattr(self, "polarizabilities"):
+                self.polarizabilities = []
+            polarizability = []
+            self.skip_lines(inputfile, ['b', 'directions'])
+            for _ in range(3):
+                line = next(inputfile)
+                polarizability.append(line.split()[1:])
+            self.polarizabilities.append(numpy.array(polarizability))
+
         # Check for ELECTRON ORBITALS (canonical molecular orbitals).
         if line[1:18] == "ELECTRON ORBITALS" or self.electronorbitals:
             self._parse_orbitals(inputfile, line)
