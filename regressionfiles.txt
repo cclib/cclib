@@ -170,6 +170,7 @@ Gaussian/Gaussian09/BSL_opt_freq_DFT.out
 Gaussian/Gaussian09/coeffs.log
 Gaussian/Gaussian09/Dahlgren_TS.log
 Gaussian/Gaussian09/di-iodophenyl.log
+Gaussian/Gaussian09/dvb_bomd.out
 Gaussian/Gaussian09/dvb_gopt_revA.02.out
 Gaussian/Gaussian09/dvb_gopt_unconverged.log
 Gaussian/Gaussian09/dvb_ir_revA.02.out
@@ -198,7 +199,7 @@ Gaussian/Gaussian09/water_gaussian.inp.log
 Gaussian/Gaussian09/benzene_freq.log
 Gaussian/Gaussian09/benzene_HPfreq.log
 Gaussian/Gaussian09/stopiter_gaussian.out
-Gaussian/Gaussian09/dvb_bomd.out
+Gaussian/Gaussian09/trithiolane_polar.log
 Gaussian/Gaussian98/C_bigmult.log
 Gaussian/Gaussian98/oo-LAN.out
 Gaussian/Gaussian98/test_Cu2.log
@@ -263,7 +264,6 @@ ORCA/ORCA3.0/stopiter_orca_scf_compact.out
 ORCA/ORCA3.0/stopiter_orca_scf_large.out
 ORCA/ORCA3.0/trithiolane_polar.out
 Psi/Psi3/water_psi3.log
-Psi/Psi4.0/sample_psithon2.out
 Psi/Psi4.0/sample_props1.out
 Psi/Psi4.0/sample_fd-freq-gradient.out
 Psi/Psi4.0/sample_scf5.out

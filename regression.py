@@ -1254,6 +1254,21 @@ class GAMESSUSCISTest_dets(GenericCISTest):
     def testetsecsvalues(self):
         """This gives unexpected coeficcients, also for current unit tests."""
 
+class GaussianPolarTest(ReferencePolarTest):
+    """Customized static polarizability unittest, meant for calculations
+    with symmetry enabled.
+    """
+
+    # Reference values are from Q-Chem 4.2/trithiolane_freq.out, since
+    # with symmetry enabled Q-Chem reorients molecules similarly to
+    # Gaussian.
+    isotropic = 66.0955766
+    principal_components = [46.71020322, 75.50778705, 76.06873953]
+    # Make the thresholds looser because these test jobs use symmetry,
+    # and the polarizability is orientation dependent.
+    isotropic_delta = 2.0
+    principal_components_delta = 0.7
+
 class JaguarSPTest_6_31gss(GenericSPTest):
     """AO counts and some values are different in 6-31G** compared to STO-3G."""
     nbasisdict = {1: 5, 6: 15}
@@ -1385,6 +1400,7 @@ old_unittests = {
     "Gaussian/Gaussian09/dvb_td_revA.02.out":           GaussianTDDFTTest,
     "Gaussian/Gaussian09/dvb_un_sp_revA.02.log":        GaussianSPunTest,
     "Gaussian/Gaussian09/dvb_un_sp_b_revA.02.log":      GaussianSPunTest,
+    "Gaussian/Gaussian09/trithiolane_polar.log":        GaussianPolarTest,
 
     "Jaguar/Jaguar4.2/dvb_gopt.out":    JaguarGeoOptTest_nmo45,
     "Jaguar/Jaguar4.2/dvb_gopt_b.out":  GenericGeoOptTest,
