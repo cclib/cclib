@@ -55,20 +55,6 @@ class ReferencePolarTest(GenericPolarTest):
                                    delta=self.principal_components_delta)
 
 
-class GaussianPolarTest(ReferencePolarTest):
-    """Customized static polarizability unittest"""
-
-    # Reference values are from Q-Chem 4.2/trithiolane_freq.out, since
-    # with symmetry enabled Q-Chem reorients molecules similarly to
-    # Gaussian.
-    isotropic = 66.0955766
-    principal_components = [46.71020322, 75.50778705, 76.06873953]
-    # Make the thresholds looser because these test jobs use symmetry,
-    # and the polarizability is orientation dependent.
-    isotropic_delta = 2.0
-    principal_components_delta = 0.7
-
-
 if __name__=="__main__":
 
     import sys

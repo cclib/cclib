@@ -1669,7 +1669,7 @@ class Gaussian(logfileparser.Logfile):
         # Static polarizability (from `polar`), lower triangular
         # matrix.
         if line[1:26] == "SCF Polarizability for W=":
-            self.hp_polarizability = True
+            self.hp_polarizabilities = True
             if not hasattr(self, 'polarizabilities'):
                 self.polarizabilities = []
             polarizability = numpy.zeros(shape=(3, 3))
@@ -1683,7 +1683,7 @@ class Gaussian(logfileparser.Logfile):
 
         # Static polarizability (from `freq`), lower triangular matrix.
         if line[1:16] == "Polarizability=":
-            self.hp_polarizability = True
+            self.hp_polarizabilities = True
             if not hasattr(self, 'polarizabilities'):
                 self.polarizabilities = []
             polarizability = numpy.zeros(shape=(3, 3))
