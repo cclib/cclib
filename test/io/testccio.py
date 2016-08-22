@@ -38,6 +38,7 @@ class guess_fileypeTest(unittest.TestCase):
         self.assertEqual(self.guess(['Gaussian, Inc.']), cclib.parser.Gaussian)
         self.assertEqual(self.guess(['Jaguar']), cclib.parser.Jaguar)
         self.assertEqual(self.guess(['PROGRAM SYSTEM MOLPRO']), cclib.parser.Molpro)
+        self.assertEqual(self.guess(['MOPAC2016']), cclib.parser.MOPAC)
         self.assertEqual(self.guess(['Northwest Computational Chemistry Package']), cclib.parser.NWChem)
         self.assertEqual(self.guess(['O   R   C   A']), cclib.parser.ORCA)
         self.assertEqual(self.guess(["PSI ...Ab Initio Electronic Structure"]), cclib.parser.Psi)

@@ -36,6 +36,7 @@ from ..parser.gamessukparser import GAMESSUK
 from ..parser.gaussianparser import Gaussian
 from ..parser.jaguarparser import Jaguar
 from ..parser.molproparser import Molpro
+from ..parser.mopacparser import MOPAC
 from ..parser.nwchemparser import NWChem
 from ..parser.orcaparser import ORCA
 from ..parser.psiparser import Psi
@@ -61,6 +62,7 @@ except ImportError:
 #   2. Molpro log files don't have the program header, but always contain
 #      the generic string 1PROGRAM, so don't break here either to be cautious.
 #   3. The Psi header has two different strings with some variation
+#   4. "MOPAC" is used in some packages like GAMESS, so match MOPAC20##
 #
 # The triggers are defined by the tuples in the list below like so:
 #   (parser, phrases, flag whether we should break)
@@ -75,6 +77,7 @@ triggers = [
     (Jaguar,    ["Jaguar"],                                         True),
     (Molpro,    ["PROGRAM SYSTEM MOLPRO"],                          True),
     (Molpro,    ["1PROGRAM"],                                       False),
+    (MOPAC,     ["MOPAC20"],                                        True),
     (NWChem,    ["Northwest Computational Chemistry Package"],      True),
     (ORCA,      ["O   R   C   A"],                                  True),
     (Psi,       ["PSI", "Ab Initio Electronic Structure"],          True),
@@ -134,9 +137,9 @@ def ccopen(source, *args, **kargs):
       source - a single logfile, a list of logfiles, or an input stream
 
     Returns:
-      one of ADF, DALTON, GAMESS, GAMESS UK, Gaussian, Jaguar, Molpro, NWChem, ORCA,
-        Psi, QChem, CJSON or None (if it cannot figure it out or the file does not
-        exist).
+      one of ADF, DALTON, GAMESS, GAMESS UK, Gaussian, Jaguar, Molpro, MOPAC,
+      NWChem, ORCA, Psi, QChem, CJSON or None (if it cannot figure it out or
+      the file does not exist).
     """
 
     inputfile = None

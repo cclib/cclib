@@ -1,0 +1,178 @@
+ *******************************************************************************
+ ** Site#: 6541            For non-commercial use only        Version 12.151M **
+ *******************************************************************************
+ ** Cite this work as: MOPAC2012, James J. P. Stewart, Stewart Computational  **
+ ** Chemistry, Version 12.151M web: HTTP://OpenMOPAC.net  Days remaining:   0 **
+ *******************************************************************************
+ **                                                                           **
+ **                                MOPAC2012 BETA VERSION                     **
+ **                                                                           **
+ *******************************************************************************
+
+                            PM7 CALCULATION RESULTS
+
+
+ *******************************************************************************
+ *  CALCULATION DONE:                                Fri Apr  8 18:32:48 2016  *
+ *
+ *
+ *
+ *                 CHARGE ON SYSTEM =    -1
+ *
+ *
+ *
+ *  T=       - A TIME OF 172800.0 SECONDS REQUESTED
+ *  DUMP=N   - RESTART FILE WRITTEN EVERY  7200.000 SECONDS
+ *  LARGE    - EXPANDED OUTPUT TO BE PRINTED
+ *******************************************************************************
+ LARGE CHARGE=-1
+ Title
+
+   ATOM   CHEMICAL          X               Y               Z
+  NUMBER   SYMBOL      (ANGSTROMS)     (ANGSTROMS)     (ANGSTROMS)
+ 
+     1       C         -5.40592000  *  -0.47619000  *   0.00000000  *
+     2       O         -4.36197000  *  -0.31061000  *   0.00000000  *
+ 
+
+
+          CARTESIAN COORDINATES 
+
+    NO.       ATOM         X         Y         Z
+
+     1         C       -5.4059   -0.4762    0.0000
+     2         O       -4.3620   -0.3106    0.0000
+
+ PM7 development complete. No journal reference available at present.
+
+           Empirical Formula: C O  =     2 atoms
+
+
+
+      MOLECULAR POINT GROUP   :   C*v 
+
+
+          UHF CALCULATION, NO. OF ALPHA ELECTRONS =    6
+                           NO. OF BETA  ELECTRONS =    5
+      Geometry optimization using EF
+
+          DIAGONAL MATRIX USED AS START HESSIAN
+
+ CYCLE:     1 TIME:   0.001 TIME LEFT:  2.00D  GRAD.:   523.700 HEAT: 35.12323
+ CYCLE:     2 TIME:   0.000 TIME LEFT:  2.00D  GRAD.:   273.031 HEAT: 29.99468
+ CYCLE:     3 TIME:   0.000 TIME LEFT:  2.00D  GRAD.:   126.222 HEAT: 15.76311
+ CYCLE:     4 TIME:   0.000 TIME LEFT:  2.00D  GRAD.:    90.507 HEAT: 14.19061
+ CYCLE:     5 TIME:   0.000 TIME LEFT:  2.00D  GRAD.:    13.056 HEAT: 13.27964
+ CYCLE:     6 TIME:   0.000 TIME LEFT:  2.00D  GRAD.:     0.798 HEAT: 13.25835
+
+     RMS GRADIENT =  0.79825  IS LESS THAN CUTOFF =  1.00000
+
+
+
+ -------------------------------------------------------------------------------
+ LARGE CHARGE=-1
+ Title
+
+
+
+     GEOMETRY OPTIMISED USING EIGENVECTOR FOLLOWING (EF).     
+     SCF FIELD WAS ACHIEVED                                   
+
+
+                              PM7 CALCULATION
+                                                       MOPAC2012 BETA VERSION(Version: 12.151M)
+                                                       Fri Apr  8 18:32:48 2016
+                                                       No. of days left =   0
+
+
+
+
+          FINAL HEAT OF FORMATION =         13.25835 KCAL/MOL =      55.47292 KJ/MOL
+
+
+          TOTAL ENERGY            =       -416.04014 EV
+          ELECTRONIC ENERGY       =       -644.83035 EV  POINT GROUP:     C*v 
+          CORE-CORE REPULSION     =        228.79021 EV
+          COSMO AREA              =         58.13 SQUARE ANGSTROMS
+          COSMO VOLUME            =         40.95 CUBIC ANGSTROMS
+
+          GRADIENT NORM           =          0.79825
+          IONIZATION POTENTIAL    =         -1.129643 EV
+          ALPHA SOMO LUMO (EV)    =          1.130  9.804
+          BETA  SOMO LUMO (EV)    =         -3.109 10.218
+          NO. OF ALPHA ELECTRONS  =          6
+          NO. OF BETA  ELECTRONS  =          5
+          MOLECULAR WEIGHT        =         28.010
+
+          MOLECULAR DIMENSIONS (Angstroms)
+
+            Atom       Atom       Distance
+            O     2    C     1     1.18991
+            O     2    C     1     0.00000
+            C     1    O     2     0.00000
+
+
+          SCF CALCULATIONS        =          7
+          COMPUTATION TIME        =          0.009 SECONDS
+
+
+
+
+   ATOM   CHEMICAL          X               Y               Z
+  NUMBER   SYMBOL      (ANGSTROMS)     (ANGSTROMS)     (ANGSTROMS)
+ 
+     1       C         -5.47137312  *  -0.48773957  *   0.00000522  *
+     2       O         -4.29651688  *  -0.29906043  *  -0.00000522  *
+
+           Empirical Formula: C O  =     2 atoms
+
+
+
+      MOLECULAR POINT GROUP   :   C*v 
+
+
+          ALPHA EIGENVALUES  
+ -21.91231 -10.27680  -6.29755  -6.06466  -3.54475   1.12964   9.80446  14.41867
+
+
+           BETA EIGENVALUES 
+ -21.31222  -9.77371  -5.87518  -5.35565  -3.10864  10.21830  11.00646  14.98227
+
+
+              NET ATOMIC CHARGES AND DIPOLE CONTRIBUTIONS
+
+  ATOM NO.   TYPE          CHARGE      No. of ELECS.   s-Pop       p-Pop       
+    1          C          -0.276613        4.2766     1.72996     2.54666
+    2          O          -0.723387        6.7234     1.85059     4.87280
+ DIPOLE           X         Y         Z       TOTAL
+ POINT-CHG.    -0.859    -0.138     0.000     0.870
+ HYBRID         1.790     0.287     0.000     1.813
+ SUM            0.931     0.150     0.000     0.943
+
+
+          CARTESIAN COORDINATES 
+
+    NO.       ATOM               X         Y         Z
+
+     1         C                 -5.4714   -0.4877    0.0000
+     2         O                 -4.2965   -0.2991    0.0000
+
+
+          ATOMIC ORBITAL ELECTRON POPULATIONS
+
+   1.72996   0.96500   1.17470   0.40695   1.85059   1.46905   1.81070   1.59305
+
+
+                    (SZ)    =    0.500000
+                    (S**2)  =    0.750502
+
+
+          ATOMIC ORBITAL SPIN POPULATIONS
+
+   0.00493   0.02077   0.79914   0.01322   0.00518  -0.00549   0.17547  -0.01322
+
+
+
+ TOTAL CPU TIME:             0.01 SECONDS
+
+ == MOPAC DONE ==
