@@ -9,4 +9,4 @@ set {
     basis sto-3g
 }
 
-energy('cisd')
+energy('mp2')

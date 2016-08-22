@@ -324,12 +324,16 @@ class CJSON(filewriter.Writer):
 
 
 class NumpyAwareJSONEncoder(json.JSONEncoder):
-    def default(self, obj):
+    """A encoder for numpy.ndarray's obtained from the cclib attributes.
+       For all other types the json default encoder is called.
+    """
+    def numpy_ndarray_encoder(self, obj):
         if isinstance(obj, np.ndarray):
             if obj.ndim == 1:
-                return obj.tolist()
+                nan_list = obj.tolist()
+                return [None if np.isnan(x) else x for x in nan_list]
             else:
-                return [self.default(obj[i]) for i in range(obj.shape[0])]
+                return [self.numpy_ndarray_encoder(obj[i]) for i in range(obj.shape[0])]
         return json.JSONEncoder.default(self, obj)
 
 

@@ -9,4 +9,4 @@ set {
     basis sto-3g
 }
 
-energy('conv-mp2')
+energy('ccsd(t)')
