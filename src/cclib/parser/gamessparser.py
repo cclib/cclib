@@ -1,14 +1,9 @@
 # -*- coding: utf-8 -*-
 #
-# This file is part of cclib (http://cclib.github.io), a library for parsing
-# and interpreting the results of computational chemistry packages.
+# Copyright (c) 2016, the cclib development team
 #
-# Copyright (C) 2006-2014, the cclib development team
-#
-# The library is free software, distributed under the terms of
-# the GNU Lesser General Public version 2.1 or later. You should have
-# received a copy of the license along with cclib. You can also access
-# the full license online at http://www.gnu.org/copyleft/lgpl.html.
+# This file is part of cclib (http://cclib.github.io) and is distributed under
+# the terms of the BSD 3-Clause License.
 
 """Parser for GAMESS(US) output files"""
 
@@ -728,7 +723,7 @@ class GAMESS(logfileparser.Logfile):
         # PLEASE VERIFY THE PROGRAM'S DECISION MANUALLY!
         #
         if "NORMAL COORDINATE ANALYSIS IN THE HARMONIC APPROXIMATION" in line:
-            
+
             self.vibfreqs = []
             self.vibirs = []
             self.vibdisps = []
@@ -738,9 +733,9 @@ class GAMESS(logfileparser.Logfile):
             # Pass the warnings to the logger if they are there.
             while not "MODES" in line:
                 self.updateprogress(inputfile, "Frequency Information")
-                
+
                 line = next(inputfile)
-                
+
                 # Typical Atomic Masses section printed in GAMESS
                 #               ATOMIC WEIGHTS (AMU)
                 #
@@ -1382,6 +1377,40 @@ class GAMESS(logfileparser.Logfile):
                     self.logger.warning('Overwriting previous multipole moments with new values')
                     self.logger.warning('This could be from post-HF properties or geometry optimization')
                     self.moments = [reference, dipole]
+
+        # Static polarizability from a harmonic frequency calculation
+        # with $CPHF/POLAR=.TRUE.
+        if line.strip() == 'ALPHA POLARIZABILITY TENSOR (ANGSTROMS**3)':
+            if not hasattr(self, 'polarizabilities'):
+                self.polarizabilities = []
+            polarizability = numpy.zeros(shape=(3, 3))
+            self.skip_lines(inputfile, ['d', 'b', 'directions'])
+            for i in range(3):
+                line = next(inputfile)
+                polarizability[i, :i+1] = [float(x) for x in line.split()[1:]]
+            polarizability = utils.symmetrize(polarizability, use_triangle='lower')
+            # Convert from Angstrom**3 to bohr**3 (a.u.**3).
+            volume_convert = numpy.vectorize(lambda x: x * utils.convertor(1, 'Angstrom', 'bohr') ** 3)
+            polarizability = volume_convert(polarizability)
+            self.polarizabilities.append(polarizability)
+
+        # Static and dynamic polarizability from RUNTYP=TDHF.
+        if line.strip() == 'TIME-DEPENDENT HARTREE-FOCK NLO PROPERTIES':
+            if not hasattr(self, 'polarizabilities'):
+                self.polarizabilities = []
+            polarizability = numpy.empty(shape=(3, 3))
+            coord_to_idx = {'X': 0, 'Y': 1, 'Z': 2}
+            self.skip_lines(inputfile, ['d', 'b', 'dots'])
+            line = next(inputfile)
+            assert 'ALPHA AT' in line
+            self.skip_lines(inputfile, ['dots', 'b'])
+            for a in range(3):
+                for b in range(3):
+                    line = next(inputfile)
+                    tokens = line.split()
+                    i, j = coord_to_idx[tokens[1][0]], coord_to_idx[tokens[1][1]]
+                    polarizability[i, j] = tokens[3]
+            self.polarizabilities.append(polarizability)
 
 
 if __name__ == "__main__":

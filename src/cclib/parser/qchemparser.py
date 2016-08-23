@@ -1,14 +1,9 @@
 # -*- coding: utf-8 -*-
 #
-# This file is part of cclib (http://cclib.github.io), a library for parsing
-# and interpreting the results of computational chemistry packages.
+# Copyright (c) 2016, the cclib development team
 #
-# Copyright (C) 2014-2016, the cclib development team
-#
-# The library is free software, distributed under the terms of
-# the GNU Lesser General Public version 2.1 or later. You should have
-# received a copy of the license along with cclib. You can also access
-# the full license online at http://www.gnu.org/copyleft/lgpl.html.
+# This file is part of cclib (http://cclib.github.io) and is distributed under
+# the terms of the BSD 3-Clause License.
 
 """Parser for Q-Chem output files"""
 
@@ -796,6 +791,19 @@ class QChem(logfileparser.Logfile):
                 self.set_attribute('etoscs', etoscs)
                 self.set_attribute('etsecs', etsecs)
 
+            # Static and dynamic polarizability from mopropman.
+            if 'Polarizability (a.u.)' in line:
+                if not hasattr(self, 'polarizabilities'):
+                    self.polarizabilities = []
+                polarizability = []
+                while 'Full Tensor' not in line:
+                    line = next(inputfile)
+                self.skip_line(inputfile, 'blank')
+                for _ in range(3):
+                    line = next(inputfile)
+                    polarizability.append(line.split())
+                self.polarizabilities.append(numpy.array(polarizability))
+
             # Molecular orbital energies and symmetries.
             if 'Orbital Energies (a.u.) and Symmetries' in line:
 
@@ -1197,6 +1205,19 @@ class QChem(logfileparser.Logfile):
                     ncolsblock = 5
                 grad = QChem.parse_matrix(inputfile, 3, self.natom, ncolsblock)
                 self.grads.append(grad.T)
+
+            # (Static) polarizability from frequency calculations.
+            if 'Polarizability Matrix (a.u.)' in line:
+                if not hasattr(self, 'polarizabilities'):
+                    self.polarizabilities = []
+                polarizability = []
+                self.skip_line(inputfile, 'index header')
+                for _ in range(3):
+                    line = next(inputfile)
+                    ss = line.strip()[1:]
+                    polarizability.append([ss[0:12], ss[13:24], ss[25:36]])
+                # For some reason the sign is inverted.
+                self.polarizabilities.append(-numpy.array(polarizability, dtype=float))
 
             # For IR-related jobs, the Hessian is printed (dim: 3*natom, 3*natom).
             # Note that this is *not* the mass-weighted Hessian.

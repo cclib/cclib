@@ -1,10 +1,10 @@
 ### cclib
 
-[![DOI](https://zenodo.org/badge/doi/10.5281/zenodo.50324.svg)](http://dx.doi.org/10.5281/zenodo.50324)
+[![DOI](https://zenodo.org/badge/doi/10.5281/zenodo.50324.svg)](http://dx.doi.org/10.5281/zenodo.60670)
 [![PyPI version](http://img.shields.io/pypi/v/cclib.svg?style=flat)](https://pypi.python.org/pypi/cclib)
 [![GitHub release](https://img.shields.io/github/release/cclib/cclib.svg?style=flat)](https://github.com/cclib/cclib/releases)
 [![build status](http://img.shields.io/travis/cclib/cclib/master.svg?style=flat)](https://travis-ci.org/cclib/cclib)
-[![license](http://img.shields.io/badge/license-LGPLv2.1-blue.svg?style=flat)](https://github.com/cclib/cclib/blob/master/LICENSE)
+[![license](http://img.shields.io/badge/license-BSD-blue.svg?style=flat)](https://github.com/cclib/cclib/blob/master/LICENSE)
 
 <img src="./logo.png" alt="cclib logo" width="100" />
 

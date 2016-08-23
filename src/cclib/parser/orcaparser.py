@@ -1,14 +1,9 @@
 # -*- coding: utf-8 -*-
 #
-# This file is part of cclib (http://cclib.github.io), a library for parsing
-# and interpreting the results of computational chemistry packages.
+# Copyright (c) 2016, the cclib development team
 #
-# Copyright (C) 2007-2014, the cclib development team
-#
-# The library is free software, distributed under the terms of
-# the GNU Lesser General Public version 2.1 or later. You should have
-# received a copy of the license along with cclib. You can also access
-# the full license online at http://www.gnu.org/copyleft/lgpl.html.
+# This file is part of cclib (http://cclib.github.io) and is distributed under
+# the terms of the BSD 3-Clause License.
 
 """Parser for ORCA output files"""
 
@@ -783,6 +778,19 @@ class ORCA(logfileparser.Logfile):
                 except AssertionError:
                     self.logger.warning('Overwriting previous multipole moments with new values')
                     self.moments = [reference, dipole]
+
+        # Static polarizability.
+        if line.strip() == "THE POLARIZABILITY TENSOR":
+            if not hasattr(self, 'polarizabilities'):
+                self.polarizabilities = []
+            self.skip_lines(inputfile, ['d', 'b'])
+            line = next(inputfile)
+            assert line.strip() == "The raw cartesian tensor (atomic units):"
+            polarizability = []
+            for _ in range(3):
+                line = next(inputfile)
+                polarizability.append(line.split())
+            self.polarizabilities.append(numpy.array(polarizability))
 
     def parse_scf_condensed_format(self, inputfile, line):
         """ Parse the SCF convergence information in condensed format """

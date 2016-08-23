@@ -1,12 +1,9 @@
-# This file is part of cclib (http://cclib.github.io), a library for parsing
-# and interpreting the results of computational chemistry packages.
+# -*- coding: utf-8 -*-
 #
-# Copyright (C) 2015-2016, the cclib development team
+# Copyright (c) 2016, the cclib development team
 #
-# The library is free software, distributed under the terms of
-# the GNU Lesser General Public version 2.1 or later. You should have
-# received a copy of the license along with cclib. You can also access
-# the full license online at http://www.gnu.org/copyleft/lgpl.html.
+# This file is part of cclib (http://cclib.github.io) and is distributed under
+# the terms of the BSD 3-Clause License.
 
 """Unit tests for parser ccio module."""
 
@@ -38,6 +35,7 @@ class guess_fileypeTest(unittest.TestCase):
         self.assertEqual(self.guess(['Gaussian, Inc.']), cclib.parser.Gaussian)
         self.assertEqual(self.guess(['Jaguar']), cclib.parser.Jaguar)
         self.assertEqual(self.guess(['PROGRAM SYSTEM MOLPRO']), cclib.parser.Molpro)
+        self.assertEqual(self.guess(['MOPAC2016']), cclib.parser.MOPAC)
         self.assertEqual(self.guess(['Northwest Computational Chemistry Package']), cclib.parser.NWChem)
         self.assertEqual(self.guess(['O   R   C   A']), cclib.parser.ORCA)
         self.assertEqual(self.guess(["PSI ...Ab Initio Electronic Structure"]), cclib.parser.Psi)

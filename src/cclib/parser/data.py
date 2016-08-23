@@ -1,14 +1,9 @@
 # -*- coding: utf-8 -*-
 #
-# This file is part of cclib (http://cclib.github.io), a library for parsing
-# and interpreting the results of computational chemistry packages.
+# Copyright (c) 2016, the cclib development team
 #
-# Copyright (C) 2007-2016, the cclib development team
-#
-# The library is free software, distributed under the terms of
-# the GNU Lesser General Public version 2.1 or later. You should have
-# received a copy of the license along with cclib. You can also access
-# the full license online at http://www.gnu.org/copyleft/lgpl.html.
+# This file is part of cclib (http://cclib.github.io) and is distributed under
+# the terms of the BSD 3-Clause License.
 
 """Classes and tools for storing and handling parsed data"""
 
@@ -66,6 +61,7 @@ class ccData(object):
         nooccnos -- natural orbital occupation numbers (array[1])
         optdone -- flags whether an optimization has converged (Boolean)
         optstatus -- optimization status for each set of atomic coordinates (array[1])
+        polarizabilities -- (dipole) polarizabilities, static or dynamic (list of arrays[2])
         scancoords -- geometries of each scan step (array[3], angstroms)
         scanenergies -- energies of potential energy surface (list)
         scannames -- names of varaibles scanned (list of strings)
@@ -135,6 +131,7 @@ class ccData(object):
        "nooccnos":         Attribute(numpy.ndarray,    'TBD',                         'N/A'),
        "optdone":          Attribute(bool,             'done',                        'optimization'),
        "optstatus":        Attribute(numpy.ndarray,    'status',                      'optimization'),
+       "polarizabilities": Attribute(list,             'polarizabilities',            'N/A'),
        "scancoords":       Attribute(numpy.ndarray,    'step geometry',               'optimization:scan'),
        "scanenergies":     Attribute(list,             'PES energies',                'optimization:scan'),
        "scannames":        Attribute(list,             'variable names',              'optimization:scan'),
@@ -159,7 +156,7 @@ class ccData(object):
     _intarrays = ['atomnos', 'coreelectrons', 'homos', 'optstatus']
 
     # Attributes that should be lists of arrays (double precision).
-    _listsofarrays = ['mocoeffs', 'moenergies', 'moments', 'scfvalues']
+    _listsofarrays = ['mocoeffs', 'moenergies', 'moments', 'polarizabilities', 'scfvalues']
 
     # Attributes that should be dictionaries of arrays (double precision).
     _dictsofarrays = ["atomcharges", "atomspins"]

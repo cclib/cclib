@@ -1,12 +1,9 @@
-# This file is part of cclib (http://cclib.github.io), a library for parsing
-# and interpreting the results of computational chemistry packages.
+# -*- coding: utf-8 -*-
 #
-# Copyright (C) 2006,2007,2012,2014,2015, the cclib development team
+# Copyright (c) 2016, the cclib development team
 #
-# The library is free software, distributed under the terms of
-# the GNU Lesser General Public version 2.1 or later. You should have
-# received a copy of the license along with cclib. You can also access
-# the full license online at http://www.gnu.org/copyleft/lgpl.html.
+# This file is part of cclib (http://cclib.github.io) and is distributed under
+# the terms of the BSD 3-Clause License.
 
 """Test logfiles with vibration output in cclib"""
 
@@ -61,10 +58,10 @@ class GaussianIRTest(GenericIRTest):
 
     def testvibsyms(self):
         """Is the length of vibsyms correct?"""
-        numvib = 3*len(self.data.atomnos) - 6        
+        numvib = 3*len(self.data.atomnos) - 6
         self.assertEqual(len(self.data.vibsyms), numvib)
 
-       
+
 class JaguarIRTest(GenericIRTest):
     """Customized vibrational frequency unittest"""
 
@@ -82,7 +79,7 @@ class OrcaIRTest(GenericIRTest):
     # the basis set seems close enough to other programs. It would be nice
     # to determine whether this difference is algorithmic in nature,
     # but in the meanwhile we will expect to parse this value.
-    max_IR_intensity = 215    
+    max_IR_intensity = 215
 
 
 class QChemIRTest(GenericIRTest):

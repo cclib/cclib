@@ -1,12 +1,9 @@
-# This file is part of cclib (http://cclib.github.io), a library for parsing
-# and interpreting the results of computational chemistry packages.
+# -*- coding: utf-8 -*-
 #
-# Copyright (C) 2006-2016 the cclib development team
+# Copyright (c) 2016, the cclib development team
 #
-# The library is free software, distributed under the terms of
-# the GNU Lesser General Public version 2.1 or later. You should have
-# received a copy of the license along with cclib. You can also access
-# the full license online at http://www.gnu.org/copyleft/lgpl.html.
+# This file is part of cclib (http://cclib.github.io) and is distributed under
+# the terms of the BSD 3-Clause License.
 
 """A library for parsing and interpreting results from computational chemistry packages.
 
@@ -17,7 +14,7 @@ and provides a consistent interface to access them.
 
 Currently supported programs:
     ADF, Firefly, GAMESS(US), GAMESS-UK, Gaussian,
-    Jaguar, Molpro, NWChem, ORCA, Psi, Q-Chem
+    Jaguar, Molpro, MOPAC, NWChem, ORCA, Psi, Q-Chem
 
 Another aim is to facilitate the implementation of algorithms that are not specific
 to any particular computational chemistry package and to maximise interoperability
@@ -26,7 +23,7 @@ To this end, cclib provides a number of bridges to help transfer data to other l
 as well as example methods that take parsed data as input.
 """
 
-__version__ = "1.4.1"
+__version__ = "1.5"
 
 from . import parser
 from . import progress

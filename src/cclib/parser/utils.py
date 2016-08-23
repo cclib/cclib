@@ -1,16 +1,40 @@
 # -*- coding: utf-8 -*-
 #
-# This file is part of cclib (http://cclib.github.io), a library for parsing
-# and interpreting the results of computational chemistry packages.
+# Copyright (c) 2016, the cclib development team
 #
-# Copyright (C) 2006-2014, the cclib development team
-#
-# The library is free software, distributed under the terms of
-# the GNU Lesser General Public version 2.1 or later. You should have
-# received a copy of the license along with cclib. You can also access
-# the full license online at http://www.gnu.org/copyleft/lgpl.html.
+# This file is part of cclib (http://cclib.github.io) and is distributed under
+# the terms of the BSD 3-Clause License.
 
 """Utilities often used by cclib parsers and scripts"""
+
+import numpy
+
+
+def symmetrize(m, use_triangle='lower'):
+    """Symmetrize a square NumPy array by reflecting one triangular
+    section across the diagonal to the other.
+    """
+
+    if use_triangle not in ('lower', 'upper'):
+        raise ValueError
+    if not len(m.shape) == 2:
+        raise ValueError
+    if not (m.shape[0] == m.shape[1]):
+        raise ValueError
+
+    dim = m.shape[0]
+
+    lower_indices = numpy.tril_indices(dim, k=-1)
+    upper_indices = numpy.triu_indices(dim, k=1)
+
+    ms = m.copy()
+
+    if use_triangle == 'lower':
+        ms[upper_indices] = ms[lower_indices]
+    if use_triangle == 'upper':
+        ms[lower_indices] = ms[upper_indices]
+
+    return ms
 
 
 def convertor(value, fromunits, tounits):
@@ -26,14 +50,15 @@ def convertor(value, fromunits, tounits):
 
     _convertor = {
 
-        "Angstrom_to_bohr": lambda x: x * 1.8897261245,
-        "bohr_to_Angstrom": lambda x: x * 0.5291772109,
+        "Angstrom_to_bohr":   lambda x: x * 1.8897261245,
+        "bohr_to_Angstrom":   lambda x: x * 0.5291772109,
 
         "cm-1_to_eV":       lambda x: x / 8065.54429,
         "cm-1_to_hartree":  lambda x: x / 219474.6313708,
         "cm-1_to_kcal":     lambda x: x / 349.7550112,
         "cm-1_to_kJmol-1":  lambda x: x / 83.5934722814,
         "cm-1_to_nm":       lambda x: 1e7 / x,
+        "cm-1_to_Hz":       lambda x: x * 29.9792458,
 
         "eV_to_cm-1":       lambda x: x * 8065.54429,
         "eV_to_hartree":    lambda x: x / 27.21138505,
@@ -111,7 +136,8 @@ class PeriodicTable(object):
             'Tl', 'Pb', 'Bi', 'Po', 'At', 'Rn',
             'Fr', 'Ra',
             'Ac', 'Th', 'Pa', 'U', 'Np', 'Pu', 'Am', 'Cm', 'Bk', 'Cf', 'Es', 'Fm', 'Md', 'No',
-            'Lr', 'Rf', 'Db', 'Sg', 'Bh', 'Hs', 'Mt', 'Ds', 'Rg', 'Uub']
+            'Lr', 'Rf', 'Db', 'Sg', 'Bh', 'Hs', 'Mt', 'Ds', 'Rg', 'Cn',
+            'Uut', 'Fl', 'Uup', 'Lv', 'Uus', 'Uuo']
         self.number = {}
         for i in range(1, len(self.element)):
             self.number[self.element[i]] = i

@@ -1,14 +1,9 @@
-#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 #
-# This file is part of cclib (http://cclib.github.io), a library for parsing
-# and interpreting the results of computational chemistry packages.
+# Copyright (c) 2016, the cclib development team
 #
-# Copyright (C) 2006-2016, the cclib development team
-#
-# The library is free software, distributed under the terms of
-# the GNU Lesser General Public version 2.1 or later. You should have
-# received a copy of the license along with cclib. You can also access
-# the full license online at http://www.gnu.org/copyleft/lgpl.html.
+# This file is part of cclib (http://cclib.github.io) and is distributed under
+# the terms of the BSD 3-Clause License.
 
 """cclib: parsers and algorithms for computational chemistry
 
@@ -25,7 +20,7 @@ classifiers = """Development Status :: 5 - Production/Stable
 Environment :: Console
 Intended Audience :: Science/Research
 Intended Audience :: Developers
-License :: OSI Approved :: GNU Library or Lesser General Public License (LGPL)
+License :: OSI Approved :: BSD License
 Natural Language :: English
 Operating System :: OS Independent
 Programming Language :: Python
@@ -45,24 +40,24 @@ def setup_cclib():
     # The list of packages to be installed.
     cclib_packages = [
         'cclib',
+        'cclib.bridge',
+        'cclib.io',
+        'cclib.method',
         'cclib.parser',
         'cclib.progress',
-        'cclib.method',
-        'cclib.bridge',
-        'cclib.io'
     ]
 
     doclines = __doc__.split("\n")
 
     setup(
         name = "cclib",
-        version = "1.4.1",
+        version = "1.5",
         url = "http://cclib.github.io/",
         author = "cclib development team",
         author_email = "cclib-users@lists.sourceforge.net",
         maintainer = "cclib development team",
         maintainer_email = "cclib-users@lists.sourceforge.net",
-        license = "LGPL",
+        license = "BSD 3-Clause License",
         description = doclines[0],
         long_description = "\n".join(doclines[2:]),      
         classifiers = classifiers.split("\n"),

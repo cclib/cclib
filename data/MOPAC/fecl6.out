@@ -1,0 +1,278 @@
+ *******************************************************************************
+ ** Site#: 6541         For non-commercial use only     Version 14.208M 64BITS**
+ *******************************************************************************
+ ** Cite this work as:                                                        **
+ **                                                                           **
+ ** (a) MOPAC2012, James J. P. Stewart, Stewart Computational Chemistry,      **
+ **  Version 14.208M web: HTTP://OpenMOPAC.net         Days remaining:   0    **
+ **                                                                           **
+ **                                 AND                                       **
+ **                                                                           **
+ ** (b) Maia, J.D.C., et al., J. Chem. Theory Comput. 2012, 8, 3072-3081.     **
+ **                DOI: 10.1021/ct3004645.                                    **
+ *******************************************************************************
+ **                                                                           **
+ **                                MOPAC2012                                  **
+ **                                                                           **
+ *******************************************************************************
+
+                            PM7 CALCULATION RESULTS
+
+
+ *******************************************************************************
+ *  CALCULATION DONE:                                Fri Apr  8 16:56:02 2016  *
+ *  PM7        - The PM7 Hamiltonian to be used
+ *  SEXTET     - SPIN STATE DEFINED AS A SEXTET
+ *
+ *
+ *
+ *                 CHARGE ON SYSTEM =    -3
+ *
+ *
+ *
+ *  T=         - A TIME OF 172800.0 SECONDS REQUESTED
+ *  DUMP=N     - RESTART FILE WRITTEN EVERY  7200.000 SECONDS
+ *  LARGE      - EXPANDED OUTPUT TO BE PRINTED
+ *******************************************************************************
+ LARGE CHARGE=-3 SEXTET  PM7
+ Title
+
+   ATOM   CHEMICAL          X               Y               Z
+  NUMBER   SYMBOL      (ANGSTROMS)     (ANGSTROMS)     (ANGSTROMS)
+ 
+     1      Fe         -0.56480000  *  -0.17888000  *   0.17143000  *
+     2      Cl         -2.02799000  *  -0.48345000  *  -1.55265000  *
+     3      Cl          0.89832000  *   0.12565000  *   1.89551000  *
+     4      Cl          0.09932000  *   1.80349000  *  -0.74238000  *
+     5      Cl         -1.22898000  *  -2.16130000  *   1.08524000  *
+     6      Cl         -2.18474000  *   0.90894000  *   1.35402000  *
+     7      Cl          1.05508000  *  -1.26674000  *  -1.01116000  *
+ 
+
+
+          CARTESIAN COORDINATES 
+
+    NO.       ATOM         X         Y         Z
+
+     1        Fe       -0.5648   -0.1789    0.1714
+     2        Cl       -2.0280   -0.4835   -1.5527
+     3        Cl        0.8983    0.1256    1.8955
+     4        Cl        0.0993    1.8035   -0.7424
+     5        Cl       -1.2290   -2.1613    1.0852
+     6        Cl       -2.1847    0.9089    1.3540
+     7        Cl        1.0551   -1.2667   -1.0112
+
+     ===================== shared-memory parallel CPU Section ======================
+     **                                                                           **
+     **  MOPAC calculations will run in shared-memory parallel CPUs               **
+     **                                                                           **
+     **  Number of Threads =  2                                                   **
+     **                                                                           **
+     **                                                                           **
+     **  For information on this work, see:                                       **
+     **                                                                           **
+     **  Maia, J.D.C., et al., J. Chem. Theory Comput. 2012, 8, 3072-3081.        **
+     **        DOI: 10.1021/ct3004645.                                            **
+     **                                                                           **
+     ===================== shared-memory parallel CPU Section ======================
+      
+
+
+ General Reference for PM7:
+ "Optimization of Parameters for Semiempirical Methods VI: More Modifications to the 
+ NDDO Approximations and Re-optimization of Parameters", J. J. P. Stewart, J. Mol. Mod., 1:32, 19 (2013)
+ http://www.springerlink.com/openurl.asp?genre=article&id=doi:10.1007/s00894-012-1667-x
+
+           Empirical Formula: Fe Cl6  =     7 atoms
+
+
+
+      MOLECULAR POINT GROUP   :   Oh  
+
+
+ SEXTET STATE CALCULATION
+
+
+          UHF CALCULATION, NO. OF ALPHA ELECTRONS =   29
+                           NO. OF BETA  ELECTRONS =   24
+      Geometry optimization using EF
+
+          DIAGONAL MATRIX USED AS START HESSIAN
+
+ CYCLE:     1 TIME:   0.059 TIME LEFT:  2.00D  GRAD.:    40.163 HEAT: -110.8178
+ CYCLE:     2 TIME:   0.035 TIME LEFT:  2.00D  GRAD.:    26.216 HEAT: -113.6516
+ CYCLE:     3 TIME:   0.039 TIME LEFT:  2.00D  GRAD.:    12.387 HEAT: -115.7951
+ CYCLE:     4 TIME:   0.031 TIME LEFT:  2.00D  GRAD.:     6.385 HEAT: -116.2249
+ CYCLE:     5 TIME:   0.035 TIME LEFT:  2.00D  GRAD.:     6.517 HEAT: -116.3548
+ CYCLE:     6 TIME:   0.066 TIME LEFT:  2.00D  GRAD.:     6.734 HEAT: -116.4040
+ CYCLE:     7 TIME:   0.035 TIME LEFT:  2.00D  GRAD.:     3.318 HEAT: -116.4507
+ CYCLE:     8 TIME:   0.031 TIME LEFT:  2.00D  GRAD.:     3.240 HEAT: -116.4851
+ CYCLE:     9 TIME:   0.035 TIME LEFT:  2.00D  GRAD.:     1.059 HEAT: -116.4941
+ CYCLE:    10 TIME:   0.035 TIME LEFT:  2.00D  GRAD.:     1.027 HEAT: -116.4995
+ CYCLE:    11 TIME:   0.039 TIME LEFT:  2.00D  GRAD.:     1.383 HEAT: -116.5053
+ CYCLE:    12 TIME:   0.055 TIME LEFT:  2.00D  GRAD.:     4.002 HEAT: -116.5404
+ CYCLE:    13 TIME:   0.031 TIME LEFT:  2.00D  GRAD.:     3.397 HEAT: -116.5506
+ CYCLE:    14 TIME:   0.035 TIME LEFT:  2.00D  GRAD.:     3.139 HEAT: -116.5965
+ CYCLE:    15 TIME:   0.031 TIME LEFT:  2.00D  GRAD.:     1.364 HEAT: -116.6189
+ CYCLE:    16 TIME:   0.047 TIME LEFT:  2.00D  GRAD.:     3.581 HEAT: -116.6671
+ CYCLE:    17 TIME:   0.035 TIME LEFT:  2.00D  GRAD.:     4.448 HEAT: -116.7027
+ CYCLE:    18 TIME:   0.035 TIME LEFT:  2.00D  GRAD.:     2.062 HEAT: -116.8044
+ CYCLE:    19 TIME:   0.039 TIME LEFT:  2.00D  GRAD.:     1.989 HEAT: -116.8997
+ CYCLE:    20 TIME:   0.039 TIME LEFT:  2.00D  GRAD.:     2.555 HEAT: -116.9509
+ CYCLE:    21 TIME:   0.035 TIME LEFT:  2.00D  GRAD.:     1.265 HEAT: -117.0215
+ CYCLE:    22 TIME:   0.043 TIME LEFT:  2.00D  GRAD.:     0.905 HEAT: -117.0404
+
+     GRADIENT =  0.90538  IS LESS THAN CUTOFF =  1.00000
+
+
+
+ -------------------------------------------------------------------------------
+ LARGE CHARGE=-3 SEXTET  PM7
+ Title
+
+
+
+     GEOMETRY OPTIMISED USING EIGENVECTOR FOLLOWING (EF).     
+     SCF FIELD WAS ACHIEVED                                   
+
+
+                              PM7 CALCULATION
+                                                       MOPAC2012 (Version: 14.208M)
+                                                       Fri Apr  8 16:56:03 2016
+                                                       No. of days left =   0
+
+
+
+
+          FINAL HEAT OF FORMATION =       -117.04061 KCAL/MOL =    -489.69793 KJ/MOL
+
+
+          TOTAL ENERGY            =      -2002.96940 EV
+          ELECTRONIC ENERGY       =      -6771.25114 EV  POINT GROUP:     C2h 
+          CORE-CORE REPULSION     =       4768.28174 EV
+          COSMO AREA              =        183.21 SQUARE ANGSTROMS
+          COSMO VOLUME            =        202.73 CUBIC ANGSTROMS
+
+          GRADIENT NORM           =          0.90538
+          IONIZATION POTENTIAL    =         -3.095689 EV
+          ALPHA SOMO LUMO (EV)    =          3.096 10.532
+          BETA  SOMO LUMO (EV)    =          1.038 11.076
+          NO. OF ALPHA ELECTRONS  =         29
+          NO. OF BETA  ELECTRONS  =         24
+          MOLECULAR WEIGHT        =        268.565
+
+          MOLECULAR DIMENSIONS (Angstroms)
+
+            Atom       Atom       Distance
+           Cl     5   Cl     4     4.78403
+           Cl     3   Cl     2     4.74674
+           Cl     7   Cl     6     4.31395
+
+
+          SCF CALCULATIONS        =         24
+ 
+          WALL-CLOCK TIME         =          0.918 SECONDS
+          COMPUTATION TIME        =          1.726 SECONDS
+
+
+
+
+   ATOM   CHEMICAL          X               Y               Z
+  NUMBER   SYMBOL      (ANGSTROMS)     (ANGSTROMS)     (ANGSTROMS)
+ 
+     1      Fe         -0.56544470  *  -0.17876310  *   0.17157966  *
+     2      Cl         -2.08837126  *  -0.49814217  *  -1.62012665  *
+     3      Cl          0.95924031  *   0.14058947  *   1.96256894  *
+     4      Cl          0.13400905  *   1.89854103  *  -0.78626193  *
+     5      Cl         -1.26334324  *  -2.25643177  *   1.12959515  *
+     6      Cl         -2.09744672  *   0.84633703  *   1.29037859  *
+     7      Cl          0.96773103  *  -1.20445031  *  -0.94776193  *
+                             CARTESIAN COORDINATES
+
+   1   Fe       -0.565444702    -0.178763097     0.171579664
+   2   Cl       -2.088371264    -0.498142172    -1.620126654
+   3   Cl        0.959240305     0.140589468     1.962568936
+   4   Cl        0.134009047     1.898541031    -0.786261930
+   5   Cl       -1.263343241    -2.256431767     1.129595146
+   6   Cl       -2.097446720     0.846337028     1.290378588
+   7   Cl        0.967731029    -1.204450310    -0.947761928
+
+
+           Empirical Formula: Fe Cl6  =     7 atoms
+
+
+
+      MOLECULAR POINT GROUP   :   C2h 
+
+
+          ALPHA EIGENVALUES  
+ -15.67425 -14.65074 -14.44148 -14.27662 -13.94034 -13.89825  -5.17249  -5.15280
+  -5.14076  -4.93714  -4.14058  -3.05042  -1.00852  -0.71544  -0.70003   0.19741
+   0.22296   0.37173   0.38829   0.66110   0.69898   0.73871   0.76703   0.89616
+   1.12275   1.12704   1.26783   2.96227   3.09569  10.53213  17.51988  17.53359
+  18.24735  81.96797  82.20191  82.68955  82.69379  83.22651  83.23236  84.94536
+  85.05926  85.31051  85.33709  86.28974  86.58367  86.74719  86.74808  86.85337
+  87.02924  87.16934  87.93293  87.96190  88.05848  88.06299  88.48677  88.57458
+  88.71753  88.88271  88.98576  89.07930  89.16223  89.79603  90.09772
+
+
+           BETA EIGENVALUES 
+ -15.32589 -14.42552 -13.64016 -13.43734 -13.11122 -13.08399  -3.94437  -1.84098
+  -1.70261  -1.67227  -1.36720  -1.12152  -0.42885  -0.41314  -0.13637   0.62629
+   0.64285   0.77057   0.80148   0.86376   0.89137   1.02738   1.03307   1.03817
+  11.07625  11.09033  11.85658  12.16763  12.90908  13.91035  20.67500  21.39248
+  21.39876  81.94297  82.18076  82.70124  82.70612  83.23236  83.23752  85.01636
+  85.13440  85.38338  85.41070  86.40468  86.69631  86.84955  86.85977  86.95433
+  87.13471  87.27272  88.03150  88.07497  88.11023  88.15592  88.58580  88.67888
+  88.77256  88.93156  89.03200  89.13252  89.21207  89.84968  90.14799
+
+
+              NET ATOMIC CHARGES AND DIPOLE CONTRIBUTIONS
+
+  ATOM NO.   TYPE          CHARGE      No. of ELECS.   s-Pop       p-Pop       d-Pop       
+    1         Fe           1.172685        6.8273     1.06488     0.19153     5.57090
+    2         Cl          -0.796051        7.7961     1.99288     5.80111     0.00206
+    3         Cl          -0.796296        7.7963     1.99289     5.80135     0.00206
+    4         Cl          -0.806409        7.8064     1.99317     5.81122     0.00202
+    5         Cl          -0.806407        7.8064     1.99317     5.81122     0.00202
+    6         Cl          -0.483406        7.4834     1.98437     5.49605     0.00298
+    7         Cl          -0.484117        7.4841     1.98441     5.49673     0.00298
+ DIPOLE           X         Y         Z       TOTAL
+ POINT-CHG.    -0.014     0.004     0.003     0.015
+ HYBRID         0.001    -0.001    -0.001     0.002
+ SUM           -0.013     0.004     0.002     0.013
+
+
+          ATOMIC ORBITAL ELECTRON POPULATIONS
+
+    Atom      s        px        py        pz      x^2-y^2     xz        z^2       yz        xy
+    1 Fe   1.06488   0.07419   0.05669   0.06066   1.17705   1.08213   1.15262   1.11243   1.04667
+    2 Cl   1.99288   1.92403   1.97141   1.90567   0.00036   0.00028   0.00056   0.00047   0.00039
+    3 Cl   1.99289   1.92407   1.97147   1.90581   0.00036   0.00028   0.00056   0.00047   0.00039
+    4 Cl   1.99317   1.96524   1.88890   1.95708   0.00041   0.00033   0.00038   0.00041   0.00048
+    5 Cl   1.99317   1.96526   1.88889   1.95707   0.00041   0.00033   0.00038   0.00041   0.00048
+    6 Cl   1.98437   1.77465   1.86771   1.85369   0.00073   0.00055   0.00067   0.00050   0.00052
+    7 Cl   1.98441   1.77480   1.86797   1.85397   0.00073   0.00055   0.00066   0.00050   0.00052
+
+
+                    (SZ)    =    2.500000
+                    (S**2)  =    8.767270
+
+
+          ATOMIC ORBITAL SPIN POPULATIONS
+
+    Atom   Total    s     px     py     pz   x^2-y^2  xz     z^2    yz     xy
+         Atomic
+    1 Fe  4.2588  0.744  0.008  0.002  0.003  0.773  0.526  0.836  0.726  0.641
+    2 Cl  0.1647  0.006  0.059  0.027  0.072  0.000  0.000  0.000  0.000  0.000
+    3 Cl  0.1645  0.006  0.059  0.027  0.072  0.000  0.000  0.000  0.000  0.000
+    4 Cl  0.1616  0.006  0.031  0.087  0.037  0.000  0.000  0.000  0.000  0.000
+    5 Cl  0.1615  0.006  0.031  0.087  0.037  0.000  0.000  0.000  0.000  0.000
+    6 Cl  0.0448  0.002 -0.006  0.027  0.022  0.000  0.000  0.000  0.000  0.000
+    7 Cl  0.0441  0.002 -0.007  0.027  0.022  0.000  0.000  0.000  0.000  0.000
+
+
+
+ TOTAL JOB TIME:             0.92 SECONDS
+
+ == MOPAC DONE ==

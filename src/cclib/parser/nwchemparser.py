@@ -1,14 +1,9 @@
 # -*- coding: utf-8 -*-
 #
-# This file is part of cclib (http://cclib.github.io), a library for parsing
-# and interpreting the results of computational chemistry packages.
+# Copyright (c) 2016, the cclib development team
 #
-# Copyright (C) 2008-2014, the cclib development team
-#
-# The library is free software, distributed under the terms of
-# the GNU Lesser General Public version 2.1 or later. You should have
-# received a copy of the license along with cclib. You can also access
-# the full license online at http://www.gnu.org/copyleft/lgpl.html.
+# This file is part of cclib (http://cclib.github.io) and is distributed under
+# the terms of the BSD 3-Clause License.
 
 """Parser for NWChem output files"""
 
@@ -1038,6 +1033,21 @@ class NWChem(logfileparser.Logfile):
                 self.ccenergies = []
             self.ccenergies.append([])
             self.ccenergies[-1].append(utils.convertor(ccenerg, "hartree", "eV"))
+
+        # Static and dynamic polarizability.
+        if "Linear Response polarizability / au" in line:
+            if not hasattr(self, "polarizabilities"):
+                self.polarizabilities = []
+            polarizability = []
+            line = next(inputfile)
+            assert line.split()[0] == "Frequency"
+            line = next(inputfile)
+            assert line.split()[0] == "Wavelength"
+            self.skip_lines(inputfile, ['coordinates', 'd'])
+            for _ in range(3):
+                line = next(inputfile)
+                polarizability.append(line.split()[1:])
+            self.polarizabilities.append(numpy.array(polarizability))
 
     def after_parsing(self):
         """NWChem-specific routines for after parsing file.

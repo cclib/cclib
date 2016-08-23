@@ -1,14 +1,9 @@
 # -*- coding: utf-8 -*-
 #
-# This file is part of cclib (http://cclib.github.io), a library for parsing
-# and interpreting the results of computational chemistry packages.
+# Copyright (c) 2016, the cclib development team
 #
-# Copyright (C) 2009-2016, the cclib development team
-#
-# The library is free software, distributed under the terms of
-# the GNU Lesser General Public version 2.1 or later. You should have
-# received a copy of the license along with cclib. You can also access
-# the full license online at http://www.gnu.org/copyleft/lgpl.html.
+# This file is part of cclib (http://cclib.github.io) and is distributed under
+# the terms of the BSD 3-Clause License.
 
 """Tools for identifying, reading and writing files and streams."""
 
@@ -36,6 +31,7 @@ from ..parser.gamessukparser import GAMESSUK
 from ..parser.gaussianparser import Gaussian
 from ..parser.jaguarparser import Jaguar
 from ..parser.molproparser import Molpro
+from ..parser.mopacparser import MOPAC
 from ..parser.nwchemparser import NWChem
 from ..parser.orcaparser import ORCA
 from ..parser.psiparser import Psi
@@ -61,6 +57,7 @@ except ImportError:
 #   2. Molpro log files don't have the program header, but always contain
 #      the generic string 1PROGRAM, so don't break here either to be cautious.
 #   3. The Psi header has two different strings with some variation
+#   4. "MOPAC" is used in some packages like GAMESS, so match MOPAC20##
 #
 # The triggers are defined by the tuples in the list below like so:
 #   (parser, phrases, flag whether we should break)
@@ -75,6 +72,7 @@ triggers = [
     (Jaguar,    ["Jaguar"],                                         True),
     (Molpro,    ["PROGRAM SYSTEM MOLPRO"],                          True),
     (Molpro,    ["1PROGRAM"],                                       False),
+    (MOPAC,     ["MOPAC20"],                                        True),
     (NWChem,    ["Northwest Computational Chemistry Package"],      True),
     (ORCA,      ["O   R   C   A"],                                  True),
     (Psi,       ["PSI", "Ab Initio Electronic Structure"],          True),
@@ -134,9 +132,9 @@ def ccopen(source, *args, **kargs):
       source - a single logfile, a list of logfiles, or an input stream
 
     Returns:
-      one of ADF, DALTON, GAMESS, GAMESS UK, Gaussian, Jaguar, Molpro, NWChem, ORCA,
-        Psi, QChem, CJSON or None (if it cannot figure it out or the file does not
-        exist).
+      one of ADF, DALTON, GAMESS, GAMESS UK, Gaussian, Jaguar, Molpro, MOPAC,
+      NWChem, ORCA, Psi, QChem, CJSON or None (if it cannot figure it out or
+      the file does not exist).
     """
 
     inputfile = None

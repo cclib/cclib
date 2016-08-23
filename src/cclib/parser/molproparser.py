@@ -1,14 +1,9 @@
 # -*- coding: utf-8 -*-
 #
-# This file is part of cclib (http://cclib.github.io), a library for parsing
-# and interpreting the results of computational chemistry packages.
+# Copyright (c) 2016, the cclib development team
 #
-# Copyright (C) 2007-2014, the cclib development team
-#
-# The library is free software, distributed under the terms of
-# the GNU Lesser General Public version 2.1 or later. You should have
-# received a copy of the license along with cclib. You can also access
-# the full license online at http://www.gnu.org/copyleft/lgpl.html.
+# This file is part of cclib (http://cclib.github.io) and is distributed under
+# the terms of the BSD 3-Clause License.
 
 """Parser for Molpro output files"""
 
@@ -569,6 +564,17 @@ class Molpro(logfileparser.Logfile):
                 self.moments = [reference, dipole]
             else:
                 self.moments[1] == dipole
+
+        # Static dipole polarizability.
+        if line.strip() == "SCF dipole polarizabilities":
+            if not hasattr(self, "polarizabilities"):
+                self.polarizabilities = []
+            polarizability = []
+            self.skip_lines(inputfile, ['b', 'directions'])
+            for _ in range(3):
+                line = next(inputfile)
+                polarizability.append(line.split()[1:])
+            self.polarizabilities.append(numpy.array(polarizability))
 
         # Check for ELECTRON ORBITALS (canonical molecular orbitals).
         if line[1:18] == "ELECTRON ORBITALS" or self.electronorbitals:
