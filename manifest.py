@@ -13,7 +13,7 @@ import glob
 import os
 
 
-files = ['ANNOUNCE', 'CHANGELOG', 'INSTALL', 'LICENSE', 'README','THANKS',]
+files = ['ANNOUNCE', 'CHANGELOG', 'INSTALL', 'LICENSE', 'README.md','THANKS',]
 files += ['setup.py']
 
 source = os.path.join('src', 'cclib')
