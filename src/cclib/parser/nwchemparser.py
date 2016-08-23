@@ -29,9 +29,6 @@ class NWChem(logfileparser.Logfile):
 
         # Call the __init__ method of the superclass
         super(NWChem, self).__init__(logname="NWChem", *args, **kwargs)
-        if not hasattr(self, "metadata"):
-            self.metadata = {}
-            self.metadata["package"] = self.logname
 
     def __str__(self):
         """Return a string representation of the object."""
@@ -55,9 +52,6 @@ class NWChem(logfileparser.Logfile):
         """
         # FIXME if necessary
         return label
-
-    def before_parsing(self):
-        self.metadata['methods'] = []
 
     name2element = lambda self, lbl: "".join(itertools.takewhile(str.isalpha, str(lbl)))
 

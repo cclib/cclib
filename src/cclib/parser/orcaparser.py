@@ -28,9 +28,6 @@ class ORCA(logfileparser.Logfile):
 
         # Call the __init__ method of the superclass
         super(ORCA, self).__init__(logname="ORCA", *args, **kwargs)
-        if not hasattr(self, "metadata"):
-            self.metadata = {}
-            self.metadata["package"] = self.logname
 
 
     def __str__(self):
@@ -62,8 +59,6 @@ class ORCA(logfileparser.Logfile):
 
         # Keep track of whether this is a relaxed scan calculation
         self.is_relaxed_scan = False
-
-        self.metadata['methods'] = []
 
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""

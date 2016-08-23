@@ -29,9 +29,6 @@ class DALTON(logfileparser.Logfile):
 
         # Call the __init__ method of the superclass
         super(DALTON, self).__init__(logname="DALTON", *args, **kwargs)
-        if not hasattr(self, "metadata"):
-            self.metadata = {}
-            self.metadata["package"] = self.logname
 
     def __str__(self):
         """Return a string representation of the object."""
@@ -64,7 +61,6 @@ class DALTON(logfileparser.Logfile):
         # when the first line is BASIS, false for INTGRL/ATOMBASIS.
         self.basislibrary = True
 
-        self.metadata['methods'] = []
 
     def parse_geometry(self, lines):
         """Parse DALTON geometry lines into an atomcoords array."""

@@ -30,9 +30,6 @@ class QChem(logfileparser.Logfile):
 
         # Call the __init__ method of the superclass
         super(QChem, self).__init__(logname="QChem", *args, **kwargs)
-        if not hasattr(self, "metadata"):
-            self.metadata = {}
-            self.metadata["package"] = self.logname
 
     def __str__(self):
         """Return a string representation of the object."""
@@ -108,7 +105,8 @@ class QChem(logfileparser.Logfile):
             'Final Hessian.',
         )
 
-        self.metadata['methods'] = []
+        self.wfn_method = ['HF', 'MP2', 'RI-MP2', 'LOCAL_MP2', 'MP4', 'CCD', 'CCSD', \
+                                      'CCSD(T)', 'QCISD', 'QCISD(T)']
 
     def after_parsing(self):
 
@@ -297,8 +295,6 @@ class QChem(logfileparser.Logfile):
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
 
-        wfn_method = ['HF', 'MP2', 'RI-MP2', 'LOCAL_MP2', 'MP4', 'CCD', 'CCSD', \
-                                      'CCSD(T)', 'QCISD', 'QCISD(T)']
         # Extract the version number first
         if 'Q-Chem,' in line:
             self.metadata["package_version"] = line.split()[1][:-1]
@@ -321,7 +317,7 @@ class QChem(logfileparser.Logfile):
                             line = next(inputfile)
                             if 'method' in line.lower():
                                 method = line.split()[-1].upper()
-                                if method in wfn_method:
+                                if method in self.wfn_method:
                                     self.metadata["methods"].append(method)
                                 else:
                                     self.metadata["methods"].append('DFT')

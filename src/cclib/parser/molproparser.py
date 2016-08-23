@@ -60,9 +60,6 @@ class Molpro(logfileparser.Logfile):
     def __init__(self, *args, **kwargs):
         # Call the __init__ method of the superclass
         super(Molpro, self).__init__(logname="Molpro", *args, **kwargs)
-        if not hasattr(self, "metadata"):
-            self.metadata = {}
-            self.metadata["package"] = self.logname
 
     def __str__(self):
         """Return a string representation of the object."""
@@ -81,7 +78,6 @@ class Molpro(logfileparser.Logfile):
 
         self.electronorbitals = ""
         self.insidescf = False
-        self.metadata['methods'] = []
 
     def after_parsing(self):
 

@@ -28,9 +28,6 @@ class Jaguar(logfileparser.Logfile):
 
         # Call the __init__ method of the superclass
         super(Jaguar, self).__init__(logname="Jaguar", *args, **kwargs)
-        if not hasattr(self, "metadata"):
-            self.metadata = {}
-            self.metadata["package"] = self.logname
 
     def __str__(self):
         """Return a string representation of the object."""
@@ -62,8 +59,6 @@ class Jaguar(logfileparser.Logfile):
         # We need to track whether we are inside geometry optimization in order
         # to parse SCF targets/values correctly.
         self.geoopt = False
-
-        self.metadata['methods'] = []
 
     def after_parsing(self):
 

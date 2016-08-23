@@ -230,6 +230,13 @@ class Logfile(object):
             handler.setFormatter(logging.Formatter("[%(name)s %(levelname)s] %(message)s"))
             self.logger.addHandler(handler)
 
+        # Set up the metadata.
+        if not hasattr(self, "metadata"):
+            self.metadata = {}
+            self.metadata["package"] = self.logname
+            self.metadata["methods"] = []
+
+
         # Periodic table of elements.
         self.table = utils.PeriodicTable()
 

@@ -30,9 +30,6 @@ class Gaussian(logfileparser.Logfile):
 
         # Call the __init__ method of the superclass
         super(Gaussian, self).__init__(logname="Gaussian", *args, **kwargs)
-        if not hasattr(self, "metadata"):
-            self.metadata = {}
-            self.metadata["package"] = self.logname
 
     def __str__(self):
         """Return a string representation of the object."""
@@ -88,8 +85,6 @@ class Gaussian(logfileparser.Logfile):
         # We also add a "time" attribute to the parser.
         self.BOMD = False
 
-        # Methods could have multiple values
-        self.metadata['methods'] = []
 
     def after_parsing(self):
 

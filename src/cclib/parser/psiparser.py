@@ -29,9 +29,6 @@ class Psi(logfileparser.Logfile):
 
         # Call the __init__ method of the superclass
         super(Psi, self).__init__(logname="Psi", *args, **kwargs)
-        if not hasattr(self, "metadata"):
-            self.metadata = {}
-            self.metadata["package"] = self.logname
 
     def __str__(self):
         """Return a string representation of the object."""
@@ -54,8 +51,6 @@ class Psi(logfileparser.Logfile):
         # This is just used to track which part of the output we are in for Psi4,
         # with changes triggered by ==> things like this <== (Psi3 does not have this)
         self.section = None
-
-        self.metadata['methods'] = []
 
 
     def after_parsing(self):
