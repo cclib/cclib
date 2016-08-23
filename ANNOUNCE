@@ -4,12 +4,10 @@ cclib is an open source library, written in Python, for parsing and interpreting
 
 Among other data, cclib extracts:
 
-    * coordinates and energies
-    * geometry optimization data
-    * atomic orbital information
-    * molecular orbital data
-    * vibrational modes
-    * results of TD-DFT calculations
+    * results of SCF, post-Hartree-Fock, TD-DFT and other calculations
+    * coordinates, energies and geometry optimization data
+    * information about atomic and molecular orbitals
+    * vibrational modes, excited states and transitions
     * charges and electrostatic moments
 
 (For a complete list see http://cclib.github.io/data.html).
@@ -18,7 +16,7 @@ cclib also provides some calculation methods for interpreting the electronic pro
 
     * Mulliken and Lowdin population analyses
     * Overlap population analysis
-    * Calculation of Mayer's bond orders. 
+    * Mayer's bond orders
 
 (For a complete list see http://cclib.github.io/methods.html).
 
@@ -31,7 +29,7 @@ If you need help, find a bug, want new features or have any questions, please se
 If your published work uses cclib, please support its development by citing the following article:
     N. M. O'Boyle, A. L. Tenderholt, K. M. Langner, cclib: a library for package-independent computational chemistry algorithms, J. Comp. Chem. 29 (5), 839-845 (2008)
 You can also specifically reference this version of cclib as:
-    Eric Berquist, Karol M. Langner, Noel M. O'Boyle, and Adam L. Tenderholt. Release of cclib version 1.4. 2016. http://dx.doi.org/10.5281/zenodo.50324
+    Eric Berquist, Karol M. Langner, Noel M. O'Boyle, and Adam L. Tenderholt. Release of cclib version 1.5. 2016. http://dx.doi.org/10.5281/zenodo.60670
 
 Regards,
 The cclib development team
@@ -40,6 +38,6 @@ The cclib development team
 
 Summary of changes since last version:
     Support for reading and writing CJSON files
-    New parser: cclib nor parses MOPAC files
+    New parser: cclib now parses MOPAC files
     New attribute time for tracking coordinates in trajectories
     New attribute metadata for miscellaneous data not in other attributes 
