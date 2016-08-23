@@ -4,7 +4,7 @@ Features:
     * Support for both reading and writing CJSON (Sanjeed Schamnad)
     * New parser: cclib can now parse MOPAC files (Geoff Hutchison)
     * New attribute time tracks coordinated for dynamics jobs (Ramon Crehuet)
-    * New attribute metadata holds miscellaneous information not in other attributes
+    * New attribute metadata holds miscellaneous information not in other attributes (bwang2453)
     * Extract moments attribute for Gaussian (Geoff Hutchison)
     * Extract atombasis for ADF in simple cases (Felix Plaser)
 

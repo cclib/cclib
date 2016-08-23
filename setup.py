@@ -45,11 +45,11 @@ def setup_cclib():
     # The list of packages to be installed.
     cclib_packages = [
         'cclib',
+        'cclib.bridge',
+        'cclib.io',
+        'cclib.method',
         'cclib.parser',
         'cclib.progress',
-        'cclib.method',
-        'cclib.bridge',
-        'cclib.io'
     ]
 
     doclines = __doc__.split("\n")

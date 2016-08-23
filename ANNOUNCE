@@ -4,12 +4,10 @@ cclib is an open source library, written in Python, for parsing and interpreting
 
 Among other data, cclib extracts:
 
-    * coordinates and energies
-    * geometry optimization data
-    * atomic orbital information
-    * molecular orbital data
-    * vibrational modes
-    * results of TD-DFT calculations
+    * results of SCF, post-Hartree-Fock, TD-DFT and other calculations
+    * coordinates, energies and geometry optimization data
+    * information about atomic and molecular orbitals
+    * vibrational modes, excited states and transitions
     * charges and electrostatic moments
 
 (For a complete list see http://cclib.github.io/data.html).
@@ -18,7 +16,7 @@ cclib also provides some calculation methods for interpreting the electronic pro
 
     * Mulliken and Lowdin population analyses
     * Overlap population analysis
-    * Calculation of Mayer's bond orders. 
+    * Mayer's bond orders
 
 (For a complete list see http://cclib.github.io/methods.html).
 
@@ -40,6 +38,6 @@ The cclib development team
 
 Summary of changes since last version:
     Support for reading and writing CJSON files
-    New parser: cclib nor parses MOPAC files
+    New parser: cclib now parses MOPAC files
     New attribute time for tracking coordinates in trajectories
     New attribute metadata for miscellaneous data not in other attributes 

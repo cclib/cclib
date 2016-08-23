@@ -25,7 +25,7 @@ files.append(os.path.join("src", "scripts", "ccget"))
 files.append(os.path.join("src", "scripts", "ccwrite"))
 files.append(os.path.join("src", "scripts", "cda"))
 
-folders = ['bridge', 'method', 'parser', 'progress', 'writer']
+folders = ['bridge', 'io', 'method', 'parser', 'progress']
 for folder in folders:
     files.extend(glob.glob(os.path.join(source,folder,'*.py')))
 
