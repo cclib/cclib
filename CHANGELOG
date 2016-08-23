@@ -7,6 +7,7 @@ Features:
     * New attribute metadata holds miscellaneous information not in other attributes (bwang2453)
     * Extract moments attribute for Gaussian (Geoff Hutchison)
     * Extract atombasis for ADF in simple cases (Felix Plaser)
+    * License change to BSD 3-Clause License
 
 Bugfixes:
     * Correct parsing of several attributes for ROHF calculations
