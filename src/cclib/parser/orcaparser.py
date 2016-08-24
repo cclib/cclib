@@ -84,11 +84,18 @@ class ORCA(logfileparser.Logfile):
             self.skip_line(inputfile, 'dashes')
 
             line = next(inputfile)
-            colums = line.split()
-            if colums[1] == "Energy":
-                self.parse_scf_condensed_format(inputfile, colums)
-            elif colums[1] == "Starting":
-                self.parse_scf_expanded_format(inputfile, colums)
+            columns = line.split()
+            # "Starting incremental Fock matrix formation" doesn't
+            # necessarily appear before the extended format.
+            if not columns:
+                self.parse_scf_expanded_format(inputfile, columns)
+            # A header with distinct columns indicates the condensed
+            # format.
+            elif columns[1] == "Energy":
+                self.parse_scf_condensed_format(inputfile, columns)
+            # Assume the extended format.
+            else:
+                self.parse_scf_expanded_format(inputfile, columns)
 
         # Information about the final iteration, which also includes the convergence
         # targets and the convergence values, is printed separately, in a section like this:
