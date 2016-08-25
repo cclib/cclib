@@ -248,6 +248,7 @@ ORCA/ORCA2.9/qmspeedtest_hf.out
 ORCA/ORCA3.0/benzene_td_singlets.out
 ORCA/ORCA3.0/CuI-MePY2-CH3CN_optxes.out
 ORCA/ORCA3.0/dvb_gopt_unconverged.out
+ORCA/ORCA3.0/skattejag.out
 ORCA/ORCA3.0/stopiter_orca_scf_compact.out
 ORCA/ORCA3.0/stopiter_orca_scf_large.out
 Psi/Psi3/water_psi3.log
