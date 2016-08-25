@@ -26,7 +26,8 @@ class CJSONReaderTest(unittest.TestCase):
         self.CJSON = cclib.io.CJSONReader
 
     def test_cjson_read(self):
-        """File->ccData->CJSON->ccData, the two instances of ccData should be same"""
+        """File->ccData->CJSON->attribute_dict, the attributes within ccData and attribute_dict
+           should be same"""
         fpath = os.path.join(__datadir__, "data/ADF/basicADF2007.01/dvb_gopt.adfout")
         data = cclib.io.ccopen(fpath).parse()
 
