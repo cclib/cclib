@@ -22,7 +22,7 @@ __datadir__ = os.path.join(__filepath__, "..", "..")
 class CJSONTest(unittest.TestCase):
 
     def setUp(self):
-        self.CJSON = cclib.io.CJSON
+        self.CJSON = cclib.io.CJSONWriter
 
     def test_init(self):
         """Does the class initialize correctly?"""
