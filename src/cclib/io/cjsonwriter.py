@@ -59,14 +59,48 @@ class CJSON(filewriter.Writer):
             cjson_dict['formula'] = self.pbmol.formula
         # Incorporate Unit Cell into the chemical JSON
 
-        # Helpers functions which use properties provided by cclib
-        self.generate_properties(cjson_dict)
-        self.generate_atoms(cjson_dict)
-        self.generate_optimization(cjson_dict)
-        self.generate_vibrations(cjson_dict)
-        self.generate_bonds(cjson_dict)
-        self.generate_transitions(cjson_dict)
-        self.generate_fragments(cjson_dict)
+        # Iterate through the attribute list present in ccData. Depending on the
+        # availability of the attribute add it at the right 'level'
+        for attributeName, Value in ccData._attributes.items():
+            if not hasattr(self.ccdata, attributeName):
+                continue
+
+            attributePath = Value.attributePath.split(":")
+
+            # Depth of the attribute in the CJSON
+            levels = len(attributePath)
+
+            # The attributes which haven't been included in the CJSON format
+            if attributePath[0] == 'N/A':
+                continue
+
+            if attributePath[0] not in cjson_dict:
+                cjson_dict[attributePath[0]] = dict()
+            l1_data_object = cjson_dict[attributePath[0]]
+
+            # 'moments' and 'atomcoords' key will contain processed data obtained from the output file
+            if attributeName == 'moments' or attributeName == 'atomcoords' :
+                if attributeName == 'moments':
+                    cjson_dict['properties'][ccData._attributes['moments'].jsonKey] = self._calculate_total_dipole_moment()
+                else:
+                    cjson_dict['atoms']['coords'] = dict()
+                    cjson_dict['atoms']['coords']['3d'] = self.ccdata.atomcoords[-1].flatten().tolist()
+                continue
+
+            if levels == 1:
+                self.set_JSON_attribute(l1_data_object, attributeName)
+            elif levels >= 2:
+                if attributePath[1] not in l1_data_object:
+                    l1_data_object[attributePath[1]] = dict()
+                l2_data_object = l1_data_object[attributePath[1]]
+
+                if levels == 2:
+                    self.set_JSON_attribute(l2_data_object, attributeName)
+                elif levels == 3:
+                    if attributePath[2] not in l2_data_object:
+                        l2_data_object[attributePath[2]] = dict()
+                    l3_data_object = l2_data_object[attributePath[2]]
+                    self.set_JSON_attribute(l3_data_object, attributeName)
 
         if has_openbabel:
             cjson_dict['diagram'] = self.pbmol.write(format='svg')
