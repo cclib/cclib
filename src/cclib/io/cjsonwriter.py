@@ -110,19 +110,18 @@ class CJSON(filewriter.Writer):
         else:
             return json.dumps(cjson_dict, cls=JSONIndentEncoder, sort_keys=True, indent=4)
 
-    def set_JSON_attribute(self, object, list):
+    def set_JSON_attribute(self, object, key):
         """
         Args:
             object: Python dictionary which is being appended with the key value
-            list: list of cclib attribute name
+            key: cclib attribute name
 
         Returns: 
             None. The dictionary is modified to contain the attribute with the
                  cclib keyname as key
         """
-        for key in list:
-            if hasattr(self.ccdata, key):
-                object[ccData._attributes[key].jsonKey] = getattr(self.ccdata, key)
+        if hasattr(self.ccdata, key):
+            object[ccData._attributes[key].jsonKey] = getattr(self.ccdata, key)
 
     def has_data(self, attr_names):
         """
