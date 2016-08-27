@@ -104,6 +104,9 @@ class CJSON(filewriter.Writer):
 
         # Attributes which are not directly obtained from the output files
         if hasattr(self.ccdata, 'moenergies') and hasattr(self.ccdata, 'homos'):
+            if 'energy' not in cjson_dict['properties']:
+                cjson_dict['properties']['energy'] = dict()
+
             cjson_dict['properties']['energy']['alpha'] = dict()
             cjson_dict['properties']['energy']['beta'] = dict()
 
