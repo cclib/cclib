@@ -102,7 +102,42 @@ class CJSON(filewriter.Writer):
                     l3_data_object = l2_data_object[attributePath[2]]
                     self.set_JSON_attribute(l3_data_object, attributeName)
 
+        # Attributes which are not directly obtained from the output files
+        if hasattr(self.ccdata, 'moenergies') and hasattr(self.ccdata, 'homos'):
+            cjson_dict['properties']['energy']['alpha'] = dict()
+            cjson_dict['properties']['energy']['beta'] = dict()
+
+            homo_idx_alpha = int(self.ccdata.homos[0])
+            homo_idx_beta = int(self.ccdata.homos[-1])
+            energy_alpha_homo = self.ccdata.moenergies[0][homo_idx_alpha]
+            energy_alpha_lumo = self.ccdata.moenergies[0][homo_idx_alpha + 1]
+            energy_alpha_gap = energy_alpha_lumo - energy_alpha_homo
+            energy_beta_homo = self.ccdata.moenergies[-1][homo_idx_beta]
+            energy_beta_lumo = self.ccdata.moenergies[-1][homo_idx_beta + 1]
+            energy_beta_gap = energy_beta_lumo - energy_beta_homo
+
+            cjson_dict['properties']['energy']['alpha']['homo'] = energy_alpha_homo
+            cjson_dict['properties']['energy']['alpha']['gap'] = energy_alpha_gap
+            cjson_dict['properties']['energy']['beta']['homo'] = energy_beta_homo
+            cjson_dict['properties']['energy']['beta']['gap'] = energy_beta_gap
+            cjson_dict['properties']['energy']['total'] = self.ccdata.scfenergies[-1]
+
+        if hasattr(self.ccdata, 'atomnos'):
+            cjson_dict['atoms']['elements']['atom count'] = len(self.ccdata.atomnos)
+            cjson_dict['atoms']['elements']['heavy atom count'] = len([x for x in self.ccdata.atomnos if x > 1])
+
+        # Bond attributes
+        if has_openbabel and (len(self.ccdata.atomnos) > 1):
+            cjson_dict['bonds'] = dict()
+            cjson_dict['bonds']['connections'] = dict()
+            cjson_dict['bonds']['connections']['index'] = []
+            for bond in self.bond_connectivities:
+                cjson_dict['bonds']['connections']['index'].append(bond[0] + 1)
+                cjson_dict['bonds']['connections']['index'].append(bond[1] + 1)
+            cjson_dict['bonds']['order'] = [bond[2] for bond in self.bond_connectivities]
+
         if has_openbabel:
+            cjson_dict['properties']['molecular mass'] = self.pbmol.molwt
             cjson_dict['diagram'] = self.pbmol.write(format='svg')
 
         if self.terse:
