@@ -1,19 +1,19 @@
 ----- GAMESS execution script 'rungms' -----
-This job is running on host fwnc7111
-under operating system Linux at Sat Dec 1 00:01:03 CET 2012
+This job is running on host copper
+under operating system Linux at Wed Jul 27 01:23:27 EDT 2016
 Available scratch disk space (Kbyte units) at beginning of the job is
-Filesystem           1K-blocks      Used Available Use% Mounted on
-/dev/mapper/vg1-home 309637120 256368024  50124456  84% /home
-GAMESS temporary binary files will be written to /home/kml
-GAMESS supplementary output files will be written to /home/kml/tmp/cclib-gamess2012
+Filesystem     1K-blocks   Used Available Use% Mounted on
+tmpfs            8089516 124472   7965044   2% /tmp
+GAMESS temporary binary files will be written to /tmp
+GAMESS supplementary output files will be written to /tmp
 Copying input file water_mp2.inp to your run's scratch directory...
 
  Distributed Data Interface kickoff program.
  Initiating 1 compute processes on 1 nodes to run the following command:
- /usr/local/src/gamess-2012.05.01.r1/gamess.fwnc7111.x water_mp2 
+ /opt/gamess/gamess.01.x water_mp2 
 
           ******************************************************
-          *         GAMESS VERSION =  1 MAY 2012 (R1)          *
+          *         GAMESS VERSION =  5 DEC 2014 (R1)          *
           *             FROM IOWA STATE UNIVERSITY             *
           * M.W.SCHMIDT, K.K.BALDRIDGE, J.A.BOATZ, S.T.ELBERT, *
           *   M.S.GORDON, J.H.JENSEN, S.KOSEKI, N.MATSUNAGA,   *
@@ -27,17 +27,18 @@ Copying input file water_mp2.inp to your run's scratch directory...
   CONTRIBUTIONS TO THE CODE:
      IVANA ADAMOVIC, CHRISTINE AIKENS, YURI ALEXEEV, POOJA ARORA,
      ANDREY ASADCHEV, ROB BELL, PRADIPTA BANDYOPADHYAY, JONATHAN BENTZ,
-     BRETT BODE, GALINA CHABAN, WEI CHEN, CHEOL HO CHOI, PAUL DAY,
-     ALBERT DEFUSCO, TIM DUDLEY, DMITRI FEDOROV, GRAHAM FLETCHER,
-     MARK FREITAG, KURT GLAESEMANN, DAN KEMP, GRANT MERRILL,
-     NORIYUKI MINEZAWA, JONATHAN MULLIN, TAKESHI NAGATA,
-     SEAN NEDD, HEATHER NETZLOFF, BOSILJKA NJEGIC, RYAN OLSON, MIKE PAK,
-     JIM SHOEMAKER, LYUDMILA SLIPCHENKO, SAROM SOK, JIE SONG,
-     TETSUYA TAKETSUGU, SIMON WEBB, SOOHAENG YOO, FEDERICO ZAHARIEV
+     BRETT BODE, KURT BRORSEN, CALEB CARLIN, GALINA CHABAN, WEI CHEN,
+     CHEOL HO CHOI, PAUL DAY, ALBERT DEFUSCO, NUWAN DESILVA, TIM DUDLEY,
+     DMITRI FEDOROV, GRAHAM FLETCHER, MARK FREITAG, KURT GLAESEMANN,
+     DAN KEMP, GRANT MERRILL, NORIYUKI MINEZAWA, JONATHAN MULLIN,
+     TAKESHI NAGATA, SEAN NEDD, HEATHER NETZLOFF, BOSILJKA NJEGIC, RYAN OLSON,
+     MIKE PAK, SPENCER PRUITT, LUKE ROSKOP, JIM SHOEMAKER, LYUDMILA SLIPCHENKO,
+     TONY SMITH, SAROM SOK, JIE SONG, TETSUYA TAKETSUGU, SIMON WEBB,
+     PENG XU, SOOHAENG YOO, FEDERICO ZAHARIEV
 
   ADDITIONAL CODE HAS BEEN PROVIDED BY COLLABORATORS IN OTHER GROUPS:
      IOWA STATE UNIVERSITY:
-          JOE IVANIC, LAIMUTIS BYTAUTAS, KLAUS RUEDENBERG
+          JOE IVANIC, AARON WEST, LAIMUTIS BYTAUTAS, KLAUS RUEDENBERG
      UNIVERSITY OF TOKYO: KIMIHIKO HIRAO, TAKAHITO NAKAJIMA,
           TAKAO TSUNEDA, MUNEAKI KAMIYA, SUSUMU YANAGISAWA,
           KIYOSHI YAGI, MAHITO CHIBA, SEIKEN TOKURA, NAOAKI KAWAKAMI
@@ -49,15 +50,17 @@ Copying input file water_mp2.inp to your run's scratch directory...
      UNIVERSITY OF ALBERTA: TOBY ZENG, MARIUSZ KLOBUKOWSKI
      UNIVERSITY OF NEW ENGLAND: MARK SPACKMAN
      MIE UNIVERSITY: HIROAKI UMEDA
+     NAT. INST. OF ADVANCED INDUSTRIAL SCIENCE AND TECHNOLOGY: KAZUO KITAURA
      MICHIGAN STATE UNIVERSITY:
-          KAROL KOWALSKI, MARTA WLOCH, JEFFREY GOUR, JESSE LUTZ, PIOTR PIECUCH
+          KAROL KOWALSKI, MARTA WLOCH, JEFFREY GOUR, JESSE LUTZ,
+          WEI LI, PIOTR PIECUCH
      UNIVERSITY OF SILESIA: MONIKA MUSIAL, STANISLAW KUCHARSKI
      FACULTES UNIVERSITAIRES NOTRE-DAME DE LA PAIX:
           OLIVIER QUINET, BENOIT CHAMPAGNE
      UNIVERSITY OF CALIFORNIA - SANTA BARBARA: BERNARD KIRTMAN
      INSTITUTE FOR MOLECULAR SCIENCE:
           KAZUYA ISHIMURA, MICHIO KATOUDA, AND SHIGERU NAGASE
-     UNIVERSITY OF NOTRE DAME: DAN CHIPMAN
+     UNIVERSITY OF NOTRE DAME: ANNA POMOGAEVA, DAN CHIPMAN
      KYUSHU UNIVERSITY:
           HARUYUKI NAKANO,
           FENG LONG GU, JACEK KORCHOWIEC, MARCIN MAKOWSKI, AND YURIKO AOKI,
@@ -68,14 +71,17 @@ Copying input file water_mp2.inp to your run's scratch directory...
      WASEDA UNIVERSITY:
           MASATO KOBAYASHI, TOMOKO AKAMA, TSUGUKI TOUMA,
           TAKESHI YOSHIKAWA, YASUHIRO IKABATA, HIROMI NAKAI
+     NANJING UNIVERSITY: SHUHUA LI
      UNIVERSITY OF NEBRASKA:
           PEIFENG SU, DEJUN SI, NANDUN THELLAMUREGE, YALI WANG, HUI LI
-     UNIVERSITY OF ZURICH:
-          ROBERTO PEVERATI, KIM BALDRIDGE
+     UNIVERSITY OF ZURICH: ROBERTO PEVERATI, KIM BALDRIDGE
      N. COPERNICUS UNIVERSITY AND JACKSON STATE UNIVERSITY:
           MARIA BARYSZ
+     UNIVERSITY OF COPENHAGEN: CASPER STEINMANN
+     TOKYO INSTITUTE OF TECHNOLOGY: HIROYA NAKATA
+     NAGOYA UNIVERSITY: YOSHIO NISHIMOTO, STEPHAN IRLE
 
- EXECUTION OF GAMESS BEGUN Sat Dec  1 00:01:03 2012
+ EXECUTION OF GAMESS BEGUN Wed Jul 27 01:23:27 2016
 
             ECHO OF THE FIRST FEW INPUT CARDS -
  INPUT CARD> $contrl scftyp=rhf mplevl=2                                                    
@@ -194,7 +200,7 @@ Copying input file water_mp2.inp to your run's scratch directory...
  TOTAL MEMORY REQUESTED ON EACH PROCESSOR=     1000000 WORDS.
  TIMLIM=      525600.00 MINUTES, OR     365.0 DAYS.
  PARALL= F  BALTYP=  DLB     KDIAG=    0  COREFL= F
- MXSEQ2=     300 MXSEQ3=     150
+ MXSEQ2=     300 MXSEQ3=     150  mem10=         0
 
           ----------------
           PROPERTIES INPUT
@@ -255,15 +261,15 @@ Copying input file water_mp2.inp to your run's scratch directory...
  A   =    7
 
  ..... DONE SETTING UP THE RUN .....
- STEP CPU TIME =     0.00 TOTAL CPU TIME =        0.0 (    0.0 MIN)
- TOTAL WALL CLOCK TIME=        0.1 SECONDS, CPU UTILIZATION IS   0.00%
+ STEP CPU TIME =     0.05 TOTAL CPU TIME =        0.0 (    0.0 MIN)
+ TOTAL WALL CLOCK TIME=        0.0 SECONDS, CPU UTILIZATION IS 500.00%
 
           ********************
           1 ELECTRON INTEGRALS
           ********************
  ...... END OF ONE-ELECTRON INTEGRALS ......
  STEP CPU TIME =     0.00 TOTAL CPU TIME =        0.0 (    0.0 MIN)
- TOTAL WALL CLOCK TIME=        0.1 SECONDS, CPU UTILIZATION IS   0.00%
+ TOTAL WALL CLOCK TIME=        0.0 SECONDS, CPU UTILIZATION IS 500.00%
 
           -------------
           GUESS OPTIONS
@@ -280,8 +286,8 @@ Copying input file water_mp2.inp to your run's scratch directory...
      5 ORBITALS ARE OCCUPIED (    1 CORE ORBITALS).
      2=A        3=A        4=A        5=A        6=A        7=A   
  ...... END OF INITIAL ORBITAL SELECTION ......
- STEP CPU TIME =     0.00 TOTAL CPU TIME =        0.0 (    0.0 MIN)
- TOTAL WALL CLOCK TIME=        0.1 SECONDS, CPU UTILIZATION IS   0.00%
+ STEP CPU TIME =     0.01 TOTAL CPU TIME =        0.1 (    0.0 MIN)
+ TOTAL WALL CLOCK TIME=        0.0 SECONDS, CPU UTILIZATION IS 600.00%
 
                     ----------------------
                     AO INTEGRAL TECHNOLOGY
@@ -310,8 +316,8 @@ Copying input file water_mp2.inp to your run's scratch directory...
  TOTAL NUMBER OF NONZERO TWO-ELECTRON INTEGRALS =                 228
           1 INTEGRAL RECORDS WERE STORED ON DISK FILE  8.
   ...... END OF TWO-ELECTRON INTEGRALS .....
- STEP CPU TIME =     0.02 TOTAL CPU TIME =        0.0 (    0.0 MIN)
- TOTAL WALL CLOCK TIME=        0.1 SECONDS, CPU UTILIZATION IS  28.57%
+ STEP CPU TIME =     0.05 TOTAL CPU TIME =        0.1 (    0.0 MIN)
+ TOTAL WALL CLOCK TIME=        0.0 SECONDS, CPU UTILIZATION IS 366.67%
 
           --------------------------
                  RHF SCF CALCULATION
@@ -353,13 +359,13 @@ Copying input file water_mp2.inp to your run's scratch directory...
                       1          2          3          4          5
                   -20.2438    -1.2506    -0.6032    -0.4455    -0.3882
                      A          A          A          A          A   
-    1  O  1  S    0.994203  -0.234218   0.000000   0.100458   0.000000
-    2  O  1  S    0.025916   0.845882   0.000000  -0.521395   0.000000
-    3  O  1  X   -0.000000  -0.000000   0.603305  -0.000000   0.000000
-    4  O  1  Y    0.003993   0.117048   0.000000   0.774267   0.000000
+    1  O  1  S    0.994203  -0.234218   0.000000   0.100458  -0.000000
+    2  O  1  S    0.025916   0.845882   0.000000  -0.521395  -0.000000
+    3  O  1  X   -0.000000  -0.000000   0.603305  -0.000000  -0.000000
+    4  O  1  Y    0.003993   0.117048   0.000000   0.774267  -0.000000
     5  O  1  Z   -0.000000  -0.000000   0.000000  -0.000000   1.000000
-    6  H  2  S   -0.005627   0.156449   0.446377   0.289064   0.000000
-    7  H  3  S   -0.005627   0.156449  -0.446377   0.289064   0.000000
+    6  H  2  S   -0.005627   0.156449   0.446377   0.289064  -0.000000
+    7  H  3  S   -0.005627   0.156449  -0.446377   0.289064  -0.000000
 
                       6          7
                     0.5707     0.7086
@@ -372,8 +378,8 @@ Copying input file water_mp2.inp to your run's scratch directory...
     6  H  2  S   -0.775801  -0.808916
     7  H  3  S   -0.775801   0.808916
  ...... END OF RHF CALCULATION ......
- STEP CPU TIME =     0.01 TOTAL CPU TIME =        0.0 (    0.0 MIN)
- TOTAL WALL CLOCK TIME=        0.1 SECONDS, CPU UTILIZATION IS  37.50%
+ STEP CPU TIME =     0.01 TOTAL CPU TIME =        0.1 (    0.0 MIN)
+ TOTAL WALL CLOCK TIME=        0.0 SECONDS, CPU UTILIZATION IS 400.00%
 
      ----------------------------------------------------------------
      PROPERTY VALUES FOR THE RHF   SELF-CONSISTENT FIELD WAVEFUNCTION
@@ -412,7 +418,7 @@ Copying input file water_mp2.inp to your run's scratch directory...
                (K,V1,2)=     69.4593977875   -176.4390799391     30.9468054838
            PI PART(1+2)=     -7.8184589445
                (K,V1,2)=      5.0574624520    -19.9179511408      7.0420297443
-  SIGMA SKELETON, ERROR=    -67.1458697593     -0.0000000000
+  SIGMA SKELETON, ERROR=    -67.1458697593      0.0000000000
              MIXED PART= 0.00000E+00 0.00000E+00 0.00000E+00 0.00000E+00
  ...... END OF PI ENERGY ANALYSIS ......
 
@@ -465,9 +471,9 @@ Copying input file water_mp2.inp to your run's scratch directory...
 
                        TOTAL       BONDED        FREE
       ATOM            VALENCE     VALENCE     VALENCE
-    1 O                 1.917       1.917      -0.000
+    1 O                 1.917       1.917       0.000
     2 H                 0.971       0.971       0.000
-    3 H                 0.971       0.971      -0.000
+    3 H                 0.971       0.971       0.000
 
           ---------------------
           ELECTROSTATIC MOMENTS
@@ -476,10 +482,10 @@ Copying input file water_mp2.inp to your run's scratch directory...
  POINT   1           X           Y           Z (BOHR)    CHARGE
                  0.000000    0.000000    0.000000       -0.00 (A.U.)
          DX          DY          DZ         /D/  (DEBYE)
-     0.000000    1.673510    0.000000    1.673510
+    -0.000000    1.673510    0.000000    1.673510
  ...... END OF PROPERTY EVALUATION ......
- STEP CPU TIME =     0.00 TOTAL CPU TIME =        0.0 (    0.0 MIN)
- TOTAL WALL CLOCK TIME=        0.1 SECONDS, CPU UTILIZATION IS  37.50%
+ STEP CPU TIME =     0.01 TOTAL CPU TIME =        0.1 (    0.0 MIN)
+ TOTAL WALL CLOCK TIME=        0.0 SECONDS, CPU UTILIZATION IS 433.33%
 
  -------------------------------   -----------------------------
  MP2 ENERGY GRADIENT CALCULATION   PROGRAM WRITTEN BY K.ISHIMURA
@@ -497,8 +503,8 @@ Copying input file water_mp2.inp to your run's scratch directory...
  MAXIMUM MEMORY USED DURING MP2 GRADIENT=       14690 WORDS, OR       1 MWORDS.
  BEGINNING    1ST SHELL LOOP...
  .... DONE WITH 1ST THREE INDEX TRANSFORMATIONS ....
- STEP CPU TIME =     0.00 TOTAL CPU TIME =        0.0 (    0.0 MIN)
- TOTAL WALL CLOCK TIME=        0.1 SECONDS, CPU UTILIZATION IS  33.33%
+ STEP CPU TIME =     0.00 TOTAL CPU TIME =        0.1 (    0.0 MIN)
+ TOTAL WALL CLOCK TIME=        0.0 SECONDS, CPU UTILIZATION IS 433.33%
 
  RESULTS OF MOLLER-PLESSET 2ND ORDER CORRECTION ARE
                E(0)=       -74.9643287925
@@ -506,21 +512,21 @@ Copying input file water_mp2.inp to your run's scratch directory...
                E(2)=        -0.0379533247
              E(MP2)=       -75.0022821173
  .... DONE WITH 4TH INDEX TRANSFORMATION AND ENERGY ....
- STEP CPU TIME =     0.00 TOTAL CPU TIME =        0.0 (    0.0 MIN)
- TOTAL WALL CLOCK TIME=        0.1 SECONDS, CPU UTILIZATION IS  33.33%
+ STEP CPU TIME =     0.00 TOTAL CPU TIME =        0.1 (    0.0 MIN)
+ TOTAL WALL CLOCK TIME=        0.0 SECONDS, CPU UTILIZATION IS 433.33%
  .... DONE WITH 1ST THREE INDEX TRANSFORMATIONS FOR GRADIENT ....
- STEP CPU TIME =     0.00 TOTAL CPU TIME =        0.0 (    0.0 MIN)
- TOTAL WALL CLOCK TIME=        0.1 SECONDS, CPU UTILIZATION IS  33.33%
+ STEP CPU TIME =     0.01 TOTAL CPU TIME =        0.1 (    0.0 MIN)
+ TOTAL WALL CLOCK TIME=        0.0 SECONDS, CPU UTILIZATION IS 350.00%
  .... DONE WITH 4TH INDEX TRANSFORMATION FOR GRADIENT ....
- STEP CPU TIME =     0.00 TOTAL CPU TIME =        0.0 (    0.0 MIN)
- TOTAL WALL CLOCK TIME=        0.1 SECONDS, CPU UTILIZATION IS  33.33%
+ STEP CPU TIME =     0.00 TOTAL CPU TIME =        0.1 (    0.0 MIN)
+ TOTAL WALL CLOCK TIME=        0.0 SECONDS, CPU UTILIZATION IS 350.00%
  CYCLE  1  Z-VECTOR ERROR= -0.753735E-03
  CYCLE  2  Z-VECTOR ERROR=  0.953587E-04
  CYCLE  3  Z-VECTOR ERROR= -0.580159E-07
- CYCLE  4  Z-VECTOR ERROR=  0.111271E-17
+ CYCLE  4  Z-VECTOR ERROR=  0.708667E-19
  .... DONE WITH RESPONSE EQUATIONS AND DENSITY ....
- STEP CPU TIME =     0.00 TOTAL CPU TIME =        0.0 (    0.0 MIN)
- TOTAL WALL CLOCK TIME=        0.1 SECONDS, CPU UTILIZATION IS  33.33%
+ STEP CPU TIME =     0.00 TOTAL CPU TIME =        0.1 (    0.0 MIN)
+ TOTAL WALL CLOCK TIME=        0.0 SECONDS, CPU UTILIZATION IS 350.00%
 
  MP2 NATURAL ORBITAL OCCUPATION NUMBERS ARE
   2.0000 1.9990 1.9984 1.9878 1.9857 0.0151 0.0141
@@ -528,8 +534,8 @@ Copying input file water_mp2.inp to your run's scratch directory...
  THERE ARE     0.0292 ELECTRONS IN SECONDARY MP2 NATURAL ORBITALS.
  THE MP2 NATURAL ORBITALS HAVE BEEN PUNCHED.
  ..... DONE WITH MP2 ENERGY .....
- STEP CPU TIME =     0.00 TOTAL CPU TIME =        0.0 (    0.0 MIN)
- TOTAL WALL CLOCK TIME=        0.1 SECONDS, CPU UTILIZATION IS  33.33%
+ STEP CPU TIME =     0.00 TOTAL CPU TIME =        0.1 (    0.0 MIN)
+ TOTAL WALL CLOCK TIME=        0.0 SECONDS, CPU UTILIZATION IS 350.00%
 
      -------------------------------------------------
      MP2 PROPERTIES...FOR THE FIRST ORDER WAVEFUNCTION
@@ -604,26 +610,27 @@ Copying input file water_mp2.inp to your run's scratch directory...
           ---------------------
 
  POINT   1           X           Y           Z (BOHR)    CHARGE
-                 0.000000    0.000000    0.000000       -0.00 (A.U.)
+                 0.000000    0.000000    0.000000        0.00 (A.U.)
          DX          DY          DZ         /D/  (DEBYE)
-     0.000000    1.599447    0.000000    1.599447
+    -0.000000    1.599447    0.000000    1.599447
  ...... END OF PROPERTY EVALUATION ......
- STEP CPU TIME =     0.01 TOTAL CPU TIME =        0.0 (    0.0 MIN)
- TOTAL WALL CLOCK TIME=        0.1 SECONDS, CPU UTILIZATION IS  40.00%
+ STEP CPU TIME =     0.00 TOTAL CPU TIME =        0.1 (    0.0 MIN)
+ TOTAL WALL CLOCK TIME=        0.0 SECONDS, CPU UTILIZATION IS 350.00%
                580000  WORDS OF DYNAMIC MEMORY USED
- EXECUTION OF GAMESS TERMINATED NORMALLY Sat Dec  1 00:01:03 2012
- DDI: 263624 bytes (0.3 MB / 0 MWords) used by master data server.
+ EXECUTION OF GAMESS TERMINATED NORMALLY Wed Jul 27 01:23:27 2016
+ DDI: 263640 bytes (0.3 MB / 0 MWords) used by master data server.
 
  ----------------------------------------
  CPU timing information for all processes
  ========================================
- 0: 0.32 + 0.16 = 0.48
+ 0: 0.59 + 0.203 = 0.263
  ----------------------------------------
  ddikick.x: exited gracefully.
 ----- accounting info -----
-Files used on the master node fwnc7111 were:
--rw-r--r-- 1 kml kml     216 Dec  1 00:01 /home/kml/water_mp2.F05
--rw-r--r-- 1 kml kml  180016 Dec  1 00:01 /home/kml/water_mp2.F08
--rw-r--r-- 1 kml kml 1374240 Dec  1 00:01 /home/kml/water_mp2.F10
-Sat Dec  1 00:01:06 CET 2012
-0.0u 0.0s 0:03.15 0.3% 0+0k 0+16io 0pf+0w
+Files used on the master node copper were:
+-rw-r--r-- 1 eric users    2971 Jul 27 01:23 /tmp/water_mp2.dat
+-rw-r--r-- 1 eric users     216 Jul 27 01:23 /tmp/water_mp2.F05
+-rw-r--r-- 1 eric users  180016 Jul 27 01:23 /tmp/water_mp2.F08
+-rw-r--r-- 1 eric users 1865040 Jul 27 01:23 /tmp/water_mp2.F10
+Wed Jul 27 01:23:30 EDT 2016
+0.236u 0.056s 0:03.42 8.1%	0+0k 0+16io 0pf+0w
