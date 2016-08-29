@@ -37,16 +37,16 @@ class CJSON(filewriter.Writer):
         """
         This function is OS independent and returns the file name irrespective of
         the file path containing forward slash or backward slash - which is valid
-        in Windows
+        in Windows.
         """
         head, tail = ntpath.split(path)
         return tail or ntpath.basename(head)
 
     def generate_repr(self):
-        """Generate the CJSON representation of the logfile data"""
+        """Generate the CJSON representation of the logfile data."""
 
         cjson_dict = dict()
-        # Need to decide on a number format
+        # Need to decide on a number format.
         cjson_dict['chemical json'] = 0
         if self.jobfilename is not None:
             cjson_dict['name'] = self.pathname(os.path.splitext(self.jobfilename)[0])
@@ -57,20 +57,20 @@ class CJSON(filewriter.Writer):
             cjson_dict['inchi'] = self.pbmol.write('inchi')
             cjson_dict['inchikey'] = self.pbmol.write('inchikey')
             cjson_dict['formula'] = self.pbmol.formula
-        # Incorporate Unit Cell into the chemical JSON
+        # Incorporate Unit Cell into the chemical JSON.
 
         # Iterate through the attribute list present in ccData. Depending on the
-        # availability of the attribute add it at the right 'level'
+        # availability of the attribute add it at the right 'level'.
         for attributeName, Value in ccData._attributes.items():
             if not hasattr(self.ccdata, attributeName):
                 continue
 
             attributePath = Value.attributePath.split(":")
 
-            # Depth of the attribute in the CJSON
+            # Depth of the attribute in the CJSON.
             levels = len(attributePath)
 
-            # The attributes which haven't been included in the CJSON format
+            # The attributes which haven't been included in the CJSON format.
             if attributePath[0] == 'N/A':
                 continue
 
@@ -78,7 +78,7 @@ class CJSON(filewriter.Writer):
                 cjson_dict[attributePath[0]] = dict()
             l1_data_object = cjson_dict[attributePath[0]]
 
-            # 'moments' and 'atomcoords' key will contain processed data obtained from the output file
+            # 'moments' and 'atomcoords' key will contain processed data obtained from the output file.
             if attributeName == 'moments' or attributeName == 'atomcoords' :
                 if attributeName == 'moments':
                     cjson_dict['properties'][ccData._attributes['moments'].jsonKey] = self._calculate_total_dipole_moment()
@@ -102,7 +102,7 @@ class CJSON(filewriter.Writer):
                     l3_data_object = l2_data_object[attributePath[2]]
                     self.set_JSON_attribute(l3_data_object, attributeName)
 
-        # Attributes which are not directly obtained from the output files
+        # Attributes which are not directly obtained from the output files.
         if hasattr(self.ccdata, 'moenergies') and hasattr(self.ccdata, 'homos'):
             if 'energy' not in cjson_dict['properties']:
                 cjson_dict['properties']['energy'] = dict()
@@ -129,7 +129,7 @@ class CJSON(filewriter.Writer):
             cjson_dict['atoms']['elements']['atom count'] = len(self.ccdata.atomnos)
             cjson_dict['atoms']['elements']['heavy atom count'] = len([x for x in self.ccdata.atomnos if x > 1])
 
-        # Bond attributes
+        # Bond attributes:
         if has_openbabel and (len(self.ccdata.atomnos) > 1):
             cjson_dict['bonds'] = dict()
             cjson_dict['bonds']['connections'] = dict()
@@ -151,8 +151,8 @@ class CJSON(filewriter.Writer):
     def set_JSON_attribute(self, object, key):
         """
         Args:
-            object: Python dictionary which is being appended with the key value
-            key: cclib attribute name
+            object: Python dictionary which is being appended with the key value.
+            key: cclib attribute name.
 
         Returns: 
             None. The dictionary is modified to contain the attribute with the
