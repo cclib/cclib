@@ -34,14 +34,13 @@ class CJSONTest(unittest.TestCase):
         self.assertEqual(cjson.ccdata, data)
 
     def test_cjson_generation(self):
-        """Does the CJSON format get dumped properly"""
+        """Does the CJSON format get generated properly?"""
         fpath = os.path.join(__datadir__, "data/ADF/basicADF2007.01/dvb_gopt.adfout")
         data = cclib.io.ccopen(fpath).parse()
 
         cjson = cclib.io.cjsonwriter.CJSON(data).generate_repr()
 
-        # if the cjson is generated properly, the data available in the cjson and ccdata
-        # object should be same
+        # The data available in the cjson and ccdata objects should be equal.
         json_data = json.loads(cjson)
         number_of_atoms = json_data['properties']['number of atoms']
         self.assertEqual(number_of_atoms, data.natom)
