@@ -7,7 +7,7 @@
 
 """Contains all writers for standard chemical representations"""
 
-from .cjsonwriter import CJSON
+from .cjsonwriter import CJSON as CJSONWriter
 from .cmlwriter import CML
 from .xyzwriter import XYZ
 from .cjsonreader import CJSON as CJSONReader

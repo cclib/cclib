@@ -15,6 +15,8 @@ from testccio import *
 from testfilewriter import *
 from testxyzwriter import *
 from testcjsonreader import *
+from testcjsonwriter import *
+
 
 
 if __name__ == "__main__":
