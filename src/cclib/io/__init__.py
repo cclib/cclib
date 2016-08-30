@@ -10,6 +10,7 @@
 from .cjsonwriter import CJSON
 from .cmlwriter import CML
 from .xyzwriter import XYZ
+from .cjsonreader import CJSON as CJSONReader
 
 # This allows users to type:
 #   from cclib.io import ccopen

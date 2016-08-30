@@ -14,6 +14,7 @@ sys.path.append('io')
 from testccio import *
 from testfilewriter import *
 from testxyzwriter import *
+from testcjsonreader import *
 
 
 if __name__ == "__main__":
