@@ -1280,6 +1280,9 @@ class OrcaSPunTest_charge0(GenericSPunTest):
     @unittest.skip('HOMOs were incorrect due to charge being wrong.')
     def testhomos(self):
         """HOMOs were incorrect due to charge being wrong."""
+    def testorbitals(self):
+        """Closed-shell calculation run as open-shell."""
+        self.assertTrue(self.data.closed_shell)
 
 class OrcaTDDFTTest_error(OrcaTDDFTTest):
     def testoscs(self):
