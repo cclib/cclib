@@ -1,5 +1,13 @@
-We would like the thank the following who have contributed in some way to cclib:
+Developers that have added more than 1K SLOC:
+Eric J. Berquist
+Geoff Hutchison
+Karol M. Langner
+Noel M. O'Boyle
+Sanjeed Schamnad
+Casper Steinmann
+Adam L. Tenderholt
 
+We would like the thank the following who have contributed to cclib:
 Nuno Bandeira -- for bug reporting
 Björn Baumeier -- for bug reporting
 Dermot Brougham -- for bug reporting
@@ -17,7 +25,6 @@ glideht -- for bug reporting
 Edward Holland -- for patches
 Karen Hemelsoet -- for bug reporting
 Ian Hovell -- for bug reporting
-Geoff Hutchison -- for patches, files and a new parser
 Julien Idé -- for bug reporting
 csjacky -- for bug reporting
 Russell Johnson -- for providing CCCBDB (NIST) logfiles
@@ -35,7 +42,6 @@ Marius Retegan -- for bug reporting
 Tamilmani S -- for bug reporting
 Melchor Sanchez -- for bug reporting
 Alex Schild -- for ideas and contributing test files
-Sanjeed Schamnad -- for patches new features
 Jen Schwartz -- for helping create and run Jaguar 6.0 test jobs
 Tiago Silva -- for bug reporting
 Pavel Solntsev -- for bug reporting
@@ -48,8 +54,3 @@ Samuel Wilson -- for bug reporting
 Fedor Zhuravlev -- for patches
 
 Please let us know if we have omitted someone from this list.
-Developers of cclib
-Eric J. Berquist
-Karol M. Langner
-Noel M. O'Boyle
-Adam L. Tenderholt

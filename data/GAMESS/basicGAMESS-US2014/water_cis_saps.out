@@ -1,22 +1,19 @@
- openmpi/1.6.4_intel12.1 load complete.
 ----- GAMESS execution script 'rungms' -----
-This job is running on host wn451
-under operating system Linux at Wed Feb 19 23:53:12 CET 2014
-PBS has assigned the following compute nodes to this run:
-wn451
+This job is running on host copper
+under operating system Linux at Wed Jul 27 01:23:23 EDT 2016
 Available scratch disk space (Kbyte units) at beginning of the job is
-Filesystem            Size  Used Avail Use% Mounted on
-mds1@o2ib:/scratch    485T   73T  408T  16% /lustre
-GAMESS temporary binary files will be written to /lustre/scratch/tmp/pbs.6219543.nova
-GAMESS supplementary output files will be written to /home/langner/basicGAMESS-US2012
+Filesystem     1K-blocks   Used Available Use% Mounted on
+tmpfs            8089516 124472   7965044   2% /tmp
+GAMESS temporary binary files will be written to /tmp
+GAMESS supplementary output files will be written to /tmp
 Copying input file water_cis_saps.inp to your run's scratch directory...
-cp water_cis_saps.inp /lustre/scratch/tmp/pbs.6219543.nova/water_cis_saps.F05
-unset echo
-MPI kickoff will run GAMESS on 1 cores in all nodes.
-MPI will run 1 compute processes and 1 data servers.
-mpiexec -np 2 /usr/local/gamess/2012.05.01-R2-openmpi/gamess.00.x
+
+ Distributed Data Interface kickoff program.
+ Initiating 1 compute processes on 1 nodes to run the following command:
+ /opt/gamess/gamess.01.x water_cis_saps 
+
           ******************************************************
-          *         GAMESS VERSION =  1 MAY 2012 (R2)          *
+          *         GAMESS VERSION =  5 DEC 2014 (R1)          *
           *             FROM IOWA STATE UNIVERSITY             *
           * M.W.SCHMIDT, K.K.BALDRIDGE, J.A.BOATZ, S.T.ELBERT, *
           *   M.S.GORDON, J.H.JENSEN, S.KOSEKI, N.MATSUNAGA,   *
@@ -30,17 +27,18 @@ mpiexec -np 2 /usr/local/gamess/2012.05.01-R2-openmpi/gamess.00.x
   CONTRIBUTIONS TO THE CODE:
      IVANA ADAMOVIC, CHRISTINE AIKENS, YURI ALEXEEV, POOJA ARORA,
      ANDREY ASADCHEV, ROB BELL, PRADIPTA BANDYOPADHYAY, JONATHAN BENTZ,
-     BRETT BODE, GALINA CHABAN, WEI CHEN, CHEOL HO CHOI, PAUL DAY,
-     ALBERT DEFUSCO, TIM DUDLEY, DMITRI FEDOROV, GRAHAM FLETCHER,
-     MARK FREITAG, KURT GLAESEMANN, DAN KEMP, GRANT MERRILL,
-     NORIYUKI MINEZAWA, JONATHAN MULLIN, TAKESHI NAGATA,
-     SEAN NEDD, HEATHER NETZLOFF, BOSILJKA NJEGIC, RYAN OLSON, MIKE PAK,
-     JIM SHOEMAKER, LYUDMILA SLIPCHENKO, SAROM SOK, JIE SONG,
-     TETSUYA TAKETSUGU, SIMON WEBB, SOOHAENG YOO, FEDERICO ZAHARIEV
+     BRETT BODE, KURT BRORSEN, CALEB CARLIN, GALINA CHABAN, WEI CHEN,
+     CHEOL HO CHOI, PAUL DAY, ALBERT DEFUSCO, NUWAN DESILVA, TIM DUDLEY,
+     DMITRI FEDOROV, GRAHAM FLETCHER, MARK FREITAG, KURT GLAESEMANN,
+     DAN KEMP, GRANT MERRILL, NORIYUKI MINEZAWA, JONATHAN MULLIN,
+     TAKESHI NAGATA, SEAN NEDD, HEATHER NETZLOFF, BOSILJKA NJEGIC, RYAN OLSON,
+     MIKE PAK, SPENCER PRUITT, LUKE ROSKOP, JIM SHOEMAKER, LYUDMILA SLIPCHENKO,
+     TONY SMITH, SAROM SOK, JIE SONG, TETSUYA TAKETSUGU, SIMON WEBB,
+     PENG XU, SOOHAENG YOO, FEDERICO ZAHARIEV
 
   ADDITIONAL CODE HAS BEEN PROVIDED BY COLLABORATORS IN OTHER GROUPS:
      IOWA STATE UNIVERSITY:
-          JOE IVANIC, LAIMUTIS BYTAUTAS, KLAUS RUEDENBERG
+          JOE IVANIC, AARON WEST, LAIMUTIS BYTAUTAS, KLAUS RUEDENBERG
      UNIVERSITY OF TOKYO: KIMIHIKO HIRAO, TAKAHITO NAKAJIMA,
           TAKAO TSUNEDA, MUNEAKI KAMIYA, SUSUMU YANAGISAWA,
           KIYOSHI YAGI, MAHITO CHIBA, SEIKEN TOKURA, NAOAKI KAWAKAMI
@@ -52,15 +50,17 @@ mpiexec -np 2 /usr/local/gamess/2012.05.01-R2-openmpi/gamess.00.x
      UNIVERSITY OF ALBERTA: TOBY ZENG, MARIUSZ KLOBUKOWSKI
      UNIVERSITY OF NEW ENGLAND: MARK SPACKMAN
      MIE UNIVERSITY: HIROAKI UMEDA
+     NAT. INST. OF ADVANCED INDUSTRIAL SCIENCE AND TECHNOLOGY: KAZUO KITAURA
      MICHIGAN STATE UNIVERSITY:
-          KAROL KOWALSKI, MARTA WLOCH, JEFFREY GOUR, JESSE LUTZ, PIOTR PIECUCH
+          KAROL KOWALSKI, MARTA WLOCH, JEFFREY GOUR, JESSE LUTZ,
+          WEI LI, PIOTR PIECUCH
      UNIVERSITY OF SILESIA: MONIKA MUSIAL, STANISLAW KUCHARSKI
      FACULTES UNIVERSITAIRES NOTRE-DAME DE LA PAIX:
           OLIVIER QUINET, BENOIT CHAMPAGNE
      UNIVERSITY OF CALIFORNIA - SANTA BARBARA: BERNARD KIRTMAN
      INSTITUTE FOR MOLECULAR SCIENCE:
           KAZUYA ISHIMURA, MICHIO KATOUDA, AND SHIGERU NAGASE
-     UNIVERSITY OF NOTRE DAME: DAN CHIPMAN
+     UNIVERSITY OF NOTRE DAME: ANNA POMOGAEVA, DAN CHIPMAN
      KYUSHU UNIVERSITY:
           HARUYUKI NAKANO,
           FENG LONG GU, JACEK KORCHOWIEC, MARCIN MAKOWSKI, AND YURIKO AOKI,
@@ -71,14 +71,17 @@ mpiexec -np 2 /usr/local/gamess/2012.05.01-R2-openmpi/gamess.00.x
      WASEDA UNIVERSITY:
           MASATO KOBAYASHI, TOMOKO AKAMA, TSUGUKI TOUMA,
           TAKESHI YOSHIKAWA, YASUHIRO IKABATA, HIROMI NAKAI
+     NANJING UNIVERSITY: SHUHUA LI
      UNIVERSITY OF NEBRASKA:
           PEIFENG SU, DEJUN SI, NANDUN THELLAMUREGE, YALI WANG, HUI LI
-     UNIVERSITY OF ZURICH:
-          ROBERTO PEVERATI, KIM BALDRIDGE
+     UNIVERSITY OF ZURICH: ROBERTO PEVERATI, KIM BALDRIDGE
      N. COPERNICUS UNIVERSITY AND JACKSON STATE UNIVERSITY:
           MARIA BARYSZ
+     UNIVERSITY OF COPENHAGEN: CASPER STEINMANN
+     TOKYO INSTITUTE OF TECHNOLOGY: HIROYA NAKATA
+     NAGOYA UNIVERSITY: YOSHIO NISHIMOTO, STEPHAN IRLE
 
- EXECUTION OF GAMESS BEGUN Wed Feb 19 23:53:14 2014
+ EXECUTION OF GAMESS BEGUN Wed Jul 27 01:23:24 2016
 
             ECHO OF THE FIRST FEW INPUT CARDS -
  INPUT CARD> $contrl scftyp=rhf cityp=cis runtyp=energy exetyp=run                          
@@ -195,7 +198,7 @@ mpiexec -np 2 /usr/local/gamess/2012.05.01-R2-openmpi/gamess.00.x
  TOTAL MEMORY REQUESTED ON EACH PROCESSOR=     1000000 WORDS.
  TIMLIM=      525600.00 MINUTES, OR     365.0 DAYS.
  PARALL= F  BALTYP=  DLB     KDIAG=    0  COREFL= F
- MXSEQ2=     300 MXSEQ3=     150
+ MXSEQ2=     300 MXSEQ3=     150  mem10=         0
 
           ----------------
           PROPERTIES INPUT
@@ -259,15 +262,15 @@ mpiexec -np 2 /usr/local/gamess/2012.05.01-R2-openmpi/gamess.00.x
  A   =    7
 
  ..... DONE SETTING UP THE RUN .....
- STEP CPU TIME =     0.00 TOTAL CPU TIME =        0.0 (    0.0 MIN)
- TOTAL WALL CLOCK TIME=        0.2 SECONDS, CPU UTILIZATION IS   0.00%
+ STEP CPU TIME =     0.04 TOTAL CPU TIME =        0.0 (    0.0 MIN)
+ TOTAL WALL CLOCK TIME=        0.0 SECONDS, CPU UTILIZATION IS 400.00%
 
           ********************
           1 ELECTRON INTEGRALS
           ********************
  ...... END OF ONE-ELECTRON INTEGRALS ......
  STEP CPU TIME =     0.00 TOTAL CPU TIME =        0.0 (    0.0 MIN)
- TOTAL WALL CLOCK TIME=        0.2 SECONDS, CPU UTILIZATION IS   0.00%
+ TOTAL WALL CLOCK TIME=        0.0 SECONDS, CPU UTILIZATION IS 200.00%
 
           -------------
           GUESS OPTIONS
@@ -284,8 +287,8 @@ mpiexec -np 2 /usr/local/gamess/2012.05.01-R2-openmpi/gamess.00.x
      5 ORBITALS ARE OCCUPIED (    1 CORE ORBITALS).
      2=A        3=A        4=A        5=A        6=A        7=A   
  ...... END OF INITIAL ORBITAL SELECTION ......
- STEP CPU TIME =     0.02 TOTAL CPU TIME =        0.0 (    0.0 MIN)
- TOTAL WALL CLOCK TIME=        0.2 SECONDS, CPU UTILIZATION IS  10.53%
+ STEP CPU TIME =     0.01 TOTAL CPU TIME =        0.0 (    0.0 MIN)
+ TOTAL WALL CLOCK TIME=        0.0 SECONDS, CPU UTILIZATION IS 250.00%
 
                     ----------------------
                     AO INTEGRAL TECHNOLOGY
@@ -314,8 +317,8 @@ mpiexec -np 2 /usr/local/gamess/2012.05.01-R2-openmpi/gamess.00.x
  TOTAL NUMBER OF NONZERO TWO-ELECTRON INTEGRALS =                 228
           1 INTEGRAL RECORDS WERE STORED ON DISK FILE  8.
   ...... END OF TWO-ELECTRON INTEGRALS .....
- STEP CPU TIME =     0.00 TOTAL CPU TIME =        0.0 (    0.0 MIN)
- TOTAL WALL CLOCK TIME=        0.2 SECONDS, CPU UTILIZATION IS  10.00%
+ STEP CPU TIME =     0.05 TOTAL CPU TIME =        0.1 (    0.0 MIN)
+ TOTAL WALL CLOCK TIME=        0.0 SECONDS, CPU UTILIZATION IS 333.33%
 
           --------------------------
                  RHF SCF CALCULATION
@@ -338,9 +341,9 @@ mpiexec -np 2 /usr/local/gamess/2012.05.01-R2-openmpi/gamess.00.x
    8  2  0      -74.9643287911    -0.0000000069   0.000045747   0.000000000
    9  3  0      -74.9643287923    -0.0000000011   0.000017697   0.000000000
   10  4  0      -74.9643287925    -0.0000000002   0.000007301   0.000000000
-  11  5  0      -74.9643287925     0.0000000000   0.000003237   0.000000000
-  12  6  0      -74.9643287925     0.0000000000   0.000001437   0.000000000
-  13  7  0      -74.9643287925     0.0000000000   0.000000639   0.000000000
+  11  5  0      -74.9643287925    -0.0000000000   0.000003237   0.000000000
+  12  6  0      -74.9643287925    -0.0000000000   0.000001437   0.000000000
+  13  7  0      -74.9643287925    -0.0000000000   0.000000639   0.000000000
 
           -----------------
           DENSITY CONVERGED
@@ -357,13 +360,13 @@ mpiexec -np 2 /usr/local/gamess/2012.05.01-R2-openmpi/gamess.00.x
                       1          2          3          4          5
                   -20.2438    -1.2506    -0.6032    -0.4455    -0.3882
                      A          A          A          A          A   
-    1  O  1  S    0.994203  -0.234218   0.000000   0.100458   0.000000
-    2  O  1  S    0.025916   0.845882   0.000000  -0.521395   0.000000
-    3  O  1  X    0.000000   0.000000   0.603305   0.000000   0.000000
-    4  O  1  Y    0.003993   0.117048   0.000000   0.774267   0.000000
-    5  O  1  Z    0.000000   0.000000   0.000000   0.000000   1.000000
-    6  H  2  S   -0.005627   0.156449   0.446377   0.289064   0.000000
-    7  H  3  S   -0.005627   0.156449  -0.446377   0.289064   0.000000
+    1  O  1  S    0.994203  -0.234218   0.000000   0.100458  -0.000000
+    2  O  1  S    0.025916   0.845882   0.000000  -0.521395  -0.000000
+    3  O  1  X   -0.000000  -0.000000   0.603305  -0.000000  -0.000000
+    4  O  1  Y    0.003993   0.117048   0.000000   0.774267  -0.000000
+    5  O  1  Z   -0.000000  -0.000000   0.000000  -0.000000   1.000000
+    6  H  2  S   -0.005627   0.156449   0.446377   0.289064  -0.000000
+    7  H  3  S   -0.005627   0.156449  -0.446377   0.289064  -0.000000
 
                       6          7
                     0.5707     0.7086
@@ -376,8 +379,8 @@ mpiexec -np 2 /usr/local/gamess/2012.05.01-R2-openmpi/gamess.00.x
     6  H  2  S   -0.775801  -0.808916
     7  H  3  S   -0.775801   0.808916
  ...... END OF RHF CALCULATION ......
- STEP CPU TIME =     0.00 TOTAL CPU TIME =        0.0 (    0.0 MIN)
- TOTAL WALL CLOCK TIME=        0.2 SECONDS, CPU UTILIZATION IS   9.52%
+ STEP CPU TIME =     0.00 TOTAL CPU TIME =        0.1 (    0.0 MIN)
+ TOTAL WALL CLOCK TIME=        0.0 SECONDS, CPU UTILIZATION IS 333.33%
 
      ----------------------------------------------------------------
      PROPERTY VALUES FOR THE RHF   SELF-CONSISTENT FIELD WAVEFUNCTION
@@ -454,12 +457,12 @@ mpiexec -np 2 /usr/local/gamess/2012.05.01-R2-openmpi/gamess.00.x
           ---------------------
 
  POINT   1           X           Y           Z (BOHR)    CHARGE
-                 0.000000    0.000000    0.000000        0.00 (A.U.)
+                 0.000000    0.000000    0.000000       -0.00 (A.U.)
          DX          DY          DZ         /D/  (DEBYE)
-     0.000000    1.673510    0.000000    1.673510
+    -0.000000    1.673510    0.000000    1.673510
  ...... END OF PROPERTY EVALUATION ......
- STEP CPU TIME =     0.01 TOTAL CPU TIME =        0.0 (    0.0 MIN)
- TOTAL WALL CLOCK TIME=        0.2 SECONDS, CPU UTILIZATION IS  13.04%
+ STEP CPU TIME =     0.01 TOTAL CPU TIME =        0.1 (    0.0 MIN)
+ TOTAL WALL CLOCK TIME=        0.0 SECONDS, CPU UTILIZATION IS 366.67%
 
  MXVEC CANNOT BE BIGGER THAN THE NUMBER OF CIS CONFIGS
  SETTING MXVEC = NCFG
@@ -546,8 +549,8 @@ mpiexec -np 2 /usr/local/gamess/2012.05.01-R2-openmpi/gamess.00.x
           SINGLE EXCITATION               SAP COEFFICENT
           FROM MO     TO MO
           ----------------------------------------------
-             3          6                   0.44072347
-             4          7                  -0.89762921
+             3          6                  -0.44072347
+             4          7                   0.89762921
           ----------------------------------------------
 
 
@@ -557,8 +560,8 @@ mpiexec -np 2 /usr/local/gamess/2012.05.01-R2-openmpi/gamess.00.x
           SINGLE EXCITATION               SAP COEFFICENT
           FROM MO     TO MO
           ----------------------------------------------
-             3          6                   0.89668441
-             4          7                   0.43999069
+             3          6                  -0.89668441
+             4          7                  -0.43999069
           ----------------------------------------------
 
   ---------------------------------------------------------------------
@@ -578,7 +581,7 @@ mpiexec -np 2 /usr/local/gamess/2012.05.01-R2-openmpi/gamess.00.x
                     EXPECTATION VALUES OF DIPOLE MOMENTS
   ---------------------------------------------------------------------
 
- GROUND STATE (SCF) DIPOLE=     0.000000     1.673510     0.000000 DEBYE
+ GROUND STATE (SCF) DIPOLE=    -0.000000     1.673510     0.000000 DEBYE
 
  TRANSITION FROM THE GROUND STATE TO EXCITED STATE  1
 
@@ -600,7 +603,7 @@ mpiexec -np 2 /usr/local/gamess/2012.05.01-R2-openmpi/gamess.00.x
  TRANSITION DIPOLE =    0.000000    0.000000    0.000000    0.000000 E*BOHR
  TRANSITION DIPOLE =    0.000000    0.000000    0.000000    0.000000 DEBYE
  OSCILLATOR STRENGTH =    0.000000
- EINSTEIN COEFFICIENTS: A=  1.8566E-21 1/SEC; B=  2.4512E-22 SEC/G
+ EINSTEIN COEFFICIENTS: A=  1.0316E-20 1/SEC; B=  1.3619E-21 SEC/G
 
  TRANSITION FROM THE GROUND STATE TO EXCITED STATE  3
 
@@ -619,8 +622,8 @@ mpiexec -np 2 /usr/local/gamess/2012.05.01-R2-openmpi/gamess.00.x
  STATE ENERGIES =        -74.9643287925      -74.2969138850
  EXCITATION ENERGY =  4.3914E+15 [1/SEC] =   146480.64 [1/CM] =     18.16 [EV]
                             X           Y           Z           NORM
- TRANSITION DIPOLE =    0.336747    0.000000    0.000000    0.336747 E*BOHR
- TRANSITION DIPOLE =    0.855932    0.000000    0.000000    0.855932 DEBYE
+ TRANSITION DIPOLE =   -0.336747   -0.000000    0.000000    0.336747 E*BOHR
+ TRANSITION DIPOLE =   -0.855932   -0.000000    0.000000    0.855932 DEBYE
  OSCILLATOR STRENGTH =    0.050456
  EINSTEIN COEFFICIENTS: A=  7.2214E+08 1/SEC; B=  4.6022E+07 SEC/G
 
@@ -630,8 +633,8 @@ mpiexec -np 2 /usr/local/gamess/2012.05.01-R2-openmpi/gamess.00.x
  STATE ENERGIES =        -74.9643287925      -74.1904032965
  EXCITATION ENERGY =  5.0922E+15 [1/SEC] =   169857.01 [1/CM] =     21.06 [EV]
                             X           Y           Z           NORM
- TRANSITION DIPOLE =   -1.533912    0.000000    0.000000    1.533912 E*BOHR
- TRANSITION DIPOLE =   -3.898846    0.000000    0.000000    3.898846 DEBYE
+ TRANSITION DIPOLE =    1.533912   -0.000000    0.000000    1.533912 E*BOHR
+ TRANSITION DIPOLE =    3.898846   -0.000000    0.000000    3.898846 DEBYE
  OSCILLATOR STRENGTH =    1.213973
  EINSTEIN COEFFICIENTS: A=  2.3363E+10 1/SEC; B=  9.5490E+08 SEC/G
 
@@ -671,10 +674,10 @@ mpiexec -np 2 /usr/local/gamess/2012.05.01-R2-openmpi/gamess.00.x
  STATE ENERGIES =        -74.5150077880      -74.2969138850
  TRANSITION ENERGY =  1.4350E+15 [1/SEC] =    47866.08 [1/CM] =        5.93 [EV]
                             X           Y           Z           NORM
- TRANSITION DIPOLE =    0.000000    0.000000    0.000000    0.000000 E*BOHR
- TRANSITION DIPOLE =    0.000000    0.000000    0.000000    0.000000 DEBYE
+ TRANSITION DIPOLE =    0.000000    0.000000   -0.000000    0.000000 E*BOHR
+ TRANSITION DIPOLE =    0.000000    0.000000   -0.000000    0.000000 DEBYE
  OSCILLATOR STRENGTH =    0.000000
- EINSTEIN COEFFICIENTS: A=  7.3441E-22 1/SEC; B=  1.3413E-21 SEC/G
+ EINSTEIN COEFFICIENTS: A=  2.6747E-23 1/SEC; B=  4.8851E-23 SEC/G
 
  TRANSITION BETWEEN EXCITED STATES   1 AND  5
 
@@ -685,15 +688,15 @@ mpiexec -np 2 /usr/local/gamess/2012.05.01-R2-openmpi/gamess.00.x
  TRANSITION DIPOLE =    0.000000    0.000000    0.000000    0.000000 E*BOHR
  TRANSITION DIPOLE =    0.000000    0.000000    0.000000    0.000000 DEBYE
  OSCILLATOR STRENGTH =    0.000000
- EINSTEIN COEFFICIENTS: A=  3.9824E-21 1/SEC; B=  2.2061E-21 SEC/G
+ EINSTEIN COEFFICIENTS: A=  3.2510E-22 1/SEC; B=  1.8009E-22 SEC/G
 
  EXPECTATION VALUE DIPOLE MOMENT FOR EXCITED STATE  2
 
  STATE MULTIPLICITY =   1
  STATE ENERGY =        -74.4407758359
                             X           Y           Z           NORM
-      STATE DIPOLE =    0.000000   -0.005921    0.000000    0.005921 E*BOHR
-      STATE DIPOLE =    0.000000   -0.015050    0.000000    0.015050 DEBYE
+      STATE DIPOLE =   -0.000000   -0.005921    0.000000    0.005921 E*BOHR
+      STATE DIPOLE =   -0.000000   -0.015050    0.000000    0.015050 DEBYE
 
  TRANSITION BETWEEN EXCITED STATES   2 AND  3
 
@@ -701,10 +704,10 @@ mpiexec -np 2 /usr/local/gamess/2012.05.01-R2-openmpi/gamess.00.x
  STATE ENERGIES =        -74.4407758359      -74.3813542595
  TRANSITION ENERGY =  3.9098E+14 [1/SEC] =    13041.53 [1/CM] =        1.62 [EV]
                             X           Y           Z           NORM
- TRANSITION DIPOLE =    0.000000    0.000000    0.000000    0.000000 E*BOHR
- TRANSITION DIPOLE =    0.000000    0.000000    0.000000    0.000000 DEBYE
+ TRANSITION DIPOLE =    0.000000    0.000000   -0.000000    0.000000 E*BOHR
+ TRANSITION DIPOLE =    0.000000    0.000000   -0.000000    0.000000 DEBYE
  OSCILLATOR STRENGTH =    0.000000
- EINSTEIN COEFFICIENTS: A=  2.8044E-23 1/SEC; B=  2.5325E-21 SEC/G
+ EINSTEIN COEFFICIENTS: A=  1.2464E-25 1/SEC; B=  1.1255E-23 SEC/G
 
  TRANSITION BETWEEN EXCITED STATES   2 AND  4
 
@@ -712,8 +715,8 @@ mpiexec -np 2 /usr/local/gamess/2012.05.01-R2-openmpi/gamess.00.x
  STATE ENERGIES =        -74.4407758359      -74.2969138850
  TRANSITION ENERGY =  9.4657E+14 [1/SEC] =    31574.05 [1/CM] =        3.91 [EV]
                             X           Y           Z           NORM
- TRANSITION DIPOLE =    0.000000    0.000000    0.141089    0.141089 E*BOHR
- TRANSITION DIPOLE =    0.000000    0.000000    0.358616    0.358616 DEBYE
+ TRANSITION DIPOLE =    0.000000    0.000000   -0.141089    0.141089 E*BOHR
+ TRANSITION DIPOLE =    0.000000    0.000000   -0.358616    0.358616 DEBYE
  OSCILLATOR STRENGTH =    0.001909
  EINSTEIN COEFFICIENTS: A=  1.2696E+06 1/SEC; B=  8.0788E+06 SEC/G
 
@@ -723,8 +726,8 @@ mpiexec -np 2 /usr/local/gamess/2012.05.01-R2-openmpi/gamess.00.x
  STATE ENERGIES =        -74.4407758359      -74.1904032965
  TRANSITION ENERGY =  1.6474E+15 [1/SEC] =    54950.42 [1/CM] =        6.81 [EV]
                             X           Y           Z           NORM
- TRANSITION DIPOLE =    0.000000    0.000000   -0.040434    0.040434 E*BOHR
- TRANSITION DIPOLE =    0.000000    0.000000   -0.102774    0.102774 DEBYE
+ TRANSITION DIPOLE =    0.000000    0.000000    0.040434    0.040434 E*BOHR
+ TRANSITION DIPOLE =    0.000000    0.000000    0.102774    0.102774 DEBYE
  OSCILLATOR STRENGTH =    0.000273
  EINSTEIN COEFFICIENTS: A=  5.4965E+05 1/SEC; B=  6.6352E+05 SEC/G
 
@@ -742,8 +745,8 @@ mpiexec -np 2 /usr/local/gamess/2012.05.01-R2-openmpi/gamess.00.x
  STATE ENERGIES =        -74.3813542595      -74.2969138850
  TRANSITION ENERGY =  5.5559E+14 [1/SEC] =    18532.52 [1/CM] =        2.30 [EV]
                             X           Y           Z           NORM
- TRANSITION DIPOLE =    1.249154    0.000000    0.000000    1.249154 E*BOHR
- TRANSITION DIPOLE =    3.175056    0.000000    0.000000    3.175056 DEBYE
+ TRANSITION DIPOLE =   -1.249154    0.000000    0.000000    1.249154 E*BOHR
+ TRANSITION DIPOLE =   -3.175056    0.000000    0.000000    3.175056 DEBYE
  OSCILLATOR STRENGTH =    0.087840
  EINSTEIN COEFFICIENTS: A=  2.0124E+07 1/SEC; B=  6.3327E+08 SEC/G
 
@@ -753,8 +756,8 @@ mpiexec -np 2 /usr/local/gamess/2012.05.01-R2-openmpi/gamess.00.x
  STATE ENERGIES =        -74.3813542595      -74.1904032965
  TRANSITION ENERGY =  1.2564E+15 [1/SEC] =    41908.89 [1/CM] =        5.20 [EV]
                             X           Y           Z           NORM
- TRANSITION DIPOLE =   -0.025692    0.000000    0.000000    0.025692 E*BOHR
- TRANSITION DIPOLE =   -0.065304    0.000000    0.000000    0.065304 DEBYE
+ TRANSITION DIPOLE =    0.025692   -0.000000    0.000000    0.025692 E*BOHR
+ TRANSITION DIPOLE =    0.065304   -0.000000    0.000000    0.065304 DEBYE
  OSCILLATOR STRENGTH =    0.000084
  EINSTEIN COEFFICIENTS: A=  9.8445E+04 1/SEC; B=  2.6789E+05 SEC/G
 
@@ -763,8 +766,8 @@ mpiexec -np 2 /usr/local/gamess/2012.05.01-R2-openmpi/gamess.00.x
  STATE MULTIPLICITY =   1
  STATE ENERGY =        -74.2969138850
                             X           Y           Z           NORM
-      STATE DIPOLE =    0.000000    0.003681    0.000000    0.003681 E*BOHR
-      STATE DIPOLE =    0.000000    0.009356    0.000000    0.009356 DEBYE
+      STATE DIPOLE =   -0.000000    0.003681    0.000000    0.003681 E*BOHR
+      STATE DIPOLE =   -0.000000    0.009356    0.000000    0.009356 DEBYE
 
  TRANSITION BETWEEN EXCITED STATES   4 AND  5
 
@@ -772,8 +775,8 @@ mpiexec -np 2 /usr/local/gamess/2012.05.01-R2-openmpi/gamess.00.x
  STATE ENERGIES =        -74.2969138850      -74.1904032965
  TRANSITION ENERGY =  7.0081E+14 [1/SEC] =    23376.37 [1/CM] =        2.90 [EV]
                             X           Y           Z           NORM
- TRANSITION DIPOLE =    0.000000   -0.070656    0.000000    0.070656 E*BOHR
- TRANSITION DIPOLE =    0.000000   -0.179591    0.000000    0.179591 DEBYE
+ TRANSITION DIPOLE =   -0.000000   -0.070656    0.000000    0.070656 E*BOHR
+ TRANSITION DIPOLE =   -0.000000   -0.179591    0.000000    0.179591 DEBYE
  OSCILLATOR STRENGTH =    0.000354
  EINSTEIN COEFFICIENTS: A=  1.2921E+05 1/SEC; B=  2.0261E+06 SEC/G
 
@@ -798,32 +801,32 @@ mpiexec -np 2 /usr/local/gamess/2012.05.01-R2-openmpi/gamess.00.x
 
                     2.0000     2.0000     2.0000     2.0000     1.0000
 
-    1  O  1  S   -0.006099  -0.070894  -1.000517   0.217468  -0.110136
-    2  O  1  S    0.953083   0.184841   0.181265  -0.112471   0.714378
-    3  O  1  X    0.105481  -0.592513   0.036894  -0.020458   0.000000
-    4  O  1  Y   -0.351734  -0.051569  -0.194175  -0.670168   0.628655
-    5  O  1  Z    0.000000   0.000000   0.000000   0.000000  -0.513508
-    6  H  2  S    0.031593  -0.439089  -0.028852  -0.335691  -0.665703
-    7  H  3  S   -0.124494   0.437694  -0.083447  -0.305418  -0.665703
+    1  O  1  S   -0.097870  -0.039732  -0.165866  -1.007333  -0.127937
+    2  O  1  S    0.566253   0.244882  -0.728000   0.278294   0.829843
+    3  O  1  X   -0.240385   0.553344  -0.000244   0.001570  -0.000000
+    4  O  1  Y   -0.692444  -0.301065  -0.199298   0.058026   0.730265
+    5  O  1  Z   -0.000000   0.000000   0.000000  -0.000000   0.080218
+    6  H  2  S   -0.424386   0.302038  -0.175771   0.071364  -0.773301
+    7  H  3  S   -0.068672  -0.516785  -0.175410   0.069041  -0.773301
 
                       6          7
 
                     1.0000     0.0000
 
-    1  O  1  S   -0.065909   0.000000
-    2  O  1  S    0.427509   0.000000
-    3  O  1  X    0.000000  -0.976485
-    4  O  1  Y    0.376209   0.000000
-    5  O  1  Z    0.858085   0.000000
-    6  H  2  S   -0.398380   0.808916
-    7  H  3  S   -0.398380  -0.808916
+    1  O  1  S   -0.010296   0.000000
+    2  O  1  S    0.066783   0.000000
+    3  O  1  X    0.000000   0.976485
+    4  O  1  Y    0.058770   0.000000
+    5  O  1  Z   -0.996777  -0.000000
+    6  H  2  S   -0.062233  -0.808916
+    7  H  3  S   -0.062233   0.808916
 
  THE CIS NATURAL ORBITALS HAVE BEEN PUNCHED.
 
  ..... DONE WITH CIS ENERGY .....
 
- STEP CPU TIME =     0.01 TOTAL CPU TIME =        0.0 (    0.0 MIN)
- TOTAL WALL CLOCK TIME=        0.2 SECONDS, CPU UTILIZATION IS  17.39%
+ STEP CPU TIME =     0.01 TOTAL CPU TIME =        0.1 (    0.0 MIN)
+ TOTAL WALL CLOCK TIME=        0.0 SECONDS, CPU UTILIZATION IS 300.00%
 
      -------------------------------------------------------------
      CIS   PROPERTIES...FOR THE WAVEFUNCTION OF EXCITED STATE    1
@@ -888,29 +891,24 @@ mpiexec -np 2 /usr/local/gamess/2012.05.01-R2-openmpi/gamess.00.x
          DX          DY          DZ         /D/  (DEBYE)
      0.000000   -0.764898    0.000000    0.764898
  ...... END OF PROPERTY EVALUATION ......
- STEP CPU TIME =     0.00 TOTAL CPU TIME =        0.0 (    0.0 MIN)
- TOTAL WALL CLOCK TIME=        0.2 SECONDS, CPU UTILIZATION IS  16.67%
-                580000  WORDS OF DYNAMIC MEMORY USED
- EXECUTION OF GAMESS TERMINATED NORMALLY Wed Feb 19 23:53:14 2014
- DDI: 263624 bytes (0.3 MB / 0 MWords) used by master data server.
+ STEP CPU TIME =     0.00 TOTAL CPU TIME =        0.1 (    0.0 MIN)
+ TOTAL WALL CLOCK TIME=        0.0 SECONDS, CPU UTILIZATION IS 300.00%
+               580000  WORDS OF DYNAMIC MEMORY USED
+ EXECUTION OF GAMESS TERMINATED NORMALLY Wed Jul 27 01:23:24 2016
+ DDI: 263640 bytes (0.3 MB / 0 MWords) used by master data server.
 
  ----------------------------------------
  CPU timing information for all processes
  ========================================
- 0: 0.22 + 0.41 = 0.64
- 1: 0.08 + 0.12 = 0.21
+ 0: 0.73 + 0.186 = 0.259
  ----------------------------------------
-set exit_status=0
-unset echo
+ ddikick.x: exited gracefully.
 ----- accounting info -----
-Files used on the master node wn451 were:
--rw------- 1 langner grant012     216 Feb 19 23:53 /lustre/scratch/tmp/pbs.6219543.nova/water_cis_saps.F05
--rw------- 1 langner grant012  180016 Feb 19 23:53 /lustre/scratch/tmp/pbs.6219543.nova/water_cis_saps.F08
--rw------- 1 langner grant012 1341520 Feb 19 23:53 /lustre/scratch/tmp/pbs.6219543.nova/water_cis_saps.F10
--rw------- 1 langner grant012     360 Feb 19 23:53 /lustre/scratch/tmp/pbs.6219543.nova/water_cis_saps.F12
--rw------- 1 langner grant012       6 Feb 19 23:53 /lustre/scratch/tmp/pbs.6219543.nova/water_cis_saps.nodes.mpd
-ls: No match.
-ls: No match.
-ls: No match.
-Wed Feb 19 23:53:16 CET 2014
-0.199u 0.162s 0:05.00 7.0%	0+0k 0+0io 68pf+0w
+Files used on the master node copper were:
+-rw-r--r-- 1 eric users    3795 Jul 27 01:23 /tmp/water_cis_saps.dat
+-rw-r--r-- 1 eric users     216 Jul 27 01:23 /tmp/water_cis_saps.F05
+-rw-r--r-- 1 eric users  180016 Jul 27 01:23 /tmp/water_cis_saps.F08
+-rw-r--r-- 1 eric users 1865040 Jul 27 01:23 /tmp/water_cis_saps.F10
+-rw-r--r-- 1 eric users     360 Jul 27 01:23 /tmp/water_cis_saps.F12
+Wed Jul 27 01:23:27 EDT 2016
+0.209u 0.036s 0:03.37 6.8%	0+0k 0+8io 0pf+0w
