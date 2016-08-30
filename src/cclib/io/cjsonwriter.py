@@ -37,16 +37,16 @@ class CJSON(filewriter.Writer):
         """
         This function is OS independent and returns the file name irrespective of
         the file path containing forward slash or backward slash - which is valid
-        in Windows
+        in Windows.
         """
         head, tail = ntpath.split(path)
         return tail or ntpath.basename(head)
 
     def generate_repr(self):
-        """Generate the CJSON representation of the logfile data"""
+        """Generate the CJSON representation of the logfile data."""
 
         cjson_dict = dict()
-        # Need to decide on a number format
+        # Need to decide on a number format.
         cjson_dict['chemical json'] = 0
         if self.jobfilename is not None:
             cjson_dict['name'] = self.pathname(os.path.splitext(self.jobfilename)[0])
@@ -57,232 +57,79 @@ class CJSON(filewriter.Writer):
             cjson_dict['inchi'] = self.pbmol.write('inchi')
             cjson_dict['inchikey'] = self.pbmol.write('inchikey')
             cjson_dict['formula'] = self.pbmol.formula
-        # Incorporate Unit Cell into the chemical JSON
+        # Incorporate Unit Cell into the chemical JSON.
 
-        # Helpers functions which use properties provided by cclib
-        self.generate_properties(cjson_dict)
-        self.generate_atoms(cjson_dict)
-        self.generate_optimization(cjson_dict)
-        self.generate_vibrations(cjson_dict)
-        self.generate_bonds(cjson_dict)
-        self.generate_transitions(cjson_dict)
-        self.generate_fragments(cjson_dict)
+        # Iterate through the attribute list present in ccData. Depending on the
+        # availability of the attribute add it at the right 'level'.
+        for attributeName, Value in ccData._attributes.items():
+            if not hasattr(self.ccdata, attributeName):
+                continue
 
-        if has_openbabel:
-            cjson_dict['diagram'] = self.pbmol.write(format='svg')
+            attributePath = Value.attributePath.split(":")
 
-        if self.terse:
-            return json.dumps(cjson_dict, cls=NumpyAwareJSONEncoder)
-        else:
-            return json.dumps(cjson_dict, cls=JSONIndentEncoder, sort_keys=True, indent=4)
+            # Depth of the attribute in the CJSON.
+            levels = len(attributePath)
 
-    def set_JSON_attribute(self, object, list):
-        """
-        Args:
-            object: Python dictionary which is being appended with the key value
-            list: list of cclib attribute name
+            # The attributes which haven't been included in the CJSON format.
+            if attributePath[0] == 'N/A':
+                continue
 
-        Returns: 
-            None. The dictionary is modified to contain the attribute with the
-                 cclib keyname as key
-        """
-        for key in list:
-            if hasattr(self.ccdata, key):
-                object[ccData._attributes[key].jsonKey] = getattr(self.ccdata, key)
+            if attributePath[0] not in cjson_dict:
+                cjson_dict[attributePath[0]] = dict()
+            l1_data_object = cjson_dict[attributePath[0]]
 
-    def has_data(self, attr_names):
-        """
-        Args:
-            attr_names: Python List containing cclib attribute names
+            # 'moments' and 'atomcoords' key will contain processed data obtained from the output file.
+            if attributeName == 'moments' or attributeName == 'atomcoords' :
+                if attributeName == 'moments':
+                    cjson_dict['properties'][ccData._attributes['moments'].jsonKey] = self._calculate_total_dipole_moment()
+                else:
+                    cjson_dict['atoms']['coords'] = dict()
+                    cjson_dict['atoms']['coords']['3d'] = self.ccdata.atomcoords[-1].flatten().tolist()
+                continue
 
-        Returns: 
-            Boolean True/False. Returns true if atleast one attribute in the list exists in the output file                 
-        """ 
-        for name in attr_names:
-            if hasattr(self.ccdata, name):
-                return True
-        return False
-        
-    def generate_properties(self, cjson_dict):
-        """ Appends the Properties object into the cjson
-        Properties table:
-            1) Molecular Mass
-            2) Charge
-            3) Multiplicity
-            4) Energy
-                 i) alpha
-                     a) homo
-                     b) gap
-                 ii) beta        
-                     a) homo
-                     b) gap
-                iii) Total       
-                 iv) Free Energy 
-                  v) Moller - Plesset 
-                 vi) Coupled Cluster 
-            5) Enthalpy 
-            6) Entropy 
-            7) numberOfAtoms    
-            8) Temperature 
-            9) totalDipoleMoment 
-            10) Partial Charges
-                 i) Mulliken 
-            11) Orbitals 
-                 i) Homos   
-                ii) Energies  
-               iii) Overlaps 
-                iv) Symmetry 
-                 v) Coeffs
-                 vi) Basis number
-                 vii) MO number
-        """
-        cjson_dict['properties'] = dict()
-        
-        if has_openbabel:
-            cjson_dict['properties']['molecular mass'] = self.pbmol.molwt
-            
-        self.set_JSON_attribute(cjson_dict['properties'], ['charge', 'mult'])
-        
-        energy_attr = ['moenergies', 'freeenergy', 'mpenergies', 'ccenergies']
-        if self.has_data(energy_attr):
-            cjson_dict['properties']['energy'] = dict()
-            
-            if hasattr(self.ccdata, 'moenergies') and hasattr(self.ccdata, 'homos'):
-                cjson_dict['properties']['energy']['alpha'] = dict()
-                cjson_dict['properties']['energy']['beta'] = dict()
-                
-                homo_idx_alpha = int(self.ccdata.homos[0])
-                homo_idx_beta = int(self.ccdata.homos[-1])
-                energy_alpha_homo = self.ccdata.moenergies[0][homo_idx_alpha]
-                energy_alpha_lumo = self.ccdata.moenergies[0][homo_idx_alpha + 1]
-                energy_alpha_gap = energy_alpha_lumo - energy_alpha_homo
-                energy_beta_homo = self.ccdata.moenergies[-1][homo_idx_beta]
-                energy_beta_lumo = self.ccdata.moenergies[-1][homo_idx_beta + 1]
-                energy_beta_gap = energy_beta_lumo - energy_beta_homo
-                
-                cjson_dict['properties']['energy']['alpha']['homo'] = energy_alpha_homo
-                cjson_dict['properties']['energy']['alpha']['gap'] = energy_alpha_gap
-                cjson_dict['properties']['energy']['beta']['homo'] = energy_beta_homo
-                cjson_dict['properties']['energy']['beta']['gap'] = energy_beta_gap
-                cjson_dict['properties']['energy']['total'] = self.ccdata.scfenergies[-1]
+            if levels == 1:
+                self.set_JSON_attribute(l1_data_object, attributeName)
+            elif levels >= 2:
+                if attributePath[1] not in l1_data_object:
+                    l1_data_object[attributePath[1]] = dict()
+                l2_data_object = l1_data_object[attributePath[1]]
 
-            self.set_JSON_attribute(cjson_dict['properties']['energy'], ['freeenergy', 'mpenergies', 'ccenergies'])
+                if levels == 2:
+                    self.set_JSON_attribute(l2_data_object, attributeName)
+                elif levels == 3:
+                    if attributePath[2] not in l2_data_object:
+                        l2_data_object[attributePath[2]] = dict()
+                    l3_data_object = l2_data_object[attributePath[2]]
+                    self.set_JSON_attribute(l3_data_object, attributeName)
 
-        self.set_JSON_attribute(cjson_dict['properties'], ['enthalpy', 'entropy', 'natom', 'temperature'])
+        # Attributes which are not directly obtained from the output files.
+        if hasattr(self.ccdata, 'moenergies') and hasattr(self.ccdata, 'homos'):
+            if 'energy' not in cjson_dict['properties']:
+                cjson_dict['properties']['energy'] = dict()
 
-        if hasattr(self.ccdata, 'moments'):
-            cjson_dict['properties'][ccData._attributes['moments'].jsonKey] = self._calculate_total_dipole_moment()
+            cjson_dict['properties']['energy']['alpha'] = dict()
+            cjson_dict['properties']['energy']['beta'] = dict()
 
-        if hasattr(self.ccdata, 'atomcharges'):
-            cjson_dict['properties']['partial charges'] = self.ccdata.atomcharges
+            homo_idx_alpha = int(self.ccdata.homos[0])
+            homo_idx_beta = int(self.ccdata.homos[-1])
+            energy_alpha_homo = self.ccdata.moenergies[0][homo_idx_alpha]
+            energy_alpha_lumo = self.ccdata.moenergies[0][homo_idx_alpha + 1]
+            energy_alpha_gap = energy_alpha_lumo - energy_alpha_homo
+            energy_beta_homo = self.ccdata.moenergies[-1][homo_idx_beta]
+            energy_beta_lumo = self.ccdata.moenergies[-1][homo_idx_beta + 1]
+            energy_beta_gap = energy_beta_lumo - energy_beta_homo
 
-        orbital_attr = ['homos', 'moenergies', 'aooverlaps', 'mosyms', 'mocoeffs', 'nbasis', 'nmo']
-        if self.has_data(orbital_attr):
-            cjson_dict['properties']['orbitals'] = dict()
-            self.set_JSON_attribute(cjson_dict['properties']['orbitals'], orbital_attr)
+            cjson_dict['properties']['energy']['alpha']['homo'] = energy_alpha_homo
+            cjson_dict['properties']['energy']['alpha']['gap'] = energy_alpha_gap
+            cjson_dict['properties']['energy']['beta']['homo'] = energy_beta_homo
+            cjson_dict['properties']['energy']['beta']['gap'] = energy_beta_gap
+            cjson_dict['properties']['energy']['total'] = self.ccdata.scfenergies[-1]
 
-    def generate_atoms(self, cjson_dict):
-        """ Appends the Atoms object into the cjson
-        Atoms Table:
-            1) Elements
-                a) Number
-                b) atomCount                
-                c) heavyAtomCount                
-            2) Coords
-                a) 3d                    
-            3) Orbitals
-                a) Names
-                b) basis functions
-                c) Indices
-            4) Coreelectrons
-            5) Mass
-            6) Spins
-        """
-        cjson_dict['atoms'] = dict()
-        
         if hasattr(self.ccdata, 'atomnos'):
-            cjson_dict['atoms']['elements'] = dict()
-            cjson_dict['atoms']['elements'][ccData._attributes['atomnos'].jsonKey] = self.ccdata.atomnos
             cjson_dict['atoms']['elements']['atom count'] = len(self.ccdata.atomnos)
             cjson_dict['atoms']['elements']['heavy atom count'] = len([x for x in self.ccdata.atomnos if x > 1])
-        
-        if hasattr(self.ccdata, 'atomcoords'):
-            cjson_dict['atoms']['coords'] = dict()
-            cjson_dict['atoms']['coords']['3d'] = self.ccdata.atomcoords[-1].flatten().tolist()
-            
-        orbital_list = ['aonames', 'atombasis']
-        if self.has_data(orbital_list):
-            cjson_dict['atoms']['orbitals'] = dict()
-            self.set_JSON_attribute(cjson_dict['atoms']['orbitals'], orbital_list)
 
-        self.set_JSON_attribute(cjson_dict['atoms'], ['coreelectrons', 'atommasses', 'atomspins'])
-
-    def generate_optimization(self, cjson_dict):
-        """ Appends the Optimization object into the cjson
-            Optimization table:
-                1) Done 
-                2) Status  
-                3) Geometric Targets 
-                4) Geometric Values 
-                5) SCF
-                    a) Energies 
-                    b) Targets 
-                    c) Values 
-                6) Scan
-                    a) Step Geometry 
-                    b) Potential Energy Surface - energies     
-                    c) Variable names 
-                    d) PES Parameter Values 
-        """
-        opti_attr = ['optdone', 'geotargets', 'scfenergies', 'scancoords', 'scannames']
-        if self.has_data(opti_attr):
-            cjson_dict['optimization'] = dict()
-            attr_list = ['optdone', 'optstatus', 'geotargets', 'geovalues']
-            self.set_JSON_attribute(cjson_dict['optimization'], attr_list)
-
-            # assumption: If SCFenergies exist, then scftargets will also exist
-            if hasattr(self.ccdata, 'scfenergies') or hasattr(self.ccdata, 'scfvalues'):
-                cjson_dict['optimization']['scf'] = dict()
-                attr_list = ['scfenergies', 'scftargets', 'scfvalues']
-                self.set_JSON_attribute(cjson_dict['optimization']['scf'], attr_list)
-                
-            # Similar assumption as above
-            if hasattr(self.ccdata, 'scanenergies'):
-                cjson_dict['optimization']['scan'] = dict()
-                attr_list = ['scancoords', 'scanenergies', 'scannames', 'scanparm']
-                self.set_JSON_attribute(cjson_dict['optimization']['scan'], attr_list)
-                
-    def generate_vibrations(self, cjson_dict):
-        """ Appends the Vibrations object into the cjson
-            Vibrations table:
-                1) Anharmonicity constants 
-                2) Frequencies  
-                3) Symmetry 
-                4) Hessian matrix 
-                5) Displacement 
-                6) Intensities 
-                    a)IR 
-                    b) Raman               
-        """
-        vib_attr = ['vibanharms', 'vibanharms', 'vibirs', 'vibramans', 'vibsyms', 'hessian', 'vibdisps']
-        if self.has_data(vib_attr):
-            cjson_dict['vibrations'] = dict()
-            
-            attr_list = ['vibanharms', 'vibfreqs', 'vibsyms', 'hessian', 'vibdisps']
-            self.set_JSON_attribute(cjson_dict['vibrations'], attr_list)
-            
-            if hasattr(self.ccdata, 'vibirs') or hasattr(self.ccdata, 'vibramans'):
-                cjson_dict['vibrations']['intensities'] = dict()
-                attr_list = ['vibirs', 'vibramans']
-                self.set_JSON_attribute(cjson_dict['vibrations']['intensities'], attr_list)
-            
-    def generate_bonds(self, cjson_dict):
-        """ Appends the Bonds object into the cjson
-            Bonds table:
-                1) Connections 
-                    a) Index
-                2) Order    
-        """
+        # Bond attributes:
         if has_openbabel and (len(self.ccdata.atomnos) > 1):
             cjson_dict['bonds'] = dict()
             cjson_dict['bonds']['connections'] = dict()
@@ -291,34 +138,28 @@ class CJSON(filewriter.Writer):
                 cjson_dict['bonds']['connections']['index'].append(bond[0] + 1)
                 cjson_dict['bonds']['connections']['index'].append(bond[1] + 1)
             cjson_dict['bonds']['order'] = [bond[2] for bond in self.bond_connectivities]
-            
-    def generate_transitions(self, cjson_dict):
-        """ Appends the Transition object into the cjson
-            Transitions table:
-               1) Electronic Transitions 
-               2) Oscillator Strength 
-               3) Rotatory Strength 
-               4) 1-excited-config  
-               5) Symmetry 
-        """
-        attr_list = ['etenergies', 'etoscs', 'etrotats', 'etsecs', 'etsyms']
-        if self.has_data(attr_list):
-            cjson_dict['transitions'] = dict()
-            self.set_JSON_attribute(cjson_dict['transitions'], attr_list)
-                
-    def generate_fragments(self, cjson_dict):
-        """ Appends the Fragments object into the cjson
-            Fragments table:
-               1) Names 
-               2) Atom Indices 
-               3) Orbital Names 
-               4) Orbital Overlap 
-        """
-        attr_list = ['fragnames', 'frags', 'fonames', 'fooverlaps']
-        if self.has_data(attr_list):
-            cjson_dict['fragments'] = dict()
-            self.set_JSON_attribute(cjson_dict['fragments'], attr_list)
 
+        if has_openbabel:
+            cjson_dict['properties']['molecular mass'] = self.pbmol.molwt
+            cjson_dict['diagram'] = self.pbmol.write(format='svg')
+
+        if self.terse:
+            return json.dumps(cjson_dict, cls=NumpyAwareJSONEncoder)
+        else:
+            return json.dumps(cjson_dict, cls=JSONIndentEncoder, sort_keys=True, indent=4)
+
+    def set_JSON_attribute(self, object, key):
+        """
+        Args:
+            object: Python dictionary which is being appended with the key value.
+            key: cclib attribute name.
+
+        Returns: 
+            None. The dictionary is modified to contain the attribute with the
+                 cclib keyname as key
+        """
+        if hasattr(self.ccdata, key):
+            object[ccData._attributes[key].jsonKey] = getattr(self.ccdata, key)
 
 class NumpyAwareJSONEncoder(json.JSONEncoder):
     """A encoder for numpy.ndarray's obtained from the cclib attributes.
