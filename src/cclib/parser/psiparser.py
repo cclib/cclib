@@ -47,10 +47,6 @@ class Psi(logfileparser.Logfile):
         # with changes triggered by ==> things like this <== (Psi3 does not have this)
         self.section = None
 
-        # Keep track of whether or not we're performing an
-        # (un)restricted calculation. Can be ('RHF', 'UHF', 'ROHF',
-        # 'CUHF').
-        self.reference = 'RHF'
 
     def after_parsing(self):
 
@@ -78,11 +74,14 @@ class Psi(logfileparser.Logfile):
             # Keep track of early versions of Psi4.
             if "beta" in line:
                 self.version_4_beta = True
+        self.metadata["package_version"] = self.version
 
         # This will automatically change the section attribute for Psi4, when encountering
         # a line that <== looks like this ==>, to whatever is in between.
         if (line.strip()[:3] == "==>") and (line.strip()[-3:] == "<=="):
             self.section = line.strip()[4:-4]
+            if self.section == "DFT Potential":
+                self.metadata["methods"].append("DFT")
 
         # Determine whether or not the reference wavefunction is
         # restricted, unrestricted, or restricted open-shell.
@@ -270,6 +269,8 @@ class Psi(logfileparser.Logfile):
                     self.set_attribute('charge', charge)
                 if line.split()[0] == "convergence":
                     conv = float(line.split()[-1])
+                if line.split()[0] == "reference":
+                    self.reference = line.split()[-1]
                 line = next(inputfile)
 
             if not hasattr(self, 'scftargets'):
@@ -304,6 +305,10 @@ class Psi(logfileparser.Logfile):
         #       2     C     6s 3p // 2s 1p
         #       3     C     6s 3p // 2s 1p
         # ...
+        if self.section == "Primary Basis" :
+            if line[2:12] == "Basis Set:" :
+                self.metadata["basis_set"] = line.split()[2]
+
         if (self.section == "Primary Basis" or self.section == "DFT Potential") and line.strip() == "-Contraction Scheme:":
 
             self.skip_lines(inputfile, ['headers', 'd'])
@@ -734,6 +739,7 @@ class Psi(logfileparser.Logfile):
         # This is for the older conventional MP2 code in 4.0b5.
         mp_trigger = "MP2 Total Energy (a.u.)"
         if line.strip()[:len(mp_trigger)] == mp_trigger:
+            self.metadata["methods"].append("MP2")
             mpenergy = utils.convertor(float(line.split()[-1]), 'hartree', 'eV')
             if not hasattr(self, 'mpenergies'):
                 self.mpenergies = []
@@ -750,6 +756,7 @@ class Psi(logfileparser.Logfile):
         # Note this is just a start and needs to be modified for CCSD(T), etc.
         ccsd_trigger = "* CCSD total energy"
         if line.strip()[:len(ccsd_trigger)] == ccsd_trigger:
+            self.metadata["methods"].append("CCSD")
             ccsd_energy = utils.convertor(float(line.split()[-1]), 'hartree', 'eV')
             if not hasattr(self, "ccenergis"):
                 self.ccenergies = []

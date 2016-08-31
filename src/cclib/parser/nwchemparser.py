@@ -53,6 +53,10 @@ class NWChem(logfileparser.Logfile):
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
 
+        #extract the version number first
+        if "Northwest Computational" in line:
+            self.metadata["package_version"] = line.split()[5]
+
         # This is printed in the input module, so should always be the first coordinates,
         # and contains some basic information we want to parse as well. However, this is not
         # the only place where the coordinates are printed during geometry optimization,
@@ -220,6 +224,7 @@ class NWChem(logfileparser.Logfile):
                 while line.strip():
                     atomname, desc, shells, funcs, types = line.split()
                     atomelement = self.name2element(atomname)
+                    self.metadata["basis_set"] = desc
 
                     self.shells[atomname] = types
                     atombasis_dict[atomelement] = int(funcs)
@@ -297,6 +302,12 @@ class NWChem(logfileparser.Logfile):
                 if not hasattr(self, 'scftargets'):
                     self.scftargets = []
                 self.scftargets.append([target_energy, target_density, target_gradient])
+
+        #DFT functional information
+        if "XC Information" in line:
+            line = next(inputfile)
+            line = next(inputfile)
+            self.metadata["functional"] = line.split()[0]
 
         # If the full overlap matrix is printed, it looks like this:
         #
@@ -509,6 +520,12 @@ class NWChem(logfileparser.Logfile):
         if "Failed to converge" in line and hasattr(self, 'geovalues'):
             if not hasattr(self, 'optdone'):
                 self.optdone = []
+
+        # extract the theoretical method
+        if "Total SCF energy" in line:
+            self.metadata["methods"].append("HF")
+        if "Total DFT energy" in line:
+            self.metadata["methods"].append("DFT")
 
         # The line containing the final SCF energy seems to be always identifiable like this.
         if "Total SCF energy" in line or "Total DFT energy" in line:
@@ -994,13 +1011,23 @@ class NWChem(logfileparser.Logfile):
                     assert self.moments[3] == octupole
 
         if "Total MP2 energy" in line:
+            self.metadata["methods"].append("MP2")
             mpenerg = float(line.split()[-1])
             if not hasattr(self, "mpenergies"):
                 self.mpenergies = []
             self.mpenergies.append([])
             self.mpenergies[-1].append(utils.convertor(mpenerg, "hartree", "eV"))
 
+        if "CCSD total energy / hartree" in line or "total CCSD energy:" in line:
+            self.metadata["methods"].append("CCSD")
+            ccenerg = float(line.split()[-1])
+            if not hasattr(self, "ccenergies"):
+                self.ccenergies = []
+            self.ccenergies.append([])
+            self.ccenergies[-1].append(utils.convertor(ccenerg, "hartree", "eV"))
+
         if "CCSD(T) total energy / hartree" in line:
+            self.metadata["methods"].append("CCSD(T)")
             ccenerg = float(line.split()[-1])
             if not hasattr(self, "ccenergies"):
                 self.ccenergies = []

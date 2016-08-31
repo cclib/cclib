@@ -100,6 +100,9 @@ class QChem(logfileparser.Logfile):
             'Final Hessian.',
         )
 
+        self.wfn_method = ['HF', 'MP2', 'RI-MP2', 'LOCAL_MP2', 'MP4', 'CCD', 'CCSD', \
+                                      'CCSD(T)', 'QCISD', 'QCISD(T)']
+
     def after_parsing(self):
 
         # If parsing a fragment job, each of the geometries appended to
@@ -287,6 +290,10 @@ class QChem(logfileparser.Logfile):
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
 
+        # Extract the version number first
+        if 'Q-Chem,' in line:
+            self.metadata["package_version"] = line.split()[1][:-1]
+
         # Disable/enable parsing for fragment sections.
         if any(message in line for message in self.fragment_section_headers):
             self.is_fragment_section = True
@@ -303,6 +310,16 @@ class QChem(logfileparser.Logfile):
                     if '$rem' in line:
                         while '$end' not in line:
                             line = next(inputfile)
+                            if 'method' in line.lower():
+                                method = line.split()[-1].upper()
+                                if method in self.wfn_method:
+                                    self.metadata["methods"].append(method)
+                                else:
+                                    self.metadata["methods"].append('DFT')
+                                    self.metadata["functional"] = method
+                            if 'exchange' in line.lower():
+                                self.metadata["methods"].append('DFT')
+                                self.metadata["functional"] = line.split()[-1]
                             if 'print_orbitals' in line.lower():
                                 # Stay with the default value if a number isn't
                                 # specified.
@@ -315,6 +332,10 @@ class QChem(logfileparser.Logfile):
                                     self.norbdisp_set = True
 
                     line = next(inputfile)
+
+            # Parse the basis set name
+            if 'Requested basis set' in line:
+                self.metadata["basis_set"] = line.split()[-1]
 
             # Parse the general basis for `gbasis`, in the style used by
             # Gaussian.

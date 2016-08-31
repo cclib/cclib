@@ -24,9 +24,6 @@ class DALTON(logfileparser.Logfile):
 
         # Call the __init__ method of the superclass
         super(DALTON, self).__init__(logname="DALTON", *args, **kwargs)
-        if not hasattr(self, "metadata"):
-            self.metadata = {}
-            self.metadata["package"] = self.logname
 
     def __str__(self):
         """Return a string representation of the object."""
@@ -59,7 +56,6 @@ class DALTON(logfileparser.Logfile):
         # when the first line is BASIS, false for INTGRL/ATOMBASIS.
         self.basislibrary = True
 
-        self.metadata['methods'] = []
 
     def parse_geometry(self, lines):
         """Parse DALTON geometry lines into an atomcoords array."""
@@ -181,7 +177,8 @@ class DALTON(logfileparser.Logfile):
             symmetry_atoms = []
             atommasses = []
             for cols in lines:
-                atomnos.append(self.table.number[cols[0]])
+                cols0 = ''.join([i for i in cols[0] if not i.isdigit()]) #remove numbers
+                atomnos.append(self.table.number[cols0])
                 if len(cols) == 3:
                     symmetry_atoms.append(int(cols[1][1]))
                     atommasses.append(float(cols[2]))

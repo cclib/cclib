@@ -24,6 +24,28 @@ class GAMESS(logfileparser.Logfile):
     # Used to index self.scftargets[].
     SCFRMS, SCFMAX, SCFENERGY = list(range(3))
 
+    # Used to extact Dunning basis set names.
+    dunningbas = {'CCD': 'cc-pVDZ', \
+            'CCT': 'cc-pVTZ', \
+            'CCQ': 'cc-pVQZ', \
+            'CC5': 'cc-pV5Z', \
+            'CC6': 'cc-pV6Z', \
+            'ACCD': 'aug-cc-pVDZ', \
+            'ACCT': 'aug-cc-pVTZ', \
+            'ACCQ': 'aug-cc-pVQZ', \
+            'ACC5': 'aug-cc-pV5Z', \
+            'ACC6': 'aug-cc-pV6Z', \
+            'CCDC': 'cc-pCVDZ', \
+            'CCTC': 'cc-pCVTZ', \
+            'CCQC': 'cc-pCVQZ', \
+            'CC5C': 'cc-pCV5Z', \
+            'CC6C': 'cc-pCV6Z', \
+            'ACCDC': 'aug-cc-pCVDZ', \
+            'ACCTC': 'aug-cc-pCVTZ', \
+            'ACCQC': 'aug-cc-pCVQZ', \
+            'ACC5C': 'aug-cc-pCV5Z', \
+            'ACC6C': 'aug-cc-pCV6Z'}
+
     def __init__(self, *args, **kwargs):
 
         # Call the __init__ method of the superclass
@@ -66,9 +88,85 @@ class GAMESS(logfileparser.Logfile):
 
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
+        
+        # extract the version number first
+        if line.find("GAMESS VERSION") >= 0:
+            self.metadata["package_version"] = line.split()[4] + line.split()[5] + line.split()[6]
 
         if line[1:12] == "INPUT CARD>":
             return
+
+        # extract the methods 
+        if line[1:7] == "SCFTYP":
+            method = line.split()[0][7:]
+            if len(self.metadata["methods"]) == 0:
+                self.metadata["methods"].append(method)
+
+        # extract the basis set name
+        if line[5:11] == "GBASIS":
+            basnm1 = line.split()[0][7:]
+            if basnm1 in self.dunningbas:
+                self.metadata["basis_set"] = self.dunningbas[basnm1]
+            else:
+                if basnm1 == "PM3" or basnm1 == "AM1":
+                    self.metadata["methods"].append(basnm1)
+                if basnm1 == "STO" :
+                    if line.split()[2] == "2":
+                        self.metadata["basis_set"] = "STO-2G"
+                    elif line.split()[2] == "3":
+                        self.metadata["basis_set"] = "STO-3G"
+                    elif line.split()[2] == "4":
+                        self.metadata["basis_set"] = "STO-4G"
+                    elif line.split()[2] == "5":
+                        self.metadata["basis_set"] = "STO-5G"
+                if basnm1 == "N21" :
+                    if line.split()[2] == "3" and line.split()[3] == "POLAR=COMMON":
+                        self.metadata["basis_set"] = "3-21G*"
+                    if line.split()[2] == "3" and line.split()[3] == "POLAR=NONE":
+                        self.metadata["basis_set"] = "3-21G"
+                    if line.split()[2] == "4" and line.split()[3] == "POLAR=NONE":
+                        self.metadata["basis_set"] = "4-21G"
+                    if line.split()[2] == "6" and line.split()[3] == "POLAR=NONE":
+                        self.metadata["basis_set"] = "6-21G"
+                if basnm1 == "N31" :
+                    if line.split()[2] == "6" and (line.split()[3] == "POLAR=POPN31" \
+                            or line.split()[3] == "POLAR=POPLE"):
+                        self.metadata["basis_set"] = "6-31G*"
+                        line = next(inputfile)
+                        if line.split()[-1] == "T":
+                            self.metadata["basis_set"] = "6-31+G*"
+                            line = next(inputfile)
+                            if line.split()[1] == "0" and line.split()[3] == "T":
+                                self.metadata["basis_set"] = "6-31++G*"
+                            if line.split()[1] == "1" and line.split()[3] == "T":
+                                self.metadata["basis_set"] = "6-31++G**"
+                        else:
+                            line = next(inputfile)
+                            if line.split()[1] == "1":  #NPFUNC = 1
+                                self.metadata["basis_set"] = "6-31G**"
+                    if line.split()[2] == "6" and line.split()[3] == "POLAR=NONE":
+                        self.metadata["basis_set"] = "6-31G"
+                    if line.split()[2] == "4" and line.split()[3] == "POLAR=NONE":
+                        self.metadata["basis_set"] = "4-31G"
+                    if line.split()[2] == "4" and line.split()[3] == "POLAR=POPN31":
+                        self.metadata["basis_set"] = "4-31G*"
+                if basnm1 == "N311" :
+                    if line.split()[2] == "6" and line.split()[3] == "POLAR=POPN311":
+                        self.metadata["basis_set"] = "6-311G*"
+                        line = next(inputfile)
+                        if line.split()[-1] == "T":
+                            self.metadata["basis_set"] = "6-311+G*"
+                            line = next(inputfile)
+                            if line.split()[1] == "0" and line.split()[3] == "T":
+                                self.metadata["basis_set"] = "6-311++G*"
+                            if line.split()[1] == "1" and line.split()[3] == "T":
+                                self.metadata["basis_set"] = "6-311++G**"
+                        else:
+                            line = next(inputfile)
+                            if line.split()[1] == "1":  #NPFUNC = 1
+                                self.metadata["basis_set"] = "6-311G**"
+                    if line.split()[2] == "6" and line.split()[3] == "POLAR=NONE":
+                        self.metadata["basis_set"] = "6-311G"
 
         # We are looking for this line:
         #           PARAMETERS CONTROLLING GEOMETRY SEARCH ARE
@@ -122,6 +220,7 @@ class GAMESS(logfileparser.Logfile):
                 if len(line.split()) > 0:
                     # Only up to MP2 correction
                     if line.split()[0] == "E(MP2)=":
+                        self.metadata["methods"].append("MP2")
                         mp2energy = float(line.split()[1])
                         self.mpenergies[-1].append(utils.convertor(mp2energy, "hartree", "eV"))
                     # MP2 before higher order calculations
@@ -129,28 +228,34 @@ class GAMESS(logfileparser.Logfile):
                         mp2energy = float(line.split()[2])
                         self.mpenergies[-1].append(utils.convertor(mp2energy, "hartree", "eV"))
                     if line.split()[0] == "E(MP3)":
+                        self.metadata["methods"].append("MP3")
                         mp3energy = float(line.split()[2])
                         self.mpenergies[-1].append(utils.convertor(mp3energy, "hartree", "eV"))
                     if line.split()[0] in ["E(MP4-SDQ)", "E(MP4-SDTQ)"]:
+                        self.metadata["methods"].append("MP4")
                         mp4energy = float(line.split()[2])
                         self.mpenergies[-1].append(utils.convertor(mp4energy, "hartree", "eV"))
 
         # Total energies after Coupled Cluster calculations
         # Only the highest Coupled Cluster level result is gathered
         if line[12:23] == "CCD ENERGY:":
+            self.metadata["methods"].append("CCD")
             if not hasattr(self, "ccenergies"):
                 self.ccenergies = []
             ccenergy = float(line.split()[2])
             self.ccenergies.append(utils.convertor(ccenergy, "hartree", "eV"))
         if line.find("CCSD") >= 0 and line.split()[0:2] == ["CCSD", "ENERGY:"]:
+            self.metadata["methods"].append("CCSD")
             if not hasattr(self, "ccenergies"):
                 self.ccenergies = []
             ccenergy = float(line.split()[2])
             line = next(inputfile)
             if line[8:23] == "CCSD[T] ENERGY:":
+                self.metadata["methods"].append("CCSD[T]")
                 ccenergy = float(line.split()[2])
                 line = next(inputfile)
                 if line[8:23] == "CCSD(T) ENERGY:":
+                    self.metadata["methods"].append("CCSD(T)")
                     ccenergy = float(line.split()[2])
             self.ccenergies.append(utils.convertor(ccenergy, "hartree", "eV"))
 
