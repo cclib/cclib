@@ -569,28 +569,29 @@ class Psi(logfileparser.Logfile):
 
             # The last orbital energy here represents the HOMO.
             self.homos = [len(self.moenergies[0])-1]
-            # For a restricted open-shell calculation, this is the
-            # beta HOMO, and we assume the singly-occupied orbitals
-            # are all alpha, which are handled next.
+            # For a restricted open-shell calculation, the last
+            # doubly-occupied orbital is the beta HOMO, and we assume
+            # the singly-occupied orbitals are all alpha, which are
+            # handled next.
             if self.reference[0:2] == 'RO':
                 self.homos.append(self.homos[0])
 
-            # Different numbers of blank lines in Psi3 and Psi4.
-            if self.version == 3:
-                self.skip_line(inputfile, 'blank')
-
-            unoccupied = next(inputfile)
+            line = next(inputfile)
+            # This will skip over blank lines in the case of no
+            # orbitals.
+            while not line.strip():
+                line = next(inputfile)
             if self.reference[0:2] == 'RO':
-                assert unoccupied.strip() == 'Singly Occupied:'
+                assert line.strip() == 'Singly Occupied:'
             elif self.reference[0:1] == 'R':
                 # The header for virtual orbitals is different for
                 # Psi3 and Psi4.
                 if self.version == 3:
-                    assert unoccupied.strip() == 'Unoccupied orbitals'
+                    assert line.strip() == 'Unoccupied orbitals'
                 else:
-                    assert unoccupied.strip() == 'Virtual:'
+                    assert line.strip() == 'Virtual:'
             elif self.reference[0:1] == 'U':
-                assert unoccupied.strip() == 'Alpha Virtual:'
+                assert line.strip() == 'Alpha Virtual:'
 
             # Psi4 now has a blank line, Psi3 does not.
             if self.version == 4:
@@ -604,11 +605,17 @@ class Psi(logfileparser.Logfile):
                 self.mosyms.append([])
                 self.moenergies.append([])
                 line = next(inputfile)
+                # If there aren't any unoccupied alpha orbitals.
+                while not line.strip():
+                    line = next(inputfile)
                 assert line.strip() == 'Beta Occupied:'
                 self.skip_line(inputfile, 'blank')
                 self._parse_mosyms_moenergies(inputfile, 1)
                 self.homos.append(len(self.moenergies[1])-1)
                 line = next(inputfile)
+                # If there aren't any occupied beta orbitals.
+                while not line.strip():
+                    line = next(inputfile)
                 assert line.strip() == 'Beta Virtual:'
                 self.skip_line(inputfile, 'blank')
                 self._parse_mosyms_moenergies(inputfile, 1)
@@ -620,6 +627,8 @@ class Psi(logfileparser.Logfile):
 
             if self.version == 4:
                 line = next(inputfile)
+                while not line.strip():
+                    line = next(inputfile)
                 assert line.strip() == 'Final Occupation by Irrep:'
                 line = next(inputfile)
                 irreps = line.split()
@@ -672,43 +681,7 @@ class Psi(logfileparser.Logfile):
         if (self.section) and ("Molecular Orbitals" in self.section) \
            and ("Molecular Orbitals" in line):
 
-            self.skip_line(inputfile, 'blank')
-
-            mocoeffs = []
-            indices = next(inputfile)
-            while indices.strip():
-
-                if indices[:3] == '***':
-                    break
-
-                indices = [int(i) for i in indices.split()]
-
-                if len(mocoeffs) < indices[-1]:
-                    for i in range(len(indices)):
-                        mocoeffs.append([])
-                else:
-                    assert len(mocoeffs) == indices[-1]
-
-                self.skip_line(inputfile, 'blank')
-
-                line = next(inputfile)
-                while line.strip():
-                    iao = int(line.split()[0])
-                    coeffs = [float(c) for c in line.split()[1:]]
-                    for i, c in enumerate(coeffs):
-                        mocoeffs[indices[i]-1].append(c)
-                    line = next(inputfile)
-
-                energies = next(inputfile)
-                symmetries = next(inputfile)
-                occupancies = next(inputfile)
-
-                self.skip_lines(inputfile, ['b', 'b'])
-                indices = next(inputfile)
-
-            if not hasattr(self, 'mocoeffs'):
-                self.mocoeffs = []
-            self.mocoeffs.append(mocoeffs)
+            self._parse_mocoeffs(inputfile)
 
         # The formats for Mulliken and Lowdin atomic charges are the same, just with
         # the name changes, so use the same code for both.
@@ -1094,6 +1067,52 @@ class Psi(logfileparser.Logfile):
                     line = next(inputfile)
                 self.vibdisps.append(normal_mode_disps)
                 line = next(inputfile)
+
+    def _parse_mocoeffs(self, inputfile):
+        """Parse molecular orbital coefficients."""
+        self.skip_line(inputfile, 'blank')
+
+        mocoeffs = []
+        indices = next(inputfile)
+        while indices.strip():
+
+            if indices[:3] == '***':
+                break
+
+            indices = [int(i) for i in indices.split()]
+
+            if len(mocoeffs) < indices[-1]:
+                for i in range(len(indices)):
+                    mocoeffs.append([])
+            else:
+                assert len(mocoeffs) == indices[-1]
+
+            self.skip_line(inputfile, 'blank')
+
+            line = next(inputfile)
+            while line.strip():
+                iao = int(line.split()[0])
+                coeffs = [float(c) for c in line.split()[1:]]
+                for i, c in enumerate(coeffs):
+                    mocoeffs[indices[i]-1].append(c)
+                line = next(inputfile)
+
+            energies = next(inputfile)
+            symmetries = next(inputfile)
+            occupancies = next(inputfile)
+
+            # The number of newlines at the end of a block depends on
+            # wther or not the maximum number of columns (5) is
+            # present.
+            if len(energies.split()[1:]) == 5:
+                self.skip_lines(inputfile, ['b', 'b'])
+            else:
+                self.skip_line(inputfile, 'b')
+            indices = next(inputfile)
+
+        if not hasattr(self, 'mocoeffs'):
+            self.mocoeffs = []
+        self.mocoeffs.append(mocoeffs)
 
     def _parse_mosyms_moenergies(self, inputfile, spinidx):
         """Parse molecular orbital symmetries and energies from the
