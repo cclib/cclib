@@ -26,7 +26,8 @@ class CJSON:
     def read_cjson(self):
         inputfile = self.filename
 
-        json_data = json.loads(open(inputfile).read())
+        with open(inputfile) as fh:
+            json_data = json.loads(fh.read())
 
         # Actual update of attribute dictionary happens here
         self.construct(json_data)
