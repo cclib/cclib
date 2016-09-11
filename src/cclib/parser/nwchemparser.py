@@ -669,7 +669,12 @@ class NWChem(logfileparser.Logfile):
 
             if not hasattr(self, 'homos') or (len(self.homos) > alphabeta):
                 self.homos = []
-            nvector_index = mooccnos.index(0) - 1
+            # Locate the index for the beta HOMO.
+            try:
+                nvector_index = mooccnos.index(0) - 1
+            # No electrons present.
+            except ValueError:
+                nvector_index = 0
             if nvector_index > -1:
                 self.homos.append(nvectors[nvector_index] - 1)
             else:
