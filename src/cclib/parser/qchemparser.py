@@ -451,7 +451,7 @@ class QChem(logfileparser.Logfile):
                 # Calculate the spin multiplicity (2S + 1), where S is the
                 # total spin of the system.
                 S = (self.nalpha - self.nbeta) / 2
-                mult = int(2 * S + 1)
+                mult = int((2 * S) + 1)
                 self.set_attribute('mult', mult)
                 # Calculate the molecular charge as the difference between
                 # the atomic numbers and the number of electrons.
@@ -460,14 +460,6 @@ class QChem(logfileparser.Logfile):
                     self.set_attribute('charge', charge)
 
             # Number of basis functions.
-            # Because Q-Chem's integral recursion scheme is defined using
-            # Cartesian basis functions, there is often a distinction between the
-            # two in the output. We only parse for *pure* functions.
-            # Examples:
-            #  Only one type:
-            #   There are 30 shells and 60 basis functions
-            #  Both Cartesian and pure:
-            #   ...
             if 'basis functions' in line:
                 if not hasattr(self, 'nbasis'):
                     self.set_attribute('nbasis', int(line.split()[-3]))
@@ -556,17 +548,21 @@ class QChem(logfileparser.Logfile):
             # Molecular orbital coefficients.
 
             # Try parsing them from this block (which comes from
-            # `scf_final_print = 2``) rather than the combined
+            # `scf_final_print = 2`) rather than the combined
             # aonames/mocoeffs/moenergies block (which comes from
             # `print_orbitals = true`).
             if 'Final Alpha MO Coefficients' in line:
                 if not hasattr(self, 'mocoeffs'):
                     self.mocoeffs = []
-                mocoeffs = QChem.parse_matrix(inputfile, self.nbasis, self.norbdisp_alpha, self.ncolsblock)
+                # There might be fewer basis functions that the number
+                # of columns that were requested for display.
+                mocoeffs = QChem.parse_matrix(
+                    inputfile, self.nbasis, min(self.nbasis, self.norbdisp_alpha), self.ncolsblock)
                 self.mocoeffs.append(mocoeffs.transpose())
 
             if 'Final Beta MO Coefficients' in line:
-                mocoeffs = QChem.parse_matrix(inputfile, self.nbasis, self.norbdisp_beta, self.ncolsblock)
+                mocoeffs = QChem.parse_matrix(
+                    inputfile, self.nbasis, min(self.nbasis, self.norbdisp_beta), self.ncolsblock)
                 self.mocoeffs.append(mocoeffs.transpose())
 
             if 'Total energy in the final basis set' in line:
@@ -805,6 +801,7 @@ class QChem(logfileparser.Logfile):
                 self.polarizabilities.append(numpy.array(polarizability))
 
             # Molecular orbital energies and symmetries.
+            # TODO combine this with the no symmetry block?
             if 'Orbital Energies (a.u.) and Symmetries' in line:
 
                 #  --------------------------------------------------------------
@@ -877,8 +874,6 @@ class QChem(logfileparser.Logfile):
                             self.homos = [len(energies_alpha)-1]
                         line = next(inputfile)
                     # Parse the energies and symmetries in pairs of lines.
-                    # energies = [utils.convertor(energy, 'hartree', 'eV')
-                    #             for energy in map(float, line.split())]
                     # This convoluted bit handles '*******' when present.
                     energies = []
                     energy_line = line.split()
@@ -894,10 +889,15 @@ class QChem(logfileparser.Logfile):
                     symbols_alpha.extend(symbols)
                     line = next(inputfile)
 
+                # This condition will be hit if there are no virtual
+                # (alpha) orbitals.
+                if not hasattr(self, 'homos'):
+                    if hasattr(self, 'nalpha'):
+                        self.homos = [self.nalpha - 1]
+
                 line = next(inputfile)
-                # Only look at the second block if doing an unrestricted calculation.
-                # This might be a problem for ROHF/ROKS.
-                if self.unrestricted:
+
+                if self.unrestricted and not self.is_rohf:
                     assert 'Beta MOs' in line
                     self.skip_line(inputfile, '-- Occupied --')
                     line = next(inputfile)
@@ -921,6 +921,16 @@ class QChem(logfileparser.Logfile):
                         symbols = line.split()[1::2]
                         symbols_beta.extend(symbols)
                         line = next(inputfile)
+                elif self.unrestricted and self.is_rohf:
+                    # There isn't a second set of MO coefficients, but
+                    # the beta HOMO needs to be added; it can be
+                    # determined from the number of beta electrons.
+                    if hasattr(self, 'nbeta'):
+                        assert len(self.homos) == 1
+                        self.homos.append(self.nbeta - 1)
+                else:
+                    assert not self.unrestricted
+                    assert not self.is_rohf
 
                 # For now, only keep the last set of MO energies, even though it is
                 # printed at every step of geometry optimizations and fragment jobs.
@@ -998,10 +1008,15 @@ class QChem(logfileparser.Logfile):
                     energies_alpha.extend(energies)
                     line = next(inputfile)
 
+                # This condition will be hit if there are no virtual
+                # (alpha) orbitals.
+                if not hasattr(self, 'homos'):
+                    if hasattr(self, 'nalpha'):
+                        self.homos = [self.nalpha - 1]
+
                 line = next(inputfile)
-                # Only look at the second block if doing an unrestricted calculation.
-                # This might be a problem for ROHF/ROKS.
-                if self.unrestricted:
+
+                if self.unrestricted and not self.is_rohf:
                     assert 'Beta MOs' in line
                     self.skip_line(inputfile, '-- Occupied --')
                     line = next(inputfile)
@@ -1022,6 +1037,16 @@ class QChem(logfileparser.Logfile):
                             energies.append(energy)
                         energies_beta.extend(energies)
                         line = next(inputfile)
+                elif self.unrestricted and self.is_rohf:
+                    # There isn't a second set of MO coefficients, but
+                    # the beta HOMO needs to be added; it can be
+                    # determined from the number of beta electrons.
+                    if hasattr(self, 'nbeta'):
+                        assert len(self.homos) == 1
+                        self.homos.append(self.nbeta - 1)
+                else:
+                    assert not self.unrestricted
+                    assert not self.is_rohf
 
                 # For now, only keep the last set of MO energies, even though it is
                 # printed at every step of geometry optimizations and fragment jobs.
