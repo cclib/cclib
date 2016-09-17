@@ -41,7 +41,15 @@ class QChem(logfileparser.Logfile):
 
         # Keep track of whether or not we're performing an
         # (un)restricted calculation.
+        # False, False -> RHF
+        # True, False -> UHF
+        # False, True -> ROHF
+        # True, True -> N/P
+        # Is is open-shell with two sets of MO energies and
+        # coefficients?
         self.unrestricted = False
+        # Is it open-shell but with two sets of MO energies and
+        # coefficients?
         self.is_rohf = False
 
         # Keep track of whether or not this is a fragment calculation,
@@ -57,7 +65,6 @@ class QChem(logfileparser.Logfile):
             'Done with SCF on isolated fragments',
             'Done with counterpoise correction on fragments',
         )
-
 
         # Compile the dashes-and-or-spaces-only regex.
         self.re_dashes_and_spaces = re.compile('^[\s-]+$')
@@ -100,8 +107,8 @@ class QChem(logfileparser.Logfile):
             'Final Hessian.',
         )
 
-        self.wfn_method = ['HF', 'MP2', 'RI-MP2', 'LOCAL_MP2', 'MP4', 'CCD', 'CCSD', \
-                                      'CCSD(T)', 'QCISD', 'QCISD(T)']
+        self.wfn_method = ['HF', 'MP2', 'RI-MP2', 'LOCAL_MP2', 'MP4', 'CCD', 'CCSD',
+                           'CCSD(T)', 'QCISD', 'QCISD(T)']
 
     def after_parsing(self):
 
@@ -469,12 +476,10 @@ class QChem(logfileparser.Logfile):
             if 'calculation will be' in line:
                 if ' restricted' in line:
                     self.unrestricted = False
+                    if self.nalpha != self.nbeta:
+                        self.is_rohf = True
                 if 'unrestricted' in line:
                     self.unrestricted = True
-                if hasattr(self, 'nalpha') and hasattr(self, 'nbeta'):
-                    if self.nalpha != self.nbeta:
-                        self.unrestricted = True
-                        self.is_rohf = True
 
             # Section with SCF iterations goes like this:
             #
@@ -561,9 +566,12 @@ class QChem(logfileparser.Logfile):
                 self.mocoeffs.append(mocoeffs.transpose())
 
             if 'Final Beta MO Coefficients' in line:
-                mocoeffs = QChem.parse_matrix(
-                    inputfile, self.nbasis, min(self.nbasis, self.norbdisp_beta), self.ncolsblock)
-                self.mocoeffs.append(mocoeffs.transpose())
+                # These are printed in ROHF calculations, but they are
+                # identical to the alpha coefficients.
+                if not self.is_rohf:
+                    mocoeffs = QChem.parse_matrix(
+                        inputfile, self.nbasis, min(self.nbasis, self.norbdisp_beta), self.ncolsblock)
+                    self.mocoeffs.append(mocoeffs.transpose())
 
             if 'Total energy in the final basis set' in line:
                 if not hasattr(self, 'scfenergies'):
@@ -897,6 +905,7 @@ class QChem(logfileparser.Logfile):
 
                 line = next(inputfile)
 
+                # UHF
                 if self.unrestricted and not self.is_rohf:
                     assert 'Beta MOs' in line
                     self.skip_line(inputfile, '-- Occupied --')
@@ -921,14 +930,18 @@ class QChem(logfileparser.Logfile):
                         symbols = line.split()[1::2]
                         symbols_beta.extend(symbols)
                         line = next(inputfile)
-                elif self.unrestricted and self.is_rohf:
+                # ROHF
+                elif not self.unrestricted and self.is_rohf:
                     # There isn't a second set of MO coefficients, but
                     # the beta HOMO needs to be added; it can be
                     # determined from the number of beta electrons.
                     if hasattr(self, 'nbeta'):
                         assert len(self.homos) == 1
                         self.homos.append(self.nbeta - 1)
+                # RHF
                 else:
+                    # Under the current conventions, both True doesn't
+                    # make sense.
                     assert not self.unrestricted
                     assert not self.is_rohf
 
@@ -1016,6 +1029,7 @@ class QChem(logfileparser.Logfile):
 
                 line = next(inputfile)
 
+                # UHF
                 if self.unrestricted and not self.is_rohf:
                     assert 'Beta MOs' in line
                     self.skip_line(inputfile, '-- Occupied --')
@@ -1037,14 +1051,18 @@ class QChem(logfileparser.Logfile):
                             energies.append(energy)
                         energies_beta.extend(energies)
                         line = next(inputfile)
-                elif self.unrestricted and self.is_rohf:
+                # ROHF
+                elif not self.unrestricted and self.is_rohf:
                     # There isn't a second set of MO coefficients, but
                     # the beta HOMO needs to be added; it can be
                     # determined from the number of beta electrons.
                     if hasattr(self, 'nbeta'):
                         assert len(self.homos) == 1
                         self.homos.append(self.nbeta - 1)
+                # RHF
                 else:
+                    # Under the current conventions, both True doesn't
+                    # make sense.
                     assert not self.unrestricted
                     assert not self.is_rohf
 
