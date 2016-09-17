@@ -907,29 +907,36 @@ class QChem(logfileparser.Logfile):
 
                 # UHF
                 if self.unrestricted and not self.is_rohf:
-                    assert 'Beta MOs' in line
-                    self.skip_line(inputfile, '-- Occupied --')
-                    line = next(inputfile)
-                    while not self.re_dashes_and_spaces.search(line):
-                        if 'Occupied' in line or 'Virtual' in line:
-                            # This will definitely exist, thanks to the above block.
-                            if 'Virtual' in line:
-                                if len(self.homos) == 1:
+                    # There is a bug where nothing is printed if there
+                    # are no beta electrons...
+                    if self.nbeta == 0:
+                        # ...so set the beta HOMO manually.
+                        assert len(self.homos) == 1
+                        self.homos.append(-1)
+                    else:
+                        assert 'Beta MOs' in line
+                        self.skip_line(inputfile, '-- Occupied --')
+                        line = next(inputfile)
+                        while not self.re_dashes_and_spaces.search(line):
+                            if 'Occupied' in line or 'Virtual' in line:
+                                # This will definitely exist, thanks to the above block.
+                                if 'Virtual' in line:
+                                    assert len(self.homos) == 1
                                     self.homos.append(len(energies_beta)-1)
+                                line = next(inputfile)
+                            energies = []
+                            energy_line = line.split()
+                            for e in energy_line:
+                                try:
+                                    energy = utils.convertor(self.float(e), 'hartree', 'eV')
+                                except ValueError:
+                                    energy = numpy.nan
+                                energies.append(energy)
+                            energies_beta.extend(energies)
                             line = next(inputfile)
-                        energies = []
-                        energy_line = line.split()
-                        for e in energy_line:
-                            try:
-                                energy = utils.convertor(self.float(e), 'hartree', 'eV')
-                            except ValueError:
-                                energy = numpy.nan
-                            energies.append(energy)
-                        energies_beta.extend(energies)
-                        line = next(inputfile)
-                        symbols = line.split()[1::2]
-                        symbols_beta.extend(symbols)
-                        line = next(inputfile)
+                            symbols = line.split()[1::2]
+                            symbols_beta.extend(symbols)
+                            line = next(inputfile)
                 # ROHF
                 elif not self.unrestricted and self.is_rohf:
                     # There isn't a second set of MO coefficients, but
@@ -1031,26 +1038,33 @@ class QChem(logfileparser.Logfile):
 
                 # UHF
                 if self.unrestricted and not self.is_rohf:
-                    assert 'Beta MOs' in line
-                    self.skip_line(inputfile, '-- Occupied --')
-                    line = next(inputfile)
-                    while not self.re_dashes_and_spaces.search(line):
-                        if 'Occupied' in line or 'Virtual' in line:
-                            # This will definitely exist, thanks to the above block.
-                            if 'Virtual' in line:
-                                if len(self.homos) == 1:
-                                    self.homos.append(len(energies_beta)-1)
-                            line = next(inputfile)
-                        energies = []
-                        energy_line = line.split()
-                        for e in energy_line:
-                            try:
-                                energy = utils.convertor(self.float(e), 'hartree', 'eV')
-                            except ValueError:
-                                energy = numpy.nan
-                            energies.append(energy)
-                        energies_beta.extend(energies)
+                    # There is a bug where nothing is printed if there
+                    # are no beta electrons...
+                    if self.nbeta == 0:
+                        # ...so set the beta HOMO manually.
+                        assert len(self.homos) == 1
+                        self.homos.append(-1)
+                    else:
+                        assert 'Beta MOs' in line
+                        self.skip_line(inputfile, '-- Occupied --')
                         line = next(inputfile)
+                        while not self.re_dashes_and_spaces.search(line):
+                            if 'Occupied' in line or 'Virtual' in line:
+                                # This will definitely exist, thanks to the above block.
+                                if 'Virtual' in line:
+                                    assert len(self.homos) == 1
+                                    self.homos.append(len(energies_beta)-1)
+                                line = next(inputfile)
+                            energies = []
+                            energy_line = line.split()
+                            for e in energy_line:
+                                try:
+                                    energy = utils.convertor(self.float(e), 'hartree', 'eV')
+                                except ValueError:
+                                    energy = numpy.nan
+                                energies.append(energy)
+                            energies_beta.extend(energies)
+                            line = next(inputfile)
                 # ROHF
                 elif not self.unrestricted and self.is_rohf:
                     # There isn't a second set of MO coefficients, but
@@ -1118,6 +1132,7 @@ class QChem(logfileparser.Logfile):
 
             if 'BETA  MOLECULAR ORBITAL COEFFICIENTS' in line:
 
+                assert hasattr(self, 'aonames')
                 mocoeffs = self.parse_matrix_aonames(inputfile, self.nbasis, self.norbdisp_beta_aonames)
                 if len(self.mocoeffs) == 1:
                     self.mocoeffs.append(mocoeffs.transpose())
