@@ -23,9 +23,9 @@ from cclib.parser import Gaussian
 
 
 def main(log=True):
-    data1, logfile1 = getdatafile(Gaussian, "CDA", "BH3CO-sp.log")
-    data2, logfile2 = getdatafile(Gaussian, "CDA", "BH3.log")
-    data3, logfile3 = getdatafile(Gaussian, "CDA", "CO.log")
+    data1, logfile1 = getdatafile(Gaussian, "CDA", ["BH3CO-sp.log"])
+    data2, logfile2 = getdatafile(Gaussian, "CDA", ["BH3.log"])
+    data3, logfile3 = getdatafile(Gaussian, "CDA", ["CO.log"])
     fa = CDA(data1)
     if not log:
         fa.logger.setLevel(logging.ERROR)

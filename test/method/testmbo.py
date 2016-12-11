@@ -27,7 +27,7 @@ class MBOTest(unittest.TestCase):
     def test_mbo_sp(self):
         """Testing Mayer bond orders for restricted single point."""
 
-        data, logfile = getdatafile(Gaussian, "basicGaussian09", "dvb_sp.out")
+        data, logfile = getdatafile(Gaussian, "basicGaussian09", ["dvb_sp.out"])
         mbo = MBO(data)
         mbo.logger.setLevel(logging.ERROR)
         mbo.calculate()
@@ -39,7 +39,7 @@ class MBOTest(unittest.TestCase):
     def test_mbo_un_sp(self):
         """Testing Mayer bond orders for unrestricted single point."""
 
-        data, logfile = getdatafile(Gaussian, "basicGaussian09", "dvb_un_sp.log")
+        data, logfile = getdatafile(Gaussian, "basicGaussian09", ["dvb_un_sp.log"])
         mbo = MBO(data)
         mbo.logger.setLevel(logging.ERROR)
         mbo.calculate()
