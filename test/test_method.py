@@ -10,12 +10,12 @@
 import sys
 import unittest
 
+sys.path.append("method")
+from testcda import *
+from testmbo import *
+from testnuclear import *
+from testpopulation import *
+
 
 if __name__ == "__main__":
-
-    sys.path.append("method")
-    from testcda import *
-    from testmbo import *
-    from testnuclear import *
-    from testpopulation import *
     unittest.main()

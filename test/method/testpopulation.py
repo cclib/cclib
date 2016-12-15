@@ -26,7 +26,7 @@ class GaussianMPATest(unittest.TestCase):
     """Mulliken Population Analysis test"""
 
     def setUp(self):
-        self.data, self.logfile = getdatafile(Gaussian, "basicGaussian03", "dvb_un_sp.out")
+        self.data, self.logfile = getdatafile(Gaussian, "basicGaussian03", ["dvb_un_sp.out"])
         self.analysis = MPA(self.data)
         self.analysis.logger.setLevel(0)
         self.analysis.calculate()
@@ -48,7 +48,7 @@ class GaussianLPATest(unittest.TestCase):
     """Lowdin Population Analysis test"""
 
     def setUp(self):
-        self.data, self.logfile = getdatafile(Gaussian, "basicGaussian03", "dvb_un_sp.out")
+        self.data, self.logfile = getdatafile(Gaussian, "basicGaussian03", ["dvb_un_sp.out"])
         self.analysis = LPA(self.data)
         self.analysis.logger.setLevel(0)
         self.analysis.calculate()
@@ -70,7 +70,7 @@ class GaussianCSPATest(unittest.TestCase):
     """C-squared Population Analysis test"""
 
     def setUp(self):
-        self.data, self.logfile = getdatafile(Gaussian, "basicGaussian03", "dvb_un_sp.out")
+        self.data, self.logfile = getdatafile(Gaussian, "basicGaussian03", ["dvb_un_sp.out"])
         self.analysis = CSPA(self.data)
         self.analysis.logger.setLevel(0)
         self.analysis.calculate()
