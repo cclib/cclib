@@ -635,6 +635,14 @@ def testORCA_ORCA3_0_dvb_gopt_unconverged_out(logfile):
     """An unconverged geometry optimization to test for empty optdone (see #103 for details)."""
     assert hasattr(logfile.data, 'optdone') and not logfile.data.optdone
 
+def testORCA_ORCA3_0_polar_rhf_cg_out(logfile):
+    """Alternative CP-SCF solver for the polarizability wasn't being detected."""
+    assert hasattr(logfile.data, 'polarizabilities')
+
+def testORCA_ORCA3_0_polar_rhf_diis_out(logfile):
+    """Alternative CP-SCF solver for the polarizability wasn't being detected."""
+    assert hasattr(logfile.data, 'polarizabilities')
+
 def testORCA_ORCA3_0_stopiter_orca_scf_compact_out(logfile):
     """Check to ensure that an incomplete SCF is handled correctly."""
     assert len(logfile.data.scfvalues[0]) == 1

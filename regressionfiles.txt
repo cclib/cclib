@@ -276,6 +276,8 @@ ORCA/ORCA3.0/benzene_td_singlets.out
 ORCA/ORCA3.0/CuI-MePY2-CH3CN_optxes.out
 ORCA/ORCA3.0/dvb_gopt_unconverged.out
 ORCA/ORCA3.0/skattejag.out
+ORCA/ORCA3.0/polar_rhf_cg.out
+ORCA/ORCA3.0/polar_rhf_diis.out
 ORCA/ORCA3.0/stopiter_orca_scf_compact.out
 ORCA/ORCA3.0/stopiter_orca_scf_large.out
 ORCA/ORCA3.0/trithiolane_polar.out
