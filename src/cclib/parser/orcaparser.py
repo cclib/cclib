@@ -84,7 +84,7 @@ class ORCA(logfileparser.Logfile):
         # --------------
         #
         # However, there are two common formats which need to be handled, implemented as separate functions.
-        if "SCF ITERATIONS" in line:
+        if line.strip() == "SCF ITERATIONS":
 
             self.skip_line(inputfile, 'dashes')
 
