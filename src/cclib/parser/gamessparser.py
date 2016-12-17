@@ -86,9 +86,12 @@ class GAMESS(logfileparser.Logfile):
         self.cihamtyp = "none"  # Type of CI Hamiltonian: saps or dets.
         self.scftype = "none"  # Type of SCF calculation: BLYP, RHF, ROHF, etc.
 
+    def after_parsing(self):
+        super(GAMESS, self).after_parsing()
+
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
-        
+
         # extract the version number first
         if line.find("GAMESS VERSION") >= 0:
             self.metadata["package_version"] = line.split()[4] + line.split()[5] + line.split()[6]
@@ -96,7 +99,7 @@ class GAMESS(logfileparser.Logfile):
         if line[1:12] == "INPUT CARD>":
             return
 
-        # extract the methods 
+        # extract the methods
         if line[1:7] == "SCFTYP":
             method = line.split()[0][7:]
             if len(self.metadata["methods"]) == 0:

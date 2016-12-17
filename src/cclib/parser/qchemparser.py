@@ -111,6 +111,7 @@ class QChem(logfileparser.Logfile):
                            'CCSD(T)', 'QCISD', 'QCISD(T)']
 
     def after_parsing(self):
+        super(QChem, self).after_parsing()
 
         # If parsing a fragment job, each of the geometries appended to
         # `atomcoords` may be of different lengths, which will prevent
@@ -912,7 +913,7 @@ class QChem(logfileparser.Logfile):
                     if self.nbeta == 0:
                         # ...so set the beta HOMO manually.
                         assert len(self.homos) == 1
-                        self.homos.append(-1)
+                        self.homos.append(None)
                     else:
                         assert 'Beta MOs' in line
                         self.skip_line(inputfile, '-- Occupied --')
@@ -1043,7 +1044,7 @@ class QChem(logfileparser.Logfile):
                     if self.nbeta == 0:
                         # ...so set the beta HOMO manually.
                         assert len(self.homos) == 1
-                        self.homos.append(-1)
+                        self.homos.append(None)
                     else:
                         assert 'Beta MOs' in line
                         self.skip_line(inputfile, '-- Occupied --')

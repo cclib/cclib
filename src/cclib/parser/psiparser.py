@@ -49,6 +49,7 @@ class Psi(logfileparser.Logfile):
 
 
     def after_parsing(self):
+        super(Psi, self).after_parsing()
 
         # Newer versions of Psi4 don't explicitly print the number of atoms.
         if not hasattr(self, 'natom'):

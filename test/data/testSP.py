@@ -129,7 +129,8 @@ class GenericSPTest(unittest.TestCase):
 
     def testhomos(self):
         """Is the index of the HOMO equal to 34?"""
-        numpy.testing.assert_array_equal(self.data.homos, numpy.array([34],"i"), "%s != array([34],'i')" % numpy.array_repr(self.data.homos))
+        # numpy.testing.assert_array_equal(self.data.homos, numpy.array([34],"i"), "%s != array([34],'i')" % numpy.array_repr(self.data.homos))
+        self.assertEquals(self.data.homos, [34])
 
     def testscfvaluetype(self):
         """Are scfvalues and its elements the right type??"""

@@ -48,6 +48,9 @@ class NWChem(logfileparser.Logfile):
         # FIXME if necessary
         return label
 
+    def after_parsing(self):
+        super(NWChem, self).after_parsing()
+
     name2element = lambda self, lbl: "".join(itertools.takewhile(str.isalpha, str(lbl)))
 
     def extract(self, inputfile, line):
@@ -675,19 +678,13 @@ class NWChem(logfileparser.Logfile):
             # No electrons present.
             except ValueError:
                 nvector_index = 0
-            if nvector_index > -1:
-                self.homos.append(nvectors[nvector_index] - 1)
-            else:
-                self.homos.append(-1)
+            self.homos.append(nvectors[nvector_index] - 1)
             # If this was a restricted open-shell calculation, append
             # to HOMOs twice since only one Molecular Orbital Analysis
             # section is in the output file.
             if (not unrestricted) and (1 in mooccnos):
                 nvector_index = mooccnos.index(1) - 1
-                if nvector_index > -1:
-                    self.homos.append(nvectors[nvector_index] - 1)
-                else:
-                    self.homos.append(-1)
+                self.homos.append(nvectors[nvector_index] - 1)
 
         # This is where the full MO vectors are printed, but a special directive is needed for it:
         #

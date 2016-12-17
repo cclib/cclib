@@ -46,7 +46,7 @@ class ccData(object):
         geovalues -- current values for convergence of geometry optmization (array[1])
         grads -- current values of forces (gradients) in geometry optimization (array[3])
         hessian -- elements of the force constant matrix (array[1])
-        homos -- molecular orbital indices of HOMO(s) (array[1])
+        homos -- molecular orbital indices of HOMO(s) (list of integers)
         metadata -- various metadata about the package and computation (dict) 
         mocoeffs -- molecular orbital coefficients (list of arrays[2])
         moenergies -- molecular orbital energies (list of arrays[1], eV)
@@ -116,7 +116,7 @@ class ccData(object):
        "geovalues":        Attribute(numpy.ndarray,    'geometric values',            'optimization'),
        "grads":            Attribute(numpy.ndarray,    'TBD',                         'N/A'),
        "hessian":          Attribute(numpy.ndarray,    'hessian matrix',              'vibrations'),
-       "homos":            Attribute(numpy.ndarray,    'homos',                       'properties:orbitals'),
+       "homos":            Attribute(list,             'homos',                       'properties:orbitals'),
        "metadata":         Attribute(dict,             'TBD',                         'N/A'),
        "mocoeffs":         Attribute(list,             'coeffs',                      'properties:orbitals'),
        "moenergies":       Attribute(list,             'energies',                    'properties:orbitals'),
@@ -153,7 +153,7 @@ class ccData(object):
     _attrlist = sorted(_attributes.keys())
 
     # Arrays are double precision by default, but these will be integer arrays.
-    _intarrays = ['atomnos', 'coreelectrons', 'homos', 'optstatus']
+    _intarrays = ['atomnos', 'coreelectrons', 'optstatus']
 
     # Attributes that should be lists of arrays (double precision).
     _listsofarrays = ['mocoeffs', 'moenergies', 'moments', 'polarizabilities', 'scfvalues']

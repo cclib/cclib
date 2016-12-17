@@ -87,9 +87,10 @@ class GenericGeoOptTest(unittest.TestCase):
 
     def testhomos(self):
         """Is the index of the HOMO equal to 34?"""
-        ref = numpy.array([34], "i")
-        msg = "%s != array([34], 'i')" % numpy.array_repr(self.data.homos)
-        numpy.testing.assert_array_equal(self.data.homos, ref, msg)
+        # ref = numpy.array([34], "i")
+        # msg = "%s != array([34], 'i')" % numpy.array_repr(self.data.homos)
+        # numpy.testing.assert_array_equal(self.data.homos, ref, msg)
+        self.assertEquals(self.data.homos, [34])
 
     def testscfvaluetype(self):
         """Are scfvalues and its elements the right type?"""

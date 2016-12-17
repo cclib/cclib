@@ -75,6 +75,7 @@ class Molpro(logfileparser.Logfile):
         self.insidescf = False
 
     def after_parsing(self):
+        super(Molpro, self).after_parsing()
 
         # If optimization thresholds are default, they are normally not printed and we need
         # to set them to the default after parsing. Make sure to set them in the same order that

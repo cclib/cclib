@@ -53,6 +53,9 @@ class GAMESSUK(logfileparser.Logfile):
         # used for determining whether to add a second mosyms, etc.
         self.betamosyms = self.betamoenergies = self.betamocoeffs = False
 
+    def after_parsing(self):
+        super(GAMESSUK, self).after_parsing()
+
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
 
@@ -211,9 +214,9 @@ class GAMESSUK(logfileparser.Logfile):
             alpha = int(next(inputfile).split()[-1])-1
             beta = int(next(inputfile).split()[-1])-1
             if self.mult == 1:
-                self.homos = numpy.array([alpha], "i")
+                self.homos = [alpha]
             else:
-                self.homos = numpy.array([alpha, beta], "i")
+                self.homos = [alpha, beta]
 
         if line[37:69] == "s-matrix over gaussian basis set":
             self.aooverlaps = numpy.zeros((self.nbasis, self.nbasis), "d")

@@ -319,11 +319,12 @@ class Logfile(object):
         if not hasattr(self, "atomcoords") and hasattr(self, "inputcoords"):
             self.atomcoords = numpy.array(self.inputcoords, 'd')
 
-        # Set nmo if not set already - to nbasis.
+        # Set nmo if not set already - to nbasis. This assumes there
+        # wasn't a linear dependence problem during the calculation.
         if not hasattr(self, "nmo") and hasattr(self, "nbasis"):
             self.nmo = self.nbasis
 
-        # Creating deafult coreelectrons array.
+        # Creating default coreelectrons array.
         if not hasattr(self, "coreelectrons") and hasattr(self, "natom"):
             self.coreelectrons = numpy.zeros(self.natom, "i")
 
@@ -357,7 +358,13 @@ class Logfile(object):
 
     def after_parsing(self):
         """Correct data or do parser-specific validation after parsing is finished."""
-        pass
+
+        # Negative HOMO values don't make physical sense, so convert
+        # them to None to indicate no electrons present.
+        if hasattr(self, 'homos'):
+            for i in range(len(self.homos)):
+                if self.homos[i] < 0:
+                    self.homos[i] = None
 
     def updateprogress(self, inputfile, msg, xupdate=0.05):
         """Update progress."""

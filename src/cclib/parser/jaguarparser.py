@@ -56,6 +56,7 @@ class Jaguar(logfileparser.Logfile):
         self.geoopt = False
 
     def after_parsing(self):
+        super(Jaguar, self).after_parsing()
 
         # This is to make sure we always have optdone after geometry optimizations,
         # even if it is to be empty for unconverged runs. We have yet to test this
@@ -251,15 +252,15 @@ class Jaguar(logfileparser.Logfile):
             line = next(inputfile)
             virts = int(line.split()[-1])
             self.nmo = occs + virts
-            self.homos = numpy.array([occs-1], "i")
+            self.homos = [occs-1]
 
             self.unrestrictedflag = False
 
         if line[1:28] == "number of occupied orbitals":
-            self.homos = numpy.array([float(line.strip().split()[-1])-1], "i")
+            self.homos = [float(line.split()[-1])-1]
 
         if line[2:27] == "number of basis functions":
-            nbasis = int(line.strip().split()[-1])
+            nbasis = int(line.split()[-1])
             self.set_attribute('nbasis', nbasis)
 
         if line.find("number of alpha occupied orb") > 0:
@@ -274,7 +275,7 @@ class Jaguar(logfileparser.Logfile):
             bvirt = int(line.split()[-1])
 
             self.nmo = aoccs + avirts
-            self.homos = numpy.array([aoccs-1, boccs-1], "i")
+            self.homos = [aoccs-1, boccs-1]
             self.unrestrictedflag = True
 
         if line[0:4] == "etot":

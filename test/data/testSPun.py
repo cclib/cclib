@@ -53,8 +53,9 @@ class GenericSPunTest(unittest.TestCase):
 
     def testhomos(self):
         """Are the homos correct?"""
-        msg = "%s != array([34,33],'i')" % numpy.array_repr(self.data.homos)
-        numpy.testing.assert_array_equal(self.data.homos, numpy.array([34,33],"i"), msg)
+        # msg = "%s != array([34,33],'i')" % numpy.array_repr(self.data.homos)
+        # numpy.testing.assert_array_equal(self.data.homos, numpy.array([34,33],"i"), msg)
+        self.assertEquals(self.data.homos, [34, 33])
 
     def testmoenergies(self):
         """Are the dims of the moenergies equals to 2 x nmo?"""
@@ -85,8 +86,9 @@ class GenericROSPTest(GenericSPunTest):
         """Are the HOMO indices equal to 34 and 33 (one more alpha electron
         than beta electron)?
         """
-        msg = "%s != array([34, 33], 'i')" % numpy.array_repr(self.data.homos)
-        numpy.testing.assert_array_equal(self.data.homos, numpy.array([34, 33], "i"), msg)
+        # msg = "%s != array([34, 33], 'i')" % numpy.array_repr(self.data.homos)
+        # numpy.testing.assert_array_equal(self.data.homos, numpy.array([34, 33], "i"), msg)
+        self.assertEquals(self.data.homos, [34, 33])
 
     @skipForParser('QChem', 'prints 2 sets of different MO energies?')
     def testmoenergies(self):
