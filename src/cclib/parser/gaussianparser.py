@@ -1455,9 +1455,9 @@ class Gaussian(logfileparser.Logfile):
                     for j in range(0, len(part), 10):
                         temp.append(float(part[j:j+10]))
                     if beta:
-                        self.mocoeffs[1][base:base + len(part) / 10, i] = temp
+                        self.mocoeffs[1][base:base + len(part) // 10, i] = temp
                     else:
-                        mocoeffs[0][base:base + len(part) / 10, i] = temp
+                        mocoeffs[0][base:base + len(part) // 10, i] = temp
 
                 if base == 0 and not beta:  # Do the last update of atombasis
                     self.atombasis.append(atombasis)
@@ -1527,7 +1527,7 @@ class Gaussian(logfileparser.Logfile):
                     for j in range(0, len(part), 10):
                         temp.append(float(part[j:j+10]))
 
-                    nocoeffs[base:base + len(part) / 10, i] = temp
+                    nocoeffs[base:base + len(part) // 10, i] = temp
 
                 # Do the last update of atombasis.
                 if base == 0:
