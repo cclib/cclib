@@ -3,7 +3,7 @@
 # This file is part of cclib (http://cclib.github.io), a library for parsing
 # and interpreting the results of computational chemistry packages.
 #
-# Copyright (C) 2016, the cclib development team
+# Copyright (C) 2017, the cclib development team
 #
 # The library is free software, distributed under the terms of
 # the GNU Lesser General Public version 2.1 or later. You should have
@@ -40,17 +40,18 @@ class Orbitals(Method):
     def closed_shell(self):
         """Return Boolean indicating if system is closed shell."""
 
-        # Restricted calculation will have one set of orbitals and are
-        # therefore closed shell by definition.
-        if len(self.data.mocoeffs) == 1:
-            assert len(self.data.moenergies) == 1
-            return True
+        # If there are beta orbitals, we can assume the system is closed
+        # shell if the orbital energies are identical within numerical accuracy.
+        if len(self.data.mocoeffs) == 2:
+            precision = 10e-6
+            return numpy.allclose(*self.data.moenergies, atol=precision)
 
-        # If there are beta orbitals, we can assume the system is
-        # closed shell if the orbital energies are identical within
-        # numerical accuracy.
-        precision = 10e-6
-        return numpy.allclose(*self.data.moenergies, atol=precision)
+        # Restricted open shell will have one set of MOs but two HOMO indices,
+        # and the indices should be different (otherwise it's still closed shell).
+        if len(self.data.homos) == 2 and self.data.homos[0] != self.data.homos[1]:
+            return False
+
+        return True
 
 
 if __name__ == "__main__":
