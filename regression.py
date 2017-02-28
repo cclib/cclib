@@ -540,6 +540,12 @@ def testMolpro_Molpro2012_stopiter_molpro_hf_out(logfile):
     """Check to ensure that an incomplete SCF is handled correctly."""
     assert len(logfile.data.scfvalues[0]) == 6
 
+# MOPAC #
+
+def testMOPAC_MOPAC2016_9S3_uuu_Cs_cation_freq_PM7_out(logfile):
+    """There was a syntax error in the frequency parsing."""
+    assert hasattr(logfile.data, 'vibfreqs')
+
 # NWChem #
 
 def testNWChem_NWChem6_0_dvb_gopt_hf_unconverged_out(logfile):
