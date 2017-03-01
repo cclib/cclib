@@ -102,8 +102,7 @@ class MOPAC(logfileparser.Logfile):
         #     1       O          4.79280259  *  -0.84610232  *   0.36409474  *
         #     2       O          5.89768035  *  -0.31706418  *   0.00917035  *
         # ... etc.
-        if (line.find("NUMBER    SYMBOL      (ANGSTROMS)     (ANGSTROMS)     (ANGSTROMS)") > -1 \
-            or line.find("NUMBER   SYMBOL      (ANGSTROMS)     (ANGSTROMS)     (ANGSTROMS)") > -1):
+        if line.split() == ["NUMBER", "SYMBOL", "(ANGSTROMS)", "(ANGSTROMS)", "(ANGSTROMS)"]:
 
             self.updateprogress(inputfile, "Attributes", self.cupdate)
 
