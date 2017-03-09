@@ -308,8 +308,8 @@ class QChem(logfileparser.Logfile):
                 self.skip_line(inputfile, 'd')
                 while list(set(line.strip())) != ['-']:
 
-                    if '$rem' in line:
-                        while '$end' not in line:
+                    if '$rem' in line.lower():
+                        while '$end' not in line.lower():
                             line = next(inputfile)
                             if 'method' in line.lower():
                                 method = line.split()[-1].upper()
@@ -331,6 +331,11 @@ class QChem(logfileparser.Logfile):
                                     self.norbdisp_alpha_aonames = norbdisp_aonames
                                     self.norbdisp_beta_aonames = norbdisp_aonames
                                     self.norbdisp_set = True
+                            # Apparently calculations can run without
+                            # a matching $end...this terminates the
+                            # user input section.
+                            if line.strip() == ('-' * 62):
+                                break
 
                     line = next(inputfile)
 
