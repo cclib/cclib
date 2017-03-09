@@ -13,13 +13,21 @@ from __future__ import print_function
 import io
 import os
 import sys
+import re
+from tempfile import NamedTemporaryFile
+import atexit
 
 # Python 2->3 changes the default file object hierarchy.
 if sys.version_info[0] == 2:
     fileclass = file
+
+    from urllib2 import urlopen, URLError
 else:
     import io
     fileclass = io.IOBase
+
+    from urllib.request import urlopen
+    from urllib.error import URLError
 
 from ..parser import logfileparser
 from ..parser import data
@@ -48,6 +56,18 @@ try:
 except ImportError:
     _has_cclib2openbabel = False
 
+
+# Regular expression for validating URLs
+URL_PATTERN = re.compile(
+
+    r'^(?:http|ftp)s?://'  # http:// or https://
+    r'(?:(?:[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?\.)+(?:[A-Z]{2,6}\.?|[A-Z0-9-]{2,}\.?)|'  # domain...
+    r'localhost|'  # localhost...
+    r'\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})'  # ...or ip
+    r'(?::\d+)?'  # optional port
+    r'(?:/?|[/?]\S+)$', re.IGNORECASE
+
+)
 
 # Parser choice is triggered by certain phrases occuring the logfile. Where these
 # strings are unique, we can set the parser and break. In other cases, the situation
@@ -104,7 +124,8 @@ def ccread(source, *args, **kargs):
     the appropriate bridge such as OpenBabel.
 
     Inputs:
-        source - a single logfile, a list of logfiles, or an input stream
+        source - a single logfile, a list of logfiles, or an input stream.
+        Also URLs to log files are supported.
     Returns:
         a ccData object containing cclib data attributes
     """
@@ -129,7 +150,8 @@ def ccopen(source, *args, **kargs):
     """Guess the identity of a particular log file and return an instance of it.
 
     Inputs:
-      source - a single logfile, a list of logfiles, or an input stream
+      source - a single logfile, a list of logfiles, or an input stream.
+      Also URLs to log files are supported.
 
     Returns:
       one of ADF, DALTON, GAMESS, GAMESS UK, Gaussian, Jaguar, Molpro, MOPAC,
@@ -140,17 +162,57 @@ def ccopen(source, *args, **kargs):
     inputfile = None
     is_stream = False
 
+    # Check if source is a link or contains links. Retrieve their content.
     # Try to open the logfile(s), using openlogfile, if the source is a string (filename)
     # or list of filenames. If it can be read, assume it is an open file object/stream.
     is_string = isinstance(source, str)
+    is_url = True if is_string and URL_PATTERN.match(source) else False
     is_listofstrings = isinstance(source, list) and all([isinstance(s, str) for s in source])
     if is_string or is_listofstrings:
-        try:
-            inputfile = logfileparser.openlogfile(source)
-        except IOError as error:
-            if not kargs.get('quiet', False):
-                (errno, strerror) = error.args
-            return None
+        # Process links from list (download contents into temporary location)
+        if is_listofstrings:
+            filelist = []
+            for filename in source:
+                if not URL_PATTERN.match(filename):
+                    filelist.append(filename)
+                else:
+                    try:
+                        response = urlopen(filename)
+                        tfile = NamedTemporaryFile(delete=False)
+                        tfile.write(response.read())
+                        # Close the file because Windows won't let open it second time
+                        tfile.close()
+                        filelist.append(tfile.name)
+                        # Delete temporary file when the program finishes
+                        atexit.register(os.remove, tfile.name)
+                    except (ValueError, URLError) as error:
+                        if not kargs.get('quiet', False):
+                            (errno, strerror) = error.args
+                        return None
+            source = filelist
+
+        if not is_url:
+            try:
+                inputfile = logfileparser.openlogfile(source)
+            except IOError as error:
+                if not kargs.get('quiet', False):
+                    (errno, strerror) = error.args
+                return None
+        else:
+            try:
+                response = urlopen(source)
+                is_stream = True
+
+                # Retrieve filename from URL if possible
+                filename = re.findall("\w+\.\w+", source.split('/')[-1])
+                filename = filename[0] if filename else ""
+
+                inputfile = logfileparser.openlogfile(filename, object=response.read())
+            except (ValueError, URLError) as error:
+                if not kargs.get('quiet', False):
+                    (errno, strerror) = error.args
+                return None
+
     elif hasattr(source, "read"):
         inputfile = source
         is_stream = True
@@ -168,9 +230,9 @@ def ccopen(source, *args, **kargs):
         except (AttributeError, IOError):
             contents = inputfile.read()
             try:
-              inputfile = io.StringIO(contents)
+                inputfile = io.StringIO(contents)
             except:
-              inputfile = io.StringIO(unicode(contents))
+                inputfile = io.StringIO(unicode(contents))
             inputfile.seek(0, 0)
 
     # Proceed to return an instance of the logfile parser only if the filetype
