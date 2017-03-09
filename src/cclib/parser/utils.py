@@ -7,7 +7,29 @@
 
 """Utilities often used by cclib parsers and scripts"""
 
+import sys
 import numpy
+
+
+# Define for any Python version <= 3.3,
+# See https://github.com/kachayev/fn.py/commit/391824c43fb388e0eca94e568ff62cc35b543ecb
+if sys.version_info.major == 2 or sys.version_info.minor <= 3:
+    import operator
+    def accumulate(iterable, func=operator.add):
+        """Return running totals"""
+        # accumulate([1,2,3,4,5]) --> 1 3 6 10 15
+        # accumulate([1,2,3,4,5], operator.mul) --> 1 2 6 24 120
+        it = iter(iterable)
+        try:
+            total = next(it)
+        except StopIteration:
+            return
+        yield total
+        for element in it:
+            total = func(total, element)
+            yield total
+else:
+    from itertools import accumulate
 
 
 def symmetrize(m, use_triangle='lower'):
@@ -141,6 +163,23 @@ class PeriodicTable(object):
         self.number = {}
         for i in range(1, len(self.element)):
             self.number[self.element[i]] = i
+
+
+class Splitter:
+    def __init__(self, widths):
+        self.start_indices = [0] + list(accumulate(widths))[:-1]
+        self.end_indices = list(accumulate(widths))
+
+    def split(self, line):
+        elements = [line[start:end].strip()
+                    for (start, end) in zip(self.start_indices, self.end_indices)]
+        for i in range(1, len(elements)):
+            if elements[-1] == '':
+                elements.pop()
+            else:
+                break
+        return elements
+
 
 
 if __name__ == "__main__":
