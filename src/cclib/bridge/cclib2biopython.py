@@ -34,7 +34,8 @@ def makebiopython(atomcoords, atomnos):
     pt = PeriodicTable()
     bioatoms = []
     for coords, atomno in zip(atomcoords, atomnos):
-        bioatoms.append(Atom(pt.element[atomno], coords, 0, 0, 0, 0, 0))
+        symbol = pt.element[atomno]
+        bioatoms.append(Atom(symbol, coords, 0, 0, 0, symbol, 0, symbol.upper()))
     return bioatoms
 
 
