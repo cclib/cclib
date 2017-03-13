@@ -65,6 +65,15 @@ class ccopenTest(unittest.TestCase):
         self.assertIsNone(self.ccopen([], quiet=True))
         self.assertIsNone(self.ccopen(None, quiet=True))
 
+    def test_list_of_filenames(self):
+        """Can we ccopen a list of filenames (https://github.com/cclib/cclib/issues/350)?"""
+        absdir = os.path.dirname(os.path.abspath(__file__))
+        rootdir = os.path.join(os.sep, *absdir.split(os.sep)[:-2])
+        molprodir = os.path.join(rootdir, "data", "Molpro", "basicMolpro2012")
+        filenames = ["h2o_mp2.out", "h2o_mp3.out"]
+        filepaths = [os.path.join(molprodir, fn) for fn in filenames]
+        self.assertIsNotNone(self.ccopen(filepaths))
+
     def test_cjson_empty_tempfile(self):
         """Do we get a CJSON object when the keyword argument used?"""
         with tempfile.NamedTemporaryFile() as tf:
@@ -82,7 +91,7 @@ class fallbackTest(unittest.TestCase):
         self.fallback = cclib.io.ccio.fallback
 
     def test_fallback_fail(self):
-        """Does the functin fail as expected?"""
+        """Does the function fail as expected?"""
         self.assertIsNone(self.fallback(None))
 
 

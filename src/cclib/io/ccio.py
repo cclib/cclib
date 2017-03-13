@@ -187,7 +187,14 @@ def ccopen(source, *args, **kargs):
     # could be guessed. Need to make sure the input file is closed before creating
     # an instance, because parsers will handle opening/closing on their own.
     if filetype:
-        inputfile.seek(0, 0)
+        # We're going to clase and reopen below anyway, so this is just to avoid
+        # the missing seek method for fileinput.FileInput. In the long run
+        # we need to refactor to support for various input types in a more
+        # centralized fashion.
+        if is_listofstrings:
+            pass
+        else:
+            inputfile.seek(0, 0)
         if not is_stream:
             inputfile.close()
             return filetype(source, *args, **kargs)
