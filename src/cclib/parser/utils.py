@@ -166,11 +166,18 @@ class PeriodicTable(object):
 
 
 class Splitter:
+    """Split a line based not on a character, but a given number of field
+    widths.
+    """
+
     def __init__(self, widths):
         self.start_indices = [0] + list(accumulate(widths))[:-1]
         self.end_indices = list(accumulate(widths))
 
     def split(self, line):
+        """Split the given line using the field widths passed in on class
+        initialization.
+        """
         elements = [line[start:end].strip()
                     for (start, end) in zip(self.start_indices, self.end_indices)]
         for i in range(1, len(elements)):
@@ -179,7 +186,6 @@ class Splitter:
             else:
                 break
         return elements
-
 
 
 if __name__ == "__main__":
