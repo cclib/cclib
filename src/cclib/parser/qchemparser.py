@@ -100,8 +100,12 @@ class QChem(logfileparser.Logfile):
             'Final Hessian.',
         )
 
-        self.wfn_method = ['HF', 'MP2', 'RI-MP2', 'LOCAL_MP2', 'MP4', 'CCD', 'CCSD', \
-                                      'CCSD(T)', 'QCISD', 'QCISD(T)']
+        self.wfn_method = [
+            'HF',
+            'MP2', 'RI-MP2', 'LOCAL_MP2', 'MP4',
+            'CCD', 'CCSD', 'CCSD(T)',
+            'QCISD', 'QCISD(T)'
+        ]
 
     def after_parsing(self):
 
@@ -799,6 +803,26 @@ class QChem(logfileparser.Logfile):
                 while 'Full Tensor' not in line:
                     line = next(inputfile)
                 self.skip_line(inputfile, 'blank')
+                for _ in range(3):
+                    line = next(inputfile)
+                    polarizability.append(line.split())
+                self.polarizabilities.append(numpy.array(polarizability))
+
+            # Static polarizability from finite difference.
+            if line.strip() == 'Static polarizability tensor [a.u.]':
+                if not hasattr(self, 'polarizabilities'):
+                    self.polarizabilities = []
+                polarizability = []
+                for _ in range(3):
+                    line = next(inputfile)
+                    polarizability.append(line.split())
+                self.polarizabilities.append(numpy.array(polarizability))
+
+            # Polarizability from responseman.
+            if line.strip() == 'Polarizability tensor      [a.u.]':
+                if not hasattr(self, 'polarizabilities'):
+                    self.polarizabilities = []
+                polarizability = []
                 for _ in range(3):
                     line = next(inputfile)
                     polarizability.append(line.split())
