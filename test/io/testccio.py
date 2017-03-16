@@ -70,9 +70,10 @@ class ccopenTest(unittest.TestCase):
         absdir = os.path.dirname(os.path.abspath(__file__))
         rootdir = os.path.join(os.sep, *absdir.split(os.sep)[:-2])
         molprodir = os.path.join(rootdir, "data", "Molpro", "basicMolpro2012")
-        filenames = ["h2o_mp2.out", "h2o_mp3.out"]
+        filenames = ["dvb_gopt.log", "dvb_gopt.out"]
         filepaths = [os.path.join(molprodir, fn) for fn in filenames]
         self.assertIsNotNone(self.ccopen(filepaths))
+        self.assertIsNotNone(self.ccopen(filepaths).parse())
 
     def test_cjson_empty_tempfile(self):
         """Do we get a CJSON object when the keyword argument used?"""
