@@ -1143,6 +1143,14 @@ def testQChem_QChem4_3_R_propylene_oxide_freq_rimp2_out(logfile):
     assert logfile.data.hessian[idx] == 0.3520538
 
 
+def testQChem_QChem4_4_Trp_polar_ideriv0_out(logfile):
+    """Ensure that the polarizability section is being parsed, but don't
+    compare to reference results as 2nd-order finite difference can have
+    large errors.
+    """
+    assert hasattr(logfile.data, 'polarizabilities')
+
+
 # These regression tests are for logfiles that are not to be parsed
 # for some reason, and the function should start with 'testnoparse'.
 
@@ -1456,9 +1464,11 @@ old_unittests = {
     "Psi/Psi4.0b5/water_ccsd.out":   GenericCCTest,
     "Psi/Psi4.0b5/water_mp2.out":    GenericMP2Test,
 
-    "QChem/QChem4.2/Trp_freq.out":          ReferencePolarTest,
-    "QChem/QChem4.2/trithiolane_polar.out": GaussianPolarTest,
-    "QChem/QChem4.2/trithiolane_freq.out":  GaussianPolarTest,
+    "QChem/QChem4.2/Trp_freq.out":           ReferencePolarTest,
+    "QChem/QChem4.2/trithiolane_polar.out":  GaussianPolarTest,
+    "QChem/QChem4.2/trithiolane_freq.out":   GaussianPolarTest,
+    "QChem/QChem4.4/Trp_polar_ideriv1.out":  ReferencePolarTest,
+    "QChem/QChem4.4/Trp_polar_response.out": ReferencePolarTest,
 
 }
 

@@ -340,3 +340,6 @@ QChem/QChem4.3/R_propylene_oxide_freq_ccsd.out
 QChem/QChem4.3/R_propylene_oxide_freq_hf_numerical_gradients.out
 QChem/QChem4.3/R_propylene_oxide_freq_mp2.out
 QChem/QChem4.3/R_propylene_oxide_freq_rimp2.out
+QChem/QChem4.4/Trp_polar_ideriv0.out
+QChem/QChem4.4/Trp_polar_ideriv1.out
+QChem/QChem4.4/Trp_polar_response.out
