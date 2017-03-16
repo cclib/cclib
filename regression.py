@@ -1143,6 +1143,13 @@ def testQChem_QChem4_3_R_propylene_oxide_freq_rimp2_out(logfile):
     assert logfile.data.hessian[idx] == 0.3520538
 
 
+def testQChem_QChem4_4_full_2_out(logfile):
+    """The polarizability section may not be parsed due to something
+    appearing just beforehand from a frequency-type calculation.
+    """
+    assert hasattr(logfile.data, 'polarizabilities')
+
+
 def testQChem_QChem4_4_Trp_polar_ideriv0_out(logfile):
     """Ensure that the polarizability section is being parsed, but don't
     compare to reference results as 2nd-order finite difference can have
