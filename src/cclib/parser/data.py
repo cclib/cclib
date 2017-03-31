@@ -62,6 +62,7 @@ class ccData(object):
         optdone -- flags whether an optimization has converged (Boolean)
         optstatus -- optimization status for each set of atomic coordinates (array[1])
         polarizabilities -- (dipole) polarizabilities, static or dynamic (list of arrays[2])
+        pressure -- temperature used for Thermochemistry (float, atm)
         scancoords -- geometries of each scan step (array[3], angstroms)
         scanenergies -- energies of potential energy surface (list)
         scannames -- names of varaibles scanned (list of strings)
@@ -132,6 +133,7 @@ class ccData(object):
        "optdone":          Attribute(bool,             'done',                        'optimization'),
        "optstatus":        Attribute(numpy.ndarray,    'status',                      'optimization'),
        "polarizabilities": Attribute(list,             'polarizabilities',            'N/A'),
+       "pressure":         Attribute(float,            'pressure',                    'properties'),
        "scancoords":       Attribute(numpy.ndarray,    'step geometry',               'optimization:scan'),
        "scanenergies":     Attribute(list,             'PES energies',                'optimization:scan'),
        "scannames":        Attribute(list,             'variable names',              'optimization:scan'),

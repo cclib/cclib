@@ -1683,6 +1683,7 @@ class Gaussian(logfileparser.Logfile):
             self.set_attribute('freeenergy', float(line.split()[7]))
         if line[1:12] == "Temperature":
             self.set_attribute('temperature', float(line.split()[1]))
+            self.set_attribute('pressure', float(line.split()[4]))
 
         # Static polarizability (from `polar`), lower triangular
         # matrix.
