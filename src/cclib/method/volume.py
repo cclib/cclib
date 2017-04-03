@@ -171,7 +171,7 @@ def wavefunction(coords, mocoeffs, gbasis, volume):
         gbasis -- gbasis from a parser object
         volume -- a template Volume object (will not be altered)
     """
-    bfs = getbfs(coords, gbasis)
+    bfs = cclib2pyquante.getbfs(coords, gbasis)
     
     wavefn = copy.copy(volume)
     wavefn.data = numpy.zeros( wavefn.data.shape, "d")
