@@ -53,6 +53,7 @@ from cclib.parser import GAMESSUK
 from cclib.parser import Gaussian
 from cclib.parser import Jaguar
 from cclib.parser import Molpro
+from cclib.parser import MOPAC
 from cclib.parser import NWChem
 from cclib.parser import ORCA
 from cclib.parser import Psi
@@ -538,6 +539,12 @@ def testMolpro_Molpro2012_stopiter_molpro_dft_out(logfile):
 def testMolpro_Molpro2012_stopiter_molpro_hf_out(logfile):
     """Check to ensure that an incomplete SCF is handled correctly."""
     assert len(logfile.data.scfvalues[0]) == 6
+
+# MOPAC #
+
+def testMOPAC_MOPAC2016_9S3_uuu_Cs_cation_freq_PM7_out(logfile):
+    """There was a syntax error in the frequency parsing."""
+    assert hasattr(logfile.data, 'vibfreqs')
 
 # NWChem #
 
