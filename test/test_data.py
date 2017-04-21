@@ -26,8 +26,8 @@ sys.path.append(os.path.join(__filedir__, 'data'))
 
 
 parser_names = [
-    "ADF", "DALTON", "GAMESS", "GAMESSUK", "Gaussian",
-    "Jaguar", "Molpro", "NWChem", "ORCA", "Psi", "QChem",
+    "ADF", "DALTON", "GAMESS", "GAMESSUK", "Gaussian", "Jaguar", "Molpro",
+    "MOPAC", "NWChem", "ORCA", "Psi", "QChem",
 ]
 all_parsers = {name: getattr(cclib.parser, name) for name in parser_names}
 
@@ -239,6 +239,8 @@ class DataSuite(object):
             'GAMESS-US' : getdatafile('GAMESS', "basicGAMESS-US2014", ["dvb_gopt_a.out"])[0],
             'Jaguar8.0' : getdatafile('Jaguar', "basicJaguar8.3", ["dvb_gopt_ks.out"])[0],
             'Molpro2012' : getdatafile('Molpro', "basicMolpro2012", ["dvb_gopt.log", "dvb_gopt.out"])[0],
+            # Note that it doesn't make sense to put MOPAC here, as it
+            # is a semiempirical-only program.
             'NWChem6.5' : getdatafile('NWChem', "basicNWChem6.5", ["dvb_gopt_ks.out"])[0],
             'ORCA3.0' : getdatafile('ORCA', "basicORCA3.0", ["dvb_gopt.out"])[0],
             'Psi4.0' : getdatafile('Psi', "basicPsi4.0", ["dvb_gopt_rks.out"])[0],

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2016, the cclib development team
+# Copyright (c) 2017, the cclib development team
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
@@ -16,6 +16,7 @@
 from __future__ import print_function
 import re
 
+import math
 import numpy
 
 from . import data
@@ -101,8 +102,7 @@ class MOPAC(logfileparser.Logfile):
         #     1       O          4.79280259  *  -0.84610232  *   0.36409474  *
         #     2       O          5.89768035  *  -0.31706418  *   0.00917035  *
         # ... etc.
-        if (line.find("NUMBER    SYMBOL      (ANGSTROMS)     (ANGSTROMS)     (ANGSTROMS)") > -1
-            or line.find("NUMBER   SYMBOL      (ANGSTROMS)     (ANGSTROMS)     (ANGSTROMS)") > -1):
+        if line.split() == ["NUMBER", "SYMBOL", "(ANGSTROMS)", "(ANGSTROMS)", "(ANGSTROMS)"]:
 
             self.updateprogress(inputfile, "Attributes", self.cupdate)
 
@@ -121,7 +121,7 @@ class MOPAC(logfileparser.Logfile):
                 xc = float(tokens[2])
                 yc = float(tokens[4])
                 zc = float(tokens[6])
-                atomcoords.append([xc,yc,zc])
+                atomcoords.append([xc, yc, zc])
                 line = inputfile.next()
 
             self.inputcoords.append(atomcoords)
@@ -161,7 +161,7 @@ class MOPAC(logfileparser.Logfile):
         # so we will want to use the 2nd to last instance
         if line[0:40] == '          ROTATIONAL CONSTANTS IN CM(-1)':
             blankline = inputfile.next()
-            rotinfo=inputfile.next()
+            rotinfo = inputfile.next()
             if not hasattr(self, "rotcons"):
                 self.rotcons = []
             broken = rotinfo.split()
@@ -191,7 +191,7 @@ class MOPAC(logfileparser.Logfile):
 
             # get the vib symmetry
             if len(line.split()) >= 3:
-                sym = line.split[2]
+                sym = line.split()[2]
                 if not hasattr(self, 'vibsyms'):
                     self.vibsyms = []
                 self.vibsyms.append(sym)
@@ -217,12 +217,12 @@ class MOPAC(logfileparser.Logfile):
         # or just "EIGENVALUES" for closed-shell
         if 'EIGENVALUES' in line:
             if not hasattr(self, 'moenergies'):
-                self.moenergies = [ ] # list of arrays
+                self.moenergies = [] # list of arrays
 
             energies = []
             line = inputfile.next()
-            while (len(line.split()) > 0):
-                energies.extend( [float(i) for i in line.split()] )
+            while len(line.split()) > 0:
+                energies.extend([float(i) for i in line.split()])
                 line = inputfile.next()
             self.moenergies.append(energies)
 
