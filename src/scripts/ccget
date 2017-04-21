@@ -18,7 +18,7 @@ import os.path
 import sys
 
 from cclib.parser import ccData
-from cclib.io import ccread
+from cclib.io import ccread, URL_PATTERN
 
 
 MSG_USAGE = """\
@@ -90,7 +90,7 @@ def ccget():
         print(MSG_USAGE)
         sys.exit(1)
 
-    # Figure out which are the attribute names and which are the filenames.
+    # Figure out which are the attribute names and which are the filenames or links.
     # Note that in Linux, the shell expands wild cards, but not so in Windows,
     # so try to do that here using glob.
     attrnames = []
@@ -98,7 +98,7 @@ def ccget():
     for arg in arglist:
         if arg in ccData._attrlist:
             attrnames.append(arg)
-        elif os.path.isfile(arg):
+        elif URL_PATTERN.match(arg) or os.path.isfile(arg):
             filenames.append(arg)
         else:
             wildcardmatches = glob.glob(arg)

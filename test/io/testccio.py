@@ -14,6 +14,11 @@ import unittest
 import cclib
 
 
+__filedir__ = os.path.dirname(__file__)
+__filepath__ = os.path.realpath(__filedir__)
+__datadir__ = os.path.join(__filepath__, "..", "..")
+
+
 class guess_fileypeTest(unittest.TestCase):
 
     def setUp(self):
@@ -79,6 +84,26 @@ class ccopenTest(unittest.TestCase):
         """Do we get a CJSON object when the keyword argument used?"""
         with tempfile.NamedTemporaryFile() as tf:
             self.assertIsInstance(self.ccopen(tf.name, cjson=True), cclib.io.cjsonreader.CJSON)
+
+    def test_url_io(self):
+        """Does the function works with URLs such good as with filenames?"""
+        fpath = os.path.join(__datadir__, "data")
+        base_url = "https://raw.githubusercontent.com/cclib/cclib/master/data/"
+        filenames = ["DALTON/basicDALTON-2013/dvb_td.out", "Molpro/basicMolpro2012/h2o_mp2.out"]
+        for fname in filenames:
+            self.assertEqual(self.ccopen(os.path.join(fpath, fname), quiet=True).parse().getattributes(tolists=True),
+                             self.ccopen(base_url + fname, quiet=True).parse().getattributes(tolists=True))
+
+    def test_multi_url_io(self):
+        """Does the function works with multiple URLs such good as with multiple filenames?"""
+        fpath = os.path.join(__datadir__, "data")
+        base_url = "https://raw.githubusercontent.com/cclib/cclib/master/data/"
+        filenames = ["Molpro/basicMolpro2012/dvb_gopt.log", "Molpro/basicMolpro2012/dvb_gopt.out"]
+        self.assertEqual(
+            self.ccopen([os.path.join(fpath, fname) for fname in filenames], quiet=True)
+                .parse().getattributes(tolists=True),
+            self.ccopen([base_url + fname for fname in filenames], quiet=True)
+                .parse().getattributes(tolists=True))
 
     # This should also work if cjsonreader supported streams.
     #def test_cjson(self):

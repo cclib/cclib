@@ -16,7 +16,8 @@ from .cjsonreader import CJSON as CJSONReader
 #   from cclib.io import ccopen
 #   from cclib.io import ccread
 #   from cclib.io import ccwrite
+#   from cclib.io import URL_PATTERN
 from .ccio import ccopen
 from .ccio import ccread
 from .ccio import ccwrite
-
+from .ccio import URL_PATTERN

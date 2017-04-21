@@ -125,10 +125,11 @@ class FileWrapper(object):
             self.pos = self.size
 
 
-def openlogfile(filename):
-    """Return a file object given a filename.
+def openlogfile(filename, object=None):
+    """Return a file object given a filename or if object specified decompresses it
+    if needed and wrap it up.
 
-    Given the filename of a log file or a gzipped, zipped, or bzipped
+    Given the filename or file object of a log file or a gzipped, zipped, or bzipped
     log file, this function returns a file-like object.
 
     Given a list of filenames, this function returns a FileInput object,
@@ -141,20 +142,22 @@ def openlogfile(filename):
         extension = os.path.splitext(filename)[1]
 
         if extension == ".gz":
-            fileobject = myGzipFile(filename, "r")
+            fileobject = myGzipFile(filename, "r", fileobj=object)
 
         elif extension == ".zip":
-            zip = zipfile.ZipFile(filename, "r")
+            zip = zipfile.ZipFile(object, "r") if object else zipfile.ZipFile(filename, "r")
             assert len(zip.namelist()) == 1, "ERROR: Zip file contains more than 1 file"
             fileobject = io.StringIO(zip.read(zip.namelist()[0]).decode("ascii", "ignore"))
 
         elif extension in ['.bz', '.bz2']:
             # Module 'bz2' is not always importable.
             assert bz2 is not None, "ERROR: module bz2 cannot be imported"
-            fileobject = myBZ2File(filename, "r")
+            fileobject = myBZ2File(object, "r") if object else myBZ2File(filename, "r")
 
         else:
-            fileobject = FileWrapper(io.open(filename, "r", errors='ignore'))
+            # Assuming that object is text file encoded in utf-8
+            fileobject = io.StringIO(object.decode('utf-8')) if object \
+                    else FileWrapper(io.open(filename, "r", errors='ignore'))
 
         return fileobject
 
