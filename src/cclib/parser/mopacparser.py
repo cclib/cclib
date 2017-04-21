@@ -15,6 +15,7 @@
 
 from __future__ import print_function
 import re
+import math
 
 import numpy
 
@@ -191,7 +192,7 @@ class MOPAC(logfileparser.Logfile):
 
             # get the vib symmetry
             if len(line.split()) >= 3:
-                sym = line.split[2]
+                sym = (line.split())[2]
                 if not hasattr(self, 'vibsyms'):
                     self.vibsyms = []
                 self.vibsyms.append(sym)
