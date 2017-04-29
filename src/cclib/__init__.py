@@ -36,3 +36,8 @@ try:
     from . import test
 except ImportError:
     pass
+
+# The objects below constitute our public API. These names will not change
+# over time. Names in the sub-modules will typically also be backwards
+# compatible, but may sometimes change when code is moved around.
+ccopen = io.ccopen
