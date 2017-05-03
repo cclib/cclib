@@ -100,8 +100,12 @@ class QChem(logfileparser.Logfile):
             'Final Hessian.',
         )
 
-        self.wfn_method = ['HF', 'MP2', 'RI-MP2', 'LOCAL_MP2', 'MP4', 'CCD', 'CCSD', \
-                                      'CCSD(T)', 'QCISD', 'QCISD(T)']
+        self.wfn_method = [
+            'HF',
+            'MP2', 'RI-MP2', 'LOCAL_MP2', 'MP4',
+            'CCD', 'CCSD', 'CCSD(T)',
+            'QCISD', 'QCISD(T)'
+        ]
 
     def after_parsing(self):
 
@@ -795,13 +799,19 @@ class QChem(logfileparser.Logfile):
             if 'Polarizability (a.u.)' in line:
                 if not hasattr(self, 'polarizabilities'):
                     self.polarizabilities = []
-                polarizability = []
                 while 'Full Tensor' not in line:
                     line = next(inputfile)
                 self.skip_line(inputfile, 'blank')
-                for _ in range(3):
-                    line = next(inputfile)
-                    polarizability.append(line.split())
+                polarizability = [next(inputfile).split() for _ in range(3)]
+                self.polarizabilities.append(numpy.array(polarizability))
+
+            # Static polarizability from finite difference or
+            # responseman.
+            if line.strip() in ('Static polarizability tensor [a.u.]',
+                                'Polarizability tensor      [a.u.]'):
+                if not hasattr(self, 'polarizabilities'):
+                    self.polarizabilities = []
+                polarizability = [next(inputfile).split() for _ in range(3)]
                 self.polarizabilities.append(numpy.array(polarizability))
 
             # Molecular orbital energies and symmetries.
@@ -1325,41 +1335,47 @@ class QChem(logfileparser.Logfile):
                 # Not supported yet.
                 if not hasattr(self, 'pressure'):
                     self.pressure = float(line.split()[7])
-                self.skip_lines(inputfile, ['blank', 'Imaginary'])
+                self.skip_line(inputfile, 'blank')
+
                 line = next(inputfile)
-                # Not supported yet.
-                if 'Zero point vibrational energy' in line:
+                if self.natom == 1:
+                    assert 'Translational Enthalpy' in line
+                else:
+                    assert 'Imaginary Frequencies' in line
+                    line = next(inputfile)
+                    # Not supported yet.
+                    assert 'Zero point vibrational energy' in line
                     if not hasattr(self, 'zpe'):
                         # Convert from kcal/mol to Hartree/particle.
                         self.zpe = utils.convertor(float(line.split()[4]),
                                                    'kcal', 'hartree')
+                    atommasses = []
+                    while 'Translational Enthalpy' not in line:
+                        if 'Has Mass' in line:
+                            atommass = float(line.split()[6])
+                            atommasses.append(atommass)
+                        line = next(inputfile)
+                    if not hasattr(self, 'atommasses'):
+                        self.atommasses = numpy.array(atommasses)
 
-                atommasses = []
-
-                while 'Archival summary' not in line:
-
-                    if 'Has Mass' in line:
-                        atommass = float(line.split()[6])
-                        atommasses.append(atommass)
-
-                    if 'Total Enthalpy' in line:
-                        if not hasattr(self, 'enthalpy'):
-                            enthalpy = float(line.split()[2])
-                            self.enthalpy = utils.convertor(enthalpy,
-                                                            'kcal', 'hartree')
-                    if 'Total Entropy' in line:
-                        if not hasattr(self, 'entropy'):
-                            entropy = float(line.split()[2]) * self.temperature / 1000
-                            # This is the *temperature dependent* entropy.
-                            self.entropy = utils.convertor(entropy,
-                                                           'kcal', 'hartree')
-                        if not hasattr(self, 'freeenergy'):
-                            self.freeenergy = self.enthalpy - self.entropy
-
+                while line.strip():
                     line = next(inputfile)
 
-                if not hasattr(self, 'atommasses'):
-                    self.atommasses = numpy.array(atommasses)
+                line = next(inputfile)
+                assert 'Total Enthalpy' in line
+                if not hasattr(self, 'enthalpy'):
+                    enthalpy = float(line.split()[2])
+                    self.enthalpy = utils.convertor(enthalpy,
+                                                    'kcal', 'hartree')
+                line = next(inputfile)
+                assert 'Total Entropy' in line
+                if not hasattr(self, 'entropy'):
+                    entropy = float(line.split()[2]) * self.temperature / 1000
+                    # This is the *temperature dependent* entropy.
+                    self.entropy = utils.convertor(entropy,
+                                                   'kcal', 'hartree')
+                if not hasattr(self, 'freeenergy'):
+                    self.freeenergy = self.enthalpy - self.entropy
 
         # TODO:
         # 'enthalpy' (incorrect)
