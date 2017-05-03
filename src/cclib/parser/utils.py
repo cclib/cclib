@@ -66,8 +66,8 @@ def convertor(value, fromunits, tounits):
         NIST 2010 CODATA (http://physics.nist.gov/cuu/Constants/index.html)
         Documentation of GAMESS-US or other programs as noted
 
-    >>> print "%.1f" % convertor(8, "eV", "cm-1")
-    64524.8
+    >>> print("%.3f" % convertor(8.0, "eV", "cm-1"))
+    64524.354
     """
 
     _convertor = {
@@ -165,9 +165,15 @@ class PeriodicTable(object):
             self.number[self.element[i]] = i
 
 
-class Splitter:
+class WidthSplitter:
     """Split a line based not on a character, but a given number of field
     widths.
+
+    >>> split_fixed = WidthSplitter((4, 3, 5, 6, 10, 10, 10, 10, 10, 10))
+    >>> split_fixed.split("  60  H 10  s        0.14639   0.00000   0.00000  -0.00000  -0.00000   0.00000")
+    ['60', 'H', '10', 's', '0.14639', '0.00000', '0.00000', '-0.00000', '-0.00000', '0.00000']
+    >>> split_fixed.split("   1  C 1   s       -0.00000  -0.00000   0.00000")
+    ['1', 'C', '1', 's', '-0.00000', '-0.00000', '0.00000']
     """
 
     def __init__(self, widths):
@@ -180,7 +186,9 @@ class Splitter:
         """
         elements = [line[start:end].strip()
                     for (start, end) in zip(self.start_indices, self.end_indices)]
-        for i in range(1, len(elements)):
+        # Handle lines that contain fewer fields than specified in the
+        # widths; they are added as empty strings, so remove them.
+        for _ in range(1, len(elements)):
             if elements[-1] == '':
                 elements.pop()
             else:
