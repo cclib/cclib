@@ -12,6 +12,7 @@ install:
   - if [[ $TRAVIS_PYTHON_VERSION == 3* ]]; then python setup.py install; fi
 script:
   - cd test
+  - python test_utils.py
   - python test_method.py
   - python test_parser.py
   - python test_io.py

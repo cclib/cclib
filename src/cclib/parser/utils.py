@@ -180,7 +180,7 @@ class WidthSplitter:
         self.start_indices = [0] + list(accumulate(widths))[:-1]
         self.end_indices = list(accumulate(widths))
 
-    def split(self, line):
+    def split(self, line, truncate=True):
         """Split the given line using the field widths passed in on class
         initialization.
         """
@@ -188,11 +188,9 @@ class WidthSplitter:
                     for (start, end) in zip(self.start_indices, self.end_indices)]
         # Handle lines that contain fewer fields than specified in the
         # widths; they are added as empty strings, so remove them.
-        for _ in range(1, len(elements)):
-            if elements[-1] == '':
+        if truncate:
+            while len(elements) and elements[-1] == '':
                 elements.pop()
-            else:
-                break
         return elements
 
 
