@@ -1,0 +1,2352 @@
+This is a multi-thread run using 4 threads
+/home/eric/opt/apps/qchem/branch_libresponse/exe/qcprog.exe .Trp_polar_ideriv0.in.14765.qcin.1 /tmp/qchem/qchem14765/
+
+localhost.localdomain 127.0.0
+Q-Chem Developer Version! Running on 127.0.0.*
+                  Welcome to Q-Chem
+     A Quantum Leap Into The Future Of Chemistry
+
+
+ Q-Chem 4.4, Q-Chem, Inc., Pleasanton, CA (2016)
+
+ Y. Shao,  Z. Gan,  E. Epifanovsky,  A. T. B. Gilbert,  M. Wormit,  
+ J. Kussmann,  A. W. Lange,  A. Behn,  J. Deng,  X. Feng,  D. Ghosh,  
+ M. Goldey,  P. R. Horn,  L. D. Jacobson,  I. Kaliman,  F. Rob,  
+ R. Z. Khaliullin,  T. Kus,  A. Landau,  J. Liu,  E. I. Proynov,  Y. M. Rhee,  
+ R. M. Richard,  M. A. Rohrdanz,  R. P. Steele,  E. J. Sundstrom,  
+ H. L. Woodcock III,  P. M. Zimmerman,  D. Zuev,  B. Albrecht,  E. Alguire,  
+ B. Austin,  S. A. Baeppler,  G. J. O. Beran,  Y. A. Bernard,  
+ E. J. Berquist,  K. Brandhorst,  K. B. Bravaya,  S. T. Brown,  D. Casanova,  
+ C.-M. Chang,  Y. Chen,  S. H. Chien,  K. D. Closser,  M. P. Coons,  
+ D. L. Crittenden,  S. Dasgupta,  M. Diedenhofen,  R. A. DiStasio Jr.,  
+ H. Do,  A. D. Dutoi,  R. G. Edgar,  P.-T. Fang,  S. Fatehi,  Q. Feng,  
+ L. Fusti-Molnar,  A. Ghysels,  A. Golubeva-Zadorozhnaya,  J. Gomes,  
+ A. Gunina,  M. W. D. Hanson-Heine,  P. H. P. Harbach,  A. W. Hauser,  
+ J. E. Herr,  E. G. Hohenstein,  Z. C. Holden,  K. Hui,  T.-C. Jagau,  H. Ji,  
+ B. Kaduk,  K. Khistyaev,  Jaehoon Kim,  Jihan Kim,  R. A. King,  
+ P. Klunzinger,  K. Koh,  D. Kosenkov,  T. Kowalczyk,  C. M. Krauter,  
+ A. Kunitsa,  K. U. Lao,  A. Laurent,  K. V. Lawler,  J. Lee,  D. Lefrancois,  
+ S. Lehtola,  S. V. Levchenko,  C. Y. Lin,  Y.-S. Lin,  F. Liu,  E. Livshits,  
+ R. C. Lochan,  A. Luenser,  P. Manohar,  S. F. Manzer,  S.-P. Mao,  Y. Mao,  
+ N. Mardirossian,  A. V. Marenich,  L. A. Martinez-Martinez,  S. A. Maurer,  
+ N. J. Mayhall,  J.-M. Mewes,  A. F. Morrison,  K. Nanda,  T. S. Nguyen-Beck,  
+ C. M. Oana,  R. Olivares-Amaya,  D. P. O'Neill,  J. A. Parkhill,  
+ T. M. Perrine,  R. Peverati,  P. A. Pieniazek,  F. Plasser,  A. Prociuk,  
+ D. R. Rehn,  E. Rosta,  N. J. Russ,  N. Sergueev,  S. M. Sharada,  
+ S. Sharma,  D. W. Small,  A. Sodt,  T. Stauch,  T. Stein,  D. Stuck,  
+ Y.-C. Su,  A. J. W. Thom,  T. Tsuchimochi,  L. Vogt,  O. Vydrov,  T. Wang,  
+ M. A. Watson,  J. Wenzel,  A. White,  C. F. Williams,  V. Vanovschi,  
+ K. Yao,  S. Yeganeh,  S. R. Yost,  Z.-Q. You,  I. Y. Zhang,  X. Zhang,  
+ Y. Zhao,  B. R. Brooks,  G. K. L. Chan,  D. M. Chipman,  C. J. Cramer,  
+ W. A. Goddard III,  M. S. Gordon,  W. J. Hehre,  A. Klamt,  
+ H. F. Schaefer III,  M. W. Schmidt,  C. D. Sherrill,  D. G. Truhlar,  
+ A. Warshel,  X. Xu,  A. Aspuru-Guzik,  R. Baer,  A. T. Bell,  N. A. Besley,  
+ J.-D. Chai,  A. Dreuw,  B. D. Dunietz,  T. R. Furlani,  S. R. Gwaltney,  
+ C.-P. Hsu,  Y. Jung,  J. Kong,  D. S. Lambrecht,  W. Liang,  C. Ochsenfeld,  
+ V. A. Rassolov,  L. V. Slipchenko,  J. E. Subotnik,  T. Van Voorhis,  
+ J. M. Herbert,  A. I. Krylov,  P. M. W. Gill,  M. Head-Gordon
+
+ Contributors to earlier versions of Q-Chem not listed above: 
+ R. D. Adamson,  J. Baker,  E. F. C. Byrd,  A. K. Chakraborty,  C.-L. Cheng,  
+ H. Dachsel,  R. J. Doerksen,  G. Hawkins,  A. Heyden,  S. Hirata,  
+ G. Kedziora,  F. J. Keil,  C. Kelley,  P. P. Korambath,  W. Kurlancheek,  
+ A. M. Lee,  M. S. Lee,  D. Liotard,  I. Lotan,  P. E. Maslen,  N. Nair,  
+ D. Neuhauser,  R. Olson,  B. Peters,  J. Ritchie,  N. E. Schultz,  
+ N. Shenvi,  A. C. Simmonett,  K. S. Thanthiriwatte,  Q. Wu,  W. Zhang
+
+ Please cite Q-Chem as follows:
+ Y. Shao et al., Mol. Phys. 113, 184-215 (2015)
+ DOI: 10.1080/00268976.2014.952696
+
+ Q-Chem 4.4.2 for Intel X86 EM64T Linux
+
+ Parts of Q-Chem use Armadillo 5.200.1 (Boston Tea Smuggler).
+ http://arma.sourceforge.net/
+
+ Q-Chem begins on Thu Mar 16 11:10:51 2017  
+
+copper
+Host: 0
+
+     Scratch files written to /tmp/qchem/qchem14765//
+
+Checking the input file for inconsistencies... 	...done.
+
+--------------------------------------------------------------
+User input:
+--------------------------------------------------------------
+$rem
+ jobtype polarizability
+ method hf
+ basis sto-3g
+ scf_convergence 9
+ thresh 12
+ symmetry false
+ sym_ignore true
+ response_polar -1
+ ideriv 0
+$end
+
+$molecule
+0 1
+N     -0.0699826875    0.3321987191    0.2821283177
+C      1.3728035449    0.0970713322   -0.0129587739
+C      2.0969275417   -0.0523593054    1.3682652221
+O      3.1382490088   -0.6563684788    1.5380162924
+C      1.9529664597    1.3136139853   -0.7956021969
+H      1.8442727348    2.2050605044   -0.1801631789
+H      1.3455899915    1.4594935008   -1.6885689523
+C      3.4053646872    1.1270611844   -1.1918075237
+C      4.4845249667    1.6235038050   -0.5598918002
+N      5.6509089647    1.2379326369   -1.2284610654
+H      6.6009314349    1.4112351003   -0.9028629397
+C      5.2921619642    0.4356274269   -2.3131617003
+C      3.8942019475    0.3557998019   -2.3263315791
+C      3.2659168792   -0.3832607567   -3.3431309548
+H      2.1864306677   -0.4577058843   -3.3815918670
+C      4.0381762333   -1.0087512639   -4.2870993776
+H      3.5696890585   -1.5824763141   -5.0755609734
+C      5.4445159165   -0.9194874753   -4.2519002882
+H      6.0229926396   -1.4277973542   -5.0130007062
+C      6.0869576238   -0.2024044961   -3.2767702726
+H      7.1656650647   -0.1287762497   -3.2458650647
+H      4.5457621618    2.2425310766    0.3253979653
+H     -0.5159777859    0.7478905868   -0.5487661007
+H      1.5420526570   -0.8143939718   -0.5935463196
+H     -0.5302278747   -0.5823989653    0.4084507634
+O      1.4575846656    0.5996887308    2.4093500287
+H      0.5990015339    0.8842421241    2.0047830456
+$end
+--------------------------------------------------------------
+ ----------------------------------------------------------------
+             Standard Nuclear Orientation (Angstroms)
+    I     Atom           X                Y                Z
+ ----------------------------------------------------------------
+    1      N      -0.0699826875     0.3321987191     0.2821283177
+    2      C       1.3728035449     0.0970713322    -0.0129587739
+    3      C       2.0969275417    -0.0523593054     1.3682652221
+    4      O       3.1382490088    -0.6563684788     1.5380162924
+    5      C       1.9529664597     1.3136139853    -0.7956021969
+    6      H       1.8442727348     2.2050605044    -0.1801631789
+    7      H       1.3455899915     1.4594935008    -1.6885689523
+    8      C       3.4053646872     1.1270611844    -1.1918075237
+    9      C       4.4845249667     1.6235038050    -0.5598918002
+   10      N       5.6509089647     1.2379326369    -1.2284610654
+   11      H       6.6009314349     1.4112351003    -0.9028629397
+   12      C       5.2921619642     0.4356274269    -2.3131617003
+   13      C       3.8942019475     0.3557998019    -2.3263315791
+   14      C       3.2659168792    -0.3832607567    -3.3431309548
+   15      H       2.1864306677    -0.4577058843    -3.3815918670
+   16      C       4.0381762333    -1.0087512639    -4.2870993776
+   17      H       3.5696890585    -1.5824763141    -5.0755609734
+   18      C       5.4445159165    -0.9194874753    -4.2519002882
+   19      H       6.0229926396    -1.4277973542    -5.0130007062
+   20      C       6.0869576238    -0.2024044961    -3.2767702726
+   21      H       7.1656650647    -0.1287762497    -3.2458650647
+   22      H       4.5457621618     2.2425310766     0.3253979653
+   23      H      -0.5159777859     0.7478905868    -0.5487661007
+   24      H       1.5420526570    -0.8143939718    -0.5935463196
+   25      H      -0.5302278747    -0.5823989653     0.4084507634
+   26      O       1.4575846656     0.5996887308     2.4093500287
+   27      H       0.5990015339     0.8842421241     2.0047830456
+ ----------------------------------------------------------------
+ Nuclear Repulsion Energy =   957.1063345966 hartrees
+ There are       54 alpha and       54 beta electrons
+ Requested basis set is STO-3G
+ There are 42 shells and 87 basis functions
+
+ Total QAlloc Memory Limit   2000 MB
+ Mega-Array Size        61 MB
+ MEM_STATIC part        62 MB
+ Polarizability to be calculated using 2nd-order finite difference with energies.
+ ######################################################
+ ######################################################
+ # Starting finite difference calculation for IDERIV  #
+ Finite diff step size:  1.88973e-05 a.u.
+ Applying Cartesian multipole field
+    Component          Value
+    ---------          -----
+     (1,0,0)        3.77945E-05
+ Nucleus-field energy     =     0.0255842827 hartrees
+ A cutoff of  1.0D-12 yielded    745 shell pairs
+ There are      3574 function pairs
+
+ -------------------------------------------------------
+ OpenMP Integral Computing Module                       
+ Release: version 1.0, May 2013, Q-Chem Inc. Pittsburgh 
+ -------------------------------------------------------
+ Integral Job Info:
+ Integral job number is                      11
+ Integral operator is                         1
+ short-range coefficients                     0
+ long-range coefficients              100000000
+ Omega coefficients                           0
+ if combine SR and LR in K                    0
+ Integral screening is                        0
+ Integral computing path is                   2
+ max size of driver memory is            800000
+ size of driver memory is                 45569
+ size of scratch memory is               945100
+ max col of scratch BK array                289
+ max len of scratch array in speh3           22
+ max len of scratch index in speh4            8
+ max int batch size is                      520
+ min int batch size is                       52
+ fixed nKL is                                52
+ max L of basis functions is                  1
+ order of int derivative is                   0
+ number of shells is                         42
+ number of basis is                          87
+ number of cartesian basis is                87
+ number of contracted shell pairs           745
+ number of primitive shell pairs           4304
+ maxK2 (contraction) of shell pair            9
+ max number of K2 of shell pair               1
+ max number of CS2 of shell pair             91
+ max number of PS2 of shell pair            621
+ mem total for path MDJ                   27894
+ -------------------------------------------------------
+ Smallest overlap matrix eigenvalue = 1.69E-01
+ Guess from superposition of atomic densities
+ Warning:  Energy on first SCF cycle will be non-variational
+ A restricted Hartree-Fock SCF calculation will be
+ performed using Pulay DIIS extrapolation
+ SCF converges when DIIS error is below 1.0E-09
+ using 4 threads for integral computing 
+ ---------------------------------------
+  Cycle       Energy         DIIS Error
+ ---------------------------------------
+    1    -674.0047463841      1.28E-01
+    2    -673.3334096759      1.34E-02
+    3    -673.5207380111      8.22E-03
+    4    -673.5861445131      1.33E-03
+    5    -673.5899480189      5.31E-04
+    6    -673.5904529015      1.91E-04
+    7    -673.5905776328      7.11E-05
+    8    -673.5905879746      2.26E-05
+    9    -673.5905890467      5.77E-06
+   10    -673.5905891272      1.75E-06
+   11    -673.5905891341      6.59E-07
+   12    -673.5905891356      3.08E-07
+   13    -673.5905891361      1.04E-07
+   14    -673.5905891361      3.67E-08
+   15    -673.5905891361      1.57E-08
+   16    -673.5905891361      5.39E-09
+   17    -673.5905891361      2.61E-09
+   18    -673.5905891361      1.15E-09
+   19    -673.5905891361      2.65E-10 Convergence criterion met
+ ---------------------------------------
+ SCF time:  CPU 12.03 s  wall 4.93 s
+ SCF   energy in the final basis set = -673.5905891361
+ Total energy in the final basis set = -673.5905891361
+
+ --------------------------------------------------------------
+
+                    Orbital Energies (a.u.)
+ --------------------------------------------------------------
+
+ Alpha MOs
+ -- Occupied --
+-20.269 -20.242 -15.390 -15.345 -11.148 -11.099 -11.068 -11.065
+-11.064 -11.026 -11.026 -11.024 -11.016 -11.015 -11.012  -1.348
+ -1.258  -1.220  -1.154  -1.075  -1.026  -0.960  -0.937  -0.914
+ -0.838  -0.783  -0.750  -0.711  -0.693  -0.669  -0.649  -0.617
+ -0.603  -0.599  -0.581  -0.557  -0.543  -0.537  -0.524  -0.518
+ -0.498  -0.487  -0.479  -0.460  -0.445  -0.439  -0.417  -0.414
+ -0.370  -0.329  -0.326  -0.307  -0.243  -0.226
+ -- Virtual --
+  0.247   0.295   0.318   0.369   0.522   0.533   0.561   0.568
+  0.578   0.612   0.616   0.626   0.644   0.653   0.677   0.685
+  0.691   0.716   0.722   0.742   0.744   0.754   0.771   0.803
+  0.825   0.883   0.913   0.959   0.965   1.004   1.086   1.145
+  1.174
+ --------------------------------------------------------------
+
+          Ground-State Mulliken Net Atomic Charges
+
+     Atom                 Charge (a.u.)
+  ----------------------------------------
+      1 N                    -0.405340
+      2 C                     0.019231
+      3 C                     0.298927
+      4 O                    -0.260879
+      5 C                    -0.106011
+      6 H                     0.066666
+      7 H                     0.060841
+      8 C                    -0.035598
+      9 C                     0.043361
+     10 N                    -0.321587
+     11 H                     0.216200
+     12 C                     0.105681
+     13 C                    -0.023638
+     14 C                    -0.064844
+     15 H                     0.055349
+     16 C                    -0.075174
+     17 H                     0.057038
+     18 C                    -0.059369
+     19 H                     0.060695
+     20 C                    -0.082654
+     21 H                     0.061468
+     22 H                     0.077299
+     23 H                     0.163322
+     24 H                     0.065986
+     25 H                     0.161178
+     26 O                    -0.312241
+     27 H                     0.234090
+  ----------------------------------------
+  Sum of atomic charges =     0.000000
+
+ -----------------------------------------------------------------
+                    Cartesian Multipole Moments
+ -----------------------------------------------------------------
+    Charge (ESU x 10^10)
+                 0.0000
+    Dipole Moment (Debye)
+         X      -1.2167      Y       0.9550      Z      -2.2312
+       Tot       2.7149
+    Quadrupole Moments (Debye-Ang)
+        XX     -71.1959     XY       8.1608     YY     -79.5857
+        XZ      -4.0338     YZ       1.8140     ZZ     -89.9302
+    Octopole Moments (Debye-Ang^2)
+       XXX    -683.4395    XXY      25.3635    XYY    -269.9395
+       YYY     -61.8914    XXZ      79.9047    XYZ      11.9759
+       YYZ     104.7314    XZZ    -300.1270    YZZ     -33.0188
+       ZZZ     288.0416
+    Hexadecapole Moments (Debye-Ang^3)
+      XXXX   -6007.2584   XXXY     107.2861   XXYY   -1256.2584
+      XYYY    -170.4076   YYYY    -452.5873   XXXZ    1419.1799
+      XXYZ      21.0459   XYYZ     546.2943   YYYZ     -83.6040
+      XXZZ   -1731.4115   XYZZ    -112.0785   YYZZ    -546.5151
+      XZZZ    1565.6032   YZZZ     -41.3852   ZZZZ   -2875.5105
+ -----------------------------------------------------------------
+
+ Scale SEOQF with 1.000000e-02/1.000000e-01/1.000000e-01
+
+ Standard Electronic Orientation quadrupole field applied
+ Nucleus-field energy     =    -0.0000000523 hartrees
+ Guess MOs from SCF MO coefficient file
+ Reading MOs from coefficient file
+ Reading MOs from coefficient file
+ A restricted Hartree-Fock SCF calculation will be
+ performed using Pulay DIIS extrapolation
+ SCF converges when DIIS error is below 1.0E-09
+ using 4 threads for integral computing 
+ ---------------------------------------
+  Cycle       Energy         DIIS Error
+ ---------------------------------------
+    1    -673.5905710442      5.50E-06
+    2    -673.5905711016      2.81E-06
+    3    -673.5905711105      7.67E-07
+    4    -673.5905711119      2.35E-07
+    5    -673.5905711121      8.37E-08
+    6    -673.5905711121      3.23E-08
+    7    -673.5905711121      1.24E-08
+    8    -673.5905711121      4.79E-09
+    9    -673.5905711121      1.59E-09
+   10    -673.5905711121      6.94E-10 Convergence criterion met
+ ---------------------------------------
+ SCF time:  CPU 6.62 s  wall 2.46 s
+ SCF   energy in the final basis set = -673.5905711121
+ Total energy in the final basis set = -673.5905711121
+
+ --------------------------------------------------------------
+
+                    Orbital Energies (a.u.)
+ --------------------------------------------------------------
+
+ Alpha MOs
+ -- Occupied --
+-20.269 -20.242 -15.390 -15.345 -11.148 -11.098 -11.068 -11.065
+-11.063 -11.025 -11.025 -11.024 -11.016 -11.015 -11.012  -1.348
+ -1.258  -1.220  -1.154  -1.075  -1.026  -0.959  -0.937  -0.913
+ -0.838  -0.783  -0.749  -0.711  -0.693  -0.669  -0.648  -0.617
+ -0.602  -0.598  -0.581  -0.556  -0.543  -0.537  -0.524  -0.518
+ -0.498  -0.487  -0.479  -0.460  -0.445  -0.438  -0.417  -0.414
+ -0.370  -0.329  -0.326  -0.307  -0.243  -0.226
+ -- Virtual --
+  0.248   0.295   0.319   0.369   0.522   0.534   0.561   0.569
+  0.578   0.613   0.617   0.627   0.644   0.653   0.677   0.685
+  0.691   0.717   0.723   0.742   0.745   0.754   0.771   0.803
+  0.826   0.884   0.913   0.960   0.965   1.004   1.086   1.145
+  1.174
+ --------------------------------------------------------------
+
+          Ground-State Mulliken Net Atomic Charges
+
+     Atom                 Charge (a.u.)
+  ----------------------------------------
+      1 N                    -0.405350
+      2 C                     0.019228
+      3 C                     0.298919
+      4 O                    -0.260769
+      5 C                    -0.106000
+      6 H                     0.066640
+      7 H                     0.060788
+      8 C                    -0.035657
+      9 C                     0.043391
+     10 N                    -0.321558
+     11 H                     0.216300
+     12 C                     0.105706
+     13 C                    -0.023661
+     14 C                    -0.064892
+     15 H                     0.055242
+     16 C                    -0.075176
+     17 H                     0.056995
+     18 C                    -0.059357
+     19 H                     0.060758
+     20 C                    -0.082603
+     21 H                     0.061584
+     22 H                     0.077314
+     23 H                     0.163263
+     24 H                     0.065997
+     25 H                     0.161111
+     26 O                    -0.312238
+     27 H                     0.234025
+  ----------------------------------------
+  Sum of atomic charges =     0.000000
+
+ -----------------------------------------------------------------
+                    Cartesian Multipole Moments
+ -----------------------------------------------------------------
+    Charge (ESU x 10^10)
+                -0.0000
+    Dipole Moment (Debye)
+         X      -1.2075      Y       0.9547      Z      -2.2316
+       Tot       2.7110
+    Quadrupole Moments (Debye-Ang)
+        XX     -71.1304     XY       8.1630     YY     -79.5855
+        XZ      -4.0495     YZ       1.8134     ZZ     -89.9284
+    Octopole Moments (Debye-Ang^2)
+       XXX    -682.9881    XXY      25.3804    XYY    -269.9278
+       YYY     -61.8911    XXZ      79.7585    XYZ      11.9776
+       YYZ     104.7308    XZZ    -300.0616    YZZ     -33.0220
+       ZZZ     288.0304
+    Hexadecapole Moments (Debye-Ang^3)
+      XXXX   -6004.2132   XXXY     107.3984   XXYY   -1256.1752
+      XYYY    -170.3971   YYYY    -452.5858   XXXZ    1418.0795
+      XXYZ      21.0742   XYYZ     546.2775   YYYZ     -83.6047
+      XXZZ   -1730.8664   XYZZ    -112.1104   YYZZ    -546.5146
+      XZZZ    1565.3645   YZZZ     -41.3813   ZZZZ   -2875.4609
+ -----------------------------------------------------------------
+ Applying Cartesian multipole field
+    Component          Value
+    ---------          -----
+     (1,0,0)        1.88973E-05
+     (0,1,0)        1.88973E-05
+ Nucleus-field energy     =     0.0138210677 hartrees
+ Guess MOs from SCF MO coefficient file
+ Reading MOs from coefficient file
+ Reading MOs from coefficient file
+ A restricted Hartree-Fock SCF calculation will be
+ performed using Pulay DIIS extrapolation
+ SCF converges when DIIS error is below 1.0E-09
+ using 4 threads for integral computing 
+ ---------------------------------------
+  Cycle       Energy         DIIS Error
+ ---------------------------------------
+    1    -673.5905729923      3.31E-06
+    2    -673.5905730139      1.58E-06
+    3    -673.5905730168      4.66E-07
+    4    -673.5905730173      1.46E-07
+    5    -673.5905730173      5.79E-08
+    6    -673.5905730174      2.14E-08
+    7    -673.5905730174      9.01E-09
+    8    -673.5905730174      3.39E-09
+    9    -673.5905730174      1.00E-09
+   10    -673.5905730174      5.02E-10 Convergence criterion met
+ ---------------------------------------
+ SCF time:  CPU 6.70 s  wall 2.93 s
+ SCF   energy in the final basis set = -673.5905730174
+ Total energy in the final basis set = -673.5905730174
+
+ --------------------------------------------------------------
+
+                    Orbital Energies (a.u.)
+ --------------------------------------------------------------
+
+ Alpha MOs
+ -- Occupied --
+-20.269 -20.242 -15.390 -15.345 -11.148 -11.099 -11.068 -11.065
+-11.064 -11.026 -11.025 -11.024 -11.016 -11.015 -11.012  -1.348
+ -1.258  -1.220  -1.154  -1.075  -1.026  -0.959  -0.937  -0.913
+ -0.838  -0.783  -0.750  -0.711  -0.693  -0.669  -0.648  -0.617
+ -0.602  -0.598  -0.581  -0.557  -0.543  -0.537  -0.524  -0.518
+ -0.498  -0.487  -0.479  -0.460  -0.445  -0.439  -0.417  -0.414
+ -0.370  -0.329  -0.326  -0.307  -0.243  -0.226
+ -- Virtual --
+  0.247   0.295   0.318   0.369   0.522   0.533   0.561   0.568
+  0.578   0.612   0.617   0.627   0.644   0.653   0.677   0.685
+  0.691   0.717   0.723   0.742   0.745   0.754   0.771   0.803
+  0.826   0.883   0.913   0.960   0.965   1.004   1.086   1.145
+  1.174
+ --------------------------------------------------------------
+
+          Ground-State Mulliken Net Atomic Charges
+
+     Atom                 Charge (a.u.)
+  ----------------------------------------
+      1 N                    -0.405357
+      2 C                     0.019231
+      3 C                     0.298922
+      4 O                    -0.260787
+      5 C                    -0.106004
+      6 H                     0.066614
+      7 H                     0.060801
+      8 C                    -0.035627
+      9 C                     0.043354
+     10 N                    -0.321581
+     11 H                     0.216234
+     12 C                     0.105690
+     13 C                    -0.023656
+     14 C                    -0.064866
+     15 H                     0.055302
+     16 C                    -0.075161
+     17 H                     0.057050
+     18 C                    -0.059347
+     19 H                     0.060757
+     20 C                    -0.082631
+     21 H                     0.061525
+     22 H                     0.077270
+     23 H                     0.163272
+     24 H                     0.066027
+     25 H                     0.161177
+     26 O                    -0.312249
+     27 H                     0.234040
+  ----------------------------------------
+  Sum of atomic charges =     0.000000
+
+ -----------------------------------------------------------------
+                    Cartesian Multipole Moments
+ -----------------------------------------------------------------
+    Charge (ESU x 10^10)
+                -0.0000
+    Dipole Moment (Debye)
+         X      -1.2120      Y       0.9525      Z      -2.2329
+       Tot       2.7132
+    Quadrupole Moments (Debye-Ang)
+        XX     -71.1632     XY       8.1537     YY     -79.5869
+        XZ      -4.0482     YZ       1.8169     ZZ     -89.9214
+    Octopole Moments (Debye-Ang^2)
+       XXX    -683.2183    XXY      25.3343    XYY    -269.9375
+       YYY     -61.8993    XXZ      79.7998    XYZ      11.9924
+       YYZ     104.7273    XZZ    -300.0563    YZZ     -33.0368
+       ZZZ     287.9946
+    Hexadecapole Moments (Debye-Ang^3)
+      XXXX   -6005.7779   XXXY     107.1548   XXYY   -1256.2318
+      XYYY    -170.4315   YYYY    -452.5965   XXXZ    1418.4637
+      XXYZ      21.1403   XYYZ     546.2681   YYYZ     -83.5949
+      XXZZ   -1730.9507   XYZZ    -112.1669   YYZZ    -546.4949
+      XZZZ    1565.2935   YZZZ     -41.3162   ZZZZ   -2875.2817
+ -----------------------------------------------------------------
+ Applying Cartesian multipole field
+    Component          Value
+    ---------          -----
+     (1,0,0)        1.88973E-05
+     (0,1,0)       -1.88973E-05
+ Nucleus-field energy     =     0.0117632151 hartrees
+ Guess MOs from SCF MO coefficient file
+ Reading MOs from coefficient file
+ Reading MOs from coefficient file
+ A restricted Hartree-Fock SCF calculation will be
+ performed using Pulay DIIS extrapolation
+ SCF converges when DIIS error is below 1.0E-09
+ using 4 threads for integral computing 
+ ---------------------------------------
+  Cycle       Energy         DIIS Error
+ ---------------------------------------
+    1    -673.5905871798      4.01E-06
+    2    -673.5905872126      1.49E-06
+    3    -673.5905872151      4.34E-07
+    4    -673.5905872155      1.40E-07
+    5    -673.5905872155      5.55E-08
+    6    -673.5905872155      2.14E-08
+    7    -673.5905872155      7.76E-09
+    8    -673.5905872155      2.82E-09
+    9    -673.5905872155      1.07E-09
+   10    -673.5905872155      4.42E-10 Convergence criterion met
+ ---------------------------------------
+ SCF time:  CPU 6.53 s  wall 2.66 s
+ SCF   energy in the final basis set = -673.5905872155
+ Total energy in the final basis set = -673.5905872155
+
+ --------------------------------------------------------------
+
+                    Orbital Energies (a.u.)
+ --------------------------------------------------------------
+
+ Alpha MOs
+ -- Occupied --
+-20.269 -20.242 -15.390 -15.345 -11.148 -11.099 -11.068 -11.065
+-11.063 -11.026 -11.025 -11.024 -11.016 -11.015 -11.012  -1.348
+ -1.258  -1.220  -1.154  -1.075  -1.026  -0.959  -0.937  -0.913
+ -0.838  -0.783  -0.750  -0.711  -0.693  -0.669  -0.648  -0.617
+ -0.602  -0.598  -0.581  -0.557  -0.543  -0.537  -0.524  -0.518
+ -0.498  -0.487  -0.479  -0.460  -0.445  -0.439  -0.417  -0.414
+ -0.370  -0.329  -0.326  -0.307  -0.243  -0.226
+ -- Virtual --
+  0.247   0.295   0.318   0.369   0.522   0.534   0.561   0.568
+  0.578   0.613   0.617   0.627   0.644   0.653   0.677   0.685
+  0.691   0.717   0.723   0.742   0.745   0.754   0.771   0.803
+  0.826   0.883   0.913   0.960   0.965   1.004   1.086   1.145
+  1.174
+ --------------------------------------------------------------
+
+          Ground-State Mulliken Net Atomic Charges
+
+     Atom                 Charge (a.u.)
+  ----------------------------------------
+      1 N                    -0.405332
+      2 C                     0.019229
+      3 C                     0.298924
+      4 O                    -0.260861
+      5 C                    -0.106007
+      6 H                     0.066692
+      7 H                     0.060828
+      8 C                    -0.035628
+      9 C                     0.043398
+     10 N                    -0.321564
+     11 H                     0.216267
+     12 C                     0.105697
+     13 C                    -0.023644
+     14 C                    -0.064870
+     15 H                     0.055289
+     16 C                    -0.075188
+     17 H                     0.056984
+     18 C                    -0.059378
+     19 H                     0.060696
+     20 C                    -0.082625
+     21 H                     0.061527
+     22 H                     0.077343
+     23 H                     0.163312
+     24 H                     0.065957
+     25 H                     0.161112
+     26 O                    -0.312230
+     27 H                     0.234074
+  ----------------------------------------
+  Sum of atomic charges =     0.000000
+
+ -----------------------------------------------------------------
+                    Cartesian Multipole Moments
+ -----------------------------------------------------------------
+    Charge (ESU x 10^10)
+                -0.0000
+    Dipole Moment (Debye)
+         X      -1.2122      Y       0.9573      Z      -2.2299
+       Tot       2.7126
+    Quadrupole Moments (Debye-Ang)
+        XX     -71.1630     XY       8.1701     YY     -79.5843
+        XZ      -4.0351     YZ       1.8105     ZZ     -89.9371
+    Octopole Moments (Debye-Ang^2)
+       XXX    -683.2092    XXY      25.4096    XYY    -269.9298
+       YYY     -61.8832    XXZ      79.8634    XYZ      11.9611
+       YYZ     104.7349    XZZ    -300.1324    YZZ     -33.0040
+       ZZZ     288.0774
+    Hexadecapole Moments (Debye-Ang^3)
+      XXXX   -6005.6937   XXXY     107.5297   XXYY   -1256.2017
+      XYYY    -170.3732   YYYY    -452.5767   XXXZ    1418.7957
+      XXYZ      20.9799   XYYZ     546.3037   YYYZ     -83.6138
+      XXZZ   -1731.3272   XYZZ    -112.0219   YYZZ    -546.5349
+      XZZZ    1565.6742   YZZZ     -41.4503   ZZZZ   -2875.6897
+ -----------------------------------------------------------------
+ Applying Cartesian multipole field
+    Component          Value
+    ---------          -----
+     (1,0,0)        1.88973E-05
+     (0,0,1)        1.88973E-05
+ Nucleus-field energy     =     0.0085468942 hartrees
+ Guess MOs from SCF MO coefficient file
+ Reading MOs from coefficient file
+ Reading MOs from coefficient file
+ A restricted Hartree-Fock SCF calculation will be
+ performed using Pulay DIIS extrapolation
+ SCF converges when DIIS error is below 1.0E-09
+ using 4 threads for integral computing 
+ ---------------------------------------
+  Cycle       Energy         DIIS Error
+ ---------------------------------------
+    1    -673.5905966776      3.76E-06
+    2    -673.5905967080      1.54E-06
+    3    -673.5905967107      3.90E-07
+    4    -673.5905967111      1.30E-07
+    5    -673.5905967111      4.64E-08
+    6    -673.5905967111      1.51E-08
+    7    -673.5905967111      7.07E-09
+    8    -673.5905967111      2.79E-09
+    9    -673.5905967111      8.11E-10 Convergence criterion met
+ ---------------------------------------
+ SCF time:  CPU 5.88 s  wall 2.31 s
+ SCF   energy in the final basis set = -673.5905967111
+ Total energy in the final basis set = -673.5905967111
+
+ --------------------------------------------------------------
+
+                    Orbital Energies (a.u.)
+ --------------------------------------------------------------
+
+ Alpha MOs
+ -- Occupied --
+-20.269 -20.242 -15.390 -15.345 -11.148 -11.099 -11.068 -11.065
+-11.063 -11.025 -11.025 -11.024 -11.016 -11.015 -11.012  -1.348
+ -1.258  -1.220  -1.154  -1.075  -1.026  -0.959  -0.937  -0.913
+ -0.838  -0.783  -0.749  -0.711  -0.693  -0.669  -0.648  -0.617
+ -0.602  -0.598  -0.581  -0.557  -0.543  -0.537  -0.524  -0.518
+ -0.498  -0.487  -0.479  -0.460  -0.445  -0.439  -0.417  -0.414
+ -0.370  -0.329  -0.326  -0.307  -0.243  -0.226
+ -- Virtual --
+  0.248   0.295   0.318   0.369   0.522   0.534   0.561   0.568
+  0.578   0.613   0.617   0.626   0.644   0.653   0.677   0.685
+  0.691   0.717   0.723   0.742   0.745   0.754   0.771   0.803
+  0.826   0.884   0.913   0.960   0.965   1.004   1.086   1.145
+  1.174
+ --------------------------------------------------------------
+
+          Ground-State Mulliken Net Atomic Charges
+
+     Atom                 Charge (a.u.)
+  ----------------------------------------
+      1 N                    -0.405364
+      2 C                     0.019230
+      3 C                     0.298919
+      4 O                    -0.260840
+      5 C                    -0.106005
+      6 H                     0.066632
+      7 H                     0.060848
+      8 C                    -0.035627
+      9 C                     0.043351
+     10 N                    -0.321577
+     11 H                     0.216228
+     12 C                     0.105690
+     13 C                    -0.023658
+     14 C                    -0.064867
+     15 H                     0.055301
+     16 C                    -0.075154
+     17 H                     0.057064
+     18 C                    -0.059340
+     19 H                     0.060773
+     20 C                    -0.082630
+     21 H                     0.061530
+     22 H                     0.077258
+     23 H                     0.163320
+     24 H                     0.066014
+     25 H                     0.161133
+     26 O                    -0.312281
+     27 H                     0.234053
+  ----------------------------------------
+  Sum of atomic charges =     0.000000
+
+ -----------------------------------------------------------------
+                    Cartesian Multipole Moments
+ -----------------------------------------------------------------
+    Charge (ESU x 10^10)
+                -0.0000
+    Dipole Moment (Debye)
+         X      -1.2119      Y       0.9534      Z      -2.2351
+       Tot       2.7154
+    Quadrupole Moments (Debye-Ang)
+        XX     -71.1616     XY       8.1547     YY     -79.5861
+        XZ      -4.0560     YZ       1.8168     ZZ     -89.9160
+    Octopole Moments (Debye-Ang^2)
+       XXX    -683.2031    XXY      25.3366    XYY    -269.9362
+       YYY     -61.8970    XXZ      79.7635    XYZ      11.9934
+       YYZ     104.7246    XZZ    -300.0290    YZZ     -33.0381
+       ZZZ     287.9606
+    Hexadecapole Moments (Debye-Ang^3)
+      XXXX   -6005.6658   XXXY     107.1564   XXYY   -1256.2278
+      XYYY    -170.4287   YYYY    -452.5924   XXXZ    1418.2767
+      XXYZ      21.1468   XYYZ     546.2590   YYYZ     -83.5959
+      XXZZ   -1730.8036   XYZZ    -112.1782   YYZZ    -546.4878
+      XZZZ    1565.1397   YZZZ     -41.2985   ZZZZ   -2875.1353
+ -----------------------------------------------------------------
+ Applying Cartesian multipole field
+    Component          Value
+    ---------          -----
+     (1,0,0)        1.88973E-05
+     (0,0,1)       -1.88973E-05
+ Nucleus-field energy     =     0.0170373885 hartrees
+ Guess MOs from SCF MO coefficient file
+ Reading MOs from coefficient file
+ Reading MOs from coefficient file
+ A restricted Hartree-Fock SCF calculation will be
+ performed using Pulay DIIS extrapolation
+ SCF converges when DIIS error is below 1.0E-09
+ using 4 threads for integral computing 
+ ---------------------------------------
+  Cycle       Energy         DIIS Error
+ ---------------------------------------
+    1    -673.5905634763      4.76E-06
+    2    -673.5905635263      1.85E-06
+    3    -673.5905635307      5.60E-07
+    4    -673.5905635314      1.79E-07
+    5    -673.5905635315      6.01E-08
+    6    -673.5905635315      1.86E-08
+    7    -673.5905635315      8.65E-09
+    8    -673.5905635315      3.91E-09
+    9    -673.5905635315      1.20E-09
+   10    -673.5905635315      5.37E-10 Convergence criterion met
+ ---------------------------------------
+ SCF time:  CPU 6.71 s  wall 2.61 s
+ SCF   energy in the final basis set = -673.5905635315
+ Total energy in the final basis set = -673.5905635315
+
+ --------------------------------------------------------------
+
+                    Orbital Energies (a.u.)
+ --------------------------------------------------------------
+
+ Alpha MOs
+ -- Occupied --
+-20.269 -20.242 -15.390 -15.345 -11.148 -11.099 -11.068 -11.065
+-11.064 -11.026 -11.026 -11.024 -11.016 -11.015 -11.012  -1.348
+ -1.258  -1.220  -1.154  -1.075  -1.026  -0.959  -0.937  -0.914
+ -0.838  -0.783  -0.750  -0.711  -0.693  -0.669  -0.648  -0.617
+ -0.603  -0.599  -0.581  -0.557  -0.543  -0.537  -0.524  -0.518
+ -0.498  -0.487  -0.479  -0.460  -0.445  -0.439  -0.417  -0.414
+ -0.370  -0.329  -0.326  -0.307  -0.243  -0.226
+ -- Virtual --
+  0.247   0.295   0.318   0.369   0.522   0.533   0.561   0.568
+  0.578   0.612   0.617   0.627   0.644   0.653   0.677   0.685
+  0.691   0.716   0.722   0.742   0.745   0.754   0.771   0.803
+  0.825   0.883   0.913   0.960   0.965   1.004   1.086   1.145
+  1.174
+ --------------------------------------------------------------
+
+          Ground-State Mulliken Net Atomic Charges
+
+     Atom                 Charge (a.u.)
+  ----------------------------------------
+      1 N                    -0.405326
+      2 C                     0.019229
+      3 C                     0.298927
+      4 O                    -0.260808
+      5 C                    -0.106005
+      6 H                     0.066674
+      7 H                     0.060782
+      8 C                    -0.035628
+      9 C                     0.043401
+     10 N                    -0.321568
+     11 H                     0.216272
+     12 C                     0.105697
+     13 C                    -0.023642
+     14 C                    -0.064869
+     15 H                     0.055291
+     16 C                    -0.075195
+     17 H                     0.056970
+     18 C                    -0.059386
+     19 H                     0.060680
+     20 C                    -0.082627
+     21 H                     0.061522
+     22 H                     0.077356
+     23 H                     0.163265
+     24 H                     0.065970
+     25 H                     0.161157
+     26 O                    -0.312199
+     27 H                     0.234061
+  ----------------------------------------
+  Sum of atomic charges =     0.000000
+
+ -----------------------------------------------------------------
+                    Cartesian Multipole Moments
+ -----------------------------------------------------------------
+    Charge (ESU x 10^10)
+                 0.0000
+    Dipole Moment (Debye)
+         X      -1.2123      Y       0.9563      Z      -2.2277
+       Tot       2.7105
+    Quadrupole Moments (Debye-Ang)
+        XX     -71.1647     XY       8.1691     YY     -79.5851
+        XZ      -4.0274     YZ       1.8107     ZZ     -89.9426
+    Octopole Moments (Debye-Ang^2)
+       XXX    -683.2244    XXY      25.4073    XYY    -269.9311
+       YYY     -61.8854    XXZ      79.8997    XYZ      11.9602
+       YYZ     104.7376    XZZ    -300.1596    YZZ     -33.0026
+       ZZZ     288.1114
+    Hexadecapole Moments (Debye-Ang^3)
+      XXXX   -6005.8058   XXXY     107.5281   XXYY   -1256.2058
+      XYYY    -170.3760   YYYY    -452.5808   XXXZ    1418.9827
+      XXYZ      20.9733   XYYZ     546.3128   YYYZ     -83.6127
+      XXZZ   -1731.4743   XYZZ    -112.0106   YYZZ    -546.5419
+      XZZZ    1565.8279   YZZZ     -41.4681   ZZZZ   -2875.8360
+ -----------------------------------------------------------------
+ Applying Cartesian multipole field
+    Component          Value
+    ---------          -----
+     (1,0,0)       -3.77945E-05
+ Nucleus-field energy     =    -0.0255842827 hartrees
+ Guess MOs from SCF MO coefficient file
+ Reading MOs from coefficient file
+ Reading MOs from coefficient file
+ A restricted Hartree-Fock SCF calculation will be
+ performed using Pulay DIIS extrapolation
+ SCF converges when DIIS error is below 1.0E-09
+ using 4 threads for integral computing 
+ ---------------------------------------
+  Cycle       Energy         DIIS Error
+ ---------------------------------------
+    1    -673.5905530548      8.52E-06
+    2    -673.5905531998      4.26E-06
+    3    -673.5905532211      1.29E-06
+    4    -673.5905532251      3.81E-07
+    5    -673.5905532254      1.30E-07
+    6    -673.5905532255      4.78E-08
+    7    -673.5905532255      2.01E-08
+    8    -673.5905532255      7.07E-09
+    9    -673.5905532255      2.40E-09
+   10    -673.5905532255      1.11E-09
+   11    -673.5905532255      4.76E-10 Convergence criterion met
+ ---------------------------------------
+ SCF time:  CPU 7.33 s  wall 2.69 s
+ SCF   energy in the final basis set = -673.5905532255
+ Total energy in the final basis set = -673.5905532255
+
+ --------------------------------------------------------------
+
+                    Orbital Energies (a.u.)
+ --------------------------------------------------------------
+
+ Alpha MOs
+ -- Occupied --
+-20.269 -20.242 -15.389 -15.345 -11.148 -11.098 -11.068 -11.065
+-11.063 -11.025 -11.025 -11.024 -11.016 -11.015 -11.011  -1.348
+ -1.258  -1.220  -1.154  -1.074  -1.025  -0.959  -0.936  -0.913
+ -0.837  -0.783  -0.749  -0.710  -0.692  -0.669  -0.648  -0.617
+ -0.602  -0.598  -0.581  -0.556  -0.543  -0.537  -0.524  -0.517
+ -0.498  -0.487  -0.478  -0.460  -0.444  -0.438  -0.416  -0.414
+ -0.370  -0.328  -0.325  -0.307  -0.242  -0.225
+ -- Virtual --
+  0.248   0.296   0.319   0.370   0.522   0.534   0.561   0.569
+  0.579   0.613   0.617   0.627   0.644   0.653   0.678   0.685
+  0.691   0.717   0.723   0.742   0.745   0.755   0.771   0.803
+  0.826   0.884   0.914   0.960   0.965   1.004   1.087   1.145
+  1.174
+ --------------------------------------------------------------
+
+          Ground-State Mulliken Net Atomic Charges
+
+     Atom                 Charge (a.u.)
+  ----------------------------------------
+      1 N                    -0.405359
+      2 C                     0.019225
+      3 C                     0.298912
+      4 O                    -0.260659
+      5 C                    -0.105989
+      6 H                     0.066614
+      7 H                     0.060734
+      8 C                    -0.035715
+      9 C                     0.043420
+     10 N                    -0.321530
+     11 H                     0.216400
+     12 C                     0.105731
+     13 C                    -0.023685
+     14 C                    -0.064940
+     15 H                     0.055135
+     16 C                    -0.075178
+     17 H                     0.056951
+     18 C                    -0.059345
+     19 H                     0.060820
+     20 C                    -0.082551
+     21 H                     0.061700
+     22 H                     0.077329
+     23 H                     0.163204
+     24 H                     0.066008
+     25 H                     0.161044
+     26 O                    -0.312236
+     27 H                     0.233960
+  ----------------------------------------
+  Sum of atomic charges =     0.000000
+
+ -----------------------------------------------------------------
+                    Cartesian Multipole Moments
+ -----------------------------------------------------------------
+    Charge (ESU x 10^10)
+                 0.0000
+    Dipole Moment (Debye)
+         X      -1.1984      Y       0.9545      Z      -2.2319
+       Tot       2.7072
+    Quadrupole Moments (Debye-Ang)
+        XX     -71.0648     XY       8.1651     YY     -79.5853
+        XZ      -4.0652     YZ       1.8128     ZZ     -89.9266
+    Octopole Moments (Debye-Ang^2)
+       XXX    -682.5366    XXY      25.3973    XYY    -269.9162
+       YYY     -61.8908    XXZ      79.6123    XYZ      11.9793
+       YYZ     104.7302    XZZ    -299.9962    YZZ     -33.0252
+       ZZZ     288.0192
+    Hexadecapole Moments (Debye-Ang^3)
+      XXXX   -6001.1679   XXXY     107.5106   XXYY   -1256.0919
+      XYYY    -170.3867   YYYY    -452.5844   XXXZ    1416.9790
+      XXYZ      21.1024   XYYZ     546.2607   YYYZ     -83.6054
+      XXZZ   -1730.3213   XYZZ    -112.1423   YYZZ    -546.5142
+      XZZZ    1565.1258   YZZZ     -41.3774   ZZZZ   -2875.4112
+ -----------------------------------------------------------------
+ Applying Cartesian multipole field
+    Component          Value
+    ---------          -----
+     (1,0,0)       -1.88973E-05
+     (0,1,0)        1.88973E-05
+ Nucleus-field energy     =    -0.0117632151 hartrees
+ Guess MOs from SCF MO coefficient file
+ Reading MOs from coefficient file
+ Reading MOs from coefficient file
+ A restricted Hartree-Fock SCF calculation will be
+ performed using Pulay DIIS extrapolation
+ SCF converges when DIIS error is below 1.0E-09
+ using 4 threads for integral computing 
+ ---------------------------------------
+  Cycle       Energy         DIIS Error
+ ---------------------------------------
+    1    -673.5905550385      3.31E-06
+    2    -673.5905550602      1.58E-06
+    3    -673.5905550631      4.66E-07
+    4    -673.5905550636      1.46E-07
+    5    -673.5905550636      5.79E-08
+    6    -673.5905550636      2.14E-08
+    7    -673.5905550636      9.01E-09
+    8    -673.5905550636      3.39E-09
+    9    -673.5905550636      1.00E-09
+   10    -673.5905550636      5.02E-10 Convergence criterion met
+ ---------------------------------------
+ SCF time:  CPU 6.60 s  wall 2.49 s
+ SCF   energy in the final basis set = -673.5905550636
+ Total energy in the final basis set = -673.5905550636
+
+ --------------------------------------------------------------
+
+                    Orbital Energies (a.u.)
+ --------------------------------------------------------------
+
+ Alpha MOs
+ -- Occupied --
+-20.269 -20.242 -15.390 -15.345 -11.148 -11.098 -11.068 -11.065
+-11.063 -11.025 -11.025 -11.024 -11.016 -11.015 -11.011  -1.348
+ -1.258  -1.220  -1.154  -1.074  -1.025  -0.959  -0.937  -0.913
+ -0.838  -0.783  -0.749  -0.710  -0.693  -0.669  -0.648  -0.617
+ -0.602  -0.598  -0.581  -0.556  -0.543  -0.537  -0.524  -0.518
+ -0.498  -0.487  -0.479  -0.460  -0.445  -0.438  -0.417  -0.414
+ -0.370  -0.328  -0.325  -0.307  -0.242  -0.226
+ -- Virtual --
+  0.248   0.295   0.319   0.370   0.522   0.534   0.561   0.569
+  0.578   0.613   0.617   0.627   0.644   0.653   0.677   0.685
+  0.691   0.717   0.723   0.742   0.745   0.754   0.771   0.803
+  0.826   0.884   0.913   0.960   0.965   1.004   1.086   1.145
+  1.174
+ --------------------------------------------------------------
+
+          Ground-State Mulliken Net Atomic Charges
+
+     Atom                 Charge (a.u.)
+  ----------------------------------------
+      1 N                    -0.405367
+      2 C                     0.019228
+      3 C                     0.298914
+      4 O                    -0.260677
+      5 C                    -0.105993
+      6 H                     0.066588
+      7 H                     0.060747
+      8 C                    -0.035685
+      9 C                     0.043384
+     10 N                    -0.321553
+     11 H                     0.216334
+     12 C                     0.105715
+     13 C                    -0.023679
+     14 C                    -0.064914
+     15 H                     0.055195
+     16 C                    -0.075164
+     17 H                     0.057006
+     18 C                    -0.059335
+     19 H                     0.060820
+     20 C                    -0.082580
+     21 H                     0.061641
+     22 H                     0.077285
+     23 H                     0.163214
+     24 H                     0.066038
+     25 H                     0.161110
+     26 O                    -0.312247
+     27 H                     0.233975
+  ----------------------------------------
+  Sum of atomic charges =     0.000000
+
+ -----------------------------------------------------------------
+                    Cartesian Multipole Moments
+ -----------------------------------------------------------------
+    Charge (ESU x 10^10)
+                 0.0000
+    Dipole Moment (Debye)
+         X      -1.2028      Y       0.9522      Z      -2.2332
+       Tot       2.7094
+    Quadrupole Moments (Debye-Ang)
+        XX     -71.0977     XY       8.1558     YY     -79.5867
+        XZ      -4.0639     YZ       1.8163     ZZ     -89.9197
+    Octopole Moments (Debye-Ang^2)
+       XXX    -682.7669    XXY      25.3512    XYY    -269.9259
+       YYY     -61.8990    XXZ      79.6536    XYZ      11.9941
+       YYZ     104.7267    XZZ    -299.9909    YZZ     -33.0400
+       ZZZ     287.9834
+    Hexadecapole Moments (Debye-Ang^3)
+      XXXX   -6002.7326   XXXY     107.2670   XXYY   -1256.1486
+      XYYY    -170.4211   YYYY    -452.5950   XXXZ    1417.3632
+      XXYZ      21.1685   XYYZ     546.2513   YYYZ     -83.5956
+      XXZZ   -1730.4056   XYZZ    -112.1989   YYZZ    -546.4944
+      XZZZ    1565.0548   YZZZ     -41.3123   ZZZZ   -2875.2321
+ -----------------------------------------------------------------
+ Applying Cartesian multipole field
+    Component          Value
+    ---------          -----
+     (1,0,0)       -1.88973E-05
+     (0,1,0)       -1.88973E-05
+ Nucleus-field energy     =    -0.0138210677 hartrees
+ Guess MOs from SCF MO coefficient file
+ Reading MOs from coefficient file
+ Reading MOs from coefficient file
+ A restricted Hartree-Fock SCF calculation will be
+ performed using Pulay DIIS extrapolation
+ SCF converges when DIIS error is below 1.0E-09
+ using 4 threads for integral computing 
+ ---------------------------------------
+  Cycle       Energy         DIIS Error
+ ---------------------------------------
+    1    -673.5905692229      4.01E-06
+    2    -673.5905692556      1.49E-06
+    3    -673.5905692581      4.34E-07
+    4    -673.5905692585      1.41E-07
+    5    -673.5905692586      5.55E-08
+    6    -673.5905692586      2.14E-08
+    7    -673.5905692586      7.76E-09
+    8    -673.5905692586      2.82E-09
+    9    -673.5905692586      1.07E-09
+   10    -673.5905692586      4.42E-10 Convergence criterion met
+ ---------------------------------------
+ SCF time:  CPU 6.49 s  wall 2.52 s
+ SCF   energy in the final basis set = -673.5905692586
+ Total energy in the final basis set = -673.5905692586
+
+ --------------------------------------------------------------
+
+                    Orbital Energies (a.u.)
+ --------------------------------------------------------------
+
+ Alpha MOs
+ -- Occupied --
+-20.269 -20.242 -15.390 -15.345 -11.148 -11.098 -11.068 -11.065
+-11.063 -11.025 -11.025 -11.024 -11.016 -11.015 -11.011  -1.348
+ -1.258  -1.220  -1.154  -1.074  -1.025  -0.959  -0.937  -0.913
+ -0.838  -0.783  -0.749  -0.710  -0.693  -0.669  -0.648  -0.617
+ -0.602  -0.598  -0.581  -0.556  -0.543  -0.537  -0.524  -0.518
+ -0.498  -0.487  -0.479  -0.460  -0.445  -0.438  -0.417  -0.414
+ -0.370  -0.328  -0.325  -0.307  -0.242  -0.226
+ -- Virtual --
+  0.248   0.295   0.319   0.370   0.522   0.534   0.561   0.569
+  0.579   0.613   0.617   0.627   0.644   0.653   0.678   0.685
+  0.691   0.717   0.723   0.742   0.745   0.754   0.771   0.803
+  0.826   0.884   0.913   0.960   0.965   1.004   1.086   1.145
+  1.174
+ --------------------------------------------------------------
+
+          Ground-State Mulliken Net Atomic Charges
+
+     Atom                 Charge (a.u.)
+  ----------------------------------------
+      1 N                    -0.405342
+      2 C                     0.019226
+      3 C                     0.298916
+      4 O                    -0.260751
+      5 C                    -0.105996
+      6 H                     0.066666
+      7 H                     0.060774
+      8 C                    -0.035687
+      9 C                     0.043428
+     10 N                    -0.321536
+     11 H                     0.216366
+     12 C                     0.105722
+     13 C                    -0.023667
+     14 C                    -0.064918
+     15 H                     0.055182
+     16 C                    -0.075191
+     17 H                     0.056940
+     18 C                    -0.059366
+     19 H                     0.060759
+     20 C                    -0.082574
+     21 H                     0.061643
+     22 H                     0.077358
+     23 H                     0.163254
+     24 H                     0.065968
+     25 H                     0.161045
+     26 O                    -0.312228
+     27 H                     0.234009
+  ----------------------------------------
+  Sum of atomic charges =     0.000000
+
+ -----------------------------------------------------------------
+                    Cartesian Multipole Moments
+ -----------------------------------------------------------------
+    Charge (ESU x 10^10)
+                 0.0000
+    Dipole Moment (Debye)
+         X      -1.2031      Y       0.9570      Z      -2.2303
+       Tot       2.7088
+    Quadrupole Moments (Debye-Ang)
+        XX     -71.0975     XY       8.1723     YY     -79.5841
+        XZ      -4.0508     YZ       1.8099     ZZ     -89.9354
+    Octopole Moments (Debye-Ang^2)
+       XXX    -682.7578    XXY      25.4265    XYY    -269.9181
+       YYY     -61.8829    XXZ      79.7172    XYZ      11.9628
+       YYZ     104.7343    XZZ    -300.0670    YZZ     -33.0072
+       ZZZ     288.0662
+    Hexadecapole Moments (Debye-Ang^3)
+      XXXX   -6002.6485   XXXY     107.6419   XXYY   -1256.1185
+      XYYY    -170.3628   YYYY    -452.5752   XXXZ    1417.6952
+      XXYZ      21.0081   XYYZ     546.2869   YYYZ     -83.6145
+      XXZZ   -1730.7820   XYZZ    -112.0538   YYZZ    -546.5344
+      XZZZ    1565.4355   YZZZ     -41.4464   ZZZZ   -2875.6400
+ -----------------------------------------------------------------
+ Applying Cartesian multipole field
+    Component          Value
+    ---------          -----
+     (1,0,0)       -1.88973E-05
+     (0,0,1)        1.88973E-05
+ Nucleus-field energy     =    -0.0170373885 hartrees
+ Guess MOs from SCF MO coefficient file
+ Reading MOs from coefficient file
+ Reading MOs from coefficient file
+ A restricted Hartree-Fock SCF calculation will be
+ performed using Pulay DIIS extrapolation
+ SCF converges when DIIS error is below 1.0E-09
+ using 4 threads for integral computing 
+ ---------------------------------------
+  Cycle       Energy         DIIS Error
+ ---------------------------------------
+    1    -673.5905787249      3.76E-06
+    2    -673.5905787553      1.54E-06
+    3    -673.5905787581      3.90E-07
+    4    -673.5905787585      1.30E-07
+    5    -673.5905787585      4.64E-08
+    6    -673.5905787585      1.51E-08
+    7    -673.5905787585      7.07E-09
+    8    -673.5905787585      2.79E-09
+    9    -673.5905787585      8.10E-10 Convergence criterion met
+ ---------------------------------------
+ SCF time:  CPU 5.83 s  wall 2.20 s
+ SCF   energy in the final basis set = -673.5905787585
+ Total energy in the final basis set = -673.5905787585
+
+ --------------------------------------------------------------
+
+                    Orbital Energies (a.u.)
+ --------------------------------------------------------------
+
+ Alpha MOs
+ -- Occupied --
+-20.269 -20.242 -15.389 -15.345 -11.148 -11.098 -11.068 -11.065
+-11.063 -11.025 -11.025 -11.024 -11.016 -11.015 -11.011  -1.348
+ -1.258  -1.220  -1.154  -1.074  -1.025  -0.959  -0.937  -0.913
+ -0.838  -0.783  -0.749  -0.710  -0.693  -0.669  -0.648  -0.617
+ -0.602  -0.598  -0.581  -0.556  -0.543  -0.537  -0.524  -0.518
+ -0.498  -0.487  -0.479  -0.460  -0.444  -0.438  -0.416  -0.414
+ -0.370  -0.328  -0.325  -0.307  -0.242  -0.225
+ -- Virtual --
+  0.248   0.295   0.319   0.370   0.522   0.534   0.561   0.569
+  0.579   0.613   0.617   0.627   0.644   0.653   0.678   0.685
+  0.691   0.717   0.723   0.742   0.745   0.754   0.771   0.803
+  0.826   0.884   0.913   0.960   0.965   1.004   1.086   1.145
+  1.174
+ --------------------------------------------------------------
+
+          Ground-State Mulliken Net Atomic Charges
+
+     Atom                 Charge (a.u.)
+  ----------------------------------------
+      1 N                    -0.405373
+      2 C                     0.019227
+      3 C                     0.298911
+      4 O                    -0.260730
+      5 C                    -0.105994
+      6 H                     0.066606
+      7 H                     0.060794
+      8 C                    -0.035685
+      9 C                     0.043381
+     10 N                    -0.321549
+     11 H                     0.216328
+     12 C                     0.105715
+     13 C                    -0.023681
+     14 C                    -0.064915
+     15 H                     0.055193
+     16 C                    -0.075157
+     17 H                     0.057020
+     18 C                    -0.059327
+     19 H                     0.060835
+     20 C                    -0.082578
+     21 H                     0.061646
+     22 H                     0.077273
+     23 H                     0.163261
+     24 H                     0.066025
+     25 H                     0.161066
+     26 O                    -0.312278
+     27 H                     0.233988
+  ----------------------------------------
+  Sum of atomic charges =     0.000000
+
+ -----------------------------------------------------------------
+                    Cartesian Multipole Moments
+ -----------------------------------------------------------------
+    Charge (ESU x 10^10)
+                 0.0000
+    Dipole Moment (Debye)
+         X      -1.2028      Y       0.9532      Z      -2.2355
+       Tot       2.7116
+    Quadrupole Moments (Debye-Ang)
+        XX     -71.0960     XY       8.1569     YY     -79.5859
+        XZ      -4.0716     YZ       1.8162     ZZ     -89.9142
+    Octopole Moments (Debye-Ang^2)
+       XXX    -682.7517    XXY      25.3535    XYY    -269.9245
+       YYY     -61.8967    XXZ      79.6173    XYZ      11.9951
+       YYZ     104.7240    XZZ    -299.9636    YZZ     -33.0413
+       ZZZ     287.9494
+    Hexadecapole Moments (Debye-Ang^3)
+      XXXX   -6002.6205   XXXY     107.2686   XXYY   -1256.1445
+      XYYY    -170.4183   YYYY    -452.5909   XXXZ    1417.1762
+      XXYZ      21.1751   XYYZ     546.2422   YYYZ     -83.5967
+      XXZZ   -1730.2585   XYZZ    -112.2101   YYZZ    -546.4874
+      XZZZ    1564.9011   YZZZ     -41.2946   ZZZZ   -2875.0857
+ -----------------------------------------------------------------
+ Applying Cartesian multipole field
+    Component          Value
+    ---------          -----
+     (1,0,0)       -1.88973E-05
+     (0,0,1)       -1.88973E-05
+ Nucleus-field energy     =    -0.0085468942 hartrees
+ Guess MOs from SCF MO coefficient file
+ Reading MOs from coefficient file
+ Reading MOs from coefficient file
+ A restricted Hartree-Fock SCF calculation will be
+ performed using Pulay DIIS extrapolation
+ SCF converges when DIIS error is below 1.0E-09
+ using 4 threads for integral computing 
+ ---------------------------------------
+  Cycle       Energy         DIIS Error
+ ---------------------------------------
+    1    -673.5905455183      4.76E-06
+    2    -673.5905455682      1.85E-06
+    3    -673.5905455726      5.60E-07
+    4    -673.5905455734      1.79E-07
+    5    -673.5905455734      6.01E-08
+    6    -673.5905455734      1.86E-08
+    7    -673.5905455734      8.65E-09
+    8    -673.5905455734      3.91E-09
+    9    -673.5905455734      1.20E-09
+   10    -673.5905455734      5.38E-10 Convergence criterion met
+ ---------------------------------------
+ SCF time:  CPU 6.51 s  wall 2.61 s
+ SCF   energy in the final basis set = -673.5905455734
+ Total energy in the final basis set = -673.5905455734
+
+ --------------------------------------------------------------
+
+                    Orbital Energies (a.u.)
+ --------------------------------------------------------------
+
+ Alpha MOs
+ -- Occupied --
+-20.269 -20.242 -15.390 -15.345 -11.148 -11.098 -11.068 -11.065
+-11.063 -11.025 -11.025 -11.024 -11.016 -11.015 -11.011  -1.348
+ -1.258  -1.220  -1.154  -1.074  -1.025  -0.959  -0.937  -0.913
+ -0.838  -0.783  -0.749  -0.711  -0.693  -0.669  -0.648  -0.617
+ -0.602  -0.598  -0.581  -0.556  -0.543  -0.537  -0.524  -0.518
+ -0.498  -0.487  -0.479  -0.460  -0.445  -0.438  -0.417  -0.414
+ -0.370  -0.328  -0.326  -0.307  -0.243  -0.226
+ -- Virtual --
+  0.248   0.295   0.319   0.370   0.522   0.534   0.561   0.569
+  0.578   0.613   0.617   0.627   0.644   0.653   0.677   0.685
+  0.691   0.717   0.723   0.742   0.745   0.754   0.771   0.803
+  0.826   0.884   0.913   0.960   0.965   1.004   1.086   1.145
+  1.174
+ --------------------------------------------------------------
+
+          Ground-State Mulliken Net Atomic Charges
+
+     Atom                 Charge (a.u.)
+  ----------------------------------------
+      1 N                    -0.405336
+      2 C                     0.019226
+      3 C                     0.298919
+      4 O                    -0.260698
+      5 C                    -0.105995
+      6 H                     0.066648
+      7 H                     0.060728
+      8 C                    -0.035686
+      9 C                     0.043430
+     10 N                    -0.321540
+     11 H                     0.216372
+     12 C                     0.105722
+     13 C                    -0.023665
+     14 C                    -0.064917
+     15 H                     0.055183
+     16 C                    -0.075198
+     17 H                     0.056926
+     18 C                    -0.059374
+     19 H                     0.060743
+     20 C                    -0.082576
+     21 H                     0.061638
+     22 H                     0.077370
+     23 H                     0.163206
+     24 H                     0.065981
+     25 H                     0.161090
+     26 O                    -0.312196
+     27 H                     0.233996
+  ----------------------------------------
+  Sum of atomic charges =     0.000000
+
+ -----------------------------------------------------------------
+                    Cartesian Multipole Moments
+ -----------------------------------------------------------------
+    Charge (ESU x 10^10)
+                -0.0000
+    Dipole Moment (Debye)
+         X      -1.2031      Y       0.9561      Z      -2.2280
+       Tot       2.7066
+    Quadrupole Moments (Debye-Ang)
+        XX     -71.0992     XY       8.1713     YY     -79.5849
+        XZ      -4.0431     YZ       1.8101     ZZ     -89.9408
+    Octopole Moments (Debye-Ang^2)
+       XXX    -682.7730    XXY      25.4242    XYY    -269.9195
+       YYY     -61.8851    XXZ      79.7535    XYZ      11.9619
+       YYZ     104.7370    XZZ    -300.0942    YZZ     -33.0058
+       ZZZ     288.1001
+    Hexadecapole Moments (Debye-Ang^3)
+      XXXX   -6002.7605   XXXY     107.6403   XXYY   -1256.1226
+      XYYY    -170.3656   YYYY    -452.5793   XXXZ    1417.8823
+      XXYZ      21.0015   XYYZ     546.2960   YYYZ     -83.6135
+      XXZZ   -1730.9292   XYZZ    -112.0425   YYZZ    -546.5414
+      XZZZ    1565.5892   YZZZ     -41.4642   ZZZZ   -2875.7864
+ -----------------------------------------------------------------
+ Applying Cartesian multipole field
+    Component          Value
+    ---------          -----
+     (0,1,0)        3.77945E-05
+ Nucleus-field energy     =     0.0020578526 hartrees
+ Guess MOs from SCF MO coefficient file
+ Reading MOs from coefficient file
+ Reading MOs from coefficient file
+ A restricted Hartree-Fock SCF calculation will be
+ performed using Pulay DIIS extrapolation
+ SCF converges when DIIS error is below 1.0E-09
+ using 4 threads for integral computing 
+ ---------------------------------------
+  Cycle       Energy         DIIS Error
+ ---------------------------------------
+    1    -673.5905568668      6.10E-06
+    2    -673.5905569429      2.67E-06
+    3    -673.5905569508      6.79E-07
+    4    -673.5905569519      2.39E-07
+    5    -673.5905569520      9.88E-08
+    6    -673.5905569520      3.78E-08
+    7    -673.5905569520      1.47E-08
+    8    -673.5905569520      5.36E-09
+    9    -673.5905569520      1.73E-09
+   10    -673.5905569520      6.09E-10 Convergence criterion met
+ ---------------------------------------
+ SCF time:  CPU 6.51 s  wall 2.42 s
+ SCF   energy in the final basis set = -673.5905569520
+ Total energy in the final basis set = -673.5905569520
+
+ --------------------------------------------------------------
+
+                    Orbital Energies (a.u.)
+ --------------------------------------------------------------
+
+ Alpha MOs
+ -- Occupied --
+-20.269 -20.242 -15.390 -15.345 -11.148 -11.098 -11.068 -11.065
+-11.063 -11.025 -11.025 -11.024 -11.016 -11.015 -11.012  -1.348
+ -1.258  -1.220  -1.154  -1.075  -1.026  -0.959  -0.937  -0.913
+ -0.838  -0.783  -0.749  -0.711  -0.693  -0.669  -0.648  -0.617
+ -0.602  -0.598  -0.581  -0.556  -0.543  -0.537  -0.524  -0.518
+ -0.498  -0.487  -0.479  -0.460  -0.445  -0.438  -0.417  -0.414
+ -0.370  -0.329  -0.326  -0.307  -0.243  -0.226
+ -- Virtual --
+  0.248   0.295   0.319   0.369   0.522   0.534   0.561   0.569
+  0.578   0.613   0.617   0.627   0.644   0.653   0.677   0.685
+  0.691   0.717   0.723   0.742   0.745   0.754   0.771   0.803
+  0.826   0.884   0.913   0.960   0.965   1.004   1.086   1.145
+  1.174
+ --------------------------------------------------------------
+
+          Ground-State Mulliken Net Atomic Charges
+
+     Atom                 Charge (a.u.)
+  ----------------------------------------
+      1 N                    -0.405375
+      2 C                     0.019231
+      3 C                     0.298917
+      4 O                    -0.260695
+      5 C                    -0.105997
+      6 H                     0.066562
+      7 H                     0.060761
+      8 C                    -0.035655
+      9 C                     0.043347
+     10 N                    -0.321576
+     11 H                     0.216268
+     12 C                     0.105700
+     13 C                    -0.023674
+     14 C                    -0.064889
+     15 H                     0.055255
+     16 C                    -0.075149
+     17 H                     0.057061
+     18 C                    -0.059326
+     19 H                     0.060819
+     20 C                    -0.082609
+     21 H                     0.061582
+     22 H                     0.077241
+     23 H                     0.163223
+     24 H                     0.066067
+     25 H                     0.161176
+     26 O                    -0.312257
+     27 H                     0.233991
+  ----------------------------------------
+  Sum of atomic charges =     0.000000
+
+ -----------------------------------------------------------------
+                    Cartesian Multipole Moments
+ -----------------------------------------------------------------
+    Charge (ESU x 10^10)
+                -0.0000
+    Dipole Moment (Debye)
+         X      -1.2073      Y       0.9499      Z      -2.2345
+       Tot       2.7116
+    Quadrupole Moments (Debye-Ang)
+        XX     -71.1306     XY       8.1465     YY     -79.5881
+        XZ      -4.0626     YZ       1.8198     ZZ     -89.9127
+    Octopole Moments (Debye-Ang^2)
+       XXX    -682.9971    XXY      25.3051    XYY    -269.9355
+       YYY     -61.9072    XXZ      79.6948    XYZ      12.0089
+       YYZ     104.7232    XZZ    -299.9855    YZZ     -33.0548
+       ZZZ     287.9476
+    Hexadecapole Moments (Debye-Ang^3)
+      XXXX   -6004.2973   XXXY     107.0235   XXYY   -1256.2052
+      XYYY    -170.4555   YYYY    -452.6056   XXXZ    1417.7474
+      XXYZ      21.2346   XYYZ     546.2419   YYYZ     -83.5857
+      XXZZ   -1730.4900   XYZZ    -112.2554   YYZZ    -546.4746
+      XZZZ    1564.9838   YZZZ     -41.2472   ZZZZ   -2875.0529
+ -----------------------------------------------------------------
+ Applying Cartesian multipole field
+    Component          Value
+    ---------          -----
+     (0,1,0)        1.88973E-05
+     (0,0,1)        1.88973E-05
+ Nucleus-field energy     =    -0.0032163209 hartrees
+ Guess MOs from SCF MO coefficient file
+ Reading MOs from coefficient file
+ Reading MOs from coefficient file
+ A restricted Hartree-Fock SCF calculation will be
+ performed using Pulay DIIS extrapolation
+ SCF converges when DIIS error is below 1.0E-09
+ using 4 threads for integral computing 
+ ---------------------------------------
+  Cycle       Energy         DIIS Error
+ ---------------------------------------
+    1    -673.5905806275      2.30E-06
+    2    -673.5905806384      6.70E-07
+    3    -673.5905806392      2.93E-07
+    4    -673.5905806393      1.00E-07
+    5    -673.5905806394      2.51E-08
+    6    -673.5905806394      1.14E-08
+    7    -673.5905806394      4.42E-09
+    8    -673.5905806394      1.96E-09
+    9    -673.5905806394      7.53E-10 Convergence criterion met
+ ---------------------------------------
+ SCF time:  CPU 5.66 s  wall 2.04 s
+ SCF   energy in the final basis set = -673.5905806394
+ Total energy in the final basis set = -673.5905806394
+
+ --------------------------------------------------------------
+
+                    Orbital Energies (a.u.)
+ --------------------------------------------------------------
+
+ Alpha MOs
+ -- Occupied --
+-20.269 -20.242 -15.390 -15.345 -11.148 -11.098 -11.068 -11.065
+-11.063 -11.025 -11.025 -11.024 -11.016 -11.015 -11.012  -1.348
+ -1.258  -1.220  -1.154  -1.074  -1.025  -0.959  -0.937  -0.913
+ -0.838  -0.783  -0.749  -0.711  -0.693  -0.669  -0.648  -0.617
+ -0.602  -0.598  -0.581  -0.556  -0.543  -0.537  -0.524  -0.518
+ -0.498  -0.487  -0.479  -0.460  -0.445  -0.438  -0.417  -0.414
+ -0.370  -0.329  -0.326  -0.307  -0.242  -0.226
+ -- Virtual --
+  0.248   0.295   0.318   0.369   0.522   0.534   0.561   0.569
+  0.578   0.613   0.617   0.627   0.644   0.653   0.677   0.685
+  0.691   0.717   0.723   0.742   0.745   0.754   0.771   0.803
+  0.826   0.884   0.913   0.960   0.965   1.004   1.086   1.145
+  1.174
+ --------------------------------------------------------------
+
+          Ground-State Mulliken Net Atomic Charges
+
+     Atom                 Charge (a.u.)
+  ----------------------------------------
+      1 N                    -0.405381
+      2 C                     0.019230
+      3 C                     0.298914
+      4 O                    -0.260748
+      5 C                    -0.105998
+      6 H                     0.066580
+      7 H                     0.060807
+      8 C                    -0.035655
+      9 C                     0.043344
+     10 N                    -0.321572
+     11 H                     0.216262
+     12 C                     0.105699
+     13 C                    -0.023676
+     14 C                    -0.064889
+     15 H                     0.055254
+     16 C                    -0.075142
+     17 H                     0.057075
+     18 C                    -0.059318
+     19 H                     0.060835
+     20 C                    -0.082607
+     21 H                     0.061587
+     22 H                     0.077229
+     23 H                     0.163270
+     24 H                     0.066054
+     25 H                     0.161132
+     26 O                    -0.312289
+     27 H                     0.234004
+  ----------------------------------------
+  Sum of atomic charges =     0.000000
+
+ -----------------------------------------------------------------
+                    Cartesian Multipole Moments
+ -----------------------------------------------------------------
+    Charge (ESU x 10^10)
+                -0.0000
+    Dipole Moment (Debye)
+         X      -1.2072      Y       0.9509      Z      -2.2367
+       Tot       2.7138
+    Quadrupole Moments (Debye-Ang)
+        XX     -71.1289     XY       8.1475     YY     -79.5873
+        XZ      -4.0704     YZ       1.8197     ZZ     -89.9073
+    Octopole Moments (Debye-Ang^2)
+       XXX    -682.9819    XXY      25.3074    XYY    -269.9342
+       YYY     -61.9049    XXZ      79.6586    XYZ      12.0099
+       YYZ     104.7205    XZZ    -299.9582    YZZ     -33.0561
+       ZZZ     287.9136
+    Hexadecapole Moments (Debye-Ang^3)
+      XXXX   -6004.1853   XXXY     107.0251   XXYY   -1256.2012
+      XYYY    -170.4527   YYYY    -452.6015   XXXZ    1417.5604
+      XXYZ      21.2412   XYYZ     546.2328   YYYZ     -83.5868
+      XXZZ   -1730.3428   XYZZ    -112.2667   YYZZ    -546.4676
+      XZZZ    1564.8301   YZZZ     -41.2295   ZZZZ   -2874.9065
+ -----------------------------------------------------------------
+ Applying Cartesian multipole field
+    Component          Value
+    ---------          -----
+     (0,1,0)        1.88973E-05
+     (0,0,1)       -1.88973E-05
+ Nucleus-field energy     =     0.0052741735 hartrees
+ Guess MOs from SCF MO coefficient file
+ Reading MOs from coefficient file
+ Reading MOs from coefficient file
+ A restricted Hartree-Fock SCF calculation will be
+ performed using Pulay DIIS extrapolation
+ SCF converges when DIIS error is below 1.0E-09
+ using 4 threads for integral computing 
+ ---------------------------------------
+  Cycle       Energy         DIIS Error
+ ---------------------------------------
+    1    -673.5905473801      4.76E-06
+    2    -673.5905474301      1.85E-06
+    3    -673.5905474345      5.60E-07
+    4    -673.5905474352      1.79E-07
+    5    -673.5905474353      6.01E-08
+    6    -673.5905474353      1.86E-08
+    7    -673.5905474353      8.65E-09
+    8    -673.5905474353      3.91E-09
+    9    -673.5905474353      1.20E-09
+   10    -673.5905474353      5.36E-10 Convergence criterion met
+ ---------------------------------------
+ SCF time:  CPU 6.39 s  wall 2.44 s
+ SCF   energy in the final basis set = -673.5905474353
+ Total energy in the final basis set = -673.5905474353
+
+ --------------------------------------------------------------
+
+                    Orbital Energies (a.u.)
+ --------------------------------------------------------------
+
+ Alpha MOs
+ -- Occupied --
+-20.269 -20.242 -15.390 -15.345 -11.148 -11.098 -11.068 -11.065
+-11.063 -11.026 -11.025 -11.024 -11.016 -11.015 -11.012  -1.348
+ -1.258  -1.220  -1.154  -1.075  -1.026  -0.959  -0.937  -0.913
+ -0.838  -0.783  -0.749  -0.711  -0.693  -0.669  -0.648  -0.617
+ -0.602  -0.598  -0.581  -0.557  -0.543  -0.537  -0.524  -0.518
+ -0.498  -0.487  -0.479  -0.460  -0.445  -0.439  -0.417  -0.414
+ -0.370  -0.328  -0.326  -0.307  -0.243  -0.226
+ -- Virtual --
+  0.247   0.295   0.319   0.369   0.522   0.534   0.561   0.569
+  0.578   0.613   0.617   0.627   0.644   0.653   0.677   0.685
+  0.691   0.717   0.723   0.742   0.745   0.754   0.771   0.803
+  0.826   0.883   0.913   0.960   0.965   1.004   1.086   1.145
+  1.174
+ --------------------------------------------------------------
+
+          Ground-State Mulliken Net Atomic Charges
+
+     Atom                 Charge (a.u.)
+  ----------------------------------------
+      1 N                    -0.405343
+      2 C                     0.019229
+      3 C                     0.298922
+      4 O                    -0.260716
+      5 C                    -0.105999
+      6 H                     0.066622
+      7 H                     0.060741
+      8 C                    -0.035656
+      9 C                     0.043393
+     10 N                    -0.321563
+     11 H                     0.216306
+     12 C                     0.105706
+     13 C                    -0.023659
+     14 C                    -0.064891
+     15 H                     0.055244
+     16 C                    -0.075183
+     17 H                     0.056981
+     18 C                    -0.059364
+     19 H                     0.060742
+     20 C                    -0.082604
+     21 H                     0.061579
+     22 H                     0.077327
+     23 H                     0.163216
+     24 H                     0.066010
+     25 H                     0.161156
+     26 O                    -0.312207
+     27 H                     0.234012
+  ----------------------------------------
+  Sum of atomic charges =     0.000000
+
+ -----------------------------------------------------------------
+                    Cartesian Multipole Moments
+ -----------------------------------------------------------------
+    Charge (ESU x 10^10)
+                -0.0000
+    Dipole Moment (Debye)
+         X      -1.2076      Y       0.9538      Z      -2.2293
+       Tot       2.7089
+    Quadrupole Moments (Debye-Ang)
+        XX     -71.1320     XY       8.1619     YY     -79.5863
+        XZ      -4.0418     YZ       1.8136     ZZ     -89.9338
+    Octopole Moments (Debye-Ang^2)
+       XXX    -683.0032    XXY      25.3781    XYY    -269.9292
+       YYY     -61.8933    XXZ      79.7947    XYZ      11.9767
+       YYZ     104.7335    XZZ    -300.0889    YZZ     -33.0206
+       ZZZ     288.0644
+    Hexadecapole Moments (Debye-Ang^3)
+      XXXX   -6004.3252   XXXY     107.3968   XXYY   -1256.1792
+      XYYY    -170.3999   YYYY    -452.5899   XXXZ    1418.2665
+      XXYZ      21.0676   XYYZ     546.2866   YYYZ     -83.6036
+      XXZZ   -1731.0136   XYZZ    -112.0991   YYZZ    -546.5217
+      XZZZ    1565.5182   YZZZ     -41.3991   ZZZZ   -2875.6072
+ -----------------------------------------------------------------
+ Applying Cartesian multipole field
+    Component          Value
+    ---------          -----
+     (0,1,0)       -3.77945E-05
+ Nucleus-field energy     =    -0.0020578526 hartrees
+ Guess MOs from SCF MO coefficient file
+ Reading MOs from coefficient file
+ Reading MOs from coefficient file
+ A restricted Hartree-Fock SCF calculation will be
+ performed using Pulay DIIS extrapolation
+ SCF converges when DIIS error is below 1.0E-09
+ using 4 threads for integral computing 
+ ---------------------------------------
+  Cycle       Energy         DIIS Error
+ ---------------------------------------
+    1    -673.5905852836      5.35E-06
+    2    -673.5905853406      1.73E-06
+    3    -673.5905853443      6.65E-07
+    4    -673.5905853450      2.03E-07
+    5    -673.5905853451      7.42E-08
+    6    -673.5905853451      2.95E-08
+    7    -673.5905853451      1.10E-08
+    8    -673.5905853451      4.26E-09
+    9    -673.5905853451      1.65E-09
+   10    -673.5905853451      8.39E-10 Convergence criterion met
+ ---------------------------------------
+ SCF time:  CPU 6.30 s  wall 2.34 s
+ SCF   energy in the final basis set = -673.5905853451
+ Total energy in the final basis set = -673.5905853451
+
+ --------------------------------------------------------------
+
+                    Orbital Energies (a.u.)
+ --------------------------------------------------------------
+
+ Alpha MOs
+ -- Occupied --
+-20.269 -20.242 -15.390 -15.345 -11.148 -11.098 -11.068 -11.065
+-11.063 -11.025 -11.025 -11.024 -11.016 -11.015 -11.011  -1.348
+ -1.258  -1.220  -1.154  -1.075  -1.025  -0.959  -0.937  -0.913
+ -0.838  -0.783  -0.749  -0.711  -0.693  -0.669  -0.648  -0.617
+ -0.602  -0.598  -0.581  -0.556  -0.543  -0.537  -0.524  -0.518
+ -0.498  -0.487  -0.479  -0.460  -0.445  -0.438  -0.417  -0.414
+ -0.370  -0.329  -0.326  -0.307  -0.243  -0.226
+ -- Virtual --
+  0.248   0.295   0.319   0.369   0.522   0.534   0.561   0.569
+  0.578   0.613   0.617   0.627   0.644   0.653   0.677   0.685
+  0.691   0.717   0.723   0.742   0.745   0.754   0.771   0.803
+  0.826   0.884   0.913   0.960   0.965   1.004   1.086   1.145
+  1.174
+ --------------------------------------------------------------
+
+          Ground-State Mulliken Net Atomic Charges
+
+     Atom                 Charge (a.u.)
+  ----------------------------------------
+      1 N                    -0.405324
+      2 C                     0.019226
+      3 C                     0.298921
+      4 O                    -0.260843
+      5 C                    -0.106003
+      6 H                     0.066718
+      7 H                     0.060814
+      8 C                    -0.035658
+      9 C                     0.043435
+     10 N                    -0.321541
+     11 H                     0.216333
+     12 C                     0.105713
+     13 C                    -0.023649
+     14 C                    -0.064896
+     15 H                     0.055229
+     16 C                    -0.075203
+     17 H                     0.056929
+     18 C                    -0.059388
+     19 H                     0.060697
+     20 C                    -0.082596
+     21 H                     0.061586
+     22 H                     0.077387
+     23 H                     0.163303
+     24 H                     0.065927
+     25 H                     0.161046
+     26 O                    -0.312219
+     27 H                     0.234058
+  ----------------------------------------
+  Sum of atomic charges =     0.000000
+
+ -----------------------------------------------------------------
+                    Cartesian Multipole Moments
+ -----------------------------------------------------------------
+    Charge (ESU x 10^10)
+                -0.0000
+    Dipole Moment (Debye)
+         X      -1.2077      Y       0.9595      Z      -2.2286
+       Tot       2.7104
+    Quadrupole Moments (Debye-Ang)
+        XX     -71.1302     XY       8.1795     YY     -79.5829
+        XZ      -4.0364     YZ       1.8070     ZZ     -89.9441
+    Octopole Moments (Debye-Ang^2)
+       XXX    -682.9790    XXY      25.4557    XYY    -269.9201
+       YYY     -61.8750    XXZ      79.8222    XYZ      11.9463
+       YYZ     104.7384    XZZ    -300.1377    YZZ     -32.9892
+       ZZZ     288.1132
+    Hexadecapole Moments (Debye-Ang^3)
+      XXXX   -6004.1290   XXXY     107.7733   XXYY   -1256.1451
+      XYYY    -170.3388   YYYY    -452.5661   XXXZ    1418.4115
+      XXYZ      20.9138   XYYZ     546.3130   YYYZ     -83.6237
+      XXZZ   -1731.2428   XYZZ    -111.9653   YYZZ    -546.5547
+      XZZZ    1565.7452   YZZZ     -41.5155   ZZZZ   -2875.8688
+ -----------------------------------------------------------------
+ Applying Cartesian multipole field
+    Component          Value
+    ---------          -----
+     (0,1,0)       -1.88973E-05
+     (0,0,1)        1.88973E-05
+ Nucleus-field energy     =    -0.0052741735 hartrees
+ Guess MOs from SCF MO coefficient file
+ Reading MOs from coefficient file
+ Reading MOs from coefficient file
+ A restricted Hartree-Fock SCF calculation will be
+ performed using Pulay DIIS extrapolation
+ SCF converges when DIIS error is below 1.0E-09
+ using 4 threads for integral computing 
+ ---------------------------------------
+  Cycle       Energy         DIIS Error
+ ---------------------------------------
+    1    -673.5905947806      3.76E-06
+    2    -673.5905948110      1.54E-06
+    3    -673.5905948138      3.90E-07
+    4    -673.5905948141      1.30E-07
+    5    -673.5905948142      4.64E-08
+    6    -673.5905948142      1.51E-08
+    7    -673.5905948142      7.07E-09
+    8    -673.5905948142      2.79E-09
+    9    -673.5905948142      8.11E-10 Convergence criterion met
+ ---------------------------------------
+ SCF time:  CPU 5.72 s  wall 2.19 s
+ SCF   energy in the final basis set = -673.5905948142
+ Total energy in the final basis set = -673.5905948142
+
+ --------------------------------------------------------------
+
+                    Orbital Energies (a.u.)
+ --------------------------------------------------------------
+
+ Alpha MOs
+ -- Occupied --
+-20.269 -20.242 -15.390 -15.345 -11.148 -11.098 -11.068 -11.065
+-11.063 -11.025 -11.025 -11.024 -11.016 -11.015 -11.011  -1.348
+ -1.258  -1.220  -1.154  -1.074  -1.025  -0.959  -0.937  -0.913
+ -0.838  -0.783  -0.749  -0.711  -0.693  -0.669  -0.648  -0.617
+ -0.602  -0.598  -0.581  -0.556  -0.543  -0.537  -0.524  -0.518
+ -0.498  -0.487  -0.479  -0.460  -0.445  -0.438  -0.417  -0.414
+ -0.370  -0.329  -0.326  -0.307  -0.242  -0.226
+ -- Virtual --
+  0.248   0.295   0.318   0.370   0.522   0.534   0.561   0.569
+  0.578   0.613   0.617   0.627   0.644   0.653   0.677   0.685
+  0.691   0.717   0.723   0.742   0.745   0.754   0.771   0.803
+  0.826   0.884   0.913   0.960   0.965   1.004   1.086   1.145
+  1.174
+ --------------------------------------------------------------
+
+          Ground-State Mulliken Net Atomic Charges
+
+     Atom                 Charge (a.u.)
+  ----------------------------------------
+      1 N                    -0.405356
+      2 C                     0.019228
+      3 C                     0.298916
+      4 O                    -0.260822
+      5 C                    -0.106001
+      6 H                     0.066657
+      7 H                     0.060834
+      8 C                    -0.035657
+      9 C                     0.043388
+     10 N                    -0.321554
+     11 H                     0.216295
+     12 C                     0.105706
+     13 C                    -0.023664
+     14 C                    -0.064893
+     15 H                     0.055241
+     16 C                    -0.075169
+     17 H                     0.057009
+     18 C                    -0.059349
+     19 H                     0.060774
+     20 C                    -0.082601
+     21 H                     0.061589
+     22 H                     0.077302
+     23 H                     0.163310
+     24 H                     0.065984
+     25 H                     0.161066
+     26 O                    -0.312270
+     27 H                     0.234037
+  ----------------------------------------
+  Sum of atomic charges =     0.000000
+
+ -----------------------------------------------------------------
+                    Cartesian Multipole Moments
+ -----------------------------------------------------------------
+    Charge (ESU x 10^10)
+                 0.0000
+    Dipole Moment (Debye)
+         X      -1.2075      Y       0.9557      Z      -2.2338
+       Tot       2.7132
+    Quadrupole Moments (Debye-Ang)
+        XX     -71.1287     XY       8.1640     YY     -79.5847
+        XZ      -4.0572     YZ       1.8133     ZZ     -89.9230
+    Octopole Moments (Debye-Ang^2)
+       XXX    -682.9729    XXY      25.3827    XYY    -269.9265
+       YYY     -61.8888    XXZ      79.7223    XYZ      11.9786
+       YYZ     104.7281    XZZ    -300.0344    YZZ     -33.0233
+       ZZZ     287.9964
+    Hexadecapole Moments (Debye-Ang^3)
+      XXXX   -6004.1011   XXXY     107.4000   XXYY   -1256.1711
+      XYYY    -170.3943   YYYY    -452.5817   XXXZ    1417.8925
+      XXYZ      21.0808   XYYZ     546.2684   YYYZ     -83.6058
+      XXZZ   -1730.7192   XYZZ    -112.1216   YYZZ    -546.5076
+      XZZZ    1565.2107   YZZZ     -41.3636   ZZZZ   -2875.3145
+ -----------------------------------------------------------------
+ Applying Cartesian multipole field
+    Component          Value
+    ---------          -----
+     (0,1,0)       -1.88973E-05
+     (0,0,1)       -1.88973E-05
+ Nucleus-field energy     =     0.0032163209 hartrees
+ Guess MOs from SCF MO coefficient file
+ Reading MOs from coefficient file
+ Reading MOs from coefficient file
+ A restricted Hartree-Fock SCF calculation will be
+ performed using Pulay DIIS extrapolation
+ SCF converges when DIIS error is below 1.0E-09
+ using 4 threads for integral computing 
+ ---------------------------------------
+  Cycle       Energy         DIIS Error
+ ---------------------------------------
+    1    -673.5905615984      4.76E-06
+    2    -673.5905616483      1.85E-06
+    3    -673.5905616527      5.60E-07
+    4    -673.5905616535      1.79E-07
+    5    -673.5905616535      6.01E-08
+    6    -673.5905616536      1.86E-08
+    7    -673.5905616536      8.65E-09
+    8    -673.5905616536      3.91E-09
+    9    -673.5905616536      1.20E-09
+   10    -673.5905616536      5.38E-10 Convergence criterion met
+ ---------------------------------------
+ SCF time:  CPU 6.44 s  wall 2.57 s
+ SCF   energy in the final basis set = -673.5905616536
+ Total energy in the final basis set = -673.5905616536
+
+ --------------------------------------------------------------
+
+                    Orbital Energies (a.u.)
+ --------------------------------------------------------------
+
+ Alpha MOs
+ -- Occupied --
+-20.269 -20.242 -15.390 -15.345 -11.148 -11.098 -11.068 -11.065
+-11.063 -11.026 -11.025 -11.024 -11.016 -11.015 -11.012  -1.348
+ -1.258  -1.220  -1.154  -1.075  -1.026  -0.959  -0.937  -0.913
+ -0.838  -0.783  -0.749  -0.711  -0.693  -0.669  -0.648  -0.617
+ -0.602  -0.598  -0.581  -0.556  -0.543  -0.537  -0.524  -0.518
+ -0.498  -0.487  -0.479  -0.460  -0.445  -0.439  -0.417  -0.414
+ -0.370  -0.328  -0.326  -0.307  -0.243  -0.226
+ -- Virtual --
+  0.247   0.295   0.319   0.369   0.522   0.534   0.561   0.569
+  0.578   0.613   0.617   0.627   0.644   0.653   0.677   0.685
+  0.691   0.717   0.723   0.742   0.745   0.754   0.771   0.803
+  0.826   0.883   0.913   0.960   0.965   1.004   1.086   1.145
+  1.174
+ --------------------------------------------------------------
+
+          Ground-State Mulliken Net Atomic Charges
+
+     Atom                 Charge (a.u.)
+  ----------------------------------------
+      1 N                    -0.405318
+      2 C                     0.019227
+      3 C                     0.298924
+      4 O                    -0.260790
+      5 C                    -0.106001
+      6 H                     0.066700
+      7 H                     0.060768
+      8 C                    -0.035658
+      9 C                     0.043437
+     10 N                    -0.321545
+     11 H                     0.216338
+     12 C                     0.105713
+     13 C                    -0.023647
+     14 C                    -0.064895
+     15 H                     0.055231
+     16 C                    -0.075210
+     17 H                     0.056915
+     18 C                    -0.059395
+     19 H                     0.060681
+     20 C                    -0.082598
+     21 H                     0.061581
+     22 H                     0.077399
+     23 H                     0.163256
+     24 H                     0.065940
+     25 H                     0.161091
+     26 O                    -0.312188
+     27 H                     0.234046
+  ----------------------------------------
+  Sum of atomic charges =     0.000000
+
+ -----------------------------------------------------------------
+                    Cartesian Multipole Moments
+ -----------------------------------------------------------------
+    Charge (ESU x 10^10)
+                 0.0000
+    Dipole Moment (Debye)
+         X      -1.2078      Y       0.9586      Z      -2.2264
+       Tot       2.7082
+    Quadrupole Moments (Debye-Ang)
+        XX     -71.1318     XY       8.1784     YY     -79.5837
+        XZ      -4.0287     YZ       1.8072     ZZ     -89.9495
+    Octopole Moments (Debye-Ang^2)
+       XXX    -682.9942    XXY      25.4534    XYY    -269.9215
+       YYY     -61.8772    XXZ      79.8584    XYZ      11.9454
+       YYZ     104.7411    XZZ    -300.1650    YZZ     -32.9878
+       ZZZ     288.1472
+    Hexadecapole Moments (Debye-Ang^3)
+      XXXX   -6004.2411   XXXY     107.7717   XXYY   -1256.1491
+      XYYY    -170.3416   YYYY    -452.5702   XXXZ    1418.5985
+      XXYZ      20.9072   XYYZ     546.3221   YYYZ     -83.6226
+      XXZZ   -1731.3900   XYZZ    -111.9541   YYZZ    -546.5617
+      XZZZ    1565.8989   YZZZ     -41.5332   ZZZZ   -2876.0152
+ -----------------------------------------------------------------
+ Applying Cartesian multipole field
+    Component          Value
+    ---------          -----
+     (0,0,1)        3.77945E-05
+ Nucleus-field energy     =    -0.0084904943 hartrees
+ Guess MOs from SCF MO coefficient file
+ Reading MOs from coefficient file
+ Reading MOs from coefficient file
+ A restricted Hartree-Fock SCF calculation will be
+ performed using Pulay DIIS extrapolation
+ SCF converges when DIIS error is below 1.0E-09
+ using 4 threads for integral computing 
+ ---------------------------------------
+  Cycle       Energy         DIIS Error
+ ---------------------------------------
+    1    -673.5906041847      8.26E-06
+    2    -673.5906043345      3.34E-06
+    3    -673.5906043482      9.17E-07
+    4    -673.5906043502      2.99E-07
+    5    -673.5906043504      1.02E-07
+    6    -673.5906043504      3.08E-08
+    7    -673.5906043504      1.50E-08
+    8    -673.5906043504      6.46E-09
+    9    -673.5906043504      1.94E-09
+   10    -673.5906043504      7.32E-10 Convergence criterion met
+ ---------------------------------------
+ SCF time:  CPU 6.43 s  wall 2.41 s
+ SCF   energy in the final basis set = -673.5906043504
+ Total energy in the final basis set = -673.5906043504
+
+ --------------------------------------------------------------
+
+                    Orbital Energies (a.u.)
+ --------------------------------------------------------------
+
+ Alpha MOs
+ -- Occupied --
+-20.269 -20.242 -15.390 -15.345 -11.148 -11.098 -11.068 -11.065
+-11.063 -11.025 -11.025 -11.024 -11.016 -11.015 -11.011  -1.348
+ -1.258  -1.220  -1.154  -1.074  -1.025  -0.959  -0.937  -0.913
+ -0.838  -0.783  -0.749  -0.710  -0.693  -0.669  -0.648  -0.617
+ -0.602  -0.598  -0.581  -0.556  -0.543  -0.537  -0.524  -0.518
+ -0.498  -0.487  -0.479  -0.460  -0.445  -0.438  -0.416  -0.414
+ -0.370  -0.329  -0.325  -0.307  -0.242  -0.226
+ -- Virtual --
+  0.248   0.295   0.318   0.370   0.522   0.534   0.561   0.569
+  0.579   0.613   0.617   0.627   0.644   0.653   0.677   0.685
+  0.691   0.717   0.723   0.742   0.745   0.754   0.771   0.803
+  0.826   0.884   0.913   0.960   0.965   1.004   1.086   1.145
+  1.174
+ --------------------------------------------------------------
+
+          Ground-State Mulliken Net Atomic Charges
+
+     Atom                 Charge (a.u.)
+  ----------------------------------------
+      1 N                    -0.405387
+      2 C                     0.019229
+      3 C                     0.298911
+      4 O                    -0.260801
+      5 C                    -0.106000
+      6 H                     0.066597
+      7 H                     0.060854
+      8 C                    -0.035656
+      9 C                     0.043341
+     10 N                    -0.321567
+     11 H                     0.216257
+     12 C                     0.105699
+     13 C                    -0.023678
+     14 C                    -0.064890
+     15 H                     0.055252
+     16 C                    -0.075135
+     17 H                     0.057089
+     18 C                    -0.059310
+     19 H                     0.060851
+     20 C                    -0.082605
+     21 H                     0.061592
+     22 H                     0.077216
+     23 H                     0.163317
+     24 H                     0.066041
+     25 H                     0.161087
+     26 O                    -0.312320
+     27 H                     0.234016
+  ----------------------------------------
+  Sum of atomic charges =     0.000000
+
+ -----------------------------------------------------------------
+                    Cartesian Multipole Moments
+ -----------------------------------------------------------------
+    Charge (ESU x 10^10)
+                -0.0000
+    Dipole Moment (Debye)
+         X      -1.2072      Y       0.9518      Z      -2.2390
+       Tot       2.7159
+    Quadrupole Moments (Debye-Ang)
+        XX     -71.1272     XY       8.1486     YY     -79.5865
+        XZ      -4.0781     YZ       1.8195     ZZ     -89.9019
+    Octopole Moments (Debye-Ang^2)
+       XXX    -682.9667    XXY      25.3097    XYY    -269.9329
+       YYY     -61.9027    XXZ      79.6223    XYZ      12.0108
+       YYZ     104.7177    XZZ    -299.9310    YZZ     -33.0575
+       ZZZ     287.8796
+    Hexadecapole Moments (Debye-Ang^3)
+      XXXX   -6004.0732   XXXY     107.0267   XXYY   -1256.1971
+      XYYY    -170.4499   YYYY    -452.5974   XXXZ    1417.3734
+      XXYZ      21.2477   XYYZ     546.2237   YYYZ     -83.5879
+      XXZZ   -1730.1956   XYZZ    -112.2780   YYZZ    -546.4606
+      XZZZ    1564.6763   YZZZ     -41.2118   ZZZZ   -2874.7602
+ -----------------------------------------------------------------
+ Applying Cartesian multipole field
+    Component          Value
+    ---------          -----
+     (0,0,1)       -3.77945E-05
+ Nucleus-field energy     =     0.0084904943 hartrees
+ Guess MOs from SCF MO coefficient file
+ Reading MOs from coefficient file
+ Reading MOs from coefficient file
+ A restricted Hartree-Fock SCF calculation will be
+ performed using Pulay DIIS extrapolation
+ SCF converges when DIIS error is below 1.0E-09
+ using 4 threads for integral computing 
+ ---------------------------------------
+  Cycle       Energy         DIIS Error
+ ---------------------------------------
+    1    -673.5905377650      9.52E-06
+    2    -673.5905379648      3.70E-06
+    3    -673.5905379825      1.12E-06
+    4    -673.5905379854      3.59E-07
+    5    -673.5905379856      1.20E-07
+    6    -673.5905379857      3.72E-08
+    7    -673.5905379857      1.73E-08
+    8    -673.5905379857      7.82E-09
+    9    -673.5905379857      2.40E-09
+   10    -673.5905379857      1.07E-09
+   11    -673.5905379857      5.01E-10 Convergence criterion met
+ ---------------------------------------
+ SCF time:  CPU 7.23 s  wall 2.87 s
+ SCF   energy in the final basis set = -673.5905379857
+ Total energy in the final basis set = -673.5905379857
+
+ --------------------------------------------------------------
+
+                    Orbital Energies (a.u.)
+ --------------------------------------------------------------
+
+ Alpha MOs
+ -- Occupied --
+-20.269 -20.242 -15.390 -15.345 -11.148 -11.098 -11.068 -11.065
+-11.063 -11.026 -11.025 -11.024 -11.016 -11.015 -11.012  -1.348
+ -1.258  -1.220  -1.154  -1.075  -1.026  -0.959  -0.937  -0.913
+ -0.838  -0.783  -0.750  -0.711  -0.693  -0.669  -0.648  -0.617
+ -0.602  -0.599  -0.581  -0.557  -0.543  -0.537  -0.524  -0.518
+ -0.498  -0.487  -0.479  -0.460  -0.445  -0.439  -0.417  -0.414
+ -0.370  -0.328  -0.326  -0.307  -0.243  -0.226
+ -- Virtual --
+  0.247   0.295   0.319   0.369   0.522   0.534   0.561   0.569
+  0.578   0.613   0.617   0.627   0.644   0.653   0.677   0.685
+  0.691   0.717   0.723   0.742   0.745   0.754   0.771   0.803
+  0.826   0.883   0.913   0.960   0.965   1.004   1.086   1.145
+  1.174
+ --------------------------------------------------------------
+
+          Ground-State Mulliken Net Atomic Charges
+
+     Atom                 Charge (a.u.)
+  ----------------------------------------
+      1 N                    -0.405312
+      2 C                     0.019227
+      3 C                     0.298927
+      4 O                    -0.260737
+      5 C                    -0.106000
+      6 H                     0.066683
+      7 H                     0.060722
+      8 C                    -0.035658
+      9 C                     0.043440
+     10 N                    -0.321549
+     11 H                     0.216344
+     12 C                     0.105713
+     13 C                    -0.023645
+     14 C                    -0.064894
+     15 H                     0.055232
+     16 C                    -0.075217
+     17 H                     0.056901
+     18 C                    -0.059403
+     19 H                     0.060665
+     20 C                    -0.082600
+     21 H                     0.061576
+     22 H                     0.077412
+     23 H                     0.163209
+     24 H                     0.065953
+     25 H                     0.161135
+     26 O                    -0.312156
+     27 H                     0.234033
+  ----------------------------------------
+  Sum of atomic charges =     0.000000
+
+ -----------------------------------------------------------------
+                    Cartesian Multipole Moments
+ -----------------------------------------------------------------
+    Charge (ESU x 10^10)
+                -0.0000
+    Dipole Moment (Debye)
+         X      -1.2079      Y       0.9577      Z      -2.2241
+       Tot       2.7061
+    Quadrupole Moments (Debye-Ang)
+        XX     -71.1335     XY       8.1774     YY     -79.5845
+        XZ      -4.0209     YZ       1.8073     ZZ     -89.9549
+    Octopole Moments (Debye-Ang^2)
+       XXX    -683.0094    XXY      25.4511    XYY    -269.9228
+       YYY     -61.8795    XXZ      79.8947    XYZ      11.9444
+       YYZ     104.7439    XZZ    -300.1922    YZZ     -32.9865
+       ZZZ     288.1811
+    Hexadecapole Moments (Debye-Ang^3)
+      XXXX   -6004.3531   XXXY     107.7701   XXYY   -1256.1532
+      XYYY    -170.3444   YYYY    -452.5743   XXXZ    1418.7855
+      XXYZ      20.9006   XYYZ     546.3312   YYYZ     -83.6215
+      XXZZ   -1731.5372   XYZZ    -111.9428   YYZZ    -546.5687
+      XZZZ    1566.0527   YZZZ     -41.5509   ZZZZ   -2876.1615
+ -----------------------------------------------------------------
+ <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+  Polarizability tensor      [a.u.]
+     96.1928863     -2.2775157     -3.7758562
+     -2.2775157     51.0737840     30.4190339
+     -3.7758562     30.4190339     78.3388693
+  Principal components       [a.u.]
+     31.3718943     92.6137922    101.6198531
+  Isotropic polarizability   [a.u.]
+     75.2018465
+  Anisotropic polarizability [a.u.]
+     66.2059473
+  Polarizability tensor      [angstrom^3]
+     14.2543151     -0.3374930     -0.5595242
+     -0.3374930      7.5683539      4.5076358
+     -0.5595242      4.5076358     11.6086227
+  Principal components       [angstrom^3]
+      4.6488351     13.7239481     15.0585086
+  Isotropic polarizability   [angstrom^3]
+     11.1437639
+  Anisotropic polarizability [angstrom^3]
+      9.8107092
+  Orientation
+     -0.0021852     -0.7762430     -0.6304300
+      0.8392545     -0.3442117      0.4209159
+     -0.5437344     -0.5281714      0.6522176
+ >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+FINAL TENSOR RESULT:
+Order 2, Length 3
+    Atom      X          Y          Z
+     1 Order 1, Length 3
+    Atom      X          Y          Z
+     1   -9.619288630893467e+01   2.277515744886017e+00   3.775856233187099e+00
+
+Order 1, Length 3
+    Atom      X          Y          Z
+     1    2.277515744886017e+00  -5.107378403021845e+01  -3.041903385263978e+01
+
+Order 1, Length 3
+    Atom      X          Y          Z
+     1    3.775856233188567e+00  -3.041903385264125e+01  -7.833886925487818e+01
+
+
+
+ # Finishing finite difference calculation for IDERIV #
+ ######################################################
+ ######################################################
+Archival summary:
+1\1\copper\JobtypUnspecified\HF\STO-3G\221112\eric\ThuMar1611:11:412017ThuMar1611:11:412017\0\\#,JobtypUnspecified,HF,STO-3G,\\0,1\O\C,1,1.21573\O,2,1.38484,1,121.628\H,3,0.990863,2,103.198,1,-172.642,0\C,2,1.56667,1,124.499,3,178.54,0\H,5,1.09384,2,108.479,1,33.4833,0\N,5,1.49131,2,106.724,1,155.184,0\H,7,1.03058,5,108.829,2,160.876,0\H,7,1.03164,5,108.425,2,-85.1222,0\C,5,1.55856,2,110.189,1,-85.8192,0\H,10,1.08869,5,108.548,2,-57.054,0\H,10,1.08976,5,107.969,2,-173.108,0\C,10,1.51698,5,113.052,2,65.4279,0\C,13,1.3455,10,126.86,5,-99.0524,0\H,14,1.08198,13,129.849,10,-0.48321,0\N,14,1.39861,13,110.039,10,-179.84,0\H,16,1.01911,14,125.297,13,-173.946,0\C,16,1.39605,14,108.394,13,-1.44639,0\C,18,1.4003,16,107.254,14,1.36903,0\C,18,1.40261,16,130.511,14,-179.445,0\H,20,1.08166,18,120.965,16,1.04843,0\C,20,1.37033,18,117.468,16,-179.02,0\H,22,1.08272,20,119.697,18,-179.904,0\C,19,1.40529,18,118.89,16,178.955,0\H,24,1.08273,19,120.505,18,-179.654,0\C,24,1.37066,19,119.105,18,0.30959,0\H,26,1.08181,24,119.998,19,179.926,0\\HF=-673.590538\\@
+
+ Total job time:  50.09s(wall), 128.28s(cpu) 
+ Thu Mar 16 11:11:41 2017
+
+        *************************************************************
+        *                                                           *
+        *  Thank you very much for using Q-Chem.  Have a nice day.  *
+        *                                                           *
+        *************************************************************
+
+

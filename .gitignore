@@ -1,1 +1,7 @@
 *.pyc
+
+# input files
+*.in
+
+# Q-Chem
+pathtable

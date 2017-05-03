@@ -1,0 +1,1814 @@
+/home/eric/opt/apps/qchem/branch_libresponse/exe/qcprog.exe .full_2.in.4060.qcin.1 /tmp/qchem/qchem4060/
+
+localhost.localdomain 127.0.0
+Q-Chem Developer Version! Running on 127.0.0.*
+                  Welcome to Q-Chem
+     A Quantum Leap Into The Future Of Chemistry
+
+
+ Q-Chem 4.4, Q-Chem, Inc., Pleasanton, CA (2016)
+
+ Y. Shao,  Z. Gan,  E. Epifanovsky,  A. T. B. Gilbert,  M. Wormit,  
+ J. Kussmann,  A. W. Lange,  A. Behn,  J. Deng,  X. Feng,  D. Ghosh,  
+ M. Goldey,  P. R. Horn,  L. D. Jacobson,  I. Kaliman,  F. Rob,  
+ R. Z. Khaliullin,  T. Kus,  A. Landau,  J. Liu,  E. I. Proynov,  Y. M. Rhee,  
+ R. M. Richard,  M. A. Rohrdanz,  R. P. Steele,  E. J. Sundstrom,  
+ H. L. Woodcock III,  P. M. Zimmerman,  D. Zuev,  B. Albrecht,  E. Alguire,  
+ B. Austin,  S. A. Baeppler,  G. J. O. Beran,  Y. A. Bernard,  
+ E. J. Berquist,  K. Brandhorst,  K. B. Bravaya,  S. T. Brown,  D. Casanova,  
+ C.-M. Chang,  Y. Chen,  S. H. Chien,  K. D. Closser,  M. P. Coons,  
+ D. L. Crittenden,  S. Dasgupta,  M. Diedenhofen,  R. A. DiStasio Jr.,  
+ H. Do,  A. D. Dutoi,  R. G. Edgar,  P.-T. Fang,  S. Fatehi,  Q. Feng,  
+ L. Fusti-Molnar,  A. Ghysels,  A. Golubeva-Zadorozhnaya,  J. Gomes,  
+ A. Gunina,  M. W. D. Hanson-Heine,  P. H. P. Harbach,  A. W. Hauser,  
+ J. E. Herr,  E. G. Hohenstein,  Z. C. Holden,  K. Hui,  T.-C. Jagau,  H. Ji,  
+ B. Kaduk,  K. Khistyaev,  Jaehoon Kim,  Jihan Kim,  R. A. King,  
+ P. Klunzinger,  K. Koh,  D. Kosenkov,  T. Kowalczyk,  C. M. Krauter,  
+ A. Kunitsa,  K. U. Lao,  A. Laurent,  K. V. Lawler,  J. Lee,  D. Lefrancois,  
+ S. Lehtola,  S. V. Levchenko,  C. Y. Lin,  Y.-S. Lin,  F. Liu,  E. Livshits,  
+ R. C. Lochan,  A. Luenser,  P. Manohar,  S. F. Manzer,  S.-P. Mao,  Y. Mao,  
+ N. Mardirossian,  A. V. Marenich,  L. A. Martinez-Martinez,  S. A. Maurer,  
+ N. J. Mayhall,  J.-M. Mewes,  A. F. Morrison,  K. Nanda,  T. S. Nguyen-Beck,  
+ C. M. Oana,  R. Olivares-Amaya,  D. P. O'Neill,  J. A. Parkhill,  
+ T. M. Perrine,  R. Peverati,  P. A. Pieniazek,  F. Plasser,  A. Prociuk,  
+ D. R. Rehn,  E. Rosta,  N. J. Russ,  N. Sergueev,  S. M. Sharada,  
+ S. Sharma,  D. W. Small,  A. Sodt,  T. Stauch,  T. Stein,  D. Stuck,  
+ Y.-C. Su,  A. J. W. Thom,  T. Tsuchimochi,  L. Vogt,  O. Vydrov,  T. Wang,  
+ M. A. Watson,  J. Wenzel,  A. White,  C. F. Williams,  V. Vanovschi,  
+ K. Yao,  S. Yeganeh,  S. R. Yost,  Z.-Q. You,  I. Y. Zhang,  X. Zhang,  
+ Y. Zhao,  B. R. Brooks,  G. K. L. Chan,  D. M. Chipman,  C. J. Cramer,  
+ W. A. Goddard III,  M. S. Gordon,  W. J. Hehre,  A. Klamt,  
+ H. F. Schaefer III,  M. W. Schmidt,  C. D. Sherrill,  D. G. Truhlar,  
+ A. Warshel,  X. Xu,  A. Aspuru-Guzik,  R. Baer,  A. T. Bell,  N. A. Besley,  
+ J.-D. Chai,  A. Dreuw,  B. D. Dunietz,  T. R. Furlani,  S. R. Gwaltney,  
+ C.-P. Hsu,  Y. Jung,  J. Kong,  D. S. Lambrecht,  W. Liang,  C. Ochsenfeld,  
+ V. A. Rassolov,  L. V. Slipchenko,  J. E. Subotnik,  T. Van Voorhis,  
+ J. M. Herbert,  A. I. Krylov,  P. M. W. Gill,  M. Head-Gordon
+
+ Contributors to earlier versions of Q-Chem not listed above: 
+ R. D. Adamson,  J. Baker,  E. F. C. Byrd,  A. K. Chakraborty,  C.-L. Cheng,  
+ H. Dachsel,  R. J. Doerksen,  G. Hawkins,  A. Heyden,  S. Hirata,  
+ G. Kedziora,  F. J. Keil,  C. Kelley,  P. P. Korambath,  W. Kurlancheek,  
+ A. M. Lee,  M. S. Lee,  D. Liotard,  I. Lotan,  P. E. Maslen,  N. Nair,  
+ D. Neuhauser,  R. Olson,  B. Peters,  J. Ritchie,  N. E. Schultz,  
+ N. Shenvi,  A. C. Simmonett,  K. S. Thanthiriwatte,  Q. Wu,  W. Zhang
+
+ Please cite Q-Chem as follows:
+ Y. Shao et al., Mol. Phys. 113, 184-215 (2015)
+ DOI: 10.1080/00268976.2014.952696
+
+ Q-Chem 4.4.2 for Intel X86 EM64T Linux
+
+ Parts of Q-Chem use Armadillo 5.200.1 (Boston Tea Smuggler).
+ http://arma.sourceforge.net/
+
+ Q-Chem begins on Tue Feb 14 16:13:54 2017  
+
+copper
+Host: 0
+
+     Scratch files written to /tmp/qchem/qchem4060//
+
+Checking the input file for inconsistencies... 	...done.
+
+--------------------------------------------------------------
+User input:
+--------------------------------------------------------------
+$rem
+  jobtype = polarizability
+  method = hf
+  basis = def2-svpd
+  scf_convergence = 11
+  thresh = 14
+  symmetry = false
+  sym_ignore = true
+  cc_symmetry = false
+  ideriv = 0
+  response_polar = -1
+  scf_max_cycles = 1000
+$end
+
+
+$molecule
+1 1
+Li     0.000000000000000    0.000000000000000    1.000000000000000
+$end
+--------------------------------------------------------------
+ ----------------------------------------------------------------
+             Standard Nuclear Orientation (Angstroms)
+    I     Atom           X                Y                Z
+ ----------------------------------------------------------------
+    1      Li      0.0000000000     0.0000000000     1.0000000000
+ ----------------------------------------------------------------
+ Nuclear Repulsion Energy =     0.0000000000 hartrees
+ There are        1 alpha and        1 beta electrons
+ Requested basis set is def2-SVPD
+ There are 6 shells and 12 basis functions
+
+ Total QAlloc Memory Limit   2000 MB
+ Mega-Array Size        61 MB
+ MEM_STATIC part        62 MB
+ Polarizability to be calculated using 2nd-order finite difference with energies.
+ ######################################################
+ ######################################################
+ # Starting finite difference calculation for IDERIV  #
+ Finite diff step size:  1.88973e-05 a.u.
+ Applying Cartesian multipole field
+    Component          Value
+    ---------          -----
+     (1,0,0)        3.77945E-05
+ A cutoff of  1.0D-14 yielded     21 shell pairs
+ There are        87 function pairs
+
+ -------------------------------------------------------
+ OpenMP Integral Computing Module                       
+ Release: version 1.0, May 2013, Q-Chem Inc. Pittsburgh 
+ -------------------------------------------------------
+ Integral Job Info:
+ Integral job number is                      11
+ Integral operator is                         1
+ short-range coefficients                     0
+ long-range coefficients              100000000
+ Omega coefficients                           0
+ if combine SR and LR in K                    0
+ Integral screening is                        0
+ Integral computing path is                   2
+ max size of driver memory is            800000
+ size of driver memory is                 45569
+ size of scratch memory is               800000
+ max col of scratch BK array                289
+ max len of scratch array in speh3           22
+ max len of scratch index in speh4            8
+ max int batch size is                      520
+ min int batch size is                       52
+ fixed nKL is                                59
+ max L of basis functions is                  1
+ order of int derivative is                   0
+ number of shells is                          6
+ number of basis is                          12
+ number of cartesian basis is                12
+ number of contracted shell pairs            21
+ number of primitive shell pairs             77
+ maxK2 (contraction) of shell pair           25
+ max number of K2 of shell pair               1
+ max number of CS2 of shell pair              4
+ max number of PS2 of shell pair             25
+ mem total for path MDJ                    5626
+ -------------------------------------------------------
+ Smallest overlap matrix eigenvalue = 1.36E-01
+ Guess from superposition of atomic densities
+ Warning:  Energy on first SCF cycle will be non-variational
+ A restricted Hartree-Fock SCF calculation will be
+ performed using Pulay DIIS extrapolation
+ SCF converges when DIIS error is below 1.0E-11
+ ---------------------------------------
+  Cycle       Energy         DIIS Error
+ ---------------------------------------
+    1      -7.2799579380      8.88E-03
+    2      -7.2328262402      2.16E-03
+    3      -7.2328971939      2.44E-04
+    4      -7.2328981140      1.63E-06
+    5      -7.2328981140      4.77E-09
+    6      -7.2328981140      7.69E-10
+    7      -7.2328981140      4.29E-13 Convergence criterion met
+ ---------------------------------------
+ SCF time:  CPU 0.01 s  wall 0.01 s
+ SCF   energy in the final basis set = -7.2328981140
+ Total energy in the final basis set = -7.2328981140
+
+ --------------------------------------------------------------
+
+                    Orbital Energies (a.u.)
+ --------------------------------------------------------------
+
+ Alpha MOs
+ -- Occupied --
+ -2.793
+ -- Virtual --
+ -0.192  -0.128  -0.128  -0.128  -0.056  -0.016  -0.016  -0.016
+  0.497   0.497   0.497
+ --------------------------------------------------------------
+
+          Ground-State Mulliken Net Atomic Charges
+
+     Atom                 Charge (a.u.)
+  ----------------------------------------
+      1 Li                    1.000000
+  ----------------------------------------
+  Sum of atomic charges =     1.000000
+
+ -----------------------------------------------------------------
+                    Cartesian Multipole Moments
+ -----------------------------------------------------------------
+    Charge (ESU x 10^10)
+                 4.8032
+    Dipole Moment (Debye)
+         X      -0.0000      Y       0.0000      Z       4.8032
+       Tot       4.8032
+    Quadrupole Moments (Debye-Ang)
+        XX      -0.4001     XY       0.0000     YY      -0.4001
+        XZ      -0.0000     YZ       0.0000     ZZ       4.4031
+    Octopole Moments (Debye-Ang^2)
+       XXX      -0.0000    XXY      -0.0000    XYY      -0.0000
+       YYY      -0.0000    XXZ      -0.4001    XYZ       0.0000
+       YYZ      -0.4001    XZZ      -0.0000    YZZ       0.0000
+       ZZZ       3.6030
+    Hexadecapole Moments (Debye-Ang^3)
+      XXXX      -0.0878   XXXY       0.0000   XXYY      -0.0293
+      XYYY       0.0000   YYYY      -0.0878   XXXZ      -0.0000
+      XXYZ      -0.0000   XYYZ      -0.0000   YYYZ      -0.0000
+      XXZZ      -0.4293   XYZZ       0.0000   YYZZ      -0.4293
+      XZZZ      -0.0000   YZZZ       0.0000   ZZZZ       2.3150
+ -----------------------------------------------------------------
+
+ STANDARD THERMODYNAMIC QUANTITIES AT   298.15 K  AND     1.00 ATM
+
+   Translational Enthalpy:        0.889 kcal/mol
+   Rotational Enthalpy:           0.000 kcal/mol
+   Vibrational Enthalpy:          0.000 kcal/mol
+   gas constant (RT):             0.592 kcal/mol
+   Translational Entropy:        31.798  cal/mol.K
+   Rotational Entropy:            0.000  cal/mol.K
+   Vibrational Entropy:           0.000  cal/mol.K
+
+   Total Enthalpy:                1.481 kcal/mol
+   Total Entropy:                31.798  cal/mol.K
+
+ -----------------------------------------------------------------
+
+
+ Scale SEOQF with 1.000000e-01/1.000000e-01/1.000000e-01
+
+ Standard Electronic Orientation quadrupole field applied
+ Nucleus-field energy     =    -0.0000000003 hartrees
+ Guess MOs from SCF MO coefficient file
+ Reading MOs from coefficient file
+ Reading MOs from coefficient file
+ A restricted Hartree-Fock SCF calculation will be
+ performed using Pulay DIIS extrapolation
+ SCF converges when DIIS error is below 1.0E-11
+ ---------------------------------------
+  Cycle       Energy         DIIS Error
+ ---------------------------------------
+    1      -7.2328981139      2.87E-06
+    2      -7.2328981140      4.96E-07
+    3      -7.2328981140      3.83E-09
+    4      -7.2328981140      2.59E-11
+    5      -7.2328981140      9.36E-16 Convergence criterion met
+ ---------------------------------------
+ SCF time:  CPU 0.00 s  wall 0.00 s
+ SCF   energy in the final basis set = -7.2328981140
+ Total energy in the final basis set = -7.2328981140
+
+ --------------------------------------------------------------
+
+                    Orbital Energies (a.u.)
+ --------------------------------------------------------------
+
+ Alpha MOs
+ -- Occupied --
+ -2.793
+ -- Virtual --
+ -0.192  -0.128  -0.128  -0.128  -0.056  -0.016  -0.016  -0.016
+  0.497   0.497   0.497
+ --------------------------------------------------------------
+
+          Ground-State Mulliken Net Atomic Charges
+
+     Atom                 Charge (a.u.)
+  ----------------------------------------
+      1 Li                    1.000000
+  ----------------------------------------
+  Sum of atomic charges =     1.000000
+
+ -----------------------------------------------------------------
+                    Cartesian Multipole Moments
+ -----------------------------------------------------------------
+    Charge (ESU x 10^10)
+                 4.8032
+    Dipole Moment (Debye)
+         X       0.0000      Y       0.0000      Z       4.8032
+       Tot       4.8032
+    Quadrupole Moments (Debye-Ang)
+        XX      -0.4001     XY      -0.0000     YY      -0.4001
+        XZ       0.0000     YZ       0.0000     ZZ       4.4031
+    Octopole Moments (Debye-Ang^2)
+       XXX       0.0000    XXY       0.0000    XYY       0.0000
+       YYY       0.0000    XXZ      -0.4001    XYZ      -0.0000
+       YYZ      -0.4001    XZZ       0.0000    YZZ       0.0000
+       ZZZ       3.6030
+    Hexadecapole Moments (Debye-Ang^3)
+      XXXX      -0.0878   XXXY      -0.0000   XXYY      -0.0293
+      XYYY      -0.0000   YYYY      -0.0878   XXXZ       0.0000
+      XXYZ       0.0000   XYYZ       0.0000   YYYZ       0.0000
+      XXZZ      -0.4293   XYZZ      -0.0000   YYZZ      -0.4293
+      XZZZ       0.0000   YZZZ       0.0000   ZZZZ       2.3150
+ -----------------------------------------------------------------
+
+ STANDARD THERMODYNAMIC QUANTITIES AT   298.15 K  AND     1.00 ATM
+
+   Translational Enthalpy:        0.889 kcal/mol
+   Rotational Enthalpy:           0.000 kcal/mol
+   Vibrational Enthalpy:          0.000 kcal/mol
+   gas constant (RT):             0.592 kcal/mol
+   Translational Entropy:        31.798  cal/mol.K
+   Rotational Entropy:            0.000  cal/mol.K
+   Vibrational Entropy:           0.000  cal/mol.K
+
+   Total Enthalpy:                1.481 kcal/mol
+   Total Entropy:                31.798  cal/mol.K
+
+ -----------------------------------------------------------------
+
+ Applying Cartesian multipole field
+    Component          Value
+    ---------          -----
+     (1,0,0)        1.88973E-05
+     (0,1,0)        1.88973E-05
+ Guess MOs from SCF MO coefficient file
+ Reading MOs from coefficient file
+ Reading MOs from coefficient file
+ A restricted Hartree-Fock SCF calculation will be
+ performed using Pulay DIIS extrapolation
+ SCF converges when DIIS error is below 1.0E-11
+ ---------------------------------------
+  Cycle       Energy         DIIS Error
+ ---------------------------------------
+    1      -7.2328981139      2.03E-06
+    2      -7.2328981139      3.51E-07
+    3      -7.2328981139      2.71E-09
+    4      -7.2328981139      1.83E-11
+    5      -7.2328981139      1.20E-15 Convergence criterion met
+ ---------------------------------------
+ SCF time:  CPU 0.00 s  wall 0.00 s
+ SCF   energy in the final basis set = -7.2328981139
+ Total energy in the final basis set = -7.2328981139
+
+ --------------------------------------------------------------
+
+                    Orbital Energies (a.u.)
+ --------------------------------------------------------------
+
+ Alpha MOs
+ -- Occupied --
+ -2.793
+ -- Virtual --
+ -0.192  -0.128  -0.128  -0.128  -0.056  -0.016  -0.016  -0.016
+  0.497   0.497   0.497
+ --------------------------------------------------------------
+
+          Ground-State Mulliken Net Atomic Charges
+
+     Atom                 Charge (a.u.)
+  ----------------------------------------
+      1 Li                    1.000000
+  ----------------------------------------
+  Sum of atomic charges =     1.000000
+
+ -----------------------------------------------------------------
+                    Cartesian Multipole Moments
+ -----------------------------------------------------------------
+    Charge (ESU x 10^10)
+                 4.8032
+    Dipole Moment (Debye)
+         X      -0.0000      Y      -0.0000      Z       4.8032
+       Tot       4.8032
+    Quadrupole Moments (Debye-Ang)
+        XX      -0.4001     XY      -0.0000     YY      -0.4001
+        XZ      -0.0000     YZ      -0.0000     ZZ       4.4031
+    Octopole Moments (Debye-Ang^2)
+       XXX      -0.0000    XXY      -0.0000    XYY      -0.0000
+       YYY      -0.0000    XXZ      -0.4001    XYZ      -0.0000
+       YYZ      -0.4001    XZZ      -0.0000    YZZ      -0.0000
+       ZZZ       3.6030
+    Hexadecapole Moments (Debye-Ang^3)
+      XXXX      -0.0878   XXXY      -0.0000   XXYY      -0.0293
+      XYYY      -0.0000   YYYY      -0.0878   XXXZ      -0.0000
+      XXYZ      -0.0000   XYYZ      -0.0000   YYYZ      -0.0000
+      XXZZ      -0.4293   XYZZ      -0.0000   YYZZ      -0.4293
+      XZZZ      -0.0000   YZZZ      -0.0000   ZZZZ       2.3150
+ -----------------------------------------------------------------
+
+ STANDARD THERMODYNAMIC QUANTITIES AT   298.15 K  AND     1.00 ATM
+
+   Translational Enthalpy:        0.889 kcal/mol
+   Rotational Enthalpy:           0.000 kcal/mol
+   Vibrational Enthalpy:          0.000 kcal/mol
+   gas constant (RT):             0.592 kcal/mol
+   Translational Entropy:        31.798  cal/mol.K
+   Rotational Entropy:            0.000  cal/mol.K
+   Vibrational Entropy:           0.000  cal/mol.K
+
+   Total Enthalpy:                1.481 kcal/mol
+   Total Entropy:                31.798  cal/mol.K
+
+ -----------------------------------------------------------------
+
+ Applying Cartesian multipole field
+    Component          Value
+    ---------          -----
+     (1,0,0)        1.88973E-05
+     (0,1,0)       -1.88973E-05
+ Guess MOs from SCF MO coefficient file
+ Reading MOs from coefficient file
+ Reading MOs from coefficient file
+ A restricted Hartree-Fock SCF calculation will be
+ performed using Pulay DIIS extrapolation
+ SCF converges when DIIS error is below 1.0E-11
+ ---------------------------------------
+  Cycle       Energy         DIIS Error
+ ---------------------------------------
+    1      -7.2328981138      2.87E-06
+    2      -7.2328981139      4.96E-07
+    3      -7.2328981139      3.83E-09
+    4      -7.2328981139      2.59E-11
+    5      -7.2328981139      1.29E-15 Convergence criterion met
+ ---------------------------------------
+ SCF time:  CPU 0.00 s  wall 0.00 s
+ SCF   energy in the final basis set = -7.2328981139
+ Total energy in the final basis set = -7.2328981139
+
+ --------------------------------------------------------------
+
+                    Orbital Energies (a.u.)
+ --------------------------------------------------------------
+
+ Alpha MOs
+ -- Occupied --
+ -2.793
+ -- Virtual --
+ -0.192  -0.128  -0.128  -0.128  -0.056  -0.016  -0.016  -0.016
+  0.497   0.497   0.497
+ --------------------------------------------------------------
+
+          Ground-State Mulliken Net Atomic Charges
+
+     Atom                 Charge (a.u.)
+  ----------------------------------------
+      1 Li                    1.000000
+  ----------------------------------------
+  Sum of atomic charges =     1.000000
+
+ -----------------------------------------------------------------
+                    Cartesian Multipole Moments
+ -----------------------------------------------------------------
+    Charge (ESU x 10^10)
+                 4.8032
+    Dipole Moment (Debye)
+         X      -0.0000      Y       0.0000      Z       4.8032
+       Tot       4.8032
+    Quadrupole Moments (Debye-Ang)
+        XX      -0.4001     XY       0.0000     YY      -0.4001
+        XZ      -0.0000     YZ       0.0000     ZZ       4.4031
+    Octopole Moments (Debye-Ang^2)
+       XXX      -0.0000    XXY       0.0000    XYY      -0.0000
+       YYY       0.0000    XXZ      -0.4001    XYZ       0.0000
+       YYZ      -0.4001    XZZ      -0.0000    YZZ       0.0000
+       ZZZ       3.6030
+    Hexadecapole Moments (Debye-Ang^3)
+      XXXX      -0.0878   XXXY       0.0000   XXYY      -0.0293
+      XYYY       0.0000   YYYY      -0.0878   XXXZ      -0.0000
+      XXYZ       0.0000   XYYZ      -0.0000   YYYZ       0.0000
+      XXZZ      -0.4293   XYZZ       0.0000   YYZZ      -0.4293
+      XZZZ      -0.0000   YZZZ       0.0000   ZZZZ       2.3150
+ -----------------------------------------------------------------
+
+ STANDARD THERMODYNAMIC QUANTITIES AT   298.15 K  AND     1.00 ATM
+
+   Translational Enthalpy:        0.889 kcal/mol
+   Rotational Enthalpy:           0.000 kcal/mol
+   Vibrational Enthalpy:          0.000 kcal/mol
+   gas constant (RT):             0.592 kcal/mol
+   Translational Entropy:        31.798  cal/mol.K
+   Rotational Entropy:            0.000  cal/mol.K
+   Vibrational Entropy:           0.000  cal/mol.K
+
+   Total Enthalpy:                1.481 kcal/mol
+   Total Entropy:                31.798  cal/mol.K
+
+ -----------------------------------------------------------------
+
+ Applying Cartesian multipole field
+    Component          Value
+    ---------          -----
+     (1,0,0)        1.88973E-05
+     (0,0,1)        1.88973E-05
+ Nucleus-field energy     =     0.0001071319 hartrees
+ Guess MOs from SCF MO coefficient file
+ Reading MOs from coefficient file
+ Reading MOs from coefficient file
+ A restricted Hartree-Fock SCF calculation will be
+ performed using Pulay DIIS extrapolation
+ SCF converges when DIIS error is below 1.0E-11
+ ---------------------------------------
+  Cycle       Energy         DIIS Error
+ ---------------------------------------
+    1      -7.2328624032      2.03E-06
+    2      -7.2328624033      3.51E-07
+    3      -7.2328624033      2.71E-09
+    4      -7.2328624033      1.83E-11
+    5      -7.2328624033      1.02E-15 Convergence criterion met
+ ---------------------------------------
+ SCF time:  CPU 0.00 s  wall 0.00 s
+ SCF   energy in the final basis set = -7.2328624033
+ Total energy in the final basis set = -7.2328624033
+
+ --------------------------------------------------------------
+
+                    Orbital Energies (a.u.)
+ --------------------------------------------------------------
+
+ Alpha MOs
+ -- Occupied --
+ -2.793
+ -- Virtual --
+ -0.192  -0.128  -0.128  -0.128  -0.056  -0.016  -0.016  -0.016
+  0.497   0.497   0.497
+ --------------------------------------------------------------
+
+          Ground-State Mulliken Net Atomic Charges
+
+     Atom                 Charge (a.u.)
+  ----------------------------------------
+      1 Li                    1.000000
+  ----------------------------------------
+  Sum of atomic charges =     1.000000
+
+ -----------------------------------------------------------------
+                    Cartesian Multipole Moments
+ -----------------------------------------------------------------
+    Charge (ESU x 10^10)
+                 4.8032
+    Dipole Moment (Debye)
+         X      -0.0000      Y       0.0000      Z       4.8032
+       Tot       4.8032
+    Quadrupole Moments (Debye-Ang)
+        XX      -0.4001     XY       0.0000     YY      -0.4001
+        XZ      -0.0000     YZ       0.0000     ZZ       4.4031
+    Octopole Moments (Debye-Ang^2)
+       XXX      -0.0000    XXY       0.0000    XYY      -0.0000
+       YYY       0.0000    XXZ      -0.4001    XYZ       0.0000
+       YYZ      -0.4001    XZZ      -0.0000    YZZ       0.0000
+       ZZZ       3.6030
+    Hexadecapole Moments (Debye-Ang^3)
+      XXXX      -0.0878   XXXY      -0.0000   XXYY      -0.0293
+      XYYY      -0.0000   YYYY      -0.0878   XXXZ      -0.0000
+      XXYZ       0.0000   XYYZ      -0.0000   YYYZ       0.0000
+      XXZZ      -0.4293   XYZZ       0.0000   YYZZ      -0.4293
+      XZZZ      -0.0000   YZZZ       0.0000   ZZZZ       2.3150
+ -----------------------------------------------------------------
+
+ STANDARD THERMODYNAMIC QUANTITIES AT   298.15 K  AND     1.00 ATM
+
+   Translational Enthalpy:        0.889 kcal/mol
+   Rotational Enthalpy:           0.000 kcal/mol
+   Vibrational Enthalpy:          0.000 kcal/mol
+   gas constant (RT):             0.592 kcal/mol
+   Translational Entropy:        31.798  cal/mol.K
+   Rotational Entropy:            0.000  cal/mol.K
+   Vibrational Entropy:           0.000  cal/mol.K
+
+   Total Enthalpy:                1.481 kcal/mol
+   Total Entropy:                31.798  cal/mol.K
+
+ -----------------------------------------------------------------
+
+ Applying Cartesian multipole field
+    Component          Value
+    ---------          -----
+     (1,0,0)        1.88973E-05
+     (0,0,1)       -1.88973E-05
+ Nucleus-field energy     =    -0.0001071319 hartrees
+ Guess MOs from SCF MO coefficient file
+ Reading MOs from coefficient file
+ Reading MOs from coefficient file
+ A restricted Hartree-Fock SCF calculation will be
+ performed using Pulay DIIS extrapolation
+ SCF converges when DIIS error is below 1.0E-11
+ ---------------------------------------
+  Cycle       Energy         DIIS Error
+ ---------------------------------------
+    1      -7.2329338245      2.87E-06
+    2      -7.2329338246      4.96E-07
+    3      -7.2329338246      3.83E-09
+    4      -7.2329338246      2.59E-11
+    5      -7.2329338246      1.33E-15 Convergence criterion met
+ ---------------------------------------
+ SCF time:  CPU 0.01 s  wall 0.00 s
+ SCF   energy in the final basis set = -7.2329338246
+ Total energy in the final basis set = -7.2329338246
+
+ --------------------------------------------------------------
+
+                    Orbital Energies (a.u.)
+ --------------------------------------------------------------
+
+ Alpha MOs
+ -- Occupied --
+ -2.793
+ -- Virtual --
+ -0.192  -0.128  -0.128  -0.128  -0.056  -0.016  -0.016  -0.016
+  0.497   0.497   0.497
+ --------------------------------------------------------------
+
+          Ground-State Mulliken Net Atomic Charges
+
+     Atom                 Charge (a.u.)
+  ----------------------------------------
+      1 Li                    1.000000
+  ----------------------------------------
+  Sum of atomic charges =     1.000000
+
+ -----------------------------------------------------------------
+                    Cartesian Multipole Moments
+ -----------------------------------------------------------------
+    Charge (ESU x 10^10)
+                 4.8032
+    Dipole Moment (Debye)
+         X      -0.0000      Y       0.0000      Z       4.8032
+       Tot       4.8032
+    Quadrupole Moments (Debye-Ang)
+        XX      -0.4001     XY       0.0000     YY      -0.4001
+        XZ      -0.0000     YZ       0.0000     ZZ       4.4032
+    Octopole Moments (Debye-Ang^2)
+       XXX      -0.0000    XXY       0.0000    XYY      -0.0000
+       YYY       0.0000    XXZ      -0.4001    XYZ       0.0000
+       YYZ      -0.4001    XZZ      -0.0000    YZZ       0.0000
+       ZZZ       3.6030
+    Hexadecapole Moments (Debye-Ang^3)
+      XXXX      -0.0878   XXXY      -0.0000   XXYY      -0.0293
+      XYYY      -0.0000   YYYY      -0.0878   XXXZ      -0.0000
+      XXYZ       0.0000   XYYZ      -0.0000   YYYZ       0.0000
+      XXZZ      -0.4293   XYZZ      -0.0000   YYZZ      -0.4293
+      XZZZ      -0.0000   YZZZ       0.0000   ZZZZ       2.3150
+ -----------------------------------------------------------------
+
+ STANDARD THERMODYNAMIC QUANTITIES AT   298.15 K  AND     1.00 ATM
+
+   Translational Enthalpy:        0.889 kcal/mol
+   Rotational Enthalpy:           0.000 kcal/mol
+   Vibrational Enthalpy:          0.000 kcal/mol
+   gas constant (RT):             0.592 kcal/mol
+   Translational Entropy:        31.798  cal/mol.K
+   Rotational Entropy:            0.000  cal/mol.K
+   Vibrational Entropy:           0.000  cal/mol.K
+
+   Total Enthalpy:                1.481 kcal/mol
+   Total Entropy:                31.798  cal/mol.K
+
+ -----------------------------------------------------------------
+
+ Applying Cartesian multipole field
+    Component          Value
+    ---------          -----
+     (1,0,0)       -3.77945E-05
+ Guess MOs from SCF MO coefficient file
+ Reading MOs from coefficient file
+ Reading MOs from coefficient file
+ A restricted Hartree-Fock SCF calculation will be
+ performed using Pulay DIIS extrapolation
+ SCF converges when DIIS error is below 1.0E-11
+ ---------------------------------------
+  Cycle       Energy         DIIS Error
+ ---------------------------------------
+    1      -7.2328981137      4.54E-06
+    2      -7.2328981140      7.84E-07
+    3      -7.2328981140      6.06E-09
+    4      -7.2328981140      4.09E-11
+    5      -7.2328981140      2.38E-15 Convergence criterion met
+ ---------------------------------------
+ SCF time:  CPU 0.00 s  wall 0.00 s
+ SCF   energy in the final basis set = -7.2328981140
+ Total energy in the final basis set = -7.2328981140
+
+ --------------------------------------------------------------
+
+                    Orbital Energies (a.u.)
+ --------------------------------------------------------------
+
+ Alpha MOs
+ -- Occupied --
+ -2.793
+ -- Virtual --
+ -0.192  -0.128  -0.128  -0.128  -0.056  -0.016  -0.016  -0.016
+  0.497   0.497   0.497
+ --------------------------------------------------------------
+
+          Ground-State Mulliken Net Atomic Charges
+
+     Atom                 Charge (a.u.)
+  ----------------------------------------
+      1 Li                    1.000000
+  ----------------------------------------
+  Sum of atomic charges =     1.000000
+
+ -----------------------------------------------------------------
+                    Cartesian Multipole Moments
+ -----------------------------------------------------------------
+    Charge (ESU x 10^10)
+                 4.8032
+    Dipole Moment (Debye)
+         X       0.0000      Y       0.0000      Z       4.8032
+       Tot       4.8032
+    Quadrupole Moments (Debye-Ang)
+        XX      -0.4001     XY      -0.0000     YY      -0.4001
+        XZ       0.0000     YZ       0.0000     ZZ       4.4031
+    Octopole Moments (Debye-Ang^2)
+       XXX       0.0000    XXY      -0.0000    XYY       0.0000
+       YYY      -0.0000    XXZ      -0.4001    XYZ      -0.0000
+       YYZ      -0.4001    XZZ       0.0000    YZZ       0.0000
+       ZZZ       3.6030
+    Hexadecapole Moments (Debye-Ang^3)
+      XXXX      -0.0878   XXXY      -0.0000   XXYY      -0.0293
+      XYYY      -0.0000   YYYY      -0.0878   XXXZ       0.0000
+      XXYZ      -0.0000   XYYZ       0.0000   YYYZ      -0.0000
+      XXZZ      -0.4293   XYZZ      -0.0000   YYZZ      -0.4293
+      XZZZ       0.0000   YZZZ       0.0000   ZZZZ       2.3150
+ -----------------------------------------------------------------
+
+ STANDARD THERMODYNAMIC QUANTITIES AT   298.15 K  AND     1.00 ATM
+
+   Translational Enthalpy:        0.889 kcal/mol
+   Rotational Enthalpy:           0.000 kcal/mol
+   Vibrational Enthalpy:          0.000 kcal/mol
+   gas constant (RT):             0.592 kcal/mol
+   Translational Entropy:        31.798  cal/mol.K
+   Rotational Entropy:            0.000  cal/mol.K
+   Vibrational Entropy:           0.000  cal/mol.K
+
+   Total Enthalpy:                1.481 kcal/mol
+   Total Entropy:                31.798  cal/mol.K
+
+ -----------------------------------------------------------------
+
+ Applying Cartesian multipole field
+    Component          Value
+    ---------          -----
+     (1,0,0)       -1.88973E-05
+     (0,1,0)        1.88973E-05
+ Guess MOs from SCF MO coefficient file
+ Reading MOs from coefficient file
+ Reading MOs from coefficient file
+ A restricted Hartree-Fock SCF calculation will be
+ performed using Pulay DIIS extrapolation
+ SCF converges when DIIS error is below 1.0E-11
+ ---------------------------------------
+  Cycle       Energy         DIIS Error
+ ---------------------------------------
+    1      -7.2328981139      2.03E-06
+    2      -7.2328981139      3.51E-07
+    3      -7.2328981139      2.71E-09
+    4      -7.2328981139      1.83E-11
+    5      -7.2328981139      1.05E-15 Convergence criterion met
+ ---------------------------------------
+ SCF time:  CPU 0.01 s  wall 0.00 s
+ SCF   energy in the final basis set = -7.2328981139
+ Total energy in the final basis set = -7.2328981139
+
+ --------------------------------------------------------------
+
+                    Orbital Energies (a.u.)
+ --------------------------------------------------------------
+
+ Alpha MOs
+ -- Occupied --
+ -2.793
+ -- Virtual --
+ -0.192  -0.128  -0.128  -0.128  -0.056  -0.016  -0.016  -0.016
+  0.497   0.497   0.497
+ --------------------------------------------------------------
+
+          Ground-State Mulliken Net Atomic Charges
+
+     Atom                 Charge (a.u.)
+  ----------------------------------------
+      1 Li                    1.000000
+  ----------------------------------------
+  Sum of atomic charges =     1.000000
+
+ -----------------------------------------------------------------
+                    Cartesian Multipole Moments
+ -----------------------------------------------------------------
+    Charge (ESU x 10^10)
+                 4.8032
+    Dipole Moment (Debye)
+         X       0.0000      Y      -0.0000      Z       4.8032
+       Tot       4.8032
+    Quadrupole Moments (Debye-Ang)
+        XX      -0.4001     XY       0.0000     YY      -0.4001
+        XZ       0.0000     YZ      -0.0000     ZZ       4.4031
+    Octopole Moments (Debye-Ang^2)
+       XXX       0.0000    XXY      -0.0000    XYY       0.0000
+       YYY      -0.0000    XXZ      -0.4001    XYZ       0.0000
+       YYZ      -0.4001    XZZ       0.0000    YZZ      -0.0000
+       ZZZ       3.6030
+    Hexadecapole Moments (Debye-Ang^3)
+      XXXX      -0.0878   XXXY       0.0000   XXYY      -0.0293
+      XYYY       0.0000   YYYY      -0.0878   XXXZ       0.0000
+      XXYZ      -0.0000   XYYZ       0.0000   YYYZ      -0.0000
+      XXZZ      -0.4293   XYZZ       0.0000   YYZZ      -0.4293
+      XZZZ       0.0000   YZZZ      -0.0000   ZZZZ       2.3150
+ -----------------------------------------------------------------
+
+ STANDARD THERMODYNAMIC QUANTITIES AT   298.15 K  AND     1.00 ATM
+
+   Translational Enthalpy:        0.889 kcal/mol
+   Rotational Enthalpy:           0.000 kcal/mol
+   Vibrational Enthalpy:          0.000 kcal/mol
+   gas constant (RT):             0.592 kcal/mol
+   Translational Entropy:        31.798  cal/mol.K
+   Rotational Entropy:            0.000  cal/mol.K
+   Vibrational Entropy:           0.000  cal/mol.K
+
+   Total Enthalpy:                1.481 kcal/mol
+   Total Entropy:                31.798  cal/mol.K
+
+ -----------------------------------------------------------------
+
+ Applying Cartesian multipole field
+    Component          Value
+    ---------          -----
+     (1,0,0)       -1.88973E-05
+     (0,1,0)       -1.88973E-05
+ Guess MOs from SCF MO coefficient file
+ Reading MOs from coefficient file
+ Reading MOs from coefficient file
+ A restricted Hartree-Fock SCF calculation will be
+ performed using Pulay DIIS extrapolation
+ SCF converges when DIIS error is below 1.0E-11
+ ---------------------------------------
+  Cycle       Energy         DIIS Error
+ ---------------------------------------
+    1      -7.2328981138      2.87E-06
+    2      -7.2328981139      4.96E-07
+    3      -7.2328981139      3.83E-09
+    4      -7.2328981139      2.59E-11
+    5      -7.2328981139      1.35E-15 Convergence criterion met
+ ---------------------------------------
+ SCF time:  CPU 0.00 s  wall 0.00 s
+ SCF   energy in the final basis set = -7.2328981139
+ Total energy in the final basis set = -7.2328981139
+
+ --------------------------------------------------------------
+
+                    Orbital Energies (a.u.)
+ --------------------------------------------------------------
+
+ Alpha MOs
+ -- Occupied --
+ -2.793
+ -- Virtual --
+ -0.192  -0.128  -0.128  -0.128  -0.056  -0.016  -0.016  -0.016
+  0.497   0.497   0.497
+ --------------------------------------------------------------
+
+          Ground-State Mulliken Net Atomic Charges
+
+     Atom                 Charge (a.u.)
+  ----------------------------------------
+      1 Li                    1.000000
+  ----------------------------------------
+  Sum of atomic charges =     1.000000
+
+ -----------------------------------------------------------------
+                    Cartesian Multipole Moments
+ -----------------------------------------------------------------
+    Charge (ESU x 10^10)
+                 4.8032
+    Dipole Moment (Debye)
+         X       0.0000      Y       0.0000      Z       4.8032
+       Tot       4.8032
+    Quadrupole Moments (Debye-Ang)
+        XX      -0.4001     XY      -0.0000     YY      -0.4001
+        XZ       0.0000     YZ       0.0000     ZZ       4.4031
+    Octopole Moments (Debye-Ang^2)
+       XXX       0.0000    XXY       0.0000    XYY       0.0000
+       YYY       0.0000    XXZ      -0.4001    XYZ      -0.0000
+       YYZ      -0.4001    XZZ       0.0000    YZZ       0.0000
+       ZZZ       3.6030
+    Hexadecapole Moments (Debye-Ang^3)
+      XXXX      -0.0878   XXXY      -0.0000   XXYY      -0.0293
+      XYYY      -0.0000   YYYY      -0.0878   XXXZ       0.0000
+      XXYZ       0.0000   XYYZ       0.0000   YYYZ       0.0000
+      XXZZ      -0.4293   XYZZ      -0.0000   YYZZ      -0.4293
+      XZZZ       0.0000   YZZZ       0.0000   ZZZZ       2.3150
+ -----------------------------------------------------------------
+
+ STANDARD THERMODYNAMIC QUANTITIES AT   298.15 K  AND     1.00 ATM
+
+   Translational Enthalpy:        0.889 kcal/mol
+   Rotational Enthalpy:           0.000 kcal/mol
+   Vibrational Enthalpy:          0.000 kcal/mol
+   gas constant (RT):             0.592 kcal/mol
+   Translational Entropy:        31.798  cal/mol.K
+   Rotational Entropy:            0.000  cal/mol.K
+   Vibrational Entropy:           0.000  cal/mol.K
+
+   Total Enthalpy:                1.481 kcal/mol
+   Total Entropy:                31.798  cal/mol.K
+
+ -----------------------------------------------------------------
+
+ Applying Cartesian multipole field
+    Component          Value
+    ---------          -----
+     (1,0,0)       -1.88973E-05
+     (0,0,1)        1.88973E-05
+ Nucleus-field energy     =     0.0001071319 hartrees
+ Guess MOs from SCF MO coefficient file
+ Reading MOs from coefficient file
+ Reading MOs from coefficient file
+ A restricted Hartree-Fock SCF calculation will be
+ performed using Pulay DIIS extrapolation
+ SCF converges when DIIS error is below 1.0E-11
+ ---------------------------------------
+  Cycle       Energy         DIIS Error
+ ---------------------------------------
+    1      -7.2328624032      2.03E-06
+    2      -7.2328624033      3.51E-07
+    3      -7.2328624033      2.71E-09
+    4      -7.2328624033      1.83E-11
+    5      -7.2328624033      9.98E-16 Convergence criterion met
+ ---------------------------------------
+ SCF time:  CPU 0.01 s  wall 0.00 s
+ SCF   energy in the final basis set = -7.2328624033
+ Total energy in the final basis set = -7.2328624033
+
+ --------------------------------------------------------------
+
+                    Orbital Energies (a.u.)
+ --------------------------------------------------------------
+
+ Alpha MOs
+ -- Occupied --
+ -2.793
+ -- Virtual --
+ -0.192  -0.128  -0.128  -0.128  -0.056  -0.016  -0.016  -0.016
+  0.497   0.497   0.497
+ --------------------------------------------------------------
+
+          Ground-State Mulliken Net Atomic Charges
+
+     Atom                 Charge (a.u.)
+  ----------------------------------------
+      1 Li                    1.000000
+  ----------------------------------------
+  Sum of atomic charges =     1.000000
+
+ -----------------------------------------------------------------
+                    Cartesian Multipole Moments
+ -----------------------------------------------------------------
+    Charge (ESU x 10^10)
+                 4.8032
+    Dipole Moment (Debye)
+         X       0.0000      Y       0.0000      Z       4.8032
+       Tot       4.8032
+    Quadrupole Moments (Debye-Ang)
+        XX      -0.4001     XY      -0.0000     YY      -0.4001
+        XZ       0.0000     YZ       0.0000     ZZ       4.4031
+    Octopole Moments (Debye-Ang^2)
+       XXX       0.0000    XXY       0.0000    XYY       0.0000
+       YYY       0.0000    XXZ      -0.4001    XYZ      -0.0000
+       YYZ      -0.4001    XZZ       0.0000    YZZ       0.0000
+       ZZZ       3.6030
+    Hexadecapole Moments (Debye-Ang^3)
+      XXXX      -0.0878   XXXY       0.0000   XXYY      -0.0293
+      XYYY       0.0000   YYYY      -0.0878   XXXZ       0.0000
+      XXYZ       0.0000   XYYZ       0.0000   YYYZ       0.0000
+      XXZZ      -0.4293   XYZZ       0.0000   YYZZ      -0.4293
+      XZZZ       0.0000   YZZZ       0.0000   ZZZZ       2.3150
+ -----------------------------------------------------------------
+
+ STANDARD THERMODYNAMIC QUANTITIES AT   298.15 K  AND     1.00 ATM
+
+   Translational Enthalpy:        0.889 kcal/mol
+   Rotational Enthalpy:           0.000 kcal/mol
+   Vibrational Enthalpy:          0.000 kcal/mol
+   gas constant (RT):             0.592 kcal/mol
+   Translational Entropy:        31.798  cal/mol.K
+   Rotational Entropy:            0.000  cal/mol.K
+   Vibrational Entropy:           0.000  cal/mol.K
+
+   Total Enthalpy:                1.481 kcal/mol
+   Total Entropy:                31.798  cal/mol.K
+
+ -----------------------------------------------------------------
+
+ Applying Cartesian multipole field
+    Component          Value
+    ---------          -----
+     (1,0,0)       -1.88973E-05
+     (0,0,1)       -1.88973E-05
+ Nucleus-field energy     =    -0.0001071319 hartrees
+ Guess MOs from SCF MO coefficient file
+ Reading MOs from coefficient file
+ Reading MOs from coefficient file
+ A restricted Hartree-Fock SCF calculation will be
+ performed using Pulay DIIS extrapolation
+ SCF converges when DIIS error is below 1.0E-11
+ ---------------------------------------
+  Cycle       Energy         DIIS Error
+ ---------------------------------------
+    1      -7.2329338245      2.87E-06
+    2      -7.2329338246      4.96E-07
+    3      -7.2329338246      3.83E-09
+    4      -7.2329338246      2.59E-11
+    5      -7.2329338246      1.28E-15 Convergence criterion met
+ ---------------------------------------
+ SCF time:  CPU 0.00 s  wall 0.00 s
+ SCF   energy in the final basis set = -7.2329338246
+ Total energy in the final basis set = -7.2329338246
+
+ --------------------------------------------------------------
+
+                    Orbital Energies (a.u.)
+ --------------------------------------------------------------
+
+ Alpha MOs
+ -- Occupied --
+ -2.793
+ -- Virtual --
+ -0.192  -0.128  -0.128  -0.128  -0.056  -0.016  -0.016  -0.016
+  0.497   0.497   0.497
+ --------------------------------------------------------------
+
+          Ground-State Mulliken Net Atomic Charges
+
+     Atom                 Charge (a.u.)
+  ----------------------------------------
+      1 Li                    1.000000
+  ----------------------------------------
+  Sum of atomic charges =     1.000000
+
+ -----------------------------------------------------------------
+                    Cartesian Multipole Moments
+ -----------------------------------------------------------------
+    Charge (ESU x 10^10)
+                 4.8032
+    Dipole Moment (Debye)
+         X       0.0000      Y       0.0000      Z       4.8032
+       Tot       4.8032
+    Quadrupole Moments (Debye-Ang)
+        XX      -0.4001     XY      -0.0000     YY      -0.4001
+        XZ       0.0000     YZ       0.0000     ZZ       4.4032
+    Octopole Moments (Debye-Ang^2)
+       XXX       0.0000    XXY       0.0000    XYY       0.0000
+       YYY       0.0000    XXZ      -0.4001    XYZ      -0.0000
+       YYZ      -0.4001    XZZ       0.0000    YZZ       0.0000
+       ZZZ       3.6030
+    Hexadecapole Moments (Debye-Ang^3)
+      XXXX      -0.0878   XXXY      -0.0000   XXYY      -0.0293
+      XYYY      -0.0000   YYYY      -0.0878   XXXZ       0.0000
+      XXYZ       0.0000   XYYZ       0.0000   YYYZ       0.0000
+      XXZZ      -0.4293   XYZZ      -0.0000   YYZZ      -0.4293
+      XZZZ       0.0000   YZZZ       0.0000   ZZZZ       2.3150
+ -----------------------------------------------------------------
+
+ STANDARD THERMODYNAMIC QUANTITIES AT   298.15 K  AND     1.00 ATM
+
+   Translational Enthalpy:        0.889 kcal/mol
+   Rotational Enthalpy:           0.000 kcal/mol
+   Vibrational Enthalpy:          0.000 kcal/mol
+   gas constant (RT):             0.592 kcal/mol
+   Translational Entropy:        31.798  cal/mol.K
+   Rotational Entropy:            0.000  cal/mol.K
+   Vibrational Entropy:           0.000  cal/mol.K
+
+   Total Enthalpy:                1.481 kcal/mol
+   Total Entropy:                31.798  cal/mol.K
+
+ -----------------------------------------------------------------
+
+ Applying Cartesian multipole field
+    Component          Value
+    ---------          -----
+     (0,1,0)        3.77945E-05
+ Guess MOs from SCF MO coefficient file
+ Reading MOs from coefficient file
+ Reading MOs from coefficient file
+ A restricted Hartree-Fock SCF calculation will be
+ performed using Pulay DIIS extrapolation
+ SCF converges when DIIS error is below 1.0E-11
+ ---------------------------------------
+  Cycle       Energy         DIIS Error
+ ---------------------------------------
+    1      -7.2328981138      3.51E-06
+    2      -7.2328981140      6.07E-07
+    3      -7.2328981140      4.69E-09
+    4      -7.2328981140      3.17E-11
+    5      -7.2328981140      1.80E-15 Convergence criterion met
+ ---------------------------------------
+ SCF time:  CPU 0.00 s  wall 0.00 s
+ SCF   energy in the final basis set = -7.2328981140
+ Total energy in the final basis set = -7.2328981140
+
+ --------------------------------------------------------------
+
+                    Orbital Energies (a.u.)
+ --------------------------------------------------------------
+
+ Alpha MOs
+ -- Occupied --
+ -2.793
+ -- Virtual --
+ -0.192  -0.128  -0.128  -0.128  -0.056  -0.016  -0.016  -0.016
+  0.497   0.497   0.497
+ --------------------------------------------------------------
+
+          Ground-State Mulliken Net Atomic Charges
+
+     Atom                 Charge (a.u.)
+  ----------------------------------------
+      1 Li                    1.000000
+  ----------------------------------------
+  Sum of atomic charges =     1.000000
+
+ -----------------------------------------------------------------
+                    Cartesian Multipole Moments
+ -----------------------------------------------------------------
+    Charge (ESU x 10^10)
+                 4.8032
+    Dipole Moment (Debye)
+         X       0.0000      Y      -0.0000      Z       4.8032
+       Tot       4.8032
+    Quadrupole Moments (Debye-Ang)
+        XX      -0.4001     XY       0.0000     YY      -0.4001
+        XZ       0.0000     YZ      -0.0000     ZZ       4.4031
+    Octopole Moments (Debye-Ang^2)
+       XXX       0.0000    XXY      -0.0000    XYY       0.0000
+       YYY      -0.0000    XXZ      -0.4001    XYZ       0.0000
+       YYZ      -0.4001    XZZ       0.0000    YZZ      -0.0000
+       ZZZ       3.6030
+    Hexadecapole Moments (Debye-Ang^3)
+      XXXX      -0.0878   XXXY      -0.0000   XXYY      -0.0293
+      XYYY      -0.0000   YYYY      -0.0878   XXXZ       0.0000
+      XXYZ      -0.0000   XYYZ       0.0000   YYYZ      -0.0000
+      XXZZ      -0.4293   XYZZ      -0.0000   YYZZ      -0.4293
+      XZZZ       0.0000   YZZZ      -0.0000   ZZZZ       2.3150
+ -----------------------------------------------------------------
+
+ STANDARD THERMODYNAMIC QUANTITIES AT   298.15 K  AND     1.00 ATM
+
+   Translational Enthalpy:        0.889 kcal/mol
+   Rotational Enthalpy:           0.000 kcal/mol
+   Vibrational Enthalpy:          0.000 kcal/mol
+   gas constant (RT):             0.592 kcal/mol
+   Translational Entropy:        31.798  cal/mol.K
+   Rotational Entropy:            0.000  cal/mol.K
+   Vibrational Entropy:           0.000  cal/mol.K
+
+   Total Enthalpy:                1.481 kcal/mol
+   Total Entropy:                31.798  cal/mol.K
+
+ -----------------------------------------------------------------
+
+ Applying Cartesian multipole field
+    Component          Value
+    ---------          -----
+     (0,1,0)        1.88973E-05
+     (0,0,1)        1.88973E-05
+ Nucleus-field energy     =     0.0001071319 hartrees
+ Guess MOs from SCF MO coefficient file
+ Reading MOs from coefficient file
+ Reading MOs from coefficient file
+ A restricted Hartree-Fock SCF calculation will be
+ performed using Pulay DIIS extrapolation
+ SCF converges when DIIS error is below 1.0E-11
+ ---------------------------------------
+  Cycle       Energy         DIIS Error
+ ---------------------------------------
+    1      -7.2328624032      2.03E-06
+    2      -7.2328624033      3.51E-07
+    3      -7.2328624033      2.71E-09
+    4      -7.2328624033      1.83E-11
+    5      -7.2328624033      1.01E-15 Convergence criterion met
+ ---------------------------------------
+ SCF time:  CPU 0.00 s  wall 0.00 s
+ SCF   energy in the final basis set = -7.2328624033
+ Total energy in the final basis set = -7.2328624033
+
+ --------------------------------------------------------------
+
+                    Orbital Energies (a.u.)
+ --------------------------------------------------------------
+
+ Alpha MOs
+ -- Occupied --
+ -2.793
+ -- Virtual --
+ -0.192  -0.128  -0.128  -0.128  -0.056  -0.016  -0.016  -0.016
+  0.497   0.497   0.497
+ --------------------------------------------------------------
+
+          Ground-State Mulliken Net Atomic Charges
+
+     Atom                 Charge (a.u.)
+  ----------------------------------------
+      1 Li                    1.000000
+  ----------------------------------------
+  Sum of atomic charges =     1.000000
+
+ -----------------------------------------------------------------
+                    Cartesian Multipole Moments
+ -----------------------------------------------------------------
+    Charge (ESU x 10^10)
+                 4.8032
+    Dipole Moment (Debye)
+         X       0.0000      Y      -0.0000      Z       4.8032
+       Tot       4.8032
+    Quadrupole Moments (Debye-Ang)
+        XX      -0.4001     XY       0.0000     YY      -0.4001
+        XZ       0.0000     YZ      -0.0000     ZZ       4.4031
+    Octopole Moments (Debye-Ang^2)
+       XXX       0.0000    XXY      -0.0000    XYY       0.0000
+       YYY      -0.0000    XXZ      -0.4001    XYZ       0.0000
+       YYZ      -0.4001    XZZ       0.0000    YZZ      -0.0000
+       ZZZ       3.6030
+    Hexadecapole Moments (Debye-Ang^3)
+      XXXX      -0.0878   XXXY      -0.0000   XXYY      -0.0293
+      XYYY      -0.0000   YYYY      -0.0878   XXXZ       0.0000
+      XXYZ      -0.0000   XYYZ       0.0000   YYYZ      -0.0000
+      XXZZ      -0.4293   XYZZ      -0.0000   YYZZ      -0.4293
+      XZZZ       0.0000   YZZZ      -0.0000   ZZZZ       2.3150
+ -----------------------------------------------------------------
+
+ STANDARD THERMODYNAMIC QUANTITIES AT   298.15 K  AND     1.00 ATM
+
+   Translational Enthalpy:        0.889 kcal/mol
+   Rotational Enthalpy:           0.000 kcal/mol
+   Vibrational Enthalpy:          0.000 kcal/mol
+   gas constant (RT):             0.592 kcal/mol
+   Translational Entropy:        31.798  cal/mol.K
+   Rotational Entropy:            0.000  cal/mol.K
+   Vibrational Entropy:           0.000  cal/mol.K
+
+   Total Enthalpy:                1.481 kcal/mol
+   Total Entropy:                31.798  cal/mol.K
+
+ -----------------------------------------------------------------
+
+ Applying Cartesian multipole field
+    Component          Value
+    ---------          -----
+     (0,1,0)        1.88973E-05
+     (0,0,1)       -1.88973E-05
+ Nucleus-field energy     =    -0.0001071319 hartrees
+ Guess MOs from SCF MO coefficient file
+ Reading MOs from coefficient file
+ Reading MOs from coefficient file
+ A restricted Hartree-Fock SCF calculation will be
+ performed using Pulay DIIS extrapolation
+ SCF converges when DIIS error is below 1.0E-11
+ ---------------------------------------
+  Cycle       Energy         DIIS Error
+ ---------------------------------------
+    1      -7.2329338245      2.87E-06
+    2      -7.2329338246      4.96E-07
+    3      -7.2329338246      3.83E-09
+    4      -7.2329338246      2.59E-11
+    5      -7.2329338246      1.46E-15 Convergence criterion met
+ ---------------------------------------
+ SCF time:  CPU 0.00 s  wall 0.00 s
+ SCF   energy in the final basis set = -7.2329338246
+ Total energy in the final basis set = -7.2329338246
+
+ --------------------------------------------------------------
+
+                    Orbital Energies (a.u.)
+ --------------------------------------------------------------
+
+ Alpha MOs
+ -- Occupied --
+ -2.793
+ -- Virtual --
+ -0.192  -0.128  -0.128  -0.128  -0.056  -0.016  -0.016  -0.016
+  0.497   0.497   0.497
+ --------------------------------------------------------------
+
+          Ground-State Mulliken Net Atomic Charges
+
+     Atom                 Charge (a.u.)
+  ----------------------------------------
+      1 Li                    1.000000
+  ----------------------------------------
+  Sum of atomic charges =     1.000000
+
+ -----------------------------------------------------------------
+                    Cartesian Multipole Moments
+ -----------------------------------------------------------------
+    Charge (ESU x 10^10)
+                 4.8032
+    Dipole Moment (Debye)
+         X       0.0000      Y      -0.0000      Z       4.8032
+       Tot       4.8032
+    Quadrupole Moments (Debye-Ang)
+        XX      -0.4001     XY       0.0000     YY      -0.4001
+        XZ       0.0000     YZ      -0.0000     ZZ       4.4032
+    Octopole Moments (Debye-Ang^2)
+       XXX       0.0000    XXY      -0.0000    XYY       0.0000
+       YYY      -0.0000    XXZ      -0.4001    XYZ       0.0000
+       YYZ      -0.4001    XZZ       0.0000    YZZ      -0.0000
+       ZZZ       3.6030
+    Hexadecapole Moments (Debye-Ang^3)
+      XXXX      -0.0878   XXXY      -0.0000   XXYY      -0.0293
+      XYYY      -0.0000   YYYY      -0.0878   XXXZ       0.0000
+      XXYZ      -0.0000   XYYZ       0.0000   YYYZ      -0.0000
+      XXZZ      -0.4293   XYZZ      -0.0000   YYZZ      -0.4293
+      XZZZ       0.0000   YZZZ      -0.0000   ZZZZ       2.3150
+ -----------------------------------------------------------------
+
+ STANDARD THERMODYNAMIC QUANTITIES AT   298.15 K  AND     1.00 ATM
+
+   Translational Enthalpy:        0.889 kcal/mol
+   Rotational Enthalpy:           0.000 kcal/mol
+   Vibrational Enthalpy:          0.000 kcal/mol
+   gas constant (RT):             0.592 kcal/mol
+   Translational Entropy:        31.798  cal/mol.K
+   Rotational Entropy:            0.000  cal/mol.K
+   Vibrational Entropy:           0.000  cal/mol.K
+
+   Total Enthalpy:                1.481 kcal/mol
+   Total Entropy:                31.798  cal/mol.K
+
+ -----------------------------------------------------------------
+
+ Applying Cartesian multipole field
+    Component          Value
+    ---------          -----
+     (0,1,0)       -3.77945E-05
+ Guess MOs from SCF MO coefficient file
+ Reading MOs from coefficient file
+ Reading MOs from coefficient file
+ A restricted Hartree-Fock SCF calculation will be
+ performed using Pulay DIIS extrapolation
+ SCF converges when DIIS error is below 1.0E-11
+ ---------------------------------------
+  Cycle       Energy         DIIS Error
+ ---------------------------------------
+    1      -7.2328981137      4.54E-06
+    2      -7.2328981140      7.84E-07
+    3      -7.2328981140      6.06E-09
+    4      -7.2328981140      4.09E-11
+    5      -7.2328981140      2.42E-15 Convergence criterion met
+ ---------------------------------------
+ SCF time:  CPU 0.00 s  wall 0.00 s
+ SCF   energy in the final basis set = -7.2328981140
+ Total energy in the final basis set = -7.2328981140
+
+ --------------------------------------------------------------
+
+                    Orbital Energies (a.u.)
+ --------------------------------------------------------------
+
+ Alpha MOs
+ -- Occupied --
+ -2.793
+ -- Virtual --
+ -0.192  -0.128  -0.128  -0.128  -0.056  -0.016  -0.016  -0.016
+  0.497   0.497   0.497
+ --------------------------------------------------------------
+
+          Ground-State Mulliken Net Atomic Charges
+
+     Atom                 Charge (a.u.)
+  ----------------------------------------
+      1 Li                    1.000000
+  ----------------------------------------
+  Sum of atomic charges =     1.000000
+
+ -----------------------------------------------------------------
+                    Cartesian Multipole Moments
+ -----------------------------------------------------------------
+    Charge (ESU x 10^10)
+                 4.8032
+    Dipole Moment (Debye)
+         X       0.0000      Y       0.0000      Z       4.8032
+       Tot       4.8032
+    Quadrupole Moments (Debye-Ang)
+        XX      -0.4001     XY      -0.0000     YY      -0.4001
+        XZ       0.0000     YZ       0.0000     ZZ       4.4031
+    Octopole Moments (Debye-Ang^2)
+       XXX       0.0000    XXY       0.0000    XYY       0.0000
+       YYY       0.0000    XXZ      -0.4001    XYZ      -0.0000
+       YYZ      -0.4001    XZZ       0.0000    YZZ       0.0000
+       ZZZ       3.6030
+    Hexadecapole Moments (Debye-Ang^3)
+      XXXX      -0.0878   XXXY       0.0000   XXYY      -0.0293
+      XYYY       0.0000   YYYY      -0.0878   XXXZ       0.0000
+      XXYZ       0.0000   XYYZ       0.0000   YYYZ       0.0000
+      XXZZ      -0.4293   XYZZ       0.0000   YYZZ      -0.4293
+      XZZZ       0.0000   YZZZ       0.0000   ZZZZ       2.3150
+ -----------------------------------------------------------------
+
+ STANDARD THERMODYNAMIC QUANTITIES AT   298.15 K  AND     1.00 ATM
+
+   Translational Enthalpy:        0.889 kcal/mol
+   Rotational Enthalpy:           0.000 kcal/mol
+   Vibrational Enthalpy:          0.000 kcal/mol
+   gas constant (RT):             0.592 kcal/mol
+   Translational Entropy:        31.798  cal/mol.K
+   Rotational Entropy:            0.000  cal/mol.K
+   Vibrational Entropy:           0.000  cal/mol.K
+
+   Total Enthalpy:                1.481 kcal/mol
+   Total Entropy:                31.798  cal/mol.K
+
+ -----------------------------------------------------------------
+
+ Applying Cartesian multipole field
+    Component          Value
+    ---------          -----
+     (0,1,0)       -1.88973E-05
+     (0,0,1)        1.88973E-05
+ Nucleus-field energy     =     0.0001071319 hartrees
+ Guess MOs from SCF MO coefficient file
+ Reading MOs from coefficient file
+ Reading MOs from coefficient file
+ A restricted Hartree-Fock SCF calculation will be
+ performed using Pulay DIIS extrapolation
+ SCF converges when DIIS error is below 1.0E-11
+ ---------------------------------------
+  Cycle       Energy         DIIS Error
+ ---------------------------------------
+    1      -7.2328624032      2.03E-06
+    2      -7.2328624033      3.51E-07
+    3      -7.2328624033      2.71E-09
+    4      -7.2328624033      1.83E-11
+    5      -7.2328624033      9.21E-16 Convergence criterion met
+ ---------------------------------------
+ SCF time:  CPU 0.00 s  wall 0.00 s
+ SCF   energy in the final basis set = -7.2328624033
+ Total energy in the final basis set = -7.2328624033
+
+ --------------------------------------------------------------
+
+                    Orbital Energies (a.u.)
+ --------------------------------------------------------------
+
+ Alpha MOs
+ -- Occupied --
+ -2.793
+ -- Virtual --
+ -0.192  -0.128  -0.128  -0.128  -0.056  -0.016  -0.016  -0.016
+  0.497   0.497   0.497
+ --------------------------------------------------------------
+
+          Ground-State Mulliken Net Atomic Charges
+
+     Atom                 Charge (a.u.)
+  ----------------------------------------
+      1 Li                    1.000000
+  ----------------------------------------
+  Sum of atomic charges =     1.000000
+
+ -----------------------------------------------------------------
+                    Cartesian Multipole Moments
+ -----------------------------------------------------------------
+    Charge (ESU x 10^10)
+                 4.8032
+    Dipole Moment (Debye)
+         X       0.0000      Y       0.0000      Z       4.8032
+       Tot       4.8032
+    Quadrupole Moments (Debye-Ang)
+        XX      -0.4001     XY      -0.0000     YY      -0.4001
+        XZ       0.0000     YZ       0.0000     ZZ       4.4031
+    Octopole Moments (Debye-Ang^2)
+       XXX       0.0000    XXY       0.0000    XYY       0.0000
+       YYY       0.0000    XXZ      -0.4001    XYZ      -0.0000
+       YYZ      -0.4001    XZZ       0.0000    YZZ       0.0000
+       ZZZ       3.6030
+    Hexadecapole Moments (Debye-Ang^3)
+      XXXX      -0.0878   XXXY       0.0000   XXYY      -0.0293
+      XYYY       0.0000   YYYY      -0.0878   XXXZ       0.0000
+      XXYZ       0.0000   XYYZ       0.0000   YYYZ       0.0000
+      XXZZ      -0.4293   XYZZ       0.0000   YYZZ      -0.4293
+      XZZZ       0.0000   YZZZ       0.0000   ZZZZ       2.3150
+ -----------------------------------------------------------------
+
+ STANDARD THERMODYNAMIC QUANTITIES AT   298.15 K  AND     1.00 ATM
+
+   Translational Enthalpy:        0.889 kcal/mol
+   Rotational Enthalpy:           0.000 kcal/mol
+   Vibrational Enthalpy:          0.000 kcal/mol
+   gas constant (RT):             0.592 kcal/mol
+   Translational Entropy:        31.798  cal/mol.K
+   Rotational Entropy:            0.000  cal/mol.K
+   Vibrational Entropy:           0.000  cal/mol.K
+
+   Total Enthalpy:                1.481 kcal/mol
+   Total Entropy:                31.798  cal/mol.K
+
+ -----------------------------------------------------------------
+
+ Applying Cartesian multipole field
+    Component          Value
+    ---------          -----
+     (0,1,0)       -1.88973E-05
+     (0,0,1)       -1.88973E-05
+ Nucleus-field energy     =    -0.0001071319 hartrees
+ Guess MOs from SCF MO coefficient file
+ Reading MOs from coefficient file
+ Reading MOs from coefficient file
+ A restricted Hartree-Fock SCF calculation will be
+ performed using Pulay DIIS extrapolation
+ SCF converges when DIIS error is below 1.0E-11
+ ---------------------------------------
+  Cycle       Energy         DIIS Error
+ ---------------------------------------
+    1      -7.2329338245      2.87E-06
+    2      -7.2329338246      4.96E-07
+    3      -7.2329338246      3.83E-09
+    4      -7.2329338246      2.59E-11
+    5      -7.2329338246      1.31E-15 Convergence criterion met
+ ---------------------------------------
+ SCF time:  CPU 0.00 s  wall 0.00 s
+ SCF   energy in the final basis set = -7.2329338246
+ Total energy in the final basis set = -7.2329338246
+
+ --------------------------------------------------------------
+
+                    Orbital Energies (a.u.)
+ --------------------------------------------------------------
+
+ Alpha MOs
+ -- Occupied --
+ -2.793
+ -- Virtual --
+ -0.192  -0.128  -0.128  -0.128  -0.056  -0.016  -0.016  -0.016
+  0.497   0.497   0.497
+ --------------------------------------------------------------
+
+          Ground-State Mulliken Net Atomic Charges
+
+     Atom                 Charge (a.u.)
+  ----------------------------------------
+      1 Li                    1.000000
+  ----------------------------------------
+  Sum of atomic charges =     1.000000
+
+ -----------------------------------------------------------------
+                    Cartesian Multipole Moments
+ -----------------------------------------------------------------
+    Charge (ESU x 10^10)
+                 4.8032
+    Dipole Moment (Debye)
+         X       0.0000      Y       0.0000      Z       4.8032
+       Tot       4.8032
+    Quadrupole Moments (Debye-Ang)
+        XX      -0.4001     XY      -0.0000     YY      -0.4001
+        XZ       0.0000     YZ       0.0000     ZZ       4.4032
+    Octopole Moments (Debye-Ang^2)
+       XXX       0.0000    XXY       0.0000    XYY       0.0000
+       YYY       0.0000    XXZ      -0.4001    XYZ      -0.0000
+       YYZ      -0.4001    XZZ       0.0000    YZZ       0.0000
+       ZZZ       3.6030
+    Hexadecapole Moments (Debye-Ang^3)
+      XXXX      -0.0878   XXXY       0.0000   XXYY      -0.0293
+      XYYY       0.0000   YYYY      -0.0878   XXXZ       0.0000
+      XXYZ       0.0000   XYYZ       0.0000   YYYZ       0.0000
+      XXZZ      -0.4293   XYZZ       0.0000   YYZZ      -0.4293
+      XZZZ       0.0000   YZZZ       0.0000   ZZZZ       2.3150
+ -----------------------------------------------------------------
+
+ STANDARD THERMODYNAMIC QUANTITIES AT   298.15 K  AND     1.00 ATM
+
+   Translational Enthalpy:        0.889 kcal/mol
+   Rotational Enthalpy:           0.000 kcal/mol
+   Vibrational Enthalpy:          0.000 kcal/mol
+   gas constant (RT):             0.592 kcal/mol
+   Translational Entropy:        31.798  cal/mol.K
+   Rotational Entropy:            0.000  cal/mol.K
+   Vibrational Entropy:           0.000  cal/mol.K
+
+   Total Enthalpy:                1.481 kcal/mol
+   Total Entropy:                31.798  cal/mol.K
+
+ -----------------------------------------------------------------
+
+ Applying Cartesian multipole field
+    Component          Value
+    ---------          -----
+     (0,0,1)        3.77945E-05
+ Nucleus-field energy     =     0.0002142639 hartrees
+ Guess MOs from SCF MO coefficient file
+ Reading MOs from coefficient file
+ Reading MOs from coefficient file
+ A restricted Hartree-Fock SCF calculation will be
+ performed using Pulay DIIS extrapolation
+ SCF converges when DIIS error is below 1.0E-11
+ ---------------------------------------
+  Cycle       Energy         DIIS Error
+ ---------------------------------------
+    1      -7.2328266924      4.54E-06
+    2      -7.2328266927      7.84E-07
+    3      -7.2328266927      6.06E-09
+    4      -7.2328266927      4.09E-11
+    5      -7.2328266927      2.33E-15 Convergence criterion met
+ ---------------------------------------
+ SCF time:  CPU 0.00 s  wall 0.00 s
+ SCF   energy in the final basis set = -7.2328266927
+ Total energy in the final basis set = -7.2328266927
+
+ --------------------------------------------------------------
+
+                    Orbital Energies (a.u.)
+ --------------------------------------------------------------
+
+ Alpha MOs
+ -- Occupied --
+ -2.793
+ -- Virtual --
+ -0.192  -0.128  -0.128  -0.128  -0.056  -0.016  -0.016  -0.016
+  0.497   0.497   0.497
+ --------------------------------------------------------------
+
+          Ground-State Mulliken Net Atomic Charges
+
+     Atom                 Charge (a.u.)
+  ----------------------------------------
+      1 Li                    1.000000
+  ----------------------------------------
+  Sum of atomic charges =     1.000000
+
+ -----------------------------------------------------------------
+                    Cartesian Multipole Moments
+ -----------------------------------------------------------------
+    Charge (ESU x 10^10)
+                 4.8032
+    Dipole Moment (Debye)
+         X       0.0000      Y       0.0000      Z       4.8032
+       Tot       4.8032
+    Quadrupole Moments (Debye-Ang)
+        XX      -0.4001     XY      -0.0000     YY      -0.4001
+        XZ       0.0000     YZ       0.0000     ZZ       4.4031
+    Octopole Moments (Debye-Ang^2)
+       XXX       0.0000    XXY       0.0000    XYY       0.0000
+       YYY       0.0000    XXZ      -0.4001    XYZ      -0.0000
+       YYZ      -0.4001    XZZ       0.0000    YZZ       0.0000
+       ZZZ       3.6030
+    Hexadecapole Moments (Debye-Ang^3)
+      XXXX      -0.0878   XXXY      -0.0000   XXYY      -0.0293
+      XYYY      -0.0000   YYYY      -0.0878   XXXZ       0.0000
+      XXYZ       0.0000   XYYZ       0.0000   YYYZ       0.0000
+      XXZZ      -0.4293   XYZZ      -0.0000   YYZZ      -0.4293
+      XZZZ       0.0000   YZZZ       0.0000   ZZZZ       2.3149
+ -----------------------------------------------------------------
+
+ STANDARD THERMODYNAMIC QUANTITIES AT   298.15 K  AND     1.00 ATM
+
+   Translational Enthalpy:        0.889 kcal/mol
+   Rotational Enthalpy:           0.000 kcal/mol
+   Vibrational Enthalpy:          0.000 kcal/mol
+   gas constant (RT):             0.592 kcal/mol
+   Translational Entropy:        31.798  cal/mol.K
+   Rotational Entropy:            0.000  cal/mol.K
+   Vibrational Entropy:           0.000  cal/mol.K
+
+   Total Enthalpy:                1.481 kcal/mol
+   Total Entropy:                31.798  cal/mol.K
+
+ -----------------------------------------------------------------
+
+ Applying Cartesian multipole field
+    Component          Value
+    ---------          -----
+     (0,0,1)       -3.77945E-05
+ Nucleus-field energy     =    -0.0002142639 hartrees
+ Guess MOs from SCF MO coefficient file
+ Reading MOs from coefficient file
+ Reading MOs from coefficient file
+ A restricted Hartree-Fock SCF calculation will be
+ performed using Pulay DIIS extrapolation
+ SCF converges when DIIS error is below 1.0E-11
+ ---------------------------------------
+  Cycle       Energy         DIIS Error
+ ---------------------------------------
+    1      -7.2329695348      5.74E-06
+    2      -7.2329695353      9.92E-07
+    3      -7.2329695353      7.66E-09
+    4      -7.2329695353      5.17E-11
+    5      -7.2329695353      3.35E-15 Convergence criterion met
+ ---------------------------------------
+ SCF time:  CPU 0.00 s  wall 0.00 s
+ SCF   energy in the final basis set = -7.2329695353
+ Total energy in the final basis set = -7.2329695353
+
+ --------------------------------------------------------------
+
+                    Orbital Energies (a.u.)
+ --------------------------------------------------------------
+
+ Alpha MOs
+ -- Occupied --
+ -2.793
+ -- Virtual --
+ -0.192  -0.128  -0.128  -0.128  -0.055  -0.016  -0.016  -0.016
+  0.497   0.497   0.497
+ --------------------------------------------------------------
+
+          Ground-State Mulliken Net Atomic Charges
+
+     Atom                 Charge (a.u.)
+  ----------------------------------------
+      1 Li                    1.000000
+  ----------------------------------------
+  Sum of atomic charges =     1.000000
+
+ -----------------------------------------------------------------
+                    Cartesian Multipole Moments
+ -----------------------------------------------------------------
+    Charge (ESU x 10^10)
+                 4.8032
+    Dipole Moment (Debye)
+         X       0.0000      Y       0.0000      Z       4.8032
+       Tot       4.8032
+    Quadrupole Moments (Debye-Ang)
+        XX      -0.4001     XY      -0.0000     YY      -0.4001
+        XZ       0.0000     YZ       0.0000     ZZ       4.4032
+    Octopole Moments (Debye-Ang^2)
+       XXX       0.0000    XXY      -0.0000    XYY       0.0000
+       YYY      -0.0000    XXZ      -0.4001    XYZ      -0.0000
+       YYZ      -0.4001    XZZ       0.0000    YZZ       0.0000
+       ZZZ       3.6031
+    Hexadecapole Moments (Debye-Ang^3)
+      XXXX      -0.0878   XXXY       0.0000   XXYY      -0.0293
+      XYYY       0.0000   YYYY      -0.0878   XXXZ       0.0000
+      XXYZ      -0.0000   XYYZ       0.0000   YYYZ      -0.0000
+      XXZZ      -0.4293   XYZZ       0.0000   YYZZ      -0.4293
+      XZZZ       0.0000   YZZZ       0.0000   ZZZZ       2.3151
+ -----------------------------------------------------------------
+
+ STANDARD THERMODYNAMIC QUANTITIES AT   298.15 K  AND     1.00 ATM
+
+   Translational Enthalpy:        0.889 kcal/mol
+   Rotational Enthalpy:           0.000 kcal/mol
+   Vibrational Enthalpy:          0.000 kcal/mol
+   gas constant (RT):             0.592 kcal/mol
+   Translational Entropy:        31.798  cal/mol.K
+   Rotational Entropy:            0.000  cal/mol.K
+   Vibrational Entropy:           0.000  cal/mol.K
+
+   Total Enthalpy:                1.481 kcal/mol
+   Total Entropy:                31.798  cal/mol.K
+
+ -----------------------------------------------------------------
+
+ <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+  Polarizability tensor      [a.u.]
+     0.010284     0.000002    -0.000018
+     0.000002     0.010284     0.000002
+    -0.000018     0.000002     0.010279
+  Principal components       [a.u.]
+     0.010263     0.010284     0.010300
+  Isotropic polarizability   [a.u.]
+     0.010282
+  Anisotropic polarizability [a.u.]
+     0.000032
+  Polarizability tensor      [angstrom^3]
+     0.001524     0.000000    -0.000003
+     0.000000     0.001524     0.000000
+    -0.000003     0.000000     0.001523
+  Principal components       [angstrom^3]
+     0.001521     0.001524     0.001526
+  Isotropic polarizability   [angstrom^3]
+     0.001524
+  Anisotropic polarizability [angstrom^3]
+     0.000005
+  Orientation
+     0.658215    -0.066580     0.749880
+    -0.145057    -0.988633     0.039547
+     0.738723    -0.134806    -0.660391
+ >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+FINAL TENSOR RESULT:
+Order 2, Length 3
+    Atom      X          Y          Z
+     1 Order 1, Length 3
+    Atom      X          Y          Z
+     1   -1.028375540144763e-02  -2.487152887465417e-06   1.803185947612265e-05
+
+Order 1, Length 3
+    Atom      X          Y          Z
+     1   -2.487152887465417e-06  -1.028375540144763e-02  -1.865368622560877e-06
+
+Order 1, Length 3
+    Atom      X          Y          Z
+     1    1.803185843412427e-05  -1.865364665599063e-06  -1.027940288513350e-02
+
+
+
+ # Finishing finite difference calculation for IDERIV #
+ ######################################################
+ ######################################################
+Archival summary:
+1\1\copper\JobtypUnspecified\HF\BasisUnspecified\i1(1+,1)\eric\TueFeb1416:13:552017TueFeb1416:13:552017\0\\#,JobtypUnspecified,HF,BasisUnspecified,\\1,1\Li\\HF=-7.23296954\\@
+
+ Total job time:  0.31s(wall), 0.30s(cpu) 
+ Tue Feb 14 16:13:55 2017
+
+        *************************************************************
+        *                                                           *
+        *  Thank you very much for using Q-Chem.  Have a nice day.  *
+        *                                                           *
+        *************************************************************
+
+
