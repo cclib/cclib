@@ -799,33 +799,19 @@ class QChem(logfileparser.Logfile):
             if 'Polarizability (a.u.)' in line:
                 if not hasattr(self, 'polarizabilities'):
                     self.polarizabilities = []
-                polarizability = []
                 while 'Full Tensor' not in line:
                     line = next(inputfile)
                 self.skip_line(inputfile, 'blank')
-                for _ in range(3):
-                    line = next(inputfile)
-                    polarizability.append(line.split())
+                polarizability = [next(inputfile).split() for _ in range(3)]
                 self.polarizabilities.append(numpy.array(polarizability))
 
-            # Static polarizability from finite difference.
-            if line.strip() == 'Static polarizability tensor [a.u.]':
+            # Static polarizability from finite difference or
+            # responseman.
+            if line.strip() in ('Static polarizability tensor [a.u.]',
+                                'Polarizability tensor      [a.u.]'):
                 if not hasattr(self, 'polarizabilities'):
                     self.polarizabilities = []
-                polarizability = []
-                for _ in range(3):
-                    line = next(inputfile)
-                    polarizability.append(line.split())
-                self.polarizabilities.append(numpy.array(polarizability))
-
-            # Polarizability from responseman.
-            if line.strip() == 'Polarizability tensor      [a.u.]':
-                if not hasattr(self, 'polarizabilities'):
-                    self.polarizabilities = []
-                polarizability = []
-                for _ in range(3):
-                    line = next(inputfile)
-                    polarizability.append(line.split())
+                polarizability = [next(inputfile).split() for _ in range(3)]
                 self.polarizabilities.append(numpy.array(polarizability))
 
             # Molecular orbital energies and symmetries.
