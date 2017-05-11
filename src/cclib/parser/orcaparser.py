@@ -552,7 +552,7 @@ class ORCA(logfileparser.Logfile):
             del self.tmp_atnames
 
         # Read TDDFT information
-        if line[0:18] == "TD-DFT/TDA EXCITED":
+        if any(x in line for x in ("TD-DFT/TDA EXCITED", "TD-DFT EXCITED")):
             # Could be singlets or triplets
             if line.find("SINGLETS") >= 0:
                 sym = "Singlet"
@@ -583,7 +583,11 @@ class ORCA(logfileparser.Logfile):
                     start = (int(start[:-1]), lookup[start[-1]])
                     end = line[10:17].strip()
                     end = (int(end[:-1]), lookup[end[-1]])
-                    contrib = float(line[35:47].strip())
+                    # Coeffients are not printed for RPA, only
+                    # TDA/CIS.
+                    contrib = line[35:47].strip()
+                    if contrib != '':
+                        contrib = float(contrib)
                     sec.append([start, end, contrib])
                     line = next(inputfile)
                 self.etsecs.append(sec)
