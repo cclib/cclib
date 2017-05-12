@@ -658,6 +658,13 @@ def testORCA_ORCA3_0_stopiter_orca_scf_large_out(logfile):
     """Check to ensure that an incomplete SCF is handled correctly."""
     assert len(logfile.data.scfvalues[0]) == 9
 
+def testORCA_ORCA4_0_1_ttt_td_out(logfile):
+    """RPA is slightly different from TDA, see #373."""
+    assert hasattr(logfile.data, 'etsyms')
+    assert len(logfile.data.etsecs) == 24
+    assert len(logfile.data.etsecs[0]) == 1
+    assert numpy.isnan(logfile.data.etsecs[0][0][2])
+
 # PSI #
 
 def testPsi_Psi3_water_psi3_log(logfile):
