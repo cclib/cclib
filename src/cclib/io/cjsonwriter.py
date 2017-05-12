@@ -214,6 +214,8 @@ class JSONIndentEncoder(json.JSONEncoder):
             self.current_indent -= self.indent
             self.current_indent_str = "".join([" " for x in range(self.current_indent)])
             return "{\n" + ",\n".join(output) + "\n" + self.current_indent_str + "}"
+        elif isinstance(o, np.generic):
+            return json.dumps(np.asscalar(o), cls=NumpyAwareJSONEncoder)
         else:
             return json.dumps(o, cls=NumpyAwareJSONEncoder)
 
