@@ -299,9 +299,9 @@ class ORCA(logfileparser.Logfile):
             for i, n in enumerate(self.geotargets_names):
                 if (n == "energy change") and (n not in names):
                     if self.is_relaxed_scan:
-                      newvalues.append(0.0)
+                        newvalues.append(0.0)
                     else:
-                      newvalues.append(numpy.nan)
+                        newvalues.append(numpy.nan)
                 else:
                     newvalues.append(values[names.index(n)])
                     assert targets[names.index(n)] == self.geotargets[i]
@@ -586,8 +586,10 @@ class ORCA(logfileparser.Logfile):
                     # Coeffients are not printed for RPA, only
                     # TDA/CIS.
                     contrib = line[35:47].strip()
-                    if contrib != '':
+                    try:
                         contrib = float(contrib)
+                    except ValueError:
+                        contrib = numpy.nan
                     sec.append([start, end, contrib])
                     line = next(inputfile)
                 self.etsecs.append(sec)
