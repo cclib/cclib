@@ -18,6 +18,21 @@ from . import logfileparser
 from . import utils
 
 
+class Splitter:
+    def __init__(self, widths):
+        self.start_indices = [0] + list(itertools.accumulate(widths))[:-1]
+        self.end_indices = list(itertools.accumulate(widths))
+
+    def split(self, line):
+        elements = [line[start:end].strip() for (start, end) in zip(self.start_indices, self.end_indices)]
+        for i in range(1, len(elements)):
+            if elements[-1] == '':
+                elements.pop()
+            else:
+                break
+        return elements
+
+
 class QChem(logfileparser.Logfile):
     """A Q-Chem 4 log file."""
 
@@ -221,6 +236,7 @@ class QChem(logfileparser.Logfile):
         line = next(inputfile)
         assert len(line.split()) == min(self.ncolsblock, ncols)
         colcounter = 0
+        split_fixed = Splitter((4, 3, 5, 6, 10, 10, 10, 10, 10, 10))
         while colcounter < ncols:
             # If the line is just the column header (indices)...
             if line[:5].strip() == '':
@@ -230,15 +246,15 @@ class QChem(logfileparser.Logfile):
                 line = next(inputfile)
             rowcounter = 0
             while rowcounter < nrows:
-                row = line.split()
+                row = split_fixed.split(line)
                 # Only take the AO names on the first time through.
                 if colcounter == 0:
                     if len(self.aonames) != self.nbasis:
                         # Apply the offset for rows where there is
                         # more than one atom of any element in the
                         # molecule.
-                        offset = int(self.formula_histogram[row[1]] != 1)
-                        if offset:
+                        offset = 1
+                        if row[2] != '':
                             name = self.atommap.get(row[1] + str(row[2]))
                         else:
                             name = self.atommap.get(row[1] + '1')
