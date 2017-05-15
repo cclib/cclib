@@ -1,9 +1,25 @@
+Changes in cclib-1.5.1:
+
+Features:
+    * New attribute polarizabilities for static or dynamic dipole polarizability
+    * New attribute pressure for thermochemistry (renpj)
+    * Add property to detect closed shells in parsed data
+    * Handle RPA excited state calculation in ORCA, in addition to TDA
+    * Support for Python 3.6
+
+Bugfixes:
+    * Restore alias cclib.parser.ccopen for backwards compatibility
+    * Fixed parsing thermochemistry for single atoms in QChem
+    * Fixed handling of URLs (Alexey Alnatanov)
+    * Fixed Atom object creation in biopython bridge (Nitish Garg)
+    * Fixed ccopen when working with multiple files
+
 Changes in cclib-1.5:
 
 Features:
     * Support for both reading and writing CJSON (Sanjeed Schamnad)
     * New parser: cclib can now parse MOPAC files (Geoff Hutchison)
-    * New attribute time tracks coordinated for dynamics jobs (Ramon Crehuet)
+    * New attribute time tracks coordinates for dynamics jobs (Ramon Crehuet)
     * New attribute metadata holds miscellaneous information not in other attributes (bwang2453)
     * Extract moments attribute for Gaussian (Geoff Hutchison)
     * Extract atombasis for ADF in simple cases (Felix Plaser)

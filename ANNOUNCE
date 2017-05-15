@@ -1,4 +1,4 @@
-On behalf of the cclib development team, we are pleased to announce the release of cclib 1.5, which is now available for download from http://cclib.github.io. This is a major update to version 1.4.1 that includes new functionality and attributes, as well as bug fixes and small improvements.
+On behalf of the cclib development team, we are pleased to announce the release of cclib 1.5.1, which is now available for download from http://cclib.github.io. This is a minor update to version 1.5 that includes some new functionality and attributes, as well as bug fixes and small improvements.
 
 cclib is an open source library, written in Python, for parsing and interpreting the results of computational chemistry packages. It currently parses output files from 13 different programs: ADF, DALTON, Firefly, GAMESS (US), GAMESS-UK, Gaussian, Jaguar, Molpro, MOPAC, NWChem, ORCA, Psi and QChem.
 
@@ -8,7 +8,7 @@ Among other data, cclib extracts:
     * coordinates, energies and geometry optimization data
     * information about atomic and molecular orbitals
     * vibrational modes, excited states and transitions
-    * charges and electrostatic moments
+    * charges, electrostatic moments and polarizabilities
 
 (For a complete list see http://cclib.github.io/data.html).
 
@@ -37,7 +37,7 @@ The cclib development team
 ———
 
 Summary of changes since last version:
-    Support for reading and writing CJSON files
-    New parser: cclib now parses MOPAC files
-    New attribute time for tracking coordinates in trajectories
-    New attribute metadata for miscellaneous data not in other attributes 
+    New attribute polarizabilities for static or dynamic dipole polarizability
+    New attribute pressure for thermochemistry
+    Detecting closed shells in parsed data
+    Support for Python 3.6
