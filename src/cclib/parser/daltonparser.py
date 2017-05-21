@@ -12,7 +12,6 @@ from __future__ import print_function
 
 import numpy
 
-
 from . import logfileparser
 from . import utils
 
@@ -1073,6 +1072,9 @@ class DALTON(logfileparser.Logfile):
             self.skip_lines(inputfile, ['d', 'b', 'directions', 'b'])
             for _ in range(3):
                 line = next(inputfile)
+                # Separate possibly unspaced huge negative polarizability tensor
+                # element and the left adjacent column from each other.
+                line = line.replace('-', ' -')
                 polarizability.append(line.split()[1:])
             self.polarizabilities.append(numpy.array(polarizability))
 
