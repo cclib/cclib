@@ -177,6 +177,22 @@ def testDALTON_DALTON_2015_stopiter_dalton_hf_out(logfile):
     """Check to ensure that an incomplete SCF is handled correctly."""
     assert len(logfile.data.scfvalues[0]) == 5
 
+def testDALTON_DALTON_2016_huge_neg_polar_freq_out(logfile):
+    """This is an example of a multiple frequency-dependent polarizability
+    calculation.
+    """
+    assert hasattr(logfile.data, "polarizabilities")
+    assert len(logfile.data.polarizabilities) == 3
+    assert abs(logfile.data.polarizabilities[2][0, 0] - 183.6308) < 1.0e-5
+
+def testDALTON_DALTON_2016_huge_neg_polar_stat_out(logfile):
+    """This logfile didn't parse due to lack of spacing between
+    polarizability tensor elements.
+    """
+    assert hasattr(logfile.data, "polarizabilities")
+    assert len(logfile.data.polarizabilities) == 1
+    assert abs(logfile.data.polarizabilities[0][1, 1] + 7220.150408) < 1.0e-7
+
 # Firefly #
 
 def testGAMESS_Firefly8_0_dvb_gopt_a_unconverged_out(logfile):
