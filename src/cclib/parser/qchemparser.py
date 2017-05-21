@@ -221,6 +221,7 @@ class QChem(logfileparser.Logfile):
         line = next(inputfile)
         assert len(line.split()) == min(self.ncolsblock, ncols)
         colcounter = 0
+        split_fixed = utils.WidthSplitter((4, 3, 5, 6, 10, 10, 10, 10, 10, 10))
         while colcounter < ncols:
             # If the line is just the column header (indices)...
             if line[:5].strip() == '':
@@ -230,15 +231,15 @@ class QChem(logfileparser.Logfile):
                 line = next(inputfile)
             rowcounter = 0
             while rowcounter < nrows:
-                row = line.split()
+                row = split_fixed.split(line)
                 # Only take the AO names on the first time through.
                 if colcounter == 0:
                     if len(self.aonames) != self.nbasis:
                         # Apply the offset for rows where there is
                         # more than one atom of any element in the
                         # molecule.
-                        offset = int(self.formula_histogram[row[1]] != 1)
-                        if offset:
+                        offset = 1
+                        if row[2] != '':
                             name = self.atommap.get(row[1] + str(row[2]))
                         else:
                             name = self.atommap.get(row[1] + '1')
@@ -311,8 +312,8 @@ class QChem(logfileparser.Logfile):
                 self.skip_line(inputfile, 'd')
                 while list(set(line.strip())) != ['-']:
 
-                    if '$rem' in line:
-                        while '$end' not in line:
+                    if '$rem' in line.lower():
+                        while '$end' not in line.lower():
                             line = next(inputfile)
                             if 'method' in line.lower():
                                 method = line.split()[-1].upper()
@@ -334,6 +335,11 @@ class QChem(logfileparser.Logfile):
                                     self.norbdisp_alpha_aonames = norbdisp_aonames
                                     self.norbdisp_beta_aonames = norbdisp_aonames
                                     self.norbdisp_set = True
+                            # Apparently calculations can run without
+                            # a matching $end...this terminates the
+                            # user input section.
+                            if line.strip() == ('-' * 62):
+                                break
 
                     line = next(inputfile)
 

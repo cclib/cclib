@@ -7,7 +7,29 @@
 
 """Utilities often used by cclib parsers and scripts"""
 
+import sys
 import numpy
+
+
+# Define for any Python version <= 3.3,
+# See https://github.com/kachayev/fn.py/commit/391824c43fb388e0eca94e568ff62cc35b543ecb
+if sys.version_info.major == 2 or sys.version_info.minor <= 3:
+    import operator
+    def accumulate(iterable, func=operator.add):
+        """Return running totals"""
+        # accumulate([1,2,3,4,5]) --> 1 3 6 10 15
+        # accumulate([1,2,3,4,5], operator.mul) --> 1 2 6 24 120
+        it = iter(iterable)
+        try:
+            total = next(it)
+        except StopIteration:
+            return
+        yield total
+        for element in it:
+            total = func(total, element)
+            yield total
+else:
+    from itertools import accumulate
 
 
 def symmetrize(m, use_triangle='lower'):
@@ -44,8 +66,8 @@ def convertor(value, fromunits, tounits):
         NIST 2010 CODATA (http://physics.nist.gov/cuu/Constants/index.html)
         Documentation of GAMESS-US or other programs as noted
 
-    >>> print "%.1f" % convertor(8, "eV", "cm-1")
-    64524.8
+    >>> print("%.3f" % convertor(8.0, "eV", "cm-1"))
+    64524.354
     """
 
     _convertor = {
@@ -141,6 +163,35 @@ class PeriodicTable(object):
         self.number = {}
         for i in range(1, len(self.element)):
             self.number[self.element[i]] = i
+
+
+class WidthSplitter:
+    """Split a line based not on a character, but a given number of field
+    widths.
+
+    >>> split_fixed = WidthSplitter((4, 3, 5, 6, 10, 10, 10, 10, 10, 10))
+    >>> split_fixed.split("  60  H 10  s        0.14639   0.00000   0.00000  -0.00000  -0.00000   0.00000")
+    ['60', 'H', '10', 's', '0.14639', '0.00000', '0.00000', '-0.00000', '-0.00000', '0.00000']
+    >>> split_fixed.split("   1  C 1   s       -0.00000  -0.00000   0.00000")
+    ['1', 'C', '1', 's', '-0.00000', '-0.00000', '0.00000']
+    """
+
+    def __init__(self, widths):
+        self.start_indices = [0] + list(accumulate(widths))[:-1]
+        self.end_indices = list(accumulate(widths))
+
+    def split(self, line, truncate=True):
+        """Split the given line using the field widths passed in on class
+        initialization.
+        """
+        elements = [line[start:end].strip()
+                    for (start, end) in zip(self.start_indices, self.end_indices)]
+        # Handle lines that contain fewer fields than specified in the
+        # widths; they are added as empty strings, so remove them.
+        if truncate:
+            while len(elements) and elements[-1] == '':
+                elements.pop()
+        return elements
 
 
 if __name__ == "__main__":
