@@ -1,0 +1,1559 @@
+
+
+     ************************************************************************
+     *************** Dalton - An Electronic Structure Program ***************
+     ************************************************************************
+
+    This is output from DALTON release Dalton2016.2 (2016)
+         ( Web site: http://daltonprogram.org )
+
+   ----------------------------------------------------------------------------
+
+    NOTE:
+     
+    Dalton is an experimental code for the evaluation of molecular
+    properties using (MC)SCF, DFT, CI, and CC wave functions.
+    The authors accept no responsibility for the performance of
+    the code or for the correctness of the results.
+     
+    The code (in whole or part) is provided under a licence and
+    is not to be reproduced for further distribution without
+    the written permission of the authors or their representatives.
+     
+    See the home page "http://daltonprogram.org" for further information.
+     
+    If results obtained with this code are published,
+    the appropriate citations would be both of:
+     
+       K. Aidas, C. Angeli, K. L. Bak, V. Bakken, R. Bast,
+       L. Boman, O. Christiansen, R. Cimiraglia, S. Coriani,
+       P. Dahle, E. K. Dalskov, U. Ekstroem,
+       T. Enevoldsen, J. J. Eriksen, P. Ettenhuber, B. Fernandez,
+       L. Ferrighi, H. Fliegl, L. Frediani, K. Hald, A. Halkier,
+       C. Haettig, H. Heiberg, T. Helgaker, A. C. Hennum,
+       H. Hettema, E. Hjertenaes, S. Hoest, I.-M. Hoeyvik,
+       M. F. Iozzi, B. Jansik, H. J. Aa. Jensen, D. Jonsson,
+       P. Joergensen, J. Kauczor, S. Kirpekar,
+       T. Kjaergaard, W. Klopper, S. Knecht, R. Kobayashi, H. Koch,
+       J. Kongsted, A. Krapp, K. Kristensen, A. Ligabue,
+       O. B. Lutnaes, J. I. Melo, K. V. Mikkelsen, R. H. Myhre,
+       C. Neiss, C. B. Nielsen, P. Norman, J. Olsen,
+       J. M. H. Olsen, A. Osted, M. J. Packer, F. Pawlowski,
+       T. B. Pedersen, P. F. Provasi, S. Reine, Z. Rinkevicius,
+       T. A. Ruden, K. Ruud, V. Rybkin, P. Salek, C. C. M. Samson,
+       A. Sanchez de Meras, T. Saue, S. P. A. Sauer,
+       B. Schimmelpfennig, K. Sneskov, A. H. Steindal,
+       K. O. Sylvester-Hvid, P. R. Taylor, A. M. Teale,
+       E. I. Tellgren, D. P. Tew, A. J. Thorvaldsen, L. Thoegersen,
+       O. Vahtras, M. A. Watson, D. J. D. Wilson, M. Ziolkowski
+       and H. Agren,
+       "The Dalton quantum chemistry program system",
+       WIREs Comput. Mol. Sci. 2014, 4:269–284 (doi: 10.1002/wcms.1172)
+     
+    and
+     
+       Dalton, a Molecular Electronic Structure Program,
+       Release Dalton2016.2 (2016), see http://daltonprogram.org
+   ----------------------------------------------------------------------------
+
+    Authors in alphabetical order (major contribution(s) in parenthesis):
+
+  Kestutis Aidas,           Vilnius University,           Lithuania   (QM/MM)
+  Celestino Angeli,         University of Ferrara,        Italy       (NEVPT2)
+  Keld L. Bak,              UNI-C,                        Denmark     (AOSOPPA, non-adiabatic coupling, magnetic properties)
+  Vebjoern Bakken,          University of Oslo,           Norway      (DALTON; geometry optimizer, symmetry detection)
+  Radovan Bast,             UiT The Arctic U. of Norway,  Norway      (DALTON installation and execution frameworks)
+  Pablo Baudin,             University of Valencia,       Spain       (Cholesky excitation energies)
+  Linus Boman,              NTNU,                         Norway      (Cholesky decomposition and subsystems)
+  Ove Christiansen,         Aarhus University,            Denmark     (CC module)
+  Renzo Cimiraglia,         University of Ferrara,        Italy       (NEVPT2)
+  Sonia Coriani,            University of Trieste,        Italy       (CC module, MCD in RESPONS)
+  Janusz Cukras,            University of Trieste,        Italy       (MChD in RESPONS)
+  Paal Dahle,               University of Oslo,           Norway      (Parallelization)
+  Erik K. Dalskov,          UNI-C,                        Denmark     (SOPPA)
+  Thomas Enevoldsen,        Univ. of Southern Denmark,    Denmark     (SOPPA)
+  Janus J. Eriksen,         Aarhus University,            Denmark     (Polarizable embedding model, TDA)
+  Rasmus Faber,             University of Copenhagen,     Denmark     (Vib.avg. NMR with SOPPA, parallel AO-SOPPA)
+  Berta Fernandez,          U. of Santiago de Compostela, Spain       (doublet spin, ESR in RESPONS)
+  Lara Ferrighi,            Aarhus University,            Denmark     (PCM Cubic response)
+  Heike Fliegl,             University of Oslo,           Norway      (CCSD(R12))
+  Luca Frediani,            UiT The Arctic U. of Norway,  Norway      (PCM)
+  Bin Gao,                  UiT The Arctic U. of Norway,  Norway      (Gen1Int library)
+  Christof Haettig,         Ruhr-University Bochum,       Germany     (CC module)
+  Kasper Hald,              Aarhus University,            Denmark     (CC module)
+  Asger Halkier,            Aarhus University,            Denmark     (CC module)
+  Frederik Beyer Hansen,    University of Copenhagen,     Denmark     (Parallel AO-SOPPA)
+  Erik D. Hedegaard,        Univ. of Southern Denmark,    Denmark     (Polarizable embedding model, QM/MM)
+  Hanne Heiberg,            University of Oslo,           Norway      (geometry analysis, selected one-electron integrals)
+  Trygve Helgaker,          University of Oslo,           Norway      (DALTON; ABACUS, ERI, DFT modules, London, and much more)
+  Alf Christian Hennum,     University of Oslo,           Norway      (Parity violation)
+  Hinne Hettema,            University of Auckland,       New Zealand (quadratic response in RESPONS; SIRIUS supersymmetry)
+  Eirik Hjertenaes,         NTNU,                         Norway      (Cholesky decomposition)
+  Maria Francesca Iozzi,    University of Oslo,           Norway      (RPA)
+  Brano Jansik              Technical Univ. of Ostrava    Czech Rep.  (DFT cubic response)
+  Hans Joergen Aa. Jensen,  Univ. of Southern Denmark,    Denmark     (DALTON; SIRIUS, RESPONS, ABACUS modules, London, and much more)
+  Dan Jonsson,              UiT The Arctic U. of Norway,  Norway      (cubic response in RESPONS module)
+  Poul Joergensen,          Aarhus University,            Denmark     (RESPONS, ABACUS, and CC modules)
+  Maciej Kaminski,          University of Warsaw,         Poland      (CPPh in RESPONS)
+  Joanna Kauczor,           Linkoeping University,        Sweden      (Complex polarization propagator (CPP) module)
+  Sheela Kirpekar,          Univ. of Southern Denmark,    Denmark     (Mass-velocity & Darwin integrals)
+  Wim Klopper,              KIT Karlsruhe,                Germany     (R12 code in CC, SIRIUS, and ABACUS modules)
+  Stefan Knecht,            ETH Zurich,                   Switzerland (Parallel CI and MCSCF)
+  Rika Kobayashi,           Australian National Univ.,    Australia   (DIIS in CC, London in MCSCF)
+  Henrik Koch,              NTNU,                         Norway      (CC module, Cholesky decomposition)
+  Jacob Kongsted,           Univ. of Southern Denmark,    Denmark     (Polarizable embedding model, QM/MM)
+  Andrea Ligabue,           University of Modena,         Italy       (CTOCD, AOSOPPA)
+  Nanna H. List             Univ. of Southern Denmark,    Denmark     (Polarizable embedding model)
+  Ola B. Lutnaes,           University of Oslo,           Norway      (DFT Hessian)
+  Juan I. Melo,             University of Buenos Aires,   Argentina   (LRESC, Relativistic Effects on NMR Shieldings)
+  Kurt V. Mikkelsen,        University of Copenhagen,     Denmark     (MC-SCRF and QM/MM)
+  Rolf H. Myhre,            NTNU,                         Norway      (Cholesky, subsystems and ECC2)
+  Christian Neiss,          Univ. Erlangen-Nuernberg,     Germany     (CCSD(R12))
+  Christian B. Nielsen,     University of Copenhagen,     Denmark     (QM/MM)
+  Patrick Norman,           Linkoeping University,        Sweden      (Cubic response and complex frequency response in RESPONS)
+  Jeppe Olsen,              Aarhus University,            Denmark     (SIRIUS CI/density modules)
+  Jogvan Magnus H. Olsen,   Univ. of Southern Denmark,    Denmark     (Polarizable embedding model, QM/MM)
+  Anders Osted,             Copenhagen University,        Denmark     (QM/MM)
+  Martin J. Packer,         University of Sheffield,      UK          (SOPPA)
+  Filip Pawlowski,          Kazimierz Wielki University,  Poland      (CC3)
+  Morten N. Pedersen,       Univ. of Southern Denmark,    Denmark     (Polarizable embedding model)
+  Thomas B. Pedersen,       University of Oslo,           Norway      (Cholesky decomposition)
+  Patricio F. Provasi,      University of Northeastern,   Argentina   (Analysis of coupling constants in localized orbitals)
+  Zilvinas Rinkevicius,     KTH Stockholm,                Sweden      (open-shell DFT, ESR)
+  Elias Rudberg,            KTH Stockholm,                Sweden      (DFT grid and basis info)
+  Torgeir A. Ruden,         University of Oslo,           Norway      (Numerical derivatives in ABACUS)
+  Kenneth Ruud,             UiT The Arctic U. of Norway,  Norway      (DALTON; ABACUS magnetic properties and much more)
+  Pawel Salek,              KTH Stockholm,                Sweden      (DALTON; DFT code)
+  Claire C. M. Samson       University of Karlsruhe       Germany     (Boys localization, r12 integrals in ERI)
+  Alfredo Sanchez de Meras, University of Valencia,       Spain       (CC module, Cholesky decomposition)
+  Trond Saue,               Paul Sabatier University,     France      (direct Fock matrix construction)
+  Stephan P. A. Sauer,      University of Copenhagen,     Denmark     (SOPPA(CCSD), SOPPA prop., AOSOPPA, vibrational g-factors)
+  Bernd Schimmelpfennig,    Forschungszentrum Karlsruhe,  Germany     (AMFI module)
+  Kristian Sneskov,         Aarhus University,            Denmark     (Polarizable embedding model, QM/MM)
+  Arnfinn H. Steindal,      UiT The Arctic U. of Norway,  Norway      (parallel QM/MM, Polarizable embedding model)
+  Casper Steinmann,         Univ. of Southern Denmark,    Denmark     (QFIT, Polarizable embedding model)
+  K. O. Sylvester-Hvid,     University of Copenhagen,     Denmark     (MC-SCRF)
+  Peter R. Taylor,          VLSCI/Univ. of Melbourne,     Australia   (Symmetry handling ABACUS, integral transformation)
+  Andrew M. Teale,          University of Nottingham,     England     (DFT-AC, DFT-D)
+  David P. Tew,             University of Bristol,        England     (CCSD(R12))
+  Olav Vahtras,             KTH Stockholm,                Sweden      (triplet response, spin-orbit, ESR, TDDFT, open-shell DFT)
+  David J. Wilson,          La Trobe University,          Australia   (DFT Hessian and DFT magnetizabilities)
+  Hans Agren,               KTH Stockholm,                Sweden      (SIRIUS module, RESPONS, MC-SCRF solvation model)
+ --------------------------------------------------------------------------------
+
+     Date and time (Linux)  : Sun May 21 04:26:20 2017
+     Host name              : south                              
+
+ * Work memory size             :    64000000 =  488.28 megabytes.
+
+ * Directories for basis set searches:
+   1) /home/ms/DALTONDATA/tests/huge_neg_polar
+   2) /usr/local/dalton-2016.2-serial/dalton/basis
+
+
+Compilation information
+-----------------------
+
+ Who compiled             | ms
+ Host                     | south
+ System                   | Linux-4.4.0-57-generic
+ CMake generator          | Unix Makefiles
+ Processor                | x86_64
+ 64-bit integers          | OFF
+ MPI                      | OFF
+ Fortran compiler         | /usr/bin/gfortran
+ Fortran compiler version | GNU Fortran (Ubuntu 5.4.0-6ubuntu1~16.04.4) 5.4.0 
+                          | 20160609
+ C compiler               | /usr/bin/gcc
+ C compiler version       | gcc (Ubuntu 5.4.0-6ubuntu1~16.04.4) 5.4.0 20160609
+ C++ compiler             | /usr/bin/g++
+ C++ compiler version     | g++ (Ubuntu 5.4.0-6ubuntu1~16.04.4) 5.4.0 20160609
+ BLAS                     | /usr/lib/libopenblas.so
+ LAPACK                   | /usr/lib/liblapack.so
+ Static linking           | OFF
+ Last Git revision        | 7db4647eac203e51aae7da3cbc289f55146b30e9
+ Configuration time       | 2016-12-23 19:08:35.373176
+
+
+   Content of the .dal input file
+ ----------------------------------
+
+BASIS
+stuttgart_rsc_1997_ecp
+Silver tetramer static and dynamic polarizabilities
+---
+Atomtypes=1 Angstrom Charge=1 Nosymmetry
+Charge=47 Atoms=4
+Ag      0.000000     -1.335615      0.000000
+Ag      0.000000      1.335615      0.000000
+Ag      2.415491      0.000000      0.000000
+Ag     -2.415491      0.000000     -0.000000
+
+**DALTON
+.RUN PROPERTIES
+**WAVE FUNCTIONS
+.HF
+**PROPERTIES
+.ALPHA
+*ABALNR
+.FREQUE
+3
+0.0 0.0001 0.072
+**END OF
+
+
+
+       *******************************************************************
+       *********** Output from DALTON general input processing ***********
+       *******************************************************************
+
+ --------------------------------------------------------------------------------
+   Overall default print level:    0
+   Print level for DALTON.STAT:    1
+
+    HERMIT 1- and 2-electron integral sections will be executed
+    "Old" integral transformation used (limited to max 255 basis functions)
+    Wave function sections will be executed (SIRIUS module)
+    Static molecular property section will be executed (ABACUS module)
+ --------------------------------------------------------------------------------
+
+
+   ****************************************************************************
+   *************** Output of molecule and basis set information ***************
+   ****************************************************************************
+
+
+    The two title cards from your ".mol" input:
+    ------------------------------------------------------------------------
+ 1: Silver tetramer static and dynamic polarizabilities                     
+ 2: ---                                                                     
+    ------------------------------------------------------------------------
+
+  Coordinates are entered in Angstrom and converted to atomic units.
+          - Conversion factor : 1 bohr = 0.52917721 A
+
+  Atomic type no.    1
+  --------------------
+  Nuclear charge:  47.00000
+  Number of symmetry independent centers:    4
+  Number of basis sets to read;    2
+  Basis set file used for this atomic type with Z =  47 :
+     "/usr/local/dalton-2016.2-serial/dalton/basis/stuttgart_rsc_1997_ecp"
+
+  Info about the basis set file: your basis has no documentation.
+  Basis set: stuttgart_rsc_1997_ecp                                                          
+
+
+                         SYMGRP: Point group information
+                         -------------------------------
+
+@    Point group: C1 
+
+
+                                 Isotopic Masses
+                                 ---------------
+
+                           Ag        106.905095
+                           Ag        106.905095
+                           Ag        106.905095
+                           Ag        106.905095
+
+                       Total mass:   427.620380 amu
+                       Natural abundance:   7.221 %
+
+ Center-of-mass coordinates (a.u.):    0.000000    0.000000    0.000000
+
+
+  Atoms and basis sets
+  --------------------
+
+  Number of atom types :    1
+  Total number of atoms:    4
+
+  Basis set used is "stuttgart_rsc_1997_ecp" from the basis set library.
+
+  label    atoms   charge   prim   cont     basis
+  ----------------------------------------------------------------------
+  Ag          4   47.0000    59    36      [8s7p6d|6s5p3d]                                    
+  ----------------------------------------------------------------------
+  total:      4  188.0000   236   144
+  ----------------------------------------------------------------------
+  Spherical harmonic basis used.
+
+  Threshold for neglecting AO integrals:  1.00D-12
+
+
+  Cartesian Coordinates (a.u.)
+  ----------------------------
+
+  Total number of coordinates:   12
+  Ag      :     1  x   0.0000000000    2  y  -2.5239465584    3  z   0.0000000000
+  Ag      :     4  x   0.0000000000    5  y   2.5239465584    6  z   0.0000000000
+  Ag      :     7  x   4.5646164474    8  y   0.0000000000    9  z   0.0000000000
+  Ag      :    10  x  -4.5646164474   11  y   0.0000000000   12  z  -0.0000000000
+
+
+   Interatomic separations (in Angstrom):
+   --------------------------------------
+
+            Ag          Ag          Ag          Ag    
+            ------      ------      ------      ------
+ Ag    :    0.000000
+ Ag    :    2.671230    0.000000
+ Ag    :    2.760157    2.760157    0.000000
+ Ag    :    2.760157    2.760157    4.830982    0.000000
+
+
+  Max    interatomic separation is    4.8310 Angstrom (    9.1292 Bohr)
+  between atoms    4 and    3, "Ag    " and "Ag    ".
+
+  Min YX interatomic separation is    2.6712 Angstrom (    5.0479 Bohr)
+
+
+  Bond distances (Angstrom):
+  --------------------------
+
+                  atom 1     atom 2       distance
+                  ------     ------       --------
+  bond distance:  Ag         Ag           2.671230
+  bond distance:  Ag         Ag           2.760157
+  bond distance:  Ag         Ag           2.760157
+  bond distance:  Ag         Ag           2.760157
+  bond distance:  Ag         Ag           2.760157
+
+
+  Bond angles (degrees):
+  ----------------------
+
+                  atom 1     atom 2     atom 3         angle
+                  ------     ------     ------         -----
+  bond angle:     Ag         Ag         Ag            61.060
+  bond angle:     Ag         Ag         Ag            61.060
+  bond angle:     Ag         Ag         Ag           122.120
+  bond angle:     Ag         Ag         Ag            61.060
+  bond angle:     Ag         Ag         Ag            61.060
+  bond angle:     Ag         Ag         Ag           122.120
+  bond angle:     Ag         Ag         Ag            57.880
+  bond angle:     Ag         Ag         Ag            57.880
+
+
+
+
+ Principal moments of inertia (u*A**2) and principal axes
+ --------------------------------------------------------
+
+   IA     381.409034          1.000000    0.000000    0.000000
+   IB    1247.496244          0.000000    1.000000    0.000000
+   IC    1628.905278          0.000000    0.000000    1.000000
+
+
+ Rotational constants
+ --------------------
+
+@    The molecule is planar.
+
+               A                   B                   C
+
+           1325.0316            405.1147            310.2568 MHz
+            0.044198            0.013513            0.010349 cm-1
+
+
+@  Nuclear repulsion energy : 2373.616170215839 Hartree
+
+
+                     .---------------------------------------.
+                     | Starting in Integral Section (HERMIT) |
+                     `---------------------------------------'
+
+
+
+ ***************************************************************************************
+ ****************** Output from **INTEGRALS input processing (HERMIT) ******************
+ ***************************************************************************************
+
+
+ - Using defaults, no **INTEGRALS input found
+
+ Default print level:        1
+
+ * Nuclear model: Point charge
+
+ Calculation of one- and two-electron Hamiltonian integrals.
+
+ Center of mass  (bohr):      0.000000000000      0.000000000000      0.000000000000
+ Operator center (bohr):      0.000000000000      0.000000000000      0.000000000000
+ Gauge origin    (bohr):      0.000000000000      0.000000000000      0.000000000000
+ Dipole origin   (bohr):      0.000000000000      0.000000000000      0.000000000000
+
+
+     ************************************************************************
+     ************************** Output from HERINT **************************
+     ************************************************************************
+
+  Time used in ONEDRV     is       0.37 seconds
+  Time used in HUCKEL     is       0.14 seconds
+
+ Threshold for neglecting two-electron integrals:  1.00D-12
+ HERMIT - Number of two-electron integrals written:    24302767 ( 44.6% )
+ HERMIT - Megabytes written:                            278.280
+
+  Time used in TWOINT     is       4.54 seconds
+  Total CPU  time used in HERMIT:   5.15 seconds
+  Total wall time used in HERMIT:   4.83 seconds
+
+
+                        .----------------------------------.
+                        | End of Integral Section (HERMIT) |
+                        `----------------------------------'
+
+
+
+                   .--------------------------------------------.
+                   | Starting in Wave Function Section (SIRIUS) |
+                   `--------------------------------------------'
+
+
+ *** Output from Huckel module :
+
+     Using EWMO model:          T
+     Using EHT  model:          F
+     Number of Huckel orbitals each symmetry:   96
+
+ EWMO - Energy Weighted Maximum Overlap - is a Huckel type method,
+        which normally is better than Extended Huckel Theory.
+ Reference: Linderberg and Ohrn, Propagators in Quantum Chemistry (Wiley, 1973)
+
+ Huckel EWMO eigenvalues for symmetry :  1
+         -913.831506    -913.831499    -913.831499    -913.831497    -134.877546
+         -134.877523    -134.877513    -134.877476    -125.181101    -125.181101
+         -125.181101    -125.181100    -125.181100    -125.181100    -125.181100
+         -125.181100    -125.181100    -125.181099    -125.181099    -125.181099
+          -25.918123     -25.917907     -25.917879     -25.917808     -21.945346
+          -21.945336     -21.945318     -21.945310     -21.945304     -21.945300
+          -21.945296     -21.945295     -21.945295     -21.945287     -21.945283
+          -21.945282     -14.678114     -14.678110     -14.678109     -14.678108
+          -14.678107     -14.678106     -14.678106     -14.678105     -14.678103
+          -14.678103     -14.678100     -14.678100     -14.678097     -14.678095
+          -14.678093     -14.678091     -14.678090     -14.678090     -14.678089
+          -14.678085      -4.016512      -4.002542      -4.002249      -4.001431
+           -2.692320      -2.689146      -2.683248      -2.679332      -2.677893
+           -2.676895      -2.675721      -2.675603      -2.674365      -2.669996
+           -2.668178      -2.668127      -0.583222      -0.573207      -0.568627
+           -0.567669      -0.564458      -0.561314      -0.553067      -0.545552
+           -0.537812      -0.537263      -0.529811      -0.527298      -0.521436
+           -0.521188      -0.517560      -0.516815      -0.514169      -0.511232
+           -0.508099      -0.493974      -0.470261      -0.190985      -0.110337
+           -0.075655
+
+ **********************************************************************
+ *SIRIUS* a direct, restricted step, second order MCSCF program       *
+ **********************************************************************
+
+ 
+     Date and time (Linux)  : Sun May 21 04:26:25 2017
+     Host name              : south                              
+
+ Title lines from ".mol" input file:
+     Silver tetramer static and dynamic polarizabilities                     
+     ---                                                                     
+
+ Print level on unit LUPRI =   2 is   0
+ Print level on unit LUW4  =   2 is   5
+
+@    Restricted, one open shell Hartree-Fock calculation.
+
+ Initial molecular orbitals are obtained according to
+ ".MOSTART EWMO  " input option
+
+     Wave function specification
+     ============================
+@    Wave function type        --- HF ---
+@    Number of closed shell electrons         186
+@    Number of electrons in active shells       1
+@    Total charge of the molecule               1
+
+@    Spin multiplicity and 2 M_S                2         1
+@    Total number of symmetries                 1 (point group: C1 )
+@    Reference state symmetry                   1 (irrep name : A  )
+
+     Orbital specifications
+     ======================
+@    Abelian symmetry species          All |    1
+@                                          |  A  
+                                       --- |  ---
+@    Occupied SCF orbitals              93 |   93
+@    Open shell SCF orbitals             1 |    1
+@    Secondary orbitals                 50 |   50
+@    Total number of orbitals          144 |  144
+@    Number of basis functions         144 |  144
+
+     Optimization information
+     ========================
+@    Number of configurations                 1
+@    Number of orbital rotations           4793
+     ------------------------------------------
+@    Total number of variables             4794
+
+     Maximum number of Fock   iterations      0
+     Maximum number of DIIS   iterations     60
+     Maximum number of QC-SCF iterations     60
+     Threshold for SCF convergence     1.00D-05
+
+
+ ***********************************************
+ ***** DIIS acceleration of SCF iterations *****
+ ***********************************************
+
+ C1-DIIS algorithm; max error vectors =    8
+
+ Iter      Total energy        Error norm    Delta(E)  DIIS dim.
+ -----------------------------------------------------------------------------
+@  1    -6009.85364353        1.15092D+01   -6.01D+03    1
+      Virial theorem: -V/T =      6.272450
+@      MULPOP Ag      0.99; Ag      0.99; Ag     -0.49; Ag     -0.49; 
+   1  Level shift: doubly occupied orbital energies shifted by -2.00D-01
+               and singly occupied orbital energies shifted by -1.00D-01
+ -----------------------------------------------------------------------------
+@  2    -6014.13892589        1.33696D+00   -4.29D+00    2
+      Virial theorem: -V/T =      6.289244
+@      MULPOP Ag      0.04; Ag      0.04; Ag      0.46; Ag      0.46; 
+   2  Level shift: doubly occupied orbital energies shifted by -5.00D-02
+               and singly occupied orbital energies shifted by -2.50D-02
+ -----------------------------------------------------------------------------
+@  3    -6014.51104453        3.70719D-01   -3.72D-01    3
+      Virial theorem: -V/T =      6.294957
+@      MULPOP Ag      0.69; Ag      0.69; Ag     -0.19; Ag     -0.19; 
+   3  Level shift: doubly occupied orbital energies shifted by -2.50D-02
+               and singly occupied orbital energies shifted by -1.25D-02
+ -----------------------------------------------------------------------------
+@  4    -6014.55422109        1.03616D-01   -4.32D-02    4
+      Virial theorem: -V/T =      6.296595
+@      MULPOP Ag      0.72; Ag      0.72; Ag     -0.22; Ag     -0.22; 
+   4  Level shift: doubly occupied orbital energies shifted by -1.25D-02
+               and singly occupied orbital energies shifted by -6.25D-03
+ -----------------------------------------------------------------------------
+@  5    -6014.55866579        1.87818D-02   -4.44D-03    5
+      Virial theorem: -V/T =      6.296968
+@      MULPOP Ag      0.72; Ag      0.72; Ag     -0.22; Ag     -0.22; 
+ -----------------------------------------------------------------------------
+@  6    -6014.55882072        1.98041D-03   -1.55D-04    6
+      Virial theorem: -V/T =      6.296991
+@      MULPOP Ag      0.72; Ag      0.72; Ag     -0.22; Ag     -0.22; 
+ -----------------------------------------------------------------------------
+@  7    -6014.55882205        2.60084D-04   -1.32D-06    7
+      Virial theorem: -V/T =      6.296990
+@      MULPOP Ag      0.72; Ag      0.72; Ag     -0.22; Ag     -0.22; 
+ -----------------------------------------------------------------------------
+@  8    -6014.55882207        5.04335D-05   -2.32D-08    8
+      Virial theorem: -V/T =      6.296990
+@      MULPOP Ag      0.72; Ag      0.72; Ag     -0.22; Ag     -0.22; 
+ -----------------------------------------------------------------------------
+@  9    -6014.55882207        4.33857D-06   -6.95D-10    8
+
+@ *** DIIS converged in   9 iterations !
+@     Converged SCF energy, gradient:  -6014.558822071422    4.34D-06
+    - total time used in SIRFCK :              0.00 seconds
+
+
+ *** SCF orbital energy analysis ***
+
+ Orbital energy analysis for an open-shell system.
+ Orbital energies are not well-defined for open-shell systems
+   here is used block diagonalization of the FD=FC+FV Fock matrix.
+ NOTE that Koopmans' theorem is not fulfilled for this case.
+
+ Only the 20 lowest virtual orbital energies printed in each symmetry.
+
+ Number of electrons :  186
+ Orbital occupations :   93
+
+ Sym       Hartree-Fock orbital energies
+
+1 A    -112.87133929  -112.85990834  -112.83864820  -112.76561851   -56.95790921
+        -56.91275051   -56.68419626   -56.57441348   -56.24636138   -55.86586567
+        -55.82308858   -55.61192325   -55.60936095   -55.57825966   -55.52874669
+        -55.33035096   -22.69203746   -22.68191514   -22.64338340   -22.61112901
+        -18.19975798   -18.18754452   -18.18126545   -18.16254129   -18.13741353
+        -18.12127289   -18.12077750   -18.11593107   -18.11492578   -18.09090488
+        -18.07813531   -18.07226061   -12.69897819   -12.65763829   -12.64456310
+        -12.58247607   -12.54732980   -12.53407016   -12.53275119   -12.50431304
+        -12.50137838   -12.48662655   -12.48547756   -12.47665569   -12.46842441
+        -12.43666536   -12.34548028   -12.34159893   -12.33318046   -12.33212668
+        -12.32490966   -12.29793504    -5.79380477    -5.78997017    -5.71251188
+         -5.70326328    -3.55311788    -3.49728168    -3.44964265    -3.40867641
+         -3.38286463    -3.34648380    -3.27427477    -3.26154309    -3.24861492
+         -3.24508287    -3.19592464    -3.19085912    -1.74903722    -1.73751135
+         -1.57742408    -1.56583704    -1.39032696    -1.35485036    -1.33831542
+         -1.20062253    -1.19268878    -1.16222345    -1.12063973    -1.06508685
+         -1.05935236    -1.05923338    -1.04376316    -1.02840328    -1.02529637
+         -0.99360275    -0.96151977    -0.95772782    -0.95370046    -0.93966699
+         -0.92737432    -0.90865474    -0.46273080    -0.39041400    -0.30737733
+         -0.29784193    -0.19624575    -0.17679838    -0.16624962    -0.13499618
+         -0.10588236    -0.09130739    -0.08617755    -0.07998053    -0.04755976
+         -0.04301299    -0.03458177    -0.03417738    -0.02735039    -0.02597332
+         -0.02417828    -0.02360766    -0.00719910    -0.00103952
+
+    E(LUMO) :    -0.30737733 au (symmetry 1)
+  - E(HOMO) :    -0.46273080 au (symmetry 1)
+  ------------------------------------------
+    gap     :     0.15535346 au
+
+and E(SOMO) :    -0.39041400 au (symmetry 1)
+
+ NOTE: MOLECULAR ORBITALS ARE NOT CANONICAL HARTREE-FOCK ORBITALS
+
+ Largest off-diagonal Fock matrix element is  3.43D-03
+
+ --- Writing SIRIFC interface file
+     (Precalculated two-electron integrals are transformed to P-supermatrix elements.
+      Threshold for discarding integrals :  1.00D-12 )
+  Time used in FORMSUP    is       5.66 seconds
+
+ CPU and wall time for SCF :      69.892      10.899
+
+
+                       .-----------------------------------.
+                       | --- Final results from SIRIUS --- |
+                       `-----------------------------------'
+
+
+@    Spin multiplicity:           2
+@    Spatial symmetry:            1 ( irrep  A   in C1  )
+@    Total charge of molecule:    1
+
+@    Final HF energy:           -6014.558822071422                 
+@    Nuclear repulsion:          2373.616170215839
+@    Electronic energy:         -8388.174992287260
+
+@    Final gradient norm:           0.000004338574
+
+ 
+     Date and time (Linux)  : Sun May 21 04:26:36 2017
+     Host name              : south                              
+
+File label for MO orbitals:  21May17   FOCKDIIS
+
+ (Only coefficients > 0.0100 are printed.)
+
+ Molecular orbitals for symmetry species 1  (A  )
+ ------------------------------------------------
+
+    Orbital        84       85       86       87       88       89       90
+   1 Ag  :1s    -0.0000   0.0000  -0.0000  -0.0000  -0.0000   0.0000   0.0781
+   2 Ag  :1s     0.0000  -0.0000   0.0000  -0.0000  -0.0000   0.0000  -0.4111
+   3 Ag  :1s     0.0000  -0.0000   0.0000   0.0000   0.0000  -0.0000   0.6871
+   4 Ag  :1s    -0.0000   0.0000  -0.0000  -0.0000   0.0000   0.0000  -0.8768
+   5 Ag  :1s    -0.0000  -0.0000   0.0000  -0.0000  -0.0000  -0.0000  -0.6660
+   6 Ag  :1s    -0.0000  -0.0000   0.0000  -0.0000  -0.0000  -0.0000  -0.0895
+  10 Ag  :2px   -0.0205  -0.0531   0.0123  -0.0000   0.0000   0.0000  -0.0000
+  11 Ag  :2py   -0.0000  -0.0000   0.0000   0.0000  -0.0000   0.0000   0.0221
+  13 Ag  :2px    0.0512   0.1265   0.0018  -0.0000  -0.0000  -0.0000   0.0000
+  14 Ag  :2py    0.0000   0.0000  -0.0000  -0.0000  -0.0000  -0.0000  -0.0661
+  16 Ag  :2px    0.6304   1.2794  -2.8579   0.0000  -0.0000   0.0000   0.0000
+  17 Ag  :2py   -0.0000  -0.0000   0.0000  -0.0000  -0.0000   0.0000  -0.4887
+  18 Ag  :2pz   -0.0000   0.0000  -0.0000  -0.0000   0.0261   0.0000   0.0000
+  19 Ag  :2px    0.2458  -0.6663  -0.8720  -0.0000  -0.0000   0.0000  -0.0000
+  20 Ag  :2py   -0.0000  -0.0000   0.0000  -0.0000  -0.0000   0.0000  -0.1110
+  21 Ag  :2pz    0.0000   0.0000   0.0000  -0.0000   0.3202  -0.0000   0.0000
+  22 Ag  :3d2-  -0.0044  -0.1209   0.1009  -0.0000   0.0000   0.0000  -0.0000
+  23 Ag  :3d1-  -0.0000  -0.0000  -0.0000  -0.0000   0.1490  -0.0000   0.0000
+  24 Ag  :3d0   -0.0000  -0.0000   0.0000  -0.0000  -0.0000   0.0000  -0.0657
+  25 Ag  :3d1+   0.0000   0.0000   0.0000  -0.0871  -0.0000  -0.1046   0.0000
+  26 Ag  :3d2+  -0.0000   0.0000   0.0000   0.0000  -0.0000   0.0000   0.0591
+  27 Ag  :3d2-   0.0890   0.9728  -0.8920   0.0000  -0.0000   0.0000   0.0000
+  28 Ag  :3d1-   0.0000   0.0000   0.0000   0.0000  -1.0019   0.0000  -0.0000
+  29 Ag  :3d0    0.0000  -0.0000  -0.0000   0.0000   0.0000  -0.0000   0.5332
+  30 Ag  :3d1+  -0.0000  -0.0000  -0.0000   0.5993   0.0000   0.7146  -0.0000
+  31 Ag  :3d2+   0.0000  -0.0000  -0.0000  -0.0000   0.0000  -0.0000  -0.5160
+  32 Ag  :3d2-   0.2743   0.0084  -0.5928  -0.0000  -0.0000   0.0000   0.0000
+  33 Ag  :3d1-  -0.0000  -0.0000  -0.0000  -0.0000   0.3700  -0.0000   0.0000
+  34 Ag  :3d0    0.0000   0.0000  -0.0000   0.0000   0.0000   0.0000  -0.0910
+  35 Ag  :3d1+   0.0000   0.0000   0.0000  -0.3991  -0.0000  -0.3010   0.0000
+  36 Ag  :3d2+  -0.0000   0.0000   0.0000   0.0000   0.0000  -0.0000   0.1823
+  37 Ag  :1s    -0.0000  -0.0000  -0.0000  -0.0000   0.0000  -0.0000   0.0781
+  38 Ag  :1s     0.0000   0.0000   0.0000  -0.0000   0.0000  -0.0000  -0.4111
+  39 Ag  :1s     0.0000   0.0000   0.0000   0.0000  -0.0000   0.0000   0.6871
+  40 Ag  :1s    -0.0000  -0.0000  -0.0000  -0.0000  -0.0000  -0.0000  -0.8768
+  41 Ag  :1s    -0.0000   0.0000   0.0000   0.0000   0.0000   0.0000  -0.6660
+  42 Ag  :1s     0.0000   0.0000   0.0000   0.0000   0.0000  -0.0000  -0.0895
+  46 Ag  :2px   -0.0205   0.0531   0.0123  -0.0000   0.0000  -0.0000  -0.0000
+  47 Ag  :2py    0.0000  -0.0000  -0.0000   0.0000  -0.0000   0.0000  -0.0221
+  49 Ag  :2px    0.0512  -0.1265   0.0018   0.0000  -0.0000   0.0000   0.0000
+  50 Ag  :2py   -0.0000   0.0000   0.0000  -0.0000   0.0000  -0.0000   0.0661
+  52 Ag  :2px    0.6304  -1.2794  -2.8579  -0.0000  -0.0000   0.0000   0.0000
+  53 Ag  :2py    0.0000  -0.0000   0.0000  -0.0000  -0.0000   0.0000   0.4887
+  54 Ag  :2pz    0.0000  -0.0000   0.0000   0.0000  -0.0261   0.0000   0.0000
+  55 Ag  :2px    0.2458   0.6663  -0.8720   0.0000  -0.0000   0.0000  -0.0000
+  56 Ag  :2py   -0.0000  -0.0000  -0.0000  -0.0000  -0.0000   0.0000   0.1110
+  57 Ag  :2pz   -0.0000   0.0000  -0.0000   0.0000  -0.3202   0.0000   0.0000
+  58 Ag  :3d2-   0.0044  -0.1209  -0.1009  -0.0000  -0.0000   0.0000  -0.0000
+  59 Ag  :3d1-  -0.0000  -0.0000  -0.0000   0.0000   0.1490  -0.0000  -0.0000
+  60 Ag  :3d0    0.0000   0.0000   0.0000  -0.0000   0.0000  -0.0000  -0.0657
+  61 Ag  :3d1+  -0.0000  -0.0000  -0.0000   0.0871  -0.0000  -0.1046  -0.0000
+  62 Ag  :3d2+  -0.0000  -0.0000  -0.0000   0.0000   0.0000   0.0000   0.0591
+  63 Ag  :3d2-  -0.0890   0.9728   0.8920   0.0000   0.0000  -0.0000   0.0000
+  64 Ag  :3d1-   0.0000   0.0000   0.0000   0.0000  -1.0019   0.0000   0.0000
+  65 Ag  :3d0   -0.0000   0.0000  -0.0000   0.0000  -0.0000   0.0000   0.5332
+  66 Ag  :3d1+   0.0000   0.0000   0.0000  -0.5993   0.0000   0.7146   0.0000
+  67 Ag  :3d2+   0.0000   0.0000   0.0000  -0.0000  -0.0000  -0.0000  -0.5160
+  68 Ag  :3d2-  -0.2743   0.0084   0.5928  -0.0000   0.0000   0.0000  -0.0000
+  69 Ag  :3d1-  -0.0000  -0.0000  -0.0000  -0.0000   0.3700  -0.0000  -0.0000
+  70 Ag  :3d0    0.0000  -0.0000   0.0000  -0.0000  -0.0000  -0.0000  -0.0910
+  71 Ag  :3d1+  -0.0000  -0.0000  -0.0000   0.3991   0.0000  -0.3010  -0.0000
+  72 Ag  :3d2+  -0.0000  -0.0000   0.0000   0.0000  -0.0000   0.0000   0.1823
+  73 Ag  :1s    -0.0591  -0.0000  -0.0596   0.0000   0.0000  -0.0000  -0.1059
+  74 Ag  :1s     0.2779   0.0000   0.3265   0.0000   0.0000  -0.0000   0.5404
+  75 Ag  :1s    -0.3803   0.0000  -0.5761  -0.0000  -0.0000   0.0000  -0.8562
+  76 Ag  :1s     0.3032   0.0000   0.4141  -0.0000   0.0000  -0.0000   0.7166
+  77 Ag  :1s    -1.2588  -0.0000   4.6266   0.0000   0.0000  -0.0000   0.7767
+  78 Ag  :1s    -0.0693  -0.0000   0.9680   0.0000  -0.0000   0.0000   0.1124
+  82 Ag  :2px    0.0005   0.0000   0.0145   0.0000  -0.0000  -0.0000   0.0327
+  85 Ag  :2px   -0.0110  -0.0000  -0.0002  -0.0000   0.0000  -0.0000  -0.0766
+  86 Ag  :2py    0.0000  -0.0251  -0.0000   0.0000  -0.0000   0.0000   0.0000
+  87 Ag  :2pz   -0.0000   0.0000  -0.0000   0.0000   0.0000  -0.0132   0.0000
+  88 Ag  :2px    0.6735   0.0000  -2.8253  -0.0000  -0.0000   0.0000  -0.8841
+  89 Ag  :2py   -0.0000   0.8363   0.0000  -0.0000  -0.0000  -0.0000   0.0000
+  90 Ag  :2pz    0.0000  -0.0000   0.0000  -0.0000   0.0000   0.0745  -0.0000
+  91 Ag  :2px    0.0349   0.0000  -0.5772  -0.0000  -0.0000  -0.0000  -0.0937
+  92 Ag  :2py    0.0000  -0.4175  -0.0000  -0.0000  -0.0000  -0.0000  -0.0000
+  93 Ag  :2pz    0.0000  -0.0000   0.0000   0.0000   0.0000   0.1982  -0.0000
+  94 Ag  :3d2-  -0.0000   0.1136   0.0000  -0.0000   0.0000   0.0000   0.0000
+  95 Ag  :3d1-   0.0000   0.0000   0.0000  -0.1331   0.0579  -0.0000   0.0000
+  96 Ag  :3d0   -0.1380  -0.0000   0.0351   0.0000   0.0000   0.0000   0.1210
+  97 Ag  :3d1+  -0.0000   0.0000  -0.0000  -0.0000  -0.0000  -0.1274   0.0000
+  98 Ag  :3d2+  -0.0198   0.0000  -0.1417  -0.0000   0.0000   0.0000   0.0273
+  99 Ag  :3d2-   0.0000  -0.9052  -0.0000   0.0000  -0.0000  -0.0000  -0.0000
+ 100 Ag  :3d1-  -0.0000  -0.0000  -0.0000   0.8473  -0.3761   0.0000  -0.0000
+ 101 Ag  :3d0    0.8711   0.0000  -0.3826  -0.0000  -0.0000  -0.0000  -0.8628
+ 102 Ag  :3d1+   0.0000  -0.0000   0.0000  -0.0000   0.0000   0.8455  -0.0000
+ 103 Ag  :3d2+   0.0902  -0.0000   1.0592   0.0000  -0.0000  -0.0000  -0.0935
+ 104 Ag  :3d2-  -0.0000  -0.0953  -0.0000   0.0000   0.0000   0.0000  -0.0000
+ 105 Ag  :3d1-   0.0000   0.0000   0.0000  -0.3724   0.0951  -0.0000   0.0000
+ 106 Ag  :3d0   -0.1392   0.0000  -0.4176   0.0000   0.0000   0.0000   0.0737
+ 107 Ag  :3d1+  -0.0000   0.0000  -0.0000  -0.0000  -0.0000  -0.3295   0.0000
+ 108 Ag  :3d2+  -0.1483  -0.0000   0.1802   0.0000   0.0000   0.0000   0.3163
+ 109 Ag  :1s     0.0591   0.0000   0.0596   0.0000  -0.0000   0.0000  -0.1059
+ 110 Ag  :1s    -0.2779  -0.0000  -0.3265   0.0000  -0.0000   0.0000   0.5404
+ 111 Ag  :1s     0.3803  -0.0000   0.5761  -0.0000   0.0000  -0.0000  -0.8562
+ 112 Ag  :1s    -0.3032  -0.0000  -0.4141  -0.0000  -0.0000  -0.0000   0.7166
+ 113 Ag  :1s     1.2588   0.0000  -4.6266   0.0000  -0.0000   0.0000   0.7767
+ 114 Ag  :1s     0.0693   0.0000  -0.9680   0.0000   0.0000   0.0000   0.1124
+ 118 Ag  :2px    0.0005   0.0000   0.0145  -0.0000  -0.0000  -0.0000  -0.0327
+ 121 Ag  :2px   -0.0110  -0.0000  -0.0002  -0.0000   0.0000   0.0000   0.0766
+ 122 Ag  :2py   -0.0000   0.0251  -0.0000  -0.0000  -0.0000   0.0000  -0.0000
+ 123 Ag  :2pz   -0.0000  -0.0000   0.0000  -0.0000   0.0000   0.0132   0.0000
+ 124 Ag  :2px    0.6735   0.0000  -2.8253   0.0000  -0.0000   0.0000   0.8841
+ 125 Ag  :2py    0.0000  -0.8363  -0.0000  -0.0000  -0.0000  -0.0000   0.0000
+ 126 Ag  :2pz    0.0000   0.0000  -0.0000   0.0000  -0.0000  -0.0745  -0.0000
+ 127 Ag  :2px    0.0349   0.0000  -0.5772   0.0000  -0.0000   0.0000   0.0937
+ 128 Ag  :2py   -0.0000   0.4175   0.0000  -0.0000   0.0000  -0.0000   0.0000
+ 129 Ag  :2pz    0.0000  -0.0000  -0.0000   0.0000  -0.0000  -0.1982  -0.0000
+ 130 Ag  :3d2-  -0.0000   0.1136   0.0000   0.0000   0.0000   0.0000  -0.0000
+ 131 Ag  :3d1-   0.0000   0.0000   0.0000   0.1331   0.0579   0.0000  -0.0000
+ 132 Ag  :3d0    0.1380   0.0000  -0.0351   0.0000  -0.0000   0.0000   0.1210
+ 133 Ag  :3d1+   0.0000  -0.0000  -0.0000   0.0000  -0.0000  -0.1274  -0.0000
+ 134 Ag  :3d2+   0.0198  -0.0000   0.1417   0.0000  -0.0000   0.0000   0.0273
+ 135 Ag  :3d2-   0.0000  -0.9052  -0.0000  -0.0000  -0.0000   0.0000   0.0000
+ 136 Ag  :3d1-  -0.0000   0.0000  -0.0000  -0.8473  -0.3761  -0.0000   0.0000
+ 137 Ag  :3d0   -0.8711  -0.0000   0.3826  -0.0000   0.0000  -0.0000  -0.8628
+ 138 Ag  :3d1+  -0.0000   0.0000   0.0000  -0.0000   0.0000   0.8455   0.0000
+ 139 Ag  :3d2+  -0.0902   0.0000  -1.0592  -0.0000   0.0000  -0.0000  -0.0935
+ 140 Ag  :3d2-  -0.0000  -0.0953  -0.0000  -0.0000  -0.0000  -0.0000  -0.0000
+ 141 Ag  :3d1-   0.0000  -0.0000   0.0000   0.3724   0.0951   0.0000  -0.0000
+ 142 Ag  :3d0    0.1392  -0.0000   0.4176   0.0000  -0.0000  -0.0000   0.0737
+ 143 Ag  :3d1+   0.0000  -0.0000  -0.0000   0.0000  -0.0000  -0.3295  -0.0000
+ 144 Ag  :3d2+   0.1483   0.0000  -0.1802   0.0000  -0.0000   0.0000   0.3163
+
+    Orbital        91       92       93       94       95       96       97
+   1 Ag  :1s    -0.1207  -0.0752   0.0699   0.0000  -0.0000   0.0000  -0.0000
+   2 Ag  :1s     0.6356   0.3919  -0.3582  -0.0000  -0.0000  -0.0000   0.0000
+   3 Ag  :1s    -1.0640  -0.6425   0.5984  -0.0000   0.0000   0.0000  -0.0000
+   4 Ag  :1s     0.8302   0.7174  -1.9127  -0.0000  -0.0000  -0.0000   0.0000
+   5 Ag  :1s     5.7715  -0.0367   1.0776  -0.0000   0.0000   0.0000  -0.0000
+   6 Ag  :1s     1.0082  -0.4147  -0.0040  -0.0000   0.0000   0.0000   0.0000
+   7 Ag  :2px   -0.0000   0.0000   0.0000   0.0208  -0.0160   0.0000   0.0000
+   8 Ag  :2py   -0.0062  -0.0038   0.0228   0.0000   0.0000  -0.0000   0.0000
+   9 Ag  :2pz   -0.0000   0.0000  -0.0000  -0.0000  -0.0000  -0.0152  -0.0000
+  10 Ag  :2px    0.0000   0.0000  -0.0000   0.1452  -0.1124   0.0000  -0.0000
+  11 Ag  :2py   -0.0392  -0.0238   0.1597  -0.0000   0.0000   0.0000   0.0000
+  12 Ag  :2pz    0.0000   0.0000   0.0000   0.0000  -0.0000  -0.1048  -0.0000
+  13 Ag  :2px   -0.0000  -0.0000   0.0000  -0.5886   0.4675  -0.0000   0.0000
+  14 Ag  :2py    0.0891   0.0774  -0.6697  -0.0000  -0.0000  -0.0000  -0.0000
+  15 Ag  :2pz   -0.0000  -0.0000  -0.0000  -0.0000   0.0000   0.3755   0.0000
+  16 Ag  :2px    0.0000   0.0000  -0.0000   0.9871  -1.9242   0.0000  -0.0000
+  17 Ag  :2py    3.3617   0.0143   1.0388   0.0000   0.0000   0.0000   0.0000
+  18 Ag  :2pz    0.0000   0.0000   0.0000   0.0000  -0.0000  -0.5045  -0.0000
+  19 Ag  :2px    0.0000   0.0000  -0.0000   0.2026  -0.3873   0.0000  -0.0000
+  20 Ag  :2py    0.6267   0.0330   0.1942  -0.0000   0.0000   0.0000   0.0000
+  21 Ag  :2pz    0.0000   0.0000   0.0000  -0.0000   0.0000   0.1393   0.0000
+  22 Ag  :3d2-   0.0000  -0.0000   0.0000   0.0219   0.0158   0.0000  -0.0000
+  23 Ag  :3d1-   0.0000   0.0000  -0.0000   0.0000   0.0000  -0.0249  -0.0000
+  24 Ag  :3d0    0.1083   0.0444   0.0166   0.0000   0.0000   0.0000   0.0000
+  25 Ag  :3d1+  -0.0000   0.0000  -0.0000  -0.0000  -0.0000  -0.0000   0.0326
+  26 Ag  :3d2+   0.1165  -0.0909  -0.0154   0.0000  -0.0000   0.0000  -0.0000
+  27 Ag  :3d2-  -0.0000   0.0000   0.0000  -0.2358  -0.1933   0.0000   0.0000
+  28 Ag  :3d1-  -0.0000  -0.0000   0.0000  -0.0000  -0.0000   0.1832   0.0000
+  29 Ag  :3d0   -0.8925  -0.3756  -0.0851  -0.0000  -0.0000  -0.0000  -0.0000
+  30 Ag  :3d1+   0.0000  -0.0000   0.0000   0.0000   0.0000   0.0000  -0.2693
+  31 Ag  :3d2+  -1.0415   0.7980   0.1377  -0.0000   0.0000  -0.0000   0.0000
+  32 Ag  :3d2-   0.0000   0.0000  -0.0000   0.5506  -0.8137   0.0000  -0.0000
+  33 Ag  :3d1-   0.0000   0.0000  -0.0000   0.0000   0.0000  -0.0970  -0.0000
+  34 Ag  :3d0   -0.5304   0.0128  -0.4255  -0.0000  -0.0000   0.0000   0.0000
+  35 Ag  :3d1+  -0.0000   0.0000  -0.0000  -0.0000  -0.0000  -0.0000  -0.1943
+  36 Ag  :3d2+  -0.0731  -0.0223  -0.2871  -0.0000   0.0000   0.0000  -0.0000
+  37 Ag  :1s     0.1207   0.0752   0.0699   0.0000   0.0000  -0.0000   0.0000
+  38 Ag  :1s    -0.6356  -0.3919  -0.3582   0.0000   0.0000   0.0000  -0.0000
+  39 Ag  :1s     1.0640   0.6425   0.5984  -0.0000  -0.0000   0.0000   0.0000
+  40 Ag  :1s    -0.8302  -0.7174  -1.9127  -0.0000   0.0000  -0.0000  -0.0000
+  41 Ag  :1s    -5.7715   0.0367   1.0776   0.0000  -0.0000  -0.0000   0.0000
+  42 Ag  :1s    -1.0082   0.4147  -0.0040  -0.0000  -0.0000  -0.0000  -0.0000
+  43 Ag  :2px   -0.0000  -0.0000  -0.0000   0.0208   0.0160  -0.0000   0.0000
+  44 Ag  :2py   -0.0062  -0.0038  -0.0228   0.0000   0.0000  -0.0000   0.0000
+  45 Ag  :2pz   -0.0000   0.0000  -0.0000  -0.0000  -0.0000  -0.0152  -0.0000
+  46 Ag  :2px   -0.0000  -0.0000   0.0000   0.1452   0.1124  -0.0000   0.0000
+  47 Ag  :2py   -0.0392  -0.0238  -0.1597  -0.0000   0.0000   0.0000   0.0000
+  48 Ag  :2pz    0.0000  -0.0000   0.0000   0.0000  -0.0000  -0.1048  -0.0000
+  49 Ag  :2px    0.0000   0.0000   0.0000  -0.5886  -0.4675   0.0000  -0.0000
+  50 Ag  :2py    0.0891   0.0774   0.6697   0.0000  -0.0000  -0.0000  -0.0000
+  51 Ag  :2pz   -0.0000   0.0000  -0.0000  -0.0000   0.0000   0.3755   0.0000
+  52 Ag  :2px   -0.0000  -0.0000   0.0000   0.9871   1.9242  -0.0000   0.0000
+  53 Ag  :2py    3.3617   0.0143  -1.0388  -0.0000   0.0000   0.0000   0.0000
+  54 Ag  :2pz    0.0000  -0.0000   0.0000  -0.0000  -0.0000  -0.5045  -0.0000
+  55 Ag  :2px   -0.0000  -0.0000   0.0000   0.2026   0.3873  -0.0000  -0.0000
+  56 Ag  :2py    0.6267   0.0330  -0.1942   0.0000   0.0000   0.0000   0.0000
+  57 Ag  :2pz    0.0000  -0.0000   0.0000   0.0000   0.0000   0.1393  -0.0000
+  58 Ag  :3d2-   0.0000  -0.0000  -0.0000  -0.0219   0.0158   0.0000  -0.0000
+  59 Ag  :3d1-   0.0000   0.0000   0.0000   0.0000   0.0000   0.0249   0.0000
+  60 Ag  :3d0   -0.1083  -0.0444   0.0166   0.0000  -0.0000   0.0000  -0.0000
+  61 Ag  :3d1+   0.0000   0.0000   0.0000  -0.0000   0.0000  -0.0000   0.0326
+  62 Ag  :3d2+  -0.1165   0.0909  -0.0154   0.0000   0.0000   0.0000   0.0000
+  63 Ag  :3d2-  -0.0000   0.0000  -0.0000   0.2358  -0.1933  -0.0000   0.0000
+  64 Ag  :3d1-  -0.0000  -0.0000  -0.0000  -0.0000  -0.0000  -0.1832  -0.0000
+  65 Ag  :3d0    0.8925   0.3756  -0.0851  -0.0000   0.0000  -0.0000   0.0000
+  66 Ag  :3d1+  -0.0000  -0.0000  -0.0000   0.0000  -0.0000   0.0000  -0.2693
+  67 Ag  :3d2+   1.0415  -0.7980   0.1377   0.0000  -0.0000  -0.0000  -0.0000
+  68 Ag  :3d2-   0.0000   0.0000  -0.0000  -0.5506  -0.8137   0.0000  -0.0000
+  69 Ag  :3d1-   0.0000   0.0000   0.0000   0.0000   0.0000   0.0970   0.0000
+  70 Ag  :3d0    0.5304  -0.0128  -0.4255  -0.0000   0.0000   0.0000  -0.0000
+  71 Ag  :3d1+   0.0000   0.0000   0.0000  -0.0000   0.0000   0.0000  -0.1943
+  72 Ag  :3d2+   0.0731   0.0223  -0.2871  -0.0000  -0.0000   0.0000   0.0000
+  73 Ag  :1s     0.0000   0.0000   0.0349   0.0706   0.0000   0.0000   0.0000
+  74 Ag  :1s    -0.0000  -0.0000  -0.1825  -0.3634   0.0000  -0.0000  -0.0000
+  75 Ag  :1s    -0.0000  -0.0000   0.3150   0.5993  -0.0000  -0.0000   0.0000
+  76 Ag  :1s     0.0000  -0.0000  -0.9024  -1.4088   0.0000  -0.0000  -0.0000
+  77 Ag  :1s    -0.0000   0.0000   0.0210  -0.0172   0.0000   0.0000   0.0000
+  78 Ag  :1s    -0.0000   0.0000  -0.0059  -0.0523   0.0000  -0.0000   0.0000
+  79 Ag  :2px   -0.0000   0.0000  -0.0141  -0.0181  -0.0000   0.0000   0.0000
+  80 Ag  :2py    0.0007  -0.0056  -0.0000   0.0000   0.0198  -0.0000  -0.0000
+  81 Ag  :2pz    0.0000  -0.0000  -0.0000  -0.0000  -0.0000  -0.0124   0.0195
+  82 Ag  :2px    0.0000  -0.0000  -0.0983  -0.1250   0.0000  -0.0000  -0.0000
+  83 Ag  :2py    0.0043  -0.0356   0.0000  -0.0000   0.1354  -0.0000  -0.0000
+  84 Ag  :2pz   -0.0000  -0.0000  -0.0000   0.0000  -0.0000  -0.0846   0.1348
+  85 Ag  :2px   -0.0000   0.0000   0.3934   0.4971  -0.0000   0.0000   0.0000
+  86 Ag  :2py   -0.0107   0.0951  -0.0000   0.0000  -0.4873   0.0000   0.0000
+  87 Ag  :2pz    0.0000   0.0000   0.0000  -0.0000   0.0000   0.2979  -0.5001
+  88 Ag  :2px    0.0000  -0.0000  -0.2168  -0.3501  -0.0000  -0.0000  -0.0000
+  89 Ag  :2py    0.8574   0.3847  -0.0000   0.0000   0.0667   0.0000  -0.0000
+  90 Ag  :2pz   -0.0000  -0.0000  -0.0000   0.0000  -0.0000  -0.3978   1.1635
+  91 Ag  :2px    0.0000  -0.0000  -0.0378  -0.0850  -0.0000   0.0000  -0.0000
+  92 Ag  :2py    0.2299  -0.2999  -0.0000  -0.0000  -0.1518   0.0000  -0.0000
+  93 Ag  :2pz   -0.0000   0.0000  -0.0000  -0.0000   0.0000  -0.0406   0.0229
+  94 Ag  :3d2-   0.0200   0.1392   0.0000   0.0000  -0.0358   0.0000  -0.0000
+  97 Ag  :3d1+   0.0000  -0.0000   0.0000  -0.0000  -0.0000   0.0288  -0.0059
+  98 Ag  :3d2+   0.0000   0.0000   0.0276  -0.0033  -0.0000  -0.0000  -0.0000
+  99 Ag  :3d2-  -0.2010  -1.0759  -0.0000  -0.0000   0.3776  -0.0000   0.0000
+ 101 Ag  :3d0    0.0000   0.0000  -0.0037   0.0382  -0.0000   0.0000   0.0000
+ 102 Ag  :3d1+  -0.0000  -0.0000  -0.0000   0.0000   0.0000  -0.2165   0.0328
+ 103 Ag  :3d2+  -0.0000   0.0000  -0.2603   0.0031   0.0000   0.0000   0.0000
+ 104 Ag  :3d2-  -0.2803   0.1622   0.0000   0.0000   0.0147  -0.0000   0.0000
+ 106 Ag  :3d0    0.0000  -0.0000  -0.1100  -0.2540  -0.0000  -0.0000  -0.0000
+ 107 Ag  :3d1+   0.0000   0.0000   0.0000  -0.0000  -0.0000   0.0939  -0.3184
+ 108 Ag  :3d2+  -0.0000   0.0000   0.1520   0.1564   0.0000  -0.0000   0.0000
+ 109 Ag  :1s    -0.0000  -0.0000   0.0349  -0.0706  -0.0000   0.0000  -0.0000
+ 110 Ag  :1s     0.0000   0.0000  -0.1825   0.3634  -0.0000   0.0000   0.0000
+ 111 Ag  :1s    -0.0000  -0.0000   0.3150  -0.5993   0.0000  -0.0000   0.0000
+ 112 Ag  :1s     0.0000  -0.0000  -0.9024   1.4088   0.0000  -0.0000  -0.0000
+ 113 Ag  :1s     0.0000   0.0000   0.0210   0.0172  -0.0000   0.0000  -0.0000
+ 114 Ag  :1s     0.0000   0.0000  -0.0059   0.0523  -0.0000  -0.0000  -0.0000
+ 115 Ag  :2px   -0.0000  -0.0000   0.0141  -0.0181   0.0000   0.0000   0.0000
+ 116 Ag  :2py    0.0007  -0.0056   0.0000  -0.0000  -0.0198  -0.0000  -0.0000
+ 117 Ag  :2pz    0.0000   0.0000  -0.0000  -0.0000   0.0000  -0.0124  -0.0195
+ 118 Ag  :2px    0.0000   0.0000   0.0983  -0.1250  -0.0000   0.0000   0.0000
+ 119 Ag  :2py    0.0043  -0.0356  -0.0000   0.0000  -0.1354   0.0000  -0.0000
+ 120 Ag  :2pz    0.0000   0.0000   0.0000   0.0000   0.0000  -0.0846  -0.1348
+ 121 Ag  :2px   -0.0000  -0.0000  -0.3934   0.4971   0.0000  -0.0000  -0.0000
+ 122 Ag  :2py   -0.0107   0.0951   0.0000  -0.0000   0.4873  -0.0000   0.0000
+ 123 Ag  :2pz   -0.0000  -0.0000  -0.0000  -0.0000  -0.0000   0.2979   0.5001
+ 124 Ag  :2px    0.0000   0.0000   0.2168  -0.3501  -0.0000   0.0000  -0.0000
+ 125 Ag  :2py    0.8574   0.3847  -0.0000   0.0000  -0.0667   0.0000  -0.0000
+ 126 Ag  :2pz    0.0000   0.0000   0.0000  -0.0000   0.0000  -0.3978  -1.1635
+ 127 Ag  :2px    0.0000   0.0000   0.0378  -0.0850  -0.0000  -0.0000  -0.0000
+ 128 Ag  :2py    0.2299  -0.2999   0.0000   0.0000   0.1518  -0.0000  -0.0000
+ 129 Ag  :2pz   -0.0000  -0.0000  -0.0000  -0.0000   0.0000  -0.0406  -0.0229
+ 130 Ag  :3d2-  -0.0200  -0.1392   0.0000   0.0000  -0.0358  -0.0000   0.0000
+ 133 Ag  :3d1+  -0.0000  -0.0000  -0.0000  -0.0000   0.0000  -0.0288  -0.0059
+ 134 Ag  :3d2+   0.0000   0.0000   0.0276   0.0033   0.0000  -0.0000   0.0000
+ 135 Ag  :3d2-   0.2010   1.0759  -0.0000  -0.0000   0.3776   0.0000  -0.0000
+ 137 Ag  :3d0    0.0000   0.0000  -0.0037  -0.0382   0.0000  -0.0000   0.0000
+ 138 Ag  :3d1+   0.0000  -0.0000   0.0000   0.0000  -0.0000   0.2165   0.0328
+ 139 Ag  :3d2+  -0.0000  -0.0000  -0.2603  -0.0031  -0.0000   0.0000  -0.0000
+ 140 Ag  :3d2-   0.2803  -0.1622   0.0000   0.0000   0.0147  -0.0000  -0.0000
+ 142 Ag  :3d0   -0.0000  -0.0000  -0.1100   0.2540   0.0000  -0.0000  -0.0000
+ 143 Ag  :3d1+  -0.0000   0.0000  -0.0000  -0.0000   0.0000  -0.0939  -0.3184
+ 144 Ag  :3d2+   0.0000   0.0000   0.1520  -0.1564  -0.0000  -0.0000  -0.0000
+
+    Orbital        98       99      100      101      102      103      104
+   1 Ag  :1s    -0.0685  -0.0000  -0.0000   0.0547   0.0351  -0.0000  -0.0435
+   2 Ag  :1s     0.3651  -0.0000   0.0000  -0.3013  -0.1828   0.0000   0.2437
+   3 Ag  :1s    -0.6236   0.0000   0.0000   0.5371   0.3042   0.0000  -0.4438
+   4 Ag  :1s     0.7185   0.0000  -0.0000  -0.3049  -0.6953  -0.0000   0.1905
+   5 Ag  :1s     4.5499  -0.0000   0.0000  -6.8365   0.6844  -0.0000   7.4710
+   6 Ag  :1s     1.1477  -0.0000   0.0000  -3.7233   0.6689  -0.0000   2.4242
+   8 Ag  :2py    0.0025  -0.0000   0.0000  -0.0091   0.0006   0.0000   0.0121
+   9 Ag  :2pz    0.0000  -0.0203  -0.0124  -0.0000   0.0000   0.0000  -0.0000
+  10 Ag  :2px   -0.0000  -0.0000  -0.0000   0.0000   0.0000  -0.0205  -0.0000
+  11 Ag  :2py    0.0182  -0.0000   0.0000  -0.0658   0.0044  -0.0000   0.0875
+  12 Ag  :2pz   -0.0000  -0.1418  -0.0871  -0.0000   0.0000  -0.0000   0.0000
+  13 Ag  :2px    0.0000   0.0000   0.0000  -0.0000  -0.0000   0.1077   0.0000
+  14 Ag  :2py   -0.0729   0.0000  -0.0000   0.2942  -0.0368   0.0000  -0.3969
+  15 Ag  :2pz    0.0000   0.5394   0.3400   0.0000  -0.0000   0.0000  -0.0000
+  16 Ag  :2px   -0.0000  -0.0000  -0.0000   0.0000   0.0000  -1.8946  -0.0000
+  17 Ag  :2py    1.4340  -0.0000   0.0000  -2.3771   0.2258  -0.0000   5.0602
+  18 Ag  :2pz   -0.0000  -1.5928  -1.0261  -0.0000  -0.0000  -0.0000   0.0000
+  19 Ag  :2px   -0.0000  -0.0000  -0.0000   0.0000   0.0000  -0.6650  -0.0000
+  20 Ag  :2py    0.5804  -0.0000   0.0000  -1.3094   0.2965  -0.0000   2.4327
+  21 Ag  :2pz   -0.0000  -0.1266  -0.1524   0.0000  -0.0000   0.0000   0.0000
+  22 Ag  :3d2-  -0.0000   0.0000  -0.0000  -0.0000   0.0000   0.0165   0.0000
+  23 Ag  :3d1-  -0.0000   0.0097  -0.0114   0.0000   0.0000  -0.0000   0.0000
+  24 Ag  :3d0    0.0112   0.0000   0.0000  -0.0086   0.0161  -0.0000   0.0114
+  26 Ag  :3d2+  -0.0294  -0.0000   0.0000   0.0251  -0.0027   0.0000   0.0317
+  27 Ag  :3d2-   0.0000  -0.0000   0.0000   0.0000   0.0000  -0.2121   0.0000
+  28 Ag  :3d1-   0.0000  -0.1111   0.0822  -0.0000  -0.0000   0.0000  -0.0000
+  29 Ag  :3d0   -0.1689  -0.0000  -0.0000   0.1820  -0.1230   0.0000  -0.1970
+  31 Ag  :3d2+   0.2965   0.0000  -0.0000  -0.3393   0.0240  -0.0000  -0.4540
+  32 Ag  :3d2-  -0.0000  -0.0000  -0.0000   0.0000   0.0000  -0.5449  -0.0000
+  33 Ag  :3d1-  -0.0000  -0.4897  -0.2624   0.0000   0.0000  -0.0000   0.0000
+  34 Ag  :3d0   -0.4281   0.0000  -0.0000   0.6716  -0.0824   0.0000  -0.7043
+  36 Ag  :3d2+   0.3327   0.0000   0.0000  -0.3088   0.1011   0.0000  -1.3915
+  37 Ag  :1s     0.0685   0.0000  -0.0000   0.0547   0.0351  -0.0000   0.0435
+  38 Ag  :1s    -0.3651   0.0000  -0.0000  -0.3013  -0.1828   0.0000  -0.2437
+  39 Ag  :1s     0.6236  -0.0000   0.0000   0.5371   0.3042   0.0000   0.4438
+  40 Ag  :1s    -0.7185  -0.0000  -0.0000  -0.3049  -0.6953  -0.0000  -0.1905
+  41 Ag  :1s    -4.5499   0.0000   0.0000  -6.8365   0.6844  -0.0000  -7.4710
+  42 Ag  :1s    -1.1477   0.0000   0.0000  -3.7233   0.6689  -0.0000  -2.4242
+  44 Ag  :2py    0.0025  -0.0000  -0.0000   0.0091  -0.0006   0.0000   0.0121
+  45 Ag  :2pz   -0.0000   0.0203  -0.0124  -0.0000   0.0000   0.0000   0.0000
+  46 Ag  :2px   -0.0000   0.0000   0.0000   0.0000   0.0000  -0.0205   0.0000
+  47 Ag  :2py    0.0182  -0.0000  -0.0000   0.0658  -0.0044  -0.0000   0.0875
+  48 Ag  :2pz    0.0000   0.1418  -0.0871  -0.0000   0.0000  -0.0000  -0.0000
+  49 Ag  :2px   -0.0000  -0.0000  -0.0000  -0.0000  -0.0000   0.1077  -0.0000
+  50 Ag  :2py   -0.0729   0.0000   0.0000  -0.2942   0.0368   0.0000  -0.3969
+  51 Ag  :2pz   -0.0000  -0.5394   0.3400   0.0000  -0.0000   0.0000   0.0000
+  52 Ag  :2px    0.0000  -0.0000   0.0000   0.0000   0.0000  -1.8946   0.0000
+  53 Ag  :2py    1.4340  -0.0000  -0.0000   2.3771  -0.2258   0.0000   5.0602
+  54 Ag  :2pz    0.0000   1.5928  -1.0261  -0.0000  -0.0000  -0.0000  -0.0000
+  55 Ag  :2px    0.0000  -0.0000   0.0000   0.0000   0.0000  -0.6650   0.0000
+  56 Ag  :2py    0.5804  -0.0000  -0.0000   1.3094  -0.2965  -0.0000   2.4327
+  57 Ag  :2pz   -0.0000   0.1266  -0.1524   0.0000  -0.0000  -0.0000  -0.0000
+  58 Ag  :3d2-  -0.0000   0.0000  -0.0000  -0.0000   0.0000  -0.0165   0.0000
+  59 Ag  :3d1-   0.0000   0.0097   0.0114  -0.0000  -0.0000  -0.0000  -0.0000
+  60 Ag  :3d0   -0.0112   0.0000   0.0000  -0.0086   0.0161   0.0000  -0.0114
+  62 Ag  :3d2+   0.0294   0.0000   0.0000   0.0251  -0.0027  -0.0000  -0.0317
+  63 Ag  :3d2-   0.0000  -0.0000   0.0000  -0.0000  -0.0000   0.2121  -0.0000
+  64 Ag  :3d1-  -0.0000  -0.1111  -0.0822   0.0000   0.0000   0.0000   0.0000
+  65 Ag  :3d0    0.1689  -0.0000  -0.0000   0.1820  -0.1230   0.0000   0.1970
+  67 Ag  :3d2+  -0.2965  -0.0000  -0.0000  -0.3393   0.0240  -0.0000   0.4540
+  68 Ag  :3d2-  -0.0000   0.0000  -0.0000  -0.0000  -0.0000   0.5449  -0.0000
+  69 Ag  :3d1-  -0.0000  -0.4897   0.2624  -0.0000  -0.0000  -0.0000   0.0000
+  70 Ag  :3d0    0.4281  -0.0000  -0.0000   0.6716  -0.0824  -0.0000   0.7043
+  72 Ag  :3d2+  -0.3327  -0.0000   0.0000  -0.3088   0.1011  -0.0000   1.3915
+  73 Ag  :1s     0.0000   0.0000  -0.0000  -0.0344   0.0393  -0.0610   0.0000
+  74 Ag  :1s    -0.0000   0.0000   0.0000   0.1918  -0.2052   0.3249  -0.0000
+  75 Ag  :1s    -0.0000  -0.0000  -0.0000  -0.3404   0.3393  -0.5520  -0.0000
+  76 Ag  :1s     0.0000   0.0000   0.0000  -0.3054  -0.5471   0.6520   0.0000
+  77 Ag  :1s    -0.0000   0.0000  -0.0000   6.8765  -0.6706   3.1151  -0.0000
+  78 Ag  :1s    -0.0000  -0.0000  -0.0000   3.7889   0.1164  -0.2042  -0.0000
+  79 Ag  :2px   -0.0000  -0.0000   0.0000  -0.0155   0.0007  -0.0050  -0.0000
+  80 Ag  :2py    0.0185  -0.0000  -0.0000  -0.0000   0.0000   0.0000  -0.0103
+  81 Ag  :2pz    0.0000  -0.0000   0.0161   0.0000  -0.0000  -0.0000  -0.0000
+  82 Ag  :2px    0.0000  -0.0000   0.0000  -0.1113   0.0048  -0.0364  -0.0000
+  83 Ag  :2py    0.1290   0.0000  -0.0000   0.0000  -0.0000  -0.0000  -0.0728
+  84 Ag  :2pz    0.0000  -0.0000   0.1123   0.0000  -0.0000   0.0000  -0.0000
+  85 Ag  :2px   -0.0000   0.0000  -0.0000   0.4982  -0.0111   0.1603   0.0000
+  86 Ag  :2py   -0.5174  -0.0000   0.0000  -0.0000   0.0000   0.0000   0.2969
+  87 Ag  :2pz   -0.0000   0.0000  -0.4240  -0.0000   0.0000  -0.0000   0.0000
+  88 Ag  :2px    0.0000  -0.0000   0.0000  -4.2148   0.3047  -2.0059   0.0000
+  89 Ag  :2py    2.2899  -0.0000  -0.0000   0.0000  -0.0000  -0.0000  -0.6395
+  90 Ag  :2pz    0.0000  -0.0000   1.2160   0.0000  -0.0000  -0.0000  -0.0000
+  91 Ag  :2px    0.0000   0.0000   0.0000  -2.4781   0.0890  -0.5020   0.0000
+  92 Ag  :2py    0.4511  -0.0000  -0.0000   0.0000  -0.0000  -0.0000  -0.1171
+  93 Ag  :2pz   -0.0000   0.0000   0.1677  -0.0000   0.0000   0.0000   0.0000
+  94 Ag  :3d2-   0.0218   0.0000   0.0000  -0.0000   0.0000  -0.0000   0.0024
+  95 Ag  :3d1-   0.0000   0.0276  -0.0000   0.0000  -0.0000   0.0000  -0.0000
+  96 Ag  :3d0    0.0000   0.0000  -0.0000   0.0167   0.0093   0.0033  -0.0000
+  97 Ag  :3d1+   0.0000  -0.0000   0.0105  -0.0000  -0.0000  -0.0000  -0.0000
+  98 Ag  :3d2+  -0.0000   0.0000  -0.0000  -0.0104  -0.0054  -0.0006   0.0000
+  99 Ag  :3d2-  -0.2448  -0.0000  -0.0000   0.0000  -0.0000  -0.0000  -0.0530
+ 100 Ag  :3d1-  -0.0000  -0.2225   0.0000  -0.0000   0.0000  -0.0000   0.0000
+ 101 Ag  :3d0   -0.0000  -0.0000   0.0000  -0.2179  -0.0609  -0.0841   0.0000
+ 102 Ag  :3d1+  -0.0000   0.0000  -0.1065   0.0000   0.0000   0.0000   0.0000
+ 103 Ag  :3d2+   0.0000  -0.0000   0.0000   0.1925   0.0282   0.0445  -0.0000
+ 104 Ag  :3d2-  -0.8830   0.0000   0.0000  -0.0000   0.0000   0.0000   0.1018
+ 105 Ag  :3d1-  -0.0000  -0.0399  -0.0000   0.0000  -0.0000   0.0000  -0.0000
+ 106 Ag  :3d0    0.0000   0.0000   0.0000  -0.7741   0.0705  -0.3195  -0.0000
+ 107 Ag  :3d1+  -0.0000   0.0000  -0.3318  -0.0000  -0.0000  -0.0000   0.0000
+ 108 Ag  :3d2+  -0.0000   0.0000  -0.0000   0.8059  -0.0170   0.4454   0.0000
+ 109 Ag  :1s    -0.0000  -0.0000   0.0000  -0.0344   0.0393   0.0610  -0.0000
+ 110 Ag  :1s     0.0000  -0.0000  -0.0000   0.1918  -0.2052  -0.3249   0.0000
+ 111 Ag  :1s    -0.0000   0.0000  -0.0000  -0.3404   0.3393   0.5520  -0.0000
+ 112 Ag  :1s     0.0000  -0.0000   0.0000  -0.3054  -0.5471  -0.6520   0.0000
+ 113 Ag  :1s    -0.0000  -0.0000  -0.0000   6.8765  -0.6706  -3.1151  -0.0000
+ 114 Ag  :1s    -0.0000   0.0000  -0.0000   3.7889   0.1164   0.2042  -0.0000
+ 115 Ag  :2px    0.0000  -0.0000  -0.0000   0.0155  -0.0007  -0.0050   0.0000
+ 116 Ag  :2py    0.0185   0.0000  -0.0000  -0.0000   0.0000  -0.0000  -0.0103
+ 117 Ag  :2pz   -0.0000  -0.0000   0.0161   0.0000  -0.0000  -0.0000   0.0000
+ 118 Ag  :2px   -0.0000  -0.0000  -0.0000   0.1113  -0.0048  -0.0364  -0.0000
+ 119 Ag  :2py    0.1290  -0.0000   0.0000   0.0000  -0.0000   0.0000  -0.0728
+ 120 Ag  :2pz   -0.0000  -0.0000   0.1123   0.0000  -0.0000   0.0000   0.0000
+ 121 Ag  :2px    0.0000   0.0000   0.0000  -0.4982   0.0111   0.1603   0.0000
+ 122 Ag  :2py   -0.5174   0.0000  -0.0000  -0.0000   0.0000  -0.0000   0.2969
+ 123 Ag  :2pz    0.0000   0.0000  -0.4240  -0.0000   0.0000  -0.0000  -0.0000
+ 124 Ag  :2px   -0.0000  -0.0000  -0.0000   4.2148  -0.3047  -2.0059  -0.0000
+ 125 Ag  :2py    2.2899   0.0000   0.0000   0.0000  -0.0000   0.0000  -0.6395
+ 126 Ag  :2pz   -0.0000  -0.0000   1.2160   0.0000  -0.0000   0.0000   0.0000
+ 127 Ag  :2px   -0.0000  -0.0000  -0.0000   2.4781  -0.0890  -0.5020  -0.0000
+ 128 Ag  :2py    0.4511   0.0000   0.0000  -0.0000   0.0000   0.0000  -0.1171
+ 129 Ag  :2pz    0.0000   0.0000   0.1677  -0.0000   0.0000  -0.0000  -0.0000
+ 130 Ag  :3d2-  -0.0218   0.0000  -0.0000  -0.0000   0.0000  -0.0000  -0.0024
+ 131 Ag  :3d1-  -0.0000   0.0276  -0.0000  -0.0000  -0.0000   0.0000   0.0000
+ 132 Ag  :3d0    0.0000  -0.0000  -0.0000   0.0167   0.0093  -0.0033  -0.0000
+ 133 Ag  :3d1+   0.0000  -0.0000  -0.0105   0.0000   0.0000   0.0000  -0.0000
+ 134 Ag  :3d2+   0.0000  -0.0000  -0.0000  -0.0104  -0.0054   0.0006  -0.0000
+ 135 Ag  :3d2-   0.2448  -0.0000   0.0000   0.0000  -0.0000   0.0000   0.0530
+ 136 Ag  :3d1-   0.0000  -0.2225   0.0000   0.0000   0.0000  -0.0000  -0.0000
+ 137 Ag  :3d0   -0.0000   0.0000  -0.0000  -0.2179  -0.0609   0.0841   0.0000
+ 138 Ag  :3d1+  -0.0000   0.0000   0.1065  -0.0000  -0.0000  -0.0000   0.0000
+ 139 Ag  :3d2+  -0.0000   0.0000   0.0000   0.1925   0.0282  -0.0445   0.0000
+ 140 Ag  :3d2-   0.8830   0.0000   0.0000  -0.0000   0.0000   0.0000  -0.1018
+ 141 Ag  :3d1-  -0.0000  -0.0399  -0.0000  -0.0000  -0.0000   0.0000   0.0000
+ 142 Ag  :3d0    0.0000  -0.0000   0.0000  -0.7741   0.0705   0.3195   0.0000
+ 143 Ag  :3d1+  -0.0000  -0.0000   0.3318   0.0000   0.0000   0.0000   0.0000
+ 144 Ag  :3d2+  -0.0000  -0.0000  -0.0000   0.8059  -0.0170  -0.4454  -0.0000
+
+  Total CPU  time used in SIRIUS :  1 minute  19 seconds
+  Total wall time used in SIRIUS :  11.28 seconds
+
+ 
+     Date and time (Linux)  : Sun May 21 04:26:36 2017
+     Host name              : south                              
+
+
+                     .---------------------------------------.
+                     | End of Wave Function Section (SIRIUS) |
+                     `---------------------------------------'
+
+
+
+        *****************************************************************
+        ******** Output from **PROPE input processing for ABACUS ********
+        *****************************************************************
+
+
+
+ The following molecular properties will be calculated in this run:
+ ------------------------------------------------------------------
+
+ Default print level:        0
+
+      Dynamic electric dipole polarizability
+      Natural orbital connection is used
+      for perturbation dependent basis sets.
+      Linear response properties
+
+
+ Changes of defaults for *ABALNR:
+ --------------------------------
+
+ Number of frequencies          :   3
+ Frequencies                    :  0.000000  0.000100  0.072000
+ Print level                    :   0
+ Lin Resp convergence threshold :  5.00D-05
+ Max. Lin Resp iterations       :  60
+
+ Center of mass dipole origin  :    0.000000    0.000000    0.000000
+
+ Center of mass gauge origin   :    0.000000    0.000000    0.000000
+
+
+                 .------------------------------------------------.
+                 | Starting in Static Property Section (ABACUS) - |
+                 `------------------------------------------------'
+
+
+ 
+     Date and time (Linux)  : Sun May 21 04:26:36 2017
+     Host name              : south                              
+
+
+     ***********************************************************************
+     ****************** Solving Linear Response Equations ******************
+     ***********************************************************************
+
+
+ Integral transformation: Total CPU and WALL times (sec)      48.592      49.167
+
+ Sorting integrals to Dirac format: Total CPU and WALL times (sec)       4.908       4.910
+
+ *** INFO, negative eigenvalues in reduced matrix. Symmetry  1,  triplet       F Dimension of reduced matrix =     6
+
+ GP * SOLUTION vector at frequency     0.00000 a.u.
+ after    3 linear transformations is      4.91014849D+01
+ INERTIA (POS,ZER,NEG) of reduced matrix is    4    0    2
+ Determinant of reduced matrix is  2.03 * 10 ** -5.0
+
+ *** INFO, negative eigenvalues in reduced matrix. Symmetry  1,  triplet       F Dimension of reduced matrix =     6
+
+ GP * SOLUTION vector at frequency     0.00010 a.u.
+ after    3 linear transformations is      4.90826516D+01
+ INERTIA (POS,ZER,NEG) of reduced matrix is    4    0    2
+ Determinant of reduced matrix is  2.03 * 10 ** -5.0
+
+ *** INFO, negative eigenvalues in reduced matrix. Symmetry  1,  triplet       F Dimension of reduced matrix =     6
+
+ GP * SOLUTION vector at frequency     0.07200 a.u.
+ after    3 linear transformations is      1.77500741D+02
+ INERTIA (POS,ZER,NEG) of reduced matrix is    5    0    1
+ Determinant of reduced matrix is -1.51 * 10 ** -3.0
+RSPORT:    1 out of    3 new trial vectors linear dependent
+
+ *** INFO, negative eigenvalues in reduced matrix. Symmetry  1,  triplet       F Dimension of reduced matrix =    10
+
+ GP * SOLUTION vector at frequency     0.00000 a.u.
+ after    5 linear transformations is      8.56904852D+01
+ INERTIA (POS,ZER,NEG) of reduced matrix is    8    0    2
+ Determinant of reduced matrix is  3.26 * 10 ** -5.0
+
+ *** INFO, negative eigenvalues in reduced matrix. Symmetry  1,  triplet       F Dimension of reduced matrix =    10
+
+ GP * SOLUTION vector at frequency     0.00010 a.u.
+ after    5 linear transformations is      8.56810394D+01
+ INERTIA (POS,ZER,NEG) of reduced matrix is    8    0    2
+ Determinant of reduced matrix is  3.26 * 10 ** -5.0
+
+ *** INFO, negative eigenvalues in reduced matrix. Symmetry  1,  triplet       F Dimension of reduced matrix =    10
+
+ GP * SOLUTION vector at frequency     0.07200 a.u.
+ after    5 linear transformations is      1.83496499D+02
+ INERTIA (POS,ZER,NEG) of reduced matrix is    9    0    1
+ Determinant of reduced matrix is -1.59 * 10 ** -3.0
+RSPORT:    1 out of    3 new trial vectors linear dependent
+
+ *** INFO, negative eigenvalues in reduced matrix. Symmetry  1,  triplet       F Dimension of reduced matrix =    14
+
+ GP * SOLUTION vector at frequency     0.00000 a.u.
+ after    7 linear transformations is      8.63965706D+01
+ INERTIA (POS,ZER,NEG) of reduced matrix is   12    0    2
+ Determinant of reduced matrix is  4.56 * 10 ** -5.0
+
+ *** INFO, negative eigenvalues in reduced matrix. Symmetry  1,  triplet       F Dimension of reduced matrix =    14
+
+ GP * SOLUTION vector at frequency     0.00010 a.u.
+ after    7 linear transformations is      8.63874330D+01
+ INERTIA (POS,ZER,NEG) of reduced matrix is   12    0    2
+ Determinant of reduced matrix is  4.56 * 10 ** -5.0
+
+ *** INFO, negative eigenvalues in reduced matrix. Symmetry  1,  triplet       F Dimension of reduced matrix =    14
+
+ GP * SOLUTION vector at frequency     0.07200 a.u.
+ after    7 linear transformations is      1.83628292D+02
+ INERTIA (POS,ZER,NEG) of reduced matrix is   13    0    1
+ Determinant of reduced matrix is -2.05 * 10 ** -3.0
+RSPORT:    1 out of    3 new trial vectors linear dependent
+
+ *** INFO, negative eigenvalues in reduced matrix. Symmetry  1,  triplet       F Dimension of reduced matrix =    18
+
+ GP * SOLUTION vector at frequency     0.00000 a.u.
+ after    9 linear transformations is      8.64101821D+01
+ INERTIA (POS,ZER,NEG) of reduced matrix is   16    0    2
+ Determinant of reduced matrix is  8.49 * 10 ** -5.0
+
+ *** INFO, negative eigenvalues in reduced matrix. Symmetry  1,  triplet       F Dimension of reduced matrix =    18
+
+ GP * SOLUTION vector at frequency     0.00010 a.u.
+ after    9 linear transformations is      8.64011716D+01
+ INERTIA (POS,ZER,NEG) of reduced matrix is   16    0    2
+ Determinant of reduced matrix is  8.49 * 10 ** -5.0
+
+ *** INFO, negative eigenvalues in reduced matrix. Symmetry  1,  triplet       F Dimension of reduced matrix =    18
+
+ GP * SOLUTION vector at frequency     0.07200 a.u.
+ after    9 linear transformations is      1.83630768D+02
+ INERTIA (POS,ZER,NEG) of reduced matrix is   17    0    1
+ Determinant of reduced matrix is -3.58 * 10 ** -3.0
+RSPORT:    1 out of    3 new trial vectors linear dependent
+
+ *** INFO, negative eigenvalues in reduced matrix. Symmetry  1,  triplet       F Dimension of reduced matrix =    22
+
+ GP * SOLUTION vector at frequency     0.00000 a.u.
+ after   11 linear transformations is      8.64103476D+01
+ INERTIA (POS,ZER,NEG) of reduced matrix is   20    0    2
+ Determinant of reduced matrix is  7.59 * 10 ** -4.0
+
+ *** INFO, negative eigenvalues in reduced matrix. Symmetry  1,  triplet       F Dimension of reduced matrix =    22
+
+ GP * SOLUTION vector at frequency     0.00010 a.u.
+ after   11 linear transformations is      8.64013660D+01
+ INERTIA (POS,ZER,NEG) of reduced matrix is   20    0    2
+ Determinant of reduced matrix is  7.59 * 10 ** -4.0
+
+ *** INFO, negative eigenvalues in reduced matrix. Symmetry  1,  triplet       F Dimension of reduced matrix =    22
+
+ GP * SOLUTION vector at frequency     0.07200 a.u.
+ after   11 linear transformations is      1.83630823D+02
+ INERTIA (POS,ZER,NEG) of reduced matrix is   21    0    1
+ Determinant of reduced matrix is -3.05 * 10 ** -2.0
+
+ *** INFO, negative eigenvalues in reduced matrix. Symmetry  1,  triplet       F Dimension of reduced matrix =    26
+
+ GP * SOLUTION vector at frequency     0.00000 a.u.
+ after   13 linear transformations is      8.64103491D+01
+ INERTIA (POS,ZER,NEG) of reduced matrix is   24    0    2
+ Determinant of reduced matrix is  5.38 * 10 ** -3.0
+
+ *** INFO, negative eigenvalues in reduced matrix. Symmetry  1,  triplet       F Dimension of reduced matrix =    26
+
+ GP * SOLUTION vector at frequency     0.00010 a.u.
+ after   13 linear transformations is      8.64016237D+01
+ INERTIA (POS,ZER,NEG) of reduced matrix is   24    0    2
+ Determinant of reduced matrix is  5.38 * 10 ** -3.0
+
+ *** INFO, negative eigenvalues in reduced matrix. Symmetry  1,  triplet       F Dimension of reduced matrix =    26
+
+ GP * SOLUTION vector at frequency     0.07200 a.u.
+ after   13 linear transformations is      1.83630824D+02
+ INERTIA (POS,ZER,NEG) of reduced matrix is   25    0    1
+ Determinant of reduced matrix is -2.04 * 10 ** -1.0
+
+ *** INFO, negative eigenvalues in reduced matrix. Symmetry  1,  triplet       F Dimension of reduced matrix =     6
+
+ GP * SOLUTION vector at frequency     0.07200 a.u.
+ after    3 linear transformations is      1.33859609D+02
+ INERTIA (POS,ZER,NEG) of reduced matrix is    5    0    1
+ Determinant of reduced matrix is -4.04 * 10 ** -3.0
+
+ *** INFO, negative eigenvalues in reduced matrix. Symmetry  1,  triplet       F Dimension of reduced matrix =    12
+
+ GP * SOLUTION vector at frequency     0.07200 a.u.
+ after    6 linear transformations is      1.40502856D+02
+ INERTIA (POS,ZER,NEG) of reduced matrix is   11    0    1
+ Determinant of reduced matrix is -7.78 * 10 ** -4.0
+RSPORT:    1 out of    3 new trial vectors linear dependent
+
+ *** INFO, negative eigenvalues in reduced matrix. Symmetry  1,  triplet       F Dimension of reduced matrix =    16
+
+ GP * SOLUTION vector at frequency     0.00000 a.u.
+ after    8 linear transformations is     -7.39956319D+03
+ INERTIA (POS,ZER,NEG) of reduced matrix is   15    0    1
+ Determinant of reduced matrix is -1.64 * 10 ** -7.0
+
+ *** INFO, negative eigenvalues in reduced matrix. Symmetry  1,  triplet       F Dimension of reduced matrix =    16
+
+ GP * SOLUTION vector at frequency     0.00010 a.u.
+ after    8 linear transformations is     -7.29923074D+03
+ INERTIA (POS,ZER,NEG) of reduced matrix is   15    0    1
+ Determinant of reduced matrix is -1.67 * 10 ** -7.0
+
+ *** INFO, negative eigenvalues in reduced matrix. Symmetry  1,  triplet       F Dimension of reduced matrix =    16
+
+ GP * SOLUTION vector at frequency     0.07200 a.u.
+ after    8 linear transformations is      1.41234063D+02
+ INERTIA (POS,ZER,NEG) of reduced matrix is   15    0    1
+ Determinant of reduced matrix is -7.70 * 10 ** -4.0
+
+ *** INFO, negative eigenvalues in reduced matrix. Symmetry  1,  triplet       F Dimension of reduced matrix =    22
+
+ GP * SOLUTION vector at frequency     0.00000 a.u.
+ after   11 linear transformations is     -7.22133053D+03
+ INERTIA (POS,ZER,NEG) of reduced matrix is   21    0    1
+ Determinant of reduced matrix is -5.02 * 10 ** -6.0
+
+ *** INFO, negative eigenvalues in reduced matrix. Symmetry  1,  triplet       F Dimension of reduced matrix =    22
+
+ GP * SOLUTION vector at frequency     0.00010 a.u.
+ after   11 linear transformations is     -7.12561733D+03
+ INERTIA (POS,ZER,NEG) of reduced matrix is   21    0    1
+ Determinant of reduced matrix is -5.09 * 10 ** -6.0
+
+ *** INFO, negative eigenvalues in reduced matrix. Symmetry  1,  triplet       F Dimension of reduced matrix =    22
+
+ GP * SOLUTION vector at frequency     0.07200 a.u.
+ after   11 linear transformations is      1.41276284D+02
+ INERTIA (POS,ZER,NEG) of reduced matrix is   21    0    1
+ Determinant of reduced matrix is -2.14 * 10 ** -2.0
+RSPORT:    1 out of    3 new trial vectors linear dependent
+
+ *** INFO, negative eigenvalues in reduced matrix. Symmetry  1,  triplet       F Dimension of reduced matrix =    26
+
+ GP * SOLUTION vector at frequency     0.00000 a.u.
+ after   13 linear transformations is     -7.21974724D+03
+ INERTIA (POS,ZER,NEG) of reduced matrix is   25    0    1
+ Determinant of reduced matrix is -1.27 * 10 ** -4.0
+
+ *** INFO, negative eigenvalues in reduced matrix. Symmetry  1,  triplet       F Dimension of reduced matrix =    26
+
+ GP * SOLUTION vector at frequency     0.00010 a.u.
+ after   13 linear transformations is     -7.12407480D+03
+ INERTIA (POS,ZER,NEG) of reduced matrix is   25    0    1
+ Determinant of reduced matrix is -1.29 * 10 ** -4.0
+
+ *** INFO, negative eigenvalues in reduced matrix. Symmetry  1,  triplet       F Dimension of reduced matrix =    26
+
+ GP * SOLUTION vector at frequency     0.07200 a.u.
+ after   13 linear transformations is      1.41276892D+02
+ INERTIA (POS,ZER,NEG) of reduced matrix is   25    0    1
+ Determinant of reduced matrix is -5.30 * 10 ** -1.0
+
+ *** INFO, negative eigenvalues in reduced matrix. Symmetry  1,  triplet       F Dimension of reduced matrix =    28
+
+ GP * SOLUTION vector at frequency     0.00000 a.u.
+ after   14 linear transformations is     -7.21973934D+03
+ INERTIA (POS,ZER,NEG) of reduced matrix is   27    0    1
+ Determinant of reduced matrix is -5.40 * 10 ** -4.0
+
+ *** INFO, negative eigenvalues in reduced matrix. Symmetry  1,  triplet       F Dimension of reduced matrix =    28
+
+ GP * SOLUTION vector at frequency     0.00010 a.u.
+ after   14 linear transformations is     -7.12406711D+03
+ INERTIA (POS,ZER,NEG) of reduced matrix is   27    0    1
+ Determinant of reduced matrix is -5.47 * 10 ** -4.0
+
+ *** INFO, negative eigenvalues in reduced matrix. Symmetry  1,  triplet       F Dimension of reduced matrix =    28
+
+ GP * SOLUTION vector at frequency     0.07200 a.u.
+ after   14 linear transformations is      1.41276896D+02
+ INERTIA (POS,ZER,NEG) of reduced matrix is   27    0    1
+ Determinant of reduced matrix is -2.24 * 10 **  0.0
+
+ *** INFO, negative eigenvalues in reduced matrix. Symmetry  1,  triplet       F Dimension of reduced matrix =     6
+
+ GP * SOLUTION vector at frequency     0.07200 a.u.
+ after    3 linear transformations is      9.47639996D+01
+ INERTIA (POS,ZER,NEG) of reduced matrix is    5    0    1
+ Determinant of reduced matrix is -3.27 * 10 ** -2.0
+
+ *** INFO, negative eigenvalues in reduced matrix. Symmetry  1,  triplet       F Dimension of reduced matrix =    12
+
+ GP * SOLUTION vector at frequency     0.07200 a.u.
+ after    6 linear transformations is      9.69874798D+01
+ INERTIA (POS,ZER,NEG) of reduced matrix is   11    0    1
+ Determinant of reduced matrix is -5.90 * 10 ** -2.0
+
+ *** INFO, negative eigenvalues in reduced matrix. Symmetry  1,  triplet       F Dimension of reduced matrix =    18
+
+ GP * SOLUTION vector at frequency     0.07200 a.u.
+ after    9 linear transformations is      9.70003914D+01
+ INERTIA (POS,ZER,NEG) of reduced matrix is   17    0    1
+ Determinant of reduced matrix is -1.07 * 10 ** -1.0
+
+ *** INFO, negative eigenvalues in reduced matrix. Symmetry  1,  triplet       F Dimension of reduced matrix =    24
+
+ GP * SOLUTION vector at frequency     0.07200 a.u.
+ after   12 linear transformations is      9.70005992D+01
+ INERTIA (POS,ZER,NEG) of reduced matrix is   23    0    1
+ Determinant of reduced matrix is -2.21 * 10 **  0.0
+
+ *** INFO, negative eigenvalues in reduced matrix. Symmetry  1,  triplet       F Dimension of reduced matrix =    30
+
+ GP * SOLUTION vector at frequency     0.07200 a.u.
+ after   15 linear transformations is      9.70006043D+01
+ INERTIA (POS,ZER,NEG) of reduced matrix is   29    0    1
+ Determinant of reduced matrix is -1.17 * 10 **  2.0
+
+ *** INFO, negative eigenvalues in reduced matrix. Symmetry  1,  triplet       F Dimension of reduced matrix =    36
+
+ GP * SOLUTION vector at frequency     0.07200 a.u.
+ after   18 linear transformations is      9.70006044D+01
+ INERTIA (POS,ZER,NEG) of reduced matrix is   35    0    1
+ Determinant of reduced matrix is -1.96 * 10 **  4.0
+  Time used in LNRABA     is      3 minutes 10 seconds
+
+
+   ***************************************************************************
+   ************************ FINAL RESULTS from ABACUS ************************
+   ***************************************************************************
+
+
+ 
+     Date and time (Linux)  : Sun May 21 04:28:37 2017
+     Host name              : south                              
+
+
+                             Molecular geometry (au)
+                             -----------------------
+
+ Ag         0.0000000000           -2.5239465584            0.0000000000
+ Ag         0.0000000000            2.5239465584            0.0000000000
+ Ag         4.5646164474            0.0000000000            0.0000000000
+ Ag        -4.5646164474            0.0000000000           -0.0000000000
+
+
+
+
+
+                        Molecular wave function and energy
+                        ----------------------------------
+
+     Spatial symmetry   1 ( A   )
+     Spin multiplicity  2
+     2 * M_S            1
+     State number       1
+     Total charge       1
+
+     Total energy      -6014.5588220714 au (Hartrees)
+                       -163664.47096080 eV
+                         -15791221.7528 kJ/mol
+                          -3774192.5795 kcal/mol
+
+
+                   Scalar Breit-Pauli relativistic corrections
+                   -------------------------------------------
+
+     Darwin correction:                          0.1341990243 au
+     Mass-velocity correction:                  -0.6023574819 au
+
+     Total relativistic correction:             -0.4681584576 au ( 0.0078%)
+     Non-relativistic + relativistic energy: -6015.0269805290 au
+
+
+
+      (Note that these corrections are NOT included in the results below.)
+
+
+                                  Dipole moment
+                                  -------------
+
+                 au               Debye          C m (/(10**-30)
+              0.000000           0.000000           0.000000
+
+
+                             Dipole moment components
+                             ------------------------
+
+                 au               Debye          C m (/(10**-30)
+
+      x      0.00000000         0.00000000         0.00000001
+      y      0.00000000         0.00000000         0.00000000
+      z      0.00000000         0.00000000         0.00000000
+
+
+   Units:   1 a.u. =   2.54175 Debye 
+            1 a.u. =   8.47835 (10**-30) C m (SI)
+
+
+
+
+    ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    ++++++++++++++++++ Frequency dependent polarizabilities ++++++++++++++++++
+    ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+          Polarizability tensor for frequency     0.000000 au
+          ----------------------------------------------------
+                            Ex             Ey             Ez
+
+                Ex    86.41035     -7.3493271E-08 -3.9886895E-09
+                Ey   8.0461773E-06  -7219.739     -2.1337146E-07
+                Ez   6.8625900E-10  2.7931549E-09   95.70375    
+
+Isotropic polarizability:  -2345.875    
+
+          Polarizability tensor for frequency     0.000100 au
+          ----------------------------------------------------
+                            Ex             Ey             Ez
+
+                Ex    86.40162     -7.3426856E-08 -4.0064662E-09
+                Ey   7.9412771E-06  -7124.067     -2.1066618E-07
+                Ez   6.8615510E-10  2.7933389E-09   95.70375    
+
+Isotropic polarizability:  -2313.987    
+
+          Polarizability tensor for frequency     0.072000 au
+          ----------------------------------------------------
+                            Ex             Ey             Ez
+
+                Ex    183.6308     -1.1012338E-07 -1.3254276E-09
+                Ey   1.2835026E-07   141.2769      1.8451377E-08
+                Ez  -8.8684572E-09  3.2790452E-09   97.00060    
+
+Isotropic polarizability:   140.6361    
+
+
+   Interatomic separations (in Angstrom):
+   --------------------------------------
+
+            Ag          Ag          Ag          Ag    
+            ------      ------      ------      ------
+ Ag    :    0.000000
+ Ag    :    2.671230    0.000000
+ Ag    :    2.760157    2.760157    0.000000
+ Ag    :    2.760157    2.760157    4.830982    0.000000
+
+
+  Max    interatomic separation is    4.8310 Angstrom (    9.1292 Bohr)
+  between atoms    4 and    3, "Ag    " and "Ag    ".
+
+  Min YX interatomic separation is    2.6712 Angstrom (    5.0479 Bohr)
+
+
+  Bond distances (Angstrom):
+  --------------------------
+
+                  atom 1     atom 2       distance
+                  ------     ------       --------
+  bond distance:  Ag         Ag           2.671230
+  bond distance:  Ag         Ag           2.760157
+  bond distance:  Ag         Ag           2.760157
+  bond distance:  Ag         Ag           2.760157
+  bond distance:  Ag         Ag           2.760157
+
+
+  Bond angles (degrees):
+  ----------------------
+
+                  atom 1     atom 2     atom 3         angle
+                  ------     ------     ------         -----
+  bond angle:     Ag         Ag         Ag            61.060
+  bond angle:     Ag         Ag         Ag            61.060
+  bond angle:     Ag         Ag         Ag           122.120
+  bond angle:     Ag         Ag         Ag            61.060
+  bond angle:     Ag         Ag         Ag            61.060
+  bond angle:     Ag         Ag         Ag           122.120
+  bond angle:     Ag         Ag         Ag            57.880
+  bond angle:     Ag         Ag         Ag            57.880
+
+
+
+
+ CPU time statistics for ABACUS
+ ------------------------------
+
+ MAGINT     00:00:02       1 %
+ LNRABA     00:03:10      99 %
+
+ TOTAL      00:03:12     100 %
+
+
+  Total CPU  time used in ABACUS:  3 minutes 12 seconds
+  Total wall time used in ABACUS:  2 minutes  0 seconds
+
+
+                   .-------------------------------------------.
+                   | End of Static Property Section (ABACUS) - |
+                   `-------------------------------------------'
+
+  Total CPU  time used in DALTON:  4 minutes 41 seconds
+  Total wall time used in DALTON:  2 minutes 17 seconds
+
+ 
+     Date and time (Linux)  : Sun May 21 04:28:37 2017
+     Host name              : south                              
