@@ -35,7 +35,7 @@ class MOLDEN(filewriter.Writer):
         return tail or ntpath.basename(head)
 
     def _coords_from_ccdata(self, index):
-        """Create an [Atoms] section using geometry at the given index."""
+        """Create [Atoms] section using geometry at the given index."""
 
         element_list = [self.pt.element[Z] for Z in self.ccdata.atomnos]
         atomcoords = self.ccdata.atomcoords[index]
@@ -50,6 +50,32 @@ class MOLDEN(filewriter.Writer):
             block.append(atom_template.format(element, no, atomno, x, y, z))
 
         return block
+
+    def _gto_from_ccdata(self):
+        """Create [GTO] section using gbasis."""
+
+        # atom_sequence_number1 0
+        # shell_label number_of_primitives 1.00
+        # exponent_primitive_1 contraction_coefficient_1 (contraction_coefficient_1)
+        # ...
+        # empty line
+        # atom_sequence__number2 0
+        gbasis = self.ccdata.gbasis
+        block = []
+        label_template = '{:s} {:5d} 1.0'
+        basis_template = '  {:15.10f} {:15.10f}'
+        block = []
+
+        for no, basis in enumerate(gbasis):
+            block.append('%5d 1'%no)
+            for prims in basis:
+                block.append(label_template.format(prims[0].lower(), len(prims[1])))
+                for prim in prims[1]:
+                    block.append(basis_template.format(prim[0], prim[1]))
+            block.append('')
+
+        return block
+
 
     def generate_repr(self):
         """Generate the MOLDEN representation of the logfile data."""
@@ -67,6 +93,10 @@ class MOLDEN(filewriter.Writer):
         # Last set of coordinates for geometry optimization runs.
         index = -1
         molden_block.extend(self._coords_from_ccdata(index))
+
+        if hasattr(self.ccdata, 'gbaisis'):
+            molden_block.append("[GTO]")
+            molden_block.extend(self._gto_from_ccdata())
 
         return '\n'.join(molden_block)
 
