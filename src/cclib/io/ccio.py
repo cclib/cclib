@@ -49,6 +49,7 @@ from . import cjsonreader
 from . import cjsonwriter
 from . import cmlwriter
 from . import xyzwriter
+from . import moldenwriter
 
 try:
     from ..bridge import cclib2openbabel
@@ -286,7 +287,7 @@ def ccwrite(ccobj, outputtype=None, outputdest=None, terse=False , returnstr=Fal
 
     Inputs:
         ccobj - Either a job (from ccopen) or a data (from job.parse()) object
-        outputtype - The output format (should be one of 'cjson', 'cml', 'xyz')
+        outputtype - The output format (should be one of 'cjson', 'cml', 'xyz', 'molden')
         outputdest - A filename or file object for writing
         terse -  This option is currently limited to the cjson/json format. Whether to indent the cjson/json or not
         returnstr - Whether or not to return a string representation.
@@ -345,7 +346,7 @@ def _determine_output_format(outputtype, outputdest):
 
     Inputs:
       outputtype - a string corresponding to the file type
-        (one of cjson/json, cml, xyz)
+        (one of cjson/json, cml, xyz, molden)
       outputdest - a filename string or file handle
     Returns:
       outputclass - the class corresponding to the correct output format
@@ -363,6 +364,8 @@ def _determine_output_format(outputtype, outputdest):
             outputclass = cmlwriter.CML
         elif outputtype.lower() == 'xyz':
             outputclass = xyzwriter.XYZ
+        elif outputtype.lower() == 'molden':
+            outputclass = moldenwriter.MOLDEN
     else:
         # Then checkout outputdest.
         if isinstance(outputdest, str):
@@ -377,6 +380,8 @@ def _determine_output_format(outputtype, outputdest):
             outputclass = cmlwriter.CML
         elif extension.lower() == '.xyz':
             outputclass = xyzwriter.XYZ
+        elif extension.lower() == '.molden':
+            outputclass = moldenwriter.MOLDEN
         else:
             raise ValueError
 
