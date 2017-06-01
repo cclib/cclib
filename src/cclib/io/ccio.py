@@ -101,6 +101,14 @@ triggers = [
 
 ]
 
+outputclasses = {
+    'cjson': cjsonwriter.CJSON,
+    'json': cjsonwriter.CJSON,
+    'cml': cmlwriter.CML,
+    'xyz': xyzwriter.XYZ,
+    'molden': moldenwriter.MOLDEN
+}
+
 
 def guess_filetype(inputfile):
     """Try to guess the filetype by searching for trigger strings."""
@@ -287,7 +295,7 @@ def ccwrite(ccobj, outputtype=None, outputdest=None, terse=False , returnstr=Fal
 
     Inputs:
         ccobj - Either a job (from ccopen) or a data (from job.parse()) object
-        outputtype - The output format (should be one of 'cjson', 'cml', 'xyz', 'molden')
+        outputtype - The output format (should be a string)
         outputdest - A filename or file object for writing
         terse -  This option is currently limited to the cjson/json format. Whether to indent the cjson/json or not
         returnstr - Whether or not to return a string representation.
@@ -346,7 +354,6 @@ def _determine_output_format(outputtype, outputdest):
 
     Inputs:
       outputtype - a string corresponding to the file type
-        (one of cjson/json, cml, xyz, molden)
       outputdest - a filename string or file handle
     Returns:
       outputclass - the class corresponding to the correct output format
@@ -358,31 +365,21 @@ def _determine_output_format(outputtype, outputdest):
 
     # First check outputtype.
     if isinstance(outputtype, str):
-        if outputtype.lower() in ('cjson', 'json'):
-            outputclass = cjsonwriter.CJSON
-        elif outputtype.lower() == 'cml':
-            outputclass = cmlwriter.CML
-        elif outputtype.lower() == 'xyz':
-            outputclass = xyzwriter.XYZ
-        elif outputtype.lower() == 'molden':
-            outputclass = moldenwriter.MOLDEN
+        try:
+            outputclass = outputclasses[outputtype.lower()]
+        except:
+            pass
     else:
         # Then checkout outputdest.
         if isinstance(outputdest, str):
-            extension = os.path.splitext(outputdest)[1]
+            extension = os.path.splitext(outputdest)[1].lower()
         elif isinstance(outputdest, fileclass):
-            extension = os.path.splitext(outputdest.name)[1]
+            extension = os.path.splitext(outputdest.name)[1].lower()
         else:
             raise ValueError
-        if extension.lower() in ('.cjson', '.json'):
-            outputclass = cjsonwriter.CJSON
-        elif extension.lower() == '.cml':
-            outputclass = cmlwriter.CML
-        elif extension.lower() == '.xyz':
-            outputclass = xyzwriter.XYZ
-        elif extension.lower() == '.molden':
-            outputclass = moldenwriter.MOLDEN
-        else:
+        try:
+            outputclass = outputclasses[extension[1:]]
+        except:
             raise ValueError
 
     return outputclass
