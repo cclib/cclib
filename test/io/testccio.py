@@ -111,6 +111,20 @@ class ccopenTest(unittest.TestCase):
     #    self.assertIsInstance(self.ccopen(StringIO.StringIO(""), cjson=True), cclib.io.cjsonreader.CJSON)
 
 
+class _determine_output_formatTest(unittest.TestCase):
+
+    def setUp(self):
+        self._determine_output_format = cclib.io.ccio._determine_output_format
+
+    def test_outputclass(self):
+        """Does the function determine output class as expected"""
+        outputtype = "xyz"
+        outputdest = "file.xyz"
+        # Create outputdest as ccwrite does.
+        self.assertEqual(self._determine_output_format(outputtype, outputdest),
+                         cclib.io.xyzwriter.XYZ)
+
+
 class fallbackTest(unittest.TestCase):
 
     def setUp(self):
