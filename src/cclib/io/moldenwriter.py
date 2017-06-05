@@ -76,6 +76,21 @@ class MOLDEN(filewriter.Writer):
 
         return block
 
+    def _scfconv_from_ccdata(self):
+        """Create [SCFCONV] section using gbasis."""
+
+        # scf-first    1 THROUGH   12
+        #    -672.634394
+        #    ...
+        #    -673.590571
+        #    -673.590571
+
+        block = ["scf-first    1 THROUGH   %d"%len(self.ccdata.scfenergies)]
+
+        for scfenergy in self.ccdata.scfenergies:
+            block.append('{:15.6f}'.format(scfenergy))
+
+        return block
 
     def generate_repr(self):
         """Generate the MOLDEN representation of the logfile data."""
@@ -94,9 +109,14 @@ class MOLDEN(filewriter.Writer):
         index = -1
         molden_block.extend(self._coords_from_ccdata(index))
 
-        if hasattr(self.ccdata, 'gbaisis'):
+        if hasattr(self.ccdata, 'gbasis'):
             molden_block.append("[GTO]")
             molden_block.extend(self._gto_from_ccdata())
+
+        if hasattr(self.ccdata, 'scfenergies'):
+            molden_block.append("[SCFCONV]")
+            molden_block.extend(self._scfconv_from_ccdata())
+
 
         return '\n'.join(molden_block)
 
