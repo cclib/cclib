@@ -9,10 +9,10 @@
 
 import os.path
 import ntpath
-import numpy as np
 
 from . import filewriter
-from cclib.parser.data import ccData
+from cclib.parser import utils
+
 
 class MOLDEN(filewriter.Writer):
     """A writer for chemical JSON (MOLDEN) files."""
@@ -27,9 +27,9 @@ class MOLDEN(filewriter.Writer):
 
     def pathname(self, path):
         """
-        This function is OS independent and returns the file name irrespective of
-        the file path containing forward slash or backward slash - which is valid
-        in Windows.
+        This function is OS independent and returns the file name irrespective
+        of the file path containing forward slash or backward slash - which is
+        valid in Windows.
         """
         head, tail = ntpath.split(path)
         return tail or ntpath.basename(head)
@@ -40,14 +40,15 @@ class MOLDEN(filewriter.Writer):
         element_list = [self.pt.element[Z] for Z in self.ccdata.atomnos]
         atomcoords = self.ccdata.atomcoords[index]
         atomnos = self.ccdata.atomnos
-        nos = range(1, self.ccdata.natom)
-        
+        nos = range(self.ccdata.natom)
+
         # element_name number atomic_number x y z
-        atom_template = '{:3s} {:3d} {:3d} {:15.10f} {:15.10f} {:15.10f}'
+        atom_template = '{:2s} {:5d} {:2d} {:12.6f} {:12.6f} {:12.6f}'
         block = []
-        for element, no, atomno, (x, y, z) in zip(element_list, nos, atomnos,\
-            atomcoords):
-            block.append(atom_template.format(element, no, atomno, x, y, z))
+        for element, no, atomno, (x, y, z) in zip(element_list, nos, atomnos,
+                                                  atomcoords):
+            block.append(atom_template.format(element, no + 1, atomno,
+                                              x, y, z))
 
         return block
 
@@ -56,20 +57,20 @@ class MOLDEN(filewriter.Writer):
 
         # atom_sequence_number1 0
         # shell_label number_of_primitives 1.00
-        # exponent_primitive_1 contraction_coefficient_1 (contraction_coefficient_1)
+        # exponent_primitive_1 contraction_coeff_1 (contraction_coeff_1)
         # ...
         # empty line
         # atom_sequence__number2 0
         gbasis = self.ccdata.gbasis
-        block = []
-        label_template = '{:s} {:5d} 1.0'
-        basis_template = '  {:15.10f} {:15.10f}'
+        label_template = '{:s} {:5d} 1.00'
+        basis_template = '{:15.6e} {:15.6e}'
         block = []
 
         for no, basis in enumerate(gbasis):
-            block.append('%5d 1'%no)
+            block.append('{:3d} 0'.format(no + 1))
             for prims in basis:
-                block.append(label_template.format(prims[0].lower(), len(prims[1])))
+                block.append(label_template.format(prims[0].lower(),
+                                                   len(prims[1])))
                 for prim in prims[1]:
                     block.append(basis_template.format(prim[0], prim[1]))
             block.append('')
@@ -84,39 +85,88 @@ class MOLDEN(filewriter.Writer):
         #    ...
         #    -673.590571
         #    -673.590571
-
-        block = ["scf-first    1 THROUGH   %d"%len(self.ccdata.scfenergies)]
+        block = ["scf-first    1 THROUGH   %d" % len(self.ccdata.scfenergies)]
 
         for scfenergy in self.ccdata.scfenergies:
             block.append('{:15.6f}'.format(scfenergy))
 
         return block
 
+    def _mo_from_ccdata(self):
+        """Create [MO] section."""
+
+        # Sym= symmetry_label_1
+        # Ene= mo_energy_1
+        # Spin= (Alpha|Beta)
+        # Occup= mo_occupation_number_1
+        # ao_number_1 mo_coefficient_1
+        # ...
+        # ao_number_n mo_coefficient_n
+        # ...
+        moenergies = self.ccdata.moenergies
+        mocoeffs = self.ccdata.mocoeffs
+        homos = self.ccdata.homos
+        mult = self.ccdata.mult
+
+        has_syms = False
+        block = []
+
+        if hasattr(self.ccdata, 'mosyms'):
+            has_syms = True
+            syms = self.ccdata.mosyms[0]  # Optional
+
+        for i in range(mult):
+            spin = 'Alpha'
+            for j in range(len(moenergies)):
+                if has_syms:
+                    block.append(' Sym= %s' % syms[j])
+                moenergy = utils.convertor(moenergies[i][j], 'eV', 'hartree')
+                block.append(' Ene= {:10.4f}'.format(moenergy))
+                block.append(' Spin= %s' % spin)
+                if j <= homos[i]:
+                    block.append(' Occup= {:10.6f}'.format(2.0 / mult))
+                else:
+                    block.append(' Occup= {:10.6f}'.format(0.0))
+                for k, mocoeff in enumerate(mocoeffs[i][j]):
+                    block.append('{:4d}  {:10.6f}'.format(k + 1, mocoeff))
+
+            spin = 'Beta'
+
+        return block
+
     def generate_repr(self):
         """Generate the MOLDEN representation of the logfile data."""
 
-        molden_block = ["[MOLDEN FORMAT]"]
+        molden_block = ['[Molden Format]']
 
         # Title of file
-        molden_block.append("[Title]")
-        molden_block.append(self.pathname(os.path.splitext(self.jobfilename)[0]))
+        molden_block.append('[Title]')
+        molden_block.append(self.pathname(os.path.splitext(
+            self.jobfilename)[0]))
 
         # Coordinates for the Electron Density/Molecular orbitals
         # [Atoms] (Angs|AU)
         unit = "Angs"
-        molden_block.append("[Atoms] %s" % unit)
+        molden_block.append('[Atoms] %s' % unit)
         # Last set of coordinates for geometry optimization runs.
         index = -1
         molden_block.extend(self._coords_from_ccdata(index))
 
         if hasattr(self.ccdata, 'gbasis'):
-            molden_block.append("[GTO]")
+            molden_block.append('[GTO]')
             molden_block.extend(self._gto_from_ccdata())
 
-        if hasattr(self.ccdata, 'scfenergies'):
-            molden_block.append("[SCFCONV]")
-            molden_block.extend(self._scfconv_from_ccdata())
+        if hasattr(self.ccdata, 'mocoeffs') and hasattr(self.ccdata,
+                                                        'moenergies'):
+            molden_block.append('[MO]')
+            molden_block.extend(self._mo_from_ccdata())
 
+        if hasattr(self.ccdata, 'scfenergies'):
+            if len(self.ccdata.scfenergies) > 1:
+                molden_block.append('[SCFCONV]')
+                molden_block.extend(self._scfconv_from_ccdata())
+
+        molden_block.append('')
 
         return '\n'.join(molden_block)
 
