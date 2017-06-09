@@ -357,18 +357,22 @@ def _determine_output_format(outputtype, outputdest):
       outputdest - a filename string or file handle
     Returns:
       outputclass - the class corresponding to the correct output format
+    Raises:
+      KeyError for unsupported file writer extensions
     """
 
     # Priority for determining the correct output format:
     #  1. outputtype
     #  2. outputdest
 
+    outputclass = None
     # First check outputtype.
     if isinstance(outputtype, str):
         try:
             outputclass = outputclasses[outputtype.lower()]
-        except:
-            pass
+        except KeyError as e:
+            e.args = ('Unsupported Extension %s' % e.args[0],)
+            raise
     else:
         # Then checkout outputdest.
         if isinstance(outputdest, str):
@@ -376,10 +380,11 @@ def _determine_output_format(outputtype, outputdest):
         elif isinstance(outputdest, fileclass):
             extension = os.path.splitext(outputdest.name)[1].lower()
         else:
-            raise ValueError
+            raise KeyError("must be a string or file handle")
         try:
             outputclass = outputclasses[extension[1:]]
-        except:
-            raise ValueError
+        except KeyError as e:
+            e.args = ('Unsupported Extension %s' % e.args[0],)
+            raise
 
     return outputclass

@@ -120,9 +120,11 @@ class _determine_output_formatTest(unittest.TestCase):
         """Does the function determine output class as expected"""
         outputtype = "xyz"
         outputdest = "file.xyz"
-        # Create outputdest as ccwrite does.
         self.assertEqual(self._determine_output_format(outputtype, outputdest),
                          cclib.io.xyzwriter.XYZ)
+        # Must raise a KeyError for unsuported extensions
+        self.assertRaises(KeyError, self._determine_output_format, 'ext', outputdest)
+        self.assertRaises(KeyError, self._determine_output_format, None, None)
 
 
 class fallbackTest(unittest.TestCase):
