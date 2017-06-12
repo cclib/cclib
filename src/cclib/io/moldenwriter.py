@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2016, the cclib development team
+# Copyright (c) 2017, the cclib development team
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
@@ -8,31 +8,18 @@
 """A writer for MOLDEN format files."""
 
 import os.path
-import ntpath
 
 from . import filewriter
 from cclib.parser import utils
 
 
 class MOLDEN(filewriter.Writer):
-    """A writer for chemical JSON (MOLDEN) files."""
-    def __init__(self, ccdata, *args, **kwargs):
-        """Initialize the chemical JSON writer object.
+    """A writer for MOLDEN files."""
 
-        Inputs:
-          ccdata - An instance of ccData, parsed from a logfile.
-        """
-        # Call the __init__ method of the superclass
-        super(MOLDEN, self).__init__(ccdata, *args, **kwargs)
-
-    def pathname(self, path):
-        """
-        This function is OS independent and returns the file name irrespective
-        of the file path containing forward slash or backward slash - which is
-        valid in Windows.
-        """
-        head, tail = ntpath.split(path)
-        return tail or ntpath.basename(head)
+    def _title(self, path):
+        """Return filename without extension to be used as title."""
+        title = os.path.basename(os.path.splitext(path)[0])
+        return title
 
     def _coords_from_ccdata(self, index):
         """Create [Atoms] section using geometry at the given index."""
@@ -43,13 +30,13 @@ class MOLDEN(filewriter.Writer):
 
         # element_name number atomic_number x y z
         atom_template = '{:2s} {:5d} {:2d} {:12.6f} {:12.6f} {:12.6f}'
-        block = []
+        lines = []
         for element, no, atomno, (x, y, z) in zip(self.elements, nos, atomnos,
                                                   atomcoords):
-            block.append(atom_template.format(element, no + 1, atomno,
+            lines.append(atom_template.format(element, no + 1, atomno,
                                               x, y, z))
 
-        return block
+        return lines
 
     def _gto_from_ccdata(self):
         """Create [GTO] section using gbasis."""
@@ -63,18 +50,18 @@ class MOLDEN(filewriter.Writer):
         gbasis = self.ccdata.gbasis
         label_template = '{:s} {:5d} 1.00'
         basis_template = '{:15.6e} {:15.6e}'
-        block = []
+        lines = []
 
         for no, basis in enumerate(gbasis):
-            block.append('{:3d} 0'.format(no + 1))
+            lines.append('{:3d} 0'.format(no + 1))
             for prims in basis:
-                block.append(label_template.format(prims[0].lower(),
+                lines.append(label_template.format(prims[0].lower(),
                                                    len(prims[1])))
                 for prim in prims[1]:
-                    block.append(basis_template.format(prim[0], prim[1]))
-            block.append('')
+                    lines.append(basis_template.format(prim[0], prim[1]))
+            lines.append('')
 
-        return block
+        return lines
 
     def _scfconv_from_ccdata(self):
         """Create [SCFCONV] section using gbasis."""
@@ -84,12 +71,12 @@ class MOLDEN(filewriter.Writer):
         #    ...
         #    -673.590571
         #    -673.590571
-        block = ["scf-first    1 THROUGH   %d" % len(self.ccdata.scfenergies)]
+        lines = ["scf-first    1 THROUGH   %d" % len(self.ccdata.scfenergies)]
 
         for scfenergy in self.ccdata.scfenergies:
-            block.append('{:15.6f}'.format(scfenergy))
+            lines.append('{:15.6f}'.format(scfenergy))
 
-        return block
+        return lines
 
     def _mo_from_ccdata(self):
         """Create [MO] section."""
@@ -108,66 +95,67 @@ class MOLDEN(filewriter.Writer):
         mult = self.ccdata.mult
 
         has_syms = False
-        block = []
+        lines = []
 
+        # Sym attribute is optional in [MO] section.
         if hasattr(self.ccdata, 'mosyms'):
             has_syms = True
-            syms = self.ccdata.mosyms[0]  # Optional
+            syms = self.ccdata.mosyms
 
         for i in range(mult):
             spin = 'Alpha'
-            for j in range(len(moenergies)):
+            for j in range(len(moenergies[i])):
                 if has_syms:
-                    block.append(' Sym= %s' % syms[j])
+                    lines.append(' Sym= %s' % syms[i][j])
                 moenergy = utils.convertor(moenergies[i][j], 'eV', 'hartree')
-                block.append(' Ene= {:10.4f}'.format(moenergy))
-                block.append(' Spin= %s' % spin)
+                lines.append(' Ene= {:10.4f}'.format(moenergy))
+                lines.append(' Spin= %s' % spin)
                 if j <= homos[i]:
-                    block.append(' Occup= {:10.6f}'.format(2.0 / mult))
+                    lines.append(' Occup= {:10.6f}'.format(2.0 / mult))
                 else:
-                    block.append(' Occup= {:10.6f}'.format(0.0))
+                    lines.append(' Occup= {:10.6f}'.format(0.0))
                 for k, mocoeff in enumerate(mocoeffs[i][j]):
-                    block.append('{:4d}  {:10.6f}'.format(k + 1, mocoeff))
+                    lines.append('{:4d}  {:10.6f}'.format(k + 1, mocoeff))
 
             spin = 'Beta'
 
-        return block
+        return lines
 
     def generate_repr(self):
         """Generate the MOLDEN representation of the logfile data."""
 
-        molden_block = ['[Molden Format]']
+        molden_lines = ['[Molden Format]']
 
-        # Title of file
-        molden_block.append('[Title]')
-        molden_block.append(self.pathname(os.path.splitext(
-            self.jobfilename)[0]))
+        # Title of file.
+        molden_lines.append('[Title]')
+        molden_lines.append(self._title(self.jobfilename))
 
-        # Coordinates for the Electron Density/Molecular orbitals
+        # Coordinates for the Electron Density/Molecular orbitals.
         # [Atoms] (Angs|AU)
         unit = "Angs"
-        molden_block.append('[Atoms] %s' % unit)
+        molden_lines.append('[Atoms] %s' % unit)
         # Last set of coordinates for geometry optimization runs.
         index = -1
-        molden_block.extend(self._coords_from_ccdata(index))
+        molden_lines.extend(self._coords_from_ccdata(index))
 
-        if hasattr(self.ccdata, 'gbasis'):
-            molden_block.append('[GTO]')
-            molden_block.extend(self._gto_from_ccdata())
+        # Either both [GTO] and [MO] should be present or none of them.
+        if hasattr(self.ccdata, 'gbasis') and hasattr(self.ccdata, 'mocoeffs')\
+                and hasattr(self.ccdata, 'moenergies'):
 
-        if hasattr(self.ccdata, 'mocoeffs') and hasattr(self.ccdata,
-                                                        'moenergies'):
-            molden_block.append('[MO]')
-            molden_block.extend(self._mo_from_ccdata())
+            molden_lines.append('[GTO]')
+            molden_lines.extend(self._gto_from_ccdata())
+
+            molden_lines.append('[MO]')
+            molden_lines.extend(self._mo_from_ccdata())
 
         if hasattr(self.ccdata, 'scfenergies'):
             if len(self.ccdata.scfenergies) > 1:
-                molden_block.append('[SCFCONV]')
-                molden_block.extend(self._scfconv_from_ccdata())
+                molden_lines.append('[SCFCONV]')
+                molden_lines.extend(self._scfconv_from_ccdata())
 
-        molden_block.append('')
+        molden_lines.append('')
 
-        return '\n'.join(molden_block)
+        return '\n'.join(molden_lines)
 
 
 if __name__ == "__main__":
