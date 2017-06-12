@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2016, the cclib development team
+# Copyright (c) 2017, the cclib development team
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
@@ -108,6 +108,10 @@ outputclasses = {
     'xyz': xyzwriter.XYZ,
     'molden': moldenwriter.MOLDEN
 }
+
+
+class UnknownOutputFormatError(Exception):
+    """Raised when an unknown output format is encountered."""
 
 
 def guess_filetype(inputfile):
@@ -358,7 +362,7 @@ def _determine_output_format(outputtype, outputdest):
     Returns:
       outputclass - the class corresponding to the correct output format
     Raises:
-      KeyError for unsupported file writer extensions
+      UnknownOutputFormatError for unsupported file writer extensions
     """
 
     # Priority for determining the correct output format:
@@ -368,11 +372,11 @@ def _determine_output_format(outputtype, outputdest):
     outputclass = None
     # First check outputtype.
     if isinstance(outputtype, str):
-        try:
-            outputclass = outputclasses[outputtype.lower()]
-        except KeyError as e:
-            e.args = ('Unsupported Extension %s' % e.args[0],)
-            raise
+        extension = outputtype.lower()
+        if extension in outputclasses:
+            outputclass = outputclasses[extension]
+        else:
+            raise UnknownOutputFormatError(extension)
     else:
         # Then checkout outputdest.
         if isinstance(outputdest, str):
@@ -380,11 +384,10 @@ def _determine_output_format(outputtype, outputdest):
         elif isinstance(outputdest, fileclass):
             extension = os.path.splitext(outputdest.name)[1].lower()
         else:
-            raise KeyError("must be a string or file handle")
-        try:
-            outputclass = outputclasses[extension[1:]]
-        except KeyError as e:
-            e.args = ('Unsupported Extension %s' % e.args[0],)
-            raise
+            raise UnknownOutputFormatError
+        if extension in outputclasses:
+            outputclass = outputclasses[extension]
+        else:
+            raise UnknownOutputFormatError(extension)
 
     return outputclass
