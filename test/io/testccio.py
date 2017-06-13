@@ -111,6 +111,25 @@ class ccopenTest(unittest.TestCase):
     #    self.assertIsInstance(self.ccopen(StringIO.StringIO(""), cjson=True), cclib.io.cjsonreader.CJSON)
 
 
+class _determine_output_formatTest(unittest.TestCase):
+
+    def setUp(self):
+        self._determine_output_format = cclib.io.ccio._determine_output_format
+        self.UnknownOutputFormatError = cclib.io.ccio.UnknownOutputFormatError
+
+    def test_outputclass(self):
+        """Does the function determine output class as expected."""
+        outputtype = "xyz"
+        outputdest = "file.xyz"
+        self.assertEqual(self._determine_output_format(outputtype, outputdest),
+                         cclib.io.xyzwriter.XYZ)
+        # Must raise a KeyError for unsuported extensions
+        self.assertRaises(self.UnknownOutputFormatError,
+                          self._determine_output_format, 'ext', outputdest)
+        self.assertRaises(self.UnknownOutputFormatError,
+                          self._determine_output_format, None, None)
+
+
 class fallbackTest(unittest.TestCase):
 
     def setUp(self):

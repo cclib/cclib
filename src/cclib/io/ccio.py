@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2016, the cclib development team
+# Copyright (c) 2017, the cclib development team
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
@@ -49,6 +49,7 @@ from . import cjsonreader
 from . import cjsonwriter
 from . import cmlwriter
 from . import xyzwriter
+from . import moldenwriter
 
 try:
     from ..bridge import cclib2openbabel
@@ -99,6 +100,18 @@ triggers = [
     (QChem,     ["A Quantum Leap Into The Future Of Chemistry"],    True),
 
 ]
+
+outputclasses = {
+    'cjson': cjsonwriter.CJSON,
+    'json': cjsonwriter.CJSON,
+    'cml': cmlwriter.CML,
+    'xyz': xyzwriter.XYZ,
+    'molden': moldenwriter.MOLDEN
+}
+
+
+class UnknownOutputFormatError(Exception):
+    """Raised when an unknown output format is encountered."""
 
 
 def guess_filetype(inputfile):
@@ -288,7 +301,7 @@ def ccwrite(ccobj, outputtype=None, outputdest=None, terse=False , returnstr=Fal
 
     Inputs:
         ccobj - Either a job (from ccopen) or a data (from job.parse()) object
-        outputtype - The output format (should be one of 'cjson', 'cml', 'xyz')
+        outputtype - The output format (should be a string)
         outputdest - A filename or file object for writing
         terse -  This option is currently limited to the cjson/json format. Whether to indent the cjson/json or not
         returnstr - Whether or not to return a string representation.
@@ -347,39 +360,36 @@ def _determine_output_format(outputtype, outputdest):
 
     Inputs:
       outputtype - a string corresponding to the file type
-        (one of cjson/json, cml, xyz)
       outputdest - a filename string or file handle
     Returns:
       outputclass - the class corresponding to the correct output format
+    Raises:
+      UnknownOutputFormatError for unsupported file writer extensions
     """
 
     # Priority for determining the correct output format:
     #  1. outputtype
     #  2. outputdest
 
+    outputclass = None
     # First check outputtype.
     if isinstance(outputtype, str):
-        if outputtype.lower() in ('cjson', 'json'):
-            outputclass = cjsonwriter.CJSON
-        elif outputtype.lower() == 'cml':
-            outputclass = cmlwriter.CML
-        elif outputtype.lower() == 'xyz':
-            outputclass = xyzwriter.XYZ
+        extension = outputtype.lower()
+        if extension in outputclasses:
+            outputclass = outputclasses[extension]
+        else:
+            raise UnknownOutputFormatError(extension)
     else:
         # Then checkout outputdest.
         if isinstance(outputdest, str):
-            extension = os.path.splitext(outputdest)[1]
+            extension = os.path.splitext(outputdest)[1].lower()
         elif isinstance(outputdest, fileclass):
-            extension = os.path.splitext(outputdest.name)[1]
+            extension = os.path.splitext(outputdest.name)[1].lower()
         else:
-            raise ValueError
-        if extension.lower() in ('.cjson', '.json'):
-            outputclass = cjsonwriter.CJSON
-        elif extension.lower() == '.cml':
-            outputclass = cmlwriter.CML
-        elif extension.lower() == '.xyz':
-            outputclass = xyzwriter.XYZ
+            raise UnknownOutputFormatError
+        if extension in outputclasses:
+            outputclass = outputclasses[extension]
         else:
-            raise ValueError
+            raise UnknownOutputFormatError(extension)
 
     return outputclass
