@@ -24,7 +24,7 @@ class Writer(object):
     """Abstract class for writer objects.
 
     Subclasses defined by cclib:
-        CJSON, CML, XYZ
+        CJSON, CML, XYZ, MOLDEN
     """
 
     def __init__(self, ccdata, jobfilename=None, terse=False,

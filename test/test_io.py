@@ -16,7 +16,7 @@ from testfilewriter import *
 from testxyzwriter import *
 from testcjsonreader import *
 from testcjsonwriter import *
-
+from testmoldenwriter import *
 
 
 if __name__ == "__main__":
