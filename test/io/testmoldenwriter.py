@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2016, the cclib development team
+# Copyright (c) 2017, the cclib development team
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
@@ -22,6 +22,7 @@ class MOLDENTest(unittest.TestCase):
 
     def setUp(self):
         self.molden = cclib.io.MOLDEN
+        self.MissingAttributeError = cclib.io.filewriter.MissingAttributeError
 
     def test_init(self):
         """Does the class initialize correctly?"""
@@ -32,6 +33,17 @@ class MOLDENTest(unittest.TestCase):
 
         # The object should keep the ccData instance passed to its constructor.
         self.assertEqual(molden.ccdata, data)
+
+    def test_missing_attributes(self):
+        """Check if MissingAttributeError is raised as expected."""
+        fpath = os.path.join(__datadir__,
+                             "data/ADF/basicADF2007.01/dvb_gopt.adfout")
+        data = cclib.io.ccopen(fpath).parse()
+        del data.atomcoords
+
+        # Molden files cannot be wriiten if atomcoords are missing.
+        with self.assertRaises(self.MissingAttributeError):
+            cclib.io.moldenwriter.MOLDEN(data).generate_repr()
 
 
 if __name__ == "__main__":

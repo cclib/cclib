@@ -10,6 +10,7 @@
 import os.path
 
 from . import filewriter
+from .filewriter import MissingAttributeError
 from cclib.parser import utils
 
 
@@ -23,6 +24,11 @@ class MOLDEN(filewriter.Writer):
 
     def _coords_from_ccdata(self, index):
         """Create [Atoms] section using geometry at the given index."""
+
+        if not (hasattr(self.ccdata, 'atomcoords') and
+                hasattr(self.ccdata, 'atomnos') and
+                hasattr(self.ccdata, 'natom')):
+                raise MissingAttributeError('Could not parse necessary outputs to write molden file.')
 
         atomcoords = self.ccdata.atomcoords[index]
         atomnos = self.ccdata.atomnos
@@ -127,8 +133,9 @@ class MOLDEN(filewriter.Writer):
         molden_lines = ['[Molden Format]']
 
         # Title of file.
-        molden_lines.append('[Title]')
-        molden_lines.append(self._title(self.jobfilename))
+        if self.jobfilename is not None:
+            molden_lines.append('[Title]')
+            molden_lines.append(self._title(self.jobfilename))
 
         # Coordinates for the Electron Density/Molecular orbitals.
         # [Atoms] (Angs|AU)
