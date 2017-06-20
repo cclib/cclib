@@ -11,7 +11,7 @@ import os
 import unittest
 
 import cclib
-
+from cclib.io.filewriter import MissingAttributeError
 
 __filedir__ = os.path.dirname(__file__)
 __filepath__ = os.path.realpath(__filedir__)
@@ -19,20 +19,6 @@ __datadir__ = os.path.join(__filepath__, "..", "..")
 
 
 class MOLDENTest(unittest.TestCase):
-
-    def setUp(self):
-        self.molden = cclib.io.MOLDEN
-        self.MissingAttributeError = cclib.io.filewriter.MissingAttributeError
-
-    def test_init(self):
-        """Does the class initialize correctly?"""
-        fpath = os.path.join(__datadir__,
-                             "data/ADF/basicADF2007.01/dvb_gopt.adfout")
-        data = cclib.io.ccopen(fpath).parse()
-        molden = cclib.io.moldenwriter.MOLDEN(data)
-
-        # The object should keep the ccData instance passed to its constructor.
-        self.assertEqual(molden.ccdata, data)
 
     def test_missing_attributes(self):
         """Check if MissingAttributeError is raised as expected."""
@@ -42,7 +28,7 @@ class MOLDENTest(unittest.TestCase):
         del data.atomcoords
 
         # Molden files cannot be wriiten if atomcoords are missing.
-        with self.assertRaises(self.MissingAttributeError):
+        with self.assertRaises(MissingAttributeError):
             cclib.io.moldenwriter.MOLDEN(data).generate_repr()
 
 
