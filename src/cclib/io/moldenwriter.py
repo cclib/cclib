@@ -17,6 +17,13 @@ from cclib.parser import utils
 class MOLDEN(filewriter.Writer):
     """A writer for MOLDEN files."""
 
+    def _check_required_attributes(self, required):
+        """Check if required attributes are present in ccdata"""
+        missing = [ x for x in required if not hasattr(self.ccdata, x) ]
+        if len(missing) > 0:
+            missing = ' '.join(missing)
+            raise MissingAttributeError('Could not parse required outputs to write molden file: ' + missing)
+
     def _title(self, path):
         """Return filename without extension to be used as title."""
         title = os.path.basename(os.path.splitext(path)[0])
@@ -24,11 +31,7 @@ class MOLDEN(filewriter.Writer):
 
     def _coords_from_ccdata(self, index):
         """Create [Atoms] section using geometry at the given index."""
-
-        if not (hasattr(self.ccdata, 'atomcoords') and
-                hasattr(self.ccdata, 'atomnos') and
-                hasattr(self.ccdata, 'natom')):
-                raise MissingAttributeError('Could not parse necessary outputs to write molden file.')
+        self._check_required_attributes(['atomcoords', 'atomnos', 'natom'])
 
         atomcoords = self.ccdata.atomcoords[index]
         atomnos = self.ccdata.atomnos
