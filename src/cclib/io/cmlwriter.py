@@ -43,16 +43,17 @@ class CML(filewriter.Writer):
         if self.jobfilename is not None:
             d['id'] = self.jobfilename
         _set_attrs(molecule, d)
-
+        
         # Form the listing of all the atoms present.
         atomArray = ET.SubElement(molecule, 'atomArray')
-        if hasattr(self.ccdata, 'atomcoords'):
+        if hasattr(self.ccdata, 'atomcoords') and hasattr(self.ccdata, 'atomnos'):
+            elements = [self.pt.element[Z] for Z in self.ccdata.atomnos]
             for atomid in range(self.ccdata.natom):
                 atom = ET.SubElement(atomArray, 'atom')
                 x, y, z = self.ccdata.atomcoords[-1][atomid].tolist()
                 d = {
                     'id': 'a{}'.format(atomid + 1),
-                    'elementType': self.elements[atomid],
+                    'elementType': elements[atomid],
                     'x3': '{:.10f}'.format(x),
                     'y3': '{:.10f}'.format(y),
                     'z3': '{:.10f}'.format(z),
