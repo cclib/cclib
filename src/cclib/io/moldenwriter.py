@@ -23,7 +23,7 @@ class MOLDEN(filewriter.Writer):
 
     def _coords_from_ccdata(self, index):
         """Create [Atoms] section using geometry at the given index."""
-
+        elements = [self.pt.element[Z] for Z in self.ccdata.atomnos]
         atomcoords = self.ccdata.atomcoords[index]
         atomnos = self.ccdata.atomnos
         nos = range(self.ccdata.natom)
@@ -31,7 +31,7 @@ class MOLDEN(filewriter.Writer):
         # element_name number atomic_number x y z
         atom_template = '{:2s} {:5d} {:2d} {:12.6f} {:12.6f} {:12.6f}'
         lines = []
-        for element, no, atomno, (x, y, z) in zip(self.elements, nos, atomnos,
+        for element, no, atomno, (x, y, z) in zip(elements, nos, atomnos,
                                                   atomcoords):
             lines.append(atom_template.format(element, no + 1, atomno,
                                               x, y, z))

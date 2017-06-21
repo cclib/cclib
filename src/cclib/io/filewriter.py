@@ -44,7 +44,6 @@ class Writer(object):
         self.terse = terse
 
         self.pt = PeriodicTable()
-        self.elements = [self.pt.element[Z] for Z in self.ccdata.atomnos]
 
         # Open Babel isn't necessarily present.
         if has_openbabel:
