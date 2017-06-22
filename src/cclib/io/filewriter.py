@@ -48,7 +48,6 @@ class Writer(object):
         self.terse = terse
 
         self.pt = PeriodicTable()
-        self.elements = [self.pt.element[Z] for Z in self.ccdata.atomnos]
 
         # Open Babel isn't necessarily present.
         if has_openbabel:
@@ -92,6 +91,13 @@ class Writer(object):
                                         obbond.GetEndAtom().GetIndex(),
                                         obbond.GetBondOrder()))
         return bond_connectivities
+
+    def _check_required_attributes(self, required):
+        """Check if required attributes are present in ccdata"""
+        missing = [x for x in required if not hasattr(self.ccdata, x)]
+        if len(missing) > 0:
+            missing = ' '.join(missing)
+            raise MissingAttributeError('Could not parse required outputs to write molden file: ' + missing)
 
 
 if __name__ == "__main__":
