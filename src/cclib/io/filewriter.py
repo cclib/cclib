@@ -26,9 +26,6 @@ class MissingAttributeError(Exception):
 
 class Writer(object):
     """Abstract class for writer objects.
-
-    Subclasses defined by cclib:
-        CJSON, CML, XYZ, MOLDEN
     """
 
     def __init__(self, ccdata, jobfilename=None, terse=False,
@@ -48,7 +45,10 @@ class Writer(object):
         self.terse = terse
 
         self.pt = PeriodicTable()
-        self.elements = [self.pt.element[Z] for Z in self.ccdata.atomnos]
+
+        # Check if required attributes are present.
+        if hasattr(self, 'required_attrs'):
+            self._check_required_attributes()
 
         # Open Babel isn't necessarily present.
         if has_openbabel:
@@ -92,6 +92,12 @@ class Writer(object):
                                         obbond.GetEndAtom().GetIndex(),
                                         obbond.GetBondOrder()))
         return bond_connectivities
+
+    def _check_required_attributes(self):
+        """Check if required attributes are present in ccdata."""
+        missing = ', '.join([x for x in self.required_attrs if not hasattr(self.ccdata, x)])
+        if len(missing) > 0:
+            raise MissingAttributeError('Could not parse required attributes to write file: ' + missing)
 
 
 if __name__ == "__main__":

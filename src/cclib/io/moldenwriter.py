@@ -10,19 +10,11 @@
 import os.path
 
 from . import filewriter
-from .filewriter import MissingAttributeError
 from cclib.parser import utils
 
 
 class MOLDEN(filewriter.Writer):
     """A writer for MOLDEN files."""
-
-    def _check_required_attributes(self, required):
-        """Check if required attributes are present in ccdata"""
-        missing = [ x for x in required if not hasattr(self.ccdata, x) ]
-        if len(missing) > 0:
-            missing = ' '.join(missing)
-            raise MissingAttributeError('Could not parse required outputs to write molden file: ' + missing)
 
     def _title(self, path):
         """Return filename without extension to be used as title."""
@@ -32,7 +24,8 @@ class MOLDEN(filewriter.Writer):
     def _coords_from_ccdata(self, index):
         """Create [Atoms] section using geometry at the given index."""
         self._check_required_attributes(['atomcoords', 'atomnos', 'natom'])
-
+        
+        elements = [self.pt.element[Z] for Z in self.ccdata.atomnos]
         atomcoords = self.ccdata.atomcoords[index]
         atomnos = self.ccdata.atomnos
         nos = range(self.ccdata.natom)
@@ -40,7 +33,7 @@ class MOLDEN(filewriter.Writer):
         # element_name number atomic_number x y z
         atom_template = '{:2s} {:5d} {:2d} {:12.6f} {:12.6f} {:12.6f}'
         lines = []
-        for element, no, atomno, (x, y, z) in zip(self.elements, nos, atomnos,
+        for element, no, atomno, (x, y, z) in zip(elements, nos, atomnos,
                                                   atomcoords):
             lines.append(atom_template.format(element, no + 1, atomno,
                                               x, y, z))
