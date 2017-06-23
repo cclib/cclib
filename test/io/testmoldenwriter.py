@@ -29,7 +29,7 @@ class MOLDENTest(unittest.TestCase):
 
         # Molden files cannot be wriiten if atomcoords are missing.
         with self.assertRaises(MissingAttributeError):
-            cclib.io.moldenwriter.MOLDEN(data).generate_repr()
+            cclib.io.moldenwriter.MOLDEN(data)
 
 
 if __name__ == "__main__":

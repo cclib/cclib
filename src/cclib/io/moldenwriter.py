@@ -16,6 +16,19 @@ from cclib.parser import utils
 class MOLDEN(filewriter.Writer):
     """A writer for MOLDEN files."""
 
+    def __init__(self, ccdata, *args, **kwargs):
+        """Initialize the MOLDEN writer object.
+
+        Inputs:
+          ccdata - An instance of ccData, parsed from a logfile.
+        """
+        # Call the __init__ method of the superclass
+        super(MOLDEN, self).__init__(ccdata, *args, **kwargs)
+
+        required_attrs = ['atomcoords', 'atomnos', 'natom']
+        # Check if all required attributes are present in ccData.
+        self._check_required_attributes(required_attrs)
+
     def _title(self, path):
         """Return filename without extension to be used as title."""
         title = os.path.basename(os.path.splitext(path)[0])
@@ -23,8 +36,6 @@ class MOLDEN(filewriter.Writer):
 
     def _coords_from_ccdata(self, index):
         """Create [Atoms] section using geometry at the given index."""
-        self._check_required_attributes(['atomcoords', 'atomnos', 'natom'])
-        
         elements = [self.pt.element[Z] for Z in self.ccdata.atomnos]
         atomcoords = self.ccdata.atomcoords[index]
         atomnos = self.ccdata.atomnos
