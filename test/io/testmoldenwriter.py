@@ -26,10 +26,12 @@ class MOLDENTest(unittest.TestCase):
                              "data/ADF/basicADF2007.01/dvb_gopt.adfout")
         data = cclib.io.ccopen(fpath).parse()
         del data.atomcoords
+        del data.atomnos
+        del data.natom
 
         # Molden files cannot be wriiten if atomcoords are missing.
         with self.assertRaises(MissingAttributeError):
-            cclib.io.moldenwriter.MOLDEN(data).generate_repr()
+            cclib.io.moldenwriter.MOLDEN(data)
 
 
 if __name__ == "__main__":
