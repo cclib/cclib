@@ -18,7 +18,7 @@ __filepath__ = os.path.realpath(__filedir__)
 __datadir__ = os.path.join(__filepath__, "..", "..")
 
 
-class MOLDENTest(unittest.TestCase):
+class MoldenWriterTest(unittest.TestCase):
 
     def test_missing_attributes(self):
         """Check if MissingAttributeError is raised as expected."""
@@ -31,7 +31,7 @@ class MOLDENTest(unittest.TestCase):
 
         # Molden files cannot be wriiten if atomcoords are missing.
         with self.assertRaises(MissingAttributeError):
-            cclib.io.moldenwriter.MOLDEN(data)
+            cclib.io.moldenwriter.MoldenWriter(data)
 
 
 if __name__ == "__main__":

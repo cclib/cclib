@@ -106,7 +106,7 @@ outputclasses = {
     'json': cjsonwriter.CJSON,
     'cml': cmlwriter.CML,
     'xyz': xyzwriter.XYZ,
-    'molden': moldenwriter.MOLDEN
+    'molden': moldenwriter.MoldenWriter
 }
 
 

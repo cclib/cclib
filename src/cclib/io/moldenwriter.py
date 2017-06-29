@@ -5,7 +5,7 @@
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
 
-"""A writer for MOLDEN format files."""
+"""A writer for Molden format files."""
 
 import os.path
 
@@ -13,8 +13,8 @@ from . import filewriter
 from cclib.parser import utils
 
 
-class MOLDEN(filewriter.Writer):
-    """A writer for MOLDEN files."""
+class MoldenWriter(filewriter.Writer):
+    """A writer for Molden files."""
 
     required_attrs = ['atomcoords', 'atomnos', 'natom']
 
@@ -124,7 +124,7 @@ class MOLDEN(filewriter.Writer):
         return lines
 
     def generate_repr(self):
-        """Generate the MOLDEN representation of the logfile data."""
+        """Generate the Molden representation of the logfile data."""
 
         molden_lines = ['[Molden Format]']
 
