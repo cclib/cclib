@@ -61,7 +61,7 @@ class ORCA(logfileparser.Logfile):
         self.is_relaxed_scan = False
 
     def after_parsing(self):
-        super().after_parsing()
+        super(ORCA, self).after_parsing()
 
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""

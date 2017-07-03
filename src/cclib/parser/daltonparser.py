@@ -56,7 +56,7 @@ class DALTON(logfileparser.Logfile):
         self.basislibrary = True
 
     def after_parsing(self):
-        super().after_parsing()
+        super(DALTON, self).after_parsing()
 
     def parse_geometry(self, lines):
         """Parse DALTON geometry lines into an atomcoords array."""

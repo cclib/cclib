@@ -106,7 +106,7 @@ class ADF(logfileparser.Logfile):
         maxelem, norm = list(range(2))  # used to index scf.values
 
     def after_parsing(self):
-        super().after_parsing()
+        super(ADF, self).after_parsing()
 
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""

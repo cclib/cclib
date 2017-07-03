@@ -1074,7 +1074,7 @@ class NWChem(logfileparser.Logfile):
 
         Currently, expands self.shells() into self.aonames.
         """
-        super().after_parsing()
+        super(NWChem, self).after_parsing()
 
         # setup a few necessary things, including a regular expression
         # for matching the shells

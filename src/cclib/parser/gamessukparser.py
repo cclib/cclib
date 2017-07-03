@@ -54,7 +54,7 @@ class GAMESSUK(logfileparser.Logfile):
         self.betamosyms = self.betamoenergies = self.betamocoeffs = False
 
     def after_parsing(self):
-        super().after_parsing()
+        super(GAMESSUK, self).after_parsing()
 
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""

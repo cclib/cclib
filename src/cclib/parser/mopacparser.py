@@ -82,7 +82,7 @@ class MOPAC(logfileparser.Logfile):
                           'NONET': 9}
 
     def after_parsing(self):
-        super().after_parsing()
+        super(MOPAC, self).after_parsing()
 
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""

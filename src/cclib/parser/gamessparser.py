@@ -89,7 +89,7 @@ class GAMESS(logfileparser.Logfile):
         self.scftype = "none"  # Type of SCF calculation: BLYP, RHF, ROHF, etc.
 
     def after_parsing(self):
-        super().after_parsing()
+        super(GAMESS, self).after_parsing()
 
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""

@@ -108,7 +108,7 @@ class QChem(logfileparser.Logfile):
         ]
 
     def after_parsing(self):
-        super().after_parsing()
+        super(QChem, self).after_parsing()
 
         # If parsing a fragment job, each of the geometries appended to
         # `atomcoords` may be of different lengths, which will prevent

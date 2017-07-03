@@ -88,7 +88,7 @@ class Gaussian(logfileparser.Logfile):
         self.hp_polarizabilities = False
 
     def after_parsing(self):
-        super().after_parsing()
+        super(Gaussian, self).after_parsing()
 
         # Correct the percent values in the etsecs in the case of
         # a restricted calculation. The following has the
