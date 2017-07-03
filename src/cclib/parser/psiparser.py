@@ -49,6 +49,7 @@ class Psi(logfileparser.Logfile):
 
 
     def after_parsing(self):
+        super().after_parsing()
 
         # Newer versions of Psi4 don't explicitly print the number of atoms.
         if not hasattr(self, 'natom'):
@@ -138,6 +139,19 @@ class Psi(logfileparser.Logfile):
         #           C          1.415253322400    -0.230221785400     0.000000000000
         # ...
         #
+        if (self.section == "Geometry") and ("Molecular point group" in line):
+
+            point_group_abelian = line.split()[3].lower()
+            line = next(inputfile)
+            if "Full point group" in line:
+                point_group_full = line.split()[3].lower()
+            else:
+                # TODO this isn't right, need to "know" about symmetry.
+                point_group_full = point_group_abelian
+
+            self.metadata['symmetry_full'] = point_group_full
+            self.metadata['symmetry_abelian'] = point_group_abelian
+
         if (self.section == "Geometry") and ("Geometry (in Angstrom), charge" in line):
 
             assert line.split()[3] == "charge"

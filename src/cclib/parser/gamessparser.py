@@ -25,26 +25,28 @@ class GAMESS(logfileparser.Logfile):
     SCFRMS, SCFMAX, SCFENERGY = list(range(3))
 
     # Used to extact Dunning basis set names.
-    dunningbas = {'CCD': 'cc-pVDZ', \
-            'CCT': 'cc-pVTZ', \
-            'CCQ': 'cc-pVQZ', \
-            'CC5': 'cc-pV5Z', \
-            'CC6': 'cc-pV6Z', \
-            'ACCD': 'aug-cc-pVDZ', \
-            'ACCT': 'aug-cc-pVTZ', \
-            'ACCQ': 'aug-cc-pVQZ', \
-            'ACC5': 'aug-cc-pV5Z', \
-            'ACC6': 'aug-cc-pV6Z', \
-            'CCDC': 'cc-pCVDZ', \
-            'CCTC': 'cc-pCVTZ', \
-            'CCQC': 'cc-pCVQZ', \
-            'CC5C': 'cc-pCV5Z', \
-            'CC6C': 'cc-pCV6Z', \
-            'ACCDC': 'aug-cc-pCVDZ', \
-            'ACCTC': 'aug-cc-pCVTZ', \
-            'ACCQC': 'aug-cc-pCVQZ', \
-            'ACC5C': 'aug-cc-pCV5Z', \
-            'ACC6C': 'aug-cc-pCV6Z'}
+    dunningbas = {
+        'CCD': 'cc-pVDZ', 
+        'CCT': 'cc-pVTZ', 
+        'CCQ': 'cc-pVQZ', 
+        'CC5': 'cc-pV5Z', 
+        'CC6': 'cc-pV6Z', 
+        'ACCD': 'aug-cc-pVDZ', 
+        'ACCT': 'aug-cc-pVTZ', 
+        'ACCQ': 'aug-cc-pVQZ', 
+        'ACC5': 'aug-cc-pV5Z', 
+        'ACC6': 'aug-cc-pV6Z', 
+        'CCDC': 'cc-pCVDZ', 
+        'CCTC': 'cc-pCVTZ', 
+        'CCQC': 'cc-pCVQZ', 
+        'CC5C': 'cc-pCV5Z', 
+        'CC6C': 'cc-pCV6Z', 
+        'ACCDC': 'aug-cc-pCVDZ', 
+        'ACCTC': 'aug-cc-pCVTZ', 
+        'ACCQC': 'aug-cc-pCVQZ', 
+        'ACC5C': 'aug-cc-pCV5Z', 
+        'ACC6C': 'aug-cc-pCV6Z'
+    }
 
     def __init__(self, *args, **kwargs):
 
@@ -85,6 +87,9 @@ class GAMESS(logfileparser.Logfile):
         self.firststdorient = True  # Used to decide whether to wipe the atomcoords clean
         self.cihamtyp = "none"  # Type of CI Hamiltonian: saps or dets.
         self.scftype = "none"  # Type of SCF calculation: BLYP, RHF, ROHF, etc.
+
+    def after_parsing(self):
+        super().after_parsing()
 
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
@@ -175,6 +180,7 @@ class GAMESS(logfileparser.Logfile):
             line = next(inputfile)
             order = line.split()[-1]
             point_group = pg.replace('N', order)
+            self.metadata['symmetry_full'] = point_group
 
         # Symmetry: ordering of irreducible representations
         if line.strip() == "DIMENSIONS OF THE SYMMETRY SUBSPACES ARE":

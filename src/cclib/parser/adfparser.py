@@ -105,6 +105,9 @@ class ADF(logfileparser.Logfile):
         SCFCNV, SCFCNV2 = list(range(2))  # used to index self.scftargets[]
         maxelem, norm = list(range(2))  # used to index scf.values
 
+    def after_parsing(self):
+        super().after_parsing()
+
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
 
@@ -136,12 +139,17 @@ class ADF(logfileparser.Logfile):
             while line[:5] != "title":
                 line = inputfile.next()
 
+        if "Amsterdam Density Functional" in line:
+            self.metadata['package_version'] = line.split()[5]
+
         if line[1:10] == "Symmetry:":
             info = line.split()
             if info[1] == "NOSYM":
                 self.nosymflag = True
+                point_group = "c1"
             else:
                 point_group = info[1].replace('(', '').replace(')', '').lower()
+            self.metadata['symmetry_full'] = point_group
 
         # Use this to read the subspecies of irreducible representations.
         # It will be a list, with each element representing one irrep.

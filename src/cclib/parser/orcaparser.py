@@ -60,6 +60,9 @@ class ORCA(logfileparser.Logfile):
         # Keep track of whether this is a relaxed scan calculation
         self.is_relaxed_scan = False
 
+    def after_parsing(self):
+        super().after_parsing()
+
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
 
@@ -83,12 +86,13 @@ class ORCA(logfileparser.Logfile):
             self.set_attribute('mult', mult)
 
         if line[1:18] == "Symmetry handling":
+
             line = next(inputfile)
             assert "Point group" in line
-            point_group_full = line.split()[3]
+            point_group_full = line.split()[3].lower()
             line = next(inputfile)
             assert "Used point group" in line
-            point_group_abelian = line.split()[4]
+            point_group_abelian = line.split()[4].lower()
             line = next(inputfile)
             assert "Number of irreps" in line
             nirrep = int(line.split()[4])
@@ -99,6 +103,9 @@ class ORCA(logfileparser.Logfile):
                 if not hasattr(self, 'symlabels'):
                     self.symlabels = []
                 self.symlabels.append(self.normalisesym(irrep))
+
+            self.metadata['symmetry_full'] = point_group_full
+            self.metadata['symmetry_abelian'] = point_group_abelian
 
         # SCF convergence output begins with:
         #

@@ -53,8 +53,14 @@ class GAMESSUK(logfileparser.Logfile):
         # used for determining whether to add a second mosyms, etc.
         self.betamosyms = self.betamoenergies = self.betamocoeffs = False
 
+    def after_parsing(self):
+        super().after_parsing()
+
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
+
+        if all(token in line for token in ("version", "===")):
+            self.metadata["package_version"] = line.split()[4]
 
         if line[1:22] == "total number of atoms":
             natom = int(line.split()[-1])
@@ -97,6 +103,7 @@ class GAMESSUK(logfileparser.Logfile):
             assert "order of principal axis" in line
             naxis = line.split()[-1]
             point_group = pg.replace('n', naxis)
+            self.metadata['symmetry_full'] = point_group
 
         # This is the only place coordinates are printed in single point calculations. Note that
         # in the following fragment, the basis set selection is not always printed:
@@ -595,8 +602,8 @@ class GAMESSUK(logfileparser.Logfile):
         #
         if line.strip() == "dipole moments":
 
-            # In older version there is only one blank line before the header,
-            # and newer version there are two.
+            # In older versions there is only one blank line before
+            # the header, and newer versions there are two.
             self.skip_line(inputfile, 'blank')
             line = next(inputfile)
             if not line.strip():

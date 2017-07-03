@@ -55,6 +55,8 @@ class DALTON(logfileparser.Logfile):
         # when the first line is BASIS, false for INTGRL/ATOMBASIS.
         self.basislibrary = True
 
+    def after_parsing(self):
+        super().after_parsing()
 
     def parse_geometry(self, lines):
         """Parse DALTON geometry lines into an atomcoords array."""
@@ -143,6 +145,9 @@ class DALTON(logfileparser.Logfile):
                 if 'The irrep name for each symmetry:' in line:
                     irreps = [self.normalisesym(irrep) for irrep in line.split()[8:][1::2]]
                     self.symlabels = irreps
+
+            self.metadata['symmetry_full'] = point_group_full
+            self.metadata['symmetry_abelian'] = point_group_abelian
 
         # This is probably the first place where atomic symmetry labels are printed,
         # somewhere afer the SYMGRP point group information section. We need to know
