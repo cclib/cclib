@@ -202,9 +202,8 @@ class Jaguar(logfileparser.Logfile):
 
         if "Molecular Point Group:" in line:
             point_group_full = line.split()[3].lower()
-            self.skip_lines(inputfile, ['comment', 'comment'])
-            line = next(inputfile)
-            assert "Point Group used:" in line
+            while "Point Group used:" not in line:
+                line = next(inputfile)
             point_group_abelian = line.split()[3].lower()
 
         if line[2:14] == "new geometry" or line[1:21] == "Symmetrized geometry" or line.find("Input geometry") > 0:

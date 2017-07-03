@@ -61,6 +61,9 @@ class Gaussian(logfileparser.Logfile):
 
     def before_parsing(self):
 
+        # Calculations use point group symmetry by default.
+        self.uses_symmetry = True
+
         # Used to index self.scftargets[].
         SCFRMS, SCFMAX, SCFENERGY = list(range(3))
 
@@ -487,12 +490,22 @@ class Gaussian(logfileparser.Logfile):
                 line = next(inputfile)
 
         # Symmetry: point group
+        if line.strip() == "Symmetry turned off by external request.":
+            self.set_attribute('uses_symmetry', False)
         if "Full point group" in line:
             point_group_full = line.split()[3].lower()
-            line = next(inputfile)
-            line = next(inputfile)
-            assert "Largest Abelian subgroup" in line
-            point_group_abelian = line.split()[3].lower()
+            if self.uses_symmetry:
+                while "Largest Abelian subgroup" not in line:
+                    line = next(inputfile)
+                    if "Leave Link" in line:
+                        # TODO this isn't correct. Need understanding
+                        # of symmetry tables.
+                        point_group_abelian = "d2h"
+                        break
+                if "Leave Link" not in line:
+                    point_group_abelian = line.split()[3].lower()
+            else:
+                point_group_abelian = "c1"
 
         # Symmetry: ordering of irreducible representations
         if "symmetry adapted cartesian basis functions" in line:
@@ -1740,7 +1753,8 @@ class Gaussian(logfileparser.Logfile):
                 polarizability = numpy.zeros(shape=(3, 3))
                 indices = numpy.tril_indices(3)
                 polarizability[indices] = [self.float(x) for x in
-                                           [line[23:31], line[31:39], line[39:47], line[47:55], line[55:63], line[63:71]]]
+                                           [line[23:31], line[31:39], line[39:47],
+                                            line[47:55], line[55:63], line[63:71]]]
                 polarizability = utils.symmetrize(polarizability, use_triangle='lower')
                 self.polarizabilities.append(polarizability)
 

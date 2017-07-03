@@ -130,7 +130,7 @@ class DALTON(logfileparser.Logfile):
             self.skip_lines(inputfile, ['d', 'b'])
             line = next(inputfile)
             if 'Point group:' in line:
-                point_group_full = line.split()[3].lower()
+                point_group_full = line.split()[-1].lower()
                 point_group_abelian = point_group_full
             else:
                 assert 'Full point group is:' in line
