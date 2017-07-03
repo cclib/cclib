@@ -94,6 +94,15 @@ class Psi(logfileparser.Logfile):
             if self.reference[0] == 'C':
                 self.reference = self.reference[1:]
 
+        if (self.version == 3) and (line.strip() == "-SYMMETRY INFORMATION:"):
+            line = next(inputfile)
+            assert "Computational point group is" in line
+            point_group_abelian = line.split()[4].lower()
+            # TODO
+            point_group_full = point_group_abelian
+            self.metadata['symmetry_full'] = point_group_full
+            self.metadata['symmetry_abelian'] = point_group_abelian
+
         # Psi3 prints the coordinates in several configurations, and we will parse the
         # the canonical coordinates system in Angstroms as the first coordinate set,
         # although it is actually somewhere later in the input, after basis set, etc.

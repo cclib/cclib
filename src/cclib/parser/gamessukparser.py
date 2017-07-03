@@ -102,8 +102,11 @@ class GAMESSUK(logfileparser.Logfile):
             line = next(inputfile)
             assert "order of principal axis" in line
             naxis = line.split()[-1]
-            point_group = pg.replace('n', naxis)
-            self.metadata['symmetry_full'] = point_group
+            point_group_full = pg.replace('n', naxis)
+            # TODO
+            point_group_abelian = point_group_full
+            self.metadata['symmetry_full'] = point_group_full
+            self.metadata['symmetry_abelian'] = point_group_abelian
 
         # This is the only place coordinates are printed in single point calculations. Note that
         # in the following fragment, the basis set selection is not always printed:

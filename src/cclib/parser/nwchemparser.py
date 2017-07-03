@@ -92,13 +92,16 @@ class NWChem(logfileparser.Logfile):
             self.skip_lines(inputfile, ['d', 'b'])
             line = next(inputfile)
             assert line[1:11] == "Group name"
-            point_group = line.split()[2]
+            point_group_full = line.split()[2].lower()
             line = next(inputfile)
             assert line[1:13] == "Group number"
             line = next(inputfile)
             assert line[1:12] == "Group order"
             self.pg_order = int(line.split()[2])
-            self.metadata['symmetry_full'] = point_group
+            # TODO
+            point_group_abelian = point_group_full
+            self.metadata['symmetry_full'] = point_group_full
+            self.metadata['symmetry_abelian'] = point_group_abelian
 
         # If the geometry is printed in XYZ format, it will have the number of atoms.
         if line[12:31] == "XYZ format geometry":

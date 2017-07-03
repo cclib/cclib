@@ -344,6 +344,15 @@ class QChem(logfileparser.Logfile):
 
                     line = next(inputfile)
 
+            # Point group symmetry.
+            if 'Molecular Point Group' in line:
+                point_group_full = line.split()[3].lower()
+                line = next(inputfile)
+                assert 'Largest Abelian Subgroup' in line
+                point_group_abelian = line.split()[3].lower()
+                self.metadata['symmetry_full'] = point_group_full
+                self.metadata['symmetry_abelian'] = point_group_abelian
+
             # Parse the basis set name
             if 'Requested basis set' in line:
                 self.metadata["basis_set"] = line.split()[-1]

@@ -271,8 +271,11 @@ class Molpro(logfileparser.Logfile):
             self.metadata["package_version"] = line.split()[1]
 
         if line[1:12] == "Point group":
-            point_group_full = line.split()[-1]
+            point_group_full = line.split()[-1].lower()
+            # TODO
+            point_group_abelian = point_group_full
             self.metadata['symmetry_full'] = point_group_full
+            self.metadata['symmetry_abelian'] = point_group_abelian
 
         if line[1:19] == "ATOMIC COORDINATES":
 

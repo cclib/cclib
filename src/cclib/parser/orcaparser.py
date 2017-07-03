@@ -45,13 +45,13 @@ class ORCA(logfileparser.Logfile):
         >>> map(sym, labels)
         ['A1', 'Ag', 'A1g', 'sigma', 'pi', 'phi', 'delta', 'delta.u', 'sigma.g']
         """
-        # TODO
-        # 1. change docstring
-        # 2. implement?
+        # TODO change docstring
 
         return label
 
     def before_parsing(self):
+
+        self.uses_symmetry = False
 
         # A geometry optimization is started only when
         # we parse a cycle (so it will be larger than zero().
@@ -86,6 +86,7 @@ class ORCA(logfileparser.Logfile):
             self.set_attribute('mult', mult)
 
         if line[1:18] == "Symmetry handling":
+            self.uses_symmetry = True
 
             line = next(inputfile)
             assert "Point group" in line
@@ -412,14 +413,20 @@ class ORCA(logfileparser.Logfile):
 
             self.mooccnos = [[]]
             self.moenergies = [[]]
+            self.mosyms = [[]]
 
             line = next(inputfile)
             while len(line) > 20:  # restricted calcs are terminated by ------
                 info = line.split()
                 mooccno = int(float(info[1]))
                 moenergy = float(info[2])
+                if self.uses_symmetry:
+                    mosym = self.normalisesym(info[4].split('-')[1])
+                else:
+                    mosym = 'A'
                 self.mooccnos[0].append(mooccno)
                 self.moenergies[0].append(utils.convertor(moenergy, "hartree", "eV"))
+                self.mosyms[0].append(mosym)
                 line = next(inputfile)
 
             line = next(inputfile)
@@ -430,14 +437,20 @@ class ORCA(logfileparser.Logfile):
 
                 self.mooccnos.append([])
                 self.moenergies.append([])
+                self.mosyms.append([])
 
                 line = next(inputfile)
                 while len(line) > 20:  # actually terminated by ------
                     info = line.split()
                     mooccno = int(float(info[1]))
                     moenergy = float(info[2])
+                    if self.uses_symmetry:
+                        mosym = self.normalisesym(info[4].split('-')[1])
+                    else:
+                        mosym = 'A'
                     self.mooccnos[1].append(mooccno)
                     self.moenergies[1].append(utils.convertor(moenergy, "hartree", "eV"))
+                    self.mosyms[1].append(mosym)
                     line = next(inputfile)
 
             if not hasattr(self, 'homos'):

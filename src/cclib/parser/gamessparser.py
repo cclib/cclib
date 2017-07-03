@@ -179,8 +179,11 @@ class GAMESS(logfileparser.Logfile):
             pg = line.split()[-1]
             line = next(inputfile)
             order = line.split()[-1]
-            point_group = pg.replace('N', order)
-            self.metadata['symmetry_full'] = point_group
+            point_group_full = pg.replace('N', order).lower()
+            # TODO
+            point_group_abelian = point_group_full
+            self.metadata['symmetry_full'] = point_group_full
+            self.metadata['symmetry_abelian'] = point_group_abelian
 
         # Symmetry: ordering of irreducible representations
         if line.strip() == "DIMENSIONS OF THE SYMMETRY SUBSPACES ARE":

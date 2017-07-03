@@ -146,10 +146,13 @@ class ADF(logfileparser.Logfile):
             info = line.split()
             if info[1] == "NOSYM":
                 self.nosymflag = True
-                point_group = "c1"
+                point_group_full = "c1"
             else:
-                point_group = info[1].replace('(', '').replace(')', '').lower()
-            self.metadata['symmetry_full'] = point_group
+                point_group_full = info[1].replace('(', '').replace(')', '').lower()
+            # TODO
+            point_group_abelian = point_group_full
+            self.metadata['symmetry_full'] = point_group_full
+            self.metadata['symmetry_abelian'] = point_group_abelian
 
         # Use this to read the subspecies of irreducible representations.
         # It will be a list, with each element representing one irrep.

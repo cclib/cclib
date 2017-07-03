@@ -507,6 +507,8 @@ class Gaussian(logfileparser.Logfile):
                     point_group_abelian = line.split()[3].lower()
             else:
                 point_group_abelian = "c1"
+            self.metadata['symmetry_full'] = point_group_full
+            self.metadata['symmetry_abelian'] = point_group_abelian
 
         # Symmetry: ordering of irreducible representations
         if "symmetry adapted cartesian basis functions" in line:
