@@ -81,6 +81,27 @@ class OrcaIRTest(GenericIRTest):
     # but in the meanwhile we will expect to parse this value.
     max_IR_intensity = 215
 
+    def testtemperature(self):
+        """Is the temperature 298.15 K?"""
+        print(self.data)
+        self.assertAlmostEqual(298.15, self.data.temperature)
+
+    def testpressure(self):
+        """Is the pressure 1 atm?"""
+        self.assertAlmostEqual(1, self.data.pressure)
+
+    def testenthalpy(self):
+         """Is the enthalpy defined"""
+         self.assertTrue(hasattr(self.data, 'enthalpy'))
+
+    def testentropy(self):
+         """Is the entropy defined"""
+         self.assertTrue(hasattr(self.data, 'entropy'))
+
+    def testfreeenergy(self):
+         """Is the freeenergy defined"""
+         self.assertTrue(hasattr(self.data, 'freeenergy'))
+
 
 class QChemIRTest(GenericIRTest):
     """Customized vibrational frequency unittest"""
