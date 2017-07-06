@@ -50,6 +50,7 @@ from . import cjsonwriter
 from . import cmlwriter
 from . import xyzwriter
 from . import moldenwriter
+from . import wfxwriter
 
 try:
     from ..bridge import cclib2openbabel
@@ -106,7 +107,8 @@ outputclasses = {
     'json': cjsonwriter.CJSON,
     'cml': cmlwriter.CML,
     'xyz': xyzwriter.XYZ,
-    'molden': moldenwriter.MOLDEN
+    'molden': moldenwriter.MOLDEN,
+    'wfx': wfxwriter.WFXWriter
 }
 
 
