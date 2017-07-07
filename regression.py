@@ -1265,7 +1265,12 @@ for m, module in all_modules.items():
         if name[-4:] == "Test":
             globals()[name] = getattr(module, name)
 
-class ADFSPTest_nosyms(ADFSPTest):
+class GenericSPTest_nosym(GenericSPTest):
+    def testsymmetry(self):
+        assert self.data.metadata["symmetry_full"] == "c1"
+        assert self.data.metadata["symmetry_abelian"] == "c1"
+
+class ADFSPTest_nosyms(ADFSPTest, GenericSPTest_nosym):
     foverlap00 = 1.00000
     foverlap11 = 0.99999
     foverlap22 = 0.99999
@@ -1283,7 +1288,7 @@ class DALTONBigBasisTest_aug_cc_pCVQZ(GenericBigBasisTest):
     contractions = { 6: 29 }
     spherical = True
 
-class DALTONSPTest_nosyms_nolabels(GenericSPTest):
+class DALTONSPTest_nosyms_nolabels(GenericSPTest_nosym):
     @unittest.skip('?')
     def testsymlabels(self):
         """Are all the symmetry labels either Ag/u or Bg/u?."""
@@ -1327,6 +1332,10 @@ class JaguarSPTest_6_31gss(GenericSPTest):
     nbasisdict = {1: 5, 6: 15}
     b3lyp_energy = -10530
     overlap01 = 0.22
+    def testsymmetry(self):
+        """Symmetry is detected, but disabled."""
+        assert self.data.metadata["symmetry_full"] == "c2h"
+        assert self.data.metadata["symmetry_abelian"] == "c1"
 
 class JaguarSPunTest_nmo_all(JaguarSPunTest):
     def testmoenergies(self):
@@ -1345,10 +1354,13 @@ class JaguarGeoOptTest_6_31gss(GenericGeoOptTest):
 class MolproBigBasisTest_cart(MolproBigBasisTest):
     spherical = False
 
-class OrcaSPTest_3_21g(GenericSPTest):
+class OrcaSPTest_3_21g(GenericSPTest_nosym):
     nbasisdict = {1: 2, 6: 9}
     b3lyp_energy = -10460
     overlap01 = 0.19
+    @unittest.skip('This calculation has no symmetry.')
+    def testsymlabels(self):
+        """This calculation has no symmetry."""
 
 class OrcaGeoOptTest_3_21g(OrcaGeoOptTest):
     nbasisdict = {1: 2, 6: 9}
@@ -1398,7 +1410,7 @@ old_unittests = {
 
     "DALTON/DALTON-2013/C_bigbasis.aug-cc-pCVQZ.out":       DALTONBigBasisTest_aug_cc_pCVQZ,
     "DALTON/DALTON-2013/b3lyp_energy_dvb_sp_nosym.out":     DALTONSPTest_nosyms_nolabels,
-    "DALTON/DALTON-2013/dvb_sp_hf_nosym.out":               GenericSPTest,
+    "DALTON/DALTON-2013/dvb_sp_hf_nosym.out":               GenericSPTest_nosym,
     "DALTON/DALTON-2013/sp_b3lyp_dvb.out":                  GenericSPTest,
     "DALTON/DALTON-2015/trithiolane_polar_abalnr.out":      GaussianPolarTest,
     "DALTON/DALTON-2015/trithiolane_polar_response.out":    GaussianPolarTest,
