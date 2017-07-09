@@ -271,6 +271,13 @@ ORCA/ORCA2.8/dvb_raman.out
 ORCA/ORCA2.8/dvb_sp.out
 ORCA/ORCA2.8/dvb_sp_un.out
 ORCA/ORCA2.8/dvb_td.out
+ORCA/ORCA2.9/dvb_gopt.out
+ORCA/ORCA2.9/dvb_ir.out
+ORCA/ORCA2.9/dvb_raman.out
+ORCA/ORCA2.9/dvb_scan.out
+ORCA/ORCA2.9/dvb_sp.out
+ORCA/ORCA2.9/dvb_sp_un.out
+ORCA/ORCA2.9/dvb_td.out
 ORCA/ORCA2.9/job.out
 ORCA/ORCA2.9/PCB_1_122.out
 ORCA/ORCA2.9/prova.out
