@@ -88,9 +88,6 @@ class GAMESS(logfileparser.Logfile):
         self.cihamtyp = "none"  # Type of CI Hamiltonian: saps or dets.
         self.scftype = "none"  # Type of SCF calculation: BLYP, RHF, ROHF, etc.
 
-    def after_parsing(self):
-        super(GAMESS, self).after_parsing()
-
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
         

@@ -53,9 +53,6 @@ class GAMESSUK(logfileparser.Logfile):
         # used for determining whether to add a second mosyms, etc.
         self.betamosyms = self.betamoenergies = self.betamocoeffs = False
 
-    def after_parsing(self):
-        super(GAMESSUK, self).after_parsing()
-
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
 
