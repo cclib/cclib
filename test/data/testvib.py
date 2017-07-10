@@ -83,7 +83,6 @@ class OrcaIRTest(GenericIRTest):
 
     def testtemperature(self):
         """Is the temperature 298.15 K?"""
-        print(self.data)
         self.assertAlmostEqual(298.15, self.data.temperature)
 
     def testpressure(self):
@@ -91,15 +90,15 @@ class OrcaIRTest(GenericIRTest):
         self.assertAlmostEqual(1, self.data.pressure)
 
     def testenthalpy(self):
-         """Is the enthalpy defined"""
+         """Is the enthalpy defined?"""
          self.assertTrue(hasattr(self.data, 'enthalpy'))
 
     def testentropy(self):
-         """Is the entropy defined"""
+         """Is the entropy defined?"""
          self.assertTrue(hasattr(self.data, 'entropy'))
 
     def testfreeenergy(self):
-         """Is the freeenergy defined"""
+         """Is the freeenergy defined?"""
          self.assertTrue(hasattr(self.data, 'freeenergy'))
 
 
