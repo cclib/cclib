@@ -569,35 +569,35 @@ class ORCA(logfileparser.Logfile):
             while line[:17] != 'Electronic energy':
                 line = next(inputfile)
             self.zpe = next(inputfile).split()[4]
-            thermal_vibrational_correction = next(inputfile).split()[4]
-            thermal_rotional_correction = next(inputfile).split()[4]
-            thermal_translational_correction = next(inputfile).split()[4]
+            thermal_vibrational_correction = float(next(inputfile).split()[4])
+            thermal_rotional_correction = float(next(inputfile).split()[4])
+            thermal_translational_correction = float(next(inputfile).split()[4])
             next(inputfile)
-            total_thermal_energy = next(inputfile).split()[3]
+            total_thermal_energy = float(next(inputfile).split()[3])
 
             # Enthalpy
             line = next(inputfile)
             while line[:17] != 'Total free energy':
                 line = next(inputfile)
-            thermal_enthalpy_correction = next(inputfile).split()[4]
+            thermal_enthalpy_correction = float(next(inputfile).split()[4])
             next(inputfile)
-            self.enthalpy = next(inputfile).split()[3]
+            self.enthalpy = float(next(inputfile).split()[3])
 
             # Entropy
             line = next(inputfile)
             while line[:18] != 'Electronic entropy':
                 line = next(inputfile)
-            electronic_entropy = line.split()[3]
-            vibrational_entropy = next(inputfile).split()[3]
-            rotational_entropy = next(inputfile).split()[3]
-            translational_entropy = next(inputfile).split()[3]
+            electronic_entropy = float(line.split()[3])
+            vibrational_entropy = float(next(inputfile).split()[3])
+            rotational_entropy = float(next(inputfile).split()[3])
+            translational_entropy = float(next(inputfile).split()[3])
             next(inputfile)
-            self.entropy = next(inputfile).split()[4]
+            self.entropy = float(next(inputfile).split()[4])
 
             line = next(inputfile)
             while line[:25] != 'Final Gibbs free enthalpy':
                 line = next(inputfile)
-            self.freeenergy = line.split()[5]
+            self.freeenergy = float(line.split()[5])
 
         # Read TDDFT information
         if any(x in line for x in ("TD-DFT/TDA EXCITED", "TD-DFT EXCITED")):

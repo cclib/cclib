@@ -74,11 +74,7 @@ class JaguarIRTest(GenericIRTest):
 class OrcaIRTest(GenericIRTest):
     """Customized vibrational frequency unittest"""
 
-    # We have not been able to determine why ORCA gets such a different
-    # maximum IR intensity. The coordinates are exactly the same, and
-    # the basis set seems close enough to other programs. It would be nice
-    # to determine whether this difference is algorithmic in nature,
-    # but in the meanwhile we will expect to parse this value.
+    # ORCA has a bug in the intensities for version < 4.0
     max_IR_intensity = 215
 
     def testtemperature(self):
@@ -90,16 +86,16 @@ class OrcaIRTest(GenericIRTest):
         self.assertAlmostEqual(1, self.data.pressure)
 
     def testenthalpy(self):
-         """Is the enthalpy defined?"""
-         self.assertTrue(hasattr(self.data, 'enthalpy'))
+         """Is the enthalpy correct?"""
+         self.assertAlmostEqual(-381.85224835, self.data.enthalpy, 3)
 
     def testentropy(self):
-         """Is the entropy defined?"""
-         self.assertTrue(hasattr(self.data, 'entropy'))
+         """Is the entropy correct?"""
+         self.assertAlmostEqual(0.03601749, self.data.entropy, 3)
 
     def testfreeenergy(self):
-         """Is the freeenergy defined?"""
-         self.assertTrue(hasattr(self.data, 'freeenergy'))
+         """Is the freeenergy correct?"""
+         self.assertAlmostEqual(-381.88826585, self.data.freeenergy, 3)
 
 
 class QChemIRTest(GenericIRTest):
