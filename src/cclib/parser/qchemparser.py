@@ -66,7 +66,8 @@ class QChem(logfileparser.Logfile):
         # aoname.
         self.re_atomindex = re.compile('(\d+)_')
 
-        # A maximum of 6 columns per block when printing matrices.
+        # A maximum of 6 columns per block when printing matrices. The
+        # Fock matrix is 4.
         self.ncolsblock = 6
 
         # By default, when asked to print orbitals via
@@ -79,7 +80,8 @@ class QChem(logfileparser.Logfile):
         # `scf_print`/`scf_final_print` will still only display (NOcc
         # + 5) MOs.
         #
-        # Note that the density matrix is always (NBasis * NBasis)!
+        # Note that the (AO basis) density matrix is always (NBasis *
+        # NBasis)!
         self.norbdisp_alpha = self.norbdisp_beta = 5
         self.norbdisp_alpha_aonames = self.norbdisp_beta_aonames = 5
         self.norbdisp_set = False
@@ -337,7 +339,7 @@ class QChem(logfileparser.Logfile):
                                     self.norbdisp_set = True
                             # Apparently calculations can run without
                             # a matching $end...this terminates the
-                            # user input section.
+                            # user input section no matter what.
                             if line.strip() == ('-' * 62):
                                 break
 
@@ -481,6 +483,12 @@ class QChem(logfileparser.Logfile):
             if 'basis functions' in line:
                 if not hasattr(self, 'nbasis'):
                     self.set_attribute('nbasis', int(line.split()[-3]))
+                    # We can't display more MOs than there are basis
+                    # functions.
+                    self.norbdisp_alpha = min(self.norbdisp_alpha, self.nbasis)
+                    self.norbdisp_alpha_aonames = min(self.norbdisp_alpha_aonames, self.nbasis)
+                    self.norbdisp_beta = min(self.norbdisp_beta, self.nbasis)
+                    self.norbdisp_beta_aonames = min(self.norbdisp_beta_aonames, self.nbasis)
 
             # Check for whether or not we're peforming an
             # (un)restricted calculation.
