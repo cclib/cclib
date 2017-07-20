@@ -77,6 +77,10 @@ class OrcaIRTest(GenericIRTest):
     # ORCA has a bug in the intensities for version < 4.0
     max_IR_intensity = 215
 
+    enthalpy_places = -1
+    entropy_places = -1
+    freeenergy_places = -1
+
     def testtemperature(self):
         """Is the temperature 298.15 K?"""
         self.assertAlmostEqual(298.15, self.data.temperature)
@@ -87,15 +91,15 @@ class OrcaIRTest(GenericIRTest):
 
     def testenthalpy(self):
          """Is the enthalpy reasonable"""
-         self.assertAlmostEqual(-381.85224835, self.data.enthalpy, -1)
+         self.assertAlmostEqual(-381.85224835, self.data.enthalpy, self.enthalpy_places)
 
     def testentropy(self):
          """Is the entropy reasonable"""
-         self.assertAlmostEqual(0.03601749, self.data.entropy, -1)
+         self.assertAlmostEqual(0.03601749, self.data.entropy, self.entropy_places)
 
     def testfreeenergy(self):
          """Is the freeenergy reasonable"""
-         self.assertAlmostEqual(-381.88826585, self.data.freeenergy, -1)
+         self.assertAlmostEqual(-381.88826585, self.data.freeenergy, self.freeenergy_places)
 
 
 class QChemIRTest(GenericIRTest):
