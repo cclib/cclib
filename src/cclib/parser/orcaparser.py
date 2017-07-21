@@ -647,7 +647,6 @@ class ORCA(logfileparser.Logfile):
         # Parse the various absorption spectra for TDDFT and ROCIS
         if 'ABSORPTION SPECTRUM' in line or 'ELECTRIC DIPOLE' in line:
 
-            print(line)
             # Standard header, occasionally changes
             header = ['d', 'header', 'header', 'd']
 
@@ -704,9 +703,10 @@ State  Energy   Wavelength       D2            m2              Q2               
                         # Spin forbidden
                         return line.split()[1], 0
 
-            elif line[10:15] == 'X-RAY':
+            elif line[10:15] == 'X-RAY' and \
+		(line[16:33] == 'EMISSION SPECTRUM' or line[16:35] == 'ABSORPTION SPECTRUM'):
                 def energy_intensity(line):
-                    """ X-Ray from XES
+                    """ X-Ray from XES (emission or absorption, electric or velocity dipole moments)
 -------------------------------------------------------------------------------------
           X-RAY ABSORPTION SPECTRUM VIA TRANSITION ELECTRIC DIPOLE MOMENTS
 -------------------------------------------------------------------------------------
@@ -718,10 +718,10 @@ State  Energy   Wavelength       D2            m2              Q2               
                     state, start, arrow, end, energy, intensity, tx, ty, tz = line.split()
                     return energy, intensity
 
-            elif line[10:18] == 'COMBINED' and 'X-RAY ABSORPTION' in line:
+            elif line[10:80] == 'COMBINED ELECTRIC DIPOLE + MAGNETIC DIPOLE + ELECTRIC QUADRUPOLE X-RAY':
                 header = ['header', 'd', 'header', 'd', 'header', 'header', 'd']
                 def energy_intensity(line):
-                    """ XAS
+                    """ XAS with quadrupole
 -------------------------------------------------------------------------------------------------------------------------------
           COMBINED ELECTRIC DIPOLE + MAGNETIC DIPOLE + ELECTRIC QUADRUPOLE X-RAY ABSORPTION SPECTRUM
                                       (origin adjusted)
@@ -736,9 +736,9 @@ State  Energy   Wavelength       D2            m2              Q2               
                     state, start, arrow, end, energy, d2, m2, q2, intensity, d2_contrib, m2_contrib, q2_contrib = line.split()
                     return energy, intensity
 
-            elif line[:10] == 'SPIN ORBIT':
+            elif line[:79] == 'SPIN ORBIT CORRECTED ABSORPTION SPECTRUM VIA TRANSITION':
                 def energy_intensity(line):
-                    """ ROCIS dipole approximation with SOC == True
+                    """ ROCIS dipole approximation with SOC == True (electric or veloctiy dipole moments)
 -------------------------------------------------------------------------------
 SPIN ORBIT CORRECTED ABSORPTION SPECTRUM VIA TRANSITION ELECTRIC DIPOLE MOMENTS
 -------------------------------------------------------------------------------
@@ -751,8 +751,7 @@ States    Energy  Wavelength   fosc         T2         TX        TY        TZ
                     state, state2, energy, wavelength, intensity, t2, tx, ty, tz = line.split()
                     return energy, intensity
 
-            elif line[10:15] == 'ROCIS' or line[3:8] == 'ROCIS':
-                print(line)
+            elif line[10:24] == 'ROCIS COMBINED' or line[3:17] == 'ROCIS COMBINED':
                 def energy_intensity(line):
                     """ ROCIS with DoQuad = True and SOC = True (also does origin adjusted)
 ------------------------------------------------------------------------------------------------------
