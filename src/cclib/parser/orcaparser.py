@@ -668,9 +668,10 @@ State   Energy  Wavelength   fosc         T2         TX        TY        TZ
                     intensity = 0
                 return energy, intensity
 
+            line = line.strip()
             # Check for variations
-            if (line[16:24] == 'COMBINED' and not 'ROCIS' in line) or \
-	       (line[ 6:14] == 'COMBINED' and 'origin adjusted' in line):
+            if line == 'COMBINED ELECTRIC DIPOLE + MAGNETIC DIPOLE + ELECTRIC QUADRUPOLE SPECTRUM' or \
+               line == 'COMBINED ELECTRIC DIPOLE + MAGNETIC DIPOLE + ELECTRIC QUADRUPOLE SPECTRUM (origin adjusted)':
                 def energy_intensity(line):
                     """ TDDFT with DoQuad == True
 ------------------------------------------------------------------------------------------------------
@@ -684,7 +685,7 @@ State   Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
                     state, energy, wavelength, d2, m2, q2, intensity, d2_contrib, m2_contrib, q2_contrib = line.split()
                     return energy, intensity
 
-            elif line[36:44] == 'COMBINED':
+            elif line == 'COMBINED ELECTRIC DIPOLE + MAGNETIC DIPOLE + ELECTRIC QUADRUPOLE SPECTRUM (Origin Independent, Length Representation)':
                 def energy_intensity(line):
                     """ TDDFT with doQuad == True (Origin Independent Length Representation)
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -703,8 +704,8 @@ State  Energy   Wavelength       D2            m2              Q2               
                         # Spin forbidden
                         return line.split()[1], 0
 
-            elif line[10:15] == 'X-RAY' and \
-		(line[16:33] == 'EMISSION SPECTRUM' or line[16:35] == 'ABSORPTION SPECTRUM'):
+            elif line[:5] == 'X-RAY' and \
+                (line[6:23] == 'EMISSION SPECTRUM' or line[6:25] == 'ABSORPTION SPECTRUM'):
                 def energy_intensity(line):
                     """ X-Ray from XES (emission or absorption, electric or velocity dipole moments)
 -------------------------------------------------------------------------------------
@@ -718,10 +719,10 @@ State  Energy   Wavelength       D2            m2              Q2               
                     state, start, arrow, end, energy, intensity, tx, ty, tz = line.split()
                     return energy, intensity
 
-            elif line[10:80] == 'COMBINED ELECTRIC DIPOLE + MAGNETIC DIPOLE + ELECTRIC QUADRUPOLE X-RAY':
+            elif line[:70] == 'COMBINED ELECTRIC DIPOLE + MAGNETIC DIPOLE + ELECTRIC QUADRUPOLE X-RAY':
                 header = ['header', 'd', 'header', 'd', 'header', 'header', 'd']
                 def energy_intensity(line):
-                    """ XAS with quadrupole
+                    """ XAS with quadrupole (origin adjusted)
 -------------------------------------------------------------------------------------------------------------------------------
           COMBINED ELECTRIC DIPOLE + MAGNETIC DIPOLE + ELECTRIC QUADRUPOLE X-RAY ABSORPTION SPECTRUM
                                       (origin adjusted)
@@ -736,7 +737,7 @@ State  Energy   Wavelength       D2            m2              Q2               
                     state, start, arrow, end, energy, d2, m2, q2, intensity, d2_contrib, m2_contrib, q2_contrib = line.split()
                     return energy, intensity
 
-            elif line[:79] == 'SPIN ORBIT CORRECTED ABSORPTION SPECTRUM VIA TRANSITION':
+            elif line[:55] == 'SPIN ORBIT CORRECTED ABSORPTION SPECTRUM VIA TRANSITION':
                 def energy_intensity(line):
                     """ ROCIS dipole approximation with SOC == True (electric or veloctiy dipole moments)
 -------------------------------------------------------------------------------
@@ -751,7 +752,7 @@ States    Energy  Wavelength   fosc         T2         TX        TY        TZ
                     state, state2, energy, wavelength, intensity, t2, tx, ty, tz = line.split()
                     return energy, intensity
 
-            elif line[10:24] == 'ROCIS COMBINED' or line[3:17] == 'ROCIS COMBINED':
+            elif line[:79] == 'ROCIS COMBINED ELECTRIC DIPOLE + MAGNETIC DIPOLE + ELECTRIC QUADRUPOLE SPECTRUM':
                 def energy_intensity(line):
                     """ ROCIS with DoQuad = True and SOC = True (also does origin adjusted)
 ------------------------------------------------------------------------------------------------------
