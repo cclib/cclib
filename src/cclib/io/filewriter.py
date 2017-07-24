@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2016, the cclib development team
+# Copyright (c) 2017, the cclib development team
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
@@ -20,12 +20,14 @@ from math import sqrt
 from cclib.parser.utils import PeriodicTable
 
 
-class Writer(object):
-    """Abstract class for writer objects.
+class MissingAttributeError(Exception):
+    pass
 
-    Subclasses defined by cclib:
-        CJSON, CML, XYZ, MOLDEN
-    """
+
+class Writer(object):
+    """Abstract class for writer objects."""
+
+    required_attrs = ()
 
     def __init__(self, ccdata, jobfilename=None, terse=False,
                  *args, **kwargs):
@@ -44,7 +46,6 @@ class Writer(object):
         self.terse = terse
 
         self.pt = PeriodicTable()
-        self.elements = [self.pt.element[Z] for Z in self.ccdata.atomnos]
 
         # Open Babel isn't necessarily present.
         if has_openbabel:
@@ -52,6 +53,8 @@ class Writer(object):
             # Used for calculating SMILES/InChI, formula, MW, etc.
             self.obmol, self.pbmol = self._make_openbabel_from_ccdata()
             self.bond_connectivities = self._make_bond_connectivity_from_openbabel(self.obmol)
+
+        self._check_required_attributes()
 
     def generate_repr(self):
         """Generate the written representation of the logfile data.
@@ -88,6 +91,14 @@ class Writer(object):
                                         obbond.GetEndAtom().GetIndex(),
                                         obbond.GetBondOrder()))
         return bond_connectivities
+
+    def _check_required_attributes(self):
+        """Check if required attributes are present in ccdata."""
+        missing = [x for x in self.required_attrs if not hasattr(self.ccdata, x)]
+        if missing:
+            missing = ' '.join(missing)
+            raise MissingAttributeError(
+                'Could not parse required outputs to write file: ' + missing)
 
 
 if __name__ == "__main__":
