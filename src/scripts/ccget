@@ -16,6 +16,7 @@ import glob
 import logging
 import os.path
 import sys
+import numpy
 
 from cclib.parser import ccData
 from cclib.io import ccread, URL_PATTERN
@@ -38,12 +39,13 @@ To parse multiple files as one input stream, use --multi (or -m):
     ccget --multi <attr> [<attr>]  <cclogfile> <cclogfile> [<cclogfile>]
 Additional options:
     -v or --verbose: more verbose parsing output (only errors by default)
-    -u or --future: use experimental features (currently optdone_as_list)\
+    -u or --future: use experimental features (currently optdone_as_list)
+    -f or --full: toggle full print behaviour for attributes\
 """
 
 # These are the options ccget accepts and their one letter versions.
-OPTS_LONG = ["help", "list", "json", "multi", "verbose", "future"]
-OPTS_SHORT = "hljmvu"
+OPTS_LONG = ["help", "list", "json", "multi", "verbose", "future", "full"]
+OPTS_SHORT = "hljmvuf"
 
 
 def ccget():
@@ -62,6 +64,7 @@ def ccget():
     cjsonfile = False
     multifile = False
     verbose = False
+    full = False
     for opt, arg in optlist:
         if opt in ("-h", "--help"):
             print(MSG_USAGE_LONG)
@@ -76,6 +79,12 @@ def ccget():
             verbose = True
         if opt in ("-u", "--future"):
             future = True
+        if opt in ("-f", "--full"):
+            full = True
+
+    # Toggle full print behaviour for numpy arrays.
+    if full:
+        numpy.set_printoptions(threshold=numpy.nan)
 
     # We need at least one attribute and the filename, so two arguments, or
     # just one filename if we want to list attributes that can be extracted.
@@ -179,7 +188,14 @@ def ccget():
                         continue
                 else:
                     if hasattr(data, attr):
-                        print("%s:\n%s" % (attr, getattr(data, attr)))
+                        print(attr)
+                        attr_val = getattr(data, attr)
+                        # List of attributes to be printed with new lines
+                        if attr in data._listsofarrays and full:
+                            for val in attr_val:
+                                print(val)
+                        else:
+                            print(attr_val)
                         continue
 
                 print("Could not parse %s from this file." % attr)

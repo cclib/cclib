@@ -163,6 +163,7 @@ class DataSuite(object):
             parser = self.parsers[td['parser']]
             test = getattr(module, td['class'])
 
+            description = ''
             if not self.silent:
                 print("", file=stream_test)
                 description = "%s/%s: %s" % (td['subdir'], ",".join(td['files']), test.__doc__)

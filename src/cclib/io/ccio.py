@@ -137,8 +137,9 @@ def ccread(source, *args, **kargs):
     the appropriate bridge such as OpenBabel.
 
     Inputs:
-        source - a single logfile, a list of logfiles, or an input stream.
-        Also URLs to log files are supported.
+        source - a single logfile, a list of logfiles (for a single job),
+                 an input stream, or an URL pointing to a log file.
+        *args, **kargs - arguments and keyword arguments passed to ccopen
     Returns:
         a ccData object containing cclib data attributes
     """
@@ -163,8 +164,9 @@ def ccopen(source, *args, **kargs):
     """Guess the identity of a particular log file and return an instance of it.
 
     Inputs:
-      source - a single logfile, a list of logfiles, or an input stream.
-      Also URLs to log files are supported.
+        source - a single logfile, a list of logfiles (for a single job),
+                 an input stream, or an URL pointing to a log file.
+        *args, **kargs - arguments and keyword arguments passed to filetype
 
     Returns:
       one of ADF, DALTON, GAMESS, GAMESS UK, Gaussian, Jaguar, Molpro, MOPAC,
