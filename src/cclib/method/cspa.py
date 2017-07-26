@@ -24,7 +24,7 @@ class CSPA(Population):
 
     def __str__(self):
         """Return a string representation of the object."""
-        return "CSPA of" % (self.data)
+        return "CSPA of %s" % (self.data)
 
     def __repr__(self):
         """Return a representation of the object."""

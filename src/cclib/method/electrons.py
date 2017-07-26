@@ -16,11 +16,11 @@ from .calculationmethod import Method
 
 class Electrons(Method):
     """A container for methods pertaining to electrons."""
-    
+
     def __init__(self, data, progress=None, loglevel=logging.INFO, logname="Log"):
 
         super(Electrons, self).__init__(data, progress, loglevel, logname)
-        
+
     def __str__(self):
         """Returns a string representation of the object."""
         return "Electrons"
@@ -28,10 +28,10 @@ class Electrons(Method):
     def __repr__(self):
         """Returns a representation of the object."""
         return "Electrons"
-    
+
     def count(self, core=False):
         """Returns the electron count in system.
-        
+
         Normally returns electrons used in calculation, but will include
         core electrons in pseudopotentials if core is True.
         """

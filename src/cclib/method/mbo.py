@@ -21,18 +21,18 @@ class MBO(Density):
 
         # Call the __init__ method of the superclass.
         super(MBO, self).__init__(logname="MBO", *args)
-        
+
     def __str__(self):
         """Return a string representation of the object."""
-        return "Mayer's bond order of" % (self.data)
+        return "Mayer's bond order of %s" % (self.data)
 
     def __repr__(self):
         """Return a representation of the object."""
         return 'Mayer\'s bond order("%s")' % (self.data)
-    
+
     def calculate(self, indices=None, fupdate=0.05):
         """Calculate Mayer's bond orders."""
-    
+
         retval = super(MBO, self).calculate(fupdate)
         if not retval: #making density didn't work
             return False
@@ -101,7 +101,7 @@ class MBO(Density):
 
                 tempsumA = 0
                 tempsumB = 0
-                
+
                 for a in indices[i]:
 
                     for b in indices[j]:
