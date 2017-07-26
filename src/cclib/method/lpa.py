@@ -23,7 +23,7 @@ class LPA(Population):
 
     def __str__(self):
         """Return a string representation of the object."""
-        return "LPA of" % (self.data)
+        return "LPA of %s" % (self.data)
 
     def __repr__(self):
         """Return a representation of the object."""

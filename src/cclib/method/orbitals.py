@@ -21,14 +21,14 @@ from .calculationmethod import Method
 
 class Orbitals(Method):
     """A class for orbital related methods."""
-    
+
     def __init__(self, data, progress=None, \
                  loglevel=logging.INFO, logname="Log"):
 
         # Call the __init__ method of the superclass.
         super(Orbitals, self).__init__(data, progress, loglevel, logname)
         self.fragresults = None
-        
+
     def __str__(self):
         """Return a string representation of the object."""
         return "Orbitals"
