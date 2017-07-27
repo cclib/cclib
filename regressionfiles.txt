@@ -326,6 +326,9 @@ QChem/QChem4.2/CO2_cation_ROHF_bigprint_allvirt.out
 QChem/QChem4.2/CO2_cation_UHF.out
 QChem/QChem4.2/CO2_cation_UHF_bigprint.out
 QChem/QChem4.2/CO2_cation_UHF_bigprint_allvirt.out
+QChem/QChem4.2/CO2_linear_dependence_printall.out
+QChem/QChem4.2/CO2_linear_dependence_printall_final.out
+QChem/QChem4.2/CO2_linear_dependence_printdefault.out
 QChem/QChem4.2/copper_ax2wat_eq0wat4amm.opt_tzvpp.SOS-CIS_D0.out
 QChem/QChem4.2/dvb_gopt_unconverged.out
 QChem/QChem4.2/dvb_sp_multipole_10.out
