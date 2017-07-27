@@ -308,69 +308,56 @@ class ORCA(logfileparser.Logfile):
 
             self.geovalues.append(newvalues)
 
-        #if not an optimization, determine structure used
-        if line[0:21] == "CARTESIAN COORDINATES" and not hasattr(self, "atomcoords"):
-
-            self.skip_line(inputfile, 'dashes')
+        """ Grab cartesian coordinates
+        ---------------------------------
+        CARTESIAN COORDINATES (ANGSTROEM)
+        ---------------------------------
+        H      0.000000    0.000000    0.000000
+        O      0.000000    0.000000    1.000000
+        H      0.000000    1.000000    1.000000
+        """
+        if line[0:33] == "CARTESIAN COORDINATES (ANGSTROEM)":
+            next(inputfile)
 
             atomnos = []
             atomcoords = []
             line = next(inputfile)
             while len(line) > 1:
-                broken = line.split()
-                atomnos.append(self.table.number[broken[0]])
-                atomcoords.append(list(map(float, broken[1:4])))
+                atom, x, y, z = line.split()
+                atomnos.append(self.table.number[atom])
+                atomcoords.append([float(x), float(y), float(z)])
                 line = next(inputfile)
 
             self.set_attribute('natom', len(atomnos))
             self.set_attribute('atomnos', atomnos)
-
-            self.atomcoords = [atomcoords]
-
-        # There's always a banner announcing the next geometry optimization cycle,
-        # which looks something like this:
-        #
-        #    *************************************************************
-        #    *                GEOMETRY OPTIMIZATION CYCLE   2            *
-        #    *************************************************************
-        if "GEOMETRY OPTIMIZATION CYCLE" in line:
-
-            # Keep track of the current cycle jsut in case, because some things
-            # are printed differently inside the first/last and other cycles.
-            self.gopt_cycle = int(line.split()[4])
-
-            self.skip_lines(inputfile, ['s', 'd', 'text', 'd'])
-
-            if not hasattr(self, "atomcoords"):
+            if not hasattr(self, 'atomcoords'):
                 self.atomcoords = []
-
-            atomnos = []
-            atomcoords = []
-            for i in range(self.natom):
-                line = next(inputfile)
-                broken = line.split()
-                atomnos.append(self.table.number[broken[0]])
-                atomcoords.append(list(map(float, broken[1:4])))
-
             self.atomcoords.append(atomcoords)
 
-            self.set_attribute('atomnos', atomnos)
+        """ Grab atom masses
+        ----------------------------
+        CARTESIAN COORDINATES (A.U.)
+        ----------------------------
+        NO LB      ZA    FRAG     MASS         X           Y           Z
+        0 H     1.0000    0     1.008    0.000000    0.000000    0.000000
+        1 O     8.0000    0    15.999    0.000000    0.000000    1.889726
+        2 H     1.0000    0     1.008    0.000000    1.889726    1.889726
+        """
+        if line[0:28] == "CARTESIAN COORDINATES (A.U.)" and not hasattr(self, 'atommasses'):
+            next(inputfile)
+            next(inputfile)
+
+            line = next(inputfile)
+            self.atommasses = []
+            while len(line) > 1:
+                no, lb, za, frag, mass, x, y, z = line.split()
+                self.atommasses.append(float(mass))
+                line = next(inputfile)
 
         if line[21:68] == "FINAL ENERGY EVALUATION AT THE STATIONARY POINT":
-
             if not hasattr(self, 'optdone'):
                 self.optdone = []
             self.optdone.append(len(self.atomcoords))
-
-            self.skip_lines(inputfile, ['text', 's', 'd', 'text', 'd'])
-
-            atomcoords = []
-            for i in range(self.natom):
-                line = next(inputfile)
-                broken = line.split()
-                atomcoords.append(list(map(float, broken[1:4])))
-
-            self.atomcoords.append(atomcoords)
 
         if "The optimization did not converge" in line:
             if not hasattr(self, 'optdone'):
