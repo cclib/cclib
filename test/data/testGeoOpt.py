@@ -123,6 +123,18 @@ class GenericGeoOptTest(unittest.TestCase):
         msg = "len(atomcoords) is %d but len(geovalues) is %d" % (count_coords, count_geovalues)
         self.assertEquals(count_geovalues, count_coords, msg)
 
+    @skipForParser("GAMESSUK", "Not implemented.")
+    @skipForParser("GAMESS", "Not implemented.")
+    @skipForParser("Jaguar", "Not implemented.")
+    @skipForParser("Molpro", "Not implemented.")
+    @skipForParser("NWChem", "Not implemented.")
+    @skipForParser("QChem", "Not implemented.")
+    def testatommasses(self):
+        """Are atommasses correct?"""
+        H, C = 1.008, 12.011
+        for atommass in self.data.atommasses:
+            self.assertTrue(numpy.isclose(atommass, H, 3) or numpy.isclose(atommass, C, 1))
+
     def testgeovalues_scfvalues(self):
         """Are scfvalues consistent with geovalues?"""
         count_scfvalues = len(self.data.scfvalues) - self.extrascfs
