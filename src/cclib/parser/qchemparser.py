@@ -78,7 +78,8 @@ class QChem(logfileparser.Logfile):
         # the output will display (NOcc + that many virtual) MOs, but
         # any other sections present due to
         # `scf_print`/`scf_final_print` will still only display (NOcc
-        # + 5) MOs.
+        # + 5) MOs. It is the `print_orbitals` section that `aonames`
+        # is parsed from.
         #
         # Note that the (AO basis) density matrix is always (NBasis *
         # NBasis)!
@@ -472,19 +473,12 @@ class QChem(logfileparser.Logfile):
                     self.set_attribute('charge', charge)
 
             # Number of basis functions.
-            # Because Q-Chem's integral recursion scheme is defined using
-            # Cartesian basis functions, there is often a distinction between the
-            # two in the output. We only parse for *pure* functions.
-            # Examples:
-            #  Only one type:
-            #   There are 30 shells and 60 basis functions
-            #  Both Cartesian and pure:
-            #   ...
             if 'basis functions' in line:
                 if not hasattr(self, 'nbasis'):
                     self.set_attribute('nbasis', int(line.split()[-3]))
-                    # We can't display more MOs than there are basis
-                    # functions.
+                    # In the case that there are fewer basis functions
+                    # (and therefore MOs) than default number of MOs
+                    # displayed, reset the display values.
                     self.norbdisp_alpha = min(self.norbdisp_alpha, self.nbasis)
                     self.norbdisp_alpha_aonames = min(self.norbdisp_alpha_aonames, self.nbasis)
                     self.norbdisp_beta = min(self.norbdisp_beta, self.nbasis)
@@ -1056,14 +1050,6 @@ class QChem(logfileparser.Logfile):
                     self.moenergies[1] = numpy.array(energies_beta)
                 self.set_attribute('nmo', len(self.moenergies[0]))
 
-            # If we've asked to display more virtual orbitals than there
-            # are MOs present in the molecule, fix that now.
-            if hasattr(self, 'nmo') and hasattr(self, 'nalpha') and hasattr(self, 'nbeta'):
-                if self.norbdisp_alpha_aonames > self.nmo:
-                    self.norbdisp_alpha_aonames = self.nmo
-                if self.norbdisp_beta_aonames > self.nmo:
-                    self.norbdisp_beta_aonames = self.nmo
-
             # Molecular orbital coefficients.
 
             # This block comes from `print_orbitals = true/{int}`. Less
@@ -1072,6 +1058,12 @@ class QChem(logfileparser.Logfile):
 
             if any(header in line
                    for header in self.alpha_mo_coefficient_headers):
+
+                # If we've asked to display more virtual orbitals than
+                # there are MOs present in the molecule, fix that now.
+                if hasattr(self, 'nmo') and hasattr(self, 'nalpha') and hasattr(self, 'nbeta'):
+                    self.norbdisp_alpha_aonames = min(self.norbdisp_alpha_aonames, self.nmo)
+                    self.norbdisp_beta_aonames = min(self.norbdisp_beta_aonames, self.nmo)
 
                 if not hasattr(self, 'mocoeffs'):
                     self.mocoeffs = []
