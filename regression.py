@@ -1233,6 +1233,17 @@ def testQChem_QChem4_4_Trp_polar_ideriv0_out(logfile):
     assert hasattr(logfile.data, 'polarizabilities')
 
 
+def testQChem_QChem4_4_top_out(logfile):
+    """This job has fewer MOs (7) than would normally be printed (15)."""
+    nbasis = 7
+    nmo = 7
+    assert logfile.data.nbasis == nbasis
+    assert logfile.data.nmo == nmo
+    assert len(logfile.data.mocoeffs) == 1
+    assert logfile.data.mocoeffs[0].shape == (nmo, nbasis)
+    assert logfile.data.mocoeffs[0].T[6, 5] == 0.8115082
+
+
 # These regression tests are for logfiles that are not to be parsed
 # for some reason, and the function should start with 'testnoparse'.
 
