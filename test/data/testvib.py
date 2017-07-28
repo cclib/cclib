@@ -77,9 +77,9 @@ class OrcaIRTest(GenericIRTest):
     # ORCA has a bug in the intensities for version < 4.0
     max_IR_intensity = 215
 
-    enthalpy_places = -1
-    entropy_places = -1
-    freeenergy_places = -1
+    enthalpy_places = 3
+    entropy_places = 3
+    freeenergy_places = 3
 
     def testtemperature(self):
         """Is the temperature 298.15 K?"""
