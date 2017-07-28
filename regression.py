@@ -927,6 +927,51 @@ def testQChem_QChem4_2_CO2_cation_ROHF_bigprint_allvirt_out(logfile):
     assert len(logfile.data.moenergies[1]) == nmo
 
 
+def testQChem_QChem4_2_CO2_linear_dependence_printall_out(logfile):
+    """A job with linear dependency and all MOs printed."""
+    nbasis = 138
+    nmo = 106
+    assert logfile.data.nbasis == nbasis
+    assert logfile.data.nmo == nmo
+    assert len(logfile.data.mocoeffs) == 1
+    assert logfile.data.mocoeffs[0].shape == (nmo, nbasis)
+    assert logfile.data.mocoeffs[0].T[59, 15] == -0.28758
+    assert logfile.data.mocoeffs[0].T[59, 16] == -0.00000
+
+
+def testQChem_QChem4_2_CO2_linear_dependence_printall_final_out(logfile):
+    """A job with linear dependency and all MOs printed.
+
+    The increased precision is due to the presence of `scf_final_print
+    = 3` giving a separate block with more decimal places.
+    """
+    nbasis = 138
+    nmo = 106
+    assert logfile.data.nbasis == nbasis
+    assert logfile.data.nmo == nmo
+    assert len(logfile.data.mocoeffs) == 1
+    assert logfile.data.mocoeffs[0].shape == (nmo, nbasis)
+    assert logfile.data.mocoeffs[0].T[59, 15] == -0.2875844
+    # Even though all MO coefficients are printed in the less precise
+    # block, they aren't parsed.
+    # assert logfile.data.mocoeffs[0].T[59, 16] == -0.00000
+    assert numpy.isnan(logfile.data.mocoeffs[0].T[59, 16])
+
+
+def testQChem_QChem4_2_CO2_linear_dependence_printdefault_out(logfile):
+    """A job with linear dependency and the default number of MOs printed
+    (all occupieds and 5 virtuals).
+    """
+    nbasis = 138
+    nmo = 106
+    assert logfile.data.nbasis == nbasis
+    assert logfile.data.nmo == nmo
+    assert len(logfile.data.mocoeffs) == 1
+    assert logfile.data.mocoeffs[0].shape == (nmo, nbasis)
+    assert logfile.data.mocoeffs[0].T[59, 15] == -0.28758
+    assert numpy.isnan(logfile.data.mocoeffs[0].T[59, 16])
+
+
 def testQChem_QChem4_2_dvb_gopt_unconverged_out(logfile):
     """An unconverged geometry optimization to test for empty optdone (see #103 for details)."""
     assert hasattr(logfile.data, 'optdone') and not logfile.data.optdone
@@ -1186,6 +1231,17 @@ def testQChem_QChem4_4_Trp_polar_ideriv0_out(logfile):
     large errors.
     """
     assert hasattr(logfile.data, 'polarizabilities')
+
+
+def testQChem_QChem4_4_top_out(logfile):
+    """This job has fewer MOs (7) than would normally be printed (15)."""
+    nbasis = 7
+    nmo = 7
+    assert logfile.data.nbasis == nbasis
+    assert logfile.data.nmo == nmo
+    assert len(logfile.data.mocoeffs) == 1
+    assert logfile.data.mocoeffs[0].shape == (nmo, nbasis)
+    assert logfile.data.mocoeffs[0].T[6, 5] == 0.8115082
 
 
 # These regression tests are for logfiles that are not to be parsed
