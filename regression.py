@@ -1439,7 +1439,18 @@ class OrcaTDDFTTest_error(OrcaTDDFTTest):
         self.assertEqual(len(self.data.etoscs), self.number)
         self.assertAlmostEquals(max(self.data.etoscs), 1.0, delta=0.2)
 
+class OrcaIRTest_old_coordsOK(OrcaIRTest):
+
+    enthalpy_places = -1
+    entropy_places = 2
+    freeenergy_places = -1
+
 class OrcaIRTest_old(OrcaIRTest):
+
+    enthalpy_places = -1
+    entropy_places = 2
+    freeenergy_places = -1
+
     @unittest.skip('These values were wrong due to wrong input coordinates.')
     def testfreqval(self):
         """These values were wrong due to wrong input coordinates."""
@@ -1550,7 +1561,7 @@ old_unittests = {
     "ORCA/ORCA2.6/dvb_gopt.out":    OrcaGeoOptTest_3_21g,
     "ORCA/ORCA2.6/dvb_sp.out":      OrcaSPTest_3_21g,
     "ORCA/ORCA2.6/dvb_td.out":      OrcaTDDFTTest_error,
-    "ORCA/ORCA2.6/dvb_ir.out":      OrcaIRTest,
+    "ORCA/ORCA2.6/dvb_ir.out":      OrcaIRTest_old_coordsOK,
 
     "ORCA/ORCA2.8/dvb_gopt.out":    OrcaGeoOptTest,
     "ORCA/ORCA2.8/dvb_sp.out":      GenericBasisTest,
