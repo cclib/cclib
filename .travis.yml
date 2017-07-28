@@ -11,11 +11,4 @@ install:
   - if [[ $TRAVIS_PYTHON_VERSION == 2* ]]; then python setup.py install; fi
   - if [[ $TRAVIS_PYTHON_VERSION == 3* ]]; then python setup.py install; fi
 script:
-  - cd test
-  - python test_utils.py
-  - python test_method.py
-  - python test_parser.py
-  - python test_io.py
-  - python test_data.py --status --terse
-  - cd ../data && bash regression_download.sh
-  - cd ../test && python run_regressions.py --status --traceback
+  - sh run_travis_tests.sh
