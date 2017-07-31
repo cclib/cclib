@@ -101,15 +101,17 @@ class GenericSPTest(unittest.TestCase):
     @skipForParser('Jaguar', 'atommasses not implemented yet')
     @skipForParser('Molpro', 'atommasses not implemented yet')
     @skipForParser('NWChem', 'atommasses not implemented yet')
-    @skipForParser('ORCA', 'atommasses not implemented yet')
     @skipForLogfile('Psi/basicPsi3', 'atommasses not implemented yet')
     @skipForLogfile('Psi/basicPsi4.0b5', 'atommasses not implemented yet')
     @skipForParser('QChem', 'atommasses not implemented yet')
     def testatommasses(self):
         """Do the atom masses sum up to the molecular mass?"""
         mm = 1000*sum(self.data.atommasses)
-        msg = "Molecule mass: %f not %f +- %fmD" % (mm, self.molecularmass, self.mass_precision)
-        self.assertAlmostEquals(mm, self.molecularmass, delta=self.mass_precision, msg=msg)
+        molecularmass = self.molecularmass
+        if self.logfile.logname == 'ORCA':
+            molecularmass = 130190.0
+        msg = "Molecule mass: %f not %f +- %fmD" % (mm, molecularmass, self.mass_precision)
+        self.assertAlmostEquals(mm, molecularmass, delta=self.mass_precision, msg=msg)
 
     def testcoreelectrons(self):
         """Are the coreelectrons all 0?"""
