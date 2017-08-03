@@ -22,6 +22,7 @@ import numpy
 
 from . import utils
 from .data import ccData
+from .data import ccData_optdone_bool
 
 
 # This seems to avoid a problem with Avogadro.
@@ -185,7 +186,7 @@ class Logfile(object):
     """
 
     def __init__(self, source, loglevel=logging.INFO, logname="Log",
-                 logstream=sys.stdout, datatype=ccData, **kwds):
+                 logstream=sys.stdout, datatype=ccData_optdone_bool, **kwds):
         """Initialise the Logfile object.
 
         This should be called by a subclass in its own __init__ method.
@@ -245,9 +246,8 @@ class Logfile(object):
         # is used, which might have more consequences in the future.
         optdone_as_list = kwds.get("optdone_as_list", False) or kwds.get("future", False)
         optdone_as_list = optdone_as_list if isinstance(optdone_as_list, bool) else False
-        if not optdone_as_list:
-            from .data import ccData_optdone_bool
-            self.datatype = ccData_optdone_bool
+        if optdone_as_list:
+            self.datatype = ccData
 
     def __setattr__(self, name, value):
 

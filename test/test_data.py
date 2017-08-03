@@ -71,7 +71,7 @@ def get_program_dir(parser_name):
     return parser_name
 
 
-def getdatafile(parser, subdir, files, stream=None, loglevel=0):
+def getdatafile(parser, subdir, files, stream=None, loglevel=0, datatype=None):
     """Returns a parsed logfile.
 
     Inputs:
@@ -80,6 +80,7 @@ def getdatafile(parser, subdir, files, stream=None, loglevel=0):
         files    - data filename(s)
         stream   - where to log to (sys.stdout by default)
         loglevel - what level to log at
+        datatype - ccData or child class
 
     Outputs:
         data - the resulting data object
@@ -100,7 +101,8 @@ def getdatafile(parser, subdir, files, stream=None, loglevel=0):
         inputs = inputs[0]
 
     stream = stream or sys.stdout
-    logfile = parser(inputs, logstream=stream)
+    logfile = parser(inputs, logstream=stream,
+                     datatype=datatype or cclib.parser.data.ccData)
     logfile.logger.setLevel(loglevel)
 
     data = logfile.parse()
@@ -170,7 +172,8 @@ class DataSuite(object):
                 print("*** %s ***" % description, file=self.stream)
 
             loglevel = 33 if self.silent else 0
-            test.data, test.logfile = getdatafile(parser, td['subdir'], td['files'], stream=self.stream, loglevel=loglevel)
+            test.data, test.logfile = getdatafile(parser, td['subdir'], td['files'], stream=self.stream, loglevel=loglevel,
+                                                  datatype=test.datatype if hasattr(test, 'datatype') else None)
 
             # By overriding __getattribute__ temporarily with a custom method, we collect
             # coverage information for data attributes while the tests are run. This slightly
