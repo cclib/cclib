@@ -59,7 +59,7 @@ def setup_cclib():
         maintainer_email = "cclib-users@lists.sourceforge.net",
         license = "BSD 3-Clause License",
         description = doclines[0],
-        long_description = "\n".join(doclines[2:]),      
+        long_description = "\n".join(doclines[2:]),
         classifiers = classifiers.split("\n"),
         platforms = ["Any."],
         packages = cclib_packages,
