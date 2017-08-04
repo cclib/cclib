@@ -270,7 +270,7 @@ class GAMESS(logfileparser.Logfile):
         # Extract charge and multiplicity
         if line[1:19] == "CHARGE OF MOLECULE":
 
-            charge = int(line.split()[-1])
+            charge = int(round(float(line.split()[-1])))
             self.set_attribute('charge', charge)
 
             line = next(inputfile)
@@ -1371,7 +1371,7 @@ class GAMESS(logfileparser.Logfile):
             assert coords_and_charge.split()[-1] == '(A.U.)'
             reference = numpy.array([float(x) for x in coords_and_charge.split()[:3]])
             reference = utils.convertor(reference, 'bohr', 'Angstrom')
-            charge = float(coords_and_charge.split()[-2])
+            charge = int(round(float(coords_and_charge.split()[-2])))
             self.set_attribute('charge', charge)
 
             dipoleheader = next(inputfile)

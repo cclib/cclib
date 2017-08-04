@@ -47,14 +47,14 @@ class Writer(object):
 
         self.pt = PeriodicTable()
 
+        self._check_required_attributes()
+
         # Open Babel isn't necessarily present.
         if has_openbabel:
             # Generate the Open Babel/Pybel representation of the molecule.
             # Used for calculating SMILES/InChI, formula, MW, etc.
             self.obmol, self.pbmol = self._make_openbabel_from_ccdata()
             self.bond_connectivities = self._make_bond_connectivity_from_openbabel(self.obmol)
-
-        self._check_required_attributes()
 
     def generate_repr(self):
         """Generate the written representation of the logfile data.

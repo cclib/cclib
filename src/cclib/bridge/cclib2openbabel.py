@@ -42,7 +42,7 @@ def makeopenbabel(atomcoords, atomnos, charge=0, mult=1):
     obmol.ConnectTheDots()
     obmol.PerceiveBondOrders()
     obmol.SetTotalSpinMultiplicity(mult)
-    obmol.SetTotalCharge(charge)
+    obmol.SetTotalCharge(int(charge))
     return obmol
 
 def makecclib(mol):
