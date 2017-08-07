@@ -1414,6 +1414,7 @@ class OrcaSPTest_3_21g(GenericSPTest_nosym):
     nbasisdict = {1: 2, 6: 9}
     b3lyp_energy = -10460
     overlap01 = 0.19
+    molecularmass = 130190
     @unittest.skip('This calculation has no symmetry.')
     def testsymlabels(self):
         """This calculation has no symmetry."""
@@ -1565,7 +1566,7 @@ old_unittests = {
 
     "ORCA/ORCA2.8/dvb_gopt.out":    OrcaGeoOptTest,
     "ORCA/ORCA2.8/dvb_sp.out":      GenericBasisTest,
-    "ORCA/ORCA2.8/dvb_sp.out":      GenericSPTest,
+    "ORCA/ORCA2.8/dvb_sp.out":      OrcaSPTest,
     "ORCA/ORCA2.8/dvb_sp_un.out":   OrcaSPunTest_charge0,
     "ORCA/ORCA2.8/dvb_td.out":      OrcaTDDFTTest,
     "ORCA/ORCA2.8/dvb_ir.out":      OrcaIRTest_old,
@@ -1575,7 +1576,7 @@ old_unittests = {
     "ORCA/ORCA2.9/dvb_raman.out":   GenericRamanTest,
     "ORCA/ORCA2.9/dvb_scan.out":    OrcaScanTest,
     "ORCA/ORCA2.9/dvb_sp.out":      GenericBasisTest,
-    "ORCA/ORCA2.9/dvb_sp.out":      GenericSPTest,
+    "ORCA/ORCA2.9/dvb_sp.out":      OrcaSPTest,
     "ORCA/ORCA2.9/dvb_sp_un.out":   GenericSPunTest,
     "ORCA/ORCA2.9/dvb_td.out":      OrcaTDDFTTest,
 
