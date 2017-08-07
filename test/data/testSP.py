@@ -107,11 +107,8 @@ class GenericSPTest(unittest.TestCase):
     def testatommasses(self):
         """Do the atom masses sum up to the molecular mass?"""
         mm = 1000*sum(self.data.atommasses)
-        molecularmass = self.molecularmass
-        if self.logfile.logname == 'ORCA':
-            molecularmass = 130190.0
-        msg = "Molecule mass: %f not %f +- %fmD" % (mm, molecularmass, self.mass_precision)
-        self.assertAlmostEquals(mm, molecularmass, delta=self.mass_precision, msg=msg)
+        msg = "Molecule mass: %f not %f +- %fmD" % (mm, self.molecularmass, self.mass_precision)
+        self.assertAlmostEquals(mm, self.molecularmass, delta=self.mass_precision, msg=msg)
 
     def testcoreelectrons(self):
         """Are the coreelectrons all 0?"""
@@ -305,6 +302,13 @@ class Psi3SPTest(GenericSPTest):
     # The final energy is also a bit higher here, I think due to the fact
     # that a SALC calculation is done instead of a full LCAO.
     b3lyp_energy = -10300
+
+
+class OrcaSPTest(GenericSPTest):
+    """Customized restricted single point unittest"""
+
+    # Orca has different weights for the masses
+    molecularmass = 130190
 
 
 if __name__=="__main__":
