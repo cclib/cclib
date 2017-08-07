@@ -101,7 +101,6 @@ class GenericSPTest(unittest.TestCase):
     @skipForParser('Jaguar', 'atommasses not implemented yet')
     @skipForParser('Molpro', 'atommasses not implemented yet')
     @skipForParser('NWChem', 'atommasses not implemented yet')
-    @skipForParser('ORCA', 'atommasses not implemented yet')
     @skipForLogfile('Psi/basicPsi3', 'atommasses not implemented yet')
     @skipForLogfile('Psi/basicPsi4.0b5', 'atommasses not implemented yet')
     @skipForParser('QChem', 'atommasses not implemented yet')
@@ -303,6 +302,13 @@ class Psi3SPTest(GenericSPTest):
     # The final energy is also a bit higher here, I think due to the fact
     # that a SALC calculation is done instead of a full LCAO.
     b3lyp_energy = -10300
+
+
+class OrcaSPTest(GenericSPTest):
+    """Customized restricted single point unittest"""
+
+    # Orca has different weights for the masses
+    molecularmass = 130190
 
 
 if __name__=="__main__":
