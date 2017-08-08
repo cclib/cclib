@@ -350,6 +350,8 @@ class ORCA(logfileparser.Logfile):
             line = next(inputfile)
             self.atommasses = []
             while len(line) > 1:
+                if line == '* core charge reduced due to ECP\n':
+                    break
                 no, lb, za, frag, mass, x, y, z = line.split()
                 self.atommasses.append(float(mass))
                 line = next(inputfile)
@@ -868,24 +870,50 @@ class ORCA(logfileparser.Logfile):
 
         # Try to keep track of the converger (NR, DIIS, SOSCF, etc.).
         diis_active = True
-        while not line == []:
+        while line:
 
+            maxDP = None
             if 'Newton-Raphson' in line:
                 diis_active = False
             elif 'SOSCF' in line:
                 diis_active = False
-            elif line[0].isdigit() and diis_active:
-                energy = float(line[1])
-                deltaE = float(line[2])
-                maxDP = float(line[3])
-                rmsDP = float(line[4])
+            elif line[0].isdigit():
+                shim = 0
+                try:
+                    energy = float(line[1])
+                    deltaE = float(line[2])
+                    maxDP = float(line[3 + int(not diis_active)])
+                    rmsDP = float(line[4 + int(not diis_active)])
+                except ValueError as e:
+                    # Someone in Orca forgot to properly add spaces in the scf printing
+                    # code looks like:
+                    # %3i %17.10f%12.12f%11.8f %11.8f
+                    if line[1].count('.') == 2:
+                        integer1, decimal1_integer2, decimal2 = line[1].split('.')
+                        decimal1, integer2 = decimal1_integer2[:10], decimal1_integer2[10:]
+                        energy = float(integer1 + '.' + decimal1)
+                        deltaE = float(integer2 + '.' + decimal2)
+                        maxDP = float(line[2 + int(not diis_active)])
+                        rmsDP = float(line[3 + int(not diis_active)])
+                    elif line[1].count('.') == 3:
+                        integer1, decimal1_integer2, decimal2_integer3, decimal3 = line[1].split('.')
+                        decimal1, integer2 = decimal1_integer2[:10], decimal1_integer2[10:]
+                        decimal2, integer3 = decimal2_integer3[:12], decimal2_integer3[12:]
+                        energy = float(integer1 + '.' + decimal1)
+                        deltaE = float(integer2 + '.' + decimal2)
+                        maxDP = float(integer3 + '.' + decimal3)
+                        rmsDP = float(line[2 + int(not diis_active)])
+                    elif line[2].count('.') == 2:
+                        integer1, decimal1_integer2, decimal2 = line[2].split('.')
+                        decimal1, integer2 = decimal1_integer2[:12], decimal1_integer2[12:]
+                        deltaE = float(integer1 + '.' + decimal1)
+                        maxDP = float(integer2 + '.' + decimal2)
+                        rmsDP = float(line[3 + int(not diis_active)])
+                    else:
+                        raise e
+
                 self.scfvalues[-1].append([deltaE, maxDP, rmsDP])
-            elif line[0].isdigit() and not diis_active:
-                energy = float(line[1])
-                deltaE = float(line[2])
-                maxDP = float(line[5])
-                rmsDP = float(line[6])
-                self.scfvalues[-1].append([deltaE, maxDP, rmsDP])
+
             try:
                 line = next(inputfile).split()
             except StopIteration:
