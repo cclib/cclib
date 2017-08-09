@@ -681,6 +681,14 @@ def testORCA_ORCA4_0_1_ttt_td_out(logfile):
     assert len(logfile.data.etsecs[0]) == 1
     assert numpy.isnan(logfile.data.etsecs[0][0][2])
 
+def testORCA_ORCA4_0_IrCl6_sp_out(logfile):
+    """Tests ECP and weird SCF printing."""
+    assert hasattr(logfile.data, 'scfvalues')
+    assert len(logfile.data.scfvalues) == 1
+    vals =  [0.000037800796, 0.00412549, 0.00014041]
+    numpy.testing.assert_almost_equal(logfile.data.scfvalues[0][-1], vals)
+
+
 # PSI #
 
 def testPsi_Psi3_water_psi3_log(logfile):
