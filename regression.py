@@ -685,8 +685,10 @@ def testORCA_ORCA4_0_IrCl6_sp_out(logfile):
     """Tests ECP and weird SCF printing."""
     assert hasattr(logfile.data, 'scfvalues')
     assert len(logfile.data.scfvalues) == 1
-    vals =  [0.000037800796, 0.00412549, 0.00014041]
-    numpy.testing.assert_almost_equal(logfile.data.scfvalues[0][-1], vals)
+    vals_first = [0.000000000000, 28.31276975, 0.71923638]
+    vals_last = [0.000037800796, 0.00412549, 0.00014041]
+    numpy.testing.assert_almost_equal(logfile.data.scfvalues[0][0], vals_first)
+    numpy.testing.assert_almost_equal(logfile.data.scfvalues[0][-1], vals_last)
 
 
 # PSI #
