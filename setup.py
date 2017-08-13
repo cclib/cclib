@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2016, the cclib development team
+# Copyright (c) 2017, the cclib development team
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
@@ -59,7 +59,7 @@ def setup_cclib():
         maintainer_email = "cclib-users@lists.sourceforge.net",
         license = "BSD 3-Clause License",
         description = doclines[0],
-        long_description = "\n".join(doclines[2:]),      
+        long_description = "\n".join(doclines[2:]),
         classifiers = classifiers.split("\n"),
         platforms = ["Any."],
         packages = cclib_packages,
