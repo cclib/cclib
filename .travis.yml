@@ -15,6 +15,10 @@ before_install:
   - pip install numpy
   - pip install openbabel
   - if [[ $TRAVIS_PYTHON_VERSION != 3.2 ]]; then pip install biopython; fi
+  - curl -L https://sourceforge.net/projects/pyquante/files/PyQuante-1.6/PyQuante-1.6.5/PyQuante-1.6.5.tar.gz > PyQuante-1.6.5.tar.gz
+  - tar xf PyQuante-1.6.5.tar.gz
+  - cd PyQuante-1.6.5
+  - python setup.py install
 install:
   - python setup.py install
 script:
