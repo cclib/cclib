@@ -12,7 +12,9 @@ addons:
 cache:
   pip: true
 before_install:
-  - pip install -r requirements.txt
+  - pip install numpy
+  - pip install openbabel
+  - if [[ $TRAVIS_PYTHON_VERSION != 3.2 ]]; then pip install biopython; fi
 install:
   - python setup.py install
 script:
