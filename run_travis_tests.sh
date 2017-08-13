@@ -3,6 +3,7 @@
 # run_travis_tests.sh: Run the tests for Travis CI.
 
 cd test
+python test_bridge.py
 python test_utils.py
 python test_method.py
 python test_parser.py
