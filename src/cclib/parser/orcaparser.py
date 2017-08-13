@@ -745,55 +745,11 @@ class ORCA(logfileparser.Logfile):
         # Sum of atomic charges         :   -0.0000000
         # Sum of atomic spin populations:    1.0000000
         if line[:23] == "MULLIKEN ATOMIC CHARGES":
-
-            has_spins = "AND SPIN POPULATIONS" in line
-
-            if not hasattr(self, "atomcharges"):
-                self.atomcharges = {}
-            if has_spins and not hasattr(self, "atomspins"):
-                self.atomspins = {}
-
-            self.skip_line(inputfile, 'dashes')
-
-            charges = []
-            if has_spins:
-                spins = []
-            line = next(inputfile)
-            while line[:21] != "Sum of atomic charges":
-                charges.append(float(line[8:20]))
-                if has_spins:
-                    spins.append(float(line[20:]))
-                line = next(inputfile)
-            self.atomcharges["mulliken"] = charges
-            if has_spins:
-                self.atomspins["mulliken"] = spins
-
+            self.parse_charge_section(line, inputfile, 'mulliken')
         # Things are the same for Lowdin populations, except that the sums
         #   are not printed (there is a blank line at the end).
         if line[:22] == "LOEWDIN ATOMIC CHARGES":
-
-            has_spins = "AND SPIN POPULATIONS" in line
-
-            if not hasattr(self, "atomcharges"):
-                self.atomcharges = {}
-            if has_spins and not hasattr(self, "atomspins"):
-                self.atomspins = {}
-
-            self.skip_line(inputfile, 'dashes')
-
-            charges = []
-            if has_spins:
-                spins = []
-            line = next(inputfile)
-            while line.strip():
-                charges.append(float(line[8:20]))
-                if has_spins:
-                    spins.append(float(line[20:]))
-                line = next(inputfile)
-            self.atomcharges["lowdin"] = charges
-            if has_spins:
-                self.atomspins["lowdin"] = spins
-
+            self.parse_charge_section(line, inputfile, 'lowdin')
         #CHELPG Charges            
         #--------------------------------
         #  0   C   :       0.363939
@@ -803,29 +759,7 @@ class ORCA(logfileparser.Logfile):
         #Total charge:    -0.000000
         #--------------------------------
         if line.startswith('CHELPG Charges'):
-            has_spins = 'AND SPIN POPULATIONS' in line
-
-            if not hasattr(self, "atomcharges"):
-                self.atomcharges = {}
-            if has_spins and not hasattr(self, "atomspins"):
-                self.atomspins = {}
-
-            self.skip_line(inputfile, 'dashes')
-
-            charges = []
-            if has_spins:
-                spins = []
-
-            line = next(inputfile)
-            while not line.startswith('---'):
-                charges.append(float(line[11:26]))
-                if has_spins:
-                    spins.append(float(line[26:]))
-                line = next(inputfile)
-
-            self.atomcharges['chelpg'] = charges
-            if has_spins:
-                self.atomspins['chelpg'] = spins
+            self.parse_charge_section(line, inputfile, 'chelpg')
 
         # It is not stated explicitely, but the dipole moment components printed by ORCA
         # seem to be in atomic units, so they will need to be converted. Also, they
@@ -874,6 +808,48 @@ class ORCA(logfileparser.Logfile):
                 line = next(inputfile)
                 polarizability.append(line.split())
             self.polarizabilities.append(numpy.array(polarizability))
+
+    def parse_charge_section(self, line, inputfile, chargestype):
+        # line - the line which triggered entry here
+        # inputfile - handle to file object
+        # chargestype - what type of charge we're dealing with
+
+        has_spins = 'AND SPIN POPULATIONS' in line
+
+        if not hasattr(self, "atomcharges"):
+            self.atomcharges = {}
+        if has_spins and not hasattr(self, "atomspins"):
+            self.atomspins = {}
+
+        self.skip_line(inputfile, 'dashes')
+
+        # depending on chargestype, decide when to stop parsing lines
+        # start, stop - indices for slicing lines and grabbing values
+        if chargestype == 'mulliken':
+            should_stop = lambda x: x.startswith('Sum of atomic charges')
+            start, stop = 8, 20
+        elif chargestype == 'lowdin':
+            # stops when blank line encountered
+            should_stop = lambda x: not bool(x.strip())
+            start, stop = 8, 20
+        elif chargestype == 'chelpg':
+            should_stop = lambda x: x.startswith('---')
+            start, stop = 11, 26
+
+        charges = []
+        if has_spins:
+            spins = []
+
+        line = next(inputfile)
+        while not should_stop(line):
+            charges.append(float(line[start:stop]))
+            if has_spins:
+                spins.append(float(line[stop:]))
+            line = next(inputfile)
+
+        self.atomcharges[chargestype] = charges
+        if has_spins:
+            self.atomspins[chargestype] = spins
 
     def parse_scf_condensed_format(self, inputfile, line):
         """ Parse the SCF convergence information in condensed format """
