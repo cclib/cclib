@@ -1235,6 +1235,24 @@ def testQChem_QChem4_4_full_2_out(logfile):
     assert hasattr(logfile.data, 'polarizabilities')
 
 
+def testQChem_QChem4_4_srtlg_out(logfile):
+    """Some lines in the MO coefficients require fixed-width parsing. See
+    #349 and #381.
+    """
+    # There is a linear dependence problem.
+    nbasis, nmo = 1129, 1115
+    assert len(logfile.data.mocoeffs) == 2
+    assert logfile.data.mocoeffs[0].shape == (nmo, nbasis)
+    assert logfile.data.mocoeffs[1].shape == (nmo, nbasis)
+    index_ao = 151 - 1
+    indices_mo = [index_mo - 1 for index_mo in (493, 494, 495, 496, 497, 498)]
+    # line 306371:
+    #  151  C 7   s      -54.24935 -36.37903-102.67529  32.37428-150.40380-103.24478
+    ref = numpy.asarray([-54.24935, -36.37903, -102.67529, 32.37428, -150.40380, -103.24478])
+    res = logfile.data.mocoeffs[1][indices_mo, index_ao]
+    numpy.testing.assert_allclose(ref, res, atol=1.0e-5, rtol=0.0)
+
+
 def testQChem_QChem4_4_Trp_polar_ideriv0_out(logfile):
     """Ensure that the polarizability section is being parsed, but don't
     compare to reference results as 2nd-order finite difference can have
