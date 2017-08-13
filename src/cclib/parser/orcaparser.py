@@ -794,6 +794,39 @@ class ORCA(logfileparser.Logfile):
             if has_spins:
                 self.atomspins["lowdin"] = spins
 
+        #CHELPG Charges            
+        #--------------------------------
+        #  0   C   :       0.363939
+        #  1   H   :       0.025695
+        # ...
+        #--------------------------------
+        #Total charge:    -0.000000
+        #--------------------------------
+        if line.startswith('CHELPG Charges'):
+            has_spins = 'AND SPIN POPULATIONS' in line
+
+            if not hasattr(self, "atomcharges"):
+                self.atomcharges = {}
+            if has_spins and not hasattr(self, "atomspins"):
+                self.atomspins = {}
+
+            self.skip_line(inputfile, 'dashes')
+
+            charges = []
+            if has_spins:
+                spins = []
+
+            line = next(inputfile)
+            while not line.startswith('---'):
+                charges.append(float(line[11:26]))
+                if has_spins:
+                    spins.append(float(line[26:]))
+                line = next(inputfile)
+
+            self.atomcharges['chelpg'] = charges
+            if has_spins:
+                self.atomspins['chelpg'] = spins
+
         # It is not stated explicitely, but the dipole moment components printed by ORCA
         # seem to be in atomic units, so they will need to be converted. Also, they
         # are most probably calculated with respect to the origin .
