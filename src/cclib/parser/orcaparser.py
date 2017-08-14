@@ -810,10 +810,18 @@ class ORCA(logfileparser.Logfile):
             self.polarizabilities.append(numpy.array(polarizability))
 
     def parse_charge_section(self, line, inputfile, chargestype):
-        # line - the line which triggered entry here
-        # inputfile - handle to file object
-        # chargestype - what type of charge we're dealing with
+        """Parse a charge section, modifies class in place
 
+        Parameters
+        ----------
+        line : str
+          the line which triggered entry here
+        inputfile : file
+          handle to file object
+        chargestype : str
+          what type of charge we're dealing with, must be one of
+          'mulliken', 'lowdin' or 'chelpg'   
+        """
         has_spins = 'AND SPIN POPULATIONS' in line
 
         if not hasattr(self, "atomcharges"):
