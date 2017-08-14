@@ -240,7 +240,7 @@ class DataSuite(object):
             'DALTON2015' : getdatafile('DALTON', "basicDALTON-2015", ["dvb_gopt_ks.out"])[0],
             'Firefly8.0' : getdatafile('GAMESS', "basicFirefly8.0", ["dvb_gopt_a.out"])[0],
             'Gaussian09' : getdatafile('Gaussian', "basicGaussian09", ["dvb_gopt.out"])[0],
-            'GAMESS-US' : getdatafile('GAMESS', "basicGAMESS-US2014", ["dvb_gopt_a.out"])[0],
+            'GAMESS-US' : getdatafile('GAMESS', "basicGAMESS-US2017", ["dvb_gopt_a.out"])[0],
             'Jaguar8.0' : getdatafile('Jaguar', "basicJaguar8.3", ["dvb_gopt_ks.out"])[0],
             'Molpro2012' : getdatafile('Molpro', "basicMolpro2012", ["dvb_gopt.log", "dvb_gopt.out"])[0],
             # Note that it doesn't make sense to put MOPAC here, as it
