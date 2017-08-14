@@ -1,19 +1,22 @@
 ----- GAMESS execution script 'rungms' -----
-This job is running on host copper
-under operating system Linux at Wed Jul 27 01:16:02 EDT 2016
+This job is running on host firzens
+under operating system Linux at Mon Aug 14 12:26:03 IST 2017
 Available scratch disk space (Kbyte units) at beginning of the job is
-Filesystem     1K-blocks   Used Available Use% Mounted on
-tmpfs            8089516 124464   7965052   2% /tmp
-GAMESS temporary binary files will be written to /tmp
-GAMESS supplementary output files will be written to /tmp
+Filesystem     1K-blocks      Used Available Use% Mounted on
+/dev/sda11     254243428 112973816 128331732  47% /
+GAMESS temporary binary files will be written to /scr/sagar
+GAMESS supplementary output files will be written to /home/sagar/gamess/scratch
 Copying input file dvb_sp.inp to your run's scratch directory...
+ 
+Assuming a single but multicore node.
+ 
 
  Distributed Data Interface kickoff program.
- Initiating 1 compute processes on 1 nodes to run the following command:
- /opt/gamess/gamess.01.x dvb_sp 
+ Initiating 4 compute processes on 1 nodes to run the following command:
+ /home/sagar/gamess/gamess.02.x dvb_sp 
 
           ******************************************************
-          *         GAMESS VERSION =  5 DEC 2014 (R1)          *
+          *         GAMESS VERSION = 20 APR 2017 (R1)          *
           *             FROM IOWA STATE UNIVERSITY             *
           * M.W.SCHMIDT, K.K.BALDRIDGE, J.A.BOATZ, S.T.ELBERT, *
           *   M.S.GORDON, J.H.JENSEN, S.KOSEKI, N.MATSUNAGA,   *
@@ -33,7 +36,7 @@ Copying input file dvb_sp.inp to your run's scratch directory...
      DAN KEMP, GRANT MERRILL, NORIYUKI MINEZAWA, JONATHAN MULLIN,
      TAKESHI NAGATA, SEAN NEDD, HEATHER NETZLOFF, BOSILJKA NJEGIC, RYAN OLSON,
      MIKE PAK, SPENCER PRUITT, LUKE ROSKOP, JIM SHOEMAKER, LYUDMILA SLIPCHENKO,
-     TONY SMITH, SAROM SOK, JIE SONG, TETSUYA TAKETSUGU, SIMON WEBB,
+     TONY SMITH, SAROM SOK LEANG, JIE SONG, TETSUYA TAKETSUGU, SIMON WEBB,
      PENG XU, SOOHAENG YOO, FEDERICO ZAHARIEV
 
   ADDITIONAL CODE HAS BEEN PROVIDED BY COLLABORATORS IN OTHER GROUPS:
@@ -70,27 +73,33 @@ Copying input file dvb_sp.inp to your run's scratch directory...
           SHARON HAMMES-SCHIFFER
      WASEDA UNIVERSITY:
           MASATO KOBAYASHI, TOMOKO AKAMA, TSUGUKI TOUMA,
-          TAKESHI YOSHIKAWA, YASUHIRO IKABATA, HIROMI NAKAI
+          TAKESHI YOSHIKAWA, YASUHIRO IKABATA, JUNJI SEINO,
+          YUYA NAKAJIMA, HIROMI NAKAI
      NANJING UNIVERSITY: SHUHUA LI
      UNIVERSITY OF NEBRASKA:
           PEIFENG SU, DEJUN SI, NANDUN THELLAMUREGE, YALI WANG, HUI LI
      UNIVERSITY OF ZURICH: ROBERTO PEVERATI, KIM BALDRIDGE
      N. COPERNICUS UNIVERSITY AND JACKSON STATE UNIVERSITY:
           MARIA BARYSZ
-     UNIVERSITY OF COPENHAGEN: CASPER STEINMANN
+     UNIVERSITY OF COPENHAGEN: Jimmy Kromann, CASPER STEINMANN
      TOKYO INSTITUTE OF TECHNOLOGY: HIROYA NAKATA
      NAGOYA UNIVERSITY: YOSHIO NISHIMOTO, STEPHAN IRLE
+     MOSCOW STATE UNIVERSITY: VLADIMIR MIRONOV
 
- EXECUTION OF GAMESS BEGUN Wed Jul 27 01:16:02 2016
+
+ PARALLEL VERSION RUNNING ON        4 PROCESSORS IN        1 NODES.
+
+ EXECUTION OF GAMESS BEGUN Mon Aug 14 12:26:03 2017
 
             ECHO OF THE FIRST FEW INPUT CARDS -
  INPUT CARD> $CONTRL COORD=PRINAXIS UNITS=ANGS NPRINT=3                                     
- INPUT CARD>         RUNTYP=ENERGY SCFTYP=RHF DFTTYP=B3LYP $END                             
+ INPUT CARD>         RUNTYP=ENERGY SCFTYP=RHF DFTTYP=B3LYP                                  
+ INPUT CARD>         AIMPAC=.t. $END                                                        
  INPUT CARD> $BASIS  GBASIS=STO NGAUSS=3 $END                                               
  INPUT CARD> $GUESS  GUESS=HUCKEL $END                                                      
  INPUT CARD> $DATA                                                                          
  INPUT CARD>divinylbenzene                                                                  
- INPUT CARD>cnh  2                                                                          
+ INPUT CARD>cnh 2                                                                           
  INPUT CARD>                                                                                
  INPUT CARD> C           6.0  -1.4152533224   0.2302217854   0.0000000000                   
  INPUT CARD> C           6.0   1.4152533224  -0.2302217854   0.0000000000                   
@@ -369,7 +378,7 @@ Copying input file dvb_sp.inp to your run's scratch directory...
  MULT  =       1     ICHARG=       0     NZVAR =       0     COORD =PRINAXIS
  PP    =NONE         RELWFN=NONE         LOCAL =NONE         NUMGRD=       F
  ISPHER=      -1     NOSYM =       0     MAXIT =      30     UNITS =ANGS    
- PLTORB=       F     MOLPLT=       F     AIMPAC=       F     FRIEND=        
+ PLTORB=       F     MOLPLT=       F     AIMPAC=       T     FRIEND=        
  NPRINT=       3     IREST =       0     GEOM  =INPUT   
  NORMF =       0     NORMP =       0     ITOL  =      20     ICUT  =       9
  INTTYP=BEST         GRDTYP=BEST         QMTTOL= 1.0E-06
@@ -378,10 +387,10 @@ Copying input file dvb_sp.inp to your run's scratch directory...
      ---------------
   REPLICATED MEMORY=     1000000 WORDS (ON EVERY NODE).
  DISTRIBUTED MEMDDI=           0 MILLION WORDS IN AGGREGATE,
- MEMDDI DISTRIBUTED OVER   1 PROCESSORS IS           0 WORDS/PROCESSOR.
+ MEMDDI DISTRIBUTED OVER   4 PROCESSORS IS           0 WORDS/PROCESSOR.
  TOTAL MEMORY REQUESTED ON EACH PROCESSOR=     1000000 WORDS.
  TIMLIM=      525600.00 MINUTES, OR     365.0 DAYS.
- PARALL= F  BALTYP=  DLB     KDIAG=    0  COREFL= F
+ PARALL= T  BALTYP=  DLB     KDIAG=    0  COREFL= F
  MXSEQ2=     300 MXSEQ3=     150  mem10=         0
 
           ----------------
@@ -418,8 +427,8 @@ Copying input file dvb_sp.inp to your run's scratch directory...
  AG  =   25     AU  =    5     BU  =   25     BG  =    5
 
  ..... DONE SETTING UP THE RUN .....
- STEP CPU TIME =     0.05 TOTAL CPU TIME =        0.1 (    0.0 MIN)
- TOTAL WALL CLOCK TIME=        0.0 SECONDS, CPU UTILIZATION IS 250.00%
+ CPU     0: STEP CPU TIME=     0.00 TOTAL CPU TIME=        0.0 (    0.0 MIN)
+ TOTAL WALL CLOCK TIME=        0.0 SECONDS, CPU UTILIZATION IS   0.00%
 
           ********************
           1 ELECTRON INTEGRALS
@@ -1706,8 +1715,8 @@ Copying input file dvb_sp.inp to your run's scratch directory...
    59  H 19  S    0.000000  -0.007762  -0.000000   0.760032
    60  H 20  S    0.000000  -0.000000  -0.007762  -0.000000   0.760032
  ...... END OF ONE-ELECTRON INTEGRALS ......
- STEP CPU TIME =     0.07 TOTAL CPU TIME =        0.1 (    0.0 MIN)
- TOTAL WALL CLOCK TIME=        0.0 SECONDS, CPU UTILIZATION IS 400.00%
+ CPU     0: STEP CPU TIME=     0.01 TOTAL CPU TIME=        0.0 (    0.0 MIN)
+ TOTAL WALL CLOCK TIME=        0.0 SECONDS, CPU UTILIZATION IS  33.33%
 
           -------------
           GUESS OPTIONS
@@ -1718,7 +1727,7 @@ Copying input file dvb_sp.inp to your run's scratch directory...
           SYMDEN=       F          PURIFY=       F
 
  INITIAL GUESS ORBITALS GENERATED BY HUCKEL   ROUTINE.
- HUCKEL GUESS REQUIRES     53480 WORDS.
+ HUCKEL GUESS REQUIRES     53820 WORDS.
 
  SYMMETRIES FOR INITIAL GUESS ORBITALS FOLLOW.   BOTH SET(S).
     35 ORBITALS ARE OCCUPIED (   10 CORE ORBITALS).
@@ -1728,8 +1737,8 @@ Copying input file dvb_sp.inp to your run's scratch directory...
     32=BG      33=AG      34=BG      35=AG      36=AU      37=AU      38=BG  
     39=AU      40=BG      41=AG      42=AG      43=AG      44=AG      45=AG  
  ...... END OF INITIAL ORBITAL SELECTION ......
- STEP CPU TIME =     0.08 TOTAL CPU TIME =        0.2 (    0.0 MIN)
- TOTAL WALL CLOCK TIME=        0.1 SECONDS, CPU UTILIZATION IS 400.00%
+ CPU     0: STEP CPU TIME=     0.03 TOTAL CPU TIME=        0.0 (    0.0 MIN)
+ TOTAL WALL CLOCK TIME=        0.1 SECONDS, CPU UTILIZATION IS  66.67%
 
                     ----------------------
                     AO INTEGRAL TECHNOLOGY
@@ -1751,43 +1760,43 @@ Copying input file dvb_sp.inp to your run's scratch directory...
  THE -PK- OPTION IS OFF, THE INTEGRALS ARE NOT IN SUPERMATRIX FORM.
  STORING   15000 INTEGRALS/RECORD ON DISK, USING 12 BYTES/INTEGRAL.
  TWO ELECTRON INTEGRAL EVALUATION REQUIRES   89821 WORDS OF MEMORY.
- SCHWARZ INEQUALITY OVERHEAD:      1783 INTEGRALS, T=        0.01
+ SCHWARZ INEQUALITY OVERHEAD:      1783 INTEGRALS, T=        0.00
  II,JST,KST,LST =  1  1  1  1 NREC =         1 INTLOC =    1
  II,JST,KST,LST =  2  1  1  1 NREC =         1 INTLOC =    1
  II,JST,KST,LST =  3  1  1  1 NREC =         1 INTLOC =    1
- II,JST,KST,LST =  4  1  1  1 NREC =         1 INTLOC =    3
- II,JST,KST,LST =  5  1  1  1 NREC =         1 INTLOC =  473
- II,JST,KST,LST =  6  1  1  1 NREC =         1 INTLOC =  473
- II,JST,KST,LST =  7  1  1  1 NREC =         1 INTLOC =  473
- II,JST,KST,LST =  8  1  1  1 NREC =         1 INTLOC =  877
- II,JST,KST,LST =  9  1  1  1 NREC =         1 INTLOC = 6372
- II,JST,KST,LST = 10  1  1  1 NREC =         1 INTLOC = 6372
- II,JST,KST,LST = 11  1  1  1 NREC =         1 INTLOC = 6372
- II,JST,KST,LST = 12  1  1  1 NREC =         1 INTLOC = 8941
- II,JST,KST,LST = 13  1  1  1 NREC =         3 INTLOC =  203
- II,JST,KST,LST = 14  1  1  1 NREC =         3 INTLOC =  203
- II,JST,KST,LST = 15  1  1  1 NREC =         3 INTLOC = 9729
- II,JST,KST,LST = 16  1  1  1 NREC =         3 INTLOC = 9729
- II,JST,KST,LST = 17  1  1  1 NREC =         4 INTLOC = 6449
- II,JST,KST,LST = 18  1  1  1 NREC =         4 INTLOC = 6449
- II,JST,KST,LST = 19  1  1  1 NREC =         4 INTLOC = 6449
- II,JST,KST,LST = 20  1  1  1 NREC =         5 INTLOC =  997
- II,JST,KST,LST = 21  1  1  1 NREC =         9 INTLOC = 8406
- II,JST,KST,LST = 22  1  1  1 NREC =         9 INTLOC = 8406
- II,JST,KST,LST = 23  1  1  1 NREC =        11 INTLOC = 3665
- II,JST,KST,LST = 24  1  1  1 NREC =        11 INTLOC = 3665
- II,JST,KST,LST = 25  1  1  1 NREC =        11 INTLOC = 3665
- II,JST,KST,LST = 26  1  1  1 NREC =        12 INTLOC = 1746
- II,JST,KST,LST = 27  1  1  1 NREC =        19 INTLOC = 2907
- II,JST,KST,LST = 28  1  1  1 NREC =        19 INTLOC = 2907
- II,JST,KST,LST = 29  1  1  1 NREC =        21 INTLOC =12224
- II,JST,KST,LST = 30  1  1  1 NREC =        21 INTLOC =12224
+ II,JST,KST,LST =  4  1  1  1 NREC =         1 INTLOC =    1
+ II,JST,KST,LST =  5  1  1  1 NREC =         1 INTLOC =    1
+ II,JST,KST,LST =  6  1  1  1 NREC =         1 INTLOC =    1
+ II,JST,KST,LST =  7  1  1  1 NREC =         1 INTLOC =    1
+ II,JST,KST,LST =  8  1  1  1 NREC =         1 INTLOC =  141
+ II,JST,KST,LST =  9  1  1  1 NREC =         1 INTLOC = 1435
+ II,JST,KST,LST = 10  1  1  1 NREC =         1 INTLOC = 1435
+ II,JST,KST,LST = 11  1  1  1 NREC =         1 INTLOC = 1435
+ II,JST,KST,LST = 12  1  1  1 NREC =         1 INTLOC = 1672
+ II,JST,KST,LST = 13  1  1  1 NREC =         1 INTLOC =12741
+ II,JST,KST,LST = 14  1  1  1 NREC =         1 INTLOC =12741
+ II,JST,KST,LST = 15  1  1  1 NREC =         2 INTLOC =  591
+ II,JST,KST,LST = 16  1  1  1 NREC =         2 INTLOC =  591
+ II,JST,KST,LST = 17  1  1  1 NREC =         2 INTLOC = 6267
+ II,JST,KST,LST = 18  1  1  1 NREC =         2 INTLOC = 6267
+ II,JST,KST,LST = 19  1  1  1 NREC =         2 INTLOC = 6267
+ II,JST,KST,LST = 20  1  1  1 NREC =         2 INTLOC = 9214
+ II,JST,KST,LST = 21  1  1  1 NREC =         3 INTLOC = 5670
+ II,JST,KST,LST = 22  1  1  1 NREC =         3 INTLOC = 5670
+ II,JST,KST,LST = 23  1  1  1 NREC =         4 INTLOC = 4649
+ II,JST,KST,LST = 24  1  1  1 NREC =         4 INTLOC = 4649
+ II,JST,KST,LST = 25  1  1  1 NREC =         4 INTLOC = 4649
+ II,JST,KST,LST = 26  1  1  1 NREC =         4 INTLOC = 9126
+ II,JST,KST,LST = 27  1  1  1 NREC =         7 INTLOC = 2501
+ II,JST,KST,LST = 28  1  1  1 NREC =         7 INTLOC = 2501
+ II,JST,KST,LST = 29  1  1  1 NREC =         7 INTLOC =13149
+ II,JST,KST,LST = 30  1  1  1 NREC =         7 INTLOC =13149
  SCHWARZ INEQUALITY TEST SKIPPED       22124 INTEGRAL BLOCKS.
  TOTAL NUMBER OF NONZERO TWO-ELECTRON INTEGRALS =              347845
-         24 INTEGRAL RECORDS WERE STORED ON DISK FILE  8.
+         25 INTEGRAL RECORDS WERE STORED ON DISK FILE  8.
   ...... END OF TWO-ELECTRON INTEGRALS .....
- STEP CPU TIME =     0.26 TOTAL CPU TIME =        0.5 (    0.0 MIN)
- TOTAL WALL CLOCK TIME=        0.2 SECONDS, CPU UTILIZATION IS 230.00%
+ CPU     0: STEP CPU TIME=     0.10 TOTAL CPU TIME=        0.1 (    0.0 MIN)
+ TOTAL WALL CLOCK TIME=        0.2 SECONDS, CPU UTILIZATION IS  82.35%
 
           --------------------------
              R-B3LYP SCF CALCULATION
@@ -1842,7 +1851,7 @@ Copying input file dvb_sp.inp to your run's scratch directory...
           -----------------
           DENSITY CONVERGED
           -----------------
-     TIME TO FORM FOCK OPERATORS=      11.9 SECONDS (       0.7 SEC/ITER)
+     TIME TO FORM FOCK OPERATORS=       7.2 SECONDS (       0.4 SEC/ITER)
      TIME TO SOLVE SCF EQUATIONS=       0.0 SECONDS (       0.0 SEC/ITER)
 
  FINAL R-B3LYP ENERGY IS     -382.0506353326 AFTER  17 ITERATIONS
@@ -1860,32 +1869,32 @@ Copying input file dvb_sp.inp to your run's scratch directory...
     2  C  1  S    0.031568   0.031360   0.004099  -0.004056  -0.000783
     3  C  1  X   -0.000908  -0.000632   0.004163  -0.004131  -0.000548
     4  C  1  Y    0.000020  -0.000032  -0.000669   0.000654  -0.005256
-    5  C  1  Z    0.000000   0.000000  -0.000000   0.000000   0.000000
+    5  C  1  Z    0.000000   0.000000  -0.000000  -0.000000   0.000000
     6  C  2  S   -0.699297   0.699293   0.027509   0.027742   0.003166
     7  C  2  S   -0.031568   0.031360  -0.004099  -0.004056  -0.000783
     8  C  2  X   -0.000908   0.000632   0.004163   0.004131   0.000548
     9  C  2  Y    0.000020   0.000032  -0.000669  -0.000654   0.005256
-   10  C  2  Z    0.000000   0.000000  -0.000000   0.000000   0.000000
+   10  C  2  Z    0.000000   0.000000  -0.000000  -0.000000   0.000000
    11  C  3  S   -0.018918  -0.019390   0.011741  -0.014708  -0.439511
    12  C  3  S   -0.007746  -0.006930   0.000679  -0.000684  -0.024454
    13  C  3  X   -0.002628  -0.002997  -0.000019  -0.000063   0.003664
    14  C  3  Y   -0.003534  -0.003322   0.000133  -0.000189  -0.001021
-   15  C  3  Z    0.000000   0.000000  -0.000000   0.000000   0.000000
+   15  C  3  Z    0.000000   0.000000  -0.000000  -0.000000   0.000000
    16  C  4  S    0.018918  -0.019390  -0.011741  -0.014708  -0.439511
    17  C  4  S    0.007746  -0.006930  -0.000679  -0.000684  -0.024454
    18  C  4  X   -0.002628   0.002997  -0.000019   0.000063  -0.003664
    19  C  4  Y   -0.003534   0.003322   0.000133   0.000189   0.001021
-   20  C  4  Z    0.000000   0.000000  -0.000000   0.000000   0.000000
+   20  C  4  Z    0.000000   0.000000  -0.000000  -0.000000   0.000000
    21  C  5  S    0.019228  -0.019558  -0.009600  -0.011003   0.544803
    22  C  5  S    0.007710  -0.006873  -0.000548  -0.000421   0.028105
    23  C  5  X   -0.001323   0.001753  -0.000096   0.000006   0.003239
    24  C  5  Y    0.004169  -0.004069  -0.000129  -0.000211  -0.000074
-   25  C  5  Z    0.000000   0.000000  -0.000000   0.000000   0.000000
+   25  C  5  Z    0.000000   0.000000  -0.000000  -0.000000   0.000000
    26  C  6  S   -0.019228  -0.019558   0.009600  -0.011003   0.544803
    27  C  6  S   -0.007710  -0.006873   0.000548  -0.000421   0.028105
    28  C  6  X   -0.001323  -0.001753  -0.000096  -0.000006  -0.003239
    29  C  6  Y    0.004169   0.004069  -0.000129   0.000211   0.000074
-   30  C  6  Z    0.000000   0.000000  -0.000000   0.000000   0.000000
+   30  C  6  Z    0.000000   0.000000  -0.000000  -0.000000   0.000000
    31  H  7  S    0.000336   0.000223  -0.000102   0.000108   0.004065
    32  H  8  S   -0.000336   0.000223   0.000102   0.000108   0.004065
    33  H  9  S   -0.000334   0.000223  -0.000044  -0.000058  -0.005044
@@ -1894,24 +1903,24 @@ Copying input file dvb_sp.inp to your run's scratch directory...
    36  C 11  S    0.006710  -0.006779   0.030786   0.030768  -0.000042
    37  C 11  X    0.003973  -0.004012  -0.001086  -0.001096  -0.000034
    38  C 11  Y   -0.000905   0.000913  -0.000751  -0.000749  -0.000108
-   39  C 11  Z    0.000000   0.000000  -0.000000   0.000000   0.000000
+   39  C 11  Z    0.000000   0.000000  -0.000000  -0.000000   0.000000
    40  C 12  S   -0.027053  -0.027417  -0.699777   0.699692  -0.000803
    41  C 12  S   -0.006710  -0.006779  -0.030786   0.030768  -0.000042
    42  C 12  X    0.003973   0.004012  -0.001086   0.001096   0.000034
    43  C 12  Y   -0.000905  -0.000913  -0.000751   0.000749   0.000108
-   44  C 12  Z    0.000000   0.000000  -0.000000   0.000000   0.000000
+   44  C 12  Z    0.000000   0.000000  -0.000000  -0.000000   0.000000
    45  H 13  S   -0.000323   0.000334  -0.006419  -0.006417  -0.000004
    46  H 14  S    0.000323   0.000334   0.006419  -0.006417  -0.000004
    47  C 15  S   -0.000179   0.000193  -0.008121  -0.008114  -0.000287
    48  C 15  S   -0.000471   0.000474  -0.007619  -0.007617  -0.000050
    49  C 15  X   -0.000281   0.000288  -0.003442  -0.003441  -0.000009
    50  C 15  Y    0.000007  -0.000006  -0.003046  -0.003046   0.000034
-   51  C 15  Z    0.000000   0.000000  -0.000000   0.000000   0.000000
+   51  C 15  Z    0.000000   0.000000  -0.000000  -0.000000   0.000000
    52  C 16  S    0.000179   0.000193   0.008121  -0.008114  -0.000287
    53  C 16  S    0.000471   0.000474   0.007619  -0.007617  -0.000050
    54  C 16  X   -0.000281  -0.000288  -0.003442   0.003441   0.000009
    55  C 16  Y    0.000007   0.000006  -0.003046   0.003046  -0.000034
-   56  C 16  Z    0.000000   0.000000  -0.000000   0.000000   0.000000
+   56  C 16  Z    0.000000   0.000000  -0.000000  -0.000000   0.000000
    57  H 17  S    0.000149  -0.000141   0.000186   0.000187   0.000155
    58  H 18  S   -0.000149  -0.000141  -0.000186   0.000187   0.000155
    59  H 19  S    0.000028  -0.000027   0.000217   0.000217  -0.000004
@@ -2240,130 +2249,130 @@ Copying input file dvb_sp.inp to your run's scratch directory...
                      31         32         33         34         35
                    -0.2838    -0.2599    -0.2087    -0.1916    -0.1494
                      AG         BG         AU         BG         BG  
-    1  C  1  S    0.006981   0.000000   0.000000   0.000000   0.000000
-    2  C  1  S   -0.033746   0.000000   0.000000   0.000000   0.000000
-    3  C  1  X   -0.094796   0.000000   0.000000   0.000000   0.000000
-    4  C  1  Y    0.295934   0.000000   0.000000   0.000000   0.000000
+    1  C  1  S    0.006981  -0.000000   0.000000   0.000000   0.000000
+    2  C  1  S   -0.033746  -0.000000   0.000000   0.000000   0.000000
+    3  C  1  X   -0.094796  -0.000000   0.000000   0.000000   0.000000
+    4  C  1  Y    0.295934  -0.000000   0.000000   0.000000   0.000000
     5  C  1  Z    0.000000  -0.348961  -0.018019   0.005756   0.387550
-    6  C  2  S    0.006981   0.000000   0.000000   0.000000   0.000000
-    7  C  2  S   -0.033746   0.000000   0.000000   0.000000   0.000000
-    8  C  2  X    0.094796   0.000000   0.000000   0.000000   0.000000
-    9  C  2  Y   -0.295934   0.000000   0.000000   0.000000   0.000000
+    6  C  2  S    0.006981  -0.000000   0.000000   0.000000   0.000000
+    7  C  2  S   -0.033746  -0.000000   0.000000   0.000000   0.000000
+    8  C  2  X    0.094796  -0.000000   0.000000   0.000000   0.000000
+    9  C  2  Y   -0.295934  -0.000000   0.000000   0.000000   0.000000
    10  C  2  Z    0.000000   0.348961  -0.018019  -0.005756  -0.387550
-   11  C  3  S    0.012019   0.000000   0.000000   0.000000   0.000000
-   12  C  3  S   -0.035632   0.000000   0.000000   0.000000   0.000000
-   13  C  3  X    0.049038   0.000000   0.000000   0.000000   0.000000
-   14  C  3  Y   -0.222154   0.000000   0.000000   0.000000   0.000000
+   11  C  3  S    0.012019  -0.000000   0.000000   0.000000   0.000000
+   12  C  3  S   -0.035632  -0.000000   0.000000   0.000000   0.000000
+   13  C  3  X    0.049038  -0.000000   0.000000   0.000000   0.000000
+   14  C  3  Y   -0.222154  -0.000000   0.000000   0.000000   0.000000
    15  C  3  Z    0.000000  -0.131662  -0.179218   0.463633   0.215046
-   16  C  4  S    0.012019   0.000000   0.000000   0.000000   0.000000
-   17  C  4  S   -0.035632   0.000000   0.000000   0.000000   0.000000
-   18  C  4  X   -0.049038   0.000000   0.000000   0.000000   0.000000
-   19  C  4  Y    0.222154   0.000000   0.000000   0.000000   0.000000
+   16  C  4  S    0.012019  -0.000000   0.000000   0.000000   0.000000
+   17  C  4  S   -0.035632  -0.000000   0.000000   0.000000   0.000000
+   18  C  4  X   -0.049038  -0.000000   0.000000   0.000000   0.000000
+   19  C  4  Y    0.222154  -0.000000   0.000000   0.000000   0.000000
    20  C  4  Z    0.000000   0.131662  -0.179218  -0.463633  -0.215046
-   21  C  5  S   -0.007622   0.000000   0.000000   0.000000   0.000000
-   22  C  5  S    0.021972   0.000000   0.000000   0.000000   0.000000
-   23  C  5  X   -0.095902   0.000000   0.000000   0.000000   0.000000
-   24  C  5  Y    0.280644   0.000000   0.000000   0.000000   0.000000
+   21  C  5  S   -0.007622  -0.000000   0.000000   0.000000   0.000000
+   22  C  5  S    0.021972  -0.000000   0.000000   0.000000   0.000000
+   23  C  5  X   -0.095902  -0.000000   0.000000   0.000000   0.000000
+   24  C  5  Y    0.280644  -0.000000   0.000000   0.000000   0.000000
    25  C  5  Z    0.000000   0.132091  -0.176645   0.457529  -0.230771
-   26  C  6  S   -0.007622   0.000000   0.000000   0.000000   0.000000
-   27  C  6  S    0.021972   0.000000   0.000000   0.000000   0.000000
-   28  C  6  X    0.095902   0.000000   0.000000   0.000000   0.000000
-   29  C  6  Y   -0.280644   0.000000   0.000000   0.000000   0.000000
+   26  C  6  S   -0.007622  -0.000000   0.000000   0.000000   0.000000
+   27  C  6  S    0.021972  -0.000000   0.000000   0.000000   0.000000
+   28  C  6  X    0.095902  -0.000000   0.000000   0.000000   0.000000
+   29  C  6  Y   -0.280644  -0.000000   0.000000   0.000000   0.000000
    30  C  6  Z    0.000000  -0.132091  -0.176645  -0.457529   0.230771
-   31  H  7  S    0.258114   0.000000   0.000000   0.000000   0.000000
-   32  H  8  S    0.258114   0.000000   0.000000   0.000000   0.000000
-   33  H  9  S   -0.151448   0.000000   0.000000   0.000000   0.000000
-   34  H 10  S   -0.151448   0.000000   0.000000   0.000000   0.000000
-   35  C 11  S    0.011128   0.000000   0.000000   0.000000   0.000000
-   36  C 11  S   -0.038421   0.000000   0.000000   0.000000   0.000000
-   37  C 11  X   -0.111900   0.000000   0.000000   0.000000   0.000000
-   38  C 11  Y    0.136826   0.000000   0.000000   0.000000   0.000000
+   31  H  7  S    0.258114  -0.000000   0.000000   0.000000   0.000000
+   32  H  8  S    0.258114  -0.000000   0.000000   0.000000   0.000000
+   33  H  9  S   -0.151448  -0.000000   0.000000   0.000000   0.000000
+   34  H 10  S   -0.151448  -0.000000   0.000000   0.000000   0.000000
+   35  C 11  S    0.011128  -0.000000   0.000000   0.000000   0.000000
+   36  C 11  S   -0.038421  -0.000000   0.000000   0.000000   0.000000
+   37  C 11  X   -0.111900  -0.000000   0.000000   0.000000   0.000000
+   38  C 11  Y    0.136826  -0.000000   0.000000   0.000000   0.000000
    39  C 11  Z    0.000000   0.376486   0.413775  -0.000343   0.223667
-   40  C 12  S    0.011128   0.000000   0.000000   0.000000   0.000000
-   41  C 12  S   -0.038421   0.000000   0.000000   0.000000   0.000000
-   42  C 12  X    0.111900   0.000000   0.000000   0.000000   0.000000
-   43  C 12  Y   -0.136826   0.000000   0.000000   0.000000   0.000000
+   40  C 12  S    0.011128  -0.000000   0.000000   0.000000   0.000000
+   41  C 12  S   -0.038421  -0.000000   0.000000   0.000000   0.000000
+   42  C 12  X    0.111900  -0.000000   0.000000   0.000000   0.000000
+   43  C 12  Y   -0.136826  -0.000000   0.000000   0.000000   0.000000
    44  C 12  Z    0.000000  -0.376486   0.413775   0.000343  -0.223667
-   45  H 13  S    0.182713   0.000000   0.000000   0.000000   0.000000
-   46  H 14  S    0.182713   0.000000   0.000000   0.000000   0.000000
-   47  C 15  S    0.004677   0.000000   0.000000   0.000000   0.000000
-   48  C 15  S   -0.018377   0.000000   0.000000   0.000000   0.000000
-   49  C 15  X    0.037591   0.000000   0.000000   0.000000   0.000000
-   50  C 15  Y   -0.109565   0.000000   0.000000   0.000000   0.000000
+   45  H 13  S    0.182713  -0.000000   0.000000   0.000000   0.000000
+   46  H 14  S    0.182713  -0.000000   0.000000   0.000000   0.000000
+   47  C 15  S    0.004677  -0.000000   0.000000   0.000000   0.000000
+   48  C 15  S   -0.018377  -0.000000   0.000000   0.000000   0.000000
+   49  C 15  X    0.037591  -0.000000   0.000000   0.000000   0.000000
+   50  C 15  Y   -0.109565  -0.000000   0.000000   0.000000   0.000000
    51  C 15  Z    0.000000   0.271395   0.417956   0.009573   0.397376
-   52  C 16  S    0.004677   0.000000   0.000000   0.000000   0.000000
-   53  C 16  S   -0.018377   0.000000   0.000000   0.000000   0.000000
-   54  C 16  X   -0.037591   0.000000   0.000000   0.000000   0.000000
-   55  C 16  Y    0.109565   0.000000   0.000000   0.000000   0.000000
+   52  C 16  S    0.004677  -0.000000   0.000000   0.000000   0.000000
+   53  C 16  S   -0.018377  -0.000000   0.000000   0.000000   0.000000
+   54  C 16  X   -0.037591  -0.000000   0.000000   0.000000   0.000000
+   55  C 16  Y    0.109565  -0.000000   0.000000   0.000000   0.000000
    56  C 16  Z    0.000000  -0.271395   0.417956  -0.009573  -0.397376
-   57  H 17  S    0.115910   0.000000   0.000000   0.000000   0.000000
-   58  H 18  S    0.115910   0.000000   0.000000   0.000000   0.000000
-   59  H 19  S   -0.089778   0.000000   0.000000   0.000000   0.000000
-   60  H 20  S   -0.089778   0.000000   0.000000   0.000000   0.000000
+   57  H 17  S    0.115910  -0.000000   0.000000   0.000000   0.000000
+   58  H 18  S    0.115910  -0.000000   0.000000   0.000000   0.000000
+   59  H 19  S   -0.089778  -0.000000   0.000000   0.000000   0.000000
+   60  H 20  S   -0.089778  -0.000000   0.000000   0.000000   0.000000
 
                      36         37         38         39         40
                     0.0411     0.0938     0.1144     0.1859     0.2760
                      AU         AU         BG         AU         BG  
-    1  C  1  S    0.000000   0.000000   0.000000  -0.000000  -0.000000
-    2  C  1  S    0.000000   0.000000   0.000000  -0.000000  -0.000000
-    3  C  1  X    0.000000   0.000000   0.000000  -0.000000  -0.000000
-    4  C  1  Y    0.000000   0.000000   0.000000  -0.000000  -0.000000
+    1  C  1  S    0.000000   0.000000   0.000000  -0.000000   0.000000
+    2  C  1  S    0.000000   0.000000   0.000000  -0.000000   0.000000
+    3  C  1  X    0.000000   0.000000   0.000000  -0.000000   0.000000
+    4  C  1  Y    0.000000   0.000000   0.000000  -0.000000   0.000000
     5  C  1  Z   -0.442649  -0.031935   0.023444  -0.497236   0.543482
-    6  C  2  S    0.000000   0.000000   0.000000  -0.000000  -0.000000
-    7  C  2  S    0.000000   0.000000   0.000000  -0.000000  -0.000000
-    8  C  2  X    0.000000   0.000000   0.000000  -0.000000  -0.000000
-    9  C  2  Y    0.000000   0.000000   0.000000  -0.000000  -0.000000
+    6  C  2  S    0.000000   0.000000   0.000000  -0.000000   0.000000
+    7  C  2  S    0.000000   0.000000   0.000000  -0.000000   0.000000
+    8  C  2  X    0.000000   0.000000   0.000000  -0.000000   0.000000
+    9  C  2  Y    0.000000   0.000000   0.000000  -0.000000   0.000000
    10  C  2  Z   -0.442649  -0.031935  -0.023444  -0.497236  -0.543482
-   11  C  3  S    0.000000   0.000000   0.000000  -0.000000  -0.000000
-   12  C  3  S    0.000000   0.000000   0.000000  -0.000000  -0.000000
-   13  C  3  X    0.000000   0.000000   0.000000  -0.000000  -0.000000
-   14  C  3  Y    0.000000   0.000000   0.000000  -0.000000  -0.000000
+   11  C  3  S    0.000000   0.000000   0.000000  -0.000000   0.000000
+   12  C  3  S    0.000000   0.000000   0.000000  -0.000000   0.000000
+   13  C  3  X    0.000000   0.000000   0.000000  -0.000000   0.000000
+   14  C  3  Y    0.000000   0.000000   0.000000  -0.000000   0.000000
    15  C  3  Z    0.232249   0.582694  -0.240695   0.166744  -0.464183
-   16  C  4  S    0.000000   0.000000   0.000000  -0.000000  -0.000000
-   17  C  4  S    0.000000   0.000000   0.000000  -0.000000  -0.000000
-   18  C  4  X    0.000000   0.000000   0.000000  -0.000000  -0.000000
-   19  C  4  Y    0.000000   0.000000   0.000000  -0.000000  -0.000000
+   16  C  4  S    0.000000   0.000000   0.000000  -0.000000   0.000000
+   17  C  4  S    0.000000   0.000000   0.000000  -0.000000   0.000000
+   18  C  4  X    0.000000   0.000000   0.000000  -0.000000   0.000000
+   19  C  4  Y    0.000000   0.000000   0.000000  -0.000000   0.000000
    20  C  4  Z    0.232249   0.582694   0.240695   0.166744   0.464183
-   21  C  5  S    0.000000   0.000000   0.000000  -0.000000  -0.000000
-   22  C  5  S    0.000000   0.000000   0.000000  -0.000000  -0.000000
-   23  C  5  X    0.000000   0.000000   0.000000  -0.000000  -0.000000
-   24  C  5  Y    0.000000   0.000000   0.000000  -0.000000  -0.000000
+   21  C  5  S    0.000000   0.000000   0.000000  -0.000000   0.000000
+   22  C  5  S    0.000000   0.000000   0.000000  -0.000000   0.000000
+   23  C  5  X    0.000000   0.000000   0.000000  -0.000000   0.000000
+   24  C  5  Y    0.000000   0.000000   0.000000  -0.000000   0.000000
    25  C  5  Z    0.277556  -0.553234   0.232246   0.199208   0.466876
-   26  C  6  S    0.000000   0.000000   0.000000  -0.000000  -0.000000
-   27  C  6  S    0.000000   0.000000   0.000000  -0.000000  -0.000000
-   28  C  6  X    0.000000   0.000000   0.000000  -0.000000  -0.000000
-   29  C  6  Y    0.000000   0.000000   0.000000  -0.000000  -0.000000
+   26  C  6  S    0.000000   0.000000   0.000000  -0.000000   0.000000
+   27  C  6  S    0.000000   0.000000   0.000000  -0.000000   0.000000
+   28  C  6  X    0.000000   0.000000   0.000000  -0.000000   0.000000
+   29  C  6  Y    0.000000   0.000000   0.000000  -0.000000   0.000000
    30  C  6  Z    0.277556  -0.553234  -0.232246   0.199208  -0.466876
-   31  H  7  S    0.000000   0.000000   0.000000  -0.000000  -0.000000
-   32  H  8  S    0.000000   0.000000   0.000000  -0.000000  -0.000000
-   33  H  9  S    0.000000   0.000000   0.000000  -0.000000  -0.000000
-   34  H 10  S    0.000000   0.000000   0.000000  -0.000000  -0.000000
-   35  C 11  S    0.000000   0.000000   0.000000  -0.000000  -0.000000
-   36  C 11  S    0.000000   0.000000   0.000000  -0.000000  -0.000000
-   37  C 11  X    0.000000   0.000000   0.000000  -0.000000  -0.000000
-   38  C 11  Y    0.000000   0.000000   0.000000  -0.000000  -0.000000
+   31  H  7  S    0.000000   0.000000   0.000000  -0.000000   0.000000
+   32  H  8  S    0.000000   0.000000   0.000000  -0.000000   0.000000
+   33  H  9  S    0.000000   0.000000   0.000000  -0.000000   0.000000
+   34  H 10  S    0.000000   0.000000   0.000000  -0.000000   0.000000
+   35  C 11  S    0.000000   0.000000   0.000000  -0.000000   0.000000
+   36  C 11  S    0.000000   0.000000   0.000000  -0.000000   0.000000
+   37  C 11  X    0.000000   0.000000   0.000000  -0.000000   0.000000
+   38  C 11  Y    0.000000   0.000000   0.000000  -0.000000   0.000000
    39  C 11  Z   -0.256149   0.003798  -0.522167   0.529124   0.287730
-   40  C 12  S    0.000000   0.000000   0.000000  -0.000000  -0.000000
-   41  C 12  S    0.000000   0.000000   0.000000  -0.000000  -0.000000
-   42  C 12  X    0.000000   0.000000   0.000000  -0.000000  -0.000000
-   43  C 12  Y    0.000000   0.000000   0.000000  -0.000000  -0.000000
+   40  C 12  S    0.000000   0.000000   0.000000  -0.000000   0.000000
+   41  C 12  S    0.000000   0.000000   0.000000  -0.000000   0.000000
+   42  C 12  X    0.000000   0.000000   0.000000  -0.000000   0.000000
+   43  C 12  Y    0.000000   0.000000   0.000000  -0.000000   0.000000
    44  C 12  Z   -0.256149   0.003798   0.522167   0.529124  -0.287730
-   45  H 13  S    0.000000   0.000000   0.000000  -0.000000  -0.000000
-   46  H 14  S    0.000000   0.000000   0.000000  -0.000000  -0.000000
-   47  C 15  S    0.000000   0.000000   0.000000  -0.000000  -0.000000
-   48  C 15  S    0.000000   0.000000   0.000000  -0.000000  -0.000000
-   49  C 15  X    0.000000   0.000000   0.000000  -0.000000  -0.000000
-   50  C 15  Y    0.000000   0.000000   0.000000  -0.000000  -0.000000
+   45  H 13  S    0.000000   0.000000   0.000000  -0.000000   0.000000
+   46  H 14  S    0.000000   0.000000   0.000000  -0.000000   0.000000
+   47  C 15  S    0.000000   0.000000   0.000000  -0.000000   0.000000
+   48  C 15  S    0.000000   0.000000   0.000000  -0.000000   0.000000
+   49  C 15  X    0.000000   0.000000   0.000000  -0.000000   0.000000
+   50  C 15  Y    0.000000   0.000000   0.000000  -0.000000   0.000000
    51  C 15  Z    0.449631   0.010776   0.523103  -0.379677  -0.156149
-   52  C 16  S    0.000000   0.000000   0.000000  -0.000000  -0.000000
-   53  C 16  S    0.000000   0.000000   0.000000  -0.000000  -0.000000
-   54  C 16  X    0.000000   0.000000   0.000000  -0.000000  -0.000000
-   55  C 16  Y    0.000000   0.000000   0.000000  -0.000000  -0.000000
+   52  C 16  S    0.000000   0.000000   0.000000  -0.000000   0.000000
+   53  C 16  S    0.000000   0.000000   0.000000  -0.000000   0.000000
+   54  C 16  X    0.000000   0.000000   0.000000  -0.000000   0.000000
+   55  C 16  Y    0.000000   0.000000   0.000000  -0.000000   0.000000
    56  C 16  Z    0.449631   0.010776  -0.523103  -0.379677   0.156149
-   57  H 17  S    0.000000   0.000000   0.000000  -0.000000  -0.000000
-   58  H 18  S    0.000000   0.000000   0.000000  -0.000000  -0.000000
-   59  H 19  S    0.000000   0.000000   0.000000  -0.000000  -0.000000
-   60  H 20  S    0.000000   0.000000   0.000000  -0.000000  -0.000000
+   57  H 17  S    0.000000   0.000000   0.000000  -0.000000   0.000000
+   58  H 18  S    0.000000   0.000000   0.000000  -0.000000   0.000000
+   59  H 19  S    0.000000   0.000000   0.000000  -0.000000   0.000000
+   60  H 20  S    0.000000   0.000000   0.000000  -0.000000   0.000000
 
                      41         42         43         44         45
                     0.3361     0.3443     0.3832     0.3849     0.4140
@@ -2621,8 +2630,8 @@ Copying input file dvb_sp.inp to your run's scratch directory...
    59  H 19  S    0.330705  -0.115750   0.093271   0.047885  -0.064757
    60  H 20  S    0.330705  -0.115750  -0.093271   0.047885   0.064757
  ...... END OF RHF CALCULATION ......
- STEP CPU TIME =    12.92 TOTAL CPU TIME =       13.4 (    0.2 MIN)
- TOTAL WALL CLOCK TIME=       12.2 SECONDS, CPU UTILIZATION IS 109.76%
+ CPU     0: STEP CPU TIME=     7.82 TOTAL CPU TIME=        8.0 (    0.1 MIN)
+ TOTAL WALL CLOCK TIME=        9.4 SECONDS, CPU UTILIZATION IS  84.86%
 
      ---------------------------------------------------------------------
      PROPERTIES FOR THE B3LYP    DFT FUNCTIONAL (RHF  TYPE) DENSITY MATRIX
@@ -3465,45 +3474,53 @@ Copying input file dvb_sp.inp to your run's scratch directory...
     6 C                 3.970       3.970       0.000
     7 H                 0.994       0.994       0.000
     8 H                 0.994       0.994       0.000
-    9 H                 0.994       0.994      -0.000
-   10 H                 0.994       0.994      -0.000
+    9 H                 0.994       0.994       0.000
+   10 H                 0.994       0.994       0.000
    11 C                 3.968       3.968       0.000
    12 C                 3.968       3.968       0.000
-   13 H                 0.994       0.994       0.000
+   13 H                 0.994       0.994      -0.000
    14 H                 0.994       0.994       0.000
    15 C                 3.965       3.965       0.000
    16 C                 3.965       3.965       0.000
-   17 H                 0.994       0.994       0.000
-   18 H                 0.994       0.994       0.000
-   19 H                 0.994       0.994      -0.000
-   20 H                 0.994       0.994      -0.000
+   17 H                 0.994       0.994      -0.000
+   18 H                 0.994       0.994      -0.000
+   19 H                 0.994       0.994       0.000
+   20 H                 0.994       0.994       0.000
 
           ---------------------
           ELECTROSTATIC MOMENTS
           ---------------------
 
  POINT   1           X           Y           Z (BOHR)    CHARGE
-                -0.000000    0.000000    0.000000        0.00 (A.U.)
+                -0.000000    0.000000    0.000000       -0.00 (A.U.)
          DX          DY          DZ         /D/  (DEBYE)
-    -0.000000   -0.000000    0.000000    0.000000
+     0.000000    0.000000    0.000000    0.000000
  ...... END OF PROPERTY EVALUATION ......
- STEP CPU TIME =     0.01 TOTAL CPU TIME =       13.4 (    0.2 MIN)
- TOTAL WALL CLOCK TIME=       12.2 SECONDS, CPU UTILIZATION IS 109.75%
+ CPU     0: STEP CPU TIME=     0.02 TOTAL CPU TIME=        8.0 (    0.1 MIN)
+ TOTAL WALL CLOCK TIME=        9.4 SECONDS, CPU UTILIZATION IS  84.80%
+
+ AN AIMPAC INPUT FILE IS BEING WRITTEN TO FILE   7
+
                708617  WORDS OF DYNAMIC MEMORY USED
- EXECUTION OF GAMESS TERMINATED NORMALLY Wed Jul 27 01:16:14 2016
+ EXECUTION OF GAMESS TERMINATED NORMALLY Mon Aug 14 12:26:13 2017
  DDI: 263640 bytes (0.3 MB / 0 MWords) used by master data server.
 
  ----------------------------------------
  CPU timing information for all processes
  ========================================
- 0: 12.333 + 1.213 = 13.546
+ 0: 7.908 + 0.92 = 7.1000
+ 1: 7.904 + 0.100 = 8.04
+ 2: 7.440 + 0.60 = 7.500
+ 3: 7.660 + 0.56 = 7.716
  ----------------------------------------
  ddikick.x: exited gracefully.
 ----- accounting info -----
-Files used on the master node copper were:
--rw-r--r-- 1 eric users   60734 Jul 27 01:16 /tmp/dvb_sp.dat
--rw-r--r-- 1 eric users    1433 Jul 27 01:16 /tmp/dvb_sp.F05
--rw-r--r-- 1 eric users 4320384 Jul 27 01:16 /tmp/dvb_sp.F08
--rw-r--r-- 1 eric users 1537840 Jul 27 01:16 /tmp/dvb_sp.F10
-Wed Jul 27 01:16:17 EDT 2016
-0.236u 0.036s 0:15.56 1.6%	0+0k 0+8io 0pf+0w
+Files used on the master node firzens were:
+-rw-r--r-- 1 sagar sagar    1452 Aug 14 12:26 /scr/sagar/dvb_sp.F05
+-rw-rw-r-- 1 sagar sagar 1620144 Aug 14 12:26 /scr/sagar/dvb_sp.F08
+-rw-rw-r-- 1 sagar sagar  720064 Aug 14 12:26 /scr/sagar/dvb_sp.F08.001
+-rw-rw-r-- 1 sagar sagar 1440128 Aug 14 12:26 /scr/sagar/dvb_sp.F08.002
+-rw-rw-r-- 1 sagar sagar  720064 Aug 14 12:26 /scr/sagar/dvb_sp.F08.003
+-rw-rw-r-- 1 sagar sagar 1537840 Aug 14 12:26 /scr/sagar/dvb_sp.F10
+Mon Aug 14 12:26:16 IST 2017
+0.088u 0.008s 0:12.71 0.6%	0+0k 360+16io 4pf+0w

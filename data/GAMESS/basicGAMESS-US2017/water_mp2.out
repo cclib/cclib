@@ -1,19 +1,22 @@
 ----- GAMESS execution script 'rungms' -----
-This job is running on host copper
-under operating system Linux at Wed Jul 27 01:23:27 EDT 2016
+This job is running on host firzens
+under operating system Linux at Mon Aug 14 12:30:40 IST 2017
 Available scratch disk space (Kbyte units) at beginning of the job is
-Filesystem     1K-blocks   Used Available Use% Mounted on
-tmpfs            8089516 124472   7965044   2% /tmp
-GAMESS temporary binary files will be written to /tmp
-GAMESS supplementary output files will be written to /tmp
+Filesystem     1K-blocks      Used Available Use% Mounted on
+/dev/sda11     254243428 112975224 128330324  47% /
+GAMESS temporary binary files will be written to /scr/sagar
+GAMESS supplementary output files will be written to /home/sagar/gamess/scratch
 Copying input file water_mp2.inp to your run's scratch directory...
+ 
+Assuming a single but multicore node.
+ 
 
  Distributed Data Interface kickoff program.
- Initiating 1 compute processes on 1 nodes to run the following command:
- /opt/gamess/gamess.01.x water_mp2 
+ Initiating 4 compute processes on 1 nodes to run the following command:
+ /home/sagar/gamess/gamess.02.x water_mp2 
 
           ******************************************************
-          *         GAMESS VERSION =  5 DEC 2014 (R1)          *
+          *         GAMESS VERSION = 20 APR 2017 (R1)          *
           *             FROM IOWA STATE UNIVERSITY             *
           * M.W.SCHMIDT, K.K.BALDRIDGE, J.A.BOATZ, S.T.ELBERT, *
           *   M.S.GORDON, J.H.JENSEN, S.KOSEKI, N.MATSUNAGA,   *
@@ -33,7 +36,7 @@ Copying input file water_mp2.inp to your run's scratch directory...
      DAN KEMP, GRANT MERRILL, NORIYUKI MINEZAWA, JONATHAN MULLIN,
      TAKESHI NAGATA, SEAN NEDD, HEATHER NETZLOFF, BOSILJKA NJEGIC, RYAN OLSON,
      MIKE PAK, SPENCER PRUITT, LUKE ROSKOP, JIM SHOEMAKER, LYUDMILA SLIPCHENKO,
-     TONY SMITH, SAROM SOK, JIE SONG, TETSUYA TAKETSUGU, SIMON WEBB,
+     TONY SMITH, SAROM SOK LEANG, JIE SONG, TETSUYA TAKETSUGU, SIMON WEBB,
      PENG XU, SOOHAENG YOO, FEDERICO ZAHARIEV
 
   ADDITIONAL CODE HAS BEEN PROVIDED BY COLLABORATORS IN OTHER GROUPS:
@@ -70,32 +73,37 @@ Copying input file water_mp2.inp to your run's scratch directory...
           SHARON HAMMES-SCHIFFER
      WASEDA UNIVERSITY:
           MASATO KOBAYASHI, TOMOKO AKAMA, TSUGUKI TOUMA,
-          TAKESHI YOSHIKAWA, YASUHIRO IKABATA, HIROMI NAKAI
+          TAKESHI YOSHIKAWA, YASUHIRO IKABATA, JUNJI SEINO,
+          YUYA NAKAJIMA, HIROMI NAKAI
      NANJING UNIVERSITY: SHUHUA LI
      UNIVERSITY OF NEBRASKA:
           PEIFENG SU, DEJUN SI, NANDUN THELLAMUREGE, YALI WANG, HUI LI
      UNIVERSITY OF ZURICH: ROBERTO PEVERATI, KIM BALDRIDGE
      N. COPERNICUS UNIVERSITY AND JACKSON STATE UNIVERSITY:
           MARIA BARYSZ
-     UNIVERSITY OF COPENHAGEN: CASPER STEINMANN
+     UNIVERSITY OF COPENHAGEN: Jimmy Kromann, CASPER STEINMANN
      TOKYO INSTITUTE OF TECHNOLOGY: HIROYA NAKATA
      NAGOYA UNIVERSITY: YOSHIO NISHIMOTO, STEPHAN IRLE
+     MOSCOW STATE UNIVERSITY: VLADIMIR MIRONOV
 
- EXECUTION OF GAMESS BEGUN Wed Jul 27 01:23:27 2016
+
+ PARALLEL VERSION RUNNING ON        4 PROCESSORS IN        1 NODES.
+
+ EXECUTION OF GAMESS BEGUN Mon Aug 14 12:30:40 2017
 
             ECHO OF THE FIRST FEW INPUT CARDS -
  INPUT CARD> $contrl scftyp=rhf mplevl=2                                                    
  INPUT CARD>         runtyp=energy exetyp=run                                               
- INPUT CARD>         units=angs coord=zmt $end                                              
+ INPUT CARD>         units=angs AIMPAC=.t. $end                                             
  INPUT CARD> $mp2    mp2prp=.t. $end                                                        
  INPUT CARD> $basis  gbasis=sto ngauss=3 $end                                               
  INPUT CARD> $data                                                                          
  INPUT CARD>water                                                                           
- INPUT CARD>C1 1                                                                            
- INPUT CARD> O                                                                              
- INPUT CARD> H 1 0.99                                                                       
- INPUT CARD> H 1 0.99 2 106.0                                                               
- INPUT CARD> $end                                                                           
+ INPUT CARD>C1                                                                              
+ INPUT CARD> O  8   0.000000    0.000000    0.000000                                        
+ INPUT CARD> H  1   0.990000    0.000000    0.000000                                        
+ INPUT CARD> H  1  -0.272881    0.951649    0.000000                                        
+ INPUT CARD> $END                                                                           
  INPUT CARD>                                                                                
  INPUT CARD>                                                                                
     1000000 WORDS OF MEMORY AVAILABLE
@@ -112,30 +120,22 @@ Copying input file water_mp2.inp to your run's scratch directory...
  water                                                                           
 
  THE POINT GROUP OF THE MOLECULE IS C1      
- THE ORDER OF THE PRINCIPAL AXIS IS     1
-
- YOUR FULLY SUBSTITUTED Z-MATRIX IS
- O   
- H      1   0.9900000
- H      1   0.9900000  2  106.0000
-
- THE MOMENTS OF INERTIA ARE (AMU-ANGSTROM**2)
- IXX=     0.635   IYY=     1.260   IZZ=     1.895
+ THE ORDER OF THE PRINCIPAL AXIS IS     0
 
  ATOM      ATOMIC                      COORDINATES (BOHR)
            CHARGE         X                   Y                   Z
- O           8.0     0.0000000000       -0.1260041826        0.0000000000
- H           1.0     1.4941102553        0.9998886515        0.0000000000
- H           1.0    -1.4941102553        0.9998886515        0.0000000000
+ O           8.0     0.0000000000        0.0000000000        0.0000000000
+ H           1.0     1.8708287278        0.0000000000        0.0000000000
+ H           1.0    -0.5156703173        1.7983558465        0.0000000000
 
           INTERNUCLEAR DISTANCES (ANGS.)
           ------------------------------
 
                 1 O          2 H          3 H     
 
-   1 O       0.0000000    0.9900000 *  0.9900000 *
+   1 O       0.0000000    0.9900000 *  0.9899999 *
    2 H       0.9900000 *  0.0000000    1.5812983 *
-   3 H       0.9900000 *  1.5812983 *  0.0000000  
+   3 H       0.9899999 *  1.5812983 *  0.0000000  
 
   * ... LESS THAN  3.000
 
@@ -177,17 +177,17 @@ Copying input file water_mp2.inp to your run's scratch directory...
  NUMBER OF OCCUPIED ORBITALS (ALPHA)          =    5
  NUMBER OF OCCUPIED ORBITALS (BETA )          =    5
  TOTAL NUMBER OF ATOMS                        =    3
- THE NUCLEAR REPULSION ENERGY IS        8.8870069086
+ THE NUCLEAR REPULSION ENERGY IS        8.8870072224
 
      $CONTRL OPTIONS
      ---------------
  SCFTYP=RHF          RUNTYP=ENERGY       EXETYP=RUN     
  MPLEVL=       2     CITYP =NONE         CCTYP =NONE         VBTYP =NONE    
  DFTTYP=NONE         TDDFT =NONE    
- MULT  =       1     ICHARG=       0     NZVAR =       0     COORD =ZMT     
+ MULT  =       1     ICHARG=       0     NZVAR =       0     COORD =UNIQUE  
  PP    =NONE         RELWFN=NONE         LOCAL =NONE         NUMGRD=       F
  ISPHER=      -1     NOSYM =       0     MAXIT =      30     UNITS =ANGS    
- PLTORB=       F     MOLPLT=       F     AIMPAC=       F     FRIEND=        
+ PLTORB=       F     MOLPLT=       F     AIMPAC=       T     FRIEND=        
  NPRINT=       7     IREST =       0     GEOM  =INPUT   
  NORMF =       0     NORMP =       0     ITOL  =      20     ICUT  =       9
  INTTYP=BEST         GRDTYP=BEST         QMTTOL= 1.0E-06
@@ -196,10 +196,10 @@ Copying input file water_mp2.inp to your run's scratch directory...
      ---------------
   REPLICATED MEMORY=     1000000 WORDS (ON EVERY NODE).
  DISTRIBUTED MEMDDI=           0 MILLION WORDS IN AGGREGATE,
- MEMDDI DISTRIBUTED OVER   1 PROCESSORS IS           0 WORDS/PROCESSOR.
+ MEMDDI DISTRIBUTED OVER   4 PROCESSORS IS           0 WORDS/PROCESSOR.
  TOTAL MEMORY REQUESTED ON EACH PROCESSOR=     1000000 WORDS.
  TIMLIM=      525600.00 MINUTES, OR     365.0 DAYS.
- PARALL= F  BALTYP=  DLB     KDIAG=    0  COREFL= F
+ PARALL= T  BALTYP=  DLB     KDIAG=    0  COREFL= F
  MXSEQ2=     300 MXSEQ3=     150  mem10=         0
 
           ----------------
@@ -235,7 +235,7 @@ Copying input file water_mp2.inp to your run's scratch directory...
           METHOD =        2  NWORD  =               0
           MP2PRP =        T  OSPT   = NONE    
           CUTOFF = 1.00E-09  CPHFBS = BASISAO 
-          CODE   = IMS     
+          CODE   = DDI     
 
           NUMBER OF CORE -A-  ORBITALS =     1
           NUMBER OF CORE -B-  ORBITALS =     1
@@ -245,31 +245,23 @@ Copying input file water_mp2.inp to your run's scratch directory...
           NUMBER OF   BASIS  FUNCTIONS =     7
 
 
-   --- ENCODED Z MATRIX ---
- COORD  TYPE   I   J   K   L   M   N
-    1      1    2   1
-    2      1    3   1
-    3      2    3   1   2
-
- THE DETERMINANT OF THE G MATRIX IS 10**(    -1)
-
      ------------------------------------------
-     THE POINT GROUP IS C1 , NAXIS= 1, ORDER= 1
+     THE POINT GROUP IS C1 , NAXIS= 0, ORDER= 1
      ------------------------------------------
 
      DIMENSIONS OF THE SYMMETRY SUBSPACES ARE
  A   =    7
 
  ..... DONE SETTING UP THE RUN .....
- STEP CPU TIME =     0.05 TOTAL CPU TIME =        0.0 (    0.0 MIN)
- TOTAL WALL CLOCK TIME=        0.0 SECONDS, CPU UTILIZATION IS 500.00%
+ CPU     0: STEP CPU TIME=     0.01 TOTAL CPU TIME=        0.0 (    0.0 MIN)
+ TOTAL WALL CLOCK TIME=        0.1 SECONDS, CPU UTILIZATION IS  20.00%
 
           ********************
           1 ELECTRON INTEGRALS
           ********************
  ...... END OF ONE-ELECTRON INTEGRALS ......
- STEP CPU TIME =     0.00 TOTAL CPU TIME =        0.0 (    0.0 MIN)
- TOTAL WALL CLOCK TIME=        0.0 SECONDS, CPU UTILIZATION IS 500.00%
+ CPU     0: STEP CPU TIME=     0.00 TOTAL CPU TIME=        0.0 (    0.0 MIN)
+ TOTAL WALL CLOCK TIME=        0.1 SECONDS, CPU UTILIZATION IS  20.00%
 
           -------------
           GUESS OPTIONS
@@ -280,14 +272,14 @@ Copying input file water_mp2.inp to your run's scratch directory...
           SYMDEN=       F          PURIFY=       F
 
  INITIAL GUESS ORBITALS GENERATED BY HUCKEL   ROUTINE.
- HUCKEL GUESS REQUIRES      2569 WORDS.
+ HUCKEL GUESS REQUIRES      2620 WORDS.
 
  SYMMETRIES FOR INITIAL GUESS ORBITALS FOLLOW.   BOTH SET(S).
      5 ORBITALS ARE OCCUPIED (    1 CORE ORBITALS).
      2=A        3=A        4=A        5=A        6=A        7=A   
  ...... END OF INITIAL ORBITAL SELECTION ......
- STEP CPU TIME =     0.01 TOTAL CPU TIME =        0.1 (    0.0 MIN)
- TOTAL WALL CLOCK TIME=        0.0 SECONDS, CPU UTILIZATION IS 600.00%
+ CPU     0: STEP CPU TIME=     0.00 TOTAL CPU TIME=        0.0 (    0.0 MIN)
+ TOTAL WALL CLOCK TIME=        0.1 SECONDS, CPU UTILIZATION IS  20.00%
 
                     ----------------------
                     AO INTEGRAL TECHNOLOGY
@@ -310,39 +302,39 @@ Copying input file water_mp2.inp to your run's scratch directory...
  STORING   15000 INTEGRALS/RECORD ON DISK, USING 12 BYTES/INTEGRAL.
  TWO ELECTRON INTEGRAL EVALUATION REQUIRES   89366 WORDS OF MEMORY.
  II,JST,KST,LST =  1  1  1  1 NREC =         1 INTLOC =    1
- II,JST,KST,LST =  2  1  1  1 NREC =         1 INTLOC =    2
- II,JST,KST,LST =  3  1  1  1 NREC =         1 INTLOC =   34
- II,JST,KST,LST =  4  1  1  1 NREC =         1 INTLOC =  109
- TOTAL NUMBER OF NONZERO TWO-ELECTRON INTEGRALS =                 228
-          1 INTEGRAL RECORDS WERE STORED ON DISK FILE  8.
+ II,JST,KST,LST =  2  1  1  1 NREC =         1 INTLOC =    1
+ II,JST,KST,LST =  3  1  1  1 NREC =         1 INTLOC =    1
+ II,JST,KST,LST =  4  1  1  1 NREC =         1 INTLOC =    2
+ TOTAL NUMBER OF NONZERO TWO-ELECTRON INTEGRALS =                 206
+          4 INTEGRAL RECORDS WERE STORED ON DISK FILE  8.
   ...... END OF TWO-ELECTRON INTEGRALS .....
- STEP CPU TIME =     0.05 TOTAL CPU TIME =        0.1 (    0.0 MIN)
- TOTAL WALL CLOCK TIME=        0.0 SECONDS, CPU UTILIZATION IS 366.67%
+ CPU     0: STEP CPU TIME=     0.02 TOTAL CPU TIME=        0.0 (    0.0 MIN)
+ TOTAL WALL CLOCK TIME=        0.1 SECONDS, CPU UTILIZATION IS  42.86%
 
           --------------------------
                  RHF SCF CALCULATION
           --------------------------
 
-     NUCLEAR ENERGY =         8.8870069086
+     NUCLEAR ENERGY =         8.8870072224
      MAXIT =   30     NPUNCH=    2
      EXTRAP=T  DAMP=F  SHIFT=F  RSTRCT=F  DIIS=F  DEM=F  SOSCF=F
      DENSITY MATRIX CONV=  1.00E-06
      MEMORY REQUIRED FOR RHF ITERS=     30441 WORDS.
 
  ITER EX DEM     TOTAL ENERGY        E CHANGE  DENSITY CHANGE    DIIS ERROR
-   1  0  0      -74.7981539269   -74.7981539269   0.585814622   0.000000000
-   2  1  0      -74.9499878493    -0.1518339224   0.180197673   0.000000000
-   3  2  0      -74.9626905270    -0.0127026777   0.060203035   0.000000000
-   4  3  0      -74.9640834596    -0.0013929326   0.020782027   0.000000000
-   5  4  0      -74.9642853920    -0.0002019324   0.007719362   0.000000000
-   6  0  0      -74.9643205282    -0.0000351362   0.005106732   0.000000000
-   7  1  0      -74.9643287842    -0.0000082560   0.000126896   0.000000000
-   8  2  0      -74.9643287911    -0.0000000069   0.000045747   0.000000000
-   9  3  0      -74.9643287923    -0.0000000011   0.000017697   0.000000000
-  10  4  0      -74.9643287925    -0.0000000002   0.000007301   0.000000000
-  11  5  0      -74.9643287925    -0.0000000000   0.000003237   0.000000000
-  12  6  0      -74.9643287925    -0.0000000000   0.000001437   0.000000000
-  13  7  0      -74.9643287925    -0.0000000000   0.000000639   0.000000000
+   1  0  0      -74.7981539440   -74.7981539440   0.585814612   0.000000000
+   2  1  0      -74.9499878503    -0.1518339063   0.180197669   0.000000000
+   3  2  0      -74.9626905265    -0.0127026762   0.060203036   0.000000000
+   4  3  0      -74.9640834590    -0.0013929325   0.020782027   0.000000000
+   5  4  0      -74.9642853914    -0.0002019324   0.007719362   0.000000000
+   6  0  0      -74.9643205277    -0.0000351362   0.005056645   0.000000000
+   7  1  0      -74.9643287836    -0.0000082560   0.000126896   0.000000000
+   8  2  0      -74.9643287906    -0.0000000069   0.000045747   0.000000000
+   9  3  0      -74.9643287917    -0.0000000011   0.000017697   0.000000000
+  10  4  0      -74.9643287919    -0.0000000002   0.000007222   0.000000000
+  11  5  0      -74.9643287920    -0.0000000000   0.000003052   0.000000000
+  12  6  0      -74.9643287920    -0.0000000000   0.000001318   0.000000000
+  13  7  0      -74.9643287920    -0.0000000000   0.000000577   0.000000000
 
           -----------------
           DENSITY CONVERGED
@@ -350,7 +342,7 @@ Copying input file water_mp2.inp to your run's scratch directory...
      TIME TO FORM FOCK OPERATORS=       0.0 SECONDS (       0.0 SEC/ITER)
      TIME TO SOLVE SCF EQUATIONS=       0.0 SECONDS (       0.0 SEC/ITER)
 
- FINAL RHF ENERGY IS      -74.9643287925 AFTER  13 ITERATIONS
+ FINAL RHF ENERGY IS      -74.9643287920 AFTER  13 ITERATIONS
 
           ------------
           EIGENVECTORS
@@ -359,11 +351,11 @@ Copying input file water_mp2.inp to your run's scratch directory...
                       1          2          3          4          5
                   -20.2438    -1.2506    -0.6032    -0.4455    -0.3882
                      A          A          A          A          A   
-    1  O  1  S    0.994203  -0.234218   0.000000   0.100458  -0.000000
+    1  O  1  S    0.994203  -0.234218  -0.000000   0.100458  -0.000000
     2  O  1  S    0.025916   0.845882   0.000000  -0.521395  -0.000000
-    3  O  1  X   -0.000000  -0.000000   0.603305  -0.000000  -0.000000
-    4  O  1  Y    0.003993   0.117048   0.000000   0.774267  -0.000000
-    5  O  1  Z   -0.000000  -0.000000   0.000000  -0.000000   1.000000
+    3  O  1  X    0.002403   0.070441   0.481821   0.465965  -0.000000
+    4  O  1  Y    0.003189   0.093479  -0.363078   0.618357  -0.000000
+    5  O  1  Z    0.000000  -0.000000   0.000000   0.000000   1.000000
     6  H  2  S   -0.005627   0.156449   0.446377   0.289064  -0.000000
     7  H  3  S   -0.005627   0.156449  -0.446377   0.289064  -0.000000
 
@@ -371,15 +363,15 @@ Copying input file water_mp2.inp to your run's scratch directory...
                     0.5707     0.7086
                      A          A   
     1  O  1  S   -0.128351   0.000000
-    2  O  1  S    0.832526   0.000000
-    3  O  1  X    0.000000   0.976485
-    4  O  1  Y    0.732626   0.000000
-    5  O  1  Z    0.000000   0.000000
-    6  H  2  S   -0.775801  -0.808916
+    2  O  1  S    0.832526  -0.000000
+    3  O  1  X    0.440906   0.779855
+    4  O  1  Y    0.585101  -0.587663
+    5  O  1  Z   -0.000000   0.000000
+    6  H  2  S   -0.775801  -0.808915
     7  H  3  S   -0.775801   0.808916
  ...... END OF RHF CALCULATION ......
- STEP CPU TIME =     0.01 TOTAL CPU TIME =        0.1 (    0.0 MIN)
- TOTAL WALL CLOCK TIME=        0.0 SECONDS, CPU UTILIZATION IS 400.00%
+ CPU     0: STEP CPU TIME=     0.00 TOTAL CPU TIME=        0.0 (    0.0 MIN)
+ TOTAL WALL CLOCK TIME=        0.1 SECONDS, CPU UTILIZATION IS  42.86%
 
      ----------------------------------------------------------------
      PROPERTY VALUES FOR THE RHF   SELF-CONSISTENT FIELD WAVEFUNCTION
@@ -391,34 +383,34 @@ Copying input file water_mp2.inp to your run's scratch directory...
 
          WAVEFUNCTION NORMALIZATION =       1.0000000000
 
-                ONE ELECTRON ENERGY =    -121.8401708405
-                TWO ELECTRON ENERGY =      37.9888351394
-           NUCLEAR REPULSION ENERGY =       8.8870069086
+                ONE ELECTRON ENERGY =    -121.8401714153
+                TWO ELECTRON ENERGY =      37.9888354010
+           NUCLEAR REPULSION ENERGY =       8.8870072224
                                       ------------------
-                       TOTAL ENERGY =     -74.9643287925
+                       TOTAL ENERGY =     -74.9643287920
 
- ELECTRON-ELECTRON POTENTIAL ENERGY =      37.9888351394
-  NUCLEUS-ELECTRON POTENTIAL ENERGY =    -196.3570310799
-   NUCLEUS-NUCLEUS POTENTIAL ENERGY =       8.8870069086
+ ELECTRON-ELECTRON POTENTIAL ENERGY =      37.9888354010
+  NUCLEUS-ELECTRON POTENTIAL ENERGY =    -196.3570317288
+   NUCLEUS-NUCLEUS POTENTIAL ENERGY =       8.8870072224
                                       ------------------
-             TOTAL POTENTIAL ENERGY =    -149.4811890320
-               TOTAL KINETIC ENERGY =      74.5168602395
-                 VIRIAL RATIO (V/T) =       2.0060049303
+             TOTAL POTENTIAL ENERGY =    -149.4811891055
+               TOTAL KINETIC ENERGY =      74.5168603135
+                 VIRIAL RATIO (V/T) =       2.0060049293
 
   ...... PI ENERGY ANALYSIS ......
 
  ENERGY ANALYSIS:
-            FOCK ENERGY=    -45.8625003844
-          BARE H ENERGY=   -121.8401708405
-     ELECTRONIC ENERGY =    -83.8513356124
-         KINETIC ENERGY=     74.5168602395
-          N-N REPULSION=      8.8870069086
-           TOTAL ENERGY=    -74.9643287039
-        SIGMA PART(1+2)=    -76.0328766679
-               (K,V1,2)=     69.4593977875   -176.4390799391     30.9468054838
-           PI PART(1+2)=     -7.8184589445
-               (K,V1,2)=      5.0574624520    -19.9179511408      7.0420297443
-  SIGMA SKELETON, ERROR=    -67.1458697593      0.0000000000
+            FOCK ENERGY=    -45.8625004361
+          BARE H ENERGY=   -121.8401714153
+     ELECTRONIC ENERGY =    -83.8513359257
+         KINETIC ENERGY=     74.5168603135
+          N-N REPULSION=      8.8870072224
+           TOTAL ENERGY=    -74.9643287033
+        SIGMA PART(1+2)=    -76.0328769524
+               (K,V1,2)=     69.4593978615   -176.4390805300     30.9468057162
+           PI PART(1+2)=     -7.8184589734
+               (K,V1,2)=      5.0574624520    -19.9179511988      7.0420297734
+  SIGMA SKELETON, ERROR=    -67.1458697299      0.0000000000
              MIXED PART= 0.00000E+00 0.00000E+00 0.00000E+00 0.00000E+00
  ...... END OF PI ENERGY ANALYSIS ......
 
@@ -440,8 +432,8 @@ Copying input file water_mp2.inp to your run's scratch directory...
                              MULLIKEN      LOWDIN
               1  O  1  S      1.99775     1.99609
               2  O  1  S      1.83608     1.69744
-              3  O  1  X      1.05644     1.08303
-              4  O  1  Y      1.44894     1.46130
+              3  O  1  X      1.19859     1.22003
+              4  O  1  Y      1.30678     1.32430
               5  O  1  Z      2.00000     2.00000
               6  H  2  S      0.83039     0.88107
               7  H  3  S      0.83039     0.88107
@@ -451,9 +443,9 @@ Copying input file water_mp2.inp to your run's scratch directory...
 
              1           2           3
 
-    1    7.8244434
-    2    0.2573856   0.6146366
-    3    0.2573856  -0.0416294   0.6146366
+    1    7.8244435
+    2    0.2573856   0.6146365
+    3    0.2573856  -0.0416294   0.6146365
 
           TOTAL MULLIKEN AND LOWDIN ATOMIC POPULATIONS
        ATOM         MULL.POP.    CHARGE          LOW.POP.     CHARGE
@@ -480,53 +472,70 @@ Copying input file water_mp2.inp to your run's scratch directory...
           ---------------------
 
  POINT   1           X           Y           Z (BOHR)    CHARGE
-                 0.000000    0.000000    0.000000       -0.00 (A.U.)
+                 0.075831    0.100631    0.000000        0.00 (A.U.)
          DX          DY          DZ         /D/  (DEBYE)
-    -0.000000    1.673510    0.000000    1.673510
+     1.007144    1.336525    0.000000    1.673511
  ...... END OF PROPERTY EVALUATION ......
- STEP CPU TIME =     0.01 TOTAL CPU TIME =        0.1 (    0.0 MIN)
- TOTAL WALL CLOCK TIME=        0.0 SECONDS, CPU UTILIZATION IS 433.33%
+ CPU     0: STEP CPU TIME=     0.02 TOTAL CPU TIME=        0.0 (    0.0 MIN)
+ TOTAL WALL CLOCK TIME=        0.1 SECONDS, CPU UTILIZATION IS  62.50%
 
- -------------------------------   -----------------------------
- MP2 ENERGY GRADIENT CALCULATION   PROGRAM WRITTEN BY K.ISHIMURA
- -------------------------------   -----------------------------
- NUMBER OF OCCUPIED ORBITALS            =    5
- NUMBER OF VIRTUAL ORBITALS             =    2
- NUMBER OF ACTIVE OCCUPIED ORBITALS     =    4
- NUMBER OF ACTIVE VIRTUAL ORBITALS      =    2
- NUMBER OF BASIS FUNCTIONS              =    7
- NUMBER OF BASIS SHELLS                 =    4
- AO INTEGRAL THRESHOLD                  = 1.00E-09
- HALF-TRANSFORMED INTEGRAL THRESHOLD    = 1.00E-09
-   REQUIRED DISK =         0 MBYTES/PROCESSOR
 
- MAXIMUM MEMORY USED DURING MP2 GRADIENT=       14690 WORDS, OR       1 MWORDS.
- BEGINNING    1ST SHELL LOOP...
- .... DONE WITH 1ST THREE INDEX TRANSFORMATIONS ....
- STEP CPU TIME =     0.00 TOTAL CPU TIME =        0.1 (    0.0 MIN)
- TOTAL WALL CLOCK TIME=        0.0 SECONDS, CPU UTILIZATION IS 433.33%
+
+ -----------------------------     ------------------------------
+ DISTRIBUTED DATA MP2 GRADIENT     PROGRAM WRITTEN BY G. FLETCHER
+ -----------------------------     ------------------------------
+
+ DDI: Creating Array [0] - 49 x 15 = 735 words.
+ DDI: Creating Array [1] - 2 x 75 = 150 words.
+ DDI: Creating Array [2] - 28 x 15 = 420 words.
+ DDI: Creating Array [3] - 15 x 15 = 225 words.
+    THIS CALCULATION IS RUNNING WITH MWORDS=    1, MEMDDI=       0, AND P=    4
+ MEMORY USAGE PER CPU IS 8*(MWORDS + MEMDDI/P)/1024 =    0.0 GBYTES.
+
+ MINIMAL REQUIREMENT FOR THIS RUN IS MWORDS=    1, MEMDDI=       1.
+ FOR P=    4, THE MEMORY USAGE PER CPU(CORE) WOULD BE    0.0 GBYTES.
+
+
+      DIRECT 4-INDEX TRANSFORMATION 
+      SCHWARZ INEQUALITY TEST SKIPPED          0 INTEGRAL BLOCKS
 
  RESULTS OF MOLLER-PLESSET 2ND ORDER CORRECTION ARE
-               E(0)=       -74.9643287925
-               E(1)=         0.0
-               E(2)=        -0.0379533247
-             E(MP2)=       -75.0022821173
- .... DONE WITH 4TH INDEX TRANSFORMATION AND ENERGY ....
- STEP CPU TIME =     0.00 TOTAL CPU TIME =        0.1 (    0.0 MIN)
- TOTAL WALL CLOCK TIME=        0.0 SECONDS, CPU UTILIZATION IS 433.33%
- .... DONE WITH 1ST THREE INDEX TRANSFORMATIONS FOR GRADIENT ....
- STEP CPU TIME =     0.01 TOTAL CPU TIME =        0.1 (    0.0 MIN)
- TOTAL WALL CLOCK TIME=        0.0 SECONDS, CPU UTILIZATION IS 350.00%
- .... DONE WITH 4TH INDEX TRANSFORMATION FOR GRADIENT ....
- STEP CPU TIME =     0.00 TOTAL CPU TIME =        0.1 (    0.0 MIN)
- TOTAL WALL CLOCK TIME=        0.0 SECONDS, CPU UTILIZATION IS 350.00%
- CYCLE  1  Z-VECTOR ERROR= -0.753735E-03
- CYCLE  2  Z-VECTOR ERROR=  0.953587E-04
- CYCLE  3  Z-VECTOR ERROR= -0.580159E-07
- CYCLE  4  Z-VECTOR ERROR=  0.708667E-19
- .... DONE WITH RESPONSE EQUATIONS AND DENSITY ....
- STEP CPU TIME =     0.00 TOTAL CPU TIME =        0.1 (    0.0 MIN)
- TOTAL WALL CLOCK TIME=        0.0 SECONDS, CPU UTILIZATION IS 350.00%
+                     E(SCF)=       -74.9643287920
+                       E(2)=        -0.0379533213
+                     E(MP2)=       -75.0022821133
+ SPIN-COMPONENT-SCALED MP2 RESULTS ARE
+                      E(2S)=        -0.0357762357
+                      E(2T)=        -0.0021770856
+                     E(2ST)=        -0.0436571780 = 6/5 * E(2S) + 1/3 * E(2T)
+                    SCS-MP2=       -75.0079859700
+
+      COMPUTING CONTRIBUTIONS TO THE 1-PARTICLE DENSITY MATRICES
+
+      COMPUTING THREE-VIRTUAL CONTRIBUTIONS TO THE LAGRANGIAN
+      FORMING BACK-TRANSFORMED AMPLITUDES
+      COMPUTING (VV|VO) INTEGRAL CLASS 
+      SCHWARZ INEQUALITY TEST SKIPPED          0 INTEGRAL BLOCKS
+      RESTORING (VO|VO) INTEGRAL CLASS
+
+      SOLVING FOR Z-VECTOR
+ DDI: Creating Array [3] - 10 x 50 = 500 words.
+
+      ITERATION         TESTER  EXPANSION VECTOR NORM
+      ===============================================
+
+                                 0.000488181016396
+         2        0.0008482176
+                                 0.000035604028506
+         3        0.0000784276
+                                 0.000000124229456
+         4        0.0000002816
+                                 0.000000000000234
+         5        0.0000000000
+
+      CONVERGED - WAVEFUNCTIONS STATIONARY
+
+
+      COMPUTING LAST CONTRIBUTIONS TO THE 1-PARTICLE DENSITY
 
  MP2 NATURAL ORBITAL OCCUPATION NUMBERS ARE
   2.0000 1.9990 1.9984 1.9878 1.9857 0.0151 0.0141
@@ -534,8 +543,8 @@ Copying input file water_mp2.inp to your run's scratch directory...
  THERE ARE     0.0292 ELECTRONS IN SECONDARY MP2 NATURAL ORBITALS.
  THE MP2 NATURAL ORBITALS HAVE BEEN PUNCHED.
  ..... DONE WITH MP2 ENERGY .....
- STEP CPU TIME =     0.00 TOTAL CPU TIME =        0.1 (    0.0 MIN)
- TOTAL WALL CLOCK TIME=        0.0 SECONDS, CPU UTILIZATION IS 350.00%
+ CPU     0: STEP CPU TIME=     0.01 TOTAL CPU TIME=        0.1 (    0.0 MIN)
+ TOTAL WALL CLOCK TIME=        0.1 SECONDS, CPU UTILIZATION IS  60.00%
 
      -------------------------------------------------
      MP2 PROPERTIES...FOR THE FIRST ORDER WAVEFUNCTION
@@ -548,19 +557,19 @@ Copying input file water_mp2.inp to your run's scratch directory...
 
          WAVEFUNCTION NORMALIZATION =       1.0000000000
 
-                ONE ELECTRON ENERGY =    -121.7630269691
-                TWO ELECTRON ENERGY =      37.8737379433
-           NUCLEAR REPULSION ENERGY =       8.8870069086
+                ONE ELECTRON ENERGY =    -121.7630275479
+                TWO ELECTRON ENERGY =      37.8737382122
+           NUCLEAR REPULSION ENERGY =       8.8870072224
                                       ------------------
-                       TOTAL ENERGY =     -75.0022821173
+                       TOTAL ENERGY =     -75.0022821133
 
- ELECTRON-ELECTRON POTENTIAL ENERGY =      37.8737379433
-  NUCLEUS-ELECTRON POTENTIAL ENERGY =    -196.3002738429
-   NUCLEUS-NUCLEUS POTENTIAL ENERGY =       8.8870069086
+ ELECTRON-ELECTRON POTENTIAL ENERGY =      37.8737382122
+  NUCLEUS-ELECTRON POTENTIAL ENERGY =    -196.3002744908
+   NUCLEUS-NUCLEUS POTENTIAL ENERGY =       8.8870072224
                                       ------------------
-             TOTAL POTENTIAL ENERGY =    -149.5395289911
-               TOTAL KINETIC ENERGY =      74.5372468738
-                 VIRIAL RATIO (V/T) =       2.0062389646
+             TOTAL POTENTIAL ENERGY =    -149.5395290561
+               TOTAL KINETIC ENERGY =      74.5372469429
+                 VIRIAL RATIO (V/T) =       2.0062389636
 
           ---------------------------------------
           MULLIKEN AND LOWDIN POPULATION ANALYSES
@@ -570,8 +579,8 @@ Copying input file water_mp2.inp to your run's scratch directory...
                              MULLIKEN      LOWDIN
               1  O  1  S      1.99782     1.99619
               2  O  1  S      1.84194     1.70460
-              3  O  1  X      1.05406     1.08051
-              4  O  1  Y      1.42710     1.44088
+              3  O  1  X      1.18917     1.21103
+              4  O  1  Y      1.29199     1.31036
               5  O  1  Z      1.99898     1.99898
               6  H  2  S      0.84006     0.88942
               7  H  3  S      0.84006     0.88942
@@ -583,7 +592,7 @@ Copying input file water_mp2.inp to your run's scratch directory...
 
     1    7.8363628
     2    0.2417630   0.6382746
-    3    0.2417630  -0.0399819   0.6382746
+    3    0.2417630  -0.0399819   0.6382745
 
           TOTAL MULLIKEN AND LOWDIN ATOMIC POPULATIONS
        ATOM         MULL.POP.    CHARGE          LOW.POP.     CHARGE
@@ -610,27 +619,35 @@ Copying input file water_mp2.inp to your run's scratch directory...
           ---------------------
 
  POINT   1           X           Y           Z (BOHR)    CHARGE
-                 0.000000    0.000000    0.000000        0.00 (A.U.)
+                 0.075831    0.100631    0.000000        0.00 (A.U.)
          DX          DY          DZ         /D/  (DEBYE)
-    -0.000000    1.599447    0.000000    1.599447
+     0.962571    1.277375    0.000000    1.599447
  ...... END OF PROPERTY EVALUATION ......
- STEP CPU TIME =     0.00 TOTAL CPU TIME =        0.1 (    0.0 MIN)
- TOTAL WALL CLOCK TIME=        0.0 SECONDS, CPU UTILIZATION IS 350.00%
+ CPU     0: STEP CPU TIME=     0.00 TOTAL CPU TIME=        0.1 (    0.0 MIN)
+ TOTAL WALL CLOCK TIME=        0.1 SECONDS, CPU UTILIZATION IS  50.00%
+
+ AN AIMPAC INPUT FILE IS BEING WRITTEN TO FILE   7
+
                580000  WORDS OF DYNAMIC MEMORY USED
- EXECUTION OF GAMESS TERMINATED NORMALLY Wed Jul 27 01:23:27 2016
- DDI: 263640 bytes (0.3 MB / 0 MWords) used by master data server.
+ EXECUTION OF GAMESS TERMINATED NORMALLY Mon Aug 14 12:30:40 2017
+ DDI: 267448 bytes (0.3 MB / 0 MWords) used by master data server.
 
  ----------------------------------------
  CPU timing information for all processes
  ========================================
- 0: 0.59 + 0.203 = 0.263
+ 0: 0.52 + 0.24 = 0.76
+ 1: 0.24 + 0.20 = 0.44
+ 2: 0.24 + 0.24 = 0.48
+ 3: 0.28 + 0.16 = 0.44
  ----------------------------------------
  ddikick.x: exited gracefully.
 ----- accounting info -----
-Files used on the master node copper were:
--rw-r--r-- 1 eric users    2971 Jul 27 01:23 /tmp/water_mp2.dat
--rw-r--r-- 1 eric users     216 Jul 27 01:23 /tmp/water_mp2.F05
--rw-r--r-- 1 eric users  180016 Jul 27 01:23 /tmp/water_mp2.F08
--rw-r--r-- 1 eric users 1865040 Jul 27 01:23 /tmp/water_mp2.F10
-Wed Jul 27 01:23:30 EDT 2016
-0.236u 0.056s 0:03.42 8.1%	0+0k 0+16io 0pf+0w
+Files used on the master node firzens were:
+-rw-r--r-- 1 sagar sagar     312 Aug 14 12:30 /scr/sagar/water_mp2.F05
+-rw-rw-r-- 1 sagar sagar  180016 Aug 14 12:30 /scr/sagar/water_mp2.F08
+-rw-rw-r-- 1 sagar sagar  180016 Aug 14 12:30 /scr/sagar/water_mp2.F08.001
+-rw-rw-r-- 1 sagar sagar  180016 Aug 14 12:30 /scr/sagar/water_mp2.F08.002
+-rw-rw-r-- 1 sagar sagar  180016 Aug 14 12:30 /scr/sagar/water_mp2.F08.003
+-rw-rw-r-- 1 sagar sagar 1603280 Aug 14 12:30 /scr/sagar/water_mp2.F10
+Mon Aug 14 12:30:43 IST 2017
+0.100u 0.000s 0:03.26 3.0%	0+0k 0+24io 0pf+0w
