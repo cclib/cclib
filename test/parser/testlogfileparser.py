@@ -70,7 +70,7 @@ class FileWrapperTest(unittest.TestCase):
         """Check that the same attributes are parsed when a file is piped through standard input."""
         logfiles = [
             "data/ADF/basicADF2007.01/dvb_gopt.adfout",
-            "data/GAMESS/basicGAMESS-US2014/C_bigbasis.out",
+            "data/GAMESS/basicGAMESS-US2017/C_bigbasis.out",
         ]
         get_attributes = lambda data: [a for a in data._attrlist if hasattr(data, a)]
         for lf in logfiles:
