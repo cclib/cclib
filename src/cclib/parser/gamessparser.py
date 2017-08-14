@@ -203,38 +203,46 @@ class GAMESS(logfileparser.Logfile):
         #                       E(2)=        -0.1403745370
         #                     E(MP2)=       -76.1492222841
         #
+        # With GAMESS-US 20 APR 2017 (R1), the following block may be present:
+        #       SCHWARZ INEQUALITY TEST SKIPPED          0 INTEGRAL BLOCKS
+        # ... END OF INTEGRAL TRANSFORMATION ...
+
         if line.find("RESULTS OF MOLLER-PLESSET") >= 0 or line[6:37] == "SCHWARZ INEQUALITY TEST SKIPPED":
 
             if not hasattr(self, "mpenergies"):
                 self.mpenergies = []
 
+            line = next(inputfile)
             # Each iteration has a new print-out
-            self.mpenergies.append([])
+            if "END OF INTEGRAL TRANSFORMATION" not in line:
+                self.mpenergies.append([])
 
-            # GAMESS-US presently supports only second order corrections (MP2)
-            # PC GAMESS also has higher levels (3rd and 4th), with different output
-            # Only the highest level MP4 energy is gathered (SDQ or SDTQ)
-            while re.search("DONE WITH MP(\d) ENERGY", line) is None:
+                # GAMESS-US presently supports only second order corrections (MP2)
+                # PC GAMESS also has higher levels (3rd and 4th), with different output
+                # Only the highest level MP4 energy is gathered (SDQ or SDTQ)
+                # Loop breaks when substring "DONE WITH MPn ENERGY" is encountered,
+                # where n=2, 3 or 4.
+                while "DONE WITH MP" not in line:
 
-                line = next(inputfile)
-                if len(line.split()) > 0:
-                    # Only up to MP2 correction
-                    if line.split()[0] == "E(MP2)=":
-                        self.metadata["methods"].append("MP2")
-                        mp2energy = float(line.split()[1])
-                        self.mpenergies[-1].append(utils.convertor(mp2energy, "hartree", "eV"))
-                    # MP2 before higher order calculations
-                    if line.split()[0] == "E(MP2)":
-                        mp2energy = float(line.split()[2])
-                        self.mpenergies[-1].append(utils.convertor(mp2energy, "hartree", "eV"))
-                    if line.split()[0] == "E(MP3)":
-                        self.metadata["methods"].append("MP3")
-                        mp3energy = float(line.split()[2])
-                        self.mpenergies[-1].append(utils.convertor(mp3energy, "hartree", "eV"))
-                    if line.split()[0] in ["E(MP4-SDQ)", "E(MP4-SDTQ)"]:
-                        self.metadata["methods"].append("MP4")
-                        mp4energy = float(line.split()[2])
-                        self.mpenergies[-1].append(utils.convertor(mp4energy, "hartree", "eV"))
+                    if len(line.split()) > 0:
+                        # Only up to MP2 correction
+                        if line.split()[0] == "E(MP2)=":
+                            self.metadata["methods"].append("MP2")
+                            mp2energy = float(line.split()[1])
+                            self.mpenergies[-1].append(utils.convertor(mp2energy, "hartree", "eV"))
+                        # MP2 before higher order calculations
+                        if line.split()[0] == "E(MP2)":
+                            mp2energy = float(line.split()[2])
+                            self.mpenergies[-1].append(utils.convertor(mp2energy, "hartree", "eV"))
+                        if line.split()[0] == "E(MP3)":
+                            self.metadata["methods"].append("MP3")
+                            mp3energy = float(line.split()[2])
+                            self.mpenergies[-1].append(utils.convertor(mp3energy, "hartree", "eV"))
+                        if line.split()[0] in ["E(MP4-SDQ)", "E(MP4-SDTQ)"]:
+                            self.metadata["methods"].append("MP4")
+                            mp4energy = float(line.split()[2])
+                            self.mpenergies[-1].append(utils.convertor(mp4energy, "hartree", "eV"))
+                    line = next(inputfile)
 
         # Total energies after Coupled Cluster calculations
         # Only the highest Coupled Cluster level result is gathered
@@ -793,7 +801,9 @@ class GAMESS(logfileparser.Logfile):
 
             # Continue down to the first frequencies
             line = next(inputfile)
-            while not line.strip() or not line.startswith("                          1"):
+            # With GAMESS-US 20 APR 2017 (R1), there are 28 blank spaces,
+            # in earlier versions there used to be 26.
+            while not line.strip() or not re.search(' {26,}1', line) is not None:
                 line = next(inputfile)
 
             while not "SAYVETZ" in line:
