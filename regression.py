@@ -1253,7 +1253,7 @@ def testQChem_QChem4_4_top_out(logfile):
     assert logfile.data.mocoeffs[0].shape == (nmo, nbasis)
     assert logfile.data.mocoeffs[0].T[6, 5] == 0.8115082
 
-def testORCA_ORCA_3_0_chelpg_out(logfile):
+def testORCA_ORCA3_0_chelpg_out(logfile):
     """orca file with chelpg charges"""
     assert 'chelpg' in logfile.data.atomcharges
     charges = logfile.data.atomcharges['chelpg']
