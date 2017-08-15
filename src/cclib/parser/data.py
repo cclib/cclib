@@ -143,6 +143,7 @@ class ccData(object):
        "scftargets":       Attribute(numpy.ndarray,    'targets',                     'optimization:scf'),
        "scfvalues":        Attribute(list,             'values',                      'optimization:scf'),
        "temperature":      Attribute(float,            'temperature',                 'properties'),
+       "transprop":        Attribute(dict,             'electronic transitions',      'transitions'),
        "time":             Attribute(numpy.ndarray,    'time',                        'N/A'),
        "vibanharms":       Attribute(numpy.ndarray,    'anharmonicity constants',     'vibrations'),
        "vibdisps":         Attribute(numpy.ndarray,    'displacement',                'vibrations'),

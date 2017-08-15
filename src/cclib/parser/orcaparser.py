@@ -646,6 +646,7 @@ class ORCA(logfileparser.Logfile):
 
         # Parse the various absorption spectra for TDDFT and ROCIS
         if 'ABSORPTION SPECTRUM' in line or 'ELECTRIC DIPOLE' in line:
+            line = line.strip()
 
             # Standard header, occasionally changes
             header = ['d', 'header', 'header', 'd']
@@ -668,7 +669,6 @@ State   Energy  Wavelength   fosc         T2         TX        TY        TZ
                     intensity = 0
                 return energy, intensity
 
-            line = line.strip()
             # Check for variations
             if line == 'COMBINED ELECTRIC DIPOLE + MAGNETIC DIPOLE + ELECTRIC QUADRUPOLE SPECTRUM' or \
                line == 'COMBINED ELECTRIC DIPOLE + MAGNETIC DIPOLE + ELECTRIC QUADRUPOLE SPECTRUM (origin adjusted)':
@@ -767,7 +767,11 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
                     state, state2, energy, wavelength, d2, m2, q2, intensity, d2_contrib, m2_contrib, q2_contrib = line.split()
                     return energy, intensity
 
+            name = line
             self.skip_lines(inputfile, header)
+
+            if not hasattr(self, 'transprop'):
+                self.transprop = {}
 
             etenergies = []
             etoscs = []
@@ -781,6 +785,7 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
 
             self.etenergies = numpy.array(etenergies)
             self.etoscs = numpy.array(etoscs)
+            self.transprop[name] = (self.etenergies, self.etoscs)
 
 
         if line[0:23] == "VIBRATIONAL FREQUENCIES":

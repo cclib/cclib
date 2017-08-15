@@ -122,7 +122,19 @@ class OrcaTDDFTTest(GenericTDTest):
     def testoscs(self):
         """Is the maximum of etoscs in the right range?"""
         self.assertEqual(len(self.data.etoscs), self.number)
-        self.assertAlmostEqual(max(self.data.etoscs), 1.0, delta=0.1)
+        self.assertAlmostEqual(max(self.data.etoscs), .09, delta=0.01)
+
+
+class QChemTDDFTTest(GenericTDTest):
+    """Customized time-dependent HF/DFT unittest"""
+
+    number = 10
+    expected_l_max = 48000
+
+    def testoscs(self):
+        """Is the maximum of etoscs in the right range?"""
+        self.assertEqual(len(self.data.etoscs), self.number)
+        self.assertAlmostEqual(max(self.data.etoscs), .9, delta=0.1)
 
 
 class GenericTDDFTtrpTest(GenericTDTest):
