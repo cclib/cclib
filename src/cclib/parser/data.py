@@ -15,6 +15,9 @@ from cclib.method import Electrons
 from cclib.method import orbitals
 
 
+Attribute = namedtuple('Attribute', ['type', 'jsonKey', 'attributePath'])
+
+
 class ccData(object):
     """Stores data extracted by cclib parsers
 
@@ -88,7 +91,6 @@ class ccData(object):
     # The expected types for all supported attributes.
     # The jsonKey is the key name used for attributes in the CJSON/JSON format
     # 'TBD' - To Be Decided are the key names of attributes which haven't been included in the cjson format
-    Attribute = namedtuple('Attribute', ['type', 'jsonKey', 'attributePath'])
     _attributes = {
        "aonames":          Attribute(list,             'names',                       'atoms:orbitals'),
        "aooverlaps":       Attribute(numpy.ndarray,    'overlaps',                    'properties:orbitals'),
@@ -131,7 +133,7 @@ class ccData(object):
        "nmo":              Attribute(int,              'MO number',                   'properties:orbitals'),
        "nocoeffs":         Attribute(numpy.ndarray,    'TBD',                         'N/A'),
        "nooccnos":         Attribute(numpy.ndarray,    'TBD',                         'N/A'),
-       "optdone":          Attribute(bool,             'done',                        'optimization'),
+       "optdone":          Attribute(list,             'done',                        'optimization'),
        "optstatus":        Attribute(numpy.ndarray,    'status',                      'optimization'),
        "polarizabilities": Attribute(list,             'polarizabilities',            'N/A'),
        "pressure":         Attribute(float,            'pressure',                    'properties'),
@@ -316,6 +318,7 @@ class ccData_optdone_bool(ccData):
     def __init__(self, *args, **kwargs):
 
         super(ccData_optdone_bool, self).__init__(*args, **kwargs)
+        self._attributes["optdone"] = Attribute(bool, 'done', 'optimization')
 
     def setattributes(self, *args, **kwargs):
         invalid = super(ccData_optdone_bool, self).setattributes(*args, **kwargs)
