@@ -1734,10 +1734,11 @@ def main(which=[], opt_traceback=False, opt_status=False, regdir="."):
 
             if not test_noparse:
                 try:
-                    logfile = ccopen(os.path.join(__filedir__, fname))
-                except:
+                    datatype = parser_class.datatype if hasattr(parser_class, 'datatype') else ccData
+                    logfile = ccopen(os.path.join(__filedir__, fname), datatype=datatype)
+                except Exception as e:
                     errors += 1
-                    print("ccopen error")
+                    print("ccopen error: ", e)
                 else:
                     if type(logfile) == parser_class:
                         try:
