@@ -412,6 +412,13 @@ class OrcaSPTest(GenericSPTest):
 
     num_scf_criteria = 3
 
+
+class OrcaDispersionTest(OrcaSPTest):
+    """Customized test case for dispersion"""
+    def testdispersion(self):
+        self.assertAlmostEquals(self.data.dispersionenergies[0], -4.2498575453)
+
+
 class TurbomoleSPTest(GenericSPTest):
     """Customized restricted single point unittest"""
 
