@@ -163,6 +163,51 @@ class ORCA(logfileparser.Logfile):
 
             self._append_scfvalues_scftargets(inputfile, line)
 
+        """
+-------------------------------------------------------------------------------
+                          DFT DISPERSION CORRECTION
+
+                              DFTD3 V3.1  Rev 1
+                              USING zero damping
+-------------------------------------------------------------------------------
+The omegaB97X-D3 functional is recognized. Fit by Chai et al.
+Active option DFTDOPT                   ...         3
+
+molecular C6(AA) [au] = 9563.878941
+
+
+            DFT-D V3
+ parameters
+ s6 scaling factor         :     1.0000
+ rs6 scaling factor        :     1.2810
+ s8 scaling factor         :     1.0000
+ rs8 scaling factor        :     1.0940
+ Damping factor alpha6     :    14.0000
+ Damping factor alpha8     :    16.0000
+ ad hoc parameters k1-k3   :    16.0000     1.3333    -4.0000
+
+ Edisp/kcal,au: -10.165629059768  -0.016199959356
+ E6   /kcal   :  -4.994512983
+ E8   /kcal   :  -5.171116077
+ % E8         :  50.868628459
+
+-------------------------   ----------------
+Dispersion correction           -0.016199959
+-------------------------   ----------------
+"""
+        if "DFT DISPERSION CORRECTION" in line:
+            # A bunch of parameters are printed the first time dispersion is called
+            # However, they vary wildly in form and number, making parsing problematic
+            line = next(inputfile)
+            while 'Dispersion correction' not in line:
+                line = next(inputfile)
+            dispersion = float(line.split()[-1])
+            dispersion = utils.convertor(dispersion, "hartree", "eV")
+
+            if not hasattr(self, 'dispersionenergies'):
+                self.dispersionenergies = []
+            self.dispersionenergies.append(dispersion)
+
         # The convergence targets for geometry optimizations are printed at the
         # beginning of the output, although the order and their description is
         # different than later on. So, try to standardize the names of the criteria
@@ -750,7 +795,7 @@ class ORCA(logfileparser.Logfile):
         #   are not printed (there is a blank line at the end).
         if line[:22] == "LOEWDIN ATOMIC CHARGES":
             self.parse_charge_section(line, inputfile, 'lowdin')
-        #CHELPG Charges            
+        #CHELPG Charges
         #--------------------------------
         #  0   C   :       0.363939
         #  1   H   :       0.025695
@@ -820,7 +865,7 @@ class ORCA(logfileparser.Logfile):
           handle to file object
         chargestype : str
           what type of charge we're dealing with, must be one of
-          'mulliken', 'lowdin' or 'chelpg'   
+          'mulliken', 'lowdin' or 'chelpg'
         """
         has_spins = 'AND SPIN POPULATIONS' in line
 

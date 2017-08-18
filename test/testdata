@@ -194,6 +194,7 @@ SP        NWChem      GenericSPTest         basicNWChem6.5        dvb_sp_hf.out
 SP        NWChem      GenericSPTest         basicNWChem6.5        dvb_sp_ks.out
 SP        ORCA        OrcaSPTest            basicORCA2.9          dvb_sp.out
 SP        ORCA        OrcaSPTest            basicORCA3.0          dvb_sp.out
+SP        ORCA        OrcaDispersionTest    basicORCA4.0          dvb_dispersion.out
 SP        Psi         Psi3SPTest            basicPsi3             dvb_sp_hf.out
 SP        Psi         GenericSPTest         basicPsi4.0           dvb_sp_rhf.out
 SP        Psi         GenericSPTest         basicPsi4.0           dvb_sp_rks.out

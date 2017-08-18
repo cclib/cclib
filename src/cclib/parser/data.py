@@ -33,6 +33,7 @@ class ccData(object):
         charge -- net charge of the system (integer)
         ccenergies -- molecular energies with Coupled-Cluster corrections (array[2], eV)
         coreelectrons -- number of core electrons in atom pseudopotentials (array[1])
+        dispersionenergies -- a molecular dispersion energy corrections (array[1], eV)
         enthalpy -- sum of electronic and thermal enthalpies (float, hartree/particle)
         entropy -- entropy (float, hartree/particle)
         etenergies -- energies of electronic transitions (array[1], 1/cm)
@@ -103,6 +104,7 @@ class ccData(object):
        "ccenergies":       Attribute(numpy.ndarray,    'coupled cluster',             'properties:energy'),
        "charge":           Attribute(int,              'charge',                      'properties'),
        "coreelectrons":    Attribute(numpy.ndarray,    'core electrons',              'atoms'),
+       "dispersionenergies":Attribute(numpy.ndarray,   'dispersion correction',       'properties:energy'),
        "enthalpy":         Attribute(float,            'enthalpy',                    'properties'),
        "entropy":          Attribute(float,            'entropy',                     'properties'),
        "etenergies":       Attribute(numpy.ndarray,    'electronic transitions',      'transitions'),

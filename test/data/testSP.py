@@ -310,6 +310,10 @@ class OrcaSPTest(GenericSPTest):
     # Orca has different weights for the masses
     molecularmass = 130190
 
+class OrcaDispersionTest(OrcaSPTest):
+    """Customized test case for dispersion"""
+    def testdispersion(self):
+        self.assertAlmostEquals(self.data.dispersionenergies[0], -4.2498575453)
 
 if __name__=="__main__":
 
