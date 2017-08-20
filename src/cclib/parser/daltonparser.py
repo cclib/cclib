@@ -1099,8 +1099,7 @@ class DALTON(logfileparser.Logfile):
             self.skip_line(inputfile, 'b')
             line = next(inputfile)
 
-            polarizability_diplen = numpy.empty(shape=(3, 3))
-
+            polarizability_diplen = numpy.empty(shape=(3, 3)) * numpy.nan
             while "Time used in linear response calculation is" not in line:
                 tokens = line.split()
                 if line.count("DIPLEN") == 2:
