@@ -62,6 +62,119 @@ class ORCA(logfileparser.Logfile):
         if "Program Version" in line:
             self.metadata["package_version"] = line.split()[2]
 
+        """
+================================================================================
+                                        WARNINGS
+                       Please study these warnings very carefully!
+================================================================================
+
+Warning: TCutStore was < 0. Adjusted to Thresh (uncritical)
+
+WARNING: your system is open-shell and RHF/RKS was chosen
+  ===> : WILL SWITCH to UHF/UKS
+
+
+INFO   : the flag for use of LIBINT has been found!
+
+================================================================================
+        """
+        if "WARNINGS" == line.strip():
+            next(inputfile)
+            next(inputfile)
+            next(inputfile)
+            if 'warnings' not in self.metadata:
+                self.metadata['warnings'] = []
+            if 'info' not in self.metadata:
+                self.metadata['info'] = []
+            line = next(inputfile)
+            while line[0] != '=':
+                if line.lower()[:7] == 'warning':
+                    self.metadata['warnings'].append('')
+                    while len(line) > 1:
+                        self.metadata['warnings'][-1] += line[9:]
+                        line = next(inputfile)
+                elif line.lower()[:4] == 'info':
+                    self.metadata['info'].append('')
+                    while len(line) > 1:
+                        self.metadata['info'][-1] += line[9:]
+                        line = next(inputfile)
+                line = next(inputfile)
+
+        """
+================================================================================
+                                       INPUT FILE
+================================================================================
+NAME = input.dat
+|  1> %pal nprocs 4 end
+|  2> ! B3LYP def2-svp
+|  3> ! Grid4
+|  4>
+|  5> *xyz 0 3
+|  6>     O   0   0   0
+|  7>     O   0   0   1.5
+|  8> *
+|  9>
+| 10>                          ****END OF INPUT****
+================================================================================
+"""
+        if "INPUT FILE" in line:
+            next(inputfile)
+            name = next(inputfile).split()[-1]
+            methods = []
+            line = next(inputfile)
+            coords = []
+            while line[0] == '|':
+                line = line[6:]
+                # Keywords block
+                if line[0] == '!':
+                    methods += line[1:].split()
+                # Impossible to parse without knowing whether a keyword opens a new block
+                elif line[0] == '%':
+                    pass
+                # Geometry block
+                elif line[0] == '*':
+                    vals = line[1:].split()
+                    coord_type = vals[0].lower()
+                    def splitter(line): return line.split()
+                    if coord_type == 'xyz':
+                        def splitter(line):
+                            atom, x, y, z = line.split()[:4]
+                            return [atom, float(x), float(y), float(z)]
+                    elif coord_type == 'int':
+                        def splitter(line):
+                            atom, a1, a2, a3, bond, angle, dihedral = line.split()[:7]
+                            return [atom, int(a1), int(a2), int(a3), float(bond), float(angle), float(dihedral)]
+                    elif coord_type == 'gzmt':
+                        def splitter(line):
+                            vals = line.split()[:7]
+                            if len(vals) == 7:
+                                atom, a1, bond, a2, angle, a3, dihedral = vals
+                                return [atom, int(a1), float(bond), int(a2), float(angle), int(a3), float(dihedral)]
+                            elif len(vals) == 5:
+                                return [vals[0], int(vals[1]), float(vals[2]), int(vals[3]), float(vals[4])]
+                            elif len(vals) == 3:
+                                return [vals[0], int(vals[1]), float(vals[2])]
+                            elif len(vals) == 1:
+                                return [vals[0]]
+                            self.logger.warning('Incorrect number of atoms in input geometry.')
+                    elif 'file' in coord_type:
+                        pass
+                    else:
+                        self.logger.warning('Invalid coordinate type.')
+
+                    line = next(inputfile)[6:].strip()
+                    if 'file' not in coord_type:
+                        while line[0] != '*':
+                            # Strip basis specification that can appear after coordinates
+                            line = line.split('newGTO')[0]
+                            coords.append(splitter(line))
+                            line = next(inputfile)[6:].strip()
+
+                line = next(inputfile)
+
+            self.metadata['methods'] = methods
+            self.metadata['coords'] = coords
+
         if line[0:15] == "Number of atoms":
 
             natom = int(line.split()[-1])
@@ -250,6 +363,31 @@ class ORCA(logfileparser.Logfile):
                 target = float(line.split()[-2])
                 self.geotargets_names.append(name)
                 self.geotargets.append(target)
+
+        """
+        ------------------
+        CARTESIAN GRADIENT
+        ------------------
+
+        1   H   :    0.000000004    0.019501450   -0.021537091
+        2   O   :    0.000000054   -0.042431648    0.042431420
+        3   H   :    0.000000004    0.021537179   -0.019501388
+        """
+        if line == 'CARTESIAN GRADIENT\n':
+            next(inputfile)
+            next(inputfile)
+
+            grads = []
+            line = next(inputfile).strip()
+            while line:
+                idx, atom, colon, x, y, z = line.split()
+                grads.append((float(x), float(y), float(z)))
+
+                line = next(inputfile).strip()
+
+            if not hasattr(self, 'grads'):
+                self.grads = []
+            self.grads.append(grads)
 
         # After each geometry optimization step, ORCA prints the current convergence
         # parameters and the targets (again), so it is a good idea to check that they

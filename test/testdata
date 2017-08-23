@@ -111,8 +111,8 @@ GeoOpt    GAMESSUK    GenericGeoOptTest     basicGAMESS-UK8.0     dvb_gopt_ks.ou
 GeoOpt    GAMESS      GenericGeoOptTest     basicFirefly8.0       dvb_gopt_a.out
 GeoOpt    GAMESS      GenericGeoOptTest     basicGAMESS-US2014    dvb_gopt_a.out
 GeoOpt    GAMESS      GenericGeoOptTest     basicGAMESS-US2017    dvb_gopt_a.out
-GeoOpt    Gaussian    GaussianGeoOptTest    basicGaussian03       dvb_gopt.out
-GeoOpt    Gaussian    GaussianGeoOptTest    basicGaussian09       dvb_gopt.out
+GeoOpt    Gaussian    GenericGeoOptTest     basicGaussian03       dvb_gopt.out
+GeoOpt    Gaussian    GenericGeoOptTest     basicGaussian09       dvb_gopt.out
 GeoOpt    Jaguar      GenericGeoOptTest     basicJaguar7.0        dvb_gopt_b.out
 GeoOpt    Jaguar      GenericGeoOptTest     basicJaguar8.3        dvb_gopt_hf.out
 GeoOpt    Jaguar      GenericGeoOptTest     basicJaguar8.3        dvb_gopt_ks.out

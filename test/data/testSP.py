@@ -241,19 +241,10 @@ class GenericSPTest(unittest.TestCase):
                 self.assertEquals(m, 0.0)
 
     @skipForParser('ADF', 'Does not support metadata yet')
-    @skipForParser('GAMESS', 'Does not support metadata yet')
     @skipForParser('GAMESSUK', 'Does not support metadata yet')
-    @skipForParser('Gaussian', 'Does not support metadata yet')
-    @skipForParser('Jaguar', 'Does not support metadata yet')
-    @skipForParser('Molpro', 'Does not support metadata yet')
-    @skipForParser('NWChem', 'Does not support metadata yet')
-    @skipForParser('ORCA', 'Does not support metadata yet')
-    @skipForParser('Psi', 'Does not support metadata yet')
-    @skipForParser('QChem', 'Does not support metadata yet')
     def testmetadata(self):
         """Does metadata have expected keys and values?"""
         self.assertTrue(hasattr(self.data, "metadata"))
-        self.assertIn("basis_set", self.data.metadata)
         self.assertIn("methods", self.data.metadata)
         self.assertIn("package", self.data.metadata)
         self.assertIn("package_version", self.data.metadata)
