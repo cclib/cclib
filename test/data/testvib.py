@@ -23,15 +23,14 @@ class GenericIRTest(unittest.TestCase):
     max_IR_intensity = 100
 
     def testvibdisps(self):
-        """Are the dimensions of vibdisps consistent with 3N-6 x N x 3"""
-        numvib = 3*len(self.data.atomnos) - 6
+        """Are the dimensions of vibdisps consistent with num_modes x N x 3"""
+        num_modes = len(self.data.vibfreqs)
         self.assertEqual(self.data.vibdisps.shape,
-                        (numvib, len(self.data.atomnos), 3))
+                         (num_modes, len(self.data.atomnos), 3))
 
     def testlengths(self):
         """Are the lengths of vibfreqs and vibirs (and if present, vibsyms) correct?"""
-        numvib = 3*len(self.data.atomnos) - 6
-        self.assertEqual(len(self.data.vibfreqs), numvib)
+        numvib = len(self.data.vibfreqs)
         if hasattr(self.data, 'vibirs'):
             self.assertEqual(len(self.data.vibirs), numvib)
         if hasattr(self.data, 'vibsyms'):

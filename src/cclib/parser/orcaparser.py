@@ -792,18 +792,23 @@ NAME = input.dat
 
             self.skip_lines(inputfile, ['d', 'b'])
 
-            self.vibfreqs = numpy.zeros((3 * self.natom,), "d")
+            vibfreqs = numpy.zeros(3*self.natom)
 
-            for i in range(3 * self.natom):
-                line = next(inputfile)
-                self.vibfreqs[i] = float(line.split()[1])
+            for i, line in zip(range(3*self.natom), inputfile):
+                vibfreqs[i] = line.split()[1]
 
-            if numpy.any(self.vibfreqs[0:6] != 0):
-                msg = "Modes corresponding to rotations/translations "
-                msg += "may be non-zero."
+            nonzero = numpy.nonzero(vibfreqs)[0]
+            if len(nonzero) > 3*self.natom - 6:
+                msg = "Modes corresponding to rotations/translations may be non-zero."
+                if len(nonzero) == 3*self.natom - 5:
+                    msg += '\n You can ignore this if the molecule is linear.'
                 self.logger.warning(msg)
+            elif len(nonzero) < 3*self.natom - 6:
+                self.logger.warning('Too few vibrational modes for molecule.')
+            # Take all modes after first
+            # Mode between imaginary and real modes could be 0
+            self.vibfreqs = vibfreqs[nonzero[0]:]
 
-            self.vibfreqs = self.vibfreqs[6:]
 
         if line[0:12] == "NORMAL MODES":
             """ Format:
