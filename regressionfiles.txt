@@ -182,6 +182,7 @@ Gaussian/Gaussian09/25DMF_HRANH.log
 Gaussian/Gaussian09/2D-PES-all-converged.log
 Gaussian/Gaussian09/2D-PES-one-unconverged.log
 Gaussian/Gaussian09/534.out
+Gaussian/Gaussian09/ansaBPFP2_acetylene_ircf_LQA.out
 Gaussian/Gaussian09/BH3CO_fragment_guess.log
 Gaussian/Gaussian09/BH3CO_fragment_guess.pop_minimal.log
 Gaussian/Gaussian09/BSL_opt_freq_DFT.out
