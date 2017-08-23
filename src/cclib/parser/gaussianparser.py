@@ -817,9 +817,10 @@ class Gaussian(logfileparser.Logfile):
                     self.ccenergies = []
                 self.ccenergies.append(utils.convertor(self.ccenergy, "hartree", "eV"))
                 del self.ccenergy
-
+        # Find step number for current optimization/IRC
+        # Matches "Step number  123", "Pt XX Step number 123" and "PtXXX Step number 123"
         if " Step number" in line:
-            step = int(line.split()[2])
+            step = line.split()[line.split().index('Step') + 2]
             if step == 1:
                 if not hasattr(self, "optstatus"):
                     self.optstatus = []
