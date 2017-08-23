@@ -253,10 +253,10 @@ NAME = input.dat
 
             self._append_scfvalues_scftargets(inputfile, line)
 
-        # Sometimes the SCF does not converge, but does not halt the
-        # the run (like in bug 3184890). In this this case, we should
-        # remain consistent and use the energy from the last reported
-        # SCF cycle. In this case, ORCA print a banner like this:
+        # Sometimes the SCF does not converge, but does not halt the run
+        # (like in bug 3184890). In this this case, we should remain consistent
+        # and use the energy from the last reported SCF cycle. In this case,
+        # ORCA print a banner like this:
         #
         #       *****************************************************
         #       *                     ERROR                         *
@@ -446,7 +446,7 @@ NAME = input.dat
 
             self.geovalues.append(newvalues)
 
-        """ Grab cartesian coordinates
+        """ Grab Cartesian coordinates
         ---------------------------------
         CARTESIAN COORDINATES (ANGSTROEM)
         ---------------------------------
@@ -632,7 +632,7 @@ NAME = input.dat
         # Basis set information
         # ORCA prints this out in a somewhat indirect fashion.
         # Therefore, parsing occurs in several steps:
-        # 1. read which atom belongs to which basis set group
+        # 1. Read which atom belongs to which basis set group
         if line[0:21] == "BASIS SET INFORMATION":
             line = next(inputfile)
             line = next(inputfile)
@@ -873,9 +873,8 @@ NAME = input.dat
 
         # ORCA will print atomic charges along with the spin populations,
         #   so care must be taken about choosing the proper column.
-        # Population analyses are performed usually only at the end
-        #   of a geometry optimization or other run, so we want to
-        #   leave just the final atom charges.
+        # Population analyses are performed at the beginning and end of a
+        # geometry optimization, while only at the end of other runs.
         # Here is an example for Mulliken charges:
         # --------------------------------------------
         # MULLIKEN ATOMIC CHARGES AND SPIN POPULATIONS
@@ -889,7 +888,7 @@ NAME = input.dat
         # Sum of atomic spin populations:    1.0000000
         if line[:23] == "MULLIKEN ATOMIC CHARGES":
             self.parse_charge_section(line, inputfile, 'mulliken')
-        # Things are the same for Lowdin populations, except that the sums
+        # Things are the same for Löwdin populations, except that the sums
         #   are not printed (there is a blank line at the end).
         if line[:22] == "LOEWDIN ATOMIC CHARGES":
             self.parse_charge_section(line, inputfile, 'lowdin')
@@ -904,9 +903,9 @@ NAME = input.dat
         if line.startswith('CHELPG Charges'):
             self.parse_charge_section(line, inputfile, 'chelpg')
 
-        # It is not stated explicitely, but the dipole moment components printed by ORCA
-        # seem to be in atomic units, so they will need to be converted. Also, they
-        # are most probably calculated with respect to the origin .
+        # The dipole moment components printed by ORCA are in atomic units.
+        # They can be computed with respect to the center of mass or the center
+        # of electric charge.
         #
         # -------------
         # DIPOLE MOMENT
