@@ -700,6 +700,9 @@ def testORCA_ORCA4_0_IrCl6_sp_out(logfile):
     numpy.testing.assert_almost_equal(logfile.data.scfvalues[0][0], vals_first)
     numpy.testing.assert_almost_equal(logfile.data.scfvalues[0][-1], vals_last)
 
+def testORCA_ORCA4_0_CO2_freqs_out(logfile):
+    """Tests a linear system for the correct number of modes"""
+    assert len(logfile.data.vibfreqs) == 3*logfile.data.natom - 5
 
 # PSI #
 
@@ -1571,7 +1574,7 @@ old_unittests = {
 
     "GAMESS/WinGAMESS/dvb_td_2007.03.24.r1.out":    GAMESSUSTDDFTTest,
 
-    "Gaussian/Gaussian09/dvb_gopt_revA.02.out":         GaussianGeoOptTest,
+    "Gaussian/Gaussian09/dvb_gopt_revA.02.out":         GenericGeoOptTest,
     "Gaussian/Gaussian09/dvb_ir_revA.02.out":           GaussianIRTest,
     "Gaussian/Gaussian09/dvb_raman_revA.02.out":        GaussianRamanTest,
     "Gaussian/Gaussian09/dvb_scan_revA.02.log":         GaussianScanTest,

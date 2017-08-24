@@ -296,6 +296,7 @@ ORCA/ORCA3.0/trithiolane_polar.out
 ORCA/ORCA3.0/chelpg.out
 ORCA/ORCA4.0/1-ttt_td.out
 ORCA/ORCA4.0/IrCl6_sp.out
+ORCA/ORCA4.0/CO2_freqs.out
 Psi/Psi3/water_psi3.log
 Psi/Psi4.0/sample_props1.out
 Psi/Psi4.0/sample_fd-freq-gradient.out
