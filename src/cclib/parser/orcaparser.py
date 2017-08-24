@@ -80,8 +80,8 @@ INFO   : the flag for use of LIBINT has been found!
         """
         if "WARNINGS" == line.strip():
             next(inputfile)
-            next(inputfile)
-            next(inputfile)
+            self.skip_lines(inputfile, ['equals', 'blank'])
+
             if 'warnings' not in self.metadata:
                 self.metadata['warnings'] = []
             if 'info' not in self.metadata:
@@ -135,12 +135,11 @@ NAME = input.dat
                 elif line[0] == '*':
                     vals = line[1:].split()
                     coord_type = vals[0].lower()
-                    def splitter(line): return line.split()
                     if coord_type == 'xyz':
                         def splitter(line):
                             atom, x, y, z = line.split()[:4]
                             return [atom, float(x), float(y), float(z)]
-                    elif coord_type == 'int':
+                    elif coord_type in ['int', 'internal']:
                         def splitter(line):
                             atom, a1, a2, a3, bond, angle, dihedral = line.split()[:7]
                             return [atom, int(a1), int(a2), int(a3), float(bond), float(angle), float(dihedral)]
@@ -374,8 +373,7 @@ NAME = input.dat
         3   H   :    0.000000004    0.021537179   -0.019501388
         """
         if line == 'CARTESIAN GRADIENT\n':
-            next(inputfile)
-            next(inputfile)
+            self.skip_lines(inputfile, ['dashes', 'blank'])
 
             grads = []
             line = next(inputfile).strip()
@@ -788,7 +786,7 @@ NAME = input.dat
                     osc = float(osc)
                 self.etoscs.append(osc)
 
-        if line[0:23] == "VIBRATIONAL FREQUENCIES":
+        if line[:23] == "VIBRATIONAL FREQUENCIES":
 
             self.skip_lines(inputfile, ['d', 'b'])
 
@@ -810,7 +808,7 @@ NAME = input.dat
             self.vibfreqs = vibfreqs[nonzero[0]:]
 
 
-        if line[0:12] == "NORMAL MODES":
+        if line[:12] == "NORMAL MODES":
             """ Format:
             NORMAL MODES
             ------------
@@ -841,9 +839,10 @@ NAME = input.dat
                     self.vibdisps[mode:mode + 6, atom, 1] = y
                     self.vibdisps[mode:mode + 6, atom, 2] = z
 
-            self.vibdisps = self.vibdisps[6:]
+            # Grab all modes starting with first non-zero mode
+            self.vibdisps = self.vibdisps[-len(self.vibfreqs):]
 
-        if line[0:11] == "IR SPECTRUM":
+        if line[:11] == "IR SPECTRUM":
 
             self.skip_lines(inputfile, ['d', 'b', 'header', 'd'])
 
@@ -851,13 +850,25 @@ NAME = input.dat
 
             line = next(inputfile)
             while len(line) > 2:
-                num = int(line[0:4])
-                self.vibirs[num] = float(line.split()[2])
+                num, freq, t2 = line.split()[:3]
+                num = int(num[:-1])
+                self.vibirs[num] = float(t2)
                 line = next(inputfile)
 
-            self.vibirs = self.vibirs[6:]
+            # Grab all modes starting with first non-zero mode
+            self.vibirs = self.vibirs[-len(self.vibfreqs):]
 
-        if line[0:14] == "RAMAN SPECTRUM":
+        if line[:14] == "RAMAN SPECTRUM":
+            """
+            --------------
+            RAMAN SPECTRUM
+            --------------
+
+            Mode    freq (cm**-1)   Activity   Depolarization
+            -------------------------------------------------------------------
+            6:       294.84      5.291308      0.404692
+            7:       356.53      0.000000      0.000000
+            8:       367.60      0.000000      0.301002"""
 
             self.skip_lines(inputfile, ['d', 'b', 'header', 'd'])
 
@@ -865,11 +876,13 @@ NAME = input.dat
 
             line = next(inputfile)
             while len(line) > 2:
-                num = int(line[0:4])
-                self.vibramans[num] = float(line.split()[2])
+                num, freq, activity, depolarization = line.split()
+                num = int(num[:-1])
+                self.vibramans[num] = float(activity)
                 line = next(inputfile)
 
-            self.vibramans = self.vibramans[6:]
+            # Grab all modes starting with first non-zero mode
+            self.vibramans = self.vibramans[-len(self.vibfreqs):]
 
         # ORCA will print atomic charges along with the spin populations,
         #   so care must be taken about choosing the proper column.
