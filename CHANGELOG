@@ -1,3 +1,20 @@
+Changes in cclib-1.5.2:
+
+Features:
+    * Support for writing Molden and WFX files (Sagar Gaur)
+    * Support for thermochesmitry attributes in ORCA (Jonathon Vandezande)
+    * Support for chelpg atomic charges in ORCA (Richard Gowers)
+    * Updated test file versions to GAMESS-US 2017 (Sagar Gaur)
+    * Added option to print full arrays with ccget (Sagar Gaur)
+
+Bugfixes:
+    * Fxied polarizability parsing bug in DALTON (Maxim Stolyarchuk)
+    * Fixed IRC parsing in Gaussian for large trajectories (Dénes Berta, LaTruelle)
+    * Fixed coordinate parsing for heavy elements in ORCA (Jonathon Vandezande)
+    * Fixed parsing of large mocoeffs in fixed width format for QChem (srtlg)
+    * Fixed parsing of large polarizabilities in fixed width format for DALTON (Maxim Stolyarchuk)
+    * Fixed parsing molecular orbitals when there are more than basis set functions in QChem
+
 Changes in cclib-1.5.1:
 
 Features:
