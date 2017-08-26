@@ -53,7 +53,7 @@ Basis     NWChem      GenericBigBasisTest   basicNWChem6.5        C_bigbasis.out
 Basis     Psi         PsiBigBasisTest       basicPsi4.0           C_bigbasis.out
 Basis     QChem       QChemBigBasisTest     basicQChem4.2         C_bigbasis.out
 
-BOMD      Gaussian    GenericBOMDTest       basicGaussian09       dvb_bomd.out
+BOMD      Gaussian    GaussianBOMDTest      basicGaussian09       dvb_bomd.out
 BOMD      NWChem      GenericBOMDTest       basicNWChem6.6        dvb_bomd_ks.out
 BOMD      ORCA        GenericBOMDTest       basicORCA3.0          dvb_bomd.out
 BOMD      QChem       GenericBOMDTest       basicQChem4.2         dvb_bomd.out
