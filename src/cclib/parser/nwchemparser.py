@@ -1049,7 +1049,7 @@ class NWChem(logfileparser.Logfile):
                 polarizability.append(line.split()[1:])
             self.polarizabilities.append(numpy.array(polarizability))
 
-        # Born-Oppenheimer molecular dynamics (BOMD).
+        # Born-Oppenheimer molecular dynamics (BOMD): time.
         if "QMD Run Information" in line:
             self.skip_line(inputfile, 'd')
             line = next(inputfile)
@@ -1058,6 +1058,18 @@ class NWChem(logfileparser.Logfile):
             if not hasattr(self, 'time'):
                 self.time = []
             self.time.append(time)
+
+        # BOMD: geometry coordinates when `print low`.
+        if line.strip() == "DFT ENERGY GRADIENTS":
+            self.skip_lines(inputfile, ['b', 'atom coordinates gradient', 'xyzxyz'])
+            line = next(inputfile)
+            atomcoords_step = []
+            while line.strip():
+                tokens = line.split()
+                assert len(tokens) == 8
+                atomcoords_step.append([float(c) for c in tokens[2:5]])
+                line = next(inputfile)
+            self.atomcoords.append(atomcoords_step)
 
     def after_parsing(self):
         """NWChem-specific routines for after parsing file.
