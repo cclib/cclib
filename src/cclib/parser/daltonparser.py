@@ -1,14 +1,9 @@
 # -*- coding: utf-8 -*-
 #
-# This file is part of cclib (http://cclib.github.io), a library for parsing
-# and interpreting the results of computational chemistry packages.
+# Copyright (c) 2017, the cclib development team
 #
-# Copyright (C) 2006-2015, the cclib development team
-#
-# The library is free software, distributed under the terms of
-# the GNU Lesser General Public version 2.1 or later. You should have
-# received a copy of the license along with cclib. You can also access
-# the full license online at http://www.gnu.org/copyleft/lgpl.html.
+# This file is part of cclib (http://cclib.github.io) and is distributed under
+# the terms of the BSD 3-Clause License.
 
 """Parser for DALTON output files"""
 
@@ -16,7 +11,6 @@
 from __future__ import print_function
 
 import numpy
-
 
 from . import logfileparser
 from . import utils
@@ -29,9 +23,6 @@ class DALTON(logfileparser.Logfile):
 
         # Call the __init__ method of the superclass
         super(DALTON, self).__init__(logname="DALTON", *args, **kwargs)
-        if not hasattr(self, "metadata"):
-            self.metadata = {}
-            self.metadata["package"] = self.logname
 
     def __str__(self):
         """Return a string representation of the object."""
@@ -64,7 +55,6 @@ class DALTON(logfileparser.Logfile):
         # when the first line is BASIS, false for INTGRL/ATOMBASIS.
         self.basislibrary = True
 
-        self.metadata['methods'] = []
 
     def parse_geometry(self, lines):
         """Parse DALTON geometry lines into an atomcoords array."""
@@ -186,7 +176,8 @@ class DALTON(logfileparser.Logfile):
             symmetry_atoms = []
             atommasses = []
             for cols in lines:
-                atomnos.append(self.table.number[cols[0]])
+                cols0 = ''.join([i for i in cols[0] if not i.isdigit()]) #remove numbers
+                atomnos.append(self.table.number[cols0])
                 if len(cols) == 3:
                     symmetry_atoms.append(int(cols[1][1]))
                     atommasses.append(float(cols[2]))
@@ -1072,6 +1063,56 @@ class DALTON(logfileparser.Logfile):
             # All vibrational properties in DALTON appear in reverse
             # order.
             self.vibramans = vibramans[::-1]
+
+        # Static polarizability from **PROPERTIES/.POLARI.
+        if line.strip() == "Static polarizabilities (au)":
+            if not hasattr(self, 'polarizabilities'):
+                self.polarizabilities = []
+            polarizability = []
+            self.skip_lines(inputfile, ['d', 'b', 'directions', 'b'])
+            for _ in range(3):
+                line = next(inputfile)
+                # Separate possibly unspaced huge negative polarizability tensor
+                # element and the left adjacent column from each other.
+                line = line.replace('-', ' -')
+                polarizability.append(line.split()[1:])
+            self.polarizabilities.append(numpy.array(polarizability))
+
+        # Static and dynamic polarizability from **PROPERTIES/.ALPHA/*ABALNR.
+        if "Polarizability tensor for frequency" in line:
+            if not hasattr(self, 'polarizabilities'):
+                self.polarizabilities = []
+            polarizability = []
+            self.skip_lines(inputfile, ['d', 'directions', 'b'])
+            for _ in range(3):
+                line = next(inputfile)
+                polarizability.append(line.split()[1:])
+            self.polarizabilities.append(numpy.array(polarizability))
+
+        # Static and dynamic polarizability from **RESPONSE/*LINEAR.
+        # This section is *very* general and will need to be expanded later.
+        # For now, only form the matrix from dipole (length gauge) values.
+        if "@ FREQUENCY INDEPENDENT SECOND ORDER PROPERTIES" in line:
+
+            coord_to_idx = {'X': 0, 'Y': 1, 'Z': 2}
+
+            self.skip_line(inputfile, 'b')
+            line = next(inputfile)
+
+            polarizability_diplen = numpy.empty(shape=(3, 3)) * numpy.nan
+            while "Time used in linear response calculation is" not in line:
+                tokens = line.split()
+                if line.count("DIPLEN") == 2:
+                    assert len(tokens) == 8
+                    if not hasattr(self, 'polarizabilities'):
+                        self.polarizabilities = []
+                    i, j = coord_to_idx[tokens[2][0]], coord_to_idx[tokens[4][0]]
+                    polarizability_diplen[i, j] = self.float(tokens[7])
+                line = next(inputfile)
+
+            polarizability_diplen = utils.symmetrize(polarizability_diplen, use_triangle='upper')
+            if hasattr(self, 'polarizabilities'):
+                self.polarizabilities.append(polarizability_diplen)
 
         # Electronic excitations: single residues of the linear
         # response equations.

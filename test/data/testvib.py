@@ -1,17 +1,16 @@
-# This file is part of cclib (http://cclib.github.io), a library for parsing
-# and interpreting the results of computational chemistry packages.
+# -*- coding: utf-8 -*-
 #
-# Copyright (C) 2006,2007,2012,2014,2015, the cclib development team
+# Copyright (c) 2017, the cclib development team
 #
-# The library is free software, distributed under the terms of
-# the GNU Lesser General Public version 2.1 or later. You should have
-# received a copy of the license along with cclib. You can also access
-# the full license online at http://www.gnu.org/copyleft/lgpl.html.
+# This file is part of cclib (http://cclib.github.io) and is distributed under
+# the terms of the BSD 3-Clause License.
 
 """Test logfiles with vibration output in cclib"""
 
 import os
 import unittest
+
+from skip import skipForParser
 
 
 __filedir__ = os.path.realpath(os.path.dirname(__file__))
@@ -33,14 +32,16 @@ class GenericIRTest(unittest.TestCase):
         """Are the lengths of vibfreqs and vibirs (and if present, vibsyms) correct?"""
         numvib = 3*len(self.data.atomnos) - 6
         self.assertEqual(len(self.data.vibfreqs), numvib)
-        self.assertEqual(len(self.data.vibirs), numvib)
-        if hasattr(self.data,'vibsyms'):
+        if hasattr(self.data, 'vibirs'):
+            self.assertEqual(len(self.data.vibirs), numvib)
+        if hasattr(self.data, 'vibsyms'):
             self.assertEqual(len(self.data.vibsyms), numvib)
 
     def testfreqval(self):
         """Is the highest freq value 3630 +/- 200 cm-1?"""
         self.assertAlmostEqual(max(self.data.vibfreqs), 3630, delta=200)
 
+    @skipForParser('Psi', 'Psi cannot print IR intensities')
     def testirintens(self):
         """Is the maximum IR intensity 100 +/- 10 km mol-1?"""
         self.assertAlmostEqual(max(self.data.vibirs), self.max_IR_intensity, delta=10)
@@ -57,10 +58,10 @@ class GaussianIRTest(GenericIRTest):
 
     def testvibsyms(self):
         """Is the length of vibsyms correct?"""
-        numvib = 3*len(self.data.atomnos) - 6        
+        numvib = 3*len(self.data.atomnos) - 6
         self.assertEqual(len(self.data.vibsyms), numvib)
 
-       
+
 class JaguarIRTest(GenericIRTest):
     """Customized vibrational frequency unittest"""
 
@@ -73,12 +74,32 @@ class JaguarIRTest(GenericIRTest):
 class OrcaIRTest(GenericIRTest):
     """Customized vibrational frequency unittest"""
 
-    # We have not been able to determine why ORCA gets such a different
-    # maximum IR intensity. The coordinates are exactly the same, and
-    # the basis set seems close enough to other programs. It would be nice
-    # to determine whether this difference is algorithmic in nature,
-    # but in the meanwhile we will expect to parse this value.
-    max_IR_intensity = 215    
+    # ORCA has a bug in the intensities for version < 4.0
+    max_IR_intensity = 215
+
+    enthalpy_places = 3
+    entropy_places = 3
+    freeenergy_places = 3
+
+    def testtemperature(self):
+        """Is the temperature 298.15 K?"""
+        self.assertAlmostEqual(298.15, self.data.temperature)
+
+    def testpressure(self):
+        """Is the pressure 1 atm?"""
+        self.assertAlmostEqual(1, self.data.pressure)
+
+    def testenthalpy(self):
+         """Is the enthalpy reasonable"""
+         self.assertAlmostEqual(-381.85224835, self.data.enthalpy, self.enthalpy_places)
+
+    def testentropy(self):
+         """Is the entropy reasonable"""
+         self.assertAlmostEqual(0.03601749, self.data.entropy, self.entropy_places)
+
+    def testfreeenergy(self):
+         """Is the freeenergy reasonable"""
+         self.assertAlmostEqual(-381.88826585, self.data.freeenergy, self.freeenergy_places)
 
 
 class QChemIRTest(GenericIRTest):

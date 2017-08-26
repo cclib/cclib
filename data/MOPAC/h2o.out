@@ -1,0 +1,203 @@
+ *******************************************************************************
+ ** Site#: 6541         For non-commercial use only     Version 14.208M 64BITS**
+ *******************************************************************************
+ ** Cite this work as:                                                        **
+ **                                                                           **
+ ** (a) MOPAC2012, James J. P. Stewart, Stewart Computational Chemistry,      **
+ **  Version 14.208M web: HTTP://OpenMOPAC.net         Days remaining:   0    **
+ **                                                                           **
+ **                                 AND                                       **
+ **                                                                           **
+ ** (b) Maia, J.D.C., et al., J. Chem. Theory Comput. 2012, 8, 3072-3081.     **
+ **                DOI: 10.1021/ct3004645.                                    **
+ *******************************************************************************
+ **                                                                           **
+ **                                MOPAC2012                                  **
+ **                                                                           **
+ *******************************************************************************
+
+                            PM7 CALCULATION RESULTS
+
+
+ *******************************************************************************
+ *  CALCULATION DONE:                                Fri Apr  8 16:57:57 2016  *
+ *  SINGLET    - SPIN STATE DEFINED AS A SINGLET
+ *
+ *
+ *
+ *                 CHARGE ON SYSTEM =     0
+ *
+ *
+ *
+ *  T=         - A TIME OF 172800.0 SECONDS REQUESTED
+ *  DUMP=N     - RESTART FILE WRITTEN EVERY  7200.000 SECONDS
+ *  AUX        - OUTPUT AUXILIARY INFORMATION
+ *  LARGE      - EXPANDED OUTPUT TO BE PRINTED
+ *******************************************************************************
+ AUX LARGE CHARGE=0 SINGLET
+ Title
+
+  ATOM    CHEMICAL      BOND LENGTH      BOND ANGLE     TWIST ANGLE 
+ NUMBER    SYMBOL       (ANGSTROMS)      (DEGREES)       (DEGREES) 
+   (I)                     NA:I           NB:NA:I       NC:NB:NA:I       NA    NB    NC 
+     1       O          0.00000000  *    0.0000000  *    0.0000000  *     0     0     0
+     2       H          0.97000000  *    0.0000000  *    0.0000000  *     1     0     0
+     3       H          0.97000000  *  109.4710000  *    0.0000000  *     1     2     0
+ 
+
+
+          CARTESIAN COORDINATES 
+
+    NO.       ATOM         X         Y         Z
+
+     1         O        0.0000    0.0000    0.0000
+     2         H        0.9700    0.0000    0.0000
+     3         H       -0.3233    0.9145    0.0000
+
+     ===================== shared-memory parallel CPU Section ======================
+     **                                                                           **
+     **  MOPAC calculations will run in shared-memory parallel CPUs               **
+     **                                                                           **
+     **  Number of Threads =  2                                                   **
+     **                                                                           **
+     **                                                                           **
+     **  For information on this work, see:                                       **
+     **                                                                           **
+     **  Maia, J.D.C., et al., J. Chem. Theory Comput. 2012, 8, 3072-3081.        **
+     **        DOI: 10.1021/ct3004645.                                            **
+     **                                                                           **
+     ===================== shared-memory parallel CPU Section ======================
+      
+
+
+ General Reference for PM7:
+ "Optimization of Parameters for Semiempirical Methods VI: More Modifications to the 
+ NDDO Approximations and Re-optimization of Parameters", J. J. P. Stewart, J. Mol. Mod., 1:32, 19 (2013)
+ http://www.springerlink.com/openurl.asp?genre=article&id=doi:10.1007/s00894-012-1667-x
+
+           Empirical Formula: H2 O  =     3 atoms
+
+
+
+      MOLECULAR POINT GROUP   :   C2v 
+
+
+ SINGLET STATE CALCULATION
+
+
+      RHF CALCULATION, NO. OF DOUBLY OCCUPIED LEVELS =    4
+
+      Geometry optimization using EF
+
+          DIAGONAL MATRIX USED AS START HESSIAN
+
+ CYCLE:     1 TIME:   0.000 TIME LEFT:  2.00D  GRAD.:    19.869 HEAT: -57.34670
+ CYCLE:     2 TIME:   0.000 TIME LEFT:  2.00D  GRAD.:     9.575 HEAT: -57.63802
+ CYCLE:     3 TIME:   0.000 TIME LEFT:  2.00D  GRAD.:     3.408 HEAT: -57.75215
+ CYCLE:     4 TIME:   0.000 TIME LEFT:  2.00D  GRAD.:     3.253 HEAT: -57.76033
+ CYCLE:     5 TIME:   0.000 TIME LEFT:  2.00D  GRAD.:     3.936 HEAT: -57.77420
+ CYCLE:     6 TIME:   0.000 TIME LEFT:  2.00D  GRAD.:     3.839 HEAT: -57.78020
+ CYCLE:     7 TIME:   0.000 TIME LEFT:  2.00D  GRAD.:     1.884 HEAT: -57.79659
+ CYCLE:     8 TIME:   0.000 TIME LEFT:  2.00D  GRAD.:     0.746 HEAT: -57.79898
+
+     GRADIENT =  0.74605  IS LESS THAN CUTOFF =  1.00000
+
+
+
+ -------------------------------------------------------------------------------
+ AUX LARGE CHARGE=0 SINGLET
+ Title
+
+
+
+     GEOMETRY OPTIMISED USING EIGENVECTOR FOLLOWING (EF).     
+     SCF FIELD WAS ACHIEVED                                   
+
+
+                              PM7 CALCULATION
+                                                       MOPAC2012 (Version: 14.208M)
+                                                       Fri Apr  8 16:57:57 2016
+                                                       No. of days left =   0
+
+
+
+
+          FINAL HEAT OF FORMATION =        -57.79898 KCAL/MOL =    -241.83093 KJ/MOL
+
+
+          TOTAL ENERGY            =       -322.67918 EV
+          ELECTRONIC ENERGY       =       -469.14460 EV  POINT GROUP:     C2v 
+          CORE-CORE REPULSION     =        146.46542 EV
+          COSMO AREA              =         42.43 SQUARE ANGSTROMS
+          COSMO VOLUME            =         25.18 CUBIC ANGSTROMS
+
+          GRADIENT NORM           =          0.74605
+          IONIZATION POTENTIAL    =         12.111488 EV
+          HOMO LUMO ENERGIES (EV) =        -12.111  4.047
+          NO. OF FILLED LEVELS    =          4
+          MOLECULAR WEIGHT        =         18.015
+
+          MOLECULAR DIMENSIONS (Angstroms)
+
+            Atom       Atom       Distance
+            H     3    H     2     1.51885
+            H     2    O     1     0.58038
+            O     1    H     2     0.00000
+
+
+          SCF CALCULATIONS        =          9
+ 
+          WALL-CLOCK TIME         =          0.016 SECONDS
+          COMPUTATION TIME        =          0.011 SECONDS
+
+
+
+
+  ATOM    CHEMICAL      BOND LENGTH      BOND ANGLE     TWIST ANGLE 
+ NUMBER    SYMBOL       (ANGSTROMS)      (DEGREES)       (DEGREES) 
+   (I)                     NA:I           NB:NA:I       NC:NB:NA:I       NA    NB    NC 
+     1       O          0.00712366  *    0.0075399  *    0.0000000  *     0     0     0
+     2       H          0.95658454  *    2.5270685  *   -0.0000000  *     1     0     0
+     3       H          0.95503323  *  105.2227260  *    0.0000000  *     1     2     0
+                             CARTESIAN COORDINATES
+
+   1    O        0.007123662     0.007539924     0.000000000
+   2    H        0.963708206     0.007539924     0.000000000
+   3    H       -0.243641254     0.929063354     0.000000000
+
+
+           Empirical Formula: H2 O  =     3 atoms
+
+
+
+      MOLECULAR POINT GROUP   :   C2v 
+
+
+                  EIGENVALUES  
+ -29.61013 -17.82488 -14.22206 -12.11149   4.04728   6.34250
+
+
+              NET ATOMIC CHARGES AND DIPOLE CONTRIBUTIONS
+
+  ATOM NO.   TYPE          CHARGE      No. of ELECS.   s-Pop       p-Pop       
+    1          O          -0.648660        6.6487     1.81402     4.83464
+    2          H           0.324465        0.6755     0.67554
+    3          H           0.324195        0.6758     0.67580
+ DIPOLE           X         Y         Z       TOTAL
+ POINT-CHG.     1.100     1.435     0.000     1.808
+ HYBRID         0.196     0.257    -0.000     0.323
+ SUM            1.296     1.692    -0.000     2.131
+
+
+          ATOMIC ORBITAL ELECTRON POPULATIONS
+
+    Atom      s        px        py        pz   
+    1  O   1.81402   1.39976   1.43488   2.00000
+    2  H   0.67554
+    3  H   0.67580
+
+
+
+ TOTAL JOB TIME:             0.02 SECONDS
+
+ == MOPAC DONE ==

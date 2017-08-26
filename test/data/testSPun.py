@@ -1,12 +1,9 @@
-# This file is part of cclib (http://cclib.github.io), a library for parsing
-# and interpreting the results of computational chemistry packages.
+# -*- coding: utf-8 -*-
 #
-# Copyright (C) 2006,2007,2012,2014,2015, the cclib development team
+# Copyright (c) 2017, the cclib development team
 #
-# The library is free software, distributed under the terms of
-# the GNU Lesser General Public version 2.1 or later. You should have
-# received a copy of the license along with cclib. You can also access
-# the full license online at http://www.gnu.org/copyleft/lgpl.html.
+# This file is part of cclib (http://cclib.github.io) and is distributed under
+# the terms of the BSD 3-Clause License.
 
 """Test unrestrictied single point logfiles in cclib"""
 
@@ -91,6 +88,7 @@ class GenericROSPTest(GenericSPunTest):
         msg = "%s != array([34, 33], 'i')" % numpy.array_repr(self.data.homos)
         numpy.testing.assert_array_equal(self.data.homos, numpy.array([34, 33], "i"), msg)
 
+    @skipForParser('QChem', 'prints 2 sets of different MO energies?')
     def testmoenergies(self):
         """Are the dims of the moenergies equals to 1 x nmo?"""
         self.assertEquals(len(self.data.moenergies), 1)

@@ -1,14 +1,9 @@
 # -*- coding: utf-8 -*-
 #
-# This file is part of cclib (http://cclib.github.io), a library for parsing
-# and interpreting the results of computational chemistry packages.
+# Copyright (c) 2017, the cclib development team
 #
-# Copyright (C) 2007-2014, the cclib development team
-#
-# The library is free software, distributed under the terms of
-# the GNU Lesser General Public version 2.1 or later. You should have
-# received a copy of the license along with cclib. You can also access
-# the full license online at http://www.gnu.org/copyleft/lgpl.html.
+# This file is part of cclib (http://cclib.github.io) and is distributed under
+# the terms of the BSD 3-Clause License.
 
 """Parser for ORCA output files"""
 
@@ -28,6 +23,7 @@ class ORCA(logfileparser.Logfile):
 
         # Call the __init__ method of the superclass
         super(ORCA, self).__init__(logname="ORCA", *args, **kwargs)
+
 
     def __str__(self):
         """Return a string representation of the object."""
@@ -62,6 +58,10 @@ class ORCA(logfileparser.Logfile):
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
 
+        #  extract the version number first
+        if "Program Version" in line:
+            self.metadata["package_version"] = line.split()[2]
+
         if line[0:15] == "Number of atoms":
 
             natom = int(line.split()[-1])
@@ -84,16 +84,23 @@ class ORCA(logfileparser.Logfile):
         # --------------
         #
         # However, there are two common formats which need to be handled, implemented as separate functions.
-        if "SCF ITERATIONS" in line:
+        if line.strip() == "SCF ITERATIONS":
 
             self.skip_line(inputfile, 'dashes')
 
             line = next(inputfile)
-            colums = line.split()
-            if colums[1] == "Energy":
-                self.parse_scf_condensed_format(inputfile, colums)
-            elif colums[1] == "Starting":
-                self.parse_scf_expanded_format(inputfile, colums)
+            columns = line.split()
+            # "Starting incremental Fock matrix formation" doesn't
+            # necessarily appear before the extended format.
+            if not columns:
+                self.parse_scf_expanded_format(inputfile, columns)
+            # A header with distinct columns indicates the condensed
+            # format.
+            elif columns[1] == "Energy":
+                self.parse_scf_condensed_format(inputfile, columns)
+            # Assume the extended format.
+            else:
+                self.parse_scf_expanded_format(inputfile, columns)
 
         # Information about the final iteration, which also includes the convergence
         # targets and the convergence values, is printed separately, in a section like this:
@@ -292,78 +299,67 @@ class ORCA(logfileparser.Logfile):
             for i, n in enumerate(self.geotargets_names):
                 if (n == "energy change") and (n not in names):
                     if self.is_relaxed_scan:
-                      newvalues.append(0.0)
+                        newvalues.append(0.0)
                     else:
-                      newvalues.append(numpy.nan)
+                        newvalues.append(numpy.nan)
                 else:
                     newvalues.append(values[names.index(n)])
                     assert targets[names.index(n)] == self.geotargets[i]
 
             self.geovalues.append(newvalues)
 
-        #if not an optimization, determine structure used
-        if line[0:21] == "CARTESIAN COORDINATES" and not hasattr(self, "atomcoords"):
-
-            self.skip_line(inputfile, 'dashes')
+        """ Grab cartesian coordinates
+        ---------------------------------
+        CARTESIAN COORDINATES (ANGSTROEM)
+        ---------------------------------
+        H      0.000000    0.000000    0.000000
+        O      0.000000    0.000000    1.000000
+        H      0.000000    1.000000    1.000000
+        """
+        if line[0:33] == "CARTESIAN COORDINATES (ANGSTROEM)":
+            next(inputfile)
 
             atomnos = []
             atomcoords = []
             line = next(inputfile)
             while len(line) > 1:
-                broken = line.split()
-                atomnos.append(self.table.number[broken[0]])
-                atomcoords.append(list(map(float, broken[1:4])))
+                atom, x, y, z = line.split()
+                atomnos.append(self.table.number[atom])
+                atomcoords.append([float(x), float(y), float(z)])
                 line = next(inputfile)
 
             self.set_attribute('natom', len(atomnos))
             self.set_attribute('atomnos', atomnos)
-
-            self.atomcoords = [atomcoords]
-
-        # There's always a banner announcing the next geometry optimization cycle,
-        # which looks something like this:
-        #
-        #    *************************************************************
-        #    *                GEOMETRY OPTIMIZATION CYCLE   2            *
-        #    *************************************************************
-        if "GEOMETRY OPTIMIZATION CYCLE" in line:
-
-            # Keep track of the current cycle jsut in case, because some things
-            # are printed differently inside the first/last and other cycles.
-            self.gopt_cycle = int(line.split()[4])
-
-            self.skip_lines(inputfile, ['s', 'd', 'text', 'd'])
-
-            if not hasattr(self, "atomcoords"):
+            if not hasattr(self, 'atomcoords'):
                 self.atomcoords = []
-
-            atomnos = []
-            atomcoords = []
-            for i in range(self.natom):
-                line = next(inputfile)
-                broken = line.split()
-                atomnos.append(self.table.number[broken[0]])
-                atomcoords.append(list(map(float, broken[1:4])))
-
             self.atomcoords.append(atomcoords)
 
-            self.set_attribute('atomnos', atomnos)
+        """ Grab atom masses
+        ----------------------------
+        CARTESIAN COORDINATES (A.U.)
+        ----------------------------
+        NO LB      ZA    FRAG     MASS         X           Y           Z
+        0 H     1.0000    0     1.008    0.000000    0.000000    0.000000
+        1 O     8.0000    0    15.999    0.000000    0.000000    1.889726
+        2 H     1.0000    0     1.008    0.000000    1.889726    1.889726
+        """
+        if line[0:28] == "CARTESIAN COORDINATES (A.U.)" and not hasattr(self, 'atommasses'):
+            next(inputfile)
+            next(inputfile)
+
+            line = next(inputfile)
+            self.atommasses = []
+            while len(line) > 1:
+                if line == '* core charge reduced due to ECP\n':
+                    break
+                no, lb, za, frag, mass, x, y, z = line.split()
+                self.atommasses.append(float(mass))
+                line = next(inputfile)
 
         if line[21:68] == "FINAL ENERGY EVALUATION AT THE STATIONARY POINT":
-
             if not hasattr(self, 'optdone'):
                 self.optdone = []
             self.optdone.append(len(self.atomcoords))
-
-            self.skip_lines(inputfile, ['text', 's', 'd', 'text', 'd'])
-
-            atomcoords = []
-            for i in range(self.natom):
-                line = next(inputfile)
-                broken = line.split()
-                atomcoords.append(list(map(float, broken[1:4])))
-
-            self.atomcoords.append(atomcoords)
 
         if "The optimization did not converge" in line:
             if not hasattr(self, 'optdone'):
@@ -544,8 +540,56 @@ class ORCA(logfileparser.Logfile):
                 self.gbasis.append(gbasis_tmp[bas_atname])
             del self.tmp_atnames
 
+        """ Banner announcing Thermochemistry
+        --------------------------
+        THERMOCHEMISTRY AT 298.15K
+        --------------------------
+        """
+        if 'THERMOCHEMISTRY AT' == line[:18]:
+
+            next(inputfile)
+            next(inputfile)
+            self.temperature = float(next(inputfile).split()[2])
+            self.pressure = float(next(inputfile).split()[2])
+            total_mass = float(next(inputfile).split()[3])
+
+            # Vibrations, rotations, and translations
+            line = next(inputfile)
+            while line[:17] != 'Electronic energy':
+                line = next(inputfile)
+            self.zpe = next(inputfile).split()[4]
+            thermal_vibrational_correction = float(next(inputfile).split()[4])
+            thermal_rotional_correction = float(next(inputfile).split()[4])
+            thermal_translational_correction = float(next(inputfile).split()[4])
+            next(inputfile)
+            total_thermal_energy = float(next(inputfile).split()[3])
+
+            # Enthalpy
+            line = next(inputfile)
+            while line[:17] != 'Total free energy':
+                line = next(inputfile)
+            thermal_enthalpy_correction = float(next(inputfile).split()[4])
+            next(inputfile)
+            self.enthalpy = float(next(inputfile).split()[3])
+
+            # Entropy
+            line = next(inputfile)
+            while line[:18] != 'Electronic entropy':
+                line = next(inputfile)
+            electronic_entropy = float(line.split()[3])
+            vibrational_entropy = float(next(inputfile).split()[3])
+            rotational_entropy = float(next(inputfile).split()[3])
+            translational_entropy = float(next(inputfile).split()[3])
+            next(inputfile)
+            self.entropy = float(next(inputfile).split()[4])
+
+            line = next(inputfile)
+            while line[:25] != 'Final Gibbs free enthalpy':
+                line = next(inputfile)
+            self.freeenergy = float(line.split()[5])
+
         # Read TDDFT information
-        if line[0:18] == "TD-DFT/TDA EXCITED":
+        if any(x in line for x in ("TD-DFT/TDA EXCITED", "TD-DFT EXCITED")):
             # Could be singlets or triplets
             if line.find("SINGLETS") >= 0:
                 sym = "Singlet"
@@ -576,7 +620,13 @@ class ORCA(logfileparser.Logfile):
                     start = (int(start[:-1]), lookup[start[-1]])
                     end = line[10:17].strip()
                     end = (int(end[:-1]), lookup[end[-1]])
-                    contrib = float(line[35:47].strip())
+                    # Coeffients are not printed for RPA, only
+                    # TDA/CIS.
+                    contrib = line[35:47].strip()
+                    try:
+                        contrib = float(contrib)
+                    except ValueError:
+                        contrib = numpy.nan
                     sec.append([start, end, contrib])
                     line = next(inputfile)
                 self.etsecs.append(sec)
@@ -695,54 +745,31 @@ class ORCA(logfileparser.Logfile):
         # Sum of atomic charges         :   -0.0000000
         # Sum of atomic spin populations:    1.0000000
         if line[:23] == "MULLIKEN ATOMIC CHARGES":
-
-            has_spins = "AND SPIN POPULATIONS" in line
-
-            if not hasattr(self, "atomcharges"):
-                self.atomcharges = {}
-            if has_spins and not hasattr(self, "atomspins"):
-                self.atomspins = {}
-
-            self.skip_line(inputfile, 'dashes')
-
-            charges = []
-            if has_spins:
-                spins = []
-            line = next(inputfile)
-            while line[:21] != "Sum of atomic charges":
-                charges.append(float(line[8:20]))
-                if has_spins:
-                    spins.append(float(line[20:]))
-                line = next(inputfile)
-            self.atomcharges["mulliken"] = charges
-            if has_spins:
-                self.atomspins["mulliken"] = spins
-
+            self.parse_charge_section(line, inputfile, 'mulliken')
         # Things are the same for Lowdin populations, except that the sums
         #   are not printed (there is a blank line at the end).
         if line[:22] == "LOEWDIN ATOMIC CHARGES":
+            self.parse_charge_section(line, inputfile, 'lowdin')
+        #CHELPG Charges            
+        #--------------------------------
+        #  0   C   :       0.363939
+        #  1   H   :       0.025695
+        # ...
+        #--------------------------------
+        #Total charge:    -0.000000
+        #--------------------------------
+        if line.startswith('CHELPG Charges'):
+            self.parse_charge_section(line, inputfile, 'chelpg')
 
-            has_spins = "AND SPIN POPULATIONS" in line
-
-            if not hasattr(self, "atomcharges"):
-                self.atomcharges = {}
-            if has_spins and not hasattr(self, "atomspins"):
-                self.atomspins = {}
-
-            self.skip_line(inputfile, 'dashes')
-
-            charges = []
-            if has_spins:
-                spins = []
+        # Born-Oppenheimer molecular dynamics (BOMD).
+        if "Molecular Dynamics Iteration" in line:
+            self.skip_lines(inputfile, ['d', 'ORCA MD', 'd', 'New Coordinates'])
             line = next(inputfile)
-            while line.strip():
-                charges.append(float(line[8:20]))
-                if has_spins:
-                    spins.append(float(line[20:]))
-                line = next(inputfile)
-            self.atomcharges["lowdin"] = charges
-            if has_spins:
-                self.atomspins["lowdin"] = spins
+            tokens = line.split()
+            assert tokens[0] == "time"
+            if not hasattr(self, 'time'):
+                self.time = []
+            self.time.append(utils.convertor(float(tokens[2]), "au", "fs"))
 
         # It is not stated explicitely, but the dipole moment components printed by ORCA
         # seem to be in atomic units, so they will need to be converted. Also, they
@@ -779,14 +806,68 @@ class ORCA(logfileparser.Logfile):
                     self.logger.warning('Overwriting previous multipole moments with new values')
                     self.moments = [reference, dipole]
 
-        if "Molecular Dynamics Iteration" in line:
-            self.skip_lines(inputfile, ['d', 'ORCA MD', 'd', 'New Coordinates'])
+        # Static polarizability.
+        if line.strip() == "THE POLARIZABILITY TENSOR":
+            if not hasattr(self, 'polarizabilities'):
+                self.polarizabilities = []
+            self.skip_lines(inputfile, ['d', 'b'])
             line = next(inputfile)
-            tokens = line.split()
-            assert tokens[0] == "time"
-            if not hasattr(self, 'time'):
-                self.time = []
-            self.time.append(utils.convertor(float(tokens[2]), "au", "fs"))
+            assert line.strip() == "The raw cartesian tensor (atomic units):"
+            polarizability = []
+            for _ in range(3):
+                line = next(inputfile)
+                polarizability.append(line.split())
+            self.polarizabilities.append(numpy.array(polarizability))
+
+    def parse_charge_section(self, line, inputfile, chargestype):
+        """Parse a charge section, modifies class in place
+
+        Parameters
+        ----------
+        line : str
+          the line which triggered entry here
+        inputfile : file
+          handle to file object
+        chargestype : str
+          what type of charge we're dealing with, must be one of
+          'mulliken', 'lowdin' or 'chelpg'   
+        """
+        has_spins = 'AND SPIN POPULATIONS' in line
+
+        if not hasattr(self, "atomcharges"):
+            self.atomcharges = {}
+        if has_spins and not hasattr(self, "atomspins"):
+            self.atomspins = {}
+
+        self.skip_line(inputfile, 'dashes')
+
+        # depending on chargestype, decide when to stop parsing lines
+        # start, stop - indices for slicing lines and grabbing values
+        if chargestype == 'mulliken':
+            should_stop = lambda x: x.startswith('Sum of atomic charges')
+            start, stop = 8, 20
+        elif chargestype == 'lowdin':
+            # stops when blank line encountered
+            should_stop = lambda x: not bool(x.strip())
+            start, stop = 8, 20
+        elif chargestype == 'chelpg':
+            should_stop = lambda x: x.startswith('---')
+            start, stop = 11, 26
+
+        charges = []
+        if has_spins:
+            spins = []
+
+        line = next(inputfile)
+        while not should_stop(line):
+            charges.append(float(line[start:stop]))
+            if has_spins:
+                spins.append(float(line[stop:]))
+            line = next(inputfile)
+
+        self.atomcharges[chargestype] = charges
+        if has_spins:
+            self.atomspins[chargestype] = spins
 
     def parse_scf_condensed_format(self, inputfile, line):
         """ Parse the SCF convergence information in condensed format """
@@ -816,24 +897,50 @@ class ORCA(logfileparser.Logfile):
 
         # Try to keep track of the converger (NR, DIIS, SOSCF, etc.).
         diis_active = True
-        while not line == []:
+        while line:
 
+            maxDP = None
             if 'Newton-Raphson' in line:
                 diis_active = False
             elif 'SOSCF' in line:
                 diis_active = False
-            elif line[0].isdigit() and diis_active:
-                energy = float(line[1])
-                deltaE = float(line[2])
-                maxDP = float(line[3])
-                rmsDP = float(line[4])
+            elif line[0].isdigit():
+                shim = 0
+                try:
+                    energy = float(line[1])
+                    deltaE = float(line[2])
+                    maxDP = float(line[3 + int(not diis_active)])
+                    rmsDP = float(line[4 + int(not diis_active)])
+                except ValueError as e:
+                    # Someone in Orca forgot to properly add spaces in the scf printing
+                    # code looks like:
+                    # %3i %17.10f%12.12f%11.8f %11.8f
+                    if line[1].count('.') == 2:
+                        integer1, decimal1_integer2, decimal2 = line[1].split('.')
+                        decimal1, integer2 = decimal1_integer2[:10], decimal1_integer2[10:]
+                        energy = float(integer1 + '.' + decimal1)
+                        deltaE = float(integer2 + '.' + decimal2)
+                        maxDP = float(line[2 + int(not diis_active)])
+                        rmsDP = float(line[3 + int(not diis_active)])
+                    elif line[1].count('.') == 3:
+                        integer1, decimal1_integer2, decimal2_integer3, decimal3 = line[1].split('.')
+                        decimal1, integer2 = decimal1_integer2[:10], decimal1_integer2[10:]
+                        decimal2, integer3 = decimal2_integer3[:12], decimal2_integer3[12:]
+                        energy = float(integer1 + '.' + decimal1)
+                        deltaE = float(integer2 + '.' + decimal2)
+                        maxDP = float(integer3 + '.' + decimal3)
+                        rmsDP = float(line[2 + int(not diis_active)])
+                    elif line[2].count('.') == 2:
+                        integer1, decimal1_integer2, decimal2 = line[2].split('.')
+                        decimal1, integer2 = decimal1_integer2[:12], decimal1_integer2[12:]
+                        deltaE = float(integer1 + '.' + decimal1)
+                        maxDP = float(integer2 + '.' + decimal2)
+                        rmsDP = float(line[3 + int(not diis_active)])
+                    else:
+                        raise e
+
                 self.scfvalues[-1].append([deltaE, maxDP, rmsDP])
-            elif line[0].isdigit() and not diis_active:
-                energy = float(line[1])
-                deltaE = float(line[2])
-                maxDP = float(line[5])
-                rmsDP = float(line[6])
-                self.scfvalues[-1].append([deltaE, maxDP, rmsDP])
+
             try:
                 line = next(inputfile).split()
             except StopIteration:

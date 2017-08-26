@@ -1,12 +1,9 @@
-# This file is part of cclib (http://cclib.github.io), a library for parsing
-# and interpreting the results of computational chemistry packages.
+# -*- coding: utf-8 -*-
 #
-# Copyright (C) 2014,2015, the cclib development team
+# Copyright (c) 2017, the cclib development team
 #
-# The library is free software, distributed under the terms of
-# the GNU Lesser General Public version 2.1 or later. You should have
-# received a copy of the license along with cclib. You can also access
-# the full license online at http://www.gnu.org/copyleft/lgpl.html.
+# This file is part of cclib (http://cclib.github.io) and is distributed under
+# the terms of the BSD 3-Clause License.
 
 """Test scan logfiles in cclib"""
 
@@ -14,6 +11,7 @@ import os
 import unittest
 
 import numpy
+import cclib
 
 from skip import skipForParser
 
@@ -21,32 +19,52 @@ from skip import skipForParser
 __filedir__ = os.path.realpath(os.path.dirname(__file__))
 
 
+class GenericScanTest_optdone_bool(unittest.TestCase):
+    """Generic relaxed potential energy surface scan unittest."""
+
+    datatype = cclib.parser.data.ccData_optdone_bool
+
+    def testoptdone(self):
+        """Is the optimization finished?"""
+        self.assertIsInstance(self.data.optdone, bool)
+        self.assertEquals(self.data.optdone, True)
+
+    def testindices(self):
+        """Do the indices match the results from geovalues."""
+        assert self.data.optdone and numpy.all(self.data.geovalues[-1] <= self.data.geotargets)
+
+    @skipForParser("Jaguar", "Not implemented")
+    @skipForParser("ORCA", "Not implemented")
+    def testoptstatus(self):
+        """Does optstatus contain expected values?"""
+        OPT_DONE = self.data.OPT_DONE
+
+        # The input and final coordinates were at a stationary points.
+        self.assertEquals(self.data.optstatus[0], OPT_DONE)
+        self.assertEquals(self.data.optstatus[-1], OPT_DONE)
+
+
 class GenericScanTest(unittest.TestCase):
-    """Generic relaxed potential energy surface scan unittest"""
+    """Generic relaxed potential energy surface scan unittest."""
 
     # extra indices
     extra = 0
 
     def testnumindices(self):
         """Do the number of indices match number of scan points."""
+        self.assertEquals(len(self.data.optdone), 12 + self.extra)
 
-        if self.data._attributes["optdone"].type is bool:
-            self.assertEquals(self.data.optdone, True)
-        else:
-            self.assertEquals(len(self.data.optdone), 12 + self.extra)
-
+    @skipForParser("Jaguar", "Does not work as expected")
+    @skipForParser("ORCA", "Does not work as expected")
     def testindices(self):
         """Do the indices match the results from geovalues."""
+        indexes = self.data.optdone
+        geovalues_from_index = self.data.geovalues[indexes]
+        temp = numpy.all(self.data.geovalues <= self.data.geotargets, axis=1)
+        geovalues = self.data.geovalues[temp]
+        numpy.testing.assert_array_equal(geovalues, geovalues_from_index)
 
-        if self.data._attributes["optdone"].type is bool:
-            assert self.data.optdone and numpy.all(self.data.geovalues[-1] <= self.data.geotargets)
-        else:
-            indexes = self.data.optdone
-            geovalues_from_index = self.data.geovalues[indexes]
-            temp = numpy.all(self.data.geovalues <= self.data.geotargets, axis=1)
-            geovalues = self.data.geovalues[temp]
-            numpy.testing.assert_array_equal(geovalues, geovalues_from_index)
-
+    @skipForParser("Gaussian", "Not working as expected")
     @skipForParser("Jaguar", "Not implemented")
     @skipForParser("ORCA", "Not implemented")
     def testoptstatus(self):
@@ -57,14 +75,11 @@ class GenericScanTest(unittest.TestCase):
         # The input coordinates were at a stationary point.
         self.assertEquals(self.data.optstatus[0], OPT_DONE)
 
-        if self.data._attributes["optdone"].type is bool:
-            self.assertEquals(self.data.optstatus[-1], OPT_DONE)
-        else:
-            self.assertEqual(len(self.data.optstatus), len(optdone))
-            for idone in self.data.optdone:
-                self.assertEquals(self.data.optstatus[idone], OPT_DONE)
-                if idone != len(self.data.optdone) - 1:
-                    self.assertEquals(self.data.optstatus[idone+1], OPT_NEW)
+        self.assertEqual(len(self.data.optstatus), len(self.data.optdone))
+        for idone in self.data.optdone:
+            self.assertEquals(self.data.optstatus[idone], OPT_DONE)
+            if idone != len(self.data.optdone) - 1:
+                self.assertEquals(self.data.optstatus[idone+1], OPT_NEW)
 
 
 class GaussianScanTest(GenericScanTest):

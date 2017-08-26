@@ -1,12 +1,9 @@
-# This file is part of cclib (http://cclib.github.io), a library for parsing
-# and interpreting the results of computational chemistry packages.
+# -*- coding: utf-8 -*-
 #
-# Copyright (C) 2006-2010,2012-2015, the cclib development team
+# Copyright (c) 2017, the cclib development team
 #
-# The library is free software, distributed under the terms of
-# the GNU Lesser General Public version 2.1 or later. You should have
-# received a copy of the license along with cclib. You can also access
-# the full license online at http://www.gnu.org/copyleft/lgpl.html.
+# This file is part of cclib (http://cclib.github.io) and is distributed under
+# the terms of the BSD 3-Clause License.
 
 """Test single point logfiles in cclib."""
 
@@ -104,8 +101,8 @@ class GenericSPTest(unittest.TestCase):
     @skipForParser('Jaguar', 'atommasses not implemented yet')
     @skipForParser('Molpro', 'atommasses not implemented yet')
     @skipForParser('NWChem', 'atommasses not implemented yet')
-    @skipForParser('ORCA', 'atommasses not implemented yet')
-    @skipForParser('Psi', 'atommasses not implemented yet')
+    @skipForLogfile('Psi/basicPsi3', 'atommasses not implemented yet')
+    @skipForLogfile('Psi/basicPsi4.0b5', 'atommasses not implemented yet')
     @skipForParser('QChem', 'atommasses not implemented yet')
     def testatommasses(self):
         """Do the atom masses sum up to the molecular mass?"""
@@ -305,6 +302,13 @@ class Psi3SPTest(GenericSPTest):
     # The final energy is also a bit higher here, I think due to the fact
     # that a SALC calculation is done instead of a full LCAO.
     b3lyp_energy = -10300
+
+
+class OrcaSPTest(GenericSPTest):
+    """Customized restricted single point unittest"""
+
+    # Orca has different weights for the masses
+    molecularmass = 130190
 
 
 if __name__=="__main__":

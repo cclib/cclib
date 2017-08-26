@@ -1,16 +1,62 @@
 # -*- coding: utf-8 -*-
 #
-# This file is part of cclib (http://cclib.github.io), a library for parsing
-# and interpreting the results of computational chemistry packages.
+# Copyright (c) 2017, the cclib development team
 #
-# Copyright (C) 2006-2014, the cclib development team
-#
-# The library is free software, distributed under the terms of
-# the GNU Lesser General Public version 2.1 or later. You should have
-# received a copy of the license along with cclib. You can also access
-# the full license online at http://www.gnu.org/copyleft/lgpl.html.
+# This file is part of cclib (http://cclib.github.io) and is distributed under
+# the terms of the BSD 3-Clause License.
 
 """Utilities often used by cclib parsers and scripts"""
+
+import sys
+import numpy
+
+
+# Define for any Python version <= 3.3,
+# See https://github.com/kachayev/fn.py/commit/391824c43fb388e0eca94e568ff62cc35b543ecb
+if sys.version_info.major == 2 or sys.version_info.minor <= 3:
+    import operator
+    def accumulate(iterable, func=operator.add):
+        """Return running totals"""
+        # accumulate([1,2,3,4,5]) --> 1 3 6 10 15
+        # accumulate([1,2,3,4,5], operator.mul) --> 1 2 6 24 120
+        it = iter(iterable)
+        try:
+            total = next(it)
+        except StopIteration:
+            return
+        yield total
+        for element in it:
+            total = func(total, element)
+            yield total
+else:
+    from itertools import accumulate
+
+
+def symmetrize(m, use_triangle='lower'):
+    """Symmetrize a square NumPy array by reflecting one triangular
+    section across the diagonal to the other.
+    """
+
+    if use_triangle not in ('lower', 'upper'):
+        raise ValueError
+    if not len(m.shape) == 2:
+        raise ValueError
+    if not (m.shape[0] == m.shape[1]):
+        raise ValueError
+
+    dim = m.shape[0]
+
+    lower_indices = numpy.tril_indices(dim, k=-1)
+    upper_indices = numpy.triu_indices(dim, k=1)
+
+    ms = m.copy()
+
+    if use_triangle == 'lower':
+        ms[upper_indices] = ms[lower_indices]
+    if use_triangle == 'upper':
+        ms[lower_indices] = ms[upper_indices]
+
+    return ms
 
 
 def convertor(value, fromunits, tounits):
@@ -20,8 +66,8 @@ def convertor(value, fromunits, tounits):
         NIST 2010 CODATA (http://physics.nist.gov/cuu/Constants/index.html)
         Documentation of GAMESS-US or other programs as noted
 
-    >>> print "%.1f" % convertor(8, "eV", "cm-1")
-    64524.8
+    >>> print("%.3f" % convertor(8.0, "eV", "cm-1"))
+    64524.354
     """
 
     _convertor = {
@@ -29,14 +75,15 @@ def convertor(value, fromunits, tounits):
         "au_to_fs": lambda x: x * 0.02418884,
         "fs_to_au": lambda x: x / 0.02418884,
 
-        "Angstrom_to_bohr": lambda x: x * 1.8897261245,
-        "bohr_to_Angstrom": lambda x: x * 0.5291772109,
+        "Angstrom_to_bohr":   lambda x: x * 1.8897261245,
+        "bohr_to_Angstrom":   lambda x: x * 0.5291772109,
 
         "cm-1_to_eV":       lambda x: x / 8065.54429,
         "cm-1_to_hartree":  lambda x: x / 219474.6313708,
         "cm-1_to_kcal":     lambda x: x / 349.7550112,
         "cm-1_to_kJmol-1":  lambda x: x / 83.5934722814,
         "cm-1_to_nm":       lambda x: 1e7 / x,
+        "cm-1_to_Hz":       lambda x: x * 29.9792458,
 
         "eV_to_cm-1":       lambda x: x * 8065.54429,
         "eV_to_hartree":    lambda x: x / 27.21138505,
@@ -114,10 +161,40 @@ class PeriodicTable(object):
             'Tl', 'Pb', 'Bi', 'Po', 'At', 'Rn',
             'Fr', 'Ra',
             'Ac', 'Th', 'Pa', 'U', 'Np', 'Pu', 'Am', 'Cm', 'Bk', 'Cf', 'Es', 'Fm', 'Md', 'No',
-            'Lr', 'Rf', 'Db', 'Sg', 'Bh', 'Hs', 'Mt', 'Ds', 'Rg', 'Uub']
+            'Lr', 'Rf', 'Db', 'Sg', 'Bh', 'Hs', 'Mt', 'Ds', 'Rg', 'Cn',
+            'Uut', 'Fl', 'Uup', 'Lv', 'Uus', 'Uuo']
         self.number = {}
         for i in range(1, len(self.element)):
             self.number[self.element[i]] = i
+
+
+class WidthSplitter:
+    """Split a line based not on a character, but a given number of field
+    widths.
+
+    >>> split_fixed = WidthSplitter((4, 3, 5, 6, 10, 10, 10, 10, 10, 10))
+    >>> split_fixed.split("  60  H 10  s        0.14639   0.00000   0.00000  -0.00000  -0.00000   0.00000")
+    ['60', 'H', '10', 's', '0.14639', '0.00000', '0.00000', '-0.00000', '-0.00000', '0.00000']
+    >>> split_fixed.split("   1  C 1   s       -0.00000  -0.00000   0.00000")
+    ['1', 'C', '1', 's', '-0.00000', '-0.00000', '0.00000']
+    """
+
+    def __init__(self, widths):
+        self.start_indices = [0] + list(accumulate(widths))[:-1]
+        self.end_indices = list(accumulate(widths))
+
+    def split(self, line, truncate=True):
+        """Split the given line using the field widths passed in on class
+        initialization.
+        """
+        elements = [line[start:end].strip()
+                    for (start, end) in zip(self.start_indices, self.end_indices)]
+        # Handle lines that contain fewer fields than specified in the
+        # widths; they are added as empty strings, so remove them.
+        if truncate:
+            while len(elements) and elements[-1] == '':
+                elements.pop()
+        return elements
 
 
 if __name__ == "__main__":

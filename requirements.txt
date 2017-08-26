@@ -1,0 +1,5 @@
+numpy
+biopython
+openbabel
+# For some reason PyQuante can't be installed from PyPI.
+# PyQuante

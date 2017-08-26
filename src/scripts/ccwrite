@@ -1,14 +1,10 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 #
-# This file is part of cclib (http://cclib.github.io), a library for parsing
-# and interpreting the results of computational chemistry packages.
+# Copyright (c) 2017, the cclib development team
 #
-# Copyright (C) 2014-2016, the cclib development team
-#
-# The library is free software, distributed under the terms of
-# the GNU Lesser General Public version 2.1 or later. You should have
-# received a copy of the license along with cclib. You can also access
-# the full license online at http://www.gnu.org/copyleft/lgpl.html.
+# This file is part of cclib (http://cclib.github.io) and is distributed under
+# the terms of the BSD 3-Clause License.
 
 from __future__ import print_function
 
@@ -17,8 +13,9 @@ import logging
 import os.path
 import sys
 
-from cclib.parser import ccData, ccopen
-from cclib.writer import ccwrite
+from cclib.parser import ccData
+from cclib.io import ccopen
+from cclib.io import ccwrite
 
 
 def main():
@@ -26,7 +23,7 @@ def main():
     parser = argparse.ArgumentParser()
 
     parser.add_argument('outputtype',
-                        choices=('json', 'cjson', 'cml', 'xyz'),
+                        choices=('json', 'cjson', 'cml', 'xyz', 'molden'),
                         help='the output format to write (json/cjson are identical)')
     parser.add_argument('compchemlogfile',
                         nargs='+',

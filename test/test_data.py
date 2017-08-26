@@ -1,12 +1,9 @@
-# This file is part of cclib (http://cclib.github.io), a library for parsing
-# and interpreting the results of computational chemistry packages.
+# -*- coding: utf-8 -*-
 #
-# Copyright (C) 2015, the cclib development team
+# Copyright (c) 2017, the cclib development team
 #
-# The library is free software, distributed under the terms of
-# the GNU Lesser General Public version 2.1 or later. You should have
-# received a copy of the license along with cclib. You can also access
-# the full license online at http://www.gnu.org/copyleft/lgpl.html.
+# This file is part of cclib (http://cclib.github.io) and is distributed under
+# the terms of the BSD 3-Clause License.
 
 """Run data tests for cclib."""
 
@@ -29,8 +26,8 @@ sys.path.append(os.path.join(__filedir__, 'data'))
 
 
 parser_names = [
-    "ADF", "DALTON", "GAMESS", "GAMESSUK", "Gaussian",
-    "Jaguar", "Molpro", "NWChem", "ORCA", "Psi", "QChem",
+    "ADF", "DALTON", "GAMESS", "GAMESSUK", "Gaussian", "Jaguar", "Molpro",
+    "MOPAC", "NWChem", "ORCA", "Psi", "QChem",
 ]
 all_parsers = {name: getattr(cclib.parser, name) for name in parser_names}
 
@@ -38,7 +35,7 @@ all_parsers = {name: getattr(cclib.parser, name) for name in parser_names}
 module_names = [
     "SP", "SPun", "GeoOpt", "Basis", "Core",    # Basic calculations.
     "MP", "CC", "CI", "TD", "TDun",             # Post-SCF calculations.
-    "vib", "Scan", "BOMD",                      # Other property calculations.
+    "vib", "Polar", "Scan", "BOMD"              # Other property calculations.
 ]
 all_modules = {tn: importlib.import_module('data.test' + tn) for tn in module_names}
 
@@ -74,14 +71,16 @@ def get_program_dir(parser_name):
     return parser_name
 
 
-def getdatafile(parser, subdir, *files, **kwds):
+def getdatafile(parser, subdir, files, stream=None, loglevel=0, datatype=None):
     """Returns a parsed logfile.
 
     Inputs:
-        parser - a logfile parser class (subclass of LogFile)
-        subdir - subdirectory containing data files (program version)
-        *files - data filename(s)
-        **kwds - currently accepts 'stream' keyword argument
+        parser   - a logfile parser class (subclass of LogFile)
+        subdir   - subdirectory containing data files (program version)
+        files    - data filename(s)
+        stream   - where to log to (sys.stdout by default)
+        loglevel - what level to log at
+        datatype - ccData or child class
 
     Outputs:
         data - the resulting data object
@@ -101,9 +100,10 @@ def getdatafile(parser, subdir, *files, **kwds):
     if len(inputs) == 1:
         inputs = inputs[0]
 
-    stream = kwds.get('stream', sys.stdout)
-    logfile = parser(inputs, logstream=stream)
-    logfile.logger.setLevel(0)
+    stream = stream or sys.stdout
+    logfile = parser(inputs, logstream=stream,
+                     datatype=datatype or cclib.parser.data.ccData)
+    logfile.logger.setLevel(loglevel)
 
     data = logfile.parse()
     return data, logfile
@@ -126,10 +126,14 @@ class DataSuite(object):
     subdirectory, and do some basic bookkeeping.
     """
 
-    def __init__(self, argv=[], stream=sys.stdout):
+    def __init__(self, parsers, modules, status=False, terse=False, silent=False, stream=sys.stdout):
 
+        self.parsers = parsers
+        self.modules = modules
+        self.status = status
+        self.terse = terse or silent
+        self.silent = silent
         self.stream = stream
-        self.argparse(argv)
 
         # Load the test data and filter with parsers and modules.
         self.testdata = gettestdata()
@@ -142,18 +146,6 @@ class DataSuite(object):
         self.failures = []
         self.alltests = []
         self.perpackage = {p: [0, 0, 0, 0] for p in self.parsers}
-
-    def argparse(self, argv):
-        """Parse a list of command line arguments tfor anything relevant."""
-
-        # These allow the parsers and modules tested to be filtered on the command line
-        # with any number of arguments. No matching parsers/modules implies all of them.
-        self.parsers = {p: all_parsers[p] for p in parser_names if p in argv} or all_parsers
-        self.modules = {m: all_modules[m] for m in module_names if m in argv} or all_modules
-
-        # These options modify the output and are used for Travis CI.
-        self.status = "status" in argv or "--status" in argv
-        self.terse = "terse" in argv or "--terse" in argv
 
     def testall(self):
         """Run all unittests in all modules.
@@ -173,11 +165,15 @@ class DataSuite(object):
             parser = self.parsers[td['parser']]
             test = getattr(module, td['class'])
 
-            description = "%s/%s: %s" % (td['subdir'], td['files'], test.__doc__)
-            print("", file=stream_test)
-            print("*** %s ***" % description, file=self.stream)
+            description = ''
+            if not self.silent:
+                print("", file=stream_test)
+                description = "%s/%s: %s" % (td['subdir'], ",".join(td['files']), test.__doc__)
+                print("*** %s ***" % description, file=self.stream)
 
-            test.data, test.logfile = getdatafile(parser, td['subdir'], *td['files'], stream=self.stream)
+            loglevel = 33 if self.silent else 0
+            test.data, test.logfile = getdatafile(parser, td['subdir'], td['files'], stream=self.stream, loglevel=loglevel,
+                                                  datatype=test.datatype if hasattr(test, 'datatype') else None)
 
             # By overriding __getattribute__ temporarily with a custom method, we collect
             # coverage information for data attributes while the tests are run. This slightly
@@ -240,16 +236,19 @@ class DataSuite(object):
         """These are not formal tests -- but they should be eyeballed."""
 
         parsers_to_test = {
-            'ADF2013.01' : getdatafile('ADF', "basicADF2013.01", "dvb_gopt.adfout")[0],
-            'DALTON2015' : getdatafile('DALTON', "basicDALTON-2015", "dvb_gopt_ks.out")[0],
-            'Firefly8.0' : getdatafile('GAMESS', "basicFirefly8.0", "dvb_gopt_a.out")[0],
-            'Gaussian09' : getdatafile('Gaussian', "basicGaussian09", "dvb_gopt.out")[0],
-            'GAMESS-US' : getdatafile('GAMESS', "basicGAMESS-US2012", "dvb_gopt_a.out")[0],
-            'Jaguar8.0' : getdatafile('Jaguar', "basicJaguar8.3", "dvb_gopt_ks.out")[0],
-            'Molpro2012' : getdatafile('Molpro', "basicMolpro2012", "dvb_gopt.log", "dvb_gopt.out")[0],
-            'NWChem6.0' : getdatafile('NWChem', "basicNWChem6.0", "dvb_gopt_ks.out")[0],
-            'ORCA3.0' : getdatafile('ORCA', "basicORCA3.0", "dvb_gopt.out")[0],
-            'QChem4.2' : getdatafile('QChem', "basicQChem4.2", "dvb_gopt.out")[0],
+            'ADF2013.01' : getdatafile('ADF', "basicADF2013.01", ["dvb_gopt.adfout"])[0],
+            'DALTON2015' : getdatafile('DALTON', "basicDALTON-2015", ["dvb_gopt_ks.out"])[0],
+            'Firefly8.0' : getdatafile('GAMESS', "basicFirefly8.0", ["dvb_gopt_a.out"])[0],
+            'Gaussian09' : getdatafile('Gaussian', "basicGaussian09", ["dvb_gopt.out"])[0],
+            'GAMESS-US' : getdatafile('GAMESS', "basicGAMESS-US2017", ["dvb_gopt_a.out"])[0],
+            'Jaguar8.0' : getdatafile('Jaguar', "basicJaguar8.3", ["dvb_gopt_ks.out"])[0],
+            'Molpro2012' : getdatafile('Molpro', "basicMolpro2012", ["dvb_gopt.log", "dvb_gopt.out"])[0],
+            # Note that it doesn't make sense to put MOPAC here, as it
+            # is a semiempirical-only program.
+            'NWChem6.5' : getdatafile('NWChem', "basicNWChem6.5", ["dvb_gopt_ks.out"])[0],
+            'ORCA3.0' : getdatafile('ORCA', "basicORCA3.0", ["dvb_gopt.out"])[0],
+            'Psi4.0' : getdatafile('Psi', "basicPsi4.0", ["dvb_gopt_rks.out"])[0],
+            'QChem4.2' : getdatafile('QChem', "basicQChem4.2", ["dvb_gopt.out"])[0],
         }
         parser_names = sorted(parsers_to_test.keys())
         output = [parsers_to_test[pn] for pn in parser_names]
@@ -258,13 +257,31 @@ class DataSuite(object):
         print("MO energies of optimised dvb", file=self.stream)
         print("      ", "".join(["%-12s" % pn for pn in parser_names]), file=self.stream)
         print("HOMO", "   ".join(["%+9.4f" % out.moenergies[0][out.homos[0]] for out in output]), file=self.stream)
-        print("LUMO", "   ".join(["%+9.4f" % out.moenergies[0][out.homos[0]+1] for out in output]), file=stream)
+        print("LUMO", "   ".join(["%+9.4f" % out.moenergies[0][out.homos[0]+1] for out in output]), file=self.stream)
         print("H-L ", "   ".join(["%9.4f" % (out.moenergies[0][out.homos[0]+1]-out.moenergies[0][out.homos[0]],) for out in output]), file=self.stream)
 
 
-if __name__ == "__main__":
+def test_all(parsers=None, modules=None, status=False, terse=False, silent=True, summary=True, visual_tests=True):
+    parsers = parsers or all_parsers
+    modules = modules or all_modules
+    data_suite = DataSuite(parsers, modules, status=status, terse=terse, silent=silent)
+    data_suite.testall()
+    if summary and not silent:
+        data_suite.summary()
+    if visual_tests and not silent:
+        data_suite.visualtests()
 
-    suite = DataSuite(sys.argv)
-    suite.testall()
-    suite.summary()
-    suite.visualtests()
+
+if __name__ == "__main__":
+    
+    # These allow the parsers and modules tested to be filtered on the command line
+    # with any number of arguments. No matching parsers/modules implies all of them.
+    parsers = {p: all_parsers[p] for p in parser_names if p in sys.argv} or None
+    modules = {m: all_modules[m] for m in module_names if m in sys.argv} or None
+
+    # These options modify the output and are used by testall and Travis CI.
+    status = "--status" in sys.argv
+    terse = "--terse" in sys.argv
+    silent = "--silent" in sys.argv
+
+    test_all(parsers, modules, status=status, terse=terse, silent=silent)

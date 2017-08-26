@@ -1,14 +1,9 @@
 # -*- coding: utf-8 -*-
 #
-# This file is part of cclib (http://cclib.github.io), a library for parsing
-# and interpreting the results of computational chemistry packages.
+# Copyright (c) 2017, the cclib development team
 #
-# Copyright (C) 2006-2014, the cclib development team
-#
-# The library is free software, distributed under the terms of
-# the GNU Lesser General Public version 2.1 or later. You should have
-# received a copy of the license along with cclib. You can also access
-# the full license online at http://www.gnu.org/copyleft/lgpl.html.
+# This file is part of cclib (http://cclib.github.io) and is distributed under
+# the terms of the BSD 3-Clause License.
 
 """Calculation of Mayer's bond orders based on data parsed by cclib."""
 
@@ -26,18 +21,18 @@ class MBO(Density):
 
         # Call the __init__ method of the superclass.
         super(MBO, self).__init__(logname="MBO", *args)
-        
+
     def __str__(self):
         """Return a string representation of the object."""
-        return "Mayer's bond order of" % (self.data)
+        return "Mayer's bond order of %s" % (self.data)
 
     def __repr__(self):
         """Return a representation of the object."""
         return 'Mayer\'s bond order("%s")' % (self.data)
-    
+
     def calculate(self, indices=None, fupdate=0.05):
         """Calculate Mayer's bond orders."""
-    
+
         retval = super(MBO, self).calculate(fupdate)
         if not retval: #making density didn't work
             return False
@@ -106,7 +101,7 @@ class MBO(Density):
 
                 tempsumA = 0
                 tempsumB = 0
-                
+
                 for a in indices[i]:
 
                     for b in indices[j]:

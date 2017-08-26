@@ -1,12 +1,9 @@
-# This file is part of cclib (http://cclib.github.io), a library for parsing
-# and interpreting the results of computational chemistry packages.
+# -*- coding: utf-8 -*-
 #
-# Copyright (C) 2014-2016 the cclib development team
+# Copyright (c) 2017, the cclib development team
 #
-# The library is free software, distributed under the terms of
-# the GNU Lesser General Public version 2.1 or later. You should have
-# received a copy of the license along with cclib. You can also access
-# the full license online at http://www.gnu.org/copyleft/lgpl.html.
+# This file is part of cclib (http://cclib.github.io) and is distributed under
+# the terms of the BSD 3-Clause License.
 
 """Test the Nuclear method in cclib"""
 
@@ -32,7 +29,7 @@ class NuclearTest(unittest.TestCase):
     def test_nre(self):
         """Testing nuclear repulsion energy for one logfile where it is printed."""
 
-        data, logfile = getdatafile(QChem, "basicQChem4.2", "water_mp4sdq.out")
+        data, logfile = getdatafile(QChem, "basicQChem4.2", ["water_mp4sdq.out"])
         nuclear = Nuclear(data)
         nuclear.logger.setLevel(logging.ERROR)
 

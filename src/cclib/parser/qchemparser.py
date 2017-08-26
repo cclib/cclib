@@ -1,14 +1,9 @@
 # -*- coding: utf-8 -*-
 #
-# This file is part of cclib (http://cclib.github.io), a library for parsing
-# and interpreting the results of computational chemistry packages.
+# Copyright (c) 2017, the cclib development team
 #
-# Copyright (C) 2014-2016, the cclib development team
-#
-# The library is free software, distributed under the terms of
-# the GNU Lesser General Public version 2.1 or later. You should have
-# received a copy of the license along with cclib. You can also access
-# the full license online at http://www.gnu.org/copyleft/lgpl.html.
+# This file is part of cclib (http://cclib.github.io) and is distributed under
+# the terms of the BSD 3-Clause License.
 
 """Parser for Q-Chem output files"""
 
@@ -71,7 +66,8 @@ class QChem(logfileparser.Logfile):
         # aoname.
         self.re_atomindex = re.compile('(\d+)_')
 
-        # A maximum of 6 columns per block when printing matrices.
+        # A maximum of 6 columns per block when printing matrices. The
+        # Fock matrix is 4.
         self.ncolsblock = 6
 
         # By default, when asked to print orbitals via
@@ -82,9 +78,11 @@ class QChem(logfileparser.Logfile):
         # the output will display (NOcc + that many virtual) MOs, but
         # any other sections present due to
         # `scf_print`/`scf_final_print` will still only display (NOcc
-        # + 5) MOs.
+        # + 5) MOs. It is the `print_orbitals` section that `aonames`
+        # is parsed from.
         #
-        # Note that the density matrix is always (NBasis * NBasis)!
+        # Note that the (AO basis) density matrix is always (NBasis *
+        # NBasis)!
         self.norbdisp_alpha = self.norbdisp_beta = 5
         self.norbdisp_alpha_aonames = self.norbdisp_beta_aonames = 5
         self.norbdisp_set = False
@@ -104,6 +102,13 @@ class QChem(logfileparser.Logfile):
             'Hessian of the SCF Energy',
             'Final Hessian.',
         )
+
+        self.wfn_method = [
+            'HF',
+            'MP2', 'RI-MP2', 'LOCAL_MP2', 'MP4',
+            'CCD', 'CCSD', 'CCSD(T)',
+            'QCISD', 'QCISD(T)'
+        ]
 
     def after_parsing(self):
 
@@ -219,6 +224,7 @@ class QChem(logfileparser.Logfile):
         line = next(inputfile)
         assert len(line.split()) == min(self.ncolsblock, ncols)
         colcounter = 0
+        split_fixed = utils.WidthSplitter((4, 3, 5, 6, 10, 10, 10, 10, 10, 10))
         while colcounter < ncols:
             # If the line is just the column header (indices)...
             if line[:5].strip() == '':
@@ -228,15 +234,15 @@ class QChem(logfileparser.Logfile):
                 line = next(inputfile)
             rowcounter = 0
             while rowcounter < nrows:
-                row = line.split()
+                row = split_fixed.split(line)
                 # Only take the AO names on the first time through.
                 if colcounter == 0:
                     if len(self.aonames) != self.nbasis:
                         # Apply the offset for rows where there is
                         # more than one atom of any element in the
                         # molecule.
-                        offset = int(self.formula_histogram[row[1]] != 1)
-                        if offset:
+                        offset = 1
+                        if row[2] != '':
                             name = self.atommap.get(row[1] + str(row[2]))
                         else:
                             name = self.atommap.get(row[1] + '1')
@@ -292,6 +298,10 @@ class QChem(logfileparser.Logfile):
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
 
+        # Extract the version number first
+        if 'Q-Chem,' in line:
+            self.metadata["package_version"] = line.split()[1][:-1]
+
         # Disable/enable parsing for fragment sections.
         if any(message in line for message in self.fragment_section_headers):
             self.is_fragment_section = True
@@ -305,9 +315,19 @@ class QChem(logfileparser.Logfile):
                 self.skip_line(inputfile, 'd')
                 while list(set(line.strip())) != ['-']:
 
-                    if '$rem' in line:
-                        while '$end' not in line:
+                    if '$rem' in line.lower():
+                        while '$end' not in line.lower():
                             line = next(inputfile)
+                            if 'method' in line.lower():
+                                method = line.split()[-1].upper()
+                                if method in self.wfn_method:
+                                    self.metadata["methods"].append(method)
+                                else:
+                                    self.metadata["methods"].append('DFT')
+                                    self.metadata["functional"] = method
+                            if 'exchange' in line.lower():
+                                self.metadata["methods"].append('DFT')
+                                self.metadata["functional"] = line.split()[-1]
                             if 'print_orbitals' in line.lower():
                                 # Stay with the default value if a number isn't
                                 # specified.
@@ -318,8 +338,17 @@ class QChem(logfileparser.Logfile):
                                     self.norbdisp_alpha_aonames = norbdisp_aonames
                                     self.norbdisp_beta_aonames = norbdisp_aonames
                                     self.norbdisp_set = True
+                            # Apparently calculations can run without
+                            # a matching $end...this terminates the
+                            # user input section no matter what.
+                            if line.strip() == ('-' * 62):
+                                break
 
                     line = next(inputfile)
+
+            # Parse the basis set name
+            if 'Requested basis set' in line:
+                self.metadata["basis_set"] = line.split()[-1]
 
             # Parse the general basis for `gbasis`, in the style used by
             # Gaussian.
@@ -389,6 +418,7 @@ class QChem(logfileparser.Logfile):
                     self.gbasis.append(atom)
                     line = next(inputfile)
 
+            # Born-Oppenheimer molecular dynamics (BOMD).
             if 'TIME STEP #' in line:
                 tokens = line.split()
                 if not hasattr(self, 'time'):
@@ -450,17 +480,16 @@ class QChem(logfileparser.Logfile):
                     self.set_attribute('charge', charge)
 
             # Number of basis functions.
-            # Because Q-Chem's integral recursion scheme is defined using
-            # Cartesian basis functions, there is often a distinction between the
-            # two in the output. We only parse for *pure* functions.
-            # Examples:
-            #  Only one type:
-            #   There are 30 shells and 60 basis functions
-            #  Both Cartesian and pure:
-            #   ...
             if 'basis functions' in line:
                 if not hasattr(self, 'nbasis'):
                     self.set_attribute('nbasis', int(line.split()[-3]))
+                    # In the case that there are fewer basis functions
+                    # (and therefore MOs) than default number of MOs
+                    # displayed, reset the display values.
+                    self.norbdisp_alpha = min(self.norbdisp_alpha, self.nbasis)
+                    self.norbdisp_alpha_aonames = min(self.norbdisp_alpha_aonames, self.nbasis)
+                    self.norbdisp_beta = min(self.norbdisp_beta, self.nbasis)
+                    self.norbdisp_beta_aonames = min(self.norbdisp_beta_aonames, self.nbasis)
 
             # Check for whether or not we're peforming an
             # (un)restricted calculation.
@@ -781,6 +810,25 @@ class QChem(logfileparser.Logfile):
                 self.set_attribute('etoscs', etoscs)
                 self.set_attribute('etsecs', etsecs)
 
+            # Static and dynamic polarizability from mopropman.
+            if 'Polarizability (a.u.)' in line:
+                if not hasattr(self, 'polarizabilities'):
+                    self.polarizabilities = []
+                while 'Full Tensor' not in line:
+                    line = next(inputfile)
+                self.skip_line(inputfile, 'blank')
+                polarizability = [next(inputfile).split() for _ in range(3)]
+                self.polarizabilities.append(numpy.array(polarizability))
+
+            # Static polarizability from finite difference or
+            # responseman.
+            if line.strip() in ('Static polarizability tensor [a.u.]',
+                                'Polarizability tensor      [a.u.]'):
+                if not hasattr(self, 'polarizabilities'):
+                    self.polarizabilities = []
+                polarizability = [next(inputfile).split() for _ in range(3)]
+                self.polarizabilities.append(numpy.array(polarizability))
+
             # Molecular orbital energies and symmetries.
             if 'Orbital Energies (a.u.) and Symmetries' in line:
 
@@ -1009,14 +1057,6 @@ class QChem(logfileparser.Logfile):
                     self.moenergies[1] = numpy.array(energies_beta)
                 self.set_attribute('nmo', len(self.moenergies[0]))
 
-            # If we've asked to display more virtual orbitals than there
-            # are MOs present in the molecule, fix that now.
-            if hasattr(self, 'nmo') and hasattr(self, 'nalpha') and hasattr(self, 'nbeta'):
-                if self.norbdisp_alpha_aonames > self.nmo:
-                    self.norbdisp_alpha_aonames = self.nmo
-                if self.norbdisp_beta_aonames > self.nmo:
-                    self.norbdisp_beta_aonames = self.nmo
-
             # Molecular orbital coefficients.
 
             # This block comes from `print_orbitals = true/{int}`. Less
@@ -1025,6 +1065,12 @@ class QChem(logfileparser.Logfile):
 
             if any(header in line
                    for header in self.alpha_mo_coefficient_headers):
+
+                # If we've asked to display more virtual orbitals than
+                # there are MOs present in the molecule, fix that now.
+                if hasattr(self, 'nmo') and hasattr(self, 'nalpha') and hasattr(self, 'nbeta'):
+                    self.norbdisp_alpha_aonames = min(self.norbdisp_alpha_aonames, self.nmo)
+                    self.norbdisp_beta_aonames = min(self.norbdisp_beta_aonames, self.nmo)
 
                 if not hasattr(self, 'mocoeffs'):
                     self.mocoeffs = []
@@ -1183,6 +1229,19 @@ class QChem(logfileparser.Logfile):
                 grad = QChem.parse_matrix(inputfile, 3, self.natom, ncolsblock)
                 self.grads.append(grad.T)
 
+            # (Static) polarizability from frequency calculations.
+            if 'Polarizability Matrix (a.u.)' in line:
+                if not hasattr(self, 'polarizabilities'):
+                    self.polarizabilities = []
+                polarizability = []
+                self.skip_line(inputfile, 'index header')
+                for _ in range(3):
+                    line = next(inputfile)
+                    ss = line.strip()[1:]
+                    polarizability.append([ss[0:12], ss[13:24], ss[25:36]])
+                # For some reason the sign is inverted.
+                self.polarizabilities.append(-numpy.array(polarizability, dtype=float))
+
             # For IR-related jobs, the Hessian is printed (dim: 3*natom, 3*natom).
             # Note that this is *not* the mass-weighted Hessian.
             if any(header in line for header in self.hessian_headers):
@@ -1289,41 +1348,47 @@ class QChem(logfileparser.Logfile):
                 # Not supported yet.
                 if not hasattr(self, 'pressure'):
                     self.pressure = float(line.split()[7])
-                self.skip_lines(inputfile, ['blank', 'Imaginary'])
+                self.skip_line(inputfile, 'blank')
+
                 line = next(inputfile)
-                # Not supported yet.
-                if 'Zero point vibrational energy' in line:
+                if self.natom == 1:
+                    assert 'Translational Enthalpy' in line
+                else:
+                    assert 'Imaginary Frequencies' in line
+                    line = next(inputfile)
+                    # Not supported yet.
+                    assert 'Zero point vibrational energy' in line
                     if not hasattr(self, 'zpe'):
                         # Convert from kcal/mol to Hartree/particle.
                         self.zpe = utils.convertor(float(line.split()[4]),
                                                    'kcal', 'hartree')
+                    atommasses = []
+                    while 'Translational Enthalpy' not in line:
+                        if 'Has Mass' in line:
+                            atommass = float(line.split()[6])
+                            atommasses.append(atommass)
+                        line = next(inputfile)
+                    if not hasattr(self, 'atommasses'):
+                        self.atommasses = numpy.array(atommasses)
 
-                atommasses = []
-
-                while 'Archival summary' not in line:
-
-                    if 'Has Mass' in line:
-                        atommass = float(line.split()[6])
-                        atommasses.append(atommass)
-
-                    if 'Total Enthalpy' in line:
-                        if not hasattr(self, 'enthalpy'):
-                            enthalpy = float(line.split()[2])
-                            self.enthalpy = utils.convertor(enthalpy,
-                                                            'kcal', 'hartree')
-                    if 'Total Entropy' in line:
-                        if not hasattr(self, 'entropy'):
-                            entropy = float(line.split()[2]) * self.temperature / 1000
-                            # This is the *temperature dependent* entropy.
-                            self.entropy = utils.convertor(entropy,
-                                                           'kcal', 'hartree')
-                        if not hasattr(self, 'freeenergy'):
-                            self.freeenergy = self.enthalpy - self.entropy
-
+                while line.strip():
                     line = next(inputfile)
 
-                if not hasattr(self, 'atommasses'):
-                    self.atommasses = numpy.array(atommasses)
+                line = next(inputfile)
+                assert 'Total Enthalpy' in line
+                if not hasattr(self, 'enthalpy'):
+                    enthalpy = float(line.split()[2])
+                    self.enthalpy = utils.convertor(enthalpy,
+                                                    'kcal', 'hartree')
+                line = next(inputfile)
+                assert 'Total Entropy' in line
+                if not hasattr(self, 'entropy'):
+                    entropy = float(line.split()[2]) * self.temperature / 1000
+                    # This is the *temperature dependent* entropy.
+                    self.entropy = utils.convertor(entropy,
+                                                   'kcal', 'hartree')
+                if not hasattr(self, 'freeenergy'):
+                    self.freeenergy = self.enthalpy - self.entropy
 
         # TODO:
         # 'enthalpy' (incorrect)
