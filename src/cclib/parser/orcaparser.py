@@ -62,23 +62,21 @@ class ORCA(logfileparser.Logfile):
         if "Program Version" in line:
             self.metadata["package_version"] = line.split()[2]
 
-        """
-================================================================================
-                                        WARNINGS
-                       Please study these warnings very carefully!
-================================================================================
-
-Warning: TCutStore was < 0. Adjusted to Thresh (uncritical)
-
-WARNING: your system is open-shell and RHF/RKS was chosen
-  ===> : WILL SWITCH to UHF/UKS
-
-
-INFO   : the flag for use of LIBINT has been found!
-
-================================================================================
-        """
-        if "WARNINGS" == line.strip():
+        # ================================================================================
+        #                                         WARNINGS
+        #                        Please study these warnings very carefully!
+        # ================================================================================
+        #
+        # Warning: TCutStore was < 0. Adjusted to Thresh (uncritical)
+        #
+        # WARNING: your system is open-shell and RHF/RKS was chosen
+        #   ===> : WILL SWITCH to UHF/UKS
+        #
+        #
+        # INFO   : the flag for use of LIBINT has been found!
+        #
+        # ================================================================================
+        if line.strip() == "WARNINGS":
             next(inputfile)
             self.skip_lines(inputfile, ['equals', 'blank'])
 
@@ -100,23 +98,21 @@ INFO   : the flag for use of LIBINT has been found!
                         line = next(inputfile)
                 line = next(inputfile)
 
-        """
-================================================================================
-                                       INPUT FILE
-================================================================================
-NAME = input.dat
-|  1> %pal nprocs 4 end
-|  2> ! B3LYP def2-svp
-|  3> ! Grid4
-|  4>
-|  5> *xyz 0 3
-|  6>     O   0   0   0
-|  7>     O   0   0   1.5
-|  8> *
-|  9>
-| 10>                          ****END OF INPUT****
-================================================================================
-"""
+        # ================================================================================
+        #                                        INPUT FILE
+        # ================================================================================
+        # NAME = input.dat
+        # |  1> %pal nprocs 4 end
+        # |  2> ! B3LYP def2-svp
+        # |  3> ! Grid4
+        # |  4>
+        # |  5> *xyz 0 3
+        # |  6>     O   0   0   0
+        # |  7>     O   0   0   1.5
+        # |  8> *
+        # |  9>
+        # | 10>                          ****END OF INPUT****
+        # ================================================================================
         if "INPUT FILE" in line:
             next(inputfile)
             name = next(inputfile).split()[-1]
@@ -363,15 +359,13 @@ NAME = input.dat
                 self.geotargets_names.append(name)
                 self.geotargets.append(target)
 
-        """
-        ------------------
-        CARTESIAN GRADIENT
-        ------------------
-
-        1   H   :    0.000000004    0.019501450   -0.021537091
-        2   O   :    0.000000054   -0.042431648    0.042431420
-        3   H   :    0.000000004    0.021537179   -0.019501388
-        """
+        # ------------------
+        # CARTESIAN GRADIENT
+        # ------------------
+        #
+        # 1   H   :    0.000000004    0.019501450   -0.021537091
+        # 2   O   :    0.000000054   -0.042431648    0.042431420
+        # 3   H   :    0.000000004    0.021537179   -0.019501388
         if line == 'CARTESIAN GRADIENT\n':
             self.skip_lines(inputfile, ['dashes', 'blank'])
 
@@ -444,15 +438,14 @@ NAME = input.dat
 
             self.geovalues.append(newvalues)
 
-        """ Grab Cartesian coordinates
-        ---------------------------------
-        CARTESIAN COORDINATES (ANGSTROEM)
-        ---------------------------------
-        H      0.000000    0.000000    0.000000
-        O      0.000000    0.000000    1.000000
-        H      0.000000    1.000000    1.000000
-        """
-        if line[0:33] == "CARTESIAN COORDINATES (ANGSTROEM)":
+        # Grab Cartesian coordinates
+        # ---------------------------------
+        # CARTESIAN COORDINATES (ANGSTROEM)
+        # ---------------------------------
+        # H      0.000000    0.000000    0.000000
+        # O      0.000000    0.000000    1.000000
+        # H      0.000000    1.000000    1.000000
+        if line[:33] == "CARTESIAN COORDINATES (ANGSTROEM)":
             next(inputfile)
 
             atomnos = []
@@ -470,16 +463,15 @@ NAME = input.dat
                 self.atomcoords = []
             self.atomcoords.append(atomcoords)
 
-        """ Grab atom masses
-        ----------------------------
-        CARTESIAN COORDINATES (A.U.)
-        ----------------------------
-        NO LB      ZA    FRAG     MASS         X           Y           Z
-        0 H     1.0000    0     1.008    0.000000    0.000000    0.000000
-        1 O     8.0000    0    15.999    0.000000    0.000000    1.889726
-        2 H     1.0000    0     1.008    0.000000    1.889726    1.889726
-        """
-        if line[0:28] == "CARTESIAN COORDINATES (A.U.)" and not hasattr(self, 'atommasses'):
+        # Grab atom masses
+        # ----------------------------
+        # CARTESIAN COORDINATES (A.U.)
+        # ----------------------------
+        # NO LB      ZA    FRAG     MASS         X           Y           Z
+        # 0 H     1.0000    0     1.008    0.000000    0.000000    0.000000
+        # 1 O     8.0000    0    15.999    0.000000    0.000000    1.889726
+        # 2 H     1.0000    0     1.008    0.000000    1.889726    1.889726
+        if line[:28] == "CARTESIAN COORDINATES (A.U.)" and not hasattr(self, 'atommasses'):
             next(inputfile)
             next(inputfile)
 
@@ -676,13 +668,11 @@ NAME = input.dat
                 self.gbasis.append(gbasis_tmp[bas_atname])
             del self.tmp_atnames
 
-        """ Banner announcing Thermochemistry
-        --------------------------
-        THERMOCHEMISTRY AT 298.15K
-        --------------------------
-        """
-        if 'THERMOCHEMISTRY AT' == line[:18]:
-
+        # Banner announcing Thermochemistry
+        # --------------------------
+        # THERMOCHEMISTRY AT 298.15K
+        # --------------------------
+        if line[:18] == 'THERMOCHEMISTRY AT':
             next(inputfile)
             next(inputfile)
             self.temperature = float(next(inputfile).split()[2])
@@ -808,21 +798,19 @@ NAME = input.dat
             self.vibfreqs = vibfreqs[nonzero[0]:]
 
 
+        # ------------
+        # NORMAL MODES
+        # ------------
+        #
+        # These modes are the cartesian displacements weighted by the diagonal matrix
+        # M(i,i)=1/sqrt(m[i]) where m[i] is the mass of the displaced atom
+        # Thus, these vectors are normalized but *not* orthogonal
+        #
+        #                   0          1          2          3          4          5
+        #       0       0.000000   0.000000   0.000000   0.000000   0.000000   0.000000
+        #       1       0.000000   0.000000   0.000000   0.000000   0.000000   0.000000
+        #       2       0.000000   0.000000   0.000000   0.000000   0.000000   0.000000
         if line[:12] == "NORMAL MODES":
-            """ Format:
-            NORMAL MODES
-            ------------
-
-            These modes are the cartesian displacements weighted by the diagonal matrix
-            M(i,i)=1/sqrt(m[i]) where m[i] is the mass of the displaced atom
-            Thus, these vectors are normalized but *not* orthogonal
-
-                              0          1          2          3          4          5
-                  0       0.000000   0.000000   0.000000   0.000000   0.000000   0.000000
-                  1       0.000000   0.000000   0.000000   0.000000   0.000000   0.000000
-                  2       0.000000   0.000000   0.000000   0.000000   0.000000   0.000000
-            ...
-            """
 
             self.vibdisps = numpy.zeros((3 * self.natom, self.natom, 3), "d")
 
@@ -858,17 +846,16 @@ NAME = input.dat
             # Grab all modes starting with first non-zero mode
             self.vibirs = self.vibirs[-len(self.vibfreqs):]
 
+        # --------------
+        # RAMAN SPECTRUM
+        # --------------
+        #
+        # Mode    freq (cm**-1)   Activity   Depolarization
+        # -------------------------------------------------------------------
+        # 6:       294.84      5.291308      0.404692
+        # 7:       356.53      0.000000      0.000000
+        # 8:       367.60      0.000000      0.301002"""
         if line[:14] == "RAMAN SPECTRUM":
-            """
-            --------------
-            RAMAN SPECTRUM
-            --------------
-
-            Mode    freq (cm**-1)   Activity   Depolarization
-            -------------------------------------------------------------------
-            6:       294.84      5.291308      0.404692
-            7:       356.53      0.000000      0.000000
-            8:       367.60      0.000000      0.301002"""
 
             self.skip_lines(inputfile, ['d', 'b', 'header', 'd'])
 
@@ -1162,8 +1149,6 @@ NAME = input.dat
                 self.scfvalues[-1].append([deltaE, maxDP, rmsDP])
 
         return
-
-    # end of parse_scf_expanded_format
 
     def _append_scfvalues_scftargets(self, inputfile, line):
         # The SCF convergence targets are always printed after this, but apparently
