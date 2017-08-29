@@ -1050,7 +1050,7 @@ class NWChem(logfileparser.Logfile):
             self.polarizabilities.append(numpy.array(polarizability))
 
         if line.strip() == "NWChem QMD Module":
-            self.is_MD = True
+            self.is_BOMD = True
 
         # Born-Oppenheimer molecular dynamics (BOMD): time.
         if "QMD Run Information" in line:
@@ -1064,7 +1064,7 @@ class NWChem(logfileparser.Logfile):
 
         # BOMD: geometry coordinates when `print low`.
         if line.strip() == "DFT ENERGY GRADIENTS":
-            if self.is_MD:
+            if self.is_BOMD:
                 self.skip_lines(inputfile, ['b', 'atom coordinates gradient', 'xyzxyz'])
                 line = next(inputfile)
                 atomcoords_step = []
@@ -1083,7 +1083,7 @@ class NWChem(logfileparser.Logfile):
         # set in the input file, which we assume is likely for a BOMD
         # trajectory. This will enable parsing coordinates from the
         # 'DFT ENERGY GRADIENTS' section.
-        self.is_MD = False
+        self.is_BOMD = False
 
     def after_parsing(self):
         """NWChem-specific routines for after parsing a file.
@@ -1154,7 +1154,7 @@ class NWChem(logfileparser.Logfile):
         # geometries are identical, and all from the second onward are
         # in Bohr. Delete the first one and perform the unit
         # conversion.
-        if self.is_MD:
+        if self.is_BOMD:
             self.atomcoords = utils.convertor(numpy.asarray(self.atomcoords)[1:, ...],
                                               'bohr', 'Angstrom')
 
