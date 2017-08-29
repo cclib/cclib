@@ -1080,7 +1080,7 @@ class NWChem(logfileparser.Logfile):
         """
 
         # The only reason we need this identifier is if `print low` is
-        # set in the input file, which we assume is likely for an MD
+        # set in the input file, which we assume is likely for a BOMD
         # trajectory. This will enable parsing coordinates from the
         # 'DFT ENERGY GRADIENTS' section.
         self.is_MD = False
@@ -1149,6 +1149,14 @@ class NWChem(logfileparser.Logfile):
                 for k in range(count):
                     temp = [x % (j + k + 1) for x in labels[label]]
                     self.aonames.extend([prefix + x for x in temp])
+
+        # If we parsed a BOMD trajectory, the first two parsed
+        # geometries are identical, and all from the second onward are
+        # in Bohr. Delete the first one and perform the unit
+        # conversion.
+        if self.is_MD:
+            self.atomcoords = utils.convertor(numpy.asarray(self.atomcoords)[1:, ...],
+                                              'bohr', 'Angstrom')
 
 
 if __name__ == "__main__":
