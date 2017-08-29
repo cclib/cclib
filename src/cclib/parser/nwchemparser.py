@@ -1049,6 +1049,9 @@ class NWChem(logfileparser.Logfile):
                 polarizability.append(line.split()[1:])
             self.polarizabilities.append(numpy.array(polarizability))
 
+        if line.strip() == "NWChem QMD Module":
+            self.is_MD = True
+
         # Born-Oppenheimer molecular dynamics (BOMD): time.
         if "QMD Run Information" in line:
             self.skip_line(inputfile, 'd')
@@ -1061,18 +1064,29 @@ class NWChem(logfileparser.Logfile):
 
         # BOMD: geometry coordinates when `print low`.
         if line.strip() == "DFT ENERGY GRADIENTS":
-            self.skip_lines(inputfile, ['b', 'atom coordinates gradient', 'xyzxyz'])
-            line = next(inputfile)
-            atomcoords_step = []
-            while line.strip():
-                tokens = line.split()
-                assert len(tokens) == 8
-                atomcoords_step.append([float(c) for c in tokens[2:5]])
+            if self.is_MD:
+                self.skip_lines(inputfile, ['b', 'atom coordinates gradient', 'xyzxyz'])
                 line = next(inputfile)
-            self.atomcoords.append(atomcoords_step)
+                atomcoords_step = []
+                while line.strip():
+                    tokens = line.split()
+                    assert len(tokens) == 8
+                    atomcoords_step.append([float(c) for c in tokens[2:5]])
+                    line = next(inputfile)
+                self.atomcoords.append(atomcoords_step)
+
+    def before_parsing(self):
+        """NWChem-specific routines performed before parsing a file.
+        """
+
+        # The only reason we need this identifier is if `print low` is
+        # set in the input file, which we assume is likely for an MD
+        # trajectory. This will enable parsing coordinates from the
+        # 'DFT ENERGY GRADIENTS' section.
+        self.is_MD = False
 
     def after_parsing(self):
-        """NWChem-specific routines for after parsing file.
+        """NWChem-specific routines for after parsing a file.
 
         Currently, expands self.shells() into self.aonames.
         """
