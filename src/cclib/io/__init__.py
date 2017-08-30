@@ -11,6 +11,7 @@ from .cjsonwriter import CJSON as CJSONWriter
 from .cmlwriter import CML
 from .xyzwriter import XYZ
 from .moldenwriter import MOLDEN
+from .wfxwriter import WFXWriter
 from .cjsonreader import CJSON as CJSONReader
 
 # This allows users to type:

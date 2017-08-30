@@ -18,6 +18,7 @@ from testcjsonreader import *
 from testcjsonwriter import *
 from testmoldenwriter import *
 
+from testwfxwriter import *
 
 if __name__ == "__main__":
     unittest.main()
