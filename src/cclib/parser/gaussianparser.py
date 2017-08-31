@@ -258,12 +258,12 @@ class Gaussian(logfileparser.Logfile):
                 self.moments.append(dipole)
 
         if line[1:43] == "Quadrupole moment (field-independent basis":
-        # e.g. (g09)
-        # Quadrupole moment (field-independent basis, Debye-Ang):
-        #   XX=             -6.1213   YY=             -4.2950   ZZ=             -5.4175
-        #   XY=              0.0000   XZ=              0.0000   YZ=              0.0000
-        # or from g03
-        #   XX=    -6.1213   YY=    -4.2950   ZZ=    -5.4175
+            # e.g. (g09)
+            # Quadrupole moment (field-independent basis, Debye-Ang):
+            #   XX=             -6.1213   YY=             -4.2950   ZZ=             -5.4175
+            #   XY=              0.0000   XZ=              0.0000   YZ=              0.0000
+            # or from g03
+            #   XX=    -6.1213   YY=    -4.2950   ZZ=    -5.4175
             quadrupole = {}
             for j in range(2): # two rows
                 line = inputfile.next()
@@ -288,11 +288,11 @@ class Gaussian(logfileparser.Logfile):
                     assert self.moments[2] == quadrupole
 
         if line[1:41] == "Octapole moment (field-independent basis":
-        # e.g.
-        # Octapole moment (field-independent basis, Debye-Ang**2):
-        #  XXX=              0.0000  YYY=              0.0000  ZZZ=             -0.1457  XYY=              0.0000
-        #  XXY=              0.0000  XXZ=              0.0136  XZZ=              0.0000  YZZ=              0.0000
-        #  YYZ=             -0.5848  XYZ=              0.0000
+            # e.g.
+            # Octapole moment (field-independent basis, Debye-Ang**2):
+            #  XXX=              0.0000  YYY=              0.0000  ZZZ=             -0.1457  XYY=              0.0000
+            #  XXY=              0.0000  XXZ=              0.0136  XZZ=              0.0000  YZZ=              0.0000
+            #  YYZ=             -0.5848  XYZ=              0.0000
             octapole = {}
             for j in range(2): # two rows
                 line = inputfile.next()
@@ -326,12 +326,12 @@ class Gaussian(logfileparser.Logfile):
                     assert self.moments[3] == octapole
 
         if line[1:20] == "Hexadecapole moment":
-        # e.g.
-        # Hexadecapole moment (field-independent basis, Debye-Ang**3):
-        # XXXX=             -3.2614 YYYY=             -6.8264 ZZZZ=             -4.9965 XXXY=              0.0000
-        # XXXZ=              0.0000 YYYX=              0.0000 YYYZ=              0.0000 ZZZX=              0.0000
-        # ZZZY=              0.0000 XXYY=             -1.8585 XXZZ=             -1.4123 YYZZ=             -1.7504
-        # XXYZ=              0.0000 YYXZ=              0.0000 ZZXY=              0.0000
+            # e.g.
+            # Hexadecapole moment (field-independent basis, Debye-Ang**3):
+            # XXXX=             -3.2614 YYYY=             -6.8264 ZZZZ=             -4.9965 XXXY=              0.0000
+            # XXXZ=              0.0000 YYYX=              0.0000 YYYZ=              0.0000 ZZZX=              0.0000
+            # ZZZY=              0.0000 XXYY=             -1.8585 XXZZ=             -1.4123 YYZZ=             -1.7504
+            # XXYZ=              0.0000 YYXZ=              0.0000 ZZXY=              0.0000
             hexadecapole = {}
             # read three lines worth of 4 moments per line
             for j in range(3):
@@ -372,7 +372,7 @@ class Gaussian(logfileparser.Logfile):
             self.optdone.append(len(self.geovalues) - 1)
 
             assert hasattr(self, "optstatus") and len(self.optstatus) > 0
-            self.optstatus[-1] = data.ccData.OPT_DONE
+            self.optstatus[-1] += data.ccData.OPT_DONE
 
         # Catch message about stopped optimization (not converged).
         if line[1:21] == "Optimization stopped":
@@ -381,7 +381,7 @@ class Gaussian(logfileparser.Logfile):
                 self.optdone = []
 
             assert hasattr(self, "optstatus") and len(self.optstatus) > 0
-            self.optstatus[-1] = data.ccData.OPT_UNCONVERGED
+            self.optstatus[-1] += data.ccData.OPT_UNCONVERGED
 
         # Extract the atomic numbers and coordinates from the input orientation,
         #   in the event the standard orientation isn't available.
@@ -821,10 +821,11 @@ class Gaussian(logfileparser.Logfile):
         # Matches "Step number  123", "Pt XX Step number 123" and "PtXXX Step number 123"
         if " Step number" in line:
             step = int(line.split()[line.split().index('Step') + 2])
+            if not hasattr(self, "optstatus"):
+                self.optstatus = []
+            self.optstatus.append(data.ccData.OPT_UNKNOWN)
             if step == 1:
-                if not hasattr(self, "optstatus"):
-                    self.optstatus = []
-                self.optstatus.append(data.ccData.OPT_NEW)
+                self.optstatus[-1] += data.ccData.OPT_NEW
 
         # Geometry convergence information.
         if line[49:59] == 'Converged?':
@@ -847,13 +848,6 @@ class Gaussian(logfileparser.Logfile):
                 self.geotargets[i] = self.float(parts[3])
 
             self.geovalues.append(newlist)
-
-            if not hasattr(self, "optstatus"):
-                self.optstatus = []
-            if len(self.optstatus) == len(self.geovalues) - 1:
-                self.optstatus.append(data.ccData.OPT_UNKNOWN)
-            else:
-                assert self.optstatus[-1] == data.ccData.OPT_NEW
 
         # Gradients.
         # Read in the cartesian energy gradients (forces) from a block like this:
@@ -1572,19 +1566,18 @@ class Gaussian(logfileparser.Logfile):
                 # This was continue before parser refactoring.
                 # continue
 
-# Needs to handle code like the following:
-#
-#  Center     Atomic      Valence      Angular      Power                                                       Coordinates
-#  Number     Number     Electrons     Momentum     of R      Exponent        Coefficient                X           Y           Z
-# ===================================================================================================================================
-# Centers:   1
-# Centers:  16
-# Centers:  21 24
-# Centers:  99100101102
-#    1         44           16                                                                      -4.012684 -0.696698  0.006750
-#                                      F and up
-#                                                     0      554.3796303       -0.05152700
-
+            # Needs to handle code like the following:
+            #
+            #  Center     Atomic      Valence      Angular      Power                                                       Coordinates
+            #  Number     Number     Electrons     Momentum     of R      Exponent        Coefficient                X           Y           Z
+            # ===================================================================================================================================
+            # Centers:   1
+            # Centers:  16
+            # Centers:  21 24
+            # Centers:  99100101102
+            #    1         44           16                                                                      -4.012684 -0.696698  0.006750
+            #                                      F and up
+            #                                                     0      554.3796303       -0.05152700
             centers = []
             while line.find("Centers:") >= 0:
                 temp = line[10:]
@@ -1729,6 +1722,78 @@ class Gaussian(logfileparser.Logfile):
                                            [line[23:31], line[31:39], line[39:47], line[47:55], line[55:63], line[63:71]]]
                 polarizability = utils.symmetrize(polarizability, use_triangle='lower')
                 self.polarizabilities.append(polarizability)
+
+        # IRC Computation convergence checks.
+        #
+        # -------- Sample extract for IRC step --------
+        #
+        # IRC-IRC-IRC-IRC-IRC-IRC-IRC-IRC-IRC-IRC-IRC-IRC-IRC-IRC-IRC-IRC-IRC-IRC
+        # ------------------------------------------------------------------------
+        # INPUT DATA FOR L123
+        # ------------------------------------------------------------------------
+        # GENERAL PARAMETERS:
+        # Follow reaction path in both directions.
+        # Maximum points per path      = 200
+        # Step size                    =   0.100 bohr
+        # Integration scheme           = HPC
+        #    Redo corrector integration= Yes
+        #    DWI Weight Power          =  2
+        #    DWI will use Hessian update vectors when possible.
+        #    Max correction cycles     =  50
+        # Initial Hessian              = CalcFC
+        # Hessian evaluation           = Analytic every   5 predictor steps
+        #                              = Analytic every   5 corrector steps
+        # Hessian updating method      = Bofill
+        # ------------------------------------------------------------------------
+        # IRC-IRC-IRC-IRC-IRC-IRC-IRC-IRC-IRC-IRC-IRC-IRC-IRC-IRC-IRC-IRC-IRC-IRC
+        #
+        # -------- Sample extract for converged step --------
+        # IRC-IRC-IRC-IRC-IRC-IRC-IRC-IRC-IRC-IRC-IRC-IRC-IRC-IRC-IRC-IRC-IRC-IRC
+        # Pt  1 Step number   1 out of a maximum of  50
+        # Modified Bulirsch-Stoer Extrapolation Cycles:
+        #    EPS =    0.000010000000000
+        # Maximum DWI energy   std dev =  0.000000595 at pt     1
+        # Maximum DWI gradient std dev =  0.135684493 at pt     2
+        # CORRECTOR INTEGRATION CONVERGENCE:
+        #   Recorrection delta-x convergence threshold:    0.010000
+        #   Delta-x Convergence Met
+        # Point Number:   1          Path Number:   1
+        #   CHANGE IN THE REACTION COORDINATE =    0.16730
+        #   NET REACTION COORDINATE UP TO THIS POINT =    0.16730
+        #  # OF POINTS ALONG THE PATH =   1
+        #  # OF STEPS =   1
+        #
+        # Calculating another point on the path.
+        # IRC-IRC-IRC-IRC-IRC-IRC-IRC-IRC-IRC-IRC-IRC-IRC-IRC-IRC-IRC-IRC-IRC-IRC
+        #
+        # -------- Sample extract for unconverged intermediate step --------
+        # IRC-IRC-IRC-IRC-IRC-IRC-IRC-IRC-IRC-IRC-IRC-IRC-IRC-IRC-IRC-IRC-IRC-IRC
+        # Error in corrector energy =          -0.0000457166
+        # Magnitude of corrector gradient =     0.0140183779
+        # Magnitude of analytic gradient =      0.0144021969
+        # Magnitude of difference =             0.0078709968
+        # Angle between gradients (degrees)=   32.1199
+        # Pt 40 Step number   2 out of a maximum of  20
+        # Modified Bulirsch-Stoer Extrapolation Cycles:
+        #    EPS =    0.000010000000000
+        # Maximum DWI energy   std dev =  0.000007300 at pt    31
+        # Maximum DWI gradient std dev =  0.085197906 at pt    59
+        # CORRECTOR INTEGRATION CONVERGENCE:
+        #   Recorrection delta-x convergence threshold:    0.010000
+        #   Delta-x Convergence NOT Met
+        # IRC-IRC-IRC-IRC-IRC-IRC-IRC-IRC-IRC-IRC-IRC-IRC-IRC-IRC-IRC-IRC-IRC-IRC
+        if line[1:20] == "INPUT DATA FOR L123":  # First IRC step
+            if not hasattr(self, "optstatus"):
+                self.optstatus = []
+            self.optstatus.append(data.ccData.OPT_NEW)
+        if line[3:22] == "Delta-x Convergence":
+            if line[23:30] == "NOT Met":
+                self.optstatus[-1] += data.ccData.OPT_UNCONVERGED
+            elif line[23:26] == "Met":
+                self.optstatus[-1] += data.ccData.OPT_DONE
+                if not hasattr(self, 'optdone'):
+                    self.optdone = []
+                self.optdone.append(len(self.optstatus) - 1)
 
 
 

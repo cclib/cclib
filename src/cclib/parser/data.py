@@ -51,7 +51,7 @@ class ccData(object):
         grads -- current values of forces (gradients) in geometry optimization (array[3])
         hessian -- elements of the force constant matrix (array[1])
         homos -- molecular orbital indices of HOMO(s) (array[1])
-        metadata -- various metadata about the package and computation (dict) 
+        metadata -- various metadata about the package and computation (dict)
         mocoeffs -- molecular orbital coefficients (list of arrays[2])
         moenergies -- molecular orbital energies (list of arrays[1], eV)
         moments -- molecular multipole moments (list of arrays[], a.u.)
@@ -167,10 +167,15 @@ class ccData(object):
     _dictsofarrays = ["atomcharges", "atomspins"]
 
     # Possible statuses for optimization steps.
-    OPT_UNKNOWN = 0
-    OPT_NEW = 1
-    OPT_DONE = 2
-    OPT_UNCONVERGED = 3
+    # OPT_UNKNOWN should not be used after parsing, unless for unfinished computations.
+    # OPT_NEW is set for every new optimization (e.g. PES, IRCs, etc.)
+    # OPT_DONE is set for the last step of an optimisation that converged.
+    # OPT_UNCONVERGED is set for every unconverged step (e.g. should be mutually exclusive with OPT_DONE)
+    # bit value notation allows coding for multiple states: OPT_NEW and OPT_UNCONVERGED or OPT_NEW and OPT_DONE.
+    OPT_UNKNOWN = 0b000
+    OPT_NEW = 0b001
+    OPT_UNCONVERGED = 0b010
+    OPT_DONE = 0b100
 
     def __init__(self, attributes={}):
         """Initialize the cclibData object.
@@ -257,6 +262,35 @@ class ccData(object):
         self.typecheck()
 
         return invalid
+
+    def converged_geometries(self):
+        """
+        Return all converged geometries.
+
+        An array containing only the converged geometries, e.g.:
+            - For PES or IRCs, return all geometries for which optstatus matches OPT_DONE
+            - The converged geometry for simple optimisations
+            - The input geometry for single points
+        """
+        if hasattr(self, 'optstatus'):
+            converged_indexes = [x for x, y in enumerate(self.optstatus) if y & self.OPT_DONE > 0]
+            return self.atomcoords[converged_indexes]
+        else:
+            return self.atomcoords
+
+    def starting_geometries(self):
+        """
+        Return all starting geometries.
+
+        An array containing only the starting geometries, e.g.:
+            - For PES or IRCs, return all geometries for which optstatus matches OPT_NEW
+            - The input geometry for simple optimisations or single points
+        """
+        if hasattr(self, 'optstatus'):
+            new_indexes = [x for x, y in enumerate(self.optstatus) if y & self.OPT_NEW > 0]
+            return self.atomcoords[new_indexes]
+        else:
+            return self.atomcoords
 
     def typecheck(self):
         """Check the types of all attributes.
