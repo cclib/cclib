@@ -263,35 +263,6 @@ class ccData(object):
 
         return invalid
 
-    def converged_geometries(self):
-        """
-        Return all converged geometries.
-
-        An array containing only the converged geometries, e.g.:
-            - For PES or IRCs, return all geometries for which optstatus matches OPT_DONE
-            - The converged geometry for simple optimisations
-            - The input geometry for single points
-        """
-        if hasattr(self, 'optstatus'):
-            converged_indexes = [x for x, y in enumerate(self.optstatus) if y & self.OPT_DONE > 0]
-            return self.atomcoords[converged_indexes]
-        else:
-            return self.atomcoords
-
-    def starting_geometries(self):
-        """
-        Return all starting geometries.
-
-        An array containing only the starting geometries, e.g.:
-            - For PES or IRCs, return all geometries for which optstatus matches OPT_NEW
-            - The input geometry for simple optimisations or single points
-        """
-        if hasattr(self, 'optstatus'):
-            new_indexes = [x for x, y in enumerate(self.optstatus) if y & self.OPT_NEW > 0]
-            return self.atomcoords[new_indexes]
-        else:
-            return self.atomcoords
-
     def typecheck(self):
         """Check the types of all attributes.
 
@@ -336,6 +307,37 @@ class ccData(object):
     def writexyz(self, filename=None):
         """Write parsed attributes to an XML file."""
         return self.write(filename=filename, outputtype='xyz')
+
+    @property
+    def converged_geometries(self):
+        """
+        Return all converged geometries.
+
+        An array containing only the converged geometries, e.g.:
+            - For PES or IRCs, return all geometries for which optstatus matches OPT_DONE
+            - The converged geometry for simple optimisations
+            - The input geometry for single points
+        """
+        if hasattr(self, 'optstatus'):
+            converged_indexes = [x for x, y in enumerate(self.optstatus) if y & self.OPT_DONE > 0]
+            return self.atomcoords[converged_indexes]
+        else:
+            return self.atomcoords
+
+    @property
+    def starting_geometries(self):
+        """
+        Return all starting geometries.
+
+        An array containing only the starting geometries, e.g.:
+            - For PES or IRCs, return all geometries for which optstatus matches OPT_NEW
+            - The input geometry for simple optimisations or single points
+        """
+        if hasattr(self, 'optstatus'):
+            new_indexes = [x for x, y in enumerate(self.optstatus) if y & self.OPT_NEW > 0]
+            return self.atomcoords[new_indexes]
+        else:
+            return self.atomcoords
 
     @property
     def nelectrons(self):
