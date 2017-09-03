@@ -32,7 +32,6 @@ Basis     NWChem      GenericBasisTest      basicNWChem6.0        dvb_sp_hf.out
 Basis     NWChem      GenericBasisTest      basicNWChem6.0        dvb_sp_ks.out
 Basis     NWChem      GenericBasisTest      basicNWChem6.5        dvb_sp_hf.out
 Basis     NWChem      GenericBasisTest      basicNWChem6.5        dvb_sp_ks.out
-Basis     ORCA        GenericBasisTest      basicORCA2.9          dvb_sp.out
 Basis     ORCA        GenericBasisTest      basicORCA3.0          dvb_sp.out
 Basis     Psi         GenericBasisTest      basicPsi4.0           dvb_sp_rhf.out
 Basis     Psi         GenericBasisTest      basicPsi4.0           dvb_sp_rks.out
@@ -122,7 +121,6 @@ GeoOpt    NWChem      NWChemGeoOptTest      basicNWChem6.0        dvb_gopt_hf.ou
 GeoOpt    NWChem      NWChemGeoOptTest      basicNWChem6.0        dvb_gopt_ks.out
 GeoOpt    NWChem      NWChemGeoOptTest      basicNWChem6.5        dvb_gopt_hf.out
 GeoOpt    NWChem      NWChemGeoOptTest      basicNWChem6.5        dvb_gopt_ks.out
-GeoOpt    ORCA        OrcaGeoOptTest        basicORCA2.9          dvb_gopt.out
 GeoOpt    ORCA        OrcaGeoOptTest        basicORCA3.0          dvb_gopt.out
 GeoOpt    Psi         PsiGeoOptTest         basicPsi4.0           dvb_gopt_rhf.out
 GeoOpt    Psi         PsiGeoOptTest         basicPsi4.0           dvb_gopt_rks.out
@@ -173,8 +171,6 @@ Polar     QChem       ReferencePolarTest    basicQChem4.2         Trp_polar.out
 
 Scan      Gaussian     GenericScanTest_optdone_bool   basicGaussian09       dvb_scan.log
 Scan      Gaussian     GaussianScanTest               basicGaussian09       dvb_scan.log
-Scan      ORCA         GenericScanTest_optdone_bool   basicORCA2.9          dvb_scan.out
-Scan      ORCA         OrcaScanTest                   basicORCA2.9          dvb_scan.out
 Scan      ORCA         OrcaScanTest                   basicORCA3.0          dvb_scan.out
 Scan      Jaguar       GenericScanTest_optdone_bool   basicJaguar8.3        dvb_scan.out
 Scan      Jaguar       JaguarScanTest                 basicJaguar8.3        dvb_scan.out
@@ -202,7 +198,6 @@ SP        NWChem      GenericSPTest         basicNWChem6.0        dvb_sp_hf.out
 SP        NWChem      GenericSPTest         basicNWChem6.0        dvb_sp_ks.out
 SP        NWChem      GenericSPTest         basicNWChem6.5        dvb_sp_hf.out
 SP        NWChem      GenericSPTest         basicNWChem6.5        dvb_sp_ks.out
-SP        ORCA        OrcaSPTest            basicORCA2.9          dvb_sp.out
 SP        ORCA        OrcaSPTest            basicORCA3.0          dvb_sp.out
 SP        Psi         Psi3SPTest            basicPsi3             dvb_sp_hf.out
 SP        Psi         GenericSPTest         basicPsi4.0           dvb_sp_rhf.out
@@ -230,7 +225,6 @@ SPun      Molpro      GenericSPunTest       basicMolpro2006       dvb_sphf_un.ou
 SPun      Molpro      GenericSPunTest       basicMolpro2012       dvb_sphf_un.out
 SPun      NWChem      GenericSPunTest       basicNWChem6.0        dvb_un_sp_ks.out
 SPun      NWChem      GenericSPunTest       basicNWChem6.5        dvb_un_sp_ks.out
-SPun      ORCA        GenericSPunTest       basicORCA2.9          dvb_sp_un.out
 SPun      ORCA        GenericSPunTest       basicORCA3.0          dvb_sp_un.out
 SPun      Psi         GenericROSPTest       basicPsi4.0           dvb_sp_rohf.out
 SPun      Psi         GenericSPunTest       basicPsi4.0           dvb_sp_uhf.out
@@ -250,7 +244,6 @@ TD        GAMESS      GenericTDDFTtrpTest   basicGAMESS-US2017    dvb_td_trplet.
 TD        Gaussian    GaussianTDDFTTest     basicGaussian03       dvb_td.out
 TD        Gaussian    GaussianTDDFTTest     basicGaussian09       dvb_td.out
 TD        Jaguar      JaguarTDDFTTest       basicJaguar8.3        dvb_td.out
-TD        ORCA        OrcaTDDFTTest         basicORCA2.9          dvb_td.out
 TD        ORCA        OrcaTDDFTTest         basicORCA3.0          dvb_td.out
 TD        ORCA        OrcaROCISTest         basicORCA4.0          dvb_rocis.out
 TD        QChem       QChemTDDFTTest        basicQChem4.2         dvb_td.out
@@ -273,7 +266,6 @@ vib       Jaguar      JaguarIRTest          basicJaguar7.0        dvb_ir.out
 vib       Jaguar      JaguarIRTest          basicJaguar8.3        dvb_ir.out
 vib       Molpro      GenericIRTest         basicMolpro2006       dvb_ir.out            dvb_ir.log
 vib       Molpro      GenericIRTest         basicMolpro2012       dvb_ir.out            dvb_ir.log
-vib       ORCA        OrcaIRTest            basicORCA2.9          dvb_ir.out
 vib       ORCA        OrcaIRTest            basicORCA3.0          dvb_ir.out
 vib       Psi         GenericIRTest         basicPsi4.0           dvb_ir_rhf.out
 vib       QChem       QChemIRTest           basicQChem4.2         dvb_ir.out
@@ -287,6 +279,5 @@ vib       GAMESSUK    GenericRamanTest      basicGAMESS-UK8.0     dvb_raman.out
 vib       GAMESS      GenericRamanTest      basicFirefly8.0       dvb_raman.out
 vib       Gaussian    GaussianRamanTest     basicGaussian03       dvb_raman.out
 vib       Gaussian    GaussianRamanTest     basicGaussian09       dvb_raman.out
-vib       ORCA        GenericRamanTest      basicORCA2.9          dvb_raman.out
 vib       ORCA        GenericRamanTest      basicORCA3.0          dvb_raman.out
 vib       QChem       QChemRamanTest        basicQChem4.2         dvb_raman.out
