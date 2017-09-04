@@ -325,7 +325,7 @@ class ccData(object):
             return self.atomcoords
 
     @property
-    def starting_geometries(self):
+    def new_geometries(self):
         """
         Return all starting geometries.
 
@@ -336,6 +336,36 @@ class ccData(object):
         if hasattr(self, 'optstatus'):
             new_indexes = [x for x, y in enumerate(self.optstatus) if y & self.OPT_NEW > 0]
             return self.atomcoords[new_indexes]
+        else:
+            return self.atomcoords
+
+    @property
+    def unknown_geometries(self):
+        """
+        Return all OPT_UNKNOWN geometries.
+
+        An array containing only the starting geometries, e.g.:
+            - For PES or IRCs, return all geometries for which optstatus matches OPT_UNKNOWN
+            - The input geometry for simple optimisations or single points
+        """
+        if hasattr(self, 'optstatus'):
+            unknown_indexes = [x for x, y in enumerate(self.optstatus) if y == self.OPT_UNKNOWN]
+            return self.atomcoords[unknown_indexes]
+        else:
+            return self.atomcoords
+
+    @property
+    def unconverged_geometries(self):
+        """
+        Return all unconverged geometries.
+
+        An array containing only the starting geometries, e.g.:
+            - For PES or IRCs, return all geometries for which optstatus matches OPT_UNCONVERGED
+            - The input geometry for simple optimisations or single points
+        """
+        if hasattr(self, 'optstatus'):
+            unconverged_indexes = [x for x, y in enumerate(self.optstatus) if y & self.OPT_UNCONVERGED > 0]
+            return self.atomcoords[unconverged_indexes]
         else:
             return self.atomcoords
 
