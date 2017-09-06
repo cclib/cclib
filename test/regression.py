@@ -75,6 +75,7 @@ from test_data import get_program_dir
 
 # We need this to point to files relative to this script.
 __filedir__ = os.path.abspath(os.path.dirname(__file__))
+__regression_dir__ = os.path.join(__filedir__, "../data/regression/")
 
 
 # The following regression test functions were manually written, because they
@@ -197,7 +198,7 @@ def testDALTON_DALTON_2016_Trp_polar_response_diplnx_out(logfile):
     """Check that only the xx component of polarizability is defined and
     all others are NaN even after parsing a previous file with full tensor.
     """
-    full_tens_path = os.path.join(__filedir__, "DALTON/DALTON-2015/Trp_polar_response.out")
+    full_tens_path = os.path.join(__regression_dir__, "DALTON/DALTON-2015/Trp_polar_response.out")
     DALTON(full_tens_path).parse()
     assert hasattr(logfile.data, "polarizabilities")
     assert abs(logfile.data.polarizabilities[0][0, 0] - 95.11540019) < 1.0e-8
@@ -1656,16 +1657,16 @@ def make_regression_from_old_unittest(test_class):
     return old_unit_test
 
 
-def main(which=[], opt_traceback=False, opt_status=False, regdir="."):
+def main(which=[], opt_traceback=False, opt_status=False, regdir=__regression_dir__):
 
     # Build a list of regression files that can be found.
     try:
         filenames = {}
         for p in parser_names:
             filenames[p] = []
-            pdir = get_program_dir(p)
-            for version in os.listdir(os.path.join(__filedir__, pdir)):
-                for fn in os.listdir(os.path.join(__filedir__, pdir, version)):
+            pdir = os.path.join(regdir, get_program_dir(p))
+            for version in os.listdir(pdir):
+                for fn in os.listdir(os.path.join(pdir, version)):
                     fpath = os.path.join(pdir, version, fn)
                     filenames[p].append(fpath)
     except OSError as e:
@@ -1689,10 +1690,10 @@ def main(which=[], opt_traceback=False, opt_status=False, regdir="."):
     missing_on_disk = []
     missing_in_list = []
     for fn in regfilenames:
-        if not os.path.isfile(os.path.join(__filedir__, fn)):
+        if not os.path.isfile(os.path.join(regdir, fn)):
             missing_on_disk.append(fn)
-    for fn in glob.glob(os.path.join(__filedir__, '*', '*', '*')):
-        fn = fn.replace(__filedir__, '').strip('/')
+    for fn in glob.glob(os.path.join(regdir, '*', '*', '*')):
+        fn = fn.replace(regdir, '').strip('/')
         if fn not in regfilenames:
             missing_in_list.append(fn)
 
@@ -1708,7 +1709,7 @@ def main(which=[], opt_traceback=False, opt_status=False, regdir="."):
     for pn in parser_names:
         prefix = "test%s_%s" % (pn, pn)
         tests = [fn for fn in globals() if fn[:len(prefix)] == prefix]
-        normalized = [normalisefilename(fn) for fn in filenames[pn]]
+        normalized = [normalisefilename(fn.replace(__regression_dir__, '')) for fn in filenames[pn]]
         orphaned = [t for t in tests if t[4:] not in normalized]
         orphaned_tests.extend(orphaned)
 
@@ -1734,7 +1735,7 @@ def main(which=[], opt_traceback=False, opt_status=False, regdir="."):
             # correctly parsed (for fragments, for example), and these test need
             # to be additionaly prepended with 'testnoparse'.
             test_this = test_noparse = False
-            fname_norm = normalisefilename(fname)
+            fname_norm = normalisefilename(fname.replace(__regression_dir__, ''))
 
             funcname = "test" + fname_norm
             test_this = funcname in globals()
