@@ -23,6 +23,7 @@ class GenericIRTest(unittest.TestCase):
     max_IR_intensity = 100
 
     def setUp(self):
+        """Initialize the number of vibrational frequencies on a per molecule basis"""
         self.numvib = 3*len(self.data.atomnos) - 6
 
     def testvibdisps(self):
@@ -148,6 +149,7 @@ class GenericIRimgTest(unittest.TestCase):
     """Generic imaginary vibrational frequency unittest"""
 
     def setUp(self):
+        """Initialize the number of vibrational frequencies on a per molecule basis"""
         self.numvib = 3*len(self.data.atomnos) - 6
 
     def testvibdisps(self):
@@ -178,6 +180,7 @@ class GenericRamanTest(unittest.TestCase):
     max_raman_intensity = 575
 
     def setUp(self):
+        """Initialize the number of vibrational frequencies on a per molecule basis"""
         self.numvib = 3*len(self.data.atomnos) - 6
 
     def testlengths(self):
@@ -229,6 +232,10 @@ class GenericLinearIRTest(GenericIRTest):
     """Test for linear molecules, which have 3N - 5 vibrational modes"""
 
     def setUp(self):
+        """
+        Initialize the number of vibrational frequencies on a per molecule basis
+        Linear molecules have one extra vibrational frequency
+        """
         self.numvib = 3*len(self.data.atomnos) - 5
 
     def testfreqval(self):
