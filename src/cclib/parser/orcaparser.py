@@ -697,12 +697,10 @@ State  Energy   Wavelength       D2            m2              Q2               
    1 61784150.6      0.2      0.00000         0.00000         3.23572         0.00000         0.00000         0.00000323571519         0.00000         0.00000         1.00000         0.00000          0.00000
    2 61793079.3      0.2      0.00000         0.00000         2.85949         0.00000        -0.00000         0.00000285948800         0.00000         0.00000         1.00000         0.00000         -0.00000
 """
-                    try:
-                        state, energy, wavelength, d2, m2, q2, dm, do, intensity, d2_contrib, m2_contrib, q2_contrib, dm_contrib, do_contrib = line.split()
-                        return energy, intensity
-                    except ValueError as e:
-                        # Spin forbidden
-                        return line.split()[1], 0
+                    vals = line.split()
+                    if len(vals) < 14:
+                        return vals[1], 0
+                    return vals[1], vals[8]
 
             elif line[:5] == 'X-RAY' and \
                 (line[6:23] == 'EMISSION SPECTRUM' or line[6:25] == 'ABSORPTION SPECTRUM'):
