@@ -72,6 +72,8 @@ class ccData(object):
         scftargets -- targets for convergence of the SCF (array[2])
         scfvalues -- current values for convergence of the SCF (list of arrays[2])
         temperature -- temperature used for Thermochemistry (float, kelvin)
+        transprop -- all absorption and emission spectra (dictionary {name:(etenergies, etoscs)})
+            WARNING: this attribute is not standardized and is liable to change in cclib 2.0
         time -- time in molecular dynamics and other trajectories (array[1], fs)
         vibanharms -- vibrational anharmonicity constants (array[2], 1/cm)
         vibdisps -- cartesian displacement vectors (array[3], delta angstrom)
