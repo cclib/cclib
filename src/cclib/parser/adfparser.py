@@ -133,7 +133,7 @@ class ADF(logfileparser.Logfile):
         # else we are sure is is the calculation proper. It would be good to combine
         # this with the previous block, if possible.
         if line[:6] == "Create":
-            while line[:5] != "title":
+            while line[:5] != "title" and "NO TITLE" not in line:
                 line = inputfile.next()
 
         if line[1:10] == "Symmetry:":
