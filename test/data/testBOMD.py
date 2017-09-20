@@ -50,6 +50,15 @@ class GaussianBOMDTest(GenericBOMDTest):
     nenergies = 35
 
 
+class ORCABOMDTest(GenericBOMDTest):
+    """Customized Born-Oppenheimer molecular dynamics unittest"""
+
+    # This includes the energy/gradient for the initial geometry.
+    nsteps = 36
+    # FIXME A duplicate initial step is printed?
+    nenergies = 37
+
+
 if __name__=="__main__":
 
     import sys

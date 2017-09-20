@@ -10,6 +10,7 @@
 
 import numpy
 from collections import namedtuple
+from copy import deepcopy
 
 from cclib.method import Electrons
 from cclib.method import orbitals
@@ -183,6 +184,19 @@ class ccData(object):
 
         if attributes:
             self.setattributes(attributes)
+
+    def __add__(self, other):
+        """Combine two ccData instances together by merging their attributes.
+
+        If both instances have an attribute defined, this (self) takes
+        precedence.
+        """
+        assert isinstance(other, ccData)
+        new_attributes = deepcopy(self.getattributes())
+        for (k, v) in other.getattributes().items():
+            if k not in new_attributes:
+                new_attributes[k] = v
+        return type(self)(attributes=new_attributes)
 
     def listify(self):
         """Converts all attributes that are arrays or lists/dicts of arrays to lists."""

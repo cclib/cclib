@@ -761,7 +761,7 @@ class ORCA(logfileparser.Logfile):
         if line.startswith('CHELPG Charges'):
             self.parse_charge_section(line, inputfile, 'chelpg')
 
-        # Born-Oppenheimer molecular dynamics (BOMD).
+        # Born-Oppenheimer molecular dynamics (BOMD), ORCA version < 4.0.
         if "Molecular Dynamics Iteration" in line:
             self.skip_lines(inputfile, ['d', 'ORCA MD', 'd', 'New Coordinates'])
             line = next(inputfile)
@@ -770,6 +770,22 @@ class ORCA(logfileparser.Logfile):
             if not hasattr(self, 'time'):
                 self.time = []
             self.time.append(utils.convertor(float(tokens[2]), "au", "fs"))
+
+        # Born-Oppenheimer molecular dynamics (BOMD), ORCA version >= 4.0.
+        if "Starting MD loop for" in line:
+            nsteps = int(line.split()[4])
+            self.skip_lines(inputfile, ['b', 'Opening position trajectory', 'b', 'header'])
+            line = next(inputfile)
+            if not hasattr(self, 'time'):
+                self.time = []
+            while line.strip():
+                tokens = line.split()
+                time = float(tokens[1])
+                self.time.append(utils.convertor(time, "au", "fs"))
+                line = next(inputfile)
+            # This includes the energy/gradient for the initial
+            # geometry.
+            assert len(self.time) == nsteps + 1
 
         # It is not stated explicitely, but the dipole moment components printed by ORCA
         # seem to be in atomic units, so they will need to be converted. Also, they

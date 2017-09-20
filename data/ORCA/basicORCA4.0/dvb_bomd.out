@@ -1,0 +1,234 @@
+
+                                 *****************
+                                 * O   R   C   A *
+                                 *****************
+
+           --- An Ab Initio, DFT and Semiempirical electronic structure package ---
+
+                  #######################################################
+                  #                        -***-                        #
+                  #  Department of molecular theory and spectroscopy    #
+                  #              Directorship: Frank Neese              #
+                  # Max Planck Institute for Chemical Energy Conversion #
+                  #                  D-45470 Muelheim/Ruhr              #
+                  #                       Germany                       #
+                  #                                                     #
+                  #                  All rights reserved                #
+                  #                        -***-                        #
+                  #######################################################
+
+
+                         Program Version 4.0.1.2 - RELEASE -
+
+
+ With contributions from (in alphabetic order):
+   Daniel Aravena         : Magnetic Properties
+   Michael Atanasov       : Ab Initio Ligand Field Theory
+   Ute Becker             : Parallelization
+   Martin Brehm           : Molecular dynamics
+   Dmytro Bykov           : SCF Hessian
+   Vijay G. Chilkuri      : MRCI spin determinant printing
+   Dipayan Datta          : RHF DLPNO-CCSD density
+   Achintya Kumar Dutta   : EOM-CC, STEOM-CC
+   Dmitry Ganyushin       : Spin-Orbit,Spin-Spin,Magnetic field MRCI
+   Yang Guo               : DLPNO-NEVPT2, CIM, IAO-localization
+   Andreas Hansen         : Spin unrestricted coupled pair/coupled cluster methods
+   Lee Huntington         : MR-EOM, pCC
+   Robert Izsak           : Overlap fitted RIJCOSX, COSX-SCS-MP3, EOM
+   Christian Kollmar      : KDIIS, OOCD, Brueckner-CCSD(T), CCSD density
+   Simone Kossmann        : Meta GGA functionals, TD-DFT gradient, OOMP2, MP2 Hessian
+   Martin Krupicka        : AUTO-CI
+   Dagmar Lenk            : GEPOL surface
+   Dimitrios Liakos       : Extrapolation schemes; parallel MDCI
+   Dimitrios Manganas     : ROCIS; embedding schemes
+   Dimitrios Pantazis     : SARC Basis sets
+   Taras Petrenko         : DFT Hessian,TD-DFT gradient, ASA, ECA, R-Raman, ABS, FL, XAS/XES, NRVS
+   Peter Pinski           : DLPNO-MP2
+   Christoph Reimann      : Effective Core Potentials
+   Marius Retegan         : Local ZFS, SOC
+   Christoph Riplinger    : Optimizer, TS searches, QM/MM, DLPNO-CCSD(T), (RO)-DLPNO pert. Triples
+   Tobias Risthaus        : Range-separated hybrids, TD-DFT gradient, RPA, STAB
+   Michael Roemelt        : Restricted open shell CIS
+   Masaaki Saitow         : Open-shell DLPNO
+   Barbara Sandhoefer     : DKH picture change effects
+   Kantharuban Sivalingam : CASSCF convergence, NEVPT2, FIC-MRCI
+   Georgi Stoychev        : AutoAux
+   Boris Wezisla          : Elementary symmetry handling
+   Frank Wennmohs         : Technical directorship
+
+
+ We gratefully acknowledge several colleagues who have allowed us to
+ interface, adapt or use parts of their codes:
+   Stefan Grimme, W. Hujo, H. Kruse,             : VdW corrections, initial TS optimization,
+                  C. Bannwarth                     DFT functionals, gCP, sTDA/sTD-DF
+   Ed Valeev                                     : LibInt (2-el integral package), F12 methods
+   Garnet Chan, S. Sharma, J. Yang, R. Olivares  : DMRG
+   Ulf Ekstrom                                   : XCFun DFT Library
+   Mihaly Kallay                                 : mrcc  (arbitrary order and MRCC methods)
+   Andreas Klamt, Michael Diedenhofen            : otool_cosmo (COSMO solvation model)
+   Jiri Pittner, Ondrej Demel                    : Mk-CCSD
+   Frank Weinhold                                : gennbo (NPA and NBO analysis)
+   Christopher J. Cramer and Donald G. Truhlar   : smd solvation model
+
+
+ Your calculation uses the libint2 library for the computation of 2-el integrals
+ For citations please refer to: http://libint.valeyev.net
+
+ This ORCA versions uses:
+   CBLAS   interface :  Fast vector & matrix operations
+   LAPACKE interface :  Fast linear algebra routines
+   SCALAPACK package :  Parallel linear algebra routines
+
+
+Your calculation utilizes the basis: STO-3G
+   H-Ne       : W. J. Hehre, R. F. Stewart and J. A. Pople, J. Chem. Phys. 2657 (1969).
+   Na-Ar      : W. J. Hehre, R. Ditchfield, R. F. Stewart and J. A. Pople, J. Chem. Phys. 2769 (1970).
+   K,Ca,Ga-Kr : W. J. Pietro, B. A. Levy, W. J. Hehre and R. F. Stewart, J. Am. Chem. Soc. 19, 2225 (1980).
+   Sc-Zn,Y-Cd : W. J. Pietro and W. J. Hehre, J. Comp. Chem. 4, 241 (1983).
+
+================================================================================
+                                        WARNINGS
+                       Please study these warnings very carefully!
+================================================================================
+
+Warning: TCutStore was < 0. Adjusted to Thresh (uncritical)
+
+INFO   : the flag for use of LIBINT has been found!
+
+================================================================================
+                                       INPUT FILE
+================================================================================
+NAME = dvb_bomd.in
+|  1> ! b3lyp sto-3g nori noautostart md
+|  2> 
+|  3> %md
+|  4>  timestep 25 au
+|  5>  initvel 298 K
+|  6>  run 35
+|  7>  end
+|  8> 
+|  9> * xyz 0 1
+| 10>  C                  0.27867948   -1.36683162    0.00000000
+| 11>  C                  1.32303041   -0.44173575    0.00000000
+| 12>  C                  1.04434506    0.92484978    0.00000000
+| 13>  C                 -0.27867948    1.36683162    0.00000000
+| 14>  C                 -1.32303041    0.44173575    0.00000000
+| 15>  C                 -1.04434506   -0.92484978    0.00000000
+| 16>  H                  2.36595443   -0.79037726    0.00000000
+| 17>  H                  1.86746094    1.65407997    0.00000000
+| 18>  H                 -2.36595443    0.79037726    0.00000000
+| 19>  H                 -1.86746094   -1.65407997    0.00000000
+| 20>  C                 -0.58659169    2.87589931    0.00000000
+| 21>  C                  0.36350188    3.80076420    0.00000000
+| 22>  H                 -1.65647768    3.12394312    0.00000000
+| 23>  H                  0.14429560    4.87693235    0.00000000
+| 24>  H                  1.43338788    3.55272039    0.00000000
+| 25>  C                  0.58659169   -2.87589931    0.00000000
+| 26>  C                 -0.36350188   -3.80076420    0.00000000
+| 27>  H                  1.65647768   -3.12394312    0.00000000
+| 28>  H                 -0.14429560   -4.87693235    0.00000000
+| 29>  H                 -1.43338788   -3.55272039    0.00000000
+| 30> *
+| 31> 
+| 32>                          ****END OF INPUT****
+================================================================================
+
+*********************************************
+***   ORCA ab initio Molecular Dynamics   ***
+*********************************************
+
+Initializing (dvb_bomd / dvb_bomd.mdinput) ...
+TMDInputEngine::ReadInputFile(): Reading input file dvb_bomd.mdinput ...
+
+Converting 25.000000 au to default unit 0.604750 fs.
+In input line 1:
+  >  timestep 25 au
+              ^^^^^
+
+Converting 298.000000 K to default unit 298.000000 Kelvin.
+In input line 2:
+  >  initvel 298 K
+             ^^^^^
+
+TMDInputEngine::ReadInputFile(): Done reading input file.
+Added 3 commands.
+
+    System contains 20 atoms.
+
+****************************
+***   Starting Execution ***
+****************************
+
+>>> timestep 25 au
+
+Setting integration timestep to 0.60 fs.
+
+>>> initvel 298 K
+
+Initializing atom velocities to 298.00 K:
+  Creating Maxwell-Boltzmann distribution...
+  Removing initial center of mass movement...
+  Rescaling velocities to match exact initial temperature (0.952952)...
+Done.
+
+>>> run 35
+
+Starting MD loop for 35 steps.
+
+Opening position trajectory "dvb_bomd-postrj.xyz" for writing...
+
+  Step   Time  Cyc    t_SCF   t_Grad     Temp       E_Kin         E_Pot         E_Ges
+     0    0.0    8   12.584           298.000    0.028322   -382.042725   -382.014403
+     1    0.6    8   13.455    9.806  298.000    0.028322   -382.041552   -382.013230
+     2    1.2    8   13.442    5.527  277.005    0.026327   -382.039028   -382.012702
+     3    1.8    8   13.427    5.518  248.428    0.023611   -382.036460   -382.012850
+     4    2.4    8   13.428    5.525  226.098    0.021488   -382.035008   -382.013520
+     5    3.0    8   13.418    5.520  219.150    0.020828   -382.035150   -382.014322
+     6    3.6    8   13.423    5.578  227.959    0.021665   -382.036479   -382.014814
+     7    4.2    8   13.437    5.526  244.135    0.023203   -382.037902   -382.014700
+     8    4.8    8   13.555    5.530  254.483    0.024186   -382.038160   -382.013974
+     9    5.4    8   12.578    5.528  247.493    0.023522   -382.036489   -382.012967
+    10    6.0    8   12.596    5.519  220.148    0.020923   -382.033183   -382.012260
+    11    6.7    8   12.601    5.544  181.894    0.017287   -382.029680   -382.012392
+    12    7.3    8   12.601    5.529  151.489    0.014398   -382.027811   -382.013414
+    13    7.9    8   12.576    5.533  145.085    0.013789   -382.028485   -382.014696
+    14    8.5    8   12.576    5.524  163.513    0.015540   -382.030939   -382.015398
+    15    9.1    8   12.619    5.530  191.732    0.018222   -382.033395   -382.015173
+    16    9.7    8   13.408    5.555  211.147    0.020068   -382.034408   -382.014340
+    17   10.3    8   13.446    5.533  212.065    0.020155   -382.033656   -382.013501
+    18   10.9    8   13.411    5.512  197.255    0.018747   -382.031879   -382.013132
+    19   11.5    8   13.380    5.513  177.949    0.016912   -382.030303   -382.013391
+    20   12.1    8   13.384    5.529  166.877    0.015860   -382.029969   -382.014109
+    21   12.7    8   13.386    5.508  171.877    0.016335   -382.031239   -382.014904
+    22   13.3    8   13.394    5.513  192.289    0.018275   -382.033634   -382.015359
+    23   13.9    8   13.394    5.512  219.271    0.020840   -382.036047   -382.015208
+    24   14.5    8   13.355    5.519  239.760    0.022787   -382.037249   -382.014462
+    25   15.1    8   12.522    5.514  242.605    0.023057   -382.036503   -382.013445
+    26   15.7    8   12.519    5.505  224.894    0.021374   -382.034089   -382.012715
+    27   16.3    8   12.548    5.513  195.639    0.018594   -382.031378   -382.012784
+    28   16.9    8   12.505    5.513  172.719    0.016415   -382.030114   -382.013699
+    29   17.5    8   12.511    5.513  171.455    0.016295   -382.031148   -382.014853
+    30   18.1    8   12.529    5.513  192.430    0.018289   -382.033726   -382.015437
+    31   18.7    8   12.524    5.505  220.954    0.021000   -382.036119   -382.015120
+    32   19.4    8   12.549    5.500  238.968    0.022712   -382.036928   -382.014216
+    33   20.0    8   13.367    5.508  237.207    0.022544   -382.035870   -382.013326
+    34   20.6    8   13.397    5.515  218.790    0.020794   -382.033716   -382.012922
+    35   21.2    8   13.389    5.504  195.265    0.018558   -382.031717   -382.013159
+
+Finished MD loop.
+
+****************************
+***   Finished Execution ***
+****************************
+
+
+****************************************************
+***   ORCA ab initio Molecular Dynamics leaving  ***
+****************************************************
+
+Timings for individual modules:
+
+Sum of individual times         ...      666.791 sec (=  11.113 min)
+Molecular Dynamics run          ...      666.791 sec (=  11.113 min) 100.0 %
+                             ****ORCA TERMINATED NORMALLY****
+TOTAL RUN TIME: 0 days 0 hours 11 minutes 6 seconds 816 msec
