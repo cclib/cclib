@@ -58,7 +58,7 @@ class GenericScanTest_optdone_bool(GenericScanTestBase):
         self.assertOptDone(self.data.optstatus[-1])
 
 
-class GenericScanTest(unittest.TestCase):
+class GenericScanTest(GenericScanTestBase):
     """Generic relaxed potential energy surface scan unittest."""
 
     # extra indices

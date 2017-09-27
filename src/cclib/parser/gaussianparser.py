@@ -110,8 +110,8 @@ class Gaussian(logfileparser.Logfile):
         # for example for jobs with no symmetry. This last step, however, is now generic for all parsers.
         # Perhaps then this part should also be generic code...
         # Regression that tests this: Gaussian03/cyclopropenyl.rhf.g03.cut.log
-        if hasattr(self, 'optdone') and len(self.optdone) > 0:
-            last_point = self.optdone[-1]
+        if hasattr(self, 'optstatus') and len(self.optstatus) > 0:
+            last_point = len(self.optstatus) - 1
             if hasattr(self, 'atomcoords'):
                 self.atomcoords = self.atomcoords[:last_point + 1]
             if hasattr(self, 'inputcoords'):
