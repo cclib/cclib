@@ -782,6 +782,10 @@ class Psi(logfileparser.Logfile):
         #
         if (self.section == "Convergence Check") and line.strip() == "==> Convergence Check <==":
 
+            if not hasattr(self, "optstatus"):
+                self.optstatus = []
+            self.optstatus.append(data.ccData.OPT_UNKNOWN)
+
             self.skip_lines(inputfile, ['b', 'units', 'comment', 'dash+tilde', 'header', 'dash+tilde'])
 
             # These are the position in the line at which numbers should start.
@@ -798,14 +802,14 @@ class Psi(logfileparser.Logfile):
             self.skip_line(inputfile, 'dashes')
 
             values = next(inputfile)
+            step = int(values.split()[0])
             geovalues = []
             for istart in starts:
                 if values[istart:istart+9].strip():
                     geovalues.append(float(values[istart:istart+9]))
 
-            if not hasattr(self, "optstatus"):
-                self.optstatus = []
-            self.optstatus.append(data.ccData.OPT_NEW)
+            if step == 1:
+                self.optstatus[-1] += data.ccData.OPT_NEW
 
             # This assertion may be too restrictive, but we haven't seen the geotargets change.
             # If such an example comes up, update the value since we're interested in the last ones.
@@ -833,7 +837,7 @@ class Psi(logfileparser.Logfile):
                 self.optdone.append(len(self.geovalues))
 
                 assert hasattr(self, "optstatus") and len(self.optstatus) > 0
-                self.optstatus[-1] = data.ccData.OPT_DONE
+                self.optstatus[-1] += data.ccData.OPT_DONE
 
         # This message means that optimization has stopped for some reason, but we
         # still want optdone to exist in this case, although it will be an empty list.
@@ -842,7 +846,7 @@ class Psi(logfileparser.Logfile):
                 self.optdone = []
 
             assert hasattr(self, "optstatus") and len(self.optstatus) > 0
-            self.optstatus[-1] = data.ccData.OPT_UNCONVERGED
+            self.optstatus[-1] += data.ccData.OPT_UNCONVERGED
 
         # The reference point at which properties are evaluated in Psi4 is explicitely stated,
         # so we can save it for later. It is not, however, a part of the Properties section,

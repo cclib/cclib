@@ -19,7 +19,21 @@ from skip import skipForParser
 __filedir__ = os.path.realpath(os.path.dirname(__file__))
 
 
-class GenericScanTest_optdone_bool(unittest.TestCase):
+OPT_DONE = cclib.parser.data.ccData.OPT_DONE
+OPT_NEW = cclib.parser.data.ccData.OPT_NEW
+
+
+class GenericScanTestBase(unittest.TestCase):
+    """Base relaxed potential energy surface scan unittest."""
+
+    def assertOptNew(self, optstatus_value):
+        return optstatus_value & OPT_NEW == OPT_NEW
+
+    def assertOptDone(self, optstatus_value):
+        return optstatus_value & OPT_DONE == OPT_DONE
+
+
+class GenericScanTest_optdone_bool(GenericScanTestBase):
     """Generic relaxed potential energy surface scan unittest."""
 
     datatype = cclib.parser.data.ccData_optdone_bool
@@ -37,14 +51,14 @@ class GenericScanTest_optdone_bool(unittest.TestCase):
     @skipForParser("ORCA", "Not implemented")
     def testoptstatus(self):
         """Does optstatus contain expected values?"""
-        OPT_DONE = self.data.OPT_DONE
 
         # The input and final coordinates were at a stationary points.
-        self.assertEquals(self.data.optstatus[0], OPT_DONE)
-        self.assertEquals(self.data.optstatus[-1], OPT_DONE)
+        self.assertOptNew(self.data.optstatus[0])
+        self.assertOptDone(self.data.optstatus[0])
+        self.assertOptDone(self.data.optstatus[-1])
 
 
-class GenericScanTest(unittest.TestCase):
+class GenericScanTest(GenericScanTestBase):
     """Generic relaxed potential energy surface scan unittest."""
 
     # extra indices
@@ -64,22 +78,20 @@ class GenericScanTest(unittest.TestCase):
         geovalues = self.data.geovalues[temp]
         numpy.testing.assert_array_equal(geovalues, geovalues_from_index)
 
-    @skipForParser("Gaussian", "Not working as expected")
     @skipForParser("Jaguar", "Not implemented")
     @skipForParser("ORCA", "Not implemented")
     def testoptstatus(self):
         """Does optstatus contain expected values?"""
         OPT_NEW = self.data.OPT_NEW
         OPT_DONE = self.data.OPT_DONE
-
         # The input coordinates were at a stationary point.
-        self.assertEquals(self.data.optstatus[0], OPT_DONE)
+        self.assertOptDone(self.data.optstatus[0])
 
-        self.assertEqual(len(self.data.optstatus), len(self.data.optdone))
+        self.assertEqual(len(self.data.converged_geometries), len(self.data.optdone))
         for idone in self.data.optdone:
-            self.assertEquals(self.data.optstatus[idone], OPT_DONE)
-            if idone != len(self.data.optdone) - 1:
-                self.assertEquals(self.data.optstatus[idone+1], OPT_NEW)
+            self.assertOptDone(self.data.optstatus[idone])
+            if idone != len(self.data.optstatus) - 1:
+                self.assertOptNew(self.data.optstatus[idone+1])
 
 
 class GaussianScanTest(GenericScanTest):
