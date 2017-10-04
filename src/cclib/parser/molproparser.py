@@ -19,7 +19,8 @@ from . import utils
 def create_atomic_orbital_names(orbitals):
     """Generate all atomic orbital names that could be used by Molpro.
 
-    The names are returned in a dictionary, organized by subshell (S, P, D and so on).
+    The names are returned in a dictionary, organized by subshell
+    (S, P, D and so on).
     """
 
     # We can write out the first two manually, since there are not that many.
@@ -28,20 +29,25 @@ def create_atomic_orbital_names(orbitals):
         'P': ['x', 'y', 'z', '2px', '2py', '2pz'],
     }
 
-    # Although we could write out all names for the other subshells, it is better
-    # to generate them if we need to expand further, since the number of functions quickly
-    # grows and there are both Cartesian and spherical variants to consider.
-    # For D orbitals, the Cartesian functions are xx, yy, zz, xy, xz and yz, and the
-    # spherical ones are called 3d0, 3d1-, 3d1+, 3d2- and 3d2+. For F orbitals, the Cartesians
-    # are xxx, xxy, xxz, xyy, ... and the sphericals are 4f0, 4f1-, 4f+ and so on.
+    # Although we could write out all names for the other subshells, it is
+    # better # to generate them if we need to expand further,
+    # since the number of functions quickly grows and there are both
+    # Cartesian and spherical variants to consider.
+    # For D orbitals, the Cartesian functions are xx, yy, zz, xy, xz and yz,
+    # and the # spherical ones are called 3d0, 3d1-, 3d1+, 3d2- and 3d2+.
+    # For F orbitals, the Cartesians are xxx, xxy, xxz, xyy, ...
+    # and the sphericals are 4f0, 4f1-, 4f+ and so on.
     for i, orb in enumerate(orbitals):
 
         # Cartesian can be generated directly by combinations.
-        cartesian = list(map(''.join, list(itertools.combinations_with_replacement(['x', 'y', 'z'], i+2))))
+        cartesian = [
+            ''.join(x) for x in
+            itertools.combinations_with_replacement(['x', 'y', 'z'], i + 2)]
 
         # For spherical functions, we need to construct the names.
-        pre = str(i+3) + orb.lower()
-        spherical = [pre + '0'] + [pre + str(j) + s for j in range(1, i+3) for s in ['-', '+']]
+        pre = str(i + 3) + orb.lower()
+        spherical = [pre + '0'] + [pre + str(j) + s for j in range(1, i + 3)
+                                   for s in ['-', '+']]
         atomic_orbital_names[orb] = cartesian + spherical
 
     return atomic_orbital_names
@@ -76,25 +82,32 @@ class Molpro(logfileparser.Logfile):
 
     def after_parsing(self):
 
-        # If optimization thresholds are default, they are normally not printed and we need
-        # to set them to the default after parsing. Make sure to set them in the same order that
-        # they appear in the in the geometry optimization progress printed in the output,
-        # namely: energy difference, maximum gradient, maximum step.
+        # If optimization thresholds are default, they are normally
+        # not printed and we need # to set them to the default after parsing.
+        # Make sure to set them in the same order that
+        # they appear in the in the geometry optimization progress printed
+        # in the output, # namely: energy difference, maximum gradient,
+        # maximum step.
         if not hasattr(self, "geotargets"):
             self.geotargets = []
             # Default THRENERG (required accuracy of the optimized energy).
             self.geotargets.append(1E-6)
             # Default THRGRAD (required accuracy of the optimized gradient).
             self.geotargets.append(3E-4)
-            # Default THRSTEP (convergence threshold for the geometry optimization step).
+            # Default THRSTEP (convergence threshold
+            # for the geometry optimization step).
             self.geotargets.append(3E-4)
 
     def _parse_orbitals(self, inputfile, line):
-        # From this block aonames, atombasis, moenergies and mocoeffs can be parsed. The data is
-        # flipped compared to most programs (GAMESS, Gaussian), since the MOs are in rows. Also, Molpro
-        # does not cut the table into parts, rather each MO row has as many lines as it takes ro print
-        # all of the MO coefficients. Each row normally has 10 coefficients, although this can be less
-        # for the last row and when symmetry is used (each irrep has its own block).
+        # From this block aonames, atombasis, moenergies and mocoeffs
+        # can be parsed. The data is flipped compared to most programs
+        # (GAMESS, Gaussian), since the MOs are in rows.
+        # Also, Molpro # does not cut the table into parts, rather
+        # each MO row has as many lines as it takes ro print
+        # all of the MO coefficients.
+        # Each row normally has 10 coefficients, although this can be less
+        # for the last row and when symmetry is used
+        # (each irrep has its own block).
         #
         # ELECTRON ORBITALS
         # =================
@@ -133,11 +146,14 @@ class Molpro(logfileparser.Logfile):
         # canonical/natural orbitals.
         self.naturalorbitals = (line[1:17] == "NATURAL ORBITALS")
         # Make sure we didn't get here by mistake.
-        assert line[1:18] == "ELECTRON ORBITALS" or self.electronorbitals or self.naturalorbitals
+        assert (line[1:18] == "ELECTRON ORBITALS"
+                or self.electronorbitals or self.naturalorbitals)
 
-        # For unrestricted calculations, ELECTRON ORBITALS is followed on the same line
+        # For unrestricted calculations, ELECTRON ORBITALS is followed on
+        # the same line
         # by FOR POSITIVE SPIN or FOR NEGATIVE SPIN as appropriate.
-        spin = (line[19:36] == "FOR NEGATIVE SPIN") or (self.electronorbitals[19:36] == "FOR NEGATIVE SPIN")
+        spin = (line[19:36] == "FOR NEGATIVE SPIN"
+                or self.electronorbitals[19:36] == "FOR NEGATIVE SPIN")
 
         if self.naturalorbitals:
             self.skip_lines(inputfile, ['equals', 'b', 'headers', 'b'])
@@ -154,16 +170,21 @@ class Molpro(logfileparser.Logfile):
         occnos = []
         line = next(inputfile)
 
-        # Besides a double blank line, stop when the next orbitals are encountered for unrestricted jobs
-        # or if there are stars on the line which always signifies the end of the block.
-        while line.strip() and (not "ORBITALS" in line) and (not set(line.strip()) == {'*'}):
+        # Besides a double blank line, stop when the next orbitals
+        # are encountered for unrestricted jobs
+        # or if there are stars on the line which always
+        # signifies the end of the block.
+        while (line.strip() and ("ORBITALS" not in line)
+               and (not set(line.strip()) == {'*'})):
 
-            # The function names are normally printed just once, but if symmetry is used then each irrep
+            # The function names are normally printed just once,
+            # but if symmetry is used then each irrep
             # has its own mocoeff block with a preceding list of names.
             is_aonames = line[:25].strip() == ""
             if is_aonames:
 
-                # We need to save this offset for parsing the coefficients later.
+                # We need to save this offset for parsing
+                # the coefficients later.
                 offset = len(aonames)
 
                 aonum = len(aonames)
@@ -171,11 +192,12 @@ class Molpro(logfileparser.Logfile):
                     for s in line.split():
                         if s.isdigit():
                             atomno = int(s)
-                            atombasis[atomno-1].append(aonum)
+                            atombasis[atomno - 1].append(aonum)
                             aonum += 1
                         else:
                             functype = s
-                            element = self.table.element[self.atomnos[atomno-1]]
+                            element = self.table.element[
+                                self.atomnos[atomno - 1]]
                             aoname = "%s%i_%s" % (element, atomno, functype)
                             aonames.append(aoname)
                     line = next(inputfile)
@@ -184,8 +206,9 @@ class Molpro(logfileparser.Logfile):
                 while not line.strip():
                     line = next(inputfile)
 
-            # Newer versions of Molpro (for example, 2012 test files) will print some
-            # more things here, such as HOMO and LUMO, but these have less than 10 columns.
+            # Newer versions of Molpro (for example, 2012 test files)
+            # will print some # more things here, such as HOMO and LUMO
+            #  but these have less than 10 columns.
             if "HOMO" in line or "LUMO" in line:
                 break
 
@@ -193,7 +216,8 @@ class Molpro(logfileparser.Logfile):
             if "Natural orbital dump" in line:
                 break
 
-            # Now parse the MO coefficients, padding the list with an appropriate amount of zeros.
+            # Now parse the MO coefficients,
+            # padding the list with an appropriate amount of zeros.
             coeffs = [0.0 for i in range(offset)]
             while line.strip() != "":
                 if line[:31].rstrip():
@@ -205,8 +229,10 @@ class Molpro(logfileparser.Logfile):
                         occno = float(tokens[1])
                         occnos.append(occno)
 
-                # Coefficients are in 10.6f format and splitting does not work since there are not
-                # always spaces between them. If the numbers are very large, there will be stars.
+                # Coefficients are in 10.6f format and splitting
+                # does not work since there are not
+                # always spaces between them.
+                # If the numbers are very large, there will be stars.
                 str_coeffs = line[31:]
                 ncoeffs = len(str_coeffs) // 10
                 coeff = []
@@ -222,18 +248,20 @@ class Molpro(logfileparser.Logfile):
                 line = next(inputfile)
             mocoeffs.append(coeffs)
 
-            # The loop should keep going until there is a double blank line, and there is
-            # a single line between each coefficient block.
+            # The loop should keep going until there is a double blank line,
+            # and there is # a single line between each coefficient block.
             line = next(inputfile)
             if not line.strip():
                 line = next(inputfile)
 
-        # If symmetry was used (offset was needed) then we will need to pad all MO vectors
+        # If symmetry was used (offset was needed)
+        # then we will need to pad all MO vectors
         # up to nbasis for all irreps before the last one.
         if offset > 0:
             for im, m in enumerate(mocoeffs):
                 if len(m) < self.nbasis:
-                    mocoeffs[im] = m + [0.0 for i in range(self.nbasis - len(m))]
+                    mocoeffs[im] = (
+                        m + [0.0 for i in range(self.nbasis - len(m))])
 
         self.set_attribute('atombasis', atombasis)
         self.set_attribute('aonames', aonames)
@@ -245,15 +273,18 @@ class Molpro(logfileparser.Logfile):
             self.nocoeffs = mocoeffs
             self.nooccnos = occnos
         else:
-            # Consistent with current cclib conventions, reset moenergies/mocoeffs if they have been
-            # previously parsed, since we want to produce only the final values.
+            # Consistent with current cclib conventions,
+            # reset moenergies/mocoeffs if they have been
+            # previously parsed, since we want
+            # to produce only the final values.
             if not hasattr(self, "moenergies") or spin == 0:
                 self.mocoeffs = []
                 self.moenergies = []
             self.moenergies.append(moenergies)
             self.mocoeffs.append(mocoeffs)
 
-        # Check if last line begins the next ELECTRON ORBITALS section, because we already used
+        # Check if last line begins the next ELECTRON ORBITALS section,
+        # because we already used
         # this line and need to know when this method is called next time.
         if line[1:18] == "ELECTRON ORBITALS":
             self.electronorbitals = line
@@ -282,7 +313,9 @@ class Molpro(logfileparser.Logfile):
             line = next(inputfile)
             while line.strip():
                 temp = line.strip().split()
-                atomcoords.append([utils.convertor(float(x), "bohr", "Angstrom") for x in temp[3:6]])  # bohrs to angs
+                atomcoords.append(
+                    [utils.convertor(float(x), "bohr", "Angstrom")
+                     for x in temp[3:6]])
                 atomnos.append(int(round(float(temp[2]))))
                 line = next(inputfile)
 
@@ -310,7 +343,8 @@ class Molpro(logfileparser.Logfile):
             # We can do a sanity check with the header.
             self.skip_line(inputfile, 'blank')
             header = next(inputfile)
-            assert header.split() == ["Nr", "Sym", "Nuc", "Type", "Exponents", "Contraction", "coefficients"]
+            assert header.split() == ["Nr", "Sym", "Nuc", "Type", "Exponents",
+                                      "Contraction", "coefficients"]
             self.skip_line(inputfile, 'blank')
 
             aonames = []
