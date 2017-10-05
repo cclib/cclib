@@ -8,12 +8,12 @@
 """Parser for Molpro output files"""
 
 
+import csv
 import itertools
 
 import numpy
 
-from . import logfileparser
-from . import utils
+from . import logfileparser, utils
 
 
 def create_atomic_orbital_names(orbitals):
@@ -915,6 +915,29 @@ class Molpro(logfileparser.Logfile):
             if not hasattr(self, "atomcharges"):
                 self.atomcharges = {}
             self.atomcharges['mulliken'] = charges
+
+        if 'GRADIENT FOR STATE' in line:
+            reader = csv.reader(inputfile, delimiter=' ',
+                                skipinitialspace=True)
+            for _ in range(3):
+                next(reader)
+
+            def convert(x):
+                return (utils.convertor(x, 'hartree', 'eV')
+                        / utils.convertor(1, 'bohr', 'Angstrom'))
+
+            grad = []
+            lines_read = 0
+            while lines_read < self.natom:
+                line = next(reader)
+                if line:
+                    grad.append([convert(float(x)) for x in line[1:]])
+                    lines_read += 1
+            try:
+                self.grads.append(grad)
+            except AttributeError:
+                self.grads = [grad]
+
 
 
 if __name__ == "__main__":
