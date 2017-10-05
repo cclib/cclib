@@ -462,7 +462,7 @@ class Molpro(logfileparser.Logfile):
             if not hasattr(self, "scftargets"):
                 self.scftargets = []
 
-            scftargets = list(map(float, line.split()[2::2]))
+            scftargets = [float(x) for x in line.split()[2::2]]
             self.scftargets.append(scftargets)
             # Usually two criteria, but save the names this just in case.
             self.scftargetnames = line.split()[3::2]
@@ -776,19 +776,19 @@ class Molpro(logfileparser.Logfile):
 
                 if line[1:25].isspace():
                     if not islow:  # vibsyms not printed for low freq modes
-                        numbers = list(map(int, line.split()[::2]))
+                        numbers = [int(x) for x in line.split()[::2]]
                         vibsyms = line.split()[1::2]
                     else:
                         # give low freq modes an empty str as vibsym
                         # note there could be other possibilities..
-                        numbers = list(map(int, line.split()))
-                        vibsyms = ['']*len(numbers)
+                        numbers = [int(x) for x in line.split()]
+                        vibsyms = [''] * len(numbers)
 
                 if line[1:12] == "Wavenumbers":
-                    vibfreqs = list(map(float, line.strip().split()[2:]))
+                    vibfreqs = [float(x) for x in line.strip().split()[2:]]
 
                 if line[1:21] == "Intensities [km/mol]":
-                    vibirs = list(map(float, line.strip().split()[2:]))
+                    vibirs = [float(x) for x in line.strip().split()[2:]]
 
                 # There should always by 3xnatom displacement rows.
                 if line[1:11].isspace() and line[13:25].strip().isdigit():
@@ -855,11 +855,11 @@ class Molpro(logfileparser.Logfile):
 
             while line.strip():
                 try:
-                    list(map(float, line.strip().split()[2:]))
+                    [float(x) for x in line.strip().split()[2:]]
                 except:
                     line = next(inputfile)
                 line.strip().split()[1:]
-                hess.extend([list(map(float, line.strip().split()[1:]))])
+                hess.append([float(x) for x in line.strip().split()[1:]])
                 line = next(inputfile)
             lig = 0
 
@@ -881,11 +881,11 @@ class Molpro(logfileparser.Logfile):
         if line[1:14] == "Atomic Masses" and hasattr(self, "hessian"):
 
             line = next(inputfile)
-            self.amass = list(map(float, line.strip().split()[2:]))
+            self.amass = [float(x) for x in line.strip().split()[2:]]
 
             while line.strip():
                 line = next(inputfile)
-                self.amass += list(map(float, line.strip().split()[2:]))
+                self.amass += [float(x) for x in line.strip().split()[2:]]
 
         #1PROGRAM * POP (Mulliken population analysis)
         #
