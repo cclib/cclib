@@ -10,6 +10,7 @@
 
 import csv
 import itertools
+from itertools import combinations_with_replacement
 
 import numpy
 
@@ -40,9 +41,8 @@ def create_atomic_orbital_names(orbitals):
     for i, orb in enumerate(orbitals):
 
         # Cartesian can be generated directly by combinations.
-        cartesian = [
-            ''.join(x) for x in
-            itertools.combinations_with_replacement(['x', 'y', 'z'], i + 2)]
+        cartesian = [''.join(x) for x in
+                     combinations_with_replacement(['x', 'y', 'z'], i + 2)]
 
         # For spherical functions, we need to construct the names.
         pre = str(i + 3) + orb.lower()
@@ -196,8 +196,7 @@ class Molpro(logfileparser.Logfile):
                             aonum += 1
                         else:
                             functype = s
-                            element = self.table.element[
-                                self.atomnos[atomno - 1]]
+                            element = self.table.element[self.atomnos[atomno - 1]]
                             aoname = "%s%i_%s" % (element, atomno, functype)
                             aonames.append(aoname)
                     line = next(inputfile)
@@ -249,7 +248,7 @@ class Molpro(logfileparser.Logfile):
             mocoeffs.append(coeffs)
 
             # The loop should keep going until there is a double blank line,
-            # and there is # a single line between each coefficient block.
+            # and there is a single line between each coefficient block.
             line = next(inputfile)
             if not line.strip():
                 line = next(inputfile)
@@ -917,26 +916,19 @@ class Molpro(logfileparser.Logfile):
             self.atomcharges['mulliken'] = charges
 
         if 'GRADIENT FOR STATE' in line:
-            reader = csv.reader(inputfile, delimiter=' ',
-                                skipinitialspace=True)
             for _ in range(3):
-                next(reader)
-
-            def convert(x):
-                return (utils.convertor(x, 'hartree', 'eV')
-                        / utils.convertor(1, 'bohr', 'Angstrom'))
+                next(inputfile)
 
             grad = []
             lines_read = 0
             while lines_read < self.natom:
-                line = next(reader)
+                line = next(inputfile)
                 if line:
-                    grad.append([convert(float(x)) for x in line[1:]])
+                    grad.append([float(x) for x in line.split()[1:]])
                     lines_read += 1
-            try:
-                self.grads.append(grad)
-            except AttributeError:
-                self.grads = [grad]
+            if not hasattr(self, 'grads'):
+                self.grads = []
+            self.grads.append(grad)
 
 
 
