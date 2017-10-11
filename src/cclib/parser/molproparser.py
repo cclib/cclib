@@ -918,7 +918,6 @@ class Molpro(logfileparser.Logfile):
         if 'GRADIENT FOR STATE' in line:
             for _ in range(3):
                 next(inputfile)
-
             grad = []
             lines_read = 0
             while lines_read < self.natom:
