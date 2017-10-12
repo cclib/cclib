@@ -1,0 +1,636 @@
+localhost.localdomain 127.0.0
+Q-Chem Developer Version! Running on 127.0.0.*
+                  Welcome to Q-Chem
+     A Quantum Leap Into The Future Of Chemistry
+
+
+ Q-Chem 5.0, Q-Chem, Inc., Pleasanton, CA (2017)
+
+ Yihan Shao,  Zhengting Gan,  E. Epifanovsky,  A. T. B. Gilbert,  M. Wormit,  
+ J. Kussmann,  A. W. Lange,  A. Behn,  Jia Deng,  Xintian Feng,  D. Ghosh,  
+ M. Goldey,  P. R. Horn,  L. D. Jacobson,  I. Kaliman,  T. Kus,  A. Landau,  
+ Jie Liu,  E. I. Proynov,  R. M. Richard,  R. P. Steele,  E. J. Sundstrom,  
+ H. L. Woodcock III,  P. M. Zimmerman,  D. Zuev,  B. Albrecht,  E. Alguire,  
+ S. A. Baeppler,  Z. Benda,  Y. A. Bernard,  E. J. Berquist,  K. B. Bravaya,  
+ D. Casanova,  Chun-Min Chang,  Yunqing Chen,  A. Chien,  K. D. Closser,  
+ M. P. Coons,  S. Dasgupta,  M. Diedenhofen,  Hainam Do,  R. G. Edgar,  
+ Po-Tung Fang,  S. Fatehi,  Qingguo Feng,  Qinghui Ge,  A. Ghysels,  
+ J. Gomes,  J. Gonthier,  A. Gunina,  M. W. D. Hanson-Heine,  
+ P. H. P. Harbach,  A. W. Hauser,  J. E. Herr,  E. G. Hohenstein,  
+ Z. C. Holden,  Kerwin Hui,  T.-C. Jagau,  Hyunjun Ji,  B. Kaduk,  
+ K. Khistyaev,  Jaehoon Kim,  P. Klunzinger,  K. Koh,  D. Kosenkov,  
+ T. Kowalczyk,  C. M. Krauter,  A. Kunitsa,  Ka Un Lao,  A. Laurent,  
+ K. V. Lawler,  Joonho Lee,  D. Lefrancois,  S. Lehtola,  D. S. Levine,  
+ Yi-Pei Li,  You-Sheng Lin,  Fenglai Liu,  E. Livshits,  A. Luenser,  
+ P. Manohar,  E. Mansoor,  S. F. Manzer,  Shan-Ping Mao,  Yuezhi Mao,  
+ N. Mardirossian,  A. V. Marenich,  L. A. Martinez-Martinez,  S. A. Maurer,  
+ N. J. Mayhall,  S. C. McKenzie,  J.-M. Mewes,  A. F. Morrison,  K. Nanda,  
+ T. S. Nguyen-Beck,  R. Olivares-Amaya,  J. A. Parkhill,  T. M. Perrine,  
+ F. Plasser,  S. Prager,  A. Prociuk,  D. R. Rehn,  F. Rob,  M. Schneider,  
+ N. Sergueev,  S. M. Sharada,  S. Sharma,  D. W. Small,  T. Stauch,  
+ T. Stein,  Yu-Chuan Su,  A. J. W. Thom,  T. Tsuchimochi,  L. Vogt,  
+ O. Vydrov,  M. A. Watson,  J. Wenzel,  M. de Wergifosse,  T. A. Wesolowski,  
+ A. White,  J. Witte,  A. Yamada,  Jun Yang,  K. Yao,  S. Yeganeh,  
+ S. R. Yost,  Zhi-Qiang You,  A. Zech,  Igor Ying Zhang,  Xing Zhang,  
+ Yan Zhao,  Ying Zhu,  B. R. Brooks,  G. K. L. Chan,  C. J. Cramer,  
+ M. S. Gordon,  W. J. Hehre,  A. Klamt,  M. W. Schmidt,  C. D. Sherrill,  
+ D. G. Truhlar,  A. Aspuru-Guzik,  R. Baer,  A. T. Bell,  N. A. Besley,  
+ Jeng-Da Chai,  A. Dreuw,  B. D. Dunietz,  T. R. Furlani,  Chao-Ping Hsu,  
+ Yousung Jung,  Jing Kong,  D. S. Lambrecht,  WanZhen Liang,  C. Ochsenfeld,  
+ V. A. Rassolov,  L. V. Slipchenko,  J. E. Subotnik,  T. Van Voorhis,  
+ J. M. Herbert,  A. I. Krylov,  P. M. W. Gill,  M. Head-Gordon
+
+ Contributors to earlier versions of Q-Chem not listed above: 
+ R. D. Adamson,  B. Austin,  J. Baker,  G. J. O. Beran,  K. Brandhorst,  
+ S. T. Brown,  E. F. C. Byrd,  A. K. Chakraborty,  C.-L. Cheng,  
+ Siu Hung Chien,  D. M. Chipman,  D. L. Crittenden,  H. Dachsel,  
+ R. A. DiStasio Jr.,  R. J. Doerksen,  A. D. Dutoi,  L. Fusti-Molnar,  
+ W. A. Goddard III,  A. Golubeva-Zadorozhnaya,  S. R. Gwaltney,  G. Hawkins,  
+ A. Heyden,  S. Hirata,  G. Kedziora,  F. J. Keil,  C. Kelley,  Jihan Kim,  
+ R. A. King,  R. Z. Khaliullin,  P. P. Korambath,  W. Kurlancheek,  
+ A. M. Lee,  M. S. Lee,  S. V. Levchenko,  Ching Yeh Lin,  D. Liotard,  
+ R. C. Lochan,  I. Lotan,  P. E. Maslen,  N. Nair,  D. P. O'Neill,  
+ D. Neuhauser,  E. Neuscamman,  C. M. Oana,  R. Olson,  B. Peters,  
+ R. Peverati,  P. A. Pieniazek,  Y. M. Rhee,  J. Ritchie,  M. A. Rohrdanz,  
+ E. Rosta,  N. J. Russ,  H. F. Schaefer III,  N. E. Schultz,  N. Shenvi,  
+ A. C. Simmonett,  A. Sodt,  D. Stuck,  K. S. Thanthiriwatte,  V. Vanovschi,  
+ Tao Wang,  A. Warshel,  C. F. Williams,  Q. Wu,  X. Xu,  W. Zhang
+
+ Please cite Q-Chem as follows:
+ Y. Shao et al., Mol. Phys. 113, 184-215 (2015)
+ DOI: 10.1080/00268976.2014.952696
+
+ Q-Chem 5.0.1 for Intel X86 EM64T Linux
+
+ Parts of Q-Chem use Armadillo 5.200.1 (Boston Tea Smuggler).
+ http://arma.sourceforge.net/
+
+ Q-Chem begins on Mon Sep  4 15:58:34 2017  
+
+Host: copper
+0
+
+     Scratch files written to /tmp/qchem/qchem32492//
+
+Checking the input file for inconsistencies... 	...done.
+
+--------------------------------------------------------------
+User input:
+--------------------------------------------------------------
+$rem
+  method = hf
+  basis = def2-svpd
+  scf_convergence = 11
+  thresh = 14
+  gen_scfman = true
+  n_frozen_core = 0
+  cis_n_roots = 10
+  cis_singlets = true
+  cis_triplets = false
+  rpa = 2
+  cis_moments = true
+  cis_dynamic_mem = true
+$end
+
+$molecule
+0 1
+Ar     0.000000000000000    0.000000000000000   -0.857713330500000
+$end
+--------------------------------------------------------------
+ ----------------------------------------------------------------
+             Standard Nuclear Orientation (Angstroms)
+    I     Atom           X                Y                Z
+ ----------------------------------------------------------------
+    1      Ar      0.0000000000     0.0000000000     0.0000000000
+ ----------------------------------------------------------------
+ Molecular Point Group                 Kh    NOp =***
+ Largest Abelian Subgroup              D2h   NOp =  1
+ Nuclear Repulsion Energy =     0.0000000000 hartrees
+ There are        9 alpha and        9 beta electrons
+ Requested basis set is def2-SVPD
+ There are 11 shells and 27 basis functions
+
+ Total QAlloc Memory Limit   2000 MB
+ Mega-Array Size        61 MB
+ MEM_STATIC part        62 MB
+ A cutoff of  1.0D-14 yielded     66 shell pairs
+ There are       410 function pairs (       477 Cartesian)
+ Smallest overlap matrix eigenvalue = 4.82E-02
+
+ Scale SEOQF with 1.000000e-01/1.000000e-01/1.000000e-01
+
+ Standard Electronic Orientation quadrupole field applied
+ Guess from superposition of atomic densities
+ Warning:  Energy on first SCF cycle will be non-variational
+
+ ==================================================
+    GEN_SCFMAN: A general SCF calculation manager  
+                                                   
+    Authors:                                       
+        -- Eric Jon Sundstrom 2008-2014            
+        -- Paul Horn 2010-2015                     
+        -- Yuezhi Mao 2012-                        
+        -- Dmitri Zuev 2014                        
+        -- Alec White 2015-                        
+        -- David Stuck 2015                        
+        -- Shaama M.S. 2015                        
+        -- Shane Yost 2015-                         
+        -- Joonho Lee 2016-                        
+        -- David Small 2016-                       
+        -- Daniel Levine 2016-                     
+ ==================================================
+ Hartree-Fock
+ A restricted SCF calculation will be
+ performed using DIIS
+ ---------------------------------------
+  Cycle       Energy         DIIS error
+ ---------------------------------------
+    1    -526.6255797983      2.00e-02  
+    2    -526.6323178650      7.78e-04  
+    3    -526.6323933584      1.34e-04  
+    4    -526.6323968376      1.02e-05  
+    5    -526.6323968551      2.48e-06  
+    6    -526.6323968555      1.94e-07  
+    7    -526.6323968555      7.80e-09  
+    8    -526.6323968555      3.33e-10  
+    9    -526.6323968555      6.98e-13  Convergence criterion met
+ ---------------------------------------
+ SCF time:   CPU 0.09s  wall 0.00s 
+ Total energy in the final basis set =     -526.6323968555
+Wall 1 = 0
+Clock 1 = 0.0898530036
+ ==================================================
+                  Done GEN_SCFMAN                  
+ ==================================================
+
+
+ CIS energy converged when residual is below 10e- 6
+ NRoots was altered as: 10 --> 12
+
+ Direct TDHF calculation will be performed
+ ---------------------------------------------------
+ Iter    Rts Conv    Rts Left    Ttl Dev     Max Dev
+ ---------------------------------------------------
+   1         0          12      0.044697    0.005463
+   2         0          12      0.002674    0.000814
+   3         3           9      0.000354    0.000221
+   4         3           9      0.000335    0.000102
+   5         3           9      0.000082    0.000021
+   6         9           3      0.000030    0.000009
+   7         9           3      0.000007    0.000001
+   8        12           0      0.000005    0.000001    Roots Converged
+ ---------------------------------------------------
+
+ ---------------------------------------------------
+               RPA Excitation Energies              
+ ---------------------------------------------------
+
+ Excited state   1: excitation energy (eV) =   13.2182
+ Total energy for state  1:                  -526.14663738 au
+    Multiplicity: Singlet 
+    Trans. Mom.:  0.0000 X  -0.0001 Y  -0.7148 Z
+    Strength   :     0.1654698778
+    X: D(  9) --> V(  1) amplitude =  0.9969
+
+ Excited state   2: excitation energy (eV) =   13.2182
+ Total energy for state  2:                  -526.14663738 au
+    Multiplicity: Singlet 
+    Trans. Mom.: -0.7148 X   0.0002 Y  -0.0000 Z
+    Strength   :     0.1654698783
+    X: D(  8) --> V(  1) amplitude =  0.9969
+
+ Excited state   3: excitation energy (eV) =   13.2182
+ Total energy for state  3:                  -526.14663738 au
+    Multiplicity: Singlet 
+    Trans. Mom.:  0.0002 X   0.7148 Y  -0.0001 Z
+    Strength   :     0.1654698784
+    X: D(  7) --> V(  1) amplitude =  0.9969
+
+ Excited state   4: excitation energy (eV) =   14.6915
+ Total energy for state  4:                  -526.09249346 au
+    Multiplicity: Singlet 
+    Trans. Mom.:  0.0000 X   0.0000 Y  -0.0000 Z
+    Strength   :     0.0000000000
+    X: D(  7) --> V(  2) amplitude =  0.7412
+    X: D(  8) --> V(  3) amplitude = -0.6639
+
+ Excited state   5: excitation energy (eV) =   14.6915
+ Total energy for state  5:                  -526.09249346 au
+    Multiplicity: Singlet 
+    Trans. Mom.: -0.0000 X  -0.0000 Y  -0.0000 Z
+    Strength   :     0.0000000000
+    X: D(  7) --> V(  3) amplitude =  0.7057
+    X: D(  8) --> V(  2) amplitude =  0.7057
+
+ Excited state   6: excitation energy (eV) =   14.6915
+ Total energy for state  6:                  -526.09249346 au
+    Multiplicity: Singlet 
+    Trans. Mom.: -0.0000 X   0.0000 Y   0.0000 Z
+    Strength   :     0.0000000000
+    X: D(  7) --> V(  4) amplitude =  0.7057
+    X: D(  9) --> V(  2) amplitude =  0.7057
+
+ Excited state   7: excitation energy (eV) =   14.6915
+ Total energy for state  7:                  -526.09249346 au
+    Multiplicity: Singlet 
+    Trans. Mom.: -0.0000 X   0.0000 Y  -0.0000 Z
+    Strength   :     0.0000000000
+    X: D(  8) --> V(  4) amplitude =  0.7057
+    X: D(  9) --> V(  3) amplitude =  0.7057
+
+ Excited state   8: excitation energy (eV) =   14.6915
+ Total energy for state  8:                  -526.09249346 au
+    Multiplicity: Singlet 
+    Trans. Mom.:  0.0000 X  -0.0000 Y   0.0000 Z
+    Strength   :     0.0000000000
+    X: D(  7) --> V(  2) amplitude = -0.3386
+    X: D(  8) --> V(  3) amplitude = -0.4726
+    X: D(  9) --> V(  4) amplitude =  0.8112
+
+ Excited state   9: excitation energy (eV) =   14.8048
+ Total energy for state  9:                  -526.08832996 au
+    Multiplicity: Singlet 
+    Trans. Mom.:  0.0000 X   0.0000 Y  -0.0000 Z
+    Strength   :     0.0000000000
+    X: D(  7) --> V(  3) amplitude =  0.7059
+    X: D(  8) --> V(  2) amplitude = -0.7059
+
+ Excited state  10: excitation energy (eV) =   14.8048
+ Total energy for state 10:                  -526.08832996 au
+    Multiplicity: Singlet 
+    Trans. Mom.:  0.0000 X  -0.0000 Y   0.0000 Z
+    Strength   :     0.0000000000
+    X: D(  7) --> V(  4) amplitude =  0.7059
+    X: D(  9) --> V(  2) amplitude = -0.7059
+
+ Excited state  11: excitation energy (eV) =   14.8048
+ Total energy for state 11:                  -526.08832996 au
+    Multiplicity: Singlet 
+    Trans. Mom.:  0.0000 X   0.0000 Y  -0.0000 Z
+    Strength   :     0.0000000000
+    X: D(  8) --> V(  4) amplitude =  0.7059
+    X: D(  9) --> V(  3) amplitude = -0.7059
+
+ Excited state  12: excitation energy (eV) =   16.0465
+ Total energy for state 12:                  -526.04269809 au
+    Multiplicity: Singlet 
+    Trans. Mom.:  0.0000 X   0.0000 Y   0.0000 Z
+    Strength   :     0.0000000000
+    X: D(  7) --> V(  2) amplitude =  0.5777
+    X: D(  8) --> V(  3) amplitude =  0.5777
+    X: D(  9) --> V(  4) amplitude =  0.5777
+
+ ---------------------------------------------------
+  SETman timing summary (seconds)
+  CPU time                 0.15s
+  System time              0.00s
+  Wall time                0.15s
+
+ --------------------------------------------------------------
+
+                    Orbital Energies (a.u.)
+ --------------------------------------------------------------
+
+ Alpha MOs
+ -- Occupied --
+******* -12.331  -9.588  -9.588  -9.588  -1.279  -0.595  -0.595
+ -0.595
+ -- Virtual --
+  0.145   0.179   0.179   0.179   0.376   0.376   0.376   0.376
+  0.376   1.075   1.275   1.275   1.275   1.275   1.275   1.469
+  1.469   1.469
+ --------------------------------------------------------------
+
+          Ground-State Mulliken Net Atomic Charges
+
+     Atom                 Charge (a.u.)
+  ----------------------------------------
+      1 Ar                   -0.000000
+  ----------------------------------------
+  Sum of atomic charges =    -0.000000
+
+ -----------------------------------------------------------------
+                    Cartesian Multipole Moments
+ -----------------------------------------------------------------
+    Charge (ESU x 10^10)
+                -0.0000
+    Dipole Moment (Debye)
+         X      -0.0000      Y       0.0000      Z       0.0000
+       Tot       0.0000
+    Quadrupole Moments (Debye-Ang)
+        XX     -11.7608     XY      -0.0000     YY     -11.7608
+        XZ      -0.0000     YZ       0.0000     ZZ     -11.7608
+    Octopole Moments (Debye-Ang^2)
+       XXX       0.0000    XXY       0.0000    XYY       0.0000
+       YYY       0.0000    XXZ      -0.0000    XYZ      -0.0000
+       YYZ      -0.0000    XZZ       0.0000    YZZ       0.0000
+       ZZZ      -0.0000
+    Hexadecapole Moments (Debye-Ang^3)
+      XXXX     -11.0455   XXXY      -0.0000   XXYY      -3.6818
+      XYYY      -0.0000   YYYY     -11.0455   XXXZ      -0.0000
+      XXYZ       0.0000   XYYZ      -0.0000   YYYZ       0.0000
+      XXZZ      -3.6818   XYZZ      -0.0000   YYZZ      -3.6818
+      XZZZ      -0.0000   YZZZ       0.0000   ZZZZ     -11.0455
+ -----------------------------------------------------------------
+ -----------------------------------------------------------------
+               RPA Excited-State Multipoles, State  1
+ -----------------------------------------------------------------
+    Charge (ESU x 10^10)
+                -0.0000
+    Dipole Moment (Debye)
+         X      -0.0000      Y       0.0000      Z      -0.0000
+       Tot       0.0000
+    Quadrupole Moments (Debye-Ang)
+        XX     -18.7112     XY      -0.0000     YY     -18.7112
+        XZ      -0.0000     YZ       0.0002     ZZ     -16.9416
+    Octopole Moments (Debye-Ang^2)
+       XXX      -0.0000    XXY       0.0000    XYY      -0.0000
+       YYY       0.0000    XXZ      -0.0000    XYZ      -0.0000
+       YYZ      -0.0000    XZZ      -0.0000    YZZ       0.0000
+       ZZZ      -0.0000
+    Hexadecapole Moments (Debye-Ang^3)
+      XXXX     -41.1461   XXXY      -0.0000   XXYY     -13.7154
+      XYYY      -0.0000   YYYY     -41.1461   XXXZ      -0.0000
+      XXYZ       0.0001   XYYZ      -0.0000   YYYZ       0.0002
+      XXZZ     -13.2842   XYZZ      -0.0000   YYZZ     -13.2842
+      XZZZ      -0.0000   YZZZ       0.0002   ZZZZ     -38.5593
+ -----------------------------------------------------------------
+ -----------------------------------------------------------------
+               RPA Excited-State Multipoles, State  2
+ -----------------------------------------------------------------
+    Charge (ESU x 10^10)
+                 0.0000
+    Dipole Moment (Debye)
+         X       0.0000      Y      -0.0000      Z      -0.0000
+       Tot       0.0000
+    Quadrupole Moments (Debye-Ang)
+        XX     -16.9416     XY      -0.0004     YY     -18.7112
+        XZ       0.0000     YZ      -0.0000     ZZ     -18.7112
+    Octopole Moments (Debye-Ang^2)
+       XXX       0.0000    XXY      -0.0000    XYY       0.0000
+       YYY      -0.0000    XXZ      -0.0000    XYZ      -0.0000
+       YYZ      -0.0000    XZZ       0.0000    YZZ      -0.0000
+       ZZZ      -0.0000
+    Hexadecapole Moments (Debye-Ang^3)
+      XXXX     -38.5593   XXXY      -0.0003   XXYY     -13.2842
+      XYYY      -0.0003   YYYY     -41.1461   XXXZ       0.0000
+      XXYZ      -0.0000   XYYZ       0.0000   YYYZ      -0.0000
+      XXZZ     -13.2842   XYZZ      -0.0001   YYZZ     -13.7154
+      XZZZ       0.0000   YZZZ      -0.0000   ZZZZ     -41.1461
+ -----------------------------------------------------------------
+ -----------------------------------------------------------------
+               RPA Excited-State Multipoles, State  3
+ -----------------------------------------------------------------
+    Charge (ESU x 10^10)
+                -0.0000
+    Dipole Moment (Debye)
+         X      -0.0000      Y       0.0000      Z      -0.0000
+       Tot       0.0000
+    Quadrupole Moments (Debye-Ang)
+        XX     -18.7112     XY       0.0004     YY     -16.9416
+        XZ      -0.0000     YZ      -0.0002     ZZ     -18.7112
+    Octopole Moments (Debye-Ang^2)
+       XXX      -0.0000    XXY       0.0000    XYY      -0.0000
+       YYY       0.0000    XXZ      -0.0000    XYZ       0.0000
+       YYZ      -0.0000    XZZ      -0.0000    YZZ       0.0000
+       ZZZ      -0.0000
+    Hexadecapole Moments (Debye-Ang^3)
+      XXXX     -41.1461   XXXY       0.0003   XXYY     -13.2842
+      XYYY       0.0003   YYYY     -38.5593   XXXZ      -0.0000
+      XXYZ      -0.0001   XYYZ      -0.0000   YYYZ      -0.0002
+      XXZZ     -13.7154   XYZZ       0.0001   YYZZ     -13.2842
+      XZZZ      -0.0000   YZZZ      -0.0002   ZZZZ     -41.1461
+ -----------------------------------------------------------------
+ -----------------------------------------------------------------
+               RPA Excited-State Multipoles, State  4
+ -----------------------------------------------------------------
+    Charge (ESU x 10^10)
+                 0.0000
+    Dipole Moment (Debye)
+         X      -0.0000      Y       0.0000      Z       0.0000
+       Tot       0.0000
+    Quadrupole Moments (Debye-Ang)
+        XX     -22.0359     XY      -0.0016     YY     -23.2257
+        XZ       0.0001     YZ       0.0001     ZZ     -17.2762
+    Octopole Moments (Debye-Ang^2)
+       XXX      -0.0000    XXY       0.0000    XYY      -0.0000
+       YYY       0.0000    XXZ      -0.0000    XYZ       0.0000
+       YYZ       0.0000    XZZ      -0.0000    YZZ       0.0000
+       ZZZ       0.0000
+    Hexadecapole Moments (Debye-Ang^3)
+      XXXX     -75.6814   XXXY      -0.0068   XXYY     -26.9205
+      XYYY      -0.0068   YYYY     -85.8669   XXXZ       0.0005
+      XXYZ       0.0001   XYYZ       0.0002   YYYZ       0.0003
+      XXZZ     -18.4358   XYZZ      -0.0023   YYZZ     -20.1327
+      XZZZ       0.0005   YZZZ       0.0003   ZZZZ     -34.9379
+ -----------------------------------------------------------------
+ -----------------------------------------------------------------
+               RPA Excited-State Multipoles, State  5
+ -----------------------------------------------------------------
+    Charge (ESU x 10^10)
+                 0.0000
+    Dipole Moment (Debye)
+         X       0.0000      Y      -0.0000      Z      -0.0000
+       Tot       0.0000
+    Quadrupole Moments (Debye-Ang)
+        XX     -22.6636     XY       0.0015     YY     -22.6636
+        XZ      -0.0001     YZ      -0.0002     ZZ     -17.2107
+    Octopole Moments (Debye-Ang^2)
+       XXX       0.0000    XXY      -0.0000    XYY       0.0000
+       YYY      -0.0000    XXZ      -0.0000    XYZ       0.0000
+       YYZ      -0.0000    XZZ       0.0000    YZZ      -0.0000
+       ZZZ      -0.0000
+    Hexadecapole Moments (Debye-Ang^3)
+      XXXX     -81.0481   XXXY       0.0063   XXYY     -27.0203
+      XYYY       0.0063   YYYY     -81.0482   XXXZ      -0.0003
+      XXYZ      -0.0003   XYYZ      -0.0001   YYYZ      -0.0009
+      XXZZ     -19.2376   XYZZ       0.0021   YYZZ     -19.2376
+      XZZZ      -0.0003   YZZZ      -0.0009   ZZZZ     -34.3773
+ -----------------------------------------------------------------
+ -----------------------------------------------------------------
+               RPA Excited-State Multipoles, State  6
+ -----------------------------------------------------------------
+    Charge (ESU x 10^10)
+                -0.0000
+    Dipole Moment (Debye)
+         X       0.0000      Y      -0.0000      Z       0.0000
+       Tot       0.0000
+    Quadrupole Moments (Debye-Ang)
+        XX     -17.2107     XY       0.0002     YY     -22.6636
+        XZ       0.0001     YZ       0.0000     ZZ     -22.6636
+    Octopole Moments (Debye-Ang^2)
+       XXX       0.0000    XXY      -0.0000    XYY       0.0000
+       YYY      -0.0000    XXZ       0.0000    XYZ       0.0000
+       YYZ       0.0000    XZZ       0.0000    YZZ      -0.0000
+       ZZZ       0.0000
+    Hexadecapole Moments (Debye-Ang^3)
+      XXXX     -34.3772   XXXY       0.0008   XXYY     -19.2376
+      XYYY       0.0008   YYYY     -81.0482   XXXZ       0.0003
+      XXYZ       0.0000   XYYZ       0.0001   YYYZ       0.0001
+      XXZZ     -19.2376   XYZZ       0.0003   YYZZ     -27.0203
+      XZZZ       0.0003   YZZZ       0.0001   ZZZZ     -81.0482
+ -----------------------------------------------------------------
+ -----------------------------------------------------------------
+               RPA Excited-State Multipoles, State  7
+ -----------------------------------------------------------------
+    Charge (ESU x 10^10)
+                -0.0000
+    Dipole Moment (Debye)
+         X       0.0000      Y       0.0000      Z      -0.0000
+       Tot       0.0000
+    Quadrupole Moments (Debye-Ang)
+        XX     -22.6636     XY      -0.0002     YY     -17.2107
+        XZ      -0.0002     YZ       0.0002     ZZ     -22.6636
+    Octopole Moments (Debye-Ang^2)
+       XXX       0.0000    XXY       0.0000    XYY       0.0000
+       YYY       0.0000    XXZ      -0.0000    XYZ       0.0000
+       YYZ      -0.0000    XZZ       0.0000    YZZ       0.0000
+       ZZZ      -0.0000
+    Hexadecapole Moments (Debye-Ang^3)
+      XXXX     -81.0482   XXXY      -0.0008   XXYY     -19.2376
+      XYYY      -0.0008   YYYY     -34.3772   XXXZ      -0.0010
+      XXYZ       0.0003   XYYZ      -0.0003   YYYZ       0.0009
+      XXZZ     -27.0203   XYZZ      -0.0003   YYZZ     -19.2376
+      XZZZ      -0.0010   YZZZ       0.0009   ZZZZ     -81.0482
+ -----------------------------------------------------------------
+ -----------------------------------------------------------------
+               RPA Excited-State Multipoles, State  8
+ -----------------------------------------------------------------
+    Charge (ESU x 10^10)
+                 0.0000
+    Dipole Moment (Debye)
+         X      -0.0000      Y       0.0000      Z      -0.0000
+       Tot       0.0000
+    Quadrupole Moments (Debye-Ang)
+        XX     -19.6560     XY       0.0001     YY     -18.4661
+        XZ       0.0001     YZ      -0.0001     ZZ     -24.4157
+    Octopole Moments (Debye-Ang^2)
+       XXX      -0.0000    XXY       0.0000    XYY      -0.0000
+       YYY       0.0000    XXZ      -0.0000    XYZ      -0.0000
+       YYZ      -0.0000    XZZ      -0.0000    YZZ       0.0000
+       ZZZ      -0.0000
+    Hexadecapole Moments (Debye-Ang^3)
+      XXXX     -55.3095   XXXY       0.0005   XXYY     -16.7389
+      XYYY       0.0005   YYYY     -45.1239   XXXZ       0.0005
+      XXYZ      -0.0001   XYYZ       0.0002   YYYZ      -0.0004
+      XXZZ     -25.2236   XYZZ       0.0002   YYZZ     -23.5267
+      XZZZ       0.0005   YZZZ      -0.0004   ZZZZ     -96.0529
+ -----------------------------------------------------------------
+ -----------------------------------------------------------------
+               RPA Excited-State Multipoles, State  9
+ -----------------------------------------------------------------
+    Charge (ESU x 10^10)
+                -0.0000
+    Dipole Moment (Debye)
+         X       0.0000      Y       0.0000      Z      -0.0000
+       Tot       0.0000
+    Quadrupole Moments (Debye-Ang)
+        XX     -22.6399     XY      -0.0000     YY     -22.6399
+        XZ       0.0000     YZ      -0.0002     ZZ     -17.2004
+    Octopole Moments (Debye-Ang^2)
+       XXX       0.0000    XXY       0.0000    XYY       0.0000
+       YYY       0.0000    XXZ      -0.0000    XYZ       0.0000
+       YYZ      -0.0000    XZZ       0.0000    YZZ       0.0000
+       ZZZ      -0.0000
+    Hexadecapole Moments (Debye-Ang^3)
+      XXXX     -80.8876   XXXY      -0.0000   XXYY     -26.9625
+      XYYY      -0.0000   YYYY     -80.8876   XXXZ       0.0000
+      XXYZ      -0.0002   XYYZ       0.0000   YYYZ      -0.0006
+      XXZZ     -19.2023   XYZZ      -0.0000   YYZZ     -19.2023
+      XZZZ       0.0000   YZZZ      -0.0006   ZZZZ     -34.3262
+ -----------------------------------------------------------------
+ -----------------------------------------------------------------
+               RPA Excited-State Multipoles, State 10
+ -----------------------------------------------------------------
+    Charge (ESU x 10^10)
+                -0.0000
+    Dipole Moment (Debye)
+         X       0.0000      Y      -0.0000      Z       0.0000
+       Tot       0.0000
+    Quadrupole Moments (Debye-Ang)
+        XX     -17.2004     XY       0.0009     YY     -22.6399
+        XZ      -0.0000     YZ      -0.0000     ZZ     -22.6399
+    Octopole Moments (Debye-Ang^2)
+       XXX       0.0000    XXY      -0.0000    XYY       0.0000
+       YYY      -0.0000    XXZ       0.0000    XYZ       0.0000
+       YYZ       0.0000    XZZ       0.0000    YZZ      -0.0000
+       ZZZ       0.0000
+    Hexadecapole Moments (Debye-Ang^3)
+      XXXX     -34.3262   XXXY       0.0036   XXYY     -19.2023
+      XYYY       0.0036   YYYY     -80.8876   XXXZ      -0.0000
+      XXYZ      -0.0000   XYYZ      -0.0000   YYYZ      -0.0000
+      XXZZ     -19.2023   XYZZ       0.0012   YYZZ     -26.9625
+      XZZZ      -0.0000   YZZZ      -0.0000   ZZZZ     -80.8876
+ -----------------------------------------------------------------
+ -----------------------------------------------------------------
+               RPA Excited-State Multipoles, State 11
+ -----------------------------------------------------------------
+    Charge (ESU x 10^10)
+                 0.0000
+    Dipole Moment (Debye)
+         X      -0.0000      Y       0.0000      Z       0.0000
+       Tot       0.0000
+    Quadrupole Moments (Debye-Ang)
+        XX     -22.6399     XY      -0.0009     YY     -17.2004
+        XZ      -0.0000     YZ       0.0002     ZZ     -22.6399
+    Octopole Moments (Debye-Ang^2)
+       XXX      -0.0000    XXY       0.0000    XYY      -0.0000
+       YYY       0.0000    XXZ       0.0000    XYZ      -0.0000
+       YYZ       0.0000    XZZ      -0.0000    YZZ       0.0000
+       ZZZ       0.0000
+    Hexadecapole Moments (Debye-Ang^3)
+      XXXX     -80.8876   XXXY      -0.0036   XXYY     -19.2023
+      XYYY      -0.0036   YYYY     -34.3262   XXXZ      -0.0000
+      XXYZ       0.0002   XYYZ      -0.0000   YYYZ       0.0006
+      XXZZ     -26.9625   XYZZ      -0.0012   YYZZ     -19.2023
+      XZZZ      -0.0000   YZZZ       0.0006   ZZZZ     -80.8876
+ -----------------------------------------------------------------
+ -----------------------------------------------------------------
+               RPA Excited-State Multipoles, State 12
+ -----------------------------------------------------------------
+    Charge (ESU x 10^10)
+                 0.0000
+    Dipole Moment (Debye)
+         X       0.0000      Y      -0.0000      Z       0.0000
+       Tot       0.0000
+    Quadrupole Moments (Debye-Ang)
+        XX     -21.4370     XY       0.0000     YY     -21.4370
+        XZ      -0.0000     YZ       0.0000     ZZ     -21.4370
+    Octopole Moments (Debye-Ang^2)
+       XXX       0.0000    XXY      -0.0000    XYY       0.0000
+       YYY      -0.0000    XXZ       0.0000    XYZ       0.0000
+       YYZ       0.0000    XZZ       0.0000    YZZ      -0.0000
+       ZZZ       0.0000
+    Hexadecapole Moments (Debye-Ang^3)
+      XXXX     -69.5531   XXXY       0.0000   XXYY     -23.1844
+      XYYY       0.0000   YYYY     -69.5531   XXXZ      -0.0000
+      XXYZ       0.0000   XYYZ      -0.0000   YYYZ       0.0000
+      XXZZ     -23.1844   XYZZ       0.0000   YYZZ     -23.1844
+      XZZZ      -0.0000   YZZZ       0.0000   ZZZZ     -69.5531
+ -----------------------------------------------------------------
+
+ STANDARD THERMODYNAMIC QUANTITIES AT   298.15 K  AND     1.00 ATM
+
+   Translational Enthalpy:        0.889 kcal/mol
+   Rotational Enthalpy:           0.000 kcal/mol
+   Vibrational Enthalpy:          0.000 kcal/mol
+   gas constant (RT):             0.592 kcal/mol
+   Translational Entropy:        36.983  cal/mol.K
+   Rotational Entropy:            0.000  cal/mol.K
+   Vibrational Entropy:           0.000  cal/mol.K
+
+   Total Enthalpy:                1.481 kcal/mol
+   Total Entropy:                36.983  cal/mol.K
+
+ -----------------------------------------------------------------
+
+ Total job time:  0.33s(wall), 0.32s(cpu) 
+ Mon Sep  4 15:58:34 2017
+
+        *************************************************************
+        *                                                           *
+        *  Thank you very much for using Q-Chem.  Have a nice day.  *
+        *                                                           *
+        *************************************************************
+
+
