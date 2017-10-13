@@ -252,7 +252,8 @@ TD        Gaussian    GaussianTDDFTTest     basicGaussian09       dvb_td.out
 TD        Jaguar      JaguarTDDFTTest       basicJaguar8.3        dvb_td.out
 TD        ORCA        OrcaTDDFTTest         basicORCA2.9          dvb_td.out
 TD        ORCA        OrcaTDDFTTest         basicORCA3.0          dvb_td.out
-TD        QChem       OrcaTDDFTTest         basicQChem4.2         dvb_td.out
+TD        ORCA        OrcaROCISTest         basicORCA4.0          dvb_rocis.out
+TD        QChem       QChemTDDFTTest        basicQChem4.2         dvb_td.out
 
 TDun      Gaussian    GenericTDunTest       basicGaussian03       CO_TD_delta.log
 TDun      Gaussian    GenericTDunTest       basicGaussian09       CO_TD_delta.log

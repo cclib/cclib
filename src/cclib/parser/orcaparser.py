@@ -632,23 +632,148 @@ class ORCA(logfileparser.Logfile):
                 self.etsecs.append(sec)
                 line = next(inputfile)
 
-        # This will parse etoscs for TD calculations, but note that ORCA generally
-        # prints two sets, one based on the length form of transition dipole moments,
-        # the other based on the velocity form. Although these should be identical
-        # in the basis set limit, in practice they are rarely the same. Here we will
-        # effectively parse just the spectrum based on the length-form.
-        if (line[25:44] == "ABSORPTION SPECTRUM" or line[9:28] == "ABSORPTION SPECTRUM") and not hasattr(self, "etoscs"):
 
-            self.skip_lines(inputfile, ['d', 'header', 'header', 'd'])
+        # Parse the various absorption spectra for TDDFT and ROCIS
+        if 'ABSORPTION SPECTRUM' in line or 'ELECTRIC DIPOLE' in line:
+            line = line.strip()
 
-            self.etoscs = []
-            for x in self.etsyms:
-                osc = next(inputfile).split()[3]
-                if osc == "spin":  # "spin forbidden"
-                    osc = 0
-                else:
-                    osc = float(osc)
-                self.etoscs.append(osc)
+            # Standard header, occasionally changes
+            header = ['d', 'header', 'header', 'd']
+
+            def energy_intensity(line):
+                """ TDDFT and related methods standard method of output
+-----------------------------------------------------------------------------
+         ABSORPTION SPECTRUM VIA TRANSITION ELECTRIC DIPOLE MOMENTS
+-----------------------------------------------------------------------------
+State   Energy  Wavelength   fosc         T2         TX        TY        TZ
+        (cm-1)    (nm)                  (au**2)     (au)      (au)      (au)
+-----------------------------------------------------------------------------
+   1 5184116.7      1.9   0.040578220   0.00258  -0.05076  -0.00000  -0.00000
+"""
+                try:
+                    state, energy, wavelength, intensity, t2, tx, ty, tz = line.split()
+                except ValueError as e:
+                    # Must be spin forbidden and thus no intensity
+                    energy = line.split()[1]
+                    intensity = 0
+                return energy, intensity
+
+            # Check for variations
+            if line == 'COMBINED ELECTRIC DIPOLE + MAGNETIC DIPOLE + ELECTRIC QUADRUPOLE SPECTRUM' or \
+               line == 'COMBINED ELECTRIC DIPOLE + MAGNETIC DIPOLE + ELECTRIC QUADRUPOLE SPECTRUM (origin adjusted)':
+                def energy_intensity(line):
+                    """ TDDFT with DoQuad == True
+------------------------------------------------------------------------------------------------------
+                COMBINED ELECTRIC DIPOLE + MAGNETIC DIPOLE + ELECTRIC QUADRUPOLE SPECTRUM
+------------------------------------------------------------------------------------------------------
+State   Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TOT    m2/TOT    Q2/TOT
+        (cm-1)   (nm)                (*1e6)    (*1e6)
+------------------------------------------------------------------------------------------------------
+   1 61784150.6      0.2   0.00000   0.00000   3.23572   0.00000323571519   0.00000   0.00000   1.00000
+"""
+                    state, energy, wavelength, d2, m2, q2, intensity, d2_contrib, m2_contrib, q2_contrib = line.split()
+                    return energy, intensity
+
+            elif line == 'COMBINED ELECTRIC DIPOLE + MAGNETIC DIPOLE + ELECTRIC QUADRUPOLE SPECTRUM (Origin Independent, Length Representation)':
+                def energy_intensity(line):
+                    """ TDDFT with doQuad == True (Origin Independent Length Representation)
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+                                    COMBINED ELECTRIC DIPOLE + MAGNETIC DIPOLE + ELECTRIC QUADRUPOLE SPECTRUM (Origin Independent, Length Representation)
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+State  Energy   Wavelength       D2            m2              Q2               DM             DO               D2+m2+Q2+DM+DO          D2/TOT          m2/TOT          Q2/TOT         DM/TOT          DO/TOT
+       (cm-1)      (nm)                      (*1e6)          (*1e6)           (*1e6)         (*1e6)
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+   1 61784150.6      0.2      0.00000         0.00000         3.23572         0.00000         0.00000         0.00000323571519         0.00000         0.00000         1.00000         0.00000          0.00000
+   2 61793079.3      0.2      0.00000         0.00000         2.85949         0.00000        -0.00000         0.00000285948800         0.00000         0.00000         1.00000         0.00000         -0.00000
+"""
+                    vals = line.split()
+                    if len(vals) < 14:
+                        return vals[1], 0
+                    return vals[1], vals[8]
+
+            elif line[:5] == 'X-RAY' and \
+                (line[6:23] == 'EMISSION SPECTRUM' or line[6:25] == 'ABSORPTION SPECTRUM'):
+                def energy_intensity(line):
+                    """ X-Ray from XES (emission or absorption, electric or velocity dipole moments)
+-------------------------------------------------------------------------------------
+          X-RAY ABSORPTION SPECTRUM VIA TRANSITION ELECTRIC DIPOLE MOMENTS
+-------------------------------------------------------------------------------------
+       Transition          Energy           INT             TX        TY        TZ
+                            (eV)        (normalized)       (au)      (au)      (au)
+-------------------------------------------------------------------------------------
+    1   90a ->    0a      8748.824     0.000002678629     0.00004  -0.00001   0.00003
+"""
+                    state, start, arrow, end, energy, intensity, tx, ty, tz = line.split()
+                    return energy, intensity
+
+            elif line[:70] == 'COMBINED ELECTRIC DIPOLE + MAGNETIC DIPOLE + ELECTRIC QUADRUPOLE X-RAY':
+                header = ['header', 'd', 'header', 'd', 'header', 'header', 'd']
+                def energy_intensity(line):
+                    """ XAS with quadrupole (origin adjusted)
+-------------------------------------------------------------------------------------------------------------------------------
+          COMBINED ELECTRIC DIPOLE + MAGNETIC DIPOLE + ELECTRIC QUADRUPOLE X-RAY ABSORPTION SPECTRUM
+                                      (origin adjusted)
+-------------------------------------------------------------------------------------------------------------------------------
+                                                        INT (normalized)
+                                     ---------------------------------------------------------
+       Transition         Energy        D2             M2             Q2           D2+M2+Q2       D2/TOT     M2/TOT     Q2/TOT
+                           (eV)                      (*1e6)         (*1e6)
+-------------------------------------------------------------------------------------------------------------------------------
+    1   90a ->    0a     8748.824    0.000000       0.000292       0.003615     0.000000027512   0.858012   0.010602   0.131386
+"""
+                    state, start, arrow, end, energy, d2, m2, q2, intensity, d2_contrib, m2_contrib, q2_contrib = line.split()
+                    return energy, intensity
+
+            elif line[:55] == 'SPIN ORBIT CORRECTED ABSORPTION SPECTRUM VIA TRANSITION':
+                def energy_intensity(line):
+                    """ ROCIS dipole approximation with SOC == True (electric or veloctiy dipole moments)
+-------------------------------------------------------------------------------
+SPIN ORBIT CORRECTED ABSORPTION SPECTRUM VIA TRANSITION ELECTRIC DIPOLE MOMENTS
+-------------------------------------------------------------------------------
+States    Energy  Wavelength   fosc         T2         TX        TY        TZ
+          (cm-1)    (nm)                  (au**2)     (au)      (au)      (au)
+-------------------------------------------------------------------------------
+ 0  1       0.0      0.0   0.000000000   0.00000   0.00000   0.00000   0.00000
+ 0  2 5184116.4      1.9   0.020288451   0.00258   0.05076   0.00003   0.00000
+"""
+                    state, state2, energy, wavelength, intensity, t2, tx, ty, tz = line.split()
+                    return energy, intensity
+
+            elif line[:79] == 'ROCIS COMBINED ELECTRIC DIPOLE + MAGNETIC DIPOLE + ELECTRIC QUADRUPOLE SPECTRUM':
+                def energy_intensity(line):
+                    """ ROCIS with DoQuad = True and SOC = True (also does origin adjusted)
+------------------------------------------------------------------------------------------------------
+          ROCIS COMBINED ELECTRIC DIPOLE + MAGNETIC DIPOLE + ELECTRIC QUADRUPOLE SPECTRUM
+------------------------------------------------------------------------------------------------------
+States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TOT    m2/TOT    Q2/TOT
+        (cm-1)   (nm)                (*1e6)    (*1e6)     (*population)
+------------------------------------------------------------------------------------------------------
+ 0  1       0.0      0.0   0.00000   0.00000   0.00000   0.00000000000000   0.00000   0.00000   0.00000
+ 0  2 669388066.6      0.0   0.00000   0.00000   0.00876   0.00000000437784   0.00000   0.00000   1.00000
+"""
+                    state, state2, energy, wavelength, d2, m2, q2, intensity, d2_contrib, m2_contrib, q2_contrib = line.split()
+                    return energy, intensity
+
+            name = line
+            self.skip_lines(inputfile, header)
+
+            if not hasattr(self, 'transprop'):
+                self.transprop = {}
+
+            etenergies = []
+            etoscs = []
+            line = next(inputfile)
+            while len(line) > 1:
+                energy, intensity = energy_intensity(line)
+                etenergies.append(float(energy))
+                etoscs.append(float(intensity))
+
+                line = next(inputfile)
+
+            self.etenergies = numpy.array(etenergies)
+            self.etoscs = numpy.array(etoscs)
+            self.transprop[name] = (self.etenergies, self.etoscs)
+
 
         if line[0:23] == "VIBRATIONAL FREQUENCIES":
 
