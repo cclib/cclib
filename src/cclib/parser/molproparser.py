@@ -8,7 +8,6 @@
 """Parser for Molpro output files"""
 
 
-import csv
 import itertools
 from itertools import combinations_with_replacement
 
