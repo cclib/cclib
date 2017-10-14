@@ -882,6 +882,23 @@ class Molpro(logfileparser.Logfile):
                 self.atomcharges = {}
             self.atomcharges['mulliken'] = charges
 
+        if 'GRADIENT FOR STATE' in line:
+            for _ in range(3):
+                next(inputfile)
+            grad = []
+            lines_read = 0
+            # It is not possible to make a loop
+            # for _ in range(self.natom)
+            # Because molpro inserts a newline every 50th atom.
+            while lines_read < self.natom:
+                line = next(inputfile)
+                if line:
+                    grad.append([float(x) for x in line.split()[1:]])
+                    lines_read += 1
+            if not hasattr(self, 'grads'):
+                self.grads = []
+            self.grads.append(grad)
+
 
 if __name__ == "__main__":
     import doctest, molproparser
