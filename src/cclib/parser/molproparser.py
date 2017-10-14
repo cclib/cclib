@@ -887,11 +887,9 @@ class Molpro(logfileparser.Logfile):
                 next(inputfile)
             grad = []
             lines_read = 0
-            # It is not possible to make a loop
-            # for _ in range(self.natom)
-            # Because molpro inserts a newline every 50th atom.
             while lines_read < self.natom:
                 line = next(inputfile)
+                # Because molpro inserts an empty line every 50th atom.
                 if line:
                     grad.append([float(x) for x in line.split()[1:]])
                     lines_read += 1
