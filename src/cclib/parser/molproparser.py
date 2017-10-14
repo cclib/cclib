@@ -31,7 +31,7 @@ def create_atomic_orbital_names(orbitals):
     }
 
     # Although we could write out all names for the other subshells, it is
-    # better # to generate them if we need to expand further,
+    # better to generate them if we need to expand further,
     # since the number of functions quickly grows and there are both
     # Cartesian and spherical variants to consider.
     # For D orbitals, the Cartesian functions are xx, yy, zz, xy, xz and yz,
@@ -83,10 +83,10 @@ class Molpro(logfileparser.Logfile):
     def after_parsing(self):
 
         # If optimization thresholds are default, they are normally
-        # not printed and we need # to set them to the default after parsing.
+        # not printed and we need to set them to the default after parsing.
         # Make sure to set them in the same order that
         # they appear in the in the geometry optimization progress printed
-        # in the output, # namely: energy difference, maximum gradient,
+        # in the output, namely: energy difference, maximum gradient,
         # maximum step.
         if not hasattr(self, "geotargets"):
             self.geotargets = []
@@ -150,8 +150,8 @@ class Molpro(logfileparser.Logfile):
                 or self.electronorbitals or self.naturalorbitals)
 
         # For unrestricted calculations, ELECTRON ORBITALS is followed on
-        # the same line
-        # by FOR POSITIVE SPIN or FOR NEGATIVE SPIN as appropriate.
+        # the same line by FOR POSITIVE SPIN
+        # or FOR NEGATIVE SPIN as appropriate.
         spin = (line[19:36] == "FOR NEGATIVE SPIN"
                 or self.electronorbitals[19:36] == "FOR NEGATIVE SPIN")
 
@@ -196,7 +196,8 @@ class Molpro(logfileparser.Logfile):
                             aonum += 1
                         else:
                             functype = s
-                            element = self.table.element[self.atomnos[atomno - 1]]
+                            element = self.table.element[
+                                self.atomnos[atomno - 1]]
                             aoname = "%s%i_%s" % (element, atomno, functype)
                             aonames.append(aoname)
                     line = next(inputfile)
