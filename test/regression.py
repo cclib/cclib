@@ -1282,6 +1282,19 @@ def testQChem_QChem4_4_top_out(logfile):
     assert logfile.data.mocoeffs[0].shape == (nmo, nbasis)
     assert logfile.data.mocoeffs[0].T[6, 5] == 0.8115082
 
+
+def testQChem_QChem5_0_argon_out(logfile):
+    """This job has unit specifications at the end of 'Total energy for
+    state' lines.
+    """
+    nroots = 12
+    assert len(logfile.data.etenergies) == nroots
+    state_0_energy = -526.6323968555
+    state_1_energy = -526.14663738
+    assert logfile.data.scfenergies[0] == convertor(state_0_energy, 'hartree', 'eV')
+    assert abs(logfile.data.etenergies[0] - convertor(state_1_energy - state_0_energy, 'hartree', 'cm-1')) < 1.0e-1
+
+
 def testORCA_ORCA3_0_chelpg_out(logfile):
     """orca file with chelpg charges"""
     assert 'chelpg' in logfile.data.atomcharges
