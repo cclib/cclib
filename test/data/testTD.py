@@ -32,8 +32,7 @@ class GenericTDTest(unittest.TestCase):
 
         # Note that if all oscillator strengths are zero (like for triplets)
         # then this will simply pick out the first energy.
-        idx_lambdamax = [i for i, x in enumerate(self.data.etoscs)
-                         if x == max(self.data.etoscs)][0]
+        idx_lambdamax = numpy.argmax(self.data.etoscs)
         self.assertAlmostEqual(self.data.etenergies[idx_lambdamax], self.expected_l_max, delta=5000)
 
     @skipForParser('DALTON', 'Oscillator strengths will have to be calculated, not just parsed.')
@@ -53,8 +52,7 @@ class GenericTDTest(unittest.TestCase):
     @skipForParser('DALTON', '???')
     def testsecs_transition(self):
         """Is the lowest E transition from the HOMO or to the LUMO?"""
-        idx_minenergy = [i for i, x in enumerate(self.data.etenergies)
-                         if x == min(self.data.etenergies)][0]
+        idx_minenergy = numpy.argmin(self.data.etoscs)
         sec = self.data.etsecs[idx_minenergy]
         t = [(c*c, s, e) for (s, e, c) in sec]
         t.sort()
@@ -122,7 +120,48 @@ class OrcaTDDFTTest(GenericTDTest):
     def testoscs(self):
         """Is the maximum of etoscs in the right range?"""
         self.assertEqual(len(self.data.etoscs), self.number)
-        self.assertAlmostEqual(max(self.data.etoscs), 1.0, delta=0.1)
+        self.assertAlmostEqual(max(self.data.etoscs), .09, delta=0.01)
+
+class OrcaROCISTest(GenericTDTest):
+    """Customized test for ROCIS"""
+    number = 57
+    expected_l_max = 2316970.8
+    n_spectra = 9
+
+    def testoscs(self):
+        """Is the maximum of etoscs in the right range?"""
+        self.assertEqual(len(self.data.etoscs), self.number)
+        self.assertAlmostEqual(max(self.data.etoscs), 0.015, delta=0.1)
+
+    def testTransprop(self):
+        """Check the number of spectra parsed"""
+        self.assertEqual(len(self.data.transprop), self.n_spectra)
+        tddft_length = 'ABSORPTION SPECTRUM VIA TRANSITION ELECTRIC DIPOLE MOMENTS'
+        self.assertIn(tddft_length, self.data.transprop)
+
+    def testsymsnumber(self):
+        """ORCA ROCIS has no symmetry"""
+        pass
+
+    def testsecs(self):
+        """ROCIS does not form singly excited configurations (secs)"""
+        pass
+
+    def testsecs_transition(self):
+        """ROCIS does not form singly excited configurations (secs)"""
+        pass
+
+
+class QChemTDDFTTest(GenericTDTest):
+    """Customized time-dependent HF/DFT unittest"""
+
+    number = 10
+    expected_l_max = 48000
+
+    def testoscs(self):
+        """Is the maximum of etoscs in the right range?"""
+        self.assertEqual(len(self.data.etoscs), self.number)
+        self.assertAlmostEqual(max(self.data.etoscs), .9, delta=0.1)
 
 
 class GenericTDDFTtrpTest(GenericTDTest):
