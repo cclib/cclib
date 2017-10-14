@@ -745,7 +745,7 @@ class QChem(logfileparser.Logfile):
                     # ground state energy, rather than just the EE;
                     # this will be more accurate.
                     if 'Total energy for state' in line:
-                        energy = utils.convertor(float(line.split()[-1]), 'hartree', 'cm-1')
+                        energy = utils.convertor(float(line.split()[5]), 'hartree', 'cm-1')
                         etenergy = energy - utils.convertor(self.scfenergies[-1], 'eV', 'cm-1')
                         etenergies.append(etenergy)
                     # if 'excitation energy' in line:
