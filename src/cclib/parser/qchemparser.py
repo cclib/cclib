@@ -186,7 +186,7 @@ electrons are only printed for user-provided definitions. Rerun with \
                                 for i in range(self.natom):
                                     if elements[i] == element:
                                         msg = "Can't calculate coreelectrons for {} {}".format(element, i + 1)
-                                        self.logger.warning
+                                        self.logger.warning(msg)
                             else:
                                 msg = "Can't calculate coreelectrons for {} {}".format(element, index + 1)
                                 self.logger.warning(msg)
@@ -520,7 +520,6 @@ electrons are only printed for user-provided definitions. Rerun with \
 
             # Parse the basis set name
             if 'Requested basis set' in line:
-                # if 'is non-standard' not in line
                 self.metadata["basis_set"] = line.split()[-1]
 
             # Parse the general basis for `gbasis`, in the style used by
