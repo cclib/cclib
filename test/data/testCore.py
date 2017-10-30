@@ -24,6 +24,7 @@ class GenericCoreTest(unittest.TestCase):
     """Generic core electrons unittest"""
 
     coredict = {'Mo': 28, 'O':0, 'Cl':10}
+    charge = -2
 
     def testcorrect(self):
         """Is coreelectrons equal to what it should be?"""
@@ -34,11 +35,9 @@ class GenericCoreTest(unittest.TestCase):
         ans = numpy.array(ans, "i")
         numpy.testing.assert_array_equal(self.data.coreelectrons, ans)
 
-    @skipForParser('ADF', '?')
     def testcharge(self):
         """Is the total charge correct?"""
-        charge = -2
-        self.assertEqual(self.data.charge, charge)
+        self.assertEqual(self.data.charge, self.charge)
 
 
 class ADFCoreTest(GenericCoreTest):
@@ -47,6 +46,9 @@ class ADFCoreTest(GenericCoreTest):
     # For some reason ADF does not have a core in this test for chlorine atoms.
     # This might be fixable in the input.
     coredict = {'Mo': 28, 'O':0, 'Cl':0}
+
+    # These calculations were run on the neutral complex.
+    charge = 0
 
 
 class JaguarCoreTest(GenericCoreTest):
