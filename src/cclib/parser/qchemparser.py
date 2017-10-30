@@ -170,10 +170,14 @@ class QChem(logfileparser.Logfile):
                 has_iprint = hasattr(self, 'possible_ecps')
 
                 if not ecp_is_gen and not has_iprint:
-                    msg = """ECPs are present, but the number of core electrons isn't printed at all. Rerun with "iprint >= 100", otherwise coreelectrons is incorrect (all zeros)."""
+                    msg = """ECPs are present, but the number of core \
+electrons isn't printed at all. Rerun with "iprint >= 100", otherwise \
+coreelectrons is incorrect (all zeros)."""
                     self.logger.warning(msg)
                 elif ecp_is_gen and not has_iprint:
-                    msg = """ECPs are present, but the number of core electrons are only printed for user-provided definitions. Rerun with "iprint >= 100", otherwise coreelectrons may only be partially correct."""
+                    msg = """ECPs are present, but the number of core \
+electrons are only printed for user-provided definitions. Rerun with \
+"iprint >= 100", otherwise coreelectrons may only be partially correct."""
                     self.logger.warning(msg)
                     for entry in self.user_input['ecp']:
                         element, index, ncore = entry
@@ -385,7 +389,7 @@ class QChem(logfileparser.Logfile):
             # If the input section is repeated back, parse the $rem and
             # $molecule sections.
             if line[0:11] == 'User input:':
-                self.user_input= dict()
+                self.user_input = dict()
                 self.skip_line(inputfile, 'd')
                 while list(set(line.strip())) != ['-']:
 
