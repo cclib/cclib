@@ -13,6 +13,7 @@ $rem
  thresh = 14
  max_scf_cycles = 200
  print_general_basis = true
+ iprint = 100
 $end
 
 $molecule

@@ -14,6 +14,8 @@ import numpy
 
 from cclib.parser.utils import PeriodicTable
 
+from skip import skipForParser
+
 
 __filedir__ = os.path.realpath(os.path.dirname(__file__))
 
@@ -32,6 +34,12 @@ class GenericCoreTest(unittest.TestCase):
         ans = numpy.array(ans, "i")
         numpy.testing.assert_array_equal(self.data.coreelectrons, ans)
 
+    @skipForParser('ADF', '?')
+    def testcharge(self):
+        """Is the total charge correct?"""
+        charge = -2
+        self.assertEqual(self.data.charge, charge)
+
 
 class ADFCoreTest(GenericCoreTest):
     """Customized core electrons unittest"""
@@ -47,7 +55,7 @@ class JaguarCoreTest(GenericCoreTest):
     # This test was done using LanL2DZ instead of the smaller variant.
     coredict = {'Mo': 36, 'O':0, 'Cl':10}
 
-           
+
 if __name__=="__main__":
 
     import sys

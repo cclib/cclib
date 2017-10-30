@@ -98,6 +98,7 @@ Core      GAMESS      GenericCoreTest       basicGAMESS-US2017    MoOCl4-sp.out
 Core      Gaussian    GenericCoreTest       basicGaussian03       Mo4OCl4-sp.log
 Core      Gaussian    GenericCoreTest       basicGaussian09       Mo4OCl4-sp.log
 Core      Jaguar      JaguarCoreTest        basicJaguar8.3        MoOCl4-sp.out
+Core      QChem       GenericCoreTest       basicQChem4.2         MoOCl4_sp.out
 
 GeoOpt    ADF         ADFGeoOptTest         basicADF2007.01       dvb_gopt_b.adfout
 GeoOpt    ADF         ADFGeoOptTest         basicADF2013.01       dvb_gopt_b.adfout

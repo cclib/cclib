@@ -1018,6 +1018,16 @@ def testQChem_QChem4_2_dvb_sp_multipole_10_out(logfile):
     assert numpy.isnan(logfile.data.moments[10][0])
 
 
+def testQChem_QChem4_2_MoOCl4_sp_mixed_out(logfile):
+    """Use a mixed basis, where only the first chlorine atom has an
+    ECP.
+    """
+    assert logfile.data.charge == -2
+    assert logfile.data.mult == 1
+    coreelectrons = numpy.array([28, 0, 10, 0, 0, 0], dtype=int)
+    assert numpy.all(coreelectrons == logfile.data.coreelectrons)
+
+
 def testQChem_QChem4_2_print_frgm_false_opt_out(logfile):
     """Fragment calculation: geometry optimization.
 
@@ -1281,6 +1291,14 @@ def testQChem_QChem4_4_top_out(logfile):
     assert len(logfile.data.mocoeffs) == 1
     assert logfile.data.mocoeffs[0].shape == (nmo, nbasis)
     assert logfile.data.mocoeffs[0].T[6, 5] == 0.8115082
+
+
+def testQChem_QChem5_0_438_out(logfile):
+    """This job has an ECP on Pt, replacing 60 of 78 electrons, and was
+    showing the charge as 60.
+    """
+    assert logfile.data.charge == 0
+    assert logfile.data.coreelectrons[0] == 60
 
 
 def testQChem_QChem5_0_argon_out(logfile):
