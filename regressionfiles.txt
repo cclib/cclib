@@ -339,6 +339,7 @@ QChem/QChem4.2/dvb_gopt_unconverged.out
 QChem/QChem4.2/dvb_sp_multipole_10.out
 QChem/QChem4.2/dvb_sp_omp.out
 QChem/QChem4.2/dvb_sp_unconverged.out
+QChem/QChem4.2/MoOCl4_sp_mixed.out
 QChem/QChem4.2/opt_ZZZZ_+1.000.out
 QChem/QChem4.2/print_frgm_false_opt.out
 QChem/QChem4.2/print_frgm_true_opt.out
@@ -365,4 +366,5 @@ QChem/QChem4.4/Trp_polar_ideriv0.out
 QChem/QChem4.4/Trp_polar_ideriv1.out
 QChem/QChem4.4/Trp_polar_response.out
 QChem/QChem4.4/top.out
+QChem/QChem5.0/438.out
 QChem/QChem5.0/argon.out
