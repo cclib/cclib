@@ -326,9 +326,12 @@ class Logfile(object):
         if not hasattr(self, "nmo") and hasattr(self, "nbasis"):
             self.nmo = self.nbasis
 
-        # Creating deafult coreelectrons array.
+        # Create a default coreelectrons array, unless it's impossible
+        # ot determine.
         if not hasattr(self, "coreelectrons") and hasattr(self, "natom"):
             self.coreelectrons = numpy.zeros(self.natom, "i")
+        if hasattr(self, "incorrect_coreelectrons"):
+            self.__delattr__("coreelectrons")
 
         # Create the data object we want to return. This is normally ccData, but can be changed
         # by passing the datatype argument to the constructor. All supported cclib attributes

@@ -171,36 +171,68 @@ class QChem(logfileparser.Logfile):
 
                 if not ecp_is_gen and not has_iprint:
                     msg = """ECPs are present, but the number of core \
-electrons isn't printed at all. Rerun with "iprint >= 100", otherwise \
-coreelectrons is incorrect (all zeros)."""
+electrons isn't printed at all. Rerun with "iprint >= 100" to get \
+coreelectrons."""
                     self.logger.warning(msg)
+                    self.incorrect_coreelectrons = True
                 elif ecp_is_gen and not has_iprint:
-                    msg = """ECPs are present, but the number of core \
-electrons are only printed for user-provided definitions. Rerun with \
-"iprint >= 100", otherwise coreelectrons may only be partially correct."""
-                    self.logger.warning(msg)
-                    for entry in self.user_input['ecp']:
-                        element, index, ncore = entry
-                        if ncore == 0:
-                            if index == -1:
-                                for i in range(self.natom):
-                                    if elements[i] == element:
-                                        msg = "Can't calculate coreelectrons for {} {}".format(element, i + 1)
-                                        self.logger.warning(msg)
-                            else:
-                                msg = "Can't calculate coreelectrons for {} {}".format(element, index + 1)
-                                self.logger.warning(msg)
+                    # We can guess in only two cases:
+                    # 1. a single atom can't be determined
+                    # 2. all (ECP) atoms of a single element can't be determined
+                    nmissing = sum(ncore == 0
+                                   for (_, _, ncore) in self.user_input['ecp'])
+                    if nmissing > 1:
+                        msg = """ECPs are present, but coreelectrons can only \
+be guessed for one element at most. Rerun with "iprint >= 100" to get \
+coreelectrons."""
+                        self.logger.warning(msg)
+                        self.incorrect_coreelectrons = True
+                    else:
+                        if self.user_input['molecule'].get('charge') is None:
+                            msg = """ECPs are present, but the total charge \
+cannot be determined. Rerun without `$molecule read`."""
+                            self.logger.warning(msg)
+                            self.incorrect_coreelectrons = True
                         else:
-                            # Do we assign this to all instances of the
-                            # element?
-                            if index == -1:
-                                for i in range(self.natom):
-                                    if elements[i] == element:
-                                        self.coreelectrons[i] = ncore
-                            # Or only one instance?
+                            user_charge = self.user_input['molecule']['charge']
+                            # First, assign the entries given
+                            # explicitly.
+                            for entry in self.user_input['ecp']:
+                                element, index, ncore = entry
+                                if ncore > 0:
+                                    # Do we assign this to all
+                                    # instances of the element?
+                                    if index == -1:
+                                        for i in range(self.natom):
+                                            if elements[i] == element:
+                                                self.coreelectrons[i] = ncore
+                                    # Or only one instance?
+                                    else:
+                                        assert elements[index] == element
+                                        self.coreelectrons[index] = ncore
+                            # Because of how the charge is calculated
+                            # during extract(), this is the number of
+                            # remaining core electrons that need to be
+                            # assigned ECP centers. Filter out the
+                            # remaining entries, of which there should
+                            # only be one.
+                            remainder = self.charge - user_charge - self.coreelectrons.sum()
+                            entries = [entry
+                                       for entry in self.user_input['ecp']
+                                       if entry[2] == 0]
+                            if len(entries) == 0:
+                                pass
                             else:
-                                assert elements[index] == element
-                                self.coreelectrons[index] = ncore
+                                assert len(entries) == 1
+                                element, _, ncore = entries[0]
+                                assert ncore == 0
+                                # Assign to all instances of the
+                                # element, because mixed usage isn't
+                                # allowed within elements.
+                                mask = [element == possible_element
+                                        for possible_element in elements]
+                                count = sum(mask)
+                                self.coreelectrons[mask] = remainder // count
                 elif not ecp_is_gen and has_iprint:
                     for i in range(self.natom):
                         if elements[i] in self.possible_ecps:
@@ -231,9 +263,9 @@ electrons are only printed for user-provided definitions. Rerun with \
         # section. It may not be if using an ECP.
         if hasattr(self, 'user_input'):
             if self.user_input.get('molecule') is not None:
-                user_input_charge = self.user_input['molecule'].get('charge')
-                if user_input_charge is not None:
-                    self.set_attribute('charge', user_input_charge)
+                user_charge = self.user_input['molecule'].get('charge')
+                if user_charge is not None:
+                    self.set_attribute('charge', user_charge)
 
     def parse_charge_section(self, inputfile, chargetype):
         """Parse the population analysis charge block."""
@@ -1351,7 +1383,6 @@ electrons are only printed for user-provided definitions. Rerun with \
                 charge = utils.convertor(charge, 'statcoulomb', 'e') * 1e-10
                 # Allow this to change until fragment jobs are properly implemented.
                 # assert abs(charge - self.charge) < 1e-4
-                self.set_attribute('charge', round(charge))
 
                 # This will make sure Debyes are used (not sure if it can be changed).
                 line = inputfile.next()
