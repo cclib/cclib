@@ -1,0 +1,540 @@
+                  Welcome to Q-Chem
+     A Quantum Leap Into The Future Of Chemistry
+
+
+ Q-Chem 4.2, Q-Chem, Inc., Pleasanton, CA (2014).
+
+ Y. Shao,  Z. Gan,  E. Epifanovsky,  A. T. B. Gilbert,  M. Wormit,  
+ J. Kussmann,  A. W. Lange,  A. Behn,  J. Deng,  X. Feng,  D. Ghosh,  
+ M. Goldey,  P. R. Horn,  L. D. Jacobson,  I. Kaliman,  R. Z. Khaliullin,  
+ T. Kus,  A. Landau,  J. Liu,  E. I. Proynov,  Y. M. Rhee,  R. M. Richard,  
+ M. A. Rohrdanz,  R. P. Steele,  E. J. Sundstrom,  H. L. Woodcock III,  
+ P. M. Zimmerman,  D. Zuev,  B. Albrecht,  E. Alguire,  B. Austin,  
+ G. J. O. Beran,  Y. A. Bernard,  E. Berquist,  K. Brandhorst,  
+ K. B. Bravaya,  S. T. Brown,  D. Casanova,  C.-M. Chang,  Y. Chen,  
+ S. H. Chien,  K. D. Closser,  D. L. Crittenden,  M. Diedenhofen,  
+ R. A. DiStasio Jr.,  H. Do,  A. D. Dutoi,  R. G. Edgar,  S. Fatehi,  
+ L. Fusti-Molnar,  A. Ghysels,  A. Golubeva-Zadorozhnaya,  J. Gomes,  
+ M. W. D. Hanson-Heine,  P. H. P. Harbach,  A. W. Hauser,  E. G. Hohenstein,  
+ Z. C. Holden,  T.-C. Jagau,  H. Ji,  B. Kaduk,  K. Khistyaev,  Jaehoon Kim,  
+ Jihan Kim,  R. A. King,  P. Klunzinger,  D. Kosenkov,  T. Kowalczyk,  
+ C. M. Krauter,  K. U. Lao,  A. Laurent,  K. V. Lawler,  S. V. Levchenko,  
+ C. Y. Lin,  F. Liu,  E. Livshits,  R. C. Lochan,  A. Luenser,  P. Manohar,  
+ S. F. Manzer,  S.-P. Mao,  N. Mardirossian,  A. V. Marenich,  S. A. Maurer,  
+ N. J. Mayhall,  C. M. Oana,  R. Olivares-Amaya,  D. P. O'Neill,  
+ J. A. Parkhill,  T. M. Perrine,  R. Peverati,  P. A. Pieniazek,  A. Prociuk,  
+ D. R. Rehn,  E. Rosta,  N. J. Russ,  N. Sergueev,  S. M. Sharada,  
+ S. Sharma,  D. W. Small,  A. Sodt,  T. Stein,  D. Stuck,  Y.-C. Su,  
+ A. J. W. Thom,  T. Tsuchimochi,  L. Vogt,  O. Vydrov,  T. Wang,  
+ M. A. Watson,  J. Wenzel,  A. White,  C. F. Williams,  V. Vanovschi,  
+ S. Yeganeh,  S. R. Yost,  Z.-Q. You,  I. Y. Zhang,  X. Zhang,  Y. Zhao,  
+ B. R. Brooks,  G. K. L. Chan,  D. M. Chipman,  C. J. Cramer,  
+ W. A. Goddard III,  M. S. Gordon,  W. J. Hehre,  A. Klamt,  
+ H. F. Schaefer III,  M. W. Schmidt,  C. D. Sherrill,  D. G. Truhlar,  
+ A. Warshel,  X. Xu,  A. Aspuru-Guzik,  R. Baer,  A. T. Bell,  N. A. Besley,  
+ J.-D. Chai,  A. Dreuw,  B. D. Dunietz,  T. R. Furlani,  S. R. Gwaltney,  
+ C.-P. Hsu,  Y. Jung,  J. Kong,  D. S. Lambrecht,  W. Liang,  C. Ochsenfeld,  
+ V. A. Rassolov,  L. V. Slipchenko,  J. E. Subotnik,  T. Van Voorhis,  
+ J. M. Herbert,  A. I. Krylov,  P. M. W. Gill,  M. Head-Gordon
+
+ Contributors to earlier versions of Q-Chem not listed above: 
+ R. D. Adamson,  J. Baker,  E. F. C. Byrd,  A. K. Chakraborty,  C.-L. Cheng,  
+ H. Dachsel,  R. J. Doerksen,  G. Hawkins,  A. Heyden,  S. Hirata,  
+ G. Kedziora,  F. J. Keil,  C. Kelley,  P. P. Korambath,  W. Kurlancheek,  
+ A. M. Lee,  M. S. Lee,  D. Liotard,  I. Lotan,  P. E. Maslen,  N. Nair,  
+ D. Neuhauser,  R. Olson,  B. Peters,  J. Ritchie,  N. E. Schultz,  
+ N. Shenvi,  A. C. Simmonett,  K. S. Thanthiriwatte,  Q. Wu,  W. Zhang
+
+ Q-Chem 4.2.0 for Intel X86 EM64T Linux
+
+ Parts of Q-Chem use Armadillo 4.100.2 (Dirt Cruiser).
+ http://arma.sourceforge.net/
+
+ Q-Chem begins on Tue Oct 31 20:42:04 2017  
+
+Host: copper
+0
+
+     Scratch files written to /tmp/qchem/qchem375//
+ Apr3014 |home|eric|opt|apps|qchem|trunk_intel_release|libmdc|qstr_info.C -1
+Checking the input file for consistency...	...done.
+
+--------------------------------------------------------------
+User input:
+--------------------------------------------------------------
+$comment
+ MoOCl4, single point, with pseudopotentials, RB3LYP/{LanL2MB/6-31G(d)}
+$end
+
+$rem
+ method = b3lyp
+ basis = gen
+ ecp = gen
+ unrestricted = false
+ scf_guess = gwh
+ scf_algorithm = diis_gdm
+ scf_convergence = 9
+ thresh = 14
+ max_scf_cycles = 200
+ print_general_basis = true
+$end
+
+$molecule
+ -2 1
+Mo     0.000325    -0.000325     0.051810
+ O     0.000206    -0.000206     1.741504
+Cl     1.711727    -1.711727    -0.659846
+Cl    -1.710992    -1.711738    -0.660079
+Cl    -1.711004     1.711004    -0.660311
+Cl     1.711738     1.710992    -0.660079
+$end
+
+$basis
+ O
+ 6-31g(d)
+ ****
+ Mo
+ 3-21g
+ ****
+ Cl
+ lanl2dz
+ ****
+$end
+
+$ecp
+ Cl
+ lanl2dz
+ ****
+$end
+--------------------------------------------------------------
+ ----------------------------------------------------------------
+             Standard Nuclear Orientation (Angstroms)
+    I     Atom           X                Y                Z
+ ----------------------------------------------------------------
+    1      Mo     -0.0000056728     0.2956854500    -0.0000000000
+    2      O      -0.0000013631     1.9853794584    -0.0000000000
+    3      Cl     -2.4202245156    -0.4162054311    -0.0000000007
+    4      Cl     -0.0000044669    -0.4162035532    -2.4202355932
+    5      Cl      2.4202481073    -0.4162006722     0.0000000007
+    6      Cl     -0.0000044682    -0.4162035532     2.4202355932
+ ----------------------------------------------------------------
+ Molecular Point Group                 Cs    NOp =  2
+ Largest Abelian Subgroup              Cs    NOp =  2
+ Nuclear Repulsion Energy =   427.6895006034 hartrees
+ There are       40 alpha and       40 beta electrons
+
+ Q-Chem warning in module /home/eric/opt/apps/qchem/trunk_intel_release/forms1/BasisType.C, line 1209:
+
+ Setting pure/cartesian flag to 2111 for general basis
+
+
+ Requested basis set is non-standard
+Basis set in general basis input format:
+-----------------------------------------------------------------------
+$basis
+Mo   0
+S    3    1.000000
+   8.89949100E+03    6.17060000E-02 
+   1.34676400E+03    3.69454000E-01 
+   2.95635200E+02    6.88434000E-01 
+SP   3    1.000000
+   3.99313900E+02   -1.12144000E-01   1.50066000E-01 
+   8.65935600E+01    8.60110000E-02   6.00769000E-01 
+   2.76390400E+01    9.67433000E-01   4.10386000E-01 
+SP   3    1.000000
+   2.25029200E+01   -1.42230600E+00  -6.68066000E-01 
+   1.94917100E+01    1.28418500E+00   1.03034600E+00 
+   4.27818000E+00    1.01086600E+00   7.28348000E-01 
+D    3    1.000000
+   6.37804500E+01    1.31739000E-01 
+   1.73735800E+01    4.98532000E-01 
+   5.23078400E+00    5.78178000E-01 
+SP   3    1.000000
+   4.16302100E+00   -3.96423000E-01   2.96300000E-03 
+   1.43530500E+00    4.37079000E-01   4.79147000E-01 
+   5.43782000E-01    8.14846000E-01   5.86487000E-01 
+D    2    1.000000
+   2.27093700E+00    3.11264000E-01 
+   7.54653000E-01    7.81034000E-01 
+D    1    1.000000
+   2.35142000E-01    1.00000000E+00 
+SP   2    1.000000
+   6.31801000E-01   -3.03362000E-01  -1.07900000E-03 
+   7.32580000E-02    1.10841300E+00   1.00031300E+00 
+SP   1    1.000000
+   2.80250000E-02    1.00000000E+00   1.00000000E+00 
+****
+O    0
+S    6    1.000000
+   5.48467170E+03    1.83110000E-03 
+   8.25234950E+02    1.39501000E-02 
+   1.88046960E+02    6.84451000E-02 
+   5.29645000E+01    2.32714300E-01 
+   1.68975700E+01    4.70193000E-01 
+   5.79963530E+00    3.58520900E-01 
+SP   3    1.000000
+   1.55396160E+01   -1.10777500E-01   7.08743000E-02 
+   3.59993360E+00   -1.48026300E-01   3.39752800E-01 
+   1.01376180E+00    1.13076700E+00   7.27158600E-01 
+SP   1    1.000000
+   2.70005800E-01    1.00000000E+00   1.00000000E+00 
+D    1    1.000000
+   8.00000000E-01    1.00000000E+00 
+****
+Cl   0
+S    2    1.000000
+   2.23100000E+00   -4.90058900E-01 
+   4.72000000E-01    1.25426840E+00 
+S    1    1.000000
+   1.63100000E-01    1.00000000E+00 
+P    2    1.000000
+   6.29600000E+00   -6.35641000E-02 
+   6.33300000E-01    1.01413550E+00 
+P    1    1.000000
+   1.81900000E-01    1.00000000E+00 
+****
+Cl   0
+S    2    1.000000
+   2.23100000E+00   -4.90058900E-01 
+   4.72000000E-01    1.25426840E+00 
+S    1    1.000000
+   1.63100000E-01    1.00000000E+00 
+P    2    1.000000
+   6.29600000E+00   -6.35641000E-02 
+   6.33300000E-01    1.01413550E+00 
+P    1    1.000000
+   1.81900000E-01    1.00000000E+00 
+****
+Cl   0
+S    2    1.000000
+   2.23100000E+00   -4.90058900E-01 
+   4.72000000E-01    1.25426840E+00 
+S    1    1.000000
+   1.63100000E-01    1.00000000E+00 
+P    2    1.000000
+   6.29600000E+00   -6.35641000E-02 
+   6.33300000E-01    1.01413550E+00 
+P    1    1.000000
+   1.81900000E-01    1.00000000E+00 
+****
+Cl   0
+S    2    1.000000
+   2.23100000E+00   -4.90058900E-01 
+   4.72000000E-01    1.25426840E+00 
+S    1    1.000000
+   1.63100000E-01    1.00000000E+00 
+P    2    1.000000
+   6.29600000E+00   -6.35641000E-02 
+   6.33300000E-01    1.01413550E+00 
+P    1    1.000000
+   1.81900000E-01    1.00000000E+00 
+****
+$end
+-----------------------------------------------------------------------
+ There are 29 shells and 82 basis functions
+
+Total QAlloc Memory Limit   2000 MB
+Mega-Array Size        61 MB
+MEM_STATIC part        62 MB
+
+                       Distance Matrix (Angstroms)
+             Mo(  1)   O (  2)   Cl(  3)   Cl(  4)   Cl(  5)
+   O (  2)  1.689694
+   Cl(  3)  2.522746  3.409559
+   Cl(  4)  2.522762  3.409566  3.422719
+   Cl(  5)  2.522778  3.409574  4.840473  3.422742
+   Cl(  6)  2.522762  3.409566  3.422719  4.840471  3.422742
+ 
+ A cutoff of  1.0D-14 yielded    433 shell pairs
+ There are      3504 function pairs (      3862 Cartesian)
+JobNum = 11
+ Requested basis set is non-standard
+ Compound shells will be simplified
+Basis set in general basis input format:
+-----------------------------------------------------------------------
+$basis
+Mo   0
+S    3    1.000000
+   8.89949100E+03    6.17060000E-02 
+   1.34676400E+03    3.69454000E-01 
+   2.95635200E+02    6.88434000E-01 
+SP   3    1.000000
+   3.99313900E+02   -1.12144000E-01   1.50066000E-01 
+   8.65935600E+01    8.60110000E-02   6.00769000E-01 
+   2.76390400E+01    9.67433000E-01   4.10386000E-01 
+SP   3    1.000000
+   2.25029200E+01   -1.42230600E+00  -6.68066000E-01 
+   1.94917100E+01    1.28418500E+00   1.03034600E+00 
+   4.27818000E+00    1.01086600E+00   7.28348000E-01 
+D    3    1.000000
+   6.37804500E+01    1.31739000E-01 
+   1.73735800E+01    4.98532000E-01 
+   5.23078400E+00    5.78178000E-01 
+SP   3    1.000000
+   4.16302100E+00   -3.96423000E-01   2.96300000E-03 
+   1.43530500E+00    4.37079000E-01   4.79147000E-01 
+   5.43782000E-01    8.14846000E-01   5.86487000E-01 
+D    2    1.000000
+   2.27093700E+00    3.11264000E-01 
+   7.54653000E-01    7.81034000E-01 
+D    1    1.000000
+   2.35142000E-01    1.00000000E+00 
+SP   2    1.000000
+   6.31801000E-01   -3.03362000E-01  -1.07900000E-03 
+   7.32580000E-02    1.10841300E+00   1.00031300E+00 
+SP   1    1.000000
+   2.80250000E-02    1.00000000E+00   1.00000000E+00 
+****
+O    0
+S    6    1.000000
+   5.48467170E+03    1.83110000E-03 
+   8.25234950E+02    1.39501000E-02 
+   1.88046960E+02    6.84451000E-02 
+   5.29645000E+01    2.32714300E-01 
+   1.68975700E+01    4.70193000E-01 
+   5.79963530E+00    3.58520900E-01 
+SP   3    1.000000
+   1.55396160E+01   -1.10777500E-01   7.08743000E-02 
+   3.59993360E+00   -1.48026300E-01   3.39752800E-01 
+   1.01376180E+00    1.13076700E+00   7.27158600E-01 
+SP   1    1.000000
+   2.70005800E-01    1.00000000E+00   1.00000000E+00 
+D    1    1.000000
+   8.00000000E-01    1.00000000E+00 
+****
+Cl   0
+S    2    1.000000
+   2.23100000E+00   -4.90058900E-01 
+   4.72000000E-01    1.25426840E+00 
+S    1    1.000000
+   1.63100000E-01    1.00000000E+00 
+P    2    1.000000
+   6.29600000E+00   -6.35641000E-02 
+   6.33300000E-01    1.01413550E+00 
+P    1    1.000000
+   1.81900000E-01    1.00000000E+00 
+****
+Cl   0
+S    2    1.000000
+   2.23100000E+00   -4.90058900E-01 
+   4.72000000E-01    1.25426840E+00 
+S    1    1.000000
+   1.63100000E-01    1.00000000E+00 
+P    2    1.000000
+   6.29600000E+00   -6.35641000E-02 
+   6.33300000E-01    1.01413550E+00 
+P    1    1.000000
+   1.81900000E-01    1.00000000E+00 
+****
+Cl   0
+S    2    1.000000
+   2.23100000E+00   -4.90058900E-01 
+   4.72000000E-01    1.25426840E+00 
+S    1    1.000000
+   1.63100000E-01    1.00000000E+00 
+P    2    1.000000
+   6.29600000E+00   -6.35641000E-02 
+   6.33300000E-01    1.01413550E+00 
+P    1    1.000000
+   1.81900000E-01    1.00000000E+00 
+****
+Cl   0
+S    2    1.000000
+   2.23100000E+00   -4.90058900E-01 
+   4.72000000E-01    1.25426840E+00 
+S    1    1.000000
+   1.63100000E-01    1.00000000E+00 
+P    2    1.000000
+   6.29600000E+00   -6.35641000E-02 
+   6.33300000E-01    1.01413550E+00 
+P    1    1.000000
+   1.81900000E-01    1.00000000E+00 
+****
+$end
+-----------------------------------------------------------------------
+ There are 36 shells and 82 basis functions
+ A cutoff of  1.0D-14 yielded    663 shell pairs
+ There are      3483 function pairs (      3841 Cartesian)
+ Smallest overlap matrix eigenvalue = 3.33E-02
+
+  Scale SEOQF with 1.000000e-01/1.000000e-01/1.000000e-01
+
+ Standard Electronic Orientation quadrupole field applied
+ Nucleus-field energy     =    -0.0000000030 hartrees
+ Constructing guess Fock matrix from core Hamiltonian
+ Applying Wolfsberg-Helmholtz approximation
+ A restricted hybrid HF-DFT SCF calculation will be
+ performed using Pulay DIIS + Geometric Direct Minimization
+ Exchange:     0.2000 Hartree-Fock + 0.0800 Slater + 0.7200 Becke88
+ Correlation:  0.8100 LYP + 0.1900 VWN1RPA
+ Using SG-1 standard quadrature grid
+ SCF converges when RMS gradient is below 1.0E-09
+ ---------------------------------------
+  Cycle       Energy         DIIS Error
+ ---------------------------------------
+    1   -4024.8832472297      1.01E+00
+    2   -4070.4167720119      8.42E-02
+    3   -3965.5058840586      2.69E-01
+    4   -4065.9877221731      1.67E-01
+    5   -4084.8912857728      1.03E-01
+    6   -4088.0814573975      7.80E-02
+    7   -4092.5492015362      4.24E-02
+    8   -4091.7408222244      3.67E-02
+    9   -4093.9617624239      1.44E-02
+   10   -4094.0794047973      6.15E-03 Done DIIS. Switching to GDM
+   11   -4094.0825686029      1.80E-01 Descent step
+   12   -4093.5544146850      2.38E+00 Line search: overstep
+   13   -4094.1116903500      1.11E-01 Normal BFGS step
+   14   -4094.1200547851      3.44E-02 Normal BFGS step
+   15   -4094.1208529754      2.02E-02 Normal BFGS step
+   16   -4094.1220784368      6.12E-03 Normal BFGS step
+   17   -4094.1221804935      1.72E-03 Normal BFGS step
+   18   -4094.1222068996      9.22E-04 Normal BFGS step
+   19   -4094.1222079534      1.85E-04 Normal BFGS step
+   20   -4094.1222082929      7.44E-05 Normal BFGS step
+   21   -4094.1222083019      2.62E-05 Normal BFGS step
+   22   -4094.1222083039      6.16E-07 Normal BFGS step
+   GDM::WARNING energy changes are now smaller than effective accuracy.
+   GDM::        calculation will continue, but THRESH should be increased
+   GDM::        or SCF_CONVERGENCE decreased.
+   GDM::        effective_thresh =   8.296001663410379E-010
+   23   -4094.1222083037      3.29E-07 Normal BFGS step
+   GDM::WARNING energy changes are now smaller than effective accuracy.
+   GDM::        calculation will continue, but THRESH should be increased
+   GDM::        or SCF_CONVERGENCE decreased.
+   GDM::        effective_thresh =   8.296001663410379E-010
+   24   -4094.1222083033      2.91E-07 Normal BFGS step
+   GDM::WARNING energy changes are now smaller than effective accuracy.
+   GDM::        calculation will continue, but THRESH should be increased
+   GDM::        or SCF_CONVERGENCE decreased.
+   GDM::        effective_thresh =   8.296001663410379E-010
+   25   -4094.1222083029      8.95E-08 Normal BFGS step
+   26   -4094.1222083034      1.85E-08 Normal BFGS step
+   27   -4094.1222083036      7.99E-09 Normal BFGS step
+   GDM::WARNING energy changes are now smaller than effective accuracy.
+   GDM::        calculation will continue, but THRESH should be increased
+   GDM::        or SCF_CONVERGENCE decreased.
+   GDM::        effective_thresh =   8.296001663410379E-010
+   28   -4094.1222083033      4.35E-09 Normal BFGS step
+   GDM::WARNING energy changes are now smaller than effective accuracy.
+   GDM::        calculation will continue, but THRESH should be increased
+   GDM::        or SCF_CONVERGENCE decreased.
+   GDM::        effective_thresh =   8.296001663410379E-010
+   29   -4094.1222083033      1.03E-09 Normal BFGS step
+   GDM::WARNING energy changes are now smaller than effective accuracy.
+   GDM::        calculation will continue, but THRESH should be increased
+   GDM::        or SCF_CONVERGENCE decreased.
+   GDM::        effective_thresh =   8.296001663410379E-010
+   30   -4094.1222083033      3.00E-10 Convergence criterion met
+ ---------------------------------------
+ SCF time:  CPU 10.10 s  wall 10.10 s
+ SCF   energy in the final basis set = -4094.1222083033
+ Total energy in the final basis set = -4094.1222083033
+ Analysis of SCF Wavefunction
+ 
+ --------------------------------------------------------------
+             Orbital Energies (a.u.) and Symmetries
+ --------------------------------------------------------------
+ 
+ Alpha MOs, Restricted
+ -- Occupied --                  
+-707.92  -99.13  -90.96  -90.95  -90.95  -18.89  -17.03  -13.78
+  1 A'    2 A'    3 A'    1 A"    4 A'    5 A'    6 A'    7 A'                 
+-13.759 -13.759  -8.429  -8.423  -8.423  -8.407  -8.406  -2.148
+  2 A"    8 A'    9 A'    3 A"   10 A'   11 A'    4 A"   12 A'                 
+ -1.252  -1.183  -1.183  -0.618  -0.445  -0.435  -0.435  -0.433
+ 13 A'    5 A"   14 A'   15 A'   16 A'    6 A"   17 A'   18 A'                 
+ -0.105  -0.084  -0.084  -0.040  -0.030  -0.020  -0.013  -0.013
+ 19 A'    7 A"   20 A'   21 A'   22 A'    8 A"    9 A"   23 A'                 
+  0.003   0.019   0.019   0.027   0.031   0.031   0.049   0.118
+ 24 A'   10 A"   25 A'   26 A'   27 A'   11 A"   12 A"   13 A"                 
+ -- Virtual --                   
+  0.232   0.232   0.261   0.262   0.284   0.287   0.289   0.289
+ 14 A"   28 A'   29 A'   30 A'   31 A'   32 A'   15 A"   33 A'                 
+  0.449   0.508   0.528   0.528   0.919   0.976   0.976   1.018
+ 34 A'   35 A'   16 A"   36 A'   17 A"   18 A"   37 A'   38 A'                 
+  1.046   1.050   1.059   1.059   1.087   1.123   1.153   1.153
+ 39 A'   40 A'   19 A"   41 A'   42 A'   43 A'   20 A"   21 A"                 
+  1.153   1.160   1.223   1.223   1.313   1.320   1.320   1.363
+ 44 A'   22 A"   45 A'   23 A"   46 A'   24 A"   47 A'   48 A'                 
+  1.781   2.078   2.089   2.140   2.140   2.282   6.621   7.784
+ 49 A'   25 A"   50 A'   26 A"   51 A'   52 A'   53 A'   54 A'                 
+  8.311   8.311
+ 55 A'   27 A"                                                                 
+ 
+ Beta MOs, Restricted
+ -- Occupied --                  
+-707.92  -99.13  -90.96  -90.95  -90.95  -18.89  -17.03  -13.78
+  1 A'    2 A'    3 A'    1 A"    4 A'    5 A'    6 A'    7 A'                 
+-13.759 -13.759  -8.429  -8.423  -8.423  -8.407  -8.406  -2.148
+  2 A"    8 A'    9 A'    3 A"   10 A'   11 A'    4 A"   12 A'                 
+ -1.252  -1.183  -1.183  -0.618  -0.445  -0.435  -0.435  -0.433
+ 13 A'    5 A"   14 A'   15 A'   16 A'    6 A"   17 A'   18 A'                 
+ -0.105  -0.084  -0.084  -0.040  -0.030  -0.020  -0.013  -0.013
+ 19 A'    7 A"   20 A'   21 A'   22 A'    8 A"    9 A"   23 A'                 
+  0.003   0.019   0.019   0.027   0.031   0.031   0.049   0.118
+ 24 A'   10 A"   25 A'   26 A'   27 A'   11 A"   12 A"   13 A"                 
+ -- Virtual --                   
+  0.232   0.232   0.261   0.262   0.284   0.287   0.289   0.289
+ 14 A"   28 A'   29 A'   30 A'   31 A'   32 A'   15 A"   33 A'                 
+  0.449   0.508   0.528   0.528   0.919   0.976   0.976   1.018
+ 34 A'   35 A'   16 A"   36 A'   17 A"   18 A"   37 A'   38 A'                 
+  1.046   1.050   1.059   1.059   1.087   1.123   1.153   1.153
+ 39 A'   40 A'   19 A"   41 A'   42 A'   43 A'   20 A"   21 A"                 
+  1.153   1.160   1.223   1.223   1.313   1.320   1.320   1.363
+ 44 A'   22 A"   45 A'   23 A"   46 A'   24 A"   47 A'   48 A'                 
+  1.781   2.078   2.089   2.140   2.140   2.282   6.621   7.784
+ 49 A'   25 A"   50 A'   26 A"   51 A'   52 A'   53 A'   54 A'                 
+  8.311   8.311
+ 55 A'   27 A"                                                                 
+ --------------------------------------------------------------
+ 
+          Ground-State Mulliken Net Atomic Charges
+
+     Atom                 Charge (a.u.)
+  ----------------------------------------
+      1 Mo                    0.601149
+      2 O                    -0.567800
+      3 Cl                   -0.508331
+      4 Cl                   -0.508337
+      5 Cl                   -0.508344
+      6 Cl                   -0.508337
+  ----------------------------------------
+  Sum of atomic charges =    -2.000000
+
+ -----------------------------------------------------------------
+                    Cartesian Multipole Moments
+ -----------------------------------------------------------------
+    Charge (ESU x 10^10)
+                -9.6064
+    Dipole Moment (Debye)
+         X      -0.0002      Y       1.4851      Z      -0.0000
+       Tot       1.4851
+    Quadrupole Moments (Debye-Ang)
+        XX    -116.2281     XY       0.0000     YY     -90.1153
+        XZ       0.0000     YZ       0.0000     ZZ    -116.2280
+    Octopole Moments (Debye-Ang^2)
+       XXX      -0.0020    XXY      18.2219    XYY      -0.0001
+       YYY      -1.3974    XXZ       0.0000    XYZ       0.0000
+       YYZ      -0.0000    XZZ       0.0000    YZZ      18.2219
+       ZZZ      -0.0000
+    Hexadecapole Moments (Debye-Ang^3)
+      XXXX   -1238.4984   XXXY       0.0004   XXYY    -232.5150
+      XYYY       0.0000   YYYY    -340.6963   XXXZ      -0.0000
+      XXYZ       0.0000   XYYZ       0.0000   YYYZ       0.0000
+      XXZZ    -354.9037   XYZZ      -0.0001   YYZZ    -232.5149
+      XZZZ       0.0000   YZZZ       0.0000   ZZZZ   -1238.4975
+ -----------------------------------------------------------------
+Archival summary:
+1\1\copper\SP\ProcedureUnspecified\BasisUnspecified\o1l41(\eric\TueOct3120:42:152017TueOct3120:42:152017\0\\#,ProcedureUnspecified,BasisUnspecified,\\38,1\Mo\O,1,1.68969\Cl,1,2.52275,2,106.391\Cl,1,2.52276,2,106.391,3,90.0001,0\Cl,1,2.52276,2,106.391,3,-90.0001,0\Cl,1,2.52278,2,106.39,3,-180,0\\\@
+
+ Total job time:  10.25s(wall), 10.24s(cpu) 
+ Tue Oct 31 20:42:15 2017
+
+        *************************************************************
+        *                                                           *
+        *  Thank you very much for using Q-Chem.  Have a nice day.  *
+        *                                                           *
+        *************************************************************
+
+
