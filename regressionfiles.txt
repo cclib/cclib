@@ -341,7 +341,6 @@ QChem/QChem4.2/dvb_sp_omp.out
 QChem/QChem4.2/dvb_sp_unconverged.out
 QChem/QChem4.2/MoOCl4_sp_noprint_builtin_mixed_single_Mo.out
 QChem/QChem4.2/MoOCl4_sp_print_builtin_mixed_single_Mo_single_Cl.out
-QChem/QChem4.2/MoOCl4_sp_noprint_builtin_mixed_single_Cl.out
 QChem/QChem4.2/MoOCl4_sp_noprint_builtin_mixed_both.out
 QChem/QChem4.2/MoOCl4_sp_noprint_builtin_mixed_all_Cl.out
 QChem/QChem4.2/MoOCl4_sp_noprint_user_Mo_builtin_all_Cl.out
