@@ -198,18 +198,15 @@ cannot be determined. Rerun without `$molecule read`."""
                             # First, assign the entries given
                             # explicitly.
                             for entry in self.user_input['ecp']:
-                                element, index, ncore = entry
+                                element, _, ncore = entry
                                 if ncore > 0:
-                                    # Do we assign this to all
-                                    # instances of the element?
-                                    if index == -1:
-                                        for i in range(self.natom):
-                                            if elements[i] == element:
-                                                self.coreelectrons[i] = ncore
-                                    # Or only one instance?
-                                    else:
-                                        assert elements[index] == element
-                                        self.coreelectrons[index] = ncore
+                                    # Assign to all instances of the
+                                    # element, because mixed usage isn't
+                                    # allowed within elements.
+                                    mask = [element == possible_element
+                                            for possible_element in elements]
+                                    count = sum(mask)
+                                    self.coreelectrons[mask] = ncore
                             # Because of how the charge is calculated
                             # during extract(), this is the number of
                             # remaining core electrons that need to be
@@ -226,9 +223,6 @@ cannot be determined. Rerun without `$molecule read`."""
                                 assert len(entries) == 1
                                 element, _, ncore = entries[0]
                                 assert ncore == 0
-                                # Assign to all instances of the
-                                # element, because mixed usage isn't
-                                # allowed within elements.
                                 mask = [element == possible_element
                                         for possible_element in elements]
                                 count = sum(mask)
@@ -240,24 +234,18 @@ cannot be determined. Rerun without `$molecule read`."""
                 else:
                     assert ecp_is_gen and has_iprint
                     for entry in self.user_input['ecp']:
-                        element, index, ncore = entry
+                        element, _, ncore = entry
                         # If ncore is non-zero, then it must be
-                        # user-defined, and we take that value.
+                        # user-defined, and we take that
+                        # value. Otherwise, look it up.
                         if ncore > 0:
                             pass
-                        # Otherwise, look it up.
                         else:
                             ncore = self.possible_ecps[element]
-                        # Do we assign this to all instances of the
-                        # element?
-                        if index == -1:
-                            for i in range(self.natom):
-                                if elements[i] == element:
-                                    self.coreelectrons[i] = ncore
-                        # Or only one instance?
-                        else:
-                            assert elements[index] == element
-                            self.coreelectrons[index] = ncore
+                        mask = [element == possible_element
+                                for possible_element in elements]
+                        count = sum(mask)
+                        self.coreelectrons[mask] = ncore
 
         # Check to see if the charge is consistent with the input
         # section. It may not be if using an ECP.

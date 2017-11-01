@@ -327,7 +327,7 @@ class Logfile(object):
             self.nmo = self.nbasis
 
         # Create a default coreelectrons array, unless it's impossible
-        # ot determine.
+        # to determine.
         if not hasattr(self, "coreelectrons") and hasattr(self, "natom"):
             self.coreelectrons = numpy.zeros(self.natom, "i")
         if hasattr(self, "incorrect_coreelectrons"):
