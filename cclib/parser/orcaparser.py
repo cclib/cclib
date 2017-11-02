@@ -11,6 +11,7 @@
 from __future__ import print_function
 
 import numpy
+import re
 
 from cclib.parser import logfileparser
 from cclib.parser import utils
@@ -364,7 +365,7 @@ class ORCA(logfileparser.Logfile):
             line = next(inputfile)
             self.atommasses = []
             while len(line) > 1:
-                if line == '* core charge reduced due to ECP\n':
+                if line[:32] == '* core charge reduced due to ECP':
                     break
                 no, lb, za, frag, mass, x, y, z = line.split()
                 self.atommasses.append(float(mass))
@@ -740,7 +741,7 @@ State  Energy   Wavelength       D2            m2              Q2               
 
             elif line[:55] == 'SPIN ORBIT CORRECTED ABSORPTION SPECTRUM VIA TRANSITION':
                 def energy_intensity(line):
-                    """ ROCIS dipole approximation with SOC == True (electric or veloctiy dipole moments)
+                    """ ROCIS dipole approximation with SOC == True (electric or velocity dipole moments)
 -------------------------------------------------------------------------------
 SPIN ORBIT CORRECTED ABSORPTION SPECTRUM VIA TRANSITION ELECTRIC DIPOLE MOMENTS
 -------------------------------------------------------------------------------
@@ -768,6 +769,23 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
                     state, state2, energy, wavelength, d2, m2, q2, intensity, d2_contrib, m2_contrib, q2_contrib = line.split()
                     return energy, intensity
 
+            # Clashes with Orca 2.6 (and presumably before) TDDFT absorption spectrum printing
+            elif line == 'ABSORPTION SPECTRUM' and float(self.metadata['package_version']) > 2.6:
+                def energy_intensity(line):
+                    """ CASSCF absorption spectrum
+------------------------------------------------------------------------------------------
+                                ABSORPTION SPECTRUM
+------------------------------------------------------------------------------------------
+  States           Energy   Wavelength   fosc          T2        TX         TY        TZ
+                   (cm-1)     (nm)                   (D**2)      (D)        (D)       (D)
+------------------------------------------------------------------------------------------
+  0( 0)-> 1( 0) 1   83163.2    120.2   0.088250385   2.25340   0.00000   0.00000   1.50113
+"""
+                    reg = r'(\d+)\( ?(\d+)\)-> ?(\d+)\( ?(\d+)\) (\d+)'+ '\s+(\d+\.\d+)'*4 + '\s+(-?\d+\.\d+)'*3
+                    res = re.search(reg, line)
+                    jstate, jblock, istate, iblock, mult, energy, wavelength, intensity, t2, tx, ty, tz = res.groups()
+                    return energy, intensity
+
             name = line
             self.skip_lines(inputfile, header)
 
@@ -777,7 +795,9 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
             etenergies = []
             etoscs = []
             line = next(inputfile)
-            while len(line) > 1:
+            # The sections are occasionally ended with dashed lines
+            # other times they are blank (other than a new line)
+            while len(line.strip('-')) > 2:
                 energy, intensity = energy_intensity(line)
                 etenergies.append(float(energy))
                 etoscs.append(float(intensity))
@@ -958,6 +978,228 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
                 line = next(inputfile)
                 polarizability.append(line.split())
             self.polarizabilities.append(numpy.array(polarizability))
+
+        if line.strip() == 'ORCA-CASSCF':
+            self.skip_lines(inputfile, ['d', 'b'])
+            # -------------------------------------------------------------------------------
+            #                               ORCA-CASSCF
+            # -------------------------------------------------------------------------------
+            #
+            # Symmetry handling      UseSym     ... ON
+            # Point group                       ... C2
+            # Used point group                  ... C2
+            # Number of irreps                  ... 2
+            #    Irrep    A has   10 SALCs (ofs=   0) #(closed)=   0 #(active)=   2
+            #    Irrep    B has   10 SALCs (ofs=  10) #(closed)=   0 #(active)=   2
+            #  Symmetries of active orbitals:
+            #    MO =    0  IRREP= 0 (A)
+            #    MO =    1  IRREP= 1 (B)
+            vals = next(inputfile).split()
+            if vals[0] == 'Symmetry':
+                # Symmetry section is only printed if symmetry is used
+                assert vals[-1] == 'ON'
+                point_group = next(inputfile).split()[-1]
+                used_point_group = next(inputfile).split()[-1]
+                num_irreps = int(next(inputfile).split()[-1])
+                num_active = 0
+                for i, line in zip(range(num_irreps), inputfile):
+                    reg = r'Irrep\s+(\w+) has\s+(\d+) SALCs \(ofs=\s*(\d+)\) #\(closed\)=\s*(\d+) #\(active\)=\s*(\d+)'
+                    groups = re.search(reg, line).groups()
+                    irrep = groups[0]
+                    salcs, ofs, closed, active = map(int, groups[1:])
+                    num_active += active
+                self.skip_line(inputfile, 'Symmetries')
+                for i, line in zip(range(num_active), inputfile):
+                    reg = r'(\d+)  IRREP= (\d+) \((\w+)\)'
+                    groups = re.search(reg, line).groups()
+                    mo, irrep_idx, irrep = groups
+
+            line = next(inputfile)
+            while line[:25] != 'SYSTEM-SPECIFIC SETTINGS:':
+                line = next(inputfile)
+
+            # SYSTEM-SPECIFIC SETTINGS:
+            # Number of active electrons          ...    4
+            # Number of active orbitals           ...    4
+            # Total number of electrons           ...    4
+            # Total number of orbitals            ...   20
+
+            num_el = int(next(inputfile).split()[-1])
+            num_orbs = int(next(inputfile).split()[-1])
+            total_el = int(next(inputfile).split()[-1])
+            total_orbs = int(next(inputfile).split()[-1])
+
+            self.skip_lines(inputfile, ['b', 'Determined'])
+
+            # Determined orbital ranges:
+            #    Internal       0 -   -1 (   0 orbitals)
+            #    Active         0 -    3 (   4 orbitals)
+            #    External       4 -   19 (  16 orbitals)
+            orbital_ranges = []
+            for i in range(3):
+                vals = next(inputfile).split()
+                start, end, num = int(vals[1]), int(vals[3]), int(vals[5])
+                # Change from inclusive to exclusive in order to match python
+                end = end + 1
+                assert end - start == num
+                orbital_ranges.append((start, end, num))
+
+            line = next(inputfile)
+            while line[:8] != 'CI-STEP:':
+                line = next(inputfile)
+            self.skip_line(inputfile, 'CI strategy')
+
+            num_blocks = int(next(inputfile).split()[-1])
+
+            # CI-STEP:
+            # CI strategy                         ... General CI
+            # Number of symmetry/multplity blocks ...    1
+            # BLOCK  1 WEIGHT=   1.0000
+            #   Multiplicity                      ...    1
+            #   Irrep                             ...    0 (A)
+            #   #(Configurations)                 ...   11
+            #   #(CSFs)                           ...   12
+            #   #(Roots)                          ...    1
+            #     ROOT=0 WEIGHT=    1.000000
+            for b in range(1, num_blocks + 1):
+                vals = next(inputfile).split()
+                block = int(vals[1])
+                weight = float(vals[3])
+                assert b == block
+                mult = int(next(inputfile).split()[-1])
+                vals = next(inputfile).split()
+                # If using symmetry
+                if vals[0] == 'Irrep':
+                    irrep_idx = int(vals[-2])
+                    irrep = vals[-1].strip('()')
+                    vals = next(inputfile).split()
+                num_confs = int(vals[-1])
+                num_csfs = int(next(inputfile).split()[-1])
+                num_roots = int(next(inputfile).split()[-1])
+                for r, line in zip(range(num_roots), inputfile):
+                    reg = r'=(\d+) WEIGHT=\s*(\d\.\d+)'
+                    groups = re.search(reg, line).groups()
+                    root = int(groups[0])
+                    weight = float(groups[1])
+                    assert r == root
+
+            # Iterations
+            # Skipping for now
+            line = next(inputfile).strip()
+            while line != 'CASSCF RESULTS':
+                line = next(inputfile).strip()
+
+            self.skip_lines(inputfile, ['d', 'b'])
+
+            casscf_energy = float(next(inputfile).split()[4])
+
+            self.skip_lines(inputfile, ['b', 'd', 'ORBITAL', 'd', 'b', 'NO'])
+
+            # ----------------
+            # ORBITAL ENERGIES
+            # ----------------
+            #
+            #   NO   OCC          E(Eh)            E(eV)    Irrep
+            #    0   0.0868       0.257841         7.0162    1-A
+            orbitals = []
+            vals = next(inputfile).split()
+            while vals:
+                occ, eh, ev = map(float, vals[1:4])
+                if len(vals) == 5:
+                    idx, irrep = vals[4].split('-')
+                    orbitals.append((occ, ev, int(idx), irrep))
+                else:
+                    orbitals.append((occ, ev))
+                vals = next(inputfile).split()
+
+            self.skip_line(inputfile, 'b')
+
+            # Orbital Compositions
+            # ---------------------------------------------
+            # CAS-SCF STATES FOR BLOCK  1 MULT= 1 IRREP= Ag NROOTS= 2
+            # ---------------------------------------------
+            #
+            # ROOT   0:  E=     -14.5950507665 Eh
+            #       0.89724 [     0]: 2000
+            for b in range(num_blocks):
+                self.skip_line(inputfile, 'd')
+                reg = r'BLOCK\s+(\d+) MULT=\s*(\d+) (IRREP=\s*\w+ )?(NROOTS=\s*(\d+))?'
+                groups = re.search(reg, next(inputfile)).groups()
+                block = int(groups[0])
+                mult = int(groups[1])
+                if groups[2] is not None:
+                    irrep = groups[2].split('=')[1].strip()
+                    nroots = int(groups[3].split('=')[1])
+
+                self.skip_lines(inputfile, ['d', 'b'])
+
+                line = next(inputfile).strip()
+                while line:
+                    if line[:4] == 'ROOT':
+                        reg = r'(\d+):\s*E=\s*(-?\d+.\d+) Eh(\s+\d+\.\d+ eV)?(\s+\d+\.\d+)?'
+                        groups = re.search(reg, line).groups()
+                        root = int(groups[0])
+                        energy = float(groups[1])
+                        if groups[2] is not None:
+                            excitation_energy_ev = float(groups[2].split()[0])
+                            excitation_energy_cm = float(groups[3])
+                    else:
+                        reg = r'(\d+\.\d+) \[\s*(\d+)\]: (\d+)'
+                        groups = re.search(reg, line).groups()
+                        coeff = float(groups[0])
+                        number = float(groups[1])
+                        occupations = list(map(int, groups[2]))
+
+                    line = next(inputfile).strip()
+
+            # Skip extended wavefunction printing
+            while line != 'DENSITY MATRIX':
+                line = next(inputfile).strip()
+
+            self.skip_lines(inputfile, ['d', 'b'])
+            # --------------
+            # DENSITY MATRIX
+            # --------------
+            #
+            #                    0          1          2          3
+            #       0       0.897244   0.000000   0.000000   0.000000
+            #       1       0.000000   0.533964   0.000000   0.000000
+            density = numpy.zeros((num_orbs, num_orbs))
+            for i in range(0, num_orbs, 6):
+                next(inputfile)
+                for j, line in zip(range(num_orbs), inputfile):
+                    density[j][i:i + 6] = list(map(float, line.split()[1:]))
+
+            # ENERGY COMPONENTS
+            # -----------------
+            #
+            # One electron energy          :    -18.811767801 Eh        -511.8942 eV
+            # Two electron energy          :      4.367616074 Eh         118.8489 eV
+            # Nuclear repuslion energy     :      0.000000000 Eh           0.0000 eV
+            #                                ----------------
+            #                                   -14.444151727
+            #
+            # Kinetic energy               :     14.371970266 Eh         391.0812 eV
+            # Potential energy             :    -28.816121993 Eh        -784.1265 eV
+            # Virial ratio                 :     -2.005022378
+            #                                ----------------
+            #                                   -14.444151727
+            #
+            # Core energy                  :    -13.604678408 Eh     -370.2021 eV
+            self.skip_lines(inputfile, ['Trace', 'b', 'd', 'ENERGY', 'd', 'b'])
+            one_el_energy = float(next(inputfile).split()[4])
+            two_el_energy = float(next(inputfile).split()[4])
+            nuclear_repulsion_energy = float(next(inputfile).split()[4])
+            next(inputfile)
+            energy = float(next(inputfile).strip())
+            next(inputfile)
+            kinetic_energy = float(next(inputfile).split()[3])
+            potential_energy = float(next(inputfile).split()[3])
+            virial_ratio = float(next(inputfile).split()[3])
+            next(inputfile)
+            energy = float(next(inputfile).strip())
+            next(inputfile)
+            core_energy = float(next(inputfile).split()[3])
 
         if line[:15] == 'TOTAL RUN TIME:':
             self.metadata['success'] = True
