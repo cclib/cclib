@@ -188,35 +188,34 @@ be guessed for one element at most. Rerun with "iprint >= 100" to get \
 coreelectrons."""
                         self.logger.warning(msg)
                         self.incorrect_coreelectrons = True
-                    else:
-                        if self.user_input['molecule'].get('charge') is None:
-                            msg = """ECPs are present, but the total charge \
+                    elif self.user_input['molecule'].get('charge') is None:
+                        msg = """ECPs are present, but the total charge \
 cannot be determined. Rerun without `$molecule read`."""
-                            self.logger.warning(msg)
-                            self.incorrect_coreelectrons = True
-                        else:
-                            user_charge = self.user_input['molecule']['charge']
-                            # First, assign the entries given
-                            # explicitly.
-                            for entry in self.user_input['ecp']:
-                                element, _, ncore = entry
-                                if ncore > 0:
-                                    self._assign_coreelectrons_to_element(element, ncore)
-                            # Because of how the charge is calculated
-                            # during extract(), this is the number of
-                            # remaining core electrons that need to be
-                            # assigned ECP centers. Filter out the
-                            # remaining entries, of which there should
-                            # only be one.
-                            remainder = self.charge - user_charge - self.coreelectrons.sum()
-                            entries = [entry
-                                       for entry in self.user_input['ecp']
-                                       if entry[2] == 0]
-                            if len(entries) != 0:
-                                assert len(entries) == 1
-                                element, _, ncore = entries[0]
-                                assert ncore == 0
-                                self._assign_coreelectrons_to_element(element, remainder, True)
+                        self.logger.warning(msg)
+                        self.incorrect_coreelectrons = True
+                    else:
+                        user_charge = self.user_input['molecule']['charge']
+                        # First, assign the entries given
+                        # explicitly.
+                        for entry in self.user_input['ecp']:
+                            element, _, ncore = entry
+                            if ncore > 0:
+                                self._assign_coreelectrons_to_element(element, ncore)
+                        # Because of how the charge is calculated
+                        # during extract(), this is the number of
+                        # remaining core electrons that need to be
+                        # assigned ECP centers. Filter out the
+                        # remaining entries, of which there should
+                        # only be one.
+                        remainder = self.charge - user_charge - self.coreelectrons.sum()
+                        entries = [entry
+                                   for entry in self.user_input['ecp']
+                                   if entry[2] == 0]
+                        if len(entries) != 0:
+                            assert len(entries) == 1
+                            element, _, ncore = entries[0]
+                            assert ncore == 0
+                            self._assign_coreelectrons_to_element(element, remainder, True)
                 elif not ecp_is_gen and has_iprint:
                     for i in range(self.natom):
                         if self.elements[i] in self.possible_ecps:
