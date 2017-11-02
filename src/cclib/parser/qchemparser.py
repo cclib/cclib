@@ -177,9 +177,6 @@ coreelectrons."""
                     self.logger.warning(msg)
                     self.incorrect_coreelectrons = True
                 elif ecp_is_gen and not has_iprint:
-                    # We can guess in only two cases:
-                    # 1. a single atom can't be determined
-                    # 2. all (ECP) atoms of a single element can't be determined
                     nmissing = sum(ncore == 0
                                    for (_, _, ncore) in self.user_input['ecp'])
                     if nmissing > 1:
@@ -496,13 +493,10 @@ cannot be determined. Rerun without `$molecule read`."""
                                 # it's a full definition.
                                 tokens = line.split()
                                 if len(tokens) == 1:
-                                    ecp_name = tokens[0]
                                     ncore = 0
                                     line = next(inputfile)
                                 else:
                                     assert len(tokens) == 3
-                                    ecp_name = tokens[0]
-                                    maxl = int(tokens[1])
                                     ncore = int(tokens[2])
                                     # Don't parse the remainder of the
                                     # ECP definition.
