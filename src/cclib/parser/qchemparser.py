@@ -10,9 +10,9 @@
 from __future__ import division
 from __future__ import print_function
 
+import itertools
 import re
 import numpy
-import itertools
 
 from . import logfileparser
 from . import utils
@@ -163,7 +163,8 @@ class QChem(logfileparser.Logfile):
         if hasattr(self, 'user_input') and self.user_input.get('rem') is not None:
             if self.user_input['rem'].get('ecp') is not None:
                 self.coreelectrons = numpy.zeros(self.natom, 'i')
-                elements = [self.table.element[atomno] for atomno in self.atomnos]
+                self.elements = [self.table.element[atomno]
+                                 for atomno in self.atomnos]
                 ecp_is_gen = (self.user_input['rem']['ecp'] == 'gen')
                 if ecp_is_gen:
                     assert 'ecp' in self.user_input
@@ -200,13 +201,7 @@ cannot be determined. Rerun without `$molecule read`."""
                             for entry in self.user_input['ecp']:
                                 element, _, ncore = entry
                                 if ncore > 0:
-                                    # Assign to all instances of the
-                                    # element, because mixed usage isn't
-                                    # allowed within elements.
-                                    mask = [element == possible_element
-                                            for possible_element in elements]
-                                    count = sum(mask)
-                                    self.coreelectrons[mask] = ncore
+                                    self._assign_coreelectrons_to_element(element, ncore)
                             # Because of how the charge is calculated
                             # during extract(), this is the number of
                             # remaining core electrons that need to be
@@ -223,14 +218,11 @@ cannot be determined. Rerun without `$molecule read`."""
                                 assert len(entries) == 1
                                 element, _, ncore = entries[0]
                                 assert ncore == 0
-                                mask = [element == possible_element
-                                        for possible_element in elements]
-                                count = sum(mask)
-                                self.coreelectrons[mask] = remainder // count
+                                self._assign_coreelectrons_to_element(element, remainder, True)
                 elif not ecp_is_gen and has_iprint:
                     for i in range(self.natom):
-                        if elements[i] in self.possible_ecps:
-                            self.coreelectrons[i] = self.possible_ecps[elements[i]]
+                        if self.elements[i] in self.possible_ecps:
+                            self.coreelectrons[i] = self.possible_ecps[self.elements[i]]
                 else:
                     assert ecp_is_gen and has_iprint
                     for entry in self.user_input['ecp']:
@@ -242,10 +234,7 @@ cannot be determined. Rerun without `$molecule read`."""
                             pass
                         else:
                             ncore = self.possible_ecps[element]
-                        mask = [element == possible_element
-                                for possible_element in elements]
-                        count = sum(mask)
-                        self.coreelectrons[mask] = ncore
+                        self._assign_coreelectrons_to_element(element, ncore)
 
         # Check to see if the charge is consistent with the input
         # section. It may not be if using an ECP.
@@ -390,6 +379,17 @@ cannot be determined. Rerun without `$molecule read`."""
             else:
                 histogram[element] = 1
         return histogram
+
+    def _assign_coreelectrons_to_element(self, element, ncore, divide_by_count=False):
+        """Assign to all instances of the element, because mixed usage isn't
+        allowed within elements.
+        """
+        mask = [element == possible_element
+                for possible_element in self.elements]
+        count = sum(mask)
+        if divide_by_count:
+            ncore = ncore // count
+        self.coreelectrons[mask] = ncore
 
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
