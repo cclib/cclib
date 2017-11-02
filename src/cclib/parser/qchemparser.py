@@ -163,7 +163,7 @@ class QChem(logfileparser.Logfile):
         if hasattr(self, 'user_input') and self.user_input.get('rem') is not None:
             if self.user_input['rem'].get('ecp') is not None:
                 self.coreelectrons = numpy.zeros(self.natom, 'i')
-                self.elements = [self.table.element[atomno]
+                self.atomsymbols = [self.table.element[atomno]
                                  for atomno in self.atomnos]
                 ecp_is_gen = (self.user_input['rem']['ecp'] == 'gen')
                 if ecp_is_gen:
@@ -218,8 +218,8 @@ cannot be determined. Rerun without `$molecule read`."""
                             self._assign_coreelectrons_to_element(element, remainder, True)
                 elif not ecp_is_gen and has_iprint:
                     for i in range(self.natom):
-                        if self.elements[i] in self.possible_ecps:
-                            self.coreelectrons[i] = self.possible_ecps[self.elements[i]]
+                        if self.atomsymbols[i] in self.possible_ecps:
+                            self.coreelectrons[i] = self.possible_ecps[self.atomsymbols[i]]
                 else:
                     assert ecp_is_gen and has_iprint
                     for entry in self.user_input['ecp']:
@@ -380,7 +380,7 @@ cannot be determined. Rerun without `$molecule read`."""
         allowed within elements.
         """
         mask = [element == possible_element
-                for possible_element in self.elements]
+                for possible_element in self.atomsymbols]
         count = sum(mask)
         if divide_by_count:
             ncore = ncore // count
