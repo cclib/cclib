@@ -212,9 +212,7 @@ cannot be determined. Rerun without `$molecule read`."""
                             entries = [entry
                                        for entry in self.user_input['ecp']
                                        if entry[2] == 0]
-                            if len(entries) == 0:
-                                pass
-                            else:
+                            if len(entries) != 0:
                                 assert len(entries) == 1
                                 element, _, ncore = entries[0]
                                 assert ncore == 0
@@ -230,9 +228,7 @@ cannot be determined. Rerun without `$molecule read`."""
                         # If ncore is non-zero, then it must be
                         # user-defined, and we take that
                         # value. Otherwise, look it up.
-                        if ncore > 0:
-                            pass
-                        else:
+                        if ncore == 0:
                             ncore = self.possible_ecps[element]
                         self._assign_coreelectrons_to_element(element, ncore)
 
