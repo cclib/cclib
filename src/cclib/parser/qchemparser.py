@@ -378,10 +378,11 @@ cannot be determined. Rerun without `$molecule read`."""
         """
         mask = [element == possible_element
                 for possible_element in self.atomsymbols]
+        indices = [i for (i, x) in enumerate(mask) if x]
         count = sum(mask)
         if divide_by_count:
             ncore = ncore // count
-        self.coreelectrons[mask] = ncore
+        self.coreelectrons[indices] = ncore
 
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
