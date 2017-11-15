@@ -7,8 +7,6 @@
 
 """A writer for XYZ (Cartesian coordinate) files."""
 
-from collections import Iterable
-
 from . import filewriter
 
 
@@ -28,6 +26,8 @@ class XYZ(filewriter.Writer):
           allgeom - Boolean to write all available geometries from the logfile.
         """
 
+        required_attrs = ('natom', 'atomcoords', 'atomnos')
+
         # Call the __init__ method of the superclass
         super(XYZ, self).__init__(ccdata, *args, **kwargs)
 
@@ -35,7 +35,8 @@ class XYZ(filewriter.Writer):
         self.do_lastgeom = lastgeom
         self.do_allgeom = allgeom
 
-        self.indices = kwargs.get('indices')
+        self.natom = str(self.ccdata.natom)
+        self.element_list = [self.pt.element[Z] for Z in self.ccdata.atomnos]
 
     def generate_repr(self):
         """Generate the XYZ representation of the logfile data."""
@@ -53,45 +54,29 @@ class XYZ(filewriter.Writer):
 
         xyzblock = []
 
-        if hasattr(self.ccdata, 'atomcoords'):
+        lencoords = len(self.ccdata.atomcoords)
 
-            lencoords = len(self.ccdata.atomcoords)
+        # Collect the indices.
+        if lencoords == 1 or self.do_firstgeom:
+            self.indices.add(0)
+        if self.do_lastgeom:
+            self.indices.add(lencoords - 1)
+        if self.do_allgeom:
+            for i in range(lencoords):
+                self.indices.add(i)
 
-            indices = set()
-
-            # Collect the indices.
-            if lencoords == 1 or self.do_firstgeom:
-                indices.add(0)
-            if self.do_lastgeom:
-                indices.add(lencoords - 1)
-            if self.do_allgeom:
-                for index in range(lencoords):
-                    indices.add(index)
-
-            if self.indices:
-                if isinstance(self.indices, Iterable):
-                    for i in self.indices:
-                        if i < 0:
-                            i += lencoords
-                        indices.add(i)
-                else:
-                    assert isinstance(self.indices, int)
-                    if self.indices < 0:
-                        self.indices += lencoords
-                    indices.add(self.indices)
-
-            # Generate the XYZ string for each index.
-            indices = sorted(indices)
-            for i in indices:
-                xyzblock.append(self._xyz_from_ccdata(i))
+        # Generate the XYZ string for each index.
+        indices = sorted(self.indices)
+        if not indices:
+            indices = [-1]
+        for i in indices:
+            xyzblock.append(self._xyz_from_ccdata(i))
 
         return '\n'.join(xyzblock)
 
     def _xyz_from_ccdata(self, index):
         """Create an XYZ file of the geometry at the given index."""
 
-        natom = str(self.ccdata.natom)
-        element_list = [self.pt.element[Z] for Z in self.ccdata.atomnos]
         atomcoords = self.ccdata.atomcoords[index]
 
         # Create a comment derived from the filename and the index.
@@ -106,9 +91,9 @@ class XYZ(filewriter.Writer):
 
         atom_template = '{:3s} {:15.10f} {:15.10f} {:15.10f}'
         block = []
-        block.append(natom)
+        block.append(self.natom)
         block.append(comment)
-        for element, (x, y, z) in zip(element_list, atomcoords):
+        for element, (x, y, z) in zip(self.element_list, atomcoords):
             block.append(atom_template.format(element, x, y, z))
         return '\n'.join(block)
 

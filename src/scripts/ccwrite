@@ -87,14 +87,14 @@ def main():
             ccwrite_kwargs['future'] = True
         # For XYZ files, write the last geometry unless otherwise
         # specified.
-        if index:
-            ccwrite_kwargs['indices'] = index
-        else:
-            ccwrite_kwargs['indices'] = -1
+        if not index:
+            index = -1
         ccwrite_kwargs['jobfilename'] = filename
 
-        # The argument terse presently is only applicable to CJSON/JSON formats
-        ccwrite(data, outputtype, outputdest, terse, **ccwrite_kwargs)
+        # The argument terse presently is only applicable to
+        # CJSON/JSON formats
+        ccwrite(data, outputtype, outputdest, terse, indices=index,
+                **ccwrite_kwargs)
 
 
 if __name__ == "__main__":
