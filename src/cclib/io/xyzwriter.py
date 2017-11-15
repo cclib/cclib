@@ -26,7 +26,7 @@ class XYZ(filewriter.Writer):
           allgeom - Boolean to write all available geometries from the logfile.
         """
 
-        required_attrs = ('natom', 'atomcoords', 'atomnos')
+        self.required_attrs = ('natom', 'atomcoords', 'atomnos')
 
         # Call the __init__ method of the superclass
         super(XYZ, self).__init__(ccdata, *args, **kwargs)
