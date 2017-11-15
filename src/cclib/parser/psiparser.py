@@ -746,6 +746,7 @@ class Psi(logfileparser.Logfile):
             self.mpenergies.append([mpenergy])
         # This is for the newer DF-MP2 code in 4.0.
         if 'DF-MP2 Energies' in line:
+            self.metadata["methods"].append("DF-MP2")
             while 'Total Energy' not in line:
                 line = next(inputfile)
             mpenergy = utils.convertor(float(line.split()[3]), 'hartree', 'eV')
