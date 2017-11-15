@@ -7,6 +7,8 @@
 
 """A writer for XYZ (Cartesian coordinate) files."""
 
+from collections import Iterable
+
 from . import filewriter
 
 
@@ -14,7 +16,7 @@ class XYZ(filewriter.Writer):
     """A writer for XYZ (Cartesian coordinate) files."""
 
     def __init__(self, ccdata, splitfiles=False,
-                 firstgeom=False, lastgeom=True, allgeom=False,
+                 firstgeom=False, lastgeom=False, allgeom=False,
                  *args, **kwargs):
         """Initialize the XYZ writer object.
 
@@ -33,6 +35,7 @@ class XYZ(filewriter.Writer):
         self.do_lastgeom = lastgeom
         self.do_allgeom = allgeom
 
+        self.indices = kwargs.get('indices')
 
     def generate_repr(self):
         """Generate the XYZ representation of the logfile data."""
@@ -45,8 +48,8 @@ class XYZ(filewriter.Writer):
         # 3. Write the very first geometry, which for any job other than a
         #   geometry optimization would be the single/only geometry.
         # 4. Write the first and last geometries from a geometry optimization.
-        # Options for ouput (to multiple files):
-        # 1. Write all geometries from an optimization, to suitably named files. [TODO]
+        # 5. Write arbitrary structures via zero-based indexing.
+        # TODO: Options for output (to multiple files)
 
         xyzblock = []
 
@@ -54,21 +57,33 @@ class XYZ(filewriter.Writer):
 
             lencoords = len(self.ccdata.atomcoords)
 
-            if lencoords == 1:
-                xyzblock.append(self._xyz_from_ccdata(-1))
-            elif self.do_allgeom:
+            indices = set()
+
+            # Collect the indices.
+            if lencoords == 1 or self.do_firstgeom:
+                indices.add(0)
+            if self.do_lastgeom:
+                indices.add(lencoords - 1)
+            if self.do_allgeom:
                 for index in range(lencoords):
-                    xyzblock.append(self._xyz_from_ccdata(index))
-            elif self.do_firstgeom and self.do_lastgeom:
-                xyzblock.append(self._xyz_from_ccdata(0))
-                xyzblock.append(self._xyz_from_ccdata(-1))
-            elif self.do_firstgeom:
-                xyzblock.append(self._xyz_from_ccdata(0))
-            elif self.do_lastgeom:
-                xyzblock.append(self._xyz_from_ccdata(-1))
-            # If none of the options are set, return the empty string.
-            else:
-                xyzblock.append("")
+                    indices.add(index)
+
+            if self.indices:
+                if isinstance(self.indices, Iterable):
+                    for i in self.indices:
+                        if i < 0:
+                            i += lencoords
+                        indices.add(i)
+                else:
+                    assert isinstance(self.indices, int)
+                    if self.indices < 0:
+                        self.indices += lencoords
+                    indices.add(self.indices)
+
+            # Generate the XYZ string for each index.
+            indices = sorted(indices)
+            for i in indices:
+                xyzblock.append(self._xyz_from_ccdata(i))
 
         return '\n'.join(xyzblock)
 
