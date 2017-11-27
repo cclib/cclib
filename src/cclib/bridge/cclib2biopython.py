@@ -1,13 +1,9 @@
-# This file is part of cclib (http://cclib.github.io), a library for parsing
-# and interpreting the results of computational chemistry packages.
+# -*- coding: utf-8 -*-
 #
-# Copyright (C) 2006, the cclib development team
+# Copyright (c) 2017, the cclib development team
 #
-# The library is free software, distributed under the terms of
-# the GNU Lesser General Public version 2.1 or later. You should have
-# received a copy of the license along with cclib. You can also access
-# the full license online at http://www.gnu.org/copyleft/lgpl.html.
-
+# This file is part of cclib (http://cclib.github.io) and is distributed under
+# the terms of the BSD 3-Clause License.
 """Bridge for using cclib data in biopython (http://biopython.org)."""
 
 try:
@@ -38,7 +34,8 @@ def makebiopython(atomcoords, atomnos):
     pt = PeriodicTable()
     bioatoms = []
     for coords, atomno in zip(atomcoords, atomnos):
-        bioatoms.append(Atom(pt.element[atomno], coords, 0, 0, 0, 0, 0))
+        symbol = pt.element[atomno]
+        bioatoms.append(Atom(symbol, coords, 0, 0, 0, symbol, 0, symbol.upper()))
     return bioatoms
 
 

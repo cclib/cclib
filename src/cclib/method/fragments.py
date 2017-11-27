@@ -1,14 +1,9 @@
 # -*- coding: utf-8 -*-
 #
-# This file is part of cclib (http://cclib.github.io), a library for parsing
-# and interpreting the results of computational chemistry packages.
+# Copyright (c) 2017, the cclib development team
 #
-# Copyright (C) 2006-2014, the cclib development team
-#
-# The library is free software, distributed under the terms of
-# the GNU Lesser General Public version 2.1 or later. You should have
-# received a copy of the license along with cclib. You can also access
-# the full license online at http://www.gnu.org/copyleft/lgpl.html.
+# This file is part of cclib (http://cclib.github.io) and is distributed under
+# the terms of the BSD 3-Clause License.
 
 """Fragment analysis based on parsed ADF data."""
 
@@ -28,7 +23,7 @@ class FragmentAnalysis(Method):
         # Call the __init__ method of the superclass.
         super(FragmentAnalysis, self).__init__(data, progress, loglevel, logname)
         self.parsed = False
-        
+
     def __str__(self):
         """Return a string representation of the object."""
         return "Fragment molecule basis of %s" % (self.data)
@@ -56,7 +51,7 @@ class FragmentAnalysis(Method):
                 nFragBeta += fragments[j].homos[0] + 1 #assume restricted fragment
             elif unrestricted and len(fragments[j].homos) == 2:
                 nFragBeta += fragments[j].homos[1] + 1 #assume unrestricted fragment
-             
+
             #assign fonames based on fragment name and MO number
             for i in range(fragments[j].nbasis):
                 if hasattr(fragments[j],"name"):
@@ -124,14 +119,14 @@ class FragmentAnalysis(Method):
                     temp = numpy.transpose(fragments[i].mocoeffs[spin])
                     blockMatrix[pos:pos+size, pos:pos+size] = temp
                 pos += size
-            
+
             # Invert and mutliply to result in fragment MOs as basis.
-            iBlockMatrix = numpy.inv(blockMatrix) 
+            iBlockMatrix = numpy.inv(blockMatrix)
             temp = numpy.transpose(self.data.mocoeffs[spin])
             results = numpy.transpose(numpy.dot(iBlockMatrix, temp))
 
             self.mocoeffs.append(results)
-            
+
             if hasattr(self.data, "aooverlaps"):
                 tempMatrix = numpy.dot(self.data.aooverlaps, blockMatrix)
                 tBlockMatrix = numpy.transpose(blockMatrix)

@@ -1,12 +1,9 @@
-# This file is part of cclib (http://cclib.github.io), a library for parsing
-# and interpreting the results of computational chemistry packages.
+# -*- coding: utf-8 -*-
 #
-# Copyright (C) 2009-2015, the cclib development team
+# Copyright (c) 2017, the cclib development team
 #
-# The library is free software, distributed under the terms of
-# the GNU Lesser General Public version 2.1 or later. You should have
-# received a copy of the license along with cclib. You can also access
-# the full license online at http://www.gnu.org/copyleft/lgpl.html.
+# This file is part of cclib (http://cclib.github.io) and is distributed under
+# the terms of the BSD 3-Clause License.
 
 """Bridge between cclib data and openbabel (http://openbabel.org)."""
 
@@ -45,7 +42,7 @@ def makeopenbabel(atomcoords, atomnos, charge=0, mult=1):
     obmol.ConnectTheDots()
     obmol.PerceiveBondOrders()
     obmol.SetTotalSpinMultiplicity(mult)
-    obmol.SetTotalCharge(charge)
+    obmol.SetTotalCharge(int(charge))
     return obmol
 
 def makecclib(mol):

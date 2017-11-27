@@ -1,12 +1,9 @@
-# This file is part of cclib (http://cclib.github.io), a library for parsing
-# and interpreting the results of computational chemistry packages.
+# -*- coding: utf-8 -*-
 #
-# Copyright (C) 2007-2016, the cclib development team
+# Copyright (c) 2017, the cclib development team
 #
-# The library is free software, distributed under the terms of
-# the GNU Lesser General Public version 2.1 or later. You should have
-# received a copy of the license along with cclib. You can also access
-# the full license online at http://www.gnu.org/copyleft/lgpl.html.
+# This file is part of cclib (http://cclib.github.io) and is distributed under
+# the terms of the BSD 3-Clause License.
 
 """Test the MBO method in cclib"""
 
@@ -30,7 +27,7 @@ class MBOTest(unittest.TestCase):
     def test_mbo_sp(self):
         """Testing Mayer bond orders for restricted single point."""
 
-        data, logfile = getdatafile(Gaussian, "basicGaussian09", "dvb_sp.out")
+        data, logfile = getdatafile(Gaussian, "basicGaussian09", ["dvb_sp.out"])
         mbo = MBO(data)
         mbo.logger.setLevel(logging.ERROR)
         mbo.calculate()
@@ -42,7 +39,7 @@ class MBOTest(unittest.TestCase):
     def test_mbo_un_sp(self):
         """Testing Mayer bond orders for unrestricted single point."""
 
-        data, logfile = getdatafile(Gaussian, "basicGaussian09", "dvb_un_sp.log")
+        data, logfile = getdatafile(Gaussian, "basicGaussian09", ["dvb_un_sp.log"])
         mbo = MBO(data)
         mbo.logger.setLevel(logging.ERROR)
         mbo.calculate()

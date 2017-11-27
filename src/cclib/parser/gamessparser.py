@@ -1,14 +1,9 @@
 # -*- coding: utf-8 -*-
 #
-# This file is part of cclib (http://cclib.github.io), a library for parsing
-# and interpreting the results of computational chemistry packages.
+# Copyright (c) 2017, the cclib development team
 #
-# Copyright (C) 2006-2014, the cclib development team
-#
-# The library is free software, distributed under the terms of
-# the GNU Lesser General Public version 2.1 or later. You should have
-# received a copy of the license along with cclib. You can also access
-# the full license online at http://www.gnu.org/copyleft/lgpl.html.
+# This file is part of cclib (http://cclib.github.io) and is distributed under
+# the terms of the BSD 3-Clause License.
 
 """Parser for GAMESS(US) output files"""
 
@@ -28,6 +23,28 @@ class GAMESS(logfileparser.Logfile):
 
     # Used to index self.scftargets[].
     SCFRMS, SCFMAX, SCFENERGY = list(range(3))
+
+    # Used to extact Dunning basis set names.
+    dunningbas = {'CCD': 'cc-pVDZ', \
+            'CCT': 'cc-pVTZ', \
+            'CCQ': 'cc-pVQZ', \
+            'CC5': 'cc-pV5Z', \
+            'CC6': 'cc-pV6Z', \
+            'ACCD': 'aug-cc-pVDZ', \
+            'ACCT': 'aug-cc-pVTZ', \
+            'ACCQ': 'aug-cc-pVQZ', \
+            'ACC5': 'aug-cc-pV5Z', \
+            'ACC6': 'aug-cc-pV6Z', \
+            'CCDC': 'cc-pCVDZ', \
+            'CCTC': 'cc-pCVTZ', \
+            'CCQC': 'cc-pCVQZ', \
+            'CC5C': 'cc-pCV5Z', \
+            'CC6C': 'cc-pCV6Z', \
+            'ACCDC': 'aug-cc-pCVDZ', \
+            'ACCTC': 'aug-cc-pCVTZ', \
+            'ACCQC': 'aug-cc-pCVQZ', \
+            'ACC5C': 'aug-cc-pCV5Z', \
+            'ACC6C': 'aug-cc-pCV6Z'}
 
     def __init__(self, *args, **kwargs):
 
@@ -72,8 +89,84 @@ class GAMESS(logfileparser.Logfile):
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
         
+        # extract the version number first
+        if line.find("GAMESS VERSION") >= 0:
+            self.metadata["package_version"] = line.split()[4] + line.split()[5] + line.split()[6]
+
         if line[1:12] == "INPUT CARD>":
             return
+
+        # extract the methods 
+        if line[1:7] == "SCFTYP":
+            method = line.split()[0][7:]
+            if len(self.metadata["methods"]) == 0:
+                self.metadata["methods"].append(method)
+
+        # extract the basis set name
+        if line[5:11] == "GBASIS":
+            basnm1 = line.split()[0][7:]
+            if basnm1 in self.dunningbas:
+                self.metadata["basis_set"] = self.dunningbas[basnm1]
+            else:
+                if basnm1 == "PM3" or basnm1 == "AM1":
+                    self.metadata["methods"].append(basnm1)
+                if basnm1 == "STO" :
+                    if line.split()[2] == "2":
+                        self.metadata["basis_set"] = "STO-2G"
+                    elif line.split()[2] == "3":
+                        self.metadata["basis_set"] = "STO-3G"
+                    elif line.split()[2] == "4":
+                        self.metadata["basis_set"] = "STO-4G"
+                    elif line.split()[2] == "5":
+                        self.metadata["basis_set"] = "STO-5G"
+                if basnm1 == "N21" :
+                    if line.split()[2] == "3" and line.split()[3] == "POLAR=COMMON":
+                        self.metadata["basis_set"] = "3-21G*"
+                    if line.split()[2] == "3" and line.split()[3] == "POLAR=NONE":
+                        self.metadata["basis_set"] = "3-21G"
+                    if line.split()[2] == "4" and line.split()[3] == "POLAR=NONE":
+                        self.metadata["basis_set"] = "4-21G"
+                    if line.split()[2] == "6" and line.split()[3] == "POLAR=NONE":
+                        self.metadata["basis_set"] = "6-21G"
+                if basnm1 == "N31" :
+                    if line.split()[2] == "6" and (line.split()[3] == "POLAR=POPN31" \
+                            or line.split()[3] == "POLAR=POPLE"):
+                        self.metadata["basis_set"] = "6-31G*"
+                        line = next(inputfile)
+                        if line.split()[-1] == "T":
+                            self.metadata["basis_set"] = "6-31+G*"
+                            line = next(inputfile)
+                            if line.split()[1] == "0" and line.split()[3] == "T":
+                                self.metadata["basis_set"] = "6-31++G*"
+                            if line.split()[1] == "1" and line.split()[3] == "T":
+                                self.metadata["basis_set"] = "6-31++G**"
+                        else:
+                            line = next(inputfile)
+                            if line.split()[1] == "1":  #NPFUNC = 1
+                                self.metadata["basis_set"] = "6-31G**"
+                    if line.split()[2] == "6" and line.split()[3] == "POLAR=NONE":
+                        self.metadata["basis_set"] = "6-31G"
+                    if line.split()[2] == "4" and line.split()[3] == "POLAR=NONE":
+                        self.metadata["basis_set"] = "4-31G"
+                    if line.split()[2] == "4" and line.split()[3] == "POLAR=POPN31":
+                        self.metadata["basis_set"] = "4-31G*"
+                if basnm1 == "N311" :
+                    if line.split()[2] == "6" and line.split()[3] == "POLAR=POPN311":
+                        self.metadata["basis_set"] = "6-311G*"
+                        line = next(inputfile)
+                        if line.split()[-1] == "T":
+                            self.metadata["basis_set"] = "6-311+G*"
+                            line = next(inputfile)
+                            if line.split()[1] == "0" and line.split()[3] == "T":
+                                self.metadata["basis_set"] = "6-311++G*"
+                            if line.split()[1] == "1" and line.split()[3] == "T":
+                                self.metadata["basis_set"] = "6-311++G**"
+                        else:
+                            line = next(inputfile)
+                            if line.split()[1] == "1":  #NPFUNC = 1
+                                self.metadata["basis_set"] = "6-311G**"
+                    if line.split()[2] == "6" and line.split()[3] == "POLAR=NONE":
+                        self.metadata["basis_set"] = "6-311G"
 
         # We are looking for this line:
         #           PARAMETERS CONTROLLING GEOMETRY SEARCH ARE
@@ -110,52 +203,67 @@ class GAMESS(logfileparser.Logfile):
         #                       E(2)=        -0.1403745370
         #                     E(MP2)=       -76.1492222841
         #
+        # With GAMESS-US 20 APR 2017 (R1), the following block may be present:
+        #       SCHWARZ INEQUALITY TEST SKIPPED          0 INTEGRAL BLOCKS
+        # ... END OF INTEGRAL TRANSFORMATION ...
+
         if line.find("RESULTS OF MOLLER-PLESSET") >= 0 or line[6:37] == "SCHWARZ INEQUALITY TEST SKIPPED":
 
             if not hasattr(self, "mpenergies"):
                 self.mpenergies = []
 
+            line = next(inputfile)
             # Each iteration has a new print-out
-            self.mpenergies.append([])
+            if "END OF INTEGRAL TRANSFORMATION" not in line:
+                self.mpenergies.append([])
 
-            # GAMESS-US presently supports only second order corrections (MP2)
-            # PC GAMESS also has higher levels (3rd and 4th), with different output
-            # Only the highest level MP4 energy is gathered (SDQ or SDTQ)
-            while re.search("DONE WITH MP(\d) ENERGY", line) is None:
+                # GAMESS-US presently supports only second order corrections (MP2)
+                # PC GAMESS also has higher levels (3rd and 4th), with different output
+                # Only the highest level MP4 energy is gathered (SDQ or SDTQ)
+                # Loop breaks when substring "DONE WITH MPn ENERGY" is encountered,
+                # where n=2, 3 or 4.
+                while "DONE WITH MP" not in line:
 
-                line = next(inputfile)
-                if len(line.split()) > 0:
-                    # Only up to MP2 correction
-                    if line.split()[0] == "E(MP2)=":
-                        mp2energy = float(line.split()[1])
-                        self.mpenergies[-1].append(utils.convertor(mp2energy, "hartree", "eV"))
-                    # MP2 before higher order calculations
-                    if line.split()[0] == "E(MP2)":
-                        mp2energy = float(line.split()[2])
-                        self.mpenergies[-1].append(utils.convertor(mp2energy, "hartree", "eV"))
-                    if line.split()[0] == "E(MP3)":
-                        mp3energy = float(line.split()[2])
-                        self.mpenergies[-1].append(utils.convertor(mp3energy, "hartree", "eV"))
-                    if line.split()[0] in ["E(MP4-SDQ)", "E(MP4-SDTQ)"]:
-                        mp4energy = float(line.split()[2])
-                        self.mpenergies[-1].append(utils.convertor(mp4energy, "hartree", "eV"))
+                    if len(line.split()) > 0:
+                        # Only up to MP2 correction
+                        if line.split()[0] == "E(MP2)=":
+                            self.metadata["methods"].append("MP2")
+                            mp2energy = float(line.split()[1])
+                            self.mpenergies[-1].append(utils.convertor(mp2energy, "hartree", "eV"))
+                        # MP2 before higher order calculations
+                        if line.split()[0] == "E(MP2)":
+                            mp2energy = float(line.split()[2])
+                            self.mpenergies[-1].append(utils.convertor(mp2energy, "hartree", "eV"))
+                        if line.split()[0] == "E(MP3)":
+                            self.metadata["methods"].append("MP3")
+                            mp3energy = float(line.split()[2])
+                            self.mpenergies[-1].append(utils.convertor(mp3energy, "hartree", "eV"))
+                        if line.split()[0] in ["E(MP4-SDQ)", "E(MP4-SDTQ)"]:
+                            self.metadata["methods"].append("MP4")
+                            mp4energy = float(line.split()[2])
+                            self.mpenergies[-1].append(utils.convertor(mp4energy, "hartree", "eV"))
+                    line = next(inputfile)
 
         # Total energies after Coupled Cluster calculations
         # Only the highest Coupled Cluster level result is gathered
         if line[12:23] == "CCD ENERGY:":
+            self.metadata["methods"].append("CCD")
             if not hasattr(self, "ccenergies"):
                 self.ccenergies = []
             ccenergy = float(line.split()[2])
             self.ccenergies.append(utils.convertor(ccenergy, "hartree", "eV"))
         if line.find("CCSD") >= 0 and line.split()[0:2] == ["CCSD", "ENERGY:"]:
+            self.metadata["methods"].append("CCSD")
             if not hasattr(self, "ccenergies"):
                 self.ccenergies = []
             ccenergy = float(line.split()[2])
             line = next(inputfile)
             if line[8:23] == "CCSD[T] ENERGY:":
+                self.metadata["methods"].append("CCSD[T]")
                 ccenergy = float(line.split()[2])
                 line = next(inputfile)
                 if line[8:23] == "CCSD(T) ENERGY:":
+                    self.metadata["methods"].append("CCSD(T)")
                     ccenergy = float(line.split()[2])
             self.ccenergies.append(utils.convertor(ccenergy, "hartree", "eV"))
 
@@ -170,7 +278,7 @@ class GAMESS(logfileparser.Logfile):
         # Extract charge and multiplicity
         if line[1:19] == "CHARGE OF MOLECULE":
 
-            charge = int(line.split()[-1])
+            charge = int(round(float(line.split()[-1])))
             self.set_attribute('charge', charge)
 
             line = next(inputfile)
@@ -639,7 +747,7 @@ class GAMESS(logfileparser.Logfile):
         # PLEASE VERIFY THE PROGRAM'S DECISION MANUALLY!
         #
         if "NORMAL COORDINATE ANALYSIS IN THE HARMONIC APPROXIMATION" in line:
-            
+
             self.vibfreqs = []
             self.vibirs = []
             self.vibdisps = []
@@ -649,9 +757,9 @@ class GAMESS(logfileparser.Logfile):
             # Pass the warnings to the logger if they are there.
             while not "MODES" in line:
                 self.updateprogress(inputfile, "Frequency Information")
-                
+
                 line = next(inputfile)
-                
+
                 # Typical Atomic Masses section printed in GAMESS
                 #               ATOMIC WEIGHTS (AMU)
                 #
@@ -693,7 +801,9 @@ class GAMESS(logfileparser.Logfile):
 
             # Continue down to the first frequencies
             line = next(inputfile)
-            while not line.strip() or not line.startswith("                          1"):
+            # With GAMESS-US 20 APR 2017 (R1), there are 28 blank spaces,
+            # in earlier versions there used to be 26.
+            while not line.strip() or not re.search(' {26,}1', line) is not None:
                 line = next(inputfile)
 
             while not "SAYVETZ" in line:
@@ -1271,7 +1381,7 @@ class GAMESS(logfileparser.Logfile):
             assert coords_and_charge.split()[-1] == '(A.U.)'
             reference = numpy.array([float(x) for x in coords_and_charge.split()[:3]])
             reference = utils.convertor(reference, 'bohr', 'Angstrom')
-            charge = float(coords_and_charge.split()[-2])
+            charge = int(round(float(coords_and_charge.split()[-2])))
             self.set_attribute('charge', charge)
 
             dipoleheader = next(inputfile)
@@ -1293,6 +1403,40 @@ class GAMESS(logfileparser.Logfile):
                     self.logger.warning('Overwriting previous multipole moments with new values')
                     self.logger.warning('This could be from post-HF properties or geometry optimization')
                     self.moments = [reference, dipole]
+
+        # Static polarizability from a harmonic frequency calculation
+        # with $CPHF/POLAR=.TRUE.
+        if line.strip() == 'ALPHA POLARIZABILITY TENSOR (ANGSTROMS**3)':
+            if not hasattr(self, 'polarizabilities'):
+                self.polarizabilities = []
+            polarizability = numpy.zeros(shape=(3, 3))
+            self.skip_lines(inputfile, ['d', 'b', 'directions'])
+            for i in range(3):
+                line = next(inputfile)
+                polarizability[i, :i+1] = [float(x) for x in line.split()[1:]]
+            polarizability = utils.symmetrize(polarizability, use_triangle='lower')
+            # Convert from Angstrom**3 to bohr**3 (a.u.**3).
+            volume_convert = numpy.vectorize(lambda x: x * utils.convertor(1, 'Angstrom', 'bohr') ** 3)
+            polarizability = volume_convert(polarizability)
+            self.polarizabilities.append(polarizability)
+
+        # Static and dynamic polarizability from RUNTYP=TDHF.
+        if line.strip() == 'TIME-DEPENDENT HARTREE-FOCK NLO PROPERTIES':
+            if not hasattr(self, 'polarizabilities'):
+                self.polarizabilities = []
+            polarizability = numpy.empty(shape=(3, 3))
+            coord_to_idx = {'X': 0, 'Y': 1, 'Z': 2}
+            self.skip_lines(inputfile, ['d', 'b', 'dots'])
+            line = next(inputfile)
+            assert 'ALPHA AT' in line
+            self.skip_lines(inputfile, ['dots', 'b'])
+            for a in range(3):
+                for b in range(3):
+                    line = next(inputfile)
+                    tokens = line.split()
+                    i, j = coord_to_idx[tokens[1][0]], coord_to_idx[tokens[1][1]]
+                    polarizability[i, j] = tokens[3]
+            self.polarizabilities.append(polarizability)
 
 
 if __name__ == "__main__":

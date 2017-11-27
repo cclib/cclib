@@ -1,14 +1,9 @@
 # -*- coding: utf-8 -*-
 #
-# This file is part of cclib (http://cclib.github.io), a library for parsing
-# and interpreting the results of computational chemistry packages.
+# Copyright (c) 2017, the cclib development team
 #
-# Copyright (C) 2006-2014, the cclib development team
-#
-# The library is free software, distributed under the terms of
-# the GNU Lesser General Public version 2.1 or later. You should have
-# received a copy of the license along with cclib. You can also access
-# the full license online at http://www.gnu.org/copyleft/lgpl.html.
+# This file is part of cclib (http://cclib.github.io) and is distributed under
+# the terms of the BSD 3-Clause License.
 
 """Calculation methods related to volume based on cclib data."""
 
@@ -42,21 +37,21 @@ class Volume(object):
        topcorner -- the top right hand corner
        spacing -- the distance between the points in the cube
 
-    Attributes:   
+    Attributes:
        data -- a numpy array of values for each point in the volume
                (set to zero at initialisation)
        numpts -- the numbers of points in the (x,y,z) directions
 
     """
-    
+
     def __init__(self, origin, topcorner, spacing):
-    
+
         self.origin = origin
         self.spacing = spacing
         self.topcorner = topcorner
         self.numpts = []
         for i in range(3):
-            self.numpts.append(int((self.topcorner[i]-self.origin[i])/self.spacing[i]                                   + 1) )
+            self.numpts.append(int((self.topcorner[i]-self.origin[i])/self.spacing[i] + 1) )
         self.data = numpy.zeros( tuple(self.numpts), "d")
 
     def __str__(self):
@@ -140,7 +135,7 @@ def scinotation(num):
        sign="-"
    else:
        sign="+"
-   return ("%sE%s%s" % (broken[0],sign,broken[1][-2:])).rjust(12)                
+   return ("%sE%s%s" % (broken[0],sign,broken[1][-2:])).rjust(12)
 
 def getbfs(coords, gbasis):
     """Convenience function for both wavefunction and density based on PyQuante Ints.py."""
@@ -169,7 +164,7 @@ def getbfs(coords, gbasis):
 
 def wavefunction(coords, mocoeffs, gbasis, volume):
     """Calculate the magnitude of the wavefunction at every point in a volume.
-    
+
     Attributes:
         coords -- the coordinates of the atoms
         mocoeffs -- mocoeffs for one eigenvalue
@@ -177,7 +172,7 @@ def wavefunction(coords, mocoeffs, gbasis, volume):
         volume -- a template Volume object (will not be altered)
     """
     bfs = getbfs(coords, gbasis)
-    
+
     wavefn = copy.copy(volume)
     wavefn.data = numpy.zeros( wavefn.data.shape, "d")
 
@@ -194,12 +189,12 @@ def wavefunction(coords, mocoeffs, gbasis, volume):
                     data[i, j, k] = bfs[bs].amp(xval,yval,zval)
         numpy.multiply(data, mocoeffs[bs], data)
         numpy.add(wavefn.data, data, wavefn.data)
-    
+
     return wavefn
 
 def electrondensity(coords, mocoeffslist, gbasis, volume):
     """Calculate the magnitude of the electron density at every point in a volume.
-    
+
     Attributes:
         coords -- the coordinates of the atoms
         mocoeffs -- mocoeffs for all of the occupied eigenvalues
@@ -210,7 +205,7 @@ def electrondensity(coords, mocoeffslist, gbasis, volume):
           for restricted calculations, and length 2 for unrestricted.
     """
     bfs = getbfs(coords, gbasis)
-    
+
     density = copy.copy(volume)
     density.data = numpy.zeros( density.data.shape, "d")
 
@@ -233,10 +228,10 @@ def electrondensity(coords, mocoeffslist, gbasis, volume):
                 numpy.multiply(data, mocoeff[bs], data)
                 numpy.add(wavefn, data, wavefn)
             density.data += wavefn**2
-        
+
     if len(mocoeffslist) == 1:
         density.data = density.data*2. # doubly-occupied
-    
+
     return density
 
 
@@ -253,7 +248,7 @@ if __name__=="__main__":
     a = ccopen("../../../data/Gaussian/basicGaussian03/dvb_sp_basis.log")
     a.logger.setLevel(logging.ERROR)
     c = a.parse()
-    
+
     b = ccopen("../../../data/Gaussian/basicGaussian03/dvb_sp.out")
     b.logger.setLevel(logging.ERROR)
     d = b.parse()

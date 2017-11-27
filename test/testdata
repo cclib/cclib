@@ -18,7 +18,8 @@ Basis     DALTON      GenericBasisTest      basicDALTON-2015      dvb_sp_ks.out
 Basis     GAMESSUK    GenericBasisTest      basicGAMESS-UK7.0     dvb_sp_b.out
 Basis     GAMESSUK    GenericBasisTest      basicGAMESS-UK8.0     dvb_sp_hf.out
 Basis     GAMESSUK    GenericBasisTest      basicGAMESS-UK8.0     dvb_sp_ks.out
-Basis     GAMESS      GenericBasisTest      basicGAMESS-US2012    dvb_sp.out
+Basis     GAMESS      GenericBasisTest      basicGAMESS-US2014    dvb_sp.out
+Basis     GAMESS      GenericBasisTest      basicGAMESS-US2017    dvb_sp.out
 Basis     GAMESS      GenericBasisTest      basicFirefly8.0       dvb_sp.out
 Basis     Gaussian    GenericBasisTest      basicGaussian03       dvb_sp_basis.log
 Basis     Gaussian    GenericBasisTest      basicGaussian03       dvb_sp_basis_b.log
@@ -33,14 +34,15 @@ Basis     NWChem      GenericBasisTest      basicNWChem6.5        dvb_sp_hf.out
 Basis     NWChem      GenericBasisTest      basicNWChem6.5        dvb_sp_ks.out
 Basis     ORCA        GenericBasisTest      basicORCA2.9          dvb_sp.out
 Basis     ORCA        GenericBasisTest      basicORCA3.0          dvb_sp.out
-Basis     Psi         GenericBasisTest      basicPsi4             dvb_sp_hf.out
-Basis     Psi         GenericBasisTest      basicPsi4             dvb_sp_ks.out
+Basis     Psi         GenericBasisTest      basicPsi4.0           dvb_sp_rhf.out
+Basis     Psi         GenericBasisTest      basicPsi4.0           dvb_sp_rks.out
 Basis     QChem       GenericBasisTest      basicQChem4.2         dvb_sp.out
 
 Basis     DALTON      DALTONBigBasisTest    basicDALTON-2013      C_bigbasis.out
 Basis     DALTON      DALTONBigBasisTest    basicDALTON-2015      C_bigbasis.out
 Basis     GAMESS      GenericBigBasisTest   basicFirefly8.0       C_bigbasis.out
-Basis     GAMESS      GenericBigBasisTest   basicGAMESS-US2012    C_bigbasis.out
+Basis     GAMESS      GenericBigBasisTest   basicGAMESS-US2014    C_bigbasis.out
+Basis     GAMESS      GenericBigBasisTest   basicGAMESS-US2017    C_bigbasis.out
 Basis     Gaussian    GaussianBigBasisTest  basicGaussian03       C_bigbasis.out
 Basis     Gaussian    GaussianBigBasisTest  basicGaussian09       C_bigbasis.out
 Basis     Jaguar      JaguarBigBasisTest    basicJaguar8.3        C_bigbasis.out
@@ -48,14 +50,17 @@ Basis     Molpro      MolproBigBasisTest    basicMolpro2006       C_bigbasis.out
 Basis     Molpro      MolproBigBasisTest    basicMolpro2012       C_bigbasis.out
 Basis     NWChem      GenericBigBasisTest   basicNWChem6.0        C_bigbasis.out
 Basis     NWChem      GenericBigBasisTest   basicNWChem6.5        C_bigbasis.out
-Basis     Psi         GenericBigBasisTest   basicPsi4             C_bigbasis.out
+Basis     Psi         PsiBigBasisTest       basicPsi4.0           C_bigbasis.out
 Basis     QChem       QChemBigBasisTest     basicQChem4.2         C_bigbasis.out
 
 CC        DALTON      GenericCCTest         basicDALTON-2013      water_ccsdt.out
 CC        DALTON      GenericCCTest         basicDALTON-2015      water_ccsdt.out
-CC        GAMESS      GenericCCTest         basicGAMESS-US2012    water_ccd.out
-CC        GAMESS      GenericCCTest         basicGAMESS-US2012    water_ccsd.out
-CC        GAMESS      GenericCCTest         basicGAMESS-US2012    water_ccsd(t).out
+CC        GAMESS      GenericCCTest         basicGAMESS-US2014    water_ccd.out
+CC        GAMESS      GenericCCTest         basicGAMESS-US2017    water_ccd.out
+CC        GAMESS      GenericCCTest         basicGAMESS-US2014    water_ccsd.out
+CC        GAMESS      GenericCCTest         basicGAMESS-US2017    water_ccsd.out
+CC        GAMESS      GenericCCTest         basicGAMESS-US2014    water_ccsd(t).out
+CC        GAMESS      GenericCCTest         basicGAMESS-US2017    water_ccsd(t).out
 CC        Gaussian    GenericCCTest         basicGaussian03       water_ccd.log
 CC        Gaussian    GenericCCTest         basicGaussian09       water_ccd.log
 CC        Gaussian    GenericCCTest         basicGaussian03       water_ccsd.log
@@ -70,12 +75,14 @@ CC        Molpro      GenericCCTest         basicMolpro2006       h2o_ccsd(t).ou
 CC        Molpro      GenericCCTest         basicMolpro2012       h2o_ccsdt.out
 CC        NWChem      GenericCCTest         basicNWChem6.0        water_ccsd(t).out
 CC        NWChem      GenericCCTest         basicNWChem6.5        water_ccsd(t).out
-CC        Psi         GenericCCTest         basicPsi4             water_ccsd.out
+CC        Psi         GenericCCTest         basicPsi4.0           water_ccsd.out
+CC        Psi         GenericCCTest         basicPsi4.0           water_ccsd(t).out
 CC        QChem       GenericCCTest         basicQChem4.2         water_ccd.out
 CC        QChem       GenericCCTest         basicQChem4.2         water_ccsd.out
 CC        QChem       GenericCCTest         basicQChem4.2         water_ccsd(t).out
 
-CI        GAMESS      GAMESSCISTest         basicGAMESS-US2012    water_cis_saps.out
+CI        GAMESS      GAMESSCISTest         basicGAMESS-US2014    water_cis_saps.out
+CI        GAMESS      GAMESSCISTest         basicGAMESS-US2017    water_cis_saps.out
 CI        Gaussian    GaussianCISTest       basicGaussian03       water_cis.log
 CI        Gaussian    GaussianCISTest       basicGaussian09       water_cis.log
 CI        Jaguar      GenericCISTest        basicJaguar7.0        water_cis.out
@@ -86,7 +93,8 @@ Core      ADF         ADFCoreTest           basicADF2007.01       MoOCl4-sp.adfo
 Core      ADF         ADFCoreTest           basicADF2013.01       MoOCl4-sp.adfout
 Core      GAMESSUK    GenericCoreTest       basicGAMESS-UK7.0     MoOCl4-sp.out
 Core      GAMESSUK    GenericCoreTest       basicGAMESS-UK8.0     MoOCl4-sp.out
-Core      GAMESS      GenericCoreTest       basicGAMESS-US2012    MoOCl4-sp.out
+Core      GAMESS      GenericCoreTest       basicGAMESS-US2014    MoOCl4-sp.out
+Core      GAMESS      GenericCoreTest       basicGAMESS-US2017    MoOCl4-sp.out
 Core      Gaussian    GenericCoreTest       basicGaussian03       Mo4OCl4-sp.log
 Core      Gaussian    GenericCoreTest       basicGaussian09       Mo4OCl4-sp.log
 Core      Jaguar      JaguarCoreTest        basicJaguar8.3        MoOCl4-sp.out
@@ -101,7 +109,8 @@ GeoOpt    GAMESSUK    GenericGeoOptTest     basicGAMESS-UK7.0     dvb_gopt_d.out
 GeoOpt    GAMESSUK    GenericGeoOptTest     basicGAMESS-UK8.0     dvb_gopt_hf.out
 GeoOpt    GAMESSUK    GenericGeoOptTest     basicGAMESS-UK8.0     dvb_gopt_ks.out
 GeoOpt    GAMESS      GenericGeoOptTest     basicFirefly8.0       dvb_gopt_a.out
-GeoOpt    GAMESS      GenericGeoOptTest     basicGAMESS-US2012    dvb_gopt_a.out
+GeoOpt    GAMESS      GenericGeoOptTest     basicGAMESS-US2014    dvb_gopt_a.out
+GeoOpt    GAMESS      GenericGeoOptTest     basicGAMESS-US2017    dvb_gopt_a.out
 GeoOpt    Gaussian    GaussianGeoOptTest    basicGaussian03       dvb_gopt.out
 GeoOpt    Gaussian    GaussianGeoOptTest    basicGaussian09       dvb_gopt.out
 GeoOpt    Jaguar      GenericGeoOptTest     basicJaguar7.0        dvb_gopt_b.out
@@ -115,7 +124,8 @@ GeoOpt    NWChem      NWChemGeoOptTest      basicNWChem6.5        dvb_gopt_hf.ou
 GeoOpt    NWChem      NWChemGeoOptTest      basicNWChem6.5        dvb_gopt_ks.out
 GeoOpt    ORCA        OrcaGeoOptTest        basicORCA2.9          dvb_gopt.out
 GeoOpt    ORCA        OrcaGeoOptTest        basicORCA3.0          dvb_gopt.out
-GeoOpt    Psi         PsiGeoOptTest         basicPsi4             dvb_gopt_hf.out
+GeoOpt    Psi         PsiGeoOptTest         basicPsi4.0           dvb_gopt_rhf.out
+GeoOpt    Psi         PsiGeoOptTest         basicPsi4.0           dvb_gopt_rks.out
 GeoOpt    QChem       GenericGeoOptTest     basicQChem4.2         dvb_gopt.out
 
 MP        DALTON      GenericMP2Test        basicDALTON-2013      water_mp2.out
@@ -124,7 +134,8 @@ MP        GAMESSUK    GenericMP2Test        basicGAMESS-UK7.0     water_mp2.out
 MP        GAMESSUK    GenericMP3Test        basicGAMESS-UK7.0     water_mp3.out
 MP        GAMESSUK    GenericMP2Test        basicGAMESS-UK8.0     water_mp2.out
 MP        GAMESSUK    GenericMP3Test        basicGAMESS-UK8.0     water_mp3.out
-MP        GAMESS      GenericMP2Test        basicGAMESS-US2012    water_mp2.out
+MP        GAMESS      GenericMP2Test        basicGAMESS-US2014    water_mp2.out
+MP        GAMESS      GenericMP2Test        basicGAMESS-US2017    water_mp2.out
 MP        Gaussian    GaussianMP2Test       basicGaussian03       water_mp2.log
 MP        Gaussian    GaussianMP2Test       basicGaussian09       water_mp2.log
 MP        Gaussian    GaussianMP3Test       basicGaussian03       water_mp3.log
@@ -146,16 +157,27 @@ MP        Molpro      GenericMP4SDTQTest    basicMolpro2006       h2o_mp4.out
 MP        Molpro      GenericMP4SDTQTest    basicMolpro2012       h2o_mp4.out
 MP        NWChem      GenericMP2Test        basicNWChem6.0        water_mp2.out
 MP        NWChem      GenericMP2Test        basicNWChem6.5        water_mp2.out
-MP        Psi         GenericMP2Test        basicPsi4             water_mp2.out
+MP        Psi         GenericMP2Test        basicPsi4.0           water_mp2.out
 MP        QChem       GenericMP2Test        basicQChem4.2         water_mp2.out
 MP        QChem       GenericMP3Test        basicQChem4.2         water_mp3.out
 MP        QChem       QChemMP4SDQTest       basicQChem4.2         water_mp4sdq.out
 MP        QChem       QChemMP4SDTQTest      basicQChem4.2         water_mp4.out
 
-Scan      Gaussian     GaussianScanTest     basicGaussian09       dvb_scan.log
-Scan      ORCA         OrcaScanTest         basicORCA2.9          dvb_scan.out
-Scan      ORCA         OrcaScanTest         basicORCA3.0          dvb_scan.out
-Scan      Jaguar       JaguarScanTest       basicJaguar8.3        dvb_scan.out
+Polar     DALTON      ReferencePolarTest    basicDALTON-2015      Trp_polar_abalnr.out
+Polar     GAMESS      ReferencePolarTest    basicGAMESS-US2017    Trp_polar_tdhf.out
+Polar     Gaussian    ReferencePolarTest    basicGaussian09       Trp_polar.log
+Polar     Molpro      ReferencePolarTest    basicMolpro2012       Trp_polar.out
+Polar     NWChem      ReferencePolarTest    basicNWChem6.5        Trp_polar.out
+Polar     ORCA        ReferencePolarTest    basicORCA3.0          Trp_polar.out
+Polar     QChem       ReferencePolarTest    basicQChem4.2         Trp_polar.out
+
+Scan      Gaussian     GenericScanTest_optdone_bool   basicGaussian09       dvb_scan.log
+Scan      Gaussian     GaussianScanTest               basicGaussian09       dvb_scan.log
+Scan      ORCA         GenericScanTest_optdone_bool   basicORCA2.9          dvb_scan.out
+Scan      ORCA         OrcaScanTest                   basicORCA2.9          dvb_scan.out
+Scan      ORCA         OrcaScanTest                   basicORCA3.0          dvb_scan.out
+Scan      Jaguar       GenericScanTest_optdone_bool   basicJaguar8.3        dvb_scan.out
+Scan      Jaguar       JaguarScanTest                 basicJaguar8.3        dvb_scan.out
 
 SP        ADF         ADFSPTest             basicADF2007.01       dvb_sp_b.adfout
 SP        ADF         ADFSPTest             basicADF2013.01       dvb_sp_b.adfout
@@ -167,7 +189,8 @@ SP        GAMESSUK    GenericSPTest         basicGAMESS-UK7.0     dvb_sp_b.out
 SP        GAMESSUK    GenericSPTest         basicGAMESS-UK8.0     dvb_sp_hf.out
 SP        GAMESSUK    GenericSPTest         basicGAMESS-UK8.0     dvb_sp_ks.out
 SP        GAMESS      GenericSPTest         basicFirefly8.0       dvb_sp.out
-SP        GAMESS      GenericSPTest         basicGAMESS-US2012    dvb_sp.out
+SP        GAMESS      GenericSPTest         basicGAMESS-US2014    dvb_sp.out
+SP        GAMESS      GenericSPTest         basicGAMESS-US2017    dvb_sp.out
 SP        Gaussian    GenericSPTest         basicGaussian03       dvb_sp.out
 SP        Gaussian    GenericSPTest         basicGaussian09       dvb_sp.out
 SP        Jaguar      Jaguar7SPTest         basicJaguar7.0        dvb_sp.out
@@ -179,11 +202,11 @@ SP        NWChem      GenericSPTest         basicNWChem6.0        dvb_sp_hf.out
 SP        NWChem      GenericSPTest         basicNWChem6.0        dvb_sp_ks.out
 SP        NWChem      GenericSPTest         basicNWChem6.5        dvb_sp_hf.out
 SP        NWChem      GenericSPTest         basicNWChem6.5        dvb_sp_ks.out
-SP        ORCA        GenericSPTest         basicORCA2.9          dvb_sp.out
-SP        ORCA        GenericSPTest         basicORCA3.0          dvb_sp.out
+SP        ORCA        OrcaSPTest            basicORCA2.9          dvb_sp.out
+SP        ORCA        OrcaSPTest            basicORCA3.0          dvb_sp.out
 SP        Psi         Psi3SPTest            basicPsi3             dvb_sp_hf.out
-SP        Psi         GenericSPTest         basicPsi4             dvb_sp_hf.out
-SP        Psi         GenericSPTest         basicPsi4             dvb_sp_ks.out
+SP        Psi         GenericSPTest         basicPsi4.0           dvb_sp_rhf.out
+SP        Psi         GenericSPTest         basicPsi4.0           dvb_sp_rks.out
 SP        QChem       GenericSPTest         basicQChem4.2         dvb_sp.out
 
 SPun      ADF         GenericSPunTest       basicADF2007.01       dvb_un_sp.adfout
@@ -195,7 +218,8 @@ SPun      DALTON      GenericROSPTest       basicDALTON-2015      dvb_sp_un_ks.o
 SPun      GAMESSUK    GamessUK70SPunTest    basicGAMESS-UK7.0     dvb_un_sp_b.out
 SPun      GAMESSUK    GamessUK80SPunTest    basicGAMESS-UK8.0     dvb_un_sp_hf.out
 SPun      GAMESSUK    GamessUK80SPunTest    basicGAMESS-UK8.0     dvb_un_sp_ks.out
-SPun      GAMESS      GenericSPunTest       basicGAMESS-US2012    dvb_un_sp.out
+SPun      GAMESS      GenericSPunTest       basicGAMESS-US2014    dvb_un_sp.out
+SPun      GAMESS      GenericSPunTest       basicGAMESS-US2017    dvb_un_sp.out
 SPun      GAMESS      GenericSPunTest       basicFirefly8.0       dvb_un_sp.out
 SPun      Gaussian    GaussianSPunTest      basicGaussian03       dvb_un_sp_b.log
 SPun      Gaussian    GaussianSPunTest      basicGaussian09       dvb_un_sp_b.log
@@ -208,6 +232,9 @@ SPun      NWChem      GenericSPunTest       basicNWChem6.0        dvb_un_sp_ks.o
 SPun      NWChem      GenericSPunTest       basicNWChem6.5        dvb_un_sp_ks.out
 SPun      ORCA        GenericSPunTest       basicORCA2.9          dvb_sp_un.out
 SPun      ORCA        GenericSPunTest       basicORCA3.0          dvb_sp_un.out
+SPun      Psi         GenericROSPTest       basicPsi4.0           dvb_sp_rohf.out
+SPun      Psi         GenericSPunTest       basicPsi4.0           dvb_sp_uhf.out
+SPun      Psi         GenericSPunTest       basicPsi4.0           dvb_sp_uks.out
 SPun      QChem       GenericSPunTest       basicQChem4.2         dvb_sp_un.out
 
 TD        ADF         ADFTDDFTTest          basicADF2007.01       dvb_td.adfout
@@ -216,14 +243,17 @@ TD        DALTON      DALTONTDTest          basicDALTON-2013      dvb_td.out
 TD        DALTON      DALTONTDTest          basicDALTON-2015      dvb_td.out
 TD        GAMESS      GenericTDTest         basicFirefly8.0       dvb_td.out
 TD        GAMESS      GenericTDDFTtrpTest   basicFirefly8.0       dvb_td_trplet.out
-TD        GAMESS      GAMESSUSTDDFTTest     basicGAMESS-US2012    dvb_td.out
-TD        GAMESS      GenericTDDFTtrpTest   basicGAMESS-US2012    dvb_td_trplet.out
+TD        GAMESS      GAMESSUSTDDFTTest     basicGAMESS-US2014    dvb_td.out
+TD        GAMESS      GAMESSUSTDDFTTest     basicGAMESS-US2017    dvb_td.out
+TD        GAMESS      GenericTDDFTtrpTest   basicGAMESS-US2014    dvb_td_trplet.out
+TD        GAMESS      GenericTDDFTtrpTest   basicGAMESS-US2017    dvb_td_trplet.out
 TD        Gaussian    GaussianTDDFTTest     basicGaussian03       dvb_td.out
 TD        Gaussian    GaussianTDDFTTest     basicGaussian09       dvb_td.out
 TD        Jaguar      JaguarTDDFTTest       basicJaguar8.3        dvb_td.out
 TD        ORCA        OrcaTDDFTTest         basicORCA2.9          dvb_td.out
 TD        ORCA        OrcaTDDFTTest         basicORCA3.0          dvb_td.out
-TD        QChem       OrcaTDDFTTest         basicQChem4.2         dvb_td.out
+TD        ORCA        OrcaROCISTest         basicORCA4.0          dvb_rocis.out
+TD        QChem       QChemTDDFTTest        basicQChem4.2         dvb_td.out
 
 TDun      Gaussian    GenericTDunTest       basicGaussian03       CO_TD_delta.log
 TDun      Gaussian    GenericTDunTest       basicGaussian09       CO_TD_delta.log
@@ -235,7 +265,8 @@ vib       DALTON      GenericIRTest         basicDALTON-2015      dvb_ir.out
 vib       GAMESSUK    GenericIRTest         basicGAMESS-UK7.0     dvb_ir.out
 vib       GAMESSUK    GenericIRTest         basicGAMESS-UK8.0     dvb_ir.out
 vib       GAMESS      FireflyIRTest         basicFirefly8.0       dvb_ir.out
-vib       GAMESS      GamessIRTest          basicGAMESS-US2012    dvb_ir.out
+vib       GAMESS      GamessIRTest          basicGAMESS-US2014    dvb_ir.out
+vib       GAMESS      GamessIRTest          basicGAMESS-US2017    dvb_ir.out
 vib       Gaussian    GaussianIRTest        basicGaussian03       dvb_ir.out
 vib       Gaussian    GaussianIRTest        basicGaussian09       dvb_ir.out
 vib       Jaguar      JaguarIRTest          basicJaguar7.0        dvb_ir.out
@@ -244,9 +275,11 @@ vib       Molpro      GenericIRTest         basicMolpro2006       dvb_ir.out    
 vib       Molpro      GenericIRTest         basicMolpro2012       dvb_ir.out            dvb_ir.log
 vib       ORCA        OrcaIRTest            basicORCA2.9          dvb_ir.out
 vib       ORCA        OrcaIRTest            basicORCA3.0          dvb_ir.out
+vib       Psi         GenericIRTest         basicPsi4.0           dvb_ir_rhf.out
 vib       QChem       QChemIRTest           basicQChem4.2         dvb_ir.out
 
-vib       GAMESS      GenericIRimgTest      basicGAMESS-US2012    nh3_ts_ir.out
+vib       GAMESS      GenericIRimgTest      basicGAMESS-US2014    nh3_ts_ir.out
+vib       GAMESS      GenericIRimgTest      basicGAMESS-US2017    nh3_ts_ir.out
 
 vib       DALTON      DALTONRamanTest       basicDALTON-2013      dvb_raman.out
 vib       GAMESSUK    GenericRamanTest      basicGAMESS-UK7.0     dvb_raman.out

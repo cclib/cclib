@@ -1,14 +1,9 @@
 # -*- coding: utf-8 -*-
 #
-# This file is part of cclib (http://cclib.github.io), a library for parsing
-# and interpreting the results of computational chemistry packages.
+# Copyright (c) 2017, the cclib development team
 #
-# Copyright (C) 2006-2014, the cclib development team
-#
-# The library is free software, distributed under the terms of
-# the GNU Lesser General Public version 2.1 or later. You should have
-# received a copy of the license along with cclib. You can also access
-# the full license online at http://www.gnu.org/copyleft/lgpl.html.
+# This file is part of cclib (http://cclib.github.io) and is distributed under
+# the terms of the BSD 3-Clause License.
 
 """Building the density matrix from data parsed by cclib."""
 
@@ -27,20 +22,20 @@ class Density(Method):
 
         # Call the __init__ method of the superclass.
         super(Density, self).__init__(data, progress, loglevel, logname)
-        
+
     def __str__(self):
         """Return a string representation of the object."""
-        return "Density matrix of" % (self.data)
+        return "Density matrix of %s" % (self.data)
 
     def __repr__(self):
         """Return a representation of the object."""
         return 'Density matrix("%s")' % (self.data)
-    
+
     def calculate(self, fupdate=0.05):
         """Calculate the density matrix."""
-    
+
         # Do we have the needed info in the data object?
-        if not hasattr(self.data, "mocoeffs"): 
+        if not hasattr(self.data, "mocoeffs"):
             self.logger.error("Missing mocoeffs")
             return False
         if not hasattr(self.data,"nbasis"):

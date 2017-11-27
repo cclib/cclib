@@ -1,19 +1,15 @@
-# -*- coding: utf-8 -*-
+## -*- coding: utf-8 -*-
 #
-# This file is part of cclib (http://cclib.github.io), a library for parsing
-# and interpreting the results of computational chemistry packages.
+# Copyright (c) 2017, the cclib development team
 #
-# Copyright (C) 2006-2014, the cclib development team
-#
-# The library is free software, distributed under the terms of
-# the GNU Lesser General Public version 2.1 or later. You should have
-# received a copy of the license along with cclib. You can also access
-# the full license online at http://www.gnu.org/copyleft/lgpl.html.
+# This file is part of cclib (http://cclib.github.io) and is distributed under
+# the terms of the BSD 3-Clause License.
 
 """Parser for ADF output files"""
 
 from __future__ import print_function
 
+import itertools
 import re
 
 import numpy
@@ -137,7 +133,7 @@ class ADF(logfileparser.Logfile):
         # else we are sure is is the calculation proper. It would be good to combine
         # this with the previous block, if possible.
         if line[:6] == "Create":
-            while line[:5] != "title":
+            while line[:5] != "title" and "NO TITLE" not in line:
                 line = inputfile.next()
 
         if line[1:10] == "Symmetry:":
@@ -1139,6 +1135,27 @@ class ADF(logfileparser.Logfile):
                 except AssertionError:
                     self.logger.warning('Overwriting previous multipole moments with new values')
                     self.moments = [reference, dipole]
+
+        # Molecular response properties.
+        if line.strip()[1:-1].strip() == "RESPONSE program part":
+
+            while line.strip() != "Normal termination of RESPONSE program part":
+
+                if "THE DIPOLE-DIPOLE POLARIZABILITY TENSOR:" in line:
+                    if not hasattr(self, 'polarizabilities'):
+                        self.polarizabilities = []
+                    polarizability = numpy.empty(shape=(3, 3))
+                    self.skip_lines(inputfile, ['b', 'FREQUENCY', 'coordinates'])
+                    # Ordering of rows/columns is Y, Z, X.
+                    ordering = [1, 2, 0]
+                    indices = list(itertools.product(ordering, ordering))
+                    for i in range(3):
+                        tokens = next(inputfile).split()
+                        for j in range(3):
+                            polarizability[indices[(i*3)+j]] = tokens[j]
+                    self.polarizabilities.append(polarizability)
+
+                line = next(inputfile)
 
 
 if __name__ == "__main__":

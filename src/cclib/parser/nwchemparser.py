@@ -1,14 +1,9 @@
 # -*- coding: utf-8 -*-
 #
-# This file is part of cclib (http://cclib.github.io), a library for parsing
-# and interpreting the results of computational chemistry packages.
+# Copyright (c) 2017, the cclib development team
 #
-# Copyright (C) 2008-2014, the cclib development team
-#
-# The library is free software, distributed under the terms of
-# the GNU Lesser General Public version 2.1 or later. You should have
-# received a copy of the license along with cclib. You can also access
-# the full license online at http://www.gnu.org/copyleft/lgpl.html.
+# This file is part of cclib (http://cclib.github.io) and is distributed under
+# the terms of the BSD 3-Clause License.
 
 """Parser for NWChem output files"""
 
@@ -57,6 +52,10 @@ class NWChem(logfileparser.Logfile):
 
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
+
+        #extract the version number first
+        if "Northwest Computational" in line:
+            self.metadata["package_version"] = line.split()[5]
 
         # This is printed in the input module, so should always be the first coordinates,
         # and contains some basic information we want to parse as well. However, this is not
@@ -225,6 +224,7 @@ class NWChem(logfileparser.Logfile):
                 while line.strip():
                     atomname, desc, shells, funcs, types = line.split()
                     atomelement = self.name2element(atomname)
+                    self.metadata["basis_set"] = desc
 
                     self.shells[atomname] = types
                     atombasis_dict[atomelement] = int(funcs)
@@ -289,11 +289,11 @@ class NWChem(logfileparser.Logfile):
 
                 # These will be present only in the DFT module.
                 if "Convergence on energy requested" in line:
-                    target_energy = float(line.split()[-1].replace('D', 'E'))
+                    target_energy = self.float(line.split()[-1])
                 if "Convergence on density requested" in line:
-                    target_density = float(line.split()[-1].replace('D', 'E'))
+                    target_density = self.float(line.split()[-1])
                 if "Convergence on gradient requested" in line:
-                    target_gradient = float(line.split()[-1].replace('D', 'E'))
+                    target_gradient = self.float(line.split()[-1])
 
                 line = next(inputfile)
 
@@ -302,6 +302,12 @@ class NWChem(logfileparser.Logfile):
                 if not hasattr(self, 'scftargets'):
                     self.scftargets = []
                 self.scftargets.append([target_energy, target_density, target_gradient])
+
+        #DFT functional information
+        if "XC Information" in line:
+            line = next(inputfile)
+            line = next(inputfile)
+            self.metadata["functional"] = line.split()[0]
 
         # If the full overlap matrix is printed, it looks like this:
         #
@@ -372,7 +378,7 @@ class NWChem(logfileparser.Logfile):
                     line = next(inputfile)
                     while line.strip():
                         it, energy, gnorm, gmax, time = line.split()
-                        gnorm = float(gnorm.replace('D', 'E'))
+                        gnorm = self.float(gnorm)
                         values.append([gnorm])
                         try:
                             line = next(inputfile)
@@ -384,11 +390,10 @@ class NWChem(logfileparser.Logfile):
                         self.scfvalues = []
                     self.scfvalues.append(values)
 
-                # this is totally and utterly broken right now
                 try:
                     line = next(inputfile)
                 except StopIteration:
-                    self.logger.warning('blech')
+                    self.logger.warning('File terminated?')
                     break
 
         # The SCF for DFT does not use the same algorithm as Hartree-Fock, but always
@@ -423,9 +428,9 @@ class NWChem(logfileparser.Logfile):
                 # ...
                 if len(line[17:].split()) == 6:
                     iter, energy, deltaE, dens, diis, time = line[17:].split()
-                    val_energy = float(deltaE.replace('D', 'E'))
-                    val_density = float(dens.replace('D', 'E'))
-                    val_gradient = float(diis.replace('D', 'E'))
+                    val_energy = self.float(deltaE)
+                    val_density = self.float(dens)
+                    val_gradient = self.float(diis)
                     values.append([val_energy, val_density, val_gradient])
 
                 try:
@@ -516,6 +521,12 @@ class NWChem(logfileparser.Logfile):
             if not hasattr(self, 'optdone'):
                 self.optdone = []
 
+        # extract the theoretical method
+        if "Total SCF energy" in line:
+            self.metadata["methods"].append("HF")
+        if "Total DFT energy" in line:
+            self.metadata["methods"].append("DFT")
+
         # The line containing the final SCF energy seems to be always identifiable like this.
         if "Total SCF energy" in line or "Total DFT energy" in line:
 
@@ -605,25 +616,27 @@ class NWChem(logfileparser.Logfile):
 
             self.skip_lines(inputfile, ['dashes', 'blank'])
 
+            nvectors = []
+            mooccnos = []
             energies = []
             symmetries = [None]*self.nbasis
             line = next(inputfile)
-            homo = 0
             while line[:7] == " Vector":
 
                 # Note: the vector count starts from 1 in NWChem.
                 nvector = int(line[7:12])
+                nvectors.append(nvector)
 
                 # A nonzero occupancy for SCF jobs means the orbital is occupied.
-                if ("Occ=2.0" in line) or ("Occ=1.0" in line):
-                    homo = nvector-1
+                mooccno = int(self.float(line[18:30]))
+                mooccnos.append(mooccno)
 
                 # If the printout does not start from the first MO, assume None for all previous orbitals.
                 if len(energies) == 0 and nvector > 1:
                     for i in range(1, nvector):
                         energies.append(None)
 
-                energy = float(line[34:47].replace('D', 'E'))
+                energy = self.float(line[34:47])
                 energy = utils.convertor(energy, "hartree", "eV")
                 energies.append(energy)
 
@@ -656,7 +669,20 @@ class NWChem(logfileparser.Logfile):
 
             if not hasattr(self, 'homos') or (len(self.homos) > alphabeta):
                 self.homos = []
-            self.homos.append(homo)
+            nvector_index = mooccnos.index(0) - 1
+            if nvector_index > -1:
+                self.homos.append(nvectors[nvector_index] - 1)
+            else:
+                self.homos.append(-1)
+            # If this was a restricted open-shell calculation, append
+            # to HOMOs twice since only one Molecular Orbital Analysis
+            # section is in the output file.
+            if (not unrestricted) and (1 in mooccnos):
+                nvector_index = mooccnos.index(1) - 1
+                if nvector_index > -1:
+                    self.homos.append(nvectors[nvector_index] - 1)
+                else:
+                    self.homos.append(-1)
 
         # This is where the full MO vectors are printed, but a special directive is needed for it:
         #
@@ -985,18 +1011,43 @@ class NWChem(logfileparser.Logfile):
                     assert self.moments[3] == octupole
 
         if "Total MP2 energy" in line:
+            self.metadata["methods"].append("MP2")
             mpenerg = float(line.split()[-1])
             if not hasattr(self, "mpenergies"):
                 self.mpenergies = []
             self.mpenergies.append([])
             self.mpenergies[-1].append(utils.convertor(mpenerg, "hartree", "eV"))
 
-        if "CCSD(T) total energy / hartree" in line:
+        if "CCSD total energy / hartree" in line or "total CCSD energy:" in line:
+            self.metadata["methods"].append("CCSD")
             ccenerg = float(line.split()[-1])
             if not hasattr(self, "ccenergies"):
                 self.ccenergies = []
             self.ccenergies.append([])
             self.ccenergies[-1].append(utils.convertor(ccenerg, "hartree", "eV"))
+
+        if "CCSD(T) total energy / hartree" in line:
+            self.metadata["methods"].append("CCSD(T)")
+            ccenerg = float(line.split()[-1])
+            if not hasattr(self, "ccenergies"):
+                self.ccenergies = []
+            self.ccenergies.append([])
+            self.ccenergies[-1].append(utils.convertor(ccenerg, "hartree", "eV"))
+
+        # Static and dynamic polarizability.
+        if "Linear Response polarizability / au" in line:
+            if not hasattr(self, "polarizabilities"):
+                self.polarizabilities = []
+            polarizability = []
+            line = next(inputfile)
+            assert line.split()[0] == "Frequency"
+            line = next(inputfile)
+            assert line.split()[0] == "Wavelength"
+            self.skip_lines(inputfile, ['coordinates', 'd'])
+            for _ in range(3):
+                line = next(inputfile)
+                polarizability.append(line.split()[1:])
+            self.polarizabilities.append(numpy.array(polarizability))
 
     def after_parsing(self):
         """NWChem-specific routines for after parsing file.

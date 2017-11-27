@@ -1,12 +1,9 @@
-# This file is part of cclib (http://cclib.github.io), a library for parsing
-# and interpreting the results of computational chemistry packages.
+# -*- coding: utf-8 -*-
 #
-# Copyright (C) 2006,2007,2009,2012-2015, the cclib development team
+# Copyright (c) 2017, the cclib development team
 #
-# The library is free software, distributed under the terms of
-# the GNU Lesser General Public version 2.1 or later. You should have
-# received a copy of the license along with cclib. You can also access
-# the full license online at http://www.gnu.org/copyleft/lgpl.html.
+# This file is part of cclib (http://cclib.github.io) and is distributed under
+# the terms of the BSD 3-Clause License.
 
 """Test geometry optimization logfiles in cclib"""
 
@@ -27,10 +24,10 @@ class GenericGeoOptTest(unittest.TestCase):
 
     # In STO-3G, H has 1, C has 3.
     nbasisdict = {1:1, 6:5}
-    
+
     # Some programs print surplus atom coordinates by default.
     extracoords = 0
-    
+
     # Some programs do surplus SCF cycles by default.
     extrascfs = 0
 
@@ -125,7 +122,7 @@ class GenericGeoOptTest(unittest.TestCase):
         count_coords = len(self.data.atomcoords) - self.extracoords
         msg = "len(atomcoords) is %d but len(geovalues) is %d" % (count_coords, count_geovalues)
         self.assertEquals(count_geovalues, count_coords, msg)
-        
+
     def testgeovalues_scfvalues(self):
         """Are scfvalues consistent with geovalues?"""
         count_scfvalues = len(self.data.scfvalues) - self.extrascfs
@@ -151,12 +148,13 @@ class GenericGeoOptTest(unittest.TestCase):
     @skipForParser("Molpro", "Not implemented.")
     @skipForParser("NWChem", "Not implemented.")
     @skipForParser("ORCA", "Not implemented.")
-    @skipForParser("Psi", "Not implemented.")
     @skipForParser("QChem", "Not implemented.")
     def testoptstatus(self):
         """Is optstatus consistent with geovalues and reasonable?"""
         self.assertEqual(len(self.data.optstatus), len(self.data.geovalues))
         self.assertEqual(self.data.optstatus[0], self.data.OPT_NEW)
+        for i in range(1, len(self.data.optstatus)-1):
+            self.assertEqual(self.data.optstatus[i], self.data.OPT_UNKNOWN)
         self.assertEqual(self.data.optstatus[-1], self.data.OPT_DONE)
 
     def testmoenergies(self):

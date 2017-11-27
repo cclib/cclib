@@ -1,14 +1,9 @@
 # -*- coding: utf-8 -*-
 #
-# This file is part of cclib (http://cclib.github.io), a library for parsing
-# and interpreting the results of computational chemistry packages.
+# Copyright (c) 2017, the cclib development team
 #
-# Copyright (C) 2007-2014, the cclib development team
-#
-# The library is free software, distributed under the terms of
-# the GNU Lesser General Public version 2.1 or later. You should have
-# received a copy of the license along with cclib. You can also access
-# the full license online at http://www.gnu.org/copyleft/lgpl.html.
+# This file is part of cclib (http://cclib.github.io) and is distributed under
+# the terms of the BSD 3-Clause License.
 
 """Parser for Molpro output files"""
 
@@ -270,6 +265,10 @@ class Molpro(logfileparser.Logfile):
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
 
+        # extract the version number first
+        if "Version" in line:
+            self.metadata["package_version"] = line.split()[1]
+
         if line[1:19] == "ATOMIC COORDINATES":
 
             if not hasattr(self, "atomcoords"):
@@ -397,10 +396,15 @@ class Molpro(logfileparser.Logfile):
             nbasis = int(line.split()[3])
             self.set_attribute('nbasis', nbasis)
 
+        # Basis set name
+        if line[1:8] == "Library":
+            self.metadata["basis_set"] = line.split()[4]
+
         # This is used to signalize whether we are inside an SCF calculation.
         if line[1:8] == "PROGRAM" and line[14:18] == "-SCF":
 
             self.insidescf = True
+            self.metadata["methods"].append("HF")
 
         # Use this information instead of 'SETTING ...', in case the defaults are standard.
         # Note that this is sometimes printed in each geometry optimization step.
@@ -486,6 +490,8 @@ class Molpro(logfileparser.Logfile):
         # MP2 energies.
         if line[1:5] == "!MP2":
 
+            self.metadata["methods"].append("MP2")
+
             if not hasattr(self, 'mpenergies'):
                 self.mpenergies = []
             mp2energy = float(line.split()[-1])
@@ -495,6 +501,7 @@ class Molpro(logfileparser.Logfile):
         # MP2 energies if MP3 or MP4 is also calculated.
         if line[1:5] == "MP2:":
 
+            self.metadata["methods"].append("MP2")
             if not hasattr(self, 'mpenergies'):
                 self.mpenergies = []
             mp2energy = float(line.split()[2])
@@ -504,14 +511,17 @@ class Molpro(logfileparser.Logfile):
         # MP3 (D) and MP4 (DQ or SDQ) energies.
         if line[1:8] == "MP3(D):":
 
+            self.metadata["methods"].append("MP3")
             mp3energy = float(line.split()[2])
             mp2energy = utils.convertor(mp3energy, "hartree", "eV")
             line = next(inputfile)
             self.mpenergies[-1].append(mp2energy)
             if line[1:9] == "MP4(DQ):":
+                self.metadata["methods"].append("MP4")
                 mp4energy = float(line.split()[2])
                 line = next(inputfile)
                 if line[1:10] == "MP4(SDQ):":
+                    self.metadata["methods"].append("MP4")
                     mp4energy = float(line.split()[2])
                 mp4energy = utils.convertor(mp4energy, "hartree", "eV")
                 self.mpenergies[-1].append(mp4energy)
@@ -519,6 +529,7 @@ class Molpro(logfileparser.Logfile):
         # The CCSD program operates all closed-shel coupled cluster runs.
         if line[1:15] == "PROGRAM * CCSD":
 
+            self.metadata["methods"].append("CCSD")
             if not hasattr(self, "ccenergies"):
                 self.ccenergies = []
             while line[1:20] != "Program statistics:":
@@ -553,6 +564,17 @@ class Molpro(logfileparser.Logfile):
                 self.moments = [reference, dipole]
             else:
                 self.moments[1] == dipole
+
+        # Static dipole polarizability.
+        if line.strip() == "SCF dipole polarizabilities":
+            if not hasattr(self, "polarizabilities"):
+                self.polarizabilities = []
+            polarizability = []
+            self.skip_lines(inputfile, ['b', 'directions'])
+            for _ in range(3):
+                line = next(inputfile)
+                polarizability.append(line.split()[1:])
+            self.polarizabilities.append(numpy.array(polarizability))
 
         # Check for ELECTRON ORBITALS (canonical molecular orbitals).
         if line[1:18] == "ELECTRON ORBITALS" or self.electronorbitals:

@@ -1,16 +1,26 @@
-The developers of cclib would like the thank the following (in alphabetical order) who have contributed in some way to cclib:
+Developers that have added more than 1K SLOC:
+Eric J. Berquist
+Geoff Hutchison
+Karol M. Langner
+Noel M. O'Boyle
+Sanjeed Schamnad
+Casper Steinmann
+Adam L. Tenderholt
 
+We would like the thank the following who have contributed to cclib:
 Nuno Bandeira -- for bug reporting
 Björn Baumeier -- for bug reporting
 Dermot Brougham -- for bug reporting
+bwang2453 -- for patches and new features
 Avril Coghlan -- for designing the cclib logo
+Ramon Crehuet -- for new features
 Björn Dahlgren -- for bug reporting
 Yafei Dai -- for bug reporting
 Abhishek Dey -- for bug reporting
 Matt Ernst -- for patches
 Clyde Fare -- for bug reporting and patches
 Christos Garoufalis -- for bug reporting
-Sagar Gaur -- for bug fixes
+Sagar Gaur -- for patches
 glideht -- for bug reporting
 Edward Holland -- for patches
 Karen Hemelsoet -- for bug reporting
@@ -21,11 +31,12 @@ Russell Johnson -- for providing CCCBDB (NIST) logfiles
 Jerome Kieffer -- for bug reporting
 Greg Magoon -- for bug reporting and patches
 Scott McKechnie -- for bug reporting
+mkrompiec -- for contributing test files
 mwykes -- for bug reporting and patches
 Alexis Otero-Calvis -- for bug reporting
 Rob Paton -- for creating and running Jaguar test jobs
 Martin Peeks -- for patches
-Felix Plasser -- for bug reporting and contributing files
+Felix Plasser -- for fixes, patches and contributing files
 Martin Rahm -- for bug reporting
 Marius Retegan -- for bug reporting
 Tamilmani S -- for bug reporting
@@ -36,7 +47,7 @@ Tiago Silva -- for bug reporting
 Pavel Solntsev -- for bug reporting
 Ben Stein -- for patches
 Adam Swanson -- for bug reporting
-Joe Townsend -- for giving multiple GAMESS files to test on
+Joe Townsend -- for contributing multiple GAMESS files to test on
 Chengju Wang -- for bug reporting
 Andrew Warden -- for bug reporting
 Samuel Wilson -- for bug reporting

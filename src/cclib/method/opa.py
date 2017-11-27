@@ -1,14 +1,9 @@
 # -*- coding: utf-8 -*-
 #
-# This file is part of cclib (http://cclib.github.io), a library for parsing
-# and interpreting the results of computational chemistry packages.
+# Copyright (c) 2017, the cclib development team
 #
-# Copyright (C) 2006-2014, the cclib development team
-#
-# The library is free software, distributed under the terms of
-# the GNU Lesser General Public version 2.1 or later. You should have
-# received a copy of the license along with cclib. You can also access
-# the full license online at http://www.gnu.org/copyleft/lgpl.html.
+# This file is part of cclib (http://cclib.github.io) and is distributed under
+# the terms of the BSD 3-Clause License.
 
 """Calculation of overlap population analysis based on cclib data."""
 
@@ -28,26 +23,26 @@ def func(x):
 
 class OPA(Method):
     """Overlap population analysis."""
-    
+
     def __init__(self, *args):
 
         # Call the __init__ method of the superclass.
         super(OPA, self).__init__(logname="OPA", *args)
-        
+
     def __str__(self):
         """Return a string representation of the object."""
-        return "OPA of" % (self.data)
+        return "OPA of %s" % (self.data)
 
     def __repr__(self):
         """Return a representation of the object."""
         return 'OPA("%s")' % (self.data)
-    
+
     def calculate(self, indices=None, fupdate=0.05):
         """Perform an overlap population analysis given the results of a parser"""
-    
+
         # Do we have the needed info in the ccData object?
         if not hasattr(self.data, "mocoeffs") \
-          and not ( hasattr(self.data, "aooverlaps") \
+          and not (hasattr(self.data, "aooverlaps") \
                     or hasattr(self.data, "fooverlaps") ) \
           and not hasattr(self.data, "nbasis"):
             self.logger.error("Missing mocoeffs, aooverlaps/fooverlaps or nbasis")
@@ -91,7 +86,7 @@ class OPA(Method):
             beta = len(self.data.mocoeffs[1])
             results.append(numpy.zeros([nfrag, nfrag, beta], "d"))
             nstep *= 2
-            
+
         if hasattr(self.data, "aooverlaps"):
             overlap = self.data.aooverlaps
         elif hasattr(self.data,"fooverlaps"):
@@ -123,7 +118,7 @@ class OPA(Method):
                         ca = self.data.mocoeffs[spin][:,a]
 
                         for b in indices[B]:
-                            
+
                             cb = self.data.mocoeffs[spin][:,b]
                             temp = ca * cb * two *overlap[a,b]
                             results[spin][A,B] = numpy.add(results[spin][A,B],temp)

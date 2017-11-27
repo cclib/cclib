@@ -1,14 +1,9 @@
 # -*- coding: utf-8 -*-
 #
-# This file is part of cclib (http://cclib.github.io), a library for parsing
-# and interpreting the results of computational chemistry packages.
+# Copyright (c) 2017, the cclib development team
 #
-# Copyright (C) 2006-2014, the cclib development team
-#
-# The library is free software, distributed under the terms of
-# the GNU Lesser General Public version 2.1 or later. You should have
-# received a copy of the license along with cclib. You can also access
-# the full license online at http://www.gnu.org/copyleft/lgpl.html.
+# This file is part of cclib (http://cclib.github.io) and is distributed under
+# the terms of the BSD 3-Clause License.
 
 """Parser for Jaguar output files"""
 
@@ -70,6 +65,14 @@ class Jaguar(logfileparser.Logfile):
 
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
+
+        # Extract the version number first
+        if "Jaguar version" in line:
+            self.metadata["package_version"] = line.split()[3][:-1]
+
+        # Extract the basis set name
+        if line[2:12] == "basis set:":
+            self.metadata["basis_set"] = line.split()[2]
 
         # Extract charge and multiplicity
         if line[2:22] == "net molecular charge":
@@ -220,6 +223,7 @@ class Jaguar(logfileparser.Logfile):
 
         # Hartree-Fock energy after SCF
         if line[1:18] == "SCFE: SCF energy:":
+            self.metadata["methods"].append("HF")
             if not hasattr(self, "scfenergies"):
                 self.scfenergies = []
             temp = line.strip().split()
@@ -229,6 +233,7 @@ class Jaguar(logfileparser.Logfile):
 
         # Energy after LMP2 correction
         if line[1:18] == "Total LMP2 Energy":
+            self.metadata["methods"].append("LMP2")
             if not hasattr(self, "mpenergies"):
                 self.mpenergies = [[]]
             lmp2energy = float(line.split()[-1])
