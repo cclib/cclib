@@ -102,7 +102,8 @@ class MOLDENTest(unittest.TestCase):
             # Reformat cclib's output to remove extra spaces.
             cclib_out_formatted = MoldenReformatter(cclib_out).reformat()
             fpath = os.path.join(__testdir__, "data/molden5.7_"+fn+".molden")
-            molden_out = open(fpath).read()
+            with open(fpath) as handle:
+                molden_out = handle.read()
             # Reformat Molden's output to remove extra spaces,
             # and fix number formatting.
             molden_out_formatted = MoldenReformatter(molden_out).reformat()
