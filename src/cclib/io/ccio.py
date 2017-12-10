@@ -10,12 +10,12 @@
 
 from __future__ import print_function
 
+import atexit
 import io
 import os
 import sys
 import re
 from tempfile import NamedTemporaryFile
-import atexit
 
 # Python 2->3 changes the default file object hierarchy.
 if sys.version_info[0] == 2:
@@ -23,11 +23,11 @@ if sys.version_info[0] == 2:
 
     from urllib2 import urlopen, URLError
 else:
-    import io
     fileclass = io.IOBase
 
     from urllib.request import urlopen
     from urllib.error import URLError
+
 
 from cclib.parser import logfileparser
 from cclib.parser import data
@@ -48,9 +48,10 @@ from cclib.parser.qchemparser import QChem
 from cclib.io import cjsonreader
 from cclib.io import cjsonwriter
 from cclib.io import cmlwriter
-from cclib.io import xyzwriter
 from cclib.io import moldenwriter
 from cclib.io import wfxwriter
+from cclib.io import xyzreader
+from cclib.io import xyzwriter
 
 try:
     from cclib.bridge import cclib2openbabel
@@ -102,13 +103,19 @@ triggers = [
 
 ]
 
-outputclasses = {
+readerclasses = {
+    'cjson': cjsonreader.CJSON,
+    'json': cjsonreader.CJSON,
+    'xyz': xyzreader.XYZ,
+}
+
+writerclasses = {
     'cjson': cjsonwriter.CJSON,
     'json': cjsonwriter.CJSON,
     'cml': cmlwriter.CML,
-    'xyz': xyzwriter.XYZ,
     'molden': moldenwriter.MOLDEN,
-    'wfx': wfxwriter.WFXWriter
+    'wfx': wfxwriter.WFXWriter,
+    'xyz': xyzwriter.XYZ,
 }
 
 
@@ -131,44 +138,13 @@ def guess_filetype(inputfile):
     return filetype
 
 
-def ccread(source, *args, **kargs):
-    """Attempt to open and read computational chemistry data from a file.
-
-    If the file is not appropriate for cclib parsers, a fallback mechanism
-    will try to recognize some common chemistry formats and read those using
-    the appropriate bridge such as OpenBabel.
-
-    Inputs:
-        source - a single logfile, a list of logfiles (for a single job),
-                 an input stream, or an URL pointing to a log file.
-        *args, **kargs - arguments and keyword arguments passed to ccopen
-    Returns:
-        a ccData object containing cclib data attributes
-    """
-
-    log = ccopen(source, *args, **kargs)
-    if log:
-        if kargs.get('verbose', None):
-            print('Identified logfile to be in %s format' % log.logname)
-        # If the input file is a CJSON file and not a standard compchemlog file
-        cjson_as_input = kargs.get("cjson", False)
-        if cjson_as_input:
-            return log.read_cjson()
-        else:
-            return log.parse()
-    else:
-        if kargs.get('verbose', None):
-            print('Attempting to use fallback mechanism to read file')
-        return fallback(source)
-
-
-def ccopen(source, *args, **kargs):
+def ccopen(source, *args, **kwargs):
     """Guess the identity of a particular log file and return an instance of it.
 
     Inputs:
         source - a single logfile, a list of logfiles (for a single job),
                  an input stream, or an URL pointing to a log file.
-        *args, **kargs - arguments and keyword arguments passed to filetype
+        *args, **kwargs - arguments and keyword arguments passed to filetype
 
     Returns:
       one of ADF, DALTON, GAMESS, GAMESS UK, Gaussian, Jaguar, Molpro, MOPAC,
@@ -203,7 +179,7 @@ def ccopen(source, *args, **kargs):
                         # Delete temporary file when the program finishes
                         atexit.register(os.remove, tfile.name)
                     except (ValueError, URLError) as error:
-                        if not kargs.get('quiet', False):
+                        if not kwargs.get('quiet', False):
                             (errno, strerror) = error.args
                         return None
             source = filelist
@@ -212,7 +188,7 @@ def ccopen(source, *args, **kargs):
             try:
                 inputfile = logfileparser.openlogfile(source)
             except IOError as error:
-                if not kargs.get('quiet', False):
+                if not kwargs.get('quiet', False):
                     (errno, strerror) = error.args
                 return None
         else:
@@ -226,7 +202,7 @@ def ccopen(source, *args, **kargs):
 
                 inputfile = logfileparser.openlogfile(filename, object=response.read())
             except (ValueError, URLError) as error:
-                if not kargs.get('quiet', False):
+                if not kwargs.get('quiet', False):
                     (errno, strerror) = error.args
                 return None
 
@@ -255,12 +231,16 @@ def ccopen(source, *args, **kargs):
     # Proceed to return an instance of the logfile parser only if the filetype
     # could be guessed. Need to make sure the input file is closed before creating
     # an instance, because parsers will handle opening/closing on their own.
-    # If the input file is a CJSON file and not a standard compchemlog file, don't
-    # guess the file.
-    if kargs.get("cjson", False):
-        filetype = cjsonreader.CJSON
-    else:
-        filetype = guess_filetype(inputfile)
+    filetype = guess_filetype(inputfile)
+    # If the input file isn't a standard compchem log file, try one of
+    # the readers, falling back to Open Babel.
+    if not filetype:
+        # TODO Replace with check for all implemented readers.
+        if kwargs.get("cjson", False):
+            filetype = cjsonreader.CJSON
+        # Fall back.
+        else:
+            filetype = None
 
     # Proceed to return an instance of the logfile parser only if the filetype
     # could be guessed. Need to make sure the input file is closed before creating
@@ -276,24 +256,57 @@ def ccopen(source, *args, **kargs):
             inputfile.seek(0, 0)
         if not is_stream:
             inputfile.close()
-            return filetype(source, *args, **kargs)
-        return filetype(inputfile, *args, **kargs)
+            return filetype(source, *args, **kwargs)
+        return filetype(inputfile, *args, **kwargs)
 
 
 def fallback(source):
     """Attempt to read standard molecular formats using other libraries.
 
-    Currently this will read XYZ files with OpenBabel, but this can easily
-    be extended to other formats and libraries, too.
+    Currently this will read files with Open Babel, but this can
+    easily be extended to other formats and libraries, too.
     """
 
     if isinstance(source, str):
         ext = os.path.splitext(source)[1][1:].lower()
         if _has_cclib2openbabel:
-            if ext in ('xyz', ):
+            import pybel as pb
+            if ext in pb.informats:
                 return cclib2openbabel.readfile(source, ext)
         else:
             print("Could not import openbabel, fallback mechanism might not work.")
+
+
+def ccread(source, *args, **kwargs):
+    """Attempt to open and read computational chemistry data from a file.
+
+    If the file is not appropriate for cclib parsers, a fallback mechanism
+    will try to recognize some common chemistry formats and read those using
+    the appropriate bridge such as OpenBabel.
+
+    Inputs:
+        source - a single logfile, a list of logfiles (for a single job),
+                 an input stream, or an URL pointing to a log file.
+        *args, **kwargs - arguments and keyword arguments passed to ccopen
+    Returns:
+        a ccData object containing cclib data attributes
+    """
+
+    log = ccopen(source, *args, **kwargs)
+    if log:
+        if kwargs.get('verbose', None):
+            print('Identified logfile to be in %s format' % log.logname)
+        # If the input file is a CJSON file and not a standard compchemlog file
+        cjson_as_input = kwargs.get("cjson", False)
+        if cjson_as_input:
+            # TODO
+            return log.read()
+        else:
+            return log.parse()
+    else:
+        if kwargs.get('verbose', None):
+            print('Attempting to use fallback mechanism to read file')
+        return fallback(source)
 
 
 def ccwrite(ccobj, outputtype=None, outputdest=None,
@@ -333,7 +346,7 @@ def ccwrite(ccobj, outputtype=None, outputdest=None,
 
     # If the logfile name has been passed in through kwargs (such as
     # in the ccwrite script), make sure it has precedence.
-    if 'jobfilename' in kwargs.keys():
+    if 'jobfilename' in kwargs:
         jobfilename = kwargs['jobfilename']
         # Avoid passing multiple times into the main call.
         del kwargs['jobfilename']
@@ -381,8 +394,8 @@ def _determine_output_format(outputtype, outputdest):
     # First check outputtype.
     if isinstance(outputtype, str):
         extension = outputtype.lower()
-        if extension in outputclasses:
-            outputclass = outputclasses[extension]
+        if extension in writerclasses:
+            outputclass = writerclasses[extension]
         else:
             raise UnknownOutputFormatError(extension)
     else:
@@ -393,8 +406,8 @@ def _determine_output_format(outputtype, outputdest):
             extension = os.path.splitext(outputdest.name)[1].lower()
         else:
             raise UnknownOutputFormatError
-        if extension in outputclasses:
-            outputclass = outputclasses[extension]
+        if extension in writerclasses:
+            outputclass = writerclasses[extension]
         else:
             raise UnknownOutputFormatError(extension)
 

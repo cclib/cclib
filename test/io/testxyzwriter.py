@@ -21,7 +21,7 @@ __datadir__ = os.path.join(__filepath__, "..", "..")
 class XYZTest(unittest.TestCase):
 
     def setUp(self):
-        self.XYZ = cclib.io.XYZ
+        self.XYZ = cclib.io.XYZWriter
 
     def test_init(self):
         """Does the class initialize correctly?"""

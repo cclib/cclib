@@ -42,8 +42,8 @@ class CJSONReaderTest(unittest.TestCase):
         with tempfile.NamedTemporaryFile(mode='w') as fp:
             fp.write(cjson_data)
             fp.flush()
-            cjson_Reader = cclib.io.cjsonreader.CJSON(fp.name)
-            read_cjson_data = cjson_Reader.read_cjson()
+            cjson_reader = cclib.io.cjsonreader.CJSON(fp.name)
+            read_cjson_data = cjson_reader.read()
         self.assertIsNotNone(read_cjson_data, "The CJSON reader failed to read attributes")
 
         # The attribute values read by the CJSON reader will be a subset of the total attributes
