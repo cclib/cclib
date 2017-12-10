@@ -33,33 +33,44 @@ class XYZ(filereader.Reader):
         # 3. line of at least 4 columns: 1 is atomic symbol (str), 2-4 are atomic coordinates (float)
         #    repeat for numver of atoms
         # (4. optional blank line)
-        # repeat for multiple sets of coordinates (TODO)
+        # repeat for multiple sets of coordinates
 
-        line = next(it)
-        if line.strip() == '':
-            line = next(it)
-        tokens = line.split()
-        assert len(tokens) >= 1
-        natom = int(tokens[0])
+        all_atomcoords = []
 
-        comment = next(it)
+        while True:
 
-        lines = []
-        for line in it:
-            tokens = line.split()
-            assert len(tokens) >= 4
-            lines.append(tokens)
-        assert len(lines) == natom
+            try:
 
-        atomsyms = [line[0] for line in lines]
-        atomnos = [self.pt.number[atomsym] for atomsym in atomsyms]
-        atomcoords = [line[1:4] for line in lines]
-        # Everything beyond the fourth column is ignored.
+                line = next(it)
+                if line.strip() == '':
+                    line = next(it)
+                tokens = line.split()
+                assert len(tokens) >= 1
+                natom = int(tokens[0])
+
+                comment = next(it)
+
+                lines = []
+                for _ in range(natom):
+                    line = next(it)
+                    tokens = line.split()
+                    assert len(tokens) >= 4
+                    lines.append(tokens)
+                assert len(lines) == natom
+
+                atomsyms = [line[0] for line in lines]
+                atomnos = [self.pt.number[atomsym] for atomsym in atomsyms]
+                atomcoords = [line[1:4] for line in lines]
+                # Everything beyond the fourth column is ignored.
+                all_atomcoords.append(atomcoords)
+
+            except StopIteration:
+                break
 
         attributes = {
             'natom': natom,
             'atomnos': atomnos,
-            'atomcoords': [atomcoords],
+            'atomcoords': all_atomcoords,
         }
 
         data = ccData(attributes)
