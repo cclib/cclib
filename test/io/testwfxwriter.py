@@ -5,7 +5,7 @@
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
 
-"""Unit tests for writer WFXwriter module."""
+"""Unit tests for wfx writer."""
 
 import os
 import unittest

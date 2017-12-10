@@ -34,7 +34,11 @@ class Reader(object):
 
         return None
 
-    def generate_repr(self, contents):
-        """Convert the raw contents of the source into the internal representation."""
+    def generate_repr(self):
+        """Convert the raw contents of the source into the internal representation.
 
-        raise NotImplementedError('generate_repr() should be implemented in subclasses.')
+        This should be overriden by all the subclasses inheriting from
+        Reader.
+        """
+        raise NotImplementedError(
+            'generate_repr is not implemented for ' + str(type(self)))

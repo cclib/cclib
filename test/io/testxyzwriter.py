@@ -5,7 +5,7 @@
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
 
-"""Unit tests for writer xyzwriter module."""
+"""Unit tests for XYZ writer."""
 
 import os
 import unittest
@@ -18,15 +18,12 @@ __filepath__ = os.path.realpath(__filedir__)
 __datadir__ = os.path.join(__filepath__, "..", "..")
 
 
-class XYZTest(unittest.TestCase):
-
-    def setUp(self):
-        self.XYZ = cclib.io.XYZWriter
+class XYZWriterTest(unittest.TestCase):
 
     def test_init(self):
         """Does the class initialize correctly?"""
         fpath = os.path.join(__datadir__, "data/ADF/basicADF2007.01/dvb_gopt.adfout")
-        data = cclib.io.ccopen(fpath).parse()
+        data = cclib.io.ccread(fpath)
         xyz = cclib.io.xyzwriter.XYZ(data)
 
         # The object should keep the ccData instance passed to its constructor.
