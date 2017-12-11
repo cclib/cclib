@@ -119,5 +119,6 @@ class CSPA(Population):
 
 
 if __name__ == "__main__":
-    import doctest, cspa
+    import doctest
+    from . import cspa
     doctest.testmod(cspa, verbose=False)

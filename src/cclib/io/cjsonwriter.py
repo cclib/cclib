@@ -18,7 +18,7 @@ import json
 import numpy as np
 
 from . import filewriter
-from cclib.parser.data import ccData
+from ..parser.data import ccData
 
 class CJSON(filewriter.Writer):
     """A writer for chemical JSON (CJSON) files."""

@@ -1159,5 +1159,6 @@ class ADF(logfileparser.Logfile):
 
 
 if __name__ == "__main__":
-    import doctest, adfparser
+    import doctest
+    from . import adfparser
     doctest.testmod(adfparser, verbose=False)

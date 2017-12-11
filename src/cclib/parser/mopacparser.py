@@ -233,7 +233,9 @@ class MOPAC(logfileparser.Logfile):
 
 
 if __name__ == "__main__":
-    import doctest, mopacparser, sys
+    import doctest
+    import sys
+    from . import mopacparser
 
     if len(sys.argv) == 1:
         doctest.testmod(mopacparser, verbose=False)

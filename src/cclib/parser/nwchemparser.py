@@ -1116,5 +1116,6 @@ class NWChem(logfileparser.Logfile):
 
 
 if __name__ == "__main__":
-    import doctest, nwchemparser
+    import doctest
+    from . import nwchemparser
     doctest.testmod(nwchemparser, verbose=False)

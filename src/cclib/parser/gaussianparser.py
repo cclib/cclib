@@ -1798,7 +1798,9 @@ class Gaussian(logfileparser.Logfile):
 
 
 if __name__ == "__main__":
-    import doctest, gaussianparser, sys
+    import doctest
+    import sys
+    from . import gaussianparser
 
     if len(sys.argv) == 1:
         doctest.testmod(gaussianparser, verbose=False)
