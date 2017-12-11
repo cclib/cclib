@@ -286,7 +286,7 @@ class ccData(object):
                 args = (attr, type(val), self._attributes[attr].type)
                 raise TypeError("attribute %s is %s instead of %s and could not be converted" % args)
 
-    def write(self, filename=None, *args, **kwargs):
+    def write(self, filename=None, indices=None, *args, **kwargs):
         """Write parsed attributes to a file.
 
         Possible extensions:
@@ -296,20 +296,24 @@ class ccData(object):
         """
 
         from ..io import ccwrite
-        outputstr = ccwrite(self, outputdest=filename, *args, **kwargs)
+        outputstr = ccwrite(self, outputdest=filename, indices=indices,
+                            *args, **kwargs)
         return outputstr
 
-    def writejson(self, filename=None):
+    def writejson(self, filename=None, indices=None):
         """Write parsed attributes to a JSON file."""
-        return self.write(filename=filename, outputtype='cjson')
+        return self.write(filename=filename, indices=indices,
+                          outputtype='cjson')
 
-    def writecml(self, filename=None):
+    def writecml(self, filename=None, indices=None):
         """Write parsed attributes to a CML file."""
-        return self.write(filename=filename, outputtype='cml')
+        return self.write(filename=filename, indices=indices,
+                          outputtype='cml')
 
-    def writexyz(self, filename=None):
+    def writexyz(self, filename=None, indices=None):
         """Write parsed attributes to an XML file."""
-        return self.write(filename=filename, outputtype='xyz')
+        return self.write(filename=filename, indices=indices,
+                          outputtype='xyz')
 
     @property
     def converged_geometries(self):

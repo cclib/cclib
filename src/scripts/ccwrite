@@ -41,6 +41,11 @@ def main():
                         action='store_true',
                         help='use experimental features (currently optdone_as_list)')
 
+    parser.add_argument('-i', '--index'
+                        type=int,
+                        default=None,
+                        help='optional zero-based index for which structure to extract')
+
     args = parser.parse_args()
 
     outputtype = args.outputtype
@@ -48,7 +53,7 @@ def main():
     verbose = args.verbose
     terse = args.terse
     future = args.future
-
+    index = args.index
 
     for filename in filenames:
 
@@ -80,10 +85,16 @@ def main():
         ccwrite_kwargs = dict()
         if future:
             ccwrite_kwargs['future'] = True
+        # For XYZ files, write the last geometry unless otherwise
+        # specified.
+        if not index:
+            index = -1
         ccwrite_kwargs['jobfilename'] = filename
 
-        # The argument terse presently is only applicable to CJSON/JSON formats
-        ccwrite(data, outputtype, outputdest, terse, **ccwrite_kwargs)
+        # The argument terse presently is only applicable to
+        # CJSON/JSON formats
+        ccwrite(data, outputtype, outputdest, terse, indices=index,
+                **ccwrite_kwargs)
 
 
 if __name__ == "__main__":

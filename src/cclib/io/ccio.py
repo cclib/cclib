@@ -296,7 +296,8 @@ def fallback(source):
             print("Could not import openbabel, fallback mechanism might not work.")
 
 
-def ccwrite(ccobj, outputtype=None, outputdest=None, terse=False , returnstr=False,
+def ccwrite(ccobj, outputtype=None, outputdest=None,
+            indices=None, terse=False , returnstr=False,
             *args, **kwargs):
     """Write the parsed data from an outputfile to a standard chemical
     representation.
@@ -305,6 +306,7 @@ def ccwrite(ccobj, outputtype=None, outputdest=None, terse=False , returnstr=Fal
         ccobj - Either a job (from ccopen) or a data (from job.parse()) object
         outputtype - The output format (should be a string)
         outputdest - A filename or file object for writing
+        indices - One or more indices for extracting specific geometries/etc. (zero-based)
         terse -  This option is currently limited to the cjson/json format. Whether to indent the cjson/json or not
         returnstr - Whether or not to return a string representation.
 
@@ -336,7 +338,9 @@ def ccwrite(ccobj, outputtype=None, outputdest=None, terse=False , returnstr=Fal
         # Avoid passing multiple times into the main call.
         del kwargs['jobfilename']
 
-    outputobj = outputclass(ccdata, jobfilename=jobfilename, terse=terse, *args, **kwargs)
+    outputobj = outputclass(ccdata, jobfilename=jobfilename,
+                            indices=indices, terse=terse,
+                            *args, **kwargs)
     output = outputobj.generate_repr()
 
     # If outputdest isn't None, write the output to disk.
