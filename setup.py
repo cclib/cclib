@@ -14,7 +14,7 @@ algorithms in a package-independent manner.
 
 from __future__ import with_statement
 from __future__ import absolute_import
-from setuptools import setup, find_packages
+import setuptools
 from io import open  # pylint:disable=redefined-builtin
 
 
@@ -41,7 +41,7 @@ def setup_cclib():
 
     doclines = __doc__.split("\n")
 
-    setup(
+    setuptools.setup(
         name="cclib",
         version="1.5.2",
         url="http://cclib.github.io/",
@@ -54,7 +54,7 @@ def setup_cclib():
         long_description="\n".join(doclines[2:]),
         classifiers=classifiers.split("\n"),
         platforms=["Any."],
-        packages=find_packages('src'),
+        packages=setuptools.find_packages('src'),
         package_dir={'': 'src'},
         scripts=["src/scripts/ccget", "src/scripts/ccwrite", "src/scripts/cda"]
     )
