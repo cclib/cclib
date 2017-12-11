@@ -11,8 +11,8 @@
 import numpy
 from collections import namedtuple
 
-from cclib.method import Electrons
-from cclib.method import orbitals
+from ..method import Electrons
+from ..method import orbitals
 
 
 Attribute = namedtuple('Attribute', ['type', 'jsonKey', 'attributePath'])

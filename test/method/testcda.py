@@ -17,7 +17,8 @@ import unittest
 import numpy
 
 sys.path.append("..")
-from test_data import getdatafile
+
+from ..test_data import getdatafile
 from cclib.method import CDA
 from cclib.parser import Gaussian
 

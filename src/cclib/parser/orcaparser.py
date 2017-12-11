@@ -1163,7 +1163,8 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
 
 if __name__ == "__main__":
     import sys
-    import doctest, orcaparser
+    import doctest
+    from . import orcaparser
 
     if len(sys.argv) == 1:
         doctest.testmod(orcaparser, verbose=False)

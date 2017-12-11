@@ -1394,7 +1394,8 @@ class QChem(logfileparser.Logfile):
 
 if __name__ == '__main__':
     import sys
-    import doctest, qchemparser
+    import doctest
+    from . import qchemparser
 
     if len(sys.argv) == 1:
         doctest.testmod(qchemparser, verbose=False)

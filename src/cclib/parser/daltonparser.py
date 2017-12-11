@@ -1207,7 +1207,10 @@ class DALTON(logfileparser.Logfile):
 
 
 if __name__ == "__main__":
-    import doctest, daltonparser, sys
+    import doctest
+    import sys
+    from . import daltonparser
+
     if len(sys.argv) == 1:
         doctest.testmod(daltonparser, verbose=False)
 

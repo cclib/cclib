@@ -140,5 +140,6 @@ class LPA(Population):
 
 
 if __name__ == "__main__":
-    import doctest, lpa
+    import doctest
+    from . import lpa
     doctest.testmod(lpa, verbose=False)

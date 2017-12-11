@@ -55,5 +55,6 @@ class Orbitals(Method):
 
 
 if __name__ == "__main__":
-    import doctest, orbitals
+    import doctest
+    from . import orbitals
     doctest.testmod(orbitals, verbose=False)

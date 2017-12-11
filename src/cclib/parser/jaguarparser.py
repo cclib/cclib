@@ -710,5 +710,6 @@ class Jaguar(logfileparser.Logfile):
 
 
 if __name__ == "__main__":
-    import doctest, jaguarparser
+    import doctest
+    from . import jaguarparser
     doctest.testmod(jaguarparser, verbose=False)

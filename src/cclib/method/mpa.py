@@ -132,5 +132,6 @@ class MPA(Population):
 
 
 if __name__ == "__main__":
-    import doctest, mpa
+    import doctest
+    from . import mpa
     doctest.testmod(mpa, verbose=False)

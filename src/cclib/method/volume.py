@@ -14,7 +14,7 @@ import numpy
 
 try:
     from PyQuante.CGBF import CGBF
-    from cclib.bridge import cclib2pyquante
+    from ..bridge import cclib2pyquante
     module_pyq = True
 except:
     module_pyq = False
@@ -26,7 +26,7 @@ try:
 except:
     module_pyvtk = False
 
-from cclib.parser.utils import convertor
+from ..parser.utils import convertor
 
 
 class Volume(object):
@@ -235,7 +235,7 @@ def electrondensity(coords, mocoeffslist, gbasis, volume):
     return density
 
 
-if __name__=="__main__":
+if __name__ == "__main__":
 
     try:
         import psyco
@@ -243,7 +243,7 @@ if __name__=="__main__":
     except ImportError:
         pass
 
-    from cclib.io import ccopen
+    from ..io import ccopen
     import logging
     a = ccopen("../../../data/Gaussian/basicGaussian03/dvb_sp_basis.log")
     a.logger.setLevel(logging.ERROR)
