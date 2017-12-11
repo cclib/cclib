@@ -75,7 +75,7 @@ class FileWrapperTest(unittest.TestCase):
         get_attributes = lambda data: [a for a in data._attrlist if hasattr(data, a)]
         for lf in logfiles:
             path = "%s/%s" % (__datadir__, lf)
-            expected_attributes = get_attributes(cclib.io.ccopen(path).parse())
+            expected_attributes = get_attributes(cclib.io.ccread(path))
             with open(path) as handle:
                 contents = handle.read()
             # This is fix strings not being unicode in Python2.
@@ -84,7 +84,7 @@ class FileWrapperTest(unittest.TestCase):
             except TypeError:
                 stdin = io.StringIO(unicode(contents))
             stdin.seek = sys.stdin.seek
-            data = cclib.io.ccopen(stdin).parse()
+            data = cclib.io.ccread(stdin)
             self.assertEqual(get_attributes(data), expected_attributes)
 
 
