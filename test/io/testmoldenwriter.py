@@ -28,7 +28,7 @@ class MOLDENTest(unittest.TestCase):
                              "data/GAMESS/basicGAMESS-US2014/dvb_un_sp.out")
         required_attrs = ['atomcoords', 'atomnos', 'natom']
         for attr in required_attrs:
-            data = cclib.io.ccopen(fpath).parse()
+            data = cclib.io.ccread(fpath)
             delattr(data, attr)
 
             # Molden files cannot be wriiten if required attrs are missing.
@@ -39,7 +39,7 @@ class MOLDENTest(unittest.TestCase):
         """Check if size of Atoms section is equal to expected."""
         fpath = os.path.join(__datadir__,
                              "data/GAMESS/basicGAMESS-US2014/dvb_un_sp.out")
-        data = cclib.io.ccopen(fpath).parse()
+        data = cclib.io.ccread(fpath)
         writer = cclib.io.moldenwriter.MOLDEN(data)
         # Check size of Atoms section.
         self.assertEqual(len(writer._coords_from_ccdata(-1)), data.natom)
@@ -48,7 +48,7 @@ class MOLDENTest(unittest.TestCase):
         """Check if size of GTO section is equal to expected."""
         fpath = os.path.join(__datadir__,
                              "data/GAMESS/basicGAMESS-US2014/dvb_un_sp.out")
-        data = cclib.io.ccopen(fpath).parse()
+        data = cclib.io.ccread(fpath)
         writer = cclib.io.moldenwriter.MOLDEN(data)
         # Check size of GTO section.
         size_gto_ccdata = 0
@@ -64,7 +64,7 @@ class MOLDENTest(unittest.TestCase):
         """Check if size of MO section is equal to expected."""
         fpath = os.path.join(__datadir__,
                              "data/GAMESS/basicGAMESS-US2014/dvb_un_sp.out")
-        data = cclib.io.ccopen(fpath).parse()
+        data = cclib.io.ccread(fpath)
         writer = cclib.io.moldenwriter.MOLDEN(data)
         # Check size of MO section.
         size_mo_ccdata = 0
@@ -97,7 +97,7 @@ class MOLDENTest(unittest.TestCase):
         for fn in filenames:
             fpath = os.path.join(__datadir__,
                                  "data/GAMESS/basicGAMESS-US2014/"+fn+".out")
-            data = cclib.io.ccopen(fpath).parse()
+            data = cclib.io.ccread(fpath)
             cclib_out = cclib.io.moldenwriter.MOLDEN(data).generate_repr()
             # Reformat cclib's output to remove extra spaces.
             cclib_out_formatted = MoldenReformatter(cclib_out).reformat()

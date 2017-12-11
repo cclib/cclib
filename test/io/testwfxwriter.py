@@ -31,7 +31,7 @@ class WFXTest(unittest.TestCase):
         required_attrs = ('atomcoords', 'atomnos', 'gbasis', 'charge',
                           'homos', 'mult', 'mocoeffs')
         for attr in required_attrs:
-            data = cclib.io.ccopen(fpath).parse()
+            data = cclib.io.ccread(fpath)
             delattr(data, attr)
 
             # WFX files cannot be written if required attrs are missing.
@@ -47,7 +47,7 @@ class WFXTest(unittest.TestCase):
         filepaths = [os.path.join(gamessdir, fn) for fn in filenames]
 
         for fpath in filepaths:
-            data = cclib.io.ccopen(fpath).parse()
+            data = cclib.io.ccread(fpath)
             wfx = cclib.io.wfxwriter.WFXWriter(data)
 
             no_prims_writer = wfx._no_of_prims()
@@ -63,7 +63,7 @@ class WFXTest(unittest.TestCase):
         """Check if MO section is printed correctly."""
         fpath = os.path.join(__datadir__,
                              "data/GAMESS/basicGAMESS-US2017/C_bigbasis.out")
-        data = cclib.io.ccopen(fpath).parse()
+        data = cclib.io.ccread(fpath)
         wfx = cclib.io.wfxwriter.WFXWriter(data)
 
         normalized_mocoeffs = wfx._normalized_mocoeffs()
@@ -77,7 +77,7 @@ class WFXTest(unittest.TestCase):
         """Check if MOs are normalized as expected."""
         fpath = os.path.join(__datadir__,
                              "data/GAMESS/basicGAMESS-US2017/dvb_sp.out")
-        data = cclib.io.ccopen(fpath).parse()
+        data = cclib.io.ccread(fpath)
         wfx = cclib.io.wfxwriter.WFXWriter(data)
 
         normalized_mocoeffs_wfx = wfx._normalized_mocoeffs()
@@ -122,14 +122,14 @@ class WFXTest(unittest.TestCase):
             'Firefly': "data/GAMESS/basicFirefly8.0/dvb_sp.out",
         }
         fpath_ref = os.path.join(__datadir__, ref_file)
-        data_ref = cclib.io.ccopen(fpath_ref).parse()
+        data_ref = cclib.io.ccread(fpath_ref)
         wfx_ref = cclib.io.wfxwriter.WFXWriter(data_ref)
         norm_mat_ref = wfx_ref._norm_mat()[0]
         mos_ref = wfx_ref._no_of_mos()
 
         for name in programs:
             fpath_prog = os.path.join(__datadir__, programs[name])
-            data_prog = cclib.io.ccopen(fpath_prog).parse()
+            data_prog = cclib.io.ccread(fpath_prog)
             wfx_prog = cclib.io.wfxwriter.WFXWriter(data_prog)
 
             norm_mat_prog = wfx_prog._norm_mat()[0]
