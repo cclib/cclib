@@ -11,13 +11,13 @@ from __future__ import print_function
 
 import unittest
 
-import test_data
+from . import test_data
 
-from test_bridge import *
-from test_io import *
-from test_method import *
-from test_parser import *
-from test_utils import *
+from .test_bridge import *
+from .test_io import *
+from .test_method import *
+from .test_parser import *
+from .test_utils import *
 
 
 if __name__ == "__main__":

@@ -12,7 +12,7 @@ except ImportError:
     # Fail silently for now.
     pass
 
-from cclib.parser.utils import PeriodicTable
+from ..parser.utils import PeriodicTable
 
 
 def makebiopython(atomcoords, atomnos):

@@ -884,5 +884,6 @@ class Molpro(logfileparser.Logfile):
 
 
 if __name__ == "__main__":
-    import doctest, molproparser
+    import doctest
+    from . import molproparser
     doctest.testmod(molproparser, verbose=False)

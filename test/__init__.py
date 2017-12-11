@@ -7,4 +7,4 @@
 
 """Unit tests and parser data tests for cclib."""
 
-from data import *
+from .data import *

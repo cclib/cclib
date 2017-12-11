@@ -11,7 +11,8 @@ import sys
 import unittest
 
 sys.path.append("bridge")
-from testopenbabel import *
+
+from .bridge.testopenbabel import *
 
 
 if __name__ == "__main__":

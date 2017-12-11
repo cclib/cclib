@@ -37,7 +37,8 @@ module_names = [
     "MP", "CC", "CI", "TD", "TDun",             # Post-SCF calculations.
     "vib", "Polar", "Scan",                     # Other property calculations.
 ]
-all_modules = {tn: importlib.import_module('data.test' + tn) for tn in module_names}
+all_modules = {tn: importlib.import_module('.data.test' + tn, package='test')
+               for tn in module_names}
 
 
 def gettestdata():

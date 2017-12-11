@@ -92,5 +92,6 @@ class Population(Method):
 
 
 if __name__ == "__main__":
-    import doctest, population
+    import doctest
+    from . import population
     doctest.testmod(population, verbose=False)

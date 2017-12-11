@@ -11,7 +11,7 @@ import os.path
 import math
 import decimal
 
-from cclib.parser import utils
+from ..parser import utils
 from . import filewriter
 
 
@@ -241,7 +241,7 @@ class MoldenReformatter(object):
             line = line.replace('\n', '')
             # Replace multiple spaces with single spaces.
             line = ' '.join(line.split())
-            
+
             # Check for [Title] section.
             if '[title]' in line.lower():
                 line = next(filelines)

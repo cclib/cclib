@@ -1440,7 +1440,10 @@ class GAMESS(logfileparser.Logfile):
 
 
 if __name__ == "__main__":
-    import doctest, gamessparser, sys
+    import doctest
+    import sys
+    from . import gamessparser
+
     if len(sys.argv) == 1:
         doctest.testmod(gamessparser, verbose=False)
 

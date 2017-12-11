@@ -1126,5 +1126,6 @@ class Psi(logfileparser.Logfile):
 
 
 if __name__ == "__main__":
-    import doctest, psiparser
+    import doctest
+    from . import psiparser
     doctest.testmod(psiparser, verbose=False)
