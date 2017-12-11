@@ -43,7 +43,7 @@ class CJSONReaderTest(unittest.TestCase):
             fp.write(cjson_data)
             fp.flush()
             cjson_reader = cclib.io.cjsonreader.CJSON(fp.name)
-            read_cjson_data = cjson_reader.read()
+            read_cjson_data = cjson_reader.parse()
         self.assertIsNotNone(read_cjson_data, "The CJSON reader failed to read attributes")
 
         # The attribute values read by the CJSON reader will be a subset of the total attributes

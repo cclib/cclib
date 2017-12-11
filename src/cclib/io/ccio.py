@@ -146,10 +146,9 @@ def ccopen(source, *args, **kwargs):
                  an input stream, or an URL pointing to a log file.
         *args, **kwargs - arguments and keyword arguments passed to filetype
 
-    Returns:
-      one of ADF, DALTON, GAMESS, GAMESS UK, Gaussian, Jaguar, Molpro, MOPAC,
-      NWChem, ORCA, Psi, QChem, CJSON or None (if it cannot figure it out or
-      the file does not exist).
+    Returns: one of ADF, DALTON, GAMESS, GAMESS UK, Gaussian, Jaguar, Molpro,
+      MOPAC, NWChem, ORCA, Psi, QChem, a non-QC program reader instance, or None
+      (if it cannot figure it out or the file does not exist).
     """
 
     inputfile = None
@@ -235,12 +234,13 @@ def ccopen(source, *args, **kwargs):
     # If the input file isn't a standard compchem log file, try one of
     # the readers, falling back to Open Babel.
     if not filetype:
-        # TODO Replace with check for all implemented readers.
-        if kwargs.get("cjson", False):
-            filetype = cjsonreader.CJSON
-        # Fall back.
-        else:
-            filetype = None
+        if kwargs.get("cjson"):
+            filetype = readerclasses['cjson']
+        elif source and not is_stream:
+            ext = os.path.splitext(source)[1][1:].lower()
+            for extension in readerclasses:
+                if ext == extension:
+                    filetype = readerclasses[extension]
 
     # Proceed to return an instance of the logfile parser only if the filetype
     # could be guessed. Need to make sure the input file is closed before creating
@@ -296,13 +296,7 @@ def ccread(source, *args, **kwargs):
     if log:
         if kwargs.get('verbose', None):
             print('Identified logfile to be in %s format' % log.logname)
-        # If the input file is a CJSON file and not a standard compchemlog file
-        cjson_as_input = kwargs.get("cjson", False)
-        if cjson_as_input:
-            # TODO
-            return log.read()
-        else:
-            return log.parse()
+        return log.parse()
     else:
         if kwargs.get('verbose', None):
             print('Attempting to use fallback mechanism to read file')

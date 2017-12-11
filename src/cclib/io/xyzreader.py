@@ -18,7 +18,15 @@ class XYZ(filereader.Reader):
 
     def __init__(self, source, *args, **kwargs):
         super(XYZ, self).__init__(source, *args, **kwargs)
+
         self.pt = PeriodicTable()
+
+    def parse(self):
+        super(XYZ, self).parse()
+
+        self.generate_repr()
+
+        return self.data
 
     def generate_repr(self):
         """Convert the raw contents of the source into the internal representation."""
@@ -73,6 +81,4 @@ class XYZ(filereader.Reader):
             'atomcoords': all_atomcoords,
         }
 
-        data = ccData(attributes)
-
-        return data
+        self.data = ccData(attributes)

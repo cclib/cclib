@@ -25,7 +25,7 @@ class Reader(object):
         else:
             raise ValueError
 
-    def read(self):
+    def parse(self):
         """Read the raw contents of the source into the Reader."""
 
         # TODO This cannot currently handle streams.

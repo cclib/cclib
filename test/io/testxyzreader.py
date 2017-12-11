@@ -28,8 +28,7 @@ class XYZReaderTest(unittest.TestCase):
         fpath = os.path.join(__datadir__, "test/bridge/uracil.xyz")
         assert os.path.exists(fpath)
         xyz = cclib.io.xyzreader.XYZ(fpath)
-        xyz.read()
-        data = xyz.generate_repr()
+        data = xyz.parse()
 
         attrs = ('natom', 'atomnos', 'atomcoords')
         for attr in attrs:
@@ -66,8 +65,7 @@ class XYZReaderTest(unittest.TestCase):
         fpath = os.path.join(__filedir__, "data/uracil_two.xyz")
         assert os.path.exists(fpath)
         xyz = cclib.io.xyzreader.XYZ(fpath)
-        xyz.read()
-        data = xyz.generate_repr()
+        data = xyz.parse()
 
         attrs = ('natom', 'atomnos', 'atomcoords')
         for attr in attrs:

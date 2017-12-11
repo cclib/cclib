@@ -21,8 +21,8 @@ class CJSON(filereader.Reader):
 
         self.representation = {}
 
-    def read(self):
-        super(CJSON, self).read()
+    def parse(self):
+        super(CJSON, self).parse()
 
         json_data = json.loads(self.filecontents)
 
