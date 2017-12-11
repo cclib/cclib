@@ -15,7 +15,6 @@ algorithms in a package-independent manner.
 from __future__ import with_statement
 from __future__ import absolute_import
 import setuptools
-from io import open  # pylint:disable=redefined-builtin
 
 
 # Chosen from http://www.python.org/pypi?:action=list_classifiers
@@ -29,12 +28,6 @@ Operating System :: OS Independent
 Programming Language :: Python
 Topic :: Scientific/Engineering :: Chemistry
 Topic :: Software Development :: Libraries :: Python Modules"""
-
-
-def readme():
-    '''Return the contents of the README.md file.'''
-    with open('README.md') as freadme:
-        return freadme.read()
 
 
 def setup_cclib():
