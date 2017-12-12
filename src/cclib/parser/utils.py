@@ -196,5 +196,5 @@ class WidthSplitter:
 
 if __name__ == "__main__":
     import doctest
-    from . import utils
+    from cclib.parser import utils
     doctest.testmod(utils, verbose=False)

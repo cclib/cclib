@@ -13,9 +13,9 @@ import re
 
 import numpy
 
-from . import data
-from . import logfileparser
-from . import utils
+from cclib.parser import data
+from cclib.parser import logfileparser
+from cclib.parser import utils
 
 
 class Gaussian(logfileparser.Logfile):
@@ -1800,7 +1800,7 @@ class Gaussian(logfileparser.Logfile):
 if __name__ == "__main__":
     import doctest
     import sys
-    from . import gaussianparser
+    from cclib.parser import gaussianparser
 
     if len(sys.argv) == 1:
         doctest.testmod(gaussianparser, verbose=False)

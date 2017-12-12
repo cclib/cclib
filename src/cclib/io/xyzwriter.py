@@ -7,7 +7,7 @@
 
 """A writer for XYZ (Cartesian coordinate) files."""
 
-from . import filewriter
+from cclib.io import filewriter
 
 
 class XYZ(filewriter.Writer):

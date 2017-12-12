@@ -11,7 +11,7 @@ import random
 
 import numpy
 
-from .calculationmethod import Method
+from cclib.method.calculationmethod import Method
 
 
 def func(x):
@@ -140,5 +140,5 @@ class OPA(Method):
 
 if __name__ == "__main__":
     import doctest
-    from . import opa
+    from cclib.method import opa
     doctest.testmod(opa, verbose=False)

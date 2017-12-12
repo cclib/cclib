@@ -7,7 +7,8 @@
 
 import json
 
-from ..parser.data import ccData
+from cclib.parser.data import ccData
+
 
 class CJSON:
     """ CJSON log file"""

@@ -12,8 +12,8 @@ import itertools
 
 import numpy
 
-from . import logfileparser
-from . import utils
+from cclib.parser import logfileparser
+from cclib.parser import utils
 
 
 def create_atomic_orbital_names(orbitals):
@@ -885,5 +885,5 @@ class Molpro(logfileparser.Logfile):
 
 if __name__ == "__main__":
     import doctest
-    from . import molproparser
+    from cclib.parser import molproparser
     doctest.testmod(molproparser, verbose=False)

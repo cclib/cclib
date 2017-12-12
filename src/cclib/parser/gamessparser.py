@@ -14,8 +14,8 @@ import re
 import numpy
 
 
-from . import logfileparser
-from . import utils
+from cclib.parser import logfileparser
+from cclib.parser import utils
 
 
 class GAMESS(logfileparser.Logfile):
@@ -1442,7 +1442,7 @@ class GAMESS(logfileparser.Logfile):
 if __name__ == "__main__":
     import doctest
     import sys
-    from . import gamessparser
+    from cclib.parser import gamessparser
 
     if len(sys.argv) == 1:
         doctest.testmod(gamessparser, verbose=False)

@@ -7,15 +7,15 @@
 
 """Example analyses and calculations based on data parsed by cclib."""
 
-from .cda import CDA
-from .cspa import CSPA
-from .density import Density
-from .electrons import Electrons
-from .fragments import FragmentAnalysis
-from .lpa import LPA
-from .mbo import MBO
-from .mpa import MPA
-from .nuclear import Nuclear
-from .opa import OPA
-from .orbitals import Orbitals
-from .volume import Volume
+from cclib.method.cda import CDA
+from cclib.method.cspa import CSPA
+from cclib.method.density import Density
+from cclib.method.electrons import Electrons
+from cclib.method.fragments import FragmentAnalysis
+from cclib.method.lpa import LPA
+from cclib.method.mbo import MBO
+from cclib.method.mpa import MPA
+from cclib.method.nuclear import Nuclear
+from cclib.method.opa import OPA
+from cclib.method.orbitals import Orbitals
+from cclib.method.volume import Volume
