@@ -12,8 +12,8 @@ import re
 
 import numpy
 
-from . import logfileparser
-from . import utils
+from cclib.parser import logfileparser
+from cclib.parser import utils
 
 
 class GAMESSUK(logfileparser.Logfile):

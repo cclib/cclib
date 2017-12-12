@@ -8,7 +8,7 @@
 import sys
 
 if 'PyQt4' in list(sys.modules.keys()):
-    from .qt4progress import Qt4Progress
+    from cclib.progress.qt4progress import Qt4Progress
 
-from .textprogress import TextProgress
+from cclib.progress.textprogress import TextProgress
 

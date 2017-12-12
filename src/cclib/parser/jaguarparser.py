@@ -12,8 +12,8 @@ import re
 
 import numpy
 
-from . import logfileparser
-from . import utils
+from cclib.parser import logfileparser
+from cclib.parser import utils
 
 
 class Jaguar(logfileparser.Logfile):
@@ -711,5 +711,5 @@ class Jaguar(logfileparser.Logfile):
 
 if __name__ == "__main__":
     import doctest
-    from . import jaguarparser
+    from cclib.parser import jaguarparser
     doctest.testmod(jaguarparser, verbose=False)

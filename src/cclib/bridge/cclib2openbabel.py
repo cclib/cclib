@@ -13,7 +13,7 @@ except ImportError:
     # Fail silently for now.
     pass
 
-from ..parser.data import ccData
+from cclib.parser.data import ccData
 
 
 def makeopenbabel(atomcoords, atomnos, charge=0, mult=1):

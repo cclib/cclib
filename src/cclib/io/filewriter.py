@@ -8,7 +8,7 @@
 """Generic file writer and related tools"""
 
 try:
-    from ..bridge import makeopenbabel
+    from cclib.bridge import makeopenbabel
     import openbabel as ob
     import pybel as pb
     has_openbabel = True
@@ -18,7 +18,7 @@ except ImportError:
 from math import sqrt
 from collections import Iterable
 
-from ..parser.utils import PeriodicTable
+from cclib.parser.utils import PeriodicTable
 
 
 class MissingAttributeError(Exception):

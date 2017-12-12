@@ -14,14 +14,15 @@
 # Merged and modernized by Geoff Hutchison
 
 from __future__ import print_function
-import re
 
+import re
 import math
+
 import numpy
 
-from . import data
-from . import logfileparser
-from . import utils
+from cclib.parser import data
+from cclib.parser import logfileparser
+from cclib.parser import utils
 
 
 def symbol2int(symbol):
@@ -235,7 +236,7 @@ class MOPAC(logfileparser.Logfile):
 if __name__ == "__main__":
     import doctest
     import sys
-    from . import mopacparser
+    from cclib.parser import mopacparser
 
     if len(sys.argv) == 1:
         doctest.testmod(mopacparser, verbose=False)

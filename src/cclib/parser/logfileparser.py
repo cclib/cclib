@@ -20,9 +20,9 @@ import zipfile
 
 import numpy
 
-from . import utils
-from .data import ccData
-from .data import ccData_optdone_bool
+from cclib.parser import utils
+from cclib.parser.data import ccData
+from cclib.parser.data import ccData_optdone_bool
 
 
 # This seems to avoid a problem with Avogadro.
