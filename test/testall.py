@@ -21,7 +21,7 @@ from .test_utils import *
 
 
 if __name__ == "__main__":
-	print("Running unit tests for data...")
-	test_data.test_all(silent=True, summary=False, visual_tests=False)
-	print("Running all other unit tests...")
-	unittest.main()
+    print("Running unit tests for data...")
+    test_data.test_all(silent=True, summary=False, visual_tests=False)
+    print("Running all other unit tests...")
+    unittest.main()

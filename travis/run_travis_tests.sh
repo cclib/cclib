@@ -9,4 +9,4 @@ python -m test.test_parser &&
 python -m test.test_io &&
 python -m test.test_data --status --terse &&
 cd data && bash regression_download.sh &&
-cd ../test && python regression.py --status --traceback
+cd ../test && python -m test.regression --status --traceback
