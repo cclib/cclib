@@ -274,7 +274,7 @@ def test_all(parsers=None, modules=None, status=False, terse=False, silent=True,
 
 
 if __name__ == "__main__":
-    
+
     # These allow the parsers and modules tested to be filtered on the command line
     # with any number of arguments. No matching parsers/modules implies all of them.
     parsers = {p: all_parsers[p] for p in parser_names if p in sys.argv} or None
