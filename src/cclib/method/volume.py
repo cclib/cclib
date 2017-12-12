@@ -14,7 +14,7 @@ import numpy
 
 try:
     from PyQuante.CGBF import CGBF
-    from ..bridge import cclib2pyquante
+    from cclib.bridge import cclib2pyquante
     module_pyq = True
 except:
     module_pyq = False
@@ -26,7 +26,7 @@ try:
 except:
     module_pyvtk = False
 
-from ..parser.utils import convertor
+from cclib.parser.utils import convertor
 
 
 class Volume(object):
@@ -243,7 +243,7 @@ if __name__ == "__main__":
     except ImportError:
         pass
 
-    from ..io import ccopen
+    from cclib.io import ccopen
     import logging
     a = ccopen("../../../data/Gaussian/basicGaussian03/dvb_sp_basis.log")
     a.logger.setLevel(logging.ERROR)

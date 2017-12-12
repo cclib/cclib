@@ -13,7 +13,7 @@ import random
 
 import numpy
 
-from .fragments import FragmentAnalysis
+from cclib.method.fragments import FragmentAnalysis
 
 
 class CDA(FragmentAnalysis):

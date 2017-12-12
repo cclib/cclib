@@ -12,9 +12,9 @@ import re
 
 import numpy
 
-from . import data
-from . import logfileparser
-from . import utils
+from cclib.parser import data
+from cclib.parser import logfileparser
+from cclib.parser import utils
 
 
 class Psi(logfileparser.Logfile):
@@ -1127,5 +1127,5 @@ class Psi(logfileparser.Logfile):
 
 if __name__ == "__main__":
     import doctest
-    from . import psiparser
+    from cclib.parser import psiparser
     doctest.testmod(psiparser, verbose=False)

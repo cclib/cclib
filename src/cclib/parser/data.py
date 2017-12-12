@@ -11,8 +11,8 @@
 import numpy
 from collections import namedtuple
 
-from ..method import Electrons
-from ..method import orbitals
+from cclib.method import Electrons
+from cclib.method import orbitals
 
 
 Attribute = namedtuple('Attribute', ['type', 'jsonKey', 'attributePath'])
@@ -295,7 +295,7 @@ class ccData(object):
           .xyz - output a Cartesian XYZ file of the last coordinates available
         """
 
-        from ..io import ccwrite
+        from cclib.io import ccwrite
         outputstr = ccwrite(self, outputdest=filename, indices=indices,
                             *args, **kwargs)
         return outputstr

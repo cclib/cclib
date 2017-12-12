@@ -11,7 +11,7 @@ import random
 
 import numpy
 
-from .population import Population
+from cclib.method.population import Population
 
 
 class CSPA(Population):
@@ -120,5 +120,5 @@ class CSPA(Population):
 
 if __name__ == "__main__":
     import doctest
-    from . import cspa
+    from cclib.method import cspa
     doctest.testmod(cspa, verbose=False)

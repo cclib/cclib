@@ -11,8 +11,8 @@ import os.path
 import math
 import decimal
 
-from ..parser import utils
-from . import filewriter
+from cclib.parser import utils
+from cclib.io import filewriter
 
 
 def round_molden(num, p=6):
