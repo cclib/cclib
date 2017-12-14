@@ -20,9 +20,9 @@ import zipfile
 
 import numpy
 
-from . import utils
-from .data import ccData
-from .data import ccData_optdone_bool
+from cclib.parser import utils
+from cclib.parser.data import ccData
+from cclib.parser.data import ccData_optdone_bool
 
 
 # This seems to avoid a problem with Avogadro.
@@ -378,7 +378,7 @@ class Logfile(object):
         contain appropriate doctests. If is not overwritten, this is detected
         as an error by unit tests.
         """
-        return "ERROR: This should be overwritten by this subclass"
+        raise NotImplementedError("normalisesym(self, symlabel) must be overriden by the parser.")
 
     def float(self, number):
         """Convert a string to a float.
@@ -469,8 +469,3 @@ class Logfile(object):
         return lines
 
     skip_line = lambda self, inputfile, expected: self.skip_lines(inputfile, [expected])
-
-
-if __name__ == "__main__":
-    import doctest
-    doctest.testmod()

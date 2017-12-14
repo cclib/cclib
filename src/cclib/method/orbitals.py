@@ -16,7 +16,7 @@ import logging
 
 import numpy
 
-from .calculationmethod import Method
+from cclib.method.calculationmethod import Method
 
 
 class Orbitals(Method):
@@ -52,8 +52,3 @@ class Orbitals(Method):
             return False
 
         return True
-
-
-if __name__ == "__main__":
-    import doctest, orbitals
-    doctest.testmod(orbitals, verbose=False)

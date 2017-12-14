@@ -12,8 +12,8 @@ import re
 
 import numpy
 
-from . import logfileparser
-from . import utils
+from cclib.parser import logfileparser
+from cclib.parser import utils
 
 
 class GAMESSUK(logfileparser.Logfile):
@@ -36,11 +36,10 @@ class GAMESSUK(logfileparser.Logfile):
     def normalisesym(self, label):
         """Use standard symmetry labels instead of GAMESS UK labels.
 
-        >>> t = GAMESSUK("dummyfile.txt")
+        >>> sym = GAMESSUK("dummyfile.txt").normalisesym
         >>> labels = ['a', 'a1', 'ag', "a'", 'a"', "a''", "a1''", 'a1"']
         >>> labels.extend(["e1+", "e1-"])
-        >>> answer = [t.normalisesym(x) for x in labels]
-        >>> answer
+        >>> list(map(sym, labels))
         ['A', 'A1', 'Ag', "A'", 'A"', 'A"', 'A1"', 'A1"', 'E1', 'E1']
         """
         label = label.replace("''", '"').replace("+", "").replace("-", "")
@@ -662,8 +661,3 @@ class GAMESSUK(logfileparser.Logfile):
                 line = inputfile.next()
 
             self.set_attribute('nooccnos', occupations)
-
-
-if __name__ == "__main__":
-    import doctest
-    doctest.testmod()

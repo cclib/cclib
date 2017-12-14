@@ -28,7 +28,7 @@ class Method(object):
         Volume - volume/grid calculations
 
     All the modules containing methods should be importable:
-    >>> import cda, cspa, density, fragments, lpa, mbo, mpa, nuclear, opa, population, volume
+    >>> from cclib.method import cda, cspa, density, fragments, lpa, mbo, mpa, nuclear, opa, population, volume
     """
 
     def __init__(self, data, progress=None, loglevel=logging.INFO, logname="Log"):
@@ -48,8 +48,3 @@ class Method(object):
         handler = logging.StreamHandler(sys.stdout)
         handler.setFormatter(logging.Formatter(self.logformat))
         self.logger.addHandler(handler)
-
-
-if __name__ == "__main__":
-    import doctest
-    doctest.testmod(verbose=False)

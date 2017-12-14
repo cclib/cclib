@@ -12,9 +12,9 @@ import re
 
 import numpy
 
-from . import data
-from . import logfileparser
-from . import utils
+from cclib.parser import data
+from cclib.parser import logfileparser
+from cclib.parser import utils
 
 
 class Psi(logfileparser.Logfile):
@@ -56,8 +56,7 @@ class Psi(logfileparser.Logfile):
                 self.set_attribute('natom', len(self.atomnos))
 
     def normalisesym(self, label):
-        """Use standard symmetry labels instead of Psi labels."""
-        # Psi uses the correct labels.
+        """Psi does not require normalizing symmetry labels."""
         return label
 
     def extract(self, inputfile, line):
@@ -1123,8 +1122,3 @@ class Psi(logfileparser.Logfile):
             return -float(vibfreq[:-1])
         else:
             return float(vibfreq)
-
-
-if __name__ == "__main__":
-    import doctest, psiparser
-    doctest.testmod(psiparser, verbose=False)

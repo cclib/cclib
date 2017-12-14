@@ -13,9 +13,9 @@ import re
 
 import numpy
 
-from . import data
-from . import logfileparser
-from . import utils
+from cclib.parser import data
+from cclib.parser import logfileparser
+from cclib.parser import utils
 
 
 class Gaussian(logfileparser.Logfile):
@@ -43,7 +43,7 @@ class Gaussian(logfileparser.Logfile):
 
         >>> sym = Gaussian("dummyfile").normalisesym
         >>> labels = ['A1', 'AG', 'A1G', "SG", "PI", "PHI", "DLTA", 'DLTU', 'SGG']
-        >>> map(sym, labels)
+        >>> list(map(sym, labels))
         ['A1', 'Ag', 'A1g', 'sigma', 'pi', 'phi', 'delta', 'delta.u', 'sigma.g']
         """
         # note: DLT must come after DLTA
@@ -1794,20 +1794,3 @@ class Gaussian(logfileparser.Logfile):
                 if not hasattr(self, 'optdone'):
                     self.optdone = []
                 self.optdone.append(len(self.optstatus) - 1)
-
-
-
-if __name__ == "__main__":
-    import doctest, gaussianparser, sys
-
-    if len(sys.argv) == 1:
-        doctest.testmod(gaussianparser, verbose=False)
-
-    if len(sys.argv) >= 2:
-        parser = gaussianparser.Gaussian(sys.argv[1])
-        data = parser.parse()
-
-    if len(sys.argv) > 2:
-        for i in range(len(sys.argv[2:])):
-            if hasattr(data, sys.argv[2 + i]):
-                print(getattr(data, sys.argv[2 + i]))

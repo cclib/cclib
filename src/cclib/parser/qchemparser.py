@@ -11,11 +11,12 @@ from __future__ import division
 from __future__ import print_function
 
 import re
-import numpy
 import itertools
 
-from . import logfileparser
-from . import utils
+import numpy
+
+from cclib.parser import logfileparser
+from cclib.parser import utils
 
 
 class QChem(logfileparser.Logfile):
@@ -36,6 +37,7 @@ class QChem(logfileparser.Logfile):
 
     def normalisesym(self, label):
         """Q-Chem does not require normalizing symmetry labels."""
+        return label
 
     def before_parsing(self):
 
@@ -1390,20 +1392,3 @@ class QChem(logfileparser.Logfile):
         # 'nocoeffs'
         # 'nooccnos'
         # 'vibanharms'
-
-
-if __name__ == '__main__':
-    import sys
-    import doctest, qchemparser
-
-    if len(sys.argv) == 1:
-        doctest.testmod(qchemparser, verbose=False)
-
-    if len(sys.argv) == 2:
-        parser = qchemparser.QChem(sys.argv[1])
-        data = parser.parse()
-
-    if len(sys.argv) > 2:
-        for i in range(len(sys.argv[2:])):
-            if hasattr(data, sys.argv[2 + i]):
-                print(getattr(data, sys.argv[2 + i]))

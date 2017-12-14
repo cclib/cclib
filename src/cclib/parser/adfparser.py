@@ -14,8 +14,8 @@ import re
 
 import numpy
 
-from . import logfileparser
-from . import utils
+from cclib.parser import logfileparser
+from cclib.parser import utils
 
 
 class ADF(logfileparser.Logfile):
@@ -45,8 +45,8 @@ class ADF(logfileparser.Logfile):
             their lowercase equivalent.
 
         >>> sym = ADF("dummyfile").normalisesym
-        >>> labels = ['A','s','A1','A1.g','Sigma','Pi','Delta','Phi','Sigma.g','A.g','AA','AAA','EE1','EEE1']
-        >>> map(sym,labels)
+        >>> labels = ['A', 's', 'A1', 'A1.g', 'Sigma', 'Pi', 'Delta', 'Phi', 'Sigma.g', 'A.g', 'AA', 'AAA', 'EE1', 'EEE1']
+        >>> list(map(sym, labels))
         ['A', 's', 'A1', 'A1g', 'sigma', 'pi', 'delta', 'phi', 'sigma.g', 'Ag', "A'", 'A"', "E1'", 'E1"']
         """
         greeks = ['Sigma', 'Pi', 'Delta', 'Phi']
@@ -1156,8 +1156,3 @@ class ADF(logfileparser.Logfile):
                     self.polarizabilities.append(polarizability)
 
                 line = next(inputfile)
-
-
-if __name__ == "__main__":
-    import doctest, adfparser
-    doctest.testmod(adfparser, verbose=False)

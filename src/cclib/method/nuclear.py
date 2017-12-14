@@ -11,7 +11,7 @@ import logging
 
 import numpy
 
-from .calculationmethod import Method
+from cclib.method.calculationmethod import Method
 
 
 class Nuclear(Method):
@@ -42,8 +42,3 @@ class Nuclear(Method):
                 d = numpy.linalg.norm(ri-rj)
                 nre += zi*zj/d
         return nre
-
-
-if __name__ == "__main__":
-    import doctest
-    doctest.testmod(verbose=True)

@@ -11,7 +11,7 @@ import random
 
 import numpy
 
-from .density import Density
+from cclib.method.density import Density
 
 
 class MBO(Density):

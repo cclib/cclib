@@ -66,11 +66,11 @@ from cclib.io import ccopen
 # way to import the relevant tests from cclib here.
 test_dir = os.path.realpath(os.path.dirname(__file__)) + "/../../test"
 sys.path.append(os.path.abspath(test_dir))
-from test_data import all_modules
-from test_data import all_parsers
-from test_data import module_names
-from test_data import parser_names
-from test_data import get_program_dir
+from .test_data import all_modules
+from .test_data import all_parsers
+from .test_data import module_names
+from .test_data import parser_names
+from .test_data import get_program_dir
 
 
 # We need this to point to files relative to this script.
@@ -1348,7 +1348,7 @@ def flatten(seq):
 def normalisefilename(filename):
     """Replace all non-alphanumeric symbols by underscores.
 
-    >>> import regression
+    >>> from . import regression
     >>> for x in [ "Gaussian/Gaussian03/Mo4OSibdt2-opt.log" ]:
     ...     print(regression.normalisefilename(x))
     ...
@@ -1670,7 +1670,7 @@ def make_regression_from_old_unittest(test_class):
     return old_unit_test
 
 
-def main(which=[], opt_traceback=False, opt_status=False, regdir=__regression_dir__):
+def test_regressions(which=[], opt_traceback=False, opt_status=False, regdir=__regression_dir__):
 
     # Build a list of regression files that can be found.
     try:
@@ -1852,4 +1852,4 @@ if __name__ == "__main__":
         opt_traceback = "--traceback" in sys.argv
         opt_status = "--status" in sys.argv
         which = [arg for arg in sys.argv[1:] if not arg in ["--status", "--traceback"]]
-        main(which, opt_traceback, opt_status)
+        test_regressions(which, opt_traceback, opt_status)

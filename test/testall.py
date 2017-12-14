@@ -11,17 +11,17 @@ from __future__ import print_function
 
 import unittest
 
-import test_data
+from . import test_data
 
-from test_bridge import *
-from test_io import *
-from test_method import *
-from test_parser import *
-from test_utils import *
+from .test_bridge import *
+from .test_io import *
+from .test_method import *
+from .test_parser import *
+from .test_utils import *
 
 
 if __name__ == "__main__":
-	print("Running unit tests for data...")
-	test_data.test_all(silent=True, summary=False, visual_tests=False)
-	print("Running all other unit tests...")
-	unittest.main()
+    print("Running unit tests for data...")
+    test_data.test_all(silent=True, summary=False, visual_tests=False)
+    print("Running all other unit tests...")
+    unittest.main()

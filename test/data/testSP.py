@@ -117,7 +117,7 @@ class GenericSPTest(unittest.TestCase):
 
     def testnormalisesym(self):
         """Did this subclass overwrite normalisesym?"""
-        self.assertNotEquals(self.logfile.normalisesym("A"), "ERROR: This should be overwritten by this subclass")
+        self.logfile.normalisesym("A")
 
     @skipForParser('Molpro', '?')
     @skipForParser('ORCA', 'ORCA has no support for symmetry yet')

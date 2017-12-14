@@ -12,8 +12,8 @@ import itertools
 
 import numpy
 
-from . import logfileparser
-from . import utils
+from cclib.parser import logfileparser
+from cclib.parser import utils
 
 
 def create_atomic_orbital_names(orbitals):
@@ -65,7 +65,10 @@ class Molpro(logfileparser.Logfile):
         return 'Molpro("%s")' % (self.filename)
 
     def normalisesym(self, label):
-        """Normalise the symmetries used by Molpro."""
+        """Normalise the symmetries used by Molpro.
+
+        TODO write doctest
+        """
         ans = label.replace("`", "'").replace("``", "''")
         return ans
 
@@ -881,8 +884,3 @@ class Molpro(logfileparser.Logfile):
             if not hasattr(self, "atomcharges"):
                 self.atomcharges = {}
             self.atomcharges['mulliken'] = charges
-
-
-if __name__ == "__main__":
-    import doctest, molproparser
-    doctest.testmod(molproparser, verbose=False)

@@ -7,7 +7,7 @@
 
 """A writer for XYZ (Cartesian coordinate) files."""
 
-from . import filewriter
+from cclib.io import filewriter
 
 
 class XYZ(filewriter.Writer):
@@ -96,7 +96,3 @@ class XYZ(filewriter.Writer):
         for element, (x, y, z) in zip(self.element_list, atomcoords):
             block.append(atom_template.format(element, x, y, z))
         return '\n'.join(block)
-
-
-if __name__ == "__main__":
-    pass

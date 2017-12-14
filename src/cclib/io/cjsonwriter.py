@@ -17,8 +17,9 @@ import os.path
 import json
 import numpy as np
 
-from . import filewriter
+from cclib.io import filewriter
 from cclib.parser.data import ccData
+
 
 class CJSON(filewriter.Writer):
     """A writer for chemical JSON (CJSON) files."""
@@ -213,7 +214,3 @@ class JSONIndentEncoder(json.JSONEncoder):
             return json.dumps(np.asscalar(o), cls=NumpyAwareJSONEncoder)
         else:
             return json.dumps(o, cls=NumpyAwareJSONEncoder)
-
-
-if __name__ == "__main__":
-    pass

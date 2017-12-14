@@ -192,8 +192,3 @@ class WidthSplitter:
             while len(elements) and elements[-1] == '':
                 elements.pop()
         return elements
-
-
-if __name__ == "__main__":
-    import doctest, utils
-    doctest.testmod(utils, verbose=False)

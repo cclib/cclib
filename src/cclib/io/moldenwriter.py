@@ -12,7 +12,7 @@ import math
 import decimal
 
 from cclib.parser import utils
-from . import filewriter
+from cclib.io import filewriter
 
 
 def round_molden(num, p=6):
@@ -241,7 +241,7 @@ class MoldenReformatter(object):
             line = line.replace('\n', '')
             # Replace multiple spaces with single spaces.
             line = ' '.join(line.split())
-            
+
             # Check for [Title] section.
             if '[title]' in line.lower():
                 line = next(filelines)
@@ -280,7 +280,3 @@ class MoldenReformatter(object):
                 lines.append(line)
 
         return '\n'.join(lines)
-
-
-if __name__ == "__main__":
-    pass

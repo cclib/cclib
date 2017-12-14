@@ -11,7 +11,7 @@ import logging
 
 import numpy
 
-from .calculationmethod import Method
+from cclib.method.calculationmethod import Method
 
 
 class Electrons(Method):
@@ -39,8 +39,3 @@ class Electrons(Method):
         if core:
             nelectrons += sum(self.data.coreelectrons)
         return nelectrons
-
-
-if __name__ == "__main__":
-    import doctest
-    doctest.testmod(verbose=True)

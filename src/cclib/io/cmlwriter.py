@@ -15,7 +15,7 @@ except ImportError:
 
 import xml.etree.cElementTree as ET
 
-from . import filewriter
+from cclib.io import filewriter
 
 
 class CML(filewriter.Writer):
@@ -43,7 +43,7 @@ class CML(filewriter.Writer):
         if self.jobfilename is not None:
             d['id'] = self.jobfilename
         _set_attrs(molecule, d)
-        
+
         # Form the listing of all the atoms present.
         atomArray = ET.SubElement(molecule, 'atomArray')
         if hasattr(self.ccdata, 'atomcoords') and hasattr(self.ccdata, 'atomnos'):
@@ -113,7 +113,3 @@ def _tostring(element, xml_declaration=True, encoding='utf-8', method='xml'):
                                   encoding=encoding,
                                   method=method)
     return b''.join(data).decode(encoding)
-
-
-if __name__ == "__main__":
-    pass

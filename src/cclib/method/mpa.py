@@ -11,7 +11,7 @@ import random
 
 import numpy
 
-from .population import Population
+from cclib.method.population import Population
 
 
 class MPA(Population):
@@ -129,8 +129,3 @@ class MPA(Population):
             self.fragspins = numpy.subtract(alpha, beta)
 
         return True
-
-
-if __name__ == "__main__":
-    import doctest, mpa
-    doctest.testmod(mpa, verbose=False)
