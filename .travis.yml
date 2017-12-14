@@ -22,4 +22,5 @@ before_install:
 install:
   - python setup.py install
 script:
+  - if [[ $TRAVIS_PYTHON_VERSION == 3.2 ]]; then alias pytest='py.test'; fi
   - sh travis/run_pytest.sh

@@ -31,7 +31,7 @@ def pytest_ignore_collect(path, config):
     if match_path(path, paths_allver):
         return True
     if version_major != 2:
-        if match_path(path, paths_only_2_7_only):
+        if match_path(path, paths_only_2_7):
             return True
     if version_major == 3 and version_minor == 2:
         if match_path(path, paths_not_3_2):
