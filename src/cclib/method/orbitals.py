@@ -52,9 +52,3 @@ class Orbitals(Method):
             return False
 
         return True
-
-
-if __name__ == "__main__":
-    import doctest
-    from cclib.method import orbitals
-    doctest.testmod(orbitals, verbose=False)

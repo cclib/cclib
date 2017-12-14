@@ -881,9 +881,3 @@ class Molpro(logfileparser.Logfile):
             if not hasattr(self, "atomcharges"):
                 self.atomcharges = {}
             self.atomcharges['mulliken'] = charges
-
-
-if __name__ == "__main__":
-    import doctest
-    from cclib.parser import molproparser
-    doctest.testmod(molproparser, verbose=False)

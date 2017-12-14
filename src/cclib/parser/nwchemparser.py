@@ -1113,9 +1113,3 @@ class NWChem(logfileparser.Logfile):
                 for k in range(count):
                     temp = [x % (j + k + 1) for x in labels[label]]
                     self.aonames.extend([prefix + x for x in temp])
-
-
-if __name__ == "__main__":
-    import doctest
-    from cclib.parser import nwchemparser
-    doctest.testmod(nwchemparser, verbose=False)

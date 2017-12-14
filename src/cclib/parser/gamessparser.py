@@ -1437,21 +1437,3 @@ class GAMESS(logfileparser.Logfile):
                     i, j = coord_to_idx[tokens[1][0]], coord_to_idx[tokens[1][1]]
                     polarizability[i, j] = tokens[3]
             self.polarizabilities.append(polarizability)
-
-
-if __name__ == "__main__":
-    import doctest
-    import sys
-    from cclib.parser import gamessparser
-
-    if len(sys.argv) == 1:
-        doctest.testmod(gamessparser, verbose=False)
-
-    if len(sys.argv) >= 2:
-        parser = gamessparser.GAMESS(sys.argv[1])
-        data = parser.parse()
-
-    if len(sys.argv) > 2:
-        for i in range(len(sys.argv[2:])):
-            if hasattr(data, sys.argv[2 + i]):
-                print(getattr(data, sys.argv[2 + i]))

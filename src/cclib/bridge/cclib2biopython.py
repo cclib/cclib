@@ -37,8 +37,3 @@ def makebiopython(atomcoords, atomnos):
         symbol = pt.element[atomno]
         bioatoms.append(Atom(symbol, coords, 0, 0, 0, symbol, 0, symbol.upper()))
     return bioatoms
-
-
-if __name__ == "__main__":
-    import doctest
-    doctest.testmod()

@@ -76,8 +76,3 @@ def readfile(fname, format):
     else:
         print("Unable to load the %s reader from OpenBabel." % format)
         return {}
-
-
-if __name__ == "__main__":
-    import doctest
-    doctest.testmod()

@@ -32,8 +32,3 @@ def makepyquante(atomcoords, atomnos, charge=0, mult=1):
     """
     return Molecule("notitle", list(zip(atomnos, atomcoords)), units="Angstrom",
                     charge=charge, multiplicity=mult)
-
-
-if __name__ == "__main__":
-    import doctest
-    doctest.testmod()

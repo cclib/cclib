@@ -1794,22 +1794,3 @@ class Gaussian(logfileparser.Logfile):
                 if not hasattr(self, 'optdone'):
                     self.optdone = []
                 self.optdone.append(len(self.optstatus) - 1)
-
-
-
-if __name__ == "__main__":
-    import doctest
-    import sys
-    from cclib.parser import gaussianparser
-
-    if len(sys.argv) == 1:
-        doctest.testmod(gaussianparser, verbose=False)
-
-    if len(sys.argv) >= 2:
-        parser = gaussianparser.Gaussian(sys.argv[1])
-        data = parser.parse()
-
-    if len(sys.argv) > 2:
-        for i in range(len(sys.argv[2:])):
-            if hasattr(data, sys.argv[2 + i]):
-                print(getattr(data, sys.argv[2 + i]))

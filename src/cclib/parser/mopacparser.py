@@ -231,21 +231,3 @@ class MOPAC(logfileparser.Logfile):
         # Partial charges and dipole moments
         # Example:
         # NET ATOMIC CHARGES
-
-
-if __name__ == "__main__":
-    import doctest
-    import sys
-    from cclib.parser import mopacparser
-
-    if len(sys.argv) == 1:
-        doctest.testmod(mopacparser, verbose=False)
-
-    if len(sys.argv) >= 2:
-        parser = mopacparser.MOPAC(sys.argv[1])
-        data = parser.parse()
-
-    if len(sys.argv) > 2:
-        for i in range(len(sys.argv[2:])):
-            if hasattr(data, sys.argv[2 + i]):
-                print(getattr(data, sys.argv[2 + i]))

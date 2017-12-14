@@ -1156,9 +1156,3 @@ class ADF(logfileparser.Logfile):
                     self.polarizabilities.append(polarizability)
 
                 line = next(inputfile)
-
-
-if __name__ == "__main__":
-    import doctest
-    from cclib.parser import adfparser
-    doctest.testmod(adfparser, verbose=False)

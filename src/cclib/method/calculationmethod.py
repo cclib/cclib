@@ -48,8 +48,3 @@ class Method(object):
         handler = logging.StreamHandler(sys.stdout)
         handler.setFormatter(logging.Formatter(self.logformat))
         self.logger.addHandler(handler)
-
-
-if __name__ == "__main__":
-    import doctest
-    doctest.testmod(verbose=False)
