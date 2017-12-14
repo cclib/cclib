@@ -15,7 +15,7 @@ cache:
 before_install:
   - pip install numpy
   - pip install openbabel
-  - if [[ $TRAVIS_PYTHON_VERSION == 3.2 ]]; then pip install pytest==2.9.2; fi
+  - if [[ $TRAVIS_PYTHON_VERSION == 3.2 ]]; then pip install -r travis/requirements_3.2.txt; fi
   - pip install pytest-cov
   - if [[ $TRAVIS_PYTHON_VERSION != 3.2 ]]; then pip install biopython; fi
   - if [[ $TRAVIS_PYTHON_VERSION == 2.7 ]]; then sh travis/install_pyquante.sh; fi
