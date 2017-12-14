@@ -21,12 +21,12 @@ def makeopenbabel(atomcoords, atomnos, charge=0, mult=1):
 
     >>> import numpy, openbabel
     >>> atomnos = numpy.array([1, 8, 1], "i")
-    >>> coords = numpy.array([[-1., 1., 0.], [0., 0., 0.], [1., 1., 0.]])
-    >>> obmol = makeopenbabel(coords, atomnos)
+    >>> atomcoords = numpy.array([[[-1., 1., 0.], [0., 0., 0.], [1., 1., 0.]]])
+    >>> obmol = makeopenbabel(atomcoords, atomnos)
     >>> obconversion = openbabel.OBConversion()
     >>> formatok = obconversion.SetOutFormat("inchi")
     >>> print(obconversion.WriteString(obmol).strip())
-    InChI=1/H2O/h1H2
+    InChI=1S/H2O/h1H2
     """
     obmol = ob.OBMol()
     for i in range(len(atomnos)):
