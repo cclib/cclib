@@ -83,7 +83,7 @@ class GenericGeoOptTest(unittest.TestCase):
 
     def testnormalisesym(self):
         """Did this subclass overwrite normalisesym?"""
-        self.assertNotEquals(self.logfile.normalisesym("A"),"ERROR: This should be overwritten by this subclass")
+        self.logfile.normalisesym("A")
 
     def testhomos(self):
         """Is the index of the HOMO equal to 34?"""

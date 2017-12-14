@@ -37,6 +37,7 @@ class QChem(logfileparser.Logfile):
 
     def normalisesym(self, label):
         """Q-Chem does not require normalizing symmetry labels."""
+        return label
 
     def before_parsing(self):
 

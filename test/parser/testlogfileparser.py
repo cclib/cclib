@@ -110,9 +110,9 @@ class LogfileTest(unittest.TestCase):
         self.assertTrue(numpy.isnan(float("*****")))
 
     def test_normalisesym_base_class_error(self):
-        """Does this method return ERROR in base class?"""
+        """Does this method raise an error in the base class?"""
         normalisesym = cclib.parser.logfileparser.Logfile('').normalisesym
-        self.assertTrue("ERROR" in normalisesym(""))
+        self.assertRaises(NotImplementedError, normalisesym, 'Ag')
 
 
 if __name__ == "__main__":
