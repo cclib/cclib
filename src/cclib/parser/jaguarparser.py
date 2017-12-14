@@ -40,10 +40,9 @@ class Jaguar(logfileparser.Logfile):
         (2) Replace two p's by "
         (2) Replace any remaining single p's by '
 
-        >>> t = Jaguar("dummyfile").normalisesym
+        >>> sym = Jaguar("dummyfile").normalisesym
         >>> labels = ['A', 'A1', 'Ag', 'Ap', 'App', "A1p", "A1pp", "E1pp/Ap"]
-        >>> answers = map(t, labels)
-        >>> print answers
+        >>> list(map(sym, labels))
         ['A', 'A1', 'Ag', "A'", 'A"', "A1'", 'A1"', 'E1"']
         """
         ans = label.split("/")[0].replace("pp", '"').replace("p", "'")

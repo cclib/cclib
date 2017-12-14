@@ -378,7 +378,7 @@ class Logfile(object):
         contain appropriate doctests. If is not overwritten, this is detected
         as an error by unit tests.
         """
-        return "ERROR: This should be overwritten by this subclass"
+        raise NotImplementedError("normalisesym(self, symlabel) must be overriden by the parser.")
 
     def float(self, number):
         """Convert a string to a float.

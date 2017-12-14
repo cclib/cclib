@@ -67,10 +67,9 @@ class GAMESS(logfileparser.Logfile):
             must be lower-cased
         (2) Two single quotation marks must be replaced by a double
 
-        >>> t = GAMESS("dummyfile").normalisesym
+        >>> sym = GAMESS("dummyfile").normalisesym
         >>> labels = ['A', 'A1', 'A1G', "A'", "A''", "AG"]
-        >>> answers = map(t, labels)
-        >>> print answers
+        >>> list(map(sym, labels))
         ['A', 'A1', 'A1g', "A'", 'A"', 'Ag']
         """
 
@@ -88,7 +87,7 @@ class GAMESS(logfileparser.Logfile):
 
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
-        
+
         # extract the version number first
         if line.find("GAMESS VERSION") >= 0:
             self.metadata["package_version"] = line.split()[4] + line.split()[5] + line.split()[6]

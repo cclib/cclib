@@ -47,6 +47,7 @@ class MOPAC(logfileparser.Logfile):
 
     def normalisesym(self, label):
         """MOPAC does not require normalizing symmetry labels."""
+        return label
 
     def before_parsing(self):
         #TODO

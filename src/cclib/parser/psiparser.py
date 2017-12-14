@@ -56,8 +56,7 @@ class Psi(logfileparser.Logfile):
                 self.set_attribute('natom', len(self.atomnos))
 
     def normalisesym(self, label):
-        """Use standard symmetry labels instead of Psi labels."""
-        # Psi uses the correct labels.
+        """Psi does not require normalizing symmetry labels."""
         return label
 
     def extract(self, inputfile, line):

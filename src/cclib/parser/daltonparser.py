@@ -33,9 +33,7 @@ class DALTON(logfileparser.Logfile):
         return 'DALTON("%s")' % (self.filename)
 
     def normalisesym(self, label):
-        """Normalise the symmetries used by DALTON."""
-
-        # It appears that DALTON is using the correct labels.
+        """DALTON does not require normalizing symmetry labels."""
         return label
 
     def before_parsing(self):
@@ -54,7 +52,6 @@ class DALTON(logfileparser.Logfile):
         # Is the basis set from a single library file? This is true
         # when the first line is BASIS, false for INTGRL/ATOMBASIS.
         self.basislibrary = True
-
 
     def parse_geometry(self, lines):
         """Parse DALTON geometry lines into an atomcoords array."""

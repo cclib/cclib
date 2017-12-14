@@ -25,7 +25,7 @@ def makeopenbabel(atomcoords, atomnos, charge=0, mult=1):
     >>> obmol = makeopenbabel(coords, atomnos)
     >>> obconversion = openbabel.OBConversion()
     >>> formatok = obconversion.SetOutFormat("inchi")
-    >>> print obconversion.WriteString(obmol).strip()
+    >>> print(obconversion.WriteString(obmol).strip())
     InChI=1/H2O/h1H2
     """
     obmol = ob.OBMol()

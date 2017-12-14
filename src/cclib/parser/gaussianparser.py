@@ -43,7 +43,7 @@ class Gaussian(logfileparser.Logfile):
 
         >>> sym = Gaussian("dummyfile").normalisesym
         >>> labels = ['A1', 'AG', 'A1G', "SG", "PI", "PHI", "DLTA", 'DLTU', 'SGG']
-        >>> map(sym, labels)
+        >>> list(map(sym, labels))
         ['A1', 'Ag', 'A1g', 'sigma', 'pi', 'phi', 'delta', 'delta.u', 'sigma.g']
         """
         # note: DLT must come after DLTA

@@ -65,7 +65,10 @@ class Molpro(logfileparser.Logfile):
         return 'Molpro("%s")' % (self.filename)
 
     def normalisesym(self, label):
-        """Normalise the symmetries used by Molpro."""
+        """Normalise the symmetries used by Molpro.
+
+        TODO write doctest
+        """
         ans = label.replace("`", "'").replace("``", "''")
         return ans
 
