@@ -27,8 +27,8 @@ def makepyquante(atomcoords, atomnos, charge=0, mult=1):
     >>> a = numpy.array([[-1,1,0],[0,0,0],[1,1,0]],"f")
     >>> pyqmol = makepyquante(a,atomnos)
     >>> en, orbe, orbs = hf(pyqmol)
-    >>> print(en) # Should be around -73.8
-    -73.8
+    >>> en
+    -75.8247540498
     """
     return Molecule("notitle", list(zip(atomnos, atomcoords)), units="Angstrom",
                     charge=charge, multiplicity=mult)
