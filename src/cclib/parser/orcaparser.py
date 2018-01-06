@@ -62,6 +62,114 @@ class ORCA(logfileparser.Logfile):
         if "Program Version" in line:
             self.metadata["package_version"] = line.split()[2]
 
+        # ================================================================================
+        #                                         WARNINGS
+        #                        Please study these warnings very carefully!
+        # ================================================================================
+        #
+        # Warning: TCutStore was < 0. Adjusted to Thresh (uncritical)
+        #
+        # WARNING: your system is open-shell and RHF/RKS was chosen
+        #   ===> : WILL SWITCH to UHF/UKS
+        #
+        #
+        # INFO   : the flag for use of LIBINT has been found!
+        #
+        # ================================================================================
+        if line.strip() == "WARNINGS":
+            next(inputfile)
+            self.skip_lines(inputfile, ['equals', 'blank'])
+
+            if 'warnings' not in self.metadata:
+                self.metadata['warnings'] = []
+            if 'info' not in self.metadata:
+                self.metadata['info'] = []
+            line = next(inputfile)
+            while line[0] != '=':
+                if line.lower()[:7] == 'warning':
+                    self.metadata['warnings'].append('')
+                    while len(line) > 1:
+                        self.metadata['warnings'][-1] += line[9:]
+                        line = next(inputfile)
+                elif line.lower()[:4] == 'info':
+                    self.metadata['info'].append('')
+                    while len(line) > 1:
+                        self.metadata['info'][-1] += line[9:]
+                        line = next(inputfile)
+                line = next(inputfile)
+
+        # ================================================================================
+        #                                        INPUT FILE
+        # ================================================================================
+        # NAME = input.dat
+        # |  1> %pal nprocs 4 end
+        # |  2> ! B3LYP def2-svp
+        # |  3> ! Grid4
+        # |  4>
+        # |  5> *xyz 0 3
+        # |  6>     O   0   0   0
+        # |  7>     O   0   0   1.5
+        # |  8> *
+        # |  9>
+        # | 10>                          ****END OF INPUT****
+        # ================================================================================
+        if "INPUT FILE" in line:
+            next(inputfile)
+            name = next(inputfile).split()[-1]
+            methods = []
+            line = next(inputfile)
+            coords = []
+            while line[0] == '|':
+                line = line[6:]
+                # Keywords block
+                if line[0] == '!':
+                    methods += line[1:].split()
+                # Impossible to parse without knowing whether a keyword opens a new block
+                elif line[0] == '%':
+                    pass
+                # Geometry block
+                elif line[0] == '*':
+                    vals = line[1:].split()
+                    coord_type = vals[0].lower()
+                    if coord_type == 'xyz':
+                        def splitter(line):
+                            atom, x, y, z = line.split()[:4]
+                            return [atom, float(x), float(y), float(z)]
+                    elif coord_type in ['int', 'internal']:
+                        def splitter(line):
+                            atom, a1, a2, a3, bond, angle, dihedral = line.split()[:7]
+                            return [atom, int(a1), int(a2), int(a3), float(bond), float(angle), float(dihedral)]
+                    elif coord_type == 'gzmt':
+                        def splitter(line):
+                            vals = line.split()[:7]
+                            if len(vals) == 7:
+                                atom, a1, bond, a2, angle, a3, dihedral = vals
+                                return [atom, int(a1), float(bond), int(a2), float(angle), int(a3), float(dihedral)]
+                            elif len(vals) == 5:
+                                return [vals[0], int(vals[1]), float(vals[2]), int(vals[3]), float(vals[4])]
+                            elif len(vals) == 3:
+                                return [vals[0], int(vals[1]), float(vals[2])]
+                            elif len(vals) == 1:
+                                return [vals[0]]
+                            self.logger.warning('Incorrect number of atoms in input geometry.')
+                    elif 'file' in coord_type:
+                        pass
+                    else:
+                        self.logger.warning('Invalid coordinate type.')
+
+                    line = next(inputfile)[6:].strip()
+                    if 'file' not in coord_type:
+                        while line[0] != '*':
+                            # Strip basis specification that can appear after coordinates
+                            line = line.split('newGTO')[0]
+                            coords.append(splitter(line))
+                            line = next(inputfile)[6:].strip()
+
+                line = next(inputfile)
+
+            self.metadata['methods'] = methods
+            self.metadata['coords'] = coords
+
         if line[0:15] == "Number of atoms":
 
             natom = int(line.split()[-1])
@@ -140,10 +248,10 @@ class ORCA(logfileparser.Logfile):
 
             self._append_scfvalues_scftargets(inputfile, line)
 
-        # Sometimes the SCF does not converge, but does not halt the
-        # the run (like in bug 3184890). In this this case, we should
-        # remain consistent and use the energy from the last reported
-        # SCF cycle. In this case, ORCA print a banner like this:
+        # Sometimes the SCF does not converge, but does not halt the run
+        # (like in bug 3184890). In this this case, we should remain consistent
+        # and use the energy from the last reported SCF cycle. In this case,
+        # ORCA print a banner like this:
         #
         #       *****************************************************
         #       *                     ERROR                         *
@@ -251,6 +359,28 @@ class ORCA(logfileparser.Logfile):
                 self.geotargets_names.append(name)
                 self.geotargets.append(target)
 
+        # ------------------
+        # CARTESIAN GRADIENT
+        # ------------------
+        #
+        # 1   H   :    0.000000004    0.019501450   -0.021537091
+        # 2   O   :    0.000000054   -0.042431648    0.042431420
+        # 3   H   :    0.000000004    0.021537179   -0.019501388
+        if line == 'CARTESIAN GRADIENT\n':
+            self.skip_lines(inputfile, ['dashes', 'blank'])
+
+            grads = []
+            line = next(inputfile).strip()
+            while line:
+                idx, atom, colon, x, y, z = line.split()
+                grads.append((float(x), float(y), float(z)))
+
+                line = next(inputfile).strip()
+
+            if not hasattr(self, 'grads'):
+                self.grads = []
+            self.grads.append(grads)
+
         # After each geometry optimization step, ORCA prints the current convergence
         # parameters and the targets (again), so it is a good idea to check that they
         # have not changed. Note that the order of these criteria here are different
@@ -308,15 +438,14 @@ class ORCA(logfileparser.Logfile):
 
             self.geovalues.append(newvalues)
 
-        """ Grab cartesian coordinates
-        ---------------------------------
-        CARTESIAN COORDINATES (ANGSTROEM)
-        ---------------------------------
-        H      0.000000    0.000000    0.000000
-        O      0.000000    0.000000    1.000000
-        H      0.000000    1.000000    1.000000
-        """
-        if line[0:33] == "CARTESIAN COORDINATES (ANGSTROEM)":
+        # Grab Cartesian coordinates
+        # ---------------------------------
+        # CARTESIAN COORDINATES (ANGSTROEM)
+        # ---------------------------------
+        # H      0.000000    0.000000    0.000000
+        # O      0.000000    0.000000    1.000000
+        # H      0.000000    1.000000    1.000000
+        if line[:33] == "CARTESIAN COORDINATES (ANGSTROEM)":
             next(inputfile)
 
             atomnos = []
@@ -334,16 +463,15 @@ class ORCA(logfileparser.Logfile):
                 self.atomcoords = []
             self.atomcoords.append(atomcoords)
 
-        """ Grab atom masses
-        ----------------------------
-        CARTESIAN COORDINATES (A.U.)
-        ----------------------------
-        NO LB      ZA    FRAG     MASS         X           Y           Z
-        0 H     1.0000    0     1.008    0.000000    0.000000    0.000000
-        1 O     8.0000    0    15.999    0.000000    0.000000    1.889726
-        2 H     1.0000    0     1.008    0.000000    1.889726    1.889726
-        """
-        if line[0:28] == "CARTESIAN COORDINATES (A.U.)" and not hasattr(self, 'atommasses'):
+        # Grab atom masses
+        # ----------------------------
+        # CARTESIAN COORDINATES (A.U.)
+        # ----------------------------
+        # NO LB      ZA    FRAG     MASS         X           Y           Z
+        # 0 H     1.0000    0     1.008    0.000000    0.000000    0.000000
+        # 1 O     8.0000    0    15.999    0.000000    0.000000    1.889726
+        # 2 H     1.0000    0     1.008    0.000000    1.889726    1.889726
+        if line[:28] == "CARTESIAN COORDINATES (A.U.)" and not hasattr(self, 'atommasses'):
             next(inputfile)
             next(inputfile)
 
@@ -494,7 +622,7 @@ class ORCA(logfileparser.Logfile):
         # Basis set information
         # ORCA prints this out in a somewhat indirect fashion.
         # Therefore, parsing occurs in several steps:
-        # 1. read which atom belongs to which basis set group
+        # 1. Read which atom belongs to which basis set group
         if line[0:21] == "BASIS SET INFORMATION":
             line = next(inputfile)
             line = next(inputfile)
@@ -540,13 +668,11 @@ class ORCA(logfileparser.Logfile):
                 self.gbasis.append(gbasis_tmp[bas_atname])
             del self.tmp_atnames
 
-        """ Banner announcing Thermochemistry
-        --------------------------
-        THERMOCHEMISTRY AT 298.15K
-        --------------------------
-        """
-        if 'THERMOCHEMISTRY AT' == line[:18]:
-
+        # Banner announcing Thermochemistry
+        # --------------------------
+        # THERMOCHEMISTRY AT 298.15K
+        # --------------------------
+        if line[:18] == 'THERMOCHEMISTRY AT':
             next(inputfile)
             next(inputfile)
             self.temperature = float(next(inputfile).split()[2])
@@ -775,38 +901,41 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
             self.transprop[name] = (self.etenergies, self.etoscs)
 
 
-        if line[0:23] == "VIBRATIONAL FREQUENCIES":
+        if line[:23] == "VIBRATIONAL FREQUENCIES":
 
             self.skip_lines(inputfile, ['d', 'b'])
 
-            self.vibfreqs = numpy.zeros((3 * self.natom,), "d")
+            vibfreqs = numpy.zeros(3*self.natom)
 
-            for i in range(3 * self.natom):
-                line = next(inputfile)
-                self.vibfreqs[i] = float(line.split()[1])
+            for i, line in zip(range(3*self.natom), inputfile):
+                vibfreqs[i] = line.split()[1]
 
-            if numpy.any(self.vibfreqs[0:6] != 0):
-                msg = "Modes corresponding to rotations/translations "
-                msg += "may be non-zero."
+            nonzero = numpy.nonzero(vibfreqs)[0]
+            if len(nonzero) > 3*self.natom - 6:
+                msg = "Modes corresponding to rotations/translations may be non-zero."
+                if len(nonzero) == 3*self.natom - 5:
+                    msg += '\n You can ignore this if the molecule is linear.'
                 self.logger.warning(msg)
+            elif len(nonzero) < 3*self.natom - 6:
+                self.logger.warning('Too few vibrational modes for molecule.')
+            # Take all modes after first
+            # Mode between imaginary and real modes could be 0
+            self.vibfreqs = vibfreqs[nonzero[0]:]
 
-            self.vibfreqs = self.vibfreqs[6:]
 
-        if line[0:12] == "NORMAL MODES":
-            """ Format:
-            NORMAL MODES
-            ------------
-
-            These modes are the cartesian displacements weighted by the diagonal matrix
-            M(i,i)=1/sqrt(m[i]) where m[i] is the mass of the displaced atom
-            Thus, these vectors are normalized but *not* orthogonal
-
-                              0          1          2          3          4          5
-                  0       0.000000   0.000000   0.000000   0.000000   0.000000   0.000000
-                  1       0.000000   0.000000   0.000000   0.000000   0.000000   0.000000
-                  2       0.000000   0.000000   0.000000   0.000000   0.000000   0.000000
-            ...
-            """
+        # ------------
+        # NORMAL MODES
+        # ------------
+        #
+        # These modes are the cartesian displacements weighted by the diagonal matrix
+        # M(i,i)=1/sqrt(m[i]) where m[i] is the mass of the displaced atom
+        # Thus, these vectors are normalized but *not* orthogonal
+        #
+        #                   0          1          2          3          4          5
+        #       0       0.000000   0.000000   0.000000   0.000000   0.000000   0.000000
+        #       1       0.000000   0.000000   0.000000   0.000000   0.000000   0.000000
+        #       2       0.000000   0.000000   0.000000   0.000000   0.000000   0.000000
+        if line[:12] == "NORMAL MODES":
 
             self.vibdisps = numpy.zeros((3 * self.natom, self.natom, 3), "d")
 
@@ -823,9 +952,10 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
                     self.vibdisps[mode:mode + 6, atom, 1] = y
                     self.vibdisps[mode:mode + 6, atom, 2] = z
 
-            self.vibdisps = self.vibdisps[6:]
+            # Grab all modes starting with first non-zero mode
+            self.vibdisps = self.vibdisps[-len(self.vibfreqs):]
 
-        if line[0:11] == "IR SPECTRUM":
+        if line[:11] == "IR SPECTRUM":
 
             self.skip_lines(inputfile, ['d', 'b', 'header', 'd'])
 
@@ -833,13 +963,24 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
 
             line = next(inputfile)
             while len(line) > 2:
-                num = int(line[0:4])
-                self.vibirs[num] = float(line.split()[2])
+                num, freq, t2 = line.split()[:3]
+                num = int(num[:-1])
+                self.vibirs[num] = float(t2)
                 line = next(inputfile)
 
-            self.vibirs = self.vibirs[6:]
+            # Grab all modes starting with first non-zero mode
+            self.vibirs = self.vibirs[-len(self.vibfreqs):]
 
-        if line[0:14] == "RAMAN SPECTRUM":
+        # --------------
+        # RAMAN SPECTRUM
+        # --------------
+        #
+        # Mode    freq (cm**-1)   Activity   Depolarization
+        # -------------------------------------------------------------------
+        # 6:       294.84      5.291308      0.404692
+        # 7:       356.53      0.000000      0.000000
+        # 8:       367.60      0.000000      0.301002"""
+        if line[:14] == "RAMAN SPECTRUM":
 
             self.skip_lines(inputfile, ['d', 'b', 'header', 'd'])
 
@@ -847,17 +988,18 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
 
             line = next(inputfile)
             while len(line) > 2:
-                num = int(line[0:4])
-                self.vibramans[num] = float(line.split()[2])
+                num, freq, activity, depolarization = line.split()
+                num = int(num[:-1])
+                self.vibramans[num] = float(activity)
                 line = next(inputfile)
 
-            self.vibramans = self.vibramans[6:]
+            # Grab all modes starting with first non-zero mode
+            self.vibramans = self.vibramans[-len(self.vibfreqs):]
 
         # ORCA will print atomic charges along with the spin populations,
         #   so care must be taken about choosing the proper column.
-        # Population analyses are performed usually only at the end
-        #   of a geometry optimization or other run, so we want to
-        #   leave just the final atom charges.
+        # Population analyses are performed at the beginning and end of a
+        # geometry optimization, while only at the end of other runs.
         # Here is an example for Mulliken charges:
         # --------------------------------------------
         # MULLIKEN ATOMIC CHARGES AND SPIN POPULATIONS
@@ -871,7 +1013,7 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
         # Sum of atomic spin populations:    1.0000000
         if line[:23] == "MULLIKEN ATOMIC CHARGES":
             self.parse_charge_section(line, inputfile, 'mulliken')
-        # Things are the same for Lowdin populations, except that the sums
+        # Things are the same for Löwdin populations, except that the sums
         #   are not printed (there is a blank line at the end).
         if line[:22] == "LOEWDIN ATOMIC CHARGES":
             self.parse_charge_section(line, inputfile, 'lowdin')
@@ -886,9 +1028,9 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
         if line.startswith('CHELPG Charges'):
             self.parse_charge_section(line, inputfile, 'chelpg')
 
-        # It is not stated explicitely, but the dipole moment components printed by ORCA
-        # seem to be in atomic units, so they will need to be converted. Also, they
-        # are most probably calculated with respect to the origin .
+        # The dipole moment components printed by ORCA are in atomic units.
+        # They can be computed with respect to the center of mass or the center
+        # of electric charge.
         #
         # -------------
         # DIPOLE MOMENT
@@ -1132,8 +1274,6 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
                 self.scfvalues[-1].append([deltaE, maxDP, rmsDP])
 
         return
-
-    # end of parse_scf_expanded_format
 
     def _append_scfvalues_scftargets(self, inputfile, line):
         # The SCF convergence targets are always printed after this, but apparently

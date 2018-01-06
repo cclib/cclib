@@ -22,20 +22,23 @@ class GenericIRTest(unittest.TestCase):
     # Unit tests should normally give this value for the largest IR intensity.
     max_IR_intensity = 100
 
+    def setUp(self):
+        """Initialize the number of vibrational frequencies on a per molecule basis"""
+        self.numvib = 3*len(self.data.atomnos) - 6
+
     def testvibdisps(self):
-        """Are the dimensions of vibdisps consistent with 3N-6 x N x 3"""
-        numvib = 3*len(self.data.atomnos) - 6
+        """Are the dimensions of vibdisps consistent with numvib x N x 3"""
+        self.assertEqual(len(self.data.vibfreqs), self.numvib)
         self.assertEqual(self.data.vibdisps.shape,
-                        (numvib, len(self.data.atomnos), 3))
+                         (self.numvib, len(self.data.atomnos), 3))
 
     def testlengths(self):
         """Are the lengths of vibfreqs and vibirs (and if present, vibsyms) correct?"""
-        numvib = 3*len(self.data.atomnos) - 6
-        self.assertEqual(len(self.data.vibfreqs), numvib)
+        self.assertEqual(len(self.data.vibfreqs), self.numvib)
         if hasattr(self.data, 'vibirs'):
-            self.assertEqual(len(self.data.vibirs), numvib)
+            self.assertEqual(len(self.data.vibirs), self.numvib)
         if hasattr(self.data, 'vibsyms'):
-            self.assertEqual(len(self.data.vibsyms), numvib)
+            self.assertEqual(len(self.data.vibsyms), self.numvib)
 
     def testfreqval(self):
         """Is the highest freq value 3630 +/- 200 cm-1?"""
@@ -58,8 +61,7 @@ class GaussianIRTest(GenericIRTest):
 
     def testvibsyms(self):
         """Is the length of vibsyms correct?"""
-        numvib = 3*len(self.data.atomnos) - 6
-        self.assertEqual(len(self.data.vibsyms), numvib)
+        self.assertEqual(len(self.data.vibsyms), self.numvib)
 
 
 class JaguarIRTest(GenericIRTest):
@@ -67,8 +69,7 @@ class JaguarIRTest(GenericIRTest):
 
     def testvibsyms(self):
         """Is the length of vibsyms correct?"""
-        numvib = 3*len(self.data.atomnos) - 6
-        self.assertEqual(len(self.data.vibsyms), numvib)
+        self.assertEqual(len(self.data.vibsyms), self.numvib)
 
 
 class OrcaIRTest(GenericIRTest):
@@ -147,17 +148,19 @@ class GamessIRTest(GenericIRTest):
 class GenericIRimgTest(unittest.TestCase):
     """Generic imaginary vibrational frequency unittest"""
 
+    def setUp(self):
+        """Initialize the number of vibrational frequencies on a per molecule basis"""
+        self.numvib = 3*len(self.data.atomnos) - 6
+
     def testvibdisps(self):
-        """Are the dimensions of vibdisps consistent with 3N-6 x N x 3"""
-        numvib = 3*len(self.data.atomnos) - 6
+        """Are the dimensions of vibdisps consistent with numvib x N x 3"""
         self.assertEqual(self.data.vibdisps.shape,
-                        (numvib, len(self.data.atomnos), 3))
+                         (self.numvib, len(self.data.atomnos), 3))
 
     def testlengths(self):
         """Are the lengths of vibfreqs and vibirs correct?"""
-        numvib = 3*len(self.data.atomnos) - 6
-        self.assertEqual(len(self.data.vibfreqs), numvib)
-        self.assertEqual(len(self.data.vibirs), numvib)
+        self.assertEqual(len(self.data.vibfreqs), self.numvib)
+        self.assertEqual(len(self.data.vibirs), self.numvib)
 
     def testfreqval(self):
         """Is the lowest freq value negative?"""
@@ -176,10 +179,13 @@ class GenericRamanTest(unittest.TestCase):
     # This value is in amu.
     max_raman_intensity = 575
 
+    def setUp(self):
+        """Initialize the number of vibrational frequencies on a per molecule basis"""
+        self.numvib = 3*len(self.data.atomnos) - 6
+
     def testlengths(self):
         """Is the length of vibramans correct?"""
-        numvib = 3*len(self.data.atomnos) - 6
-        self.assertEqual(len(self.data.vibramans), numvib)
+        self.assertEqual(len(self.data.vibramans), self.numvib)
 
     # The tolerance for this number has been increased, since ORCA
     # failed to make it inside +/-5, but it would be nice in the future
@@ -221,6 +227,22 @@ class QChemRamanTest(GenericRamanTest):
 
     max_raman_intensity = 588
 
+
+class GenericLinearIRTest(GenericIRTest):
+    """Test for linear molecules, which have 3N - 5 vibrational modes"""
+
+    def setUp(self):
+        """
+        Initialize the number of vibrational frequencies on a per molecule basis
+        Linear molecules have one extra vibrational frequency
+        """
+        self.numvib = 3*len(self.data.atomnos) - 5
+
+    def testfreqval(self):
+        pass
+
+    def testirintens(self):
+        pass
 
 if __name__=="__main__":
 
