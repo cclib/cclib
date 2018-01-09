@@ -1585,7 +1585,7 @@ old_unittests = {
 
     "GAMESS/WinGAMESS/dvb_td_2007.03.24.r1.out":    GAMESSUSTDDFTTest,
 
-    "Gaussian/Gaussian09/dvb_gopt_revA.02.out":         GaussianGeoOptTest,
+    "Gaussian/Gaussian09/dvb_gopt_revA.02.out":         GenericGeoOptTest,
     "Gaussian/Gaussian09/dvb_ir_revA.02.out":           GaussianIRTest,
     "Gaussian/Gaussian09/dvb_raman_revA.02.out":        GaussianRamanTest,
     "Gaussian/Gaussian09/dvb_scan_revA.02.log":         GaussianScanTest,
