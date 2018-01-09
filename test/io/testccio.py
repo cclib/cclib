@@ -75,7 +75,7 @@ class ccopenTest(unittest.TestCase):
         absdir = os.path.dirname(os.path.abspath(__file__))
         rootdir = os.path.join(os.sep, *absdir.split(os.sep)[:-2])
         molprodir = os.path.join(rootdir, "data", "Molpro", "basicMolpro2012")
-        filenames = ["dvb_gopt.log", "dvb_gopt.out"]
+        filenames = ["dvb_gopt.out", "dvb_gopt.log"]
         filepaths = [os.path.join(molprodir, fn) for fn in filenames]
         self.assertIsNotNone(self.ccopen(filepaths))
         self.assertIsNotNone(self.ccopen(filepaths).parse())
@@ -98,7 +98,7 @@ class ccopenTest(unittest.TestCase):
         """Does the function works with multiple URLs such good as with multiple filenames?"""
         fpath = os.path.join(__datadir__, "data")
         base_url = "https://raw.githubusercontent.com/cclib/cclib/master/data/"
-        filenames = ["Molpro/basicMolpro2012/dvb_gopt.log", "Molpro/basicMolpro2012/dvb_gopt.out"]
+        filenames = ["Molpro/basicMolpro2012/dvb_gopt.out", "Molpro/basicMolpro2012/dvb_gopt.log"]
         self.assertEqual(
             self.ccopen([os.path.join(fpath, fname) for fname in filenames], quiet=True)
                 .parse().getattributes(tolists=True),
