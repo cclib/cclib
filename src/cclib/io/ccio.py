@@ -29,6 +29,8 @@ else:
     from urllib.request import urlopen
     from urllib.error import URLError
 
+    from functools import reduce
+
 from ..parser import logfileparser
 from ..parser import data
 
@@ -52,11 +54,16 @@ from . import xyzwriter
 from . import moldenwriter
 from . import wfxwriter
 
+fallback_extensions = []
 try:
     from ..bridge import cclib2openbabel
     _has_cclib2openbabel = True
+    import pybel as pb
+    _obextensions = [k.lower() for k in pb.informats.keys()]
+    fallback_extensions.extend(_obextensions)
 except ImportError:
     _has_cclib2openbabel = False
+    _obextensions = []
 
 
 # Regular expression for validating URLs
@@ -131,12 +138,28 @@ def guess_filetype(inputfile):
     return filetype
 
 
+def _check_is_iterable(source):
+    """Check to see if source is an iterable collection. Don't consider
+    strings to be iterable.
+    """
+    # https://stackoverflow.com/q/1952464/3249688
+    is_iterable = False
+    try:
+        iterator = iter(source)
+        is_iterable = True
+        if isinstance(source, str):
+            is_iterable = False
+    except:
+        pass
+    return is_iterable
+
+
 def ccread(source, *args, **kargs):
     """Attempt to open and read computational chemistry data from a file.
 
     If the file is not appropriate for cclib parsers, a fallback mechanism
     will try to recognize some common chemistry formats and read those using
-    the appropriate bridge such as OpenBabel.
+    the appropriate bridge such as Open Babel.
 
     Inputs:
         source - a single logfile, a list of logfiles (for a single job),
@@ -144,6 +167,42 @@ def ccread(source, *args, **kargs):
         *args, **kargs - arguments and keyword arguments passed to ccopen
     Returns:
         a ccData object containing cclib data attributes
+    """
+
+    # If we have an iterable, here is the strategy:
+    # 1. do a parse of all items together
+    # 2. do a parse of all items separately
+    # 3. add them together, starting with the separate items, since
+    #    extra information may be present in the combined parse
+    is_iterable = _check_is_iterable(source)
+    ccdata = _ccread(source, *args, **kargs)
+    if is_iterable:
+        individual_ccdatas = []
+        for i in source:
+            ccdata_separate = _ccread(i, *args, **kargs)
+            if ccdata_separate:
+                individual_ccdatas.append(ccdata_separate)
+        if individual_ccdatas:
+            ccdata_separate = reduce(lambda x, y: x + y, individual_ccdatas)
+            ccdata += ccdata_separate
+    return ccdata
+
+
+def _ccread(source, *args, **kargs):
+    """Attempt to open and read computational chemistry data from a file.
+
+    If the file is not appropriate for cclib parsers, a fallback mechanism
+    will try to recognize some common chemistry formats and read those using
+    the appropriate bridge such as Open Babel.
+
+    Inputs:
+        source - a single logfile, a list of logfiles (for a single job),
+                 an input stream, or an URL pointing to a log file.
+        *args, **kargs - arguments and keyword arguments passed to ccopen
+    Returns:
+        a ccData object containing cclib data attributes
+
+    This is meant to handle source as a single entity.
     """
 
     log = ccopen(source, *args, **kargs)
@@ -184,7 +243,8 @@ def ccopen(source, *args, **kargs):
     # or list of filenames. If it can be read, assume it is an open file object/stream.
     is_string = isinstance(source, str)
     is_url = True if is_string and URL_PATTERN.match(source) else False
-    is_listofstrings = isinstance(source, list) and all([isinstance(s, str) for s in source])
+    is_listofstrings = isinstance(source, list) \
+                       and all([isinstance(s, str) for s in source])
     if is_string or is_listofstrings:
         # Process links from list (download contents into temporary location)
         if is_listofstrings:
@@ -266,13 +326,11 @@ def ccopen(source, *args, **kargs):
     # could be guessed. Need to make sure the input file is closed before creating
     # an instance, because parsers will handle opening/closing on their own.
     if filetype:
-        # We're going to clase and reopen below anyway, so this is just to avoid
+        # We're going to close and reopen below anyway, so this is just to avoid
         # the missing seek method for fileinput.FileInput. In the long run
         # we need to refactor to support for various input types in a more
         # centralized fashion.
-        if is_listofstrings:
-            pass
-        else:
+        if not is_listofstrings:
             inputfile.seek(0, 0)
         if not is_stream:
             inputfile.close()
@@ -283,14 +341,14 @@ def ccopen(source, *args, **kargs):
 def fallback(source):
     """Attempt to read standard molecular formats using other libraries.
 
-    Currently this will read XYZ files with OpenBabel, but this can easily
+    Currently this will read XYZ files with Open Babel, but this can easily
     be extended to other formats and libraries, too.
     """
 
     if isinstance(source, str):
         ext = os.path.splitext(source)[1][1:].lower()
         if _has_cclib2openbabel:
-            if ext in ('xyz', ):
+            if ext in _obextensions:
                 return cclib2openbabel.readfile(source, ext)
         else:
             print("Could not import openbabel, fallback mechanism might not work.")

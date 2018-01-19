@@ -74,7 +74,8 @@ class Gaussian(logfileparser.Logfile):
         # Flag for identifying ONIOM calculations.
         self.oniom = False
 
-        # Flag for identifying BOMD calculations.
+        # Flag for identifying Born-Oppenheimer molecular dynamics
+        # (BOMD) calculations.
         # These calculations have a back-integration algorithm so that not all
         # geometries should be kept.
         # We also add a "time" attribute to the parser.
