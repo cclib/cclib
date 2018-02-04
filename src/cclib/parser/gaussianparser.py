@@ -225,7 +225,7 @@ class Gaussian(logfileparser.Logfile):
 
             self.updateprogress(inputfile, "Attributes", self.fupdate)
 
-            natom = int(line.split('=')[1].split()[0])
+            natom = int(re.search('NAtoms=\s*(\d+)', line).group(1))
             self.set_attribute('natom', natom)
 
         # Basis set name
