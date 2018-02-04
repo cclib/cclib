@@ -232,6 +232,14 @@ class Gaussian(logfileparser.Logfile):
         if line[1:15] == "Standard basis":
             self.metadata["basis_set"] = line.split()[2]
 
+        # Alpha and beta electrons
+        if "alpha electrons" in line:
+            fields = line.split()
+            alpha_index = fields.index('alpha')
+            beta_index = fields.index('beta')
+            self.set_attribute('alphaelectrons', int(fields[alpha_index - 1]))
+            self.set_attribute('betaelectrons', int(fields[beta_index - 1]))
+
         # Dipole moment
         # e.g. from G09
         #  Dipole moment (field-independent basis, Debye):

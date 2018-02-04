@@ -11,6 +11,7 @@
 import numpy
 from collections import namedtuple
 
+from cclib.method import nuclear
 from cclib.method import Electrons
 from cclib.method import orbitals
 
@@ -94,6 +95,7 @@ class ccData(object):
     # The jsonKey is the key name used for attributes in the CJSON/JSON format
     # 'TBD' - To Be Decided are the key names of attributes which haven't been included in the cjson format
     _attributes = {
+       "alphaelectrons":   Attribute(int,              'TBD',                         'N/A'),
        "aonames":          Attribute(list,             'names',                       'atoms:orbitals'),
        "aooverlaps":       Attribute(numpy.ndarray,    'overlaps',                    'properties:orbitals'),
        "atombasis":        Attribute(list,             'indices',                     'atoms:orbitals'),
@@ -102,6 +104,7 @@ class ccData(object):
        "atommasses":       Attribute(numpy.ndarray,    'mass',                        'atoms'),
        "atomnos":          Attribute(numpy.ndarray,    'number',                      'atoms:elements'),
        "atomspins":        Attribute(dict,             'spins',                       'atoms'),
+       "betaelectrons":    Attribute(int,              'TBD',                         'N/A'),
        "ccenergies":       Attribute(numpy.ndarray,    'coupled cluster',             'properties:energy'),
        "charge":           Attribute(int,              'charge',                      'properties'),
        "coreelectrons":    Attribute(numpy.ndarray,    'core electrons',              'atoms'),
@@ -147,6 +150,7 @@ class ccData(object):
        "scftargets":       Attribute(numpy.ndarray,    'targets',                     'optimization:scf'),
        "scfvalues":        Attribute(list,             'values',                      'optimization:scf'),
        "temperature":      Attribute(float,            'temperature',                 'properties'),
+       "thermalenergies":  Attribute(float,            'TBD',                         'N/A'),
        "transprop":        Attribute(dict,             'electronic transitions',      'transitions'),
        "time":             Attribute(numpy.ndarray,    'time',                        'N/A'),
        "vibanharms":       Attribute(numpy.ndarray,    'anharmonicity constants',     'vibrations'),
@@ -383,6 +387,10 @@ class ccData(object):
     @property
     def closed_shell(self):
         return orbitals.orbitals(self).closed_shell()
+
+    @property
+    def stoichiometry(self):
+        return nuclear.Nuclear(self).stoichiometry()
 
 
 class ccData_optdone_bool(ccData):
