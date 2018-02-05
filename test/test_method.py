@@ -10,7 +10,7 @@
 import sys
 import unittest
 
-sys.path.append("method")
+sys.path.insert(1, "method")
 
 from .method.testcda import *
 from .method.testmbo import *

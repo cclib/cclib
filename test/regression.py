@@ -65,7 +65,7 @@ from cclib.io import ccopen
 # within the cclib repository. It would be better to figure out a more natural
 # way to import the relevant tests from cclib here.
 test_dir = os.path.realpath(os.path.dirname(__file__)) + "/../../test"
-sys.path.append(os.path.abspath(test_dir))
+sys.path.insert(1, os.path.abspath(test_dir))
 from .test_data import all_modules
 from .test_data import all_parsers
 from .test_data import module_names

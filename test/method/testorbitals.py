@@ -21,7 +21,7 @@ from cclib.method import Orbitals
 from cclib.parser import Gaussian
 from cclib.parser import Psi
 
-sys.path.append("..")
+sys.path.insert(1, "..")
 
 from ..test_data import getdatafile
 

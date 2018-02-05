@@ -21,7 +21,7 @@ from cclib.method import Nuclear
 from cclib.parser import QChem
 from cclib.parser import utils
 
-sys.path.append("..")
+sys.path.insert(1, "..")
 
 from ..test_data import getdatafile
 
