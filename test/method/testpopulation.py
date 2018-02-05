@@ -19,7 +19,7 @@ import numpy
 from cclib.method import MPA, LPA, CSPA
 from cclib.parser import Gaussian
 
-sys.path.append("..")
+sys.path.insert(1, "..")
 
 from ..test_data import getdatafile
 

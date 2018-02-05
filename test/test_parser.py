@@ -10,7 +10,7 @@
 import sys
 import unittest
 
-sys.path.append('parser')
+sys.path.insert(1, 'parser')
 
 from .parser.testdata import *
 from .parser.testlogfileparser import *

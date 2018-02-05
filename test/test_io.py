@@ -10,7 +10,7 @@
 import sys
 import unittest
 
-sys.path.append('io')
+sys.path.insert(1, 'io')
 
 from .io.testccio import *
 

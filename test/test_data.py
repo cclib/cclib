@@ -22,7 +22,7 @@ __filedir__ = os.path.realpath(os.path.dirname(__file__))
 
 # We need this in Python3 for importing things from the same directory
 # within the unit test files.
-sys.path.append(os.path.join(__filedir__, 'data'))
+sys.path.insert(1, os.path.join(__filedir__, 'data'))
 
 
 parser_names = [

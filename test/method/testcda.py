@@ -16,7 +16,7 @@ import unittest
 
 import numpy
 
-sys.path.append("..")
+sys.path.insert(1, "..")
 
 from ..test_data import getdatafile
 from cclib.method import CDA
