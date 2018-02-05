@@ -7,10 +7,9 @@
 
 """A reader for XYZ (Cartesian coordinate) files."""
 
-from ..parser.data import ccData
-from ..parser.utils import PeriodicTable
-
-from . import filereader
+from cclib.io import filereader
+from cclib.parser.data import ccData
+from cclib.parser.utils import PeriodicTable
 
 
 class XYZ(filereader.Reader):

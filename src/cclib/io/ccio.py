@@ -146,9 +146,11 @@ def ccopen(source, *args, **kwargs):
                  an input stream, or an URL pointing to a log file.
         *args, **kwargs - arguments and keyword arguments passed to filetype
 
-    Returns: one of ADF, DALTON, GAMESS, GAMESS UK, Gaussian, Jaguar, Molpro,
-      MOPAC, NWChem, ORCA, Psi, QChem, a non-QC program reader instance, or None
-      (if it cannot figure it out or the file does not exist).
+    Returns:
+      one of ADF, DALTON, GAMESS, GAMESS UK, Gaussian, Jaguar,
+      Molpro, MOPAC, NWChem, ORCA, Psi, QChem, a non-QC program reader
+      instance, or None (if it cannot figure it out or the file does
+      not exist).
     """
 
     inputfile = None
