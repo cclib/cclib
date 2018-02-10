@@ -10,8 +10,8 @@
 from __future__ import division
 from __future__ import print_function
 
-import re
 import itertools
+import re
 
 import numpy
 
@@ -160,6 +160,83 @@ class QChem(logfileparser.Logfile):
                     newbfname = '{}{}'.format(bfcounts[bfname], bfname)
                     self.aonames[bfindex] = '_'.join([atomname, newbfname])
 
+        # Assign the number of core electrons replaced by ECPs.
+        if hasattr(self, 'user_input') and self.user_input.get('rem') is not None:
+            if self.user_input['rem'].get('ecp') is not None:
+                self.coreelectrons = numpy.zeros(self.natom, 'i')
+                self.atomsymbols = [self.table.element[atomno]
+                                 for atomno in self.atomnos]
+                ecp_is_gen = (self.user_input['rem']['ecp'] == 'gen')
+                if ecp_is_gen:
+                    assert 'ecp' in self.user_input
+                has_iprint = hasattr(self, 'possible_ecps')
+
+                if not ecp_is_gen and not has_iprint:
+                    msg = """ECPs are present, but the number of core \
+electrons isn't printed at all. Rerun with "iprint >= 100" to get \
+coreelectrons."""
+                    self.logger.warning(msg)
+                    self.incorrect_coreelectrons = True
+                elif ecp_is_gen and not has_iprint:
+                    nmissing = sum(ncore == 0
+                                   for (_, _, ncore) in self.user_input['ecp'])
+                    if nmissing > 1:
+                        msg = """ECPs are present, but coreelectrons can only \
+be guessed for one element at most. Rerun with "iprint >= 100" to get \
+coreelectrons."""
+                        self.logger.warning(msg)
+                        self.incorrect_coreelectrons = True
+                    elif self.user_input['molecule'].get('charge') is None:
+                        msg = """ECPs are present, but the total charge \
+cannot be determined. Rerun without `$molecule read`."""
+                        self.logger.warning(msg)
+                        self.incorrect_coreelectrons = True
+                    else:
+                        user_charge = self.user_input['molecule']['charge']
+                        # First, assign the entries given
+                        # explicitly.
+                        for entry in self.user_input['ecp']:
+                            element, _, ncore = entry
+                            if ncore > 0:
+                                self._assign_coreelectrons_to_element(element, ncore)
+                        # Because of how the charge is calculated
+                        # during extract(), this is the number of
+                        # remaining core electrons that need to be
+                        # assigned ECP centers. Filter out the
+                        # remaining entries, of which there should
+                        # only be one.
+                        remainder = self.charge - user_charge - self.coreelectrons.sum()
+                        entries = [entry
+                                   for entry in self.user_input['ecp']
+                                   if entry[2] == 0]
+                        if len(entries) != 0:
+                            assert len(entries) == 1
+                            element, _, ncore = entries[0]
+                            assert ncore == 0
+                            self._assign_coreelectrons_to_element(element, remainder, True)
+                elif not ecp_is_gen and has_iprint:
+                    for i in range(self.natom):
+                        if self.atomsymbols[i] in self.possible_ecps:
+                            self.coreelectrons[i] = self.possible_ecps[self.atomsymbols[i]]
+                else:
+                    assert ecp_is_gen and has_iprint
+                    for entry in self.user_input['ecp']:
+                        element, _, ncore = entry
+                        # If ncore is non-zero, then it must be
+                        # user-defined, and we take that
+                        # value. Otherwise, look it up.
+                        if ncore == 0:
+                            ncore = self.possible_ecps[element]
+                        self._assign_coreelectrons_to_element(element, ncore)
+
+        # Check to see if the charge is consistent with the input
+        # section. It may not be if using an ECP.
+        if hasattr(self, 'user_input'):
+            if self.user_input.get('molecule') is not None:
+                user_charge = self.user_input['molecule'].get('charge')
+                if user_charge is not None:
+                    self.set_attribute('charge', user_charge)
+
     def parse_charge_section(self, inputfile, chargetype):
         """Parse the population analysis charge block."""
         self.skip_line(inputfile, 'blank')
@@ -296,6 +373,18 @@ class QChem(logfileparser.Logfile):
                 histogram[element] = 1
         return histogram
 
+    def _assign_coreelectrons_to_element(self, element, ncore, divide_by_count=False):
+        """Assign to all instances of the element, because mixed usage isn't
+        allowed within elements.
+        """
+        mask = [element == possible_element
+                for possible_element in self.atomsymbols]
+        indices = [i for (i, x) in enumerate(mask) if x]
+        count = sum(mask)
+        if divide_by_count:
+            ncore = ncore // count
+        self.coreelectrons[indices] = ncore
+
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
 
@@ -310,42 +399,135 @@ class QChem(logfileparser.Logfile):
             self.is_fragment_section = False
 
         if not self.is_fragment_section:
+
             # If the input section is repeated back, parse the $rem and
             # $molecule sections.
             if line[0:11] == 'User input:':
+                self.user_input = dict()
                 self.skip_line(inputfile, 'd')
                 while list(set(line.strip())) != ['-']:
 
-                    if '$rem' in line.lower():
-                        while '$end' not in line.lower():
-                            line = next(inputfile)
-                            if 'method' in line.lower():
-                                method = line.split()[-1].upper()
-                                if method in self.wfn_method:
-                                    self.metadata["methods"].append(method)
-                                else:
-                                    self.metadata["methods"].append('DFT')
-                                    self.metadata["functional"] = method
-                            if 'exchange' in line.lower():
-                                self.metadata["methods"].append('DFT')
-                                self.metadata["functional"] = line.split()[-1]
-                            if 'print_orbitals' in line.lower():
-                                # Stay with the default value if a number isn't
-                                # specified.
-                                if line.split()[-1].lower() in ('true', 'false'):
-                                    continue
-                                else:
-                                    norbdisp_aonames = int(line.split()[-1])
-                                    self.norbdisp_alpha_aonames = norbdisp_aonames
-                                    self.norbdisp_beta_aonames = norbdisp_aonames
-                                    self.norbdisp_set = True
+                    if line.strip().lower() == '$rem':
+
+                        self.user_input['rem'] = dict()
+
+                        while line.strip().lower() != '$end':
+
+                            line = next(inputfile).lower()
+                            if line.strip() == '$end':
+                                break
                             # Apparently calculations can run without
                             # a matching $end...this terminates the
                             # user input section no matter what.
                             if line.strip() == ('-' * 62):
                                 break
 
-                    line = next(inputfile)
+                            tokens = line.split()
+                            # Allow blank lines.
+                            if len(tokens) == 0:
+                                continue
+                            # Entries may be separated by an equals
+                            # sign, and can have comments, for example:
+                            #     ecp gen
+                            #     ecp = gen
+                            #     ecp gen ! only on first chlorine
+                            #     ecp = gen only on first chlorine
+                            assert len(tokens) >= 2
+                            keyword = tokens[0]
+                            if tokens[1] == '=':
+                                option = tokens[2]
+                            else:
+                                option = tokens[1]
+                            self.user_input['rem'][keyword] = option
+
+                            if keyword == 'method':
+                                method = option.upper()
+                                if method in self.wfn_method:
+                                    self.metadata["methods"].append(method)
+                                else:
+                                    self.metadata["methods"].append('DFT')
+                                    self.metadata["functional"] = method
+
+                            if keyword == 'exchange':
+                                self.metadata["methods"].append('DFT')
+                                self.metadata["functional"] = option
+
+                            if keyword == 'print_orbitals':
+                                # Stay with the default value if a number isn't
+                                # specified.
+                                if option in ('true', 'false'):
+                                    continue
+                                else:
+                                    norbdisp_aonames = int(option)
+                                    self.norbdisp_alpha_aonames = norbdisp_aonames
+                                    self.norbdisp_beta_aonames = norbdisp_aonames
+                                    self.norbdisp_set = True
+
+                    if line.strip().lower() == '$ecp':
+
+                        self.user_input['ecp'] = []
+                        line = next(inputfile)
+
+                        while line.strip().lower() != '$end':
+
+                            while list(set(line.strip())) != ['*']:
+
+                                # Parse the element for this ECP
+                                # entry. If only the element is on
+                                # this line, or the 2nd token is 0, it
+                                # applies to all atoms; if it's > 0,
+                                # then it indexes (1-based) that
+                                # specific atom in the whole molecule.
+                                tokens = line.split()
+                                assert len(tokens) > 0
+                                element = tokens[0][0].upper() + tokens[0][1:].lower()
+                                assert element in self.table.element
+                                if len(tokens) > 1:
+                                    assert len(tokens) == 2
+                                    index = int(tokens[1]) - 1
+                                else:
+                                    index = -1
+                                line = next(inputfile)
+
+                                # Next comes the ECP definition. If
+                                # the line contains only a single
+                                # item, it's a built-in ECP, otherwise
+                                # it's a full definition.
+                                tokens = line.split()
+                                if len(tokens) == 1:
+                                    ncore = 0
+                                    line = next(inputfile)
+                                else:
+                                    assert len(tokens) == 3
+                                    ncore = int(tokens[2])
+                                    # Don't parse the remainder of the
+                                    # ECP definition.
+                                    while list(set(line.strip())) != ['*']:
+                                        line = next(inputfile)
+
+                                entry = (element, index, ncore)
+                                self.user_input['ecp'].append(entry)
+
+                                line = next(inputfile)
+
+                                if line.strip().lower() == '$end':
+                                    break
+
+                    if line.strip().lower() == '$molecule':
+
+                        self.user_input['molecule'] = dict()
+                        line = next(inputfile)
+
+                        # Don't read the molecule, only the
+                        # supersystem charge and multiplicity.
+                        if line.split()[0].lower() == 'read':
+                            pass
+                        else:
+                            charge, mult = [int(x) for x in line.split()]
+                            self.user_input['molecule']['charge'] = charge
+                            self.user_input['molecule']['mult'] = mult
+
+                    line = next(inputfile).lower()
 
             # Parse the basis set name
             if 'Requested basis set' in line:
@@ -417,6 +599,30 @@ class QChem(logfileparser.Logfile):
                         # as long as we don't hit the '****' atom
                         # delimiter.
                     self.gbasis.append(atom)
+                    line = next(inputfile)
+
+            if line.strip() == 'The following effective core potentials will be applied':
+
+                # Keep track of all elements that may have an ECP on
+                # them. *Which* centers have an ECP can't be
+                # determined here, so just take the number of valence
+                # electrons, then later later figure out the centers
+                # and do core = Z - valence.
+                self.possible_ecps = dict()
+                # This will fail if an element has more than one kind
+                # of ECP.
+
+                split_fixed = utils.WidthSplitter((4, 13, 20, 2, 14, 14))
+
+                self.skip_lines(inputfile, ['d', 'header', 'header', 'd'])
+                line = next(inputfile)
+                while list(set(line.strip())) != ['-']:
+                    tokens = split_fixed.split(line)
+                    if tokens[0] != '':
+                        element = tokens[0]
+                        valence = int(tokens[1])
+                        ncore = self.table.number[element] - valence
+                        self.possible_ecps[element] = ncore
                     line = next(inputfile)
 
             # Extract the atomic numbers and coordinates of the atoms.

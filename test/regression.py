@@ -1018,6 +1018,73 @@ def testQChem_QChem4_2_dvb_sp_multipole_10_out(logfile):
     assert numpy.isnan(logfile.data.moments[10][0])
 
 
+def testQChem_QChem4_2_MoOCl4_sp_noprint_builtin_mixed_all_Cl_out(logfile):
+    """ECP on all Cl atoms, but iprint is off, so coreelectrons must be
+    guessed.
+    """
+    assert logfile.data.charge == -2
+    assert logfile.data.mult == 1
+    assert hasattr(logfile.data, 'coreelectrons')
+    coreelectrons = numpy.array([0, 0, 10, 10, 10, 10], dtype=int)
+    assert numpy.all(coreelectrons == logfile.data.coreelectrons)
+
+
+def testQChem_QChem4_2_MoOCl4_sp_noprint_builtin_mixed_both_out(logfile):
+    """ECP on Mo and all Cl atoms, but iprint is off, so coreelectrons
+    can't be guessed.
+
+    Uses `ecp = gen`.
+    """
+    assert logfile.data.charge == -2
+    assert logfile.data.mult == 1
+    assert not hasattr(logfile.data, 'coreelectrons')
+
+
+def testQChem_QChem4_2_MoOCl4_sp_noprint_builtin_mixed_single_Mo_out(logfile):
+    """ECP on Mo, but iprint is off, so coreelectrons must be guessed."""
+    assert logfile.data.charge == -2
+    assert logfile.data.mult == 1
+    assert hasattr(logfile.data, 'coreelectrons')
+    coreelectrons = numpy.array([28, 0, 0, 0, 0, 0], dtype=int)
+    assert numpy.all(coreelectrons == logfile.data.coreelectrons)
+
+
+def testQChem_QChem4_2_MoOCl4_sp_noprint_builtin_out(logfile):
+    """ECP on Mo and all Cl atoms, but iprint is off, so coreelectrons
+    can't be guessed.
+
+    Uses `ecp = <builtin>`.
+    """
+    assert logfile.data.charge == -2
+    assert logfile.data.mult == 1
+    assert not hasattr(logfile.data, 'coreelectrons')
+
+
+def testQChem_QChem4_2_MoOCl4_sp_noprint_user_Mo_builtin_all_Cl_out(logfile):
+    """ECP on Mo and all Cl atoms, but iprint is off; the coreelectrons
+    count is given for Mo, and Cl can be guessed.
+    """
+    assert logfile.data.charge == -2
+    assert logfile.data.mult == 1
+    assert hasattr(logfile.data, 'coreelectrons')
+    coreelectrons = numpy.array([28, 0, 10, 10, 10, 10], dtype=int)
+    assert numpy.all(coreelectrons == logfile.data.coreelectrons)
+
+
+def testQChem_QChem4_2_MoOCl4_sp_print_builtin_mixed_single_Mo_single_Cl_out(logfile):
+    """ECP on Mo and all Cl atoms; iprint is on, so coreelectrons can be
+    calculated.
+
+    This was intended to only have an ECP on a single Cl, but Q-Chem
+    silently puts it on all.
+    """
+    assert logfile.data.charge == -2
+    assert logfile.data.mult == 1
+    assert hasattr(logfile.data, 'coreelectrons')
+    coreelectrons = numpy.array([28, 0, 10, 10, 10, 10], dtype=int)
+    assert numpy.all(coreelectrons == logfile.data.coreelectrons)
+
+
 def testQChem_QChem4_2_print_frgm_false_opt_out(logfile):
     """Fragment calculation: geometry optimization.
 
@@ -1281,6 +1348,14 @@ def testQChem_QChem4_4_top_out(logfile):
     assert len(logfile.data.mocoeffs) == 1
     assert logfile.data.mocoeffs[0].shape == (nmo, nbasis)
     assert logfile.data.mocoeffs[0].T[6, 5] == 0.8115082
+
+
+def testQChem_QChem5_0_438_out(logfile):
+    """This job has an ECP on Pt, replacing 60 of 78 electrons, and was
+    showing the charge as 60.
+    """
+    assert logfile.data.charge == 0
+    assert logfile.data.coreelectrons[0] == 60
 
 
 def testQChem_QChem5_0_argon_out(logfile):
