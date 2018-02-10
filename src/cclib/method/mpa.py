@@ -11,7 +11,7 @@ import random
 
 import numpy
 
-from .population import Population
+from cclib.method.population import Population
 
 
 class MPA(Population):
@@ -132,5 +132,6 @@ class MPA(Population):
 
 
 if __name__ == "__main__":
-    import doctest, mpa
+    import doctest
+    from cclib.method import mpa
     doctest.testmod(mpa, verbose=False)

@@ -10,12 +10,13 @@
 import sys
 import unittest
 
-sys.path.append("method")
-from testcda import *
-from testmbo import *
-from testnuclear import *
-from testorbitals import *
-from testpopulation import *
+sys.path.insert(1, "method")
+
+from .method.testcda import *
+from .method.testmbo import *
+from .method.testnuclear import *
+from .method.testorbitals import *
+from .method.testpopulation import *
 
 
 if __name__ == "__main__":

@@ -12,10 +12,11 @@ from __future__ import print_function
 
 import itertools
 import re
+
 import numpy
 
-from . import logfileparser
-from . import utils
+from cclib.parser import logfileparser
+from cclib.parser import utils
 
 
 class QChem(logfileparser.Logfile):
@@ -1600,7 +1601,8 @@ cannot be determined. Rerun without `$molecule read`."""
 
 if __name__ == '__main__':
     import sys
-    import doctest, qchemparser
+    import doctest
+    from cclib.parser import qchemparser
 
     if len(sys.argv) == 1:
         doctest.testmod(qchemparser, verbose=False)

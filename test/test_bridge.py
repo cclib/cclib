@@ -10,8 +10,9 @@
 import sys
 import unittest
 
-sys.path.append("bridge")
-from testopenbabel import *
+sys.path.insert(1, "bridge")
+
+from .bridge.testopenbabel import *
 
 
 if __name__ == "__main__":

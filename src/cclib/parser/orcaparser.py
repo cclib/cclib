@@ -12,8 +12,8 @@ from __future__ import print_function
 
 import numpy
 
-from . import logfileparser
-from . import utils
+from cclib.parser import logfileparser
+from cclib.parser import utils
 
 
 class ORCA(logfileparser.Logfile):
@@ -1163,7 +1163,8 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
 
 if __name__ == "__main__":
     import sys
-    import doctest, orcaparser
+    import doctest
+    from cclib.parser import orcaparser
 
     if len(sys.argv) == 1:
         doctest.testmod(orcaparser, verbose=False)

@@ -7,19 +7,19 @@
 
 """Contains all writers for standard chemical representations"""
 
-from .cjsonwriter import CJSON as CJSONWriter
-from .cmlwriter import CML
-from .xyzwriter import XYZ
-from .moldenwriter import MOLDEN
-from .wfxwriter import WFXWriter
-from .cjsonreader import CJSON as CJSONReader
+from cclib.io.cjsonwriter import CJSON as CJSONWriter
+from cclib.io.cmlwriter import CML
+from cclib.io.xyzwriter import XYZ
+from cclib.io.moldenwriter import MOLDEN
+from cclib.io.wfxwriter import WFXWriter
+from cclib.io.cjsonreader import CJSON as CJSONReader
 
 # This allows users to type:
 #   from cclib.io import ccopen
 #   from cclib.io import ccread
 #   from cclib.io import ccwrite
 #   from cclib.io import URL_PATTERN
-from .ccio import ccopen
-from .ccio import ccread
-from .ccio import ccwrite
-from .ccio import URL_PATTERN
+from cclib.io.ccio import ccopen
+from cclib.io.ccio import ccread
+from cclib.io.ccio import ccwrite
+from cclib.io.ccio import URL_PATTERN

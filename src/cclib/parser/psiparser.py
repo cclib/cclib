@@ -12,9 +12,9 @@ import re
 
 import numpy
 
-from . import data
-from . import logfileparser
-from . import utils
+from cclib.parser import data
+from cclib.parser import logfileparser
+from cclib.parser import utils
 
 
 class Psi(logfileparser.Logfile):
@@ -746,6 +746,7 @@ class Psi(logfileparser.Logfile):
             self.mpenergies.append([mpenergy])
         # This is for the newer DF-MP2 code in 4.0.
         if 'DF-MP2 Energies' in line:
+            self.metadata["methods"].append("DF-MP2")
             while 'Total Energy' not in line:
                 line = next(inputfile)
             mpenergy = utils.convertor(float(line.split()[3]), 'hartree', 'eV')
@@ -1125,5 +1126,6 @@ class Psi(logfileparser.Logfile):
 
 
 if __name__ == "__main__":
-    import doctest, psiparser
+    import doctest
+    from cclib.parser import psiparser
     doctest.testmod(psiparser, verbose=False)

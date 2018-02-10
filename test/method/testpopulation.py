@@ -16,10 +16,12 @@ import unittest
 
 import numpy
 
-sys.path.append("..")
-from test_data import getdatafile
 from cclib.method import MPA, LPA, CSPA
 from cclib.parser import Gaussian
+
+sys.path.insert(1, "..")
+
+from ..test_data import getdatafile
 
 
 class GaussianMPATest(unittest.TestCase):

@@ -29,31 +29,31 @@ else:
     from urllib.request import urlopen
     from urllib.error import URLError
 
-from ..parser import logfileparser
-from ..parser import data
+from cclib.parser import logfileparser
+from cclib.parser import data
 
-from ..parser.adfparser import ADF
-from ..parser.daltonparser import DALTON
-from ..parser.gamessparser import GAMESS
-from ..parser.gamessukparser import GAMESSUK
-from ..parser.gaussianparser import Gaussian
-from ..parser.jaguarparser import Jaguar
-from ..parser.molproparser import Molpro
-from ..parser.mopacparser import MOPAC
-from ..parser.nwchemparser import NWChem
-from ..parser.orcaparser import ORCA
-from ..parser.psiparser import Psi
-from ..parser.qchemparser import QChem
+from cclib.parser.adfparser import ADF
+from cclib.parser.daltonparser import DALTON
+from cclib.parser.gamessparser import GAMESS
+from cclib.parser.gamessukparser import GAMESSUK
+from cclib.parser.gaussianparser import Gaussian
+from cclib.parser.jaguarparser import Jaguar
+from cclib.parser.molproparser import Molpro
+from cclib.parser.mopacparser import MOPAC
+from cclib.parser.nwchemparser import NWChem
+from cclib.parser.orcaparser import ORCA
+from cclib.parser.psiparser import Psi
+from cclib.parser.qchemparser import QChem
 
-from . import cjsonreader
-from . import cjsonwriter
-from . import cmlwriter
-from . import xyzwriter
-from . import moldenwriter
-from . import wfxwriter
+from cclib.io import cjsonreader
+from cclib.io import cjsonwriter
+from cclib.io import cmlwriter
+from cclib.io import xyzwriter
+from cclib.io import moldenwriter
+from cclib.io import wfxwriter
 
 try:
-    from ..bridge import cclib2openbabel
+    from cclib.bridge import cclib2openbabel
     _has_cclib2openbabel = True
 except ImportError:
     _has_cclib2openbabel = False
@@ -296,7 +296,8 @@ def fallback(source):
             print("Could not import openbabel, fallback mechanism might not work.")
 
 
-def ccwrite(ccobj, outputtype=None, outputdest=None, terse=False , returnstr=False,
+def ccwrite(ccobj, outputtype=None, outputdest=None,
+            indices=None, terse=False , returnstr=False,
             *args, **kwargs):
     """Write the parsed data from an outputfile to a standard chemical
     representation.
@@ -305,6 +306,7 @@ def ccwrite(ccobj, outputtype=None, outputdest=None, terse=False , returnstr=Fal
         ccobj - Either a job (from ccopen) or a data (from job.parse()) object
         outputtype - The output format (should be a string)
         outputdest - A filename or file object for writing
+        indices - One or more indices for extracting specific geometries/etc. (zero-based)
         terse -  This option is currently limited to the cjson/json format. Whether to indent the cjson/json or not
         returnstr - Whether or not to return a string representation.
 
@@ -336,7 +338,9 @@ def ccwrite(ccobj, outputtype=None, outputdest=None, terse=False , returnstr=Fal
         # Avoid passing multiple times into the main call.
         del kwargs['jobfilename']
 
-    outputobj = outputclass(ccdata, jobfilename=jobfilename, terse=terse, *args, **kwargs)
+    outputobj = outputclass(ccdata, jobfilename=jobfilename,
+                            indices=indices, terse=terse,
+                            *args, **kwargs)
     output = outputobj.generate_repr()
 
     # If outputdest isn't None, write the output to disk.

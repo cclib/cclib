@@ -10,15 +10,18 @@
 import sys
 import unittest
 
-sys.path.append('io')
-from testccio import *
-from testfilewriter import *
-from testxyzwriter import *
-from testcjsonreader import *
-from testcjsonwriter import *
-from testmoldenwriter import *
+sys.path.insert(1, 'io')
 
-from testwfxwriter import *
+from .io.testccio import *
+
+from .io.testfilewriter import *
+from .io.testcjsonwriter import *
+from .io.testmoldenwriter import *
+from .io.testwfxwriter import *
+from .io.testxyzwriter import *
+
+from .io.testcjsonreader import *
+
 
 if __name__ == "__main__":
     unittest.main()

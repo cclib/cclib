@@ -13,9 +13,9 @@ import re
 
 import numpy
 
-from . import data
-from . import logfileparser
-from . import utils
+from cclib.parser import data
+from cclib.parser import logfileparser
+from cclib.parser import utils
 
 
 class Gaussian(logfileparser.Logfile):
@@ -225,7 +225,7 @@ class Gaussian(logfileparser.Logfile):
 
             self.updateprogress(inputfile, "Attributes", self.fupdate)
 
-            natom = int(line.split()[1])
+            natom = int(re.search('NAtoms=\s*(\d+)', line).group(1))
             self.set_attribute('natom', natom)
 
         # Basis set name
@@ -1798,7 +1798,9 @@ class Gaussian(logfileparser.Logfile):
 
 
 if __name__ == "__main__":
-    import doctest, gaussianparser, sys
+    import doctest
+    import sys
+    from cclib.parser import gaussianparser
 
     if len(sys.argv) == 1:
         doctest.testmod(gaussianparser, verbose=False)

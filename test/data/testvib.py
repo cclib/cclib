@@ -225,7 +225,7 @@ class QChemRamanTest(GenericRamanTest):
 if __name__=="__main__":
 
     import sys
-    sys.path.append(os.path.join(__filedir__, ".."))
+    sys.path.insert(1, os.path.join(__filedir__, ".."))
 
     from test_data import DataSuite
     suite = DataSuite(['vib'])

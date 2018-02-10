@@ -17,11 +17,13 @@ import unittest
 
 import numpy
 
-sys.path.append("..")
-from test_data import getdatafile
 from cclib.method import Nuclear
 from cclib.parser import QChem
 from cclib.parser import utils
+
+sys.path.insert(1, "..")
+
+from ..test_data import getdatafile
 
 
 class NuclearTest(unittest.TestCase):

@@ -14,8 +14,8 @@ import re
 
 import numpy
 
-from . import logfileparser
-from . import utils
+from cclib.parser import logfileparser
+from cclib.parser import utils
 
 
 class ADF(logfileparser.Logfile):
@@ -1159,5 +1159,6 @@ class ADF(logfileparser.Logfile):
 
 
 if __name__ == "__main__":
-    import doctest, adfparser
+    import doctest
+    from cclib.parser import adfparser
     doctest.testmod(adfparser, verbose=False)

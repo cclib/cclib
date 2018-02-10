@@ -11,7 +11,7 @@ import logging
 
 import numpy
 
-from .calculationmethod import Method
+from cclib.method.calculationmethod import Method
 
 
 class Population(Method):
@@ -92,5 +92,6 @@ class Population(Method):
 
 
 if __name__ == "__main__":
-    import doctest, population
+    import doctest
+    from cclib.method import population
     doctest.testmod(population, verbose=False)

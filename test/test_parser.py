@@ -10,10 +10,11 @@
 import sys
 import unittest
 
-sys.path.append('parser')
-from testdata import *
-from testlogfileparser import *
-from testutils import *
+sys.path.insert(1, 'parser')
+
+from .parser.testdata import *
+from .parser.testlogfileparser import *
+from .parser.testutils import *
 
 
 if __name__ == "__main__":

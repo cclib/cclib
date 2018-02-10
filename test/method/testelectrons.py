@@ -17,12 +17,13 @@ import unittest
 
 import numpy
 
-sys.path.append("..")
-from test_data import getdatafile
-
 from cclib.method import Electrons
 from cclib.parser import Gaussian
 from cclib.parser import QChem
+
+sys.path.insert(1, "..")
+
+from ..test_data import getdatafile
 
 
 class ElectronsTest(unittest.TestCase):

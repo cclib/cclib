@@ -235,7 +235,7 @@ def electrondensity(coords, mocoeffslist, gbasis, volume):
     return density
 
 
-if __name__=="__main__":
+if __name__ == "__main__":
 
     try:
         import psyco

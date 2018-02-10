@@ -65,12 +65,12 @@ from cclib.io import ccopen
 # within the cclib repository. It would be better to figure out a more natural
 # way to import the relevant tests from cclib here.
 test_dir = os.path.realpath(os.path.dirname(__file__)) + "/../../test"
-sys.path.append(os.path.abspath(test_dir))
-from test_data import all_modules
-from test_data import all_parsers
-from test_data import module_names
-from test_data import parser_names
-from test_data import get_program_dir
+sys.path.insert(1, os.path.abspath(test_dir))
+from .test_data import all_modules
+from .test_data import all_parsers
+from .test_data import module_names
+from .test_data import parser_names
+from .test_data import get_program_dir
 
 
 # We need this to point to files relative to this script.
@@ -1423,7 +1423,7 @@ def flatten(seq):
 def normalisefilename(filename):
     """Replace all non-alphanumeric symbols by underscores.
 
-    >>> import regression
+    >>> from . import regression
     >>> for x in [ "Gaussian/Gaussian03/Mo4OSibdt2-opt.log" ]:
     ...     print(regression.normalisefilename(x))
     ...
@@ -1660,7 +1660,7 @@ old_unittests = {
 
     "GAMESS/WinGAMESS/dvb_td_2007.03.24.r1.out":    GAMESSUSTDDFTTest,
 
-    "Gaussian/Gaussian09/dvb_gopt_revA.02.out":         GaussianGeoOptTest,
+    "Gaussian/Gaussian09/dvb_gopt_revA.02.out":         GenericGeoOptTest,
     "Gaussian/Gaussian09/dvb_ir_revA.02.out":           GaussianIRTest,
     "Gaussian/Gaussian09/dvb_raman_revA.02.out":        GaussianRamanTest,
     "Gaussian/Gaussian09/dvb_scan_revA.02.log":         GaussianScanTest,

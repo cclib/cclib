@@ -13,8 +13,8 @@ import re
 
 import numpy
 
-from . import logfileparser
-from . import utils
+from cclib.parser import logfileparser
+from cclib.parser import utils
 
 
 class NWChem(logfileparser.Logfile):
@@ -1116,5 +1116,6 @@ class NWChem(logfileparser.Logfile):
 
 
 if __name__ == "__main__":
-    import doctest, nwchemparser
+    import doctest
+    from cclib.parser import nwchemparser
     doctest.testmod(nwchemparser, verbose=False)

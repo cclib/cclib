@@ -25,15 +25,15 @@ as well as example methods that take parsed data as input.
 
 __version__ = "1.5.2"
 
-from . import parser
-from . import progress
-from . import method
-from . import bridge
-from . import io
+from cclib import parser
+from cclib import progress
+from cclib import method
+from cclib import bridge
+from cclib import io
 
 # The test module can be imported if it was installed with cclib.
 try:
-    from . import test
+    from cclib import test
 except ImportError:
     pass
 
