@@ -65,10 +65,10 @@ class Gaussian(logfileparser.Logfile):
         SCFRMS, SCFMAX, SCFENERGY = list(range(3))
 
         # Extract only well-formed numbers in scientific notation.
-        self.re_scinot = re.compile('(\w*=\s*)(-?\d\.\d{2}D[+-]\d{2})')
+        self.re_scinot = re.compile('(\w*)=\s*(-?\d\.\d{2}D[+-]\d{2})')
         # Extract only well-formed numbers in traditional
         # floating-point format.
-        self.re_float = re.compile('(\w*-?\w*=)\s*(-?\d+\.\d{10,})')
+        self.re_float = re.compile('(\w*-?\w*)=\s*(-?\d+\.\d{10,})')
 
         # Flag for identifying Coupled Cluster runs.
         self.coupledcluster = False
@@ -678,7 +678,7 @@ class Gaussian(logfileparser.Logfile):
 
                     matches = self.re_scinot.findall(line)
                     matches = {
-                        match[0].strip()[:-1]: self.float(match[1])
+                        match[0]: self.float(match[1])
                         for match in matches
                     }
                     scfvalues_step = [
