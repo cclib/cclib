@@ -64,6 +64,12 @@ class Gaussian(logfileparser.Logfile):
         # Used to index self.scftargets[].
         SCFRMS, SCFMAX, SCFENERGY = list(range(3))
 
+        # Extract only well-formed numbers in scientific notation.
+        self.re_scinot = re.compile('(\w*=\s*)(-?\d\.\d{2}D[+-]\d{2})')
+        # Extract only well-formed numbers in traditional
+        # floating-point format.
+        self.re_float = re.compile('(\w*-?\w*=)\s*(-?\d+\.\d{10,})')
+
         # Flag for identifying Coupled Cluster runs.
         self.coupledcluster = False
 
@@ -665,18 +671,23 @@ class Gaussian(logfileparser.Logfile):
                 #  RMSDP=1.13D-05 MaxDP=1.08D-04              OVMax= 1.66D-04
                 if line.find(" RMSDP") == 0:
 
-                    parts = line.split()
-                    newlist = [self.float(x.split('=')[1]) for x in parts[0:2]]
-                    energy = 1.0
-                    if len(parts) > 4:
-                        energy = parts[2].split('=')[1]
-                        if energy == "":
-                            energy = self.float(parts[3])
-                        else:
-                            energy = self.float(energy)
-                    if len(self.scftargets[0]) == 3:  # Only add the energy if it's a target criteria
-                        newlist.append(energy)
-                    scfvalues.append(newlist)
+                    # Fields of interest:
+                    # RMSDP
+                    # MaxDP
+                    # (DE) -> Only add the energy if it's a target criteria
+
+                    matches = self.re_scinot.findall(line)
+                    matches = {
+                        match[0].strip()[:-1]: self.float(match[1])
+                        for match in matches
+                    }
+                    scfvalues_step = [
+                        matches.get('RMSDP', numpy.nan),
+                        matches.get('MaxDP', numpy.nan)
+                    ]
+                    if len(self.scftargets[0]) == 3:
+                        scfvalues_step.append(matches.get('DE', numpy.nan))
+                    scfvalues.append(scfvalues_step)
 
                 try:
                     line = next(inputfile)
