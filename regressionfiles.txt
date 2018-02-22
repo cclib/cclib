@@ -205,10 +205,9 @@ Gaussian/Gaussian09/dvb_td_revA.02.out
 Gaussian/Gaussian09/dvb_un_sp_b_revA.02.log
 Gaussian/Gaussian09/dvb_un_sp_revA.02.log
 Gaussian/Gaussian09/encaps1.log
-Gaussian/Gaussian09/encaps1.log
 Gaussian/Gaussian09/guessIndo_modified_ALT.out
 Gaussian/Gaussian09/irc_point.log
-Gaussian/Gaussian09/irc_point.log
+Gaussian/Gaussian09/issue_460.log
 Gaussian/Gaussian09/jos.teunissen.out
 Gaussian/Gaussian09/oniom_IR_intensity.log
 Gaussian/Gaussian09/OPT_oniom.log
