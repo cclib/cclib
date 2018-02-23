@@ -478,7 +478,7 @@ def testGaussian_Gaussian09_issue_460_log(logfile):
     """
     assert hasattr(logfile.data, 'scfvalues')
     assert logfile.data.scfvalues[0][0, 0] == 3.37e-03
-    assert np.isnan(logfile.data.scfvalues[0][0, 2])
+    assert numpy.isnan(logfile.data.scfvalues[0][0, 2])
 
 def testGaussian_Gaussian09_OPT_td_g09_out(logfile):
     """Couldn't find etrotats as G09 has different output than G03."""
