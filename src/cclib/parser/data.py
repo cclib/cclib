@@ -382,7 +382,7 @@ class ccData(object):
 
     @property
     def closed_shell(self):
-        return orbitals.orbitals(self).closed_shell()
+        return orbitals.Orbitals(self).closed_shell()
 
 
 class ccData_optdone_bool(ccData):
