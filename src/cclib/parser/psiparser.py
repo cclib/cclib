@@ -1017,8 +1017,22 @@ class Psi(logfileparser.Logfile):
         #     1       -0.000000000000     0.000000000000    -0.064527252292
         #     2        0.000000000000    -0.028380539652     0.032263626146
         #     3       -0.000000000000     0.028380539652     0.032263626146
-        if line == '-Total Gradient:':
-            pass
+
+        if line.strip() == '-Total Gradient:':
+            next(inputfile)
+            next(inputfile)
+            line = next(inputfile).strip()
+            grads = []
+            while len(line) > 1:
+                idx, x, y, z = line.split()
+                grads.append((float(x), float(y), float(z)))
+                line = next(inputfile).strip()
+        
+            if not hasattr(self, 'grads'):
+                self.grads = []
+            self.grads.append(grads)
+
+        ## Finite Differences Gradient (Psi4)
 
         # -------------------------------------------------------------
         #   ## F-D gradient (Symmetry 0) ##
@@ -1030,10 +1044,22 @@ class Psi(logfileparser.Logfile):
         #     2     0.00000000000000    -0.00979709321487     0.01460651641258
         #     3     0.00000000000000     0.00979709321487     0.01460651641258
 
+        if line.strip() == '## F-D gradient (Symmetry 0) ##':
+            next(inputfile)
+            next(inputfile)
+            next(inputfile)
+            next(inputfile)
+            line = next(inputfile)
+            grads = []
 
+            while len(line) > 1:
+                idx, x, y, z = line.split()
+                grads.append((float(x), float(y), float(z)))
+                line = next(inputfile).strip()
         
-        if line == '  ## F-D gradient (Symmetry 0) ##':
-            pass
+            if not hasattr(self, 'grads'):
+                self.grads = []
+            self.grads.append(grads)
 
         
         ## Harmonic frequencies.
