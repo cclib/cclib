@@ -170,7 +170,6 @@ class GenericGeoOptTest(unittest.TestCase):
     @skipForParser("Jaguar", "Not implemented.")
     @skipForParser("NWChem", "Not implemented.")
     @skipForParser("ORCA", "Not implemented.")
-    @skipForParser("Psi", "Not implemented.")
     def testgradsdim(self):
         """Do the grads have the right dimensions?"""
         self.assertEquals(self.data.grads.shape,(len(self.data.geovalues),self.data.natom,3))
