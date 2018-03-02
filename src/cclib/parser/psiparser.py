@@ -1019,14 +1019,13 @@ class Psi(logfileparser.Logfile):
         #     3       -0.000000000000     0.028380539652     0.032263626146
 
         if line.strip() == '-Total Gradient:':
-            next(inputfile)
-            next(inputfile)
-            line = next(inputfile).strip()
+            self.skip_lines(inputfile, ['header', 'dash header'])
+            line = next(inputfile)
             grads = []
-            while len(line) > 1:
+            while line.strip():
                 idx, x, y, z = line.split()
                 grads.append((float(x), float(y), float(z)))
-                line = next(inputfile).strip()
+                line = next(inputfile)
         
             if not hasattr(self, 'grads'):
                 self.grads = []
@@ -1046,16 +1045,16 @@ class Psi(logfileparser.Logfile):
 
         if line.strip() == '## F-D gradient (Symmetry 0) ##':
             next(inputfile)
+            self.skip_lines(inputfile, ['b'])
             next(inputfile)
-            next(inputfile)
-            next(inputfile)
+            self.skip_lines(inputfile, ['b'])
             line = next(inputfile)
             grads = []
 
-            while len(line) > 1:
+            while line.strip():
                 idx, x, y, z = line.split()
                 grads.append((float(x), float(y), float(z)))
-                line = next(inputfile).strip()
+                line = next(inputfile)
         
             if not hasattr(self, 'grads'):
                 self.grads = []
