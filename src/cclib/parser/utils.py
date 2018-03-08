@@ -61,6 +61,7 @@ def symmetrize(m, use_triangle='lower'):
 
 def convertor(value, fromunits, tounits):
     """Convert from one set of units to another.
+    
     Sources:
         NIST 2010 CODATA (http://physics.nist.gov/cuu/Constants/index.html)
         Documentation of GAMESS-US or other programs as noted
@@ -193,4 +194,4 @@ class WidthSplitter:
 if __name__ == "__main__":
     import doctest
     from cclib.parser import utils
-doctest.testmod(utils, verbose=False)
+    doctest.testmod(utils, verbose=False)
