@@ -31,17 +31,20 @@ class Method(object):
     >>> import cda, cspa, density, fragments, lpa, mbo, mpa, nuclear, opa, population, volume
     """
 
-    def __init__(self, data, progress=None, loglevel=logging.INFO, logname="Log"):
+    def __init__(self, data, requiredAttr, progress=None, loglevel=logging.INFO, logname="Log"):
         """Initialise the Logfile object.
 
         This constructor is typically called by the constructor of a subclass.
         """
 
         self.data = data
+        self.requiredAttr = requiredAttr
         self.progress = progress
         self.loglevel = loglevel
         self.logname = logname
-
+        self.initFlag = 0
+        self.attrErrorMessage = self.init_error()
+        
         self.logger = logging.getLogger('%s %s' % (self.logname, self.data))
         self.logger.setLevel(self.loglevel)
         self.logformat = "[%(name)s %(levelname)s] %(message)s"
@@ -49,6 +52,24 @@ class Method(object):
         handler.setFormatter(logging.Formatter(self.logformat))
         self.logger.addHandler(handler)
 
+    def init_error(self):
+
+        get = []
+        miss = []
+
+        for attr in self.requiredAttr:
+            if attr in self.data.__dict__:
+                get.append(attr)
+            else:
+                miss.append(attr)
+
+        if len(miss) == 0:
+            pass
+            return ''
+        else:
+            self.initFlag =1
+            missingAttr = ','.join(i for i in miss)
+            return missingAttr
 
 if __name__ == "__main__":
     import doctest

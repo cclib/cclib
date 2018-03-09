@@ -22,12 +22,14 @@ from cclib.method.calculationmethod import Method
 class Orbitals(Method):
     """A class for orbital related methods."""
 
-    def __init__(self, data, progress=None, \
+    def __init__(self, data, requiredAttr = ['mocoeffs','moenergies','homos'], progress=None, \
                  loglevel=logging.INFO, logname="Log"):
 
         # Call the __init__ method of the superclass.
-        super(Orbitals, self).__init__(data, progress, loglevel, logname)
+        super(Orbitals, self).__init__(data,requiredAttr, progress, loglevel, logname)
         self.fragresults = None
+        if self.initFlag:
+            print('Missing attributes: %s' % (self.attrErrorMessage))
 
     def __str__(self):
         """Return a string representation of the object."""
@@ -39,26 +41,21 @@ class Orbitals(Method):
 
     def closed_shell(self):
         """Return Boolean indicating if system is closed shell."""
-
-        # Check if there is an attribute called 'mocoeffs' in parsed data
-        # from the input file
-        try:
+        if self.initFlag:
+            return None 
         # If there are beta orbitals, we can assume the system is closed
         # shell if the orbital energies are identical within numerical accuracy.
-            if len(self.data.mocoeffs) == 2:
-                precision = 10e-6
-                return numpy.allclose(*self.data.moenergies, atol=precision)
+        elif len(self.data.mocoeffs) == 2:
+            precision = 10e-6
+            return numpy.allclose(*self.data.moenergies, atol=precision)
 
-            # Restricted open shell will have one set of MOs but two HOMO indices,
-            # and the indices should be different (otherwise it's still closed shell).
-            if len(self.data.homos) == 2 and self.data.homos[0] != self.data.homos[1]:
-                return False
+        # Restricted open shell will have one set of MOs but two HOMO indices,
+        # and the indices should be different (otherwise it's still closed shell).
+        elif len(self.data.homos) == 2 and self.data.homos[0] != self.data.homos[1]:
+            return False
 
-            return True
-        
+        return True
 
-        except AttributeError:
-            return "Attribute mocoeffs couldn't be parsed. This may be due to the file that was provided as input to the parser."
 
 if __name__ == "__main__":
     import doctest
