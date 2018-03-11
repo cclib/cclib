@@ -13,10 +13,7 @@ addons:
 cache:
   pip: true
 before_install:
-  - pip install numpy
-  - pip install openbabel
-  - if [[ $TRAVIS_PYTHON_VERSION != 3.2 ]]; then pip install biopython; fi
-  - if [[ $TRAVIS_PYTHON_VERSION == 2.7 ]]; then sh travis/install_pyquante.sh; fi
+  - pip install -r requirements.txt
 install:
   - python setup.py install
 script:
