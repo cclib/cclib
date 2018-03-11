@@ -19,6 +19,7 @@ from .io.testcjsonwriter import *
 from .io.testmoldenwriter import *
 from .io.testwfxwriter import *
 from .io.testxyzwriter import *
+from .io.testscripts import *
 
 from .io.testcjsonreader import *
 

@@ -49,7 +49,14 @@ def setup_cclib():
         platforms=["Any."],
         packages=setuptools.find_packages('src'),
         package_dir={'': 'src'},
-        scripts=["src/scripts/ccget", "src/scripts/ccwrite", "src/scripts/cda"]
+        entry_points={
+            'console_scripts': [
+                'ccget=scripts.ccget:ccget',
+                'ccwrite=scripts.ccwrite:main',
+                'cda=scripts.cda:main'
+            ]
+        }
+
     )
 
 

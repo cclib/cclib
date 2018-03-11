@@ -19,8 +19,7 @@ from cclib.io import ccopen
 from cclib.method import CDA
 
 
-if __name__ == "__main__":
-
+def main():
     parser1 = ccopen(sys.argv[1], logging.ERROR)
     parser2 = ccopen(sys.argv[2], logging.ERROR)
     parser3 = ccopen(sys.argv[3], logging.ERROR)
@@ -64,3 +63,7 @@ if __name__ == "__main__":
                         fa.bdonations[spin].sum(),
                         fa.repulsions[spin].sum(),
                         fa.residuals[spin].sum()))
+
+
+if __name__ == '__main__':
+    main()
