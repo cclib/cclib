@@ -1,5 +1,6 @@
+biopython ; python_version == '2.7' or python_version >= '3.4'
 numpy
-biopython
 openbabel
+
 # For some reason PyQuante can't be installed from PyPI.
-# PyQuante
+https://sourceforge.net/projects/pyquante/files/PyQuante-1.6/PyQuante-1.6.5/PyQuante-1.6.5.tar.gz  ; python_version <= '2.7'
