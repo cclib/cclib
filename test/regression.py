@@ -747,6 +747,10 @@ def testPsi_Psi4_0b5_stopiter_psi_hf_out(logfile):
     """Check to ensure that an incomplete SCF is handled correctly."""
     assert len(logfile.data.scfvalues[0]) == 6
 
+def testPsi_Psi4_0_water_fdgrad_out(logfile):
+    """Ensure that finite difference gradients are parsed."""
+    assert hasattr(logfile.data, 'grads')
+
 # Q-Chem #
 
 def testQChem_QChem4_2_CH3___Na__RS_out(logfile):
