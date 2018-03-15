@@ -314,6 +314,7 @@ Psi/Psi4.0/sample_opt-irc-2.out
 Psi/Psi4.0/sample_props1.out
 Psi/Psi4.0/sample_psimrcc-fd-freq2.out
 Psi/Psi4.0/sample_scf5.out
+Psi/Psi4.0/water_fdgrad.out
 QChem/QChem4.2/CH3---Na+_RS_noprint.out
 QChem/QChem4.2/CH3---Na+_RS.out
 QChem/QChem4.2/CH3---Na+_RS_SCF_noprint.out
