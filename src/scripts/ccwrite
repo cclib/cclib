@@ -93,7 +93,7 @@ def main():
 
         # The argument terse presently is only applicable to
         # CJSON/JSON formats
-        ccwrite(data, outputtype, outputdest, terse, indices=index,
+        ccwrite(data, outputtype, outputdest, terse, index,
                 **ccwrite_kwargs)
 
 
