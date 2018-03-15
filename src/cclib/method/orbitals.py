@@ -41,6 +41,7 @@ class Orbitals(Method):
 
     def closed_shell(self):
         """Return Boolean indicating if system is closed shell."""
+
         # If there are beta orbitals, we can assume the system is closed
         # shell if the orbital energies are identical within numerical accuracy.
         if len(self.data.mocoeffs) == 2:
