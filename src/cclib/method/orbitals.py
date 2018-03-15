@@ -25,6 +25,7 @@ class Orbitals(Method):
     def __init__(self, data, progress=None, \
                  loglevel=logging.INFO, logname="Log"):
 
+        self.required_attrs = ('mocoeffs','moenergies','homos')
         # Call the __init__ method of the superclass.
         super(Orbitals, self).__init__(data, progress, loglevel, logname)
         self.fragresults = None
