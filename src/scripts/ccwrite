@@ -41,7 +41,7 @@ def main():
                         action='store_true',
                         help='use experimental features (currently optdone_as_list)')
 
-    parser.add_argument('-i', '--index'
+    parser.add_argument('-i', '--index',
                         type=int,
                         default=None,
                         help='optional zero-based index for which structure to extract')
@@ -93,7 +93,7 @@ def main():
 
         # The argument terse presently is only applicable to
         # CJSON/JSON formats
-        ccwrite(data, outputtype, outputdest, terse, indices=index,
+        ccwrite(data, outputtype, outputdest, terse, index,
                 **ccwrite_kwargs)
 
 
