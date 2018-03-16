@@ -65,8 +65,8 @@ This tests the program using the example data files included in the INSTALLDIR/d
 
 === What next? ===
 
-* Read the tutorial at:
-	http://cclib.github.io/tutorial.html
+* Read the documentation at:
+	http://cclib.github.io
 * Read the list and specifications of the extracted data at:
 	http://cclib.github.io/data.html
 * Send any questions to the cclib-users mailing list at:
