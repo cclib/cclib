@@ -37,17 +37,6 @@ class CSPA(Population):
            indices - list of lists containing atomic orbital indices of fragments
         """
 
-        # Do we have the needed info in the parser?
-        if not hasattr(self.data, "mocoeffs"):
-            self.logger.error("Missing mocoeffs")
-            return False
-        if not hasattr(self.data, "nbasis"):
-            self.logger.error("Missing nbasis")
-            return False
-        if not hasattr(self.data, "homos"):
-            self.logger.error("Missing homos")
-            return False
-
         self.logger.info("Creating attribute aoresults: array[3]")
 
         # Determine number of steps, and whether process involves beta orbitals.

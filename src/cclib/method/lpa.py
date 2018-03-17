@@ -37,21 +37,6 @@ class LPA(Population):
           x - overlap matrix exponent in wavefunxtion projection (x=0.5 for Lowdin)
         """
 
-        # Do we have the needed info in the parser?
-        if not hasattr(self.data,"mocoeffs"):
-            self.logger.error("Missing mocoeffs")
-            return False
-        if not (hasattr(self.data, "aooverlaps") \
-                    or hasattr(self.data, "fooverlaps") ):
-            self.logger.error("Missing overlap matrix")
-            return False
-        if not hasattr(self.data, "nbasis"):
-            self.logger.error("Missing nbasis")
-            return False
-        if not hasattr(self.data, "homos"):
-            self.logger.error("Missing homos")
-            return False
-
         unrestricted = (len(self.data.mocoeffs) == 2)
         nbasis = self.data.nbasis
 
