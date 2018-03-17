@@ -297,7 +297,7 @@ def fallback(source):
 
 
 def ccwrite(ccobj, outputtype=None, outputdest=None,
-            indices=None, terse=False , returnstr=False,
+            indices=None, terse=False, returnstr=False,
             *args, **kwargs):
     """Write the parsed data from an outputfile to a standard chemical
     representation.
