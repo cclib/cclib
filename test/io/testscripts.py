@@ -31,7 +31,11 @@ CJSON_OUTPUT_FILENAME = 'dvb_gopt.cjson'
 class ccgetTest(unittest.TestCase):
 
     def setUp(self):
-        from scripts import ccget
+        try:
+            from scripts import ccget
+        except ImportError:
+            self.fail("ccget cannot be imported")
+
         self.main = ccget.ccget
 
     @patch("scripts.ccget.sys.argv", ["ccget"])
@@ -45,7 +49,11 @@ class ccgetTest(unittest.TestCase):
 class ccwriteTest(unittest.TestCase):
 
     def setUp(self):
-        from scripts import ccwrite
+        try:
+            from scripts import ccwrite
+        except ImportError:
+            self.fail("ccwrite cannot be imported")
+
         self.main = ccwrite.main
 
     @patch('scripts.ccwrite.sys.argv', ['ccwrite'])
