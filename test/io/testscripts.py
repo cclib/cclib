@@ -28,6 +28,7 @@ INPUT_FILE = os.path.join(
 CJSON_OUTPUT_FILENAME = 'dvb_gopt.cjson'
 
 
+@patch("scripts.ccget.ccread")
 class ccgetTest(unittest.TestCase):
 
     def setUp(self):
@@ -39,10 +40,21 @@ class ccgetTest(unittest.TestCase):
         self.main = ccget.ccget
 
     @patch("scripts.ccget.sys.argv", ["ccget"])
-    def test_empty_argv(self):
+    def test_empty_argv(self, mock_ccread):
         """Does the script fail as expected if called without parameters?"""
         with self.assertRaises(SystemExit):
             self.main()
+
+    @patch(
+        "scripts.ccget.sys.argv",
+        ["ccget", "atomcoords", INPUT_FILE]
+    )
+    def test_ccread_invocation(self, mock_ccread):
+        self.main()
+
+        self.assertEqual(mock_ccread.call_count, 1)
+        ccread_call_args, ccread_call_kwargs = mock_ccread.call_args
+        self.assertEqual(ccread_call_args[0], INPUT_FILE)
 
 
 @patch("scripts.ccwrite.ccwrite")
@@ -66,7 +78,7 @@ class ccwriteTest(unittest.TestCase):
         "scripts.ccwrite.sys.argv",
         ["ccwrite", "cjson", INPUT_FILE]
     )
-    def test_cjson_output(self, mock_ccwrite):
+    def test_ccwrite_call(self, mock_ccwrite):
         """is ccwrite called with the given parameters?"""
         self.main()
 
