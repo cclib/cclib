@@ -19,6 +19,8 @@ class Electrons(Method):
 
     def __init__(self, data, progress=None, loglevel=logging.INFO, logname="Log"):
 
+        self.required_attrs = ('atomnos','charge','coreelectrons')
+
         super(Electrons, self).__init__(data, progress, loglevel, logname)
 
     def __str__(self):
