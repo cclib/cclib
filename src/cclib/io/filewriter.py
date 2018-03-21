@@ -72,7 +72,12 @@ class Writer(object):
 
     def _calculate_total_dipole_moment(self):
         """Calculate the total dipole moment."""
-        return sqrt(sum(self.ccdata.moments[1] ** 2))
+
+        # ccdata.moments may exist, but only contain center-of-mass coordinates
+        if len(getattr(self.ccdata, 'moments', [])) > 1:
+            return sqrt(sum(self.ccdata.moments[1] ** 2))
+        else:
+            return None
 
     def _check_required_attributes(self):
         """Check if required attributes are present in ccdata."""

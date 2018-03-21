@@ -7,12 +7,12 @@
 
 """Unit tests for writer cjsonwriter module."""
 
+import json
 import os
 import unittest
-import json
+from math import sqrt
 
 import cclib
-
 
 __filedir__ = os.path.dirname(__file__)
 __filepath__ = os.path.realpath(__filedir__)
@@ -35,7 +35,7 @@ class CJSONTest(unittest.TestCase):
 
     def test_cjson_generation(self):
         """Does the CJSON format get generated properly?"""
-        fpath = os.path.join(__datadir__, "data/ADF/basicADF2007.01/dvb_gopt.adfout")
+        fpath = os.path.join(__datadir__, "data/ADF/basicADF2007.01/NH3.adfout")
         data = cclib.io.ccopen(fpath).parse()
 
         cjson = cclib.io.cjsonwriter.CJSON(data).generate_repr()
@@ -44,6 +44,23 @@ class CJSONTest(unittest.TestCase):
         json_data = json.loads(cjson)
         number_of_atoms = json_data['properties']['number of atoms']
         self.assertEqual(number_of_atoms, data.natom)
+
+        dipole_moment = json_data['properties']['total dipole moment']
+        self.assertAlmostEqual(
+            dipole_moment,
+            sqrt(sum(data.moments[1] ** 2))
+        )
+
+    def test_incomplete_data(self):
+        """Does the CJSON writer handles missing properties correctly?"""
+        fpath = os.path.join(__datadir__, "data/DALTON/basicDALTON-2013/C_bigbasis.out")
+        data = cclib.io.ccopen(fpath).parse()
+
+        cjson = cclib.io.cjsonwriter.CJSON(data).generate_repr()
+
+        json_data = json.loads(cjson)
+        self.assertFalse("total dipole moment" in json_data["properties"])
+
 
 if __name__ == "__main__":
     unittest.main()

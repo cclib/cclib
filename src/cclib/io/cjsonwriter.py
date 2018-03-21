@@ -75,12 +75,14 @@ class CJSON(filewriter.Writer):
             l1_data_object = cjson_dict[attributePath[0]]
 
             # 'moments' and 'atomcoords' key will contain processed data obtained from the output file.
-            if attributeName == 'moments' or attributeName == 'atomcoords' :
-                if attributeName == 'moments':
-                    cjson_dict['properties'][ccData._attributes['moments'].jsonKey] = self._calculate_total_dipole_moment()
-                else:
-                    cjson_dict['atoms']['coords'] = dict()
-                    cjson_dict['atoms']['coords']['3d'] = self.ccdata.atomcoords[-1].flatten().tolist()
+            if attributeName == 'moments':
+                dipole_moment = self._calculate_total_dipole_moment()
+                if dipole_moment is not None:
+                    cjson_dict['properties'][ccData._attributes['moments'].jsonKey] = dipole_moment
+                continue
+            elif attributeName == 'atomcoords':
+                cjson_dict['atoms']['coords'] = dict()
+                cjson_dict['atoms']['coords']['3d'] = self.ccdata.atomcoords[-1].flatten().tolist()
                 continue
 
             if levels == 1:
