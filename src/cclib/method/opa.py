@@ -11,7 +11,7 @@ import random
 
 import numpy
 
-from cclib.method.calculationmethod import Method
+from cclib.method.population import Population
 
 
 def func(x):
@@ -21,10 +21,18 @@ def func(x):
         return x+func(x-1)
 
 
-class OPA(Method):
+class OPA(Population):
     """Overlap population analysis."""
 
     def __init__(self, *args):
+
+        self.required_attrs = ('mocoeffs','homos','nbasis')
+
+        # If the parsed data does NOT have either of the Fragment orbital overlap 
+        # or the Atomic orbital overlap matrix
+        if not (hasattr(data, "aooverlaps") \
+             or hasattr(data, "fooverlaps") ):
+            self.required_attrs += ('aooverlaps or fooverlaps',)
 
         # Call the __init__ method of the superclass.
         super(OPA, self).__init__(logname="OPA", *args)

@@ -20,22 +20,6 @@ class Population(Method):
     def __init__(self, data, progress=None, \
                  loglevel=logging.INFO, logname="Log"):
 
-        # Do we have the needed attributes in the data object?
-        # Check for getting the method  being used e.g. Mulliken Population Analysis
-        if logname == 'MPA' or logname == 'LPA':
-
-            # If the parsed data does NOT have either of the Fragment orbital overlap 
-            # or the Atomic orbital overlap matrix
-            if not (hasattr(data, "aooverlaps") \
-                 or hasattr(data, "fooverlaps") ):
-                self.required_attrs = ('mocoeffs','aooverlaps','fooverlaps','homos','nbasis')
-            # If either of the two orbital overlaps is present 
-            else:
-                self.required_attrs = ('mocoeffs','homos','nbasis')
-
-        elif logname == 'CSPA':
-            self.required_attrs = ('mocoeffs','nbasis','homos')
-
         # Call the __init__ method of the superclass.
         super(Population, self).__init__(data, progress, loglevel, logname)
         self.fragresults = None

@@ -19,6 +19,7 @@ class CSPA(Population):
 
     def __init__(self, *args):
 
+        self.required_attrs = ('mocoeffs','homos','nbasis')
         # Call the __init__ method of the superclass.
         super(CSPA, self).__init__(logname="CSPA", *args)
 

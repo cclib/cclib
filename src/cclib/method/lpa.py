@@ -16,7 +16,16 @@ from cclib.method.population import Population
 
 class LPA(Population):
     """The Löwdin population analysis"""
+
     def __init__(self, *args):
+
+        self.required_attrs = ('mocoeffs','homos','nbasis')
+
+        # If the parsed data does NOT have either of the Fragment orbital overlap 
+        # or the Atomic orbital overlap matrix
+        if not (hasattr(data, "aooverlaps") \
+             or hasattr(data, "fooverlaps") ):
+            self.required_attrs += ('aooverlaps or fooverlaps',)
 
         # Call the __init__ method of the superclass.
         super(LPA, self).__init__(logname="LPA", *args)
