@@ -4,7 +4,7 @@ import sys
 version_major = sys.version_info.major
 version_minor = sys.version_info.minor
 
-# Paths than should be ignored for all Python versions.
+# Paths that should be ignored for all Python versions.
 paths_allver = [
     'src/cclib/progress/qt4progress.py',
 ]

@@ -5,4 +5,5 @@ dist
 *.pyc
 .cache
 .coverage
+.pytest_cache
 cclib.egg-info
