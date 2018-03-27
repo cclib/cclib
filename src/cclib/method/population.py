@@ -89,9 +89,3 @@ class Population(Method):
         self.fragresults = results
 
         return True
-
-
-if __name__ == "__main__":
-    import doctest
-    from cclib.method import population
-    doctest.testmod(population, verbose=False)

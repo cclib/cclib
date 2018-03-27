@@ -662,8 +662,3 @@ class GAMESSUK(logfileparser.Logfile):
                 line = inputfile.next()
 
             self.set_attribute('nooccnos', occupations)
-
-
-if __name__ == "__main__":
-    import doctest
-    doctest.testmod()

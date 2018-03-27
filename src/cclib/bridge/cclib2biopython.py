@@ -28,7 +28,7 @@ def makebiopython(atomcoords, atomnos):
     >>> b = numpy.array([[1.1,2,0],[1,1,0],[2,1,0]],"f")
     >>> si = Superimposer()
     >>> si.set_atoms(makebiopython(a,atomnos),makebiopython(b,atomnos))
-    >>> print si.rms
+    >>> print(si.rms)
     0.29337859596
     """
     pt = PeriodicTable()
@@ -37,8 +37,3 @@ def makebiopython(atomcoords, atomnos):
         symbol = pt.element[atomno]
         bioatoms.append(Atom(symbol, coords, 0, 0, 0, symbol, 0, symbol.upper()))
     return bioatoms
-
-
-if __name__ == "__main__":
-    import doctest
-    doctest.testmod()

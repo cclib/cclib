@@ -214,7 +214,3 @@ class JSONIndentEncoder(json.JSONEncoder):
             return json.dumps(np.asscalar(o), cls=NumpyAwareJSONEncoder)
         else:
             return json.dumps(o, cls=NumpyAwareJSONEncoder)
-
-
-if __name__ == "__main__":
-    pass

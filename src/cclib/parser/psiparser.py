@@ -1175,9 +1175,3 @@ class Psi(logfileparser.Logfile):
             return -float(vibfreq[:-1])
         else:
             return float(vibfreq)
-
-
-if __name__ == "__main__":
-    import doctest
-    from cclib.parser import psiparser
-    doctest.testmod(psiparser, verbose=False)

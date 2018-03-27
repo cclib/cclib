@@ -707,9 +707,3 @@ class Jaguar(logfileparser.Logfile):
                 line = next(inputfile)
             strength = float(line.split()[-1])
             self.etoscs.append(strength)
-
-
-if __name__ == "__main__":
-    import doctest
-    from cclib.parser import jaguarparser
-    doctest.testmod(jaguarparser, verbose=False)

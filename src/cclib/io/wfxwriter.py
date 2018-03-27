@@ -511,7 +511,3 @@ class WFXWriter(filewriter.Writer):
 
         wfx_lines.append('')
         return '\n'.join(wfx_lines)
-
-
-if __name__ == "__main__":
-    pass

@@ -127,7 +127,3 @@ class Writer(object):
                 indices.add(i)
             self.indices = indices
         return
-
-
-if __name__ == "__main__":
-    pass
