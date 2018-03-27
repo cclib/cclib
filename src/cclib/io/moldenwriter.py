@@ -280,7 +280,3 @@ class MoldenReformatter(object):
                 lines.append(line)
 
         return '\n'.join(lines)
-
-
-if __name__ == "__main__":
-    pass

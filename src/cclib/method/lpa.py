@@ -137,9 +137,3 @@ class LPA(Population):
             self.fragspins = numpy.subtract(alpha, beta)
 
         return True
-
-
-if __name__ == "__main__":
-    import doctest
-    from cclib.method import lpa
-    doctest.testmod(lpa, verbose=False)

@@ -30,7 +30,7 @@ class Method(object):
         Volume - volume/grid calculations
 
     All the modules containing methods should be importable:
-    >>> import cda, cspa, density, fragments, lpa, mbo, mpa, nuclear, opa, population, volume
+    >>> from cclib.method import cda, cspa, density, fragments, lpa, mbo, mpa, nuclear, opa, population, volume
     """
     required_attrs = ()
     def __init__(self, data, progress=None, loglevel=logging.INFO, logname="Log"):
@@ -59,7 +59,3 @@ class Method(object):
             missing = ' '.join(missing)
             raise MissingAttributeError(
                 'Could not parse required attributes to use method: ' + missing)
-
-if __name__ == "__main__":
-    import doctest
-    doctest.testmod(verbose=False)

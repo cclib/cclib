@@ -472,8 +472,3 @@ class Logfile(object):
         return lines
 
     skip_line = lambda self, inputfile, expected: self.skip_lines(inputfile, [expected])
-
-
-if __name__ == "__main__":
-    import doctest
-    doctest.testmod()

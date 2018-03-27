@@ -116,9 +116,3 @@ class CSPA(Population):
             self.fragspins = numpy.subtract(alpha, beta)
 
         return True
-
-
-if __name__ == "__main__":
-    import doctest
-    from cclib.method import cspa
-    doctest.testmod(cspa, verbose=False)

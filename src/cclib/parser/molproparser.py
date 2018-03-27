@@ -896,9 +896,3 @@ class Molpro(logfileparser.Logfile):
             if not hasattr(self, 'grads'):
                 self.grads = []
             self.grads.append(grad)
-
-
-if __name__ == "__main__":
-    import doctest
-    from cclib.parser import molproparser
-    doctest.testmod(molproparser, verbose=False)

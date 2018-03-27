@@ -41,8 +41,3 @@ class Electrons(Method):
         if core:
             nelectrons += sum(self.data.coreelectrons)
         return nelectrons
-
-
-if __name__ == "__main__":
-    import doctest
-    doctest.testmod(verbose=True)

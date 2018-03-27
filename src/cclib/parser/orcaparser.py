@@ -1159,21 +1159,3 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
                 assert maxDP_target == self.scftargets[-1][1]
             self.scfvalues[-1].append([deltaE_value, maxDP_value, rmsDP_value])
             self.scftargets.append([deltaE_target, maxDP_target, rmsDP_target])
-
-
-if __name__ == "__main__":
-    import sys
-    import doctest
-    from cclib.parser import orcaparser
-
-    if len(sys.argv) == 1:
-        doctest.testmod(orcaparser, verbose=False)
-
-    if len(sys.argv) == 2:
-        parser = orcaparser.ORCA(sys.argv[1])
-        data = parser.parse()
-
-    if len(sys.argv) > 2:
-        for i in range(len(sys.argv[2:])):
-            if hasattr(data, sys.argv[2 + i]):
-                print(getattr(data, sys.argv[2 + i]))

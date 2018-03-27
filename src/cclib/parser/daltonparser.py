@@ -1203,22 +1203,3 @@ class DALTON(logfileparser.Logfile):
         # fooverlaps
         # fragnames
         # frags
-
-
-
-if __name__ == "__main__":
-    import doctest
-    import sys
-    from cclib.parser import daltonparser
-
-    if len(sys.argv) == 1:
-        doctest.testmod(daltonparser, verbose=False)
-
-    if len(sys.argv) >= 2:
-        parser = daltonparser.DALTON(sys.argv[1])
-        data = parser.parse()
-
-    if len(sys.argv) > 2:
-        for i in range(len(sys.argv[2:])):
-            if hasattr(data, sys.argv[2 + i]):
-                print(getattr(data, sys.argv[2 + i]))
