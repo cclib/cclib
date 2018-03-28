@@ -33,9 +33,7 @@ class DALTON(logfileparser.Logfile):
         return 'DALTON("%s")' % (self.filename)
 
     def normalisesym(self, label):
-        """Normalise the symmetries used by DALTON."""
-
-        # It appears that DALTON is using the correct labels.
+        """DALTON does not require normalizing symmetry labels."""
         return label
 
     def before_parsing(self):

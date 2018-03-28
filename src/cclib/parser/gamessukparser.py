@@ -34,18 +34,9 @@ class GAMESSUK(logfileparser.Logfile):
         return 'GAMESSUK("%s")' % (self.filename)
 
     def normalisesym(self, label):
-        """Use standard symmetry labels instead of GAMESS UK labels.
-
-        >>> t = GAMESSUK("dummyfile.txt")
-        >>> labels = ['a', 'a1', 'ag', "a'", 'a"', "a''", "a1''", 'a1"']
-        >>> labels.extend(["e1+", "e1-"])
-        >>> answer = [t.normalisesym(x) for x in labels]
-        >>> answer
-        ['A', 'A1', 'Ag', "A'", 'A"', 'A"', 'A1"', 'A1"', 'E1', 'E1']
-        """
+        """Use standard symmetry labels instead of GAMESS UK labels."""
         label = label.replace("''", '"').replace("+", "").replace("-", "")
         ans = label[0].upper() + label[1:]
-
         return ans
 
     def before_parsing(self):
