@@ -9,9 +9,9 @@
 
 try:
     import openbabel as ob
-    has_openbabel = True
+    _has_openbabel = True
 except ImportError:
-    has_openbabel = False
+    _has_openbabel = False
 
 import xml.etree.cElementTree as ET
 
@@ -62,7 +62,7 @@ class CML(filewriter.Writer):
 
         # Form the listing of all the bonds present.
         bondArray = ET.SubElement(molecule, 'bondArray')
-        if has_openbabel:
+        if _has_openbabel:
             for bc in self.bond_connectivities:
                 bond = ET.SubElement(bondArray, 'bond')
                 d = {

@@ -15,16 +15,16 @@ import numpy
 try:
     from PyQuante.CGBF import CGBF
     from cclib.bridge import cclib2pyquante
-    HAS_PYQUANTE = True
+    _HAS_PYQUANTE = True
 except ImportError:
-    HAS_PYQUANTE = False
+    _HAS_PYQUANTE = False
 
 try:
     from pyvtk import *
     from pyvtk.DataSetAttr import *
-    HAS_PYVTK = True
+    _HAS_PYVTK = True
 except ImportError:
-    HAS_PYVTK = False
+    _HAS_PYVTK = False
 
 from cclib.parser.utils import convertor
 
@@ -74,7 +74,7 @@ class Volume(object):
         writers[fformat](filename)
 
     def writeasvtk(self, filename):
-        if not HAS_PYVTK:
+        if not _HAS_PYVTK:
             raise Exception("You need to have pyvtk installed")
         ranges = (numpy.arange(self.data.shape[2]),
                   numpy.arange(self.data.shape[1]),
@@ -136,7 +136,7 @@ def scinotation(num):
 
 def getbfs(coords, gbasis):
     """Convenience function for both wavefunction and density based on PyQuante Ints.py."""
-    if not HAS_PYQUANTE:
+    if not _HAS_PYQUANTE:
         raise Exception("You need to have PyQuante installed")
     mymol = cclib2pyquante.makepyquante(coords, [0 for _ in coords])
 
