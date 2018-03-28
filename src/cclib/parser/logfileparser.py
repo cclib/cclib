@@ -390,14 +390,6 @@ class Logfile(object):
         including avoiding the problem with Ds instead of Es in scientific notation.
         Another point is converting string signifying numerical problems (*****)
         to something we can manage (Numpy's NaN).
-
-        >>> t = Logfile("dummyfile")
-        >>> t.float("123.2323E+02")
-        12323.23
-        >>> t.float("123.2323D+02")
-        12323.23
-        >>> t.float("*****")
-        nan
         """
 
         if list(set(number)) == ['*']:
