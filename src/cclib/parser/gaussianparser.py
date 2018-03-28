@@ -40,11 +40,6 @@ class Gaussian(logfileparser.Logfile):
         To normalise:
         (1) If label is one of [SG, PI, PHI, DLTA], replace by [sigma, pi, phi, delta]
         (2) replace any G or U by their lowercase equivalent
-
-        >>> sym = Gaussian("dummyfile").normalisesym
-        >>> labels = ['A1', 'AG', 'A1G', "SG", "PI", "PHI", "DLTA", 'DLTU', 'SGG']
-        >>> map(sym, labels)
-        ['A1', 'Ag', 'A1g', 'sigma', 'pi', 'phi', 'delta', 'delta.u', 'sigma.g']
         """
         # note: DLT must come after DLTA
         greek = [('SG', 'sigma'), ('PI', 'pi'), ('PHI', 'phi'),

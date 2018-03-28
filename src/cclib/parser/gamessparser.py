@@ -66,12 +66,6 @@ class GAMESS(logfileparser.Logfile):
         (1) Occurences of U/G in the 2/3 position of the label
             must be lower-cased
         (2) Two single quotation marks must be replaced by a double
-
-        >>> t = GAMESS("dummyfile").normalisesym
-        >>> labels = ['A', 'A1', 'A1G', "A'", "A''", "AG"]
-        >>> answers = map(t, labels)
-        >>> print answers
-        ['A', 'A1', 'A1g', "A'", 'A"', 'Ag']
         """
 
         if label[1:] == "''":

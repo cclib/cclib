@@ -14,6 +14,7 @@ sys.path.insert(1, 'parser')
 
 from .parser.testdata import *
 from .parser.testlogfileparser import *
+from .parser.testspecificparsers import *
 from .parser.testutils import *
 
 
