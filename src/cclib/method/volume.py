@@ -119,23 +119,18 @@ class Volume(object):
         outputfile.close()
 
 def scinotation(num):
-   """Write in scientific notation
+    """Write in scientific notation."""
+    ans = "%10.5E" % num
+    broken = ans.split("E")
+    exponent = int(broken[1])
+    if exponent < -99:
+        return "  0.000E+00"
+    if exponent < 0:
+        sign = "-"
+    else:
+        sign = "+"
+    return ("%sE%s%s" % (broken[0], sign, broken[1][-2:])).rjust(12)
 
-   >>> scinotation(1./654)
-   ' 1.52905E-03'
-   >>> scinotation(-1./654)
-   '-1.52905E-03'
-   """
-   ans = "%10.5E" % num
-   broken = ans.split("E")
-   exponent = int(broken[1])
-   if exponent<-99:
-       return "  0.000E+00"
-   if exponent<0:
-       sign="-"
-   else:
-       sign="+"
-   return ("%sE%s%s" % (broken[0],sign,broken[1][-2:])).rjust(12)
 
 def getbfs(coords, gbasis):
     """Convenience function for both wavefunction and density based on PyQuante Ints.py."""
@@ -233,35 +228,3 @@ def electrondensity(coords, mocoeffslist, gbasis, volume):
         density.data = density.data*2. # doubly-occupied
 
     return density
-
-
-if __name__ == "__main__":
-
-    try:
-        import psyco
-        psyco.full()
-    except ImportError:
-        pass
-
-    from cclib.io import ccopen
-    import logging
-    a = ccopen("../../../data/Gaussian/basicGaussian03/dvb_sp_basis.log")
-    a.logger.setLevel(logging.ERROR)
-    c = a.parse()
-
-    b = ccopen("../../../data/Gaussian/basicGaussian03/dvb_sp.out")
-    b.logger.setLevel(logging.ERROR)
-    d = b.parse()
-
-    vol = Volume( (-3.0,-6,-2.0), (3.0, 6, 2.0), spacing=(0.25,0.25,0.25) )
-    wavefn = wavefunction(d.atomcoords[0], d.mocoeffs[0][d.homos[0]],
-                          c.gbasis, vol)
-    assert abs(wavefn.integrate())<1E-6 # not necessarily true for all wavefns
-    assert abs(wavefn.integrate_square() - 1.00)<1E-3 #   true for all wavefns
-    print(wavefn.integrate(), wavefn.integrate_square())
-
-    vol = Volume( (-3.0,-6,-2.0), (3.0, 6, 2.0), spacing=(0.25,0.25,0.25) )
-    frontierorbs = [d.mocoeffs[0][(d.homos[0]-3):(d.homos[0]+1)]]
-    density = electrondensity(d.atomcoords[0], frontierorbs, c.gbasis, vol)
-    assert abs(density.integrate()-8.00)<1E-2
-    print("Combined Density of 4 Frontier orbitals=",density.integrate())

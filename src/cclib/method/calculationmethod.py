@@ -29,8 +29,7 @@ class Method(object):
         Population - base class for population analyses
         Volume - volume/grid calculations
 
-    All the modules containing methods should be importable:
-    >>> from cclib.method import cda, cspa, density, fragments, lpa, mbo, mpa, nuclear, opa, population, volume
+    All the modules containing methods should be importable.
     """
     required_attrs = ()
     def __init__(self, data, progress=None, loglevel=logging.INFO, logname="Log"):

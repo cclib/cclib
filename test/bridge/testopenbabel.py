@@ -8,7 +8,8 @@
 import os
 import unittest
 
-from cclib.parser import ccData
+import numpy
+
 from cclib.bridge import cclib2openbabel
 
 
@@ -18,12 +19,20 @@ class OpenbabelTest(unittest.TestCase):
     def setUp(self):
         self.path = os.path.abspath(os.path.dirname(__file__))
 
-    def test_xyz_uracyl(self):
+    def test_makeopenbabel(self):
+        import openbabel
+        atomnos = numpy.array([1, 8, 1], "i")
+        atomcoords = numpy.array([[[-1., 1., 0.], [0., 0., 0.], [1., 1., 0.]]])
+        obmol = cclib2openbabel.makeopenbabel(atomcoords, atomnos)
+        obconversion = openbabel.OBConversion()
+        formatok = obconversion.SetOutFormat("inchi")
+        assert obconversion.WriteString(obmol).strip() == "InChI=1S/H2O/h1H2"
+
+    def test_readfile(self):
         """Try to load an XYZ file with uracyl through Openbabel"""
         data = cclib2openbabel.readfile(self.path + "/uracil.xyz", "XYZ")
         assert data.natom == 12
 
 
 if __name__ == "__main__":
-
     unittest.main()
