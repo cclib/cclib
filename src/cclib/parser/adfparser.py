@@ -136,10 +136,20 @@ class ADF(logfileparser.Logfile):
             while line[:5] != "title" and "NO TITLE" not in line:
                 line = inputfile.next()
 
+        if "Amsterdam Density Functional" in line:
+            self.metadata['package_version'] = line.split()[5]
+
         if line[1:10] == "Symmetry:":
             info = line.split()
             if info[1] == "NOSYM":
                 self.nosymflag = True
+                point_group_full = "c1"
+            else:
+                point_group_full = info[1].replace('(', '').replace(')', '').lower()
+            # TODO
+            point_group_abelian = point_group_full
+            self.metadata['symmetry_full'] = point_group_full
+            self.metadata['symmetry_abelian'] = point_group_abelian
 
         # Use this to read the subspecies of irreducible representations.
         # It will be a list, with each element representing one irrep.

@@ -120,7 +120,6 @@ class GenericSPTest(unittest.TestCase):
         self.assertNotEquals(self.logfile.normalisesym("A"), "ERROR: This should be overwritten by this subclass")
 
     @skipForParser('Molpro', '?')
-    @skipForParser('ORCA', 'ORCA has no support for symmetry yet')
     def testsymlabels(self):
         """Are all the symmetry labels either Ag/u or Bg/u?"""
         sumwronglabels = sum([x not in ['Ag', 'Bu', 'Au', 'Bg'] for x in self.data.mosyms[0]])
@@ -240,16 +239,6 @@ class GenericSPTest(unittest.TestCase):
             for m in moment32:
                 self.assertEquals(m, 0.0)
 
-    @skipForParser('ADF', 'Does not support metadata yet')
-    @skipForParser('GAMESS', 'Does not support metadata yet')
-    @skipForParser('GAMESSUK', 'Does not support metadata yet')
-    @skipForParser('Gaussian', 'Does not support metadata yet')
-    @skipForParser('Jaguar', 'Does not support metadata yet')
-    @skipForParser('Molpro', 'Does not support metadata yet')
-    @skipForParser('NWChem', 'Does not support metadata yet')
-    @skipForParser('ORCA', 'Does not support metadata yet')
-    @skipForParser('Psi', 'Does not support metadata yet')
-    @skipForParser('QChem', 'Does not support metadata yet')
     def testmetadata(self):
         """Does metadata have expected keys and values?"""
         self.assertTrue(hasattr(self.data, "metadata"))
@@ -257,6 +246,16 @@ class GenericSPTest(unittest.TestCase):
         self.assertIn("methods", self.data.metadata)
         self.assertIn("package", self.data.metadata)
         self.assertIn("package_version", self.data.metadata)
+        self.assertIn("symmetry_abelian", self.data.metadata)
+        self.assertIn("symmetry_full", self.data.metadata)
+
+    @skipForParser('Molpro', 'these calculations were run with symmetry disabled')
+    def testsymmetry(self):
+        """DVB should have C2h symmetry, which is also an Abelian group.
+        """
+        self.assertEquals(self.data.metadata["symmetry_full"], "c2h")
+        self.assertEquals(self.data.metadata["symmetry_abelian"], "c2h")
+
 
 class ADFSPTest(GenericSPTest):
     """Customized restricted single point unittest"""

@@ -233,7 +233,7 @@ class Logfile(object):
             self.metadata = {}
             self.metadata["package"] = self.logname
             self.metadata["methods"] = []
-
+            self.metadata["basis_set"] = ""
 
         # Periodic table of elements.
         self.table = utils.PeriodicTable()
@@ -363,7 +363,11 @@ class Logfile(object):
 
     def after_parsing(self):
         """Correct data or do parser-specific validation after parsing is finished."""
-        pass
+
+        if "symmetry_full" not in self.metadata:
+            assert "symmetry_abelian" not in self.metadata
+            self.metadata['symmetry_full'] = "c1"
+            self.metadata['symmetry_abelian'] = "c1"
 
     def updateprogress(self, inputfile, msg, xupdate=0.05):
         """Update progress."""

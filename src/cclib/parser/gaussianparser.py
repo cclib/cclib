@@ -61,6 +61,9 @@ class Gaussian(logfileparser.Logfile):
 
     def before_parsing(self):
 
+        # Calculations use point group symmetry by default.
+        self.uses_symmetry = True
+
         # Used to index self.scftargets[].
         SCFRMS, SCFMAX, SCFENERGY = list(range(3))
 
@@ -91,6 +94,7 @@ class Gaussian(logfileparser.Logfile):
         self.hp_polarizabilities = False
 
     def after_parsing(self):
+        super(Gaussian, self).after_parsing()
 
         # Correct the percent values in the etsecs in the case of
         # a restricted calculation. The following has the
@@ -491,6 +495,33 @@ class Gaussian(logfileparser.Logfile):
                 if line[1:8] == "AtmWgt=":
                     self.atommasses.extend(list(map(float, line.split()[1:])))
                 line = next(inputfile)
+
+        # Symmetry: point group
+        if line.strip() == "Symmetry turned off by external request.":
+            self.set_attribute('uses_symmetry', False)
+        if "Full point group" in line:
+            point_group_full = line.split()[3].lower()
+            if self.uses_symmetry:
+                while "Largest Abelian subgroup" not in line:
+                    line = next(inputfile)
+                    if "Leave Link" in line:
+                        # TODO this isn't correct. Need understanding
+                        # of symmetry tables.
+                        point_group_abelian = "d2h"
+                        break
+                if "Leave Link" not in line:
+                    point_group_abelian = line.split()[3].lower()
+            else:
+                point_group_abelian = "c1"
+            self.metadata['symmetry_full'] = point_group_full
+            self.metadata['symmetry_abelian'] = point_group_abelian
+
+        # Symmetry: ordering of irreducible representations
+        if "symmetry adapted cartesian basis functions" in line:
+            if not hasattr(self, 'symlabels'):
+                self.symlabels = []
+            irrep = self.normalisesym(line.split()[-2])
+            self.symlabels.append(irrep)
 
         # Extract the atomic numbers and coordinates of the atoms.
         if line.strip() == "Standard orientation:":
@@ -1730,7 +1761,8 @@ class Gaussian(logfileparser.Logfile):
                 polarizability = numpy.zeros(shape=(3, 3))
                 indices = numpy.tril_indices(3)
                 polarizability[indices] = [self.float(x) for x in
-                                           [line[23:31], line[31:39], line[39:47], line[47:55], line[55:63], line[63:71]]]
+                                           [line[23:31], line[31:39], line[39:47],
+                                            line[47:55], line[55:63], line[63:71]]]
                 polarizability = utils.symmetrize(polarizability, use_triangle='lower')
                 self.polarizabilities.append(polarizability)
 

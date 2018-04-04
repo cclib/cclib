@@ -75,6 +75,7 @@ class Molpro(logfileparser.Logfile):
         self.insidescf = False
 
     def after_parsing(self):
+        super(Molpro, self).after_parsing()
 
         # If optimization thresholds are default, they are normally not printed and we need
         # to set them to the default after parsing. Make sure to set them in the same order that
@@ -268,6 +269,13 @@ class Molpro(logfileparser.Logfile):
         # extract the version number first
         if "Version" in line:
             self.metadata["package_version"] = line.split()[1]
+
+        if line[1:12] == "Point group":
+            point_group_full = line.split()[-1].lower()
+            # TODO
+            point_group_abelian = point_group_full
+            self.metadata['symmetry_full'] = point_group_full
+            self.metadata['symmetry_abelian'] = point_group_abelian
 
         if line[1:19] == "ATOMIC COORDINATES":
 

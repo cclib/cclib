@@ -88,6 +88,21 @@ class NWChem(logfileparser.Logfile):
 
             self.set_attribute('atomnos', atomnos)
 
+        if line.strip() == "Symmetry information":
+            self.skip_lines(inputfile, ['d', 'b'])
+            line = next(inputfile)
+            assert line[1:11] == "Group name"
+            point_group_full = line.split()[2].lower()
+            line = next(inputfile)
+            assert line[1:13] == "Group number"
+            line = next(inputfile)
+            assert line[1:12] == "Group order"
+            self.pg_order = int(line.split()[2])
+            # TODO
+            point_group_abelian = point_group_full
+            self.metadata['symmetry_full'] = point_group_full
+            self.metadata['symmetry_abelian'] = point_group_abelian
+
         # If the geometry is printed in XYZ format, it will have the number of atoms.
         if line[12:31] == "XYZ format geometry":
 
@@ -239,6 +254,14 @@ class NWChem(logfileparser.Logfile):
                     last = atombasis[-1][-1] + 1
 
                 self.set_attribute('atombasis', atombasis)
+
+        if line.strip() == "Symmetry analysis of basis":
+            self.skip_lines(inputfile, ['d', 'b'])
+            if not hasattr(self, 'symlabels'):
+                self.symlabels = []
+            for _ in range(self.pg_order):
+                line = next(inputfile)
+                self.symlabels.append(self.normalisesym(line.split()[0]))
 
         # This section contains general parameters for Hartree-Fock calculations,
         # which do not contain the 'General Information' section like most jobs.
@@ -1054,6 +1077,7 @@ class NWChem(logfileparser.Logfile):
 
         Currently, expands self.shells() into self.aonames.
         """
+        super(NWChem, self).after_parsing()
 
         # setup a few necessary things, including a regular expression
         # for matching the shells

@@ -48,13 +48,12 @@ class DALTON(logfileparser.Logfile):
         # would like to use as triggers.
         self.section = None
 
-        # If there is no symmetry, assume this.
+        # If there is no symmetry (point group is C1), assume this.
         self.symlabels = ['Ag']
 
         # Is the basis set from a single library file? This is true
         # when the first line is BASIS, false for INTGRL/ATOMBASIS.
         self.basislibrary = True
-
 
     def parse_geometry(self, lines):
         """Parse DALTON geometry lines into an atomcoords array."""
@@ -122,6 +121,30 @@ class DALTON(logfileparser.Logfile):
 
             self.geotargets.append(target)
             self.geotargets_names.append(name)
+
+        # Main location of symmetry information (point group, ordering
+        # of irreducible representations).
+        if line.strip() == "SYMGRP: Point group information":
+
+            self.skip_lines(inputfile, ['d', 'b'])
+            line = next(inputfile)
+            if 'Point group:' in line:
+                point_group_full = line.split()[-1].lower()
+                point_group_abelian = point_group_full
+            else:
+                assert 'Full point group is:' in line
+                point_group_full = line.split()[-1].replace('(', '').replace(')', '').lower()
+                line = next(inputfile)
+                assert 'Represented as:' in line
+                point_group_abelian = line.split()[-1].lower()
+                self.skip_line(inputfile, 'b')
+                line = next(inputfile)
+                if 'The irrep name for each symmetry:' in line:
+                    irreps = [self.normalisesym(irrep) for irrep in line.split()[8:][1::2]]
+                    self.symlabels = irreps
+
+            self.metadata['symmetry_full'] = point_group_full
+            self.metadata['symmetry_abelian'] = point_group_abelian
 
         # This is probably the first place where atomic symmetry labels are printed,
         # somewhere afer the SYMGRP point group information section. We need to know

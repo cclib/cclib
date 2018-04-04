@@ -56,6 +56,9 @@ class GAMESSUK(logfileparser.Logfile):
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
 
+        if all(token in line for token in ("version", "===")):
+            self.metadata["package_version"] = line.split()[4]
+
         if line[1:22] == "total number of atoms":
             natom = int(line.split()[-1])
             self.set_attribute('natom', natom)
@@ -87,6 +90,20 @@ class GAMESSUK(logfileparser.Logfile):
             self.geovalues.append(geovalues)
             if not self.geotargets:
                 self.geotargets = geotargets
+
+        if line.strip() == "molecular symmetry":
+            self.skip_lines(inputfile, ['s', 'b'])
+            line = next(inputfile)
+            assert "molecular point group" in line
+            pg = line.split()[-1]
+            line = next(inputfile)
+            assert "order of principal axis" in line
+            naxis = line.split()[-1]
+            point_group_full = pg.replace('n', naxis)
+            # TODO
+            point_group_abelian = point_group_full
+            self.metadata['symmetry_full'] = point_group_full
+            self.metadata['symmetry_abelian'] = point_group_abelian
 
         # This is the only place coordinates are printed in single point calculations. Note that
         # in the following fragment, the basis set selection is not always printed:
@@ -463,6 +480,11 @@ class GAMESSUK(logfileparser.Logfile):
             else:
                 self.mosyms = [mosyms]
 
+        if line.strip() == "Number of orbitals belonging to irreps of this group":
+            self.skip_line(inputfile, 'd')
+            line = next(inputfile)
+            irreps = [self.normalisesym(irrep) for irrep in line.split()[::2]]
+
         if line[50:62] == "eigenvectors":
         # Mocoeffs...can get evalues from here too
         # (only if using FORMAT HIGH though will they all be present)
@@ -580,8 +602,8 @@ class GAMESSUK(logfileparser.Logfile):
         #
         if line.strip() == "dipole moments":
 
-            # In older version there is only one blank line before the header,
-            # and newer version there are two.
+            # In older versions there is only one blank line before
+            # the header, and newer versions there are two.
             self.skip_line(inputfile, 'blank')
             line = next(inputfile)
             if not line.strip():
