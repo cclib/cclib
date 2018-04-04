@@ -38,7 +38,7 @@ class Volume(object):
        spacing -- the distance between the points in the cube
 
     Attributes:
-       data -- a NumPyarray of values for each point in the volume
+       data -- a NumPy array of values for each point in the volume
                (set to zero at initialisation)
        numpts -- the numbers of points in the (x,y,z) directions
     """
