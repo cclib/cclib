@@ -1,0 +1,4 @@
+%chk=PhCCCC.chk
+%mem=400MB
+%nproc=1
+#p b3lyp/sto-3g guess=read geom=allcheck pop=full gfinput iop(3/33=1,3/36=-1)
