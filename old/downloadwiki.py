@@ -5,6 +5,8 @@
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
 
+from __future__ import print_function
+
 import urllib
 
 from BeautifulSoup import BeautifulSoup
@@ -19,12 +21,11 @@ soup = BeautifulSoup(allpages)
 hrefs = []
 for anchor in soup('table')[2]('a'):
     hrefs.append(anchor['href'].split("/")[-1])
-print 'Pages to download:\n', ', '.join(hrefs)
+print('Pages to download:\n', ', '.join(hrefs))
 
 params = urllib.urlencode({"action":"submit",
                            "pages":"\n".join(hrefs)})
 
 query = urllib.urlopen(wiki + "/index.php/Special:Export", params)
-outputfile = open("backup.xml","w")
-print >> outputfile, query.read()
-outputfile.close()
+with open("backup.xml", "w") as outputfile:
+    outputfile.write(query.read())

@@ -17,4 +17,4 @@ before_install:
 install:
   - python setup.py install
 script:
-  - sh travis/run_travis_tests.sh
+  - sh travis/run_pytest.sh
