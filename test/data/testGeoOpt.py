@@ -44,7 +44,8 @@ class GenericGeoOptTest(unittest.TestCase):
         # This will work only for numpy
         #self.assertEquals(self.data.atomnos.dtype.char, 'i')
 
-        atomnos_types = [numpy.issubdtype(atomno,int) for atomno in self.data.atomnos]
+        atomnos_types = [numpy.issubdtype(atomno, np.signedinteger)
+                         for atomno in self.data.atomnos]
         self.failUnless(numpy.alltrue(atomnos_types))
 
         self.assertEquals(self.data.atomnos.shape, (20,) )
