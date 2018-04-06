@@ -13,9 +13,9 @@ import re
 
 import numpy
 
-from . import data
-from . import logfileparser
-from . import utils
+from cclib.parser import data
+from cclib.parser import logfileparser
+from cclib.parser import utils
 
 
 class Gaussian(logfileparser.Logfile):
@@ -40,11 +40,6 @@ class Gaussian(logfileparser.Logfile):
         To normalise:
         (1) If label is one of [SG, PI, PHI, DLTA], replace by [sigma, pi, phi, delta]
         (2) replace any G or U by their lowercase equivalent
-
-        >>> sym = Gaussian("dummyfile").normalisesym
-        >>> labels = ['A1', 'AG', 'A1G', "SG", "PI", "PHI", "DLTA", 'DLTU', 'SGG']
-        >>> map(sym, labels)
-        ['A1', 'Ag', 'A1g', 'sigma', 'pi', 'phi', 'delta', 'delta.u', 'sigma.g']
         """
         # note: DLT must come after DLTA
         greek = [('SG', 'sigma'), ('PI', 'pi'), ('PHI', 'phi'),
@@ -63,6 +58,12 @@ class Gaussian(logfileparser.Logfile):
 
         # Used to index self.scftargets[].
         SCFRMS, SCFMAX, SCFENERGY = list(range(3))
+
+        # Extract only well-formed numbers in scientific notation.
+        self.re_scinot = re.compile('(\w*)=\s*(-?\d\.\d{2}D[+-]\d{2})')
+        # Extract only well-formed numbers in traditional
+        # floating-point format.
+        self.re_float = re.compile('(\w*-?\w*)=\s*(-?\d+\.\d{10,})')
 
         # Flag for identifying Coupled Cluster runs.
         self.coupledcluster = False
@@ -225,7 +226,7 @@ class Gaussian(logfileparser.Logfile):
 
             self.updateprogress(inputfile, "Attributes", self.fupdate)
 
-            natom = int(line.split()[1])
+            natom = int(re.search('NAtoms=\s*(\d+)', line).group(1))
             self.set_attribute('natom', natom)
 
         # Basis set name
@@ -665,18 +666,23 @@ class Gaussian(logfileparser.Logfile):
                 #  RMSDP=1.13D-05 MaxDP=1.08D-04              OVMax= 1.66D-04
                 if line.find(" RMSDP") == 0:
 
-                    parts = line.split()
-                    newlist = [self.float(x.split('=')[1]) for x in parts[0:2]]
-                    energy = 1.0
-                    if len(parts) > 4:
-                        energy = parts[2].split('=')[1]
-                        if energy == "":
-                            energy = self.float(parts[3])
-                        else:
-                            energy = self.float(energy)
-                    if len(self.scftargets[0]) == 3:  # Only add the energy if it's a target criteria
-                        newlist.append(energy)
-                    scfvalues.append(newlist)
+                    # Fields of interest:
+                    # RMSDP
+                    # MaxDP
+                    # (DE) -> Only add the energy if it's a target criteria
+
+                    matches = self.re_scinot.findall(line)
+                    matches = {
+                        match[0]: self.float(match[1])
+                        for match in matches
+                    }
+                    scfvalues_step = [
+                        matches.get('RMSDP', numpy.nan),
+                        matches.get('MaxDP', numpy.nan)
+                    ]
+                    if len(self.scftargets[0]) == 3:
+                        scfvalues_step.append(matches.get('DE', numpy.nan))
+                    scfvalues.append(scfvalues_step)
 
                 try:
                     line = next(inputfile)
@@ -1794,20 +1800,3 @@ class Gaussian(logfileparser.Logfile):
                 if not hasattr(self, 'optdone'):
                     self.optdone = []
                 self.optdone.append(len(self.optstatus) - 1)
-
-
-
-if __name__ == "__main__":
-    import doctest, gaussianparser, sys
-
-    if len(sys.argv) == 1:
-        doctest.testmod(gaussianparser, verbose=False)
-
-    if len(sys.argv) >= 2:
-        parser = gaussianparser.Gaussian(sys.argv[1])
-        data = parser.parse()
-
-    if len(sys.argv) > 2:
-        for i in range(len(sys.argv[2:])):
-            if hasattr(data, sys.argv[2 + i]):
-                print(getattr(data, sys.argv[2 + i]))

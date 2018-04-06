@@ -11,7 +11,7 @@ import random
 
 import numpy
 
-from .calculationmethod import Method
+from cclib.method.calculationmethod import Method
 
 
 def func(x):
@@ -136,8 +136,3 @@ class OPA(Method):
             self.progress.update(nstep, "Done")
 
         return True
-
-
-if __name__ == "__main__":
-    import doctest, opa
-    doctest.testmod(opa, verbose=False)

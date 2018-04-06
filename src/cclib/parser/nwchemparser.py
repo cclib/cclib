@@ -13,8 +13,8 @@ import re
 
 import numpy
 
-from . import logfileparser
-from . import utils
+from cclib.parser import logfileparser
+from cclib.parser import utils
 
 
 class NWChem(logfileparser.Logfile):
@@ -34,18 +34,7 @@ class NWChem(logfileparser.Logfile):
         return 'NWChem("%s")' % (self.filename)
 
     def normalisesym(self, label):
-        """Use standard symmetry labels instead of NWChem labels.
-
-        To normalise:
-        (1) If label is one of [SG, PI, PHI, DLTA], replace by [sigma, pi, phi, delta]
-        (2) replace any G or U by their lowercase equivalent
-
-        >>> sym = NWChem("dummyfile").normalisesym
-        >>> labels = ['A1', 'AG', 'A1G', "SG", "PI", "PHI", "DLTA", 'DLTU', 'SGG']
-        >>> map(sym, labels)
-        ['A1', 'Ag', 'A1g', 'sigma', 'pi', 'phi', 'delta', 'delta.u', 'sigma.g']
-        """
-        # FIXME if necessary
+        """NWChem does not require normalizing symmetry labels."""
         return label
 
     name2element = lambda self, lbl: "".join(itertools.takewhile(str.isalpha, str(lbl)))
@@ -1113,8 +1102,3 @@ class NWChem(logfileparser.Logfile):
                 for k in range(count):
                     temp = [x % (j + k + 1) for x in labels[label]]
                     self.aonames.extend([prefix + x for x in temp])
-
-
-if __name__ == "__main__":
-    import doctest, nwchemparser
-    doctest.testmod(nwchemparser, verbose=False)

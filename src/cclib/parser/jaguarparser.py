@@ -12,8 +12,8 @@ import re
 
 import numpy
 
-from . import logfileparser
-from . import utils
+from cclib.parser import logfileparser
+from cclib.parser import utils
 
 
 class Jaguar(logfileparser.Logfile):
@@ -39,12 +39,6 @@ class Jaguar(logfileparser.Logfile):
         (1) To handle orbitals of E symmetry, retain everything before the /
         (2) Replace two p's by "
         (2) Replace any remaining single p's by '
-
-        >>> t = Jaguar("dummyfile").normalisesym
-        >>> labels = ['A', 'A1', 'Ag', 'Ap', 'App', "A1p", "A1pp", "E1pp/Ap"]
-        >>> answers = map(t, labels)
-        >>> print answers
-        ['A', 'A1', 'Ag', "A'", 'A"', "A1'", 'A1"', 'E1"']
         """
         ans = label.split("/")[0].replace("pp", '"').replace("p", "'")
         return ans
@@ -707,8 +701,3 @@ class Jaguar(logfileparser.Logfile):
                 line = next(inputfile)
             strength = float(line.split()[-1])
             self.etoscs.append(strength)
-
-
-if __name__ == "__main__":
-    import doctest, jaguarparser
-    doctest.testmod(jaguarparser, verbose=False)

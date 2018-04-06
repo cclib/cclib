@@ -65,9 +65,6 @@ def convertor(value, fromunits, tounits):
     Sources:
         NIST 2010 CODATA (http://physics.nist.gov/cuu/Constants/index.html)
         Documentation of GAMESS-US or other programs as noted
-
-    >>> print("%.3f" % convertor(8.0, "eV", "cm-1"))
-    64524.354
     """
 
     _convertor = {
@@ -125,18 +122,7 @@ def convertor(value, fromunits, tounits):
 
 
 class PeriodicTable(object):
-    """Allows conversion between element name and atomic no.
-
-    >>> t = PeriodicTable()
-    >>> t.element[6]
-    'C'
-    >>> t.number['C']
-    6
-    >>> t.element[44]
-    'Ru'
-    >>> t.number['Au']
-    79
-    """
+    """Allows conversion between element name and atomic no."""
 
     def __init__(self):
         self.element = [
@@ -168,12 +154,6 @@ class PeriodicTable(object):
 class WidthSplitter:
     """Split a line based not on a character, but a given number of field
     widths.
-
-    >>> split_fixed = WidthSplitter((4, 3, 5, 6, 10, 10, 10, 10, 10, 10))
-    >>> split_fixed.split("  60  H 10  s        0.14639   0.00000   0.00000  -0.00000  -0.00000   0.00000")
-    ['60', 'H', '10', 's', '0.14639', '0.00000', '0.00000', '-0.00000', '-0.00000', '0.00000']
-    >>> split_fixed.split("   1  C 1   s       -0.00000  -0.00000   0.00000")
-    ['1', 'C', '1', 's', '-0.00000', '-0.00000', '0.00000']
     """
 
     def __init__(self, widths):
@@ -192,8 +172,3 @@ class WidthSplitter:
             while len(elements) and elements[-1] == '':
                 elements.pop()
         return elements
-
-
-if __name__ == "__main__":
-    import doctest, utils
-    doctest.testmod(utils, verbose=False)

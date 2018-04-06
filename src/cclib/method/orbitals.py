@@ -16,7 +16,7 @@ import logging
 
 import numpy
 
-from .calculationmethod import Method
+from cclib.method.calculationmethod import Method
 
 
 class Orbitals(Method):
@@ -25,6 +25,7 @@ class Orbitals(Method):
     def __init__(self, data, progress=None, \
                  loglevel=logging.INFO, logname="Log"):
 
+        self.required_attrs = ('mocoeffs','moenergies','homos')
         # Call the __init__ method of the superclass.
         super(Orbitals, self).__init__(data, progress, loglevel, logname)
         self.fragresults = None
@@ -52,8 +53,3 @@ class Orbitals(Method):
             return False
 
         return True
-
-
-if __name__ == "__main__":
-    import doctest, orbitals
-    doctest.testmod(orbitals, verbose=False)

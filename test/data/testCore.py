@@ -22,6 +22,7 @@ class GenericCoreTest(unittest.TestCase):
     """Generic core electrons unittest"""
 
     coredict = {'Mo': 28, 'O':0, 'Cl':10}
+    charge = -2
 
     def testcorrect(self):
         """Is coreelectrons equal to what it should be?"""
@@ -32,6 +33,10 @@ class GenericCoreTest(unittest.TestCase):
         ans = numpy.array(ans, "i")
         numpy.testing.assert_array_equal(self.data.coreelectrons, ans)
 
+    def testcharge(self):
+        """Is the total charge correct?"""
+        self.assertEqual(self.data.charge, self.charge)
+
 
 class ADFCoreTest(GenericCoreTest):
     """Customized core electrons unittest"""
@@ -40,6 +45,9 @@ class ADFCoreTest(GenericCoreTest):
     # This might be fixable in the input.
     coredict = {'Mo': 28, 'O':0, 'Cl':0}
 
+    # These calculations were run on the neutral complex.
+    charge = 0
+
 
 class JaguarCoreTest(GenericCoreTest):
     """Customized core electrons unittest"""
@@ -47,11 +55,11 @@ class JaguarCoreTest(GenericCoreTest):
     # This test was done using LanL2DZ instead of the smaller variant.
     coredict = {'Mo': 36, 'O':0, 'Cl':10}
 
-           
+
 if __name__=="__main__":
 
     import sys
-    sys.path.append(os.path.join(__filedir__, ".."))
+    sys.path.insert(1, os.path.join(__filedir__, ".."))
 
     from test_data import DataSuite
     suite = DataSuite(['Suite'])

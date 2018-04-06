@@ -20,9 +20,9 @@ import zipfile
 
 import numpy
 
-from . import utils
-from .data import ccData
-from .data import ccData_optdone_bool
+from cclib.parser import utils
+from cclib.parser.data import ccData
+from cclib.parser.data import ccData_optdone_bool
 
 
 # This seems to avoid a problem with Avogadro.
@@ -326,9 +326,12 @@ class Logfile(object):
         if not hasattr(self, "nmo") and hasattr(self, "nbasis"):
             self.nmo = self.nbasis
 
-        # Creating deafult coreelectrons array.
+        # Create a default coreelectrons array, unless it's impossible
+        # to determine.
         if not hasattr(self, "coreelectrons") and hasattr(self, "natom"):
             self.coreelectrons = numpy.zeros(self.natom, "i")
+        if hasattr(self, "incorrect_coreelectrons"):
+            self.__delattr__("coreelectrons")
 
         # Create the data object we want to return. This is normally ccData, but can be changed
         # by passing the datatype argument to the constructor. All supported cclib attributes
@@ -378,7 +381,7 @@ class Logfile(object):
         contain appropriate doctests. If is not overwritten, this is detected
         as an error by unit tests.
         """
-        return "ERROR: This should be overwritten by this subclass"
+        raise NotImplementedError("normalisesym(self, symlabel) must be overriden by the parser.")
 
     def float(self, number):
         """Convert a string to a float.
@@ -387,14 +390,6 @@ class Logfile(object):
         including avoiding the problem with Ds instead of Es in scientific notation.
         Another point is converting string signifying numerical problems (*****)
         to something we can manage (Numpy's NaN).
-
-        >>> t = Logfile("dummyfile")
-        >>> t.float("123.2323E+02")
-        12323.23
-        >>> t.float("123.2323D+02")
-        12323.23
-        >>> t.float("*****")
-        nan
         """
 
         if list(set(number)) == ['*']:
@@ -469,8 +464,3 @@ class Logfile(object):
         return lines
 
     skip_line = lambda self, inputfile, expected: self.skip_lines(inputfile, [expected])
-
-
-if __name__ == "__main__":
-    import doctest
-    doctest.testmod()

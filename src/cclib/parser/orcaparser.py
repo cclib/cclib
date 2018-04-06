@@ -12,8 +12,8 @@ from __future__ import print_function
 
 import numpy
 
-from . import logfileparser
-from . import utils
+from cclib.parser import logfileparser
+from cclib.parser import utils
 
 
 class ORCA(logfileparser.Logfile):
@@ -34,17 +34,8 @@ class ORCA(logfileparser.Logfile):
         return 'ORCA("%s")' % (self.filename)
 
     def normalisesym(self, label):
-        """Use standard symmetry labels instead of Gaussian labels.
-
-        To normalise:
-        (1) If label is one of [SG, PI, PHI, DLTA], replace by [sigma, pi, phi, delta]
-        (2) replace any G or U by their lowercase equivalent
-
-        >>> sym = Gaussian("dummyfile").normalisesym
-        >>> labels = ['A1', 'AG', 'A1G', "SG", "PI", "PHI", "DLTA", 'DLTU', 'SGG']
-        >>> map(sym, labels)
-        ['A1', 'Ag', 'A1g', 'sigma', 'pi', 'phi', 'delta', 'delta.u', 'sigma.g']
-        """
+        """ORCA does not require normalizing symmetry labels."""
+        return label
 
     def before_parsing(self):
 
@@ -1159,20 +1150,3 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
                 assert maxDP_target == self.scftargets[-1][1]
             self.scfvalues[-1].append([deltaE_value, maxDP_value, rmsDP_value])
             self.scftargets.append([deltaE_target, maxDP_target, rmsDP_target])
-
-
-if __name__ == "__main__":
-    import sys
-    import doctest, orcaparser
-
-    if len(sys.argv) == 1:
-        doctest.testmod(orcaparser, verbose=False)
-
-    if len(sys.argv) == 2:
-        parser = orcaparser.ORCA(sys.argv[1])
-        data = parser.parse()
-
-    if len(sys.argv) > 2:
-        for i in range(len(sys.argv[2:])):
-            if hasattr(data, sys.argv[2 + i]):
-                print(getattr(data, sys.argv[2 + i]))

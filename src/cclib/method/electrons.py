@@ -11,13 +11,15 @@ import logging
 
 import numpy
 
-from .calculationmethod import Method
+from cclib.method.calculationmethod import Method
 
 
 class Electrons(Method):
     """A container for methods pertaining to electrons."""
 
     def __init__(self, data, progress=None, loglevel=logging.INFO, logname="Log"):
+
+        self.required_attrs = ('atomnos','charge','coreelectrons')
 
         super(Electrons, self).__init__(data, progress, loglevel, logname)
 
@@ -39,8 +41,3 @@ class Electrons(Method):
         if core:
             nelectrons += sum(self.data.coreelectrons)
         return nelectrons
-
-
-if __name__ == "__main__":
-    import doctest
-    doctest.testmod(verbose=True)

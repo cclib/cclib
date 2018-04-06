@@ -9,16 +9,17 @@
 
 try:
     import openbabel as ob
-    has_openbabel = True
+    _has_openbabel = True
 except ImportError:
-    has_openbabel = False
+    _has_openbabel = False
 
 import os.path
 import json
 import numpy as np
 
-from . import filewriter
+from cclib.io import filewriter
 from cclib.parser.data import ccData
+
 
 class CJSON(filewriter.Writer):
     """A writer for chemical JSON (CJSON) files."""
@@ -47,7 +48,7 @@ class CJSON(filewriter.Writer):
             cjson_dict['name'] = self.pathname(self.jobfilename)
 
         # These are properties that can be collected using Open Babel.
-        if has_openbabel:
+        if _has_openbabel:
             cjson_dict['smiles'] = self.pbmol.write('smiles')
             cjson_dict['inchi'] = self.pbmol.write('inchi')
             cjson_dict['inchikey'] = self.pbmol.write('inchikey')
@@ -125,7 +126,7 @@ class CJSON(filewriter.Writer):
             cjson_dict['atoms']['elements']['heavy atom count'] = len([x for x in self.ccdata.atomnos if x > 1])
 
         # Bond attributes:
-        if has_openbabel and (len(self.ccdata.atomnos) > 1):
+        if _has_openbabel and (len(self.ccdata.atomnos) > 1):
             cjson_dict['bonds'] = dict()
             cjson_dict['bonds']['connections'] = dict()
             cjson_dict['bonds']['connections']['index'] = []
@@ -134,7 +135,7 @@ class CJSON(filewriter.Writer):
                 cjson_dict['bonds']['connections']['index'].append(bond[1] + 1)
             cjson_dict['bonds']['order'] = [bond[2] for bond in self.bond_connectivities]
 
-        if has_openbabel:
+        if _has_openbabel:
             cjson_dict['properties']['molecular mass'] = self.pbmol.molwt
             cjson_dict['diagram'] = self.pbmol.write(format='svg')
 
@@ -213,7 +214,3 @@ class JSONIndentEncoder(json.JSONEncoder):
             return json.dumps(np.asscalar(o), cls=NumpyAwareJSONEncoder)
         else:
             return json.dumps(o, cls=NumpyAwareJSONEncoder)
-
-
-if __name__ == "__main__":
-    pass

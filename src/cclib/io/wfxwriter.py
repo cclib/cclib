@@ -9,9 +9,9 @@
 
 import os.path
 import numpy
-from cclib.parser import utils
 
-from . import filewriter
+from cclib.io import filewriter
+from cclib.parser import utils
 
 
 # Number of orbitals of type key.
@@ -511,7 +511,3 @@ class WFXWriter(filewriter.Writer):
 
         wfx_lines.append('')
         return '\n'.join(wfx_lines)
-
-
-if __name__ == "__main__":
-    pass

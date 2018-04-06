@@ -9,13 +9,13 @@
 
 try:
     import openbabel as ob
-    has_openbabel = True
+    _has_openbabel = True
 except ImportError:
-    has_openbabel = False
+    _has_openbabel = False
 
 import xml.etree.cElementTree as ET
 
-from . import filewriter
+from cclib.io import filewriter
 
 
 class CML(filewriter.Writer):
@@ -43,7 +43,7 @@ class CML(filewriter.Writer):
         if self.jobfilename is not None:
             d['id'] = self.jobfilename
         _set_attrs(molecule, d)
-        
+
         # Form the listing of all the atoms present.
         atomArray = ET.SubElement(molecule, 'atomArray')
         if hasattr(self.ccdata, 'atomcoords') and hasattr(self.ccdata, 'atomnos'):
@@ -62,7 +62,7 @@ class CML(filewriter.Writer):
 
         # Form the listing of all the bonds present.
         bondArray = ET.SubElement(molecule, 'bondArray')
-        if has_openbabel:
+        if _has_openbabel:
             for bc in self.bond_connectivities:
                 bond = ET.SubElement(bondArray, 'bond')
                 d = {
@@ -113,7 +113,3 @@ def _tostring(element, xml_declaration=True, encoding='utf-8', method='xml'):
                                   encoding=encoding,
                                   method=method)
     return b''.join(data).decode(encoding)
-
-
-if __name__ == "__main__":
-    pass

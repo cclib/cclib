@@ -11,9 +11,9 @@ try:
     from cclib.bridge import makeopenbabel
     import openbabel as ob
     import pybel as pb
-    has_openbabel = True
+    _has_openbabel = True
 except ImportError:
-    has_openbabel = False
+    _has_openbabel = False
 
 from math import sqrt
 from collections import Iterable
@@ -53,7 +53,7 @@ class Writer(object):
         self._check_required_attributes()
 
         # Open Babel isn't necessarily present.
-        if has_openbabel:
+        if _has_openbabel:
             # Generate the Open Babel/Pybel representation of the molecule.
             # Used for calculating SMILES/InChI, formula, MW, etc.
             self.obmol, self.pbmol = self._make_openbabel_from_ccdata()
@@ -127,7 +127,3 @@ class Writer(object):
                 indices.add(i)
             self.indices = indices
         return
-
-
-if __name__ == "__main__":
-    pass

@@ -14,21 +14,21 @@
 # they can use:
 #         from cclib.parser import Gaussian
 
-from .adfparser import ADF
-from .daltonparser import DALTON
-from .gamessparser import GAMESS
-from .gamessukparser import GAMESSUK
-from .gaussianparser import Gaussian
-from .jaguarparser import Jaguar
-from .molproparser import Molpro
-from .mopacparser import MOPAC
-from .nwchemparser import NWChem
-from .orcaparser import ORCA
-from .psiparser import Psi
-from .qchemparser import QChem
+from cclib.parser.adfparser import ADF
+from cclib.parser.daltonparser import DALTON
+from cclib.parser.gamessparser import GAMESS
+from cclib.parser.gamessukparser import GAMESSUK
+from cclib.parser.gaussianparser import Gaussian
+from cclib.parser.jaguarparser import Jaguar
+from cclib.parser.molproparser import Molpro
+from cclib.parser.mopacparser import MOPAC
+from cclib.parser.nwchemparser import NWChem
+from cclib.parser.orcaparser import ORCA
+from cclib.parser.psiparser import Psi
+from cclib.parser.qchemparser import QChem
 
-from .data import ccData
+from cclib.parser.data import ccData
 
 # This allows users to type:
 #         from cclib.parser import ccopen
-from ..io.ccio import ccopen
+from cclib.io.ccio import ccopen

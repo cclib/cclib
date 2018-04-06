@@ -11,7 +11,7 @@ import logging
 
 import numpy
 
-from .calculationmethod import Method
+from cclib.method.calculationmethod import Method
 
 
 class Population(Method):
@@ -89,8 +89,3 @@ class Population(Method):
         self.fragresults = results
 
         return True
-
-
-if __name__ == "__main__":
-    import doctest, population
-    doctest.testmod(population, verbose=False)

@@ -14,8 +14,8 @@ import re
 import numpy
 
 
-from . import logfileparser
-from . import utils
+from cclib.parser import logfileparser
+from cclib.parser import utils
 
 
 class GAMESS(logfileparser.Logfile):
@@ -66,12 +66,6 @@ class GAMESS(logfileparser.Logfile):
         (1) Occurences of U/G in the 2/3 position of the label
             must be lower-cased
         (2) Two single quotation marks must be replaced by a double
-
-        >>> t = GAMESS("dummyfile").normalisesym
-        >>> labels = ['A', 'A1', 'A1G', "A'", "A''", "AG"]
-        >>> answers = map(t, labels)
-        >>> print answers
-        ['A', 'A1', 'A1g', "A'", 'A"', 'Ag']
         """
 
         if label[1:] == "''":
@@ -1437,18 +1431,3 @@ class GAMESS(logfileparser.Logfile):
                     i, j = coord_to_idx[tokens[1][0]], coord_to_idx[tokens[1][1]]
                     polarizability[i, j] = tokens[3]
             self.polarizabilities.append(polarizability)
-
-
-if __name__ == "__main__":
-    import doctest, gamessparser, sys
-    if len(sys.argv) == 1:
-        doctest.testmod(gamessparser, verbose=False)
-
-    if len(sys.argv) >= 2:
-        parser = gamessparser.GAMESS(sys.argv[1])
-        data = parser.parse()
-
-    if len(sys.argv) > 2:
-        for i in range(len(sys.argv[2:])):
-            if hasattr(data, sys.argv[2 + i]):
-                print(getattr(data, sys.argv[2 + i]))

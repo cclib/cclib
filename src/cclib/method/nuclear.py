@@ -11,13 +11,15 @@ import logging
 
 import numpy
 
-from .calculationmethod import Method
+from cclib.method.calculationmethod import Method
 
 
 class Nuclear(Method):
     """A container for methods pertaining to atomic nuclei."""
 
     def __init__(self, data, progress=None, loglevel=logging.INFO, logname="Log"):
+
+        self.required_attrs = ('natom','atomcoords','atomnos')
 
         super(Nuclear, self).__init__(data, progress, loglevel, logname)
 
@@ -42,8 +44,3 @@ class Nuclear(Method):
                 d = numpy.linalg.norm(ri-rj)
                 nre += zi*zj/d
         return nre
-
-
-if __name__ == "__main__":
-    import doctest
-    doctest.testmod(verbose=True)

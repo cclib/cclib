@@ -5,7 +5,7 @@
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
 
-from PyQt4 import QtGui,QtCore
+from PyQt4 import QtGui, QtCore
 
 
 class Qt4Progress(QtGui.QProgressDialog):

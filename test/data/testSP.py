@@ -117,7 +117,8 @@ class GenericSPTest(unittest.TestCase):
 
     def testnormalisesym(self):
         """Did this subclass overwrite normalisesym?"""
-        self.assertNotEquals(self.logfile.normalisesym("A"), "ERROR: This should be overwritten by this subclass")
+        # https://stackoverflow.com/a/8747890
+        self.logfile.normalisesym("A")
 
     @skipForParser('Molpro', '?')
     @skipForParser('ORCA', 'ORCA has no support for symmetry yet')
@@ -314,7 +315,7 @@ class OrcaSPTest(GenericSPTest):
 if __name__=="__main__":
 
     import sys
-    sys.path.append(os.path.join(__filedir__, ".."))
+    sys.path.insert(1, os.path.join(__filedir__, ".."))
 
     from test_data import DataSuite
     suite = DataSuite(['SP'])

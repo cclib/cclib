@@ -17,11 +17,13 @@ import unittest
 
 import numpy
 
-sys.path.append("..")
-from test_data import getdatafile
 from cclib.method import Orbitals
 from cclib.parser import Gaussian
 from cclib.parser import Psi
+
+sys.path.insert(1, "..")
+
+from ..test_data import getdatafile
 
 
 class RestrictedCalculationTest(unittest.TestCase):

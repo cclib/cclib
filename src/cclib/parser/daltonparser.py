@@ -12,8 +12,8 @@ from __future__ import print_function
 
 import numpy
 
-from . import logfileparser
-from . import utils
+from cclib.parser import logfileparser
+from cclib.parser import utils
 
 
 class DALTON(logfileparser.Logfile):
@@ -33,9 +33,7 @@ class DALTON(logfileparser.Logfile):
         return 'DALTON("%s")' % (self.filename)
 
     def normalisesym(self, label):
-        """Normalise the symmetries used by DALTON."""
-
-        # It appears that DALTON is using the correct labels.
+        """DALTON does not require normalizing symmetry labels."""
         return label
 
     def before_parsing(self):
@@ -1203,19 +1201,3 @@ class DALTON(logfileparser.Logfile):
         # fooverlaps
         # fragnames
         # frags
-
-
-
-if __name__ == "__main__":
-    import doctest, daltonparser, sys
-    if len(sys.argv) == 1:
-        doctest.testmod(daltonparser, verbose=False)
-
-    if len(sys.argv) >= 2:
-        parser = daltonparser.DALTON(sys.argv[1])
-        data = parser.parse()
-
-    if len(sys.argv) > 2:
-        for i in range(len(sys.argv[2:])):
-            if hasattr(data, sys.argv[2 + i]):
-                print(getattr(data, sys.argv[2 + i]))

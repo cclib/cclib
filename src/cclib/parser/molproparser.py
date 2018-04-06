@@ -12,8 +12,8 @@ import itertools
 
 import numpy
 
-from . import logfileparser
-from . import utils
+from cclib.parser import logfileparser
+from cclib.parser import utils
 
 
 def create_atomic_orbital_names(orbitals):
@@ -882,7 +882,17 @@ class Molpro(logfileparser.Logfile):
                 self.atomcharges = {}
             self.atomcharges['mulliken'] = charges
 
-
-if __name__ == "__main__":
-    import doctest, molproparser
-    doctest.testmod(molproparser, verbose=False)
+        if 'GRADIENT FOR STATE' in line:
+            for _ in range(3):
+                next(inputfile)
+            grad = []
+            lines_read = 0
+            while lines_read < self.natom:
+                line = next(inputfile)
+                # Because molpro inserts an empty line every 50th atom.
+                if line:
+                    grad.append([float(x) for x in line.split()[1:]])
+                    lines_read += 1
+            if not hasattr(self, 'grads'):
+                self.grads = []
+            self.grads.append(grad)
