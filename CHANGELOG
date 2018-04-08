@@ -1,3 +1,21 @@
+Changes in cclib-1.5.3
+
+Features:
+    * New attribute transprop for electronic transitions (Jonathon Vandezande)
+    * Support grads attribute in Psi4 (Adam Abbott)
+    * Support grads attribute in Molpro (Oskar Weser)
+    * Support optstatus for IRCs and in Psi4 (Emmanuel LaTruelle)
+    * Updated test file versions to Gaussian16 (Andrew S. Rosen)
+    * Add ability to write XYZ coordinates for arbitrary indices
+
+Bugfixes:
+    * Fixed ccwrite script and added unit tests (Georgy Frolov)
+    * Fixed closed shell determination for Gaussian (Jaime Rodríguez-Guerra)
+    * Fixed parsing of natom for >9999 atoms in Gaussian (Jaime Rodríguez-Guerra)
+    * Fixed parsing of ADF jobs with no title
+    * Fixed parsing of charge and core electrons when usin ECPs in QChem
+    * Fixed parsing of scfvalues for malformed output in Gaussian
+
 Changes in cclib-1.5.2:
 
 Features:
