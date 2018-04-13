@@ -1,3 +1,9 @@
+"""test/conftest.py: dynamic testing configuration for pytest
+
+See the pytest documentation for more details:
+https://docs.pytest.org/en/latest/contents.html
+"""
+
 import sys
 
 
