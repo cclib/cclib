@@ -460,6 +460,29 @@ def testGaussian_Gaussian09_irc_point_log(logfile):
     assert hasattr(logfile.data, "vibfreqs")
     assert len(logfile.data.vibfreqs) == 11
 
+def testGaussian_Gaussian09_issue_460_log(logfile):
+    """Lots of malformed lines when parsing for scfvalues:
+
+    RMSDP=3.79D-04 MaxDP=4.02D-02              OVMax= 4.31D-02
+    RMSDP=1.43D-06 MaxDP=5.44D-04 DE=-6.21D-07 OVMax= 5.76D-04
+    RMSDP=2.06D-05 MaxDP=3.84D-03 DE= 4.82D-04 O E= -2574.14897924075     Delta-E=        0.000439804468 Rises=F Damp=F
+    RMSDP=8.64D-09 MaxDP=2.65D-06 DE=-1.67D-10 OVMax= 3. E= -2574.14837678675     Delta-E=       -0.000000179038 Rises=F Damp=F
+    RMSDP= E= -2574.14931865182     Delta-E=       -0.000000019540 Rises=F Damp=F
+    RMSDP=9.34D- E= -2574.14837612206     Delta-E=       -0.000000620705 Rises=F Damp=F
+    RMSDP=7.18D-05 Max E= -2574.14797761904     Delta-E=       -0.000000000397 Rises=F Damp=F
+    RMSDP=1.85D-06 MaxD E= -2574.14770506975     Delta-E=       -0.042173156160 Rises=F Damp=F
+    RMSDP=1.69D-06 MaxDP= E= -2574.14801776548     Delta-E=        0.000023521317 Rises=F Damp=F
+    RMSDP=3.80D-08 MaxDP=1 E= -2574.14856570920     Delta-E=       -0.000002960194 Rises=F Damp=F
+    RMSDP=4.47D-09 MaxDP=1.40 E= -2574.14915435699     Delta-E=       -0.000255709558 Rises=F Damp=F
+    RMSDP=5.54D-08 MaxDP=1.55D-05 DE=-2.55D-0 E= -2574.14854319757     Delta-E=       -0.000929740010 Rises=F Damp=F
+    RMSDP=7.20D-09 MaxDP=1.75D-06 DE=- (Enter /QFsoft/applic/GAUSSIAN/g09d.01_pgi11.9-ISTANBUL/g09/l703.exe)
+    RMSDP=5.24D-09 MaxDP=1.47D-06 DE=-1.82D-11 OVMax= 2.15 (Enter /QFsoft/applic/GAUSSIAN/g09d.01_pgi11.9-ISTANBUL/g09/l703.exe)
+    RMSDP=1.71D-04 MaxDP=1.54D-02    Iteration    2 A^-1*A deviation from unit magnitude is 1.11D-15 for    266.
+    """
+    assert hasattr(logfile.data, 'scfvalues')
+    assert logfile.data.scfvalues[0][0, 0] == 3.37e-03
+    assert numpy.isnan(logfile.data.scfvalues[0][0, 2])
+
 def testGaussian_Gaussian09_OPT_td_g09_out(logfile):
     """Couldn't find etrotats as G09 has different output than G03."""
     assert len(logfile.data.etrotats) == 10
@@ -726,6 +749,10 @@ def testPsi_Psi4_0b5_stopiter_psi_dft_out(logfile):
 def testPsi_Psi4_0b5_stopiter_psi_hf_out(logfile):
     """Check to ensure that an incomplete SCF is handled correctly."""
     assert len(logfile.data.scfvalues[0]) == 6
+
+def testPsi_Psi4_0_water_fdgrad_out(logfile):
+    """Ensure that finite difference gradients are parsed."""
+    assert hasattr(logfile.data, 'grads')
 
 # Q-Chem #
 
@@ -1021,6 +1048,73 @@ def testQChem_QChem4_2_dvb_sp_multipole_10_out(logfile):
     assert numpy.isnan(logfile.data.moments[10][0])
 
 
+def testQChem_QChem4_2_MoOCl4_sp_noprint_builtin_mixed_all_Cl_out(logfile):
+    """ECP on all Cl atoms, but iprint is off, so coreelectrons must be
+    guessed.
+    """
+    assert logfile.data.charge == -2
+    assert logfile.data.mult == 1
+    assert hasattr(logfile.data, 'coreelectrons')
+    coreelectrons = numpy.array([0, 0, 10, 10, 10, 10], dtype=int)
+    assert numpy.all(coreelectrons == logfile.data.coreelectrons)
+
+
+def testQChem_QChem4_2_MoOCl4_sp_noprint_builtin_mixed_both_out(logfile):
+    """ECP on Mo and all Cl atoms, but iprint is off, so coreelectrons
+    can't be guessed.
+
+    Uses `ecp = gen`.
+    """
+    assert logfile.data.charge == -2
+    assert logfile.data.mult == 1
+    assert not hasattr(logfile.data, 'coreelectrons')
+
+
+def testQChem_QChem4_2_MoOCl4_sp_noprint_builtin_mixed_single_Mo_out(logfile):
+    """ECP on Mo, but iprint is off, so coreelectrons must be guessed."""
+    assert logfile.data.charge == -2
+    assert logfile.data.mult == 1
+    assert hasattr(logfile.data, 'coreelectrons')
+    coreelectrons = numpy.array([28, 0, 0, 0, 0, 0], dtype=int)
+    assert numpy.all(coreelectrons == logfile.data.coreelectrons)
+
+
+def testQChem_QChem4_2_MoOCl4_sp_noprint_builtin_out(logfile):
+    """ECP on Mo and all Cl atoms, but iprint is off, so coreelectrons
+    can't be guessed.
+
+    Uses `ecp = <builtin>`.
+    """
+    assert logfile.data.charge == -2
+    assert logfile.data.mult == 1
+    assert not hasattr(logfile.data, 'coreelectrons')
+
+
+def testQChem_QChem4_2_MoOCl4_sp_noprint_user_Mo_builtin_all_Cl_out(logfile):
+    """ECP on Mo and all Cl atoms, but iprint is off; the coreelectrons
+    count is given for Mo, and Cl can be guessed.
+    """
+    assert logfile.data.charge == -2
+    assert logfile.data.mult == 1
+    assert hasattr(logfile.data, 'coreelectrons')
+    coreelectrons = numpy.array([28, 0, 10, 10, 10, 10], dtype=int)
+    assert numpy.all(coreelectrons == logfile.data.coreelectrons)
+
+
+def testQChem_QChem4_2_MoOCl4_sp_print_builtin_mixed_single_Mo_single_Cl_out(logfile):
+    """ECP on Mo and all Cl atoms; iprint is on, so coreelectrons can be
+    calculated.
+
+    This was intended to only have an ECP on a single Cl, but Q-Chem
+    silently puts it on all.
+    """
+    assert logfile.data.charge == -2
+    assert logfile.data.mult == 1
+    assert hasattr(logfile.data, 'coreelectrons')
+    coreelectrons = numpy.array([28, 0, 10, 10, 10, 10], dtype=int)
+    assert numpy.all(coreelectrons == logfile.data.coreelectrons)
+
+
 def testQChem_QChem4_2_print_frgm_false_opt_out(logfile):
     """Fragment calculation: geometry optimization.
 
@@ -1284,6 +1378,14 @@ def testQChem_QChem4_4_top_out(logfile):
     assert len(logfile.data.mocoeffs) == 1
     assert logfile.data.mocoeffs[0].shape == (nmo, nbasis)
     assert logfile.data.mocoeffs[0].T[6, 5] == 0.8115082
+
+
+def testQChem_QChem5_0_438_out(logfile):
+    """This job has an ECP on Pt, replacing 60 of 78 electrons, and was
+    showing the charge as 60.
+    """
+    assert logfile.data.charge == 0
+    assert logfile.data.coreelectrons[0] == 60
 
 
 def testQChem_QChem5_0_argon_out(logfile):

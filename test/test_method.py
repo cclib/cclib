@@ -17,6 +17,8 @@ from .method.testmbo import *
 from .method.testnuclear import *
 from .method.testorbitals import *
 from .method.testpopulation import *
+if sys.version_info[0] == 2:
+    from .method.testvolume import *
 
 
 if __name__ == "__main__":

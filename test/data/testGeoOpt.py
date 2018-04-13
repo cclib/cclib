@@ -83,7 +83,8 @@ class GenericGeoOptTest(unittest.TestCase):
 
     def testnormalisesym(self):
         """Did this subclass overwrite normalisesym?"""
-        self.assertNotEquals(self.logfile.normalisesym("A"),"ERROR: This should be overwritten by this subclass")
+        # https://stackoverflow.com/a/8747890
+        self.logfile.normalisesym("A")
 
     def testhomos(self):
         """Is the index of the HOMO equal to 34?"""
@@ -170,7 +171,6 @@ class GenericGeoOptTest(unittest.TestCase):
     @skipForParser("Jaguar", "Not implemented.")
     @skipForParser("NWChem", "Not implemented.")
     @skipForParser("ORCA", "Not implemented.")
-    @skipForParser("Psi", "Not implemented.")
     def testgradsdim(self):
         """Do the grads have the right dimensions?"""
         self.assertEquals(self.data.grads.shape,(len(self.data.geovalues),self.data.natom,3))

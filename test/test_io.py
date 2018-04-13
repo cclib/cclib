@@ -20,6 +20,7 @@ from .io.testmoldenwriter import *
 from .io.testwfxwriter import *
 from .io.testxyzreader import *
 from .io.testxyzwriter import *
+from .io.testscripts import *
 
 
 if __name__ == "__main__":
