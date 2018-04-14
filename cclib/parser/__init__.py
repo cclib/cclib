@@ -25,7 +25,7 @@ from cclib.parser.molproparser import Molpro
 from cclib.parser.mopacparser import MOPAC
 from cclib.parser.nwchemparser import NWChem
 from cclib.parser.orcaparser import ORCA
-from cclib.parser.psiparser import Psi
+from cclib.parser.psiparser import Psi, Psi4, Psi3
 from cclib.parser.qchemparser import QChem
 
 from cclib.parser.data import ccData

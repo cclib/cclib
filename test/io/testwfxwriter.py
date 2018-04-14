@@ -117,7 +117,7 @@ class WFXTest(unittest.TestCase):
         programs = {
             #'ORCA': "data/ORCA/basicORCA4.0/dvb_sp.out",
             'NWChem': "data/NWChem/basicNWChem6.5/dvb_sp_hf.out",
-            'Psi': "data/Psi/basicPsi4.0/dvb_sp_rhf.out",
+            'Psi4': "data/Psi4/basicPsi4-1.0/dvb_sp_rhf.out",
             'GAMESS-UK': "data/GAMESS-UK/basicGAMESS-UK8.0/dvb_sp_hf.out",
             'Firefly': "data/GAMESS/basicFirefly8.0/dvb_sp.out",
         }

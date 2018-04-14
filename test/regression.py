@@ -57,7 +57,7 @@ from cclib.parser import Molpro
 from cclib.parser import MOPAC
 from cclib.parser import NWChem
 from cclib.parser import ORCA
-from cclib.parser import Psi
+from cclib.parser import Psi4, Psi3
 from cclib.parser import QChem
 
 from cclib.io import ccopen
@@ -728,7 +728,7 @@ def testORCA_ORCA4_0_IrCl6_sp_out(logfile):
 
 # PSI #
 
-def testPsi_Psi3_water_psi3_log(logfile):
+def testPsi3_Psi3_4_water_psi3_log(logfile):
     """An RHF for water with D orbitals and C2v symmetry.
 
     Here we can check that the D orbitals are considered by checking atombasis and nbasis.
@@ -736,19 +736,19 @@ def testPsi_Psi3_water_psi3_log(logfile):
     assert logfile.data.nbasis == 25
     assert [len(ab) for ab in logfile.data.atombasis] == [15, 5, 5]
 
-def testPsi_Psi4_0b5_dvb_gopt_hf_unconverged_out(logfile):
+def testPsi4_Psi4_beta5_dvb_gopt_hf_unconverged_out(logfile):
     """An unconverged geometry optimization to test for empty optdone (see #103 for details)."""
     assert hasattr(logfile.data, 'optdone') and not logfile.data.optdone
 
-def testPsi_Psi4_0b5_stopiter_psi_dft_out(logfile):
+def testPsi4_Psi4_beta5_stopiter_psi_dft_out(logfile):
     """Check to ensure that an incomplete SCF is handled correctly."""
     assert len(logfile.data.scfvalues[0]) == 7
 
-def testPsi_Psi4_0b5_stopiter_psi_hf_out(logfile):
+def testPsi4_Psi4_beta5_stopiter_psi_hf_out(logfile):
     """Check to ensure that an incomplete SCF is handled correctly."""
     assert len(logfile.data.scfvalues[0]) == 6
 
-def testPsi_Psi4_0_water_fdgrad_out(logfile):
+def testPsi4_Psi4_0_5_water_fdgrad_out(logfile):
     """Ensure that finite difference gradients are parsed."""
     assert hasattr(logfile.data, 'grads')
 
@@ -1748,14 +1748,14 @@ old_unittests = {
 
     "ORCA/ORCA3.0/trithiolane_polar.out": GaussianPolarTest,
 
-    "Psi/Psi4.0b5/C_bigbasis.out":   GenericBigBasisTest,
-    "Psi/Psi4.0b5/dvb_gopt_hf.out":  PsiGeoOptTest,
-    "Psi/Psi4.0b5/dvb_sp_hf.out":    GenericBasisTest,
-    "Psi/Psi4.0b5/dvb_sp_hf.out":    GenericSPTest,
-    "Psi/Psi4.0b5/dvb_sp_ks.out":    GenericBasisTest,
-    "Psi/Psi4.0b5/dvb_sp_ks.out":    GenericSPTest,
-    "Psi/Psi4.0b5/water_ccsd.out":   GenericCCTest,
-    "Psi/Psi4.0b5/water_mp2.out":    GenericMP2Test,
+    "Psi4/Psi4-beta5/C_bigbasis.out":   GenericBigBasisTest,
+    "Psi4/Psi4-beta5/dvb_gopt_hf.out":  Psi4GeoOptTest,
+    "Psi4/Psi4-beta5/dvb_sp_hf.out":    GenericBasisTest,
+    "Psi4/Psi4-beta5/dvb_sp_hf.out":    GenericSPTest,
+    "Psi4/Psi4-beta5/dvb_sp_ks.out":    GenericBasisTest,
+    "Psi4/Psi4-beta5/dvb_sp_ks.out":    GenericSPTest,
+    "Psi4/Psi4-beta5/water_ccsd.out":   GenericCCTest,
+    "Psi4/Psi4-beta5/water_mp2.out":    GenericMP2Test,
 
     "QChem/QChem4.2/Trp_freq.out":           ReferencePolarTest,
     "QChem/QChem4.2/trithiolane_polar.out":  GaussianPolarTest,
