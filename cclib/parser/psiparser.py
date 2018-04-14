@@ -35,10 +35,6 @@ class Psi4(logfileparser.Logfile):
 
     def before_parsing(self):
 
-        # There are some major differences between the output of Psi3 and Psi4,
-        # so it will be useful to register which one we are dealing with.
-        self.version = None
-
         # Early beta versions of Psi4 normalize basis function
         # coefficients when printing.
         self.version_4_beta = False
