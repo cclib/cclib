@@ -15,7 +15,7 @@ from cclib.method import Electrons
 from cclib.method import orbitals
 
 
-Attribute = namedtuple('Attribute', ['type', 'jsonKey', 'attributePath'])
+Attribute = namedtuple('Attribute', ['type', 'json_key', 'attribute_path'])
 
 
 class ccData(object):
@@ -91,7 +91,7 @@ class ccData(object):
     """
 
     # The expected types for all supported attributes.
-    # The jsonKey is the key name used for attributes in the CJSON/JSON format
+    # The json_key is the key name used for attributes in the CJSON/JSON format
     # 'TBD' - To Be Decided are the key names of attributes which haven't been included in the cjson format
     _attributes = {
        "aonames":          Attribute(list,             'names',                       'atoms:orbitals'),

@@ -5,7 +5,7 @@
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
 
-"""Unit tests for cjsonreader module."""
+"""Unit tests for CJSON reader."""
 
 import os
 import unittest
@@ -26,10 +26,11 @@ class CJSONReaderTest(unittest.TestCase):
         self.CJSON = cclib.io.CJSONReader
 
     def test_cjson_read(self):
-        """File->ccData->CJSON->attribute_dict, the attributes within ccData and attribute_dict
-           should be the same."""
+        """File->ccData->CJSON->attribute_dict, the attributes within ccData and
+        attribute_dict should be the same.
+        """
         fpath = os.path.join(__datadir__, "data/ADF/basicADF2007.01/dvb_gopt.adfout")
-        data = cclib.io.ccopen(fpath).parse()
+        data = cclib.io.ccread(fpath)
         self.assertIsNotNone(data, "The logfileparser failed to parse the output file")
 
         cjson_obj = cclib.io.cjsonwriter.CJSON(data, terse=True)
@@ -42,23 +43,23 @@ class CJSONReaderTest(unittest.TestCase):
         with tempfile.NamedTemporaryFile(mode='w') as fp:
             fp.write(cjson_data)
             fp.flush()
-            cjson_Reader = cclib.io.cjsonreader.CJSON(fp.name)
-            read_cjson_data = cjson_Reader.read_cjson()
+            cjson_reader = cclib.io.cjsonreader.CJSON(fp.name)
+            read_cjson_data = cjson_reader.parse()
         self.assertIsNotNone(read_cjson_data, "The CJSON reader failed to read attributes")
 
-        # The attribute values read by the CJSON reader will be a subset of the total attributes
-        # stored by the logfileparser in the ccData object.
+        # The attribute values read by the CJSON reader will be a subset of the
+        # total attributes stored by the logfileparser in the ccData object.
         ccdata_dict = data.getattributes()
 
-        # Check if each 'key:value' pair read by the CJSON reader is equal to the corresponding
-        # 'key:value' pair present in the ccData object.
+        # Check if each 'key:value' pair read by the CJSON reader is equal to
+        # the corresponding 'key:value' pair present in the ccData object.
         for key in read_cjson_data:
             ccdata_value = ccdata_dict[key]
             cjson_value = read_cjson_data[key]
 
-            # The values in the ccData object might be of numpy types whereas the values
-            # obtained by the CJSON reader are of the inbuilt python types.
-            # Conversion of numpy types into python types happens here:
+            # The values in the ccData object might be of numpy types whereas
+            # the values obtained by the CJSON reader are of the inbuilt python
+            # types.  Conversion of numpy types into python types happens here:
             if isinstance(ccdata_value, np.ndarray) or isinstance(ccdata_value,list):
                 ccdata_value = (np.asarray(ccdata_value)).tolist()
             if isinstance(ccdata_value,dict):
@@ -70,9 +71,11 @@ class CJSONReaderTest(unittest.TestCase):
                         temp_dict[ccdata_key] = dict_value
                 ccdata_value = temp_dict
 
-            # The 'moments' attribute present in the CJSON is a post processed value obtained from the
-            # moments key within ccData. Hence the values for moments will be always different.
-            # To Do: Create a naming convention for post processed attributes within the CJSON structure.
+            # The 'moments' attribute present in the CJSON is a post processed
+            # value obtained from the moments key within ccData. Hence the
+            # values for moments will be always different.  To Do: Create a
+            # naming convention for post processed attributes within the CJSON
+            # structure.
             if key != 'moments':
                 self.assertEqual(ccdata_value, cjson_value)
 
