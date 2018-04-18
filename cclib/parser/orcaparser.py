@@ -766,58 +766,60 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
             self.transprop[name] = (self.etenergies, self.etoscs)
 
 
-        if line[0:23] == "VIBRATIONAL FREQUENCIES":
-
+        if line[:23] == "VIBRATIONAL FREQUENCIES":
             self.skip_lines(inputfile, ['d', 'b'])
 
-            self.vibfreqs = numpy.zeros((3 * self.natom,), "d")
+            vibfreqs = numpy.zeros(3 * self.natom)
+            for i, line in zip(range(3 * self.natom), inputfile):
+                vibfreqs[i] = float(line.split()[1])
 
-            for i in range(3 * self.natom):
-                line = next(inputfile)
-                self.vibfreqs[i] = float(line.split()[1])
+            nonzero = numpy.nonzero(vibfreqs)[0]
+            self.first_mode = nonzero[0]
+            # Take all modes after first
+            # Mode between imaginary and real modes could be 0
+            self.num_modes = 3*self.natom - self.first_mode
+            if self.num_modes > 3*self.natom - 6:
+                msg = "Modes corresponding to rotations/translations may be non-zero."
+                if self.num_modes == 3*self.natom - 5:
+                    msg += '\n You can ignore this if the molecule is linear.'
+            self.vibfreqs = vibfreqs[self.first_mode:]
 
-            if numpy.any(self.vibfreqs[0:6] != 0):
-                msg = "Modes corresponding to rotations/translations "
-                msg += "may be non-zero."
-                self.logger.warning(msg)
-
-            self.vibfreqs = self.vibfreqs[6:]
-
-        if line[0:12] == "NORMAL MODES":
-            """ Format:
-            NORMAL MODES
-            ------------
-
-            These modes are the cartesian displacements weighted by the diagonal matrix
-            M(i,i)=1/sqrt(m[i]) where m[i] is the mass of the displaced atom
-            Thus, these vectors are normalized but *not* orthogonal
-
-                              0          1          2          3          4          5
-                  0       0.000000   0.000000   0.000000   0.000000   0.000000   0.000000
-                  1       0.000000   0.000000   0.000000   0.000000   0.000000   0.000000
-                  2       0.000000   0.000000   0.000000   0.000000   0.000000   0.000000
-            ...
-            """
-
-            self.vibdisps = numpy.zeros((3 * self.natom, self.natom, 3), "d")
+        # NORMAL MODES
+        # ------------
+        #
+        # These modes are the cartesian displacements weighted by the diagonal matrix
+        # M(i,i)=1/sqrt(m[i]) where m[i] is the mass of the displaced atom
+        # Thus, these vectors are normalized but *not* orthogonal
+        #
+        #                   0          1          2          3          4          5
+        #       0       0.000000   0.000000   0.000000   0.000000   0.000000   0.000000
+        #       1       0.000000   0.000000   0.000000   0.000000   0.000000   0.000000
+        #       2       0.000000   0.000000   0.000000   0.000000   0.000000   0.000000
+        # ...
+        if line[:12] == "NORMAL MODES":
+            vibdisps = numpy.zeros((3 * self.natom, self.natom, 3), "d")
 
             self.skip_lines(inputfile, ['d', 'b', 'text', 'text', 'text', 'b'])
 
             for mode in range(0, 3 * self.natom, 6):
                 header = next(inputfile)
                 for atom in range(self.natom):
-                    x = next(inputfile).split()[1:]
-                    y = next(inputfile).split()[1:]
-                    z = next(inputfile).split()[1:]
+                    vibdisps[mode:mode + 6, atom, 0] = next(inputfile).split()[1:]
+                    vibdisps[mode:mode + 6, atom, 1] = next(inputfile).split()[1:]
+                    vibdisps[mode:mode + 6, atom, 2] = next(inputfile).split()[1:]
 
-                    self.vibdisps[mode:mode + 6, atom, 0] = x
-                    self.vibdisps[mode:mode + 6, atom, 1] = y
-                    self.vibdisps[mode:mode + 6, atom, 2] = z
+            self.vibdisps = vibdisps[self.first_mode:]
 
-            self.vibdisps = self.vibdisps[6:]
-
-        if line[0:11] == "IR SPECTRUM":
-
+        # -----------
+        # IR SPECTRUM
+        # -----------
+        #
+        #  Mode    freq (cm**-1)   T**2         TX         TY         TZ
+        # -------------------------------------------------------------------
+        #    6:      2069.36    1.674341  ( -0.000000   0.914970  -0.914970)
+        #    7:      3978.81   76.856228  (  0.000000   6.199041  -6.199042)
+        #    8:      4113.34   61.077784  ( -0.000000   5.526201   5.526200)
+        if line[:11] == "IR SPECTRUM":
             self.skip_lines(inputfile, ['d', 'b', 'header', 'd'])
 
             self.vibirs = numpy.zeros((3 * self.natom,), "d")
@@ -828,13 +830,21 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
                 self.vibirs[num] = float(line.split()[2])
                 line = next(inputfile)
 
-            self.vibirs = self.vibirs[6:]
+            self.vibirs = self.vibirs[self.first_mode:]
 
-        if line[0:14] == "RAMAN SPECTRUM":
-
+        # --------------
+        # RAMAN SPECTRUM
+        # --------------
+        #
+        #  Mode    freq (cm**-1)   Activity   Depolarization
+        # -------------------------------------------------------------------
+        #    6:       296.23      5.291229      0.399982
+        #    7:       356.70      0.000000      0.749764
+        #    8:       368.27      0.000000      0.202068
+        if line[:14] == "RAMAN SPECTRUM":
             self.skip_lines(inputfile, ['d', 'b', 'header', 'd'])
 
-            self.vibramans = numpy.zeros((3 * self.natom,), "d")
+            self.vibramans = numpy.zeros(3 * self.natom)
 
             line = next(inputfile)
             while len(line) > 2:
@@ -842,7 +852,8 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
                 self.vibramans[num] = float(line.split()[2])
                 line = next(inputfile)
 
-            self.vibramans = self.vibramans[6:]
+            self.vibramans = self.vibramans[self.first_mode:]
+
 
         # ORCA will print atomic charges along with the spin populations,
         #   so care must be taken about choosing the proper column.
