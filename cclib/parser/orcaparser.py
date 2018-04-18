@@ -242,6 +242,29 @@ class ORCA(logfileparser.Logfile):
                 self.geotargets_names.append(name)
                 self.geotargets.append(target)
 
+        # ------------------
+        # CARTESIAN GRADIENT
+        # ------------------
+        #
+        # 1   H   :    0.000000004    0.019501450   -0.021537091
+        # 2   O   :    0.000000054   -0.042431648    0.042431420
+        # 3   H   :    0.000000004    0.021537179   -0.019501388
+        if line[:18] == 'CARTESIAN GRADIENT':
+            next(inputfile)
+            next(inputfile)
+
+            grads = []
+            line = next(inputfile).strip()
+            while line:
+                idx, atom, colon, x, y, z = line.split()
+                grads.append((float(x), float(y), float(z)))
+
+                line = next(inputfile).strip()
+
+            if not hasattr(self, 'grads'):
+                self.grads = []
+            self.grads.append(grads)
+
         # After each geometry optimization step, ORCA prints the current convergence
         # parameters and the targets (again), so it is a good idea to check that they
         # have not changed. Note that the order of these criteria here are different
