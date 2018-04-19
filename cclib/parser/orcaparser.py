@@ -995,13 +995,14 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
             #    MO =    0  IRREP= 0 (A)
             #    MO =    1  IRREP= 1 (B)
             vals = next(inputfile).split()
+            # Symmetry section is only printed if symmetry is used
             if vals[0] == 'Symmetry':
-                # Symmetry section is only printed if symmetry is used
                 assert vals[-1] == 'ON'
                 point_group = next(inputfile).split()[-1]
                 used_point_group = next(inputfile).split()[-1]
                 num_irreps = int(next(inputfile).split()[-1])
                 num_active = 0
+                # Parse the irreps
                 for i, line in zip(range(num_irreps), inputfile):
                     reg = r'Irrep\s+(\w+) has\s+(\d+) SALCs \(ofs=\s*(\d+)\) #\(closed\)=\s*(\d+) #\(active\)=\s*(\d+)'
                     groups = re.search(reg, line).groups()
@@ -1009,11 +1010,14 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
                     salcs, ofs, closed, active = map(int, groups[1:])
                     num_active += active
                 self.skip_line(inputfile, 'Symmetries')
+                # Parse the symmetries of the active orbitals
                 for i, line in zip(range(num_active), inputfile):
                     reg = r'(\d+)  IRREP= (\d+) \((\w+)\)'
                     groups = re.search(reg, line).groups()
                     mo, irrep_idx, irrep = groups
 
+            # Skip until the system specific settings
+            # This will align the cases of symmetry on and off
             line = next(inputfile)
             while line[:25] != 'SYSTEM-SPECIFIC SETTINGS:':
                 line = next(inputfile)
@@ -1023,19 +1027,18 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
             # Number of active orbitals           ...    4
             # Total number of electrons           ...    4
             # Total number of orbitals            ...   20
-
             num_el = int(next(inputfile).split()[-1])
             num_orbs = int(next(inputfile).split()[-1])
             total_el = int(next(inputfile).split()[-1])
             total_orbs = int(next(inputfile).split()[-1])
 
-            self.skip_lines(inputfile, ['b', 'Determined'])
-
             # Determined orbital ranges:
             #    Internal       0 -   -1 (   0 orbitals)
             #    Active         0 -    3 (   4 orbitals)
             #    External       4 -   19 (  16 orbitals)
+            self.skip_lines(inputfile, ['b', 'Determined'])
             orbital_ranges = []
+            # Parse the orbital ranges for: Internal, Active, and External orbitals
             for i in range(3):
                 vals = next(inputfile).split()
                 start, end, num = int(vals[1]), int(vals[3]), int(vals[5])
@@ -1047,9 +1050,6 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
             line = next(inputfile)
             while line[:8] != 'CI-STEP:':
                 line = next(inputfile)
-            self.skip_line(inputfile, 'CI strategy')
-
-            num_blocks = int(next(inputfile).split()[-1])
 
             # CI-STEP:
             # CI strategy                         ... General CI
@@ -1061,6 +1061,8 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
             #   #(CSFs)                           ...   12
             #   #(Roots)                          ...    1
             #     ROOT=0 WEIGHT=    1.000000
+            self.skip_line(inputfile, 'CI strategy')
+            num_blocks = int(next(inputfile).split()[-1])
             for b in range(1, num_blocks + 1):
                 vals = next(inputfile).split()
                 block = int(vals[1])
@@ -1068,7 +1070,7 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
                 assert b == block
                 mult = int(next(inputfile).split()[-1])
                 vals = next(inputfile).split()
-                # If using symmetry
+                # The irrep will only be printed if using symmetry
                 if vals[0] == 'Irrep':
                     irrep_idx = int(vals[-2])
                     irrep = vals[-1].strip('()')
@@ -1076,6 +1078,7 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
                 num_confs = int(vals[-1])
                 num_csfs = int(next(inputfile).split()[-1])
                 num_roots = int(next(inputfile).split()[-1])
+                # Parse the roots
                 for r, line in zip(range(num_roots), inputfile):
                     reg = r'=(\d+) WEIGHT=\s*(\d\.\d+)'
                     groups = re.search(reg, line).groups()
@@ -1083,17 +1086,18 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
                     weight = float(groups[1])
                     assert r == root
 
-            # Iterations
-            # Skipping for now
+            # Skip additional setup printing and CASSCF iterations
             line = next(inputfile).strip()
             while line != 'CASSCF RESULTS':
                 line = next(inputfile).strip()
 
+            # --------------
+            # CASSCF RESULTS
+            # --------------
+            #
+            # Final CASSCF energy       : -14.597120777 Eh    -397.2078 eV
             self.skip_lines(inputfile, ['d', 'b'])
-
             casscf_energy = float(next(inputfile).split()[4])
-
-            self.skip_lines(inputfile, ['b', 'd', 'ORBITAL', 'd', 'b', 'NO'])
 
             # ----------------
             # ORBITAL ENERGIES
@@ -1101,10 +1105,12 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
             #
             #   NO   OCC          E(Eh)            E(eV)    Irrep
             #    0   0.0868       0.257841         7.0162    1-A
+            self.skip_lines(inputfile, ['b', 'd', 'ORBITAL', 'd', 'b', 'NO'])
             orbitals = []
             vals = next(inputfile).split()
             while vals:
                 occ, eh, ev = map(float, vals[1:4])
+                # The irrep will only be printed if using symmetry
                 if len(vals) == 5:
                     idx, irrep = vals[4].split('-')
                     orbitals.append((occ, ev, int(idx), irrep))
@@ -1115,6 +1121,7 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
             self.skip_line(inputfile, 'b')
 
             # Orbital Compositions
+
             # ---------------------------------------------
             # CAS-SCF STATES FOR BLOCK  1 MULT= 1 IRREP= Ag NROOTS= 2
             # ---------------------------------------------
@@ -1123,27 +1130,32 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
             #       0.89724 [     0]: 2000
             for b in range(num_blocks):
                 self.skip_line(inputfile, 'd')
+                # Parse the block data
                 reg = r'BLOCK\s+(\d+) MULT=\s*(\d+) (IRREP=\s*\w+ )?(NROOTS=\s*(\d+))?'
                 groups = re.search(reg, next(inputfile)).groups()
                 block = int(groups[0])
                 mult = int(groups[1])
+                # The irrep will only be printed if using symmetry
                 if groups[2] is not None:
                     irrep = groups[2].split('=')[1].strip()
-                    nroots = int(groups[3].split('=')[1])
+                nroots = int(groups[3].split('=')[1])
 
                 self.skip_lines(inputfile, ['d', 'b'])
 
                 line = next(inputfile).strip()
                 while line:
                     if line[:4] == 'ROOT':
+                        # Parse the root section
                         reg = r'(\d+):\s*E=\s*(-?\d+.\d+) Eh(\s+\d+\.\d+ eV)?(\s+\d+\.\d+)?'
                         groups = re.search(reg, line).groups()
                         root = int(groups[0])
                         energy = float(groups[1])
+                        # Excitation energies are only printed for excited state roots
                         if groups[2] is not None:
                             excitation_energy_ev = float(groups[2].split()[0])
                             excitation_energy_cm = float(groups[3])
                     else:
+                        # Parse the occupations section
                         reg = r'(\d+\.\d+) \[\s*(\d+)\]: (\d+)'
                         groups = re.search(reg, line).groups()
                         coeff = float(groups[0])
@@ -1152,7 +1164,7 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
 
                     line = next(inputfile).strip()
 
-            # Skip extended wavefunction printing
+            # Skip any extended wavefunction printing
             while line != 'DENSITY MATRIX':
                 line = next(inputfile).strip()
 
@@ -1170,6 +1182,7 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
                 for j, line in zip(range(num_orbs), inputfile):
                     density[j][i:i + 6] = list(map(float, line.split()[1:]))
 
+            # -----------------
             # ENERGY COMPONENTS
             # -----------------
             #
@@ -1190,15 +1203,15 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
             one_el_energy = float(next(inputfile).split()[4])
             two_el_energy = float(next(inputfile).split()[4])
             nuclear_repulsion_energy = float(next(inputfile).split()[4])
-            next(inputfile)
+            self.skip_line(inputfile, 'dashes')
             energy = float(next(inputfile).strip())
-            next(inputfile)
+            self.skip_line(inputfile, 'blank')
             kinetic_energy = float(next(inputfile).split()[3])
             potential_energy = float(next(inputfile).split()[3])
             virial_ratio = float(next(inputfile).split()[3])
-            next(inputfile)
+            self.skip_line(inputfile, 'dashes')
             energy = float(next(inputfile).strip())
-            next(inputfile)
+            self.skip_line(inputfile, 'blank')
             core_energy = float(next(inputfile).split()[3])
 
         if line[:15] == 'TOTAL RUN TIME:':
