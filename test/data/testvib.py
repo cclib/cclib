@@ -228,23 +228,6 @@ class QChemRamanTest(GenericRamanTest):
     max_raman_intensity = 588
 
 
-class GenericLinearIRTest(GenericIRTest):
-    """Test for linear molecules, which have 3N - 5 vibrational modes"""
-
-    def setUp(self):
-        """
-        Initialize the number of vibrational frequencies on a per molecule basis
-        Linear molecules have one extra vibrational frequency
-        """
-        self.numvib = 3*len(self.data.atomnos) - 5
-
-    def testfreqval(self):
-        pass
-
-    def testirintens(self):
-        pass
-
-
 if __name__=="__main__":
 
     import sys

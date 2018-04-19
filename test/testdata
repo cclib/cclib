@@ -297,7 +297,6 @@ vib       Molpro      GenericIRTest         basicMolpro2006       dvb_ir.out    
 vib       Molpro      GenericIRTest         basicMolpro2012       dvb_ir.out            dvb_ir.log
 vib       ORCA        OrcaIRTest            basicORCA2.9          dvb_ir.out
 vib       ORCA        OrcaIRTest            basicORCA3.0          dvb_ir.out
-vib       ORCA        GenericLinearIRTest   basicORCA4.0          CO2_vib.out
 vib       Psi         GenericIRTest         basicPsi4.0           dvb_ir_rhf.out
 vib       QChem       QChemIRTest           basicQChem4.2         dvb_ir.out
 
