@@ -295,6 +295,7 @@ ORCA/ORCA3.0/stopiter_orca_scf_large.out
 ORCA/ORCA3.0/trithiolane_polar.out
 ORCA/ORCA4.0/1-ttt_td.out
 ORCA/ORCA4.0/IrCl6_sp.out
+ORCA/ORCA4.0/CO2_freqs.out
 Psi/Psi3/water_psi3.log
 Psi/Psi4.0b5/C_bigbasis.out
 Psi/Psi4.0b5/dvb_gopt_hf.out
