@@ -11,6 +11,7 @@
 from __future__ import print_function
 
 import numpy
+import re
 
 from cclib.parser import logfileparser
 from cclib.parser import utils
@@ -765,8 +766,80 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
             self.etoscs = numpy.array(etoscs)
             self.transprop[name] = (self.etenergies, self.etoscs)
 
+        # ---------------
+        # CHEMICAL SHIFTS
+        # ---------------
+        #
+        # Note: using conversion factor for au to ppm alpha^2/2 =   26.625677252
+        # GIAO: Doing para- and diamagnetic shielding integrals analytically     ...done
+        #  --------------
+        #  Nucleus   0C :
+        #  --------------
+        #
+        # Diamagnetic contribution to the shielding tensor (ppm) :
+        #            261.007         -0.294        -0.000
+        #             -0.093        266.836         0.000
+        #             -0.000         -0.000       244.502
+        #
+        # Paramagnetic contribution to the shielding tensor (ppm):
+        #           -179.969          6.352        -0.000
+        #              3.571       -210.368        -0.000
+        #              0.000          0.000       -31.944
+        #
+        # Total shielding tensor (ppm):
+        #             81.038          6.058        -0.000
+        #              3.478         56.468        -0.000
+        #              0.000          0.000       212.558
+        #
+        #
+        #  Diagonalized sT*s matrix:
+        #
+        #  sDSO           266.692          261.151          244.502  iso=     257.448
+        #  sPSO          -211.114         -179.223          -31.944  iso=    -140.760
+        #         ---------------  ---------------  ---------------
+        #  Total           55.577           81.929          212.558  iso=     116.688
+        # ...
+        #
+        #--------------------------
+        #CHEMICAL SHIELDING SUMMARY (ppm)
+        #--------------------------
+        #
+        #
+        #  Nucleus  Element    Isotropic     Anisotropy
+        #  -------  -------  ------------   ------------
+        #      0       C          116.686        143.809
+        #      1       C          122.158        130.692
+        # ...
+        if line[:15] == 'CHEMICAL SHIFTS':
+            tensors = [[], [], []]
+            for line in inputfile:
+                if line[:32] == 'CHEMICAL SHIELDING SUMMARY (ppm)':
+                    break
+                if line[:8] == ' Nucleus':
+                    atom = re.search('Nucleus\s+(\d+)\w', line).groups()
+                    self.skip_lines(inputfile, ['-', ''])
+                    for i in range(3):
+                        t_type = next(inputfile).split()[0]
+                        tensor = numpy.zeros((3, 3))
+                        for j, row in zip(range(3), inputfile):
+                            tensor[j, :] = list(map(float, row.split()))
+                        tensors[i].append(tensor)
+                        self.skip_line(inputfile, '')
+
+            self.skip_lines(inputfile, ['-', '', '', 'text', '-'])
+
+            isotropic, anisotropic = [], []
+            for line in inputfile:
+                if not line.strip():
+                    break
+                nucleus, element, iso, aniso = line.split()
+                isotropic.append(float(iso))
+                anisotropic.append(float(aniso))
+
+            self.set_attribute('nmrtensors', tensors)
 
         if line[:23] == "VIBRATIONAL FREQUENCIES":
+
             self.skip_lines(inputfile, ['d', 'b'])
 
             vibfreqs = numpy.zeros(3 * self.natom)
