@@ -47,13 +47,13 @@ def setup_cclib():
         long_description="\n".join(doclines[2:]),
         classifiers=classifiers.split("\n"),
         platforms=["Any."],
-        packages=setuptools.find_packages('src'),
-        package_dir={'': 'src'},
+        packages=setuptools.find_packages('cclib'),
+        package_dir={'': 'cclib'},
         entry_points={
             'console_scripts': [
-                'ccget=scripts.ccget:ccget',
-                'ccwrite=scripts.ccwrite:main',
-                'cda=scripts.cda:main'
+                'ccget=cclib.scripts.ccget:ccget',
+                'ccwrite=cclib.scripts.ccwrite:main',
+                'cda=cclib.scripts.cda:main'
             ]
         }
 

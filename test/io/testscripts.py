@@ -28,25 +28,25 @@ INPUT_FILE = os.path.join(
 CJSON_OUTPUT_FILENAME = 'dvb_gopt.cjson'
 
 
-@patch("scripts.ccget.ccread")
+@patch("cclib.scripts.ccget.ccread")
 class ccgetTest(unittest.TestCase):
 
     def setUp(self):
         try:
-            from scripts import ccget
+            from cclib.scripts import ccget
         except ImportError:
             self.fail("ccget cannot be imported")
 
         self.main = ccget.ccget
 
-    @patch("scripts.ccget.sys.argv", ["ccget"])
+    @patch("cclib.scripts.ccget.sys.argv", ["ccget"])
     def test_empty_argv(self, mock_ccread):
         """Does the script fail as expected if called without parameters?"""
         with self.assertRaises(SystemExit):
             self.main()
 
     @patch(
-        "scripts.ccget.sys.argv",
+        "cclib.scripts.ccget.sys.argv",
         ["ccget", "atomcoords", INPUT_FILE]
     )
     def test_ccread_invocation(self, mock_ccread):
@@ -57,25 +57,25 @@ class ccgetTest(unittest.TestCase):
         self.assertEqual(ccread_call_args[0], INPUT_FILE)
 
 
-@patch("scripts.ccwrite.ccwrite")
+@patch("cclib.scripts.ccwrite.ccwrite")
 class ccwriteTest(unittest.TestCase):
 
     def setUp(self):
         try:
-            from scripts import ccwrite
+            from cclib.scripts import ccwrite
         except ImportError:
             self.fail("ccwrite cannot be imported")
 
         self.main = ccwrite.main
 
-    @patch('scripts.ccwrite.sys.argv', ['ccwrite'])
+    @patch('cclib.scripts.ccwrite.sys.argv', ['ccwrite'])
     def test_empty_argv(self, mock_ccwrite):
         """Does the script fail as expected if called without parameters?"""
         with self.assertRaises(SystemExit):
             self.main()
 
     @patch(
-        "scripts.ccwrite.sys.argv",
+        "cclib.scripts.ccwrite.sys.argv",
         ["ccwrite", "cjson", INPUT_FILE]
     )
     def test_ccwrite_call(self, mock_ccwrite):
