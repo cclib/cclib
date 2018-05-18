@@ -82,6 +82,7 @@ class GenericROSPTest(GenericSPunTest):
     """Customized restricted open-shell single point unittest"""
 
     @skipForParser('DALTON', 'mocoeffs not implemented yet')
+    @skipForParser('Molcas','The parser is still being developed so we skip this test')
     def testdimmocoeffs(self):
         """Are the dimensions of mocoeffs equal to 1 x nmo x nbasis?"""
         self.assertEquals(type(self.data.mocoeffs), type([]))
@@ -89,6 +90,7 @@ class GenericROSPTest(GenericSPunTest):
         self.assertEquals(self.data.mocoeffs[0].shape,
                           (self.data.nmo, self.data.nbasis))
 
+    @skipForParser('Molcas','The parser is still being developed so we skip this test')
     def testhomos(self):
         """Are the HOMO indices equal to 34 and 33 (one more alpha electron
         than beta electron)?
@@ -97,11 +99,13 @@ class GenericROSPTest(GenericSPunTest):
         numpy.testing.assert_array_equal(self.data.homos, numpy.array([34, 33], "i"), msg)
 
     @skipForParser('QChem', 'prints 2 sets of different MO energies?')
+    @skipForParser('Molcas','The parser is still being developed so we skip this test')
     def testmoenergies(self):
         """Are the dims of the moenergies equals to 1 x nmo?"""
         self.assertEquals(len(self.data.moenergies), 1)
         self.assertEquals(len(self.data.moenergies[0]), self.data.nmo)
 
+    @skipForParser('Molcas','The parser is still being developed so we skip this test')
     def testmosyms(self):
         """Are the dims of the mosyms equals to 1 x nmo?"""
         shape = (len(self.data.mosyms), len(self.data.mosyms[0]))
