@@ -22,21 +22,25 @@ __filedir__ = os.path.realpath(os.path.dirname(__file__))
 class GenericSPunTest(unittest.TestCase):
     """Generic unrestricted single point unittest"""
 
+    @skipForParser('Molcas','The parser is still being developed so we skip this test')
     def testnatom(self):
         """Is the number of atoms equal to 20?"""
         self.assertEquals(self.data.natom, 20)
 
+    @skipForParser('Molcas','The parser is still being developed so we skip this test')
     def testatomnos(self):
         """Are the atomnos correct?"""
         self.failUnless(numpy.alltrue([numpy.issubdtype(atomno,int) for atomno in self.data.atomnos]))
         self.assertEquals(self.data.atomnos.shape, (20,) )
         self.assertEquals(sum(self.data.atomnos==6) + sum(self.data.atomnos==1), 20)
 
+    @skipForParser('Molcas','The parser is still being developed so we skip this test')
     def testatomcoords(self):
         """Are the dimensions of atomcoords 1 x natom x 3?"""
         self.assertEquals(self.data.atomcoords.shape,(1,self.data.natom,3))
 
     @skipForParser('Jaguar', 'Data file does not contain enough information')
+    @skipForParser('Molcas','The parser is still being developed so we skip this test')
     def testdimmocoeffs(self):
         """Are the dimensions of mocoeffs equal to 2 x nmo x nbasis?"""
         self.assertEquals(type(self.data.mocoeffs), type([]))
@@ -46,22 +50,26 @@ class GenericSPunTest(unittest.TestCase):
         self.assertEquals(self.data.mocoeffs[1].shape,
                           (self.data.nmo, self.data.nbasis))
 
+    @skipForParser('Molcas','The parser is still being developed so we skip this test')
     def testcharge_and_mult(self):
         """Are the charge and multiplicity correct?"""
         self.assertEquals(self.data.charge, 1)
         self.assertEquals(self.data.mult, 2)
 
+    @skipForParser('Molcas','The parser is still being developed so we skip this test')
     def testhomos(self):
         """Are the homos correct?"""
         msg = "%s != array([34,33],'i')" % numpy.array_repr(self.data.homos)
         numpy.testing.assert_array_equal(self.data.homos, numpy.array([34,33],"i"), msg)
 
+    @skipForParser('Molcas','The parser is still being developed so we skip this test')
     def testmoenergies(self):
         """Are the dims of the moenergies equals to 2 x nmo?"""
         self.assertEquals(len(self.data.moenergies), 2)
         self.assertEquals(len(self.data.moenergies[0]), self.data.nmo)
         self.assertEquals(len(self.data.moenergies[1]), self.data.nmo)
 
+    @skipForParser('Molcas','The parser is still being developed so we skip this test')
     @skipForParser('Molpro', '?')
     @skipForParser('ORCA', 'ORCA has no support for symmetry yet')
     def testmosyms(self):
