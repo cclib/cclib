@@ -35,6 +35,10 @@ class GenericGeoOptTest(unittest.TestCase):
     b3lyp_energy = -10365
     b3lyp_tolerance = 40
 
+    @skipForParser("ADF", "Not implemented.")
+    def test_success(self):
+        self.assertTrue(self.data.metadata['success'])
+
     @skipForParser('Molcas','The parser is still being developed so we skip this test')
     def testnatom(self):
         """Is the number of atoms equal to 20?"""

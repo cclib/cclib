@@ -1591,6 +1591,9 @@ cannot be determined. Rerun without `$molecule read`."""
                 if not hasattr(self, 'freeenergy'):
                     self.freeenergy = self.enthalpy - self.entropy
 
+        if line[:16] == ' Total job time:':
+            self.metadata['success'] = True
+
         # TODO:
         # 'enthalpy' (incorrect)
         # 'entropy' (incorrect)

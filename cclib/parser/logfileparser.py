@@ -233,6 +233,8 @@ class Logfile(object):
             self.metadata = {}
             self.metadata["package"] = self.logname
             self.metadata["methods"] = []
+            # Indicate if the computation has completed successfully
+            self.metadata['success'] = False
 
 
         # Periodic table of elements.

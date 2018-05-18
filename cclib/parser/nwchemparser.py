@@ -1038,6 +1038,9 @@ class NWChem(logfileparser.Logfile):
                 polarizability.append(line.split()[1:])
             self.polarizabilities.append(numpy.array(polarizability))
 
+        if line[:18] == ' Total times  cpu:':
+            self.metadata['success'] = True
+
     def after_parsing(self):
         """NWChem-specific routines for after parsing file.
 

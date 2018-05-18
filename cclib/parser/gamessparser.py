@@ -1431,3 +1431,7 @@ class GAMESS(logfileparser.Logfile):
                     i, j = coord_to_idx[tokens[1][0]], coord_to_idx[tokens[1][1]]
                     polarizability[i, j] = tokens[3]
             self.polarizabilities.append(polarizability)
+
+        if line[:30] == ' ddikick.x: exited gracefully.' or\
+                line[:41] == ' EXECUTION OF FIREFLY TERMINATED NORMALLY':
+            self.metadata['success'] = True

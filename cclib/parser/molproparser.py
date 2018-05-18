@@ -896,3 +896,6 @@ class Molpro(logfileparser.Logfile):
             if not hasattr(self, 'grads'):
                 self.grads = []
             self.grads.append(grad)
+
+        if line[:25] == ' Variable memory released':
+            self.metadata['success'] = True

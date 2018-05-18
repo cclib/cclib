@@ -1151,6 +1151,9 @@ class Psi(logfileparser.Logfile):
                 self.vibdisps.append(normal_mode_disps)
                 line = next(inputfile)
 
+        if line[:54] == '*** Psi4 exiting successfully. Buy a developer a beer!':
+            self.metadata['success'] = True
+
     def _parse_mosyms_moenergies(self, inputfile, spinidx):
         """Parse molecular orbital symmetries and energies from the
         'Post-Iterations' section.

@@ -701,3 +701,6 @@ class Jaguar(logfileparser.Logfile):
                 line = next(inputfile)
             strength = float(line.split()[-1])
             self.etoscs.append(strength)
+
+        if line[:20] == ' Total elapsed time:':
+            self.metadata['success'] = True
