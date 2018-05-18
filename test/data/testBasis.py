@@ -10,6 +10,7 @@
 import os
 import unittest
 
+from skip import skipForParser
 
 __filedir__ = os.path.realpath(os.path.dirname(__file__))
 

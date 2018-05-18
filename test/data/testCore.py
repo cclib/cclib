@@ -14,6 +14,7 @@ import numpy
 
 from cclib.parser.utils import PeriodicTable
 
+from skip import skipForParser
 
 __filedir__ = os.path.realpath(os.path.dirname(__file__))
 
