@@ -38,16 +38,19 @@ class GenericScanTest_optdone_bool(GenericScanTestBase):
 
     datatype = cclib.parser.data.ccData_optdone_bool
 
+    @skipForParser('Molcas','The parser is still being developed so we skip this test')
     def testoptdone(self):
         """Is the optimization finished?"""
         self.assertIsInstance(self.data.optdone, bool)
         self.assertEquals(self.data.optdone, True)
 
+    @skipForParser('Molcas','The parser is still being developed so we skip this test')
     def testindices(self):
         """Do the indices match the results from geovalues."""
         assert self.data.optdone and numpy.all(self.data.geovalues[-1] <= self.data.geotargets)
 
     @skipForParser("Jaguar", "Not implemented")
+    @skipForParser('Molcas','The parser is still being developed so we skip this test')
     @skipForParser("ORCA", "Not implemented")
     def testoptstatus(self):
         """Does optstatus contain expected values?"""
@@ -64,11 +67,13 @@ class GenericScanTest(GenericScanTestBase):
     # extra indices
     extra = 0
 
+    @skipForParser('Molcas','The parser is still being developed so we skip this test')
     def testnumindices(self):
         """Do the number of indices match number of scan points."""
         self.assertEquals(len(self.data.optdone), 12 + self.extra)
 
     @skipForParser("Jaguar", "Does not work as expected")
+    @skipForParser('Molcas','The parser is still being developed so we skip this test')
     @skipForParser("ORCA", "Does not work as expected")
     def testindices(self):
         """Do the indices match the results from geovalues."""
@@ -79,6 +84,7 @@ class GenericScanTest(GenericScanTestBase):
         numpy.testing.assert_array_equal(geovalues, geovalues_from_index)
 
     @skipForParser("Jaguar", "Not implemented")
+    @skipForParser('Molcas','The parser is still being developed so we skip this test')
     @skipForParser("ORCA", "Not implemented")
     def testoptstatus(self):
         """Does optstatus contain expected values?"""
