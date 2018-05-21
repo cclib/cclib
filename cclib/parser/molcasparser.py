@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2017, the cclib development team
+# Copyright (c) 2018, the cclib development team
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
@@ -88,6 +88,18 @@ class Molcas(logfileparser.Logfile):
                 self.set_attribute('natom', len(self.atomnos))
 
         ## This section is present when executing &SCF.
+        #  ++    Orbital specifications:
+        #  -----------------------
+
+        #  Symmetry species               1
+
+        #  Frozen orbitals                0
+        #  Occupied orbitals              3
+        #  Secondary orbitals            77
+        #  Deleted orbitals               0
+        #  Total number of orbitals      80
+        #  Number of basis functions     80
+        #  --
         if line[:29] == '++    Orbital specifications:':
 
             self.skip_lines(inputfile, ['dashes', 'blank'])
@@ -107,7 +119,51 @@ class Molcas(logfileparser.Logfile):
         if line[6:23] == 'Molecular charge ':
             self.set_attribute('charge', int(float(line.split()[-1])))
 
+        #  ++    Molecular charges:
+        #  ------------------
 
+        #  Mulliken charges per centre and basis function type
+        #  ---------------------------------------------------
+
+        #         C1    
+        #  1s     2.0005
+        #  2s     2.0207
+        #  2px    0.0253
+        #  2pz    0.1147
+        #  2py    1.8198
+        #  *s    -0.0215
+        #  *px    0.0005
+        #  *pz    0.0023
+        #  *py    0.0368
+        #  *d2+   0.0002
+        #  *d1+   0.0000
+        #  *d0    0.0000
+        #  *d1-   0.0000
+        #  *d2-   0.0000
+        #  *f3+   0.0000
+        #  *f2+   0.0001
+        #  *f1+   0.0000
+        #  *f0    0.0001
+        #  *f1-   0.0001
+        #  *f2-   0.0000
+        #  *f3-   0.0003
+        #  *g4+   0.0000
+        #  *g3+   0.0000
+        #  *g2+   0.0000
+        #  *g1+   0.0000
+        #  *g0    0.0000
+        #  *g1-   0.0000
+        #  *g2-   0.0000
+        #  *g3-   0.0000
+        #  *g4-   0.0000
+        #  Total  6.0000
+
+        #  N-E    0.0000
+
+        #  Total electronic charge=    6.000000
+
+        #  Total            charge=    0.000000
+        #--
         if line[:24] == '++    Molecular charges:':
 
             atomcharges = []
@@ -130,11 +186,61 @@ class Molcas(logfileparser.Logfile):
 
         # This section is present when executing &SCF
         # This section parses the total SCF Energy.
+        # *****************************************************************************************************************************
+        # *                                                                                                                           *
+        # *                                             SCF/KS-DFT Program, Final results                                             *
+        # *                                                                                                                           *
+        # *                                                                                                                           *
+        # *                                                                                                                           *
+        # *                                                       Final Results                                                       *
+        # *                                                                                                                           *
+        # *****************************************************************************************************************************
+
+        # ::    Total SCF energy                                -37.6045426484
         if line[:22] == '::    Total SCF energy':
             if not hasattr(self, 'scfenergies'):
                 self.scfenergies = []
             scfenergy = float(line.split()[-1])
             self.scfenergies.append(utils.convertor(scfenergy, 'hartree', 'eV'))
+
+        ## Parsing the scftargets in this section
+        #  ++    Optimization specifications:
+        #  ----------------------------
+
+        #  SCF Algorithm: Conventional
+        #  Minimized density differences are used
+        #  Number of density matrices in core                9
+        #  Maximum number of NDDO SCF iterations           400
+        #  Maximum number of HF  SCF iterations            400
+        #  Threshold for SCF energy change            0.10E-08
+        #  Threshold for density matrix               0.10E-03
+        #  Threshold for Fock matrix                  0.15E-03
+        if line[:34] == '++    Optimization specifications:':
+
+            while not line[6:37] == 'Threshold for SCF energy change':
+                line = next(inputfile)
+
+            if line[6:37] == 'Threshold for SCF energy change':
+                if not hasattr(self, 'scftargets'):
+                    self.scftargets = [[]]
+                target = float(line.split()[-1])
+                self.scftargets[0].append(target)
+
+            line = next(inputfile)
+
+            if line[6:34] == 'Threshold for density matrix':
+                if not hasattr(self, 'scftargets'):
+                    self.scftargets = [[]]
+                target = float(line.split()[-1])
+                self.scftargets[0].append(target)
+
+            line = next(inputfile)
+
+            if line[6:31] == 'Threshold for Fock matrix':
+                if not hasattr(self, 'scftargets'):
+                    self.scftargets = [[]]
+                target = float(line.split()[-1])
+                self.scftargets[0].append(target)
 
 
 if __name__ == '__main__':
