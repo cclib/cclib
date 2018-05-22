@@ -1173,7 +1173,7 @@ class DALTON(logfileparser.Logfile):
             # self.set_attribute('etoscs', etoscs)
             self.set_attribute('etsecs', etsecs)
 
-        if line[:36] == '>>>> Total wall time used in DALTON:':
+        if line[:37] == ' >>>> Total wall time used in DALTON:':
             self.metadata['success'] = True
 
         # TODO:
