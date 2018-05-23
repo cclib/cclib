@@ -131,6 +131,11 @@ class JaguarBigBasisTest(GenericBigBasisTest):
     names = ['S', 'P', 'D', 'F']
 
 
+class MolcasBigBasisTest(GenericBigBasisTest):
+    """Customized big basis set unittest"""
+    spherical = True
+
+
 class MolproBigBasisTest(GenericBigBasisTest):
     """Customized big basis set unittest"""
     spherical = True
