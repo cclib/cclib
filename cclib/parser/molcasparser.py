@@ -257,7 +257,7 @@ class Molcas(logfileparser.Logfile):
 
             self.skip_line(inputfile,'blank')
 
-            while line.split() != [u'Energy', u'Energy', u'Energy', u'Change', u'Delta', u'Norm', u'in', u'Sec.']: 
+            while line.split() != ['Energy', 'Energy', 'Energy', 'Change', 'Delta', 'Norm', 'in', 'Sec.']: 
                 line = next(inputfile)
 
             if not hasattr(self, "scfvalues"):
