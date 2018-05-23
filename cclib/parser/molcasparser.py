@@ -243,6 +243,44 @@ class Molcas(logfileparser.Logfile):
                 self.scftargets[0].append(target)
 
 
+        #  ++ Convergence information
+        #                                     SCF        iterations: Energy and convergence statistics
+  
+        #  Iter     Tot. SCF       One-electron     Two-electron   Energy   Max Dij or  Max Fij    DNorm      TNorm     AccCon    Time
+        #             Energy          Energy          Energy       Change   Delta Norm                                          in Sec.
+        #     1    -36.83817703    -50.43096166     13.59278464  0.00E+00   0.16E+00*  0.27E+01*   0.30E+01   0.33E+02   NoneDa    0.
+        #     2    -36.03405202    -45.74525152      9.71119950  0.80E+00*  0.14E+00*  0.93E-02*   0.26E+01   0.43E+01   Damp      0.
+        #     3    -37.08936118    -48.41536598     11.32600480 -0.11E+01*  0.12E+00*  0.91E-01*   0.97E+00   0.16E+01   Damp      0.
+        #     4    -37.31610460    -50.54103969     13.22493509 -0.23E+00*  0.11E+00*  0.96E-01*   0.72E+00   0.27E+01   Damp      0.
+        #     5    -37.33596239    -49.47021484     12.13425245 -0.20E-01*  0.59E-01*  0.59E-01*   0.37E+00   0.16E+01   Damp      0.
+        if line[35:91] == 'SCF        iterations: Energy and convergence statistics':
+
+            self.skip_line(inputfile,'blank')
+
+            while line.split() != [u'Energy', u'Energy', u'Energy', u'Change', u'Delta', u'Norm', u'in', u'Sec.']: 
+                line = next(inputfile)
+
+            if not hasattr(self, "scfvalues"):
+                self.scfvalues = []
+
+            line = next(inputfile)
+            while line.split()[0] != 'Convergence':
+                if line.split()[0].isdigit():
+                    energy = float(line.split()[4].replace('*',''))
+                    density = float(line.split()[5].replace('*',''))
+                    fock = float(line.split()[6].replace('*',''))
+                    self.scfvalues.append([energy, density, fock])
+
+                try:
+                    line = next(inputfile)
+                    if line.split() == []:
+                        line = next(inputfile)
+                except StopIteration:
+                    self.logger.warning('File terminated before end of last SCF!')
+                    break
+
+
+
 if __name__ == '__main__':
     import sys
     import doctest, molcasparser
