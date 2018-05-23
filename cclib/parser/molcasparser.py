@@ -197,7 +197,7 @@ class Molcas(logfileparser.Logfile):
         # *****************************************************************************************************************************
 
         # ::    Total SCF energy                                -37.6045426484
-        if line[:22] == '::    Total SCF energy':
+        if line[:22] == '::    Total SCF energy' or line[:25] == '::    Total KS-DFT energy':
             if not hasattr(self, 'scfenergies'):
                 self.scfenergies = []
             scfenergy = float(line.split()[-1])
@@ -253,7 +253,7 @@ class Molcas(logfileparser.Logfile):
         #     3    -37.08936118    -48.41536598     11.32600480 -0.11E+01*  0.12E+00*  0.91E-01*   0.97E+00   0.16E+01   Damp      0.
         #     4    -37.31610460    -50.54103969     13.22493509 -0.23E+00*  0.11E+00*  0.96E-01*   0.72E+00   0.27E+01   Damp      0.
         #     5    -37.33596239    -49.47021484     12.13425245 -0.20E-01*  0.59E-01*  0.59E-01*   0.37E+00   0.16E+01   Damp      0.
-        if line[35:91] == 'SCF        iterations: Energy and convergence statistics':
+        if line[46:91] == 'iterations: Energy and convergence statistics':
 
             self.skip_line(inputfile,'blank')
 

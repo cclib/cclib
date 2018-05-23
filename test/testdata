@@ -218,6 +218,8 @@ SP        Gaussian    GenericSPTest         basicGaussian16       dvb_sp.out
 SP        Jaguar      Jaguar7SPTest         basicJaguar7.0        dvb_sp.out
 SP        Jaguar      GenericSPTest         basicJaguar8.3        dvb_sp_hf.out
 SP        Jaguar      GenericSPTest         basicJaguar8.3        dvb_sp_ks.out
+SP        Molcas      MolcasSPTest          basicMolcas8.0        dvb_sp.out
+SP        Molcas      MolcasSPTest          basicOpenMolcas18.0   dvb_sp.out
 SP        Molpro      GenericSPTest         basicMolpro2006       dvb_sphf.out
 SP        Molpro      GenericSPTest         basicMolpro2012       dvb_sphf.out
 SP        NWChem      GenericSPTest         basicNWChem6.0        dvb_sp_hf.out
