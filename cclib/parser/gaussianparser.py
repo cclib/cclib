@@ -1800,3 +1800,6 @@ class Gaussian(logfileparser.Logfile):
                 if not hasattr(self, 'optdone'):
                     self.optdone = []
                 self.optdone.append(len(self.optstatus) - 1)
+
+        if line[:31] == ' Normal termination of Gaussian':
+            self.metadata['success'] = True

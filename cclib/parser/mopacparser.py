@@ -232,3 +232,6 @@ class MOPAC(logfileparser.Logfile):
         # Partial charges and dipole moments
         # Example:
         # NET ATOMIC CHARGES
+
+        if line[:16] == '== MOPAC DONE ==':
+            self.metadata['success'] = True

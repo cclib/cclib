@@ -1151,3 +1151,6 @@ class ADF(logfileparser.Logfile):
                     self.polarizabilities.append(polarizability)
 
                 line = next(inputfile)
+
+        if line[:24] == ' Buffered I/O statistics':
+            self.metadata['success'] = True
