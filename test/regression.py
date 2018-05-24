@@ -52,6 +52,7 @@ from cclib.parser import GAMESS
 from cclib.parser import GAMESSUK
 from cclib.parser import Gaussian
 from cclib.parser import Jaguar
+from cclib.parser import Molcas
 from cclib.parser import Molpro
 from cclib.parser import MOPAC
 from cclib.parser import NWChem
