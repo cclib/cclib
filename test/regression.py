@@ -1715,9 +1715,9 @@ old_unittests = {
     "Jaguar/Jaguar6.5/dvb_un_sp.out":   JaguarSPunTest,
     "Jaguar/Jaguar6.5/dvb_ir.out":      JaguarIRTest,
 
-    "Molcas/Molacs8.0/dvb_sp.out":      GenericSPTest
-    "Molcas/Molacs8.0/dvb_sp_un.out":   GenericSPunTest
-    "Molcas/Molacs8.0/C_bigbasis.out":  MolcasBigBasisTest
+    "Molcas/Molacs8.0/dvb_sp.out":      GenericSPTest,
+    "Molcas/Molacs8.0/dvb_sp_un.out":   GenericSPunTest,
+    "Molcas/Molacs8.0/C_bigbasis.out":  MolcasBigBasisTest,
 
     "Molpro/Molpro2006/C_bigbasis_cart.out":    MolproBigBasisTest_cart,
     "Molpro/Molpro2012/trithiolane_polar.out":  GenericPolarTest,
