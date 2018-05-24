@@ -936,6 +936,9 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
                 polarizability.append(line.split())
             self.polarizabilities.append(numpy.array(polarizability))
 
+        if line[:15] == 'TOTAL RUN TIME:':
+            self.metadata['success'] = True
+
     def parse_charge_section(self, line, inputfile, chargestype):
         """Parse a charge section, modifies class in place
 

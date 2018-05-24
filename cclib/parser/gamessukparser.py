@@ -653,3 +653,6 @@ class GAMESSUK(logfileparser.Logfile):
                 line = inputfile.next()
 
             self.set_attribute('nooccnos', occupations)
+
+        if line[:33] == ' end of  G A M E S S   program at':
+            self.metadata['success'] = True
