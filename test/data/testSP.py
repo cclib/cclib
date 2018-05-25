@@ -37,12 +37,10 @@ class GenericSPTest(unittest.TestCase):
     # Overlap first two atomic orbitals.
     overlap01 = 0.24
 
-    @skipForParser('Molcas','The parser is still being developed so we skip this test')
     def testnatom(self):
         """Is the number of atoms equal to 20?"""
         self.assertEquals(self.data.natom, 20)
 
-    @skipForParser('Molcas','The parser is still being developed so we skip this test')
     def testatomnos(self):
         """Are the atomnos correct?"""
 
@@ -55,7 +53,6 @@ class GenericSPTest(unittest.TestCase):
 
     @skipForParser('DALTON', 'DALTON has a very low accuracy for the printed values of all populations (2 decimals rounded in a weird way), so let it slide for now')
     @skipForLogfile('Jaguar/basicJaguar7', 'We did not print the atomic partial charges in the unit tests for this version')
-    @skipForParser('Molcas','The parser is still being developed so we skip this test')
     @skipForLogfile('Molpro/basicMolpro2006', "These tests were run a long time ago and since we don't have access to Molpro 2006 anymore, we can skip this test (it is tested in 2012)")
     @skipForLogfile('Psi/basicPsi3', 'Psi3 did not print partial atomic charges')
     def testatomcharges(self):
@@ -65,13 +62,11 @@ class GenericSPTest(unittest.TestCase):
             self.assertEquals(len(charges), self.data.natom)
             self.assertAlmostEquals(sum(charges), 0.0, delta=0.001)
 
-    @skipForParser('Molcas','The parser is still being developed so we skip this test')
     def testatomcoords(self):
         """Are the dimensions of atomcoords 1 x natom x 3?"""
         expected_shape = (1, self.data.natom, 3)
         self.assertEquals(self.data.atomcoords.shape, expected_shape)
 
-    @skipForParser('Molcas','The parser is still being developed so we skip this test')
     def testatomcoords_units(self):
         """Are atomcoords consistent with Angstroms?"""
         min_carbon_dist = get_minimum_carbon_separation(self.data)
@@ -84,7 +79,6 @@ class GenericSPTest(unittest.TestCase):
         self.assertEquals(self.data.charge, 0)
         self.assertEquals(self.data.mult, 1)
 
-    @skipForParser('Molcas','The parser is still being developed so we skip this test')
     def testnbasis(self):
         """Is the number of basis set functions correct?"""
         count = sum([self.nbasisdict[n] for n in self.data.atomnos])
@@ -119,7 +113,6 @@ class GenericSPTest(unittest.TestCase):
         msg = "Molecule mass: %f not %f +- %fmD" % (mm, self.molecularmass, self.mass_precision)
         self.assertAlmostEquals(mm, self.molecularmass, delta=self.mass_precision, msg=msg)
 
-    @skipForParser('Molcas','The parser is still being developed so we skip this test')
     def testcoreelectrons(self):
         """Are the coreelectrons all 0?"""
         ans = numpy.zeros(self.data.natom, 'i')
@@ -144,18 +137,15 @@ class GenericSPTest(unittest.TestCase):
         """Is the index of the HOMO equal to 34?"""
         numpy.testing.assert_array_equal(self.data.homos, numpy.array([34],"i"), "%s != array([34],'i')" % numpy.array_repr(self.data.homos))
 
-    @skipForParser('Molcas','The parser is still being developed so we skip this test')
     def testscfvaluetype(self):
         """Are scfvalues and its elements the right type??"""
         self.assertEquals(type(self.data.scfvalues),type([]))
         self.assertEquals(type(self.data.scfvalues[0]),type(numpy.array([])))
 
-    @skipForParser('Molcas','The parser is still being developed so we skip this test')
     def testscfenergy(self):
         """Is the SCF energy within the target?"""
         self.assertAlmostEquals(self.data.scfenergies[-1], self.b3lyp_energy, delta=40, msg="Final scf energy: %f not %i +- 40eV" %(self.data.scfenergies[-1], self.b3lyp_energy))
 
-    @skipForParser('Molcas','The parser is still being developed so we skip this test')
     def testscftargetdim(self):
         """Do the scf targets have the right dimensions?"""
         self.assertEquals(self.data.scftargets.shape, (len(self.data.scfvalues), len(self.data.scfvalues[0][0])))

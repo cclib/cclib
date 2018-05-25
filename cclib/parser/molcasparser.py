@@ -174,7 +174,7 @@ class Molcas(logfileparser.Logfile):
                     atomcharges.extend(map(float, line.split()[1:]))
 
             # Molcas only performs Mulliken population analysis.
-            self.set_attribute('atomcharges', {'mullikoen': atomcharges})
+            self.set_attribute('atomcharges', {'mulliken': atomcharges})
 
             # Ensure the charge printed here is identical to the
             # charge printed before entering the SCF.
