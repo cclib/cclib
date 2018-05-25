@@ -261,7 +261,7 @@ class Molcas(logfileparser.Logfile):
                 line = next(inputfile)
 
             if not hasattr(self, "scfvalues"):
-                self.scfvalues = []
+                self.scfvalues = [[]]
 
             line = next(inputfile)
             while line.split()[0] != 'Convergence':
@@ -269,7 +269,7 @@ class Molcas(logfileparser.Logfile):
                     energy = float(line.split()[4].replace('*',''))
                     density = float(line.split()[5].replace('*',''))
                     fock = float(line.split()[6].replace('*',''))
-                    self.scfvalues.append([energy, density, fock])
+                    self.scfvalues[0].append([energy, density, fock])
 
                 try:
                     line = next(inputfile)
