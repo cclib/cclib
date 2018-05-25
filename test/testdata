@@ -27,6 +27,7 @@ Basis     Gaussian    GenericBasisTest      basicGaussian09       dvb_sp.out
 Basis     Gaussian    GenericBasisTest      basicGaussian16       dvb_sp.out
 Basis     Jaguar      JaguarBasisTest       basicJaguar8.3        dvb_sp_hf.out
 Basis     Jaguar      JaguarBasisTest       basicJaguar8.3        dvb_sp_ks.out
+Basis     Molcas      GenericBasisTest      basicOpenMolcas18.0   dvb_sp.out
 Basis     Molpro      GenericBasisTest      basicMolpro2006       dvb_sphf.out
 Basis     Molpro      GenericBasisTest      basicMolpro2012       dvb_sphf.out
 Basis     NWChem      GenericBasisTest      basicNWChem6.0        dvb_sp_hf.out
@@ -48,6 +49,7 @@ Basis     Gaussian    GaussianBigBasisTest  basicGaussian03       C_bigbasis.out
 Basis     Gaussian    GaussianBigBasisTest  basicGaussian09       C_bigbasis.out
 Basis     Gaussian    GaussianBigBasisTest  basicGaussian16       C_bigbasis.out
 Basis     Jaguar      JaguarBigBasisTest    basicJaguar8.3        C_bigbasis.out
+Basis     Molcas      MolcasBigBasisTest    basicOpenMolcas18.0   C_bigbasis.out
 Basis     Molpro      MolproBigBasisTest    basicMolpro2006       C_bigbasis.out
 Basis     Molpro      MolproBigBasisTest    basicMolpro2012       C_bigbasis.out
 Basis     NWChem      GenericBigBasisTest   basicNWChem6.0        C_bigbasis.out
@@ -214,6 +216,7 @@ SP        Gaussian    GenericSPTest         basicGaussian16       dvb_sp.out
 SP        Jaguar      Jaguar7SPTest         basicJaguar7.0        dvb_sp.out
 SP        Jaguar      GenericSPTest         basicJaguar8.3        dvb_sp_hf.out
 SP        Jaguar      GenericSPTest         basicJaguar8.3        dvb_sp_ks.out
+SP        Molcas      GenericSPTest         basicOpenMolcas18.0   dvb_sp.out
 SP        Molpro      GenericSPTest         basicMolpro2006       dvb_sphf.out
 SP        Molpro      GenericSPTest         basicMolpro2012       dvb_sphf.out
 SP        NWChem      GenericSPTest         basicNWChem6.0        dvb_sp_hf.out
@@ -245,6 +248,7 @@ SPun      Gaussian    GaussianSPunTest      basicGaussian16       dvb_un_sp_b.lo
 SPun      Jaguar      JaguarSPunTest        basicJaguar7.0        dvb_un_sp.out
 SPun      Jaguar      JaguarSPunTest        basicJaguar8.3        dvb_un_sp_hf.out
 SPun      Jaguar      JaguarSPunTest        basicJaguar8.3        dvb_un_sp_ks.out
+SPun	  Molcas      GenericSPunTest       basicOpenMolcas18.0	  dvb_sp_un.out
 SPun      Molpro      GenericSPunTest       basicMolpro2006       dvb_sphf_un.out
 SPun      Molpro      GenericSPunTest       basicMolpro2012       dvb_sphf_un.out
 SPun      NWChem      GenericSPunTest       basicNWChem6.0        dvb_un_sp_ks.out

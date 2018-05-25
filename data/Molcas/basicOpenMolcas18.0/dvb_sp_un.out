@@ -1,0 +1,462 @@
+   This run of MOLCAS is using the pymolcas driver
+
+                             OPE
+                             OPE          NMOL  CASOP  ENMOLC A   SO
+                 OPE        NMOLC        AS  OP EN  MO LC     AS  OP
+                OPENM       OL CA        SO  PE NM  OL CA     SOP EN
+                OP EN      MO   LC       AS  OP ENMOL  CASO   PENMOL
+                OP  EN     MO   LC       AS  OP EN     MO     LC ASO
+               OP   E  NMOL  C  AS       OP  EN MO     LC     AS  OP
+               OP  E   NMO   LC AS        OPEN  MO     LCASOP EN   M
+               O  PEN   MO  LCA  SO
+            OPE   NMO   L   CAS    OP
+        OPENMOL  CASOP     ENMOL   CASOPE
+     OPENMOLCA   SOPENMOLCASOPEN   MOLCASOPE
+    OPENMOLCAS   OP           EN   MOL    CAS
+    OPENMOLCAS       OP  ENM        O     LCA
+    OPENMOLCAS    OPEN  MOLCASO     P  E  NMO
+    OPENMOLCAS     OP               E  N  MOL
+    OPENMOLCA   SO           PENM   O  L  CAS    OPEN    MO    LCAS
+    OPENMOLCA   SOP           ENM   O  L  CAS   OP  EN  MOLC  AS   O
+    OPENMOLCA   SOPE           NM      O  LCA   S      OP  EN MO
+    OPENMOLC                AS         O  PEN   M      OL  CA  SOPE
+    OPENMO        LCASOPE  NMOL        C  ASO   P      ENMOLC     AS
+    OPE     NMO      LCA  SO     P     E   NM   OL  CA SO  PE N   MO
+          OPENMOLCA            SOPE   NMO        LCAS  O    P  ENMO
+     OPENMOLCASOPENMOLCASOPENMOLCASOPENMOLCA
+        OPENMOLCASOPENMOLCASOPENMOLCASOPE
+            OPENMOLCASOPENMOLCASOPENM
+               OPENMOLCASOPENMOLCA        version 18.0
+                   OPENMOLCASO
+                       OPE                tag o180311-1800
+
+ OpenMolcas is free software; you can redistribute it and/or modify it
+ under the terms of the GNU Lesser General Public License version 2.1.
+ OpenMolcas is distributed in the hope that it will be useful, but it
+ is provided "as is" and without any express or implied warranties.
+ For more details see the full text of the license in the file
+ LICENSE or in <http://www.gnu.org/licenses/>.
+
+                 Copyright (C) The OpenMolcas Authors
+           For the author list and the recommended citation,
+                   consult the file CONTRIBUTORS.md
+
+           *************************************************
+           * pymolcas version py1.10                       *
+           *   build 9ead62c274ce0aa10a12879e848d75c9      *
+           *   (after the EMIL interpreter by V. Veryazov) *
+           *************************************************
+
+configuration info
+------------------
+C Compiler ID: GNU
+C flags: -std=gnu99
+Fortran Compiler ID: GNU
+Fortran flags: -cpp -fno-aggressive-loop-optimizations -fdefault-integer-8
+Definitions: _MOLCAS_;_I8_;_LINUX_
+Parallel: OFF (GA=OFF)
+
+
+   ------------------------------------------------
+  |
+  |           Project: dvb_sp_un
+  |    Submitted from: /home/kunal/OpenMolcas/build
+  |      Scratch area: /tmp/dvb_sp_un
+  |   Save outputs to: /home/kunal/OpenMolcas/build
+  |            Molcas: /home/kunal/OpenMolcas/build
+  |
+  | Scratch area is NOT empty
+  |
+  |    MOLCAS_DRIVER = /usr/local/sbin/pymolcas
+  |    MOLCAS_NPROCS = 1
+  |    MOLCAS_SOURCE = /home/kunal/OpenMolcas
+  | MOLCAS_STRUCTURE = 0
+  |
+   ------------------------------------------------
+
+++ ---------   Input file   ---------
+
+&GATEWAY
+ coord
+ 20
+
+ C                  0.27867948   -1.36683162    0.00000000
+ C                  1.32303041   -0.44173575    0.00000000
+ C                  1.04434506    0.92484978    0.00000000
+ C                 -0.27867948    1.36683162    0.00000000
+ C                 -1.32303041    0.44173575    0.00000000
+ C                 -1.04434506   -0.92484978    0.00000000
+ H                  2.36595443   -0.79037726    0.00000000
+ H                  1.86746094    1.65407997    0.00000000
+ H                 -2.36595443    0.79037726    0.00000000
+ H                 -1.86746094   -1.65407997    0.00000000
+ C                 -0.58659169    2.87589931    0.00000000
+ C                  0.36350188    3.80076420    0.00000000
+ H                 -1.65647768    3.12394312    0.00000000
+ H                  0.14429560    4.87693235    0.00000000
+ H                  1.43338788    3.55272039    0.00000000
+ C                  0.58659169   -2.87589931    0.00000000
+ C                 -0.36350188   -3.80076420    0.00000000
+ H                  1.65647768   -3.12394312    0.00000000
+ H                 -0.14429560   -4.87693235    0.00000000
+ H                 -1.43338788   -3.55272039    0.00000000
+ basis = sto-3g
+ group = nosym
+
+&SEWARD
+
+&SCF
+ ksdft = b3lyp
+ uhf
+ charge = +1
+ zspin = 1
+
+-- ----------------------------------
+
+--- Start Module: gateway at Sat May 19 04:06:07 2018 ---
+
+()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()
+
+                                              &GATEWAY
+
+                                   only a single process is used
+                       available to each process: 2.0 GB of memory, 1 thread
+()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()
+
+
+++    Symmetry information:
+      ---------------------
+
+                    Character Table for C1 
+
+                             E  
+                    a        1  x, y, xy, Rz, z, xz, Ry, yz, Rx, I
+--
+
+
+++    Basis set information:
+      ----------------------
+
+
+      Basis set label: C.STO-3G.........
+
+      Electronic valence basis set:
+      ------------------
+      Associated Effective Charge  6.000000 au
+      Associated Actual Charge     6.000000 au
+      Nuclear Model: Point charge
+
+      Shell  nPrim  nBasis  Cartesian Spherical Contaminant
+         s       6       2        X                  
+         p       3       1        X                  
+
+
+      Basis set label: H.STO-3G.........
+
+      Electronic valence basis set:
+      ------------------
+      Associated Effective Charge  1.000000 au
+      Associated Actual Charge     1.000000 au
+      Nuclear Model: Point charge
+
+      Shell  nPrim  nBasis  Cartesian Spherical Contaminant
+         s       3       1        X                  
+
+
+      Basis set label: C.STO-3G.........
+
+      Electronic valence basis set:
+      ------------------
+      Associated Effective Charge  6.000000 au
+      Associated Actual Charge     6.000000 au
+      Nuclear Model: Point charge
+
+      Shell  nPrim  nBasis  Cartesian Spherical Contaminant
+         s       6       2        X                  
+         p       3       1        X                  
+
+
+      Basis set label: H.STO-3G.........
+
+      Electronic valence basis set:
+      ------------------
+      Associated Effective Charge  1.000000 au
+      Associated Actual Charge     1.000000 au
+      Nuclear Model: Point charge
+
+      Shell  nPrim  nBasis  Cartesian Spherical Contaminant
+         s       3       1        X                  
+
+
+      Basis set label: C.STO-3G.........
+
+      Electronic valence basis set:
+      ------------------
+      Associated Effective Charge  6.000000 au
+      Associated Actual Charge     6.000000 au
+      Nuclear Model: Point charge
+
+      Shell  nPrim  nBasis  Cartesian Spherical Contaminant
+         s       6       2        X                  
+         p       3       1        X                  
+
+
+      Basis set label: H.STO-3G.........
+
+      Electronic valence basis set:
+      ------------------
+      Associated Effective Charge  1.000000 au
+      Associated Actual Charge     1.000000 au
+      Nuclear Model: Point charge
+
+      Shell  nPrim  nBasis  Cartesian Spherical Contaminant
+         s       3       1        X                  
+--
+
+
+++    Molecular structure info:
+      -------------------------
+
+                    ************************************************ 
+                    **** Cartesian Coordinates / Bohr, Angstrom **** 
+                    ************************************************ 
+
+     Center  Label                x              y              z                     x              y              z
+        1      C1               0.526628      -2.582937       0.000000              0.278679      -1.366832       0.000000
+        2      C2               2.500165      -0.834760       0.000000              1.323030      -0.441736       0.000000
+        3      C3               1.973526       1.747713       0.000000              1.044345       0.924850       0.000000
+        4      C4              -0.526628       2.582937       0.000000             -0.278679       1.366832       0.000000
+        5      C5              -2.500165       0.834760       0.000000             -1.323030       0.441736       0.000000
+        6      C6              -1.973526      -1.747713       0.000000             -1.044345      -0.924850       0.000000
+        7      H7               4.471006      -1.493597       0.000000              2.365954      -0.790377       0.000000
+        8      H8               3.528990       3.125758       0.000000              1.867461       1.654080       0.000000
+        9      H9              -4.471006       1.493597       0.000000             -2.365954       0.790377       0.000000
+       10      H10             -3.528990      -3.125758       0.000000             -1.867461      -1.654080       0.000000
+       11      C11             -1.108498       5.434662       0.000000             -0.586592       2.875899       0.000000
+       12      C12              0.686919       7.182403       0.000000              0.363502       3.800764       0.000000
+       13      H13             -3.130289       5.903397       0.000000             -1.656478       3.123943       0.000000
+       14      H14              0.272679       9.216066       0.000000              0.144296       4.876932       0.000000
+       15      H15              2.708711       6.713669       0.000000              1.433388       3.552720       0.000000
+       16      C16              1.108498      -5.434662       0.000000              0.586592      -2.875899       0.000000
+       17      C17             -0.686919      -7.182403       0.000000             -0.363502      -3.800764       0.000000
+       18      H18              3.130289      -5.903397       0.000000              1.656478      -3.123943       0.000000
+       19      H19             -0.272679      -9.216066       0.000000             -0.144296      -4.876932       0.000000
+       20      H20             -2.708711      -6.713669       0.000000             -1.433388      -3.552720       0.000000
+
+                    ************************************************* 
+                    **** InterNuclear Distances / Bohr, Angstrom **** 
+                    ************************************************* 
+
+     Atom centers         Bohr        Angstrom
+   13 H13      11 C11     2.075416        1.098263
+   14 H14      12 C12   
+   15 H15      12 C12   
+   18 H18      16 C16   
+   19 H19      17 C17   
+   20 H20      17 C17   
+    7 H7        2 C2      2.078047        1.099655
+    9 H9        5 C5    
+    8 H8        3 C3      2.078094        1.099680
+   10 H10       6 C6    
+   12 C12      11 C11     2.505618        1.325916
+   17 C17      16 C16   
+    3 C3        2 C2      2.635624        1.394712
+    6 C6        5 C5    
+    4 C4        3 C3      2.635976        1.394899
+    6 C6        1 C1    
+    2 C2        1 C1      2.636470        1.395160
+    5 C5        4 C4    
+   11 C11       4 C4      2.910482        1.540161
+   16 C16       1 C1    
+   15 H15      14 H14     3.492312        1.848052
+   20 H20      19 H19   
+   15 H15       8 H8      3.680484        1.947628
+   20 H20      10 H10   
+   14 H14      11 C11     4.025751        2.130336
+   19 H19      16 C16   
+   13 H13      12 C12     4.025784        2.130353
+   15 H15      11 C11   
+   18 H18      17 C17   
+   20 H20      16 C16   
+    8 H8        4 C4      4.091783        2.165278
+   10 H10       1 C1    
+    7 H7        3 C3      4.091881        2.165330
+    9 H9        6 C6    
+    8 H8        2 C2      4.091965        2.165375
+   10 H10       5 C5    
+    7 H7        1 C1      4.092039        2.165414
+    9 H9        4 C4    
+   13 H13       4 C4      4.219538        2.232883
+   18 H18       1 C1    
+    4 C4        2 C2      4.565318        2.415862
+    5 C5        1 C1    
+    5 C5        3 C3      4.565895        2.416168
+    6 C6        2 C2    
+    3 C3        1 C1      4.565966        2.416205
+    6 C6        4 C4    
+   13 H13       9 H9      4.609106        2.439034
+   18 H18       7 H7    
+    8 H8        7 H7      4.714428        2.494768
+   10 H10       9 H9    
+   14 H14      13 H13     4.749102        2.513117
+   19 H19      18 H18   
+   12 C12       4 C4      4.756867        2.517226
+   17 C17       1 C1    
+   11 C11       3 C3      4.805462        2.542941
+   16 C16       6 C6    
+   11 C11       5 C5      4.805813        2.543127
+   16 C16       2 C2    
+   12 C12       8 H8      4.953154        2.621096
+   17 C17      10 H10   
+   15 H15       3 C3      5.020081        2.656512
+   20 H20       6 C6    
+   13 H13       5 C5      5.107655        2.702855
+   18 H18       2 C2    
+   11 C11       8 H8      5.180476        2.741390
+   16 C16      10 H10   
+   11 C11       9 H9      5.180585        2.741447
+   16 C16       7 H7    
+   15 H15       4 C4      5.246938        2.776560
+   20 H20       1 C1    
+    5 C5        2 C2      5.271679        2.789652
+    4 C4        1 C1      5.272154        2.789904
+    6 C6        3 C3      5.272307        2.789985
+   12 C12       3 C3      5.584910        2.955407
+   17 C17       6 C6    
+--
+
+
+            Nuclear Potential Energy            450.00613809 au
+
+--- Stop Module: gateway at Sat May 19 04:06:07 2018 /rc=_RC_ALL_IS_WELL_ ---
+*** files: xmldump
+    saved to directory /home/kunal/OpenMolcas/build
+
+--- Start Module: seward at Sat May 19 04:06:07 2018 ---
+
+()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()
+
+                                              &SEWARD
+
+                                   only a single process is used
+                       available to each process: 2.0 GB of memory, 1 thread
+()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()
+
+               SEWARD will generate:
+                  Multipole Moment integrals up to order  2
+                  Kinetic Energy integrals
+                  Nuclear Attraction integrals (point charge)
+                  One-Electron Hamiltonian integrals
+                  Velocity integrals
+                  Two-Electron Repulsion integrals
+
+                   Integrals are discarded if absolute value <: 0.10E-13
+                   Integral cutoff threshold is set to       <: 0.10E-15
+
+            Nuclear Potential Energy            450.00613809 au
+
+
+      Basis set specifications :
+      Symmetry species         a  
+      Basis functions           60
+
+
+  Input file to MOLDEN was generated!
+
+--- Stop Module: seward at Sat May 19 04:06:09 2018 /rc=_RC_ALL_IS_WELL_ ---
+*** files: dvb_sp_un.GssOrb dvb_sp_un.guessorb.h5 dvb_sp_un.guessorb.molden xmldump
+    saved to directory /home/kunal/OpenMolcas/build
+--- Module seward spent 1 second ---
+
+--- Start Module: scf at Sat May 19 04:06:09 2018 ---
+
+()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()
+
+                                                &SCF
+
+                                   only a single process is used
+                       available to each process: 2.0 GB of memory, 1 thread
+()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()
+
+++    Input section:
+      --------------
+
+      Header of the integral files:
+      
+       Integrals generated by seward 4.2.0  , Sat May 19 04:06:08 2018
+
+
+      Cartesian coordinates in Angstrom:
+      -----------------------------------------------------
+      No.  Label        X            Y            Z        
+      -----------------------------------------------------
+       1   C1         0.27867948  -1.36683162   0.00000000
+       2   C2         1.32303041  -0.44173575   0.00000000
+       3   C3         1.04434506   0.92484978   0.00000000
+       4   C4        -0.27867948   1.36683162   0.00000000
+       5   C5        -1.32303041   0.44173575   0.00000000
+       6   C6        -1.04434506  -0.92484978   0.00000000
+       7   H7         2.36595443  -0.79037726   0.00000000
+       8   H8         1.86746094   1.65407997   0.00000000
+       9   H9        -2.36595443   0.79037726   0.00000000
+      10   H10       -1.86746094  -1.65407997   0.00000000
+      11   C11       -0.58659169   2.87589931   0.00000000
+      12   C12        0.36350188   3.80076420   0.00000000
+      13   H13       -1.65647768   3.12394312   0.00000000
+      14   H14        0.14429560   4.87693235   0.00000000
+      15   H15        1.43338788   3.55272039   0.00000000
+      16   C16        0.58659169  -2.87589931   0.00000000
+      17   C17       -0.36350188  -3.80076420   0.00000000
+      18   H18        1.65647768  -3.12394312   0.00000000
+      19   H19       -0.14429560  -4.87693235   0.00000000
+      20   H20       -1.43338788  -3.55272039   0.00000000
+      -----------------------------------------------------
+      Nuclear repulsion energy =  450.00613809
+--
+
+++    Orbital specifications:
+      -----------------------
+
+      Symmetry species               1
+                                     a
+      Frozen orbitals                0
+      Start temperature = 0.500
+      End temperature   = 0.010
+      Temperature Factor= 0.460
+      Deleted orbitals               0
+      Total number of orbitals      60
+      Number of basis functions     60
+--
+
+      Molecular charge                           1.000
+
+
+      The same grid will be used for all iterations.
+
+++    Optimization specifications:
+      ----------------------------
+
+      SCF Algorithm: Conventional USCF
+      D(i)-D(i-1) density differences are used
+      Number of density matrices in core                5
+      Maximum number of NDDO SCF iterations           400
+      Maximum number of HF SCF iterations             400
+      Threshold for SCF energy change            0.10E-08
+      Threshold for density matrix               0.10E-03
+      Threshold for Fock matrix                  0.15E-03
+      Threshold for linear dependence            0.10E-08
+      Threshold at which DIIS is turned on       0.15E+00
+      Threshold at which QNR/C2DIIS is turned on 0.75E-01
+      Threshold for Norm(delta) (QNR/C2DIIS)     0.20E-04
+      DIIS extrapolation of the SCF procedure
+      All orbitals punched on: UHFORB
+--
+
+      Input vectors read from INPORB
+      Orbital file label: *Guess orbitals
+
+--- Stop Module: scf at Sat May 19 04:06:10 2018 /rc=_RC_INTERNAL_ERROR_ ---
+*** files: dvb_sp_un.scf.h5 dvb_sp_un.UhfOrb xmldump
+    saved to directory /home/kunal/OpenMolcas/build
+
+    Timing: Wall=2.89 User=1.96 System=0.26
