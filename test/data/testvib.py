@@ -49,7 +49,7 @@ class GenericIRTest(unittest.TestCase):
         self.assertAlmostEqual(max(self.data.vibfreqs), 3630, delta=200)
 
     @skipForParser('Molcas','The parser is still being developed so we skip this test')
-    @skipForParser('Psi', 'Psi cannot print IR intensities')
+    @skipForParser('Psi4', 'Psi cannot print IR intensities')
     def testirintens(self):
         """Is the maximum IR intensity 100 +/- 10 km mol-1?"""
         self.assertAlmostEqual(max(self.data.vibirs), self.max_IR_intensity, delta=10)
