@@ -43,7 +43,8 @@ from cclib.parser.molproparser import Molpro
 from cclib.parser.mopacparser import MOPAC
 from cclib.parser.nwchemparser import NWChem
 from cclib.parser.orcaparser import ORCA
-from cclib.parser.psiparser import Psi
+from cclib.parser.psi3parser import Psi3
+from cclib.parser.psiparser import Psi4
 from cclib.parser.qchemparser import QChem
 
 from cclib.io import cjsonreader
@@ -80,8 +81,7 @@ URL_PATTERN = re.compile(
 #      after finding GAMESS in case the more specific phrase is found.
 #   2. Molpro log files don't have the program header, but always contain
 #      the generic string 1PROGRAM, so don't break here either to be cautious.
-#   3. The Psi header has two different strings with some variation
-#   4. "MOPAC" is used in some packages like GAMESS, so match MOPAC20##
+#   3. "MOPAC" is used in some packages like GAMESS, so match MOPAC20##
 #
 # The triggers are defined by the tuples in the list below like so:
 #   (parser, phrases, flag whether we should break)
@@ -100,7 +100,8 @@ triggers = [
     (MOPAC,     ["MOPAC20"],                                        True),
     (NWChem,    ["Northwest Computational Chemistry Package"],      True),
     (ORCA,      ["O   R   C   A"],                                  True),
-    (Psi,       ["PSI", "Ab Initio Electronic Structure"],          True),
+    (Psi4,      ["Psi4: An Open-Source Ab Initio Electronic Structure Package"],          True),
+    (Psi3,      ["PSI3: An Open-Source Ab Initio Electronic Structure Package"],          True),
     (QChem,     ["A Quantum Leap Into The Future Of Chemistry"],    True),
 
 ]
@@ -180,9 +181,9 @@ def ccopen(source, *args, **kargs):
         *args, **kargs - arguments and keyword arguments passed to filetype
 
     Returns:
-      one of ADF, DALTON, GAMESS, GAMESS UK, Gaussian, Jaguar, Molpro, MOPAC,
-      NWChem, ORCA, Psi, QChem, CJSON or None (if it cannot figure it out or
-      the file does not exist).
+      one of ADF, DALTON, GAMESS, GAMESS UK, Gaussian, Jaguar,
+      Molpro, MOPAC, NWChem, ORCA, Psi3, Psi/Psi4, QChem, CJSON or None
+      (if it cannot figure it out or the file does not exist).
     """
 
     inputfile = None

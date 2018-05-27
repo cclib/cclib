@@ -17,13 +17,13 @@ from cclib.parser import logfileparser
 from cclib.parser import utils
 
 
-class Psi(logfileparser.Logfile):
+class Psi4(logfileparser.Logfile):
     """A Psi log file."""
 
     def __init__(self, *args, **kwargs):
 
         # Call the __init__ method of the superclass
-        super(Psi, self).__init__(logname="Psi", *args, **kwargs)
+        super(Psi4, self).__init__(logname="Psi4", *args, **kwargs)
 
     def __str__(self):
         """Return a string representation of the object."""
@@ -1178,3 +1178,5 @@ class Psi(logfileparser.Logfile):
             return -float(vibfreq[:-1])
         else:
             return float(vibfreq)
+
+Psi = Psi4
