@@ -124,7 +124,7 @@ class ORCA(logfileparser.Logfile):
 
                 # Geometry block
                 elif line[0] == '*':
-                    coord_type, charge, multiplicity, *filename = line[1:].split()
+                    coord_type, charge, multiplicity = line[1:].split()[:3]
                     self.set_attribute('charge', charge)
                     self.set_attribute('multiplicity', multiplicity)
                     coord_type = coord_type.lower()
