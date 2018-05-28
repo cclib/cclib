@@ -7,8 +7,6 @@
 
 """Run all unit tests for cclib."""
 
-from __future__ import print_function
-
 import unittest
 
 from . import test_data

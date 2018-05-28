@@ -7,3 +7,6 @@ https://sourceforge.net/projects/pyquante/files/PyQuante-1.6/PyQuante-1.6.5/PyQu
 
 # for unit tests
 mock==2.0.0 ; python_version < '3.3'
+pytest==2.9.2 ; python_version == '3.2'
+coverage<4 ; python_version == '3.2'
+pytest-cov
