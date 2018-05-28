@@ -29,7 +29,7 @@ class CJSONReaderTest(unittest.TestCase):
         """File->ccData->CJSON->attribute_dict, the attributes within ccData and attribute_dict
            should be the same."""
         fpath = os.path.join(__datadir__, "data/ADF/basicADF2007.01/dvb_gopt.adfout")
-        data = cclib.io.ccopen(fpath).parse()
+        data = cclib.io.ccread(fpath)
         self.assertIsNotNone(data, "The logfileparser failed to parse the output file")
 
         cjson_obj = cclib.io.cjsonwriter.CJSON(data, terse=True)
