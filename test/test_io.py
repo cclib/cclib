@@ -13,15 +13,14 @@ import unittest
 sys.path.insert(1, 'io')
 
 from .io.testccio import *
-
-from .io.testfilewriter import *
+from .io.testcjsonreader import *
 from .io.testcjsonwriter import *
+from .io.testfilewriter import *
 from .io.testmoldenwriter import *
 from .io.testwfxwriter import *
+from .io.testxyzreader import *
 from .io.testxyzwriter import *
 from .io.testscripts import *
-
-from .io.testcjsonreader import *
 
 
 if __name__ == "__main__":

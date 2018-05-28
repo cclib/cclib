@@ -10,12 +10,12 @@
 
 from __future__ import print_function
 
+import atexit
 import io
 import os
 import sys
 import re
 from tempfile import NamedTemporaryFile
-import atexit
 
 # Python 2->3 changes the default file object hierarchy.
 if sys.version_info[0] == 2:
@@ -23,11 +23,11 @@ if sys.version_info[0] == 2:
 
     from urllib2 import urlopen, URLError
 else:
-    import io
     fileclass = io.IOBase
 
     from urllib.request import urlopen
     from urllib.error import URLError
+
 
 from cclib.parser import logfileparser
 from cclib.parser import data
@@ -49,9 +49,10 @@ from cclib.parser.qchemparser import QChem
 from cclib.io import cjsonreader
 from cclib.io import cjsonwriter
 from cclib.io import cmlwriter
-from cclib.io import xyzwriter
 from cclib.io import moldenwriter
 from cclib.io import wfxwriter
+from cclib.io import xyzreader
+from cclib.io import xyzwriter
 
 try:
     from cclib.bridge import cclib2openbabel
@@ -104,13 +105,19 @@ triggers = [
 
 ]
 
-outputclasses = {
+readerclasses = {
+    'cjson': cjsonreader.CJSON,
+    'json': cjsonreader.CJSON,
+    'xyz': xyzreader.XYZ,
+}
+
+writerclasses = {
     'cjson': cjsonwriter.CJSON,
     'json': cjsonwriter.CJSON,
     'cml': cmlwriter.CML,
-    'xyz': xyzwriter.XYZ,
     'molden': moldenwriter.MOLDEN,
-    'wfx': wfxwriter.WFXWriter
+    'wfx': wfxwriter.WFXWriter,
+    'xyz': xyzwriter.XYZ,
 }
 
 
@@ -257,12 +264,17 @@ def ccopen(source, *args, **kargs):
     # Proceed to return an instance of the logfile parser only if the filetype
     # could be guessed. Need to make sure the input file is closed before creating
     # an instance, because parsers will handle opening/closing on their own.
-    # If the input file is a CJSON file and not a standard compchemlog file, don't
-    # guess the file.
-    if kargs.get("cjson", False):
-        filetype = cjsonreader.CJSON
-    else:
-        filetype = guess_filetype(inputfile)
+    filetype = guess_filetype(inputfile)
+    # If the input file isn't a standard compchem log file, try one of
+    # the readers, falling back to Open Babel.
+    if not filetype:
+        if kargs.get("cjson"):
+            filetype = readerclasses['cjson']
+        elif source and not is_stream:
+            ext = os.path.splitext(source)[1][1:].lower()
+            for extension in readerclasses:
+                if ext == extension:
+                    filetype = readerclasses[extension]
 
     # Proceed to return an instance of the logfile parser only if the filetype
     # could be guessed. Need to make sure the input file is closed before creating
@@ -383,8 +395,8 @@ def _determine_output_format(outputtype, outputdest):
     # First check outputtype.
     if isinstance(outputtype, str):
         extension = outputtype.lower()
-        if extension in outputclasses:
-            outputclass = outputclasses[extension]
+        if extension in writerclasses:
+            outputclass = writerclasses[extension]
         else:
             raise UnknownOutputFormatError(extension)
     else:
@@ -395,8 +407,8 @@ def _determine_output_format(outputtype, outputdest):
             extension = os.path.splitext(outputdest.name)[1].lower()
         else:
             raise UnknownOutputFormatError
-        if extension in outputclasses:
-            outputclass = outputclasses[extension]
+        if extension in writerclasses:
+            outputclass = writerclasses[extension]
         else:
             raise UnknownOutputFormatError(extension)
 
