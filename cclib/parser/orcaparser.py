@@ -79,12 +79,12 @@ class ORCA(logfileparser.Logfile):
                 if line.lower()[:7] == 'warning':
                     self.metadata['warnings'].append('')
                     while len(line) > 1:
-                        self.metadata['warnings'][-1] += line[9:]
+                        self.metadata['warnings'][-1] += line[9:].strip()
                         line = next(inputfile)
                 elif line.lower()[:4] == 'info':
                     self.metadata['info'].append('')
                     while len(line) > 1:
-                        self.metadata['info'][-1] += line[9:]
+                        self.metadata['info'][-1] += line[9:].strip()
                         line = next(inputfile)
                 line = next(inputfile)
 
@@ -105,16 +105,18 @@ class ORCA(logfileparser.Logfile):
         # ================================================================================
         if "INPUT FILE" == line.strip():
             self.skip_line(inputfile, '=')
-            name = next(inputfile).split()[-1]
-            methods = []
-            line = next(inputfile)
+            self.metadata['input_file'] = next(inputfile).split()[-1]
+
+            keywords = []
             coords = []
-            while line[0] == '|':
+            for line in inputfile:
+                if line[0] != '|':
+                    break
                 line = line[6:]
 
                 # Keywords block
                 if line[0] == '!':
-                    methods += line[1:].split()
+                    keywords += line[1:].split()
 
                 # Impossible to parse without knowing whether a keyword opens a new block
                 elif line[0] == '%':
@@ -122,8 +124,11 @@ class ORCA(logfileparser.Logfile):
 
                 # Geometry block
                 elif line[0] == '*':
-                    vals = line[1:].split()
-                    coord_type = vals[0].lower()
+                    coord_type, charge, multiplicity, *filename = line[1:].split()
+                    self.set_attribute('charge', charge)
+                    self.set_attribute('multiplicity', multiplicity)
+                    coord_type = coord_type.lower()
+                    self.metadata['coord_type'] = coord_type
                     if coord_type == 'xyz':
                         def splitter(line):
                             atom, x, y, z = line.split()[:4]
@@ -150,17 +155,15 @@ class ORCA(logfileparser.Logfile):
                     else:
                         self.logger.warning('Invalid coordinate type.')
 
-                    line = next(inputfile)[6:].strip()
                     if 'file' not in coord_type:
+                        line = next(inputfile)[6:].strip()
                         while line[0] != '*':
                             # Strip basis specification that can appear after coordinates
                             line = line.split('newGTO')[0]
                             coords.append(splitter(line))
                             line = next(inputfile)[6:].strip()
 
-                line = next(inputfile)
-
-            self.metadata['methods'] = methods
+            self.metadata['keywords'] = keywords
             self.metadata['coords'] = coords
 
         if line[0:15] == "Number of atoms":
