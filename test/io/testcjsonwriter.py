@@ -5,7 +5,7 @@
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
 
-"""Unit tests for writer cjsonwriter module."""
+"""Unit tests for CJSON writer."""
 
 import os
 import unittest
@@ -27,7 +27,7 @@ class CJSONTest(unittest.TestCase):
     def test_init(self):
         """Does the class initialize correctly?"""
         fpath = os.path.join(__datadir__, "data/ADF/basicADF2007.01/dvb_gopt.adfout")
-        data = cclib.io.ccopen(fpath).parse()
+        data = cclib.io.ccread(fpath)
         cjson = cclib.io.cjsonwriter.CJSON(data)
 
         # The object should keep the ccData instance passed to its constructor.
@@ -36,7 +36,7 @@ class CJSONTest(unittest.TestCase):
     def test_cjson_generation(self):
         """Does the CJSON format get generated properly?"""
         fpath = os.path.join(__datadir__, "data/ADF/basicADF2007.01/dvb_gopt.adfout")
-        data = cclib.io.ccopen(fpath).parse()
+        data = cclib.io.ccread(fpath)
 
         cjson = cclib.io.cjsonwriter.CJSON(data).generate_repr()
 

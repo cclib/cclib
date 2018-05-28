@@ -5,7 +5,7 @@
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
 
-"""Unit tests for writer filewriter module."""
+"""Unit tests for general file writer."""
 
 import os
 import unittest
@@ -23,7 +23,7 @@ class WriterTest(unittest.TestCase):
     def test_init(self):
         """Does the class initialize correctly?"""
         fpath = os.path.join(__datadir__, "data/ADF/basicADF2007.01/dvb_gopt.adfout")
-        data = cclib.io.ccopen(fpath).parse()
+        data = cclib.io.ccread(fpath)
         writer = cclib.io.filewriter.Writer(data)
 
         # The object should keep the ccData instance passed to its constructor.
