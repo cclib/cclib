@@ -105,14 +105,23 @@ class ORCA(logfileparser.Logfile):
         # ================================================================================
         if "INPUT FILE" == line.strip():
             self.skip_line(inputfile, '=')
-            self.metadata['input_file'] = next(inputfile).split()[-1]
+            name = next(inputfile).split()[-1]
 
-            keywords = []
-            coords = []
+            lines = []
             for line in inputfile:
                 if line[0] != '|':
                     break
-                line = line[6:]
+                lines.append(line[6:])
+
+            self.metadata['input_file'] = ''.join(lines[:-1])
+            lines_iter = iter(lines[:-1])
+
+            keywords = []
+            coords = []
+            for line in lines_iter:
+                line = line.strip()
+                if not line:
+                    continue
 
                 # Keywords block
                 if line[0] == '!':
@@ -125,8 +134,8 @@ class ORCA(logfileparser.Logfile):
                 # Geometry block
                 elif line[0] == '*':
                     coord_type, charge, multiplicity = line[1:].split()[:3]
-                    self.set_attribute('charge', charge)
-                    self.set_attribute('multiplicity', multiplicity)
+                    self.set_attribute('charge', int(charge))
+                    self.set_attribute('multiplicity', int(multiplicity))
                     coord_type = coord_type.lower()
                     self.metadata['coord_type'] = coord_type
                     if coord_type == 'xyz':
@@ -156,12 +165,14 @@ class ORCA(logfileparser.Logfile):
                         self.logger.warning('Invalid coordinate type.')
 
                     if 'file' not in coord_type:
-                        line = next(inputfile)[6:].strip()
-                        while line[0] != '*':
+                        for line in lines_iter:
+                            if not line:
+                                continue
+                            if line[0] == '*':
+                                break
                             # Strip basis specification that can appear after coordinates
-                            line = line.split('newGTO')[0]
+                            line = line.split('newGTO')[0].strip()
                             coords.append(splitter(line))
-                            line = next(inputfile)[6:].strip()
 
             self.metadata['keywords'] = keywords
             self.metadata['coords'] = coords
