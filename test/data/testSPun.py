@@ -30,7 +30,8 @@ class GenericSPunTest(unittest.TestCase):
     @skipForParser('Molcas','The parser is still being developed so we skip this test')
     def testatomnos(self):
         """Are the atomnos correct?"""
-        self.failUnless(numpy.alltrue([numpy.issubdtype(atomno,int) for atomno in self.data.atomnos]))
+        self.failUnless(numpy.alltrue([numpy.issubdtype(atomno, numpy.signedinteger)
+                                       for atomno in self.data.atomnos]))
         self.assertEquals(self.data.atomnos.shape, (20,) )
         self.assertEquals(sum(self.data.atomnos==6) + sum(self.data.atomnos==1), 20)
 

@@ -45,7 +45,8 @@ class GenericSPTest(unittest.TestCase):
         """Are the atomnos correct?"""
 
         # The nuclear charges should be integer values in a NumPy array.
-        self.failUnless(numpy.alltrue([numpy.issubdtype(atomno, int) for atomno in self.data.atomnos]))
+        self.failUnless(numpy.alltrue([numpy.issubdtype(atomno, numpy.signedinteger)
+                                       for atomno in self.data.atomnos]))
         self.assertEquals(self.data.atomnos.dtype.char, 'i')
 
         self.assertEquals(self.data.atomnos.shape, (20,) )
