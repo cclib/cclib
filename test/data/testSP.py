@@ -262,6 +262,9 @@ class GenericSPTest(unittest.TestCase):
         self.assertTrue(hasattr(self.data, "metadata"))
         if self.logfile.logname not in ['ORCA', 'Psi']:
             self.assertIn("basis_set", self.data.metadata)
+        if self.logfile.logname == 'ORCA':
+            self.assertIn("input_file_name", self.data.metadata)
+            self.assertIn("input_file_contents", self.data.metadata)
         self.assertIn("methods", self.data.metadata)
         self.assertIn("package", self.data.metadata)
         self.assertIn("package_version", self.data.metadata)

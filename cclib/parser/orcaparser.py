@@ -106,7 +106,7 @@ class ORCA(logfileparser.Logfile):
         # ================================================================================
         if "INPUT FILE" == line.strip():
             self.skip_line(inputfile, '=')
-            name = next(inputfile).split()[-1]
+            self.metadata['input_file_name'] = next(inputfile).split()[-1]
 
             lines = []
             for line in inputfile:
@@ -114,7 +114,7 @@ class ORCA(logfileparser.Logfile):
                     break
                 lines.append(line[6:])
 
-            self.metadata['input_file'] = ''.join(lines[:-1])
+            self.metadata['input_file_contents'] = ''.join(lines[:-1])
             lines_iter = iter(lines[:-1])
 
             keywords = []
