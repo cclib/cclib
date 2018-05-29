@@ -127,6 +127,7 @@ GeoOpt    Gaussian    GenericGeoOptTest     basicGaussian16       dvb_gopt.out
 GeoOpt    Jaguar      GenericGeoOptTest     basicJaguar7.0        dvb_gopt_b.out
 GeoOpt    Jaguar      GenericGeoOptTest     basicJaguar8.3        dvb_gopt_hf.out
 GeoOpt    Jaguar      GenericGeoOptTest     basicJaguar8.3        dvb_gopt_ks.out
+GeoOpt    Molcas      GenericGeoOptTest     basicOpenMolcas18.0   dvb_gopt.out
 GeoOpt    Molpro      MolproGeoOptTest      basicMolpro2006       dvb_gopt.out          dvb_gopt.log
 GeoOpt    Molpro      MolproGeoOptTest      basicMolpro2012       dvb_gopt.out          dvb_gopt.log
 GeoOpt    NWChem      NWChemGeoOptTest      basicNWChem6.0        dvb_gopt_hf.out
@@ -297,6 +298,7 @@ vib       Gaussian    GaussianIRTest        basicGaussian09       dvb_ir.out
 vib       Gaussian    GaussianIRTest        basicGaussian16       dvb_ir.out
 vib       Jaguar      JaguarIRTest          basicJaguar7.0        dvb_ir.out
 vib       Jaguar      JaguarIRTest          basicJaguar8.3        dvb_ir.out
+vib       Molcas      GenericIRTest         basicOpenMolcas18.0   dvb_ir.out
 vib       Molpro      GenericIRTest         basicMolpro2006       dvb_ir.out            dvb_ir.log
 vib       Molpro      GenericIRTest         basicMolpro2012       dvb_ir.out            dvb_ir.log
 vib       ORCA        OrcaIRTest            basicORCA2.9          dvb_ir.out
