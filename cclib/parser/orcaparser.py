@@ -50,9 +50,133 @@ class ORCA(logfileparser.Logfile):
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
 
-        #  extract the version number first
-        if "Program Version" in line:
+        # Extract the version number
+        if "Program Version" == line.strip()[:15]:
             self.metadata["package_version"] = line.split()[2]
+
+        # ================================================================================
+        #                                         WARNINGS
+        #                        Please study these warnings very carefully!
+        # ================================================================================
+        #
+        # Warning: TCutStore was < 0. Adjusted to Thresh (uncritical)
+        #
+        # WARNING: your system is open-shell and RHF/RKS was chosen
+        #   ===> : WILL SWITCH to UHF/UKS
+        #
+        #
+        # INFO   : the flag for use of LIBINT has been found!
+        #
+        # ================================================================================
+        if "WARNINGS" == line.strip():
+            self.skip_lines(inputfile, ['text', '=', 'blank'])
+            if 'warnings' not in self.metadata:
+                self.metadata['warnings'] = []
+            if 'info' not in self.metadata:
+                self.metadata['info'] = []
+
+            line = next(inputfile)
+            while line[0] != '=':
+                if line.lower()[:7] == 'warning':
+                    self.metadata['warnings'].append('')
+                    while len(line) > 1:
+                        self.metadata['warnings'][-1] += line[9:].strip()
+                        line = next(inputfile)
+                elif line.lower()[:4] == 'info':
+                    self.metadata['info'].append('')
+                    while len(line) > 1:
+                        self.metadata['info'][-1] += line[9:].strip()
+                        line = next(inputfile)
+                line = next(inputfile)
+
+        # ================================================================================
+        #                                        INPUT FILE
+        # ================================================================================
+        # NAME = input.dat
+        # |  1> %pal nprocs 4 end
+        # |  2> ! B3LYP def2-svp
+        # |  3> ! Grid4
+        # |  4>
+        # |  5> *xyz 0 3
+        # |  6>     O   0   0   0
+        # |  7>     O   0   0   1.5
+        # |  8> *
+        # |  9>
+        # | 10>                          ****END OF INPUT****
+        # ================================================================================
+        if "INPUT FILE" == line.strip():
+            self.skip_line(inputfile, '=')
+            self.metadata['input_file_name'] = next(inputfile).split()[-1]
+
+            lines = []
+            for line in inputfile:
+                if line[0] != '|':
+                    break
+                lines.append(line[6:])
+
+            self.metadata['input_file_contents'] = ''.join(lines[:-1])
+            lines_iter = iter(lines[:-1])
+
+            keywords = []
+            coords = []
+            for line in lines_iter:
+                line = line.strip()
+                if not line:
+                    continue
+
+                # Keywords block
+                if line[0] == '!':
+                    keywords += line[1:].split()
+
+                # Impossible to parse without knowing whether a keyword opens a new block
+                elif line[0] == '%':
+                    pass
+
+                # Geometry block
+                elif line[0] == '*':
+                    coord_type, charge, multiplicity = line[1:].split()[:3]
+                    self.set_attribute('charge', int(charge))
+                    self.set_attribute('multiplicity', int(multiplicity))
+                    coord_type = coord_type.lower()
+                    self.metadata['coord_type'] = coord_type
+                    if coord_type == 'xyz':
+                        def splitter(line):
+                            atom, x, y, z = line.split()[:4]
+                            return [atom, float(x), float(y), float(z)]
+                    elif coord_type in ['int', 'internal']:
+                        def splitter(line):
+                            atom, a1, a2, a3, bond, angle, dihedral = line.split()[:7]
+                            return [atom, int(a1), int(a2), int(a3), float(bond), float(angle), float(dihedral)]
+                    elif coord_type == 'gzmt':
+                        def splitter(line):
+                            vals = line.split()[:7]
+                            if len(vals) == 7:
+                                atom, a1, bond, a2, angle, a3, dihedral = vals
+                                return [atom, int(a1), float(bond), int(a2), float(angle), int(a3), float(dihedral)]
+                            elif len(vals) == 5:
+                                return [vals[0], int(vals[1]), float(vals[2]), int(vals[3]), float(vals[4])]
+                            elif len(vals) == 3:
+                                return [vals[0], int(vals[1]), float(vals[2])]
+                            elif len(vals) == 1:
+                                return [vals[0]]
+                            self.logger.warning('Incorrect number of atoms in input geometry.')
+                    elif 'file' in coord_type:
+                        pass
+                    else:
+                        self.logger.warning('Invalid coordinate type.')
+
+                    if 'file' not in coord_type:
+                        for line in lines_iter:
+                            if not line:
+                                continue
+                            if line[0] == '*':
+                                break
+                            # Strip basis specification that can appear after coordinates
+                            line = line.split('newGTO')[0].strip()
+                            coords.append(splitter(line))
+
+            self.metadata['keywords'] = keywords
+            self.metadata['coords'] = coords
 
         if line[0:15] == "Number of atoms":
 
