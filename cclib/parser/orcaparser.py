@@ -1223,29 +1223,30 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
             self.skip_lines(inputfile, ['d', 'b'])
             casscf_energy = float(next(inputfile).split()[4])
 
+            # Only printed for first and last step of geometry optimization
             # ----------------
             # ORBITAL ENERGIES
             # ----------------
             #
             #   NO   OCC          E(Eh)            E(eV)    Irrep
             #    0   0.0868       0.257841         7.0162    1-A
-            self.skip_lines(inputfile, ['b', 'd', 'ORBITAL', 'd', 'b', 'NO'])
-            orbitals = []
-            vals = next(inputfile).split()
-            while vals:
-                occ, eh, ev = map(float, vals[1:4])
-                # The irrep will only be printed if using symmetry
-                if len(vals) == 5:
-                    idx, irrep = vals[4].split('-')
-                    orbitals.append((occ, ev, int(idx), irrep))
-                else:
-                    orbitals.append((occ, ev))
+            self.skip_lines(inputfile, ['b', 'd'])
+            if next(inputfile).strip() == 'ORBITAL ENERGIES':
+                self.skip_lines(inputfile, ['d', 'b', 'NO'])
+                orbitals = []
                 vals = next(inputfile).split()
-
-            self.skip_line(inputfile, 'b')
+                while vals:
+                    occ, eh, ev = map(float, vals[1:4])
+                    # The irrep will only be printed if using symmetry
+                    if len(vals) == 5:
+                        idx, irrep = vals[4].split('-')
+                        orbitals.append((occ, ev, int(idx), irrep))
+                    else:
+                        orbitals.append((occ, ev))
+                    vals = next(inputfile).split()
+                self.skip_lines(inputfile, ['b', 'd'])
 
             # Orbital Compositions
-
             # ---------------------------------------------
             # CAS-SCF STATES FOR BLOCK  1 MULT= 1 IRREP= Ag NROOTS= 2
             # ---------------------------------------------
@@ -1253,7 +1254,6 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
             # ROOT   0:  E=     -14.5950507665 Eh
             #       0.89724 [     0]: 2000
             for b in range(num_blocks):
-                self.skip_line(inputfile, 'd')
                 # Parse the block data
                 reg = r'BLOCK\s+(\d+) MULT=\s*(\d+) (IRREP=\s*\w+ )?(NROOTS=\s*(\d+))?'
                 groups = re.search(reg, next(inputfile)).groups()
