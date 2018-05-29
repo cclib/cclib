@@ -1305,6 +1305,25 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
                 next(inputfile)
                 for j, line in zip(range(num_orbs), inputfile):
                     density[j][i:i + 6] = list(map(float, line.split()[1:]))
+            self.skip_lines(inputfile, ['Trace', 'b', 'd'])
+
+            # Only printed for open-shells
+            # -------------------
+            # SPIN-DENSITY MATRIX
+            # -------------------
+            #
+            #                   0          1          2          3          4          5
+            #       0      -0.003709   0.001410   0.000074  -0.000564  -0.007978   0.000735
+            #       1       0.001410  -0.001750  -0.000544  -0.003815   0.008462  -0.004529
+            if next(inputfile).strip() == 'SPIN-DENSITY MATRIX':
+                self.skip_lines(inputfile, ['d', 'b'])
+                spin_density = numpy.zeros((num_orbs, num_orbs))
+                for i in range(0, num_orbs, 6):
+                    next(inputfile)
+                    for j, line in zip(range(num_orbs), inputfile):
+                        spin_density[j][i:i + 6] = list(map(float, line.split()[1:]))
+                self.skip_lines(inputfile, ['Trace', 'b', 'd', 'ENERGY'])
+            self.skip_lines(inputfile, ['d', 'b'])
 
             # -----------------
             # ENERGY COMPONENTS
@@ -1323,7 +1342,6 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
             #                                   -14.444151727
             #
             # Core energy                  :    -13.604678408 Eh     -370.2021 eV
-            self.skip_lines(inputfile, ['Trace', 'b', 'd', 'ENERGY', 'd', 'b'])
             one_el_energy = float(next(inputfile).split()[4])
             two_el_energy = float(next(inputfile).split()[4])
             nuclear_repulsion_energy = float(next(inputfile).split()[4])
