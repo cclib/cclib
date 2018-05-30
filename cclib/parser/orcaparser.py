@@ -771,9 +771,12 @@ class ORCA(logfileparser.Logfile):
                 self.etsecs.append(sec)
                 line = next(inputfile)
 
-
         # Parse the various absorption spectra for TDDFT and ROCIS
         if 'ABSORPTION SPECTRUM' in line or 'ELECTRIC DIPOLE' in line:
+            # CASSCF has an anomalous printing of ABSORPTION SPECTRUM
+            if line[:-1] == 'ABSORPTION SPECTRUM':
+                return
+
             line = line.strip()
 
             # Standard header, occasionally changes
