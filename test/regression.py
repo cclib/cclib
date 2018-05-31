@@ -658,6 +658,13 @@ def testNWChem_NWChem6_5_stopiter_nwchem_hf_out(logfile):
     """Check to ensure that an incomplete SCF is handled correctly."""
     assert len(logfile.data.scfvalues[0]) == 2
 
+def testNWChem_NWChem6_8_526_out(logfile):
+    """If `print low` is present in the input, SCF iterations are not
+    printed.
+    """
+    assert not hasattr(logfile.data, "scftargets")
+    assert not hasattr(logfile.data, "scfvalues")
+
 # ORCA #
 
 def testORCA_ORCA2_8_co_cosmo_out(logfile):
