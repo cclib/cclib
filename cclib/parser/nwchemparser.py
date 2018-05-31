@@ -675,7 +675,10 @@ class NWChem(logfileparser.Logfile):
                 else:
                     self.homos.append(-1)
 
-        # This is where the full MO vectors are printed, but a special directive is needed for it:
+        # This is where the full MO vectors are printed, but a special
+        # directive is needed for it in the `scf` or `dft` block:
+        #   print "final vectors" "final vectors analysis"
+        # which gives:
         #
         #                                 Final MO vectors
         #                                 ----------------
