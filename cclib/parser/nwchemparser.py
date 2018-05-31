@@ -335,8 +335,10 @@ class NWChem(logfileparser.Logfile):
         if line.strip() in ("The SCF is already converged", "The DFT is already converged"):
             if self.linesearch:
                 return
-            self.scftargets.append(self.scftargets[-1])
-            self.scfvalues.append(self.scfvalues[-1])
+            if hasattr(self, 'scftargets'):
+                self.scftargets.append(self.scftargets[-1])
+            if hasattr(self, 'scfvalues'):
+                self.scfvalues.append(self.scfvalues[-1])
 
         # The default (only?) SCF algorithm for Hartree-Fock is a preconditioned conjugate
         # gradient method that apparently "always" converges, so this header should reliably
@@ -673,7 +675,10 @@ class NWChem(logfileparser.Logfile):
                 else:
                     self.homos.append(-1)
 
-        # This is where the full MO vectors are printed, but a special directive is needed for it:
+        # This is where the full MO vectors are printed, but a special
+        # directive is needed for it in the `scf` or `dft` block:
+        #   print "final vectors" "final vectors analysis"
+        # which gives:
         #
         #                                 Final MO vectors
         #                                 ----------------
