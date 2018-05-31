@@ -260,6 +260,7 @@ NWChem/NWChem6.0/hydrogen_atom_UHF_cc-pVDZ.out
 NWChem/NWChem6.5/stopiter_nwchem_dft.out
 NWChem/NWChem6.5/stopiter_nwchem_hf.out
 NWChem/NWChem6.6/trithiolane_polar.out
+NWChem/NWChem6.8/526.out
 ORCA/ORCA2.6/dvb_gopt.out
 ORCA/ORCA2.6/dvb_ir.out
 ORCA/ORCA2.6/dvb_raman.out
