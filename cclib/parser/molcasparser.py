@@ -279,6 +279,79 @@ class Molcas(logfileparser.Logfile):
                     self.logger.warning('File terminated before end of last SCF!')
                     break
 
+        #  Harmonic frequencies in cm-1
+        #
+        #  IR Intensities in km/mol
+        #
+        #                         1         2         3         4         5         6
+        #
+        #      Frequency:       i60.14    i57.39    128.18    210.06    298.24    309.65
+        #
+        #      Intensity:    3.177E-03 2.129E-06 4.767E-01 2.056E-01 6.983E-07 1.753E-07
+        #      Red. mass:      2.42030   2.34024   2.68044   3.66414   2.61721   3.34904
+        #
+        #      C1         x   -0.00000   0.00000   0.00000  -0.05921   0.00000  -0.06807
+        #      C1         y    0.00001  -0.00001  -0.00001   0.00889   0.00001  -0.02479
+        #      C1         z   -0.03190   0.04096  -0.03872   0.00001  -0.12398  -0.00002
+        #      C2         x   -0.00000   0.00001   0.00000  -0.06504   0.00000  -0.03487
+        #      C2         y    0.00000  -0.00000  -0.00000   0.01045   0.00001  -0.05659
+        #      C2         z   -0.03703  -0.03449  -0.07269   0.00000  -0.07416  -0.00001
+        #      C3         x   -0.00000   0.00001   0.00000  -0.06409  -0.00001   0.05110
+        #      C3         y   -0.00000   0.00001   0.00000   0.00152   0.00000  -0.03263
+        #      C3         z   -0.03808  -0.08037  -0.07267  -0.00001   0.07305   0.00000
+        # ...
+        #      H20        y    0.00245  -0.00394   0.03215   0.03444  -0.10424  -0.10517
+        #      H20        z    0.00002  -0.00001   0.00000  -0.00000  -0.00000   0.00000
+        #
+        #
+        #
+        # ++ Thermochemistry
+        if line[1:29] == 'Harmonic frequencies in cm-1':
+
+            self.skip_line(inputfile,'blank')
+            line = next(inputfile)
+
+            if 'IR' in line:
+                freqmode = 'IR'
+
+            while 'Thermochemistry' not in line:
+
+                if 'Frequency:' in line:
+                        if not hasattr(self, 'vibfreqs'):
+                            self.vibfreqs = []
+                        vibfreqs = [float(i.replace('i','-')) for i in line.split()[1:]]
+                        self.vibfreqs.extend(vibfreqs)
+
+                if 'Intensity:' in line:
+                    if freqmode == 'IR':
+                        if not hasattr(self, 'vibirs'):
+                            self.vibirs = []
+                        vibirs = map(float, line.split()[1:])
+                        self.vibirs.extend(vibirs)
+
+                if 'Red.' in line: 
+                    self.skip_line(inputfile,'blank')
+                    line = next(inputfile)
+                    if not hasattr(self, 'vibdisps'):
+                        self.vibdisps = []
+                    disps = []
+                    for n in range(3*self.natom):
+                        numbers = [float(s) for s in line[17:].split()]
+                        # The atomindex should start at 0 instead of 1.
+                        atomindex = int(re.search(r'\d+$', line.split()[0]).group()) - 1
+                        numbermodes = len(numbers)
+                        if len(disps) == 0:
+                            # Appends empty array of the following 
+                            # dimensions (numbermodes, natom, 0) to disps.
+                            for mode in range(numbermodes):
+                                disps.append([[] for x in range(0, self.natom)])
+                        for mode in range(numbermodes):
+                            disps[mode][atomindex].append(numbers[mode])
+                        line = next(inputfile)
+                    self.vibdisps.extend(disps)
+
+                line = next(inputfile)
+
 
 
 if __name__ == '__main__':
