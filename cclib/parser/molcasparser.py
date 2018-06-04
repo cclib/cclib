@@ -311,9 +311,6 @@ class Molcas(logfileparser.Logfile):
             self.skip_line(inputfile,'blank')
             line = next(inputfile)
 
-            if 'IR' in line:
-                freqmode = 'IR'
-
             while 'Thermochemistry' not in line:
 
                 if 'Frequency:' in line:
@@ -323,11 +320,10 @@ class Molcas(logfileparser.Logfile):
                         self.vibfreqs.extend(vibfreqs)
 
                 if 'Intensity:' in line:
-                    if freqmode == 'IR':
-                        if not hasattr(self, 'vibirs'):
-                            self.vibirs = []
-                        vibirs = map(float, line.split()[1:])
-                        self.vibirs.extend(vibirs)
+                    if not hasattr(self, 'vibirs'):
+                        self.vibirs = []
+                    vibirs = map(float, line.split()[1:])
+                    self.vibirs.extend(vibirs)
 
                 if 'Red.' in line: 
                     self.skip_line(inputfile,'blank')
@@ -403,6 +399,9 @@ class Molcas(logfileparser.Logfile):
             temperature_values = []
             pressure_values = []
             entropy_values = []
+            internal_energy_values = []
+            enthalpy_values = []
+            free_energy_values = []
 
             while 'Isotopic' not in line:
 
@@ -414,6 +413,11 @@ class Molcas(logfileparser.Logfile):
                     while 'TOTAL' not in line:
                         line = next(inputfile)
                     entropy_values.append(utils.convertor(float(line.split()[2]), 'kcal', 'hartree'))
+
+                if line[1:40] == 'Sum of energy and thermal contributions':
+                    internal_energy_values.append(float(next(inputfile).split()[2]))
+                    enthalpy_values.append(float(next(inputfile).split()[1]))
+                    free_energy_values.append(float(next(inputfile).split()[3]))
 
                 line=next(inputfile)
 
@@ -428,6 +432,14 @@ class Molcas(logfileparser.Logfile):
             self.set_attribute('entropy', entropy_values[-1])
             if len(entropy_values) > 1:
                 self.logger.warning('More than 1 values of entropy found')
+
+            self.set_attribute('enthalpy', enthalpy_values[-1])
+            if len(enthalpy_values) > 1:
+                self.logger.warning('More than 1 values of enthalpy found')
+
+            self.set_attribute('freeenergy', free_energy_values[-1])
+            if len(free_energy_values) > 1:
+                self.logger.warning('More than 1 values of freeenergy found')
 
 
 
