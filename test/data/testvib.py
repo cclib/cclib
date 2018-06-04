@@ -77,6 +77,8 @@ class MolcasIRTest(GenericIRTest):
 
     max_IR_intensity = 65
 
+    entropy_places = 3
+
     def testtemperature(self):
         """Is the temperature 473.15 K?"""
         self.assertAlmostEqual(473.15, self.data.temperature)
@@ -84,6 +86,10 @@ class MolcasIRTest(GenericIRTest):
     def testpressure(self):
         """Is the pressure 1 atm?"""
         self.assertAlmostEqual(1, self.data.pressure)
+
+    def testentropy(self):
+         """Is the entropy reasonable"""
+         self.assertAlmostEqual(0.16316088, self.data.entropy, self.entropy_places)
 
 class OrcaIRTest(GenericIRTest):
     """Customized vibrational frequency unittest"""

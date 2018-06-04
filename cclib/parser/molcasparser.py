@@ -402,12 +402,18 @@ class Molcas(logfileparser.Logfile):
 
             temperature_values = []
             pressure_values = []
+            entropy_values = []
 
             while 'Isotopic' not in line:
 
                 if line[1:12] == 'Temperature':
                     temperature_values.append(float(line.split()[2]))
                     pressure_values.append(float(line.split()[6]))
+
+                if line[1:48] == 'Molecular Partition Function and Molar Entropy:':
+                    while 'TOTAL' not in line:
+                        line = next(inputfile)
+                    entropy_values.append(utils.convertor(float(line.split()[2]), 'kcal', 'hartree'))
 
                 line=next(inputfile)
 
@@ -418,6 +424,10 @@ class Molcas(logfileparser.Logfile):
             self.set_attribute('pressure', pressure_values[-1])
             if len(pressure_values) > 1:
                 self.logger.warning('More than 1 values of pressure found')
+
+            self.set_attribute('entropy', entropy_values[-1])
+            if len(entropy_values) > 1:
+                self.logger.warning('More than 1 values of entropy found')
 
 
 
