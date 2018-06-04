@@ -352,6 +352,73 @@ class Molcas(logfileparser.Logfile):
 
                 line = next(inputfile)
 
+        ## Parsing thermochemistry attributes here
+        #  ++ Thermochemistry
+        #
+        #   *********************
+        #   *                   *
+        #   *  THERMOCHEMISTRY  *
+        #   *                   *
+        #   *********************
+        #
+        #   Mass-centered Coordinates (Angstrom):
+        #   ***********************************************************
+        # ...
+        #   *****************************************************
+        #   Temperature =     0.00 Kelvin, Pressure =   1.00 atm
+        #   -----------------------------------------------------
+        #   Molecular Partition Function and Molar Entropy:
+        #                          q/V (M**-3)    S(kcal/mol*K)
+        #   Electronic            0.100000D+01        0.000
+        #   Translational         0.100000D+01        0.000
+        #   Rotational            0.100000D+01        2.981
+        #   Vibrational           0.100000D+01        0.000
+        #   TOTAL                 0.100000D+01        2.981
+        #
+        #   Thermal contributions to INTERNAL ENERGY:
+        #   Electronic           0.000 kcal/mol      0.000000 au.
+        #   Translational        0.000 kcal/mol      0.000000 au.
+        #   Rotational           0.000 kcal/mol      0.000000 au.
+        #   Vibrational        111.885 kcal/mol      0.178300 au.
+        #   TOTAL              111.885 kcal/mol      0.178300 au.
+        #
+        #   Thermal contributions to
+        #   ENTHALPY           111.885 kcal/mol      0.178300 au.
+        #   GIBBS FREE ENERGY  111.885 kcal/mol      0.178300 au.
+        #
+        #   Sum of energy and thermal contributions
+        #   INTERNAL ENERGY                       -382.121931 au.
+        #   ENTHALPY                              -382.121931 au.
+        #   GIBBS FREE ENERGY                     -382.121931 au.
+        #   -----------------------------------------------------
+        # ...
+        #   ENTHALPY                              -382.102619 au.
+        #   GIBBS FREE ENERGY                     -382.179819 au.
+        #   -----------------------------------------------------
+        #  --
+        #
+        #  ++    Isotopic shifts:
+        if line[4:19] == 'THERMOCHEMISTRY':
+
+            temperature_values = []
+            pressure_values = []
+
+            while 'Isotopic' not in line:
+
+                if line[1:12] == 'Temperature':
+                    temperature_values.append(float(line.split()[2]))
+                    pressure_values.append(float(line.split()[6]))
+
+                line=next(inputfile)
+
+            self.set_attribute('temperature', temperature_values[-1])
+            if len(temperature_values) > 1:
+                self.logger.warning('More than 1 values of temperature found')
+
+            self.set_attribute('pressure', pressure_values[-1])
+            if len(pressure_values) > 1:
+                self.logger.warning('More than 1 values of pressure found')
+
 
 
 if __name__ == '__main__':

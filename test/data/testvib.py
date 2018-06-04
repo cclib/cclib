@@ -77,6 +77,13 @@ class MolcasIRTest(GenericIRTest):
 
     max_IR_intensity = 65
 
+    def testtemperature(self):
+        """Is the temperature 473.15 K?"""
+        self.assertAlmostEqual(473.15, self.data.temperature)
+
+    def testpressure(self):
+        """Is the pressure 1 atm?"""
+        self.assertAlmostEqual(1, self.data.pressure)
 
 class OrcaIRTest(GenericIRTest):
     """Customized vibrational frequency unittest"""
