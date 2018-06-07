@@ -82,8 +82,8 @@ class MolcasIRTest(GenericIRTest):
     freeenergy_places = 3
 
     def testtemperature(self):
-        """Is the temperature 473.15 K?"""
-        self.assertAlmostEqual(473.15, self.data.temperature)
+        """Is the temperature 298.15 K?"""
+        self.assertAlmostEqual(298.15, self.data.temperature)
 
     def testpressure(self):
         """Is the pressure 1 atm?"""
@@ -91,15 +91,15 @@ class MolcasIRTest(GenericIRTest):
 
     def testentropy(self):
          """Is the entropy reasonable"""
-         self.assertAlmostEqual(0.16316088, self.data.entropy, self.entropy_places)
+         self.assertAlmostEqual(0.13403144, self.data.entropy, self.entropy_places)
 
     def testenthalpy(self):
          """Is the enthalpy reasonable"""
-         self.assertAlmostEqual(-382.102619, self.data.enthalpy, self.enthalpy_places)
+         self.assertAlmostEqual(-382.11385, self.data.enthalpy, self.enthalpy_places)
 
     def testfreeenergy(self):
          """Is the freeenergy reasonable"""
-         self.assertAlmostEqual(-382.179819, self.data.freeenergy, self.freeenergy_places)
+         self.assertAlmostEqual(-382.153812, self.data.freeenergy, self.freeenergy_places)
 
 
 class OrcaIRTest(GenericIRTest):
