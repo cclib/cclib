@@ -22,19 +22,16 @@ class GenericIRTest(unittest.TestCase):
     # Unit tests should normally give this value for the largest IR intensity.
     max_IR_intensity = 100
 
-    @skipForParser('Molcas','The parser is still being developed so we skip this test')
     def setUp(self):
         """Initialize the number of vibrational frequencies on a per molecule basis"""
         self.numvib = 3*len(self.data.atomnos) - 6
 
-    @skipForParser('Molcas','The parser is still being developed so we skip this test')
     def testvibdisps(self):
         """Are the dimensions of vibdisps consistent with numvib x N x 3"""
         self.assertEqual(len(self.data.vibfreqs), self.numvib)
         self.assertEqual(self.data.vibdisps.shape,
                          (self.numvib, len(self.data.atomnos), 3))
 
-    @skipForParser('Molcas','The parser is still being developed so we skip this test')
     def testlengths(self):
         """Are the lengths of vibfreqs and vibirs (and if present, vibsyms) correct?"""
         self.assertEqual(len(self.data.vibfreqs), self.numvib)
@@ -43,12 +40,10 @@ class GenericIRTest(unittest.TestCase):
         if hasattr(self.data, 'vibsyms'):
             self.assertEqual(len(self.data.vibsyms), self.numvib)
 
-    @skipForParser('Molcas','The parser is still being developed so we skip this test')
     def testfreqval(self):
         """Is the highest freq value 3630 +/- 200 cm-1?"""
         self.assertAlmostEqual(max(self.data.vibfreqs), 3630, delta=200)
 
-    @skipForParser('Molcas','The parser is still being developed so we skip this test')
     @skipForParser('Psi', 'Psi cannot print IR intensities')
     def testirintens(self):
         """Is the maximum IR intensity 100 +/- 10 km mol-1?"""
@@ -75,6 +70,36 @@ class JaguarIRTest(GenericIRTest):
     def testvibsyms(self):
         """Is the length of vibsyms correct?"""
         self.assertEqual(len(self.data.vibsyms), self.numvib)
+
+
+class MolcasIRTest(GenericIRTest):
+    """Customized vibrational frequency unittest"""
+
+    max_IR_intensity = 65
+
+    entropy_places = 3
+    enthalpy_places = 3
+    freeenergy_places = 3
+
+    def testtemperature(self):
+        """Is the temperature 473.15 K?"""
+        self.assertAlmostEqual(473.15, self.data.temperature)
+
+    def testpressure(self):
+        """Is the pressure 1 atm?"""
+        self.assertAlmostEqual(1, self.data.pressure)
+
+    def testentropy(self):
+         """Is the entropy reasonable"""
+         self.assertAlmostEqual(0.16316088, self.data.entropy, self.entropy_places)
+
+    def testenthalpy(self):
+         """Is the enthalpy reasonable"""
+         self.assertAlmostEqual(-382.102619, self.data.enthalpy, self.enthalpy_places)
+
+    def testfreeenergy(self):
+         """Is the freeenergy reasonable"""
+         self.assertAlmostEqual(-382.179819, self.data.freeenergy, self.freeenergy_places)
 
 
 class OrcaIRTest(GenericIRTest):
