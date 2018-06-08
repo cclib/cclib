@@ -5,14 +5,10 @@
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
 
-"""Parser for Psi3 and Psi4 output files"""
-
-
-import re
+"""Parser for Psi3 output files."""
 
 import numpy
 
-from cclib.parser import data
 from cclib.parser import logfileparser
 from cclib.parser import utils
 

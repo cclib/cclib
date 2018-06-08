@@ -5,10 +5,7 @@
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
 
-"""Parser for Psi3 and Psi4 output files"""
-
-
-import re
+"""Parser for Psi4 output files."""
 
 import numpy
 
@@ -180,8 +177,8 @@ class Psi4(logfileparser.Logfile):
         #       2     C     6s 3p // 2s 1p
         #       3     C     6s 3p // 2s 1p
         # ...
-        if self.section == "Primary Basis" :
-            if line[2:12] == "Basis Set:" :
+        if self.section == "Primary Basis":
+            if line[2:12] == "Basis Set:":
                 self.metadata["basis_set"] = line.split()[2]
 
         if (self.section == "Primary Basis" or self.section == "DFT Potential") and line.strip() == "-Contraction Scheme:":
@@ -285,7 +282,6 @@ class Psi4(logfileparser.Logfile):
                 element, index = line.split()
                 if len(element) > 1:
                     element = element[0] + element[1:].lower()
-                atomno = self.table.number[element]
                 index = int(index)
 
                 # This is the code that adds missing atoms when symmetry atoms are excluded
@@ -299,7 +295,7 @@ class Psi4(logfileparser.Logfile):
                 while line.find("*") == -1:
 
                     # The shell type and primitive count is in the first line.
-                    shell_type, nprimitives, smthg = line.split()
+                    shell_type, nprimitives, _ = line.split()
                     nprimitives = int(nprimitives)
 
                     # Get the angular momentum for this shell type.
@@ -795,7 +791,7 @@ class Psi4(logfileparser.Logfile):
                         assert numpy.allclose(self.moments[im], m, atol=1.0e4)
 
         ## Analytic Gradient
-         
+
         #        -Total Gradient:
         #   Atom            X                  Y                   Z
         #  ------   -----------------  -----------------  -----------------
@@ -811,7 +807,7 @@ class Psi4(logfileparser.Logfile):
                 idx, x, y, z = line.split()
                 grads.append((float(x), float(y), float(z)))
                 line = next(inputfile)
-        
+
             if not hasattr(self, 'grads'):
                 self.grads = []
             self.grads.append(grads)
@@ -821,9 +817,9 @@ class Psi4(logfileparser.Logfile):
         # -------------------------------------------------------------
         #   ## F-D gradient (Symmetry 0) ##
         #   Irrep: 1 Size: 3 x 3
-        # 
+        #
         #                  1                   2                   3
-        # 
+        #
         #     1     0.00000000000000     0.00000000000000    -0.02921303282515
         #     2     0.00000000000000    -0.00979709321487     0.01460651641258
         #     3     0.00000000000000     0.00979709321487     0.01460651641258
@@ -840,12 +836,12 @@ class Psi4(logfileparser.Logfile):
                 idx, x, y, z = line.split()
                 grads.append((float(x), float(y), float(z)))
                 line = next(inputfile)
-        
+
             if not hasattr(self, 'grads'):
                 self.grads = []
             self.grads.append(grads)
 
-        
+
         ## Harmonic frequencies.
 
         # -------------------------------------------------------------
