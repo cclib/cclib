@@ -30,10 +30,6 @@ class XYZReaderTest(unittest.TestCase):
         xyz = cclib.io.xyzreader.XYZ(fpath)
         data = xyz.parse()
 
-        attrs = ('natom', 'atomnos', 'atomcoords')
-        for attr in attrs:
-            self.assertTrue(hasattr(data, attr))
-
         self.assertEqual(data.natom, 12)
 
         atomnos = np.array([7, 6, 1, 8, 7, 6, 8, 6, 6, 1, 1, 1], dtype=int)
@@ -66,10 +62,6 @@ class XYZReaderTest(unittest.TestCase):
         assert os.path.exists(fpath)
         xyz = cclib.io.xyzreader.XYZ(fpath)
         data = xyz.parse()
-
-        attrs = ('natom', 'atomnos', 'atomcoords')
-        for attr in attrs:
-            self.assertTrue(hasattr(data, attr))
 
         self.assertEqual(data.natom, 12)
 
