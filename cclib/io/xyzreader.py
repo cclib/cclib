@@ -47,7 +47,6 @@ class XYZ(filereader.Reader):
         while True:
 
             try:
-
                 line = next(it)
                 if line.strip() == '':
                     line = next(it)

@@ -19,7 +19,6 @@ class Reader(object):
         Inputs:
           source - A single filename, stream [TODO], or list of filenames/streams [TODO].
         """
-
         if isinstance(source, str):
             self.filename = source
         else:
@@ -27,7 +26,6 @@ class Reader(object):
 
     def parse(self):
         """Read the raw contents of the source into the Reader."""
-
         # TODO This cannot currently handle streams.
         with open(self.filename) as handle:
             self.filecontents = handle.read()
