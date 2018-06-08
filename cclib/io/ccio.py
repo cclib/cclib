@@ -44,7 +44,7 @@ from cclib.parser.mopacparser import MOPAC
 from cclib.parser.nwchemparser import NWChem
 from cclib.parser.orcaparser import ORCA
 from cclib.parser.psi3parser import Psi3
-from cclib.parser.psiparser import Psi4
+from cclib.parser.psi4parser import Psi4
 from cclib.parser.qchemparser import QChem
 
 from cclib.io import cjsonreader
@@ -100,8 +100,8 @@ triggers = [
     (MOPAC,     ["MOPAC20"],                                        True),
     (NWChem,    ["Northwest Computational Chemistry Package"],      True),
     (ORCA,      ["O   R   C   A"],                                  True),
-    (Psi4,      ["Psi4: An Open-Source Ab Initio Electronic Structure Package"],          True),
     (Psi3,      ["PSI3: An Open-Source Ab Initio Electronic Structure Package"],          True),
+    (Psi4,      ["Psi4: An Open-Source Ab Initio Electronic Structure Package"],          True),
     (QChem,     ["A Quantum Leap Into The Future Of Chemistry"],    True),
 
 ]

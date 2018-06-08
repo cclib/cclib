@@ -26,7 +26,7 @@ from cclib.parser.mopacparser import MOPAC
 from cclib.parser.nwchemparser import NWChem
 from cclib.parser.orcaparser import ORCA
 from cclib.parser.psi3parser import Psi3
-from cclib.parser.psiparser import Psi, Psi4
+from cclib.parser.psi4parser import Psi4
 from cclib.parser.qchemparser import QChem
 
 from cclib.parser.data import ccData

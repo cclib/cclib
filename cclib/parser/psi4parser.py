@@ -960,7 +960,3 @@ class Psi4(logfileparser.Logfile):
             return -float(vibfreq[:-1])
         else:
             return float(vibfreq)
-
-
-# For backwards compatibility.
-Psi = Psi4
