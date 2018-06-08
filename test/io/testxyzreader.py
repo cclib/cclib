@@ -112,5 +112,6 @@ class XYZReaderTest(unittest.TestCase):
         self.assertEqual(data.atomcoords.shape, atomcoords.shape)
         self.assertTrue(np.all(np.equal(data.atomcoords, atomcoords)))
 
+
 if __name__ == "__main__":
     unittest.main()

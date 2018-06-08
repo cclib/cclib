@@ -5,8 +5,7 @@
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
 
-"""Contains all writers for standard chemical representations"""
-
+"""Contains all writers for standard chemical representations."""
 
 from cclib.io.cjsonreader import CJSON as CJSONReader
 from cclib.io.cjsonwriter import CJSON as CJSONWriter
