@@ -1,0 +1,13 @@
+# The full list of properties is located at
+# https://github.com/editorconfig/editorconfig/wiki/EditorConfig-Properties.
+
+root = true
+
+[*.py]
+charset = utf-8
+indent_style = space
+indent_size = 4
+
+[.travis.yml]
+indent_style = space
+indent_size = 2
