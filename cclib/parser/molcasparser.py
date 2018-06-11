@@ -218,7 +218,6 @@ class Molcas(logfileparser.Logfile):
         if line[:34] == '++    Optimization specifications:':
 
             scftargets = []
-
             while not line[6:37] == 'Threshold for SCF energy change':
                 line = next(inputfile)
 
@@ -260,7 +259,6 @@ class Molcas(logfileparser.Logfile):
                 line = next(inputfile)
 
             scfvalues = []
-
             line = next(inputfile)
             while line.split()[0] != 'Convergence':
                 if line.split()[0].isdigit():
@@ -422,9 +420,11 @@ class Molcas(logfileparser.Logfile):
                     free_energy_values.append(float(next(inputfile).split()[3]))
 
                 line=next(inputfile)
-
+            # When calculations for more than one temperature value are
+            # performed, the values corresponding to room temperature (298.15 K)
+            # are returned and if no calculations are performed for 298.15 K, then
+            # the values corresponding last temperature value are returned.
             index  = -1
-
             if 298.15 in temperature_values:
             	index = temperature_values.index(298.15)
 
@@ -524,7 +524,6 @@ class Molcas(logfileparser.Logfile):
             line = next(inputfile)
 
             atomcoords = []
-
             while line.split() != []:
                 atomcoords.append([float(c) for c in line.split()[1:]])
                 line = next(inputfile)
