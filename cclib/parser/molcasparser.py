@@ -449,28 +449,28 @@ class Molcas(logfileparser.Logfile):
                 self.logger.warning('More than 1 values of freeenergy found')
 
         ## Parsing Geometrical Optimization attributes in this section.
-	#  **********************************************************************************************************************
-	#  *                                    Energy Statistics for Geometry Optimization                                     *
-	#  **********************************************************************************************************************
-	#                          Energy     Grad      Grad              Step                 Estimated   Geom       Hessian
-	#  Iter      Energy       Change     Norm      Max    Element    Max     Element     Final Energy Update Update   Index
-	#    1   -382.30023222  0.00000000 0.107221  0.039531 nrc047   0.085726  nrc047     -382.30533799 RS-RFO  None      0
-	#    2   -382.30702964 -0.00679742 0.043573  0.014908 nrc001   0.068195  nrc001     -382.30871333 RS-RFO  BFGS      0
-	#    3   -382.30805348 -0.00102384 0.014883  0.005458 nrc010  -0.020973  nrc001     -382.30822089 RS-RFO  BFGS      0
-	# ...
-	# ...
-	#   18   -382.30823419 -0.00000136 0.001032  0.000100 nrc053   0.012319  nrc053     -382.30823452 RS-RFO  BFGS      0
-	#   19   -382.30823198  0.00000221 0.001051 -0.000092 nrc054   0.066565  nrc053     -382.30823822 RS-RFO  BFGS      0
-	#   20   -382.30820252  0.00002946 0.001132 -0.000167 nrc021  -0.064003  nrc053     -382.30823244 RS-RFO  BFGS      0
-	#
-	#         +----------------------------------+----------------------------------+
-	#         +    Cartesian Displacements       +    Gradient in internals         +
-	#         +  Value      Threshold Converged? +  Value      Threshold Converged? +
-	#   +-----+----------------------------------+----------------------------------+
-	#   + RMS + 5.7330E-02  1.2000E-03     No    + 1.6508E-04  3.0000E-04     Yes   +
-	#   +-----+----------------------------------+----------------------------------+
-	#   + Max + 1.2039E-01  1.8000E-03     No    + 1.6711E-04  4.5000E-04     Yes   +
-	#   +-----+----------------------------------+----------------------------------+
+        #  **********************************************************************************************************************
+        #  *                                    Energy Statistics for Geometry Optimization                                     *
+        #  **********************************************************************************************************************
+        #                          Energy     Grad      Grad              Step                 Estimated   Geom       Hessian
+        #  Iter      Energy       Change     Norm      Max    Element    Max     Element     Final Energy Update Update   Index
+        #    1   -382.30023222  0.00000000 0.107221  0.039531 nrc047   0.085726  nrc047     -382.30533799 RS-RFO  None      0
+        #    2   -382.30702964 -0.00679742 0.043573  0.014908 nrc001   0.068195  nrc001     -382.30871333 RS-RFO  BFGS      0
+        #    3   -382.30805348 -0.00102384 0.014883  0.005458 nrc010  -0.020973  nrc001     -382.30822089 RS-RFO  BFGS      0
+        # ...
+        # ...
+        #   18   -382.30823419 -0.00000136 0.001032  0.000100 nrc053   0.012319  nrc053     -382.30823452 RS-RFO  BFGS      0
+        #   19   -382.30823198  0.00000221 0.001051 -0.000092 nrc054   0.066565  nrc053     -382.30823822 RS-RFO  BFGS      0
+        #   20   -382.30820252  0.00002946 0.001132 -0.000167 nrc021  -0.064003  nrc053     -382.30823244 RS-RFO  BFGS      0
+        #
+        #         +----------------------------------+----------------------------------+
+        #         +    Cartesian Displacements       +    Gradient in internals         +
+        #         +  Value      Threshold Converged? +  Value      Threshold Converged? +
+        #   +-----+----------------------------------+----------------------------------+
+        #   + RMS + 5.7330E-02  1.2000E-03     No    + 1.6508E-04  3.0000E-04     Yes   +
+        #   +-----+----------------------------------+----------------------------------+
+        #   + Max + 1.2039E-01  1.8000E-03     No    + 1.6711E-04  4.5000E-04     Yes   +
+        #   +-----+----------------------------------+----------------------------------+
         if 'Convergence criterion on energy change' in line:
             self.energy_threshold =  float(line.split()[6])
 
@@ -506,19 +506,19 @@ class Molcas(logfileparser.Logfile):
 
             self.geovalues[iter_number - 1].extend([float(line_rms[3]), float(line_rms[7]), float(line_max[3]), float(line_max[7])])
 
-	#   *********************************************************
-	#   * Nuclear coordinates for the next iteration / Angstrom *
-	#   *********************************************************
-	#    ATOM              X               Y               Z
-	#    C1               0.235560       -1.415847        0.012012
-	#    C2               1.313797       -0.488199        0.015149
-	#    C3               1.087050        0.895510        0.014200
-	# ...
-	# ...
-	#    H19             -0.021327       -4.934915       -0.029355
-	#    H20             -1.432030       -3.721047       -0.039835
-	#
-	#  --
+        #   *********************************************************
+        #   * Nuclear coordinates for the next iteration / Angstrom *
+        #   *********************************************************
+        #    ATOM              X               Y               Z
+        #    C1               0.235560       -1.415847        0.012012
+        #    C2               1.313797       -0.488199        0.015149
+        #    C3               1.087050        0.895510        0.014200
+        # ...
+        # ...
+        #    H19             -0.021327       -4.934915       -0.029355
+        #    H20             -1.432030       -3.721047       -0.039835
+        #
+        #  --
         if 'Nuclear coordinates for the next iteration / Angstrom' in line:
             self.skip_lines(inputfile, ['s','header'])
             line = next(inputfile)
@@ -531,42 +531,42 @@ class Molcas(logfileparser.Logfile):
 
             self.atomcoords.append(atomcoords)
 
-	#  **********************************************************************************************************************
-	#  *                                    Energy Statistics for Geometry Optimization                                     *
-	#  **********************************************************************************************************************
-	#                         Energy     Grad      Grad              Step                 Estimated   Geom       Hessian     
-	#  Iter      Energy       Change     Norm      Max    Element    Max     Element     Final Energy Update Update   Index  
-	#    1   -382.30023222  0.00000000 0.107221  0.039531 nrc047   0.085726  nrc047     -382.30533799 RS-RFO  None      0     
-	# ...
-	# ...
-	#   23   -382.30823115 -0.00000089 0.001030  0.000088 nrc053   0.000955  nrc053     -382.30823118 RS-RFO  BFGS      0    
-	#
-	#         +----------------------------------+----------------------------------+
-	#         +    Cartesian Displacements       +    Gradient in internals         +
-	#         +  Value      Threshold Converged? +  Value      Threshold Converged? +
-	#   +-----+----------------------------------+----------------------------------+
-	#   + RMS + 7.2395E-04  1.2000E-03     Yes   + 2.7516E-04  3.0000E-04     Yes   +
-	#   +-----+----------------------------------+----------------------------------+
-	#   + Max + 1.6918E-03  1.8000E-03     Yes   + 8.7768E-05  4.5000E-04     Yes   +
-	#   +-----+----------------------------------+----------------------------------+
-	#
-	#   Geometry is converged in  23 iterations to a Minimum Structure
+        #  **********************************************************************************************************************
+        #  *                                    Energy Statistics for Geometry Optimization                                     *
+        #  **********************************************************************************************************************
+        #                         Energy     Grad      Grad              Step                 Estimated   Geom       Hessian
+        #  Iter      Energy       Change     Norm      Max    Element    Max     Element     Final Energy Update Update   Index
+        #    1   -382.30023222  0.00000000 0.107221  0.039531 nrc047   0.085726  nrc047     -382.30533799 RS-RFO  None      0
+        # ...
+        # ...
+        #   23   -382.30823115 -0.00000089 0.001030  0.000088 nrc053   0.000955  nrc053     -382.30823118 RS-RFO  BFGS      0
+        #
+        #         +----------------------------------+----------------------------------+
+        #         +    Cartesian Displacements       +    Gradient in internals         +
+        #         +  Value      Threshold Converged? +  Value      Threshold Converged? +
+        #   +-----+----------------------------------+----------------------------------+
+        #   + RMS + 7.2395E-04  1.2000E-03     Yes   + 2.7516E-04  3.0000E-04     Yes   +
+        #   +-----+----------------------------------+----------------------------------+
+        #   + Max + 1.6918E-03  1.8000E-03     Yes   + 8.7768E-05  4.5000E-04     Yes   +
+        #   +-----+----------------------------------+----------------------------------+
+        #
+        #   Geometry is converged in  23 iterations to a Minimum Structure
         if 'Geometry is converged' in line:
             if not hasattr(self, 'optdone'):
                 self.optdone = []
             self.optdone.append(len(self.atomcoords))
 
-	#   *********************************************************
-	#   * Nuclear coordinates of the final structure / Angstrom *
-	#   *********************************************************
-	#    ATOM              X               Y               Z
-	#    C1               0.235547       -1.415838        0.012193
-	#    C2               1.313784       -0.488201        0.015297
-	#    C3               1.087036        0.895508        0.014333
-	# ...
-	# ...
-	#    H19             -0.021315       -4.934913       -0.029666
-	#    H20             -1.431994       -3.721026       -0.041078
+        #   *********************************************************
+        #   * Nuclear coordinates of the final structure / Angstrom *
+        #   *********************************************************
+        #    ATOM              X               Y               Z
+        #    C1               0.235547       -1.415838        0.012193
+        #    C2               1.313784       -0.488201        0.015297
+        #    C3               1.087036        0.895508        0.014333
+        # ...
+        # ...
+        #    H19             -0.021315       -4.934913       -0.029666
+        #    H20             -1.431994       -3.721026       -0.041078
         if 'Nuclear coordinates of the final structure / Angstrom' in line:
             self.skip_lines(inputfile, ['s','header'])
             line = next(inputfile)
