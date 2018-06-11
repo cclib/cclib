@@ -452,16 +452,16 @@ class Molcas(logfileparser.Logfile):
 	#  **********************************************************************************************************************
 	#  *                                    Energy Statistics for Geometry Optimization                                     *
 	#  **********************************************************************************************************************
-	#                          Energy     Grad      Grad              Step                 Estimated   Geom       Hessian     
-	#  Iter      Energy       Change     Norm      Max    Element    Max     Element     Final Energy Update Update   Index  
-	#    1   -382.30023222  0.00000000 0.107221  0.039531 nrc047   0.085726  nrc047     -382.30533799 RS-RFO  None      0    
-	#    2   -382.30702964 -0.00679742 0.043573  0.014908 nrc001   0.068195  nrc001     -382.30871333 RS-RFO  BFGS      0    
-	#    3   -382.30805348 -0.00102384 0.014883  0.005458 nrc010  -0.020973  nrc001     -382.30822089 RS-RFO  BFGS      0    
+	#                          Energy     Grad      Grad              Step                 Estimated   Geom       Hessian
+	#  Iter      Energy       Change     Norm      Max    Element    Max     Element     Final Energy Update Update   Index
+	#    1   -382.30023222  0.00000000 0.107221  0.039531 nrc047   0.085726  nrc047     -382.30533799 RS-RFO  None      0
+	#    2   -382.30702964 -0.00679742 0.043573  0.014908 nrc001   0.068195  nrc001     -382.30871333 RS-RFO  BFGS      0
+	#    3   -382.30805348 -0.00102384 0.014883  0.005458 nrc010  -0.020973  nrc001     -382.30822089 RS-RFO  BFGS      0
 	# ...
 	# ...
-	#   18   -382.30823419 -0.00000136 0.001032  0.000100 nrc053   0.012319  nrc053     -382.30823452 RS-RFO  BFGS      0    
-	#   19   -382.30823198  0.00000221 0.001051 -0.000092 nrc054   0.066565  nrc053     -382.30823822 RS-RFO  BFGS      0    
-	#   20   -382.30820252  0.00002946 0.001132 -0.000167 nrc021  -0.064003  nrc053     -382.30823244 RS-RFO  BFGS      0    
+	#   18   -382.30823419 -0.00000136 0.001032  0.000100 nrc053   0.012319  nrc053     -382.30823452 RS-RFO  BFGS      0
+	#   19   -382.30823198  0.00000221 0.001051 -0.000092 nrc054   0.066565  nrc053     -382.30823822 RS-RFO  BFGS      0
+	#   20   -382.30820252  0.00002946 0.001132 -0.000167 nrc021  -0.064003  nrc053     -382.30823244 RS-RFO  BFGS      0
 	#
 	#         +----------------------------------+----------------------------------+
 	#         +    Cartesian Displacements       +    Gradient in internals         +
@@ -509,15 +509,15 @@ class Molcas(logfileparser.Logfile):
 	#   *********************************************************
 	#   * Nuclear coordinates for the next iteration / Angstrom *
 	#   *********************************************************
-	#    ATOM              X               Y               Z     
+	#    ATOM              X               Y               Z
 	#    C1               0.235560       -1.415847        0.012012
 	#    C2               1.313797       -0.488199        0.015149
 	#    C3               1.087050        0.895510        0.014200
 	# ...
-	# ...		
+	# ...
 	#    H19             -0.021327       -4.934915       -0.029355
 	#    H20             -1.432030       -3.721047       -0.039835
-	#  
+	#
 	#  --
         if 'Nuclear coordinates for the next iteration / Angstrom' in line:
             self.skip_lines(inputfile, ['s','header'])
@@ -538,7 +538,7 @@ class Molcas(logfileparser.Logfile):
 	#  Iter      Energy       Change     Norm      Max    Element    Max     Element     Final Energy Update Update   Index  
 	#    1   -382.30023222  0.00000000 0.107221  0.039531 nrc047   0.085726  nrc047     -382.30533799 RS-RFO  None      0     
 	# ...
-	# ...		   
+	# ...
 	#   23   -382.30823115 -0.00000089 0.001030  0.000088 nrc053   0.000955  nrc053     -382.30823118 RS-RFO  BFGS      0    
 	#
 	#         +----------------------------------+----------------------------------+
@@ -559,12 +559,12 @@ class Molcas(logfileparser.Logfile):
 	#   *********************************************************
 	#   * Nuclear coordinates of the final structure / Angstrom *
 	#   *********************************************************
-	#    ATOM              X               Y               Z     
+	#    ATOM              X               Y               Z
 	#    C1               0.235547       -1.415838        0.012193
 	#    C2               1.313784       -0.488201        0.015297
 	#    C3               1.087036        0.895508        0.014333
 	# ...
-	# ...		
+	# ...
 	#    H19             -0.021315       -4.934913       -0.029666
 	#    H20             -1.431994       -3.721026       -0.041078
         if 'Nuclear coordinates of the final structure / Angstrom' in line:
