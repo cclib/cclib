@@ -1840,6 +1840,13 @@ def main(which=[], opt_traceback=False, opt_status=False, regdir=__regression_di
         orphaned = [t for t in tests if t[4:] not in normalized]
         orphaned_tests.extend(orphaned)
 
+    # Assume that if a string is not a parser name it'll be a relative
+    # path to a specific logfile.
+    # TODO: filter out things that are not parsers or files, and maybe
+    # raise an error in that case as well.
+    which_parsers = [w for w in which if w in parser_names]
+    which_filenames = [w for w in which if w not in which_parsers]
+
     failures = errors = total = 0
     for pn in parser_names:
 
@@ -1847,13 +1854,21 @@ def main(which=[], opt_traceback=False, opt_status=False, regdir=__regression_di
 
         # Continue to next iteration if we are limiting the regression and the current
         #   name was not explicitely chosen (that is, passed as an argument).
-        if len(which) > 0 and not pn in which:
+        if which_parsers and pn not in which_parsers:
             continue;
 
-        print("Are the %s files ccopened and parsed correctly?" % name)
+        parser_total = 0
         current_filenames = filenames[pn]
         current_filenames.sort()
         for fname in current_filenames:
+            relative_path = fname[len(regdir):]
+            if which_filenames and relative_path not in which_filenames:
+                continue;
+
+            parser_total += 1
+            if parser_total == 1:
+                print("Are the %s files ccopened and parsed correctly?" % pn)
+
             total += 1
             print("  %s ..."  % fname, end=" ")
 
@@ -1927,7 +1942,8 @@ def main(which=[], opt_traceback=False, opt_status=False, regdir=__regression_di
                 else:
                     print("test passed")
 
-        print()
+        if parser_total:
+            print()
 
     print("Total: %d   Failed: %d  Errors: %d" % (total, failures, errors))
     if not opt_traceback and failures + errors > 0:
