@@ -170,7 +170,7 @@ class ccData(object):
     _dictsofarrays = ["atomcharges", "atomspins"]
 
     # Possible statuses for optimization steps.
-    # OPT_UNKNOWN should not be used after parsing, unless for unfinished computations.
+    # OPT_UNKNOWN is the default and means optimization is in progress.
     # OPT_NEW is set for every new optimization (e.g. PES, IRCs, etc.)
     # OPT_DONE is set for the last step of an optimisation that converged.
     # OPT_UNCONVERGED is set for every unconverged step (e.g. should be mutually exclusive with OPT_DONE)
