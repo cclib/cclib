@@ -215,6 +215,8 @@ Gaussian/Gaussian09/OPT_oniom.log
 Gaussian/Gaussian09/OPT_td_g09.out
 Gaussian/Gaussian09/OPT_td.out
 Gaussian/Gaussian09/Ru2bpyen2_H2_freq3.log
+Gaussian/Gaussian09/relaxed_PES_testCO2.log
+Gaussian/Gaussian09/relaxed_PES_testH2.log
 Gaussian/Gaussian09/stopiter_gaussian.out
 Gaussian/Gaussian09/trithiolane_polar.log
 Gaussian/Gaussian09/water_gaussian.inp.log
