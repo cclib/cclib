@@ -511,6 +511,39 @@ def testGaussian_Gaussian09_benzene_freq_log(logfile):
     """Check that default precision vib displacements are parsed correctly."""
     assert abs(logfile.data.vibdisps[0,0,2] - (-0.04)) < 0.00001
 
+def testGaussian_Gaussian09_relaxed_PES_testH2_log(logfile):
+    """Check that all optimizations converge in a single step."""
+    atomcoords = logfile.data.atomcoords
+    optstatus = logfile.data.optstatus
+    assert len(optstatus) == len(atomcoords)
+
+    assert all(s == ccData.OPT_DONE + ccData.OPT_NEW for s in optstatus)
+
+def testGaussian_Gaussian09_relaxed_PES_testCO2_log(logfile):
+    """A relaxed PES scan with some uncoverged and some converged runs."""
+    atomcoords = logfile.data.atomcoords
+    optstatus = logfile.data.optstatus
+    assert len(optstatus) == len(atomcoords)
+
+    new_points = numpy.where(optstatus & ccData.OPT_NEW)[0]
+
+    # The first new point is just the beginning of the scan.
+    assert new_points[0] == 0
+
+    # The next two new points are at the end of unconverged runs.
+    assert optstatus[new_points[1]-1] == ccData.OPT_UNCONVERGED
+    assert all(optstatus[i] == ccData.OPT_UNKNOWN for i in range(new_points[0]+1, new_points[1]-1))
+    assert optstatus[new_points[2]-1] == ccData.OPT_UNCONVERGED
+    assert all(optstatus[i] == ccData.OPT_UNKNOWN for i in range(new_points[1]+1, new_points[2]-1))
+
+    # The next new point is after a convergence.
+    assert optstatus[new_points[3]-1] == ccData.OPT_DONE
+    assert all(optstatus[i] == ccData.OPT_UNKNOWN for i in range(new_points[2]+1, new_points[3]-1))
+    
+    # All subsequent point are both new and converged, since they seem
+    # to have converged in a single step.
+    assert all(s == ccData.OPT_DONE + ccData.OPT_NEW for s in optstatus[new_points[3]:])
+
 def testGaussian_Gaussian09_stopiter_gaussian_out(logfile):
     """Check to ensure that an incomplete SCF is handled correctly."""
     assert len(logfile.data.scfvalues[0]) == 4
