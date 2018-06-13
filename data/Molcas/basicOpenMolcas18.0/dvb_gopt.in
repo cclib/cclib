@@ -25,13 +25,13 @@
  basis = sto-3g
  group = nosym
 
-
+>>> Export MOLCAS_PRINT=3
 >>> Do while
 
 &seward
 
 &scf
- ksdft = b3lyp
+ksdft = b3lyp
 
 &slapaf
 
