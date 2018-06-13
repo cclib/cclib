@@ -127,7 +127,7 @@ GeoOpt    Gaussian    GenericGeoOptTest     basicGaussian16       dvb_gopt.out
 GeoOpt    Jaguar      GenericGeoOptTest     basicJaguar7.0        dvb_gopt_b.out
 GeoOpt    Jaguar      GenericGeoOptTest     basicJaguar8.3        dvb_gopt_hf.out
 GeoOpt    Jaguar      GenericGeoOptTest     basicJaguar8.3        dvb_gopt_ks.out
-GeoOpt    Molcas      GenericGeoOptTest     basicOpenMolcas18.0   dvb_gopt.out
+GeoOpt    Molcas      MolcasGeoOptTest      basicOpenMolcas18.0   dvb_gopt.out
 GeoOpt    Molpro      MolproGeoOptTest      basicMolpro2006       dvb_gopt.out          dvb_gopt.log
 GeoOpt    Molpro      MolproGeoOptTest      basicMolpro2012       dvb_gopt.out          dvb_gopt.log
 GeoOpt    NWChem      NWChemGeoOptTest      basicNWChem6.0        dvb_gopt_hf.out

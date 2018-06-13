@@ -113,7 +113,6 @@ class GenericGeoOptTest(unittest.TestCase):
         msg = "Final scf energy: %f not %i +- %ieV" %(scf, ref, tol)
         self.assertAlmostEquals(scf, ref, delta=40, msg=msg)
 
-    @skipForParser('Molcas','The parser is still being developed so we skip this test')
     def testscfenergydim(self):
         """Is the number of SCF energies consistent with atomcoords?"""
         count_scfenergies = self.data.scfenergies.shape[0] - self.extrascfs
@@ -126,7 +125,6 @@ class GenericGeoOptTest(unittest.TestCase):
         dim_scfvalues = (len(self.data.scfvalues),len(self.data.scfvalues[0][0]))
         self.assertEquals(dim_scftargets, dim_scfvalues)
 
-    @skipForParser('Molcas','The parser is still being developed so we skip this test')
     def testgeovalues_atomcoords(self):
         """Are atomcoords consistent with geovalues?"""
         count_geovalues = len(self.data.geovalues)
@@ -134,7 +132,6 @@ class GenericGeoOptTest(unittest.TestCase):
         msg = "len(atomcoords) is %d but len(geovalues) is %d" % (count_coords, count_geovalues)
         self.assertEquals(count_geovalues, count_coords, msg)
 
-    @skipForParser('Molcas','The parser is still being developed so we skip this test')
     def testgeovalues_scfvalues(self):
         """Are scfvalues consistent with geovalues?"""
         count_scfvalues = len(self.data.scfvalues) - self.extrascfs
@@ -147,6 +144,7 @@ class GenericGeoOptTest(unittest.TestCase):
         dim_geovalues = (len(self.data.geovalues[0]), )
         self.assertEquals(dim_geotargets, dim_geovalues)
 
+    @skipForParser("Molcas", "geovalues and geotargets need to discussed and parsed correctly.")
     def testoptdone(self):
         """Has the geometry converged and set optdone to True?"""
         self.assertTrue(self.data.optdone)
@@ -216,6 +214,17 @@ class DALTONGeoOptTest(GenericGeoOptTest):
         self.assertTrue(self.data.optdone)
         convergence = numpy.abs(self.data.geovalues[-1]) <= self.data.geotargets
         self.assertTrue(sum(convergence) >= 2)
+
+
+class MolcasGeoOptTest(GenericGeoOptTest):
+    """Customized restricted single point HF unittest"""
+
+    # Molcas prints the input coordinates and performs the &scf job
+    # once before entering the optimization part where the coordinates and
+    # scf section are printed for each iteration. Hence we have an extra set of
+    # coordinates and extra set of SCF attributes (scfenergies, scftargets & scfvalues).
+    extracoords = 1
+    extrascfs = 1
 
 
 class MolproGeoOptTest(GenericGeoOptTest):
