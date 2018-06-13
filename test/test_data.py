@@ -230,7 +230,7 @@ class DataSuite(object):
         print("TOTAL: %d\tPASSED: %d\tFAILED: %d\tERRORS: %d\tSKIPPED: %d" \
                 %(total[0], total[0]-(total[1]+total[2]+total[3]), total[2], total[1], total[3]), file=self.stream)
 
-        if self.status and len(self.errors) > 0:
+        if self.status and (self.errors or self.failures):
             sys.exit(1)
 
     def visualtests(self, stream=sys.stdout):
