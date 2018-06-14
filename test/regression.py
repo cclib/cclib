@@ -23,10 +23,17 @@ have been moved here from the cclib repository when newer versions
 became available. We still want those logfiles to parse and test correctly,
 although sometimes special modification will be needed.
 
-To run the doctest, just use `python regression.py test`.
+To run the doctest, run `python -m test.regression` from the top level
+directory in the cclib repository.
 
-Note that this script was moved from the main cclib repository in Feb 2015
-in order for it to be close to the data, so look there for previous history.
+Running all regression can take anywhere from 10-20s to several minutes
+depending in your hardware. To aid debugging, there are two ways to limit
+which regressions to parse and test. You can limit the test to a specific
+parse, for example:
+    python -m test.regression Gaussian
+You can also limit a run to a single output file, using it's relative path
+inside the data directory, like so:
+    python -m test.regression Gaussian/Gaussian03/borane-opt.log
 """
 
 from __future__ import print_function
