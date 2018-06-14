@@ -11,6 +11,8 @@ from __future__ import print_function
 
 import re
 
+import numpy
+
 from cclib.parser import logfileparser
 from cclib.parser import utils
 
@@ -215,6 +217,10 @@ class Molcas(logfileparser.Logfile):
         #  Threshold for SCF energy change            0.10E-08
         #  Threshold for density matrix               0.10E-03
         #  Threshold for Fock matrix                  0.15E-03
+        #  Threshold for linear dependence            0.10E-08
+        #  Threshold at which DIIS is turned on       0.15E+00
+        #  Threshold at which QNR/C2DIIS is turned on 0.75E-01
+        #  Threshold for Norm(delta) (QNR/C2DIIS)     0.20E-04
         if line[:34] == '++    Optimization specifications:':
 
             scftargets = []
@@ -234,6 +240,14 @@ class Molcas(logfileparser.Logfile):
             line = next(inputfile)
 
             if line[6:31] == 'Threshold for Fock matrix':
+                target = float(line.split()[-1])
+                scftargets.append(target)
+
+            self.skip_lines(inputfile,['Threshold for linear dependence', 'Threshold at which DIIS is turned on', \
+                                         'Threshold at which QNR/C2DIIS is turned on'])
+            line = next(inputfile)
+
+            if line[6:31] == 'Threshold for Norm(delta)':
                 target = float(line.split()[-1])
                 scftargets.append(target)
 
@@ -265,7 +279,8 @@ class Molcas(logfileparser.Logfile):
                     energy = float(line.split()[4].replace('*',''))
                     density = float(line.split()[5].replace('*',''))
                     fock = float(line.split()[6].replace('*',''))
-                    scfvalues.append([energy, density, fock])
+                    dnorm = float(line.split()[7].replace('*',''))
+                    scfvalues.append([energy, density, fock, dnorm])
 
                 try:
                     line = next(inputfile)
@@ -449,6 +464,17 @@ class Molcas(logfileparser.Logfile):
                 self.logger.warning('More than 1 values of freeenergy found')
 
         ## Parsing Geometrical Optimization attributes in this section.
+        #  ++       Slapaf input parameters:
+        #  ------------------------
+        #
+        # Max iterations:                            2000
+        # Convergence test a la Schlegel.
+        # Convergence criterion on gradient/para.<=: 0.3E-03
+        # Convergence criterion on step/parameter<=: 0.3E-03
+        # Convergence criterion on energy change <=: 0.0E+00
+        # Max change of an internal coordinate:     0.30E+00
+        # ...
+        # ...
         #  **********************************************************************************************************************
         #  *                                    Energy Statistics for Geometry Optimization                                     *
         #  **********************************************************************************************************************
@@ -473,6 +499,10 @@ class Molcas(logfileparser.Logfile):
         #   +-----+----------------------------------+----------------------------------+
         if 'Convergence criterion on energy change' in line:
             self.energy_threshold =  float(line.split()[6])
+            # If energy change threshold equals zero,
+            # then energy change is not a criteria for convergence.
+            if self.energy_threshold == 0:
+                self.energy_threshold = numpy.inf
 
         if 'Energy Statistics for Geometry Optimization' in line:
             if not hasattr(self, 'geovalues'):
@@ -500,11 +530,11 @@ class Molcas(logfileparser.Logfile):
             line_max = next(inputfile).split()
             if not hasattr(self, 'geotargets'):
                 # The attribute geotargets is an array consisting of the following
-                # values: [Energy threshold, RMS Displacements threshold, RMS Gradient threshold, \
-                #          Max Displacements threshold, Max Gradient threshold].
-                self.geotargets = [self.energy_threshold, float(line_rms[4]), float(line_rms[8]), float(line_max[4]), float(line_max[8])]
+                # values: [Energy threshold, Max Gradient threshold, RMS Gradient threshold, \
+                #          Max Displacements threshold, RMS Displacements threshold].
+                self.geotargets = [self.energy_threshold, float(line_max[8]), float(line_rms[8]), float(line_max[4]), float(line_rms[4])]
 
-            self.geovalues[iter_number - 1].extend([float(line_rms[3]), float(line_rms[7]), float(line_max[3]), float(line_max[7])])
+            self.geovalues[iter_number - 1].extend([float(line_max[7]), float(line_rms[7]), float(line_max[3]), float(line_rms[3])])
 
         #   *********************************************************
         #   * Nuclear coordinates for the next iteration / Angstrom *
