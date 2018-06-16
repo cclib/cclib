@@ -215,6 +215,10 @@ class Molcas(logfileparser.Logfile):
         #  Threshold for SCF energy change            0.10E-08
         #  Threshold for density matrix               0.10E-03
         #  Threshold for Fock matrix                  0.15E-03
+        #  Threshold for linear dependence            0.10E-08
+        #  Threshold at which DIIS is turned on       0.15E+00
+        #  Threshold at which QNR/C2DIIS is turned on 0.75E-01
+        #  Threshold for Norm(delta) (QNR/C2DIIS)     0.20E-04
         if line[:34] == '++    Optimization specifications:':
 
             scftargets = []
@@ -234,6 +238,14 @@ class Molcas(logfileparser.Logfile):
             line = next(inputfile)
 
             if line[6:31] == 'Threshold for Fock matrix':
+                target = float(line.split()[-1])
+                scftargets.append(target)
+
+            self.skip_lines(inputfile,['Threshold for linear dependence', 'Threshold at which DIIS is turned on', \
+                                         'Threshold at which QNR/C2DIIS is turned on'])
+            line = next(inputfile)
+
+            if line[6:31] == 'Threshold for Norm(delta)':
                 target = float(line.split()[-1])
                 scftargets.append(target)
 
@@ -265,7 +277,8 @@ class Molcas(logfileparser.Logfile):
                     energy = float(line.split()[4].replace('*',''))
                     density = float(line.split()[5].replace('*',''))
                     fock = float(line.split()[6].replace('*',''))
-                    scfvalues.append([energy, density, fock])
+                    dnorm = float(line.split()[7].replace('*',''))
+                    scfvalues.append([energy, density, fock, dnorm])
 
                 try:
                     line = next(inputfile)
