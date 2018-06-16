@@ -144,7 +144,6 @@ class GenericGeoOptTest(unittest.TestCase):
         dim_geovalues = (len(self.data.geovalues[0]), )
         self.assertEquals(dim_geotargets, dim_geovalues)
 
-    @skipForParser("Molcas", "geovalues and geotargets need to discussed and parsed correctly.")
     def testoptdone(self):
         """Has the geometry converged and set optdone to True?"""
         self.assertTrue(self.data.optdone)

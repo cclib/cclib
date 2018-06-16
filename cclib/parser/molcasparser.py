@@ -11,6 +11,8 @@ from __future__ import print_function
 
 import re
 
+import numpy
+
 from cclib.parser import logfileparser
 from cclib.parser import utils
 
@@ -449,6 +451,17 @@ class Molcas(logfileparser.Logfile):
                 self.logger.warning('More than 1 values of freeenergy found')
 
         ## Parsing Geometrical Optimization attributes in this section.
+        #  ++       Slapaf input parameters:
+        #  ------------------------
+        #
+        # Max iterations:                            2000
+        # Convergence test a la Schlegel.
+        # Convergence criterion on gradient/para.<=: 0.3E-03
+        # Convergence criterion on step/parameter<=: 0.3E-03
+        # Convergence criterion on energy change <=: 0.0E+00
+        # Max change of an internal coordinate:     0.30E+00
+        # ...
+        # ...
         #  **********************************************************************************************************************
         #  *                                    Energy Statistics for Geometry Optimization                                     *
         #  **********************************************************************************************************************
@@ -473,6 +486,10 @@ class Molcas(logfileparser.Logfile):
         #   +-----+----------------------------------+----------------------------------+
         if 'Convergence criterion on energy change' in line:
             self.energy_threshold =  float(line.split()[6])
+            # If energy change threshold equals zero,
+            # then energy change is not a criteria for convergence.
+            if self.energy_threshold == 0:
+                self.energy_threshold = numpy.inf
 
         if 'Energy Statistics for Geometry Optimization' in line:
             if not hasattr(self, 'geovalues'):
@@ -500,11 +517,19 @@ class Molcas(logfileparser.Logfile):
             line_max = next(inputfile).split()
             if not hasattr(self, 'geotargets'):
                 # The attribute geotargets is an array consisting of the following
-                # values: [Energy threshold, RMS Displacements threshold, RMS Gradient threshold, \
-                #          Max Displacements threshold, Max Gradient threshold].
-                self.geotargets = [self.energy_threshold, float(line_rms[4]), float(line_rms[8]), float(line_max[4]), float(line_max[8])]
+                # values: [Energy threshold, Max Gradient threshold, RMS Gradient threshold, \
+                #          Max Displacements threshold, RMS Displacements threshold].
+                max_gradient_threshold = float(line_max[8])
+                rms_gradient_threshold = float(line_rms[8])
+                max_displacement_threshold = float(line_max[4])
+                rms_displacement_threshold = float(line_rms[4])
+                self.geotargets = [self.energy_threshold, max_gradient_threshold, rms_gradient_threshold, max_displacement_threshold, rms_displacement_threshold]
 
-            self.geovalues[iter_number - 1].extend([float(line_rms[3]), float(line_rms[7]), float(line_max[3]), float(line_max[7])])
+            max_gradient_change = float(line_max[7])
+            rms_gradient_change = float(line_rms[7])
+            max_displacement_change = float(line_max[3])
+            rms_displacement_change = float(line_rms[3])
+            self.geovalues[iter_number - 1].extend([max_gradient_change, rms_gradient_change, max_displacement_change, rms_displacement_change])
 
         #   *********************************************************
         #   * Nuclear coordinates for the next iteration / Angstrom *
