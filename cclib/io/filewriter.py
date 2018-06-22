@@ -7,6 +7,11 @@
 
 """Generic file writer and related tools"""
 
+import logging
+
+from math import sqrt
+from collections import Iterable
+
 try:
     from cclib.bridge import makeopenbabel
     import openbabel as ob
@@ -14,9 +19,6 @@ try:
     _has_openbabel = True
 except ImportError:
     _has_openbabel = False
-
-from math import sqrt
-from collections import Iterable
 
 from cclib.parser.utils import PeriodicTable
 
@@ -86,10 +88,20 @@ class Writer(object):
     def _make_openbabel_from_ccdata(self):
         """Create Open Babel and Pybel molecules from ccData.
         """
+        if not hasattr(self.ccdata, 'charge'):
+            logging.warning("ccdata object does not have charge, setting to 0")
+            _charge = 0
+        else:
+            _charge = self.ccdata.charge
+        if not hasattr(self.ccdata, 'mult'):
+            logging.warning("ccdata object does not have spin multiplicity, setting to 1")
+            _mult = 1
+        else:
+            _mult = self.ccdata.mult
         obmol = makeopenbabel(self.ccdata.atomcoords,
                               self.ccdata.atomnos,
-                              charge=self.ccdata.charge,
-                              mult=self.ccdata.mult)
+                              charge=_charge,
+                              mult=_mult)
         if self.jobfilename is not None:
             obmol.SetTitle(self.jobfilename)
         return (obmol, pb.Molecule(obmol))
