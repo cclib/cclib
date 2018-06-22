@@ -23,10 +23,17 @@ have been moved here from the cclib repository when newer versions
 became available. We still want those logfiles to parse and test correctly,
 although sometimes special modification will be needed.
 
-To run the doctest, just use `python regression.py test`.
+To run the doctest, run `python -m test.regression` from the top level
+directory in the cclib repository.
 
-Note that this script was moved from the main cclib repository in Feb 2015
-in order for it to be close to the data, so look there for previous history.
+Running all regression can take anywhere from 10-20s to several minutes
+depending in your hardware. To aid debugging, there are two ways to limit
+which regressions to parse and test. You can limit the test to a specific
+parse, for example:
+    python -m test.regression Gaussian
+You can also limit a run to a single output file, using it's relative path
+inside the data directory, like so:
+    python -m test.regression Gaussian/Gaussian03/borane-opt.log
 """
 
 from __future__ import print_function
@@ -1873,6 +1880,13 @@ def main(which=[], opt_traceback=False, opt_status=False, regdir=__regression_di
         orphaned = [t for t in tests if t[4:] not in normalized]
         orphaned_tests.extend(orphaned)
 
+    # Assume that if a string is not a parser name it'll be a relative
+    # path to a specific logfile.
+    # TODO: filter out things that are not parsers or files, and maybe
+    # raise an error in that case as well.
+    which_parsers = [w for w in which if w in parser_names]
+    which_filenames = [w for w in which if w not in which_parsers]
+
     failures = errors = total = 0
     for pn in parser_names:
 
@@ -1880,13 +1894,21 @@ def main(which=[], opt_traceback=False, opt_status=False, regdir=__regression_di
 
         # Continue to next iteration if we are limiting the regression and the current
         #   name was not explicitely chosen (that is, passed as an argument).
-        if len(which) > 0 and not pn in which:
+        if which_parsers and pn not in which_parsers:
             continue;
 
-        print("Are the %s files ccopened and parsed correctly?" % name)
+        parser_total = 0
         current_filenames = filenames[pn]
         current_filenames.sort()
         for fname in current_filenames:
+            relative_path = fname[len(regdir):]
+            if which_filenames and relative_path not in which_filenames:
+                continue;
+
+            parser_total += 1
+            if parser_total == 1:
+                print("Are the %s files ccopened and parsed correctly?" % pn)
+
             total += 1
             print("  %s ..."  % fname, end=" ")
 
@@ -1960,7 +1982,8 @@ def main(which=[], opt_traceback=False, opt_status=False, regdir=__regression_di
                 else:
                     print("test passed")
 
-        print()
+        if parser_total:
+            print()
 
     print("Total: %d   Failed: %d  Errors: %d" % (total, failures, errors))
     if not opt_traceback and failures + errors > 0:
