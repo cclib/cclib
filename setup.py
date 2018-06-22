@@ -47,8 +47,7 @@ def setup_cclib():
         long_description="\n".join(doclines[2:]),
         classifiers=classifiers.split("\n"),
         platforms=["Any."],
-        packages=setuptools.find_packages('cclib'),
-        package_dir={'': 'cclib'},
+        packages=setuptools.find_packages(exclude=['tests']),
         entry_points={
             'console_scripts': [
                 'ccget=cclib.scripts.ccget:ccget',
