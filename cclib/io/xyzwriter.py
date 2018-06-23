@@ -72,6 +72,9 @@ class XYZ(filewriter.Writer):
         for i in indices:
             xyzblock.append(self._xyz_from_ccdata(i))
 
+        # Ensure an extra newline at the very end.
+        xyzblock.append('')
+
         return '\n'.join(xyzblock)
 
     def _xyz_from_ccdata(self, index):
