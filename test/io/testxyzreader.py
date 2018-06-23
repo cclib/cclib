@@ -32,9 +32,7 @@ class XYZReaderTest(unittest.TestCase):
         self.assertEqual(data.natom, 12)
 
         atomnos = np.array([7, 6, 1, 8, 7, 6, 8, 6, 6, 1, 1, 1], dtype=int)
-
-        self.assertEqual(data.atomnos.shape, atomnos.shape)
-        self.assertTrue(np.all(np.equal(data.atomnos, atomnos)))
+        np.testing.assert_equal(data.atomnos, atomnos)
 
         self.assertEqual(data.atomcoords.shape, (1, 12, 3))
 
@@ -48,9 +46,7 @@ class XYZReaderTest(unittest.TestCase):
         self.assertEqual(data.natom, 12)
 
         atomnos = np.array([7, 6, 1, 8, 7, 6, 8, 6, 6, 1, 1, 1], dtype=int)
-
-        self.assertEqual(data.atomnos.shape, atomnos.shape)
-        self.assertTrue(np.all(np.equal(data.atomnos, atomnos)))
+        np.testing.assert_equal(data.atomnos, atomnos)
 
         self.assertEqual(data.atomcoords.shape, (2, 12, 3))
 
