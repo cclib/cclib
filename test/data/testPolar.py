@@ -21,6 +21,7 @@ class GenericPolarTest(unittest.TestCase):
     """Generic static polarizability unittest"""
 
     @skipForParser('Molcas','The parser is still being developed so we skip this test')
+    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testshape(self):
         """Is the dimension of the polarizability tensor 3 x 3?"""
         self.assertEqual(len(self.data.polarizabilities), 1)
@@ -37,6 +38,7 @@ class ReferencePolarTest(GenericPolarTest):
     principal_components_delta = 0.01
 
     @skipForParser('Molcas','The parser is still being developed so we skip this test')
+    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testisotropic(self):
         """Is the isotropic polarizability (average of the diagonal elements)
         +/- 0.01 from a reference?
@@ -45,6 +47,7 @@ class ReferencePolarTest(GenericPolarTest):
         self.assertAlmostEqual(isotropic, self.isotropic, delta=self.isotropic_delta)
 
     @skipForParser('Molcas','The parser is still being developed so we skip this test')
+    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testprincomponents(self):
         """Are each of the principal components (eigenvalues) of the
         polarizability tensor +/- 0.01 from a reference?

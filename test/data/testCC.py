@@ -21,6 +21,7 @@ class GenericCCTest(unittest.TestCase):
     """Generic coupled cluster unittest"""
 
     @skipForParser('Molcas','The parser is still being developed so we skip this test')
+    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testsign(self):
         """Are the coupled cluster corrections negative?"""
         corrections = self.data.ccenergies - self.data.scfenergies
