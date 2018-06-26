@@ -114,7 +114,7 @@ class Turbomole(logfileparser.Logfile):
             homos=int(temp[1])
 
         if line[0:6] == "$basis":
-            print "Found basis"
+            print("Found basis")
             self.basis_lib=[]
             line = inputfile.next()
             line = inputfile.next()
@@ -192,7 +192,7 @@ class Turbomole(logfileparser.Logfile):
             self.atomnos = numpy.array(atomnos, "i")
 
         if line[0:6] == "$atoms":
-            print "parsing atoms"
+            print("parsing atoms")
             line = inputfile.next()
             self.atomlist=[]
             while line[0]!="$":
@@ -380,7 +380,7 @@ class Turbomole(logfileparser.Logfile):
 
             if temp[1][0:7] == "scfdump":
 #                self.logger.warning("SCF not converged?")
-                print "SCF not converged?!"
+                print("SCF not converged?!")
 
             if line[0:12] == "$uhfmo_alpha": # if unrestricted, create flag saying so
                 unrestricted = 1
@@ -412,7 +412,7 @@ class Turbomole(logfileparser.Logfile):
                     try:
                         energy = float(temp[2][11:].replace("D", "E"))
                     except ValueError:
-                        print spin, ": ", title
+                        print(spin, ": ", title)
 
                     orb_en = utils.convertor(energy,"hartree","eV")
 
