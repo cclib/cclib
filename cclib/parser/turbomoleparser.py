@@ -48,10 +48,10 @@ class AtomBasis:
 class Turbomole(logfileparser.Logfile):
     """A Turbomole output file"""
 
-    def __init__(self, *args):
+    def __init__(self, *args, **kwargs):
 
         # Call the __init__ method of the superclass
-        super(Turbomole, self).__init__(logname="Turbomole", *args)
+        super(Turbomole, self).__init__(logname="Turbomole", *args, **kwargs)
         
     def __str__(self):
         """Return a string representation of the object."""
