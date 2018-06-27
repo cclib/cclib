@@ -1,20 +1,20 @@
-"""
-cclib (http://cclib.sf.net) is (c) 2006, the cclib development team
-and licensed under the LGPL (http://www.gnu.org/copyleft/lgpl.html).
-"""
+# -*- coding: utf-8 -*-
+#
+# Copyright (c) 2018, the cclib development team
+#
+# This file is part of cclib (http://cclib.github.io) and is distributed under
+# the terms of the BSD 3-Clause License.
 
-__revision__ = "$Revision: 635 $"
+"""Parser for Turbomole output files."""
+
+from __future__ import print_function
 
 import re
 
-# If numpy is not installed, try to import Numeric instead.
-try:
-    import numpy
-except ImportError:
-    import Numeric as numpy
+import numpy
 
-import utils
-import logfileparser
+from cclib.parser import logfileparser
+from cclib.parser import utils
 
 class AtomBasis:
     def __init__(self, atname, basis_name, inputfile):
@@ -46,10 +46,118 @@ class AtomBasis:
             line=inputfile.next()
 
 class Turbomole(logfileparser.Logfile):
-    """A Turbomole output file"""
+    """A Turbomole log file."""
+
+    def __init__(self, *args, **kwargs):
+        super(Turbomole, self).__init__(logname="Turbomole", *args, **kwargs)
+
+    def __str__(self):
+        """Return a string representation of the object."""
+        return "Turbomole output file %s" % (self.filename)
+
+    def __repr__(self):
+        """Return a representation of the object."""
+        return 'Turbomole("%s")' % (self.filename)
+
+    def normalisesym(self, label):
+        """Normalise the symmetries used by Turbomole."""
+        raise NotImplementedError('Now yet implemented for Turbomole.')
+
+    def before_parsing(self):
+        self.geoopt = False # Is this a GeoOpt? Needed for SCF targets/values.
+
+    def extract(self, inputfile, line):
+        """Extract information from the file object inputfile."""
+
+        ## This information is in the control file.
+        #   $rundimensions
+        #   dim(fock,dens)=1860
+        #   natoms=20
+        #   nshell=40
+        #   nbf(CAO)=60
+        #   nbf(AO)=60
+        #   dim(trafo[SAO<-->AO/CAO])=60
+        #   rhfshells=1
+        if line[3:10]=="natoms=":
+            self.natom=int(line[10:])
+
+        if line[3:11] == "nbf(AO)=":
+            nmo = int(line.split('=')[1])
+            self.set_attribute('nbasis', nmo)
+            self.set_attribute('nmo', nmo)
+
+        ## Atomic coordinates in job.last:
+        #              +--------------------------------------------------+
+        #              | Atomic coordinate, charge and isotop information |
+        #              +--------------------------------------------------+
+        #
+        #
+        #              atomic coordinates              atom shells charge pseudo isotop
+        #    -2.69176330   -0.00007129   -0.44712612    c      3    6.000    0     0
+        #    -1.69851645   -0.00007332    2.06488947    c      3    6.000    0     0
+        #     0.92683848   -0.00007460    2.49592179    c      3    6.000    0     0
+        #     2.69176331   -0.00007127    0.44712612    c      3    6.000    0     0
+        #     1.69851645   -0.00007331   -2.06488947    c      3    6.000    0     0
+        #...
+        #    -7.04373606    0.00092244    2.74543891    h      1    1.000    0     0
+        #    -9.36352819    0.00017229    0.07445322    h      1    1.000    0     0
+        #    -0.92683849   -0.00007461   -2.49592179    c      3    6.000    0     0
+        #    -1.65164853   -0.00009927   -4.45456858    h      1    1.000    0     0
+        if 'Atomic coordinate, charge and isotop information' in line:
+            self.skip_lines(inputfile,['border', 'b', 'b'])
+            line = next(inputfile)
+            if 'atomic coordinates' in line:
+                if not hasattr(self, 'atomcoords'):
+                    self.atomcoords = []
+
+                atomcoords = []
+                atomnos = []
+                line = next(inputfile)
+                while len(line) > 2:
+                    atomnos.append(utils.PeriodicTable().number[line.split()[3].upper()])
+                    atomcoords.append([utils.convertor(float(x), "bohr", "Angstrom") for x in line.split()[:3]])
+                    line = next(inputfile)
+
+                self.set_attribute('atomcoords', atomcoords)
+                self.set_attribute('atomnos', atomnos)
+
+        ## If we are unable to find coordinates in the job file, we will look for them
+        ## in the coord file.
+        #$coord
+        #   -2.69176330280845     -0.00007129445712     -0.44712612093731      c
+        #   -1.69851644615005     -0.00007332282157      2.06488947265450      c
+        #    0.92683848474542     -0.00007460039817      2.49592179180606      c
+        #    2.69176330586455     -0.00007127328394      0.44712611937145      c
+        #    1.69851645303760     -0.00007330575699     -2.06488946767951      c
+        #...
+        #   -7.04373605585274      0.00092243787879      2.74543890990978      h
+        #   -9.36352819434217      0.00017228707094      0.07445321997922      h
+        #   -0.92683848797451     -0.00007460625018     -2.49592178685491      c
+        #   -1.65164852640697     -0.00009927259342     -4.45456857763148      h
+        #$redundant
+        if line.startswith("$coord"):
+            if '$coordinate' not in line:
+                line = next(inputfile)
+                if '$user' not in line: 
+                    atomcoords = []
+                    atomnos = []
+                    while line[0] != "$":
+                        atomnos.append(utils.PeriodicTable().number[line.split()[3].upper()])
+                        atomcoords.append([utils.convertor(float(x), "bohr", "Angstrom") for x in line.split()[:3]])
+                        line = next(inputfile)
+
+                    self.set_attribute('atomcoords', atomcoords)
+                    self.set_attribute('atomnos', atomnos)
+
+
+    def after_parsing(self):
+        pass
+
+
+class OldTurbomole(logfileparser.Logfile):
+    """A Turbomole output file. Code is outdated and is not being used."""
 
     def __init__(self, *args):
-
         # Call the __init__ method of the superclass
         super(Turbomole, self).__init__(logname="Turbomole", *args)
         
@@ -114,7 +222,7 @@ class Turbomole(logfileparser.Logfile):
             homos=int(temp[1])
 
         if line[0:6] == "$basis":
-            print "Found basis"
+            print("Found basis")
             self.basis_lib=[]
             line = inputfile.next()
             line = inputfile.next()
@@ -192,7 +300,7 @@ class Turbomole(logfileparser.Logfile):
             self.atomnos = numpy.array(atomnos, "i")
 
         if line[0:6] == "$atoms":
-            print "parsing atoms"
+            print("parsing atoms")
             line = inputfile.next()
             self.atomlist=[]
             while line[0]!="$":
@@ -380,7 +488,7 @@ class Turbomole(logfileparser.Logfile):
 
             if temp[1][0:7] == "scfdump":
 #                self.logger.warning("SCF not converged?")
-                print "SCF not converged?!"
+                print("SCF not converged?!")
 
             if line[0:12] == "$uhfmo_alpha": # if unrestricted, create flag saying so
                 unrestricted = 1
@@ -412,7 +520,7 @@ class Turbomole(logfileparser.Logfile):
                     try:
                         energy = float(temp[2][11:].replace("D", "E"))
                     except ValueError:
-                        print spin, ": ", title
+                        print(spin, ": ", title)
 
                     orb_en = utils.convertor(energy,"hartree","eV")
 
@@ -536,5 +644,4 @@ class Turbomole(logfileparser.Logfile):
                     i -= 1
                 i += 1
 
-#EOF
 
