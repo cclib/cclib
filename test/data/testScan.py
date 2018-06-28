@@ -44,14 +44,14 @@ class GenericScanTest_optdone_bool(GenericScanTestBase):
         """Is the optimization finished?"""
         self.assertIsInstance(self.data.optdone, bool)
         self.assertEquals(self.data.optdone, True)
-    
+
     @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     @skipForParser('Molcas','The parser is still being developed so we skip this test')
     def testindices(self):
         """Do the indices match the results from geovalues."""
         assert self.data.optdone and numpy.all(self.data.geovalues[-1] <= self.data.geotargets)
 
-    @skipForParser("Jaguar", "Not implemented")    
+    @skipForParser("Jaguar", "Not implemented")
     @skipForParser('Molcas','The parser is still being developed so we skip this test')
     @skipForParser("ORCA", "Not implemented")
     @skipForParser('Turbomole','The parser is still being developed so we skip this test')
@@ -62,6 +62,7 @@ class GenericScanTest_optdone_bool(GenericScanTestBase):
         self.assertOptNew(self.data.optstatus[0])
         self.assertOptDone(self.data.optstatus[0])
         self.assertOptDone(self.data.optstatus[-1])
+
 
 class GenericScanTest(GenericScanTestBase):
     """Generic relaxed potential energy surface scan unittest."""

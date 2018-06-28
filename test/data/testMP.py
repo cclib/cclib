@@ -23,7 +23,7 @@ class GenericMP2Test(unittest.TestCase):
     level = 2
     
     @skipForParser('Molcas','The parser is still being developed so we skip this test')
-    @skipForParser('Turbomole','The parser is still being developed so we skip this test')    
+    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testsizeandshape(self):
         """(MP2) Are the dimensions of mpenergies correct?"""
         self.assertEqual(self.data.mpenergies.shape,

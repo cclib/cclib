@@ -1811,8 +1811,6 @@ old_unittests = {
     "QChem/QChem4.4/Trp_polar_ideriv1.out":  ReferencePolarTest,
     "QChem/QChem4.4/Trp_polar_response.out": ReferencePolarTest,
 
-    "Turbomole/Turbomole5.9/dvb_sp.out":    GenericSPTest, 
-
 }
 
 def make_regression_from_old_unittest(test_class):
