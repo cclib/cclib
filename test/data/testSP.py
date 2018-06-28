@@ -37,6 +37,9 @@ class GenericSPTest(unittest.TestCase):
     # Overlap first two atomic orbitals.
     overlap01 = 0.24
 
+    # Generally, one criteria for SCF energy convergence. 
+    num_scf_criteria = 1
+
     def testnatom(self):
         """Is the number of atoms equal to 20?"""
         self.assertEquals(self.data.natom, 20)
@@ -150,6 +153,10 @@ class GenericSPTest(unittest.TestCase):
     def testscftargetdim(self):
         """Do the scf targets have the right dimensions?"""
         self.assertEquals(self.data.scftargets.shape, (len(self.data.scfvalues), len(self.data.scfvalues[0][0])))
+
+    def testscftargets(self):
+        """Are correct number of SCF convergence criteria being parsed?"""
+        self.assertEquals(len(self.data.scftargets[0]), self.num_scf_criteria)
 
     @skipForParser('Molcas','The parser is still being developed so we skip this test')
     def testlengthmoenergies(self):
@@ -278,7 +285,7 @@ class ADFSPTest(GenericSPTest):
     foverlap00 = 1.00003
     foverlap11 = 1.02672
     foverlap22 = 1.03585
-
+    num_scf_criteria = 2
     b3lyp_energy = -140
 
     def testfoverlaps(self):
@@ -297,8 +304,17 @@ class ADFSPTest(GenericSPTest):
         self.assertAlmostEquals(self.data.fooverlaps[1, 1], self.foverlap11, delta=0.0001)
         self.assertAlmostEquals(self.data.fooverlaps[2, 2], self.foverlap22, delta=0.0001)
 
+class GaussianSPTest(GenericSPTest):
+    """Customized restricted single point unittest"""
 
-class Jaguar7SPTest(GenericSPTest):
+    num_scf_criteria = 3
+
+class JaguarSPTest(GenericSPTest):
+    """Customized restricted single point unittest"""
+
+    num_scf_criteria = 2
+
+class Jaguar7SPTest(JaguarSPTest):
     """Customized restricted single point unittest"""
 
     # Jaguar prints only 10 virtual MOs by default. Can we re-run with full output?
@@ -306,6 +322,20 @@ class Jaguar7SPTest(GenericSPTest):
         """Is the number of evalues equal to the number of occ. MOs + 10?"""
         self.assertEquals(len(self.data.moenergies[0]), self.data.homos[0]+11)
 
+class MolcasSPTest(GenericSPTest):
+    """Customized restricted single point unittest"""
+
+    num_scf_criteria = 4
+
+class MolproSPTest(GenericSPTest):
+    """Customized restricted single point unittest"""
+
+    num_scf_criteria = 2
+
+class NWChemKSSPTest(GenericSPTest):
+    """Customized restricted single point unittest"""
+
+    num_scf_criteria = 3
 
 class Psi3SPTest(GenericSPTest):
     """Customized restricted single point HF/KS unittest"""
@@ -314,12 +344,18 @@ class Psi3SPTest(GenericSPTest):
     # that a SALC calculation is done instead of a full LCAO.
     b3lyp_energy = -10300
 
+class PsiSPTest(GenericSPTest):
+    """Customized restricted single point HF/KS unittest"""
+
+    num_scf_criteria = 2
 
 class OrcaSPTest(GenericSPTest):
     """Customized restricted single point unittest"""
 
     # Orca has different weights for the masses
     molecularmass = 130190
+
+    num_scf_criteria = 3
 
 
 if __name__=="__main__":

@@ -1592,7 +1592,7 @@ class GaussianPolarTest(ReferencePolarTest):
     isotropic_delta = 2.0
     principal_components_delta = 0.7
 
-class JaguarSPTest_6_31gss(GenericSPTest):
+class JaguarSPTest_6_31gss(JaguarSPTest):
     """AO counts and some values are different in 6-31G** compared to STO-3G."""
     nbasisdict = {1: 5, 6: 15}
     b3lyp_energy = -10530
@@ -1619,7 +1619,7 @@ class JaguarGeoOptTest_6_31gss(GenericGeoOptTest):
 class MolproBigBasisTest_cart(MolproBigBasisTest):
     spherical = False
 
-class OrcaSPTest_3_21g(GenericSPTest_nosym):
+class OrcaSPTest_3_21g(OrcaSPTest, GenericSPTest_nosym):
     nbasisdict = {1: 2, 6: 9}
     b3lyp_energy = -10460
     overlap01 = 0.19
@@ -1741,7 +1741,7 @@ old_unittests = {
     "Gaussian/Gaussian09/dvb_scan_revA.02.log":         GaussianScanTest,
     "Gaussian/Gaussian09/dvb_sp_basis_b_gfprint.log":   GenericBasisTest,
     "Gaussian/Gaussian09/dvb_sp_basis_gfinput.log":     GenericBasisTest,
-    "Gaussian/Gaussian09/dvb_sp_revA.02.out":           GenericSPTest,
+    "Gaussian/Gaussian09/dvb_sp_revA.02.out":           GaussianSPTest,
     "Gaussian/Gaussian09/dvb_td_revA.02.out":           GaussianTDDFTTest,
     "Gaussian/Gaussian09/dvb_un_sp_revA.02.log":        GaussianSPunTest,
     "Gaussian/Gaussian09/dvb_un_sp_b_revA.02.log":      GaussianSPunTest,
@@ -1763,7 +1763,7 @@ old_unittests = {
     "Jaguar/Jaguar6.5/dvb_un_sp.out":   JaguarSPunTest,
     "Jaguar/Jaguar6.5/dvb_ir.out":      JaguarIRTest,
 
-    "Molcas/Molcas8.0/dvb_sp.out":      GenericSPTest,
+    "Molcas/Molcas8.0/dvb_sp.out":      MolcasSPTest,
     "Molcas/Molcas8.0/dvb_sp_un.out":   GenericSPunTest,
     "Molcas/Molcas8.0/C_bigbasis.out":  MolcasBigBasisTest,
 
@@ -1798,9 +1798,9 @@ old_unittests = {
     "Psi/Psi4.0b5/C_bigbasis.out":   GenericBigBasisTest,
     "Psi/Psi4.0b5/dvb_gopt_hf.out":  PsiGeoOptTest,
     "Psi/Psi4.0b5/dvb_sp_hf.out":    GenericBasisTest,
-    "Psi/Psi4.0b5/dvb_sp_hf.out":    GenericSPTest,
+    "Psi/Psi4.0b5/dvb_sp_hf.out":    PsiSPTest,
     "Psi/Psi4.0b5/dvb_sp_ks.out":    GenericBasisTest,
-    "Psi/Psi4.0b5/dvb_sp_ks.out":    GenericSPTest,
+    "Psi/Psi4.0b5/dvb_sp_ks.out":    PsiSPTest,
     "Psi/Psi4.0b5/water_ccsd.out":   GenericCCTest,
     "Psi/Psi4.0b5/water_mp2.out":    GenericMP2Test,
 
