@@ -66,6 +66,7 @@ from cclib.parser import NWChem
 from cclib.parser import ORCA
 from cclib.parser import Psi
 from cclib.parser import QChem
+from cclib.parser import Turbomole
 
 from cclib.io import ccopen
 
@@ -1809,6 +1810,8 @@ old_unittests = {
     "QChem/QChem4.2/trithiolane_freq.out":   GaussianPolarTest,
     "QChem/QChem4.4/Trp_polar_ideriv1.out":  ReferencePolarTest,
     "QChem/QChem4.4/Trp_polar_response.out": ReferencePolarTest,
+
+    "Turbomole/Turbomole5.9/dvb_sp.out":    GenericSPTest, 
 
 }
 
