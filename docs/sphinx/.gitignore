@@ -4,3 +4,9 @@ cclib
 
 *.log
 *.pyc
+
+# auto-generated files
+attributes.rst
+attributes_dev.rst
+coverage.rst
+coverage_dev.rst

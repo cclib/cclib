@@ -20,7 +20,7 @@ clean:
 	-rm -rf $(BUILDDIR)/*
 	-rm -rf cclib*
 	-rm -rf attributes*.rst
-	-rm -rf converage*.rst
+	-rm -rf coverage*.rst
 
 PRODUCTION_VERSION = v1.5.3
 CCLIB_PROD = $(BUILDDIR)/cclib_prod
