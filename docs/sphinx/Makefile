@@ -14,9 +14,7 @@ help:
 	@$(SPHINXBUILD) -M help "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
 
 .PHONY: default
-default: cclib update attributes coverage html copy
-copy:
-	cp -rvf _build/html/* ../.
+default: cclib update attributes coverage html
 
 clean:
 	-rm -rf $(BUILDDIR)/*
