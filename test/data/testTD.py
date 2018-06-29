@@ -26,6 +26,7 @@ class GenericTDTest(unittest.TestCase):
 
     @skipForParser('DALTON', 'etoscs are not parsed')
     @skipForParser('Molcas','The parser is still being developed so we skip this test')
+    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testenergies(self):
         """Is the l_max reasonable?"""
 
@@ -38,6 +39,7 @@ class GenericTDTest(unittest.TestCase):
 
     @skipForParser('DALTON', 'Oscillator strengths will have to be calculated, not just parsed.')
     @skipForParser('Molcas','The parser is still being developed so we skip this test')
+    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testoscs(self):
         """Is the maximum of etoscs in the right range?"""
         self.assertEqual(len(self.data.etoscs), self.number)
@@ -45,6 +47,7 @@ class GenericTDTest(unittest.TestCase):
 
     @skipForParser('DALTON', '???')
     @skipForParser('Molcas','The parser is still being developed so we skip this test')
+    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testsecs(self):
         """Is the sum of etsecs close to 1?"""
         self.assertEqual(len(self.data.etsecs), self.number)
@@ -54,6 +57,7 @@ class GenericTDTest(unittest.TestCase):
 
     @skipForParser('DALTON', '???')
     @skipForParser('Molcas','The parser is still being developed so we skip this test')
+    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testsecs_transition(self):
         """Is the lowest E transition from the HOMO or to the LUMO?"""
         idx_minenergy = numpy.argmin(self.data.etoscs)
@@ -65,6 +69,7 @@ class GenericTDTest(unittest.TestCase):
                      t[0][2][0] == self.data.homos[0]+1, t[0])
 
     @skipForParser('Molcas','The parser is still being developed so we skip this test')    
+    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testsymsnumber(self):
         """Is the length of etsyms correct?"""
         self.assertEqual(len(self.data.etsyms), self.number)
