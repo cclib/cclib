@@ -170,6 +170,7 @@ class GenericSPTest(unittest.TestCase):
         """Do the scf targets have the right dimensions?"""
         self.assertEquals(self.data.scftargets.shape, (len(self.data.scfvalues), len(self.data.scfvalues[0][0])))
 
+    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testscftargets(self):
         """Are correct number of SCF convergence criteria being parsed?"""
         self.assertEquals(len(self.data.scftargets[0]), self.num_scf_criteria)
