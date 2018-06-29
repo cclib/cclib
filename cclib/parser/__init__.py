@@ -27,6 +27,7 @@ from cclib.parser.nwchemparser import NWChem
 from cclib.parser.orcaparser import ORCA
 from cclib.parser.psiparser import Psi
 from cclib.parser.qchemparser import QChem
+from cclib.parser.turbomoleparser import Turbomole
 
 from cclib.parser.data import ccData
 

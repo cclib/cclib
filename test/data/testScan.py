@@ -38,12 +38,14 @@ class GenericScanTest_optdone_bool(GenericScanTestBase):
 
     datatype = cclib.parser.data.ccData_optdone_bool
 
+    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     @skipForParser('Molcas','The parser is still being developed so we skip this test')
     def testoptdone(self):
         """Is the optimization finished?"""
         self.assertIsInstance(self.data.optdone, bool)
         self.assertEquals(self.data.optdone, True)
 
+    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     @skipForParser('Molcas','The parser is still being developed so we skip this test')
     def testindices(self):
         """Do the indices match the results from geovalues."""
@@ -52,6 +54,7 @@ class GenericScanTest_optdone_bool(GenericScanTestBase):
     @skipForParser("Jaguar", "Not implemented")
     @skipForParser('Molcas','The parser is still being developed so we skip this test')
     @skipForParser("ORCA", "Not implemented")
+    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testoptstatus(self):
         """Does optstatus contain expected values?"""
 
@@ -66,15 +69,17 @@ class GenericScanTest(GenericScanTestBase):
 
     # extra indices
     extra = 0
-
+    
     @skipForParser('Molcas','The parser is still being developed so we skip this test')
+    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testnumindices(self):
         """Do the number of indices match number of scan points."""
         self.assertEquals(len(self.data.optdone), 12 + self.extra)
 
-    @skipForParser("Jaguar", "Does not work as expected")
+    @skipForParser("Jaguar", "Does not work as expected")    
     @skipForParser('Molcas','The parser is still being developed so we skip this test')
     @skipForParser("ORCA", "Does not work as expected")
+    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testindices(self):
         """Do the indices match the results from geovalues."""
         indexes = self.data.optdone
@@ -86,6 +91,7 @@ class GenericScanTest(GenericScanTestBase):
     @skipForParser("Jaguar", "Not implemented")
     @skipForParser('Molcas','The parser is still being developed so we skip this test')
     @skipForParser("ORCA", "Not implemented")
+    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testoptstatus(self):
         """Does optstatus contain expected values?"""
         OPT_NEW = self.data.OPT_NEW

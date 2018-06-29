@@ -66,6 +66,7 @@ from cclib.parser import NWChem
 from cclib.parser import ORCA
 from cclib.parser import Psi
 from cclib.parser import QChem
+from cclib.parser import Turbomole
 
 from cclib.io import ccopen
 

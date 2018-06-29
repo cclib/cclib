@@ -45,6 +45,7 @@ from cclib.parser.nwchemparser import NWChem
 from cclib.parser.orcaparser import ORCA
 from cclib.parser.psiparser import Psi
 from cclib.parser.qchemparser import QChem
+from cclib.parser.turbomoleparser import Turbomole
 
 from cclib.io import cjsonreader
 from cclib.io import cjsonwriter
@@ -102,6 +103,7 @@ triggers = [
     (ORCA,      ["O   R   C   A"],                                  True),
     (Psi,       ["PSI", "Ab Initio Electronic Structure"],          True),
     (QChem,     ["A Quantum Leap Into The Future Of Chemistry"],    True),
+    (Turbomole, ["TURBOMOLE"],                                      True),
 
 ]
 

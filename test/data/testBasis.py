@@ -36,11 +36,13 @@ class GenericBasisTest(unittest.TestCase):
     gbasis_C_2p_func0 = [2.9412, 0.1559]
 
     @skipForParser('Molcas','The parser is still being developed so we skip this test')
+    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testgbasis(self):
         """Is gbasis the right length?"""
         self.assertEquals(self.data.natom, len(self.data.gbasis))
 
     @skipForParser('Molcas','The parser is still being developed so we skip this test')
+    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testnames(self):
         """Are the name of basis set functions acceptable?"""
         for atom in self.data.gbasis:
@@ -49,6 +51,7 @@ class GenericBasisTest(unittest.TestCase):
                              "%s not one of S or P" % fns[0])
 
     @skipForParser('Molcas','The parser is still being developed so we skip this test')
+    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testsizeofbasis(self):
         """Is the basis set the correct size?"""
 
@@ -61,6 +64,7 @@ class GenericBasisTest(unittest.TestCase):
         self.assertEquals(self.data.nbasis, total)
 
     @skipForParser('Molcas','The parser is still being developed so we skip this test')
+    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testcontractions(self):
         """Are the number of contractions on all atoms correct?"""
         for iatom, atom in enumerate(self.data.gbasis):
@@ -68,6 +72,7 @@ class GenericBasisTest(unittest.TestCase):
             self.assertEquals(len(atom), self.contractions[atomno])
 
     @skipForParser('Molcas','The parser is still being developed so we skip this test')
+    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testprimitives(self):
         """Are all primitives 2-tuples?"""
         for atom in self.data.gbasis:
@@ -76,6 +81,7 @@ class GenericBasisTest(unittest.TestCase):
                     self.assertEquals(len(primitive), 2)
 
     @skipForParser('Molcas','The parser is still being developed so we skip this test')
+    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testcoeffs(self):
         """Are the atomic basis set exponents and coefficients correct?"""
 
