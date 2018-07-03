@@ -24,7 +24,7 @@
  H                 -1.43338788   -3.55272039    0.00000000
  basis = sto-3g
  group = nosym
-
+>>> Export MOLCAS_REDUCE_PRT = NO
 &seward
 
 &scf
