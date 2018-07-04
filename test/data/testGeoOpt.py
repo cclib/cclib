@@ -304,7 +304,7 @@ class OrcaGeoOptTest(GenericGeoOptTest):
         self.assertTrue(converged)
 
 
-class PsiGeoOptTest(GenericGeoOptTest):
+class Psi4GeoOptTest(GenericGeoOptTest):
     """Customized geometry optimization unittest"""
 
     # Psi has a number of different convergence strategies to choose from, as described here:

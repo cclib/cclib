@@ -5,10 +5,7 @@
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
 
-"""Parser for Psi3 and Psi4 output files"""
-
-
-import re
+"""Parser for Psi4 output files."""
 
 import numpy
 
@@ -17,27 +14,23 @@ from cclib.parser import logfileparser
 from cclib.parser import utils
 
 
-class Psi(logfileparser.Logfile):
-    """A Psi log file."""
+class Psi4(logfileparser.Logfile):
+    """A Psi4 log file."""
 
     def __init__(self, *args, **kwargs):
 
         # Call the __init__ method of the superclass
-        super(Psi, self).__init__(logname="Psi", *args, **kwargs)
+        super(Psi4, self).__init__(logname="Psi4", *args, **kwargs)
 
     def __str__(self):
         """Return a string representation of the object."""
-        return "Psi log file %s" % (self.filename)
+        return "Psi4 log file %s" % (self.filename)
 
     def __repr__(self):
         """Return a representation of the object."""
-        return 'Psi("%s")' % (self.filename)
+        return 'Psi4("%s")' % (self.filename)
 
     def before_parsing(self):
-
-        # There are some major differences between the output of Psi3 and Psi4,
-        # so it will be useful to register which one we are dealing with.
-        self.version = None
 
         # Early beta versions of Psi4 normalize basis function
         # coefficients when printing.
@@ -56,24 +49,17 @@ class Psi(logfileparser.Logfile):
                 self.set_attribute('natom', len(self.atomnos))
 
     def normalisesym(self, label):
-        """Psi does not require normalizing symmetry labels."""
+        """Psi4 does not require normalizing symmetry labels."""
         return label
 
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
 
-        # The version should always be detected.
-        if "PSI3: An Open-Source Ab Initio" in line:
-            self.version = 3
         if "PSI4: An Open-Source Ab Initio".lower() in line.lower():
-            self.version = 4
-            # A more detailed version (minor and patch level) appears
-            # on the next line.
-            line = next(inputfile)
             # Keep track of early versions of Psi4.
             if "beta" in line:
                 self.version_4_beta = True
-        self.metadata["package_version"] = self.version
+        self.metadata["package_version"] = 4
 
         # This will automatically change the section attribute for Psi4, when encountering
         # a line that <== looks like this ==>, to whatever is in between.
@@ -91,38 +77,6 @@ class Psi(logfileparser.Logfile):
             # Work with a complex reference as if it's real.
             if self.reference[0] == 'C':
                 self.reference = self.reference[1:]
-
-        # Psi3 prints the coordinates in several configurations, and we will parse the
-        # the canonical coordinates system in Angstroms as the first coordinate set,
-        # although it is actually somewhere later in the input, after basis set, etc.
-        # We can also get or verify the number of atoms and atomic numbers from this block.
-        if (self.version == 3) and (line.strip() == "-Geometry in the canonical coordinate system (Angstrom):"):
-
-            self.skip_lines(inputfile, ['header', 'd'])
-
-            coords = []
-            numbers = []
-            line = next(inputfile)
-            while line.strip():
-
-                tokens = line.split()
-
-                element = tokens[0]
-                numbers.append(self.table.number[element])
-
-                x = float(tokens[1])
-                y = float(tokens[2])
-                z = float(tokens[3])
-                coords.append([x, y, z])
-
-                line = next(inputfile)
-
-            self.set_attribute('natom', len(coords))
-            self.set_attribute('atomnos', numbers)
-
-            if not hasattr(self, 'atomcoords'):
-                self.atomcoords = []
-            self.atomcoords.append(coords)
 
         #  ==> Geometry <==
         #
@@ -187,20 +141,6 @@ class Psi(logfileparser.Logfile):
                 if not hasattr(self, 'atommasses'):
                     self.atommasses = atommasses
 
-        # In Psi3 there are these two helpful sections.
-        if (self.version == 3) and (line.strip() == '-SYMMETRY INFORMATION:'):
-            line = next(inputfile)
-            while line.strip():
-                if "Number of atoms" in line:
-                    self.set_attribute('natom', int(line.split()[-1]))
-                line = next(inputfile)
-        if (self.version == 3) and (line.strip() == "-BASIS SET INFORMATION:"):
-            line = next(inputfile)
-            while line.strip():
-                if "Number of SO" in line:
-                    self.set_attribute('nbasis', int(line.split()[-1]))
-                line = next(inputfile)
-
         # Psi4 repeats the charge and multiplicity after the geometry.
         if (self.section == "Geometry") and (line[2:16].lower() == "charge       ="):
             charge = int(line.split()[-1])
@@ -208,73 +148,6 @@ class Psi(logfileparser.Logfile):
         if (self.section == "Geometry") and (line[2:16].lower() == "multiplicity ="):
             mult = int(line.split()[-1])
             self.set_attribute('mult', mult)
-
-        # In Psi3, the section with the contraction scheme can be used to infer atombasis.
-        if (self.version == 3) and line.strip() == "-Contraction Scheme:":
-
-            self.skip_lines(inputfile, ['header', 'd'])
-
-            indices = []
-            line = next(inputfile)
-            while line.strip():
-                shells = line.split('//')[-1]
-                expression = shells.strip().replace(' ', '+')
-                expression = expression.replace('s', '*1')
-                expression = expression.replace('p', '*3')
-                expression = expression.replace('d', '*6')
-                nfuncs = eval(expression)
-                if len(indices) == 0:
-                    indices.append(range(nfuncs))
-                else:
-                    start = indices[-1][-1] + 1
-                    indices.append(range(start, start+nfuncs))
-                line = next(inputfile)
-
-            self.set_attribute('atombasis', indices)
-
-        # In Psi3, the integrals program prints useful information when invoked.
-        if (self.version == 3) and (line.strip() == "CINTS: An integrals program written in C"):
-
-            self.skip_lines(inputfile, ['authors', 'd', 'b', 'b'])
-
-            line = next(inputfile)
-            assert line.strip() == "-OPTIONS:"
-            while line.strip():
-                line = next(inputfile)
-
-            line = next(inputfile)
-            assert line.strip() == "-CALCULATION CONSTANTS:"
-            while line.strip():
-                if "Number of atoms" in line:
-                    natom = int(line.split()[-1])
-                    self.set_attribute('natom', natom)
-                if "Number of symmetry orbitals" in line:
-                    nbasis = int(line.split()[-1])
-                    self.set_attribute('nbasis', nbasis)
-                line = next(inputfile)
-
-        # In Psi3, this part contains alot of important data pertaining to the SCF, but not only:
-        if (self.version == 3) and (line.strip() == "CSCF3.0: An SCF program written in C"):
-
-            self.skip_lines(inputfile, ['b', 'authors', 'b', 'd', 'b', 'mult', 'mult_comment', 'b'])
-
-            line = next(inputfile)
-            while line.strip():
-                if line.split()[0] == "multiplicity":
-                    mult = int(line.split()[-1])
-                    self.set_attribute('mult', mult)
-                if line.split()[0] == "charge":
-                    charge = int(line.split()[-1])
-                    self.set_attribute('charge', charge)
-                if line.split()[0] == "convergence":
-                    conv = float(line.split()[-1])
-                if line.split()[0] == "reference":
-                    self.reference = line.split()[-1]
-                line = next(inputfile)
-
-            if not hasattr(self, 'scftargets'):
-                self.scftargets = []
-            self.scftargets.append([conv])
 
         # The printout for Psi4 has a more obvious trigger for the SCF parameter printout.
         if (self.section == "Algorithm") and (line.strip() == "==> Algorithm <=="):
@@ -304,8 +177,8 @@ class Psi(logfileparser.Logfile):
         #       2     C     6s 3p // 2s 1p
         #       3     C     6s 3p // 2s 1p
         # ...
-        if self.section == "Primary Basis" :
-            if line[2:12] == "Basis Set:" :
+        if self.section == "Primary Basis":
+            if line[2:12] == "Basis Set:":
                 self.metadata["basis_set"] = line.split()[2]
 
         if (self.section == "Primary Basis" or self.section == "DFT Potential") and line.strip() == "-Contraction Scheme:":
@@ -409,7 +282,6 @@ class Psi(logfileparser.Logfile):
                 element, index = line.split()
                 if len(element) > 1:
                     element = element[0] + element[1:].lower()
-                atomno = self.table.number[element]
                 index = int(index)
 
                 # This is the code that adds missing atoms when symmetry atoms are excluded
@@ -423,7 +295,7 @@ class Psi(logfileparser.Logfile):
                 while line.find("*") == -1:
 
                     # The shell type and primitive count is in the first line.
-                    shell_type, nprimitives, smthg = line.split()
+                    shell_type, nprimitives, _ = line.split()
                     nprimitives = int(nprimitives)
 
                     # Get the angular momentum for this shell type.
@@ -468,21 +340,6 @@ class Psi(logfileparser.Logfile):
             self.set_attribute('nbasis', nbasis)
 
         #  ==> Iterations <==
-
-        # Psi3 converges just the density elements, although it reports in the iterations
-        # changes in the energy as well as the DIIS error.
-        psi3_iterations_header = "iter       total energy        delta E         delta P          diiser"
-        if (self.version == 3) and (line.strip() == psi3_iterations_header):
-
-            if not hasattr(self, 'scfvalues'):
-                self.scfvalues = []
-            self.scfvalues.append([])
-
-            line = next(inputfile)
-            while line.strip():
-                ddensity = float(line.split()[-2])
-                self.scfvalues[-1].append([ddensity])
-                line = next(inputfile)
 
         # Psi4 converges both the SCF energy and density elements and reports both in the
         # iterations printout. However, the default convergence scheme involves a density-fitted
@@ -542,14 +399,13 @@ class Psi(logfileparser.Logfile):
         if "orbital energies (a.u.)" in line.lower():
 
             # If this is Psi4, we will be in the appropriate section.
-            assert (self.version == 3) or (self.section == "Post-Iterations")
+            assert self.section == "Post-Iterations"
 
             self.moenergies = [[]]
             self.mosyms = [[]]
 
             # Psi4 has dashes under the trigger line, but Psi3 did not.
-            if self.version == 4:
-                self.skip_line(inputfile, 'dashes')
+            self.skip_line(inputfile, 'dashes')
             self.skip_line(inputfile, 'blank')
 
             # Both versions have this case-insensitive substring.
@@ -559,9 +415,7 @@ class Psi(logfileparser.Logfile):
             elif self.reference[0:1] == 'U':
                 assert 'alpha occupied' in occupied.lower()
 
-            # Psi4 now has a blank line, Psi3 does not.
-            if self.version == 4:
-                self.skip_line(inputfile, 'blank')
+            self.skip_line(inputfile, 'blank')
 
             # Parse the occupied MO symmetries and energies.
             self._parse_mosyms_moenergies(inputfile, 0)
@@ -574,26 +428,16 @@ class Psi(logfileparser.Logfile):
             if self.reference[0:2] == 'RO':
                 self.homos.append(self.homos[0])
 
-            # Different numbers of blank lines in Psi3 and Psi4.
-            if self.version == 3:
-                self.skip_line(inputfile, 'blank')
-
             unoccupied = next(inputfile)
             if self.reference[0:2] == 'RO':
                 assert unoccupied.strip() == 'Singly Occupied:'
             elif self.reference[0:1] == 'R':
-                # The header for virtual orbitals is different for
-                # Psi3 and Psi4.
-                if self.version == 3:
-                    assert unoccupied.strip() == 'Unoccupied orbitals'
-                else:
-                    assert unoccupied.strip() == 'Virtual:'
+                assert unoccupied.strip() == 'Virtual:'
             elif self.reference[0:1] == 'U':
                 assert unoccupied.strip() == 'Alpha Virtual:'
 
             # Psi4 now has a blank line, Psi3 does not.
-            if self.version == 4:
-                self.skip_line(inputfile, 'blank')
+            self.skip_line(inputfile, 'blank')
 
             # Parse the unoccupied MO symmetries and energies.
             self._parse_mosyms_moenergies(inputfile, 0)
@@ -617,32 +461,27 @@ class Psi(logfileparser.Logfile):
                 self.skip_line(inputfile, 'blank')
                 self._parse_mosyms_moenergies(inputfile, 0)
 
-            if self.version == 4:
-                line = next(inputfile)
-                assert line.strip() == 'Final Occupation by Irrep:'
-                line = next(inputfile)
-                irreps = line.split()
-                line = next(inputfile)
+            line = next(inputfile)
+            assert line.strip() == 'Final Occupation by Irrep:'
+            line = next(inputfile)
+            irreps = line.split()
+            line = next(inputfile)
+            tokens = line.split()
+            assert tokens[0] == 'DOCC'
+            docc = sum([int(x.replace(',', '')) for x in tokens[2:-1]])
+            line = next(inputfile)
+            if line.strip():
                 tokens = line.split()
-                assert tokens[0] == 'DOCC'
-                docc = sum([int(x.replace(',', '')) for x in tokens[2:-1]])
-                line = next(inputfile)
-                if line.strip():
-                    tokens = line.split()
-                    assert tokens[0] in ('SOCC', 'NA')
-                    socc = sum([int(x.replace(',', '')) for x in tokens[2:-1]])
-                    # Fix up the restricted open-shell alpha HOMO.
-                    if self.reference[0:2] == 'RO':
-                        self.homos[0] += socc
+                assert tokens[0] in ('SOCC', 'NA')
+                socc = sum([int(x.replace(',', '')) for x in tokens[2:-1]])
+                # Fix up the restricted open-shell alpha HOMO.
+                if self.reference[0:2] == 'RO':
+                    self.homos[0] += socc
 
         # Both Psi3 and Psi4 print the final SCF energy right after the orbital energies,
         # but the label is different. Psi4 also does DFT, and the label is also different in that case.
-        if (self.version == 3 and "* SCF total energy" in line) or \
-           (self.section == "Post-Iterations" and "Final Energy:" in line):
-            if self.version == 3:
-                e = float(line.split()[-1])
-            else:
-                e = float(line.split()[3])
+        if self.section == "Post-Iterations" and "Final Energy:" in line:
+            e = float(line.split()[3])
             if not hasattr(self, 'scfenergies'):
                 self.scfenergies = []
             self.scfenergies.append(utils.convertor(e, 'hartree', 'eV'))
@@ -855,7 +694,7 @@ class Psi(logfileparser.Logfile):
         #
         # Properties will be evaluated at   0.000000,   0.000000,   0.000000 Bohr
         #
-        if (self.version == 4) and ("Properties will be evaluated at" in line.strip()):
+        if "Properties will be evaluated at" in line.strip():
             self.origin = numpy.array([float(x.strip(',')) for x in line.split()[-4:-1]])
             assert line.split()[-1] == "Bohr"
             self.origin = utils.convertor(self.origin, 'bohr', 'Angstrom')
@@ -951,65 +790,8 @@ class Psi(logfileparser.Logfile):
                     else:
                         assert numpy.allclose(self.moments[im], m, atol=1.0e4)
 
-        # We can also get some higher moments in Psi3, although here the dipole is not printed
-        # separately and the order is not lexicographical. However, the numbers seem
-        # kind of strange -- the quadrupole seems to be traceless, although I'm not sure
-        # whether the standard transformation has been used. So, until we know what kind
-        # of moment these are and how to make them raw again, we will only parse the dipole.
-        #
-        # --------------------------------------------------------------
-        #                *** Electric multipole moments ***
-        # --------------------------------------------------------------
-        #
-        #  CAUTION : The system has non-vanishing dipole moment, therefore
-        #    quadrupole and higher moments depend on the reference point.
-        #
-        # -Coordinates of the reference point (a.u.) :
-        #           x                     y                     z
-        #  --------------------  --------------------  --------------------
-        #          0.0000000000          0.0000000000          0.0000000000
-        #
-        # -Electric dipole moment (expectation values) :
-        #
-        #    mu(X)  =  -0.00000 D  =  -1.26132433e-43 C*m  =  -0.00000000 a.u.
-        #    mu(Y)  =   0.00000 D  =   3.97987832e-44 C*m  =   0.00000000 a.u.
-        #    mu(Z)  =   0.00000 D  =   0.00000000e+00 C*m  =   0.00000000 a.u.
-        #    |mu|   =   0.00000 D  =   1.32262368e-43 C*m  =   0.00000000 a.u.
-        #
-        # -Components of electric quadrupole moment (expectation values) (a.u.) :
-        #
-        #     Q(XX) =   10.62340220   Q(YY) =    1.11816843   Q(ZZ) =  -11.74157063
-        #     Q(XY) =    3.64633112   Q(XZ) =    0.00000000   Q(YZ) =    0.00000000
-        #
-        if (self.version == 3) and line.strip() == "*** Electric multipole moments ***":
+        ## Analytic Gradient
 
-            self.skip_lines(inputfile, ['d', 'b', 'caution1', 'caution2', 'b'])
-
-            coordinates = next(inputfile)
-            assert coordinates.split()[-2] == "(a.u.)"
-            self.skip_lines(inputfile, ['xyz', 'd'])
-            line = next(inputfile)
-            self.origin = numpy.array([float(x) for x in line.split()])
-            self.origin = utils.convertor(self.origin, 'bohr', 'Angstrom')
-
-            self.skip_line(inputfile, "blank")
-            line = next(inputfile)
-            assert "Electric dipole moment" in line
-            self.skip_line(inputfile, "blank")
-
-            # Make sure to use the column that has the value in Debyes.
-            dipole = []
-            for i in range(3):
-                line = next(inputfile)
-                dipole.append(float(line.split()[2]))
-
-            if not hasattr(self, 'moments'):
-                self.moments = [self.origin, dipole]
-            else:
-                assert self.moments[1] == dipole
-
-        ## Analytic Gradient (Psi4)
-         
         #        -Total Gradient:
         #   Atom            X                  Y                   Z
         #  ------   -----------------  -----------------  -----------------
@@ -1025,19 +807,19 @@ class Psi(logfileparser.Logfile):
                 idx, x, y, z = line.split()
                 grads.append((float(x), float(y), float(z)))
                 line = next(inputfile)
-        
+
             if not hasattr(self, 'grads'):
                 self.grads = []
             self.grads.append(grads)
 
-        ## Finite Differences Gradient (Psi4)
+        ## Finite Differences Gradient
 
         # -------------------------------------------------------------
         #   ## F-D gradient (Symmetry 0) ##
         #   Irrep: 1 Size: 3 x 3
-        # 
+        #
         #                  1                   2                   3
-        # 
+        #
         #     1     0.00000000000000     0.00000000000000    -0.02921303282515
         #     2     0.00000000000000    -0.00979709321487     0.01460651641258
         #     3     0.00000000000000     0.00979709321487     0.01460651641258
@@ -1054,12 +836,12 @@ class Psi(logfileparser.Logfile):
                 idx, x, y, z = line.split()
                 grads.append((float(x), float(y), float(z)))
                 line = next(inputfile)
-        
+
             if not hasattr(self, 'grads'):
                 self.grads = []
             self.grads.append(grads)
 
-        
+
         ## Harmonic frequencies.
 
         # -------------------------------------------------------------
@@ -1091,7 +873,7 @@ class Psi(logfileparser.Logfile):
             while '---' not in line:
                 chomp = line.split()
                 vibsym = chomp[0]
-                vibfreq = Psi.parse_vibfreq(chomp[1])
+                vibfreq = Psi4.parse_vibfreq(chomp[1])
                 vibsyms.append(vibsym)
                 vibfreqs.append(vibfreq)
                 line = next(inputfile)
@@ -1127,7 +909,7 @@ class Psi(logfileparser.Logfile):
             # C      0.000   0.000   0.050      12.000000
             # C      0.000   0.000   0.050      12.000000
             for vibfreq in self.vibfreqs:
-                _vibfreq = Psi.parse_vibfreq(line[13:].strip())
+                _vibfreq = Psi4.parse_vibfreq(line[13:].strip())
                 assert abs(vibfreq - _vibfreq) < 1.0e-2
                 line = next(inputfile)
                 # Can't do anything with this for now.
