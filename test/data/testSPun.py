@@ -22,13 +22,11 @@ __filedir__ = os.path.realpath(os.path.dirname(__file__))
 class GenericSPunTest(unittest.TestCase):
     """Generic unrestricted single point unittest"""
 
-    @skipForParser('Molcas','The parser is still being developed so we skip this test')
     @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testnatom(self):
         """Is the number of atoms equal to 20?"""
         self.assertEquals(self.data.natom, 20)
 
-    @skipForParser('Molcas','The parser is still being developed so we skip this test')
     @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testatomnos(self):
         """Are the atomnos correct?"""
@@ -37,7 +35,6 @@ class GenericSPunTest(unittest.TestCase):
         self.assertEquals(self.data.atomnos.shape, (20,) )
         self.assertEquals(sum(self.data.atomnos==6) + sum(self.data.atomnos==1), 20)
 
-    @skipForParser('Molcas','The parser is still being developed so we skip this test')
     @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testatomcoords(self):
         """Are the dimensions of atomcoords 1 x natom x 3?"""
@@ -62,14 +59,12 @@ class GenericSPunTest(unittest.TestCase):
         self.assertEquals(self.data.charge, 1)
         self.assertEquals(self.data.mult, 2)
 
-    @skipForParser('Molcas','The parser is still being developed so we skip this test')
     @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testhomos(self):
         """Are the homos correct?"""
         msg = "%s != array([34,33],'i')" % numpy.array_repr(self.data.homos)
         numpy.testing.assert_array_equal(self.data.homos, numpy.array([34,33],"i"), msg)
 
-    @skipForParser('Molcas','The parser is still being developed so we skip this test')
     @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testmoenergies(self):
         """Are the dims of the moenergies equals to 2 x nmo?"""
@@ -178,6 +173,24 @@ class JaguarSPunTest(GenericSPunTest):
         shape1 = (len(self.data.mosyms), len(self.data.mosyms[1]))
         self.assertEquals(shape0, (2, self.data.homos[0]+11))
         self.assertEquals(shape1, (2, self.data.homos[1]+11))
+
+
+class MolcasSPunTest(GenericSPunTest):
+    """Customized unrestricted single point unittest"""
+
+    # In MOLCAS we are parsing not only the alpha/beta orbitals but also
+    # the Natural orbitals. Hence we have 3 homos.
+    def testhomos(self):
+        """Are the homos correct?"""
+        msg = "%s != array([34,33,40],'i')" % numpy.array_repr(self.data.homos)
+        numpy.testing.assert_array_equal(self.data.homos, numpy.array([34,33,40],"i"), msg)
+
+    def testmoenergies(self):
+        """Are the dims of the moenergies equals to 3 x nmo?"""
+        self.assertEquals(len(self.data.moenergies), 3)
+        self.assertEquals(len(self.data.moenergies[0]), self.data.nmo)
+        self.assertEquals(len(self.data.moenergies[1]), self.data.nmo)
+        self.assertEquals(len(self.data.moenergies[2]), self.data.nmo)
 
 
 if __name__=="__main__":

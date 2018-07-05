@@ -250,7 +250,7 @@ SPun      Gaussian    GaussianSPunTest      basicGaussian16       dvb_un_sp_b.lo
 SPun      Jaguar      JaguarSPunTest        basicJaguar7.0        dvb_un_sp.out
 SPun      Jaguar      JaguarSPunTest        basicJaguar8.3        dvb_un_sp_hf.out
 SPun      Jaguar      JaguarSPunTest        basicJaguar8.3        dvb_un_sp_ks.out
-SPun	  Molcas      GenericSPunTest       basicOpenMolcas18.0	  dvb_sp_un.out
+SPun	  Molcas      MolcasSPunTest        basicOpenMolcas18.0	  dvb_sp_un.out
 SPun      Molpro      GenericSPunTest       basicMolpro2006       dvb_sphf_un.out
 SPun      Molpro      GenericSPunTest       basicMolpro2012       dvb_sphf_un.out
 SPun      NWChem      GenericSPunTest       basicNWChem6.0        dvb_un_sp_ks.out

@@ -1770,7 +1770,7 @@ old_unittests = {
     "Jaguar/Jaguar6.5/dvb_ir.out":      JaguarIRTest,
 
     "Molcas/Molcas8.0/dvb_sp.out":      MolcasSPTest,
-    "Molcas/Molcas8.0/dvb_sp_un.out":   GenericSPunTest,
+    "Molcas/Molcas8.0/dvb_sp_un.out":   MolcasSPunTest,
     "Molcas/Molcas8.0/C_bigbasis.out":  MolcasBigBasisTest,
 
     "Molpro/Molpro2006/C_bigbasis_cart.out":    MolproBigBasisTest_cart,
