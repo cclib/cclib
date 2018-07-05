@@ -40,6 +40,17 @@ class Psi4(logfileparser.Logfile):
         # with changes triggered by ==> things like this <== (Psi3 does not have this)
         self.section = None
 
+        # Match the number of skipped lines required based on the type
+        # of gradient present (determined from the header), as
+        # otherwise the parsing is identical.
+        self.gradient_headers = {
+            '-Total Gradient:': 'analytic',
+            '## F-D gradient (Symmetry 0) ##': 'numerical',
+        }
+        self.gradient_skip_lines = {
+            'analytic': ['header', 'dash header'],
+            'numerical': ['Irrep num and total size', 'b', '123', 'b'],
+        }
 
     def after_parsing(self):
 
@@ -791,7 +802,6 @@ class Psi4(logfileparser.Logfile):
                         assert numpy.allclose(self.moments[im], m, atol=1.0e4)
 
         ## Analytic Gradient
-
         #        -Total Gradient:
         #   Atom            X                  Y                   Z
         #  ------   -----------------  -----------------  -----------------
@@ -799,21 +809,7 @@ class Psi4(logfileparser.Logfile):
         #     2        0.000000000000    -0.028380539652     0.032263626146
         #     3       -0.000000000000     0.028380539652     0.032263626146
 
-        if line.strip() == '-Total Gradient:':
-            self.skip_lines(inputfile, ['header', 'dash header'])
-            line = next(inputfile)
-            grads = []
-            while line.strip():
-                idx, x, y, z = line.split()
-                grads.append((float(x), float(y), float(z)))
-                line = next(inputfile)
-
-            if not hasattr(self, 'grads'):
-                self.grads = []
-            self.grads.append(grads)
-
         ## Finite Differences Gradient
-
         # -------------------------------------------------------------
         #   ## F-D gradient (Symmetry 0) ##
         #   Irrep: 1 Size: 3 x 3
@@ -824,11 +820,9 @@ class Psi4(logfileparser.Logfile):
         #     2     0.00000000000000    -0.00979709321487     0.01460651641258
         #     3     0.00000000000000     0.00979709321487     0.01460651641258
 
-        if line.strip() == '## F-D gradient (Symmetry 0) ##':
-            next(inputfile)
-            self.skip_lines(inputfile, ['b'])
-            next(inputfile)
-            self.skip_lines(inputfile, ['b'])
+        if line.strip() in self.gradient_headers:
+            gradient_type = self.gradient_headers[line.strip()]
+            self.skip_lines(inputfile, self.gradient_skip_lines[gradient_type])
             line = next(inputfile)
             grads = []
 
@@ -840,7 +834,6 @@ class Psi4(logfileparser.Logfile):
             if not hasattr(self, 'grads'):
                 self.grads = []
             self.grads.append(grads)
-
 
         ## Harmonic frequencies.
 
