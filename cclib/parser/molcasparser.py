@@ -616,7 +616,58 @@ class Molcas(logfileparser.Logfile):
 
             self.atomcoords.append(atomcoords)
 
+        #        All orbitals with orbital energies smaller than  E(LUMO)+0.5 are printed
+        #
+        #  ++    Molecular orbitals:
+        #        -------------------
+        #
+        #        Title: RKS-DFT orbitals
+        #
+        #        Molecular orbitals for symmetry species 1: a
+        #
+        #            Orbital        1         2         3         4         5         6         7         8         9        10
+        #            Energy      -10.0179  -10.0179  -10.0075  -10.0075  -10.0066  -10.0066  -10.0056  -10.0055   -9.9919   -9.9919
+        #            Occ. No.      2.0000    2.0000    2.0000    2.0000    2.0000    2.0000    2.0000    2.0000    2.0000    2.0000
+        #
+        #          1 C1    1s     -0.6990    0.6989    0.0342    0.0346    0.0264   -0.0145   -0.0124   -0.0275   -0.0004   -0.0004
+        #          2 C1    2s     -0.0319    0.0317   -0.0034   -0.0033   -0.0078    0.0034    0.0041    0.0073   -0.0002   -0.0002
+        # ...
+        # ...
+        #         58 H18   1s      0.2678
+        #         59 H19   1s     -0.2473
+        #         60 H20   1s      0.1835
+        #  --
+        if '++    Molecular orbitals:' in line:
+            self.skip_lines(inputfile,['d','b','title','b'])
+            line = next(inputfile)
+            moenergies = []
+            homos = 0
+            while line[:2] != '--':
+                if 'Energy' in line:
+                    energies = [utils.convertor(float(x),'hartree','eV') for x in line.split()[1:]]
+                    moenergies.extend(energies)
 
+                if 'Occ. No.' in line:
+                    for i in line.split()[2:]:
+                        if float(i) != 0:
+                                homos = homos + 1
+
+                line = next(inputfile)
+
+            if len(moenergies) != self.nmo:
+                moenergies.extend([numpy.nan for x in range(self.nmo-len(moenergies))])
+
+            if not hasattr(self, 'moenergies'):
+                self.moenergies = []
+                self.moenergies.append(moenergies)
+            else:
+                self.moenergies.append(moenergies)
+
+            if not hasattr(self, 'homos'):
+                self.homos = []
+                self.homos.extend([homos-1])
+            else:
+                self.homos.extend([homos-1])
 
 if __name__ == '__main__':
     import sys
