@@ -821,11 +821,15 @@ class Psi4(logfileparser.Logfile):
         #     3     0.00000000000000     0.00979709321487     0.01460651641258
         if line.strip() in Psi4.GRADIENT_HEADERS:
 
-            grads = self.parse_gradient(inputfile, line)
+            # Handle the different header lines between analytic and
+            # numerical gradients.
+            gradient_type = Psi4.GRADIENT_HEADERS[line.strip()]
+            gradient_skip_lines = Psi4.GRADIENT_SKIP_LINES[gradient_type]
+            gradient = self.parse_gradient(inputfile, gradient_skip_lines)
 
             if not hasattr(self, 'grads'):
                 self.grads = []
-            self.grads.append(grads)
+            self.grads.append(gradient)
 
         ## Harmonic frequencies.
 
@@ -935,13 +939,11 @@ class Psi4(logfileparser.Logfile):
             line = next(inputfile)
         return
 
-    def parse_gradient(self, inputfile, line):
+    def parse_gradient(self, inputfile, skip_lines):
         """Parse the nuclear gradient section into a list of lists with shape
-        [natom, 3]. It handles the different header lines between
-        analytic and numerical gradients.
+        [natom, 3].
         """
-        gradient_type = Psi4.GRADIENT_HEADERS[line.strip()]
-        self.skip_lines(inputfile, self.GRADIENT_SKIP_LINES[gradient_type])
+        self.skip_lines(inputfile, skip_lines)
         line = next(inputfile)
         gradient = []
 
