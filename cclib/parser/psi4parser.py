@@ -22,18 +22,6 @@ class Psi4(logfileparser.Logfile):
         # Call the __init__ method of the superclass
         super(Psi4, self).__init__(logname="Psi4", *args, **kwargs)
 
-    # Match the number of skipped lines required based on the type
-    # of gradient present (determined from the header), as
-    # otherwise the parsing is identical.
-    GRADIENT_HEADERS = {
-        '-Total Gradient:': 'analytic',
-        '## F-D gradient (Symmetry 0) ##': 'numerical',
-    }
-    GRADIENT_SKIP_LINES = {
-        'analytic': ['header', 'dash header'],
-        'numerical': ['Irrep num and total size', 'b', '123', 'b'],
-    }
-
     def __str__(self):
         """Return a string representation of the object."""
         return "Psi4 log file %s" % (self.filename)
@@ -62,6 +50,18 @@ class Psi4(logfileparser.Logfile):
     def normalisesym(self, label):
         """Psi4 does not require normalizing symmetry labels."""
         return label
+
+    # Match the number of skipped lines required based on the type
+    # of gradient present (determined from the header), as
+    # otherwise the parsing is identical.
+    GRADIENT_HEADERS = {
+        '-Total Gradient:': 'analytic',
+        '## F-D gradient (Symmetry 0) ##': 'numerical',
+    }
+    GRADIENT_SKIP_LINES = {
+        'analytic': ['header', 'dash header'],
+        'numerical': ['Irrep num and total size', 'b', '123', 'b'],
+    }
 
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
