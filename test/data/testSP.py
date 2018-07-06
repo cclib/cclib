@@ -60,7 +60,7 @@ class GenericSPTest(unittest.TestCase):
     @skipForParser('DALTON', 'DALTON has a very low accuracy for the printed values of all populations (2 decimals rounded in a weird way), so let it slide for now')
     @skipForLogfile('Jaguar/basicJaguar7', 'We did not print the atomic partial charges in the unit tests for this version')
     @skipForLogfile('Molpro/basicMolpro2006', "These tests were run a long time ago and since we don't have access to Molpro 2006 anymore, we can skip this test (it is tested in 2012)")
-    @skipForLogfile('Psi/basicPsi3', 'Psi3 did not print partial atomic charges')
+    @skipForLogfile('Psi3/basicPsi3', 'Psi3 did not print partial atomic charges')
     @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testatomcharges(self):
         """Are atomcharges (at least Mulliken) consistent with natom and sum to zero?"""
@@ -116,8 +116,8 @@ class GenericSPTest(unittest.TestCase):
     @skipForParser('Molcas','The parser is still being developed so we skip this test')
     @skipForParser('Molpro', 'atommasses not implemented yet')
     @skipForParser('NWChem', 'atommasses not implemented yet')
-    @skipForLogfile('Psi/basicPsi3', 'atommasses not implemented yet')
-    @skipForLogfile('Psi/basicPsi4.0b5', 'atommasses not implemented yet')
+    @skipForLogfile('Psi3/basicPsi3', 'atommasses not implemented yet')
+    @skipForLogfile('Psi4/basicPsi4.0b5', 'atommasses not implemented yet')
     @skipForParser('QChem', 'atommasses not implemented yet')
     @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testatommasses(self):
@@ -191,7 +191,7 @@ class GenericSPTest(unittest.TestCase):
     @skipForParser('DALTON', 'mocoeffs not implemented yet')
     @skipForLogfile('Jaguar/basicJaguar7', 'Data file does not contain enough information. Can we make a new one?')
     @skipForParser('Molcas','The parser is still being developed so we skip this test')
-    @skipForLogfile('Psi/basicPsi3', 'MO coefficients are printed separately for each SALC')
+    @skipForLogfile('Psi3/basicPsi3', 'MO coefficients are printed separately for each SALC')
     @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testdimmocoeffs(self):
         """Are the dimensions of mocoeffs equal to 1 x nmo x nbasis?"""
@@ -202,7 +202,8 @@ class GenericSPTest(unittest.TestCase):
 
     @skipForParser('DALTON', 'To print: **INTEGRALS\n.PROPRI')
     @skipForParser('Molcas','The parser is still being developed so we skip this test')
-    @skipForParser('Psi', 'Psi does not currently have the option to print the overlap matrix')
+    @skipForParser('Psi3', 'Psi3 does not currently have the option to print the overlap matrix')
+    @skipForParser('Psi4', 'Psi4 does not currently have the option to print the overlap matrix')
     @skipForParser('QChem', 'QChem cannot print the overlap matrix')
     @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testaooverlaps(self):
@@ -287,6 +288,12 @@ class GenericSPTest(unittest.TestCase):
     @skipForParser('ADF', 'Does not support metadata yet')
     @skipForParser('GAMESSUK', 'Does not support metadata yet')
     @skipForParser('Molcas','The parser is still being developed so we skip this test')
+    @skipForParser('Molpro', 'Does not support metadata yet')
+    @skipForParser('NWChem', 'Does not support metadata yet')
+    @skipForParser('ORCA', 'Does not support metadata yet')
+    @skipForParser('Psi3', 'Does not support metadata yet')
+    @skipForParser('Psi4', 'Does not support metadata yet')
+    @skipForParser('QChem', 'Does not support metadata yet')
     @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testmetadata(self):
         """Does metadata have expected keys and values?"""

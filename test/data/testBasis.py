@@ -154,7 +154,7 @@ class MolproBigBasisTest(GenericBigBasisTest):
     spherical = True
 
 
-class PsiBigBasisTest(GenericBigBasisTest):
+class Psi4BigBasisTest(GenericBigBasisTest):
     """Customized big basis set unittest"""
     spherical = True
 

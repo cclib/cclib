@@ -43,7 +43,8 @@ class guess_fileypeTest(unittest.TestCase):
         self.assertEqual(self.guess(['MOPAC2016']), cclib.parser.MOPAC)
         self.assertEqual(self.guess(['Northwest Computational Chemistry Package']), cclib.parser.NWChem)
         self.assertEqual(self.guess(['O   R   C   A']), cclib.parser.ORCA)
-        self.assertEqual(self.guess(["PSI ...Ab Initio Electronic Structure"]), cclib.parser.Psi)
+        self.assertEqual(self.guess(["PSI3: An Open-Source Ab Initio Electronic Structure Package"]), cclib.parser.Psi3)
+        self.assertEqual(self.guess(["Psi4: An Open-Source Ab Initio Electronic Structure Package"]), cclib.parser.Psi4)
         self.assertEqual(self.guess(['A Quantum Leap Into The Future Of Chemistry']), cclib.parser.QChem)
 
 

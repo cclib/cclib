@@ -26,8 +26,8 @@ sys.path.insert(1, os.path.join(__filedir__, 'data'))
 
 
 parser_names = [
-    "ADF", "DALTON", "GAMESS", "GAMESSUK", "Gaussian", "Jaguar", "Molcas", "Molpro",
-    "MOPAC", "NWChem", "ORCA", "Psi", "QChem", "Turbomole",
+    "ADF", "DALTON", "GAMESS", "GAMESSUK", "Gaussian", "Jaguar", "Molpro",
+    "Molcas", "MOPAC", "NWChem", "ORCA", "Psi3", "Psi4", "QChem", "Turbomole",
 ]
 all_parsers = {name: getattr(cclib.parser, name) for name in parser_names}
 
@@ -248,7 +248,7 @@ class DataSuite(object):
             # is a semiempirical-only program.
             'NWChem6.5' : getdatafile('NWChem', "basicNWChem6.5", ["dvb_gopt_ks.out"])[0],
             'ORCA3.0' : getdatafile('ORCA', "basicORCA3.0", ["dvb_gopt.out"])[0],
-            'Psi4.0' : getdatafile('Psi', "basicPsi4.0", ["dvb_gopt_rks.out"])[0],
+            'Psi4-1.0' : getdatafile('Psi4', "basicPsi4-1.0", ["dvb_gopt_rks.out"])[0],
             'QChem4.2' : getdatafile('QChem', "basicQChem4.2", ["dvb_gopt.out"])[0],
         }
         parser_names = sorted(parsers_to_test.keys())
