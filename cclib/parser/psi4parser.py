@@ -819,17 +819,9 @@ class Psi4(logfileparser.Logfile):
         #     1     0.00000000000000     0.00000000000000    -0.02921303282515
         #     2     0.00000000000000    -0.00979709321487     0.01460651641258
         #     3     0.00000000000000     0.00979709321487     0.01460651641258
-
         if line.strip() in Psi4.GRADIENT_HEADERS:
-            gradient_type = Psi4.GRADIENT_HEADERS[line.strip()]
-            self.skip_lines(inputfile, self.GRADIENT_SKIP_LINES[gradient_type])
-            line = next(inputfile)
-            grads = []
 
-            while line.strip():
-                idx, x, y, z = line.split()
-                grads.append((float(x), float(y), float(z)))
-                line = next(inputfile)
+            grads = self.parse_gradient(inputfile, line)
 
             if not hasattr(self, 'grads'):
                 self.grads = []
@@ -942,6 +934,22 @@ class Psi4(logfileparser.Logfile):
                 self.moenergies[spinidx].append(moenergy)
             line = next(inputfile)
         return
+
+    def parse_gradient(self, inputfile, line):
+        """Parse the nuclear gradient section into a list of lists with shape
+        [natom, 3]. It handles the different header lines between
+        analytic and numerical gradients.
+        """
+        gradient_type = Psi4.GRADIENT_HEADERS[line.strip()]
+        self.skip_lines(inputfile, self.GRADIENT_SKIP_LINES[gradient_type])
+        line = next(inputfile)
+        gradient = []
+
+        while line.strip():
+            idx, x, y, z = line.split()
+            gradient.append((float(x), float(y), float(z)))
+            line = next(inputfile)
+        return gradient
 
     @staticmethod
     def parse_vibfreq(vibfreq):
