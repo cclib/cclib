@@ -40,10 +40,12 @@ class GenericSPTest(unittest.TestCase):
     # Generally, one criteria for SCF energy convergence. 
     num_scf_criteria = 1
 
+    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testnatom(self):
         """Is the number of atoms equal to 20?"""
         self.assertEquals(self.data.natom, 20)
 
+    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testatomnos(self):
         """Are the atomnos correct?"""
 
@@ -59,6 +61,7 @@ class GenericSPTest(unittest.TestCase):
     @skipForLogfile('Jaguar/basicJaguar7', 'We did not print the atomic partial charges in the unit tests for this version')
     @skipForLogfile('Molpro/basicMolpro2006', "These tests were run a long time ago and since we don't have access to Molpro 2006 anymore, we can skip this test (it is tested in 2012)")
     @skipForLogfile('Psi3/basicPsi3', 'Psi3 did not print partial atomic charges')
+    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testatomcharges(self):
         """Are atomcharges (at least Mulliken) consistent with natom and sum to zero?"""
         for type in set(['mulliken'] + list(self.data.atomcharges.keys())):
@@ -66,11 +69,13 @@ class GenericSPTest(unittest.TestCase):
             self.assertEquals(len(charges), self.data.natom)
             self.assertAlmostEquals(sum(charges), 0.0, delta=0.001)
 
+    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testatomcoords(self):
         """Are the dimensions of atomcoords 1 x natom x 3?"""
         expected_shape = (1, self.data.natom, 3)
         self.assertEquals(self.data.atomcoords.shape, expected_shape)
 
+    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testatomcoords_units(self):
         """Are atomcoords consistent with Angstroms?"""
         min_carbon_dist = get_minimum_carbon_separation(self.data)
@@ -78,11 +83,13 @@ class GenericSPTest(unittest.TestCase):
         self.assertTrue(dev < 0.03, "Minimum carbon dist is %.2f (not 1.34)" % min_carbon_dist)
 
     @skipForParser('Molcas','The parser is still being developed so we skip this test')
+    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testcharge_and_mult(self):
         """Are the charge and multiplicity correct?"""
         self.assertEquals(self.data.charge, 0)
         self.assertEquals(self.data.mult, 1)
 
+    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testnbasis(self):
         """Is the number of basis set functions correct?"""
         count = sum([self.nbasisdict[n] for n in self.data.atomnos])
@@ -91,6 +98,7 @@ class GenericSPTest(unittest.TestCase):
     @skipForParser('ADF', 'ADF parser does not extract atombasis')
     @skipForLogfile('Jaguar/basicJaguar7', 'Data file does not contain enough information. Can we make a new one?')
     @skipForParser('Molcas','The parser is still being developed so we skip this test')
+    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testatombasis(self):
         """Are the indices in atombasis the right amount and unique?"""
         all = []
@@ -111,18 +119,21 @@ class GenericSPTest(unittest.TestCase):
     @skipForLogfile('Psi3/basicPsi3', 'atommasses not implemented yet')
     @skipForLogfile('Psi4/basicPsi4.0b5', 'atommasses not implemented yet')
     @skipForParser('QChem', 'atommasses not implemented yet')
+    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testatommasses(self):
         """Do the atom masses sum up to the molecular mass?"""
         mm = 1000*sum(self.data.atommasses)
         msg = "Molecule mass: %f not %f +- %fmD" % (mm, self.molecularmass, self.mass_precision)
         self.assertAlmostEquals(mm, self.molecularmass, delta=self.mass_precision, msg=msg)
 
+    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testcoreelectrons(self):
         """Are the coreelectrons all 0?"""
         ans = numpy.zeros(self.data.natom, 'i')
         numpy.testing.assert_array_equal(self.data.coreelectrons, ans)
 
     @skipForParser('Molcas','The parser is still being developed so we skip this test')
+    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testnormalisesym(self):
         """Did this subclass overwrite normalisesym?"""
         # https://stackoverflow.com/a/8747890
@@ -131,39 +142,47 @@ class GenericSPTest(unittest.TestCase):
     @skipForParser('Molcas','The parser is still being developed so we skip this test')
     @skipForParser('Molpro', '?')
     @skipForParser('ORCA', 'ORCA has no support for symmetry yet')
+    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testsymlabels(self):
         """Are all the symmetry labels either Ag/u or Bg/u?"""
         sumwronglabels = sum([x not in ['Ag', 'Bu', 'Au', 'Bg'] for x in self.data.mosyms[0]])
         self.assertEquals(sumwronglabels, 0)
 
     @skipForParser('Molcas','The parser is still being developed so we skip this test')
+    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testhomos(self):
         """Is the index of the HOMO equal to 34?"""
         numpy.testing.assert_array_equal(self.data.homos, numpy.array([34],"i"), "%s != array([34],'i')" % numpy.array_repr(self.data.homos))
 
+    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testscfvaluetype(self):
         """Are scfvalues and its elements the right type??"""
         self.assertEquals(type(self.data.scfvalues),type([]))
         self.assertEquals(type(self.data.scfvalues[0]),type(numpy.array([])))
 
+    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testscfenergy(self):
         """Is the SCF energy within the target?"""
         self.assertAlmostEquals(self.data.scfenergies[-1], self.b3lyp_energy, delta=40, msg="Final scf energy: %f not %i +- 40eV" %(self.data.scfenergies[-1], self.b3lyp_energy))
 
+    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testscftargetdim(self):
         """Do the scf targets have the right dimensions?"""
         self.assertEquals(self.data.scftargets.shape, (len(self.data.scfvalues), len(self.data.scfvalues[0][0])))
 
+    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testscftargets(self):
         """Are correct number of SCF convergence criteria being parsed?"""
         self.assertEquals(len(self.data.scftargets[0]), self.num_scf_criteria)
 
     @skipForParser('Molcas','The parser is still being developed so we skip this test')
+    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testlengthmoenergies(self):
         """Is the number of evalues equal to nmo?"""
         self.assertEquals(len(self.data.moenergies[0]), self.data.nmo)
 
     @skipForParser('Molcas','The parser is still being developed so we skip this test')
+    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testtypemoenergies(self):
         """Is moenergies a list containing one numpy array?"""
         self.assertEquals(type(self.data.moenergies), type([]))
@@ -171,8 +190,9 @@ class GenericSPTest(unittest.TestCase):
 
     @skipForParser('DALTON', 'mocoeffs not implemented yet')
     @skipForLogfile('Jaguar/basicJaguar7', 'Data file does not contain enough information. Can we make a new one?')
-    @skipForParser('Molcas', 'The parser is still being developed so we skip this test')
+    @skipForParser('Molcas','The parser is still being developed so we skip this test')
     @skipForLogfile('Psi3/basicPsi3', 'MO coefficients are printed separately for each SALC')
+    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testdimmocoeffs(self):
         """Are the dimensions of mocoeffs equal to 1 x nmo x nbasis?"""
         self.assertEquals(type(self.data.mocoeffs), type([]))
@@ -185,6 +205,7 @@ class GenericSPTest(unittest.TestCase):
     @skipForParser('Psi3', 'Psi3 does not currently have the option to print the overlap matrix')
     @skipForParser('Psi4', 'Psi4 does not currently have the option to print the overlap matrix')
     @skipForParser('QChem', 'QChem cannot print the overlap matrix')
+    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testaooverlaps(self):
         """Are the dims and values of the overlap matrix correct?"""
 
@@ -206,6 +227,7 @@ class GenericSPTest(unittest.TestCase):
         self.assertEquals(self.data.aooverlaps[0,3], 0.0)
 
     @skipForParser('Molcas','The parser is still being developed so we skip this test')
+    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testoptdone(self):
         """There should be no optdone attribute set."""
         self.assertFalse(hasattr(self.data, 'optdone'))
@@ -213,6 +235,7 @@ class GenericSPTest(unittest.TestCase):
     @skipForParser('Gaussian', 'Logfile needs to be updated')
     @skipForParser('Jaguar', 'No dipole moments in the logfile')
     @skipForParser('Molcas','The parser is still being developed so we skip this test')
+    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testmoments(self):
         """Does the dipole and possible higher molecular moments look reasonable?"""
 
@@ -271,6 +294,7 @@ class GenericSPTest(unittest.TestCase):
     @skipForParser('Psi3', 'Does not support metadata yet')
     @skipForParser('Psi4', 'Does not support metadata yet')
     @skipForParser('QChem', 'Does not support metadata yet')
+    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testmetadata(self):
         """Does metadata have expected keys and values?"""
         self.assertTrue(hasattr(self.data, "metadata"))

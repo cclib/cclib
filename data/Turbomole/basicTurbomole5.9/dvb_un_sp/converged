@@ -1,0 +1,10 @@
+$convcrit
+  polarizability       6.0000000
+  cartesian gradient   3.0000000
+  cycles              800
+  previous value         -381.8348744523
+$convinfo
+ energy change  : actual value =  -0.1589E-06 threshold =   0.1000E-05
+ geom. gradient : actual value =   0.2588E-04 threshold =   0.1000E-02
+$convergence reached
+$end
