@@ -55,12 +55,8 @@ class Psi4(logfileparser.Logfile):
     # of gradient present (determined from the header), as
     # otherwise the parsing is identical.
     GRADIENT_HEADERS = {
-        '-Total Gradient:': 'analytic',
-        '## F-D gradient (Symmetry 0) ##': 'numerical',
-    }
-    GRADIENT_SKIP_LINES = {
-        'analytic': ['header', 'dash header'],
-        'numerical': ['Irrep num and total size', 'b', '123', 'b'],
+        '-Total Gradient:': ['header', 'dash header'],
+        '## F-D gradient (Symmetry 0) ##': ['Irrep num and total size', 'b', '123', 'b'],
     }
 
     def extract(self, inputfile, line):
@@ -823,8 +819,7 @@ class Psi4(logfileparser.Logfile):
 
             # Handle the different header lines between analytic and
             # numerical gradients.
-            gradient_type = Psi4.GRADIENT_HEADERS[line.strip()]
-            gradient_skip_lines = Psi4.GRADIENT_SKIP_LINES[gradient_type]
+            gradient_skip_lines = Psi4.GRADIENT_HEADERS[line.strip()]
             gradient = self.parse_gradient(inputfile, gradient_skip_lines)
 
             if not hasattr(self, 'grads'):
