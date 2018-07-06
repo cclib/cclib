@@ -175,24 +175,6 @@ class JaguarSPunTest(GenericSPunTest):
         self.assertEquals(shape1, (2, self.data.homos[1]+11))
 
 
-class MolcasSPunTest(GenericSPunTest):
-    """Customized unrestricted single point unittest"""
-
-    # In MOLCAS we are parsing not only the alpha/beta orbitals but also
-    # the Natural orbitals. Hence we have 3 homos.
-    def testhomos(self):
-        """Are the homos correct?"""
-        msg = "%s != array([34,33,40],'i')" % numpy.array_repr(self.data.homos)
-        numpy.testing.assert_array_equal(self.data.homos, numpy.array([34,33,40],"i"), msg)
-
-    def testmoenergies(self):
-        """Are the dims of the moenergies equals to 3 x nmo?"""
-        self.assertEquals(len(self.data.moenergies), 3)
-        self.assertEquals(len(self.data.moenergies[0]), self.data.nmo)
-        self.assertEquals(len(self.data.moenergies[1]), self.data.nmo)
-        self.assertEquals(len(self.data.moenergies[2]), self.data.nmo)
-
-
 if __name__=="__main__":
 
     import sys
