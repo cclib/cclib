@@ -7,6 +7,8 @@
 
 """Parser for Psi4 output files."""
 
+from collections import namedtuple
+
 import numpy
 
 from cclib.parser import data
@@ -51,13 +53,20 @@ class Psi4(logfileparser.Logfile):
         """Psi4 does not require normalizing symmetry labels."""
         return label
 
-    # Match the number of skipped lines required based on the type
-    # of gradient present (determined from the header), as
-    # otherwise the parsing is identical.
-    GRADIENT_HEADERS = {
-        '-Total Gradient:': ['header', 'dash header'],
-        '## F-D gradient (Symmetry 0) ##': ['Irrep num and total size', 'b', '123', 'b'],
+    # Match the number of skipped lines required based on the type of
+    # gradient present (determined from the header), as otherwise the
+    # parsing is identical.
+    GradientInfo = namedtuple('GradientInfo', ['gradient_type', 'header', 'skip_lines'])
+    GRADIENT_TYPES = {
+        'analytic': GradientInfo('analytic',
+                                 '-Total Gradient:',
+                                 ['header', 'dash header']),
+        'numerical': GradientInfo('numerical',
+                                  '## F-D gradient (Symmetry 0) ##',
+                                  ['Irrep num and total size', 'b', '123', 'b']),
     }
+    GRADIENT_HEADERS = set([gradient_type.header
+                            for gradient_type in GRADIENT_TYPES.values()])
 
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
@@ -819,7 +828,11 @@ class Psi4(logfileparser.Logfile):
 
             # Handle the different header lines between analytic and
             # numerical gradients.
-            gradient_skip_lines = Psi4.GRADIENT_HEADERS[line.strip()]
+            gradient_skip_lines = [
+                info.skip_lines
+                for info in Psi4.GRADIENT_TYPES.values()
+                if info.header == line.strip()
+            ][0]
             gradient = self.parse_gradient(inputfile, gradient_skip_lines)
 
             if not hasattr(self, 'grads'):
