@@ -22,6 +22,18 @@ class Psi4(logfileparser.Logfile):
         # Call the __init__ method of the superclass
         super(Psi4, self).__init__(logname="Psi4", *args, **kwargs)
 
+    # Match the number of skipped lines required based on the type
+    # of gradient present (determined from the header), as
+    # otherwise the parsing is identical.
+    GRADIENT_HEADERS = {
+        '-Total Gradient:': 'analytic',
+        '## F-D gradient (Symmetry 0) ##': 'numerical',
+    }
+    GRADIENT_SKIP_LINES = {
+        'analytic': ['header', 'dash header'],
+        'numerical': ['Irrep num and total size', 'b', '123', 'b'],
+    }
+
     def __str__(self):
         """Return a string representation of the object."""
         return "Psi4 log file %s" % (self.filename)
@@ -39,18 +51,6 @@ class Psi4(logfileparser.Logfile):
         # This is just used to track which part of the output we are in for Psi4,
         # with changes triggered by ==> things like this <== (Psi3 does not have this)
         self.section = None
-
-        # Match the number of skipped lines required based on the type
-        # of gradient present (determined from the header), as
-        # otherwise the parsing is identical.
-        self.gradient_headers = {
-            '-Total Gradient:': 'analytic',
-            '## F-D gradient (Symmetry 0) ##': 'numerical',
-        }
-        self.gradient_skip_lines = {
-            'analytic': ['header', 'dash header'],
-            'numerical': ['Irrep num and total size', 'b', '123', 'b'],
-        }
 
     def after_parsing(self):
 
@@ -820,9 +820,9 @@ class Psi4(logfileparser.Logfile):
         #     2     0.00000000000000    -0.00979709321487     0.01460651641258
         #     3     0.00000000000000     0.00979709321487     0.01460651641258
 
-        if line.strip() in self.gradient_headers:
-            gradient_type = self.gradient_headers[line.strip()]
-            self.skip_lines(inputfile, self.gradient_skip_lines[gradient_type])
+        if line.strip() in Psi4.GRADIENT_HEADERS:
+            gradient_type = Psi4.GRADIENT_HEADERS[line.strip()]
+            self.skip_lines(inputfile, self.GRADIENT_SKIP_LINES[gradient_type])
             line = next(inputfile)
             grads = []
 
