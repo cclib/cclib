@@ -7,6 +7,8 @@
 
 """Parser for Psi4 output files."""
 
+from collections import namedtuple
+
 import numpy
 
 from cclib.parser import data
@@ -40,7 +42,6 @@ class Psi4(logfileparser.Logfile):
         # with changes triggered by ==> things like this <== (Psi3 does not have this)
         self.section = None
 
-
     def after_parsing(self):
 
         # Newer versions of Psi4 don't explicitly print the number of atoms.
@@ -51,6 +52,21 @@ class Psi4(logfileparser.Logfile):
     def normalisesym(self, label):
         """Psi4 does not require normalizing symmetry labels."""
         return label
+
+    # Match the number of skipped lines required based on the type of
+    # gradient present (determined from the header), as otherwise the
+    # parsing is identical.
+    GradientInfo = namedtuple('GradientInfo', ['gradient_type', 'header', 'skip_lines'])
+    GRADIENT_TYPES = {
+        'analytic': GradientInfo('analytic',
+                                 '-Total Gradient:',
+                                 ['header', 'dash header']),
+        'numerical': GradientInfo('numerical',
+                                  '## F-D gradient (Symmetry 0) ##',
+                                  ['Irrep num and total size', 'b', '123', 'b']),
+    }
+    GRADIENT_HEADERS = set([gradient_type.header
+                            for gradient_type in GRADIENT_TYPES.values()])
 
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
@@ -791,7 +807,6 @@ class Psi4(logfileparser.Logfile):
                         assert numpy.allclose(self.moments[im], m, atol=1.0e4)
 
         ## Analytic Gradient
-
         #        -Total Gradient:
         #   Atom            X                  Y                   Z
         #  ------   -----------------  -----------------  -----------------
@@ -799,21 +814,7 @@ class Psi4(logfileparser.Logfile):
         #     2        0.000000000000    -0.028380539652     0.032263626146
         #     3       -0.000000000000     0.028380539652     0.032263626146
 
-        if line.strip() == '-Total Gradient:':
-            self.skip_lines(inputfile, ['header', 'dash header'])
-            line = next(inputfile)
-            grads = []
-            while line.strip():
-                idx, x, y, z = line.split()
-                grads.append((float(x), float(y), float(z)))
-                line = next(inputfile)
-
-            if not hasattr(self, 'grads'):
-                self.grads = []
-            self.grads.append(grads)
-
         ## Finite Differences Gradient
-
         # -------------------------------------------------------------
         #   ## F-D gradient (Symmetry 0) ##
         #   Irrep: 1 Size: 3 x 3
@@ -823,24 +824,20 @@ class Psi4(logfileparser.Logfile):
         #     1     0.00000000000000     0.00000000000000    -0.02921303282515
         #     2     0.00000000000000    -0.00979709321487     0.01460651641258
         #     3     0.00000000000000     0.00979709321487     0.01460651641258
+        if line.strip() in Psi4.GRADIENT_HEADERS:
 
-        if line.strip() == '## F-D gradient (Symmetry 0) ##':
-            next(inputfile)
-            self.skip_lines(inputfile, ['b'])
-            next(inputfile)
-            self.skip_lines(inputfile, ['b'])
-            line = next(inputfile)
-            grads = []
-
-            while line.strip():
-                idx, x, y, z = line.split()
-                grads.append((float(x), float(y), float(z)))
-                line = next(inputfile)
+            # Handle the different header lines between analytic and
+            # numerical gradients.
+            gradient_skip_lines = [
+                info.skip_lines
+                for info in Psi4.GRADIENT_TYPES.values()
+                if info.header == line.strip()
+            ][0]
+            gradient = self.parse_gradient(inputfile, gradient_skip_lines)
 
             if not hasattr(self, 'grads'):
                 self.grads = []
-            self.grads.append(grads)
-
+            self.grads.append(gradient)
 
         ## Harmonic frequencies.
 
@@ -949,6 +946,20 @@ class Psi4(logfileparser.Logfile):
                 self.moenergies[spinidx].append(moenergy)
             line = next(inputfile)
         return
+
+    def parse_gradient(self, inputfile, skip_lines):
+        """Parse the nuclear gradient section into a list of lists with shape
+        [natom, 3].
+        """
+        self.skip_lines(inputfile, skip_lines)
+        line = next(inputfile)
+        gradient = []
+
+        while line.strip():
+            idx, x, y, z = line.split()
+            gradient.append((float(x), float(y), float(z)))
+            line = next(inputfile)
+        return gradient
 
     @staticmethod
     def parse_vibfreq(vibfreq):

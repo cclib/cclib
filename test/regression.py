@@ -799,6 +799,11 @@ def testPsi4_Psi4_beta5_stopiter_psi_hf_out(logfile):
 def testPsi4_Psi4_0_5_water_fdgrad_out(logfile):
     """Ensure that finite difference gradients are parsed."""
     assert hasattr(logfile.data, 'grads')
+    assert logfile.data.grads.shape == (1, 3, 3)
+    assert abs(logfile.data.grads[0, 0, 2] - 0.05498126903657) < 1.0e-12
+    # In C2v symmetry, there are 5 unique displacements for the
+    # nuclear gradient, and this is at the MP2 level.
+    assert logfile.data.mpenergies.shape == (5, 1)
 
 # Q-Chem #
 
