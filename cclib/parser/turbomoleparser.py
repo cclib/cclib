@@ -149,9 +149,75 @@ class Turbomole(logfileparser.Logfile):
                     self.set_attribute('atomcoords', atomcoords)
                     self.set_attribute('atomnos', atomnos)
 
+        # Frequency values in aoforce.out
+        #        mode               7        8        9       10       11       12
+        #
+        #      frequency          53.33    88.32   146.85   171.70   251.75   289.44
+        #
+        #      symmetry            a        a        a        a        a        a
+        #
+        #         IR               YES      YES      YES      YES      YES      YES
+        # |dDIP/dQ|   (a.u.)     0.0002   0.0000   0.0005   0.0004   0.0000   0.0000
+        # intensity (km/mol)       0.05     0.00     0.39     0.28     0.00     0.00
+        # intensity (  %   )       0.05     0.00     0.40     0.28     0.00     0.00
+        #
+        #        RAMAN             YES      YES      YES      YES      YES      YES
+        #
+        #   1   c           x   0.00000  0.00001  0.00000 -0.01968 -0.04257  0.00001
+        #                   y  -0.08246 -0.08792  0.02675 -0.00010  0.00000  0.17930
+        #                   z   0.00001  0.00003  0.00004 -0.10350  0.11992 -0.00003
+        if line[5:14] == 'frequency':
+            if not hasattr(self, 'vibfreqs'):
+                self.vibfreqs = []
+
+            if not hasattr(self, 'vibdisps'):
+                self.vibdisps = []
+
+            vibfreqs = [float(i.replace('i', '-')) for i in line.split()[1:]]
+            self.vibfreqs.extend(vibfreqs)
+            self.skip_line(inputfile, ['b'])
+            line = next(inputfile)
+            if line[5:13] == 'symmetry':
+                if not hasattr(self, 'vibsyms'):
+                    self.vibsyms = []
+
+                vibsyms = line.split()[1:]
+                self.vibsyms.extend(vibsyms)
+
+            self.skip_lines(inputfile, ['b', 'IR', 'dQIP'])
+            line = next(inputfile)
+            if line.split()[0] == 'intensity':
+                if not hasattr(self, 'vibirs'):
+                    self.vibirs = []
+
+                vibirs = [self.float(f) for f in line.split()[2:]]
+                self.vibirs.extend(vibirs)
+
+            self.skip_lines(inputfile, ['intensity', 'b', 'raman', 'b'])
+            line = next(inputfile)
+            x, y, z = [], [], []
+            while line.split() != []:
+                x.append([float(i) for i in line.split()[3:]])
+                line = next(inputfile)
+                y.append([float(i) for i in line.split()[1:]])
+                line = next(inputfile)
+                z.append([float(i) for i in line.split()[1:]])
+                line = next(inputfile)
+
+            for j in range(len(x[0])):
+                vibdisps = []
+                for i in range(len(x)):
+                    vibdisps.append([x[i][j], y[i][j], z[i][j]])
+                self.vibdisps.append(vibdisps)
 
     def after_parsing(self):
-        pass
+        if hasattr(self, 'vibfreqs'):
+            i = 0
+            while i < len(self.vibfreqs):
+                if self.vibfreqs[i] == 0.0:
+                    del self.vibfreqs[i], self.vibdisps[i], self.vibirs[i]
+                    i -= 1
+                i += 1
 
 
 class OldTurbomole(logfileparser.Logfile):
