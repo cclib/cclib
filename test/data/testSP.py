@@ -148,7 +148,6 @@ class GenericSPTest(unittest.TestCase):
         sumwronglabels = sum([x not in ['Ag', 'Bu', 'Au', 'Bg'] for x in self.data.mosyms[0]])
         self.assertEquals(sumwronglabels, 0)
 
-    @skipForParser('Molcas','The parser is still being developed so we skip this test')
     @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testhomos(self):
         """Is the index of the HOMO equal to 34?"""
@@ -175,13 +174,11 @@ class GenericSPTest(unittest.TestCase):
         """Are correct number of SCF convergence criteria being parsed?"""
         self.assertEquals(len(self.data.scftargets[0]), self.num_scf_criteria)
 
-    @skipForParser('Molcas','The parser is still being developed so we skip this test')
     @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testlengthmoenergies(self):
         """Is the number of evalues equal to nmo?"""
         self.assertEquals(len(self.data.moenergies[0]), self.data.nmo)
 
-    @skipForParser('Molcas','The parser is still being developed so we skip this test')
     @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testtypemoenergies(self):
         """Is moenergies a list containing one numpy array?"""
