@@ -166,58 +166,62 @@ class Turbomole(logfileparser.Logfile):
         #   1   c           x   0.00000  0.00001  0.00000 -0.01968 -0.04257  0.00001
         #                   y  -0.08246 -0.08792  0.02675 -0.00010  0.00000  0.17930
         #                   z   0.00001  0.00003  0.00004 -0.10350  0.11992 -0.00003
-        if line[5:14] == 'frequency':
-            if not hasattr(self, 'vibfreqs'):
-                self.vibfreqs = []
+        if 'NORMAL MODES and VIBRATIONAL FREQUENCIES (cm**(-1))' in line:
+            vibfreqs, vibsyms, vibirs, vibdisps = [], [], [], []
+            while '****  force : all done  ****' not in line:
+                if line.strip().startswith('frequency'):
+                    freqs = [float(i.replace('i', '-')) for i in line.split()[1:]]
+                    vibfreqs.extend(freqs)
+                    self.skip_line(inputfile, ['b'])
+                    line = next(inputfile)
+                    if line.strip().startswith('symmetry'):
+                        syms = line.split()[1:]
+                        vibsyms.extend(syms)
 
-            if not hasattr(self, 'vibdisps'):
-                self.vibdisps = []
+                    self.skip_lines(inputfile, ['b', 'IR', 'dQIP'])
+                    line = next(inputfile)
+                    if line.strip().startswith('intensity (km/mol)'):
+                        irs = [self.float(f) for f in line.split()[2:]]
+                        vibirs.extend(irs)
 
-            vibfreqs = [float(i.replace('i', '-')) for i in line.split()[1:]]
-            self.vibfreqs.extend(vibfreqs)
-            self.skip_line(inputfile, ['b'])
-            line = next(inputfile)
-            if line[5:13] == 'symmetry':
-                if not hasattr(self, 'vibsyms'):
-                    self.vibsyms = []
+                    self.skip_lines(inputfile, ['intensity', 'b', 'raman', 'b'])
+                    line = next(inputfile)
+                    x, y, z = [], [], []
+                    while line.split():
+                        x.append([float(i) for i in line.split()[3:]])
+                        line = next(inputfile)
+                        y.append([float(i) for i in line.split()[1:]])
+                        line = next(inputfile)
+                        z.append([float(i) for i in line.split()[1:]])
+                        line = next(inputfile)
 
-                vibsyms = line.split()[1:]
-                self.vibsyms.extend(vibsyms)
+                    for j in range(len(x[0])):
+                        disps = []
+                        for i in range(len(x)):
+                            disps.append([x[i][j], y[i][j], z[i][j]])
+                        vibdisps.append(disps)
 
-            self.skip_lines(inputfile, ['b', 'IR', 'dQIP'])
-            line = next(inputfile)
-            if line.split()[0] == 'intensity':
-                if not hasattr(self, 'vibirs'):
-                    self.vibirs = []
-
-                vibirs = [self.float(f) for f in line.split()[2:]]
-                self.vibirs.extend(vibirs)
-
-            self.skip_lines(inputfile, ['intensity', 'b', 'raman', 'b'])
-            line = next(inputfile)
-            x, y, z = [], [], []
-            while line.split() != []:
-                x.append([float(i) for i in line.split()[3:]])
                 line = next(inputfile)
-                y.append([float(i) for i in line.split()[1:]])
-                line = next(inputfile)
-                z.append([float(i) for i in line.split()[1:]])
-                line = next(inputfile)
 
-            for j in range(len(x[0])):
-                vibdisps = []
-                for i in range(len(x)):
-                    vibdisps.append([x[i][j], y[i][j], z[i][j]])
-                self.vibdisps.append(vibdisps)
+            self.set_attribute('vibfreqs', vibfreqs)
+            self.set_attribute('vibsyms', vibsyms)
+            self.set_attribute('vibirs', vibirs)
+            self.set_attribute('vibdisps', vibdisps)
+
+    def deleting_modes(self, vibfreqs, vibdisps, vibirs):
+        """Deleting frequencies relating to translations or rotations"""
+        i = 0
+        while i < len(vibfreqs):
+            if vibfreqs[i] == 0.0:
+                # Deleting frequencies that have value 0 since they
+                # do not correspond to vibrations.
+                del vibfreqs[i], vibdisps[i], vibirs[i]
+                i -= 1
+            i += 1
 
     def after_parsing(self):
         if hasattr(self, 'vibfreqs'):
-            i = 0
-            while i < len(self.vibfreqs):
-                if self.vibfreqs[i] == 0.0:
-                    del self.vibfreqs[i], self.vibdisps[i], self.vibirs[i]
-                    i -= 1
-                i += 1
+            self.deleting_modes(self.vibfreqs, self.vibdisps, self.vibirs)
 
 
 class OldTurbomole(logfileparser.Logfile):
