@@ -642,11 +642,18 @@ class Molcas(logfileparser.Logfile):
             self.skip_lines(inputfile, ['d', 'b'])
             line = next(inputfile)
             if 'Natural orbitals' not in line:
-                self.skip_lines(inputfile, ['b', 'symm', 'b'])
+                self.skip_lines(inputfile, ['b', 'symm'])
                 line = next(inputfile)
                 moenergies = []
                 homos = 0
+                mocoeffs = []
                 while line[:2] != '--':
+                    line = next(inputfile)
+                    if line.strip().startswith('Orbital'):
+                        orbital_index = line.split()[1:]
+                        for i in orbital_index:
+                            mocoeffs.append([])
+
                     if 'Energy' in line:
                         energies = [utils.convertor(float(x), 'hartree', 'eV') for x in line.split()[1:]]
                         moenergies.extend(energies)
@@ -656,7 +663,19 @@ class Molcas(logfileparser.Logfile):
                             if float(i) != 0:
                                 homos += 1
 
-                    line = next(inputfile)
+                    aonames = []
+                    tokens = line.split()
+                    if tokens and tokens[0] == '1':
+                        while tokens and tokens[0] != '--':
+                            aonames.append("{atom}_{orbital}".format(atom=tokens[1], orbital=tokens[2]))
+                            info = tokens[3:]
+                            j = 0
+                            for i in orbital_index:
+                                mocoeffs[int(i)-1].append(float(info[j]))
+                                j += 1
+                            line = next(inputfile)
+                            tokens = line.split()
+                        self.set_attribute('aonames', aonames)
 
                 if len(moenergies) != self.nmo:
                     moenergies.extend([numpy.nan for x in range(self.nmo - len(moenergies))])
@@ -668,6 +687,14 @@ class Molcas(logfileparser.Logfile):
                 if not hasattr(self, 'homos'):
                     self.homos = []
                 self.homos.extend([homos-1])
+
+                while len(mocoeffs) < self.nmo:
+                    nan_array = [numpy.nan for i in range(self.nbasis)]
+                    mocoeffs.append(nan_array)
+
+                if not hasattr(self, 'mocoeffs'):
+                    self.mocoeffs = []
+                self.mocoeffs.append(mocoeffs)
 
 
 if __name__ == '__main__':

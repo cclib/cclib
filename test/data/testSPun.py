@@ -41,7 +41,6 @@ class GenericSPunTest(unittest.TestCase):
         self.assertEquals(self.data.atomcoords.shape,(1,self.data.natom,3))
 
     @skipForParser('Jaguar', 'Data file does not contain enough information')
-    @skipForParser('Molcas','The parser is still being developed so we skip this test')
     @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testdimmocoeffs(self):
         """Are the dimensions of mocoeffs equal to 2 x nmo x nbasis?"""
