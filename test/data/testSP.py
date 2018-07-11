@@ -187,7 +187,6 @@ class GenericSPTest(unittest.TestCase):
 
     @skipForParser('DALTON', 'mocoeffs not implemented yet')
     @skipForLogfile('Jaguar/basicJaguar7', 'Data file does not contain enough information. Can we make a new one?')
-    @skipForParser('Molcas','The parser is still being developed so we skip this test')
     @skipForLogfile('Psi3/basicPsi3', 'MO coefficients are printed separately for each SALC')
     @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testdimmocoeffs(self):
