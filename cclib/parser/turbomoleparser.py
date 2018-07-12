@@ -149,9 +149,79 @@ class Turbomole(logfileparser.Logfile):
                     self.set_attribute('atomcoords', atomcoords)
                     self.set_attribute('atomnos', atomnos)
 
+        # Frequency values in aoforce.out
+        #        mode               7        8        9       10       11       12
+        #
+        #      frequency          53.33    88.32   146.85   171.70   251.75   289.44
+        #
+        #      symmetry            a        a        a        a        a        a
+        #
+        #         IR               YES      YES      YES      YES      YES      YES
+        # |dDIP/dQ|   (a.u.)     0.0002   0.0000   0.0005   0.0004   0.0000   0.0000
+        # intensity (km/mol)       0.05     0.00     0.39     0.28     0.00     0.00
+        # intensity (  %   )       0.05     0.00     0.40     0.28     0.00     0.00
+        #
+        #        RAMAN             YES      YES      YES      YES      YES      YES
+        #
+        #   1   c           x   0.00000  0.00001  0.00000 -0.01968 -0.04257  0.00001
+        #                   y  -0.08246 -0.08792  0.02675 -0.00010  0.00000  0.17930
+        #                   z   0.00001  0.00003  0.00004 -0.10350  0.11992 -0.00003
+        if 'NORMAL MODES and VIBRATIONAL FREQUENCIES (cm**(-1))' in line:
+            vibfreqs, vibsyms, vibirs, vibdisps = [], [], [], []
+            while '****  force : all done  ****' not in line:
+                if line.strip().startswith('frequency'):
+                    freqs = [float(i.replace('i', '-')) for i in line.split()[1:]]
+                    vibfreqs.extend(freqs)
+                    self.skip_line(inputfile, ['b'])
+                    line = next(inputfile)
+                    if line.strip().startswith('symmetry'):
+                        syms = line.split()[1:]
+                        vibsyms.extend(syms)
+
+                    self.skip_lines(inputfile, ['b', 'IR', 'dQIP'])
+                    line = next(inputfile)
+                    if line.strip().startswith('intensity (km/mol)'):
+                        irs = [self.float(f) for f in line.split()[2:]]
+                        vibirs.extend(irs)
+
+                    self.skip_lines(inputfile, ['intensity', 'b', 'raman', 'b'])
+                    line = next(inputfile)
+                    x, y, z = [], [], []
+                    while line.split():
+                        x.append([float(i) for i in line.split()[3:]])
+                        line = next(inputfile)
+                        y.append([float(i) for i in line.split()[1:]])
+                        line = next(inputfile)
+                        z.append([float(i) for i in line.split()[1:]])
+                        line = next(inputfile)
+
+                    for j in range(len(x[0])):
+                        disps = []
+                        for i in range(len(x)):
+                            disps.append([x[i][j], y[i][j], z[i][j]])
+                        vibdisps.append(disps)
+
+                line = next(inputfile)
+
+            self.set_attribute('vibfreqs', vibfreqs)
+            self.set_attribute('vibsyms', vibsyms)
+            self.set_attribute('vibirs', vibirs)
+            self.set_attribute('vibdisps', vibdisps)
+
+    def deleting_modes(self, vibfreqs, vibdisps, vibirs):
+        """Deleting frequencies relating to translations or rotations"""
+        i = 0
+        while i < len(vibfreqs):
+            if vibfreqs[i] == 0.0:
+                # Deleting frequencies that have value 0 since they
+                # do not correspond to vibrations.
+                del vibfreqs[i], vibdisps[i], vibirs[i]
+                i -= 1
+            i += 1
 
     def after_parsing(self):
-        pass
+        if hasattr(self, 'vibfreqs'):
+            self.deleting_modes(self.vibfreqs, self.vibdisps, self.vibirs)
 
 
 class OldTurbomole(logfileparser.Logfile):
