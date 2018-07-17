@@ -9,7 +9,7 @@
 
 import logging
 
-import numpy
+import numpy as np
 
 from cclib.method.calculationmethod import Method
 from cclib.parser.utils import PeriodicTable
@@ -65,6 +65,98 @@ class Nuclear(Method):
             for j in range(i+1, self.data.natom):
                 rj = self.data.atomcoords[0][j]
                 zj = self.data.atomnos[j]
-                d = numpy.linalg.norm(ri-rj)
+                d = np.linalg.norm(ri-rj)
                 nre += zi*zj/d
         return nre
+
+    @staticmethod
+    def _get_most_abundant_isotope(element):
+        """Given a `periodictable` element, return the most abundant
+        isotope.
+        """
+        most_abundant_isotope = element.isotopes[0]
+        abundance = 0
+        for iso in element:
+            if iso.abundance > abundance:
+                most_abundant_isotope = iso
+                abundance = iso.abundance
+        return most_abundant_isotope
+
+    @staticmethod
+    def get_isotopic_masses(charges):
+        """Return the masses for the given nuclei, respresented by their
+        nuclear charges.
+        """
+        import periodictable
+        masses = []
+        for charge in charges:
+            el = periodictable.elements[charge]
+            isotope = Nuclear._get_most_abundant_isotope(el)
+            mass = isotope.mass
+            masses.append(mass)
+        return np.array(masses)
+
+    def center_of_mass(self):
+        """Return the center of mass."""
+        charges = self.data.atomnos
+        masses = Nuclear.get_isotopic_masses(charges)
+        coords = self.data.atomcoords[-1]
+
+        mwc = coords * masses[:, np.newaxis]
+        numerator = np.sum(mwc, axis=0)
+        denominator = np.sum(masses)
+
+        return numerator / denominator
+
+    def moment_of_inertia_tensor(self):
+        """Return the moment of inertia tensor."""
+        charges = self.data.atomnos
+        masses = Nuclear.get_isotopic_masses(charges)
+        coords = self.data.atomcoords[-1]
+
+        moi_tensor = np.empty((3, 3))
+
+        moi_tensor[0][0] = np.sum(masses * (coords[:, 1]**2 + coords[:, 2]**2))
+        moi_tensor[1][1] = np.sum(masses * (coords[:, 0]**2 + coords[:, 2]**2))
+        moi_tensor[2][2] = np.sum(masses * (coords[:, 0]**2 + coords[:, 1]**2))
+
+        moi_tensor[0][1] = np.sum(masses * coords[:, 0] * coords[:, 1])
+        moi_tensor[0][2] = np.sum(masses * coords[:, 0] * coords[:, 2])
+        moi_tensor[1][2] = np.sum(masses * coords[:, 1] * coords[:, 2])
+
+        moi_tensor[1][0] = moi_tensor[0][1]
+        moi_tensor[2][0] = moi_tensor[0][2]
+        moi_tensor[2][1] = moi_tensor[1][2]
+
+        return moi_tensor
+
+    def principal_moments_of_inertia(self):
+        """Return the principal moments of inertia in 3 kinds of units:
+        1. [amu][bohr]^2
+        2. [amu][angstrom]^2
+        3. [g][cm]^2
+        and the principal axes.
+        """
+        import scipy.constants as spc
+        moi_tensor = self.moment_of_inertia_tensor()
+        principal_moments, principal_axes = np.linalg.eigh(moi_tensor)
+        amu2g = spc.value('unified atomic mass unit') * spc.kilo
+        bohr2ang = spc.value('atomic unit of length') / spc.angstrom
+        conv1 = bohr2ang ** 2
+        conv2 = amu2g * (spc.value('atomic unit of length') * spc.centi) ** 2
+        return (principal_moments,
+                principal_moments * conv1,
+                principal_moments * conv2,
+                principal_axes)
+
+    def rotational_constants(self):
+        """Compute the rotational constants in 1/cm and MHz."""
+        import scipy.constants as spc
+        principal_moments = self.principal_moments_of_inertia()[0]
+        bohr2ang = spc.value('atomic unit of length') / spc.angstrom
+        xfamu = 1 / spc.value('electron mass in u')
+        xthz = spc.value('hartree-hertz relationship')
+        rotghz = xthz * (bohr2ang ** 2) / (2 * xfamu * spc.giga)
+        ghz2invcm = spc.giga * spc.centi / spc.c
+        return (rotghz / principal_moments,
+                rotghz * ghz2invcm / principal_moments)
