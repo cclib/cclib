@@ -55,12 +55,12 @@ class Nuclear(Method):
             formula += "(%s%i)" % (sign, magnitude)
         return formula
 
-    def repulsion_energy(self):
+    def repulsion_energy(self, atomcoords_index=-1):
         """Return the nuclear repulsion energy."""
 
         nre = 0.0
         for i in range(self.data.natom):
-            ri = self.data.atomcoords[0][i]
+            ri = self.data.atomcoords[atomcoords_index][i]
             zi = self.data.atomnos[i]
             for j in range(i+1, self.data.natom):
                 rj = self.data.atomcoords[0][j]
@@ -96,11 +96,11 @@ class Nuclear(Method):
             masses.append(mass)
         return np.array(masses)
 
-    def center_of_mass(self):
+    def center_of_mass(self, atomcoords_index=-1):
         """Return the center of mass."""
         charges = self.data.atomnos
         masses = Nuclear.get_isotopic_masses(charges)
-        coords = self.data.atomcoords[-1]
+        coords = self.data.atomcoords[atomcoords_index]
 
         mwc = coords * masses[:, np.newaxis]
         numerator = np.sum(mwc, axis=0)
@@ -108,11 +108,11 @@ class Nuclear(Method):
 
         return numerator / denominator
 
-    def moment_of_inertia_tensor(self):
+    def moment_of_inertia_tensor(self, atomcoords_index=-1):
         """Return the moment of inertia tensor."""
         charges = self.data.atomnos
         masses = Nuclear.get_isotopic_masses(charges)
-        coords = self.data.atomcoords[-1]
+        coords = self.data.atomcoords[atomcoords_index]
 
         moi_tensor = np.empty((3, 3))
 
