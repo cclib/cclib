@@ -130,39 +130,45 @@ class Nuclear(Method):
 
         return moi_tensor
 
-    def principal_moments_of_inertia(self):
+    def principal_moments_of_inertia(self, units='amu_bohr_2'):
         """Return the principal moments of inertia in 3 kinds of units:
         1. [amu][bohr]^2
         2. [amu][angstrom]^2
         3. [g][cm]^2
         and the principal axes.
         """
+        choices = ('amu_bohr_2', 'amu_angstrom_2', 'g_cm_2')
+        units = units.lower()
+        if units not in choices:
+            raise ValueError("Invalid units, pick one of {}".format(choices))
         import scipy.constants as spc
         moi_tensor = self.moment_of_inertia_tensor()
         principal_moments, principal_axes = np.linalg.eigh(moi_tensor)
-        amu2g = spc.value('unified atomic mass unit') * spc.kilo
-        bohr2ang = spc.value('atomic unit of length') / spc.angstrom
-        conv1 = bohr2ang ** 2
-        conv2 = amu2g * (spc.value('atomic unit of length') * spc.centi) ** 2
-        return (principal_moments,
-                principal_moments * conv1,
-                principal_moments * conv2,
-                principal_axes)
+        if units == 'amu_bohr_2':
+            conv = 1
+        if units == 'amu_angstrom_2':
+            bohr2ang = spc.value('atomic unit of length') / spc.angstrom
+            conv = bohr2ang ** 2
+        if units == 'g_cm_2':
+            amu2g = spc.value('unified atomic mass unit') * spc.kilo
+            conv = amu2g * (spc.value('atomic unit of length') * spc.centi) ** 2
+        return conv * principal_moments, principal_axes
 
     def rotational_constants(self, units='ghz'):
         """Compute the rotational constants in 1/cm or GHz."""
         choices = ('invcm', 'ghz')
-        if units.lower() not in choices:
-            raise ValueError("Invalid units, pick one of {}".format(choices))
         units = units.lower()
+        if units not in choices:
+            raise ValueError("Invalid units, pick one of {}".format(choices))
         import scipy.constants as spc
         principal_moments = self.principal_moments_of_inertia()[0]
         bohr2ang = spc.value('atomic unit of length') / spc.angstrom
         xfamu = 1 / spc.value('electron mass in u')
         xthz = spc.value('hartree-hertz relationship')
         rotghz = xthz * (bohr2ang ** 2) / (2 * xfamu * spc.giga)
-        ghz2invcm = spc.giga * spc.centi / spc.c
         if units == 'ghz':
-            return rotghz / principal_moments
+            conv = rotghz
         if units == 'invcm':
-            return rotghz * ghz2invcm / principal_moments
+            ghz2invcm = spc.giga * spc.centi / spc.c
+            conv = rotghz * ghz2invcm
+        return conv / principal_moments
