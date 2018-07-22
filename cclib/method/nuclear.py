@@ -149,8 +149,12 @@ class Nuclear(Method):
                 principal_moments * conv2,
                 principal_axes)
 
-    def rotational_constants(self):
-        """Compute the rotational constants in 1/cm and MHz."""
+    def rotational_constants(self, units='ghz'):
+        """Compute the rotational constants in 1/cm or GHz."""
+        choices = ('invcm', 'ghz')
+        if units.lower() not in choices:
+            raise ValueError("Invalid units, pick one of {}".format(choices))
+        units = units.lower()
         import scipy.constants as spc
         principal_moments = self.principal_moments_of_inertia()[0]
         bohr2ang = spc.value('atomic unit of length') / spc.angstrom
@@ -158,5 +162,7 @@ class Nuclear(Method):
         xthz = spc.value('hartree-hertz relationship')
         rotghz = xthz * (bohr2ang ** 2) / (2 * xfamu * spc.giga)
         ghz2invcm = spc.giga * spc.centi / spc.c
-        return (rotghz / principal_moments,
-                rotghz * ghz2invcm / principal_moments)
+        if units == 'ghz':
+            return rotghz / principal_moments
+        if units == 'invcm':
+            return rotghz * ghz2invcm / principal_moments

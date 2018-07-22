@@ -118,7 +118,8 @@ class NuclearTest(unittest.TestCase):
                     line = next(f)
                     ref_mhz = [float(x) for x in next(f).split()[:-1]]
                     ref_invcm = [float(x) for x in next(f).split()[:-1]]
-        rotconsts_ghz, rotconsts_invcm = nuclear.rotational_constants()
+        rotconsts_ghz = nuclear.rotational_constants('ghz')
+        rotconsts_invcm = nuclear.rotational_constants('invcm')
         np.testing.assert_allclose(rotconsts_ghz * 1.0e3, ref_mhz, rtol=0, atol=1.0e-4)
         np.testing.assert_allclose(rotconsts_invcm, ref_invcm, rtol=0, atol=1.0e-4)
 
@@ -130,7 +131,7 @@ class NuclearTest(unittest.TestCase):
             for line in f:
                 if "Rotational constants (GHZ):" in line:
                     ref_ghz = [float(x) for x in line.split()[3:]]
-        rotconsts_ghz, _ = nuclear.rotational_constants()
+        rotconsts_ghz = nuclear.rotational_constants('ghz')
         np.testing.assert_allclose(rotconsts_ghz, ref_ghz, rtol=0, atol=1.0e-5)
 
 if __name__ == "__main__":
