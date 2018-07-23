@@ -231,7 +231,7 @@ SP        Psi3        Psi3SPTest            basicPsi3                   dvb_sp_h
 SP        Psi4        PsiSPTest             basicPsi4-1.0               dvb_sp_rhf.out
 SP        Psi4        PsiSPTest             basicPsi4-1.0               dvb_sp_rks.out
 SP        QChem       GenericSPTest         basicQChem4.2               dvb_sp.out
-SP        Turbomole   GenericSPTest         basicTurbomole5.9           dvb_sp/basis      dvb_sp/control      dvb_sp/job.last      dvb_sp/coord      dvb_sp/mos
+SP        Turbomole   TurbomoleSPTest       basicTurbomole5.9           dvb_sp/basis      dvb_sp/control      dvb_sp/job.last      dvb_sp/coord      dvb_sp/mos
 
 SPun      ADF         GenericSPunTest       basicADF2007.01       dvb_un_sp.adfout
 SPun      ADF         GenericSPunTest       basicADF2013.01       dvb_un_sp.adfout
@@ -308,7 +308,7 @@ vib       ORCA        OrcaIRTest            basicORCA3.0          dvb_ir.out
 vib       ORCA        GenericIRTest         basicORCA4.0          dvb_ir.out
 vib       Psi4        GenericIRTest         basicPsi4-1.0         dvb_ir_rhf.out
 vib       QChem       QChemIRTest           basicQChem4.2         dvb_ir.out
-vib       Turbomole   GenericIRTest         basicTurbomole5.9     dvb_ir/basis            dvb_ir/control            dvb_ir/coord            dvb_ir/mos            dvb_ir/aoforce.out
+vib       Turbomole   GenericIRTest         basicTurbomole5.9     dvb_ir/basis            dvb_ir/control            dvb_ir/mos            dvb_ir/coord            dvb_ir/aoforce.out
 
 vib       GAMESS      GenericIRimgTest      basicGAMESS-US2014    nh3_ts_ir.out
 vib       GAMESS      GenericIRimgTest      basicGAMESS-US2017    nh3_ts_ir.out

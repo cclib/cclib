@@ -40,12 +40,10 @@ class GenericSPTest(unittest.TestCase):
     # Generally, one criteria for SCF energy convergence. 
     num_scf_criteria = 1
 
-    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testnatom(self):
         """Is the number of atoms equal to 20?"""
         self.assertEquals(self.data.natom, 20)
 
-    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testatomnos(self):
         """Are the atomnos correct?"""
 
@@ -69,13 +67,11 @@ class GenericSPTest(unittest.TestCase):
             self.assertEquals(len(charges), self.data.natom)
             self.assertAlmostEquals(sum(charges), 0.0, delta=0.001)
 
-    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testatomcoords(self):
         """Are the dimensions of atomcoords 1 x natom x 3?"""
         expected_shape = (1, self.data.natom, 3)
         self.assertEquals(self.data.atomcoords.shape, expected_shape)
 
-    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testatomcoords_units(self):
         """Are atomcoords consistent with Angstroms?"""
         min_carbon_dist = get_minimum_carbon_separation(self.data)
@@ -153,23 +149,19 @@ class GenericSPTest(unittest.TestCase):
         """Is the index of the HOMO equal to 34?"""
         numpy.testing.assert_array_equal(self.data.homos, numpy.array([34],"i"), "%s != array([34],'i')" % numpy.array_repr(self.data.homos))
 
-    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testscfvaluetype(self):
         """Are scfvalues and its elements the right type??"""
         self.assertEquals(type(self.data.scfvalues),type([]))
         self.assertEquals(type(self.data.scfvalues[0]),type(numpy.array([])))
 
-    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testscfenergy(self):
         """Is the SCF energy within the target?"""
         self.assertAlmostEquals(self.data.scfenergies[-1], self.b3lyp_energy, delta=40, msg="Final scf energy: %f not %i +- 40eV" %(self.data.scfenergies[-1], self.b3lyp_energy))
 
-    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testscftargetdim(self):
         """Do the scf targets have the right dimensions?"""
         self.assertEquals(self.data.scftargets.shape, (len(self.data.scfvalues), len(self.data.scfvalues[0][0])))
 
-    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testscftargets(self):
         """Are correct number of SCF convergence criteria being parsed?"""
         self.assertEquals(len(self.data.scftargets[0]), self.num_scf_criteria)
@@ -380,6 +372,11 @@ class OrcaSPTest(GenericSPTest):
     molecularmass = 130190
 
     num_scf_criteria = 3
+
+class TurbomoleSPTest(GenericSPTest):
+    """Customized restricted single point unittest"""
+
+    num_scf_criteria = 2
 
 
 if __name__=="__main__":
