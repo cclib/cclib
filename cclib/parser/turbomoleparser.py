@@ -65,6 +65,7 @@ class Turbomole(logfileparser.Logfile):
 
     def before_parsing(self):
         self.geoopt = False # Is this a GeoOpt? Needed for SCF targets/values.
+        self.periodic_table = utils.PeriodicTable()
 
     @staticmethod
     def split_molines(inline):
@@ -124,22 +125,20 @@ class Turbomole(logfileparser.Logfile):
         #    -0.92683849   -0.00007461   -2.49592179    c      3    6.000    0     0
         #    -1.65164853   -0.00009927   -4.45456858    h      1    1.000    0     0
         if 'Atomic coordinate, charge and isotop information' in line:
-            self.skip_lines(inputfile,['border', 'b', 'b'])
-            line = next(inputfile)
-            if 'atomic coordinates' in line:
-                if not hasattr(self, 'atomcoords'):
-                    self.atomcoords = []
-
-                atomcoords = []
-                atomnos = []
+            while 'atomic coordinates' not in line:
                 line = next(inputfile)
-                while len(line) > 2:
-                    atomnos.append(utils.PeriodicTable().number[line.split()[3].upper()])
-                    atomcoords.append([utils.convertor(float(x), "bohr", "Angstrom") for x in line.split()[:3]])
-                    line = next(inputfile)
 
-                self.set_attribute('atomcoords', atomcoords)
-                self.set_attribute('atomnos', atomnos)
+            atomcoords = []
+            atomnos = []
+            line = next(inputfile)
+            while len(line) > 2:
+                atomnos.append(self.periodic_table.number[line.split()[3].upper()])
+                atomcoords.append([utils.convertor(float(x), "bohr", "Angstrom") 
+                                   for x in line.split()[:3]])
+                line = next(inputfile)
+
+            self.append_attribute('atomcoords', atomcoords)
+            self.set_attribute('atomnos', atomnos)
 
         ## If we are unable to find coordinates in the job file, we will look for them
         ## in the coord file.
@@ -279,6 +278,64 @@ class Turbomole(logfileparser.Logfile):
 
             self.mocoeffs.append(mocoeffs)
             self.moenergies.append(moenergies)
+
+        # Parsing the scfenergies, scfvalues and scftargets from job.last file.
+        # scf convergence criterion : increment of total energy < .1000000D-05
+        #                  and increment of one-electron energy < .1000000D-02
+        #
+        # ...
+        # ...
+        #                                              current damping :  0.700
+        # ITERATION  ENERGY          1e-ENERGY        2e-ENERGY     NORM[dD(SAO)]  TOL
+        #   1  -382.34543727790    -1396.8009423     570.56292464    0.000D+00 0.556D-09
+        #                            Exc =   -57.835278090846     N = 69.997494722
+        #          max. resid. norm for Fia-block=  2.782D-05 for orbital     33a
+        # ...
+        # ...
+        #                                              current damping :  0.750
+        # ITERATION  ENERGY          1e-ENERGY        2e-ENERGY     NORM[dD(SAO)]  TOL
+        #   3  -382.34575357399    -1396.8009739     570.56263988    0.117D-03 0.319D-09
+        #                            Exc =   -57.835593208072     N = 69.999813370
+        #          max. resid. norm for Fia-block=  7.932D-06 for orbital     33a
+        #          max. resid. fock norm         =  8.105D-06 for orbital     33a
+        #
+        # convergence criteria satisfied after  3 iterations
+        #
+        #
+        #                  ------------------------------------------
+        #                 |  total energy      =   -382.34575357399  |
+        #                  ------------------------------------------
+        #                 :  kinetic energy    =    375.67398458525  :
+        #                 :  potential energy  =   -758.01973815924  :
+        #                 :  virial theorem    =      1.98255043001  :
+        #                 :  wavefunction norm =      1.00000000000  :
+        #                  ..........................................
+        if 'scf convergence criterion' in line:
+            total_energy_threshold = self.float(line.split()[-1])
+            one_electron_energy_threshold = self.float(next(inputfile).split()[-1])
+            scftargets = [total_energy_threshold, one_electron_energy_threshold]
+            self.append_attribute('scftargets', scftargets)
+            iter_energy = []
+            iter_one_elec_energy = []
+            while 'convergence criteria satisfied' not in line:
+                if 'ITERATION  ENERGY' in line:
+                    line = next(inputfile)
+                    info = line.split()
+                    iter_energy.append(self.float(info[1]))
+                    iter_one_elec_energy.append(self.float(info[2]))
+                line = next(inputfile)
+
+            assert len(iter_energy) == len(iter_one_elec_energy), \
+                'Different number of values found for total energy and one electron energy.'
+            scfvalues = [[x - y, a - b] for x, y, a, b in 
+                         zip(iter_energy[1:], iter_energy[:-1], iter_one_elec_energy[1:], iter_one_elec_energy[:-1])]
+            self.append_attribute('scfvalues', scfvalues)
+            while 'total energy' not in line:
+                line = next(inputfile)
+
+            scfenergy = utils.convertor(self.float(line.split()[4]), 'hartree', 'eV')
+            self.append_attribute('scfenergies', scfenergy)
+
 
     def deleting_modes(self, vibfreqs, vibdisps, vibirs):
         """Deleting frequencies relating to translations or rotations"""
