@@ -80,6 +80,7 @@ CC        Molpro      GenericCCTest         basicMolpro2006       h2o_ccsd.out
 CC        Molpro      GenericCCTest         basicMolpro2012       h2o_ccsd.out
 CC        Molpro      GenericCCTest         basicMolpro2006       h2o_ccsd(t).out
 CC        Molpro      GenericCCTest         basicMolpro2012       h2o_ccsdt.out
+CC        Molcas      GenericCCTest         basicOpenMolcas18.0   water_ccsd.out
 CC        NWChem      GenericCCTest         basicNWChem6.0        water_ccsd(t).out
 CC        NWChem      GenericCCTest         basicNWChem6.5        water_ccsd(t).out
 CC        Psi4        GenericCCTest         basicPsi4-1.0         water_ccsd.out
