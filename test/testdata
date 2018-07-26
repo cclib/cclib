@@ -172,6 +172,7 @@ MP        Molpro      GenericMP3Test        basicMolpro2006       h2o_mp3.out
 MP        Molpro      GenericMP3Test        basicMolpro2012       h2o_mp3.out
 MP        Molpro      GenericMP4SDTQTest    basicMolpro2006       h2o_mp4.out
 MP        Molpro      GenericMP4SDTQTest    basicMolpro2012       h2o_mp4.out
+MP        Molcas      GenericMP2Test        basicOpenMolcas18.0   water_mbpt2.out
 MP        NWChem      GenericMP2Test        basicNWChem6.0        water_mp2.out
 MP        NWChem      GenericMP2Test        basicNWChem6.5        water_mp2.out
 MP        Psi4        GenericMP2Test        basicPsi4-1.0         water_mp2.out
