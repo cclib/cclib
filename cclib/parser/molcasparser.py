@@ -222,36 +222,23 @@ class Molcas(logfileparser.Logfile):
         #  Threshold at which QNR/C2DIIS is turned on 0.75E-01
         #  Threshold for Norm(delta) (QNR/C2DIIS)     0.20E-04
         if line[:34] == '++    Optimization specifications:':
-
-            scftargets = []
-            while not line[6:37] == 'Threshold for SCF energy change':
-                line = next(inputfile)
-
-            if line[6:37] == 'Threshold for SCF energy change':
-                target = float(line.split()[-1])
-                scftargets.append(target)
-
+            self.skip_lines(inputfile, ['d', 'b'])
             line = next(inputfile)
+            if line.strip().startswith('SCF'):
+                scftargets = []
+                self.skip_lines(inputfile,
+                                ['Minimized', 'Number', 'Maximum', 'Maximum'])
+                lines = [next(inputfile) for i in range(7)]
+                targets = [
+                    'Threshold for SCF energy change',
+                    'Threshold for density matrix',
+                    'Threshold for Fock matrix',
+                    'Threshold for Norm(delta)',
+                ]
+                for y in targets:
+                    scftargets.extend([float(x.split()[-1]) for x in lines if y in x])
 
-            if line[6:34] == 'Threshold for density matrix':
-                target = float(line.split()[-1])
-                scftargets.append(target)
-
-            line = next(inputfile)
-
-            if line[6:31] == 'Threshold for Fock matrix':
-                target = float(line.split()[-1])
-                scftargets.append(target)
-
-            self.skip_lines(inputfile, ['Threshold for linear dependence', 'Threshold at which DIIS is turned on', \
-                                         'Threshold at which QNR/C2DIIS is turned on'])
-            line = next(inputfile)
-
-            if line[6:31] == 'Threshold for Norm(delta)':
-                target = float(line.split()[-1])
-                scftargets.append(target)
-
-            self.append_attribute('scftargets', scftargets)
+                self.append_attribute('scftargets', scftargets)
 
         #  ++ Convergence information
         #                                     SCF        iterations: Energy and convergence statistics
@@ -709,6 +696,34 @@ class Molcas(logfileparser.Logfile):
             if not hasattr(self, 'mpenergies'):
                 self.mpenergies = []
             self.mpenergies.append(mpenergies)
+
+        # Parsing data ccenergies from &CCSDT module.
+        #  --- Start Module: ccsdt at Thu Jul 26 14:03:23 2018 ---
+        #
+        #  ()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()
+        #
+        #                                                 &CCSDT
+        # ...
+        # ...
+        #          14          -75.01515915      -0.05070274      -0.00000029
+        #          15          -75.01515929      -0.05070289      -0.00000014
+        #          16          -75.01515936      -0.05070296      -0.00000007
+        #       Convergence after                    17  Iterations
+        #
+        #
+        #      Total energy (diff) :     -75.01515936      -0.00000007
+        #      Correlation energy  :        -0.0507029554992
+        if 'Start Module: ccsdt' in line:
+            self.skip_lines(inputfile, ['b', '()', 'b'])
+            line = next(inputfile)
+            if '&CCSDT' in line:
+                while not line.strip().startswith('Total energy (diff)'):
+                    line = next(inputfile)
+
+                ccenergies = utils.convertor(self.float(line.split()[4]), 'hartree', 'eV')
+                if not hasattr(self, 'ccenergies'):
+                    self.ccenergies= []
+                self.ccenergies.append(ccenergies)
 
 
 if __name__ == '__main__':
