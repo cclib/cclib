@@ -1090,6 +1090,15 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
                     self.logger.warning('Overwriting previous multipole moments with new values')
                     self.moments = [reference, dipole]
 
+        if "Molecular Dynamics Iteration" in line:
+            self.skip_lines(inputfile, ['d', 'ORCA MD', 'd', 'New Coordinates'])
+            line = next(inputfile)
+            tokens = line.split()
+            assert tokens[0] == "time"
+            if not hasattr(self, 'time'):
+                self.time = []
+            self.time.append(utils.convertor(float(tokens[2]), "au", "fs"))
+
         # Static polarizability.
         if line.strip() == "THE POLARIZABILITY TENSOR":
             if not hasattr(self, 'polarizabilities'):
