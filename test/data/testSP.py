@@ -174,12 +174,10 @@ class GenericSPTest(unittest.TestCase):
         """Are correct number of SCF convergence criteria being parsed?"""
         self.assertEquals(len(self.data.scftargets[0]), self.num_scf_criteria)
 
-    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testlengthmoenergies(self):
         """Is the number of evalues equal to nmo?"""
         self.assertEquals(len(self.data.moenergies[0]), self.data.nmo)
 
-    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testtypemoenergies(self):
         """Is moenergies a list containing one numpy array?"""
         self.assertEquals(type(self.data.moenergies), type([]))
@@ -188,7 +186,6 @@ class GenericSPTest(unittest.TestCase):
     @skipForParser('DALTON', 'mocoeffs not implemented yet')
     @skipForLogfile('Jaguar/basicJaguar7', 'Data file does not contain enough information. Can we make a new one?')
     @skipForLogfile('Psi3/basicPsi3', 'MO coefficients are printed separately for each SALC')
-    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testdimmocoeffs(self):
         """Are the dimensions of mocoeffs equal to 1 x nmo x nbasis?"""
         self.assertEquals(type(self.data.mocoeffs), type([]))

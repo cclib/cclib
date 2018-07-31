@@ -66,6 +66,26 @@ class Turbomole(logfileparser.Logfile):
     def before_parsing(self):
         self.geoopt = False # Is this a GeoOpt? Needed for SCF targets/values.
 
+    @staticmethod
+    def split_molines(inline):
+        """Splits the lines containing mocoeffs (each of length 20)
+        and converts them to float correctly.
+        """
+        line = inline.replace("D", "E")
+        f1 = line[0:20]
+        f2 = line[20:40]
+        f3 = line[40:60]
+        f4 = line[60:80]
+
+        if(len(f4) > 1):
+            return [float(f1), float(f2), float(f3), float(f4)]
+        if(len(f3) > 1):
+            return [float(f1), float(f2), float(f3)]
+        if(len(f2) > 1):
+            return [float(f1), float(f2)]
+        if(len(f1) > 1):
+            return [float(f1)]
+
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
 
@@ -207,6 +227,58 @@ class Turbomole(logfileparser.Logfile):
             self.set_attribute('vibsyms', vibsyms)
             self.set_attribute('vibirs', vibirs)
             self.set_attribute('vibdisps', vibdisps)
+
+        # In this section we are parsing mocoeffs and moenergies from
+        # the files like: mos, alpha and beta.
+        # $scfmo    scfconv=6   format(4d20.14)
+        # # SCF total energy is     -382.3457535740 a.u.
+        # #
+        #      1  a      eigenvalue=-.97461484059799D+01   nsaos=60
+        # 0.69876828353937D+000.32405121159405D-010.87670894913921D-03-.85232349313288D-07
+        # 0.19361534257922D-04-.23841194890166D-01-.81711001390807D-020.13626356942047D-02
+        # ...
+        # ...
+        # $end
+        if (line.startswith('$scfmo') or line.startswith('$uhfmo')) and line.find('scfconv') > 0:
+            if line.strip().startswith('$uhfmo_alpha'):
+                self.unrestricted = True
+
+            # Need to skip the first line to start with lines starting with '#'.
+            line = next(inputfile)
+            while line.strip().startswith('#') and not line.find('eigenvalue') > 0:
+                line = next(inputfile)
+
+            moenergies = []
+            mocoeffs = []
+
+            while not line.strip().startswith('$'):
+                info = re.match(".*eigenvalue=(?P<moenergy>[0-9D\.+-]{20})\s+nsaos=(?P<count>\d+).*", line)
+                eigenvalue = self.float(info.group('moenergy'))
+                orbital_energy = utils.convertor(eigenvalue, 'hartree', 'eV')
+                moenergies.append(orbital_energy)
+                single_coeffs = []
+                nsaos = int(info.group('count'))
+
+                while(len(single_coeffs) < nsaos):
+                    line = next(inputfile)
+                    single_coeffs.extend(Turbomole.split_molines(line))
+
+                mocoeffs.append(single_coeffs)
+                line = next(inputfile)
+
+            max_nsaos = max([len(i) for i in mocoeffs])
+            for i in mocoeffs:
+                while len(i) < max_nsaos:
+                    i.append(numpy.nan)
+
+            if not hasattr(self, 'mocoeffs'):
+                self.mocoeffs = []
+
+            if not hasattr(self, 'moenergies'):
+                self.moenergies = []
+
+            self.mocoeffs.append(mocoeffs)
+            self.moenergies.append(moenergies)
 
     def deleting_modes(self, vibfreqs, vibdisps, vibirs):
         """Deleting frequencies relating to translations or rotations"""
