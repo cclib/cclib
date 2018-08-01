@@ -38,9 +38,8 @@ class CJSON(filewriter.Writer):
         name = os.path.basename(os.path.splitext(path)[0])
         return name
 
-    def generate_repr(self):
-        """Generate the CJSON representation of the logfile data."""
-
+    def as_dict(self):
+        """ Build a Python dict with the CJSON data"""
         cjson_dict = dict()
         # Need to decide on a number format.
         cjson_dict['chemical json'] = 0
@@ -138,7 +137,11 @@ class CJSON(filewriter.Writer):
         if _has_openbabel:
             cjson_dict['properties']['molecular mass'] = self.pbmol.molwt
             cjson_dict['diagram'] = self.pbmol.write(format='svg')
+        return cjson_dict
 
+    def generate_repr(self):
+        """Generate the CJSON representation of the logfile data."""
+        cjson_dict = self.as_dict()
         if self.terse:
             return json.dumps(cjson_dict, cls=NumpyAwareJSONEncoder)
         else:
@@ -150,12 +153,13 @@ class CJSON(filewriter.Writer):
             object: Python dictionary which is being appended with the key value.
             key: cclib attribute name.
 
-        Returns: 
+        Returns:
             None. The dictionary is modified to contain the attribute with the
                  cclib keyname as key
         """
         if hasattr(self.ccdata, key):
             object[ccData._attributes[key].jsonKey] = getattr(self.ccdata, key)
+
 
 class NumpyAwareJSONEncoder(json.JSONEncoder):
     """A encoder for numpy.ndarray's obtained from the cclib attributes.
