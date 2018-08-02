@@ -251,9 +251,7 @@ class Molcas(logfileparser.Logfile):
                 target = float(line.split()[-1])
                 scftargets.append(target)
 
-            if not hasattr(self, 'scftargets'):
-                self.scftargets = []
-            self.scftargets.append(scftargets)
+            self.append_attribute('scftargets', scftargets)
 
         #  ++ Convergence information
         #                                     SCF        iterations: Energy and convergence statistics
@@ -291,9 +289,7 @@ class Molcas(logfileparser.Logfile):
                     self.logger.warning('File terminated before end of last SCF!')
                     break
 
-            if not hasattr(self, "scfvalues"):
-                self.scfvalues = []
-            self.scfvalues.append(scfvalues)
+            self.append_attribute('scfvalues', scfvalues)
 
         #  Harmonic frequencies in cm-1
         #
@@ -680,9 +676,7 @@ class Molcas(logfileparser.Logfile):
                 if len(moenergies) != self.nmo:
                     moenergies.extend([numpy.nan for x in range(self.nmo - len(moenergies))])
 
-                if not hasattr(self, 'moenergies'):
-                    self.moenergies = []
-                self.moenergies.append(moenergies)
+                self.append_attribute('moenergies', moenergies)
 
                 if not hasattr(self, 'homos'):
                     self.homos = []
@@ -692,9 +686,7 @@ class Molcas(logfileparser.Logfile):
                     nan_array = [numpy.nan for i in range(self.nbasis)]
                     mocoeffs.append(nan_array)
 
-                if not hasattr(self, 'mocoeffs'):
-                    self.mocoeffs = []
-                self.mocoeffs.append(mocoeffs)
+                self.append_attribute('mocoeffs', mocoeffs)
 
 
 if __name__ == '__main__':

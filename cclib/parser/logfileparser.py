@@ -419,6 +419,13 @@ class Logfile(object):
                 self.logger.warning("Attribute %s changed value (%s -> %s)" % (name, getattr(self, name), value))
         setattr(self, name, value)
 
+    def append_attribute(self, name, value):
+        """Appends a value to an attribute."""
+
+        if not hasattr(self, name):
+            self.set_attribute(name, [])
+        getattr(self, name).append(value)
+
     def skip_lines(self, inputfile, sequence):
         """Read trivial line types and check they are what they are supposed to be.
 
