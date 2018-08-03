@@ -688,6 +688,28 @@ class Molcas(logfileparser.Logfile):
 
                 self.append_attribute('mocoeffs', mocoeffs)
 
+        ## Parsing MP energy from the &MBPT2 module.
+        #  Conventional algorithm used...
+        #
+        #         SCF energy                           =      -74.9644564043 a.u.
+        #         Second-order correlation energy      =       -0.0364237923 a.u.
+        #
+        #         Total energy                         =      -75.0008801966 a.u.
+        #         Reference weight ( Cref**2 )         =        0.98652
+        #
+        #  ::    Total MBPT2 energy                              -75.0008801966
+        #
+        #
+        #         Zeroth-order energy (E0)             =      -36.8202538520 a.u.
+        #
+        #         Shanks-type energy S1(E)             =      -75.0009150108 a.u.
+        if 'Total MBPT2 energy' in line:
+            mpenergies = []
+            mpenergies.append(utils.convertor(self.float(line.split()[4]), 'hartree', 'eV'))
+            if not hasattr(self, 'mpenergies'):
+                self.mpenergies = []
+            self.mpenergies.append(mpenergies)
+
 
 if __name__ == '__main__':
     import sys
