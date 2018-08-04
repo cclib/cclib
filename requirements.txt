@@ -1,4 +1,4 @@
-biopython ; python_version == '2.7' or python_version >= '3.4'
+biopython
 numpy
 openbabel
 
