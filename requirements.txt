@@ -7,3 +7,6 @@ https://sourceforge.net/projects/pyquante/files/PyQuante-1.6/PyQuante-1.6.5/PyQu
 
 # for unit tests
 mock==2.0.0 ; python_version < '3.3'
+
+# for building documentation and testing on Travis
+travis-sphinx
