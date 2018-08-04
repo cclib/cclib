@@ -18,7 +18,7 @@ pushd "${SCRIPTDIR}"/../doc
 mkdir -p sphinx/_themes
 if [ ! -d sphinx/_themes/sphinx_rtd_theme ]; then
     pushd sphinx/_themes/
-    git clone -b cclib git@github.com:cclib/sphinx_rtd_theme.git
+    git clone -b cclib https://github.com/cclib/sphinx_rtd_theme.git
 else
     pushd sphinx/_themes/sphinx_rtd_theme
     git pull
@@ -44,6 +44,6 @@ echo "Committing..."
 # This will return 1 if there are no changes, which should not result
 # in failure.
 git commit -m "Deploy documentation `date`" || ret=$?
-git push --force origin $DOCS_BRANCH_NAME
+git push origin $DOCS_BRANCH_NAME
 
 popd
