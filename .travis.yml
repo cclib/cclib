@@ -35,10 +35,7 @@ script:
     git clone -b cclib
     "https://${GH_TOKEN}@github.com/cclib/sphinx_rtd_theme.git"
     "${THEME_DIR}"/sphinx_rtd_theme
-  - >
-    travis-sphinx --verbose
-    --outdir="${DOCS_DIR}"/_build build
-    --source="${DOCS_DIR}" --nowarn
+  - pushd doc; make; popd
   - install -dm755 "${DOCS_DIR}"/_build/html
   - touch "${DOCS_DIR}"/_build/html/.nojekyll
   - |
