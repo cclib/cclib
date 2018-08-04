@@ -36,11 +36,11 @@ SRC_DEV = $(CCLIB_DEV)/cclib
 cclib: $(CCLIB_PROD) $(CCLIB_DEV)
 $(CCLIB_PROD):
 	@echo "Checking out prod..."
-	git clone git@github.com:cclib/cclib.git $@
+	git clone https://github.com/cclib/cclib.git $@
 	cd $(CCLIB_PROD); git checkout $(PRODUCTION_VERSION)
 $(CCLIB_DEV):
 	@echo "Checking out dev..."
-	git clone -b master git@github.com:cclib/cclib.git $@
+	git clone -b master https://github.com/cclib/cclib.git $@
 
 .PHONY: update update_prod update_dev
 update: update_prod update_dev
