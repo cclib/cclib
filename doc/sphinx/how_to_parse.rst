@@ -4,7 +4,7 @@ How to parse and write
 This page outlines the various ways cclib can be used to parse and write logfiles and provides several examples to get you started.
 
 From Python
-+++++++++
++++++++++++
 
 Importing cclib and parsing a file is a few lines of Python code, making it simple to access data from the output file of any supported computational chemistry program. For example:
 
