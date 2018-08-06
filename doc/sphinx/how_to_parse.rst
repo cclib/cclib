@@ -20,13 +20,14 @@ Importing cclib and parsing a file is a few lines of Python code, making it simp
 From command line
 +++++++++++++++++
 
-The cclib package provides three scripts to parse and write data i.e. ``ccget``, ``ccwrite``, and ``cda``
+The cclib package provides four scripts to parse and write data i.e. ``ccget``, ``ccwrite``, ``cda``, and ``ccframe``
 
 1. **ccget** is used to parse attribute data from output files.
 2. **ccwrite** has the ability to list out all valid attribute data that can be parsed from an output format. It has the added feature of writing the output file into four different formats i.e. ``json``, ``cjson``, ``cml``, ``xyz``.
 3. **cda** is used for the chemical decomposition analysis of output files.
+4. **ccframe** is used to write data tables from output files.
 
-This page describes how to use the ccget and ccwrite scripts to obtain data from output files.
+This page describes how to use the ccget, ccwrite and ccframe scripts to obtain data from output files.
 
 ccget
 -----
@@ -218,3 +219,20 @@ Using ``xyz`` as the <OutputFileFormat> with Benzeneselenol.out, we obtain the f
     H     -2.7028960000   -2.1530750000    0.0036640000
     Se     1.8210800000   -0.0433780000   -0.0038760000
     H      2.0043580000    1.4100070000    0.1034490000
+
+ccframe
+-------
+
+This script creates complete tables of data from output files in some of the formats supported by pandas_.
+Since the pandas library is not a dependency of cclib, `it must be installed <https://pandas.pydata.org/pandas-docs/stable/install.html>`_ separately.
+
+.. _pandas: https://pandas.pydata.org/
+
+A complete data table can be parsed from many output files by following this format
+
+.. code-block:: bash
+
+    ccframe -O <OutputDest> <CompChemLogFile> [<CompChemLogFile>...]
+
+The argument for ``-O`` indicates the data file to be written and its extesion specifies the filetype (e.g. csv, hdf/hdf5, json/cjson, pickle/pkl, xlsx).
+Since higher-dimensional attributes (e.g. ``atomcoords``) are handled as plain text in some file formats (such as Excel XLSX or CSV), we recommend storing JSON or HDF5 files.
