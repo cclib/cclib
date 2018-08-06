@@ -309,7 +309,7 @@ vib       ORCA        OrcaIRTest            basicORCA3.0          dvb_ir.out
 vib       ORCA        GenericIRTest         basicORCA4.0          dvb_ir.out
 vib       Psi4        GenericIRTest         basicPsi4-1.0         dvb_ir_rhf.out
 vib       QChem       QChemIRTest           basicQChem4.2         dvb_ir.out
-vib       Turbomole   GenericIRTest         basicTurbomole5.9     dvb_ir/basis            dvb_ir/control            dvb_ir/mos            dvb_ir/coord            dvb_ir/aoforce.out
+vib       Turbomole   GenericIRTest         basicTurbomole5.9     dvb_ir/basis            dvb_ir/control            dvb_ir/mos            dvb_ir/aoforce.out
 
 vib       GAMESS      GenericIRimgTest      basicGAMESS-US2014    nh3_ts_ir.out
 vib       GAMESS      GenericIRimgTest      basicGAMESS-US2017    nh3_ts_ir.out
