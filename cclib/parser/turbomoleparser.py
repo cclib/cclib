@@ -140,34 +140,6 @@ class Turbomole(logfileparser.Logfile):
             self.append_attribute('atomcoords', atomcoords)
             self.set_attribute('atomnos', atomnos)
 
-        ## If we are unable to find coordinates in the job file, we will look for them
-        ## in the coord file.
-        #$coord
-        #   -2.69176330280845     -0.00007129445712     -0.44712612093731      c
-        #   -1.69851644615005     -0.00007332282157      2.06488947265450      c
-        #    0.92683848474542     -0.00007460039817      2.49592179180606      c
-        #    2.69176330586455     -0.00007127328394      0.44712611937145      c
-        #    1.69851645303760     -0.00007330575699     -2.06488946767951      c
-        #...
-        #   -7.04373605585274      0.00092243787879      2.74543890990978      h
-        #   -9.36352819434217      0.00017228707094      0.07445321997922      h
-        #   -0.92683848797451     -0.00007460625018     -2.49592178685491      c
-        #   -1.65164852640697     -0.00009927259342     -4.45456857763148      h
-        #$redundant
-        if line.startswith("$coord"):
-            if '$coordinate' not in line:
-                line = next(inputfile)
-                if '$user' not in line: 
-                    atomcoords = []
-                    atomnos = []
-                    while line[0] != "$":
-                        atomnos.append(utils.PeriodicTable().number[line.split()[3].upper()])
-                        atomcoords.append([utils.convertor(float(x), "bohr", "Angstrom") for x in line.split()[:3]])
-                        line = next(inputfile)
-
-                    self.set_attribute('atomcoords', atomcoords)
-                    self.set_attribute('atomnos', atomnos)
-
         # Frequency values in aoforce.out
         #        mode               7        8        9       10       11       12
         #
