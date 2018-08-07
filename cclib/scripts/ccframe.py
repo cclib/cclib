@@ -24,11 +24,11 @@ from cclib.io import ccframe
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('-O', '--outputdest',
+    parser.add_argument('-O', '--output',
                         help=('the output document to write, including an '
                               'extension supported by pandas '
                               '(csv, hdf/hdf5, json/cjson, pickle/pkl, xlsx)'))
-    parser.add_argument('compchemlogfile',
+    parser.add_argument('compchemlogfiles', metavar='compchemlogfile',
                         nargs='+',
                         help=('one or more computational chemistry output '
                               'files to parse and convert'))
@@ -39,25 +39,25 @@ def main():
                               'the group in HDFStore, if writing a HDF file'))
     args = parser.parse_args()
 
-    outputdest = args.outputdest
+    output = args.output
     identifier = args.identifier
-    filenames = args.compchemlogfile
+    filenames = args.compchemlogfiles
 
     df = ccframe([ccopen(path) for path in filenames])
 
-    if outputdest is not None:
-        outputtype = os.path.splitext(os.path.basename(outputdest))[1][1:]
+    if output is not None:
+        outputtype = os.path.splitext(os.path.basename(output))[1][1:]
 
         if outputtype in {'csv'}:
-            df.to_csv(outputdest)
+            df.to_csv(output)
         elif outputtype in {'hdf', 'hdf5'}:
-            df.to_hdf(outputdest, key=identifier)
+            df.to_hdf(output, key=identifier)
         elif outputtype in {'json', 'cjson'}:
-            df.to_json(outputdest)
+            df.to_json(output)
         elif outputtype in {'pickle', 'pkl'}:
-            df.to_pickle(outputdest)
+            df.to_pickle(output)
         elif outputtype in {'xlsx'}:
-            writer = pd.ExcelWriter(outputdest)
+            writer = pd.ExcelWriter(output)
             # This overwrites previous sheets
             # (see https://stackoverflow.com/a/42375263/4039050)
             df.to_excel(writer, sheet_name=identifier)
