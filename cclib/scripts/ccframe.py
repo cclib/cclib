@@ -23,6 +23,10 @@ from cclib.io import ccframe
 
 
 def main():
+    if not _has_pandas:
+        print("You need to have pandas installed")
+        sys.exit(1)
+
     parser = argparse.ArgumentParser()
     parser.add_argument('-O', '--output',
                         help=('the output document to write, including an '
