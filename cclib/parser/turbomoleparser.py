@@ -308,6 +308,56 @@ class Turbomole(logfileparser.Logfile):
             scfenergy = utils.convertor(self.float(line.split()[4]), 'hartree', 'eV')
             self.append_attribute('scfenergies', scfenergy)
 
+        #  **********************************************************************
+        #  *                                                                    *
+        #  *   RHF  energy                             :    -74.9644564256      *
+        #  *   MP2 correlation energy (doubles)        :     -0.0365225363      *
+        #  *                                                                    *
+        #  *   Final MP2 energy                        :    -75.0009789619      *
+        # ...
+        #  *   Norm of MP1 T2 amplitudes               :      0.0673494687      *
+        #  *                                                                    *
+        #  **********************************************************************
+        # OR
+        #  **********************************************************************
+        #  *                                                                    *
+        #  *   RHF  energy                             :    -74.9644564256      *
+        #  *   correlation energy                      :     -0.0507799360      *
+        #  *                                                                    *
+        #  *   Final CCSD energy                       :    -75.0152363616      *
+        #  *                                                                    *
+        #  *   D1 diagnostic                           :      0.0132            *
+        #  *                                                                    *
+        #  **********************************************************************
+        if 'C C S D F 1 2   P R O G R A M' in line:
+            while 'ccsdf12 : all done' not in line:
+                if 'Final MP2 energy' in line:
+                    mp2energy = [utils.convertor(self.float(line.split()[5]), 'hartree', 'eV')]
+                    self.append_attribute('mpenergies', mp2energy)
+
+                if 'Final CCSD energy' in line:
+                    ccenergy = [utils.convertor(self.float(line.split()[5]), 'hartree', 'eV')]
+                    self.append_attribute('ccenergies', ccenergy)
+
+                line = next(inputfile)
+
+        #  *****************************************************
+        #  *                                                   *
+        #  *      SCF-energy   :     -74.49827196840999        *
+        #  *      MP2-energy   :      -0.19254365976227        *
+        #  *      total        :     -74.69081562817226        *
+        #  *                                                   *
+        #  *     (MP2-energy evaluated from T2 amplitudes)     *
+        #  *                                                   *
+        #  *****************************************************
+        if 'm p g r a d - program' in line:
+            while 'ccsdf12 : all done' not in line:
+                if 'MP2-energy' in line:
+                    line = next(inputfile)
+                    if 'total' in line:
+                        mp2energy = [utils.convertor(self.float(line.split()[3]), 'hartree', 'eV')]
+                        self.append_attribute('mpenergies', mp2energy)
+                line = next(inputfile)
 
     def deleting_modes(self, vibfreqs, vibdisps, vibirs):
         """Deleting frequencies relating to translations or rotations"""
