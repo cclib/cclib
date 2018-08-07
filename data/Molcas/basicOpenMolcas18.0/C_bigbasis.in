@@ -1,3 +1,4 @@
+>>>EXPORT MOLCAS_PRINT = 3
 &gateway
  coord
  1
