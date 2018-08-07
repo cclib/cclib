@@ -59,10 +59,10 @@ Parallel: OFF (GA=OFF)
 
    ------------------------------------------------
   |
-  |           Project: bigbasis
-  |    Submitted from: /home/kunal
-  |      Scratch area: /tmp/bigbasis
-  |   Save outputs to: /home/kunal
+  |           Project: C_bigbasis
+  |    Submitted from: /home/kunal/OpenMolcas/build
+  |      Scratch area: /tmp/C_bigbasis
+  |   Save outputs to: /home/kunal/OpenMolcas/build
   |            Molcas: /home/kunal/OpenMolcas/build
   |
   | Scratch area is NOT empty
@@ -75,6 +75,8 @@ Parallel: OFF (GA=OFF)
    ------------------------------------------------
 
 ++ ---------   Input file   ---------
+
+>>> EXPORT MOLCAS_PRINT = 3
 
 &GATEWAY
  coord
@@ -90,8 +92,10 @@ Parallel: OFF (GA=OFF)
 
 -- ----------------------------------
 
-*** symbolic link created: INPORB -> bigbasis.ScfOrb
---- Start Module: gateway at Tue Mar 27 10:20:21 2018 ---
+>>> EXPORT MOLCAS_PRINT = 3
+
+*** symbolic link created: INPORB -> C_bigbasis.ScfOrb
+--- Start Module: gateway at Tue Aug  7 09:50:14 2018 ---
 
 ()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()
 
@@ -101,6 +105,19 @@ Parallel: OFF (GA=OFF)
                        available to each process: 2.0 GB of memory, 1 thread
 ()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()
 
+
+
+ Basis Set     1 Label: C.AUG-CC-PVQZ
+ Basis set is read from library:basis_library 
+ Basis Set Reference(s):
+     T.H. Dunning, Jr. JCP.90,1007 (1989), R.A. Kendall, T.H. Dunning, Jr,R.J. Harris
+     CARBON       (13s,7p,4d,3f,2g) -> [6s,5p,4d,3f,2g]                              
+
+
+
+  Weights used for alignment and distance                     
+  mat. size =     1x    1
+       12.0000000000000000
 
 ++    Symmetry information:
       ---------------------
@@ -130,6 +147,10 @@ Parallel: OFF (GA=OFF)
          d       4       4                 X         
          f       3       3                 X         
          g       2       2                 X         
+
+       Label   Cartesian Coordinates / Bohr
+
+ C1                -2.6744411775        0.4350561225        0.0000000000
 --
 
 
@@ -145,14 +166,196 @@ Parallel: OFF (GA=OFF)
 --
 
 
+++    Rigid rotor info:
+      -----------------
+
+
+                    Total mass (a) :  12.00000
+
+                    Center of mass 
+                          X          Y          Z   
+                      -2.67444    0.43506    0.00000
+
+                    Reference system based on center of mass
+                    Coordinates and Masses of Atoms, in au and A
+                          X          Y          Z        Mass
+                       0.00000    0.00000    0.00000   12.00000
+
+--
+
+
+++    Primitive basis info:
+      ---------------------
+
+
+                    *****************************************************
+                    ******** Primitive Basis Functions (Valence) ********
+                    *****************************************************
+
+
+ Basis set:C.AUG-CC-PVQZ.........                                                          
+
+                  Type         
+                   s
+           No.      Exponent    Contraction Coefficients
+            1  0.339800000D+05   0.000091  -0.000019   0.000000   0.000000   0.000000   0.000000
+            2  0.508900000D+04   0.000704  -0.000151   0.000000   0.000000   0.000000   0.000000
+            3  0.115700000D+04   0.003693  -0.000785   0.000000   0.000000   0.000000   0.000000
+            4  0.326600000D+03   0.015360  -0.003324   0.000000   0.000000   0.000000   0.000000
+            5  0.106100000D+03   0.052929  -0.011512   0.000000   0.000000   0.000000   0.000000
+            6  0.381100000D+02   0.147043  -0.034160   0.000000   0.000000   0.000000   0.000000
+            7  0.147500000D+02   0.305631  -0.077173   0.000000   0.000000   0.000000   0.000000
+            8  0.603500000D+01   0.399345  -0.141493   0.000000   0.000000   0.000000   0.000000
+            9  0.253000000D+01   0.217051  -0.118019   0.000000   0.000000   0.000000   0.000000
+           10  0.735500000D+00   0.015894   0.273806   1.000000   0.000000   0.000000   0.000000
+           11  0.290500000D+00  -0.003084   0.586510   0.000000   1.000000   0.000000   0.000000
+           12  0.111100000D+00   0.000978   0.285430   0.000000   0.000000   1.000000   0.000000
+           13  0.414500000D-01   0.000000   0.000000   0.000000   0.000000   0.000000   1.000000
+
+                  Type         
+                   p
+           No.      Exponent    Contraction Coefficients
+           14  0.345100000D+02   0.005378   0.000000   0.000000   0.000000   0.000000
+           15  0.791500000D+01   0.036132   0.000000   0.000000   0.000000   0.000000
+           16  0.236800000D+01   0.142493   0.000000   0.000000   0.000000   0.000000
+           17  0.813200000D+00   0.342150   1.000000   0.000000   0.000000   0.000000
+           18  0.289000000D+00   0.463864   0.000000   1.000000   0.000000   0.000000
+           19  0.100700000D+00   0.250028   0.000000   0.000000   1.000000   0.000000
+           20  0.321800000D-01   0.000000   0.000000   0.000000   0.000000   1.000000
+
+                  Type         
+                   d
+           No.      Exponent    Contraction Coefficients
+           21  0.184800000D+01   1.000000   0.000000   0.000000   0.000000
+           22  0.649000000D+00   0.000000   1.000000   0.000000   0.000000
+           23  0.228000000D+00   0.000000   0.000000   1.000000   0.000000
+           24  0.766000000D-01   0.000000   0.000000   0.000000   1.000000
+
+                  Type         
+                   f
+           No.      Exponent    Contraction Coefficients
+           25  0.141900000D+01   1.000000   0.000000   0.000000
+           26  0.485000000D+00   0.000000   1.000000   0.000000
+           27  0.187000000D+00   0.000000   0.000000   1.000000
+
+                  Type         
+                   g
+           No.      Exponent    Contraction Coefficients
+           28  0.101100000D+01   1.000000   0.000000
+           29  0.424000000D+00   0.000000   1.000000
+
+  Number of primitives                                   93
+  Number of basis functions                              80
+
+--
+
+
+++    SO/AO info:
+      -----------
+
+                    **************************************************
+                    ********** Petite list Basis Functions ***********
+                    **************************************************
+
+
+           Basis functions generated by E  
+
+ Basis Label        Type   Center
+   1   C1           1s        1
+   2   C1           2s        1
+   3   C1           *s        1
+   4   C1           *s        1
+   5   C1           *s        1
+   6   C1           *s        1
+   7   C1           2px       1
+   8   C1           *px       1
+   9   C1           *px       1
+  10   C1           *px       1
+  11   C1           *px       1
+  12   C1           2py       1
+  13   C1           *py       1
+  14   C1           *py       1
+  15   C1           *py       1
+  16   C1           *py       1
+  17   C1           2pz       1
+  18   C1           *pz       1
+  19   C1           *pz       1
+  20   C1           *pz       1
+  21   C1           *pz       1
+  22   C1           *d2-      1
+  23   C1           *d2-      1
+  24   C1           *d2-      1
+  25   C1           *d2-      1
+  26   C1           *d1-      1
+  27   C1           *d1-      1
+  28   C1           *d1-      1
+  29   C1           *d1-      1
+  30   C1           *d0       1
+  31   C1           *d0       1
+  32   C1           *d0       1
+  33   C1           *d0       1
+  34   C1           *d1+      1
+  35   C1           *d1+      1
+  36   C1           *d1+      1
+  37   C1           *d1+      1
+  38   C1           *d2+      1
+  39   C1           *d2+      1
+  40   C1           *d2+      1
+  41   C1           *d2+      1
+  42   C1           *f3-      1
+  43   C1           *f3-      1
+  44   C1           *f3-      1
+  45   C1           *f2-      1
+  46   C1           *f2-      1
+  47   C1           *f2-      1
+  48   C1           *f1-      1
+  49   C1           *f1-      1
+  50   C1           *f1-      1
+  51   C1           *f0       1
+  52   C1           *f0       1
+  53   C1           *f0       1
+  54   C1           *f1+      1
+  55   C1           *f1+      1
+  56   C1           *f1+      1
+  57   C1           *f2+      1
+  58   C1           *f2+      1
+  59   C1           *f2+      1
+  60   C1           *f3+      1
+  61   C1           *f3+      1
+  62   C1           *f3+      1
+  63   C1           *g4-      1
+  64   C1           *g4-      1
+  65   C1           *g3-      1
+  66   C1           *g3-      1
+  67   C1           *g2-      1
+  68   C1           *g2-      1
+  69   C1           *g1-      1
+  70   C1           *g1-      1
+  71   C1           *g0       1
+  72   C1           *g0       1
+  73   C1           *g1+      1
+  74   C1           *g1+      1
+  75   C1           *g2+      1
+  76   C1           *g2+      1
+  77   C1           *g3+      1
+  78   C1           *g3+      1
+  79   C1           *g4+      1
+  80   C1           *g4+      1
+
+      Basis set specifications :
+      Symmetry species        a  
+      Basis functions          80
+--
+
+
             Nuclear Potential Energy              0.00000000 au
 
---- Stop Module: gateway at Tue Mar 27 10:20:21 2018 /rc=_RC_ALL_IS_WELL_ ---
+--- Stop Module: gateway at Tue Aug  7 09:50:15 2018 /rc=_RC_ALL_IS_WELL_ ---
 *** files: xmldump
-    saved to directory /home/kunal
+    saved to directory /home/kunal/OpenMolcas/build
 
-*** symbolic link created: INPORB -> bigbasis.ScfOrb
---- Start Module: seward at Tue Mar 27 10:20:21 2018 ---
+*** symbolic link created: INPORB -> C_bigbasis.ScfOrb
+--- Start Module: seward at Tue Aug  7 09:50:15 2018 ---
 
 ()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()
 
@@ -162,6 +365,10 @@ Parallel: OFF (GA=OFF)
                        available to each process: 2.0 GB of memory, 1 thread
 ()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()
 
+
+  Weights used for alignment and distance                     
+  mat. size =     1x    1
+       12.0000000000000000
                SEWARD will generate:
                   Multipole Moment integrals up to order  2
                   Kinetic Energy integrals
@@ -173,6 +380,104 @@ Parallel: OFF (GA=OFF)
                    Integrals are discarded if absolute value <: 0.10E-13
                    Integral cutoff threshold is set to       <: 0.10E-15
 
+++    SO/AO info:
+      -----------
+
+                    **************************************************
+                    ********** Petite list Basis Functions ***********
+                    **************************************************
+
+
+           Basis functions generated by E  
+
+ Basis Label        Type   Center
+   1   C1           1s        1
+   2   C1           2s        1
+   3   C1           *s        1
+   4   C1           *s        1
+   5   C1           *s        1
+   6   C1           *s        1
+   7   C1           2px       1
+   8   C1           *px       1
+   9   C1           *px       1
+  10   C1           *px       1
+  11   C1           *px       1
+  12   C1           2py       1
+  13   C1           *py       1
+  14   C1           *py       1
+  15   C1           *py       1
+  16   C1           *py       1
+  17   C1           2pz       1
+  18   C1           *pz       1
+  19   C1           *pz       1
+  20   C1           *pz       1
+  21   C1           *pz       1
+  22   C1           *d2-      1
+  23   C1           *d2-      1
+  24   C1           *d2-      1
+  25   C1           *d2-      1
+  26   C1           *d1-      1
+  27   C1           *d1-      1
+  28   C1           *d1-      1
+  29   C1           *d1-      1
+  30   C1           *d0       1
+  31   C1           *d0       1
+  32   C1           *d0       1
+  33   C1           *d0       1
+  34   C1           *d1+      1
+  35   C1           *d1+      1
+  36   C1           *d1+      1
+  37   C1           *d1+      1
+  38   C1           *d2+      1
+  39   C1           *d2+      1
+  40   C1           *d2+      1
+  41   C1           *d2+      1
+  42   C1           *f3-      1
+  43   C1           *f3-      1
+  44   C1           *f3-      1
+  45   C1           *f2-      1
+  46   C1           *f2-      1
+  47   C1           *f2-      1
+  48   C1           *f1-      1
+  49   C1           *f1-      1
+  50   C1           *f1-      1
+  51   C1           *f0       1
+  52   C1           *f0       1
+  53   C1           *f0       1
+  54   C1           *f1+      1
+  55   C1           *f1+      1
+  56   C1           *f1+      1
+  57   C1           *f2+      1
+  58   C1           *f2+      1
+  59   C1           *f2+      1
+  60   C1           *f3+      1
+  61   C1           *f3+      1
+  62   C1           *f3+      1
+  63   C1           *g4-      1
+  64   C1           *g4-      1
+  65   C1           *g3-      1
+  66   C1           *g3-      1
+  67   C1           *g2-      1
+  68   C1           *g2-      1
+  69   C1           *g1-      1
+  70   C1           *g1-      1
+  71   C1           *g0       1
+  72   C1           *g0       1
+  73   C1           *g1+      1
+  74   C1           *g1+      1
+  75   C1           *g2+      1
+  76   C1           *g2+      1
+  77   C1           *g3+      1
+  78   C1           *g3+      1
+  79   C1           *g4+      1
+  80   C1           *g4+      1
+
+      Basis set specifications :
+      Symmetry species        a  
+      Basis functions          80
+--
+
+
             Nuclear Potential Energy              0.00000000 au
 
 
@@ -181,15 +486,54 @@ Parallel: OFF (GA=OFF)
       Basis functions           80
 
 
+  SEWARD will use a sorting area of        8192 Words(Real*8) in the first phase (=   1 bins).
+  SEWARD will use a sorting area of    10497600 Words(Real*8) in the second phase.
+
+
+ Integrals are written in MOLCAS2 format
+ Total Number of integrals                             =   10497600
+ Number of nonzero integrals passed to packing routine =    1751833
+ Packing accuracy = 0.1000E-13
+ Highest disk address written     41540
+ Diagonal and subdiagonal, symmetry allowed 2-el integral blocks are stored on Disk
+
   Input file to MOLDEN was generated!
 
---- Stop Module: seward at Tue Mar 27 10:20:22 2018 /rc=_RC_ALL_IS_WELL_ ---
-*** files: bigbasis.GssOrb bigbasis.guessorb.h5 bigbasis.guessorb.molden xmldump
-    saved to directory /home/kunal
+++ I/O STATISTICS
+ 
+  I. General I/O information
+  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  Unit  Name          Flsize      Write/Read            MBytes           Write/Read
+                      (MBytes)       Calls              In/Out           Time, sec.
+  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+   1  RUNFILE          13.09 .    1337/    7683 .     22.2/     81.6 .       0/       0
+   2  NQGRID            0.00 .       2/       0 .      0.0/      0.0 .       0/       0
+   3  ONEINT            1.87 .      44/      52 .     32.9/     21.8 .       0/       0
+   4  ORDINT           20.28 .    1766/     132 .     45.9/     33.0 .       0/       0
+   5  TEMP01            6.38 .    1681/      51 .     12.7/      6.4 .       0/       0
+  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+   *  TOTAL            41.62 .    4830/    7918 .    113.8/    142.8 .       0/       0
+  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ 
+  II. I/O Access Patterns
+  - - - - - - - - - - - - - - - - - - - -
+  Unit  Name               % of random
+                         Write/Read calls
+  - - - - - - - - - - - - - - - - - - - -
+   1  RUNFILE             28.6/  10.3
+   2  NQGRID              50.0/   0.0
+   3  ONEINT              93.2/  28.8
+   4  ORDINT               3.2/  39.4
+   5  TEMP01               3.0/ 100.0
+  - - - - - - - - - - - - - - - - - - - -
+--
+--- Stop Module: seward at Tue Aug  7 09:50:16 2018 /rc=_RC_ALL_IS_WELL_ ---
+*** files: C_bigbasis.GssOrb C_bigbasis.guessorb.h5 C_bigbasis.guessorb.molden xmldump
+    saved to directory /home/kunal/OpenMolcas/build
 --- Module seward spent 1 second ---
 
-*** symbolic link created: INPORB -> bigbasis.ScfOrb
---- Start Module: scf at Tue Mar 27 10:20:22 2018 ---
+*** symbolic link created: INPORB -> C_bigbasis.ScfOrb
+--- Start Module: scf at Tue Aug  7 09:50:16 2018 ---
 
 ()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()
 
@@ -204,7 +548,7 @@ Parallel: OFF (GA=OFF)
 
       Header of the integral files:
       
-       Integrals generated by seward 4.2.0  , Tue Mar 27 10:20:21 2018
+       Integrals generated by seward 4.2.0  , Tue Aug  7 09:50:15 2018
 
 
       Cartesian coordinates in Angstrom:
@@ -515,26 +859,118 @@ Iter     Tot. SCF        One-elec.       Two-elec.     Energy      Max Dij or  M
 --
 
 
+      Expectation values of various operators
+
 ++    Molecular properties:
       ---------------------
 
-      Charge (e):
-                      =   -0.0000
-      Dipole Moment (Debye):
-      Origin of the operator (Ang)=    0.0000    0.0000    0.0000
-                   X= -9.0301E-15               Y= -1.1288E-15               Z=  1.8964E-15           Total=  9.2959E-15
-      Quadrupole Moment (Debye*Ang):
-      Origin of the operator (Ang)=   -1.4153    0.2302    0.0000
-                  XX= -5.1300E+00              XY= -4.8913E-01              XZ=  1.2280E-01              YY= -9.2210E+00
-                  YZ=  1.0416E+00              ZZ= -5.3338E+00
-      In traceless form (Debye*Ang)
-                  XX=  2.1474E+00              XY= -7.3369E-01              XZ=  1.8420E-01              YY= -3.9891E+00
-                  YZ=  1.5624E+00              ZZ=  1.8417E+00
+
+
+       0-st cartesian moments: origin at (  0.00000000,  0.00000000,  0.00000000)
+      ----------------------------------------------------------------------------
+ Total electronic            -6.00000000
+ Total nuclear                6.00000000
+ Total                       -0.00000000
+
+
+       1-st cartesian moments: origin at (  0.00000000,  0.00000000,  0.00000000)
+      ----------------------------------------------------------------------------
+ Component                             X               Y               Z
+ Total electronic            16.04664706     -2.61033674      0.00000000
+ Total nuclear              -16.04664706      2.61033674      0.00000000
+ Total                       -0.00000000     -0.00000000      0.00000000
+      ----------------------------------------------------------------------------
+      Total                  -0.00000000     -0.00000000      0.00000000   Debye
+
+
+       2-nd cartesian moments: origin at ( -2.67444118,  0.43505612,  0.00000000)
+      ----------------------------------------------------------------------------
+ Component                            XX              XY              XZ              YY              YZ              ZZ
+ Total electronic            -3.81403740     -0.36365254      0.09129845     -6.85561505      0.77438112     -3.96557906
+ Total nuclear                0.00000000      0.00000000      0.00000000      0.00000000      0.00000000      0.00000000
+ Total                       -3.81403740     -0.36365254      0.09129845     -6.85561505      0.77438112     -3.96557906
+
+
+
+      Cartesian  2-pole moment: origin at ( -2.67444118,  0.43505612,  0.00000000)
+      ----------------------------------------------------------------------------
+ Component                            XX              XY              XZ              YY              YZ              ZZ
+ Total electronic             1.59655966     -0.54547882      0.13694767     -2.96580682      1.16157168      1.36924716
+ Total nuclear                0.00000000      0.00000000      0.00000000      0.00000000      0.00000000      0.00000000
+ Total                        1.59655966     -0.54547882      0.13694767     -2.96580682      1.16157168      1.36924716
+
+--
+
+
+++ Statistics and timing
+   ---------------------
+
+  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+     Part of the program                              CPU    fraction
+  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  1) Input processing                         :      0.02      0.06
+  2) Wave function optimization               :      0.17      0.47
+       Line Search Iterations    (QNR steps)  :      0.00      0.00
+    a ) calculation of the density            :      0.00      0.00
+    b ) contraction with integrals            :      0.13      0.36
+    c ) acceleration of convergence           :      0.00      0.00
+          recursive BFGS         (QNR steps)  :      0.00      0.00
+    d ) solution to Roothaan-Hall equations   :      0.00      0.00
+    d') rotate MOs C with U      (QNR steps)  :      0.00      0.00
+          U=exp(kap)                          :      0.00      0.00
+            via Taylor expansion (sin/cos)    :      0.00      0.00
+            via transformation to Schur basis :      0.00      0.00
+    e') transf. Fck Mat. with C  (QNR steps)  :      0.00      0.00
+    f ) other calculations                    :      0.00      0.00
+  3) Final processing (generation of outputs) :      0.12      0.33
+
+     T O T A L                                :      0.36
+  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 --
 
 
   Input file to MOLDEN was generated!
 
+++ I/O STATISTICS
+ 
+  I. General I/O information
+  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  Unit  Name          Flsize      Write/Read            MBytes           Write/Read
+                      (MBytes)       Calls              In/Out           Time, sec.
+  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+   1  RUNFILE          13.24 .     490/    6219 .      3.8/     57.2 .       0/       0
+   2  ORDINT           20.28 .       1/     163 .      0.0/     40.5 .       0/       0
+   3  DNSMAT            0.40 .       0/       0 .      0.0/      0.0 .       0/       0
+   4  DVXCDR            0.40 .       0/       0 .      0.0/      0.0 .       0/       0
+   5  TWOHAM            0.40 .       0/       0 .      0.0/      0.0 .       0/       0
+   6  GRADIENT          0.00 .       0/       0 .      0.0/      0.0 .       0/       0
+   7  SODGRAD           0.00 .       0/       0 .      0.0/      0.0 .       0/       0
+   8  SOXVEC            0.00 .       0/       0 .      0.0/      0.0 .       0/       0
+   9  SODELTA           0.00 .       0/       0 .      0.0/      0.0 .       0/       0
+  10  SOYVEC            0.00 .       0/       0 .      0.0/      0.0 .       0/       0
+  11  ONEINT            1.87 .       2/     227 .      1.4/    177.6 .       0/       0
+  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+   *  TOTAL            36.59 .     493/    6609 .      5.2/    275.4 .       0/       0
+  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ 
+  II. I/O Access Patterns
+  - - - - - - - - - - - - - - - - - - - -
+  Unit  Name               % of random
+                         Write/Read calls
+  - - - - - - - - - - - - - - - - - - - -
+   1  RUNFILE             28.6/  12.3
+   2  ORDINT             100.0/   1.2
+   3  DNSMAT               0.0/   0.0
+   4  DVXCDR               0.0/   0.0
+   5  TWOHAM               0.0/   0.0
+   6  GRADIENT             0.0/   0.0
+   7  SODGRAD              0.0/   0.0
+   8  SOXVEC               0.0/   0.0
+   9  SODELTA              0.0/   0.0
+  10  SOYVEC               0.0/   0.0
+  11  ONEINT             100.0/  37.9
+  - - - - - - - - - - - - - - - - - - - -
+--
  ###############################################################################
  ###############################################################################
  ###                                                                         ###
@@ -545,8 +981,8 @@ Iter     Tot. SCF        One-elec.       Two-elec.     Energy      Max Dij or  M
  ###                                                                         ###
  ###############################################################################
  ###############################################################################
---- Stop Module: scf at Tue Mar 27 10:20:23 2018 /rc=_RC_ALL_IS_WELL_ ---
-*** files: bigbasis.scf.molden bigbasis.ScfOrb bigbasis.scf.h5 xmldump
-    saved to directory /home/kunal
+--- Stop Module: scf at Tue Aug  7 09:50:17 2018 /rc=_RC_ALL_IS_WELL_ ---
+*** files: C_bigbasis.scf.molden C_bigbasis.ScfOrb C_bigbasis.scf.h5 xmldump
+    saved to directory /home/kunal/OpenMolcas/build
 
-    Timing: Wall=2.26 User=1.54 System=0.36
+    Timing: Wall=2.48 User=1.56 System=0.58
