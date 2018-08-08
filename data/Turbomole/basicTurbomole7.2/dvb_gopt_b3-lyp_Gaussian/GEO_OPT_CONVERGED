@@ -1,0 +1,24 @@
+CONVERGENCY CRITERIA FULFILLED IN CYCLE 6
+
+ energy change  : actual value =  -0.8371E-06 threshold =   0.1000E-05
+ geom. gradient : actual value =   0.4511E-03 threshold =   0.1000E-02
+
+Job ended at   Tue Aug 7 22:20:38 EDT 2018
+  on machine     smp-n25.crc.pitt.edu
+  by user        erb74
+  in directory   /ihome/dlambrecht/erb74/turbomole/dvb_gopt_b3-lyp_Gaussian
+  
+job.start file had been created with details about the job type: 
+
+Tue Aug  7 22:20:18 EDT 2018
+jobex WAS CALLED AS: jobex
+AN OPTIMIZATION WITH MAX. 100 CYCLES WILL BE PERFORMED
+CONVERGENCY CRITERION FOR TOTAL SCF-ENERGY IS 10**(-6)
+CONVERGENCY CRITERION FOR MAXIMUM NORM OF SCF-ENERGY GRADIENT IS 10**(-3)
+CONVERGENCY CRITERION FOR MAXIMUM NORM OF BASIS SET GRADIENT IS 10**(-3)
+PROCEDURE WILL START WITH A dscf like STEP
+LOAD MODULES WILL BE TAKEN FROM DIRECTORY /ihome/crc/install/turbomole/7.21/TURBOMOLE/bin/em64t-unknown-linux-gnu_smp
+DSCF  = /ihome/crc/install/turbomole/7.21/TURBOMOLE/bin/em64t-unknown-linux-gnu_smp/dscf
+GRAD  = /ihome/crc/install/turbomole/7.21/TURBOMOLE/bin/em64t-unknown-linux-gnu_smp/grad
+STATPT = /ihome/crc/install/turbomole/7.21/TURBOMOLE/bin/em64t-unknown-linux-gnu_smp/statpt
+
