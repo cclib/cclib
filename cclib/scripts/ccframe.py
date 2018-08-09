@@ -31,7 +31,7 @@ def main():
     parser.add_argument('-O', '--output',
                         help=('the output document to write, including an '
                               'extension supported by pandas '
-                              '(csv, hdf/hdf5, json/cjson, pickle/pkl, xlsx)'))
+                              '(csv, h5/hdf/hdf5, json, pickle/pkl, xlsx)'))
     parser.add_argument('compchemlogfiles', metavar='compchemlogfile',
                         nargs='+',
                         help=('one or more computational chemistry output '
@@ -54,9 +54,9 @@ def main():
 
         if outputtype in {'csv'}:
             df.to_csv(output)
-        elif outputtype in {'hdf', 'hdf5'}:
+        elif outputtype in {'h5', 'hdf', 'hdf5'}:
             df.to_hdf(output, key=identifier)
-        elif outputtype in {'json', 'cjson'}:
+        elif outputtype in {'json'}:
             df.to_json(output)
         elif outputtype in {'pickle', 'pkl'}:
             df.to_pickle(output)
