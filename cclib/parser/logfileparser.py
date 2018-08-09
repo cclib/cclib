@@ -235,7 +235,7 @@ class Logfile(object):
 
         # Set up the metadata.
         if not hasattr(self, "metadata"):
-            self.metadata = {}
+            self.metadata = dict()
             self.metadata["package"] = self.logname
             self.metadata["methods"] = []
             # Indicate if the computation has completed successfully

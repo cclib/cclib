@@ -75,7 +75,7 @@ class Psi4(logfileparser.Logfile):
             # Keep track of early versions of Psi4.
             if "beta" in line:
                 self.version_4_beta = True
-        self.metadata["package_version"] = 4
+        self.metadata["package_version"] = "4"
 
         # This will automatically change the section attribute for Psi4, when encountering
         # a line that <== looks like this ==>, to whatever is in between.

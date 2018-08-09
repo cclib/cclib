@@ -36,6 +36,7 @@ module_names = [
     "SP", "SPun", "GeoOpt", "Basis", "Core",    # Basic calculations.
     "MP", "CC", "CI", "TD", "TDun",             # Post-SCF calculations.
     "vib", "Polar", "Scan",                     # Other property calculations.
+    "metadata",                                 # ???
 ]
 all_modules = {tn: importlib.import_module('.data.test' + tn, package='test')
                for tn in module_names}

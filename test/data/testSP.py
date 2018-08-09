@@ -270,27 +270,6 @@ class GenericSPTest(unittest.TestCase):
             for m in moment32:
                 self.assertEquals(m, 0.0)
 
-    @skipForParser('ADF', 'Does not support metadata yet')
-    @skipForParser('GAMESSUK', 'Does not support metadata yet')
-    @skipForParser('Molcas','The parser is still being developed so we skip this test')
-    @skipForParser('Molpro', 'Does not support metadata yet')
-    @skipForParser('NWChem', 'Does not support metadata yet')
-    @skipForParser('ORCA', 'Does not support metadata yet')
-    @skipForParser('Psi3', 'Does not support metadata yet')
-    @skipForParser('Psi4', 'Does not support metadata yet')
-    @skipForParser('QChem', 'Does not support metadata yet')
-    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
-    def testmetadata(self):
-        """Does metadata have expected keys and values?"""
-        self.assertTrue(hasattr(self.data, "metadata"))
-        if self.logfile.logname not in ['ORCA', 'Psi']:
-            self.assertIn("basis_set", self.data.metadata)
-        if self.logfile.logname == 'ORCA':
-            self.assertIn("input_file_name", self.data.metadata)
-            self.assertIn("input_file_contents", self.data.metadata)
-        self.assertIn("methods", self.data.metadata)
-        self.assertIn("package", self.data.metadata)
-        self.assertIn("package_version", self.data.metadata)
 
 class ADFSPTest(GenericSPTest):
     """Customized restricted single point unittest"""
