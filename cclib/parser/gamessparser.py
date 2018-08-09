@@ -85,7 +85,8 @@ class GAMESS(logfileparser.Logfile):
         
         # extract the version number first
         if line.find("GAMESS VERSION") >= 0:
-            self.metadata["package_version"] = line.split()[4] + line.split()[5] + line.split()[6]
+            tokens = line.split()
+            self.metadata["package_version"] = ' '.join(tokens[4:-1])
 
         if line[1:12] == "INPUT CARD>":
             return
