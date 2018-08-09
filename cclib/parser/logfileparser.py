@@ -414,7 +414,7 @@ class Logfile(object):
         """
         if check and hasattr(self, name):
             try:
-                assert getattr(self, name) == value
+                numpy.testing.assert_equal(getattr(self, name), value)
             except AssertionError:
                 self.logger.warning("Attribute %s changed value (%s -> %s)" % (name, getattr(self, name), value))
         setattr(self, name, value)
