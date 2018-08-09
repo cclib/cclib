@@ -1,0 +1,31 @@
+>>>EXPORT MOLCAS_PRINT = 3
+
+&gateway
+
+Basis set
+O.6-31G*..10s4p1d.3s2p1d.
+O     0.000206    -0.000206     1.741504 /Angstrom
+End of basis
+
+Basis set
+Cl.ECP.Hay-Wadt.3s3p.2s2p.7e-LANL2DZ.
+Cl1     1.711727    -1.711727    -0.659846 /Angstrom
+Cl2    -1.710992    -1.711738    -0.660079 /Angstrom
+Cl3    -1.711004     1.711004    -0.660311 /Angstrom
+Cl4     1.711738     1.710992    -0.660079 /Angstrom
+End of basis
+
+Basis set
+Mo.ECP.Hay-Wadt.5s6p4d.3s3p2d.14e-LANL2DZ.
+Mo     0.000325    -0.000325     0.051810 /Angstrom
+End of basis
+
+ECPShow
+
+End of input
+
+&seward
+
+&scf
+ ksdft = b3lyp
+ charge = -2
