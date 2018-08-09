@@ -292,6 +292,9 @@ def ccopen(source, *args, **kargs):
         else:
             inputfile.seek(0, 0)
         if not is_stream:
+            if is_listofstrings:
+                if filetype == Turbomole:
+                    source = sort_turbomole_outputs(source)
             inputfile.close()
             return filetype(source, *args, **kargs)
         return filetype(inputfile, *args, **kargs)
@@ -416,3 +419,55 @@ def _determine_output_format(outputtype, outputdest):
             raise UnknownOutputFormatError(extension)
 
     return outputclass
+
+def path_leaf(path):
+    """
+    Splits the path to give the filename. Works irrespective of '\'
+    or '/' appearing in the path and also with path ending with '/' or '\'.
+
+    Inputs:
+      path - a string path of a logfile.
+    Returns:
+      tail - 'directory/subdirectory/logfilename' will return 'logfilename'.
+      ntpath.basename(head) - 'directory/subdirectory/logfilename/' will return 'logfilename'.
+    """
+    head, tail = os.path.split(path)
+    return tail or os.path.basename(head)
+
+def sort_turbomole_outputs(filelist):
+    """
+    Sorts a list of inputs (or list of log files) according to the order
+    defined below. Just appends the unknown files in the end of the sorted list.
+
+    Inputs:
+      filelist - a list of Turbomole log files needed to be parsed.
+    Returns:
+      sorted_list - a sorted list of Turbomole files needed for proper parsing.
+    """
+    sorting_order = {
+        'basis' : 0,
+        'control' : 1,
+        'mos' : 2,
+        'alpha' : 3,
+        'beta' : 4,
+        'job.last' : 5,
+        'coord' : 6,
+        'gradient' : 7,
+        'aoforce' : 8,
+    }
+
+    known_files = []
+    unknown_files = []
+    sorted_list = []
+    for fname in filelist:
+        filename = path_leaf(fname)
+        if filename in sorting_order:
+            known_files.append([fname, sorting_order[filename]])
+        else:
+            unknown_files.append(fname)
+    for i in sorted(known_files, key=lambda x: x[1]):
+        sorted_list.append(i[0])
+    if unknown_files:
+        sorted_list.append(known_files)
+
+    return sorted_list
