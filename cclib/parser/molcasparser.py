@@ -40,10 +40,30 @@ class Molcas(logfileparser.Logfile):
     def before_parsing(self):
         # Compile the regex for extracting the element symbol from the
         # atom label in the "Molecular structure info" block.
-        self.re_atomelement = re.compile('([a-zA-Z]+)\d+')
+        self.re_atomelement = re.compile('([a-zA-Z]+)|d+')
 
         # Compile the dashes-and-or-spaces-only regex.
         self.re_dashes_and_spaces = re.compile('^[\s-]+$')
+
+    def _assign_coreelectrons_to_element(self, element, ncore, divide_by_count=False):
+        """Assign to all instances of the element, because mixed usage isn't
+        allowed within elements.
+        """
+        mask = [element == possible_element
+                for possible_element in self.atomsymbols]
+        indices = [i for (i, x) in enumerate(mask) if x]
+        count = sum(mask)
+        if divide_by_count:
+            ncore = ncore // count
+        self.coreelectrons[indices] = ncore
+
+    def after_parsing(self):
+        self.coreelectrons = numpy.zeros(self.natom, 'i')
+        self.atomsymbols = [self.table.element[atomno]
+                                 for atomno in self.atomnos]
+
+        for element, ncore in self.core_array:
+            self._assign_coreelectrons_to_element(element, ncore)
 
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
@@ -76,8 +96,6 @@ class Molcas(logfileparser.Logfile):
         if line[25:63] == 'Cartesian Coordinates / Bohr, Angstrom':
             if not hasattr(self, 'atomnos'):
                 self.atomnos = []
-            if not hasattr(self, 'atomcoords'):
-                self.atomcoords = []
 
             self.skip_lines(inputfile, ['stars', 'blank', 'header'])
 
@@ -88,11 +106,13 @@ class Molcas(logfileparser.Logfile):
 
             while not self.re_dashes_and_spaces.search(line):
                 sline = line.split()
-                atomelements.append(self.re_atomelement.search(sline[1]).groups()[0])
+                atomelement = self.re_atomelement.search(sline[1]).groups()[0]
+                atomelement = atomelement[0]+atomelement[1:].lower()
+                atomelements.append(atomelement)
                 atomcoords.append(list(map(float, sline[5:])))
                 line = next(inputfile)
 
-            self.atomcoords.append(atomcoords)
+            self.append_attribute('atomcoords', atomcoords)
 
             if self.atomnos == []:
                 self.atomnos = [utils.PeriodicTable().number[atomelement] for atomelement in atomelements]
@@ -803,6 +823,58 @@ class Molcas(logfileparser.Logfile):
                 indices = [i for (i, x) in enumerate(mask) if x]
                 for index in indices:
                     self.gbasis[index] = gbasis
+
+        #  ++    Basis set information:
+        #        ----------------------
+        # ...
+        #        Basis set label: MO.ECP.HAY-WADT.5S6P4D.3S3P2D.14E-LANL2DZ.....
+        #
+        #        Electronic valence basis set:
+        #        ------------------
+        #        Associated Effective Charge  14.000000 au
+        #        Associated Actual Charge     42.000000 au
+        #        Nuclear Model: Point charge
+        # ...
+        #
+        #        Effective Core Potential specification:
+        #        =======================================
+        #
+        #         Label   Cartesian Coordinates / Bohr
+        #
+        #   MO                 0.0006141610       -0.0006141610        0.0979067106
+        #  --
+        if '++    Basis set information:' in line:
+            self.core_array = []
+            basis_element = ''
+            ncore = 0
+
+            while line[:2] != '--':
+                if 'Basis set label' in line:
+                    try:
+                        basis_element = line.split()[3].split('.')[0]
+                        basis_element = basis_element[0] + basis_element[1:].lower()
+                    except:
+                        self.logger.warning('Basis set label is missing!')
+                        basis_element = ''
+                if 'valence basis set:' in line.lower():
+                    self.skip_line(inputfile, 'd')
+                    line = next(inputfile)
+                    if 'Associated Effective Charge' in line:
+                        effective_charge = float(line.split()[3])
+                        actual_charge = float(next(inputfile).split()[3])
+                        element = self.table.element[int(actual_charge)]
+                        ncore = int(actual_charge - effective_charge)
+                        if basis_element:
+                            assert(basis_element == element)
+                        else:
+                            basis_element = element
+
+                if basis_element and ncore:
+                    self.core_array.append((basis_element, ncore))
+                    basis_element = ''
+                    ncore = 0
+
+                line = next(inputfile)
 
 
 if __name__ == '__main__':
