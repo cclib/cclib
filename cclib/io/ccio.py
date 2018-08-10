@@ -62,6 +62,11 @@ try:
 except ImportError:
     _has_cclib2openbabel = False
 
+try:
+    import pandas as pd
+except ImportError:
+    # Fail silently for now.
+    pass
 
 # Regular expression for validating URLs
 URL_PATTERN = re.compile(
@@ -471,3 +476,34 @@ def sort_turbomole_outputs(filelist):
         sorted_list.append(known_files)
 
     return sorted_list
+
+def ccframe(ccobjs, *args, **kwargs):
+    """Returns a pandas.DataFrame of data attributes parsed by cclib from one
+    or more logfiles.
+
+    Inputs:
+        ccobjs - an iterable of either cclib jobs (from ccopen) or data (from
+        job.parse()) objects
+
+    Returns:
+        a pandas.DataFrame
+    """
+    logfiles = []
+    for ccobj in ccobjs:
+        # Is ccobj an job object (unparsed), or is it a ccdata object (parsed)?
+        if isinstance(ccobj, logfileparser.Logfile):
+            jobfilename = ccobj.filename
+            ccdata = ccobj.parse()
+        elif isinstance(ccobj, data.ccData):
+            jobfilename = None
+            ccdata = ccobj
+        else:
+            raise ValueError
+
+        attributes = ccdata.getattributes()
+        attributes.update({
+            'jobfilename': jobfilename
+        })
+
+        logfiles.append(pd.Series(attributes))
+    return pd.DataFrame(logfiles)

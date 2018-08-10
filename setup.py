@@ -50,6 +50,7 @@ def setup_cclib():
         packages=setuptools.find_packages(exclude=['*test*']),
         entry_points={
             'console_scripts': [
+                'ccframe=cclib.scripts.ccframe:main',
                 'ccget=cclib.scripts.ccget:ccget',
                 'ccwrite=cclib.scripts.ccwrite:main',
                 'cda=cclib.scripts.cda:main'
