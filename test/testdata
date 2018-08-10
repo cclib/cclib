@@ -27,7 +27,6 @@ Basis     Gaussian    GenericBasisTest      basicGaussian09       dvb_sp.out
 Basis     Gaussian    GenericBasisTest      basicGaussian16       dvb_sp.out
 Basis     Jaguar      JaguarBasisTest       basicJaguar8.3        dvb_sp_hf.out
 Basis     Jaguar      JaguarBasisTest       basicJaguar8.3        dvb_sp_ks.out
-Basis     Molcas      GenericBasisTest      basicOpenMolcas18.0   dvb_sp.out
 Basis     Molpro      GenericBasisTest      basicMolpro2006       dvb_sphf.out
 Basis     Molpro      GenericBasisTest      basicMolpro2012       dvb_sphf.out
 Basis     NWChem      GenericBasisTest      basicNWChem6.0        dvb_sp_hf.out
