@@ -84,9 +84,16 @@ class GAMESS(logfileparser.Logfile):
         """Extract information from the file object inputfile."""
         
         # extract the version number first
-        if line.find("GAMESS VERSION") >= 0:
-            tokens = line.split()
-            self.metadata["package_version"] = ' '.join(tokens[4:-1])
+        if "Firefly version" in line:
+            match = re.search(r"Firefly version\s([\d.]*)\D*(\d*)\s*\*", line)
+            if match:
+                version, build = match.groups()
+                package_version = "{}.b{}".format(version, build)
+                self.metadata["package_version"] = package_version
+        if "GAMESS VERSION" in line:
+            if "package_version" not in self.metadata:
+                tokens = line.split()
+                self.metadata["package_version"] = ' '.join(tokens[4:-1])
 
         if line[1:12] == "INPUT CARD>":
             return
