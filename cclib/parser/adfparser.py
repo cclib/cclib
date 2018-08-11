@@ -124,7 +124,7 @@ class ADF(logfileparser.Logfile):
                 line = next(inputfile)
 
         if "Amsterdam Density Functional" in line:
-            self.metadata["package_version"] == line.split()[5]
+            self.metadata["package_version"] = line.split()[5]
 
         # In ADF 2014.01, there are (INPUT FILE) messages, so we need to use just
         # the lines that start with 'Create' and run until the title or something
