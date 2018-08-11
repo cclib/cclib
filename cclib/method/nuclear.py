@@ -20,7 +20,7 @@ class Nuclear(Method):
 
     def __init__(self, data, progress=None, loglevel=logging.INFO, logname="Log"):
 
-        self.required_attrs = ('natom','atomcoords','atomnos')
+        self.required_attrs = ('natom','atomcoords','atomnos','charge')
 
         super(Nuclear, self).__init__(data, progress, loglevel, logname)
 

@@ -32,7 +32,9 @@ class NuclearTest(unittest.TestCase):
         data = ccData()
 
         def check(atomnos, formula, charge=0):
+            data.natom = len(atomnos)
             data.atomnos = numpy.array(atomnos)
+            data.atomcoords = numpy.zeros((data.natom, 3))
             data.charge = charge
             self.assertEqual(Nuclear(data).stoichiometry(), formula)
 
