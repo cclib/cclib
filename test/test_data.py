@@ -45,7 +45,8 @@ def gettestdata():
     """Return a dict of the test file data."""
 
     testdatadir = os.path.dirname(os.path.realpath(__file__))
-    lines = open(testdatadir + '/testdata').readlines()
+    with open(testdatadir + '/testdata') as testdatafile:
+        lines = testdatafile.readlines()
 
     # Remove blank lines and those starting with '#'.
     lines = [line for line in lines if (line.strip() and line[0] != '#')]
