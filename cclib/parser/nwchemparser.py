@@ -42,9 +42,11 @@ class NWChem(logfileparser.Logfile):
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
 
-        #extract the version number first
-        if "Northwest Computational" in line:
-            self.metadata["package_version"] = line.split()[5]
+        # Extract the version number.
+        if "nwchem branch" in line:
+            self.metadata["package_version"] = line.split()[3]
+        if "nwchem revision" in line:
+            revision = line.split()[3]
 
         # This is printed in the input module, so should always be the first coordinates,
         # and contains some basic information we want to parse as well. However, this is not
