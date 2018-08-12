@@ -71,11 +71,14 @@ class Psi4(logfileparser.Logfile):
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
 
-        if "PSI4: An Open-Source Ab Initio".lower() in line.lower():
+        if "Driver" in line:
+            tokens = line.split()
+            package_version = tokens[1].split("-")[-1]
+            self.metadata["package_version"] = package_version
             # Keep track of early versions of Psi4.
-            if "beta" in line:
+            if "beta" in package_version:
                 self.version_4_beta = True
-        self.metadata["package_version"] = 4
+            
 
         # This will automatically change the section attribute for Psi4, when encountering
         # a line that <== looks like this ==>, to whatever is in between.
