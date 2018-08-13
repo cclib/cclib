@@ -78,12 +78,16 @@ class DALTON(logfileparser.Logfile):
 
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
-        # extract the version number first
+
+        # Extract the version number and optionally the Git revision
+        # number.
         if line[4:30] == "This is output from DALTON":
             rs = r"([0-9]{4})\D\s?\w*\s?([0-9]{1})"
             match = re.search(rs, line)
             package_version = ".".join(match.groups())
             self.metadata["package_version"] = package_version
+        if "Last Git revision" in line:
+            revision = line.split()[4]
 
         # Is the basis set from a single library file, or is it
         # manually specified? See before_parsing().
