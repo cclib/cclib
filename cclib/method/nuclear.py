@@ -15,6 +15,33 @@ from cclib.method.calculationmethod import Method
 from cclib.parser.utils import PeriodicTable
 
 
+def get_most_abundant_isotope(element):
+    """Given a `periodictable` element, return the most abundant
+    isotope.
+    """
+    most_abundant_isotope = element.isotopes[0]
+    abundance = 0
+    for iso in element:
+        if iso.abundance > abundance:
+            most_abundant_isotope = iso
+            abundance = iso.abundance
+    return most_abundant_isotope
+
+
+def get_isotopic_masses(charges):
+    """Return the masses for the given nuclei, respresented by their
+    nuclear charges.
+    """
+    import periodictable
+    masses = []
+    for charge in charges:
+        el = periodictable.elements[charge]
+        isotope = get_most_abundant_isotope(el)
+        mass = isotope.mass
+        masses.append(mass)
+    return np.array(masses)
+
+
 class Nuclear(Method):
     """A container for methods pertaining to atomic nuclei."""
 
@@ -57,7 +84,6 @@ class Nuclear(Method):
 
     def repulsion_energy(self, atomcoords_index=-1):
         """Return the nuclear repulsion energy."""
-
         nre = 0.0
         for i in range(self.data.natom):
             ri = self.data.atomcoords[atomcoords_index][i]
@@ -69,38 +95,11 @@ class Nuclear(Method):
                 nre += zi*zj/d
         return nre
 
-    @staticmethod
-    def _get_most_abundant_isotope(element):
-        """Given a `periodictable` element, return the most abundant
-        isotope.
-        """
-        most_abundant_isotope = element.isotopes[0]
-        abundance = 0
-        for iso in element:
-            if iso.abundance > abundance:
-                most_abundant_isotope = iso
-                abundance = iso.abundance
-        return most_abundant_isotope
-
-    @staticmethod
-    def get_isotopic_masses(charges):
-        """Return the masses for the given nuclei, respresented by their
-        nuclear charges.
-        """
-        import periodictable
-        masses = []
-        for charge in charges:
-            el = periodictable.elements[charge]
-            isotope = Nuclear._get_most_abundant_isotope(el)
-            mass = isotope.mass
-            masses.append(mass)
-        return np.array(masses)
-
     def center_of_mass(self, atomcoords_index=-1):
         """Return the center of mass."""
         charges = self.data.atomnos
-        masses = Nuclear.get_isotopic_masses(charges)
         coords = self.data.atomcoords[atomcoords_index]
+        masses = get_isotopic_masses(charges)
 
         mwc = coords * masses[:, np.newaxis]
         numerator = np.sum(mwc, axis=0)
@@ -111,8 +110,8 @@ class Nuclear(Method):
     def moment_of_inertia_tensor(self, atomcoords_index=-1):
         """Return the moment of inertia tensor."""
         charges = self.data.atomnos
-        masses = Nuclear.get_isotopic_masses(charges)
         coords = self.data.atomcoords[atomcoords_index]
+        masses = get_isotopic_masses(charges)
 
         moi_tensor = np.empty((3, 3))
 
