@@ -123,8 +123,18 @@ class ADF(logfileparser.Logfile):
                     break
                 line = next(inputfile)
 
-        if "Amsterdam Density Functional" in line:
-            self.metadata["package_version"] = line.split()[5]
+        version_searchstr = "Amsterdam Density Functional  (ADF)"
+        if version_searchstr in line:
+            startidx = line.index(version_searchstr) + len(version_searchstr)
+            line = line[startidx:].strip()[:-1]
+            match = re.search(r"([\d\.]{4,7})", line)
+            if match:
+                package_version = match.groups()[0]
+                self.metadata["package_version"] = package_version
+            else:
+                # This isn't as well-defined, but the field shouldn't
+                # be left empty.
+                self.metadata["package_version"] = line.strip()
 
         # In ADF 2014.01, there are (INPUT FILE) messages, so we need to use just
         # the lines that start with 'Create' and run until the title or something
