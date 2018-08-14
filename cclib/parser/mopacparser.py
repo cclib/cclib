@@ -95,6 +95,8 @@ class MOPAC(logfileparser.Logfile):
                 package_version = package_version + " BETA"
             self.metadata["package_version"] = package_version
 
+        # Don't use the full package version until we know its field
+        # yet.
         if "For non-commercial use only" in line:
             tokens = line.split()
             tokens = tokens[8:]
