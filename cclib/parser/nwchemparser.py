@@ -1055,9 +1055,7 @@ class NWChem(logfileparser.Logfile):
             line = next(inputfile)
             assert "Time elapsed (fs)" in line
             time = float(line.split()[4])
-            if not hasattr(self, 'time'):
-                self.time = []
-            self.time.append(time)
+            self.append_attribute('time', time)
 
         # BOMD: geometry coordinates when `print low`.
         if line.strip() == "DFT ENERGY GRADIENTS":
