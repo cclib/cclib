@@ -114,6 +114,7 @@ class Turbomole(logfileparser.Logfile):
             line = line[index + len(searchstr):]
             tokens = line.split()
             self.metadata["package_version"] = tokens[0][1:].replace("-", ".")
+            # Don't add revision information to the main package version for now.
             if tokens[1] == "(":
                 revision = tokens[2]
 

@@ -60,7 +60,7 @@ class Jaguar(logfileparser.Logfile):
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
 
-        # Extract the version number first
+        # Extract the package version number.
         if "Jaguar version" in line:
             tokens = line.split()
             # Don't add revision information to the main package

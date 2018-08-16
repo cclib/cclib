@@ -45,6 +45,7 @@ class NWChem(logfileparser.Logfile):
         # Extract the version number.
         if "nwchem branch" in line:
             self.metadata["package_version"] = line.split()[3]
+        # Don't add revision information to the main package version for now.
         if "nwchem revision" in line:
             revision = line.split()[3]
 

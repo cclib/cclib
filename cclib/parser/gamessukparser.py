@@ -47,15 +47,14 @@ class GAMESSUK(logfileparser.Logfile):
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
 
-        # Find the version number and optionally the revision number.
+        # Extract the version number and optionally the revision number.
         if "version" in line:
             search = re.search(r"\sversion\s*(\d\.\d)", line)
             if search:
                 self.metadata["package_version"] = search.groups()[0]
         if "Revision" in line:
             revision = line.split()[1]
-            # Don't add revision information to the main package
-            # version for now.
+            # Don't add revision information to the main package version for now.
             # if "package_version" in self.metadata:
             #     package_version = "{}.r{}".format(self.metadata["package_version"],
             #                                       revision)

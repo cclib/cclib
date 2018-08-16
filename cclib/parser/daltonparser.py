@@ -86,6 +86,7 @@ class DALTON(logfileparser.Logfile):
             match = re.search(rs, line)
             package_version = ".".join(match.groups())
             self.metadata["package_version"] = package_version
+        # Don't add revision information to the main package version for now.
         if "Last Git revision" in line:
             revision = line.split()[4]
 

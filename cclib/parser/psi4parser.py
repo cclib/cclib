@@ -80,6 +80,7 @@ class Psi4(logfileparser.Logfile):
             # Keep track of early versions of Psi4.
             if "beta" in package_version:
                 self.version_4_beta = True
+        # Don't add revision information to the main package version for now.
         if "Git:" in line:
             tokens = line.split()
             revision = '-'.join(tokens[2:])

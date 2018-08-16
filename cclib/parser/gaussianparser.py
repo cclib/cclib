@@ -135,7 +135,8 @@ class Gaussian(logfileparser.Logfile):
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
 
-        # Extract the version number first
+        # Extract the version number: "Gaussian 09, Revision D.01"
+        # becomes "09revisionD.01".
         if line.strip() == "Cite this work as:":
             line = inputfile.next()
             tokens = line.split()
