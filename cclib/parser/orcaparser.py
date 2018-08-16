@@ -1095,7 +1095,7 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
             line = next(inputfile)
             tokens = line.split()
             assert tokens[0] == "time"
-            time = utils.convertor(float(tokens[2]), "au", "fs")
+            time = utils.convertor(float(tokens[2]), "time_au", "fs")
             self.append_attribute('time', time)
 
         # Static polarizability.
