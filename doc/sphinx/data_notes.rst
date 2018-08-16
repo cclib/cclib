@@ -334,6 +334,30 @@ A 1D array that holds the indexes of the highest occupied molecular orbitals (HO
 .. index::
     single: molecular orbitals; mocoeffs (attribute)
 
+metadata
+--------
+
+A dictionary containing metadata_ (data about data) for the calculation. Currently, it can contain the following possible attributes, not all of which are implemented for each parser.
+
+* ``basis_set``: A string with the name of the basis set, if it is printed anywhere as a standard name.
+* ``coord_type``: For the ``coords`` field, a string for the representation of stored coordinates. Currently, it is one of ``xyz``, ``int``/``internal``, or ``gzmat``.
+* ``coords``: A list of lists with shape ``[natoms, 4]`` which contains the input coordinates (those found in the input file). The first column is the atomic symbol as a string, and the next three columns are floats. This is useful as many programs reorient coordinates for symmetry reasons.
+* ``functional``: A string with the name of the density functional used.
+* ``info``: A list of strings, each of which is an information or log message produced during a calculation.
+* ``input_file_contents``: A string containing the entire input file, if it is echoed back during the calculation.
+* ``input_file_name``: A string containing the name of the input file, with file extension. It may not contain the entire path to the file.
+* ``keywords``: A list of strings corresponding to the keywords used in the input file, in the loose format used by ORCA.
+* ``methods``: A list of strings containing each method used in order. Currently, the list may contain ``HF``, ``DFT``, ``LMP2``/``DF-MP2``/``MP2``, ``MP3``, ``MP4``, ``CCSD``, and/or ``CCSD(T)``/``CCSD-T``.
+* ``package``: A string with the name of the quantum chemistry program used.
+* ``package_version``: A string representation of the package version. It is formatted to allow comparison using relational operators.
+* ``success``: A boolean for whether or not the calculation completed properly.
+* ``unrestricted``: A boolean for whether or not the calculation was performed with a unrestricted wavefunction.
+* ``warnings``: A list of strings, each of which is a warning produced during a calculation.
+
+The implementation and coverage of metadata is currently inconsistent. In the future, metadata may receive its own page similar to `extracted data`_.
+
+.. _metadata: https://en.wikipedia.org/wiki/Metadata
+
 mocoeffs
 --------
 
