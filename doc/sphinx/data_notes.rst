@@ -42,11 +42,11 @@ Some examples:
 * ``aooverlaps[0,3]`` is the overlap between the 1st and 4th basis function
 * ``aooverlaps[2,:]`` is a 1-dimensional array containing the overlap between every basis function and the 3rd basis function
 
-**ADF**: not present by default, printed when `PRINT Smat` is in the input; do not mistake with `fooverlaps`_
+**ADF**: not present by default, printed when `PRINT Smat` is in the input; do not mistake with `fooverlaps`_.
 
-**DALTON**: no option to print as of version 2013
+**DALTON**: no option to print as of version 2013.
 
-**Gaussian**: iop(3/33=1) must be specified in the input file
+**Gaussian**: ``iop(3/33=1)`` must be specified in the input file.
 
 .. _`Mulliken`: methods.html#mulliken-population-analysis-mpa
 .. _`C squared`: methods.html#c-squared-population-analysis-cspa
@@ -58,7 +58,7 @@ atombasis
 The attribute ``atombasis`` is a list, each element being a list that contains the atomic orbital indices on the respective atom. For example, ``atombasis[1]`` will contain the indices of atomic orbitals on the second atom of the molecule.
 
 .. index::
-    single: properties; atoimcharges (attribute)
+    single: properties; atomcharges (attribute)
 
 atomcharges
 -----------
@@ -67,14 +67,16 @@ The attribute ``atomcharges`` contains the atomic partial charges as taken from 
 
 Currently, cclib parses Mulliken, Löwdin, NPA and CHELPG charges, whose respective dictionary keys are ``mulliken``, ``lowdin``, ``natural`` and ``chelpg``.
 
-Note that in practice these may differ somewhat from the values cclib calculates in the various calculation methods.
+In practice, these may differ somewhat from the values cclib calculates in the various `calculation methods`_.
 
-**Molpro**: use the ``pop`` command (see http://www.molpro.net/info/2010.1/doc/manual/node450.html)
+**Molpro**: use the ``pop`` command (see http://www.molpro.net/info/2015.1/doc/manual/node515.html).
+
+.. _`calculation methods`: methods.html
 
 atomcoords
 ----------
 
-The attribute ``atomcoords`` contains the atomic coordinates as taken from the output file. This is an array of rank 3, with a shape (n,m,3) where n is 1 for a single point calculation and >=1 for a geometry optimisation and m is the number of atoms. 
+The attribute ``atomcoords`` contains the atomic coordinates as taken from the output file. This is an array of rank 3, with a shape (n,m,3) where n is 1 for a single point calculation and >=1 for a geometry optimisation and m is the number of atoms.
 
 **Gaussian**: for geometry optimisations, the "Standard orientation" sections are extracted.
 
@@ -181,9 +183,9 @@ The difficulty in handling the basis for a molecule with symmetry and the availa
 gbasis
 ------
 
-This attribute stores information about the Gaussian basis functions that were used in the calculation, per atom using the same conventions as [http://pyquante.sf.net PyQuante]. Specifically, ``gbasis`` is a list of lists iterating over atoms and Gaussian basis functions. The elements (basis functions) are tuples of length 2 consisting of orbital type (e.g. 'S', 'P' or 'D') and a list (per contracted GTO) of tuples of size 2 consisting of the exponent and coefficient. Confused? Well, here's ``gbasis`` for a molecule consisting of a single C atom with a STO-3G basis:
+This attribute stores information about the Gaussian basis functions that were used in the calculation, per atom using the same conventions as `PyQuante <http://pyquante.sf.net>`_. Specifically, ``gbasis`` is a list of lists iterating over atoms and Gaussian basis functions. The elements (basis functions) are tuples of length 2 consisting of orbital type (e.g. 'S', 'P' or 'D') and a list (per contracted GTO) of tuples of size 2 consisting of the exponent and coefficient. Confused? Well, here's ``gbasis`` for a molecule consisting of a single C atom with a STO-3G basis:
 
-..
+.. code-block:: python
 
     [ # per atom
         [
@@ -219,7 +221,7 @@ For D and F functions there is an important distinction between pure (5D, 7F) or
 .. _`GFPRINT`: http://www.gaussian.com/g_tech/g_ur/k_gfprint.htm
 
 .. index::
-    single: geomtry optimisation; geotargets (attribute)
+    single: geometry optimisation; geotargets (attribute)
 
 geotargets
 ----------
@@ -235,7 +237,7 @@ In some special cases, the values in ``geotargets`` will be `numpy.inf`_.
     - maximum gradient below TOL * 1/4,
     - average gradient below TOL * 1/6.
 
-.. _`GAMESS-UK manual section on controlling optimisation`:http://www.cfs.dl.ac.uk/docs/html/part4/node14.html 
+.. _`GAMESS-UK manual section on controlling optimisation`: http://www.cfs.dl.ac.uk/docs/html/part4/node14.html
 
 **Jaguar** has several geometry convergence criteria,
 
@@ -247,11 +249,11 @@ In some special cases, the values in ``geotargets`` will be `numpy.inf`_.
 
 Note that a value for gconv7 is not available until the second iteration, so it is set to zero in the first element of `geovalues`_.
 
-**Molpro** has custom convergence criteria, as described in the `manual`_:
+**Molpro** has custom convergence criteria, as described in the `manual <Molpro manual convergence_>`_:
 
-    The standard MOLPRO convergency criterion requires the maximum component of the gradient to be less then :math:`3 \cdot 10^{-4}` [a.u.] and the maximum energy change to be less than :math:`1 \cdot 10^{-6}` [H] or the maximum component of the gradient to be less then $ 3 \cdot 10^{-4}$ [a.u.] and the maximum component of the step to be less then :math:`3 \cdot 10^{-4}` [a.u.]. 
+    The standard MOLPRO convergence criterion requires the maximum component of the gradient to be less then :math:`3 \cdot 10^{-4}` [a.u.] and the maximum energy change to be less than :math:`1 \cdot 10^{-6}` [H] or the maximum component of the gradient to be less then $ 3 \cdot 10^{-4}$ [a.u.] and the maximum component of the step to be less then :math:`3 \cdot 10^{-4}` [a.u.].
 
-.. _`manual`: https://www.molpro.net/info/2012.1/doc/manual/node592.html
+.. _Molpro manual convergence: https://www.molpro.net/info/2012.1/doc/manual/node592.html
 
 **ORCA** tracks the change in energy as well as RMS and maximum gradients and displacements. As of version 3.0, an optimisation is considered converged when all the tolerances are met, and there are four exceptions:
 
@@ -274,16 +276,14 @@ geovalues
 
 These are the current values for the criteria used to determine whether a geometry has converged in the course of a geometry optimisation. It is an array of dimensions ``m x n``, where ``m`` is the number of geometry optimisation iterations and ``n`` the number of target criteria.
 
-Note that many programs print atomic coordinates before and after a geomtry optimisation, which means that there will not necessarily be ``m`` elements in ``atomcoords``_.
+Note that many programs print atomic coordinates before and after a geometry optimisation, which means that there will not necessarily be ``m`` elements in `atomcoords`_.
 
 If the optimisation has finished successfully, the values in the last row should be smaller than the values in geotargets_ (unless the convergence criteria require otherwise).
 
 hessian
 -------
 
-An array of rank 1 that contains the elements of [http://en.wikipedia.org/wiki/Hessian_matrix hessian] or the force constant matrix. Only the lower triangular part of the 3Nx3N matrix is stored (this may change in the future, maybe also only the force-constant , unwighted matrix will be parsed).
-
-* currently available only in ``Molpro``
+An array of rank 1 that contains the elements of the `hessian <http://en.wikipedia.org/wiki/Hessian_matrix>`_ or force constant matrix. Only the lower triangular part of the 3Nx3N matrix is stored (this may change in the future, maybe also only the unweighted matrix will be parsed).
 
 .. index::
     single: molecular orbitals; homos (attribute)
@@ -361,21 +361,22 @@ The symmetry labels are normalised and cclib reports standard symmetry names:
     A"      AAA     A' '    a" or a' '  A"                          App
     A1'     AA1     A1'     a1'         A1'                         A1p
     A1"     AAA1    A1"     a1"         A1"                         A1pp
-    sigma   Sigma                       SG                          
-    pi      Pi                          PI                          
-    phi     Phi                         PHI (inferred)              
-    delta   Delta                       DLTA but DLTU/DLTG          
-    sigma.g Sigma.g                     SGG                         
+    sigma   Sigma                       SG
+    pi      Pi                          PI
+    phi     Phi                         PHI (inferred)
+    delta   Delta                       DLTA but DLTU/DLTG
+    sigma.g Sigma.g                     SGG
     ======= ======= ======= ==========  ==================          ======
 
 * ADF - the full list can be found [http://www.scm.com/Doc/Doc2005.01/ADF/ADFUsersGuide/page339.html here].
 * GAMESS-UK - to get the list, 'grep "data yr" input.m' if you have access to the source. Note that for E, it's split into "e1+" and "e1-" for instance.
 * Jaguar - to get the list, look at the examples in schrodinger/jaguar-whatever/samples if you have access to Jaguar. Note that for E, it's written as E1pp/Ap, for instance.
-* NWChem - if molecular symmetry is turned off or set to C1, symmetry adaption for orbitals is also deactivated, and can be explicitely turned on with `adapt on` in the SCF block
+* NWChem - if molecular symmetry is turned off or set to C1, symmetry adaption for orbitals is also deactivated, and can be explicitly turned on with `adapt on` in the SCF block
 
 Developers:
+
 * The use of a function with doctests for each of these cases is recommended, to make sure that the conversion is robust. There is a prototype called normalisesym() in logfileparser.py which should be overwritten in the subclasses if necessary (there is a unittest to make sure that this has been done).
-* The character tables [http://www.mpip-mainz.mpg.de/~gelessus/group.html here] may be useful in determining the correspondence between the labels used by the comp chem package and the commonly-used symbols.
+* The character tables `here <http://www.mpip-mainz.mpg.de/~gelessus/group.html>`_ may be useful in determining the correspondence between the labels used by the comp chem package and the commonly-used symbols.
 
 .. index::
     single: energy; mpenergies (attribute)
@@ -425,7 +426,9 @@ Commands to get information on all orbitals:
 
 **GAMESS-UK**: only usually prints information on the 5 lowest virtual orbitals. "FORMAT HIGH" should make it do this for all of the orbitals, although GAMESS-UK 7.0 has a bug that means that this only works for restricted calculations.
 
-**Jaguar**: the first ten virtual orbitals are printed by default; in order to print more of them, use the ``ipvirt`` keyword in the input file, with ``ipvirt=-1`` printing all virtual orbitals (see the [http://www.pdc.kth.se/doc/jaguar4.1/html/manual/mang.html#644675 manual] for more information).
+**Jaguar**: the first ten virtual orbitals are printed by default; in order to print more of them, use the ``ipvirt`` keyword in the input file, with ``ipvirt=-1`` printing all virtual orbitals (see the `manual <Jaguar manual nmo_>`_ for more information).
+
+.. _Jaguar manual nmo: http://www.pdc.kth.se/doc/jaguar4.1/html/manual/mang.html#644675
 
 optdone
 -------
@@ -434,12 +437,12 @@ Flags whether a geometry optimisation has completed. Currently this attribute is
 
 .. code-block:: bash
 
-    $ ccget optdone data/Gaussian/basicGaussian09/dvb_gopt.out 
+    $ ccget optdone data/Gaussian/basicGaussian09/dvb_gopt.out
     Attempting to parse data/Gaussian/basicGaussian09/dvb_gopt.out
     optdone:
     True
 
-    $ ccget --future optdone data/Gaussian/basicGaussian09/dvb_gopt.out 
+    $ ccget --future optdone data/Gaussian/basicGaussian09/dvb_gopt.out
     Attempting to parse data/Gaussian/basicGaussian09/dvb_gopt.out
     optdone:
     [4]
@@ -462,7 +465,7 @@ An array containing the converged SCF energies of the calculation, in eV. For an
 scftargets
 ----------
 
-Target thesholds for determining whether the current SCF run has converged, stored in a ``n x m`` array, where ``n`` is the number of geometry optimisation steps (1 for a single point calculation) and ``m`` is the number of criteria. The criteria vary between programs, and depending on the program they may be constant for the whole of a geometry optimisation or they may change between optimisation steps. A more complete description for each program follows.
+Target thresholds for determining whether the current SCF run has converged, stored in a ``n x m`` array, where ``n`` is the number of geometry optimisation steps (1 for a single point calculation) and ``m`` is the number of criteria. The criteria vary between programs, and depending on the program they may be constant for the whole of a geometry optimisation or they may change between optimisation steps. A more detailed description for each program follows.
 
 **ADF**: There are two convergence criteria which are controlled by ``SCFcnv`` in the `CONVERGE subkey of the SCF block`_.
 
@@ -481,9 +484,9 @@ where ``old criteria`` is the initial value or from the previous geometry cycle,
 
 **GAMESS**: Two criteria are, the maximum and root-mean-square (RMS) density matrix change, are used with a default starting value of 5.0E-05. It seems these values can change over the course of a geometry optimisation. ROHF calculations use SQCDF instead of the standard RMS change.
 
-**GAMESS-UK**: According to `the manual`_, convergence is determined by convergence of density matrix elements. The default value for SCF is 1E-5, but it appears to be 1E-7 for geoopts.
+**GAMESS-UK**: According to `the manual <GAMESS-UK manual convergence_>`_, convergence is determined by convergence of density matrix elements. The default value for SCF is 1E-5, but it appears to be 1E-7 for geoopts.
 
-.. _`the manual`: http://www.cfs.dl.ac.uk/docs/html/part4/node6.html
+.. _`GAMESS-UK manual convergence`: http://www.cfs.dl.ac.uk/docs/html/part4/node6.html
 
 **Gaussian**: normally three criteria are used.
 
