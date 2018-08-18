@@ -1,26 +1,36 @@
 How to parse and write
 ======================
 
-This page outlines the various ways cclib can be used to parse and write logfiles and provides several examples to get you started.
+This page outlines the various ways cclib can be used to parse and write logfiles, and provides several examples to get you started.
 
 From Python
-+++++++++
++++++++++++
 
 Importing cclib and parsing a file is a few lines of Python code, making it simple to access data from the output file of any supported computational chemistry program. For example:
 
 .. code-block:: python
 
   import cclib
-  
+
   filename = "logfile.out"
-  parser = cclib.parser.ccopen(filename)
+  parser = cclib.io.ccopen(filename)
   data = parser.parse()
+  print("There are %i atoms and %i MOs" % (data.natom, data.nmo))
+
+A newer command, ``ccread``, combines both the format detection and parsing steps:
+
+.. code-block:: python
+
+  import cclib
+
+  filename = "logfile.out"
+  data = cclib.io.ccread(filename)
   print("There are %i atoms and %i MOs" % (data.natom, data.nmo))
 
 From command line
 +++++++++++++++++
 
-The cclib package provides four scripts to parse and write data i.e. ``ccget``, ``ccwrite``, ``cda``, and ``ccframe``
+The cclib package provides four scripts to parse and write data: ``ccget``, ``ccwrite``, ``cda``, and ``ccframe``.
 
 1. **ccget** is used to parse attribute data from output files.
 2. **ccwrite** has the ability to list out all valid attribute data that can be parsed from an output format. It has the added feature of writing the output file into four different formats i.e. ``json``, ``cjson``, ``cml``, ``xyz``.
@@ -34,102 +44,92 @@ ccget
 
 The data types that can be parsed from the output file depends on the type of computation being conducted. The name of the output file used to show example usage is ``Benzeneselenol.out``.
 
-Data type can be parsed from the output file by following this format
-
-.. code-block:: bash
+Data type can be parsed from the output file by following this format::
 
     ccget <attribute> [<attribute>] <CompChemLogFile> [<CompChemLogFile>]
 
-where attribute can be any one of the attribute names available `here`_
+where ``attribute`` can be any one of the attribute names available `here`_.
 
 .. _`here`: data_dev.html
 
 1. Atomic Charges
-  The atomic charges are obtained by using the ``atomcharges`` attribute with ``ccget``
 
-.. code-block:: bash
+    The atomic charges are obtained by using the ``atomcharges`` attribute::
 
-    $ ccget atomcharges Benzeneselenol.out
-    Attempting to read Benzeneselenol.out
-    atomcharges:
-    {'mulliken': array([-0.49915 ,  0.056965,  0.172161,  0.349794, -0.153072,  0.094583,
-        0.016487,  0.050249,  0.002149,  0.01161 ,  0.053777, -0.173671,
-        0.018118])}
+        $ ccget atomcharges Benzeneselenol.out
+        Attempting to read Benzeneselenol.out
+        atomcharges:
+        {'mulliken': array([-0.49915 ,  0.056965,  0.172161,  0.349794, -0.153072,  0.094583,
+            0.016487,  0.050249,  0.002149,  0.01161 ,  0.053777, -0.173671,
+            0.018118])}
 
 2. Electronic Energies
-  The molecular electronic energies after SCF (DFT) optimization of the input molecule is obtained by using the ``scfenergies`` attribute with ``ccget``
 
-.. code-block:: bash
+    The molecular electronic energies after SCF (DFT) optimization of the input molecule are printed by using the ``scfenergies`` attribute::
 
-    $ ccget scfenergies Benzeneselenol.out
-    Attempting to read Benzeneselenol.out
-    scfenergies:
-    [-71671.43702915 -71671.4524142  -71671.4534768  -71671.45447492
-    -71671.4556548  -71671.45605671 -71671.43194906 -71671.45761021
-    -71671.45850275 -71671.39630296 -71671.45915119 -71671.45935854
-    -71671.4594614  -71671.45947338 -71671.45948807 -71671.4594946
-    -71671.4594946 ]
+        $ ccget scfenergies Benzeneselenol.out
+        Attempting to read Benzeneselenol.out
+        scfenergies:
+        [-71671.43702915 -71671.4524142  -71671.4534768  -71671.45447492
+        -71671.4556548  -71671.45605671 -71671.43194906 -71671.45761021
+        -71671.45850275 -71671.39630296 -71671.45915119 -71671.45935854
+        -71671.4594614  -71671.45947338 -71671.45948807 -71671.4594946
+        -71671.4594946 ]
 
 
 3. Geometry Targets
-  The targets for convergence of geometry optimization can be obtained by using the ``geotargets`` attribute with ``ccget``
 
-.. code-block:: bash
+    The targets for convergence of geometry optimization can be obtained by using the ``geotargets`` attribute::
 
-    $ ccget  geotargets Benzeneselenol.out
-    Attempting to read Benzeneselenol.out
-    geotargets:
-    [ 0.00045  0.0003   0.0018   0.0012 ]
+        $ ccget geotargets Benzeneselenol.out
+        Attempting to read Benzeneselenol.out
+        geotargets:
+        [ 0.00045  0.0003   0.0018   0.0012 ]
 
-**Chaining of attributes**
+Chaining of attributes
+^^^^^^^^^^^^^^^^^^^^^^
 
 ccget provides the user with the option to chain attributes to obtain more than one type of data with a command call. The attributes can be chained in any particular order. A few chained examples are provided below.
 
 1. Molecular Orbitals and Multiplicity
-  The number of molecular orbitals and the number of basis functions used to optimize the molecule can be obtained by running the following command
 
-.. code-block:: bash
+    The number of molecular orbitals and the number of basis functions used to optimize the molecule can be obtained by running the following command::
 
-    $ ccget nmo nbasis Benzeneselenol.out
-    Attempting to read Benzeneselenol.out
-    nmo:
-    405
-    nbasis:
-    407
+        $ ccget nmo nbasis Benzeneselenol.out
+        Attempting to read Benzeneselenol.out
+        nmo:
+        405
+        nbasis:
+        407
 
 2. Enthalpy and Vibrational Frequency
-  The enthalpy and the vibrational frequencies of the optimized molecule is conducted is obtained below:
 
-.. code-block:: bash
+    The enthalpy and the vibrational frequencies of the optimized molecule is conducted is obtained below::
 
-    $ ccget enthalpy vibfreqs Benzeneselenol.out
-    Attempting to read Benzeneselenol.out
-    enthalpy:
-    -2633.77264
-    vibfreqs:
-    [  129.5512   170.6681   231.4278   304.8614   407.8299   472.5026
-       629.9087   679.9032   693.2509   746.7694   812.5113   850.2578
-       915.8742   987.1252   988.1785  1002.8922  1038.1073  1091.4005
-      1102.3417  1183.3857  1209.2727  1311.3497  1355.6441  1471.4447
-      1510.1919  1611.9088  1619.0156  2391.2487  3165.1596  3171.3909
-      3182.0753  3188.5786  3198.0359]
+        $ ccget enthalpy vibfreqs Benzeneselenol.out
+        Attempting to read Benzeneselenol.out
+        enthalpy:
+        -2633.77264
+        vibfreqs:
+        [  129.5512   170.6681   231.4278   304.8614   407.8299   472.5026
+           629.9087   679.9032   693.2509   746.7694   812.5113   850.2578
+           915.8742   987.1252   988.1785  1002.8922  1038.1073  1091.4005
+          1102.3417  1183.3857  1209.2727  1311.3497  1355.6441  1471.4447
+          1510.1919  1611.9088  1619.0156  2391.2487  3165.1596  3171.3909
+          3182.0753  3188.5786  3198.0359]
 
 ccwrite
 -------
 
 The same Benzeneselenol.out file used in the previous examples will be used as the input file for ccwrite. When the ccwrite script is used with a valid input, it prints out the valid attributes that can be parsed from the file.
 
-Command line format:
-
-.. code-block:: bash
+Command line format::
 
     ccwrite <OutputFileFormat>  <CompChemLogFile> [<CompChemLogFile>]
 
-The valid output file formats are ``json``, ``cjson``, ``cml``, ``xyz``
+The valid output file formats are ``cjson``, ``cml``, and ``xyz``.
 
-1. CML
-
-.. code-block:: bash
+1. `Chemical markup language`_ (CML)::
 
     $ ccwrite cml Benzeneselenol.out
     Attempting to parse Benzeneselenol.out
@@ -160,9 +160,11 @@ The valid output file formats are ``json``, ``cjson``, ``cml``, ``xyz``
       vibirs
       vibsyms
 
-A *Benzeneselenol.cml* output file is generated in the same directory as the Benzeneselenol.out file.
+.. _`chemical markup language`: http://www.xml-cml.org/
 
-.. code-block:: bash
+A ``Benzeneselenol.cml`` output file is generated in the same directory as the ``Benzeneselenol.out`` file:
+
+.. code-block:: xml
 
     <?xml version='1.0' encoding='utf-8'?>
     <molecule id="Benzeneselenol.out" xmlns="http://www.xml-cml.org/schema">
@@ -198,11 +200,9 @@ A *Benzeneselenol.cml* output file is generated in the same directory as the Ben
       </bondArray>
     </molecule>
 
-2. xyz
+2. XYZ_
 
-Using ``xyz`` as the <OutputFileFormat> with Benzeneselenol.out, we obtain the following *Benzeneselenol.xyz* file
-
-.. code-block:: bash
+Using ``xyz`` as the ``<OutputFileFormat>`` with ``Benzeneselenol.out``, we obtain the following ``Benzeneselenol.xyz`` file::
 
     13
     Benzeneselenol.out: Geometry 17
@@ -220,6 +220,8 @@ Using ``xyz`` as the <OutputFileFormat> with Benzeneselenol.out, we obtain the f
     Se     1.8210800000   -0.0433780000   -0.0038760000
     H      2.0043580000    1.4100070000    0.1034490000
 
+.. _XYZ: https://en.wikipedia.org/wiki/XYZ_file_format
+
 ccframe
 -------
 
@@ -228,11 +230,9 @@ Since the pandas library is not a dependency of cclib, `it must be installed <ht
 
 .. _pandas: https://pandas.pydata.org/
 
-A complete data table can be parsed from many output files by following this format
-
-.. code-block:: bash
+A complete data table can be parsed from many output files by following this format::
 
     ccframe -O <OutputDest> <CompChemLogFile> [<CompChemLogFile>...]
 
-The argument for ``-O`` indicates the data file to be written and its extesion specifies the filetype (e.g. csv, h5/hdf/hdf5, json, pickle/pkl, xlsx).
+The argument for ``-O`` indicates the data file to be written and its extension specifies the filetype (e.g. csv, h5/hdf/hdf5, json, pickle/pkl, xlsx).
 Since higher-dimensional attributes (e.g. ``atomcoords``) are handled as plain text in some file formats (such as Excel XLSX or CSV), we recommend storing JSON or HDF5 files.
