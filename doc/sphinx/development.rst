@@ -16,7 +16,7 @@ cclib is hosted by the fantastic people at `GitHub`_ (previously at `Sourceforge
 
 .. code-block:: bash
 
-    git clone https://github.com/cclib/cclib.git cclib
+    git clone https://github.com/cclib/cclib.git
 
 .. _`GitHub`: https://github.com
 .. _`Sourceforge`: https://sourceforge.net
@@ -41,9 +41,9 @@ We follow a typical GitHub collaborative model, relying on `forks and pull reque
 
 Here are some general guidelines for developers who are contributing code:
 
-* Run and review the unit tests (see below) before submitting a pull request
-* There should normally not be more failed tests than before your changes
-* For larger changes or features that take some time to implement, `using branches`_ is recommended
+* Run and review the unit tests (see below) before submitting a pull request.
+* There should normally not be more failed tests than before your changes.
+* For larger changes or features that take some time to implement, `using branches`_ is recommended.
 
 .. _`using branches`: https://help.github.com/articles/branching-out
 
@@ -91,10 +91,10 @@ The input files for tests, which are logfiles from computational chemistry progr
 
 .. _`Travis CI`: https://travis-ci.org/cclib/cclib
 
-.. |travis_prod| image:: https://travis-ci.org/cclib/cclib.svg?branch=v1.4
+.. |travis_prod| image:: https://travis-ci.org/cclib/cclib.svg?branch=v1.5.3
 .. |travis_master| image:: https://travis-ci.org/cclib/cclib.svg?branch=master
 
-.. _`data directory`: https://github.com/cclib/cclib/tree/master/test
+.. _`data directory`: https://github.com/cclib/cclib/tree/master/data
 .. _`test directory`: https://github.com/cclib/cclib/tree/master/test
 
 .. index::
@@ -103,7 +103,7 @@ The input files for tests, which are logfiles from computational chemistry progr
 Unit tests
 ~~~~~~~~~~
 
-Unit tests check that the parsers work correctly for typical calculation types on small molecules, usually water or 1,4-divinylbenzene (dvb) with C2h symmetry. The corresponding logfiles stored in folders like ``data/NWChem/basicNWChem6.0`` are intended to test logfiles for an approximate major version of a program, and are standardized for all supported programs to the extent possible. They are located alongside the code in the repository, but are not normally distributed with the source. Attributes are considered supported only if they are checked by at least one test, and the `table of attribute coverage`_ is generated automatically using this criterion.
+Unit tests check that the parsers work correctly for typical calculation types on small molecules, usually water or 1,4-divinylbenzene (dvb) with :math:`C_{\mathrm{2h}}` symmetry. The corresponding logfiles stored in folders like ``data/NWChem/basicNWChem6.0`` are intended to test logfiles for an approximate major version of a program, and are standardized for all supported programs to the extent possible. They are located alongside the code in the repository, but are not normally distributed with the source. Attributes are considered supported only if they are checked by at least one test, and the `table of attribute coverage`_ is generated automatically using this criterion.
 
 The job types currently included as unit tests:
 
@@ -112,6 +112,7 @@ The job types currently included as unit tests:
 * frequency calculation with IR and Raman intensities for dvb (RHF/STO-3G or B3LYP/STO-3G)
 * single point energy for carbon atom using a large basis set such as aug-cc-pCVQZ
 * Møller–Plesset and coupled cluster energies for water (STO-3G or 6-31G basis set)
+* static polarizabilities for tryptophan (RHF/STO-3G)
 
 .. _`table of attribute coverage`: data_dev.html#details-of-current-implementation
 
@@ -155,7 +156,7 @@ Developers
 
 Besides input from a number of people `listed in the repository`_, the following developers have contributed code to cclib (in alphabetical order):
 
-* Eric Berquist
+* `Eric Berquist`_
 * `Karol M. Langner`_
 * `Noel O'Boyle`_
 * Christopher Rowley
@@ -163,5 +164,6 @@ Besides input from a number of people `listed in the repository`_, the following
 
 .. _`listed in the repository`: https://github.com/cclib/cclib/blob/master/THANKS
 
+.. _`Eric Berquist`: https://github.com/berquist
 .. _`Karol M. Langner`: https://github.com/langner
-.. _`Noel O'Boyle`: http://www.redbrick.dcu.ie/~noel
+.. _`Noel O'Boyle`: https://www.redbrick.dcu.ie/~noel/
