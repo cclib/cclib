@@ -120,34 +120,10 @@ etenergies
 
 This is a rank 1 array that contains the energies of electronic transitions from a reference state to the excited states of the molecule, in ``cm<sup>-1</sup>``. There should be as many elements to this array as there are excited states calculated. Any type of excited state calculation should provide output that can be parsed into this attribute.
 
-Availability:
-
-* Configuration Interaction (CIS): Gaussian
-* Time-dependent DFT (TD-DFT): Gaussian
-* Time-dependent Hartree-Fock (TD-HF): Gaussian
-
-Availability (development version):
-
-* Configuration Interaction (CIS): Gaussian, GAMESS, Jaguar
-* Time-dependent DFT (TD-DFT): Gaussian
-* Time-dependent Hartree-Fock (TD-HF): Gaussian
-
 etoscs
 ------
 
 The attribute ``etoscs`` is a rank 1 array that contains the oscillator strengths of transitions from the reference (ground) state to the excited electronic states of the of the molecule. As for `etenergies`_ and other attributes related to excited states, there should as many elements in this array as there are excited states in the calculation.
-
-Availability:
-
-* Configuration Interaction (CIS): Gaussian
-* Time-dependent DFT (TD-DFT): Gaussian
-* Time-dependent Hartree-Fock (TD-HF): Gaussian
-
-Availability (development version):
-
-* Configuration Interaction (CIS): GAMESS, Gaussian, Jaguar
-* Time-dependent DFT (TD-DFT): Gaussian
-* Time-dependent Hartree-Fock (TD-HF): Gaussian
 
 etsecs
 ------
@@ -162,36 +138,12 @@ In these tuples, the value of alpha/beta is 0 or 1, respectively. For a restrict
 
 The excitation coefficient is always converted to its unnormalized value by cclib - so the sum of the squared coefficients of all alpha and beta excitations should be unity. It is important to keep in mind, however, that only the square of the excitation coefficient has a physical meaning, and its sign depends on the numerical procedures used by each program.
 
-Availability:
-
-* Configuration Interaction (CIS): Gaussian
-* Time-dependent DFT (TD-DFT): Gaussian
-* Time-dependent Hartree-Fock (TD-HF): Gaussian
-
-Availability (development version):
-
-* Configuration Interaction (CIS): GAMESS, Gaussian, Jaguar
-* Time-dependent DFT (TD-DFT): GAMESS, Gaussian
-* Time-dependent Hartree-Fock (TD-HF): Gaussian
-
 etsyms
 ------
 
 The attributes ``etsyms`` is a list containing the symmetries (strings) of the excited states found in the calculation. As for `etenergies`_ and other attributes related to excited states, there should be as many elements in this list as there are excited states in the calculation.
 
 Note that while the symmetry descriptions start with the string ``Singlet`` or ``Triplet``, the exact format differs between programs.
-
-Availability:
-
-* Configuration Interaction (CIS): Gaussian
-* Time-dependent DFT (TD-DFT): Gaussian
-* Time-dependent Hartree-Fock (TD-HF): Gaussian
-
-Availability:
-
-* Configuration Interaction (CIS): GAMESS, Gaussian, Jaguar
-* Time-dependent DFT (TD-DFT): Gaussian
-* Time-dependent Hartree-Fock (TD-HF): Gaussian
 
 fonames
 -------
