@@ -11,6 +11,18 @@ import logging
 
 import numpy as np
 
+try:
+    import periodictable as pt
+except ImportError:
+    # Fail silently for now.
+    pass
+
+try:
+    import scipy.constants as spc
+except ImportError:
+    # Fail silently for now.
+    pass
+
 from cclib.method.calculationmethod import Method
 from cclib.parser.utils import PeriodicTable
 
@@ -32,10 +44,9 @@ def get_isotopic_masses(charges):
     """Return the masses for the given nuclei, respresented by their
     nuclear charges.
     """
-    import periodictable
     masses = []
     for charge in charges:
-        el = periodictable.elements[charge]
+        el = pt.elements[charge]
         isotope = get_most_abundant_isotope(el)
         mass = isotope.mass
         masses.append(mass)
@@ -140,7 +151,6 @@ class Nuclear(Method):
         units = units.lower()
         if units not in choices:
             raise ValueError("Invalid units, pick one of {}".format(choices))
-        import scipy.constants as spc
         moi_tensor = self.moment_of_inertia_tensor()
         principal_moments, principal_axes = np.linalg.eigh(moi_tensor)
         if units == 'amu_bohr_2':
@@ -159,7 +169,6 @@ class Nuclear(Method):
         units = units.lower()
         if units not in choices:
             raise ValueError("Invalid units, pick one of {}".format(choices))
-        import scipy.constants as spc
         principal_moments = self.principal_moments_of_inertia()[0]
         bohr2ang = spc.value('atomic unit of length') / spc.angstrom
         xfamu = 1 / spc.value('electron mass in u')
