@@ -1,29 +1,35 @@
+
     -----------------------------------------------------------------------
           Psi4: An Open-Source Ab Initio Electronic Structure Package
-                              Psi4 1.0.54 Driver
+                               Psi4 1.2.1 release
 
-                          Git: Rev {master} 8d4cec3 dirty
+                         Git: Rev {HEAD} 406f4de 
 
-    J. M. Turney, A. C. Simmonett, R. M. Parrish, E. G. Hohenstein,
-    F. A. Evangelista, J. T. Fermann, B. J. Mintz, L. A. Burns, J. J. Wilke,
-    M. L. Abrams, N. J. Russ, M. L. Leininger, C. L. Janssen, E. T. Seidl,
-    W. D. Allen, H. F. Schaefer, R. A. King, E. F. Valeev, C. D. Sherrill,
-    and T. D. Crawford, WIREs Comput. Mol. Sci. 2, 556-565 (2012)
-    (doi: 10.1002/wcms.93)
+
+    R. M. Parrish, L. A. Burns, D. G. A. Smith, A. C. Simmonett,
+    A. E. DePrince III, E. G. Hohenstein, U. Bozkaya, A. Yu. Sokolov,
+    R. Di Remigio, R. M. Richard, J. F. Gonthier, A. M. James,
+    H. R. McAlexander, A. Kumar, M. Saitow, X. Wang, B. P. Pritchard,
+    P. Verma, H. F. Schaefer III, K. Patkowski, R. A. King, E. F. Valeev,
+    F. A. Evangelista, J. M. Turney, T. D. Crawford, and C. D. Sherrill,
+    J. Chem. Theory Comput. 13(7) pp 3185--3197 (2017).
+    (doi: 10.1021/acs.jctc.7b00174)
+
 
                          Additional Contributions by
-    A. E. DePrince, U. Bozkaya, A. Yu. Sokolov, D. G. A. Smith, R. Di Remigio,
-    R. M. Richard, J. F. Gonthier, H. R. McAlexander, M. Saitow, and
-    B. P. Pritchard
+    P. Kraus, H. Kruse, M. H. Lechner, M. C. Schieber, and R. A. Shaw
+
     -----------------------------------------------------------------------
 
 
-    Psi4 started on: Tue Aug  2 20:24:01 2016
+    Psi4 started on: Friday, 24 August 2018 06:37PM
 
-    Process ID:  12896
-    PSI4DATADIR: /home/eric/opt/apps/python/anaconda2/share/psi4
-    Memory level set to 256.000 MB
-
+    Process ID: 24324
+    Host:       gold
+    PSIDATADIR: /home/eric/opt/apps/python/psi4conda/share/psi4
+    Memory:     500.0 MiB
+    Threads:    1
+    
   ==> Input File <==
 
 --------------------------------------------------------------------------
@@ -42,15 +48,24 @@ energy('mp2')
 --------------------------------------------------------------------------
     SCF Algorithm Type (re)set to DF.
 
-*** tstart() called on copper
-*** at Tue Aug  2 20:24:01 2016
+*** tstart() called on gold
+*** at Fri Aug 24 18:37:07 2018
+
+   => Loading Basis Set <=
+
+    Name: STO-3G
+    Role: ORBITAL
+    Keyword: BASIS
+    atoms 1   entry O          line    81 file /home/eric/opt/apps/python/psi4conda/share/psi4/basis/sto-3g.gbs 
+    atoms 2-3 entry H          line    19 file /home/eric/opt/apps/python/psi4conda/share/psi4/basis/sto-3g.gbs 
 
 
          ---------------------------------------------------------
                                    SCF
-            by Justin Turney, Rob Parrish, and Andy Simmonett
+            by Justin Turney, Rob Parrish, Andy Simmonett
+                             and Daniel Smith
                               RHF Reference
-                        1 Threads,    256 MiB Core
+                        1 Threads,    500 MiB Core
          ---------------------------------------------------------
 
   ==> Geometry <==
@@ -62,15 +77,15 @@ energy('mp2')
 
        Center              X                  Y                   Z               Mass       
     ------------   -----------------  -----------------  -----------------  -----------------
-           O          0.000000000000     0.000000000000    -0.066678531529    15.994914619560
-           H          0.000000000000    -0.790649154947     0.529118341392     1.007825032070
-           H          0.000000000000     0.790649154947     0.529118341392     1.007825032070
+         O            0.000000000000     0.000000000000    -0.066678531529    15.994914619560
+         H            0.000000000000    -0.790649154947     0.529118341392     1.007825032070
+         H            0.000000000000     0.790649154947     0.529118341392     1.007825032070
 
   Running in c2v symmetry.
 
   Rotational constants: A =     26.52958  B =     13.37869  C =      8.89367 [cm^-1]
   Rotational constants: A = 795336.70122  B = 401083.16849  C = 266625.59877 [MHz]
-  Nuclear repulsion =    8.887006225878347
+  Nuclear repulsion =    8.887006225878341
 
   Charge       = 0
   Multiplicity = 1
@@ -92,11 +107,20 @@ energy('mp2')
   ==> Primary Basis <==
 
   Basis Set: STO-3G
+    Blend: STO-3G
     Number of shells: 5
     Number of basis function: 7
     Number of Cartesian functions: 7
     Spherical Harmonics?: true
     Max angular momentum: 1
+
+   => Loading Basis Set <=
+
+    Name: (STO-3G AUX)
+    Role: JKFIT
+    Keyword: DF_BASIS_SCF
+    atoms 1   entry O          line   323 file /home/eric/opt/apps/python/psi4conda/share/psi4/basis/def2-svp-jkfit.gbs 
+    atoms 2-3 entry H          line    23 file /home/eric/opt/apps/python/psi4conda/share/psi4/basis/def2-svp-jkfit.gbs 
 
   ==> Pre-Iterations <==
 
@@ -113,58 +137,61 @@ energy('mp2')
 
   ==> Integral Setup <==
 
-  ==> DFJK: Density-Fitted J/K Matrices <==
+  DFHelper Memory: AOs need 0.000 [GiB]; user supplied 0.366 [GiB]. Using in-core AOs.
 
-    J tasked:                  Yes
-    K tasked:                  Yes
-    wK tasked:                  No
-    OpenMP threads:              1
-    Integrals threads:           1
-    Memory (MB):               183
-    Algorithm:                Core
-    Integral Cache:           NONE
-    Schwarz Cutoff:          1E-12
-    Fitting Condition:       1E-12
+  ==> MemDFJK: Density-Fitted J/K Matrices <==
+
+    J tasked:                   Yes
+    K tasked:                   Yes
+    wK tasked:                   No
+    OpenMP threads:               1
+    Memory (MB):                375
+    Algorithm:                 Core
+    Schwarz Cutoff:           1E-12
+    Mask sparsity (%):       0.0000
+    Fitting Condition:        1E-12
 
    => Auxiliary Basis Set <=
 
-  Basis Set: 
-    Number of shells: 30
-    Number of basis function: 84
-    Number of Cartesian functions: 96
+  Basis Set: (STO-3G AUX)
+    Blend: DEF2-SVP-JKFIT
+    Number of shells: 37
+    Number of basis function: 113
+    Number of Cartesian functions: 133
     Spherical Harmonics?: true
-    Max angular momentum: 3
+    Max angular momentum: 4
 
   Minimum eigenvalue in the overlap matrix is 3.6393052139E-01.
   Using Symmetric Orthogonalization.
+
   SCF Guess: Superposition of Atomic Densities via on-the-fly atomic UHF.
 
   ==> Iterations <==
 
                            Total Energy        Delta E     RMS |[F,P]|
 
-   @DF-RHF iter   0:   -74.71493621967714   -7.47149e+01   3.03932e-01 
-   @DF-RHF iter   1:   -74.91637951477493   -2.01443e-01   5.09895e-02 
-   @DF-RHF iter   2:   -74.96267807928611   -4.62986e-02   9.16964e-03 DIIS
-   @DF-RHF iter   3:   -74.96437617230208   -1.69809e-03   3.56735e-03 DIIS
-   @DF-RHF iter   4:   -74.96480267092308   -4.26499e-04   3.22760e-04 DIIS
-   @DF-RHF iter   5:   -74.96480516645127   -2.49553e-06   3.57847e-05 DIIS
-   @DF-RHF iter   6:   -74.96480519069387   -2.42426e-08   1.11507e-06 DIIS
-   @DF-RHF iter   7:   -74.96480519071420   -2.03357e-11   8.52703e-10 DIIS
+   @DF-RHF iter   0:   -74.71460191107995   -7.47146e+01   3.03940e-01 
+   @DF-RHF iter   1:   -74.91600325469190   -2.01401e-01   5.09813e-02 
+   @DF-RHF iter   2:   -74.96229021096319   -4.62870e-02   9.16895e-03 DIIS
+   @DF-RHF iter   3:   -74.96398815217506   -1.69794e-03   3.56711e-03 DIIS
+   @DF-RHF iter   4:   -74.96441461353317   -4.26461e-04   3.22682e-04 DIIS
+   @DF-RHF iter   5:   -74.96441710792517   -2.49439e-06   3.57733e-05 DIIS
+   @DF-RHF iter   6:   -74.96441713215150   -2.42263e-08   1.11484e-06 DIIS
+   @DF-RHF iter   7:   -74.96441713217189   -2.03926e-11   4.76811e-10 DIIS
 
   ==> Post-Iterations <==
 
-    Orbital Energies (a.u.)
-    -----------------------
+    Orbital Energies [Eh]
+    ---------------------
 
     Doubly Occupied:                                                      
 
-       1A1   -20.244302     2A1    -1.250662     1B2    -0.603157  
-       3A1    -0.445462     1B1    -0.388196  
+       1A1   -20.243976     2A1    -1.250662     1B2    -0.603166  
+       3A1    -0.445470     1B1    -0.388215  
 
     Virtual:                                                              
 
-       4A1     0.570859     2B2     0.708697  
+       4A1     0.570772     2B2     0.708631  
 
     Final Occupation by Irrep:
              A1    A2    B1    B2 
@@ -172,68 +199,60 @@ energy('mp2')
 
   Energy converged.
 
-  @DF-RHF Final Energy:   -74.96480519071420
+  @DF-RHF Final Energy:   -74.96441713217189
 
    => Energetics <=
 
-    Nuclear Repulsion Energy =              8.8870062258783467
-    One-Electron Energy =                -121.8400650575953250
-    Two-Electron Energy =                  37.9882536410027640
-    DFT Exchange-Correlation Energy =       0.0000000000000000
-    Empirical Dispersion Energy =           0.0000000000000000
-    PCM Polarization Energy =               0.0000000000000000
-    EFP Energy =                            0.0000000000000000
-    Total Energy =                        -74.9648051907142019
+    Nuclear Repulsion Energy =              8.8870062258783413
+    One-Electron Energy =                -121.8398687190932321
+    Two-Electron Energy =                  37.9884453610430199
+    Total Energy =                        -74.9644171321718744
 
 
-  Saving occupied orbitals to File 180.
 
-*** tstop() called on copper at Tue Aug  2 20:24:02 2016
-Module time:
-	user time   =       0.26 seconds =       0.00 minutes
-	system time =       0.01 seconds =       0.00 minutes
-	total time  =          1 seconds =       0.02 minutes
-Total time:
-	user time   =       0.26 seconds =       0.00 minutes
-	system time =       0.01 seconds =       0.00 minutes
-	total time  =          1 seconds =       0.02 minutes
-
-
-Properties will be evaluated at   0.000000,   0.000000,   0.000000 Bohr
+Properties will be evaluated at   0.000000,   0.000000,   0.000000 [a0]
 
 Properties computed using the SCF density matrix
 
-  Nuclear Dipole Moment: (a.u.)
+  Nuclear Dipole Moment: [e a0]
      X:     0.0000      Y:     0.0000      Z:     0.9917
 
-  Electronic Dipole Moment: (a.u.)
-     X:     0.0000      Y:     0.0000      Z:    -0.3334
+  Electronic Dipole Moment: [e a0]
+     X:     0.0000      Y:     0.0000      Z:    -0.3335
 
-  Dipole Moment: (a.u.)
-     X:     0.0000      Y:     0.0000      Z:     0.6584     Total:     0.6584
+  Dipole Moment: [e a0]
+     X:     0.0000      Y:     0.0000      Z:     0.6583     Total:     0.6583
 
-  Dipole Moment: (Debye)
-     X:     0.0000      Y:     0.0000      Z:     1.6734     Total:     1.6734
+  Dipole Moment: [D]
+     X:     0.0000      Y:     0.0000      Z:     1.6732     Total:     1.6732
+
+
+*** tstop() called on gold at Fri Aug 24 18:37:07 2018
+Module time:
+	user time   =       0.28 seconds =       0.00 minutes
+	system time =       0.00 seconds =       0.00 minutes
+	total time  =          0 seconds =       0.00 minutes
+Total time:
+	user time   =       0.28 seconds =       0.00 minutes
+	system time =       0.00 seconds =       0.00 minutes
+	total time  =          0 seconds =       0.00 minutes
+
+*** tstart() called on gold
+*** at Fri Aug 24 18:37:07 2018
 
 
   //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>//
   //               DFMP2               //
   //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<//
 
+   => Loading Basis Set <=
 
-*** tstart() called on copper
-*** at Tue Aug  2 20:24:02 2016
+    Name: (STO-3G AUX)
+    Role: RIFIT
+    Keyword: DF_BASIS_MP2
+    atoms 1   entry O          line   406 file /home/eric/opt/apps/python/psi4conda/share/psi4/basis/def2-qzvpp-ri.gbs 
+    atoms 2-3 entry H          line    24 file /home/eric/opt/apps/python/psi4conda/share/psi4/basis/def2-qzvpp-ri.gbs 
 
-
-*** tstop() called on copper at Tue Aug  2 20:24:02 2016
-Module time:
-	user time   =       0.03 seconds =       0.00 minutes
-	system time =       0.00 seconds =       0.00 minutes
-	total time  =          0 seconds =       0.00 minutes
-Total time:
-	user time   =       0.29 seconds =       0.00 minutes
-	system time =       0.01 seconds =       0.00 minutes
-	total time  =          1 seconds =       0.02 minutes
 	 --------------------------------------------------------
 	                          DF-MP2                         
 	      2nd-Order Density-Fitted Moller-Plesset Theory     
@@ -245,15 +264,16 @@ Total time:
 
    => Auxiliary Basis Set <=
 
-  Basis Set: 
-    Number of shells: 30
-    Number of basis function: 84
-    Number of Cartesian functions: 96
+  Basis Set: (STO-3G AUX)
+    Blend: DEF2-QZVPP-RI
+    Number of shells: 65
+    Number of basis function: 253
+    Number of Cartesian functions: 333
     Spherical Harmonics?: true
-    Max angular momentum: 3
+    Max angular momentum: 5
 
 	 --------------------------------------------------------
-	                 NBF =     7, NAUX =    84
+	                 NBF =     7, NAUX =   253
 	 --------------------------------------------------------
 	   CLASS    FOCC     OCC    AOCC    AVIR     VIR    FVIR
 	   PAIRS       0       5       5       2       2       0
@@ -262,22 +282,35 @@ Total time:
 	-----------------------------------------------------------
 	 ==================> DF-MP2 Energies <==================== 
 	-----------------------------------------------------------
-	 Reference Energy          =     -74.9648051907142019 [Eh]
+	 Reference Energy          =     -74.9644171321718886 [Eh]
 	 Singles Energy            =      -0.0000000000000000 [Eh]
-	 Same-Spin Energy          =      -0.0021866802380160 [Eh]
-	 Opposite-Spin Energy      =      -0.0358549851606233 [Eh]
-	 Correlation Energy        =      -0.0380416653986393 [Eh]
-	 Total Energy              =     -75.0028468561128392 [Eh]
+	 Same-Spin Energy          =      -0.0021865372482765 [Eh]
+	 Opposite-Spin Energy      =      -0.0358629201406745 [Eh]
+	 Correlation Energy        =      -0.0380494573889510 [Eh]
+	 Total Energy              =     -75.0024665895608393 [Eh]
 	-----------------------------------------------------------
 	 ================> DF-SCS-MP2 Energies <================== 
 	-----------------------------------------------------------
 	 SCS Same-Spin Scale       =       0.3333333333333333 [-]
 	 SCS Opposite-Spin Scale   =       1.2000000000000000 [-]
-	 SCS Same-Spin Energy      =      -0.0007288934126720 [Eh]
-	 SCS Opposite-Spin Energy  =      -0.0430259821927479 [Eh]
-	 SCS Correlation Energy    =      -0.0437548756054199 [Eh]
-	 SCS Total Energy          =     -75.0085600663196175 [Eh]
+	 SCS Same-Spin Energy      =      -0.0007288457494255 [Eh]
+	 SCS Opposite-Spin Energy  =      -0.0430355041688094 [Eh]
+	 SCS Correlation Energy    =      -0.0437643499182349 [Eh]
+	 SCS Total Energy          =     -75.0081814820901229 [Eh]
 	-----------------------------------------------------------
 
+
+*** tstop() called on gold at Fri Aug 24 18:37:07 2018
+Module time:
+	user time   =       0.10 seconds =       0.00 minutes
+	system time =       0.00 seconds =       0.00 minutes
+	total time  =          0 seconds =       0.00 minutes
+Total time:
+	user time   =       0.38 seconds =       0.01 minutes
+	system time =       0.00 seconds =       0.00 minutes
+	total time  =          0 seconds =       0.00 minutes
+
+    Psi4 stopped on: Friday, 24 August 2018 06:37PM
+    Psi4 wall time for execution: 0:00:00.40
 
 *** Psi4 exiting successfully. Buy a developer a beer!
