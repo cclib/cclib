@@ -7,7 +7,7 @@ Requirements
 ------------
 
 Before you install cclib, you need to make sure that you have the following:
- * Python (at least version 3.0 is recommended, although 2.7 is still tested)
+ * Python (at least version 3.4 is recommended, although 2.7 is still tested)
  * NumPy (at least version 1.5 is recommended)
 
 Python is an open-source programming language available from http://www.python.org. It is available for Windows as well as being included in most Linux distributions. In Debian/Ubuntu it is installed as follows (as root):
@@ -66,7 +66,7 @@ There are in fact two packages, `python-cclib`_ containing the Python module, an
 Manual download and install
 ---------------------------
 
-The source code of the newest release of cclib (version 1.5) is distributed as:
+The source code of the newest release of cclib (version |release|) is distributed as:
  * A .zip file: https://github.com/cclib/cclib/releases/download/v1.5/cclib-1.5.post1.zip
  * A .tar.gz file: https://github.com/cclib/cclib/releases/download/v1.5/cclib-1.5.post1.tar.gz
  * Windows binary installers (see the `newest release page`_)
