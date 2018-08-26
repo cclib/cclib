@@ -14,6 +14,7 @@ from cclib.method.electrons import Electrons
 from cclib.method.fragments import FragmentAnalysis
 from cclib.method.lpa import LPA
 from cclib.method.mbo import MBO
+from cclib.method.moments import Moments
 from cclib.method.mpa import MPA
 from cclib.method.nuclear import Nuclear
 from cclib.method.opa import OPA
