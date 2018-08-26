@@ -50,7 +50,7 @@ class ORCA(logfileparser.Logfile):
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
 
-        # Extract the version number
+        # Extract the version number.
         if "Program Version" == line.strip()[:15]:
             self.metadata["package_version"] = line.split()[2]
 

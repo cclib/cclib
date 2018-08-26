@@ -51,6 +51,20 @@ class Molcas(logfileparser.Logfile):
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
 
+        # Extract the version number and optionally the Git tag and hash.
+        if "version" in line:
+            match = re.search(r"\s{2,}version\s(\d*\.\d*)", line)
+            if match:
+                package_version = match.groups()[0]
+                self.metadata["package_version"] = package_version
+        # Don't add revision information to the main package version for now.
+        if "tag" in line:
+            tag = line.split()[-1]
+        if "build" in line:
+            match = re.search(r"\*\s*build\s(\S*)\s*\*", line)
+            if match:
+                revision = match.groups()[0]
+
         ## This section is present when executing &GATEWAY.
         # ++    Molecular structure info:
         #       -------------------------

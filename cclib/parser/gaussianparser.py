@@ -135,11 +135,16 @@ class Gaussian(logfileparser.Logfile):
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
 
-        # Extract the version number first
+        # Extract the version number: "Gaussian 09, Revision D.01"
+        # becomes "09revisionD.01".
         if line.strip() == "Cite this work as:":
             line = inputfile.next()
-            self.metadata["package_version"] = line.split()[1][:-1]+ \
-                    'revision'+line.split()[-1][:-1]
+            tokens = line.split()
+            self.metadata["package_version"] = ''.join([
+                tokens[1][:-1],
+                'revision',
+                tokens[-1][:-1],
+            ])
 
         # This block contains some general information as well as coordinates,
         # which could be parsed in the future:
