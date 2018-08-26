@@ -69,8 +69,11 @@ def convertor(value, fromunits, tounits):
 
     _convertor = {
 
-        "Angstrom_to_bohr":   lambda x: x * 1.8897261245,
-        "bohr_to_Angstrom":   lambda x: x * 0.5291772109,
+        "time_au_to_fs": lambda x: x * 0.02418884,
+        "fs_to_time_au": lambda x: x / 0.02418884,
+
+        "Angstrom_to_bohr": lambda x: x * 1.8897261245,
+        "bohr_to_Angstrom": lambda x: x * 0.5291772109,
 
         "cm-1_to_eV":       lambda x: x / 8065.54429,
         "cm-1_to_hartree":  lambda x: x / 219474.6313708,
