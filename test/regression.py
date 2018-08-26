@@ -277,6 +277,13 @@ def testGAMESS_GAMESS_US2013_N_UHF_out(logfile):
     """An UHF job that has an LZ value analysis between the alpha and beta orbitals."""
     assert len(logfile.data.moenergies) == 2
 
+def testGAMESS_GAMESS_US2014_CdtetraM1B3LYP_log(logfile):
+    """This logfile had coefficients for only 80 molecular orbitals."""
+    assert len(logfile.data.mocoeffs) == 2
+    assert numpy.count_nonzero(logfile.data.mocoeffs[0][79-1:, :]) == 258
+    assert numpy.count_nonzero(logfile.data.mocoeffs[0][80-1: 0:]) == 0
+    assert logfile.data.mocoeffs[0].all() == logfile.data.mocoeffs[1].all()
+
 def testGAMESS_WinGAMESS_dvb_td_trplet_2007_03_24_r1_out(logfile):
     """Do some basic checks for this old unit test that was failing.
 
