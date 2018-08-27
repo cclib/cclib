@@ -55,11 +55,12 @@ class Moments(Method):
         
         return convertor(quadrupole, 'ebohr2', 'Buckingham')
     
-    def calculate(self, gauge='nuccharge', population='mulliken', **kwargs):
+    def calculate(self, gauge='nuccharge', population='mulliken', masses=None,
+                  overwrite=False):
         """Calculate electric dipole and quadrupole moments using parsed
         partial atomic charges.
         
-        Args:
+        Inputs:
             gauge - a choice of gauge origin. Can be either a string
                 or a three-element iterable. If iterable, then it
                 explicitly defines the coordinate system origin (in
@@ -68,8 +69,6 @@ class Moments(Method):
                 origin:
                     * 'nuccharge' -- center of positive nuclear charge
                     * 'mass' -- center of mass
-
-        Keyword Args:
             masses - if None, then use default atomic masses. Otherwise,
                 the user-provided will be used.
             overwrite - it defines whether to modify the data object or
@@ -94,8 +93,8 @@ class Moments(Method):
         elif gauge == 'nuccharge':
             origin = numpy.average(coords, weights=self.data.atomnos, axis=0)
         elif gauge == 'mass':
-            if 'masses' in kwargs:
-                atommasses = numpy.asarray(kwargs.get('masses'))
+            if masses:
+                atommasses = numpy.asarray(masses)
             else:
                 atommasses = self.data.atommasses
             origin = numpy.average(coords, weights=atommasses, axis=0)
@@ -106,7 +105,7 @@ class Moments(Method):
         quadrupole = self._calculate_quadrupole(charges, coords, origin)
         moments = [origin, dipole, quadrupole]
         
-        if 'overwrite' in kwargs:
+        if overwrite:
             if hasattr(self.data, 'moments'):
                 msg = ("Overwriting existing moments attribute values "
                        "with newly calculated ones.")
