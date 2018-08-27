@@ -71,13 +71,18 @@ class Molcas(logfileparser.Logfile):
             if match:
                 package_version = match.groups()[0]
                 self.metadata["package_version"] = package_version
-        # Don't add revision information to the main package version for now.
         if "tag" in line:
             tag = line.split()[-1]
+            package_version = self.metadata.get("package_version")
+            if package_version:
+                self.metadata["package_version"] = package_version + "." + tag
         if "build" in line:
             match = re.search(r"\*\s*build\s(\S*)\s*\*", line)
             if match:
                 revision = match.groups()[0]
+                package_version = self.metadata.get("package_version")
+                if package_version:
+                    self.metadata["package_version"] = package_version + "+" + revision
 
         ## This section is present when executing &GATEWAY.
         # ++    Molecular structure info:
