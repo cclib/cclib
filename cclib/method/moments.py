@@ -55,16 +55,16 @@ class Moments(Method):
         
         return convertor(quadrupole, 'ebohr2', 'Buckingham')
     
-    def calculate(self, gauge='nuccharge', population='mulliken', masses=None,
-                  overwrite=False):
+    def calculate(self, origin='nuccharge', population='mulliken',
+                  masses=None, overwrite=False):
         """Calculate electric dipole and quadrupole moments using parsed
         partial atomic charges.
         
         Inputs:
-            gauge - a choice of gauge origin. Can be either a string
-                or a three-element iterable. If iterable, then it
-                explicitly defines the coordinate system origin (in
-                Angstrom).  If string, then the value can be any one
+            origin - a choice of the origin of coordinate system. Can
+                be either a three-element iterable or a string. If
+                iterable, then it explicitly defines the origin (in
+                Angstrom). If string, then the value can be any one
                 of the following and it describes what is used as the
                 origin:
                     * 'nuccharge' -- center of positive nuclear charge
@@ -89,22 +89,22 @@ class Moments(Method):
         except KeyError:
             raise ValueError
 
-        if hasattr(gauge, '__iter__') and not isinstance(gauge, str):
-            origin = numpy.asarray(gauge)
-        elif gauge == 'nuccharge':
-            origin = numpy.average(coords, weights=self.data.atomnos, axis=0)
-        elif gauge == 'mass':
+        if hasattr(origin, '__iter__') and not isinstance(origin, str):
+            origin_pos = numpy.asarray(origin)
+        elif origin == 'nuccharge':
+            origin_pos = numpy.average(coords, weights=self.data.atomnos, axis=0)
+        elif origin == 'mass':
             if masses:
                 atommasses = numpy.asarray(masses)
             else:
                 atommasses = self.data.atommasses
-            origin = numpy.average(coords, weights=atommasses, axis=0)
+            origin_pos = numpy.average(coords, weights=atommasses, axis=0)
         else:
             raise ValueError
 
-        dipole = self._calculate_dipole(charges, coords, origin)
-        quadrupole = self._calculate_quadrupole(charges, coords, origin)
-        moments = [origin, dipole, quadrupole]
+        dipole = self._calculate_dipole(charges, coords, origin_pos)
+        quadrupole = self._calculate_quadrupole(charges, coords, origin_pos)
+        moments = [origin_pos, dipole, quadrupole]
         
         if overwrite:
             if hasattr(self.data, 'moments'):
