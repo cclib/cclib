@@ -72,12 +72,12 @@ class Moments(Method):
         Keyword Args:
             masses - if None, then use default atomic masses. Otherwise,
                 the user-provided will be used.
-            decimals - a number of decimal places that atomic charges are
-                to be truncated to without rounding.
 
         Returns:
             A list where the first element is the origin of
-            coordinates, while other elements are multipole moments.
+            coordinates, while other elements are dipole and
+            quadrupole moments expressed in terms of Debye and
+            Buckingham units respectively.
 
         """
         coords = self.data.atomcoords[-1]
