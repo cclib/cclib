@@ -69,18 +69,19 @@ class Moments(Method):
                 origin:
                     * 'nuccharge' -- center of positive nuclear charge
                     * 'mass' -- center of mass
+            population - a type of population analysis used to extract
+                corresponding atomic charges from the output file.
             masses - if None, then use default atomic masses. Otherwise,
                 the user-provided will be used.
-            overwrite - it defines whether to modify the data object or
-                just return results. If `moments` attribute already exists,
-                the old value will be fully replaced. 
+            overwrite - it defines whether to modify the data object
+                or just return results. If `moments` attribute already
+                exists, the old value will be fully replaced.
 
         Returns:
             A list where the first element is the origin of
             coordinates, while other elements are dipole and
             quadrupole moments expressed in terms of Debye and
             Buckingham units respectively.
-
         """
         coords = self.data.atomcoords[-1]
         try:
