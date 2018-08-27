@@ -10,14 +10,12 @@
 from __future__ import print_function
 
 import sys
-import os
-import logging
 import unittest
 
 import numpy
 from numpy.testing import assert_almost_equal
 
-from cclib.method import Moments, MPA
+from cclib.method import Moments
 from cclib.parser import Gaussian
 
 sys.path.insert(1, "..")
@@ -29,7 +27,10 @@ class MomentsTest(unittest.TestCase):
     def test_results(self):
         data, _ = getdatafile(Gaussian, "basicGaussian16", ["water_mp2.log"])
         x = Moments(data).calculate()
-        assert_almost_equal(x, [[0,0,0], [0,0, -0.91543]], 5)
+        print(x[2])
+        assert_almost_equal(x[0], [0,0,0], 5)
+        assert_almost_equal(x[1], [0,0, -0.91543], 5)
+        assert_almost_equal(x[2][0] + x[2][3] + x[2][5], 0)
 
     def test_origin_displacement(self):
         data, _ = getdatafile(Gaussian, "basicGaussian16", ["water_mp2.log"])

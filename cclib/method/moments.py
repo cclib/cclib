@@ -27,16 +27,45 @@ class Moments(Method):
         """Returns a representation of the object."""
         return 'Moments("%s")' % (self.data)
 
+    def _calculate_dipole(self, charges, coords, origin):
+        coords_au = convertor(coords, 'Angstrom', 'bohr')
+        
+        if self.data.charge == 0:
+            dipole = numpy.dot(charges, coords_au)
+        else:
+            origin_au = convertor(origin, 'Angstrom', 'bohr')
+            dipole = numpy.dot(charges, coords_au - origin_au)
+            
+        return convertor(dipole, 'ebohr', 'Debye')
+
+    def _calculate_quadrupole(self, charges, coords, origin):
+        transl_coords_au = convertor(coords - origin, 'Angstrom', 'bohr')
+
+        delta = numpy.eye(3)
+        Q = numpy.zeros([3,3])
+        for i in range(3):
+            for j in range(3):
+                for q, r in zip(charges, transl_coords_au):
+                    Q[i,j] += q * (3 * r[i] * r[j] - \
+                              numpy.linalg.norm(r)**2 * delta[i][j])
+
+        triu_idxs = numpy.triu_indices_from(Q)
+        raveled_idxs = numpy.ravel_multi_index(triu_idxs, Q.shape)
+        quadrupole = numpy.take(Q.flatten(), raveled_idxs)
+        
+        return convertor(quadrupole, 'ebohr2', 'Buckingham')
+    
     def calculate(self, gauge='nuccharge', population='mulliken', **kwargs):
-        """Calculate electric dipole moment using parsed partial atomic
-        charges.
+        """Calculate electric dipole and quadrupole moments using parsed
+        partial atomic charges.
         
         Args:
-            gauge - a choice of gauge origin. Can be either a string or
-                a three-element iterable. If iterable, then it
-                explicitly defines the origin. If string, then the
-                value can be any one of the following and it describes
-                what is used as the origin:
+            gauge - a choice of gauge origin. Can be either a string
+                or a three-element iterable. If iterable, then it
+                explicitly defines the coordinate system origin (in
+                Angstrom).  If string, then the value can be any one
+                of the following and it describes what is used as the
+                origin:
                     * 'nuccharge' -- center of positive nuclear charge
                     * 'mass' -- center of mass
 
@@ -47,9 +76,9 @@ class Moments(Method):
                 to be truncated to without rounding.
 
         Returns:
-            A list where the first element is the origin of coordinates,
-            while other elements are multipole moments expressed in Debye
-            units.
+            A list where the first element is the origin of
+            coordinates, while other elements are multipole moments.
+
         """
         coords = self.data.atomcoords[-1]
         try:
@@ -70,11 +99,8 @@ class Moments(Method):
         else:
             raise ValueError
 
-        one_debye = convertor(1, 'Angstrom', 'bohr') * convertor(1, 'ebohr', 'Debye')
-        if self.data.charge == 0:
-            dipole = numpy.dot(charges, coords) * one_debye
-        else:
-            dipole = numpy.dot(charges, coords - origin) * one_debye
+        dipole = self._calculate_dipole(charges, coords, origin)
+        quadrupole = self._calculate_quadrupole(charges, coords, origin)
 
-        moments = [origin, dipole]
+        moments = [origin, dipole, quadrupole]
         return moments
