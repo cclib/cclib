@@ -16,7 +16,7 @@ import numpy
 from numpy.testing import assert_almost_equal
 
 from cclib.method import Moments
-from cclib.parser import Gaussian
+from cclib.parser import Gaussian, NWChem
 
 sys.path.insert(1, "..")
 
@@ -54,11 +54,19 @@ class MomentsTest(unittest.TestCase):
                             
     def test_user_provided_masses(self):
         data, _ = getdatafile(Gaussian, "basicGaussian16", ["water_mp2.log"])
-        x = Moments(data).calculate(masses=[15.9949146,1.007825,1.007825], gauge="mass")
         x = Moments(data).calculate(masses=[1,1,1], gauge="mass")
         assert_almost_equal(x[0], [0, 0, -0.2780383])
-        
 
+    def test_inplace_modifying(self):
+        data, _ = getdatafile(NWChem, "basicNWChem6.5", ["water_mp2.out"])
+        assert not hasattr(data, "moments")        
+        Moments(data).calculate(overwrite=True)
+        assert hasattr(data, "moments")
+
+    def test_inplace_modifying2(self):
+        data, _ = getdatafile(Gaussian, "basicGaussian16", ["water_mp2.log"])
+        Moments(data).calculate(overwrite=True)
+        assert_almost_equal(data.moments[1], [0,0, -0.91543], 5)
         
 if __name__ == "__main__":
     unittest.TextTestRunner(verbosity=2).run(unittest.makeSuite(MomentsTest))

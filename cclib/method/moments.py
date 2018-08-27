@@ -72,6 +72,9 @@ class Moments(Method):
         Keyword Args:
             masses - if None, then use default atomic masses. Otherwise,
                 the user-provided will be used.
+            overwrite - it defines whether to modify the data object or
+                just return results. If `moments` attribute already exists,
+                the old value will be fully replaced. 
 
         Returns:
             A list where the first element is the origin of
@@ -101,6 +104,13 @@ class Moments(Method):
 
         dipole = self._calculate_dipole(charges, coords, origin)
         quadrupole = self._calculate_quadrupole(charges, coords, origin)
-
         moments = [origin, dipole, quadrupole]
+        
+        if 'overwrite' in kwargs:
+            if hasattr(self.data, 'moments'):
+                msg = ("Overwriting existing moments attribute values "
+                       "with newly calculated ones.")
+                self.logger.info(msg)
+            self.data.moments = moments
+
         return moments
