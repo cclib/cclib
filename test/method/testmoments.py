@@ -27,7 +27,6 @@ class MomentsTest(unittest.TestCase):
     def test_results(self):
         data, _ = getdatafile(Gaussian, "basicGaussian16", ["water_mp2.log"])
         x = Moments(data).calculate()
-        print(x[2])
         assert_almost_equal(x[0], [0,0,0], 5)
         assert_almost_equal(x[1], [0,0, -0.91543], 5)
         assert_almost_equal(x[2][0] + x[2][3] + x[2][5], 0)
