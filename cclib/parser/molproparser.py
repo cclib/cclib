@@ -265,9 +265,21 @@ class Molpro(logfileparser.Logfile):
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
 
-        # Extract the package version number.
+        # Extract the package version number. The one associated with NAME may
+        # be more specific.
+        if line.strip()[:4] == "NAME":
+            self.metadata["package_version"] = line.split()[-1]
+        # Only take the less-specific version if it doesn't already exist.
         if "Version" in line:
-            self.metadata["package_version"] = line.split()[1]
+            package_version = self.metadata.get("package_version")
+            if not package_version:
+                self.metadata["package_version"] = line.split()[1]
+        if "SHA1" in line:
+            package_version = self.metadata.get("package_version")
+            if package_version:
+                self.metadata["package_version"] = ''.join([
+                    package_version, "+", line.split()[-1]
+                ])
 
         if line[1:19] == "ATOMIC COORDINATES":
 
