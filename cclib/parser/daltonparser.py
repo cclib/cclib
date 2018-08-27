@@ -112,6 +112,9 @@ class DALTON(logfileparser.Logfile):
         # Don't add revision information to the main package version for now.
         if "Last Git revision" in line:
             revision = line.split()[4]
+            package_version = self.metadata.get("package_version")
+            if package_version:
+                self.metadata["package_version"] = "{}+{}".format(package_version, revision)
 
         # Is the basis set from a single library file, or is it
         # manually specified? See before_parsing().
