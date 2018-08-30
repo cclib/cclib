@@ -14,9 +14,14 @@ from cclib.method.calculationmethod import Method
 
 
 class Moments(Method):
+    """This class calculates multipole moments and stores them in
+    `results` attribute as a dictionary whose keys denote the used
+    charge population scheme.
+    """
     def __init__(self, data):
         self.required_attrs = ('atomcoords', 'atomcharges')
-
+        self.results = {}
+        
         super(Moments, self).__init__(data)
 
     def __str__(self):
@@ -62,7 +67,7 @@ class Moments(Method):
         return convertor(quadrupole, 'ebohr2', 'Buckingham')
     
     def calculate(self, origin='nuccharge', population='mulliken',
-                  masses=None, overwrite=False):
+                  masses=None, save=False):
         """Calculate electric dipole and quadrupole moments using parsed
         partial atomic charges.
         
@@ -79,9 +84,6 @@ class Moments(Method):
                 corresponding atomic charges from the output file.
             masses - if None, then use default atomic masses. Otherwise,
                 the user-provided will be used.
-            overwrite - it defines whether to modify the data object
-                or just return results. If `moments` attribute already
-                exists, the old value will be fully replaced.
 
         Returns:
             A list where the first element is the origin of
@@ -110,13 +112,8 @@ class Moments(Method):
 
         dipole = self._calculate_dipole(charges, coords, origin_pos)
         quadrupole = self._calculate_quadrupole(charges, coords, origin_pos)
-        moments = [origin_pos, dipole, quadrupole]
-        
-        if overwrite:
-            if hasattr(self.data, 'moments'):
-                msg = ("Overwriting existing moments attribute values "
-                       "with newly calculated ones.")
-                self.logger.info(msg)
-            self.data.moments = moments
 
-        return moments
+        rv = [origin_pos, dipole, quadrupole]
+        self.results.update({population: rv})
+        
+        return rv

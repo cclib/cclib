@@ -16,7 +16,7 @@ import numpy
 from numpy.testing import assert_almost_equal
 
 from cclib.method import Moments
-from cclib.parser import Gaussian, NWChem
+from cclib.parser import GAMESS, Gaussian
 
 sys.path.insert(1, "..")
 
@@ -57,16 +57,13 @@ class MomentsTest(unittest.TestCase):
         x = Moments(data).calculate(masses=[1,1,1], origin="mass")
         assert_almost_equal(x[0], [0, 0, -0.2780383])
 
-    def test_inplace_modifying(self):
-        data, _ = getdatafile(NWChem, "basicNWChem6.5", ["water_mp2.out"])
-        assert not hasattr(data, "moments")        
-        Moments(data).calculate(overwrite=True)
-        assert hasattr(data, "moments")
-
-    def test_inplace_modifying2(self):
-        data, _ = getdatafile(Gaussian, "basicGaussian16", ["water_mp2.log"])
-        Moments(data).calculate(overwrite=True)
-        assert_almost_equal(data.moments[1], [0, 0, -0.91543], 5)
+    def test_saving(self):
+        data, _ = getdatafile(GAMESS, "basicFirefly8.0", ["water_mp2.out"])
+        m = Moments(data)
+        m.calculate(population='mulliken')
+        m.calculate(population='lowdin')
+        assert 'mulliken' in m.results
+        assert 'lowdin' in m.results
 
         
 if __name__ == "__main__":
