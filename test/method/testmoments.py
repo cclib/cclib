@@ -57,7 +57,7 @@ class MomentsTest(unittest.TestCase):
         x = Moments(data).calculate(masses=[1,1,1], origin="mass")
         assert_almost_equal(x[0], [0, 0, -0.2780383])
 
-    def test_saving(self):
+    def test_results_storing(self):
         data, _ = getdatafile(GAMESS, "basicFirefly8.0", ["water_mp2.out"])
         m = Moments(data)
         m.calculate(population='mulliken')

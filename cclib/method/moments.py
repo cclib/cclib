@@ -67,7 +67,7 @@ class Moments(Method):
         return convertor(quadrupole, 'ebohr2', 'Buckingham')
     
     def calculate(self, origin='nuccharge', population='mulliken',
-                  masses=None, save=False):
+                  masses=None):
         """Calculate electric dipole and quadrupole moments using parsed
         partial atomic charges.
         
