@@ -28,6 +28,9 @@ class Moments(Method):
         return 'Moments("%s")' % (self.data)
 
     def _calculate_dipole(self, charges, coords, origin):
+        """Calculate the dipole moment from the given atomic charges
+        and their coordinates with respect to the origin.
+        """
         coords_au = convertor(coords, 'Angstrom', 'bohr')
         
         if self.data.charge == 0:
@@ -39,6 +42,9 @@ class Moments(Method):
         return convertor(dipole, 'ebohr', 'Debye')
 
     def _calculate_quadrupole(self, charges, coords, origin):
+        """Calculate the traceless quadrupole moment from the given
+        atomic charges and their coordinates with respect to the origin.
+        """
         transl_coords_au = convertor(coords - origin, 'Angstrom', 'bohr')
 
         delta = numpy.eye(3)
