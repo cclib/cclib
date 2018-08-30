@@ -53,12 +53,12 @@ class Moments(Method):
         transl_coords_au = convertor(coords - origin, 'Angstrom', 'bohr')
 
         delta = numpy.eye(3)
-        Q = numpy.zeros([3,3])
+        Q = numpy.zeros([3, 3])
         for i in range(3):
             for j in range(3):
                 for q, r in zip(charges, transl_coords_au):
-                    Q[i,j] += q * (3 * r[i] * r[j] - \
-                              numpy.linalg.norm(r)**2 * delta[i][j])
+                    Q[i,j] += 1/2 * q * (3 * r[i] * r[j] - \
+                              numpy.linalg.norm(r)**2 * delta[i,j])
 
         triu_idxs = numpy.triu_indices_from(Q)
         raveled_idxs = numpy.ravel_multi_index(triu_idxs, Q.shape)
@@ -72,11 +72,11 @@ class Moments(Method):
         partial atomic charges.
         
         Inputs:
-            origin - a choice of the origin of coordinate system. Can
-                be either a three-element iterable or a string. If
+            origin - a choice of the origin of coordinate system. Can be
+                either a three-element iterable or a string. If
                 iterable, then it explicitly defines the origin (in
-                Angstrom). If string, then the value can be any one
-                of the following and it describes what is used as the
+                Angstrom). If string, then the value can be any one of
+                the following and it describes what is used as the
                 origin:
                     * 'nuccharge' -- center of positive nuclear charge
                     * 'mass' -- center of mass
@@ -86,10 +86,16 @@ class Moments(Method):
                 the user-provided will be used.
 
         Returns:
-            A list where the first element is the origin of
-            coordinates, while other elements are dipole and
-            quadrupole moments expressed in terms of Debye and
-            Buckingham units respectively.
+            A list where the first element is the origin of coordinates,
+            while other elements are dipole and quadrupole moments
+            expressed in terms of Debye and Buckingham units
+            respectively.
+        Notes:
+            To calculate the quadrupole moment the Buckingham definition
+            [1]_ is chosen.
+        References:
+         .. [1] Buckingham, A. D. (1959). Molecular quadrupole moments.
+            Quarterly Reviews, Chemical Society, 13(3), 183.
         """
         coords = self.data.atomcoords[-1]
         try:
