@@ -34,7 +34,7 @@ script:
   - bash travis/build_docs.bash
   - env | sort
   - |
-    if [[ "${TRAVIS_BRANCH}" == master && "${TRAVIS_PULL_REQUEST}" == false ]];
+    if [[ "${TRAVIS_BRANCH}" == master && "${TRAVIS_PULL_REQUEST}" == false && $TRAVIS_PYTHON_VERSION == 3.6 ]];
     then
         # Commits to master that are not pull requests, that is, only actual
         # addition of code to master, should deploy the documentation.

@@ -11,7 +11,7 @@ BUILDDIR      = _build
 # Put it first so that "make" without argument is like "make help".
 .PHONY: help Makefile
 help:
-	@$(SPHINXBUILD) -M help "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
+	@$(SPHINXBUILD) -M help "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O) && exit 2
 
 .PHONY: default
 default: cclib update attributes coverage html

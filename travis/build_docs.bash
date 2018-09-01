@@ -23,5 +23,5 @@ install -dm755 "${DOCS_BUILD_DIR}"
 touch "${DOCS_BUILD_DIR}"/.nojekyll
 
 pushd "${DOCS_BUILD_DIR}"/../..
-make
+make default
 popd
