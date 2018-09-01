@@ -1,5 +1,7 @@
 biopython
 numpy
+scipy
+periodictable
 openbabel
 
 # For some reason PyQuante can't be installed from PyPI.
