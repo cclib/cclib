@@ -14,7 +14,7 @@ Changes in cclib-1.5
 * New attribute time tracks coordinated for dynamics jobs (Ramon Crehuet)
 * New attribute metadata holds miscellaneous information not in other attributes (bwang2453)
 * Extract moments attribute for Gaussian (Geoff Hutchison)
-* Extract atombasis for ADF in simple cases (Felix Plaser)
+* Extract atombasis for ADF in simple cases (Felix Plasser)
 * License change to BSD 3-Clause License
 
 **Bugfixes**
@@ -43,7 +43,7 @@ Changes in cclib-1.4
 
 **Features**
 
-* New parser: cclib can now parse DALTON files 
+* New parser: cclib can now parse DALTON files
 * New parser: cclib can now parse ORCA files
 * New attribute optstatus for status during geometry optimizations and scans
 * Extract atommasses for GAMESS-US (Sagar Gaur)
@@ -64,7 +64,7 @@ Changes in cclib-1.4
 * Fix units in atom corodinates parsed from GAMESS-UK files (mwykes)
 * Fix test for vibrational frequencies in Turbomole (mwykes)
 * Fix parsing vibration symmetries for Molpro (mwykes)
-* Fix parsing egenvectors in GAMESS-US (Alexis Otero-Calvis)
+* Fix parsing eigenvectors in GAMESS-US (Alexis Otero-Calvis)
 * Fix duplicate parsing of symmetry labels for Gaussian (Martin Peeks)
 
 Changes in cclib-1.3.2
@@ -73,7 +73,7 @@ Changes in cclib-1.3.2
 **Features**
 
 * New attribute nooccnos for natural orbital occupation numbers
-* Read data from XYZ files using OpenBabel bridge
+* Read data from XYZ files using Open Babel bridge
 * Start basic tests for bridge functionality
 
 **Bugfixes**
@@ -90,7 +90,7 @@ Changes in cclib-1.3.1
 **Features**
 
 * New attribute nooccnos for natural orbital occupation numbers
-* Read data from XYZ files using OpenBabel bridge
+* Read data from XYZ files using Open Babel bridge
 * Start basic tests for bridge functionality
 
 **Bugfixes**
@@ -139,7 +139,7 @@ Changes in cclib-1.2
 **Bugfixes**
 
 * Ignore unicode errors in logfiles
-* Handle Guassian jobs with terse output (basis set count not reported)
+* Handle Gaussian jobs with terse output (basis set count not reported)
 * Handle Gaussian jobs using IndoGuess (Scott McKechnie)
 * Handle Gaussian file with irregular ONION gradients (Tamilmani S)
 * Handle ORCA file with SCF convergence issue (Melchor Sanchez)
@@ -236,7 +236,7 @@ Changes in cclib-0.8
 * API addition: 'atombasis' for indices of atom orbitals on each atom
 * API addition: 'nocoeffs' for Natural Orbital (NO) coefficients
 * GAMESS-US parser: added 'etoscs' (CIS calculations)
-* Jaguar parser: added 'mpenergies' (LMP2 calcualtions)
+* Jaguar parser: added 'mpenergies' (LMP2 calculations)
 * Jaguar parser: added 'etenergies' and 'etoscs' (CIS calculations)
 * New method: Lowdin Population Analysis (LPA)
 * Tests: unittests can be run from the Python interpreter, and for a single parser; the number of "passed" tests is also counted and shown
@@ -261,7 +261,7 @@ Changes in cclib-0.7
 * API change: 'moenergies' is now a list of rank 1 arrays, rather than rank 2 array
 * GAMESS-UK parser: added 'vibramans'
 * New method: Charge Decomposition Analysis (CDA) for studying electron donation, back donation, and repulsion between fragments in a molecule
-* New method: Fragment Analysis for studing bonding interactions between two or more fragments in a molecule
+* New method: Fragment Analysis for studying bonding interactions between two or more fragments in a molecule
 * New method: Ability to calculate the electron density or wavefunction
 
 **Bugfixes**
@@ -273,7 +273,7 @@ Changes in cclib-0.7
 * GAMESS-UK parser:
     - 'atomnos' not being extracted
     - Rotations and translations now not included in frequencies
-* bridge to OpenBabel: No longer dependent on pyopenbabel
+* bridge to Open Babel: No longer dependent on pyopenbabel
 
 Changes in cclib-0.6.1
 ----------------------
@@ -292,7 +292,7 @@ Changes in cclib-0.6.0
 
 **Bugfixes**
 
-* ADF parser: The following bugs have been fixed P/D orbitals for single atoms not handled correctly Problem parsing homos in unrestricted calculations Problem skipping the Create sections in certain calculations  
+* ADF parser: The following bugs have been fixed P/D orbitals for single atoms not handled correctly Problem parsing homos in unrestricted calculations Problem skipping the Create sections in certain calculations
 * Gaussian parser: The following bugs have been fixed Parser failed if standard orientation not found
 * ccget: aooverlaps not included when using --list option
 
