@@ -90,9 +90,11 @@ class Moments(Method):
             while other elements are dipole and quadrupole moments
             expressed in terms of Debye and Buckingham units
             respectively.
+
         Notes:
             To calculate the quadrupole moment the Buckingham definition
             [1]_ is chosen.
+
         References:
          .. [1] Buckingham, A. D. (1959). Molecular quadrupole moments.
             Quarterly Reviews, Chemical Society, 13(3), 183.

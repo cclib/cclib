@@ -12,7 +12,6 @@ from __future__ import print_function
 import sys
 import unittest
 
-import numpy
 from numpy.testing import assert_almost_equal
 
 from cclib.method import Moments
@@ -34,7 +33,7 @@ class MomentsTest(unittest.TestCase):
     def test_origin_displacement(self):
         data, _ = getdatafile(Gaussian, "basicGaussian16", ["water_mp2.log"])
         x = Moments(data).calculate()
-        y = Moments(data).calculate(origin=(2e7,18,28))
+        y = Moments(data).calculate(origin=[2e7, 18, 28])
         assert_almost_equal(x[1], y[1])
 
     def test_origin_at_center_of_nuclear_charge(self):
@@ -49,12 +48,12 @@ class MomentsTest(unittest.TestCase):
 
     def test_user_provided_origin(self):
         data, _ = getdatafile(Gaussian, "basicGaussian16", ["water_mp2.log"])
-        x = Moments(data).calculate(origin=(1,1,1))
+        x = Moments(data).calculate(origin=[1, 1, 1])
         assert_almost_equal(x[0], [1, 1, 1])
-                            
+        
     def test_user_provided_masses(self):
         data, _ = getdatafile(Gaussian, "basicGaussian16", ["water_mp2.log"])
-        x = Moments(data).calculate(masses=[1,1,1], origin="mass")
+        x = Moments(data).calculate(masses=[1, 1, 1], origin="mass")
         assert_almost_equal(x[0], [0, 0, -0.2780383])
 
     def test_results_storing(self):
