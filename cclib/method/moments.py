@@ -98,6 +98,7 @@ class Moments(Method):
         References:
          .. [1] Buckingham, A. D. (1959). Molecular quadrupole moments.
             Quarterly Reviews, Chemical Society, 13(3), 183.
+            https://doi.org:10.1039/qr9591300183
         """
         coords = self.data.atomcoords[-1]
         try:
