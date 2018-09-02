@@ -148,7 +148,7 @@ def guess_filetype(inputfile):
     return filetype
 
 
-def ccread(source, *args, **kargs):
+def ccread(source, *args, **kwargs):
     """Attempt to open and read computational chemistry data from a file.
 
     If the file is not appropriate for cclib parsers, a fallback mechanism
@@ -158,34 +158,34 @@ def ccread(source, *args, **kargs):
     Inputs:
         source - a single logfile, a list of logfiles (for a single job),
                  an input stream, or an URL pointing to a log file.
-        *args, **kargs - arguments and keyword arguments passed to ccopen
+        *args, **kwargs - arguments and keyword arguments passed to ccopen
     Returns:
         a ccData object containing cclib data attributes
     """
 
-    log = ccopen(source, *args, **kargs)
+    log = ccopen(source, *args, **kwargs)
     if log:
-        if kargs.get('verbose', None):
+        if kwargs.get('verbose', None):
             print('Identified logfile to be in %s format' % log.logname)
         # If the input file is a CJSON file and not a standard compchemlog file
-        cjson_as_input = kargs.get("cjson", False)
+        cjson_as_input = kwargs.get("cjson", False)
         if cjson_as_input:
             return log.read_cjson()
         else:
             return log.parse()
     else:
-        if kargs.get('verbose', None):
+        if kwargs.get('verbose', None):
             print('Attempting to use fallback mechanism to read file')
         return fallback(source)
 
 
-def ccopen(source, *args, **kargs):
+def ccopen(source, *args, **kwargs):
     """Guess the identity of a particular log file and return an instance of it.
 
     Inputs:
         source - a single logfile, a list of logfiles (for a single job),
                  an input stream, or an URL pointing to a log file.
-        *args, **kargs - arguments and keyword arguments passed to filetype
+        *args, **kwargs - arguments and keyword arguments passed to filetype
 
     Returns:
       one of ADF, DALTON, GAMESS, GAMESS UK, Gaussian, Jaguar,
@@ -220,7 +220,7 @@ def ccopen(source, *args, **kargs):
                         # Delete temporary file when the program finishes
                         atexit.register(os.remove, tfile.name)
                     except (ValueError, URLError) as error:
-                        if not kargs.get('quiet', False):
+                        if not kwargs.get('quiet', False):
                             (errno, strerror) = error.args
                         return None
             source = filelist
@@ -229,7 +229,7 @@ def ccopen(source, *args, **kargs):
             try:
                 inputfile = logfileparser.openlogfile(source)
             except IOError as error:
-                if not kargs.get('quiet', False):
+                if not kwargs.get('quiet', False):
                     (errno, strerror) = error.args
                 return None
         else:
@@ -243,7 +243,7 @@ def ccopen(source, *args, **kargs):
 
                 inputfile = logfileparser.openlogfile(filename, object=response.read())
             except (ValueError, URLError) as error:
-                if not kargs.get('quiet', False):
+                if not kwargs.get('quiet', False):
                     (errno, strerror) = error.args
                 return None
 
@@ -276,7 +276,7 @@ def ccopen(source, *args, **kargs):
     # If the input file isn't a standard compchem log file, try one of
     # the readers, falling back to Open Babel.
     if not filetype:
-        if kargs.get("cjson"):
+        if kwargs.get("cjson"):
             filetype = readerclasses['cjson']
         elif source and not is_stream:
             ext = os.path.splitext(source)[1][1:].lower()
@@ -301,8 +301,8 @@ def ccopen(source, *args, **kargs):
                 if filetype == Turbomole:
                     source = sort_turbomole_outputs(source)
             inputfile.close()
-            return filetype(source, *args, **kargs)
-        return filetype(inputfile, *args, **kargs)
+            return filetype(source, *args, **kwargs)
+        return filetype(inputfile, *args, **kwargs)
 
 
 def fallback(source):
@@ -359,7 +359,7 @@ def ccwrite(ccobj, outputtype=None, outputdest=None,
 
     # If the logfile name has been passed in through kwargs (such as
     # in the ccwrite script), make sure it has precedence.
-    if 'jobfilename' in kwargs.keys():
+    if 'jobfilename' in kwargs:
         jobfilename = kwargs['jobfilename']
         # Avoid passing multiple times into the main call.
         del kwargs['jobfilename']
