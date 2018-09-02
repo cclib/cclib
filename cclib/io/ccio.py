@@ -19,6 +19,8 @@ from cclib.io import (
     cjsonwriter,
     cmlwriter,
     moldenwriter,
+    qcjsonreader,
+    qcjsonwriter,
     wfxwriter,
     xyzreader,
     xyzwriter,
@@ -88,13 +90,17 @@ triggers = [
     (Turbomole, ["TURBOMOLE"], True),
 ]
 
-readerclasses = {"cjson": cjsonreader.CJSON, "json": cjsonreader.CJSON, "xyz": xyzreader.XYZ}
+readerclasses = {
+    "cjson": cjsonreader.CJSON,
+    "qcjson": qcjsonreader.QCJSONReader,
+    "xyz": xyzreader.XYZ,
+}
 
 writerclasses = {
     "cjson": cjsonwriter.CJSON,
-    "json": cjsonwriter.CJSON,
     "cml": cmlwriter.CML,
     "molden": moldenwriter.MOLDEN,
+    "qcjson": qcjsonwriter.QCJSONWriter,
     "wfx": wfxwriter.WFXWriter,
     "xyz": xyzwriter.XYZ,
 }
