@@ -315,7 +315,8 @@ def fallback(source):
     if isinstance(source, str):
         ext = os.path.splitext(source)[1][1:].lower()
         if _has_cclib2openbabel:
-            if ext in ('xyz', ):
+            import pybel as pb
+            if ext in pb.informats:
                 return cclib2openbabel.readfile(source, ext)
         else:
             print("Could not import openbabel, fallback mechanism might not work.")
