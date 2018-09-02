@@ -30,16 +30,16 @@ class ElectronsTest(unittest.TestCase):
 
     def test_count(self):
         """Test electron count for logfiles without pseudopotentials."""
-        data, logfile = getdatafile(QChem, "basicQChem4.2", "water_mp4sdq.out")
+        data, logfile = getdatafile(QChem, "basicQChem4.2", ["water_mp4sdq.out"])
         self.assertEqual(Electrons(data).count(), 10)
         self.assertEqual(Electrons(data).count(core=True), 10)
-        data, logfile = getdatafile(Gaussian, "basicGaussian09", "water_cis.log")
+        data, logfile = getdatafile(Gaussian, "basicGaussian09", ["water_cis.log"])
         self.assertEqual(Electrons(data).count(), 10)
         self.assertEqual(Electrons(data).count(core=True), 10)
 
     def test_count_pseudopotential(self):
         """Test electron count for logfiles with pseudopotentials."""
-        data, logfile = getdatafile(Gaussian, "basicGaussian09", "Mo4OCl4-sp.log")
+        data, logfile = getdatafile(Gaussian, "basicGaussian09", ["Mo4OCl4-sp.log"])
         self.assertEqual(Electrons(data).count(), 120)
         self.assertEqual(Electrons(data).count(core=True), 188)
 
