@@ -33,8 +33,8 @@ class VolumeTest(unittest.TestCase):
         values?
         """
 
-        data_basis, _ = getdatafile(Gaussian, "basicGaussian03", ["dvb_sp_basis.log"])
-        data_sp, _ = getdatafile(Gaussian, "basicGaussian03", ["dvb_sp.out"])
+        data_basis, _ = getdatafile(Gaussian, "basicGaussian09", ["dvb_sp.out"])
+        data_sp, _ = getdatafile(Gaussian, "basicGaussian09", ["dvb_sp.out"])
 
         vol = volume.Volume((-3.0, -6.0, -2.0), (3.0, 6.0, 2.0), (0.25, 0.25, 0.25))
 
@@ -53,8 +53,8 @@ class VolumeTest(unittest.TestCase):
         to the correct value?
         """
 
-        data_basis, _ = getdatafile(Gaussian, "basicGaussian03", ["dvb_sp_basis.log"])
-        data_sp, _ = getdatafile(Gaussian, "basicGaussian03", ["dvb_sp.out"])
+        data_basis, _ = getdatafile(Gaussian, "basicGaussian09", ["dvb_sp.out"])
+        data_sp, _ = getdatafile(Gaussian, "basicGaussian09", ["dvb_sp.out"])
 
         vol = volume.Volume((-3.0, -6.0, -2.0), (3.0, 6.0, 2.0), (0.25, 0.25, 0.25))
 
