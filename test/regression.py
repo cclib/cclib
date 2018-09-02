@@ -1751,7 +1751,7 @@ old_unittests = {
     "Gaussian/Gaussian03/dvb_td.out":         GaussianTDDFTTest,
     "Gaussian/Gaussian03/dvb_un_sp.out":      GaussianSPunTest,
     "Gaussian/Gaussian03/dvb_un_sp_b.log":    GaussianSPunTest,
-    "Gaussian/Gaussian03/Mo4ICl4-sp.log":     GenericCoreTest,
+    "Gaussian/Gaussian03/Mo4OCl4-sp.log":     GenericCoreTest,
     "Gaussian/Gaussian03/water_ccd.log":      GenericCCTest,
     "Gaussian/Gaussian03/water_ccsd(t).log":  GenericCCTest,
     "Gaussian/Gaussian03/water_ccsd.log":     GenericCCTest,
