@@ -23,6 +23,7 @@ from cclib.parser.data import ccData
 
 class CJSON(filewriter.Writer):
     """A writer for chemical JSON (CJSON) files."""
+
     def __init__(self, ccdata, terse=False, *args, **kwargs):
         """Initialize the chemical JSON writer object.
 
@@ -30,7 +31,6 @@ class CJSON(filewriter.Writer):
           ccdata - An instance of ccData, parsed from a logfile.
         """
 
-        # Call the __init__ method of the superclass
         super(CJSON, self).__init__(ccdata, terse=terse, *args, **kwargs)
 
     def pathname(self, path):
@@ -52,50 +52,51 @@ class CJSON(filewriter.Writer):
             cjson_dict['inchi'] = self.pbmol.write('inchi')
             cjson_dict['inchikey'] = self.pbmol.write('inchikey')
             cjson_dict['formula'] = self.pbmol.formula
-        # Incorporate Unit Cell into the chemical JSON.
+        # TODO Incorporate unit cell information.
 
         # Iterate through the attribute list present in ccData. Depending on the
         # availability of the attribute add it at the right 'level'.
-        for attributeName, Value in ccData._attributes.items():
-            if not hasattr(self.ccdata, attributeName):
+        for attribute_name, v in ccData._attributes.items():
+            if not hasattr(self.ccdata, attribute_name):
                 continue
 
-            attributePath = Value.attributePath.split(":")
+            attribute_path = v.attribute_path.split(":")
 
             # Depth of the attribute in the CJSON.
-            levels = len(attributePath)
+            levels = len(attribute_path)
 
             # The attributes which haven't been included in the CJSON format.
-            if attributePath[0] == 'N/A':
+            if attribute_path[0] == 'N/A':
                 continue
 
-            if attributePath[0] not in cjson_dict:
-                cjson_dict[attributePath[0]] = dict()
-            l1_data_object = cjson_dict[attributePath[0]]
+            if attribute_path[0] not in cjson_dict:
+                cjson_dict[attribute_path[0]] = dict()
+            l1_data_object = cjson_dict[attribute_path[0]]
 
-            # 'moments' and 'atomcoords' key will contain processed data obtained from the output file.
-            if attributeName == 'moments' or attributeName == 'atomcoords' :
-                if attributeName == 'moments':
-                    cjson_dict['properties'][ccData._attributes['moments'].jsonKey] = self._calculate_total_dipole_moment()
+            # 'moments' and 'atomcoords' key will contain processed data
+            # obtained from the output file. TODO rewrite this
+            if attribute_name in ('moments', 'atomcoords'):
+                if attribute_name == 'moments':
+                    cjson_dict['properties'][ccData._attributes['moments'].json_key] = self._calculate_total_dipole_moment()
                 else:
                     cjson_dict['atoms']['coords'] = dict()
                     cjson_dict['atoms']['coords']['3d'] = self.ccdata.atomcoords[-1].flatten().tolist()
                 continue
 
             if levels == 1:
-                self.set_JSON_attribute(l1_data_object, attributeName)
+                self.set_JSON_attribute(l1_data_object, attribute_name)
             elif levels >= 2:
-                if attributePath[1] not in l1_data_object:
-                    l1_data_object[attributePath[1]] = dict()
-                l2_data_object = l1_data_object[attributePath[1]]
+                if attribute_path[1] not in l1_data_object:
+                    l1_data_object[attribute_path[1]] = dict()
+                l2_data_object = l1_data_object[attribute_path[1]]
 
                 if levels == 2:
-                    self.set_JSON_attribute(l2_data_object, attributeName)
+                    self.set_JSON_attribute(l2_data_object, attribute_name)
                 elif levels == 3:
-                    if attributePath[2] not in l2_data_object:
-                        l2_data_object[attributePath[2]] = dict()
-                    l3_data_object = l2_data_object[attributePath[2]]
-                    self.set_JSON_attribute(l3_data_object, attributeName)
+                    if attribute_path[2] not in l2_data_object:
+                        l2_data_object[attribute_path[2]] = dict()
+                    l3_data_object = l2_data_object[attribute_path[2]]
+                    self.set_JSON_attribute(l3_data_object, attribute_name)
 
         # Attributes which are not directly obtained from the output files.
         if hasattr(self.ccdata, 'moenergies') and hasattr(self.ccdata, 'homos'):
@@ -158,7 +159,7 @@ class CJSON(filewriter.Writer):
                  cclib keyname as key
         """
         if hasattr(self.ccdata, key):
-            object[ccData._attributes[key].jsonKey] = getattr(self.ccdata, key)
+            object[ccData._attributes[key].json_key] = getattr(self.ccdata, key)
 
 
 class NumpyAwareJSONEncoder(json.JSONEncoder):
@@ -178,6 +179,7 @@ class NumpyAwareJSONEncoder(json.JSONEncoder):
 
 
 class JSONIndentEncoder(json.JSONEncoder):
+
     def __init__(self, *args, **kwargs):
         super(JSONIndentEncoder, self).__init__(*args, **kwargs)
         self.current_indent = 0
@@ -194,7 +196,7 @@ class JSONIndentEncoder(json.JSONEncoder):
             output = []
             if primitives_only:
                 for item in o:
-                    output.append(json.dumps(item,  cls=NumpyAwareJSONEncoder))
+                    output.append(json.dumps(item, cls=NumpyAwareJSONEncoder))
                 return "[ " + ", ".join(output) + " ]"
             else:
                 self.current_indent += self.indent
