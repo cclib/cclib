@@ -4,6 +4,88 @@
 Changelog
 =========
 
+Changes in cclib-1.6
+--------------------
+
+**Features**
+
+* New parser: cclib can now parse Molcas files (Kunal Sharma)
+* New parser: cclib can now parse Turbomole files (Christopher Rowley, Kunal Sharma)
+* New script: ccframe writes data table files from logfiles (Felipe Schneider)
+* New method: stoichiometry builds the chemical formula of a system
+* Support package version in metadata for most parsers
+* Support time attribute and BOMD output in Gaussian, NWChem, ORCA and QChem
+* Support grads and metadata attributes in ORCA (Jonathon Vandezande)
+* Experimental support for CASSCF output in ORCA (Jonathon Vandezande)
+* Added entry in metadata for successful completion of jobs
+* Updated test file versions to ORCA 4.0
+* Update minimum Python3 version to 3.4
+
+**Bugfixes**
+
+* Fixed parsing ORCA output with inear molecules (Jonathon Vandezande)
+* Fixed parsing NWChem output with incomplete SCF
+
+Changes in cclib-1.5.3
+----------------------
+
+**Features**
+
+* New attribute transprop for electronic transitions (Jonathon Vandezande)
+* Support grads attribute in Psi4 (Adam Abbott)
+* Support grads attribute in Molpro (Oskar Weser)
+* Support optstatus for IRCs and in Psi4 (Emmanuel LaTruelle)
+* Updated test file versions to Gaussian16 (Andrew S. Rosen)
+* Add ability to write XYZ coordinates for arbitrary indices
+
+**Bugfixes**
+
+* Fixed ccwrite script and added unit tests (Georgy Frolov)
+* Fixed closed shell determination for Gaussian (Jaime Rodríguez-Guerra)
+* Fixed parsing of natom for >9999 atoms in Gaussian (Jaime Rodríguez-Guerra)
+* Fixed parsing of ADF jobs with no title
+* Fixed parsing of charge and core electrons when usin ECPs in QChem
+* Fixed parsing of scfvalues for malformed output in Gaussian
+
+Changes in cclib-1.5.2
+----------------------
+
+**Features**
+
+* Support for writing Molden and WFX files (Sagar Gaur)
+* Support for thermochesmitry attributes in ORCA (Jonathon Vandezande)
+* Support for chelpg atomic charges in ORCA (Richard Gowers)
+* Updated test file versions to GAMESS-US 2017 (Sagar Gaur)
+* Added option to print full arrays with ccget (Sagar Gaur)
+
+**Bugfixes**
+
+* Fxied polarizability parsing bug in DALTON (Maxim Stolyarchuk)
+* Fixed IRC parsing in Gaussian for large trajectories (Dénes Berta, LaTruelle)
+* Fixed coordinate parsing for heavy elements in ORCA (Jonathon Vandezande)
+* Fixed parsing of large mocoeffs in fixed width format for QChem (srtlg)
+* Fixed parsing of large polarizabilities in fixed width format for DALTON (Maxim Stolyarchuk)
+* Fixed parsing molecular orbitals when there are more than basis set functions in QChem
+
+Changes in cclib-1.5.1
+----------------------
+
+**Features**
+
+* New attribute polarizabilities for static or dynamic dipole polarizability
+* New attribute pressure for thermochemistry (renpj)
+* Add property to detect closed shells in parsed data
+* Handle RPA excited state calculation in ORCA, in addition to TDA
+* Support for Python 3.6
+
+**Bugfixes**
+
+* Restore alias cclib.parser.ccopen for backwards compatibility
+* Fixed parsing thermochemistry for single atoms in QChem
+* Fixed handling of URLs (Alexey Alnatanov)
+* Fixed Atom object creation in biopython bridge (Nitish Garg)
+* Fixed ccopen when working with multiple files
+
 Changes in cclib-1.5
 --------------------
 
