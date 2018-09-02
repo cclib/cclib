@@ -1,3 +1,22 @@
+Changes in cclib-1.6
+
+Features:
+    * New parser: cclib can now parse Molcas files (Kunal Sharma)
+    * New parser: cclib can now parse Turbomole files (Christopher Rowley, Kunal Sharma)
+    * New script: ccframe writes data table files from logfiles (Felipe Schneider)
+    * New method: stoichiometry builds the chemical formula of a system
+    * Support package version in metadata for most parsers
+    * Support time attribute and BOMD output in Gaussian, NWChem, ORCA and QChem
+    * Support grads and metadata attributes in ORCA (Jonathon Vandezande)
+    * Experimental support for CASSCF output in ORCA (Jonathon Vandezande)
+    * Added entry in metadata for successful completion of jobs
+    * Updated test file versions to ORCA 4.0
+    * Update minimum Python3 version to 3.4
+
+Bugfixes:
+    * Fixed parsing ORCA output with inear molecules (Jonathon Vandezande)
+    * Fixed parsing NWChem output with incomplete SCF
+
 Changes in cclib-1.5.3
 
 Features:
