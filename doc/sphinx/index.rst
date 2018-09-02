@@ -89,4 +89,4 @@ A record for the latest release is also available on Zenodo_.
 .. _QMForge: https://qmforge.net/
 .. _literature: http://pubs.acs.org/doi/abs/10.1021/jacs.5b05600
 .. _DOI: http://dx.doi.org/10.1002/jcc.20823
-.. _Zenodo: http://dx.doi.org/10.5281/zenodo.44552
+.. _Zenodo: http://dx.doi.org/10.5281/zenodo.1407790
