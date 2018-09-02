@@ -1,7 +1,7 @@
 # This file is part of cclib (http://cclib.github.io), a library for parsing
 # and interpreting the results of computational chemistry packages.
 #
-# Copyright (C) 2006-2016, the cclib development team
+# Copyright (C) 2018, the cclib development team
 #
 # The library is free software, distributed under the terms of
 # the GNU Lesser General Public version 2.1 or later. You should have
@@ -1739,6 +1739,29 @@ old_unittests = {
     "GAMESS/PCGAMESS/water_mp4_sdtq.out":   GenericMP4SDTQTest,
 
     "GAMESS/WinGAMESS/dvb_td_2007.03.24.r1.out":    GAMESSUSTDDFTTest,
+
+    "Gaussian/Gaussian03/CO_TD_delta.log":    GenericTDunTest,
+    "Gaussian/Gaussian03/C_bigbasis.out":     GaussianBigBasisTest,
+    "Gaussian/Gaussian03/dvb_gopt.out":       GenericGeoOptTest,
+    "Gaussian/Gaussian03/dvb_ir.out":         GaussianIRTest,
+    "Gaussian/Gaussian03/dvb_raman.out":      GaussianRamanTest,
+    "Gaussian/Gaussian03/dvb_sp.out":         GaussianSPTest,
+    "Gaussian/Gaussian03/dvb_sp_basis.log":   GenericBasisTest,
+    "Gaussian/Gaussian03/dvb_sp_basis_b.log": GenericBasisTest,
+    "Gaussian/Gaussian03/dvb_td.out":         GaussianTDDFTTest,
+    "Gaussian/Gaussian03/dvb_un_sp.out":      GaussianSPunTest,
+    "Gaussian/Gaussian03/dvb_un_sp_b.log":    GaussianSPunTest,
+    "Gaussian/Gaussian03/Mo4ICl4-sp.log":     GenericCoreTest,
+    "Gaussian/Gaussian03/water_ccd.log":      GenericCCTest,
+    "Gaussian/Gaussian03/water_ccsd(t).log":  GenericCCTest,
+    "Gaussian/Gaussian03/water_ccsd.log":     GenericCCTest,
+    "Gaussian/Gaussian03/water_cis.log":      GenericCISTest,
+    "Gaussian/Gaussian03/water_cisd.log":     GenericCISTest,
+    "Gaussian/Gaussian03/water_mp2.log":      GaussianMP2Test,
+    "Gaussian/Gaussian03/water_mp3.log":      GaussianMP3Test,
+    "Gaussian/Gaussian03/water_mp4.log":      GaussianMP4SDTQTest,
+    "Gaussian/Gaussian03/water_mp4sdq.log":   GaussianMP4SDQTest,
+    "Gaussian/Gaussian03/water_mp5.log":      GenericMP5Test,
 
     "Gaussian/Gaussian09/dvb_gopt_revA.02.out":         GenericGeoOptTest,
     "Gaussian/Gaussian09/dvb_ir_revA.02.out":           GaussianIRTest,
