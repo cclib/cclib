@@ -1571,7 +1571,7 @@ class GAMESSUSSPunTest_charge0(GenericSPunTest):
     def testhomos(self):
         """HOMOs were incorrect due to charge being wrong."""
 
-class GAMESSUSIRTest_ts(GenericIRTest):
+class GAMESSUSIRTest_ts(GenericIRimgTest):
     @unittest.skip('This is a transition state with different intensities')
     def testirintens(self):
         """This is a transition state with different intensities."""
