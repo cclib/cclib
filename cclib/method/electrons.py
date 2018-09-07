@@ -33,18 +33,12 @@ class Electrons(Method):
 
     def alpha(self):
         """Number of alpha electrons"""
-        homos = self.data.homos
-        if len(homos) == 1:
-            return homos[0] + 1
-        return homos[0] + 1
+        return self.data.homos[0] + 1
 
     def beta(self):
         """Number of beta electrons"""
-        homos = self.data.homos
-        if len(homos) == 1:
-            return homos[0] + 1
-        return homos[1] + 1
-
+        return self.data.homos[-1] + 1
+        
     def count(self, core=False):
         """Returns the electron count in system.
 
