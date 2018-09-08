@@ -150,6 +150,7 @@ class Turbomole(logfileparser.Logfile):
 
             self.append_attribute('atomcoords', atomcoords)
             self.set_attribute('atomnos', atomnos)
+            self.set_attribute('natom', len(atomcoords))
 
         # Frequency values in aoforce.out
         #        mode               7        8        9       10       11       12
