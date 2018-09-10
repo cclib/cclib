@@ -114,7 +114,12 @@ class Moments(Method):
             if masses:
                 atommasses = numpy.asarray(masses)
             else:
-                atommasses = self.data.atommasses
+                try:
+                    atommasses = self.data.atommasses
+                except AttributeError:
+                    raise ValueError(
+                        "atomic masses were not parsed, consider provide "
+                        "'masses' argument instead")
             origin_pos = numpy.average(coords, weights=atommasses, axis=0)
         else:
             raise ValueError

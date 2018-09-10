@@ -98,8 +98,14 @@ class TestIdealizedInputs(unittest.TestCase):
     def test_user_provided_masses(self, mock):
         mock.configure_mock(**self.linear_dipole_attrs)
 
-        x = Moments(mock).calculate(masses=[1, 1], origin="mass")
+        x = Moments(mock).calculate(masses=[1, 1], origin='mass')
         assert_almost_equal(x[0], [0, 0, 0])
+
+    @mock.patch('cclib.parser.ccData', spec=True)
+    def test_not_providing_masses(self, mock):
+        mock.configure_mock(**self.linear_dipole_attrs)
+        with self.assertRaisesRegex(ValueError, 'masses'):
+            Moments(mock).calculate(origin='mass')
 
     @mock.patch('cclib.parser.ccData', spec=True)
     def test_results_storing(self, mock):
@@ -114,6 +120,6 @@ class TestIdealizedInputs(unittest.TestCase):
         assert not np.array_equal(a, b)
 
         
-if __name__ == "__main__":
-    suite = unittest.TestLoader().loadTestsFromModule(sys.modules[__name__])
+if __name__ == '__main__':
+    suite = unittest.makeSuite(TestIdealizedInputs)
     unittest.TextTestRunner(verbosity=2).run(suite)
