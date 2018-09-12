@@ -19,7 +19,7 @@ class Electrons(Method):
 
     def __init__(self, data, progress=None, loglevel=logging.INFO, logname="Log"):
 
-        self.required_attrs = ('atomnos','charge','coreelectrons')
+        self.required_attrs = ('atomnos','charge','coreelectrons','homos')
 
         super(Electrons, self).__init__(data, progress, loglevel, logname)
 
@@ -31,6 +31,14 @@ class Electrons(Method):
         """Returns a representation of the object."""
         return "Electrons"
 
+    def alpha(self):
+        """Number of alpha electrons"""
+        return self.data.homos[0] + 1
+
+    def beta(self):
+        """Number of beta electrons"""
+        return self.data.homos[-1] + 1
+        
     def count(self, core=False):
         """Returns the electron count in system.
 
