@@ -88,12 +88,15 @@ class Moments(Method):
 
         Notes:
             To calculate the quadrupole moment the Buckingham definition
-            [1]_ is chosen.
+            [1]_ is chosen. Hirschfelder et al. [2]_ define it two times
+            as much.
 
         References:
          .. [1] Buckingham, A. D. (1959). Molecular quadrupole moments.
             Quarterly Reviews, Chemical Society, 13(3), 183.
-            https://doi.org:10.1039/qr9591300183
+            https://doi.org:10.1039/qr9591300183.
+         .. [2] Hirschfelder J. O., Curtiss C. F. and Bird R. B. (1954).
+            The Molecular Theory of Gases and Liquids. New York: Wiley.
         """
         coords = self.data.atomcoords[-1]
         try:
