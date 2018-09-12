@@ -7,8 +7,6 @@
 
 """Test the Moments method in cclib"""
 
-from __future__ import print_function
-
 import sys
 import unittest
 from unittest import mock
@@ -26,7 +24,6 @@ class TestIdealizedInputs(unittest.TestCase):
             'atomcoords': np.array([[[-1, 0, 0], [ 1,  0, 0]]]),
             'atomcharges': {'mulliken': [-1, 1]},
             'atomnos': [1, 1],
-            'charge': 0,
         }
     
     @mock.patch('cclib.parser.ccData', spec=True)
@@ -34,23 +31,35 @@ class TestIdealizedInputs(unittest.TestCase):
         mock.configure_mock(**self.linear_dipole_attrs)
 
         x = Moments(mock).calculate()[1]
-        assert_almost_equal(x / 4.803204252680386, [2, 0, 0])
+        assert_almost_equal(x / 4.80320425, [2, 0, 0])
 
     @mock.patch('cclib.parser.ccData', spec=True)
-    def test_quarupole_moment(self, mock):
-        mock.charge = 0
+    def test_nonzero_quadrupole_moment(self, mock):
         mock.atomcoords = np.array([[
-            [-0.75,  1, 0],
-            [ 1,  1, 0],
-            [ 0.75, -1, 0],
-            [-1, -1, 0]]])
-        mock.atomcharges = {'mulliken': [-1, 1, -1, 1]}
+            [-1, 0, 0],
+            [0, 0, 0],
+            [1, 0, 0]]])
+        mock.atomcharges = {'mulliken': [1/2, -1, 1/2]}
         mock.atomnos = np.ones(mock.atomcoords.shape[1])
 
-        x = Moments(mock).calculate()[2]
-        assert np.isclose(x[0] + x[3] + x[5], 0)
-        assert np.isclose(x[0], -x[3] * 2)
-        assert np.isclose(x[0], -x[5] * 2)
+        x = Moments(mock).calculate()
+        assert np.count_nonzero(x[1]) == 0
+        assert_almost_equal(x[2] / 4.80320423, [1, 0, 0, -0.5, 0, -0.5])
+
+    @mock.patch('cclib.parser.ccData', spec=True)
+    def test_zero_moments(self, mock):
+        mock.atomcoords = np.array([[
+            [-2, 0, 0],
+            [-1, 0, 0],
+            [0, 0, 0],
+            [1, 0, 0],
+            [2, 0, 0]]])
+        mock.atomcharges = {'mulliken': [-1/8, 1/2, -3/4, 1/2, -1/8]}
+        mock.atomnos = np.ones(mock.atomcoords.shape[1])
+
+        x = Moments(mock).calculate()
+        assert np.count_nonzero(x[1]) == 0
+        assert np.count_nonzero(x[2]) == 0
 
     @mock.patch('cclib.parser.ccData', spec=True)
     def test_invariant_to_origin_dislacement(self, mock):
@@ -63,7 +72,6 @@ class TestIdealizedInputs(unittest.TestCase):
     @mock.patch('cclib.parser.ccData', spec=True)
     def test_variant_to_origin_dislacement(self, mock):
         attrs = dict(self.linear_dipole_attrs, **{
-            'charge': 1,
             'atomcharges': {'mulliken': [-1, 2]}
         })
         mock.configure_mock(**attrs)
@@ -98,8 +106,8 @@ class TestIdealizedInputs(unittest.TestCase):
     def test_user_provided_masses(self, mock):
         mock.configure_mock(**self.linear_dipole_attrs)
 
-        x = Moments(mock).calculate(masses=[1, 1], origin='mass')
-        assert_almost_equal(x[0], [0, 0, 0])
+        x = Moments(mock).calculate(masses=[1, 3], origin='mass')
+        assert_almost_equal(x[0], [0.5, 0, 0])
 
     @mock.patch('cclib.parser.ccData', spec=True)
     def test_not_providing_masses(self, mock):
@@ -119,7 +127,7 @@ class TestIdealizedInputs(unittest.TestCase):
         a, b = m.results['mulliken'][1], m.results['lowdin'][1]
         assert not np.array_equal(a, b)
 
-        
+
 if __name__ == '__main__':
     suite = unittest.makeSuite(TestIdealizedInputs)
     unittest.TextTestRunner(verbosity=2).run(suite)

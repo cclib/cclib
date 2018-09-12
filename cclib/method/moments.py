@@ -36,14 +36,9 @@ class Moments(Method):
         """Calculate the dipole moment from the given atomic charges
         and their coordinates with respect to the origin.
         """
-        coords_au = convertor(coords, 'Angstrom', 'bohr')
+        transl_coords_au = convertor(coords - origin, 'Angstrom', 'bohr')
+        dipole = numpy.dot(charges, transl_coords_au)
         
-        if self.data.charge == 0:
-            dipole = numpy.dot(charges, coords_au)
-        else:
-            origin_au = convertor(origin, 'Angstrom', 'bohr')
-            dipole = numpy.dot(charges, coords_au - origin_au)
-            
         return convertor(dipole, 'ebohr', 'Debye')
 
     def _calculate_quadrupole(self, charges, coords, origin):
@@ -63,7 +58,7 @@ class Moments(Method):
         triu_idxs = numpy.triu_indices_from(Q)
         raveled_idxs = numpy.ravel_multi_index(triu_idxs, Q.shape)
         quadrupole = numpy.take(Q.flatten(), raveled_idxs)
-        
+
         return convertor(quadrupole, 'ebohr2', 'Buckingham')
     
     def calculate(self, origin='nuccharge', population='mulliken',
