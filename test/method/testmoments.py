@@ -25,7 +25,7 @@ class TestIdealizedInputs(unittest.TestCase):
             'atomcharges': {'mulliken': [-1, 1]},
             'atomnos': [1, 1],
         }
-    
+
     @mock.patch('cclib.parser.ccData', spec=True)
     def test_dipole_moment(self, mock):
         mock.configure_mock(**self.linear_dipole_attrs)
@@ -43,7 +43,7 @@ class TestIdealizedInputs(unittest.TestCase):
         mock.atomnos = np.ones(mock.atomcoords.shape[1])
 
         x = Moments(mock).calculate()
-        assert np.count_nonzero(x[1]) == 0
+        self.assertEqual(np.count_nonzero(x[1]), 0)
         assert_almost_equal(x[2] / 4.80320423, [1, 0, 0, -0.5, 0, -0.5])
 
     @mock.patch('cclib.parser.ccData', spec=True)
@@ -58,8 +58,8 @@ class TestIdealizedInputs(unittest.TestCase):
         mock.atomnos = np.ones(mock.atomcoords.shape[1])
 
         x = Moments(mock).calculate()
-        assert np.count_nonzero(x[1]) == 0
-        assert np.count_nonzero(x[2]) == 0
+        self.assertEqual(np.count_nonzero(x[1]), 0)
+        self.assertEqual(np.count_nonzero(x[2]), 0)
 
     @mock.patch('cclib.parser.ccData', spec=True)
     def test_invariant_to_origin_dislacement(self, mock):
@@ -68,7 +68,7 @@ class TestIdealizedInputs(unittest.TestCase):
         x = Moments(mock).calculate(origin=[0, 0, 0])[1]
         y = Moments(mock).calculate(origin=[1, 1, 1])[1]
         assert_equal(x, y)
-    
+
     @mock.patch('cclib.parser.ccData', spec=True)
     def test_variant_to_origin_dislacement(self, mock):
         attrs = dict(self.linear_dipole_attrs, **{
@@ -78,7 +78,7 @@ class TestIdealizedInputs(unittest.TestCase):
 
         x = Moments(mock).calculate(origin=[0, 0, 0])[1]
         y = Moments(mock).calculate(origin=[1, 1, 1])[1]
-        assert not np.array_equal(x, y)
+        self.assertFalse(np.array_equal(x, y))
 
     @mock.patch('cclib.parser.ccData', spec=True)
     def test_origin_at_center_of_nuclear_charge(self, mock):
@@ -86,7 +86,7 @@ class TestIdealizedInputs(unittest.TestCase):
 
         x = Moments(mock).calculate()[0]
         assert_equal(x, [0, 0, 0])
-        
+
     @mock.patch('cclib.parser.ccData', spec=True)
     def test_origin_at_center_of_mass(self, mock):
         mock.configure_mock(**self.linear_dipole_attrs)
@@ -119,13 +119,13 @@ class TestIdealizedInputs(unittest.TestCase):
     def test_results_storing(self, mock):
         mock.configure_mock(**self.linear_dipole_attrs)
         mock.atomcharges.update({'lowdin': [-0.5, 0.5]})
-        
+
         m = Moments(mock)
         m.calculate(population='mulliken')
         m.calculate(population='lowdin')
 
         a, b = m.results['mulliken'][1], m.results['lowdin'][1]
-        assert not np.array_equal(a, b)
+        self.assertFalse(np.array_equal(a, b))
 
 
 if __name__ == '__main__':
