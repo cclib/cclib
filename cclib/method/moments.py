@@ -89,6 +89,10 @@ class Moments(Method):
             expressed in terms of Debye and Buckingham units
             respectively.
 
+        Raises:
+            ValueError when an argument with incorrect value or of
+            inappropriate type is passed to a method.
+
         Notes:
             To calculate the quadrupole moment the Buckingham definition
             [1]_ is chosen. Hirschfelder et al. [2]_ define it two times
@@ -104,8 +108,10 @@ class Moments(Method):
         coords = self.data.atomcoords[-1]
         try:
             charges = self.data.atomcharges[population]
-        except KeyError:
-            raise ValueError
+        except KeyError as e:
+            msg = ("charges coming from requested population analysis"
+                   "scheme are not parsed")
+            raise ValueError(msg, e)
 
         if isinstance(origin, Iterable) and not isinstance(origin, str):
             origin_pos = numpy.asarray(origin)
@@ -117,13 +123,13 @@ class Moments(Method):
             else:
                 try:
                     atommasses = self.data.atommasses
-                except AttributeError:
-                    raise ValueError(
-                        "atomic masses were not parsed, consider provide "
-                        "'masses' argument instead")
+                except AttributeError as e:
+                    msg = ("atomic masses were not parsed, consider provide "
+                           "'masses' argument instead")
+                    raise ValueError(msg, e)
             origin_pos = numpy.average(coords, weights=atommasses, axis=0)
         else:
-            raise ValueError
+            raise ValueError("{} is invalid value for 'origin'".format(origin))
 
         dipole = self._calculate_dipole(charges, coords, origin_pos)
         quadrupole = self._calculate_quadrupole(charges, coords, origin_pos)
