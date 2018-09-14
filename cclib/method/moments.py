@@ -7,6 +7,8 @@
 
 """Calculation of electric multipole moments based on data parsed by cclib."""
 
+from collections import Iterable
+
 import numpy
 
 from cclib.parser.utils import convertor
@@ -14,14 +16,15 @@ from cclib.method.calculationmethod import Method
 
 
 class Moments(Method):
-    """This class calculates multipole moments and stores them in
-    `results` attribute as a dictionary whose keys denote the used
-    charge population scheme.
+    """A class used to calculate electric multipole moments.
+
+    The obtained results are stored in `results` attribute as a
+    dictionary whose keys denote the used charge population scheme.
     """
     def __init__(self, data):
         self.required_attrs = ('atomcoords', 'atomcharges')
         self.results = {}
-        
+
         super(Moments, self).__init__(data)
 
     def __str__(self):
@@ -38,7 +41,7 @@ class Moments(Method):
         """
         transl_coords_au = convertor(coords - origin, 'Angstrom', 'bohr')
         dipole = numpy.dot(charges, transl_coords_au)
-        
+
         return convertor(dipole, 'ebohr', 'Debye')
 
     def _calculate_quadrupole(self, charges, coords, origin):
@@ -60,12 +63,12 @@ class Moments(Method):
         quadrupole = numpy.take(Q.flatten(), raveled_idxs)
 
         return convertor(quadrupole, 'ebohr2', 'Buckingham')
-    
+
     def calculate(self, origin='nuccharge', population='mulliken',
                   masses=None):
         """Calculate electric dipole and quadrupole moments using parsed
         partial atomic charges.
-        
+
         Inputs:
             origin - a choice of the origin of coordinate system. Can be
                 either a three-element iterable or a string. If
@@ -104,7 +107,7 @@ class Moments(Method):
         except KeyError:
             raise ValueError
 
-        if hasattr(origin, '__iter__') and not isinstance(origin, str):
+        if isinstance(origin, Iterable) and not isinstance(origin, str):
             origin_pos = numpy.asarray(origin)
         elif origin == 'nuccharge':
             origin_pos = numpy.average(coords, weights=self.data.atomnos, axis=0)
@@ -127,5 +130,5 @@ class Moments(Method):
 
         rv = [origin_pos, dipole, quadrupole]
         self.results.update({population: rv})
-        
+
         return rv
