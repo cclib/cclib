@@ -15,6 +15,7 @@ sys.path.insert(1, "method")
 from .method.testcda import *
 from .method.testelectrons import *
 from .method.testmbo import *
+from .method.testmoments import *
 from .method.testnuclear import *
 from .method.testorbitals import *
 from .method.testpopulation import *

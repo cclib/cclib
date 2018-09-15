@@ -23,6 +23,7 @@ class Method(object):
         FragmentAnalysis - fragment analysis for ADF output
         LPA - Löwdin population analysis
         MBO - Mayer's bond orders
+        Moments - multipole moments calculations
         MPA - Mulliken population analysis
         Nuclear - properties of atomic nuclei
         OPA - overlap population analysis
