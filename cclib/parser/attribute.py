@@ -46,11 +46,14 @@ class Attribute:
         convert; if that fails, only then raise a TypeError.
         """
 
-        if type(self._impl) == self.type:
+        if type(self._impl) == self.main_type:
             return
 
         try:
-            self._impl = self.main_type(self._impl)
+            if self.main_type == np.ndarray:
+                self._impl = np.asarray(self._impl)
+            else:
+                self._impl = self.main_type(self._impl)
         except ValueError:
             args = (self.name, type(self._impl), self.main_type)
             raise TypeError("attribute {} is {} instead of {} and could not be converted".format(*args))
