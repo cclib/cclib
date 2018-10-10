@@ -581,17 +581,40 @@ class ORCA(logfileparser.Logfile):
                     broken = line.split()
                     self.aooverlaps[j, i:i+size] = list(map(float, broken[1:size+1]))
 
-        # Molecular orbital coefficients.
-        # This is also where atombasis is parsed.
+        # Molecular orbital coefficients are parsed here, but also related things
+        #like atombasis and aonames if possible.
+        #
+        # Normally the output is easy to parse like this:
+        # ------------------
+        # MOLECULAR ORBITALS
+        # ------------------
+        #                       0         1         2         3         4         5   
+        #                  -19.28527 -19.26828 -19.26356 -19.25801 -19.25765 -19.21471
+        #                    2.00000   2.00000   2.00000   2.00000   2.00000   2.00000
+        #                   --------  --------  --------  --------  --------  --------
+        #   0C   1s         0.000002 -0.000001  0.000000  0.000000 -0.000000  0.000001
+        #   0C   2s        -0.000007  0.000006 -0.000002 -0.000000  0.000001 -0.000003
+        #   0C   3s        -0.000086 -0.000061  0.000058 -0.000033 -0.000027 -0.000058
+        # ...
+        #
+        # But when the numbers get big, things get yucky since ORCA does not use
+        # fixed width formatting for the floats, and does not insert extra spaces
+        # when the numbers get wider. So things get stuck together overflowing columns,
+        # like this:
+        #   12C   6s       -11.608845-53.775398161.302640-76.633779 29.914985 22.083999
+        #
+        # One assumption that seems to hold is that there are always six significant
+        # digits in the coefficients, so we can try to use that to delineate numbers
+        # when the parsing gets rough. This is what we do below with a regex, and a case
+        # like this is tested in regression ORCA/ORCA4.0/invalid-literal-for-float.out
+        # which was reported in https://github.com/cclib/cclib/issues/629
         if line[0:18] == "MOLECULAR ORBITALS":
 
             self.skip_line(inputfile, 'dashes')
 
+            aonames = []
+            atombasis = [[] for i in range(self.natom)]
             mocoeffs = [numpy.zeros((self.nbasis, self.nbasis), "d")]
-            self.aonames = []
-            self.atombasis = []
-            for n in range(self.natom):
-                self.atombasis.append([])
 
             for spin in range(len(self.moenergies)):
 
@@ -604,31 +627,32 @@ class ORCA(logfileparser.Logfile):
                     self.updateprogress(inputfile, "Coefficients")
 
                     self.skip_lines(inputfile, ['numbers', 'energies', 'occs'])
-
                     dashes = next(inputfile)
-                    broken = dashes.split()
-                    size = len(broken)
 
                     for j in range(self.nbasis):
                         line = next(inputfile)
-                        broken = line.split()
 
-                        #only need this on the first time through
+                        # Only need this in the first iteration.
                         if spin == 0 and i == 0:
                             atomname = line[3:5].split()[0]
                             num = int(line[0:3])
-                            orbital = broken[1].upper()
+                            orbital = line.split()[1].upper()
 
-                            self.aonames.append("%s%i_%s" % (atomname, num+1, orbital))
-                            self.atombasis[num].append(j)
+                            aonames.append("%s%i_%s" % (atomname, num+1, orbital))
+                            atombasis[num].append(j)
 
-                        temp = []
-                        vals = line[16:-1]  # -1 to remove the last blank space
-                        for k in range(0, len(vals), 10):
-                            temp.append(float(vals[k:k+10]))
-                        mocoeffs[spin][i:i+size, j] = temp
+                        # This regex will tease out all number with exactly
+                        # six digits after the decimal point.
+                        coeffs = re.findall('-?\d+\.\d{6}', line)
 
-            self.mocoeffs = mocoeffs
+                        # Something is very wrong if this does not hold.
+                        assert len(coeffs) <= 6
+
+                        mocoeffs[spin][i:i+len(coeffs), j] = [float(c) for c in coeffs]
+
+            self.set_attribute('aonames', aonames)
+            self.set_attribute('atombasis', atombasis)
+            self.set_attribute("mocoeffs", mocoeffs)
 
         # Basis set information
         # ORCA prints this out in a somewhat indirect fashion.

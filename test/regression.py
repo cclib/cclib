@@ -765,6 +765,20 @@ def testORCA_ORCA4_0_1_ttt_td_out(logfile):
     assert len(logfile.data.etsecs[0]) == 1
     assert numpy.isnan(logfile.data.etsecs[0][0][2])
 
+def testORCA_ORCA4_0_invalid_literal_for_float_out(logfile):
+    """MO coefficients are glued together, see #629."""
+    assert hasattr(logfile.data, 'mocoeffs')
+    assert logfile.data.mocoeffs[0].shape == (logfile.data.nmo, logfile.data.nbasis)
+
+    # Test the coefficients from this line where things are glued together:
+    # 15C   6s       -154.480939-111.069870-171.460819-79.052025241.536860-92.159399
+    assert logfile.data.mocoeffs[0][102][378] == -154.480939
+    assert logfile.data.mocoeffs[0][103][378] == -111.069870
+    assert logfile.data.mocoeffs[0][104][378] == -171.460819
+    assert logfile.data.mocoeffs[0][105][378] == -79.052025
+    assert logfile.data.mocoeffs[0][106][378] == 241.536860
+    assert logfile.data.mocoeffs[0][107][378] == -92.159399
+
 def testORCA_ORCA4_0_IrCl6_sp_out(logfile):
     """Tests ECP and weird SCF printing."""
     assert hasattr(logfile.data, 'scfvalues')
