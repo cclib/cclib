@@ -75,6 +75,7 @@ class NuclearTest(unittest.TestCase):
         nre = utils.convertor(nre, 'Angstrom', 'bohr')
         self.assertAlmostEqual(nuclear.repulsion_energy(), nre, places=7)
 
+    @unittest.skipIf(sys.version_info < (3, 0), "The periodictable package doesn't work in Python2.")
     def test_principal_moments_of_inertia(self):
         """Testing principal moments of inertia and the principal axes for one
         logfile where it is printed.
@@ -101,6 +102,7 @@ class NuclearTest(unittest.TestCase):
         # are still orthonormal within each set.
         np.testing.assert_allclose(np.abs(axes), np.abs(ref_axes), rtol=0, atol=1.0e-4)
 
+    @unittest.skipIf(sys.version_info < (3, 0), "The periodictable package doesn't work in Python2.")
     def test_rotational_constants(self):
         """Testing rotational constants for two logfiles where they are
         printed.
