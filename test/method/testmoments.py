@@ -8,7 +8,11 @@
 """Test the Moments method in cclib"""
 
 import unittest
-from unittest import mock
+
+try:
+    from unittest import mock
+except ImportError:
+    import mock
 
 import numpy as np
 from numpy.testing import assert_equal, assert_almost_equal
