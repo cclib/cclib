@@ -9,3 +9,6 @@ https://sourceforge.net/projects/pyquante/files/PyQuante-1.6/PyQuante-1.6.5/PyQu
 
 # For building the documentation
 sphinx
+
+# This library is in the standard library starting from Python 3.3.
+mock ; python_version < '3.3'
