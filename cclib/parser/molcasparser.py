@@ -45,8 +45,21 @@ class Molcas(logfileparser.Logfile):
         # Compile the dashes-and-or-spaces-only regex.
         self.re_dashes_and_spaces = re.compile('^[\s-]+$')
 
+    def _assing_gbasis_to_element(self, element, _array):
+        """Assign proper basis exponents and coefficients to element."""
+        mask = [element == possible_element
+                for possible_element in self.atomsymbols]
+        indices = [i for (i, x) in enumerate(mask) if x]
+        for index in indices:
+            self.gbasis[index] = _array
+
     def after_parsing(self):
-        pass
+        self.atomsymbols = [self.table.element[atomno]
+                                 for atomno in self.atomnos]
+        if hasattr(self, 'gbasis_array'):
+            self.gbasis = [[] for i in range(self.natom)]
+            for element, gbasis in self.gbasis_array:
+                self._assing_gbasis_to_element(element, gbasis)
 
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
@@ -738,6 +751,62 @@ class Molcas(logfileparser.Logfile):
                 if not hasattr(self, 'ccenergies'):
                     self.ccenergies= []
                 self.ccenergies.append(ccenergies)
+
+        #  ++    Primitive basis info:
+        #        ---------------------
+        #
+        #
+        #                      *****************************************************
+        #                      ******** Primitive Basis Functions (Valence) ********
+        #                      *****************************************************
+        #
+        #
+        #   Basis set:C.AUG-CC-PVQZ.........                                                          
+        #
+        #                    Type         
+        #                     s
+        #             No.      Exponent    Contraction Coefficients
+        #             1  0.339800000D+05   0.000091  -0.000019   0.000000   0.000000   0.000000   0.000000
+        #             2  0.508900000D+04   0.000704  -0.000151   0.000000   0.000000   0.000000   0.000000
+        # ...
+        # ...
+        #             29  0.424000000D+00   0.000000   1.000000
+        #
+        #   Number of primitives                                   93
+        #   Number of basis functions                              80
+        #
+        #  --
+        if '++    Primitive basis info:' in line:
+            self.skip_lines(inputfile, ['d', 'b', 'b', 's', 'header', 's', 'b'])
+            line = next(inputfile)
+            self.gbasis_array = []
+            while '--' not in line and '****' not in line:
+                if 'Basis set:' in line:
+                    basis_element = line.split()[1].split('.')[0].split(':')[1]
+                    basis_element = basis_element[0] + basis_element[1:].lower()
+                    self.gbasis_array.append((basis_element, []))
+
+                if 'Type' in line:
+                    exponents = []
+                    coefficients = []
+                    line = next(inputfile)
+                    _type = line.split()[0].upper()
+                    func_array = []
+                    self.skip_line(inputfile, 'headers')
+                    line = next(inputfile)
+                    while line.split():
+                        exponents.append(self.float(line.split()[1]))
+                        coefficients.append([self.float(i) for i in line.split()[2:]])
+                        line = next(inputfile)
+
+                    for i in range(len(coefficients[0])):
+                        func_tuple = (_type, [])
+                        for j in range(len(exponents)):
+                            if coefficients[j][i] != 0:
+                                func_tuple[1].append((exponents[j], coefficients[j][i]))
+                        self.gbasis_array[-1][1].append(func_tuple)
+
+                line = next(inputfile)
 
 
 if __name__ == '__main__':
