@@ -119,11 +119,9 @@ class Molcas(logfileparser.Logfile):
         if line[:29] == '++    Orbital specifications:':
 
             self.skip_lines(inputfile, ['dashes', 'blank'])
-
             line = next(inputfile)
 
-            while line[:2] != '--':
-
+            while not line.startswith('--'):
                 if line[6:30] == 'Total number of orbitals':
                     self.set_attribute('nmo', int(line.split()[-1]))
                 if line[6:31] == 'Number of basis functions':
@@ -636,9 +634,12 @@ class Molcas(logfileparser.Logfile):
         #         60 H20   1s      0.1835
         #  --
         if '++    Molecular orbitals:' in line:
+
             self.skip_lines(inputfile, ['d', 'b'])
             line = next(inputfile)
-            if 'Natural orbitals' not in line:
+
+            # We don't currently support parinsg natural orbitals or active space orbitals.
+            if 'Natural orbitals' not in line and "Pseudonatural" not in line:
                 self.skip_lines(inputfile, ['b', 'symm'])
                 line = next(inputfile)
                 moenergies = []

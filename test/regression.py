@@ -581,6 +581,13 @@ def testJaguar_Jaguar8_3_stopiter_jaguar_hf_out(logfile):
     """Check to ensure that an incomplete SCF is handled correctly."""
     assert len(logfile.data.scfvalues[0]) == 3
 
+# Molcas #
+
+def testMolcas_Molcas18_test_stevenv_001_out(logfile):
+    """Don't support parsing MOs for RAS (active space)."""
+    assert not hasattr(logfile.data, "moenergies")
+    assert not hasattr(logfile.data, "mocoeffs")
+
 # Molpro #
 
 def testMolpro_Molpro2008_ch2o_molpro_casscf_out(logfile):
