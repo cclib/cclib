@@ -11,7 +11,7 @@ BUILDDIR      = _build
 # Put it first so that "make" without argument is like "make help".
 .PHONY: help Makefile
 help:
-	@$(SPHINXBUILD) -M help "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
+	@$(SPHINXBUILD) -M help "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O) && exit 2
 
 .PHONY: default
 default: cclib update attributes coverage html
@@ -22,7 +22,7 @@ clean:
 	-rm -rf attributes*.rst
 	-rm -rf coverage*.rst
 
-PRODUCTION_VERSION = v1.5.3
+PRODUCTION_VERSION = v1.6
 CCLIB_PROD = $(BUILDDIR)/cclib_prod
 CCLIB_DEV = $(BUILDDIR)/cclib_dev
 SRC_PROD = $(CCLIB_PROD)/cclib
@@ -36,11 +36,11 @@ SRC_DEV = $(CCLIB_DEV)/cclib
 cclib: $(CCLIB_PROD) $(CCLIB_DEV)
 $(CCLIB_PROD):
 	@echo "Checking out prod..."
-	git clone git@github.com:cclib/cclib.git $@
+	git clone https://github.com/cclib/cclib.git $@
 	cd $(CCLIB_PROD); git checkout $(PRODUCTION_VERSION)
 $(CCLIB_DEV):
 	@echo "Checking out dev..."
-	git clone -b master git@github.com:cclib/cclib.git $@
+	git clone -b master https://github.com/cclib/cclib.git $@
 
 .PHONY: update update_prod update_dev
 update: update_prod update_dev

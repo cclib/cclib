@@ -123,6 +123,22 @@ class ADF(logfileparser.Logfile):
                     break
                 line = next(inputfile)
 
+        version_searchstr = "Amsterdam Density Functional  (ADF)"
+        if version_searchstr in line:
+            startidx = line.index(version_searchstr) + len(version_searchstr)
+            trimmed_line = line[startidx:].strip()[:-1]
+            # The package version is normally a year with revision
+            # number (such as 2013.01), but it may also be a random
+            # string (such as a version control branch name).
+            match = re.search(r"([\d\.]{4,7})", trimmed_line)
+            if match:
+                package_version = match.groups()[0]
+                self.metadata["package_version"] = package_version
+            else:
+                # This isn't as well-defined, but the field shouldn't
+                # be left empty.
+                self.metadata["package_version"] = trimmed_line.strip()
+
         # In ADF 2014.01, there are (INPUT FILE) messages, so we need to use just
         # the lines that start with 'Create' and run until the title or something
         # else we are sure is is the calculation proper. It would be good to combine

@@ -36,7 +36,7 @@ def setup_cclib():
 
     setuptools.setup(
         name="cclib",
-        version="1.5.3",
+        version="1.6",
         url="http://cclib.github.io/",
         author="cclib development team",
         author_email="cclib-users@lists.sourceforge.net",
@@ -50,6 +50,7 @@ def setup_cclib():
         packages=setuptools.find_packages(exclude=['*test*']),
         entry_points={
             'console_scripts': [
+                'ccframe=cclib.scripts.ccframe:main',
                 'ccget=cclib.scripts.ccget:ccget',
                 'ccwrite=cclib.scripts.ccwrite:main',
                 'cda=cclib.scripts.cda:main'

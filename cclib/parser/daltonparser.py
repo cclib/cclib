@@ -10,6 +10,8 @@
 
 from __future__ import print_function
 
+import re
+
 import numpy
 
 from cclib.parser import logfileparser
@@ -76,12 +78,17 @@ class DALTON(logfileparser.Logfile):
 
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
-        # extract the version number first
+
+        # Extract the version number and optionally the Git revision
+        # number.
         if line[4:30] == "This is output from DALTON":
-            if line.split()[5] == "release" or line.split()[5] == "(Release":
-                self.metadata["package_version"] = line.split()[6][6:]
-            else:
-                self.metadata["package_version"] = line.split()[5]
+            rs = r"([0-9]{4})\D\s?\w*\s?([0-9]{1})"
+            match = re.search(rs, line)
+            package_version = ".".join(match.groups())
+            self.metadata["package_version"] = package_version
+        # Don't add revision information to the main package version for now.
+        if "Last Git revision" in line:
+            revision = line.split()[4]
 
         # Is the basis set from a single library file, or is it
         # manually specified? See before_parsing().

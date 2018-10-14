@@ -5,7 +5,7 @@
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
 
-"""Unit tests for CJSON writer."""
+"""Unit tests for the CJSON writer."""
 
 import os
 import unittest
@@ -20,9 +20,7 @@ __datadir__ = os.path.join(__filepath__, "..", "..")
 
 
 class CJSONTest(unittest.TestCase):
-
-    def setUp(self):
-        self.CJSON = cclib.io.CJSONWriter
+    """Unit tests for the CJSON writer."""
 
     def test_init(self):
         """Does the class initialize correctly?"""

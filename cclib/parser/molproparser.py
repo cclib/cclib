@@ -265,7 +265,7 @@ class Molpro(logfileparser.Logfile):
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
 
-        # extract the version number first
+        # Extract the package version number.
         if "Version" in line:
             self.metadata["package_version"] = line.split()[1]
 

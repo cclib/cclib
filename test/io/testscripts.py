@@ -88,5 +88,46 @@ class ccwriteTest(unittest.TestCase):
         self.assertEqual(ccwrite_call_args[2], CJSON_OUTPUT_FILENAME)
 
 
+@patch("cclib.scripts.ccframe.ccframe")
+class ccframeTest(unittest.TestCase):
+
+    def setUp(self):
+        try:
+            from cclib.scripts import ccframe
+        except ImportError:
+            self.fail("ccframe cannot be imported")
+
+        self.main = ccframe.main
+
+    @patch('cclib.scripts.ccframe.sys.argv', ['ccframe'])
+    def test_empty_argv(self, mock_ccframe):
+        """Does the script fail as expected if called without parameters?"""
+        with self.assertRaises(SystemExit):
+            self.main()
+
+    @patch(
+        "cclib.scripts.ccframe.sys.argv",
+        ["ccframe", INPUT_FILE]
+    )
+    @patch("cclib.scripts.ccframe._has_pandas", True)
+    def test_ccframe_call(self, mock_ccframe):
+        """is ccframe called with the given parameters?"""
+        self.main()
+
+        self.assertEqual(mock_ccframe.call_count, 1)
+        ccframe_call_args, ccframe_call_kwargs = mock_ccframe.call_args
+        self.assertEqual(ccframe_call_args[0][0].filename, INPUT_FILE)
+
+    @patch(
+        "cclib.scripts.ccframe.sys.argv",
+        ["ccframe", INPUT_FILE]
+    )
+    @patch("cclib.scripts.ccframe._has_pandas", False)
+    def test_ccframe_call_without_pandas(self, mock_ccframe):
+        """does ccframe fails cleanly if pandas can't be imported?"""
+        with self.assertRaises(SystemExit):
+            self.main()
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -14,13 +14,23 @@ aonames
 
 This attribute contains the atomic orbital names. These are not normalised as the following examples show, although a reasonable attempt is made to get them close to each other. Users will need to know what each orbital is by knowing the basis set inside out, rather than relying on this data. Such is life, as GAMESS does not provide enough information.
 
-* Gaussian gives names of the form: ['C1_1S', 'C1_2S', 'C1_2PX', 'C1_2PY', 'C1_2PZ', 'C2_1S', 'C2_2S', 'C2_2PX', 'C2_2PY', 'C2_2PZ', 'C3_1S', 'C3_2S', 'C3_2PX', 'C3_2PY', 'C3_2PZ', 'C4_1S', 'C4_2S', 'C4_2PX', 'C4_2PY', 'C4_2PZ', 'C5_1S', 'C5_2S', 'C5_2PX', 'C5_2PY', 'C5_2PZ', 'H6_1S', 'H7_1S', 'H8_1S', 'C9_1S', 'C9_2S', 'C9_2PX', 'C9_2PY', 'C9_2PZ', 'C10_1S', 'C10_2S', 'C10_2PX', 'C10_2PY', 'C10_2PZ', 'H11_1S', 'H12_1S', 'H13_1S', 'C14_1S', 'C14_2S', 'C14_2PX', 'C14_2PY', 'C14_2PZ', 'H15_1S', 'C16_1S', 'C16_2S', 'C16_2PX', 'C16_2PY', 'C16_2PZ', 'H17_1S', 'H18_1S', 'C19_1S', 'C19_2S', 'C19_2PX', 'C19_2PY', 'C19_2PZ', 'H20_1S']
-* GAMESS gives names of the form: ['C1_1S', 'C1_2S', 'C1_3X', 'C1_3Y', 'C1_3Z', 'C2_1S', 'C2_2S', 'C2_3X', 'C2_3Y', 'C2_3Z', 'C3_1S', 'C3_2S', 'C3_3X', 'C3_3Y', 'C3_3Z', 'C4_1S', 'C4_2S', 'C4_3X', 'C4_3Y', 'C4_3Z', 'C5_1S', 'C5_2S', 'C5_3X', 'C5_3Y', 'C5_3Z', 'C6_1S', 'C6_2S', 'C6_3X', 'C6_3Y', 'C6_3Z', 'H7_1S', 'H8_1S', 'H9_1S', 'H10_1S', 'C11_1S', 'C11_2S', 'C11_3X', 'C11_3Y', 'C11_3Z', 'C12_1S', 'C12_2S', 'C12_3X', 'C12_3Y', 'C12_3Z', 'H13_1S', 'H14_1S', 'C15_1S', 'C15_2S', 'C15_3X', 'C15_3Y', 'C15_3Z', 'C16_1S', 'C16_2S', 'C16_3X', 'C16_3Y', 'C16_3Z', 'H17_1S', 'H18_1S', 'H19_1S', 'H20_1S']
+* Gaussian gives names of the form::
 
-And for a large basis set calculation on a single C atom...:
+    ['C1_1S', 'C1_2S', 'C1_2PX', 'C1_2PY', 'C1_2PZ', 'C2_1S', 'C2_2S', 'C2_2PX', 'C2_2PY', 'C2_2PZ', 'C3_1S', 'C3_2S', 'C3_2PX', 'C3_2PY', 'C3_2PZ', 'C4_1S', 'C4_2S', 'C4_2PX', 'C4_2PY', 'C4_2PZ', 'C5_1S', 'C5_2S', 'C5_2PX', 'C5_2PY', 'C5_2PZ', 'H6_1S', 'H7_1S', 'H8_1S', 'C9_1S', 'C9_2S', 'C9_2PX', 'C9_2PY', 'C9_2PZ', 'C10_1S', 'C10_2S', 'C10_2PX', 'C10_2PY', 'C10_2PZ', 'H11_1S', 'H12_1S', 'H13_1S', 'C14_1S', 'C14_2S', 'C14_2PX', 'C14_2PY', 'C14_2PZ', 'H15_1S', 'C16_1S', 'C16_2S', 'C16_2PX', 'C16_2PY', 'C16_2PZ', 'H17_1S', 'H18_1S', 'C19_1S', 'C19_2S', 'C19_2PX', 'C19_2PY', 'C19_2PZ', 'H20_1S']
 
-* Gaussian: ['C1_1S', 'C1_2S', 'C1_3S', 'C1_4S', 'C1_5S', 'C1_6PX', 'C1_6PY', 'C1_6PZ', 'C1_7PX', 'C1_7PY', 'C1_7PZ', 'C1_8PX', 'C1_8PY', 'C1_8PZ', 'C1_9PX', 'C1_9PY', 'C1_9PZ', 'C1_10D 0', 'C1_10D+1', 'C1_10D-1', 'C1_10D+2', 'C1_10D-2', 'C1_11D 0', 'C1_11D+1', 'C1_11D-1', 'C1_11D+2', 'C1_11D-2', 'C1_12D 0', 'C1_12D+1', 'C1_12D-1', 'C1_12D+2', 'C1_12D-2', 'C1_13F 0', 'C1_13F+1', 'C1_13F-1', 'C1_13F+2', 'C1_13F-2', 'C1_13F+3', 'C1_13F-3', 'C1_14F 0', 'C1_14F+1', 'C1_14F-1', 'C1_14F+2', 'C1_14F-2', 'C1_14F+3', 'C1_14F-3', 'C1_15G 0', 'C1_15G+1', 'C1_15G-1', 'C1_15G+2', 'C1_15G-2', 'C1_15G+3', 'C1_15G-3', 'C1_15G+4', 'C1_15G-4', 'C1_16S', 'C1_17PX', 'C1_17PY', 'C1_17PZ', 'C1_18D 0', 'C1_18D+1', 'C1_18D-1', 'C1_18D+2', 'C1_18D-2', 'C1_19F 0', 'C1_19F+1', 'C1_19F-1', 'C1_19F+2', 'C1_19F-2', 'C1_19F+3', 'C1_19F-3', 'C1_20G 0', 'C1_20G+1', 'C1_20G-1', 'C1_20G+2', 'C1_20G-2', 'C1_20G+3', 'C1_20G-3', 'C1_20G+4', 'C1_20G-4']
-* GAMESS: ['C1_1S', 'C1_2S', 'C1_3S', 'C1_4S', 'C1_5S', 'C1_6X', 'C1_6Y', 'C1_6Z', 'C1_7X', 'C1_7Y', 'C1_7Z', 'C1_8X', 'C1_8Y', 'C1_8Z', 'C1_9X', 'C1_9Y', 'C1_9Z', 'C1_10XX', 'C1_10YY', 'C1_10ZZ', 'C1_10XY', 'C1_10XZ', 'C1_10YZ', 'C1_11XX', 'C1_11YY', 'C1_11ZZ', 'C1_11XY', 'C1_11XZ', 'C1_11YZ', 'C1_12XX', 'C1_12YY', 'C1_12ZZ', 'C1_12XY', 'C1_12XZ', 'C1_12YZ', 'C1_13XXX', 'C1_13YYY', 'C1_13ZZZ', 'C1_13XXY','C1_13XXZ', 'C1_13YYX', 'C1_13YYZ', 'C1_13ZZX', 'C1_13ZZY', 'C1_13XYZ', 'C1_14XXX', 'C1_14YYY', 'C1_14ZZZ', 'C1_14XXY', 'C1_14XXZ', 'C1_14YYX', 'C1_14YYZ', 'C1_14ZZX', 'C1_14ZZY', 'C1_14XYZ', 'C1_15XXXX', 'C1_15YYYY', 'C1_15ZZZZ', 'C1_15XXXY', 'C1_15XXXZ', 'C1_15YYYX', 'C1_15YYYZ', 'C1_15ZZZX', 'C1_15ZZZY', 'C1_15XXYY', 'C1_15XXZZ', 'C1_15YYZZ', 'C1_15XXYZ', 'C1_15YYXZ', 'C1_15ZZXY', 'C1_16S', 'C1_17S', 'C1_18S', 'C1_19X', 'C1_19Y', 'C1_19Z', 'C1_20X', 'C1_20Y', 'C1_20Z', 'C1_21X', 'C1_21Y', 'C1_21Z', 'C1_22XX', 'C1_22YY', 'C1_22ZZ', 'C1_22XY', 'C1_22XZ', 'C1_22YZ', 'C1_23XX', 'C1_23YY', 'C1_23ZZ', 'C1_23XY', 'C1_23XZ', 'C1_23YZ', 'C1_24XXX', 'C1_24YYY', 'C1_24ZZZ', 'C1_24XXY', 'C1_24XXZ', 'C1_24YYX', 'C1_24YYZ', 'C1_24ZZX', 'C1_24ZZY', 'C1_24XYZ', 'C1_25S', 'C1_26X', 'C1_26Y', 'C1_26Z', 'C1_27XX', 'C1_27YY', 'C1_27ZZ', 'C1_27XY', 'C1_27XZ', 'C1_27YZ', 'C1_28XXX', 'C1_28YYY', 'C1_28ZZZ', 'C1_28XXY', 'C1_28XXZ', 'C1_28YYX', 'C1_28YYZ', 'C1_28ZZX', 'C1_28ZZY', 'C1_28XYZ', 'C1_29XXXX', 'C1_29YYYY', 'C1_29ZZZZ', 'C1_29XXXY', 'C1_29XXXZ', 'C1_29YYYX', 'C1_29YYYZ', 'C1_29ZZZX', 'C1_29ZZZY', 'C1_29XXYY', 'C1_29XXZZ', 'C1_29YYZZ', 'C1_29XXYZ', 'C1_29YYXZ', 'C1_29ZZXY']
+* GAMESS gives names of the form::
+
+    ['C1_1S', 'C1_2S', 'C1_3X', 'C1_3Y', 'C1_3Z', 'C2_1S', 'C2_2S', 'C2_3X', 'C2_3Y', 'C2_3Z', 'C3_1S', 'C3_2S', 'C3_3X', 'C3_3Y', 'C3_3Z', 'C4_1S', 'C4_2S', 'C4_3X', 'C4_3Y', 'C4_3Z', 'C5_1S', 'C5_2S', 'C5_3X', 'C5_3Y', 'C5_3Z', 'C6_1S', 'C6_2S', 'C6_3X', 'C6_3Y', 'C6_3Z', 'H7_1S', 'H8_1S', 'H9_1S', 'H10_1S', 'C11_1S', 'C11_2S', 'C11_3X', 'C11_3Y', 'C11_3Z', 'C12_1S', 'C12_2S', 'C12_3X', 'C12_3Y', 'C12_3Z', 'H13_1S', 'H14_1S', 'C15_1S', 'C15_2S', 'C15_3X', 'C15_3Y', 'C15_3Z', 'C16_1S', 'C16_2S', 'C16_3X', 'C16_3Y', 'C16_3Z', 'H17_1S', 'H18_1S', 'H19_1S', 'H20_1S']
+
+And for a large basis set calculation on a single C atom:
+
+* Gaussian::
+
+    ['C1_1S', 'C1_2S', 'C1_3S', 'C1_4S', 'C1_5S', 'C1_6PX', 'C1_6PY', 'C1_6PZ', 'C1_7PX', 'C1_7PY', 'C1_7PZ', 'C1_8PX', 'C1_8PY', 'C1_8PZ', 'C1_9PX', 'C1_9PY', 'C1_9PZ', 'C1_10D 0', 'C1_10D+1', 'C1_10D-1', 'C1_10D+2', 'C1_10D-2', 'C1_11D 0', 'C1_11D+1', 'C1_11D-1', 'C1_11D+2', 'C1_11D-2', 'C1_12D 0', 'C1_12D+1', 'C1_12D-1', 'C1_12D+2', 'C1_12D-2', 'C1_13F 0', 'C1_13F+1', 'C1_13F-1', 'C1_13F+2', 'C1_13F-2', 'C1_13F+3', 'C1_13F-3', 'C1_14F 0', 'C1_14F+1', 'C1_14F-1', 'C1_14F+2', 'C1_14F-2', 'C1_14F+3', 'C1_14F-3', 'C1_15G 0', 'C1_15G+1', 'C1_15G-1', 'C1_15G+2', 'C1_15G-2', 'C1_15G+3', 'C1_15G-3', 'C1_15G+4', 'C1_15G-4', 'C1_16S', 'C1_17PX', 'C1_17PY', 'C1_17PZ', 'C1_18D 0', 'C1_18D+1', 'C1_18D-1', 'C1_18D+2', 'C1_18D-2', 'C1_19F 0', 'C1_19F+1', 'C1_19F-1', 'C1_19F+2', 'C1_19F-2', 'C1_19F+3', 'C1_19F-3', 'C1_20G 0', 'C1_20G+1', 'C1_20G-1', 'C1_20G+2', 'C1_20G-2', 'C1_20G+3', 'C1_20G-3', 'C1_20G+4', 'C1_20G-4']
+
+* GAMESS::
+
+    ['C1_1S', 'C1_2S', 'C1_3S', 'C1_4S', 'C1_5S', 'C1_6X', 'C1_6Y', 'C1_6Z', 'C1_7X', 'C1_7Y', 'C1_7Z', 'C1_8X', 'C1_8Y', 'C1_8Z', 'C1_9X', 'C1_9Y', 'C1_9Z', 'C1_10XX', 'C1_10YY', 'C1_10ZZ', 'C1_10XY', 'C1_10XZ', 'C1_10YZ', 'C1_11XX', 'C1_11YY', 'C1_11ZZ', 'C1_11XY', 'C1_11XZ', 'C1_11YZ', 'C1_12XX', 'C1_12YY', 'C1_12ZZ', 'C1_12XY', 'C1_12XZ', 'C1_12YZ', 'C1_13XXX', 'C1_13YYY', 'C1_13ZZZ', 'C1_13XXY','C1_13XXZ', 'C1_13YYX', 'C1_13YYZ', 'C1_13ZZX', 'C1_13ZZY', 'C1_13XYZ', 'C1_14XXX', 'C1_14YYY', 'C1_14ZZZ', 'C1_14XXY', 'C1_14XXZ', 'C1_14YYX', 'C1_14YYZ', 'C1_14ZZX', 'C1_14ZZY', 'C1_14XYZ', 'C1_15XXXX', 'C1_15YYYY', 'C1_15ZZZZ', 'C1_15XXXY', 'C1_15XXXZ', 'C1_15YYYX', 'C1_15YYYZ', 'C1_15ZZZX', 'C1_15ZZZY', 'C1_15XXYY', 'C1_15XXZZ', 'C1_15YYZZ', 'C1_15XXYZ', 'C1_15YYXZ', 'C1_15ZZXY', 'C1_16S', 'C1_17S', 'C1_18S', 'C1_19X', 'C1_19Y', 'C1_19Z', 'C1_20X', 'C1_20Y', 'C1_20Z', 'C1_21X', 'C1_21Y', 'C1_21Z', 'C1_22XX', 'C1_22YY', 'C1_22ZZ', 'C1_22XY', 'C1_22XZ', 'C1_22YZ', 'C1_23XX', 'C1_23YY', 'C1_23ZZ', 'C1_23XY', 'C1_23XZ', 'C1_23YZ', 'C1_24XXX', 'C1_24YYY', 'C1_24ZZZ', 'C1_24XXY', 'C1_24XXZ', 'C1_24YYX', 'C1_24YYZ', 'C1_24ZZX', 'C1_24ZZY', 'C1_24XYZ', 'C1_25S', 'C1_26X', 'C1_26Y', 'C1_26Z', 'C1_27XX', 'C1_27YY', 'C1_27ZZ', 'C1_27XY', 'C1_27XZ', 'C1_27YZ', 'C1_28XXX', 'C1_28YYY', 'C1_28ZZZ', 'C1_28XXY', 'C1_28XXZ', 'C1_28YYX', 'C1_28YYZ', 'C1_28ZZX', 'C1_28ZZY', 'C1_28XYZ', 'C1_29XXXX', 'C1_29YYYY', 'C1_29ZZZZ', 'C1_29XXXY', 'C1_29XXXZ', 'C1_29YYYX', 'C1_29YYYZ', 'C1_29ZZZX', 'C1_29ZZZY', 'C1_29XXYY', 'C1_29XXZZ', 'C1_29YYZZ', 'C1_29XXYZ', 'C1_29YYXZ', 'C1_29ZZXY']
 
 aooverlaps
 ----------
@@ -32,11 +42,11 @@ Some examples:
 * ``aooverlaps[0,3]`` is the overlap between the 1st and 4th basis function
 * ``aooverlaps[2,:]`` is a 1-dimensional array containing the overlap between every basis function and the 3rd basis function
 
-**ADF**: not present by default, printed when `PRINT Smat` is in the input; do not mistake with `fooverlaps`_
+**ADF**: not present by default, printed when `PRINT Smat` is in the input; do not mistake with `fooverlaps`_.
 
-**DALTON**: no option to print as of version 2013
+**DALTON**: no option to print as of version 2013.
 
-**Gaussian**: iop(3/33=1) must be specified in the input file
+**Gaussian**: ``iop(3/33=1)`` must be specified in the input file.
 
 .. _`Mulliken`: methods.html#mulliken-population-analysis-mpa
 .. _`C squared`: methods.html#c-squared-population-analysis-cspa
@@ -48,7 +58,7 @@ atombasis
 The attribute ``atombasis`` is a list, each element being a list that contains the atomic orbital indices on the respective atom. For example, ``atombasis[1]`` will contain the indices of atomic orbitals on the second atom of the molecule.
 
 .. index::
-    single: properties; atoimcharges (attribute)
+    single: properties; atomcharges (attribute)
 
 atomcharges
 -----------
@@ -57,14 +67,16 @@ The attribute ``atomcharges`` contains the atomic partial charges as taken from 
 
 Currently, cclib parses Mulliken, Löwdin, NPA and CHELPG charges, whose respective dictionary keys are ``mulliken``, ``lowdin``, ``natural`` and ``chelpg``.
 
-Note that in practice these may differ somewhat from the values cclib calculates in the various calculation methods.
+In practice, these may differ somewhat from the values cclib calculates in the various `calculation methods`_.
 
-**Molpro**: use the ``pop`` command (see http://www.molpro.net/info/2010.1/doc/manual/node450.html)
+**Molpro**: use the ``pop`` command (see http://www.molpro.net/info/2015.1/doc/manual/node515.html).
+
+.. _`calculation methods`: methods.html
 
 atomcoords
 ----------
 
-The attribute ``atomcoords`` contains the atomic coordinates as taken from the output file. This is an array of rank 3, with a shape (n,m,3) where n is 1 for a single point calculation and >=1 for a geometry optimisation and m is the number of atoms. 
+The attribute ``atomcoords`` contains the atomic coordinates as taken from the output file. This is an array of rank 3, with a shape (n,m,3) where n is 1 for a single point calculation and >=1 for a geometry optimisation and m is the number of atoms.
 
 **Gaussian**: for geometry optimisations, the "Standard orientation" sections are extracted.
 
@@ -110,34 +122,10 @@ etenergies
 
 This is a rank 1 array that contains the energies of electronic transitions from a reference state to the excited states of the molecule, in ``cm<sup>-1</sup>``. There should be as many elements to this array as there are excited states calculated. Any type of excited state calculation should provide output that can be parsed into this attribute.
 
-Availability:
-
-* Configuration Interaction (CIS): Gaussian
-* Time-dependent DFT (TD-DFT): Gaussian
-* Time-dependent Hartree-Fock (TD-HF): Gaussian
-
-Availability (development version):
-
-* Configuration Interaction (CIS): Gaussian, GAMESS, Jaguar
-* Time-dependent DFT (TD-DFT): Gaussian
-* Time-dependent Hartree-Fock (TD-HF): Gaussian
-
 etoscs
 ------
 
 The attribute ``etoscs`` is a rank 1 array that contains the oscillator strengths of transitions from the reference (ground) state to the excited electronic states of the of the molecule. As for `etenergies`_ and other attributes related to excited states, there should as many elements in this array as there are excited states in the calculation.
-
-Availability:
-
-* Configuration Interaction (CIS): Gaussian
-* Time-dependent DFT (TD-DFT): Gaussian
-* Time-dependent Hartree-Fock (TD-HF): Gaussian
-
-Availability (development version):
-
-* Configuration Interaction (CIS): GAMESS, Gaussian, Jaguar
-* Time-dependent DFT (TD-DFT): Gaussian
-* Time-dependent Hartree-Fock (TD-HF): Gaussian
 
 etsecs
 ------
@@ -152,36 +140,12 @@ In these tuples, the value of alpha/beta is 0 or 1, respectively. For a restrict
 
 The excitation coefficient is always converted to its unnormalized value by cclib - so the sum of the squared coefficients of all alpha and beta excitations should be unity. It is important to keep in mind, however, that only the square of the excitation coefficient has a physical meaning, and its sign depends on the numerical procedures used by each program.
 
-Availability:
-
-* Configuration Interaction (CIS): Gaussian
-* Time-dependent DFT (TD-DFT): Gaussian
-* Time-dependent Hartree-Fock (TD-HF): Gaussian
-
-Availability (development version):
-
-* Configuration Interaction (CIS): GAMESS, Gaussian, Jaguar
-* Time-dependent DFT (TD-DFT): GAMESS, Gaussian
-* Time-dependent Hartree-Fock (TD-HF): Gaussian
-
 etsyms
 ------
 
 The attributes ``etsyms`` is a list containing the symmetries (strings) of the excited states found in the calculation. As for `etenergies`_ and other attributes related to excited states, there should be as many elements in this list as there are excited states in the calculation.
 
 Note that while the symmetry descriptions start with the string ``Singlet`` or ``Triplet``, the exact format differs between programs.
-
-Availability:
-
-* Configuration Interaction (CIS): Gaussian
-* Time-dependent DFT (TD-DFT): Gaussian
-* Time-dependent Hartree-Fock (TD-HF): Gaussian
-
-Availability:
-
-* Configuration Interaction (CIS): GAMESS, Gaussian, Jaguar
-* Time-dependent DFT (TD-DFT): Gaussian
-* Time-dependent Hartree-Fock (TD-HF): Gaussian
 
 fonames
 -------
@@ -219,9 +183,9 @@ The difficulty in handling the basis for a molecule with symmetry and the availa
 gbasis
 ------
 
-This attribute stores information about the Gaussian basis functions that were used in the calculation, per atom using the same conventions as [http://pyquante.sf.net PyQuante]. Specifically, ``gbasis`` is a list of lists iterating over atoms and Gaussian basis functions. The elements (basis functions) are tuples of length 2 consisting of orbital type (e.g. 'S', 'P' or 'D') and a list (per contracted GTO) of tuples of size 2 consisting of the exponent and coefficient. Confused? Well, here's ``gbasis`` for a molecule consisting of a single C atom with a STO-3G basis:
+This attribute stores information about the Gaussian basis functions that were used in the calculation, per atom using the same conventions as `PyQuante <http://pyquante.sf.net>`_. Specifically, ``gbasis`` is a list of lists iterating over atoms and Gaussian basis functions. The elements (basis functions) are tuples of length 2 consisting of orbital type (e.g. 'S', 'P' or 'D') and a list (per contracted GTO) of tuples of size 2 consisting of the exponent and coefficient. Confused? Well, here's ``gbasis`` for a molecule consisting of a single C atom with a STO-3G basis:
 
-..
+.. code-block:: python
 
     [ # per atom
         [
@@ -257,7 +221,7 @@ For D and F functions there is an important distinction between pure (5D, 7F) or
 .. _`GFPRINT`: http://www.gaussian.com/g_tech/g_ur/k_gfprint.htm
 
 .. index::
-    single: geomtry optimisation; geotargets (attribute)
+    single: geometry optimisation; geotargets (attribute)
 
 geotargets
 ----------
@@ -273,7 +237,7 @@ In some special cases, the values in ``geotargets`` will be `numpy.inf`_.
     - maximum gradient below TOL * 1/4,
     - average gradient below TOL * 1/6.
 
-.. _`GAMESS-UK manual section on controlling optimisation`:http://www.cfs.dl.ac.uk/docs/html/part4/node14.html 
+.. _`GAMESS-UK manual section on controlling optimisation`: http://www.cfs.dl.ac.uk/docs/html/part4/node14.html 
 
 **Jaguar** has several geometry convergence criteria,
 
@@ -285,11 +249,11 @@ In some special cases, the values in ``geotargets`` will be `numpy.inf`_.
 
 Note that a value for gconv7 is not available until the second iteration, so it is set to zero in the first element of `geovalues`_.
 
-**Molpro** has custom convergence criteria, as described in the `manual`_:
+**Molpro** has custom convergence criteria, as described in the `manual <Molpro manual convergence_>`_:
 
-    The standard MOLPRO convergency criterion requires the maximum component of the gradient to be less then :math:`3 \cdot 10^{-4}` [a.u.] and the maximum energy change to be less than :math:`1 \cdot 10^{-6}` [H] or the maximum component of the gradient to be less then $ 3 \cdot 10^{-4}$ [a.u.] and the maximum component of the step to be less then :math:`3 \cdot 10^{-4}` [a.u.]. 
+    The standard MOLPRO convergence criterion requires the maximum component of the gradient to be less then :math:`3 \cdot 10^{-4}` [a.u.] and the maximum energy change to be less than :math:`1 \cdot 10^{-6}` [H] or the maximum component of the gradient to be less then $ 3 \cdot 10^{-4}$ [a.u.] and the maximum component of the step to be less then :math:`3 \cdot 10^{-4}` [a.u.].
 
-.. _`manual`: https://www.molpro.net/info/2012.1/doc/manual/node592.html
+.. _Molpro manual convergence: https://www.molpro.net/info/2012.1/doc/manual/node592.html
 
 **ORCA** tracks the change in energy as well as RMS and maximum gradients and displacements. As of version 3.0, an optimisation is considered converged when all the tolerances are met, and there are four exceptions:
 
@@ -312,16 +276,14 @@ geovalues
 
 These are the current values for the criteria used to determine whether a geometry has converged in the course of a geometry optimisation. It is an array of dimensions ``m x n``, where ``m`` is the number of geometry optimisation iterations and ``n`` the number of target criteria.
 
-Note that many programs print atomic coordinates before and after a geomtry optimisation, which means that there will not necessarily be ``m`` elements in ``atomcoords``_.
+Note that many programs print atomic coordinates before and after a geometry optimisation, which means that there will not necessarily be ``m`` elements in `atomcoords`_.
 
 If the optimisation has finished successfully, the values in the last row should be smaller than the values in geotargets_ (unless the convergence criteria require otherwise).
 
 hessian
 -------
 
-An array of rank 1 that contains the elements of [http://en.wikipedia.org/wiki/Hessian_matrix hessian] or the force constant matrix. Only the lower triangular part of the 3Nx3N matrix is stored (this may change in the future, maybe also only the force-constant , unwighted matrix will be parsed).
-
-* currently available only in ``Molpro``
+An array of rank 1 that contains the elements of the `hessian <http://en.wikipedia.org/wiki/Hessian_matrix>`_ or force constant matrix. Only the lower triangular part of the 3Nx3N matrix is stored (this may change in the future, maybe also only the unweighted matrix will be parsed).
 
 .. index::
     single: molecular orbitals; homos (attribute)
@@ -333,6 +295,30 @@ A 1D array that holds the indexes of the highest occupied molecular orbitals (HO
 
 .. index::
     single: molecular orbitals; mocoeffs (attribute)
+
+metadata
+--------
+
+A dictionary containing metadata_ (data about data) for the calculation. Currently, it can contain the following possible attributes, not all of which are implemented for each parser.
+
+* ``basis_set``: A string with the name of the basis set, if it is printed anywhere as a standard name.
+* ``coord_type``: For the ``coords`` field, a string for the representation of stored coordinates. Currently, it is one of ``xyz``, ``int``/``internal``, or ``gzmat``.
+* ``coords``: A list of lists with shape ``[natoms, 4]`` which contains the input coordinates (those found in the input file). The first column is the atomic symbol as a string, and the next three columns are floats. This is useful as many programs reorient coordinates for symmetry reasons.
+* ``functional``: A string with the name of the density functional used.
+* ``info``: A list of strings, each of which is an information or log message produced during a calculation.
+* ``input_file_contents``: A string containing the entire input file, if it is echoed back during the calculation.
+* ``input_file_name``: A string containing the name of the input file, with file extension. It may not contain the entire path to the file.
+* ``keywords``: A list of strings corresponding to the keywords used in the input file, in the loose format used by ORCA.
+* ``methods``: A list of strings containing each method used in order. Currently, the list may contain ``HF``, ``DFT``, ``LMP2``/``DF-MP2``/``MP2``, ``MP3``, ``MP4``, ``CCSD``, and/or ``CCSD(T)``/``CCSD-T``.
+* ``package``: A string with the name of the quantum chemistry program used.
+* ``package_version``: A string representation of the package version. It is formatted to allow comparison using relational operators.
+* ``success``: A boolean for whether or not the calculation completed properly.
+* ``unrestricted``: A boolean for whether or not the calculation was performed with a unrestricted wavefunction.
+* ``warnings``: A list of strings, each of which is a warning produced during a calculation.
+
+The implementation and coverage of metadata is currently inconsistent. In the future, metadata may receive its own page similar to `extracted data`_.
+
+.. _metadata: https://en.wikipedia.org/wiki/Metadata
 
 mocoeffs
 --------
@@ -399,21 +385,22 @@ The symmetry labels are normalised and cclib reports standard symmetry names:
     A"      AAA     A' '    a" or a' '  A"                          App
     A1'     AA1     A1'     a1'         A1'                         A1p
     A1"     AAA1    A1"     a1"         A1"                         A1pp
-    sigma   Sigma                       SG                          
-    pi      Pi                          PI                          
-    phi     Phi                         PHI (inferred)              
-    delta   Delta                       DLTA but DLTU/DLTG          
-    sigma.g Sigma.g                     SGG                         
+    sigma   Sigma                       SG
+    pi      Pi                          PI
+    phi     Phi                         PHI (inferred)
+    delta   Delta                       DLTA but DLTU/DLTG
+    sigma.g Sigma.g                     SGG
     ======= ======= ======= ==========  ==================          ======
 
 * ADF - the full list can be found [http://www.scm.com/Doc/Doc2005.01/ADF/ADFUsersGuide/page339.html here].
 * GAMESS-UK - to get the list, 'grep "data yr" input.m' if you have access to the source. Note that for E, it's split into "e1+" and "e1-" for instance.
 * Jaguar - to get the list, look at the examples in schrodinger/jaguar-whatever/samples if you have access to Jaguar. Note that for E, it's written as E1pp/Ap, for instance.
-* NWChem - if molecular symmetry is turned off or set to C1, symmetry adaption for orbitals is also deactivated, and can be explicitely turned on with `adapt on` in the SCF block
+* NWChem - if molecular symmetry is turned off or set to C1, symmetry adaption for orbitals is also deactivated, and can be explicitly turned on with `adapt on` in the SCF block
 
 Developers:
+
 * The use of a function with doctests for each of these cases is recommended, to make sure that the conversion is robust. There is a prototype called normalisesym() in logfileparser.py which should be overwritten in the subclasses if necessary (there is a unittest to make sure that this has been done).
-* The character tables [http://www.mpip-mainz.mpg.de/~gelessus/group.html here] may be useful in determining the correspondence between the labels used by the comp chem package and the commonly-used symbols.
+* The character tables `here <http://www.mpip-mainz.mpg.de/~gelessus/group.html>`_ may be useful in determining the correspondence between the labels used by the comp chem package and the commonly-used symbols.
 
 .. index::
     single: energy; mpenergies (attribute)
@@ -463,7 +450,9 @@ Commands to get information on all orbitals:
 
 **GAMESS-UK**: only usually prints information on the 5 lowest virtual orbitals. "FORMAT HIGH" should make it do this for all of the orbitals, although GAMESS-UK 7.0 has a bug that means that this only works for restricted calculations.
 
-**Jaguar**: the first ten virtual orbitals are printed by default; in order to print more of them, use the ``ipvirt`` keyword in the input file, with ``ipvirt=-1`` printing all virtual orbitals (see the [http://www.pdc.kth.se/doc/jaguar4.1/html/manual/mang.html#644675 manual] for more information).
+**Jaguar**: the first ten virtual orbitals are printed by default; in order to print more of them, use the ``ipvirt`` keyword in the input file, with ``ipvirt=-1`` printing all virtual orbitals (see the `manual <Jaguar manual nmo_>`_ for more information).
+
+.. _Jaguar manual nmo: http://www.pdc.kth.se/doc/jaguar4.1/html/manual/mang.html#644675
 
 optdone
 -------
@@ -472,12 +461,12 @@ Flags whether a geometry optimisation has completed. Currently this attribute is
 
 .. code-block:: bash
 
-    $ ccget optdone data/Gaussian/basicGaussian09/dvb_gopt.out 
+    $ ccget optdone data/Gaussian/basicGaussian09/dvb_gopt.out
     Attempting to parse data/Gaussian/basicGaussian09/dvb_gopt.out
     optdone:
     True
 
-    $ ccget --future optdone data/Gaussian/basicGaussian09/dvb_gopt.out 
+    $ ccget --future optdone data/Gaussian/basicGaussian09/dvb_gopt.out
     Attempting to parse data/Gaussian/basicGaussian09/dvb_gopt.out
     optdone:
     [4]
@@ -500,7 +489,7 @@ An array containing the converged SCF energies of the calculation, in eV. For an
 scftargets
 ----------
 
-Target thesholds for determining whether the current SCF run has converged, stored in a ``n x m`` array, where ``n`` is the number of geometry optimisation steps (1 for a single point calculation) and ``m`` is the number of criteria. The criteria vary between programs, and depending on the program they may be constant for the whole of a geometry optimisation or they may change between optimisation steps. A more complete description for each program follows.
+Target thresholds for determining whether the current SCF run has converged, stored in a ``n x m`` array, where ``n`` is the number of geometry optimisation steps (1 for a single point calculation) and ``m`` is the number of criteria. The criteria vary between programs, and depending on the program they may be constant for the whole of a geometry optimisation or they may change between optimisation steps. A more detailed description for each program follows.
 
 **ADF**: There are two convergence criteria which are controlled by ``SCFcnv`` in the `CONVERGE subkey of the SCF block`_.
 
@@ -519,9 +508,9 @@ where ``old criteria`` is the initial value or from the previous geometry cycle,
 
 **GAMESS**: Two criteria are, the maximum and root-mean-square (RMS) density matrix change, are used with a default starting value of 5.0E-05. It seems these values can change over the course of a geometry optimisation. ROHF calculations use SQCDF instead of the standard RMS change.
 
-**GAMESS-UK**: According to `the manual`_, convergence is determined by convergence of density matrix elements. The default value for SCF is 1E-5, but it appears to be 1E-7 for geoopts.
+**GAMESS-UK**: According to `the manual <GAMESS-UK manual convergence_>`_, convergence is determined by convergence of density matrix elements. The default value for SCF is 1E-5, but it appears to be 1E-7 for geoopts.
 
-.. _`the manual`: http://www.cfs.dl.ac.uk/docs/html/part4/node6.html
+.. _`GAMESS-UK manual convergence`: http://www.cfs.dl.ac.uk/docs/html/part4/node6.html
 
 **Gaussian**: normally three criteria are used.
 

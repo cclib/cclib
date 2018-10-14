@@ -65,7 +65,7 @@ def main():
         print("Attempting to parse {}".format(filename))
         log = ccopen(filename, **ccopen_kwargs)
 
-        if log == None:
+        if not log:
             print("Cannot figure out what type of computational chemistry output file '{}' is.".format(filename))
             print("Report this to the cclib development team if you think this is an error.")
             sys.exit()
@@ -93,7 +93,7 @@ def main():
 
         # The argument terse presently is only applicable to
         # CJSON/JSON formats
-        ccwrite(data, outputtype, outputdest, terse=terse, indices=index,
+        ccwrite(data, outputtype, outputdest, indices=index, terse=terse,
                 **ccwrite_kwargs)
 
 

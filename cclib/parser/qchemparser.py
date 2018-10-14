@@ -389,9 +389,15 @@ cannot be determined. Rerun without `$molecule read`."""
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
 
-        # Extract the version number first
-        if 'Q-Chem,' in line:
-            self.metadata["package_version"] = line.split()[1][:-1]
+        # Extract the version number and optionally the version
+        # control info.
+        if "Q-Chem" in line:
+            match = re.search(r"Q-Chem\s([0-9\.]*)\sfor", line)
+            if match:
+                self.metadata["package_version"] = match.groups()[0]
+        # Don't add revision information to the main package version for now.
+        if "SVN revision" in line:
+            revision = line.split()[3]
 
         # Disable/enable parsing for fragment sections.
         if any(message in line for message in self.fragment_section_headers):
@@ -625,6 +631,10 @@ cannot be determined. Rerun without `$molecule read`."""
                         ncore = self.table.number[element] - valence
                         self.possible_ecps[element] = ncore
                     line = next(inputfile)
+
+            if 'TIME STEP #' in line:
+                tokens = line.split()
+                self.append_attribute('time', float(tokens[8]))
 
             # Extract the atomic numbers and coordinates of the atoms.
             if 'Standard Nuclear Orientation (Angstroms)' in line:

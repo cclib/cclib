@@ -1,7 +1,7 @@
 # This file is part of cclib (http://cclib.github.io), a library for parsing
 # and interpreting the results of computational chemistry packages.
 #
-# Copyright (C) 2006-2016, the cclib development team
+# Copyright (C) 2018, the cclib development team
 #
 # The library is free software, distributed under the terms of
 # the GNU Lesser General Public version 2.1 or later. You should have
@@ -74,6 +74,8 @@ from cclib.io import ccopen
 # within the cclib repository. It would be better to figure out a more natural
 # way to import the relevant tests from cclib here.
 test_dir = os.path.realpath(os.path.dirname(__file__)) + "/../../test"
+# This is safer than sys.path.append, and isn't sys.path.insert(0, ...) so
+# virtualenvs work properly. See https://stackoverflow.com/q/10095037.
 sys.path.insert(1, os.path.abspath(test_dir))
 from .test_data import all_modules
 from .test_data import all_parsers
@@ -276,6 +278,13 @@ def testGAMESS_GAMESS_US2012_stopiter_gamess_out(logfile):
 def testGAMESS_GAMESS_US2013_N_UHF_out(logfile):
     """An UHF job that has an LZ value analysis between the alpha and beta orbitals."""
     assert len(logfile.data.moenergies) == 2
+
+def testGAMESS_GAMESS_US2014_CdtetraM1B3LYP_log(logfile):
+    """This logfile had coefficients for only 80 molecular orbitals."""
+    assert len(logfile.data.mocoeffs) == 2
+    assert numpy.count_nonzero(logfile.data.mocoeffs[0][79-1:, :]) == 258
+    assert numpy.count_nonzero(logfile.data.mocoeffs[0][80-1: 0:]) == 0
+    assert logfile.data.mocoeffs[0].all() == logfile.data.mocoeffs[1].all()
 
 def testGAMESS_WinGAMESS_dvb_td_trplet_2007_03_24_r1_out(logfile):
     """Do some basic checks for this old unit test that was failing.
@@ -556,14 +565,6 @@ def testGaussian_Gaussian09_stopiter_gaussian_out(logfile):
     """Check to ensure that an incomplete SCF is handled correctly."""
     assert len(logfile.data.scfvalues[0]) == 4
 
-def testGaussian_Gaussian09_dvb_bomd_out(logfile):
-    """
-    Check that the number of energies and geometries corresponds to 
-    integrated steps, and not all the energies and geometries found in the file.
-    """
-    assert logfile.data.scfenergies.shape == (35,)
-    assert logfile.data.atomcoords.shape == (35,20,3)
-    assert logfile.data.time.shape == (35,)
 
 # Jaguar #
 
@@ -763,6 +764,20 @@ def testORCA_ORCA4_0_1_ttt_td_out(logfile):
     assert len(logfile.data.etsecs) == 24
     assert len(logfile.data.etsecs[0]) == 1
     assert numpy.isnan(logfile.data.etsecs[0][0][2])
+
+def testORCA_ORCA4_0_invalid_literal_for_float_out(logfile):
+    """MO coefficients are glued together, see #629."""
+    assert hasattr(logfile.data, 'mocoeffs')
+    assert logfile.data.mocoeffs[0].shape == (logfile.data.nmo, logfile.data.nbasis)
+
+    # Test the coefficients from this line where things are glued together:
+    # 15C   6s       -154.480939-111.069870-171.460819-79.052025241.536860-92.159399
+    assert logfile.data.mocoeffs[0][102][378] == -154.480939
+    assert logfile.data.mocoeffs[0][103][378] == -111.069870
+    assert logfile.data.mocoeffs[0][104][378] == -171.460819
+    assert logfile.data.mocoeffs[0][105][378] == -79.052025
+    assert logfile.data.mocoeffs[0][106][378] == 241.536860
+    assert logfile.data.mocoeffs[0][107][378] == -92.159399
 
 def testORCA_ORCA4_0_IrCl6_sp_out(logfile):
     """Tests ECP and weird SCF printing."""
@@ -1572,7 +1587,7 @@ class GAMESSUSSPunTest_charge0(GenericSPunTest):
     def testhomos(self):
         """HOMOs were incorrect due to charge being wrong."""
 
-class GAMESSUSIRTest_ts(GenericIRTest):
+class GAMESSUSIRTest_ts(GenericIRimgTest):
     @unittest.skip('This is a transition state with different intensities')
     def testirintens(self):
         """This is a transition state with different intensities."""
@@ -1740,6 +1755,29 @@ old_unittests = {
     "GAMESS/PCGAMESS/water_mp4_sdtq.out":   GenericMP4SDTQTest,
 
     "GAMESS/WinGAMESS/dvb_td_2007.03.24.r1.out":    GAMESSUSTDDFTTest,
+
+    "Gaussian/Gaussian03/CO_TD_delta.log":    GenericTDunTest,
+    "Gaussian/Gaussian03/C_bigbasis.out":     GaussianBigBasisTest,
+    "Gaussian/Gaussian03/dvb_gopt.out":       GenericGeoOptTest,
+    "Gaussian/Gaussian03/dvb_ir.out":         GaussianIRTest,
+    "Gaussian/Gaussian03/dvb_raman.out":      GaussianRamanTest,
+    "Gaussian/Gaussian03/dvb_sp.out":         GaussianSPTest,
+    "Gaussian/Gaussian03/dvb_sp_basis.log":   GenericBasisTest,
+    "Gaussian/Gaussian03/dvb_sp_basis_b.log": GenericBasisTest,
+    "Gaussian/Gaussian03/dvb_td.out":         GaussianTDDFTTest,
+    "Gaussian/Gaussian03/dvb_un_sp.out":      GaussianSPunTest,
+    "Gaussian/Gaussian03/dvb_un_sp_b.log":    GaussianSPunTest,
+    "Gaussian/Gaussian03/Mo4OCl4-sp.log":     GenericCoreTest,
+    "Gaussian/Gaussian03/water_ccd.log":      GenericCCTest,
+    "Gaussian/Gaussian03/water_ccsd(t).log":  GenericCCTest,
+    "Gaussian/Gaussian03/water_ccsd.log":     GenericCCTest,
+    "Gaussian/Gaussian03/water_cis.log":      GenericCISTest,
+    "Gaussian/Gaussian03/water_cisd.log":     GenericCISTest,
+    "Gaussian/Gaussian03/water_mp2.log":      GaussianMP2Test,
+    "Gaussian/Gaussian03/water_mp3.log":      GaussianMP3Test,
+    "Gaussian/Gaussian03/water_mp4.log":      GaussianMP4SDTQTest,
+    "Gaussian/Gaussian03/water_mp4sdq.log":   GaussianMP4SDQTest,
+    "Gaussian/Gaussian03/water_mp5.log":      GenericMP5Test,
 
     "Gaussian/Gaussian09/dvb_gopt_revA.02.out":         GenericGeoOptTest,
     "Gaussian/Gaussian09/dvb_ir_revA.02.out":           GaussianIRTest,

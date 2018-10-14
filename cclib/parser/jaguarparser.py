@@ -60,9 +60,14 @@ class Jaguar(logfileparser.Logfile):
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
 
-        # Extract the version number first
+        # Extract the package version number.
         if "Jaguar version" in line:
-            self.metadata["package_version"] = line.split()[3][:-1]
+            tokens = line.split()
+            # Don't add revision information to the main package
+            # version for now.
+            # package_version = "{}.r{}".format(tokens[3][:-1], tokens[5])
+            package_version = tokens[3][:-1]
+            self.metadata["package_version"] = package_version
 
         # Extract the basis set name
         if line[2:12] == "basis set:":

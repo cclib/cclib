@@ -42,9 +42,12 @@ class NWChem(logfileparser.Logfile):
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
 
-        #extract the version number first
-        if "Northwest Computational" in line:
-            self.metadata["package_version"] = line.split()[5]
+        # Extract the version number.
+        if "nwchem branch" in line:
+            self.metadata["package_version"] = line.split()[3]
+        # Don't add revision information to the main package version for now.
+        if "nwchem revision" in line:
+            revision = line.split()[3]
 
         # This is printed in the input module, so should always be the first coordinates,
         # and contains some basic information we want to parse as well. However, this is not
@@ -1046,8 +1049,42 @@ class NWChem(logfileparser.Logfile):
         if line[:18] == ' Total times  cpu:':
             self.metadata['success'] = True
 
+        if line.strip() == "NWChem QMD Module":
+            self.is_BOMD = True
+
+        # Born-Oppenheimer molecular dynamics (BOMD): time.
+        if "QMD Run Information" in line:
+            self.skip_line(inputfile, 'd')
+            line = next(inputfile)
+            assert "Time elapsed (fs)" in line
+            time = float(line.split()[4])
+            self.append_attribute('time', time)
+
+        # BOMD: geometry coordinates when `print low`.
+        if line.strip() == "DFT ENERGY GRADIENTS":
+            if self.is_BOMD:
+                self.skip_lines(inputfile, ['b', 'atom coordinates gradient', 'xyzxyz'])
+                line = next(inputfile)
+                atomcoords_step = []
+                while line.strip():
+                    tokens = line.split()
+                    assert len(tokens) == 8
+                    atomcoords_step.append([float(c) for c in tokens[2:5]])
+                    line = next(inputfile)
+                self.atomcoords.append(atomcoords_step)
+
+    def before_parsing(self):
+        """NWChem-specific routines performed before parsing a file.
+        """
+
+        # The only reason we need this identifier is if `print low` is
+        # set in the input file, which we assume is likely for a BOMD
+        # trajectory. This will enable parsing coordinates from the
+        # 'DFT ENERGY GRADIENTS' section.
+        self.is_BOMD = False
+
     def after_parsing(self):
-        """NWChem-specific routines for after parsing file.
+        """NWChem-specific routines for after parsing a file.
 
         Currently, expands self.shells() into self.aonames.
         """
@@ -1110,3 +1147,11 @@ class NWChem(logfileparser.Logfile):
                 for k in range(count):
                     temp = [x % (j + k + 1) for x in labels[label]]
                     self.aonames.extend([prefix + x for x in temp])
+
+        # If we parsed a BOMD trajectory, the first two parsed
+        # geometries are identical, and all from the second onward are
+        # in Bohr. Delete the first one and perform the unit
+        # conversion.
+        if self.is_BOMD:
+            self.atomcoords = utils.convertor(numpy.asarray(self.atomcoords)[1:, ...],
+                                              'bohr', 'Angstrom')

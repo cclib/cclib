@@ -15,7 +15,7 @@ from cclib.method import Electrons
 from cclib.method import orbitals
 
 
-Attribute = namedtuple('Attribute', ['type', 'jsonKey', 'attributePath'])
+Attribute = namedtuple('Attribute', ['type', 'json_key', 'attribute_path'])
 
 
 class ccData(object):
@@ -30,8 +30,8 @@ class ccData(object):
         atommasses -- atom masses (array[1], daltons)
         atomnos -- atomic numbers (array[1])
         atomspins -- atomic spin densities (dict of arrays[1])
-        charge -- net charge of the system (integer)
         ccenergies -- molecular energies with Coupled-Cluster corrections (array[2], eV)
+        charge -- net charge of the system (integer)
         coreelectrons -- number of core electrons in atom pseudopotentials (array[1])
         enthalpy -- sum of electronic and thermal enthalpies (float, hartree/particle)
         entropy -- entropy (float, hartree/particle)
@@ -75,9 +75,9 @@ class ccData(object):
         scftargets -- targets for convergence of the SCF (array[2])
         scfvalues -- current values for convergence of the SCF (list of arrays[2])
         temperature -- temperature used for Thermochemistry (float, kelvin)
+        time -- time in molecular dynamics and other trajectories (array[1], fs)
         transprop -- all absorption and emission spectra (dictionary {name:(etenergies, etoscs)})
             WARNING: this attribute is not standardized and is liable to change in cclib 2.0
-        time -- time in molecular dynamics and other trajectories (array[1], fs)
         vibanharms -- vibrational anharmonicity constants (array[2], 1/cm)
         vibdisps -- cartesian displacement vectors (array[3], delta angstrom)
         vibfreqs -- vibrational frequencies (array[1], 1/cm)
@@ -91,7 +91,7 @@ class ccData(object):
     """
 
     # The expected types for all supported attributes.
-    # The jsonKey is the key name used for attributes in the CJSON/JSON format
+    # The json_key is the key name used for attributes in the CJSON/JSON format
     # 'TBD' - To Be Decided are the key names of attributes which haven't been included in the cjson format
     _attributes = {
        "aonames":          Attribute(list,             'names',                       'atoms:orbitals'),
@@ -147,8 +147,8 @@ class ccData(object):
        "scftargets":       Attribute(numpy.ndarray,    'targets',                     'optimization:scf'),
        "scfvalues":        Attribute(list,             'values',                      'optimization:scf'),
        "temperature":      Attribute(float,            'temperature',                 'properties'),
-       "transprop":        Attribute(dict,             'electronic transitions',      'transitions'),
        "time":             Attribute(numpy.ndarray,    'time',                        'N/A'),
+       "transprop":        Attribute(dict,             'electronic transitions',      'transitions'),
        "vibanharms":       Attribute(numpy.ndarray,    'anharmonicity constants',     'vibrations'),
        "vibdisps":         Attribute(numpy.ndarray,    'displacement',                'vibrations'),
        "vibfreqs":         Attribute(numpy.ndarray,    'frequencies',                 'vibrations'),

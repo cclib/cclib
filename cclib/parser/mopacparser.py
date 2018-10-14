@@ -86,6 +86,25 @@ class MOPAC(logfileparser.Logfile):
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
 
+        if "(Version:" in line:
+            # Part of the full version can be extracted from here, but is
+            # missing information about the bitness.
+            package_version = line[line.find("MOPAC") + 5:line.find("(")]
+            package_version = package_version[:4]
+            if "BETA" in line:
+                package_version = package_version + " BETA"
+            self.metadata["package_version"] = package_version
+
+        # Don't use the full package version until we know its field
+        # yet.
+        if "For non-commercial use only" in line:
+            tokens = line.split()
+            tokens = tokens[8:]
+            assert len(tokens) == 2
+            package_version_full = tokens[0]
+            if tokens[1] != "**":
+                package_version_full = '-'.join(tokens)[:-2]
+
         # Extract the atomic numbers and coordinates from the optimized geometry
         # note that cartesian coordinates section occurs multiple times in the file, and we want to end up using the last instance
         # also, note that the section labeled cartesian coordinates doesn't have as many decimal places as the one used here

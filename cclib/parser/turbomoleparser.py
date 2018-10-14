@@ -107,6 +107,17 @@ class Turbomole(logfileparser.Logfile):
             self.set_attribute('nbasis', nmo)
             self.set_attribute('nmo', nmo)
 
+        # Extract the version number and optionally the build number.
+        searchstr = ": TURBOMOLE"
+        index = line.find(searchstr)
+        if index > -1:
+            line = line[index + len(searchstr):]
+            tokens = line.split()
+            self.metadata["package_version"] = tokens[0][1:].replace("-", ".")
+            # Don't add revision information to the main package version for now.
+            if tokens[1] == "(":
+                revision = tokens[2]
+
         ## Atomic coordinates in job.last:
         #              +--------------------------------------------------+
         #              | Atomic coordinate, charge and isotop information |
@@ -139,6 +150,7 @@ class Turbomole(logfileparser.Logfile):
 
             self.append_attribute('atomcoords', atomcoords)
             self.set_attribute('atomnos', atomnos)
+            self.set_attribute('natom', len(atomcoords))
 
         # Frequency values in aoforce.out
         #        mode               7        8        9       10       11       12

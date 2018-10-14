@@ -3,7 +3,7 @@ Development
 ===========
 
 Basic instructions
-===========================
+==================
 
 The default cclib files distributed with a release, as described in `How to install`_, do not include any unit tests and logfiles necessary to run those tests. This section covers how to download the full source along with all test data and scripts, and how to use these for development and testing.
 
@@ -16,11 +16,11 @@ cclib is hosted by the fantastic people at `GitHub`_ (previously at `Sourceforge
 
 .. code-block:: bash
 
-    git clone https://github.com/cclib/cclib.git cclib
+    git clone https://github.com/cclib/cclib.git
 
 .. _`GitHub`: https://github.com
 .. _`Sourceforge`: https://sourceforge.net
-.. _`git`: http://git-scm.com
+.. _`git`: https://git-scm.com
 .. _`zipped archive`: https://github.com/cclib/cclib/archive/master.zip
 .. _`releases`: https://github.com/cclib/cclib/releases
 
@@ -41,9 +41,9 @@ We follow a typical GitHub collaborative model, relying on `forks and pull reque
 
 Here are some general guidelines for developers who are contributing code:
 
-* Run and review the unit tests (see below) before submitting a pull request
-* There should normally not be more failed tests than before your changes
-* For larger changes or features that take some time to implement, `using branches`_ is recommended
+* Run and review the unit tests (see below) before submitting a pull request.
+* There should normally not be more failed tests than before your changes.
+* For larger changes or features that take some time to implement, `using branches`_ is recommended.
 
 .. _`using branches`: https://help.github.com/articles/branching-out
 
@@ -62,7 +62,7 @@ When creating a new release on GitHub, the typical procedure might include the f
 * Tag the release (make sure to use an annotated tag using ``git -a``) and upload it (``git push --tags``)
 * Run `manifest.py`_ to update the MANIFEST file
 * Create the source distributions (``python setup.py sdist --formats=gztar,zip``) and Windows binary installers (``python setup.py bdist_wininst``)
-* Create a release on Github using the created tag (see `Creating releases`_) and upload the source distribiuions and Windows binaries
+* Create a release on GitHub using the created tag (see `Creating releases`_) and upload the source distributions and Windows binaries
 * Email the users and developers mailing list with the message in `ANNOUNCE`_
 * Update the Python package index (https://pypi.python.org/pypi/cclib), normally done by ``python setup.py register``
 * For significant releases, if appropriate, send an email to the `CCL list`_ and any mailing lists for computational chemistry packages supported by cclib
@@ -91,10 +91,10 @@ The input files for tests, which are logfiles from computational chemistry progr
 
 .. _`Travis CI`: https://travis-ci.org/cclib/cclib
 
-.. |travis_prod| image:: https://travis-ci.org/cclib/cclib.svg?branch=v1.4
+.. |travis_prod| image:: https://travis-ci.org/cclib/cclib.svg?branch=v1.6
 .. |travis_master| image:: https://travis-ci.org/cclib/cclib.svg?branch=master
 
-.. _`data directory`: https://github.com/cclib/cclib/tree/master/test
+.. _`data directory`: https://github.com/cclib/cclib/tree/master/data
 .. _`test directory`: https://github.com/cclib/cclib/tree/master/test
 
 .. index::
@@ -103,7 +103,7 @@ The input files for tests, which are logfiles from computational chemistry progr
 Unit tests
 ~~~~~~~~~~
 
-Unit tests check that the parsers work correctly for typical calculation types on small molecules, usually water or 1,4-divinylbenzene (dvb) with C2h symmetry. The corresponding logfiles stored in folders like ``data/NWChem/basicNWChem6.0`` are intended to test logfiles for an approximate major version of a program, and are standardized for all supported programs to the extent possible. They are located alongside the code in the repository, but are not normally distributed with the source. Attributes are considered supported only if they are checked by at least one test, and the `table of attribute coverage`_ is generated automatically using this criterion.
+Unit tests check that the parsers work correctly for typical calculation types on small molecules, usually water or 1,4-divinylbenzene (dvb) with :math:`C_{\mathrm{2h}}` symmetry. The corresponding logfiles stored in folders like ``data/NWChem/basicNWChem6.0`` are intended to test logfiles for an approximate major version of a program, and are standardized for all supported programs to the extent possible. They are located alongside the code in the repository, but are not normally distributed with the source. Attributes are considered supported only if they are checked by at least one test, and the `table of attribute coverage`_ is generated automatically using this criterion.
 
 The job types currently included as unit tests:
 
@@ -112,6 +112,7 @@ The job types currently included as unit tests:
 * frequency calculation with IR and Raman intensities for dvb (RHF/STO-3G or B3LYP/STO-3G)
 * single point energy for carbon atom using a large basis set such as aug-cc-pCVQZ
 * Møller–Plesset and coupled cluster energies for water (STO-3G or 6-31G basis set)
+* static polarizabilities for tryptophan (RHF/STO-3G)
 
 .. _`table of attribute coverage`: data_dev.html#details-of-current-implementation
 
@@ -128,42 +129,12 @@ There are a few conventions when adding a new supported program version to the u
 Regression tests
 ~~~~~~~~~~~~~~~~
 
-Regression tests ensure that bugs, once fixed, stay fixed. These are real-life files that at some point broke a cclib parser, and are stored in folders like ``data/regression/Jaguar/Jaguar6.4``. The files associated with regression tests are not stored stored together with the source code as they are often quite large. A separate repository on github, `cclib-data`_, is used to track these files, and we do not distribute them with any releases.
+Regression tests ensure that bugs, once fixed, stay fixed. These are real-life files that at some point broke a cclib parser, and are stored in folders like ``data/regression/Jaguar/Jaguar6.4``. The files associated with regression tests are not stored stored together with the source code as they are often quite large. A separate repository on GitHub, `cclib-data`_, is used to track these files, and we do not distribute them with any releases.
 
-For every bug found in the parsers, there should be a corresponding regression test that tests this bug stays fixed. The process is automated by `run_regressions.py`_, which runs through all of our test data, both the basic data and regression files, opens them, tries to parse, and runs any relevant regression tests defined for that file. New regression tests are added by creating a function ``testMyFileName_out`` according to the examples at the start of `run_regressions.py`_.
+For every bug found in the parsers, there should be a corresponding regression test that tests this bug stays fixed. The process is automated by `regression.py`_, which runs through all of our test data, both the basic data and regression files, opens them, tries to parse, and runs any relevant regression tests defined for that file. New regression tests are added by creating a function ``testMyFileName_out`` according to the examples at the start of `regression.py`_.
 
 .. _`cclib-data`: https://github.com/cclib/cclib-data
-.. _`run_regressions.py`: https://github.com/cclib/cclib/blob/master/test/run_regressions.py
-
-Doctests
-~~~~~~~~~
-
-Doctests are a useful Python feature for unit testing individual functions. To run the doctests in a particular file, you need to run the script. For example, ``python gaussianparser.py`` runs the doctests contained in `gaussianparser.py`_. To run all of the doctests at once, you need to install a testing tool such as `nose`_, and then use the following command (note that many errors may be due to missing libraries like `biopython`_):
-
-.. code-block:: bash
-
-    $ nose cclib --with-doctest -e test* -v
-    ERROR
-    ERROR
-    Doctest: cclib.bridge.cclib2openbabel.makeopenbabel ... ok
-    ERROR
-    ERROR
-    Doctest: cclib.parser.adfparser.ADF.normalisesym ... ok
-    Doctest: cclib.parser.gamessparser.GAMESS.normalise_aonames ... ok
-    Doctest: cclib.parser.gamessparser.GAMESS.normalisesym ... ok
-    Doctest: cclib.parser.gamessukparser.GAMESSUK.normalisesym ... ok
-    Doctest: cclib.parser.gaussianparser.Gaussian.normalisesym ... ok
-    Doctest: cclib.parser.jaguarparser.Jaguar.normalisesym ... ok
-    Doctest: cclib.parser.logfileparser.Logfile.float ... ok
-    Doctest: cclib.parser.utils.PeriodicTable ... ok
-    Doctest: cclib.parser.utils.convertor ... ok
-    ERROR
-    ERROR
-    ......
-
-.. _`gaussianparser.py`: https://github.com/cclib/cclib/blob/master/src/cclib/parser/gaussianparser.py
-.. _`nose`: https://nose.readthedocs.org/en/latest/
-.. _`biopython`: http://biopython.org/wiki/Main_Page
+.. _`regression.py`: https://github.com/cclib/cclib/blob/master/test/regression.py
 
 Websites related to cclib
 =========================
@@ -185,13 +156,14 @@ Developers
 
 Besides input from a number of people `listed in the repository`_, the following developers have contributed code to cclib (in alphabetical order):
 
-* Eric Berquist
+* `Eric Berquist`_
 * `Karol M. Langner`_
 * `Noel O'Boyle`_
 * Christopher Rowley
-* Adam Tenderholt 
+* Adam Tenderholt
 
 .. _`listed in the repository`: https://github.com/cclib/cclib/blob/master/THANKS
 
+.. _`Eric Berquist`: https://github.com/berquist
 .. _`Karol M. Langner`: https://github.com/langner
-.. _`Noel O'Boyle`: http://www.redbrick.dcu.ie/~noel
+.. _`Noel O'Boyle`: https://www.redbrick.dcu.ie/~noel/

@@ -35,7 +35,7 @@ all_parsers = {name: getattr(cclib.parser, name) for name in parser_names}
 module_names = [
     "SP", "SPun", "GeoOpt", "Basis", "Core",    # Basic calculations.
     "MP", "CC", "CI", "TD", "TDun",             # Post-SCF calculations.
-    "vib", "Polar", "Scan",                     # Other property calculations.
+    "vib", "BOMD", "Polar", "Scan",             # Other property calculations.
 ]
 all_modules = {tn: importlib.import_module('.data.test' + tn, package='test')
                for tn in module_names}
@@ -45,7 +45,8 @@ def gettestdata():
     """Return a dict of the test file data."""
 
     testdatadir = os.path.dirname(os.path.realpath(__file__))
-    lines = open(testdatadir + '/testdata').readlines()
+    with open(testdatadir + '/testdata') as testdatafile:
+        lines = testdatafile.readlines()
 
     # Remove blank lines and those starting with '#'.
     lines = [line for line in lines if (line.strip() and line[0] != '#')]

@@ -26,6 +26,10 @@ class GenericIRTest(unittest.TestCase):
         """Initialize the number of vibrational frequencies on a per molecule basis"""
         self.numvib = 3*len(self.data.atomnos) - 6
 
+    def testbasics(self):
+        """Are basic attributes correct?"""
+        self.assertEqual(self.data.natom, 20)
+
     def testvibdisps(self):
         """Are the dimensions of vibdisps consistent with numvib x N x 3"""
         self.assertEqual(len(self.data.vibfreqs), self.numvib)
