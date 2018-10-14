@@ -583,6 +583,11 @@ def testJaguar_Jaguar8_3_stopiter_jaguar_hf_out(logfile):
 
 # Molcas #
 
+def testMolcas_Molcas18_test_standard_000_out(logfile):
+    """Don't support parsing MOs for multiple symmetry species."""
+    assert not hasattr(logfile.data, "moenergies")
+    assert not hasattr(logfile.data, "mocoeffs")
+
 def testMolcas_Molcas18_test_stevenv_001_out(logfile):
     """Don't support parsing MOs for RAS (active space)."""
     assert not hasattr(logfile.data, "moenergies")

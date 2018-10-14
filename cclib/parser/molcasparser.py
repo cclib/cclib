@@ -580,7 +580,14 @@ class Molcas(logfileparser.Logfile):
                 atomcoords.append([float(c) for c in line.split()[1:]])
                 line = next(inputfile)
 
-            self.atomcoords.append(atomcoords)
+            if len(atomcoords) == self.natom:
+                self.atomcoords.append(atomcoords)
+            else:
+                self.logger.warning(
+                        "Parsed coordinates not consistent with previous, skipping. "
+                        "This could be due to symmetry being turned on during the job. "
+                        "Length was %i, now found %i. New coordinates: %s"
+                        % (len(self.atomcoords[-1]), len(atomcoords), str(atomcoords)))
 
         #  **********************************************************************************************************************
         #  *                                    Energy Statistics for Geometry Optimization                                     *
@@ -658,7 +665,13 @@ class Molcas(logfileparser.Logfile):
 
             # We don't currently support parinsg natural orbitals or active space orbitals.
             if 'Natural orbitals' not in line and "Pseudonatural" not in line:
-                self.skip_lines(inputfile, ['b', 'symm'])
+                self.skip_line(inputfile, 'b')
+
+                # Symmetry is not currently supported, so this line can have one form.
+                line = next(inputfile)
+                if line.strip() != 'Molecular orbitals for symmetry species 1: a':
+                    return
+                
                 line = next(inputfile)
                 moenergies = []
                 homos = 0
