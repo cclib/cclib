@@ -98,7 +98,7 @@ class Molcas(logfileparser.Logfile):
             self.atomcoords.append(atomcoords)
 
             if self.atomnos == []:
-                self.atomnos = [utils.PeriodicTable().number[atomelement] for atomelement in atomelements]
+                self.atomnos = [utils.PeriodicTable().number[ae.title()] for ae in atomelements]
 
             if not hasattr(self, 'natom'):
                 self.set_attribute('natom', len(self.atomnos))
