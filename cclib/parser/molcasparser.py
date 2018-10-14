@@ -262,6 +262,9 @@ class Molcas(logfileparser.Logfile):
         #     3    -37.08936118    -48.41536598     11.32600480 -0.11E+01*  0.12E+00*  0.91E-01*   0.97E+00   0.16E+01   Damp      0.
         #     4    -37.31610460    -50.54103969     13.22493509 -0.23E+00*  0.11E+00*  0.96E-01*   0.72E+00   0.27E+01   Damp      0.
         #     5    -37.33596239    -49.47021484     12.13425245 -0.20E-01*  0.59E-01*  0.59E-01*   0.37E+00   0.16E+01   Damp      0.
+        # ...
+        #           Convergence after 26 Macro Iterations
+        # --
         if line[46:91] == 'iterations: Energy and convergence statistics':
 
             self.skip_line(inputfile, 'blank')
@@ -269,24 +272,39 @@ class Molcas(logfileparser.Logfile):
             while line.split() != ['Energy', 'Energy', 'Energy', 'Change', 'Delta', 'Norm', 'in', 'Sec.']:
                 line = next(inputfile)
 
+            iteration_regex = ("^([0-9]+)"                                  # Iter
+                               "( [ \-0-9]*\.[0-9]{6,9})"                   # Tot. SCF Energy
+                               "( [ \-0-9]*\.[0-9]{6,9})"                   # One-electron Energy
+                               "( [ \-0-9]*\.[0-9]{6,9})"                   # Two-electron Energy
+                               "( [ \-0-9]*\.[0-9]{2}E[\-\+][0-9]{2}\*?)"   # Energy Change
+                               "( [ \-0-9]*\.[0-9]{2}E[\-\+][0-9]{2}\*?)"   # Max Dij or Delta Norm
+                               "( [ \-0-9]*\.[0-9]{2}E[\-\+][0-9]{2}\*?)"   # Max Fij
+                               "( [ \-0-9]*\.[0-9]{2}E[\-\+][0-9]{2}\*?)"   # DNorm
+                               "( [ \-0-9]*\.[0-9]{2}E[\-\+][0-9]{2}\*?)"   # TNorm
+                               "( [ A-Za-z0-9]*)"                           # AccCon
+                               "( [ \.0-9]*)$")                             # Time in Sec.
+
             scfvalues = []
             line = next(inputfile)
-            while line.split()[0] != 'Convergence':
-                if line.split()[0].isdigit():
-                    info = line.split()
-                    energy = float(info[4].replace('*', ''))
-                    density = float(info[5].replace('*', ''))
-                    fock = float(info[6].replace('*', ''))
-                    dnorm = float(info[7].replace('*', ''))
+            while not line.strip().startswith("Convergence"):
+
+                match = re.match(iteration_regex, line.strip())
+                if match:
+                    groups = match.groups()
+                    cols = [g.strip() for g in match.groups()]
+                    cols = [c.replace('*', '') for c in cols]
+
+                    energy = float(cols[4])
+                    density = float(cols[5])
+                    fock = float(cols[6])
+                    dnorm = float(cols[7])
                     scfvalues.append([energy, density, fock, dnorm])
 
-                try:
-                    line = next(inputfile)
-                    if line.split() == []:
-                        line = next(inputfile)
-                except StopIteration:
+                if line.strip() == "--":
                     self.logger.warning('File terminated before end of last SCF!')
                     break
+
+                line = next(inputfile)
 
             self.append_attribute('scfvalues', scfvalues)
 

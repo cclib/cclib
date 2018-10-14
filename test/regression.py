@@ -588,6 +588,11 @@ def testMolcas_Molcas18_test_stevenv_001_out(logfile):
     assert not hasattr(logfile.data, "moenergies")
     assert not hasattr(logfile.data, "mocoeffs")
 
+def testMolcas_Molcas18_test_stevenv_desym_out(logfile):
+    """This logfile has iterations interrupted by a Fermi aufbau procedure."""
+    assert len(logfile.data.scfvalues) == 1
+    assert len(logfile.data.scfvalues[0]) == 26
+
 # Molpro #
 
 def testMolpro_Molpro2008_ch2o_molpro_casscf_out(logfile):
