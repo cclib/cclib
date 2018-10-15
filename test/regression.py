@@ -588,6 +588,10 @@ def testMolcas_Molcas18_test_standard_000_out(logfile):
     assert not hasattr(logfile.data, "moenergies")
     assert not hasattr(logfile.data, "mocoeffs")
 
+def testMolcas_Molcas18_test_standard_001_out(logfile):
+    """This logfile has two calculations, and we currently only want to parse the first."""
+    assert logfile.data.natom == 8
+
 def testMolcas_Molcas18_test_stevenv_001_out(logfile):
     """Don't support parsing MOs for RAS (active space)."""
     assert not hasattr(logfile.data, "moenergies")

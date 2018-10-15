@@ -45,11 +45,23 @@ class Molcas(logfileparser.Logfile):
         # Compile the dashes-and-or-spaces-only regex.
         self.re_dashes_and_spaces = re.compile('^[\s-]+$')
 
+        # Molcas can do multiple calculations in one job, and each one
+        # starts from the gateway module. Onle parse the first.
+        # TODO: It would be best to parse each calcualtion as a separate
+        # ccData object and return an iterator - something for 2.x
+        self.gateway_module_count = 0
+
     def after_parsing(self):
         pass
 
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
+
+        if "Start Module: gateway" in line:
+            self.gateway_module_count += 1
+
+        if self.gateway_module_count > 1:
+            return
 
         # Extract the version number and optionally the Git tag and hash.
         if "version" in line:
