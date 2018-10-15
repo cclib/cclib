@@ -592,6 +592,10 @@ def testMolcas_Molcas18_test_standard_001_out(logfile):
     """This logfile has two calculations, and we currently only want to parse the first."""
     assert logfile.data.natom == 8
 
+    # There are also four symmetry species, and orbital count should cover all of them.
+    assert logfile.data.nbasis == 30
+    assert logfile.data.nmo == 30
+
 def testMolcas_Molcas18_test_stevenv_001_out(logfile):
     """Don't support parsing MOs for RAS (active space)."""
     assert not hasattr(logfile.data, "moenergies")

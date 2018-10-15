@@ -133,11 +133,16 @@ class Molcas(logfileparser.Logfile):
             self.skip_lines(inputfile, ['dashes', 'blank'])
             line = next(inputfile)
 
+            symmetry_count = 1
             while not line.startswith('--'):
-                if line[6:30] == 'Total number of orbitals':
-                    self.set_attribute('nmo', int(line.split()[-1]))
-                if line[6:31] == 'Number of basis functions':
-                    self.set_attribute('nbasis', int(line.split()[-1]))
+                if line.strip().startswith('Symmetry species'):
+                    symmetry_count = int(line.split()[-1])
+                if line.strip().startswith('Total number of orbitals'):
+                    nmos = line.split()[-symmetry_count:]
+                    self.set_attribute('nmo', sum(map(int, nmos)))
+                if line.strip().startswith('Number of basis functions'):
+                    nbasis = line.split()[-symmetry_count:]
+                    self.set_attribute('nbasis', sum(map(int, nbasis)))
 
                 line = next(inputfile)
 
