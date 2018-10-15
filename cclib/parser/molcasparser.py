@@ -40,7 +40,7 @@ class Molcas(logfileparser.Logfile):
     def before_parsing(self):
         # Compile the regex for extracting the element symbol from the
         # atom label in the "Molecular structure info" block.
-        self.re_atomelement = re.compile('([a-zA-Z]+)\d+')
+        self.re_atomelement = re.compile('([a-zA-Z]+)\d?')
 
         # Compile the dashes-and-or-spaces-only regex.
         self.re_dashes_and_spaces = re.compile('^[\s-]+$')
@@ -146,8 +146,7 @@ class Molcas(logfileparser.Logfile):
 
                 line = next(inputfile)
 
-        #Parsing the molecular charge
-        if line[6:23] == 'Molecular charge ':
+        if line.strip().startswith('Total molecular charge'):
             self.set_attribute('charge', int(float(line.split()[-1])))
 
         #  ++    Molecular charges:
