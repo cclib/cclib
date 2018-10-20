@@ -426,6 +426,21 @@ class Logfile(object):
             self.set_attribute(name, [])
         getattr(self, name).append(value)
 
+    def _assign_coreelectrons_to_element(self, element, ncore, divide_by_count=False):
+        """Assign core electrons to all instances of the element.
+
+        It's usually reasonable to do this, because mixed usage isn't
+        normally allowed within elements.
+        """
+        atomsymbols = [self.table.element[atomno] for atomno in self.atomnos]
+        indices = [i for i, el in enumerate(atomsymbols) if el == element]
+        if divide_by_count:
+            ncore = ncore // len(indices)
+
+        if not hasattr(self, 'coreelectrons'):
+            self.coreelectrons = numpy.zeros(self.natom, 'i')
+        self.coreelectrons[indices] = ncore
+
     def skip_lines(self, inputfile, sequence):
         """Read trivial line types and check they are what they are supposed to be.
 

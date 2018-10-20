@@ -45,23 +45,7 @@ class Molcas(logfileparser.Logfile):
         # Compile the dashes-and-or-spaces-only regex.
         self.re_dashes_and_spaces = re.compile('^[\s-]+$')
 
-    def _assign_coreelectrons_to_element(self, element, ncore, divide_by_count=False):
-        """Assign to all instances of the element, because mixed usage isn't
-        allowed within elements.
-        """
-        mask = [element == possible_element
-                for possible_element in self.atomsymbols]
-        indices = [i for (i, x) in enumerate(mask) if x]
-        count = sum(mask)
-        if divide_by_count:
-            ncore = ncore // count
-        self.coreelectrons[indices] = ncore
-
     def after_parsing(self):
-        self.coreelectrons = numpy.zeros(self.natom, 'i')
-        self.atomsymbols = [self.table.element[atomno]
-                                 for atomno in self.atomnos]
-
         for element, ncore in self.core_array:
             self._assign_coreelectrons_to_element(element, ncore)
 
@@ -107,7 +91,7 @@ class Molcas(logfileparser.Logfile):
             while not self.re_dashes_and_spaces.search(line):
                 sline = line.split()
                 atomelement = self.re_atomelement.search(sline[1]).groups()[0]
-                atomelement = atomelement[0]+atomelement[1:].lower()
+                atomelement = atomelement[0] + atomelement[1:].lower()
                 atomelements.append(atomelement)
                 atomcoords.append(list(map(float, sline[5:])))
                 line = next(inputfile)
@@ -845,7 +829,7 @@ class Molcas(logfileparser.Logfile):
         #  --
         if '++    Basis set information:' in line:
             self.core_array = []
-            basis_element = ''
+            basis_element = None
             ncore = 0
 
             while line[:2] != '--':
@@ -865,7 +849,7 @@ class Molcas(logfileparser.Logfile):
                         element = self.table.element[int(actual_charge)]
                         ncore = int(actual_charge - effective_charge)
                         if basis_element:
-                            assert(basis_element == element)
+                            assert basis_element == element
                         else:
                             basis_element = element
 
