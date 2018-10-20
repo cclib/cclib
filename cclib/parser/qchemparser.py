@@ -203,7 +203,8 @@ cannot be determined. Rerun without `$molecule read`."""
                         # assigned ECP centers. Filter out the
                         # remaining entries, of which there should
                         # only be one.
-                        remainder = self.charge - user_charge - self.coreelectrons.sum()
+                        core_sum = self.coreelectrons.sum() if hasattr(self, 'coreelectrons') else 0
+                        remainder = self.charge - user_charge - core_sum
                         entries = [entry
                                    for entry in self.user_input['ecp']
                                    if entry[2] == 0]
