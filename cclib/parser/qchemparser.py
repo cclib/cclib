@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2017, the cclib development team
+# Copyright (c) 2018, the cclib development team
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
@@ -212,7 +212,8 @@ cannot be determined. Rerun without `$molecule read`."""
                             assert len(entries) == 1
                             element, _, ncore = entries[0]
                             assert ncore == 0
-                            self._assign_coreelectrons_to_element(element, remainder, True)
+                            self._assign_coreelectrons_to_element(
+                                    element, remainder, ncore_is_total_count=True)
                 elif not ecp_is_gen and has_iprint:
                     atomsymbols = [self.table.element[atomno] for atomno in self.atomnos]
                     for i in range(self.natom):
