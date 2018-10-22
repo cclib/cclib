@@ -10,6 +10,7 @@
 from __future__ import print_function
 
 import re
+import string
 
 import numpy
 
@@ -26,7 +27,7 @@ class Molcas(logfileparser.Logfile):
         super(Molcas, self).__init__(logname="Molcas", *args, **kwargs)
 
     def __str__(self):
-        """Return a string representation of the object."""
+        """Return a string repeesentation of the object."""
         return "Molcas log file %s" % (self.filename)
 
     def __repr__(self):
@@ -36,14 +37,6 @@ class Molcas(logfileparser.Logfile):
     #These are yet to be implemented.
     def normalisesym(self, label):
         """Does Molcas require symmetry label normalization?"""
-
-    def before_parsing(self):
-        # Compile the regex for extracting the element symbol from the
-        # atom label in the "Molecular structure info" block.
-        self.re_atomelement = re.compile('([a-zA-Z]+)|d+')
-
-        # Compile the dashes-and-or-spaces-only regex.
-        self.re_dashes_and_spaces = re.compile('^[\s-]+$')
 
     def after_parsing(self):
         for element, ncore in self.core_array:
@@ -88,10 +81,9 @@ class Molcas(logfileparser.Logfile):
             atomelements = []
             atomcoords = []
 
-            while not self.re_dashes_and_spaces.search(line):
+            while line.strip() not in ('', '--'):
                 sline = line.split()
-                atomelement = self.re_atomelement.search(sline[1]).groups()[0]
-                atomelement = atomelement[0] + atomelement[1:].lower()
+                atomelement = sline[1].rstrip(string.digits).title()
                 atomelements.append(atomelement)
                 atomcoords.append(list(map(float, sline[5:])))
                 line = next(inputfile)
