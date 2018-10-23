@@ -47,7 +47,7 @@ class Molcas(logfileparser.Logfile):
 
         # Molcas can do multiple calculations in one job, and each one
         # starts from the gateway module. Onle parse the first.
-        # TODO: It would be best to parse each calcualtion as a separate
+        # TODO: It would be best to parse each calculation as a separate
         # ccData object and return an iterator - something for 2.x
         self.gateway_module_count = 0
 
@@ -679,7 +679,7 @@ class Molcas(logfileparser.Logfile):
             self.skip_lines(inputfile, ['d', 'b'])
             line = next(inputfile)
 
-            # We don't currently support parinsg natural orbitals or active space orbitals.
+            # We don't currently support parsing natural orbitals or active space orbitals.
             if 'Natural orbitals' not in line and "Pseudonatural" not in line:
                 self.skip_line(inputfile, 'b')
 
