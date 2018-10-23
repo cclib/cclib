@@ -787,6 +787,74 @@ class Molcas(logfileparser.Logfile):
                     self.ccenergies= []
                 self.ccenergies.append(ccenergies)
 
+        #  ++    Primitive basis info:
+        #        ---------------------
+        #
+        #
+        #                      *****************************************************
+        #                      ******** Primitive Basis Functions (Valence) ********
+        #                      *****************************************************
+        #
+        #
+        #   Basis set:C.AUG-CC-PVQZ.........                                                          
+        #
+        #                    Type         
+        #                     s
+        #             No.      Exponent    Contraction Coefficients
+        #             1  0.339800000D+05   0.000091  -0.000019   0.000000   0.000000   0.000000   0.000000
+        #             2  0.508900000D+04   0.000704  -0.000151   0.000000   0.000000   0.000000   0.000000
+        # ...
+        # ...
+        #             29  0.424000000D+00   0.000000   1.000000
+        #
+        #   Number of primitives                                   93
+        #   Number of basis functions                              80
+        #
+        #  --
+        if line.startswith('++    Primitive basis info:'):
+            self.skip_lines(inputfile, ['d', 'b', 'b', 's', 'header', 's', 'b'])
+            line = next(inputfile)
+            gbasis_array = []
+            while '--' not in line and '****' not in line:
+                if 'Basis set:' in line:
+                    basis_element_patterns = re.findall('Basis set:([A-Za-z]{1,2})\.', line)
+                    assert len(basis_element_patterns) == 1
+                    basis_element = basis_element_patterns[0].title()
+                    gbasis_array.append((basis_element, []))
+
+                if 'Type' in line:
+                    line = next(inputfile)
+                    shell_type = line.split()[0].upper()
+
+                    self.skip_line(inputfile, 'headers')
+                    line = next(inputfile)
+
+                    exponents = []
+                    coefficients = []
+                    func_array = []
+                    while line.split():
+                        exponents.append(self.float(line.split()[1]))
+                        coefficients.append([self.float(i) for i in line.split()[2:]])
+                        line = next(inputfile)
+
+                    for i in range(len(coefficients[0])):
+                        func_tuple = (shell_type, [])
+                        for iexp, exp in enumerate(exponents):
+                            coeff = coefficients[iexp][i]
+                            if coeff != 0:
+                                func_tuple[1].append((exp, coeff))
+                        gbasis_array[-1][1].append(func_tuple)
+
+                line = next(inputfile)
+
+            atomsymbols = [self.table.element[atomno] for atomno in self.atomnos]
+            self.gbasis = [[] for i in range(self.natom)]
+            for element, gbasis in gbasis_array:
+                mask = [element == possible_element for possible_element in atomsymbols]
+                indices = [i for (i, x) in enumerate(mask) if x]
+                for index in indices:
+                    self.gbasis[index] = gbasis
+
 
 if __name__ == '__main__':
     import sys
