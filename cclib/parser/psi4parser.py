@@ -510,27 +510,35 @@ class Psi4(logfileparser.Logfile):
                 self.scfenergies = []
             self.scfenergies.append(utils.convertor(e, 'hartree', 'eV'))
 
-        #  ==> Molecular Orbitals <==
+        #   ==> Molecular Orbitals <==
         #
-        #                 1            2            3            4            5
+        #                     1            2            3            4            5
         #
-        #    1    0.7014827    0.7015412    0.0096801    0.0100168    0.0016438
-        #    2    0.0252630    0.0251793   -0.0037890   -0.0037346    0.0016447
-        # ...
-        #   59    0.0000133   -0.0000067    0.0000005   -0.0047455   -0.0047455
-        #   60    0.0000133    0.0000067    0.0000005    0.0047455   -0.0047455
+        # 1    H1 s0         0.1610392    0.1040990    0.0453848    0.0978665    1.0863246
+        # 2    H1 s0         0.3066996    0.0742959    0.8227318    1.3460922   -1.6429494
+        # 3    H1 s0         0.1669296    1.5494169   -0.8885631   -1.8689490    1.0473633
+        # 4    H2 s0         0.1610392   -0.1040990    0.0453848   -0.0978665   -1.0863246
+        # 5    H2 s0         0.3066996   -0.0742959    0.8227318   -1.3460922    1.6429494
+        # 6    H2 s0         0.1669296   -1.5494169   -0.8885631    1.8689490   -1.0473633
         #
-        # Ene   -11.0288198  -11.0286067  -11.0285837  -11.0174766  -11.0174764
-        # Sym            Ag           Bu           Ag           Bu           Ag
-        # Occ             2            2            2            2            2
+        #             Ene    -0.5279195    0.1235556    0.3277474    0.5523654    2.5371710
+        #             Sym            Ag          B3u           Ag          B3u          B3u
+        #             Occ             2            0            0            0            0
         #
         #
-        #                11           12           13           14           15
+        #                         6
         #
-        #    1    0.1066946    0.1012709    0.0029709    0.0120562    0.1002765
-        #    2   -0.2753689   -0.2708037   -0.0102079   -0.0329973   -0.2790813
-        # ...
+        # 1    H1 s0         1.1331221
+        # 2    H1 s0        -1.2163107
+        # 3    H1 s0         0.4695317
+        # 4    H2 s0         1.1331221
+        # 5    H2 s0        -1.2163107
+        # 6    H2 s0         0.4695317
         #
+        #            Ene     2.6515637
+        #            Sym            Ag
+        #            Occ             0
+
         if (self.section) and ("Molecular Orbitals" in self.section) \
            and ("Molecular Orbitals" in line):
 
@@ -553,10 +561,13 @@ class Psi4(logfileparser.Logfile):
 
                 self.skip_line(inputfile, 'blank')
 
+                n = len(indices)
                 line = next(inputfile)
                 while line.strip():
-                    iao = int(line.split()[0])
-                    coeffs = [float(c) for c in line.split()[1:]]
+                    chomp = line.split()
+                    m = len(chomp)
+                    iao = int(chomp[0])
+                    coeffs = [float(c) for c in chomp[m - n:]]
                     for i, c in enumerate(coeffs):
                         mocoeffs[indices[i]-1].append(c)
                     line = next(inputfile)
