@@ -335,6 +335,7 @@ Psi4/Psi4-0.5/sample_props1.out
 Psi4/Psi4-0.5/sample_psimrcc-fd-freq2.out
 Psi4/Psi4-0.5/sample_scf5.out
 Psi4/Psi4-0.5/water_fdgrad.out
+Psi4/Psi4-1.2/ch4_hf_opt_freq.out
 Psi4/Psi4-beta5/C_bigbasis.out
 Psi4/Psi4-beta5/dvb_gopt_hf.out
 Psi4/Psi4-beta5/dvb_gopt_hf_unconverged.out
