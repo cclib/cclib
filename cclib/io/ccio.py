@@ -139,12 +139,21 @@ def guess_filetype(inputfile):
         return None
 
     filetype = None
-    for line in inputfile:
-        for parser, phrases, do_break in triggers:
-            if all([line.lower().find(p.lower()) >= 0 for p in phrases]):
-                filetype = parser
-                if do_break:
-                    return filetype
+    if isinstance(inputfile, basestring):
+        for line in inputfile:
+            for parser, phrases, do_break in triggers:
+                if all([line.lower().find(p.lower()) >= 0 for p in phrases]):
+                    filetype = parser
+                    if do_break:
+                        return filetype
+    else:
+        for fname in inputfile:
+            for line in inputfile:
+                for parser, phrases, do_break in triggers:
+                    if all([line.lower().find(p.lower()) >= 0 for p in phrases]):
+                        filetype = parser
+                        if do_break:
+                            return filetype
     return filetype
 
 
@@ -192,7 +201,6 @@ def ccopen(source, *args, **kwargs):
       Molpro, MOPAC, NWChem, ORCA, Psi3, Psi/Psi4, QChem, CJSON or None
       (if it cannot figure it out or the file does not exist).
     """
-
     inputfile = None
     is_stream = False
 
@@ -273,6 +281,7 @@ def ccopen(source, *args, **kwargs):
     # could be guessed. Need to make sure the input file is closed before creating
     # an instance, because parsers will handle opening/closing on their own.
     filetype = guess_filetype(inputfile)
+
     # If the input file isn't a standard compchem log file, try one of
     # the readers, falling back to Open Babel.
     if not filetype:
@@ -474,8 +483,7 @@ def sort_turbomole_outputs(filelist):
     for i in sorted(known_files, key=lambda x: x[1]):
         sorted_list.append(i[0])
     if unknown_files:
-        sorted_list.append(known_files)
-
+        sorted_list.extend(unknown_files)
     return sorted_list
 
 def ccframe(ccobjs, *args, **kwargs):

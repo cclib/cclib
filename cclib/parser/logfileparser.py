@@ -207,18 +207,23 @@ class Logfile(object):
         # Set the filename to source if it is a string or a list of strings, which are
         # assumed to be filenames. Otherwise, assume the source is a file-like object
         # if it has a read method, and we will try to use it like a stream.
+        self.isfileinput = False
         if isinstance(source, str):
             self.filename = source
             self.isstream = False
         elif isinstance(source, list) and all([isinstance(s, str) for s in source]):
             self.filename = source
             self.isstream = False
+        elif isinstance(source, fileinput.FileInput):
+            self.filename = source
+            self.isstream = False
+            self.isfileinput = True
         elif hasattr(source, "read"):
             self.filename = "stream %s" % str(type(source))
             self.isstream = True
             self.stream = source
         else:
-            raise ValueError
+            raise ValueError, "Unexpected source type."
 
         # Set up the logger.
         # Note that calling logging.getLogger() with one name always returns the same instance.
@@ -290,7 +295,10 @@ class Logfile(object):
         # Initiate the FileInput object for the input files.
         # Remember that self.filename can be a list of files.
         if not self.isstream:
-            inputfile = openlogfile(self.filename)
+            if not self.isfileinput:
+                inputfile = openlogfile(self.filename)
+            else:
+                inputfile = self.filename
         else:
             inputfile = FileWrapper(self.stream)
 
