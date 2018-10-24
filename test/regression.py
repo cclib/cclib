@@ -820,6 +820,12 @@ def testPsi4_Psi4_0_5_water_fdgrad_out(logfile):
     # nuclear gradient, and this is at the MP2 level.
     assert logfile.data.mpenergies.shape == (5, 1)
 
+def testPsi4_Psi4_1_2_ch4_hf_opt_freq_out(logfile):
+    """Ensure that molecular orbitals and normal modes are parsed in Psi4 1.2"""
+    assert hasattr(logfile.data, 'mocoeffs')
+    assert hasattr(logfile.data, 'vibdisps')
+    assert hasattr(logfile.data, 'vibfreqs')
+
 # Q-Chem #
 
 def testQChem_QChem4_2_CH3___Na__RS_out(logfile):
