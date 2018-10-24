@@ -862,6 +862,8 @@ class Psi4(logfileparser.Logfile):
                 self.grads = []
             self.grads.append(gradient)
 
+        # OLD Normal mode output parser (PSI4 < 1)
+
         ## Harmonic frequencies.
 
         # -------------------------------------------------------------
@@ -953,6 +955,49 @@ class Psi4(logfileparser.Logfile):
                 self.vibdisps.append(normal_mode_disps)
                 line = next(inputfile)
 
+        # NEW Normal mode output parser (PSI4 >= 1)
+
+        #   ==> Harmonic Vibrational Analysis <==
+        #   ...
+        #   Vibration                       7                   8                   9
+        #   ...
+        #
+        #   Vibration                       10                  11                  12
+        #   ...
+
+        if line.strip() == '==> Harmonic Vibrational Analysis <==':
+
+            vibsyms = []
+            vibfreqs = []
+            vibdisps = []
+
+            # Skip lines till the first Vibration block
+            while not line.strip().startswith('Vibration'):
+                line = next(inputfile)
+
+            n_modes = 0
+            # Parse all the Vibration blocks
+            while line.strip().startswith('Vibration'):
+                n = len(line.split()) - 1
+                n_modes += n
+                vibfreqs_, vibsyms_, vibdisps_ = self.parse_vibration(n, inputfile)
+                vibfreqs.extend(vibfreqs_)
+                vibsyms.extend(vibsyms_)
+                vibdisps.extend(vibdisps_)
+                line = next(inputfile)
+
+            # It looks like the symmetry of the normal mode may be missing 
+            # from some / most. Only include them if they are there for all
+
+            if len(vibfreqs) == n_modes:
+                self.set_attribute('vibfreqs', vibfreqs)
+
+            if len(vibsyms) == n_modes:
+                self.set_attribute('vibsyms', vibsyms)
+
+            if len(vibdisps) == n_modes:
+                self.set_attribute('vibdisps', vibdisps)
+
         if line[:54] == '*** Psi4 exiting successfully. Buy a developer a beer!'\
                 or line[:54] == '*** PSI4 exiting successfully. Buy a developer a beer!':
             self.metadata['success'] = True
@@ -983,6 +1028,65 @@ class Psi4(logfileparser.Logfile):
             gradient.append((float(x), float(y), float(z)))
             line = next(inputfile)
         return gradient
+
+    @staticmethod
+    def parse_vibration(n, inputfile):
+
+        #   Freq [cm^-1]                1501.9533           1501.9533           1501.9533
+        #   Irrep
+        #   Reduced mass [u]              1.1820              1.1820              1.1820
+        #   Force const [mDyne/A]         1.5710              1.5710              1.5710
+        #   Turning point v=0 [a0]        0.2604              0.2604              0.2604
+        #   RMS dev v=0 [a0 u^1/2]        0.2002              0.2002              0.2002
+        #   Char temp [K]               2160.9731           2160.9731           2160.9731
+        #   ----------------------------------------------------------------------------------
+        #       1   C               -0.00  0.01  0.13   -0.00 -0.13  0.01   -0.13  0.00 -0.00
+        #       2   H                0.33 -0.03 -0.38    0.02  0.60 -0.02    0.14 -0.01 -0.32
+        #       3   H               -0.32 -0.03 -0.37   -0.01  0.60 -0.01    0.15 -0.01  0.33
+        #       4   H                0.02  0.32 -0.36    0.01  0.16 -0.34    0.60 -0.01  0.01
+        #       5   H                0.02 -0.33 -0.39    0.01  0.13  0.31    0.60  0.01  0.01
+
+        line = next(inputfile)
+        assert 'Freq' in line
+        chomp = line.split()
+        vibfreqs = [float(x) for x in chomp[-n:]]
+
+        line = next(inputfile)
+        assert 'Irrep' in line
+        chomp = line.split()
+        vibsyms = [irrep for irrep in chomp[1:]]
+
+        line = next(inputfile)
+        assert 'Reduced mass' in line
+
+        line = next(inputfile)
+        assert 'Force const' in line
+
+        line = next(inputfile)
+        assert 'Turning point' in line
+
+        line = next(inputfile)
+        assert 'RMS dev' in line
+
+        line = next(inputfile)
+        assert 'Char temp' in line
+
+        line = next(inputfile)
+        assert '---' in line
+
+        line = next(inputfile)
+        vibdisps = [ [] for i in range(n)]
+        while len(line.strip()) > 0:
+            chomp = line.split()
+            for i in range(n):
+                start = len(chomp) - (n - i) * 3
+                stop = start + 3
+                mode_disps = [float(c) for c in chomp[start:stop]]
+                vibdisps[i].append(mode_disps)
+
+            line = next(inputfile)
+
+        return vibfreqs, vibsyms, vibdisps
 
     @staticmethod
     def parse_vibfreq(vibfreq):
