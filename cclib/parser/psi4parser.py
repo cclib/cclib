@@ -1065,7 +1065,7 @@ class Psi4(logfileparser.Logfile):
         line = next(inputfile)
         assert 'Freq' in line
         chomp = line.split()
-        vibfreqs = [float(x) for x in chomp[-n:]]
+        vibfreqs = [Psi4.parse_vibfreq(x) for x in chomp[-n:]]
 
         line = next(inputfile)
         assert 'Irrep' in line
