@@ -115,7 +115,7 @@ class Psi4(logfileparser.Logfile):
         #           C          1.415253322400    -0.230221785400     0.000000000000
         # ...
         #
-        if (self.section == "Geometry") and ("Geometry (in Angstrom), charge" in line):
+        if (self.section == "Geometry") and ("Geometry (in Angstrom), charge" in line) and not hasattr(self, 'finite_difference'):
 
             assert line.split()[3] == "charge"
             charge = int(line.split()[5].strip(','))
@@ -174,7 +174,7 @@ class Psi4(logfileparser.Logfile):
             self.set_attribute('mult', mult)
 
         # The printout for Psi4 has a more obvious trigger for the SCF parameter printout.
-        if (self.section == "Algorithm") and (line.strip() == "==> Algorithm <=="):
+        if (self.section == "Algorithm") and (line.strip() == "==> Algorithm <==") and not hasattr(self, 'finite_difference'):
 
             self.skip_line(inputfile, 'blank')
 
@@ -371,7 +371,7 @@ class Psi4(logfileparser.Logfile):
         # repulsion integrals. In that case, there are actually two convergence cycles performed,
         # one for the density-fitted algorithm and one for the exact one, and the iterations are
         # printed in two blocks separated by some set-up information.
-        if (self.section == "Iterations") and (line.strip() == "==> Iterations <=="):
+        if (self.section == "Iterations") and (line.strip() == "==> Iterations <==")  and not hasattr(self, 'finite_difference'):
 
             if not hasattr(self, 'scfvalues'):
                 self.scfvalues = []
@@ -420,7 +420,8 @@ class Psi4(logfileparser.Logfile):
         #	  25Bu     1.124938
         #
         # The case is different in the trigger string.
-        if "orbital energies (a.u.)" in line.lower():
+        if ("orbital energies (a.u.)" in line.lower()  or "orbital energies [eh]" in line.lower()) \
+            and not hasattr(self, 'finite_difference'):
 
             # If this is Psi4, we will be in the appropriate section.
             assert self.section == "Post-Iterations"
@@ -504,7 +505,7 @@ class Psi4(logfileparser.Logfile):
 
         # Both Psi3 and Psi4 print the final SCF energy right after the orbital energies,
         # but the label is different. Psi4 also does DFT, and the label is also different in that case.
-        if self.section == "Post-Iterations" and "Final Energy:" in line:
+        if self.section == "Post-Iterations" and "Final Energy:" in line and not hasattr(self, 'finite_difference'):
             e = float(line.split()[3])
             if not hasattr(self, 'scfenergies'):
                 self.scfenergies = []
@@ -540,7 +541,7 @@ class Psi4(logfileparser.Logfile):
         #            Occ             0
 
         if (self.section) and ("Molecular Orbitals" in self.section) \
-           and ("Molecular Orbitals" in line):
+           and ("Molecular Orbitals" in line) and not hasattr(self, 'finite_difference'):
 
             self.skip_line(inputfile, 'blank')
 
@@ -654,7 +655,7 @@ class Psi4(logfileparser.Logfile):
         #      2    -379.77675264   -7.79e-03      1.88e-02      4.37e-03 o    2.29e-02      6.76e-03 o  ~
         #  ---------------------------------------------------------------------------------------------
         #
-        if (self.section == "Convergence Check") and line.strip() == "==> Convergence Check <==":
+        if (self.section == "Convergence Check") and line.strip() == "==> Convergence Check <=="  and not hasattr(self, 'finite_difference'):
 
             if not hasattr(self, "optstatus"):
                 self.optstatus = []
@@ -997,6 +998,14 @@ class Psi4(logfileparser.Logfile):
 
             if len(vibdisps) == n_modes:
                 self.set_attribute('vibdisps', vibdisps)
+
+        # If finite difference is used to compute forces (i.e. by displacing
+        # slightly all the atoms), a series of additional scf calculations is
+        # performed. Orbitals, geometries, energies, etc. for these shouln't be
+        # included in the parsed data.
+
+        if line.strip().startswith('Using finite-differences of gradients'):
+            self.set_attribute('finite_difference', True)
 
         if line[:54] == '*** Psi4 exiting successfully. Buy a developer a beer!'\
                 or line[:54] == '*** PSI4 exiting successfully. Buy a developer a beer!':
