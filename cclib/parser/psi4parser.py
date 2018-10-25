@@ -102,6 +102,13 @@ class Psi4(logfileparser.Logfile):
             if self.reference[0] == 'C':
                 self.reference = self.reference[1:]
 
+        # Parse the XC density functional
+        # => Composite Functional: B3LYP <=
+        if self.section == "DFT Potential" and "composite functional" in line.lower():
+            chomp = line.split()
+            functional = chomp[-2]
+            self.metadata["functional"] = functional
+
         #  ==> Geometry <==
         #
         #    Molecular point group: c2h
