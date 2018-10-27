@@ -40,13 +40,28 @@ class Molcas(logfileparser.Logfile):
     def before_parsing(self):
         # Compile the regex for extracting the element symbol from the
         # atom label in the "Molecular structure info" block.
-        self.re_atomelement = re.compile('([a-zA-Z]+)\d+')
+        self.re_atomelement = re.compile('([a-zA-Z]+)\d?')
 
         # Compile the dashes-and-or-spaces-only regex.
         self.re_dashes_and_spaces = re.compile('^[\s-]+$')
 
+        # Molcas can do multiple calculations in one job, and each one
+        # starts from the gateway module. Onle parse the first.
+        # TODO: It would be best to parse each calculation as a separate
+        # ccData object and return an iterator - something for 2.x
+        self.gateway_module_count = 0
+
+    def after_parsing(self):
+        pass
+
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
+
+        if "Start Module: gateway" in line:
+            self.gateway_module_count += 1
+
+        if self.gateway_module_count > 1:
+            return
 
         # Extract the version number and optionally the Git tag and hash.
         if "version" in line:
@@ -95,7 +110,7 @@ class Molcas(logfileparser.Logfile):
             self.atomcoords.append(atomcoords)
 
             if self.atomnos == []:
-                self.atomnos = [utils.PeriodicTable().number[atomelement] for atomelement in atomelements]
+                self.atomnos = [self.table.number[ae.title()] for ae in atomelements]
 
             if not hasattr(self, 'natom'):
                 self.set_attribute('natom', len(self.atomnos))
@@ -116,20 +131,22 @@ class Molcas(logfileparser.Logfile):
         if line[:29] == '++    Orbital specifications:':
 
             self.skip_lines(inputfile, ['dashes', 'blank'])
-
             line = next(inputfile)
 
-            while line[:2] != '--':
-
-                if line[6:30] == 'Total number of orbitals':
-                    self.set_attribute('nmo', int(line.split()[-1]))
-                if line[6:31] == 'Number of basis functions':
-                    self.set_attribute('nbasis', int(line.split()[-1]))
+            symmetry_count = 1
+            while not line.startswith('--'):
+                if line.strip().startswith('Symmetry species'):
+                    symmetry_count = int(line.split()[-1])
+                if line.strip().startswith('Total number of orbitals'):
+                    nmos = line.split()[-symmetry_count:]
+                    self.set_attribute('nmo', sum(map(int, nmos)))
+                if line.strip().startswith('Number of basis functions'):
+                    nbasis = line.split()[-symmetry_count:]
+                    self.set_attribute('nbasis', sum(map(int, nbasis)))
 
                 line = next(inputfile)
 
-        #Parsing the molecular charge
-        if line[6:23] == 'Molecular charge ':
+        if line.strip().startswith('Total molecular charge'):
             self.set_attribute('charge', int(float(line.split()[-1])))
 
         #  ++    Molecular charges:
@@ -261,6 +278,9 @@ class Molcas(logfileparser.Logfile):
         #     3    -37.08936118    -48.41536598     11.32600480 -0.11E+01*  0.12E+00*  0.91E-01*   0.97E+00   0.16E+01   Damp      0.
         #     4    -37.31610460    -50.54103969     13.22493509 -0.23E+00*  0.11E+00*  0.96E-01*   0.72E+00   0.27E+01   Damp      0.
         #     5    -37.33596239    -49.47021484     12.13425245 -0.20E-01*  0.59E-01*  0.59E-01*   0.37E+00   0.16E+01   Damp      0.
+        # ...
+        #           Convergence after 26 Macro Iterations
+        # --
         if line[46:91] == 'iterations: Energy and convergence statistics':
 
             self.skip_line(inputfile, 'blank')
@@ -268,24 +288,39 @@ class Molcas(logfileparser.Logfile):
             while line.split() != ['Energy', 'Energy', 'Energy', 'Change', 'Delta', 'Norm', 'in', 'Sec.']:
                 line = next(inputfile)
 
+            iteration_regex = ("^([0-9]+)"                                  # Iter
+                               "( [ \-0-9]*\.[0-9]{6,9})"                   # Tot. SCF Energy
+                               "( [ \-0-9]*\.[0-9]{6,9})"                   # One-electron Energy
+                               "( [ \-0-9]*\.[0-9]{6,9})"                   # Two-electron Energy
+                               "( [ \-0-9]*\.[0-9]{2}E[\-\+][0-9]{2}\*?)"   # Energy Change
+                               "( [ \-0-9]*\.[0-9]{2}E[\-\+][0-9]{2}\*?)"   # Max Dij or Delta Norm
+                               "( [ \-0-9]*\.[0-9]{2}E[\-\+][0-9]{2}\*?)"   # Max Fij
+                               "( [ \-0-9]*\.[0-9]{2}E[\-\+][0-9]{2}\*?)"   # DNorm
+                               "( [ \-0-9]*\.[0-9]{2}E[\-\+][0-9]{2}\*?)"   # TNorm
+                               "( [ A-Za-z0-9]*)"                           # AccCon
+                               "( [ \.0-9]*)$")                             # Time in Sec.
+
             scfvalues = []
             line = next(inputfile)
-            while line.split()[0] != 'Convergence':
-                if line.split()[0].isdigit():
-                    info = line.split()
-                    energy = float(info[4].replace('*', ''))
-                    density = float(info[5].replace('*', ''))
-                    fock = float(info[6].replace('*', ''))
-                    dnorm = float(info[7].replace('*', ''))
+            while not line.strip().startswith("Convergence"):
+
+                match = re.match(iteration_regex, line.strip())
+                if match:
+                    groups = match.groups()
+                    cols = [g.strip() for g in match.groups()]
+                    cols = [c.replace('*', '') for c in cols]
+
+                    energy = float(cols[4])
+                    density = float(cols[5])
+                    fock = float(cols[6])
+                    dnorm = float(cols[7])
                     scfvalues.append([energy, density, fock, dnorm])
 
-                try:
-                    line = next(inputfile)
-                    if line.split() == []:
-                        line = next(inputfile)
-                except StopIteration:
+                if line.strip() == "--":
                     self.logger.warning('File terminated before end of last SCF!')
                     break
+
+                line = next(inputfile)
 
             self.append_attribute('scfvalues', scfvalues)
 
@@ -561,7 +596,14 @@ class Molcas(logfileparser.Logfile):
                 atomcoords.append([float(c) for c in line.split()[1:]])
                 line = next(inputfile)
 
-            self.atomcoords.append(atomcoords)
+            if len(atomcoords) == self.natom:
+                self.atomcoords.append(atomcoords)
+            else:
+                self.logger.warning(
+                        "Parsed coordinates not consistent with previous, skipping. "
+                        "This could be due to symmetry being turned on during the job. "
+                        "Length was %i, now found %i. New coordinates: %s"
+                        % (len(self.atomcoords[-1]), len(atomcoords), str(atomcoords)))
 
         #  **********************************************************************************************************************
         #  *                                    Energy Statistics for Geometry Optimization                                     *
@@ -633,10 +675,19 @@ class Molcas(logfileparser.Logfile):
         #         60 H20   1s      0.1835
         #  --
         if '++    Molecular orbitals:' in line:
+
             self.skip_lines(inputfile, ['d', 'b'])
             line = next(inputfile)
-            if 'Natural orbitals' not in line:
-                self.skip_lines(inputfile, ['b', 'symm'])
+
+            # We don't currently support parsing natural orbitals or active space orbitals.
+            if 'Natural orbitals' not in line and "Pseudonatural" not in line:
+                self.skip_line(inputfile, 'b')
+
+                # Symmetry is not currently supported, so this line can have one form.
+                line = next(inputfile)
+                if line.strip() != 'Molecular orbitals for symmetry species 1: a':
+                    return
+                
                 line = next(inputfile)
                 moenergies = []
                 homos = 0

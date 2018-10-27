@@ -581,6 +581,35 @@ def testJaguar_Jaguar8_3_stopiter_jaguar_hf_out(logfile):
     """Check to ensure that an incomplete SCF is handled correctly."""
     assert len(logfile.data.scfvalues[0]) == 3
 
+# Molcas #
+
+def testMolcas_Molcas18_test_standard_000_out(logfile):
+    """Don't support parsing MOs for multiple symmetry species."""
+    assert not hasattr(logfile.data, "moenergies")
+    assert not hasattr(logfile.data, "mocoeffs")
+
+def testMolcas_Molcas18_test_standard_001_out(logfile):
+    """This logfile has two calculations, and we currently only want to parse the first."""
+    assert logfile.data.natom == 8
+
+    # There are also four symmetry species, and orbital count should cover all of them.
+    assert logfile.data.nbasis == 30
+    assert logfile.data.nmo == 30
+
+def testMolcas_Molcas18_test_stadard_003_out(logfile):
+    """This logfile has extra charged monopoles (not part of the molecule)."""
+    assert logfile.data.charge == 0
+
+def testMolcas_Molcas18_test_stevenv_001_out(logfile):
+    """Don't support parsing MOs for RAS (active space)."""
+    assert not hasattr(logfile.data, "moenergies")
+    assert not hasattr(logfile.data, "mocoeffs")
+
+def testMolcas_Molcas18_test_stevenv_desym_out(logfile):
+    """This logfile has iterations interrupted by a Fermi aufbau procedure."""
+    assert len(logfile.data.scfvalues) == 1
+    assert len(logfile.data.scfvalues[0]) == 26
+
 # Molpro #
 
 def testMolpro_Molpro2008_ch2o_molpro_casscf_out(logfile):
