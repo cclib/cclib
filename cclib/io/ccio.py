@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2017, the cclib development team
+# Copyright (c) 2018, the cclib development team
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
@@ -16,6 +16,9 @@ import os
 import sys
 import re
 from tempfile import NamedTemporaryFile
+
+# We want this as long as we need to support both Python 2 and 3.
+from six import string_types
 
 # Python 2->3 changes the default file object hierarchy.
 if sys.version_info[0] == 2:
@@ -139,7 +142,7 @@ def guess_filetype(inputfile):
         return None
 
     filetype = None
-    if isinstance(inputfile, basestring):
+    if isinstance(inputfile, string_types):
         for line in inputfile:
             for parser, phrases, do_break in triggers:
                 if all([line.lower().find(p.lower()) >= 0 for p in phrases]):

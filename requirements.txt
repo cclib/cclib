@@ -12,3 +12,6 @@ sphinx
 
 # This library is in the standard library starting from Python 3.3.
 mock ; python_version < '3.3'
+
+# We need this as long as we need support both Python 2 and 3.
+six
