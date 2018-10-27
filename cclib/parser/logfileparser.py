@@ -223,7 +223,7 @@ class Logfile(object):
             self.isstream = True
             self.stream = source
         else:
-            raise ValueError, "Unexpected source type."
+            raise ValueError("Unexpected source type.")
 
         # Set up the logger.
         # Note that calling logging.getLogger() with one name always returns the same instance.
