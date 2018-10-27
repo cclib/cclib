@@ -1,0 +1,3975 @@
+   This run of MOLCAS is using the pymolcas driver
+
+                             OPE
+                             OPE          NMOL  CASOP  ENMOLC A   SO
+                 OPE        NMOLC        AS  OP EN  MO LC     AS  OP
+                OPENM       OL CA        SO  PE NM  OL CA     SOP EN
+                OP EN      MO   LC       AS  OP ENMOL  CASO   PENMOL
+                OP  EN     MO   LC       AS  OP EN     MO     LC ASO
+               OP   E  NMOL  C  AS       OP  EN MO     LC     AS  OP
+               OP  E   NMO   LC AS        OPEN  MO     LCASOP EN   M
+               O  PEN   MO  LCA  SO
+            OPE   NMO   L   CAS    OP
+        OPENMOL  CASOP     ENMOL   CASOPE
+     OPENMOLCA   SOPENMOLCASOPEN   MOLCASOPE
+    OPENMOLCAS   OP           EN   MOL    CAS
+    OPENMOLCAS       OP  ENM        O     LCA
+    OPENMOLCAS    OPEN  MOLCASO     P  E  NMO
+    OPENMOLCAS     OP               E  N  MOL
+    OPENMOLCA   SO           PENM   O  L  CAS    OPEN    MO    LCAS
+    OPENMOLCA   SOP           ENM   O  L  CAS   OP  EN  MOLC  AS   O
+    OPENMOLCA   SOPE           NM      O  LCA   S      OP  EN MO
+    OPENMOLC                AS         O  PEN   M      OL  CA  SOPE
+    OPENMO        LCASOPE  NMOL        C  ASO   P      ENMOLC     AS
+    OPE     NMO      LCA  SO     P     E   NM   OL  CA SO  PE N   MO
+          OPENMOLCA            SOPE   NMO        LCAS  O    P  ENMO
+     OPENMOLCASOPENMOLCASOPENMOLCASOPENMOLCA
+        OPENMOLCASOPENMOLCASOPENMOLCASOPE
+            OPENMOLCASOPENMOLCASOPENM
+               OPENMOLCASOPENMOLCA        version: 18.09
+                   OPENMOLCASO
+                       OPE                tag: 52-ge15dc38
+
+ OpenMolcas is free software; you can redistribute it and/or modify it
+ under the terms of the GNU Lesser General Public License version 2.1.
+ OpenMolcas is distributed in the hope that it will be useful, but it
+ is provided "as is" and without any express or implied warranties.
+ For more details see the full text of the license in the file
+ LICENSE or in <http://www.gnu.org/licenses/>.
+
+                 Copyright (C) The OpenMolcas Authors
+           For the author list and the recommended citation,
+                   consult the file CONTRIBUTORS.md
+
+           *************************************************
+           * pymolcas version py2.04                       *
+           *   build 81d3fb3dc6a5c5df6b3791ef1ef3790f      *
+           *   (after the EMIL interpreter by V. Veryazov) *
+           *************************************************
+
+configuration info
+------------------
+C Compiler ID: GNU
+C flags: -std=gnu99
+Fortran Compiler ID: GNU
+Fortran flags: -cpp -fno-aggressive-loop-optimizations -fdefault-integer-8
+Definitions: _MOLCAS_;_I8_;_LINUX_
+Parallel: OFF (GA=OFF)
+
+
+   --------------------------------------------------
+  |
+  |           Project: 003
+  |    Submitted from: /home/kml/test/standard
+  |      Scratch area: /tmp/003
+  |   Save outputs to: /home/kml/test/standard
+  |            Molcas: /home/kml/tmp/OpenMolcas/build
+  |
+  | Scratch area is NOT empty
+  |
+  |    MOLCAS_DRIVER = /home/kml/bin/pymolcas
+  |    MOLCAS_NPROCS = 1
+  |    MOLCAS_SOURCE = /home/kml/tmp/OpenMolcas
+  | MOLCAS_STRUCTURE = 0
+  |
+   --------------------------------------------------
+
+++ ---------   Input file   ---------
+
+&SEWARD
+Title
+ Ge
+Symmetry
+ XYZ
+Finite
+multi
+0
+Basis set
+Ge.ano-rcc...5s4p2d.
+Ge    0.000000    0.000000    0.000000
+End of basis
+XField
+  2
+  4.0 5.0 6.0    2.0 0.0 0.0 0.0
+ -4.0 5.0 6.0    2.0 0.0 0.0 0.0
+NoCD
+End of input
+
+&SCF
+charge
+2
+THREsholds
+1.0d-10 1.0d-6 0.5d-7 0.2d-5
+End of input
+
+&RASSCF
+Title
+ Ge
+Symmetry
+ 1
+Spin
+ 3
+nActEl
+ 4 0 0
+Inactive
+ 8 6
+Ras2
+ 1 3
+Lumorb
+Levshft
+ 0.5
+ITERation
+200 50
+CIMX
+ 48
+CIROOT
+ 3 3 1
+THRS
+1.0e-10 1.0e-06 1.0e-06
+TIGHt
+1.0d-08 1.0d-6
+End of input
+
+&CASPT2
+Title
+ Ge
+MAXITER
+ 25
+IPEA
+ 0.25
+Multistate
+ 3 1 2 3
+CONVergence
+ 1.0D-9
+PROPerties
+End of input
+
+>>> COPY $Project.JobMix JOBMIX_T
+
+&RASSCF
+Title
+ Ge
+Symmetry
+ 1
+Spin
+ 1
+nActEl
+ 4 0 0
+Inactive
+ 8 6
+Ras2
+ 1 3
+Levshft
+ 0.5
+ITERation
+200 50
+CIMX
+ 48
+CIROOT
+ 6 6 1
+THRS
+1.0e-10 1.0e-06 1.0e-06
+TIGHt
+1.0d-08 1.0d-6
+End of input
+
+>>> EXPORT MOLCAS_THR = 1
+
+&CASPT2
+Title
+ Ge
+MAXITER
+ 25
+IPEA
+ 0.25
+Multistate
+ 6 1 2 3 4 5 6
+CONVergence
+ 1.0D-9
+PROPerties
+End of input
+
+>>> COPY $Project.JobMix JOBMIX_S
+
+>>> EXPORT MOLCAS_THR = 0
+
+&RASSI
+Nrof JobIphs
+ 2 3 6
+ 1 2 3
+ 1 2 3 4 5 6
+IphNames
+ JOBMIX_T
+ JOBMIX_S
+Spin Orbit
+Ejob
+End of input
+
+-- ----------------------------------
+
+--- Start Module: seward at Sun Oct 14 13:45:57 2018 ---
+
+()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()
+
+                                              &SEWARD
+
+                                   only a single process is used
+                       available to each process: 2.0 GB of memory, 1 thread?
+()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()
+
+               SEWARD will generate:
+                  Multipole Moment integrals up to order  0
+                  Kinetic Energy integrals
+                  Nuclear Attraction integrals (finite nuclei - Gaussian type)
+                  One-Electron Hamiltonian integrals
+                  Relativistic Douglas-Kroll-Hess integrals:
+                    - Parametrization         : EXP
+                    - DKH order of Hamiltonian: 2
+                    - DKH order of Properties : 0
+                         - multipole moment operators
+                         - electric potential operators
+                         - contact operators
+                  External field from     2 point(s) added to the one-electron Hamiltonian
+                  Atomic mean-field integrals
+                  Two-Electron Repulsion integrals
+
+ Title:
+                                               Ge                                       
+
+
+                   Integrals are discarded if absolute value <: 0.10E-13
+                   Integral cutoff threshold is set to       <: 0.10E-15
+
+++    Symmetry information:
+      ---------------------
+
+                    --- Group Generators ---
+                    Inversion through the origin
+
+                    Character Table for Ci 
+
+                             E     i  
+                    ag       1     1  xy, Rz, xz, Ry, yz, Rx
+                    au       1    -1  x, y, z, I
+--
+
+
+                    Unitary symmetry adaptation
+
+
+++    Basis set information:
+      ----------------------
+
+
+      Basis set label: GE.ANO-RCC...5S4P2D......
+
+      Electronic valence basis set:
+      ------------------
+      Associated Effective Charge  32.000000 au
+      Associated Actual Charge     32.000000 au
+      Nuclear Model: Finite nucleus - Gaussian distribution
+        Gaussian exponent, Xi/bohr**(-2):  0.25236E+09
+
+      Shell  nPrim  nBasis  Cartesian Spherical Contaminant
+         s      20       5        X                  
+         p      17       4        X                  
+         d      11       2                 X         
+--
+
+
+++    Molecular structure info:
+      -------------------------
+
+                    ************************************************ 
+                    **** Cartesian Coordinates / Bohr, Angstrom **** 
+                    ************************************************ 
+
+     Center  Label                x              y              z                     x              y              z
+        1      GE               0.000000       0.000000       0.000000              0.000000       0.000000       0.000000
+--
+
+
+++    Operator info:
+      --------------
+
+
+  Net charge from external field:    8.0000000000000000     
+--
+
+
+            Nuclear Potential Energy              0.00000000 au
+
+                    Nuclear-External Field Potential Energy      29.17390757 au
+                    External Field Potential Energy               1.96798983 au 
+
+
+            Total Nuclear Potential Energy             29.17390757 au
+
+
+      Basis set specifications :
+      Symmetry species         ag   au 
+      Basis functions           15   12
+
+
+  Input file to MOLDEN was generated!
+
+Note: The following floating-point exceptions are signalling: IEEE_INVALID_FLAG IEEE_DIVIDE_BY_ZERO IEEE_UNDERFLOW_FLAG IEEE_DENORMAL
+--- Stop Module: seward at Sun Oct 14 13:45:58 2018 /rc=_RC_ALL_IS_WELL_ ---
+*** files: 003.GssOrb 003.guessorb.molden xmldump
+    saved to directory /home/kml/test/standard
+--- Module seward spent 1 second ---
+
+*** symbolic link created: INPORB -> 003.GssOrb
+--- Start Module: scf at Sun Oct 14 13:45:58 2018 ---
+
+()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()
+
+                                                &SCF
+
+                                   only a single process is used
+                       available to each process: 2.0 GB of memory, 1 thread?
+()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()
+
+++    Input section:
+      --------------
+
+      Header of the integral files:
+                                         Ge
+       Integrals generated by seward 4.2.0  , Sun Oct 14 13:45:57 2018
+
+
+      Cartesian coordinates in Angstrom:
+      -----------------------------------------------------
+      No.  Label        X            Y            Z        
+      -----------------------------------------------------
+       1   GE         0.00000000   0.00000000   0.00000000
+      -----------------------------------------------------
+      Nuclear repulsion energy =   29.17390757
+--
+
+++    Orbital specifications:
+      -----------------------
+
+      Symmetry species               1   2
+                                    ag  au
+      Frozen orbitals                0   0
+      Aufbau                        15
+      Start temperature = 0.500
+      End temperature   = 0.010
+      Temperature Factor= 0.460
+      Deleted orbitals               0   0
+      Total number of orbitals      15  12
+      Number of basis functions     15  12
+--
+
+      Molecular charge                           2.000
+
+++    Optimization specifications:
+      ----------------------------
+
+      SCF Algorithm: Conventional
+      Minimized density differences are used
+      Number of density matrices in core                5
+      Maximum number of NDDO SCF iterations           400
+      Maximum number of HF SCF iterations             400
+      Threshold for SCF energy change            0.10E-09
+      Threshold for density matrix               0.10E-05
+      Threshold for Fock matrix                  0.50E-07
+      Threshold for linear dependence            0.10E-08
+      Threshold at which DIIS is turned on       0.15E+00
+      Threshold at which QNR/C2DIIS is turned on 0.75E-01
+      Threshold for Norm(delta) (QNR/C2DIIS)     0.20E-05
+      DIIS extrapolation of the SCF procedure
+      All orbitals punched on: SCFORB
+--
+
+      Input vectors read from INPORB
+      Orbital file label: *Guess orbitals
+
+
+++ Convergence information
+                                   SCF        iterations: Energy and convergence statistics
+
+Iter     Tot. SCF        One-elec.       Two-elec.     Energy      Max Dij or  Max Fij      DNorm      TNorm      AccCon     Time
+         Energy          Energy          Energy        Change      Delta Norm                                                in Sec.
+
+ The total and one-electron energies are shifted by a value of      2000. a.u.
+
+   1   -91.229771141  -887.733854960   767.330176246   0.00E+00    0.17E+00*   0.32E+00*    0.74E+01   0.24E+03   None         0.
+   2   -93.366805504  -945.527824306   822.987111228  -0.21E+01*   0.25E+00*   0.45E+00*    0.13E+01   0.24E+03   EDIIS        0.
+   3   -93.909145171  -910.872652802   787.789600057  -0.54E+00*   0.16E+00*   0.33E+00*    0.12E+01   0.24E+03   EDIIS        0.
+   4   -94.241695113  -936.150104132   812.734501446  -0.33E+00*   0.11E+00*   0.21E+00*    0.56E+00   0.24E+03   EDIIS        0.
+   5   -94.292623207  -920.680753535   797.214222755  -0.51E-01*   0.34E-01*   0.11E+00*    0.71E-01   0.24E+03   EDIIS        0.
+   6   -94.325699933  -928.918055529   805.418448023  -0.33E-01*   0.23E-01*   0.43E-01*    0.12E-01   0.24E+03   EDIIS        0.
+   7   -94.327652873  -925.731956321   802.230395874  -0.20E-02*   0.59E-02*   0.22E-01*    0.44E-03   0.24E+03   EDIIS        0.
+
+       Fermi aufbau procedure completed!
+      nOcc=    9    6
+
+   8   -94.329053089  -927.332543183   803.829582520  -0.14E-02*   0.39E-02*   0.74E-02*    0.75E-04   0.24E+03   EDIIS        0.
+   9   -94.329110767  -926.786224967   803.283206626  -0.58E-04*   0.10E-02*   0.37E-02*    0.19E-04   0.24E+03   EDIIS        0.
+  10   -94.329151646  -927.059643632   803.556584411  -0.41E-04*   0.66E-03*   0.13E-02*    0.81E-04   0.24E+03   EDIIS        0.
+  11   -94.329153345  -926.965916844   803.462855925  -0.17E-05*   0.17E-03*   0.64E-03*    0.48E-02   0.24E+03   EDIIS        0.
+  12   -94.329154547  -927.012781244   803.509719124  -0.12E-05*   0.20E-06    0.13E-03*    0.61E-03   0.24E+03   c2DIIS       0.
+  13   -94.329154635  -927.003085122   803.500022914  -0.88E-07*   0.25E-07    0.25E-07     0.22E-02   0.24E+03   QNRc2DIIS    0.
+  14   -94.329154635  -927.003086256   803.500024048   0.91E-12    0.70E-08    0.95E-08     0.31E-03   0.24E+03   QNRc2DIIS    0.
+
+       Convergence after 14 Macro Iterations
+--
+
+ *****************************************************************************************************************************
+ *                                                                                                                           *
+ *                                             SCF/KS-DFT Program, Final results                                             *
+ *                                                                                                                           *
+ *                                                                                                                           *
+ *                                                                                                                           *
+ *                                                       Final Results                                                       *
+ *                                                                                                                           *
+ *****************************************************************************************************************************
+
+::    Total SCF energy                              -2094.3291546349
+      One-electron energy                           -2927.0030862563
+      Two-electron energy                             803.5000240478
+      Nuclear repulsion energy                         29.1739075737
+      Kinetic energy (interpolated)                  2227.0672081406
+      Virial theorem                                    0.9403978232
+      Total spin, S(S+1)                                0.0000000000
+      Total spin, S                                     0.0000000000
+      Max non-diagonal density matrix element           0.0000000076
+      Max non-diagonal Fock matrix element              0.0000000010
+
+
+      All orbitals with orbital energies smaller than  E(LUMO)+0.5 are printed
+
+++    Molecular orbitals:
+      -------------------
+
+      Title: SCF orbitals
+
+      Molecular orbitals for symmetry species 1: ag 
+
+          Orbital            1         2         3         4         5         6         7         8         9        10    
+          Energy         -412.4352  -55.0765   -9.0552   -3.2495   -3.2492   -3.2488   -3.2476   -3.2475   -2.1060   -1.0845
+          Occ. No.          2.0000    2.0000    2.0000    2.0000    2.0000    2.0000    2.0000    2.0000    2.0000    0.0000
+
+        1 GE     1s         1.0000   -0.0000    0.0000   -0.0000    0.0000   -0.0000    0.0000   -0.0000   -0.0001   -0.0000
+        2 GE     2s         0.0000    1.0000    0.0028   -0.0000    0.0000    0.0000   -0.0000   -0.0000    0.0006    0.0002
+        3 GE     3s        -0.0000   -0.0028    0.9996   -0.0002    0.0000   -0.0000    0.0000   -0.0001    0.0262    0.0057
+        4 GE     4s         0.0001   -0.0006   -0.0267    0.0023   -0.0000    0.0000   -0.0000    0.0009    0.9938    0.1079
+        5 GE     5s         0.0000   -0.0001   -0.0028   -0.0003    0.0000    0.0000    0.0000   -0.0001   -0.1080    0.9941
+        6 GE     3d2-      -0.0000   -0.0000   -0.0000    0.0000    0.6402    0.0000   -0.7682   -0.0000    0.0000   -0.0000
+        7 GE     4d2-       0.0000    0.0000    0.0000   -0.0000   -0.0015   -0.0000    0.0025    0.0000    0.0000   -0.0000
+        8 GE     3d1-       0.0000    0.0000    0.0003    0.7852   -0.0000   -0.1803   -0.0000    0.5924   -0.0024    0.0001
+        9 GE     4d1-      -0.0000   -0.0000    0.0001   -0.0016    0.0000    0.0005    0.0000   -0.0019    0.0055    0.0058
+       10 GE     3d0        0.0000    0.0000    0.0001    0.4258   -0.0000    0.8518    0.0000   -0.3051   -0.0007    0.0000
+       11 GE     4d0       -0.0000   -0.0000    0.0000   -0.0009    0.0000   -0.0022   -0.0000    0.0010    0.0017    0.0017
+       12 GE     3d1+       0.0000    0.0000    0.0000    0.0000    0.7682    0.0000    0.6402    0.0000    0.0000    0.0000
+       13 GE     4d1+      -0.0000   -0.0000   -0.0000   -0.0000   -0.0017   -0.0000   -0.0021   -0.0000    0.0000   -0.0000
+       14 GE     3d2+      -0.0000   -0.0000   -0.0000   -0.4496    0.0000    0.4918   -0.0000    0.7456    0.0004   -0.0000
+       15 GE     4d2+       0.0000    0.0000   -0.0000    0.0010   -0.0000   -0.0013    0.0000   -0.0024   -0.0008   -0.0009
+
+      Molecular orbitals for symmetry species 2: au 
+
+          Orbital            1         2         3         4         5         6         7         8         9    
+          Energy          -48.1720  -48.1719  -48.1718   -6.8579   -6.8565   -6.8559   -1.4897   -1.4548   -1.4430
+          Occ. No.          2.0000    2.0000    2.0000    2.0000    2.0000    2.0000    0.0000    0.0000    0.0000
+
+        1 GE     2px       -0.0000    1.0000    0.0000    0.0000   -0.0000   -0.0000    0.0000   -0.0001   -0.0000
+        2 GE     3px       -0.0000    0.0000    0.0000   -0.0000    1.0000    0.0000    0.0000   -0.0024   -0.0000
+        3 GE     4px       -0.0000    0.0001    0.0000   -0.0000    0.0024    0.0000    0.0000    0.9993    0.0000
+        4 GE     5px       -0.0000    0.0000    0.0000   -0.0000   -0.0003   -0.0000   -0.0000   -0.0377   -0.0000
+        5 GE     2py        0.6402    0.0000   -0.7682   -0.0000   -0.0000    0.0000   -0.0000   -0.0000    0.0000
+        6 GE     3py        0.0000    0.0000   -0.0000    0.6402    0.0000   -0.7682   -0.0017   -0.0000    0.0018
+        7 GE     4py        0.0000    0.0000   -0.0000    0.0017    0.0000   -0.0018    0.6402   -0.0000   -0.7672
+        8 GE     5py        0.0000    0.0000   -0.0000   -0.0003   -0.0000    0.0002    0.0043   -0.0000    0.0403
+        9 GE     2pz        0.7682   -0.0000    0.6402   -0.0000   -0.0000   -0.0000   -0.0000    0.0000   -0.0000
+       10 GE     3pz        0.0000    0.0000    0.0000    0.7682    0.0000    0.6402   -0.0020   -0.0000   -0.0015
+       11 GE     4pz        0.0000   -0.0000    0.0000    0.0020    0.0000    0.0015    0.7682   -0.0000    0.6393
+       12 GE     5pz        0.0000    0.0000    0.0000   -0.0004    0.0000   -0.0002    0.0051    0.0000   -0.0336
+--
+
+
+++    Molecular charges:
+      ------------------
+
+      Mulliken charges per centre and basis function type
+      ---------------------------------------------------
+
+                GE    
+      1s       2.0000
+      2s       2.0000
+      2px      2.0000
+      2pz      2.0000
+      2py      2.0000
+      3s       1.9999
+      3px      2.0000
+      3pz      2.0000
+      3py      2.0000
+      4s       1.9766
+      3d2+     2.0000
+      3d1+     2.0000
+      3d0      2.0000
+      3d1-     2.0000
+      3d2-     2.0000
+      4px      0.0000
+      4pz      0.0000
+      4py      0.0000
+      5s       0.0234
+      4d2+     0.0000
+      4d1+     0.0000
+      4d0      0.0000
+      4d1-     0.0001
+      4d2-     0.0000
+      5px      0.0000
+      5pz      0.0000
+      5py      0.0000
+      Total   30.0000
+
+      N-E      2.0000
+
+      Total electronic charge=   30.000000
+
+      Total            charge=    2.000000
+--
+
+
+++    Static properties:
+      ------------------
+
+
+      LoProp Charges per center
+
+
+                   GE    
+      Nuclear     32.0000
+      Electronic -30.0000
+
+      Total        2.0000
+--
+
+
+++    Molecular properties:
+      ---------------------
+
+      Charge (e):
+                      =    2.0000
+--
+
+
+  Input file to MOLDEN was generated!
+
+Note: The following floating-point exceptions are signalling: IEEE_UNDERFLOW_FLAG IEEE_DENORMAL
+--- Stop Module: scf at Sun Oct 14 13:45:59 2018 /rc=_RC_ALL_IS_WELL_ ---
+*** files: 003.LprOrb 003.scf.molden 003.ScfOrb xmldump
+    saved to directory /home/kml/test/standard
+
+*** symbolic link created: INPORB -> 003.ScfOrb
+--- Start Module: rasscf at Sun Oct 14 13:45:59 2018 ---
+
+()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()
+
+                                              &RASSCF
+
+                                   only a single process is used
+                       available to each process: 2.0 GB of memory, 1 thread?
+()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()
+
+
+      Header of the ONEINT file:
+      --------------------------
+      Ge
+      Integrals generated by seward 4.2.0  , Sun Oct 14 13:45:57 2018
+
+
+      OrdInt status: non-squared
+
+
+      Cartesian coordinates in Angstrom:
+      -----------------------------------------------------
+      No.  Label        X            Y            Z        
+      -----------------------------------------------------
+       1   GE         0.00000000   0.00000000   0.00000000
+      -----------------------------------------------------
+      Nuclear repulsion energy =   29.17390757
+
+++    Wave function specifications:
+      -----------------------------
+
+      Number of closed shell electrons          28
+      Number of electrons in active shells       4
+      Max number of holes in RAS1 space          0
+      Max nr of electrons in RAS3 space          0
+      Number of inactive orbitals               14
+      Number of active orbitals                  4
+      Number of secondary orbitals               9
+      Spin quantum number                      1.0
+      State symmetry                             1
+--
+
+++    Orbital specifications:
+      -----------------------
+
+      Symmetry species                           1   2
+                                                ag  au
+      Frozen orbitals                            0   0
+      Inactive orbitals                          8   6
+      Active orbitals                            1   3
+      RAS1 orbitals                              0   0
+      RAS2 orbitals                              1   3
+      RAS3 orbitals                              0   0
+      Secondary orbitals                         6   3
+      Deleted orbitals                           0   0
+      Number of basis functions                 15  12
+--
+
+++    CI expansion specifications:
+      ----------------------------
+
+      Number of CSFs                             6
+      Number of determinants                     6
+      Number of root(s) required                 3
+      Root chosen for geometry opt.              3
+      CI roots used                              1     2     3
+      weights                                0.333 0.333 0.333
+      highest root included in the CI            3
+      max. size of the explicit Hamiltonian      6
+--
+
+++    Optimization specifications:
+      ----------------------------
+
+      RASSCF algorithm: Conventional
+      Maximum number of macro iterations       200
+      Maximum number of SX iterations           50
+      Threshold for RASSCF energy            0.100E-09
+      Threshold for max MO rotation          0.100E-05
+      Threshold for max BLB element          0.100E-05
+      Level shift parameter                  0.500E+00
+      Make Quasi-Newton update
+--
+
+      The MO-coefficients are taken from the file:
+      INPORB                                                                                                                          
+      Title: SCF orbitals                                                                  
+
+      Total molecular charge    0.00
+
+      ************************************************************************************************************************
+      *                                                                                                                      *
+      *                                            Wave function control section                                             *
+      *                                                                                                                      *
+      ************************************************************************************************************************
+
+
+                                         RASSCF iterations: Energy and convergence statistics
+                                         ----------------------------------------------------
+
+      Iter CI   SX   CI       RASSCF       Energy    max ROT     max BLB   max BLB  Level Ln srch  Step   QN   Walltime
+          iter iter root      energy       change     param      element    value   shift minimum  type update hh:mm:ss
+ Nr of preliminary CI iterations:   1
+      Total energies have been shifted. Add                -2000.00 au
+        1   1    5    0   -96.95842297    0.00E+00  -0.11E+00*   9  10 1 -0.19E+00*  0.00   0.00    SX    NO    0:00:00
+        2   1    4    0   -96.98734880   -0.29E-01*  0.16E-01*   5  12 1  0.86E-01*  0.00   0.00    SX    NO    0:00:00
+        3   1    4    0   -96.98966397   -0.23E-02*  0.11E-01*   7  14 1 -0.57E-01*  0.00   0.00    SX    NO    0:00:00
+        4   1    4    0   -96.99048718   -0.82E-03*  0.70E-02*   5  12 1  0.41E-01*  0.00   0.00    SX    NO    0:00:00
+        5   1    4    0   -96.99088261   -0.40E-03*  0.28E-02*   6  13 1 -0.28E-01*  0.00   0.59    LS   YES    0:00:00
+        6   1    3    0   -96.99126612   -0.38E-03*  0.62E-03*   9  10 1 -0.11E-02*  0.00   1.01    QN   YES    0:00:00
+        7   1    3    0   -96.99126711   -0.10E-05* -0.19E-03*   9  10 1 -0.26E-03*  0.00   1.30    QN   YES    0:00:00
+        8   1    2    0   -96.99126718   -0.62E-07* -0.13E-05*   4  11 1  0.59E-05*  0.00   1.01    QN   YES    0:00:00
+        9   1    2    0   -96.99126718   -0.16E-10   0.30E-06    4  11 1  0.38E-06   0.00   2.50    QN   YES    0:00:00
+      Convergence after  9 iterations
+       10   1    2    0   -96.99126718    0.00E+00   0.30E-06    7  14 1 -0.16E-07   0.00   2.50    QN   YES    0:00:00
+
+      ************************************************************************************************************************
+                                                      Wave function printout:
+                       occupation of active orbitals, and spin coupling of open shells (u,d: Spin up or down)
+      ************************************************************************************************************************
+
+      Note: transformation to natural orbitals
+      has been made, which may change the order of the CSFs.
+
+      printout of CI-coefficients larger than  0.05 for root  1
+      energy=   -2097.012840
+      conf/sym  1 222     Coeff  Weight
+             1  2 uu0   0.99380 0.98763
+             6  0 uu2  -0.11121 0.01237
+
+      printout of CI-coefficients larger than  0.05 for root  2
+      energy=   -2096.999839
+      conf/sym  1 222     Coeff  Weight
+             2  2 u0u   0.99347 0.98698
+             5  0 u2u   0.11409 0.01302
+
+      printout of CI-coefficients larger than  0.05 for root  3
+      energy=   -2096.961123
+      conf/sym  1 222     Coeff  Weight
+             3  2 0uu   0.99231 0.98467
+             4  0 2uu  -0.12380 0.01533
+
+      Natural orbitals and occupation numbers for root  1
+      sym 1:   1.975266
+      sym 2:   1.000000   1.000000   0.024734
+
+      Natural orbitals and occupation numbers for root  2
+      sym 1:   1.973965
+      sym 2:   1.000000   0.026035   1.000000
+
+      Natural orbitals and occupation numbers for root  3
+      sym 1:   1.969349
+      sym 2:   0.030651   1.000000   1.000000
+
+      ************************************************************************************************************************
+      *                                                                                                                      *
+      *                                                    Final results                                                     *
+      *                                                                                                                      *
+      ************************************************************************************************************************
+
+
+++    Wave function specifications:
+      -----------------------------
+
+      Number of closed shell electrons          28
+      Number of electrons in active shells       4
+      Max number of holes in RAS1 space          0
+      Max nr of electrons in RAS3 space          0
+      Number of inactive orbitals               14
+      Number of active orbitals                  4
+      Number of secondary orbitals               9
+      Spin quantum number                      1.0
+      State symmetry                             1
+--
+
+++    Orbital specifications:
+      -----------------------
+
+      Symmetry species                           1   2
+                                                ag  au
+      Frozen orbitals                            0   0
+      Inactive orbitals                          8   6
+      Active orbitals                            1   3
+      RAS1 orbitals                              0   0
+      RAS2 orbitals                              1   3
+      RAS3 orbitals                              0   0
+      Secondary orbitals                         6   3
+      Deleted orbitals                           0   0
+      Number of basis functions                 15  12
+--
+
+++    CI expansion specifications:
+      ----------------------------
+
+      Number of CSFs                             6
+      Number of determinants                     6
+      Number of root(s) required                 3
+      CI roots used                              1     2     3
+      weights                                0.333 0.333 0.333
+      highest root included in the CI            3
+      Root passed to geometry opt.               3
+--
+
+++    Final optimization conditions:
+      ------------------------------
+
+      Average CI energy                           -2096.99126718
+      RASSCF energy for state  3                  -2096.96112268
+      Super-CI energy                                -0.00000000
+      RASSCF energy change                            0.00000000
+      Max change in MO coefficients               0.306E-06
+      Max non-diagonal density matrix element     0.297E-06
+      Maximum BLB matrix element                 -0.157E-07
+      (orbital pair   7,  14 in symmetry   1)
+      Norm of electronic gradient            0.266E-01
+--
+
+
+      Final state energy(ies):
+      ------------------------
+
+::    RASSCF root number  1 Total energy:  -2097.01283953
+::    RASSCF root number  2 Total energy:  -2096.99983931
+::    RASSCF root number  3 Total energy:  -2096.96112268
+
+++    Molecular orbitals:
+      -------------------
+
+      Pseudonatural active orbitals and approximate occupation numbers
+
+
+
+
+      Molecular orbitals for symmetry species 1: ag 
+
+
+      Orbital                1         2         3         4         5         6         7         8         9        10
+      Energy         -411.6865  -54.3318   -8.3058   -2.5038   -2.5033   -2.5027   -2.5009   -2.5008    0.0000   -0.5644
+      Occ. No.          2.0000    2.0000    2.0000    2.0000    2.0000    2.0000    2.0000    2.0000    1.9729    0.0000
+
+    1 GE     1s         1.0000   -0.0000    0.0000   -0.0000    0.0000    0.0000    0.0000   -0.0000   -0.0001   -0.0000
+    2 GE     2s         0.0000    1.0000    0.0027   -0.0000    0.0000    0.0000    0.0000   -0.0000    0.0005    0.0001
+    3 GE     3s        -0.0000   -0.0027    0.9996   -0.0003    0.0000   -0.0000    0.0000   -0.0001    0.0282    0.0025
+    4 GE     4s         0.0001   -0.0004   -0.0282    0.0016   -0.0000    0.0000   -0.0000    0.0007    0.9994   -0.0190
+    5 GE     5s         0.0000   -0.0001   -0.0030   -0.0003    0.0000    0.0000    0.0000   -0.0001    0.0189    0.9998
+    6 GE     3d2-       0.0000   -0.0000   -0.0000    0.0000    0.6402    0.0000   -0.7682   -0.0000    0.0000   -0.0000
+    7 GE     4d2-       0.0000    0.0000    0.0000    0.0000    0.0005    0.0000    0.0002    0.0000   -0.0000   -0.0000
+    8 GE     3d1-       0.0000    0.0000    0.0004    0.7845   -0.0000   -0.1803   -0.0000    0.5933   -0.0017    0.0004
+    9 GE     4d1-      -0.0000   -0.0000    0.0001    0.0007   -0.0000   -0.0001    0.0000   -0.0001    0.0056    0.0044
+   10 GE     3d0        0.0000    0.0000    0.0001    0.4261   -0.0000    0.8518    0.0000   -0.3046   -0.0005    0.0001
+   11 GE     4d0       -0.0000   -0.0000    0.0000    0.0004   -0.0000    0.0004   -0.0000    0.0001    0.0017    0.0013
+   12 GE     3d1+       0.0000    0.0000    0.0000    0.0000    0.7682    0.0000    0.6402    0.0000   -0.0000    0.0000
+   13 GE     4d1+      -0.0000   -0.0000   -0.0000   -0.0000    0.0006    0.0000   -0.0001   -0.0000    0.0000   -0.0000
+   14 GE     3d2+      -0.0000   -0.0000   -0.0001   -0.4504    0.0000    0.4918   -0.0000    0.7451    0.0002   -0.0001
+   15 GE     4d2+       0.0000    0.0000   -0.0000   -0.0004    0.0000    0.0002    0.0000   -0.0002   -0.0009   -0.0007
+
+
+
+      Molecular orbitals for symmetry species 2: au 
+
+
+      Orbital                1         2         3         4         5         6         7         8         9        10
+      Energy          -47.4289  -47.4287  -47.4286   -6.1131   -6.1112   -6.1106    0.0000    0.0000    0.0000   -0.3131
+      Occ. No.          2.0000    2.0000    2.0000    2.0000    2.0000    2.0000    0.6769    0.6753    0.6749    0.0000
+
+    1 GE     2px       -0.0000    1.0000   -0.0000    0.0000    0.0000    0.0000   -0.0000   -0.0001   -0.0000   -0.0000
+    2 GE     3px        0.0000   -0.0000    0.0000    0.0000    1.0000   -0.0000   -0.0000   -0.0026   -0.0000   -0.0000
+    3 GE     4px       -0.0000    0.0001   -0.0000    0.0000    0.0026   -0.0000    0.0000    0.9997    0.0000   -0.0000
+    4 GE     5px        0.0000   -0.0000    0.0000    0.0000    0.0001   -0.0000    0.0000    0.0247    0.0000   -0.0000
+    5 GE     2py        0.6402    0.0000   -0.7682    0.0000    0.0000   -0.0000   -0.0000   -0.0000    0.0000    0.0000
+    6 GE     3py       -0.0000    0.0000    0.0000    0.6402   -0.0000   -0.7682   -0.0018   -0.0000    0.0019    0.0002
+    7 GE     4py        0.0000    0.0000   -0.0000    0.0018   -0.0000   -0.0019    0.6385    0.0000   -0.7682   -0.0469
+    8 GE     5py       -0.0000    0.0000    0.0000   -0.0001   -0.0000   -0.0002    0.0469   -0.0000   -0.0063    0.6385
+    9 GE     2pz        0.7682    0.0000    0.6402    0.0000   -0.0000    0.0000   -0.0000   -0.0000   -0.0000    0.0000
+   10 GE     3pz       -0.0000   -0.0000   -0.0000    0.7682    0.0000    0.6402   -0.0022    0.0000   -0.0016    0.0003
+   11 GE     4pz        0.0000    0.0000    0.0000    0.0022    0.0000    0.0016    0.7662   -0.0000    0.6402   -0.0563
+   12 GE     5pz       -0.0000   -0.0000   -0.0000   -0.0001    0.0000    0.0001    0.0563   -0.0000    0.0052    0.7662
+
+
+      Orbital               11        12
+      Energy           -0.2621   -0.2432
+      Occ. No.          0.0000    0.0000
+
+    1 GE     2px        0.0000    0.0000
+    2 GE     3px       -0.0000   -0.0000
+    3 GE     4px       -0.0247   -0.0000
+    4 GE     5px        0.9997    0.0000
+    5 GE     2py        0.0000   -0.0000
+    6 GE     3py        0.0000    0.0001
+    7 GE     4py       -0.0000    0.0063
+    8 GE     5py        0.0000   -0.7682
+    9 GE     2pz       -0.0000    0.0000
+   10 GE     3pz        0.0000   -0.0001
+   11 GE     4pz        0.0000   -0.0052
+   12 GE     5pz       -0.0000    0.6402
+--
+
+      Von Neumann Entropy (Root  1) =  1.09611
+
+
+      Mulliken population analysis for root number:  1
+      -----------------------------------------------
+
+
+++    Molecular charges:
+      ------------------
+
+      Mulliken charges per centre and basis function type
+      ---------------------------------------------------
+
+                GE    
+      1s       2.0000
+      2s       2.0000
+      2px      2.0000
+      2pz      2.0000
+      2py      2.0000
+      3s       2.0000
+      3px      2.0000
+      3pz      2.0000
+      3py      2.0000
+      4s       1.9745
+      3d2+     2.0000
+      3d1+     2.0000
+      3d0      2.0000
+      3d1-     2.0000
+      3d2-     2.0000
+      4px      0.9994
+      4pz      0.5971
+      4py      0.4222
+      5s       0.0007
+      4d2+     0.0000
+      4d1+     0.0000
+      4d0      0.0000
+      4d1-     0.0001
+      4d2-     0.0000
+      5px      0.0006
+      5pz      0.0032
+      5py      0.0022
+      Total   32.0000
+
+      N-E     -0.0000
+
+      Total electronic charge=   32.000000
+
+      Total            charge=   -0.000000
+--
+
+
+
+      Expectation values of various properties for root number:  1
+      -----------------------------------------------------------
+
+
+++    Molecular properties:
+      ---------------------
+
+      Charge (e):
+                      =   -0.0000
+--
+
+
+      Mulliken spin population analysis for root number:  1
+      ---------------------------------------------------
+
+
+++    Molecular charges:
+      ------------------
+
+      Mulliken spin population per centre and basis function type
+      ---------------------------------------------------
+
+                GE    
+      1s       0.0000
+      2s       0.0000
+      2px      0.0000
+      2pz      0.0000
+      2py      0.0000
+      3s       0.0000
+      3px      0.0000
+      3pz      0.0000
+      3py      0.0000
+      4s       0.0000
+      3d2+     0.0000
+      3d1+     0.0000
+      3d0      0.0000
+      3d1-     0.0000
+      3d2-     0.0000
+      4px      0.9994
+      4pz      0.5870
+      4py      0.4076
+      5s       0.0000
+      4d2+     0.0000
+      4d1+     0.0000
+      4d0      0.0000
+      4d1-     0.0000
+      4d2-     0.0000
+      5px      0.0006
+      5pz      0.0032
+      5py      0.0022
+      Total    2.0000
+
+      Total electronic spin=    2.000000
+--
+
+
+
+      LoProp population analysis for root number:  1
+      -----------------------------------------------
+
+
+++    LoProp analysis:
+      ----------------
+
+
+
+++    Static properties:
+      ------------------
+
+
+      LoProp Charges per center
+
+
+                   GE    
+      Nuclear     32.0000
+      Electronic -32.0000
+
+      Total       -0.0000
+--
+
+
+      Natural Bond Order analysis for root number:  1
+--
+
+      Von Neumann Entropy (Root  2) =  1.10019
+
+
+      Mulliken population analysis for root number:  2
+      -----------------------------------------------
+
+
+++    Molecular charges:
+      ------------------
+
+      Mulliken charges per centre and basis function type
+      ---------------------------------------------------
+
+                GE    
+      1s       2.0000
+      2s       2.0000
+      2px      2.0000
+      2pz      2.0000
+      2py      2.0000
+      3s       2.0000
+      3px      2.0000
+      3pz      2.0000
+      3py      2.0000
+      4s       1.9732
+      3d2+     2.0000
+      3d1+     2.0000
+      3d0      2.0000
+      3d1-     2.0000
+      3d2-     2.0000
+      4px      0.0260
+      4pz      0.9968
+      4py      0.9978
+      5s       0.0007
+      4d2+     0.0000
+      4d1+     0.0000
+      4d0      0.0000
+      4d1-     0.0001
+      4d2-     0.0000
+      5px      0.0000
+      5pz      0.0032
+      5py      0.0022
+      Total   32.0000
+
+      N-E     -0.0000
+
+      Total electronic charge=   32.000000
+
+      Total            charge=   -0.000000
+--
+
+
+
+      Expectation values of various properties for root number:  2
+      -----------------------------------------------------------
+
+
+++    Molecular properties:
+      ---------------------
+
+      Charge (e):
+                      =   -0.0000
+--
+
+
+      Mulliken spin population analysis for root number:  2
+      ---------------------------------------------------
+
+
+++    Molecular charges:
+      ------------------
+
+      Mulliken spin population per centre and basis function type
+      ---------------------------------------------------
+
+                GE    
+      1s       0.0000
+      2s       0.0000
+      2px      0.0000
+      2pz      0.0000
+      2py      0.0000
+      3s       0.0000
+      3px      0.0000
+      3pz      0.0000
+      3py      0.0000
+      4s       0.0000
+      3d2+     0.0000
+      3d1+     0.0000
+      3d0      0.0000
+      3d1-     0.0000
+      3d2-     0.0000
+      4px      0.0000
+      4pz      0.9968
+      4py      0.9978
+      5s       0.0000
+      4d2+     0.0000
+      4d1+     0.0000
+      4d0      0.0000
+      4d1-     0.0000
+      4d2-     0.0000
+      5px      0.0000
+      5pz      0.0032
+      5py      0.0022
+      Total    2.0000
+
+      Total electronic spin=    2.000000
+--
+
+
+
+      LoProp population analysis for root number:  2
+      -----------------------------------------------
+
+
+++    LoProp analysis:
+      ----------------
+
+
+
+++    Static properties:
+      ------------------
+
+
+      LoProp Charges per center
+
+
+                   GE    
+      Nuclear     32.0000
+      Electronic -32.0000
+
+      Total       -0.0000
+--
+
+
+      Natural Bond Order analysis for root number:  2
+--
+
+      Von Neumann Entropy (Root  3) =  1.11432
+
+
+      Mulliken population analysis for root number:  3
+      -----------------------------------------------
+
+
+++    Molecular charges:
+      ------------------
+
+      Mulliken charges per centre and basis function type
+      ---------------------------------------------------
+
+                GE    
+      1s       2.0000
+      2s       2.0000
+      2px      2.0000
+      2pz      2.0000
+      2py      2.0000
+      3s       2.0000
+      3px      2.0000
+      3pz      2.0000
+      3py      2.0000
+      4s       1.9686
+      3d2+     2.0000
+      3d1+     2.0000
+      3d0      2.0000
+      3d1-     2.0000
+      3d2-     2.0000
+      4px      0.9994
+      4pz      0.4278
+      4py      0.6026
+      5s       0.0007
+      4d2+     0.0000
+      4d1+     0.0000
+      4d0      0.0000
+      4d1-     0.0001
+      4d2-     0.0000
+      5px      0.0006
+      5pz      0.0001
+      5py      0.0001
+      Total   32.0000
+
+      N-E     -0.0000
+
+      Total electronic charge=   32.000000
+
+      Total            charge=   -0.000000
+--
+
+
+
+      Expectation values of various properties for root number:  3
+      -----------------------------------------------------------
+
+
+++    Molecular properties:
+      ---------------------
+
+      Charge (e):
+                      =   -0.0000
+--
+
+
+      Mulliken spin population analysis for root number:  3
+      ---------------------------------------------------
+
+
+++    Molecular charges:
+      ------------------
+
+      Mulliken spin population per centre and basis function type
+      ---------------------------------------------------
+
+                GE    
+      1s       0.0000
+      2s       0.0000
+      2px      0.0000
+      2pz      0.0000
+      2py      0.0000
+      3s       0.0000
+      3px      0.0000
+      3pz      0.0000
+      3py      0.0000
+      4s       0.0000
+      3d2+     0.0000
+      3d1+     0.0000
+      3d0      0.0000
+      3d1-     0.0000
+      3d2-     0.0000
+      4px      0.9994
+      4pz      0.4098
+      4py      0.5901
+      5s       0.0000
+      4d2+     0.0000
+      4d1+     0.0000
+      4d0      0.0000
+      4d1-     0.0000
+      4d2-     0.0000
+      5px      0.0006
+      5pz      0.0000
+      5py      0.0000
+      Total    2.0000
+
+      Total electronic spin=    2.000000
+--
+
+
+
+      LoProp population analysis for root number:  3
+      -----------------------------------------------
+
+
+++    LoProp analysis:
+      ----------------
+
+
+
+++    Static properties:
+      ------------------
+
+
+      LoProp Charges per center
+
+
+                   GE    
+      Nuclear     32.0000
+      Electronic -32.0000
+
+      Total       -0.0000
+--
+
+
+      Natural Bond Order analysis for root number:  3
+--
+
+
+  Input file to MOLDEN was generated!
+
+
+  Input file to MOLDEN was generated!
+
+
+  Input file to MOLDEN was generated!
+
+
+  Input file to MOLDEN was generated!
+
+      Average orbitals are written to the RASORB file
+      Natural orbitals for root   1 are written to the RASORB.1 file
+      Natural orbitals for root   2 are written to the RASORB.2 file
+      Natural orbitals for root   3 are written to the RASORB.3 file
+      Spin density orbitals for root   1 are written to the SPDORB.1 file
+      Spin density orbitals for root   2 are written to the SPDORB.2 file
+      Spin density orbitals for root   3 are written to the SPDORB.3 file
+
+Note: The following floating-point exceptions are signalling: IEEE_INVALID_FLAG IEEE_DIVIDE_BY_ZERO IEEE_UNDERFLOW_FLAG IEEE_DENORMAL
+--- Stop Module: rasscf at Sun Oct 14 13:46:00 2018 /rc=_RC_ALL_IS_WELL_ ---
+*** files: 003.LprOrb 003.rasscf.molden 003.rasscf.molden.2 003.rasscf.molden.1 003.rasscf.molden.3 003.RasOrb.1 003.RasOrb.3 003.RasOrb 003.RasOrb.2 003.SpdOrb.1 003.SpdOrb.3
+           003.SpdOrb.2 xmldump
+    saved to directory /home/kml/test/standard
+
+*** symbolic link created: INPORB -> 003.RasOrb
+--- Start Module: caspt2 at Sun Oct 14 13:46:00 2018 ---
+
+()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()
+
+                                              &CASPT2
+
+                                   only a single process is used
+                       available to each process: 2.0 GB of memory, 1 thread?
+()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()
+
+ ###############################################################################
+ ###############################################################################
+ ###                                                                         ###
+ ###                                                                         ###
+ ###    User-modified 0-order hamiltonian!                                   ###
+ ###                                                                         ###
+ ###                                                                         ###
+ ###############################################################################
+ ###############################################################################
+ Cholesky algorithm in CASPT2 =    1
+
+
+++    Wave function specifications:
+      -----------------------------
+
+      Number of closed shell electrons           0
+      Number of electrons in active shells       4
+      Max number of holes in RAS1 space          0
+      Max number of electrons in RAS3 space      0
+      Number of inactive orbitals                0
+      Number of active orbitals                  4
+      Number of secondary orbitals               9
+      Spin quantum number                      1.0
+      State symmetry                             1
+      Number of CSFs                             6
+      Number of root(s) available                3
+      Root passed to geometry opt.               3
+      A file JOBMIX will be created.
+      This is a MULTI-STATE CASSCF reference
+      Number of CI roots used                    3
+      These are:                               1   2   3
+      Off-diagonal elements of Heff are computed.
+--
+
+++    Orbital specifications:
+      -----------------------
+
+      Symmetry species                           1   2
+                                                ag  au
+      Frozen orbitals                            8   6
+      Inactive orbitals                          0   0
+      Active orbitals                            1   3
+      Secondary orbitals                         6   3
+      Deleted orbitals                           0   0
+      Number of basis functions                 15  12
+--
+
+      Type of Fock operator: STANDARD
+      Type of 0-order Hamiltonian: STANDARD WITH CUSTOM IPEA
+        "IP-EA" denominator shift =      0.25
+      The input orbitals and the CI vector will be transformed.
+
+--------------------------------------------------------------------------------
+ Estimated memory requirements:
+  POLY3 :                   250455
+  RHS:                      250980
+  SIGMA :                   250756
+  PRPCTL:                   255222
+ Available workspace:    230399231
+
+++ CASPT2 computation    1
+
+********************************************************************************
+ Multi-State initialization phase begins for group   1
+--------------------------------------------------------------------------------
+********************************************************************************
+ Compute H0 matrices for state    1
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+ H0 matrices have been computed.
+
+********************************************************************************
+  CASPT2 EQUATION SOLUTION
+--------------------------------------------------------------------------------
+
+  Total nr of CASPT2 parameters:
+   Before reduction:         627
+   After  reduction:         303
+
+ The contributions to the second order correlation energy in atomic units.
+-----------------------------------------------------------------------------------------------------------------------------
+  IT.      VJTU        VJTI        ATVX        AIVX        VJAI        BVAT        BJAT        BJAI        TOTAL       RNORM  
+-----------------------------------------------------------------------------------------------------------------------------
+   1     0.000000    0.000000   -0.009286    0.000000    0.000000   -0.009167    0.000000    0.000000   -0.018452    0.000196
+   2     0.000000    0.000000   -0.009290    0.000000    0.000000   -0.009174    0.000000    0.000000   -0.018464    0.000005
+   3     0.000000    0.000000   -0.009290    0.000000    0.000000   -0.009174    0.000000    0.000000   -0.018464    0.000000
+   4     0.000000    0.000000   -0.009290    0.000000    0.000000   -0.009174    0.000000    0.000000   -0.018464    0.000000
+-------------------------------------------------------------------------------------------------------------------
+
+  FINAL CASPT2 RESULT:
+
+      Reference energy:       -2097.0128395321
+      E2 (Non-variational):      -0.0184641897
+      E2 (Variational):          -0.0184641897
+      Total energy:           -2097.0313037218
+      Residual norm:              0.0000000001
+      Reference weight:           0.99248
+
+      Contributions to the CASPT2 correlation energy
+      Active & Virtual Only:         -0.0184641897
+      One Inactive Excited:           0.0000000000
+      Two Inactive Excited:           0.0000000000
+
+
+++ Denominators, etc.
+----------------------------------------------------------------------------------------------------
+ Report on small energy denominators, large coefficients, and large energy contributions.
+CASE  SYMM ACTIVE-MIX  NON-ACTIVE INDICES          DENOMINATOR     RHS VALUE       COEFFICIENT     CONTRIBUTION
+ATVX     2  Mu2.0006  Se2.012                       1.88619503      0.05123030     -0.02684203     -0.00137512
+--
+
+********************************************************************************
+  CASPT2 PROPERTY SECTION
+--------------------------------------------------------------------------------
+ * TypeIndex information is IGNORED *
+
+  Input file to MOLDEN was generated!
+
+
+
+      Mulliken population Analysis:
+      -----------------------------
+
+++    Molecular charges:
+      ------------------
+
+      Mulliken charges per centre and basis function type
+      ---------------------------------------------------
+
+                GE    
+      1s       2.0000
+      2s       2.0000
+      2px      2.0000
+      2pz      2.0000
+      2py      2.0000
+      3s       2.0000
+      3px      2.0000
+      3pz      2.0000
+      3py      2.0000
+      4s       1.9692
+      3d2+     2.0000
+      3d1+     2.0000
+      3d0      2.0000
+      3d1-     2.0000
+      3d2-     2.0000
+      4px      0.9965
+      4pz      0.5951
+      4py      0.4208
+      5s       0.0032
+      4d2+     0.0006
+      4d1+     0.0007
+      4d0      0.0006
+      4d1-     0.0005
+      4d2-     0.0006
+      5px      0.0028
+      5pz      0.0053
+      5py      0.0040
+      Total   32.0000
+
+      N-E     -0.0000
+
+      Total electronic charge=   32.000000
+
+      Total            charge=   -0.000000
+--
+
+
+      Expectation values of various properties:
+      -----------------------------------------
+
+++    Molecular properties:
+      ---------------------
+
+      Charge (e):
+                      =   -0.0000
+--
+
+--
+
+++ CASPT2 computation    2
+
+********************************************************************************
+ Multi-State initialization phase begins for group   2
+--------------------------------------------------------------------------------
+********************************************************************************
+ Compute H0 matrices for state    2
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+ H0 matrices have been computed.
+
+********************************************************************************
+  CASPT2 EQUATION SOLUTION
+--------------------------------------------------------------------------------
+
+  Total nr of CASPT2 parameters:
+   Before reduction:         627
+   After  reduction:         303
+
+ The contributions to the second order correlation energy in atomic units.
+-----------------------------------------------------------------------------------------------------------------------------
+  IT.      VJTU        VJTI        ATVX        AIVX        VJAI        BVAT        BJAT        BJAI        TOTAL       RNORM  
+-----------------------------------------------------------------------------------------------------------------------------
+   1     0.000000    0.000000   -0.009416    0.000000    0.000000   -0.009195    0.000000    0.000000   -0.018611    0.000211
+   2     0.000000    0.000000   -0.009421    0.000000    0.000000   -0.009202    0.000000    0.000000   -0.018623    0.000006
+   3     0.000000    0.000000   -0.009421    0.000000    0.000000   -0.009202    0.000000    0.000000   -0.018624    0.000000
+   4     0.000000    0.000000   -0.009421    0.000000    0.000000   -0.009202    0.000000    0.000000   -0.018624    0.000000
+-------------------------------------------------------------------------------------------------------------------
+
+  FINAL CASPT2 RESULT:
+
+      Reference energy:       -2096.9998393128
+      E2 (Non-variational):      -0.0186236478
+      E2 (Variational):          -0.0186236478
+      Total energy:           -2097.0184629606
+      Residual norm:              0.0000000001
+      Reference weight:           0.99243
+
+      Contributions to the CASPT2 correlation energy
+      Active & Virtual Only:         -0.0186236478
+      One Inactive Excited:           0.0000000000
+      Two Inactive Excited:           0.0000000000
+
+
+++ Denominators, etc.
+----------------------------------------------------------------------------------------------------
+ Report on small energy denominators, large coefficients, and large energy contributions.
+CASE  SYMM ACTIVE-MIX  NON-ACTIVE INDICES          DENOMINATOR     RHS VALUE       COEFFICIENT     CONTRIBUTION
+ATVX     2  Mu2.0005  Se2.011                       1.85047900      0.05252426     -0.02803212     -0.00147237
+--
+
+********************************************************************************
+  CASPT2 PROPERTY SECTION
+--------------------------------------------------------------------------------
+ * TypeIndex information is IGNORED *
+
+  Input file to MOLDEN was generated!
+
+
+
+      Mulliken population Analysis:
+      -----------------------------
+
+++    Molecular charges:
+      ------------------
+
+      Mulliken charges per centre and basis function type
+      ---------------------------------------------------
+
+                GE    
+      1s       2.0000
+      2s       2.0000
+      2px      2.0000
+      2pz      2.0000
+      2py      2.0000
+      3s       2.0000
+      3px      2.0000
+      3pz      2.0000
+      3py      2.0000
+      4s       1.9678
+      3d2+     2.0000
+      3d1+     2.0000
+      3d0      2.0000
+      3d1-     2.0000
+      3d2-     2.0000
+      4px      0.0262
+      4pz      0.9935
+      4py      0.9946
+      5s       0.0032
+      4d2+     0.0005
+      4d1+     0.0005
+      4d0      0.0007
+      4d1-     0.0008
+      4d2-     0.0005
+      5px      0.0009
+      5pz      0.0059
+      5py      0.0048
+      Total   32.0000
+
+      N-E     -0.0000
+
+      Total electronic charge=   32.000000
+
+      Total            charge=   -0.000000
+--
+
+
+      Expectation values of various properties:
+      -----------------------------------------
+
+++    Molecular properties:
+      ---------------------
+
+      Charge (e):
+                      =   -0.0000
+--
+
+--
+
+++ CASPT2 computation    3
+
+********************************************************************************
+ Multi-State initialization phase begins for group   3
+--------------------------------------------------------------------------------
+********************************************************************************
+ Compute H0 matrices for state    3
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+ H0 matrices have been computed.
+
+********************************************************************************
+  CASPT2 EQUATION SOLUTION
+--------------------------------------------------------------------------------
+
+  Total nr of CASPT2 parameters:
+   Before reduction:         627
+   After  reduction:         303
+
+ The contributions to the second order correlation energy in atomic units.
+-----------------------------------------------------------------------------------------------------------------------------
+  IT.      VJTU        VJTI        ATVX        AIVX        VJAI        BVAT        BJAT        BJAI        TOTAL       RNORM  
+-----------------------------------------------------------------------------------------------------------------------------
+   1     0.000000    0.000000   -0.009816    0.000000    0.000000   -0.009304    0.000000    0.000000   -0.019120    0.000258
+   2     0.000000    0.000000   -0.009822    0.000000    0.000000   -0.009312    0.000000    0.000000   -0.019134    0.000008
+   3     0.000000    0.000000   -0.009822    0.000000    0.000000   -0.009312    0.000000    0.000000   -0.019134    0.000000
+   4     0.000000    0.000000   -0.009822    0.000000    0.000000   -0.009312    0.000000    0.000000   -0.019134    0.000000
+-------------------------------------------------------------------------------------------------------------------
+
+  FINAL CASPT2 RESULT:
+
+      Reference energy:       -2096.9611226832
+      E2 (Non-variational):      -0.0191342937
+      E2 (Variational):          -0.0191342937
+      Total energy:           -2096.9802569769
+      Residual norm:              0.0000000002
+      Reference weight:           0.99223
+
+      Contributions to the CASPT2 correlation energy
+      Active & Virtual Only:         -0.0191342937
+      One Inactive Excited:           0.0000000000
+      Two Inactive Excited:           0.0000000000
+
+
+++ Denominators, etc.
+----------------------------------------------------------------------------------------------------
+ Report on small energy denominators, large coefficients, and large energy contributions.
+CASE  SYMM ACTIVE-MIX  NON-ACTIVE INDICES          DENOMINATOR     RHS VALUE       COEFFICIENT     CONTRIBUTION
+ATVX     2  Mu2.0004  Se2.010                       1.74949003     -0.05596881      0.03152871     -0.00176462
+--
+
+********************************************************************************
+  CASPT2 PROPERTY SECTION
+--------------------------------------------------------------------------------
+ * TypeIndex information is IGNORED *
+
+  Input file to MOLDEN was generated!
+
+
+
+      Mulliken population Analysis:
+      -----------------------------
+
+++    Molecular charges:
+      ------------------
+
+      Mulliken charges per centre and basis function type
+      ---------------------------------------------------
+
+                GE    
+      1s       2.0000
+      2s       2.0000
+      2px      2.0000
+      2pz      2.0000
+      2py      2.0000
+      3s       2.0000
+      3px      2.0000
+      3pz      2.0000
+      3py      2.0000
+      4s       1.9628
+      3d2+     2.0000
+      3d1+     2.0000
+      3d0      2.0000
+      3d1-     2.0000
+      3d2-     2.0000
+      4px      0.9962
+      4pz      0.4271
+      4py      0.6012
+      5s       0.0034
+      4d2+     0.0007
+      4d1+     0.0007
+      4d0      0.0006
+      4d1-     0.0007
+      4d2-     0.0007
+      5px      0.0031
+      5pz      0.0013
+      5py      0.0016
+      Total   32.0000
+
+      N-E     -0.0000
+
+      Total electronic charge=   32.000000
+
+      Total            charge=   -0.000000
+--
+
+
+      Expectation values of various properties:
+      -----------------------------------------
+
+++    Molecular properties:
+      ---------------------
+
+      Charge (e):
+                      =   -0.0000
+--
+
+--
+
+  Total CASPT2 energies:
+::    CASPT2 Root  1     Total energy:  -2097.03130372
+::    CASPT2 Root  2     Total energy:  -2097.01846296
+::    CASPT2 Root  3     Total energy:  -2096.98025698
+
+++ Multi-State CASPT2 section:
+********************************************************************************
+  MULTI-STATE CASPT2 SECTION
+--------------------------------------------------------------------------------
+
+  Output diagonal energies have been shifted. Add   -2097.0000000000000     
+
+  Effective Hamiltonian matrix (Symmetric):
+
+                1               2               3
+  1        -0.03130372
+  2        -0.00000000     -0.01846296
+  3        -0.00000000      0.00000000      0.01974302
+
+       Total MS-CASPT2 energies:
+::    MS-CASPT2 Root  1     Total energy:  -2097.03130372
+::    MS-CASPT2 Root  2     Total energy:  -2097.01846296
+::    MS-CASPT2 Root  3     Total energy:  -2096.98025698
+
+       Eigenvectors:
+            1.00000000     -0.00000000     -0.00000000
+            0.00000000      1.00000000      0.00000000
+           -0.00000000     -0.00000000      1.00000000
+
+--
+
+  THE ORIGINAL CI ARRAYS ARE NOW MIXED AS LINEAR
+  COMBINATIONS, GIVEN BY THE EIGENVECTORS.
+  A NEW JOBIPH FILE NAMED 'JOBMIX' IS PREPARED.
+********************************************************************************
+
+++ Mixed CI coefficients:
+  The CI coefficients for the MIXED state nr.   1
+--------------------------------------------------------------------------------
+ CI COEFFICIENTS LARGER THAN  0.50D-01
+  Occupation of active orbitals, and spin coupling
+  of open shells. (u,d: Spin up or down).
+  SGUGA info is (Midvert:IsyUp:UpperWalk/LowerWalk)
+        Conf  SGUGA info        Occupation    Coefficient         Weight
+           1  ( 1:2:   1/   1)   2 uu0           0.993797       0.987633
+           6  ( 4:2:   2/   1)   0 uu2          -0.111208       0.012367
+
+  The CI coefficients for the MIXED state nr.   2
+--------------------------------------------------------------------------------
+ CI COEFFICIENTS LARGER THAN  0.50D-01
+  Occupation of active orbitals, and spin coupling
+  of open shells. (u,d: Spin up or down).
+  SGUGA info is (Midvert:IsyUp:UpperWalk/LowerWalk)
+        Conf  SGUGA info        Occupation    Coefficient         Weight
+           2  ( 1:2:   2/   1)   2 u0u           0.993470       0.986983
+           5  ( 4:2:   1/   1)   0 u2u           0.114093       0.013017
+
+  The CI coefficients for the MIXED state nr.   3
+--------------------------------------------------------------------------------
+ CI COEFFICIENTS LARGER THAN  0.50D-01
+  Occupation of active orbitals, and spin coupling
+  of open shells. (u,d: Spin up or down).
+  SGUGA info is (Midvert:IsyUp:UpperWalk/LowerWalk)
+        Conf  SGUGA info        Occupation    Coefficient         Weight
+           3  ( 2:1:   1/   1)   2 0uu           0.992308       0.984675
+           4  ( 2:1:   1/   2)   0 2uu          -0.123795       0.015325
+
+--
+
+ ###############################################################################
+ ###############################################################################
+ ###                                                                         ###
+ ###                                                                         ###
+ ###    RunFile label nBas                                                   ###
+ ###    was used       88 times                                              ###
+ ###                                                                         ###
+ ###                                                                         ###
+ ###############################################################################
+ ###############################################################################
+--- Stop Module: caspt2 at Sun Oct 14 13:46:00 2018 /rc=_RC_ALL_IS_WELL_ ---
+*** files: 003.caspt2.molden.1 003.caspt2.molden.2 003.caspt2.molden.3 003.Pt2Orb.1 003.Pt2Orb.3 003.Pt2Orb.2 xmldump
+    saved to directory /home/kml/test/standard
+
+>>> COPY 003.JobMix JOBMIX_T
+
+*** symbolic link created: INPORB -> 003.RasOrb
+--- Start Module: rasscf at Sun Oct 14 13:46:00 2018 ---
+
+()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()
+
+                                              &RASSCF
+
+                                   only a single process is used
+                       available to each process: 2.0 GB of memory, 1 thread?
+()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()
+
+
+      Header of the ONEINT file:
+      --------------------------
+      Ge
+      Integrals generated by seward 4.2.0  , Sun Oct 14 13:45:57 2018
+
+
+      OrdInt status: non-squared
+
+
+      Cartesian coordinates in Angstrom:
+      -----------------------------------------------------
+      No.  Label        X            Y            Z        
+      -----------------------------------------------------
+       1   GE         0.00000000   0.00000000   0.00000000
+      -----------------------------------------------------
+      Nuclear repulsion energy =   29.17390757
+
+++    Wave function specifications:
+      -----------------------------
+
+      Number of closed shell electrons          28
+      Number of electrons in active shells       4
+      Max number of holes in RAS1 space          0
+      Max nr of electrons in RAS3 space          0
+      Number of inactive orbitals               14
+      Number of active orbitals                  4
+      Number of secondary orbitals               9
+      Spin quantum number                      0.0
+      State symmetry                             1
+--
+
+++    Orbital specifications:
+      -----------------------
+
+      Symmetry species                           1   2
+                                                ag  au
+      Frozen orbitals                            0   0
+      Inactive orbitals                          8   6
+      Active orbitals                            1   3
+      RAS1 orbitals                              0   0
+      RAS2 orbitals                              1   3
+      RAS3 orbitals                              0   0
+      Secondary orbitals                         6   3
+      Deleted orbitals                           0   0
+      Number of basis functions                 15  12
+--
+
+++    CI expansion specifications:
+      ----------------------------
+
+      Number of CSFs                            12
+      Number of determinants                    12
+      Number of root(s) required                 6
+      Root chosen for geometry opt.              6
+      CI roots used                              1     2     3     4     5     6
+      weights                                0.167 0.167 0.167 0.167 0.167 0.167
+      highest root included in the CI            6
+      max. size of the explicit Hamiltonian     12
+--
+
+++    Optimization specifications:
+      ----------------------------
+
+      RASSCF algorithm: Conventional
+      Maximum number of macro iterations       200
+      Maximum number of SX iterations           50
+      Threshold for RASSCF energy            0.100E-09
+      Threshold for max MO rotation          0.100E-05
+      Threshold for max BLB element          0.100E-05
+      Level shift parameter                  0.500E+00
+      Make Quasi-Newton update
+--
+
+      Orbitals from runfile: rasscf orbitals
+      The MO-coefficients are taken from rasscf orbitals on runfile
+
+      Total molecular charge    0.00
+
+      ************************************************************************************************************************
+      *                                                                                                                      *
+      *                                            Wave function control section                                             *
+      *                                                                                                                      *
+      ************************************************************************************************************************
+
+
+                                         RASSCF iterations: Energy and convergence statistics
+                                         ----------------------------------------------------
+
+      Iter CI   SX   CI       RASSCF       Energy    max ROT     max BLB   max BLB  Level Ln srch  Step   QN   Walltime
+          iter iter root      energy       change     param      element    value   shift minimum  type update hh:mm:ss
+ Nr of preliminary CI iterations:   1
+      Total energies have been shifted. Add                -2000.00 au
+        1   1    4    0   -96.94489211    0.00E+00  -0.10E-01*   9  12 2 -0.52E-02*  0.00   0.00    SX    NO    0:00:00
+        2   1    3    0   -96.94502451   -0.13E-03*  0.91E-03*   5  12 1  0.20E-02*  0.00   0.00    SX    NO    0:00:00
+        3   1    3    0   -96.94502691   -0.24E-05*  0.36E-03*   5  12 1 -0.14E-02*  0.00   0.00    SX    NO    0:00:00
+        4   1    3    0   -96.94502745   -0.54E-06*  0.16E-03*   6  13 1  0.98E-03*  0.00   0.00    SX    NO    0:00:00
+        5   1    3    0   -96.94502769   -0.23E-06*  0.66E-04*   5  12 1 -0.69E-03*  0.00   0.59    LS   YES    0:00:00
+        6   1    3    0   -96.94502791   -0.23E-06*  0.22E-04*   9  10 1  0.37E-04*  0.00   1.00    QN   YES    0:00:00
+        7   1    3    0   -96.94502791   -0.13E-08*  0.68E-05*   9  10 1  0.89E-05*  0.00   1.31    QN   YES    0:00:00
+        8   1    2    0   -96.94502791   -0.81E-10   0.48E-07    6  12 2 -0.60E-07   0.00   1.00    QN   YES    0:00:00
+      Convergence after  8 iterations
+        9   1    2    0   -96.94502791    0.36E-11   0.48E-07    4  11 1 -0.12E-07   0.00   1.00    QN   YES    0:00:00
+
+      ************************************************************************************************************************
+                                                      Wave function printout:
+                       occupation of active orbitals, and spin coupling of open shells (u,d: Spin up or down)
+      ************************************************************************************************************************
+
+      Note: transformation to natural orbitals
+      has been made, which may change the order of the CSFs.
+
+      printout of CI-coefficients larger than  0.05 for root  1
+      energy=   -2097.003292
+      conf/sym  1 222     Coeff  Weight
+             1  2 200  -0.97792 0.95634
+             4  2 020   0.12812 0.01641
+             6  2 002   0.09474 0.00898
+             7  0 220   0.09301 0.00865
+             9  0 202   0.09445 0.00892
+
+      printout of CI-coefficients larger than  0.05 for root  2
+      energy=   -2096.972885
+      conf/sym  1 222     Coeff  Weight
+             2  2 ud0  -0.99394 0.98792
+            11  0 ud2   0.10989 0.01208
+
+      printout of CI-coefficients larger than  0.05 for root  3
+      energy=   -2096.959740
+      conf/sym  1 222     Coeff  Weight
+             3  2 u0d   0.99362 0.98728
+            10  0 u2d   0.11277 0.01272
+
+      printout of CI-coefficients larger than  0.05 for root  4
+      energy=   -2096.925801
+      conf/sym  1 222     Coeff  Weight
+             1  2 200   0.07566 0.00572
+             4  2 020   0.90846 0.82530
+             6  2 002  -0.38748 0.15014
+             7  0 220  -0.11876 0.01410
+            12  0 022  -0.05504 0.00303
+
+      printout of CI-coefficients larger than  0.05 for root  5
+      energy=   -2096.920336
+      conf/sym  1 222     Coeff  Weight
+             5  2 0ud   0.99247 0.98499
+             8  0 2ud  -0.12251 0.01501
+
+      printout of CI-coefficients larger than  0.05 for root  6
+      energy=   -2096.888113
+      conf/sym  1 222     Coeff  Weight
+             1  2 200   0.12223 0.01494
+             4  2 020   0.36483 0.13310
+             6  2 002   0.90278 0.81502
+             7  0 220  -0.05416 0.00293
+             9  0 202  -0.12069 0.01457
+            12  0 022  -0.13943 0.01944
+
+      Natural orbitals and occupation numbers for root  1
+      sym 1:   1.963451
+      sym 2:   1.947817   0.051534   0.037198
+
+      Natural orbitals and occupation numbers for root  2
+      sym 1:   1.975850
+      sym 2:   1.000000   1.000000   0.024150
+
+      Natural orbitals and occupation numbers for root  3
+      sym 1:   1.974565
+      sym 2:   1.000000   0.025435   1.000000
+
+      Natural orbitals and occupation numbers for root  4
+      sym 1:   1.962330
+      sym 2:   0.043059   1.684863   0.309748
+
+      Natural orbitals and occupation numbers for root  5
+      sym 1:   1.969981
+      sym 2:   0.030019   1.000000   1.000000
+
+      Natural orbitals and occupation numbers for root  6
+      sym 1:   1.926117
+      sym 2:   0.064879   0.310957   1.698047
+
+      ************************************************************************************************************************
+      *                                                                                                                      *
+      *                                                    Final results                                                     *
+      *                                                                                                                      *
+      ************************************************************************************************************************
+
+
+++    Wave function specifications:
+      -----------------------------
+
+      Number of closed shell electrons          28
+      Number of electrons in active shells       4
+      Max number of holes in RAS1 space          0
+      Max nr of electrons in RAS3 space          0
+      Number of inactive orbitals               14
+      Number of active orbitals                  4
+      Number of secondary orbitals               9
+      Spin quantum number                      0.0
+      State symmetry                             1
+--
+
+++    Orbital specifications:
+      -----------------------
+
+      Symmetry species                           1   2
+                                                ag  au
+      Frozen orbitals                            0   0
+      Inactive orbitals                          8   6
+      Active orbitals                            1   3
+      RAS1 orbitals                              0   0
+      RAS2 orbitals                              1   3
+      RAS3 orbitals                              0   0
+      Secondary orbitals                         6   3
+      Deleted orbitals                           0   0
+      Number of basis functions                 15  12
+--
+
+++    CI expansion specifications:
+      ----------------------------
+
+      Number of CSFs                            12
+      Number of determinants                    12
+      Number of root(s) required                 6
+      CI roots used                              1     2     3     4     5     6
+      weights                                0.167 0.167 0.167 0.167 0.167 0.167
+      highest root included in the CI            6
+      Root passed to geometry opt.               6
+--
+
+++    Final optimization conditions:
+      ------------------------------
+
+      Average CI energy                           -2096.94502791
+      RASSCF energy for state  6                  -2096.88811334
+      Super-CI energy                                -0.00000000
+      RASSCF energy change                            0.00000000
+      Max change in MO coefficients               0.614E-07
+      Max non-diagonal density matrix element     0.482E-07
+      Maximum BLB matrix element                 -0.121E-07
+      (orbital pair   4,  11 in symmetry   1)
+      Norm of electronic gradient            0.346E-01
+--
+
+
+      Final state energy(ies):
+      ------------------------
+
+::    RASSCF root number  1 Total energy:  -2097.00329221
+::    RASSCF root number  2 Total energy:  -2096.97288526
+::    RASSCF root number  3 Total energy:  -2096.95973950
+::    RASSCF root number  4 Total energy:  -2096.92580149
+::    RASSCF root number  5 Total energy:  -2096.92033568
+::    RASSCF root number  6 Total energy:  -2096.88811334
+
+++    Molecular orbitals:
+      -------------------
+
+      Pseudonatural active orbitals and approximate occupation numbers
+
+
+
+
+      Molecular orbitals for symmetry species 1: ag 
+
+
+      Orbital                1         2         3         4         5         6         7         8         9        10
+      Energy         -411.6940  -54.3387   -8.3124   -2.5104   -2.5100   -2.5093   -2.5076   -2.5075    0.0000   -0.5666
+      Occ. No.          2.0000    2.0000    2.0000    2.0000    2.0000    2.0000    2.0000    2.0000    1.9620    0.0000
+
+    1 GE     1s         1.0000   -0.0000    0.0000   -0.0000    0.0000    0.0000    0.0000   -0.0000   -0.0001   -0.0000
+    2 GE     2s         0.0000    1.0000    0.0027   -0.0000    0.0000    0.0000    0.0000   -0.0000    0.0005    0.0001
+    3 GE     3s        -0.0000   -0.0027    0.9996   -0.0003    0.0000    0.0000    0.0000   -0.0001    0.0282    0.0025
+    4 GE     4s         0.0001   -0.0004   -0.0282    0.0015   -0.0000    0.0000   -0.0000    0.0006    0.9994   -0.0183
+    5 GE     5s         0.0000   -0.0001   -0.0030   -0.0003    0.0000    0.0000    0.0000   -0.0001    0.0182    0.9998
+    6 GE     3d2-      -0.0000   -0.0000   -0.0000    0.0000    0.6402    0.0000   -0.7682   -0.0000    0.0000   -0.0000
+    7 GE     4d2-       0.0000    0.0000    0.0000    0.0000    0.0004    0.0000    0.0003    0.0000   -0.0000   -0.0000
+    8 GE     3d1-       0.0000    0.0000    0.0004    0.7844   -0.0000   -0.1803   -0.0000    0.5934   -0.0015    0.0004
+    9 GE     4d1-      -0.0000   -0.0000    0.0001    0.0006   -0.0000   -0.0001    0.0000   -0.0002    0.0057    0.0044
+   10 GE     3d0        0.0000    0.0000    0.0001    0.4262   -0.0000    0.8518    0.0000   -0.3045   -0.0004    0.0001
+   11 GE     4d0       -0.0000   -0.0000    0.0000    0.0003   -0.0000    0.0002   -0.0000    0.0001    0.0017    0.0013
+   12 GE     3d1+       0.0000    0.0000    0.0000    0.0000    0.7682    0.0000    0.6402    0.0000    0.0000    0.0000
+   13 GE     4d1+      -0.0000   -0.0000   -0.0000   -0.0000    0.0004    0.0000   -0.0003   -0.0000    0.0000   -0.0000
+   14 GE     3d2+      -0.0000   -0.0000   -0.0001   -0.4506    0.0000    0.4918   -0.0000    0.7451    0.0002   -0.0001
+   15 GE     4d2+       0.0000    0.0000   -0.0000   -0.0003    0.0000    0.0001    0.0000   -0.0003   -0.0009   -0.0007
+
+
+
+      Molecular orbitals for symmetry species 2: au 
+
+
+      Orbital                1         2         3         4         5         6         7         8         9        10
+      Energy          -47.4358  -47.4356  -47.4355   -6.1197   -6.1179   -6.1172    0.0000    0.0000    0.0000   -0.3150
+      Occ. No.          2.0000    2.0000    2.0000    2.0000    2.0000    2.0000    0.6810    0.6788    0.6782    0.0000
+
+    1 GE     2px       -0.0000    1.0000   -0.0000    0.0000    0.0000    0.0000   -0.0000   -0.0001    0.0000   -0.0000
+    2 GE     3px        0.0000   -0.0000    0.0000    0.0000    1.0000   -0.0000   -0.0000   -0.0029    0.0000   -0.0000
+    3 GE     4px       -0.0000    0.0001   -0.0000    0.0000    0.0029    0.0000    0.0000    0.9994   -0.0000   -0.0000
+    4 GE     5px       -0.0000   -0.0000    0.0000    0.0000    0.0001    0.0000    0.0000    0.0350   -0.0000    0.0000
+    5 GE     2py        0.6402   -0.0000   -0.7682    0.0000   -0.0000   -0.0000   -0.0000    0.0000    0.0000    0.0000
+    6 GE     3py       -0.0000    0.0000    0.0000    0.6402   -0.0000   -0.7682   -0.0020    0.0000    0.0021    0.0002
+    7 GE     4py        0.0000   -0.0000   -0.0000    0.0020    0.0000   -0.0021    0.6381   -0.0000   -0.7681   -0.0517
+    8 GE     5py       -0.0000    0.0000    0.0000   -0.0001   -0.0000   -0.0002    0.0517   -0.0000   -0.0148    0.6381
+    9 GE     2pz        0.7682    0.0000    0.6402    0.0000   -0.0000    0.0000   -0.0000   -0.0000   -0.0000    0.0000
+   10 GE     3pz       -0.0000   -0.0000   -0.0000    0.7682    0.0000    0.6402   -0.0024   -0.0000   -0.0018    0.0003
+   11 GE     4pz        0.0000    0.0000    0.0000    0.0024   -0.0000    0.0018    0.7657    0.0000    0.6401   -0.0620
+   12 GE     5pz       -0.0000   -0.0000   -0.0000   -0.0001    0.0000    0.0002    0.0620    0.0000    0.0123    0.7657
+
+
+      Orbital               11        12
+      Energy           -0.2635   -0.2445
+      Occ. No.          0.0000    0.0000
+
+    1 GE     2px        0.0000    0.0000
+    2 GE     3px       -0.0000    0.0000
+    3 GE     4px       -0.0350   -0.0000
+    4 GE     5px        0.9994    0.0000
+    5 GE     2py        0.0000   -0.0000
+    6 GE     3py       -0.0000    0.0001
+    7 GE     4py       -0.0000    0.0148
+    8 GE     5py        0.0000   -0.7681
+    9 GE     2pz        0.0000    0.0000
+   10 GE     3pz       -0.0000   -0.0001
+   11 GE     4pz        0.0000   -0.0123
+   12 GE     5pz       -0.0000    0.6401
+--
+
+      Von Neumann Entropy (Root  1) =  0.30620
+
+
+      Mulliken population analysis for root number:  1
+      -----------------------------------------------
+
+
+++    Molecular charges:
+      ------------------
+
+      Mulliken charges per centre and basis function type
+      ---------------------------------------------------
+
+                GE    
+      1s       2.0000
+      2s       2.0000
+      2px      2.0000
+      2pz      2.0000
+      2py      2.0000
+      3s       2.0000
+      3px      2.0000
+      3pz      2.0000
+      3py      2.0000
+      4s       1.9628
+      3d2+     2.0000
+      3d1+     2.0000
+      3d0      2.0000
+      3d1-     2.0000
+      3d2-     2.0000
+      4px      0.0515
+      4pz      1.1573
+      4py      0.8150
+      5s       0.0007
+      4d2+     0.0000
+      4d1+     0.0000
+      4d0      0.0000
+      4d1-     0.0001
+      4d2-     0.0000
+      5px      0.0001
+      5pz      0.0075
+      5py      0.0052
+      Total   32.0000
+
+      N-E     -0.0000
+
+      Total electronic charge=   32.000000
+
+      Total            charge=   -0.000000
+--
+
+
+
+      Expectation values of various properties for root number:  1
+      -----------------------------------------------------------
+
+
+++    Molecular properties:
+      ---------------------
+
+      Charge (e):
+                      =   -0.0000
+--
+
+
+      LoProp population analysis for root number:  1
+      -----------------------------------------------
+
+
+++    LoProp analysis:
+      ----------------
+
+
+
+++    Static properties:
+      ------------------
+
+
+      LoProp Charges per center
+
+
+                   GE    
+      Nuclear     32.0000
+      Electronic -32.0000
+
+      Total       -0.0000
+--
+
+
+      Natural Bond Order analysis for root number:  1
+--
+
+      Von Neumann Entropy (Root  2) =  1.09426
+
+
+      Mulliken population analysis for root number:  2
+      -----------------------------------------------
+
+
+++    Molecular charges:
+      ------------------
+
+      Mulliken charges per centre and basis function type
+      ---------------------------------------------------
+
+                GE    
+      1s       2.0000
+      2s       2.0000
+      2px      2.0000
+      2pz      2.0000
+      2py      2.0000
+      3s       2.0000
+      3px      2.0000
+      3pz      2.0000
+      3py      2.0000
+      4s       1.9751
+      3d2+     2.0000
+      3d1+     2.0000
+      3d0      2.0000
+      3d1-     2.0000
+      3d2-     2.0000
+      4px      0.9988
+      4pz      0.5962
+      4py      0.4214
+      5s       0.0007
+      4d2+     0.0000
+      4d1+     0.0000
+      4d0      0.0000
+      4d1-     0.0001
+      4d2-     0.0000
+      5px      0.0012
+      5pz      0.0038
+      5py      0.0027
+      Total   32.0000
+
+      N-E     -0.0000
+
+      Total electronic charge=   32.000000
+
+      Total            charge=   -0.000000
+--
+
+
+
+      Expectation values of various properties for root number:  2
+      -----------------------------------------------------------
+
+
+++    Molecular properties:
+      ---------------------
+
+      Charge (e):
+                      =   -0.0000
+--
+
+
+      LoProp population analysis for root number:  2
+      -----------------------------------------------
+
+
+++    LoProp analysis:
+      ----------------
+
+
+
+++    Static properties:
+      ------------------
+
+
+      LoProp Charges per center
+
+
+                   GE    
+      Nuclear     32.0000
+      Electronic -32.0000
+
+      Total       -0.0000
+--
+
+
+      Natural Bond Order analysis for root number:  2
+--
+
+      Von Neumann Entropy (Root  3) =  1.09831
+
+
+      Mulliken population analysis for root number:  3
+      -----------------------------------------------
+
+
+++    Molecular charges:
+      ------------------
+
+      Mulliken charges per centre and basis function type
+      ---------------------------------------------------
+
+                GE    
+      1s       2.0000
+      2s       2.0000
+      2px      2.0000
+      2pz      2.0000
+      2py      2.0000
+      3s       2.0000
+      3px      2.0000
+      3pz      2.0000
+      3py      2.0000
+      4s       1.9739
+      3d2+     2.0000
+      3d1+     2.0000
+      3d0      2.0000
+      3d1-     2.0000
+      3d2-     2.0000
+      4px      0.0254
+      4pz      0.9960
+      4py      0.9971
+      5s       0.0007
+      4d2+     0.0000
+      4d1+     0.0000
+      4d0      0.0000
+      4d1-     0.0001
+      4d2-     0.0000
+      5px      0.0000
+      5pz      0.0040
+      5py      0.0029
+      Total   32.0000
+
+      N-E     -0.0000
+
+      Total electronic charge=   32.000000
+
+      Total            charge=   -0.000000
+--
+
+
+
+      Expectation values of various properties for root number:  3
+      -----------------------------------------------------------
+
+
+++    Molecular properties:
+      ---------------------
+
+      Charge (e):
+                      =   -0.0000
+--
+
+
+      LoProp population analysis for root number:  3
+      -----------------------------------------------
+
+
+++    LoProp analysis:
+      ----------------
+
+
+
+++    Static properties:
+      ------------------
+
+
+      LoProp Charges per center
+
+
+                   GE    
+      Nuclear     32.0000
+      Electronic -32.0000
+
+      Total       -0.0000
+--
+
+
+      Natural Bond Order analysis for root number:  3
+--
+
+      Von Neumann Entropy (Root  4) =  0.77127
+
+
+      Mulliken population analysis for root number:  4
+      -----------------------------------------------
+
+
+++    Molecular charges:
+      ------------------
+
+      Mulliken charges per centre and basis function type
+      ---------------------------------------------------
+
+                GE    
+      1s       2.0000
+      2s       2.0000
+      2px      2.0000
+      2pz      2.0000
+      2py      2.0000
+      3s       2.0000
+      3px      2.0000
+      3pz      2.0000
+      3py      2.0000
+      4s       1.9616
+      3d2+     2.0000
+      3d1+     2.0000
+      3d0      2.0000
+      3d1-     2.0000
+      3d2-     2.0000
+      4px      1.6828
+      4pz      0.1522
+      4py      0.2003
+      5s       0.0007
+      4d2+     0.0000
+      4d1+     0.0000
+      4d0      0.0000
+      4d1-     0.0001
+      4d2-     0.0000
+      5px      0.0021
+      5pz      0.0002
+      5py      0.0002
+      Total   32.0000
+
+      N-E     -0.0000
+
+      Total electronic charge=   32.000000
+
+      Total            charge=   -0.000000
+--
+
+
+
+      Expectation values of various properties for root number:  4
+      -----------------------------------------------------------
+
+
+++    Molecular properties:
+      ---------------------
+
+      Charge (e):
+                      =   -0.0000
+--
+
+
+      LoProp population analysis for root number:  4
+      -----------------------------------------------
+
+
+++    LoProp analysis:
+      ----------------
+
+
+
+++    Static properties:
+      ------------------
+
+
+      LoProp Charges per center
+
+
+                   GE    
+      Nuclear     32.0000
+      Electronic -32.0000
+
+      Total       -0.0000
+--
+
+
+      Natural Bond Order analysis for root number:  4
+--
+
+      Von Neumann Entropy (Root  5) =  1.11242
+
+
+      Mulliken population analysis for root number:  5
+      -----------------------------------------------
+
+
+++    Molecular charges:
+      ------------------
+
+      Mulliken charges per centre and basis function type
+      ---------------------------------------------------
+
+                GE    
+      1s       2.0000
+      2s       2.0000
+      2px      2.0000
+      2pz      2.0000
+      2py      2.0000
+      3s       2.0000
+      3px      2.0000
+      3pz      2.0000
+      3py      2.0000
+      4s       1.9693
+      3d2+     2.0000
+      3d1+     2.0000
+      3d0      2.0000
+      3d1-     2.0000
+      3d2-     2.0000
+      4px      0.9988
+      4pz      0.4273
+      4py      0.6022
+      5s       0.0007
+      4d2+     0.0000
+      4d1+     0.0000
+      4d0      0.0000
+      4d1-     0.0001
+      4d2-     0.0000
+      5px      0.0012
+      5pz      0.0003
+      5py      0.0003
+      Total   32.0000
+
+      N-E     -0.0000
+
+      Total electronic charge=   32.000000
+
+      Total            charge=   -0.000000
+--
+
+
+
+      Expectation values of various properties for root number:  5
+      -----------------------------------------------------------
+
+
+++    Molecular properties:
+      ---------------------
+
+      Charge (e):
+                      =   -0.0000
+--
+
+
+      LoProp population analysis for root number:  5
+      -----------------------------------------------
+
+
+++    LoProp analysis:
+      ----------------
+
+
+
+++    Static properties:
+      ------------------
+
+
+      LoProp Charges per center
+
+
+                   GE    
+      Nuclear     32.0000
+      Electronic -32.0000
+
+      Total       -0.0000
+--
+
+
+      Natural Bond Order analysis for root number:  5
+--
+
+      Von Neumann Entropy (Root  6) =  0.83072
+
+
+      Mulliken population analysis for root number:  6
+      -----------------------------------------------
+
+
+++    Molecular charges:
+      ------------------
+
+      Mulliken charges per centre and basis function type
+      ---------------------------------------------------
+
+                GE    
+      1s       2.0000
+      2s       2.0000
+      2px      2.0000
+      2pz      2.0000
+      2py      2.0000
+      3s       1.9999
+      3px      2.0000
+      3pz      2.0000
+      3py      2.0000
+      4s       1.9255
+      3d2+     2.0000
+      3d1+     2.0000
+      3d0      2.0000
+      3d1-     2.0000
+      3d2-     2.0000
+      4px      0.3106
+      4pz      0.7337
+      4py      1.0282
+      5s       0.0007
+      4d2+     0.0000
+      4d1+     0.0000
+      4d0      0.0000
+      4d1-     0.0001
+      4d2-     0.0000
+      5px      0.0004
+      5pz      0.0005
+      5py      0.0005
+      Total   32.0000
+
+      N-E     -0.0000
+
+      Total electronic charge=   32.000000
+
+      Total            charge=   -0.000000
+--
+
+
+
+      Expectation values of various properties for root number:  6
+      -----------------------------------------------------------
+
+
+++    Molecular properties:
+      ---------------------
+
+      Charge (e):
+                      =   -0.0000
+--
+
+
+      LoProp population analysis for root number:  6
+      -----------------------------------------------
+
+
+++    LoProp analysis:
+      ----------------
+
+
+
+++    Static properties:
+      ------------------
+
+
+      LoProp Charges per center
+
+
+                   GE    
+      Nuclear     32.0000
+      Electronic -32.0000
+
+      Total       -0.0000
+--
+
+
+      Natural Bond Order analysis for root number:  6
+--
+
+
+  Input file to MOLDEN was generated!
+
+
+  Input file to MOLDEN was generated!
+
+
+  Input file to MOLDEN was generated!
+
+
+  Input file to MOLDEN was generated!
+
+
+  Input file to MOLDEN was generated!
+
+
+  Input file to MOLDEN was generated!
+
+
+  Input file to MOLDEN was generated!
+
+      Average orbitals are written to the RASORB file
+      Natural orbitals for root   1 are written to the RASORB.1 file
+      Natural orbitals for root   2 are written to the RASORB.2 file
+      Natural orbitals for root   3 are written to the RASORB.3 file
+      Natural orbitals for root   4 are written to the RASORB.4 file
+      Natural orbitals for root   5 are written to the RASORB.5 file
+      Natural orbitals for root   6 are written to the RASORB.6 file
+      Spin density orbitals for root   1 are written to the SPDORB.1 file
+      Spin density orbitals for root   2 are written to the SPDORB.2 file
+      Spin density orbitals for root   3 are written to the SPDORB.3 file
+      Spin density orbitals for root   4 are written to the SPDORB.4 file
+      Spin density orbitals for root   5 are written to the SPDORB.5 file
+      Spin density orbitals for root   6 are written to the SPDORB.6 file
+
+ ###############################################################################
+ ###############################################################################
+ ###                                                                         ###
+ ###                                                                         ###
+ ###    RunFile label nBas                                                   ###
+ ###    was used       42 times                                              ###
+ ###                                                                         ###
+ ###                                                                         ###
+ ###############################################################################
+ ###############################################################################
+Note: The following floating-point exceptions are signalling: IEEE_INVALID_FLAG IEEE_DIVIDE_BY_ZERO IEEE_UNDERFLOW_FLAG IEEE_DENORMAL
+--- Stop Module: rasscf at Sun Oct 14 13:46:01 2018 /rc=_RC_ALL_IS_WELL_ ---
+*** files: 003.LprOrb 003.rasscf.molden 003.rasscf.molden.6 003.rasscf.molden.5 003.rasscf.molden.2 003.rasscf.molden.1 003.rasscf.molden.4 003.rasscf.molden.3 003.RasOrb.1
+           003.RasOrb.3 003.RasOrb 003.RasOrb.5 003.RasOrb.6 003.RasOrb.2 003.RasOrb.4 003.SpdOrb.4 003.SpdOrb.6 003.SpdOrb.1 003.SpdOrb.3 003.SpdOrb.2 003.SpdOrb.5 xmldump
+    saved to directory /home/kml/test/standard
+--- Module rasscf spent 1 second ---
+
+>>> EXPORT MOLCAS_THR = 1
+
+*** symbolic link created: INPORB -> 003.RasOrb
+--- Start Module: caspt2 at Sun Oct 14 13:46:01 2018 ---
+
+()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()
+
+                                              &CASPT2
+
+                                   only a single process is used
+                       available to each process: 2.0 GB of memory, 1 thread?
+()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()
+
+ ###############################################################################
+ ###############################################################################
+ ###                                                                         ###
+ ###                                                                         ###
+ ###    User-modified 0-order hamiltonian!                                   ###
+ ###                                                                         ###
+ ###                                                                         ###
+ ###############################################################################
+ ###############################################################################
+ Cholesky algorithm in CASPT2 =    1
+
+
+++    Wave function specifications:
+      -----------------------------
+
+      Number of closed shell electrons           0
+      Number of electrons in active shells       4
+      Max number of holes in RAS1 space          0
+      Max number of electrons in RAS3 space      0
+      Number of inactive orbitals                0
+      Number of active orbitals                  4
+      Number of secondary orbitals               9
+      Spin quantum number                      0.0
+      State symmetry                             1
+      Number of CSFs                            12
+      Number of root(s) available                6
+      Root passed to geometry opt.               6
+      A file JOBMIX will be created.
+      This is a MULTI-STATE CASSCF reference
+      Number of CI roots used                    6
+      These are:                               1   2   3   4   5   6
+      Off-diagonal elements of Heff are computed.
+--
+
+++    Orbital specifications:
+      -----------------------
+
+      Symmetry species                           1   2
+                                                ag  au
+      Frozen orbitals                            8   6
+      Inactive orbitals                          0   0
+      Active orbitals                            1   3
+      Secondary orbitals                         6   3
+      Deleted orbitals                           0   0
+      Number of basis functions                 15  12
+--
+
+      Type of Fock operator: STANDARD
+      Type of 0-order Hamiltonian: STANDARD WITH CUSTOM IPEA
+        "IP-EA" denominator shift =      0.25
+      The input orbitals and the CI vector will be transformed.
+
+--------------------------------------------------------------------------------
+ Estimated memory requirements:
+  POLY3 :                   250560
+  RHS:                      250980
+  SIGMA :                   250756
+  PRPCTL:                   255222
+ Available workspace:    230399057
+
+++ CASPT2 computation    1
+
+********************************************************************************
+ Multi-State initialization phase begins for group   1
+--------------------------------------------------------------------------------
+********************************************************************************
+ Compute H0 matrices for state    1
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+ H0 matrices have been computed.
+
+********************************************************************************
+  CASPT2 EQUATION SOLUTION
+--------------------------------------------------------------------------------
+
+  Total nr of CASPT2 parameters:
+   Before reduction:         627
+   After  reduction:         438
+
+ The contributions to the second order correlation energy in atomic units.
+-----------------------------------------------------------------------------------------------------------------------------
+  IT.      VJTU        VJTI        ATVX        AIVX        VJAI        BVAT        BJAT        BJAI        TOTAL       RNORM  
+-----------------------------------------------------------------------------------------------------------------------------
+   1     0.000000    0.000000   -0.008363    0.000000    0.000000   -0.010353    0.000000    0.000000   -0.018716    0.000085
+   2     0.000000    0.000000   -0.008366    0.000000    0.000000   -0.010353    0.000000    0.000000   -0.018719    0.000002
+   3     0.000000    0.000000   -0.008366    0.000000    0.000000   -0.010353    0.000000    0.000000   -0.018719    0.000000
+-------------------------------------------------------------------------------------------------------------------
+
+  FINAL CASPT2 RESULT:
+
+      Reference energy:       -2097.0032922105
+      E2 (Non-variational):      -0.0187188401
+      E2 (Variational):          -0.0187188401
+      Total energy:           -2097.0220110507
+      Residual norm:              0.0000000007
+      Reference weight:           0.99208
+
+      Contributions to the CASPT2 correlation energy
+      Active & Virtual Only:         -0.0187188401
+      One Inactive Excited:           0.0000000000
+      Two Inactive Excited:           0.0000000000
+
+
+++ Denominators, etc.
+----------------------------------------------------------------------------------------------------
+ Report on small energy denominators, large coefficients, and large energy contributions.
+CASE  SYMM ACTIVE-MIX  NON-ACTIVE INDICES          DENOMINATOR     RHS VALUE       COEFFICIENT     CONTRIBUTION
+ATVX     1  Mu1.0004  Se1.012                       3.13196104     -0.08275618      0.02626677     -0.00217374
+ATVX     1  Mu1.0005  Se1.013                       3.15256112      0.08095943     -0.02553285     -0.00206712
+ATVX     2  Mu2.0004  Se2.011                       1.85231371      0.05382733     -0.02865326     -0.00154233
+ATVX     2  Mu2.0005  Se2.012                       1.88710016      0.05282055     -0.02762219     -0.00145902
+BVATP    1  Mu1.0001  Se2.010 Se2.010               1.68942078      0.05117235     -0.03023324     -0.00154711
+BVATP    2  Mu2.0001  Se2.010 Se1.010               1.72667055     -0.05247205      0.03042107     -0.00159626
+BVATM    2  Mu2.0001  Se2.010 Se1.010               1.72667055      0.04983854     -0.02891924     -0.00144129
+--
+
+********************************************************************************
+  CASPT2 PROPERTY SECTION
+--------------------------------------------------------------------------------
+ * TypeIndex information is IGNORED *
+
+  Input file to MOLDEN was generated!
+
+
+
+      Mulliken population Analysis:
+      -----------------------------
+
+++    Molecular charges:
+      ------------------
+
+      Mulliken charges per centre and basis function type
+      ---------------------------------------------------
+
+                GE    
+      1s       2.0000
+      2s       2.0000
+      2px      2.0000
+      2pz      2.0000
+      2py      2.0000
+      3s       2.0000
+      3px      2.0000
+      3pz      2.0000
+      3py      2.0000
+      4s       1.9570
+      3d2+     2.0000
+      3d1+     2.0000
+      3d0      2.0000
+      3d1-     2.0000
+      3d2-     2.0000
+      4px      0.0517
+      4pz      1.1526
+      4py      0.8118
+      5s       0.0033
+      4d2+     0.0004
+      4d1+     0.0007
+      4d0      0.0009
+      4d1-     0.0004
+      4d2-     0.0005
+      5px      0.0009
+      5pz      0.0116
+      5py      0.0084
+      Total   32.0000
+
+      N-E     -0.0000
+
+      Total electronic charge=   32.000000
+
+      Total            charge=   -0.000000
+--
+
+
+      Expectation values of various properties:
+      -----------------------------------------
+
+++    Molecular properties:
+      ---------------------
+
+      Charge (e):
+                      =   -0.0000
+--
+
+--
+
+++ CASPT2 computation    2
+
+********************************************************************************
+ Multi-State initialization phase begins for group   2
+--------------------------------------------------------------------------------
+********************************************************************************
+ Compute H0 matrices for state    2
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+ H0 matrices have been computed.
+
+********************************************************************************
+  CASPT2 EQUATION SOLUTION
+--------------------------------------------------------------------------------
+
+  Total nr of CASPT2 parameters:
+   Before reduction:         627
+   After  reduction:         303
+
+ The contributions to the second order correlation energy in atomic units.
+-----------------------------------------------------------------------------------------------------------------------------
+  IT.      VJTU        VJTI        ATVX        AIVX        VJAI        BVAT        BJAT        BJAI        TOTAL       RNORM  
+-----------------------------------------------------------------------------------------------------------------------------
+   1     0.000000    0.000000   -0.010040    0.000000    0.000000   -0.009872    0.000000    0.000000   -0.019912    0.000148
+   2     0.000000    0.000000   -0.010044    0.000000    0.000000   -0.009877    0.000000    0.000000   -0.019921    0.000004
+   3     0.000000    0.000000   -0.010044    0.000000    0.000000   -0.009877    0.000000    0.000000   -0.019921    0.000000
+   4     0.000000    0.000000   -0.010044    0.000000    0.000000   -0.009877    0.000000    0.000000   -0.019921    0.000000
+-------------------------------------------------------------------------------------------------------------------
+
+  FINAL CASPT2 RESULT:
+
+      Reference energy:       -2096.9728852554
+      E2 (Non-variational):      -0.0199213368
+      E2 (Variational):          -0.0199213368
+      Total energy:           -2096.9928065923
+      Residual norm:              0.0000000000
+      Reference weight:           0.99177
+
+      Contributions to the CASPT2 correlation energy
+      Active & Virtual Only:         -0.0199213368
+      One Inactive Excited:           0.0000000000
+      Two Inactive Excited:           0.0000000000
+
+
+++ Denominators, etc.
+----------------------------------------------------------------------------------------------------
+ Report on small energy denominators, large coefficients, and large energy contributions.
+CASE  SYMM ACTIVE-MIX  NON-ACTIVE INDICES          DENOMINATOR     RHS VALUE       COEFFICIENT     CONTRIBUTION
+ATVX     1  Mu1.0004  Se1.011                       2.91475395     -0.08604910      0.02936689     -0.00252699
+ATVX     1  Mu1.0004  Se1.015                       2.92441813      0.07800832     -0.02654875     -0.00207102
+ATVX     2  Mu2.0006  Se2.012                       1.88885791      0.05383309     -0.02819402     -0.00151777
+BVATP    1  Mu1.0001  Se2.011 Se2.010               1.72084190      0.04782846     -0.02762514     -0.00132127
+--
+
+********************************************************************************
+  CASPT2 PROPERTY SECTION
+--------------------------------------------------------------------------------
+ * TypeIndex information is IGNORED *
+
+  Input file to MOLDEN was generated!
+
+
+
+      Mulliken population Analysis:
+      -----------------------------
+
+++    Molecular charges:
+      ------------------
+
+      Mulliken charges per centre and basis function type
+      ---------------------------------------------------
+
+                GE    
+      1s       2.0000
+      2s       2.0000
+      2px      2.0000
+      2pz      2.0000
+      2py      2.0000
+      3s       2.0000
+      3px      2.0000
+      3pz      2.0000
+      3py      2.0000
+      4s       1.9693
+      3d2+     2.0000
+      3d1+     2.0000
+      3d0      2.0000
+      3d1-     2.0000
+      3d2-     2.0000
+      4px      0.9957
+      4pz      0.5937
+      4py      0.4197
+      5s       0.0031
+      4d2+     0.0011
+      4d1+     0.0004
+      4d0      0.0008
+      4d1-     0.0006
+      4d2-     0.0005
+      5px      0.0037
+      5pz      0.0067
+      5py      0.0049
+      Total   32.0000
+
+      N-E     -0.0000
+
+      Total electronic charge=   32.000000
+
+      Total            charge=   -0.000000
+--
+
+
+      Expectation values of various properties:
+      -----------------------------------------
+
+++    Molecular properties:
+      ---------------------
+
+      Charge (e):
+                      =   -0.0000
+--
+
+--
+
+++ CASPT2 computation    3
+
+********************************************************************************
+ Multi-State initialization phase begins for group   3
+--------------------------------------------------------------------------------
+********************************************************************************
+ Compute H0 matrices for state    3
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+ H0 matrices have been computed.
+
+********************************************************************************
+  CASPT2 EQUATION SOLUTION
+--------------------------------------------------------------------------------
+
+  Total nr of CASPT2 parameters:
+   Before reduction:         627
+   After  reduction:         303
+
+ The contributions to the second order correlation energy in atomic units.
+-----------------------------------------------------------------------------------------------------------------------------
+  IT.      VJTU        VJTI        ATVX        AIVX        VJAI        BVAT        BJAT        BJAI        TOTAL       RNORM  
+-----------------------------------------------------------------------------------------------------------------------------
+   1     0.000000    0.000000   -0.010220    0.000000    0.000000   -0.009903    0.000000    0.000000   -0.020123    0.000160
+   2     0.000000    0.000000   -0.010224    0.000000    0.000000   -0.009909    0.000000    0.000000   -0.020133    0.000004
+   3     0.000000    0.000000   -0.010224    0.000000    0.000000   -0.009909    0.000000    0.000000   -0.020133    0.000000
+   4     0.000000    0.000000   -0.010224    0.000000    0.000000   -0.009909    0.000000    0.000000   -0.020133    0.000000
+-------------------------------------------------------------------------------------------------------------------
+
+  FINAL CASPT2 RESULT:
+
+      Reference energy:       -2096.9597395031
+      E2 (Non-variational):      -0.0201327237
+      E2 (Variational):          -0.0201327237
+      Total energy:           -2096.9798722268
+      Residual norm:              0.0000000001
+      Reference weight:           0.99166
+
+      Contributions to the CASPT2 correlation energy
+      Active & Virtual Only:         -0.0201327237
+      One Inactive Excited:           0.0000000000
+      Two Inactive Excited:           0.0000000000
+
+
+++ Denominators, etc.
+----------------------------------------------------------------------------------------------------
+ Report on small energy denominators, large coefficients, and large energy contributions.
+CASE  SYMM ACTIVE-MIX  NON-ACTIVE INDICES          DENOMINATOR     RHS VALUE       COEFFICIENT     CONTRIBUTION
+ATVX     1  Mu1.0003  Se1.015                       2.92705098      0.09514745     -0.03235163     -0.00307817
+ATVX     2  Mu2.0005  Se2.011                       1.85318458      0.05499745     -0.02933497     -0.00161335
+BVATP    1  Mu1.0001  Se2.012 Se2.010               1.72706075     -0.04790736      0.02755477     -0.00132008
+--
+
+********************************************************************************
+  CASPT2 PROPERTY SECTION
+--------------------------------------------------------------------------------
+ * TypeIndex information is IGNORED *
+
+  Input file to MOLDEN was generated!
+
+
+
+      Mulliken population Analysis:
+      -----------------------------
+
+++    Molecular charges:
+      ------------------
+
+      Mulliken charges per centre and basis function type
+      ---------------------------------------------------
+
+                GE    
+      1s       2.0000
+      2s       2.0000
+      2px      2.0000
+      2pz      2.0000
+      2py      2.0000
+      3s       2.0000
+      3px      2.0000
+      3pz      2.0000
+      3py      2.0000
+      4s       1.9679
+      3d2+     2.0000
+      3d1+     2.0000
+      3d0      2.0000
+      3d1-     2.0000
+      3d2-     2.0000
+      4px      0.0257
+      4pz      0.9919
+      4py      0.9934
+      5s       0.0031
+      4d2+     0.0002
+      4d1+     0.0005
+      4d0      0.0003
+      4d1-     0.0018
+      4d2-     0.0005
+      5px      0.0009
+      5pz      0.0076
+      5py      0.0061
+      Total   32.0000
+
+      N-E     -0.0000
+
+      Total electronic charge=   32.000000
+
+      Total            charge=   -0.000000
+--
+
+
+      Expectation values of various properties:
+      -----------------------------------------
+
+++    Molecular properties:
+      ---------------------
+
+      Charge (e):
+                      =   -0.0000
+--
+
+--
+
+++ CASPT2 computation    4
+
+********************************************************************************
+ Multi-State initialization phase begins for group   4
+--------------------------------------------------------------------------------
+********************************************************************************
+ Compute H0 matrices for state    4
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+ H0 matrices have been computed.
+
+********************************************************************************
+  CASPT2 EQUATION SOLUTION
+--------------------------------------------------------------------------------
+
+  Total nr of CASPT2 parameters:
+   Before reduction:         627
+   After  reduction:         438
+
+ The contributions to the second order correlation energy in atomic units.
+-----------------------------------------------------------------------------------------------------------------------------
+  IT.      VJTU        VJTI        ATVX        AIVX        VJAI        BVAT        BJAT        BJAI        TOTAL       RNORM  
+-----------------------------------------------------------------------------------------------------------------------------
+   1     0.000000    0.000000   -0.009645    0.000000    0.000000   -0.010579    0.000000    0.000000   -0.020224    0.000155
+   2     0.000000    0.000000   -0.009650    0.000000    0.000000   -0.010581    0.000000    0.000000   -0.020232    0.000005
+   3     0.000000    0.000000   -0.009651    0.000000    0.000000   -0.010581    0.000000    0.000000   -0.020232    0.000000
+   4     0.000000    0.000000   -0.009651    0.000000    0.000000   -0.010581    0.000000    0.000000   -0.020232    0.000000
+-------------------------------------------------------------------------------------------------------------------
+
+  FINAL CASPT2 RESULT:
+
+      Reference energy:       -2096.9258014933
+      E2 (Non-variational):      -0.0202316855
+      E2 (Variational):          -0.0202316855
+      Total energy:           -2096.9460331788
+      Residual norm:              0.0000000002
+      Reference weight:           0.99139
+
+      Contributions to the CASPT2 correlation energy
+      Active & Virtual Only:         -0.0202316855
+      One Inactive Excited:           0.0000000000
+      Two Inactive Excited:           0.0000000000
+
+
+++ Denominators, etc.
+----------------------------------------------------------------------------------------------------
+ Report on small energy denominators, large coefficients, and large energy contributions.
+CASE  SYMM ACTIVE-MIX  NON-ACTIVE INDICES          DENOMINATOR     RHS VALUE       COEFFICIENT     CONTRIBUTION
+ATVX     1  Mu1.0005  Se1.014                       3.01872346      0.10191508     -0.03357852     -0.00342216
+ATVX     2  Mu2.0004  Se2.010                       1.71825834      0.05590651     -0.03201769     -0.00179000
+ATVX     2  Mu2.0005  Se2.012                       1.81368022      0.04712621     -0.02559905     -0.00120639
+BVATP    1  Mu1.0001  Se2.011 Se2.011               1.66322369     -0.04840536      0.02893503     -0.00140061
+BVATP    2  Mu2.0001  Se2.011 Se1.010               1.69701622      0.05108926     -0.03009569     -0.00153757
+BVATM    2  Mu2.0001  Se2.011 Se1.010               1.69701622     -0.04496111      0.02647748     -0.00119046
+--
+
+********************************************************************************
+  CASPT2 PROPERTY SECTION
+--------------------------------------------------------------------------------
+ * TypeIndex information is IGNORED *
+
+  Input file to MOLDEN was generated!
+
+
+
+      Mulliken population Analysis:
+      -----------------------------
+
+++    Molecular charges:
+      ------------------
+
+      Mulliken charges per centre and basis function type
+      ---------------------------------------------------
+
+                GE    
+      1s       2.0000
+      2s       2.0000
+      2px      2.0000
+      2pz      2.0000
+      2py      2.0000
+      3s       2.0000
+      3px      2.0000
+      3pz      2.0000
+      3py      2.0000
+      4s       1.9551
+      3d2+     2.0000
+      3d1+     2.0000
+      3d0      2.0000
+      3d1-     2.0000
+      3d2-     2.0000
+      4px      1.6762
+      4pz      0.1523
+      4py      0.2001
+      5s       0.0036
+      4d2+     0.0004
+      4d1+     0.0012
+      4d0      0.0003
+      4d1-     0.0002
+      4d2-     0.0013
+      5px      0.0071
+      5pz      0.0011
+      5py      0.0012
+      Total   32.0000
+
+      N-E     -0.0000
+
+      Total electronic charge=   32.000000
+
+      Total            charge=   -0.000000
+--
+
+
+      Expectation values of various properties:
+      -----------------------------------------
+
+++    Molecular properties:
+      ---------------------
+
+      Charge (e):
+                      =   -0.0000
+--
+
+--
+
+++ CASPT2 computation    5
+
+********************************************************************************
+ Multi-State initialization phase begins for group   5
+--------------------------------------------------------------------------------
+********************************************************************************
+ Compute H0 matrices for state    5
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+ H0 matrices have been computed.
+
+********************************************************************************
+  CASPT2 EQUATION SOLUTION
+--------------------------------------------------------------------------------
+
+  Total nr of CASPT2 parameters:
+   Before reduction:         627
+   After  reduction:         303
+
+ The contributions to the second order correlation energy in atomic units.
+-----------------------------------------------------------------------------------------------------------------------------
+  IT.      VJTU        VJTI        ATVX        AIVX        VJAI        BVAT        BJAT        BJAI        TOTAL       RNORM  
+-----------------------------------------------------------------------------------------------------------------------------
+   1     0.000000    0.000000   -0.010579    0.000000    0.000000   -0.010040    0.000000    0.000000   -0.020619    0.000198
+   2     0.000000    0.000000   -0.010584    0.000000    0.000000   -0.010046    0.000000    0.000000   -0.020631    0.000006
+   3     0.000000    0.000000   -0.010584    0.000000    0.000000   -0.010046    0.000000    0.000000   -0.020631    0.000000
+   4     0.000000    0.000000   -0.010584    0.000000    0.000000   -0.010046    0.000000    0.000000   -0.020631    0.000000
+-------------------------------------------------------------------------------------------------------------------
+
+  FINAL CASPT2 RESULT:
+
+      Reference energy:       -2096.9203356796
+      E2 (Non-variational):      -0.0206308081
+      E2 (Variational):          -0.0206308081
+      Total energy:           -2096.9409664877
+      Residual norm:              0.0000000001
+      Reference weight:           0.99150
+
+      Contributions to the CASPT2 correlation energy
+      Active & Virtual Only:         -0.0206308081
+      One Inactive Excited:           0.0000000000
+      Two Inactive Excited:           0.0000000000
+
+
+++ Denominators, etc.
+----------------------------------------------------------------------------------------------------
+ Report on small energy denominators, large coefficients, and large energy contributions.
+CASE  SYMM ACTIVE-MIX  NON-ACTIVE INDICES          DENOMINATOR     RHS VALUE       COEFFICIENT     CONTRIBUTION
+ATVX     1  Mu1.0004  Se1.015                       2.93360712      0.11993111     -0.04067685     -0.00487842
+ATVX     2  Mu2.0004  Se2.010                       1.75229585      0.05806370     -0.03267253     -0.00189709
+BVATP    1  Mu1.0001  Se2.012 Se2.011               1.73953460     -0.04854613      0.02765241     -0.00134242
+--
+
+********************************************************************************
+  CASPT2 PROPERTY SECTION
+--------------------------------------------------------------------------------
+ * TypeIndex information is IGNORED *
+
+  Input file to MOLDEN was generated!
+
+
+
+      Mulliken population Analysis:
+      -----------------------------
+
+++    Molecular charges:
+      ------------------
+
+      Mulliken charges per centre and basis function type
+      ---------------------------------------------------
+
+                GE    
+      1s       2.0000
+      2s       2.0000
+      2px      2.0000
+      2pz      2.0000
+      2py      2.0000
+      3s       2.0000
+      3px      2.0000
+      3pz      2.0000
+      3py      2.0000
+      4s       1.9630
+      3d2+     2.0000
+      3d1+     2.0000
+      3d0      2.0000
+      3d1-     2.0000
+      3d2-     2.0000
+      4px      0.9951
+      4pz      0.4265
+      4py      0.6006
+      5s       0.0033
+      4d2+     0.0013
+      4d1+     0.0005
+      4d0      0.0007
+      4d1-     0.0007
+      4d2-     0.0004
+      5px      0.0043
+      5pz      0.0016
+      5py      0.0021
+      Total   32.0000
+
+      N-E     -0.0000
+
+      Total electronic charge=   32.000000
+
+      Total            charge=   -0.000000
+--
+
+
+      Expectation values of various properties:
+      -----------------------------------------
+
+++    Molecular properties:
+      ---------------------
+
+      Charge (e):
+                      =   -0.0000
+--
+
+--
+
+++ CASPT2 computation    6
+
+********************************************************************************
+ Multi-State initialization phase begins for group   6
+--------------------------------------------------------------------------------
+********************************************************************************
+ Compute H0 matrices for state    6
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+ H0 matrices have been computed.
+
+********************************************************************************
+  CASPT2 EQUATION SOLUTION
+--------------------------------------------------------------------------------
+
+  Total nr of CASPT2 parameters:
+   Before reduction:         627
+   After  reduction:         438
+
+ The contributions to the second order correlation energy in atomic units.
+-----------------------------------------------------------------------------------------------------------------------------
+  IT.      VJTU        VJTI        ATVX        AIVX        VJAI        BVAT        BJAT        BJAI        TOTAL       RNORM  
+-----------------------------------------------------------------------------------------------------------------------------
+   1     0.000000    0.000000   -0.006357    0.000000    0.000000   -0.012474    0.000000    0.000000   -0.018831    0.000207
+   2     0.000000    0.000000   -0.006363    0.000000    0.000000   -0.012477    0.000000    0.000000   -0.018840    0.000006
+   3     0.000000    0.000000   -0.006363    0.000000    0.000000   -0.012477    0.000000    0.000000   -0.018840    0.000000
+   4     0.000000    0.000000   -0.006363    0.000000    0.000000   -0.012477    0.000000    0.000000   -0.018840    0.000000
+-------------------------------------------------------------------------------------------------------------------
+
+  FINAL CASPT2 RESULT:
+
+      Reference energy:       -2096.8881133409
+      E2 (Non-variational):      -0.0188404896
+      E2 (Variational):          -0.0188404896
+      Total energy:           -2096.9069538305
+      Residual norm:              0.0000000004
+      Reference weight:           0.99113
+
+      Contributions to the CASPT2 correlation energy
+      Active & Virtual Only:         -0.0188404896
+      One Inactive Excited:           0.0000000000
+      Two Inactive Excited:           0.0000000000
+
+
+++ Denominators, etc.
+----------------------------------------------------------------------------------------------------
+ Report on small energy denominators, large coefficients, and large energy contributions.
+CASE  SYMM ACTIVE-MIX  NON-ACTIVE INDICES          DENOMINATOR     RHS VALUE       COEFFICIENT     CONTRIBUTION
+ATVX     2  Mu2.0004  Se2.010                       1.70478761      0.05486613     -0.03166348     -0.00173725
+ATVX     2  Mu2.0005  Se2.011                       1.76041803      0.05032619     -0.02824843     -0.00142164
+BVATP    1  Mu1.0001  Se2.012 Se2.012               1.67130770      0.05459689     -0.03243472     -0.00177083
+BVATP    2  Mu2.0001  Se2.012 Se1.010               1.69309364      0.05140905     -0.03031951     -0.00155870
+BVATM    2  Mu2.0001  Se2.012 Se1.010               1.69309364     -0.04422098      0.02604144     -0.00115158
+--
+
+********************************************************************************
+  CASPT2 PROPERTY SECTION
+--------------------------------------------------------------------------------
+ * TypeIndex information is IGNORED *
+
+  Input file to MOLDEN was generated!
+
+
+
+      Mulliken population Analysis:
+      -----------------------------
+
+++    Molecular charges:
+      ------------------
+
+      Mulliken charges per centre and basis function type
+      ---------------------------------------------------
+
+                GE    
+      1s       2.0000
+      2s       2.0000
+      2px      2.0000
+      2pz      2.0000
+      2py      2.0000
+      3s       1.9999
+      3px      2.0000
+      3pz      2.0000
+      3py      2.0000
+      4s       1.9183
+      3d2+     2.0000
+      3d1+     2.0000
+      3d0      2.0000
+      3d1-     2.0000
+      3d2-     2.0000
+      4px      0.3096
+      4pz      0.7313
+      4py      1.0244
+      5s       0.0046
+      4d2+     0.0005
+      4d1+     0.0004
+      4d0      0.0007
+      4d1-     0.0005
+      4d2-     0.0005
+      5px      0.0022
+      5pz      0.0032
+      5py      0.0040
+      Total   32.0000
+
+      N-E     -0.0000
+
+      Total electronic charge=   32.000000
+
+      Total            charge=   -0.000000
+--
+
+
+      Expectation values of various properties:
+      -----------------------------------------
+
+++    Molecular properties:
+      ---------------------
+
+      Charge (e):
+                      =   -0.0000
+--
+
+--
+
+  Total CASPT2 energies:
+::    CASPT2 Root  1     Total energy:  -2097.02201105
+::    CASPT2 Root  2     Total energy:  -2096.99280659
+::    CASPT2 Root  3     Total energy:  -2096.97987223
+::    CASPT2 Root  4     Total energy:  -2096.94603318
+::    CASPT2 Root  5     Total energy:  -2096.94096649
+::    CASPT2 Root  6     Total energy:  -2096.90695383
+
+++ Multi-State CASPT2 section:
+********************************************************************************
+  MULTI-STATE CASPT2 SECTION
+--------------------------------------------------------------------------------
+
+  Output diagonal energies have been shifted. Add   -2097.0000000000000     
+
+  Effective Hamiltonian matrix (Symmetric):
+
+                1               2               3               4               5
+  1        -0.02201105
+  2        -0.00000000      0.00719341
+  3         0.00000000     -0.00000000      0.02012777
+  4        -0.00060434     -0.00000000     -0.00000000      0.05396682
+  5        -0.00000000     -0.00000000     -0.00000000      0.00000000      0.05903351
+  6        -0.00121679     -0.00000000      0.00000000      0.00108398      0.00000000
+
+                6
+  6         0.09304617
+
+       Total MS-CASPT2 energies:
+::    MS-CASPT2 Root  1     Total energy:  -2097.02202854
+::    MS-CASPT2 Root  2     Total energy:  -2096.99280659
+::    MS-CASPT2 Root  3     Total energy:  -2096.97987223
+::    MS-CASPT2 Root  4     Total energy:  -2096.94605894
+::    MS-CASPT2 Root  5     Total energy:  -2096.94096649
+::    MS-CASPT2 Root  6     Total energy:  -2096.90691058
+
+       Eigenvectors:
+            0.99991444     -0.00000000      0.00000000     -0.00750590     -0.00000000
+            0.00000000      1.00000000     -0.00000000      0.00000000     -0.00000000
+           -0.00000000      0.00000000      1.00000000     -0.00000000     -0.00000000
+            0.00780189     -0.00000000      0.00000000      0.99958138     -0.00000000
+            0.00000000      0.00000000      0.00000000     -0.00000000      1.00000000
+            0.01049950      0.00000000     -0.00000000     -0.02794165     -0.00000000
+
+           -0.01071310
+           -0.00000000
+            0.00000000
+            0.02786045
+            0.00000000
+            0.99955441
+
+--
+
+  THE ORIGINAL CI ARRAYS ARE NOW MIXED AS LINEAR
+  COMBINATIONS, GIVEN BY THE EIGENVECTORS.
+  A NEW JOBIPH FILE NAMED 'JOBMIX' IS PREPARED.
+********************************************************************************
+
+++ Mixed CI coefficients:
+  The CI coefficients for the MIXED state nr.   1
+--------------------------------------------------------------------------------
+ CI COEFFICIENTS LARGER THAN  0.50D-01
+  Occupation of active orbitals, and spin coupling
+  of open shells. (u,d: Spin up or down).
+  SGUGA info is (Midvert:IsyUp:UpperWalk/LowerWalk)
+        Conf  SGUGA info        Occupation    Coefficient         Weight
+           1  ( 1:1:   1/   1)   2 200          -0.975967       0.952512
+           4  ( 3:1:   1/   1)   2 020           0.139023       0.019327
+           6  ( 3:1:   3/   1)   2 002           0.101186       0.010239
+           7  ( 3:1:   1/   2)   0 220           0.091506       0.008373
+           9  ( 3:1:   3/   2)   0 202           0.093498       0.008742
+
+  The CI coefficients for the MIXED state nr.   2
+--------------------------------------------------------------------------------
+ CI COEFFICIENTS LARGER THAN  0.50D-01
+  Occupation of active orbitals, and spin coupling
+  of open shells. (u,d: Spin up or down).
+  SGUGA info is (Midvert:IsyUp:UpperWalk/LowerWalk)
+        Conf  SGUGA info        Occupation    Coefficient         Weight
+           2  ( 2:2:   1/   1)   2 ud0          -0.993944       0.987925
+          11  ( 5:2:   2/   1)   0 ud2           0.109887       0.012075
+
+  The CI coefficients for the MIXED state nr.   3
+--------------------------------------------------------------------------------
+ CI COEFFICIENTS LARGER THAN  0.50D-01
+  Occupation of active orbitals, and spin coupling
+  of open shells. (u,d: Spin up or down).
+  SGUGA info is (Midvert:IsyUp:UpperWalk/LowerWalk)
+        Conf  SGUGA info        Occupation    Coefficient         Weight
+           3  ( 2:2:   2/   1)   2 u0d           0.993621       0.987283
+          10  ( 5:2:   1/   1)   0 u2d           0.112771       0.012717
+
+  The CI coefficients for the MIXED state nr.   4
+--------------------------------------------------------------------------------
+ CI COEFFICIENTS LARGER THAN  0.50D-01
+  Occupation of active orbitals, and spin coupling
+  of open shells. (u,d: Spin up or down).
+  SGUGA info is (Midvert:IsyUp:UpperWalk/LowerWalk)
+        Conf  SGUGA info        Occupation    Coefficient         Weight
+           1  ( 1:1:   1/   1)   2 200           0.079551       0.006328
+           4  ( 3:1:   1/   1)   2 020           0.896923       0.804471
+           6  ( 3:1:   3/   1)   2 002          -0.413257       0.170781
+           7  ( 3:1:   1/   2)   0 220          -0.117896       0.013900
+          12  ( 6:1:   1/   1)   0 022          -0.050925       0.002593
+
+  The CI coefficients for the MIXED state nr.   5
+--------------------------------------------------------------------------------
+ CI COEFFICIENTS LARGER THAN  0.50D-01
+  Occupation of active orbitals, and spin coupling
+  of open shells. (u,d: Spin up or down).
+  SGUGA info is (Midvert:IsyUp:UpperWalk/LowerWalk)
+        Conf  SGUGA info        Occupation    Coefficient         Weight
+           5  ( 3:1:   2/   1)   2 0ud           0.992467       0.984990
+           8  ( 3:1:   2/   2)   0 2ud          -0.122514       0.015010
+
+  The CI coefficients for the MIXED state nr.   6
+--------------------------------------------------------------------------------
+ CI COEFFICIENTS LARGER THAN  0.50D-01
+  Occupation of active orbitals, and spin coupling
+  of open shells. (u,d: Spin up or down).
+  SGUGA info is (Midvert:IsyUp:UpperWalk/LowerWalk)
+        Conf  SGUGA info        Occupation    Coefficient         Weight
+           1  ( 1:1:   1/   1)   2 200           0.134756       0.018159
+           4  ( 3:1:   1/   1)   2 020           0.388608       0.151016
+           6  ( 3:1:   3/   1)   2 002           0.890570       0.793114
+           7  ( 3:1:   1/   2)   0 220          -0.058445       0.003416
+           9  ( 3:1:   3/   2)   0 202          -0.120502       0.014521
+          12  ( 6:1:   1/   1)   0 022          -0.140619       0.019774
+
+--
+
+ ###############################################################################
+ ###############################################################################
+ ###                                                                         ###
+ ###                                                                         ###
+ ###    RunFile label nBas                                                   ###
+ ###    was used      175 times                                              ###
+ ###                                                                         ###
+ ###                                                                         ###
+ ###############################################################################
+ ###############################################################################
+--- Stop Module: caspt2 at Sun Oct 14 13:46:02 2018 /rc=_RC_ALL_IS_WELL_ ---
+*** files: 003.caspt2.molden.6 003.caspt2.molden.1 003.caspt2.molden.2 003.caspt2.molden.5 003.caspt2.molden.3 003.caspt2.molden.4 003.Pt2Orb.1 003.Pt2Orb.3 003.Pt2Orb.6
+           003.Pt2Orb.2 003.Pt2Orb.5 003.Pt2Orb.4 xmldump
+    saved to directory /home/kml/test/standard
+
+>>> COPY 003.JobMix JOBMIX_S
+
+>>> EXPORT MOLCAS_THR = 0
+
+*** symbolic link created: INPORB -> 003.RasOrb
+--- Start Module: rassi at Sun Oct 14 13:46:02 2018 ---
+
+()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()
+
+                                               &RASSI
+
+                                   only a single process is used
+                       available to each process: 2.0 GB of memory, 1 thread?
+()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()
+
+
+      ********************************************************************************
+      *                                                                              *
+      *                             General data section                             *
+      *                                                                              *
+      ********************************************************************************
+
+   Specific data for JOBIPH file JOBMIX_T                                                                                                                        
+   -------------------------------------
+
+   Header from SEWARD:
+                                          Ge                                   
+        Integrals generated by seward 4.2.0  , Sun Oct 14 13:45:57 2018        
+
+   CASSCF title (first line only):
+       Ge                                                                      
+
+   STATE IRREP:                            1
+   SPIN MULTIPLICITY:                      3
+   ACTIVE ELECTRONS:                       4
+   MAX RAS1 HOLES:                         0
+   MAX RAS3 ELECTRONS:                     0
+   NR OF CONFIG:                           6
+
+   Specific data for JOBIPH file JOBMIX_S                                                                                                                        
+   -------------------------------------
+
+   Header from SEWARD:
+                                          Ge                                   
+        Integrals generated by seward 4.2.0  , Sun Oct 14 13:45:57 2018        
+
+   CASSCF title (first line only):
+       Ge                                                                      
+
+   STATE IRREP:                            1
+   SPIN MULTIPLICITY:                      1
+   ACTIVE ELECTRONS:                       4
+   MAX RAS1 HOLES:                         0
+   MAX RAS3 ELECTRONS:                     0
+   NR OF CONFIG:                          12
+  J2 values cannot be computed.
+  Reason: Angular momentum integrals are missing.
+
+ ###############################################################################
+ ###############################################################################
+ ###                                                                         ###
+ ###                                                                         ###
+ ###    Requested integrals are missing.                                     ###
+ ###                                                                         ###
+ ###                                                                         ###
+ ###############################################################################
+ ###############################################################################
+  SO-Property name, and component:ANGMOM                      1
+  This record cannot be found. Some of the requested
+  properties cannot be computed. Suggested fix: Try
+  recomputing one-electron integrals with keyword
+  'OneOnly', and additional keywords for the
+  properties needed.
+  Also missing:ANGMOM                      2
+  Also missing:ANGMOM                      3
+
+   The following data are common to all the states:
+   ------------------------------------------------
+   (note: frozen counts as inactive, deleted as secondary)
+
+      NR of irreps: 2
+
+                 Total     No./Irrep 
+      Irrep                  1   2
+                            ag  au
+
+      INACTIVE      14       8   6
+      ACTIVE         4       1   3
+      SECONDARY      9       6   3
+      BASIS         27      15  12
+
+      RAS1           0       0   0
+      RAS2           4       1   3
+      RAS3           0       0   0
+
+        MATRIX ELEMENTS WILL BE COMPUTED FOR THE FOLLOWING ONE-ELECTRON OPERATORS, UNLESS ZERO BY SYMMETRY.
+   (Herm=Hermitian, Anti=Antihermitian, Sing=Singlet operator, Trip=Triplet operator)
+     AMFI       1 (ANTITRIP)     AMFI       2 (ANTITRIP)     AMFI       3 (ANTITRIP)
+
+       EIGENSTATES OF A SPIN-FREE HAMILTONIAN WILL BE COMPUTED BASED ON:
+
+  a Hamiltonian matrix assumed to be diagonal with energies read from the wavefunction file(s).
+
+  Nr of states:                    9
+
+   State:        1   2   3   4   5   6   7   8   9
+  JobIph:        1   1   1   2   2   2   2   2   2
+ Root nr:        1   2   3   1   2   3   4   5   6
+
+  HAMILTONIAN MATRIX FOR THE ORIGINAL STATES:
+
+  Diagonal, with energies
+  -2097.03130372  -2097.01846296  -2096.98025698  -2097.02202854  -2096.99280659
+  -2096.97987223  -2096.94605894  -2096.94096649  -2096.90691058
+
+      OVERLAP MATRIX FOR THE ORIGINAL STATES:
+
+  Diagonal, with elements
+      1.00000000      1.00000000      1.00000000      1.00000000      1.00000000
+      1.00000000      1.00000000      1.00000000      1.00000000
+
+::    RASSI State    1     Total energy:  -2097.03130372
+::    RASSI State    2     Total energy:  -2097.01846296
+::    RASSI State    3     Total energy:  -2096.98025698
+::    RASSI State    4     Total energy:  -2097.02202854
+::    RASSI State    5     Total energy:  -2096.99280659
+::    RASSI State    6     Total energy:  -2096.97987223
+::    RASSI State    7     Total energy:  -2096.94605894
+::    RASSI State    8     Total energy:  -2096.94096649
+::    RASSI State    9     Total energy:  -2096.90691058
+
+
+
+      ****************************************************************************************************
+      *                                                                                                  *
+      *                                         Spin-free section                                        *
+      *                                                                                                  *
+      ****************************************************************************************************
+
+
+
+  SPIN-FREE ENERGIES:
+  (Shifted by EVAC (a.u.) =      -2097.0313037218)
+
+ SF State       Relative EVAC(au)   Rel lowest level(eV)    D:o, cm**(-1)
+
+     1             0.0000000000        0.0000000000              0.0000
+     2             0.0128407612        0.3494149095           2818.2213
+     3             0.0510467448        1.3890526785          11203.4655
+     4             0.0092751789        0.2523904747           2035.6665
+     5             0.0384971295        1.0475602517           8449.1433
+     6             0.0514314949        1.3995222622          11287.9084
+     7             0.0852447800        2.3196286159          18709.0667
+     8             0.0903372340        2.4582013470          19826.7311
+     9             0.1243931464        3.3849099236          27301.1399
+ Electric-Quadrupole - Electric-Quadrupole not in
+ Electric-Dipole - Electric-Octupole not included
+ Electric-Dipole - Magnetic-Quadrupole not included
+
+
+
+      ****************************************************************************************************
+      *                                                                                                  *
+      *                                         Spin-orbit section                                       *
+      *                                                                                                  *
+      ****************************************************************************************************
+
+
+ Complex SO-Hamiltonian matrix elements over
+ spin components of spin-free eigenstates (SFS):
+ (In cm-1. Print threshold:    290.000 cm-1)
+ ----------------------------------------------------------------------
+
+  I1  S1  MS1    I2  S2  MS2    Real part    Imag part      Absolute
+     4  1.0 -1.0    1  1.0 -1.0         0.000       328.336       328.336
+     6  1.0  1.0    3  1.0  1.0         0.000      -328.336       328.336
+    10  0.0  0.0    4  1.0 -1.0        -0.000      -341.860       341.860
+    10  0.0  0.0    6  1.0  1.0        -0.000       341.860       341.860
+    11  0.0  0.0    5  1.0  0.0         0.000       322.182       322.182
+    12  0.0  0.0    2  1.0  0.0         0.000       321.927       321.927
+    13  0.0  0.0    2  1.0  0.0         0.000      -331.148       331.148
+    15  0.0  0.0    4  1.0 -1.0         0.000       404.638       404.638
+    15  0.0  0.0    6  1.0  1.0         0.000      -404.638       404.638
+    15  0.0  0.0    7  1.0 -1.0      -355.461         0.000       355.461
+    15  0.0  0.0    8  1.0  0.0        -0.000      -603.238       603.238
+    15  0.0  0.0    9  1.0  1.0      -355.461        -0.000       355.461
+ ----------------------------------------------------------------------
+
+       Total energies including SO-coupling:
+::    SO-RASSI State    1     Total energy:  -2097.03229693
+::    SO-RASSI State    2     Total energy:  -2097.03161607
+::    SO-RASSI State    3     Total energy:  -2097.03143049
+::    SO-RASSI State    4     Total energy:  -2097.02231284
+::    SO-RASSI State    5     Total energy:  -2097.01866859
+::    SO-RASSI State    6     Total energy:  -2097.01822085
+::    SO-RASSI State    7     Total energy:  -2097.01748921
+::    SO-RASSI State    8     Total energy:  -2096.99293275
+::    SO-RASSI State    9     Total energy:  -2096.98174865
+::    SO-RASSI State   10     Total energy:  -2096.98032158
+::    SO-RASSI State   11     Total energy:  -2096.97992519
+::    SO-RASSI State   12     Total energy:  -2096.97825379
+::    SO-RASSI State   13     Total energy:  -2096.94593335
+::    SO-RASSI State   14     Total energy:  -2096.94089625
+::    SO-RASSI State   15     Total energy:  -2096.90666779
+
+
+   Eigenvalues of complex Hamiltonian:
+   -----------------------------------
+
+  (Shifted by EVAC (a.u.) =     -2097.031303722)
+
+          Relative EVac(au)    Rel lowest level(eV)    D:o, cm**(-1)
+
+     1       -0.0009932132          0.0000000000              0.0000
+     2       -0.0003123466          0.0185273234            149.4329
+     3       -0.0001267715          0.0235770790            190.1620
+     4        0.0089908780          0.2716809585           2191.2547
+     5        0.0126351335          0.3708462034           2991.0764
+     6        0.0130828673          0.3830296610           3089.3426
+     7        0.0138145077          0.4029386084           3249.9191
+     8        0.0383709717          1.0711540315           8639.4400
+     9        0.0495550760          1.3754890103          11094.0671
+    10        0.0509821377          1.4143213363          11407.2710
+    11        0.0513785302          1.4251077272          11494.2691
+    12        0.0530499352          1.4705889738          11861.1001
+    13        0.0853703688          2.3500727675          18954.6153
+    14        0.0904074745          2.4871393945          20060.1322
+    15        0.1246359324          3.4185431762          27572.4104
+
+
+ Weights of the five most important spin-orbit-free states for each spin-orbit state.
+
+ SO State  Total energy (au)           Spin-free states, spin, and weights
+ -------------------------------------------------------------------------------------------------------
+    1        -0.000993       1 1.0  0.9154    4 0.0  0.0511    2 1.0  0.0312    3 1.0  0.0014    7 0.0  0.0006
+    2        -0.000312       1 1.0  0.9789    2 1.0  0.0209    8 0.0  0.0003    4 0.0  0.0000    3 1.0  0.0000
+    3        -0.000127       1 1.0  0.9976    6 0.0  0.0013    3 1.0  0.0011    5 0.0  0.0000    4 0.0  0.0000
+    4         0.008991       4 0.0  0.7867    2 1.0  0.1362    1 1.0  0.0768    7 0.0  0.0002    3 1.0  0.0001
+    5         0.012635       2 1.0  0.9933    5 0.0  0.0050    3 1.0  0.0017    4 0.0  0.0000    6 0.0  0.0000
+    6         0.013083       2 1.0  0.9787    1 1.0  0.0207    8 0.0  0.0006    4 0.0  0.0000    3 1.0  0.0000
+    7         0.013815       2 1.0  0.8298    4 0.0  0.1618    1 1.0  0.0056    3 1.0  0.0021    9 0.0  0.0005
+    8         0.038371       5 0.0  0.9753    3 1.0  0.0205    2 1.0  0.0041    1 1.0  0.0000    7 0.0  0.0000
+    9         0.049555       3 1.0  0.5565    6 0.0  0.4435    1 1.0  0.0000    5 0.0  0.0000    2 1.0  0.0000
+   10         0.050982       3 1.0  0.9926    9 0.0  0.0021    2 1.0  0.0021    7 0.0  0.0014    1 1.0  0.0013
+   11         0.051379       3 1.0  0.9778    5 0.0  0.0196    2 1.0  0.0026    1 1.0  0.0000    6 0.0  0.0000
+   12         0.053050       6 0.0  0.5552    3 1.0  0.4424    1 1.0  0.0024    2 1.0  0.0000    5 0.0  0.0000
+   13         0.085370       7 0.0  0.9976    3 1.0  0.0015    1 1.0  0.0007    2 1.0  0.0002    9 0.0  0.0000
+   14         0.090407       8 0.0  0.9991    2 1.0  0.0005    1 1.0  0.0004    7 0.0  0.0000    3 1.0  0.0000
+   15         0.124636       9 0.0  0.9971    3 1.0  0.0023    2 1.0  0.0005    1 1.0  0.0001    7 0.0  0.0000
+ -------------------------------------------------------------------------------------------------------
+
+
+      ****************************************************************************************************
+      *                                                                                                  *
+      *                                    Special properties section                                    *
+      *                                                                                                  *
+      ****************************************************************************************************
+
+
+ ###############################################################################
+ ###############################################################################
+ ###                                                                         ###
+ ###                                                                         ###
+ ###    RunFile label nBas                                                   ###
+ ###    was used      286 times                                              ###
+ ###                                                                         ###
+ ###                                                                         ###
+ ###############################################################################
+ ###############################################################################
+--- Stop Module: rassi at Sun Oct 14 13:46:03 2018 /rc=_RC_ALL_IS_WELL_ ---
+*** files: xmldump
+    saved to directory /home/kml/test/standard
+
+    Timing: Wall=6.22 User=4.96 System=1.12
