@@ -510,27 +510,35 @@ class Psi4(logfileparser.Logfile):
                 self.scfenergies = []
             self.scfenergies.append(utils.convertor(e, 'hartree', 'eV'))
 
-        #  ==> Molecular Orbitals <==
+        #   ==> Molecular Orbitals <==
         #
-        #                 1            2            3            4            5
+        #                     1            2            3            4            5
         #
-        #    1    0.7014827    0.7015412    0.0096801    0.0100168    0.0016438
-        #    2    0.0252630    0.0251793   -0.0037890   -0.0037346    0.0016447
-        # ...
-        #   59    0.0000133   -0.0000067    0.0000005   -0.0047455   -0.0047455
-        #   60    0.0000133    0.0000067    0.0000005    0.0047455   -0.0047455
+        # 1    H1 s0         0.1610392    0.1040990    0.0453848    0.0978665    1.0863246
+        # 2    H1 s0         0.3066996    0.0742959    0.8227318    1.3460922   -1.6429494
+        # 3    H1 s0         0.1669296    1.5494169   -0.8885631   -1.8689490    1.0473633
+        # 4    H2 s0         0.1610392   -0.1040990    0.0453848   -0.0978665   -1.0863246
+        # 5    H2 s0         0.3066996   -0.0742959    0.8227318   -1.3460922    1.6429494
+        # 6    H2 s0         0.1669296   -1.5494169   -0.8885631    1.8689490   -1.0473633
         #
-        # Ene   -11.0288198  -11.0286067  -11.0285837  -11.0174766  -11.0174764
-        # Sym            Ag           Bu           Ag           Bu           Ag
-        # Occ             2            2            2            2            2
+        #             Ene    -0.5279195    0.1235556    0.3277474    0.5523654    2.5371710
+        #             Sym            Ag          B3u           Ag          B3u          B3u
+        #             Occ             2            0            0            0            0
         #
         #
-        #                11           12           13           14           15
+        #                         6
         #
-        #    1    0.1066946    0.1012709    0.0029709    0.0120562    0.1002765
-        #    2   -0.2753689   -0.2708037   -0.0102079   -0.0329973   -0.2790813
-        # ...
+        # 1    H1 s0         1.1331221
+        # 2    H1 s0        -1.2163107
+        # 3    H1 s0         0.4695317
+        # 4    H2 s0         1.1331221
+        # 5    H2 s0        -1.2163107
+        # 6    H2 s0         0.4695317
         #
+        #            Ene     2.6515637
+        #            Sym            Ag
+        #            Occ             0
+
         if (self.section) and ("Molecular Orbitals" in self.section) \
            and ("Molecular Orbitals" in line):
 
@@ -553,10 +561,13 @@ class Psi4(logfileparser.Logfile):
 
                 self.skip_line(inputfile, 'blank')
 
+                n = len(indices)
                 line = next(inputfile)
                 while line.strip():
-                    iao = int(line.split()[0])
-                    coeffs = [float(c) for c in line.split()[1:]]
+                    chomp = line.split()
+                    m = len(chomp)
+                    iao = int(chomp[0])
+                    coeffs = [float(c) for c in chomp[m - n:]]
                     for i, c in enumerate(coeffs):
                         mocoeffs[indices[i]-1].append(c)
                     line = next(inputfile)
@@ -718,9 +729,13 @@ class Psi4(logfileparser.Logfile):
         #
         # Properties will be evaluated at   0.000000,   0.000000,   0.000000 Bohr
         #
+        # OR
+        #
+        # Properties will be evaluated at   0.000000,   0.000000,   0.000000 [a0]
+        #
         if "Properties will be evaluated at" in line.strip():
             self.origin = numpy.array([float(x.strip(',')) for x in line.split()[-4:-1]])
-            assert line.split()[-1] == "Bohr"
+            assert line.split()[-1] in ["Bohr", "[a0]"]
             self.origin = utils.convertor(self.origin, 'bohr', 'Angstrom')
 
         # The properties section print the molecular dipole moment:
@@ -847,6 +862,8 @@ class Psi4(logfileparser.Logfile):
                 self.grads = []
             self.grads.append(gradient)
 
+        # OLD Normal mode output parser (PSI4 < 1)
+
         ## Harmonic frequencies.
 
         # -------------------------------------------------------------
@@ -938,6 +955,49 @@ class Psi4(logfileparser.Logfile):
                 self.vibdisps.append(normal_mode_disps)
                 line = next(inputfile)
 
+        # NEW Normal mode output parser (PSI4 >= 1)
+
+        #   ==> Harmonic Vibrational Analysis <==
+        #   ...
+        #   Vibration                       7                   8                   9
+        #   ...
+        #
+        #   Vibration                       10                  11                  12
+        #   ...
+
+        if line.strip() == '==> Harmonic Vibrational Analysis <==':
+
+            vibsyms = []
+            vibfreqs = []
+            vibdisps = []
+
+            # Skip lines till the first Vibration block
+            while not line.strip().startswith('Vibration'):
+                line = next(inputfile)
+
+            n_modes = 0
+            # Parse all the Vibration blocks
+            while line.strip().startswith('Vibration'):
+                n = len(line.split()) - 1
+                n_modes += n
+                vibfreqs_, vibsyms_, vibdisps_ = self.parse_vibration(n, inputfile)
+                vibfreqs.extend(vibfreqs_)
+                vibsyms.extend(vibsyms_)
+                vibdisps.extend(vibdisps_)
+                line = next(inputfile)
+
+            # It looks like the symmetry of the normal mode may be missing 
+            # from some / most. Only include them if they are there for all
+
+            if len(vibfreqs) == n_modes:
+                self.set_attribute('vibfreqs', vibfreqs)
+
+            if len(vibsyms) == n_modes:
+                self.set_attribute('vibsyms', vibsyms)
+
+            if len(vibdisps) == n_modes:
+                self.set_attribute('vibdisps', vibdisps)
+
         if line[:54] == '*** Psi4 exiting successfully. Buy a developer a beer!'\
                 or line[:54] == '*** PSI4 exiting successfully. Buy a developer a beer!':
             self.metadata['success'] = True
@@ -968,6 +1028,65 @@ class Psi4(logfileparser.Logfile):
             gradient.append((float(x), float(y), float(z)))
             line = next(inputfile)
         return gradient
+
+    @staticmethod
+    def parse_vibration(n, inputfile):
+
+        #   Freq [cm^-1]                1501.9533           1501.9533           1501.9533
+        #   Irrep
+        #   Reduced mass [u]              1.1820              1.1820              1.1820
+        #   Force const [mDyne/A]         1.5710              1.5710              1.5710
+        #   Turning point v=0 [a0]        0.2604              0.2604              0.2604
+        #   RMS dev v=0 [a0 u^1/2]        0.2002              0.2002              0.2002
+        #   Char temp [K]               2160.9731           2160.9731           2160.9731
+        #   ----------------------------------------------------------------------------------
+        #       1   C               -0.00  0.01  0.13   -0.00 -0.13  0.01   -0.13  0.00 -0.00
+        #       2   H                0.33 -0.03 -0.38    0.02  0.60 -0.02    0.14 -0.01 -0.32
+        #       3   H               -0.32 -0.03 -0.37   -0.01  0.60 -0.01    0.15 -0.01  0.33
+        #       4   H                0.02  0.32 -0.36    0.01  0.16 -0.34    0.60 -0.01  0.01
+        #       5   H                0.02 -0.33 -0.39    0.01  0.13  0.31    0.60  0.01  0.01
+
+        line = next(inputfile)
+        assert 'Freq' in line
+        chomp = line.split()
+        vibfreqs = [float(x) for x in chomp[-n:]]
+
+        line = next(inputfile)
+        assert 'Irrep' in line
+        chomp = line.split()
+        vibsyms = [irrep for irrep in chomp[1:]]
+
+        line = next(inputfile)
+        assert 'Reduced mass' in line
+
+        line = next(inputfile)
+        assert 'Force const' in line
+
+        line = next(inputfile)
+        assert 'Turning point' in line
+
+        line = next(inputfile)
+        assert 'RMS dev' in line
+
+        line = next(inputfile)
+        assert 'Char temp' in line
+
+        line = next(inputfile)
+        assert '---' in line
+
+        line = next(inputfile)
+        vibdisps = [ [] for i in range(n)]
+        while len(line.strip()) > 0:
+            chomp = line.split()
+            for i in range(n):
+                start = len(chomp) - (n - i) * 3
+                stop = start + 3
+                mode_disps = [float(c) for c in chomp[start:stop]]
+                vibdisps[i].append(mode_disps)
+
+            line = next(inputfile)
+
+        return vibfreqs, vibsyms, vibdisps
 
     @staticmethod
     def parse_vibfreq(vibfreq):
