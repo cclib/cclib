@@ -147,7 +147,7 @@ class Molcas(logfileparser.Logfile):
 
                 line = next(inputfile)
 
-        if line.strip().startswith('Total molecular charge'):
+        if line.strip().startswith(('Molecular charge', 'Total molecular charge')):
             self.set_attribute('charge', int(float(line.split()[-1])))
 
         #  ++    Molecular charges:
