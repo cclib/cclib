@@ -1500,6 +1500,7 @@ def testQChem_QChem5_0_argon_out(logfile):
     assert logfile.data.scfenergies[0] == convertor(state_0_energy, 'hartree', 'eV')
     assert abs(logfile.data.etenergies[0] - convertor(state_1_energy - state_0_energy, 'hartree', 'cm-1')) < 1.0e-1
 
+# ORCA
 
 def testORCA_ORCA3_0_chelpg_out(logfile):
     """orca file with chelpg charges"""
@@ -1508,6 +1509,11 @@ def testORCA_ORCA3_0_chelpg_out(logfile):
     assert len(charges) == 9
     assert charges[0] == 0.363939
     assert charges[1] == 0.025695
+
+# Turbomole
+
+def testTurbomole_Turbomole7_2_dvb_gopt_b3_lyp_Gaussian__(logfile):
+    assert logfile.data.natom == 20
 
 # These regression tests are for logfiles that are not to be parsed
 # for some reason, and the function should start with 'testnoparse'.
@@ -1724,6 +1730,7 @@ class OrcaIRTest_old(OrcaIRTest):
     def testirintens(self):
         """These values were wrong due to wrong input coordinates."""
 
+
 old_unittests = {
 
     "ADF/ADF2004.01/MoOCl4-sp.adfout":      ADFCoreTest,
@@ -1905,16 +1912,20 @@ def make_regression_from_old_unittest(test_class):
 
 def main(which=[], opt_traceback=False, opt_status=False, regdir=__regression_dir__):
 
-    # Build a list of regression files that can be found.
+    # Build a list of regression files that can be found. If there is a directory
+    # on the third level, then treat all files within it as one job.
     try:
         filenames = {}
         for p in parser_names:
             filenames[p] = []
             pdir = os.path.join(regdir, get_program_dir(p))
             for version in os.listdir(pdir):
-                for fn in os.listdir(os.path.join(pdir, version)):
-                    fpath = os.path.join(pdir, version, fn)
-                    filenames[p].append(fpath)
+                for job in os.listdir(os.path.join(pdir, version)):
+                    path = os.path.join(pdir, version, job)
+                    if os.path.isdir(path):
+                        filenames[p].append(os.path.join(path, "*"))
+                    else:
+                        filenames[p].append(path)
     except OSError as e:
         print(e)
         print("\nERROR: At least one program direcory is missing.")
@@ -1923,7 +1934,7 @@ def main(which=[], opt_traceback=False, opt_status=False, regdir=__regression_di
 
     # This file should contain the paths to all regresssion test files we have gathered
     # over the years. It is not really necessary, since we can discover them on the disk,
-    # but we keep it as a legacy and a way to track double check the regression tests.
+    # but we keep it as a legacy and a way to track the regression tests.
     regfile = open(os.path.join(regdir, "regressionfiles.txt"), "r")
     regfilenames = [os.sep.join(x.strip().split("/")) for x in regfile.readlines()]
     regfile.close()
@@ -2005,12 +2016,18 @@ def main(which=[], opt_traceback=False, opt_status=False, regdir=__regression_di
             test_noparse = not test_this and funcname_noparse in globals()
 
             if not test_noparse:
+                datatype = parser_class.datatype if hasattr(parser_class, 'datatype') else ccData
+                job_filenames = glob.glob(fname)
                 try:
-                    datatype = parser_class.datatype if hasattr(parser_class, 'datatype') else ccData
-                    logfile = ccopen(os.path.join(__filedir__, fname), datatype=datatype)
+                    if len(job_filenames) == 1:
+                        logfile = ccopen(job_filenames[0], datatype=datatype)
+                    else:
+                        logfile = ccopen(job_filenames, datatype=datatype)
                 except Exception as e:
                     errors += 1
                     print("ccopen error: ", e)
+                    if opt_traceback:
+                        print(traceback.format_exc())
                 else:
                     if type(logfile) == parser_class:
                         try:
@@ -2019,7 +2036,7 @@ def main(which=[], opt_traceback=False, opt_status=False, regdir=__regression_di
                         except KeyboardInterrupt:
                             sys.exit(1)
                         except Exception as e:
-                            print("parse error")
+                            print("parse error:", e)
                             errors += 1
                             if opt_traceback:
                                 print(traceback.format_exc())
