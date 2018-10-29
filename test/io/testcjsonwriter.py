@@ -53,6 +53,7 @@ class CJSONTest(unittest.TestCase):
         """Does the CJSON writer handles missing properties correctly?"""
         fpath = os.path.join(__datadir__, "data/GAMESS/basicGAMESS-US2017/C_bigbasis.out")
         data = cclib.io.ccopen(fpath).parse()
+        del data.moments
 
         cjson = cclib.io.cjsonwriter.CJSON(data).generate_repr()
 
