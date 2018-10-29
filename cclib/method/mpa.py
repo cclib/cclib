@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2017, the cclib development team
+# Copyright (c) 2018, the cclib development team
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
@@ -32,22 +32,6 @@ class MPA(Population):
 
     def calculate(self, indices=None, fupdate=0.05):
         """Perform a Mulliken population analysis."""
-
-        # Do we have the needed attributes in the data object?
-        if not hasattr(self.data, "mocoeffs"):
-            self.logger.error("Missing mocoeffs")
-            return False
-        if not (hasattr(self.data, "aooverlaps") \
-             or hasattr(self.data, "fooverlaps") ):
-            self.logger.error("Missing overlap matrix")
-            return False
-        if not hasattr(self.data, "nbasis"):
-            self.logger.error("Missing nbasis")
-            return False
-        if not hasattr(self.data, "homos"):
-            self.logger.error("Missing homos")
-            return False
-
 
         # Determine number of steps, and whether process involves beta orbitals.
         self.logger.info("Creating attribute aoresults: [array[2]]")

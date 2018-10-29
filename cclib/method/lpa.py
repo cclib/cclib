@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2017, the cclib development team
+# Copyright (c) 2018, the cclib development team
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
@@ -36,21 +36,6 @@ class LPA(Population):
           indices - list of lists containing atomic orbital indices of fragments
           x - overlap matrix exponent in wavefunxtion projection (x=0.5 for Lowdin)
         """
-
-        # Do we have the needed info in the parser?
-        if not hasattr(self.data,"mocoeffs"):
-            self.logger.error("Missing mocoeffs")
-            return False
-        if not (hasattr(self.data, "aooverlaps") \
-                    or hasattr(self.data, "fooverlaps") ):
-            self.logger.error("Missing overlap matrix")
-            return False
-        if not hasattr(self.data, "nbasis"):
-            self.logger.error("Missing nbasis")
-            return False
-        if not hasattr(self.data, "homos"):
-            self.logger.error("Missing homos")
-            return False
 
         unrestricted = (len(self.data.mocoeffs) == 2)
         nbasis = self.data.nbasis
