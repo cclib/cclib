@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2017, the cclib development team
+# Copyright (c) 2018, the cclib development team
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
@@ -91,8 +91,7 @@ class Writer(object):
                 'Could not parse required attributes to write file: ' + missing)
 
     def _make_openbabel_from_ccdata(self):
-        """Create Open Babel and Pybel molecules from ccData.
-        """
+        """Create Open Babel and Pybel molecules from ccData."""        
         if not hasattr(self.ccdata, 'charge'):
             logging.warning("ccdata object does not have charge, setting to 0")
             _charge = 0

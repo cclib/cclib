@@ -51,7 +51,7 @@ class CJSONTest(unittest.TestCase):
 
     def test_incomplete_data(self):
         """Does the CJSON writer handles missing properties correctly?"""
-        fpath = os.path.join(__datadir__, "data/DALTON/basicDALTON-2013/C_bigbasis.out")
+        fpath = os.path.join(__datadir__, "data/GAMESS/basicGAMESS-US2017/C_bigbasis.out")
         data = cclib.io.ccopen(fpath).parse()
 
         cjson = cclib.io.cjsonwriter.CJSON(data).generate_repr()
