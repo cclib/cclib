@@ -19,7 +19,7 @@ import numpy
 
 from cclib.method import Orbitals
 from cclib.parser import Gaussian
-from cclib.parser import Psi
+from cclib.parser import Psi4
 
 sys.path.insert(1, "..")
 
@@ -47,7 +47,7 @@ class UnrestrictedCalculationTest(unittest.TestCase):
 class RestrictedOpenShellCalculationTest(unittest.TestCase):
     """Check restricted open shell calcualtion."""
     def setUp(self):
-        self.data, self.logfile = getdatafile(Psi, "basicPsi4.0", ["dvb_sp_rohf.out"])
+        self.data, self.logfile = getdatafile(Psi4, "basicPsi4-1.0", ["dvb_sp_rohf.out"])
 
     def test_closed_shel(self):
         self.assertFalse(Orbitals(self.data).closed_shell())

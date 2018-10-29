@@ -16,15 +16,12 @@ import os
 files = ['ANNOUNCE', 'CHANGELOG', 'INSTALL', 'LICENSE', 'README.md','THANKS',]
 files += ['setup.py']
 
-source = os.path.join('src', 'cclib')
+source = 'cclib'
 files.append(os.path.join(source, "__init__.py"))
-files.append(os.path.join("src", "scripts", "ccget"))
-files.append(os.path.join("src", "scripts", "ccwrite"))
-files.append(os.path.join("src", "scripts", "cda"))
 
 folders = ['bridge', 'io', 'method', 'parser', 'progress']
 for folder in folders:
-    files.extend(glob.glob(os.path.join(source,folder,'*.py')))
+    files.extend(glob.glob(os.path.join(source, folder, '*.py')))
 
 for f in files:
     if not os.path.isfile(f):

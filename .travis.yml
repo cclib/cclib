@@ -3,7 +3,7 @@ dist: trusty
 language: python
 python:
   - 2.7
-  - 3.2
+  - 3.4
   - 3.6
 addons:
   apt:
@@ -12,9 +12,31 @@ addons:
       - swig
 cache:
   pip: true
+
 before_install:
   - pip install -r requirements.txt
+
 install:
-  - python setup.py install
+  - pip install .
+
+before_script:
+  - |
+    export DOCS_BRANCH_NAME=master
+    export DOCS_REPO_NAME=cclib.github.io
+    export DOCS_REPO_OWNER=cclib
+    export DOCS_ROOT_DIR="${TRAVIS_BUILD_DIR}"/doc/sphinx
+    export DOCS_BUILD_DIR="${DOCS_ROOT_DIR}"/_build/html
+    export THEME_DIR="${DOCS_ROOT_DIR}"/_themes
+  - install -dm755 "${THEME_DIR}"
+
 script:
-  - sh travis/run_travis_tests.sh
+  - bash travis/run_travis_tests.sh
+  - bash travis/build_docs.bash
+  - env | sort
+  - |
+    if [[ "${TRAVIS_BRANCH}" == master && "${TRAVIS_PULL_REQUEST}" == false && $TRAVIS_PYTHON_VERSION == 3.6 ]];
+    then
+        # Commits to master that are not pull requests, that is, only actual
+        # addition of code to master, should deploy the documentation.
+        bash ${TRAVIS_BUILD_DIR}/travis/deploy_docs_travis.bash
+    fi

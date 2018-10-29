@@ -1,7 +1,7 @@
 # This file is part of cclib (http://cclib.github.io), a library for parsing
 # and interpreting the results of computational chemistry packages.
 #
-# Copyright (C) 2006-2016, the cclib development team
+# Copyright (C) 2018, the cclib development team
 #
 # The library is free software, distributed under the terms of
 # the GNU Lesser General Public version 2.1 or later. You should have
@@ -23,10 +23,17 @@ have been moved here from the cclib repository when newer versions
 became available. We still want those logfiles to parse and test correctly,
 although sometimes special modification will be needed.
 
-To run the doctest, just use `python regression.py test`.
+To run the doctest, run `python -m test.regression` from the top level
+directory in the cclib repository.
 
-Note that this script was moved from the main cclib repository in Feb 2015
-in order for it to be close to the data, so look there for previous history.
+Running all regression can take anywhere from 10-20s to several minutes
+depending in your hardware. To aid debugging, there are two ways to limit
+which regressions to parse and test. You can limit the test to a specific
+parse, for example:
+    python -m test.regression Gaussian
+You can also limit a run to a single output file, using it's relative path
+inside the data directory, like so:
+    python -m test.regression Gaussian/Gaussian03/borane-opt.log
 """
 
 from __future__ import print_function
@@ -52,12 +59,14 @@ from cclib.parser import GAMESS
 from cclib.parser import GAMESSUK
 from cclib.parser import Gaussian
 from cclib.parser import Jaguar
+from cclib.parser import Molcas
 from cclib.parser import Molpro
 from cclib.parser import MOPAC
 from cclib.parser import NWChem
 from cclib.parser import ORCA
-from cclib.parser import Psi
+from cclib.parser import Psi4, Psi3
 from cclib.parser import QChem
+from cclib.parser import Turbomole
 
 from cclib.io import ccopen
 
@@ -65,6 +74,8 @@ from cclib.io import ccopen
 # within the cclib repository. It would be better to figure out a more natural
 # way to import the relevant tests from cclib here.
 test_dir = os.path.realpath(os.path.dirname(__file__)) + "/../../test"
+# This is safer than sys.path.append, and isn't sys.path.insert(0, ...) so
+# virtualenvs work properly. See https://stackoverflow.com/q/10095037.
 sys.path.insert(1, os.path.abspath(test_dir))
 from .test_data import all_modules
 from .test_data import all_parsers
@@ -267,6 +278,13 @@ def testGAMESS_GAMESS_US2012_stopiter_gamess_out(logfile):
 def testGAMESS_GAMESS_US2013_N_UHF_out(logfile):
     """An UHF job that has an LZ value analysis between the alpha and beta orbitals."""
     assert len(logfile.data.moenergies) == 2
+
+def testGAMESS_GAMESS_US2014_CdtetraM1B3LYP_log(logfile):
+    """This logfile had coefficients for only 80 molecular orbitals."""
+    assert len(logfile.data.mocoeffs) == 2
+    assert numpy.count_nonzero(logfile.data.mocoeffs[0][79-1:, :]) == 258
+    assert numpy.count_nonzero(logfile.data.mocoeffs[0][80-1: 0:]) == 0
+    assert logfile.data.mocoeffs[0].all() == logfile.data.mocoeffs[1].all()
 
 def testGAMESS_WinGAMESS_dvb_td_trplet_2007_03_24_r1_out(logfile):
     """Do some basic checks for this old unit test that was failing.
@@ -510,18 +528,43 @@ def testGaussian_Gaussian09_benzene_freq_log(logfile):
     """Check that default precision vib displacements are parsed correctly."""
     assert abs(logfile.data.vibdisps[0,0,2] - (-0.04)) < 0.00001
 
+def testGaussian_Gaussian09_relaxed_PES_testH2_log(logfile):
+    """Check that all optimizations converge in a single step."""
+    atomcoords = logfile.data.atomcoords
+    optstatus = logfile.data.optstatus
+    assert len(optstatus) == len(atomcoords)
+
+    assert all(s == ccData.OPT_DONE + ccData.OPT_NEW for s in optstatus)
+
+def testGaussian_Gaussian09_relaxed_PES_testCO2_log(logfile):
+    """A relaxed PES scan with some uncoverged and some converged runs."""
+    atomcoords = logfile.data.atomcoords
+    optstatus = logfile.data.optstatus
+    assert len(optstatus) == len(atomcoords)
+
+    new_points = numpy.where(optstatus & ccData.OPT_NEW)[0]
+
+    # The first new point is just the beginning of the scan.
+    assert new_points[0] == 0
+
+    # The next two new points are at the end of unconverged runs.
+    assert optstatus[new_points[1]-1] == ccData.OPT_UNCONVERGED
+    assert all(optstatus[i] == ccData.OPT_UNKNOWN for i in range(new_points[0]+1, new_points[1]-1))
+    assert optstatus[new_points[2]-1] == ccData.OPT_UNCONVERGED
+    assert all(optstatus[i] == ccData.OPT_UNKNOWN for i in range(new_points[1]+1, new_points[2]-1))
+
+    # The next new point is after a convergence.
+    assert optstatus[new_points[3]-1] == ccData.OPT_DONE
+    assert all(optstatus[i] == ccData.OPT_UNKNOWN for i in range(new_points[2]+1, new_points[3]-1))
+    
+    # All subsequent point are both new and converged, since they seem
+    # to have converged in a single step.
+    assert all(s == ccData.OPT_DONE + ccData.OPT_NEW for s in optstatus[new_points[3]:])
+
 def testGaussian_Gaussian09_stopiter_gaussian_out(logfile):
     """Check to ensure that an incomplete SCF is handled correctly."""
     assert len(logfile.data.scfvalues[0]) == 4
 
-def testGaussian_Gaussian09_dvb_bomd_out(logfile):
-    """
-    Check that the number of energies and geometries corresponds to 
-    integrated steps, and not all the energies and geometries found in the file.
-    """
-    assert logfile.data.scfenergies.shape == (35,)
-    assert logfile.data.atomcoords.shape == (35,20,3)
-    assert logfile.data.time.shape == (35,)
 
 # Jaguar #
 
@@ -537,6 +580,35 @@ def testJaguar_Jaguar8_3_stopiter_jaguar_dft_out(logfile):
 def testJaguar_Jaguar8_3_stopiter_jaguar_hf_out(logfile):
     """Check to ensure that an incomplete SCF is handled correctly."""
     assert len(logfile.data.scfvalues[0]) == 3
+
+# Molcas #
+
+def testMolcas_Molcas18_test_standard_000_out(logfile):
+    """Don't support parsing MOs for multiple symmetry species."""
+    assert not hasattr(logfile.data, "moenergies")
+    assert not hasattr(logfile.data, "mocoeffs")
+
+def testMolcas_Molcas18_test_standard_001_out(logfile):
+    """This logfile has two calculations, and we currently only want to parse the first."""
+    assert logfile.data.natom == 8
+
+    # There are also four symmetry species, and orbital count should cover all of them.
+    assert logfile.data.nbasis == 30
+    assert logfile.data.nmo == 30
+
+def testMolcas_Molcas18_test_stadard_003_out(logfile):
+    """This logfile has extra charged monopoles (not part of the molecule)."""
+    assert logfile.data.charge == 0
+
+def testMolcas_Molcas18_test_stevenv_001_out(logfile):
+    """Don't support parsing MOs for RAS (active space)."""
+    assert not hasattr(logfile.data, "moenergies")
+    assert not hasattr(logfile.data, "mocoeffs")
+
+def testMolcas_Molcas18_test_stevenv_desym_out(logfile):
+    """This logfile has iterations interrupted by a Fermi aufbau procedure."""
+    assert len(logfile.data.scfvalues) == 1
+    assert len(logfile.data.scfvalues[0]) == 26
 
 # Molpro #
 
@@ -657,6 +729,13 @@ def testNWChem_NWChem6_5_stopiter_nwchem_hf_out(logfile):
     """Check to ensure that an incomplete SCF is handled correctly."""
     assert len(logfile.data.scfvalues[0]) == 2
 
+def testNWChem_NWChem6_8_526_out(logfile):
+    """If `print low` is present in the input, SCF iterations are not
+    printed.
+    """
+    assert not hasattr(logfile.data, "scftargets")
+    assert not hasattr(logfile.data, "scfvalues")
+
 # ORCA #
 
 def testORCA_ORCA2_8_co_cosmo_out(logfile):
@@ -715,6 +794,20 @@ def testORCA_ORCA4_0_1_ttt_td_out(logfile):
     assert len(logfile.data.etsecs[0]) == 1
     assert numpy.isnan(logfile.data.etsecs[0][0][2])
 
+def testORCA_ORCA4_0_invalid_literal_for_float_out(logfile):
+    """MO coefficients are glued together, see #629."""
+    assert hasattr(logfile.data, 'mocoeffs')
+    assert logfile.data.mocoeffs[0].shape == (logfile.data.nmo, logfile.data.nbasis)
+
+    # Test the coefficients from this line where things are glued together:
+    # 15C   6s       -154.480939-111.069870-171.460819-79.052025241.536860-92.159399
+    assert logfile.data.mocoeffs[0][102][378] == -154.480939
+    assert logfile.data.mocoeffs[0][103][378] == -111.069870
+    assert logfile.data.mocoeffs[0][104][378] == -171.460819
+    assert logfile.data.mocoeffs[0][105][378] == -79.052025
+    assert logfile.data.mocoeffs[0][106][378] == 241.536860
+    assert logfile.data.mocoeffs[0][107][378] == -92.159399
+
 def testORCA_ORCA4_0_IrCl6_sp_out(logfile):
     """Tests ECP and weird SCF printing."""
     assert hasattr(logfile.data, 'scfvalues')
@@ -727,7 +820,7 @@ def testORCA_ORCA4_0_IrCl6_sp_out(logfile):
 
 # PSI #
 
-def testPsi_Psi3_water_psi3_log(logfile):
+def testPsi3_Psi3_4_water_psi3_log(logfile):
     """An RHF for water with D orbitals and C2v symmetry.
 
     Here we can check that the D orbitals are considered by checking atombasis and nbasis.
@@ -735,21 +828,32 @@ def testPsi_Psi3_water_psi3_log(logfile):
     assert logfile.data.nbasis == 25
     assert [len(ab) for ab in logfile.data.atombasis] == [15, 5, 5]
 
-def testPsi_Psi4_0b5_dvb_gopt_hf_unconverged_out(logfile):
+def testPsi4_Psi4_beta5_dvb_gopt_hf_unconverged_out(logfile):
     """An unconverged geometry optimization to test for empty optdone (see #103 for details)."""
     assert hasattr(logfile.data, 'optdone') and not logfile.data.optdone
 
-def testPsi_Psi4_0b5_stopiter_psi_dft_out(logfile):
+def testPsi4_Psi4_beta5_stopiter_psi_dft_out(logfile):
     """Check to ensure that an incomplete SCF is handled correctly."""
     assert len(logfile.data.scfvalues[0]) == 7
 
-def testPsi_Psi4_0b5_stopiter_psi_hf_out(logfile):
+def testPsi4_Psi4_beta5_stopiter_psi_hf_out(logfile):
     """Check to ensure that an incomplete SCF is handled correctly."""
     assert len(logfile.data.scfvalues[0]) == 6
 
-def testPsi_Psi4_0_water_fdgrad_out(logfile):
+def testPsi4_Psi4_0_5_water_fdgrad_out(logfile):
     """Ensure that finite difference gradients are parsed."""
     assert hasattr(logfile.data, 'grads')
+    assert logfile.data.grads.shape == (1, 3, 3)
+    assert abs(logfile.data.grads[0, 0, 2] - 0.05498126903657) < 1.0e-12
+    # In C2v symmetry, there are 5 unique displacements for the
+    # nuclear gradient, and this is at the MP2 level.
+    assert logfile.data.mpenergies.shape == (5, 1)
+
+def testPsi4_Psi4_1_2_ch4_hf_opt_freq_out(logfile):
+    """Ensure that molecular orbitals and normal modes are parsed in Psi4 1.2"""
+    assert hasattr(logfile.data, 'mocoeffs')
+    assert hasattr(logfile.data, 'vibdisps')
+    assert hasattr(logfile.data, 'vibfreqs')
 
 # Q-Chem #
 
@@ -1396,6 +1500,7 @@ def testQChem_QChem5_0_argon_out(logfile):
     assert logfile.data.scfenergies[0] == convertor(state_0_energy, 'hartree', 'eV')
     assert abs(logfile.data.etenergies[0] - convertor(state_1_energy - state_0_energy, 'hartree', 'cm-1')) < 1.0e-1
 
+# ORCA
 
 def testORCA_ORCA3_0_chelpg_out(logfile):
     """orca file with chelpg charges"""
@@ -1404,6 +1509,11 @@ def testORCA_ORCA3_0_chelpg_out(logfile):
     assert len(charges) == 9
     assert charges[0] == 0.363939
     assert charges[1] == 0.025695
+
+# Turbomole
+
+def testTurbomole_Turbomole7_2_dvb_gopt_b3_lyp_Gaussian__(logfile):
+    assert logfile.data.natom == 20
 
 # These regression tests are for logfiles that are not to be parsed
 # for some reason, and the function should start with 'testnoparse'.
@@ -1518,7 +1628,7 @@ class GAMESSUSSPunTest_charge0(GenericSPunTest):
     def testhomos(self):
         """HOMOs were incorrect due to charge being wrong."""
 
-class GAMESSUSIRTest_ts(GenericIRTest):
+class GAMESSUSIRTest_ts(GenericIRimgTest):
     @unittest.skip('This is a transition state with different intensities')
     def testirintens(self):
         """This is a transition state with different intensities."""
@@ -1544,7 +1654,7 @@ class GaussianPolarTest(ReferencePolarTest):
     isotropic_delta = 2.0
     principal_components_delta = 0.7
 
-class JaguarSPTest_6_31gss(GenericSPTest):
+class JaguarSPTest_6_31gss(JaguarSPTest):
     """AO counts and some values are different in 6-31G** compared to STO-3G."""
     nbasisdict = {1: 5, 6: 15}
     b3lyp_energy = -10530
@@ -1571,7 +1681,7 @@ class JaguarGeoOptTest_6_31gss(GenericGeoOptTest):
 class MolproBigBasisTest_cart(MolproBigBasisTest):
     spherical = False
 
-class OrcaSPTest_3_21g(GenericSPTest_nosym):
+class OrcaSPTest_3_21g(OrcaSPTest, GenericSPTest_nosym):
     nbasisdict = {1: 2, 6: 9}
     b3lyp_energy = -10460
     overlap01 = 0.19
@@ -1619,6 +1729,7 @@ class OrcaIRTest_old(OrcaIRTest):
     @unittest.skip('These values were wrong due to wrong input coordinates.')
     def testirintens(self):
         """These values were wrong due to wrong input coordinates."""
+
 
 old_unittests = {
 
@@ -1687,13 +1798,36 @@ old_unittests = {
 
     "GAMESS/WinGAMESS/dvb_td_2007.03.24.r1.out":    GAMESSUSTDDFTTest,
 
+    "Gaussian/Gaussian03/CO_TD_delta.log":    GenericTDunTest,
+    "Gaussian/Gaussian03/C_bigbasis.out":     GaussianBigBasisTest,
+    "Gaussian/Gaussian03/dvb_gopt.out":       GenericGeoOptTest,
+    "Gaussian/Gaussian03/dvb_ir.out":         GaussianIRTest,
+    "Gaussian/Gaussian03/dvb_raman.out":      GaussianRamanTest,
+    "Gaussian/Gaussian03/dvb_sp.out":         GaussianSPTest,
+    "Gaussian/Gaussian03/dvb_sp_basis.log":   GenericBasisTest,
+    "Gaussian/Gaussian03/dvb_sp_basis_b.log": GenericBasisTest,
+    "Gaussian/Gaussian03/dvb_td.out":         GaussianTDDFTTest,
+    "Gaussian/Gaussian03/dvb_un_sp.out":      GaussianSPunTest,
+    "Gaussian/Gaussian03/dvb_un_sp_b.log":    GaussianSPunTest,
+    "Gaussian/Gaussian03/Mo4OCl4-sp.log":     GenericCoreTest,
+    "Gaussian/Gaussian03/water_ccd.log":      GenericCCTest,
+    "Gaussian/Gaussian03/water_ccsd(t).log":  GenericCCTest,
+    "Gaussian/Gaussian03/water_ccsd.log":     GenericCCTest,
+    "Gaussian/Gaussian03/water_cis.log":      GenericCISTest,
+    "Gaussian/Gaussian03/water_cisd.log":     GenericCISTest,
+    "Gaussian/Gaussian03/water_mp2.log":      GaussianMP2Test,
+    "Gaussian/Gaussian03/water_mp3.log":      GaussianMP3Test,
+    "Gaussian/Gaussian03/water_mp4.log":      GaussianMP4SDTQTest,
+    "Gaussian/Gaussian03/water_mp4sdq.log":   GaussianMP4SDQTest,
+    "Gaussian/Gaussian03/water_mp5.log":      GenericMP5Test,
+
     "Gaussian/Gaussian09/dvb_gopt_revA.02.out":         GenericGeoOptTest,
     "Gaussian/Gaussian09/dvb_ir_revA.02.out":           GaussianIRTest,
     "Gaussian/Gaussian09/dvb_raman_revA.02.out":        GaussianRamanTest,
     "Gaussian/Gaussian09/dvb_scan_revA.02.log":         GaussianScanTest,
     "Gaussian/Gaussian09/dvb_sp_basis_b_gfprint.log":   GenericBasisTest,
     "Gaussian/Gaussian09/dvb_sp_basis_gfinput.log":     GenericBasisTest,
-    "Gaussian/Gaussian09/dvb_sp_revA.02.out":           GenericSPTest,
+    "Gaussian/Gaussian09/dvb_sp_revA.02.out":           GaussianSPTest,
     "Gaussian/Gaussian09/dvb_td_revA.02.out":           GaussianTDDFTTest,
     "Gaussian/Gaussian09/dvb_un_sp_revA.02.log":        GaussianSPunTest,
     "Gaussian/Gaussian09/dvb_un_sp_b_revA.02.log":      GaussianSPunTest,
@@ -1714,6 +1848,10 @@ old_unittests = {
     "Jaguar/Jaguar6.5/dvb_sp.out":      JaguarGeoOptTest_nmo45,
     "Jaguar/Jaguar6.5/dvb_un_sp.out":   JaguarSPunTest,
     "Jaguar/Jaguar6.5/dvb_ir.out":      JaguarIRTest,
+
+    "Molcas/Molcas8.0/dvb_sp.out":      MolcasSPTest,
+    "Molcas/Molcas8.0/dvb_sp_un.out":   GenericSPunTest,
+    "Molcas/Molcas8.0/C_bigbasis.out":  MolcasBigBasisTest,
 
     "Molpro/Molpro2006/C_bigbasis_cart.out":    MolproBigBasisTest_cart,
     "Molpro/Molpro2012/trithiolane_polar.out":  GenericPolarTest,
@@ -1743,14 +1881,14 @@ old_unittests = {
 
     "ORCA/ORCA3.0/trithiolane_polar.out": GaussianPolarTest,
 
-    "Psi/Psi4.0b5/C_bigbasis.out":   GenericBigBasisTest,
-    "Psi/Psi4.0b5/dvb_gopt_hf.out":  PsiGeoOptTest,
-    "Psi/Psi4.0b5/dvb_sp_hf.out":    GenericBasisTest,
-    "Psi/Psi4.0b5/dvb_sp_hf.out":    GenericSPTest,
-    "Psi/Psi4.0b5/dvb_sp_ks.out":    GenericBasisTest,
-    "Psi/Psi4.0b5/dvb_sp_ks.out":    GenericSPTest,
-    "Psi/Psi4.0b5/water_ccsd.out":   GenericCCTest,
-    "Psi/Psi4.0b5/water_mp2.out":    GenericMP2Test,
+    "Psi4/Psi4-beta5/C_bigbasis.out":   GenericBigBasisTest,
+    "Psi4/Psi4-beta5/dvb_gopt_hf.out":  Psi4GeoOptTest,
+    "Psi4/Psi4-beta5/dvb_sp_hf.out":    GenericBasisTest,
+    "Psi4/Psi4-beta5/dvb_sp_hf.out":    PsiSPTest,
+    "Psi4/Psi4-beta5/dvb_sp_ks.out":    GenericBasisTest,
+    "Psi4/Psi4-beta5/dvb_sp_ks.out":    PsiSPTest,
+    "Psi4/Psi4-beta5/water_ccsd.out":   GenericCCTest,
+    "Psi4/Psi4-beta5/water_mp2.out":    GenericMP2Test,
 
     "QChem/QChem4.2/Trp_freq.out":           ReferencePolarTest,
     "QChem/QChem4.2/trithiolane_polar.out":  GaussianPolarTest,
@@ -1774,16 +1912,20 @@ def make_regression_from_old_unittest(test_class):
 
 def main(which=[], opt_traceback=False, opt_status=False, regdir=__regression_dir__):
 
-    # Build a list of regression files that can be found.
+    # Build a list of regression files that can be found. If there is a directory
+    # on the third level, then treat all files within it as one job.
     try:
         filenames = {}
         for p in parser_names:
             filenames[p] = []
             pdir = os.path.join(regdir, get_program_dir(p))
             for version in os.listdir(pdir):
-                for fn in os.listdir(os.path.join(pdir, version)):
-                    fpath = os.path.join(pdir, version, fn)
-                    filenames[p].append(fpath)
+                for job in os.listdir(os.path.join(pdir, version)):
+                    path = os.path.join(pdir, version, job)
+                    if os.path.isdir(path):
+                        filenames[p].append(os.path.join(path, "*"))
+                    else:
+                        filenames[p].append(path)
     except OSError as e:
         print(e)
         print("\nERROR: At least one program direcory is missing.")
@@ -1792,7 +1934,7 @@ def main(which=[], opt_traceback=False, opt_status=False, regdir=__regression_di
 
     # This file should contain the paths to all regresssion test files we have gathered
     # over the years. It is not really necessary, since we can discover them on the disk,
-    # but we keep it as a legacy and a way to track double check the regression tests.
+    # but we keep it as a legacy and a way to track the regression tests.
     regfile = open(os.path.join(regdir, "regressionfiles.txt"), "r")
     regfilenames = [os.sep.join(x.strip().split("/")) for x in regfile.readlines()]
     regfile.close()
@@ -1828,6 +1970,13 @@ def main(which=[], opt_traceback=False, opt_status=False, regdir=__regression_di
         orphaned = [t for t in tests if t[4:] not in normalized]
         orphaned_tests.extend(orphaned)
 
+    # Assume that if a string is not a parser name it'll be a relative
+    # path to a specific logfile.
+    # TODO: filter out things that are not parsers or files, and maybe
+    # raise an error in that case as well.
+    which_parsers = [w for w in which if w in parser_names]
+    which_filenames = [w for w in which if w not in which_parsers]
+
     failures = errors = total = 0
     for pn in parser_names:
 
@@ -1835,13 +1984,21 @@ def main(which=[], opt_traceback=False, opt_status=False, regdir=__regression_di
 
         # Continue to next iteration if we are limiting the regression and the current
         #   name was not explicitely chosen (that is, passed as an argument).
-        if len(which) > 0 and not pn in which:
+        if which_parsers and pn not in which_parsers:
             continue;
 
-        print("Are the %s files ccopened and parsed correctly?" % name)
+        parser_total = 0
         current_filenames = filenames[pn]
         current_filenames.sort()
         for fname in current_filenames:
+            relative_path = fname[len(regdir):]
+            if which_filenames and relative_path not in which_filenames:
+                continue;
+
+            parser_total += 1
+            if parser_total == 1:
+                print("Are the %s files ccopened and parsed correctly?" % pn)
+
             total += 1
             print("  %s ..."  % fname, end=" ")
 
@@ -1859,12 +2016,18 @@ def main(which=[], opt_traceback=False, opt_status=False, regdir=__regression_di
             test_noparse = not test_this and funcname_noparse in globals()
 
             if not test_noparse:
+                datatype = parser_class.datatype if hasattr(parser_class, 'datatype') else ccData
+                job_filenames = glob.glob(fname)
                 try:
-                    datatype = parser_class.datatype if hasattr(parser_class, 'datatype') else ccData
-                    logfile = ccopen(os.path.join(__filedir__, fname), datatype=datatype)
+                    if len(job_filenames) == 1:
+                        logfile = ccopen(job_filenames[0], datatype=datatype)
+                    else:
+                        logfile = ccopen(job_filenames, datatype=datatype)
                 except Exception as e:
                     errors += 1
                     print("ccopen error: ", e)
+                    if opt_traceback:
+                        print(traceback.format_exc())
                 else:
                     if type(logfile) == parser_class:
                         try:
@@ -1873,7 +2036,7 @@ def main(which=[], opt_traceback=False, opt_status=False, regdir=__regression_di
                         except KeyboardInterrupt:
                             sys.exit(1)
                         except Exception as e:
-                            print("parse error")
+                            print("parse error:", e)
                             errors += 1
                             if opt_traceback:
                                 print(traceback.format_exc())
@@ -1915,7 +2078,8 @@ def main(which=[], opt_traceback=False, opt_status=False, regdir=__regression_di
                 else:
                     print("test passed")
 
-        print()
+        if parser_total:
+            print()
 
     print("Total: %d   Failed: %d  Errors: %d" % (total, failures, errors))
     if not opt_traceback and failures + errors > 0:

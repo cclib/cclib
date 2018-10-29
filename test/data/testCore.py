@@ -14,6 +14,7 @@ import numpy
 
 from cclib.parser.utils import PeriodicTable
 
+from skip import skipForParser
 
 __filedir__ = os.path.realpath(os.path.dirname(__file__))
 
@@ -24,6 +25,8 @@ class GenericCoreTest(unittest.TestCase):
     coredict = {'Mo': 28, 'O':0, 'Cl':10}
     charge = -2
 
+    @skipForParser('Molcas','The parser is still being developed so we skip this test')
+    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testcorrect(self):
         """Is coreelectrons equal to what it should be?"""
         pt = PeriodicTable()
@@ -33,6 +36,8 @@ class GenericCoreTest(unittest.TestCase):
         ans = numpy.array(ans, "i")
         numpy.testing.assert_array_equal(self.data.coreelectrons, ans)
 
+    @skipForParser('Molcas','The parser is still being developed so we skip this test')
+    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testcharge(self):
         """Is the total charge correct?"""
         self.assertEqual(self.data.charge, self.charge)

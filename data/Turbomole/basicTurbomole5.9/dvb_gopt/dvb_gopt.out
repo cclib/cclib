@@ -1,0 +1,4 @@
+convgrep will be taken out of the TURBODIR directory
+OPTIMIZATION CYCLE 1
+run relax for a cartesian step
+ERROR: Module relax failed to run properly - please check output job.1 and job.last for the reason

@@ -25,6 +25,8 @@ class GenericTDTest(unittest.TestCase):
     expected_l_max = 41000
 
     @skipForParser('DALTON', 'etoscs are not parsed')
+    @skipForParser('Molcas','The parser is still being developed so we skip this test')
+    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testenergies(self):
         """Is the l_max reasonable?"""
 
@@ -36,12 +38,16 @@ class GenericTDTest(unittest.TestCase):
         self.assertAlmostEqual(self.data.etenergies[idx_lambdamax], self.expected_l_max, delta=5000)
 
     @skipForParser('DALTON', 'Oscillator strengths will have to be calculated, not just parsed.')
+    @skipForParser('Molcas','The parser is still being developed so we skip this test')
+    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testoscs(self):
         """Is the maximum of etoscs in the right range?"""
         self.assertEqual(len(self.data.etoscs), self.number)
         self.assertAlmostEqual(max(self.data.etoscs), 0.67, delta=0.1)
 
     @skipForParser('DALTON', '???')
+    @skipForParser('Molcas','The parser is still being developed so we skip this test')
+    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testsecs(self):
         """Is the sum of etsecs close to 1?"""
         self.assertEqual(len(self.data.etsecs), self.number)
@@ -50,6 +56,8 @@ class GenericTDTest(unittest.TestCase):
         self.assertAlmostEqual(sumofsec, 1.0, delta=0.16)
 
     @skipForParser('DALTON', '???')
+    @skipForParser('Molcas','The parser is still being developed so we skip this test')
+    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testsecs_transition(self):
         """Is the lowest E transition from the HOMO or to the LUMO?"""
         idx_minenergy = numpy.argmin(self.data.etoscs)
@@ -60,6 +68,8 @@ class GenericTDTest(unittest.TestCase):
         self.assert_(t[0][1][0] == self.data.homos[0] or
                      t[0][2][0] == self.data.homos[0]+1, t[0])
 
+    @skipForParser('Molcas','The parser is still being developed so we skip this test')    
+    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testsymsnumber(self):
         """Is the length of etsyms correct?"""
         self.assertEqual(len(self.data.etsyms), self.number)
@@ -122,6 +132,31 @@ class OrcaTDDFTTest(GenericTDTest):
         self.assertEqual(len(self.data.etoscs), self.number)
         self.assertAlmostEqual(max(self.data.etoscs), .09, delta=0.01)
 
+
+class QChemTDDFTTest(GenericTDTest):
+    """Customized time-dependent HF/DFT unittest"""
+
+    number = 10
+    expected_l_max = 48000
+
+    def testoscs(self):
+        """Is the maximum of etoscs in the right range?"""
+        self.assertEqual(len(self.data.etoscs), self.number)
+        self.assertAlmostEqual(max(self.data.etoscs), 0.9, delta=0.1)
+
+
+class GenericTDDFTtrpTest(GenericTDTest):
+    """Generic time-dependent HF/DFT (triplet) unittest"""
+
+    number = 5
+    expected_l_max = 24500
+
+    def testoscs(self):
+        """Triplet excitations should be disallowed."""
+        self.assertEqual(len(self.data.etoscs), self.number)
+        self.assertAlmostEqual(max(self.data.etoscs), 0.0, delta=0.01)
+
+
 class OrcaROCISTest(GenericTDTest):
     """Customized test for ROCIS"""
     number = 57
@@ -150,30 +185,6 @@ class OrcaROCISTest(GenericTDTest):
     def testsecs_transition(self):
         """ROCIS does not form singly excited configurations (secs)"""
         pass
-
-
-class QChemTDDFTTest(GenericTDTest):
-    """Customized time-dependent HF/DFT unittest"""
-
-    number = 10
-    expected_l_max = 48000
-
-    def testoscs(self):
-        """Is the maximum of etoscs in the right range?"""
-        self.assertEqual(len(self.data.etoscs), self.number)
-        self.assertAlmostEqual(max(self.data.etoscs), .9, delta=0.1)
-
-
-class GenericTDDFTtrpTest(GenericTDTest):
-    """Generic time-dependent HF/DFT (triplet) unittest"""
-
-    number = 5
-    expected_l_max = 24500
-
-    def testoscs(self):
-        """Triplet excitations should be disallowed."""
-        self.assertEqual(len(self.data.etoscs), self.number)
-        self.assertAlmostEqual(max(self.data.etoscs), 0.0, delta=0.01)
 
 
 if __name__=="__main__":

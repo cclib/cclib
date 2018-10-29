@@ -1,0 +1,12 @@
+>>>EXPORT MOLCAS_PRINT = 3
+&gateway
+ coord
+ 1
+
+ C                  -1.4152533224   0.2302217854   0.0000000000
+ basis = aug-cc-pvqz
+ group = nosym
+
+&seward
+
+&scf

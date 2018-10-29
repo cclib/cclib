@@ -12,6 +12,7 @@ import unittest
 
 import numpy
 
+from skip import skipForParser
 
 __filedir__ = os.path.realpath(os.path.dirname(__file__))
 
@@ -20,7 +21,7 @@ class GenericMP2Test(unittest.TestCase):
     """Generic MP2 unittest"""
 
     level = 2
-    
+
     def testsizeandshape(self):
         """(MP2) Are the dimensions of mpenergies correct?"""
         self.assertEqual(self.data.mpenergies.shape,

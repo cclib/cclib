@@ -37,6 +37,9 @@ class GenericSPTest(unittest.TestCase):
     # Overlap first two atomic orbitals.
     overlap01 = 0.24
 
+    # Generally, one criteria for SCF energy convergence. 
+    num_scf_criteria = 1
+
     def testnatom(self):
         """Is the number of atoms equal to 20?"""
         self.assertEquals(self.data.natom, 20)
@@ -45,7 +48,8 @@ class GenericSPTest(unittest.TestCase):
         """Are the atomnos correct?"""
 
         # The nuclear charges should be integer values in a NumPy array.
-        self.failUnless(numpy.alltrue([numpy.issubdtype(atomno, int) for atomno in self.data.atomnos]))
+        self.failUnless(numpy.alltrue([numpy.issubdtype(atomno, numpy.signedinteger)
+                                       for atomno in self.data.atomnos]))
         self.assertEquals(self.data.atomnos.dtype.char, 'i')
 
         self.assertEquals(self.data.atomnos.shape, (20,) )
@@ -54,7 +58,8 @@ class GenericSPTest(unittest.TestCase):
     @skipForParser('DALTON', 'DALTON has a very low accuracy for the printed values of all populations (2 decimals rounded in a weird way), so let it slide for now')
     @skipForLogfile('Jaguar/basicJaguar7', 'We did not print the atomic partial charges in the unit tests for this version')
     @skipForLogfile('Molpro/basicMolpro2006', "These tests were run a long time ago and since we don't have access to Molpro 2006 anymore, we can skip this test (it is tested in 2012)")
-    @skipForLogfile('Psi/basicPsi3', 'Psi3 did not print partial atomic charges')
+    @skipForLogfile('Psi3/basicPsi3', 'Psi3 did not print partial atomic charges')
+    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testatomcharges(self):
         """Are atomcharges (at least Mulliken) consistent with natom and sum to zero?"""
         for type in set(['mulliken'] + list(self.data.atomcharges.keys())):
@@ -73,11 +78,14 @@ class GenericSPTest(unittest.TestCase):
         dev = abs(min_carbon_dist - 1.34)
         self.assertTrue(dev < 0.03, "Minimum carbon dist is %.2f (not 1.34)" % min_carbon_dist)
 
+    @skipForParser('Molcas','The parser is still being developed so we skip this test')
+    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testcharge_and_mult(self):
         """Are the charge and multiplicity correct?"""
         self.assertEquals(self.data.charge, 0)
         self.assertEquals(self.data.mult, 1)
 
+    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testnbasis(self):
         """Is the number of basis set functions correct?"""
         count = sum([self.nbasisdict[n] for n in self.data.atomnos])
@@ -85,6 +93,8 @@ class GenericSPTest(unittest.TestCase):
 
     @skipForParser('ADF', 'ADF parser does not extract atombasis')
     @skipForLogfile('Jaguar/basicJaguar7', 'Data file does not contain enough information. Can we make a new one?')
+    @skipForParser('Molcas','The parser is still being developed so we skip this test')
+    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testatombasis(self):
         """Are the indices in atombasis the right amount and unique?"""
         all = []
@@ -99,33 +109,42 @@ class GenericSPTest(unittest.TestCase):
     @skipForParser('GAMESS', 'atommasses not implemented yet')
     @skipForParser('GAMESSUK', 'atommasses not implemented yet')
     @skipForParser('Jaguar', 'atommasses not implemented yet')
+    @skipForParser('Molcas','The parser is still being developed so we skip this test')
     @skipForParser('Molpro', 'atommasses not implemented yet')
     @skipForParser('NWChem', 'atommasses not implemented yet')
-    @skipForLogfile('Psi/basicPsi3', 'atommasses not implemented yet')
-    @skipForLogfile('Psi/basicPsi4.0b5', 'atommasses not implemented yet')
+    @skipForLogfile('Psi3/basicPsi3', 'atommasses not implemented yet')
+    @skipForLogfile('Psi4/basicPsi4.0b5', 'atommasses not implemented yet')
     @skipForParser('QChem', 'atommasses not implemented yet')
+    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testatommasses(self):
         """Do the atom masses sum up to the molecular mass?"""
         mm = 1000*sum(self.data.atommasses)
         msg = "Molecule mass: %f not %f +- %fmD" % (mm, self.molecularmass, self.mass_precision)
         self.assertAlmostEquals(mm, self.molecularmass, delta=self.mass_precision, msg=msg)
 
+    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testcoreelectrons(self):
         """Are the coreelectrons all 0?"""
         ans = numpy.zeros(self.data.natom, 'i')
         numpy.testing.assert_array_equal(self.data.coreelectrons, ans)
 
+    @skipForParser('Molcas','The parser is still being developed so we skip this test')
+    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testnormalisesym(self):
         """Did this subclass overwrite normalisesym?"""
-        self.assertNotEquals(self.logfile.normalisesym("A"), "ERROR: This should be overwritten by this subclass")
+        # https://stackoverflow.com/a/8747890
+        self.logfile.normalisesym("A")
 
+    @skipForParser('Molcas','The parser is still being developed so we skip this test')
     @skipForParser('Molpro', '?')
     @skipForParser('ORCA', 'ORCA has no support for symmetry yet')
+    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testsymlabels(self):
         """Are all the symmetry labels either Ag/u or Bg/u?"""
         sumwronglabels = sum([x not in ['Ag', 'Bu', 'Au', 'Bg'] for x in self.data.mosyms[0]])
         self.assertEquals(sumwronglabels, 0)
 
+    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testhomos(self):
         """Is the index of the HOMO equal to 34?"""
         numpy.testing.assert_array_equal(self.data.homos, numpy.array([34],"i"), "%s != array([34],'i')" % numpy.array_repr(self.data.homos))
@@ -143,6 +162,10 @@ class GenericSPTest(unittest.TestCase):
         """Do the scf targets have the right dimensions?"""
         self.assertEquals(self.data.scftargets.shape, (len(self.data.scfvalues), len(self.data.scfvalues[0][0])))
 
+    def testscftargets(self):
+        """Are correct number of SCF convergence criteria being parsed?"""
+        self.assertEquals(len(self.data.scftargets[0]), self.num_scf_criteria)
+
     def testlengthmoenergies(self):
         """Is the number of evalues equal to nmo?"""
         self.assertEquals(len(self.data.moenergies[0]), self.data.nmo)
@@ -154,7 +177,7 @@ class GenericSPTest(unittest.TestCase):
 
     @skipForParser('DALTON', 'mocoeffs not implemented yet')
     @skipForLogfile('Jaguar/basicJaguar7', 'Data file does not contain enough information. Can we make a new one?')
-    @skipForLogfile('Psi/basicPsi3', 'MO coefficients are printed separately for each SALC')
+    @skipForLogfile('Psi3/basicPsi3', 'MO coefficients are printed separately for each SALC')
     def testdimmocoeffs(self):
         """Are the dimensions of mocoeffs equal to 1 x nmo x nbasis?"""
         self.assertEquals(type(self.data.mocoeffs), type([]))
@@ -163,8 +186,11 @@ class GenericSPTest(unittest.TestCase):
                           (self.data.nmo, self.data.nbasis))
 
     @skipForParser('DALTON', 'To print: **INTEGRALS\n.PROPRI')
-    @skipForParser('Psi', 'Psi does not currently have the option to print the overlap matrix')
+    @skipForParser('Molcas','The parser is still being developed so we skip this test')
+    @skipForParser('Psi3', 'Psi3 does not currently have the option to print the overlap matrix')
+    @skipForParser('Psi4', 'Psi4 does not currently have the option to print the overlap matrix')
     @skipForParser('QChem', 'QChem cannot print the overlap matrix')
+    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testaooverlaps(self):
         """Are the dims and values of the overlap matrix correct?"""
 
@@ -185,12 +211,16 @@ class GenericSPTest(unittest.TestCase):
         self.assertEquals(self.data.aooverlaps[3,0], 0.0)
         self.assertEquals(self.data.aooverlaps[0,3], 0.0)
 
+    @skipForParser('Molcas','The parser is still being developed so we skip this test')
+    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testoptdone(self):
         """There should be no optdone attribute set."""
         self.assertFalse(hasattr(self.data, 'optdone'))
 
     @skipForParser('Gaussian', 'Logfile needs to be updated')
     @skipForParser('Jaguar', 'No dipole moments in the logfile')
+    @skipForParser('Molcas','The parser is still being developed so we skip this test')
+    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testmoments(self):
         """Does the dipole and possible higher molecular moments look reasonable?"""
 
@@ -241,19 +271,23 @@ class GenericSPTest(unittest.TestCase):
                 self.assertEquals(m, 0.0)
 
     @skipForParser('ADF', 'Does not support metadata yet')
-    @skipForParser('GAMESS', 'Does not support metadata yet')
     @skipForParser('GAMESSUK', 'Does not support metadata yet')
-    @skipForParser('Gaussian', 'Does not support metadata yet')
-    @skipForParser('Jaguar', 'Does not support metadata yet')
+    @skipForParser('Molcas','The parser is still being developed so we skip this test')
     @skipForParser('Molpro', 'Does not support metadata yet')
     @skipForParser('NWChem', 'Does not support metadata yet')
     @skipForParser('ORCA', 'Does not support metadata yet')
-    @skipForParser('Psi', 'Does not support metadata yet')
+    @skipForParser('Psi3', 'Does not support metadata yet')
+    @skipForParser('Psi4', 'Does not support metadata yet')
     @skipForParser('QChem', 'Does not support metadata yet')
+    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testmetadata(self):
         """Does metadata have expected keys and values?"""
         self.assertTrue(hasattr(self.data, "metadata"))
-        self.assertIn("basis_set", self.data.metadata)
+        if self.logfile.logname not in ['ORCA', 'Psi']:
+            self.assertIn("basis_set", self.data.metadata)
+        if self.logfile.logname == 'ORCA':
+            self.assertIn("input_file_name", self.data.metadata)
+            self.assertIn("input_file_contents", self.data.metadata)
         self.assertIn("methods", self.data.metadata)
         self.assertIn("package", self.data.metadata)
         self.assertIn("package_version", self.data.metadata)
@@ -267,7 +301,7 @@ class ADFSPTest(GenericSPTest):
     foverlap00 = 1.00003
     foverlap11 = 1.02672
     foverlap22 = 1.03585
-
+    num_scf_criteria = 2
     b3lyp_energy = -140
 
     def testfoverlaps(self):
@@ -286,8 +320,17 @@ class ADFSPTest(GenericSPTest):
         self.assertAlmostEquals(self.data.fooverlaps[1, 1], self.foverlap11, delta=0.0001)
         self.assertAlmostEquals(self.data.fooverlaps[2, 2], self.foverlap22, delta=0.0001)
 
+class GaussianSPTest(GenericSPTest):
+    """Customized restricted single point unittest"""
 
-class Jaguar7SPTest(GenericSPTest):
+    num_scf_criteria = 3
+
+class JaguarSPTest(GenericSPTest):
+    """Customized restricted single point unittest"""
+
+    num_scf_criteria = 2
+
+class Jaguar7SPTest(JaguarSPTest):
     """Customized restricted single point unittest"""
 
     # Jaguar prints only 10 virtual MOs by default. Can we re-run with full output?
@@ -295,6 +338,20 @@ class Jaguar7SPTest(GenericSPTest):
         """Is the number of evalues equal to the number of occ. MOs + 10?"""
         self.assertEquals(len(self.data.moenergies[0]), self.data.homos[0]+11)
 
+class MolcasSPTest(GenericSPTest):
+    """Customized restricted single point unittest"""
+
+    num_scf_criteria = 4
+
+class MolproSPTest(GenericSPTest):
+    """Customized restricted single point unittest"""
+
+    num_scf_criteria = 2
+
+class NWChemKSSPTest(GenericSPTest):
+    """Customized restricted single point unittest"""
+
+    num_scf_criteria = 3
 
 class Psi3SPTest(GenericSPTest):
     """Customized restricted single point HF/KS unittest"""
@@ -303,12 +360,23 @@ class Psi3SPTest(GenericSPTest):
     # that a SALC calculation is done instead of a full LCAO.
     b3lyp_energy = -10300
 
+class PsiSPTest(GenericSPTest):
+    """Customized restricted single point HF/KS unittest"""
+
+    num_scf_criteria = 2
 
 class OrcaSPTest(GenericSPTest):
     """Customized restricted single point unittest"""
 
     # Orca has different weights for the masses
     molecularmass = 130190
+
+    num_scf_criteria = 3
+
+class TurbomoleSPTest(GenericSPTest):
+    """Customized restricted single point unittest"""
+
+    num_scf_criteria = 2
 
 
 if __name__=="__main__":
