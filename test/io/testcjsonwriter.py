@@ -49,8 +49,18 @@ class CJSONTest(unittest.TestCase):
             sqrt(sum(data.moments[1] ** 2))
         )
 
-    def test_incomplete_data(self):
-        """Does the CJSON writer handles missing properties correctly?"""
+    def test_zero_dipole_moment(self):
+        """Does the CJSON writer handle zero dipole moment correctly?"""
+        fpath = os.path.join(__datadir__, "data/GAMESS/basicGAMESS-US2017/C_bigbasis.out")
+        data = cclib.io.ccopen(fpath).parse()
+
+        cjson = cclib.io.cjsonwriter.CJSON(data).generate_repr()
+
+        json_data = json.loads(cjson)
+        self.assertAlmostEqual(json_data["properties"]['total dipole moment'], 0.0)
+
+    def test_missing_dipole_moment(self):
+        """Does the CJSON writer handle missing properties correctly?"""
         fpath = os.path.join(__datadir__, "data/GAMESS/basicGAMESS-US2017/C_bigbasis.out")
         data = cclib.io.ccopen(fpath).parse()
         del data.moments
