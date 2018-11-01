@@ -133,8 +133,8 @@ class CJSON(filewriter.Writer):
             cjson_dict['bonds']['connections'] = dict()
             cjson_dict['bonds']['connections']['index'] = []
             for bond in self.bond_connectivities:
-                cjson_dict['bonds']['connections']['index'].append(bond[0] + 1)
-                cjson_dict['bonds']['connections']['index'].append(bond[1] + 1)
+                cjson_dict['bonds']['connections']['index'].append(bond[0])
+                cjson_dict['bonds']['connections']['index'].append(bond[1])
             cjson_dict['bonds']['order'] = [bond[2] for bond in self.bond_connectivities]
 
         if _has_openbabel:
