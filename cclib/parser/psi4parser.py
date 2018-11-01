@@ -122,7 +122,7 @@ class Psi4(logfileparser.Logfile):
         #           C          1.415253322400    -0.230221785400     0.000000000000
         # ...
         #
-        if (self.section == "Geometry") and ("Geometry (in Angstrom), charge" in line) and not hasattr(self, 'finite_difference'):
+        if (self.section == "Geometry") and ("Geometry (in Angstrom), charge" in line):
 
             assert line.split()[3] == "charge"
             charge = int(line.split()[5].strip(','))
@@ -165,7 +165,8 @@ class Psi4(logfileparser.Logfile):
             # This condition discards any repeated coordinates that Psi print. For example,
             # geometry optimizations will print the coordinates at the beginning of and SCF
             # section and also at the start of the gradient calculation.
-            if len(self.atomcoords) == 0 or self.atomcoords[-1] != coords:
+            if len(self.atomcoords) == 0 \
+                or (self.atomcoords[-1] != coords and not hasattr(self, 'finite_difference')):
                 self.atomcoords.append(coords)
 
             if len(atommasses) > 0:
@@ -181,7 +182,8 @@ class Psi4(logfileparser.Logfile):
             self.set_attribute('mult', mult)
 
         # The printout for Psi4 has a more obvious trigger for the SCF parameter printout.
-        if (self.section == "Algorithm") and (line.strip() == "==> Algorithm <==") and not hasattr(self, 'finite_difference'):
+        if (self.section == "Algorithm") and (line.strip() == "==> Algorithm <==") \
+            and not hasattr(self, 'finite_difference'):
 
             self.skip_line(inputfile, 'blank')
 
@@ -378,7 +380,8 @@ class Psi4(logfileparser.Logfile):
         # repulsion integrals. In that case, there are actually two convergence cycles performed,
         # one for the density-fitted algorithm and one for the exact one, and the iterations are
         # printed in two blocks separated by some set-up information.
-        if (self.section == "Iterations") and (line.strip() == "==> Iterations <==")  and not hasattr(self, 'finite_difference'):
+        if (self.section == "Iterations") and (line.strip() == "==> Iterations <==") \
+            and not hasattr(self, 'finite_difference'):
 
             if not hasattr(self, 'scfvalues'):
                 self.scfvalues = []
@@ -512,7 +515,8 @@ class Psi4(logfileparser.Logfile):
 
         # Both Psi3 and Psi4 print the final SCF energy right after the orbital energies,
         # but the label is different. Psi4 also does DFT, and the label is also different in that case.
-        if self.section == "Post-Iterations" and "Final Energy:" in line and not hasattr(self, 'finite_difference'):
+        if self.section == "Post-Iterations" and "Final Energy:" in line \
+            and not hasattr(self, 'finite_difference'):
             e = float(line.split()[3])
             if not hasattr(self, 'scfenergies'):
                 self.scfenergies = []
@@ -662,7 +666,8 @@ class Psi4(logfileparser.Logfile):
         #      2    -379.77675264   -7.79e-03      1.88e-02      4.37e-03 o    2.29e-02      6.76e-03 o  ~
         #  ---------------------------------------------------------------------------------------------
         #
-        if (self.section == "Convergence Check") and line.strip() == "==> Convergence Check <=="  and not hasattr(self, 'finite_difference'):
+        if (self.section == "Convergence Check") and line.strip() == "==> Convergence Check <==" \
+            and not hasattr(self, 'finite_difference'):
 
             if not hasattr(self, "optstatus"):
                 self.optstatus = []
