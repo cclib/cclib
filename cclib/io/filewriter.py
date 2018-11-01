@@ -9,8 +9,9 @@
 
 import logging
 
-from math import sqrt
 from collections import Iterable
+
+import numpy
 
 try:
     from cclib.bridge import makeopenbabel
@@ -77,7 +78,7 @@ class Writer(object):
 
         # ccdata.moments may exist, but only contain center-of-mass coordinates
         if len(getattr(self.ccdata, 'moments', [])) > 1:
-            return sqrt(sum(self.ccdata.moments[1] ** 2))
+            return numpy.linalg.norm(self.ccdata.moments[1])
 
     def _check_required_attributes(self):
         """Check if required attributes are present in ccdata."""

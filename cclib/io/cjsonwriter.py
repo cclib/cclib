@@ -79,7 +79,7 @@ class CJSON(filewriter.Writer):
                 if attribute_name == 'moments':
                     dipole_moment = self._calculate_total_dipole_moment()
                     if dipole_moment is not None:
-                        cjson_dict['properties'][ccData._attributes['moments'].json_key] = self._calculate_total_dipole_moment()
+                        cjson_dict['properties'][ccData._attributes['moments'].json_key] = dipole_moment
                 else:
                     cjson_dict['atoms']['coords'] = dict()
                     cjson_dict['atoms']['coords']['3d'] = self.ccdata.atomcoords[-1].flatten().tolist()
