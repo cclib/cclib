@@ -17,8 +17,11 @@ from cclib.method.calculationmethod import Method, MissingAttributeError
 class Population(Method):
     """An abstract base class for population-type methods."""
 
+    # All of these are typically required for population analyses.
     required_attrs = ('homos', 'mocoeffs', 'nbasis')
-    overlap_attributes = ("aooverlaps", "fooverlaps")
+
+    # At least one of these are typically required.
+    overlap_attributes = ('aooverlaps', 'fooverlaps')
 
     def __init__(self, data, progress=None, \
                  loglevel=logging.INFO, logname="Log"):
@@ -37,7 +40,7 @@ class Population(Method):
     def _check_required_attributes(self):
         super(Population, self)._check_required_attributes()
         
-        if not any(hasattr(self.data, a) for a in self.overlap_attributes):
+        if self.overlap_attributes and not any(hasattr(self.data, a) for a in self.overlap_attributes):
             raise MissingAttributeError(
                     'Need overlap matrix (aooverlaps or fooverlaps attribute) for Population methods')
 

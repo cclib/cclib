@@ -17,6 +17,9 @@ from cclib.method.population import Population
 class CSPA(Population):
     """The C-squared population analysis."""
 
+    # Overlaps are not required for CSPA.
+    overlap_attributes = ()
+
     def __init__(self, *args):
 
         # Call the __init__ method of the superclass.

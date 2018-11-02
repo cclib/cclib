@@ -56,8 +56,9 @@ class PopulationTest(unittest.TestCase):
             if hasattr(self.data, overlap_attribute):
                 delattr(self.data,overlap_attribute) 
         for method_class in self.methods:
-            with self.assertRaises(MissingAttributeError):
-                self.calculate(method_class)
+            if method_class.overlap_attributes:
+                with self.assertRaises(MissingAttributeError):
+                    self.calculate(method_class)
 
 
 class GaussianMPATest(unittest.TestCase):
