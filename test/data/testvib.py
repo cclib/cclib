@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2017, the cclib development team
+# Copyright (c) 2018, the cclib development team
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
@@ -45,12 +45,12 @@ class GenericIRTest(unittest.TestCase):
             self.assertEqual(len(self.data.vibsyms), self.numvib)
 
     def testfreqval(self):
-        """Is the highest freq value 3630 +/- 200 cm-1?"""
+        """Is the highest freq value 3630 +/- 200 wavenumber?"""
         self.assertAlmostEqual(max(self.data.vibfreqs), 3630, delta=200)
 
     @skipForParser('Psi4', 'Psi cannot print IR intensities')
     def testirintens(self):
-        """Is the maximum IR intensity 100 +/- 10 km mol-1?"""
+        """Is the maximum IR intensity 100 +/- 10 km/mol?"""
         self.assertAlmostEqual(max(self.data.vibirs), self.max_IR_intensity, delta=10)
 
 

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2017, the cclib development team
+# Copyright (c) 2018, the cclib development team
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
@@ -313,7 +313,7 @@ class GAMESS(logfileparser.Logfile):
                 # Take hartree value with more numbers, and convert.
                 # Note that the values listed after this are also less exact!
                 etenergy = float(broken[1])
-                self.etenergies.append(utils.convertor(etenergy, "hartree", "cm-1"))
+                self.etenergies.append(utils.convertor(etenergy, "hartree", "wavenumber"))
                 if get_etosc:
                     etosc = float(broken[-1])
                     self.etoscs.append(etosc)
@@ -440,7 +440,7 @@ class GAMESS(logfileparser.Logfile):
 
                 self.updateprogress(inputfile, "Excited States")
 
-                etenergy = utils.convertor(float(line.split()[-2]), "eV", "cm-1")
+                etenergy = utils.convertor(float(line.split()[-2]), "eV", "wavenumber")
                 etoscs = float(next(inputfile).split()[-1])
                 self.etenergies.append(etenergy)
                 self.etoscs.append(etoscs)
