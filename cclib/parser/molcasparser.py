@@ -457,7 +457,7 @@ class Molcas(logfileparser.Logfile):
                 if line[1:48] == 'Molecular Partition Function and Molar Entropy:':
                     while 'TOTAL' not in line:
                         line = next(inputfile)
-                    entropy_values.append(utils.convertor(float(line.split()[2]), 'kcal', 'hartree'))
+                    entropy_values.append(utils.convertor(float(line.split()[2]), 'kcal/mol', 'hartree'))
 
                 if line[1:40] == 'Sum of energy and thermal contributions':
                     internal_energy_values.append(float(next(inputfile).split()[2]))

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2017, the cclib development team
+# Copyright (c) 2018, the cclib development team
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
@@ -19,7 +19,7 @@ class convertorTest(unittest.TestCase):
         convertor = cclib.parser.utils.convertor
         self.assertAlmostEqual(convertor(1.89, "bohr", "Angstrom"), 1.0, places=3)
         self.assertAlmostEqual(convertor(0.529, "Angstrom", "bohr"), 1.0, places=3)
-        self.assertAlmostEqual(convertor(627.5, "kcal", "hartree"), 1.0, places=3)
+        self.assertAlmostEqual(convertor(627.5, "kcal/mol", "hartree"), 1.0, places=3)
 
     def test_pairs(self):
         """Do flipped conversions correspond to each other?"""
@@ -27,11 +27,9 @@ class convertorTest(unittest.TestCase):
         convertor = cclib.parser.utils.convertor
 
         pairs_proportional = (
-            ("Angstrom", "bohr"),
-            ("cm-1", "eV"), ("cm-1", "kcal"), ("eV", "kJmol-1"),
-            ("coulomb", "e"),
-        )
-        pairs_inverse = (("nm", "cm-1"),)
+            ("Angstrom", "bohr"), ("wavenumber", "eV"),
+            ("wavenumber", "kcal/mol"), ("eV", "kJ/mol"), ("coulomb", "e"))
+        pairs_inverse = (("nm", "wavenumber"),)
 
         for unit1, unit2 in pairs_proportional:
             conv1 = convertor(1.0, unit1, unit2)

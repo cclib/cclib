@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2017, the cclib development team
+# Copyright (c) 2018, the cclib development team
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
@@ -686,7 +686,7 @@ class Jaguar(logfileparser.Logfile):
                 self.etsecs = []
                 self.etsyms = []
             etenergy = float(line.split()[3])
-            etenergy = utils.convertor(etenergy, "eV", "cm-1")
+            etenergy = utils.convertor(etenergy, "eV", "wavenumber")
             self.etenergies.append(etenergy)
 
             self.skip_lines(inputfile, ['line', 'line', 'line', 'line'])

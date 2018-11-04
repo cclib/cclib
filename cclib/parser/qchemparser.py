@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2017, the cclib development team
+# Copyright (c) 2018, the cclib development team
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
@@ -963,11 +963,11 @@ cannot be determined. Rerun without `$molecule read`."""
                     # ground state energy, rather than just the EE;
                     # this will be more accurate.
                     if 'Total energy for state' in line:
-                        energy = utils.convertor(float(line.split()[5]), 'hartree', 'cm-1')
-                        etenergy = energy - utils.convertor(self.scfenergies[-1], 'eV', 'cm-1')
+                        energy = utils.convertor(float(line.split()[5]), 'hartree', 'wavenumber')
+                        etenergy = energy - utils.convertor(self.scfenergies[-1], 'eV', 'wavenumber')
                         etenergies.append(etenergy)
                     # if 'excitation energy' in line:
-                    #     etenergy = utils.convertor(float(line.split()[-1]), 'eV', 'cm-1')
+                    #     etenergy = utils.convertor(float(line.split()[-1]), 'eV', 'wavenumber')
                     #     etenergies.append(etenergy)
                     if 'Multiplicity' in line:
                         etsym = line.split()[1]
@@ -1572,7 +1572,7 @@ cannot be determined. Rerun without `$molecule read`."""
                     if not hasattr(self, 'zpe'):
                         # Convert from kcal/mol to Hartree/particle.
                         self.zpe = utils.convertor(float(line.split()[4]),
-                                                   'kcal', 'hartree')
+                                                   'kcal/mol', 'hartree')
                     atommasses = []
                     while 'Translational Enthalpy' not in line:
                         if 'Has Mass' in line:
@@ -1590,14 +1590,14 @@ cannot be determined. Rerun without `$molecule read`."""
                 if not hasattr(self, 'enthalpy'):
                     enthalpy = float(line.split()[2])
                     self.enthalpy = utils.convertor(enthalpy,
-                                                    'kcal', 'hartree')
+                                                    'kcal/mol', 'hartree')
                 line = next(inputfile)
                 assert 'Total Entropy' in line
                 if not hasattr(self, 'entropy'):
                     entropy = float(line.split()[2]) * self.temperature / 1000
                     # This is the *temperature dependent* entropy.
                     self.entropy = utils.convertor(entropy,
-                                                   'kcal', 'hartree')
+                                                   'kcal/mol', 'hartree')
                 if not hasattr(self, 'freeenergy'):
                     self.freeenergy = self.enthalpy - self.entropy
 

@@ -1,6 +1,6 @@
 ## -*- coding: utf-8 -*-
 #
-# Copyright (c) 2017, the cclib development team
+# Copyright (c) 2018, the cclib development team
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
@@ -998,7 +998,7 @@ class ADF(logfileparser.Logfile):
             line = next(inputfile)
             while len(line) > 2:
                 info = line.split()
-                etenergies.append(utils.convertor(float(info[2]), "eV", "cm-1"))
+                etenergies.append(utils.convertor(float(info[2]), "eV", "wavenumber"))
                 etoscs.append(float(info[3]))
                 etsyms.append(symm)
                 line = next(inputfile)

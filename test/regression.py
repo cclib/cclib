@@ -1498,7 +1498,7 @@ def testQChem_QChem5_0_argon_out(logfile):
     state_0_energy = -526.6323968555
     state_1_energy = -526.14663738
     assert logfile.data.scfenergies[0] == convertor(state_0_energy, 'hartree', 'eV')
-    assert abs(logfile.data.etenergies[0] - convertor(state_1_energy - state_0_energy, 'hartree', 'cm-1')) < 1.0e-1
+    assert abs(logfile.data.etenergies[0] - convertor(state_1_energy - state_0_energy, 'hartree', 'wavenumber')) < 1.0e-1
 
 # ORCA
 

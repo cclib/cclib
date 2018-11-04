@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2017, the cclib development team
+# Copyright (c) 2018, the cclib development team
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
@@ -15,7 +15,7 @@ from cclib.parser import utils
 class ConvertorTest(unittest.TestCase):
 
     def test_convertor(self):
-        self.assertEqual("%.3f" % utils.convertor(8.0, "eV", "cm-1"),
+        self.assertEqual("%.3f" % utils.convertor(8.0, "eV", "wavenumber"),
                          "64524.354")
 
 

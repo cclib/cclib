@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2017, the cclib development team
+# Copyright (c) 2018, the cclib development team
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
@@ -22,7 +22,7 @@ class GenericCISTest(unittest.TestCase):
 
     nstates = 5
 
-    # First four singlet/triplet state excitation energies [cm-1].
+    # First four singlet/triplet state excitation energies [wavenumber].
     # Based on output in GAMESS test.
     etenergies0 = numpy.array([98614.56, 114906.59, 127948.12, 146480.64])
     etenergies1 = numpy.array([82085.34,  98999.11, 104077.89, 113978.37])
@@ -50,7 +50,7 @@ class GenericCISTest(unittest.TestCase):
     @skipForParser('Molcas','The parser is still being developed so we skip this test')
     @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testetenergiesvalues(self):
-        """ Are etenergies within 50cm-1 of the correct values?"""
+        """ Are etenergies within 50 wavenumbers of the correct values?"""
         indices0 = [i for i in range(self.nstates) if self.data.etsyms[i][0] == "S"]
         indices1 = [i for i in range(self.nstates) if self.data.etsyms[i][0] == "T"]
         singlets = [self.data.etenergies[i] for i in indices0]

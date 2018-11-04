@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2017, the cclib development team
+# Copyright (c) 2018, the cclib development team
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
@@ -61,7 +61,7 @@ def symmetrize(m, use_triangle='lower'):
 
 def convertor(value, fromunits, tounits):
     """Convert from one set of units to another.
-
+    
     Sources:
         NIST 2010 CODATA (http://physics.nist.gov/cuu/Constants/index.html)
         Documentation of GAMESS-US or other programs as noted
@@ -75,33 +75,33 @@ def convertor(value, fromunits, tounits):
         "Angstrom_to_bohr": lambda x: x * 1.8897261245,
         "bohr_to_Angstrom": lambda x: x * 0.5291772109,
 
-        "cm-1_to_eV":       lambda x: x / 8065.54429,
-        "cm-1_to_hartree":  lambda x: x / 219474.6313708,
-        "cm-1_to_kcal":     lambda x: x / 349.7550112,
-        "cm-1_to_kJmol-1":  lambda x: x / 83.5934722814,
-        "cm-1_to_nm":       lambda x: 1e7 / x,
-        "cm-1_to_Hz":       lambda x: x * 29.9792458,
+        "wavenumber_to_eV":       lambda x: x / 8065.54429,
+        "wavenumber_to_hartree":  lambda x: x / 219474.6313708,
+        "wavenumber_to_kcal/mol": lambda x: x / 349.7550112,
+        "wavenumber_to_kJ/mol":   lambda x: x / 83.5934722814,
+        "wavenumber_to_nm":       lambda x: 1e7 / x,
+        "wavenumber_to_Hz":       lambda x: x * 29.9792458,
 
-        "eV_to_cm-1":       lambda x: x * 8065.54429,
+        "eV_to_wavenumber": lambda x: x * 8065.54429,
         "eV_to_hartree":    lambda x: x / 27.21138505,
-        "eV_to_kcal":       lambda x: x * 23.060548867,
-        "eV_to_kJmol-1":    lambda x: x * 96.4853364596,
+        "eV_to_kcal/mol":   lambda x: x * 23.060548867,
+        "eV_to_kJ/mol":     lambda x: x * 96.4853364596,
 
-        "hartree_to_cm-1":      lambda x: x * 219474.6313708,
-        "hartree_to_eV":        lambda x: x * 27.21138505,
-        "hartree_to_kcal":      lambda x: x * 627.50947414,
-        "hartree_to_kJmol-1":   lambda x: x * 2625.4996398,
+        "hartree_to_wavenumber": lambda x: x * 219474.6313708,
+        "hartree_to_eV":         lambda x: x * 27.21138505,
+        "hartree_to_kcal/mol":   lambda x: x * 627.50947414,
+        "hartree_to_kJ/mol":     lambda x: x * 2625.4996398,
 
-        "kcal_to_cm-1":     lambda x: x * 349.7550112,
-        "kcal_to_eV":       lambda x: x / 23.060548867,
-        "kcal_to_hartree":  lambda x: x / 627.50947414,
-        "kcal_to_kJmol-1":  lambda x: x * 4.184,
+        "kcal/mol_to_wavenumber": lambda x: x * 349.7550112,
+        "kcal/mol_to_eV":         lambda x: x / 23.060548867,
+        "kcal/mol_to_hartree":    lambda x: x / 627.50947414,
+        "kcal/mol_to_kJ/mol":     lambda x: x * 4.184,
 
-        "kJmol-1_to_cm-1":  lambda x: x * 83.5934722814,
-        "kJmol-1_to_eV":    lambda x: x / 96.4853364596,
-        "kJmol-1_to_hartree": lambda x: x / 2625.49963978,
-        "kJmol-1_to_kcal":  lambda x: x / 4.184,
-        "nm_to_cm-1":       lambda x: 1e7 / x,
+        "kJ/mol_to_wavenumber": lambda x: x * 83.5934722814,
+        "kJ/mol_to_eV":         lambda x: x / 96.4853364596,
+        "kJ/mol_to_hartree":    lambda x: x / 2625.49963978,
+        "kJ/mol_to_kcal/mol":   lambda x: x / 4.184,
+        "nm_to_wavenumber":     lambda x: 1e7 / x,
 
         # Taken from GAMESS docs, "Further information",
         # "Molecular Properties and Conversion Factors"
