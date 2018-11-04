@@ -102,6 +102,13 @@ class Psi4(logfileparser.Logfile):
             if self.reference[0] == 'C':
                 self.reference = self.reference[1:]
 
+        # Parse the XC density functional
+        # => Composite Functional: B3LYP <=
+        if self.section == "DFT Potential" and "composite functional" in line.lower():
+            chomp = line.split()
+            functional = chomp[-2]
+            self.metadata["functional"] = functional
+
         #  ==> Geometry <==
         #
         #    Molecular point group: c2h
@@ -158,7 +165,8 @@ class Psi4(logfileparser.Logfile):
             # This condition discards any repeated coordinates that Psi print. For example,
             # geometry optimizations will print the coordinates at the beginning of and SCF
             # section and also at the start of the gradient calculation.
-            if len(self.atomcoords) == 0 or self.atomcoords[-1] != coords:
+            if len(self.atomcoords) == 0 \
+                or (self.atomcoords[-1] != coords and not hasattr(self, 'finite_difference')):
                 self.atomcoords.append(coords)
 
             if len(atommasses) > 0:
@@ -174,7 +182,8 @@ class Psi4(logfileparser.Logfile):
             self.set_attribute('mult', mult)
 
         # The printout for Psi4 has a more obvious trigger for the SCF parameter printout.
-        if (self.section == "Algorithm") and (line.strip() == "==> Algorithm <=="):
+        if (self.section == "Algorithm") and (line.strip() == "==> Algorithm <==") \
+            and not hasattr(self, 'finite_difference'):
 
             self.skip_line(inputfile, 'blank')
 
@@ -371,7 +380,8 @@ class Psi4(logfileparser.Logfile):
         # repulsion integrals. In that case, there are actually two convergence cycles performed,
         # one for the density-fitted algorithm and one for the exact one, and the iterations are
         # printed in two blocks separated by some set-up information.
-        if (self.section == "Iterations") and (line.strip() == "==> Iterations <=="):
+        if (self.section == "Iterations") and (line.strip() == "==> Iterations <==") \
+            and not hasattr(self, 'finite_difference'):
 
             if not hasattr(self, 'scfvalues'):
                 self.scfvalues = []
@@ -420,7 +430,8 @@ class Psi4(logfileparser.Logfile):
         #	  25Bu     1.124938
         #
         # The case is different in the trigger string.
-        if "orbital energies (a.u.)" in line.lower():
+        if ("orbital energies (a.u.)" in line.lower()  or "orbital energies [eh]" in line.lower()) \
+            and not hasattr(self, 'finite_difference'):
 
             # If this is Psi4, we will be in the appropriate section.
             assert self.section == "Post-Iterations"
@@ -504,7 +515,8 @@ class Psi4(logfileparser.Logfile):
 
         # Both Psi3 and Psi4 print the final SCF energy right after the orbital energies,
         # but the label is different. Psi4 also does DFT, and the label is also different in that case.
-        if self.section == "Post-Iterations" and "Final Energy:" in line:
+        if self.section == "Post-Iterations" and "Final Energy:" in line \
+            and not hasattr(self, 'finite_difference'):
             e = float(line.split()[3])
             if not hasattr(self, 'scfenergies'):
                 self.scfenergies = []
@@ -540,7 +552,7 @@ class Psi4(logfileparser.Logfile):
         #            Occ             0
 
         if (self.section) and ("Molecular Orbitals" in self.section) \
-           and ("Molecular Orbitals" in line):
+           and ("Molecular Orbitals" in line) and not hasattr(self, 'finite_difference'):
 
             self.skip_line(inputfile, 'blank')
 
@@ -654,7 +666,8 @@ class Psi4(logfileparser.Logfile):
         #      2    -379.77675264   -7.79e-03      1.88e-02      4.37e-03 o    2.29e-02      6.76e-03 o  ~
         #  ---------------------------------------------------------------------------------------------
         #
-        if (self.section == "Convergence Check") and line.strip() == "==> Convergence Check <==":
+        if (self.section == "Convergence Check") and line.strip() == "==> Convergence Check <==" \
+            and not hasattr(self, 'finite_difference'):
 
             if not hasattr(self, "optstatus"):
                 self.optstatus = []
@@ -998,6 +1011,14 @@ class Psi4(logfileparser.Logfile):
             if len(vibdisps) == n_modes:
                 self.set_attribute('vibdisps', vibdisps)
 
+        # If finite difference is used to compute forces (i.e. by displacing
+        # slightly all the atoms), a series of additional scf calculations is
+        # performed. Orbitals, geometries, energies, etc. for these shouln't be
+        # included in the parsed data.
+
+        if line.strip().startswith('Using finite-differences of gradients'):
+            self.set_attribute('finite_difference', True)
+
         if line[:54] == '*** Psi4 exiting successfully. Buy a developer a beer!'\
                 or line[:54] == '*** PSI4 exiting successfully. Buy a developer a beer!':
             self.metadata['success'] = True
@@ -1049,7 +1070,7 @@ class Psi4(logfileparser.Logfile):
         line = next(inputfile)
         assert 'Freq' in line
         chomp = line.split()
-        vibfreqs = [float(x) for x in chomp[-n:]]
+        vibfreqs = [Psi4.parse_vibfreq(x) for x in chomp[-n:]]
 
         line = next(inputfile)
         assert 'Irrep' in line
