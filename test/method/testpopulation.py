@@ -41,7 +41,7 @@ class PopulationTest(unittest.TestCase):
         self.analysis.calculate()
 
     def testmissingrequiredattributes(self):
-        """Is an error raised when requried attributes are missing?"""
+        """Is an error raised when required attributes are missing?"""
         for missing_attribute in MPA.required_attrs:
             self.parse()
             delattr(self.data, missing_attribute)
