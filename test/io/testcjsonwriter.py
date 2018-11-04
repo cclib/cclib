@@ -49,6 +49,13 @@ class CJSONTest(unittest.TestCase):
             sqrt(sum(data.moments[1] ** 2))
         )
 
+        # Ensure the bond connectivity index starts from 0
+        bonds = json_data.get('bonds', None)
+        self.assertIsNotNone(bonds)
+        indices = bonds['connections']['index']
+        self.assertEqual(min(indices), 0)
+        self.assertTrue(max(indices) < number_of_atoms)
+
     def test_zero_dipole_moment(self):
         """Does the CJSON writer handle zero dipole moment correctly?"""
         fpath = os.path.join(__datadir__, "data/GAMESS/basicGAMESS-US2017/C_bigbasis.out")
