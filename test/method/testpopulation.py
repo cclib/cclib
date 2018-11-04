@@ -54,7 +54,7 @@ class PopulationTest(unittest.TestCase):
         self.parse()
         for overlap_attribute in MPA.overlap_attributes:
             if hasattr(self.data, overlap_attribute):
-                delattr(self.data,overlap_attribute) 
+                delattr(self.data, overlap_attribute)
         for method_class in self.methods:
             if method_class.overlap_attributes:
                 with self.assertRaises(MissingAttributeError):
