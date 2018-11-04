@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2017, the cclib development team
+# Copyright (c) 2018, the cclib development team
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
@@ -11,17 +11,22 @@ import logging
 
 import numpy
 
-from cclib.method.calculationmethod import Method
+from cclib.method.calculationmethod import Method, MissingAttributeError
 
 
 class Population(Method):
     """An abstract base class for population-type methods."""
 
+    # All of these are typically required for population analyses.
+    required_attrs = ('homos', 'mocoeffs', 'nbasis')
+
+    # At least one of these are typically required.
+    overlap_attributes = ('aooverlaps', 'fooverlaps')
+
     def __init__(self, data, progress=None, \
                  loglevel=logging.INFO, logname="Log"):
-
-        # Call the __init__ method of the superclass.
         super(Population, self).__init__(data, progress, loglevel, logname)
+
         self.fragresults = None
 
     def __str__(self):
@@ -31,6 +36,13 @@ class Population(Method):
     def __repr__(self):
         """Return a representation of the object."""
         return "Population"
+
+    def _check_required_attributes(self):
+        super(Population, self)._check_required_attributes()
+        
+        if self.overlap_attributes and not any(hasattr(self.data, a) for a in self.overlap_attributes):
+            raise MissingAttributeError(
+                    'Need overlap matrix (aooverlaps or fooverlaps attribute) for Population methods')
 
     def partition(self, indices=None):
 

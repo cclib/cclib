@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2017, the cclib development team
+# Copyright (c) 2018, the cclib development team
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
@@ -12,6 +12,7 @@ import random
 import numpy
 
 from cclib.method.calculationmethod import Method
+from cclib.method.population import Population
 
 
 def func(x):
@@ -21,7 +22,7 @@ def func(x):
         return x+func(x-1)
 
 
-class OPA(Method):
+class OPA(Population):
     """Overlap population analysis."""
 
     def __init__(self, *args):
@@ -39,17 +40,7 @@ class OPA(Method):
 
     def calculate(self, indices=None, fupdate=0.05):
         """Perform an overlap population analysis given the results of a parser"""
-
-        # Do we have the needed info in the ccData object?
-        if not hasattr(self.data, "mocoeffs") \
-          and not (hasattr(self.data, "aooverlaps") \
-                    or hasattr(self.data, "fooverlaps") ) \
-          and not hasattr(self.data, "nbasis"):
-            self.logger.error("Missing mocoeffs, aooverlaps/fooverlaps or nbasis")
-            return False #let the caller of function know we didn't finish
-
         if not indices:
-
             # Build list of groups of orbitals in each atom for atomresults.
             if hasattr(self.data, "aonames"):
                 names = self.data.aonames
