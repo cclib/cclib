@@ -1,0 +1,2207 @@
+----- GAMESS execution script 'rungms' -----
+This job is running on host subito
+under operating system Linux at Sun Nov 4 21:37:18 PST 2018
+Available scratch disk space (Kbyte units) at beginning of the job is
+Filesystem     1K-blocks      Used Available Use% Mounted on
+/dev/sda3      874729480 280286984 549985692  34% /home
+GAMESS temporary binary files will be written to /home/kml/tmp/
+GAMESS supplementary output files will be written to /home/kml/tmp/
+Copying input file exam45.inp to your run's scratch directory...
+cp tests/standard/exam45.inp /home/kml/tmp//exam45.F05
+unset echo
+/home/kml/tmp/gamess/ddikick.x /home/kml/tmp/gamess/gamess.00.x exam45 -ddi 1 1 subito -scr /home/kml/tmp/
+
+ Distributed Data Interface kickoff program.
+ Initiating 1 compute processes on 1 nodes to run the following command:
+ /home/kml/tmp/gamess/gamess.00.x exam45 
+
+          ******************************************************
+          *         GAMESS VERSION = 02 AUG 2018 (R2)         *
+          *             FROM IOWA STATE UNIVERSITY             *
+          * M.W.SCHMIDT, K.K.BALDRIDGE, J.A.BOATZ, S.T.ELBERT, *
+          *   M.S.GORDON, J.H.JENSEN, S.KOSEKI, N.MATSUNAGA,   *
+          *          K.A.NGUYEN, S.J.SU, T.L.WINDUS,           *
+          *       TOGETHER WITH M.DUPUIS, J.A.MONTGOMERY       *
+          *         J.COMPUT.CHEM.  14, 1347-1363(1993)        *
+          **************** 64 BIT LINUX VERSION ****************
+
+  SINCE 1993, STUDENTS AND POSTDOCS WORKING AT IOWA STATE UNIVERSITY
+  AND ALSO IN THEIR VARIOUS JOBS AFTER LEAVING ISU HAVE MADE IMPORTANT
+  CONTRIBUTIONS TO THE CODE:
+     IVANA ADAMOVIC, CHRISTINE AIKENS, YURI ALEXEEV, POOJA ARORA,
+     ANDREY ASADCHEV, ROB BELL, PRADIPTA BANDYOPADHYAY, JONATHAN BENTZ,
+     BRETT BODE, KURT BRORSEN, CALEB CARLIN, GALINA CHABAN, WEI CHEN,
+     CHEOL HO CHOI, PAUL DAY, ALBERT DEFUSCO, NUWAN DESILVA, TIM DUDLEY,
+     DMITRI FEDOROV, ALEX FINDLATER, GRAHAM FLETCHER, MARK FREITAG,
+     KURT GLAESEMANN, ANASTASIA GUININA,
+     DAN KEMP, GRANT MERRILL, NORIYUKI MINEZAWA, JONATHAN MULLIN,
+     TAKESHI NAGATA, SEAN NEDD, HEATHER NETZLOFF, BOSILJKA NJEGIC, RYAN OLSON,
+     MIKE PAK, BUU PHAM,
+     SPENCER PRUITT, LUKE ROSKOP, JIM SHOEMAKER, LYUDMILA SLIPCHENKO,
+     TONY SMITH, SAROM SOK LEANG, JIE SONG, TETSUYA TAKETSUGU, SIMON WEBB,
+     PENG XU, SOOHAENG YOO, FEDERICO ZAHARIEV
+
+  ADDITIONAL CODE HAS BEEN PROVIDED BY COLLABORATORS IN OTHER GROUPS:
+     IOWA STATE UNIVERSITY:
+          JOE IVANIC, AARON WEST, LAIMUTIS BYTAUTAS, KLAUS RUEDENBERG
+     UNIVERSITY OF TOKYO: KIMIHIKO HIRAO, TAKAHITO NAKAJIMA,
+          TAKAO TSUNEDA, MUNEAKI KAMIYA, SUSUMU YANAGISAWA,
+          KIYOSHI YAGI, MAHITO CHIBA, SEIKEN TOKURA, NAOAKI KAWAKAMI
+     UNIVERSITY OF AARHUS: FRANK JENSEN
+     UNIVERSITY OF IOWA: VISVALDAS KAIRYS, HUI LI
+     NATIONAL INST. OF STANDARDS AND TECHNOLOGY: WALT STEVENS, DAVID GARMER
+     UNIVERSITY OF PISA: BENEDETTA MENNUCCI, JACOPO TOMASI
+     UNIVERSITY OF MEMPHIS: HENRY KURTZ, PRAKASHAN KORAMBATH
+     UNIVERSITY OF ALBERTA: TOBY ZENG, MARIUSZ KLOBUKOWSKI
+     UNIVERSITY OF NEW ENGLAND: MARK SPACKMAN
+     MIE UNIVERSITY: HIROAKI UMEDA
+     NAT. INST. OF ADVANCED INDUSTRIAL SCIENCE AND TECHNOLOGY: KAZUO KITAURA
+     MICHIGAN STATE UNIVERSITY:
+          KAROL KOWALSKI, MARTA WLOCH, JEFFREY GOUR, JESSE LUTZ,
+          WEI LI, JUN SHEN, J. EMILIANO DEUSTUA, PIOTR PIECUCH
+     UNIVERSITY OF MINNESOTA:
+          YINAN SHU
+     UNIVERSITY OF SILESIA: MONIKA MUSIAL, STANISLAW KUCHARSKI
+     FACULTES UNIVERSITAIRES NOTRE-DAME DE LA PAIX:
+          OLIVIER QUINET, BENOIT CHAMPAGNE
+     UNIVERSITY OF CALIFORNIA - SANTA BARBARA: BERNARD KIRTMAN
+     INSTITUTE FOR MOLECULAR SCIENCE:
+          KAZUYA ISHIMURA, MICHIO KATOUDA, AND SHIGERU NAGASE
+     UNIVERSITY OF NOTRE DAME: ANNA POMOGAEVA, DAN CHIPMAN
+     KYUSHU UNIVERSITY:
+          HARUYUKI NAKANO,
+          FENG LONG GU, JACEK KORCHOWIEC, MARCIN MAKOWSKI, AND YURIKO AOKI,
+          HIROTOSHI MORI AND EISAKU MIYOSHI
+     PENNSYLVANIA STATE UNIVERSITY:
+          TZVETELIN IORDANOV, CHET SWALINA, JONATHAN SKONE,
+          SHARON HAMMES-SCHIFFER
+     WASEDA UNIVERSITY:
+          MASATO KOBAYASHI, TOMOKO AKAMA, TSUGUKI TOUMA,
+          TAKESHI YOSHIKAWA, YASUHIRO IKABATA, JUNJI SEINO,
+          YUYA NAKAJIMA, HIROMI NAKAI
+     NANJING UNIVERSITY: SHUHUA LI
+     UNIVERSITY OF NEBRASKA:
+          PEIFENG SU, DEJUN SI, NANDUN THELLAMUREGE, YALI WANG, HUI LI
+     UNIVERSITY OF ZURICH: ROBERTO PEVERATI, KIM BALDRIDGE
+     N. COPERNICUS UNIVERSITY AND JACKSON STATE UNIVERSITY:
+          MARIA BARYSZ
+     UNIVERSITY OF COPENHAGEN: Jimmy Kromann, CASPER STEINMANN
+     TOKYO INSTITUTE OF TECHNOLOGY: HIROYA NAKATA
+     NAGOYA UNIVERSITY: YOSHIO NISHIMOTO, STEPHAN IRLE
+     MOSCOW STATE UNIVERSITY: VLADIMIR MIRONOV
+
+ EXECUTION OF GAMESS BEGUN Sun Nov  4 21:37:18 2018
+
+            ECHO OF THE FIRST FEW INPUT CARDS -
+ INPUT CARD>!   EXAM45.                                                                     
+ INPUT CARD>!   triples-corrected excited state energies by coupled cluster EOM,            
+ INPUT CARD>!   from a closed shell ground state.                                           
+ INPUT CARD>!   Molecule is CH2, with 43 AOs and 41 MOs in aug-cc-pVDZ basis.               
+ INPUT CARD>!                                                                               
+ INPUT CARD>!   a priori, we know that methylene has two valence excited singlet            
+ INPUT CARD>!   states, 1-B-1 and a second 1-A-1, with the latter being a double            
+ INPUT CARD>!   excitation from the lowest singlet 1-A-1.                                   
+ INPUT CARD>!                                                                               
+ INPUT CARD>!   reference 1-A-1: FINAL ENERGY= -38.8841290160, in 11 iters                  
+ INPUT CARD>!   reference 1-A-1:    MBPT(2) E= -38.9999600236                               
+ INPUT CARD>!   reference 1-A-1:  CCSD ENERGY= -39.0279559403, in 16 iters, T1=0.00998093   
+ INPUT CARD>!   reference 1-A-1 lambda equation requires 7 iterations.                      
+ INPUT CARD>!   EOM-CCSD level results are                                                  
+ INPUT CARD>!   1-A-1: EOM-CCSD= -38.80419384, 15 iters, R2=0.7535(4**2 -> 5**2)            
+ INPUT CARD>!   1-B-1: EOM-CCSD= -38.96328855,  7 iters, R1=0.6169(4**2 -> 4**1,5**1)       
+ INPUT CARD>!   excited state lambda equations take 10, 7, 6 iterations.                    
+ INPUT CARD>!   the bright state, 1-1A1 to 1B1 at 1.76 eV has EOM-CCSD transition info      
+ INPUT CARD>!    RIGHT  TRANSITION MOM.    0.28097065     0.00000000     0.00000000         
+ INPUT CARD>!    LEFT   TRANSITION MOM.    0.30086244     0.00000000     0.00000000         
+ INPUT CARD>!    DIPOLE       STRENGTH     0.08453352     0.00000000     0.00000000         
+ INPUT CARD>!    OSCILLATOR   STRENGTH     0.00364437     0.00000000     0.00000000         
+ INPUT CARD>!   triples corrected energies are                                              
+ INPUT CARD>!    g.s.: GROUND STATE CR-CC(2,3),D  TOTAL E=      -39.0318193002              
+ INPUT CARD>!   1-B-1: CR-EOMCC(2,3) OR CR-EOMCCSD(T)_L E=      -38.9658047536              
+ INPUT CARD>!   1-A-1: CR-EOMCC(2,3) OR CR-EOMCCSD(T)_L E=      -38.8539785232              
+ INPUT CARD>!   with column D just below being the best overal results,                     
+ INPUT CARD>!      SUMMARY OF CR-EOMCC(2,3) RESULTS FOR ALL STATES                          
+ INPUT CARD>!      EXCITATION ENERGIES IN EV, 1 H = 27.211396 EV                            
+ INPUT CARD>!   STATE  EOMCCSD   (2,3),D    (2,3),A    (2,3),B    (2,3),C                   
+ INPUT CARD>!     B1    1.760      1.796      1.789      1.788      1.796                   
+ INPUT CARD>!     A1    6.089      4.839      5.134      5.192      4.834                   
+ INPUT CARD>!   The EOM-CCSD level dipole moment for 2-1A1 is 0.353331 Debye.               
+ INPUT CARD>!                                                                               
+ INPUT CARD> $contrl scftyp=rhf cctyp=cr-eoml runtyp=energy ispher=1 $end                   
+ INPUT CARD> $system mwords=1 $end                                                          
+ INPUT CARD> $basis  gbasis=accd $end                                                       
+ INPUT CARD> $guess  guess=huckel $end                                                      
+ INPUT CARD> $ccinp  ccprp=.true. $end                                                      
+ INPUT CARD> $eominp nstate(1)=1,0,1,0 iroot(1)=1,1 ccprpe=.true.                           
+ INPUT CARD>         minit=1 noact=3 nuact=5 moact(1)=2,3,4, 8,9,10,11,12 $end              
+ INPUT CARD> $data                                                                          
+ INPUT CARD>methyelene...aug-cc-pVDZ basis...excited states...1-1A1 state's MP2 geometry    
+ INPUT CARD>Cnv 2                                                                           
+ INPUT CARD>                                                                                
+ INPUT CARD>CARBON      6.0   0.0   0.0            0.0054633173                             
+ INPUT CARD>HYDROGEN    1.0   0.0  -0.8669990485  -0.7027316586                             
+ INPUT CARD> $end                                                                           
+ INPUT CARD>! TRAVIS-CI SKIP                                                                
+ INPUT CARD>                                                                                
+    1000000 WORDS OF MEMORY AVAILABLE
+
+     BASIS OPTIONS
+     -------------
+     GBASIS=ACCD         IGAUSS=       0      POLAR=NONE    
+     NDFUNC=       0     NFFUNC=       0     DIFFSP=       F
+     NPFUNC=       0      DIFFS=       F     BASNAM=        
+
+
+     RUN TITLE
+     ---------
+ methyelene...aug-cc-pVDZ basis...excited states...1-1A1 state's MP2 geometry    
+
+ THE POINT GROUP OF THE MOLECULE IS CNV     
+ THE ORDER OF THE PRINCIPAL AXIS IS     2
+
+ ATOM      ATOMIC                      COORDINATES (BOHR)
+           CHARGE         X                   Y                   Z
+ CARBON      6.0     0.0000000000        0.0000000000        0.0103241727
+ HYDROGEN    1.0     0.0000000000        1.6383906333       -1.3279702777
+ HYDROGEN    1.0     0.0000000000       -1.6383906333       -1.3279702777
+
+          INTERNUCLEAR DISTANCES (ANGS.)
+          ------------------------------
+
+                1 CARB       2 HYDR       3 HYDR  
+
+   1 CARB    0.0000000    1.1194764 *  1.1194764 *
+   2 HYDR    1.1194764 *  0.0000000    1.7339981 *
+   3 HYDR    1.1194764 *  1.7339981 *  0.0000000  
+
+  * ... LESS THAN  3.000
+
+
+     ATOMIC BASIS SET
+     ----------------
+ THE CONTRACTED PRIMITIVE FUNCTIONS HAVE BEEN UNNORMALIZED
+ THE CONTRACTED BASIS FUNCTIONS ARE NOW NORMALIZED TO UNITY
+
+  SHELL TYPE  PRIMITIVE        EXPONENT          CONTRACTION COEFFICIENT(S)
+
+ CARBON    
+
+      1   S       1          6665.0000000    0.000691583963
+      1   S       2          1000.0000000    0.005325796153
+      1   S       3           228.0000000    0.027060721042
+      1   S       4            64.7100000    0.101656846141
+      1   S       5            21.0600000    0.274574823617
+      1   S       6             7.4950000    0.448294318924
+      1   S       7             2.7970000    0.284902610715
+      1   S       8             0.5215000    0.015194859206
+
+      2   S       9          6665.0000000   -0.000293269653
+      2   S      10          1000.0000000   -0.002318035474
+      2   S      11           228.0000000   -0.011499786039
+      2   S      12            64.7100000   -0.046826727010
+      2   S      13            21.0600000   -0.128466168750
+      2   S      14             7.4950000   -0.301266272463
+      2   S      15             2.7970000   -0.255630702330
+      2   S      16             0.5215000    1.093793361012
+
+      3   S      17             0.1596000    1.000000000000
+
+      4   P      18             9.4390000    0.056979251590
+      4   P      19             2.0020000    0.313207211501
+      4   P      20             0.5456000    0.760376741738
+
+      5   P      21             0.1517000    1.000000000000
+
+      6   D      22             0.5500000    1.000000000000
+
+      7   S      23             0.0469000    1.000000000000
+
+      8   P      24             0.0404100    1.000000000000
+
+      9   D      25             0.1510000    1.000000000000
+
+ HYDROGEN  
+
+     15   S      26            13.0100000    0.033498726390
+     15   S      27             1.9620000    0.234800801174
+     15   S      28             0.4446000    0.813682957883
+
+     16   S      29             0.1220000    1.000000000000
+
+     17   P      30             0.7270000    1.000000000000
+
+     18   S      31             0.0297400    1.000000000000
+
+     19   P      32             0.1410000    1.000000000000
+
+ TOTAL NUMBER OF BASIS SET SHELLS             =   19
+ NUMBER OF CARTESIAN GAUSSIAN BASIS FUNCTIONS =   43
+ NOTE: THIS RUN WILL RESTRICT THE MO VARIATION SPACE TO SPHERICAL HARMONICS.
+ THE NUMBER OF ORBITALS KEPT IN THE VARIATIONAL SPACE WILL BE PRINTED LATER.
+ NUMBER OF ELECTRONS                          =    8
+ CHARGE OF MOLECULE                           =    0
+ SPIN MULTIPLICITY                            =    1
+ NUMBER OF OCCUPIED ORBITALS (ALPHA)          =    4
+ NUMBER OF OCCUPIED ORBITALS (BETA )          =    4
+ TOTAL NUMBER OF ATOMS                        =    3
+ THE NUCLEAR REPULSION ENERGY IS        5.9775854741
+
+     $CONTRL OPTIONS
+     ---------------
+ SCFTYP=RHF          RUNTYP=ENERGY       EXETYP=RUN     
+ MPLEVL=       0     CITYP =NONE         CCTYP =CR-EOML      VBTYP =NONE    
+ DFTTYP=NONE         TDDFT =NONE    
+ MULT  =       1     ICHARG=       0     NZVAR =       0     COORD =UNIQUE  
+ PP    =NONE         RELWFN=NONE         LOCAL =NONE         NUMGRD=       F
+ ISPHER=       1     NOSYM =       0     MAXIT =      30     UNITS =ANGS    
+ PLTORB=       F     MOLPLT=       F     AIMPAC=       F     FRIEND=        
+ NPRINT=       7     IREST =       0     GEOM  =INPUT   
+ NORMF =       0     NORMP =       0     ITOL  =      20     ICUT  =       9
+ INTTYP=BEST         GRDTYP=BEST         QMTTOL= 1.0E-06
+
+     $SYSTEM OPTIONS
+     ---------------
+  REPLICATED MEMORY=     1000000 WORDS (ON EVERY NODE).
+ DISTRIBUTED MEMDDI=           0 MILLION WORDS IN AGGREGATE,
+ MEMDDI DISTRIBUTED OVER   1 PROCESSORS IS           0 WORDS/PROCESSOR.
+ TOTAL MEMORY REQUESTED ON EACH PROCESSOR=     1000000 WORDS.
+ TIMLIM=      525600.00 MINUTES, OR     365.0 DAYS.
+ PARALL= F  BALTYP=  DLB     KDIAG=    0  COREFL= F
+ MXSEQ2=     300 MXSEQ3=     150  mem10=         0
+
+          ----------------
+          PROPERTIES INPUT
+          ----------------
+
+     MOMENTS            FIELD           POTENTIAL          DENSITY
+ IEMOM =       1   IEFLD =       0   IEPOT =       0   IEDEN =       0
+ WHERE =COMASS     WHERE =NUCLEI     WHERE =NUCLEI     WHERE =NUCLEI  
+ OUTPUT=BOTH       OUTPUT=BOTH       OUTPUT=BOTH       OUTPUT=BOTH    
+ IEMINT=       0   IEFINT=       0                     IEDINT=       0
+                                                       MORB  =       0
+          EXTRAPOLATION IN EFFECT
+          SOSCF IN EFFECT
+ ORBITAL PRINTING OPTION: NPREO=     1    43     2     1
+
+     -------------------------------
+     INTEGRAL TRANSFORMATION OPTIONS
+     -------------------------------
+     NWORD  =            0
+     CUTOFF = 1.0E-09     MPTRAN =       0
+     DIRTRF =       F     AOINTS =DUP     
+
+          ----------------------
+          INTEGRAL INPUT OPTIONS
+          ----------------------
+ NOPK  =       1 NORDER=       0 SCHWRZ=       F
+
+     -------------------------------------------
+     EQUATION OF MOTION INPUT FOR EXCITED STATES
+     -------------------------------------------
+     OPTIONS FOR STATE SELECTION:
+     GROUP =C2V       NSTATE= 1, 0, 1, 0, 0, 0, 0, 0    IROOT = 1, 1
+     OPTIONS FOR THE EOM-CCSD:
+     MEOM  =       0  MAXEOM=      50  MICEOM=      80  CVGEOM= 1.0E-04
+     OPTIONS FOR THE TRIPLES CORRECTION:
+     MTRIP =       1
+     OPTIONS FOR PROPERTIES:
+     CCPRP =       T  CCPRPE =       T
+     OPTIONS FOR INITIAL GUESSES:
+     MINIT =       1  MACT =       0  NOACT =       3  NUACT =       5
+     MOACT =    2    3    4    8    9   10   11   12
+
+     ------------------------------------------
+     THE POINT GROUP IS CNV, NAXIS= 2, ORDER= 4
+     ------------------------------------------
+
+ -- VARIATIONAL SPACE WILL BE RESTRICTED TO PURE SPHERICAL HARMONICS ONLY --
+ AFTER EXCLUDING CONTAMINANT COMBINATIONS FROM THE CARTESIAN GAUSSIAN BASIS
+ SET, THE NUMBER OF SPHERICAL HARMONICS KEPT IN THE VARIATION SPACE IS   41
+
+     DIMENSIONS OF THE SYMMETRY SUBSPACES ARE
+ A1  =   18     A2  =    4     B1  =    7     B2  =   12
+
+ ..... DONE SETTING UP THE RUN .....
+ STEP CPU TIME =     0.01 TOTAL CPU TIME =          0.0 (      0.0 MIN)
+ TOTAL WALL CLOCK TIME=          0.0 SECONDS, CPU UTILIZATION IS   100.00%
+
+          ********************
+          1 ELECTRON INTEGRALS
+          ********************
+ ...... END OF ONE-ELECTRON INTEGRALS ......
+ STEP CPU TIME =     0.00 TOTAL CPU TIME =          0.0 (      0.0 MIN)
+ TOTAL WALL CLOCK TIME=          0.0 SECONDS, CPU UTILIZATION IS   100.00%
+
+          -------------
+          GUESS OPTIONS
+          -------------
+          GUESS =HUCKEL            NORB  =       0          NORDER=       0
+          MIX   =       F          PRTMO =       F          PUNMO =       F
+          TOLZ  = 1.0E-08          TOLE  = 1.0E-05
+          SYMDEN=       F          PURIFY=       F
+
+ INITIAL GUESS ORBITALS GENERATED BY HUCKEL   ROUTINE.
+ HUCKEL GUESS REQUIRES     15976 WORDS.
+
+ STATISTICS FOR GENERATION OF SYMMETRY ORBITAL -Q- MATRIX
+ NUMBER OF CARTESIAN ATOMIC ORBITALS=         43
+ NUMBER OF SPHERICAL CONTAMINANTS DROPPED=     2
+ NUMBER OF LINEARLY DEPENDENT MOS DROPPED=     0
+ TOTAL NUMBER OF MOS IN VARIATION SPACE=      41
+
+ SYMMETRIES FOR INITIAL GUESS ORBITALS FOLLOW.   BOTH SET(S).
+     4 ORBITALS ARE OCCUPIED (    1 CORE ORBITALS).
+     2=A1       3=B2       4=A1       5=B1       6=B2       7=A1       8=A1  
+     9=A1      10=A1      11=A1      12=A1      13=A1      14=A1  
+ ...... END OF INITIAL ORBITAL SELECTION ......
+ STEP CPU TIME =     0.00 TOTAL CPU TIME =          0.0 (      0.0 MIN)
+ TOTAL WALL CLOCK TIME=          0.0 SECONDS, CPU UTILIZATION IS   100.00%
+
+                    ----------------------
+                    AO INTEGRAL TECHNOLOGY
+                    ----------------------
+     S,P,L SHELL ROTATED AXIS INTEGRALS, REPROGRAMMED BY
+        KAZUYA ISHIMURA (IMS) AND JOSE SIERRA (SYNSTAR).
+     S,P,D,L SHELL ROTATED AXIS INTEGRALS PROGRAMMED BY
+        KAZUYA ISHIMURA (INSTITUTE FOR MOLECULAR SCIENCE).
+     S,P,D,F,G SHELL TO TOTAL QUARTET ANGULAR MOMENTUM SUM 5,
+        ERIC PROGRAM BY GRAHAM FLETCHER (ELORET AND NASA ADVANCED
+        SUPERCOMPUTING DIVISION, AMES RESEARCH CENTER).
+     S,P,D,F,G,L SHELL GENERAL RYS QUADRATURE PROGRAMMED BY
+        MICHEL DUPUIS (PACIFIC NORTHWEST NATIONAL LABORATORY).
+
+          --------------------
+          2 ELECTRON INTEGRALS
+          --------------------
+
+ THE -PK- OPTION IS OFF, THE INTEGRALS ARE NOT IN SUPERMATRIX FORM.
+ STORING   15000 INTEGRALS/RECORD ON DISK, USING 12 BYTES/INTEGRAL.
+ TWO ELECTRON INTEGRAL EVALUATION REQUIRES   90586 WORDS OF MEMORY.
+ II,JST,KST,LST =  1  1  1  1 NREC =         1 INTLOC =    1
+ II,JST,KST,LST =  2  1  1  1 NREC =         1 INTLOC =    2
+ II,JST,KST,LST =  3  1  1  1 NREC =         1 INTLOC =    7
+ II,JST,KST,LST =  4  1  1  1 NREC =         1 INTLOC =   22
+ II,JST,KST,LST =  5  1  1  1 NREC =         1 INTLOC =   67
+ II,JST,KST,LST =  6  1  1  1 NREC =         1 INTLOC =  214
+ II,JST,KST,LST =  7  1  1  1 NREC =         1 INTLOC = 1189
+ II,JST,KST,LST =  8  1  1  1 NREC =         1 INTLOC = 1589
+ II,JST,KST,LST =  9  1  1  1 NREC =         1 INTLOC = 2864
+ II,JST,KST,LST = 10  1  1  1 NREC =         1 INTLOC = 7967
+ II,JST,KST,LST = 11  1  1  1 NREC =         1 INTLOC = 7967
+ II,JST,KST,LST = 12  1  1  1 NREC =         1 INTLOC = 7967
+ II,JST,KST,LST = 13  1  1  1 NREC =         1 INTLOC = 7967
+ II,JST,KST,LST = 14  1  1  1 NREC =         1 INTLOC = 7967
+ II,JST,KST,LST = 15  1  1  1 NREC =         1 INTLOC = 7967
+ II,JST,KST,LST = 16  1  1  1 NREC =         1 INTLOC =13227
+ II,JST,KST,LST = 17  1  1  1 NREC =         2 INTLOC = 4906
+ II,JST,KST,LST = 18  1  1  1 NREC =         4 INTLOC = 2657
+ II,JST,KST,LST = 19  1  1  1 NREC =         5 INTLOC = 1372
+ TOTAL NUMBER OF NONZERO TWO-ELECTRON INTEGRALS =              113050
+          8 INTEGRAL RECORDS WERE STORED ON DISK FILE  8.
+  ...... END OF TWO-ELECTRON INTEGRALS .....
+ STEP CPU TIME =     0.04 TOTAL CPU TIME =          0.1 (      0.0 MIN)
+ TOTAL WALL CLOCK TIME=          0.1 SECONDS, CPU UTILIZATION IS   100.00%
+
+          --------------------------
+                 RHF SCF CALCULATION
+          --------------------------
+
+     NUCLEAR ENERGY =         5.9775854741
+     MAXIT =   30     NPUNCH=    2
+     EXTRAP=T  DAMP=F  SHIFT=F  RSTRCT=F  DIIS=F  DEM=F  SOSCF=T
+     DENSITY MATRIX CONV=  1.00E-06
+     SOSCF WILL OPTIMIZE     148 ORBITAL ROTATIONS, SOGTOL=   0.250
+     MEMORY REQUIRED FOR RHF ITERS=     44137 WORDS.
+
+ ITER EX DEM     TOTAL ENERGY        E CHANGE  DENSITY CHANGE     ORB. GRAD
+   1  0  0      -38.7577866605   -38.7577866605   0.323433498   0.000000000
+          ---------------START SECOND ORDER SCF---------------
+   2  1  0      -38.8770914975    -0.1193048371   0.047013349   0.022921083
+   3  2  0      -38.8832755233    -0.0061840257   0.031243017   0.006851280
+   4  3  0      -38.8841113145    -0.0008357912   0.003404017   0.001341321
+   5  4  0      -38.8841267661    -0.0000154516   0.002015898   0.000496837
+   6  5  0      -38.8841289722    -0.0000022061   0.000344281   0.000048054
+   7  6  0      -38.8841290120    -0.0000000398   0.000108257   0.000012772
+   8  7  0      -38.8841290159    -0.0000000040   0.000012277   0.000002151
+   9  8  0      -38.8841290160    -0.0000000001   0.000003228   0.000000763
+  10  9  0      -38.8841290160    -0.0000000000   0.000000889   0.000000107
+  11 10  0      -38.8841290160    -0.0000000000   0.000000402   0.000000032
+
+ RHF HAS CONVERGED, NOW COMPUTING EXACT TOTAL FOCK MATRIX
+ FOR USE DURING THE COUPLED CLUSTER CALCULATION THAT FOLLOWS.
+
+          -----------------
+          DENSITY CONVERGED
+          -----------------
+     TIME TO FORM FOCK OPERATORS=       0.0 SECONDS (       0.0 SEC/ITER)
+     TIME TO SOLVE SCF EQUATIONS=       0.0 SECONDS (       0.0 SEC/ITER)
+
+ FINAL RHF ENERGY IS      -38.8841290160 AFTER  11 ITERATIONS
+
+          ------------
+          EIGENVECTORS
+          ------------
+
+                      1          2          3          4          5
+                  -11.3048    -0.8905    -0.5602    -0.3966     0.0258
+                     A1         A1         B2         A1         B1  
+    1  C  1  S    1.002735  -0.009833  -0.000000   0.002425   0.000000
+    2  C  1  S    0.004640   0.396024  -0.000000   0.214680   0.000000
+    3  C  1  S   -0.022639   0.290442  -0.000000   0.409098   0.000000
+    4  C  1  X   -0.000000  -0.000000  -0.000000  -0.000000   0.349596
+    5  C  1  Y   -0.000000  -0.000000   0.439757  -0.000000   0.000000
+    6  C  1  Z   -0.002959  -0.124060  -0.000000   0.497957   0.000000
+    7  C  1  X   -0.000000  -0.000000  -0.000000  -0.000000   0.339028
+    8  C  1  Y   -0.000000  -0.000000   0.159241  -0.000000   0.000000
+    9  C  1  Z    0.007026  -0.005642  -0.000000   0.331181   0.000000
+   10  C  1 XX   -0.001204  -0.009658  -0.000000   0.019123   0.000000
+   11  C  1 YY    0.000671   0.002833  -0.000000   0.004791   0.000000
+   12  C  1 ZZ    0.000533   0.006824  -0.000000  -0.023914   0.000000
+   13  C  1 XY   -0.000000  -0.000000  -0.000000  -0.000000   0.000000
+   14  C  1 XZ   -0.000000  -0.000000  -0.000000  -0.000000  -0.010154
+   15  C  1 YZ   -0.000000  -0.000000  -0.044951  -0.000000   0.000000
+   16  C  1  S   -0.006339  -0.019656  -0.000000   0.096123   0.000000
+   17  C  1  X   -0.000000  -0.000000  -0.000000  -0.000000   0.581599
+   18  C  1  Y   -0.000000  -0.000000  -0.015685  -0.000000   0.000000
+   19  C  1  Z    0.001252   0.003292  -0.000000   0.043854   0.000000
+   20  C  1 XX    0.001380   0.000929  -0.000000   0.013390   0.000000
+   21  C  1 YY   -0.001093   0.002230  -0.000000   0.014068   0.000000
+   22  C  1 ZZ   -0.000287  -0.003160  -0.000000  -0.027458   0.000000
+   23  C  1 XY   -0.000000  -0.000000  -0.000000  -0.000000   0.000000
+   24  C  1 XZ   -0.000000  -0.000000  -0.000000  -0.000000  -0.056012
+   25  C  1 YZ   -0.000000  -0.000000   0.000786  -0.000000   0.000000
+   26  H  2  S    0.000025   0.243461   0.320113  -0.155605   0.000000
+   27  H  2  S    0.011155   0.051961   0.194161  -0.103624   0.000000
+   28  H  2  X   -0.000000  -0.000000  -0.000000  -0.000000   0.016603
+   29  H  2  Y    0.000706  -0.025181  -0.008722   0.011003   0.000000
+   30  H  2  Z   -0.000525   0.015864   0.017035   0.006331   0.000000
+   31  H  2  S    0.001186   0.007898   0.032546  -0.013423   0.000000
+   32  H  2  X   -0.000000  -0.000000  -0.000000  -0.000000  -0.007420
+   33  H  2  Y   -0.002759  -0.009980  -0.022358   0.006664   0.000000
+   34  H  2  Z    0.002218  -0.001945   0.014443  -0.002519   0.000000
+   35  H  3  S    0.000025   0.243461  -0.320113  -0.155605   0.000000
+   36  H  3  S    0.011155   0.051961  -0.194161  -0.103624   0.000000
+   37  H  3  X   -0.000000  -0.000000  -0.000000  -0.000000   0.016603
+   38  H  3  Y   -0.000706   0.025181  -0.008722  -0.011003   0.000000
+   39  H  3  Z   -0.000525   0.015864  -0.017035   0.006331   0.000000
+   40  H  3  S    0.001186   0.007898  -0.032546  -0.013423   0.000000
+   41  H  3  X   -0.000000  -0.000000  -0.000000  -0.000000  -0.007420
+   42  H  3  Y    0.002759   0.009980  -0.022358  -0.006664   0.000000
+   43  H  3  Z    0.002218  -0.001945  -0.014443  -0.002519   0.000000
+
+                      6          7          8          9         10
+                    0.0355     0.0600     0.1188     0.1515     0.1518
+                     A1         B2         A1         B2         B1  
+    1  C  1  S   -0.013146   0.000000  -0.027826  -0.000000  -0.000000
+    2  C  1  S    0.044548   0.000000  -0.019313  -0.000000  -0.000000
+    3  C  1  S    0.733129   0.000000   0.659598  -0.000000  -0.000000
+    4  C  1  X    0.000000   0.000000   0.000000  -0.000000  -0.341022
+    5  C  1  Y    0.000000  -0.079952   0.000000   0.069500  -0.000000
+    6  C  1  Z   -0.041266   0.000000   0.148492  -0.000000  -0.000000
+    7  C  1  X    0.000000   0.000000   0.000000  -0.000000  -0.445868
+    8  C  1  Y    0.000000  -0.141790   0.000000  -1.410081  -0.000000
+    9  C  1  Z   -0.354588   0.000000  -0.163886  -0.000000  -0.000000
+   10  C  1 XX    0.002143   0.000000   0.015171  -0.000000  -0.000000
+   11  C  1 YY   -0.003566   0.000000   0.008030  -0.000000  -0.000000
+   12  C  1 ZZ    0.001423   0.000000  -0.023201  -0.000000  -0.000000
+   13  C  1 XY    0.000000   0.000000   0.000000  -0.000000  -0.000000
+   14  C  1 XZ    0.000000   0.000000   0.000000  -0.000000   0.031283
+   15  C  1 YZ    0.000000  -0.003113   0.000000  -0.029515  -0.000000
+   16  C  1  S    2.700827   0.000000   2.225529  -0.000000  -0.000000
+   17  C  1  X    0.000000   0.000000   0.000000  -0.000000   1.136670
+   18  C  1  Y    0.000000  -1.313939   0.000000  -3.615706  -0.000000
+   19  C  1  Z   -0.489003   0.000000  -1.717308  -0.000000  -0.000000
+   20  C  1 XX   -0.076702   0.000000  -0.131691  -0.000000  -0.000000
+   21  C  1 YY    0.063400   0.000000  -0.056519  -0.000000  -0.000000
+   22  C  1 ZZ    0.013302   0.000000   0.188210  -0.000000  -0.000000
+   23  C  1 XY    0.000000   0.000000   0.000000  -0.000000  -0.000000
+   24  C  1 XZ    0.000000   0.000000   0.000000  -0.000000  -0.126953
+   25  C  1 YZ    0.000000   0.042062   0.000000   0.509619  -0.000000
+   26  H  2  S    0.001176  -0.020915  -0.032932   0.096505  -0.000000
+   27  H  2  S   -0.677261   0.183492  -0.915898   2.963075  -0.000000
+   28  H  2  X    0.000000   0.000000   0.000000  -0.000000   0.001696
+   29  H  2  Y   -0.004337   0.007466   0.011911  -0.006879  -0.000000
+   30  H  2  Z    0.004256  -0.009489  -0.010484   0.002443  -0.000000
+   31  H  2  S   -1.525537   3.912212  -0.775245   4.282612  -0.000000
+   32  H  2  X    0.000000   0.000000   0.000000  -0.000000  -0.257371
+   33  H  2  Y    0.140854  -0.072921   0.171798  -0.533339  -0.000000
+   34  H  2  Z   -0.121222   0.070889   0.080506   0.451024  -0.000000
+   35  H  3  S    0.001176   0.020915  -0.032932  -0.096505  -0.000000
+   36  H  3  S   -0.677261  -0.183492  -0.915898  -2.963075  -0.000000
+   37  H  3  X    0.000000   0.000000   0.000000  -0.000000   0.001696
+   38  H  3  Y    0.004337   0.007466  -0.011911  -0.006879  -0.000000
+   39  H  3  Z    0.004256   0.009489  -0.010484  -0.002443  -0.000000
+   40  H  3  S   -1.525537  -3.912212  -0.775245  -4.282612  -0.000000
+   41  H  3  X    0.000000   0.000000   0.000000  -0.000000  -0.257371
+   42  H  3  Y   -0.140854  -0.072921  -0.171798  -0.533339  -0.000000
+   43  H  3  Z   -0.121222  -0.070889   0.080506  -0.451024  -0.000000
+
+                     11         12         13         14         15
+                    0.1786     0.2877     0.2982     0.3452     0.3641
+                     A1         B2         A1         A1         A2  
+    1  C  1  S   -0.059028  -0.000000  -0.022435  -0.010604   0.000000
+    2  C  1  S   -0.253201  -0.000000   0.068395   0.009588   0.000000
+    3  C  1  S    1.752705  -0.000000   0.567961   0.036407   0.000000
+    4  C  1  X   -0.000000  -0.000000  -0.000000  -0.000000   0.000000
+    5  C  1  Y   -0.000000   0.338899  -0.000000  -0.000000   0.000000
+    6  C  1  Z    0.056075  -0.000000  -0.176053  -0.193209   0.000000
+    7  C  1  X   -0.000000  -0.000000  -0.000000  -0.000000   0.000000
+    8  C  1  Y   -0.000000   0.860907  -0.000000  -0.000000   0.000000
+    9  C  1  Z   -1.094909  -0.000000  -0.279716  -1.337993   0.000000
+   10  C  1 XX   -0.006507  -0.000000   0.000616  -0.020113   0.000000
+   11  C  1 YY   -0.007664  -0.000000  -0.035888   0.042089   0.000000
+   12  C  1 ZZ    0.014172  -0.000000   0.035272  -0.021976   0.000000
+   13  C  1 XY   -0.000000  -0.000000  -0.000000  -0.000000   0.025788
+   14  C  1 XZ   -0.000000  -0.000000  -0.000000  -0.000000   0.000000
+   15  C  1 YZ   -0.000000  -0.011273  -0.000000  -0.000000   0.000000
+   16  C  1  S    6.723992  -0.000000   2.170475   2.025758   0.000000
+   17  C  1  X   -0.000000  -0.000000  -0.000000  -0.000000   0.000000
+   18  C  1  Y   -0.000000  -0.668918  -0.000000  -0.000000   0.000000
+   19  C  1  Z   -0.969002  -0.000000  -0.425299  -0.856644   0.000000
+   20  C  1 XX   -0.200470  -0.000000   0.035753   0.091578   0.000000
+   21  C  1 YY    0.261894  -0.000000   0.198688  -0.467063   0.000000
+   22  C  1 ZZ   -0.061424  -0.000000  -0.234442   0.375485   0.000000
+   23  C  1 XY   -0.000000  -0.000000  -0.000000  -0.000000  -0.052753
+   24  C  1 XZ   -0.000000  -0.000000  -0.000000  -0.000000   0.000000
+   25  C  1 YZ   -0.000000  -0.092143  -0.000000  -0.000000   0.000000
+   26  H  2  S   -0.020987  -0.098890  -0.093281  -0.020950   0.000000
+   27  H  2  S   -2.372000  -1.159454  -1.479829  -0.989160   0.000000
+   28  H  2  X   -0.000000  -0.000000  -0.000000  -0.000000  -0.020832
+   29  H  2  Y    0.023629   0.013006   0.012993   0.015689   0.000000
+   30  H  2  Z   -0.009605  -0.008439  -0.007918  -0.015523   0.000000
+   31  H  2  S   -2.015727   1.809807  -0.310365  -0.411265   0.000000
+   32  H  2  X   -0.000000  -0.000000  -0.000000  -0.000000   1.018654
+   33  H  2  Y    0.496019  -0.216689  -0.549992   0.483399   0.000000
+   34  H  2  Z   -0.558620   0.336799  -0.259558   1.005975   0.000000
+   35  H  3  S   -0.020987   0.098890  -0.093281  -0.020950   0.000000
+   36  H  3  S   -2.372000   1.159454  -1.479829  -0.989160   0.000000
+   37  H  3  X   -0.000000  -0.000000  -0.000000  -0.000000   0.020832
+   38  H  3  Y   -0.023629   0.013006  -0.012993  -0.015689   0.000000
+   39  H  3  Z   -0.009605   0.008439  -0.007918  -0.015523   0.000000
+   40  H  3  S   -2.015727  -1.809807  -0.310365  -0.411265   0.000000
+   41  H  3  X   -0.000000  -0.000000  -0.000000  -0.000000  -1.018654
+   42  H  3  Y   -0.496019  -0.216689   0.549992  -0.483399   0.000000
+   43  H  3  Z   -0.558620  -0.336799  -0.259558   1.005975   0.000000
+
+                     16         17         18         19         20
+                    0.3892     0.4524     0.5077     0.5469     0.5717
+                     B1         B2         A1         B2         B1  
+    1  C  1  S   -0.000000  -0.000000  -0.118983   0.000000   0.000000
+    2  C  1  S   -0.000000  -0.000000  -0.091777   0.000000   0.000000
+    3  C  1  S   -0.000000  -0.000000   4.929407   0.000000   0.000000
+    4  C  1  X    0.155640  -0.000000   0.000000   0.000000  -0.250439
+    5  C  1  Y   -0.000000  -0.029089   0.000000   0.076062   0.000000
+    6  C  1  Z   -0.000000  -0.000000  -0.170838   0.000000   0.000000
+    7  C  1  X    1.178163  -0.000000   0.000000   0.000000  -1.450863
+    8  C  1  Y   -0.000000  -4.908254   0.000000  -2.504256   0.000000
+    9  C  1  Z   -0.000000  -0.000000  -2.081759   0.000000   0.000000
+   10  C  1 XX   -0.000000  -0.000000   0.017117   0.000000   0.000000
+   11  C  1 YY   -0.000000  -0.000000  -0.004765   0.000000   0.000000
+   12  C  1 ZZ   -0.000000  -0.000000  -0.012352   0.000000   0.000000
+   13  C  1 XY   -0.000000  -0.000000   0.000000   0.000000   0.000000
+   14  C  1 XZ    0.002783  -0.000000   0.000000   0.000000  -0.045718
+   15  C  1 YZ   -0.000000   0.058840   0.000000  -0.003774   0.000000
+   16  C  1  S   -0.000000  -0.000000   5.803889   0.000000   0.000000
+   17  C  1  X    0.339467  -0.000000   0.000000   0.000000  -0.606236
+   18  C  1  Y   -0.000000  -2.405457   0.000000  -0.391439   0.000000
+   19  C  1  Z   -0.000000  -0.000000  -1.416192   0.000000   0.000000
+   20  C  1 XX   -0.000000  -0.000000  -1.252398   0.000000   0.000000
+   21  C  1 YY   -0.000000  -0.000000   0.578352   0.000000   0.000000
+   22  C  1 ZZ   -0.000000  -0.000000   0.674047   0.000000   0.000000
+   23  C  1 XY   -0.000000  -0.000000   0.000000   0.000000   0.000000
+   24  C  1 XZ    0.092910  -0.000000   0.000000   0.000000   1.636437
+   25  C  1 YZ   -0.000000   1.535995   0.000000   1.422755   0.000000
+   26  H  2  S   -0.000000  -0.103589   0.054012  -0.080496   0.000000
+   27  H  2  S   -0.000000   8.083035  -4.724279   6.298885   0.000000
+   28  H  2  X    0.020584  -0.000000   0.000000   0.000000  -0.022172
+   29  H  2  Y   -0.000000  -0.012874   0.003080   0.026847   0.000000
+   30  H  2  Z   -0.000000   0.018754   0.000932   0.035705   0.000000
+   31  H  2  S   -0.000000   1.910400  -1.259948   0.209499   0.000000
+   32  H  2  X   -1.024077  -0.000000   0.000000   0.000000   1.479856
+   33  H  2  Y   -0.000000  -1.424796   0.896409  -2.758924   0.000000
+   34  H  2  Z   -0.000000   1.974433  -0.527647  -0.017273   0.000000
+   35  H  3  S   -0.000000   0.103589   0.054012   0.080496   0.000000
+   36  H  3  S   -0.000000  -8.083035  -4.724279  -6.298885   0.000000
+   37  H  3  X    0.020584  -0.000000   0.000000   0.000000  -0.022172
+   38  H  3  Y   -0.000000  -0.012874  -0.003080   0.026847   0.000000
+   39  H  3  Z   -0.000000  -0.018754   0.000932  -0.035705   0.000000
+   40  H  3  S   -0.000000  -1.910400  -1.259948  -0.209499   0.000000
+   41  H  3  X   -1.024077  -0.000000   0.000000   0.000000   1.479856
+   42  H  3  Y   -0.000000  -1.424796  -0.896409  -2.758924   0.000000
+   43  H  3  Z   -0.000000  -1.974433  -0.527647   0.017273   0.000000
+
+                     21         22         23         24         25
+                    0.5720     0.6094     0.6131     0.6528     0.9185
+                     A1         B2         A2         A1         B1  
+    1  C  1  S   -0.154242   0.000000   0.000000  -0.019810  -0.000000
+    2  C  1  S   -0.067385   0.000000   0.000000   0.059763  -0.000000
+    3  C  1  S    8.885655   0.000000   0.000000   2.399578  -0.000000
+    4  C  1  X   -0.000000   0.000000   0.000000  -0.000000  -1.098889
+    5  C  1  Y   -0.000000  -0.181682   0.000000  -0.000000  -0.000000
+    6  C  1  Z   -0.016218   0.000000   0.000000   0.170626  -0.000000
+    7  C  1  X   -0.000000   0.000000   0.000000  -0.000000   2.402553
+    8  C  1  Y   -0.000000  -5.993414   0.000000  -0.000000  -0.000000
+    9  C  1  Z   -2.538705   0.000000   0.000000   0.227964  -0.000000
+   10  C  1 XX   -0.033657   0.000000   0.000000   0.002951  -0.000000
+   11  C  1 YY    0.021775   0.000000   0.000000  -0.037985  -0.000000
+   12  C  1 ZZ    0.011881   0.000000   0.000000   0.035034  -0.000000
+   13  C  1 XY   -0.000000   0.000000  -0.061394  -0.000000  -0.000000
+   14  C  1 XZ   -0.000000   0.000000   0.000000  -0.000000   0.000100
+   15  C  1 YZ   -0.000000   0.030466   0.000000  -0.000000  -0.000000
+   16  C  1  S    3.200797   0.000000   0.000000   2.183056  -0.000000
+   17  C  1  X   -0.000000   0.000000   0.000000  -0.000000  -0.155078
+   18  C  1  Y   -0.000000  -0.566515   0.000000  -0.000000  -0.000000
+   19  C  1  Z   -0.227871   0.000000   0.000000   0.108722  -0.000000
+   20  C  1 XX    0.368659   0.000000   0.000000  -0.251520  -0.000000
+   21  C  1 YY   -0.199575   0.000000   0.000000   2.308566  -0.000000
+   22  C  1 ZZ   -0.169084   0.000000   0.000000  -2.057046  -0.000000
+   23  C  1 XY   -0.000000   0.000000   2.003586  -0.000000  -0.000000
+   24  C  1 XZ   -0.000000   0.000000   0.000000  -0.000000  -0.764971
+   25  C  1 YZ   -0.000000   0.118190   0.000000  -0.000000  -0.000000
+   26  H  2  S   -0.072088   0.116211   0.000000   0.012343  -0.000000
+   27  H  2  S   -4.959457   9.964867   0.000000  -2.126995  -0.000000
+   28  H  2  X   -0.000000   0.000000   0.017449  -0.000000  -0.066737
+   29  H  2  Y    0.004391   0.008674   0.000000   0.010913  -0.000000
+   30  H  2  Z    0.004473  -0.000885   0.000000   0.017469  -0.000000
+   31  H  2  S   -0.738882   0.742428   0.000000  -0.408983  -0.000000
+   32  H  2  X   -0.000000   0.000000  -1.644559  -0.000000  -0.941660
+   33  H  2  Y    2.083174  -3.916346   0.000000  -0.644373  -0.000000
+   34  H  2  Z   -1.788561   2.764593   0.000000  -1.665870  -0.000000
+   35  H  3  S   -0.072088  -0.116211   0.000000   0.012343  -0.000000
+   36  H  3  S   -4.959457  -9.964867   0.000000  -2.126995  -0.000000
+   37  H  3  X   -0.000000   0.000000  -0.017449  -0.000000  -0.066737
+   38  H  3  Y   -0.004391   0.008674   0.000000  -0.010913  -0.000000
+   39  H  3  Z    0.004473   0.000885   0.000000   0.017469  -0.000000
+   40  H  3  S   -0.738882  -0.742428   0.000000  -0.408983  -0.000000
+   41  H  3  X   -0.000000   0.000000   1.644559  -0.000000  -0.941660
+   42  H  3  Y   -2.083174  -3.916346   0.000000   0.644373  -0.000000
+   43  H  3  Z   -1.788561  -2.764593   0.000000  -1.665870  -0.000000
+
+                     26         27         28         29         30
+                    0.9202     0.9418     0.9791     1.3361     1.5152
+                     B2         A1         A1         B2         A2  
+    1  C  1  S    0.000000  -0.124436  -0.239307   0.000000  -0.000000
+    2  C  1  S    0.000000  -0.290461  -0.669076   0.000000  -0.000000
+    3  C  1  S    0.000000   2.115430   1.361285   0.000000  -0.000000
+    4  C  1  X    0.000000   0.000000   0.000000   0.000000  -0.000000
+    5  C  1  Y    0.834140   0.000000   0.000000   0.599173  -0.000000
+    6  C  1  Z    0.000000   0.835391  -0.567945   0.000000  -0.000000
+    7  C  1  X    0.000000   0.000000   0.000000   0.000000  -0.000000
+    8  C  1  Y   -3.378849   0.000000   0.000000  -8.081080  -0.000000
+    9  C  1  Z    0.000000  -2.382094   2.047742   0.000000  -0.000000
+   10  C  1 XX    0.000000  -0.226276  -0.139530   0.000000  -0.000000
+   11  C  1 YY    0.000000   0.181461   0.154423   0.000000  -0.000000
+   12  C  1 ZZ    0.000000   0.044815  -0.014893   0.000000  -0.000000
+   13  C  1 XY    0.000000   0.000000   0.000000   0.000000   0.770643
+   14  C  1 XZ    0.000000   0.000000   0.000000   0.000000  -0.000000
+   15  C  1 YZ    0.324666   0.000000   0.000000  -0.412987  -0.000000
+   16  C  1  S    0.000000   2.572489  -1.240901   0.000000  -0.000000
+   17  C  1  X    0.000000   0.000000   0.000000   0.000000  -0.000000
+   18  C  1  Y    0.379643   0.000000   0.000000  -1.383993  -0.000000
+   19  C  1  Z    0.000000  -0.580089   0.104197   0.000000  -0.000000
+   20  C  1 XX    0.000000  -0.099897   0.607993   0.000000  -0.000000
+   21  C  1 YY    0.000000  -0.647528   0.380332   0.000000  -0.000000
+   22  C  1 ZZ    0.000000   0.747425  -0.988325   0.000000  -0.000000
+   23  C  1 XY    0.000000   0.000000   0.000000   0.000000  -0.632733
+   24  C  1 XZ    0.000000   0.000000   0.000000   0.000000  -0.000000
+   25  C  1 YZ   -0.155183   0.000000   0.000000   2.693776  -0.000000
+   26  H  2  S   -0.407914   0.492834   0.707063   0.922730  -0.000000
+   27  H  2  S    4.296856  -2.467095  -0.241203   9.945093  -0.000000
+   28  H  2  X    0.000000   0.000000   0.000000   0.000000   0.439438
+   29  H  2  Y   -0.152939   0.212122   0.085370  -0.103560  -0.000000
+   30  H  2  Z    0.198969  -0.092113  -0.023525  -0.039972  -0.000000
+   31  H  2  S   -0.925072  -0.434081   0.323163   0.916219  -0.000000
+   32  H  2  X    0.000000   0.000000   0.000000   0.000000  -0.001880
+   33  H  2  Y   -1.049873   0.541294  -0.269694  -2.066027  -0.000000
+   34  H  2  Z    0.886410   0.390311  -0.931454   1.929938  -0.000000
+   35  H  3  S    0.407914   0.492834   0.707063  -0.922730  -0.000000
+   36  H  3  S   -4.296856  -2.467095  -0.241203  -9.945093  -0.000000
+   37  H  3  X    0.000000   0.000000   0.000000   0.000000  -0.439438
+   38  H  3  Y   -0.152939  -0.212122  -0.085370  -0.103560  -0.000000
+   39  H  3  Z   -0.198969  -0.092113  -0.023525   0.039972  -0.000000
+   40  H  3  S    0.925072  -0.434081   0.323163  -0.916219  -0.000000
+   41  H  3  X    0.000000   0.000000   0.000000   0.000000   0.001880
+   42  H  3  Y   -1.049873  -0.541294   0.269694  -2.066027  -0.000000
+   43  H  3  Z   -0.886410   0.390311  -0.931454  -1.929938  -0.000000
+
+                     31         32         33         34         35
+                    1.5818     1.5818     1.6858     1.9600     2.0624
+                     A1         B1         A1         B2         A1  
+    1  C  1  S   -0.373552  -0.000000  -0.829722   0.000000  -1.176116
+    2  C  1  S   -0.749205  -0.000000  -1.634647   0.000000  -2.280246
+    3  C  1  S    4.361472  -0.000000   8.878042   0.000000  12.111845
+    4  C  1  X    0.000000   0.102508  -0.000000   0.000000  -0.000000
+    5  C  1  Y    0.000000  -0.000000  -0.000000  -0.121311  -0.000000
+    6  C  1  Z   -0.004124  -0.000000   0.093411   0.000000   0.170584
+    7  C  1  X    0.000000   0.306002  -0.000000   0.000000  -0.000000
+    8  C  1  Y    0.000000  -0.000000  -0.000000  -1.417597  -0.000000
+    9  C  1  Z   -0.344655  -0.000000  -3.087006   0.000000  -4.045180
+   10  C  1 XX   -0.136014  -0.000000   0.848293   0.000000  -0.720783
+   11  C  1 YY   -0.568626  -0.000000  -0.299124   0.000000   0.696391
+   12  C  1 ZZ    0.704640  -0.000000  -0.549169   0.000000   0.024392
+   13  C  1 XY    0.000000  -0.000000  -0.000000   0.000000  -0.000000
+   14  C  1 XZ    0.000000   0.870077  -0.000000   0.000000  -0.000000
+   15  C  1 YZ    0.000000  -0.000000  -0.000000  -0.342083  -0.000000
+   16  C  1  S    1.264279  -0.000000   3.699867   0.000000   2.960546
+   17  C  1  X    0.000000  -0.020294  -0.000000   0.000000  -0.000000
+   18  C  1  Y    0.000000  -0.000000  -0.000000   0.057185  -0.000000
+   19  C  1  Z   -0.166605  -0.000000  -0.811577   0.000000  -0.457109
+   20  C  1 XX   -0.083842  -0.000000  -1.074131   0.000000  -0.421604
+   21  C  1 YY    1.337401  -0.000000   0.610154   0.000000   0.117088
+   22  C  1 ZZ   -1.253559  -0.000000   0.463977   0.000000   0.304516
+   23  C  1 XY    0.000000  -0.000000  -0.000000   0.000000  -0.000000
+   24  C  1 XZ    0.000000  -0.667775  -0.000000   0.000000  -0.000000
+   25  C  1 YZ    0.000000  -0.000000  -0.000000   0.667873  -0.000000
+   26  H  2  S    0.015245  -0.000000  -0.235644   0.101962  -0.965609
+   27  H  2  S   -2.354331  -0.000000  -5.203274   2.402190  -5.749467
+   28  H  2  X    0.000000  -0.397693  -0.000000   0.000000  -0.000000
+   29  H  2  Y   -0.207923  -0.000000   0.145101   0.467238  -0.113763
+   30  H  2  Z   -0.398110  -0.000000  -0.084910   0.676801   0.055991
+   31  H  2  S   -0.221587  -0.000000  -0.700290  -0.185986  -0.562704
+   32  H  2  X    0.000000  -0.078586  -0.000000   0.000000  -0.000000
+   33  H  2  Y    0.235331  -0.000000   1.117332  -0.985446   1.836877
+   34  H  2  Z   -1.019371  -0.000000  -0.844960  -0.112496  -1.266884
+   35  H  3  S    0.015245  -0.000000  -0.235644  -0.101962  -0.965609
+   36  H  3  S   -2.354331  -0.000000  -5.203274  -2.402190  -5.749467
+   37  H  3  X    0.000000  -0.397693  -0.000000   0.000000  -0.000000
+   38  H  3  Y    0.207923  -0.000000  -0.145101   0.467238   0.113763
+   39  H  3  Z   -0.398110  -0.000000  -0.084910  -0.676801   0.055991
+   40  H  3  S   -0.221587  -0.000000  -0.700290   0.185986  -0.562704
+   41  H  3  X    0.000000  -0.078586  -0.000000   0.000000  -0.000000
+   42  H  3  Y   -0.235331  -0.000000  -1.117332  -0.985446  -1.836877
+   43  H  3  Z   -1.019371  -0.000000  -0.844960   0.112496  -1.266884
+
+                     36         37         38         39         40
+                    2.1238     2.1599     2.1688     2.3843     2.6820
+                     B1         B2         A2         A1         A1  
+    1  C  1  S   -0.000000  -0.000000  -0.000000  -0.333479   0.151801
+    2  C  1  S   -0.000000  -0.000000  -0.000000  -0.636468   0.560545
+    3  C  1  S   -0.000000  -0.000000  -0.000000   3.591024   3.302813
+    4  C  1  X   -0.251292  -0.000000  -0.000000  -0.000000  -0.000000
+    5  C  1  Y   -0.000000   0.644400  -0.000000  -0.000000  -0.000000
+    6  C  1  Z   -0.000000  -0.000000  -0.000000  -0.113784  -0.893570
+    7  C  1  X    0.343776  -0.000000  -0.000000  -0.000000  -0.000000
+    8  C  1  Y   -0.000000  -5.917393  -0.000000  -0.000000  -0.000000
+    9  C  1  Z   -0.000000  -0.000000  -0.000000  -1.192078  -1.549237
+   10  C  1 XX   -0.000000  -0.000000  -0.000000  -0.102668  -0.774189
+   11  C  1 YY   -0.000000  -0.000000  -0.000000  -0.875743   0.642659
+   12  C  1 ZZ   -0.000000  -0.000000  -0.000000   0.978411   0.131531
+   13  C  1 XY   -0.000000  -0.000000   1.033660  -0.000000  -0.000000
+   14  C  1 XZ    0.887823  -0.000000  -0.000000  -0.000000  -0.000000
+   15  C  1 YZ   -0.000000   0.681581  -0.000000  -0.000000  -0.000000
+   16  C  1  S   -0.000000  -0.000000  -0.000000   1.294006   0.984427
+   17  C  1  X    0.245783  -0.000000  -0.000000  -0.000000  -0.000000
+   18  C  1  Y   -0.000000  -0.474178  -0.000000  -0.000000  -0.000000
+   19  C  1  Z   -0.000000  -0.000000  -0.000000  -0.073187  -0.242736
+   20  C  1 XX   -0.000000  -0.000000  -0.000000  -0.242898  -0.135425
+   21  C  1 YY   -0.000000  -0.000000  -0.000000   0.501593  -0.135353
+   22  C  1 ZZ   -0.000000  -0.000000  -0.000000  -0.258694   0.270777
+   23  C  1 XY   -0.000000  -0.000000  -0.658935  -0.000000  -0.000000
+   24  C  1 XZ   -0.456262  -0.000000  -0.000000  -0.000000  -0.000000
+   25  C  1 YZ   -0.000000   1.210869  -0.000000  -0.000000  -0.000000
+   26  H  2  S   -0.000000   0.873348  -0.000000  -0.230966  -1.057191
+   27  H  2  S   -0.000000   7.281655  -0.000000  -1.972590  -1.724966
+   28  H  2  X    0.787402  -0.000000  -0.763093  -0.000000  -0.000000
+   29  H  2  Y   -0.000000   0.501150  -0.000000   0.553879   0.924981
+   30  H  2  Z   -0.000000  -0.164637  -0.000000   0.670514  -0.696244
+   31  H  2  S   -0.000000   0.381306  -0.000000  -0.230253  -0.128963
+   32  H  2  X   -0.544358  -0.000000   0.667086  -0.000000  -0.000000
+   33  H  2  Y   -0.000000  -2.200895  -0.000000   0.208287   0.334659
+   34  H  2  Z   -0.000000   1.646304  -0.000000  -0.687460  -0.008363
+   35  H  3  S   -0.000000  -0.873348  -0.000000  -0.230966  -1.057191
+   36  H  3  S   -0.000000  -7.281655  -0.000000  -1.972590  -1.724966
+   37  H  3  X    0.787402  -0.000000   0.763093  -0.000000  -0.000000
+   38  H  3  Y   -0.000000   0.501150  -0.000000  -0.553879  -0.924981
+   39  H  3  Z   -0.000000   0.164637  -0.000000   0.670514  -0.696244
+   40  H  3  S   -0.000000  -0.381306  -0.000000  -0.230253  -0.128963
+   41  H  3  X   -0.544358  -0.000000  -0.667086  -0.000000  -0.000000
+   42  H  3  Y   -0.000000  -2.200895  -0.000000  -0.208287  -0.334659
+   43  H  3  Z   -0.000000  -1.646304  -0.000000  -0.687460  -0.008363
+
+                     41
+                    2.7779
+                     B2  
+    1  C  1  S    0.000000
+    2  C  1  S    0.000000
+    3  C  1  S    0.000000
+    4  C  1  X    0.000000
+    5  C  1  Y   -1.091143
+    6  C  1  Z    0.000000
+    7  C  1  X    0.000000
+    8  C  1  Y   -2.794121
+    9  C  1  Z    0.000000
+   10  C  1 XX    0.000000
+   11  C  1 YY    0.000000
+   12  C  1 ZZ    0.000000
+   13  C  1 XY    0.000000
+   14  C  1 XZ    0.000000
+   15  C  1 YZ    1.589179
+   16  C  1  S    0.000000
+   17  C  1  X    0.000000
+   18  C  1  Y    0.094462
+   19  C  1  Z    0.000000
+   20  C  1 XX    0.000000
+   21  C  1 YY    0.000000
+   22  C  1 ZZ    0.000000
+   23  C  1 XY    0.000000
+   24  C  1 XZ    0.000000
+   25  C  1 YZ    0.313947
+   26  H  2  S    1.422790
+   27  H  2  S    2.803644
+   28  H  2  X    0.000000
+   29  H  2  Y   -0.849976
+   30  H  2  Z    0.737630
+   31  H  2  S   -0.364348
+   32  H  2  X    0.000000
+   33  H  2  Y   -0.575489
+   34  H  2  Z    0.564678
+   35  H  3  S   -1.422790
+   36  H  3  S   -2.803644
+   37  H  3  X    0.000000
+   38  H  3  Y   -0.849976
+   39  H  3  Z   -0.737630
+   40  H  3  S    0.364348
+   41  H  3  X    0.000000
+   42  H  3  Y   -0.575489
+   43  H  3  Z   -0.564678
+ ...... END OF RHF CALCULATION ......
+ STEP CPU TIME =     0.02 TOTAL CPU TIME =          0.1 (      0.0 MIN)
+ TOTAL WALL CLOCK TIME=          0.1 SECONDS, CPU UTILIZATION IS   100.00%
+
+     ----------------------------------------------------------------
+     PROPERTY VALUES FOR THE RHF   SELF-CONSISTENT FIELD WAVEFUNCTION
+     ----------------------------------------------------------------
+
+          ---------------------------------------
+          MULLIKEN AND LOWDIN POPULATION ANALYSES
+          ---------------------------------------
+
+               ----- POPULATIONS IN EACH AO -----
+                             MULLIKEN      LOWDIN
+              1  C  1  S      2.00544     1.85617
+              2  C  1  S      0.79636     0.56874
+              3  C  1  S      0.76810     0.31652
+              4  C  1  X      0.00000     0.00000
+              5  C  1  Y      0.69198     0.61635
+              6  C  1  Z      0.85593     0.78150
+              7  C  1  X      0.00000     0.00000
+              8  C  1  Y      0.26212     0.41297
+              9  C  1  Z      0.54089     0.52775
+             10  C  1 XX      0.00338     0.12108
+             11  C  1 YY      0.00291     0.16070
+             12  C  1 ZZ      0.00000     0.14157
+             13  C  1 XY      0.00000     0.00000
+             14  C  1 XZ      0.02581     0.00000
+             15  C  1 YZ      0.00000     0.04034
+             16  C  1  S      0.01518     0.07396
+             17  C  1  X      0.00000     0.00000
+             18  C  1  Y     -0.01258     0.03670
+             19  C  1  Z      0.03698     0.06647
+             20  C  1 XX      0.00345     0.02229
+             21  C  1 YY      0.00009     0.03996
+             22  C  1 ZZ      0.00000     0.03359
+             23  C  1 XY      0.00000     0.00000
+             24  C  1 XZ     -0.00047     0.00000
+             25  C  1 YZ      0.00000     0.04095
+             26  H  2  S      0.73968     0.55820
+             27  H  2  S      0.22810     0.19675
+             28  H  2  X      0.00000     0.00000
+             29  H  2  Y      0.01622     0.03085
+             30  H  2  Z      0.01299     0.02928
+             31  H  2  S      0.01073     0.02541
+             32  H  2  X      0.00000     0.00000
+             33  H  2  Y     -0.00552     0.09571
+             34  H  2  Z      0.00002     0.13498
+             35  H  3  S      0.73968     0.55820
+             36  H  3  S      0.22810     0.19675
+             37  H  3  X      0.00000     0.00000
+             38  H  3  Y      0.01622     0.03085
+             39  H  3  Z      0.01299     0.02928
+             40  H  3  S      0.01073     0.02541
+             41  H  3  X      0.00000     0.00000
+             42  H  3  Y     -0.00552     0.09571
+             43  H  3  Z      0.00002     0.13498
+
+          ----- MULLIKEN ATOMIC OVERLAP POPULATIONS -----
+          (OFF-DIAGONAL ELEMENTS NEED TO BE MULTIPLIED BY 2)
+
+             1           2           3
+
+    1    5.3595700
+    2    0.3180011   0.7726006
+    3    0.3180011  -0.0883879   0.7726006
+
+          TOTAL MULLIKEN AND LOWDIN ATOMIC POPULATIONS
+       ATOM         MULL.POP.    CHARGE          LOW.POP.     CHARGE
+    1 CARBON        5.995572    0.004428         5.857626    0.142374
+    2 HYDROGEN      1.002214   -0.002214         1.071187   -0.071187
+    3 HYDROGEN      1.002214   -0.002214         1.071187   -0.071187
+
+          MULLIKEN SPHERICAL HARMONIC POPULATIONS
+       ATOM           S       P       D      F      G      H      I    TOTAL
+    1 CARBON        3.59    2.38    0.04   0.00   0.00   0.00   0.00    6.00
+    2 HYDROGEN      0.98    0.02    0.00   0.00   0.00   0.00   0.00    1.00
+    3 HYDROGEN      0.98    0.02    0.00   0.00   0.00   0.00   0.00    1.00
+
+          -------------------------------
+          BOND ORDER AND VALENCE ANALYSIS     BOND ORDER THRESHOLD=0.050
+          -------------------------------
+
+                   BOND                       BOND                       BOND
+  ATOM PAIR DIST  ORDER      ATOM PAIR DIST  ORDER      ATOM PAIR DIST  ORDER
+    1   2  1.119  0.962        1   3  1.119  0.962
+
+                       TOTAL       BONDED        FREE
+      ATOM            VALENCE     VALENCE     VALENCE
+    1 CARBON            1.924       1.924       0.000
+    2 HYDROGEN          0.937       0.937       0.000
+    3 HYDROGEN          0.937       0.937       0.000
+
+          ---------------------
+          ELECTROSTATIC MOMENTS
+          ---------------------
+
+ POINT   1           X           Y           Z (BOHR)    CHARGE
+                 0.000000    0.000000   -0.182142        0.00 (A.U.)
+         DX          DY          DZ         /D/  (DEBYE)
+    -0.000000   -0.000000   -1.884716    1.884716
+ ...... END OF PROPERTY EVALUATION ......
+ STEP CPU TIME =     0.00 TOTAL CPU TIME =          0.1 (      0.0 MIN)
+ TOTAL WALL CLOCK TIME=          0.1 SECONDS, CPU UTILIZATION IS    87.50%
+
+     ---------------------------
+     COUPLED CLUSTER CALCULATION
+     ---------------------------
+ CCTYP                        =CR-EOML 
+ TOTAL NUMBER OF MOS          =    41
+ NUMBER OF OCCUPIED MOS       =     4
+ NUMBER OF FROZEN CORE MOS    =     1
+ NUMBER OF FROZEN VIRTUAL MOS =     0
+ MAXIMUM CC ITERATIONS        =    30
+ MAXIMUM DIIS ITERATIONS      =     5
+ CONVERGENCE CRITERION FOR CC =     7
+ AMPLITUDE ACCURACY THRESHOLD = 0.0E+00
+
+     --------------------------------------------
+     PARTIAL TWO ELECTRON INTEGRAL TRANSFORMATION
+     --------------------------------------------
+
+ NUMBER OF CORE MOLECULAR ORBITALS     =    1
+ NUMBER OF OCCUPIED MOLECULAR ORBITALS =   41
+ TOTAL NUMBER OF MOLECULAR ORBITALS    =   41
+ TOTAL NUMBER OF ATOMIC ORBITALS       =   43
+ THRESHOLD FOR KEEPING TRANSFORMED 2E- INTEGRALS = 1.000E-09
+ AO INTEGRALS WILL BE READ IN FROM DISK...
+ EVALUATING THE FROZEN CORE ENERGY...
+ ----- FROZEN CORE ENERGY =       -34.2499231048
+
+ PLAN A: REQUIREMENTS FOR FULLY IN-MEMORY TRANSFORMATION:
+ # OF WORDS AVAILABLE =              1000000
+ # OF WORDS NEEDED    =              1696453
+
+ PLAN B: REQUIREMENTS FOR THE SEGMENTED TRANSFORMATION:
+       MINIMUM=         110011 WORDS FOR 1 MOLECULAR ORBITAL PER PASS
+       MAXIMUM=        1696453 WORDS FOR ALL MOLECULAR ORBITALS IN 1 PASS
+              (          40678 EXTRA WORDS INCLUDES 1 EXTRA ORBITAL/PASS)
+ THIS RUN USES=         882893 WORDS,
+ DISTRIBUTING   2 PASSES EACH CONTAINING    20 ORBITALS OVER   1 PROCESSORS.
+
+ CHOOSING SEGMENTED PARTIAL TRANSFORMATION...
+ PASS #   1 TOOK        0.02 SECONDS.
+ PASS #   2 TOOK        0.03 SECONDS.
+ TOTAL NUMBER OF TRANSFORMED 2E- INTEGRALS KEPT =        88999
+ ... END OF INTEGRAL TRANSFORMATION ...
+ STEP CPU TIME =     0.06 TOTAL CPU TIME =          0.1 (      0.0 MIN)
+ TOTAL WALL CLOCK TIME=          0.1 SECONDS, CPU UTILIZATION IS    92.86%
+
+ CCTYP=CR-EOML  CALCULATION REQUIRES CONVERGED GROUND STATE CCSD AMPLTUDES.
+
+   -----------------------
+   COUPLED-CLUSTER PROGRAM
+   -----------------------
+
+   -------------------------------------------------------
+   P.PIECUCH, S.A.KUCHARSKI, M.WLOCH, K.KOWALSKI, M.MUSIAL
+   -------------------------------------------------------
+
+ *****************************************************************
+ THE FOLLOWING PAPERS SHOULD BE CITED WHEN USING COUPLED-CLUSTER
+ OPTIONS:
+
+ CCTYP = LCCD, CCD, CCSD, CCSD(T)
+ P. PIECUCH, S.A. KUCHARSKI, K. KOWALSKI, AND M. MUSIAL,
+ COMP. PHYS. COMMUN. 149, 71-96 (2002).
+
+ CCTYP = R-CC, CR-CC, CCSD(TQ), CR-CC(Q)
+ P. PIECUCH, S.A. KUCHARSKI, K. KOWALSKI, AND M. MUSIAL,
+ COMP. PHYS. COMMUN. 149, 71-96 (2002);
+ K. KOWALSKI AND P. PIECUCH, J. CHEM. PHYS. 113, 18-35 (2000);
+ K. KOWALSKI AND P. PIECUCH, J. CHEM. PHYS. 113, 5644-5652 (2000).
+
+ CCTYP = EOM-CCSD, CR-EOM
+ P. PIECUCH, S.A. KUCHARSKI, K. KOWALSKI, AND M. MUSIAL,
+ COMP. PHYS. COMMUN. 149, 71-96 (2002);
+ K. KOWALSKI AND P. PIECUCH, J. CHEM. PHYS. 120, 1715-1738 (2004);
+ M. WLOCH, J.R. GOUR, K. KOWALSKI, AND P. PIECUCH,
+ J. CHEM. PHYS. 122, 214107-1 - 214107-15 (2005).
+
+ CCTYP = CR-CCL
+ P. PIECUCH, S.A. KUCHARSKI, K. KOWALSKI, AND M. MUSIAL,
+ COMP. PHYS. COMMUN. 149, 71-96 (2002);
+ P. PIECUCH AND M. WLOCH, J. CHEM. PHYS. 123,
+ 224105-1 - 224105-10 (2005).
+
+ CCTYP = CR-EOML
+ P. PIECUCH, S.A. KUCHARSKI, K. KOWALSKI, AND M. MUSIAL,
+ COMP. PHYS. COMMUN. 149, 71-96 (2002);
+ P. PIECUCH, J. R. GOUR, AND M. WLOCH,
+ INT. J. QUANTUM CHEM. 109, 3268-3304 (2009);
+ K. KOWALSKI AND P. PIECUCH,
+ J. CHEM. PHYS. 120, 1715-1738 (2004).
+
+ IN ADDITION, THE USE OF CCPRP=.TRUE. IN $CCINP AND/OR THE USE
+ OF CCPRPE=.TRUE. IN $EOMINP SHOULD REFERENCE
+
+ M. WLOCH, J.R. GOUR, K. KOWALSKI, AND P. PIECUCH,
+ J. CHEM. PHYS. 122, 214107-1 - 214107-15 (2005).
+ *****************************************************************
+
+
+ THE FOLLOWING CALCULATIONS WILL BE PERFORMED:
+                                                     CCSD   
+
+ THE FOLLOWING ENERGY WILL BE CONSIDERED THE HIGHEST LEVEL:    CCSD   
+ THE AVAILABLE REPLICATED MEMORY IS     1000000 WORDS.
+ CONVERGENCE THRESHOLD:   1.0E-07
+ MAXIMUM NUMBER OF ITERATIONS:   30
+
+ MEMORY TO BE USED IN CC INTEGRAL SORTING IS      992407 WORDS.
+ THE MINIMUM MEMORY TO ACCOMPLISH SORTING IS      232612 WORDS.
+        88999 NON-ZERO TRANSFORMED 2E- INTEGRALS WERE SORTED INTO FILE 72:
+           13 [IJ|KL] TYPE,         238 [AJ|KL] TYPE,
+         1282 [AB|IJ] TYPE,        1855 [IA|BJ] TYPE,
+        21062 [AB|CI] TYPE,       64549 [AB|CD] TYPE.
+ TRANSFORMED INTEGRAL FILE  9 WAS READ    5 TIMES.
+ ....... DONE WITH CC INTEGRAL PREPARATION .......
+ STEP CPU TIME =     0.04 TOTAL CPU TIME =          0.2 (      0.0 MIN)
+ TOTAL WALL CLOCK TIME=          0.2 SECONDS, CPU UTILIZATION IS   100.00%
+
+ MEMORY REQUIRED FOR THE CCSD ITERATIONS IS      254687 WORDS.
+ ITER:  1   CCSD    CORR. ENERGY:  -0.1346940053   CONV.: -1.5330E-02
+ ITER:  2   CCSD    CORR. ENERGY:  -0.1393226616   CONV.: -1.1864E-02
+ ITER:  3   CCSD    CORR. ENERGY:  -0.1418788305   CONV.: -7.3184E-03
+ ITER:  4   CCSD    CORR. ENERGY:  -0.1427028264   CONV.:  7.8584E-03
+ ITER:  5   CCSD    CORR. ENERGY:  -0.1427687335   CONV.:  7.2704E-03
+ ITER:  6   CCSD    CORR. ENERGY:  -0.1436221232   CONV.:  1.6966E-03
+ ITER:  7   CCSD    CORR. ENERGY:  -0.1438471300   CONV.: -2.7702E-04
+ ITER:  8   CCSD    CORR. ENERGY:  -0.1438452060   CONV.: -2.1021E-04
+ ITER:  9   CCSD    CORR. ENERGY:  -0.1438215326   CONV.: -5.8991E-05
+ ITER: 10   CCSD    CORR. ENERGY:  -0.1438250660   CONV.: -2.4289E-05
+ ITER: 11   CCSD    CORR. ENERGY:  -0.1438260358   CONV.: -1.1089E-05
+ ITER: 12   CCSD    CORR. ENERGY:  -0.1438267904   CONV.:  4.5022E-06
+ ITER: 13   CCSD    CORR. ENERGY:  -0.1438268709   CONV.:  1.2645E-06
+ ITER: 14   CCSD    CORR. ENERGY:  -0.1438269181   CONV.:  5.6294E-07
+ ITER: 15   CCSD    CORR. ENERGY:  -0.1438269221   CONV.: -8.8813E-08
+ ITER: 16   CCSD    CORR. ENERGY:  -0.1438269243   CONV.: -8.8813E-08
+
+     THE    CCSD     ITERATIONS HAVE CONVERGED
+
+    MBPT(2) CORRELATION ENERGY:  -0.1158310075
+    CCSD    CORRELATION ENERGY:  -0.1438269243
+
+ T1 DIAGNOSTIC        =     0.00998093
+ NORM OF THE T1 VECTOR=     0.02444819
+ NORM OF THE T2 VECTOR=     0.28444977
+
+ THE FIVE LARGEST T1 AMPLITUDES ARE:
+ T1 AMPLITUDE IS  0.012490 FOR I=   4 -> A=  14
+ T1 AMPLITUDE IS  0.008954 FOR I=   4 -> A=  13
+ T1 AMPLITUDE IS  0.005527 FOR I=   4 -> A=  18
+ T1 AMPLITUDE IS  0.005401 FOR I=   2 -> A=  13
+ T1 AMPLITUDE IS  0.005357 FOR I=   3 -> A=  37
+
+ THE FIVE LARGEST SPIN-UNIQUE T2 AMPLITUDES ARE:
+ T2 AMPLITUDE IS -0.092345 FOR I,J=   4   4 -> A,B=   5   5
+ T2 AMPLITUDE IS -0.058981 FOR I,J=   4   4 -> A,B=   5  10
+ T2 AMPLITUDE IS -0.037121 FOR I,J=   4   4 -> A,B=  10  10
+ T2 AMPLITUDE IS -0.035616 FOR I,J=   3   3 -> A,B=  12  12
+ T2 AMPLITUDE IS -0.033422 FOR I,J=   2   2 -> A,B=   5   5
+ PRINTED T2(I-ALPHA,J-BETA -> A-ALPHA,B-BETA) VALUES
+ EQUAL   T2(J-ALPHA,I-BETA -> B-ALPHA,A-BETA) AMPLITUDES.
+
+ ....... DONE WITH CC AMPLITUDE ITERATIONS .......
+ STEP CPU TIME =     0.38 TOTAL CPU TIME =          0.6 (      0.0 MIN)
+ TOTAL WALL CLOCK TIME=          0.6 SECONDS, CPU UTILIZATION IS    98.21%
+
+                      SUMMARY OF RESULTS
+
+      REFERENCE ENERGY:      -38.8841290160
+        MBPT(2) ENERGY:      -38.9999600236   CORR.E=  -0.1158310075
+        CCSD    ENERGY:      -39.0279559403   CORR.E=  -0.1438269243
+
+ THE FOLLOWING METHOD AND ENERGY WILL BE CONSIDERED THE HIGHEST LEVEL RESULT:
+ COUPLED-CLUSTER ENERGY E(CCSD) =      -39.0279559403
+
+
+ THE GROUND STATE CCSD HAS CONVERGED, NOW ENTERING THE EOMCCSD PROGRAM TO
+ CALCULATE EXCITED STATE(S) AND/OR PROPERTIES AND/OR CR-CC(2,3) ENERGIES...
+
+
+     --------------------------
+     EQUATION-OF-MOTION PROGRAM
+     --------------------------
+
+     -------------------------------------------------------
+     K.KOWALSKI, P.PIECUCH, M.WLOCH, S.A.KUCHARSKI, M.MUSIAL
+     -------------------------------------------------------
+
+ CARRYING OUT CR-EOML  CALCULATION.
+ MEMORY REQUIRED FOR EOMCCSD INTERMEDIATES (INTQUA ) IS       215044 WORDS.
+ MEMORY REQUIRED FOR EOMCCSD INTERMEDIATES (INTRIPL) IS       367003 WORDS.
+ MEMORY REQUIRED FOR EOMCCSD INTERMEDIATES (INTRIP ) IS       216043 WORDS.
+ THERE IS ENOUGH MEMORY TO RUN THE MORE EFFICIENT INTRIPL INSTEAD OF INTRIP.
+ MEMORY REQUIRED FOR EOMCCSD INTERMEDIATES (INTRIH ) IS       217042 WORDS.
+ MEMORY USAGE BY       WDEX:    215044 NEEDED,    999960 AVAILABLE
+ MEMORY USAGE BY   INTQUAT2:    278018 NEEDED,    999960 AVAILABLE
+
+ THE ORBITAL RANGES USED BY THE INITIAL AMPLITUDE GUESS ARE
+ THE NUMBER OF CORRELATED OCCUPIED ORBITALS=     3
+ THE NUMBER OF CORRELATED  VIRTUAL ORBITALS=    37
+ THE NUMBER OF ACTIVE     OCCUPIED ORBITALS=     3
+ THE NUMBER OF ACTIVE      VIRTUAL ORBITALS=     5
+
+ USING EOMCCSd  AMPLITUDE INITIAL GUESS, REQUIRING    471419 WORDS.
+ OF THIS,    225792 WORDS ARE FOR MATRICES HM AND VR.
+ MEMORY USAGE BY    EOMINIT:    471419 NEEDED,    999960 AVAILABLE
+ THE EOM-CCSD POINT GROUP IS C2V
+ DIMENSION OF THE INITIAL GUESS MATRIX=    87
+    1 INITIAL VECTORS OF A1  SYMMETRY HAVE BEEN FOUND.
+    ORDERING OF THE INITIAL EIGENVALUES WAS SUCCESSFUL
+    INITIAL EIGENVALUES OF A1  SYMMETRY:
+             0.3144205675
+ DIMENSION OF THE INITIAL GUESS MATRIX=    36
+    1 INITIAL VECTORS OF B1  SYMMETRY HAVE BEEN FOUND.
+    ORDERING OF THE INITIAL EIGENVALUES WAS SUCCESSFUL
+    INITIAL EIGENVALUES OF B1  SYMMETRY:
+             0.1279930871
+ MEMORY USAGE BY       BAR3:     37629 NEEDED,    999960 AVAILABLE
+ MEMORY USAGE BY      DENR3:     67451 NEEDED,    999960 AVAILABLE
+ MEMORY USAGE BY     DENCI3:     66033 NEEDED,    999960 AVAILABLE
+ MEMORY USAGE BY      EXTIB:     75406 NEEDED,    999960 AVAILABLE
+ MEMORY USAGE BY   LAMBDIIS:    341392 NEEDED,    999960 AVAILABLE
+
+ SOLVING FOR THE GROUND STATE'S LAMBDA VECTOR (LEFT EIGENSTATE) USING DIIS
+
+   ITR       CONVERG.
+     1    0.010766695
+     2    0.002340543
+     3    0.000951101
+     4    0.000499711
+     5    0.000238687
+     6    0.000155929
+     7    0.000062560
+ SYMMETRY OF THE GROUND STATE LEFT EIGENSTATE: A1 
+ THE LARGEST LA1 AND LA2 AMPLITUDES FOR THIS ROOT ARE
+ LA2=  -0.0870767392 FOR I,J -> A,B =    3    3    4    4
+ LA2=  -0.0556143852 FOR I,J -> A,B =    3    3    9    4
+ LA2=  -0.0556143852 FOR I,J -> A,B =    3    3    4    9
+ MEMORY USAGE BY      DAVPR:    273477 NEEDED,    999960 AVAILABLE
+
+       RESULTS  OF  THE  EOM-CCSD   ITERATIONS
+
+ SOLVING FOR ROOT NUMBER    1 ...
+         TOT        EXCITATION ENERGY          AMPLITUDE
+    ITR  ITR      HARTREE         EV          CONVERGENCE
+     1    1    0.314438024    8.556297496    0.247561100
+     2    2    0.246431592    6.705747556    0.085040129
+     3    3    0.243954590    6.638344889    0.037459968
+     4    4    0.243505617    6.626127712    0.017393792
+     5    5    0.243401007    6.623281104    0.013202280
+     6    6    0.243294877    6.620393174    0.021425639
+     7    7    0.245580226    6.682580698    0.091212302
+     8    8    0.226932350    6.175145970    0.062379465
+     9    9    0.224216860    6.101253693    0.029483082
+    10   10    0.223807912    6.090125646    0.008740640
+    11   11    0.223761762    6.088869855    0.003678222
+    12   12    0.223762158    6.088880629    0.001141529
+    13   13    0.223761537    6.088863713    0.000588571
+    14   14    0.223762276    6.088883826    0.000167975
+    15   15    0.223762102    6.088879090    0.000065295
+ SYMMETRY OF THE STATE: A1 
+ THE LARGEST R1 AND R2 AMPLITUDES FOR THIS ROOT ARE
+ R1=   0.0527522945 FOR   I -> A   =    4    8
+ R2=  -0.0535967866 FOR I,J -> A,B =    2    2    5    5
+ R2=  -0.0539091946 FOR I,J -> A,B =    4    2    5    5
+ R2=  -0.0539091946 FOR I,J -> A,B =    2    4    5    5
+ R2=   0.7535385417 FOR I,J -> A,B =    4    4    5    5
+ R2=   0.3853625822 FOR I,J -> A,B =    4    4   10    5
+ R2=  -0.0964294063 FOR I,J -> A,B =    4    4   16    5
+ R2=   0.1027540160 FOR I,J -> A,B =    4    4   25    5
+ R2=   0.3853625822 FOR I,J -> A,B =    4    4    5   10
+ R2=   0.1603220356 FOR I,J -> A,B =    4    4   10   10
+ R2=  -0.0964294063 FOR I,J -> A,B =    4    4    5   16
+ R2=   0.1027540160 FOR I,J -> A,B =    4    4    5   25
+ GROUND STATE'S WEIGHT R0 =    0.1186036852
+ REL DIAGNOSTIC (R1*R1 + 2*R2*R2):    1.954
+ THE TOTAL ENERGY OF ROOT   1 IS E(EOM-CCSD) =      -38.8041938387
+
+ SOLVING FOR ROOT NUMBER    2 ...
+         TOT        EXCITATION ENERGY          AMPLITUDE
+    ITR  ITR      HARTREE         EV          CONVERGENCE
+     1   16    0.127935524    3.481304161    0.195743590
+     2   17    0.066090178    1.798405993    0.033848282
+     3   18    0.064781284    1.762789143    0.023758965
+     4   19    0.064671191    1.759793366    0.006120520
+     5   20    0.064668235    1.759712921    0.001241836
+     6   21    0.064667273    1.759686763    0.000280664
+     7   22    0.064667391    1.759689953    0.000085380
+ SYMMETRY OF THE STATE: B1 
+ THE LARGEST R1 AND R2 AMPLITUDES FOR THIS ROOT ARE
+ R1=   0.6169305628 FOR   I -> A   =    4    5
+ R1=   0.3004314417 FOR   I -> A   =    4   10
+ R1=  -0.0614989931 FOR   I -> A   =    4   20
+ R1=   0.0587703339 FOR   I -> A   =    4   25
+ GROUND STATE'S WEIGHT R0 =    0.0000000000
+ REL DIAGNOSTIC (R1*R1 + 2*R2*R2):    1.038
+ THE TOTAL ENERGY OF ROOT   2 IS E(EOM-CCSD) =      -38.9632885498
+
+
+               ---- SUMMARY OF EOM-CCSD CALCULATIONS ----
+
+                 EXCITATION      EXCITATION      TOTAL
+    SYMMETRY     ENERGY (H)      ENERGY (EV)     ENERGY (H)          ITERATIONS
+       B1        0.06466739         1.760       -38.96328855          CONVERGED
+       A1        0.22376210         6.089       -38.80419384          CONVERGED
+  
+ MEMORY USAGE BY  LEFTDIISH:    263777 NEEDED,    999960 AVAILABLE
+
+
+
+
+       DIIS PROCEDURE FOR LEFT EOMCCSD PROBLEM
+
+
+
+       RESULTS  OF  THE  LEFT EOMCCSD VECTOR ITERATIONS
+
+ SOLVING LEFT VECTOR
+
+
+  EXCIT. ENERGY    0.223762102 SYMMETRY: A1 
+  ITR      CONVERG.
+     1    0.030779219
+     2    0.008056977
+     3    0.005547435
+     4    0.003174207
+     5    0.003135898
+     6    0.001881886
+     7    0.001232813
+     8    0.000557348
+     9    0.000231198
+    10    0.000088521
+ SYMMETRY OF THE STATE: A1 
+ THE LARGEST LA1 AND LA2 AMPLITUDES FOR THIS ROOT ARE
+ LA1=   0.0689339873 FOR   I -> A   =    3    5
+ LA1=   0.0505296683 FOR   I -> A   =    3   10
+ LA2=  -0.0580503870 FOR I,J -> A,B =    1    1    4    4
+ LA2=  -0.0557218382 FOR I,J -> A,B =    3    1    4    4
+ LA2=  -0.0557218382 FOR I,J -> A,B =    1    3    4    4
+ LA2=   0.7628526093 FOR I,J -> A,B =    3    3    4    4
+ LA2=   0.3887426704 FOR I,J -> A,B =    3    3    9    4
+ LA2=  -0.0950878174 FOR I,J -> A,B =    3    3   15    4
+ LA2=   0.1029160011 FOR I,J -> A,B =    3    3   24    4
+ LA2=   0.3887426704 FOR I,J -> A,B =    3    3    4    9
+ LA2=   0.1603733046 FOR I,J -> A,B =    3    3    9    9
+ LA2=  -0.0950878174 FOR I,J -> A,B =    3    3    4   15
+ LA2=   0.1029160011 FOR I,J -> A,B =    3    3    4   24
+
+
+  EXCIT. ENERGY    0.064667391 SYMMETRY: B1 
+  ITR      CONVERG.
+     1    0.030274200
+     2    0.024970112
+     3    0.003449098
+     4    0.001050745
+     5    0.000270286
+     6    0.000087601
+ SYMMETRY OF THE STATE: B1 
+ THE LARGEST LA1 AND LA2 AMPLITUDES FOR THIS ROOT ARE
+ LA1=   0.6172661442 FOR   I -> A   =    3    4
+ LA1=   0.2989723765 FOR   I -> A   =    3    9
+ LA1=  -0.0602556977 FOR   I -> A   =    3   19
+ LA1=   0.0575410324 FOR   I -> A   =    3   24
+ MEMORY USAGE BY D.M. CALC.:    118695 NEEDED,    999960 AVAILABLE
+
+
+                    GROUND STATE CCSD PROPERTIES
+                    ----------------------------
+
+                           X-COMPONENT     Y-COMPONENT     Z-COMPONENT
+                           -----------     -----------     -----------
+ ---------------------------------------------------------------------
+ CCSD     DIPOLE  MOM.     0.000000000     0.000000000    -0.658732940
+ ---------------------------------------------------------------------
+ THE LEFT/RIGHT NATURAL ORBITALS HAVE OCCUPATION NUMBERS
+ 1.9659 1.9560 1.9101 0.0644 0.0000 0.0000 0.0001 0.0000 0.0000 0.0001
+ 0.0279 0.0000 0.0223 0.0001 0.0001 0.0076 0.0034 0.0000 0.0006 0.0000
+ 0.0000 0.0000 0.0078 0.0000 0.0001 0.0001 0.0134 0.0002 0.0061 0.0004
+ 0.0058 0.0012 0.0014 0.0005 0.0003 0.0009 0.0008 0.0008 0.0000 0.0017
+ THERE ARE     2.00 UNCORRELATED E- IN FILLED ORBITALS
+ THERE ARE     5.83 REAL E- IN PRINCIPAL NATURAL ORBITALS (  0.0 IMAG. E-)
+ THERE ARE     0.17 REAL E- IN SECONDARY NATURAL ORBITALS (  0.0 IMAG. E-)
+
+
+                    EXCITED STATE EOMCCSD PROPERTIES
+                    --------------------------------
+  EXCIT. ENERGY.=    1.760 EV   EOMCCSD     CONVERGED
+  SYMMETRY OF THE STATE  B1 
+
+                           X-COMPONENT     Y-COMPONENT     Z-COMPONENT
+                           -----------     -----------     -----------
+ TRANSITION:    0.000 EV  ==>    1.760 EV
+
+ RIGHT  TRANSITION MOM.    0.28097065    -0.00000000    -0.00000000
+ LEFT   TRANSITION MOM.    0.30086244    -0.00000000    -0.00000000
+ DIPOLE       STRENGTH     0.08453352     0.00000000     0.00000000
+ OSCILLATOR   STRENGTH     0.00364437     0.00000000     0.00000000
+
+ ---------------------------------------------------------------------
+ EOMCCSD  DIPOLE  MOM.     0.000000000     0.000000000    -0.357308895
+ ---------------------------------------------------------------------
+ THE LEFT/RIGHT NATURAL ORBITALS HAVE OCCUPATION NUMBERS
+ 1.9834 1.9867 0.9983 0.9824 0.0000 0.0000 0.0000 0.0000 0.0002 0.0024
+ 0.0075 0.0021 0.0000 0.0040 0.0004 0.0022 0.0000 0.0000 0.0000 0.0000
+ 0.0000 0.0000 0.0000 0.0103 0.0001 0.0112 0.0045 0.0000 0.0002 0.0000
+ 0.0021 0.0001 0.0001 0.0005 0.0001 0.0007 0.0003 0.0000 0.0001 0.0000
+ THERE ARE     2.00 UNCORRELATED E- IN FILLED ORBITALS
+ THERE ARE     4.97 REAL E- IN PRINCIPAL NATURAL ORBITALS (  0.0 IMAG. E-)
+ THERE ARE     1.03 REAL E- IN SECONDARY NATURAL ORBITALS (  0.0 IMAG. E-)
+
+
+                    EXCITED STATE EOMCCSD PROPERTIES
+                    --------------------------------
+  EXCIT. ENERGY.=    6.089 EV   EOMCCSD     CONVERGED
+  SYMMETRY OF THE STATE  A1 
+
+                           X-COMPONENT     Y-COMPONENT     Z-COMPONENT
+                           -----------     -----------     -----------
+ TRANSITION:    0.000 EV  ==>    6.089 EV
+
+ RIGHT  TRANSITION MOM.   -0.00000000    -0.00000000    -0.20180819
+ LEFT   TRANSITION MOM.   -0.00000000    -0.00000000    -0.25299688
+ DIPOLE       STRENGTH     0.00000000     0.00000000     0.05105684
+ OSCILLATOR   STRENGTH     0.00000000     0.00000000     0.00761639
+
+ TRANSITION:    1.760 EV  ==>    6.089 EV
+
+ RIGHT  TRANSITION MOM.    0.40704868    -0.00000000    -0.00000000
+ LEFT   TRANSITION MOM.    0.45605238    -0.00000000    -0.00000000
+ DIPOLE       STRENGTH     0.18563552     0.00000000     0.00000000
+ OSCILLATOR   STRENGTH     0.01968909     0.00000000     0.00000000
+
+ ---------------------------------------------------------------------
+ EOMCCSD  DIPOLE  MOM.     0.000000000     0.000000000    -0.139010149
+ ---------------------------------------------------------------------
+ THE LEFT/RIGHT NATURAL ORBITALS HAVE OCCUPATION NUMBERS
+ 1.9805 1.9937 0.0815 1.8898 0.0000 0.0000 0.0188 0.0000 0.0002 0.0000
+ 0.0007 0.0000 0.0002 0.0040 0.0067 0.0003 0.0008 0.0000 0.0001 0.0000
+ 0.0000 0.0006 0.0004 0.0170 0.0000 0.0000 0.0001 0.0000 0.0001 0.0000
+ 0.0001 0.0043 0.0000 0.0000 0.0000 0.0000 0.0000 0.0000 0.0000 0.0000
+ THERE ARE     2.00 UNCORRELATED E- IN FILLED ORBITALS
+ THERE ARE     4.06 REAL E- IN PRINCIPAL NATURAL ORBITALS (  0.0 IMAG. E-)
+ THERE ARE     1.94 REAL E- IN SECONDARY NATURAL ORBITALS (  0.0 IMAG. E-)
+ SAVING DENSITY MATRIX FOR STATE IROOT=  1  1 FOR PROPERTIES.
+
+          RIGHT EOM-CC NATURAL ORBITALS
+          -----------------------------
+ NOTE: LEFT NATURAL ORBITALS ARE NOT IDENTICAL TO THE RIGHT,
+       BUT ARE NOT PRINTED OUT.
+
+                      1          2          3          4          5
+                    2.0000     1.9937     1.9805     1.8898     0.0815
+                     A1         B2         A1         B1         A1  
+    1  C  1  S    1.002735   0.000000  -0.005560   0.000000   0.001839
+    2  C  1  S    0.004640   0.000000   0.418044   0.000000   0.140178
+    3  C  1  S   -0.022639   0.000000   0.293207  -0.000000   0.171661
+    4  C  1  X   -0.000000   0.000000  -0.000000   0.587663   0.000000
+    5  C  1  Y   -0.000000   0.449642  -0.000000  -0.000000   0.000000
+    6  C  1  Z   -0.002959  -0.000000  -0.100058   0.000000   0.481661
+    7  C  1  X   -0.000000   0.000000  -0.000000   0.439082  -0.000000
+    8  C  1  Y   -0.000000   0.136062  -0.000000  -0.000000   0.000000
+    9  C  1  Z    0.007026   0.000000   0.019011   0.000000   0.190280
+   10  C  1 XX   -0.001204  -0.000000  -0.003241   0.000000  -0.026118
+   11  C  1 YY    0.000671   0.000000   0.000772  -0.000000   0.024792
+   12  C  1 ZZ    0.000533   0.000000   0.002469  -0.000000   0.001326
+   13  C  1 XY   -0.000000   0.000000  -0.000000  -0.000000   0.000000
+   14  C  1 XZ   -0.000000   0.000000  -0.000000   0.005720   0.000000
+   15  C  1 YZ   -0.000000  -0.042843   0.000000   0.000000  -0.000000
+   16  C  1  S   -0.006339  -0.000000  -0.014833  -0.000000   0.144311
+   17  C  1  X   -0.000000   0.000000  -0.000000   0.100579  -0.000000
+   18  C  1  Y   -0.000000  -0.016629   0.000000  -0.000000  -0.000000
+   19  C  1  Z    0.001252   0.000000   0.010151   0.000000   0.234422
+   20  C  1 XX    0.001380   0.000000   0.005424   0.000000  -0.094094
+   21  C  1 YY   -0.001093  -0.000000   0.000679  -0.000000   0.029234
+   22  C  1 ZZ   -0.000287  -0.000000  -0.006103  -0.000000   0.064860
+   23  C  1 XY   -0.000000   0.000000   0.000000   0.000000  -0.000000
+   24  C  1 XZ   -0.000000  -0.000000  -0.000000   0.009326   0.000000
+   25  C  1 YZ   -0.000000   0.007417  -0.000000   0.000000   0.000000
+   26  H  2  S    0.000025   0.320531   0.231456   0.000000  -0.162704
+   27  H  2  S    0.011155   0.216239   0.053642   0.000000  -0.057717
+   28  H  2  X   -0.000000  -0.000000  -0.000000   0.025143  -0.000000
+   29  H  2  Y    0.000706  -0.005540  -0.022936  -0.000000   0.021756
+   30  H  2  Z   -0.000525   0.014667   0.014943   0.000000   0.012399
+   31  H  2  S    0.001186   0.032732   0.008633   0.000000   0.082640
+   32  H  2  X   -0.000000  -0.000000  -0.000000   0.034232   0.000000
+   33  H  2  Y   -0.002759  -0.025506  -0.011803  -0.000000   0.036960
+   34  H  2  Z    0.002218   0.018474   0.001078   0.000000   0.082516
+   35  H  3  S    0.000025  -0.320531   0.231456   0.000000  -0.162704
+   36  H  3  S    0.011155  -0.216239   0.053642  -0.000000  -0.057717
+   37  H  3  X   -0.000000   0.000000  -0.000000   0.025143  -0.000000
+   38  H  3  Y   -0.000706  -0.005540   0.022936   0.000000  -0.021756
+   39  H  3  Z   -0.000525  -0.014667   0.014943  -0.000000   0.012399
+   40  H  3  S    0.001186  -0.032732   0.008633  -0.000000   0.082640
+   41  H  3  X   -0.000000   0.000000  -0.000000   0.034232   0.000000
+   42  H  3  Y    0.002759  -0.025506   0.011803  -0.000000  -0.036960
+   43  H  3  Z    0.002218  -0.018474   0.001078  -0.000000   0.082516
+
+                      6          7          8          9         10
+                    0.0188     0.0170     0.0067     0.0043     0.0040
+                     A1         B1         B1         A1         A2  
+    1  C  1  S    0.065186  -0.000000  -0.000000  -0.139679   0.000000
+    2  C  1  S    0.366131  -0.000000  -0.000000  -0.366201   0.000000
+    3  C  1  S    0.797577   0.000000   0.000000   0.138484  -0.000000
+    4  C  1  X    0.000000   0.911878  -0.207860  -0.000000   0.000000
+    5  C  1  Y   -0.000000  -0.000000   0.000000  -0.000000   0.000000
+    6  C  1  Z    0.220202  -0.000000  -0.000000  -0.393101  -0.000000
+    7  C  1  X   -0.000000  -0.614035   0.323487   0.000000  -0.000000
+    8  C  1  Y   -0.000000   0.000000   0.000000  -0.000000  -0.000000
+    9  C  1  Z    0.032881  -0.000000  -0.000000  -0.186781   0.000000
+   10  C  1 XX    0.370562  -0.000000   0.000000   0.476592   0.000000
+   11  C  1 YY   -0.211595   0.000000  -0.000000  -0.208007  -0.000000
+   12  C  1 ZZ   -0.158967  -0.000000  -0.000000  -0.268585  -0.000000
+   13  C  1 XY   -0.000000  -0.000000  -0.000000  -0.000000   0.633364
+   14  C  1 XZ    0.000000   0.145654   0.635826   0.000000  -0.000000
+   15  C  1 YZ    0.000000  -0.000000  -0.000000   0.000000   0.000000
+   16  C  1  S   -0.115212   0.000000   0.000000   0.159822  -0.000000
+   17  C  1  X   -0.000000  -0.284081   0.081976   0.000000   0.000000
+   18  C  1  Y    0.000000   0.000000   0.000000  -0.000000  -0.000000
+   19  C  1  Z   -0.427411  -0.000000  -0.000000   0.330183   0.000000
+   20  C  1 XX    0.312239  -0.000000  -0.000000   0.302099   0.000000
+   21  C  1 YY   -0.068415   0.000000   0.000000  -0.211990  -0.000000
+   22  C  1 ZZ   -0.243824   0.000000   0.000000  -0.090108   0.000000
+   23  C  1 XY    0.000000   0.000000   0.000000  -0.000000   0.449009
+   24  C  1 XZ    0.000000   0.069182   0.387606  -0.000000   0.000000
+   25  C  1 YZ    0.000000  -0.000000  -0.000000  -0.000000   0.000000
+   26  H  2  S   -0.144219  -0.000000  -0.000000  -0.145753   0.000000
+   27  H  2  S   -0.307115  -0.000000  -0.000000   0.061658   0.000000
+   28  H  2  X    0.000000  -0.039387  -0.058222  -0.000000   0.023047
+   29  H  2  Y   -0.013161   0.000000   0.000000   0.006343  -0.000000
+   30  H  2  Z   -0.000631  -0.000000   0.000000   0.014440   0.000000
+   31  H  2  S   -0.186222  -0.000000  -0.000000   0.143991   0.000000
+   32  H  2  X   -0.000000  -0.069580  -0.074846  -0.000000   0.058389
+   33  H  2  Y    0.003254   0.000000   0.000000   0.051583  -0.000000
+   34  H  2  Z   -0.203848  -0.000000  -0.000000   0.117947   0.000000
+   35  H  3  S   -0.144219   0.000000   0.000000  -0.145753  -0.000000
+   36  H  3  S   -0.307115   0.000000  -0.000000   0.061658  -0.000000
+   37  H  3  X   -0.000000  -0.039387  -0.058222   0.000000  -0.023047
+   38  H  3  Y    0.013161  -0.000000  -0.000000  -0.006343   0.000000
+   39  H  3  Z   -0.000631   0.000000   0.000000   0.014440  -0.000000
+   40  H  3  S   -0.186222   0.000000  -0.000000   0.143991   0.000000
+   41  H  3  X   -0.000000  -0.069580  -0.074846   0.000000  -0.058389
+   42  H  3  Y   -0.003254   0.000000   0.000000  -0.051583  -0.000000
+   43  H  3  Z   -0.203848   0.000000  -0.000000   0.117947  -0.000000
+
+                     11         12         13         14         15
+                    0.0008     0.0007     0.0006     0.0004     0.0003
+                     A1         B2         A2         A1         B2  
+    1  C  1  S    0.355721  -0.000000  -0.000000  -0.173353   0.000000
+    2  C  1  S    0.944209  -0.000000  -0.000000  -0.356170   0.000000
+    3  C  1  S   -0.430400   0.000000   0.000000   0.667517  -0.000000
+    4  C  1  X    0.000000   0.000000   0.000000   0.000000  -0.000000
+    5  C  1  Y    0.000000   0.682138   0.000000  -0.000000  -0.642531
+    6  C  1  Z   -0.596422   0.000000  -0.000000  -0.850322   0.000000
+    7  C  1  X   -0.000000  -0.000000  -0.000000  -0.000000   0.000000
+    8  C  1  Y    0.000000   0.432862  -0.000000  -0.000000   0.836343
+    9  C  1  Z   -0.056119   0.000000  -0.000000   1.168713  -0.000000
+   10  C  1 XX    0.203950  -0.000000  -0.000000  -0.452574   0.000000
+   11  C  1 YY   -0.099072   0.000000  -0.000000   0.158558   0.000000
+   12  C  1 ZZ   -0.104878   0.000000   0.000000   0.294016  -0.000000
+   13  C  1 XY   -0.000000  -0.000000  -0.574048  -0.000000  -0.000000
+   14  C  1 XZ    0.000000   0.000000  -0.000000   0.000000  -0.000000
+   15  C  1 YZ    0.000000   0.357500   0.000000  -0.000000   0.240023
+   16  C  1  S    0.261469  -0.000000   0.000000   0.022283  -0.000000
+   17  C  1  X    0.000000  -0.000000   0.000000   0.000000   0.000000
+   18  C  1  Y    0.000000   0.086876  -0.000000  -0.000000   0.157737
+   19  C  1  Z    0.271072  -0.000000  -0.000000  -0.220411   0.000000
+   20  C  1 XX   -0.491796   0.000000  -0.000000   0.275620  -0.000000
+   21  C  1 YY    0.268424  -0.000000  -0.000000  -0.148901   0.000000
+   22  C  1 ZZ    0.223372  -0.000000   0.000000  -0.126719  -0.000000
+   23  C  1 XY   -0.000000  -0.000000  -0.682833  -0.000000  -0.000000
+   24  C  1 XZ    0.000000   0.000000   0.000000   0.000000  -0.000000
+   25  C  1 YZ    0.000000   0.163422   0.000000  -0.000000   0.201649
+   26  H  2  S   -0.137084  -0.231391  -0.000000  -0.116374  -0.142998
+   27  H  2  S   -0.432610  -0.780799  -0.000000   0.024750  -0.201437
+   28  H  2  X    0.000000   0.000000   0.484190   0.000000  -0.000000
+   29  H  2  Y    0.028434  -0.021277   0.000000   0.001160   0.031689
+   30  H  2  Z    0.000441  -0.002438  -0.000000  -0.038659   0.034138
+   31  H  2  S    0.084741  -0.069783  -0.000000  -0.232801   0.012708
+   32  H  2  X    0.000000   0.000000   1.011249   0.000000  -0.000000
+   33  H  2  Y    0.058133   0.133651   0.000000  -0.151392   0.287975
+   34  H  2  Z    0.061642  -0.100983   0.000000  -0.170397  -0.074060
+   35  H  3  S   -0.137084   0.231391   0.000000  -0.116374   0.142998
+   36  H  3  S   -0.432610   0.780799  -0.000000   0.024750   0.201437
+   37  H  3  X    0.000000  -0.000000  -0.484190   0.000000  -0.000000
+   38  H  3  Y   -0.028434  -0.021277  -0.000000  -0.001160   0.031689
+   39  H  3  Z    0.000441   0.002438  -0.000000  -0.038659  -0.034138
+   40  H  3  S    0.084741   0.069783  -0.000000  -0.232801  -0.012708
+   41  H  3  X    0.000000  -0.000000  -1.011249   0.000000  -0.000000
+   42  H  3  Y   -0.058133   0.133651  -0.000000   0.151392   0.287975
+   43  H  3  Z    0.061642   0.100983   0.000000  -0.170397   0.074060
+
+                     16         17         18         19         20
+                    0.0002     0.0002     0.0001     0.0001     0.0001
+                     B1         A1         B1         A1         A2  
+    1  C  1  S   -0.000000   0.041681  -0.000000  -0.144204   0.000000
+    2  C  1  S   -0.000000   0.106999  -0.000000  -0.467685   0.000000
+    3  C  1  S    0.000000  -0.010994   0.000000  -0.282938  -0.000000
+    4  C  1  X   -0.572251  -0.000000  -0.028179  -0.000000   0.000000
+    5  C  1  Y    0.000000  -0.000000  -0.000000  -0.000000   0.000000
+    6  C  1  Z   -0.000000   0.166797  -0.000000  -0.074464   0.000000
+    7  C  1  X    2.459413   0.000000  -0.186364   0.000000  -0.000000
+    8  C  1  Y   -0.000000   0.000000   0.000000   0.000000  -0.000000
+    9  C  1  Z    0.000000  -0.546027   0.000000   1.415079  -0.000000
+   10  C  1 XX   -0.000000   0.050267   0.000000   0.918460   0.000000
+   11  C  1 YY    0.000000  -0.572854  -0.000000  -0.518206   0.000000
+   12  C  1 ZZ   -0.000000   0.522587  -0.000000  -0.400255  -0.000000
+   13  C  1 XY   -0.000000   0.000000  -0.000000   0.000000  -0.808418
+   14  C  1 XZ    0.070152   0.000000   0.999263  -0.000000  -0.000000
+   15  C  1 YZ   -0.000000   0.000000   0.000000  -0.000000   0.000000
+   16  C  1  S   -0.000000   0.148297   0.000000  -0.726184  -0.000000
+   17  C  1  X   -0.718386  -0.000000  -0.079550  -0.000000  -0.000000
+   18  C  1  Y    0.000000   0.000000  -0.000000   0.000000  -0.000000
+   19  C  1  Z   -0.000000   0.134953  -0.000000  -0.142218   0.000000
+   20  C  1 XX    0.000000  -0.107459  -0.000000  -0.466080  -0.000000
+   21  C  1 YY    0.000000  -0.517406   0.000000   0.331324  -0.000000
+   22  C  1 ZZ   -0.000000   0.624865  -0.000000   0.134756   0.000000
+   23  C  1 XY    0.000000   0.000000   0.000000   0.000000   1.579735
+   24  C  1 XZ   -0.885314  -0.000000  -0.891508   0.000000   0.000000
+   25  C  1 YZ    0.000000   0.000000   0.000000   0.000000   0.000000
+   26  H  2  S    0.000000  -0.042189   0.000000   0.600345   0.000000
+   27  H  2  S   -0.000000  -0.152891  -0.000000   0.546405   0.000000
+   28  H  2  X   -0.083040   0.000000   0.178564   0.000000  -0.227115
+   29  H  2  Y   -0.000000   0.008114  -0.000000  -0.071473  -0.000000
+   30  H  2  Z   -0.000000   0.020492   0.000000   0.044036  -0.000000
+   31  H  2  S   -0.000000   0.110586  -0.000000  -0.021980   0.000000
+   32  H  2  X   -1.042299  -0.000000   0.090861   0.000000  -0.606983
+   33  H  2  Y   -0.000000   0.130743   0.000000  -0.122994  -0.000000
+   34  H  2  Z   -0.000000   0.118078  -0.000000  -0.270751   0.000000
+   35  H  3  S    0.000000  -0.042189   0.000000   0.600345   0.000000
+   36  H  3  S   -0.000000  -0.152891  -0.000000   0.546405  -0.000000
+   37  H  3  X   -0.083040   0.000000   0.178564   0.000000   0.227115
+   38  H  3  Y    0.000000  -0.008114  -0.000000   0.071473   0.000000
+   39  H  3  Z   -0.000000   0.020492   0.000000   0.044036   0.000000
+   40  H  3  S   -0.000000   0.110586  -0.000000  -0.021980  -0.000000
+   41  H  3  X   -1.042299  -0.000000   0.090861   0.000000   0.606983
+   42  H  3  Y    0.000000  -0.130743  -0.000000   0.122994  -0.000000
+   43  H  3  Z   -0.000000   0.118078  -0.000000  -0.270751   0.000000
+
+                     21         22         23         24         25
+                    0.0001     0.0000     0.0000     0.0000     0.0000
+                     B1         B2         A1         B2         A1  
+    1  C  1  S   -0.000000   0.000000  -0.322914  -0.000000  -0.316562
+    2  C  1  S   -0.000000   0.000000  -0.559544  -0.000000  -0.544646
+    3  C  1  S    0.000000  -0.000000   1.946745   0.000000   2.886748
+    4  C  1  X   -0.138089  -0.000000   0.000000   0.000000  -0.000000
+    5  C  1  Y   -0.000000   0.448661   0.000000  -0.116613   0.000000
+    6  C  1  Z   -0.000000   0.000000   0.061337  -0.000000  -0.509927
+    7  C  1  X   -1.002189  -0.000000  -0.000000  -0.000000   0.000000
+    8  C  1  Y   -0.000000   0.074978  -0.000000   2.751656   0.000000
+    9  C  1  Z   -0.000000   0.000000  -1.700748  -0.000000  -0.555928
+   10  C  1 XX   -0.000000   0.000000   0.001419  -0.000000  -0.172549
+   11  C  1 YY   -0.000000  -0.000000   0.586015   0.000000  -0.146932
+   12  C  1 ZZ    0.000000   0.000000  -0.587435  -0.000000   0.319482
+   13  C  1 XY    0.000000  -0.000000   0.000000   0.000000  -0.000000
+   14  C  1 XZ    0.027882   0.000000  -0.000000   0.000000  -0.000000
+   15  C  1 YZ   -0.000000  -0.938246   0.000000  -1.013894  -0.000000
+   16  C  1  S    0.000000  -0.000000   2.657594   0.000000  -0.616679
+   17  C  1  X   -0.688151  -0.000000  -0.000000  -0.000000   0.000000
+   18  C  1  Y   -0.000000   0.184909  -0.000000   0.588778   0.000000
+   19  C  1  Z   -0.000000   0.000000  -0.654594  -0.000000  -0.398084
+   20  C  1 XX   -0.000000   0.000000  -1.020025  -0.000000  -0.473578
+   21  C  1 YY    0.000000  -0.000000   0.170502   0.000000   0.409418
+   22  C  1 ZZ    0.000000  -0.000000   0.849523   0.000000   0.064159
+   23  C  1 XY   -0.000000   0.000000   0.000000  -0.000000   0.000000
+   24  C  1 XZ    1.062049   0.000000   0.000000   0.000000  -0.000000
+   25  C  1 YZ   -0.000000  -0.409432   0.000000  -0.996846  -0.000000
+   26  H  2  S   -0.000000  -0.977660  -0.872264  -1.072313  -1.042223
+   27  H  2  S    0.000000  -0.193997  -1.502999  -2.337542  -0.332736
+   28  H  2  X    0.623121   0.000000   0.000000  -0.000000  -0.000000
+   29  H  2  Y    0.000000   0.275352  -0.027393   0.172570   0.268426
+   30  H  2  Z    0.000000   0.088153  -0.138285   0.041509   0.035406
+   31  H  2  S   -0.000000  -0.033050  -0.665373  -0.447395   0.083727
+   32  H  2  X    0.814611   0.000000   0.000000   0.000000  -0.000000
+   33  H  2  Y   -0.000000   0.413207  -0.096930   0.024546   0.336041
+   34  H  2  Z    0.000000   0.480420   0.267301   0.040870  -0.153228
+   35  H  3  S   -0.000000   0.977660  -0.872264   1.072313  -1.042223
+   36  H  3  S    0.000000   0.193997  -1.502999   2.337542  -0.332736
+   37  H  3  X    0.623121   0.000000   0.000000   0.000000  -0.000000
+   38  H  3  Y   -0.000000   0.275352   0.027393   0.172570  -0.268426
+   39  H  3  Z    0.000000  -0.088153  -0.138285  -0.041509   0.035406
+   40  H  3  S   -0.000000   0.033050  -0.665373   0.447395   0.083727
+   41  H  3  X    0.814611   0.000000   0.000000   0.000000  -0.000000
+   42  H  3  Y   -0.000000   0.413207   0.096930   0.024546  -0.336041
+   43  H  3  Z    0.000000  -0.480420   0.267301  -0.040870  -0.153228
+
+                     26         27         28         29         30
+                    0.0000     0.0000     0.0000     0.0000     0.0000
+                     B2         A1         A1         A1         B2  
+    1  C  1  S    0.000000  -0.163739  -0.672385  -0.241454   0.000000
+    2  C  1  S    0.000000  -0.255847  -1.334563  -0.349941   0.000000
+    3  C  1  S   -0.000000   2.214406   5.899737   5.247029  -0.000000
+    4  C  1  X    0.000000   0.000000   0.000000   0.000000  -0.000000
+    5  C  1  Y    0.142003   0.000000   0.000000  -0.000000   0.490018
+    6  C  1  Z   -0.000000  -0.308610   0.128022  -0.309768  -0.000000
+    7  C  1  X   -0.000000  -0.000000  -0.000000  -0.000000   0.000000
+    8  C  1  Y   -1.254762  -0.000000  -0.000000  -0.000000  -2.180761
+    9  C  1  Z    0.000000   1.202956  -0.495032  -1.141228   0.000000
+   10  C  1 XX   -0.000000  -0.125398   0.064792  -0.378665  -0.000000
+   11  C  1 YY    0.000000   0.276957  -0.452746   0.888356   0.000000
+   12  C  1 ZZ    0.000000  -0.151558   0.387954  -0.509691  -0.000000
+   13  C  1 XY    0.000000  -0.000000  -0.000000  -0.000000  -0.000000
+   14  C  1 XZ   -0.000000  -0.000000  -0.000000  -0.000000   0.000000
+   15  C  1 YZ   -0.659614  -0.000000   0.000000   0.000000  -0.263578
+   16  C  1  S   -0.000000  -0.646775   0.197906  -1.656259  -0.000000
+   17  C  1  X   -0.000000  -0.000000  -0.000000  -0.000000   0.000000
+   18  C  1  Y    0.089565  -0.000000  -0.000000  -0.000000   0.059035
+   19  C  1  Z    0.000000   0.249489   0.308551   0.378850   0.000000
+   20  C  1 XX    0.000000  -0.172665  -0.380404   0.206129   0.000000
+   21  C  1 YY    0.000000   1.608898   2.045028  -0.929456  -0.000000
+   22  C  1 ZZ   -0.000000  -1.436233  -1.664624   0.723326   0.000000
+   23  C  1 XY   -0.000000   0.000000   0.000000  -0.000000   0.000000
+   24  C  1 XZ    0.000000   0.000000   0.000000   0.000000  -0.000000
+   25  C  1 YZ    1.442216   0.000000  -0.000000   0.000000   0.356518
+   26  H  2  S    0.553954  -0.540598  -0.224802  -0.607013  -0.649692
+   27  H  2  S   -0.118507  -0.443285  -2.606174  -1.518266   4.717379
+   28  H  2  X   -0.000000  -0.000000  -0.000000  -0.000000   0.000000
+   29  H  2  Y    0.027351  -0.318868  -0.408481   0.187420  -0.131803
+   30  H  2  Z   -0.000926  -0.454429  -0.199632  -0.109616  -0.301294
+   31  H  2  S   -0.212581   0.267855   0.163454   0.683993   0.346591
+   32  H  2  X    0.000000   0.000000   0.000000   0.000000  -0.000000
+   33  H  2  Y    0.818439  -0.461500   0.114167   1.081131  -1.837414
+   34  H  2  Z    0.088377  -1.333205  -1.458046  -0.750991   0.429034
+   35  H  3  S   -0.553954  -0.540598  -0.224802  -0.607013   0.649692
+   36  H  3  S    0.118507  -0.443285  -2.606174  -1.518266  -4.717379
+   37  H  3  X    0.000000  -0.000000  -0.000000  -0.000000  -0.000000
+   38  H  3  Y    0.027351   0.318868   0.408481  -0.187420  -0.131803
+   39  H  3  Z    0.000926  -0.454429  -0.199632  -0.109616   0.301294
+   40  H  3  S    0.212581   0.267855   0.163454   0.683993  -0.346591
+   41  H  3  X   -0.000000   0.000000   0.000000   0.000000   0.000000
+   42  H  3  Y    0.818439   0.461500  -0.114167  -1.081131  -1.837414
+   43  H  3  Z   -0.088377  -1.333205  -1.458046  -0.750991  -0.429034
+
+                     31         32         33         34         35
+                    0.0000     0.0000     0.0000     0.0000     0.0000
+                     A2         B2         B1         B2         B2  
+    1  C  1  S   -0.000000   0.000000  -0.000000   0.000000   0.000000
+    2  C  1  S   -0.000000   0.000000  -0.000000   0.000000   0.000000
+    3  C  1  S    0.000000  -0.000000   0.000000  -0.000000  -0.000000
+    4  C  1  X    0.000000  -0.000000   0.159647   0.000000   0.000000
+    5  C  1  Y    0.000000  -0.502248  -0.000000  -0.350161  -0.274618
+    6  C  1  Z    0.000000   0.000000   0.000000   0.000000   0.000000
+    7  C  1  X   -0.000000   0.000000  -1.442767  -0.000000  -0.000000
+    8  C  1  Y   -0.000000  -4.957758   0.000000  10.428135   3.275768
+    9  C  1  Z   -0.000000  -0.000000  -0.000000   0.000000   0.000000
+   10  C  1 XX    0.000000  -0.000000   0.000000   0.000000   0.000000
+   11  C  1 YY   -0.000000   0.000000  -0.000000   0.000000  -0.000000
+   12  C  1 ZZ    0.000000  -0.000000   0.000000  -0.000000  -0.000000
+   13  C  1 XY    0.513211   0.000000  -0.000000   0.000000  -0.000000
+   14  C  1 XZ   -0.000000   0.000000  -0.358376  -0.000000  -0.000000
+   15  C  1 YZ   -0.000000   0.944006  -0.000000  -0.487485  -0.403123
+   16  C  1  S    0.000000  -0.000000   0.000000  -0.000000  -0.000000
+   17  C  1  X   -0.000000   0.000000  -1.042838  -0.000000  -0.000000
+   18  C  1  Y   -0.000000  -0.265919   0.000000   0.023676  -0.920568
+   19  C  1  Z   -0.000000   0.000000  -0.000000   0.000000   0.000000
+   20  C  1 XX   -0.000000   0.000000  -0.000000   0.000000   0.000000
+   21  C  1 YY    0.000000  -0.000000   0.000000  -0.000000  -0.000000
+   22  C  1 ZZ   -0.000000   0.000000  -0.000000   0.000000   0.000000
+   23  C  1 XY   -1.297131  -0.000000   0.000000  -0.000000   0.000000
+   24  C  1 XZ    0.000000  -0.000000   1.039237   0.000000   0.000000
+   25  C  1 YZ    0.000000   0.168445  -0.000000  -1.635783   0.460184
+   26  H  2  S   -0.000000   0.693051  -0.000000  -0.926696  -0.415904
+   27  H  2  S   -0.000000   6.384571  -0.000000 -14.514677  -3.169365
+   28  H  2  X   -0.704686   0.000000  -0.597874  -0.000000  -0.000000
+   29  H  2  Y    0.000000  -0.823915   0.000000  -0.150025  -0.018770
+   30  H  2  Z   -0.000000   0.414620  -0.000000  -0.091776   0.404106
+   31  H  2  S   -0.000000   0.847785  -0.000000   0.436678   0.606573
+   32  H  2  X    1.672068  -0.000000   1.657001   0.000000   0.000000
+   33  H  2  Y   -0.000000  -1.839978   0.000000   4.850130   1.275217
+   34  H  2  Z   -0.000000   1.919940  -0.000000  -3.516543  -2.015186
+   35  H  3  S    0.000000  -0.693051   0.000000   0.926696   0.415904
+   36  H  3  S   -0.000000  -6.384571   0.000000  14.514677   3.169365
+   37  H  3  X    0.704686   0.000000  -0.597874  -0.000000  -0.000000
+   38  H  3  Y   -0.000000  -0.823915   0.000000  -0.150025  -0.018770
+   39  H  3  Z   -0.000000  -0.414620   0.000000   0.091776  -0.404106
+   40  H  3  S   -0.000000  -0.847785   0.000000  -0.436678  -0.606573
+   41  H  3  X   -1.672068  -0.000000   1.657001   0.000000   0.000000
+   42  H  3  Y   -0.000000  -1.839978   0.000000   4.850130   1.275217
+   43  H  3  Z   -0.000000  -1.919940   0.000000   3.516543   2.015186
+
+                     36         37         38         39         40
+                    0.0000     0.0000     0.0000     0.0000     0.0000
+                     A1         A1         A1         B2         A1  
+    1  C  1  S   -0.282735   0.028040  -0.396019   0.000000  -0.654471
+    2  C  1  S   -0.361834   0.050099  -0.622701   0.000000  -1.181007
+    3  C  1  S    8.766679  -0.085748  10.019353  -0.000000  12.305182
+    4  C  1  X   -0.000000  -0.000000   0.000000  -0.000000   0.000000
+    5  C  1  Y   -0.000000  -0.000000  -0.000000   0.148761  -0.000000
+    6  C  1  Z   -0.402020   0.095967  -0.163597   0.000000   0.168449
+    7  C  1  X    0.000000   0.000000  -0.000000   0.000000  -0.000000
+    8  C  1  Y    0.000000  -0.000000   0.000000  -1.657216  -0.000000
+    9  C  1  Z   -3.105410  -0.267446  -2.972716   0.000000  -4.102104
+   10  C  1 XX   -0.423815   0.010934  -0.279055   0.000000   0.055672
+   11  C  1 YY    0.264761   0.119337  -0.071991   0.000000  -0.193216
+   12  C  1 ZZ    0.159054  -0.130272   0.351046  -0.000000   0.137544
+   13  C  1 XY   -0.000000   0.000000  -0.000000  -0.000000   0.000000
+   14  C  1 XZ    0.000000   0.000000  -0.000000   0.000000  -0.000000
+   15  C  1 YZ   -0.000000  -0.000000   0.000000  -0.089447  -0.000000
+   16  C  1  S    4.714432   0.110416   5.990521  -0.000000  10.930179
+   17  C  1  X    0.000000   0.000000  -0.000000   0.000000  -0.000000
+   18  C  1  Y   -0.000000  -0.000000   0.000000  -0.257766  -0.000000
+   19  C  1  Z   -0.474879  -0.011604  -0.098359   0.000000  -2.023726
+   20  C  1 XX   -0.379111   0.106702  -0.290810   0.000000  -0.853360
+   21  C  1 YY    0.603419  -0.474053   1.094485  -0.000000   1.135722
+   22  C  1 ZZ   -0.224308   0.367352  -0.803675   0.000000  -0.282363
+   23  C  1 XY    0.000000  -0.000000   0.000000   0.000000  -0.000000
+   24  C  1 XZ   -0.000000  -0.000000   0.000000  -0.000000   0.000000
+   25  C  1 YZ    0.000000   0.000000  -0.000000   0.382498   0.000000
+   26  H  2  S   -0.574109  -0.061619  -0.509494  -0.168169  -0.133026
+   27  H  2  S   -5.492576   0.352147  -5.921854   2.325765  -8.880922
+   28  H  2  X    0.000000   0.000000  -0.000000   0.000000  -0.000000
+   29  H  2  Y    0.743849  -0.219135   0.493940  -0.168567  -0.007569
+   30  H  2  Z   -0.554217  -0.046793  -0.031673  -0.239169   0.222286
+   31  H  2  S   -1.086227  -0.237105  -1.724788  -2.123432  -2.865041
+   32  H  2  X   -0.000000  -0.000000   0.000000  -0.000000   0.000000
+   33  H  2  Y    1.066736   0.492819   1.315923   0.284527   2.022699
+   34  H  2  Z   -1.254051   0.213205  -2.275175   0.820696  -2.310783
+   35  H  3  S   -0.574109  -0.061619  -0.509494   0.168169  -0.133026
+   36  H  3  S   -5.492576   0.352147  -5.921854  -2.325765  -8.880922
+   37  H  3  X    0.000000   0.000000  -0.000000   0.000000  -0.000000
+   38  H  3  Y   -0.743849   0.219135  -0.493940  -0.168567   0.007569
+   39  H  3  Z   -0.554217  -0.046793  -0.031673   0.239169   0.222286
+   40  H  3  S   -1.086227  -0.237105  -1.724788   2.123432  -2.865041
+   41  H  3  X   -0.000000  -0.000000   0.000000  -0.000000   0.000000
+   42  H  3  Y   -1.066736  -0.492819  -1.315923   0.284527  -2.022699
+   43  H  3  Z   -1.254051   0.213205  -2.275175  -0.820696  -2.310783
+
+                     41
+                    0.0000
+                     B2  
+    1  C  1  S    0.000000
+    2  C  1  S    0.000000
+    3  C  1  S   -0.000000
+    4  C  1  X    0.000000
+    5  C  1  Y   -0.305970
+    6  C  1  Z   -0.000000
+    7  C  1  X   -0.000000
+    8  C  1  Y    4.672935
+    9  C  1  Z    0.000000
+   10  C  1 XX   -0.000000
+   11  C  1 YY    0.000000
+   12  C  1 ZZ   -0.000000
+   13  C  1 XY    0.000000
+   14  C  1 XZ   -0.000000
+   15  C  1 YZ    0.314162
+   16  C  1  S   -0.000000
+   17  C  1  X   -0.000000
+   18  C  1  Y    4.566675
+   19  C  1  Z    0.000000
+   20  C  1 XX    0.000000
+   21  C  1 YY   -0.000000
+   22  C  1 ZZ    0.000000
+   23  C  1 XY   -0.000000
+   24  C  1 XZ    0.000000
+   25  C  1 YZ   -1.499810
+   26  H  2  S   -0.080843
+   27  H  2  S   -7.786357
+   28  H  2  X   -0.000000
+   29  H  2  Y   -0.167440
+   30  H  2  Z    0.318376
+   31  H  2  S   -6.014869
+   32  H  2  X    0.000000
+   33  H  2  Y    1.830633
+   34  H  2  Z   -2.080427
+   35  H  3  S    0.080843
+   36  H  3  S    7.786357
+   37  H  3  X   -0.000000
+   38  H  3  Y   -0.167440
+   39  H  3  Z   -0.318376
+   40  H  3  S    6.014869
+   41  H  3  X    0.000000
+   42  H  3  Y    1.830633
+   43  H  3  Z    2.080427
+ ... END OF RIGHT EOM NATURAL ORBITALS ...
+ ..... DONE WITH EOM-CCSD .....
+ STEP CPU TIME =     0.97 TOTAL CPU TIME =          1.5 (      0.0 MIN)
+ TOTAL WALL CLOCK TIME=          1.5 SECONDS, CPU UTILIZATION IS   100.00%
+
+ EOM-CCSD HAS FINISHED, NOW ENTERING THE MMCC23 PROGRAM
+ TO COMPUTE CR-EOMCCSD(T) AND/OR CR-CC(2,3) TRIPLES CORRECTIONS
+
+ -----------------------------------     ------------------------------
+ MMCC(2,3) METHOD OF MOMENTS PROGRAM     K.KOWALSKI, M.WLOCH, P.PIECUCH
+ -----------------------------------     ------------------------------
+
+ EOM-CCSD EXCITATION ENERGIES BEFORE ORDERING
+       ENERGY     R0 AMPLITUDE   SYMMETRY
+     0.223762      0.118604        A1 
+     0.064667      0.000000        B1 
+ ORDERING                    2 ->                    1
+ ORDERING                    1 ->                    2
+ EOM-CCSD EXCITATION ENERGIES AFTER SORTING, AND ELIMINATING ANY DEGENERACIES
+     0.064667      0.000000        B1 
+     0.223762      0.118604        A1 
+
+ A TOTAL OF  3 STATES WILL BE TRIPLES CORRECTED
+
+ BEGINNING TRIPLES CORRECTION FOR STATE  0
+ MEMORY REQUIRED FOR   XINTQUA=      380434
+ MEMORY REQUIRED FOR  XINTRIPL=      379546
+ MEMORY REQUIRED FOR   XINTRIH=      230473
+ MEMORY REQUIRED FOR   DEN12CR=       24864 MTRIP= 1
+ MEMORY REQUIRED FOR XT3WT2NNN=      747865 MTRIP= 1
+ LAMBDA CORRECTION FOR ROOT NO.                    0
+ THE LARGEST L1 AND L2 AMPLITUDES FOR THIS ROOT ARE
+
+ GROUND STATE CCSD TOTAL ENERGY=                                -39.0279559403
+
+ MAIN RESULTS: CR-CC(2,3) = CR-CC(2,3),D = CR-CCSD(T)_L CALCULATIONS
+ [SEE P. PIECUCH AND M. WLOCH, J. CHEM. PHYS. 123, 224105 (2005);
+ P. PIECUCH, M. WLOCH, J.R. GOUR, AND A. KINAL, CHEM. PHYS. LETT.
+ 418, 463 (2005)]
+
+ FOR EXCITED STATES, SEE
+ P. PIECUCH, J. R. GOUR, AND M. WLOCH,
+ INT. J. QUANTUM CHEM. 109, 3268-3304 (2009).
+
+ GROUND STATE CR-CC(2,3),A CORRECTION -0.003211, TOTAL E=      -39.0311668911
+ GROUND STATE CR-CC(2,3),B CORRECTION -0.003081, TOTAL E=      -39.0310368179
+ GROUND STATE CR-CC(2,3),C CORRECTION -0.003871, TOTAL E=      -39.0318272562
+ GROUND STATE CR-CC(2,3),D CORRECTION -0.003863, TOTAL E=      -39.0318193002
+
+ CR-CC(2,3),A ENERGY IS IDENTICAL TO THE CCSD(2)_T ENERGY.
+ CR-CC(2,3),D ENERGY IS IDENTICAL TO COMPLETE CR-CC(2,3) ENERGY (CR-CCSD(T)_L)
+
+ ADDITIONAL RESULTS: GROUND-STATE CR-EOMCCSD(T) CALCULATIONS
+ [SEE K. KOWALSKI AND P. PIECUCH, J. CHEM. PHYS. 120, 1715 (2004)]
+
+ GROUND STATE CR-CCSD(T)IA  CORRECTION -0.002906, TOTAL E=      -39.0308619729
+ GROUND STATE CR-CCSD(T)IB  CORRECTION -0.002785, TOTAL E=      -39.0307412522
+ GROUND STATE CR-CCSD(T)IC  CORRECTION -0.003517, TOTAL E=      -39.0314726178
+ GROUND STATE CR-CCSD(T)ID  CORRECTION -0.003509, TOTAL E=      -39.0314652869
+ GROUND STATE CR-CCSD(T)IIA CORRECTION -0.002985, TOTAL E=      -39.0309411294
+ GROUND STATE CR-CCSD(T)IIB CORRECTION -0.002864, TOTAL E=      -39.0308204032
+ GROUND STATE CR-CCSD(T)IIC CORRECTION -0.003596, TOTAL E=      -39.0315518022
+ GROUND STATE CR-CCSD(T)IID CORRECTION -0.003589, TOTAL E=      -39.0315444710
+
+              SUMMARY OF CR-CC(2,3) OR CR-CCSD(T)_L CALCULATIONS
+
+ THE MOST ACCURATE ENERGETICS IS PROVIDED BY CR-CC(2,3) = CR-CC(2,3),D
+
+ CCSD                       ENERGY:      -39.0279559403   CORR.E=  -0.1438269243
+ CR-CC(2,3),A OR CCSD(2)_T  ENERGY:      -39.0311668911   CORR.E=  -0.1470378750
+ CR-CC(2,3) OR CR-CCSD(T)_L ENERGY:      -39.0318193002   CORR.E=  -0.1476902842
+ CPU TIME FOR TRIPLES CORRECTION FOR THIS STATE=       0.2
+
+ BEGINNING TRIPLES CORRECTION FOR STATE  1
+ MEMORY REQUIRED FOR   XINTQUA=      380434
+ MEMORY REQUIRED FOR  XINTRIPL=      379546
+ MEMORY REQUIRED FOR   XINTRIH=      230473
+ MEMORY REQUIRED FOR   DEN12CR=       24864 MTRIP= 1
+ MEMORY REQUIRED FOR XT3WT2NNN=      747865 MTRIP= 1
+ HERE WE START CR-EOM TRIPLES FOR STATE: 
+                    1 <-                    2
+ LAMBDA CORRECTION FOR ROOT NO.                    1
+ THE LARGEST L1 AND L2 AMPLITUDES FOR THIS ROOT ARE
+ L1=   0.6172661442 FOR   I -> A   =    3    4
+ L1=   0.2989723765 FOR   I -> A   =    3    9
+
+ SYMMETRY OF THE EXCITED STATE: B1 
+ TOTAL EOM-CCSD ENERGY               -38.9632885498 HARTREE
+ CR-EOMCCSD(T)IA  TOTAL ENERGY       -38.9654570235 HARTREE
+ CR-EOMCCSD(T)IB  TOTAL ENERGY       -38.9653396607 HARTREE
+ CR-EOMCCSD(T)IC  TOTAL ENERGY       -38.9660474647 HARTREE
+ CR-EOMCCSD(T)ID  TOTAL ENERGY       -38.9660408383 HARTREE
+ CR-EOMCCSD(T)IIA TOTAL ENERGY       -38.9661263606 HARTREE
+ CR-EOMCCSD(T)IIB TOTAL ENERGY       -38.9660052661 HARTREE
+ CR-EOMCCSD(T)IIC TOTAL ENERGY       -38.9667355739 HARTREE
+ CR-EOMCCSD(T)IID TOTAL ENERGY       -38.9667287358 HARTREE
+
+ MAIN RESULTS: CR-EOMCC(2,3) = CR-EOMCC(2,3),D = CR-EOMCCSD(T)_L CALCULATIONS
+
+ EX. STATE CR-EOMCC(2,3),A CORRECTION -0.0021170, TOTAL E=      -38.9654055986
+ EX. STATE CR-EOMCC(2,3),B CORRECTION -0.0020330, TOTAL E=      -38.9653215869
+ EX. STATE CR-EOMCC(2,3),C CORRECTION -0.0025194, TOTAL E=      -38.9658079709
+ EX. STATE CR-EOMCC(2,3),D CORRECTION -0.0025162, TOTAL E=      -38.9658047536
+
+ SIZE INTENSIVITY CORRECTED delta-CR-EOMCC(2,3) CALCULATIONS
+
+ EX. STATE CR-EOMCC(2,3),A CORRECTION -0.0053280, TOTAL E=      -38.9686165493
+ EX. STATE CR-EOMCC(2,3),B CORRECTION -0.0051139, TOTAL E=      -38.9684024645
+ EX. STATE CR-EOMCC(2,3),C CORRECTION -0.0063907, TOTAL E=      -38.9696792869
+ EX. STATE CR-EOMCC(2,3),D CORRECTION -0.0063796, TOTAL E=      -38.9696681135
+
+           SUMMARY OF CR-EOMCC(2,3) OR CR-EOMCCSD(T)_L CALCULATIONS
+
+ THE MOST ACCURATE ENERGETICS IS PROVIDED BY CR-EOMCC(2,3) = CR-EOMCC(2,3),D
+
+ EOMCCSD                          E=      -38.9632885498 CORR.E=  -0.0791595338
+ CR-EOMCC(2,3),A                  E=      -38.9654055986 CORR.E=  -0.0812765826
+ CR-EOMCC(2,3) OR CR-EOMCCSD(T)_L E=      -38.9658047536 CORR.E=  -0.0816757376
+ CPU TIME FOR TRIPLES CORRECTION FOR THIS STATE=       0.1
+
+ BEGINNING TRIPLES CORRECTION FOR STATE  2
+ MEMORY REQUIRED FOR   XINTQUA=      380434
+ MEMORY REQUIRED FOR  XINTRIPL=      379546
+ MEMORY REQUIRED FOR   XINTRIH=      230473
+ MEMORY REQUIRED FOR   DEN12CR=       24864 MTRIP= 1
+ MEMORY REQUIRED FOR XT3WT2NNN=      747865 MTRIP= 1
+ HERE WE START CR-EOM TRIPLES FOR STATE: 
+                    2 <-                    1
+ LAMBDA CORRECTION FOR ROOT NO.                    2
+ THE LARGEST L1 AND L2 AMPLITUDES FOR THIS ROOT ARE
+ L2=   0.7628526093 FOR I,J -> A,B =    3    3    4    4
+ L2=   0.3887426704 FOR I,J -> A,B =    3    3    4    9
+ L2=   0.1029160011 FOR I,J -> A,B =    3    3    4   24
+ L2=   0.3887426704 FOR I,J -> A,B =    3    3    9    4
+ L2=   0.1603733046 FOR I,J -> A,B =    3    3    9    9
+ L2=   0.1029160011 FOR I,J -> A,B =    3    3   24    4
+
+ SYMMETRY OF THE EXCITED STATE: A1 
+ TOTAL EOM-CCSD ENERGY               -38.8041938387 HARTREE
+ CR-EOMCCSD(T)IA  TOTAL ENERGY       -38.8411294609 HARTREE
+ CR-EOMCCSD(T)IB  TOTAL ENERGY       -38.8389782330 HARTREE
+ CR-EOMCCSD(T)IC  TOTAL ENERGY       -38.8523844550 HARTREE
+ CR-EOMCCSD(T)ID  TOTAL ENERGY       -38.8521771095 HARTREE
+ CR-EOMCCSD(T)IIA TOTAL ENERGY       -38.8413258029 HARTREE
+ CR-EOMCCSD(T)IIB TOTAL ENERGY       -38.8391723781 HARTREE
+ CR-EOMCCSD(T)IIC TOTAL ENERGY       -38.8525922868 HARTREE
+ CR-EOMCCSD(T)IID TOTAL ENERGY       -38.8523847297 HARTREE
+
+ MAIN RESULTS: CR-EOMCC(2,3) = CR-EOMCC(2,3),D = CR-EOMCCSD(T)_L CALCULATIONS
+
+ EX. STATE CR-EOMCC(2,3),A CORRECTION -0.0382924, TOTAL E=      -38.8424862344
+ EX. STATE CR-EOMCC(2,3),B CORRECTION -0.0360560, TOTAL E=      -38.8402498375
+ EX. STATE CR-EOMCC(2,3),C CORRECTION -0.0500029, TOTAL E=      -38.8541967481
+ EX. STATE CR-EOMCC(2,3),D CORRECTION -0.0497847, TOTAL E=      -38.8539785232
+
+ SIZE INTENSIVITY CORRECTED delta-CR-EOMCC(2,3) CALCULATIONS
+
+ EX. STATE CR-EOMCC(2,3),A CORRECTION -0.0419907, TOTAL E=      -38.8461845638
+ EX. STATE CR-EOMCC(2,3),B CORRECTION -0.0395959, TOTAL E=      -38.8437897459
+ EX. STATE CR-EOMCC(2,3),C CORRECTION -0.0545119, TOTAL E=      -38.8587057532
+ EX. STATE CR-EOMCC(2,3),D CORRECTION -0.0542830, TOTAL E=      -38.8584768325
+
+           SUMMARY OF CR-EOMCC(2,3) OR CR-EOMCCSD(T)_L CALCULATIONS
+
+ THE MOST ACCURATE ENERGETICS IS PROVIDED BY CR-EOMCC(2,3) = CR-EOMCC(2,3),D
+
+ EOMCCSD                          E=      -38.8041938387 CORR.E=   0.0799351773
+ CR-EOMCC(2,3),A                  E=      -38.8424862344 CORR.E=   0.0416427816
+ CR-EOMCC(2,3) OR CR-EOMCCSD(T)_L E=      -38.8539785232 CORR.E=   0.0301504928
+ CPU TIME FOR TRIPLES CORRECTION FOR THIS STATE=       0.2
+
+       SUMMARY OF CR-EOMCCSD(T) RESULTS FOR ALL STATES
+       EXCITATION ENERGIES IN EV, 1 H = 27.211396 EV
+
+ STATE  EOMCCSD     ID/IA      IID/IA     ID/IB     IID/IB    (T)/R
+   B1    1.760      1.764      1.745      1.761      1.742      1.683
+   A1    6.089      4.862      4.857      4.859      4.853      5.107
+
+       SUMMARY OF CR-EOMCC(2,3) RESULTS FOR ALL STATES
+       EXCITATION ENERGIES IN EV, 1 H = 27.211396 EV
+
+ STATE  EOMCCSD   (2,3),D    (2,3),A    (2,3),B    (2,3),C 
+   B1    1.760      1.796      1.789      1.788      1.796
+   A1    6.089      4.839      5.134      5.192      4.834
+
+       SUMMARY OF delta-CR-EOMCC(2,3) RESULTS FOR ALL STATES
+       EXCITATION ENERGIES IN EV, 1 H = 27.211396 EV
+
+ STATE  EOMCCSD   (2,3),D    (2,3),A    (2,3),B    (2,3),C 
+   B1    1.760      1.691      1.702      1.704      1.691
+   A1    6.089      4.717      5.034      5.095      4.711
+
+        EXCITATION ENERGIES (IN EV; 1 H = 27.2113957 EV)
+               DELTA-CR-EOMCCSD(T) METHODS
+
+   STATE  EOMCCSD DEL(IA) DEL(IB)  DEL(IC)  DEL(ID)  DEL(IIA) DEL(IIB)
+                                                     DEL(IIC) DEL(IID)
+   B1     1.760    1.701    1.704    1.685    1.685    1.682    1.686
+                                                       1.666    1.666
+   A1     6.089    5.084    5.142    4.778    4.783    5.078    5.137
+                                                       4.772    4.778
+
+       IF DEGENERATE STATES OF DIFFERENT SYMMETRIES
+       ARE CALCULATED IN A SINGLE EOM-CCSD RUN, ONLY ONE
+       OF THESE TWO STATES WILL BE LISTED HERE; IN ORDER
+       TO SEE THE CR-EOMCCSD(T) ENERGIES OF ALL DEGENERATE
+       STATES, YOU MUST RUN CALCULATIONS FOR DIFFERENT
+       SYMMETRIES SEPARATELY.
+
+ .... DONE WITH MMCC(2,3) TRIPLES CORRECTIONS ....
+ STEP CPU TIME =     0.45 TOTAL CPU TIME =          2.0 (      0.0 MIN)
+ TOTAL WALL CLOCK TIME=          2.0 SECONDS, CPU UTILIZATION IS    98.99%
+
+     ----------------------------------------------------------------
+     EOM-CCSD PROPERTIES...FOR EXCITED STATE   1 OF SPACE SYMMETRY  1
+                    USING THE EXPECTATION VALUE DENSITY
+     ----------------------------------------------------------------
+
+          ---------------------------------------
+          MULLIKEN AND LOWDIN POPULATION ANALYSES
+          ---------------------------------------
+
+               ----- POPULATIONS IN EACH AO -----
+                             MULLIKEN      LOWDIN
+              1  C  1  S      2.00543     1.85607
+              2  C  1  S      0.69055     0.48025
+              3  C  1  S      0.53542     0.26432
+              4  C  1  X      0.97000     0.88863
+              5  C  1  Y      0.70133     0.62190
+              6  C  1  Z      0.07774     0.06566
+              7  C  1  X      0.73116     0.55252
+              8  C  1  Y      0.24191     0.40853
+              9  C  1  Z      0.00692     0.03620
+             10  C  1 XX      0.00138     0.08808
+             11  C  1 YY      0.00521     0.14479
+             12  C  1 ZZ      0.00234     0.12611
+             13  C  1 XY      0.00411     0.00217
+             14  C  1 XZ      0.02524     0.00429
+             15  C  1 YZ      0.00000     0.03946
+             16  C  1  S     -0.01413     0.06372
+             17  C  1  X      0.09735     0.10164
+             18  C  1  Y     -0.01290     0.03661
+             19  C  1  Z      0.00997     0.01141
+             20  C  1 XX      0.00048     0.01306
+             21  C  1 YY      0.00302     0.04175
+             22  C  1 ZZ      0.00146     0.03073
+             23  C  1 XY      0.00191     0.00139
+             24  C  1 XZ     -0.00222     0.00604
+             25  C  1 YZ      0.00000     0.04057
+             26  H  2  S      0.64322     0.46669
+             27  H  2  S      0.21893     0.18816
+             28  H  2  X      0.01451     0.03144
+             29  H  2  Y      0.01268     0.02094
+             30  H  2  Z      0.01074     0.02378
+             31  H  2  S      0.01661     0.02729
+             32  H  2  X      0.04057     0.14947
+             33  H  2  Y     -0.00604     0.09601
+             34  H  2  Z      0.00693     0.03327
+             35  H  3  S      0.64322     0.46669
+             36  H  3  S      0.21893     0.18816
+             37  H  3  X      0.01451     0.03144
+             38  H  3  Y      0.01268     0.02094
+             39  H  3  Z      0.01074     0.02378
+             40  H  3  S      0.01661     0.02729
+             41  H  3  X      0.04057     0.14947
+             42  H  3  Y     -0.00604     0.09601
+             43  H  3  Z      0.00693     0.03327
+
+          ----- MULLIKEN ATOMIC OVERLAP POPULATIONS -----
+          (OFF-DIAGONAL ELEMENTS NEED TO BE MULTIPLIED BY 2)
+
+             1           2           3
+
+    1    5.2443538
+    2    0.4196678   0.6734530
+    3    0.4196678  -0.1349654   0.6734530
+
+          TOTAL MULLIKEN AND LOWDIN ATOMIC POPULATIONS
+       ATOM         MULL.POP.    CHARGE          LOW.POP.     CHARGE
+    1 CARBON        6.083689   -0.083689         5.925908    0.074092
+    2 HYDROGEN      0.958155    0.041845         1.037046   -0.037046
+    3 HYDROGEN      0.958155    0.041845         1.037046   -0.037046
+
+          MULLIKEN SPHERICAL HARMONIC POPULATIONS
+       ATOM           S       P       D      F      G      H      I    TOTAL
+    1 CARBON        3.22    2.82    0.04   0.00   0.00   0.00   0.00    6.08
+    2 HYDROGEN      0.88    0.08    0.00   0.00   0.00   0.00   0.00    0.96
+    3 HYDROGEN      0.88    0.08    0.00   0.00   0.00   0.00   0.00    0.96
+
+          -------------------------------
+          BOND ORDER AND VALENCE ANALYSIS     BOND ORDER THRESHOLD=0.050
+          -------------------------------
+
+                   BOND                       BOND                       BOND
+  ATOM PAIR DIST  ORDER      ATOM PAIR DIST  ORDER      ATOM PAIR DIST  ORDER
+    1   2  1.119  1.045        1   3  1.119  1.045
+
+                       TOTAL       BONDED        FREE
+      ATOM            VALENCE     VALENCE     VALENCE
+    1 CARBON            2.527       2.091       0.436
+    2 HYDROGEN          1.056       1.012       0.044
+    3 HYDROGEN          1.056       1.012       0.044
+
+          ---------------------
+          ELECTROSTATIC MOMENTS
+          ---------------------
+
+ POINT   1           X           Y           Z (BOHR)    CHARGE
+                 0.000000    0.000000   -0.182142       -0.00 (A.U.)
+         DX          DY          DZ         /D/  (DEBYE)
+    -0.000000    0.000000   -0.353331    0.353331
+ ...... END OF PROPERTY EVALUATION ......
+ STEP CPU TIME =     0.01 TOTAL CPU TIME =          2.0 (      0.0 MIN)
+ TOTAL WALL CLOCK TIME=          2.0 SECONDS, CPU UTILIZATION IS    99.50%
+               992447  WORDS OF DYNAMIC MEMORY USED
+ EXECUTION OF GAMESS TERMINATED NORMALLY Sun Nov  4 21:37:20 2018
+ DDI: 263640 bytes (0.3 MB / 0 MWords) used by master data server.
+
+ ----------------------------------------
+ CPU timing information for all processes
+ ========================================
+ 0: 1.740 + 0.248 = 1.988
+ ----------------------------------------
+Note: The following floating-point exceptions are signalling: IEEE_UNDERFLOW_FLAG IEEE_DENORMAL
+ ddikick.x: exited gracefully.
+unset echo
+----- accounting info -----
+Files used on the master node subito were:
+-rw-rw-r-- 1 kml kml   480933 Nov  4 21:37 /home/kml/tmp//exam45.dat
+-rw-r--r-- 1 kml kml     2385 Nov  4 21:37 /home/kml/tmp//exam45.F05
+-rw-rw-r-- 1 kml kml  1440128 Nov  4 21:37 /home/kml/tmp//exam45.F08
+-rw-rw-r-- 1 kml kml  1086664 Nov  4 21:37 /home/kml/tmp//exam45.F09
+-rw-rw-r-- 1 kml kml  1636000 Nov  4 21:37 /home/kml/tmp//exam45.F10
+-rw-rw-r-- 1 kml kml   388608 Nov  4 21:37 /home/kml/tmp//exam45.F70
+-rw-rw-r-- 1 kml kml   994560 Nov  4 21:37 /home/kml/tmp//exam45.F71
+-rw-rw-r-- 1 kml kml 37280608 Nov  4 21:37 /home/kml/tmp//exam45.F72
+-rw-rw-r-- 1 kml kml     6216 Nov  4 21:37 /home/kml/tmp//exam45.F73
+-rw-rw-r-- 1 kml kml  1379952 Nov  4 21:37 /home/kml/tmp//exam45.F74
+-rw-rw-r-- 1 kml kml        0 Nov  4 21:37 /home/kml/tmp//exam45.F75
+-rw-rw-r-- 1 kml kml    39960 Nov  4 21:37 /home/kml/tmp//exam45.F76
+-rw-rw-r-- 1 kml kml  6078360 Nov  4 21:37 /home/kml/tmp//exam45.F77
+-rw-rw-r-- 1 kml kml   198912 Nov  4 21:37 /home/kml/tmp//exam45.F80
+-rw-rw-r-- 1 kml kml    19536 Nov  4 21:37 /home/kml/tmp//exam45.F81
+-rw-rw-r-- 1 kml kml  2168496 Nov  4 21:37 /home/kml/tmp//exam45.F82
+-rw-rw-r-- 1 kml kml    19536 Nov  4 21:37 /home/kml/tmp//exam45.F83
+-rw-rw-r-- 1 kml kml  2168496 Nov  4 21:37 /home/kml/tmp//exam45.F84
+-rw-rw-r-- 1 kml kml    32856 Nov  4 21:37 /home/kml/tmp//exam45.F85
+-rw-rw-r-- 1 kml kml 14993288 Nov  4 21:37 /home/kml/tmp//exam45.F86
+-rw-rw-r-- 1 kml kml   397824 Nov  4 21:37 /home/kml/tmp//exam45.F87
+-rw-rw-r-- 1 kml kml        0 Nov  4 21:37 /home/kml/tmp//exam45.F88
+-rw-rw-r-- 1 kml kml    99456 Nov  4 21:37 /home/kml/tmp//exam45.F89
+-rw-rw-r-- 1 kml kml   175232 Nov  4 21:37 /home/kml/tmp//exam45.F90
+-rw-rw-r-- 1 kml kml   131424 Nov  4 21:37 /home/kml/tmp//exam45.F91
+-rw-rw-r-- 1 kml kml        0 Nov  4 21:37 /home/kml/tmp//exam45.F92
+-rw-rw-r-- 1 kml kml        0 Nov  4 21:37 /home/kml/tmp//exam45.F93
+-rw-rw-r-- 1 kml kml        0 Nov  4 21:37 /home/kml/tmp//exam45.F94
+-rw-rw-r-- 1 kml kml     8880 Nov  4 21:37 /home/kml/tmp//exam45.F95
+-rw-rw-r-- 1 kml kml   985680 Nov  4 21:37 /home/kml/tmp//exam45.F96
+-rw-rw-r-- 1 kml kml   397824 Nov  4 21:37 /home/kml/tmp//exam45.F97
+-rw-rw-r-- 1 kml kml     8880 Nov  4 21:37 /home/kml/tmp//exam45.F98
+-rw-rw-r-- 1 kml kml   985680 Nov  4 21:37 /home/kml/tmp//exam45.F99
+ls: No match.
+ls: No match.
+ls: No match.
+Sun Nov  4 21:37:23 PST 2018
+0.0u 0.0s 0:05.07 0.3% 0+0k 0+32io 0pf+0w

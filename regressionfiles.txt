@@ -123,6 +123,7 @@ GAMESS/GAMESS-US2014/CdtetraM1B3LYP.log
 GAMESS/GAMESS-US2014/trithiolane_polar_freq.out
 GAMESS/GAMESS-US2014/trithiolane_polar_tdhf.out
 GAMESS/GAMESS-US2014/Trp_polar_freq.out
+GAMESS/GAMESS-US2018/exam45.log
 GAMESS/PCGAMESS/aomixgamess.log
 GAMESS/PCGAMESS/C_bigbasis.out
 GAMESS/PCGAMESS/CN_ir.out
