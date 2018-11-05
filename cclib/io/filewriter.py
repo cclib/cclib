@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2017, the cclib development team
+# Copyright (c) 2018, the cclib development team
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
@@ -9,8 +9,9 @@
 
 import logging
 
-from math import sqrt
 from collections import Iterable
+
+import numpy
 
 try:
     from cclib.bridge import makeopenbabel
@@ -74,7 +75,10 @@ class Writer(object):
 
     def _calculate_total_dipole_moment(self):
         """Calculate the total dipole moment."""
-        return sqrt(sum(self.ccdata.moments[1] ** 2))
+
+        # ccdata.moments may exist, but only contain center-of-mass coordinates
+        if len(getattr(self.ccdata, 'moments', [])) > 1:
+            return numpy.linalg.norm(self.ccdata.moments[1])
 
     def _check_required_attributes(self):
         """Check if required attributes are present in ccdata."""
@@ -86,8 +90,7 @@ class Writer(object):
                 'Could not parse required attributes to write file: ' + missing)
 
     def _make_openbabel_from_ccdata(self):
-        """Create Open Babel and Pybel molecules from ccData.
-        """
+        """Create Open Babel and Pybel molecules from ccData."""        
         if not hasattr(self.ccdata, 'charge'):
             logging.warning("ccdata object does not have charge, setting to 0")
             _charge = 0
