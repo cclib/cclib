@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2017, the cclib development team
+# Copyright (c) 2018, the cclib development team
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
@@ -433,6 +433,32 @@ class Logfile(object):
         if not hasattr(self, name):
             self.set_attribute(name, [])
         getattr(self, name).append(value)
+
+    def _assign_coreelectrons_to_element(self, element, ncore,
+                                         ncore_is_total_count=False):
+        """Assign core electrons to all instances of the element.
+
+        It's usually reasonable to do this for all atoms of a given element,
+        because mixed usage isn't normally allowed within elements.
+
+        Parameters
+        ----------
+        element: str
+          the chemical element to set coreelectrons for
+        ncore: int
+          the number of core electrons
+        ncore_is_total_count: bool
+          whether the ncore argument is the total count, in which case it is
+          divided by the number of atoms of this element
+        """
+        atomsymbols = [self.table.element[atomno] for atomno in self.atomnos]
+        indices = [i for i, el in enumerate(atomsymbols) if el == element]
+        if ncore_is_total_count:
+            ncore = ncore // len(indices)
+
+        if not hasattr(self, 'coreelectrons'):
+            self.coreelectrons = numpy.zeros(self.natom, 'i')
+        self.coreelectrons[indices] = ncore
 
     def skip_lines(self, inputfile, sequence):
         """Read trivial line types and check they are what they are supposed to be.

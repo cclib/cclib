@@ -164,9 +164,6 @@ class QChem(logfileparser.Logfile):
         # Assign the number of core electrons replaced by ECPs.
         if hasattr(self, 'user_input') and self.user_input.get('rem') is not None:
             if self.user_input['rem'].get('ecp') is not None:
-                self.coreelectrons = numpy.zeros(self.natom, 'i')
-                self.atomsymbols = [self.table.element[atomno]
-                                 for atomno in self.atomnos]
                 ecp_is_gen = (self.user_input['rem']['ecp'] == 'gen')
                 if ecp_is_gen:
                     assert 'ecp' in self.user_input
@@ -206,7 +203,8 @@ cannot be determined. Rerun without `$molecule read`."""
                         # assigned ECP centers. Filter out the
                         # remaining entries, of which there should
                         # only be one.
-                        remainder = self.charge - user_charge - self.coreelectrons.sum()
+                        core_sum = self.coreelectrons.sum() if hasattr(self, 'coreelectrons') else 0
+                        remainder = self.charge - user_charge - core_sum
                         entries = [entry
                                    for entry in self.user_input['ecp']
                                    if entry[2] == 0]
@@ -214,11 +212,13 @@ cannot be determined. Rerun without `$molecule read`."""
                             assert len(entries) == 1
                             element, _, ncore = entries[0]
                             assert ncore == 0
-                            self._assign_coreelectrons_to_element(element, remainder, True)
+                            self._assign_coreelectrons_to_element(
+                                    element, remainder, ncore_is_total_count=True)
                 elif not ecp_is_gen and has_iprint:
+                    atomsymbols = [self.table.element[atomno] for atomno in self.atomnos]
                     for i in range(self.natom):
-                        if self.atomsymbols[i] in self.possible_ecps:
-                            self.coreelectrons[i] = self.possible_ecps[self.atomsymbols[i]]
+                        if atomsymbols[i] in self.possible_ecps:
+                            self.coreelectrons[i] = self.possible_ecps[atomsymbols[i]]
                 else:
                     assert ecp_is_gen and has_iprint
                     for entry in self.user_input['ecp']:
@@ -373,18 +373,6 @@ cannot be determined. Rerun without `$molecule read`."""
             else:
                 histogram[element] = 1
         return histogram
-
-    def _assign_coreelectrons_to_element(self, element, ncore, divide_by_count=False):
-        """Assign to all instances of the element, because mixed usage isn't
-        allowed within elements.
-        """
-        mask = [element == possible_element
-                for possible_element in self.atomsymbols]
-        indices = [i for (i, x) in enumerate(mask) if x]
-        count = sum(mask)
-        if divide_by_count:
-            ncore = ncore // count
-        self.coreelectrons[indices] = ncore
 
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
