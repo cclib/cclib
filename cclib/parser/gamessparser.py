@@ -290,8 +290,16 @@ class GAMESS(logfileparser.Logfile):
             mult = int(line.split()[-1])
             self.set_attribute('mult', mult)
 
-        # etenergies (originally used only for CIS runs, but now also TD-DFT)
-        if "EXCITATION ENERGIES" in line and line.find("DONE WITH") < 0:
+        # Electronic transitions (etenergies) for CIS runs. The outputs
+        # for TD-DFT and EOM look very different.
+        #
+        #  ---------------------------------------------------------------------
+        #                    CI-SINGLES EXCITATION ENERGIES
+        #  STATE       HARTREE        EV      KCAL/MOL       CM-1         NM
+        #  ---------------------------------------------------------------------
+        #   1A''   0.1677341781     4.5643    105.2548      36813.40     271.64
+        #   ...
+        if line.strip() == "CI-SINGLES EXCITATION ENERGIES":
 
             if not hasattr(self, "etenergies"):
                 self.etenergies = []
