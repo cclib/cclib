@@ -286,6 +286,10 @@ def testGAMESS_GAMESS_US2014_CdtetraM1B3LYP_log(logfile):
     assert numpy.count_nonzero(logfile.data.mocoeffs[0][80-1: 0:]) == 0
     assert logfile.data.mocoeffs[0].all() == logfile.data.mocoeffs[1].all()
 
+def testGAMESS_GAMESS_US2018_exam45_log(logfile):
+    """This logfile has EOM-CC electronic transitions (not currently supported)."""
+    assert not hasattr(logfile.data, 'etenergies')
+
 def testGAMESS_WinGAMESS_dvb_td_trplet_2007_03_24_r1_out(logfile):
     """Do some basic checks for this old unit test that was failing.
 
