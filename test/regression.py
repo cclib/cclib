@@ -1910,7 +1910,7 @@ def make_regression_from_old_unittest(test_class):
     return old_unit_test
 
 
-def main(which=[], opt_traceback=False, opt_status=False, regdir=__regression_dir__):
+def test_regressions(which=[], opt_traceback=False, opt_status=False, regdir=__regression_dir__):
 
     # Build a list of regression files that can be found. If there is a directory
     # on the third level, then treat all files within it as one job.
@@ -2118,4 +2118,4 @@ if __name__ == "__main__":
         opt_traceback = "--traceback" in sys.argv
         opt_status = "--status" in sys.argv
         which = [arg for arg in sys.argv[1:] if not arg in ["--status", "--traceback"]]
-        main(which, opt_traceback, opt_status)
+        test_regressions(which, opt_traceback, opt_status)
