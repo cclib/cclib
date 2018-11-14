@@ -2,6 +2,9 @@ __pycache__
 MANIFEST
 build
 dist
+htmlcov
 *.pyc
 .cache
+.coverage
+.pytest_cache
 cclib.egg-info

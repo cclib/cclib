@@ -17,11 +17,10 @@ from .io.testcjsonreader import *
 from .io.testcjsonwriter import *
 from .io.testfilewriter import *
 from .io.testmoldenwriter import *
+from .io.testscripts import *
 from .io.testwfxwriter import *
 from .io.testxyzreader import *
 from .io.testxyzwriter import *
-from .io.testscripts import *
-
 
 if __name__ == "__main__":
     unittest.main()

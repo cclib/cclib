@@ -1914,7 +1914,7 @@ def make_regression_from_old_unittest(test_class):
     return old_unit_test
 
 
-def main(which=[], opt_traceback=False, opt_status=False, regdir=__regression_dir__):
+def test_regressions(which=[], opt_traceback=False, regdir=__regression_dir__):
 
     # Build a list of regression files that can be found. If there is a directory
     # on the third level, then treat all files within it as one job.
@@ -2106,7 +2106,7 @@ def main(which=[], opt_traceback=False, opt_status=False, regdir=__regression_di
         print("Please make sure these function names correspond to regression files:")
         print("\n".join(orphaned_tests))
 
-    if opt_status and failures+errors > 0:
+    if failures + errors > 0:
         sys.exit(1)
 
 if __name__ == "__main__":
@@ -2120,6 +2120,5 @@ if __name__ == "__main__":
         doctest.testmod()
     else:
         opt_traceback = "--traceback" in sys.argv
-        opt_status = "--status" in sys.argv
-        which = [arg for arg in sys.argv[1:] if not arg in ["--status", "--traceback"]]
-        main(which, opt_traceback, opt_status)
+        which = [arg for arg in sys.argv[1:] if not arg in ["--traceback"]]
+        test_regressions(which, opt_traceback)
