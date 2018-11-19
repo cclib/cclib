@@ -146,6 +146,9 @@ class Gaussian(logfileparser.Logfile):
                 tokens[-1][:-1],
             ])
 
+        if line.strip().startswith("Link1:  Proceeding to internal job step number"):
+            self.new_internal_job()
+
         # This block contains some general information as well as coordinates,
         # which could be parsed in the future:
         #
@@ -366,9 +369,13 @@ class Gaussian(logfileparser.Logfile):
                 self.moments = [self.reference, None, None, None, hexadecapole]
             else:
                 if len(self.moments) == 4:
-                    self.moments.append(hexadecapole)
+                    self.append_attribute("moments", hexadecapole)
                 else:
-                    assert self.moments[4] == hexadecapole
+                    try:
+                        numpy.testing.assert_equal(self.moments[4], hexadecapole)
+                    except AssertionError:
+                        self.logger.warning("Attribute hexadecapole changed value (%s -> %s)" % (self.moments[4], hexadecapole))
+                    self.append_attribute("moments", hexadecapole)
 
         # Catch message about completed optimization.
         if line[1:23] == "Optimization completed":
@@ -1686,7 +1693,7 @@ class Gaussian(logfileparser.Logfile):
             self.set_attribute('enthalpy', float(line.split()[6]))
         if "Sum of electronic and thermal Free Energies=" in line:
             self.set_attribute('freeenergy', float(line.split()[7]))
-        if line[1:12] == "Temperature":
+        if line[1:13] == "Temperature ":
             self.set_attribute('temperature', float(line.split()[1]))
             self.set_attribute('pressure', float(line.split()[4]))
 

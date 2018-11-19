@@ -330,6 +330,17 @@ def testGaussian_Gaussian98_C_bigmult_log(logfile):
     assert logfile.data.homos[0] == 8
     assert logfile.data.homos[1] == -1 # No occupied beta orbitals
 
+def testGaussian_Gaussian98_NIST_CCCBDB_1himidaz_m21b0_out(logfile):
+    """A G3 computation is a sequence of jobs."""
+
+    # All steps deal with the same molecule, so we extract the coordinates
+    # from all steps.
+    assert len(logfile.data.atomcoords) == 10
+
+    # Different G3 steps do perturbation to different orders, and so
+    # we expect only the last MP2 energy to be extracted.
+    assert len(logfile.data.mpenergies) == 1
+
 def testGaussian_Gaussian98_test_Cu2_log(logfile):
     """An example of the number of basis set function changing."""
     assert logfile.data.nbasis == 38
