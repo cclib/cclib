@@ -1482,8 +1482,8 @@ class Gaussian(logfileparser.Logfile):
 
         # Natural orbital coefficients (nocoeffs) and occupation numbers (nooccnos),
         # which are respectively define the eigenvectors and eigenvalues of the
-        # diagnolized one-electron density matrix. These orbitals are formed after
-        # configuration interact (CI) calculations, but not only. Similarly to mocoeffs,
+        # diagonalized one-electron density matrix. These orbitals are formed after
+        # configuration interaction (CI) calculations, but not only. Similarly to mocoeffs,
         # we can parse and check aonames and atombasis here.
         #
         #     Natural Orbital Coefficients:
@@ -1493,66 +1493,89 @@ class Gaussian(logfileparser.Logfile):
         #   2        2S          0.00000   0.75440   0.57746   0.07245   0.00000
         # ...
         #
-        if line[5:33] == "Natural Orbital Coefficients":
-
-            self.aonames = []
-            self.atombasis = []
-            nocoeffs = numpy.zeros((self.nmo, self.nbasis), "d")
-            nooccnos = []
-
-            base = 0
-            self.popregular = False
+        def natural_orbital_single_spin_parsing(inputfile, updateprogress_title):
+            coeffs = numpy.zeros((self.nmo, self.nbasis), "d")
+            occnos = []
+            aonames = []
+            atombasis = []
             for base in range(0, self.nmo, 5):
-
-                self.updateprogress(inputfile, "Natural orbitals", self.fupdate)
-
+                self.updateprogress(inputfile, updateprogress_title, self.fupdate)
                 colmNames = next(inputfile)
-                if base == 0 and int(colmNames.split()[0]) != 1:
-                    # Implies that this is a POP=REGULAR calculation
-                    # and so, only aonames (not mocoeffs) will be extracted
-                    self.popregular = True
-
                 eigenvalues = next(inputfile)
-                nooccnos.extend(map(float, eigenvalues.split()[2:]))
-
+                occnos.extend(map(float, eigenvalues.split()[2:]))
                 for i in range(self.nbasis):
-
                     line = next(inputfile)
-
                     # Just do this the first time 'round.
                     if base == 0:
-
                         # Changed below from :12 to :11 to deal with Elmar Neumann's example.
                         parts = line[:11].split()
                         # New atom.
                         if len(parts) > 1:
                             if i > 0:
-                                self.atombasis.append(atombasis)
-                            atombasis = []
+                                atombasis.append(basisonatom)
+                            basisonatom = []
                             atomname = "%s%s" % (parts[2], parts[1])
                         orbital = line[11:20].strip()
-                        self.aonames.append("%s_%s" % (atomname, orbital))
-                        atombasis.append(i)
-
+                        aonames.append("%s_%s" % (atomname, orbital))
+                        basisonatom.append(i)
                     part = line[21:].replace("D", "E").rstrip()
                     temp = []
-
                     for j in range(0, len(part), 10):
                         temp.append(float(part[j:j+10]))
-
-                    nocoeffs[base:base + len(part) // 10, i] = temp
-
+                    coeffs[base:base + len(part) // 10, i] = temp
                 # Do the last update of atombasis.
                 if base == 0:
-                    self.atombasis.append(atombasis)
+                    atombasis.append(basisonatom)
+            return occnos, coeffs, aonames, atombasis
 
-                # We now have aonames, so no need to continue.
-                if self.popregular:
-                    break
+        if line[5:33] == "Natural Orbital Coefficients":
+            updateprogress_title = "Natural orbitals"
+            nooccnos, nocoeffs, aonames, atombasis = natural_orbital_single_spin_parsing(inputfile, updateprogress_title)
+            self.set_attribute("nocoeffs", nocoeffs)
+            self.set_attribute("nooccnos", nooccnos)
+            self.set_attribute("atombasis", atombasis)
+            self.set_attribute("aonames", aonames)
 
-            if not self.popregular:
-                self.nocoeffs = nocoeffs
-                self.nooccnos = nooccnos
+        # Natural spin orbital coefficients (nsocoeffs) and occupation numbers (nsooccnos)
+        # Parsed attributes are similar to the natural orbitals above except
+        # the natural spin orbitals and occupation numbers are the eigenvalues
+        # and eigenvectors of the one particles spin density matrices
+        #     Alpha Natural Orbital Coefficients:
+        #                           1         2         3         4         5
+        #     Eigenvalues --     1.00000   1.00000   0.99615   0.99320   0.99107
+        #   1 1   O  1S          0.70425   0.70600  -0.16844  -0.14996  -0.00000
+        #   2        2S          0.01499   0.01209   0.36089   0.34940  -0.00000
+        # ...
+        #     Beta Natural Orbital Coefficients:
+        #                           1         2         3         4         5
+        #     Eigenvalues --     1.00000   1.00000   0.99429   0.98790   0.98506
+        #   1 1   O  1S          0.70822   0.70798  -0.15316  -0.13458   0.00465
+        #   2        2S          0.00521   0.00532   0.33837   0.33189  -0.01301
+        #   3        3S         -0.02542  -0.00841   0.28649   0.53224   0.18902
+        # ...
+
+        if line[5:39] == "Alpha Natural Orbital Coefficients":
+            updateprogress_title = "Natural Spin orbitals (alpha)"
+            nsooccnos, nsocoeffs, aonames, atombasis = natural_orbital_single_spin_parsing(inputfile, updateprogress_title)
+            if self.unified_no_nso:
+                self.append_attribute("nocoeffs", nsocoeffs)
+                self.append_attribute("nooccnos", nsooccnos)
+            else:
+                self.append_attribute("nsocoeffs", nsocoeffs)
+                self.append_attribute("nsooccnos", nsooccnos)
+            self.set_attribute("atombasis", atombasis)
+            self.set_attribute("aonames", aonames)
+        if line[5:38] == "Beta Natural Orbital Coefficients":
+            updateprogress_title = "Natural Spin orbitals (beta)"
+            nsooccnos, nsocoeffs, aonames, atombasis = natural_orbital_single_spin_parsing(inputfile, updateprogress_title)
+            if self.unified_no_nso:
+                self.append_attribute("nocoeffs", nsocoeffs)
+                self.append_attribute("nooccnos", nsooccnos)
+            else:
+                self.append_attribute("nsocoeffs", nsocoeffs)
+                self.append_attribute("nsooccnos", nsooccnos)
+            self.set_attribute("atombasis", atombasis)
+            self.set_attribute("aonames", aonames)
 
         # For FREQ=Anharm, extract anharmonicity constants
         if line[1:40] == "X matrix of Anharmonic Constants (cm-1)":

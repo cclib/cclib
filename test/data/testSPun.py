@@ -43,12 +43,39 @@ class GenericSPunTest(unittest.TestCase):
     @skipForParser('Jaguar', 'Data file does not contain enough information')
     def testdimmocoeffs(self):
         """Are the dimensions of mocoeffs equal to 2 x nmo x nbasis?"""
-        self.assertEquals(type(self.data.mocoeffs), type([]))
-        self.assertEquals(len(self.data.mocoeffs), 2)
-        self.assertEquals(self.data.mocoeffs[0].shape,
+        if hasattr(self.data, "mocoeffs"):
+            self.assertIsInstance(self.data.mocoeffs, list)
+            self.assertEquals(len(self.data.mocoeffs), 2)
+            self.assertEquals(self.data.mocoeffs[0].shape,
                           (self.data.nmo, self.data.nbasis))
-        self.assertEquals(self.data.mocoeffs[1].shape,
+            self.assertEquals(self.data.mocoeffs[1].shape,
                           (self.data.nmo, self.data.nbasis))
+    
+    @skipForParser('Jaguar', 'Data file does not contain enough information')
+    @skipForParser('DALTON', 'mocoeffs not implemented yet')
+    def testfornsoormo(self):
+        """Do we have NSOs or MOs?"""
+        self.assertEquals(hasattr(self.data, "nsocoeffs") or hasattr(self.data, "mocoeffs"), True)
+
+    def testdimnsoccnos(self):
+        """Are the dimensions of nsooccnos equal to 2 x nmo?"""
+        if hasattr(self.data, "nsooccnos"):
+            self.assertIsInstance(self.data.nsooccnos, list)
+            self.assertIsInstance(self.data.nsooccnos[0], list)
+            self.assertIsInstance(self.data.nsooccnos[1], list)
+            self.assertEquals(len(self.data.nsooccnos), 2)
+            self.assertEquals(len(self.data.nsooccnos[0]), self.data.nmo)
+            self.assertEquals(len(self.data.nsooccnos[1]), self.data.nmo)
+
+    def testdimnsocoeffs(self):
+        """Are the dimensions of nsocoeffs equal to 2 x nmo x nmo?"""
+        if hasattr(self.data, "nsocoeffs"):
+            self.assertIsInstance(self.data.nsocoeffs, list)
+            self.assertIsInstance(self.data.nsocoeffs[0], numpy.ndarray)
+            self.assertIsInstance(self.data.nsocoeffs[1], numpy.ndarray)
+            self.assertEquals(len(self.data.nsocoeffs), 2)
+            self.assertEquals(self.data.nsocoeffs[0].shape, (self.data.nmo, self.data.nmo))
+            self.assertEquals(self.data.nsocoeffs[1].shape, (self.data.nmo, self.data.nmo))
 
     @skipForParser('Molcas','The parser is still being developed so we skip this test')
     @skipForParser('Turbomole','The parser is still being developed so we skip this test')
@@ -65,9 +92,10 @@ class GenericSPunTest(unittest.TestCase):
 
     def testmoenergies(self):
         """Are the dims of the moenergies equals to 2 x nmo?"""
-        self.assertEquals(len(self.data.moenergies), 2)
-        self.assertEquals(len(self.data.moenergies[0]), self.data.nmo)
-        self.assertEquals(len(self.data.moenergies[1]), self.data.nmo)
+        if hasattr(self.data, "moenergies"):
+            self.assertEquals(len(self.data.moenergies), 2)
+            self.assertEquals(len(self.data.moenergies[0]), self.data.nmo)
+            self.assertEquals(len(self.data.moenergies[1]), self.data.nmo)
 
     @skipForParser('Molcas','The parser is still being developed so we skip this test')
     @skipForParser('Molpro', '?')
