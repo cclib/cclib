@@ -412,6 +412,22 @@ class Logfile(object):
 
         return float(number.replace("D", "E"))
 
+    def new_internal_job(self):
+        """Delete attributes that can be problematic in multistep jobs.
+
+        TODO: instead of this hack, parse each job in a multistep comptation
+        as a different ccData object (this is for 2.x).
+
+        Some computations are actually sequences of several jobs, and some
+        attributes won't work well if parsed across jobs. There include:
+            mpenergies: if different jobs go to different orders then
+                        these won't be consistent and can't be converted
+                        to an array easily
+        """
+        for name in ("mpenergies",):
+            if hasattr(self, name):
+                delattr(self, name)
+
     def set_attribute(self, name, value, check=True):
         """Set an attribute and perform a check when it already exists.
 
