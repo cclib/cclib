@@ -341,6 +341,12 @@ def testGaussian_Gaussian98_NIST_CCCBDB_1himidaz_m21b0_out(logfile):
     # we expect only the last MP2 energy to be extracted.
     assert len(logfile.data.mpenergies) == 1
 
+def testGaussian_Gaussian98_NIST_CCCBDB_1himidaz_m23b6_out(logfile):
+    """A job that was killed before it ended, should have several basic attributes parsed."""
+    assert hasattr(logfile.data, 'charge')
+    assert hasattr(logfile.data, 'metadata')
+    assert hasattr(logfile.data, 'mult')
+
 def testGaussian_Gaussian98_test_Cu2_log(logfile):
     """An example of the number of basis set function changing."""
     assert logfile.data.nbasis == 38
