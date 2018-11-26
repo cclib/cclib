@@ -323,7 +323,11 @@ class Logfile(object):
             # If it does, it parses some lines and sets the relevant attributes (to self).
             # Any attributes can be freely set and used across calls, however only those
             #   in data._attrlist will be moved to final data object that is returned.
-            self.extract(inputfile, line)
+            try:
+                self.extract(inputfile, line)
+            except StopIteration:
+                self.logger.error("Unexpectedly encountered end of logfile.")
+                break
 
         # Close input file object.
         if not self.isstream:
