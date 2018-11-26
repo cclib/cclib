@@ -1,0 +1,261 @@
+setenv GAUSS_EXEDIR /usr/local/apps/g98/g98/linda-exe:/usr/local/apps/g98/g98/bsd:/usr/local/apps/g98/g98/local:/usr/local/apps/g98/g98/extras:/usr/local/apps/g98/g98
+set SW_LIST = `echo $LOADL_PROCESSOR_LIST| sed -e 's/grand/hssw/g'`
+echo grand48.nist.gov grand44.nist.gov
+sed -e s/grand/hssw/g
+setenv q "
+setenv NODELIST  " hssw48.nist.gov hssw44.nist.gov " 
+setenv GAUSS_LFLAGS -nodelist   " hssw48.nist.gov hssw44.nist.gov " 
+g98
+ Entering Gaussian System, Link 0=g98
+ Initial command:
+ /usr/local/apps/g98/g98/l1.exe /wrk/sonic00/Gau-12274.inp -scrdir=/wrk/sonic00/
+ Entering Link 1 = /usr/local/apps/g98/g98/l1.exe PID=     20774.
+  
+ Copyright (c) 1988,1990,1992,1993,1995,1998 Gaussian, Inc.
+                  All Rights Reserved.
+  
+ This is part of the Gaussian(R) 98 program.  It is based on
+ the Gaussian 94(TM) system (copyright 1995 Gaussian, Inc.),
+ the Gaussian 92(TM) system (copyright 1992 Gaussian, Inc.),
+ the Gaussian 90(TM) system (copyright 1990 Gaussian, Inc.),
+ the Gaussian 88(TM) system (copyright 1988 Gaussian, Inc.),
+ the Gaussian 86(TM) system (copyright 1986 Carnegie Mellon
+ University), and the Gaussian 82(TM) system (copyright 1983
+ Carnegie Mellon University). Gaussian is a federally registered
+ trademark of Gaussian, Inc.
+  
+ This software contains proprietary and confidential information,
+ including trade secrets, belonging to Gaussian, Inc.
+  
+ This software is provided under written license and may be
+ used, copied, transmitted, or stored only in accord with that
+ written license.
+  
+ The following legend is applicable only to US Government
+ contracts under DFARS:
+  
+                    RESTRICTED RIGHTS LEGEND
+  
+ Use, duplication or disclosure by the US Government is subject
+ to restrictions as set forth in subparagraph (c)(1)(ii) of the
+ Rights in Technical Data and Computer Software clause at DFARS
+ 252.227-7013.
+  
+ Gaussian, Inc.
+ Carnegie Office Park, Building 6, Pittsburgh, PA 15106 USA
+  
+ The following legend is applicable only to US Government
+ contracts under FAR:
+  
+                    RESTRICTED RIGHTS LEGEND
+  
+ Use, reproduction and disclosure by the US Government is subject
+ to restrictions as set forth in subparagraph (c) of the
+ Commercial Computer Software - Restricted Rights clause at FAR
+ 52.227-19.
+  
+ Gaussian, Inc.
+ Carnegie Office Park, Building 6, Pittsburgh, PA 15106 USA
+  
+  
+ ---------------------------------------------------------------
+ Warning -- This program may not be used in any manner that
+ competes with the business of Gaussian, Inc. or will provide
+ assistance to any competitor of Gaussian, Inc.  The licensee
+ of this program is prohibited from giving any competitor of
+ Gaussian, Inc. access to this program.  By using this program,
+ the user acknowledges that Gaussian, Inc. is engaged in the
+ business of creating and licensing software in the field of
+ computational chemistry and represents and warrants to the
+ licensee that it is not a competitor of Gaussian, Inc. and that
+ it will not use this program in any manner prohibited above.
+ ---------------------------------------------------------------
+  
+
+ Cite this work as:
+ Gaussian 98, Revision A.7,
+ M. J. Frisch, G. W. Trucks, H. B. Schlegel, G. E. Scuseria, 
+ M. A. Robb, J. R. Cheeseman, V. G. Zakrzewski, J. A. Montgomery, Jr., 
+ R. E. Stratmann, J. C. Burant, S. Dapprich, J. M. Millam, 
+ A. D. Daniels, K. N. Kudin, M. C. Strain, O. Farkas, J. Tomasi, 
+ V. Barone, M. Cossi, R. Cammi, B. Mennucci, C. Pomelli, C. Adamo, 
+ S. Clifford, J. Ochterski, G. A. Petersson, P. Y. Ayala, Q. Cui, 
+ K. Morokuma, D. K. Malick, A. D. Rabuck, K. Raghavachari, 
+ J. B. Foresman, J. Cioslowski, J. V. Ortiz, A. G. Baboul, 
+ B. B. Stefanov, G. Liu, A. Liashenko, P. Piskorz, I. Komaromi, 
+ R. Gomperts, R. L. Martin, D. J. Fox, T. Keith, M. A. Al-Laham, 
+ C. Y. Peng, A. Nanayakkara, C. Gonzalez, M. Challacombe, 
+ P. M. W. Gill, B. Johnson, W. Chen, M. W. Wong, J. L. Andres, 
+ C. Gonzalez, M. Head-Gordon, E. S. Replogle, and J. A. Pople, 
+ Gaussian, Inc., Pittsburgh PA, 1998.
+
+ **********************************************
+ Gaussian 98:  IBM-RS6000-G98RevA.7 11-Apr-1999
+                  27-Dec-2001 
+ **********************************************
+ %NProcl=2
+ Will use up to    2 processors via Linda.
+ %mem=24000000
+ ------------
+ #MP2/cc-pVTZ
+ ------------
+ 1/38=1/1;
+ 2/17=6,18=5/2;
+ 3/5=16,6=1,11=9,25=1,30=1/1,2,3;
+ 4//1;
+ 5/5=2,38=4/2;
+ 8/10=1/1;
+ 9/16=-3/6;
+ 6/7=2,8=2,9=2,10=2/1;
+ 99/5=1,9=1/99;
+ --------------------------------
+ 1H imidazole C3H4N2 casno=288324
+ --------------------------------
+ Symbolic Z-matrix:
+ Charge =  0 Multiplicity = 1
+ N                     0.30938   0.        1.30938 
+ H                     0.3125    0.       -1.6875 
+ C                    -1.06875   0.       -0.28438 
+ H                    -1.91875   0.       -0.79063 
+ C                    -0.93438   0.        1.02812 
+ H                    -1.675     0.        1.6875 
+ H                     1.91875   0.        0.09063 
+ C                     0.93438   0.        0.19063 
+ N                     0.09688   0.       -0.775 
+ ------------------------------------------------------------------------
+                         Z-MATRIX (ANGSTROMS AND DEGREES)
+ CD Cent Atom  N1     Length/X     N2    Alpha/Y     N3     Beta/Z      J
+ ------------------------------------------------------------------------
+   1   1  N     0    .309375           .000000          1.309375
+   2   2  H     0    .312500           .000000         -1.687500
+   3   3  C     0  -1.068750           .000000          -.284375
+   4   4  H     0  -1.918750           .000000          -.790625
+   5   5  C     0   -.934375           .000000          1.028125
+   6   6  H     0  -1.675000           .000000          1.687500
+   7   7  H     0   1.918750           .000000           .090625
+   8   8  C     0    .934375           .000000           .190625
+   9   9  N     0    .096875           .000000          -.775000
+ ------------------------------------------------------------------------
+                         Z-Matrix orientation:                         
+ ---------------------------------------------------------------------
+ Center     Atomic     Atomic              Coordinates (Angstroms)
+ Number     Number      Type              X           Y           Z
+ ---------------------------------------------------------------------
+    1          7             0         .309375     .000000    1.309375
+    2          1             0         .312500     .000000   -1.687500
+    3          6             0       -1.068750     .000000    -.284375
+    4          1             0       -1.918750     .000000    -.790625
+    5          6             0        -.934375     .000000    1.028125
+    6          1             0       -1.675000     .000000    1.687500
+    7          1             0        1.918750     .000000     .090625
+    8          6             0         .934375     .000000     .190625
+    9          7             0         .096875     .000000    -.775000
+ ---------------------------------------------------------------------
+                    Distance matrix (angstroms):
+                    1          2          3          4          5
+     1  N     .000000
+     2  H    2.996877    .000000
+     3  C    2.106957   1.968911    .000000
+     4  H    3.061787   2.404758    .989338    .000000
+     5  C    1.275153   2.988196   1.319361   2.068054    .000000
+     6  H    2.020080   3.916731   2.062966   2.490084    .991615
+     7  H    2.018772   2.396199   3.010944   3.937386   3.003203
+     8  C    1.281494   1.978404   2.058673   3.017147   2.047836
+     9  N    2.095179    .937630   1.264672   2.015686   2.077194
+                    6          7          8          9
+     6  H     .000000
+     7  H    3.932563    .000000
+     8  C    3.008234    .989441    .000000
+     9  N    3.033718   2.017061   1.278217    .000000
+                           Interatomic angles:
+       N1-C3-H2= 94.6          N1-H2-H4= 68.0421       N1-C3-H4=161.6277
+       H2-C3-H4=103.7723       N1-C5-H2= 78.0799       N1-C5-C3=108.5877
+       H2-C3-C5=129.6045       N1-C5-H4=131.1659       H2-H4-C5= 83.4743
+       H4-C3-C5=126.6232       H2-N1-H6=100.8482       N1-H6-C3= 62.1216
+       H2-C3-H6=152.5401       N1-H6-H4= 84.8291       H2-H4-H6=106.2806
+       H4-C3-H6=103.6876       N1-C5-H6=125.5794       H2-C5-H6=156.3407
+       C3-C5-H6=125.8329       H4-C5-H6=103.2546       N1-H7-H2= 85.0432
+       C3-N1-H7= 93.7142       C3-H2-H7= 86.6426       H4-H2-H7=110.1945
+       H4-C3-H7=156.377        C5-N1-H7=130.122        C5-H2-H7= 66.7549
+       C3-C5-H7= 77.6558       H4-C5-H7=100.234        H6-N1-H7=153.6525
+       H6-C3-H7= 99.9354       H6-C5-H7=156.5113       N1-C8-H2=132.4892
+       N1-C8-C3= 74.1498       C3-H2-C8= 62.8703       H4-H2-C8= 86.4223
+       H4-C3-C8=162.5626       C5-N1-C8=106.4483       H2-C8-C5= 95.8196
+       C3-C5-C8= 71.7056       H4-C5-C8= 94.2839       H6-N1-C8=129.9788
+       H2-C8-H6=101.5204       H6-C3-C8= 93.7498       H4-H6-C8= 65.7767
+       H6-C5-C8=162.4615       N1-C8-H7=124.9909       H2-C8-H7=102.5198
+       C3-C8-H7=160.8593       C5-C8-H7=161.6606       H6-C8-H7=155.9598
+       N1-N9-H2=160.8837       N1-N9-C3= 72.9944       H2-N9-C3=126.122 
+       N1-N9-H4= 96.2653       H2-N9-H4=102.851        H4-C3-N9=126.3957
+       N1-C5-N9= 72.9758       H2-N9-C5=163.5289       C5-C3-N9=106.9812
+       C5-H4-N9= 61.132        H6-N1-N9= 94.9673       H6-C3-N9=129.9168
+       H6-H4-N9= 83.9383       H6-C5-N9=161.4448       N1-H7-N9= 62.5497
+       H2-N9-H7=102.1185       C3-N9-H7=131.7595       H4-N9-H7=155.0304
+       C5-N9-H7= 94.3525       N1-C8-N9=109.8741       H2-N9-C8=125.7693
+       C3-N9-C8=108.1088       H4-N9-C8=131.3797       C5-C8-N9= 73.2045
+       H6-C8-N9= 78.9053       H7-C8-N9=125.1349
+ Stoichiometry    C3H4N2
+ Framework group  CS[SG(C3H4N2)]
+ Deg. of freedom   15
+ Full point group                 CS      NOp   2
+ Largest Abelian subgroup         CS      NOp   2
+ Largest concise Abelian subgroup C1      NOp   1
+                         Standard orientation:                         
+ ---------------------------------------------------------------------
+ Center     Atomic     Atomic              Coordinates (Angstroms)
+ Number     Number      Type              X           Y           Z
+ ---------------------------------------------------------------------
+    1          7             0        -.674969    -.941702     .000000
+    2          1             0        -.005288    1.979393     .000000
+    3          6             0        1.025744     .302019     .000000
+    4          1             0        1.967693     .604544     .000000
+    5          6             0         .600174    -.946822     .000000
+    6          1             0        1.173884   -1.755622     .000000
+    7          1             0       -1.969692     .607211     .000000
+    8          6             0       -1.032886     .288794     .000000
+    9          7             0         .000000    1.041778     .000000
+ ---------------------------------------------------------------------
+ Rotational constants (GHZ):     11.1543393     10.4769603      5.4025219
+ Isotopes: N-14,H-1,C-12,H-1,C-12,H-1,H-1,C-12,N-14
+ Standard basis: CC-pVTZ (5D, 7F)
+ There are   140 symmetry adapted basis functions of A'  symmetry.
+ There are    66 symmetry adapted basis functions of A"  symmetry.
+ Crude estimate of integral set expansion from redundant integrals=1.000.
+ Integral buffers will be    262144 words long.
+ Raffenetti 1 integral format.
+ Two-electron integral symmetry is turned on.
+   206 basis functions      343 primitive gaussians
+    18 alpha electrons       18 beta electrons
+       nuclear repulsion energy       173.5664837334 Hartrees.
+ One-electron integrals computed using PRISM.
+ NBasis=   206 RedAO= T  NBF=   140    66
+ NBsUse=   206 1.00D-04 NBFU=   140    66
+ Projected INDO Guess.
+ Initial guess orbital symmetries:
+       Occupied  (A') (A') (A') (A') (A') (A') (A') (A') (A') (A')
+                 (A') (A") (A') (A') (A') (A") (A') (A")
+       Virtual   (A") (A') (A') (A") (A') (A') (A') (A') (A') (A')
+                 (A') (A') (A') (A') (A') (A') (A') (A') (A') (A')
+                 (A') (A') (A') (A') (A') (A') (A') (A') (A') (A')
+                 (A') (A') (A') (A') (A') (A') (A') (A') (A') (A')
+                 (A') (A') (A') (A') (A') (A') (A') (A') (A') (A')
+                 (A') (A') (A') (A') (A') (A') (A') (A') (A') (A')
+                 (A') (A') (A') (A') (A') (A') (A') (A') (A') (A')
+                 (A') (A') (A') (A') (A') (A') (A') (A') (A') (A')
+                 (A') (A') (A') (A') (A') (A') (A') (A') (A') (A')
+                 (A') (A') (A') (A') (A') (A') (A') (A') (A') (A')
+                 (A') (A') (A') (A') (A') (A') (A') (A') (A') (A')
+                 (A') (A') (A') (A') (A') (A') (A') (A') (A') (A')
+                 (A') (A') (A') (A') (A') (A') (A') (A") (A") (A")
+                 (A") (A") (A") (A") (A") (A") (A") (A") (A") (A")
+                 (A") (A") (A") (A") (A") (A") (A") (A") (A") (A")
+                 (A") (A") (A") (A") (A") (A") (A") (A") (A") (A")
+                 (A") (A") (A") (A") (A") (A") (A") (A") (A") (A")
+                 (A") (A") (A") (A") (A") (A") (A") (A") (A") (A")
+                 (A") (A") (A") (A") (A") (A") (A") (A")
+ Requested convergence on RMS density matrix=1.00D-08 within  64 cycles.
+ Requested convergence on MAX density matrix=1.00D-06.
+ Integral accuracy reduced to 1.0D-05 until final iterations.
+ Initial convergence to 1.0D-05 achieved.  Increase integral accuracy.
+ntsnet: worker on node hssw44.nist.gov exited abnormally
+Killed
