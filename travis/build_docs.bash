@@ -25,3 +25,9 @@ touch "${DOCS_BUILD_DIR}"/.nojekyll
 pushd "${DOCS_BUILD_DIR}"/../..
 make default
 popd
+
+TEST_COVERAGE_DIR="${TRAVIS_BUILD_DIR}/htmlcov"
+if [[ -d "${TEST_COVERAGE_DIR}" ]]; then
+    echo "${bold}Copying test coverage results...${normal}"
+    mv "${TEST_COVERAGE_DIR}" "${DOCS_BUILD_DIR}"/coverage
+fi
