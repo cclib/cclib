@@ -25,8 +25,8 @@ class VolumeTest(unittest.TestCase):
     def test_scinotation(self):
         """Does the scientific notation writer work as expected?"""
 
-        self.assertEquals(volume.scinotation(1./654), ' 1.52905E-03')
-        self.assertEquals(volume.scinotation(-1./654), '-1.52905E-03')
+        self.assertEqual(volume.scinotation(1./654), ' 1.52905E-03')
+        self.assertEqual(volume.scinotation(-1./654), '-1.52905E-03')
 
     def test_wavefunction(self):
         """Does the volume occupied by the HOMO integrate to the correct

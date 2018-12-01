@@ -1669,8 +1669,8 @@ class ADFSPTest_nosyms(ADFSPTest, GenericSPTest_nosym):
 class ADFSPTest_nosyms_valence(ADFSPTest_nosyms):
     def testlengthmoenergies(self):
         """Only valence orbital energies were printed here."""
-        self.assertEquals(len(self.data.moenergies[0]), 45)
-        self.assertEquals(self.data.moenergies[0][0], 99999.0)
+        self.assertEqual(len(self.data.moenergies[0]), 45)
+        self.assertEqual(self.data.moenergies[0][0], 99999.0)
 
 class DALTONBigBasisTest_aug_cc_pCVQZ(GenericBigBasisTest):
     contractions = { 6: 29 }
@@ -1684,7 +1684,7 @@ class DALTONSPTest_nosyms_nolabels(GenericSPTest_nosym):
 class GAMESSUSSPunTest_charge0(GenericSPunTest):
     def testcharge_and_mult(self):
         """The charge in the input was wrong."""
-        self.assertEquals(self.data.charge, 0)
+        self.assertEqual(self.data.charge, 0)
     @unittest.skip('HOMOs were incorrect due to charge being wrong')
     def testhomos(self):
         """HOMOs were incorrect due to charge being wrong."""
@@ -1728,12 +1728,12 @@ class JaguarSPTest_6_31gss(JaguarSPTest):
 class JaguarSPunTest_nmo_all(JaguarSPunTest):
     def testmoenergies(self):
         """Some tests printed all MO energies apparently."""
-        self.assertEquals(len(self.data.moenergies[0]), self.data.nmo)
+        self.assertEqual(len(self.data.moenergies[0]), self.data.nmo)
 
 class JaguarGeoOptTest_nmo45(GenericGeoOptTest):
     def testlengthmoenergies(self):
         """Without special options, Jaguar only print Homo+10 orbital energies."""
-        self.assertEquals(len(self.data.moenergies[0]), 45)
+        self.assertEqual(len(self.data.moenergies[0]), 45)
 
 class JaguarGeoOptTest_6_31gss(GenericGeoOptTest):
     nbasisdict = {1: 5, 6: 15}
@@ -1758,7 +1758,7 @@ class OrcaGeoOptTest_3_21g(OrcaGeoOptTest):
 class OrcaSPunTest_charge0(GenericSPunTest):
     def testcharge_and_mult(self):
         """The charge in the input was wrong."""
-        self.assertEquals(self.data.charge, 0)
+        self.assertEqual(self.data.charge, 0)
     @unittest.skip('HOMOs were incorrect due to charge being wrong.')
     def testhomos(self):
         """HOMOs were incorrect due to charge being wrong."""
@@ -1770,7 +1770,7 @@ class OrcaTDDFTTest_error(OrcaTDDFTTest):
     def testoscs(self):
         """These values used to be less accurate, probably due to wrong coordinates."""
         self.assertEqual(len(self.data.etoscs), self.number)
-        self.assertAlmostEquals(max(self.data.etoscs), 1.0, delta=0.2)
+        self.assertAlmostEqual(max(self.data.etoscs), 1.0, delta=0.2)
 
 class OrcaIRTest_old_coordsOK(OrcaIRTest):
 

@@ -43,7 +43,7 @@ class GenericScanTest_optdone_bool(GenericScanTestBase):
     def testoptdone(self):
         """Is the optimization finished?"""
         self.assertIsInstance(self.data.optdone, bool)
-        self.assertEquals(self.data.optdone, True)
+        self.assertEqual(self.data.optdone, True)
 
     @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     @skipForParser('Molcas','The parser is still being developed so we skip this test')
@@ -74,7 +74,7 @@ class GenericScanTest(GenericScanTestBase):
     @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testnumindices(self):
         """Do the number of indices match number of scan points."""
-        self.assertEquals(len(self.data.optdone), 12 + self.extra)
+        self.assertEqual(len(self.data.optdone), 12 + self.extra)
 
     @skipForParser("Jaguar", "Does not work as expected")    
     @skipForParser('Molcas','The parser is still being developed so we skip this test')
