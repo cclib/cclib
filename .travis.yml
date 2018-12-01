@@ -30,7 +30,7 @@ before_script:
   - install -dm755 "${THEME_DIR}"
 
 script:
-  - bash travis/run_pytest.sh
+  - bash travis/run_pytest.bash
   - bash travis/build_docs.bash
   - env | sort
 

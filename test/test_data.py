@@ -128,11 +128,10 @@ class DataSuite(object):
     subdirectory, and do some basic bookkeeping.
     """
 
-    def __init__(self, parsers, modules, status=False, terse=False, silent=False, stream=sys.stdout):
+    def __init__(self, parsers, modules, terse=False, silent=False, stream=sys.stdout):
 
         self.parsers = parsers
         self.modules = modules
-        self.status = status
         self.terse = terse or silent
         self.silent = silent
         self.stream = stream
@@ -231,7 +230,7 @@ class DataSuite(object):
         print("TOTAL: %d\tPASSED: %d\tFAILED: %d\tERRORS: %d\tSKIPPED: %d" \
                 %(total[0], total[0]-(total[1]+total[2]+total[3]), total[2], total[1], total[3]), file=self.stream)
 
-        if self.status and (self.errors or self.failures):
+        if self.errors or self.failures:
             sys.exit(1)
 
     def visualtests(self, stream=sys.stdout):
@@ -263,10 +262,10 @@ class DataSuite(object):
         print("H-L ", "   ".join(["%9.4f" % (out.moenergies[0][out.homos[0]+1]-out.moenergies[0][out.homos[0]],) for out in output]), file=self.stream)
 
 
-def test_all(parsers=None, modules=None, status=False, terse=False, silent=True, summary=True, visual_tests=True):
+def test_all(parsers=None, modules=None, terse=False, silent=True, summary=True, visual_tests=True):
     parsers = parsers or all_parsers
     modules = modules or all_modules
-    data_suite = DataSuite(parsers, modules, status=status, terse=terse, silent=silent)
+    data_suite = DataSuite(parsers, modules, terse=terse, silent=silent)
     data_suite.testall()
     if summary and not silent:
         data_suite.summary()
@@ -282,8 +281,7 @@ if __name__ == "__main__":
     modules = {m: all_modules[m] for m in module_names if m in sys.argv} or None
 
     # These options modify the output and are used by testall and Travis CI.
-    status = "--status" in sys.argv
     terse = "--terse" in sys.argv
     silent = "--silent" in sys.argv
 
-    test_all(parsers, modules, status=status, terse=terse, silent=silent)
+    test_all(parsers, modules, terse=terse, silent=silent)
