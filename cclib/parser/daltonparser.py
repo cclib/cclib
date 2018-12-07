@@ -1125,7 +1125,7 @@ class DALTON(logfileparser.Logfile):
 
             etsyms = []
             etenergies = []
-            # etoscs = []
+            etoscs = []
             etsecs = []
 
             symmap = {"T": "Triplet", "F": "Singlet"}
@@ -1143,10 +1143,15 @@ class DALTON(logfileparser.Logfile):
                     self.skip_lines(inputfile, ['d', 'b', 'Excitation energy in a.u.'])
                     line = next(inputfile)
                     etenergy = float(line.split()[1])
+                    etosc = 0.0
                     etenergies.append(etenergy)
 
                     while "The dominant contributions" not in line:
                         line = next(inputfile)
+                        if '@ Oscillator strength (LENGTH)' in line:
+                            f_i = float(line.split()[5])
+                            etosc += f_i
+                    etoscs.append(etosc)
 
                     self.skip_line(inputfile, 'b')
                     line = next(inputfile)
@@ -1177,7 +1182,7 @@ class DALTON(logfileparser.Logfile):
 
             self.set_attribute('etsyms', etsyms)
             self.set_attribute('etenergies', etenergies)
-            # self.set_attribute('etoscs', etoscs)
+            self.set_attribute('etoscs', etoscs)
             self.set_attribute('etsecs', etsecs)
 
         if line[:37] == ' >>>> Total wall time used in DALTON:':
@@ -1191,7 +1196,6 @@ class DALTON(logfileparser.Logfile):
         # coreelectrons
         # enthalpy
         # entropy
-        # etoscs
         # etrotats
         # freeenergy
         # grads
