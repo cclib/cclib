@@ -82,10 +82,12 @@ class DALTON(logfileparser.Logfile):
         # Extract the version number and optionally the Git revision
         # number.
         if line[4:30] == "This is output from DALTON":
-            rs = r"([0-9]{4})\D\s?\w*\s?([0-9]{1})"
+            rs = (r"from DALTON \(?(?:Release|release)?\s?(?:Dalton)?"
+                  r"(\d+\.?[\w\d\-]*)"
+                  r"(?:[\s,]\(?)?")
             match = re.search(rs, line)
-            package_version = ".".join(match.groups())
-            self.metadata["package_version"] = package_version
+            if match:
+                self.metadata["package_version"] = match.groups()[0]
         # Don't add revision information to the main package version for now.
         if "Last Git revision" in line:
             revision = line.split()[4]
