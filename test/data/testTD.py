@@ -37,7 +37,6 @@ class GenericTDTest(unittest.TestCase):
         idx_lambdamax = numpy.argmax(self.data.etoscs)
         self.assertAlmostEqual(self.data.etenergies[idx_lambdamax], self.expected_l_max, delta=5000)
 
-    @skipForParser('DALTON', 'Oscillator strengths will have to be calculated, not just parsed.')
     @skipForParser('Molcas','The parser is still being developed so we skip this test')
     @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testoscs(self):
