@@ -53,6 +53,7 @@ DALTON/DALTON-2015/Trp_polar_static.out
 DALTON/DALTON-2016/huge_neg_polar_freq.out
 DALTON/DALTON-2016/huge_neg_polar_stat.out
 DALTON/DALTON-2016/Trp_polar_response_diplnx.out
+DALTON/DALTON-2018/dft_properties_nosym_H2O_cc-pVDZ.out
 GAMESS/Firefly7.1/firefly-FailStationary.out
 GAMESS/Firefly7.1/triazole_tddft_c1_b3lyp_631Gdp_sp.out
 GAMESS/Firefly8.0/dvb_gopt_a_unconverged.out
