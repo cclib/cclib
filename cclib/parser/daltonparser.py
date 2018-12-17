@@ -81,6 +81,27 @@ class DALTON(logfileparser.Logfile):
 
         # Extract the version number and optionally the Git revision
         # number.
+        #
+        # Example strings that at least the major version is parsed from:
+        #                            
+        # This is output from DALTON 2013.2
+        #                            2013.4
+        #                            2014.0
+        #                            2014.alpha
+        #                            2015.0
+        #                            2016.alpha
+        #                            (Release 1.1, September 2000)
+        #                            Release 2011 (DEVELOPMENT VERSION)
+        #                            Release 2011 (Rev. 0, Dec. 2010)
+        #                            Release 2011 (Rev. 0, Mar. 2011)
+        #                            (Release 2.0 rev. 0, Mar. 2005)
+        #                            (Release Dalton2013 patch 0)
+        #                            release Dalton2017.alpha (2016)
+        #                            release Dalton2017.alpha (2017)
+        #                            release Dalton2018.0 (2018)
+        #                            release Dalton2018.0-rc (2018)
+        #                            release Dalton2018.alpha (2018)
+        #                            release Dalton2019.alpha (2018)
         if line[4:30] == "This is output from DALTON":
             rs = (r"from DALTON \(?(?:Release|release)?\s?(?:Dalton)?"
                   r"(\d+\.?[\w\d\-]*)"
