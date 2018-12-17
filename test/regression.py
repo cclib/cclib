@@ -215,6 +215,16 @@ def testDALTON_DALTON_2016_Trp_polar_response_diplnx_out(logfile):
     assert abs(logfile.data.polarizabilities[0][0, 0] - 95.11540019) < 1.0e-8
     assert numpy.count_nonzero(numpy.isnan(logfile.data.polarizabilities)) == 8
 
+def testDALTON_DALTON_2018_dft_properties_nosym_H2O_cc_pVDZ_out(logfile):
+    """The "simple" version string in newer development versions of DALTON wasn't
+    being parsed properly.
+
+    This file is in DALTON-2018, rather than DALTON-2019, because 2018.0 was
+    just released.
+    """
+    assert "package_version" in logfile.data.metadata
+    assert logfile.data.metadata["package_version"] == "2019.alpha"
+
 # Firefly #
 
 def testGAMESS_Firefly8_0_dvb_gopt_a_unconverged_out(logfile):
