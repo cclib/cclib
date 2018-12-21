@@ -1,0 +1,20 @@
+$comment
+ Water, single point, RCIS(D)/STO-3G (5 singlets, 5 triplets)
+$end
+
+$rem
+ method = cis(d)
+ basis = sto-3g
+ cis_n_roots = 5
+ ao2mo_disk = 200
+$end
+
+$molecule
+ 0 1
+ O
+ H 1 R1
+ H 1 R1 2 A1
+
+ R1=0.99
+ A1=106.0
+$end

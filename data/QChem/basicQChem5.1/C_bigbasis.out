@@ -1,0 +1,490 @@
+Q-Chem Developer Version!
+                  Welcome to Q-Chem
+     A Quantum Leap Into The Future Of Chemistry
+
+
+ Q-Chem 5.1, Q-Chem, Inc., Pleasanton, CA (2018)
+
+ Yihan Shao,  Zhengting Gan,  E. Epifanovsky,  A. T. B. Gilbert,  M. Wormit,  
+ J. Kussmann,  A. W. Lange,  A. Behn,  Jia Deng,  Xintian Feng,  D. Ghosh,  
+ M. Goldey,  P. R. Horn,  L. D. Jacobson,  I. Kaliman,  T. Kus,  A. Landau,  
+ Jie Liu,  E. I. Proynov,  R. M. Richard,  R. P. Steele,  E. J. Sundstrom,  
+ H. L. Woodcock III,  P. M. Zimmerman,  D. Zuev,  B. Albrecht,  E. Alguire,  
+ S. A. Baeppler,  D. Barton,  Z. Benda,  Y. A. Bernard,  E. J. Berquist,  
+ K. B. Bravaya,  H. Burton,  D. Casanova,  Chun-Min Chang,  Yunqing Chen,  
+ A. Chien,  K. D. Closser,  M. P. Coons,  S. Coriani,  S. Dasgupta,  
+ A. L. Dempwolff,  M. Diedenhofen,  Hainam Do,  R. G. Edgar,  Po-Tung Fang,  
+ S. Faraji,  S. Fatehi,  Qingguo Feng,  K. D. Fenk,  J. Fosso-Tande,  
+ J. Gayvert,  Qinghui Ge,  A. Ghysels,  G. Gidofalvi,  J. Gomes,  
+ J. Gonthier,  A. Gunina,  D. Hait,  M. W. D. Hanson-Heine,  
+ P. H. P. Harbach,  A. W. Hauser,  J. E. Herr,  E. G. Hohenstein,  
+ Z. C. Holden,  Kerwin Hui,  B. C. Huynh,  T.-C. Jagau,  Hyunjun Ji,  
+ B. Kaduk,  K. Khistyaev,  Jaehoon Kim,  P. Klunzinger,  K. Koh,  
+ D. Kosenkov,  L. Koulias,  T. Kowalczyk,  C. M. Krauter,  A. Kunitsa,  
+ Ka Un Lao,  A. Laurent,  K. V. Lawler,  Joonho Lee,  D. Lefrancois,  
+ S. Lehtola,  D. S. Levine,  Yi-Pei Li,  You-Sheng Lin,  Fenglai Liu,  
+ E. Livshits,  A. Luenser,  P. Manohar,  E. Mansoor,  S. F. Manzer,  
+ Shan-Ping Mao,  Yuezhi Mao,  N. Mardirossian,  A. V. Marenich,  
+ T. Markovich,  L. A. Martinez-Martinez,  S. A. Maurer,  N. J. Mayhall,  
+ S. C. McKenzie,  J.-M. Mewes,  A. F. Morrison,  J. W. Mullinax,  K. Nanda,  
+ T. S. Nguyen-Beck,  R. Olivares-Amaya,  J. A. Parkhill,  T. M. Perrine,  
+ F. Plasser,  P. Pokhilko,  S. Prager,  A. Prociuk,  E. Ramos,  D. R. Rehn,  
+ F. Rob,  M. Schneider,  N. Sergueev,  S. M. Sharada,  S. Sharma,  
+ D. W. Small,  T. Stauch,  T. Stein,  Yu-Chuan Su,  A. J. W. Thom,  
+ A. Tkatchenko,  T. Tsuchimochi,  N. M. Tubman,  L. Vogt,  M. L. Vidal,  
+ O. Vydrov,  M. A. Watson,  J. Wenzel,  M. de Wergifosse,  T. A. Wesolowski,  
+ A. White,  J. Witte,  A. Yamada,  Jun Yang,  K. Yao,  S. Yeganeh,  
+ S. R. Yost,  Zhi-Qiang You,  A. Zech,  Igor Ying Zhang,  Xing Zhang,  
+ Yan Zhao,  Ying Zhu,  B. R. Brooks,  G. K. L. Chan,  C. J. Cramer,  
+ M. S. Gordon,  W. J. Hehre,  A. Klamt,  M. W. Schmidt,  C. D. Sherrill,  
+ D. G. Truhlar,  A. Aspuru-Guzik,  R. Baer,  A. T. Bell,  N. A. Besley,  
+ Jeng-Da Chai,  A. E. DePrince, III,  R. A. DiStasio Jr.,  A. Dreuw,  
+ B. D. Dunietz,  T. R. Furlani,  Chao-Ping Hsu,  Yousung Jung,  Jing Kong,  
+ D. S. Lambrecht,  WanZhen Liang,  C. Ochsenfeld,  V. A. Rassolov,  
+ L. V. Slipchenko,  J. E. Subotnik,  T. Van Voorhis,  J. M. Herbert,  
+ A. I. Krylov,  P. M. W. Gill,  M. Head-Gordon
+
+ Contributors to earlier versions of Q-Chem not listed above: 
+ R. D. Adamson,  B. Austin,  J. Baker,  G. J. O. Beran,  K. Brandhorst,  
+ S. T. Brown,  E. F. C. Byrd,  A. K. Chakraborty,  C.-L. Cheng,  
+ Siu Hung Chien,  D. M. Chipman,  D. L. Crittenden,  H. Dachsel,  
+ R. J. Doerksen,  A. D. Dutoi,  L. Fusti-Molnar,  W. A. Goddard III,  
+ A. Golubeva-Zadorozhnaya,  S. R. Gwaltney,  G. Hawkins,  A. Heyden,  
+ S. Hirata,  G. Kedziora,  F. J. Keil,  C. Kelley,  Jihan Kim,  R. A. King,  
+ R. Z. Khaliullin,  P. P. Korambath,  W. Kurlancheek,  A. M. Lee,  M. S. Lee,  
+ S. V. Levchenko,  Ching Yeh Lin,  D. Liotard,  R. C. Lochan,  I. Lotan,  
+ P. E. Maslen,  N. Nair,  D. P. O'Neill,  D. Neuhauser,  E. Neuscamman,  
+ C. M. Oana,  R. Olson,  B. Peters,  R. Peverati,  P. A. Pieniazek,  
+ Y. M. Rhee,  J. Ritchie,  M. A. Rohrdanz,  E. Rosta,  N. J. Russ,  
+ H. F. Schaefer III,  N. E. Schultz,  N. Shenvi,  A. C. Simmonett,  A. Sodt,  
+ D. Stuck,  K. S. Thanthiriwatte,  V. Vanovschi,  Tao Wang,  A. Warshel,  
+ C. F. Williams,  Q. Wu,  X. Xu,  W. Zhang
+
+ Please cite Q-Chem as follows:
+ Y. Shao et al., Mol. Phys. 113, 184-215 (2015)
+ DOI: 10.1080/00268976.2014.952696
+
+ Q-Chem 5.1.2 for Intel X86 EM64T Linux
+
+ Parts of Q-Chem use Armadillo 8.300.2 (Tropical Shenanigans).
+ http://arma.sourceforge.net/
+
+Compilation information
+-----------------------
+
+ SVN revision             | 29783
+ SVN branch               | trunk
+ Last SVN revision        | 29781
+ Last SVN author          | ilyak
+ Hostname                 | osmium
+ User                     | eric
+ System                   | Linux-4.19.8-arch1-1-ARCH
+ Processor                | x86_64
+ Compiler                 | GNU
+ C compiler version       | 8.2.1
+ CXX compiler version     | 8.2.1
+ Fortran compiler version | 8.2.1
+ Configuration time       | 2018-12-16 22:52:03
+
+
+ Q-Chem begins on Sun Dec 16 23:54:38 2018  
+
+Host: osmium
+0
+
+     Scratch files written to /tmp/qchem/qchem109789//
+Input Ideriv = 2
+Curr. Ideriv = -1
+Max.  Ideriv = 2
+
+Checking the input file for inconsistencies... 	...done.
+
+--------------------------------------------------------------
+User input:
+--------------------------------------------------------------
+$comment
+ Carbon atom (big basis), single point, RHF/aug-cc-pVQZ
+$end
+
+$rem
+ method = hf
+ basis = aug-cc-pvqz
+ scf_final_print = 2
+ print_general_basis = true
+ print_orbitals = true
+ molden_format = false
+$end
+
+$molecule
+ 0 1
+ C          -1.4152533224   0.2302217854   0.0000000000
+$end
+--------------------------------------------------------------
+ ----------------------------------------------------------------
+             Standard Nuclear Orientation (Angstroms)
+    I     Atom           X                Y                Z
+ ----------------------------------------------------------------
+    1      C       0.0000000000     0.0000000000     0.0000000000
+ ----------------------------------------------------------------
+ Molecular Point Group                 Kh    NOp =***
+ Largest Abelian Subgroup              D2h   NOp =  1
+ Nuclear Repulsion Energy =     0.0000000000 hartrees
+ There are        3 alpha and        3 beta electrons
+ Requested basis set is aug-cc-pVQZ
+Basis set in general basis input format:
+-----------------------------------------------------------------------
+$basis
+C    0
+S    9    1.000000
+   3.39800000E+04    9.10000000E-05 
+   5.08900000E+03    7.04000000E-04 
+   1.15700000E+03    3.69300000E-03 
+   3.26600000E+02    1.53600000E-02 
+   1.06100000E+02    5.29290000E-02 
+   3.81100000E+01    1.47043000E-01 
+   1.47500000E+01    3.05631000E-01 
+   6.03500000E+00    3.99345000E-01 
+   2.53000000E+00    2.17051000E-01 
+S    9    1.000000
+   3.39800000E+04   -1.90000000E-05 
+   5.08900000E+03   -1.51000000E-04 
+   1.15700000E+03   -7.85000000E-04 
+   3.26600000E+02   -3.32400000E-03 
+   1.06100000E+02   -1.15120000E-02 
+   3.81100000E+01   -3.41600000E-02 
+   1.47500000E+01   -7.71730000E-02 
+   6.03500000E+00   -1.41493000E-01 
+   2.53000000E+00   -1.18019000E-01 
+S    1    1.000000
+   7.35500000E-01    1.00000000E+00 
+S    1    1.000000
+   2.90500000E-01    1.00000000E+00 
+S    1    1.000000
+   1.11100000E-01    1.00000000E+00 
+P    3    1.000000
+   3.45100000E+01    5.37800000E-03 
+   7.91500000E+00    3.61320000E-02 
+   2.36800000E+00    1.42493000E-01 
+P    1    1.000000
+   8.13200000E-01    1.00000000E+00 
+P    1    1.000000
+   2.89000000E-01    1.00000000E+00 
+P    1    1.000000
+   1.00700000E-01    1.00000000E+00 
+D    1    1.000000
+   1.84800000E+00    1.00000000E+00 
+D    1    1.000000
+   6.49000000E-01    1.00000000E+00 
+D    1    1.000000
+   2.28000000E-01    1.00000000E+00 
+F    1    1.000000
+   1.41900000E+00    1.00000000E+00 
+F    1    1.000000
+   4.85000000E-01    1.00000000E+00 
+G    1    1.000000
+   1.01100000E+00    1.00000000E+00 
+S    1    1.000000
+   4.14500000E-02    1.00000000E+00 
+P    1    1.000000
+   3.21800000E-02    1.00000000E+00 
+D    1    1.000000
+   7.66000000E-02    1.00000000E+00 
+F    1    1.000000
+   1.87000000E-01    1.00000000E+00 
+G    1    1.000000
+   4.24000000E-01    1.00000000E+00 
+****
+$end
+-----------------------------------------------------------------------
+ There are 20 shells and 80 basis functions
+
+ Total QAlloc Memory Limit   2000 MB
+ Mega-Array Size       188 MB
+ MEM_STATIC part       192 MB
+ A cutoff of  1.0D-08 yielded    210 shell pairs
+ There are      3430 function pairs (      5985 Cartesian)
+ Smallest overlap matrix eigenvalue = 4.28E-03
+
+ Scale SEOQF with 1.000000e-01/1.000000e-01/1.000000e-01
+
+ Standard Electronic Orientation quadrupole field applied
+ Guess from superposition of atomic densities
+ Warning:  Energy on first SCF cycle will be non-variational
+ SAD guess density has 6.000000 electrons
+
+ -----------------------------------------------------------------------
+  General SCF calculation program by
+  Eric Jon Sundstrom, Paul Horn, Yuezhi Mao, Dmitri Zuev, Alec White,
+  David Stuck, Shaama M.S., Shane Yost, Joonho Lee, David Small,
+  Daniel Levine, Susi Lehtola, Hugh Burton, Evgeny Epifanovsky
+ -----------------------------------------------------------------------
+ Hartree-Fock
+ A restricted SCF calculation will be
+ performed using DIIS
+ SCF converges when DIIS error is below 1.0e-05
+ ---------------------------------------
+  Cycle       Energy         DIIS error
+ ---------------------------------------
+    1     -37.3025390174      2.12e-03  
+    2     -37.5672540551      4.46e-03  
+    3     -37.5891389161      2.87e-03  
+    4     -37.6022120493      1.19e-03  
+    5     -37.6045149972      1.42e-04  
+    6     -37.6045418617      1.43e-05  
+    7     -37.6045426355      2.43e-06  Convergence criterion met
+ ---------------------------------------
+ HF Exchange   Energy =  -5.00648280830537
+ One-Electron  Energy = -50.31127092712131
+ Total Coulomb Energy =  17.71321109996428
+ SCF time:   CPU 1.28s  wall 2.00s 
+ SCF   energy in the final basis set =      -37.6045426355
+ Total energy in the final basis set =      -37.6045426355
+
+ --------------------------------------------------------------
+
+                    Orbital Energies (a.u.)
+ --------------------------------------------------------------
+
+ Alpha MOs
+ -- Occupied --
+-11.365  -0.726  -0.358
+ -- Virtual --
+  0.019   0.019   0.083   0.090   0.108   0.108   0.232   0.232
+  0.242   0.242   0.245   0.445   0.464   0.464   0.503   0.744
+  0.744   0.762   0.762   0.774   0.774   0.776   0.776   0.777
+  0.791   0.791   0.798   1.591   1.591   1.609   2.090   2.090
+  2.108   2.118   2.118   2.139   2.139   2.151   2.151   2.155
+  2.197   2.197   2.232   2.232   2.245   2.245   2.245   2.283
+  2.283   2.307   2.307   2.315   5.767   5.767   5.814   5.874
+  5.874   5.921   5.921   5.955   5.955   5.975   5.975   5.982
+  6.328   6.328   6.383   6.383   6.401   6.418   6.418   6.473
+  6.473   6.507   6.507   6.518  20.423
+ --------------------------------------------------------------
+
+
+                        RESTRICTED (RHF) MOLECULAR ORBITAL COEFFICIENTS
+                         1         2         3         4         5         6
+ eigenvalues:        -11.365    -0.726    -0.358     0.019     0.019     0.083
+   1  C     s       -0.99335   0.00055   0.00000  -0.00000  -0.00000  -0.02673
+   2  C     s       -0.00016   0.34461   0.00000  -0.00000   0.00000  -0.11742
+   3  C     s       -0.01575   0.28096   0.00000  -0.00000   0.00000  -0.17435
+   4  C     s        0.00348   0.59193  -0.00000   0.00000   0.00000   0.22498
+   5  C     s       -0.00161   0.27147   0.00000  -0.00000   0.00000  -1.35882
+   6  C     px       0.00000   0.00000   0.00001   0.00000   0.09664  -0.00000
+   7  C     py       0.00000   0.00000   0.16656   0.00000  -0.00000   0.00000
+   8  C     pz       0.00000  -0.00000   0.00000  -0.09664   0.00000  -0.00000
+   9  C     px      -0.00000  -0.00000   0.00001   0.00000   0.18334  -0.00000
+  10  C     py      -0.00000   0.00000   0.32543   0.00000  -0.00001   0.00000
+  11  C     pz      -0.00000  -0.00000   0.00000  -0.18334   0.00000  -0.00000
+  12  C     px       0.00000  -0.00000   0.00002   0.00000   0.30012  -0.00000
+  13  C     py       0.00000  -0.00000   0.44185   0.00000  -0.00001  -0.00000
+  14  C     pz       0.00000  -0.00000   0.00000  -0.30012   0.00000  -0.00000
+  15  C     px      -0.00000  -0.00000   0.00001   0.00000   0.23774  -0.00000
+  16  C     py      -0.00000   0.00000   0.28897   0.00000  -0.00001   0.00000
+  17  C     pz      -0.00000   0.00000   0.00000  -0.23774   0.00000  -0.00000
+  18  C     d 1      0.00000   0.00000   0.00000  -0.00000   0.00000   0.00000
+  19  C     d 2      0.00000   0.00000  -0.00000   0.00000   0.00000   0.00000
+  20  C     d 3     -0.00011  -0.00111  -0.00000  -0.00000   0.00000  -0.00024
+  21  C     d 4      0.00000   0.00000  -0.00000  -0.00000  -0.00000   0.00000
+  22  C     d 5     -0.00018  -0.00192  -0.00000   0.00000  -0.00000  -0.00042
+  23  C     d 1     -0.00000  -0.00000  -0.00000  -0.00000  -0.00000   0.00000
+  24  C     d 2     -0.00000  -0.00000   0.00000  -0.00000  -0.00000   0.00000
+  25  C     d 3      0.00051   0.00033  -0.00000   0.00000   0.00000  -0.00000
+  26  C     d 4     -0.00000  -0.00000  -0.00000   0.00000  -0.00000   0.00000
+  27  C     d 5      0.00088   0.00058  -0.00000  -0.00000   0.00000  -0.00001
+  28  C     d 1      0.00000   0.00000   0.00000  -0.00000   0.00000   0.00000
+  29  C     d 2      0.00000   0.00000  -0.00000   0.00000   0.00000   0.00000
+  30  C     d 3     -0.00005  -0.00429   0.00000  -0.00000   0.00000  -0.00532
+  31  C     d 4      0.00000   0.00000   0.00000  -0.00000   0.00000   0.00000
+  32  C     d 5     -0.00009  -0.00743   0.00000   0.00000  -0.00000  -0.00921
+  33  C     f 1     -0.00000   0.00000   0.00327   0.00000  -0.00000  -0.00000
+  34  C     f 2      0.00000   0.00000  -0.00000   0.00000  -0.00000  -0.00000
+  35  C     f 3      0.00000  -0.00000   0.00253   0.00000  -0.00000   0.00000
+  36  C     f 4      0.00000   0.00000   0.00000  -0.00129   0.00000   0.00000
+  37  C     f 5      0.00000   0.00000   0.00000   0.00000   0.00053  -0.00000
+  38  C     f 6     -0.00000  -0.00000   0.00000  -0.00166  -0.00000   0.00000
+  39  C     f 7     -0.00000  -0.00000   0.00000   0.00000   0.00204   0.00000
+  40  C     f 1      0.00000  -0.00000   0.00738   0.00000  -0.00000   0.00000
+  41  C     f 2     -0.00000  -0.00000  -0.00000   0.00000  -0.00000   0.00000
+  42  C     f 3     -0.00000  -0.00000   0.00571   0.00000  -0.00000  -0.00000
+  43  C     f 4     -0.00000  -0.00000   0.00000  -0.00240   0.00000  -0.00000
+  44  C     f 5     -0.00000   0.00000   0.00000   0.00000   0.00098   0.00000
+  45  C     f 6      0.00000   0.00000   0.00000  -0.00310  -0.00000  -0.00000
+  46  C     f 7      0.00000   0.00000   0.00000   0.00000   0.00379  -0.00000
+  47  C     g 1     -0.00000   0.00000   0.00000   0.00000  -0.00000   0.00000
+  48  C     g 2     -0.00000   0.00000   0.00000  -0.00000  -0.00000   0.00000
+  49  C     g 3     -0.00000   0.00000  -0.00000  -0.00000   0.00000   0.00000
+  50  C     g 4     -0.00000   0.00000  -0.00000   0.00000   0.00000   0.00000
+  51  C     g 5      0.00001  -0.00002  -0.00000  -0.00000   0.00000  -0.00003
+  52  C     g 6     -0.00000   0.00000  -0.00000  -0.00000   0.00000   0.00000
+  53  C     g 7      0.00001  -0.00004  -0.00000   0.00000   0.00000  -0.00005
+  54  C     g 8     -0.00000   0.00000   0.00000  -0.00000  -0.00000   0.00000
+  55  C     g 9      0.00001  -0.00005  -0.00000   0.00000  -0.00000  -0.00006
+  56  C     s        0.00040   0.00293  -0.00000   0.00000  -0.00000   1.81403
+  57  C     px       0.00000  -0.00000   0.00000   0.00000   0.52802   0.00000
+  58  C     py       0.00000  -0.00000   0.02378   0.00000  -0.00002  -0.00000
+  59  C     pz       0.00000   0.00000   0.00000  -0.52802   0.00000   0.00000
+  60  C     d 1     -0.00000   0.00000  -0.00000   0.00000   0.00000  -0.00000
+  61  C     d 2     -0.00000   0.00000   0.00000  -0.00000  -0.00000  -0.00000
+  62  C     d 3      0.00004  -0.00218  -0.00000   0.00000   0.00000   0.03113
+  63  C     d 4     -0.00000   0.00000  -0.00000   0.00000  -0.00000  -0.00000
+  64  C     d 5      0.00008  -0.00378  -0.00000   0.00000   0.00000   0.05391
+  65  C     f 1      0.00000  -0.00000   0.00614   0.00000  -0.00000  -0.00000
+  66  C     f 2      0.00000   0.00000  -0.00000   0.00000  -0.00000  -0.00000
+  67  C     f 3      0.00000   0.00000   0.00475   0.00000  -0.00000   0.00000
+  68  C     f 4      0.00000   0.00000   0.00000  -0.00723   0.00000   0.00000
+  69  C     f 5      0.00000  -0.00000   0.00000   0.00000   0.00295  -0.00000
+  70  C     f 6     -0.00000   0.00000   0.00000  -0.00933  -0.00000   0.00000
+  71  C     f 7     -0.00000  -0.00000   0.00000   0.00000   0.01143  -0.00000
+  72  C     g 1     -0.00000   0.00000  -0.00000   0.00000  -0.00000  -0.00000
+  73  C     g 2     -0.00000   0.00000  -0.00000  -0.00000   0.00000  -0.00000
+  74  C     g 3     -0.00000   0.00000   0.00000  -0.00000  -0.00000  -0.00000
+  75  C     g 4     -0.00000   0.00000   0.00000   0.00000  -0.00000  -0.00000
+  76  C     g 5      0.00000  -0.00015  -0.00000   0.00000   0.00000   0.00011
+  77  C     g 6     -0.00000   0.00000   0.00000  -0.00000   0.00000  -0.00000
+  78  C     g 7      0.00000  -0.00023   0.00000  -0.00000  -0.00000   0.00017
+  79  C     g 8     -0.00000   0.00000   0.00000   0.00000   0.00000  -0.00000
+  80  C     g 9      0.00000  -0.00030   0.00000   0.00000  -0.00000   0.00023
+                         7         8
+ eigenvalues:          0.090     0.108
+   1  C     s        0.00000   0.00000
+   2  C     s        0.00000   0.00000
+   3  C     s        0.00000   0.00000
+   4  C     s        0.00000   0.00000
+   5  C     s        0.00000  -0.00000
+   6  C     px       0.00000   0.00000
+   7  C     py       0.03311   0.00000
+   8  C     pz       0.00000  -0.07999
+   9  C     px       0.00000   0.00000
+  10  C     py       0.10501   0.00000
+  11  C     pz       0.00000  -0.20284
+  12  C     px      -0.00000   0.00000
+  13  C     py      -0.02041   0.00000
+  14  C     pz      -0.00000  -0.11259
+  15  C     px       0.00002   0.00000
+  16  C     py       0.52966   0.00001
+  17  C     pz       0.00000  -0.80733
+  18  C     d 1      0.00000   0.00000
+  19  C     d 2     -0.00000   0.00000
+  20  C     d 3     -0.00000   0.00000
+  21  C     d 4     -0.00000  -0.00000
+  22  C     d 5      0.00000  -0.00000
+  23  C     d 1      0.00000   0.00000
+  24  C     d 2      0.00000   0.00000
+  25  C     d 3      0.00000  -0.00000
+  26  C     d 4      0.00000   0.00000
+  27  C     d 5     -0.00000  -0.00000
+  28  C     d 1     -0.00000   0.00000
+  29  C     d 2      0.00000  -0.00000
+  30  C     d 3     -0.00000  -0.00000
+  31  C     d 4     -0.00000  -0.00000
+  32  C     d 5      0.00000   0.00000
+  33  C     f 1      0.00047   0.00000
+  34  C     f 2     -0.00000   0.00000
+  35  C     f 3      0.00036   0.00000
+  36  C     f 4      0.00000  -0.00093
+  37  C     f 5      0.00000   0.00000
+  38  C     f 6      0.00000  -0.00120
+  39  C     f 7      0.00000   0.00000
+  40  C     f 1      0.00336   0.00000
+  41  C     f 2     -0.00000   0.00000
+  42  C     f 3      0.00260   0.00000
+  43  C     f 4      0.00000  -0.00351
+  44  C     f 5      0.00000   0.00000
+  45  C     f 6      0.00000  -0.00454
+  46  C     f 7      0.00000   0.00000
+  47  C     g 1      0.00000  -0.00000
+  48  C     g 2      0.00000  -0.00000
+  49  C     g 3     -0.00000  -0.00000
+  50  C     g 4     -0.00000   0.00000
+  51  C     g 5      0.00000   0.00000
+  52  C     g 6      0.00000  -0.00000
+  53  C     g 7     -0.00000  -0.00000
+  54  C     g 8      0.00000   0.00000
+  55  C     g 9      0.00000   0.00000
+  56  C     s       -0.00000   0.00000
+  57  C     px      -0.00005  -0.00000
+  58  C     py      -1.26811  -0.00001
+  59  C     pz      -0.00001   1.18807
+  60  C     d 1      0.00000  -0.00000
+  61  C     d 2      0.00000   0.00000
+  62  C     d 3      0.00000   0.00000
+  63  C     d 4      0.00000  -0.00000
+  64  C     d 5     -0.00000  -0.00000
+  65  C     f 1     -0.00509   0.00000
+  66  C     f 2      0.00000   0.00000
+  67  C     f 3     -0.00394   0.00000
+  68  C     f 4     -0.00000  -0.00123
+  69  C     f 5     -0.00000   0.00000
+  70  C     f 6     -0.00000  -0.00159
+  71  C     f 7     -0.00000   0.00000
+  72  C     g 1      0.00000  -0.00000
+  73  C     g 2     -0.00000   0.00000
+  74  C     g 3      0.00000   0.00000
+  75  C     g 4     -0.00000  -0.00000
+  76  C     g 5     -0.00000  -0.00000
+  77  C     g 6     -0.00000   0.00000
+  78  C     g 7     -0.00000   0.00000
+  79  C     g 8     -0.00000   0.00000
+  80  C     g 9     -0.00000  -0.00000
+
+          Ground-State Mulliken Net Atomic Charges
+
+     Atom                 Charge (a.u.)
+  ----------------------------------------
+      1 C                    -0.000000
+  ----------------------------------------
+  Sum of atomic charges =    -0.000000
+
+ -----------------------------------------------------------------
+                    Cartesian Multipole Moments
+ -----------------------------------------------------------------
+    Charge (ESU x 10^10)
+                 0.0000
+    Dipole Moment (Debye)
+         X       0.0000      Y      -0.0000      Z       0.0000
+       Tot       0.0000
+    Quadrupole Moments (Debye-Ang)
+        XX      -5.0724     XY      -0.0002     YY      -9.5402
+        XZ      -0.0000     YZ      -0.0000     ZZ      -5.0724
+    Octopole Moments (Debye-Ang^2)
+       XXX       0.0000    XXY       0.0000    XYY       0.0000
+       YYY      -0.0000    XXZ       0.0000    XYZ       0.0000
+       YYZ      -0.0000    XZZ       0.0000    YZZ      -0.0000
+       ZZZ      -0.0000
+    Hexadecapole Moments (Debye-Ang^3)
+      XXXX      -5.4258   XXXY      -0.0002   XXYY      -3.6748
+      XYYY      -0.0002   YYYY     -16.2592   XXXZ      -0.0000
+      XXYZ      -0.0000   XYYZ      -0.0000   YYYZ      -0.0000
+      XXZZ      -1.8086   XYZZ      -0.0001   YYZZ      -3.6748
+      XZZZ      -0.0000   YZZZ      -0.0000   ZZZZ      -5.4258
+ -----------------------------------------------------------------
+
+ STANDARD THERMODYNAMIC QUANTITIES AT   298.15 K  AND     1.00 ATM
+
+   Translational Enthalpy:        0.889 kcal/mol
+   Rotational Enthalpy:           0.000 kcal/mol
+   Vibrational Enthalpy:          0.000 kcal/mol
+   gas constant (RT):             0.592 kcal/mol
+   Translational Entropy:        33.398  cal/mol.K
+   Rotational Entropy:            0.000  cal/mol.K
+   Vibrational Entropy:           0.000  cal/mol.K
+
+   Total Enthalpy:                1.481 kcal/mol
+   Total Entropy:                33.398  cal/mol.K
+
+ -----------------------------------------------------------------
+
+Archival summary:
+1\1\osmium\SP\HF\BasisUnspecified\1\eric\SunDec1623:54:402018SunDec1623:54:402018\0\\#,HF,BasisUnspecified,\\0,1\C\\HF=-37.6045426\\@
+
+ Total job time:  1.75s(wall), 1.34s(cpu) 
+ Sun Dec 16 23:54:40 2018
+
+        *************************************************************
+        *                                                           *
+        *  Thank you very much for using Q-Chem.  Have a nice day.  *
+        *                                                           *
+        *************************************************************
+
+
