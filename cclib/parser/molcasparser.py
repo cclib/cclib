@@ -685,7 +685,10 @@ class Molcas(logfileparser.Logfile):
                 self.skip_line(inputfile, 'b')
 
                 # Symmetry is not currently supported, so this line can have one form.
-                line = next(inputfile)
+                while 'Molecular orbitals for symmetry species 1: a' not in line.strip():
+                    line = next(inputfile)
+
+                # Symmetry is not currently supported, so this line can have one form.
                 if line.strip() != 'Molecular orbitals for symmetry species 1: a':
                     return
                 

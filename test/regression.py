@@ -627,7 +627,7 @@ def testMolcas_Molcas18_test_standard_001_out(logfile):
     assert logfile.data.nbasis == 30
     assert logfile.data.nmo == 30
 
-def testMolcas_Molcas18_test_stadard_003_out(logfile):
+def testMolcas_Molcas18_test_standard_003_out(logfile):
     """This logfile has extra charged monopoles (not part of the molecule)."""
     assert logfile.data.charge == 0
 
