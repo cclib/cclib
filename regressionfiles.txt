@@ -269,6 +269,7 @@ Jaguar/Jaguar8.3/stopiter_jaguar_hf.out
 Molcas/Molcas18/test_standard_000.out
 Molcas/Molcas18/test_standard_001.out
 Molcas/Molcas18/test_standard_003.out
+Molcas/Molcas18/test_standard_005.out
 Molcas/Molcas18/test_stevenv_001.out
 Molcas/Molcas18/test_stevenv_desym.out
 Molcas/Molcas8.0/dvb_sp.out
