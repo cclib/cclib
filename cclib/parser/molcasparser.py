@@ -652,7 +652,14 @@ class Molcas(logfileparser.Logfile):
                 atomcoords.append([float(c) for c in line.split()[1:]])
                 line = next(inputfile)
 
-            self.atomcoords.append(atomcoords)
+            if len(atomcoords) == self.natom:
+                self.atomcoords.append(atomcoords)
+            else:
+                self.logger.error(
+                        'Number of atoms (%d) in parsed atom coordinates '
+                        'is smaller than previously (%d), possibly due to '
+                        'symmetry. Ignoring these coordinates.'
+                        % (len(atomcoords), self.natom))
 
         #        All orbitals with orbital energies smaller than  E(LUMO)+0.5 are printed
         #

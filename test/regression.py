@@ -631,6 +631,10 @@ def testMolcas_Molcas18_test_standard_003_out(logfile):
     """This logfile has extra charged monopoles (not part of the molecule)."""
     assert logfile.data.charge == 0
 
+def testMolcas_Molcas18_test_standard_005_out(logfile):
+    """Final geometry in optimization has fewer atoms due to symmetry, and so is ignored."""
+    assert len(logfile.data.atomcoords) == 2
+
 def testMolcas_Molcas18_test_stevenv_001_out(logfile):
     """Don't support parsing MOs for RAS (active space)."""
     assert not hasattr(logfile.data, "moenergies")
