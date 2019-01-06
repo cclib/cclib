@@ -405,6 +405,7 @@ QChem/QChem4.3/R_propylene_oxide_freq_ccsd.out
 QChem/QChem4.3/R_propylene_oxide_freq_hf_numerical_gradients.out
 QChem/QChem4.3/R_propylene_oxide_freq_mp2.out
 QChem/QChem4.3/R_propylene_oxide_freq_rimp2.out
+QChem/QChem4.4/678.out
 QChem/QChem4.4/full_2.out
 QChem/QChem4.4/srtlg.out
 QChem/QChem4.4/top.out
