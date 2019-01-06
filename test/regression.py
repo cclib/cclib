@@ -165,6 +165,48 @@ def testADF_ADF2016_fa2_adf_out(logfile):
 
 # DALTON #
 
+def testDALTON_DALTON_2013_dvb_td_normalprint_out(logfile):
+    """This original unit test prints a DFT-specific version of the excitation
+    eigenvectors, which we do not parse.
+
+    Here is an example of the general output (requiring `**RESPONSE/.PRINT 4`
+    for older versions of DALTON), followed by "PBHT MO Overlap Diagnostic"
+    which only appears for DFT calculations. Note that the reason we cannot
+    parse this for etsyms is it doesn't contain the necessary
+    coefficient. "K_IA" and "(r s) operator", which is $\kappa_{rs}$, the
+    coefficient for excitation from the r -> s MO in the response vector, is
+    not what most programs print; it is "(r s) scaled", which is $\kappa_{rs}
+    * \sqrt{S_{rr} - S_{ss}}$. Because this isn't available from the PBHT
+    output, we cannot parse it.
+
+         Eigenvector for state no.  1
+
+             Response orbital operator symmetry = 1
+             (only scaled elements abs greater than   10.00 % of max abs value)
+
+              Index(r,s)      r      s        (r s) operator      (s r) operator      (r s) scaled        (s r) scaled
+              ----------    -----  -----      --------------      --------------      --------------      --------------
+                 154        27(2)  28(2)        0.5645327267        0.0077924161        0.7983698385        0.0110201405
+                 311        58(4)  59(4)       -0.4223079545        0.0137981027       -0.5972336367        0.0195134639
+
+        ...
+
+                                    PBHT MO Overlap Diagnostic
+                                    --------------------------
+
+              I    A    K_IA      K_AI   <|I|*|A|> <I^2*A^2>    Weight   Contrib
+
+             27   28  0.564533  0.007792  0.790146  0.644560  0.309960  0.244913
+             58   59 -0.422308  0.013798  0.784974  0.651925  0.190188  0.149293
+
+    In the future, if `aooverlaps` and `mocoeffs` are available, it may be
+    possible to calculate the necessary scaled coefficients for `etsecs`.
+    """
+    assert hasattr(logfile.data, "etenergies")
+    assert not hasattr(logfile.data, "etsecs")
+    assert hasattr(logfile.data, "etsyms")
+    assert hasattr(logfile.data, "etoscs")
+
 def testDALTON_DALTON_2015_dalton_atombasis_out(logfile):
     """This logfile didn't parse due to the absence of a line in the basis
     set section.
@@ -180,6 +222,15 @@ def testDALTON_DALTON_2015_dalton_intgrl_out(logfile):
     assert hasattr(logfile.data, "nbasis")
     assert logfile.data.nbasis == 4
     assert hasattr(logfile.data, "atombasis")
+
+def testDALTON_DALTON_2015_dvb_td_normalprint_out(logfile):
+    """This original unit test prints a DFT-specific version of the excitation
+    eigenvectors, which we do not parse.
+    """
+    assert hasattr(logfile.data, "etenergies")
+    assert not hasattr(logfile.data, "etsecs")
+    assert hasattr(logfile.data, "etsyms")
+    assert hasattr(logfile.data, "etoscs")
 
 def testDALTON_DALTON_2015_stopiter_dalton_dft_out(logfile):
     """Check to ensure that an incomplete SCF is handled correctly."""
@@ -1681,6 +1732,15 @@ class DALTONSPTest_nosyms_nolabels(GenericSPTest_nosym):
     def testsymlabels(self):
         """Are all the symmetry labels either Ag/u or Bg/u?."""
 
+class DALTONTDTest_noetsecs(DALTONTDTest):
+    @unittest.skip("etsecs cannot be parsed from this file")
+    def testsecs(self):
+        pass
+    @unittest.skip("etsecs cannot be parsed from this file")
+    def testsecs_transition(self):
+        pass
+
+
 class GAMESSUSSPunTest_charge0(GenericSPunTest):
     def testcharge_and_mult(self):
         """The charge in the input was wrong."""
@@ -1812,7 +1872,9 @@ old_unittests = {
     "DALTON/DALTON-2013/C_bigbasis.aug-cc-pCVQZ.out":       DALTONBigBasisTest_aug_cc_pCVQZ,
     "DALTON/DALTON-2013/b3lyp_energy_dvb_sp_nosym.out":     DALTONSPTest_nosyms_nolabels,
     "DALTON/DALTON-2013/dvb_sp_hf_nosym.out":               GenericSPTest_nosym,
+    "DALTON/DALTON-2013/dvb_td_normalprint.out":            DALTONTDTest_noetsecs,
     "DALTON/DALTON-2013/sp_b3lyp_dvb.out":                  GenericSPTest,
+    "DALTON/DALTON-2015/dvb_td_normalprint.out":            DALTONTDTest_noetsecs,
     "DALTON/DALTON-2015/trithiolane_polar_abalnr.out":      GaussianPolarTest,
     "DALTON/DALTON-2015/trithiolane_polar_response.out":    GaussianPolarTest,
     "DALTON/DALTON-2015/trithiolane_polar_static.out":      GaussianPolarTest,

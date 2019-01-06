@@ -1117,6 +1117,9 @@ class DALTON(logfileparser.Logfile):
                 polarizability.append(line.split()[1:])
             self.polarizabilities.append(numpy.array(polarizability))
 
+        if "Starting in Dynamic Property Section (RESPONS)" in line:
+            self.section = "RESPONSE"
+
         # Static and dynamic polarizability from **RESPONSE/*LINEAR.
         # This section is *very* general and will need to be expanded later.
         # For now, only form the matrix from dipole (length gauge) values.
@@ -1148,8 +1151,9 @@ class DALTON(logfileparser.Logfile):
 
             etsyms = []
             etenergies = []
-            etoscs = []
             etsecs = []
+            etoscs = dict()
+            etoscs_keys = set()
 
             symmap = {"T": "Triplet", "F": "Singlet"}
 
@@ -1160,53 +1164,70 @@ class DALTON(logfileparser.Logfile):
                 if "Operator symmetry" in line:
                     do_triplet = line[-2]
 
-                if "@ Excited state no:" in line:
-                    etsym = line.split()[9] # -2
+                # @ Excited state no:    4 in symmetry 2  ( Au )
+                if line.startswith(" @ Excited state no:"):
+                    tokens = line.split()
+                    excited_state_num_in_sym = int(tokens[4])
+                    sym_num = int(tokens[7])
+                    etosc_key = (sym_num, excited_state_num_in_sym)
+                    etoscs_keys.add(etosc_key)
+                    etsym = tokens[9]
                     etsyms.append(symmap[do_triplet] + "-" + etsym)
-                    self.skip_lines(inputfile, ['d', 'b', 'Excitation energy in a.u.'])
+                    self.skip_lines(inputfile, ["d", "b", "Excitation energy in a.u."])
                     line = next(inputfile)
-                    etenergy = float(line.split()[1])
-                    etosc = 0.0
-                    etenergies.append(etenergy)
+                    etenergies.append(self.float(line.split()[3]))
+                    self.skip_lines(inputfile, ["b", "@ Total energy", "b"])
 
-                    while "The dominant contributions" not in line:
-                        line = next(inputfile)
-                        if '@ Oscillator strength (LENGTH)' in line:
-                            f_i = float(line.split()[5])
-                            etosc += f_i
-                    etoscs.append(etosc)
-
-                    self.skip_line(inputfile, 'b')
+                if line.startswith("@ Operator type:"):
                     line = next(inputfile)
-                    # [0] is the starting (occupied) MO
-                    # [1] is the ending (unoccupied) MO
-                    # [2] and [3] are the excitation/deexcitation coefficients
-                    # [4] is the orbital overlap
-                    # [5] is the ...
-                    # [6] is the ...
-                    # [7] is the ...
-                    assert "I    A    K_IA      K_AI   <|I|*|A|> <I^2*A^2>    Weight   Contrib" in line
-                    self.skip_line(inputfile, 'b')
-                    line = next(inputfile)
-                    sec = []
+                    assert line.startswith("@ Oscillator strength")
+                    if etosc_key not in etoscs:
+                        etoscs[etosc_key] = 0.0
+                    etoscs[etosc_key] += self.float(line.split()[5])
+                    self.skip_line(inputfile, "b")
 
+                # To understand why the "PBHT MO Overlap Diagnostic" section
+                # cannot be used, see
+                # `test/regression.py/testDALTON_DALTON_2013_dvb_td_normalprint_out`.
+                if "Eigenvector for state no." in line:
+                    assert int(line.split()[4]) == excited_state_num_in_sym
+                    self.skip_lines(inputfile, [
+                        "b",
+                        "Response orbital operator symmetry",
+                        "only scaled elements",
+                        "b",
+                        "Index(r,s)",
+                        "d"
+                    ])
+                    line = next(inputfile)
+                    etsec = []
                     while line.strip():
-                        chomp = line.split()
-                        startidx = int(chomp[0]) - 1
-                        endidx = int(chomp[1]) - 1
-                        contrib = float(chomp[2])
-                        # Since DALTON is restricted open-shell only,
-                        # there is not distinction between alpha and
-                        # beta spin.
-                        sec.append([(startidx, 0), (endidx, 0), contrib])
+                        tokens = line.split()
+                        startidx = int(tokens[1].split("(")[0]) - 1
+                        endidx = int(tokens[2].split("(")[0]) - 1
+                        # `(r s) scaled`; to handle anything other than
+                        # CIS/TDA properly, the deexcitation coefficient `(s
+                        # r) scaled` should also be considered, but this
+                        # requires a rework of the attribute structure.
+                        contrib = float(tokens[5])
+                        # Since DALTON is restricted open-shell only, there is
+                        # no distinction between alpha and beta spin.
+                        etsec.append([(startidx, 0), (endidx, 0), contrib])
                         line = next(inputfile)
+                    etsecs.append(etsec)
 
-                    etsecs.append(sec)
-
-            self.set_attribute('etsyms', etsyms)
-            self.set_attribute('etenergies', etenergies)
-            self.set_attribute('etoscs', etoscs)
-            self.set_attribute('etsecs', etsecs)
+            self.set_attribute("etsyms", etsyms)
+            self.set_attribute("etenergies", etenergies)
+            if etsecs:
+                self.set_attribute("etsecs", etsecs)
+            if etoscs:
+                for k in etoscs_keys:
+                    # If the oscillator strength of a transition is known to
+                    # be zero for symmetry reasons, it isn't printed, however
+                    # we need it for consistency; if it wasn't found, add it.
+                    if k not in etoscs:
+                        etoscs[k] = 0.0
+                self.set_attribute("etoscs", [etoscs[k] for k in sorted(etoscs)])
 
         if line[:37] == ' >>>> Total wall time used in DALTON:':
             self.metadata['success'] = True
