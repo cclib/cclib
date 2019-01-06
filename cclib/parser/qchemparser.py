@@ -20,7 +20,7 @@ from cclib.parser import utils
 
 
 class QChem(logfileparser.Logfile):
-    """A Q-Chem 4 log file."""
+    """A Q-Chem log file."""
 
     def __init__(self, *args, **kwargs):
 
@@ -338,6 +338,41 @@ cannot be determined. Rerun without `$molecule read`."""
                 rowcounter += 1
             colcounter += self.ncolsblock
         return nparray
+
+    def parse_orbital_energies_and_symmetries(self, inputfile):
+        energies = []
+        symbols = []
+
+        line = next(inputfile)
+        # Sometimes Q-Chem gets a little confused...
+        while 'Warning : Irrep of orbital' in line:
+            line = next(inputfile)
+        line = next(inputfile)
+
+        # The end of the block is either a blank line or only dashes.
+        while not self.re_dashes_and_spaces.search(line) \
+              or 'Warning : Irrep of orbital' in line:
+            if 'Occupied' in line or 'Virtual' in line:
+                # A nice trick to find where the HOMO is.
+                if 'Virtual' in line:
+                    if not hasattr(self, "homos"):
+                        self.homos = [len(energies) - 1]
+                    elif len(self.homos) == 1 and self.unrestricted:
+                        self.homos.append(len(energies) - 1)
+                line = next(inputfile)
+            raw_energies = line.split()
+            for e in raw_energies:
+                try:
+                    energy = utils.convertor(self.float(e), 'hartree', 'eV')
+                except ValueError:
+                    energy = numpy.nan
+                energies.append(energy)
+            line = next(inputfile)
+            symbols.extend(line.split()[1::2])
+            line = next(inputfile)
+
+        return energies, symbols
+
 
     def generate_atom_map(self):
         """Generate the map to go from Q-Chem atom numbering:
@@ -1082,69 +1117,12 @@ cannot be determined. Rerun without `$molecule read`."""
 
                 self.skip_line(inputfile, 'dashes')
                 line = next(inputfile)
-                # Sometimes Q-Chem gets a little confused...
-                while 'Warning : Irrep of orbital' in line:
-                    line = next(inputfile)
-                line = next(inputfile)
-                energies_alpha = []
-                symbols_alpha = []
-                if self.unrestricted:
-                    energies_beta = []
-                    symbols_beta = []
-                line = next(inputfile)
-
-                # The end of the block is either a blank line or only dashes.
-                while not self.re_dashes_and_spaces.search(line):
-                    if 'Occupied' in line or 'Virtual' in line:
-                        # A nice trick to find where the HOMO is.
-                        if 'Virtual' in line:
-                            self.homos = [len(energies_alpha)-1]
-                        line = next(inputfile)
-                    # Parse the energies and symmetries in pairs of lines.
-                    # energies = [utils.convertor(energy, 'hartree', 'eV')
-                    #             for energy in map(float, line.split())]
-                    # This convoluted bit handles '*******' when present.
-                    energies = []
-                    energy_line = line.split()
-                    for e in energy_line:
-                        try:
-                            energy = utils.convertor(self.float(e), 'hartree', 'eV')
-                        except ValueError:
-                            energy = numpy.nan
-                        energies.append(energy)
-                    energies_alpha.extend(energies)
-                    line = next(inputfile)
-                    symbols = line.split()[1::2]
-                    symbols_alpha.extend(symbols)
-                    line = next(inputfile)
-
+                energies_alpha, symbols_alpha = self.parse_orbital_energies_and_symmetries(inputfile)
                 line = next(inputfile)
                 # Only look at the second block if doing an unrestricted calculation.
                 # This might be a problem for ROHF/ROKS.
                 if self.unrestricted:
-                    assert 'Beta MOs' in line
-                    self.skip_line(inputfile, '-- Occupied --')
-                    line = next(inputfile)
-                    while not self.re_dashes_and_spaces.search(line):
-                        if 'Occupied' in line or 'Virtual' in line:
-                            # This will definitely exist, thanks to the above block.
-                            if 'Virtual' in line:
-                                if len(self.homos) == 1:
-                                    self.homos.append(len(energies_beta)-1)
-                            line = next(inputfile)
-                        energies = []
-                        energy_line = line.split()
-                        for e in energy_line:
-                            try:
-                                energy = utils.convertor(self.float(e), 'hartree', 'eV')
-                            except ValueError:
-                                energy = numpy.nan
-                            energies.append(energy)
-                        energies_beta.extend(energies)
-                        line = next(inputfile)
-                        symbols = line.split()[1::2]
-                        symbols_beta.extend(symbols)
-                        line = next(inputfile)
+                    energies_beta, symbols_beta = self.parse_orbital_energies_and_symmetries(inputfile)
 
                 # For now, only keep the last set of MO energies, even though it is
                 # printed at every step of geometry optimizations and fragment jobs.
