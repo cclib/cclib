@@ -11,7 +11,7 @@ https://sourceforge.net/projects/pyquante/files/PyQuante-1.6/PyQuante-1.6.5/PyQu
 sphinx
 
 # For testing
-pytest
+pytest>=3.6
 coverage
 pytest-cov
 # This library is in the standard library starting from Python 3.3.
