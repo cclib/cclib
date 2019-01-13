@@ -60,7 +60,6 @@ class QChem(logfileparser.Logfile):
             'Done with counterpoise correction on fragments',
         )
 
-
         # Compile the dashes-and-or-spaces-only regex.
         self.re_dashes_and_spaces = re.compile('^[\s-]+$')
 
@@ -340,30 +339,31 @@ cannot be determined. Rerun without `$molecule read`."""
         return nparray
 
     def parse_orbital_energies_and_symmetries(self, inputfile):
+        """Parse the 'Orbital Energies (a.u.)' block appearing after SCF converges,
+        which optionally includes MO symmetries. Based upon the
+        Occupied/Virtual labeling, the HOMO is also parsed.
+        """
         energies = []
         symbols = []
 
         line = next(inputfile)
         # Sometimes Q-Chem gets a little confused...
-        while 'Warning : Irrep of orbital' in line:
+        while "MOs" not in line:
             line = next(inputfile)
         line = next(inputfile)
 
         # The end of the block is either a blank line or only dashes.
         while not self.re_dashes_and_spaces.search(line) \
-              or 'Warning : Irrep of orbital' in line:
+              and not 'Warning : Irrep of orbital' in line:
             if 'Occupied' in line or 'Virtual' in line:
                 # A nice trick to find where the HOMO is.
                 if 'Virtual' in line:
-                    if not hasattr(self, "homos"):
-                        self.homos = [len(energies) - 1]
-                    elif len(self.homos) == 1 and self.unrestricted:
-                        self.homos.append(len(energies) - 1)
+                    homo = len(energies) - 1
                 line = next(inputfile)
             tokens = line.split()
             # If the line contains letters, it must be the MO
             # symmetries. Otherwise, it's the energies.
-            if any(token.isalpha() for token in tokens):
+            if re.search("[a-zA-Z]", line):
                 symbols.extend(tokens[1::2])
             else:
                 for e in tokens:
@@ -374,7 +374,11 @@ cannot be determined. Rerun without `$molecule read`."""
                     energies.append(energy)
             line = next(inputfile)
 
-        return energies, symbols
+        # MO symmetries are either not present or there is one for each MO
+        # (energy).
+        assert len(symbols) in (0, len(energies))
+
+        return energies, symbols, homo
 
 
     def generate_atom_map(self):
@@ -1118,6 +1122,29 @@ cannot be determined. Rerun without `$molecule read`."""
                 #  25 Bu
                 #  --------------------------------------------------------------
 
+                self.skip_line(inputfile, 'dashes')
+                line = next(inputfile)
+                energies_alpha, symbols_alpha, homo_alpha = self.parse_orbital_energies_and_symmetries(inputfile)
+                # Only look at the second block if doing an unrestricted calculation.
+                # This might be a problem for ROHF/ROKS.
+                if self.unrestricted:
+                    energies_beta, symbols_beta, homo_beta = self.parse_orbital_energies_and_symmetries(inputfile)
+
+                # For now, only keep the last set of MO energies, even though it is
+                # printed at every step of geometry optimizations and fragment jobs.
+                self.set_attribute('moenergies', [numpy.array(energies_alpha)])
+                self.set_attribute('homos', [homo_alpha])
+                self.set_attribute('mosyms', [symbols_alpha])
+                if self.unrestricted:
+                    self.moenergies.append(numpy.array(energies_beta))
+                    self.homos.append(homo_beta)
+                    self.mosyms.append(symbols_beta)
+
+                self.set_attribute('nmo', len(self.moenergies[0]))
+
+            # Molecular orbital energies, no symmetries.
+            if line.strip() == 'Orbital Energies (a.u.)':
+
                 # In the case of no orbital symmetries, the beta spin block is not
                 # present for restricted calculations.
 
@@ -1153,40 +1180,19 @@ cannot be determined. Rerun without `$molecule read`."""
 
                 self.skip_line(inputfile, 'dashes')
                 line = next(inputfile)
-                energies_alpha, symbols_alpha = self.parse_orbital_energies_and_symmetries(inputfile)
-                line = next(inputfile)
+                energies_alpha, _, homo_alpha = self.parse_orbital_energies_and_symmetries(inputfile)
                 # Only look at the second block if doing an unrestricted calculation.
                 # This might be a problem for ROHF/ROKS.
                 if self.unrestricted:
-                    energies_beta, symbols_beta = self.parse_orbital_energies_and_symmetries(inputfile)
+                    energies_beta, _, homo_beta = self.parse_orbital_energies_and_symmetries(inputfile)
 
                 # For now, only keep the last set of MO energies, even though it is
                 # printed at every step of geometry optimizations and fragment jobs.
-                self.moenergies = [numpy.array(energies_alpha)]
-                self.mosyms = [symbols_alpha]
+                self.set_attribute('moenergies', [numpy.array(energies_alpha)])
+                self.set_attribute('homos', [homo_alpha])
                 if self.unrestricted:
                     self.moenergies.append(numpy.array(energies_beta))
-                    self.mosyms.append(symbols_beta)
-
-                self.set_attribute('nmo', len(self.moenergies[0]))
-
-            # Molecular orbital energies, no symmetries.
-            if line.strip() == 'Orbital Energies (a.u.)':
-
-                self.skip_lines(inputfile, ['dashes', 'blank'])
-                line = next(inputfile)
-                energies_alpha, _ = self.parse_orbital_energies_and_symmetries(inputfile)
-                line = next(inputfile)
-                # Only look at the second block if doing an unrestricted calculation.
-                # This might be a problem for ROHF/ROKS.
-                if self.unrestricted:
-                    energies_beta, _ = self.parse_orbital_energies_and_symmetries(inputfile)
-
-                # For now, only keep the last set of MO energies, even though it is
-                # printed at every step of geometry optimizations and fragment jobs.
-                self.moenergies = [numpy.array(energies_alpha)]
-                if self.unrestricted:
-                    self.moenergies.append(numpy.array(energies_beta))
+                    self.homos.append(homo_beta)
 
                 self.set_attribute('nmo', len(self.moenergies[0]))
 
