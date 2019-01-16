@@ -39,10 +39,12 @@ ADF/ADF2016/fa2.adf.out
 DALTON/DALTON-2013/b3lyp_energy_dvb_sp_nosym.out
 DALTON/DALTON-2013/C_bigbasis.aug-cc-pCVQZ.out
 DALTON/DALTON-2013/dvb_sp_hf_nosym.out
+DALTON/DALTON-2013/dvb_td_normalprint.out
 DALTON/DALTON-2013/sp_b3lyp_dvb.out
 DALTON/DALTON-2013/td_b3lyp_dvb.out
 DALTON/DALTON-2015/dalton_atombasis.out
 DALTON/DALTON-2015/dalton_intgrl.out
+DALTON/DALTON-2015/dvb_td_normalprint.out
 DALTON/DALTON-2015/stopiter_dalton_dft.out
 DALTON/DALTON-2015/stopiter_dalton_hf.out
 DALTON/DALTON-2015/trithiolane_polar_abalnr.out
