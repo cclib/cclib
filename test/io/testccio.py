@@ -90,7 +90,7 @@ class ccopenTest(unittest.TestCase):
         """Does the function works with URLs such good as with filenames?"""
         fpath = os.path.join(__datadir__, "data")
         base_url = "https://raw.githubusercontent.com/cclib/cclib/master/data/"
-        filenames = ["DALTON/basicDALTON-2013/dvb_td.out", "Molpro/basicMolpro2012/h2o_mp2.out"]
+        filenames = ["QChem/basicQChem5.1/dvb_td.out", "Molpro/basicMolpro2012/h2o_mp2.out"]
         for fname in filenames:
             self.assertEqual(self.ccopen(os.path.join(fpath, fname), quiet=True).parse().getattributes(tolists=True),
                              self.ccopen(base_url + fname, quiet=True).parse().getattributes(tolists=True))
