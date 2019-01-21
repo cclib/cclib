@@ -260,6 +260,8 @@ class Logfile(object):
         optdone_as_list = optdone_as_list if isinstance(optdone_as_list, bool) else False
         if optdone_as_list:
             self.datatype = ccData
+        # Parsing of Natural Orbitals and Natural Spin Orbtials into one attribute
+        self.unified_no_nso = kwds.get("future",False)
 
     def __setattr__(self, name, value):
 

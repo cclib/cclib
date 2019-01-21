@@ -63,6 +63,8 @@ class ccData(object):
         nmo -- number of molecular orbitals (integer)
         nocoeffs -- natural orbital coefficients (array[2])
         nooccnos -- natural orbital occupation numbers (array[1])
+        nsocoeffs -- natural spin orbital coefficients (list of array[2])
+        nsooccnos -- natural spin orbital occupation numbers (list of array[1])
         optdone -- flags whether an optimization has converged (Boolean)
         optstatus -- optimization status for each set of atomic coordinates (array[1])
         polarizabilities -- (dipole) polarizabilities, static or dynamic (list of arrays[2])
@@ -135,6 +137,8 @@ class ccData(object):
        "nmo":              Attribute(int,              'MO number',                   'properties:orbitals'),
        "nocoeffs":         Attribute(numpy.ndarray,    'TBD',                         'N/A'),
        "nooccnos":         Attribute(numpy.ndarray,    'TBD',                         'N/A'),
+       "nsocoeffs":         Attribute(list,    'TBD',                         'N/A'),
+       "nsooccnos":         Attribute(list,    'TBD',                         'N/A'),
        "optdone":          Attribute(list,             'done',                        'optimization'),
        "optstatus":        Attribute(numpy.ndarray,    'status',                      'optimization'),
        "polarizabilities": Attribute(list,             'polarizabilities',            'N/A'),

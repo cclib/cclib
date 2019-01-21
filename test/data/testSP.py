@@ -168,22 +168,44 @@ class GenericSPTest(unittest.TestCase):
 
     def testlengthmoenergies(self):
         """Is the number of evalues equal to nmo?"""
-        self.assertEquals(len(self.data.moenergies[0]), self.data.nmo)
+        if hasattr(self.data, "moenergies"):
+            self.assertEquals(len(self.data.moenergies[0]), self.data.nmo)
 
     def testtypemoenergies(self):
         """Is moenergies a list containing one numpy array?"""
-        self.assertEquals(type(self.data.moenergies), type([]))
-        self.assertEquals(type(self.data.moenergies[0]), type(numpy.array([])))
+        if hasattr(self.data, "moenergies"):
+            self.assertIsInstance(self.data.moenergies, list)
+            self.assertIsInstance(self.data.moenergies[0], numpy.ndarray)
 
     @skipForParser('DALTON', 'mocoeffs not implemented yet')
     @skipForLogfile('Jaguar/basicJaguar7', 'Data file does not contain enough information. Can we make a new one?')
     @skipForLogfile('Psi3/basicPsi3', 'MO coefficients are printed separately for each SALC')
     def testdimmocoeffs(self):
         """Are the dimensions of mocoeffs equal to 1 x nmo x nbasis?"""
-        self.assertEquals(type(self.data.mocoeffs), type([]))
-        self.assertEquals(len(self.data.mocoeffs), 1)
-        self.assertEquals(self.data.mocoeffs[0].shape,
+        if hasattr(self.data, "mocoeffs"):
+            self.assertIsInstance(self.data.mocoeffs, list)
+            self.assertEquals(len(self.data.mocoeffs), 1)
+            self.assertEquals(self.data.mocoeffs[0].shape,
                           (self.data.nmo, self.data.nbasis))
+    
+    @skipForParser('DALTON', 'mocoeffs not implemented yet')
+    @skipForLogfile('Jaguar/basicJaguar7', 'Data file does not contain enough information. Can we make a new one?')
+    @skipForLogfile('Psi3/basicPsi3', 'MO coefficients are printed separately for each SALC')
+    def testfornoormo(self):
+        """Do we have NOs or MOs?"""
+        self.assertEquals(hasattr(self.data, "nocoeffs") or hasattr(self.data, "mocoeffs"), True)
+
+    def testdimnoccnos(self):
+        """Is the length of nooccnos equal to nmo?"""
+        if hasattr(self.data, "nooccnos"):
+            self.assertIsInstance(self.data.nooccnos, numpy.ndarray)
+            self.assertEquals(len(self.data.nooccnos), self.data.nmo)
+
+    def testdimnocoeffs(self):
+        """Are the dimensions of nocoeffs equal to nmo x nmo?"""
+        if hasattr(self.data, "nocoeffs"):
+            self.assertIsInstance(self.data.nocoeffs, numpy.ndarray)
+            self.assertEquals(self.data.nocoeffs.shape, (self.data.nmo, self.data.nmo))
 
     @skipForParser('DALTON', 'To print: **INTEGRALS\n.PROPRI')
     @skipForParser('Molcas','The parser is still being developed so we skip this test')
