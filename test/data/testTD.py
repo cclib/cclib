@@ -59,7 +59,7 @@ class GenericTDTest(unittest.TestCase):
     @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testsecs_transition(self):
         """Is the lowest E transition from the HOMO or to the LUMO?"""
-        idx_minenergy = numpy.argmin(self.data.etoscs)
+        idx_minenergy = numpy.argmin(self.data.etenergies)
         sec = self.data.etsecs[idx_minenergy]
         t = [(c*c, s, e) for (s, e, c) in sec]
         t.sort()
