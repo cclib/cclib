@@ -970,7 +970,7 @@ class Gaussian(logfileparser.Logfile):
             i = 0
             while len(line) > 18 and line[17] == '(':
                 if line.find('Virtual') >= 0:
-                    self.homos = numpy.array([i-1], "i")  # 'HOMO' indexes the HOMO in the arrays
+                    self.homos = [i - 1]
                 parts = line[17:].split()
                 for x in parts:
                     self.mosyms[0].append(self.normalisesym(x.strip('()')))
@@ -994,11 +994,10 @@ class Gaussian(logfileparser.Logfile):
                         if (hasattr(self, "homos")):
                             # Extend the array to two elements
                             # 'HOMO' indexes the HOMO in the arrays
-                            self.homos.resize([2])
-                            self.homos[1] = i-1
+                            self.homos.append(i-1)
                         else:
                             # 'HOMO' indexes the HOMO in the arrays
-                            self.homos = numpy.array([i-1], "i")
+                            self.homos = [i - 1]
                     parts = line[17:].split()
                     for x in parts:
                         self.mosyms[1].append(self.normalisesym(x.strip('()')))
@@ -1031,7 +1030,7 @@ class Gaussian(logfileparser.Logfile):
 
                     # If there aren't any symmetries, this is a good way to find the HOMO.
                     HOMO = len(self.moenergies[0])-1
-                    self.homos = numpy.array([HOMO], "i")
+                    self.homos = [HOMO]
 
                 # Convert to floats and append to moenergies, but sometimes Gaussian
                 #  doesn't print correctly so test for ValueError (bug 1756789).
@@ -1051,7 +1050,7 @@ class Gaussian(logfileparser.Logfile):
             # any alpha virtual orbitals
             if not hasattr(self, "homos"):
                 HOMO = len(self.moenergies[0])-1
-                self.homos = numpy.array([HOMO], "i")
+                self.homos = [HOMO]
 
             if line.find('Beta') == 2:
                 self.moenergies.append([])
@@ -1063,8 +1062,7 @@ class Gaussian(logfileparser.Logfile):
                     # If there aren't any symmetries, this is a good way to find the HOMO.
                     # Also, check for consistency if homos was already parsed.
                     HOMO = len(self.moenergies[1])-1
-                    self.homos.resize([2])
-                    self.homos[1] = HOMO
+                    self.homos.append(HOMO)
 
                 part = line[28:]
                 i = 0
