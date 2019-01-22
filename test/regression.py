@@ -207,6 +207,7 @@ def testDALTON_DALTON_2013_dvb_td_normalprint_out(logfile):
     assert hasattr(logfile.data, "etsyms")
     assert hasattr(logfile.data, "etoscs")
 
+
 def testDALTON_DALTON_2015_dalton_atombasis_out(logfile):
     """This logfile didn't parse due to the absence of a line in the basis
     set section.
@@ -275,6 +276,87 @@ def testDALTON_DALTON_2018_dft_properties_nosym_H2O_cc_pVDZ_out(logfile):
     """
     assert "package_version" in logfile.data.metadata
     assert logfile.data.metadata["package_version"] == "2019.alpha"
+
+
+def testDALTON_DALTON_2018_tdhf_2000_out(logfile):
+    """Ensure etsecs are being parsed from a TDHF calculation without symmetry and
+    a big print level.
+    """
+    assert hasattr(logfile.data, "etsecs")
+    for attr in ("etenergies", "etsecs", "etsyms", "etoscs"):
+        assert len(getattr(logfile.data, attr)) == 9
+    assert logfile.data.etsecs[0][0] == [(1, 0), (2, 0), -0.9733558768]
+
+
+def testDALTON_DALTON_2018_tdhf_2000_sym_out(logfile):
+    """Ensure etsecs are being parsed from a TDHF calculation with symmetry and a
+    big print level.
+    """
+    assert hasattr(logfile.data, "etsecs")
+    for attr in ("etenergies", "etsecs", "etsyms", "etoscs"):
+        assert len(getattr(logfile.data, attr)) == 3
+    assert logfile.data.etsecs[0][0] == [(1, 0), (2, 0), 0.9733562358]
+
+
+def testDALTON_DALTON_2018_tdhf_normal_out(logfile):
+    """Ensure etsecs are being parsed from a TDHF calculation without symmetry and
+    a normal print level.
+    """
+    assert hasattr(logfile.data, "etsecs")
+    for attr in ("etenergies", "etsecs", "etsyms", "etoscs"):
+        assert len(getattr(logfile.data, attr)) == 9
+    assert logfile.data.etsecs[0][0] == [(1, 0), (2, 0), -0.9733558768]
+
+
+def testDALTON_DALTON_2018_tdhf_normal_sym_out(logfile):
+    """Ensure etsecs are being parsed from a TDHF calculation with symmetry and a
+    normal print level.
+    """
+    assert hasattr(logfile.data, "etsecs")
+    for attr in ("etenergies", "etsecs", "etsyms", "etoscs"):
+        assert len(getattr(logfile.data, attr)) == 3
+    assert logfile.data.etsecs[0][0] == [(1, 0), (2, 0), 0.9733562358]
+
+
+def testDALTON_DALTON_2018_tdpbe_2000_out(logfile):
+    """Ensure etsecs are being parsed from a TDDFT calculation without symmetry
+    and a big print level.
+    """
+    assert hasattr(logfile.data, "etsecs")
+    for attr in ("etenergies", "etsecs", "etsyms", "etoscs"):
+        assert len(getattr(logfile.data, attr)) == 9
+    assert logfile.data.etsecs[0][0] == [(1, 0), (2, 0), 0.9992665559]
+
+
+def testDALTON_DALTON_2018_tdpbe_2000_sym_out(logfile):
+    """Ensure etsecs are being parsed from a TDDFT calculation with symmetry and a
+    big print level.
+    """
+    assert hasattr(logfile.data, "etsecs")
+    for attr in ("etenergies", "etsecs", "etsyms", "etoscs"):
+        assert len(getattr(logfile.data, attr)) == 3
+    assert logfile.data.etsecs[0][0] == [(1, 0), (2, 0), 0.9992672154]
+
+
+def testDALTON_DALTON_2018_tdpbe_normal_out(logfile):
+    """Ensure etsecs are being parsed from a TDDFT calculation without symmetry
+    and a normal print level.
+    """
+    assert hasattr(logfile.data, "etsecs")
+    for attr in ("etenergies", "etsecs", "etsyms", "etoscs"):
+        assert len(getattr(logfile.data, attr)) == 9
+    assert logfile.data.etsecs[0][0] == [(1, 0), (2, 0), 0.9992665559]
+
+
+def testDALTON_DALTON_2018_tdpbe_normal_sym_out(logfile):
+    """Ensure etsecs are being parsed from a TDDFT calculation with symmetry and a
+    normal print level.
+    """
+    assert hasattr(logfile.data, "etsecs")
+    for attr in ("etenergies", "etsecs", "etsyms", "etoscs"):
+        assert len(getattr(logfile.data, attr)) == 3
+    assert logfile.data.etsecs[0][0] == [(1, 0), (2, 0), 0.9992672154]
+
 
 # Firefly #
 
