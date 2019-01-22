@@ -2,7 +2,7 @@ language: python
 python:
   - 2.7
   - 3.4
-  - 3.6
+  - 3.7
 addons:
     apt:
       packages:
@@ -30,13 +30,13 @@ before_script:
   - install -dm755 "${THEME_DIR}"
 
 script:
+  - env | sort
   - bash travis/run_pytest.bash
   - bash travis/build_docs.bash
-  - env | sort
 
 after_success:
   - |
-    if [[ "${TRAVIS_BRANCH}" == master && "${TRAVIS_PULL_REQUEST}" == false && $TRAVIS_PYTHON_VERSION == 3.6 ]];
+    if [[ "${TRAVIS_BRANCH}" == master && "${TRAVIS_PULL_REQUEST}" == false && $TRAVIS_PYTHON_VERSION == 3.7 ]];
     then
         # Commits to master that are not pull requests, that is, only actual
         # addition of code to master, should deploy the documentation.
