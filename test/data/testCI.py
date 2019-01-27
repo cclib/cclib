@@ -57,11 +57,11 @@ class GenericCISTest(unittest.TestCase):
         triplets = [self.data.etenergies[i] for i in indices1]
         # All programs do singlets.
         singletdiff = singlets[:4] - self.etenergies0
-        self.failUnless(numpy.alltrue(singletdiff < 50))
+        self.assertTrue(numpy.alltrue(singletdiff < 50))
         # Not all programs do triplets (i.e. Jaguar).
         if len(triplets) >= 4:
             tripletdiff = triplets[:4] - self.etenergies1
-            self.failUnless(numpy.alltrue(tripletdiff < 50))
+            self.assertTrue(numpy.alltrue(tripletdiff < 50))
 
     @skipForParser('Molcas','The parser is still being developed so we skip this test')
     @skipForParser('Turbomole','The parser is still being developed so we skip this test')
@@ -69,7 +69,7 @@ class GenericCISTest(unittest.TestCase):
         """Is the sum of etsecs close to 1?"""
         etsec = self.data.etsecs[2] # Pick one with several contributors
         sumofsec = sum([z*z for (x, y, z) in etsec])
-        self.assertAlmostEquals(sumofsec, 1.0, delta=0.02)
+        self.assertAlmostEqual(sumofsec, 1.0, delta=0.02)
 
     @skipForParser('Molcas','The parser is still being developed so we skip this test')
     @skipForParser('Turbomole','The parser is still being developed so we skip this test')
@@ -86,7 +86,7 @@ class GenericCISTest(unittest.TestCase):
                 for s in singlets[i]:
                     if s[0][0] == exc[0] and s[1][0] == exc[1]:
                         found = True
-                        self.assertAlmostEquals(abs(s[2]), abs(exc[2]), delta=self.etsecs_precision)
+                        self.assertAlmostEqual(abs(s[2]), abs(exc[2]), delta=self.etsecs_precision)
                 if not found:
                     self.fail("Excitation %i->%s not found (singlet state %i)" %(exc[0], exc[1], i))
         # Not all programs do triplets (i.e. Jaguar).
@@ -97,7 +97,7 @@ class GenericCISTest(unittest.TestCase):
                     for s in triplets[i]:
                         if s[0][0] == exc[0] and s[1][0] == exc[1]:
                             found = True
-                            self.assertAlmostEquals(abs(s[2]), abs(exc[2]), delta=self.etsecs_precision)
+                            self.assertAlmostEqual(abs(s[2]), abs(exc[2]), delta=self.etsecs_precision)
                     if not found:
                         self.fail("Excitation %i->%s not found (triplet state %i)" %(exc[0], exc[1], i))
 
@@ -107,11 +107,11 @@ class GAMESSCISTest(GenericCISTest):
 
     def testnocoeffs(self):
         """Are natural orbital coefficients the right size?"""
-        self.assertEquals(self.data.nocoeffs.shape, (self.data.nmo, self.data.nbasis))
+        self.assertEqual(self.data.nocoeffs.shape, (self.data.nmo, self.data.nbasis))
 
     def testnooccnos(self):
         """Are natural orbital occupation numbers the right size?"""
-        self.assertEquals(self.data.nooccnos.shape, (self.data.nmo, ))
+        self.assertEqual(self.data.nooccnos.shape, (self.data.nmo, ))
 
 
 class GaussianCISTest(GenericCISTest):
@@ -120,11 +120,11 @@ class GaussianCISTest(GenericCISTest):
 
     def testnocoeffs(self):
         """Are natural orbital coefficients the right size?"""
-        self.assertEquals(self.data.nocoeffs.shape, (self.data.nmo, self.data.nbasis))
+        self.assertEqual(self.data.nocoeffs.shape, (self.data.nmo, self.data.nbasis))
 
     def testnooccnos(self):
         """Are natural orbital occupation numbers the right size?"""
-        self.assertEquals(self.data.nooccnos.shape, (self.data.nmo, ))
+        self.assertEqual(self.data.nooccnos.shape, (self.data.nmo, ))
 
 
 

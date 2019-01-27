@@ -64,7 +64,7 @@ class GenericTDTest(unittest.TestCase):
         t = [(c*c, s, e) for (s, e, c) in sec]
         t.sort()
         t.reverse()
-        self.assert_(t[0][1][0] == self.data.homos[0] or
+        self.assertTrue(t[0][1][0] == self.data.homos[0] or
                      t[0][2][0] == self.data.homos[0]+1, t[0])
 
     @skipForParser('Molcas','The parser is still being developed so we skip this test')    
