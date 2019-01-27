@@ -854,6 +854,8 @@ def testORCA_ORCA4_0_1_ttt_td_out(logfile):
     assert len(logfile.data.etsecs) == 24
     assert len(logfile.data.etsecs[0]) == 1
     assert numpy.isnan(logfile.data.etsecs[0][0][2])
+    assert len(logfile.data.etrotats) == 24
+    assert logfile.data.etrotats[13] == -0.03974
 
 def testORCA_ORCA4_0_invalid_literal_for_float_out(logfile):
     """MO coefficients are glued together, see #629."""
