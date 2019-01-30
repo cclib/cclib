@@ -746,7 +746,7 @@ def testGaussian_Gaussian09_relaxed_PES_testCO2_log(logfile):
     # The next new point is after a convergence.
     assert optstatus[new_points[3]-1] == ccData.OPT_DONE
     assert all(optstatus[i] == ccData.OPT_UNKNOWN for i in range(new_points[2]+1, new_points[3]-1))
-    
+
     # All subsequent point are both new and converged, since they seem
     # to have converged in a single step.
     assert all(s == ccData.OPT_DONE + ccData.OPT_NEW for s in optstatus[new_points[3]:])
@@ -1788,12 +1788,7 @@ for m, module in all_modules.items():
         if name[-4:] == "Test":
             globals()[name] = getattr(module, name)
 
-class GenericSPTest_nosym(GenericSPTest):
-    def testsymmetry(self):
-        assert self.data.metadata["symmetry_full"] == "c1"
-        assert self.data.metadata["symmetry_abelian"] == "c1"
-
-class ADFSPTest_nosyms(ADFSPTest, GenericSPTest_nosym):
+class ADFSPTest_nosyms(ADFSPTest, GenericSPTest):
     foverlap00 = 1.00000
     foverlap11 = 0.99999
     foverlap22 = 0.99999
@@ -1811,7 +1806,7 @@ class DALTONBigBasisTest_aug_cc_pCVQZ(GenericBigBasisTest):
     contractions = { 6: 29 }
     spherical = True
 
-class DALTONSPTest_nosyms_nolabels(GenericSPTest_nosym):
+class DALTONSPTest_nosyms_nolabels(GenericSPTest):
     @unittest.skip('?')
     def testsymlabels(self):
         """Are all the symmetry labels either Ag/u or Bg/u?."""
@@ -1864,10 +1859,6 @@ class JaguarSPTest_6_31gss(JaguarSPTest):
     nbasisdict = {1: 5, 6: 15}
     b3lyp_energy = -10530
     overlap01 = 0.22
-    def testsymmetry(self):
-        """Symmetry is detected, but disabled."""
-        assert self.data.metadata["symmetry_full"] == "c2h"
-        assert self.data.metadata["symmetry_abelian"] == "c1"
 
 class JaguarSPunTest_nmo_all(JaguarSPunTest):
     def testmoenergies(self):
@@ -1886,7 +1877,7 @@ class JaguarGeoOptTest_6_31gss(GenericGeoOptTest):
 class MolproBigBasisTest_cart(MolproBigBasisTest):
     spherical = False
 
-class OrcaSPTest_3_21g(OrcaSPTest, GenericSPTest_nosym):
+class OrcaSPTest_3_21g(OrcaSPTest, GenericSPTest):
     nbasisdict = {1: 2, 6: 9}
     b3lyp_energy = -10460
     overlap01 = 0.19
@@ -1955,7 +1946,7 @@ old_unittests = {
 
     "DALTON/DALTON-2013/C_bigbasis.aug-cc-pCVQZ.out":       DALTONBigBasisTest_aug_cc_pCVQZ,
     "DALTON/DALTON-2013/b3lyp_energy_dvb_sp_nosym.out":     DALTONSPTest_nosyms_nolabels,
-    "DALTON/DALTON-2013/dvb_sp_hf_nosym.out":               GenericSPTest_nosym,
+    "DALTON/DALTON-2013/dvb_sp_hf_nosym.out":               GenericSPTest,
     "DALTON/DALTON-2013/dvb_td_normalprint.out":            DALTONTDTest_noetsecs,
     "DALTON/DALTON-2013/sp_b3lyp_dvb.out":                  GenericSPTest,
     "DALTON/DALTON-2015/dvb_td_normalprint.out":            DALTONTDTest_noetsecs,
