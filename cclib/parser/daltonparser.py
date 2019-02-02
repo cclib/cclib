@@ -1145,8 +1145,33 @@ class DALTON(logfileparser.Logfile):
             if hasattr(self, 'polarizabilities'):
                 self.polarizabilities.append(polarizability_diplen)
 
-        # Electronic excitations: single residues of the linear
-        # response equations.
+        ## Electronic excitations: single residues of the linear response
+        ## equations.
+        #
+        #
+        #  @ Excited state no:    1 in symmetry 3  ( Bu )
+        #  ----------------------------------------------
+        #
+        # @ Excitation energy :  0.19609400     au
+        # @                      5.3359892     eV;   43037.658     cm-1;   514.84472     kJ / mol
+        #
+        # @ Total energy :      -381.85462     au
+        #
+        # @ Operator type:    XDIPLEN 
+        # @ Oscillator strength (LENGTH)   :  8.93558787E-03  (Transition moment :  0.26144181     )
+        #
+        # @ Operator type:    YDIPLEN 
+        # @ Oscillator strength (LENGTH)   :  0.15204812      (Transition moment :   1.0784599     )
+        #
+        #  Eigenvector for state no.  1
+        #
+        #      Response orbital operator symmetry = 3
+        #      (only scaled elements abs greater than   10.00 % of max abs value)
+        #
+        #       Index(r,s)      r      s        (r s) operator      (s r) operator      (r s) scaled        (s r) scaled
+        #       ----------    -----  -----      --------------      --------------      --------------      --------------
+        #          308        57(4)  28(2)        0.4829593728       -0.0024872024        0.6830076950       -0.0035174354
+        #          ...
         if "Linear Response single residue calculation" in line:
 
             etsyms = []
@@ -1227,7 +1252,10 @@ class DALTON(logfileparser.Logfile):
                     # we need it for consistency; if it wasn't found, add it.
                     if k not in etoscs:
                         etoscs[k] = 0.0
-                self.set_attribute("etoscs", [etoscs[k] for k in sorted(etoscs)])
+                # `.keys()` is not strictly necessary, but make it obvious
+                # that this is being sorted in order of excitation and
+                # symmetry, not oscillator strength.
+                self.set_attribute("etoscs", [etoscs[k] for k in sorted(etoscs.keys())])
 
         if line[:37] == ' >>>> Total wall time used in DALTON:':
             self.metadata['success'] = True
