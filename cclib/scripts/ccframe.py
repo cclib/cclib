@@ -8,25 +8,20 @@
 
 """Script for writing data tables from computational chemistry files."""
 
-import sys
-import os.path
 import argparse
-
-try:
-    import pandas as pd
-    _has_pandas = True
-except ImportError:
-    _has_pandas = False
+import os.path
+import sys
 
 from cclib.io import ccopen
 from cclib.io import ccframe
+from cclib.parser.utils import find_package as _find_package
+
+_has_pandas = _find_package("pandas")
+if _has_pandas:
+    import pandas as pd
 
 
 def main():
-    if not _has_pandas:
-        print("You need to have pandas installed")
-        sys.exit(1)
-
     parser = argparse.ArgumentParser()
     parser.add_argument('-O', '--output',
                         help=('the output document to write, including an '

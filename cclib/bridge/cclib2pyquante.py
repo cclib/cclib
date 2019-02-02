@@ -7,18 +7,18 @@
 
 """Bridge for using cclib data in PyQuante (http://pyquante.sourceforge.net)."""
 
-from __future__ import print_function
+from cclib.parser.utils import find_package as _find_package
 
-import sys
-
-try:
+_found_pyquante = _find_package("PyQuante")
+if _found_pyquante:
     from PyQuante.Molecule import Molecule
-except ImportError:
-    # Fail silently for now.
-    pass
 
 
 def makepyquante(atomcoords, atomnos, charge=0, mult=1):
     """Create a PyQuante Molecule."""
-    return Molecule("notitle", list(zip(atomnos, atomcoords)), units="Angstrom",
+    if not _found_pyquante:
+        raise ImportError("You must install `PyQuante` to use this function")
+    return Molecule("notitle",
+                    list(zip(atomnos, atomcoords)),
+                    units="Angstrom",
                     charge=charge, multiplicity=mult)

@@ -11,9 +11,8 @@ import sys
 import numpy
 
 
-# Define for any Python version <= 3.3,
 # See https://github.com/kachayev/fn.py/commit/391824c43fb388e0eca94e568ff62cc35b543ecb
-if sys.version_info.major == 2 or sys.version_info.minor <= 3:
+if sys.version_info <= (3, 3):
     import operator
     def accumulate(iterable, func=operator.add):
         """Return running totals"""
@@ -30,6 +29,20 @@ if sys.version_info.major == 2 or sys.version_info.minor <= 3:
             yield total
 else:
     from itertools import accumulate
+
+
+def find_package(package):
+    """Check if a package exists without importing it.
+
+    Derived from https://stackoverflow.com/a/14050282
+    """
+    if sys.version_info.major == 2:
+        import pkgutil
+        return pkgutil.find_loader(package) is not None
+    else:
+        import importlib
+        module_spec = importlib.util.find_spec(package)
+        return module_spec is not None and module_spec.loader is not None
 
 
 def symmetrize(m, use_triangle='lower'):

@@ -11,20 +11,27 @@ import logging
 
 import numpy as np
 
-try:
-    import periodictable as pt
-except ImportError:
-    # Fail silently for now.
-    pass
-
-try:
-    import scipy.constants as spc
-except ImportError:
-    # Fail silently for now.
-    pass
-
 from cclib.method.calculationmethod import Method
 from cclib.parser.utils import PeriodicTable
+from cclib.parser.utils import find_package as _find_package
+
+_found_periodictable = _find_package("periodictable")
+if _found_periodictable:
+    import periodictable as pt
+
+_found_scipy = _find_package("scipy")
+if _found_scipy:
+    import scipy.constants as spc
+
+
+def _check_periodictable(found_periodictable):
+    if not _found_periodictable:
+        raise ImportError("You must install `periodictable` to use this function")
+
+
+def _check_scipy(found_scipy):
+    if not _found_scipy:
+        raise ImportError("You must install `scipy` to use this function")
 
 
 def get_most_abundant_isotope(element):
@@ -44,6 +51,7 @@ def get_isotopic_masses(charges):
     """Return the masses for the given nuclei, respresented by their
     nuclear charges.
     """
+    _check_periodictable(_found_periodictable)
     masses = []
     for charge in charges:
         el = pt.elements[charge]
@@ -72,8 +80,8 @@ class Nuclear(Method):
 
     def stoichiometry(self):
         """Return the stoichemistry of the object according to the Hill system"""
-        pt = PeriodicTable()
-        elements = [pt.element[ano] for ano in self.data.atomnos]
+        cclib_pt = PeriodicTable()
+        elements = [cclib_pt.element[ano] for ano in self.data.atomnos]
         counts = {el: elements.count(el) for el in set(elements)}
 
         formula = ""
@@ -156,9 +164,11 @@ class Nuclear(Method):
         if units == 'amu_bohr_2':
             conv = 1
         if units == 'amu_angstrom_2':
+            _check_scipy(_found_scipy)
             bohr2ang = spc.value('atomic unit of length') / spc.angstrom
             conv = bohr2ang ** 2
         if units == 'g_cm_2':
+            _check_scipy(_found_scipy)
             amu2g = spc.value('unified atomic mass unit') * spc.kilo
             conv = amu2g * (spc.value('atomic unit of length') * spc.centi) ** 2
         return conv * principal_moments, principal_axes
@@ -170,6 +180,7 @@ class Nuclear(Method):
         if units not in choices:
             raise ValueError("Invalid units, pick one of {}".format(choices))
         principal_moments = self.principal_moments_of_inertia()[0]
+        _check_scipy(_found_scipy)
         bohr2ang = spc.value('atomic unit of length') / spc.angstrom
         xfamu = 1 / spc.value('electron mass in u')
         xthz = spc.value('hartree-hertz relationship')

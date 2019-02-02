@@ -7,23 +7,13 @@
 
 """Facilities for moving parsed data to other cheminformatic libraries."""
 
-try:
-    import openbabel
-except ImportError:
-    pass
-else:
+from cclib.parser.utils import find_package as _find_package
+
+if _find_package("Bio"):
+    from cclib.bridge.cclib2biopython import makebiopython
+
+if _find_package("openbabel"):
     from cclib.bridge.cclib2openbabel import makeopenbabel
 
-try:
-    import PyQuante
-except ImportError:
-    pass
-else:
+if _find_package("PyQuante"):
     from cclib.bridge.cclib2pyquante import makepyquante
-
-try:
-    import Bio
-except ImportError:
-    pass
-else:
-    from cclib.bridge.cclib2biopython import makebiopython
