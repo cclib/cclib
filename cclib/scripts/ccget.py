@@ -16,6 +16,9 @@ import glob
 import logging
 import os.path
 import sys
+from functools import partial
+from pprint import pprint
+
 import numpy
 
 from cclib.parser import ccData
@@ -46,6 +49,14 @@ Additional options:
 # These are the options ccget accepts and their one letter versions.
 OPTS_LONG = ["help", "list", "json", "multi", "verbose", "future", "full"]
 OPTS_SHORT = "hljmvuf"
+
+
+# Set up options for pretty-printing output.
+if sys.version_info < (3, 4):
+    pprint = partial(pprint, width=120)
+else:
+    pprint = partial(pprint, width=120, compact=True)
+numpy.set_printoptions(linewidth=120)
 
 
 def ccget():
@@ -193,9 +204,9 @@ def ccget():
                         # List of attributes to be printed with new lines
                         if attr in data._listsofarrays and full:
                             for val in attr_val:
-                                print(val)
+                                pprint(val)
                         else:
-                            print(attr_val)
+                            pprint(attr_val)
                         continue
 
                 print("Could not parse %s from this file." % attr)
