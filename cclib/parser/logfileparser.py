@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2018, the cclib development team
+# Copyright (c) 2019, the cclib development team
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
@@ -265,8 +265,8 @@ class Logfile(object):
 
     def __setattr__(self, name, value):
 
-        # Send info to logger if the attribute is in the list self._attrlist.
-        if name in getattr(self, "_attrlist", {}) and hasattr(self, "logger"):
+        # Send info to logger if the attribute is in the list of attributes.
+        if name in ccData._attrlist and hasattr(self, "logger"):
 
             # Call logger.info() only if the attribute is new.
             if not hasattr(self, name):
