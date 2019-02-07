@@ -73,6 +73,15 @@ class GenericTDTest(unittest.TestCase):
         """Is the length of etsyms correct?"""
         self.assertEqual(len(self.data.etsyms), self.number)
 
+    @skipForParser('ADF', 'etrotats are not yet implemented')
+    @skipForParser('DALTON', 'etrotats are not yet implemented')
+    @skipForParser('GAMESS', 'etrotats are not yet implemented')
+    @skipForParser('GAMESSUK', 'etrotats are not yet implemented')
+    @skipForParser('Jaguar', 'etrotats are not yet implemented')
+    @skipForParser('QChem', 'Q-Chem cannot calculate rotatory strengths')
+    def testrotatsnumber(self):
+        """Is the length of etrotats correct?"""
+        self.assertEqual(len(self.data.etrotats), self.number)
 
 class ADFTDDFTTest(GenericTDTest):
     """Customized time-dependent DFT unittest"""
@@ -98,10 +107,6 @@ class GaussianTDDFTTest(GenericTDTest):
     """Customized time-dependent HF/DFT unittest"""
 
     expected_l_max = 48000
-
-    def testrotatsnumber(self):
-        """Is the length of etrotats correct?"""
-        self.assertEqual(len(self.data.etrotats), self.number)
 
 
 class GAMESSUSTDDFTTest(GenericTDTest):
@@ -183,6 +188,10 @@ class OrcaROCISTest(GenericTDTest):
 
     def testsecs_transition(self):
         """ROCIS does not form singly excited configurations (secs)"""
+        pass
+
+    def testrotatsnumber(self):
+        """ROCIS does not calculate rotatory strengths"""
         pass
 
 

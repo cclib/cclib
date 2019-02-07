@@ -959,6 +959,33 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
             self.etoscs = numpy.array(etoscs)
             self.transprop[name] = (self.etenergies, self.etoscs)
 
+        if line.strip() == "CD SPECTRUM":
+            # -------------------------------------------------------------------
+            #                              CD SPECTRUM
+            # -------------------------------------------------------------------
+            # State   Energy Wavelength       R         MX        MY        MZ   
+            #         (cm-1)   (nm)       (1e40*cgs)   (au)      (au)      (au)  
+            # -------------------------------------------------------------------
+            #    1   43167.6    231.7      0.00000   0.00000  -0.00000   0.00000
+            #
+            etenergies = []
+            etrotats = []
+            self.skip_lines(inputfile, ["d", "State   Energy Wavelength", "(cm-1)   (nm)", "d"])
+            line = next(inputfile)
+            while line.strip():
+                tokens = line.split()
+                if "spin forbidden" in line:
+                    etrotat, mx, my, mz = 0.0, 0.0, 0.0, 0.0
+                else:
+                    etrotat, mx, my, mz = [self.float(t) for t in tokens[3:]]
+                etenergies.append(self.float(tokens[1]))
+                etrotats.append(etrotat)
+                line = next(inputfile)
+            self.set_attribute("etrotats", etrotats)
+            if not hasattr(self, "etenergies"):
+                self.logger.warning("etenergies not parsed before ECD section, "
+                                    "the output file may be malformed")
+                self.set_attribute("etenergies", etenergies)
 
         if line[:23] == "VIBRATIONAL FREQUENCIES":
             self.skip_lines(inputfile, ['d', 'b'])
