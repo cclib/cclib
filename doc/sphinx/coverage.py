@@ -83,7 +83,7 @@ def generate_coverage():
     }
     not_possible = {
         'Psi' : ['aooverlaps', 'vibirs'],
-        'QChem' : ['aooverlaps'],
+        'QChem' : ['aooverlaps', 'etrotats'],
     }
 
     # For each attribute, get a list of Boolean values for each parser that flags
