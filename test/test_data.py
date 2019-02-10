@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2017, the cclib development team
+# Copyright (c) 2019, the cclib development team
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
@@ -10,6 +10,7 @@
 from __future__ import print_function
 
 import importlib
+import logging
 import os
 import sys
 import unittest
@@ -274,6 +275,11 @@ def test_all(parsers=None, modules=None, terse=False, silent=True, summary=True,
 
 
 if __name__ == "__main__":
+
+    if "--debug" in sys.argv:
+        logging.getLogger().setLevel(logging.DEBUG)
+    else:
+        logging.getLogger().setLevel(logging.ERROR)
 
     # These allow the parsers and modules tested to be filtered on the command line
     # with any number of arguments. No matching parsers/modules implies all of them.
