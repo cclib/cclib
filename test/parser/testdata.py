@@ -1,17 +1,23 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2017, the cclib development team
+# Copyright (c) 2019, the cclib development team
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
 
 """Unit tests for parser data module."""
 
+import mock
 import unittest
 
 import numpy
 
 import cclib
+
+
+class AnyStringWith(str):
+    def __eq__(self, other):
+        return self in other
 
 
 class ccDataTest(unittest.TestCase):
@@ -23,10 +29,17 @@ class ccDataTest(unittest.TestCase):
 
     def setUp(self):
         self.data = cclib.parser.logfileparser.ccData()
+        self.mock_logger = mock.Mock()
 
     def _set_attributes(self, names, val):
         for n in names:
             setattr(self.data, n, val)
+
+    def test_valuecheck_negative_etenergies(self):
+        self.data.etenergies = [1, -1]
+        self.data.check_values(logger=self.mock_logger)
+        self.mock_logger.error.assert_called_once_with(
+            AnyStringWith("At least one excitation energy is negative"))
 
     def test_listify_ndarray(self):
         """Does the method convert ndarrays as expected?"""

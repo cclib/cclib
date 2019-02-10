@@ -372,6 +372,9 @@ class Logfile(object):
             if not attr in _nodelete:
                 self.__delattr__(attr)
 
+        # Perform final checks on values of attributes.
+        data.check_values(logger=self.logger)
+
         # Update self.progress as done.
         if hasattr(self, "progress"):
             self.progress.update(inputfile.size, "Done")
@@ -434,19 +437,28 @@ class Logfile(object):
             if hasattr(self, name):
                 delattr(self, name)
 
-    def set_attribute(self, name, value, check=True):
-        """Set an attribute and perform a check when it already exists.
+    def set_attribute(self, name, value, check_change=True):
+        """Set an attribute and perform an optional check when it already exists.
 
         Note that this can be used for scalars and lists alike, whenever we want
-        to set a value for an attribute. By default we want to check that
-        the value does not change if the attribute already exists, and this function
-        is a good place to add more tests in the future.
+        to set a value for an attribute.
+        
+        Parameters
+        ----------
+        name: str
+            The name of the attribute.
+        value: str
+            The value for the attribute.
+        check_change: bool
+            By default we want to check that the value does not change
+            if the attribute already exists.
         """
-        if check and hasattr(self, name):
+        if check_change and hasattr(self, name):
             try:
                 numpy.testing.assert_equal(getattr(self, name), value)
             except AssertionError:
                 self.logger.warning("Attribute %s changed value (%s -> %s)" % (name, getattr(self, name), value))
+
         setattr(self, name, value)
 
     def append_attribute(self, name, value):
