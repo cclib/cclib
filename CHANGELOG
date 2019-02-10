@@ -5,7 +5,7 @@ Features:
 	* New attribute nsooccnos for natural spin orbital occupation numbers (Shiv Upadhyay)
     * New methods: alpha and beta electron counts (Jaime Rodríguez-Guerra)
 	* Support coreelectrons attribute in Molcas (Kunal Sharma)
-	* Support etoscs for response calculations in Falton (Peter Reinholdt)
+	* Support etoscs for response calculations in Dalton (Peter Reinholdt)
 	* Support etenergies for TDDFT in GAMESS
 	* Support etrotats attribute in ORCA
 	* Support functional name in metadata for Psi4 (Alessandro Genova)
