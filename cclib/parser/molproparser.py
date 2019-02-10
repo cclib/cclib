@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2017, the cclib development team
+# Copyright (c) 2019, the cclib development team
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
@@ -813,8 +813,7 @@ class Molpro(logfileparser.Logfile):
 
         if line[1:16] == "Force Constants":
 
-            self.logger.info("Creating attribute hessian")
-            self.hessian = []
+            hessian = []
             line = next(inputfile)
             hess = []
             tmp = []
@@ -842,7 +841,9 @@ class Molpro(logfileparser.Logfile):
                 if k >= lig:
                     k = len(tmp[-1])
             for l in tmp:
-                self.hessian += l
+                hessian += l
+
+            self.set_attribute("hessian", hessian)
 
         if line[1:14] == "Atomic Masses" and hasattr(self, "hessian"):
 
