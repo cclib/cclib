@@ -36,4 +36,9 @@ The cclib development team
 ———
 
 Summary of changes since last version:
-    ...
+* New attributes nsocoeffs and nsooccnos for natural spin orbital coefficients (Shiv Upadhyay)
+* New methods for alpha and beta electron counts (Jaime Rodríguez-Guerra)
+* Support coreelectrons attribute in Molcas (Kunal Sharma)
+* Support etoscs for response calculations in Dalton (Peter Reinholdt)
+* Updated testing framework (Jaime Rodríguez-Guerra, Maxim Stolyarchuk and others)
+* Many other minor improvements and bug fixes from Alessandro Genova. Felipe S. S. Schneider and others
