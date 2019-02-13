@@ -1,0 +1,4605 @@
+
+
+     ************************************************************************
+     *************** Dalton - An Electronic Structure Program ***************
+     ************************************************************************
+
+    This is output from DALTON release Dalton2019.alpha (2018)
+         ( Web site: http://daltonprogram.org )
+
+   ----------------------------------------------------------------------------
+
+    NOTE:
+     
+    Dalton is an experimental code for the evaluation of molecular
+    properties using (MC)SCF, DFT, CI, and CC wave functions.
+    The authors accept no responsibility for the performance of
+    the code or for the correctness of the results.
+     
+    The code (in whole or part) is provided under a licence and
+    is not to be reproduced for further distribution without
+    the written permission of the authors or their representatives.
+     
+    See the home page "http://daltonprogram.org" for further information.
+     
+    If results obtained with this code are published,
+    the appropriate citations would be both of:
+     
+       K. Aidas, C. Angeli, K. L. Bak, V. Bakken, R. Bast,
+       L. Boman, O. Christiansen, R. Cimiraglia, S. Coriani,
+       P. Dahle, E. K. Dalskov, U. Ekstroem,
+       T. Enevoldsen, J. J. Eriksen, P. Ettenhuber, B. Fernandez,
+       L. Ferrighi, H. Fliegl, L. Frediani, K. Hald, A. Halkier,
+       C. Haettig, H. Heiberg, T. Helgaker, A. C. Hennum,
+       H. Hettema, E. Hjertenaes, S. Hoest, I.-M. Hoeyvik,
+       M. F. Iozzi, B. Jansik, H. J. Aa. Jensen, D. Jonsson,
+       P. Joergensen, J. Kauczor, S. Kirpekar,
+       T. Kjaergaard, W. Klopper, S. Knecht, R. Kobayashi, H. Koch,
+       J. Kongsted, A. Krapp, K. Kristensen, A. Ligabue,
+       O. B. Lutnaes, J. I. Melo, K. V. Mikkelsen, R. H. Myhre,
+       C. Neiss, C. B. Nielsen, P. Norman, J. Olsen,
+       J. M. H. Olsen, A. Osted, M. J. Packer, F. Pawlowski,
+       T. B. Pedersen, P. F. Provasi, S. Reine, Z. Rinkevicius,
+       T. A. Ruden, K. Ruud, V. Rybkin, P. Salek, C. C. M. Samson,
+       A. Sanchez de Meras, T. Saue, S. P. A. Sauer,
+       B. Schimmelpfennig, K. Sneskov, A. H. Steindal,
+       K. O. Sylvester-Hvid, P. R. Taylor, A. M. Teale,
+       E. I. Tellgren, D. P. Tew, A. J. Thorvaldsen, L. Thoegersen,
+       O. Vahtras, M. A. Watson, D. J. D. Wilson, M. Ziolkowski
+       and H. Agren,
+       "The Dalton quantum chemistry program system",
+       WIREs Comput. Mol. Sci. 2014, 4:269–284 (doi: 10.1002/wcms.1172)
+     
+    and
+     
+       Dalton, a molecular electronic structure program,
+       Release Dalton2019.alpha (2018), see http://daltonprogram.org
+   ----------------------------------------------------------------------------
+
+    Authors in alphabetical order (major contribution(s) in parenthesis):
+
+  Kestutis Aidas,           Vilnius University,           Lithuania   (QM/MM)
+  Celestino Angeli,         University of Ferrara,        Italy       (NEVPT2)
+  Keld L. Bak,              UNI-C,                        Denmark     (AOSOPPA, non-adiabatic coupling, magnetic properties)
+  Vebjoern Bakken,          University of Oslo,           Norway      (DALTON; geometry optimizer, symmetry detection)
+  Radovan Bast,             UiT The Arctic U. of Norway,  Norway      (DALTON installation and execution frameworks)
+  Pablo Baudin,             University of Valencia,       Spain       (Cholesky excitation energies)
+  Linus Boman,              NTNU,                         Norway      (Cholesky decomposition and subsystems)
+  Ove Christiansen,         Aarhus University,            Denmark     (CC module)
+  Renzo Cimiraglia,         University of Ferrara,        Italy       (NEVPT2)
+  Sonia Coriani,            Technical Univ. of Denmark,   Denmark     (CC module, MCD in RESPONS)
+  Janusz Cukras,            University of Trieste,        Italy       (MChD in RESPONS)
+  Paal Dahle,               University of Oslo,           Norway      (Parallelization)
+  Erik K. Dalskov,          UNI-C,                        Denmark     (SOPPA)
+  Thomas Enevoldsen,        Univ. of Southern Denmark,    Denmark     (SOPPA)
+  Janus J. Eriksen,         Aarhus University,            Denmark     (Polarizable embedding model, TDA)
+  Rasmus Faber,             University of Copenhagen,     Denmark     (Vib.avg. NMR with SOPPA, parallel AO-SOPPA)
+  Tobias Fahleson,          KTH Stockholm,                Sweden      (Damped cubic response)
+  Berta Fernandez,          U. of Santiago de Compostela, Spain       (doublet spin, ESR in RESPONS)
+  Lara Ferrighi,            Aarhus University,            Denmark     (PCM Cubic response)
+  Heike Fliegl,             University of Oslo,           Norway      (CCSD(R12))
+  Luca Frediani,            UiT The Arctic U. of Norway,  Norway      (PCM)
+  Bin Gao,                  UiT The Arctic U. of Norway,  Norway      (Gen1Int library)
+  Christof Haettig,         Ruhr-University Bochum,       Germany     (CC module)
+  Kasper Hald,              Aarhus University,            Denmark     (CC module)
+  Asger Halkier,            Aarhus University,            Denmark     (CC module)
+  Frederik Beyer Hansen,    University of Copenhagen,     Denmark     (Parallel AO-SOPPA)
+  Erik D. Hedegaard,        Univ. of Southern Denmark,    Denmark     (Polarizable embedding model, QM/MM)
+  Hanne Heiberg,            University of Oslo,           Norway      (geometry analysis, selected one-electron integrals)
+  Trygve Helgaker,          University of Oslo,           Norway      (DALTON; ABACUS, ERI, DFT modules, London, and much more)
+  Alf Christian Hennum,     University of Oslo,           Norway      (Parity violation)
+  Hinne Hettema,            University of Auckland,       New Zealand (quadratic response in RESPONS; SIRIUS supersymmetry)
+  Eirik Hjertenaes,         NTNU,                         Norway      (Cholesky decomposition)
+  Pi A. B. Haase,           University of Copenhagen,     Denmark     (Triplet AO-SOPPA)
+  Maria Francesca Iozzi,    University of Oslo,           Norway      (RPA)
+  Christoph Jacob           TU Braunschweig               Germany     (Frozen density embedding model)
+  Brano Jansik              Technical Univ. of Ostrava    Czech Rep.  (DFT cubic response)
+  Hans Joergen Aa. Jensen,  Univ. of Southern Denmark,    Denmark     (DALTON; SIRIUS, RESPONS, ABACUS modules, London, and much more)
+  Dan Jonsson,              UiT The Arctic U. of Norway,  Norway      (cubic response in RESPONS module)
+  Poul Joergensen,          Aarhus University,            Denmark     (RESPONS, ABACUS, and CC modules)
+  Maciej Kaminski,          University of Warsaw,         Poland      (CPPh in RESPONS)
+  Joanna Kauczor,           Linkoeping University,        Sweden      (Complex polarization propagator (CPP) module)
+  Sheela Kirpekar,          Univ. of Southern Denmark,    Denmark     (Mass-velocity & Darwin integrals)
+  Wim Klopper,              KIT Karlsruhe,                Germany     (R12 code in CC, SIRIUS, and ABACUS modules)
+  Stefan Knecht,            ETH Zurich,                   Switzerland (Parallel CI and MCSCF)
+  Rika Kobayashi,           Australian National Univ.,    Australia   (DIIS in CC, London in MCSCF)
+  Henrik Koch,              NTNU,                         Norway      (CC module, Cholesky decomposition)
+  Jacob Kongsted,           Univ. of Southern Denmark,    Denmark     (Polarizable embedding model, QM/MM)
+  Andrea Ligabue,           University of Modena,         Italy       (CTOCD, AOSOPPA)
+  Nanna H. List             Univ. of Southern Denmark,    Denmark     (Polarizable embedding model)
+  Ola B. Lutnaes,           University of Oslo,           Norway      (DFT Hessian)
+  Juan I. Melo,             University of Buenos Aires,   Argentina   (LRESC, Relativistic Effects on NMR Shieldings)
+  Kurt V. Mikkelsen,        University of Copenhagen,     Denmark     (MC-SCRF and QM/MM)
+  Rolf H. Myhre,            NTNU,                         Norway      (Subsystems and CC3)
+  Christian Neiss,          Univ. Erlangen-Nuernberg,     Germany     (CCSD(R12))
+  Christian B. Nielsen,     University of Copenhagen,     Denmark     (QM/MM)
+  Patrick Norman,           KTH Stockholm,                Sweden      (Cubic response and complex frequency response in RESPONS)
+  Jeppe Olsen,              Aarhus University,            Denmark     (SIRIUS CI/density modules)
+  Jogvan Magnus H. Olsen,   Univ. of Southern Denmark,    Denmark     (Polarizable embedding model, QM/MM)
+  Anders Osted,             Copenhagen University,        Denmark     (QM/MM)
+  Martin J. Packer,         University of Sheffield,      UK          (SOPPA)
+  Filip Pawlowski,          Kazimierz Wielki University,  Poland      (CC3)
+  Morten N. Pedersen,       Univ. of Southern Denmark,    Denmark     (Polarizable embedding model)
+  Thomas B. Pedersen,       University of Oslo,           Norway      (Cholesky decomposition)
+  Patricio F. Provasi,      University of Northeastern,   Argentina   (Analysis of coupling constants in localized orbitals)
+  Zilvinas Rinkevicius,     KTH Stockholm,                Sweden      (open-shell DFT, ESR)
+  Elias Rudberg,            KTH Stockholm,                Sweden      (DFT grid and basis info)
+  Torgeir A. Ruden,         University of Oslo,           Norway      (Numerical derivatives in ABACUS)
+  Kenneth Ruud,             UiT The Arctic U. of Norway,  Norway      (DALTON; ABACUS magnetic properties and much more)
+  Pawel Salek,              KTH Stockholm,                Sweden      (DALTON; DFT code)
+  Claire C. M. Samson       University of Karlsruhe       Germany     (Boys localization, r12 integrals in ERI)
+  Alfredo Sanchez de Meras, University of Valencia,       Spain       (CC module, Cholesky decomposition)
+  Trond Saue,               Paul Sabatier University,     France      (direct Fock matrix construction)
+  Stephan P. A. Sauer,      University of Copenhagen,     Denmark     (SOPPA(CCSD), SOPPA prop., AOSOPPA, vibrational g-factors)
+  Andre S. P. Gomes,        CNRS/Universite de Lille,     France      (Frozen density embedding model)
+  Bernd Schimmelpfennig,    Forschungszentrum Karlsruhe,  Germany     (AMFI module)
+  Kristian Sneskov,         Aarhus University,            Denmark     (Polarizable embedding model, QM/MM)
+  Arnfinn H. Steindal,      UiT The Arctic U. of Norway,  Norway      (parallel QM/MM, Polarizable embedding model)
+  Casper Steinmann,         Univ. of Southern Denmark,    Denmark     (QFIT, Polarizable embedding model)
+  K. O. Sylvester-Hvid,     University of Copenhagen,     Denmark     (MC-SCRF)
+  Peter R. Taylor,          VLSCI/Univ. of Melbourne,     Australia   (Symmetry handling ABACUS, integral transformation)
+  Andrew M. Teale,          University of Nottingham,     England     (DFT-AC, DFT-D)
+  David P. Tew,             University of Bristol,        England     (CCSD(R12))
+  Olav Vahtras,             KTH Stockholm,                Sweden      (triplet response, spin-orbit, ESR, TDDFT, open-shell DFT)
+  Lucas Visscher,           Vrije Universiteit Amsterdam, Netherlands (Frozen density embedding model)
+  David J. Wilson,          La Trobe University,          Australia   (DFT Hessian and DFT magnetizabilities)
+  Hans Agren,               KTH Stockholm,                Sweden      (SIRIUS module, RESPONS, MC-SCRF solvation model)
+ --------------------------------------------------------------------------------
+
+     Date and time (Linux)  : Mon Jan 21 21:15:24 2019
+     Host name              : osmium                                  
+
+ * Work memory size             :    64000000 =  488.28 megabytes.
+
+ * Directories for basis set searches:
+   1) /home/eric/Dropbox/research/cclib/calculations/dalton/td/2018
+   2) /home/eric/data/opt/apps/dalton/git-gnu-openblas-omp/dalton/basis
+
+
+Compilation information
+-----------------------
+
+ Who compiled             | eric
+ Host                     | osmium
+ System                   | Linux-4.19.4-arch1-1-ARCH
+ CMake generator          | Unix Makefiles
+ Processor                | x86_64
+ 64-bit integers          | OFF
+ MPI                      | OFF
+ Fortran compiler         | /usr/bin/f95
+ Fortran compiler version | GNU Fortran (GCC) 8.2.1 20181127
+ Fortran flags            |  -fopenmp -DVAR_GFORTRAN -ffloat-store -fcray-poin
+                          | ter -std=legacy -m64 -fopenmp -DVAR_GFORTRAN -fflo
+                          | at-store -fcray-pointer -std=legacy -m64 -O3 -ffas
+                          | t-math -funroll-loops -ftree-vectorize
+ C compiler               | /usr/bin/cc
+ C compiler version       | cc (GCC) 8.2.1 20181127
+ C flags                  |  -fopenmp -std=c99 -DRESTRICT=restrict -DFUNDERSCO
+                          | RE=1 -DHAVE_NO_LSEEK64 -ffloat-store -Wall -m64 -f
+                          | openmp -std=c99 -DRESTRICT=restrict -DFUNDERSCORE=
+                          | 1 -DHAVE_NO_LSEEK64 -ffloat-store -Wall -m64 -O3 -
+                          | ffast-math -funroll-loops -ftree-vectorize -Wno-un
+                          | used
+ C++ compiler             | /usr/bin/c++
+ C++ compiler version     | c++ (GCC) 8.2.1 20181127
+ C++ flags                |  -fopenmp -g -Wall -fno-rtti -fno-exceptions -m64 
+                          | -march=native -fopenmp -g -Wall -fno-rtti -fno-exc
+                          | eptions -m64 -march=native -O3 -ffast-math -funrol
+                          | l-loops -ftree-vectorize -Wno-unused
+ BLAS                     | /lib64/libopenblas.so
+ LAPACK                   | /lib64/liblapack.so
+ Static linking           | OFF
+ Last Git revision        | 25947a3d842ee2ebb42bff87a4dd64adbbd3ec5b
+ Git branch               | master
+ Configuration time       | 2018-12-09 15:28:33.044522
+
+
+   Content of the .dal input file
+ ----------------------------------
+
+BASIS
+STO-3G
+---
+---
+Atomtypes=2 Angstrom Charge=1
+Charge=3.0 Atoms=1
+Li  0.0000  0.0000  0.0000
+Charge=1.0 Atoms=1
+H   0.0000  0.0000  1.5949
+
+**DALTON INPUT
+.RUN ALL
+**WAVE FUNCTIONS
+.DFT
+PBE
+*SCF IN
+.THRESH
+1.0D-07
+.MAX DIIS ITERATIONS
+200
+**RESPONSE
+*LINEAR
+.THCLR
+1.0D-6
+.DIPLEN
+.SINGLE RESIDUE
+.ROOTS
+1 1 1 0
+.PRINT
+2000
+**END OF DALTON INPUT
+
+
+       *******************************************************************
+       *********** Output from DALTON general input processing ***********
+       *******************************************************************
+
+ --------------------------------------------------------------------------------
+   Overall default print level:    0
+   Print level for DALTON.STAT:    1
+
+    HERMIT 1- and 2-electron integral sections will be executed
+    "Old" integral transformation used (limited to max 255 basis functions)
+    Wave function sections will be executed (SIRIUS module)
+    Dynamic molecular response properties section will be executed (RESPONSE module)
+    Static molecular property section will be executed (ABACUS module)
+ --------------------------------------------------------------------------------
+
+
+   ****************************************************************************
+   *************** Output of molecule and basis set information ***************
+   ****************************************************************************
+
+
+    The two title cards from your ".mol" input:
+    ------------------------------------------------------------------------
+ 1: ---                                                                     
+ 2: ---                                                                     
+    ------------------------------------------------------------------------
+
+  Coordinates are entered in Angstrom and converted to atomic units.
+          - Conversion factor : 1 bohr = 0.52917721 A
+
+  Atomic type no.    1
+  --------------------
+  Nuclear charge:   3.00000
+  Number of symmetry independent centers:    1
+  Number of basis sets to read;    2
+  Basis set file used for this atomic type with Z =   3 :
+     "/home/eric/data/opt/apps/dalton/git-gnu-openblas-omp/dalton/basis/STO-3G"
+
+  Atomic type no.    2
+  --------------------
+  Nuclear charge:   1.00000
+  Number of symmetry independent centers:    1
+  Number of basis sets to read;    2
+  Basis set file used for this atomic type with Z =   1 :
+     "/home/eric/data/opt/apps/dalton/git-gnu-openblas-omp/dalton/basis/STO-3G"
+
+
+                      SYMADD: Requested addition of symmetry
+                      --------------------------------------
+
+ Symmetry test threshold:  5.00E-06
+
+@   The molecule is centered at center of mass and rotated
+@   so principal axes of inertia are along coordinate axes.
+
+ Symmetry class found: C(oo,v)        
+
+ Symmetry Independent Centres             
+ ----------------------------
+       3 :      0.00000000     0.00000000    -0.37856088  Isotope  1
+       1 :      0.00000000     0.00000000     2.63536332  Isotope  1
+
+ The following symmetry elements were found:   X  Y     
+
+
+                         SYMGRP: Point group information
+                         -------------------------------
+
+@    Full point group is: C(oo,v)        
+@    Represented as:      C2v
+
+@  * The irrep name for each symmetry:    1: A1     2: B1     3: B2     4: A2 
+
+   * The point group was generated by:
+
+      Reflection in the yz-plane
+      Reflection in the xz-plane
+
+   * Group multiplication table
+
+        |  E   C2z  Oxz  Oyz
+   -----+--------------------
+     E  |  E   C2z  Oxz  Oyz
+    C2z | C2z   E   Oyz  Oxz
+    Oxz | Oxz  Oyz   E   C2z
+    Oyz | Oyz  Oxz  C2z   E 
+
+   * Character table
+
+        |  E   C2z  Oxz  Oyz
+   -----+--------------------
+    A1  |   1    1    1    1
+    B1  |   1   -1    1   -1
+    B2  |   1   -1   -1    1
+    A2  |   1    1   -1   -1
+
+   * Direct product table
+
+        | A1   B1   B2   A2 
+   -----+--------------------
+    A1  | A1   B1   B2   A2 
+    B1  | B1   A1   A2   B2 
+    B2  | B2   A2   A1   B1 
+    A2  | A2   B2   B1   A1 
+
+
+                                 Isotopic Masses
+                                 ---------------
+
+                           Li          7.016005
+                           H           1.007825
+
+                       Total mass:     8.023830 amu
+                       Natural abundance:  92.486 %
+
+ Center-of-mass coordinates (a.u.):    0.000000    0.000000    0.000000
+
+
+  Atoms and basis sets
+  --------------------
+
+  Number of atom types :    2
+  Total number of atoms:    2
+
+  Basis set used is "STO-3G" from the basis set library.
+
+  label    atoms   charge   prim   cont     basis
+  ----------------------------------------------------------------------
+  Li          1    3.0000    15     5      [6s3p|2s1p]                                        
+  H           1    1.0000     3     1      [3s|1s]                                            
+  ----------------------------------------------------------------------
+  total:      2    4.0000    18     6
+  ----------------------------------------------------------------------
+
+  Threshold for neglecting AO integrals:  1.00D-12
+
+
+  Cartesian Coordinates (a.u.)
+  ----------------------------
+
+  Total number of coordinates:    6
+  Li      :     1  x   0.0000000000    2  y   0.0000000000    3  z  -0.3785608810
+  H       :     4  x   0.0000000000    5  y   0.0000000000    6  z   2.6353633158
+
+
+  Symmetry Coordinates
+  --------------------
+
+  Number of coordinates in each symmetry:     2    2    2    0
+
+  Symmetry  A1  ( 1)
+
+    1   Li    z    3
+    2   H     z    6
+
+  Symmetry  B1  ( 2)
+
+    3   Li    x    1
+    4   H     x    4
+
+  Symmetry  B2  ( 3)
+
+    5   Li    y    2
+    6   H     y    5
+
+
+   Interatomic separations (in Angstrom):
+   --------------------------------------
+
+            Li          H     
+            ------      ------
+ Li    :    0.000000
+ H     :    1.594900    0.000000
+
+
+  Max    interatomic separation is    1.5949 Angstrom (    3.0139 Bohr)
+  between atoms    2 and    1, "H     " and "Li    ".
+
+  Min HX interatomic separation is    1.5949 Angstrom (    3.0139 Bohr)
+
+
+  Bond distances (Angstrom):
+  --------------------------
+
+                  atom 1     atom 2       distance
+                  ------     ------       --------
+  bond distance:  H          Li           1.594900
+
+
+
+
+ Principal moments of inertia (u*A**2) and principal axes
+ --------------------------------------------------------
+
+   IA       0.000000          0.000000    0.000000    1.000000
+   IB       2.241611          0.000000    1.000000    0.000000
+   IC       2.241611          1.000000    0.000000    0.000000
+
+
+ Rotational constants
+ --------------------
+
+@    The molecule is linear.
+
+               B =       225453.50 MHz     (    7.520319 cm-1)
+
+
+@  Nuclear repulsion energy :    0.995380044141 Hartree
+
+
+  Symmetry Orbitals
+  -----------------
+
+  Number of orbitals in each symmetry:           4    1    1    0
+
+
+  Symmetry  A1 ( 1)
+
+    1     Li       1s         1
+    2     Li       1s         2
+    3     Li       2pz        5
+    4     H        1s         6
+
+
+  Symmetry  B1 ( 2)
+
+    5     Li       2px        3
+
+
+  Symmetry  B2 ( 3)
+
+    6     Li       2py        4
+
+
+  No orbitals in symmetry  A2 ( 4)
+
+  Symmetries of electric field:  B1 (2)  B2 (3)  A1 (1)
+
+  Symmetries of magnetic field:  B2 (3)  B1 (2)  A2 (4)
+
+
+                     .---------------------------------------.
+                     | Starting in Integral Section (HERMIT) |
+                     `---------------------------------------'
+
+
+
+ ***************************************************************************************
+ ****************** Output from **INTEGRALS input processing (HERMIT) ******************
+ ***************************************************************************************
+
+
+ - Using defaults, no **INTEGRALS input found
+
+ Default print level:        1
+
+ Calculation of one- and two-electron Hamiltonian integrals.
+
+ Center of mass  (bohr):      0.000000000000      0.000000000000      0.000000000000
+ Operator center (bohr):      0.000000000000      0.000000000000      0.000000000000
+ Gauge origin    (bohr):      0.000000000000      0.000000000000      0.000000000000
+ Dipole origin   (bohr):      0.000000000000      0.000000000000      0.000000000000
+
+
+     ************************************************************************
+     ************************** Output from HERINT **************************
+     ************************************************************************
+
+
+
+                      Nuclear contribution to dipole moments
+                      --------------------------------------
+
+                 au               Debye          C m (/(10**-30)
+
+      z      1.49968067         3.81180781        12.71482224
+
+
+
+ Threshold for neglecting two-electron integrals:  1.00D-12
+ HERMIT - Number of two-electron integrals written:          83 ( 35.9% )
+ HERMIT - Megabytes written:                              0.007
+
+  Total CPU  time used in HERMIT:   0.00 seconds
+  Total wall time used in HERMIT:   0.00 seconds
+
+
+                        .----------------------------------.
+                        | End of Integral Section (HERMIT) |
+                        `----------------------------------'
+
+
+
+                   .--------------------------------------------.
+                   | Starting in Wave Function Section (SIRIUS) |
+                   `--------------------------------------------'
+
+
+ *** Output from Huckel module :
+
+     Using EWMO model:          T
+     Using EHT  model:          F
+     Number of Huckel orbitals each symmetry:    4    1    1    0
+
+ EWMO - Energy Weighted Maximum Overlap - is a Huckel type method,
+        which normally is better than Extended Huckel Theory.
+ Reference: Linderberg and Ohrn, Propagators in Quantum Chemistry (Wiley, 1973)
+
+ Huckel EWMO eigenvalues for symmetry :  1
+           -2.483511      -0.580537      -0.169653      -0.070299
+
+ Huckel EWMO eigenvalues for symmetry :  2
+           -0.130000
+
+ Huckel EWMO eigenvalues for symmetry :  3
+           -0.130000
+
+ **********************************************************************
+ *SIRIUS* a direct, restricted step, second order MCSCF program       *
+ **********************************************************************
+
+ 
+     Date and time (Linux)  : Mon Jan 21 21:15:24 2019
+     Host name              : osmium                                  
+
+ Title lines from ".mol" input file:
+     ---                                                                     
+     ---                                                                     
+
+ Print level on unit LUPRI =   2 is   0
+ Print level on unit LUW4  =   2 is   5
+
+@    Restricted, one open shell Kohn-Sham DFT calculation.
+
+@    Time-dependent Kohn-Sham DFT calculation (TD-DFT).
+
+ Initial molecular orbitals are obtained according to
+ ".MOSTART EWMO  " input option
+
+     Wave function specification
+     ============================
+@    Wave function type        --- KS-DFT ---
+@    Number of closed shell electrons           2
+@    Number of electrons in active shells       1
+@    Total charge of the molecule               1
+
+@    Spin multiplicity and 2 M_S                2         1
+@    Total number of symmetries                 4 (point group: C2v)
+@    Reference state symmetry                   1 (irrep name : A1 )
+ 
+     This is a DFT calculation of type: PBE
+ Weighted mixed functional:
+                      PBEx:    1.00000
+                      PBEc:    1.00000
+
+     Orbital specifications
+     ======================
+@    Abelian symmetry species          All |    1    2    3    4
+@                                          |  A1   B1   B2   A2 
+                                       --- |  ---  ---  ---  ---
+@    Total number of orbitals            6 |    4    1    1    0
+@    Number of basis functions           6 |    4    1    1    0
+
+      ** Automatic occupation of RKS orbitals **
+
+      -- Initial occupation of symmetries is determined from extended Huckel guess.           
+      -- Initial occupation of symmetries is :
+@    Occupied SCF orbitals               1 |    1    0    0    0
+
+@    plus one open shell SCF orbital of symmetry   1
+
+     Maximum number of Fock   iterations      0
+     Maximum number of DIIS   iterations    200
+     Maximum number of QC-SCF iterations     60
+     Threshold for SCF convergence     1.00D-07
+ 
+     This is a DFT calculation of type: PBE
+ Weighted mixed functional:
+                      PBEx:    1.00000
+                      PBEc:    1.00000
+
+
+ ***********************************************
+ ***** DIIS acceleration of SCF iterations *****
+ ***********************************************
+
+ C1-DIIS algorithm; max error vectors =    4
+
+ Automatic occupation of symmetries with   3 electrons.
+ "sym." is the symmetry of the one open shell orbital in table below.
+
+ Iter     Total energy    Error norm  Delta(E)  Sym.  Closed shell occupation
+ -----------------------------------------------------------------------------
+@  1  -7.62702922742       1.50D-01  -7.63D+00   1     1   0   0   0
+      Virial theorem: -V/T =      2.000673
+@    MULPOP   Li      0.74; H       0.26; 
+   1  Level shift: doubly occupied orbital energies shifted by -2.00D-01
+               and singly occupied orbital energies shifted by -1.00D-01
+ -----------------------------------------------------------------------------
+@  2  -7.63149031676       7.80D-03  -4.46D-03   1     1   0   0   0
+      Virial theorem: -V/T =      2.003246
+@    MULPOP   Li      0.78; H       0.22; 
+   2  Level shift: doubly occupied orbital energies shifted by -5.00D-02
+               and singly occupied orbital energies shifted by -2.50D-02
+ -----------------------------------------------------------------------------
+@  3  -7.63149142111       4.83D-03  -1.10D-06   1     1   0   0   0
+      Virial theorem: -V/T =      2.003903
+@    MULPOP   Li      0.77; H       0.23; 
+   3  Level shift: doubly occupied orbital energies shifted by -5.00D-02
+               and singly occupied orbital energies shifted by -2.50D-02
+ -----------------------------------------------------------------------------
+@  4  -7.63150807464       7.04D-04  -1.67D-05   1     1   0   0   0
+      Virial theorem: -V/T =      2.003843
+@    MULPOP   Li      0.78; H       0.22; 
+   4  Level shift: doubly occupied orbital energies shifted by -1.25D-02
+               and singly occupied orbital energies shifted by -6.25D-03
+ -----------------------------------------------------------------------------
+@  5  -7.63150841863       8.60D-05  -3.44D-07   1     1   0   0   0
+      Virial theorem: -V/T =      2.003817
+@    MULPOP   Li      0.78; H       0.22; 
+ -----------------------------------------------------------------------------
+@  6  -7.63150842222       2.01D-06  -3.59D-09   1     1   0   0   0
+      Virial theorem: -V/T =      2.003822
+@    MULPOP   Li      0.78; H       0.22; 
+ -----------------------------------------------------------------------------
+@  7  -7.63150842222       4.89D-08  -8.95D-13   1     1   0   0   0
+
+@ *** DIIS converged in   7 iterations !
+@     Converged SCF energy, gradient:     -7.631508422223    4.89D-08
+    - total time used in SIRFCK :              0.00 seconds
+
+
+ *** SCF orbital energy analysis ***
+
+ Orbital energy analysis for an open-shell system.
+ Orbital energies are not uniquely defined for open-shell systems
+   here is used block diagonalization of the FD=FC+FV Fock matrix.
+ NOTE that Koopmans' theorem is not fulfilled for this case.
+
+ Number of electrons :    2
+ Orbital occupations :    1    0    0    0
+
+ Sym       Kohn-Sham orbital energies
+
+1 A1     -2.14187094    -0.36964799    -0.22958992     0.09002491
+
+2 B1     -0.19282929
+
+3 B2     -0.19282929
+
+    E(LUMO) :    -0.22958992 au (symmetry 1)
+  - E(HOMO) :    -2.14187094 au (symmetry 1)
+  ------------------------------------------
+    gap     :     1.91228102 au
+
+and E(SOMO) :    -0.36964799 au (symmetry 1)
+
+ NOTE: MOLECULAR ORBITALS ARE NOT CANONICAL HARTREE-FOCK ORBITALS
+
+ Largest off-diagonal Fock matrix element is  1.19D-01
+
+ --- Writing SIRIFC interface file
+
+ CPU and wall time for SCF :       0.601       0.601
+
+
+                       .-----------------------------------.
+                       | --- Final results from SIRIUS --- |
+                       `-----------------------------------'
+
+
+@    Spin multiplicity:           2
+@    Spatial symmetry:            1 ( irrep  A1  in C2v )
+@    Total charge of molecule:    1
+
+@    Final DFT energy:             -7.631508422223                 
+@    Nuclear repulsion:             0.995380044141
+@    Electronic energy:            -8.626888466364
+
+@    Final gradient norm:           0.000000048883
+
+ 
+     Date and time (Linux)  : Mon Jan 21 21:15:25 2019
+     Host name              : osmium                                  
+
+File label for MO orbitals:  21Jan19   FOCKDIIS
+
+ (Only coefficients > 0.0100 are printed.)
+
+ Molecular orbitals for symmetry species 1  (A1 )
+ ------------------------------------------------
+
+    Orbital         1        2        3        4
+   1 Li  :1s     0.9886  -0.1214   0.2406  -0.1154
+   2 Li  :1s     0.0438   0.1920  -0.8931   0.7123
+   3 Li  :2pz    0.0022   0.2099   0.5024   1.0773
+   4 H   :1s    -0.0010   0.7971   0.1250  -1.0391
+
+ Molecular orbitals for symmetry species 2  (B1 )
+ ------------------------------------------------
+
+    Orbital         1
+   1 Li  :2px    1.0000
+
+ Molecular orbitals for symmetry species 3  (B2 )
+ ------------------------------------------------
+
+    Orbital         1
+   1 Li  :2py    1.0000
+
+  Total CPU  time used in SIRIUS :   0.60 seconds
+  Total wall time used in SIRIUS :   0.60 seconds
+
+ 
+     Date and time (Linux)  : Mon Jan 21 21:15:25 2019
+     Host name              : osmium                                  
+
+
+                     .---------------------------------------.
+                     | End of Wave Function Section (SIRIUS) |
+                     `---------------------------------------'
+
+
+
+                 .------------------------------------------------.
+                 | Starting in Dynamic Property Section (RESPONS) |
+                 `------------------------------------------------'
+
+
+ ------------------------------------------------------------------------------
+  RESPONSE  -  an MCSCF, MC-srDFT, DFT, and SOPPA response property program
+ ------------------------------------------------------------------------------
+
+
+ -------- OUTPUT FROM RESPONSE INPUT PROCESSING --------
+
+
+
+
+  Linear Response single residue calculation
+ -------------------------------------------
+
+
+    5 input options by user.
+
+ Print level                                    : IPRPP  =2000
+ Maximum number of iterations for eigenval.eqs. : MAXITP =  60
+ Threshold for convergence of eigenvalue eqs.   : THCPP  = 1.000D-03
+ Maximum iterations in optimal orbital algorithm: MAXITO =   5
+
+ General print level in RESPONS is IPRRSP =      2000
+
+ **** Output from RSPSYM ****
+
+ I, LPPOP(I), PRPLBL(I)  (for excitations)
+
+    1         T  XDIPLEN 
+    2         T  YDIPLEN 
+    3         T  ZDIPLEN 
+
+ I, LLROP(I), PRPLBL(I)  (for linear response)
+
+    1         F  XDIPLEN 
+    2         F  YDIPLEN 
+    3         F  ZDIPLEN 
+
+ I, LC6OP(I), PRPLBL(I)  (for C6/C8)
+
+    1         F  XDIPLEN 
+    2         F  YDIPLEN 
+    3         F  ZDIPLEN 
+
+ I, AQROP(I), BQROP(I), CQROP(I), PRPLBL(I)  (for quadratic response)
+
+    1         F         F         F  XDIPLEN 
+    2         F         F         F  YDIPLEN 
+    3         F         F         F  ZDIPLEN 
+
+ I, ASMOP(I), BSMOP(I), PRPLBL(I)  (for second mom.)
+
+    1         F         F  XDIPLEN 
+    2         F         F  YDIPLEN 
+    3         F         F  ZDIPLEN 
+
+ I, ESROPS(I), ESROPT(I), PRPLBL(I) (for ESR prop.)
+
+    1         F         F  XDIPLEN 
+    2         F         F  YDIPLEN 
+    3         F         F  ZDIPLEN 
+
+ I, ACROP(I), BCROP(I), CCROP(I), DCROP(I), PRPLBL(I)  (for cubic response)
+
+    1         F         F         F         F  XDIPLEN 
+    2         F         F         F         F  YDIPLEN 
+    3         F         F         F         F  ZDIPLEN 
+
+ I, ATMOP(I), BTMOP(I), CTMOP(I), PRPLBL(I)  (for third mom.)
+
+    1         F         F         F  XDIPLEN 
+    2         F         F         F  YDIPLEN 
+    3         F         F         F  ZDIPLEN 
+
+ I, ATPOP(I), BTPOP(I), PRPLBL(I) (for cubic double res.)
+
+    1         F         F  XDIPLEN 
+    2         F         F  YDIPLEN 
+    3         F         F  ZDIPLEN 
+
+ NPRLBL=    3 labels in property calculations in RESPONS:
+
+  I      PRPLBL(I), I=1,NPRLBL 
+    1     XDIPLEN 
+    2     YDIPLEN 
+    3     ZDIPLEN 
+
+ RSPSYM: number of property vectors :
+
+ NGPPP(I) ,I=1,NSYM    1    1    1    0
+ NGPLR(I) ,I=1,NSYM    0    0    0    0
+ NGPC6(I) ,I=1,NSYM    0    0    0    0
+ NAQROP(I),I=1,NSYM    0    0    0    0
+ NBQROP(I),I=1,NSYM    0    0    0    0
+ NCQROP(I),I=1,NSYM    0    0    0    0
+ NASMOP(I),I=1,NSYM    0    0    0    0
+ NBSMOP(I),I=1,NSYM    0    0    0    0
+ NESRS(I) ,I=1,NSYM    0    0    0    0
+ NESRT(I) ,I=1,NSYM    0    0    0    0
+ NACROP(I),I=1,NSYM    0    0    0    0
+ NBCROP(I),I=1,NSYM    0    0    0    0
+ NCCROP(I),I=1,NSYM    0    0    0    0
+ NDCROP(I),I=1,NSYM    0    0    0    0
+ NATMOP(I),I=1,NSYM    0    0    0    0
+ NBTMOP(I),I=1,NSYM    0    0    0    0
+ NCTMOP(I),I=1,NSYM    0    0    0    0
+ NATPOP(I),I=1,NSYM    0    0    0    0
+ NBTPOP(I),I=1,NSYM    0    0    0    0
+
+      1 Excitation energies are calculated for symmetry no.    1
+
+      1 property residues are calculated with labels:
+
+               ZDIPLEN 
+
+      1 Excitation energies are calculated for symmetry no.    2
+
+      1 property residues are calculated with labels:
+
+               XDIPLEN 
+
+      1 Excitation energies are calculated for symmetry no.    3
+
+      1 property residues are calculated with labels:
+
+               YDIPLEN 
+
+  SYMMETRY   NO.CONV  NO.START NO.SIMULT
+
+         1         1         1         1
+         2         1         1         1
+         3         1         1         1
+         4         0         0         0
+
+ INFO SIR_INTOPEN, old integral transformation not found as expected, ICASE = 2
+ - ICASE = 1: MO integral file MOTWOINT does not exist
+ - ICASE = 2: no MO integrals on MOTWOINT
+ - ICASE = 3: transformation level on MOTWOINT not sufficient
+
+ 2-el. integral transformation level 4: Total CPU and WALL times (sec)       0.000       0.000
+
+ Sorting integrals to Dirac format: Total CPU and WALL times (sec)       0.000       0.000
+
+
+ open shell SCF energy:       -7.631508422223442
+ -- inactive part     :       -8.626888466364141
+ --   active part     :        0.000000000000000
+ -- nuclear repulsion :        0.995380044140699
+
+ NISHT,NASHT,NORBT,NBAST,NCREF,IREFSY     1     1     6     6     1     1
+
+ **** RSPMC **** MO coefficients read from SIRIFC for symmetry    1
+
+               Column   1     Column   2     Column   3     Column   4
+       1       0.98862446    -0.12143128     0.24056100    -0.11538672
+       2       0.04378496     0.19198185    -0.89314972     0.71234747
+       3       0.00217381     0.20989318     0.50236713     1.07728268
+       4      -0.00104383     0.79706099     0.12498136    -1.03906332
+    ==== End of matrix output ====
+
+ **** RSPMC **** MO coefficients read from SIRIFC for symmetry    2
+
+               Column   1
+       1       1.00000000
+    ==== End of matrix output ====
+
+ **** RSPMC **** MO coefficients read from SIRIFC for symmetry    3
+
+               Column   1
+       1       1.00000000
+    ==== End of matrix output ====
+
+ **** RSPMC **** MO coefficients read from SIRIFC for symmetry    4
+    ==== End of matrix output ====
+
+
+                    ******************************************
+                    *** High-spin DFT response calculation ***
+                    ******************************************
+
+ ----------------------------------------------------------------
+ ----- Linear response calculation
+ ----- Symmetry of excitation/property operator(s)    1  ( A1 )
+ ----------------------------------------------------------------
+
+ Number of excitations of this symmetry            1
+ Number of response properties of this symmetry    0
+ Number of C6/C8 properties of this symmetry       0
+
+
+ Perturbation symmetry.     KSYMOP:       1
+ Perturbation spin symmetry.TRPLET:       F
+ Orbital variables.         KZWOPT:       5
+ Configuration variables.   KZCONF:       0
+ Total number of variables. KZVAR :       5
+
+ KZYWOP,KZYCON,KZYVAR:      10       0      10
+
+ ONE ELECTRON ACTIVE DENSITY MATRIX - UNPACKED
+
+               Column   1
+       1       1.00000000
+    ==== End of matrix output ====
+
+ FOCK VALENCE MATRIX
+
+     *** Block  1 ***
+
+               Column   1     Column   2     Column   3     Column   4
+       1       0.00166769
+       2       0.00296257     0.21490992
+       3      -0.00006883     0.02337376     0.01230529
+       4      -0.00022483    -0.11878466    -0.02144837     0.11933982
+
+     *** Block  2 ***
+
+               Column   1
+       1       0.01823794
+
+     *** Block  3 ***
+
+               Column   1
+       1       0.01823794
+    ==== End of matrix output ====
+
+ FOCK CORE MATRIX
+
+     *** Block  1 ***
+
+               Column   1     Column   2     Column   3     Column   4
+       1      -2.14353863
+       2      -0.00592513    -0.58455791
+       3       0.00006884    -0.00000002    -0.24189521
+       4       0.00022483    -0.00000000     0.02144839    -0.02931491
+
+     *** Block  2 ***
+
+               Column   1
+       1      -0.21106722
+
+     *** Block  3 ***
+
+               Column   1
+       1      -0.21106722
+    ==== End of matrix output ====
+
+ TOTAL FOCK  MATRIX
+
+     *** Block  1 ***
+
+               Column   1     Column   2     Column   3     Column   4
+       1      -4.28374188    -0.00592512     0.00000001     0.00000001
+       2      -0.00592513    -0.58455791    -0.00000002    -0.00000000
+
+     *** Block  2 zero matrix. ***
+
+     *** Block  3 zero matrix. ***
+    ==== End of matrix output ====
+  DIAGONAL ORBITAL PART OF E(2) 
+
+               Column   1
+       1       1.98723287
+       2       3.82466204
+       3       4.46389171
+       4       0.35506799
+       5       0.67468283
+    ==== End of matrix output ====
+  DIAGONAL ORBITAL PART OF S(2)
+
+               Column   1
+       1       1.00000000
+       2       2.00000000
+       3       2.00000000
+       4       1.00000000
+       5       1.00000000
+    ==== End of matrix output ====
+
+ FOCK MATRIX CONTRIBUTION TO DIAGONAL ORBITAL PART OF E[2]
+
+ (FOCK TYPE DECOUPLING OF TWO ELECTRON DENSITY MATRIX USED)
+
+     Orbital operator symmetry = 1
+     (only elements abs greater than 1.0D-01 times max abs value)
+
+      Index(r,s)     r    s      operator value
+      ----------    --   --      --------------
+              1      1    2        1.9872328672
+              2      1    3        3.8246620353
+              3      1    4        4.4638917135
+              5      2    4        0.6746828285
+
+       1 elements with absolute value less than 4.46D-01 not printed.
+
+               Column   1
+       1       1.98723287
+       2       3.82466204
+       3       4.46389171
+       4       0.35506799
+       5       0.67468283
+    ==== End of matrix output ====
+
+ DIAGONAL ORBITAL PART OF S[2]
+
+               Column   1
+       1       1.00000000
+       2       2.00000000
+       3       2.00000000
+       4       1.00000000
+       5       1.00000000
+    ==== End of matrix output ====
+
+ --- In RSPPP:
+ THCPP, MAXRM          1.00D-03       600
+ KSYMOP,NGPPP(KSYMOP)         1         1
+ LWRK , LWRK1          63999905  62918105
+  KEXCNV,NSIM,LWRK2            1           1     1081994
+
+
+
+ --- EXCITATION ENERGIES AND TRANSITION MOMENT CALCULATION (MCTDHF) ---
+
+ Operator symmetry = 1  ( A1 ); triplet =   F
+
+  KLIDEN,KUSE,KMAXVE,LBINTM,NORBT,NASHT,KZYVAR,LWRK 
+           2          98         225          12           6           1          10    62918105
+  LACIMX           0
+
+ MAXIMUM NUMBER OF SIMULTANEOUS TRIAL VECTORS:     120
+
+ MAXIMUM NUMBER OF SIMULTANEOUS TRIAL VECTORS IN RSPNEX:     120
+  LINEQ,RESTPP,ORBSPC F F F
+  DIMENSION SPECIFIED OF PHP, MAXPHP=         100
+  DIMENSION USED , NPCVAR=           0
+
+ DIAGONAL of E(2)
+
+               Column   1
+       1       1.98723287
+       2       3.82466204
+       3       4.46389171
+       4       0.35506799
+       5       0.67468283
+    ==== End of matrix output ====
+
+ DIAGONAL of orbital part of S(2)
+
+               Column   1
+       1       1.00000000
+       2       2.00000000
+       3       2.00000000
+       4       1.00000000
+       5       1.00000000
+    ==== End of matrix output ====
+
+ DIAGONAL E(2)/ABS(S(2))  
+
+               Column   1
+       1       1.98723287
+       2       1.91233102
+       3       2.23194586
+       4       0.35506799
+       5       0.67468283
+    ==== End of matrix output ====
+  NOSIM ORBITAL TRIAL VECTORS           1
+
+               Column   1
+       4       1.00000000
+    ==== End of matrix output ====
+
+ ** TEST OF Z = Y OR Z = -Y:
+ (Z Y) norm squared = 1.00000000D+00
+ Z + Y norm squared = 1.00000000D+00
+
+ RSPORT: b-vector, norm**2:     1 1.00000D+00
+ RSPORT, norm and <ZY/YZ> overlap before S-1/2  1.000000D+00   0.0000000000D+00
+  NOSIM ORBITAL TRIAL VECTORS           1
+
+               Column   1
+       4       1.00000000
+    ==== End of matrix output ====
+           0  START configuration VECTORS USING LOWEST DIAGONAL HESSIAN ELEMENTS
+           1  START orbital VECTORS
+ AFTER START ROUTINE BINMEM T
+
+ ** RSPCTL MICROITERATION NUMBER    1
+ NSIM,MAXSIM,JEXSIM    1  120    1
+  NCSIM,NOSIM           0           1
+
+ BEFORE RSPLIN
+
+    1 ORBITAL TRIAL VECTORS
+
+               Column   1
+       4       1.00000000
+    ==== End of matrix output ====
+           1  ZYMAT MATRICES
+
+               Column   1     Column   2     Column   3     Column   4     Column   5     Column   6
+       3       0.00000000     1.00000000     0.00000000     0.00000000     0.00000000     0.00000000
+    ==== End of matrix output ====
+
+
+Output from "RSPOLI". NCSIM,NOSIM=         0         1
+TRPLET,HSROHF,DFTADD         F         T         T
+TDHF,NASHT         T         1
+ Fock matrix I, IX, IFCTYP(I) =            1           0           3
+ Fock matrix I, IX, IFCTYP(I) =            2           0           3
+ RSPOLI:SIRFCK NFMAT DIRFCK           2 F
+ ISYMDM            1           1
+ IFCTYP            3           2
+ RSPOLI:SIRFCK DXCAO no.           1
+
+               Column   1     Column   2     Column   3     Column   4     Column   5     Column   6
+       1       0.02921163    -0.04618335    -0.05049211    -0.19174179     0.00000000     0.00000000
+       2      -0.10845632     0.17146853     0.18746603     0.71189480     0.00000000     0.00000000
+       3       0.06100308    -0.09644537    -0.10544343    -0.40041724     0.00000000     0.00000000
+       4       0.01517665    -0.02399415    -0.02623274    -0.09961777     0.00000000     0.00000000
+    ==== End of matrix output ====
+ LAGRAN? NCSIM,TDHF,TRPLET,HSROHF,DFTADD:           0 T F T T
+           1 . ONE-INDEX TRANSFORMED FOCK CORE MATRIX BEFORE DIRECT [FC,ZYMAT] CONTRIBUTION
+
+               Column   1     Column   2     Column   3     Column   4     Column   5
+       1       0.01140062    -0.00194883    -0.00021720    -0.00334986     0.00000000
+       2      -0.00194883    -0.02666905     0.00451261     0.01142905     0.00000000
+       3      -0.00021720     0.00451261     0.04183403     0.04083783     0.00000000
+       4      -0.00334986     0.01142905     0.04083783    -0.00135866     0.00000000
+       5       0.00000000     0.00000000     0.00000000     0.00000000    -0.01695629
+
+               Column   6
+       6      -0.01695629
+    ==== End of matrix output ====
+           1 . ONE-INDEX TRANSFORMED FOCK VALENCE MATRIX BEFORE DIRECT [FC,ZYMAT] CONTRIBUTION
+
+               Column   1     Column   2     Column   3     Column   4     Column   5
+       1       0.00164904    -0.00001530     0.00098411     0.00112017     0.00000000
+       2      -0.00001530    -0.01024646    -0.00510893     0.00725248     0.00000000
+       3       0.00098411    -0.00510893    -0.02003824    -0.01830652     0.00000000
+       4       0.00112017     0.00725248    -0.01830652    -0.01149561     0.00000000
+       5       0.00000000     0.00000000     0.00000000     0.00000000     0.00876595
+
+               Column   6
+       6       0.00876595
+    ==== End of matrix output ====
+           1 . ONE-INDEX TRANSFORMED FOCK CORE MATRIX
+
+               Column   1     Column   2     Column   3     Column   4     Column   5     Column   6
+       1       0.01140062    -0.00201767    -0.00021720    -0.00334986     0.00000000     0.00000000
+       2      -0.00194883    -0.02666903     0.00451261     0.01142905     0.00000000     0.00000000
+       3      -0.00614233    -0.33815010     0.04183401     0.04083782     0.00000000     0.00000000
+       4      -0.00334986    -0.01001934     0.04083783    -0.00135866     0.00000000     0.00000000
+       5       0.00000000     0.00000000     0.00000000     0.00000000    -0.01695629     0.00000000
+       6       0.00000000     0.00000000     0.00000000     0.00000000     0.00000000    -0.01695629
+    ==== End of matrix output ====
+           1 . ONE-INDEX TRANSFORMED FOCK VALENCE MATRIX
+
+               Column   1     Column   2     Column   3     Column   4     Column   5     Column   6
+       1       0.00164904     0.00005353     0.00098411     0.00112017     0.00000000     0.00000000
+       2      -0.00001530    -0.03362022    -0.00510893     0.00725248     0.00000000     0.00000000
+       3       0.00394668     0.19749570     0.00333552    -0.13709118     0.00000000     0.00000000
+       4       0.00112017     0.02870086    -0.01830652    -0.01149561     0.00000000     0.00000000
+       5       0.00000000     0.00000000     0.00000000     0.00000000     0.00876595     0.00000000
+       6       0.00000000     0.00000000     0.00000000     0.00000000     0.00000000     0.00876595
+    ==== End of matrix output ====
+  CORE FOCK MATRIX 
+
+     *** Block  1 ***
+
+               Column   1     Column   2     Column   3     Column   4
+       1      -2.14353863
+       2      -0.00592513    -0.58455791
+       3       0.00006884    -0.00000002    -0.24189521
+       4       0.00022483    -0.00000000     0.02144839    -0.02931491
+
+     *** Block  2 ***
+
+               Column   1
+       1      -0.21106722
+
+     *** Block  3 ***
+
+               Column   1
+       1      -0.21106722
+    ==== End of matrix output ====
+  VALENCE FOCK MATRIX 
+
+     *** Block  1 ***
+
+               Column   1     Column   2     Column   3     Column   4
+       1       0.00166769
+       2       0.00296257     0.21490992
+       3      -0.00006883     0.02337376     0.01230529
+       4      -0.00022483    -0.11878466    -0.02144837     0.11933982
+
+     *** Block  2 ***
+
+               Column   1
+       1       0.01823794
+
+     *** Block  3 ***
+
+               Column   1
+       1       0.01823794
+    ==== End of matrix output ====
+
+ FCX total contribution for vector    1
+
+               Column   1     Column   2     Column   3     Column   4     Column   5     Column   6
+       1       0.01140062    -0.00201767    -0.00021720    -0.00334986     0.00000000     0.00000000
+       2      -0.00194883    -0.02666903     0.00451261     0.01142905     0.00000000     0.00000000
+       3      -0.00614233    -0.33815010     0.04183401     0.04083782     0.00000000     0.00000000
+       4      -0.00334986    -0.01001934     0.04083783    -0.00135866     0.00000000     0.00000000
+       5       0.00000000     0.00000000     0.00000000     0.00000000    -0.01695629     0.00000000
+       6       0.00000000     0.00000000     0.00000000     0.00000000     0.00000000    -0.01695629
+    ==== End of matrix output ====
+
+ FVX total contribution for vector    1
+
+               Column   1     Column   2     Column   3     Column   4     Column   5     Column   6
+       1       0.00164904     0.00005353     0.00098411     0.00112017     0.00000000     0.00000000
+       2      -0.00001530    -0.03362022    -0.00510893     0.00725248     0.00000000     0.00000000
+       3       0.00394668     0.19749570     0.00333552    -0.13709118     0.00000000     0.00000000
+       4       0.00112017     0.02870086    -0.01830652    -0.01149561     0.00000000     0.00000000
+       5       0.00000000     0.00000000     0.00000000     0.00000000     0.00876595     0.00000000
+       6       0.00000000     0.00000000     0.00000000     0.00000000     0.00000000     0.00876595
+    ==== End of matrix output ====
+  LINEAR TRANSFORMATION WITH  E(2) (Z1 Y1 Z2 Y2 ...)
+
+               Column   1     Column   2
+       1       0.00197943    -0.00191060
+       2       0.00439130     0.00153382
+       3       0.00445937    -0.00445937
+       4       0.33815010     0.00451261
+       5       0.01001934     0.01142905
+    ==== End of matrix output ====
+  BEFORE WRITING IBTYP ON LURSP1 LINEQ: F
+
+ TRIAL VECTORS FOR RESTART:    1
+
+    1 ORBITAL TRIAL VECTORS
+
+               Column   1
+       4       1.00000000
+    ==== End of matrix output ====
+
+    1 E(2) LINEAR TRANSF. VECTORS
+
+               Column   1
+       1       0.00197943
+       2       0.00439130
+       3       0.00445937
+       4       0.33815010
+       5       0.01001934
+       6      -0.00191060
+       7       0.00153382
+       8      -0.00445937
+       9       0.00451261
+      10       0.01142905
+    ==== End of matrix output ====
+
+ INDEX VECTOR FOR E(2) TRANSFORMED TRIAL VECTORS
+           1
+
+ IBTYP VECTOR FOR E(2) TRANSFORMED TRIAL VECTORS
+           1
+           1  ZYMAT MATRICES
+
+               Column   1     Column   2     Column   3     Column   4     Column   5     Column   6
+       3       0.00000000     1.00000000     0.00000000     0.00000000     0.00000000     0.00000000
+    ==== End of matrix output ====
+  LINEAR TRANSFORMATION WITH  S(2) (Z1 Y1 Z2 Y2 ...)
+
+               Column   1     Column   2
+       4       1.00000000     0.00000000
+    ==== End of matrix output ====
+
+ RSPRED: REDUCED HESSIAN MATRIX:
+
+               Column   1     Column   2
+       1       0.33815010
+       2       0.00451261     0.33815010
+    ==== End of matrix output ====
+
+ RSPRED: REDUCED METRIC MATRIX:
+
+               Column   1     Column   2
+       1       1.00000000
+       2      -0.00000000    -1.00000000
+    ==== End of matrix output ====
+
+ REDUCED EIGENVECTORS BEFORE ORDERING:
+
+               Column   1     Column   2
+       1       0.00667279    -1.00000000
+       2      -1.00000000     0.00667279
+    ==== End of matrix output ====
+
+ REDUCED EIGENVALUES (2,KZRED):
+
+               Column   1
+       1      -0.33811998
+       2       0.33811998
+    ==== End of matrix output ====
+
+
+     (ALFAR + i ALFAI) / BETA are eigenvalues;
+   I      ALFAR           ALFAI          BETA
+    1  -3.381200D-01   0.000000D+00   1.000000D+00
+    2   3.381200D-01   0.000000D+00   1.000000D+00
+
+ Unsorted eigenvalues of [ E(2) , S(2) ] :
+         1  -3.381200D-01
+         2   3.381200D-01
+
+ Reduced S(2) in eigenvector basis :
+
+               Column   1     Column   2
+       1      -0.99995547    -0.00000000
+       2      -0.00000000     0.99995547
+    ==== End of matrix output ====
+
+      NUMBER      EIGENVALUE      PAIRED EIGENVALUE
+         1      3.38119983D-01     -3.38119983D-01
+ S[2] reduced matrix
+
+               Column   1     Column   2
+       1       1.00000000
+       2      -0.00000000    -1.00000000
+    ==== End of matrix output ====
+ The eigenvalues of S[2] reduced matrix
+
+               Column   1
+       1       1.00000000
+       2      -1.00000000
+    ==== End of matrix output ====
+ E[2] reduced matrix
+
+               Column   1     Column   2
+       1       0.33815010
+       2       0.00451261     0.33815010
+    ==== End of matrix output ====
+ The eigenvalues of E[2] reduced matrix
+
+               Column   1
+       1       0.34266270
+       2       0.33363749
+    ==== End of matrix output ====
+
+ REDUCED EIGENVECTORS AFTER ORDERING:
+
+               Column   1     Column   2
+       1      -1.00002226     0.00667294
+       2       0.00667294    -1.00002226
+    ==== End of matrix output ====
+
+
+ NUMBER OF EIGENVALUES WITH POSITIVE, ZERO, AND NEGATIVE METRIC:    1    0    1
+
+ THE EIGENVALUES WITH POSITIVE METRIC:
+      NUMBER      EIGENVALUE
+         1      3.38119983D-01
+
+
+ EIGENVECTOR NO.    1
+          TRIAL VEC.   coeff. for ZY       coeff. for YZ
+
+              1       -1.000022D+00        6.672939D-03
+  RSPNEX: Solution vectors no.           1  to           1  (Z1 Y1 ...)
+
+               Column   1     Column   2
+       4      -1.00002226     0.00667294
+    ==== End of matrix output ====
+           1  ZYMAT MATRICES
+
+               Column   1     Column   2     Column   3     Column   4     Column   5     Column   6
+       2       0.00000000     0.00000000     0.00667294     0.00000000     0.00000000     0.00000000
+       3       0.00000000    -1.00002226     0.00000000     0.00000000     0.00000000     0.00000000
+    ==== End of matrix output ====
+  LINEAR TRANSFORMATION WITH  S(2) (Z1 Y1 Z2 Y2 ...)
+
+               Column   1     Column   2
+       4      -1.00002226    -0.00667294
+    ==== End of matrix output ====
+  RSPNEX: (Z,Y) residual vectors no.           1  to           1
+
+               Column   1     Column   2
+       1      -0.00199222     0.00192385
+       2      -0.00438117    -0.00150455
+       3      -0.00448923     0.00448923
+       5      -0.00994330    -0.01136244
+    ==== End of matrix output ====
+
+ ROOT:  1 RESIDUAL TOT: 1.72456D-02 CONF: 0.00000D+00 ORB: 1.72456D-02
+          BNORM: 1.00004D+00 EIVAL: 3.38120D-01
+  NBX ORBITAL VECTORS WRITTEN OUT           1
+  NOSIM ORBITAL TRIAL VECTORS               1
+  KZWOPT                                    5
+  (Z1 Y1 Z2 Y2 ...)
+
+               Column   1     Column   2
+       1      -0.00120806     0.00082734
+       2      -0.00139154    -0.00033428
+       3      -0.00118523     0.00087337
+       5      -0.02954366    -0.01121881
+    ==== End of matrix output ====
+
+ ** TEST OF Z = Y OR Z = -Y:
+ (Z Y) norm squared = 1.00504924D-03
+ Z + Y norm squared = 1.66479993D-03
+ Z - Y norm squared = 3.45298548D-04
+
+ RSPORT: b-vector, norm**2:     1 1.00505D-03
+ RSPORT, norm and <ZY/YZ> overlap before S-1/2  1.000000D+00   6.5643618728D-01
+ RSPORT, norm and <ZY/YZ> overlap before S-1/2  1.000000D+00   2.3071822230D-16
+ RSPORT, norm and <ZY/YZ> overlap after  S-1/2  1.000000D+00   8.6736173799D-18
+
+ NOSIM orbital trial vectors after RSPORT    1
+ ( columns: Z_1 Y_1 Z_2 Y_2 ... Z_NOSIM Y_NOSIM)
+
+               Column   1     Column   2
+       1      -0.05943281     0.05010188
+       2      -0.04959711     0.00729962
+       3      -0.05921320     0.05156996
+       5      -0.99259117    -0.00644108
+    ==== End of matrix output ====
+
+ NUMBER OF TRIAL VECTORS IN THIS LOAD    1   OFFSET FOR THIS LOAD    0
+    1 NON-CONVERGED SOLUTION VECTORS THIS LOAD, TOTAL:    1
+    1 LINEAR INDEPENDENT TRIAL VECTORS ADDED TO PREVIOUS    0
+
+ Convergence of RSP solution vectors, threshold = 1.00D-03
+ ---------------------------------------------------------------
+ (dimension of paired reduced space:    2)
+ RSP solution vector no.    1; norm of residual   1.72D-02
+
+ ** RSPCTL MICROITERATION NUMBER    2
+ NSIM,MAXSIM,JEXSIM    1  120    1
+  NCSIM,NOSIM           0           1
+
+ BEFORE RSPLIN
+
+    1 ORBITAL TRIAL VECTORS
+
+               Column   1
+       1      -0.05943281
+       2      -0.04959711
+       3      -0.05921320
+       5      -0.99259117
+       6       0.05010188
+       7       0.00729962
+       8       0.05156996
+      10      -0.00644108
+    ==== End of matrix output ====
+           1  ZYMAT MATRICES
+
+               Column   1     Column   2     Column   3     Column   4     Column   5     Column   6
+       1       0.00000000     0.05010188     0.00729962     0.05156996     0.00000000     0.00000000
+       2      -0.05943281     0.00000000     0.00000000    -0.00644108     0.00000000     0.00000000
+       3      -0.04959711     0.00000000     0.00000000     0.00000000     0.00000000     0.00000000
+       4      -0.05921320    -0.99259117     0.00000000     0.00000000     0.00000000     0.00000000
+    ==== End of matrix output ====
+
+
+Output from "RSPOLI". NCSIM,NOSIM=         0         1
+TRPLET,HSROHF,DFTADD         F         T         T
+TDHF,NASHT         T         1
+ Fock matrix I, IX, IFCTYP(I) =            1           0           3
+ Fock matrix I, IX, IFCTYP(I) =            2           0           3
+ RSPOLI:SIRFCK NFMAT DIRFCK           2 F
+ ISYMDM            1           1
+ IFCTYP            3           2
+ RSPOLI:SIRFCK DXCAO no.           1
+
+               Column   1     Column   2     Column   3     Column   4     Column   5     Column   6
+       1       0.00245575     0.04795357     0.10430369    -0.15677062     0.00000000     0.00000000
+       2      -0.07925755     0.13824505     0.15273915     0.56199117     0.00000000     0.00000000
+       3       0.05800302     0.21278978     0.22367573     0.85336268     0.00000000     0.00000000
+       4       0.06328384    -0.20450451    -0.22227937    -0.81659206     0.00000000     0.00000000
+    ==== End of matrix output ====
+ LAGRAN? NCSIM,TDHF,TRPLET,HSROHF,DFTADD:           0 T F T T
+           1 . ONE-INDEX TRANSFORMED FOCK CORE MATRIX BEFORE DIRECT [FC,ZYMAT] CONTRIBUTION
+
+               Column   1     Column   2     Column   3     Column   4     Column   5
+       1       0.02694555    -0.00506018     0.00262724    -0.00265863     0.00000000
+       2      -0.00506018    -0.11349441    -0.01064719     0.03601491     0.00000000
+       3       0.00262724    -0.01064719    -0.01890571     0.00369008     0.00000000
+       4      -0.00265863     0.03601491     0.00369008    -0.07497511     0.00000000
+       5       0.00000000     0.00000000     0.00000000     0.00000000    -0.01547099
+
+               Column   6
+       6      -0.01547099
+    ==== End of matrix output ====
+           1 . ONE-INDEX TRANSFORMED FOCK VALENCE MATRIX BEFORE DIRECT [FC,ZYMAT] CONTRIBUTION
+
+               Column   1     Column   2     Column   3     Column   4     Column   5
+       1       0.00333748    -0.00178458    -0.00086217     0.00079315     0.00000000
+       2      -0.00178458    -0.19396794    -0.02389574     0.13110873     0.00000000
+       3      -0.00086217    -0.02389574     0.02142719     0.02860745     0.00000000
+       4       0.00079315     0.13110873     0.02860745    -0.09112739     0.00000000
+       5       0.00000000     0.00000000     0.00000000     0.00000000     0.00586723
+
+               Column   6
+       6       0.00586723
+    ==== End of matrix output ====
+           1 . ONE-INDEX TRANSFORMED FOCK CORE MATRIX
+
+               Column   1     Column   2     Column   3     Column   4     Column   5     Column   6
+       1       0.02632537     0.07327085     0.01761460     0.10649021     0.00000000     0.00000000
+       2       0.08759297    -0.11284541    -0.01074618     0.03273074     0.00000000     0.00000000
+       3       0.09821327     0.01093272    -0.01890963     0.00367538     0.00000000     0.00000000
+       4       0.12947633     0.58748380     0.00368438    -0.07500001     0.00000000     0.00000000
+       5       0.00000000     0.00000000     0.00000000     0.00000000    -0.01547099     0.00000000
+       6       0.00000000     0.00000000     0.00000000     0.00000000     0.00000000    -0.01547099
+    ==== End of matrix output ====
+           1 . ONE-INDEX TRANSFORMED FOCK VALENCE MATRIX
+
+               Column   1     Column   2     Column   3     Column   4     Column   5     Column   6
+       1       0.00363316     0.00272100    -0.00071955     0.00077268     0.00000000     0.00000000
+       2       0.00501611    -0.31143195    -0.02377512     0.13158489     0.00000000     0.00000000
+       3      -0.00021544    -0.04532869     0.02143111     0.02877270     0.00000000     0.00000000
+       4      -0.00330321     0.03608254     0.00541257     0.02603702     0.00000000     0.00000000
+       5       0.00000000     0.00000000     0.00000000     0.00000000     0.00586723     0.00000000
+       6       0.00000000     0.00000000     0.00000000     0.00000000     0.00000000     0.00586723
+    ==== End of matrix output ====
+  CORE FOCK MATRIX 
+
+     *** Block  1 ***
+
+               Column   1     Column   2     Column   3     Column   4
+       1      -2.14353863
+       2      -0.00592513    -0.58455791
+       3       0.00006884    -0.00000002    -0.24189521
+       4       0.00022483    -0.00000000     0.02144839    -0.02931491
+
+     *** Block  2 ***
+
+               Column   1
+       1      -0.21106722
+
+     *** Block  3 ***
+
+               Column   1
+       1      -0.21106722
+    ==== End of matrix output ====
+  VALENCE FOCK MATRIX 
+
+     *** Block  1 ***
+
+               Column   1     Column   2     Column   3     Column   4
+       1       0.00166769
+       2       0.00296257     0.21490992
+       3      -0.00006883     0.02337376     0.01230529
+       4      -0.00022483    -0.11878466    -0.02144837     0.11933982
+
+     *** Block  2 ***
+
+               Column   1
+       1       0.01823794
+
+     *** Block  3 ***
+
+               Column   1
+       1       0.01823794
+    ==== End of matrix output ====
+
+ FCX total contribution for vector    1
+
+               Column   1     Column   2     Column   3     Column   4     Column   5     Column   6
+       1       0.02632537     0.07327085     0.01761460     0.10649021     0.00000000     0.00000000
+       2       0.08759297    -0.11284541    -0.01074618     0.03273074     0.00000000     0.00000000
+       3       0.09821327     0.01093272    -0.01890963     0.00367538     0.00000000     0.00000000
+       4       0.12947633     0.58748380     0.00368438    -0.07500001     0.00000000     0.00000000
+       5       0.00000000     0.00000000     0.00000000     0.00000000    -0.01547099     0.00000000
+       6       0.00000000     0.00000000     0.00000000     0.00000000     0.00000000    -0.01547099
+    ==== End of matrix output ====
+
+ FVX total contribution for vector    1
+
+               Column   1     Column   2     Column   3     Column   4     Column   5     Column   6
+       1       0.00363316     0.00272100    -0.00071955     0.00077268     0.00000000     0.00000000
+       2       0.00501611    -0.31143195    -0.02377512     0.13158489     0.00000000     0.00000000
+       3      -0.00021544    -0.04532869     0.02143111     0.02877270     0.00000000     0.00000000
+       4      -0.00330321     0.03608254     0.00541257     0.02603702     0.00000000     0.00000000
+       5       0.00000000     0.00000000     0.00000000     0.00000000     0.00586723     0.00000000
+       6       0.00000000     0.00000000     0.00000000     0.00000000     0.00000000     0.00586723
+    ==== End of matrix output ====
+  LINEAR TRANSFORMATION WITH  E(2) (Z1 Y1 Z2 Y2 ...)
+
+               Column   1     Column   2
+       1      -0.09762519     0.07871285
+       2      -0.19599567     0.03379011
+       3      -0.25234622     0.21452577
+       4      -0.01093272    -0.01074618
+       5      -0.58748380     0.03273074
+    ==== End of matrix output ====
+  BEFORE WRITING IBTYP ON LURSP1 LINEQ: F
+
+ TRIAL VECTORS FOR RESTART:    2
+
+    1 ORBITAL TRIAL VECTORS
+
+               Column   1
+       1      -0.05943281
+       2      -0.04959711
+       3      -0.05921320
+       5      -0.99259117
+       6       0.05010188
+       7       0.00729962
+       8       0.05156996
+      10      -0.00644108
+    ==== End of matrix output ====
+
+    1 E(2) LINEAR TRANSF. VECTORS
+
+               Column   1
+       1      -0.09762519
+       2      -0.19599567
+       3      -0.25234622
+       4      -0.01093272
+       5      -0.58748380
+       6       0.07871285
+       7       0.03379011
+       8       0.21452577
+       9      -0.01074618
+      10       0.03273074
+    ==== End of matrix output ====
+
+ INDEX VECTOR FOR E(2) TRANSFORMED TRIAL VECTORS
+           1
+
+ IBTYP VECTOR FOR E(2) TRANSFORMED TRIAL VECTORS
+           1
+           1  ZYMAT MATRICES
+
+               Column   1     Column   2     Column   3     Column   4     Column   5     Column   6
+       1       0.00000000     0.05010188     0.00729962     0.05156996     0.00000000     0.00000000
+       2      -0.05943281     0.00000000     0.00000000    -0.00644108     0.00000000     0.00000000
+       3      -0.04959711     0.00000000     0.00000000     0.00000000     0.00000000     0.00000000
+       4      -0.05921320    -0.99259117     0.00000000     0.00000000     0.00000000     0.00000000
+    ==== End of matrix output ====
+  LINEAR TRANSFORMATION WITH  S(2) (Z1 Y1 Z2 Y2 ...)
+
+               Column   1     Column   2
+       1      -0.05943281    -0.05010188
+       2      -0.09919421    -0.01459924
+       3      -0.11842639    -0.10313992
+       5      -0.99259117     0.00644108
+    ==== End of matrix output ====
+
+ RSPRED: REDUCED HESSIAN MATRIX:
+
+               Column   1     Column   2     Column   3     Column   4
+       1       0.33815010
+       2       0.00451261     0.33815010
+       3      -0.01093272    -0.01074618     0.62863900
+       4      -0.01074618    -0.01093272    -0.06709637     0.62863900
+    ==== End of matrix output ====
+
+ RSPRED: REDUCED METRIC MATRIX:
+
+               Column   1     Column   2     Column   3     Column   4
+       1       1.00000000
+       2      -0.00000000    -1.00000000
+       3       0.00000000     0.00000000     0.99272447
+       4      -0.00000000    -0.00000000    -0.00000000    -0.99272447
+    ==== End of matrix output ====
+
+ REDUCED EIGENVECTORS BEFORE ORDERING:
+
+               Column   1     Column   2     Column   3     Column   4
+       1       0.03924470    -1.00000000    -0.01188483    -0.00581454
+       2      -0.01188483     0.00581454     0.03924470     1.00000000
+       3      -1.00000000    -0.04020234    -0.05327298     0.01388377
+       4      -0.05327298    -0.01388377    -1.00000000     0.04020234
+    ==== End of matrix output ====
+
+ REDUCED EIGENVALUES (2,KZRED):
+
+               Column   1     Column   2
+       1       0.62537361    -0.62537409
+       2       0.33753098    -0.33753072
+    ==== End of matrix output ====
+
+
+     (ALFAR + i ALFAI) / BETA are eigenvalues;
+   I      ALFAR           ALFAI          BETA
+    1   6.253736D-01   0.000000D+00   9.927367D-01
+    2   3.375310D-01   0.000000D+00   9.999877D-01
+    3  -6.253741D-01   0.000000D+00   9.927375D-01
+    4  -3.375307D-01   0.000000D+00   9.999869D-01
+
+ Unsorted eigenvalues of [ E(2) , S(2) ] :
+         1   6.299491D-01
+         2   3.375351D-01
+         3  -6.299491D-01
+         4  -3.375351D-01
+
+ Reduced S(2) in eigenvector basis :
+
+               Column   1     Column   2     Column   3     Column   4
+       1       0.99130600    -0.00000000     0.00000000     0.00000000
+       2      -0.00000000     1.00137930     0.00000000     0.00000000
+       3       0.00000000     0.00000000    -0.99130600    -0.00000000
+       4       0.00000000     0.00000000    -0.00000000    -1.00137930
+    ==== End of matrix output ====
+
+      NUMBER      EIGENVALUE      PAIRED EIGENVALUE
+         1      3.37535138D-01     -3.37535138D-01
+         2      6.29949122D-01     -6.29949122D-01
+ S[2] reduced matrix
+
+               Column   1     Column   2     Column   3     Column   4
+       1       1.00000000
+       2      -0.00000000    -1.00000000
+       3       0.00000000     0.00000000     0.99272447
+       4      -0.00000000    -0.00000000    -0.00000000    -0.99272447
+    ==== End of matrix output ====
+ The eigenvalues of S[2] reduced matrix
+
+               Column   1     Column   2
+       1       1.00000000     0.99272447
+       2      -1.00000000    -0.99272447
+    ==== End of matrix output ====
+ E[2] reduced matrix
+
+               Column   1     Column   2     Column   3     Column   4
+       1       0.33815010
+       2       0.00451261     0.33815010
+       3      -0.01093272    -0.01074618     0.62863900
+       4      -0.01074618    -0.01093272    -0.06709637     0.62863900
+    ==== End of matrix output ====
+ The eigenvalues of E[2] reduced matrix
+
+               Column   1     Column   2
+       1       0.34053618     0.56366914
+       2       0.33363739     0.69573547
+    ==== End of matrix output ====
+
+ REDUCED EIGENVECTORS AFTER ORDERING:
+
+               Column   1     Column   2     Column   3     Column   4
+       1      -0.99931106     0.03941642    -0.00581054    -0.01193683
+       2       0.00581054    -0.01193683     0.99931106     0.03941642
+       3      -0.04017464    -1.00437555     0.01387420    -0.05350608
+       4      -0.01387420    -0.05350608     0.04017464    -1.00437555
+    ==== End of matrix output ====
+
+
+ NUMBER OF EIGENVALUES WITH POSITIVE, ZERO, AND NEGATIVE METRIC:    2    0    2
+
+ THE EIGENVALUES WITH POSITIVE METRIC:
+      NUMBER      EIGENVALUE
+         1      3.37535138D-01
+         2      6.29949122D-01
+
+
+ EIGENVECTOR NO.    1
+          TRIAL VEC.   coeff. for ZY       coeff. for YZ
+
+              1       -9.993111D-01        5.810536D-03
+              2       -4.017464D-02       -1.387420D-02
+  RSPNEX: Solution vectors no.           1  to           1  (Z1 Y1 ...)
+
+               Column   1     Column   2
+       1       0.00169257    -0.00118824
+       2       0.00189127     0.00039486
+       3       0.00166338    -0.00125027
+       4      -0.99931106     0.00581054
+       5       0.03996636     0.01403018
+    ==== End of matrix output ====
+           1  ZYMAT MATRICES
+
+               Column   1     Column   2     Column   3     Column   4     Column   5     Column   6
+       1       0.00000000    -0.00118824     0.00039486    -0.00125027     0.00000000     0.00000000
+       2       0.00169257     0.00000000     0.00581054     0.01403018     0.00000000     0.00000000
+       3       0.00189127    -0.99931106     0.00000000     0.00000000     0.00000000     0.00000000
+       4       0.00166338     0.03996636     0.00000000     0.00000000     0.00000000     0.00000000
+    ==== End of matrix output ====
+  LINEAR TRANSFORMATION WITH  S(2) (Z1 Y1 Z2 Y2 ...)
+
+               Column   1     Column   2
+       1       0.00169257     0.00118824
+       2       0.00378254    -0.00078972
+       3       0.00332675     0.00250054
+       4      -0.99931106    -0.00581054
+       5       0.03996636    -0.01403018
+    ==== End of matrix output ====
+  RSPNEX: (Z,Y) residual vectors no.           1  to           1
+
+               Column   1     Column   2
+       1       0.00026951    -0.00028807
+       2       0.00174914     0.00012109
+       3       0.00155644    -0.00147920
+       5      -0.00028824     0.00020864
+    ==== End of matrix output ====
+
+ ROOT:  1 RESIDUAL TOT: 2.82257D-03 CONF: 0.00000D+00 ORB: 2.82257D-03
+          BNORM: 1.00023D+00 EIVAL: 3.37535D-01
+  NBX ORBITAL VECTORS WRITTEN OUT           1
+  NOSIM ORBITAL TRIAL VECTORS               1
+  KZWOPT                                    5
+  (Z1 Y1 Z2 Y2 ...)
+
+               Column   1     Column   2
+       1     1.633684E-04  -1.239156E-04
+       2     5.553540E-04   2.691126E-05
+       3     4.107972E-04  -2.878404E-04
+       5    -8.549439E-04   2.061242E-04
+    ==== End of matrix output ====
+
+ ** TEST OF Z = Y OR Z = -Y:
+ (Z Y) norm squared = 1.37620939D-06
+ Z + Y norm squared = 7.76674762D-07
+
+ RSPORT: b-vector, norm**2:     1 7.70884D-07
+ RSPORT, norm and <ZY/YZ> overlap before S-1/2  1.000000D+00  -4.9477107266D-01
+ RSPORT, norm and <ZY/YZ> overlap before S-1/2  1.000000D+00  -1.5959455979D-16
+ RSPORT, norm and <ZY/YZ> overlap after  S-1/2  1.000000D+00   1.1969591984D-16
+
+ RSPORT: b-vector, norm**2:     1 1.00000D+00
+ RSPORT, norm and <ZY/YZ> overlap before S-1/2  1.000000D+00   1.4571677198D-16
+ RSPORT, norm and <ZY/YZ> overlap before S-1/2  1.000000D+00  -1.3357370765D-16
+ RSPORT, norm and <ZY/YZ> overlap after  S-1/2  1.000000D+00   1.4571677198D-16
+
+ NOSIM orbital trial vectors after RSPORT    1
+ ( columns: Z_1 Y_1 Z_2 Y_2 ... Z_NOSIM Y_NOSIM)
+
+               Column   1     Column   2
+       1       0.21637178    -0.14385019
+       2       0.75777878     0.21739667
+       3       0.47456348    -0.26992092
+       5      -0.09917691     0.05564649
+    ==== End of matrix output ====
+
+ NUMBER OF TRIAL VECTORS IN THIS LOAD    1   OFFSET FOR THIS LOAD    0
+    1 NON-CONVERGED SOLUTION VECTORS THIS LOAD, TOTAL:    1
+    1 LINEAR INDEPENDENT TRIAL VECTORS ADDED TO PREVIOUS    0
+
+ Convergence of RSP solution vectors, threshold = 1.00D-03
+ ---------------------------------------------------------------
+ (dimension of paired reduced space:    4)
+ RSP solution vector no.    1; norm of residual   2.82D-03
+
+ ** RSPCTL MICROITERATION NUMBER    3
+ NSIM,MAXSIM,JEXSIM    1  120    1
+  NCSIM,NOSIM           0           1
+
+ BEFORE RSPLIN
+
+    1 ORBITAL TRIAL VECTORS
+
+               Column   1
+       1       0.21637178
+       2       0.75777878
+       3       0.47456348
+       5      -0.09917691
+       6      -0.14385019
+       7       0.21739667
+       8      -0.26992092
+      10       0.05564649
+    ==== End of matrix output ====
+           1  ZYMAT MATRICES
+
+               Column   1     Column   2     Column   3     Column   4     Column   5     Column   6
+       1       0.00000000    -0.14385019     0.21739667    -0.26992092     0.00000000     0.00000000
+       2       0.21637178     0.00000000     0.00000000     0.05564649     0.00000000     0.00000000
+       3       0.75777878     0.00000000     0.00000000     0.00000000     0.00000000     0.00000000
+       4       0.47456348    -0.09917691     0.00000000     0.00000000     0.00000000     0.00000000
+    ==== End of matrix output ====
+
+
+Output from "RSPOLI". NCSIM,NOSIM=         0         1
+TRPLET,HSROHF,DFTADD         F         T         T
+TDHF,NASHT         T         1
+ Fock matrix I, IX, IFCTYP(I) =            1           0           3
+ Fock matrix I, IX, IFCTYP(I) =            2           0           3
+ RSPOLI:SIRFCK NFMAT DIRFCK           2 F
+ ISYMDM            1           1
+ IFCTYP            3           2
+ RSPOLI:SIRFCK DXCAO no.           1
+
+               Column   1     Column   2     Column   3     Column   4     Column   5     Column   6
+       1      -0.04176543    -0.80842910    -0.39903396     0.49305747     0.00000000     0.00000000
+       2       0.62699789     0.01396915     0.01049792     0.06646616     0.00000000     0.00000000
+       3      -1.82237133    -0.05300247     0.03017630     0.07602086     0.00000000     0.00000000
+       4       0.62442639     0.03998291     0.02791943    -0.12939850     0.00000000     0.00000000
+    ==== End of matrix output ====
+ LAGRAN? NCSIM,TDHF,TRPLET,HSROHF,DFTADD:           0 T F T T
+           1 . ONE-INDEX TRANSFORMED FOCK CORE MATRIX BEFORE DIRECT [FC,ZYMAT] CONTRIBUTION
+
+               Column   1     Column   2     Column   3     Column   4     Column   5
+       1      -0.02103500    -0.00281229    -0.00374025    -0.00573470     0.00000000
+       2      -0.00281229    -0.04986718    -0.00497361     0.00998808     0.00000000
+       3      -0.00374025    -0.00497361    -0.06305001    -0.01666000     0.00000000
+       4      -0.00573470     0.00998808    -0.01666000    -0.03649137     0.00000000
+       5       0.00000000     0.00000000     0.00000000     0.00000000    -0.03228211
+
+               Column   6
+       6      -0.03228211
+    ==== End of matrix output ====
+           1 . ONE-INDEX TRANSFORMED FOCK VALENCE MATRIX BEFORE DIRECT [FC,ZYMAT] CONTRIBUTION
+
+               Column   1     Column   2     Column   3     Column   4     Column   5
+       1      -0.00311184     0.00065201     0.00011867     0.00700759     0.00000000
+       2       0.00065201    -0.60389784    -0.10370818     0.64110993     0.00000000
+       3       0.00011867    -0.10370818    -0.05498437     0.05396343     0.00000000
+       4       0.00700759     0.64110993     0.05396343    -0.51396762     0.00000000
+       5       0.00000000     0.00000000     0.00000000     0.00000000     0.02257221
+
+               Column   6
+       6       0.02257221
+    ==== End of matrix output ====
+           1 . ONE-INDEX TRANSFORMED FOCK CORE MATRIX
+
+               Column   1     Column   2     Column   3     Column   4     Column   5     Column   6
+       1      -0.01910522    -0.22704967     0.40388132    -0.57141539     0.00000000     0.00000000
+       2      -0.34011920    -0.05200154    -0.00247708     0.03933473     0.00000000     0.00000000
+       3      -1.45494390    -0.00732646    -0.06301281    -0.01647105     0.00000000     0.00000000
+       4      -1.02473356     0.06227586    -0.01667621    -0.03632398     0.00000000     0.00000000
+       5       0.00000000     0.00000000     0.00000000     0.00000000    -0.03228211     0.00000000
+       6       0.00000000     0.00000000     0.00000000     0.00000000     0.00000000    -0.03228211
+    ==== End of matrix output ====
+           1 . ONE-INDEX TRANSFORMED FOCK VALENCE MATRIX
+
+               Column   1     Column   2     Column   3     Column   4     Column   5     Column   6
+       1      -0.00397444     0.00709862     0.00485829    -0.01249505     0.00000000     0.00000000
+       2      -0.00684138    -0.62122130    -0.10556065     0.63654280     0.00000000     0.00000000
+       3      -0.00282109    -0.10360029    -0.05502156     0.05247381     0.00000000     0.00000000
+       4      -0.00717436     0.63300516     0.05166150    -0.49574436     0.00000000     0.00000000
+       5       0.00000000     0.00000000     0.00000000     0.00000000     0.02257221     0.00000000
+       6       0.00000000     0.00000000     0.00000000     0.00000000     0.00000000     0.02257221
+    ==== End of matrix output ====
+  CORE FOCK MATRIX 
+
+     *** Block  1 ***
+
+               Column   1     Column   2     Column   3     Column   4
+       1      -2.14353863
+       2      -0.00592513    -0.58455791
+       3       0.00006884    -0.00000002    -0.24189521
+       4       0.00022483    -0.00000000     0.02144839    -0.02931491
+
+     *** Block  2 ***
+
+               Column   1
+       1      -0.21106722
+
+     *** Block  3 ***
+
+               Column   1
+       1      -0.21106722
+    ==== End of matrix output ====
+  VALENCE FOCK MATRIX 
+
+     *** Block  1 ***
+
+               Column   1     Column   2     Column   3     Column   4
+       1       0.00166769
+       2       0.00296257     0.21490992
+       3      -0.00006883     0.02337376     0.01230529
+       4      -0.00022483    -0.11878466    -0.02144837     0.11933982
+
+     *** Block  2 ***
+
+               Column   1
+       1       0.01823794
+
+     *** Block  3 ***
+
+               Column   1
+       1       0.01823794
+    ==== End of matrix output ====
+
+ FCX total contribution for vector    1
+
+               Column   1     Column   2     Column   3     Column   4     Column   5     Column   6
+       1      -0.01910522    -0.22704967     0.40388132    -0.57141539     0.00000000     0.00000000
+       2      -0.34011920    -0.05200154    -0.00247708     0.03933473     0.00000000     0.00000000
+       3      -1.45494390    -0.00732646    -0.06301281    -0.01647105     0.00000000     0.00000000
+       4      -1.02473356     0.06227586    -0.01667621    -0.03632398     0.00000000     0.00000000
+       5       0.00000000     0.00000000     0.00000000     0.00000000    -0.03228211     0.00000000
+       6       0.00000000     0.00000000     0.00000000     0.00000000     0.00000000    -0.03228211
+    ==== End of matrix output ====
+
+ FVX total contribution for vector    1
+
+               Column   1     Column   2     Column   3     Column   4     Column   5     Column   6
+       1      -0.00397444     0.00709862     0.00485829    -0.01249505     0.00000000     0.00000000
+       2      -0.00684138    -0.62122130    -0.10556065     0.63654280     0.00000000     0.00000000
+       3      -0.00282109    -0.10360029    -0.05502156     0.05247381     0.00000000     0.00000000
+       4      -0.00717436     0.63300516     0.05166150    -0.49574436     0.00000000     0.00000000
+       5       0.00000000     0.00000000     0.00000000     0.00000000     0.02257221     0.00000000
+       6       0.00000000     0.00000000     0.00000000     0.00000000     0.00000000     0.02257221
+    ==== End of matrix output ====
+  LINEAR TRANSFORMATION WITH  E(2) (Z1 Y1 Z2 Y2 ...)
+
+               Column   1     Column   2
+       1       0.35380196    -0.21285243
+       2       2.91552997     0.81747922
+       3       2.06381585    -1.16782087
+       4       0.00732646    -0.00247708
+       5      -0.06227586     0.03933473
+    ==== End of matrix output ====
+  BEFORE WRITING IBTYP ON LURSP1 LINEQ: F
+
+ TRIAL VECTORS FOR RESTART:    3
+
+    1 ORBITAL TRIAL VECTORS
+
+               Column   1
+       1       0.21637178
+       2       0.75777878
+       3       0.47456348
+       5      -0.09917691
+       6      -0.14385019
+       7       0.21739667
+       8      -0.26992092
+      10       0.05564649
+    ==== End of matrix output ====
+
+    1 E(2) LINEAR TRANSF. VECTORS
+
+               Column   1
+       1       0.35380196
+       2       2.91552997
+       3       2.06381585
+       4       0.00732646
+       5      -0.06227586
+       6      -0.21285243
+       7       0.81747922
+       8      -1.16782087
+       9      -0.00247708
+      10       0.03933473
+    ==== End of matrix output ====
+
+ INDEX VECTOR FOR E(2) TRANSFORMED TRIAL VECTORS
+           1
+
+ IBTYP VECTOR FOR E(2) TRANSFORMED TRIAL VECTORS
+           1
+           1  ZYMAT MATRICES
+
+               Column   1     Column   2     Column   3     Column   4     Column   5     Column   6
+       1       0.00000000    -0.14385019     0.21739667    -0.26992092     0.00000000     0.00000000
+       2       0.21637178     0.00000000     0.00000000     0.05564649     0.00000000     0.00000000
+       3       0.75777878     0.00000000     0.00000000     0.00000000     0.00000000     0.00000000
+       4       0.47456348    -0.09917691     0.00000000     0.00000000     0.00000000     0.00000000
+    ==== End of matrix output ====
+  LINEAR TRANSFORMATION WITH  S(2) (Z1 Y1 Z2 Y2 ...)
+
+               Column   1     Column   2
+       1       0.21637178     0.14385019
+       2       1.51555755    -0.43479333
+       3       0.94912696     0.53984184
+       5      -0.09917691    -0.05564649
+    ==== End of matrix output ====
+
+ RSPRED: REDUCED HESSIAN MATRIX:
+
+               Column   1     Column   2     Column   3     Column   4     Column   5     Column   6
+       1       0.33815010
+       2       0.00451261     0.33815010
+       3      -0.01093272    -0.01074618     0.62863900
+       4      -0.01074618    -0.01093272    -0.06709637     0.62863900
+       5       0.00732646    -0.00247708    -0.29119482     0.14805334     3.79721169
+       6      -0.00247708     0.00732646     0.14805334    -0.29119482     0.03770642     3.79721169
+    ==== End of matrix output ====
+
+ RSPRED: REDUCED METRIC MATRIX:
+
+               Column   1     Column   2     Column   3     Column   4     Column   5     Column   6
+       1       1.00000000
+       2      -0.00000000    -1.00000000
+       3       0.00000000     0.00000000     0.99272447
+       4      -0.00000000    -0.00000000    -0.00000000    -0.99272447
+       5       0.00000000     0.00000000    -0.01355418     0.10777239     1.39150451
+       6      -0.00000000    -0.00000000    -0.10777239     0.01355418    -0.00000000    -1.39150451
+    ==== End of matrix output ====
+
+ REDUCED EIGENVECTORS BEFORE ORDERING:
+
+               Column   1     Column   2     Column   3     Column   4     Column   5     Column   6
+       1       0.00340293    -0.00051419     1.00000000     0.04085062    -0.01275823     0.00579469
+       2       0.00051419    -0.00340293    -0.00579469    -0.01275823     0.04085062    -1.00000000
+       3      -0.12157664    -0.04206620     0.04119229    -1.00000000    -0.03739389    -0.01377615
+       4       0.04206620     0.12157664     0.01377615    -0.03739389    -1.00000000    -0.04119229
+       5       1.00000000    -0.00395084     0.00088246    -0.09494914     0.04426640     0.00024286
+       6       0.00395084    -1.00000000    -0.00024286     0.04426640    -0.09494914    -0.00088246
+    ==== End of matrix output ====
+
+ REDUCED EIGENVALUES (2,KZRED):
+
+               Column   1     Column   2     Column   3
+       1       3.82952558     0.33753087    -0.59388408
+       2      -3.82952305     0.59389421    -0.33753102
+    ==== End of matrix output ====
+
+
+     (ALFAR + i ALFAI) / BETA are eigenvalues;
+   I      ALFAR           ALFAI          BETA
+    1   3.829526D+00   0.000000D+00   1.394231D+00
+    2  -3.829523D+00   0.000000D+00   1.394230D+00
+    3   3.375309D-01   0.000000D+00   9.999948D-01
+    4   5.938942D-01   0.000000D+00   9.989958D-01
+    5  -5.938841D-01   0.000000D+00   9.989787D-01
+    6  -3.375310D-01   0.000000D+00   9.999952D-01
+
+ Unsorted eigenvalues of [ E(2) , S(2) ] :
+         1   2.746693D+00
+         2  -2.746693D+00
+         3   3.375326D-01
+         4   5.944912D-01
+         5  -5.944912D-01
+         6  -3.375326D-01
+
+ Reduced S(2) in eigenvector basis :
+
+               Column   1     Column   2     Column   3     Column   4     Column   5     Column   6
+       1       1.41688169     0.00000000    -0.00000000     0.00000000     0.00000000     0.00000000
+       2       0.00000000    -1.41688169    -0.00000000    -0.00000000    -0.00000000     0.00000000
+       3      -0.00000000    -0.00000000     1.00146718     0.00000000    -0.00000000     0.00000000
+       4       0.00000000    -0.00000000     0.00000000     1.01034845     0.00000000     0.00000000
+       5       0.00000000    -0.00000000    -0.00000000     0.00000000    -1.01034845     0.00000000
+       6       0.00000000     0.00000000     0.00000000     0.00000000     0.00000000    -1.00146718
+    ==== End of matrix output ====
+
+      NUMBER      EIGENVALUE      PAIRED EIGENVALUE
+         1      3.37532628D-01     -3.37532628D-01
+         2      5.94491210D-01     -5.94491210D-01
+         3      2.74669344D+00     -2.74669344D+00
+ S[2] reduced matrix
+
+               Column   1     Column   2     Column   3     Column   4     Column   5     Column   6
+       1       1.00000000
+       2      -0.00000000    -1.00000000
+       3       0.00000000     0.00000000     0.99272447
+       4      -0.00000000    -0.00000000    -0.00000000    -0.99272447
+       5       0.00000000     0.00000000    -0.01355418     0.10777239     1.39150451
+       6      -0.00000000    -0.00000000    -0.10777239     0.01355418    -0.00000000    -1.39150451
+    ==== End of matrix output ====
+ The eigenvalues of S[2] reduced matrix
+
+               Column   1     Column   2     Column   3
+       1       1.00000000     0.99712594     1.39682631
+       2      -1.00000000    -0.99712594    -1.39682631
+    ==== End of matrix output ====
+ E[2] reduced matrix
+
+               Column   1     Column   2     Column   3     Column   4     Column   5     Column   6
+       1       0.33815010
+       2       0.00451261     0.33815010
+       3      -0.01093272    -0.01074618     0.62863900
+       4      -0.01074618    -0.01093272    -0.06709637     0.62863900
+       5       0.00732646    -0.00247708    -0.29119482     0.14805334     3.79721169
+       6      -0.00247708     0.00732646     0.14805334    -0.29119482     0.03770642     3.79721169
+    ==== End of matrix output ====
+ The eigenvalues of E[2] reduced matrix
+
+               Column   1     Column   2     Column   3
+       1       0.34051159     0.55743664     3.84117521
+       2       0.33360569     0.63400943     3.82126302
+    ==== End of matrix output ====
+
+ REDUCED EIGENVECTORS AFTER ORDERING:
+
+               Column   1     Column   2     Column   3     Column   4     Column   5     Column   6
+       1       0.99926722     0.04064087     0.00285882     0.00579045    -0.01269272    -0.00043197
+       2      -0.00579045    -0.01269272     0.00043197    -0.99926722     0.04064087    -0.00285882
+       3       0.04116211    -0.99486559    -0.10213706    -0.01376606    -0.03720189    -0.03534000
+       4       0.01376606    -0.03720189     0.03534000    -0.04116211    -0.99486559     0.10213706
+       5       0.00088181    -0.09446163     0.84010430     0.00024268     0.04403912    -0.00331912
+       6      -0.00024268     0.04403912     0.00331912    -0.00088181    -0.09446163    -0.84010430
+    ==== End of matrix output ====
+
+
+ NUMBER OF EIGENVALUES WITH POSITIVE, ZERO, AND NEGATIVE METRIC:    3    0    3
+
+ THE EIGENVALUES WITH POSITIVE METRIC:
+      NUMBER      EIGENVALUE
+         1      3.37532628D-01
+         2      5.94491210D-01
+         3      2.74669344D+00
+
+
+ EIGENVECTOR NO.    1
+          TRIAL VEC.   coeff. for ZY       coeff. for YZ
+
+              1        9.992672D-01       -5.790445D-03
+              2        4.116211D-02        1.376606D-02
+              3        8.818091D-04       -2.426840D-04
+  RSPNEX: Solution vectors no.           1  to           1  (Z1 Y1 ...)
+
+               Column   1     Column   2
+       1      -0.00153097     0.00106478
+       2      -0.00132558    -0.00037449
+       3      -0.00124344     0.00095441
+       4       0.99926722    -0.00579045
+       5      -0.04104677    -0.01385606
+    ==== End of matrix output ====
+           1  ZYMAT MATRICES
+
+               Column   1     Column   2     Column   3     Column   4     Column   5     Column   6
+       1       0.00000000     0.00106478    -0.00037449     0.00095441     0.00000000     0.00000000
+       2      -0.00153097     0.00000000    -0.00579045    -0.01385606     0.00000000     0.00000000
+       3      -0.00132558     0.99926722     0.00000000     0.00000000     0.00000000     0.00000000
+       4      -0.00124344    -0.04104677     0.00000000     0.00000000     0.00000000     0.00000000
+    ==== End of matrix output ====
+  LINEAR TRANSFORMATION WITH  S(2) (Z1 Y1 Z2 Y2 ...)
+
+               Column   1     Column   2
+       1      -0.00153097    -0.00106478
+       2      -0.00265115     0.00074897
+       3      -0.00248689    -0.00190882
+       4       0.99926722     0.00579045
+       5      -0.04104677     0.01385606
+    ==== End of matrix output ====
+  RSPNEX: (Z,Y) residual vectors no.           1  to           1
+
+               Column   1     Column   2
+       1    -6.545623E-05   6.125096E-05
+       2     4.416926E-05  -3.944749E-05
+       3    -9.291677E-06  -1.176969E-05
+       5     4.485758E-06  -4.485783E-06
+    ==== End of matrix output ====
+
+ ROOT:  1 RESIDUAL TOT: 1.08666D-04 CONF: 0.00000D+00 ORB: 1.08666D-04
+          BNORM: 1.00023D+00 EIVAL: 3.37533D-01
+
+ NUMBER OF TRIAL VECTORS IN THIS LOAD    1   OFFSET FOR THIS LOAD    0
+    0 NON-CONVERGED SOLUTION VECTORS THIS LOAD, TOTAL:    0
+    0 LINEAR INDEPENDENT TRIAL VECTORS ADDED TO PREVIOUS    0
+
+ *** THE REQUESTED    1 SOLUTION VECTORS CONVERGED
+
+ Convergence of RSP solution vectors, threshold = 1.00D-03
+ ---------------------------------------------------------------
+ (dimension of paired reduced space:    6)
+ RSP solution vector no.    1; norm of residual   1.09D-04
+
+ *** RSPCTL MICROITERATIONS CONVERGED
+
+
+ EIGENVECTOR NO.    1
+          TRIAL VEC.   coeff. for ZY       coeff. for YZ
+
+              1        9.992672D-01       -5.790445D-03
+              2        4.116211D-02        1.376606D-02
+              3        8.818091D-04       -2.426840D-04
+
+
+ Output from PRPCTL:
+ ===================
+
+ Property label = ZDIPLEN 
+
+
+ PRPGET: PROPERTY MATRIX ZDIPLEN  IN AO BASIS AS READ FROM LUPROP
+
+               Column   1     Column   2     Column   3     Column   4
+       1      -0.37856088
+       2      -0.09128490    -0.37856088
+       3       0.14723998     1.80329832    -0.37856088
+       4       0.01124411     0.78913174     1.23705768     2.63536332
+
+               Column   5     Column   6
+       5      -0.37856088
+       6       0.00000000    -0.37856088
+    ==== End of matrix output ====
+
+ PROPERTY MATRIX ZDIPLEN  IN AO BASIS AFTER (ANTI)SYMMETRIZATION 
+
+               Column   1     Column   2     Column   3     Column   4     Column   5
+       1      -0.37856088    -0.09128490     0.14723998     0.01124411     0.00000000
+       2      -0.09128490    -0.37856088     1.80329832     0.78913174     0.00000000
+       3       0.14723998     1.80329832    -0.37856088     1.23705768     0.00000000
+       4       0.01124411     0.78913174     1.23705768     2.63536332     0.00000000
+       5       0.00000000     0.00000000     0.00000000     0.00000000    -0.37856088
+
+               Column   6
+       6      -0.37856088
+    ==== End of matrix output ====
+
+ PROPERTY: ZDIPLEN  IN MO. BASIS after
+ ISYM=    1 JSYM=    1
+
+               Column   1     Column   2     Column   3     Column   4     Column   5
+       1      -0.37774956     0.10901388     0.11915452     0.16192944     0.00000000
+       2       0.10901388     2.43337626     0.10571232    -0.61215903     0.00000000
+       3       0.11915452     0.10571232    -1.94185043    -1.06048498     0.00000000
+       4       0.16192944    -0.61215903    -1.06048498     1.01997642     0.00000000
+
+               Column   6
+    ==== End of matrix output ====
+
+ MO. COEFFICIENTS FOR SYMMETRY    1
+
+               Column   1     Column   2     Column   3     Column   4
+       1       0.98862446    -0.12143128     0.24056100    -0.11538672
+       2       0.04378496     0.19198185    -0.89314972     0.71234747
+       3       0.00217381     0.20989318     0.50236713     1.07728268
+       4      -0.00104383     0.79706099     0.12498136    -1.03906332
+    ==== End of matrix output ====
+
+ PROPERTY: ZDIPLEN  IN MO. BASIS after
+ ISYM=    2 JSYM=    2
+
+               Column   1     Column   2     Column   3     Column   4     Column   5
+       1      -0.37774956     0.10901388     0.11915452     0.16192944     0.00000000
+       2       0.10901388     2.43337626     0.10571232    -0.61215903     0.00000000
+       3       0.11915452     0.10571232    -1.94185043    -1.06048498     0.00000000
+       4       0.16192944    -0.61215903    -1.06048498     1.01997642     0.00000000
+       5       0.00000000     0.00000000     0.00000000     0.00000000    -0.37856088
+
+               Column   6
+    ==== End of matrix output ====
+
+ MO. COEFFICIENTS FOR SYMMETRY    2
+
+               Column   1
+       1       1.00000000
+    ==== End of matrix output ====
+
+ PROPERTY: ZDIPLEN  IN MO. BASIS after
+ ISYM=    3 JSYM=    3
+
+               Column   1     Column   2     Column   3     Column   4     Column   5
+       1      -0.37774956     0.10901388     0.11915452     0.16192944     0.00000000
+       2       0.10901388     2.43337626     0.10571232    -0.61215903     0.00000000
+       3       0.11915452     0.10571232    -1.94185043    -1.06048498     0.00000000
+       4       0.16192944    -0.61215903    -1.06048498     1.01997642     0.00000000
+       5       0.00000000     0.00000000     0.00000000     0.00000000    -0.37856088
+
+               Column   6
+       6      -0.37856088
+    ==== End of matrix output ====
+
+ MO. COEFFICIENTS FOR SYMMETRY    3
+
+               Column   1
+       1       1.00000000
+    ==== End of matrix output ====
+
+ PROPERTY: ZDIPLEN  IN MO. BASIS
+
+               Column   1     Column   2     Column   3     Column   4     Column   5
+       1      -0.37774956     0.10901388     0.11915452     0.16192944     0.00000000
+       2       0.10901388     2.43337626     0.10571232    -0.61215903     0.00000000
+       3       0.11915452     0.10571232    -1.94185043    -1.06048498     0.00000000
+       4       0.16192944    -0.61215903    -1.06048498     1.01997642     0.00000000
+       5       0.00000000     0.00000000     0.00000000     0.00000000    -0.37856088
+
+               Column   6
+       6      -0.37856088
+    ==== End of matrix output ====
+
+PRPCTL test output: MOLECULAR PROPERTY INTEGRALS: ZDIPLEN 
+
+               Column   1     Column   2     Column   3     Column   4     Column   5
+       1      -0.37774956     0.10901388     0.11915452     0.16192944     0.00000000
+       2       0.10901388     2.43337626     0.10571232    -0.61215903     0.00000000
+       3       0.11915452     0.10571232    -1.94185043    -1.06048498     0.00000000
+       4       0.16192944    -0.61215903    -1.06048498     1.01997642     0.00000000
+       5       0.00000000     0.00000000     0.00000000     0.00000000    -0.37856088
+
+               Column   6
+       6      -0.37856088
+    ==== End of matrix output ====
+
+PRPCTL test output:  Reference state expectation value for ZDIPLEN 
+
+ *** Individual non-zero orbital contributions
+ *** to the expectation value for property ZDIPLEN  :
+
+     Inactive       1  1 in sym 1 :    -0.75549912
+     Active-active  1  1 in sym 1 :     2.43337626
+
+     ZDIPLEN  inactive part:    -0.75549912
+     ZDIPLEN  active part  :     2.43337626
+     ZDIPLEN  total        :     1.67787715
+  (PRPORB) Z and Y ORBITAL PROPERTY GP VECTOR
+
+               Column   1     Column   2
+       1       0.10901388    -0.10901388
+       2       0.23830905    -0.23830905
+       3       0.32385888    -0.32385888
+       4       0.10571232    -0.10571232
+       5      -0.61215903     0.61215903
+    ==== End of matrix output ====
+
+@ Singlet transition operator label: ZDIPLEN 
+@ STATE NO:    1 *TRANSITION MOMENT:  0.12167059     *ENERGY(eV):   9.1847300    
+
+ OSCILLATOR STRENGTH (LENGTH)   :  3.33116204E-03
+
+
+ **************************************************************************************
+ *** @ Excit. operator sym 1 & ref. state sym 1 => excited state symmetry 1  ( A1 ) ***
+ **************************************************************************************
+
+
+
+ @ Excited state no:    1 in symmetry 1  ( A1 ) - singlet excitation
+ -------------------------------------------------------------------
+
+@ Excitation energy :  0.33753263     au
+@                       9.1847300     eV;   74079.848     cm-1;   886.19178     kJ / mol
+
+@ Total energy :       -7.2939758     au
+
+@ Operator type:    ZDIPLEN 
+@ Oscillator strength (LENGTH)   :  3.33116204E-03  (Transition moment :  0.12167059     )
+
+ Eigenvector for state no.  1
+
+     Response orbital operator symmetry = 1
+     (only scaled elements abs greater than   10.00 % of max abs value)
+
+      Index(r,s)      r      s        (r s) operator      (s r) operator      (r s) scaled        (s r) scaled
+      ----------    -----  -----      --------------      --------------      --------------      --------------
+           4         2(1)   3(1)        0.9992672154       -0.0057904450        0.9992672154       -0.0057904450
+
+        4 elements with absolute value ≤ 9.99D-02 not printed.
+
+ The numbers in parenthesis give the orbital symmetry.
+
+     Configuration operator symmetry = 1
+     >> NO ELEMENTS <<
+
+
+ Time used in polarization propagator calculation is      0.37 CPU seconds for symmetry 1
+ ----------------------------------------------------------------
+ ----- Linear response calculation
+ ----- Symmetry of excitation/property operator(s)    2  ( B1 )
+ ----------------------------------------------------------------
+
+ Number of excitations of this symmetry            1
+ Number of response properties of this symmetry    0
+ Number of C6/C8 properties of this symmetry       0
+
+
+ Perturbation symmetry.     KSYMOP:       2
+ Perturbation spin symmetry.TRPLET:       F
+ Orbital variables.         KZWOPT:       2
+ Configuration variables.   KZCONF:       0
+ Total number of variables. KZVAR :       2
+
+ KZYWOP,KZYCON,KZYVAR:       4       0       4
+
+ ONE ELECTRON ACTIVE DENSITY MATRIX - UNPACKED
+
+               Column   1
+       1       1.00000000
+    ==== End of matrix output ====
+
+ FOCK VALENCE MATRIX
+
+     *** Block  1 ***
+
+               Column   1     Column   2     Column   3     Column   4
+       1       0.00166769
+       2       0.00296257     0.21490992
+       3      -0.00006883     0.02337376     0.01230529
+       4      -0.00022483    -0.11878466    -0.02144837     0.11933982
+
+     *** Block  2 ***
+
+               Column   1
+       1       0.01823794
+
+     *** Block  3 ***
+
+               Column   1
+       1       0.01823794
+    ==== End of matrix output ====
+
+ FOCK CORE MATRIX
+
+     *** Block  1 ***
+
+               Column   1     Column   2     Column   3     Column   4
+       1      -2.14353863
+       2      -0.00592513    -0.58455791
+       3       0.00006884    -0.00000002    -0.24189521
+       4       0.00022483    -0.00000000     0.02144839    -0.02931491
+
+     *** Block  2 ***
+
+               Column   1
+       1      -0.21106722
+
+     *** Block  3 ***
+
+               Column   1
+       1      -0.21106722
+    ==== End of matrix output ====
+
+ TOTAL FOCK  MATRIX
+
+     *** Block  1 ***
+
+               Column   1     Column   2     Column   3     Column   4
+       1      -4.28374188    -0.00592512     0.00000001     0.00000001
+       2      -0.00592513    -0.58455791    -0.00000002    -0.00000000
+
+     *** Block  2 zero matrix. ***
+
+     *** Block  3 zero matrix. ***
+    ==== End of matrix output ====
+  DIAGONAL ORBITAL PART OF E(2) 
+
+               Column   1
+       1       3.89818331
+       2       0.39182863
+    ==== End of matrix output ====
+  DIAGONAL ORBITAL PART OF S(2)
+
+               Column   1
+       1       2.00000000
+       2       1.00000000
+    ==== End of matrix output ====
+
+ FOCK MATRIX CONTRIBUTION TO DIAGONAL ORBITAL PART OF E[2]
+
+ (FOCK TYPE DECOUPLING OF TWO ELECTRON DENSITY MATRIX USED)
+
+     Orbital operator symmetry = 2
+     (only elements abs greater than 1.0D-01 times max abs value)
+
+      Index(r,s)     r    s      operator value
+      ----------    --   --      --------------
+              1      1    5        3.8981833109
+              2      2    5        0.3918286272
+
+               Column   1
+       1       3.89818331
+       2       0.39182863
+    ==== End of matrix output ====
+
+ DIAGONAL ORBITAL PART OF S[2]
+
+               Column   1
+       1       2.00000000
+       2       1.00000000
+    ==== End of matrix output ====
+
+ --- In RSPPP:
+ THCPP, MAXRM          1.00D-03       600
+ KSYMOP,NGPPP(KSYMOP)         2         1
+ LWRK , LWRK1          63999905  62918105
+  KEXCNV,NSIM,LWRK2            1           1     1081982
+
+
+
+ --- EXCITATION ENERGIES AND TRANSITION MOMENT CALCULATION (MCTDHF) ---
+
+ Operator symmetry = 2  ( B1 ); triplet =   F
+
+  KLIDEN,KUSE,KMAXVE,LBINTM,NORBT,NASHT,KZYVAR,LWRK 
+           2          98         213          12           6           1           4    62918105
+  LACIMX           0
+
+ MAXIMUM NUMBER OF SIMULTANEOUS TRIAL VECTORS:     120
+
+ MAXIMUM NUMBER OF SIMULTANEOUS TRIAL VECTORS IN RSPNEX:     120
+  LINEQ,RESTPP,ORBSPC F F F
+  DIMENSION SPECIFIED OF PHP, MAXPHP=         100
+  DIMENSION USED , NPCVAR=           0
+
+ DIAGONAL of E(2)
+
+               Column   1
+       1       3.89818331
+       2       0.39182863
+    ==== End of matrix output ====
+
+ DIAGONAL of orbital part of S(2)
+
+               Column   1
+       1       2.00000000
+       2       1.00000000
+    ==== End of matrix output ====
+
+ DIAGONAL E(2)/ABS(S(2))  
+
+               Column   1
+       1       1.94909166
+       2       0.39182863
+    ==== End of matrix output ====
+  NOSIM ORBITAL TRIAL VECTORS           1
+
+               Column   1
+       2       1.00000000
+    ==== End of matrix output ====
+
+ ** TEST OF Z = Y OR Z = -Y:
+ (Z Y) norm squared = 1.00000000D+00
+ Z + Y norm squared = 1.00000000D+00
+
+ RSPORT: b-vector, norm**2:     1 1.00000D+00
+ RSPORT, norm and <ZY/YZ> overlap before S-1/2  1.000000D+00   0.0000000000D+00
+  NOSIM ORBITAL TRIAL VECTORS           1
+
+               Column   1
+       2       1.00000000
+    ==== End of matrix output ====
+           0  START configuration VECTORS USING LOWEST DIAGONAL HESSIAN ELEMENTS
+           1  START orbital VECTORS
+ AFTER START ROUTINE BINMEM T
+
+ ** RSPCTL MICROITERATION NUMBER    1
+ NSIM,MAXSIM,JEXSIM    1  120    1
+  NCSIM,NOSIM           0           1
+
+ BEFORE RSPLIN
+
+    1 ORBITAL TRIAL VECTORS
+
+               Column   1
+       2       1.00000000
+    ==== End of matrix output ====
+           1  ZYMAT MATRICES
+
+               Column   1     Column   2     Column   3     Column   4     Column   5     Column   6
+       5       0.00000000     1.00000000     0.00000000     0.00000000     0.00000000     0.00000000
+    ==== End of matrix output ====
+
+
+Output from "RSPOLI". NCSIM,NOSIM=         0         1
+TRPLET,HSROHF,DFTADD         F         T         T
+TDHF,NASHT         T         1
+ Fock matrix I, IX, IFCTYP(I) =            1           0           3
+ Fock matrix I, IX, IFCTYP(I) =            2           0           3
+ RSPOLI:SIRFCK NFMAT DIRFCK           2 F
+ ISYMDM            2           2
+ IFCTYP            3           2
+ RSPOLI:SIRFCK DXCAO no.           1
+
+               Column   1     Column   2     Column   3     Column   4     Column   5     Column   6
+       5       0.12143128    -0.19198185    -0.20989318    -0.79706099     0.00000000     0.00000000
+    ==== End of matrix output ====
+ LAGRAN? NCSIM,TDHF,TRPLET,HSROHF,DFTADD:           0 T F T T
+           1 . ONE-INDEX TRANSFORMED FOCK CORE MATRIX BEFORE DIRECT [FC,ZYMAT] CONTRIBUTION
+
+               Column   1     Column   2     Column   3     Column   4     Column   5
+       1       0.00000000     0.00000000     0.00000000     0.00000000    -0.00065621
+       2       0.00000000     0.00000000     0.00000000     0.00000000     0.00706421
+       3       0.00000000     0.00000000     0.00000000     0.00000000    -0.00901711
+       4       0.00000000     0.00000000     0.00000000     0.00000000     0.01926591
+       5      -0.00065621     0.00706421    -0.00901711     0.01926591     0.00000000
+
+               Column   6
+    ==== End of matrix output ====
+           1 . ONE-INDEX TRANSFORMED FOCK VALENCE MATRIX BEFORE DIRECT [FC,ZYMAT] CONTRIBUTION
+
+               Column   1     Column   2     Column   3     Column   4     Column   5
+       1       0.00000000     0.00000000     0.00000000     0.00000000    -0.00161134
+       2       0.00000000     0.00000000     0.00000000     0.00000000    -0.00712789
+       3       0.00000000     0.00000000     0.00000000     0.00000000     0.00953948
+       4       0.00000000     0.00000000     0.00000000     0.00000000    -0.01313897
+       5      -0.00161134    -0.00712789     0.00953948    -0.01313897     0.00000000
+
+               Column   6
+    ==== End of matrix output ====
+           1 . ONE-INDEX TRANSFORMED FOCK CORE MATRIX
+
+               Column   1     Column   2     Column   3     Column   4     Column   5     Column   6
+       1       0.00000000     0.00000000     0.00000000     0.00000000    -0.00065621     0.00000000
+       2       0.00000000     0.00000000     0.00000000     0.00000000     0.00706421     0.00000000
+       3       0.00000000     0.00000000     0.00000000     0.00000000    -0.00901711     0.00000000
+       4       0.00000000     0.00000000     0.00000000     0.00000000     0.01926591     0.00000000
+       5      -0.00658134    -0.36642649    -0.00901713     0.01926590     0.00000000     0.00000000
+    ==== End of matrix output ====
+           1 . ONE-INDEX TRANSFORMED FOCK VALENCE MATRIX
+
+               Column   1     Column   2     Column   3     Column   4     Column   5     Column   6
+       1       0.00000000     0.00000000     0.00000000     0.00000000    -0.00161134     0.00000000
+       2       0.00000000     0.00000000     0.00000000     0.00000000    -0.00712789     0.00000000
+       3       0.00000000     0.00000000     0.00000000     0.00000000     0.00953948     0.00000000
+       4       0.00000000     0.00000000     0.00000000     0.00000000    -0.01313897     0.00000000
+       5       0.00135123     0.18954410     0.03291324    -0.13192362     0.00000000     0.00000000
+    ==== End of matrix output ====
+  CORE FOCK MATRIX 
+
+     *** Block  1 ***
+
+               Column   1     Column   2     Column   3     Column   4
+       1      -2.14353863
+       2      -0.00592513    -0.58455791
+       3       0.00006884    -0.00000002    -0.24189521
+       4       0.00022483    -0.00000000     0.02144839    -0.02931491
+
+     *** Block  2 ***
+
+               Column   1
+       1      -0.21106722
+
+     *** Block  3 ***
+
+               Column   1
+       1      -0.21106722
+    ==== End of matrix output ====
+  VALENCE FOCK MATRIX 
+
+     *** Block  1 ***
+
+               Column   1     Column   2     Column   3     Column   4
+       1       0.00166769
+       2       0.00296257     0.21490992
+       3      -0.00006883     0.02337376     0.01230529
+       4      -0.00022483    -0.11878466    -0.02144837     0.11933982
+
+     *** Block  2 ***
+
+               Column   1
+       1       0.01823794
+
+     *** Block  3 ***
+
+               Column   1
+       1       0.01823794
+    ==== End of matrix output ====
+
+ FCX total contribution for vector    1
+
+               Column   1     Column   2     Column   3     Column   4     Column   5     Column   6
+       1       0.00000000     0.00000000     0.00000000     0.00000000    -0.00065621     0.00000000
+       2       0.00000000     0.00000000     0.00000000     0.00000000     0.00706421     0.00000000
+       3       0.00000000     0.00000000     0.00000000     0.00000000    -0.00901711     0.00000000
+       4       0.00000000     0.00000000     0.00000000     0.00000000     0.01926591     0.00000000
+       5      -0.00658134    -0.36642649    -0.00901713     0.01926590     0.00000000     0.00000000
+    ==== End of matrix output ====
+
+ FVX total contribution for vector    1
+
+               Column   1     Column   2     Column   3     Column   4     Column   5     Column   6
+       1       0.00000000     0.00000000     0.00000000     0.00000000    -0.00161134     0.00000000
+       2       0.00000000     0.00000000     0.00000000     0.00000000    -0.00712789     0.00000000
+       3       0.00000000     0.00000000     0.00000000     0.00000000     0.00953948     0.00000000
+       4       0.00000000     0.00000000     0.00000000     0.00000000    -0.01313897     0.00000000
+       5       0.00135123     0.18954410     0.03291324    -0.13192362     0.00000000     0.00000000
+    ==== End of matrix output ====
+  LINEAR TRANSFORMATION WITH  E(2) (Z1 Y1 Z2 Y2 ...)
+
+               Column   1     Column   2
+       1       0.01046022    -0.00453510
+       2       0.36642649     0.00706421
+    ==== End of matrix output ====
+  BEFORE WRITING IBTYP ON LURSP1 LINEQ: F
+
+ TRIAL VECTORS FOR RESTART:    1
+
+    1 ORBITAL TRIAL VECTORS
+
+               Column   1
+       2       1.00000000
+    ==== End of matrix output ====
+
+    1 E(2) LINEAR TRANSF. VECTORS
+
+               Column   1
+       1       0.01046022
+       2       0.36642649
+       3      -0.00453510
+       4       0.00706421
+    ==== End of matrix output ====
+
+ INDEX VECTOR FOR E(2) TRANSFORMED TRIAL VECTORS
+           1
+
+ IBTYP VECTOR FOR E(2) TRANSFORMED TRIAL VECTORS
+           1
+           1  ZYMAT MATRICES
+
+               Column   1     Column   2     Column   3     Column   4     Column   5     Column   6
+       5       0.00000000     1.00000000     0.00000000     0.00000000     0.00000000     0.00000000
+    ==== End of matrix output ====
+  LINEAR TRANSFORMATION WITH  S(2) (Z1 Y1 Z2 Y2 ...)
+
+               Column   1     Column   2
+       2       1.00000000     0.00000000
+    ==== End of matrix output ====
+
+ RSPRED: REDUCED HESSIAN MATRIX:
+
+               Column   1     Column   2
+       1       0.36642649
+       2       0.00706421     0.36642649
+    ==== End of matrix output ====
+
+ RSPRED: REDUCED METRIC MATRIX:
+
+               Column   1     Column   2
+       1       1.00000000
+       2      -0.00000000    -1.00000000
+    ==== End of matrix output ====
+
+ REDUCED EIGENVECTORS BEFORE ORDERING:
+
+               Column   1     Column   2
+       1       0.00964022    -1.00000000
+       2      -1.00000000     0.00964022
+    ==== End of matrix output ====
+
+ REDUCED EIGENVALUES (2,KZRED):
+
+               Column   1
+       1      -0.36635838
+       2       0.36635838
+    ==== End of matrix output ====
+
+
+     (ALFAR + i ALFAI) / BETA are eigenvalues;
+   I      ALFAR           ALFAI          BETA
+    1  -3.663584D-01   0.000000D+00   1.000000D+00
+    2   3.663584D-01   0.000000D+00   1.000000D+00
+
+ Unsorted eigenvalues of [ E(2) , S(2) ] :
+         1  -3.663584D-01
+         2   3.663584D-01
+
+ Reduced S(2) in eigenvector basis :
+
+               Column   1     Column   2
+       1      -0.99990707    -0.00000000
+       2      -0.00000000     0.99990707
+    ==== End of matrix output ====
+
+      NUMBER      EIGENVALUE      PAIRED EIGENVALUE
+         1      3.66358385D-01     -3.66358385D-01
+ S[2] reduced matrix
+
+               Column   1     Column   2
+       1       1.00000000
+       2      -0.00000000    -1.00000000
+    ==== End of matrix output ====
+ The eigenvalues of S[2] reduced matrix
+
+               Column   1
+       1       1.00000000
+       2      -1.00000000
+    ==== End of matrix output ====
+ E[2] reduced matrix
+
+               Column   1     Column   2
+       1       0.36642649
+       2       0.00706421     0.36642649
+    ==== End of matrix output ====
+ The eigenvalues of E[2] reduced matrix
+
+               Column   1
+       1       0.37349069
+       2       0.35936228
+    ==== End of matrix output ====
+
+ REDUCED EIGENVECTORS AFTER ORDERING:
+
+               Column   1     Column   2
+       1      -1.00004647     0.00964067
+       2       0.00964067    -1.00004647
+    ==== End of matrix output ====
+
+
+ NUMBER OF EIGENVALUES WITH POSITIVE, ZERO, AND NEGATIVE METRIC:    1    0    1
+
+ THE EIGENVALUES WITH POSITIVE METRIC:
+      NUMBER      EIGENVALUE
+         1      3.66358385D-01
+
+
+ EIGENVECTOR NO.    1
+          TRIAL VEC.   coeff. for ZY       coeff. for YZ
+
+              1       -1.000046D+00        9.640667D-03
+  RSPNEX: Solution vectors no.           1  to           1  (Z1 Y1 ...)
+
+               Column   1     Column   2
+       2      -1.00004647     0.00964067
+    ==== End of matrix output ====
+           1  ZYMAT MATRICES
+
+               Column   1     Column   2     Column   3     Column   4     Column   5     Column   6
+       2       0.00000000     0.00000000     0.00000000     0.00000000     0.00964067     0.00000000
+       5       0.00000000    -1.00004647     0.00000000     0.00000000     0.00000000     0.00000000
+    ==== End of matrix output ====
+  LINEAR TRANSFORMATION WITH  S(2) (Z1 Y1 Z2 Y2 ...)
+
+               Column   1     Column   2
+       2      -1.00004647    -0.00964067
+    ==== End of matrix output ====
+  RSPNEX: (Z,Y) residual vectors no.           1  to           1
+
+               Column   1     Column   2
+       1      -0.01050443     0.00463616
+    ==== End of matrix output ====
+
+ ROOT:  1 RESIDUAL TOT: 1.14820D-02 CONF: 0.00000D+00 ORB: 1.14820D-02
+          BNORM: 1.00009D+00 EIVAL: 3.66358D-01
+  NBX ORBITAL VECTORS WRITTEN OUT           1
+  NOSIM ORBITAL TRIAL VECTORS               1
+  KZWOPT                                    2
+  (Z1 Y1 Z2 Y2 ...)
+
+               Column   1     Column   2
+       1      -0.00331845     0.00100114
+    ==== End of matrix output ====
+
+ ** TEST OF Z = Y OR Z = -Y:
+ (Z Y) norm squared = 1.20143538D-05
+ Z + Y norm squared = 5.36992920D-06
+
+ RSPORT: b-vector, norm**2:     1 1.20144D-05
+ RSPORT, norm and <ZY/YZ> overlap before S-1/2  1.000000D+00  -5.5304053136D-01
+ RSPORT, norm and <ZY/YZ> overlap before S-1/2  1.000000D+00   1.1102230246D-16
+ RSPORT, norm and <ZY/YZ> overlap after  S-1/2  1.000000D+00  -1.1102230246D-16
+
+ RSPORT: b-vector, norm**2:     1 1.00000D+00
+ RSPORT, norm and <ZY/YZ> overlap before S-1/2  1.000000D+00  -1.1102230246D-16
+ RSPORT, norm and <ZY/YZ> overlap before S-1/2  1.000000D+00   1.1102230246D-16
+ RSPORT, norm and <ZY/YZ> overlap after  S-1/2  1.000000D+00  -1.1102230246D-16
+
+ NOSIM orbital trial vectors after RSPORT    1
+ ( columns: Z_1 Y_1 Z_2 Y_2 ... Z_NOSIM Y_NOSIM)
+
+               Column   1     Column   2
+       1      -1.00000000     0.00000000
+    ==== End of matrix output ====
+
+ NUMBER OF TRIAL VECTORS IN THIS LOAD    1   OFFSET FOR THIS LOAD    0
+    1 NON-CONVERGED SOLUTION VECTORS THIS LOAD, TOTAL:    1
+    1 LINEAR INDEPENDENT TRIAL VECTORS ADDED TO PREVIOUS    0
+
+ Convergence of RSP solution vectors, threshold = 1.00D-03
+ ---------------------------------------------------------------
+ (dimension of paired reduced space:    2)
+ RSP solution vector no.    1; norm of residual   1.15D-02
+
+ ** RSPCTL MICROITERATION NUMBER    2
+ NSIM,MAXSIM,JEXSIM    1  120    1
+  NCSIM,NOSIM           0           1
+
+ BEFORE RSPLIN
+
+    1 ORBITAL TRIAL VECTORS
+
+               Column   1
+       1      -1.00000000
+    ==== End of matrix output ====
+           1  ZYMAT MATRICES
+
+               Column   1     Column   2     Column   3     Column   4     Column   5     Column   6
+       5      -1.00000000     0.00000000     0.00000000     0.00000000     0.00000000     0.00000000
+    ==== End of matrix output ====
+
+
+Output from "RSPOLI". NCSIM,NOSIM=         0         1
+TRPLET,HSROHF,DFTADD         F         T         T
+TDHF,NASHT         T         1
+ Fock matrix I, IX, IFCTYP(I) =            1           0           3
+ Fock matrix I, IX, IFCTYP(I) =            2          30           0
+ RSPOLI:SIRFCK NFMAT DIRFCK           2 F
+ ISYMDM            2           2
+ IFCTYP            3           2
+ RSPOLI:SIRFCK DXCAO no.           1
+
+               Column   1     Column   2     Column   3     Column   4     Column   5     Column   6
+       5       1.97724892     0.08756993     0.00434762    -0.00208767     0.00000000     0.00000000
+    ==== End of matrix output ====
+ LAGRAN? NCSIM,TDHF,TRPLET,HSROHF,DFTADD:           0 T F T T
+           1 . ONE-INDEX TRANSFORMED FOCK CORE MATRIX BEFORE DIRECT [FC,ZYMAT] CONTRIBUTION
+
+               Column   1     Column   2     Column   3     Column   4     Column   5
+       1       0.00000000     0.00000000     0.00000000     0.00000000     0.00574783
+       2       0.00000000     0.00000000     0.00000000     0.00000000     0.00453510
+       3       0.00000000     0.00000000     0.00000000     0.00000000     0.03075857
+       4       0.00000000     0.00000000     0.00000000     0.00000000     0.01398935
+       5       0.00574783     0.00453510     0.03075857     0.01398935     0.00000000
+
+               Column   6
+    ==== End of matrix output ====
+           1 . ONE-INDEX TRANSFORMED FOCK VALENCE MATRIX BEFORE DIRECT [FC,ZYMAT] CONTRIBUTION
+
+               Column   1     Column   2     Column   3     Column   4     Column   5
+       1       0.00000000     0.00000000     0.00000000     0.00000000    -0.00452155
+       2       0.00000000     0.00000000     0.00000000     0.00000000    -0.04428459
+       3       0.00000000     0.00000000     0.00000000     0.00000000     0.04957447
+       4       0.00000000     0.00000000     0.00000000     0.00000000    -0.04295933
+       5      -0.00452155    -0.04428459     0.04957447    -0.04295933     0.00000000
+
+               Column   6
+    ==== End of matrix output ====
+           1 . ONE-INDEX TRANSFORMED FOCK CORE MATRIX
+
+               Column   1     Column   2     Column   3     Column   4     Column   5     Column   6
+       1       0.00000000     0.00000000     0.00000000     0.00000000     0.00574783     0.00000000
+       2       0.00000000     0.00000000     0.00000000     0.00000000     0.00453510     0.00000000
+       3       0.00000000     0.00000000     0.00000000     0.00000000     0.03075857     0.00000000
+       4       0.00000000     0.00000000     0.00000000     0.00000000     0.01398935     0.00000000
+       5       1.93821923     0.01046023     0.03068973     0.01376452     0.00000000     0.00000000
+    ==== End of matrix output ====
+           1 . ONE-INDEX TRANSFORMED FOCK VALENCE MATRIX
+
+               Column   1     Column   2     Column   3     Column   4     Column   5     Column   6
+       1       0.00000000     0.00000000     0.00000000     0.00000000    -0.00452155     0.00000000
+       2       0.00000000     0.00000000     0.00000000     0.00000000    -0.04428459     0.00000000
+       3       0.00000000     0.00000000     0.00000000     0.00000000     0.04957447     0.00000000
+       4       0.00000000     0.00000000     0.00000000     0.00000000    -0.04295933     0.00000000
+       5       0.01204870    -0.04724716     0.04964331    -0.04273450     0.00000000     0.00000000
+    ==== End of matrix output ====
+  CORE FOCK MATRIX 
+
+     *** Block  1 ***
+
+               Column   1     Column   2     Column   3     Column   4
+       1      -2.14353863
+       2      -0.00592513    -0.58455791
+       3       0.00006884    -0.00000002    -0.24189521
+       4       0.00022483    -0.00000000     0.02144839    -0.02931491
+
+     *** Block  2 ***
+
+               Column   1
+       1      -0.21106722
+
+     *** Block  3 ***
+
+               Column   1
+       1      -0.21106722
+    ==== End of matrix output ====
+  VALENCE FOCK MATRIX 
+
+     *** Block  1 ***
+
+               Column   1     Column   2     Column   3     Column   4
+       1       0.00166769
+       2       0.00296257     0.21490992
+       3      -0.00006883     0.02337376     0.01230529
+       4      -0.00022483    -0.11878466    -0.02144837     0.11933982
+
+     *** Block  2 ***
+
+               Column   1
+       1       0.01823794
+
+     *** Block  3 ***
+
+               Column   1
+       1       0.01823794
+    ==== End of matrix output ====
+
+ FCX total contribution for vector    1
+
+               Column   1     Column   2     Column   3     Column   4     Column   5     Column   6
+       1       0.00000000     0.00000000     0.00000000     0.00000000     0.00574783     0.00000000
+       2       0.00000000     0.00000000     0.00000000     0.00000000     0.00453510     0.00000000
+       3       0.00000000     0.00000000     0.00000000     0.00000000     0.03075857     0.00000000
+       4       0.00000000     0.00000000     0.00000000     0.00000000     0.01398935     0.00000000
+       5       1.93821923     0.01046023     0.03068973     0.01376452     0.00000000     0.00000000
+    ==== End of matrix output ====
+
+ FVX total contribution for vector    1
+
+               Column   1     Column   2     Column   3     Column   4     Column   5     Column   6
+       1       0.00000000     0.00000000     0.00000000     0.00000000    -0.00452155     0.00000000
+       2       0.00000000     0.00000000     0.00000000     0.00000000    -0.04428459     0.00000000
+       3       0.00000000     0.00000000     0.00000000     0.00000000     0.04957447     0.00000000
+       4       0.00000000     0.00000000     0.00000000     0.00000000    -0.04295933     0.00000000
+       5       0.01204870    -0.04724716     0.04964331    -0.04273450     0.00000000     0.00000000
+    ==== End of matrix output ====
+  LINEAR TRANSFORMATION WITH  E(2) (Z1 Y1 Z2 Y2 ...)
+
+               Column   1     Column   2
+       1      -3.90053587     0.00245256
+       2      -0.01046023     0.00453510
+    ==== End of matrix output ====
+  BEFORE WRITING IBTYP ON LURSP1 LINEQ: F
+
+ TRIAL VECTORS FOR RESTART:    2
+
+    1 ORBITAL TRIAL VECTORS
+
+               Column   1
+       1      -1.00000000
+    ==== End of matrix output ====
+
+    1 E(2) LINEAR TRANSF. VECTORS
+
+               Column   1
+       1      -3.90053587
+       2      -0.01046023
+       3       0.00245256
+       4       0.00453510
+    ==== End of matrix output ====
+
+ INDEX VECTOR FOR E(2) TRANSFORMED TRIAL VECTORS
+           1
+
+ IBTYP VECTOR FOR E(2) TRANSFORMED TRIAL VECTORS
+           1
+           1  ZYMAT MATRICES
+
+               Column   1     Column   2     Column   3     Column   4     Column   5     Column   6
+       5      -1.00000000     0.00000000     0.00000000     0.00000000     0.00000000     0.00000000
+    ==== End of matrix output ====
+  LINEAR TRANSFORMATION WITH  S(2) (Z1 Y1 Z2 Y2 ...)
+
+               Column   1     Column   2
+       1      -2.00000000    -0.00000000
+    ==== End of matrix output ====
+
+ RSPRED: REDUCED HESSIAN MATRIX:
+
+               Column   1     Column   2     Column   3     Column   4
+       1       0.36642649
+       2       0.00706421     0.36642649
+       3      -0.01046023     0.00453510     3.90053587
+       4       0.00453510    -0.01046023    -0.00245256     3.90053587
+    ==== End of matrix output ====
+
+ RSPRED: REDUCED METRIC MATRIX:
+
+               Column   1     Column   2     Column   3     Column   4
+       1       1.00000000
+       2      -0.00000000    -1.00000000
+       3       0.00000000     0.00000000     2.00000000
+       4      -0.00000000    -0.00000000    -0.00000000    -2.00000000
+    ==== End of matrix output ====
+
+ REDUCED EIGENVECTORS BEFORE ORDERING:
+
+               Column   1     Column   2     Column   3     Column   4
+       1       0.00661195    -1.00000000    -0.00967552    -0.00193596
+       2       0.00193596     0.00967552     1.00000000    -0.00661195
+       3      -1.00000000    -0.00331503    -0.00099892     0.00031563
+       4      -0.00031563     0.00099892     0.00331503     1.00000000
+    ==== End of matrix output ====
+
+ REDUCED EIGENVALUES (2,KZRED):
+
+               Column   1     Column   2
+       1       3.90052605    -0.36632545
+       2       0.36632545    -3.90052605
+    ==== End of matrix output ====
+
+
+     (ALFAR + i ALFAI) / BETA are eigenvalues;
+   I      ALFAR           ALFAI          BETA
+    1   3.900526D+00   0.000000D+00   1.999964D+00
+    2   3.663254D-01   0.000000D+00   1.000018D+00
+    3  -3.663254D-01   0.000000D+00   1.000018D+00
+    4  -3.900526D+00   0.000000D+00   1.999964D+00
+
+ Unsorted eigenvalues of [ E(2) , S(2) ] :
+         1   1.950298D+00
+         2   3.663189D-01
+         3  -3.663189D-01
+         4  -1.950298D+00
+
+ Reduced S(2) in eigenvector basis :
+
+               Column   1     Column   2     Column   3     Column   4
+       1       2.00003977     0.00000000    -0.00000000    -0.00000000
+       2       0.00000000     0.99992637     0.00000000    -0.00000000
+       3      -0.00000000     0.00000000    -0.99992637    -0.00000000
+       4      -0.00000000    -0.00000000    -0.00000000    -2.00003977
+    ==== End of matrix output ====
+
+      NUMBER      EIGENVALUE      PAIRED EIGENVALUE
+         1      3.66318929D-01     -3.66318929D-01
+         2      1.95029774D+00     -1.95029774D+00
+ S[2] reduced matrix
+
+               Column   1     Column   2     Column   3     Column   4
+       1       1.00000000
+       2      -0.00000000    -1.00000000
+       3       0.00000000     0.00000000     2.00000000
+       4      -0.00000000    -0.00000000    -0.00000000    -2.00000000
+    ==== End of matrix output ====
+ The eigenvalues of S[2] reduced matrix
+
+               Column   1     Column   2
+       1       1.00000000     2.00000000
+       2      -1.00000000    -2.00000000
+    ==== End of matrix output ====
+ E[2] reduced matrix
+
+               Column   1     Column   2     Column   3     Column   4
+       1       0.36642649
+       2       0.00706421     0.36642649
+       3      -0.01046023     0.00453510     3.90053587
+       4       0.00453510    -0.01046023    -0.00245256     3.90053587
+    ==== End of matrix output ====
+ The eigenvalues of E[2] reduced matrix
+
+               Column   1     Column   2
+       1       0.37348073     3.90305188
+       2       0.35929882     3.89809327
+    ==== End of matrix output ====
+
+ REDUCED EIGENVECTORS AFTER ORDERING:
+
+               Column   1     Column   2     Column   3     Column   4
+       1      -1.00003682     0.00467531    -0.00967587    -0.00136892
+       2       0.00967587     0.00136892     1.00003682    -0.00467531
+       3      -0.00331515    -0.70709975    -0.00099896     0.00022318
+       4       0.00099896    -0.00022318     0.00331515     0.70709975
+    ==== End of matrix output ====
+
+
+ NUMBER OF EIGENVALUES WITH POSITIVE, ZERO, AND NEGATIVE METRIC:    2    0    2
+
+ THE EIGENVALUES WITH POSITIVE METRIC:
+      NUMBER      EIGENVALUE
+         1      3.66318929D-01
+         2      1.95029774D+00
+
+
+ EIGENVECTOR NO.    1
+          TRIAL VEC.   coeff. for ZY       coeff. for YZ
+
+              1       -1.000037D+00        9.675872D-03
+              2       -3.315147D-03        9.989589D-04
+  RSPNEX: Solution vectors no.           1  to           1  (Z1 Y1 ...)
+
+               Column   1     Column   2
+       1       0.00331515    -0.00099896
+       2      -1.00003682     0.00967587
+    ==== End of matrix output ====
+           1  ZYMAT MATRICES
+
+               Column   1     Column   2     Column   3     Column   4     Column   5     Column   6
+       1       0.00000000     0.00000000     0.00000000     0.00000000    -0.00099896     0.00000000
+       2       0.00000000     0.00000000     0.00000000     0.00000000     0.00967587     0.00000000
+       5       0.00331515    -1.00003682     0.00000000     0.00000000     0.00000000     0.00000000
+    ==== End of matrix output ====
+  LINEAR TRANSFORMATION WITH  S(2) (Z1 Y1 Z2 Y2 ...)
+
+               Column   1     Column   2
+       1       0.00663029     0.00199792
+       2      -1.00003682    -0.00967587
+    ==== End of matrix output ====
+  RSPNEX: (Z,Y) residual vectors no.           1  to           1
+
+               Column   1     Column   2
+       1     1.024283E-08  -9.910466E-11
+       2    -1.517680E-16  -1.061214E-16
+    ==== End of matrix output ====
+
+ ROOT:  1 RESIDUAL TOT: 1.02433D-08 CONF: 0.00000D+00 ORB: 1.02433D-08
+          BNORM: 1.00009D+00 EIVAL: 3.66319D-01
+
+ NUMBER OF TRIAL VECTORS IN THIS LOAD    1   OFFSET FOR THIS LOAD    0
+    0 NON-CONVERGED SOLUTION VECTORS THIS LOAD, TOTAL:    0
+    0 LINEAR INDEPENDENT TRIAL VECTORS ADDED TO PREVIOUS    0
+
+ *** THE REQUESTED    1 SOLUTION VECTORS CONVERGED
+
+ Convergence of RSP solution vectors, threshold = 1.00D-03
+ ---------------------------------------------------------------
+ (dimension of paired reduced space:    4)
+ RSP solution vector no.    1; norm of residual   1.02D-08
+
+ *** RSPCTL MICROITERATIONS CONVERGED
+
+
+ EIGENVECTOR NO.    1
+          TRIAL VEC.   coeff. for ZY       coeff. for YZ
+
+              1       -1.000037D+00        9.675872D-03
+              2       -3.315147D-03        9.989589D-04
+
+
+ Output from PRPCTL:
+ ===================
+
+ Property label = XDIPLEN 
+
+
+ PRPGET: PROPERTY MATRIX XDIPLEN  IN AO BASIS AS READ FROM LUPROP
+
+               Column   1     Column   2     Column   3     Column   4
+       5       0.14723998     1.80329832     0.00000000     0.32886291
+
+               Column   5     Column   6
+    ==== End of matrix output ====
+
+ PROPERTY MATRIX XDIPLEN  IN AO BASIS AFTER (ANTI)SYMMETRIZATION 
+
+               Column   1     Column   2     Column   3     Column   4     Column   5
+       1       0.00000000     0.00000000     0.00000000     0.00000000     0.14723998
+       2       0.00000000     0.00000000     0.00000000     0.00000000     1.80329832
+       4       0.00000000     0.00000000     0.00000000     0.00000000     0.32886291
+       5       0.14723998     1.80329832     0.00000000     0.32886291     0.00000000
+
+               Column   6
+    ==== End of matrix output ====
+
+ PROPERTY: XDIPLEN  IN MO. BASIS after
+ ISYM=    1 JSYM=    2
+
+               Column   1     Column   2     Column   3     Column   4     Column   5
+       1       0.00000000     0.00000000     0.00000000     0.00000000     0.22417911
+       2       0.00000000     0.00000000     0.00000000     0.00000000     0.59044480
+       3       0.00000000     0.00000000     0.00000000     0.00000000    -1.53409345
+       4       0.00000000     0.00000000     0.00000000     0.00000000     0.92587608
+
+               Column   6
+    ==== End of matrix output ====
+
+ MO. COEFFICIENTS FOR SYMMETRY    1
+
+               Column   1     Column   2     Column   3     Column   4
+       1       0.98862446    -0.12143128     0.24056100    -0.11538672
+       2       0.04378496     0.19198185    -0.89314972     0.71234747
+       3       0.00217381     0.20989318     0.50236713     1.07728268
+       4      -0.00104383     0.79706099     0.12498136    -1.03906332
+    ==== End of matrix output ====
+
+ MO. COEFFICIENTS FOR SYMMETRY    2
+
+               Column   1
+       1       1.00000000
+    ==== End of matrix output ====
+
+ PROPERTY: XDIPLEN  IN MO. BASIS after
+ ISYM=    2 JSYM=    1
+
+               Column   1     Column   2     Column   3     Column   4     Column   5
+       1       0.00000000     0.00000000     0.00000000     0.00000000     0.22417911
+       2       0.00000000     0.00000000     0.00000000     0.00000000     0.59044480
+       3       0.00000000     0.00000000     0.00000000     0.00000000    -1.53409345
+       4       0.00000000     0.00000000     0.00000000     0.00000000     0.92587608
+       5       0.22417911     0.59044480    -1.53409345     0.92587608     0.00000000
+
+               Column   6
+    ==== End of matrix output ====
+
+ MO. COEFFICIENTS FOR SYMMETRY    2
+
+               Column   1
+       1       1.00000000
+    ==== End of matrix output ====
+
+ MO. COEFFICIENTS FOR SYMMETRY    1
+
+               Column   1     Column   2     Column   3     Column   4
+       1       0.98862446    -0.12143128     0.24056100    -0.11538672
+       2       0.04378496     0.19198185    -0.89314972     0.71234747
+       3       0.00217381     0.20989318     0.50236713     1.07728268
+       4      -0.00104383     0.79706099     0.12498136    -1.03906332
+    ==== End of matrix output ====
+
+ PROPERTY: XDIPLEN  IN MO. BASIS
+
+               Column   1     Column   2     Column   3     Column   4     Column   5
+       1       0.00000000     0.00000000     0.00000000     0.00000000     0.22417911
+       2       0.00000000     0.00000000     0.00000000     0.00000000     0.59044480
+       3       0.00000000     0.00000000     0.00000000     0.00000000    -1.53409345
+       4       0.00000000     0.00000000     0.00000000     0.00000000     0.92587608
+       5       0.22417911     0.59044480    -1.53409345     0.92587608     0.00000000
+
+               Column   6
+    ==== End of matrix output ====
+
+PRPCTL test output: MOLECULAR PROPERTY INTEGRALS: XDIPLEN 
+
+               Column   1     Column   2     Column   3     Column   4     Column   5
+       1       0.00000000     0.00000000     0.00000000     0.00000000     0.22417911
+       2       0.00000000     0.00000000     0.00000000     0.00000000     0.59044480
+       3       0.00000000     0.00000000     0.00000000     0.00000000    -1.53409345
+       4       0.00000000     0.00000000     0.00000000     0.00000000     0.92587608
+       5       0.22417911     0.59044480    -1.53409345     0.92587608     0.00000000
+
+               Column   6
+    ==== End of matrix output ====
+  (PRPORB) Z and Y ORBITAL PROPERTY GP VECTOR
+
+               Column   1     Column   2
+       1       0.44835822    -0.44835822
+       2       0.59044480    -0.59044480
+    ==== End of matrix output ====
+
+@ Singlet transition operator label: XDIPLEN 
+@ STATE NO:    1 *TRANSITION MOMENT: -0.59424534     *ENERGY(eV):   9.9680451    
+
+ OSCILLATOR STRENGTH (LENGTH)   :  8.62381984E-02
+
+
+ **************************************************************************************
+ *** @ Excit. operator sym 2 & ref. state sym 1 => excited state symmetry 2  ( B1 ) ***
+ **************************************************************************************
+
+
+
+ @ Excited state no:    1 in symmetry 2  ( B1 ) - singlet excitation
+ -------------------------------------------------------------------
+
+@ Excitation energy :  0.36631893     au
+@                       9.9680451     eV;   80397.711     cm-1;   961.77020     kJ / mol
+
+@ Total energy :       -7.2651895     au
+
+@ Operator type:    XDIPLEN 
+@ Oscillator strength (LENGTH)   :  8.62381984E-02  (Transition moment : -0.59424534     )
+
+ Eigenvector for state no.  1
+
+     Response orbital operator symmetry = 2
+     (only scaled elements abs greater than   10.00 % of max abs value)
+
+      Index(r,s)      r      s        (r s) operator      (s r) operator      (r s) scaled        (s r) scaled
+      ----------    -----  -----      --------------      --------------      --------------      --------------
+           2         2(1)   5(2)       -1.0000368183        0.0096758720       -1.0000368183        0.0096758720
+
+        1 elements with absolute value ≤ 1.00D-01 not printed.
+
+ The numbers in parenthesis give the orbital symmetry.
+
+     Configuration operator symmetry = 2
+     >> NO ELEMENTS <<
+
+
+ Time used in polarization propagator calculation is      0.24 CPU seconds for symmetry 2
+ ----------------------------------------------------------------
+ ----- Linear response calculation
+ ----- Symmetry of excitation/property operator(s)    3  ( B2 )
+ ----------------------------------------------------------------
+
+ Number of excitations of this symmetry            1
+ Number of response properties of this symmetry    0
+ Number of C6/C8 properties of this symmetry       0
+
+
+ Perturbation symmetry.     KSYMOP:       3
+ Perturbation spin symmetry.TRPLET:       F
+ Orbital variables.         KZWOPT:       2
+ Configuration variables.   KZCONF:       0
+ Total number of variables. KZVAR :       2
+
+ KZYWOP,KZYCON,KZYVAR:       4       0       4
+
+ ONE ELECTRON ACTIVE DENSITY MATRIX - UNPACKED
+
+               Column   1
+       1       1.00000000
+    ==== End of matrix output ====
+
+ FOCK VALENCE MATRIX
+
+     *** Block  1 ***
+
+               Column   1     Column   2     Column   3     Column   4
+       1       0.00166769
+       2       0.00296257     0.21490992
+       3      -0.00006883     0.02337376     0.01230529
+       4      -0.00022483    -0.11878466    -0.02144837     0.11933982
+
+     *** Block  2 ***
+
+               Column   1
+       1       0.01823794
+
+     *** Block  3 ***
+
+               Column   1
+       1       0.01823794
+    ==== End of matrix output ====
+
+ FOCK CORE MATRIX
+
+     *** Block  1 ***
+
+               Column   1     Column   2     Column   3     Column   4
+       1      -2.14353863
+       2      -0.00592513    -0.58455791
+       3       0.00006884    -0.00000002    -0.24189521
+       4       0.00022483    -0.00000000     0.02144839    -0.02931491
+
+     *** Block  2 ***
+
+               Column   1
+       1      -0.21106722
+
+     *** Block  3 ***
+
+               Column   1
+       1      -0.21106722
+    ==== End of matrix output ====
+
+ TOTAL FOCK  MATRIX
+
+     *** Block  1 ***
+
+               Column   1     Column   2     Column   3     Column   4
+       1      -4.28374188    -0.00592512     0.00000001     0.00000001
+       2      -0.00592513    -0.58455791    -0.00000002    -0.00000000
+
+     *** Block  2 zero matrix. ***
+
+     *** Block  3 zero matrix. ***
+    ==== End of matrix output ====
+  DIAGONAL ORBITAL PART OF E(2) 
+
+               Column   1
+       1       3.89818331
+       2       0.39182863
+    ==== End of matrix output ====
+  DIAGONAL ORBITAL PART OF S(2)
+
+               Column   1
+       1       2.00000000
+       2       1.00000000
+    ==== End of matrix output ====
+
+ FOCK MATRIX CONTRIBUTION TO DIAGONAL ORBITAL PART OF E[2]
+
+ (FOCK TYPE DECOUPLING OF TWO ELECTRON DENSITY MATRIX USED)
+
+     Orbital operator symmetry = 3
+     (only elements abs greater than 1.0D-01 times max abs value)
+
+      Index(r,s)     r    s      operator value
+      ----------    --   --      --------------
+              1      1    6        3.8981833109
+              2      2    6        0.3918286272
+
+               Column   1
+       1       3.89818331
+       2       0.39182863
+    ==== End of matrix output ====
+
+ DIAGONAL ORBITAL PART OF S[2]
+
+               Column   1
+       1       2.00000000
+       2       1.00000000
+    ==== End of matrix output ====
+
+ --- In RSPPP:
+ THCPP, MAXRM          1.00D-03       600
+ KSYMOP,NGPPP(KSYMOP)         3         1
+ LWRK , LWRK1          63999905  62918105
+  KEXCNV,NSIM,LWRK2            1           1     1081982
+
+
+
+ --- EXCITATION ENERGIES AND TRANSITION MOMENT CALCULATION (MCTDHF) ---
+
+ Operator symmetry = 3  ( B2 ); triplet =   F
+
+  KLIDEN,KUSE,KMAXVE,LBINTM,NORBT,NASHT,KZYVAR,LWRK 
+           2          98         213          12           6           1           4    62918105
+  LACIMX           0
+
+ MAXIMUM NUMBER OF SIMULTANEOUS TRIAL VECTORS:     120
+
+ MAXIMUM NUMBER OF SIMULTANEOUS TRIAL VECTORS IN RSPNEX:     120
+  LINEQ,RESTPP,ORBSPC F F F
+  DIMENSION SPECIFIED OF PHP, MAXPHP=         100
+  DIMENSION USED , NPCVAR=           0
+
+ DIAGONAL of E(2)
+
+               Column   1
+       1       3.89818331
+       2       0.39182863
+    ==== End of matrix output ====
+
+ DIAGONAL of orbital part of S(2)
+
+               Column   1
+       1       2.00000000
+       2       1.00000000
+    ==== End of matrix output ====
+
+ DIAGONAL E(2)/ABS(S(2))  
+
+               Column   1
+       1       1.94909166
+       2       0.39182863
+    ==== End of matrix output ====
+  NOSIM ORBITAL TRIAL VECTORS           1
+
+               Column   1
+       2       1.00000000
+    ==== End of matrix output ====
+
+ ** TEST OF Z = Y OR Z = -Y:
+ (Z Y) norm squared = 1.00000000D+00
+ Z + Y norm squared = 1.00000000D+00
+
+ RSPORT: b-vector, norm**2:     1 1.00000D+00
+ RSPORT, norm and <ZY/YZ> overlap before S-1/2  1.000000D+00   0.0000000000D+00
+  NOSIM ORBITAL TRIAL VECTORS           1
+
+               Column   1
+       2       1.00000000
+    ==== End of matrix output ====
+           0  START configuration VECTORS USING LOWEST DIAGONAL HESSIAN ELEMENTS
+           1  START orbital VECTORS
+ AFTER START ROUTINE BINMEM T
+
+ ** RSPCTL MICROITERATION NUMBER    1
+ NSIM,MAXSIM,JEXSIM    1  120    1
+  NCSIM,NOSIM           0           1
+
+ BEFORE RSPLIN
+
+    1 ORBITAL TRIAL VECTORS
+
+               Column   1
+       2       1.00000000
+    ==== End of matrix output ====
+           1  ZYMAT MATRICES
+
+               Column   1     Column   2     Column   3     Column   4     Column   5     Column   6
+       6       0.00000000     1.00000000     0.00000000     0.00000000     0.00000000     0.00000000
+    ==== End of matrix output ====
+
+
+Output from "RSPOLI". NCSIM,NOSIM=         0         1
+TRPLET,HSROHF,DFTADD         F         T         T
+TDHF,NASHT         T         1
+ Fock matrix I, IX, IFCTYP(I) =            1           0           3
+ Fock matrix I, IX, IFCTYP(I) =            2           0           3
+ RSPOLI:SIRFCK NFMAT DIRFCK           2 F
+ ISYMDM            3           3
+ IFCTYP            3           2
+ RSPOLI:SIRFCK DXCAO no.           1
+
+               Column   1     Column   2     Column   3     Column   4     Column   5     Column   6
+       6       0.12143128    -0.19198185    -0.20989318    -0.79706099     0.00000000     0.00000000
+    ==== End of matrix output ====
+ LAGRAN? NCSIM,TDHF,TRPLET,HSROHF,DFTADD:           0 T F T T
+           1 . ONE-INDEX TRANSFORMED FOCK CORE MATRIX BEFORE DIRECT [FC,ZYMAT] CONTRIBUTION
+
+               Column   1     Column   2     Column   3     Column   4     Column   5
+       6      -0.00065621     0.00706421    -0.00901711     0.01926591     0.00000000
+
+               Column   6
+       1      -0.00065621
+       2       0.00706421
+       3      -0.00901711
+       4       0.01926591
+    ==== End of matrix output ====
+           1 . ONE-INDEX TRANSFORMED FOCK VALENCE MATRIX BEFORE DIRECT [FC,ZYMAT] CONTRIBUTION
+
+               Column   1     Column   2     Column   3     Column   4     Column   5
+       6      -0.00161134    -0.00712789     0.00953948    -0.01313897     0.00000000
+
+               Column   6
+       1      -0.00161134
+       2      -0.00712789
+       3       0.00953948
+       4      -0.01313897
+    ==== End of matrix output ====
+           1 . ONE-INDEX TRANSFORMED FOCK CORE MATRIX
+
+               Column   1     Column   2     Column   3     Column   4     Column   5     Column   6
+       1       0.00000000     0.00000000     0.00000000     0.00000000     0.00000000    -0.00065621
+       2       0.00000000     0.00000000     0.00000000     0.00000000     0.00000000     0.00706421
+       3       0.00000000     0.00000000     0.00000000     0.00000000     0.00000000    -0.00901711
+       4       0.00000000     0.00000000     0.00000000     0.00000000     0.00000000     0.01926591
+       6      -0.00658134    -0.36642649    -0.00901713     0.01926590     0.00000000     0.00000000
+    ==== End of matrix output ====
+           1 . ONE-INDEX TRANSFORMED FOCK VALENCE MATRIX
+
+               Column   1     Column   2     Column   3     Column   4     Column   5     Column   6
+       1       0.00000000     0.00000000     0.00000000     0.00000000     0.00000000    -0.00161134
+       2       0.00000000     0.00000000     0.00000000     0.00000000     0.00000000    -0.00712789
+       3       0.00000000     0.00000000     0.00000000     0.00000000     0.00000000     0.00953948
+       4       0.00000000     0.00000000     0.00000000     0.00000000     0.00000000    -0.01313897
+       6       0.00135123     0.18954410     0.03291324    -0.13192362     0.00000000     0.00000000
+    ==== End of matrix output ====
+  CORE FOCK MATRIX 
+
+     *** Block  1 ***
+
+               Column   1     Column   2     Column   3     Column   4
+       1      -2.14353863
+       2      -0.00592513    -0.58455791
+       3       0.00006884    -0.00000002    -0.24189521
+       4       0.00022483    -0.00000000     0.02144839    -0.02931491
+
+     *** Block  2 ***
+
+               Column   1
+       1      -0.21106722
+
+     *** Block  3 ***
+
+               Column   1
+       1      -0.21106722
+    ==== End of matrix output ====
+  VALENCE FOCK MATRIX 
+
+     *** Block  1 ***
+
+               Column   1     Column   2     Column   3     Column   4
+       1       0.00166769
+       2       0.00296257     0.21490992
+       3      -0.00006883     0.02337376     0.01230529
+       4      -0.00022483    -0.11878466    -0.02144837     0.11933982
+
+     *** Block  2 ***
+
+               Column   1
+       1       0.01823794
+
+     *** Block  3 ***
+
+               Column   1
+       1       0.01823794
+    ==== End of matrix output ====
+
+ FCX total contribution for vector    1
+
+               Column   1     Column   2     Column   3     Column   4     Column   5     Column   6
+       1       0.00000000     0.00000000     0.00000000     0.00000000     0.00000000    -0.00065621
+       2       0.00000000     0.00000000     0.00000000     0.00000000     0.00000000     0.00706421
+       3       0.00000000     0.00000000     0.00000000     0.00000000     0.00000000    -0.00901711
+       4       0.00000000     0.00000000     0.00000000     0.00000000     0.00000000     0.01926591
+       6      -0.00658134    -0.36642649    -0.00901713     0.01926590     0.00000000     0.00000000
+    ==== End of matrix output ====
+
+ FVX total contribution for vector    1
+
+               Column   1     Column   2     Column   3     Column   4     Column   5     Column   6
+       1       0.00000000     0.00000000     0.00000000     0.00000000     0.00000000    -0.00161134
+       2       0.00000000     0.00000000     0.00000000     0.00000000     0.00000000    -0.00712789
+       3       0.00000000     0.00000000     0.00000000     0.00000000     0.00000000     0.00953948
+       4       0.00000000     0.00000000     0.00000000     0.00000000     0.00000000    -0.01313897
+       6       0.00135123     0.18954410     0.03291324    -0.13192362     0.00000000     0.00000000
+    ==== End of matrix output ====
+  LINEAR TRANSFORMATION WITH  E(2) (Z1 Y1 Z2 Y2 ...)
+
+               Column   1     Column   2
+       1       0.01046022    -0.00453510
+       2       0.36642649     0.00706421
+    ==== End of matrix output ====
+  BEFORE WRITING IBTYP ON LURSP1 LINEQ: F
+
+ TRIAL VECTORS FOR RESTART:    1
+
+    1 ORBITAL TRIAL VECTORS
+
+               Column   1
+       2       1.00000000
+    ==== End of matrix output ====
+
+    1 E(2) LINEAR TRANSF. VECTORS
+
+               Column   1
+       1       0.01046022
+       2       0.36642649
+       3      -0.00453510
+       4       0.00706421
+    ==== End of matrix output ====
+
+ INDEX VECTOR FOR E(2) TRANSFORMED TRIAL VECTORS
+           1
+
+ IBTYP VECTOR FOR E(2) TRANSFORMED TRIAL VECTORS
+           1
+           1  ZYMAT MATRICES
+
+               Column   1     Column   2     Column   3     Column   4     Column   5     Column   6
+       6       0.00000000     1.00000000     0.00000000     0.00000000     0.00000000     0.00000000
+    ==== End of matrix output ====
+  LINEAR TRANSFORMATION WITH  S(2) (Z1 Y1 Z2 Y2 ...)
+
+               Column   1     Column   2
+       2       1.00000000     0.00000000
+    ==== End of matrix output ====
+
+ RSPRED: REDUCED HESSIAN MATRIX:
+
+               Column   1     Column   2
+       1       0.36642649
+       2       0.00706421     0.36642649
+    ==== End of matrix output ====
+
+ RSPRED: REDUCED METRIC MATRIX:
+
+               Column   1     Column   2
+       1       1.00000000
+       2      -0.00000000    -1.00000000
+    ==== End of matrix output ====
+
+ REDUCED EIGENVECTORS BEFORE ORDERING:
+
+               Column   1     Column   2
+       1       0.00964022    -1.00000000
+       2      -1.00000000     0.00964022
+    ==== End of matrix output ====
+
+ REDUCED EIGENVALUES (2,KZRED):
+
+               Column   1
+       1      -0.36635838
+       2       0.36635838
+    ==== End of matrix output ====
+
+
+     (ALFAR + i ALFAI) / BETA are eigenvalues;
+   I      ALFAR           ALFAI          BETA
+    1  -3.663584D-01   0.000000D+00   1.000000D+00
+    2   3.663584D-01   0.000000D+00   1.000000D+00
+
+ Unsorted eigenvalues of [ E(2) , S(2) ] :
+         1  -3.663584D-01
+         2   3.663584D-01
+
+ Reduced S(2) in eigenvector basis :
+
+               Column   1     Column   2
+       1      -0.99990707    -0.00000000
+       2      -0.00000000     0.99990707
+    ==== End of matrix output ====
+
+      NUMBER      EIGENVALUE      PAIRED EIGENVALUE
+         1      3.66358385D-01     -3.66358385D-01
+ S[2] reduced matrix
+
+               Column   1     Column   2
+       1       1.00000000
+       2      -0.00000000    -1.00000000
+    ==== End of matrix output ====
+ The eigenvalues of S[2] reduced matrix
+
+               Column   1
+       1       1.00000000
+       2      -1.00000000
+    ==== End of matrix output ====
+ E[2] reduced matrix
+
+               Column   1     Column   2
+       1       0.36642649
+       2       0.00706421     0.36642649
+    ==== End of matrix output ====
+ The eigenvalues of E[2] reduced matrix
+
+               Column   1
+       1       0.37349069
+       2       0.35936228
+    ==== End of matrix output ====
+
+ REDUCED EIGENVECTORS AFTER ORDERING:
+
+               Column   1     Column   2
+       1      -1.00004647     0.00964067
+       2       0.00964067    -1.00004647
+    ==== End of matrix output ====
+
+
+ NUMBER OF EIGENVALUES WITH POSITIVE, ZERO, AND NEGATIVE METRIC:    1    0    1
+
+ THE EIGENVALUES WITH POSITIVE METRIC:
+      NUMBER      EIGENVALUE
+         1      3.66358385D-01
+
+
+ EIGENVECTOR NO.    1
+          TRIAL VEC.   coeff. for ZY       coeff. for YZ
+
+              1       -1.000046D+00        9.640667D-03
+  RSPNEX: Solution vectors no.           1  to           1  (Z1 Y1 ...)
+
+               Column   1     Column   2
+       2      -1.00004647     0.00964067
+    ==== End of matrix output ====
+           1  ZYMAT MATRICES
+
+               Column   1     Column   2     Column   3     Column   4     Column   5     Column   6
+       2       0.00000000     0.00000000     0.00000000     0.00000000     0.00000000     0.00964067
+       6       0.00000000    -1.00004647     0.00000000     0.00000000     0.00000000     0.00000000
+    ==== End of matrix output ====
+  LINEAR TRANSFORMATION WITH  S(2) (Z1 Y1 Z2 Y2 ...)
+
+               Column   1     Column   2
+       2      -1.00004647    -0.00964067
+    ==== End of matrix output ====
+  RSPNEX: (Z,Y) residual vectors no.           1  to           1
+
+               Column   1     Column   2
+       1      -0.01050443     0.00463616
+    ==== End of matrix output ====
+
+ ROOT:  1 RESIDUAL TOT: 1.14820D-02 CONF: 0.00000D+00 ORB: 1.14820D-02
+          BNORM: 1.00009D+00 EIVAL: 3.66358D-01
+  NBX ORBITAL VECTORS WRITTEN OUT           1
+  NOSIM ORBITAL TRIAL VECTORS               1
+  KZWOPT                                    2
+  (Z1 Y1 Z2 Y2 ...)
+
+               Column   1     Column   2
+       1      -0.00331845     0.00100114
+    ==== End of matrix output ====
+
+ ** TEST OF Z = Y OR Z = -Y:
+ (Z Y) norm squared = 1.20143538D-05
+ Z + Y norm squared = 5.36992920D-06
+
+ RSPORT: b-vector, norm**2:     1 1.20144D-05
+ RSPORT, norm and <ZY/YZ> overlap before S-1/2  1.000000D+00  -5.5304053136D-01
+ RSPORT, norm and <ZY/YZ> overlap before S-1/2  1.000000D+00   1.1102230246D-16
+ RSPORT, norm and <ZY/YZ> overlap after  S-1/2  1.000000D+00  -1.1102230246D-16
+
+ RSPORT: b-vector, norm**2:     1 1.00000D+00
+ RSPORT, norm and <ZY/YZ> overlap before S-1/2  1.000000D+00  -1.1102230246D-16
+ RSPORT, norm and <ZY/YZ> overlap before S-1/2  1.000000D+00   1.1102230246D-16
+ RSPORT, norm and <ZY/YZ> overlap after  S-1/2  1.000000D+00  -1.1102230246D-16
+
+ NOSIM orbital trial vectors after RSPORT    1
+ ( columns: Z_1 Y_1 Z_2 Y_2 ... Z_NOSIM Y_NOSIM)
+
+               Column   1     Column   2
+       1      -1.00000000     0.00000000
+    ==== End of matrix output ====
+
+ NUMBER OF TRIAL VECTORS IN THIS LOAD    1   OFFSET FOR THIS LOAD    0
+    1 NON-CONVERGED SOLUTION VECTORS THIS LOAD, TOTAL:    1
+    1 LINEAR INDEPENDENT TRIAL VECTORS ADDED TO PREVIOUS    0
+
+ Convergence of RSP solution vectors, threshold = 1.00D-03
+ ---------------------------------------------------------------
+ (dimension of paired reduced space:    2)
+ RSP solution vector no.    1; norm of residual   1.15D-02
+
+ ** RSPCTL MICROITERATION NUMBER    2
+ NSIM,MAXSIM,JEXSIM    1  120    1
+  NCSIM,NOSIM           0           1
+
+ BEFORE RSPLIN
+
+    1 ORBITAL TRIAL VECTORS
+
+               Column   1
+       1      -1.00000000
+    ==== End of matrix output ====
+           1  ZYMAT MATRICES
+
+               Column   1     Column   2     Column   3     Column   4     Column   5     Column   6
+       6      -1.00000000     0.00000000     0.00000000     0.00000000     0.00000000     0.00000000
+    ==== End of matrix output ====
+
+
+Output from "RSPOLI". NCSIM,NOSIM=         0         1
+TRPLET,HSROHF,DFTADD         F         T         T
+TDHF,NASHT         T         1
+ Fock matrix I, IX, IFCTYP(I) =            1           0           3
+ Fock matrix I, IX, IFCTYP(I) =            2          30           0
+ RSPOLI:SIRFCK NFMAT DIRFCK           2 F
+ ISYMDM            3           3
+ IFCTYP            3           2
+ RSPOLI:SIRFCK DXCAO no.           1
+
+               Column   1     Column   2     Column   3     Column   4     Column   5     Column   6
+       6       1.97724892     0.08756993     0.00434762    -0.00208767     0.00000000     0.00000000
+    ==== End of matrix output ====
+ LAGRAN? NCSIM,TDHF,TRPLET,HSROHF,DFTADD:           0 T F T T
+           1 . ONE-INDEX TRANSFORMED FOCK CORE MATRIX BEFORE DIRECT [FC,ZYMAT] CONTRIBUTION
+
+               Column   1     Column   2     Column   3     Column   4     Column   5
+       6       0.00574783     0.00453510     0.03075857     0.01398935     0.00000000
+
+               Column   6
+       1       0.00574783
+       2       0.00453510
+       3       0.03075857
+       4       0.01398935
+    ==== End of matrix output ====
+           1 . ONE-INDEX TRANSFORMED FOCK VALENCE MATRIX BEFORE DIRECT [FC,ZYMAT] CONTRIBUTION
+
+               Column   1     Column   2     Column   3     Column   4     Column   5
+       6      -0.00452155    -0.04428459     0.04957447    -0.04295933     0.00000000
+
+               Column   6
+       1      -0.00452155
+       2      -0.04428459
+       3       0.04957447
+       4      -0.04295933
+    ==== End of matrix output ====
+           1 . ONE-INDEX TRANSFORMED FOCK CORE MATRIX
+
+               Column   1     Column   2     Column   3     Column   4     Column   5     Column   6
+       1       0.00000000     0.00000000     0.00000000     0.00000000     0.00000000     0.00574783
+       2       0.00000000     0.00000000     0.00000000     0.00000000     0.00000000     0.00453510
+       3       0.00000000     0.00000000     0.00000000     0.00000000     0.00000000     0.03075857
+       4       0.00000000     0.00000000     0.00000000     0.00000000     0.00000000     0.01398935
+       6       1.93821923     0.01046023     0.03068973     0.01376452     0.00000000     0.00000000
+    ==== End of matrix output ====
+           1 . ONE-INDEX TRANSFORMED FOCK VALENCE MATRIX
+
+               Column   1     Column   2     Column   3     Column   4     Column   5     Column   6
+       1       0.00000000     0.00000000     0.00000000     0.00000000     0.00000000    -0.00452155
+       2       0.00000000     0.00000000     0.00000000     0.00000000     0.00000000    -0.04428459
+       3       0.00000000     0.00000000     0.00000000     0.00000000     0.00000000     0.04957447
+       4       0.00000000     0.00000000     0.00000000     0.00000000     0.00000000    -0.04295933
+       6       0.01204870    -0.04724716     0.04964331    -0.04273450     0.00000000     0.00000000
+    ==== End of matrix output ====
+  CORE FOCK MATRIX 
+
+     *** Block  1 ***
+
+               Column   1     Column   2     Column   3     Column   4
+       1      -2.14353863
+       2      -0.00592513    -0.58455791
+       3       0.00006884    -0.00000002    -0.24189521
+       4       0.00022483    -0.00000000     0.02144839    -0.02931491
+
+     *** Block  2 ***
+
+               Column   1
+       1      -0.21106722
+
+     *** Block  3 ***
+
+               Column   1
+       1      -0.21106722
+    ==== End of matrix output ====
+  VALENCE FOCK MATRIX 
+
+     *** Block  1 ***
+
+               Column   1     Column   2     Column   3     Column   4
+       1       0.00166769
+       2       0.00296257     0.21490992
+       3      -0.00006883     0.02337376     0.01230529
+       4      -0.00022483    -0.11878466    -0.02144837     0.11933982
+
+     *** Block  2 ***
+
+               Column   1
+       1       0.01823794
+
+     *** Block  3 ***
+
+               Column   1
+       1       0.01823794
+    ==== End of matrix output ====
+
+ FCX total contribution for vector    1
+
+               Column   1     Column   2     Column   3     Column   4     Column   5     Column   6
+       1       0.00000000     0.00000000     0.00000000     0.00000000     0.00000000     0.00574783
+       2       0.00000000     0.00000000     0.00000000     0.00000000     0.00000000     0.00453510
+       3       0.00000000     0.00000000     0.00000000     0.00000000     0.00000000     0.03075857
+       4       0.00000000     0.00000000     0.00000000     0.00000000     0.00000000     0.01398935
+       6       1.93821923     0.01046023     0.03068973     0.01376452     0.00000000     0.00000000
+    ==== End of matrix output ====
+
+ FVX total contribution for vector    1
+
+               Column   1     Column   2     Column   3     Column   4     Column   5     Column   6
+       1       0.00000000     0.00000000     0.00000000     0.00000000     0.00000000    -0.00452155
+       2       0.00000000     0.00000000     0.00000000     0.00000000     0.00000000    -0.04428459
+       3       0.00000000     0.00000000     0.00000000     0.00000000     0.00000000     0.04957447
+       4       0.00000000     0.00000000     0.00000000     0.00000000     0.00000000    -0.04295933
+       6       0.01204870    -0.04724716     0.04964331    -0.04273450     0.00000000     0.00000000
+    ==== End of matrix output ====
+  LINEAR TRANSFORMATION WITH  E(2) (Z1 Y1 Z2 Y2 ...)
+
+               Column   1     Column   2
+       1      -3.90053587     0.00245256
+       2      -0.01046023     0.00453510
+    ==== End of matrix output ====
+  BEFORE WRITING IBTYP ON LURSP1 LINEQ: F
+
+ TRIAL VECTORS FOR RESTART:    2
+
+    1 ORBITAL TRIAL VECTORS
+
+               Column   1
+       1      -1.00000000
+    ==== End of matrix output ====
+
+    1 E(2) LINEAR TRANSF. VECTORS
+
+               Column   1
+       1      -3.90053587
+       2      -0.01046023
+       3       0.00245256
+       4       0.00453510
+    ==== End of matrix output ====
+
+ INDEX VECTOR FOR E(2) TRANSFORMED TRIAL VECTORS
+           1
+
+ IBTYP VECTOR FOR E(2) TRANSFORMED TRIAL VECTORS
+           1
+           1  ZYMAT MATRICES
+
+               Column   1     Column   2     Column   3     Column   4     Column   5     Column   6
+       6      -1.00000000     0.00000000     0.00000000     0.00000000     0.00000000     0.00000000
+    ==== End of matrix output ====
+  LINEAR TRANSFORMATION WITH  S(2) (Z1 Y1 Z2 Y2 ...)
+
+               Column   1     Column   2
+       1      -2.00000000    -0.00000000
+    ==== End of matrix output ====
+
+ RSPRED: REDUCED HESSIAN MATRIX:
+
+               Column   1     Column   2     Column   3     Column   4
+       1       0.36642649
+       2       0.00706421     0.36642649
+       3      -0.01046023     0.00453510     3.90053587
+       4       0.00453510    -0.01046023    -0.00245256     3.90053587
+    ==== End of matrix output ====
+
+ RSPRED: REDUCED METRIC MATRIX:
+
+               Column   1     Column   2     Column   3     Column   4
+       1       1.00000000
+       2      -0.00000000    -1.00000000
+       3       0.00000000     0.00000000     2.00000000
+       4      -0.00000000    -0.00000000    -0.00000000    -2.00000000
+    ==== End of matrix output ====
+
+ REDUCED EIGENVECTORS BEFORE ORDERING:
+
+               Column   1     Column   2     Column   3     Column   4
+       1       0.00661195    -1.00000000    -0.00967552    -0.00193596
+       2       0.00193596     0.00967552     1.00000000    -0.00661195
+       3      -1.00000000    -0.00331503    -0.00099892     0.00031563
+       4      -0.00031563     0.00099892     0.00331503     1.00000000
+    ==== End of matrix output ====
+
+ REDUCED EIGENVALUES (2,KZRED):
+
+               Column   1     Column   2
+       1       3.90052605    -0.36632545
+       2       0.36632545    -3.90052605
+    ==== End of matrix output ====
+
+
+     (ALFAR + i ALFAI) / BETA are eigenvalues;
+   I      ALFAR           ALFAI          BETA
+    1   3.900526D+00   0.000000D+00   1.999964D+00
+    2   3.663254D-01   0.000000D+00   1.000018D+00
+    3  -3.663254D-01   0.000000D+00   1.000018D+00
+    4  -3.900526D+00   0.000000D+00   1.999964D+00
+
+ Unsorted eigenvalues of [ E(2) , S(2) ] :
+         1   1.950298D+00
+         2   3.663189D-01
+         3  -3.663189D-01
+         4  -1.950298D+00
+
+ Reduced S(2) in eigenvector basis :
+
+               Column   1     Column   2     Column   3     Column   4
+       1       2.00003977    -0.00000000    -0.00000000    -0.00000000
+       2      -0.00000000     0.99992637     0.00000000     0.00000000
+       3      -0.00000000     0.00000000    -0.99992637     0.00000000
+       4      -0.00000000     0.00000000     0.00000000    -2.00003977
+    ==== End of matrix output ====
+
+      NUMBER      EIGENVALUE      PAIRED EIGENVALUE
+         1      3.66318929D-01     -3.66318929D-01
+         2      1.95029774D+00     -1.95029774D+00
+ S[2] reduced matrix
+
+               Column   1     Column   2     Column   3     Column   4
+       1       1.00000000
+       2      -0.00000000    -1.00000000
+       3       0.00000000     0.00000000     2.00000000
+       4      -0.00000000    -0.00000000    -0.00000000    -2.00000000
+    ==== End of matrix output ====
+ The eigenvalues of S[2] reduced matrix
+
+               Column   1     Column   2
+       1       1.00000000     2.00000000
+       2      -1.00000000    -2.00000000
+    ==== End of matrix output ====
+ E[2] reduced matrix
+
+               Column   1     Column   2     Column   3     Column   4
+       1       0.36642649
+       2       0.00706421     0.36642649
+       3      -0.01046023     0.00453510     3.90053587
+       4       0.00453510    -0.01046023    -0.00245256     3.90053587
+    ==== End of matrix output ====
+ The eigenvalues of E[2] reduced matrix
+
+               Column   1     Column   2
+       1       0.37348073     3.90305188
+       2       0.35929882     3.89809327
+    ==== End of matrix output ====
+
+ REDUCED EIGENVECTORS AFTER ORDERING:
+
+               Column   1     Column   2     Column   3     Column   4
+       1      -1.00003682     0.00467531    -0.00967587    -0.00136892
+       2       0.00967587     0.00136892     1.00003682    -0.00467531
+       3      -0.00331515    -0.70709975    -0.00099896     0.00022318
+       4       0.00099896    -0.00022318     0.00331515     0.70709975
+    ==== End of matrix output ====
+
+
+ NUMBER OF EIGENVALUES WITH POSITIVE, ZERO, AND NEGATIVE METRIC:    2    0    2
+
+ THE EIGENVALUES WITH POSITIVE METRIC:
+      NUMBER      EIGENVALUE
+         1      3.66318929D-01
+         2      1.95029774D+00
+
+
+ EIGENVECTOR NO.    1
+          TRIAL VEC.   coeff. for ZY       coeff. for YZ
+
+              1       -1.000037D+00        9.675872D-03
+              2       -3.315147D-03        9.989589D-04
+  RSPNEX: Solution vectors no.           1  to           1  (Z1 Y1 ...)
+
+               Column   1     Column   2
+       1       0.00331515    -0.00099896
+       2      -1.00003682     0.00967587
+    ==== End of matrix output ====
+           1  ZYMAT MATRICES
+
+               Column   1     Column   2     Column   3     Column   4     Column   5     Column   6
+       1       0.00000000     0.00000000     0.00000000     0.00000000     0.00000000    -0.00099896
+       2       0.00000000     0.00000000     0.00000000     0.00000000     0.00000000     0.00967587
+       6       0.00331515    -1.00003682     0.00000000     0.00000000     0.00000000     0.00000000
+    ==== End of matrix output ====
+  LINEAR TRANSFORMATION WITH  S(2) (Z1 Y1 Z2 Y2 ...)
+
+               Column   1     Column   2
+       1       0.00663029     0.00199792
+       2      -1.00003682    -0.00967587
+    ==== End of matrix output ====
+  RSPNEX: (Z,Y) residual vectors no.           1  to           1
+
+               Column   1     Column   2
+       1     1.024283E-08  -9.910467E-11
+       2    -2.069996E-16  -1.121201E-16
+    ==== End of matrix output ====
+
+ ROOT:  1 RESIDUAL TOT: 1.02433D-08 CONF: 0.00000D+00 ORB: 1.02433D-08
+          BNORM: 1.00009D+00 EIVAL: 3.66319D-01
+
+ NUMBER OF TRIAL VECTORS IN THIS LOAD    1   OFFSET FOR THIS LOAD    0
+    0 NON-CONVERGED SOLUTION VECTORS THIS LOAD, TOTAL:    0
+    0 LINEAR INDEPENDENT TRIAL VECTORS ADDED TO PREVIOUS    0
+
+ *** THE REQUESTED    1 SOLUTION VECTORS CONVERGED
+
+ Convergence of RSP solution vectors, threshold = 1.00D-03
+ ---------------------------------------------------------------
+ (dimension of paired reduced space:    4)
+ RSP solution vector no.    1; norm of residual   1.02D-08
+
+ *** RSPCTL MICROITERATIONS CONVERGED
+
+
+ EIGENVECTOR NO.    1
+          TRIAL VEC.   coeff. for ZY       coeff. for YZ
+
+              1       -1.000037D+00        9.675872D-03
+              2       -3.315147D-03        9.989589D-04
+
+
+ Output from PRPCTL:
+ ===================
+
+ Property label = YDIPLEN 
+
+
+ PRPGET: PROPERTY MATRIX YDIPLEN  IN AO BASIS AS READ FROM LUPROP
+
+               Column   1     Column   2     Column   3     Column   4
+       6       0.14723998     1.80329832     0.00000000     0.32886291
+
+               Column   5     Column   6
+    ==== End of matrix output ====
+
+ PROPERTY MATRIX YDIPLEN  IN AO BASIS AFTER (ANTI)SYMMETRIZATION 
+
+               Column   1     Column   2     Column   3     Column   4     Column   5
+       6       0.14723998     1.80329832     0.00000000     0.32886291     0.00000000
+
+               Column   6
+       1       0.14723998
+       2       1.80329832
+       4       0.32886291
+    ==== End of matrix output ====
+
+ PROPERTY: YDIPLEN  IN MO. BASIS after
+ ISYM=    1 JSYM=    3
+
+               Column   1     Column   2     Column   3     Column   4     Column   5
+
+               Column   6
+       1       0.22417911
+       2       0.59044480
+       3      -1.53409345
+       4       0.92587608
+    ==== End of matrix output ====
+
+ MO. COEFFICIENTS FOR SYMMETRY    1
+
+               Column   1     Column   2     Column   3     Column   4
+       1       0.98862446    -0.12143128     0.24056100    -0.11538672
+       2       0.04378496     0.19198185    -0.89314972     0.71234747
+       3       0.00217381     0.20989318     0.50236713     1.07728268
+       4      -0.00104383     0.79706099     0.12498136    -1.03906332
+    ==== End of matrix output ====
+
+ MO. COEFFICIENTS FOR SYMMETRY    3
+
+               Column   1
+       1       1.00000000
+    ==== End of matrix output ====
+
+ PROPERTY: YDIPLEN  IN MO. BASIS after
+ ISYM=    3 JSYM=    1
+
+               Column   1     Column   2     Column   3     Column   4     Column   5
+       6       0.22417911     0.59044480    -1.53409345     0.92587608     0.00000000
+
+               Column   6
+       1       0.22417911
+       2       0.59044480
+       3      -1.53409345
+       4       0.92587608
+    ==== End of matrix output ====
+
+ MO. COEFFICIENTS FOR SYMMETRY    3
+
+               Column   1
+       1       1.00000000
+    ==== End of matrix output ====
+
+ MO. COEFFICIENTS FOR SYMMETRY    1
+
+               Column   1     Column   2     Column   3     Column   4
+       1       0.98862446    -0.12143128     0.24056100    -0.11538672
+       2       0.04378496     0.19198185    -0.89314972     0.71234747
+       3       0.00217381     0.20989318     0.50236713     1.07728268
+       4      -0.00104383     0.79706099     0.12498136    -1.03906332
+    ==== End of matrix output ====
+
+ PROPERTY: YDIPLEN  IN MO. BASIS
+
+               Column   1     Column   2     Column   3     Column   4     Column   5
+       6       0.22417911     0.59044480    -1.53409345     0.92587608     0.00000000
+
+               Column   6
+       1       0.22417911
+       2       0.59044480
+       3      -1.53409345
+       4       0.92587608
+    ==== End of matrix output ====
+
+PRPCTL test output: MOLECULAR PROPERTY INTEGRALS: YDIPLEN 
+
+               Column   1     Column   2     Column   3     Column   4     Column   5
+       6       0.22417911     0.59044480    -1.53409345     0.92587608     0.00000000
+
+               Column   6
+       1       0.22417911
+       2       0.59044480
+       3      -1.53409345
+       4       0.92587608
+    ==== End of matrix output ====
+  (PRPORB) Z and Y ORBITAL PROPERTY GP VECTOR
+
+               Column   1     Column   2
+       1       0.44835822    -0.44835822
+       2       0.59044480    -0.59044480
+    ==== End of matrix output ====
+
+@ Singlet transition operator label: YDIPLEN 
+@ STATE NO:    1 *TRANSITION MOMENT: -0.59424534     *ENERGY(eV):   9.9680451    
+
+ OSCILLATOR STRENGTH (LENGTH)   :  8.62381984E-02
+
+
+ **************************************************************************************
+ *** @ Excit. operator sym 3 & ref. state sym 1 => excited state symmetry 3  ( B2 ) ***
+ **************************************************************************************
+
+
+
+ @ Excited state no:    1 in symmetry 3  ( B2 ) - singlet excitation
+ -------------------------------------------------------------------
+
+@ Excitation energy :  0.36631893     au
+@                       9.9680451     eV;   80397.711     cm-1;   961.77020     kJ / mol
+
+@ Total energy :       -7.2651895     au
+
+@ Operator type:    YDIPLEN 
+@ Oscillator strength (LENGTH)   :  8.62381984E-02  (Transition moment : -0.59424534     )
+
+ Eigenvector for state no.  1
+
+     Response orbital operator symmetry = 3
+     (only scaled elements abs greater than   10.00 % of max abs value)
+
+      Index(r,s)      r      s        (r s) operator      (s r) operator      (r s) scaled        (s r) scaled
+      ----------    -----  -----      --------------      --------------      --------------      --------------
+           2         2(1)   6(3)       -1.0000368183        0.0096758720       -1.0000368183        0.0096758720
+
+        1 elements with absolute value ≤ 1.00D-01 not printed.
+
+ The numbers in parenthesis give the orbital symmetry.
+
+     Configuration operator symmetry = 3
+     >> NO ELEMENTS <<
+
+
+ Time used in polarization propagator calculation is      0.24 CPU seconds for symmetry 3
+
+  Total CPU  time used in RESPONSE:   0.86 seconds
+  Total wall time used in RESPONSE:   0.86 seconds
+
+
+                   .-------------------------------------------.
+                   | End of Dynamic Property Section (RESPONS) |
+                   `-------------------------------------------'
+
+
+ Center of mass dipole origin  :    0.000000    0.000000    0.000000
+
+ Center of mass gauge origin   :    0.000000    0.000000    0.000000
+
+
+                 .------------------------------------------------.
+                 | Starting in Static Property Section (ABACUS) - |
+                 `------------------------------------------------'
+
+
+ 
+     Date and time (Linux)  : Mon Jan 21 21:15:26 2019
+     Host name              : osmium                                  
+
+
+   ***************************************************************************
+   ************************ FINAL RESULTS from ABACUS ************************
+   ***************************************************************************
+
+
+ 
+     Date and time (Linux)  : Mon Jan 21 21:15:26 2019
+     Host name              : osmium                                  
+
+
+                             Molecular geometry (au)
+                             -----------------------
+
+ Li         0.0000000000            0.0000000000           -0.3785608810
+ H          0.0000000000            0.0000000000            2.6353633158
+
+
+
+
+
+                        Molecular wave function and energy
+                        ----------------------------------
+
+     Spatial symmetry   1 ( A1  )
+     Spin multiplicity  2
+     2 * M_S            1
+     State number       1
+     Total charge       1
+
+     Total energy         -7.6315084222 au (Hartrees)
+                          -207.66390778 eV
+                            -20036.5223 kJ/mol
+                             -4788.8438 kcal/mol
+
+
+                   Scalar Breit-Pauli relativistic corrections
+                   -------------------------------------------
+
+     Darwin correction:                          0.0020175834 au
+     Mass-velocity correction:                  -0.0023790822 au
+
+     Total relativistic correction:             -0.0003614988 au ( 0.0047%)
+     Non-relativistic + relativistic energy:    -7.6318699210 au
+
+
+
+      (Note that these corrections are NOT included in the results below.)
+
+
+                                  Dipole moment
+                                  -------------
+
+                 au               Debye          C m (/(10**-30)
+              0.178196           0.452930           1.510813
+
+
+                             Dipole moment components
+                             ------------------------
+
+                 au               Debye          C m (/(10**-30)
+
+      z     -0.17819648        -0.45293023        -1.51081264
+
+
+   Units:   1 a.u. =   2.54175 Debye 
+            1 a.u. =   8.47835 (10**-30) C m (SI)
+
+
+
+
+   Interatomic separations (in Angstrom):
+   --------------------------------------
+
+            Li          H     
+            ------      ------
+ Li    :    0.000000
+ H     :    1.594900    0.000000
+
+
+  Max    interatomic separation is    1.5949 Angstrom (    3.0139 Bohr)
+  between atoms    2 and    1, "H     " and "Li    ".
+
+  Min HX interatomic separation is    1.5949 Angstrom (    3.0139 Bohr)
+
+
+  Bond distances (Angstrom):
+  --------------------------
+
+                  atom 1     atom 2       distance
+                  ------     ------       --------
+  bond distance:  H          Li           1.594900
+
+
+  Total CPU  time used in ABACUS:   0.00 seconds
+  Total wall time used in ABACUS:   0.00 seconds
+
+
+                   .-------------------------------------------.
+                   | End of Static Property Section (ABACUS) - |
+                   `-------------------------------------------'
+
+  Total CPU  time used in DALTON:   1.47 seconds
+  Total wall time used in DALTON:   1.47 seconds
+
+ 
+     Date and time (Linux)  : Mon Jan 21 21:15:26 2019
+     Host name              : osmium                                  
