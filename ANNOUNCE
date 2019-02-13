@@ -41,4 +41,4 @@ Summary of changes since last version:
 * Support coreelectrons attribute in Molcas (Kunal Sharma)
 * Support etoscs for response calculations in Dalton (Peter Reinholdt)
 * Updated testing framework (Jaime Rodríguez-Guerra, Maxim Stolyarchuk and others)
-* Many other minor improvements and bug fixes from Alessandro Genova. Felipe S. S. Schneider and others
+* Many other minor improvements and bug fixes from Alessandro Genova, Felipe S. S. Schneider and others
