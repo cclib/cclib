@@ -2145,7 +2145,7 @@ def test_regressions(which=[], opt_traceback=False, regdir=__regression_dir__):
     missing_on_disk = []
     missing_in_list = []
     for fn in regfilenames:
-        if not os.path.isfile(os.path.join(regdir, fn)):
+        if not os.path.exists(os.path.join(regdir, fn)):
             missing_on_disk.append(fn)
     for fn in glob.glob(os.path.join(regdir, '*', '*', '*')):
         fn = fn.replace(regdir, '').strip('/')
