@@ -1,13 +1,18 @@
-Developers that have added more than 1K SLOC:
+Core developers:
 Eric J. Berquist
 Geoff Hutchison
 Karol M. Langner
-Noel M. O'Boyle
-Sanjeed Schamnad
-Casper Steinmann
+Noel M. O'Boyle (retired)
 Adam L. Tenderholt
 
-We would like the thank the following who have contributed to cclib:
+Developers that have added at least ~1K SLOC:
+Sagar Gaur
+Sanjeed Schamnad
+Kunal Sharma
+Casper Steinmann
+Jonathon Vandezande
+
+We would like the thank all the following who have contributed to cclib:
 Nuno Bandeira -- for bug reporting
 Björn Baumeier -- for bug reporting
 Dermot Brougham -- for bug reporting
@@ -20,6 +25,7 @@ Abhishek Dey -- for bug reporting
 Matt Ernst -- for patches
 Clyde Fare -- for bug reporting and patches
 Christos Garoufalis -- for bug reporting
+Alessandro Genova - for patches and fixes
 Sagar Gaur -- for patches
 glideht -- for bug reporting
 Edward Holland -- for patches
@@ -38,16 +44,21 @@ Rob Paton -- for creating and running Jaguar test jobs
 Martin Peeks -- for patches
 Felix Plasser -- for fixes, patches and contributing files
 Martin Rahm -- for bug reporting
+Peter Reinholdt - for patches
 Marius Retegan -- for bug reporting
+Jaime Rodríguez-Guerra - for patches
 Tamilmani S -- for bug reporting
 Melchor Sanchez -- for bug reporting
 Alex Schild -- for ideas and contributing test files
+Felipe S. S. Schneider - for fixes
 Jen Schwartz -- for helping create and run Jaguar 6.0 test jobs
 Tiago Silva -- for bug reporting
 Pavel Solntsev -- for bug reporting
 Ben Stein -- for patches
+Maxim Stolyarchuk - for patches
 Adam Swanson -- for bug reporting
 Joe Townsend -- for contributing multiple GAMESS files to test on
+Shiv Upadhyay -- for patches and fixes
 Chengju Wang -- for bug reporting
 Andrew Warden -- for bug reporting
 Samuel Wilson -- for bug reporting

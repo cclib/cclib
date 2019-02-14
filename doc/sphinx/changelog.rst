@@ -4,6 +4,33 @@
 Changelog
 =========
 
+Changes in cclib-1.6.1
+----------------------
+
+**Features**
+
+* New attribute nsocoeffs for natural spin orbital coefficients (Shiv Upadhyay)
+* New attribute nsooccnos for natural spin orbital occupation numbers (Shiv Upadhyay)
+* New methods: alpha and beta electron counts (Jaime Rodríguez-Guerra)
+* Support coreelectrons attribute in Molcas (Kunal Sharma)
+* Support etoscs for response calculations in Dalton (Peter Reinholdt)
+* Support etenergies for TDDFT in GAMESS
+* Support etrotats attribute in ORCA
+* Support functional name in metadata for Psi4 (Alessandro Genova)
+* Updated testing framework (Jaime Rodríguez-Guerra, Maxim Stolyarchuk and others)
+* Updated test file version to QChem 5.1
+
+**Bugfixes**
+
+* Fixed parsing GAMESS output for EOM-CC output
+* Fixed parsing Gaussian output for G3 jobs
+* Fixed parsing ORCA output for certain invalid inputs (Felipe S. S. Schneider)
+* Fixed parsing of mocoeffs in ORCA when they are glued together (Felipe S. S. Schneider)
+* Fixed parsing of mocoeffs and vibfreqs in Psi4 (Alessandro Genova)
+* Fixed parsing of mocoeffs in Molcas for some files (Shiv Upadhyay)
+* Fixed parsing of etsecs in Dalton
+* Fixed bond atom indices in CJSON output (Alessandro Genova)
+
 Changes in cclib-1.6
 --------------------
 
