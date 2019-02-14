@@ -91,7 +91,7 @@ The input files for tests, which are logfiles from computational chemistry progr
 
 .. _`Travis CI`: https://travis-ci.org/cclib/cclib
 
-.. |travis_prod| image:: https://travis-ci.org/cclib/cclib.svg?branch=v1.6
+.. |travis_prod| image:: https://travis-ci.org/cclib/cclib.svg?branch=v1.6.1
 .. |travis_master| image:: https://travis-ci.org/cclib/cclib.svg?branch=master
 
 .. _`data directory`: https://github.com/cclib/cclib/tree/master/data
