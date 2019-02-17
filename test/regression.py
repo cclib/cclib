@@ -2108,7 +2108,7 @@ def make_regression_from_old_unittest(test_class):
     return old_unit_test
 
 
-def test_regressions(which=[], opt_traceback=False, regdir=__regression_dir__):
+def test_regressions(which=[], opt_traceback=False, regdir=__regression_dir__, loglevel=logging.ERROR):
 
     # Build a list of regression files that can be found. If there is a directory
     # on the third level, then treat all files within it as one job.
@@ -2218,9 +2218,9 @@ def test_regressions(which=[], opt_traceback=False, regdir=__regression_dir__):
                 job_filenames = glob.glob(fname)
                 try:
                     if len(job_filenames) == 1:
-                        logfile = ccopen(job_filenames[0], datatype=datatype)
+                        logfile = ccopen(job_filenames[0], datatype=datatype, loglevel=loglevel)
                     else:
-                        logfile = ccopen(job_filenames, datatype=datatype)
+                        logfile = ccopen(job_filenames, datatype=datatype, loglevel=loglevel)
                 except Exception as e:
                     errors += 1
                     print("ccopen error: ", e)
@@ -2229,7 +2229,6 @@ def test_regressions(which=[], opt_traceback=False, regdir=__regression_dir__):
                 else:
                     if type(logfile) == parser_class:
                         try:
-                            logfile.logger.setLevel(logging.ERROR)
                             logfile.data = logfile.parse()
                         except KeyboardInterrupt:
                             sys.exit(1)
@@ -2305,6 +2304,11 @@ def test_regressions(which=[], opt_traceback=False, regdir=__regression_dir__):
 
 if __name__ == "__main__":
 
+    if "--debug" in sys.argv:
+        loglevel = logging.DEBUG
+    else:
+        loglevel = logging.ERROR
+
     # If 'test' is passed as the first argument, do a doctest on this module.
     # Otherwise, any arguments are used to limit the test to the packages/parsers
     # passed as arguments. No arguments implies all parsers.
@@ -2315,4 +2319,4 @@ if __name__ == "__main__":
     else:
         opt_traceback = "--traceback" in sys.argv
         which = [arg for arg in sys.argv[1:] if not arg in ["--traceback"]]
-        test_regressions(which, opt_traceback)
+        test_regressions(which, opt_traceback, loglevel=loglevel)
