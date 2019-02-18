@@ -1788,6 +1788,20 @@ for m, module in all_modules.items():
         if name[-4:] == "Test":
             globals()[name] = getattr(module, name)
 
+class ADFGeoOptTest_noscfvalues(ADFGeoOptTest):
+
+    @unittest.skip('Cannot parse scfvalues from this file.')
+    def testgeovalues_scfvalues(self):
+        """SCF cycles were not printed here."""
+
+    @unittest.skip('Cannot parse scfvalues from this file.')
+    def testscftargetdim(self):
+        """SCF cycles were not printed here."""
+
+    @unittest.skip('Cannot parse scfvalues from this file.')
+    def testscfvaluetype(self):
+        """SCF cycles were not printed here."""
+
 class ADFSPTest_nosyms(ADFSPTest, GenericSPTest):
     foverlap00 = 1.00000
     foverlap11 = 0.99999
@@ -1940,7 +1954,7 @@ old_unittests = {
     "ADF/ADF2004.01/dvb_un_sp_c.adfout":    GenericSPunTest,
     "ADF/ADF2004.01/dvb_ir.adfout":         GenericIRTest,
 
-    "ADF/ADF2006.01/dvb_gopt.adfout":              ADFGeoOptTest,
+    "ADF/ADF2006.01/dvb_gopt.adfout":              ADFGeoOptTest_noscfvalues,
     "ADF/ADF2013.01/dvb_gopt_b_fullscf.adfout":    ADFGeoOptTest,
     "ADF/ADF2014.01/dvb_gopt_b_fullscf.out":       ADFGeoOptTest,
 
