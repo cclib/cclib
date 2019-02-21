@@ -7,12 +7,15 @@
 
 """Unit tests for parser data module."""
 
-import mock
 import unittest
 
 import numpy
 
 import cclib
+
+from six import add_move, MovedModule
+add_move(MovedModule('mock', 'mock', 'unittest.mock'))
+from six.moves import mock
 
 
 class AnyStringWith(str):

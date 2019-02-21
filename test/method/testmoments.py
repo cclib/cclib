@@ -9,15 +9,14 @@
 
 import unittest
 
-try:
-    from unittest import mock
-except ImportError:
-    import mock
-
 import numpy as np
 from numpy.testing import assert_equal, assert_almost_equal
 
 from cclib.method import Moments
+
+from six import add_move, MovedModule
+add_move(MovedModule('mock', 'mock', 'unittest.mock'))
+from six.moves import mock
 
 
 class TestIdealizedInputs(unittest.TestCase):
