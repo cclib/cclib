@@ -35,17 +35,18 @@ class GenericGeoOptTest(unittest.TestCase):
     b3lyp_energy = -10365
     b3lyp_tolerance = 40
 
-    @skipForParser('Molcas','The parser is still being developed so we skip this test')
-    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
+    @skipForParser('Molcas', 'The parser is still being developed so we skip this test')
+    @skipForParser('MOPAC', 'The success status is not parsed yet')
+    @skipForParser('Turbomole', 'The parser is still being developed so we skip this test')
     def test_success(self):
         self.assertTrue(self.data.metadata['success'])
 
-    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
+    @skipForParser('Turbomole', 'The parser is still being developed so we skip this test')
     def testnatom(self):
         """Is the number of atoms equal to 20?"""
         self.assertEqual(self.data.natom, 20)
 
-    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
+    @skipForParser('Turbomole', 'The parser is still being developed so we skip this test')
     def testatomnos(self):
         """Are the atomnos correct?"""
         # This will work only for numpy
@@ -61,7 +62,7 @@ class GenericGeoOptTest(unittest.TestCase):
         count_H = sum(self.data.atomnos == 1)
         self.assertEqual(count_C + count_H, 20)
 
-    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
+    @skipForParser('Turbomole', 'The parser is still being developed so we skip this test')
     def testatomcoords(self):
         """Are atomcoords consistent with natom and Angstroms?"""
         natom = len(self.data.atomcoords[0])
@@ -69,77 +70,82 @@ class GenericGeoOptTest(unittest.TestCase):
         msg = "natom is %d but len(atomcoords[0]) is %d" % (ref, natom)
         self.assertEqual(natom, ref, msg)
 
-    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
+    @skipForParser('Turbomole', 'The parser is still being developed so we skip this test')
     def testatomcoords_units(self):
         """Are atomcoords consistent with Angstroms?"""
         min_carbon_dist = get_minimum_carbon_separation(self.data)
         dev = abs(min_carbon_dist - 1.34)
         self.assertTrue(dev < 0.15, "Minimum carbon dist is %.2f (not 1.34)" % min_carbon_dist)
 
-    @skipForParser('Molcas','The parser is still being developed so we skip this test')
-    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
+    @skipForParser('Molcas', 'The parser is still being developed so we skip this test')
+    @skipForParser('Turbomole', 'The parser is still being developed so we skip this test')
     def testcharge_and_mult(self):
         """Are the charge and multiplicity correct?"""
         self.assertEqual(self.data.charge, 0)
         self.assertEqual(self.data.mult, 1)
 
-    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
+    @skipForParser('MOPAC', 'Not implemented.')
+    @skipForParser('Turbomole', 'The parser is still being developed so we skip this test')
     def testnbasis(self):
         """Is the number of basis set functions correct?"""
         count = sum([self.nbasisdict[n] for n in self.data.atomnos])
         self.assertEqual(self.data.nbasis, count)
 
-    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
+    @skipForParser('Turbomole', 'The parser is still being developed so we skip this test')
     def testcoreelectrons(self):
         """Are the coreelectrons all 0?"""
         ans = numpy.zeros(self.data.natom, 'i')
         numpy.testing.assert_array_equal(self.data.coreelectrons, ans)
 
-    @skipForParser('Molcas','The parser is still being developed so we skip this test')
-    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
+    @skipForParser('Molcas', 'The parser is still being developed so we skip this test')
+    @skipForParser('Turbomole', 'The parser is still being developed so we skip this test')
     def testnormalisesym(self):
         """Did this subclass overwrite normalisesym?"""
         # https://stackoverflow.com/a/8747890
         self.logfile.normalisesym("A")
 
-    @skipForParser('Molcas','The parser is still being developed so we skip this test')
-    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
+    @skipForParser('Molcas', 'The parser is still being developed so we skip this test')
+    @skipForParser('MOPAC', 'Not implemented.')
+    @skipForParser('Turbomole', 'The parser is still being developed so we skip this test')
     def testhomos(self):
         """Is the index of the HOMO equal to 34?"""
         ref = numpy.array([34], "i")
         msg = "%s != array([34], 'i')" % numpy.array_repr(self.data.homos)
         numpy.testing.assert_array_equal(self.data.homos, ref, msg)
 
-    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
+    @skipForParser('MOPAC', 'The scfvalues attribute is not parsed yet')
+    @skipForParser('Turbomole', 'The parser is still being developed so we skip this test')
     def testscfvaluetype(self):
         """Are scfvalues and its elements the right type?"""
         self.assertEqual(type(self.data.scfvalues),type([]))
         self.assertEqual(type(self.data.scfvalues[0]),type(numpy.array([])))
 
-    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
+    @skipForParser('Turbomole', 'The parser is still being developed so we skip this test')
     def testscfenergy(self):
         """Is the SCF energy close to target?"""
         scf = self.data.scfenergies[-1]
         ref = self.b3lyp_energy
         tol = self.b3lyp_tolerance
-        msg = "Final scf energy: %f not %i +- %ieV" %(scf, ref, tol)
+        msg = "Final SCF energy: %f not %i +- %ieV" %(scf, ref, tol)
         self.assertAlmostEqual(scf, ref, delta=40, msg=msg)
 
-    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
+    @skipForParser('Turbomole', 'The parser is still being developed so we skip this test')
     def testscfenergydim(self):
         """Is the number of SCF energies consistent with atomcoords?"""
         count_scfenergies = self.data.scfenergies.shape[0] - self.extrascfs
         count_atomcoords = self.data.atomcoords.shape[0] - self.extracoords
         self.assertEqual(count_scfenergies, count_atomcoords)
 
-    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
+    @skipForParser('MOPAC', 'The scftargets attribute is not parsed yet')
+    @skipForParser('Turbomole', 'The parser is still being developed so we skip this test')
     def testscftargetdim(self):
         """Do the scf targets have the right dimensions?"""
         dim_scftargets = self.data.scftargets.shape
         dim_scfvalues = (len(self.data.scfvalues),len(self.data.scfvalues[0][0]))
         self.assertEqual(dim_scftargets, dim_scfvalues)
 
-    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
+    @skipForParser('MOPAC', 'Not implemented.')
+    @skipForParser('Turbomole', 'The parser is still being developed so we skip this test')
     def testgeovalues_atomcoords(self):
         """Are atomcoords consistent with geovalues?"""
         count_geovalues = len(self.data.geovalues)
@@ -147,21 +153,24 @@ class GenericGeoOptTest(unittest.TestCase):
         msg = "len(atomcoords) is %d but len(geovalues) is %d" % (count_coords, count_geovalues)
         self.assertEqual(count_geovalues, count_coords, msg)
 
-    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
+    @skipForParser('MOPAC', 'Not implemented.')
+    @skipForParser('Turbomole', 'The parser is still being developed so we skip this test')
     def testgeovalues_scfvalues(self):
         """Are scfvalues consistent with geovalues?"""
         count_scfvalues = len(self.data.scfvalues) - self.extrascfs
         count_geovalues = len(self.data.geovalues)
         self.assertEqual(count_scfvalues, count_geovalues)
 
-    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
+    @skipForParser('MOPAC', 'Not implemented.')
+    @skipForParser('Turbomole', 'The parser is still being developed so we skip this test')
     def testgeotargets(self):
         """Do the geo targets have the right dimensions?"""
         dim_geotargets = self.data.geotargets.shape
         dim_geovalues = (len(self.data.geovalues[0]), )
         self.assertEqual(dim_geotargets, dim_geovalues)
 
-    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
+    @skipForParser('MOPAC', 'Not implemented.')
+    @skipForParser('Turbomole', 'The parser is still being developed so we skip this test')
     def testoptdone(self):
         """Has the geometry converged and set optdone to True?"""
         self.assertTrue(self.data.optdone)
@@ -172,12 +181,13 @@ class GenericGeoOptTest(unittest.TestCase):
     @skipForParser("GAMESS", "Not implemented.")
     @skipForParser("GAMESSUK", "Not implemented.")
     @skipForParser("Jaguar", "Not implemented.")
-    @skipForParser('Molcas','The parser is still being developed so we skip this test')
+    @skipForParser('Molcas', 'The parser is still being developed so we skip this test')
     @skipForParser("Molpro", "Not implemented.")
+    @skipForParser("MOPAC", "Not implemented.")
     @skipForParser("NWChem", "Not implemented.")
     @skipForParser("ORCA", "Not implemented.")
     @skipForParser("QChem", "Not implemented.")
-    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
+    @skipForParser('Turbomole', 'The parser is still being developed so we skip this test')
     def testoptstatus(self):
         """Is optstatus consistent with geovalues and reasonable?"""
         self.assertEqual(len(self.data.optstatus), len(self.data.geovalues))
@@ -186,22 +196,23 @@ class GenericGeoOptTest(unittest.TestCase):
             self.assertEqual(self.data.optstatus[i], self.data.OPT_UNKNOWN)
         self.assertEqual(self.data.optstatus[-1], self.data.OPT_DONE)
 
-    @skipForParser('Molcas','The parser is still being developed so we skip this test')
-    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
+    @skipForParser('Molcas', 'The parser is still being developed so we skip this test')
+    @skipForParser('Turbomole', 'The parser is still being developed so we skip this test')
     def testmoenergies(self):
         """Are only the final MOs parsed?"""
         self.assertEqual(len(self.data.moenergies), 1)
         if hasattr(self.data, "mocoeffs"):
             self.assertEqual(len(self.data.mocoeffs), 1)
 
-    @skipForParser("ADF", "Not implemented.")
-    @skipForParser("DALTON", "Not implemented.")
-    @skipForParser("GAMESS", "Not implemented.")
-    @skipForParser("GAMESSUK", "Not implemented.")
-    @skipForParser("Jaguar", "Not implemented.")
-    @skipForParser('Molcas','The parser is still being developed so we skip this test')
-    @skipForParser("NWChem", "Not implemented.")
-    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
+    @skipForParser('ADF', 'Not implemented.')
+    @skipForParser('DALTON', 'Not implemented.')
+    @skipForParser('GAMESS', 'Not implemented.')
+    @skipForParser('GAMESSUK', 'Not implemented.')
+    @skipForParser('Jaguar', 'Not implemented.')
+    @skipForParser('Molcas', 'The parser is still being developed so we skip this test')
+    @skipForParser('MOPAC', 'Not implemented.')
+    @skipForParser('NWChem', 'Not implemented.')
+    @skipForParser('Turbomole', 'The parser is still being developed so we skip this test')
     def testgradsdim(self):
         """Do the grads have the right dimensions?"""
         self.assertEqual(self.data.grads.shape,(len(self.data.geovalues),self.data.natom,3))
@@ -274,6 +285,14 @@ class MolproGeoOptTest(GenericGeoOptTest):
         value_e, value_g, value_s = self.data.geovalues[-1]
         converged = (value_e < target_e and value_g < target_g) or (value_g < target_g and value_s < target_s)
         self.assertTrue(converged)
+
+
+class MOPACGeoOptTest(GenericGeoOptTest):
+    """Customized geometry optimization unittest for MOPAC."""
+
+    # The geometry optimization unit test logfile uses a PM7 Hamiltonian.
+    b3lyp_energy = 2.22
+    b3lyp_tolerance = 0.01
 
 
 class NWChemGeoOptTest(GenericGeoOptTest):

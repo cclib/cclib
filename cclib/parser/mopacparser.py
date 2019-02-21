@@ -161,14 +161,16 @@ class MOPAC(logfileparser.Logfile):
             self.set_attribute('mult', mult)
 
         # Read energy (in kcal/mol, converted to eV)
-        #       Example:           FINAL HEAT OF FORMATION =       -333.88606 KCAL =   -1396.97927 KJ
-        if line[0:35] == '          FINAL HEAT OF FORMATION =':
+        #
+        # FINAL HEAT OF FORMATION =       -333.88606 KCAL =   -1396.97927 KJ
+        if 'FINAL HEAT OF FORMATION =' in line:
             if not hasattr(self, "scfenergies"):
                 self.scfenergies = []
-            self.scfenergies.append(utils.convertor(self.float(line.split()[5]), "kcal", "eV"))
+            self.scfenergies.append(utils.convertor(self.float(line.split()[5]), "kcal/mol", "eV"))
 
-        #molecular mass parsing (units will be amu)
-        #Example:          MOLECULAR WEIGHT        =
+        # Molecular mass parsing (units will be amu)
+        #
+        # MOLECULAR WEIGHT        ==        130.1890
         if line[0:35] == '          MOLECULAR WEIGHT        =':
             self.molmass = self.float(line.split()[3])
 
