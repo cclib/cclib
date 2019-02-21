@@ -18,7 +18,7 @@ add_move(MovedModule('mock', 'mock', 'unittest.mock'))
 from six.moves import mock
 
 
-class AnyStringWith(str):
+class StringContains(str):
     def __eq__(self, other):
         return self in other
 
@@ -42,7 +42,7 @@ class ccDataTest(unittest.TestCase):
         self.data.etenergies = [1, -1]
         self.data.check_values(logger=self.mock_logger)
         self.mock_logger.error.assert_called_once_with(
-            AnyStringWith("At least one excitation energy is negative"))
+            StringContains("At least one excitation energy is negative"))
 
     def test_listify_ndarray(self):
         """Does the method convert ndarrays as expected?"""
