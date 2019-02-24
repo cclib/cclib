@@ -1940,6 +1940,11 @@ class OrcaIRTest_old(OrcaIRTest):
     def testirintens(self):
         """These values were wrong due to wrong input coordinates."""
 
+class PsiSPTest_noatommasses(PsiSPTest):
+
+    @unittest.skip('atommasses were not printed in this file.')
+    def testatommasses(self):
+        """These values are not present in this output file."""
 
 old_unittests = {
 
@@ -2096,9 +2101,9 @@ old_unittests = {
     "Psi4/Psi4-beta5/C_bigbasis.out":   GenericBigBasisTest,
     "Psi4/Psi4-beta5/dvb_gopt_hf.out":  Psi4GeoOptTest,
     "Psi4/Psi4-beta5/dvb_sp_hf.out":    GenericBasisTest,
-    "Psi4/Psi4-beta5/dvb_sp_hf.out":    PsiSPTest,
+    "Psi4/Psi4-beta5/dvb_sp_hf.out":    PsiSPTest_noatommasses,
     "Psi4/Psi4-beta5/dvb_sp_ks.out":    GenericBasisTest,
-    "Psi4/Psi4-beta5/dvb_sp_ks.out":    PsiSPTest,
+    "Psi4/Psi4-beta5/dvb_sp_ks.out":    PsiSPTest_noatommasses,
     "Psi4/Psi4-beta5/water_ccsd.out":   GenericCCTest,
     "Psi4/Psi4-beta5/water_mp2.out":    GenericMP2Test,
 
