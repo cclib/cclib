@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2017, the cclib development team
+# Copyright (c) 2019, the cclib development team
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
@@ -8,8 +8,10 @@
 """Unit tests for the logfileparser module."""
 
 import io
+import mock
 import os
 import sys
+import tempfile
 import unittest
 
 # The structure of urllib changed in Python3.
@@ -114,6 +116,22 @@ class LogfileTest(unittest.TestCase):
         """Does this method raise an error in the base class?"""
         normalisesym = cclib.parser.logfileparser.Logfile('').normalisesym
         self.assertRaises(NotImplementedError, normalisesym, 'Ag')
+
+    def test_parse_check_values(self):
+        """Are custom checks performed after parsing finishes?
+        
+        The purpose of this test is not to comprehensively cover all the checks,
+        but rather to make sure the call and logging works. The unit tests
+        for the data class should have comprehensive coverage.
+        """
+        _, path = tempfile.mkstemp()
+        parser = cclib.parser.logfileparser.Logfile(path)
+        parser.extract = lambda self, inputfile, line: None
+        parser.logger = mock.Mock()
+
+        parser.etenergies = [1, -1]
+        parser.parse()
+        parser.logger.error.assert_called_once()
 
 
 if __name__ == "__main__":

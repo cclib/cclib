@@ -1,15 +1,16 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2017, the cclib development team
+# Copyright (c) 2019, the cclib development team
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
 
 """Classes and tools for storing and handling parsed data"""
 
+import logging
+from collections import namedtuple
 
 import numpy
-from collections import namedtuple
 
 from cclib.method import Electrons
 from cclib.method import orbitals
@@ -289,6 +290,15 @@ class ccData(object):
             except ValueError:
                 args = (attr, type(val), self._attributes[attr].type)
                 raise TypeError("attribute %s is %s instead of %s and could not be converted" % args)
+
+    def check_values(self, logger=logging):
+        """Perform custom checks on the values of attributes."""
+        if hasattr(self, "etenergies") and any(e < 0 for e in self.etenergies):
+            negative_values = [e for e in self.etenergies if e < 0]
+            msg = ("At least one excitation energy is negative. "
+                   "\nNegative values: %s\nFull etenergies: %s"
+                   % (negative_values, self.etenergies))
+            logger.error(msg)
 
     def write(self, filename=None, indices=None, *args, **kwargs):
         """Write parsed attributes to a file.
