@@ -1888,6 +1888,23 @@ class JaguarGeoOptTest_6_31gss(GenericGeoOptTest):
     nbasisdict = {1: 5, 6: 15}
     b3lyp_energy = -10530
 
+class MolcasBigBasisTest_nogbasis(MolcasBigBasisTest):
+    @unittest.skip('gbasis was not printed in this output file')
+    def testgbasis(self):
+        """gbasis was not parsed for this file"""
+
+    @unittest.skip('gbasis was not printed in this output file')
+    def testnames(self):
+        """gbasis was not parsed for this file"""
+
+    @unittest.skip('gbasis was not printed in this output file')
+    def testprimitives(self):
+        """gbasis was not parsed for this file"""
+
+    @unittest.skip('gbasis was not printed in this output file')
+    def testsizeofbasis(self):
+        """gbasis was not parsed for this file"""
+
 class MolproBigBasisTest_cart(MolproBigBasisTest):
     spherical = False
 
@@ -2068,7 +2085,7 @@ old_unittests = {
 
     "Molcas/Molcas8.0/dvb_sp.out":      MolcasSPTest,
     "Molcas/Molcas8.0/dvb_sp_un.out":   GenericSPunTest,
-    "Molcas/Molcas8.0/C_bigbasis.out":  MolcasBigBasisTest,
+    "Molcas/Molcas8.0/C_bigbasis.out":  MolcasBigBasisTest_nogbasis,
 
     "Molpro/Molpro2006/C_bigbasis_cart.out":    MolproBigBasisTest_cart,
     "Molpro/Molpro2012/trithiolane_polar.out":  GenericPolarTest,
