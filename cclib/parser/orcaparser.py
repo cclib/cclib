@@ -990,6 +990,10 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
         if line[:23] == "VIBRATIONAL FREQUENCIES":
             self.skip_lines(inputfile, ['d', 'b'])
 
+            # Starting with 4.1, a scaling factor for frequencies is printed
+            if float(self.metadata["package_version"][:3]) > 4.0:
+                self.skip_lines(inputfile, ['Scaling factor for frequencies', 'b'])
+
             vibfreqs = numpy.zeros(3 * self.natom)
             for i, line in zip(range(3 * self.natom), inputfile):
                 vibfreqs[i] = float(line.split()[1])
