@@ -2,6 +2,8 @@
 
 # run_unittest.bash: Run cclib tests using the built-in `unittest` module.
 
+set -euxo pipefail
+
 python -m test.test_bridge &&
 python -m test.test_io &&
 python -m test.test_method &&

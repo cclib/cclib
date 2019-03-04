@@ -2396,19 +2396,21 @@ def test_regressions(which=[], opt_traceback=False, regdir=__regression_dir__, l
 
 if __name__ == "__main__":
 
-    if "--debug" in sys.argv:
-        loglevel = logging.DEBUG
-    else:
-        loglevel = logging.ERROR
+    import argparse
 
-    # If 'test' is passed as the first argument, do a doctest on this module.
-    # Otherwise, any arguments are used to limit the test to the packages/parsers
-    # passed as arguments. No arguments implies all parsers.
-    # In general, it would be best to replace this trickery by argparse magic.
-    if len(sys.argv) == 2 and sys.argv[1] == "test":
-        import doctest
-        doctest.testmod()
-    else:
-        opt_traceback = "--traceback" in sys.argv
-        which = [arg for arg in sys.argv[1:] if not arg in ["--traceback"]]
-        test_regressions(which, opt_traceback, loglevel=loglevel)
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument("--traceback", action="store_true")
+    parser.add_argument("--debug", action="store_true")
+    parser.add_argument(
+        "which",
+        nargs="*",
+        help="Limit the test to the packages/parsers passed as arguments. "
+             "No arguments implies all parsers."
+    )
+
+    args = parser.parse_args()
+
+    loglevel = logging.DEBUG if args.debug else logging.ERROR
+
+    test_regressions(args.which, args.traceback, loglevel=loglevel)
