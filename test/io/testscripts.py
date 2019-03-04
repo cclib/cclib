@@ -10,10 +10,9 @@ import os
 import unittest
 from io import StringIO
 
-try:
-    from unittest.mock import patch
-except ImportError:
-    from mock import patch
+from six import add_move, MovedModule
+add_move(MovedModule('mock', 'mock', 'unittest.mock'))
+from six.moves import mock
 
 
 __filedir__ = os.path.dirname(__file__)
@@ -28,7 +27,7 @@ INPUT_FILE = os.path.join(
 CJSON_OUTPUT_FILENAME = 'dvb_gopt.cjson'
 
 
-@patch("cclib.scripts.ccget.ccread")
+@mock.patch("cclib.scripts.ccget.ccread")
 class ccgetTest(unittest.TestCase):
 
     def setUp(self):
@@ -39,13 +38,13 @@ class ccgetTest(unittest.TestCase):
 
         self.main = ccget.ccget
 
-    @patch("cclib.scripts.ccget.sys.argv", ["ccget"])
+    @mock.patch("cclib.scripts.ccget.sys.argv", ["ccget"])
     def test_empty_argv(self, mock_ccread):
         """Does the script fail as expected if called without parameters?"""
         with self.assertRaises(SystemExit):
             self.main()
 
-    @patch(
+    @mock.patch(
         "cclib.scripts.ccget.sys.argv",
         ["ccget", "atomcoords", INPUT_FILE]
     )
@@ -57,7 +56,7 @@ class ccgetTest(unittest.TestCase):
         self.assertEqual(ccread_call_args[0], INPUT_FILE)
 
 
-@patch("cclib.scripts.ccwrite.ccwrite")
+@mock.patch("cclib.scripts.ccwrite.ccwrite")
 class ccwriteTest(unittest.TestCase):
 
     def setUp(self):
@@ -68,13 +67,13 @@ class ccwriteTest(unittest.TestCase):
 
         self.main = ccwrite.main
 
-    @patch('cclib.scripts.ccwrite.sys.argv', ['ccwrite'])
+    @mock.patch('cclib.scripts.ccwrite.sys.argv', ['ccwrite'])
     def test_empty_argv(self, mock_ccwrite):
         """Does the script fail as expected if called without parameters?"""
         with self.assertRaises(SystemExit):
             self.main()
 
-    @patch(
+    @mock.patch(
         "cclib.scripts.ccwrite.sys.argv",
         ["ccwrite", "cjson", INPUT_FILE]
     )
@@ -88,7 +87,7 @@ class ccwriteTest(unittest.TestCase):
         self.assertEqual(ccwrite_call_args[2], CJSON_OUTPUT_FILENAME)
 
 
-@patch("cclib.scripts.ccframe.ccframe")
+@mock.patch("cclib.scripts.ccframe.ccframe")
 class ccframeTest(unittest.TestCase):
 
     def setUp(self):
@@ -99,17 +98,17 @@ class ccframeTest(unittest.TestCase):
 
         self.main = ccframe.main
 
-    @patch('cclib.scripts.ccframe.sys.argv', ['ccframe'])
+    @mock.patch('cclib.scripts.ccframe.sys.argv', ['ccframe'])
     def test_empty_argv(self, mock_ccframe):
         """Does the script fail as expected if called without parameters?"""
         with self.assertRaises(SystemExit):
             self.main()
 
-    @patch(
+    @mock.patch(
         "cclib.scripts.ccframe.sys.argv",
         ["ccframe", INPUT_FILE]
     )
-    @patch("cclib.scripts.ccframe._has_pandas", True)
+    @mock.patch("cclib.scripts.ccframe._has_pandas", True)
     def test_ccframe_call(self, mock_ccframe):
         """is ccframe called with the given parameters?"""
         self.main()
@@ -118,11 +117,11 @@ class ccframeTest(unittest.TestCase):
         ccframe_call_args, ccframe_call_kwargs = mock_ccframe.call_args
         self.assertEqual(ccframe_call_args[0][0].filename, INPUT_FILE)
 
-    @patch(
+    @mock.patch(
         "cclib.scripts.ccframe.sys.argv",
         ["ccframe", INPUT_FILE]
     )
-    @patch("cclib.scripts.ccframe._has_pandas", False)
+    @mock.patch("cclib.scripts.ccframe._has_pandas", False)
     def test_ccframe_call_without_pandas(self, mock_ccframe):
         """does ccframe fails cleanly if pandas can't be imported?"""
         with self.assertRaises(SystemExit):
