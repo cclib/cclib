@@ -8,17 +8,15 @@
 """Unit tests for the logfileparser module."""
 
 import io
-import mock
 import os
 import sys
 import tempfile
 import unittest
 
-# The structure of urllib changed in Python3.
-try:
-    from urllib.request import urlopen
-except ImportError:
-    from urllib import urlopen
+from six import add_move, MovedModule
+add_move(MovedModule('mock', 'mock', 'unittest.mock'))
+from six.moves import mock
+from six.moves.urllib.request import urlopen
 
 import numpy
 
