@@ -262,7 +262,7 @@ def testDALTON_DALTON_2016_Trp_polar_response_diplnx_out(logfile):
     all others are NaN even after parsing a previous file with full tensor.
     """
     full_tens_path = os.path.join(__regression_dir__, "DALTON/DALTON-2015/Trp_polar_response.out")
-    DALTON(full_tens_path).parse()
+    DALTON(full_tens_path, loglevel=logging.ERROR).parse()
     assert hasattr(logfile.data, "polarizabilities")
     assert abs(logfile.data.polarizabilities[0][0, 0] - 95.11540019) < 1.0e-8
     assert numpy.count_nonzero(numpy.isnan(logfile.data.polarizabilities)) == 8
@@ -1729,8 +1729,7 @@ def testnoparseGaussian_Gaussian09_coeffs_log(filename):
     parsing, we set some attributes of the parser so that it all goes smoothly.
     """
 
-    parser = Gaussian(os.path.join(__filedir__, filename))
-    parser.logger.setLevel(logging.ERROR)
+    parser = Gaussian(os.path.join(__filedir__, filename), loglevel=logging.ERROR)
     parser.nmo = 5
     parser.nbasis = 1128
 
