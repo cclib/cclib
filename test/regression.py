@@ -2403,7 +2403,7 @@ if __name__ == "__main__":
     parser.add_argument("--traceback", action="store_true")
     parser.add_argument("--debug", action="store_true")
     parser.add_argument(
-        "which",
+        "parser_or_module",
         nargs="*",
         help="Limit the test to the packages/parsers passed as arguments. "
              "No arguments implies all parsers."
@@ -2413,4 +2413,4 @@ if __name__ == "__main__":
 
     loglevel = logging.DEBUG if args.debug else logging.ERROR
 
-    test_regressions(args.which, args.traceback, loglevel=loglevel)
+    test_regressions(args.parser_or_module, args.traceback, loglevel=loglevel)

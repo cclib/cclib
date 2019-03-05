@@ -74,7 +74,7 @@ def get_program_dir(parser_name):
     return parser_name
 
 
-def getdatafile(parser, subdir, files, stream=None, loglevel=0, datatype=None):
+def getdatafile(parser, subdir, files, stream=None, loglevel=logging.ERROR, datatype=None):
     """Returns a parsed logfile.
 
     Inputs:
@@ -104,9 +104,8 @@ def getdatafile(parser, subdir, files, stream=None, loglevel=0, datatype=None):
         inputs = inputs[0]
 
     stream = stream or sys.stdout
-    logfile = parser(inputs, logstream=stream,
+    logfile = parser(inputs, logstream=stream, loglevel=loglevel,
                      datatype=datatype or cclib.parser.data.ccData)
-    logfile.logger.setLevel(loglevel)
 
     data = logfile.parse()
     return data, logfile
@@ -129,12 +128,13 @@ class DataSuite(object):
     subdirectory, and do some basic bookkeeping.
     """
 
-    def __init__(self, parsers, modules, terse=False, silent=False, stream=sys.stdout):
+    def __init__(self, parsers, modules, terse=False, silent=False, loglevel=logging.ERROR, stream=sys.stdout):
 
         self.parsers = parsers
         self.modules = modules
         self.terse = terse or silent
         self.silent = silent
+        self.loglevel = loglevel
         self.stream = stream
 
         # Load the test data and filter with parsers and modules.
@@ -173,9 +173,10 @@ class DataSuite(object):
                 description = "%s/%s: %s" % (td['subdir'], ",".join(td['files']), test.__doc__)
                 print("*** %s ***" % description, file=self.stream)
 
-            loglevel = 33 if self.silent else 0
-            test.data, test.logfile = getdatafile(parser, td['subdir'], td['files'], stream=self.stream, loglevel=loglevel,
-                                                  datatype=test.datatype if hasattr(test, 'datatype') else None)
+            test.data, test.logfile = getdatafile(
+                parser, td['subdir'], td['files'], stream=self.stream, loglevel=self.loglevel,
+                datatype=test.datatype if hasattr(test, 'datatype') else None
+            )
 
             # By overriding __getattribute__ temporarily with a custom method, we collect
             # coverage information for data attributes while the tests are run. This slightly
@@ -263,10 +264,12 @@ class DataSuite(object):
         print("H-L ", "   ".join(["%9.4f" % (out.moenergies[0][out.homos[0]+1]-out.moenergies[0][out.homos[0]],) for out in output]), file=self.stream)
 
 
-def test_all(parsers=None, modules=None, terse=False, silent=True, summary=True, visual_tests=True):
+def test_all(
+    parsers=None, modules=None, terse=False, silent=True, loglevel=logging.ERROR, summary=True, visual_tests=True
+):
     parsers = parsers or all_parsers
     modules = modules or all_modules
-    data_suite = DataSuite(parsers, modules, terse=terse, silent=silent)
+    data_suite = DataSuite(parsers, modules, terse=terse, silent=silent, loglevel=loglevel)
     data_suite.testall()
     if summary and not silent:
         data_suite.summary()
@@ -276,18 +279,28 @@ def test_all(parsers=None, modules=None, terse=False, silent=True, summary=True,
 
 if __name__ == "__main__":
 
-    if "--debug" in sys.argv:
-        logging.getLogger().setLevel(logging.DEBUG)
-    else:
-        logging.getLogger().setLevel(logging.ERROR)
+    import argparse
 
-    # These allow the parsers and modules tested to be filtered on the command line
-    # with any number of arguments. No matching parsers/modules implies all of them.
-    parsers = {p: all_parsers[p] for p in parser_names if p in sys.argv} or None
-    modules = {m: all_modules[m] for m in module_names if m in sys.argv} or None
+    parser = argparse.ArgumentParser()
 
-    # These options modify the output and are used by testall and Travis CI.
-    terse = "--terse" in sys.argv
-    silent = "--silent" in sys.argv
+    parser.add_argument("--debug", action="store_true")
+    parser.add_argument("--terse", action="store_true")
+    parser.add_argument("--silent", action="store_true")
+    parser.add_argument(
+        "parser_or_module",
+        nargs="*",
+        help="Limit the test to the packages/parsers passed as arguments. "
+             "No arguments implies all parsers."
+    )
 
-    test_all(parsers, modules, terse=terse, silent=silent)
+    args = parser.parse_args()
+
+    loglevel = logging.DEBUG if args.debug else logging.ERROR
+
+    # No matching parsers/modules implies all of them.
+    parsers = {p: all_parsers[p] for p in parser_names
+               if p in args.parser_or_module} or None
+    modules = {m: all_modules[m] for m in module_names
+               if m in args.parser_or_module} or None
+
+    test_all(parsers, modules, terse=args.terse, silent=args.silent, loglevel=loglevel)
