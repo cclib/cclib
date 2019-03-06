@@ -2113,6 +2113,16 @@ old_unittests = {
     "ORCA/ORCA2.9/dvb_sp_un.out":   GenericSPunTest,
     "ORCA/ORCA2.9/dvb_td.out":      OrcaTDDFTTest,
 
+    "ORCA/ORCA3.0/dvb_bomd.out":          GenericBOMDTest,
+    "ORCA/ORCA3.0/dvb_gopt.out":          OrcaGeoOptTest,
+    "ORCA/ORCA3.0/dvb_ir.out":            OrcaIRTest,
+    "ORCA/ORCA3.0/dvb_raman.out":         GenericRamanTest,
+    "ORCA/ORCA3.0/dvb_scan.out":          OrcaScanTest,
+    "ORCA/ORCA3.0/dvb_sp_un.out":         GenericSPunTest,
+    "ORCA/ORCA3.0/dvb_sp.out":            GenericBasisTest,
+    "ORCA/ORCA3.0/dvb_sp.out":            OrcaSPTest,
+    "ORCA/ORCA3.0/dvb_td.out":            OrcaTDDFTTest,
+    "ORCA/ORCA3.0/Trp_polar.out":         ReferencePolarTest,
     "ORCA/ORCA3.0/trithiolane_polar.out": GaussianPolarTest,
 
     "Psi4/Psi4-beta5/C_bigbasis.out":   GenericBigBasisTest,
