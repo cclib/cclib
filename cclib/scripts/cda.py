@@ -7,30 +7,32 @@
 # the terms of the BSD 3-Clause License.
 
 from __future__ import print_function
-import os
-import sys
-import glob
-import getopt
 import logging
+from argparse import ArgumentParser
 
-import numpy
-
-from cclib.io import ccopen
+from cclib.io import ccread
 from cclib.method import CDA
 
 
 def main():
-    parser1 = ccopen(sys.argv[1], logging.ERROR)
-    parser2 = ccopen(sys.argv[2], logging.ERROR)
-    parser3 = ccopen(sys.argv[3], logging.ERROR)
+    parser = ArgumentParser()
+    parser.add_argument("file1", help="logfile containing the supermolecule")
+    parser.add_argument("file2", help="logfile containing the first fragment")
+    parser.add_argument("file3", help="logfile containing the second fragment")
+    args = parser.parse_args()
 
-    data1 = parser1.parse(); data2 = parser2.parse(); data3 = parser3.parse()
-    fa = CDA(data1, None, logging.ERROR)
+    loglevel = logging.ERROR
+
+    data1 = ccread(args.file1, loglevel=loglevel)
+    data2 = ccread(args.file2, loglevel=loglevel)
+    data3 = ccread(args.file3, loglevel=loglevel)
+
+    fa = CDA(data1, None, loglevel)
     retval = fa.calculate([data2, data3])
 
     if retval:
 
-        print("Charge decomposition analysis of %s\n"%(sys.argv[1]))
+        print("Charge decomposition analysis of {}\n".format(args.file1))
 
         if len(data1.homos) == 2:
             print("ALPHA SPIN:")
