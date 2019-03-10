@@ -14,10 +14,14 @@ if _found_pyquante:
     from PyQuante.Molecule import Molecule
 
 
+def _check_pyquante(found_pyquante):
+    if not found_pyquante:
+        raise ImportError("You must install `PyQuante` to use this function")
+
+
 def makepyquante(atomcoords, atomnos, charge=0, mult=1):
     """Create a PyQuante Molecule."""
-    if not _found_pyquante:
-        raise ImportError("You must install `PyQuante` to use this function")
+    _check_pyquante(_found_pyquante)
     return Molecule("notitle",
                     list(zip(atomnos, atomcoords)),
                     units="Angstrom",

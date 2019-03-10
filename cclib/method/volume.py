@@ -138,7 +138,6 @@ def scinotation(num):
 
 def getbfs(coords, gbasis):
     """Convenience function for both wavefunction and density based on PyQuante Ints.py."""
-    _check_pyquante(_found_pyquante)
     mymol = cclib2pyquante.makepyquante(coords, [0 for _ in coords])
 
     sym2powerlist = {
