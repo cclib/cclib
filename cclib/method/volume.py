@@ -12,7 +12,6 @@ import copy
 
 import numpy
 
-from cclib.bridge.cclib2pyquante import _check_pyquante
 from cclib.parser.utils import convertor
 from cclib.parser.utils import find_package as _find_package
 
