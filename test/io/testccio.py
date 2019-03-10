@@ -13,6 +13,10 @@ import unittest
 
 import cclib
 
+from six import add_move, MovedModule
+add_move(MovedModule('mock', 'mock', 'unittest.mock'))
+from six.moves import mock
+
 
 __filedir__ = os.path.dirname(__file__)
 __filepath__ = os.path.realpath(__filedir__)
@@ -139,6 +143,15 @@ class fallbackTest(unittest.TestCase):
     def test_fallback_fail(self):
         """Does the function fail as expected?"""
         self.assertIsNone(self.fallback(None))
+
+
+class ccframeTest(unittest.TestCase):
+
+    @mock.patch("cclib.io.ccio._has_pandas", False)
+    def test_ccframe_call_without_pandas(self):
+        """Does ccframe fails cleanly if Pandas can't be imported?"""
+        with self.assertRaises(SystemExit):
+            cclib.io.ccio.ccframe([])
 
 
 if __name__ == "__main__":
