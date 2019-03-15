@@ -2295,6 +2295,14 @@ def test_regressions(which=[], opt_traceback=False, regdir=__regression_dir__, l
                                                 print("Failure for", f[0])
                                                 print(f[1])
                                         continue
+                                    elif res and len(res.errors) > 0:
+                                        errors += len(res.errors)
+                                        print("{:d} test(s) had errors".format(len(res.errors)))
+                                        if opt_traceback:
+                                            for f in res.errors:
+                                                print("Error for", f[0])
+                                                print(f[1])
+                                        continue
                                 except AssertionError:
                                     print("test failed")
                                     failures += 1
