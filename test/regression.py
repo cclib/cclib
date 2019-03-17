@@ -1874,15 +1874,78 @@ class JaguarSPTest_6_31gss(JaguarSPTest):
     b3lyp_energy = -10530
     overlap01 = 0.22
 
+class JaguarSPTest_6_31gss_nomosyms(JaguarSPTest_6_31gss):
+    @unittest.skip('Cannot parse mosyms from this file.')
+    def testsymlabels(self):
+        """mosyms were not printed here."""
+
+class JaguarSPunTest_nomosyms(JaguarSPunTest):
+    @unittest.skip('Cannot parse mosyms from this file.')
+    def testmosyms(self):
+        """mosyms were not printed here."""
+
 class JaguarSPunTest_nmo_all(JaguarSPunTest):
     def testmoenergies(self):
         """Some tests printed all MO energies apparently."""
         self.assertEqual(len(self.data.moenergies[0]), self.data.nmo)
 
+class JaguarSPunTest_nmo_all_nomosyms(JaguarSPunTest_nmo_all):
+    @unittest.skip('Cannot parse mosyms from this file.')
+    def testmosyms(self):
+        """mosyms were not printed here."""
+
 class JaguarGeoOptTest_nmo45(GenericGeoOptTest):
     def testlengthmoenergies(self):
         """Without special options, Jaguar only print Homo+10 orbital energies."""
         self.assertEqual(len(self.data.moenergies[0]), 45)
+
+class JaguarSPTest_nmo45(GenericSPTest):
+    def testlengthmoenergies(self):
+        """Without special options, Jaguar only print Homo+10 orbital energies."""
+        self.assertEqual(len(self.data.moenergies[0]), 45)
+
+    @unittest.skip('Cannot parse mos from this file.')
+    def testfornoormo(self):
+        """mos were not printed here."""
+    
+    @unittest.skip('Cannot parse scftargets from this file.')
+    def testscftargets(self):
+        """scftargets were not parsed correctly here."""
+    
+    @unittest.skip('Cannot parse atomcharges from this file.')
+    def testatomcharges(self):
+        """atomcharges were not parsed correctly here."""
+    
+    @unittest.skip('Cannot parse atombasis from this file.')
+    def testatombasis(self):
+        """atombasis was not parsed correctly here."""
+
+class JaguarSPunTest_nmo45(GenericSPunTest):
+    def testlengthmoenergies(self):
+        """Without special options, Jaguar only print Homo+10 orbital energies."""
+        self.assertEqual(len(self.data.moenergies[0]), 45)
+
+class JaguarGeoOptTest_nmo45(GenericGeoOptTest):
+    def testlengthmoenergies(self):
+        """Without special options, Jaguar only print Homo+10 orbital energies."""
+        self.assertEqual(len(self.data.moenergies[0]), 45)
+
+class JaguarGeoOptTest_nmo45_nogeo(JaguarGeoOptTest_nmo45):
+    @unittest.skip('Cannot parse geotargets from this file.')
+    def testgeotargets(self):
+        """geotargets were not printed here."""
+    
+    @unittest.skip('Cannot parse geovalues from this file.')
+    def testgeovalues_atomcoords(self):
+        """geovalues were not printed here."""
+
+    @unittest.skip('Cannot parse geovalues from this file.')
+    def testgeovalues_scfvalues(self):
+        """geovalues were not printed here."""
+
+    @unittest.skip('Cannot parse optdone from this file.')
+    def testoptdone(self):
+        """optdone does not exist for this file."""
 
 class JaguarGeoOptTest_6_31gss(GenericGeoOptTest):
     nbasisdict = {1: 5, 6: 15}
@@ -2069,18 +2132,18 @@ old_unittests = {
 
     "Jaguar/Jaguar4.2/dvb_gopt.out":    JaguarGeoOptTest_nmo45,
     "Jaguar/Jaguar4.2/dvb_gopt_b.out":  GenericGeoOptTest,
-    "Jaguar/Jaguar4.2/dvb_sp.out":      JaguarGeoOptTest_nmo45,
-    "Jaguar/Jaguar4.2/dvb_sp_b.out":    JaguarGeoOptTest_nmo45,
-    "Jaguar/Jaguar4.2/dvb_un_sp.out":   JaguarSPunTest_nmo_all,
+    "Jaguar/Jaguar4.2/dvb_sp.out":      JaguarSPTest_nmo45,
+    "Jaguar/Jaguar4.2/dvb_sp_b.out":    JaguarSPTest_nmo45,
+    "Jaguar/Jaguar4.2/dvb_un_sp.out":   JaguarSPunTest_nmo_all_nomosyms,
     "Jaguar/Jaguar4.2/dvb_ir.out":      JaguarIRTest,
 
     "Jaguar/Jaguar6.0/dvb_gopt.out":    JaguarGeoOptTest_6_31gss,
-    "Jaguar/Jaguar6.0/dvb_sp.out":      JaguarSPTest_6_31gss,
-    "Jaguar/Jaguar6.0/dvb_un_sp.out" :  JaguarSPunTest_nmo_all,
+    "Jaguar/Jaguar6.0/dvb_sp.out":      JaguarSPTest_6_31gss_nomosyms,
+    "Jaguar/Jaguar6.0/dvb_un_sp.out" :  JaguarSPunTest_nmo_all_nomosyms,
 
     "Jaguar/Jaguar6.5/dvb_gopt.out":    JaguarGeoOptTest_nmo45,
-    "Jaguar/Jaguar6.5/dvb_sp.out":      JaguarGeoOptTest_nmo45,
-    "Jaguar/Jaguar6.5/dvb_un_sp.out":   JaguarSPunTest,
+    "Jaguar/Jaguar6.5/dvb_sp.out":      JaguarSPTest_nmo45,
+    "Jaguar/Jaguar6.5/dvb_un_sp.out":   JaguarSPunTest_nomosyms,
     "Jaguar/Jaguar6.5/dvb_ir.out":      JaguarIRTest,
 
     "Molcas/Molcas8.0/dvb_sp.out":      MolcasSPTest,
