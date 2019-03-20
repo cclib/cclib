@@ -17,6 +17,8 @@ from six import add_move, MovedModule
 add_move(MovedModule('mock', 'mock', 'unittest.mock'))
 from six.moves import mock
 
+from six import StringIO
+
 
 __filedir__ = os.path.dirname(__file__)
 __filepath__ = os.path.realpath(__filedir__)
@@ -110,10 +112,10 @@ class ccopenTest(unittest.TestCase):
             self.ccopen([base_url + fname for fname in filenames], quiet=True)
                 .parse().getattributes(tolists=True))
 
-    # This should also work if cjsonreader supported streams.
-    #def test_cjson(self):
-    #    """Do we get a CJSON object then keyword argument used?"""
-    #    self.assertIsInstance(self.ccopen(StringIO.StringIO(""), cjson=True), cclib.io.cjsonreader.CJSON)
+    @unittest.skip("This should also work if cjsonreader supported streams.")
+    def test_cjson(self):
+        """Do we get a CJSON object then keyword argument used?"""
+        self.assertIsInstance(self.ccopen(StringIO(""), cjson=True), cclib.io.cjsonreader.CJSON)
 
 
 class _determine_output_formatTest(unittest.TestCase):

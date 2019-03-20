@@ -191,7 +191,7 @@ class Logfile(object):
     """
 
     def __init__(self, source, loglevel=logging.INFO, logname="Log",
-                 logstream=sys.stdout, datatype=ccData_optdone_bool, **kwds):
+                 logstream=sys.stderr, datatype=ccData_optdone_bool, **kwds):
         """Initialise the Logfile object.
 
         This should be called by a subclass in its own __init__ method.

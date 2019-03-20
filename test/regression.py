@@ -1788,8 +1788,8 @@ for m, module in all_modules.items():
         if name[-4:] == "Test":
             globals()[name] = getattr(module, name)
 
-class ADFGeoOptTest_noscfvalues(ADFGeoOptTest):
 
+class ADFGeoOptTest_noscfvalues(ADFGeoOptTest):
     @unittest.skip('Cannot parse scfvalues from this file.')
     def testgeovalues_scfvalues(self):
         """SCF cycles were not printed here."""
@@ -1802,6 +1802,21 @@ class ADFGeoOptTest_noscfvalues(ADFGeoOptTest):
     def testscfvaluetype(self):
         """SCF cycles were not printed here."""
 
+
+class ADFSPTest_noscfvalues(ADFSPTest):
+    @unittest.skip('Cannot parse scfvalues from this file.')
+    def testscftargetdim(self):
+        """SCF cycles were not printed here."""
+
+    @unittest.skip('Cannot parse scfvalues from this file.')
+    def testscfvaluetype(self):
+        """SCF cycles were not printed here."""
+
+    @unittest.skip('Cannot parse aooverlaps from this file.')
+    def testaooverlaps(self):
+        """AO overlaps were not printed here."""
+
+
 class ADFSPTest_nosyms(ADFSPTest, GenericSPTest):
     foverlap00 = 1.00000
     foverlap11 = 0.99999
@@ -1810,11 +1825,42 @@ class ADFSPTest_nosyms(ADFSPTest, GenericSPTest):
     def testsymlabels(self):
         """Symmetry labels were not printed here."""
 
+
+class ADFSPTest_nosyms_noscfvalues(ADFSPTest_nosyms):
+    @unittest.skip('Cannot parse scfvalues from this file.')
+    def testscftargetdim(self):
+        """SCF cycles were not printed here."""
+
+    @unittest.skip('Cannot parse scfvalues from this file.')
+    def testscfvaluetype(self):
+        """SCF cycles were not printed here."""
+
+    @unittest.skip('Cannot parse aooverlaps from this file.')
+    def testaooverlaps(self):
+        """AO overlaps were not printed here."""
+
+
 class ADFSPTest_nosyms_valence(ADFSPTest_nosyms):
     def testlengthmoenergies(self):
         """Only valence orbital energies were printed here."""
         self.assertEqual(len(self.data.moenergies[0]), 45)
         self.assertEqual(self.data.moenergies[0][0], 99999.0)
+
+
+class ADFSPTest_nosyms_valence_noscfvalues(ADFSPTest_nosyms_valence):
+    @unittest.skip('Cannot parse scfvalues from this file.')
+    def testscftargetdim(self):
+        """SCF cycles were not printed here."""
+
+    @unittest.skip('Cannot parse scfvalues from this file.')
+    def testscfvaluetype(self):
+        """SCF cycles were not printed here."""
+
+    @unittest.skip('Cannot parse aooverlaps from this file.')
+    def testaooverlaps(self):
+        """AO overlaps were not printed here."""
+
+
 
 class DALTONBigBasisTest_aug_cc_pCVQZ(GenericBigBasisTest):
     contractions = { 6: 29 }
@@ -1966,12 +2012,12 @@ class PsiSPTest_noatommasses(PsiSPTest):
 old_unittests = {
 
     "ADF/ADF2004.01/MoOCl4-sp.adfout":      ADFCoreTest,
-    "ADF/ADF2004.01/dvb_gopt.adfout":       ADFGeoOptTest,
+    "ADF/ADF2004.01/dvb_gopt.adfout":       ADFGeoOptTest_noscfvalues,
     "ADF/ADF2004.01/dvb_gopt_b.adfout":     ADFGeoOptTest,
-    "ADF/ADF2004.01/dvb_sp.adfout":         ADFSPTest,
-    "ADF/ADF2004.01/dvb_sp_b.adfout":       ADFSPTest,
-    "ADF/ADF2004.01/dvb_sp_c.adfout":       ADFSPTest_nosyms_valence,
-    "ADF/ADF2004.01/dvb_sp_d.adfout":       ADFSPTest_nosyms,
+    "ADF/ADF2004.01/dvb_sp.adfout":         ADFSPTest_noscfvalues,
+    "ADF/ADF2004.01/dvb_sp_b.adfout":       ADFSPTest_noscfvalues,
+    "ADF/ADF2004.01/dvb_sp_c.adfout":       ADFSPTest_nosyms_valence_noscfvalues,
+    "ADF/ADF2004.01/dvb_sp_d.adfout":       ADFSPTest_nosyms_noscfvalues,
     "ADF/ADF2004.01/dvb_un_sp.adfout":      GenericSPunTest,
     "ADF/ADF2004.01/dvb_un_sp_c.adfout":    GenericSPunTest,
     "ADF/ADF2004.01/dvb_ir.adfout":         GenericIRTest,
