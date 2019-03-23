@@ -24,18 +24,6 @@ from cclib.parser import ccData
 from cclib.io import ccread, URL_PATTERN
 
 
-# MSG_USAGE_LONG = """\
-# Usage:  ccget <attribute> [<attribute>] <compchemlogfile> [<compchemlogfile>]
-#     where <attribute> is one of the attributes to be parsed by cclib
-#     from each of the compchemlogfiles.
-# For a list of attributes available in a file, use --list (or -l):
-#     ccget --list <compchemlogfile>
-# To extract attributes available in a CJSON file, use --json (or -j):
-#     ccget --json  <attr> [<attr>]  <compchemlogfile>
-# To parse multiple files as one input stream, use --multi (or -m):
-#     ccget --multi <attr> [<attr>]  <cclogfile> <cclogfile> [<cclogfile>]
-# """
-
 # Set up options for pretty-printing output.
 if sys.version_info < (3, 4):
     pprint = partial(pprint, width=120)
@@ -52,21 +40,28 @@ def ccget():
     parser = argparse.ArgumentParser()
 
     parser.add_argument(
-        "attribute_or_compchemlogfile", nargs="+"
+        "attribute_or_compchemlogfile", nargs="+",
+        help="one or more attributes to be parsed from one ore more logfiles",
     )
 
-    parser.add_argument(
+    group = parser.add_mutually_exclusive_group()
+
+    group.add_argument(
         "--list", "-l",
         action="store_true",
+        help="print a list of attributes available in each file",
     )
-    parser.add_argument(
+    group.add_argument(
         "--json", "-j",
         action="store_true",
+        help="the given logfile is in CJSON format",
     )
-    parser.add_argument(
+    group.add_argument(
         "--multi", "-m",
         action="store_true",
+        help="parse multiple input files as one input stream",
     )
+
     parser.add_argument(
         "--verbose", "-v",
         action="store_true",
