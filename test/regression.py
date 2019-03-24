@@ -1224,6 +1224,8 @@ def testQChem_QChem4_2_CH3___Na__RS_out(logfile):
     This is to ensure only the supersystem is parsed.
     """
 
+    assert logfile.data.metadata["package_version"] == "4.2.2"
+
     assert logfile.data.charge == 1
     assert logfile.data.mult == 2
     assert len(logfile.data.moenergies) == 2
@@ -1253,6 +1255,8 @@ def testQChem_QChem4_2_CH3___Na__RS_SCF_out(logfile):
     This is to ensure only the supersystem is printed.
     """
 
+    assert logfile.data.metadata["package_version"] == "4.1.0.1"
+
     assert logfile.data.charge == 1
     assert logfile.data.mult == 2
     assert len(logfile.data.moenergies) == 2
@@ -1280,6 +1284,8 @@ def testQChem_QChem4_2_CH4___Na__out(logfile):
     This is to ensure only the supersystem is parsed.
     """
 
+    assert logfile.data.metadata["package_version"] == "4.2.0"
+
     assert logfile.data.charge == 1
     assert logfile.data.mult == 1
     assert len(logfile.data.moenergies) == 1
@@ -1306,6 +1312,8 @@ def testQChem_QChem4_2_CH3___Na__RS_SCF_noprint_out(logfile):
 
     This is to ensure only the supersystem is parsed.
     """
+
+    assert logfile.data.metadata["package_version"] == "4.3.0"
 
     assert logfile.data.charge == 1
     assert logfile.data.mult == 2
@@ -1335,6 +1343,8 @@ def testQChem_QChem4_2_CH3___Na__RS_noprint_out(logfile):
     This is to ensure only the supersystem is parsed.
     """
 
+    assert logfile.data.metadata["package_version"] == "4.3.0"
+
     assert logfile.data.charge == 1
     assert logfile.data.mult == 2
     assert len(logfile.data.moenergies) == 2
@@ -1361,6 +1371,8 @@ def testQChem_QChem4_2_CH4___Na__noprint_out(logfile):
     This is to ensure only the supersystem is parsed.
     """
 
+    assert logfile.data.metadata["package_version"] == "4.3.0"
+
     assert logfile.data.charge == 1
     assert logfile.data.mult == 1
     assert len(logfile.data.moenergies) == 1
@@ -1381,6 +1393,9 @@ def testQChem_QChem4_2_CO2_out(logfile):
     """A job containing a specific number of orbitals requested for
     printing.
     """
+
+    assert logfile.data.metadata["package_version"] == "4.2.2"
+
     nbasis = 45
     nmo = 45
     nalpha = 11
@@ -1397,6 +1412,9 @@ def testQChem_QChem4_2_CO2_out(logfile):
 def testQChem_QChem4_2_CO2_cation_UHF_out(logfile):
     """A job containing a specific number of orbitals requested for
     printing."""
+
+    assert logfile.data.metadata["package_version"] == "4.2.2"
+
     nbasis = 45
     nmo = 45
     nalpha = 11
@@ -1418,6 +1436,9 @@ def testQChem_QChem4_2_CO2_cation_UHF_out(logfile):
 def testQChem_QChem4_2_CO2_cation_ROHF_bigprint_allvirt_out(logfile):
     """A job containing a specific number of orbitals requested for
     printing."""
+
+    assert logfile.data.metadata["package_version"] == "4.2.2"
+
     nbasis = 45
     nmo = 45
     nalpha = 11
@@ -1438,6 +1459,9 @@ def testQChem_QChem4_2_CO2_cation_ROHF_bigprint_allvirt_out(logfile):
 
 def testQChem_QChem4_2_CO2_linear_dependence_printall_out(logfile):
     """A job with linear dependency and all MOs printed."""
+
+    assert logfile.data.metadata["package_version"] == "4.2.2"
+
     nbasis = 138
     nmo = 106
     assert logfile.data.nbasis == nbasis
@@ -1454,6 +1478,9 @@ def testQChem_QChem4_2_CO2_linear_dependence_printall_final_out(logfile):
     The increased precision is due to the presence of `scf_final_print
     = 3` giving a separate block with more decimal places.
     """
+
+    assert logfile.data.metadata["package_version"] == "4.2.2"
+
     nbasis = 138
     nmo = 106
     assert logfile.data.nbasis == nbasis
@@ -1471,6 +1498,9 @@ def testQChem_QChem4_2_CO2_linear_dependence_printdefault_out(logfile):
     """A job with linear dependency and the default number of MOs printed
     (all occupieds and 5 virtuals).
     """
+
+    assert logfile.data.metadata["package_version"] == "4.2.2"
+
     nbasis = 138
     nmo = 106
     assert logfile.data.nbasis == nbasis
@@ -1483,6 +1513,7 @@ def testQChem_QChem4_2_CO2_linear_dependence_printdefault_out(logfile):
 
 def testQChem_QChem4_2_dvb_gopt_unconverged_out(logfile):
     """An unconverged geometry optimization to test for empty optdone (see #103 for details)."""
+    assert logfile.data.metadata["package_version"] == "4.2.0"
     assert hasattr(logfile.data, 'optdone') and not logfile.data.optdone
 
 
@@ -1492,6 +1523,7 @@ def testQChem_QChem4_2_dvb_sp_multipole_10_out(logfile):
     Since this example has various formats for the moment ranks, we can test
     the parser by making sure the first moment (pure X) is as expected.
     """
+    assert logfile.data.metadata["package_version"] == "4.2.0"
     assert hasattr(logfile.data, 'moments') and len(logfile.data.moments) == 11
     tol = 1.0e-6
     assert logfile.data.moments[1][0] < tol
@@ -1510,6 +1542,7 @@ def testQChem_QChem4_2_MoOCl4_sp_noprint_builtin_mixed_all_Cl_out(logfile):
     """ECP on all Cl atoms, but iprint is off, so coreelectrons must be
     guessed.
     """
+    assert logfile.data.metadata["package_version"] == "4.2.0"
     assert logfile.data.charge == -2
     assert logfile.data.mult == 1
     assert hasattr(logfile.data, 'coreelectrons')
@@ -1523,6 +1556,7 @@ def testQChem_QChem4_2_MoOCl4_sp_noprint_builtin_mixed_both_out(logfile):
 
     Uses `ecp = gen`.
     """
+    assert logfile.data.metadata["package_version"] == "4.2.0"
     assert logfile.data.charge == -2
     assert logfile.data.mult == 1
     assert not hasattr(logfile.data, 'coreelectrons')
@@ -1530,6 +1564,7 @@ def testQChem_QChem4_2_MoOCl4_sp_noprint_builtin_mixed_both_out(logfile):
 
 def testQChem_QChem4_2_MoOCl4_sp_noprint_builtin_mixed_single_Mo_out(logfile):
     """ECP on Mo, but iprint is off, so coreelectrons must be guessed."""
+    assert logfile.data.metadata["package_version"] == "4.2.0"
     assert logfile.data.charge == -2
     assert logfile.data.mult == 1
     assert hasattr(logfile.data, 'coreelectrons')
@@ -1543,6 +1578,7 @@ def testQChem_QChem4_2_MoOCl4_sp_noprint_builtin_out(logfile):
 
     Uses `ecp = <builtin>`.
     """
+    assert logfile.data.metadata["package_version"] == "4.2.0"
     assert logfile.data.charge == -2
     assert logfile.data.mult == 1
     assert not hasattr(logfile.data, 'coreelectrons')
@@ -1552,6 +1588,7 @@ def testQChem_QChem4_2_MoOCl4_sp_noprint_user_Mo_builtin_all_Cl_out(logfile):
     """ECP on Mo and all Cl atoms, but iprint is off; the coreelectrons
     count is given for Mo, and Cl can be guessed.
     """
+    assert logfile.data.metadata["package_version"] == "4.2.0"
     assert logfile.data.charge == -2
     assert logfile.data.mult == 1
     assert hasattr(logfile.data, 'coreelectrons')
@@ -1566,6 +1603,7 @@ def testQChem_QChem4_2_MoOCl4_sp_print_builtin_mixed_single_Mo_single_Cl_out(log
     This was intended to only have an ECP on a single Cl, but Q-Chem
     silently puts it on all.
     """
+    assert logfile.data.metadata["package_version"] == "4.2.0"
     assert logfile.data.charge == -2
     assert logfile.data.mult == 1
     assert hasattr(logfile.data, 'coreelectrons')
@@ -1578,6 +1616,8 @@ def testQChem_QChem4_2_print_frgm_false_opt_out(logfile):
 
     Fragment sections are not printed.
     """
+
+    assert logfile.data.metadata["package_version"] == "4.3.0"
 
     assert logfile.data.charge == -1
     assert logfile.data.mult == 1
@@ -1592,6 +1632,8 @@ def testQChem_QChem4_2_print_frgm_true_opt_out(logfile):
     Fragment sections are printed.
     """
 
+    assert logfile.data.metadata["package_version"] == "4.3.0"
+
     assert logfile.data.charge == -1
     assert logfile.data.mult == 1
 
@@ -1605,6 +1647,8 @@ def testQChem_QChem4_2_print_frgm_false_sp_out(logfile):
     Fragment sections are not printed.
     """
 
+    assert logfile.data.metadata["package_version"] == "4.3.0"
+
     assert logfile.data.charge == -1
     assert logfile.data.mult == 1
 
@@ -1617,6 +1661,8 @@ def testQChem_QChem4_2_print_frgm_true_sp_out(logfile):
     Fragment sections are printed.
     """
 
+    assert logfile.data.metadata["package_version"] == "4.3.0"
+
     assert logfile.data.charge == -1
     assert logfile.data.mult == 1
 
@@ -1628,6 +1674,8 @@ def testQChem_QChem4_2_print_frgm_true_sp_ccsdt_out(logfile):
 
     Fragment sections are printed.
     """
+
+    assert logfile.data.metadata["package_version"] == "4.3.0"
 
     assert len(logfile.data.mpenergies[0]) == 1
     assert len(logfile.data.ccenergies) == 1
@@ -1644,6 +1692,9 @@ def testQChem_QChem4_2_qchem_tddft_rpa_out(logfile):
     Currently cclib will store the second set of transitions (RPA), but this
     could change in the future if we support multistep jobs.
     """
+
+    assert logfile.data.metadata["package_version"] == "4.2.0"
+
     assert len(logfile.data.etsecs) == 10
     assert len(logfile.data.etsecs[0]) == 13
 
@@ -1667,6 +1718,8 @@ def testQChem_QChem4_2_read_molecule_out(logfile):
     """A two-calculation output with the charge/multiplicity not specified
     in the user section."""
 
+    assert logfile.data.metadata["package_version"] == "4.3.0"
+
     # These correspond to the second calculation.
     assert logfile.data.charge == 1
     assert logfile.data.mult == 2
@@ -1679,6 +1732,7 @@ def testQChem_QChem4_2_read_molecule_out(logfile):
 
 def testQChem_QChem4_2_stopiter_qchem_out(logfile):
     """Check to ensure that an incomplete SCF is handled correctly."""
+    assert logfile.data.metadata["package_version"] == "4.0.0.1"
     assert len(logfile.data.scfvalues[0]) == 7
 
 
@@ -1686,6 +1740,7 @@ def testQChem_QChem4_3_R_propylene_oxide_force_ccsd_out(logfile):
     """Check to see that the CCSD gradient (not the HF gradient) is being
     parsed.
     """
+    assert logfile.data.metadata["package_version"] == "4.3.0"
     assert hasattr(logfile.data, 'grads')
     assert logfile.data.grads.shape == (1, logfile.data.natom, 3)
     # atom 9, y-coordinate.
@@ -1697,14 +1752,16 @@ def testQChem_QChem4_3_R_propylene_oxide_force_hf_numerical_energies_out(logfile
     """Check to see that the HF numerical gradient (from energies) is
     being parsed.
     """
+    assert logfile.data.metadata["package_version"] == "4.3.0"
     # This isn't implemented yet.
-    pass
+    assert not hasattr(logfile.data, "grads")
 
 
 def testQChem_QChem4_3_R_propylene_oxide_force_mp2_out(logfile):
     """Check to see that the MP2 gradient (not the HF gradient) is
     being parsed.
     """
+    assert logfile.data.metadata["package_version"] == "4.3.0"
     assert hasattr(logfile.data, 'grads')
     assert logfile.data.grads.shape == (1, logfile.data.natom, 3)
     # atom 9, y-coordinate.
@@ -1716,6 +1773,7 @@ def testQChem_QChem4_3_R_propylene_oxide_force_rimp2_out(logfile):
     """Check to see that the RI-MP2 gradient (not the HF gradient) is
     being parsed.
     """
+    assert logfile.data.metadata["package_version"] == "4.3.0"
     assert hasattr(logfile.data, 'grads')
     assert logfile.data.grads.shape == (1, logfile.data.natom, 3)
     # atom 9, y-coordinate.
@@ -1726,7 +1784,7 @@ def testQChem_QChem4_3_R_propylene_oxide_force_rimp2_out(logfile):
 def testQChem_QChem4_3_R_propylene_oxide_freq_ccsd_out(logfile):
     """Check to see that the CCSD (numerical) Hessian is being parsed.
     """
-
+    assert logfile.data.metadata["package_version"] == "4.3.0"
     # The gradient of the initial geometry in a Hessian calculated
     # from finite difference of gradients should be the same as in a
     # force calculation.
@@ -1747,14 +1805,15 @@ def testQChem_QChem4_3_R_propylene_oxide_freq_ccsd_out(logfile):
 def testQChem_QChem4_3_R_propylene_oxide_freq_hf_numerical_gradients_out(logfile):
     """Check to see that the HF Hessian (from gradients) is being parsed.
     """
+    assert logfile.data.metadata["package_version"] == "4.3.0"
     # This isn't implemented yet.
-    pass
+    assert not hasattr(logfile.data, "freq")
 
 
 def testQChem_QChem4_3_R_propylene_oxide_freq_mp2_out(logfile):
     """Check to see that the MP2 (numerical) Hessian is being parsed.
     """
-
+    assert logfile.data.metadata["package_version"] == "4.3.0"
     # The gradient of the initial geometry in a Hessian calculated
     # from finite difference of gradients should be the same as in a
     # force calculation.
@@ -1775,7 +1834,7 @@ def testQChem_QChem4_3_R_propylene_oxide_freq_mp2_out(logfile):
 def testQChem_QChem4_3_R_propylene_oxide_freq_rimp2_out(logfile):
     """Check to see that the RI-MP2 (numerical) Hessian is being parsed.
     """
-
+    assert logfile.data.metadata["package_version"] == "4.3.0"
     # The gradient of the initial geometry in a Hessian calculated
     # from finite difference of gradients should be the same as in a
     # force calculation.
@@ -1798,6 +1857,7 @@ def testQChem_QChem4_4_full_2_out(logfile):
     """The polarizability section may not be parsed due to something
     appearing just beforehand from a frequency-type calculation.
     """
+    assert logfile.data.metadata["package_version"] == "4.4.2"
     assert hasattr(logfile.data, 'polarizabilities')
 
 
@@ -1805,6 +1865,7 @@ def testQChem_QChem4_4_srtlg_out(logfile):
     """Some lines in the MO coefficients require fixed-width parsing. See
     #349 and #381.
     """
+    assert logfile.data.metadata["package_version"] == "4.4.0"
     # There is a linear dependence problem.
     nbasis, nmo = 1129, 1115
     assert len(logfile.data.mocoeffs) == 2
@@ -1824,11 +1885,13 @@ def testQChem_QChem4_4_Trp_polar_ideriv0_out(logfile):
     compare to reference results as 2nd-order finite difference can have
     large errors.
     """
+    assert logfile.data.metadata["package_version"] == "4.4.2"
     assert hasattr(logfile.data, 'polarizabilities')
 
 
 def testQChem_QChem4_4_top_out(logfile):
     """This job has fewer MOs (7) than would normally be printed (15)."""
+    assert logfile.data.metadata["package_version"] == "4.4.2"
     nbasis = 7
     nmo = 7
     assert logfile.data.nbasis == nbasis
@@ -1842,6 +1905,7 @@ def testQChem_QChem5_0_438_out(logfile):
     """This job has an ECP on Pt, replacing 60 of 78 electrons, and was
     showing the charge as 60.
     """
+    assert logfile.data.metadata["package_version"] == "5.0.0"
     assert logfile.data.charge == 0
     assert logfile.data.coreelectrons[0] == 60
 
@@ -1850,12 +1914,19 @@ def testQChem_QChem5_0_argon_out(logfile):
     """This job has unit specifications at the end of 'Total energy for
     state' lines.
     """
+    assert logfile.data.metadata["package_version"] == "5.0.1"
     nroots = 12
     assert len(logfile.data.etenergies) == nroots
     state_0_energy = -526.6323968555
     state_1_energy = -526.14663738
     assert logfile.data.scfenergies[0] == convertor(state_0_energy, 'hartree', 'eV')
     assert abs(logfile.data.etenergies[0] - convertor(state_1_energy - state_0_energy, 'hartree', 'wavenumber')) < 1.0e-1
+
+
+def testQChem_QChem5_1_old_final_print_1_out(logfile):
+    """This job has was run from a development version."""
+    assert logfile.data.metadata["package_version"] == "5.1.0dev27553+branches_libresponse"
+
 
 # Turbomole
 
