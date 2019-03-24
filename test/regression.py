@@ -1182,21 +1182,35 @@ def testPsi3_Psi3_4_water_psi3_log(logfile):
 
 def testPsi4_Psi4_beta5_dvb_gopt_hf_unconverged_out(logfile):
     """An unconverged geometry optimization to test for empty optdone (see #103 for details)."""
+    assert logfile.data.metadata["package_version"] == "0!0.beta5"
     assert hasattr(logfile.data, 'optdone') and not logfile.data.optdone
+
+
+def testPsi4_Psi4_beta5_sample_cc54_0_01_0_1_0_1_out(logfile):
+    """TODO"""
+    assert logfile.data.metadata["package_version"] == "0!0.beta2.dev+fa5960b375b8ca2a5e4000a48cb95e7f218c579a"
 
 
 def testPsi4_Psi4_beta5_stopiter_psi_dft_out(logfile):
     """Check to ensure that an incomplete SCF is handled correctly."""
+    assert logfile.data.metadata["package_version"] == "0!0.beta5"
     assert len(logfile.data.scfvalues[0]) == 7
 
 
 def testPsi4_Psi4_beta5_stopiter_psi_hf_out(logfile):
     """Check to ensure that an incomplete SCF is handled correctly."""
+    assert logfile.data.metadata["package_version"] == "0!0.beta5"
     assert len(logfile.data.scfvalues[0]) == 6
+
+
+def testPsi4_Psi4_0_5_sample_scf5_out(logfile):
+    """TODO"""
+    assert logfile.data.metadata["package_version"] == "1!0.5.dev+master-dbe9080"
 
 
 def testPsi4_Psi4_0_5_water_fdgrad_out(logfile):
     """Ensure that finite difference gradients are parsed."""
+    assert logfile.data.metadata["package_version"] == "1!1.2a1.dev429+fixsym-7838fc1-dirty"
     assert hasattr(logfile.data, 'grads')
     assert logfile.data.grads.shape == (1, 3, 3)
     assert abs(logfile.data.grads[0, 0, 2] - 0.05498126903657) < 1.0e-12
@@ -1207,6 +1221,7 @@ def testPsi4_Psi4_0_5_water_fdgrad_out(logfile):
 
 def testPsi4_Psi4_1_2_ch4_hf_opt_freq_out(logfile):
     """Ensure that molecular orbitals and normal modes are parsed in Psi4 1.2"""
+    assert logfile.data.metadata["package_version"] == "1!1.2.1.dev+HEAD-406f4de"
     assert hasattr(logfile.data, 'mocoeffs')
     assert hasattr(logfile.data, 'vibdisps')
     assert hasattr(logfile.data, 'vibfreqs')

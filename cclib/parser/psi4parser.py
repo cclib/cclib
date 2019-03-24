@@ -73,17 +73,32 @@ class Psi4(logfileparser.Logfile):
 
         # Extract the version number and the version control
         # information, if it exists.
-        if "Driver" in line:
-            tokens = line.split()
+        if "An Open-Source Ab Initio Electronic Structure Package" in line:
+            version_line = next(inputfile)
+            tokens = version_line.split()
             package_version = tokens[1].split("-")[-1]
-            self.metadata["package_version"] = package_version
             # Keep track of early versions of Psi4.
             if "beta" in package_version:
                 self.version_4_beta = True
-        # Don't add revision information to the main package version for now.
-        if "Git:" in line:
-            tokens = line.split()
-            revision = '-'.join(tokens[2:])
+                # `beta2+` -> `0!0.beta2`
+                package_version = "0!0.{}".format(package_version)
+                if package_version[-1] == "+":
+                    # There is no good way to keep the bare plus sign around,
+                    # but this version is so old...
+                    package_version = package_version[:-1]
+            else:
+                package_version = "1!{}".format(package_version)
+            self.skip_line(inputfile, "blank")
+            line = next(inputfile)
+            if "Git:" in line:
+                tokens = line.split()
+                assert tokens[1] == "Rev"
+                revision = '-'.join(tokens[2:]).replace("{", "").replace("}", "")
+                dev_flag = "" if "dev" in package_version else ".dev"
+                package_version = "{}{}+{}".format(
+                    package_version, dev_flag, revision
+                )
+            self.metadata["package_version"] = package_version
 
         # This will automatically change the section attribute for Psi4, when encountering
         # a line that <== looks like this ==>, to whatever is in between.
