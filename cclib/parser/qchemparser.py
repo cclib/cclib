@@ -447,8 +447,8 @@ cannot be determined. Rerun without `$molecule read`."""
             line = next(inputfile)
             svn_branch = line.split()[3].replace("/", "_")
             if "package_version" in self.metadata:
-                self.metadata["package_version"] = "{}dev{}+{}".format(
-                    self.metadata["package_version"], svn_revision, svn_branch
+                self.metadata["package_version"] = "{}dev+{}-{}".format(
+                    self.metadata["package_version"], svn_branch, svn_revision
                 )
 
         # Disable/enable parsing for fragment sections.

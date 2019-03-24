@@ -1925,7 +1925,7 @@ def testQChem_QChem5_0_argon_out(logfile):
 
 def testQChem_QChem5_1_old_final_print_1_out(logfile):
     """This job has was run from a development version."""
-    assert logfile.data.metadata["package_version"] == "5.1.0dev27553+branches_libresponse"
+    assert logfile.data.metadata["package_version"] == "5.1.0dev+branches_libresponse-27553"
 
 
 # Turbomole
