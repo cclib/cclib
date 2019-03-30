@@ -1010,6 +1010,7 @@ def testNWChem_NWChem6_5_stopiter_nwchem_dft_out(logfile):
 
 def testNWChem_NWChem6_5_stopiter_nwchem_hf_out(logfile):
     """Check to ensure that an incomplete SCF is handled correctly."""
+    assert logfile.data.metadata["package_version"] == "6.5+26243"
     assert len(logfile.data.scfvalues[0]) == 2
 
 
@@ -1017,6 +1018,7 @@ def testNWChem_NWChem6_8_526_out(logfile):
     """If `print low` is present in the input, SCF iterations are not
     printed.
     """
+    assert logfile.data.metadata["package_version"] == "6.8.1+g08bf49b"
     assert not hasattr(logfile.data, "scftargets")
     assert not hasattr(logfile.data, "scfvalues")
 
