@@ -1888,16 +1888,41 @@ class GAMESSUSSPunTest_charge0(GenericSPunTest):
     def testhomos(self):
         """HOMOs were incorrect due to charge being wrong."""
 
+
 class GAMESSUSIRTest_ts(GenericIRimgTest):
     @unittest.skip('This is a transition state with different intensities')
     def testirintens(self):
         """This is a transition state with different intensities."""
+
 
 class GAMESSUSCISTest_dets(GenericCISTest):
     nstates = 10
     @unittest.skip('This gives unexpected coeficcients, also for current unit tests.')
     def testetsecsvalues(self):
         """This gives unexpected coeficcients, also for current unit tests."""
+
+
+class GAMESSSPTest_noaooverlaps(GenericSPTest):
+    @unittest.skip('Cannot parse aooverlaps from this file.')
+    def testaooverlaps(self):
+        """aooverlaps were not printed here."""
+
+
+class GaussianSPunTest_nomosyms(GaussianSPunTest):
+    @unittest.skip('Cannot parse mosyms from this file.')
+    def testmosyms(self):
+        """mosyms were not printed here."""
+
+
+class GaussianSPunTest_nonaturalorbitals(GaussianCISTest):
+    @unittest.skip('Cannot parse natrual orbitals from this file.')
+    def testnocoeffs(self):
+        """natural orbitals were not printed here."""
+
+    @unittest.skip('Cannot parse natrual orbital occupation numbers from this file.')
+    def testnooccnos(self):
+        """natural orbital occupation numbers were not printed here."""
+
 
 class GaussianPolarTest(ReferencePolarTest):
     """Customized static polarizability unittest, meant for calculations
@@ -1920,15 +1945,78 @@ class JaguarSPTest_6_31gss(JaguarSPTest):
     b3lyp_energy = -10530
     overlap01 = 0.22
 
+class JaguarSPTest_6_31gss_nomosyms(JaguarSPTest_6_31gss):
+    @unittest.skip('Cannot parse mosyms from this file.')
+    def testsymlabels(self):
+        """mosyms were not printed here."""
+
+class JaguarSPunTest_nomosyms(JaguarSPunTest):
+    @unittest.skip('Cannot parse mosyms from this file.')
+    def testmosyms(self):
+        """mosyms were not printed here."""
+
 class JaguarSPunTest_nmo_all(JaguarSPunTest):
     def testmoenergies(self):
         """Some tests printed all MO energies apparently."""
         self.assertEqual(len(self.data.moenergies[0]), self.data.nmo)
 
+class JaguarSPunTest_nmo_all_nomosyms(JaguarSPunTest_nmo_all):
+    @unittest.skip('Cannot parse mosyms from this file.')
+    def testmosyms(self):
+        """mosyms were not printed here."""
+
 class JaguarGeoOptTest_nmo45(GenericGeoOptTest):
     def testlengthmoenergies(self):
         """Without special options, Jaguar only print Homo+10 orbital energies."""
         self.assertEqual(len(self.data.moenergies[0]), 45)
+
+class JaguarSPTest_nmo45(GenericSPTest):
+    def testlengthmoenergies(self):
+        """Without special options, Jaguar only print Homo+10 orbital energies."""
+        self.assertEqual(len(self.data.moenergies[0]), 45)
+
+    @unittest.skip('Cannot parse mos from this file.')
+    def testfornoormo(self):
+        """mos were not printed here."""
+
+    @unittest.skip('Cannot parse scftargets from this file.')
+    def testscftargets(self):
+        """scftargets were not parsed correctly here."""
+
+    @unittest.skip('Cannot parse atomcharges from this file.')
+    def testatomcharges(self):
+        """atomcharges were not parsed correctly here."""
+
+    @unittest.skip('Cannot parse atombasis from this file.')
+    def testatombasis(self):
+        """atombasis was not parsed correctly here."""
+
+class JaguarSPunTest_nmo45(GenericSPunTest):
+    def testlengthmoenergies(self):
+        """Without special options, Jaguar only print Homo+10 orbital energies."""
+        self.assertEqual(len(self.data.moenergies[0]), 45)
+
+class JaguarGeoOptTest_nmo45(GenericGeoOptTest):
+    def testlengthmoenergies(self):
+        """Without special options, Jaguar only print Homo+10 orbital energies."""
+        self.assertEqual(len(self.data.moenergies[0]), 45)
+
+class JaguarGeoOptTest_nmo45_nogeo(JaguarGeoOptTest_nmo45):
+    @unittest.skip('Cannot parse geotargets from this file.')
+    def testgeotargets(self):
+        """geotargets were not printed here."""
+
+    @unittest.skip('Cannot parse geovalues from this file.')
+    def testgeovalues_atomcoords(self):
+        """geovalues were not printed here."""
+
+    @unittest.skip('Cannot parse geovalues from this file.')
+    def testgeovalues_scfvalues(self):
+        """geovalues were not printed here."""
+
+    @unittest.skip('Cannot parse optdone from this file.')
+    def testoptdone(self):
+        """optdone does not exist for this file."""
 
 class JaguarGeoOptTest_6_31gss(GenericGeoOptTest):
     nbasisdict = {1: 5, 6: 15}
@@ -2054,7 +2142,7 @@ old_unittests = {
     "GAMESS/GAMESS-US2006/nh3_ts_ir.2006.2.22.r2.out":      GAMESSUSIRTest_ts,
 
     "GAMESS/GAMESS-US2010/dvb_gopt.log":    GenericGeoOptTest,
-    "GAMESS/GAMESS-US2010/dvb_sp.log":      GenericSPTest,
+    "GAMESS/GAMESS-US2010/dvb_sp.log":      GAMESSSPTest_noaooverlaps,
     "GAMESS/GAMESS-US2010/dvb_sp_un.log":   GAMESSUSSPunTest_charge0,
     "GAMESS/GAMESS-US2010/dvb_td.log":      GAMESSUSTDDFTTest,
     "GAMESS/GAMESS-US2010/dvb_ir.log":      GenericIRTest,
@@ -2087,14 +2175,14 @@ old_unittests = {
     "Gaussian/Gaussian03/dvb_sp_basis.log":   GenericBasisTest,
     "Gaussian/Gaussian03/dvb_sp_basis_b.log": GenericBasisTest,
     "Gaussian/Gaussian03/dvb_td.out":         GaussianTDDFTTest,
-    "Gaussian/Gaussian03/dvb_un_sp.out":      GaussianSPunTest,
+    "Gaussian/Gaussian03/dvb_un_sp.out":      GaussianSPunTest_nomosyms,
     "Gaussian/Gaussian03/dvb_un_sp_b.log":    GaussianSPunTest,
     "Gaussian/Gaussian03/Mo4OCl4-sp.log":     GenericCoreTest,
     "Gaussian/Gaussian03/water_ccd.log":      GenericCCTest,
     "Gaussian/Gaussian03/water_ccsd(t).log":  GenericCCTest,
     "Gaussian/Gaussian03/water_ccsd.log":     GenericCCTest,
-    "Gaussian/Gaussian03/water_cis.log":      GenericCISTest,
-    "Gaussian/Gaussian03/water_cisd.log":     GenericCISTest,
+    "Gaussian/Gaussian03/water_cis.log":      GaussianSPunTest_nonaturalorbitals,
+    "Gaussian/Gaussian03/water_cisd.log":     GaussianSPunTest_nonaturalorbitals,
     "Gaussian/Gaussian03/water_mp2.log":      GaussianMP2Test,
     "Gaussian/Gaussian03/water_mp3.log":      GaussianMP3Test,
     "Gaussian/Gaussian03/water_mp4.log":      GaussianMP4SDTQTest,
@@ -2109,24 +2197,24 @@ old_unittests = {
     "Gaussian/Gaussian09/dvb_sp_basis_gfinput.log":     GenericBasisTest,
     "Gaussian/Gaussian09/dvb_sp_revA.02.out":           GaussianSPTest,
     "Gaussian/Gaussian09/dvb_td_revA.02.out":           GaussianTDDFTTest,
-    "Gaussian/Gaussian09/dvb_un_sp_revA.02.log":        GaussianSPunTest,
+    "Gaussian/Gaussian09/dvb_un_sp_revA.02.log":        GaussianSPunTest_nomosyms,
     "Gaussian/Gaussian09/dvb_un_sp_b_revA.02.log":      GaussianSPunTest,
     "Gaussian/Gaussian09/trithiolane_polar.log":        GaussianPolarTest,
 
     "Jaguar/Jaguar4.2/dvb_gopt.out":    JaguarGeoOptTest_nmo45,
     "Jaguar/Jaguar4.2/dvb_gopt_b.out":  GenericGeoOptTest,
-    "Jaguar/Jaguar4.2/dvb_sp.out":      JaguarGeoOptTest_nmo45,
-    "Jaguar/Jaguar4.2/dvb_sp_b.out":    JaguarGeoOptTest_nmo45,
-    "Jaguar/Jaguar4.2/dvb_un_sp.out":   JaguarSPunTest_nmo_all,
+    "Jaguar/Jaguar4.2/dvb_sp.out":      JaguarSPTest_nmo45,
+    "Jaguar/Jaguar4.2/dvb_sp_b.out":    JaguarSPTest_nmo45,
+    "Jaguar/Jaguar4.2/dvb_un_sp.out":   JaguarSPunTest_nmo_all_nomosyms,
     "Jaguar/Jaguar4.2/dvb_ir.out":      JaguarIRTest,
 
     "Jaguar/Jaguar6.0/dvb_gopt.out":    JaguarGeoOptTest_6_31gss,
-    "Jaguar/Jaguar6.0/dvb_sp.out":      JaguarSPTest_6_31gss,
-    "Jaguar/Jaguar6.0/dvb_un_sp.out" :  JaguarSPunTest_nmo_all,
+    "Jaguar/Jaguar6.0/dvb_sp.out":      JaguarSPTest_6_31gss_nomosyms,
+    "Jaguar/Jaguar6.0/dvb_un_sp.out" :  JaguarSPunTest_nmo_all_nomosyms,
 
     "Jaguar/Jaguar6.5/dvb_gopt.out":    JaguarGeoOptTest_nmo45,
-    "Jaguar/Jaguar6.5/dvb_sp.out":      JaguarGeoOptTest_nmo45,
-    "Jaguar/Jaguar6.5/dvb_un_sp.out":   JaguarSPunTest,
+    "Jaguar/Jaguar6.5/dvb_sp.out":      JaguarSPTest_nmo45,
+    "Jaguar/Jaguar6.5/dvb_un_sp.out":   JaguarSPunTest_nomosyms,
     "Jaguar/Jaguar6.5/dvb_ir.out":      JaguarIRTest,
 
     "Molcas/Molcas8.0/dvb_sp.out":      MolcasSPTest,
@@ -2339,6 +2427,14 @@ def test_regressions(which=[], opt_traceback=False, regdir=__regression_dir__, l
                                         if opt_traceback:
                                             for f in res.failures:
                                                 print("Failure for", f[0])
+                                                print(f[1])
+                                        continue
+                                    elif res and len(res.errors) > 0:
+                                        errors += len(res.errors)
+                                        print("{:d} test(s) had errors".format(len(res.errors)))
+                                        if opt_traceback:
+                                            for f in res.errors:
+                                                print("Error for", f[0])
                                                 print(f[1])
                                         continue
                                 except AssertionError:
