@@ -1842,16 +1842,41 @@ class GAMESSUSSPunTest_charge0(GenericSPunTest):
     def testhomos(self):
         """HOMOs were incorrect due to charge being wrong."""
 
+
 class GAMESSUSIRTest_ts(GenericIRimgTest):
     @unittest.skip('This is a transition state with different intensities')
     def testirintens(self):
         """This is a transition state with different intensities."""
+
 
 class GAMESSUSCISTest_dets(GenericCISTest):
     nstates = 10
     @unittest.skip('This gives unexpected coeficcients, also for current unit tests.')
     def testetsecsvalues(self):
         """This gives unexpected coeficcients, also for current unit tests."""
+
+
+class GAMESSSPTest_noaooverlaps(GenericSPTest):
+    @unittest.skip('Cannot parse aooverlaps from this file.')
+    def testaooverlaps(self):
+        """aooverlaps were not printed here."""
+
+
+class GaussianSPunTest_nomosyms(GaussianSPunTest):
+    @unittest.skip('Cannot parse mosyms from this file.')
+    def testmosyms(self):
+        """mosyms were not printed here."""
+
+
+class GaussianSPunTest_nonaturalorbitals(GaussianCISTest):
+    @unittest.skip('Cannot parse natrual orbitals from this file.')
+    def testnocoeffs(self):
+        """natural orbitals were not printed here."""
+
+    @unittest.skip('Cannot parse natrual orbital occupation numbers from this file.')
+    def testnooccnos(self):
+        """natural orbital occupation numbers were not printed here."""
+
 
 class GaussianPolarTest(ReferencePolarTest):
     """Customized static polarizability unittest, meant for calculations
@@ -1907,15 +1932,15 @@ class JaguarSPTest_nmo45(GenericSPTest):
     @unittest.skip('Cannot parse mos from this file.')
     def testfornoormo(self):
         """mos were not printed here."""
-    
+
     @unittest.skip('Cannot parse scftargets from this file.')
     def testscftargets(self):
         """scftargets were not parsed correctly here."""
-    
+
     @unittest.skip('Cannot parse atomcharges from this file.')
     def testatomcharges(self):
         """atomcharges were not parsed correctly here."""
-    
+
     @unittest.skip('Cannot parse atombasis from this file.')
     def testatombasis(self):
         """atombasis was not parsed correctly here."""
@@ -1934,7 +1959,7 @@ class JaguarGeoOptTest_nmo45_nogeo(JaguarGeoOptTest_nmo45):
     @unittest.skip('Cannot parse geotargets from this file.')
     def testgeotargets(self):
         """geotargets were not printed here."""
-    
+
     @unittest.skip('Cannot parse geovalues from this file.')
     def testgeovalues_atomcoords(self):
         """geovalues were not printed here."""
@@ -2071,7 +2096,7 @@ old_unittests = {
     "GAMESS/GAMESS-US2006/nh3_ts_ir.2006.2.22.r2.out":      GAMESSUSIRTest_ts,
 
     "GAMESS/GAMESS-US2010/dvb_gopt.log":    GenericGeoOptTest,
-    "GAMESS/GAMESS-US2010/dvb_sp.log":      GenericSPTest,
+    "GAMESS/GAMESS-US2010/dvb_sp.log":      GAMESSSPTest_noaooverlaps,
     "GAMESS/GAMESS-US2010/dvb_sp_un.log":   GAMESSUSSPunTest_charge0,
     "GAMESS/GAMESS-US2010/dvb_td.log":      GAMESSUSTDDFTTest,
     "GAMESS/GAMESS-US2010/dvb_ir.log":      GenericIRTest,
@@ -2104,14 +2129,14 @@ old_unittests = {
     "Gaussian/Gaussian03/dvb_sp_basis.log":   GenericBasisTest,
     "Gaussian/Gaussian03/dvb_sp_basis_b.log": GenericBasisTest,
     "Gaussian/Gaussian03/dvb_td.out":         GaussianTDDFTTest,
-    "Gaussian/Gaussian03/dvb_un_sp.out":      GaussianSPunTest,
+    "Gaussian/Gaussian03/dvb_un_sp.out":      GaussianSPunTest_nomosyms,
     "Gaussian/Gaussian03/dvb_un_sp_b.log":    GaussianSPunTest,
     "Gaussian/Gaussian03/Mo4OCl4-sp.log":     GenericCoreTest,
     "Gaussian/Gaussian03/water_ccd.log":      GenericCCTest,
     "Gaussian/Gaussian03/water_ccsd(t).log":  GenericCCTest,
     "Gaussian/Gaussian03/water_ccsd.log":     GenericCCTest,
-    "Gaussian/Gaussian03/water_cis.log":      GenericCISTest,
-    "Gaussian/Gaussian03/water_cisd.log":     GenericCISTest,
+    "Gaussian/Gaussian03/water_cis.log":      GaussianSPunTest_nonaturalorbitals,
+    "Gaussian/Gaussian03/water_cisd.log":     GaussianSPunTest_nonaturalorbitals,
     "Gaussian/Gaussian03/water_mp2.log":      GaussianMP2Test,
     "Gaussian/Gaussian03/water_mp3.log":      GaussianMP3Test,
     "Gaussian/Gaussian03/water_mp4.log":      GaussianMP4SDTQTest,
@@ -2126,7 +2151,7 @@ old_unittests = {
     "Gaussian/Gaussian09/dvb_sp_basis_gfinput.log":     GenericBasisTest,
     "Gaussian/Gaussian09/dvb_sp_revA.02.out":           GaussianSPTest,
     "Gaussian/Gaussian09/dvb_td_revA.02.out":           GaussianTDDFTTest,
-    "Gaussian/Gaussian09/dvb_un_sp_revA.02.log":        GaussianSPunTest,
+    "Gaussian/Gaussian09/dvb_un_sp_revA.02.log":        GaussianSPunTest_nomosyms,
     "Gaussian/Gaussian09/dvb_un_sp_b_revA.02.log":      GaussianSPunTest,
     "Gaussian/Gaussian09/trithiolane_polar.log":        GaussianPolarTest,
 
