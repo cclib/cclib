@@ -1,12 +1,10 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2018, the cclib development team
+# Copyright (c) 2019, the cclib development team
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
-
 """Tools for identifying, reading and writing files and streams."""
-
 
 from __future__ import print_function
 
@@ -489,7 +487,6 @@ def sort_turbomole_outputs(filelist):
 
 def _check_pandas(found_pandas):
     if not found_pandas:
-        print("You must install `pandas` to use this function")
         sys.exit(1)
 
 
