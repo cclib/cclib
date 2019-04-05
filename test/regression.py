@@ -100,9 +100,11 @@ def testADF_ADF2004_01_Fe_ox3_final_out(logfile):
     """Make sure HOMOS are correct."""
     assert logfile.data.homos[0] == 59 and logfile.data.homos[1] == 54
 
+
 def testADF_ADF2013_01_dvb_gopt_b_unconverged_adfout(logfile):
     """An unconverged geometry optimization to test for empty optdone (see #103 for details)."""
     assert hasattr(logfile.data, 'optdone') and not logfile.data.optdone
+
 
 def testADF_ADF2013_01_stopiter_dvb_sp_adfout(logfile):
     """This logfile has not SCF test lines so we have no way to check what happens."""
@@ -110,10 +112,12 @@ def testADF_ADF2013_01_stopiter_dvb_sp_adfout(logfile):
     # len(logfile.data.scfvalues[0]) == 10
     assert not hasattr(logfile.data, "scfvalues")
 
+
 def testADF_ADF2013_01_stopiter_dvb_sp_b_adfout(logfile):
     """Check to ensure that an incomplete SCF is handled correctly."""
     # Why is this not 3?
     assert len(logfile.data.scfvalues[0]) == 2
+
 
 def testADF_ADF2013_01_stopiter_dvb_sp_c_adfout(logfile):
     """This logfile has not SCF test lines so we have no way to check what happens."""
@@ -121,11 +125,13 @@ def testADF_ADF2013_01_stopiter_dvb_sp_c_adfout(logfile):
     # len(logfile.data.scfvalues[0]) == 6
     assert not hasattr(logfile.data, "scfvalues")
 
+
 def testADF_ADF2013_01_stopiter_dvb_sp_d_adfout(logfile):
     """This logfile has not SCF test lines so we have no way to check what happens."""
     # This is what we would have checked:
     # len(logfile.data.scfvalues[0]) == 7
     assert not hasattr(logfile.data, "scfvalues")
+
 
 def testADF_ADF2013_01_stopiter_dvb_un_sp_adfout(logfile):
     """This logfile has not SCF test lines so we have no way to check what happens."""
@@ -133,17 +139,20 @@ def testADF_ADF2013_01_stopiter_dvb_un_sp_adfout(logfile):
     # len(logfile.data.scfvalues[0]) == 7
     assert not hasattr(logfile.data, "scfvalues")
 
+
 def testADF_ADF2013_01_stopiter_dvb_un_sp_c_adfout(logfile):
     """This logfile has not SCF test lines so we have no way to check what happens."""
     # This is what we would have checked:
     # len(logfile.data.scfvalues[0]) == 10
     assert not hasattr(logfile.data, "scfvalues")
 
+
 def testADF_ADF2013_01_stopiter_MoOCl4_sp_adfout(logfile):
     """This logfile has not SCF test lines so we have no way to check what happens."""
     # This is what we would have checked:
     # len(logfile.data.scfvalues[0]) == 11
     assert not hasattr(logfile.data, "scfvalues")
+
 
 def testADF_ADF2014_01_DMO_ORD_orig_out(logfile):
     """In lieu of a unit test, make sure the polarizability (and
@@ -158,12 +167,14 @@ def testADF_ADF2014_01_DMO_ORD_orig_out(logfile):
     isotropic_ref = 51.3359
     assert abs(isotropic_calc - isotropic_ref) < 1.0e-4
 
+
 def testADF_ADF2016_fa2_adf_out(logfile):
     """This logfile, without symmetry, should get atombasis parsed."""
     assert hasattr(logfile.data, "atombasis")
     assert [b for ab in logfile.data.atombasis for b in ab] == list(range(logfile.data.nbasis))
 
 # DALTON #
+
 
 def testDALTON_DALTON_2013_dvb_td_normalprint_out(logfile):
     """This original unit test prints a DFT-specific version of the excitation
@@ -216,6 +227,7 @@ def testDALTON_DALTON_2015_dalton_atombasis_out(logfile):
     assert logfile.data.nbasis == 37
     assert hasattr(logfile.data, "atombasis")
 
+
 def testDALTON_DALTON_2015_dalton_intgrl_out(logfile):
     """This logfile didn't parse due to the absence of a line in the basis
     set section.
@@ -223,6 +235,7 @@ def testDALTON_DALTON_2015_dalton_intgrl_out(logfile):
     assert hasattr(logfile.data, "nbasis")
     assert logfile.data.nbasis == 4
     assert hasattr(logfile.data, "atombasis")
+
 
 def testDALTON_DALTON_2015_dvb_td_normalprint_out(logfile):
     """This original unit test prints a DFT-specific version of the excitation
@@ -233,13 +246,16 @@ def testDALTON_DALTON_2015_dvb_td_normalprint_out(logfile):
     assert hasattr(logfile.data, "etsyms")
     assert hasattr(logfile.data, "etoscs")
 
+
 def testDALTON_DALTON_2015_stopiter_dalton_dft_out(logfile):
     """Check to ensure that an incomplete SCF is handled correctly."""
     assert len(logfile.data.scfvalues[0]) == 8
 
+
 def testDALTON_DALTON_2015_stopiter_dalton_hf_out(logfile):
     """Check to ensure that an incomplete SCF is handled correctly."""
     assert len(logfile.data.scfvalues[0]) == 5
+
 
 def testDALTON_DALTON_2016_huge_neg_polar_freq_out(logfile):
     """This is an example of a multiple frequency-dependent polarizability
@@ -249,6 +265,7 @@ def testDALTON_DALTON_2016_huge_neg_polar_freq_out(logfile):
     assert len(logfile.data.polarizabilities) == 3
     assert abs(logfile.data.polarizabilities[2][0, 0] - 183.6308) < 1.0e-5
 
+
 def testDALTON_DALTON_2016_huge_neg_polar_stat_out(logfile):
     """This logfile didn't parse due to lack of spacing between
     polarizability tensor elements.
@@ -256,6 +273,7 @@ def testDALTON_DALTON_2016_huge_neg_polar_stat_out(logfile):
     assert hasattr(logfile.data, "polarizabilities")
     assert len(logfile.data.polarizabilities) == 1
     assert abs(logfile.data.polarizabilities[0][1, 1] + 7220.150408) < 1.0e-7
+
 
 def testDALTON_DALTON_2016_Trp_polar_response_diplnx_out(logfile):
     """Check that only the xx component of polarizability is defined and
@@ -266,6 +284,7 @@ def testDALTON_DALTON_2016_Trp_polar_response_diplnx_out(logfile):
     assert hasattr(logfile.data, "polarizabilities")
     assert abs(logfile.data.polarizabilities[0][0, 0] - 95.11540019) < 1.0e-8
     assert numpy.count_nonzero(numpy.isnan(logfile.data.polarizabilities)) == 8
+
 
 def testDALTON_DALTON_2018_dft_properties_nosym_H2O_cc_pVDZ_out(logfile):
     """The "simple" version string in newer development versions of DALTON wasn't
@@ -364,21 +383,26 @@ def testGAMESS_Firefly8_0_dvb_gopt_a_unconverged_out(logfile):
     """An unconverged geometry optimization to test for empty optdone (see #103 for details)."""
     assert hasattr(logfile.data, 'optdone') and not logfile.data.optdone
 
+
 def testGAMESS_Firefly8_0_h2o_log(logfile):
     """Check that molecular orbitals are parsed correctly (cclib/cclib#208)."""
     assert logfile.data.mocoeffs[0][0][0] == -0.994216
+
 
 def testGAMESS_Firefly8_0_stopiter_firefly_out(logfile):
     """Check to ensure that an incomplete SCF is handled correctly."""
     assert len(logfile.data.scfvalues[0]) == 6
 
+
 def testGAMESS_Firefly8_1_benzene_am1_log(logfile):
 	"""Molecular orbitals were not parsed (cclib/cclib#228)."""
 	assert hasattr(logfile.data, 'mocoeffs')
 
+
 def testGAMESS_Firefly8_1_naphtalene_t_0_out(logfile):
 	"""Molecular orbitals were not parsed (cclib/cclib#228)."""
 	assert hasattr(logfile.data, 'mocoeffs')
+
 
 def testGAMESS_Firefly8_1_naphtalene_t_0_SP_out(logfile):
 	"""Molecular orbitals were not parsed (cclib/cclib#228)."""
@@ -386,11 +410,13 @@ def testGAMESS_Firefly8_1_naphtalene_t_0_SP_out(logfile):
 
 # GAMESS #
 
+
 def testGAMESS_GAMESS_US2008_N2_UMP2_out(logfile):
     """Check that the new format for GAMESS MP2 is parsed."""
     assert hasattr(logfile.data, "mpenergies")
     assert len(logfile.data.mpenergies) == 1
     assert abs(logfile.data.mpenergies[0] + 2975.97) < 0.01
+
 
 def testGAMESS_GAMESS_US2008_N2_ROMP2_out(logfile):
     """Check that the new format for GAMESS MP2 is parsed."""
@@ -398,11 +424,13 @@ def testGAMESS_GAMESS_US2008_N2_ROMP2_out(logfile):
     assert len(logfile.data.mpenergies) == 1
     assert abs(logfile.data.mpenergies[0] + 2975.97) < 0.01
 
+
 def testGAMESS_GAMESS_US2009_open_shell_ccsd_test_log(logfile):
     """Parse ccenergies from open shell CCSD calculations."""
     assert hasattr(logfile.data, "ccenergies")
     assert len(logfile.data.ccenergies) == 1
     assert abs(logfile.data.ccenergies[0] + 3501.50) < 0.01
+
 
 def testGAMESS_GAMESS_US2009_paulo_h2o_mp2_out(logfile):
     """Check that the new format for GAMESS MP2 is parsed."""
@@ -410,17 +438,21 @@ def testGAMESS_GAMESS_US2009_paulo_h2o_mp2_out(logfile):
     assert len(logfile.data.mpenergies) == 1
     assert abs(logfile.data.mpenergies[0] + 2072.13) < 0.01
 
+
 def testGAMESS_GAMESS_US2012_dvb_gopt_a_unconverged_out(logfile):
     """An unconverged geometry optimization to test for empty optdone (see #103 for details)."""
     assert hasattr(logfile.data, 'optdone') and not logfile.data.optdone
+
 
 def testGAMESS_GAMESS_US2012_stopiter_gamess_out(logfile):
     """Check to ensure that an incomplete SCF is handled correctly."""
     assert len(logfile.data.scfvalues[0]) == 10
 
+
 def testGAMESS_GAMESS_US2013_N_UHF_out(logfile):
     """An UHF job that has an LZ value analysis between the alpha and beta orbitals."""
     assert len(logfile.data.moenergies) == 2
+
 
 def testGAMESS_GAMESS_US2014_CdtetraM1B3LYP_log(logfile):
     """This logfile had coefficients for only 80 molecular orbitals."""
@@ -450,18 +482,22 @@ def testGAMESS_WinGAMESS_dvb_td_trplet_2007_03_24_r1_out(logfile):
 
 # GAMESS-UK #
 
+
 def testGAMESS_UK_GAMESS_UK8_0_dvb_gopt_hf_unconverged_out(logfile):
     assert hasattr(logfile.data, 'optdone') and not logfile.data.optdone
+
 
 def testGAMESS_UK_GAMESS_UK8_0_stopiter_gamessuk_dft_out(logfile):
     """Check to ensure that an incomplete SCF is handled correctly."""
     assert len(logfile.data.scfvalues[0]) == 7
+
 
 def testGAMESS_UK_GAMESS_UK8_0_stopiter_gamessuk_hf_out(logfile):
     """Check to ensure that an incomplete SCF is handled correctly."""
     assert len(logfile.data.scfvalues[0]) == 5
 
 # Gaussian #
+
 
 def testGaussian_Gaussian16_naturalspinorbitals_parsing_log(logfile):
     """A UHF calculation with natural spin orbitals."""
@@ -499,6 +535,7 @@ def testGaussian_Gaussian98_C_bigmult_log(logfile):
     assert logfile.data.homos[0] == 8
     assert logfile.data.homos[1] == -1 # No occupied beta orbitals
 
+
 def testGaussian_Gaussian98_NIST_CCCBDB_1himidaz_m21b0_out(logfile):
     """A G3 computation is a sequence of jobs."""
 
@@ -510,15 +547,18 @@ def testGaussian_Gaussian98_NIST_CCCBDB_1himidaz_m21b0_out(logfile):
     # we expect only the last MP2 energy to be extracted.
     assert len(logfile.data.mpenergies) == 1
 
+
 def testGaussian_Gaussian98_NIST_CCCBDB_1himidaz_m23b6_out(logfile):
     """A job that was killed before it ended, should have several basic attributes parsed."""
     assert hasattr(logfile.data, 'charge')
     assert hasattr(logfile.data, 'metadata')
     assert hasattr(logfile.data, 'mult')
 
+
 def testGaussian_Gaussian98_test_Cu2_log(logfile):
     """An example of the number of basis set function changing."""
     assert logfile.data.nbasis == 38
+
 
 def testGaussian_Gaussian98_test_H2_log(logfile):
     """
@@ -527,6 +567,7 @@ def testGaussian_Gaussian98_test_H2_log(logfile):
     """
     assert logfile.data.atomcharges['natural'][0] == 0.0
     assert logfile.data.atomcharges['natural'][1] == 0.0
+
 
 def testGaussian_Gaussian98_water_zmatrix_nosym_log(logfile):
     """This file is missing natom.
@@ -538,18 +579,22 @@ def testGaussian_Gaussian98_water_zmatrix_nosym_log(logfile):
     assert len(logfile.data.atomcoords) == 1
     assert logfile.data.natom == 3
 
+
 def testGaussian_Gaussian03_AM1_SP_out(logfile):
     """Previously, caused scfvalue parsing to fail."""
     assert len(logfile.data.scfvalues[0]) == 13
+
 
 def testGaussian_Gaussian03_anthracene_log(logfile):
     """This file exposed a bug in extracting the vibsyms."""
     assert len(logfile.data.vibsyms) == len(logfile.data.vibfreqs)
 
+
 def testGaussian_Gaussian03_borane_opt_log(logfile):
     """An example of changing molecular orbital count."""
     assert logfile.data.optstatus[-1] == logfile.data.OPT_DONE
     assert logfile.data.nmo == 609
+
 
 def testGaussian_Gaussian03_chn1_log(logfile):
     """
@@ -558,6 +603,7 @@ def testGaussian_Gaussian03_chn1_log(logfile):
     """
     assert not hasattr(logfile.data, "mocoeffs")
 
+
 def testGaussian_Gaussian03_cyclopropenyl_rhf_g03_cut_log(logfile):
     """
     Not using symmetry at all (option nosymm) means standard orientation
@@ -565,6 +611,7 @@ def testGaussian_Gaussian03_cyclopropenyl_rhf_g03_cut_log(logfile):
     which up till now stored the last coordinates.
     """
     assert len(logfile.data.atomcoords) == len(logfile.data.geovalues)
+
 
 def testGaussian_Gaussian03_DCV4T_C60_log(logfile):
     """This is a test for a very large Gaussian file with > 99 atoms.
@@ -575,6 +622,7 @@ def testGaussian_Gaussian03_DCV4T_C60_log(logfile):
     assert len(logfile.data.coreelectrons) == 102
     assert logfile.data.coreelectrons[101] == 2
 
+
 def testGaussian_Gaussian03_dvb_gopt_symmfollow_log(logfile):
     """Non-standard treatment of symmetry.
 
@@ -582,6 +630,7 @@ def testGaussian_Gaussian03_dvb_gopt_symmfollow_log(logfile):
     which caused only the first coordinates to be read previously.
     """
     assert len(logfile.data.atomcoords) == len(logfile.data.geovalues)
+
 
 def testGaussian_Gaussian03_mendes_out(logfile):
     """Previously, failed to extract coreelectrons."""
@@ -592,6 +641,7 @@ def testGaussian_Gaussian03_mendes_out(logfile):
         else:
             assert x == 0
 
+
 def testGaussian_Gaussian03_Mo4OSibdt2_opt_log(logfile):
     """
     This file had no atomcoords as it did not contain any
@@ -599,6 +649,7 @@ def testGaussian_Gaussian03_Mo4OSibdt2_opt_log(logfile):
     """
     assert logfile.data.optstatus[-1] == logfile.data.OPT_DONE
     assert hasattr(logfile.data, "atomcoords")
+
 
 def testGaussian_Gaussian03_orbgs_log(logfile):
     """Check that the pseudopotential is being parsed correctly."""
@@ -608,10 +659,12 @@ def testGaussian_Gaussian03_orbgs_log(logfile):
     assert logfile.data.coreelectrons[20] == 10
     assert logfile.data.coreelectrons[23] == 10
 
+
 def testGaussian_Gaussian09_100_g09(logfile):
     """Check that the final system is the one parsed (cclib/cclib#243)."""
     assert logfile.data.natom == 54
     assert logfile.data.homos == [104]
+
 
 def testGaussian_Gaussian09_25DMF_HRANH_log(logfile):
     """Check that the anharmonicities are being parsed correctly."""
@@ -622,18 +675,22 @@ def testGaussian_Gaussian09_25DMF_HRANH_log(logfile):
     assert abs(anharms[0][0] + 43.341) < 0.01
     assert abs(anharms[N-1][N-1] + 36.481) < 0.01
 
+
 def testGaussian_Gaussian09_2D_PES_all_converged_log(logfile):
     """Check that optstatus has no UNCOVERGED values."""
     assert ccData.OPT_UNCONVERGED not in logfile.data.optstatus
+
 
 def testGaussian_Gaussian09_2D_PES_one_unconverged_log(logfile):
     """Check that optstatus contains UNCOVERGED values."""
     assert ccData.OPT_UNCONVERGED in logfile.data.optstatus
 
+
 def testGaussian_Gaussian09_534_out(logfile):
     """Previously, caused etenergies parsing to fail."""
     assert logfile.data.etsyms[0] == "Singlet-?Sym"
     assert abs(logfile.data.etenergies[0] - 20920.55328) < 1.0
+
 
 def testGaussian_Gaussian09_BSL_opt_freq_DFT_out(logfile):
     """Failed for converting to CJSON when moments weren't parsed for
@@ -645,25 +702,30 @@ def testGaussian_Gaussian09_BSL_opt_freq_DFT_out(logfile):
     # hexadecapole ZZZZ
     assert logfile.data.moments[4][-1] == -77.9600
 
+
 def testGaussian_Gaussian09_dvb_gopt_unconverged_log(logfile):
     """An unconverged geometry optimization to test for empty optdone (see #103 for details)."""
     assert hasattr(logfile.data, 'optdone') and not logfile.data.optdone
     assert logfile.data.optstatus[-1] == logfile.data.OPT_UNCONVERGED
+
 
 def testGaussian_Gaussian09_dvb_lowdin_log(logfile):
     """Check if both Mulliken and Lowdin charges are parsed."""
     assert "mulliken" in logfile.data.atomcharges
     assert "lowdin" in logfile.data.atomcharges
 
+
 def testGaussian_Gaussian09_Dahlgren_TS_log(logfile):
     """Failed to parse ccenergies for a variety of reasons"""
     assert hasattr(logfile.data, "ccenergies")
     assert abs(logfile.data.ccenergies[0] - (-11819.96506609)) < 0.001
 
+
 def testGaussian_Gaussian09_irc_point_log(logfile):
     """Failed to parse vibfreqs except for 10, 11"""
     assert hasattr(logfile.data, "vibfreqs")
     assert len(logfile.data.vibfreqs) == 11
+
 
 def testGaussian_Gaussian09_issue_460_log(logfile):
     """Lots of malformed lines when parsing for scfvalues:
@@ -688,35 +750,43 @@ def testGaussian_Gaussian09_issue_460_log(logfile):
     assert logfile.data.scfvalues[0][0, 0] == 3.37e-03
     assert numpy.isnan(logfile.data.scfvalues[0][0, 2])
 
+
 def testGaussian_Gaussian09_OPT_td_g09_out(logfile):
     """Couldn't find etrotats as G09 has different output than G03."""
     assert len(logfile.data.etrotats) == 10
     assert logfile.data.etrotats[0] == -0.4568
+
 
 def testGaussian_Gaussian09_OPT_td_out(logfile):
     """Working fine - adding to ensure that CD is parsed correctly."""
     assert len(logfile.data.etrotats) == 10
     assert logfile.data.etrotats[0] == -0.4568
 
+
 def testGaussian_Gaussian09_OPT_oniom_log(logfile):
     """AO basis extraction broke with ONIOM"""
+
 
 def testGaussian_Gaussian09_oniom_IR_intensity_log(logfile):
     """Problem parsing IR intensity from mode 192"""
     assert hasattr(logfile.data, 'vibirs')
     assert len(logfile.data.vibirs) == 216
 
+
 def testGaussian_Gaussian09_Ru2bpyen2_H2_freq3_log(logfile):
     """Here atomnos wans't added to the gaussian parser before."""
     assert len(logfile.data.atomnos) == 69
+
 
 def testGaussian_Gaussian09_benzene_HPfreq_log(logfile):
     """Check that higher precision vib displacements obtained with freq=hpmodes) are parsed correctly."""
     assert abs(logfile.data.vibdisps[0,0,2] - (-0.04497)) < 0.00001
 
+
 def testGaussian_Gaussian09_benzene_freq_log(logfile):
     """Check that default precision vib displacements are parsed correctly."""
     assert abs(logfile.data.vibdisps[0,0,2] - (-0.04)) < 0.00001
+
 
 def testGaussian_Gaussian09_relaxed_PES_testH2_log(logfile):
     """Check that all optimizations converge in a single step."""
@@ -725,6 +795,7 @@ def testGaussian_Gaussian09_relaxed_PES_testH2_log(logfile):
     assert len(optstatus) == len(atomcoords)
 
     assert all(s == ccData.OPT_DONE + ccData.OPT_NEW for s in optstatus)
+
 
 def testGaussian_Gaussian09_relaxed_PES_testCO2_log(logfile):
     """A relaxed PES scan with some uncoverged and some converged runs."""
@@ -751,10 +822,10 @@ def testGaussian_Gaussian09_relaxed_PES_testCO2_log(logfile):
     # to have converged in a single step.
     assert all(s == ccData.OPT_DONE + ccData.OPT_NEW for s in optstatus[new_points[3]:])
 
+
 def testGaussian_Gaussian09_stopiter_gaussian_out(logfile):
     """Check to ensure that an incomplete SCF is handled correctly."""
     assert len(logfile.data.scfvalues[0]) == 4
-
 
 # Jaguar #
 
@@ -763,9 +834,11 @@ def testGaussian_Gaussian09_stopiter_gaussian_out(logfile):
 #def testJaguarX.X_dvb_gopt_unconverged:
 #    assert hasattr(logfile.data, 'optdone') and not logfile.data.optdone
 
+
 def testJaguar_Jaguar8_3_stopiter_jaguar_dft_out(logfile):
     """Check to ensure that an incomplete SCF is handled correctly."""
     assert len(logfile.data.scfvalues[0]) == 4
+
 
 def testJaguar_Jaguar8_3_stopiter_jaguar_hf_out(logfile):
     """Check to ensure that an incomplete SCF is handled correctly."""
@@ -773,10 +846,12 @@ def testJaguar_Jaguar8_3_stopiter_jaguar_hf_out(logfile):
 
 # Molcas #
 
+
 def testMolcas_Molcas18_test_standard_000_out(logfile):
     """Don't support parsing MOs for multiple symmetry species."""
     assert not hasattr(logfile.data, "moenergies")
     assert not hasattr(logfile.data, "mocoeffs")
+
 
 def testMolcas_Molcas18_test_standard_001_out(logfile):
     """This logfile has two calculations, and we currently only want to parse the first."""
@@ -786,18 +861,22 @@ def testMolcas_Molcas18_test_standard_001_out(logfile):
     assert logfile.data.nbasis == 30
     assert logfile.data.nmo == 30
 
+
 def testMolcas_Molcas18_test_standard_003_out(logfile):
     """This logfile has extra charged monopoles (not part of the molecule)."""
     assert logfile.data.charge == 0
+
 
 def testMolcas_Molcas18_test_standard_005_out(logfile):
     """Final geometry in optimization has fewer atoms due to symmetry, and so is ignored."""
     assert len(logfile.data.atomcoords) == 2
 
+
 def testMolcas_Molcas18_test_stevenv_001_out(logfile):
     """Don't support parsing MOs for RAS (active space)."""
     assert not hasattr(logfile.data, "moenergies")
     assert not hasattr(logfile.data, "mocoeffs")
+
 
 def testMolcas_Molcas18_test_stevenv_desym_out(logfile):
     """This logfile has iterations interrupted by a Fermi aufbau procedure."""
@@ -805,6 +884,7 @@ def testMolcas_Molcas18_test_stevenv_desym_out(logfile):
     assert len(logfile.data.scfvalues[0]) == 26
 
 # Molpro #
+
 
 def testMolpro_Molpro2008_ch2o_molpro_casscf_out(logfile):
     """A CASSCF job with symmetry and natural orbitals."""
@@ -833,6 +913,7 @@ def testMolpro_Molpro2008_ch2o_molpro_casscf_out(logfile):
     assert len(logfile.data.nooccnos) == logfile.data.nmo
     assert logfile.data.nooccnos[27] == 1.95640
 
+
 def testMolpro_Molpro2012_CHONHSH_HF_STO_3G_out(logfile):
     """Formatting of the basis function is slightly different than expected."""
     assert len(logfile.data.gbasis) == 7
@@ -848,15 +929,18 @@ def testMolpro_Molpro2012_dvb_gopt_unconverged_out(logfile):
     """An unconverged geometry optimization to test for empty optdone (see #103 for details)."""
     assert hasattr(logfile.data, 'optdone') and not logfile.data.optdone
 
+
 def testMolpro_Molpro2012_stopiter_molpro_dft_out(logfile):
     """Check to ensure that an incomplete SCF is handled correctly."""
     assert len(logfile.data.scfvalues[0]) == 6
+
 
 def testMolpro_Molpro2012_stopiter_molpro_hf_out(logfile):
     """Check to ensure that an incomplete SCF is handled correctly."""
     assert len(logfile.data.scfvalues[0]) == 6
 
 # MOPAC #
+
 
 def testMOPAC_MOPAC2016_9S3_uuu_Cs_cation_freq_PM7_out(logfile):
     """There was a syntax error in the frequency parsing."""
@@ -868,12 +952,14 @@ def testNWChem_NWChem6_0_dvb_gopt_hf_unconverged_out(logfile):
     """An unconverged geometry optimization to test for empty optdone (see #103 for details)."""
     assert hasattr(logfile.data, 'optdone') and not logfile.data.optdone
 
+
 def testNWChem_NWChem6_0_dvb_sp_hf_moments_only_quadrupole_out(logfile):
     """Quadrupole moments are printed/parsed, but not lower moments (no shape)."""
     assert hasattr(logfile.data, 'moments') and len(logfile.data.moments) == 3
     assert len(logfile.data.moments[0]) == 3
     assert not logfile.data.moments[1].shape
     assert len(logfile.data.moments[2]) == 6
+
 
 def testNWChem_NWChem6_0_dvb_sp_hf_moments_only_octupole_out(logfile):
     """Quadrupole moments are printed/parsed, but not lower moments (no shape)."""
@@ -882,6 +968,7 @@ def testNWChem_NWChem6_0_dvb_sp_hf_moments_only_octupole_out(logfile):
     assert not logfile.data.moments[1].shape
     assert not logfile.data.moments[2].shape
     assert len(logfile.data.moments[3]) == 10
+
 
 def testNWChem_NWChem6_0_hydrogen_atom_ROHF_cc_pVDZ_out(logfile):
     """A lone hydrogen atom is a common edge case; it has no beta
@@ -896,6 +983,7 @@ def testNWChem_NWChem6_0_hydrogen_atom_ROHF_cc_pVDZ_out(logfile):
     assert logfile.data.homos.shape == (2,)
     assert logfile.data.homos[0] == 0
     assert logfile.data.homos[1] == -1
+
 
 def testNWChem_NWChem6_0_hydrogen_atom_UHF_cc_pVDZ_out(logfile):
     """A lone hydrogen atom is a common edge case; it has no beta
@@ -915,13 +1003,16 @@ def testNWChem_NWChem6_0_hydrogen_atom_UHF_cc_pVDZ_out(logfile):
     assert logfile.data.homos[0] == 0
     assert logfile.data.homos[1] == -1
 
+
 def testNWChem_NWChem6_5_stopiter_nwchem_dft_out(logfile):
     """Check to ensure that an incomplete SCF is handled correctly."""
     assert len(logfile.data.scfvalues[0]) == 3
 
+
 def testNWChem_NWChem6_5_stopiter_nwchem_hf_out(logfile):
     """Check to ensure that an incomplete SCF is handled correctly."""
     assert len(logfile.data.scfvalues[0]) == 2
+
 
 def testNWChem_NWChem6_8_526_out(logfile):
     """If `print low` is present in the input, SCF iterations are not
@@ -931,6 +1022,7 @@ def testNWChem_NWChem6_8_526_out(logfile):
     assert not hasattr(logfile.data, "scfvalues")
 
 # ORCA #
+
 
 def testORCA_ORCA2_8_co_cosmo_out(logfile):
     """This is related to bug 3184890.
@@ -947,6 +1039,7 @@ def testORCA_ORCA2_8_co_cosmo_out(logfile):
     """
     assert hasattr(logfile.data, "scfenergies") and len(logfile.data.scfenergies) == 4
 
+
 def testORCA_ORCA2_9_job_out(logfile):
     """First output file and request to parse atomic spin densities.
 
@@ -955,31 +1048,38 @@ def testORCA_ORCA2_9_job_out(logfile):
     """
     assert all([abs(sum(v)-1.0) < 0.0001 for k, v in logfile.data.atomspins.items()])
 
+
 def testORCA_ORCA2_9_qmspeedtest_hf_out(logfile):
 	"""Check precision of SCF energies (cclib/cclib#210)."""
 	energy = logfile.data.scfenergies[-1]
 	expected = -17542.5188694
 	assert abs(energy - expected) < 10**-6
 
+
 def testORCA_ORCA3_0_dvb_gopt_unconverged_out(logfile):
     """An unconverged geometry optimization to test for empty optdone (see #103 for details)."""
     assert hasattr(logfile.data, 'optdone') and not logfile.data.optdone
+
 
 def testORCA_ORCA3_0_polar_rhf_cg_out(logfile):
     """Alternative CP-SCF solver for the polarizability wasn't being detected."""
     assert hasattr(logfile.data, 'polarizabilities')
 
+
 def testORCA_ORCA3_0_polar_rhf_diis_out(logfile):
     """Alternative CP-SCF solver for the polarizability wasn't being detected."""
     assert hasattr(logfile.data, 'polarizabilities')
+
 
 def testORCA_ORCA3_0_stopiter_orca_scf_compact_out(logfile):
     """Check to ensure that an incomplete SCF is handled correctly."""
     assert len(logfile.data.scfvalues[0]) == 1
 
+
 def testORCA_ORCA3_0_stopiter_orca_scf_large_out(logfile):
     """Check to ensure that an incomplete SCF is handled correctly."""
     assert len(logfile.data.scfvalues[0]) == 9
+
 
 def testORCA_ORCA4_0_1_ttt_td_out(logfile):
     """RPA is slightly different from TDA, see #373."""
@@ -989,6 +1089,7 @@ def testORCA_ORCA4_0_1_ttt_td_out(logfile):
     assert numpy.isnan(logfile.data.etsecs[0][0][2])
     assert len(logfile.data.etrotats) == 24
     assert logfile.data.etrotats[13] == -0.03974
+
 
 def testORCA_ORCA4_0_invalid_literal_for_float_out(logfile):
     """MO coefficients are glued together, see #629."""
@@ -1004,6 +1105,7 @@ def testORCA_ORCA4_0_invalid_literal_for_float_out(logfile):
     assert logfile.data.mocoeffs[0][106][378] == 241.536860
     assert logfile.data.mocoeffs[0][107][378] == -92.159399
 
+
 def testORCA_ORCA4_0_IrCl6_sp_out(logfile):
     """Tests ECP and weird SCF printing."""
     assert hasattr(logfile.data, 'scfvalues')
@@ -1013,8 +1115,8 @@ def testORCA_ORCA4_0_IrCl6_sp_out(logfile):
     numpy.testing.assert_almost_equal(logfile.data.scfvalues[0][0], vals_first)
     numpy.testing.assert_almost_equal(logfile.data.scfvalues[0][-1], vals_last)
 
-
 # PSI #
+
 
 def testPsi3_Psi3_4_water_psi3_log(logfile):
     """An RHF for water with D orbitals and C2v symmetry.
@@ -1024,17 +1126,21 @@ def testPsi3_Psi3_4_water_psi3_log(logfile):
     assert logfile.data.nbasis == 25
     assert [len(ab) for ab in logfile.data.atombasis] == [15, 5, 5]
 
+
 def testPsi4_Psi4_beta5_dvb_gopt_hf_unconverged_out(logfile):
     """An unconverged geometry optimization to test for empty optdone (see #103 for details)."""
     assert hasattr(logfile.data, 'optdone') and not logfile.data.optdone
+
 
 def testPsi4_Psi4_beta5_stopiter_psi_dft_out(logfile):
     """Check to ensure that an incomplete SCF is handled correctly."""
     assert len(logfile.data.scfvalues[0]) == 7
 
+
 def testPsi4_Psi4_beta5_stopiter_psi_hf_out(logfile):
     """Check to ensure that an incomplete SCF is handled correctly."""
     assert len(logfile.data.scfvalues[0]) == 6
+
 
 def testPsi4_Psi4_0_5_water_fdgrad_out(logfile):
     """Ensure that finite difference gradients are parsed."""
@@ -1045,6 +1151,7 @@ def testPsi4_Psi4_0_5_water_fdgrad_out(logfile):
     # nuclear gradient, and this is at the MP2 level.
     assert logfile.data.mpenergies.shape == (5, 1)
 
+
 def testPsi4_Psi4_1_2_ch4_hf_opt_freq_out(logfile):
     """Ensure that molecular orbitals and normal modes are parsed in Psi4 1.2"""
     assert hasattr(logfile.data, 'mocoeffs')
@@ -1052,6 +1159,7 @@ def testPsi4_Psi4_1_2_ch4_hf_opt_freq_out(logfile):
     assert hasattr(logfile.data, 'vibfreqs')
 
 # Q-Chem #
+
 
 def testQChem_QChem4_2_CH3___Na__RS_out(logfile):
     """An unrestricted fragment job with BSSE correction.
@@ -1698,6 +1806,7 @@ def testQChem_QChem5_0_argon_out(logfile):
 
 # ORCA
 
+
 def testORCA_ORCA3_0_chelpg_out(logfile):
     """orca file with chelpg charges"""
     assert 'chelpg' in logfile.data.atomcharges
@@ -1707,6 +1816,7 @@ def testORCA_ORCA3_0_chelpg_out(logfile):
     assert charges[1] == 0.025695
 
 # Turbomole
+
 
 def testTurbomole_Turbomole7_2_dvb_gopt_b3_lyp_Gaussian__(logfile):
     assert logfile.data.natom == 20
@@ -1721,6 +1831,7 @@ def testnoparseADF_ADF2004_01_mo_sp_adfout(filename):
     this to get rid of the error in the meantime.
     """
     pass
+
 
 def testnoparseGaussian_Gaussian09_coeffs_log(filename):
     """This is a test for a Gaussian file with more than 999 basis functions.
@@ -1753,6 +1864,7 @@ def flatten(seq):
             res.append(item)
     return res
 
+
 def normalisefilename(filename):
     """Replace all non-alphanumeric symbols by underscores.
 
@@ -1770,7 +1882,6 @@ def normalisefilename(filename):
         else:
             ans.append("_")
     return "".join(ans)
-
 
 # When a unit test is removed or replaced by a newer version, we normally want
 # the old logfile to become a regression, namely to run the unit test as part of
@@ -1860,16 +1971,19 @@ class ADFSPTest_nosyms_valence_noscfvalues(ADFSPTest_nosyms_valence):
     def testaooverlaps(self):
         """AO overlaps were not printed here."""
 
+# DATLON #
 
 
 class DALTONBigBasisTest_aug_cc_pCVQZ(GenericBigBasisTest):
     contractions = { 6: 29 }
     spherical = True
 
+
 class DALTONSPTest_nosyms_nolabels(GenericSPTest):
     @unittest.skip('?')
     def testsymlabels(self):
         """Are all the symmetry labels either Ag/u or Bg/u?."""
+
 
 class DALTONTDTest_noetsecs(DALTONTDTest):
     @unittest.skip("etsecs cannot be parsed from this file")
@@ -1878,6 +1992,8 @@ class DALTONTDTest_noetsecs(DALTONTDTest):
     @unittest.skip("etsecs cannot be parsed from this file")
     def testsecs_transition(self):
         pass
+
+# GAMESS #
 
 
 class GAMESSUSSPunTest_charge0(GenericSPunTest):
@@ -1907,6 +2023,7 @@ class GAMESSSPTest_noaooverlaps(GenericSPTest):
     def testaooverlaps(self):
         """aooverlaps were not printed here."""
 
+# Gaussian #
 
 class GaussianSPunTest_nomosyms(GaussianSPunTest):
     @unittest.skip('Cannot parse mosyms from this file.')
@@ -1939,36 +2056,45 @@ class GaussianPolarTest(ReferencePolarTest):
     isotropic_delta = 2.0
     principal_components_delta = 0.7
 
+# Jaguar #
+
+
 class JaguarSPTest_6_31gss(JaguarSPTest):
     """AO counts and some values are different in 6-31G** compared to STO-3G."""
     nbasisdict = {1: 5, 6: 15}
     b3lyp_energy = -10530
     overlap01 = 0.22
 
+
 class JaguarSPTest_6_31gss_nomosyms(JaguarSPTest_6_31gss):
     @unittest.skip('Cannot parse mosyms from this file.')
     def testsymlabels(self):
         """mosyms were not printed here."""
+
 
 class JaguarSPunTest_nomosyms(JaguarSPunTest):
     @unittest.skip('Cannot parse mosyms from this file.')
     def testmosyms(self):
         """mosyms were not printed here."""
 
+
 class JaguarSPunTest_nmo_all(JaguarSPunTest):
     def testmoenergies(self):
         """Some tests printed all MO energies apparently."""
         self.assertEqual(len(self.data.moenergies[0]), self.data.nmo)
+
 
 class JaguarSPunTest_nmo_all_nomosyms(JaguarSPunTest_nmo_all):
     @unittest.skip('Cannot parse mosyms from this file.')
     def testmosyms(self):
         """mosyms were not printed here."""
 
+
 class JaguarGeoOptTest_nmo45(GenericGeoOptTest):
     def testlengthmoenergies(self):
         """Without special options, Jaguar only print Homo+10 orbital energies."""
         self.assertEqual(len(self.data.moenergies[0]), 45)
+
 
 class JaguarSPTest_nmo45(GenericSPTest):
     def testlengthmoenergies(self):
@@ -1991,15 +2117,18 @@ class JaguarSPTest_nmo45(GenericSPTest):
     def testatombasis(self):
         """atombasis was not parsed correctly here."""
 
+
 class JaguarSPunTest_nmo45(GenericSPunTest):
     def testlengthmoenergies(self):
         """Without special options, Jaguar only print Homo+10 orbital energies."""
         self.assertEqual(len(self.data.moenergies[0]), 45)
 
+
 class JaguarGeoOptTest_nmo45(GenericGeoOptTest):
     def testlengthmoenergies(self):
         """Without special options, Jaguar only print Homo+10 orbital energies."""
         self.assertEqual(len(self.data.moenergies[0]), 45)
+
 
 class JaguarGeoOptTest_nmo45_nogeo(JaguarGeoOptTest_nmo45):
     @unittest.skip('Cannot parse geotargets from this file.')
@@ -2018,9 +2147,11 @@ class JaguarGeoOptTest_nmo45_nogeo(JaguarGeoOptTest_nmo45):
     def testoptdone(self):
         """optdone does not exist for this file."""
 
+
 class JaguarGeoOptTest_6_31gss(GenericGeoOptTest):
     nbasisdict = {1: 5, 6: 15}
     b3lyp_energy = -10530
+
 
 class MolcasBigBasisTest_nogbasis(MolcasBigBasisTest):
     @unittest.skip('gbasis was not printed in this output file')
@@ -2039,8 +2170,14 @@ class MolcasBigBasisTest_nogbasis(MolcasBigBasisTest):
     def testsizeofbasis(self):
         """gbasis was not parsed for this file"""
 
+# Molpro #
+
+
 class MolproBigBasisTest_cart(MolproBigBasisTest):
     spherical = False
+
+# ORCA #
+
 
 class OrcaSPTest_3_21g(OrcaSPTest, GenericSPTest):
     nbasisdict = {1: 2, 6: 9}
@@ -2051,9 +2188,11 @@ class OrcaSPTest_3_21g(OrcaSPTest, GenericSPTest):
     def testsymlabels(self):
         """This calculation has no symmetry."""
 
+
 class OrcaGeoOptTest_3_21g(OrcaGeoOptTest):
     nbasisdict = {1: 2, 6: 9}
     b3lyp_energy = -10460
+
 
 class OrcaSPunTest_charge0(GenericSPunTest):
     def testcharge_and_mult(self):
@@ -2066,17 +2205,20 @@ class OrcaSPunTest_charge0(GenericSPunTest):
         """Closed-shell calculation run as open-shell."""
         self.assertTrue(self.data.closed_shell)
 
+
 class OrcaTDDFTTest_error(OrcaTDDFTTest):
     def testoscs(self):
         """These values used to be less accurate, probably due to wrong coordinates."""
         self.assertEqual(len(self.data.etoscs), self.number)
         self.assertAlmostEqual(max(self.data.etoscs), 1.0, delta=0.2)
 
+
 class OrcaIRTest_old_coordsOK(OrcaIRTest):
 
     enthalpy_places = -1
     entropy_places = 2
     freeenergy_places = -1
+
 
 class OrcaIRTest_old(OrcaIRTest):
 
@@ -2091,11 +2233,14 @@ class OrcaIRTest_old(OrcaIRTest):
     def testirintens(self):
         """These values were wrong due to wrong input coordinates."""
 
+# PSI #
+
 class PsiSPTest_noatommasses(PsiSPTest):
 
     @unittest.skip('atommasses were not printed in this file.')
     def testatommasses(self):
         """These values are not present in this output file."""
+
 
 old_unittests = {
 
