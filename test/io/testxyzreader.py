@@ -49,6 +49,7 @@ class XYZReaderTest(unittest.TestCase):
         np.testing.assert_equal(data.atomnos, atomnos)
 
         self.assertEqual(data.atomcoords.shape, (2, 12, 3))
+        self.assertEqual(data.metadata["comments"], ["uracil", "	Energy:     -97.0646597"])
 
 
 if __name__ == "__main__":
