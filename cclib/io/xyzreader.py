@@ -43,6 +43,7 @@ class XYZ(filereader.Reader):
         # repeat for multiple sets of coordinates
 
         all_atomcoords = []
+        comments = []
 
         while True:
 
@@ -54,7 +55,7 @@ class XYZ(filereader.Reader):
                 assert len(tokens) >= 1
                 natom = int(tokens[0])
 
-                comment = next(it)
+                comments.append(next(it))
 
                 lines = []
                 for _ in range(natom):
@@ -77,6 +78,7 @@ class XYZ(filereader.Reader):
             'natom': natom,
             'atomnos': atomnos,
             'atomcoords': all_atomcoords,
+            'metadata': {"comments": comments},
         }
 
         self.data = ccData(attributes)
