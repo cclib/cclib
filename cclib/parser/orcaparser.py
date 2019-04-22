@@ -1470,9 +1470,11 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
 
         line = next(inputfile)
         while not should_stop(line):
-            charges.append(float(line[start:stop]))
-            if has_spins:
-                spins.append(float(line[stop:]))
+            # Don't add point charges or embedding potentials.
+            if "Q :" not in line:
+                charges.append(float(line[start:stop]))
+                if has_spins:
+                    spins.append(float(line[stop:]))
             line = next(inputfile)
 
         self.atomcharges[chargestype] = charges
