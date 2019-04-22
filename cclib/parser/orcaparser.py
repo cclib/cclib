@@ -108,6 +108,7 @@ class ORCA(logfileparser.Logfile):
             self.skip_line(inputfile, '=')
             self.metadata['input_file_name'] = next(inputfile).split()[-1]
 
+            # First, collect all the lines...
             lines = []
             for line in inputfile:
                 if line[0] != '|':
@@ -119,6 +120,7 @@ class ORCA(logfileparser.Logfile):
 
             keywords = []
             coords = []
+            # ...then parse them separately.
             for line in lines_iter:
                 line = line.strip()
                 if not line:
@@ -169,7 +171,7 @@ class ORCA(logfileparser.Logfile):
                         for line in lines_iter:
                             if not line:
                                 continue
-                            if line[0] == '*' or "end" in line:
+                            if line[0] == '*' or line.strip() == "end":
                                 break
                             # Strip basis specification that can appear after coordinates
                             line = line.split('newGTO')[0].strip()
@@ -463,15 +465,14 @@ class ORCA(logfileparser.Logfile):
             line = next(inputfile)
             while len(line) > 1:
                 atom, x, y, z = line.split()
-                atomnos.append(self.table.number[atom])
-                atomcoords.append([float(x), float(y), float(z)])
+                if atom[-1] != ">":
+                    atomnos.append(self.table.number[atom])
+                    atomcoords.append([float(x), float(y), float(z)])
                 line = next(inputfile)
 
             self.set_attribute('natom', len(atomnos))
             self.set_attribute('atomnos', atomnos)
-            if not hasattr(self, 'atomcoords'):
-                self.atomcoords = []
-            self.atomcoords.append(atomcoords)
+            self.append_attribute("atomcoords", atomcoords)
 
         """ Grab atom masses
         ----------------------------
@@ -491,8 +492,11 @@ class ORCA(logfileparser.Logfile):
             while len(line) > 1:
                 if line[:32] == '* core charge reduced due to ECP':
                     break
+                if line.strip() == "> coreless ECP center with (optional) point charge":
+                    break
                 no, lb, za, frag, mass, x, y, z = line.split()
-                self.atommasses.append(float(mass))
+                if lb[-1] != ">":
+                    self.atommasses.append(float(mass))
                 line = next(inputfile)
 
         if line[21:68] == "FINAL ENERGY EVALUATION AT THE STATIONARY POINT":
