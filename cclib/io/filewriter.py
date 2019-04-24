@@ -9,7 +9,12 @@
 
 import logging
 
-from collections import Iterable
+import sys
+
+if sys.version_info <= (3, 3):
+    from collections import Iterable
+else:
+    from collections.abc import Iterable
 
 import numpy
 
