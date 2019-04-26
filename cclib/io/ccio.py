@@ -487,7 +487,7 @@ def sort_turbomole_outputs(filelist):
 
 def _check_pandas(found_pandas):
     if not found_pandas:
-        sys.exit(1)
+        raise ImportError("You must install `pandas` to use this function")
 
 
 def ccframe(ccobjs, *args, **kwargs):
