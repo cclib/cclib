@@ -190,7 +190,7 @@ class Logfile(object):
         NWChem, ORCA, Psi, Q-Chem
     """
 
-    def __init__(self, source, loglevel=logging.INFO, logname="Log",
+    def __init__(self, source, loglevel=logging.ERROR, logname="Log",
                  logstream=sys.stderr, datatype=ccData_optdone_bool, **kwds):
         """Initialise the Logfile object.
 
