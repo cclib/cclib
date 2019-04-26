@@ -10,6 +10,8 @@
 import logging
 import sys
 from abc import ABCMeta, abstractmethod
+from six import add_metaclass
+
 
 if sys.version_info <= (3, 3):
     from collections import Iterable
@@ -33,10 +35,10 @@ class MissingAttributeError(Exception):
     pass
 
 
+@add_metaclass(ABCMeta)
 class Writer:
     """Abstract class for writer objects."""
 
-    __metaclass__ = ABCMeta
     required_attrs = ()
 
     def __init__(self, ccdata, jobfilename=None, indices=None, terse=False,

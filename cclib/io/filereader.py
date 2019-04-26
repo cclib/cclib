@@ -8,12 +8,12 @@
 """Generic file reader and related tools"""
 
 from abc import ABCMeta, abstractmethod
+from six import add_metaclass
 
 
+@add_metaclass(ABCMeta)
 class Reader:
     """Abstract class for reader objects."""
-
-    __metaclass__ = ABCMeta
 
     def __init__(self, source, *args, **kwargs):
         """Initialize the Reader object.
