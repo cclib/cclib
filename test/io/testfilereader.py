@@ -5,7 +5,7 @@
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
 
-"""Unit tests for general file writer."""
+"""Unit tests for general file reader."""
 
 import inspect
 import os
@@ -19,7 +19,7 @@ __filepath__ = os.path.realpath(__filedir__)
 __datadir__ = os.path.join(__filepath__, "..", "..")
 
 
-class FileWriterTest(unittest.TestCase):
+class FileReaderTest(unittest.TestCase):
 
     def test_type(self):
         """Is the class properly a metaclass?"""
@@ -30,7 +30,7 @@ class FileWriterTest(unittest.TestCase):
         fpath = os.path.join(__datadir__, "data/ADF/basicADF2007.01/dvb_gopt.adfout")
         data = cclib.io.ccread(fpath)
         with self.assertRaises(TypeError):
-            cclib.io.filewriter.Writer(data)
+            cclib.io.filereader.Reader(data)
 
 
 if __name__ == "__main__":

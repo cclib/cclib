@@ -38,6 +38,16 @@ class WFXTest(unittest.TestCase):
             with self.assertRaises(MissingAttributeError):
                 cclib.io.wfxwriter.WFXWriter(data)
 
+    def test_subclass(self):
+        """Is the writer a subclass of the abstract file writer?"""
+        fpath = os.path.join(__datadir__,
+                             "data/GAMESS/basicGAMESS-US2017/C_bigbasis.out")
+        self.assertTrue(os.path.exists(fpath))
+        data = cclib.io.ccread(fpath)
+        writer = cclib.io.wfxwriter.WFXWriter(data)
+        self.assertTrue(isinstance(writer, cclib.io.filewriter.Writer))
+        self.assertTrue(issubclass(type(writer), cclib.io.filewriter.Writer))
+
     def test_no_of_prims(self):
         """Check if number of primitives are calculated correctly."""
         num_orb = {'s':1, 'p':3, 'd':6, 'f':10, 'g':15, 'h':21}

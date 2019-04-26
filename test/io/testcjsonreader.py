@@ -24,6 +24,10 @@ __datadir__ = os.path.join(__filepath__, "..", "..")
 class CJSONReaderTest(unittest.TestCase):
     """Unit tests for the CJSON reader."""
 
+    def test_subclass(self):
+        """Is the reader a subclass of the abstract file reader?"""
+        self.assertTrue(issubclass(cclib.io.cjsonreader.CJSON, cclib.io.filereader.Reader))
+
     def test_cjson_read(self):
         """File->ccData->CJSON->attribute_dict, the attributes within ccData and attribute_dict
            should be the same."""

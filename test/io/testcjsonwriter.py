@@ -19,7 +19,7 @@ __filepath__ = os.path.realpath(__filedir__)
 __datadir__ = os.path.join(__filepath__, "..", "..")
 
 
-class CJSONTest(unittest.TestCase):
+class CJSONWriterTest(unittest.TestCase):
     """Unit tests for the CJSON writer."""
 
     def test_init(self):
@@ -30,6 +30,15 @@ class CJSONTest(unittest.TestCase):
 
         # The object should keep the ccData instance passed to its constructor.
         self.assertEqual(cjson.ccdata, data)
+
+    def test_subclass(self):
+        """Is the writer a subclass of the abstract file writer?"""
+        fpath = os.path.join(__datadir__, "data/ADF/basicADF2007.01/dvb_gopt.adfout")
+        self.assertTrue(os.path.exists(fpath))
+        data = cclib.io.ccread(fpath)
+        writer = cclib.io.cjsonwriter.CJSON(data)
+        self.assertTrue(isinstance(writer, cclib.io.filewriter.Writer))
+        self.assertTrue(issubclass(type(writer), cclib.io.filewriter.Writer))
 
     def test_cjson_generation(self):
         """Does the CJSON format get generated properly?"""

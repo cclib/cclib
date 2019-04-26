@@ -22,6 +22,15 @@ __testdir__ = __filedir__
 
 class MOLDENTest(unittest.TestCase):
 
+    def test_subclass(self):
+        """Is the writer a subclass of the abstract file writer?"""
+        fpath = os.path.join(__datadir__, "data/ADF/basicADF2007.01/dvb_gopt.adfout")
+        self.assertTrue(os.path.exists(fpath))
+        data = cclib.io.ccread(fpath)
+        writer = cclib.io.moldenwriter.MOLDEN(data)
+        self.assertTrue(isinstance(writer, cclib.io.filewriter.Writer))
+        self.assertTrue(issubclass(type(writer), cclib.io.filewriter.Writer))
+
     def test_missing_attribute_error(self):
         """Check if MissingAttributeError is raised as expected."""
         fpath = os.path.join(__datadir__,
