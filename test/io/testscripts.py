@@ -103,6 +103,7 @@ class ccframeTest(unittest.TestCase):
         with self.assertRaises(SystemExit):
             cclib.scripts.ccframe.main()
 
+    @unittest.skipIf(sys.version_info < (3, 2), "assertRaisesRegex is Python >= 3.2")
     @mock.patch(
         "cclib.scripts.ccframe.sys.argv",
         ["ccframe", INPUT_FILE]

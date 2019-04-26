@@ -8,6 +8,7 @@
 """Unit tests for parser ccio module."""
 
 import os
+import sys
 import tempfile
 import unittest
 
@@ -149,6 +150,7 @@ class fallbackTest(unittest.TestCase):
 
 class ccframeTest(unittest.TestCase):
 
+    @unittest.skipIf(sys.version_info < (3, 2), "assertRaisesRegex is Python >= 3.2")
     @mock.patch("cclib.io.ccio._has_pandas", False)
     def test_ccframe_call_without_pandas(self):
         """Does ccframe fails cleanly if Pandas can't be imported?"""
