@@ -24,6 +24,11 @@ def process_logfiles(filenames, output, identifier):
     df = ccframe([ccopen(path) for path in filenames])
     if output is not None:
         outputtype = os.path.splitext(os.path.basename(output))[1][1:]
+        if not outputtype:
+            raise RuntimeWarning(
+                "The output type could not be determined from the given path, "
+                "not writing DataFrame to disk"
+            )
 
         if outputtype in {'csv'}:
             df.to_csv(output)
