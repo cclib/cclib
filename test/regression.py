@@ -1115,6 +1115,19 @@ def testORCA_ORCA4_0_IrCl6_sp_out(logfile):
     numpy.testing.assert_almost_equal(logfile.data.scfvalues[0][0], vals_first)
     numpy.testing.assert_almost_equal(logfile.data.scfvalues[0][-1], vals_last)
 
+
+def testORCA_ORCA4_1_725_out(logfile):
+    """This file uses embedding potentials, which requires `>` after atom names in
+    the input file and that confuses different parts of the parser.
+
+    In #725 we decided to not include these potentials in the parsed results.
+    """
+    assert logfile.data.natom == 7
+    numpy.testing.assert_equal(logfile.data.atomnos, numpy.array([20, 17, 17, 17, 17, 17, 17], dtype=int))
+    assert len(logfile.data.atomcharges["mulliken"]) == 7
+    assert len(logfile.data.atomcharges["lowdin"]) == 7
+
+
 # PSI #
 
 
