@@ -32,7 +32,7 @@ else:
 
 from cclib.parser import data
 from cclib.parser import logfileparser
-from cclib.parser.utils import find_package as _find_package
+from cclib.parser.utils import find_package
 
 from cclib.parser.adfparser import ADF
 from cclib.parser.daltonparser import DALTON
@@ -58,11 +58,11 @@ from cclib.io import wfxwriter
 from cclib.io import xyzreader
 from cclib.io import xyzwriter
 
-_has_cclib2openbabel = _find_package("openbabel")
+_has_cclib2openbabel = find_package("openbabel")
 if _has_cclib2openbabel:
     from cclib.bridge import cclib2openbabel
 
-_has_pandas = _find_package("pandas")
+_has_pandas = find_package("pandas")
 if _has_pandas:
     import pandas as pd
 
@@ -521,3 +521,6 @@ def ccframe(ccobjs, *args, **kwargs):
 
         logfiles.append(pd.Series(attributes))
     return pd.DataFrame(logfiles)
+
+
+del find_package

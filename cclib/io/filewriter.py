@@ -14,9 +14,9 @@ from collections import Iterable
 import numpy
 
 from cclib.parser.utils import PeriodicTable
-from cclib.parser.utils import find_package as _find_package
+from cclib.parser.utils import find_package
 
-_has_openbabel = _find_package("openbabel")
+_has_openbabel = find_package("openbabel")
 if _has_openbabel:
     from cclib.bridge import makeopenbabel
     import openbabel as ob
@@ -141,3 +141,6 @@ class Writer(object):
                 indices.add(i)
             self.indices = indices
         return
+
+
+del find_package

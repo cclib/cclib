@@ -13,9 +13,9 @@ import sys
 
 from cclib.io import ccopen
 from cclib.io import ccframe
-from cclib.parser.utils import find_package as _find_package
+from cclib.parser.utils import find_package
 
-_has_pandas = _find_package("pandas")
+_has_pandas = find_package("pandas")
 if _has_pandas:
     import pandas as pd
 

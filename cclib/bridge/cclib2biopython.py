@@ -7,9 +7,9 @@
 """Bridge for using cclib data in biopython (http://biopython.org)."""
 
 from cclib.parser.utils import PeriodicTable
-from cclib.parser.utils import find_package as _find_package
+from cclib.parser.utils import find_package
 
-_found_biopython = _find_package("Bio")
+_found_biopython = find_package("Bio")
 if _found_biopython:
     from Bio.PDB.Atom import Atom
 
@@ -28,3 +28,6 @@ def makebiopython(atomcoords, atomnos):
         symbol = pt.element[atomno]
         bioatoms.append(Atom(symbol, coords, 0, 0, 0, symbol, 0, symbol.upper()))
     return bioatoms
+
+
+del find_package

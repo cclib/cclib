@@ -10,9 +10,9 @@
 import xml.etree.cElementTree as ET
 
 from cclib.io import filewriter
-from cclib.parser.utils import find_package as _find_package
+from cclib.parser.utils import find_package
 
-_has_openbabel = _find_package("openbabel")
+_has_openbabel = find_package("openbabel")
 
 
 class CML(filewriter.Writer):
@@ -111,3 +111,6 @@ def _tostring(element, xml_declaration=True, encoding='utf-8', method='xml'):
                                   encoding=encoding,
                                   method=method)
     return b''.join(data).decode(encoding)
+
+
+del find_package

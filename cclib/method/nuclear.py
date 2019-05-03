@@ -13,13 +13,13 @@ import numpy as np
 
 from cclib.method.calculationmethod import Method
 from cclib.parser.utils import PeriodicTable
-from cclib.parser.utils import find_package as _find_package
+from cclib.parser.utils import find_package
 
-_found_periodictable = _find_package("periodictable")
+_found_periodictable = find_package("periodictable")
 if _found_periodictable:
     import periodictable as pt
 
-_found_scipy = _find_package("scipy")
+_found_scipy = find_package("scipy")
 if _found_scipy:
     import scipy.constants as spc
 
@@ -191,3 +191,6 @@ class Nuclear(Method):
             ghz2invcm = spc.giga * spc.centi / spc.c
             conv = rotghz * ghz2invcm
         return conv / principal_moments
+
+
+del find_package

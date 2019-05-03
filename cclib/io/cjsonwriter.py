@@ -13,9 +13,9 @@ import numpy as np
 
 from cclib.io import filewriter
 from cclib.parser.data import ccData
-from cclib.parser.utils import find_package as _find_package
+from cclib.parser.utils import find_package
 
-_has_openbabel = _find_package("openbabel")
+_has_openbabel = find_package("openbabel")
 
 
 class CJSON(filewriter.Writer):
@@ -219,3 +219,6 @@ class JSONIndentEncoder(json.JSONEncoder):
             return json.dumps(o.item(), cls=NumpyAwareJSONEncoder)
         else:
             return json.dumps(o, cls=NumpyAwareJSONEncoder)
+
+
+del find_package

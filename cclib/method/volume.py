@@ -13,14 +13,14 @@ import copy
 import numpy
 
 from cclib.parser.utils import convertor
-from cclib.parser.utils import find_package as _find_package
+from cclib.parser.utils import find_package
 
-_found_pyquante = _find_package("PyQuante")
+_found_pyquante = find_package("PyQuante")
 if _found_pyquante:
     from PyQuante.CGBF import CGBF
     from cclib.bridge import cclib2pyquante
 
-_found_pyvtk = _find_package("pyvtk")
+_found_pyvtk = find_package("pyvtk")
 if _found_pyvtk:
     from pyvtk import *
     from pyvtk.DataSetAttr import *
@@ -235,3 +235,6 @@ def electrondensity(coords, mocoeffslist, gbasis, volume):
         density.data *= 2.0
 
     return density
+
+
+del find_package

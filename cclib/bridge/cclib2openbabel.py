@@ -8,9 +8,9 @@
 """Bridge between cclib data and openbabel (http://openbabel.org)."""
 
 from cclib.parser.data import ccData
-from cclib.parser.utils import find_package as _find_package
+from cclib.parser.utils import find_package
 
-_found_openbabel = _find_package("openbabel")
+_found_openbabel = find_package("openbabel")
 if _found_openbabel:
     import openbabel as ob
 
@@ -73,3 +73,6 @@ def readfile(fname, format):
     else:
         print("Unable to load the %s reader from OpenBabel." % format)
         return {}
+
+
+del find_package

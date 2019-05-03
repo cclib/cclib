@@ -7,9 +7,9 @@
 
 """Bridge for using cclib data in PyQuante (http://pyquante.sourceforge.net)."""
 
-from cclib.parser.utils import find_package as _find_package
+from cclib.parser.utils import find_package
 
-_found_pyquante = _find_package("PyQuante")
+_found_pyquante = find_package("PyQuante")
 if _found_pyquante:
     from PyQuante.Molecule import Molecule
 
@@ -26,3 +26,6 @@ def makepyquante(atomcoords, atomnos, charge=0, mult=1):
                     list(zip(atomnos, atomcoords)),
                     units="Angstrom",
                     charge=charge, multiplicity=mult)
+
+
+del find_package
