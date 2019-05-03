@@ -103,7 +103,6 @@ class ccframeTest(unittest.TestCase):
         with self.assertRaises(SystemExit):
             cclib.scripts.ccframe.main()
 
-    @unittest.skipIf(sys.version_info < (3, 2), "assertRaisesRegex is Python >= 3.2")
     @mock.patch(
         "cclib.scripts.ccframe.sys.argv",
         ["ccframe", INPUT_FILE]
@@ -111,7 +110,7 @@ class ccframeTest(unittest.TestCase):
     @mock.patch("cclib.io.ccio._has_pandas", False)
     def test_main_without_pandas(self):
         """Does ccframe fail if Pandas can't be imported?"""
-        with self.assertRaisesRegex(
+        with self.assertRaisesRegexp(
             ImportError, "You must install `pandas` to use this function"
         ):
             cclib.scripts.ccframe.main()
