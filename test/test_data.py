@@ -253,7 +253,7 @@ class DataSuite(object):
             # is a semiempirical-only program.
             'NWChem6.5' : getdatafile('NWChem', "basicNWChem6.5", ["dvb_gopt_ks.out"])[0],
             'ORCA4.1' : getdatafile('ORCA', "basicORCA4.1", ["dvb_gopt.out"])[0],
-            'Psi4-1.0' : getdatafile('Psi4', "basicPsi4-1.0", ["dvb_gopt_rks.out"])[0],
+            'Psi4-1.2.1' : getdatafile('Psi4', "basicPsi4-1.2.1", ["dvb_gopt_rks.out"])[0],
             'QChem5.1' : getdatafile('QChem', "basicQChem5.1", ["dvb_gopt.out"])[0],
         }
         parser_names = sorted(parsers_to_test.keys())
