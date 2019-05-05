@@ -144,9 +144,8 @@ class ADF(logfileparser.Logfile):
             # Get the contents between the star border.
             tokens = line.split()[1:-1]
             assert len(tokens) >= 1
-            print(tokens)
             if tokens[0] == "Build":
-                package_version += ".b{}".format(tokens[1])
+                package_version += "+{}".format(tokens[1])
             else:
                 assert tokens[0][0] == "r"
                 # If a year-type version has already been parsed (YYYY(.nn)),
