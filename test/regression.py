@@ -915,10 +915,15 @@ def testJaguar_Jaguar8_3_stopiter_jaguar_dft_out(logfile):
     """Check to ensure that an incomplete SCF is handled correctly."""
     assert len(logfile.data.scfvalues[0]) == 4
 
+    assert logfile.data.metadata["package_version"] == "8.3+13"
+
 
 def testJaguar_Jaguar8_3_stopiter_jaguar_hf_out(logfile):
     """Check to ensure that an incomplete SCF is handled correctly."""
     assert len(logfile.data.scfvalues[0]) == 3
+
+    assert logfile.data.metadata["package_version"] == "8.3+13"
+
 
 # Molcas #
 
