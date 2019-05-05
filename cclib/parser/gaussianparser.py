@@ -76,9 +76,6 @@ class Gaussian(logfileparser.Logfile):
 
     def before_parsing(self):
 
-        # Used to index self.scftargets[].
-        SCFRMS, SCFMAX, SCFENERGY = list(range(3))
-
         # Extract only well-formed numbers in scientific notation.
         self.re_scinot = re.compile('(\w*)=\s*(-?\d\.\d{2}D[+-]\d{2})')
         # Extract only well-formed numbers in traditional
