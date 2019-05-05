@@ -523,6 +523,8 @@ def testGaussian_Gaussian16_naturalspinorbitals_parsing_log(logfile):
     assert logfile.data.aonames[41] == 'O2_9D 0'
     assert logfile.data.atombasis[1][0] == 23
 
+    assert logfile.data.metadata["package_version"] == "2016+A.03"
+
 
 def testGaussian_Gaussian98_C_bigmult_log(logfile):
     """
@@ -533,6 +535,8 @@ def testGaussian_Gaussian98_C_bigmult_log(logfile):
     assert logfile.data.mult == 10
     assert logfile.data.homos[0] == 8
     assert logfile.data.homos[1] == -1 # No occupied beta orbitals
+
+    assert logfile.data.metadata["package_version"] == "1998+A.11.3"
 
 
 def testGaussian_Gaussian98_NIST_CCCBDB_1himidaz_m21b0_out(logfile):
@@ -546,6 +550,8 @@ def testGaussian_Gaussian98_NIST_CCCBDB_1himidaz_m21b0_out(logfile):
     # we expect only the last MP2 energy to be extracted.
     assert len(logfile.data.mpenergies) == 1
 
+    assert logfile.data.metadata["package_version"] == "1998+A.7"
+
 
 def testGaussian_Gaussian98_NIST_CCCBDB_1himidaz_m23b6_out(logfile):
     """A job that was killed before it ended, should have several basic attributes parsed."""
@@ -553,10 +559,14 @@ def testGaussian_Gaussian98_NIST_CCCBDB_1himidaz_m23b6_out(logfile):
     assert hasattr(logfile.data, 'metadata')
     assert hasattr(logfile.data, 'mult')
 
+    assert logfile.data.metadata["package_version"] == "1998+A.7"
+
 
 def testGaussian_Gaussian98_test_Cu2_log(logfile):
     """An example of the number of basis set function changing."""
     assert logfile.data.nbasis == 38
+
+    assert logfile.data.metadata["package_version"] == "1998+A.11.4"
 
 
 def testGaussian_Gaussian98_test_H2_log(logfile):
@@ -566,6 +576,8 @@ def testGaussian_Gaussian98_test_H2_log(logfile):
     """
     assert logfile.data.atomcharges['natural'][0] == 0.0
     assert logfile.data.atomcharges['natural'][1] == 0.0
+
+    assert logfile.data.metadata["package_version"] == "1998+A.11.4"
 
 
 def testGaussian_Gaussian98_water_zmatrix_nosym_log(logfile):
@@ -578,21 +590,29 @@ def testGaussian_Gaussian98_water_zmatrix_nosym_log(logfile):
     assert len(logfile.data.atomcoords) == 1
     assert logfile.data.natom == 3
 
+    assert logfile.data.metadata["package_version"] == "1998+A.11.3"
+
 
 def testGaussian_Gaussian03_AM1_SP_out(logfile):
     """Previously, caused scfvalue parsing to fail."""
     assert len(logfile.data.scfvalues[0]) == 13
+
+    assert logfile.data.metadata["package_version"] == "2003+E.01"
 
 
 def testGaussian_Gaussian03_anthracene_log(logfile):
     """This file exposed a bug in extracting the vibsyms."""
     assert len(logfile.data.vibsyms) == len(logfile.data.vibfreqs)
 
+    assert logfile.data.metadata["package_version"] == "2003+C.02"
+
 
 def testGaussian_Gaussian03_borane_opt_log(logfile):
     """An example of changing molecular orbital count."""
     assert logfile.data.optstatus[-1] == logfile.data.OPT_DONE
     assert logfile.data.nmo == 609
+
+    assert logfile.data.metadata["package_version"] == "2003+E.01"
 
 
 def testGaussian_Gaussian03_chn1_log(logfile):
@@ -602,6 +622,8 @@ def testGaussian_Gaussian03_chn1_log(logfile):
     """
     assert not hasattr(logfile.data, "mocoeffs")
 
+    assert logfile.data.metadata["package_version"] == "2003+B.04"
+
 
 def testGaussian_Gaussian03_cyclopropenyl_rhf_g03_cut_log(logfile):
     """
@@ -610,6 +632,8 @@ def testGaussian_Gaussian03_cyclopropenyl_rhf_g03_cut_log(logfile):
     which up till now stored the last coordinates.
     """
     assert len(logfile.data.atomcoords) == len(logfile.data.geovalues)
+
+    assert logfile.data.metadata["package_version"] == "2003+C.02"
 
 
 def testGaussian_Gaussian03_DCV4T_C60_log(logfile):
@@ -621,6 +645,8 @@ def testGaussian_Gaussian03_DCV4T_C60_log(logfile):
     assert len(logfile.data.coreelectrons) == 102
     assert logfile.data.coreelectrons[101] == 2
 
+    assert logfile.data.metadata["package_version"] == "2003+D.02"
+
 
 def testGaussian_Gaussian03_dvb_gopt_symmfollow_log(logfile):
     """Non-standard treatment of symmetry.
@@ -629,6 +655,8 @@ def testGaussian_Gaussian03_dvb_gopt_symmfollow_log(logfile):
     which caused only the first coordinates to be read previously.
     """
     assert len(logfile.data.atomcoords) == len(logfile.data.geovalues)
+
+    assert logfile.data.metadata["package_version"] == "2003+C.01"
 
 
 def testGaussian_Gaussian03_mendes_out(logfile):
@@ -640,6 +668,8 @@ def testGaussian_Gaussian03_mendes_out(logfile):
         else:
             assert x == 0
 
+    assert logfile.data.metadata["package_version"] == "2003+C.02"
+
 
 def testGaussian_Gaussian03_Mo4OSibdt2_opt_log(logfile):
     """
@@ -648,6 +678,8 @@ def testGaussian_Gaussian03_Mo4OSibdt2_opt_log(logfile):
     """
     assert logfile.data.optstatus[-1] == logfile.data.OPT_DONE
     assert hasattr(logfile.data, "atomcoords")
+
+    assert logfile.data.metadata["package_version"] == "2003+C.02"
 
 
 def testGaussian_Gaussian03_orbgs_log(logfile):
@@ -658,11 +690,15 @@ def testGaussian_Gaussian03_orbgs_log(logfile):
     assert logfile.data.coreelectrons[20] == 10
     assert logfile.data.coreelectrons[23] == 10
 
+    assert logfile.data.metadata["package_version"] == "2003+C.02"
+
 
 def testGaussian_Gaussian09_100_g09(logfile):
     """Check that the final system is the one parsed (cclib/cclib#243)."""
     assert logfile.data.natom == 54
     assert logfile.data.homos == [104]
+
+    assert logfile.data.metadata["package_version"] == "2009+B.01"
 
 
 def testGaussian_Gaussian09_25DMF_HRANH_log(logfile):
@@ -674,21 +710,29 @@ def testGaussian_Gaussian09_25DMF_HRANH_log(logfile):
     assert abs(anharms[0][0] + 43.341) < 0.01
     assert abs(anharms[N-1][N-1] + 36.481) < 0.01
 
+    assert logfile.data.metadata["package_version"] == "2009+B.01"
+
 
 def testGaussian_Gaussian09_2D_PES_all_converged_log(logfile):
     """Check that optstatus has no UNCOVERGED values."""
     assert ccData.OPT_UNCONVERGED not in logfile.data.optstatus
+
+    assert logfile.data.metadata["package_version"] == "2009+D.01"
 
 
 def testGaussian_Gaussian09_2D_PES_one_unconverged_log(logfile):
     """Check that optstatus contains UNCOVERGED values."""
     assert ccData.OPT_UNCONVERGED in logfile.data.optstatus
 
+    assert logfile.data.metadata["package_version"] == "2009+D.01"
+
 
 def testGaussian_Gaussian09_534_out(logfile):
     """Previously, caused etenergies parsing to fail."""
     assert logfile.data.etsyms[0] == "Singlet-?Sym"
     assert abs(logfile.data.etenergies[0] - 20920.55328) < 1.0
+
+    assert logfile.data.metadata["package_version"] == "2009+A.02"
 
 
 def testGaussian_Gaussian09_BSL_opt_freq_DFT_out(logfile):
@@ -701,11 +745,15 @@ def testGaussian_Gaussian09_BSL_opt_freq_DFT_out(logfile):
     # hexadecapole ZZZZ
     assert logfile.data.moments[4][-1] == -77.9600
 
+    assert logfile.data.metadata["package_version"] == "2009+D.01"
+
 
 def testGaussian_Gaussian09_dvb_gopt_unconverged_log(logfile):
     """An unconverged geometry optimization to test for empty optdone (see #103 for details)."""
     assert hasattr(logfile.data, 'optdone') and not logfile.data.optdone
     assert logfile.data.optstatus[-1] == logfile.data.OPT_UNCONVERGED
+
+    assert logfile.data.metadata["package_version"] == "2009+D.01"
 
 
 def testGaussian_Gaussian09_dvb_lowdin_log(logfile):
@@ -713,17 +761,23 @@ def testGaussian_Gaussian09_dvb_lowdin_log(logfile):
     assert "mulliken" in logfile.data.atomcharges
     assert "lowdin" in logfile.data.atomcharges
 
+    assert logfile.data.metadata["package_version"] == "2009+A.02"
+
 
 def testGaussian_Gaussian09_Dahlgren_TS_log(logfile):
     """Failed to parse ccenergies for a variety of reasons"""
     assert hasattr(logfile.data, "ccenergies")
     assert abs(logfile.data.ccenergies[0] - (-11819.96506609)) < 0.001
 
+    assert logfile.data.metadata["package_version"] == "2009+A.02"
+
 
 def testGaussian_Gaussian09_irc_point_log(logfile):
     """Failed to parse vibfreqs except for 10, 11"""
     assert hasattr(logfile.data, "vibfreqs")
     assert len(logfile.data.vibfreqs) == 11
+
+    assert logfile.data.metadata["package_version"] == "2009+D.01"
 
 
 def testGaussian_Gaussian09_issue_460_log(logfile):
@@ -749,11 +803,15 @@ def testGaussian_Gaussian09_issue_460_log(logfile):
     assert logfile.data.scfvalues[0][0, 0] == 3.37e-03
     assert numpy.isnan(logfile.data.scfvalues[0][0, 2])
 
+    assert logfile.data.metadata["package_version"] == "2009+D.01"
+
 
 def testGaussian_Gaussian09_OPT_td_g09_out(logfile):
     """Couldn't find etrotats as G09 has different output than G03."""
     assert len(logfile.data.etrotats) == 10
     assert logfile.data.etrotats[0] == -0.4568
+
+    assert logfile.data.metadata["package_version"] == "2009+A.02"
 
 
 def testGaussian_Gaussian09_OPT_td_out(logfile):
@@ -761,9 +819,13 @@ def testGaussian_Gaussian09_OPT_td_out(logfile):
     assert len(logfile.data.etrotats) == 10
     assert logfile.data.etrotats[0] == -0.4568
 
+    assert logfile.data.metadata["package_version"] == "2003+B.05"
+
 
 def testGaussian_Gaussian09_OPT_oniom_log(logfile):
     """AO basis extraction broke with ONIOM"""
+
+    assert logfile.data.metadata["package_version"] == "2009+D.01"
 
 
 def testGaussian_Gaussian09_oniom_IR_intensity_log(logfile):
@@ -771,20 +833,28 @@ def testGaussian_Gaussian09_oniom_IR_intensity_log(logfile):
     assert hasattr(logfile.data, 'vibirs')
     assert len(logfile.data.vibirs) == 216
 
+    assert logfile.data.metadata["package_version"] == "2009+C.01"
+
 
 def testGaussian_Gaussian09_Ru2bpyen2_H2_freq3_log(logfile):
     """Here atomnos wans't added to the gaussian parser before."""
     assert len(logfile.data.atomnos) == 69
+
+    assert logfile.data.metadata["package_version"] == "2009+A.02"
 
 
 def testGaussian_Gaussian09_benzene_HPfreq_log(logfile):
     """Check that higher precision vib displacements obtained with freq=hpmodes) are parsed correctly."""
     assert abs(logfile.data.vibdisps[0,0,2] - (-0.04497)) < 0.00001
 
+    assert logfile.data.metadata["package_version"] == "2009+C.01"
+
 
 def testGaussian_Gaussian09_benzene_freq_log(logfile):
     """Check that default precision vib displacements are parsed correctly."""
     assert abs(logfile.data.vibdisps[0,0,2] - (-0.04)) < 0.00001
+
+    assert logfile.data.metadata["package_version"] == "2009+C.01"
 
 
 def testGaussian_Gaussian09_relaxed_PES_testH2_log(logfile):
@@ -794,6 +864,8 @@ def testGaussian_Gaussian09_relaxed_PES_testH2_log(logfile):
     assert len(optstatus) == len(atomcoords)
 
     assert all(s == ccData.OPT_DONE + ccData.OPT_NEW for s in optstatus)
+
+    assert logfile.data.metadata["package_version"] == "2009+D.01"
 
 
 def testGaussian_Gaussian09_relaxed_PES_testCO2_log(logfile):
@@ -821,10 +893,15 @@ def testGaussian_Gaussian09_relaxed_PES_testCO2_log(logfile):
     # to have converged in a single step.
     assert all(s == ccData.OPT_DONE + ccData.OPT_NEW for s in optstatus[new_points[3]:])
 
+    assert logfile.data.metadata["package_version"] == "2009+D.01"
+
 
 def testGaussian_Gaussian09_stopiter_gaussian_out(logfile):
     """Check to ensure that an incomplete SCF is handled correctly."""
     assert len(logfile.data.scfvalues[0]) == 4
+
+    assert logfile.data.metadata["package_version"] == "2009+D.01"
+
 
 # Jaguar #
 
