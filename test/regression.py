@@ -251,6 +251,8 @@ def testDALTON_DALTON_2013_dvb_td_normalprint_out(logfile):
     assert hasattr(logfile.data, "etsyms")
     assert hasattr(logfile.data, "etoscs")
 
+    assert logfile.data.metadata["package_version"] == "2013.4+7abef2ada27562fe5e02849d6caeaa67c961732f"
+
 
 def testDALTON_DALTON_2015_dalton_atombasis_out(logfile):
     """This logfile didn't parse due to the absence of a line in the basis
@@ -260,6 +262,8 @@ def testDALTON_DALTON_2015_dalton_atombasis_out(logfile):
     assert logfile.data.nbasis == 37
     assert hasattr(logfile.data, "atombasis")
 
+    assert logfile.data.metadata["package_version"] == "2015.0+d34efb170c481236ad60c789dea90a4c857c6bab"
+
 
 def testDALTON_DALTON_2015_dalton_intgrl_out(logfile):
     """This logfile didn't parse due to the absence of a line in the basis
@@ -268,6 +272,8 @@ def testDALTON_DALTON_2015_dalton_intgrl_out(logfile):
     assert hasattr(logfile.data, "nbasis")
     assert logfile.data.nbasis == 4
     assert hasattr(logfile.data, "atombasis")
+
+    assert logfile.data.metadata["package_version"] == "2015.0+d34efb170c481236ad60c789dea90a4c857c6bab"
 
 
 def testDALTON_DALTON_2015_dvb_td_normalprint_out(logfile):
@@ -279,15 +285,21 @@ def testDALTON_DALTON_2015_dvb_td_normalprint_out(logfile):
     assert hasattr(logfile.data, "etsyms")
     assert hasattr(logfile.data, "etoscs")
 
+    assert logfile.data.metadata["package_version"] == "2015.0+d34efb170c481236ad60c789dea90a4c857c6bab"
+
 
 def testDALTON_DALTON_2015_stopiter_dalton_dft_out(logfile):
     """Check to ensure that an incomplete SCF is handled correctly."""
     assert len(logfile.data.scfvalues[0]) == 8
 
+    assert logfile.data.metadata["package_version"] == "2015.0+d34efb170c481236ad60c789dea90a4c857c6bab"
+
 
 def testDALTON_DALTON_2015_stopiter_dalton_hf_out(logfile):
     """Check to ensure that an incomplete SCF is handled correctly."""
     assert len(logfile.data.scfvalues[0]) == 5
+
+    assert logfile.data.metadata["package_version"] == "2015.0+d34efb170c481236ad60c789dea90a4c857c6bab"
 
 
 def testDALTON_DALTON_2016_huge_neg_polar_freq_out(logfile):
@@ -298,6 +310,8 @@ def testDALTON_DALTON_2016_huge_neg_polar_freq_out(logfile):
     assert len(logfile.data.polarizabilities) == 3
     assert abs(logfile.data.polarizabilities[2][0, 0] - 183.6308) < 1.0e-5
 
+    assert logfile.data.metadata["package_version"] == "2016.2+7db4647eac203e51aae7da3cbc289f55146b30e9"
+
 
 def testDALTON_DALTON_2016_huge_neg_polar_stat_out(logfile):
     """This logfile didn't parse due to lack of spacing between
@@ -306,6 +320,8 @@ def testDALTON_DALTON_2016_huge_neg_polar_stat_out(logfile):
     assert hasattr(logfile.data, "polarizabilities")
     assert len(logfile.data.polarizabilities) == 1
     assert abs(logfile.data.polarizabilities[0][1, 1] + 7220.150408) < 1.0e-7
+
+    assert logfile.data.metadata["package_version"] == "2016.2+7db4647eac203e51aae7da3cbc289f55146b30e9"
 
 
 def testDALTON_DALTON_2016_Trp_polar_response_diplnx_out(logfile):
@@ -318,6 +334,8 @@ def testDALTON_DALTON_2016_Trp_polar_response_diplnx_out(logfile):
     assert abs(logfile.data.polarizabilities[0][0, 0] - 95.11540019) < 1.0e-8
     assert numpy.count_nonzero(numpy.isnan(logfile.data.polarizabilities)) == 8
 
+    assert logfile.data.metadata["package_version"] == "2016.2+7db4647eac203e51aae7da3cbc289f55146b30e9"
+
 
 def testDALTON_DALTON_2018_dft_properties_nosym_H2O_cc_pVDZ_out(logfile):
     """The "simple" version string in newer development versions of DALTON wasn't
@@ -326,7 +344,6 @@ def testDALTON_DALTON_2018_dft_properties_nosym_H2O_cc_pVDZ_out(logfile):
     This file is in DALTON-2018, rather than DALTON-2019, because 2018.0 was
     just released.
     """
-    assert "package_version" in logfile.data.metadata
     assert logfile.data.metadata["package_version"] == "2019.alpha"
 
 
@@ -339,6 +356,8 @@ def testDALTON_DALTON_2018_tdhf_2000_out(logfile):
         assert len(getattr(logfile.data, attr)) == 9
     assert logfile.data.etsecs[0][0] == [(1, 0), (2, 0), -0.9733558768]
 
+    assert logfile.data.metadata["package_version"] == "2019.alpha+25947a3d842ee2ebb42bff87a4dd64adbbd3ec5b"
+
 
 def testDALTON_DALTON_2018_tdhf_2000_sym_out(logfile):
     """Ensure etsecs are being parsed from a TDHF calculation with symmetry and a
@@ -348,6 +367,8 @@ def testDALTON_DALTON_2018_tdhf_2000_sym_out(logfile):
     for attr in ("etenergies", "etsecs", "etsyms", "etoscs"):
         assert len(getattr(logfile.data, attr)) == 3
     assert logfile.data.etsecs[0][0] == [(1, 0), (2, 0), 0.9733562358]
+
+    assert logfile.data.metadata["package_version"] == "2019.alpha+25947a3d842ee2ebb42bff87a4dd64adbbd3ec5b"
 
 
 def testDALTON_DALTON_2018_tdhf_normal_out(logfile):
@@ -359,6 +380,8 @@ def testDALTON_DALTON_2018_tdhf_normal_out(logfile):
         assert len(getattr(logfile.data, attr)) == 9
     assert logfile.data.etsecs[0][0] == [(1, 0), (2, 0), -0.9733558768]
 
+    assert logfile.data.metadata["package_version"] == "2019.alpha+25947a3d842ee2ebb42bff87a4dd64adbbd3ec5b"
+
 
 def testDALTON_DALTON_2018_tdhf_normal_sym_out(logfile):
     """Ensure etsecs are being parsed from a TDHF calculation with symmetry and a
@@ -368,6 +391,8 @@ def testDALTON_DALTON_2018_tdhf_normal_sym_out(logfile):
     for attr in ("etenergies", "etsecs", "etsyms", "etoscs"):
         assert len(getattr(logfile.data, attr)) == 3
     assert logfile.data.etsecs[0][0] == [(1, 0), (2, 0), 0.9733562358]
+
+    assert logfile.data.metadata["package_version"] == "2019.alpha+25947a3d842ee2ebb42bff87a4dd64adbbd3ec5b"
 
 
 def testDALTON_DALTON_2018_tdpbe_2000_out(logfile):
@@ -379,6 +404,8 @@ def testDALTON_DALTON_2018_tdpbe_2000_out(logfile):
         assert len(getattr(logfile.data, attr)) == 9
     assert logfile.data.etsecs[0][0] == [(1, 0), (2, 0), 0.9992665559]
 
+    assert logfile.data.metadata["package_version"] == "2019.alpha+25947a3d842ee2ebb42bff87a4dd64adbbd3ec5b"
+
 
 def testDALTON_DALTON_2018_tdpbe_2000_sym_out(logfile):
     """Ensure etsecs are being parsed from a TDDFT calculation with symmetry and a
@@ -388,6 +415,8 @@ def testDALTON_DALTON_2018_tdpbe_2000_sym_out(logfile):
     for attr in ("etenergies", "etsecs", "etsyms", "etoscs"):
         assert len(getattr(logfile.data, attr)) == 3
     assert logfile.data.etsecs[0][0] == [(1, 0), (2, 0), 0.9992672154]
+
+    assert logfile.data.metadata["package_version"] == "2019.alpha+25947a3d842ee2ebb42bff87a4dd64adbbd3ec5b"
 
 
 def testDALTON_DALTON_2018_tdpbe_normal_out(logfile):
@@ -399,6 +428,8 @@ def testDALTON_DALTON_2018_tdpbe_normal_out(logfile):
         assert len(getattr(logfile.data, attr)) == 9
     assert logfile.data.etsecs[0][0] == [(1, 0), (2, 0), 0.9992665559]
 
+    assert logfile.data.metadata["package_version"] == "2019.alpha+25947a3d842ee2ebb42bff87a4dd64adbbd3ec5b"
+
 
 def testDALTON_DALTON_2018_tdpbe_normal_sym_out(logfile):
     """Ensure etsecs are being parsed from a TDDFT calculation with symmetry and a
@@ -408,6 +439,8 @@ def testDALTON_DALTON_2018_tdpbe_normal_sym_out(logfile):
     for attr in ("etenergies", "etsecs", "etsyms", "etoscs"):
         assert len(getattr(logfile.data, attr)) == 3
     assert logfile.data.etsecs[0][0] == [(1, 0), (2, 0), 0.9992672154]
+
+    assert logfile.data.metadata["package_version"] == "2019.alpha+25947a3d842ee2ebb42bff87a4dd64adbbd3ec5b"
 
 
 # Firefly #
