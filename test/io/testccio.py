@@ -8,10 +8,15 @@
 """Unit tests for parser ccio module."""
 
 import os
+import sys
 import tempfile
 import unittest
 
 import cclib
+
+from six import add_move, MovedModule
+add_move(MovedModule('mock', 'mock', 'unittest.mock'))
+from six.moves import mock
 
 from six import StringIO
 
@@ -141,6 +146,17 @@ class fallbackTest(unittest.TestCase):
     def test_fallback_fail(self):
         """Does the function fail as expected?"""
         self.assertIsNone(self.fallback(None))
+
+
+class ccframeTest(unittest.TestCase):
+
+    @mock.patch("cclib.io.ccio._has_pandas", False)
+    def test_ccframe_call_without_pandas(self):
+        """Does ccframe fails cleanly if Pandas can't be imported?"""
+        with self.assertRaisesRegexp(
+            ImportError, "You must install `pandas` to use this function"
+        ):
+            cclib.io.ccio.ccframe([])
 
 
 if __name__ == "__main__":

@@ -7,15 +7,12 @@
 
 """A writer for chemical markup language (CML) files."""
 
-try:
-    import openbabel as ob
-    _has_openbabel = True
-except ImportError:
-    _has_openbabel = False
-
 import xml.etree.cElementTree as ET
 
 from cclib.io import filewriter
+from cclib.parser.utils import find_package
+
+_has_openbabel = find_package("openbabel")
 
 
 class CML(filewriter.Writer):
@@ -82,6 +79,7 @@ def _set_attrs(element, d):
     """
     for (k, v) in d.items():
         element.set(k, v)
+    return
 
 
 def _indent(elem, level=0):
@@ -113,3 +111,6 @@ def _tostring(element, xml_declaration=True, encoding='utf-8', method='xml'):
                                   encoding=encoding,
                                   method=method)
     return b''.join(data).decode(encoding)
+
+
+del find_package

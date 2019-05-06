@@ -7,13 +7,17 @@
 
 """Bridge between cclib data and openbabel (http://openbabel.org)."""
 
-try:
-    import openbabel as ob
-except ImportError:
-    # Fail silently for now.
-    pass
-
 from cclib.parser.data import ccData
+from cclib.parser.utils import find_package
+
+_found_openbabel = find_package("openbabel")
+if _found_openbabel:
+    import openbabel as ob
+
+
+def _check_openbabel(found_openbabel):
+    if not found_openbabel:
+        raise ImportError("You must install `openbabel` to use this function")
 
 
 def makecclib(mol):
@@ -23,7 +27,7 @@ def makecclib(mol):
     and multiplicity, but often these are calculated from atomic formal charges
     so it is better to assume that would not be correct.
     """
-
+    _check_openbabel(_found_openbabel)
     attributes = {
         'atomcoords':   [],
         'atommasses':   [],
@@ -39,6 +43,7 @@ def makecclib(mol):
 
 def makeopenbabel(atomcoords, atomnos, charge=0, mult=1):
     """Create an Open Babel molecule."""
+    _check_openbabel(_found_openbabel)
     obmol = ob.OBMol()
     for i in range(len(atomnos)):
         # Note that list(atomcoords[i]) is not equivalent!!!
@@ -59,7 +64,7 @@ def makeopenbabel(atomcoords, atomnos, charge=0, mult=1):
 
 def readfile(fname, format):
     """Read a file with OpenBabel and extract cclib attributes."""
-
+    _check_openbabel(_found_openbabel)
     obc = ob.OBConversion()
     if obc.SetInFormat(format):
         mol = ob.OBMol()
@@ -68,3 +73,6 @@ def readfile(fname, format):
     else:
         print("Unable to load the %s reader from OpenBabel." % format)
         return {}
+
+
+del find_package

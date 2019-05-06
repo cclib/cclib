@@ -1,9 +1,14 @@
-biopython
 numpy
+# We need this as long as we need support both Python 2 and 3.
+six
+
+# methods
 scipy
 periodictable
-openbabel
 
+# bridges
+biopython
+openbabel
 # For some reason PyQuante can't be installed from PyPI.
 https://sourceforge.net/projects/pyquante/files/PyQuante-1.6/PyQuante-1.6.5/PyQuante-1.6.5.tar.gz  ; python_version <= '2.7'
 
@@ -16,6 +21,3 @@ coverage
 pytest-cov
 # This library is in the standard library starting from Python 3.3.
 mock ; python_version < '3.3'
-
-# We need this as long as we need support both Python 2 and 3.
-six

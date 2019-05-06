@@ -55,7 +55,11 @@ def setup_cclib():
                 'ccwrite=cclib.scripts.ccwrite:main',
                 'cda=cclib.scripts.cda:main'
             ]
-        }
+        },
+        install_requires=[
+            "numpy",
+            "six",
+        ],
 
     )
 

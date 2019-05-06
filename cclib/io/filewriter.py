@@ -13,15 +13,14 @@ from collections import Iterable
 
 import numpy
 
-try:
+from cclib.parser.utils import PeriodicTable
+from cclib.parser.utils import find_package
+
+_has_openbabel = find_package("openbabel")
+if _has_openbabel:
     from cclib.bridge import makeopenbabel
     import openbabel as ob
     import pybel as pb
-    _has_openbabel = True
-except ImportError:
-    _has_openbabel = False
-
-from cclib.parser.utils import PeriodicTable
 
 
 class MissingAttributeError(Exception):
@@ -90,7 +89,7 @@ class Writer(object):
                 'Could not parse required attributes to write file: ' + missing)
 
     def _make_openbabel_from_ccdata(self):
-        """Create Open Babel and Pybel molecules from ccData."""        
+        """Create Open Babel and Pybel molecules from ccData."""
         if not hasattr(self.ccdata, 'charge'):
             logging.warning("ccdata object does not have charge, setting to 0")
             _charge = 0
@@ -142,3 +141,6 @@ class Writer(object):
                 indices.add(i)
             self.indices = indices
         return
+
+
+del find_package

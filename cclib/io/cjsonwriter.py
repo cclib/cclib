@@ -7,18 +7,15 @@
 
 """A writer for chemical JSON (CJSON) files."""
 
-try:
-    import openbabel as ob
-    _has_openbabel = True
-except ImportError:
-    _has_openbabel = False
-
 import os.path
 import json
 import numpy as np
 
 from cclib.io import filewriter
 from cclib.parser.data import ccData
+from cclib.parser.utils import find_package
+
+_has_openbabel = find_package("openbabel")
 
 
 class CJSON(filewriter.Writer):
@@ -54,8 +51,8 @@ class CJSON(filewriter.Writer):
             cjson_dict['formula'] = self.pbmol.formula
         # TODO Incorporate unit cell information.
 
-        # Iterate through the attribute list present in ccData. Depending on the
-        # availability of the attribute add it at the right 'level'.
+        # Iterate through the attribute list present in ccData. Depending on
+        # the availability of the attribute add it at the right 'level'.
         for attribute_name, v in ccData._attributes.items():
             if not hasattr(self.ccdata, attribute_name):
                 continue
@@ -222,3 +219,6 @@ class JSONIndentEncoder(json.JSONEncoder):
             return json.dumps(o.item(), cls=NumpyAwareJSONEncoder)
         else:
             return json.dumps(o, cls=NumpyAwareJSONEncoder)
+
+
+del find_package

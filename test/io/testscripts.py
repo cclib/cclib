@@ -1,18 +1,22 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2018, the cclib development team
+# Copyright (c) 2019, the cclib development team
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
-
 """Unit tests for main scripts (ccget, ccwrite)."""
+
+from __future__ import print_function
+
 import os
+import sys
 import unittest
-from io import StringIO
 
 from six import add_move, MovedModule
 add_move(MovedModule('mock', 'mock', 'unittest.mock'))
 from six.moves import mock
+
+import cclib
 
 
 __filedir__ = os.path.dirname(__file__)
@@ -87,45 +91,47 @@ class ccwriteTest(unittest.TestCase):
         self.assertEqual(ccwrite_call_args[2], CJSON_OUTPUT_FILENAME)
 
 
-@mock.patch("cclib.scripts.ccframe.ccframe")
 class ccframeTest(unittest.TestCase):
 
     def setUp(self):
-        try:
-            from cclib.scripts import ccframe
-        except ImportError:
-            self.fail("ccframe cannot be imported")
+        # It would be best to test with Pandas and not a mock!
+        if not hasattr(cclib.io.ccio, "pd"):
+            cclib.io.ccio.pd = mock.MagicMock()
 
-        self.main = ccframe.main
-
-    @mock.patch('cclib.scripts.ccframe.sys.argv', ['ccframe'])
-    def test_empty_argv(self, mock_ccframe):
-        """Does the script fail as expected if called without parameters?"""
+    def test_main_empty_argv(self):
+        """Does main() fail as expected if called without arguments?"""
         with self.assertRaises(SystemExit):
-            self.main()
+            cclib.scripts.ccframe.main()
 
     @mock.patch(
         "cclib.scripts.ccframe.sys.argv",
         ["ccframe", INPUT_FILE]
     )
-    @mock.patch("cclib.scripts.ccframe._has_pandas", True)
-    def test_ccframe_call(self, mock_ccframe):
-        """is ccframe called with the given parameters?"""
-        self.main()
-
-        self.assertEqual(mock_ccframe.call_count, 1)
-        ccframe_call_args, ccframe_call_kwargs = mock_ccframe.call_args
-        self.assertEqual(ccframe_call_args[0][0].filename, INPUT_FILE)
+    @mock.patch("cclib.io.ccio._has_pandas", False)
+    def test_main_without_pandas(self):
+        """Does ccframe fail if Pandas can't be imported?"""
+        with self.assertRaisesRegexp(
+            ImportError, "You must install `pandas` to use this function"
+        ):
+            cclib.scripts.ccframe.main()
 
     @mock.patch(
         "cclib.scripts.ccframe.sys.argv",
         ["ccframe", INPUT_FILE]
     )
-    @mock.patch("cclib.scripts.ccframe._has_pandas", False)
-    def test_ccframe_call_without_pandas(self, mock_ccframe):
-        """does ccframe fails cleanly if pandas can't be imported?"""
-        with self.assertRaises(SystemExit):
-            self.main()
+    @mock.patch("cclib.io.ccio._has_pandas", True)
+    def test_main(self):
+        """Is ccframe called with the given parameters?"""
+        with mock.patch('sys.stdout') as mock_stdout:
+            cclib.scripts.ccframe.main()
+            self.assertEqual(mock_stdout.write.call_count, 2)
+            df, newline = mock_stdout.write.call_args_list
+            if isinstance(df[0][0], mock.MagicMock):
+                self.assertEqual(df[0][0].name, 'mock.DataFrame()')
+            else:
+                # TODO: this is what we really should be testing
+                pass
+            self.assertEqual(newline[0][0], '\n')
 
 
 if __name__ == "__main__":

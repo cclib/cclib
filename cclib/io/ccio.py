@@ -1,12 +1,10 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2018, the cclib development team
+# Copyright (c) 2019, the cclib development team
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
-
 """Tools for identifying, reading and writing files and streams."""
-
 
 from __future__ import print_function
 
@@ -32,8 +30,9 @@ else:
     from urllib.error import URLError
 
 
-from cclib.parser import logfileparser
 from cclib.parser import data
+from cclib.parser import logfileparser
+from cclib.parser.utils import find_package
 
 from cclib.parser.adfparser import ADF
 from cclib.parser.daltonparser import DALTON
@@ -59,17 +58,13 @@ from cclib.io import wfxwriter
 from cclib.io import xyzreader
 from cclib.io import xyzwriter
 
-try:
+_has_cclib2openbabel = find_package("openbabel")
+if _has_cclib2openbabel:
     from cclib.bridge import cclib2openbabel
-    _has_cclib2openbabel = True
-except ImportError:
-    _has_cclib2openbabel = False
 
-try:
+_has_pandas = find_package("pandas")
+if _has_pandas:
     import pandas as pd
-except ImportError:
-    # Fail silently for now.
-    pass
 
 # Regular expression for validating URLs
 URL_PATTERN = re.compile(
@@ -165,7 +160,7 @@ def ccread(source, *args, **kwargs):
 
     If the file is not appropriate for cclib parsers, a fallback mechanism
     will try to recognize some common chemistry formats and read those using
-    the appropriate bridge such as OpenBabel.
+    the appropriate bridge such as Open Babel.
 
     Inputs:
         source - a single logfile, a list of logfiles (for a single job),
@@ -331,7 +326,7 @@ def fallback(source):
             if ext in pb.informats:
                 return cclib2openbabel.readfile(source, ext)
         else:
-            print("Could not import openbabel, fallback mechanism might not work.")
+            print("Could not import `openbabel`, fallback mechanism might not work.")
 
 
 def ccwrite(ccobj, outputtype=None, outputdest=None,
@@ -489,6 +484,12 @@ def sort_turbomole_outputs(filelist):
         sorted_list.extend(unknown_files)
     return sorted_list
 
+
+def _check_pandas(found_pandas):
+    if not found_pandas:
+        raise ImportError("You must install `pandas` to use this function")
+
+
 def ccframe(ccobjs, *args, **kwargs):
     """Returns a pandas.DataFrame of data attributes parsed by cclib from one
     or more logfiles.
@@ -500,6 +501,7 @@ def ccframe(ccobjs, *args, **kwargs):
     Returns:
         a pandas.DataFrame
     """
+    _check_pandas(_has_pandas)
     logfiles = []
     for ccobj in ccobjs:
         # Is ccobj an job object (unparsed), or is it a ccdata object (parsed)?
@@ -519,3 +521,6 @@ def ccframe(ccobjs, *args, **kwargs):
 
         logfiles.append(pd.Series(attributes))
     return pd.DataFrame(logfiles)
+
+
+del find_package
