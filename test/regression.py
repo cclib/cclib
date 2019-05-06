@@ -99,10 +99,14 @@ def testADF_ADF2004_01_Fe_ox3_final_out(logfile):
     """Make sure HOMOS are correct."""
     assert logfile.data.homos[0] == 59 and logfile.data.homos[1] == 54
 
+    assert logfile.data.metadata["package_version"] == "2004.01+200410211341"
+
 
 def testADF_ADF2013_01_dvb_gopt_b_unconverged_adfout(logfile):
     """An unconverged geometry optimization to test for empty optdone (see #103 for details)."""
     assert hasattr(logfile.data, 'optdone') and not logfile.data.optdone
+
+    assert logfile.data.metadata["package_version"] == "2013.01+201309012319"
 
 
 def testADF_ADF2013_01_stopiter_dvb_sp_adfout(logfile):
@@ -111,11 +115,15 @@ def testADF_ADF2013_01_stopiter_dvb_sp_adfout(logfile):
     # len(logfile.data.scfvalues[0]) == 10
     assert not hasattr(logfile.data, "scfvalues")
 
+    assert logfile.data.metadata["package_version"] == "2013.01+201309012319"
+
 
 def testADF_ADF2013_01_stopiter_dvb_sp_b_adfout(logfile):
     """Check to ensure that an incomplete SCF is handled correctly."""
     # Why is this not 3?
     assert len(logfile.data.scfvalues[0]) == 2
+
+    assert logfile.data.metadata["package_version"] == "2013.01+201309012319"
 
 
 def testADF_ADF2013_01_stopiter_dvb_sp_c_adfout(logfile):
@@ -124,12 +132,16 @@ def testADF_ADF2013_01_stopiter_dvb_sp_c_adfout(logfile):
     # len(logfile.data.scfvalues[0]) == 6
     assert not hasattr(logfile.data, "scfvalues")
 
+    assert logfile.data.metadata["package_version"] == "2013.01+201309012319"
+
 
 def testADF_ADF2013_01_stopiter_dvb_sp_d_adfout(logfile):
     """This logfile has not SCF test lines so we have no way to check what happens."""
     # This is what we would have checked:
     # len(logfile.data.scfvalues[0]) == 7
     assert not hasattr(logfile.data, "scfvalues")
+
+    assert logfile.data.metadata["package_version"] == "2013.01+201309012319"
 
 
 def testADF_ADF2013_01_stopiter_dvb_un_sp_adfout(logfile):
@@ -138,6 +150,8 @@ def testADF_ADF2013_01_stopiter_dvb_un_sp_adfout(logfile):
     # len(logfile.data.scfvalues[0]) == 7
     assert not hasattr(logfile.data, "scfvalues")
 
+    assert logfile.data.metadata["package_version"] == "2013.01+201309012319"
+
 
 def testADF_ADF2013_01_stopiter_dvb_un_sp_c_adfout(logfile):
     """This logfile has not SCF test lines so we have no way to check what happens."""
@@ -145,12 +159,16 @@ def testADF_ADF2013_01_stopiter_dvb_un_sp_c_adfout(logfile):
     # len(logfile.data.scfvalues[0]) == 10
     assert not hasattr(logfile.data, "scfvalues")
 
+    assert logfile.data.metadata["package_version"] == "2013.01+201309012319"
+
 
 def testADF_ADF2013_01_stopiter_MoOCl4_sp_adfout(logfile):
     """This logfile has not SCF test lines so we have no way to check what happens."""
     # This is what we would have checked:
     # len(logfile.data.scfvalues[0]) == 11
     assert not hasattr(logfile.data, "scfvalues")
+
+    assert logfile.data.metadata["package_version"] == "2013.01+201309012319"
 
 
 def testADF_ADF2014_01_DMO_ORD_orig_out(logfile):
@@ -166,11 +184,27 @@ def testADF_ADF2014_01_DMO_ORD_orig_out(logfile):
     isotropic_ref = 51.3359
     assert abs(isotropic_calc - isotropic_ref) < 1.0e-4
 
+    assert logfile.data.metadata["package_version"] == "2014dev42059"
+    assert logfile.data.metadata["package_version_date"] == "2014-06-11"
+    assert logfile.data.metadata["package_version_description"] == "development version"
+
+
+def testADF_ADF2016_166_tddft_0_31_new_out(logfile):
+    """This file led to StopIteration (#430)."""
+    assert logfile.data.metadata["package_version"] == "2016dev53619"
+    assert logfile.data.metadata["package_version_date"] == "2016-07-21"
+    assert "package_version_description" not in logfile.data.metadata
+
 
 def testADF_ADF2016_fa2_adf_out(logfile):
     """This logfile, without symmetry, should get atombasis parsed."""
     assert hasattr(logfile.data, "atombasis")
     assert [b for ab in logfile.data.atombasis for b in ab] == list(range(logfile.data.nbasis))
+
+    assert logfile.data.metadata["package_version"] == "2016dev50467"
+    assert logfile.data.metadata["package_version_date"] == "2016-02-17"
+    assert logfile.data.metadata["package_version_description"] == "branches/AndrewAtkins/ADF-Shar"
+
 
 # DALTON #
 

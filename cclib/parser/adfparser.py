@@ -135,7 +135,8 @@ class ADF(logfileparser.Logfile):
                 package_version = match.groups()[0]
             else:
                 # This isn't as well-defined, but the field shouldn't be left
-                # empty.
+                # empty. Grab whatever is there and parse it out in the
+                # following lines.
                 package_version = trimmed_line.strip()
             # More detailed information can be found before "A D F", even if
             # the above package version isn't numeric.
@@ -152,9 +153,12 @@ class ADF(logfileparser.Logfile):
                 # it should take precedence, otherwise use the more detailed
                 # version first.
                 if match:
-                    package_version = '.'.join([package_version, tokens[0], tokens[1]])
+                    package_version = '{}dev{}'.format(package_version, tokens[0][1:])
                 else:
-                    package_version = '.'.join([tokens[1], tokens[0], package_version])
+                    year = tokens[1].split("-")[0]
+                    self.metadata["package_version_description"] = package_version
+                    package_version = '{}dev{}'.format(year, tokens[0][1:])
+                self.metadata["package_version_date"] = tokens[1]
             self.metadata["package_version"] = package_version
 
         # In ADF 2014.01, there are (INPUT FILE) messages, so we need to use just
