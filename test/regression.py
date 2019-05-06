@@ -933,6 +933,8 @@ def testMolcas_Molcas18_test_standard_000_out(logfile):
     assert not hasattr(logfile.data, "moenergies")
     assert not hasattr(logfile.data, "mocoeffs")
 
+    assert logfile.data.metadata["package_version"] == "18.09+52-ge15dc38.81d3fb3dc6a5c5df6b3791ef1ef3790f"
+
 
 def testMolcas_Molcas18_test_standard_001_out(logfile):
     """This logfile has two calculations, and we currently only want to parse the first."""
@@ -942,15 +944,21 @@ def testMolcas_Molcas18_test_standard_001_out(logfile):
     assert logfile.data.nbasis == 30
     assert logfile.data.nmo == 30
 
+    assert logfile.data.metadata["package_version"] == "18.09+52-ge15dc38.81d3fb3dc6a5c5df6b3791ef1ef3790f"
+
 
 def testMolcas_Molcas18_test_standard_003_out(logfile):
     """This logfile has extra charged monopoles (not part of the molecule)."""
     assert logfile.data.charge == 0
 
+    assert logfile.data.metadata["package_version"] == "18.09+52-ge15dc38.81d3fb3dc6a5c5df6b3791ef1ef3790f"
+
 
 def testMolcas_Molcas18_test_standard_005_out(logfile):
     """Final geometry in optimization has fewer atoms due to symmetry, and so is ignored."""
     assert len(logfile.data.atomcoords) == 2
+
+    assert logfile.data.metadata["package_version"] == "18.09+52-ge15dc38.81d3fb3dc6a5c5df6b3791ef1ef3790f"
 
 
 def testMolcas_Molcas18_test_stevenv_001_out(logfile):
@@ -958,11 +966,16 @@ def testMolcas_Molcas18_test_stevenv_001_out(logfile):
     assert not hasattr(logfile.data, "moenergies")
     assert not hasattr(logfile.data, "mocoeffs")
 
+    assert logfile.data.metadata["package_version"] == "18.09+52-ge15dc38.81d3fb3dc6a5c5df6b3791ef1ef3790f"
+
 
 def testMolcas_Molcas18_test_stevenv_desym_out(logfile):
     """This logfile has iterations interrupted by a Fermi aufbau procedure."""
     assert len(logfile.data.scfvalues) == 1
     assert len(logfile.data.scfvalues[0]) == 26
+
+    assert logfile.data.metadata["package_version"] == "18.09+52-ge15dc38.81d3fb3dc6a5c5df6b3791ef1ef3790f"
+
 
 # Molpro #
 

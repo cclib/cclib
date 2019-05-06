@@ -42,6 +42,28 @@ class Molcas(logfileparser.Logfile):
         for element, ncore in self.core_array:
             self._assign_coreelectrons_to_element(element, ncore)
 
+        if "package_version" in self.metadata:
+            # If there is both a tag and the full hash, place the tag
+            # first. Both are chosen to be local, since there isn't a
+            # distinction between development and release builds in their
+            # version cycle.
+            if "tag" in self.metadata and "revision" in self.metadata:
+                self.metadata["package_version"] = "{}+{}.{}".format(
+                    self.metadata["package_version"],
+                    self.metadata["tag"],
+                    self.metadata["revision"]
+                )
+            elif "tag" in self.metadata:
+                self.metadata["package_version"] = "{}+{}".format(
+                    self.metadata["package_version"],
+                    self.metadata["tag"]
+                )
+            elif "revision" in self.metadata:
+                self.metadata["package_version"] = "{}+{}".format(
+                    self.metadata["package_version"],
+                    self.metadata["revision"]
+                )
+
     def before_parsing(self):
         # Compile the regex for extracting the element symbol from the
         # atom label in the "Molecular structure info" block.
@@ -67,22 +89,15 @@ class Molcas(logfileparser.Logfile):
 
         # Extract the version number and optionally the Git tag and hash.
         if "version" in line:
-            match = re.search(r"\s{2,}version\s(\d*\.\d*)", line)
+            match = re.search(r"\s{2,}version:?\s(\d*\.\d*)", line)
             if match:
-                package_version = match.groups()[0]
-                self.metadata["package_version"] = package_version
+                self.metadata["package_version"] = match.groups()[0]
         if "tag" in line:
-            tag = line.split()[-1]
-            package_version = self.metadata.get("package_version")
-            if package_version:
-                self.metadata["package_version"] = package_version + "." + tag
+            self.metadata["tag"] = line.split()[-1]
         if "build" in line:
             match = re.search(r"\*\s*build\s(\S*)\s*\*", line)
             if match:
-                revision = match.groups()[0]
-                package_version = self.metadata.get("package_version")
-                if package_version:
-                    self.metadata["package_version"] = package_version + "+" + revision
+                self.metadata["revision"] = match.groups()[0]
 
         ## This section is present when executing &GATEWAY.
         # ++    Molecular structure info:
