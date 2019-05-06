@@ -39,8 +39,6 @@ inside the data directory, like so:
 from __future__ import print_function
 
 import glob
-import importlib
-import inspect
 import logging
 import os
 import sys
@@ -1089,6 +1087,16 @@ def testORCA_ORCA4_0_1_ttt_td_out(logfile):
     assert numpy.isnan(logfile.data.etsecs[0][0][2])
     assert len(logfile.data.etrotats) == 24
     assert logfile.data.etrotats[13] == -0.03974
+
+
+def testORCA_ORCA4_0_hydrogen_fluoride_numfreq_out(logfile):
+    """Frequencies from linear molecules weren't parsed correctly (#426)."""
+    numpy.testing.assert_equal(logfile.data.vibfreqs, [4473.96])
+
+
+def testORCA_ORCA4_0_hydrogen_fluoride_usesym_anfreq_out(logfile):
+    """Frequencies from linear molecules weren't parsed correctly (#426)."""
+    numpy.testing.assert_equal(logfile.data.vibfreqs, [4473.89])
 
 
 def testORCA_ORCA4_0_invalid_literal_for_float_out(logfile):
