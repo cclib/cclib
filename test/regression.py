@@ -445,34 +445,48 @@ def testDALTON_DALTON_2018_tdpbe_normal_sym_out(logfile):
 
 # Firefly #
 
+
 def testGAMESS_Firefly8_0_dvb_gopt_a_unconverged_out(logfile):
     """An unconverged geometry optimization to test for empty optdone (see #103 for details)."""
     assert hasattr(logfile.data, 'optdone') and not logfile.data.optdone
+
+    assert logfile.data.metadata["package_version"] == "8.0.1+8540"
 
 
 def testGAMESS_Firefly8_0_h2o_log(logfile):
     """Check that molecular orbitals are parsed correctly (cclib/cclib#208)."""
     assert logfile.data.mocoeffs[0][0][0] == -0.994216
 
+    assert logfile.data.metadata["package_version"] == "8.0.0+7651"
+
 
 def testGAMESS_Firefly8_0_stopiter_firefly_out(logfile):
     """Check to ensure that an incomplete SCF is handled correctly."""
     assert len(logfile.data.scfvalues[0]) == 6
 
+    assert logfile.data.metadata["package_version"] == "8.0.1+8540"
+
 
 def testGAMESS_Firefly8_1_benzene_am1_log(logfile):
-	"""Molecular orbitals were not parsed (cclib/cclib#228)."""
-	assert hasattr(logfile.data, 'mocoeffs')
+    """Molecular orbitals were not parsed (cclib/cclib#228)."""
+    assert hasattr(logfile.data, 'mocoeffs')
+
+    assert logfile.data.metadata["package_version"] == "8.1.0+9035"
 
 
 def testGAMESS_Firefly8_1_naphtalene_t_0_out(logfile):
-	"""Molecular orbitals were not parsed (cclib/cclib#228)."""
-	assert hasattr(logfile.data, 'mocoeffs')
+    """Molecular orbitals were not parsed (cclib/cclib#228)."""
+    assert hasattr(logfile.data, 'mocoeffs')
+
+    assert logfile.data.metadata["package_version"] == "8.1.1+9295"
 
 
 def testGAMESS_Firefly8_1_naphtalene_t_0_SP_out(logfile):
-	"""Molecular orbitals were not parsed (cclib/cclib#228)."""
-	assert hasattr(logfile.data, 'mocoeffs')
+    """Molecular orbitals were not parsed (cclib/cclib#228)."""
+    assert hasattr(logfile.data, 'mocoeffs')
+
+    assert logfile.data.metadata["package_version"] == "8.1.1+9295"
+
 
 # GAMESS #
 
