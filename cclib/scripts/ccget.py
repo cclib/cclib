@@ -11,7 +11,6 @@
 
 from __future__ import print_function
 
-import getopt
 import glob
 import logging
 import os.path
@@ -25,32 +24,6 @@ from cclib.parser import ccData
 from cclib.io import ccread, URL_PATTERN
 
 
-MSG_USAGE = """\
-Usage:  ccget <attribute> [<attribute>] <compchemlogfile> [<compchemlogfile>]
-Try     ccget --help for more information\
-"""
-
-MSG_USAGE_LONG = """\
-Usage:  ccget <attribute> [<attribute>] <compchemlogfile> [<compchemlogfile>]
-    where <attribute> is one of the attributes to be parsed by cclib
-    from each of the compchemlogfiles.
-For a list of attributes available in a file, use --list (or -l):
-    ccget --list <compchemlogfile>
-To extract attributes available in a CJSON file, use --json (or -j):
-    ccget --json  <attr> [<attr>]  <compchemlogfile>
-To parse multiple files as one input stream, use --multi (or -m):
-    ccget --multi <attr> [<attr>]  <cclogfile> <cclogfile> [<cclogfile>]
-Additional options:
-    -v or --verbose: more verbose parsing output (only errors by default)
-    -u or --future: use experimental features (currently optdone_as_list)
-    -f or --full: toggle full print behaviour for attributes\
-"""
-
-# These are the options ccget accepts and their one letter versions.
-OPTS_LONG = ["help", "list", "json", "multi", "verbose", "future", "full"]
-OPTS_SHORT = "hljmvuf"
-
-
 # Set up options for pretty-printing output.
 if sys.version_info < (3, 4):
     pprint = partial(pprint, width=120)
@@ -62,36 +35,58 @@ numpy.set_printoptions(linewidth=120)
 def ccget():
     """Parse files with cclib based on command line arguments."""
 
-    # Parse the arguments and pass them to ccget, but print help information
-    # and exit if it fails.
-    try:
-        optlist, arglist = getopt.getopt(sys.argv[1:], OPTS_SHORT, OPTS_LONG)
-    except getopt.GetoptError:
-        print(MSG_USAGE_LONG)
-        sys.exit(1)
+    import argparse
 
-    future = False
-    showattr = False
-    cjsonfile = False
-    multifile = False
-    verbose = False
-    full = False
-    for opt, arg in optlist:
-        if opt in ("-h", "--help"):
-            print(MSG_USAGE_LONG)
-            sys.exit()
-        if opt in ("-l", "--list"):
-            showattr = True
-        if opt in ("-j", "--json"):
-            cjsonfile = True
-        if opt in ("-m", "--multi"):
-            multifile = True
-        if opt in ("-v", "--verbose"):
-            verbose = True
-        if opt in ("-u", "--future"):
-            future = True
-        if opt in ("-f", "--full"):
-            full = True
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument(
+        "attribute_or_compchemlogfile", nargs="+",
+        help="one or more attributes to be parsed from one ore more logfiles",
+    )
+
+    group = parser.add_mutually_exclusive_group()
+
+    group.add_argument(
+        "--list", "-l",
+        action="store_true",
+        help="print a list of attributes available in each file",
+    )
+    group.add_argument(
+        "--json", "-j",
+        action="store_true",
+        help="the given logfile is in CJSON format",
+    )
+    group.add_argument(
+        "--multi", "-m",
+        action="store_true",
+        help="parse multiple input files as one input stream",
+    )
+
+    parser.add_argument(
+        "--verbose", "-v",
+        action="store_true",
+        help="more verbose parsing output (only errors by default)",
+    )
+    parser.add_argument(
+        "--future", "-u",
+        action="store_true",
+        help="use experimental features (currently optdone_as_list)",
+    )
+    parser.add_argument(
+        "--full", "-f",
+        action="store_true",
+        help="toggle full print behaviour for attributes",
+    )
+
+    args = parser.parse_args()
+
+    arglist = args.attribute_or_compchemlogfile
+    showattr = args.list
+    cjsonfile = args.json
+    multifile = args.multi
+    verbose = args.verbose
+    future = args.future
+    full = args.full
 
     # Toggle full print behaviour for numpy arrays.
     if full:
@@ -107,8 +102,8 @@ def ccget():
         correct_number = (not showattr and len(arglist) > 2) or (showattr and len(arglist) > 1)
     if not correct_number:
         print("The number of arguments does not seem to be correct.")
-        print(MSG_USAGE)
-        sys.exit(1)
+        parser.print_usage()
+        parser.exit(1)
 
     # Figure out which are the attribute names and which are the filenames or links.
     # Note that in Linux, the shell expands wild cards, but not so in Windows,
@@ -126,21 +121,21 @@ def ccget():
                 filenames.extend(wildcardmatches)
             else:
                 print("%s is neither a filename nor an attribute name." % arg)
-                print(MSG_USAGE)
-                sys.exit(1)
+                parser.print_usage()
+                parser.exit(1)
 
     # Since there is some ambiguity to the correct number of arguments, check
     # that there is at least one filename (or two in multifile mode), and also
     # at least one attribute to parse if the -l option was not passed.
     if len(filenames) == 0:
         print("No logfiles given")
-        sys.exit(1)
+        parser.exit(1)
     if multifile and len(filenames) == 1:
         print("Expecting at least two logfiles in multifile mode")
-        sys.exit(1)
+        parser.exit(1)
     if not showattr and len(attrnames) == 0:
         print("No attributes given")
-        sys.exit(1)
+        parser.exit(1)
 
     # This should be sufficient to correctly handle multiple files, that is to
     # run the loop below only once with all logfiles in the variable `filename`.
@@ -175,11 +170,11 @@ def ccget():
         print("Attempting to read %s" % name)
         data = ccread(filename, **kwargs)
 
-        if data == None:
+        if data is None:
             print("Cannot figure out the format of '%s'" % name)
             print("Report this to the cclib development team if you think it is an error.")
-            print("\n" + MSG_USAGE)
-            sys.exit()
+            print("\n" + parser.format_usage())
+            parser.exit(1)
 
         if showattr:
             print("cclib can parse the following attributes from %s:" % name)
@@ -212,7 +207,7 @@ def ccget():
                 print("Could not parse %s from this file." % attr)
                 invalid = True
             if invalid:
-                print(MSG_USAGE_LONG)
+                parser.print_help()
 
 
 if __name__ == "__main__":

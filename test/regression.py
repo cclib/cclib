@@ -278,7 +278,7 @@ def testDALTON_DALTON_2016_Trp_polar_response_diplnx_out(logfile):
     all others are NaN even after parsing a previous file with full tensor.
     """
     full_tens_path = os.path.join(__regression_dir__, "DALTON/DALTON-2015/Trp_polar_response.out")
-    DALTON(full_tens_path).parse()
+    DALTON(full_tens_path, loglevel=logging.ERROR).parse()
     assert hasattr(logfile.data, "polarizabilities")
     assert abs(logfile.data.polarizabilities[0][0, 0] - 95.11540019) < 1.0e-8
     assert numpy.count_nonzero(numpy.isnan(logfile.data.polarizabilities)) == 8
@@ -1861,8 +1861,7 @@ def testnoparseGaussian_Gaussian09_coeffs_log(filename):
     parsing, we set some attributes of the parser so that it all goes smoothly.
     """
 
-    parser = Gaussian(os.path.join(__filedir__, filename))
-    parser.logger.setLevel(logging.ERROR)
+    parser = Gaussian(os.path.join(__filedir__, filename), loglevel=logging.ERROR)
     parser.nmo = 5
     parser.nbasis = 1128
 
@@ -2658,19 +2657,21 @@ def test_regressions(which=[], opt_traceback=False, regdir=__regression_dir__, l
 
 if __name__ == "__main__":
 
-    if "--debug" in sys.argv:
-        loglevel = logging.DEBUG
-    else:
-        loglevel = logging.ERROR
+    import argparse
 
-    # If 'test' is passed as the first argument, do a doctest on this module.
-    # Otherwise, any arguments are used to limit the test to the packages/parsers
-    # passed as arguments. No arguments implies all parsers.
-    # In general, it would be best to replace this trickery by argparse magic.
-    if len(sys.argv) == 2 and sys.argv[1] == "test":
-        import doctest
-        doctest.testmod()
-    else:
-        opt_traceback = "--traceback" in sys.argv
-        which = [arg for arg in sys.argv[1:] if not arg in ["--traceback"]]
-        test_regressions(which, opt_traceback, loglevel=loglevel)
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument("--traceback", action="store_true")
+    parser.add_argument("--debug", action="store_true")
+    parser.add_argument(
+        "parser_or_module",
+        nargs="*",
+        help="Limit the test to the packages/parsers passed as arguments. "
+             "No arguments implies all parsers."
+    )
+
+    args = parser.parse_args()
+
+    loglevel = logging.DEBUG if args.debug else logging.ERROR
+
+    test_regressions(args.parser_or_module, args.traceback, loglevel=loglevel)
