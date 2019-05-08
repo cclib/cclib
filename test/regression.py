@@ -1118,6 +1118,8 @@ def testMolpro_Molpro2008_ch2o_molpro_casscf_out(logfile):
     assert len(logfile.data.nooccnos) == logfile.data.nmo
     assert logfile.data.nooccnos[27] == 1.95640
 
+    assert logfile.data.metadata["package_version"] == "2012.1"
+
 
 def testMolpro_Molpro2012_CHONHSH_HF_STO_3G_out(logfile):
     """Formatting of the basis function is slightly different than expected."""
@@ -1130,19 +1132,29 @@ def testMolpro_Molpro2012_CHONHSH_HF_STO_3G_out(logfile):
     assert len(logfile.data.gbasis[5]) == 1 # H
     assert len(logfile.data.gbasis[6]) == 1 # H
 
+    assert logfile.data.metadata["package_version"] == "2012.1.23+f8cfea266908527a8826bdcd5983aaf62e47d3bf"
+
+
 def testMolpro_Molpro2012_dvb_gopt_unconverged_out(logfile):
     """An unconverged geometry optimization to test for empty optdone (see #103 for details)."""
     assert hasattr(logfile.data, 'optdone') and not logfile.data.optdone
+
+    assert logfile.data.metadata["package_version"] == "2012.1.12+e112a8ab93d81616c1987a1f1ef3707d874b6803"
 
 
 def testMolpro_Molpro2012_stopiter_molpro_dft_out(logfile):
     """Check to ensure that an incomplete SCF is handled correctly."""
     assert len(logfile.data.scfvalues[0]) == 6
 
+    assert logfile.data.metadata["package_version"] == "2012.1+c18f7d37f9f045f75d4f3096db241dde02ddca0a"
+
 
 def testMolpro_Molpro2012_stopiter_molpro_hf_out(logfile):
     """Check to ensure that an incomplete SCF is handled correctly."""
     assert len(logfile.data.scfvalues[0]) == 6
+
+    assert logfile.data.metadata["package_version"] == "2012.1+c18f7d37f9f045f75d4f3096db241dde02ddca0a"
+
 
 # MOPAC #
 
