@@ -88,13 +88,8 @@ class MOPAC(logfileparser.Logfile):
 
         # Extract the package version.
         if "For non-commercial use only" in line:
-            tokens = line.split()
-            tokens = tokens[8:]
-            assert len(tokens) == 2
-            package_version_full = tokens[0]
-            if tokens[1] != "**":
-                package_version_full = '-'.join(tokens)[:-2]
-            self.metadata["package_version"] = package_version_full
+            # Ignore the platorm information for now (the last character).
+            self.metadata["package_version"] = line.split()[8][:-1]
 
         # Extract the atomic numbers and coordinates from the optimized geometry
         # note that cartesian coordinates section occurs multiple times in the file, and we want to end up using the last instance

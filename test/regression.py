@@ -1163,6 +1163,9 @@ def testMOPAC_MOPAC2016_9S3_uuu_Cs_cation_freq_PM7_out(logfile):
     """There was a syntax error in the frequency parsing."""
     assert hasattr(logfile.data, 'vibfreqs')
 
+    assert logfile.data.metadata["package_version"] == "16.175"
+
+
 # NWChem #
 
 def testNWChem_NWChem6_0_dvb_gopt_hf_unconverged_out(logfile):
