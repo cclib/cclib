@@ -580,21 +580,31 @@ def testGAMESS_WinGAMESS_dvb_td_trplet_2007_03_24_r1_out(logfile):
     assert abs(max(logfile.data.etoscs) - 0.0) < 0.01
     assert len(logfile.data.etsecs) == number
 
+    assert logfile.data.metadata["package_version"] == "2007.r1"
+
+
 # GAMESS-UK #
 
 
 def testGAMESS_UK_GAMESS_UK8_0_dvb_gopt_hf_unconverged_out(logfile):
     assert hasattr(logfile.data, 'optdone') and not logfile.data.optdone
 
+    assert logfile.data.metadata["package_version"] == "8.0+6248"
+
 
 def testGAMESS_UK_GAMESS_UK8_0_stopiter_gamessuk_dft_out(logfile):
     """Check to ensure that an incomplete SCF is handled correctly."""
     assert len(logfile.data.scfvalues[0]) == 7
 
+    assert logfile.data.metadata["package_version"] == "8.0+6248"
+
 
 def testGAMESS_UK_GAMESS_UK8_0_stopiter_gamessuk_hf_out(logfile):
     """Check to ensure that an incomplete SCF is handled correctly."""
     assert len(logfile.data.scfvalues[0]) == 5
+
+    assert logfile.data.metadata["package_version"] == "8.0+6248"
+
 
 # Gaussian #
 

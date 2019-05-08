@@ -56,8 +56,9 @@ class GAMESSUK(logfileparser.Logfile):
             revision = line.split()[1]
             package_version = self.metadata.get("package_version")
             if package_version:
-                package_version = "{}.r{}".format(package_version, revision)
-                self.metadata["package_version"] = package_version
+                self.metadata["package_version"] = "{}+{}".format(
+                    package_version, revision
+                )
 
         if line[1:22] == "total number of atoms":
             natom = int(line.split()[-1])
