@@ -1492,6 +1492,7 @@ def testPsi4_Psi4_1_2_ch4_hf_opt_freq_out(logfile):
     assert hasattr(logfile.data, 'vibdisps')
     assert hasattr(logfile.data, 'vibfreqs')
 
+
 # Q-Chem #
 
 
@@ -2213,10 +2214,13 @@ def testQChem_QChem5_1_old_final_print_1_out(logfile):
 
 
 def testTurbomole_Turbomole7_2_dvb_gopt_b3_lyp_Gaussian__(logfile):
+    assert logfile.data.metadata["package_version"] == "7.2"
     assert logfile.data.natom == 20
+
 
 # These regression tests are for logfiles that are not to be parsed
 # for some reason, and the function should start with 'testnoparse'.
+
 
 def testnoparseADF_ADF2004_01_mo_sp_adfout(filename):
     """This is an ADF file that has a different number of AO functions
