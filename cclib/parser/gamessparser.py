@@ -96,12 +96,21 @@ class GAMESS(logfileparser.Logfile):
             # ...so avoid overwriting it if Firefly already set this field.
             if "package_version" not in self.metadata:
                 tokens = line.split()
-                self.metadata["package_version"] = ' '.join(tokens[4:-1])
+                day, month, year = tokens[4:7]
+                possible_release = tokens[-2]
+                # There may not be a (Rn) for the nth release that year, in
+                # which case this index is the same as 7 (the year).
+                if possible_release == year:
+                    release = "1"
+                else:
+                    # `(R23)` -> 23
+                    release = possible_release[2:-1]
+                self.metadata["package_version"] = '{}.r{}'.format(year, release)
 
         if line[1:12] == "INPUT CARD>":
             return
 
-        # extract the methods 
+        # extract the methods
         if line[1:7] == "SCFTYP":
             method = line.split()[0][7:]
             if len(self.metadata["methods"]) == 0:

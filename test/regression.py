@@ -497,12 +497,16 @@ def testGAMESS_GAMESS_US2008_N2_UMP2_out(logfile):
     assert len(logfile.data.mpenergies) == 1
     assert abs(logfile.data.mpenergies[0] + 2975.97) < 0.01
 
+    assert logfile.data.metadata["package_version"] == "2008.r1"
+
 
 def testGAMESS_GAMESS_US2008_N2_ROMP2_out(logfile):
     """Check that the new format for GAMESS MP2 is parsed."""
     assert hasattr(logfile.data, "mpenergies")
     assert len(logfile.data.mpenergies) == 1
     assert abs(logfile.data.mpenergies[0] + 2975.97) < 0.01
+
+    assert logfile.data.metadata["package_version"] == "2008.r1"
 
 
 def testGAMESS_GAMESS_US2009_open_shell_ccsd_test_log(logfile):
@@ -511,6 +515,8 @@ def testGAMESS_GAMESS_US2009_open_shell_ccsd_test_log(logfile):
     assert len(logfile.data.ccenergies) == 1
     assert abs(logfile.data.ccenergies[0] + 3501.50) < 0.01
 
+    assert logfile.data.metadata["package_version"] == "2009.r3"
+
 
 def testGAMESS_GAMESS_US2009_paulo_h2o_mp2_out(logfile):
     """Check that the new format for GAMESS MP2 is parsed."""
@@ -518,20 +524,28 @@ def testGAMESS_GAMESS_US2009_paulo_h2o_mp2_out(logfile):
     assert len(logfile.data.mpenergies) == 1
     assert abs(logfile.data.mpenergies[0] + 2072.13) < 0.01
 
+    assert logfile.data.metadata["package_version"] == "2009.r3"
+
 
 def testGAMESS_GAMESS_US2012_dvb_gopt_a_unconverged_out(logfile):
     """An unconverged geometry optimization to test for empty optdone (see #103 for details)."""
     assert hasattr(logfile.data, 'optdone') and not logfile.data.optdone
+
+    assert logfile.data.metadata["package_version"] == "2012.r2"
 
 
 def testGAMESS_GAMESS_US2012_stopiter_gamess_out(logfile):
     """Check to ensure that an incomplete SCF is handled correctly."""
     assert len(logfile.data.scfvalues[0]) == 10
 
+    assert logfile.data.metadata["package_version"] == "2012.r1"
+
 
 def testGAMESS_GAMESS_US2013_N_UHF_out(logfile):
     """An UHF job that has an LZ value analysis between the alpha and beta orbitals."""
     assert len(logfile.data.moenergies) == 2
+
+    assert logfile.data.metadata["package_version"] == "2013.r1"
 
 
 def testGAMESS_GAMESS_US2014_CdtetraM1B3LYP_log(logfile):
@@ -541,9 +555,15 @@ def testGAMESS_GAMESS_US2014_CdtetraM1B3LYP_log(logfile):
     assert numpy.count_nonzero(logfile.data.mocoeffs[0][80-1: 0:]) == 0
     assert logfile.data.mocoeffs[0].all() == logfile.data.mocoeffs[1].all()
 
+    assert logfile.data.metadata["package_version"] == "2014.r1"
+
+
 def testGAMESS_GAMESS_US2018_exam45_log(logfile):
     """This logfile has EOM-CC electronic transitions (not currently supported)."""
     assert not hasattr(logfile.data, 'etenergies')
+
+    assert logfile.data.metadata["package_version"] == "2018.r2"
+
 
 def testGAMESS_WinGAMESS_dvb_td_trplet_2007_03_24_r1_out(logfile):
     """Do some basic checks for this old unit test that was failing.
