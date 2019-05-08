@@ -1168,9 +1168,12 @@ def testMOPAC_MOPAC2016_9S3_uuu_Cs_cation_freq_PM7_out(logfile):
 
 # NWChem #
 
+
 def testNWChem_NWChem6_0_dvb_gopt_hf_unconverged_out(logfile):
     """An unconverged geometry optimization to test for empty optdone (see #103 for details)."""
     assert hasattr(logfile.data, 'optdone') and not logfile.data.optdone
+
+    assert logfile.data.metadata["package_version"] == "6.0"
 
 
 def testNWChem_NWChem6_0_dvb_sp_hf_moments_only_quadrupole_out(logfile):
@@ -1180,6 +1183,8 @@ def testNWChem_NWChem6_0_dvb_sp_hf_moments_only_quadrupole_out(logfile):
     assert not logfile.data.moments[1].shape
     assert len(logfile.data.moments[2]) == 6
 
+    assert logfile.data.metadata["package_version"] == "6.0"
+
 
 def testNWChem_NWChem6_0_dvb_sp_hf_moments_only_octupole_out(logfile):
     """Quadrupole moments are printed/parsed, but not lower moments (no shape)."""
@@ -1188,6 +1193,8 @@ def testNWChem_NWChem6_0_dvb_sp_hf_moments_only_octupole_out(logfile):
     assert not logfile.data.moments[1].shape
     assert not logfile.data.moments[2].shape
     assert len(logfile.data.moments[3]) == 10
+
+    assert logfile.data.metadata["package_version"] == "6.0"
 
 
 def testNWChem_NWChem6_0_hydrogen_atom_ROHF_cc_pVDZ_out(logfile):
@@ -1203,6 +1210,8 @@ def testNWChem_NWChem6_0_hydrogen_atom_ROHF_cc_pVDZ_out(logfile):
     assert logfile.data.homos.shape == (2,)
     assert logfile.data.homos[0] == 0
     assert logfile.data.homos[1] == -1
+
+    assert logfile.data.metadata["package_version"] == "6.0"
 
 
 def testNWChem_NWChem6_0_hydrogen_atom_UHF_cc_pVDZ_out(logfile):
@@ -1223,25 +1232,32 @@ def testNWChem_NWChem6_0_hydrogen_atom_UHF_cc_pVDZ_out(logfile):
     assert logfile.data.homos[0] == 0
     assert logfile.data.homos[1] == -1
 
+    assert logfile.data.metadata["package_version"] == "6.0"
+
 
 def testNWChem_NWChem6_5_stopiter_nwchem_dft_out(logfile):
     """Check to ensure that an incomplete SCF is handled correctly."""
     assert len(logfile.data.scfvalues[0]) == 3
 
+    assert logfile.data.metadata["package_version"] == "6.5+26243"
+
 
 def testNWChem_NWChem6_5_stopiter_nwchem_hf_out(logfile):
     """Check to ensure that an incomplete SCF is handled correctly."""
-    assert logfile.data.metadata["package_version"] == "6.5+26243"
     assert len(logfile.data.scfvalues[0]) == 2
+
+    assert logfile.data.metadata["package_version"] == "6.5+26243"
 
 
 def testNWChem_NWChem6_8_526_out(logfile):
     """If `print low` is present in the input, SCF iterations are not
     printed.
     """
-    assert logfile.data.metadata["package_version"] == "6.8.1+g08bf49b"
     assert not hasattr(logfile.data, "scftargets")
     assert not hasattr(logfile.data, "scfvalues")
+
+    assert logfile.data.metadata["package_version"] == "6.8.1+g08bf49b"
+
 
 # ORCA #
 
