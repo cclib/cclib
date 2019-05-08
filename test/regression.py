@@ -1440,6 +1440,8 @@ def testPsi3_Psi3_4_water_psi3_log(logfile):
     assert logfile.data.nbasis == 25
     assert [len(ab) for ab in logfile.data.atombasis] == [15, 5, 5]
 
+    assert logfile.data.metadata["package_version"] == "3.4alpha"
+
 
 # PSI 4 #
 
