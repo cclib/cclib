@@ -10,8 +10,10 @@
 
 from __future__ import print_function
 
-import numpy
 import re
+
+import numpy
+from packaging.version import parse as parse_version
 
 from cclib.parser import logfileparser
 from cclib.parser import utils
@@ -52,7 +54,14 @@ class ORCA(logfileparser.Logfile):
 
         # Extract the version number.
         if "Program Version" == line.strip()[:15]:
-            self.metadata["package_version"] = line.split()[2]
+            # Handle development versions.
+            self.metadata["package_version"] = line.split()[2].replace(".x", "dev")
+            possible_revision_line = next(inputfile)
+            if "SVN: $Rev" in possible_revision_line:
+                self.metadata["package_version"] += "+{}".format(
+                    re.search(r"\d+", possible_revision_line).group()
+                )
+
 
         # ================================================================================
         #                                         WARNINGS
@@ -930,7 +939,8 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
                     return energy, intensity
 
             # Clashes with Orca 2.6 (and presumably before) TDDFT absorption spectrum printing
-            elif line == 'ABSORPTION SPECTRUM' and float(self.metadata['package_version']) > 2.6:
+            elif line == 'ABSORPTION SPECTRUM' and \
+                 parse_version(self.metadata['package_version']).release > (2, 6):
                 def energy_intensity(line):
                     """ CASSCF absorption spectrum
 ------------------------------------------------------------------------------------------

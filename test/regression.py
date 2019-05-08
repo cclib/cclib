@@ -1277,6 +1277,8 @@ def testORCA_ORCA2_8_co_cosmo_out(logfile):
     """
     assert hasattr(logfile.data, "scfenergies") and len(logfile.data.scfenergies) == 4
 
+    assert logfile.data.metadata["package_version"] == "2.8+2287"
+
 
 def testORCA_ORCA2_9_job_out(logfile):
     """First output file and request to parse atomic spin densities.
@@ -1286,12 +1288,16 @@ def testORCA_ORCA2_9_job_out(logfile):
     """
     assert all([abs(sum(v)-1.0) < 0.0001 for k, v in logfile.data.atomspins.items()])
 
+    assert logfile.data.metadata["package_version"] == "2.9.0"
+
 
 def testORCA_ORCA2_9_qmspeedtest_hf_out(logfile):
-	"""Check precision of SCF energies (cclib/cclib#210)."""
-	energy = logfile.data.scfenergies[-1]
-	expected = -17542.5188694
-	assert abs(energy - expected) < 10**-6
+    """Check precision of SCF energies (cclib/cclib#210)."""
+    energy = logfile.data.scfenergies[-1]
+    expected = -17542.5188694
+    assert abs(energy - expected) < 10**-6
+
+    assert logfile.data.metadata["package_version"] == "2.9.1"
 
 
 def testORCA_ORCA3_0_chelpg_out(logfile):
@@ -1307,25 +1313,35 @@ def testORCA_ORCA3_0_dvb_gopt_unconverged_out(logfile):
     """An unconverged geometry optimization to test for empty optdone (see #103 for details)."""
     assert hasattr(logfile.data, 'optdone') and not logfile.data.optdone
 
+    assert logfile.data.metadata["package_version"] == "3.0.1"
+
 
 def testORCA_ORCA3_0_polar_rhf_cg_out(logfile):
     """Alternative CP-SCF solver for the polarizability wasn't being detected."""
     assert hasattr(logfile.data, 'polarizabilities')
+
+    assert logfile.data.metadata["package_version"] == "3.0.3"
 
 
 def testORCA_ORCA3_0_polar_rhf_diis_out(logfile):
     """Alternative CP-SCF solver for the polarizability wasn't being detected."""
     assert hasattr(logfile.data, 'polarizabilities')
 
+    assert logfile.data.metadata["package_version"] == "3.0.3"
+
 
 def testORCA_ORCA3_0_stopiter_orca_scf_compact_out(logfile):
     """Check to ensure that an incomplete SCF is handled correctly."""
     assert len(logfile.data.scfvalues[0]) == 1
 
+    assert logfile.data.metadata["package_version"] == "3.0.1"
+
 
 def testORCA_ORCA3_0_stopiter_orca_scf_large_out(logfile):
     """Check to ensure that an incomplete SCF is handled correctly."""
     assert len(logfile.data.scfvalues[0]) == 9
+
+    assert logfile.data.metadata["package_version"] == "2.9.1"
 
 
 def testORCA_ORCA4_0_1_ttt_td_out(logfile):
@@ -1336,6 +1352,8 @@ def testORCA_ORCA4_0_1_ttt_td_out(logfile):
     assert numpy.isnan(logfile.data.etsecs[0][0][2])
     assert len(logfile.data.etrotats) == 24
     assert logfile.data.etrotats[13] == -0.03974
+
+    assert logfile.data.metadata["package_version"] == "4.0.0"
 
 
 def testORCA_ORCA4_0_hydrogen_fluoride_numfreq_out(logfile):
@@ -1362,6 +1380,8 @@ def testORCA_ORCA4_0_invalid_literal_for_float_out(logfile):
     assert logfile.data.mocoeffs[0][106][378] == 241.536860
     assert logfile.data.mocoeffs[0][107][378] == -92.159399
 
+    assert logfile.data.metadata["package_version"] == "4.0.1.2"
+
 
 def testORCA_ORCA4_0_IrCl6_sp_out(logfile):
     """Tests ECP and weird SCF printing."""
@@ -1377,6 +1397,9 @@ def testORCA_ORCA4_0_comment_or_blank_line_out(logfile):
     assert hasattr(logfile.data,"atomcoords")
     assert logfile.data.atomcoords.shape == (1, 8, 3)
 
+    assert logfile.data.metadata["package_version"] == "4.0.0.2"
+
+
 def testORCA_ORCA4_1_725_out(logfile):
     """This file uses embedding potentials, which requires `>` after atom names in
     the input file and that confuses different parts of the parser.
@@ -1387,6 +1410,8 @@ def testORCA_ORCA4_1_725_out(logfile):
     numpy.testing.assert_equal(logfile.data.atomnos, numpy.array([20, 17, 17, 17, 17, 17, 17], dtype=int))
     assert len(logfile.data.atomcharges["mulliken"]) == 7
     assert len(logfile.data.atomcharges["lowdin"]) == 7
+
+    assert logfile.data.metadata["package_version"] == "4.1dev+13440"
 
 
 def testORCA_ORCA4_1_orca_from_issue_736_out(logfile):
