@@ -360,6 +360,7 @@ ORCA/ORCA4.0/IrCl6_sp.out
 ORCA/ORCA4.0/CO2_freqs.out
 ORCA/ORCA4.0/H2-_CASSCF_opt.out
 ORCA/ORCA4.1/725.out
+ORCA/ORCA4.1/raw_failed_run_from_issue_426.out
 Psi3/Psi3.4/water_psi3.log
 Psi4/Psi4-0.5/sample_fd-freq-gradient.out
 Psi4/Psi4-0.5/sample_mom.out
