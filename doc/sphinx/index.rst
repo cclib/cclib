@@ -26,9 +26,13 @@ The current version is **cclib 1.6.1** (see the changelog_ for what's new) and p
 - MOPAC_ (version 2016)
 - NWChem_ (versions 6.0 and 6.5)
 - ORCA_ (versions 3.0 and 4.0)
-- Psi_ (versions 3.4 and 4.0)
+- Psi_ (version 4.0)
 - `Q-Chem`_ (version 4.2)
 - Turbomole_ (versions 5.9 and 7.2)
+
+The following legacy parsers are tested, but not actively maintained:
+
+- Psi_ (version 3.4)
 
 Many types of output data are parsed by cclib, including atom coordinates, orbital information, vibrational modes and TD-DFT calculations. See the page on `Extracted Data`_ for a complete list with coverage for the different programs. Several `calculation methods`_ are also provided for interpreting the electronic properties of molecules.
 
