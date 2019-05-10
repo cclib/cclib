@@ -1,7 +1,7 @@
 # This file is part of cclib (http://cclib.github.io), a library for parsing
 # and interpreting the results of computational chemistry packages.
 #
-# Copyright (C) 2018, the cclib development team
+# Copyright (C) 2019, the cclib development team
 #
 # The library is free software, distributed under the terms of
 # the GNU Lesser General Public version 2.1 or later. You should have
@@ -62,7 +62,8 @@ from cclib.parser import Molpro
 from cclib.parser import MOPAC
 from cclib.parser import NWChem
 from cclib.parser import ORCA
-from cclib.parser import Psi4, Psi3
+from cclib.parser import Psi3
+from cclib.parser import Psi4
 from cclib.parser import QChem
 from cclib.parser import Turbomole
 
@@ -1136,7 +1137,7 @@ def testORCA_ORCA4_1_725_out(logfile):
     assert len(logfile.data.atomcharges["lowdin"]) == 7
 
 
-# PSI #
+# PSI 3 #
 
 
 def testPsi3_Psi3_4_water_psi3_log(logfile):
@@ -1146,6 +1147,9 @@ def testPsi3_Psi3_4_water_psi3_log(logfile):
     """
     assert logfile.data.nbasis == 25
     assert [len(ab) for ab in logfile.data.atombasis] == [15, 5, 5]
+
+
+# PSI 4 #
 
 
 def testPsi4_Psi4_beta5_dvb_gopt_hf_unconverged_out(logfile):
@@ -2253,7 +2257,34 @@ class OrcaIRTest_old(OrcaIRTest):
     def testirintens(self):
         """These values were wrong due to wrong input coordinates."""
 
-# PSI #
+# PSI3 #
+
+
+class Psi3SPTest(GenericSPTest):
+    """Customized restricted single point HF/KS unittest"""
+
+    # The final energy is also a bit higher here, I think due to the fact
+    # that a SALC calculation is done instead of a full LCAO.
+    b3lyp_energy = -10300
+
+    @unittest.skip('atommasses not implemented yet')
+    def testatommasses(self):
+        pass
+
+    @unittest.skip('Psi3 did not print partial atomic charges')
+    def testatomcharges(self):
+        pass
+
+    @unittest.skip('MO coefficients are printed separately for each SALC')
+    def testfornoormo(self):
+        pass
+
+    @unittest.skip('MO coefficients are printed separately for each SALC')
+    def testdimmocoeffs(self):
+        pass
+
+# PSI4 #
+
 
 class PsiSPTest_noatommasses(PsiSPTest):
 
@@ -2423,6 +2454,8 @@ old_unittests = {
     "ORCA/ORCA3.0/dvb_td.out":            OrcaTDDFTTest,
     "ORCA/ORCA3.0/Trp_polar.out":         ReferencePolarTest,
     "ORCA/ORCA3.0/trithiolane_polar.out": GaussianPolarTest,
+
+    "Psi3/Psi3.4/dvb_sp_hf.out":        Psi3SPTest,
 
     "Psi4/Psi4-beta5/C_bigbasis.out":   GenericBigBasisTest,
     "Psi4/Psi4-beta5/dvb_gopt_hf.out":  Psi4GeoOptTest,
