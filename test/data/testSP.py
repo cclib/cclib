@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2017, the cclib development team
+# Copyright (c) 2019, the cclib development team
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
@@ -58,7 +58,6 @@ class GenericSPTest(unittest.TestCase):
     @skipForParser('DALTON', 'DALTON has a very low accuracy for the printed values of all populations (2 decimals rounded in a weird way), so let it slide for now')
     @skipForLogfile('Jaguar/basicJaguar7', 'We did not print the atomic partial charges in the unit tests for this version')
     @skipForLogfile('Molpro/basicMolpro2006', "These tests were run a long time ago and since we don't have access to Molpro 2006 anymore, we can skip this test (it is tested in 2012)")
-    @skipForLogfile('Psi3/basicPsi3', 'Psi3 did not print partial atomic charges')
     @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testatomcharges(self):
         """Are atomcharges (at least Mulliken) consistent with natom and sum to zero?"""
@@ -112,7 +111,6 @@ class GenericSPTest(unittest.TestCase):
     @skipForParser('Molcas','The parser is still being developed so we skip this test')
     @skipForParser('Molpro', 'atommasses not implemented yet')
     @skipForParser('NWChem', 'atommasses not implemented yet')
-    @skipForLogfile('Psi3/basicPsi3', 'atommasses not implemented yet')
     @skipForLogfile('Psi4/basicPsi4.0b5', 'atommasses not implemented yet')
     @skipForParser('QChem', 'atommasses not implemented yet')
     @skipForParser('Turbomole','The parser is still being developed so we skip this test')
@@ -179,7 +177,6 @@ class GenericSPTest(unittest.TestCase):
 
     @skipForParser('DALTON', 'mocoeffs not implemented yet')
     @skipForLogfile('Jaguar/basicJaguar7', 'Data file does not contain enough information. Can we make a new one?')
-    @skipForLogfile('Psi3/basicPsi3', 'MO coefficients are printed separately for each SALC')
     def testdimmocoeffs(self):
         """Are the dimensions of mocoeffs equal to 1 x nmo x nbasis?"""
         if hasattr(self.data, "mocoeffs"):
@@ -190,7 +187,6 @@ class GenericSPTest(unittest.TestCase):
     
     @skipForParser('DALTON', 'mocoeffs not implemented yet')
     @skipForLogfile('Jaguar/basicJaguar7', 'Data file does not contain enough information. Can we make a new one?')
-    @skipForLogfile('Psi3/basicPsi3', 'MO coefficients are printed separately for each SALC')
     def testfornoormo(self):
         """Do we have NOs or MOs?"""
         self.assertEquals(hasattr(self.data, "nocoeffs") or hasattr(self.data, "mocoeffs"), True)
@@ -374,13 +370,6 @@ class NWChemKSSPTest(GenericSPTest):
     """Customized restricted single point unittest"""
 
     num_scf_criteria = 3
-
-class Psi3SPTest(GenericSPTest):
-    """Customized restricted single point HF/KS unittest"""
-
-    # The final energy is also a bit higher here, I think due to the fact
-    # that a SALC calculation is done instead of a full LCAO.
-    b3lyp_energy = -10300
 
 class PsiSPTest(GenericSPTest):
     """Customized restricted single point HF/KS unittest"""

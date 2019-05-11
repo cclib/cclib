@@ -12,23 +12,27 @@ The goals of cclib are centered around the reuse of data obtained from these pro
 Summary
 -------
 
-The current version is **cclib 1.6.1** (see the changelog_ for what's new) and parses output files from the following programs (version in parentheses are tested):
+The current version is **cclib 1.6.1** (see the changelog_ for what's new). The following programs are supported and systematically tested at the versions given in parentheses:
 
 - ADF_ (versions 2007 and 2013)
 - DALTON_ (versions 2013 and 2015)
 - Firefly_, formerly known as PC GAMESS (version 8.0)
-- `GAMESS (US)`_ (version 2012)
-- `GAMESS-UK`_ (version 7.0)
-- Gaussian_ (versions 03, 09 and 16)
+- `GAMESS (US)`_ (versions 2014 and 2017)
+- `GAMESS-UK`_ (versions 7.0 and 8.0)
+- Gaussian_ (versions 09 and 16)
 - Jaguar_ (versions 7.0 and 8.3)
 - Molcas_ (version 18.0)
 - Molpro_ (versions 2006 and 2012)
 - MOPAC_ (version 2016)
-- NWChem_ (versions 6.0 and 6.5)
-- ORCA_ (versions 3.0 and 4.0)
-- Psi_ (versions 3.4 and 4.0)
-- `Q-Chem`_ (version 4.2)
+- NWChem_ (versions 6.0, 6.1, 6.5 and 6.6)
+- ORCA_ (versions 4.0 and 4.1)
+- Psi4_ (versions 1.0 and 1.2.1)
+- `Q-Chem`_ (versions 4.2 and 5.1)
 - Turbomole_ (versions 5.9 and 7.2)
+
+Output files from other versions of the above programs may still work, and regression tests are always welcome. The following legacy parsers are still tested as regressions, but not actively maintained:
+
+- Psi3_ (version 3.4)
 
 Many types of output data are parsed by cclib, including atom coordinates, orbital information, vibrational modes and TD-DFT calculations. See the page on `Extracted Data`_ for a complete list with coverage for the different programs. Several `calculation methods`_ are also provided for interpreting the electronic properties of molecules.
 
@@ -74,7 +78,8 @@ A record for the latest release is also available on Zenodo_.
 .. _MOPAC: http://openmopac.net/
 .. _NWChem: http://www.nwchem-sw.org/index.php/Main_Page
 .. _ORCA: https://orcaforum.cec.mpg.de/
-.. _Psi: http://psicode.org/
+.. _Psi3: http://openscience.org/psi3/
+.. _Psi4: http://psicode.org/
 .. _`Q-Chem`: http://q-chem.com/
 .. _Turbomole: http://www.turbomole-gmbh.com/
 
