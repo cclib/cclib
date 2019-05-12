@@ -11,6 +11,7 @@ import os
 import unittest
 
 import numpy
+import packaging
 
 from common import get_minimum_carbon_separation
 
@@ -313,6 +314,11 @@ class GenericSPTest(unittest.TestCase):
         self.assertIn("methods", self.data.metadata)
         self.assertIn("package", self.data.metadata)
         self.assertIn("package_version", self.data.metadata)
+        self.assertIsInstance(
+            packaging.version.parse(self.data.metadata["package_version"]),
+            packaging.version.Version
+        )
+
 
 class ADFSPTest(GenericSPTest):
     """Customized restricted single point unittest"""
