@@ -56,11 +56,6 @@ Basis     Psi4        Psi4BigBasisTest      basicPsi4-1.0         C_bigbasis.out
 Basis     QChem       QChemBigBasisTest     basicQChem4.2         C_bigbasis.out
 Basis     QChem       QChemBigBasisTest     basicQChem5.1         C_bigbasis.out
 
-BOMD      Gaussian    GaussianBOMDTest      basicGaussian09       dvb_bomd.out
-BOMD      NWChem      GenericBOMDTest       basicNWChem6.6        dvb_bomd_ks.out
-BOMD      QChem       GenericBOMDTest       basicQChem4.2         dvb_bomd.out
-BOMD      QChem       GenericBOMDTest       basicQChem5.1         dvb_bomd.out
-
 CC        DALTON      GenericCCTest         basicDALTON-2013      water_ccsdt.out
 CC        DALTON      GenericCCTest         basicDALTON-2015      water_ccsdt.out
 CC        GAMESS      GenericCCTest         basicGAMESS-US2014    water_ccd.out

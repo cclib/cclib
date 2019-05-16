@@ -23,32 +23,6 @@ class GenericBOMDTest(unittest.TestCase):
     nsteps = 35
     nenergies = 36
 
-    def testdimscfenergies(self):
-        """Are the number of parsed energies consistent with the number of MD
-        steps?
-        """
-        self.assertEqual(self.data.scfenergies.shape, (self.nenergies, ))
-
-    def testdimatomcoords(self):
-        """Are the number of parsed geometries consistent with the number of
-        MD steps?
-        """
-        self.assertEqual(self.data.atomcoords.shape, (self.nenergies, 20, 3))
-
-    def testdimtime(self):
-        """Are the number of time points consistent with the number of MD
-        steps?
-        """
-        self.assertEqual(self.data.time.shape, (self.nsteps, ))
-
-
-class GaussianBOMDTest(GenericBOMDTest):
-    """Customized Born-Oppenheimer molecular dynamics unittest"""
-
-    # This may have something to do with our corrections for
-    # extrapolation step rejection.
-    nenergies = 35
-
 
 if __name__=="__main__":
 
