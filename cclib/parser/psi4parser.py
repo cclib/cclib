@@ -543,6 +543,11 @@ class Psi4(logfileparser.Logfile):
                 self.scfenergies = []
             self.scfenergies.append(utils.convertor(e, 'hartree', 'eV'))
 
+        if self.section == "Energetics":
+            if "Empirical Dispersion Energy" in line:
+                dispersion = utils.convertor(float(line.split()[-1]), "hartree", "eV")
+                self.append_attribute("dispersionenergies", dispersion)
+
         #   ==> Molecular Orbitals <==
         #
         #                     1            2            3            4            5

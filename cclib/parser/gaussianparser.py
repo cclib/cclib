@@ -667,6 +667,10 @@ class Gaussian(logfileparser.Logfile):
                     else:
                         shell_line = line
 
+        if "Dispersion energy=" in line:
+            dispersion = utils.convertor(float(line.split()[-2]), "hartree", "eV")
+            self.append_attribute("dispersionenergies", dispersion)
+
         # Find the targets for SCF convergence (QM calcs).
         # Not for BOMD as targets are not available in the summary
         if not self.BOMD and line[1:44] == 'Requested convergence on RMS density matrix':

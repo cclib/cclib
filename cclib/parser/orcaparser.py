@@ -331,12 +331,8 @@ Dispersion correction           -0.016199959
             line = next(inputfile)
             while 'Dispersion correction' not in line:
                 line = next(inputfile)
-            dispersion = float(line.split()[-1])
-            dispersion = utils.convertor(dispersion, "hartree", "eV")
-
-            if not hasattr(self, 'dispersionenergies'):
-                self.dispersionenergies = []
-            self.dispersionenergies.append(dispersion)
+            dispersion = utils.convertor(float(line.split()[-1]), "hartree", "eV")
+            self.append_attribute("dispersionenergies", dispersion)
 
         # The convergence targets for geometry optimizations are printed at the
         # beginning of the output, although the order and their description is

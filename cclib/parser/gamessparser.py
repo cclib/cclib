@@ -202,6 +202,15 @@ class GAMESS(logfileparser.Logfile):
                 self.scfenergies = []
             temp = line.split()
             self.scfenergies.append(utils.convertor(float(temp[temp.index("IS") + 1]), "hartree", "eV"))
+        # Empirical dispersion: first is GAMESS-US, second is Firefly
+        if any(
+            line.find(dispersion_trigger) == 1
+            for dispersion_trigger in (
+                    "GRIMME'S DISPERSION ENERGY", "Dispersion correction to total energy"
+            )
+        ):
+            dispersion = utils.convertor(float(line.split()[-1]), "hartree", "eV")
+            self.append_attribute("dispersionenergies", dispersion)
 
         # For total energies after Moller-Plesset corrections, the output looks something like this:
         #
