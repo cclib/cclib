@@ -59,8 +59,8 @@ class GenericTDTest(unittest.TestCase):
         """Is the lowest E transition from the HOMO or to the LUMO?"""
         lowestEtrans = self.data.etsecs[numpy.argmin(self.data.etenergies)]
         t = list(reversed(sorted([(c*c, s, e) for (s, e, c) in lowestEtrans])))
-        self.assert_(t[0][1][0] == self.data.homos[0] or
-                     t[0][2][0] == self.data.homos[0] + 1, t[0])
+        self.assertTrue(t[0][1][0] == self.data.homos[0] or
+                        t[0][2][0] == self.data.homos[0] + 1, t[0])
 
     @skipForParser('Molcas','The parser is still being developed so we skip this test')    
     @skipForParser('Turbomole','The parser is still being developed so we skip this test')

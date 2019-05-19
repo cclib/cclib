@@ -55,7 +55,9 @@ class GenericSPunTest(unittest.TestCase):
     @skipForParser('DALTON', 'mocoeffs not implemented yet')
     def testfornsoormo(self):
         """Do we have NSOs or MOs?"""
-        self.assertEquals(hasattr(self.data, "nsocoeffs") or hasattr(self.data, "mocoeffs"), True)
+        self.assertTrue(
+            hasattr(self.data, "nsocoeffs") or hasattr(self.data, "mocoeffs")
+        )
 
     def testdimnsoccnos(self):
         """Are the dimensions of nsooccnos equal to 2 x nmo?"""
@@ -63,9 +65,9 @@ class GenericSPunTest(unittest.TestCase):
             self.assertIsInstance(self.data.nsooccnos, list)
             self.assertIsInstance(self.data.nsooccnos[0], list)
             self.assertIsInstance(self.data.nsooccnos[1], list)
-            self.assertEquals(len(self.data.nsooccnos), 2)
-            self.assertEquals(len(self.data.nsooccnos[0]), self.data.nmo)
-            self.assertEquals(len(self.data.nsooccnos[1]), self.data.nmo)
+            self.assertEqual(len(self.data.nsooccnos), 2)
+            self.assertEqual(len(self.data.nsooccnos[0]), self.data.nmo)
+            self.assertEqual(len(self.data.nsooccnos[1]), self.data.nmo)
 
     def testdimnsocoeffs(self):
         """Are the dimensions of nsocoeffs equal to 2 x nmo x nmo?"""
@@ -73,9 +75,9 @@ class GenericSPunTest(unittest.TestCase):
             self.assertIsInstance(self.data.nsocoeffs, list)
             self.assertIsInstance(self.data.nsocoeffs[0], numpy.ndarray)
             self.assertIsInstance(self.data.nsocoeffs[1], numpy.ndarray)
-            self.assertEquals(len(self.data.nsocoeffs), 2)
-            self.assertEquals(self.data.nsocoeffs[0].shape, (self.data.nmo, self.data.nmo))
-            self.assertEquals(self.data.nsocoeffs[1].shape, (self.data.nmo, self.data.nmo))
+            self.assertEqual(len(self.data.nsocoeffs), 2)
+            self.assertEqual(self.data.nsocoeffs[0].shape, (self.data.nmo, self.data.nmo))
+            self.assertEqual(self.data.nsocoeffs[1].shape, (self.data.nmo, self.data.nmo))
 
     @skipForParser('Molcas','The parser is still being developed so we skip this test')
     @skipForParser('Turbomole','The parser is still being developed so we skip this test')
