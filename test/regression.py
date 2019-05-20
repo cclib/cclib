@@ -1055,6 +1055,15 @@ def testORCA_ORCA2_9_qmspeedtest_hf_out(logfile):
 	assert abs(energy - expected) < 10**-6
 
 
+def testORCA_ORCA3_0_chelpg_out(logfile):
+    """ORCA file with chelpg charges"""
+    assert 'chelpg' in logfile.data.atomcharges
+    charges = logfile.data.atomcharges['chelpg']
+    assert len(charges) == 9
+    assert charges[0] == 0.363939
+    assert charges[1] == 0.025695
+
+
 def testORCA_ORCA3_0_dvb_gopt_unconverged_out(logfile):
     """An unconverged geometry optimization to test for empty optdone (see #103 for details)."""
     assert hasattr(logfile.data, 'optdone') and not logfile.data.optdone
@@ -1136,6 +1145,16 @@ def testORCA_ORCA4_1_725_out(logfile):
     assert len(logfile.data.atomcharges["mulliken"]) == 7
     assert len(logfile.data.atomcharges["lowdin"]) == 7
 
+
+def testORCA_ORCA4_1_orca_from_issue_736_out(logfile):
+    """ORCA file with no whitespace between SCF iteration columns."""
+    assert len(logfile.data.scfvalues) == 23
+    # The first iteration in the problematic block:
+    # ITER       Energy         Delta-E        Max-DP      RMS-DP      [F,P]     Damp
+    #           ***  Starting incremental Fock matrix formation  ***
+    # 0   -257.0554667435   0.000000000000537.42184135  4.76025534  0.4401076 0.8500
+    assert abs(logfile.data.scfvalues[14][0][1] - 537) < 1.0, logfile.data.scfvalues[14][0]
+    
 
 # PSI 3 #
 
@@ -1828,27 +1847,6 @@ def testQChem_QChem5_0_argon_out(logfile):
     state_1_energy = -526.14663738
     assert logfile.data.scfenergies[0] == convertor(state_0_energy, 'hartree', 'eV')
     assert abs(logfile.data.etenergies[0] - convertor(state_1_energy - state_0_energy, 'hartree', 'wavenumber')) < 1.0e-1
-
-# ORCA
-
-
-def testORCA_ORCA3_0_chelpg_out(logfile):
-    """ORCA file with chelpg charges"""
-    assert 'chelpg' in logfile.data.atomcharges
-    charges = logfile.data.atomcharges['chelpg']
-    assert len(charges) == 9
-    assert charges[0] == 0.363939
-    assert charges[1] == 0.025695
-
-def testORCA_ORCA4_1_orca_from_issue_736_out(logfile):
-    """ORCA file with no whitespace between SCF iteration columns."""
-    assert len(logfile.data.scfvalues) == 23
-    # The first iteration in the problematic block:
-    # ITER       Energy         Delta-E        Max-DP      RMS-DP      [F,P]     Damp
-    #           ***  Starting incremental Fock matrix formation  ***
-    # 0   -257.0554667435   0.000000000000537.42184135  4.76025534  0.4401076 0.8500
-    assert abs(logfile.data.scfvalues[14][0][1] - 537) < 1.0, logfile.data.scfvalues[14][0]
-    
 
 # Turbomole
 
