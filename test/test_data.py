@@ -208,6 +208,8 @@ class DataSuite(object):
         if self.terse:
             devnull.close()
 
+        return self.errors or self.failures
+
     def summary(self):
         """Prints a summary of the suite after it has been run."""
 
@@ -235,9 +237,6 @@ class DataSuite(object):
         print("\n********* SUMMARY OF EVERYTHING **************", file=self.stream)
         print("TOTAL: %d\tPASSED: %d\tFAILED: %d\tERRORS: %d\tSKIPPED: %d" \
                 %(total[0], total[0]-(total[1]+total[2]+total[3]), total[2], total[1], total[3]), file=self.stream)
-
-        if self.errors or self.failures:
-            sys.exit(1)
 
     def visualtests(self, stream=sys.stdout):
         """These are not formal tests -- but they should be eyeballed."""
@@ -268,17 +267,17 @@ class DataSuite(object):
         print("H-L ", "   ".join(["%9.4f" % (out.moenergies[0][out.homos[0]+1]-out.moenergies[0][out.homos[0]],) for out in output]), file=self.stream)
 
 
-def test_all(
-    parsers=None, modules=None, terse=False, silent=True, loglevel=logging.ERROR, summary=True, visual_tests=True
-):
+def test_all(parsers, modules, terse, silent, loglevel, summary, visual_tests):
     parsers = parsers or all_parsers
     modules = modules or all_modules
     data_suite = DataSuite(parsers, modules, terse=terse, silent=silent, loglevel=loglevel)
-    data_suite.testall()
+    errors_or_failures = data_suite.testall()
     if summary and not silent:
         data_suite.summary()
     if visual_tests and not silent:
         data_suite.visualtests()
+    if errors_or_failures:
+        sys.exit(1)
 
 
 if __name__ == "__main__":
@@ -307,4 +306,4 @@ if __name__ == "__main__":
     modules = {m: all_modules[m] for m in module_names
                if m in args.parser_or_module} or None
 
-    test_all(parsers, modules, terse=args.terse, silent=args.silent, loglevel=loglevel)
+    test_all(parsers, modules, terse=args.terse, silent=args.silent, loglevel=loglevel, summary=True, visual_tests=True)

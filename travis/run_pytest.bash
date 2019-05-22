@@ -5,7 +5,7 @@
 
 set -euxo pipefail
 
-python -m pytest -v --capture=no --cov=cclib --cov-report=term --cov-report=html test
+python -m pytest -v --capture=no --cov=cclib --cov-report=term --cov-report=html --terse test
 pushd data
 bash ./regression_download.sh
 popd
