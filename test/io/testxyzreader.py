@@ -22,14 +22,6 @@ __datadir__ = os.path.join(__filepath__, "..", "..")
 
 class XYZReaderTest(unittest.TestCase):
 
-    def test_subclass(self):
-        """Is the reader a subclass of the abstract file reader?"""
-        fpath = os.path.join(__datadir__, "test/bridge/uracil.xyz")
-        self.assertTrue(os.path.exists(fpath))
-        xyz = cclib.io.xyzreader.XYZ(fpath)
-        self.assertTrue(isinstance(xyz, cclib.io.filereader.Reader))
-        self.assertTrue(issubclass(type(xyz), cclib.io.filereader.Reader))
-
     def test_attributes_one(self):
         """Is an XYZ file with a single geometry read into a ccData properly?
         """

@@ -21,10 +21,8 @@ __datadir__ = os.path.join(__filepath__, "..", "..")
 
 class FileWriterTest(unittest.TestCase):
 
-    def test_type(self):
-        """Is the class properly a metaclass?"""
-
-        self.assertTrue(inspect.isabstract(cclib.io.filereader.Reader))
+    def test_init(self):
+        """Does the class initialize properly?"""
 
         # You cannot instantiate a class with abstract methods.
         fpath = os.path.join(__datadir__, "data/ADF/basicADF2007.01/dvb_gopt.adfout")
