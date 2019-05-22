@@ -8,8 +8,15 @@
 """Generic file writer and related tools"""
 
 import logging
+import sys
+from abc import ABCMeta, abstractmethod
+from six import add_metaclass
 
-from collections import Iterable
+
+if sys.version_info <= (3, 3):
+    from collections import Iterable
+else:
+    from collections.abc import Iterable
 
 import numpy
 
@@ -27,7 +34,8 @@ class MissingAttributeError(Exception):
     pass
 
 
-class Writer(object):
+@add_metaclass(ABCMeta)
+class Writer:
     """Abstract class for writer objects."""
 
     required_attrs = ()
@@ -63,14 +71,9 @@ class Writer(object):
 
         self._fix_indices()
 
+    @abstractmethod
     def generate_repr(self):
-        """Generate the written representation of the logfile data.
-
-        This should be overriden by all the subclasses inheriting from
-        Writer.
-        """
-        raise NotImplementedError(
-            'generate_repr is not implemented for ' + str(type(self)))
+        """Generate the written representation of the logfile data."""
 
     def _calculate_total_dipole_moment(self):
         """Calculate the total dipole moment."""

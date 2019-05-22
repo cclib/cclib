@@ -7,8 +7,12 @@
 
 """Generic file reader and related tools"""
 
+from abc import ABCMeta, abstractmethod
+from six import add_metaclass
 
-class Reader(object):
+
+@add_metaclass(ABCMeta)
+class Reader:
     """Abstract class for reader objects."""
 
     def __init__(self, source, *args, **kwargs):
@@ -32,11 +36,6 @@ class Reader(object):
 
         return None
 
+    @abstractmethod
     def generate_repr(self):
-        """Convert the raw contents of the source into the internal representation.
-
-        This should be overriden by all the subclasses inheriting from
-        Reader.
-        """
-        raise NotImplementedError(
-            'generate_repr is not implemented for ' + str(type(self)))
+        """Convert the raw contents of the source into the internal representation."""

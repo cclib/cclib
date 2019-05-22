@@ -19,7 +19,7 @@ __filepath__ = os.path.realpath(__filedir__)
 __datadir__ = os.path.join(__filepath__, "..", "..")
 
 
-class CJSONTest(unittest.TestCase):
+class CJSONWriterTest(unittest.TestCase):
     """Unit tests for the CJSON writer."""
 
     def test_init(self):
