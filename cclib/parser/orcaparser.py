@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2017, the cclib development team
+# Copyright (c) 2019, the cclib development team
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
@@ -767,10 +767,9 @@ class ORCA(logfileparser.Logfile):
             else:
                 sym = "Not specified"
 
-            if not hasattr(self, "etenergies"):
-                self.etsecs = []
-                self.etenergies = []
-                self.etsyms = []
+            etsecs = []
+            etenergies = []
+            etsyms = []
 
             lookup = {'a': 0, 'b': 1}
             line = next(inputfile)
@@ -779,8 +778,8 @@ class ORCA(logfileparser.Logfile):
             # Contains STATE or is blank
             while line.find("STATE") >= 0:
                 broken = line.split()
-                self.etenergies.append(float(broken[-2]))
-                self.etsyms.append(sym)
+                etenergies.append(float(broken[-2]))
+                etsyms.append(sym)
                 line = next(inputfile)
                 sec = []
                 # Contains SEC or is blank
@@ -798,8 +797,12 @@ class ORCA(logfileparser.Logfile):
                         contrib = numpy.nan
                     sec.append([start, end, contrib])
                     line = next(inputfile)
-                self.etsecs.append(sec)
+                etsecs.append(sec)
                 line = next(inputfile)
+
+            self.etenergies = etenergies
+            self.etsecs = etsecs
+            self.etsyms = etsyms
 
         # Parse the various absorption spectra for TDDFT and ROCIS.
         if 'ABSORPTION SPECTRUM' in line or 'ELECTRIC DIPOLE' in line:
