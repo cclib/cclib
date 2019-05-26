@@ -909,7 +909,8 @@ States    Energy  Wavelength   fosc         T2         TX        TY        TZ
                     state, state2, energy, wavelength, intensity, t2, tx, ty, tz = line.split()
                     return energy, intensity
 
-            elif line[:79] == 'ROCIS COMBINED ELECTRIC DIPOLE + MAGNETIC DIPOLE + ELECTRIC QUADRUPOLE SPECTRUM':
+            elif line[:79] == 'ROCIS COMBINED ELECTRIC DIPOLE + MAGNETIC DIPOLE + ELECTRIC QUADRUPOLE SPECTRUM' \
+                 or line[:87] == 'SOC CORRECTED COMBINED ELECTRIC DIPOLE + MAGNETIC DIPOLE + ELECTRIC QUADRUPOLE SPECTRUM':
                 def energy_intensity(line):
                     """ ROCIS with DoQuad = True and SOC = True (also does origin adjusted)
 ------------------------------------------------------------------------------------------------------

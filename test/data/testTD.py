@@ -160,7 +160,7 @@ class OrcaROCISTest(GenericTDTest):
     """Customized test for ROCIS"""
     number = 57
     expected_l_max = 2316970.8
-    n_spectra = 9
+    n_spectra = (8, 9)
 
     def testoscs(self):
         """Is the maximum of etoscs in the right range?"""
@@ -169,7 +169,7 @@ class OrcaROCISTest(GenericTDTest):
 
     def testTransprop(self):
         """Check the number of spectra parsed"""
-        self.assertEqual(len(self.data.transprop), self.n_spectra)
+        self.assertTrue(len(self.data.transprop) in self.n_spectra)
         tddft_length = 'ABSORPTION SPECTRUM VIA TRANSITION ELECTRIC DIPOLE MOMENTS'
         self.assertIn(tddft_length, self.data.transprop)
 
