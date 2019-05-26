@@ -7,8 +7,6 @@ https://docs.pytest.org/en/latest/contents.html
 import logging
 import sys
 
-import pytest
-
 from test.test_data import (
     all_modules,
     all_parsers,
@@ -54,28 +52,12 @@ def pytest_addoption(parser):
 
 def pytest_generate_tests(metafunc):
     if metafunc.function.__name__ == "test_all":
+        metafunc.parametrize("parsers", [{p: all_parsers[p] for p in parser_names}])
+        metafunc.parametrize("modules", [{p: all_modules[p] for p in module_names}])
+        metafunc.parametrize("terse", [metafunc.config.getoption("--terse")])
+        metafunc.parametrize("silent", [metafunc.config.getoption("--silent")])
         metafunc.parametrize("loglevel",
                              [logging.DEBUG if metafunc.config.getoption("--debug")
                               else logging.ERROR])
-        metafunc.parametrize("terse", [metafunc.config.getoption("--terse")])
-        metafunc.parametrize("silent", [metafunc.config.getoption("--silent")])
-
-
-@pytest.fixture
-def parsers():
-    return {p: all_parsers[p] for p in parser_names}
-
-
-@pytest.fixture
-def modules():
-    return {m: all_modules[m] for m in module_names}
-
-
-@pytest.fixture
-def summary():
-    return True
-
-
-@pytest.fixture
-def visual_tests():
-    return True
+        metafunc.parametrize("summary", [True])
+        metafunc.parametrize("visual_tests", [True])
