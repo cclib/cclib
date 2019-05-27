@@ -189,19 +189,23 @@ class GenericSPTest(unittest.TestCase):
     @skipForLogfile('Jaguar/basicJaguar7', 'Data file does not contain enough information. Can we make a new one?')
     def testfornoormo(self):
         """Do we have NOs or MOs?"""
-        self.assertEquals(hasattr(self.data, "nocoeffs") or hasattr(self.data, "mocoeffs"), True)
+        self.assertTrue(
+            hasattr(self.data, "nocoeffs") or hasattr(self.data, "mocoeffs")
+        )
 
     def testdimnoccnos(self):
         """Is the length of nooccnos equal to nmo?"""
         if hasattr(self.data, "nooccnos"):
             self.assertIsInstance(self.data.nooccnos, numpy.ndarray)
-            self.assertEquals(len(self.data.nooccnos), self.data.nmo)
+            self.assertEqual(len(self.data.nooccnos), self.data.nmo)
 
     def testdimnocoeffs(self):
         """Are the dimensions of nocoeffs equal to nmo x nmo?"""
         if hasattr(self.data, "nocoeffs"):
             self.assertIsInstance(self.data.nocoeffs, numpy.ndarray)
-            self.assertEquals(self.data.nocoeffs.shape, (self.data.nmo, self.data.nmo))
+            self.assertEqual(
+                self.data.nocoeffs.shape, (self.data.nmo, self.data.nmo)
+            )
 
     @skipForParser('DALTON', 'To print: **INTEGRALS\n.PROPRI')
     @skipForParser('Molcas','The parser is still being developed so we skip this test')

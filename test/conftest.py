@@ -4,8 +4,15 @@ See the pytest documentation for more details:
 https://docs.pytest.org/en/latest/contents.html
 """
 
+import logging
 import sys
 
+from test.test_data import (
+    all_modules,
+    all_parsers,
+    module_names,
+    parser_names,
+)
 
 version_major = sys.version_info.major
 
@@ -36,3 +43,21 @@ def pytest_ignore_collect(path, config):
         if match_path(path, paths_ignore_only_2_7):
             return True
     return False
+
+
+def pytest_addoption(parser):
+    parser.addoption("--terse", action="store_true")
+    parser.addoption("--silent", action="store_true")
+
+
+def pytest_generate_tests(metafunc):
+    if metafunc.function.__name__ == "test_all":
+        metafunc.parametrize("parsers", [{p: all_parsers[p] for p in parser_names}])
+        metafunc.parametrize("modules", [{p: all_modules[p] for p in module_names}])
+        metafunc.parametrize("terse", [metafunc.config.getoption("--terse")])
+        metafunc.parametrize("silent", [metafunc.config.getoption("--silent")])
+        metafunc.parametrize("loglevel",
+                             [logging.DEBUG if metafunc.config.getoption("--debug")
+                              else logging.ERROR])
+        metafunc.parametrize("summary", [True])
+        metafunc.parametrize("visual_tests", [True])
