@@ -160,6 +160,10 @@ class OrcaROCISTest(GenericTDTest):
     """Customized test for ROCIS"""
     number = 57
     expected_l_max = 2316970.8
+    # In ORCA 4.0, an additional spectrum ("COMBINED ELECTRIC DIPOLE +
+    # MAGNETIC DIPOLE + ELECTRIC QUADRUPOLE SPECTRUM (Origin Independent,
+    # Length Representation)") was present that is not in ORCA 4.1. This
+    # accounts for the difference in a version-independent way.
     n_spectra = (8, 9)
 
     def testoscs(self):
