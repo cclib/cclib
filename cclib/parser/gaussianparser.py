@@ -152,6 +152,16 @@ class Gaussian(logfileparser.Logfile):
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
 
+        # Extract the version number: "Gaussian 09, Revision D.01"
+        # becomes "09revisionD.01".
+        if line.strip() == "Cite this work as:":
+            tokens = next(inputfile).split()
+            self.metadata["legacy_package_version"] = ''.join([
+                tokens[1][:-1],
+                'revision',
+                tokens[-1][:-1],
+            ])
+
         # Extract the version number: "Gaussian 98: x86-Linux-G98RevA.11.3
         # 5-Feb-2002" becomes "1998+A.11.3", and "Gaussian 16:
         # ES64L-G16RevA.03 25-Dec-2016" becomes "2016+A.03".

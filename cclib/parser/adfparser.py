@@ -133,6 +133,8 @@ class ADF(logfileparser.Logfile):
             match = re.search(r"([\d\.]{4,7})", trimmed_line)
             if match:
                 package_version = match.groups()[0]
+                # Use YYYY.MM as a short version.
+                self.metadata["legacy_package_version"] = package_version
             else:
                 # This isn't as well-defined, but the field shouldn't be left
                 # empty. Grab whatever is there and parse it out in the
@@ -158,6 +160,7 @@ class ADF(logfileparser.Logfile):
                     year = tokens[1].split("-")[0]
                     self.metadata["package_version_description"] = package_version
                     package_version = '{}dev{}'.format(year, tokens[0][1:])
+                    self.metadata["legacy_package_version"] = year
                 self.metadata["package_version_date"] = tokens[1]
             self.metadata["package_version"] = package_version
 

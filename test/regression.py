@@ -101,6 +101,7 @@ def testADF_ADF2004_01_Fe_ox3_final_out(logfile):
     """Make sure HOMOS are correct."""
     assert logfile.data.homos[0] == 59 and logfile.data.homos[1] == 54
 
+    assert logfile.data.metadata["legacy_package_version"] == "2004.01"
     assert logfile.data.metadata["package_version"] == "2004.01+200410211341"
     assert isinstance(
         parse_version(logfile.data.metadata["package_version"]), Version
@@ -111,6 +112,7 @@ def testADF_ADF2013_01_dvb_gopt_b_unconverged_adfout(logfile):
     """An unconverged geometry optimization to test for empty optdone (see #103 for details)."""
     assert hasattr(logfile.data, 'optdone') and not logfile.data.optdone
 
+    assert logfile.data.metadata["legacy_package_version"] == "2013.01"
     assert logfile.data.metadata["package_version"] == "2013.01+201309012319"
     assert isinstance(
         parse_version(logfile.data.metadata["package_version"]), Version
@@ -192,6 +194,7 @@ def testADF_ADF2014_01_DMO_ORD_orig_out(logfile):
     isotropic_ref = 51.3359
     assert abs(isotropic_calc - isotropic_ref) < 1.0e-4
 
+    assert logfile.data.metadata["legacy_package_version"] == "2014"
     assert logfile.data.metadata["package_version"] == "2014dev42059"
     assert isinstance(
         parse_version(logfile.data.metadata["package_version"]), Version
@@ -202,6 +205,7 @@ def testADF_ADF2014_01_DMO_ORD_orig_out(logfile):
 
 def testADF_ADF2016_166_tddft_0_31_new_out(logfile):
     """This file led to StopIteration (#430)."""
+    assert logfile.data.metadata["legacy_package_version"] == "2016"
     assert logfile.data.metadata["package_version"] == "2016dev53619"
     assert isinstance(
         parse_version(logfile.data.metadata["package_version"]), Version
@@ -215,6 +219,7 @@ def testADF_ADF2016_fa2_adf_out(logfile):
     assert hasattr(logfile.data, "atombasis")
     assert [b for ab in logfile.data.atombasis for b in ab] == list(range(logfile.data.nbasis))
 
+    assert logfile.data.metadata["legacy_package_version"] == "2016"
     assert logfile.data.metadata["package_version"] == "2016dev50467"
     assert isinstance(
         parse_version(logfile.data.metadata["package_version"]), Version
@@ -268,6 +273,7 @@ def testDALTON_DALTON_2013_dvb_td_normalprint_out(logfile):
     assert hasattr(logfile.data, "etsyms")
     assert hasattr(logfile.data, "etoscs")
 
+    assert logfile.data.metadata["legacy_package_version"] == "2013.4"
     assert logfile.data.metadata["package_version"] == "2013.4+7abef2ada27562fe5e02849d6caeaa67c961732f"
     assert isinstance(
         parse_version(logfile.data.metadata["package_version"]), Version
@@ -282,6 +288,7 @@ def testDALTON_DALTON_2015_dalton_atombasis_out(logfile):
     assert logfile.data.nbasis == 37
     assert hasattr(logfile.data, "atombasis")
 
+    assert logfile.data.metadata["legacy_package_version"] == "2015.0"
     assert logfile.data.metadata["package_version"] == "2015.0+d34efb170c481236ad60c789dea90a4c857c6bab"
     assert isinstance(
         parse_version(logfile.data.metadata["package_version"]), Version
@@ -333,6 +340,7 @@ def testDALTON_DALTON_2016_huge_neg_polar_freq_out(logfile):
     assert len(logfile.data.polarizabilities) == 3
     assert abs(logfile.data.polarizabilities[2][0, 0] - 183.6308) < 1.0e-5
 
+    assert logfile.data.metadata["legacy_package_version"] == "2016.2"
     assert logfile.data.metadata["package_version"] == "2016.2+7db4647eac203e51aae7da3cbc289f55146b30e9"
     assert isinstance(
         parse_version(logfile.data.metadata["package_version"]), Version
@@ -370,6 +378,7 @@ def testDALTON_DALTON_2018_dft_properties_nosym_H2O_cc_pVDZ_out(logfile):
     This file is in DALTON-2018, rather than DALTON-2019, because 2018.0 was
     just released.
     """
+    assert logfile.data.metadata["legacy_package_version"] == "2019.alpha"
     assert logfile.data.metadata["package_version"] == "2019.alpha"
     assert isinstance(
         parse_version(logfile.data.metadata["package_version"]), Version
@@ -385,6 +394,7 @@ def testDALTON_DALTON_2018_tdhf_2000_out(logfile):
         assert len(getattr(logfile.data, attr)) == 9
     assert logfile.data.etsecs[0][0] == [(1, 0), (2, 0), -0.9733558768]
 
+    assert logfile.data.metadata["legacy_package_version"] == "2019.alpha"
     assert logfile.data.metadata["package_version"] == "2019.alpha+25947a3d842ee2ebb42bff87a4dd64adbbd3ec5b"
     assert isinstance(
         parse_version(logfile.data.metadata["package_version"]), Version
@@ -482,6 +492,7 @@ def testGAMESS_Firefly8_0_dvb_gopt_a_unconverged_out(logfile):
     """An unconverged geometry optimization to test for empty optdone (see #103 for details)."""
     assert hasattr(logfile.data, 'optdone') and not logfile.data.optdone
 
+    assert logfile.data.metadata["legacy_package_version"] == "8.0.1"
     assert logfile.data.metadata["package_version"] == "8.0.1+8540"
     assert isinstance(
         parse_version(logfile.data.metadata["package_version"]), Version
@@ -492,6 +503,7 @@ def testGAMESS_Firefly8_0_h2o_log(logfile):
     """Check that molecular orbitals are parsed correctly (cclib/cclib#208)."""
     assert logfile.data.mocoeffs[0][0][0] == -0.994216
 
+    assert logfile.data.metadata["legacy_package_version"] == "8.0.0"
     assert logfile.data.metadata["package_version"] == "8.0.0+7651"
     assert isinstance(
         parse_version(logfile.data.metadata["package_version"]), Version
@@ -509,6 +521,7 @@ def testGAMESS_Firefly8_1_benzene_am1_log(logfile):
     """Molecular orbitals were not parsed (cclib/cclib#228)."""
     assert hasattr(logfile.data, 'mocoeffs')
 
+    assert logfile.data.metadata["legacy_package_version"] == "8.1.0"
     assert logfile.data.metadata["package_version"] == "8.1.0+9035"
     assert isinstance(
         parse_version(logfile.data.metadata["package_version"]), Version
@@ -519,6 +532,7 @@ def testGAMESS_Firefly8_1_naphtalene_t_0_out(logfile):
     """Molecular orbitals were not parsed (cclib/cclib#228)."""
     assert hasattr(logfile.data, 'mocoeffs')
 
+    assert logfile.data.metadata["legacy_package_version"] == "8.1.1"
     assert logfile.data.metadata["package_version"] == "8.1.1+9295"
     assert isinstance(
         parse_version(logfile.data.metadata["package_version"]), Version
@@ -541,6 +555,7 @@ def testGAMESS_GAMESS_US2008_N2_UMP2_out(logfile):
     assert len(logfile.data.mpenergies) == 1
     assert abs(logfile.data.mpenergies[0] + 2975.97) < 0.01
 
+    assert logfile.data.metadata["legacy_package_version"] == "2008R1"
     assert logfile.data.metadata["package_version"] == "2008.r1"
     assert isinstance(
         parse_version(logfile.data.metadata["package_version"]), Version
@@ -562,6 +577,7 @@ def testGAMESS_GAMESS_US2009_open_shell_ccsd_test_log(logfile):
     assert len(logfile.data.ccenergies) == 1
     assert abs(logfile.data.ccenergies[0] + 3501.50) < 0.01
 
+    assert logfile.data.metadata["legacy_package_version"] == "2009R3"
     assert logfile.data.metadata["package_version"] == "2009.r3"
     assert isinstance(
         parse_version(logfile.data.metadata["package_version"]), Version
@@ -581,6 +597,7 @@ def testGAMESS_GAMESS_US2012_dvb_gopt_a_unconverged_out(logfile):
     """An unconverged geometry optimization to test for empty optdone (see #103 for details)."""
     assert hasattr(logfile.data, 'optdone') and not logfile.data.optdone
 
+    assert logfile.data.metadata["legacy_package_version"] == "2012R2"
     assert logfile.data.metadata["package_version"] == "2012.r2"
     assert isinstance(
         parse_version(logfile.data.metadata["package_version"]), Version
@@ -598,6 +615,7 @@ def testGAMESS_GAMESS_US2013_N_UHF_out(logfile):
     """An UHF job that has an LZ value analysis between the alpha and beta orbitals."""
     assert len(logfile.data.moenergies) == 2
 
+    assert logfile.data.metadata["legacy_package_version"] == "2013R1"
     assert logfile.data.metadata["package_version"] == "2013.r1"
     assert isinstance(
         parse_version(logfile.data.metadata["package_version"]), Version
@@ -611,6 +629,7 @@ def testGAMESS_GAMESS_US2014_CdtetraM1B3LYP_log(logfile):
     assert numpy.count_nonzero(logfile.data.mocoeffs[0][80-1: 0:]) == 0
     assert logfile.data.mocoeffs[0].all() == logfile.data.mocoeffs[1].all()
 
+    assert logfile.data.metadata["legacy_package_version"] == "2014R1"
     assert logfile.data.metadata["package_version"] == "2014.r1"
     assert isinstance(
         parse_version(logfile.data.metadata["package_version"]), Version
@@ -621,6 +640,7 @@ def testGAMESS_GAMESS_US2018_exam45_log(logfile):
     """This logfile has EOM-CC electronic transitions (not currently supported)."""
     assert not hasattr(logfile.data, 'etenergies')
 
+    assert logfile.data.metadata["legacy_package_version"] == "2018R2"
     assert logfile.data.metadata["package_version"] == "2018.r2"
     assert isinstance(
         parse_version(logfile.data.metadata["package_version"]), Version
@@ -642,6 +662,7 @@ def testGAMESS_WinGAMESS_dvb_td_trplet_2007_03_24_r1_out(logfile):
     assert abs(max(logfile.data.etoscs) - 0.0) < 0.01
     assert len(logfile.data.etsecs) == number
 
+    assert logfile.data.metadata["legacy_package_version"] == "2007R1"
     assert logfile.data.metadata["package_version"] == "2007.r1"
     assert isinstance(
         parse_version(logfile.data.metadata["package_version"]), Version
@@ -654,6 +675,7 @@ def testGAMESS_WinGAMESS_dvb_td_trplet_2007_03_24_r1_out(logfile):
 def testGAMESS_UK_GAMESS_UK8_0_dvb_gopt_hf_unconverged_out(logfile):
     assert hasattr(logfile.data, 'optdone') and not logfile.data.optdone
 
+    assert logfile.data.metadata["legacy_package_version"] == "8.0"
     assert logfile.data.metadata["package_version"] == "8.0+6248"
     assert isinstance(
         parse_version(logfile.data.metadata["package_version"]), Version
@@ -702,6 +724,7 @@ def testGaussian_Gaussian16_naturalspinorbitals_parsing_log(logfile):
     assert logfile.data.aonames[41] == 'O2_9D 0'
     assert logfile.data.atombasis[1][0] == 23
 
+    assert logfile.data.metadata["legacy_package_version"] == "16revisionA.03"
     assert logfile.data.metadata["package_version"] == "2016+A.03"
     assert isinstance(
         parse_version(logfile.data.metadata["package_version"]), Version
@@ -718,6 +741,7 @@ def testGaussian_Gaussian98_C_bigmult_log(logfile):
     assert logfile.data.homos[0] == 8
     assert logfile.data.homos[1] == -1 # No occupied beta orbitals
 
+    assert logfile.data.metadata["legacy_package_version"] == "98revisionA.11.3"
     assert logfile.data.metadata["package_version"] == "1998+A.11.3"
     assert isinstance(
         parse_version(logfile.data.metadata["package_version"]), Version
@@ -735,6 +759,7 @@ def testGaussian_Gaussian98_NIST_CCCBDB_1himidaz_m21b0_out(logfile):
     # we expect only the last MP2 energy to be extracted.
     assert len(logfile.data.mpenergies) == 1
 
+    assert logfile.data.metadata["legacy_package_version"] == "98revisionA.7"
     assert logfile.data.metadata["package_version"] == "1998+A.7"
     assert isinstance(
         parse_version(logfile.data.metadata["package_version"]), Version
@@ -754,6 +779,7 @@ def testGaussian_Gaussian98_test_Cu2_log(logfile):
     """An example of the number of basis set function changing."""
     assert logfile.data.nbasis == 38
 
+    assert logfile.data.metadata["legacy_package_version"] == "98revisionA.11.4"
     assert logfile.data.metadata["package_version"] == "1998+A.11.4"
     assert isinstance(
         parse_version(logfile.data.metadata["package_version"]), Version
@@ -788,6 +814,7 @@ def testGaussian_Gaussian03_AM1_SP_out(logfile):
     """Previously, caused scfvalue parsing to fail."""
     assert len(logfile.data.scfvalues[0]) == 13
 
+    assert logfile.data.metadata["legacy_package_version"] == "03revisionE.01"
     assert logfile.data.metadata["package_version"] == "2003+E.01"
     assert isinstance(
         parse_version(logfile.data.metadata["package_version"]), Version
@@ -798,6 +825,7 @@ def testGaussian_Gaussian03_anthracene_log(logfile):
     """This file exposed a bug in extracting the vibsyms."""
     assert len(logfile.data.vibsyms) == len(logfile.data.vibfreqs)
 
+    assert logfile.data.metadata["legacy_package_version"] == "03revisionC.02"
     assert logfile.data.metadata["package_version"] == "2003+C.02"
     assert isinstance(
         parse_version(logfile.data.metadata["package_version"]), Version
@@ -819,6 +847,7 @@ def testGaussian_Gaussian03_chn1_log(logfile):
     """
     assert not hasattr(logfile.data, "mocoeffs")
 
+    assert logfile.data.metadata["legacy_package_version"] == "03revisionB.04"
     assert logfile.data.metadata["package_version"] == "2003+B.04"
     assert isinstance(
         parse_version(logfile.data.metadata["package_version"]), Version
@@ -845,6 +874,7 @@ def testGaussian_Gaussian03_DCV4T_C60_log(logfile):
     assert len(logfile.data.coreelectrons) == 102
     assert logfile.data.coreelectrons[101] == 2
 
+    assert logfile.data.metadata["legacy_package_version"] == "03revisionD.02"
     assert logfile.data.metadata["package_version"] == "2003+D.02"
     assert isinstance(
         parse_version(logfile.data.metadata["package_version"]), Version
@@ -859,6 +889,7 @@ def testGaussian_Gaussian03_dvb_gopt_symmfollow_log(logfile):
     """
     assert len(logfile.data.atomcoords) == len(logfile.data.geovalues)
 
+    assert logfile.data.metadata["legacy_package_version"] == "03revisionC.01"
     assert logfile.data.metadata["package_version"] == "2003+C.01"
     assert isinstance(
         parse_version(logfile.data.metadata["package_version"]), Version
@@ -904,6 +935,7 @@ def testGaussian_Gaussian09_100_g09(logfile):
     assert logfile.data.natom == 54
     assert logfile.data.homos == [104]
 
+    assert logfile.data.metadata["legacy_package_version"] == "09revisionB.01"
     assert logfile.data.metadata["package_version"] == "2009+B.01"
     assert isinstance(
         parse_version(logfile.data.metadata["package_version"]), Version
@@ -926,6 +958,7 @@ def testGaussian_Gaussian09_2D_PES_all_converged_log(logfile):
     """Check that optstatus has no UNCOVERGED values."""
     assert ccData.OPT_UNCONVERGED not in logfile.data.optstatus
 
+    assert logfile.data.metadata["legacy_package_version"] == "09revisionD.01"
     assert logfile.data.metadata["package_version"] == "2009+D.01"
     assert isinstance(
         parse_version(logfile.data.metadata["package_version"]), Version
@@ -944,6 +977,7 @@ def testGaussian_Gaussian09_534_out(logfile):
     assert logfile.data.etsyms[0] == "Singlet-?Sym"
     assert abs(logfile.data.etenergies[0] - 20920.55328) < 1.0
 
+    assert logfile.data.metadata["legacy_package_version"] == "09revisionA.02"
     assert logfile.data.metadata["package_version"] == "2009+A.02"
     assert isinstance(
         parse_version(logfile.data.metadata["package_version"]), Version
@@ -1130,6 +1164,7 @@ def testJaguar_Jaguar8_3_stopiter_jaguar_dft_out(logfile):
     """Check to ensure that an incomplete SCF is handled correctly."""
     assert len(logfile.data.scfvalues[0]) == 4
 
+    assert logfile.data.metadata["legacy_package_version"] == "8.3"
     assert logfile.data.metadata["package_version"] == "8.3+13"
     assert isinstance(
         parse_version(logfile.data.metadata["package_version"]), Version
@@ -1151,6 +1186,7 @@ def testMolcas_Molcas18_test_standard_000_out(logfile):
     assert not hasattr(logfile.data, "moenergies")
     assert not hasattr(logfile.data, "mocoeffs")
 
+    assert logfile.data.metadata["legacy_package_version"] == "18.09"
     assert logfile.data.metadata["package_version"] == "18.09+52-ge15dc38.81d3fb3dc6a5c5df6b3791ef1ef3790f"
     assert isinstance(
         parse_version(logfile.data.metadata["package_version"]), Version
@@ -1228,6 +1264,7 @@ def testMolpro_Molpro2008_ch2o_molpro_casscf_out(logfile):
     assert len(logfile.data.nooccnos) == logfile.data.nmo
     assert logfile.data.nooccnos[27] == 1.95640
 
+    assert logfile.data.metadata["legacy_package_version"] == "2012.1"
     assert logfile.data.metadata["package_version"] == "2012.1"
     assert isinstance(
         parse_version(logfile.data.metadata["package_version"]), Version
@@ -1245,6 +1282,7 @@ def testMolpro_Molpro2012_CHONHSH_HF_STO_3G_out(logfile):
     assert len(logfile.data.gbasis[5]) == 1 # H
     assert len(logfile.data.gbasis[6]) == 1 # H
 
+    assert logfile.data.metadata["legacy_package_version"] == "2012.1"
     assert logfile.data.metadata["package_version"] == "2012.1.23+f8cfea266908527a8826bdcd5983aaf62e47d3bf"
     assert isinstance(
         parse_version(logfile.data.metadata["package_version"]), Version
@@ -1255,6 +1293,7 @@ def testMolpro_Molpro2012_dvb_gopt_unconverged_out(logfile):
     """An unconverged geometry optimization to test for empty optdone (see #103 for details)."""
     assert hasattr(logfile.data, 'optdone') and not logfile.data.optdone
 
+    assert logfile.data.metadata["legacy_package_version"] == "2012.1"
     assert logfile.data.metadata["package_version"] == "2012.1.12+e112a8ab93d81616c1987a1f1ef3707d874b6803"
     assert isinstance(
         parse_version(logfile.data.metadata["package_version"]), Version
@@ -1265,6 +1304,7 @@ def testMolpro_Molpro2012_stopiter_molpro_dft_out(logfile):
     """Check to ensure that an incomplete SCF is handled correctly."""
     assert len(logfile.data.scfvalues[0]) == 6
 
+    assert logfile.data.metadata["legacy_package_version"] == "2012.1"
     assert logfile.data.metadata["package_version"] == "2012.1+c18f7d37f9f045f75d4f3096db241dde02ddca0a"
     assert isinstance(
         parse_version(logfile.data.metadata["package_version"]), Version
@@ -1285,6 +1325,7 @@ def testMOPAC_MOPAC2016_9S3_uuu_Cs_cation_freq_PM7_out(logfile):
     """There was a syntax error in the frequency parsing."""
     assert hasattr(logfile.data, 'vibfreqs')
 
+    assert logfile.data.metadata["legacy_package_version"] == "2016"
     assert logfile.data.metadata["package_version"] == "16.175"
     assert isinstance(
         parse_version(logfile.data.metadata["package_version"]), Version
@@ -1298,6 +1339,7 @@ def testNWChem_NWChem6_0_dvb_gopt_hf_unconverged_out(logfile):
     """An unconverged geometry optimization to test for empty optdone (see #103 for details)."""
     assert hasattr(logfile.data, 'optdone') and not logfile.data.optdone
 
+    assert logfile.data.metadata["legacy_package_version"] == "6.0"
     assert logfile.data.metadata["package_version"] == "6.0"
     assert isinstance(
         parse_version(logfile.data.metadata["package_version"]), Version
@@ -1367,6 +1409,7 @@ def testNWChem_NWChem6_5_stopiter_nwchem_dft_out(logfile):
     """Check to ensure that an incomplete SCF is handled correctly."""
     assert len(logfile.data.scfvalues[0]) == 3
 
+    assert logfile.data.metadata["legacy_package_version"] == "6.5"
     assert logfile.data.metadata["package_version"] == "6.5+26243"
     assert isinstance(
         parse_version(logfile.data.metadata["package_version"]), Version
@@ -1387,6 +1430,7 @@ def testNWChem_NWChem6_8_526_out(logfile):
     assert not hasattr(logfile.data, "scftargets")
     assert not hasattr(logfile.data, "scfvalues")
 
+    assert logfile.data.metadata["legacy_package_version"] == "6.8.1"
     assert logfile.data.metadata["package_version"] == "6.8.1+g08bf49b"
     assert isinstance(
         parse_version(logfile.data.metadata["package_version"]), Version
@@ -1411,6 +1455,7 @@ def testORCA_ORCA2_8_co_cosmo_out(logfile):
     """
     assert hasattr(logfile.data, "scfenergies") and len(logfile.data.scfenergies) == 4
 
+    assert logfile.data.metadata["legacy_package_version"] == "2.8"
     assert logfile.data.metadata["package_version"] == "2.8+2287"
     assert isinstance(
         parse_version(logfile.data.metadata["package_version"]), Version
@@ -1425,6 +1470,7 @@ def testORCA_ORCA2_9_job_out(logfile):
     """
     assert all([abs(sum(v)-1.0) < 0.0001 for k, v in logfile.data.atomspins.items()])
 
+    assert logfile.data.metadata["legacy_package_version"] == "2.9.0"
     assert logfile.data.metadata["package_version"] == "2.9.0"
     assert isinstance(
         parse_version(logfile.data.metadata["package_version"]), Version
@@ -1437,6 +1483,7 @@ def testORCA_ORCA2_9_qmspeedtest_hf_out(logfile):
     expected = -17542.5188694
     assert abs(energy - expected) < 10**-6
 
+    assert logfile.data.metadata["legacy_package_version"] == "2.9.1"
     assert logfile.data.metadata["package_version"] == "2.9.1"
     assert isinstance(
         parse_version(logfile.data.metadata["package_version"]), Version
@@ -1456,6 +1503,7 @@ def testORCA_ORCA3_0_dvb_gopt_unconverged_out(logfile):
     """An unconverged geometry optimization to test for empty optdone (see #103 for details)."""
     assert hasattr(logfile.data, 'optdone') and not logfile.data.optdone
 
+    assert logfile.data.metadata["legacy_package_version"] == "3.0.1"
     assert logfile.data.metadata["package_version"] == "3.0.1"
     assert isinstance(
         parse_version(logfile.data.metadata["package_version"]), Version
@@ -1466,6 +1514,7 @@ def testORCA_ORCA3_0_polar_rhf_cg_out(logfile):
     """Alternative CP-SCF solver for the polarizability wasn't being detected."""
     assert hasattr(logfile.data, 'polarizabilities')
 
+    assert logfile.data.metadata["legacy_package_version"] == "3.0.3"
     assert logfile.data.metadata["package_version"] == "3.0.3"
     assert isinstance(
         parse_version(logfile.data.metadata["package_version"]), Version
@@ -1502,6 +1551,7 @@ def testORCA_ORCA4_0_1_ttt_td_out(logfile):
     assert len(logfile.data.etrotats) == 24
     assert logfile.data.etrotats[13] == -0.03974
 
+    assert logfile.data.metadata["legacy_package_version"] == "4.0.0"
     assert logfile.data.metadata["package_version"] == "4.0.0"
     assert isinstance(
         parse_version(logfile.data.metadata["package_version"]), Version
@@ -1532,6 +1582,7 @@ def testORCA_ORCA4_0_invalid_literal_for_float_out(logfile):
     assert logfile.data.mocoeffs[0][106][378] == 241.536860
     assert logfile.data.mocoeffs[0][107][378] == -92.159399
 
+    assert logfile.data.metadata["legacy_package_version"] == "4.0.1.2"
     assert logfile.data.metadata["package_version"] == "4.0.1.2"
     assert isinstance(
         parse_version(logfile.data.metadata["package_version"]), Version
@@ -1552,7 +1603,8 @@ def testORCA_ORCA4_0_comment_or_blank_line_out(logfile):
     assert hasattr(logfile.data,"atomcoords")
     assert logfile.data.atomcoords.shape == (1, 8, 3)
 
-    assert logfile.data.metadata["package_version"] == "4.0.0.2"
+    assert logfile.data.metadata["legacy_package_version"] == "4.0.1.2"
+    assert logfile.data.metadata["package_version"] == "4.0.1.2"
     assert isinstance(
         parse_version(logfile.data.metadata["package_version"]), Version
     )
@@ -1569,6 +1621,7 @@ def testORCA_ORCA4_1_725_out(logfile):
     assert len(logfile.data.atomcharges["mulliken"]) == 7
     assert len(logfile.data.atomcharges["lowdin"]) == 7
 
+    assert logfile.data.metadata["legacy_package_version"] == "4.1.x"
     assert logfile.data.metadata["package_version"] == "4.1dev+13440"
     assert isinstance(
         parse_version(logfile.data.metadata["package_version"]), Version
@@ -1601,6 +1654,7 @@ def testPsi3_Psi3_4_water_psi3_log(logfile):
     assert logfile.data.nbasis == 25
     assert [len(ab) for ab in logfile.data.atombasis] == [15, 5, 5]
 
+    assert logfile.data.metadata["legacy_package_version"] == "3.4"
     assert logfile.data.metadata["package_version"] == "3.4alpha"
     assert isinstance(
         parse_version(logfile.data.metadata["package_version"]), Version
@@ -1612,6 +1666,7 @@ def testPsi3_Psi3_4_water_psi3_log(logfile):
 
 def testPsi4_Psi4_beta5_dvb_gopt_hf_unconverged_out(logfile):
     """An unconverged geometry optimization to test for empty optdone (see #103 for details)."""
+    assert logfile.data.metadata["legacy_package_version"] == "beta5"
     assert logfile.data.metadata["package_version"] == "0!0.beta5"
     assert isinstance(
         parse_version(logfile.data.metadata["package_version"]), Version
@@ -1621,6 +1676,7 @@ def testPsi4_Psi4_beta5_dvb_gopt_hf_unconverged_out(logfile):
 
 def testPsi4_Psi4_beta5_sample_cc54_0_01_0_1_0_1_out(logfile):
     """TODO"""
+    assert logfile.data.metadata["legacy_package_version"] == "beta2+"
     assert logfile.data.metadata["package_version"] == "0!0.beta2.dev+fa5960b375b8ca2a5e4000a48cb95e7f218c579a"
     assert isinstance(
         parse_version(logfile.data.metadata["package_version"]), Version
@@ -1643,7 +1699,7 @@ def testPsi4_Psi4_beta5_stopiter_psi_hf_out(logfile):
 
 
 def testPsi4_Psi4_0_5_sample_scf5_out(logfile):
-    """TODO"""
+    assert logfile.data.metadata["legacy_package_version"] == "0.5"
     assert logfile.data.metadata["package_version"] == "1!0.5.dev+master-dbe9080"
     assert isinstance(
         parse_version(logfile.data.metadata["package_version"]), Version
@@ -1652,6 +1708,7 @@ def testPsi4_Psi4_0_5_sample_scf5_out(logfile):
 
 def testPsi4_Psi4_0_5_water_fdgrad_out(logfile):
     """Ensure that finite difference gradients are parsed."""
+    assert logfile.data.metadata["legacy_package_version"] == "1.2a1.dev429"
     assert logfile.data.metadata["package_version"] == "1!1.2a1.dev429+fixsym-7838fc1-dirty"
     assert isinstance(
         parse_version(logfile.data.metadata["package_version"]), Version
@@ -1666,6 +1723,7 @@ def testPsi4_Psi4_0_5_water_fdgrad_out(logfile):
 
 def testPsi4_Psi4_1_2_ch4_hf_opt_freq_out(logfile):
     """Ensure that molecular orbitals and normal modes are parsed in Psi4 1.2"""
+    assert logfile.data.metadata["legacy_package_version"] == "1.2.1"
     assert logfile.data.metadata["package_version"] == "1!1.2.1.dev+HEAD-406f4de"
     assert isinstance(
         parse_version(logfile.data.metadata["package_version"]), Version
@@ -1688,6 +1746,7 @@ def testQChem_QChem4_2_CH3___Na__RS_out(logfile):
     This is to ensure only the supersystem is parsed.
     """
 
+    assert logfile.data.metadata["legacy_package_version"] == "4.2.2"
     assert logfile.data.metadata["package_version"] == "4.2.2"
     assert isinstance(
         parse_version(logfile.data.metadata["package_version"]), Version
@@ -1722,6 +1781,7 @@ def testQChem_QChem4_2_CH3___Na__RS_SCF_out(logfile):
     This is to ensure only the supersystem is printed.
     """
 
+    assert logfile.data.metadata["legacy_package_version"] == "4.1.0.1"
     assert logfile.data.metadata["package_version"] == "4.1.0.1"
     assert isinstance(
         parse_version(logfile.data.metadata["package_version"]), Version
@@ -1754,6 +1814,7 @@ def testQChem_QChem4_2_CH4___Na__out(logfile):
     This is to ensure only the supersystem is parsed.
     """
 
+    assert logfile.data.metadata["legacy_package_version"] == "4.2.0"
     assert logfile.data.metadata["package_version"] == "4.2.0"
     assert isinstance(
         parse_version(logfile.data.metadata["package_version"]), Version
@@ -1786,6 +1847,7 @@ def testQChem_QChem4_2_CH3___Na__RS_SCF_noprint_out(logfile):
     This is to ensure only the supersystem is parsed.
     """
 
+    assert logfile.data.metadata["legacy_package_version"] == "4.3.0"
     assert logfile.data.metadata["package_version"] == "4.3.0"
     assert isinstance(
         parse_version(logfile.data.metadata["package_version"]), Version
@@ -2208,6 +2270,7 @@ def testQChem_QChem4_2_read_molecule_out(logfile):
 
 def testQChem_QChem4_2_stopiter_qchem_out(logfile):
     """Check to ensure that an incomplete SCF is handled correctly."""
+    assert logfile.data.metadata["legacy_package_version"] == "4.0.0.1"
     assert logfile.data.metadata["package_version"] == "4.0.0.1"
     assert isinstance(
         parse_version(logfile.data.metadata["package_version"]), Version
@@ -2336,6 +2399,7 @@ def testQChem_QChem4_4_full_2_out(logfile):
     """The polarizability section may not be parsed due to something
     appearing just beforehand from a frequency-type calculation.
     """
+    assert logfile.data.metadata["legacy_package_version"] == "4.4.2"
     assert logfile.data.metadata["package_version"] == "4.4.2"
     assert isinstance(
         parse_version(logfile.data.metadata["package_version"]), Version
@@ -2347,6 +2411,7 @@ def testQChem_QChem4_4_srtlg_out(logfile):
     """Some lines in the MO coefficients require fixed-width parsing. See
     #349 and #381.
     """
+    assert logfile.data.metadata["legacy_package_version"] == "4.4.0"
     assert logfile.data.metadata["package_version"] == "4.4.0"
     assert isinstance(
         parse_version(logfile.data.metadata["package_version"]), Version
@@ -2390,6 +2455,7 @@ def testQChem_QChem5_0_438_out(logfile):
     """This job has an ECP on Pt, replacing 60 of 78 electrons, and was
     showing the charge as 60.
     """
+    assert logfile.data.metadata["legacy_package_version"] == "5.0.0"
     assert logfile.data.metadata["package_version"] == "5.0.0"
     assert isinstance(
         parse_version(logfile.data.metadata["package_version"]), Version
@@ -2402,6 +2468,7 @@ def testQChem_QChem5_0_argon_out(logfile):
     """This job has unit specifications at the end of 'Total energy for
     state' lines.
     """
+    assert logfile.data.metadata["legacy_package_version"] == "5.0.1"
     assert logfile.data.metadata["package_version"] == "5.0.1"
     assert isinstance(
         parse_version(logfile.data.metadata["package_version"]), Version
@@ -2416,6 +2483,7 @@ def testQChem_QChem5_0_argon_out(logfile):
 
 def testQChem_QChem5_1_old_final_print_1_out(logfile):
     """This job has was run from a development version."""
+    assert logfile.data.metadata["legacy_package_version"] == "5.1.0"
     assert logfile.data.metadata["package_version"] == "5.1.0dev+branches_libresponse-27553"
     assert isinstance(
         parse_version(logfile.data.metadata["package_version"]), Version
@@ -2426,6 +2494,7 @@ def testQChem_QChem5_1_old_final_print_1_out(logfile):
 
 
 def testTurbomole_Turbomole7_2_dvb_gopt_b3_lyp_Gaussian__(logfile):
+    assert logfile.data.metadata["legacy_package_version"] == "7.2"
     assert logfile.data.metadata["package_version"] == "7.2"
     assert isinstance(
         parse_version(logfile.data.metadata["package_version"]), Version

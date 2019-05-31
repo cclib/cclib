@@ -63,8 +63,10 @@ class Jaguar(logfileparser.Logfile):
         # Extract the package version number.
         if "Jaguar version" in line:
             tokens = line.split()
-            package_version = "{}+{}".format(tokens[3][:-1], tokens[5])
+            base_version = tokens[3][:-1]
+            package_version = "{}+{}".format(base_version, tokens[5])
             self.metadata["package_version"] = package_version
+            self.metadata["legacy_package_version"] = base_version
 
         # Extract the basis set name
         if line[2:12] == "basis set:":

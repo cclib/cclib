@@ -89,10 +89,11 @@ class GAMESS(logfileparser.Logfile):
         if "Firefly version" in line:
             match = re.search(r"Firefly version\s([\d.]*)\D*(\d*)\s*\*", line)
             if match:
-                version, build = match.groups()
-                package_version = "{}+{}".format(version, build)
+                base_version, build = match.groups()
+                package_version = "{}+{}".format(base_version, build)
                 self.metadata["package_version"] = package_version
-        if "GAMESS VERSION" in line:
+                self.metadata["legacy_package_version"] = base_version
+        if "GAMESS VERSION =" in line:
             # ...so avoid overwriting it if Firefly already set this field.
             if "package_version" not in self.metadata:
                 tokens = line.split()
@@ -106,6 +107,7 @@ class GAMESS(logfileparser.Logfile):
                     # `(R23)` -> 23
                     release = possible_release[2:-1]
                 self.metadata["package_version"] = '{}.r{}'.format(year, release)
+                self.metadata["legacy_package_version"] = "{}R{}".format(year, release)
 
         if line[1:12] == "INPUT CARD>":
             return

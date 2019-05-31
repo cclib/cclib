@@ -77,6 +77,7 @@ class Psi4(logfileparser.Logfile):
             version_line = next(inputfile)
             tokens = version_line.split()
             package_version = tokens[1].split("-")[-1]
+            self.metadata["legacy_package_version"] = package_version
             # Keep track of early versions of Psi4.
             if "beta" in package_version:
                 self.version_4_beta = True

@@ -440,7 +440,9 @@ cannot be determined. Rerun without `$molecule read`."""
             if match:
                 groups = [s for s in match.groups() if s is not None]
                 assert len(groups) == 1
-                self.metadata["package_version"] = groups[0]
+                package_version = groups[0]
+                self.metadata["package_version"] = package_version
+                self.metadata["legacy_package_version"] = package_version
         # Avoid "Last SVN revision" entry.
         if "SVN revision" in line and "Last" not in line:
             svn_revision = line.split()[3]

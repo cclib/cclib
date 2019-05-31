@@ -113,7 +113,9 @@ class Turbomole(logfileparser.Logfile):
         if index > -1:
             line = line[index + len(searchstr):]
             tokens = line.split()
-            self.metadata["package_version"] = tokens[0][1:].replace("-", ".")
+            package_version = tokens[0][1:].replace("-", ".")
+            self.metadata["package_version"] = package_version
+            self.metadata["legacy_package_version"] = package_version
             # Don't add revision information to the main package version for now.
             if tokens[1] == "(":
                 revision = tokens[2]

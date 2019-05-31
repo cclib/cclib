@@ -108,7 +108,9 @@ class DALTON(logfileparser.Logfile):
                   r"(?:[\s,]\(?)?")
             match = re.search(rs, line)
             if match:
-                self.metadata["package_version"] = match.groups()[0]
+                package_version = match.groups()[0]
+                self.metadata["package_version"] = package_version
+                self.metadata["legacy_package_version"] = package_version
         # Don't add revision information to the main package version for now.
         if "Last Git revision" in line:
             revision = line.split()[4]

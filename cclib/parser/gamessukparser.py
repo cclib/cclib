@@ -51,7 +51,9 @@ class GAMESSUK(logfileparser.Logfile):
         if "version" in line:
             search = re.search(r"\sversion\s*(\d\.\d)", line)
             if search:
-                self.metadata["package_version"] = search.groups()[0]
+                package_version = search.groups()[0]
+                self.metadata["package_version"] = package_version
+                self.metadata["legacy_package_version"] = package_version
         if "Revision" in line:
             revision = line.split()[1]
             package_version = self.metadata.get("package_version")

@@ -43,6 +43,8 @@ class Molcas(logfileparser.Logfile):
             self._assign_coreelectrons_to_element(element, ncore)
 
         if "package_version" in self.metadata:
+            # Use the short version as the legacy version.
+            self.metadata["legacy_package_version"] = self.metadata["package_version"]
             # If there is both a tag and the full hash, place the tag
             # first. Both are chosen to be local, since there isn't a
             # distinction between development and release builds in their

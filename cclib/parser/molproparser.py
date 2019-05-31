@@ -272,8 +272,11 @@ class Molpro(logfileparser.Logfile):
         # Only take the less-specific version if it doesn't already exist.
         if "Version" in line:
             package_version = self.metadata.get("package_version")
+            less_specific_package_version = line.split()[1]
             if not package_version:
-                self.metadata["package_version"] = line.split()[1]
+                self.metadata["package_version"] = less_specific_package_version
+            # ...but use it for the legacy (short) version.
+            self.metadata["legacy_package_version"] = less_specific_package_version
         if "SHA1" in line:
             package_version = self.metadata.get("package_version")
             if package_version:

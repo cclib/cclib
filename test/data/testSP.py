@@ -295,14 +295,14 @@ class GenericSPTest(unittest.TestCase):
 
     @skipForParser('ADF', 'Does not support metadata yet')
     @skipForParser('GAMESSUK', 'Does not support metadata yet')
-    @skipForParser('Molcas','The parser is still being developed so we skip this test')
+    @skipForParser('Molcas', 'The parser is still being developed so we skip this test')
     @skipForParser('Molpro', 'Does not support metadata yet')
     @skipForParser('NWChem', 'Does not support metadata yet')
     @skipForParser('ORCA', 'Does not support metadata yet')
     @skipForParser('Psi3', 'Does not support metadata yet')
     @skipForParser('Psi4', 'Does not support metadata yet')
     @skipForParser('QChem', 'Does not support metadata yet')
-    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
+    @skipForParser('Turbomole', 'The parser is still being developed so we skip this test')
     def testmetadata(self):
         """Does metadata have expected keys and values?"""
         self.assertTrue(hasattr(self.data, "metadata"))
@@ -313,6 +313,7 @@ class GenericSPTest(unittest.TestCase):
             self.assertIn("input_file_contents", self.data.metadata)
         self.assertIn("methods", self.data.metadata)
         self.assertIn("package", self.data.metadata)
+        self.assertIn("legacy_package_version", self.data.metadata)
         self.assertIn("package_version", self.data.metadata)
         self.assertIsInstance(
             packaging.version.parse(self.data.metadata["package_version"]),

@@ -90,6 +90,11 @@ class MOPAC(logfileparser.Logfile):
         if "For non-commercial use only" in line:
             # Ignore the platorm information for now (the last character).
             self.metadata["package_version"] = line.split()[8][:-1]
+            # Use the year as the legacy (short) package version.
+            self.skip_lines(
+                inputfile, ["Stewart Computational Chemistry", "s", "s", "s", "s"]
+            )
+            self.metadata["legacy_package_version"] = next(inputfile).split()[1][5:]
 
         # Extract the atomic numbers and coordinates from the optimized geometry
         # note that cartesian coordinates section occurs multiple times in the file, and we want to end up using the last instance
