@@ -160,11 +160,7 @@ class OrcaROCISTest(GenericTDTest):
     """Customized test for ROCIS"""
     number = 57
     expected_l_max = 2316970.8
-    # In ORCA 4.0, an additional spectrum ("COMBINED ELECTRIC DIPOLE +
-    # MAGNETIC DIPOLE + ELECTRIC QUADRUPOLE SPECTRUM (Origin Independent,
-    # Length Representation)") was present that is not in ORCA 4.1. This
-    # accounts for the difference in a version-independent way.
-    n_spectra = (8, 9)
+    n_spectra = 8
 
     def testoscs(self):
         """Is the maximum of etoscs in the right range?"""
@@ -173,7 +169,7 @@ class OrcaROCISTest(GenericTDTest):
 
     def testTransprop(self):
         """Check the number of spectra parsed"""
-        self.assertTrue(len(self.data.transprop) in self.n_spectra)
+        self.assertEqual(len(self.data.transprop), self.n_spectra)
         tddft_length = 'ABSORPTION SPECTRUM VIA TRANSITION ELECTRIC DIPOLE MOMENTS'
         self.assertIn(tddft_length, self.data.transprop)
 
@@ -194,7 +190,15 @@ class OrcaROCISTest(GenericTDTest):
         pass
 
 
-if __name__=="__main__":
+class OrcaROCIS40Test(OrcaROCISTest):
+    """Customized test for ROCIS"""
+    # In ORCA 4.0, an additional spectrum ("COMBINED ELECTRIC DIPOLE +
+    # MAGNETIC DIPOLE + ELECTRIC QUADRUPOLE SPECTRUM (Origin Independent,
+    # Length Representation)") was present that is not in ORCA 4.1.
+    n_spectra = 9
+
+
+if __name__ =="__main__":
 
     import sys
     sys.path.insert(1, os.path.join(__filedir__, ".."))
