@@ -960,9 +960,9 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
 
                 line = next(inputfile)
 
-            self.etenergies = numpy.array(etenergies)
-            self.etoscs = numpy.array(etoscs)
-            self.transprop[name] = (self.etenergies, self.etoscs)
+            self.set_attribute('etenergies', etenergies)
+            self.set_attribute('etoscs', etoscs)
+            self.transprop[name] = (numpy.asarray(etenergies), numpy.asarray(etoscs))
 
         if line.strip() == "CD SPECTRUM":
             # -------------------------------------------------------------------
