@@ -909,7 +909,8 @@ States    Energy  Wavelength   fosc         T2         TX        TY        TZ
                     state, state2, energy, wavelength, intensity, t2, tx, ty, tz = line.split()
                     return energy, intensity
 
-            elif line[:79] == 'ROCIS COMBINED ELECTRIC DIPOLE + MAGNETIC DIPOLE + ELECTRIC QUADRUPOLE SPECTRUM':
+            elif line[:79] == 'ROCIS COMBINED ELECTRIC DIPOLE + MAGNETIC DIPOLE + ELECTRIC QUADRUPOLE SPECTRUM' \
+                 or line[:87] == 'SOC CORRECTED COMBINED ELECTRIC DIPOLE + MAGNETIC DIPOLE + ELECTRIC QUADRUPOLE SPECTRUM':
                 def energy_intensity(line):
                     """ ROCIS with DoQuad = True and SOC = True (also does origin adjusted)
 ------------------------------------------------------------------------------------------------------
@@ -959,9 +960,9 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
 
                 line = next(inputfile)
 
-            self.etenergies = numpy.array(etenergies)
-            self.etoscs = numpy.array(etoscs)
-            self.transprop[name] = (self.etenergies, self.etoscs)
+            self.set_attribute('etenergies', etenergies)
+            self.set_attribute('etoscs', etoscs)
+            self.transprop[name] = (numpy.asarray(etenergies), numpy.asarray(etoscs))
 
         if line.strip() == "CD SPECTRUM":
             # -------------------------------------------------------------------
