@@ -287,7 +287,7 @@ TD        Gaussian    GaussianTDDFTTest     basicGaussian16       dvb_td.out
 TD        Jaguar      JaguarTDDFTTest       basicJaguar8.3        dvb_td.out
 TD        ORCA        OrcaTDDFTTest         basicORCA4.0          dvb_td.out
 TD        ORCA        OrcaTDDFTTest         basicORCA4.1          dvb_td.out
-TD        ORCA        OrcaROCISTest         basicORCA4.0          dvb_rocis.out
+TD        ORCA        OrcaROCIS40Test       basicORCA4.0          dvb_rocis.out
 TD        ORCA        OrcaROCISTest         basicORCA4.1          dvb_rocis.out
 TD        QChem       QChemTDDFTTest        basicQChem4.2         dvb_td.out
 TD        QChem       QChemTDDFTTest        basicQChem5.1         dvb_td.out
