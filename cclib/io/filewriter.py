@@ -57,6 +57,7 @@ class Writer:
         self.jobfilename = jobfilename
         self.indices = indices
         self.terse = terse
+        self.ghost = kwargs.get("ghost")
 
         self.pt = PeriodicTable()
 

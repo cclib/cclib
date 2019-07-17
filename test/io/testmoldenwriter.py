@@ -31,7 +31,7 @@ class MOLDENTest(unittest.TestCase):
             data = cclib.io.ccread(fpath)
             delattr(data, attr)
 
-            # Molden files cannot be wriiten if required attrs are missing.
+            # Molden files cannot be written if required attrs are missing.
             with self.assertRaises(MissingAttributeError):
                 cclib.io.moldenwriter.MOLDEN(data)
 

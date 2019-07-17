@@ -33,6 +33,11 @@ def main():
                         action='store_true',
                         help='more verbose parsing output (only errors by default)')
 
+    parser.add_argument('-g', '--ghost',
+                        type=str,
+                        default=None,
+                        help='Symbol to use for ghost atoms')
+
     parser.add_argument('-t', '--terse',
                         action='store_true',
                         help='CJSON by default is not indented for readability, saves space (indented for readability\'s sake)')
@@ -54,6 +59,7 @@ def main():
     terse = args.terse
     future = args.future
     index = args.index
+    ghost = args.ghost
 
     for filename in filenames:
 
@@ -85,6 +91,8 @@ def main():
         ccwrite_kwargs = dict()
         if future:
             ccwrite_kwargs['future'] = True
+        if ghost:
+            ccwrite_kwargs['ghost'] = ghost
         # For XYZ files, write the last geometry unless otherwise
         # specified.
         if not index:
