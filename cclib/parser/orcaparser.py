@@ -171,6 +171,8 @@ class ORCA(logfileparser.Logfile):
                         for line in lines_iter:
                             if not line:
                                 continue
+                            if line[0] == '#' or line.strip(' ') == '\n':
+                                continue
                             if line[0] == '*' or line.strip() == "end":
                                 break
                             # Strip basis specification that can appear after coordinates

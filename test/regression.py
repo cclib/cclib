@@ -1133,6 +1133,10 @@ def testORCA_ORCA4_0_IrCl6_sp_out(logfile):
     numpy.testing.assert_almost_equal(logfile.data.scfvalues[0][0], vals_first)
     numpy.testing.assert_almost_equal(logfile.data.scfvalues[0][-1], vals_last)
 
+def testORCA_ORCA4_0_comment_or_blank_line_out(logfile):
+    """Coordinates with blank lines or comments weren't parsed correctly (#747)."""
+    assert hasattr(logfile.data,"atomcoords")
+    assert logfile.data.atomcoords.shape == (1, 8, 3)
 
 def testORCA_ORCA4_1_725_out(logfile):
     """This file uses embedding potentials, which requires `>` after atom names in
@@ -1154,7 +1158,7 @@ def testORCA_ORCA4_1_orca_from_issue_736_out(logfile):
     #           ***  Starting incremental Fock matrix formation  ***
     # 0   -257.0554667435   0.000000000000537.42184135  4.76025534  0.4401076 0.8500
     assert abs(logfile.data.scfvalues[14][0][1] - 537) < 1.0, logfile.data.scfvalues[14][0]
-    
+
 
 # PSI 3 #
 
