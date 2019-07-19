@@ -197,6 +197,38 @@ class MOLDEN(filewriter.Writer):
 
         return lines
 
+    def _no_from_ccdata(self):
+        """Create [MO] section containing natural orbitals.
+
+        Sym= symmetry_label_1
+        Ene= no_occupation_number_1
+        Spin= (Alpha|Beta)
+        Occup= no_occupation_number_1
+        ao_number_1 no_coefficient_1
+        ...
+        ao_number_n no_coefficient_n
+        ...
+        """
+
+        nooccnos = self.ccdata.nooccnos
+        nocoeffs = self.ccdata.nocoeffs
+        homos = self.ccdata.homos
+        mult = self.ccdata.mult
+
+        has_syms = False
+        lines = []
+
+        spin = 'Alpha'
+        for i in range(len(nooccnos)):
+            lines.append(' Ene= {:10.4f}'.format(nooccnos[i]))
+            lines.append(' Spin= %s' % spin)
+            lines.append(' Occup= {:10.6f}'.format(nooccnos[i]))
+            # Rearrange mocoeffs according to Molden's lexicographical order.
+            nocoeffs[i] = self._rearrange_mocoeffs(nocoeffs[i])
+            for k, nocoeff in enumerate(nocoeffs[i]):
+                lines.append('{:4d}  {:10.6f}'.format(k + 1, nocoeff))
+        return lines
+
     def generate_repr(self):
         """Generate the MOLDEN representation of the logfile data."""
 
@@ -224,6 +256,15 @@ class MOLDEN(filewriter.Writer):
 
             molden_lines.append('[MO]')
             molden_lines.extend(self._mo_from_ccdata())
+
+        if hasattr(self.ccdata, 'gbasis') and hasattr(self.ccdata, 'nocoeffs')\
+                and hasattr(self.ccdata, 'nooccnos'):
+
+            molden_lines.append('[GTO]')
+            molden_lines.extend(self._gto_from_ccdata())
+
+            molden_lines.append('[MO]')
+            molden_lines.extend(self._no_from_ccdata())
 
         # Omitting until issue #390 is resolved.
         # https://github.com/cclib/cclib/issues/390
