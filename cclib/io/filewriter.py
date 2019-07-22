@@ -58,6 +58,7 @@ class Writer(ABC):
         self.indices = indices
         self.terse = terse
         self.ghost = kwargs.get("ghost")
+        self.naturalorbitals = kwargs.get("naturalorbitals")
 
         self.pt = PeriodicTable()
 

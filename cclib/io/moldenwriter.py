@@ -220,6 +220,7 @@ class MOLDEN(filewriter.Writer):
 
         spin = 'Alpha'
         for i in range(len(nooccnos)):
+            lines.append(' Symm= {}'.format("A"))
             lines.append(' Ene= {:10.4f}'.format(nooccnos[i]))
             lines.append(' Spin= %s' % spin)
             lines.append(' Occup= {:10.6f}'.format(nooccnos[i]))
@@ -249,7 +250,7 @@ class MOLDEN(filewriter.Writer):
 
         # Either both [GTO] and [MO] should be present or none of them.
         if hasattr(self.ccdata, 'gbasis') and hasattr(self.ccdata, 'mocoeffs')\
-                and hasattr(self.ccdata, 'moenergies'):
+                and hasattr(self.ccdata, 'moenergies') and not self.naturalorbitals:
 
             molden_lines.append('[GTO]')
             molden_lines.extend(self._gto_from_ccdata())
@@ -258,7 +259,7 @@ class MOLDEN(filewriter.Writer):
             molden_lines.extend(self._mo_from_ccdata())
 
         if hasattr(self.ccdata, 'gbasis') and hasattr(self.ccdata, 'nocoeffs')\
-                and hasattr(self.ccdata, 'nooccnos'):
+                and hasattr(self.ccdata, 'nooccnos') and self.naturalorbitals:
 
             molden_lines.append('[GTO]')
             molden_lines.extend(self._gto_from_ccdata())
