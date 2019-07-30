@@ -414,9 +414,6 @@ class ORCA(logfileparser.Logfile):
         #
         if line[33:53] == "Geometry convergence":
 
-            if not hasattr(self, "geovalues"):
-                self.geovalues = []
-
             headers = next(inputfile)
             dashes = next(inputfile)
 
@@ -424,10 +421,12 @@ class ORCA(logfileparser.Logfile):
             values = []
             targets = []
             line = next(inputfile)
-            while list(set(line.strip())) != ["."]:
+            # Handle both the dots only and dashes only cases
+            while len(list(set(line.strip()))) != 1:
                 name = line[10:28].strip().lower()
-                value = float(line.split()[2])
-                target = float(line.split()[3])
+                tokens = line.split()
+                value = float(tokens[2])
+                target = float(tokens[3])
                 names.append(name)
                 values.append(value)
                 targets.append(target)
@@ -449,7 +448,7 @@ class ORCA(logfileparser.Logfile):
                     newvalues.append(values[names.index(n)])
                     assert targets[names.index(n)] == self.geotargets[i]
 
-            self.geovalues.append(newvalues)
+            self.append_attribute("geovalues", newvalues)
 
         """ Grab cartesian coordinates
         ---------------------------------
