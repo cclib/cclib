@@ -1,22 +1,25 @@
 ----- GAMESS execution script 'rungms' -----
-This job is running on host firzens
-under operating system Linux at Mon Aug 14 12:30:33 IST 2017
+This job is running on host jordan-wkst2
+under operating system Linux at Mon 05 Aug 2019 01:05:39 PM EDT
 Available scratch disk space (Kbyte units) at beginning of the job is
-Filesystem     1K-blocks      Used Available Use% Mounted on
-/dev/sda11     254243428 112975196 128330352  47% /
-GAMESS temporary binary files will be written to /scr/sagar
-GAMESS supplementary output files will be written to /home/sagar/gamess/scratch
+Filesystem     1K-blocks  Used Available Use% Mounted on
+tmpfs            5053572  8864   5044708   1% /tmp
+GAMESS temporary binary files will be written to /tmp
+GAMESS supplementary output files will be written to /home/shiv/.gamess
 Copying input file water_cis_dets.inp to your run's scratch directory...
+cp water_cis_dets.inp /tmp/water_cis_dets.F05
+unset echo
  
 Assuming a single but multicore node.
  
+/opt/gamess/ddikick.x /opt/gamess/gamess.00.x water_cis_dets -ddi 1 4 jordan-wkst2:cpus=4 -scr /tmp
 
  Distributed Data Interface kickoff program.
  Initiating 4 compute processes on 1 nodes to run the following command:
- /home/sagar/gamess/gamess.02.x water_cis_dets 
+ /opt/gamess/gamess.00.x water_cis_dets 
 
           ******************************************************
-          *         GAMESS VERSION = 20 APR 2017 (R1)          *
+          *         GAMESS VERSION = 30 SEP 2018 (R3)         *
           *             FROM IOWA STATE UNIVERSITY             *
           * M.W.SCHMIDT, K.K.BALDRIDGE, J.A.BOATZ, S.T.ELBERT, *
           *   M.S.GORDON, J.H.JENSEN, S.KOSEKI, N.MATSUNAGA,   *
@@ -30,12 +33,14 @@ Assuming a single but multicore node.
   CONTRIBUTIONS TO THE CODE:
      IVANA ADAMOVIC, CHRISTINE AIKENS, YURI ALEXEEV, POOJA ARORA,
      ANDREY ASADCHEV, ROB BELL, PRADIPTA BANDYOPADHYAY, JONATHAN BENTZ,
-     BRETT BODE, KURT BRORSEN, CALEB CARLIN, GALINA CHABAN, WEI CHEN,
-     CHEOL HO CHOI, PAUL DAY, ALBERT DEFUSCO, NUWAN DESILVA, TIM DUDLEY,
-     DMITRI FEDOROV, GRAHAM FLETCHER, MARK FREITAG, KURT GLAESEMANN,
+     COLLEEN BERTONI, BRETT BODE, KURT BRORSEN, CALEB CARLIN, GALINA CHABAN,
+     WEI CHEN, CHEOL HO CHOI, PAUL DAY, ALBERT DEFUSCO, NUWAN DESILVA,
+     TIM DUDLEY, DMITRI FEDOROV, ALEX FINDLATER, GRAHAM FLETCHER, 
+     MARK FREITAG, KURT GLAESEMANN, ANASTASIA GUNINA,
      DAN KEMP, GRANT MERRILL, NORIYUKI MINEZAWA, JONATHAN MULLIN,
      TAKESHI NAGATA, SEAN NEDD, HEATHER NETZLOFF, BOSILJKA NJEGIC, RYAN OLSON,
-     MIKE PAK, SPENCER PRUITT, LUKE ROSKOP, JIM SHOEMAKER, LYUDMILA SLIPCHENKO,
+     MIKE PAK, BUU PHAM,
+     SPENCER PRUITT, LUKE ROSKOP, JIM SHOEMAKER, LYUDMILA SLIPCHENKO,
      TONY SMITH, SAROM SOK LEANG, JIE SONG, TETSUYA TAKETSUGU, SIMON WEBB,
      PENG XU, SOOHAENG YOO, FEDERICO ZAHARIEV
 
@@ -56,7 +61,9 @@ Assuming a single but multicore node.
      NAT. INST. OF ADVANCED INDUSTRIAL SCIENCE AND TECHNOLOGY: KAZUO KITAURA
      MICHIGAN STATE UNIVERSITY:
           KAROL KOWALSKI, MARTA WLOCH, JEFFREY GOUR, JESSE LUTZ,
-          WEI LI, PIOTR PIECUCH
+          WEI LI, JUN SHEN, J. EMILIANO DEUSTUA, PIOTR PIECUCH
+     UNIVERSITY OF MINNESOTA:
+          YINAN SHU
      UNIVERSITY OF SILESIA: MONIKA MUSIAL, STANISLAW KUCHARSKI
      FACULTES UNIVERSITAIRES NOTRE-DAME DE LA PAIX:
           OLIVIER QUINET, BENOIT CHAMPAGNE
@@ -85,11 +92,13 @@ Assuming a single but multicore node.
      TOKYO INSTITUTE OF TECHNOLOGY: HIROYA NAKATA
      NAGOYA UNIVERSITY: YOSHIO NISHIMOTO, STEPHAN IRLE
      MOSCOW STATE UNIVERSITY: VLADIMIR MIRONOV
+     A.N.NESMEYANOV INSTITUTE OF ORGANOELEMENT COMPOUNDS OF RUSSIAN ACADEMY OF SCIENCES:
+          IGOR S. GERASIMOV
 
 
  PARALLEL VERSION RUNNING ON        4 PROCESSORS IN        1 NODES.
 
- EXECUTION OF GAMESS BEGUN Mon Aug 14 12:30:33 2017
+ EXECUTION OF GAMESS BEGUN Mon Aug  5 13:05:40 2019
 
             ECHO OF THE FIRST FEW INPUT CARDS -
  INPUT CARD> $contrl scftyp=rhf cityp=cis runtyp=energy exetyp=run                          
@@ -260,15 +269,15 @@ Assuming a single but multicore node.
  A   =    7
 
  ..... DONE SETTING UP THE RUN .....
- CPU     0: STEP CPU TIME=     0.01 TOTAL CPU TIME=        0.0 (    0.0 MIN)
- TOTAL WALL CLOCK TIME=        0.0 SECONDS, CPU UTILIZATION IS  50.00%
+ CPU     0: STEP CPU TIME=     0.18 TOTAL CPU TIME=          0.2 (      0.0 MIN)
+ TOTAL WALL CLOCK TIME=          0.1 SECONDS, CPU UTILIZATION IS   225.00%
 
           ********************
           1 ELECTRON INTEGRALS
           ********************
  ...... END OF ONE-ELECTRON INTEGRALS ......
- CPU     0: STEP CPU TIME=     0.00 TOTAL CPU TIME=        0.0 (    0.0 MIN)
- TOTAL WALL CLOCK TIME=        0.0 SECONDS, CPU UTILIZATION IS  50.00%
+ CPU     0: STEP CPU TIME=     0.05 TOTAL CPU TIME=          0.2 (      0.0 MIN)
+ TOTAL WALL CLOCK TIME=          0.1 SECONDS, CPU UTILIZATION IS   230.00%
 
           -------------
           GUESS OPTIONS
@@ -285,8 +294,8 @@ Assuming a single but multicore node.
      5 ORBITALS ARE OCCUPIED (    1 CORE ORBITALS).
      2=A        3=A        4=A        5=A        6=A        7=A   
  ...... END OF INITIAL ORBITAL SELECTION ......
- CPU     0: STEP CPU TIME=     0.00 TOTAL CPU TIME=        0.0 (    0.0 MIN)
- TOTAL WALL CLOCK TIME=        0.0 SECONDS, CPU UTILIZATION IS  50.00%
+ CPU     0: STEP CPU TIME=     0.01 TOTAL CPU TIME=          0.2 (      0.0 MIN)
+ TOTAL WALL CLOCK TIME=          0.1 SECONDS, CPU UTILIZATION IS   218.18%
 
                     ----------------------
                     AO INTEGRAL TECHNOLOGY
@@ -309,14 +318,14 @@ Assuming a single but multicore node.
  STORING   15000 INTEGRALS/RECORD ON DISK, USING 12 BYTES/INTEGRAL.
  TWO ELECTRON INTEGRAL EVALUATION REQUIRES   89366 WORDS OF MEMORY.
  II,JST,KST,LST =  1  1  1  1 NREC =         1 INTLOC =    1
- II,JST,KST,LST =  2  1  1  1 NREC =         1 INTLOC =    1
- II,JST,KST,LST =  3  1  1  1 NREC =         1 INTLOC =    1
- II,JST,KST,LST =  4  1  1  1 NREC =         1 INTLOC =    2
+ II,JST,KST,LST =  2  1  1  1 NREC =         1 INTLOC =    2
+ II,JST,KST,LST =  3  1  1  1 NREC =         1 INTLOC =   33
+ II,JST,KST,LST =  4  1  1  1 NREC =         1 INTLOC =   33
  TOTAL NUMBER OF NONZERO TWO-ELECTRON INTEGRALS =                 206
           4 INTEGRAL RECORDS WERE STORED ON DISK FILE  8.
   ...... END OF TWO-ELECTRON INTEGRALS .....
- CPU     0: STEP CPU TIME=     0.01 TOTAL CPU TIME=        0.0 (    0.0 MIN)
- TOTAL WALL CLOCK TIME=        0.0 SECONDS, CPU UTILIZATION IS  50.00%
+ CPU     0: STEP CPU TIME=     0.02 TOTAL CPU TIME=          0.3 (      0.0 MIN)
+ TOTAL WALL CLOCK TIME=          0.1 SECONDS, CPU UTILIZATION IS   200.00%
 
           --------------------------
                  RHF SCF CALCULATION
@@ -347,7 +356,7 @@ Assuming a single but multicore node.
           DENSITY CONVERGED
           -----------------
      TIME TO FORM FOCK OPERATORS=       0.0 SECONDS (       0.0 SEC/ITER)
-     TIME TO SOLVE SCF EQUATIONS=       0.0 SECONDS (       0.0 SEC/ITER)
+     TIME TO SOLVE SCF EQUATIONS=       0.1 SECONDS (       0.0 SEC/ITER)
 
  FINAL RHF ENERGY IS      -74.9643287920 AFTER  13 ITERATIONS
 
@@ -377,8 +386,8 @@ Assuming a single but multicore node.
     6  H  2  S   -0.775801  -0.808915
     7  H  3  S   -0.775801   0.808916
  ...... END OF RHF CALCULATION ......
- CPU     0: STEP CPU TIME=     0.01 TOTAL CPU TIME=        0.0 (    0.0 MIN)
- TOTAL WALL CLOCK TIME=        0.0 SECONDS, CPU UTILIZATION IS  75.00%
+ CPU     0: STEP CPU TIME=     0.07 TOTAL CPU TIME=          0.3 (      0.0 MIN)
+ TOTAL WALL CLOCK TIME=          0.2 SECONDS, CPU UTILIZATION IS   157.14%
 
      ----------------------------------------------------------------
      PROPERTY VALUES FOR THE RHF   SELF-CONSISTENT FIELD WAVEFUNCTION
@@ -417,7 +426,7 @@ Assuming a single but multicore node.
                (K,V1,2)=     69.4593978615   -176.4390805300     30.9468057162
            PI PART(1+2)=     -7.8184589734
                (K,V1,2)=      5.0574624520    -19.9179511988      7.0420297734
-  SIGMA SKELETON, ERROR=    -67.1458697299      0.0000000000
+  SIGMA SKELETON, ERROR=    -67.1458697299     -0.0000000000
              MIXED PART= 0.00000E+00 0.00000E+00 0.00000E+00 0.00000E+00
  ...... END OF PI ENERGY ANALYSIS ......
 
@@ -459,8 +468,8 @@ Assuming a single but multicore node.
          DX          DY          DZ         /D/  (DEBYE)
      1.007144    1.336525    0.000000    1.673511
  ...... END OF PROPERTY EVALUATION ......
- CPU     0: STEP CPU TIME=     0.01 TOTAL CPU TIME=        0.0 (    0.0 MIN)
- TOTAL WALL CLOCK TIME=        0.1 SECONDS, CPU UTILIZATION IS  66.67%
+ CPU     0: STEP CPU TIME=     0.01 TOTAL CPU TIME=          0.3 (      0.0 MIN)
+ TOTAL WALL CLOCK TIME=          0.2 SECONDS, CPU UTILIZATION IS   154.55%
 
  MXVEC CANNOT BE BIGGER THAN THE NUMBER OF CIS CONFIGS
  SETTING MXVEC = NCFG
@@ -484,7 +493,7 @@ Assuming a single but multicore node.
 
  MIN MEMORY REQ. FOR CIS ENERGY FOCK-LIKE BUILDS =       196 WORDS
  MEMORY REQ. FOR SINGLE BATCH BUILDS             =      3136 WORDS
- MEMORY AVAILABLE                                =    968315 WORDS
+ MEMORY AVAILABLE                                =    968314 WORDS
 
  SINGLE BATCH ENERGY CALCULATION WILL BE PERFORMED
 
@@ -531,8 +540,8 @@ Assuming a single but multicore node.
                    SINGLE EXCITATION              COEFFICENT
             FROM SPIN ORB     TO SPIN ORB
        -----------------------------------------------------
-       ALPHA       5                6            0.70710678
-       BETA        5                6            0.70710678
+       ALPHA       5                6           -0.70710678
+       BETA        5                6           -0.70710678
        -----------------------------------------------------
 
 
@@ -542,12 +551,12 @@ Assuming a single but multicore node.
                    SINGLE EXCITATION              COEFFICENT
             FROM SPIN ORB     TO SPIN ORB
        -----------------------------------------------------
-       ALPHA       2                6           -0.07179490
-       ALPHA       3                7           -0.16333504
-       ALPHA       4                6           -0.68422742
-       BETA        2                6            0.07179490
-       BETA        3                7            0.16333504
-       BETA        4                6            0.68422742
+       ALPHA       2                6            0.07179490
+       ALPHA       3                7            0.16333504
+       ALPHA       4                6            0.68422742
+       BETA        2                6           -0.07179490
+       BETA        3                7           -0.16333504
+       BETA        4                6           -0.68422742
        -----------------------------------------------------
 
 
@@ -557,8 +566,8 @@ Assuming a single but multicore node.
                    SINGLE EXCITATION              COEFFICENT
             FROM SPIN ORB     TO SPIN ORB
        -----------------------------------------------------
-       ALPHA       5                7            0.70710678
-       BETA        5                7           -0.70710678
+       ALPHA       5                7           -0.70710678
+       BETA        5                7            0.70710678
        -----------------------------------------------------
 
 
@@ -605,12 +614,12 @@ Assuming a single but multicore node.
                    SINGLE EXCITATION              COEFFICENT
             FROM SPIN ORB     TO SPIN ORB
        -----------------------------------------------------
-       ALPHA       2                7            0.08862262
-       ALPHA       3                6            0.58973245
-       ALPHA       4                7           -0.37994957
-       BETA        2                7           -0.08862262
-       BETA        3                6           -0.58973245
-       BETA        4                7            0.37994957
+       ALPHA       2                7           -0.08862262
+       ALPHA       3                6           -0.58973245
+       ALPHA       4                7            0.37994957
+       BETA        2                7            0.08862262
+       BETA        3                6            0.58973245
+       BETA        4                7           -0.37994957
        -----------------------------------------------------
 
 
@@ -633,12 +642,12 @@ Assuming a single but multicore node.
                    SINGLE EXCITATION              COEFFICENT
             FROM SPIN ORB     TO SPIN ORB
        -----------------------------------------------------
-       ALPHA       2                6           -0.10939889
-       ALPHA       3                7           -0.67682119
-       ALPHA       4                6            0.17304611
-       BETA        2                6            0.10939889
-       BETA        3                7            0.67682119
-       BETA        4                6           -0.17304611
+       ALPHA       2                6            0.10939889
+       ALPHA       3                7            0.67682119
+       ALPHA       4                6           -0.17304611
+       BETA        2                6           -0.10939889
+       BETA        3                7           -0.67682119
+       BETA        4                6            0.17304611
        -----------------------------------------------------
 
   ---------------------------------------------------------------------
@@ -656,7 +665,7 @@ Assuming a single but multicore node.
    1A     0.6674149453    18.1613    418.8093     146480.65      68.27
    3A     0.7049723968    19.1833    442.3769     154723.56      64.63
 
- -CIS- ENERGY                  TOOK      0.000 SECONDS
+ -CIS- ENERGY                  TOOK      0.010 SECONDS
 
   ---------------------------------------------------------------------
                     CIS TRANSITION DIPOLE MOMENTS AND
@@ -675,8 +684,8 @@ Assuming a single but multicore node.
  STATE ENERGIES =        -74.9643287920      -74.5150077566
  EXCITATION ENERGY =  2.9564E+15 [1/SEC] =    98614.57 [1/CM] =     12.23 [EV]
                             X           Y           Z           NORM
- TRANSITION DIPOLE =    0.000000   -0.000000    0.074820    0.074820 E*BOHR
- TRANSITION DIPOLE =    0.000000   -0.000000    0.190175    0.190175 DEBYE
+ TRANSITION DIPOLE =   -0.000000   -0.000000   -0.074820    0.074820 E*BOHR
+ TRANSITION DIPOLE =   -0.000000   -0.000000   -0.190175    0.190175 DEBYE
  OSCILLATOR STRENGTH =    0.001677
  EINSTEIN COEFFICIENTS: A=  1.0878E+07 1/SEC; B=  2.2719E+06 SEC/G
 
@@ -724,8 +733,8 @@ Assuming a single but multicore node.
  STATE ENERGIES =        -74.9643287920      -74.2969138467
  EXCITATION ENERGY =  4.3914E+15 [1/SEC] =   146480.65 [1/CM] =     18.16 [EV]
                             X           Y           Z           NORM
- TRANSITION DIPOLE =   -0.190168    0.143302    0.000000    0.238116 E*BOHR
- TRANSITION DIPOLE =   -0.483363    0.364240    0.000000    0.605236 DEBYE
+ TRANSITION DIPOLE =   -0.190168    0.143302   -0.000000    0.238116 E*BOHR
+ TRANSITION DIPOLE =   -0.483363    0.364240   -0.000000    0.605236 DEBYE
  OSCILLATOR STRENGTH =    0.025228
  EINSTEIN COEFFICIENTS: A=  3.6107E+08 1/SEC; B=  2.3011E+07 SEC/G
 
@@ -749,8 +758,8 @@ Assuming a single but multicore node.
  STATE ENERGIES =        -74.5903204319      -74.5132556417
  TRANSITION ENERGY =  5.0706E+14 [1/SEC] =    16913.77 [1/CM] =        2.10 [EV]
                             X           Y           Z           NORM
- TRANSITION DIPOLE =    0.000000   -0.000000   -0.065264    0.065264 E*BOHR
- TRANSITION DIPOLE =    0.000000   -0.000000   -0.165885    0.165885 DEBYE
+ TRANSITION DIPOLE =   -0.000000    0.000000    0.065264    0.065264 E*BOHR
+ TRANSITION DIPOLE =   -0.000000    0.000000    0.165885    0.165885 DEBYE
  OSCILLATOR STRENGTH =    0.000219
  EINSTEIN COEFFICIENTS: A=  4.1758E+04 1/SEC; B=  1.7286E+06 SEC/G
 
@@ -760,8 +769,8 @@ Assuming a single but multicore node.
  STATE ENERGIES =        -74.5903204319      -74.4901149960
  TRANSITION ENERGY =  6.5932E+14 [1/SEC] =    21992.55 [1/CM] =        2.73 [EV]
                             X           Y           Z           NORM
- TRANSITION DIPOLE =    0.611974   -0.461155    0.000000    0.766274 E*BOHR
- TRANSITION DIPOLE =    1.555494   -1.172149    0.000000    1.947690 DEBYE
+ TRANSITION DIPOLE =   -0.611974    0.461155    0.000000    0.766274 E*BOHR
+ TRANSITION DIPOLE =   -1.555494    1.172149    0.000000    1.947690 DEBYE
  OSCILLATOR STRENGTH =    0.039225
  EINSTEIN COEFFICIENTS: A=  1.2655E+07 1/SEC; B=  2.3830E+08 SEC/G
 
@@ -786,8 +795,8 @@ Assuming a single but multicore node.
  STATE ENERGIES =        -74.5903204319      -74.3378200957
  TRANSITION ENERGY =  1.6614E+15 [1/SEC] =    55417.42 [1/CM] =        6.87 [EV]
                             X           Y           Z           NORM
- TRANSITION DIPOLE =    0.000000   -0.000000   -0.000000    0.000000 E*BOHR
- TRANSITION DIPOLE =    0.000000   -0.000000   -0.000000    0.000000 DEBYE
+ TRANSITION DIPOLE =    0.000000   -0.000000    0.000000    0.000000 E*BOHR
+ TRANSITION DIPOLE =    0.000000   -0.000000    0.000000    0.000000 DEBYE
  OSCILLATOR STRENGTH =    0.000000
  EINSTEIN COEFFICIENTS: A=  2.6795E-06 1/SEC; B=  3.1535E-06 SEC/G
 
@@ -799,8 +808,8 @@ Assuming a single but multicore node.
  STATE ENERGIES =        -74.5903204319      -74.2593563952
  TRANSITION ENERGY =  2.1776E+15 [1/SEC] =    72638.21 [1/CM] =        9.01 [EV]
                             X           Y           Z           NORM
- TRANSITION DIPOLE =   -0.000000    0.000000    0.095808    0.095808 E*BOHR
- TRANSITION DIPOLE =   -0.000000    0.000000    0.243521    0.243521 DEBYE
+ TRANSITION DIPOLE =   -0.000000    0.000000   -0.095808    0.095808 E*BOHR
+ TRANSITION DIPOLE =   -0.000000    0.000000   -0.243521    0.243521 DEBYE
  OSCILLATOR STRENGTH =    0.002025
  EINSTEIN COEFFICIENTS: A=  7.1280E+06 1/SEC; B=  3.7253E+06 SEC/G
 
@@ -809,8 +818,8 @@ Assuming a single but multicore node.
  STATE MULTIPLICITY =   1
  STATE ENERGY =        -74.5150077566
                             X           Y           Z           NORM
-      STATE DIPOLE =    0.107566    0.142746   -0.000000    0.178736 E*BOHR
-      STATE DIPOLE =    0.273407    0.362826   -0.000000    0.454306 DEBYE
+      STATE DIPOLE =    0.107566    0.142746    0.000000    0.178736 E*BOHR
+      STATE DIPOLE =    0.273407    0.362826    0.000000    0.454306 DEBYE
 
  TRANSITION FROM STATE  2, MULT= 1 TO STATE  3, MULT= 3 IS OPTICALLY INACTIVE.
 
@@ -824,8 +833,8 @@ Assuming a single but multicore node.
  STATE ENERGIES =        -74.5150077566      -74.4407757938
  TRANSITION ENERGY =  4.8842E+14 [1/SEC] =    16292.03 [1/CM] =        2.02 [EV]
                             X           Y           Z           NORM
- TRANSITION DIPOLE =    0.432731   -0.326086    0.000000    0.541838 E*BOHR
- TRANSITION DIPOLE =    1.099900   -0.828835    0.000000    1.377225 DEBYE
+ TRANSITION DIPOLE =   -0.432731    0.326086   -0.000000    0.541838 E*BOHR
+ TRANSITION DIPOLE =   -1.099900    0.828835   -0.000000    1.377225 DEBYE
  OSCILLATOR STRENGTH =    0.014529
  EINSTEIN COEFFICIENTS: A=  2.5724E+06 1/SEC; B=  1.1915E+08 SEC/G
 
@@ -835,8 +844,8 @@ Assuming a single but multicore node.
  STATE ENERGIES =        -74.5150077566      -74.3813542385
  TRANSITION ENERGY =  8.7940E+14 [1/SEC] =    29333.56 [1/CM] =        3.64 [EV]
                             X           Y           Z           NORM
- TRANSITION DIPOLE =   -0.000000   -0.000000   -0.096700    0.096700 E*BOHR
- TRANSITION DIPOLE =   -0.000000   -0.000000   -0.245788    0.245788 DEBYE
+ TRANSITION DIPOLE =   -0.000000   -0.000000    0.096700    0.096700 E*BOHR
+ TRANSITION DIPOLE =   -0.000000   -0.000000    0.245788    0.245788 DEBYE
  OSCILLATOR STRENGTH =    0.000833
  EINSTEIN COEFFICIENTS: A=  4.7821E+05 1/SEC; B=  3.7950E+06 SEC/G
 
@@ -848,8 +857,8 @@ Assuming a single but multicore node.
  STATE ENERGIES =        -74.5150077566      -74.2969138467
  TRANSITION ENERGY =  1.4350E+15 [1/SEC] =    47866.08 [1/CM] =        5.93 [EV]
                             X           Y           Z           NORM
- TRANSITION DIPOLE =    0.000000   -0.000000   -0.000000    0.000000 E*BOHR
- TRANSITION DIPOLE =    0.000000   -0.000000   -0.000000    0.000000 DEBYE
+ TRANSITION DIPOLE =    0.000000   -0.000000    0.000000    0.000000 E*BOHR
+ TRANSITION DIPOLE =    0.000000   -0.000000    0.000000    0.000000 DEBYE
  OSCILLATOR STRENGTH =    0.000000
  EINSTEIN COEFFICIENTS: A=  7.4888E-10 1/SEC; B=  1.3678E-09 SEC/G
 
@@ -860,8 +869,8 @@ Assuming a single but multicore node.
  STATE MULTIPLICITY =   3
  STATE ENERGY =        -74.5132556417
                             X           Y           Z           NORM
-      STATE DIPOLE =    0.149230    0.198035    0.000000    0.247967 E*BOHR
-      STATE DIPOLE =    0.379307    0.503360    0.000000    0.630274 DEBYE
+      STATE DIPOLE =    0.149230    0.198035   -0.000000    0.247967 E*BOHR
+      STATE DIPOLE =    0.379307    0.503360   -0.000000    0.630274 DEBYE
 
  TRANSITION BETWEEN EXCITED STATES   3 AND  4
 
@@ -869,8 +878,8 @@ Assuming a single but multicore node.
  STATE ENERGIES =        -74.5132556417      -74.4901149960
  TRANSITION ENERGY =  1.5226E+14 [1/SEC] =     5078.78 [1/CM] =        0.63 [EV]
                             X           Y           Z           NORM
- TRANSITION DIPOLE =   -0.000000   -0.000000   -0.000000    0.000000 E*BOHR
- TRANSITION DIPOLE =   -0.000000   -0.000000   -0.000000    0.000000 DEBYE
+ TRANSITION DIPOLE =    0.000000    0.000000   -0.000000    0.000000 E*BOHR
+ TRANSITION DIPOLE =    0.000000    0.000000   -0.000000    0.000000 DEBYE
  OSCILLATOR STRENGTH =    0.000000
  EINSTEIN COEFFICIENTS: A=  6.2937E-11 1/SEC; B=  9.6230E-08 SEC/G
 
@@ -880,8 +889,8 @@ Assuming a single but multicore node.
  STATE ENERGIES =        -74.5132556417      -74.4450050939
  TRANSITION ENERGY =  4.4907E+14 [1/SEC] =    14979.26 [1/CM] =        1.86 [EV]
                             X           Y           Z           NORM
- TRANSITION DIPOLE =    0.292954   -0.220756   -0.000000    0.366818 E*BOHR
- TRANSITION DIPOLE =    0.744619   -0.561111   -0.000000    0.932365 DEBYE
+ TRANSITION DIPOLE =   -0.292954    0.220756    0.000000    0.366818 E*BOHR
+ TRANSITION DIPOLE =   -0.744619    0.561111    0.000000    0.932365 DEBYE
  OSCILLATOR STRENGTH =    0.006122
  EINSTEIN COEFFICIENTS: A=  9.1632E+05 1/SEC; B=  5.4608E+07 SEC/G
 
@@ -908,8 +917,8 @@ Assuming a single but multicore node.
  STATE ENERGIES =        -74.5132556417      -74.2593563952
  TRANSITION ENERGY =  1.6706E+15 [1/SEC] =    55724.44 [1/CM] =        6.91 [EV]
                             X           Y           Z           NORM
- TRANSITION DIPOLE =   -0.084355   -0.111943    0.000000    0.140168 E*BOHR
- TRANSITION DIPOLE =   -0.214411   -0.284534    0.000000    0.356275 DEBYE
+ TRANSITION DIPOLE =   -0.084355   -0.111943   -0.000000    0.140168 E*BOHR
+ TRANSITION DIPOLE =   -0.214411   -0.284534   -0.000000    0.356275 DEBYE
  OSCILLATOR STRENGTH =    0.003326
  EINSTEIN COEFFICIENTS: A=  6.8883E+06 1/SEC; B=  7.9736E+06 SEC/G
 
@@ -918,8 +927,8 @@ Assuming a single but multicore node.
  STATE MULTIPLICITY =   3
  STATE ENERGY =        -74.4901149960
                             X           Y           Z           NORM
-      STATE DIPOLE =    0.196337    0.260548   -0.000000    0.326242 E*BOHR
-      STATE DIPOLE =    0.499044    0.662252   -0.000000    0.829230 DEBYE
+      STATE DIPOLE =    0.196337    0.260548    0.000000    0.326242 E*BOHR
+      STATE DIPOLE =    0.499044    0.662252    0.000000    0.829230 DEBYE
 
  TRANSITION BETWEEN EXCITED STATES   4 AND  5
 
@@ -927,8 +936,8 @@ Assuming a single but multicore node.
  STATE ENERGIES =        -74.4901149960      -74.4450050939
  TRANSITION ENERGY =  2.9681E+14 [1/SEC] =     9900.48 [1/CM] =        1.23 [EV]
                             X           Y           Z           NORM
- TRANSITION DIPOLE =   -0.000000   -0.000000   -0.053039    0.053039 E*BOHR
- TRANSITION DIPOLE =   -0.000000   -0.000000   -0.134812    0.134812 DEBYE
+ TRANSITION DIPOLE =    0.000000    0.000000    0.053039    0.053039 E*BOHR
+ TRANSITION DIPOLE =    0.000000    0.000000    0.134812    0.134812 DEBYE
  OSCILLATOR STRENGTH =    0.000085
  EINSTEIN COEFFICIENTS: A=  5.5313E+03 1/SEC; B=  1.1417E+06 SEC/G
 
@@ -942,8 +951,8 @@ Assuming a single but multicore node.
  STATE ENERGIES =        -74.4901149960      -74.3378200957
  TRANSITION ENERGY =  1.0021E+15 [1/SEC] =    33424.87 [1/CM] =        4.14 [EV]
                             X           Y           Z           NORM
- TRANSITION DIPOLE =    0.000000    0.000000   -0.082112    0.082112 E*BOHR
- TRANSITION DIPOLE =    0.000000    0.000000   -0.208709    0.208709 DEBYE
+ TRANSITION DIPOLE =   -0.000000   -0.000000   -0.082112    0.082112 E*BOHR
+ TRANSITION DIPOLE =   -0.000000   -0.000000   -0.208709    0.208709 DEBYE
  OSCILLATOR STRENGTH =    0.000685
  EINSTEIN COEFFICIENTS: A=  5.1014E+05 1/SEC; B=  2.7363E+06 SEC/G
 
@@ -955,8 +964,8 @@ Assuming a single but multicore node.
  STATE ENERGIES =        -74.4901149960      -74.2593563952
  TRANSITION ENERGY =  1.5183E+15 [1/SEC] =    50645.66 [1/CM] =        6.28 [EV]
                             X           Y           Z           NORM
- TRANSITION DIPOLE =   -0.000000   -0.000000   -0.000000    0.000000 E*BOHR
- TRANSITION DIPOLE =   -0.000000   -0.000000   -0.000000    0.000000 DEBYE
+ TRANSITION DIPOLE =   -0.000000    0.000000   -0.000000    0.000000 E*BOHR
+ TRANSITION DIPOLE =   -0.000000    0.000000   -0.000000    0.000000 DEBYE
  OSCILLATOR STRENGTH =    0.000000
  EINSTEIN COEFFICIENTS: A=  5.7744E-07 1/SEC; B=  8.9036E-07 SEC/G
 
@@ -978,8 +987,8 @@ Assuming a single but multicore node.
  STATE ENERGIES =        -74.4450050939      -74.3378200957
  TRANSITION ENERGY =  7.0524E+14 [1/SEC] =    23524.39 [1/CM] =        2.92 [EV]
                             X           Y           Z           NORM
- TRANSITION DIPOLE =    0.052318    0.069428    0.000000    0.086933 E*BOHR
- TRANSITION DIPOLE =    0.132979    0.176470    0.000000    0.220964 DEBYE
+ TRANSITION DIPOLE =   -0.052318   -0.069428   -0.000000    0.086933 E*BOHR
+ TRANSITION DIPOLE =   -0.132979   -0.176470   -0.000000    0.220964 DEBYE
  OSCILLATOR STRENGTH =    0.000540
  EINSTEIN COEFFICIENTS: A=  1.9934E+05 1/SEC; B=  3.0671E+06 SEC/G
 
@@ -991,8 +1000,8 @@ Assuming a single but multicore node.
  STATE ENERGIES =        -74.4450050939      -74.2593563952
  TRANSITION ENERGY =  1.2215E+15 [1/SEC] =    40745.18 [1/CM] =        5.05 [EV]
                             X           Y           Z           NORM
- TRANSITION DIPOLE =    0.003809   -0.002870    0.000000    0.004769 E*BOHR
- TRANSITION DIPOLE =    0.009681   -0.007295    0.000000    0.012122 DEBYE
+ TRANSITION DIPOLE =   -0.003809    0.002870    0.000000    0.004769 E*BOHR
+ TRANSITION DIPOLE =   -0.009681    0.007295    0.000000    0.012122 DEBYE
  OSCILLATOR STRENGTH =    0.000003
  EINSTEIN COEFFICIENTS: A=  3.1174E+03 1/SEC; B=  9.2310E+03 SEC/G
 
@@ -1001,8 +1010,8 @@ Assuming a single but multicore node.
  STATE MULTIPLICITY =   1
  STATE ENERGY =        -74.4407757938
                             X           Y           Z           NORM
-      STATE DIPOLE =    0.196338    0.260548   -0.000000    0.326242 E*BOHR
-      STATE DIPOLE =    0.499044    0.662252   -0.000000    0.829230 DEBYE
+      STATE DIPOLE =    0.196338    0.260548    0.000000    0.326242 E*BOHR
+      STATE DIPOLE =    0.499044    0.662252    0.000000    0.829230 DEBYE
 
  TRANSITION BETWEEN EXCITED STATES   6 AND  7
 
@@ -1010,8 +1019,8 @@ Assuming a single but multicore node.
  STATE ENERGIES =        -74.4407757938      -74.3813542385
  TRANSITION ENERGY =  3.9098E+14 [1/SEC] =    13041.52 [1/CM] =        1.62 [EV]
                             X           Y           Z           NORM
- TRANSITION DIPOLE =   -0.000000   -0.000000    0.000000    0.000000 E*BOHR
- TRANSITION DIPOLE =   -0.000000   -0.000000    0.000000    0.000000 DEBYE
+ TRANSITION DIPOLE =    0.000000   -0.000000    0.000000    0.000000 E*BOHR
+ TRANSITION DIPOLE =    0.000000   -0.000000    0.000000    0.000000 DEBYE
  OSCILLATOR STRENGTH =    0.000000
  EINSTEIN COEFFICIENTS: A=  1.0752E-09 1/SEC; B=  9.7094E-08 SEC/G
 
@@ -1023,8 +1032,8 @@ Assuming a single but multicore node.
  STATE ENERGIES =        -74.4407757938      -74.2969138467
  TRANSITION ENERGY =  9.4657E+14 [1/SEC] =    31574.05 [1/CM] =        3.91 [EV]
                             X           Y           Z           NORM
- TRANSITION DIPOLE =    0.000000   -0.000000    0.070545    0.070545 E*BOHR
- TRANSITION DIPOLE =    0.000000   -0.000000    0.179308    0.179308 DEBYE
+ TRANSITION DIPOLE =   -0.000000   -0.000000    0.070545    0.070545 E*BOHR
+ TRANSITION DIPOLE =   -0.000000   -0.000000    0.179308    0.179308 DEBYE
  OSCILLATOR STRENGTH =    0.000477
  EINSTEIN COEFFICIENTS: A=  3.1739E+05 1/SEC; B=  2.0197E+06 SEC/G
 
@@ -1046,8 +1055,8 @@ Assuming a single but multicore node.
  STATE ENERGIES =        -74.3813542385      -74.2969138467
  TRANSITION ENERGY =  5.5559E+14 [1/SEC] =    18532.52 [1/CM] =        2.30 [EV]
                             X           Y           Z           NORM
- TRANSITION DIPOLE =   -0.498809    0.375880    0.000000    0.624577 E*BOHR
- TRANSITION DIPOLE =   -1.267856    0.955398    0.000000    1.587528 DEBYE
+ TRANSITION DIPOLE =   -0.498809    0.375880   -0.000000    0.624577 E*BOHR
+ TRANSITION DIPOLE =   -1.267856    0.955398   -0.000000    1.587528 DEBYE
  OSCILLATOR STRENGTH =    0.021960
  EINSTEIN COEFFICIENTS: A=  5.0309E+06 1/SEC; B=  1.5832E+08 SEC/G
 
@@ -1058,8 +1067,8 @@ Assuming a single but multicore node.
  STATE MULTIPLICITY =   3
  STATE ENERGY =        -74.3378200957
                             X           Y           Z           NORM
-      STATE DIPOLE =    0.210223    0.278975    0.000000    0.349315 E*BOHR
-      STATE DIPOLE =    0.534337    0.709090    0.000000    0.887877 DEBYE
+      STATE DIPOLE =    0.210223    0.278975   -0.000000    0.349315 E*BOHR
+      STATE DIPOLE =    0.534337    0.709090   -0.000000    0.887877 DEBYE
 
  TRANSITION FROM STATE  8, MULT= 3 TO STATE  9, MULT= 1 IS OPTICALLY INACTIVE.
 
@@ -1069,8 +1078,8 @@ Assuming a single but multicore node.
  STATE ENERGIES =        -74.3378200957      -74.2593563952
  TRANSITION ENERGY =  5.1627E+14 [1/SEC] =    17220.79 [1/CM] =        2.14 [EV]
                             X           Y           Z           NORM
- TRANSITION DIPOLE =   -0.419953    0.316457    0.000000    0.525838 E*BOHR
- TRANSITION DIPOLE =   -1.067421    0.804360    0.000000    1.336556 DEBYE
+ TRANSITION DIPOLE =   -0.419953    0.316457   -0.000000    0.525838 E*BOHR
+ TRANSITION DIPOLE =   -1.067421    0.804360   -0.000000    1.336556 DEBYE
  OSCILLATOR STRENGTH =    0.014464
  EINSTEIN COEFFICIENTS: A=  2.8611E+06 1/SEC; B=  1.1222E+08 SEC/G
 
@@ -1079,8 +1088,8 @@ Assuming a single but multicore node.
  STATE MULTIPLICITY =   1
  STATE ENERGY =        -74.2969138467
                             X           Y           Z           NORM
-      STATE DIPOLE =    0.199227    0.264382    0.000000    0.331043 E*BOHR
-      STATE DIPOLE =    0.506388    0.671998    0.000000    0.841433 DEBYE
+      STATE DIPOLE =    0.199227    0.264382   -0.000000    0.331043 E*BOHR
+      STATE DIPOLE =    0.506388    0.671998   -0.000000    0.841433 DEBYE
 
  TRANSITION FROM STATE  9, MULT= 1 TO STATE 10, MULT= 3 IS OPTICALLY INACTIVE.
 
@@ -1089,8 +1098,8 @@ Assuming a single but multicore node.
  STATE MULTIPLICITY =   3
  STATE ENERGY =        -74.2593563952
                             X           Y           Z           NORM
-      STATE DIPOLE =    0.314573    0.417452   -0.000000    0.522707 E*BOHR
-      STATE DIPOLE =    0.799571    1.061065   -0.000000    1.328598 DEBYE
+      STATE DIPOLE =    0.314573    0.417452    0.000000    0.522707 E*BOHR
+      STATE DIPOLE =    0.799571    1.061065    0.000000    1.328598 DEBYE
  -CIS- LAGRANGIAN              TOOK      0.010 SECONDS
 
      -------------------------------------------------------------
@@ -1123,13 +1132,13 @@ Assuming a single but multicore node.
 
                     2.0158     2.0036     2.0000     2.0000     1.0000
 
-    1  O  1  S    0.000000   0.157316  -0.153733   1.001212   0.000000
-    2  O  1  S   -0.000000  -0.754402  -0.554559  -0.176560  -0.000000
-    3  O  1  X    0.548722   0.429137  -0.233417  -0.069788   0.000000
-    4  O  1  Y   -0.413491   0.569485  -0.309755  -0.092612  -0.000000
-    5  O  1  Z    0.000000  -0.000000   0.000000  -0.000000   1.000000
-    6  H  2  S    0.373296   0.160298  -0.240841  -0.084379  -0.000000
-    7  H  3  S   -0.373296   0.160298  -0.240841  -0.084379   0.000000
+    1  O  1  S    0.000000   0.157316  -0.940539   0.376095   0.000000
+    2  O  1  S   -0.000000  -0.754402  -0.129573  -0.567380  -0.000000
+    3  O  1  X    0.548722   0.429137  -0.058437  -0.236514   0.000000
+    4  O  1  Y   -0.413491   0.569485  -0.077549  -0.313865  -0.000000
+    5  O  1  Z    0.000000  -0.000000  -0.000000   0.000000  -1.000000
+    6  H  2  S    0.373296   0.160298  -0.049639  -0.250320  -0.000000
+    7  H  3  S   -0.373296   0.160298  -0.049639  -0.250320   0.000000
 
                       6          7
 
@@ -1147,8 +1156,8 @@ Assuming a single but multicore node.
 
  .... DONE WITH CIS ENERGY + 1-PARTICLE DENSITY ....
 
- CPU     0: STEP CPU TIME=     0.01 TOTAL CPU TIME=        0.0 (    0.0 MIN)
- TOTAL WALL CLOCK TIME=        0.1 SECONDS, CPU UTILIZATION IS  62.50%
+ CPU     0: STEP CPU TIME=     0.02 TOTAL CPU TIME=          0.4 (      0.0 MIN)
+ TOTAL WALL CLOCK TIME=          0.2 SECONDS, CPU UTILIZATION IS   150.00%
 
      -------------------------------------------------------------
      CIS   PROPERTIES...FOR THE WAVEFUNCTION OF EXCITED STATE    1
@@ -1209,36 +1218,44 @@ Assuming a single but multicore node.
           ---------------------
 
  POINT   1           X           Y           Z (BOHR)    CHARGE
-                 0.075831    0.100631    0.000000        0.00 (A.U.)
+                 0.075831    0.100631    0.000000       -0.00 (A.U.)
          DX          DY          DZ         /D/  (DEBYE)
     -0.032300   -0.042861    0.000000    0.053669
  ...... END OF PROPERTY EVALUATION ......
- CPU     0: STEP CPU TIME=     0.01 TOTAL CPU TIME=        0.1 (    0.0 MIN)
- TOTAL WALL CLOCK TIME=        0.1 SECONDS, CPU UTILIZATION IS  66.67%
+ CPU     0: STEP CPU TIME=     0.01 TOTAL CPU TIME=          0.4 (      0.0 MIN)
+ TOTAL WALL CLOCK TIME=          0.2 SECONDS, CPU UTILIZATION IS   148.00%
 
  AN AIMPAC INPUT FILE IS BEING WRITTEN TO FILE   7
 
                580000  WORDS OF DYNAMIC MEMORY USED
- EXECUTION OF GAMESS TERMINATED NORMALLY Mon Aug 14 12:30:33 2017
+ EXECUTION OF GAMESS TERMINATED NORMALLY Mon Aug  5 13:05:40 2019
  DDI: 263640 bytes (0.3 MB / 0 MWords) used by master data server.
+Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
+Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
 
  ----------------------------------------
  CPU timing information for all processes
  ========================================
- 0: 0.52 + 0.16 = 0.68
- 1: 0.36 + 0.08 = 0.44
- 2: 0.36 + 0.08 = 0.44
- 3: 0.28 + 0.16 = 0.44
+ 0: 0.107 + 0.273 = 0.380
+ 1: 0.46 + 0.131 = 0.177
+ 2: 0.64 + 0.170 = 0.234
+ 3: 0.64 + 0.170 = 0.234
  ----------------------------------------
+Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
+Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
  ddikick.x: exited gracefully.
+unset echo
 ----- accounting info -----
-Files used on the master node firzens were:
--rw-r--r-- 1 sagar sagar     340 Aug 14 12:30 /scr/sagar/water_cis_dets.F05
--rw-rw-r-- 1 sagar sagar  180016 Aug 14 12:30 /scr/sagar/water_cis_dets.F08
--rw-rw-r-- 1 sagar sagar  180016 Aug 14 12:30 /scr/sagar/water_cis_dets.F08.001
--rw-rw-r-- 1 sagar sagar  180016 Aug 14 12:30 /scr/sagar/water_cis_dets.F08.002
--rw-rw-r-- 1 sagar sagar  180016 Aug 14 12:30 /scr/sagar/water_cis_dets.F08.003
--rw-rw-r-- 1 sagar sagar 1636000 Aug 14 12:30 /scr/sagar/water_cis_dets.F10
--rw-rw-r-- 1 sagar sagar    1360 Aug 14 12:30 /scr/sagar/water_cis_dets.F12
-Mon Aug 14 12:30:36 IST 2017
-0.088u 0.012s 0:03.24 2.7%	0+0k 0+16io 0pf+0w
+Files used on the master node jordan-wkst2 were:
+-rw-r--r-- 1 shiv users      340 Aug  5 13:05 /tmp/water_cis_dets.F05
+-rw-r--r-- 1 shiv users   180016 Aug  5 13:05 /tmp/water_cis_dets.F08
+-rw-r--r-- 1 shiv users   180016 Aug  5 13:05 /tmp/water_cis_dets.F08.001
+-rw-r--r-- 1 shiv users   180016 Aug  5 13:05 /tmp/water_cis_dets.F08.002
+-rw-r--r-- 1 shiv users   180016 Aug  5 13:05 /tmp/water_cis_dets.F08.003
+-rw-r--r-- 1 shiv users 54067200 Aug  5 13:05 /tmp/water_cis_dets.F10
+-rw-r--r-- 1 shiv users     1360 Aug  5 13:05 /tmp/water_cis_dets.F12
+ls: No match.
+ls: No match.
+ls: No match.
+Mon 05 Aug 2019 01:05:43 PM EDT
+0.153u 0.074s 0:03.51 6.2%	0+0k 0+16io 0pf+0w

@@ -1,22 +1,25 @@
 ----- GAMESS execution script 'rungms' -----
-This job is running on host firzens
-under operating system Linux at Mon Aug 14 12:30:40 IST 2017
+This job is running on host jordan-wkst2
+under operating system Linux at Mon 05 Aug 2019 01:05:46 PM EDT
 Available scratch disk space (Kbyte units) at beginning of the job is
-Filesystem     1K-blocks      Used Available Use% Mounted on
-/dev/sda11     254243428 112975224 128330324  47% /
-GAMESS temporary binary files will be written to /scr/sagar
-GAMESS supplementary output files will be written to /home/sagar/gamess/scratch
+Filesystem     1K-blocks  Used Available Use% Mounted on
+tmpfs            5053572  8864   5044708   1% /tmp
+GAMESS temporary binary files will be written to /tmp
+GAMESS supplementary output files will be written to /home/shiv/.gamess
 Copying input file water_mp2.inp to your run's scratch directory...
+cp water_mp2.inp /tmp/water_mp2.F05
+unset echo
  
 Assuming a single but multicore node.
  
+/opt/gamess/ddikick.x /opt/gamess/gamess.00.x water_mp2 -ddi 1 4 jordan-wkst2:cpus=4 -scr /tmp
 
  Distributed Data Interface kickoff program.
  Initiating 4 compute processes on 1 nodes to run the following command:
- /home/sagar/gamess/gamess.02.x water_mp2 
+ /opt/gamess/gamess.00.x water_mp2 
 
           ******************************************************
-          *         GAMESS VERSION = 20 APR 2017 (R1)          *
+          *         GAMESS VERSION = 30 SEP 2018 (R3)         *
           *             FROM IOWA STATE UNIVERSITY             *
           * M.W.SCHMIDT, K.K.BALDRIDGE, J.A.BOATZ, S.T.ELBERT, *
           *   M.S.GORDON, J.H.JENSEN, S.KOSEKI, N.MATSUNAGA,   *
@@ -30,12 +33,14 @@ Assuming a single but multicore node.
   CONTRIBUTIONS TO THE CODE:
      IVANA ADAMOVIC, CHRISTINE AIKENS, YURI ALEXEEV, POOJA ARORA,
      ANDREY ASADCHEV, ROB BELL, PRADIPTA BANDYOPADHYAY, JONATHAN BENTZ,
-     BRETT BODE, KURT BRORSEN, CALEB CARLIN, GALINA CHABAN, WEI CHEN,
-     CHEOL HO CHOI, PAUL DAY, ALBERT DEFUSCO, NUWAN DESILVA, TIM DUDLEY,
-     DMITRI FEDOROV, GRAHAM FLETCHER, MARK FREITAG, KURT GLAESEMANN,
+     COLLEEN BERTONI, BRETT BODE, KURT BRORSEN, CALEB CARLIN, GALINA CHABAN,
+     WEI CHEN, CHEOL HO CHOI, PAUL DAY, ALBERT DEFUSCO, NUWAN DESILVA,
+     TIM DUDLEY, DMITRI FEDOROV, ALEX FINDLATER, GRAHAM FLETCHER, 
+     MARK FREITAG, KURT GLAESEMANN, ANASTASIA GUNINA,
      DAN KEMP, GRANT MERRILL, NORIYUKI MINEZAWA, JONATHAN MULLIN,
      TAKESHI NAGATA, SEAN NEDD, HEATHER NETZLOFF, BOSILJKA NJEGIC, RYAN OLSON,
-     MIKE PAK, SPENCER PRUITT, LUKE ROSKOP, JIM SHOEMAKER, LYUDMILA SLIPCHENKO,
+     MIKE PAK, BUU PHAM,
+     SPENCER PRUITT, LUKE ROSKOP, JIM SHOEMAKER, LYUDMILA SLIPCHENKO,
      TONY SMITH, SAROM SOK LEANG, JIE SONG, TETSUYA TAKETSUGU, SIMON WEBB,
      PENG XU, SOOHAENG YOO, FEDERICO ZAHARIEV
 
@@ -56,7 +61,9 @@ Assuming a single but multicore node.
      NAT. INST. OF ADVANCED INDUSTRIAL SCIENCE AND TECHNOLOGY: KAZUO KITAURA
      MICHIGAN STATE UNIVERSITY:
           KAROL KOWALSKI, MARTA WLOCH, JEFFREY GOUR, JESSE LUTZ,
-          WEI LI, PIOTR PIECUCH
+          WEI LI, JUN SHEN, J. EMILIANO DEUSTUA, PIOTR PIECUCH
+     UNIVERSITY OF MINNESOTA:
+          YINAN SHU
      UNIVERSITY OF SILESIA: MONIKA MUSIAL, STANISLAW KUCHARSKI
      FACULTES UNIVERSITAIRES NOTRE-DAME DE LA PAIX:
           OLIVIER QUINET, BENOIT CHAMPAGNE
@@ -85,11 +92,13 @@ Assuming a single but multicore node.
      TOKYO INSTITUTE OF TECHNOLOGY: HIROYA NAKATA
      NAGOYA UNIVERSITY: YOSHIO NISHIMOTO, STEPHAN IRLE
      MOSCOW STATE UNIVERSITY: VLADIMIR MIRONOV
+     A.N.NESMEYANOV INSTITUTE OF ORGANOELEMENT COMPOUNDS OF RUSSIAN ACADEMY OF SCIENCES:
+          IGOR S. GERASIMOV
 
 
  PARALLEL VERSION RUNNING ON        4 PROCESSORS IN        1 NODES.
 
- EXECUTION OF GAMESS BEGUN Mon Aug 14 12:30:40 2017
+ EXECUTION OF GAMESS BEGUN Mon Aug  5 13:05:47 2019
 
             ECHO OF THE FIRST FEW INPUT CARDS -
  INPUT CARD> $contrl scftyp=rhf mplevl=2                                                    
@@ -253,15 +262,15 @@ Assuming a single but multicore node.
  A   =    7
 
  ..... DONE SETTING UP THE RUN .....
- CPU     0: STEP CPU TIME=     0.01 TOTAL CPU TIME=        0.0 (    0.0 MIN)
- TOTAL WALL CLOCK TIME=        0.1 SECONDS, CPU UTILIZATION IS  20.00%
+ CPU     0: STEP CPU TIME=     0.12 TOTAL CPU TIME=          0.1 (      0.0 MIN)
+ TOTAL WALL CLOCK TIME=          0.1 SECONDS, CPU UTILIZATION IS   162.50%
 
           ********************
           1 ELECTRON INTEGRALS
           ********************
  ...... END OF ONE-ELECTRON INTEGRALS ......
- CPU     0: STEP CPU TIME=     0.00 TOTAL CPU TIME=        0.0 (    0.0 MIN)
- TOTAL WALL CLOCK TIME=        0.1 SECONDS, CPU UTILIZATION IS  20.00%
+ CPU     0: STEP CPU TIME=     0.04 TOTAL CPU TIME=          0.2 (      0.0 MIN)
+ TOTAL WALL CLOCK TIME=          0.1 SECONDS, CPU UTILIZATION IS   188.89%
 
           -------------
           GUESS OPTIONS
@@ -278,8 +287,8 @@ Assuming a single but multicore node.
      5 ORBITALS ARE OCCUPIED (    1 CORE ORBITALS).
      2=A        3=A        4=A        5=A        6=A        7=A   
  ...... END OF INITIAL ORBITAL SELECTION ......
- CPU     0: STEP CPU TIME=     0.00 TOTAL CPU TIME=        0.0 (    0.0 MIN)
- TOTAL WALL CLOCK TIME=        0.1 SECONDS, CPU UTILIZATION IS  20.00%
+ CPU     0: STEP CPU TIME=     0.01 TOTAL CPU TIME=          0.2 (      0.0 MIN)
+ TOTAL WALL CLOCK TIME=          0.1 SECONDS, CPU UTILIZATION IS   180.00%
 
                     ----------------------
                     AO INTEGRAL TECHNOLOGY
@@ -302,14 +311,14 @@ Assuming a single but multicore node.
  STORING   15000 INTEGRALS/RECORD ON DISK, USING 12 BYTES/INTEGRAL.
  TWO ELECTRON INTEGRAL EVALUATION REQUIRES   89366 WORDS OF MEMORY.
  II,JST,KST,LST =  1  1  1  1 NREC =         1 INTLOC =    1
- II,JST,KST,LST =  2  1  1  1 NREC =         1 INTLOC =    1
- II,JST,KST,LST =  3  1  1  1 NREC =         1 INTLOC =    1
- II,JST,KST,LST =  4  1  1  1 NREC =         1 INTLOC =    2
+ II,JST,KST,LST =  2  1  1  1 NREC =         1 INTLOC =    2
+ II,JST,KST,LST =  3  1  1  1 NREC =         1 INTLOC =    2
+ II,JST,KST,LST =  4  1  1  1 NREC =         1 INTLOC =   23
  TOTAL NUMBER OF NONZERO TWO-ELECTRON INTEGRALS =                 206
           4 INTEGRAL RECORDS WERE STORED ON DISK FILE  8.
   ...... END OF TWO-ELECTRON INTEGRALS .....
- CPU     0: STEP CPU TIME=     0.02 TOTAL CPU TIME=        0.0 (    0.0 MIN)
- TOTAL WALL CLOCK TIME=        0.1 SECONDS, CPU UTILIZATION IS  42.86%
+ CPU     0: STEP CPU TIME=     0.01 TOTAL CPU TIME=          0.2 (      0.0 MIN)
+ TOTAL WALL CLOCK TIME=          0.1 SECONDS, CPU UTILIZATION IS   172.73%
 
           --------------------------
                  RHF SCF CALCULATION
@@ -340,7 +349,7 @@ Assuming a single but multicore node.
           DENSITY CONVERGED
           -----------------
      TIME TO FORM FOCK OPERATORS=       0.0 SECONDS (       0.0 SEC/ITER)
-     TIME TO SOLVE SCF EQUATIONS=       0.0 SECONDS (       0.0 SEC/ITER)
+     TIME TO SOLVE SCF EQUATIONS=       0.1 SECONDS (       0.0 SEC/ITER)
 
  FINAL RHF ENERGY IS      -74.9643287920 AFTER  13 ITERATIONS
 
@@ -370,8 +379,8 @@ Assuming a single but multicore node.
     6  H  2  S   -0.775801  -0.808915
     7  H  3  S   -0.775801   0.808916
  ...... END OF RHF CALCULATION ......
- CPU     0: STEP CPU TIME=     0.00 TOTAL CPU TIME=        0.0 (    0.0 MIN)
- TOTAL WALL CLOCK TIME=        0.1 SECONDS, CPU UTILIZATION IS  42.86%
+ CPU     0: STEP CPU TIME=     0.08 TOTAL CPU TIME=          0.3 (      0.0 MIN)
+ TOTAL WALL CLOCK TIME=          0.2 SECONDS, CPU UTILIZATION IS   142.11%
 
      ----------------------------------------------------------------
      PROPERTY VALUES FOR THE RHF   SELF-CONSISTENT FIELD WAVEFUNCTION
@@ -410,7 +419,7 @@ Assuming a single but multicore node.
                (K,V1,2)=     69.4593978615   -176.4390805300     30.9468057162
            PI PART(1+2)=     -7.8184589734
                (K,V1,2)=      5.0574624520    -19.9179511988      7.0420297734
-  SIGMA SKELETON, ERROR=    -67.1458697299      0.0000000000
+  SIGMA SKELETON, ERROR=    -67.1458697299     -0.0000000000
              MIXED PART= 0.00000E+00 0.00000E+00 0.00000E+00 0.00000E+00
  ...... END OF PI ENERGY ANALYSIS ......
 
@@ -463,7 +472,7 @@ Assuming a single but multicore node.
 
                        TOTAL       BONDED        FREE
       ATOM            VALENCE     VALENCE     VALENCE
-    1 O                 1.917       1.917       0.000
+    1 O                 1.917       1.917      -0.000
     2 H                 0.971       0.971       0.000
     3 H                 0.971       0.971       0.000
 
@@ -472,12 +481,12 @@ Assuming a single but multicore node.
           ---------------------
 
  POINT   1           X           Y           Z (BOHR)    CHARGE
-                 0.075831    0.100631    0.000000        0.00 (A.U.)
+                 0.075831    0.100631    0.000000       -0.00 (A.U.)
          DX          DY          DZ         /D/  (DEBYE)
      1.007144    1.336525    0.000000    1.673511
  ...... END OF PROPERTY EVALUATION ......
- CPU     0: STEP CPU TIME=     0.02 TOTAL CPU TIME=        0.0 (    0.0 MIN)
- TOTAL WALL CLOCK TIME=        0.1 SECONDS, CPU UTILIZATION IS  62.50%
+ CPU     0: STEP CPU TIME=     0.01 TOTAL CPU TIME=          0.3 (      0.0 MIN)
+ TOTAL WALL CLOCK TIME=          0.2 SECONDS, CPU UTILIZATION IS   133.33%
 
 
 
@@ -543,8 +552,8 @@ Assuming a single but multicore node.
  THERE ARE     0.0292 ELECTRONS IN SECONDARY MP2 NATURAL ORBITALS.
  THE MP2 NATURAL ORBITALS HAVE BEEN PUNCHED.
  ..... DONE WITH MP2 ENERGY .....
- CPU     0: STEP CPU TIME=     0.01 TOTAL CPU TIME=        0.1 (    0.0 MIN)
- TOTAL WALL CLOCK TIME=        0.1 SECONDS, CPU UTILIZATION IS  60.00%
+ CPU     0: STEP CPU TIME=     0.01 TOTAL CPU TIME=          0.3 (      0.0 MIN)
+ TOTAL WALL CLOCK TIME=          0.2 SECONDS, CPU UTILIZATION IS   126.09%
 
      -------------------------------------------------
      MP2 PROPERTIES...FOR THE FIRST ORDER WAVEFUNCTION
@@ -623,31 +632,39 @@ Assuming a single but multicore node.
          DX          DY          DZ         /D/  (DEBYE)
      0.962571    1.277375    0.000000    1.599447
  ...... END OF PROPERTY EVALUATION ......
- CPU     0: STEP CPU TIME=     0.00 TOTAL CPU TIME=        0.1 (    0.0 MIN)
- TOTAL WALL CLOCK TIME=        0.1 SECONDS, CPU UTILIZATION IS  50.00%
+ CPU     0: STEP CPU TIME=     0.01 TOTAL CPU TIME=          0.3 (      0.0 MIN)
+ TOTAL WALL CLOCK TIME=          0.2 SECONDS, CPU UTILIZATION IS   130.43%
 
  AN AIMPAC INPUT FILE IS BEING WRITTEN TO FILE   7
 
                580000  WORDS OF DYNAMIC MEMORY USED
- EXECUTION OF GAMESS TERMINATED NORMALLY Mon Aug 14 12:30:40 2017
+ EXECUTION OF GAMESS TERMINATED NORMALLY Mon Aug  5 13:05:47 2019
  DDI: 267448 bytes (0.3 MB / 0 MWords) used by master data server.
+Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
+Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
 
  ----------------------------------------
  CPU timing information for all processes
  ========================================
- 0: 0.52 + 0.24 = 0.76
- 1: 0.24 + 0.20 = 0.44
- 2: 0.24 + 0.24 = 0.48
- 3: 0.28 + 0.16 = 0.44
+ 0: 0.126 + 0.195 = 0.321
+ 1: 0.78 + 0.177 = 0.256
+ 2: 0.96 + 0.195 = 0.292
+ 3: 0.71 + 0.113 = 0.185
  ----------------------------------------
+Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
+Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
  ddikick.x: exited gracefully.
+unset echo
 ----- accounting info -----
-Files used on the master node firzens were:
--rw-r--r-- 1 sagar sagar     312 Aug 14 12:30 /scr/sagar/water_mp2.F05
--rw-rw-r-- 1 sagar sagar  180016 Aug 14 12:30 /scr/sagar/water_mp2.F08
--rw-rw-r-- 1 sagar sagar  180016 Aug 14 12:30 /scr/sagar/water_mp2.F08.001
--rw-rw-r-- 1 sagar sagar  180016 Aug 14 12:30 /scr/sagar/water_mp2.F08.002
--rw-rw-r-- 1 sagar sagar  180016 Aug 14 12:30 /scr/sagar/water_mp2.F08.003
--rw-rw-r-- 1 sagar sagar 1603280 Aug 14 12:30 /scr/sagar/water_mp2.F10
-Mon Aug 14 12:30:43 IST 2017
-0.100u 0.000s 0:03.26 3.0%	0+0k 0+24io 0pf+0w
+Files used on the master node jordan-wkst2 were:
+-rw-r--r-- 1 shiv users      312 Aug  5 13:05 /tmp/water_mp2.F05
+-rw-r--r-- 1 shiv users   180016 Aug  5 13:05 /tmp/water_mp2.F08
+-rw-r--r-- 1 shiv users   180016 Aug  5 13:05 /tmp/water_mp2.F08.001
+-rw-r--r-- 1 shiv users   180016 Aug  5 13:05 /tmp/water_mp2.F08.002
+-rw-r--r-- 1 shiv users   180016 Aug  5 13:05 /tmp/water_mp2.F08.003
+-rw-r--r-- 1 shiv users 52428800 Aug  5 13:05 /tmp/water_mp2.F10
+ls: No match.
+ls: No match.
+ls: No match.
+Mon 05 Aug 2019 01:05:50 PM EDT
+0.154u 0.073s 0:03.51 6.2%	0+0k 0+8io 0pf+0w

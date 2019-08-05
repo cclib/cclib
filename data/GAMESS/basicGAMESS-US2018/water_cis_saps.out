@@ -1,22 +1,25 @@
 ----- GAMESS execution script 'rungms' -----
-This job is running on host firzens
-under operating system Linux at Mon Aug 14 12:30:37 IST 2017
+This job is running on host jordan-wkst2
+under operating system Linux at Mon 05 Aug 2019 01:05:43 PM EDT
 Available scratch disk space (Kbyte units) at beginning of the job is
-Filesystem     1K-blocks      Used Available Use% Mounted on
-/dev/sda11     254243428 112975212 128330336  47% /
-GAMESS temporary binary files will be written to /scr/sagar
-GAMESS supplementary output files will be written to /home/sagar/gamess/scratch
+Filesystem     1K-blocks  Used Available Use% Mounted on
+tmpfs            5053572  8864   5044708   1% /tmp
+GAMESS temporary binary files will be written to /tmp
+GAMESS supplementary output files will be written to /home/shiv/.gamess
 Copying input file water_cis_saps.inp to your run's scratch directory...
+cp water_cis_saps.inp /tmp/water_cis_saps.F05
+unset echo
  
 Assuming a single but multicore node.
  
+/opt/gamess/ddikick.x /opt/gamess/gamess.00.x water_cis_saps -ddi 1 4 jordan-wkst2:cpus=4 -scr /tmp
 
  Distributed Data Interface kickoff program.
  Initiating 4 compute processes on 1 nodes to run the following command:
- /home/sagar/gamess/gamess.02.x water_cis_saps 
+ /opt/gamess/gamess.00.x water_cis_saps 
 
           ******************************************************
-          *         GAMESS VERSION = 20 APR 2017 (R1)          *
+          *         GAMESS VERSION = 30 SEP 2018 (R3)         *
           *             FROM IOWA STATE UNIVERSITY             *
           * M.W.SCHMIDT, K.K.BALDRIDGE, J.A.BOATZ, S.T.ELBERT, *
           *   M.S.GORDON, J.H.JENSEN, S.KOSEKI, N.MATSUNAGA,   *
@@ -30,12 +33,14 @@ Assuming a single but multicore node.
   CONTRIBUTIONS TO THE CODE:
      IVANA ADAMOVIC, CHRISTINE AIKENS, YURI ALEXEEV, POOJA ARORA,
      ANDREY ASADCHEV, ROB BELL, PRADIPTA BANDYOPADHYAY, JONATHAN BENTZ,
-     BRETT BODE, KURT BRORSEN, CALEB CARLIN, GALINA CHABAN, WEI CHEN,
-     CHEOL HO CHOI, PAUL DAY, ALBERT DEFUSCO, NUWAN DESILVA, TIM DUDLEY,
-     DMITRI FEDOROV, GRAHAM FLETCHER, MARK FREITAG, KURT GLAESEMANN,
+     COLLEEN BERTONI, BRETT BODE, KURT BRORSEN, CALEB CARLIN, GALINA CHABAN,
+     WEI CHEN, CHEOL HO CHOI, PAUL DAY, ALBERT DEFUSCO, NUWAN DESILVA,
+     TIM DUDLEY, DMITRI FEDOROV, ALEX FINDLATER, GRAHAM FLETCHER, 
+     MARK FREITAG, KURT GLAESEMANN, ANASTASIA GUNINA,
      DAN KEMP, GRANT MERRILL, NORIYUKI MINEZAWA, JONATHAN MULLIN,
      TAKESHI NAGATA, SEAN NEDD, HEATHER NETZLOFF, BOSILJKA NJEGIC, RYAN OLSON,
-     MIKE PAK, SPENCER PRUITT, LUKE ROSKOP, JIM SHOEMAKER, LYUDMILA SLIPCHENKO,
+     MIKE PAK, BUU PHAM,
+     SPENCER PRUITT, LUKE ROSKOP, JIM SHOEMAKER, LYUDMILA SLIPCHENKO,
      TONY SMITH, SAROM SOK LEANG, JIE SONG, TETSUYA TAKETSUGU, SIMON WEBB,
      PENG XU, SOOHAENG YOO, FEDERICO ZAHARIEV
 
@@ -56,7 +61,9 @@ Assuming a single but multicore node.
      NAT. INST. OF ADVANCED INDUSTRIAL SCIENCE AND TECHNOLOGY: KAZUO KITAURA
      MICHIGAN STATE UNIVERSITY:
           KAROL KOWALSKI, MARTA WLOCH, JEFFREY GOUR, JESSE LUTZ,
-          WEI LI, PIOTR PIECUCH
+          WEI LI, JUN SHEN, J. EMILIANO DEUSTUA, PIOTR PIECUCH
+     UNIVERSITY OF MINNESOTA:
+          YINAN SHU
      UNIVERSITY OF SILESIA: MONIKA MUSIAL, STANISLAW KUCHARSKI
      FACULTES UNIVERSITAIRES NOTRE-DAME DE LA PAIX:
           OLIVIER QUINET, BENOIT CHAMPAGNE
@@ -85,11 +92,13 @@ Assuming a single but multicore node.
      TOKYO INSTITUTE OF TECHNOLOGY: HIROYA NAKATA
      NAGOYA UNIVERSITY: YOSHIO NISHIMOTO, STEPHAN IRLE
      MOSCOW STATE UNIVERSITY: VLADIMIR MIRONOV
+     A.N.NESMEYANOV INSTITUTE OF ORGANOELEMENT COMPOUNDS OF RUSSIAN ACADEMY OF SCIENCES:
+          IGOR S. GERASIMOV
 
 
  PARALLEL VERSION RUNNING ON        4 PROCESSORS IN        1 NODES.
 
- EXECUTION OF GAMESS BEGUN Mon Aug 14 12:30:37 2017
+ EXECUTION OF GAMESS BEGUN Mon Aug  5 13:05:43 2019
 
             ECHO OF THE FIRST FEW INPUT CARDS -
  INPUT CARD> $contrl scftyp=rhf cityp=cis runtyp=energy exetyp=run                          
@@ -277,15 +286,15 @@ Assuming a single but multicore node.
  A   =    7
 
  ..... DONE SETTING UP THE RUN .....
- CPU     0: STEP CPU TIME=     0.01 TOTAL CPU TIME=        0.0 (    0.0 MIN)
- TOTAL WALL CLOCK TIME=        0.0 SECONDS, CPU UTILIZATION IS  50.00%
+ CPU     0: STEP CPU TIME=     0.15 TOTAL CPU TIME=          0.2 (      0.0 MIN)
+ TOTAL WALL CLOCK TIME=          0.1 SECONDS, CPU UTILIZATION IS   166.67%
 
           ********************
           1 ELECTRON INTEGRALS
           ********************
  ...... END OF ONE-ELECTRON INTEGRALS ......
- CPU     0: STEP CPU TIME=     0.00 TOTAL CPU TIME=        0.0 (    0.0 MIN)
- TOTAL WALL CLOCK TIME=        0.0 SECONDS, CPU UTILIZATION IS  50.00%
+ CPU     0: STEP CPU TIME=     0.03 TOTAL CPU TIME=          0.2 (      0.0 MIN)
+ TOTAL WALL CLOCK TIME=          0.1 SECONDS, CPU UTILIZATION IS   180.00%
 
           -------------
           GUESS OPTIONS
@@ -302,8 +311,8 @@ Assuming a single but multicore node.
      5 ORBITALS ARE OCCUPIED (    1 CORE ORBITALS).
      2=A        3=A        4=A        5=A        6=A        7=A   
  ...... END OF INITIAL ORBITAL SELECTION ......
- CPU     0: STEP CPU TIME=     0.00 TOTAL CPU TIME=        0.0 (    0.0 MIN)
- TOTAL WALL CLOCK TIME=        0.0 SECONDS, CPU UTILIZATION IS  50.00%
+ CPU     0: STEP CPU TIME=     0.02 TOTAL CPU TIME=          0.2 (      0.0 MIN)
+ TOTAL WALL CLOCK TIME=          0.1 SECONDS, CPU UTILIZATION IS   181.82%
 
                     ----------------------
                     AO INTEGRAL TECHNOLOGY
@@ -326,14 +335,14 @@ Assuming a single but multicore node.
  STORING   15000 INTEGRALS/RECORD ON DISK, USING 12 BYTES/INTEGRAL.
  TWO ELECTRON INTEGRAL EVALUATION REQUIRES   89366 WORDS OF MEMORY.
  II,JST,KST,LST =  1  1  1  1 NREC =         1 INTLOC =    1
- II,JST,KST,LST =  2  1  1  1 NREC =         1 INTLOC =    1
- II,JST,KST,LST =  3  1  1  1 NREC =         1 INTLOC =    1
- II,JST,KST,LST =  4  1  1  1 NREC =         1 INTLOC =    2
+ II,JST,KST,LST =  2  1  1  1 NREC =         1 INTLOC =    2
+ II,JST,KST,LST =  3  1  1  1 NREC =         1 INTLOC =    2
+ II,JST,KST,LST =  4  1  1  1 NREC =         1 INTLOC =   50
  TOTAL NUMBER OF NONZERO TWO-ELECTRON INTEGRALS =                 229
           4 INTEGRAL RECORDS WERE STORED ON DISK FILE  8.
   ...... END OF TWO-ELECTRON INTEGRALS .....
- CPU     0: STEP CPU TIME=     0.02 TOTAL CPU TIME=        0.0 (    0.0 MIN)
- TOTAL WALL CLOCK TIME=        0.0 SECONDS, CPU UTILIZATION IS  75.00%
+ CPU     0: STEP CPU TIME=     0.02 TOTAL CPU TIME=          0.2 (      0.0 MIN)
+ TOTAL WALL CLOCK TIME=          0.1 SECONDS, CPU UTILIZATION IS   169.23%
 
           --------------------------
                  RHF SCF CALCULATION
@@ -394,8 +403,8 @@ Assuming a single but multicore node.
     6  H  2  S   -0.775801   0.808915
     7  H  3  S   -0.775801  -0.808916
  ...... END OF RHF CALCULATION ......
- CPU     0: STEP CPU TIME=     0.01 TOTAL CPU TIME=        0.0 (    0.0 MIN)
- TOTAL WALL CLOCK TIME=        0.0 SECONDS, CPU UTILIZATION IS 100.00%
+ CPU     0: STEP CPU TIME=     0.07 TOTAL CPU TIME=          0.3 (      0.0 MIN)
+ TOTAL WALL CLOCK TIME=          0.2 SECONDS, CPU UTILIZATION IS   145.00%
 
      ----------------------------------------------------------------
      PROPERTY VALUES FOR THE RHF   SELF-CONSISTENT FIELD WAVEFUNCTION
@@ -476,8 +485,8 @@ Assuming a single but multicore node.
          DX          DY          DZ         /D/  (DEBYE)
     -0.000000   -1.673511    0.000000    1.673511
  ...... END OF PROPERTY EVALUATION ......
- CPU     0: STEP CPU TIME=     0.00 TOTAL CPU TIME=        0.0 (    0.0 MIN)
- TOTAL WALL CLOCK TIME=        0.1 SECONDS, CPU UTILIZATION IS  66.67%
+ CPU     0: STEP CPU TIME=     0.02 TOTAL CPU TIME=          0.3 (      0.0 MIN)
+ TOTAL WALL CLOCK TIME=          0.2 SECONDS, CPU UTILIZATION IS   147.62%
 
  MXVEC CANNOT BE BIGGER THAN THE NUMBER OF CIS CONFIGS
  SETTING MXVEC = NCFG
@@ -501,7 +510,7 @@ Assuming a single but multicore node.
 
  MIN MEMORY REQ. FOR CIS ENERGY FOCK-LIKE BUILDS =        98 WORDS
  MEMORY REQ. FOR SINGLE BATCH BUILDS             =       784 WORDS
- MEMORY AVAILABLE                                =    969195 WORDS
+ MEMORY AVAILABLE                                =    969194 WORDS
 
  SINGLE BATCH ENERGY CALCULATION WILL BE PERFORMED
 
@@ -816,32 +825,32 @@ Assuming a single but multicore node.
 
                     2.0000     2.0000     2.0000     2.0000     1.0000
 
-    1  O  1  S   -0.959157  -0.279433  -0.231060   0.044004   0.000232
-    2  O  1  S    0.443539  -0.785479   0.155180   0.387628  -0.001502
-    3  O  1  X    0.153503  -0.061746  -0.575910  -0.070209   0.000000
-    4  O  1  Y    0.148820  -0.533270   0.161421  -0.529740   0.001322
-    5  O  1  Z   -0.000000  -0.000000  -0.000000  -0.000000  -0.999998
-    6  H  2  S   -0.118300   0.197697   0.373602   0.338616   0.001400
-    7  H  3  S    0.108850   0.106327  -0.478612   0.234723   0.001400
+    1  O  1  S   -0.054696   0.670195   0.760096   0.153269  -0.128184
+    2  O  1  S   -0.277624   0.450680  -0.777730   0.320919   0.831447
+    3  O  1  X   -0.574385  -0.147588   0.098881  -0.049998  -0.000001
+    4  O  1  Y   -0.117154   0.418938  -0.336955  -0.557165  -0.731677
+    5  O  1  Z    0.000000  -0.000000  -0.000000  -0.000000   0.050880
+    6  H  2  S    0.445793  -0.034809  -0.020539   0.327037  -0.774796
+    7  H  3  S   -0.404165  -0.253205   0.125783   0.253051  -0.774796
 
                       6          7
 
                     1.0000     0.0000
 
-    1  O  1  S   -0.128350  -0.000000
-    2  O  1  S    0.832524   0.000000
-    3  O  1  X   -0.000001   0.976485
-    4  O  1  Y   -0.732625  -0.000000
-    5  O  1  Z   -0.001805  -0.000000
-    6  H  2  S   -0.775800   0.808915
-    7  H  3  S   -0.775799  -0.808916
+    1  O  1  S   -0.006530   0.000000
+    2  O  1  S    0.042359  -0.000000
+    3  O  1  X   -0.000000  -0.976485
+    4  O  1  Y   -0.037276   0.000000
+    5  O  1  Z   -0.998705   0.000000
+    6  H  2  S   -0.039473  -0.808915
+    7  H  3  S   -0.039473   0.808916
 
  THE CIS NATURAL ORBITALS HAVE BEEN PUNCHED.
 
  ..... DONE WITH CIS ENERGY .....
 
- CPU     0: STEP CPU TIME=     0.00 TOTAL CPU TIME=        0.0 (    0.0 MIN)
- TOTAL WALL CLOCK TIME=        0.1 SECONDS, CPU UTILIZATION IS  66.67%
+ CPU     0: STEP CPU TIME=     0.01 TOTAL CPU TIME=          0.3 (      0.0 MIN)
+ TOTAL WALL CLOCK TIME=          0.2 SECONDS, CPU UTILIZATION IS   145.45%
 
      -------------------------------------------------------------
      CIS   PROPERTIES...FOR THE WAVEFUNCTION OF EXCITED STATE    1
@@ -906,32 +915,40 @@ Assuming a single but multicore node.
          DX          DY          DZ         /D/  (DEBYE)
      0.000003    0.764898    0.000000    0.764898
  ...... END OF PROPERTY EVALUATION ......
- CPU     0: STEP CPU TIME=     0.01 TOTAL CPU TIME=        0.0 (    0.0 MIN)
- TOTAL WALL CLOCK TIME=        0.1 SECONDS, CPU UTILIZATION IS  71.43%
+ CPU     0: STEP CPU TIME=     0.01 TOTAL CPU TIME=          0.3 (      0.0 MIN)
+ TOTAL WALL CLOCK TIME=          0.2 SECONDS, CPU UTILIZATION IS   143.48%
 
  AN AIMPAC INPUT FILE IS BEING WRITTEN TO FILE   7
 
                580000  WORDS OF DYNAMIC MEMORY USED
- EXECUTION OF GAMESS TERMINATED NORMALLY Mon Aug 14 12:30:37 2017
+ EXECUTION OF GAMESS TERMINATED NORMALLY Mon Aug  5 13:05:43 2019
  DDI: 263640 bytes (0.3 MB / 0 MWords) used by master data server.
+Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
+Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
 
  ----------------------------------------
  CPU timing information for all processes
  ========================================
- 0: 0.36 + 0.28 = 0.64
- 1: 0.12 + 0.24 = 0.36
- 2: 0.16 + 0.24 = 0.40
- 3: 0.08 + 0.24 = 0.32
+ 0: 0.97 + 0.242 = 0.340
+ 1: 0.112 + 0.164 = 0.276
+ 2: 0.69 + 0.120 = 0.190
+ 3: 0.70 + 0.189 = 0.260
  ----------------------------------------
+Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
+Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
  ddikick.x: exited gracefully.
+unset echo
 ----- accounting info -----
-Files used on the master node firzens were:
--rw-r--r-- 1 sagar sagar     318 Aug 14 12:30 /scr/sagar/water_cis_saps.F05
--rw-rw-r-- 1 sagar sagar  180016 Aug 14 12:30 /scr/sagar/water_cis_saps.F08
--rw-rw-r-- 1 sagar sagar  180016 Aug 14 12:30 /scr/sagar/water_cis_saps.F08.001
--rw-rw-r-- 1 sagar sagar  180016 Aug 14 12:30 /scr/sagar/water_cis_saps.F08.002
--rw-rw-r-- 1 sagar sagar  180016 Aug 14 12:30 /scr/sagar/water_cis_saps.F08.003
--rw-rw-r-- 1 sagar sagar 1603280 Aug 14 12:30 /scr/sagar/water_cis_saps.F10
--rw-rw-r-- 1 sagar sagar     360 Aug 14 12:30 /scr/sagar/water_cis_saps.F12
-Mon Aug 14 12:30:40 IST 2017
-0.084u 0.008s 0:03.21 2.4%	0+0k 0+16io 0pf+0w
+Files used on the master node jordan-wkst2 were:
+-rw-r--r-- 1 shiv users      318 Aug  5 13:05 /tmp/water_cis_saps.F05
+-rw-r--r-- 1 shiv users   180016 Aug  5 13:05 /tmp/water_cis_saps.F08
+-rw-r--r-- 1 shiv users   180016 Aug  5 13:05 /tmp/water_cis_saps.F08.001
+-rw-r--r-- 1 shiv users   180016 Aug  5 13:05 /tmp/water_cis_saps.F08.002
+-rw-r--r-- 1 shiv users   180016 Aug  5 13:05 /tmp/water_cis_saps.F08.003
+-rw-r--r-- 1 shiv users 52428800 Aug  5 13:05 /tmp/water_cis_saps.F10
+-rw-r--r-- 1 shiv users      360 Aug  5 13:05 /tmp/water_cis_saps.F12
+ls: No match.
+ls: No match.
+ls: No match.
+Mon 05 Aug 2019 01:05:46 PM EDT
+0.169u 0.062s 0:03.50 6.2%	0+0k 0+8io 0pf+0w

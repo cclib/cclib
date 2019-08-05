@@ -1,22 +1,25 @@
 ----- GAMESS execution script 'rungms' -----
-This job is running on host firzens
-under operating system Linux at Mon Aug 14 12:26:03 IST 2017
+This job is running on host jordan-wkst2
+under operating system Linux at Mon 05 Aug 2019 01:01:51 PM EDT
 Available scratch disk space (Kbyte units) at beginning of the job is
-Filesystem     1K-blocks      Used Available Use% Mounted on
-/dev/sda11     254243428 112973816 128331732  47% /
-GAMESS temporary binary files will be written to /scr/sagar
-GAMESS supplementary output files will be written to /home/sagar/gamess/scratch
+Filesystem     1K-blocks  Used Available Use% Mounted on
+tmpfs            5053572  8868   5044704   1% /tmp
+GAMESS temporary binary files will be written to /tmp
+GAMESS supplementary output files will be written to /home/shiv/.gamess
 Copying input file dvb_sp.inp to your run's scratch directory...
+cp dvb_sp.inp /tmp/dvb_sp.F05
+unset echo
  
 Assuming a single but multicore node.
  
+/opt/gamess/ddikick.x /opt/gamess/gamess.00.x dvb_sp -ddi 1 4 jordan-wkst2:cpus=4 -scr /tmp
 
  Distributed Data Interface kickoff program.
  Initiating 4 compute processes on 1 nodes to run the following command:
- /home/sagar/gamess/gamess.02.x dvb_sp 
+ /opt/gamess/gamess.00.x dvb_sp 
 
           ******************************************************
-          *         GAMESS VERSION = 20 APR 2017 (R1)          *
+          *         GAMESS VERSION = 30 SEP 2018 (R3)         *
           *             FROM IOWA STATE UNIVERSITY             *
           * M.W.SCHMIDT, K.K.BALDRIDGE, J.A.BOATZ, S.T.ELBERT, *
           *   M.S.GORDON, J.H.JENSEN, S.KOSEKI, N.MATSUNAGA,   *
@@ -30,12 +33,14 @@ Assuming a single but multicore node.
   CONTRIBUTIONS TO THE CODE:
      IVANA ADAMOVIC, CHRISTINE AIKENS, YURI ALEXEEV, POOJA ARORA,
      ANDREY ASADCHEV, ROB BELL, PRADIPTA BANDYOPADHYAY, JONATHAN BENTZ,
-     BRETT BODE, KURT BRORSEN, CALEB CARLIN, GALINA CHABAN, WEI CHEN,
-     CHEOL HO CHOI, PAUL DAY, ALBERT DEFUSCO, NUWAN DESILVA, TIM DUDLEY,
-     DMITRI FEDOROV, GRAHAM FLETCHER, MARK FREITAG, KURT GLAESEMANN,
+     COLLEEN BERTONI, BRETT BODE, KURT BRORSEN, CALEB CARLIN, GALINA CHABAN,
+     WEI CHEN, CHEOL HO CHOI, PAUL DAY, ALBERT DEFUSCO, NUWAN DESILVA,
+     TIM DUDLEY, DMITRI FEDOROV, ALEX FINDLATER, GRAHAM FLETCHER, 
+     MARK FREITAG, KURT GLAESEMANN, ANASTASIA GUNINA,
      DAN KEMP, GRANT MERRILL, NORIYUKI MINEZAWA, JONATHAN MULLIN,
      TAKESHI NAGATA, SEAN NEDD, HEATHER NETZLOFF, BOSILJKA NJEGIC, RYAN OLSON,
-     MIKE PAK, SPENCER PRUITT, LUKE ROSKOP, JIM SHOEMAKER, LYUDMILA SLIPCHENKO,
+     MIKE PAK, BUU PHAM,
+     SPENCER PRUITT, LUKE ROSKOP, JIM SHOEMAKER, LYUDMILA SLIPCHENKO,
      TONY SMITH, SAROM SOK LEANG, JIE SONG, TETSUYA TAKETSUGU, SIMON WEBB,
      PENG XU, SOOHAENG YOO, FEDERICO ZAHARIEV
 
@@ -56,7 +61,9 @@ Assuming a single but multicore node.
      NAT. INST. OF ADVANCED INDUSTRIAL SCIENCE AND TECHNOLOGY: KAZUO KITAURA
      MICHIGAN STATE UNIVERSITY:
           KAROL KOWALSKI, MARTA WLOCH, JEFFREY GOUR, JESSE LUTZ,
-          WEI LI, PIOTR PIECUCH
+          WEI LI, JUN SHEN, J. EMILIANO DEUSTUA, PIOTR PIECUCH
+     UNIVERSITY OF MINNESOTA:
+          YINAN SHU
      UNIVERSITY OF SILESIA: MONIKA MUSIAL, STANISLAW KUCHARSKI
      FACULTES UNIVERSITAIRES NOTRE-DAME DE LA PAIX:
           OLIVIER QUINET, BENOIT CHAMPAGNE
@@ -85,11 +92,13 @@ Assuming a single but multicore node.
      TOKYO INSTITUTE OF TECHNOLOGY: HIROYA NAKATA
      NAGOYA UNIVERSITY: YOSHIO NISHIMOTO, STEPHAN IRLE
      MOSCOW STATE UNIVERSITY: VLADIMIR MIRONOV
+     A.N.NESMEYANOV INSTITUTE OF ORGANOELEMENT COMPOUNDS OF RUSSIAN ACADEMY OF SCIENCES:
+          IGOR S. GERASIMOV
 
 
  PARALLEL VERSION RUNNING ON        4 PROCESSORS IN        1 NODES.
 
- EXECUTION OF GAMESS BEGUN Mon Aug 14 12:26:03 2017
+ EXECUTION OF GAMESS BEGUN Mon Aug  5 13:01:51 2019
 
             ECHO OF THE FIRST FEW INPUT CARDS -
  INPUT CARD> $CONTRL COORD=PRINAXIS UNITS=ANGS NPRINT=3                                     
@@ -359,6 +368,12 @@ Assuming a single but multicore node.
  TOTAL NUMBER OF ATOMS                        =   20
  THE NUCLEAR REPULSION ENERGY IS      445.9370123699
 
+ SELECTED MURRAY-HANDY-LAMING RADIAL GRID
+
+ LEGACY BECKE'S FUZZY CELL METHOD
+
+ SELECTED ORIGINAL BECKE'S PARTITION FUNCTION
+
      LEBEDEV GRID-BASED DFT OPTIONS
      ------------------------------
      DFTTYP=B3LYP   
@@ -427,8 +442,8 @@ Assuming a single but multicore node.
  AG  =   25     AU  =    5     BU  =   25     BG  =    5
 
  ..... DONE SETTING UP THE RUN .....
- CPU     0: STEP CPU TIME=     0.00 TOTAL CPU TIME=        0.0 (    0.0 MIN)
- TOTAL WALL CLOCK TIME=        0.0 SECONDS, CPU UTILIZATION IS   0.00%
+ CPU     0: STEP CPU TIME=     0.20 TOTAL CPU TIME=          0.2 (      0.0 MIN)
+ TOTAL WALL CLOCK TIME=          0.1 SECONDS, CPU UTILIZATION IS   181.82%
 
           ********************
           1 ELECTRON INTEGRALS
@@ -1715,8 +1730,8 @@ Assuming a single but multicore node.
    59  H 19  S    0.000000  -0.007762  -0.000000   0.760032
    60  H 20  S    0.000000  -0.000000  -0.007762  -0.000000   0.760032
  ...... END OF ONE-ELECTRON INTEGRALS ......
- CPU     0: STEP CPU TIME=     0.01 TOTAL CPU TIME=        0.0 (    0.0 MIN)
- TOTAL WALL CLOCK TIME=        0.0 SECONDS, CPU UTILIZATION IS  33.33%
+ CPU     0: STEP CPU TIME=     0.03 TOTAL CPU TIME=          0.2 (      0.0 MIN)
+ TOTAL WALL CLOCK TIME=          0.1 SECONDS, CPU UTILIZATION IS   176.92%
 
           -------------
           GUESS OPTIONS
@@ -1737,8 +1752,8 @@ Assuming a single but multicore node.
     32=BG      33=AG      34=BG      35=AG      36=AU      37=AU      38=BG  
     39=AU      40=BG      41=AG      42=AG      43=AG      44=AG      45=AG  
  ...... END OF INITIAL ORBITAL SELECTION ......
- CPU     0: STEP CPU TIME=     0.03 TOTAL CPU TIME=        0.0 (    0.0 MIN)
- TOTAL WALL CLOCK TIME=        0.1 SECONDS, CPU UTILIZATION IS  66.67%
+ CPU     0: STEP CPU TIME=     0.05 TOTAL CPU TIME=          0.3 (      0.0 MIN)
+ TOTAL WALL CLOCK TIME=          0.2 SECONDS, CPU UTILIZATION IS   175.00%
 
                     ----------------------
                     AO INTEGRAL TECHNOLOGY
@@ -1768,35 +1783,35 @@ Assuming a single but multicore node.
  II,JST,KST,LST =  5  1  1  1 NREC =         1 INTLOC =    1
  II,JST,KST,LST =  6  1  1  1 NREC =         1 INTLOC =    1
  II,JST,KST,LST =  7  1  1  1 NREC =         1 INTLOC =    1
- II,JST,KST,LST =  8  1  1  1 NREC =         1 INTLOC =  141
- II,JST,KST,LST =  9  1  1  1 NREC =         1 INTLOC = 1435
- II,JST,KST,LST = 10  1  1  1 NREC =         1 INTLOC = 1435
- II,JST,KST,LST = 11  1  1  1 NREC =         1 INTLOC = 1435
- II,JST,KST,LST = 12  1  1  1 NREC =         1 INTLOC = 1672
- II,JST,KST,LST = 13  1  1  1 NREC =         1 INTLOC =12741
- II,JST,KST,LST = 14  1  1  1 NREC =         1 INTLOC =12741
- II,JST,KST,LST = 15  1  1  1 NREC =         2 INTLOC =  591
- II,JST,KST,LST = 16  1  1  1 NREC =         2 INTLOC =  591
- II,JST,KST,LST = 17  1  1  1 NREC =         2 INTLOC = 6267
- II,JST,KST,LST = 18  1  1  1 NREC =         2 INTLOC = 6267
- II,JST,KST,LST = 19  1  1  1 NREC =         2 INTLOC = 6267
- II,JST,KST,LST = 20  1  1  1 NREC =         2 INTLOC = 9214
- II,JST,KST,LST = 21  1  1  1 NREC =         3 INTLOC = 5670
- II,JST,KST,LST = 22  1  1  1 NREC =         3 INTLOC = 5670
- II,JST,KST,LST = 23  1  1  1 NREC =         4 INTLOC = 4649
- II,JST,KST,LST = 24  1  1  1 NREC =         4 INTLOC = 4649
- II,JST,KST,LST = 25  1  1  1 NREC =         4 INTLOC = 4649
- II,JST,KST,LST = 26  1  1  1 NREC =         4 INTLOC = 9126
- II,JST,KST,LST = 27  1  1  1 NREC =         7 INTLOC = 2501
- II,JST,KST,LST = 28  1  1  1 NREC =         7 INTLOC = 2501
- II,JST,KST,LST = 29  1  1  1 NREC =         7 INTLOC =13149
- II,JST,KST,LST = 30  1  1  1 NREC =         7 INTLOC =13149
+ II,JST,KST,LST =  8  1  1  1 NREC =         1 INTLOC =    1
+ II,JST,KST,LST =  9  1  1  1 NREC =         1 INTLOC =    1
+ II,JST,KST,LST = 10  1  1  1 NREC =         1 INTLOC =    1
+ II,JST,KST,LST = 11  1  1  1 NREC =         1 INTLOC =    1
+ II,JST,KST,LST = 12  1  1  1 NREC =         1 INTLOC =    1
+ II,JST,KST,LST = 13  1  1  1 NREC =         1 INTLOC = 2073
+ II,JST,KST,LST = 14  1  1  1 NREC =         1 INTLOC = 2073
+ II,JST,KST,LST = 15  1  1  1 NREC =         1 INTLOC = 6125
+ II,JST,KST,LST = 16  1  1  1 NREC =         1 INTLOC = 6125
+ II,JST,KST,LST = 17  1  1  1 NREC =         1 INTLOC = 7785
+ II,JST,KST,LST = 18  1  1  1 NREC =         1 INTLOC = 7785
+ II,JST,KST,LST = 19  1  1  1 NREC =         1 INTLOC = 7785
+ II,JST,KST,LST = 20  1  1  1 NREC =         1 INTLOC =10562
+ II,JST,KST,LST = 21  1  1  1 NREC =         3 INTLOC = 2269
+ II,JST,KST,LST = 22  1  1  1 NREC =         3 INTLOC = 2269
+ II,JST,KST,LST = 23  1  1  1 NREC =         3 INTLOC = 4274
+ II,JST,KST,LST = 24  1  1  1 NREC =         3 INTLOC = 4274
+ II,JST,KST,LST = 25  1  1  1 NREC =         3 INTLOC = 4274
+ II,JST,KST,LST = 26  1  1  1 NREC =         3 INTLOC = 5433
+ II,JST,KST,LST = 27  1  1  1 NREC =         5 INTLOC =11322
+ II,JST,KST,LST = 28  1  1  1 NREC =         5 INTLOC =11322
+ II,JST,KST,LST = 29  1  1  1 NREC =         6 INTLOC = 1326
+ II,JST,KST,LST = 30  1  1  1 NREC =         6 INTLOC = 1326
  SCHWARZ INEQUALITY TEST SKIPPED       22124 INTEGRAL BLOCKS.
  TOTAL NUMBER OF NONZERO TWO-ELECTRON INTEGRALS =              347845
-         25 INTEGRAL RECORDS WERE STORED ON DISK FILE  8.
+         26 INTEGRAL RECORDS WERE STORED ON DISK FILE  8.
   ...... END OF TWO-ELECTRON INTEGRALS .....
- CPU     0: STEP CPU TIME=     0.10 TOTAL CPU TIME=        0.1 (    0.0 MIN)
- TOTAL WALL CLOCK TIME=        0.2 SECONDS, CPU UTILIZATION IS  82.35%
+ CPU     0: STEP CPU TIME=     0.11 TOTAL CPU TIME=          0.4 (      0.0 MIN)
+ TOTAL WALL CLOCK TIME=          0.2 SECONDS, CPU UTILIZATION IS   177.27%
 
           --------------------------
              R-B3LYP SCF CALCULATION
@@ -1851,8 +1866,8 @@ Assuming a single but multicore node.
           -----------------
           DENSITY CONVERGED
           -----------------
-     TIME TO FORM FOCK OPERATORS=       7.2 SECONDS (       0.4 SEC/ITER)
-     TIME TO SOLVE SCF EQUATIONS=       0.0 SECONDS (       0.0 SEC/ITER)
+     TIME TO FORM FOCK OPERATORS=       5.2 SECONDS (       0.3 SEC/ITER)
+     TIME TO SOLVE SCF EQUATIONS=       0.2 SECONDS (       0.0 SEC/ITER)
 
  FINAL R-B3LYP ENERGY IS     -382.0506353326 AFTER  17 ITERATIONS
  DFT EXCHANGE + CORRELATION ENERGY =       -46.5262600805
@@ -2630,8 +2645,8 @@ Assuming a single but multicore node.
    59  H 19  S    0.330705  -0.115750   0.093271   0.047885  -0.064757
    60  H 20  S    0.330705  -0.115750  -0.093271   0.047885   0.064757
  ...... END OF RHF CALCULATION ......
- CPU     0: STEP CPU TIME=     7.82 TOTAL CPU TIME=        8.0 (    0.1 MIN)
- TOTAL WALL CLOCK TIME=        9.4 SECONDS, CPU UTILIZATION IS  84.86%
+ CPU     0: STEP CPU TIME=     6.00 TOTAL CPU TIME=          6.4 (      0.1 MIN)
+ TOTAL WALL CLOCK TIME=          5.1 SECONDS, CPU UTILIZATION IS   124.32%
 
      ---------------------------------------------------------------------
      PROPERTIES FOR THE B3LYP    DFT FUNCTIONAL (RHF  TYPE) DENSITY MATRIX
@@ -3469,7 +3484,7 @@ Assuming a single but multicore node.
     1 C                 3.973       3.973      -0.000
     2 C                 3.973       3.973      -0.000
     3 C                 3.969       3.969       0.000
-    4 C                 3.969       3.969       0.000
+    4 C                 3.969       3.969      -0.000
     5 C                 3.970       3.970       0.000
     6 C                 3.970       3.970       0.000
     7 H                 0.994       0.994       0.000
@@ -3478,10 +3493,10 @@ Assuming a single but multicore node.
    10 H                 0.994       0.994       0.000
    11 C                 3.968       3.968       0.000
    12 C                 3.968       3.968       0.000
-   13 H                 0.994       0.994      -0.000
+   13 H                 0.994       0.994       0.000
    14 H                 0.994       0.994       0.000
-   15 C                 3.965       3.965       0.000
-   16 C                 3.965       3.965       0.000
+   15 C                 3.965       3.965      -0.000
+   16 C                 3.965       3.965      -0.000
    17 H                 0.994       0.994      -0.000
    18 H                 0.994       0.994      -0.000
    19 H                 0.994       0.994       0.000
@@ -3492,35 +3507,43 @@ Assuming a single but multicore node.
           ---------------------
 
  POINT   1           X           Y           Z (BOHR)    CHARGE
-                -0.000000    0.000000    0.000000       -0.00 (A.U.)
+                -0.000000    0.000000    0.000000        0.00 (A.U.)
          DX          DY          DZ         /D/  (DEBYE)
-     0.000000    0.000000    0.000000    0.000000
+    -0.000000    0.000000    0.000000    0.000000
  ...... END OF PROPERTY EVALUATION ......
- CPU     0: STEP CPU TIME=     0.02 TOTAL CPU TIME=        8.0 (    0.1 MIN)
- TOTAL WALL CLOCK TIME=        9.4 SECONDS, CPU UTILIZATION IS  84.80%
+ CPU     0: STEP CPU TIME=     0.15 TOTAL CPU TIME=          6.5 (      0.1 MIN)
+ TOTAL WALL CLOCK TIME=          5.2 SECONDS, CPU UTILIZATION IS   126.01%
 
  AN AIMPAC INPUT FILE IS BEING WRITTEN TO FILE   7
 
-               708617  WORDS OF DYNAMIC MEMORY USED
- EXECUTION OF GAMESS TERMINATED NORMALLY Mon Aug 14 12:26:13 2017
+               708734  WORDS OF DYNAMIC MEMORY USED
+ EXECUTION OF GAMESS TERMINATED NORMALLY Mon Aug  5 13:01:57 2019
  DDI: 263640 bytes (0.3 MB / 0 MWords) used by master data server.
+Note: The following floating-point exceptions are signalling: IEEE_UNDERFLOW_FLAG IEEE_DENORMAL
+Note: The following floating-point exceptions are signalling: IEEE_UNDERFLOW_FLAG IEEE_DENORMAL
 
  ----------------------------------------
  CPU timing information for all processes
  ========================================
- 0: 7.908 + 0.92 = 7.1000
- 1: 7.904 + 0.100 = 8.04
- 2: 7.440 + 0.60 = 7.500
- 3: 7.660 + 0.56 = 7.716
+ 0: 5.376 + 1.278 = 6.655
+ 1: 5.276 + 1.106 = 6.382
+ 2: 5.302 + 1.101 = 6.403
+ 3: 5.272 + 1.123 = 6.396
  ----------------------------------------
+Note: The following floating-point exceptions are signalling: IEEE_UNDERFLOW_FLAG IEEE_DENORMAL
+Note: The following floating-point exceptions are signalling: IEEE_UNDERFLOW_FLAG IEEE_DENORMAL
  ddikick.x: exited gracefully.
+unset echo
 ----- accounting info -----
-Files used on the master node firzens were:
--rw-r--r-- 1 sagar sagar    1452 Aug 14 12:26 /scr/sagar/dvb_sp.F05
--rw-rw-r-- 1 sagar sagar 1620144 Aug 14 12:26 /scr/sagar/dvb_sp.F08
--rw-rw-r-- 1 sagar sagar  720064 Aug 14 12:26 /scr/sagar/dvb_sp.F08.001
--rw-rw-r-- 1 sagar sagar 1440128 Aug 14 12:26 /scr/sagar/dvb_sp.F08.002
--rw-rw-r-- 1 sagar sagar  720064 Aug 14 12:26 /scr/sagar/dvb_sp.F08.003
--rw-rw-r-- 1 sagar sagar 1537840 Aug 14 12:26 /scr/sagar/dvb_sp.F10
-Mon Aug 14 12:26:16 IST 2017
-0.088u 0.008s 0:12.71 0.6%	0+0k 360+16io 4pf+0w
+Files used on the master node jordan-wkst2 were:
+-rw-r--r-- 1 shiv users     1452 Aug  5 13:01 /tmp/dvb_sp.F05
+-rw-r--r-- 1 shiv users  1080096 Aug  5 13:01 /tmp/dvb_sp.F08
+-rw-r--r-- 1 shiv users  1080096 Aug  5 13:01 /tmp/dvb_sp.F08.001
+-rw-r--r-- 1 shiv users  1260112 Aug  5 13:01 /tmp/dvb_sp.F08.002
+-rw-r--r-- 1 shiv users  1260112 Aug  5 13:01 /tmp/dvb_sp.F08.003
+-rw-r--r-- 1 shiv users 49152000 Aug  5 13:01 /tmp/dvb_sp.F10
+ls: No match.
+ls: No match.
+ls: No match.
+Mon 05 Aug 2019 01:02:00 PM EDT
+0.152u 0.055s 0:08.45 2.3%	0+0k 0+8io 0pf+0w
