@@ -1,22 +1,25 @@
 ----- GAMESS execution script 'rungms' -----
-This job is running on host firzens
-under operating system Linux at Mon Aug 14 21:04:24 IST 2017
+This job is running on host jordan-wkst2
+under operating system Linux at Mon 05 Aug 2019 01:05:06 PM EDT
 Available scratch disk space (Kbyte units) at beginning of the job is
-Filesystem     1K-blocks      Used Available Use% Mounted on
-/dev/sda11     254243428 126581408 114724140  53% /
-GAMESS temporary binary files will be written to /scr/sagar
-GAMESS supplementary output files will be written to /home/sagar/gamess/scratch
+Filesystem     1K-blocks  Used Available Use% Mounted on
+tmpfs            5053572  8864   5044708   1% /tmp
+GAMESS temporary binary files will be written to /tmp
+GAMESS supplementary output files will be written to /home/shiv/.gamess
 Copying input file Trp_polar_tdhf.inp to your run's scratch directory...
+cp Trp_polar_tdhf.inp /tmp/Trp_polar_tdhf.F05
+unset echo
  
 Assuming a single but multicore node.
  
+/opt/gamess/ddikick.x /opt/gamess/gamess.00.x Trp_polar_tdhf -ddi 1 4 jordan-wkst2:cpus=4 -scr /tmp
 
  Distributed Data Interface kickoff program.
  Initiating 4 compute processes on 1 nodes to run the following command:
- /home/sagar/gamess/gamess.02.x Trp_polar_tdhf 
+ /opt/gamess/gamess.00.x Trp_polar_tdhf 
 
           ******************************************************
-          *         GAMESS VERSION = 20 APR 2017 (R1)          *
+          *         GAMESS VERSION = 30 SEP 2018 (R3)         *
           *             FROM IOWA STATE UNIVERSITY             *
           * M.W.SCHMIDT, K.K.BALDRIDGE, J.A.BOATZ, S.T.ELBERT, *
           *   M.S.GORDON, J.H.JENSEN, S.KOSEKI, N.MATSUNAGA,   *
@@ -30,12 +33,14 @@ Assuming a single but multicore node.
   CONTRIBUTIONS TO THE CODE:
      IVANA ADAMOVIC, CHRISTINE AIKENS, YURI ALEXEEV, POOJA ARORA,
      ANDREY ASADCHEV, ROB BELL, PRADIPTA BANDYOPADHYAY, JONATHAN BENTZ,
-     BRETT BODE, KURT BRORSEN, CALEB CARLIN, GALINA CHABAN, WEI CHEN,
-     CHEOL HO CHOI, PAUL DAY, ALBERT DEFUSCO, NUWAN DESILVA, TIM DUDLEY,
-     DMITRI FEDOROV, GRAHAM FLETCHER, MARK FREITAG, KURT GLAESEMANN,
+     COLLEEN BERTONI, BRETT BODE, KURT BRORSEN, CALEB CARLIN, GALINA CHABAN,
+     WEI CHEN, CHEOL HO CHOI, PAUL DAY, ALBERT DEFUSCO, NUWAN DESILVA,
+     TIM DUDLEY, DMITRI FEDOROV, ALEX FINDLATER, GRAHAM FLETCHER, 
+     MARK FREITAG, KURT GLAESEMANN, ANASTASIA GUNINA,
      DAN KEMP, GRANT MERRILL, NORIYUKI MINEZAWA, JONATHAN MULLIN,
      TAKESHI NAGATA, SEAN NEDD, HEATHER NETZLOFF, BOSILJKA NJEGIC, RYAN OLSON,
-     MIKE PAK, SPENCER PRUITT, LUKE ROSKOP, JIM SHOEMAKER, LYUDMILA SLIPCHENKO,
+     MIKE PAK, BUU PHAM,
+     SPENCER PRUITT, LUKE ROSKOP, JIM SHOEMAKER, LYUDMILA SLIPCHENKO,
      TONY SMITH, SAROM SOK LEANG, JIE SONG, TETSUYA TAKETSUGU, SIMON WEBB,
      PENG XU, SOOHAENG YOO, FEDERICO ZAHARIEV
 
@@ -56,7 +61,9 @@ Assuming a single but multicore node.
      NAT. INST. OF ADVANCED INDUSTRIAL SCIENCE AND TECHNOLOGY: KAZUO KITAURA
      MICHIGAN STATE UNIVERSITY:
           KAROL KOWALSKI, MARTA WLOCH, JEFFREY GOUR, JESSE LUTZ,
-          WEI LI, PIOTR PIECUCH
+          WEI LI, JUN SHEN, J. EMILIANO DEUSTUA, PIOTR PIECUCH
+     UNIVERSITY OF MINNESOTA:
+          YINAN SHU
      UNIVERSITY OF SILESIA: MONIKA MUSIAL, STANISLAW KUCHARSKI
      FACULTES UNIVERSITAIRES NOTRE-DAME DE LA PAIX:
           OLIVIER QUINET, BENOIT CHAMPAGNE
@@ -85,11 +92,13 @@ Assuming a single but multicore node.
      TOKYO INSTITUTE OF TECHNOLOGY: HIROYA NAKATA
      NAGOYA UNIVERSITY: YOSHIO NISHIMOTO, STEPHAN IRLE
      MOSCOW STATE UNIVERSITY: VLADIMIR MIRONOV
+     A.N.NESMEYANOV INSTITUTE OF ORGANOELEMENT COMPOUNDS OF RUSSIAN ACADEMY OF SCIENCES:
+          IGOR S. GERASIMOV
 
 
  PARALLEL VERSION RUNNING ON        4 PROCESSORS IN        1 NODES.
 
- EXECUTION OF GAMESS BEGUN Mon Aug 14 21:04:24 2017
+ EXECUTION OF GAMESS BEGUN Mon Aug  5 13:05:06 2019
 
             ECHO OF THE FIRST FEW INPUT CARDS -
  INPUT CARD> $basis gbasis=sto ngauss=3 $end                                                
@@ -655,8 +664,8 @@ Assuming a single but multicore node.
  A   =   87
 
  ..... DONE SETTING UP THE RUN .....
- CPU     0: STEP CPU TIME=     0.00 TOTAL CPU TIME=        0.0 (    0.0 MIN)
- TOTAL WALL CLOCK TIME=        0.0 SECONDS, CPU UTILIZATION IS   0.00%
+ CPU     0: STEP CPU TIME=     0.17 TOTAL CPU TIME=          0.2 (      0.0 MIN)
+ TOTAL WALL CLOCK TIME=          0.1 SECONDS, CPU UTILIZATION IS   188.89%
 
       ----------
       TDHF INPUT
@@ -677,8 +686,8 @@ Assuming a single but multicore node.
           1 ELECTRON INTEGRALS
           ********************
  ...... END OF ONE-ELECTRON INTEGRALS ......
- CPU     0: STEP CPU TIME=     0.02 TOTAL CPU TIME=        0.0 (    0.0 MIN)
- TOTAL WALL CLOCK TIME=        0.1 SECONDS, CPU UTILIZATION IS  40.00%
+ CPU     0: STEP CPU TIME=     0.02 TOTAL CPU TIME=          0.2 (      0.0 MIN)
+ TOTAL WALL CLOCK TIME=          0.1 SECONDS, CPU UTILIZATION IS   158.33%
 
           -------------
           GUESS OPTIONS
@@ -701,8 +710,8 @@ Assuming a single but multicore node.
     51=A       52=A       53=A       54=A       55=A       56=A       57=A   
     58=A       59=A       60=A       61=A       62=A       63=A       64=A   
  ...... END OF INITIAL ORBITAL SELECTION ......
- CPU     0: STEP CPU TIME=     0.03 TOTAL CPU TIME=        0.0 (    0.0 MIN)
- TOTAL WALL CLOCK TIME=        0.1 SECONDS, CPU UTILIZATION IS  45.45%
+ CPU     0: STEP CPU TIME=     0.32 TOTAL CPU TIME=          0.5 (      0.0 MIN)
+ TOTAL WALL CLOCK TIME=          0.3 SECONDS, CPU UTILIZATION IS   175.86%
 
                     ----------------------
                     AO INTEGRAL TECHNOLOGY
@@ -724,8 +733,8 @@ Assuming a single but multicore node.
  DIRECT SCF METHOD SKIPS INTEGRAL STORAGE ON DISK.
  DIRECT TRANSFORMATION SKIPS AO INTEGRAL STORAGE ON DISK.
   ...... END OF TWO-ELECTRON INTEGRALS .....
- CPU     0: STEP CPU TIME=     0.02 TOTAL CPU TIME=        0.1 (    0.0 MIN)
- TOTAL WALL CLOCK TIME=        0.1 SECONDS, CPU UTILIZATION IS  53.85%
+ CPU     0: STEP CPU TIME=     0.10 TOTAL CPU TIME=          0.6 (      0.0 MIN)
+ TOTAL WALL CLOCK TIME=          0.3 SECONDS, CPU UTILIZATION IS   179.41%
 
           --------------------------
                  RHF SCF CALCULATION
@@ -751,7 +760,7 @@ Assuming a single but multicore node.
    5  4  0     -673.5904536972    -0.0007654130   0.007818542   0.001431607        3995090     260822
    6  5  0     -673.5905568869    -0.0001031897   0.002297576   0.001000314        3790684     271854
    7  6  0     -673.5905698629    -0.0000129759   0.000796291   0.000164269        3571918     283353
-   8  7  0     -673.5905709790    -0.0000011161   0.000283202   0.000104183        3319429     293904
+   8  7  0     -673.5905709790    -0.0000011162   0.000283202   0.000104183        3319429     293904
    9  8  0     -673.5905711354    -0.0000001564   0.000069456   0.000018371        3051852     306554
   10  9  0     -673.5905711531    -0.0000000176   0.000029051   0.000014337        2793189     317086
   11 10  0     -673.5905711567    -0.0000000037   0.000009912   0.000002803        2609437     324912
@@ -760,8 +769,8 @@ Assuming a single but multicore node.
           -----------------
           DENSITY CONVERGED
           -----------------
-     TIME TO FORM FOCK OPERATORS=       3.4 SECONDS (       0.3 SEC/ITER)
-     FOCK TIME ON FIRST ITERATION=       0.4, LAST ITERATION=       0.2
+     TIME TO FORM FOCK OPERATORS=       1.9 SECONDS (       0.2 SEC/ITER)
+     FOCK TIME ON FIRST ITERATION=       0.2, LAST ITERATION=       0.1
      TIME TO SOLVE SCF EQUATIONS=       0.1 SECONDS (       0.0 SEC/ITER)
 
  FINAL RHF ENERGY IS     -673.5905711578 AFTER  12 ITERATIONS
@@ -2408,8 +2417,8 @@ Assuming a single but multicore node.
    86  O 26  Z   -0.006265   0.001471
    87  H 27  S   -0.001442  -0.001305
  ...... END OF RHF CALCULATION ......
- CPU     0: STEP CPU TIME=     3.42 TOTAL CPU TIME=        3.5 (    0.1 MIN)
- TOTAL WALL CLOCK TIME=        5.2 SECONDS, CPU UTILIZATION IS  67.12%
+ CPU     0: STEP CPU TIME=     2.13 TOTAL CPU TIME=          2.7 (      0.0 MIN)
+ TOTAL WALL CLOCK TIME=          2.2 SECONDS, CPU UTILIZATION IS   121.78%
 
      ----------------------------------------------------------------
      PROPERTY VALUES FOR THE RHF   SELF-CONSISTENT FIELD WAVEFUNCTION
@@ -3043,22 +3052,22 @@ Assuming a single but multicore node.
                        TOTAL       BONDED        FREE
       ATOM            VALENCE     VALENCE     VALENCE
     1 N                 2.964       2.964      -0.000
-    2 C                 3.936       3.936      -0.000
+    2 C                 3.936       3.936       0.000
     3 C                 3.909       3.909       0.000
     4 O                 2.157       2.157       0.000
-    5 C                 3.963       3.963      -0.000
+    5 C                 3.963       3.963       0.000
     6 H                 0.996       0.996       0.000
     7 H                 0.996       0.996      -0.000
     8 C                 3.964       3.964      -0.000
     9 C                 3.929       3.929       0.000
-   10 N                 3.305       3.305       0.000
+   10 N                 3.305       3.305      -0.000
    11 H                 0.953       0.953       0.000
    12 C                 3.940       3.940       0.000
    13 C                 3.977       3.977       0.000
    14 C                 3.980       3.980      -0.000
    15 H                 0.997       0.997       0.000
    16 C                 3.978       3.978      -0.000
-   17 H                 0.997       0.997       0.000
+   17 H                 0.997       0.997      -0.000
    18 C                 3.979       3.979      -0.000
    19 H                 0.996       0.996       0.000
    20 C                 3.976       3.976      -0.000
@@ -3075,19 +3084,19 @@ Assuming a single but multicore node.
           ---------------------
 
  POINT   1           X           Y           Z (BOHR)    CHARGE
-                 6.317789    0.497269   -2.037318        0.00 (A.U.)
+                 6.317789    0.497269   -2.037318       -0.00 (A.U.)
          DX          DY          DZ         /D/  (DEBYE)
     -1.207507    0.954752   -2.231578    2.711008
  ...... END OF PROPERTY EVALUATION ......
- CPU     0: STEP CPU TIME=     0.03 TOTAL CPU TIME=        3.5 (    0.1 MIN)
- TOTAL WALL CLOCK TIME=        5.2 SECONDS, CPU UTILIZATION IS  67.18%
+ CPU     0: STEP CPU TIME=     0.19 TOTAL CPU TIME=          2.9 (      0.0 MIN)
+ TOTAL WALL CLOCK TIME=          2.3 SECONDS, CPU UTILIZATION IS   125.21%
 
           ---------------------
           ELECTROSTATIC MOMENTS
           ---------------------
 
  POINT   1           X           Y           Z (BOHR)    CHARGE
-                 6.317789    0.497269   -2.037318        0.00 (A.U.)
+                 6.317789    0.497269   -2.037318       -0.00 (A.U.)
          DX          DY          DZ         /D/  (DEBYE)
     -1.207507    0.954752   -2.231578    2.711008
 
@@ -3112,28 +3121,36 @@ Assuming a single but multicore node.
   ISOTROPIC AVERAGE ALPHA =       74.1242 A.U.
 
  ....DONE WITH POLARIZABILITY....
- CPU     0: STEP CPU TIME=    26.21 TOTAL CPU TIME=       29.7 (    0.5 MIN)
- TOTAL WALL CLOCK TIME=       44.8 SECONDS, CPU UTILIZATION IS  66.35%
+ CPU     0: STEP CPU TIME=    26.33 TOTAL CPU TIME=         29.3 (      0.5 MIN)
+ TOTAL WALL CLOCK TIME=         20.7 SECONDS, CPU UTILIZATION IS   141.49%
 
  AN AIMPAC INPUT FILE IS BEING WRITTEN TO FILE   7
 
                580000  WORDS OF DYNAMIC MEMORY USED
- EXECUTION OF GAMESS TERMINATED NORMALLY Mon Aug 14 21:05:09 2017
+ EXECUTION OF GAMESS TERMINATED NORMALLY Mon Aug  5 13:05:27 2019
  DDI: 263640 bytes (0.3 MB / 0 MWords) used by master data server.
+Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
+Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
 
  ----------------------------------------
  CPU timing information for all processes
  ========================================
- 0: 29.564 + 0.200 = 29.764
- 1: 30.652 + 0.144 = 30.796
- 2: 29.852 + 0.144 = 29.996
- 3: 30.640 + 0.124 = 30.764
+ 0: 21.125 + 8.166 = 29.292
+ 1: 19.370 + 8.673 = 28.43
+ 2: 18.887 + 7.668 = 26.555
+ 3: 19.113 + 7.265 = 26.378
  ----------------------------------------
+Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
+Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
  ddikick.x: exited gracefully.
+unset echo
 ----- accounting info -----
-Files used on the master node firzens were:
--rw-rw-r-- 1 sagar sagar    1893 Aug 14 21:04 /scr/sagar/Trp_polar_tdhf.F05
--rw-rw-r-- 1 sagar sagar 2028640 Aug 14 21:05 /scr/sagar/Trp_polar_tdhf.F10
--rw-rw-r-- 1 sagar sagar 2097152 Aug 14 21:05 /scr/sagar/Trp_polar_tdhf.F20
-Mon Aug 14 21:05:12 IST 2017
-0.112u 0.004s 0:48.01 0.2%	0+0k 0+16io 0pf+0w
+Files used on the master node jordan-wkst2 were:
+-rw-r--r-- 1 shiv users     1893 Aug  5 13:05 /tmp/Trp_polar_tdhf.F05
+-rw-r--r-- 1 shiv users 58982400 Aug  5 13:05 /tmp/Trp_polar_tdhf.F10
+-rw-r--r-- 1 shiv users 52428800 Aug  5 13:05 /tmp/Trp_polar_tdhf.F20
+ls: No match.
+ls: No match.
+ls: No match.
+Mon 05 Aug 2019 01:05:30 PM EDT
+0.169u 0.075s 0:23.97 0.9%	0+0k 0+8io 0pf+0w

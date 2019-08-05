@@ -1,19 +1,22 @@
 ----- GAMESS execution script 'rungms' -----
-This job is running on host firzens
-under operating system Linux at Mon Aug 14 12:30:22 IST 2017
+This job is running on host jordan-wkst2
+under operating system Linux at Mon 05 Aug 2019 01:34:19 PM EDT
 Available scratch disk space (Kbyte units) at beginning of the job is
-Filesystem     1K-blocks      Used Available Use% Mounted on
-/dev/sda11     254243428 112975168 128330380  47% /
-GAMESS temporary binary files will be written to /scr/sagar
-GAMESS supplementary output files will be written to /home/sagar/gamess/scratch
+Filesystem     1K-blocks  Used Available Use% Mounted on
+tmpfs            5053572  8936   5044636   1% /tmp
+GAMESS temporary binary files will be written to /tmp
+GAMESS supplementary output files will be written to /home/shiv/.gamess
 Copying input file water_ccd.inp to your run's scratch directory...
+cp water_ccd.inp /tmp/water_ccd.F05
+unset echo
+/opt/gamess/ddikick.x /opt/gamess/gamess.00.x water_ccd -ddi 1 1 jordan-wkst2 -scr /tmp
 
  Distributed Data Interface kickoff program.
  Initiating 1 compute processes on 1 nodes to run the following command:
- /home/sagar/gamess/gamess.02.x water_ccd 
+ /opt/gamess/gamess.00.x water_ccd 
 
           ******************************************************
-          *         GAMESS VERSION = 20 APR 2017 (R1)          *
+          *         GAMESS VERSION = 30 SEP 2018 (R3)         *
           *             FROM IOWA STATE UNIVERSITY             *
           * M.W.SCHMIDT, K.K.BALDRIDGE, J.A.BOATZ, S.T.ELBERT, *
           *   M.S.GORDON, J.H.JENSEN, S.KOSEKI, N.MATSUNAGA,   *
@@ -27,12 +30,14 @@ Copying input file water_ccd.inp to your run's scratch directory...
   CONTRIBUTIONS TO THE CODE:
      IVANA ADAMOVIC, CHRISTINE AIKENS, YURI ALEXEEV, POOJA ARORA,
      ANDREY ASADCHEV, ROB BELL, PRADIPTA BANDYOPADHYAY, JONATHAN BENTZ,
-     BRETT BODE, KURT BRORSEN, CALEB CARLIN, GALINA CHABAN, WEI CHEN,
-     CHEOL HO CHOI, PAUL DAY, ALBERT DEFUSCO, NUWAN DESILVA, TIM DUDLEY,
-     DMITRI FEDOROV, GRAHAM FLETCHER, MARK FREITAG, KURT GLAESEMANN,
+     COLLEEN BERTONI, BRETT BODE, KURT BRORSEN, CALEB CARLIN, GALINA CHABAN,
+     WEI CHEN, CHEOL HO CHOI, PAUL DAY, ALBERT DEFUSCO, NUWAN DESILVA,
+     TIM DUDLEY, DMITRI FEDOROV, ALEX FINDLATER, GRAHAM FLETCHER, 
+     MARK FREITAG, KURT GLAESEMANN, ANASTASIA GUNINA,
      DAN KEMP, GRANT MERRILL, NORIYUKI MINEZAWA, JONATHAN MULLIN,
      TAKESHI NAGATA, SEAN NEDD, HEATHER NETZLOFF, BOSILJKA NJEGIC, RYAN OLSON,
-     MIKE PAK, SPENCER PRUITT, LUKE ROSKOP, JIM SHOEMAKER, LYUDMILA SLIPCHENKO,
+     MIKE PAK, BUU PHAM,
+     SPENCER PRUITT, LUKE ROSKOP, JIM SHOEMAKER, LYUDMILA SLIPCHENKO,
      TONY SMITH, SAROM SOK LEANG, JIE SONG, TETSUYA TAKETSUGU, SIMON WEBB,
      PENG XU, SOOHAENG YOO, FEDERICO ZAHARIEV
 
@@ -53,7 +58,9 @@ Copying input file water_ccd.inp to your run's scratch directory...
      NAT. INST. OF ADVANCED INDUSTRIAL SCIENCE AND TECHNOLOGY: KAZUO KITAURA
      MICHIGAN STATE UNIVERSITY:
           KAROL KOWALSKI, MARTA WLOCH, JEFFREY GOUR, JESSE LUTZ,
-          WEI LI, PIOTR PIECUCH
+          WEI LI, JUN SHEN, J. EMILIANO DEUSTUA, PIOTR PIECUCH
+     UNIVERSITY OF MINNESOTA:
+          YINAN SHU
      UNIVERSITY OF SILESIA: MONIKA MUSIAL, STANISLAW KUCHARSKI
      FACULTES UNIVERSITAIRES NOTRE-DAME DE LA PAIX:
           OLIVIER QUINET, BENOIT CHAMPAGNE
@@ -82,8 +89,10 @@ Copying input file water_ccd.inp to your run's scratch directory...
      TOKYO INSTITUTE OF TECHNOLOGY: HIROYA NAKATA
      NAGOYA UNIVERSITY: YOSHIO NISHIMOTO, STEPHAN IRLE
      MOSCOW STATE UNIVERSITY: VLADIMIR MIRONOV
+     A.N.NESMEYANOV INSTITUTE OF ORGANOELEMENT COMPOUNDS OF RUSSIAN ACADEMY OF SCIENCES:
+          IGOR S. GERASIMOV
 
- EXECUTION OF GAMESS BEGUN Mon Aug 14 12:30:23 2017
+ EXECUTION OF GAMESS BEGUN Mon Aug  5 13:34:19 2019
 
             ECHO OF THE FIRST FEW INPUT CARDS -
  INPUT CARD> $contrl scftyp=rhf cctyp=ccd runtyp=energy exetyp=run                          
@@ -243,15 +252,15 @@ Copying input file water_ccd.inp to your run's scratch directory...
  A   =   25
 
  ..... DONE SETTING UP THE RUN .....
- STEP CPU TIME =     0.00 TOTAL CPU TIME =        0.0 (    0.0 MIN)
- TOTAL WALL CLOCK TIME=        0.0 SECONDS, CPU UTILIZATION IS   0.00%
+ STEP CPU TIME =     0.25 TOTAL CPU TIME =          0.3 (      0.0 MIN)
+ TOTAL WALL CLOCK TIME=          0.0 SECONDS, CPU UTILIZATION IS   833.33%
 
           ********************
           1 ELECTRON INTEGRALS
           ********************
  ...... END OF ONE-ELECTRON INTEGRALS ......
- STEP CPU TIME =     0.00 TOTAL CPU TIME =        0.0 (    0.0 MIN)
- TOTAL WALL CLOCK TIME=        0.0 SECONDS, CPU UTILIZATION IS   0.00%
+ STEP CPU TIME =     0.08 TOTAL CPU TIME =          0.3 (      0.0 MIN)
+ TOTAL WALL CLOCK TIME=          0.0 SECONDS, CPU UTILIZATION IS   825.00%
 
           -------------
           GUESS OPTIONS
@@ -269,8 +278,8 @@ Copying input file water_ccd.inp to your run's scratch directory...
      2=A        3=A        4=A        5=A        6=A        7=A        8=A   
      9=A       10=A       11=A       12=A       13=A       14=A       15=A   
  ...... END OF INITIAL ORBITAL SELECTION ......
- STEP CPU TIME =     0.00 TOTAL CPU TIME =        0.0 (    0.0 MIN)
- TOTAL WALL CLOCK TIME=        0.0 SECONDS, CPU UTILIZATION IS   0.00%
+ STEP CPU TIME =     0.19 TOTAL CPU TIME =          0.5 (      0.0 MIN)
+ TOTAL WALL CLOCK TIME=          0.1 SECONDS, CPU UTILIZATION IS   742.86%
 
                     ----------------------
                     AO INTEGRAL TECHNOLOGY
@@ -305,8 +314,8 @@ Copying input file water_ccd.inp to your run's scratch directory...
  TOTAL NUMBER OF NONZERO TWO-ELECTRON INTEGRALS =               22444
           2 INTEGRAL RECORDS WERE STORED ON DISK FILE  8.
   ...... END OF TWO-ELECTRON INTEGRALS .....
- STEP CPU TIME =     0.02 TOTAL CPU TIME =        0.0 (    0.0 MIN)
- TOTAL WALL CLOCK TIME=        0.0 SECONDS, CPU UTILIZATION IS  66.67%
+ STEP CPU TIME =     0.18 TOTAL CPU TIME =          0.7 (      0.0 MIN)
+ TOTAL WALL CLOCK TIME=          0.1 SECONDS, CPU UTILIZATION IS   700.00%
 
           --------------------------
                  RHF SCF CALCULATION
@@ -340,7 +349,7 @@ Copying input file water_ccd.inp to your run's scratch directory...
           DENSITY CONVERGED
           -----------------
      TIME TO FORM FOCK OPERATORS=       0.0 SECONDS (       0.0 SEC/ITER)
-     TIME TO SOLVE SCF EQUATIONS=       0.0 SECONDS (       0.0 SEC/ITER)
+     TIME TO SOLVE SCF EQUATIONS=       0.1 SECONDS (       0.0 SEC/ITER)
 
  FINAL RHF ENERGY IS      -76.0191614048 AFTER  11 ITERATIONS
 
@@ -351,31 +360,31 @@ Copying input file water_ccd.inp to your run's scratch directory...
                       1          2          3          4          5
                   -20.5655    -1.3229    -0.6887    -0.5599    -0.4943
                      A          A          A          A          A   
-    1  O  1  S    0.994704  -0.211347  -0.000000   0.070899   0.000000
-    2  O  1  S    0.021002   0.477201   0.000000  -0.158078   0.000000
-    3  O  1  X    0.000858   0.046103   0.396612   0.332322   0.000000
-    4  O  1  Y    0.001138   0.061181  -0.298869   0.441006   0.000000
-    5  O  1  Z    0.000000  -0.000000  -0.000000   0.000000   0.639574
-    6  O  1  S    0.004102   0.435551   0.000000  -0.327468   0.000000
-    7  O  1  X   -0.000177   0.020239   0.225600   0.236991   0.000000
-    8  O  1  Y   -0.000235   0.026858  -0.170002   0.314498   0.000000
-    9  O  1  Z    0.000000  -0.000000  -0.000000   0.000000   0.500950
-   10  O  1 XX   -0.003850   0.007959   0.027729   0.013716   0.000000
-   11  O  1 YY   -0.003847   0.008233  -0.027729   0.023589   0.000000
-   12  O  1 ZZ   -0.003852   0.001263   0.000000  -0.009240   0.000000
-   13  O  1 XY    0.000004   0.000553   0.009181   0.019879   0.000000
-   14  O  1 XZ    0.000000  -0.000000  -0.000000   0.000000   0.016007
-   15  O  1 YZ    0.000000  -0.000000  -0.000000   0.000000   0.021242
-   16  H  2  S    0.000152   0.135166   0.236617   0.144885   0.000000
-   17  H  2  S   -0.000291   0.014605   0.138337   0.100261   0.000000
-   18  H  2  X    0.000309  -0.023830  -0.020408  -0.008629   0.000000
-   19  H  2  Y   -0.000005   0.001992  -0.007293   0.013175   0.000000
-   20  H  2  Z    0.000000  -0.000000  -0.000000   0.000000   0.019545
-   21  H  3  S    0.000152   0.135166  -0.236617   0.144885   0.000000
-   22  H  3  S   -0.000291   0.014605  -0.138337   0.100261   0.000000
-   23  H  3  X   -0.000090   0.008483   0.001385   0.015043   0.000000
-   24  H  3  Y    0.000295  -0.022358   0.021627  -0.004663   0.000000
-   25  H  3  Z    0.000000  -0.000000  -0.000000   0.000000   0.019545
+    1  O  1  S    0.994704  -0.211347  -0.000000   0.070899  -0.000000
+    2  O  1  S    0.021002   0.477201   0.000000  -0.158078  -0.000000
+    3  O  1  X    0.000858   0.046103   0.396612   0.332322  -0.000000
+    4  O  1  Y    0.001138   0.061181  -0.298869   0.441006  -0.000000
+    5  O  1  Z    0.000000   0.000000   0.000000   0.000000   0.639574
+    6  O  1  S    0.004102   0.435551   0.000000  -0.327468  -0.000000
+    7  O  1  X   -0.000177   0.020239   0.225600   0.236991  -0.000000
+    8  O  1  Y   -0.000235   0.026858  -0.170002   0.314498  -0.000000
+    9  O  1  Z    0.000000   0.000000   0.000000   0.000000   0.500950
+   10  O  1 XX   -0.003850   0.007959   0.027729   0.013716  -0.000000
+   11  O  1 YY   -0.003847   0.008233  -0.027729   0.023589  -0.000000
+   12  O  1 ZZ   -0.003852   0.001263   0.000000  -0.009240  -0.000000
+   13  O  1 XY    0.000004   0.000553   0.009181   0.019879  -0.000000
+   14  O  1 XZ    0.000000   0.000000   0.000000   0.000000   0.016007
+   15  O  1 YZ    0.000000   0.000000   0.000000   0.000000   0.021242
+   16  H  2  S    0.000152   0.135166   0.236617   0.144885  -0.000000
+   17  H  2  S   -0.000291   0.014605   0.138337   0.100261  -0.000000
+   18  H  2  X    0.000309  -0.023830  -0.020408  -0.008629  -0.000000
+   19  H  2  Y   -0.000005   0.001992  -0.007293   0.013175  -0.000000
+   20  H  2  Z    0.000000   0.000000   0.000000   0.000000   0.019545
+   21  H  3  S    0.000152   0.135166  -0.236617   0.144885  -0.000000
+   22  H  3  S   -0.000291   0.014605  -0.138337   0.100261  -0.000000
+   23  H  3  X   -0.000090   0.008483   0.001385   0.015043  -0.000000
+   24  H  3  Y    0.000295  -0.022358   0.021627  -0.004663  -0.000000
+   25  H  3  Z    0.000000   0.000000   0.000000   0.000000   0.019545
 
                       6          7          8          9         10
                     0.2049     0.2961     0.9956     1.0544     1.1316
@@ -384,27 +393,27 @@ Copying input file water_ccd.inp to your run's scratch directory...
     2  O  1  S    0.061919  -0.000000  -0.000000  -0.268332  -0.879172
     3  O  1  X    0.136332   0.270273  -0.147891  -0.270704   0.399012
     4  O  1  Y    0.180918  -0.203665   0.111443  -0.359236   0.529507
-    5  O  1  Z    0.000000  -0.000000   0.000000  -0.000000  -0.000000
+    5  O  1  Z    0.000000   0.000000   0.000000   0.000000  -0.000000
     6  O  1  S    1.352494  -0.000000   0.000000   0.460251   1.629835
     7  O  1  X    0.306740   0.671858  -0.199511   0.151284  -0.490564
     8  O  1  Y    0.407058  -0.506281   0.150343   0.200760  -0.651001
-    9  O  1  Z    0.000000  -0.000000   0.000000  -0.000000  -0.000000
+    9  O  1  Z    0.000000   0.000000   0.000000   0.000000  -0.000000
    10  O  1 XX   -0.047878   0.027219   0.226585   0.159845  -0.314577
    11  O  1 YY   -0.044657  -0.027219  -0.226585   0.097436  -0.327597
    12  O  1 ZZ   -0.068448   0.000000  -0.000000  -0.188440  -0.329188
    13  O  1 XY    0.006486   0.009012   0.075023  -0.125658  -0.026215
-   14  O  1 XZ    0.000000  -0.000000   0.000000  -0.000000  -0.000000
-   15  O  1 YZ    0.000000  -0.000000   0.000000  -0.000000  -0.000000
+   14  O  1 XZ    0.000000   0.000000   0.000000   0.000000  -0.000000
+   15  O  1 YZ    0.000000   0.000000   0.000000   0.000000  -0.000000
    16  H  2  S   -0.063173  -0.058634   0.776958   0.696193   0.274635
    17  H  2  S   -1.016293  -1.341369  -0.691247  -0.622951  -0.277874
    18  H  2  X    0.003162   0.013880   0.104017   0.172354  -0.061994
    19  H  2  Y    0.000048  -0.003123   0.051756  -0.060610  -0.017688
-   20  H  2  Z    0.000000  -0.000000   0.000000  -0.000000  -0.000000
+   20  H  2  Z    0.000000   0.000000   0.000000   0.000000  -0.000000
    21  H  3  S   -0.063173   0.058634  -0.776958   0.696193   0.274635
    22  H  3  S   -1.016293   1.341369   0.691246  -0.622951  -0.277874
    23  H  3  X   -0.000825   0.006828  -0.021080  -0.105769   0.000085
    24  H  3  Y    0.003053  -0.012482  -0.114253   0.148971  -0.064467
-   25  H  3  Z    0.000000  -0.000000   0.000000  -0.000000  -0.000000
+   25  H  3  Z    0.000000   0.000000   0.000000   0.000000  -0.000000
 
                      11         12         13         14         15
                     1.1696     1.2954     1.4034     1.7972     1.8287
@@ -413,56 +422,56 @@ Copying input file water_ccd.inp to your run's scratch directory...
     2  O  1  S    0.000000   0.000000  -1.358997  -0.000000  -0.294341
     3  O  1  X    0.000000  -0.709070  -0.272020  -0.000000  -0.044997
     4  O  1  Y    0.000000   0.534322  -0.360983  -0.000000  -0.059713
-    5  O  1  Z   -0.962854   0.000000  -0.000000   0.000000  -0.000000
+    5  O  1  Z   -0.962854  -0.000000  -0.000000   0.000000   0.000000
     6  O  1  S    0.000000  -0.000000   3.393827  -0.000000   0.814010
     7  O  1  X    0.000000   1.394689   0.636727  -0.000000   0.294790
     8  O  1  Y    0.000000  -1.050974   0.844966  -0.000000   0.391200
-    9  O  1  Z    1.035539   0.000000  -0.000000  -0.000000  -0.000000
+    9  O  1  Z    1.035539  -0.000000  -0.000000  -0.000000   0.000000
    10  O  1 XX    0.000000   0.088852  -0.504023  -0.000000  -0.126627
    11  O  1 YY    0.000000  -0.088852  -0.431657  -0.000000  -0.416108
    12  O  1 ZZ    0.000000   0.000000  -0.298196  -0.000000   0.263424
    13  O  1 XY    0.000000   0.029419   0.145707  -0.000000  -0.582860
-   14  O  1 XZ    0.008766   0.000000  -0.000000   0.536986  -0.000000
-   15  O  1 YZ    0.011633   0.000000  -0.000000  -0.404648  -0.000000
+   14  O  1 XZ    0.008766  -0.000000  -0.000000   0.536986   0.000000
+   15  O  1 YZ    0.011633  -0.000000  -0.000000  -0.404648   0.000000
    16  H  2  S    0.000000  -0.139312  -0.329371  -0.000000  -0.229050
    17  H  2  S    0.000000  -0.883415  -0.728280  -0.000000  -0.130035
    18  H  2  X    0.000000   0.205095   0.067600  -0.000000  -0.012958
    19  H  2  Y    0.000000  -0.020412   0.099999  -0.000000  -0.314717
-   20  H  2  Z    0.000746   0.000000  -0.000000   0.361629  -0.000000
+   20  H  2  Z    0.000746  -0.000000  -0.000000   0.361629   0.000000
    21  H  3  S    0.000000   0.139312  -0.329371  -0.000000  -0.229050
    22  H  3  S    0.000000   0.883415  -0.728280  -0.000000  -0.130035
    23  H  3  X    0.000000   0.076153   0.077492  -0.000000  -0.298954
    24  H  3  Y    0.000000  -0.191524   0.092545  -0.000000  -0.099204
-   25  H  3  Z    0.000746   0.000000  -0.000000  -0.361629  -0.000000
+   25  H  3  Z    0.000746  -0.000000  -0.000000  -0.361629   0.000000
 
                      16         17         18         19         20
                     1.9291     2.5245     2.5294     2.7415     2.9402
                      A          A          A          A          A   
-    1  O  1  S   -0.000000  -0.044720   0.000000  -0.000000   0.000000
-    2  O  1  S   -0.000000  -0.528673   0.000002  -0.000000   0.000000
-    3  O  1  X   -0.000000  -0.136680  -0.079612   0.288823   0.000000
-    4  O  1  Y   -0.000000  -0.181380   0.059993  -0.217644   0.000000
-    5  O  1  Z   -0.008268   0.000000  -0.000000  -0.000000   0.001618
-    6  O  1  S   -0.000000   1.248596  -0.000004   0.000001   0.000000
-    7  O  1  X   -0.000000   0.356004   0.437853  -0.314159   0.000000
-    8  O  1  Y   -0.000000   0.472430  -0.329949   0.236736   0.000000
-    9  O  1  Z   -0.202069   0.000000  -0.000000  -0.000000  -0.399445
-   10  O  1 XX   -0.000000   0.324522  -0.023697  -0.645419   0.000000
-   11  O  1 YY   -0.000000   0.201416   0.023696   0.645419   0.000000
-   12  O  1 ZZ   -0.000000  -1.049779   0.000003  -0.000000   0.000000
-   13  O  1 XY   -0.000000  -0.247869  -0.007845  -0.213702   0.000000
-   14  O  1 XZ    0.472118   0.000000  -0.000000  -0.000000  -0.431305
-   15  O  1 YZ    0.626522   0.000000  -0.000000  -0.000000  -0.572355
-   16  H  2  S   -0.000000  -0.582693  -0.190960   0.487991   0.000000
-   17  H  2  S   -0.000000  -0.064865  -0.075818  -0.204433   0.000000
-   18  H  2  X   -0.000000  -0.234484  -0.063621   0.403201   0.000000
-   19  H  2  Y   -0.000000  -0.056102   0.742230   0.093412   0.000000
-   20  H  2  Z    0.309219   0.000000  -0.000000  -0.000000   0.745173
-   21  H  3  S   -0.000000  -0.582692   0.190964  -0.487992   0.000000
-   22  H  3  S   -0.000000  -0.064865   0.075819   0.204433   0.000000
-   23  H  3  X   -0.000000   0.010700  -0.731014   0.021344   0.000000
-   24  H  3  Y   -0.000000  -0.240865  -0.143428  -0.413329   0.000000
-   25  H  3  Z    0.309220   0.000000  -0.000000  -0.000000   0.745166
+    1  O  1  S    0.000000  -0.044720   0.000000  -0.000000  -0.000000
+    2  O  1  S    0.000000  -0.528673   0.000002  -0.000000  -0.000000
+    3  O  1  X    0.000000  -0.136680  -0.079612   0.288823  -0.000000
+    4  O  1  Y    0.000000  -0.181380   0.059993  -0.217644  -0.000000
+    5  O  1  Z   -0.008268  -0.000000   0.000000  -0.000000   0.001618
+    6  O  1  S    0.000000   1.248596  -0.000004   0.000001  -0.000000
+    7  O  1  X    0.000000   0.356004   0.437853  -0.314159  -0.000000
+    8  O  1  Y    0.000000   0.472430  -0.329949   0.236736  -0.000000
+    9  O  1  Z   -0.202069  -0.000000   0.000000  -0.000000  -0.399445
+   10  O  1 XX    0.000000   0.324522  -0.023697  -0.645419  -0.000000
+   11  O  1 YY    0.000000   0.201416   0.023696   0.645419  -0.000000
+   12  O  1 ZZ    0.000000  -1.049779   0.000003  -0.000000  -0.000000
+   13  O  1 XY    0.000000  -0.247869  -0.007845  -0.213702  -0.000000
+   14  O  1 XZ    0.472118  -0.000000   0.000000  -0.000000  -0.431305
+   15  O  1 YZ    0.626522  -0.000000   0.000000  -0.000000  -0.572355
+   16  H  2  S    0.000000  -0.582693  -0.190960   0.487991  -0.000000
+   17  H  2  S    0.000000  -0.064865  -0.075818  -0.204433  -0.000000
+   18  H  2  X    0.000000  -0.234484  -0.063621   0.403201  -0.000000
+   19  H  2  Y    0.000000  -0.056102   0.742230   0.093412  -0.000000
+   20  H  2  Z    0.309219  -0.000000   0.000000  -0.000000   0.745173
+   21  H  3  S    0.000000  -0.582692   0.190964  -0.487992  -0.000000
+   22  H  3  S    0.000000  -0.064865   0.075819   0.204433  -0.000000
+   23  H  3  X    0.000000   0.010700  -0.731014   0.021344  -0.000000
+   24  H  3  Y    0.000000  -0.240865  -0.143428  -0.413329  -0.000000
+   25  H  3  Z    0.309220  -0.000000   0.000000  -0.000000   0.745166
 
                      21         22         23         24         25
                     2.9500     3.3141     3.6415     3.8760     4.0948
@@ -471,30 +480,30 @@ Copying input file water_ccd.inp to your run's scratch directory...
     2  O  1  S   -0.000000  -0.140195   0.157098  -0.000000   0.282672
     3  O  1  X   -0.000000  -0.014081   0.251920   0.512165  -0.236168
     4  O  1  Y   -0.000000  -0.018686   0.334309  -0.385944  -0.313405
-    5  O  1  Z   -0.000000   0.000000   0.000000  -0.000000   0.000000
+    5  O  1  Z   -0.000000   0.000000   0.000000   0.000000   0.000000
     6  O  1  S   -0.000000   0.189577   2.604579  -0.000001   2.622570
     7  O  1  X   -0.000000   0.270624   0.473159   1.034082  -0.043851
     8  O  1  Y   -0.000000   0.359130   0.627903  -0.779237  -0.058193
-    9  O  1  Z   -0.000002   0.000000   0.000000  -0.000000   0.000000
+    9  O  1  Z   -0.000002   0.000000   0.000000   0.000000   0.000000
    10  O  1 XX   -0.000000  -0.135814  -0.029399   1.206903  -1.782705
    11  O  1 YY   -0.000000   0.311784  -0.154928  -1.206903  -1.676677
    12  O  1 ZZ   -0.000000  -0.044389  -1.131163   0.000000  -1.174114
    13  O  1 XY   -0.000000   0.901220  -0.252746   0.399612   0.213484
-   14  O  1 XZ    0.697598   0.000000   0.000000  -0.000000   0.000000
-   15  O  1 YZ   -0.525682   0.000000   0.000000  -0.000000   0.000000
+   14  O  1 XZ    0.697598   0.000000   0.000000   0.000000   0.000000
+   15  O  1 YZ   -0.525682   0.000000   0.000000   0.000000   0.000000
    16  H  2  S   -0.000000  -0.087468  -0.759477  -1.117747   0.575994
    17  H  2  S   -0.000000  -0.067837  -0.523868  -0.489859  -0.286667
    18  H  2  X   -0.000000  -0.001484   0.899681   1.035997  -0.582085
    19  H  2  Y   -0.000000  -0.789216  -0.059776   0.036970  -0.045196
-   20  H  2  Z   -0.693733   0.000000   0.000000  -0.000000   0.000000
+   20  H  2  Z   -0.693733   0.000000   0.000000   0.000000   0.000000
    21  H  3  S   -0.000000  -0.087468  -0.759477   1.117748   0.575994
    22  H  3  S   -0.000000  -0.067837  -0.523868   0.489859  -0.286667
    23  H  3  X   -0.000000  -0.758234  -0.305446   0.250022   0.116999
    24  H  3  Y   -0.000000  -0.218964   0.848352  -1.006055  -0.571993
-   25  H  3  Z    0.693740   0.000000   0.000000  -0.000000   0.000000
+   25  H  3  Z    0.693740   0.000000   0.000000   0.000000   0.000000
  ...... END OF RHF CALCULATION ......
- STEP CPU TIME =     0.01 TOTAL CPU TIME =        0.0 (    0.0 MIN)
- TOTAL WALL CLOCK TIME=        0.0 SECONDS, CPU UTILIZATION IS  75.00%
+ STEP CPU TIME =     0.10 TOTAL CPU TIME =          0.8 (      0.0 MIN)
+ TOTAL WALL CLOCK TIME=          0.1 SECONDS, CPU UTILIZATION IS   571.43%
 
      ----------------------------------------------------------------
      PROPERTY VALUES FOR THE RHF   SELF-CONSISTENT FIELD WAVEFUNCTION
@@ -558,8 +567,8 @@ Copying input file water_ccd.inp to your run's scratch directory...
                        TOTAL       BONDED        FREE
       ATOM            VALENCE     VALENCE     VALENCE
     1 O                 1.750       1.750       0.000
-    2 H                 0.875       0.875       0.000
-    3 H                 0.875       0.875       0.000
+    2 H                 0.875       0.875      -0.000
+    3 H                 0.875       0.875      -0.000
 
           ---------------------
           ELECTROSTATIC MOMENTS
@@ -570,8 +579,8 @@ Copying input file water_ccd.inp to your run's scratch directory...
          DX          DY          DZ         /D/  (DEBYE)
      1.314552    1.744469    0.000000    2.184312
  ...... END OF PROPERTY EVALUATION ......
- STEP CPU TIME =     0.00 TOTAL CPU TIME =        0.0 (    0.0 MIN)
- TOTAL WALL CLOCK TIME=        0.0 SECONDS, CPU UTILIZATION IS  75.00%
+ STEP CPU TIME =     0.02 TOTAL CPU TIME =          0.8 (      0.0 MIN)
+ TOTAL WALL CLOCK TIME=          0.2 SECONDS, CPU UTILIZATION IS   546.67%
 
      ---------------------------
      COUPLED CLUSTER CALCULATION
@@ -600,14 +609,14 @@ Copying input file water_ccd.inp to your run's scratch directory...
  ----- FROZEN CORE ENERGY =       -61.2388629996
 
  PLAN A: REQUIREMENTS FOR FULLY IN-MEMORY TRANSFORMATION:
- # OF WORDS AVAILABLE =              1000000
+ # OF WORDS AVAILABLE =               999999
  # OF WORDS NEEDED    =               258177
 
  CHOOSING IN MEMORY PARTIAL TRANSFORMATION...
  TOTAL NUMBER OF TRANSFORMED 2E- INTEGRALS KEPT =        22315
  ... END OF INTEGRAL TRANSFORMATION ...
- STEP CPU TIME =     0.01 TOTAL CPU TIME =        0.0 (    0.0 MIN)
- TOTAL WALL CLOCK TIME=        0.1 SECONDS, CPU UTILIZATION IS  57.14%
+ STEP CPU TIME =     0.02 TOTAL CPU TIME =          0.8 (      0.0 MIN)
+ TOTAL WALL CLOCK TIME=          0.2 SECONDS, CPU UTILIZATION IS   525.00%
 
    -----------------------
    COUPLED-CLUSTER PROGRAM
@@ -664,7 +673,7 @@ Copying input file water_ccd.inp to your run's scratch directory...
                                                          CCD
 
  THE FOLLOWING ENERGY WILL BE CONSIDERED THE HIGHEST LEVEL:        CCD
- THE AVAILABLE REPLICATED MEMORY IS     1000000 WORDS.
+ THE AVAILABLE REPLICATED MEMORY IS      999999 WORDS.
  CONVERGENCE THRESHOLD:   1.0E-07
  MAXIMUM NUMBER OF ITERATIONS:   30
 
@@ -676,8 +685,8 @@ Copying input file water_ccd.inp to your run's scratch directory...
          8167 [AB|CI] TYPE,       11010 [AB|CD] TYPE.
  TRANSFORMED INTEGRAL FILE  9 WAS READ    3 TIMES.
  ....... DONE WITH CC INTEGRAL PREPARATION .......
- STEP CPU TIME =     0.01 TOTAL CPU TIME =        0.0 (    0.0 MIN)
- TOTAL WALL CLOCK TIME=        0.1 SECONDS, CPU UTILIZATION IS  55.56%
+ STEP CPU TIME =     0.01 TOTAL CPU TIME =          0.9 (      0.0 MIN)
+ TOTAL WALL CLOCK TIME=          0.2 SECONDS, CPU UTILIZATION IS   500.00%
 
  MEMORY REQUIRED FOR THE CCD ITERATIONS IS       67792 WORDS.
  ITER:  1       CCD CORR. ENERGY:  -0.2031895281   CONV.: -3.5035E-03
@@ -696,8 +705,8 @@ Copying input file water_ccd.inp to your run's scratch directory...
     MBPT(2) CORRELATION ENERGY:  -0.1988645028
         CCD CORRELATION ENERGY:  -0.2070122255
  ....... DONE WITH CC AMPLITUDE ITERATIONS .......
- STEP CPU TIME =     0.09 TOTAL CPU TIME =        0.1 (    0.0 MIN)
- TOTAL WALL CLOCK TIME=        0.2 SECONDS, CPU UTILIZATION IS  77.78%
+ STEP CPU TIME =     0.23 TOTAL CPU TIME =          1.1 (      0.0 MIN)
+ TOTAL WALL CLOCK TIME=          0.2 SECONDS, CPU UTILIZATION IS   540.00%
 
                       SUMMARY OF RESULTS
 
@@ -712,28 +721,32 @@ Copying input file water_ccd.inp to your run's scratch directory...
  AN AIMPAC INPUT FILE IS BEING WRITTEN TO FILE   7
 
                580000  WORDS OF DYNAMIC MEMORY USED
- EXECUTION OF GAMESS TERMINATED NORMALLY Mon Aug 14 12:30:23 2017
+ EXECUTION OF GAMESS TERMINATED NORMALLY Mon Aug  5 13:34:19 2019
  DDI: 263640 bytes (0.3 MB / 0 MWords) used by master data server.
 
  ----------------------------------------
  CPU timing information for all processes
  ========================================
- 0: 0.128 + 0.24 = 0.152
+ 0: 0.586 + 1.193 = 1.780
  ----------------------------------------
  ddikick.x: exited gracefully.
+unset echo
 ----- accounting info -----
-Files used on the master node firzens were:
--rw-r--r-- 1 sagar sagar     305 Aug 14 12:30 /scr/sagar/water_ccd.F05
--rw-rw-r-- 1 sagar sagar  360032 Aug 14 12:30 /scr/sagar/water_ccd.F08
--rw-rw-r-- 1 sagar sagar  362440 Aug 14 12:30 /scr/sagar/water_ccd.F09
--rw-rw-r-- 1 sagar sagar 1570560 Aug 14 12:30 /scr/sagar/water_ccd.F10
--rw-rw-r-- 1 sagar sagar  388608 Aug 14 12:30 /scr/sagar/water_ccd.F70
--rw-rw-r-- 1 sagar sagar  518400 Aug 14 12:30 /scr/sagar/water_ccd.F71
--rw-rw-r-- 1 sagar sagar 4032000 Aug 14 12:30 /scr/sagar/water_ccd.F72
--rw-rw-r-- 1 sagar sagar    1280 Aug 14 12:30 /scr/sagar/water_ccd.F73
--rw-rw-r-- 1 sagar sagar  102400 Aug 14 12:30 /scr/sagar/water_ccd.F74
--rw-rw-r-- 1 sagar sagar       0 Aug 14 12:30 /scr/sagar/water_ccd.F75
--rw-rw-r-- 1 sagar sagar       0 Aug 14 12:30 /scr/sagar/water_ccd.F76
--rw-rw-r-- 1 sagar sagar       0 Aug 14 12:30 /scr/sagar/water_ccd.F77
-Mon Aug 14 12:30:26 IST 2017
-0.084u 0.012s 0:03.32 2.7%	0+0k 0+24io 0pf+0w
+Files used on the master node jordan-wkst2 were:
+-rw-r--r-- 1 shiv users      305 Aug  5 13:34 /tmp/water_ccd.F05
+-rw-r--r-- 1 shiv users   360032 Aug  5 13:34 /tmp/water_ccd.F08
+-rw-r--r-- 1 shiv users   362440 Aug  5 13:34 /tmp/water_ccd.F09
+-rw-r--r-- 1 shiv users 50790400 Aug  5 13:34 /tmp/water_ccd.F10
+-rw-r--r-- 1 shiv users   388608 Aug  5 13:34 /tmp/water_ccd.F70
+-rw-r--r-- 1 shiv users   518400 Aug  5 13:34 /tmp/water_ccd.F71
+-rw-r--r-- 1 shiv users  4032000 Aug  5 13:34 /tmp/water_ccd.F72
+-rw-r--r-- 1 shiv users     1280 Aug  5 13:34 /tmp/water_ccd.F73
+-rw-r--r-- 1 shiv users   102400 Aug  5 13:34 /tmp/water_ccd.F74
+-rw-r--r-- 1 shiv users        0 Aug  5 13:34 /tmp/water_ccd.F75
+-rw-r--r-- 1 shiv users        0 Aug  5 13:34 /tmp/water_ccd.F76
+-rw-r--r-- 1 shiv users        0 Aug  5 13:34 /tmp/water_ccd.F77
+ls: No match.
+ls: No match.
+ls: No match.
+Mon 05 Aug 2019 01:34:22 PM EDT
+0.165u 0.054s 0:03.46 6.0%	0+0k 0+16io 0pf+0w
