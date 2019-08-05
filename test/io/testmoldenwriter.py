@@ -44,6 +44,18 @@ class MOLDENTest(unittest.TestCase):
         # Check size of Atoms section.
         self.assertEqual(len(writer._coords_from_ccdata(-1)), data.natom)
 
+    def test_atoms_section_size_with_ghost(self):
+        """Check if size of Atoms section is equal to expected with a ghost atom present."""
+        fpath = os.path.join(__datadir__,
+                             "data/GAMESS/basicGAMESS-US2018/dvb_un_sp_ghost.out")
+        data = cclib.io.ccread(fpath)
+        writer = cclib.io.moldenwriter.MOLDEN(data)
+        writer.ghost = "GH"
+        # Check for the ghost atom, and make sure it has the right label.
+        self.assertIn("GH", writer._coords_from_ccdata(-1)[0])
+        # Check size of Atoms section.
+        self.assertEqual(len(writer._coords_from_ccdata(-1)), data.natom)
+
     def test_gto_section_size(self):
         """Check if size of GTO section is equal to expected."""
         fpath = os.path.join(__datadir__,
