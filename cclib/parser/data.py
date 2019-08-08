@@ -87,6 +87,7 @@ class ccData(object):
         vibirs -- IR intensities (array[1], km/mol)
         vibramans -- Raman intensities (array[1], A^4/Da)
         vibsyms -- symmetries of vibrations (list of strings)
+        zpve -- zero-point vibrational energy correction (float, hartree/particle)
     (1) The term 'array' refers to a numpy array
     (2) The number of dimensions of an array is given in square brackets
     (3) Python indexes arrays/lists starting at zero, so if homos==[10], then
@@ -159,7 +160,8 @@ class ccData(object):
        "vibfreqs":         Attribute(numpy.ndarray,    'frequencies',                 'vibrations'),
        "vibirs":           Attribute(numpy.ndarray,    'IR',                          'vibrations:intensities'),
        "vibramans":        Attribute(numpy.ndarray,    'raman',                       'vibrations:intensities'),
-       "vibsyms":          Attribute(list,             'vibration symmetry',          'vibrations')
+       "vibsyms":          Attribute(list,             'vibration symmetry',          'vibrations'
+       "zpve":             Attribute(float,            'zero-point correction',       'properties:energies')
     }
 
     # The name of all attributes can be generated from the dictionary above.
