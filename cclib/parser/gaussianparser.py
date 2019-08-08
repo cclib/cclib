@@ -1710,6 +1710,8 @@ class Gaussian(logfileparser.Logfile):
         #Sum of electronic and thermal Energies=              -563.636699
         #Sum of electronic and thermal Enthalpies=            -563.635755
         #Sum of electronic and thermal Free Energies=         -563.689037
+        if "Zero-point correction" in line:
+            self.set_attribute('zpve', float(line.split()[2]))
         if "Sum of electronic and thermal Enthalpies" in line:
             self.set_attribute('enthalpy', float(line.split()[6]))
         if "Sum of electronic and thermal Free Energies=" in line:
