@@ -12,9 +12,13 @@ import unittest
 
 sys.path.insert(1, "bridge")
 
-if sys.version_info[0] == 3 and sys.version_info[1] >= 4:
-    from .bridge.testbiopython import *
+if sys.version_info[0] == 3:
+    if sys.version_info[1] >= 6:
+        from .bridge.testpsi4 import *
+    if sys.version_info[1] >= 4:
+        from .bridge.testbiopython import *
 from .bridge.testopenbabel import *
+
 if sys.version_info[0] == 2:
     from .bridge.testpyquante import *
 

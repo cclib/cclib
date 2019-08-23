@@ -18,5 +18,8 @@ if find_package("openbabel"):
 if find_package("PyQuante"):
     from cclib.bridge.cclib2pyquante import makepyquante
 
+if find_package("psi4"):
+    from cclib.bridge.cclib2psi4 import makepsi4
+
 
 del find_package
