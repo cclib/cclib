@@ -4,10 +4,11 @@ python:
   - 3.4
   - 3.6
 addons:
-  apt:
-    packages:
-      - libopenbabel-dev
-      - swig
+    apt:
+      packages:
+        - swig
+    snaps:
+      - openbabel
 cache:
   pip: true
 
