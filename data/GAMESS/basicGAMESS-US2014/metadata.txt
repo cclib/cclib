@@ -1,7 +1,0 @@
-GAMESS VERSION = 22 FEB 2006 (R2)
-Debian Sarge
-Pentium 4
-Original input file taken from ../basicPCGAMESS/dvb_gopt_a.in
-After GeoOpt of this, the final coordinates were used as the input for a single point energy calculations (unrestricted, no sym) and an IR calculation. For the Raman calculation, the $GRAD and $HESS sections were cut from the PUNCH file of the IR calc and pasted into the Raman calc input file.
-
-To get aonames right, I did a calculation on a C atom with a big basis set, aug-cc-pCVQZ.
