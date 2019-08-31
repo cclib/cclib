@@ -7,12 +7,13 @@ addons:
     apt:
       packages:
         - swig
-    snaps:
-      - openbabel
 cache:
   pip: true
 
 before_install:
+  - sudo add-apt-repository "deb http://archive.ubuntu.com/ubuntu cosmic universe"
+  - sudo apt update
+  - sudo apt install libopenbabel-dev
   - pip install -r requirements.txt
 
 install:
