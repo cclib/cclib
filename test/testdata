@@ -18,7 +18,6 @@ Basis     DALTON      GenericBasisTest      basicDALTON-2015      dvb_sp_ks.out
 Basis     GAMESSUK    GenericBasisTest      basicGAMESS-UK7.0     dvb_sp_b.out
 Basis     GAMESSUK    GenericBasisTest      basicGAMESS-UK8.0     dvb_sp_hf.out
 Basis     GAMESSUK    GenericBasisTest      basicGAMESS-UK8.0     dvb_sp_ks.out
-Basis     GAMESS      GenericBasisTest      basicGAMESS-US2014    dvb_sp.out
 Basis     GAMESS      GenericBasisTest      basicGAMESS-US2017    dvb_sp.out
 Basis     GAMESS      GenericBasisTest      basicGAMESS-US2018    dvb_sp.out
 Basis     GAMESS      GenericBasisTest      basicFirefly8.0       dvb_sp.out
@@ -43,7 +42,6 @@ Basis     QChem       GenericBasisTest      basicQChem5.1         dvb_sp.out
 Basis     DALTON      DALTONBigBasisTest    basicDALTON-2013      C_bigbasis.out
 Basis     DALTON      DALTONBigBasisTest    basicDALTON-2015      C_bigbasis.out
 Basis     GAMESS      GenericBigBasisTest   basicFirefly8.0       C_bigbasis.out
-Basis     GAMESS      GenericBigBasisTest   basicGAMESS-US2014    C_bigbasis.out
 Basis     GAMESS      GenericBigBasisTest   basicGAMESS-US2017    C_bigbasis.out
 Basis     GAMESS      GenericBigBasisTest   basicGAMESS-US2018    C_bigbasis.out
 Basis     Gaussian    GaussianBigBasisTest  basicGaussian09       C_bigbasis.out
@@ -65,13 +63,10 @@ BOMD      QChem       GenericBOMDTest       basicQChem5.1         dvb_bomd.out
 
 CC        DALTON      GenericCCTest         basicDALTON-2013      water_ccsdt.out
 CC        DALTON      GenericCCTest         basicDALTON-2015      water_ccsdt.out
-CC        GAMESS      GenericCCTest         basicGAMESS-US2014    water_ccd.out
 CC        GAMESS      GenericCCTest         basicGAMESS-US2017    water_ccd.out
 CC        GAMESS      GenericCCTest         basicGAMESS-US2018    water_ccd.out
-CC        GAMESS      GenericCCTest         basicGAMESS-US2014    water_ccsd.out
 CC        GAMESS      GenericCCTest         basicGAMESS-US2017    water_ccsd.out
 CC        GAMESS      GenericCCTest         basicGAMESS-US2018    water_ccsd.out
-CC        GAMESS      GenericCCTest         basicGAMESS-US2014    water_ccsd(t).out
 CC        GAMESS      GenericCCTest         basicGAMESS-US2017    water_ccsd(t).out
 CC        GAMESS      GenericCCTest         basicGAMESS-US2018    water_ccsd(t).out
 CC        Gaussian    GenericCCTest         basicGaussian09       water_ccd.log
@@ -99,7 +94,6 @@ CC        QChem       GenericCCTest         basicQChem5.1         water_ccsd.out
 CC        QChem       GenericCCTest         basicQChem5.1         water_ccsd(t).out
 CC        Turbomole   GenericCCTest         basicTurbomole7.2     water_ccsd/basis      water_ccsd/control      water_ccsd/mos      water_ccsd/dscf.out      water_ccsd/ccsdf12.out
 
-CI        GAMESS      GAMESSCISTest         basicGAMESS-US2014    water_cis_saps.out
 CI        GAMESS      GAMESSCISTest         basicGAMESS-US2017    water_cis_saps.out
 CI        GAMESS      GAMESSCISTest         basicGAMESS-US2018    water_cis_saps.out
 CI        Gaussian    GaussianCISTest       basicGaussian09       water_cis.log
@@ -113,7 +107,6 @@ Core      ADF         ADFCoreTest           basicADF2007.01       MoOCl4-sp.adfo
 Core      ADF         ADFCoreTest           basicADF2013.01       MoOCl4-sp.adfout
 Core      GAMESSUK    GenericCoreTest       basicGAMESS-UK7.0     MoOCl4-sp.out
 Core      GAMESSUK    GenericCoreTest       basicGAMESS-UK8.0     MoOCl4-sp.out
-Core      GAMESS      GenericCoreTest       basicGAMESS-US2014    MoOCl4-sp.out
 Core      GAMESS      GenericCoreTest       basicGAMESS-US2017    MoOCl4-sp.out
 Core      GAMESS      GenericCoreTest       basicGAMESS-US2018    MoOCl4-sp.out
 Core      Gaussian    GenericCoreTest       basicGaussian09       Mo4OCl4-sp.log
@@ -133,7 +126,6 @@ GeoOpt    GAMESSUK    GenericGeoOptTest     basicGAMESS-UK7.0     dvb_gopt_d.out
 GeoOpt    GAMESSUK    GenericGeoOptTest     basicGAMESS-UK8.0     dvb_gopt_hf.out
 GeoOpt    GAMESSUK    GenericGeoOptTest     basicGAMESS-UK8.0     dvb_gopt_ks.out
 GeoOpt    GAMESS      GenericGeoOptTest     basicFirefly8.0       dvb_gopt_a.out
-GeoOpt    GAMESS      GenericGeoOptTest     basicGAMESS-US2014    dvb_gopt_a.out
 GeoOpt    GAMESS      GenericGeoOptTest     basicGAMESS-US2017    dvb_gopt_a.out
 GeoOpt    GAMESS      GenericGeoOptTest     basicGAMESS-US2018    dvb_gopt_a.out
 GeoOpt    Gaussian    GenericGeoOptTest     basicGaussian09       dvb_gopt.out
@@ -162,7 +154,6 @@ MP        GAMESSUK    GenericMP2Test        basicGAMESS-UK7.0     water_mp2.out
 MP        GAMESSUK    GenericMP3Test        basicGAMESS-UK7.0     water_mp3.out
 MP        GAMESSUK    GenericMP2Test        basicGAMESS-UK8.0     water_mp2.out
 MP        GAMESSUK    GenericMP3Test        basicGAMESS-UK8.0     water_mp3.out
-MP        GAMESS      GenericMP2Test        basicGAMESS-US2014    water_mp2.out
 MP        GAMESS      GenericMP2Test        basicGAMESS-US2017    water_mp2.out
 MP        GAMESS      GenericMP2Test        basicGAMESS-US2018    water_mp2.out
 MP        Gaussian    GaussianMP2Test       basicGaussian09       water_mp2.log
@@ -227,7 +218,6 @@ SP        GAMESSUK    GenericSPTest         basicGAMESS-UK7.0           dvb_sp_b
 SP        GAMESSUK    GenericSPTest         basicGAMESS-UK8.0           dvb_sp_hf.out
 SP        GAMESSUK    GenericSPTest         basicGAMESS-UK8.0           dvb_sp_ks.out
 SP        GAMESS      GenericSPTest         basicFirefly8.0             dvb_sp.out
-SP        GAMESS      GenericSPTest         basicGAMESS-US2014          dvb_sp.out
 SP        GAMESS      GenericSPTest         basicGAMESS-US2017          dvb_sp.out
 SP        GAMESS      GenericSPTest         basicGAMESS-US2018          dvb_sp.out
 SP        Gaussian    GaussianSPTest        basicGaussian09             dvb_sp.out
@@ -260,7 +250,6 @@ SPun      DALTON      GenericROSPTest       basicDALTON-2015      dvb_sp_un_ks.o
 SPun      GAMESSUK    GamessUK70SPunTest    basicGAMESS-UK7.0     dvb_un_sp_b.out
 SPun      GAMESSUK    GamessUK80SPunTest    basicGAMESS-UK8.0     dvb_un_sp_hf.out
 SPun      GAMESSUK    GamessUK80SPunTest    basicGAMESS-UK8.0     dvb_un_sp_ks.out
-SPun      GAMESS      GenericSPunTest       basicGAMESS-US2014    dvb_un_sp.out
 SPun      GAMESS      GenericSPunTest       basicGAMESS-US2017    dvb_un_sp.out
 SPun      GAMESS      GenericSPunTest       basicGAMESS-US2018    dvb_un_sp.out
 SPun      GAMESS      GenericSPunTest       basicFirefly8.0       dvb_un_sp.out
@@ -290,10 +279,8 @@ TD        DALTON      DALTONTDTest          basicDALTON-2013      dvb_td.out
 TD        DALTON      DALTONTDTest          basicDALTON-2015      dvb_td.out
 TD        GAMESS      GenericTDTest         basicFirefly8.0       dvb_td.out
 TD        GAMESS      GenericTDDFTtrpTest   basicFirefly8.0       dvb_td_trplet.out
-TD        GAMESS      GAMESSUSTDDFTTest     basicGAMESS-US2014    dvb_td.out
 TD        GAMESS      GAMESSUSTDDFTTest     basicGAMESS-US2017    dvb_td.out
 TD        GAMESS      GAMESSUSTDDFTTest     basicGAMESS-US2018    dvb_td.out
-TD        GAMESS      GenericTDDFTtrpTest   basicGAMESS-US2014    dvb_td_trplet.out
 TD        GAMESS      GenericTDDFTtrpTest   basicGAMESS-US2017    dvb_td_trplet.out
 TD        GAMESS      GenericTDDFTtrpTest   basicGAMESS-US2018    dvb_td_trplet.out
 TD        Gaussian    GaussianTDDFTTest     basicGaussian09       dvb_td.out
@@ -316,7 +303,6 @@ vib       DALTON      GenericIRTest         basicDALTON-2015      dvb_ir.out
 vib       GAMESSUK    GenericIRTest         basicGAMESS-UK7.0     dvb_ir.out
 vib       GAMESSUK    GenericIRTest         basicGAMESS-UK8.0     dvb_ir.out
 vib       GAMESS      FireflyIRTest         basicFirefly8.0       dvb_ir.out
-vib       GAMESS      GamessIRTest          basicGAMESS-US2014    dvb_ir.out
 vib       GAMESS      GamessIRTest          basicGAMESS-US2017    dvb_ir.out
 vib       GAMESS      GamessIRTest          basicGAMESS-US2018    dvb_ir.out
 vib       Gaussian    GaussianIRTest        basicGaussian09       dvb_ir.out
@@ -333,7 +319,6 @@ vib       QChem       QChemIRTest           basicQChem4.2         dvb_ir.out
 vib       QChem       QChemIRTest           basicQChem5.1         dvb_ir.out
 vib       Turbomole   GenericIRTest         basicTurbomole5.9     dvb_ir/basis            dvb_ir/control            dvb_ir/mos            dvb_ir/aoforce.out
 
-vib       GAMESS      GenericIRimgTest      basicGAMESS-US2014    nh3_ts_ir.out
 vib       GAMESS      GenericIRimgTest      basicGAMESS-US2017    nh3_ts_ir.out
 vib       GAMESS      GenericIRimgTest      basicGAMESS-US2018    nh3_ts_ir.out
 

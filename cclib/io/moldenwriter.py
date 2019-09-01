@@ -244,6 +244,8 @@ class MoldenReformatter(object):
 
             # Check for [Title] section.
             if '[title]' in line.lower():
+                # skip the title
+                line = next(filelines)
                 line = next(filelines)
 
             # Exclude SCFCONV section until issue #390 is resolved.
