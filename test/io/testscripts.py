@@ -111,7 +111,7 @@ class ccframeTest(unittest.TestCase):
     def test_main_without_pandas(self):
         """Does ccframe fail if Pandas can't be imported?"""
         with six.assertRaisesRegex(
-            ImportError, "You must install `pandas` to use this function"
+            self, ImportError, "You must install `pandas` to use this function"
         ):
             cclib.scripts.ccframe.main()
 
