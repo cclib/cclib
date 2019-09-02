@@ -11,7 +11,7 @@ from __future__ import print_function
 import os
 import sys
 import unittest
-
+import six
 from six import add_move, MovedModule
 add_move(MovedModule('mock', 'mock', 'unittest.mock'))
 from six.moves import mock
@@ -110,16 +110,10 @@ class ccframeTest(unittest.TestCase):
     @mock.patch("cclib.io.ccio._has_pandas", False)
     def test_main_without_pandas(self):
         """Does ccframe fail if Pandas can't be imported?"""
-        if sys.version_info.major == 2:
-            with self.assertRaisesRegexp(
-                ImportError, "You must install `pandas` to use this function"
-            ):
-                cclib.scripts.ccframe.main()
-        else:
-            with self.assertRaisesRegex(
-                ImportError, "You must install `pandas` to use this function"
-            ):
-                cclib.scripts.ccframe.main()
+        with six.assertRaisesRegex(
+            ImportError, "You must install `pandas` to use this function"
+        ):
+            cclib.scripts.ccframe.main()
 
     @mock.patch(
         "cclib.scripts.ccframe.sys.argv",
