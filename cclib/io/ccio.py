@@ -13,6 +13,7 @@ import sys
 import re
 import pathlib
 from tempfile import NamedTemporaryFile
+from typing import Optional
 from urllib.request import urlopen
 from urllib.error import URLError
 
@@ -119,7 +120,7 @@ class UnknownOutputFormatError(Exception):
     """Raised when an unknown output format is encountered."""
 
 
-def guess_filetype(inputfile):
+def guess_filetype(inputfile) -> Optional[logfileparser.Logfile]:
     """Try to guess the filetype by searching for trigger strings."""
     if not inputfile:
         return None

@@ -30,7 +30,7 @@ pprint = partial(pprint, width=120, compact=True)
 numpy.set_printoptions(linewidth=120)
 
 
-def ccget():
+def ccget() -> None:
     """Parse files with cclib based on command line arguments."""
 
     import argparse

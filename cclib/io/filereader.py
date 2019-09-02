@@ -13,7 +13,7 @@ from abc import ABC, abstractmethod
 class Reader(ABC):
     """Abstract class for reader objects."""
 
-    def __init__(self, source, *args, **kwargs):
+    def __init__(self, source: str, *args, **kwargs) -> None:
         """Initialize the Reader object.
 
         This should be called by a subclass in its own __init__ method.
@@ -26,7 +26,7 @@ class Reader(ABC):
         else:
             raise ValueError
 
-    def parse(self):
+    def parse(self) -> None:
         """Read the raw contents of the source into the Reader."""
         # TODO This cannot currently handle streams.
         with open(self.filename) as handle:
@@ -35,5 +35,5 @@ class Reader(ABC):
         return None
 
     @abstractmethod
-    def generate_repr(self):
+    def generate_repr(self) -> None:
         """Convert the raw contents of the source into the internal representation."""

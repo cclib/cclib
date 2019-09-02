@@ -8,6 +8,7 @@
 """A reader for chemical JSON (CJSON) files."""
 
 import json
+from typing import Mapping
 
 from cclib.io import filereader
 from cclib.parser.data import ccData
@@ -16,12 +17,12 @@ from cclib.parser.data import ccData
 class CJSON(filereader.Reader):
     """A reader for chemical JSON (CJSON) log files."""
 
-    def __init__(self, source, *args, **kwargs):
+    def __init__(self, source, *args, **kwargs) -> None:
         super().__init__(source, *args, **kwargs)
 
         self.representation = dict()
 
-    def parse(self):
+    def parse(self) -> Mapping:
         super().parse()
 
         json_data = json.loads(self.filecontents)
@@ -30,7 +31,7 @@ class CJSON(filereader.Reader):
 
         return self.representation
 
-    def generate_repr(self, json_data):
+    def generate_repr(self, json_data) -> None:
         for k, v in ccData._attributes.items():
             json_key = v.json_key
             attribute_path = v.attribute_path.split(":")

@@ -68,7 +68,7 @@ def gettestdata():
     return testdata
 
 
-def get_program_dir(parser_name):
+def get_program_dir(parser_name: str) -> str:
     """Return a directory name given a parser name.
 
     In at least one case (GAMESS-UK) the directory is named differently.
@@ -154,7 +154,7 @@ class DataSuite:
         self.alltests = []
         self.perpackage = {p: [0, 0, 0, 0] for p in self.parsers}
 
-    def testall(self):
+    def testall(self) -> List[str]:
         """Run all unittests in all modules.
 
         Run unit tests for all or a subset of parsers and modules. Arguments:

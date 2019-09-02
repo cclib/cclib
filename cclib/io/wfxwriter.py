@@ -8,6 +8,8 @@
 """A writer for wfx format files."""
 
 import os.path
+from typing import List
+
 import numpy
 
 from cclib.io import filewriter
@@ -95,7 +97,7 @@ class WFXWriter(filewriter.Writer):
     required_attrs = ('natom', 'atomcoords', 'atomnos', 'gbasis', 'charge',
                        'homos', 'mult', 'mocoeffs')
 
-    def _title(self):
+    def _title(self) -> str:
         """Section: Title
         Return filename without extension to be used as title."""
         title = "Written by cclib."
@@ -103,17 +105,17 @@ class WFXWriter(filewriter.Writer):
             return f"{os.path.basename(os.path.splitext(self.jobfilename)[0])}. {title}"
         return title
 
-    def _keywords(self):
+    def _keywords(self) -> str:
         """Section: Keywords.
         Return one of GTO, GIAO, CSGT keyword."""
         # Currently only GTO is supported.
         return 'GTO'
 
-    def _no_of_nuclei(self):
+    def _no_of_nuclei(self) -> int:
         """Section: Number of Nuclei."""
         return self.ccdata.natom
 
-    def _no_of_prims(self):
+    def _no_of_prims(self) -> int:
         """Section: Number of Primitives."""
         nprims = 0
         for atom in self.ccdata.gbasis:
@@ -121,11 +123,11 @@ class WFXWriter(filewriter.Writer):
                 nprims += ORBITAL_COUNT[prims[0]] * len(prims[1])
         return nprims
 
-    def _no_of_mos(self):
+    def _no_of_mos(self) -> int:
         """Section: Number of Occupied Molecular Orbitals."""
         return int(max(self.ccdata.homos)) + 1
 
-    def _no_of_perturbations(self):
+    def _no_of_perturbations(self) -> int:
         """Section: Number of Perturbation.
 
         This is usually zero.  For GIAO it should be 3
@@ -139,7 +141,7 @@ class WFXWriter(filewriter.Writer):
             return 6
         return 0
 
-    def _nuclear_names(self):
+    def _nuclear_names(self) -> List[str]:
         """Section: Nuclear Names.
         Names of nuclei present in the molecule.
 
@@ -150,11 +152,11 @@ class WFXWriter(filewriter.Writer):
         return [self.pt.element[Z]+str(i) for i, Z in
                 enumerate(self.ccdata.atomnos, start=1)]
 
-    def _atomic_nos(self):
+    def _atomic_nos(self) -> List[str]:
         """Section: Atomic Numbers."""
         return [str(Z) for Z in self.ccdata.atomnos]
 
-    def _nuclear_charges(self):
+    def _nuclear_charges(self) -> List[str]:
         """Section: Nuclear Charges."""
         nuclear_charge = [WFX_FIELD_FMT % Z for Z in self.ccdata.atomnos]
         if hasattr(self.ccdata, "coreelectrons"):
@@ -440,7 +442,7 @@ class WFXWriter(filewriter.Writer):
                                     (mocoeffs, 5))
         return mocoeffs_section
 
-    def _energy(self):
+    def _energy(self) -> str:
         """Section: Energy = T + Vne + Vee + Vnn.
         The total energy of the molecule.
         HF and KSDFT: SCF energy        (scfenergies),
@@ -458,12 +460,12 @@ class WFXWriter(filewriter.Writer):
             raise filewriter.MissingAttributeError("scfenergies/mpenergies/ccenergies")
         return WFX_FIELD_FMT % (utils.convertor(energy, "eV", "hartree"))
 
-    def _virial_ratio(self):
+    def _virial_ratio(self) -> str:
         """Ratio of kinetic energy to potential energy."""
         # Hardcoding expected value for Required Field.
         return WFX_FIELD_FMT % (2.0)
 
-    def generate_repr(self):
+    def generate_repr(self) -> str:
         """Generate the wfx representation of the logfile data."""
 
         # sections:(Function returning data for section,

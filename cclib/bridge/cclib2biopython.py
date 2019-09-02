@@ -6,6 +6,10 @@
 # the terms of the BSD 3-Clause License.
 """Bridge for using cclib data in biopython (http://biopython.org)."""
 
+from typing import List
+
+import numpy as np
+
 from cclib.parser.utils import PeriodicTable
 from cclib.parser.utils import find_package
 
@@ -14,7 +18,7 @@ if _found_biopython:
     from Bio.PDB.Atom import Atom
 
 
-def makebiopython(atomcoords, atomnos):
+def makebiopython(atomcoords: np.ndarray, atomnos: np.ndarray) -> List["Atom"]:
     """Create a list of BioPython Atoms.
 
     This creates a list of BioPython Atoms suitable for use by

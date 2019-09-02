@@ -10,12 +10,13 @@
 import importlib
 import re
 from itertools import accumulate
+from typing import Iterable, List, Sequence, TypeVar
 
 import numpy
 import periodictable
 
 
-def find_package(package):
+def find_package(package: str) -> bool:
     """Check if a package exists without importing it.
 
     Derived from https://stackoverflow.com/a/14050282
@@ -29,7 +30,7 @@ if _found_scipy:
     import scipy.spatial
 
 
-def symmetrize(m, use_triangle='lower'):
+def symmetrize(m: np.ndarray, use_triangle: str = 'lower') -> np.ndarray:
     """Symmetrize a square NumPy array by reflecting one triangular
     section across the diagonal to the other.
     """
@@ -59,7 +60,7 @@ def symmetrize(m, use_triangle='lower'):
 _BUILTIN_FLOAT = float
 
 
-def float(number):
+def float(number: str) -> float:
     """Convert a string to a float.
 
     This method should perform certain checks that are specific to cclib,
@@ -74,7 +75,7 @@ def float(number):
     return _BUILTIN_FLOAT(number.replace("D", "E"))
 
 
-def convertor(value, fromunits, tounits):
+def convertor(value: float, fromunits: str, tounits: str) -> float:
     """Convert from one set of units to another.
 
     Sources:
@@ -233,11 +234,11 @@ class WidthSplitter:
     widths.
     """
 
-    def __init__(self, widths):
+    def __init__(self, widths: Sequence[int]) -> None:
         self.start_indices = [0] + list(accumulate(widths))[:-1]
         self.end_indices = list(accumulate(widths))
 
-    def split(self, line, truncate=True):
+    def split(self, line: str, truncate: bool = True) -> List[str]:
         """Split the given line using the field widths passed in on class
         initialization.
         """

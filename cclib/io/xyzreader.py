@@ -15,19 +15,19 @@ from cclib.parser.utils import PeriodicTable
 class XYZ(filereader.Reader):
     """A reader for XYZ (Cartesian coordinate) files."""
 
-    def __init__(self, source, *args, **kwargs):
+    def __init__(self, source, *args, **kwargs) -> None:
         super().__init__(source, *args, **kwargs)
 
         self.pt = PeriodicTable()
 
-    def parse(self):
+    def parse(self) -> ccData:
         super().parse()
 
         self.generate_repr()
 
         return self.data
 
-    def generate_repr(self):
+    def generate_repr(self) -> None:
         """Convert the raw contents of the source into the internal representation."""
 
         assert hasattr(self, 'filecontents')

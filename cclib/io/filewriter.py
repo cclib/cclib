@@ -10,6 +10,7 @@
 import logging
 from abc import ABC, abstractmethod
 from collections.abc import Iterable
+from typing import List, Tuple
 
 import numpy
 
@@ -79,7 +80,7 @@ class Writer(ABC):
         if len(getattr(self.ccdata, 'moments', [])) > 1:
             return numpy.linalg.norm(self.ccdata.moments[1])
 
-    def _check_required_attributes(self):
+    def _check_required_attributes(self) -> None:
         """Check if required attributes are present in ccdata."""
         missing = [x for x in self.required_attrs
                    if not hasattr(self.ccdata, x)]
@@ -108,7 +109,7 @@ class Writer(ABC):
             obmol.SetTitle(self.jobfilename)
         return (obmol, pb.Molecule(obmol))
 
-    def _make_bond_connectivity_from_openbabel(self, obmol):
+    def _make_bond_connectivity_from_openbabel(self, obmol) -> List[Tuple[int, int, int]]:
         """Based upon the Open Babel/Pybel molecule, create a list of tuples
         to represent bonding information, where the three integers are
         the index of the starting atom, the index of the ending atom,
@@ -121,7 +122,7 @@ class Writer(ABC):
                                         obbond.GetBondOrder()))
         return bond_connectivities
 
-    def _fix_indices(self):
+    def _fix_indices(self) -> None:
         """Clean up the index container type and remove zero-based indices to
         prevent duplicate structures and incorrect ordering when
         indices are later sorted.

@@ -10,6 +10,9 @@
 import logging
 import sys
 
+from cclib.parser.data import ccData
+from cclib.progress import Progress
+
 class MissingAttributeError(Exception):
     pass
 
@@ -33,7 +36,7 @@ class Method:
     All the modules containing methods should be importable.
     """
     required_attrs = ()
-    def __init__(self, data, progress=None, loglevel=logging.INFO, logname="Log"):
+    def __init__(self, data: ccData, progress: Optional[Progress] = None, loglevel: int = logging.INFO, logname: str = "Log") -> None:
         """Initialise the Logfile object.
 
         This constructor is typically called by the constructor of a subclass.
@@ -51,7 +54,7 @@ class Method:
         handler.setFormatter(logging.Formatter(self.logformat))
         self.logger.addHandler(handler)
 
-    def _check_required_attributes(self):
+    def _check_required_attributes(self) -> None:
         """Check if required attributes are present in data."""
         missing = [x for x in self.required_attrs
                     if not hasattr(self.data, x)]

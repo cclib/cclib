@@ -6,9 +6,12 @@
 # the terms of the BSD 3-Clause License.
 
 import sys
+from typing import Type
+
+from cclib.progress.textprogress import TextProgress
+Progress = Type[TextProgress]
 
 if 'PyQt4' in list(sys.modules.keys()):
     from cclib.progress.qt4progress import Qt4Progress
-
-from cclib.progress.textprogress import TextProgress
-
+    from typing import Union
+    Progress = Union[Type[TextProgress], Type[Qt4Progress]]
