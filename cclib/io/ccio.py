@@ -78,7 +78,7 @@ URL_PATTERN = re.compile(
 
 )
 
-# Parser choice is triggered by certain phrases occuring the logfile. Where these
+# Parser choice is triggered by certain phrases occurring the logfile. Where these
 # strings are unique, we can set the parser and break. In other cases, the situation
 # is a little but more complicated. Here are the exceptions:
 #   1. The GAMESS trigger also works for GAMESS-UK files, so we can't break
@@ -295,7 +295,7 @@ def ccopen(source, *args, **kwargs):
     # could be guessed. Need to make sure the input file is closed before creating
     # an instance, because parsers will handle opening/closing on their own.
     if filetype:
-        # We're going to clase and reopen below anyway, so this is just to avoid
+        # We're going to close and reopen below anyway, so this is just to avoid
         # the missing seek method for fileinput.FileInput. In the long run
         # we need to refactor to support for various input types in a more
         # centralized fashion.

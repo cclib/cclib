@@ -31,7 +31,7 @@ class MOLDENTest(unittest.TestCase):
             data = cclib.io.ccread(fpath)
             delattr(data, attr)
 
-            # Molden files cannot be wriiten if required attrs are missing.
+            # Molden files cannot be written if required attrs are missing.
             with self.assertRaises(MissingAttributeError):
                 cclib.io.moldenwriter.MOLDEN(data)
 
@@ -41,6 +41,18 @@ class MOLDENTest(unittest.TestCase):
                              "data/GAMESS/basicGAMESS-US2018/dvb_un_sp.out")
         data = cclib.io.ccread(fpath)
         writer = cclib.io.moldenwriter.MOLDEN(data)
+        # Check size of Atoms section.
+        self.assertEqual(len(writer._coords_from_ccdata(-1)), data.natom)
+
+    def test_atoms_section_size_with_ghost(self):
+        """Check if size of Atoms section is equal to expected with a ghost atom present."""
+        fpath = os.path.join(__datadir__,
+                             "data/GAMESS/basicGAMESS-US2018/dvb_un_sp_ghost.out")
+        data = cclib.io.ccread(fpath)
+        writer = cclib.io.moldenwriter.MOLDEN(data)
+        writer.ghost = "GH"
+        # Check for the ghost atom, and make sure it has the right label.
+        self.assertIn("GH", writer._coords_from_ccdata(-1)[0])
         # Check size of Atoms section.
         self.assertEqual(len(writer._coords_from_ccdata(-1)), data.natom)
 

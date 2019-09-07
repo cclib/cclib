@@ -43,6 +43,12 @@ class MOLDEN(filewriter.Writer):
     def _coords_from_ccdata(self, index):
         """Create [Atoms] section using geometry at the given index."""
         elements = [self.pt.element[Z] for Z in self.ccdata.atomnos]
+        if self.ghost is not None:
+            elements = [self.ghost if e is None else e for e in elements]
+        elif None in elements:
+            raise ValueError('It seems that there is at least one ghost atom ' +
+                             'in these elements. Please use the ghost flag to'+
+                             ' specify a label for the ghost atoms.')
         atomcoords = self.ccdata.atomcoords[index]
         atomnos = self.ccdata.atomnos
         nos = range(self.ccdata.natom)
