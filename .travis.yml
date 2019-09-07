@@ -15,7 +15,6 @@ before_install:
   - sudo apt update
   - sudo apt install libopenbabel-dev
   - pip install -r requirements.txt
-  - pip install pytest-faulthandler
 
 install:
   - pip install .
