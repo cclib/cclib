@@ -270,6 +270,7 @@ Gaussian/Gaussian09/stopiter_gaussian.out
 Gaussian/Gaussian09/trithiolane_polar.log
 Gaussian/Gaussian09/water_gaussian.inp.log
 Gaussian/Gaussian16/naturalspinorbitals_parsing.log
+Gaussian/Gaussian16/output.txt.issue754.log
 Gaussian/Gaussian98/C_bigmult.log
 Gaussian/Gaussian98/NIST_CCCBDB_1himidaz_m21b0.out
 Gaussian/Gaussian98/NIST_CCCBDB_1himidaz_m23b6.out
