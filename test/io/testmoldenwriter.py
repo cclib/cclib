@@ -25,7 +25,7 @@ class MOLDENTest(unittest.TestCase):
     def test_missing_attribute_error(self):
         """Check if MissingAttributeError is raised as expected."""
         fpath = os.path.join(__datadir__,
-                             "data/GAMESS/basicGAMESS-US2014/dvb_un_sp.out")
+                             "data/GAMESS/basicGAMESS-US2018/dvb_un_sp.out")
         required_attrs = ['atomcoords', 'atomnos', 'natom']
         for attr in required_attrs:
             data = cclib.io.ccread(fpath)
@@ -38,7 +38,7 @@ class MOLDENTest(unittest.TestCase):
     def test_atoms_section_size(self):
         """Check if size of Atoms section is equal to expected."""
         fpath = os.path.join(__datadir__,
-                             "data/GAMESS/basicGAMESS-US2014/dvb_un_sp.out")
+                             "data/GAMESS/basicGAMESS-US2018/dvb_un_sp.out")
         data = cclib.io.ccread(fpath)
         writer = cclib.io.moldenwriter.MOLDEN(data)
         # Check size of Atoms section.
@@ -47,7 +47,7 @@ class MOLDENTest(unittest.TestCase):
     def test_gto_section_size(self):
         """Check if size of GTO section is equal to expected."""
         fpath = os.path.join(__datadir__,
-                             "data/GAMESS/basicGAMESS-US2014/dvb_un_sp.out")
+                             "data/GAMESS/basicGAMESS-US2018/dvb_un_sp.out")
         data = cclib.io.ccread(fpath)
         writer = cclib.io.moldenwriter.MOLDEN(data)
         # Check size of GTO section.
@@ -63,7 +63,7 @@ class MOLDENTest(unittest.TestCase):
     def test_mo_section_size(self):
         """Check if size of MO section is equal to expected."""
         fpath = os.path.join(__datadir__,
-                             "data/GAMESS/basicGAMESS-US2014/dvb_un_sp.out")
+                             "data/GAMESS/basicGAMESS-US2018/dvb_un_sp.out")
         data = cclib.io.ccread(fpath)
         writer = cclib.io.moldenwriter.MOLDEN(data)
         # Check size of MO section.
@@ -96,7 +96,7 @@ class MOLDENTest(unittest.TestCase):
         filenames = ['dvb_un_sp', 'C_bigbasis', 'water_mp2']
         for fn in filenames:
             fpath = os.path.join(__datadir__,
-                                 "data/GAMESS/basicGAMESS-US2014/"+fn+".out")
+                                 "data/GAMESS/basicGAMESS-US2018/"+fn+".out")
             data = cclib.io.ccread(fpath)
             cclib_out = cclib.io.moldenwriter.MOLDEN(data).generate_repr()
             # Reformat cclib's output to remove extra spaces.
