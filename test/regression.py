@@ -1160,6 +1160,11 @@ def testORCA_ORCA4_1_orca_from_issue_736_out(logfile):
     assert abs(logfile.data.scfvalues[14][0][1] - 537) < 1.0, logfile.data.scfvalues[14][0]
 
 
+def testORCA_ORCA4_1_porphine_out(logfile):
+    """ORCA optimization with multiple TD-DFT gradients and absorption spectra."""
+    assert len(logfile.data.etenergies) == 1
+
+
 # PSI 3 #
 
 

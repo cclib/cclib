@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2017, the cclib development team
+# Copyright (c) 2019, the cclib development team
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
@@ -766,10 +766,9 @@ class ORCA(logfileparser.Logfile):
             else:
                 sym = "Not specified"
 
-            if not hasattr(self, "etenergies"):
-                self.etsecs = []
-                self.etenergies = []
-                self.etsyms = []
+            etsecs = []
+            etenergies = []
+            etsyms = []
 
             lookup = {'a': 0, 'b': 1}
             line = next(inputfile)
@@ -778,8 +777,8 @@ class ORCA(logfileparser.Logfile):
             # Contains STATE or is blank
             while line.find("STATE") >= 0:
                 broken = line.split()
-                self.etenergies.append(float(broken[-2]))
-                self.etsyms.append(sym)
+                etenergies.append(float(broken[-2]))
+                etsyms.append(sym)
                 line = next(inputfile)
                 sec = []
                 # Contains SEC or is blank
@@ -797,8 +796,12 @@ class ORCA(logfileparser.Logfile):
                         contrib = numpy.nan
                     sec.append([start, end, contrib])
                     line = next(inputfile)
-                self.etsecs.append(sec)
+                etsecs.append(sec)
                 line = next(inputfile)
+
+            self.extend_attribute('etenergies', etenergies)
+            self.extend_attribute('etsecs', etsecs)
+            self.extend_attribute('etsyms', etsyms)
 
         # Parse the various absorption spectra for TDDFT and ROCIS.
         if 'ABSORPTION SPECTRUM' in line or 'ELECTRIC DIPOLE' in line:
@@ -1013,7 +1016,7 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
                 msg = "Modes corresponding to rotations/translations may be non-zero."
                 if self.num_modes == 3*self.natom - 5:
                     msg += '\n You can ignore this if the molecule is linear.'
-            self.vibfreqs = vibfreqs[self.first_mode:]
+            self.set_attribute('vibfreqs', vibfreqs[self.first_mode:])
 
         # NORMAL MODES
         # ------------
@@ -1028,18 +1031,18 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
         #       2       0.000000   0.000000   0.000000   0.000000   0.000000   0.000000
         # ...
         if line[:12] == "NORMAL MODES":
-            vibdisps = numpy.zeros((3 * self.natom, self.natom, 3), "d")
+            all_vibdisps = numpy.zeros((3 * self.natom, self.natom, 3), "d")
 
             self.skip_lines(inputfile, ['d', 'b', 'text', 'text', 'text', 'b'])
 
             for mode in range(0, 3 * self.natom, 6):
                 header = next(inputfile)
                 for atom in range(self.natom):
-                    vibdisps[mode:mode + 6, atom, 0] = next(inputfile).split()[1:]
-                    vibdisps[mode:mode + 6, atom, 1] = next(inputfile).split()[1:]
-                    vibdisps[mode:mode + 6, atom, 2] = next(inputfile).split()[1:]
+                    all_vibdisps[mode:mode + 6, atom, 0] = next(inputfile).split()[1:]
+                    all_vibdisps[mode:mode + 6, atom, 1] = next(inputfile).split()[1:]
+                    all_vibdisps[mode:mode + 6, atom, 2] = next(inputfile).split()[1:]
 
-            self.vibdisps = vibdisps[self.first_mode:]
+            self.set_attribute('vibdisps', all_vibdisps[self.first_mode:])
 
         # -----------
         # IR SPECTRUM
@@ -1053,15 +1056,15 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
         if line[:11] == "IR SPECTRUM":
             self.skip_lines(inputfile, ['d', 'b', 'header', 'd'])
 
-            self.vibirs = numpy.zeros((3 * self.natom,), "d")
+            all_vibirs = numpy.zeros((3 * self.natom,), "d")
 
             line = next(inputfile)
             while len(line) > 2:
                 num = int(line[0:4])
-                self.vibirs[num] = float(line.split()[2])
+                all_vibirs[num] = float(line.split()[2])
                 line = next(inputfile)
 
-            self.vibirs = self.vibirs[self.first_mode:]
+            self.set_attribute('vibirs', all_vibirs[self.first_mode:])
 
         # --------------
         # RAMAN SPECTRUM
@@ -1075,15 +1078,15 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
         if line[:14] == "RAMAN SPECTRUM":
             self.skip_lines(inputfile, ['d', 'b', 'header', 'd'])
 
-            self.vibramans = numpy.zeros(3 * self.natom)
+            all_vibramans = numpy.zeros(3 * self.natom)
 
             line = next(inputfile)
             while len(line) > 2:
                 num = int(line[0:4])
-                self.vibramans[num] = float(line.split()[2])
+                all_vibramans[num] = float(line.split()[2])
                 line = next(inputfile)
 
-            self.vibramans = self.vibramans[self.first_mode:]
+            self.set_attribute('vibramans', all_vibramans[self.first_mode:])
 
 
         # ORCA will print atomic charges along with the spin populations,
@@ -1146,13 +1149,13 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
             dipole = utils.convertor(dipole, "ebohr", "Debye")
 
             if not hasattr(self, 'moments'):
-                self.moments = [reference, dipole]
+                self.set_attribute('moments', [reference, dipole])
             else:
                 try:
                     assert numpy.all(self.moments[1] == dipole)
                 except AssertionError:
                     self.logger.warning('Overwriting previous multipole moments with new values')
-                    self.moments = [reference, dipole]
+                    self.set_attribute('moments', [reference, dipole])
 
         if "Molecular Dynamics Iteration" in line:
             self.skip_lines(inputfile, ['d', 'ORCA MD', 'd', 'New Coordinates'])
