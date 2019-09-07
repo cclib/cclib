@@ -377,6 +377,7 @@ ORCA/ORCA4.0/CO2_freqs.out
 ORCA/ORCA4.0/H2-_CASSCF_opt.out
 ORCA/ORCA4.0/comment_or_blank_line.out
 ORCA/ORCA4.1/725.out
+ORCA/ORCA4.1/750.out
 ORCA/ORCA4.1/raw_failed_run_from_issue_426.out
 ORCA/ORCA4.1/orca_from_issue_736.out
 ORCA/ORCA4.1/porphine.out
