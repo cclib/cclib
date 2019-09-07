@@ -800,9 +800,9 @@ class ORCA(logfileparser.Logfile):
                 etsecs.append(sec)
                 line = next(inputfile)
 
-            self.set_attribute('etenergies', etenergies)
-            self.set_attribute('etsecs', etsecs)
-            self.set_attribute('etsyms', etsyms)
+            self.extend_attribute('etenergies', etenergies)
+            self.extend_attribute('etsecs', etsecs)
+            self.extend_attribute('etsyms', etsyms)
 
         # Parse the various absorption spectra for TDDFT and ROCIS.
         if 'ABSORPTION SPECTRUM' in line or 'ELECTRIC DIPOLE' in line:

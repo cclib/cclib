@@ -468,6 +468,13 @@ class Logfile(object):
             self.set_attribute(name, [])
         getattr(self, name).append(value)
 
+    def extend_attribute(self, name, values):
+        """Appends an iterable of values to an attribute."""
+        
+        if not hasattr(self, name):
+            self.set_attribute(name, [])
+        getattr(self, name).extend(values)
+
     def _assign_coreelectrons_to_element(self, element, ncore,
                                          ncore_is_total_count=False):
         """Assign core electrons to all instances of the element.
