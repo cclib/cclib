@@ -4,6 +4,25 @@
 Changelog
 =========
 
+Changes in cclib-1.6.2
+----------------------
+
+**Features**
+
+* Molden writer now supports ghost atoms (Shiv Upadhyay)
+* Handle comments in XYZ files when reading and writing
+* Updated regression testing framework (Amanda Dumi, Shiv Upadhyay)
+* Updated test file versions to GAMESS-US 2018 (Shiv Upadhyay)
+
+**Bugfixes**
+
+* Fixed parsing ORCA output with user comments in coordinates (Felix Plasser)
+* Fixed parsing ORCA output with embedding potentials
+* Fixed parsing ORCA output with ROCIS in version 4.1
+* Fixed parsing etenergies and similar attribute in ORCA for excited states
+* Fixed parsing of vibfreqs for ORCA for linear molecules
+* Parsing geometry optimization in ORCA is mode robust wrt line endings
+
 Changes in cclib-1.6.1
 ----------------------
 

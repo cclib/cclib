@@ -36,7 +36,7 @@ def setup_cclib():
 
     setuptools.setup(
         name="cclib",
-        version="1.6.1",
+        version="1.6.2",
         url="http://cclib.github.io/",
         author="cclib development team",
         author_email="cclib-users@lists.sourceforge.net",
