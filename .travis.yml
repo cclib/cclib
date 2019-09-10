@@ -9,12 +9,33 @@ addons:
         - swig
 cache:
   pip: true
+  directories:
+    - $HOME/miniconda
 
 before_install:
   - sudo add-apt-repository "deb http://archive.ubuntu.com/ubuntu cosmic universe"
   - sudo apt update
   - sudo apt install libopenbabel-dev
-  - pip install -r requirements.txt
+
+  - |
+    if [[ $(echo "$TRAVIS_PYTHON_VERSION >= 3.6" | bc -l) == 1 ]];
+    then
+        wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh
+        bash miniconda.sh -b -p $HOME/miniconda -u
+        export PATH="$HOME/miniconda/bin:$PATH"
+
+        hash -r
+        conda config --set always_yes yes --set changeps1 no
+        conda update -q conda
+        conda info -a
+        conda create -q -n p4env python=$TRAVIS_PYTHON_VERSION ci-psi4 psi4 numpy matplotlib jupyter scipy -c psi4/label/dev -c defaults -c conda-forge
+
+        source activate p4env
+        conda install pytest pytest-cov codecov -c conda-forge
+        pip install pytest-shutil
+        conda list
+    fi
+    pip install -r requirements.txt
 
 install:
   - pip install .
@@ -36,7 +57,7 @@ script:
 
 after_success:
   - |
-    if [[ "${TRAVIS_BRANCH}" == master && "${TRAVIS_PULL_REQUEST}" == false && $TRAVIS_PYTHON_VERSION == 3.7 ]];
+    if [[ "${TRAVIS_BRANCH}" == master && "${TRAVIS_PULL_REQUEST}" == false && $(echo "$TRAVIS_PYTHON_VERSION == 3.7" | bc -l) == 1 ]];
     then
         # Commits to master that are not pull requests, that is, only actual
         # addition of code to master, should deploy the documentation.
