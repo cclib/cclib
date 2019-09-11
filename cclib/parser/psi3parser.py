@@ -37,7 +37,7 @@ class Psi3(logfileparser.Logfile):
         """Extract information from the file object inputfile."""
 
         if "Version" in line:
-            self.metadata["package_version"] = ' '.join(line.split()[1:])
+            self.metadata["package_version"] = ''.join(line.split()[1:]).lower()
 
         # Psi3 prints the coordinates in several configurations, and we will parse the
         # the canonical coordinates system in Angstroms as the first coordinate set,

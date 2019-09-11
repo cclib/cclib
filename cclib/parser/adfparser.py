@@ -127,17 +127,42 @@ class ADF(logfileparser.Logfile):
         if version_searchstr in line:
             startidx = line.index(version_searchstr) + len(version_searchstr)
             trimmed_line = line[startidx:].strip()[:-1]
-            # The package version is normally a year with revision
-            # number (such as 2013.01), but it may also be a random
-            # string (such as a version control branch name).
+            # The package version is normally a year with revision number
+            # (such as 2013.01), but it may also be a random string (such as a
+            # version control branch name).
             match = re.search(r"([\d\.]{4,7})", trimmed_line)
             if match:
                 package_version = match.groups()[0]
-                self.metadata["package_version"] = package_version
+                # Use YYYY.MM as a short version.
+                self.metadata["legacy_package_version"] = package_version
             else:
-                # This isn't as well-defined, but the field shouldn't
-                # be left empty.
-                self.metadata["package_version"] = trimmed_line.strip()
+                # This isn't as well-defined, but the field shouldn't be left
+                # empty. Grab whatever is there and parse it out in the
+                # following lines.
+                package_version = trimmed_line.strip()
+            # More detailed information can be found before "A D F", even if
+            # the above package version isn't numeric.
+            self.skip_line(inputfile, 's')
+            line = next(inputfile)
+            # Get the contents between the star border.
+            tokens = line.split()[1:-1]
+            assert len(tokens) >= 1
+            if tokens[0] == "Build":
+                package_version += "+{}".format(tokens[1])
+            else:
+                assert tokens[0][0] == "r"
+                # If a year-type version has already been parsed (YYYY(.nn)),
+                # it should take precedence, otherwise use the more detailed
+                # version first.
+                if match:
+                    package_version = '{}dev{}'.format(package_version, tokens[0][1:])
+                else:
+                    year = tokens[1].split("-")[0]
+                    self.metadata["package_version_description"] = package_version
+                    package_version = '{}dev{}'.format(year, tokens[0][1:])
+                    self.metadata["legacy_package_version"] = year
+                self.metadata["package_version_date"] = tokens[1]
+            self.metadata["package_version"] = package_version
 
         # In ADF 2014.01, there are (INPUT FILE) messages, so we need to use just
         # the lines that start with 'Create' and run until the title or something

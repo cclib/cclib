@@ -51,14 +51,16 @@ class GAMESSUK(logfileparser.Logfile):
         if "version" in line:
             search = re.search(r"\sversion\s*(\d\.\d)", line)
             if search:
-                self.metadata["package_version"] = search.groups()[0]
+                package_version = search.groups()[0]
+                self.metadata["package_version"] = package_version
+                self.metadata["legacy_package_version"] = package_version
         if "Revision" in line:
             revision = line.split()[1]
-            # Don't add revision information to the main package version for now.
-            # if "package_version" in self.metadata:
-            #     package_version = "{}.r{}".format(self.metadata["package_version"],
-            #                                       revision)
-            #     self.metadata["package_version"] = package_version
+            package_version = self.metadata.get("package_version")
+            if package_version:
+                self.metadata["package_version"] = "{}+{}".format(
+                    package_version, revision
+                )
 
         if line[1:22] == "total number of atoms":
             natom = int(line.split()[-1])

@@ -1,3 +1,4 @@
+packaging>=19.0
 numpy
 # We need this as long as we need support both Python 2 and 3.
 six

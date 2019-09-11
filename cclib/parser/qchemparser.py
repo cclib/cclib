@@ -421,13 +421,37 @@ cannot be determined. Rerun without `$molecule read`."""
 
         # Extract the version number and optionally the version
         # control info.
-        if "Q-Chem" in line:
-            match = re.search(r"Q-Chem\s([0-9\.]*)\sfor", line)
+        if any(version_trigger in line for version_trigger in ("Q-Chem", "Unrecognized platform", "Version")):
+            # Part 1 matches
+            #   - `Q-Chem 4.3.0 for Intel X86 EM64T Linux`
+            # Part 2 matches
+            #   - `Unrecognized platform!!! 4.0.0.1`
+            # Part 3 matches
+            #   - `Intel X86 EM64T Linux Version 4.1.0.1 `
+            #   but not
+            #   - `Additional authors for Version 3.1:`
+            #   - `Q-Chem, Version 4.1, Q-Chem, Inc., Pittsburgh, PA (2013).`
+            match = re.search(
+                r"Q-Chem\s([\d\.]*)\sfor|"
+                r"Unrecognized platform!!!\s([\d\.]*)\b|"
+                r"Version\s([\d\.]*)\s*$",
+                line
+            )
             if match:
-                self.metadata["package_version"] = match.groups()[0]
-        # Don't add revision information to the main package version for now.
-        if "SVN revision" in line:
-            revision = line.split()[3]
+                groups = [s for s in match.groups() if s is not None]
+                assert len(groups) == 1
+                package_version = groups[0]
+                self.metadata["package_version"] = package_version
+                self.metadata["legacy_package_version"] = package_version
+        # Avoid "Last SVN revision" entry.
+        if "SVN revision" in line and "Last" not in line:
+            svn_revision = line.split()[3]
+            line = next(inputfile)
+            svn_branch = line.split()[3].replace("/", "_")
+            if "package_version" in self.metadata:
+                self.metadata["package_version"] = "{}dev+{}-{}".format(
+                    self.metadata["package_version"], svn_branch, svn_revision
+                )
 
         # Disable/enable parsing for fragment sections.
         if any(message in line for message in self.fragment_section_headers):

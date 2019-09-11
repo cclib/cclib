@@ -113,10 +113,12 @@ class Turbomole(logfileparser.Logfile):
         if index > -1:
             line = line[index + len(searchstr):]
             tokens = line.split()
-            self.metadata["package_version"] = tokens[0][1:].replace("-", ".")
-            # Don't add revision information to the main package version for now.
+            package_version = tokens[0][1:].replace("-", ".")
+            self.metadata["package_version"] = package_version
+            self.metadata["legacy_package_version"] = package_version
             if tokens[1] == "(":
                 revision = tokens[2]
+                self.metadata["package_version"] = "{}.r{}".format(package_version, revision)
 
         ## Atomic coordinates in job.last:
         #              +--------------------------------------------------+

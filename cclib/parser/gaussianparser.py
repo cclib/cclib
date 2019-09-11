@@ -9,6 +9,7 @@
 
 
 from __future__ import print_function
+
 import re
 
 import numpy
@@ -54,10 +55,26 @@ class Gaussian(logfileparser.Logfile):
         ans = label.replace("U", "u").replace("G", "g")
         return ans
 
-    def before_parsing(self):
+    # Use to map from the usual year suffixed to full years so package
+    # versions can be sorted properly after parsing with
+    # `packaging.parse.version`.
+    YEAR_SUFFIXES_TO_YEARS = {
+        '70': '1970',
+        '76': '1976',
+        '80': '1980',
+        '82': '1982',
+        '86': '1986',
+        '88': '1988',
+        '90': '1990',
+        '92': '1992',
+        '94': '1994',
+        '98': '1998',
+        '03': '2003',
+        '09': '2009',
+        '16': '2016',
+    }
 
-        # Used to index self.scftargets[].
-        SCFRMS, SCFMAX, SCFENERGY = list(range(3))
+    def before_parsing(self):
 
         # Extract only well-formed numbers in scientific notation.
         self.re_scinot = re.compile('(\w*)=\s*(-?\d\.\d{2}D[+-]\d{2})')
@@ -138,13 +155,29 @@ class Gaussian(logfileparser.Logfile):
         # Extract the version number: "Gaussian 09, Revision D.01"
         # becomes "09revisionD.01".
         if line.strip() == "Cite this work as:":
-            line = inputfile.next()
-            tokens = line.split()
-            self.metadata["package_version"] = ''.join([
+            tokens = next(inputfile).split()
+            self.metadata["legacy_package_version"] = ''.join([
                 tokens[1][:-1],
                 'revision',
                 tokens[-1][:-1],
             ])
+
+        # Extract the version number: "Gaussian 98: x86-Linux-G98RevA.11.3
+        # 5-Feb-2002" becomes "1998+A.11.3", and "Gaussian 16:
+        # ES64L-G16RevA.03 25-Dec-2016" becomes "2016+A.03".
+        if "Gaussian, Inc.," in line:
+            self.skip_lines(inputfile, ["b", "s"])
+            _, _, platform_full_version, compile_date = next(inputfile).split()
+            run_date = next(inputfile).strip()
+            platform_full_version_tokens = platform_full_version.split("-")
+            full_version = platform_full_version_tokens[-1]
+            platform = "-".join(platform_full_version_tokens[:-1])
+            year_suffix = full_version[1:3]
+            revision = full_version[6:]
+            self.metadata["package_version"] = "{}+{}".format(
+                self.YEAR_SUFFIXES_TO_YEARS[year_suffix], revision
+            )
+            self.metadata["platform"] = platform
 
         if line.strip().startswith("Link1:  Proceeding to internal job step number"):
             self.new_internal_job()
