@@ -2495,7 +2495,7 @@ def testQChem_QChem5_1_old_final_print_1_out(logfile):
 
 def testTurbomole_Turbomole7_2_dvb_gopt_b3_lyp_Gaussian__(logfile):
     assert logfile.data.metadata["legacy_package_version"] == "7.2"
-    assert logfile.data.metadata["package_version"] == "7.2"
+    assert logfile.data.metadata["package_version"] == "7.2.r21471"
     assert isinstance(
         parse_version(logfile.data.metadata["package_version"]), Version
     )
