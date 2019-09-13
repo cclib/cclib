@@ -56,6 +56,13 @@ class NormalisesymTest(unittest.TestCase):
         ref = ["A'", "A''"]
         self.assertEqual(list(map(sym, labels)), ref)
 
+    def test_normalisesym_turbomole(self):
+        from cclib.parser.turbomoleparser import Turbomole
+        sym = Turbomole("dummyfile").normalisesym
+        labels = ["a", "a1", "ag"]
+        ref = ["A", "A1", "Ag"]
+        self.assertEqual(list(map(sym, labels)), ref)
+
 
 if __name__ == "__main__":
     unittest.main()

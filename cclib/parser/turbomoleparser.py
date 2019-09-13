@@ -60,8 +60,14 @@ class Turbomole(logfileparser.Logfile):
         return 'Turbomole("%s")' % (self.filename)
 
     def normalisesym(self, label):
-        """TODO Normalise the symmetries used by Turbomole."""
-        return label
+        """Normalise the symmetries used by Turbomole.
+
+        The labels are standardized except for the first character being
+        lowercase.
+        """
+        # TODO more work could be required, but we don't have any logfiles
+        # with non-C1 symmetry.
+        return label[0].upper() + label[1:]
 
     def before_parsing(self):
         self.geoopt = False # Is this a GeoOpt? Needed for SCF targets/values.
