@@ -233,8 +233,6 @@ class GenericSPTest(unittest.TestCase):
         self.assertEqual(self.data.aooverlaps[3,0], 0.0)
         self.assertEqual(self.data.aooverlaps[0,3], 0.0)
 
-    @skipForParser('Molcas','The parser is still being developed so we skip this test')
-    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testoptdone(self):
         """There should be no optdone attribute set."""
         self.assertFalse(hasattr(self.data, 'optdone'))
