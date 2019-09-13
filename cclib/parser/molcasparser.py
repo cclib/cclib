@@ -34,9 +34,9 @@ class Molcas(logfileparser.Logfile):
         """Return a representation of the object."""
         return 'Molcas("%s")' % (self.filename)
 
-    #These are yet to be implemented.
     def normalisesym(self, label):
-        """Does Molcas require symmetry label normalization?"""
+        """TODO Does Molcas require symmetry label normalization?"""
+        return label
 
     def after_parsing(self):
         for element, ncore in self.core_array:

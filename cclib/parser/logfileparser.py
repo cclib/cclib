@@ -17,6 +17,8 @@ import os
 import random
 import sys
 import zipfile
+from abc import ABCMeta, abstractmethod
+from six import add_metaclass
 
 if sys.version_info.major == 2:
     getargspec = inspect.getargspec
@@ -182,6 +184,7 @@ def openlogfile(filename, object=None):
         return fileobject
 
 
+@add_metaclass(ABCMeta)
 class Logfile(object):
     """Abstract class for logfile objects.
 
@@ -398,14 +401,9 @@ class Logfile(object):
                 self.progress.update(newstep, msg)
                 self.progress.step = newstep
 
+    @abstractmethod
     def normalisesym(self, symlabel):
-        """Standardise the symmetry labels between parsers.
-
-        This method should be overwritten by individual parsers, and should
-        contain appropriate doctests. If is not overwritten, this is detected
-        as an error by unit tests.
-        """
-        raise NotImplementedError("normalisesym(self, symlabel) must be overriden by the parser.")
+        """Standardise the symmetry labels between parsers."""
 
     def float(self, number):
         """Convert a string to a float.

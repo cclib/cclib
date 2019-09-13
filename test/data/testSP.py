@@ -128,13 +128,6 @@ class GenericSPTest(unittest.TestCase):
         numpy.testing.assert_array_equal(self.data.coreelectrons, ans)
 
     @skipForParser('Molcas','The parser is still being developed so we skip this test')
-    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
-    def testnormalisesym(self):
-        """Did this subclass overwrite normalisesym?"""
-        # https://stackoverflow.com/a/8747890
-        self.logfile.normalisesym("A")
-
-    @skipForParser('Molcas','The parser is still being developed so we skip this test')
     @skipForParser('Molpro', '?')
     @skipForParser('ORCA', 'ORCA has no support for symmetry yet')
     @skipForParser('Turbomole','The parser is still being developed so we skip this test')
