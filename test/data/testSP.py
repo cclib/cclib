@@ -85,7 +85,6 @@ class GenericSPTest(unittest.TestCase):
         self.assertEqual(self.data.charge, 0)
         self.assertEqual(self.data.mult, 1)
 
-    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testnbasis(self):
         """Is the number of basis set functions correct?"""
         count = sum([self.nbasisdict[n] for n in self.data.atomnos])
