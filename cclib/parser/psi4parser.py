@@ -50,8 +50,13 @@ class Psi4(logfileparser.Logfile):
                 self.set_attribute('natom', len(self.atomnos))
 
     def normalisesym(self, label):
-        """Psi4 does not require normalizing symmetry labels."""
-        return label
+        """Use standard symmetry labels instead of Psi4 labels.
+
+        To normalise:
+        (1) `App` -> `A"`
+        (2) `Ap` -> `A'`
+        """
+        return label.replace("pp", '"').replace("p", "'")
 
     # Match the number of skipped lines required based on the type of
     # gradient present (determined from the header), as otherwise the

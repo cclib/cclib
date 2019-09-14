@@ -93,27 +93,22 @@ class LogfileTest(unittest.TestCase):
 
     def test_float_basic(self):
         """Are floats converted from strings correctly?"""
-        float = cclib.parser.logfileparser.Logfile('').float
+        float = cclib.parser.logfileparser.Logfile.float
         self.assertEqual(float("0.0"), 0.0)
         self.assertEqual(float("1.0"), 1.0)
         self.assertEqual(float("-1.0"), -1.0)
 
     def test_float_numeric_format(self):
         """Does numeric formatting get converted correctly?"""
-        float = cclib.parser.logfileparser.Logfile('').float
+        float = cclib.parser.logfileparser.Logfile.float
         self.assertEqual(float("1.2345E+02"), 123.45)
         self.assertEqual(float("1.2345D+02"), 123.45)
 
     def test_float_stars(self):
         """Does the function return nan for stars?"""
-        float = cclib.parser.logfileparser.Logfile('').float
+        float = cclib.parser.logfileparser.Logfile.float
         self.assertTrue(numpy.isnan(float("*")))
         self.assertTrue(numpy.isnan(float("*****")))
-
-    def test_normalisesym_base_class_error(self):
-        """Does this method raise an error in the base class?"""
-        normalisesym = cclib.parser.logfileparser.Logfile('').normalisesym
-        self.assertRaises(NotImplementedError, normalisesym, 'Ag')
 
     def test_parse_check_values(self):
         """Are custom checks performed after parsing finishes?
@@ -123,7 +118,9 @@ class LogfileTest(unittest.TestCase):
         for the data class should have comprehensive coverage.
         """
         _, path = tempfile.mkstemp()
-        parser = cclib.parser.logfileparser.Logfile(path)
+        logfileclass = cclib.parser.logfileparser.Logfile
+        logfileclass.__abstractmethods__ = set()
+        parser = logfileclass(path)
         parser.extract = lambda self, inputfile, line: None
         parser.logger = mock.Mock()
 

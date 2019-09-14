@@ -392,15 +392,15 @@ The symmetry labels are normalised and cclib reports standard symmetry names:
     sigma.g Sigma.g                     SGG
     ======= ======= ======= ==========  ==================          ======
 
-* ADF - the full list can be found [http://www.scm.com/Doc/Doc2005.01/ADF/ADFUsersGuide/page339.html here].
-* GAMESS-UK - to get the list, 'grep "data yr" input.m' if you have access to the source. Note that for E, it's split into "e1+" and "e1-" for instance.
-* Jaguar - to get the list, look at the examples in schrodinger/jaguar-whatever/samples if you have access to Jaguar. Note that for E, it's written as E1pp/Ap, for instance.
+* ADF - the full list can be found `here http://www.scm.com/Doc/Doc2005.01/ADF/ADFUsersGuide/page339.html`_.
+* GAMESS-UK - to get the list, ``grep "data yr" input.m`` if you have access to the source. Note that for E, it's split into "e1+" and "e1-" for instance.
+* Jaguar - to get the list, look at the examples in ``schrodinger/jaguar-whatever/samples`` if you have access to Jaguar. Note that for E, it's written as E1pp/Ap, for instance.
 * NWChem - if molecular symmetry is turned off or set to C1, symmetry adaption for orbitals is also deactivated, and can be explicitly turned on with `adapt on` in the SCF block
 
 Developers:
 
-* The use of a function with doctests for each of these cases is recommended, to make sure that the conversion is robust. There is a prototype called normalisesym() in logfileparser.py which should be overwritten in the subclasses if necessary (there is a unittest to make sure that this has been done).
-* The character tables `here <http://www.mpip-mainz.mpg.de/~gelessus/group.html>`_ may be useful in determining the correspondence between the labels used by the comp chem package and the commonly-used symbols.
+* The tests for these functions live in ``test/parser/testspecficparser.py``.
+* The character tables `here <http://symmetry.jacobs-university.de/>`_ may be useful in determining the correspondence between the labels used by the comp chem package and the commonly-used symbols.
 
 .. index::
     single: energy; mpenergies (attribute)

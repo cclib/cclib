@@ -12,7 +12,7 @@ import unittest
 
 class NormalisesymTest(unittest.TestCase):
 
-    # Not needed: DALTON, MOPAC, NWChem, ORCA, Psi, QChem
+    # Not needed: DALTON, MOPAC, NWChem, ORCA, QChem
 
     def test_normalisesym_adf(self):
         from cclib.parser.adfparser import ADF
@@ -49,6 +49,13 @@ class NormalisesymTest(unittest.TestCase):
         ref = ['A', 'A1', 'Ag', "A'", 'A"', "A1'", 'A1"', 'E1"']
         self.assertEqual(list(map(sym, labels)), ref)
 
+    def test_normalisesym_molcas(self):
+        from cclib.parser.molcasparser import Molcas
+        sym = Molcas("dummyfile").normalisesym
+        labels = ["a", "a1", "ag"]
+        ref = ["A", "A1", "Ag"]
+        self.assertEqual(list(map(sym, labels)), ref)
+
     def test_normalisesym_molpro(self):
         from cclib.parser.molproparser import Molpro
         sym = Molpro("dummyfile").normalisesym
@@ -56,6 +63,19 @@ class NormalisesymTest(unittest.TestCase):
         ref = ["A'", "A''"]
         self.assertEqual(list(map(sym, labels)), ref)
 
+    def test_normalisesym_psi4(self):
+        from cclib.parser.psi4parser import Psi4
+        sym = Psi4("dummyfile").normalisesym
+        labels = ["Ap", "App"]
+        ref = ["A'", 'A"']
+        self.assertEqual(list(map(sym, labels)), ref)
+
+    def test_normalisesym_turbomole(self):
+        from cclib.parser.turbomoleparser import Turbomole
+        sym = Turbomole("dummyfile").normalisesym
+        labels = ["a", "a1", "ag"]
+        ref = ["A", "A1", "Ag"]
+        self.assertEqual(list(map(sym, labels)), ref)
 
 if __name__ == "__main__":
     unittest.main()
