@@ -289,19 +289,47 @@ class GenericSPTest(unittest.TestCase):
             for m in moment32:
                 self.assertEqual(m, 0.0)
 
-    def testmetadata(self):
+    @skipForParser('ADF', 'reading basis set names is not implemented')
+    @skipForParser('GAMESSUK', 'reading basis set names is not implemented')
+    @skipForParser('Molcas', 'reading basis set names is not implemented')
+    @skipForParser('ORCA', 'reading basis set names is not implemented')
+    @skipForParser('Psi4', 'reading basis set names is not implemented')
+    @skipForParser('Turbomole', 'reading basis set names is not implemented')
+    def testmetadata_basis_set(self):
         """Does metadata have expected keys and values?"""
-        self.assertTrue(hasattr(self.data, "metadata"))
-        # TODO
-        if self.logfile.logname not in ['ADF', 'GAMESSUK', 'Molcas', 'ORCA', 'Psi', 'Turbomole']:
-            self.assertIn("basis_set", self.data.metadata)
-        if self.logfile.logname == 'ORCA':
-            self.assertIn("input_file_name", self.data.metadata)
-            self.assertIn("input_file_contents", self.data.metadata)
+        self.assertIn("basis_set", self.data.metadata)
+
+    @skipForParser('ADF', 'reading input file contents is not implemented')
+    @skipForParser('DALTON', 'reading input file contents is not implemented')
+    @skipForParser('GAMESS', 'reading input file contents is not implemented')
+    @skipForParser('GAMESSUK', 'reading input file contents is not implemented')
+    @skipForParser('Gaussian', 'reading input file contents is not implemented')
+    @skipForParser('Jaguar', 'reading input file contents is not implemented')
+    @skipForParser('Molcas', 'reading input file contents is not implemented')
+    @skipForParser('Molpro', 'reading input file contents is not implemented')
+    @skipForParser('NWChem', 'reading input file contents is not implemented')
+    @skipForParser('Psi4', 'reading input file contents is not implemented')
+    @skipForParser('QChem', 'reading input file contents is not implemented')
+    @skipForParser('Turbomole', 'reading input file contents is not implemented')
+    def testmetadata_input_file(self):
+        """Does metadata have expected keys and values?"""
+        self.assertIn("input_file_name", self.data.metadata)
+        self.assertIn("input_file_contents", self.data.metadata)
+
+    def testmetadata_methods(self):
+        """Does metadata have expected keys and values?"""
         self.assertIn("methods", self.data.metadata)
+
+    def testmetadata_package(self):
+        """Does metadata have expected keys and values?"""
         self.assertIn("package", self.data.metadata)
+
+    def testmetadata_legacy_package_version(self):
+        """Does metadata have expected keys and values?"""
         self.assertIn("legacy_package_version", self.data.metadata)
-        self.assertIn("package_version", self.data.metadata)
+
+    def testmetadata_package_version(self):
+        """Does metadata have expected keys and values?"""
         self.assertIsInstance(
             packaging.version.parse(self.data.metadata["package_version"]),
             packaging.version.Version
