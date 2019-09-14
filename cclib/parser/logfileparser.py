@@ -405,7 +405,8 @@ class Logfile(object):
     def normalisesym(self, symlabel):
         """Standardise the symmetry labels between parsers."""
 
-    def float(self, number):
+    @staticmethod
+    def float(number):
         """Convert a string to a float.
 
         This method should perform certain checks that are specific to cclib,
