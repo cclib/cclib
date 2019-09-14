@@ -400,7 +400,7 @@ The symmetry labels are normalised and cclib reports standard symmetry names:
 Developers:
 
 * The tests for these functions live in ``test/parser/testspecficparser.py``.
-* The character tables `here <http://www.mpip-mainz.mpg.de/~gelessus/group.html>`_ may be useful in determining the correspondence between the labels used by the comp chem package and the commonly-used symbols.
+* The character tables `here <http://symmetry.jacobs-university.de/>`_ may be useful in determining the correspondence between the labels used by the comp chem package and the commonly-used symbols.
 
 .. index::
     single: energy; mpenergies (attribute)
