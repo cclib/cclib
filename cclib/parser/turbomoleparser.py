@@ -62,8 +62,7 @@ class Turbomole(logfileparser.Logfile):
     def normalisesym(self, label):
         """Normalise the symmetries used by Turbomole.
 
-        The labels are standardized except for the first character being
-        lowercase.
+        The labels are standardized except for the first character being lowercase.
         """
         # TODO more work could be required, but we don't have any logfiles
         # with non-C1 symmetry.

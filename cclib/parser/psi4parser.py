@@ -50,9 +50,11 @@ class Psi4(logfileparser.Logfile):
                 self.set_attribute('natom', len(self.atomnos))
 
     def normalisesym(self, label):
-        """Psi4 does not require normalizing symmetry labels.
+        """Use standard symmetry labels instead of Psi4 labels.
 
-        Only the Cs group (A prime and A double prime) need modification.
+        To normalise:
+        (1) `App` -> `A"`
+        (2) `Ap` -> `A'`
         """
         return label.replace("pp", '"').replace("p", "'")
 

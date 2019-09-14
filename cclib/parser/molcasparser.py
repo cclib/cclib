@@ -37,8 +37,7 @@ class Molcas(logfileparser.Logfile):
     def normalisesym(self, label):
         """Normalise the symmetries used by Molcas.
 
-        The labels are standardized except for the first character being
-        lowercase.
+        The labels are standardized except for the first character being lowercase.
         """
         return label[0].upper() + label[1:]
 
