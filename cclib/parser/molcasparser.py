@@ -35,8 +35,12 @@ class Molcas(logfileparser.Logfile):
         return 'Molcas("%s")' % (self.filename)
 
     def normalisesym(self, label):
-        """TODO Does Molcas require symmetry label normalization?"""
-        return label
+        """Normalise the symmetries used by Molcas.
+
+        The labels are standardized except for the first character being
+        lowercase.
+        """
+        return label[0].upper() + label[1:]
 
     def after_parsing(self):
         for element, ncore in self.core_array:
