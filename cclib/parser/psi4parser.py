@@ -50,8 +50,11 @@ class Psi4(logfileparser.Logfile):
                 self.set_attribute('natom', len(self.atomnos))
 
     def normalisesym(self, label):
-        """Psi4 does not require normalizing symmetry labels."""
-        return label
+        """Psi4 does not require normalizing symmetry labels.
+
+        Only the Cs group (A prime and A double prime) need modification.
+        """
+        return label.replace("pp", '"').replace("p", "'")
 
     # Match the number of skipped lines required based on the type of
     # gradient present (determined from the header), as otherwise the
