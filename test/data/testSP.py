@@ -297,7 +297,7 @@ class GenericSPTest(unittest.TestCase):
     @skipForParser('Turbomole', 'reading basis set names is not implemented')
     def testmetadata_basis_set(self):
         """Does metadata have expected keys and values?"""
-        self.assertIn("basis_set", self.data.metadata)
+        self.assertEqual(self.data.metadata["basis_set"].lower(), "sto-3g")
 
     @skipForParser('ADF', 'reading input file contents is not implemented')
     @skipForParser('DALTON', 'reading input file contents is not implemented')
@@ -313,8 +313,8 @@ class GenericSPTest(unittest.TestCase):
     @skipForParser('Turbomole', 'reading input file contents is not implemented')
     def testmetadata_input_file(self):
         """Does metadata have expected keys and values?"""
-        self.assertIn("input_file_name", self.data.metadata)
         self.assertIn("input_file_contents", self.data.metadata)
+        self.assertIn("dvb_sp.in", self.data.metadata["input_file_name"])
 
     def testmetadata_methods(self):
         """Does metadata have expected keys and values?"""
