@@ -38,7 +38,7 @@ class GenericSPTest(unittest.TestCase):
     # Overlap first two atomic orbitals.
     overlap01 = 0.24
 
-    # Generally, one criteria for SCF energy convergence. 
+    # Generally, one criteria for SCF energy convergence.
     num_scf_criteria = 1
 
     def testnatom(self):
@@ -184,7 +184,7 @@ class GenericSPTest(unittest.TestCase):
             self.assertEqual(len(self.data.mocoeffs), 1)
             self.assertEqual(self.data.mocoeffs[0].shape,
                              (self.data.nmo, self.data.nbasis))
-    
+
     @skipForParser('DALTON', 'mocoeffs not implemented yet')
     @skipForLogfile('Jaguar/basicJaguar7', 'Data file does not contain enough information. Can we make a new one?')
     def testfornoormo(self):
@@ -209,7 +209,6 @@ class GenericSPTest(unittest.TestCase):
 
     @skipForParser('DALTON', 'To print: **INTEGRALS\n.PROPRI')
     @skipForParser('Molcas','The parser is still being developed so we skip this test')
-    @skipForParser('Psi3', 'Psi3 does not currently have the option to print the overlap matrix')
     @skipForParser('Psi4', 'Psi4 does not currently have the option to print the overlap matrix')
     @skipForParser('QChem', 'QChem cannot print the overlap matrix')
     @skipForParser('Turbomole','The parser is still being developed so we skip this test')
