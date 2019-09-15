@@ -2746,6 +2746,10 @@ class JaguarSPTest_6_31gss(JaguarSPTest):
     b3lyp_energy = -10530
     overlap01 = 0.22
 
+    def testmetadata_basis_set(self):
+        """This calculation did not use STO-3G for the basis set."""
+        self.assertEqual(self.data.metadata["basis_set"].lower(), "6-31g**")
+
 
 class JaguarSPTest_6_31gss_nomosyms(JaguarSPTest_6_31gss):
     @unittest.skip('Cannot parse mosyms from this file.')
