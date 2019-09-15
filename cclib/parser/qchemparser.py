@@ -255,10 +255,10 @@ cannot be determined. Rerun without `$molecule read`."""
 
         while list(set(line.strip())) != ['-']:
             elements = line.split()
-            charge = self.float(elements[2])
+            charge = utils.float(elements[2])
             charges.append(charge)
             if has_spins:
-                spin = self.float(elements[3])
+                spin = utils.float(elements[3])
                 spins.append(spin)
             line = next(inputfile)
 
@@ -368,7 +368,7 @@ cannot be determined. Rerun without `$molecule read`."""
             else:
                 for e in tokens:
                     try:
-                        energy = utils.convertor(self.float(e), 'hartree', 'eV')
+                        energy = utils.convertor(utils.float(e), 'hartree', 'eV')
                     except ValueError:
                         energy = numpy.nan
                     energies.append(energy)
@@ -867,12 +867,12 @@ cannot be determined. Rerun without `$molecule read`."""
                 line_e = next(inputfile).split()[2:4]
 
                 if not hasattr(self, 'geotargets'):
-                    self.geotargets = [line_g[1], line_d[1], self.float(line_e[1])]
+                    self.geotargets = [line_g[1], line_d[1], utils.float(line_e[1])]
                 if not hasattr(self, 'geovalues'):
                     self.geovalues = []
-                maxg = self.float(line_g[0])
-                maxd = self.float(line_d[0])
-                ediff = self.float(line_e[0])
+                maxg = utils.float(line_g[0])
+                maxd = utils.float(line_d[0])
+                ediff = utils.float(line_e[0])
                 geovalues = [maxg, maxd, ediff]
                 self.geovalues.append(geovalues)
 

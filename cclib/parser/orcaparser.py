@@ -997,8 +997,8 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
                 if "spin forbidden" in line:
                     etrotat, mx, my, mz = 0.0, 0.0, 0.0, 0.0
                 else:
-                    etrotat, mx, my, mz = [self.float(t) for t in tokens[3:]]
-                etenergies.append(self.float(tokens[1]))
+                    etrotat, mx, my, mz = [utils.float(t) for t in tokens[3:]]
+                etenergies.append(utils.float(tokens[1]))
                 etrotats.append(etrotat)
                 line = next(inputfile)
             self.set_attribute("etrotats", etrotats)

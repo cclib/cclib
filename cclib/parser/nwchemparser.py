@@ -286,11 +286,11 @@ class NWChem(logfileparser.Logfile):
 
                 # These will be present only in the DFT module.
                 if "Convergence on energy requested" in line:
-                    target_energy = self.float(line.split()[-1])
+                    target_energy = utils.float(line.split()[-1])
                 if "Convergence on density requested" in line:
-                    target_density = self.float(line.split()[-1])
+                    target_density = utils.float(line.split()[-1])
                 if "Convergence on gradient requested" in line:
-                    target_gradient = self.float(line.split()[-1])
+                    target_gradient = utils.float(line.split()[-1])
 
                 line = next(inputfile)
 
@@ -377,7 +377,7 @@ class NWChem(logfileparser.Logfile):
                     line = next(inputfile)
                     while line.strip():
                         it, energy, gnorm, gmax, time = line.split()
-                        gnorm = self.float(gnorm)
+                        gnorm = utils.float(gnorm)
                         values.append([gnorm])
                         try:
                             line = next(inputfile)
@@ -427,9 +427,9 @@ class NWChem(logfileparser.Logfile):
                 # ...
                 if len(line[17:].split()) == 6:
                     iter, energy, deltaE, dens, diis, time = line[17:].split()
-                    val_energy = self.float(deltaE)
-                    val_density = self.float(dens)
-                    val_gradient = self.float(diis)
+                    val_energy = utils.float(deltaE)
+                    val_density = utils.float(dens)
+                    val_gradient = utils.float(diis)
                     values.append([val_energy, val_density, val_gradient])
 
                 try:
@@ -627,7 +627,7 @@ class NWChem(logfileparser.Logfile):
                 nvectors.append(nvector)
 
                 # A nonzero occupancy for SCF jobs means the orbital is occupied.
-                mooccno = int(self.float(line[18:30]))
+                mooccno = int(utils.float(line[18:30]))
                 mooccnos.append(mooccno)
 
                 # If the printout does not start from the first MO, assume None for all previous orbitals.
@@ -635,7 +635,7 @@ class NWChem(logfileparser.Logfile):
                     for i in range(1, nvector):
                         energies.append(None)
 
-                energy = self.float(line[34:47])
+                energy = utils.float(line[34:47])
                 energy = utils.convertor(energy, "hartree", "eV")
                 energies.append(energy)
 

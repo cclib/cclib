@@ -405,21 +405,6 @@ class Logfile(object):
     def normalisesym(self, symlabel):
         """Standardise the symmetry labels between parsers."""
 
-    @staticmethod
-    def float(number):
-        """Convert a string to a float.
-
-        This method should perform certain checks that are specific to cclib,
-        including avoiding the problem with Ds instead of Es in scientific notation.
-        Another point is converting string signifying numerical problems (*****)
-        to something we can manage (Numpy's NaN).
-        """
-
-        if list(set(number)) == ['*']:
-            return numpy.nan
-
-        return float(number.replace("D", "E"))
-
     def new_internal_job(self):
         """Delete attributes that can be problematic in multistep jobs.
 

@@ -191,7 +191,7 @@ class Turbomole(logfileparser.Logfile):
                     self.skip_lines(inputfile, ['b', 'IR', 'dQIP'])
                     line = next(inputfile)
                     if line.strip().startswith('intensity (km/mol)'):
-                        irs = [self.float(f) for f in line.split()[2:]]
+                        irs = [utils.float(f) for f in line.split()[2:]]
                         vibirs.extend(irs)
 
                     self.skip_lines(inputfile, ['intensity', 'b', 'raman', 'b'])
@@ -243,7 +243,7 @@ class Turbomole(logfileparser.Logfile):
 
             while not line.strip().startswith('$'):
                 info = re.match(".*eigenvalue=(?P<moenergy>[0-9D\.+-]{20})\s+nsaos=(?P<count>\d+).*", line)
-                eigenvalue = self.float(info.group('moenergy'))
+                eigenvalue = utils.float(info.group('moenergy'))
                 orbital_energy = utils.convertor(eigenvalue, 'hartree', 'eV')
                 moenergies.append(orbital_energy)
                 single_coeffs = []
@@ -302,8 +302,8 @@ class Turbomole(logfileparser.Logfile):
         #                 :  wavefunction norm =      1.00000000000  :
         #                  ..........................................
         if 'scf convergence criterion' in line:
-            total_energy_threshold = self.float(line.split()[-1])
-            one_electron_energy_threshold = self.float(next(inputfile).split()[-1])
+            total_energy_threshold = utils.float(line.split()[-1])
+            one_electron_energy_threshold = utils.float(next(inputfile).split()[-1])
             scftargets = [total_energy_threshold, one_electron_energy_threshold]
             self.append_attribute('scftargets', scftargets)
             iter_energy = []
@@ -312,8 +312,8 @@ class Turbomole(logfileparser.Logfile):
                 if 'ITERATION  ENERGY' in line:
                     line = next(inputfile)
                     info = line.split()
-                    iter_energy.append(self.float(info[1]))
-                    iter_one_elec_energy.append(self.float(info[2]))
+                    iter_energy.append(utils.float(info[1]))
+                    iter_one_elec_energy.append(utils.float(info[2]))
                 line = next(inputfile)
 
             assert len(iter_energy) == len(iter_one_elec_energy), \
@@ -324,7 +324,7 @@ class Turbomole(logfileparser.Logfile):
             while 'total energy' not in line:
                 line = next(inputfile)
 
-            scfenergy = utils.convertor(self.float(line.split()[4]), 'hartree', 'eV')
+            scfenergy = utils.convertor(utils.float(line.split()[4]), 'hartree', 'eV')
             self.append_attribute('scfenergies', scfenergy)
 
         #  **********************************************************************
@@ -351,11 +351,11 @@ class Turbomole(logfileparser.Logfile):
         if 'C C S D F 1 2   P R O G R A M' in line:
             while 'ccsdf12 : all done' not in line:
                 if 'Final MP2 energy' in line:
-                    mp2energy = [utils.convertor(self.float(line.split()[5]), 'hartree', 'eV')]
+                    mp2energy = [utils.convertor(utils.float(line.split()[5]), 'hartree', 'eV')]
                     self.append_attribute('mpenergies', mp2energy)
 
                 if 'Final CCSD energy' in line:
-                    ccenergy = [utils.convertor(self.float(line.split()[5]), 'hartree', 'eV')]
+                    ccenergy = [utils.convertor(utils.float(line.split()[5]), 'hartree', 'eV')]
                     self.append_attribute('ccenergies', ccenergy)
 
                 line = next(inputfile)
@@ -374,7 +374,7 @@ class Turbomole(logfileparser.Logfile):
                 if 'MP2-energy' in line:
                     line = next(inputfile)
                     if 'total' in line:
-                        mp2energy = [utils.convertor(self.float(line.split()[3]), 'hartree', 'eV')]
+                        mp2energy = [utils.convertor(utils.float(line.split()[3]), 'hartree', 'eV')]
                         self.append_attribute('mpenergies', mp2energy)
                 line = next(inputfile)
 
@@ -818,7 +818,7 @@ class OldTurbomole(logfileparser.Logfile):
 
             temp=line.replace("i","-").split()
 
-            freqs = [self.float(f) for f in temp[1:]]
+            freqs = [utils.float(f) for f in temp[1:]]
             self.vibfreqs.extend(freqs)
                     
             line=inputfile.next()
@@ -833,7 +833,7 @@ class OldTurbomole(logfileparser.Logfile):
             line=inputfile.next()
 
             temp=line.split()
-            irs = [self.float(f) for f in temp[2:]]
+            irs = [utils.float(f) for f in temp[2:]]
             self.vibirs.extend(irs)
 
             line=inputfile.next()

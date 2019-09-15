@@ -11,6 +11,26 @@ import unittest
 
 from cclib.parser import utils
 
+import numpy
+
+
+class FloatTest(unittest.TestCase):
+    def test_float_basic(self):
+        """Are floats converted from strings correctly?"""
+        self.assertEqual(utils.float("0.0"), 0.0)
+        self.assertEqual(utils.float("1.0"), 1.0)
+        self.assertEqual(utils.float("-1.0"), -1.0)
+
+    def test_float_numeric_format(self):
+        """Does numeric formatting get converted correctly?"""
+        self.assertEqual(utils.float("1.2345E+02"), 123.45)
+        self.assertEqual(utils.float("1.2345D+02"), 123.45)
+
+    def test_float_stars(self):
+        """Does the function return nan for stars?"""
+        self.assertTrue(numpy.isnan(utils.float("*")))
+        self.assertTrue(numpy.isnan(utils.float("*****")))
+
 
 class ConvertorTest(unittest.TestCase):
 
