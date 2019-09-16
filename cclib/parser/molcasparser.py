@@ -790,7 +790,7 @@ class Molcas(logfileparser.Logfile):
         #         Shanks-type energy S1(E)             =      -75.0009150108 a.u.
         if 'Total MBPT2 energy' in line:
             mpenergies = []
-            mpenergies.append(utils.convertor(self.float(line.split()[4]), 'hartree', 'eV'))
+            mpenergies.append(utils.convertor(utils.float(line.split()[4]), 'hartree', 'eV'))
             if not hasattr(self, 'mpenergies'):
                 self.mpenergies = []
             self.mpenergies.append(mpenergies)
@@ -818,7 +818,7 @@ class Molcas(logfileparser.Logfile):
                 while not line.strip().startswith('Total energy (diff)'):
                     line = next(inputfile)
 
-                ccenergies = utils.convertor(self.float(line.split()[4]), 'hartree', 'eV')
+                ccenergies = utils.convertor(utils.float(line.split()[4]), 'hartree', 'eV')
                 if not hasattr(self, 'ccenergies'):
                     self.ccenergies= []
                 self.ccenergies.append(ccenergies)
@@ -869,8 +869,8 @@ class Molcas(logfileparser.Logfile):
                     coefficients = []
                     func_array = []
                     while line.split():
-                        exponents.append(self.float(line.split()[1]))
-                        coefficients.append([self.float(i) for i in line.split()[2:]])
+                        exponents.append(utils.float(line.split()[1]))
+                        coefficients.append([utils.float(i) for i in line.split()[2:]])
                         line = next(inputfile)
 
                     for i in range(len(coefficients[0])):

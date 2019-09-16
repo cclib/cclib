@@ -363,11 +363,11 @@ class GAMESSUK(logfileparser.Logfile):
             if not hasattr(self, "mpenergies"):
                 self.mpenergies = []
             self.mpenergies.append([])
-            self.mp2correction = self.float(line.split()[-1])
+            self.mp2correction = utils.float(line.split()[-1])
             self.mp2energy = self.scfenergies[-1] + self.mp2correction
             self.mpenergies[-1].append(utils.convertor(self.mp2energy, "hartree", "eV"))
         if line[10:41] == "third order perturbation energy":
-            self.mp3correction = self.float(line.split()[-1])
+            self.mp3correction = utils.float(line.split()[-1])
             self.mp3energy = self.mp2energy + self.mp3correction
             self.mpenergies[-1].append(utils.convertor(self.mp3energy, "hartree", "eV"))
 

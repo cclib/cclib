@@ -150,7 +150,7 @@ class DALTON(logfileparser.Logfile):
                 self.geotargets = []
                 self.geotargets_names = []
 
-            target = self.float(line.split()[-1])
+            target = utils.float(line.split()[-1])
             name = line.strip()[25:].split()[0]
 
             self.geotargets.append(target)
@@ -571,7 +571,7 @@ class DALTON(logfileparser.Logfile):
         if "Threshold for SCF convergence" in line:
             if not hasattr(self, "scftargets"):
                 self.scftargets = []
-            scftarget = self.float(line.split()[-1])
+            scftarget = utils.float(line.split()[-1])
             self.scftargets.append([scftarget])
 
         #      Wave function specification
@@ -666,7 +666,7 @@ class DALTON(logfileparser.Logfile):
                 strcompare = "@{0:>3d}".format(iteration)
                 if strcompare in line:
                     temp = line.split()
-                    error_norm = self.float(temp[3])
+                    error_norm = utils.float(temp[3])
                     values.append([error_norm])
 
                 if line[0] == "@" and "converged in" in line:
@@ -937,11 +937,11 @@ class DALTON(logfileparser.Logfile):
             while line.strip():
                 if iteration == 0 and "Energy at this geometry" in line:
                     index = self.geotargets_names.index('energy')
-                    values[index] = self.float(line.split()[-1])
+                    values[index] = utils.float(line.split()[-1])
                 for tgt, lbl in targets_labels.items():
                     if lbl in line and tgt in self.geotargets_names:
                         index = self.geotargets_names.index(tgt)
-                        values[index] = self.float(line.split()[-1])
+                        values[index] = utils.float(line.split()[-1])
                 line = next(inputfile)
 
             # If we're missing something above, throw away the partial geovalues since
@@ -1143,7 +1143,7 @@ class DALTON(logfileparser.Logfile):
                     if not hasattr(self, 'polarizabilities'):
                         self.polarizabilities = []
                     i, j = coord_to_idx[tokens[2][0]], coord_to_idx[tokens[4][0]]
-                    polarizability_diplen[i, j] = self.float(tokens[7])
+                    polarizability_diplen[i, j] = utils.float(tokens[7])
                 line = next(inputfile)
 
             polarizability_diplen = utils.symmetrize(polarizability_diplen, use_triangle='upper')
@@ -1205,7 +1205,7 @@ class DALTON(logfileparser.Logfile):
                     etsyms.append(symmap[do_triplet] + "-" + etsym)
                     self.skip_lines(inputfile, ["d", "b", "Excitation energy in a.u."])
                     line = next(inputfile)
-                    etenergies.append(self.float(line.split()[3]))
+                    etenergies.append(utils.float(line.split()[3]))
                     self.skip_lines(inputfile, ["b", "@ Total energy", "b"])
 
                 if line.startswith("@ Operator type:"):
@@ -1213,7 +1213,7 @@ class DALTON(logfileparser.Logfile):
                     assert line.startswith("@ Oscillator strength")
                     if etosc_key not in etoscs:
                         etoscs[etosc_key] = 0.0
-                    etoscs[etosc_key] += self.float(line.split()[5])
+                    etoscs[etosc_key] += utils.float(line.split()[5])
                     self.skip_line(inputfile, "b")
 
                 # To understand why the "PBHT MO Overlap Diagnostic" section

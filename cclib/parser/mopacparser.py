@@ -157,13 +157,13 @@ class MOPAC(logfileparser.Logfile):
         if 'FINAL HEAT OF FORMATION =' in line:
             if not hasattr(self, "scfenergies"):
                 self.scfenergies = []
-            self.scfenergies.append(utils.convertor(self.float(line.split()[5]), "kcal/mol", "eV"))
+            self.scfenergies.append(utils.convertor(utils.float(line.split()[5]), "kcal/mol", "eV"))
 
         # Molecular mass parsing (units will be amu)
         #
         # MOLECULAR WEIGHT        ==        130.1890
         if line[0:35] == '          MOLECULAR WEIGHT        =':
-            self.molmass = self.float(line.split()[3])
+            self.molmass = utils.float(line.split()[3])
 
         #rotational constants
         #Example:

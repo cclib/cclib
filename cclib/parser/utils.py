@@ -72,6 +72,24 @@ def symmetrize(m, use_triangle='lower'):
     return ms
 
 
+_BUILTIN_FLOAT = float
+
+
+def float(number):
+    """Convert a string to a float.
+
+    This method should perform certain checks that are specific to cclib,
+    including avoiding the problem with Ds instead of Es in scientific notation.
+    Another point is converting string signifying numerical problems (*****)
+    to something we can manage (Numpy's NaN).
+    """
+
+    if list(set(number)) == ['*']:
+        return numpy.nan
+
+    return _BUILTIN_FLOAT(number.replace("D", "E"))
+
+
 def convertor(value, fromunits, tounits):
     """Convert from one set of units to another.
     
