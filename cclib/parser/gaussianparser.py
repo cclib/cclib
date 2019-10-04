@@ -1702,7 +1702,8 @@ class Gaussian(logfileparser.Logfile):
         # ...
         #
         if line[1:25] == "Mulliken atomic charges:" or line[1:18] == "Mulliken charges:" or \
-           line[1:23] == "Lowdin Atomic Charges:" or line[1:16] == "Lowdin charges:":
+           line[1:23] == "Lowdin Atomic Charges:" or line[1:16] == "Lowdin charges:" or \
+           line[1:37] == "Mulliken charges and spin densities:":
 
             if not hasattr(self, "atomcharges"):
                 self.atomcharges = {}
