@@ -155,6 +155,7 @@ def convertor(value, fromunits, tounits):
 
     return _convertor["%s_to_%s" % (fromunits, tounits)](value)
 
+
 class PeriodicTable(object):
     """Allows conversion between element name and atomic no."""
 
@@ -165,6 +166,7 @@ class PeriodicTable(object):
         for e in periodictable.elements:
             self.element.append(e.symbol)
             self.number[e.symbol] = e.number
+
 
 class WidthSplitter:
     """Split a line based not on a character, but a given number of field
