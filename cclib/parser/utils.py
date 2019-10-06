@@ -164,8 +164,9 @@ class PeriodicTable(object):
         self.number = {}
         
         for e in periodictable.elements:
-            self.element.append(e.symbol)
-            self.number[e.symbol] = e.number
+            if e.symbol != 'n':
+                self.element.append(e.symbol)
+                self.number[e.symbol] = e.number
 
 
 class WidthSplitter:
