@@ -1526,7 +1526,7 @@ class GAMESS(logfileparser.Logfile):
                 electronicEnergy = 0  # GAMESS  prints thermochemistry at the end, so it should have a value for this already
             self.set_attribute('enthalpy', electronicEnergy + utils.convertor(float(thermoValues[2]),"kcal/mol","hartree"))
             self.set_attribute('freeenergy', electronicEnergy + utils.convertor(float(thermoValues[3]),"kcal/mol","hartree"))
-            self.set_attribute('entropy', electronicEnergy + utils.convertor(float(thermoValues[6])/1000.0,"kcal/mol","hartree"))
+            self.set_attribute('entropy', utils.convertor(float(thermoValues[6])/1000.0,"kcal/mol","hartree"))
 
 
         if line[:30] == ' ddikick.x: exited gracefully.'\
