@@ -173,7 +173,7 @@ class GamessIRTest(GenericIRTest):
     # Molecular mass of DVB in mD.
     molecularmass = 130078.25
     enthalpy_places = 3
-    entropy_places = 3
+    entropy_places = 6
     freeenergy_places = 3
 
     def testatommasses(self):
