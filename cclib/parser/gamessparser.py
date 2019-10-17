@@ -1506,9 +1506,6 @@ class GAMESS(logfileparser.Logfile):
         #  TOTAL     14.777    15.369     1.536     6.032     8.020    46.396
         #  VIB. THERMAL CORRECTION E(T)-E(0) = H(T)-H(0) =         2.885 CAL/MOL        
 
-
-        #          KCAL/MOL  KCAL/MOL  KCAL/MOL CAL/MOL-K CAL/MOL-K CAL/MOL-K
-        #      THERMOCHEMISTRY AT T=  298.15 K
         if "THERMOCHEMISTRY AT T=" in line:
             match = re.search(r"THERMOCHEMISTRY AT T=(.*)K", line)
             if match:
