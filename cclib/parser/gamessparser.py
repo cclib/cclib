@@ -1516,12 +1516,8 @@ class GAMESS(logfileparser.Logfile):
                 self.set_attribute('pressure', float(match.group(1))/1.01325e5)
 
         if "KCAL/MOL  KCAL/MOL  KCAL/MOL CAL/MOL-K CAL/MOL-K CAL/MOL-K" in line:
-            line = next(inputfile) #ELEC
-            line = next(inputfile) #TRANS
-            line = next(inputfile) #ROT
-            line = next(inputfile) #VIB
+            self.skip_lines(inputfile,["ELEC","TRANS","ROT","VIB"])
             line = next(inputfile) #TOTAL
-
             thermoValues = line.split()
 
             if hasattr(self, 'scfenergies'):
