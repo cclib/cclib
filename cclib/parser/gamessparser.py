@@ -1462,6 +1462,73 @@ class GAMESS(logfileparser.Logfile):
                     polarizability[i, j] = tokens[3]
             self.polarizabilities.append(polarizability)
 
+        # Extract thermochemistry
+
+        #      -------------------------------
+        #      THERMOCHEMISTRY AT T=  298.15 K
+        #      -------------------------------
+
+        #  USING IDEAL GAS, RIGID ROTOR, HARMONIC NORMAL MODE APPROXIMATIONS.
+        #  P=  1.01325E+05 PASCAL.
+        #  ALL FREQUENCIES ARE SCALED BY   1.00000
+        #  THE MOMENTS OF INERTIA ARE (IN AMU*BOHR**2)
+        #               1.77267             4.73429             6.50696
+        #  THE ROTATIONAL SYMMETRY NUMBER IS  1.0
+        #  THE ROTATIONAL CONSTANTS ARE (IN GHZ)
+        #    1017.15677   380.85747   277.10144
+        #       7 -      9 VIBRATIONAL MODES ARE USED IN THERMOCHEMISTRY.
+        #  THE HARMONIC ZERO POINT ENERGY IS (SCALED BY   1.000)
+        #         0.020711 HARTREE/MOLECULE     4545.618665 CM**-1/MOLECULE 
+        #        12.996589 KCAL/MOL               54.377728 KJ/MOL
+
+        #                Q               LN Q
+        #  ELEC.     1.00000E+00       0.000000
+        #  TRANS.    3.00431E+06      14.915558
+        #  ROT.      8.36512E+01       4.426656
+        #  VIB.      1.00067E+00       0.000665
+        #  TOT.      2.51481E+08      19.342880
+
+        #               E         H         G         CV        CP        S
+        #            KJ/MOL    KJ/MOL    KJ/MOL   J/MOL-K   J/MOL-K   J/MOL-K
+        #  ELEC.      0.000     0.000     0.000     0.000     0.000     0.000
+        #  TRANS.     3.718     6.197   -36.975    12.472    20.786   144.800
+        #  ROT.       3.718     3.718   -10.973    12.472    12.472    49.277
+        #  VIB.      54.390    54.390    54.376     0.296     0.296     0.046
+        #  TOTAL     61.827    64.306     6.428    25.240    33.554   194.123
+        #  VIB. THERMAL CORRECTION E(T)-E(0) = H(T)-H(0) =        12.071 J/MOL
+
+        #               E         H         G         CV        CP        S
+        #          KCAL/MOL  KCAL/MOL  KCAL/MOL CAL/MOL-K CAL/MOL-K CAL/MOL-K
+        #  ELEC.      0.000     0.000     0.000     0.000     0.000     0.000
+        #  TRANS.     0.889     1.481    -8.837     2.981     4.968    34.608
+        #  ROT.       0.889     0.889    -2.623     2.981     2.981    11.777
+        #  VIB.      12.999    12.999    12.996     0.071     0.071     0.011
+        #  TOTAL     14.777    15.369     1.536     6.032     8.020    46.396
+        #  VIB. THERMAL CORRECTION E(T)-E(0) = H(T)-H(0) =         2.885 CAL/MOL        
+
+        if "THERMOCHEMISTRY AT T=" in line:
+            match = re.search(r"THERMOCHEMISTRY AT T=(.*)K", line)
+            if match:
+                self.set_attribute('temperature', float(match.group(1)))
+        if "PASCAL." in line:
+            match = re.search(r"P=(.*)PASCAL.", line)
+            if match:
+                self.set_attribute('pressure', float(match.group(1))/1.01325e5)
+
+        if "KCAL/MOL  KCAL/MOL  KCAL/MOL CAL/MOL-K CAL/MOL-K CAL/MOL-K" in line:
+            self.skip_lines(inputfile,["ELEC","TRANS","ROT","VIB"])
+            line = next(inputfile) #TOTAL
+            thermoValues = line.split()
+
+            if hasattr(self, 'scfenergies'):
+                electronicEnergy = utils.convertor(self.scfenergies[-1],"eV","hartree")
+            else:
+                electronicEnergy = 0  # GAMESS  prints thermochemistry at the end, so it should have a value for this already
+            self.set_attribute('enthalpy', electronicEnergy + utils.convertor(float(thermoValues[2]),"kcal/mol","hartree"))
+            self.set_attribute('freeenergy', electronicEnergy + utils.convertor(float(thermoValues[3]),"kcal/mol","hartree"))
+            self.set_attribute('entropy', utils.convertor(float(thermoValues[6])/1000.0,"kcal/mol","hartree"))
+
+
         if line[:30] == ' ddikick.x: exited gracefully.'\
                 or line[:41] == ' EXECUTION OF FIREFLY TERMINATED NORMALLY'\
                 or line[:40] == ' EXECUTION OF GAMESS TERMINATED NORMALLY':
