@@ -176,7 +176,9 @@ class Turbomole(logfileparser.Logfile):
         #   1   c           x   0.00000  0.00001  0.00000 -0.01968 -0.04257  0.00001
         #                   y  -0.08246 -0.08792  0.02675 -0.00010  0.00000  0.17930
         #                   z   0.00001  0.00003  0.00004 -0.10350  0.11992 -0.00003
-        if 'NORMAL MODES and VIBRATIONAL FREQUENCIES (cm**(-1))' in line:
+        # raman.out can have
+        # if 'NORMAL MODES and VIBRATIONAL FREQUENCIES (cm**(-1))' in line:
+        if 'a o f o r c e' in line:  
             vibfreqs, vibsyms, vibirs, vibdisps = [], [], [], []
             while '****  force : all done  ****' not in line:
                 if line.strip().startswith('frequency'):
