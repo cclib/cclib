@@ -8,3 +8,5 @@ htmlcov
 .coverage
 .pytest_cache
 cclib.egg-info
+venv
+.idea
