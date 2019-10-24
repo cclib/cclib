@@ -178,7 +178,7 @@ class Turbomole(logfileparser.Logfile):
         #
         # reduced mass(g/mol)     3.315    2.518    2.061    3.358    3.191    2.323
 
-        if 'NORMAL MODES and VIBRATIONAL FREQUENCIES (cm**(-1))' in line:
+        if 'a o f o r c e' in line:  
             vibfreqs, vibsyms, vibirs, vibdisps, vibrmasses = [], [], [], [], []
             while '****  force : all done  ****' not in line:
                 if line.strip().startswith('frequency'):
