@@ -10,4 +10,3 @@ htmlcov
 cclib.egg-info
 venv
 .idea
-/test/cclib-data/
