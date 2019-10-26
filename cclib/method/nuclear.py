@@ -11,20 +11,16 @@ import logging
 
 import numpy as np
 import qcelemental as qcel
+from qcelemental import constants
 
 from cclib.method.calculationmethod import Method
 from cclib.parser.utils import PeriodicTable
-from cclib.parser.utils import find_package
 
-_found_scipy = find_package("scipy")
-if _found_scipy:
-    import scipy.constants
-
-
-def _check_scipy(found_scipy):
-    if not _found_scipy:
-        raise ImportError("You must install `scipy` to use this function")
-
+_CENTI = 0.01
+_GIGA = 1000000000.0
+_KILO = 1000.0
+# TODO replace with qcel.constants.Angstrom_star?
+_ANGSTROM = 1e-10
 
 def get_isotopic_masses(charges):
     """Return the masses for the given nuclei, respresented by their
@@ -133,16 +129,14 @@ class Nuclear(Method):
             raise ValueError("Invalid units, pick one of {}".format(choices))
         moi_tensor = self.moment_of_inertia_tensor()
         principal_moments, principal_axes = np.linalg.eigh(moi_tensor)
-        if units == "amu_bohr_2":
-            _check_scipy(_found_scipy)
-            bohr2ang = scipy.constants.value("atomic unit of length") / scipy.constants.angstrom
-            conv = 1 / bohr2ang ** 2
-        elif units == "amu_angstrom_2":
+        if units == 'amu_bohr_2':
             conv = 1
-        elif units == "g_cm_2":
-            _check_scipy(_found_scipy)
-            amu2g = scipy.constants.value("unified atomic mass unit") * scipy.constants.kilo
-            conv = amu2g * (scipy.constants.angstrom / scipy.constants.centi) ** 2
+        if units == 'amu_angstrom_2':
+            bohr2ang = constants.atomic_unit_of_length / _ANGSTROM
+            conv = bohr2ang ** 2
+        if units == 'g_cm_2':
+            amu2g = constants.unified_atomic_mass_unit * _KILO
+            conv = amu2g * (constants.atomic_unit_of_length * _CENTI) ** 2
         return conv * principal_moments, principal_axes
 
     def rotational_constants(self, units='ghz'):
@@ -151,18 +145,13 @@ class Nuclear(Method):
         units = units.lower()
         if units not in choices:
             raise ValueError("Invalid units, pick one of {}".format(choices))
-        principal_moments = self.principal_moments_of_inertia("amu_angstrom_2")[0]
-        _check_scipy(_found_scipy)
-        bohr2ang = scipy.constants.value('atomic unit of length') / scipy.constants.angstrom
-        xfamu = 1 / scipy.constants.value('electron mass in u')
-        xthz = scipy.constants.value('hartree-hertz relationship')
-        rotghz = xthz * (bohr2ang ** 2) / (2 * xfamu * scipy.constants.giga)
+        principal_moments = self.principal_moments_of_inertia()[0]
+        bohr2ang = constants.atomic_unit_of_length / _ANGSTROM
+        xfamu = 1 / constants.electron_mass_in_u
+        rotghz = constants.hartree_hertz_relationship * (bohr2ang ** 2) / (2 * xfamu * _GIGA)
         if units == 'ghz':
             conv = rotghz
         if units == 'invcm':
-            ghz2invcm = scipy.constants.giga * scipy.constants.centi / scipy.constants.c
+            ghz2invcm = _GIGA * _CENTI / constants.c
             conv = rotghz * ghz2invcm
         return conv / principal_moments
-
-
-del find_package
