@@ -59,7 +59,7 @@ def setup_cclib():
         install_requires=[
             "packaging>=19.0",
             "numpy",
-            "periodictable",
+            "qcelemental",
             "six",
         ],
 

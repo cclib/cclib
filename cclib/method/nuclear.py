@@ -10,23 +10,15 @@
 import logging
 
 import numpy as np
+import qcelemental as qcel
 
 from cclib.method.calculationmethod import Method
 from cclib.parser.utils import PeriodicTable
 from cclib.parser.utils import find_package
 
-_found_periodictable = find_package("periodictable")
-if _found_periodictable:
-    import periodictable as pt
-
 _found_scipy = find_package("scipy")
 if _found_scipy:
     import scipy.constants
-
-
-def _check_periodictable(found_periodictable):
-    if not _found_periodictable:
-        raise ImportError("You must install `periodictable` to use this function")
 
 
 def _check_scipy(found_scipy):
@@ -34,31 +26,11 @@ def _check_scipy(found_scipy):
         raise ImportError("You must install `scipy` to use this function")
 
 
-def get_most_abundant_isotope(element):
-    """Given a `periodictable` element, return the most abundant
-    isotope.
-    """
-    most_abundant_isotope = element.isotopes[0]
-    abundance = 0
-    for iso in element:
-        if iso.abundance > abundance:
-            most_abundant_isotope = iso
-            abundance = iso.abundance
-    return most_abundant_isotope
-
-
 def get_isotopic_masses(charges):
     """Return the masses for the given nuclei, respresented by their
     nuclear charges.
     """
-    _check_periodictable(_found_periodictable)
-    masses = []
-    for charge in charges:
-        el = pt.elements[charge]
-        isotope = get_most_abundant_isotope(el)
-        mass = isotope.mass
-        masses.append(mass)
-    return np.array(masses)
+    return np.array([qcel.periodictable.to_mass(charge) for charge in charges])
 
 
 class Nuclear(Method):
