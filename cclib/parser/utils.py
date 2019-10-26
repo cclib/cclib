@@ -220,7 +220,7 @@ def get_rotation(a, b):
             r = scipy.spatial.transform.Rotation.from_dcm(rmat)
     return r
 
-class PeriodicTable(object):
+class PeriodicTable:
     """Allows conversion between element name and atomic no."""
 
     def __init__(self):

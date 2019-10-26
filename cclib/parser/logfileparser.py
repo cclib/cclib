@@ -69,7 +69,7 @@ class myFileinputFile(fileinput.FileInput):
         return line
 
 
-class FileWrapper(object):
+class FileWrapper:
     """Wrap a file-like object or stream with some custom tweaks"""
 
     def __init__(self, source, pos=0):
