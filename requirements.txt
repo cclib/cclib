@@ -3,6 +3,8 @@ numpy
 # We need this as long as we need support both Python 2 and 3.
 six
 qcelemental
+# this is temporary
+periodictable
 
 # bridges
 biopython==1.76
