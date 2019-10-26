@@ -60,7 +60,6 @@ def setup_cclib():
             "packaging>=19.0",
             "numpy",
             "qcelemental",
-            "six",
         ],
 
     )

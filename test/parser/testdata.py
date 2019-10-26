@@ -8,14 +8,11 @@
 """Unit tests for parser data module."""
 
 import unittest
+from unittest import mock
 
 import numpy
 
 import cclib
-
-from six import add_move, MovedModule
-add_move(MovedModule('mock', 'mock', 'unittest.mock'))
-from six.moves import mock
 
 
 class StringContains(str):

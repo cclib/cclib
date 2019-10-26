@@ -9,8 +9,7 @@
 
 import logging
 import sys
-from abc import ABCMeta, abstractmethod
-from six import add_metaclass
+from abc import ABC, abstractmethod
 
 
 if sys.version_info <= (3, 3):
@@ -38,8 +37,7 @@ class MissingAttributeError(Exception):
     pass
 
 
-@add_metaclass(ABCMeta)
-class Writer:
+class Writer(ABC):
     """Abstract class for writer objects."""
 
     required_attrs = ()

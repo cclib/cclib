@@ -17,8 +17,7 @@ import os
 import random
 import sys
 import zipfile
-from abc import ABCMeta, abstractmethod
-from six import add_metaclass
+from abc import ABC, abstractmethod
 
 if sys.version_info.major == 2:
     getargspec = inspect.getargspec
@@ -187,8 +186,7 @@ def openlogfile(filename, object=None):
         return fileobject
 
 
-@add_metaclass(ABCMeta)
-class Logfile(object):
+class Logfile(ABC):
     """Abstract class for logfile objects.
 
     Subclasses defined by cclib:
