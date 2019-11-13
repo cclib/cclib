@@ -1,0 +1,25 @@
+## 1-CPU TURBOMOLE-ridft on standard queue ##
+## ------------------------------------- ##
+
+## #$ -M ich@meinserver.de
+## uncomment this to send email confirmation
+
+export PATH=$PATH:~/cluster/skripte/
+export BASEDIR=.
+export PATH=$BASEDIR:$PATH
+export EXE=$BASEDIR/
+cd $BASEDIR 
+
+## Commands:
+sed -i "1i \$tmpdir $TMPDIR" control
+nohup jobex -c 300 -gcart 4 -energy 7
+eiger > eig.out
+dist -l 7 > dist.out
+babel -itmol coord -oxyz coord.xyz
+t2p
+if  [ -e "converged" ]
+  then
+   nohup aoforce > aoforce.out
+   aoforce2g98 aoforce.out > vib.out
+   mu
+fi  

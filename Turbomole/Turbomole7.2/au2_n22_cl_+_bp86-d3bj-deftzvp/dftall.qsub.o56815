@@ -1,0 +1,87 @@
+Running init scripts...
+Detected architecture for Turbomole: em64t-unknown-linux-gnu
+Running user qsub script...
+ ridft ended normally
+OPTIMIZATION CYCLE 1
+ rdgrad ended normally
+  statpt ended normally
+ ridft ended normally
+OPTIMIZATION CYCLE 2
+ rdgrad ended normally
+  statpt ended normally
+ ridft ended normally
+OPTIMIZATION CYCLE 3
+ rdgrad ended normally
+  statpt ended normally
+ ridft ended normally
+OPTIMIZATION CYCLE 4
+ rdgrad ended normally
+  statpt ended normally
+ ridft ended normally
+OPTIMIZATION CYCLE 5
+ rdgrad ended normally
+  statpt ended normally
+ ridft ended normally
+OPTIMIZATION CYCLE 6
+ rdgrad ended normally
+  statpt ended normally
+ ridft ended normally
+OPTIMIZATION CYCLE 7
+ rdgrad ended normally
+  statpt ended normally
+ ridft ended normally
+OPTIMIZATION CYCLE 8
+ rdgrad ended normally
+  statpt ended normally
+ ridft ended normally
+OPTIMIZATION CYCLE 9
+ rdgrad ended normally
+  statpt ended normally
+ ridft ended normally
+OPTIMIZATION CYCLE 10
+ rdgrad ended normally
+  statpt ended normally
+ ridft ended normally
+OPTIMIZATION CYCLE 11
+ rdgrad ended normally
+  statpt ended normally
+ ridft ended normally
+OPTIMIZATION CYCLE 12
+ rdgrad ended normally
+  statpt ended normally
+ ridft ended normally
+OPTIMIZATION CYCLE 13
+ rdgrad ended normally
+  statpt ended normally
+ ridft ended normally
+OPTIMIZATION CYCLE 14
+ rdgrad ended normally
+  statpt ended normally
+ ridft ended normally
+OPTIMIZATION CYCLE 15
+ rdgrad ended normally
+  statpt ended normally
+ ridft ended normally
+OPTIMIZATION CYCLE 16
+ rdgrad ended normally
+  statpt ended normally
+ ridft ended normally
+OPTIMIZATION CYCLE 17
+ rdgrad ended normally
+  statpt ended normally
+ ridft ended normally
+OPTIMIZATION CYCLE 18
+ rdgrad ended normally
+  statpt ended normally
+ ridft ended normally
+OPTIMIZATION CYCLE 19
+ rdgrad ended normally
+  statpt ended normally
+ ridft ended normally
+1 molecule converted
+12 audit log messages 
+/opt/gridengine/default/spool/compute-1-1/job_scripts/56815: line 19: t2p: command not found
+aoforce ended normally 
+ freeh ended normally 
+Finished user qsub script. Now cleaning up...
+Cleaned up Gaussian scratch files from compute-1-1.local /tmp Directory.

@@ -1,0 +1,210 @@
+
+ DSCF STATISTICS OUTPUT :
+
+ integral neglect threshold       :  0.55E-11
+ integral storage threshold THIZE :  0.10E-04
+ integral storage threshold THIME :         5
+
+ cpu-time for construction of rho     :        0.462 s
+
+
+
+ --------------------    1.ITERATION  --------------------
+ cpu-time for ri-coulomb part         :        0.677 s
+
+ cpu-time for xc part                 :        2.786 s
+
+
+
+ --------------------    2.ITERATION  --------------------
+ cpu-time for ri-coulomb part         :        0.688 s
+
+ cpu-time for xc part                 :        2.934 s
+
+
+
+ --------------------    3.ITERATION  --------------------
+ cpu-time for ri-coulomb part         :        0.660 s
+
+ cpu-time for xc part                 :        2.863 s
+
+
+
+ --------------------    4.ITERATION  --------------------
+ cpu-time for ri-coulomb part         :        0.655 s
+
+ cpu-time for xc part                 :        2.822 s
+
+
+
+ --------------------    5.ITERATION  --------------------
+ cpu-time for ri-coulomb part         :        0.657 s
+
+ cpu-time for xc part                 :        2.723 s
+
+
+
+ --------------------    6.ITERATION  --------------------
+ cpu-time for ri-coulomb part         :        0.659 s
+
+ cpu-time for xc part                 :        2.660 s
+
+
+
+ --------------------    7.ITERATION  --------------------
+ cpu-time for ri-coulomb part         :        0.660 s
+
+ cpu-time for xc part                 :        2.582 s
+
+
+
+ --------------------    8.ITERATION  --------------------
+ cpu-time for ri-coulomb part         :        0.665 s
+
+ cpu-time for xc part                 :        2.524 s
+
+
+
+ --------------------    9.ITERATION  --------------------
+ cpu-time for ri-coulomb part         :        0.665 s
+
+ cpu-time for xc part                 :        2.413 s
+
+
+
+ --------------------   10.ITERATION  --------------------
+ cpu-time for ri-coulomb part         :        0.445 s
+
+ cpu-time for xc part                 :        1.628 s
+
+
+
+ --------------------   11.ITERATION  --------------------
+ cpu-time for ri-coulomb part         :        0.444 s
+
+ cpu-time for xc part                 :        1.545 s
+
+
+
+ --------------------   12.ITERATION  --------------------
+ cpu-time for ri-coulomb part         :        0.448 s
+
+ cpu-time for xc part                 :        1.475 s
+
+
+
+ --------------------   13.ITERATION  --------------------
+ cpu-time for ri-coulomb part         :        0.227 s
+
+ cpu-time for xc part                 :        0.712 s
+
+ cpu-time for construction of rho     :        1.168 s
+
+
+
+ --------------------   14.ITERATION  --------------------
+ cpu-time for ri-coulomb part         :        0.669 s
+
+ cpu-time for xc part                 :        7.347 s
+
+ cpu-time for ri-coulomb part         :        0.671 s
+
+ cpu-time for xc part                 :       27.277 s
+
+ cpu-time for ri-coulomb part         :        1.330 s
+
+ cpu-time for xc part                 :       15.856 s
+
+
+
+ --------------------    1.ITERATION  --------------------
+ cpu-time for ri-coulomb part         :        1.300 s
+
+ cpu-time for xc part                 :        5.836 s
+
+
+
+ --------------------    2.ITERATION  --------------------
+ cpu-time for ri-coulomb part         :        1.314 s
+
+ cpu-time for xc part                 :        5.905 s
+
+
+
+ --------------------    3.ITERATION  --------------------
+ cpu-time for ri-coulomb part         :        1.331 s
+
+ cpu-time for xc part                 :        5.909 s
+
+
+
+ --------------------    4.ITERATION  --------------------
+ cpu-time for ri-coulomb part         :        1.330 s
+
+ cpu-time for xc part                 :        5.661 s
+
+
+
+ --------------------    5.ITERATION  --------------------
+ cpu-time for ri-coulomb part         :        1.314 s
+
+ cpu-time for xc part                 :        5.550 s
+
+
+
+ --------------------    6.ITERATION  --------------------
+ cpu-time for ri-coulomb part         :        1.328 s
+
+ cpu-time for xc part                 :        5.288 s
+
+
+
+ --------------------    7.ITERATION  --------------------
+ cpu-time for ri-coulomb part         :        1.328 s
+
+ cpu-time for xc part                 :        5.004 s
+
+
+
+ --------------------    8.ITERATION  --------------------
+ cpu-time for ri-coulomb part         :        1.335 s
+
+ cpu-time for xc part                 :        4.752 s
+
+
+
+ --------------------    9.ITERATION  --------------------
+ cpu-time for ri-coulomb part         :        0.896 s
+
+ cpu-time for xc part                 :        3.022 s
+
+
+
+ --------------------   10.ITERATION  --------------------
+ cpu-time for ri-coulomb part         :        0.225 s
+
+ cpu-time for xc part                 :        0.772 s
+
+
+
+ --------------------   11.ITERATION  --------------------
+ cpu-time for ri-coulomb part         :        0.223 s
+
+ cpu-time for xc part                 :        0.735 s
+
+
+
+ --------------------   12.ITERATION  --------------------
+ cpu-time for ri-coulomb part         :        1.351 s
+
+ cpu-time for xc part                 :       15.111 s
+
+ cpu-time for ri-coulomb part         :        1.328 s
+
+ cpu-time for xc part                 :       16.428 s
+
+ cpu-time for xc part                 :       40.163 s
+
+
+  egrad  : cpu elapsed       254.199 s
+          wall              254.945 s
