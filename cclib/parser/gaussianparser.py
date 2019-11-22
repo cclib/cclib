@@ -1762,19 +1762,29 @@ class Gaussian(logfileparser.Logfile):
            line[1:23] == "Lowdin Atomic Charges:" or line[1:16] == "Lowdin charges:" or \
            line[1:37] == "Mulliken charges and spin densities:":
 
+            has_spin = 'spin densities' in line 
+
             if not hasattr(self, "atomcharges"):
                 self.atomcharges = {}
+
+            if has_spin and not hasattr(self, "atomspins"):
+                self.atomspins = {}
 
             ones = next(inputfile)
 
             charges = []
+            spins = []
             nline = next(inputfile)
             while not "Sum of" in nline:
                 charges.append(float(nline.split()[2]))
+                if has_spin:
+                    spins.append(float(nline.split()[3]))
                 nline = next(inputfile)
 
             if "Mulliken" in line:
                 self.atomcharges["mulliken"] = charges
+                self.atomspins["mulliken"] = spins
+
             else:
                 self.atomcharges["lowdin"] = charges
 
