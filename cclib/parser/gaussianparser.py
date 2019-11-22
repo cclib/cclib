@@ -1783,7 +1783,8 @@ class Gaussian(logfileparser.Logfile):
 
             if "Mulliken" in line:
                 self.atomcharges["mulliken"] = charges
-                self.atomspins["mulliken"] = spins
+                if has_spin:
+                    self.atomspins["mulliken"] = spins
 
             else:
                 self.atomcharges["lowdin"] = charges
