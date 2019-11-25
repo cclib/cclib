@@ -762,7 +762,7 @@ class ORCA(logfileparser.Logfile):
             self.entropy = float(next(inputfile).split()[4])
 
             line = next(inputfile)
-            while line[:25] != 'Final Gibbs free enthalpy':
+            while (line[:25] != 'Final Gibbs free enthalpy') and (line[:23] != 'Final Gibbs free energy'):
                 line = next(inputfile)
             self.freeenergy = float(line.split()[5])
 
