@@ -19,22 +19,22 @@
                   #######################################################
 
 
-                         Program Version 4.1.1  - RELEASE  -
+                         Program Version 4.2.0 -  RELEASE  -
 
 
  With contributions from (in alphabetic order):
-   Daniel Aravena         : Magnetic Properties
-   Michael Atanasov       : Ab Initio Ligand Field Theory
-   Alexander A. Auer      : GIAO ZORA
+   Daniel Aravena         : Magnetic Suceptibility
+   Michael Atanasov       : Ab Initio Ligand Field Theory (pilot matlab implementation)
+   Alexander A. Auer      : GIAO ZORA, VPT2
    Ute Becker             : Parallelization
-   Giovanni Bistoni       : ED, Open-shell LED
+   Giovanni Bistoni       : ED, misc. LED, open-shell LED, HFLED
    Martin Brehm           : Molecular dynamics
    Dmytro Bykov           : SCF Hessian
-   Vijay G. Chilkuri      : MRCI spin determinant printing
+   Vijay G. Chilkuri      : MRCI spin determinant printing, contributions to CSF-ICE
    Dipayan Datta          : RHF DLPNO-CCSD density
    Achintya Kumar Dutta   : EOM-CC, STEOM-CC
    Dmitry Ganyushin       : Spin-Orbit,Spin-Spin,Magnetic field MRCI
-   Miquel Garcia          : C-PCM Hessian
+   Miquel Garcia          : C-PCM Hessian, Gaussian charge scheme
    Yang Guo               : DLPNO-NEVPT2, CIM, IAO-localization
    Andreas Hansen         : Spin unrestricted coupled pair/coupled cluster methods
    Benjamin Helmich-Paris : CASSCF linear response (MC-RPA)
@@ -45,8 +45,8 @@
    Martin Krupicka        : AUTO-CI
    Lucas Lang             : DCDCAS
    Dagmar Lenk            : GEPOL surface, SMD
-   Dimitrios Liakos       : Extrapolation schemes; parallel MDCI
-   Dimitrios Manganas     : ROCIS; embedding schemes
+   Dimitrios Liakos       : Extrapolation schemes; Compound Job, initial MDCI parallelization
+   Dimitrios Manganas     : Further ROCIS development; embedding schemes
    Dimitrios Pantazis     : SARC Basis sets
    Taras Petrenko         : DFT Hessian,TD-DFT gradient, ASA, ECA, R-Raman, ABS, FL, XAS/XES, NRVS
    Peter Pinski           : DLPNO-MP2, DLPNO-MP2 Gradient
@@ -54,8 +54,8 @@
    Marius Retegan         : Local ZFS, SOC
    Christoph Riplinger    : Optimizer, TS searches, QM/MM, DLPNO-CCSD(T), (RO)-DLPNO pert. Triples
    Tobias Risthaus        : Range-separated hybrids, TD-DFT gradient, RPA, STAB
-   Michael Roemelt        : Restricted open shell CIS
-   Masaaki Saitow         : Open-shell DLPNO
+   Michael Roemelt        : Original ROCIS implementation
+   Masaaki Saitow         : Open-shell DLPNO-CCSD energy and density
    Barbara Sandhoefer     : DKH picture change effects
    Avijit Sen             : IP-ROCIS
    Kantharuban Sivalingam : CASSCF convergence, NEVPT2, FIC-MRCI
@@ -70,7 +70,7 @@
  interface, adapt or use parts of their codes:
    Stefan Grimme, W. Hujo, H. Kruse,             : VdW corrections, initial TS optimization,
                   C. Bannwarth                     DFT functionals, gCP, sTDA/sTD-DF
-   Ed Valeev                                     : LibInt (2-el integral package), F12 methods
+   Ed Valeev, F. Pavosevic, A. Kumar             : LibInt (2-el integral package), F12 methods
    Garnet Chan, S. Sharma, J. Yang, R. Olivares  : DMRG
    Ulf Ekstrom                                   : XCFun DFT Library
    Mihaly Kallay                                 : mrcc  (arbitrary order and MRCC methods)
@@ -80,11 +80,15 @@
    Christopher J. Cramer and Donald G. Truhlar   : smd solvation model
    Lars Goerigk                                  : TD-DFT with DH, B97 family of functionals
    V. Asgeirsson, H. Jonsson                     : NEB implementation
-   FAccTs GmbH                                   : IRC, NEB, NEB-TS, Multilevel
+   FAccTs GmbH                                   : IRC, NEB, NEB-TS, Multilevel, MM, QM/MM, CI optimization
+   S Lehtola, MJT Oliveira, MAL Marques          : LibXC Library
 
 
  Your calculation uses the libint2 library for the computation of 2-el integrals
  For citations please refer to: http://libint.valeyev.net
+
+ Your ORCA version has been built with support for libXC version: 4.2.3
+ For citations please refer to: https://tddft.org/programs/libxc/
 
  This ORCA versions uses:
    CBLAS   interface :  Fast vector & matrix operations
@@ -110,7 +114,7 @@ INFO   : the flag for use of LIBINT has been found!
 ================================================================================
                                        INPUT FILE
 ================================================================================
-NAME = Trp_polar.inp
+NAME = Trp_polar.in
 |  1> ! hf sto-3g nori verytightscf noautostart
 |  2> 
 |  3> %elprop
@@ -146,11 +150,8 @@ NAME = Trp_polar.inp
 | 33> O      1.4575846656    0.5996887308    2.4093500287
 | 34> H      0.5990015339    0.8842421241    2.0047830456
 | 35> *
-| 36> %pal
-| 37>  nprocs 4
-| 38> end
-| 39> 
-| 40>                          ****END OF INPUT****
+| 36> 
+| 37>                          ****END OF INPUT****
 ================================================================================
 
                        ****************************
@@ -319,12 +320,6 @@ Atom  23H    basis set group =>   4
 Atom  24H    basis set group =>   4
 Atom  25O    basis set group =>   3
 Atom  26H    basis set group =>   4
-
-
-           ************************************************************
-           *        Program running with 4 parallel MPI-processes     *
-           *              working on a common directory               *
-           ************************************************************
 ------------------------------------------------------------------------------
                            ORCA GTO INTEGRAL CALCULATION
 ------------------------------------------------------------------------------
@@ -349,12 +344,6 @@ Atom  26H    basis set group =>   4
  Pre-screening matrix                    ... done
  Shell pair data                         ... done (   0.001 sec)
 
-
-
-           ************************************************************
-           *        Program running with 4 parallel MPI-processes     *
-           *              working on a common directory               *
-           ************************************************************
 -------------------------------------------------------------------------------
                                  ORCA SCF
 -------------------------------------------------------------------------------
@@ -417,11 +406,11 @@ Convergence Tolerance:
 
 Diagonalization of the overlap matrix:
 Smallest eigenvalue                        ... 1.690e-01
-Time for diagonalization                   ...    0.049 sec
+Time for diagonalization                   ...    0.002 sec
 Threshold for overlap eigenvalues          ... 1.000e-08
 Number of eigenvalues below threshold      ... 0
 Time for construction of square roots      ...    0.001 sec
-Total time needed                          ...    0.050 sec
+Total time needed                          ...    0.002 sec
 
 -------------------
 DFT GRID GENERATION
@@ -441,20 +430,20 @@ Grids for H and He will be reduced by one unit
 nearest neighbour list constructed           ...    0.0 sec
 Grid point re-assignment to atoms done       ...    0.0 sec
 Grid point division into batches done        ...    0.0 sec
-Reduced shell lists constructed in    0.1 sec
+Reduced shell lists constructed in    0.2 sec
 
 Total number of grid points                  ...    31273
 Total number of batches                      ...      502
 Average number of points per batch           ...       62
 Average number of grid points per atom       ...     1158
-Average number of shells per batch           ...    39.53 (69.35%)
-Average number of basis functions per batch  ...    66.65 (76.60%)
-Average number of large shells per batch     ...    28.03 (70.92%)
-Average number of large basis fcns per batch ...    47.64 (71.48%)
-Maximum spatial batch extension              ...  17.58, 18.43, 19.08 au
-Average spatial batch extension              ...   0.71,  0.73,  0.71 au
+Average number of shells per batch           ...    36.77 (64.50%)
+Average number of basis functions per batch  ...    61.49 (70.68%)
+Average number of large shells per batch     ...    26.14 (71.09%)
+Average number of large basis fcns per batch ...    44.49 (72.36%)
+Maximum spatial batch extension              ...  20.05, 22.36, 20.95 au
+Average spatial batch extension              ...   3.25,  3.82,  3.62 au
 
-Time for grid setup =    0.241 sec
+Time for grid setup =    0.299 sec
 
 ------------------------------
 INITIAL GUESS: MODEL POTENTIAL
@@ -472,7 +461,7 @@ Diagonalizing the Hamiltonian                      ... done (   0.0 sec)
 Back transforming the eigenvectors                 ... done (   0.0 sec)
 Now organizing SCF variables                       ... done
                       ------------------
-                      INITIAL GUESS DONE (   0.5 sec)
+                      INITIAL GUESS DONE (   0.6 sec)
                       ------------------
 --------------
 SCF ITERATIONS
@@ -484,9 +473,9 @@ ITER       Energy         Delta-E        Max-DP      RMS-DP      [F,P]     Damp
                                ***Turning on DIIS***
   2   -673.4771792649  -0.046723473192 0.11295104  0.00619410  0.0653610 0.0000
   3   -673.4953637250  -0.018184460132 0.03342482  0.00145993  0.0300041 0.0000
-  4   -673.6424583953  -0.147094670327 0.01749190  0.00057331  0.0093535 0.0000
+  4   -673.6424583953  -0.147094670326 0.01749190  0.00057331  0.0093535 0.0000
   5   -673.6021038798   0.040354515550 0.01097899  0.00043526  0.0050997 0.0000
-  6   -673.5908113378   0.011292542001 0.00613796  0.00023447  0.0026427 0.0000
+  6   -673.5908113378   0.011292542000 0.00613796  0.00023447  0.0026427 0.0000
                       *** Initiating the SOSCF procedure ***
                            *** Shutting down DIIS ***
                       *** Re-Reading the Fockian *** 
@@ -532,15 +521,17 @@ Virial Ratio       :            2.00919101
 SCF CONVERGENCE
 ---------------
 
-  Last Energy change         ...    2.3419e-11  Tolerance :   1.0000e-09
+  Last Energy change         ...    2.2737e-11  Tolerance :   1.0000e-09
   Last MAX-Density change    ...    6.6215e-07  Tolerance :   1.0000e-08
   Last RMS-Density change    ...    3.7262e-08  Tolerance :   1.0000e-09
   Last Orbital Gradient      ...    2.5645e-07  Tolerance :   2.0000e-06
   Last Orbital Rotation      ...    6.2607e-07  Tolerance :   2.0000e-06
 
              **** THE GBW FILE WAS UPDATED (Trp_polar.gbw) ****
-             **** DENSITY FILE WAS UPDATED (Trp_polar.scfp.tmp) ****
+             **** DENSITY FILE WAS UPDATED (Trp_polar.scfp) ****
              **** ENERGY FILE WAS UPDATED (Trp_polar.en.tmp) ****
+             **** THE GBW FILE WAS UPDATED (Trp_polar.gbw) ****
+             **** DENSITY FILE WAS UPDATED (Trp_polar.scfp) ****
 ----------------
 ORBITAL ENERGIES
 ----------------
@@ -871,16 +862,16 @@ LOEWDIN REDUCED ORBITAL CHARGES
   FA   - Mayer's free valence
 
   ATOM       NA         ZA         QA         VA         BVA        FA
-  0 N      7.4053     7.0000    -0.4053     2.9637     2.9637     0.0000
-  1 C      5.9808     6.0000     0.0192     3.9355     3.9355    -0.0000
+  0 N      7.4053     7.0000    -0.4053     2.9637     2.9637    -0.0000
+  1 C      5.9808     6.0000     0.0192     3.9355     3.9355     0.0000
   2 C      5.7011     6.0000     0.2989     3.9089     3.9089     0.0000
   3 O      8.2608     8.0000    -0.2608     2.1565     2.1565    -0.0000
-  4 C      6.1060     6.0000    -0.1060     3.9631     3.9631    -0.0000
+  4 C      6.1060     6.0000    -0.1060     3.9631     3.9631     0.0000
   5 H      0.9334     1.0000     0.0666     0.9956     0.9956    -0.0000
-  6 H      0.9392     1.0000     0.0608     0.9963     0.9963    -0.0000
+  6 H      0.9392     1.0000     0.0608     0.9963     0.9963     0.0000
   7 C      6.0357     6.0000    -0.0357     3.9645     3.9645    -0.0000
   8 C      5.9566     6.0000     0.0434     3.9290     3.9290    -0.0000
-  9 N      7.3216     7.0000    -0.3216     3.3051     3.3051    -0.0000
+  9 N      7.3216     7.0000    -0.3216     3.3051     3.3051     0.0000
  10 H      0.7837     1.0000     0.2163     0.9532     0.9532    -0.0000
  11 C      5.8943     6.0000     0.1057     3.9395     3.9395    -0.0000
  12 C      6.0237     6.0000    -0.0237     3.9773     3.9773    -0.0000
@@ -891,15 +882,15 @@ LOEWDIN REDUCED ORBITAL CHARGES
  17 C      6.0594     6.0000    -0.0594     3.9791     3.9791    -0.0000
  18 H      0.9392     1.0000     0.0608     0.9963     0.9963     0.0000
  19 C      6.0826     6.0000    -0.0826     3.9759     3.9759    -0.0000
- 20 H      0.9384     1.0000     0.0616     0.9962     0.9962    -0.0000
+ 20 H      0.9384     1.0000     0.0616     0.9962     0.9962     0.0000
  21 H      0.9227     1.0000     0.0773     0.9940     0.9940    -0.0000
  22 H      0.8367     1.0000     0.1633     0.9733     0.9733    -0.0000
- 23 H      0.9340     1.0000     0.0660     0.9956     0.9956    -0.0000
- 24 H      0.8389     1.0000     0.1611     0.9740     0.9740     0.0000
- 25 O      8.3122     8.0000    -0.3122     2.1247     2.1247    -0.0000
+ 23 H      0.9340     1.0000     0.0660     0.9956     0.9956     0.0000
+ 24 H      0.8389     1.0000     0.1611     0.9740     0.9740    -0.0000
+ 25 O      8.3122     8.0000    -0.3122     2.1247     2.1247     0.0000
  26 H      0.7660     1.0000     0.2340     0.9452     0.9452    -0.0000
 
-  Mayer bond orders larger than 0.1
+  Mayer bond orders larger than 0.100000
 B(  0-N ,  1-C ) :   0.9684 B(  0-N , 22-H ) :   0.9436 B(  0-N , 24-H ) :   0.9487 
 B(  1-C ,  2-C ) :   0.9085 B(  1-C ,  4-C ) :   0.9664 B(  1-C , 23-H ) :   0.9601 
 B(  2-C ,  3-O ) :   1.9269 B(  2-C , 25-O ) :   1.0303 B(  3-O , 25-O ) :   0.1444 
@@ -916,20 +907,20 @@ B( 17-C , 19-C ) :   1.5353 B( 19-C , 20-H ) :   0.9710 B( 25-O , 26-H ) :   0.8
 TIMINGS
 -------
 
-Total SCF time: 0 days 0 hours 0 min 18 sec 
+Total SCF time: 0 days 0 hours 0 min 24 sec 
 
-Total time                  ....      18.388 sec
-Sum of individual times     ....      18.017 sec  ( 98.0%)
+Total time                  ....      24.704 sec
+Sum of individual times     ....      24.575 sec  ( 99.5%)
 
-Fock matrix formation       ....      17.407 sec  ( 94.7%)
-Diagonalization             ....       0.012 sec  (  0.1%)
-Density matrix formation    ....       0.005 sec  (  0.0%)
-Population analysis         ....       0.004 sec  (  0.0%)
-Initial guess               ....       0.271 sec  (  1.5%)
+Fock matrix formation       ....      23.941 sec  ( 96.9%)
+Diagonalization             ....       0.006 sec  (  0.0%)
+Density matrix formation    ....       0.002 sec  (  0.0%)
+Population analysis         ....       0.001 sec  (  0.0%)
+Initial guess               ....       0.317 sec  (  1.3%)
 Orbital Transformation      ....       0.000 sec  (  0.0%)
 Orbital Orthonormalization  ....       0.000 sec  (  0.0%)
-DIIS solution               ....       0.006 sec  (  0.0%)
-SOSCF solution              ....       0.071 sec  (  0.4%)
+DIIS solution               ....       0.003 sec  (  0.0%)
+SOSCF solution              ....       0.004 sec  (  0.0%)
 
 -------------------------   --------------------
 FINAL SINGLE POINT ENERGY      -673.590571115295
@@ -955,7 +946,7 @@ Dipole Moment Calculation                       ... on
 Quadrupole Moment Calculation                   ... off
 Polarizability Calculation                      ... Analytic (CP-SCF)
 GBWName                                         ... Trp_polar.gbw
-Electron density file                           ... Trp_polar.scfp.tmp
+Electron density file                           ... Trp_polar.scfp
 The origin for moment calculation is the CENTER OF MASS  = ( 6.318125,  0.497235 -2.037981)
 
 -------------
@@ -991,12 +982,6 @@ Transforming and storing MO dipole integrals   ... done
 Opening the Dipole integral file               ... (Trp_polar.dmo.tmp) done
 Reading Dipole-MO integrals                    ... done
 Solving CP-SCF equations                       ... 
-
-           ************************************************************
-           *        Program running with 4 parallel MPI-processes     *
-           *              working on a common directory               *
-           ************************************************************
-
 ------------------------------------------------------------------------------
                            ORCA CP-SCF CALCULATION
 ------------------------------------------------------------------------------
@@ -1026,7 +1011,7 @@ Number of vectors sought       ... 3
      CP-SCF ITERATION   8:      0.000000982579
 done
 Reading CP-SCF coefficients                    ... done
-Doing the polarizability tensor   ... done
+Doing the polarizability tensor                ... done
 Cleaning up                                    ... done
 
 -------------------------
@@ -1049,9 +1034,9 @@ Isotropic polarizability :  74.12438
 
 Timings for individual modules:
 
-Sum of individual times         ...       30.905 sec (=   0.515 min)
-GTO integral calculation        ...        0.659 sec (=   0.011 min)   2.1 %
-SCF iterations                  ...       18.624 sec (=   0.310 min)  60.3 %
-Solution of CP-SCF eqns.        ...       11.621 sec (=   0.194 min)  37.6 %
+Sum of individual times         ...       42.131 sec (=   0.702 min)
+GTO integral calculation        ...        0.181 sec (=   0.003 min)   0.4 %
+SCF iterations                  ...       24.723 sec (=   0.412 min)  58.7 %
+Solution of CP-SCF eqns.        ...       17.227 sec (=   0.287 min)  40.9 %
                              ****ORCA TERMINATED NORMALLY****
-TOTAL RUN TIME: 0 days 0 hours 0 minutes 31 seconds 275 msec
+TOTAL RUN TIME: 0 days 0 hours 0 minutes 43 seconds 535 msec
