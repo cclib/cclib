@@ -105,7 +105,10 @@ class LogfileTest(unittest.TestCase):
 
         parser.etenergies = [1, -1]
         parser.parse()
-        parser.logger.error.assert_called_once()
+        try:
+            parser.logger.error.assert_called_once()
+        except AttributeError: # assert_called_once is not availible until python 3.6
+            self.assertEqual(parser.logger.error.call_count, 1, "Expected mock to have been called once. Called {} times.".format(parser.logger.error.call_count))
 
 
 if __name__ == "__main__":
