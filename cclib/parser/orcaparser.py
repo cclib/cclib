@@ -15,6 +15,8 @@ import re
 import numpy
 from packaging.version import parse as parse_version
 
+from six.moves import zip_longest
+
 from cclib.parser import logfileparser
 from cclib.parser import utils
 
@@ -26,7 +28,6 @@ class ORCA(logfileparser.Logfile):
 
         # Call the __init__ method of the superclass
         super(ORCA, self).__init__(logname="ORCA", *args, **kwargs)
-
 
     def __str__(self):
         """Return a string representation of the object."""
@@ -48,6 +49,35 @@ class ORCA(logfileparser.Logfile):
 
         # Keep track of whether this is a relaxed scan calculation
         self.is_relaxed_scan = False
+
+    def after_parsing(self):
+        # ORCA doesn't add the dispersion energy to the "Total energy" (which
+        # we parse), only to the "FINAL SINGLE POINT ENERGY" (which we don't
+        # parse).
+        if hasattr(self, "scfenergies") and hasattr(self, "dispersionenergies"):
+            for i, (scfenergy, dispersionenergy) in enumerate(
+                zip_longest(self.scfenergies, self.dispersionenergies)
+            ):
+                # It isn't as problematic if there are more dispersion than
+                # SCF energies, since all dispersion energies can still be
+                # added to the SCF energies, hence the difference in log level.
+                if dispersionenergy is None:
+                    self.logger.error(
+                        "The number of SCF and dispersion energies are not equal: %d vs. %d, "
+                        "can't add dispersion energy to all SCF energies",
+                        len(self.scfenergies),
+                        len(self.dispersionenergies)
+                    )
+                    break
+                if scfenergy is None:
+                    self.logger.warning(
+                        "The number of SCF and dispersion energies are not equal: %d vs. %d, "
+                        "can't add dispersion energy to all SCF energies",
+                        len(self.scfenergies),
+                        len(self.dispersionenergies)
+                    )
+                    break
+                self.scfenergies[i] += dispersionenergy
 
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
