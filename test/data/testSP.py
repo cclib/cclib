@@ -419,9 +419,10 @@ class TurbomoleSPTest(GenericSPTest):
 
 
 class GenericDispersionTest(unittest.TestCase):
-    def testdispersion(self):
+    def testdispersionenergies(self):
+        """Is the dispersion energy parsed correctly?"""
+        self.assertTrue(len(self.data.dispersionenergies), 1)
         self.assertAlmostEquals(self.data.dispersionenergies[0], -0.40407836521053214)
-
 
 if __name__=="__main__":
 
