@@ -20,7 +20,10 @@ class OpenbabelTest(unittest.TestCase):
         self.path = os.path.abspath(os.path.dirname(__file__))
 
     def test_makeopenbabel(self):
-        import openbabel
+        try:
+            from openbabel import openbabel
+        except:
+            import openbabel
         atomnos = numpy.array([1, 8, 1], "i")
         atomcoords = numpy.array([[[-1., 1., 0.], [0., 0., 0.], [1., 1., 0.]]])
         obmol = cclib2openbabel.makeopenbabel(atomcoords, atomnos)

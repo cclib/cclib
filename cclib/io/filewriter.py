@@ -26,8 +26,12 @@ from cclib.parser.utils import find_package
 _has_openbabel = find_package("openbabel")
 if _has_openbabel:
     from cclib.bridge import makeopenbabel
-    import openbabel as ob
-    import pybel as pb
+    try:
+        from openbabel import openbabel as ob
+        import openbabel.pybel as pb
+    except:
+        import openbabel as ob
+        import pybel as pb
 
 
 class MissingAttributeError(Exception):
