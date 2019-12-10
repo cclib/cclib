@@ -93,7 +93,7 @@ def float(number):
 
 def convertor(value, fromunits, tounits):
     """Convert from one set of units to another.
-    
+
     Sources:
         NIST 2010 CODATA (http://physics.nist.gov/cuu/Constants/index.html)
         Documentation of GAMESS-US or other programs as noted
