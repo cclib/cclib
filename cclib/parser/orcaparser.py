@@ -403,6 +403,25 @@ class ORCA(logfileparser.Logfile):
             if not hasattr(self, 'grads'):
                 self.grads = []
             self.grads.append(grads)
+        
+        # The final MP2 gradient
+        # 0:   0.01527469  -0.00292883   0.01125000
+        # 1:   0.00098782  -0.00040549   0.00196825
+        # 2:  -0.01626251   0.00333431  -0.01321825
+        print('whatttt')
+        if line[:23] == 'The final MP2 gradient':
+            print('here')
+            grads = []
+            line = next(inputfile).strip()
+            while line:
+                idx, x, y, z = line.split()
+                grads.append((float(x), float(y), float(z)))
+
+                line = next(inputfile).strip()
+
+            if not hasattr(self, 'grads'):
+                self.grads = []
+            self.grads.append(grads)
 
         # After each geometry optimization step, ORCA prints the current convergence
         # parameters and the targets (again), so it is a good idea to check that they
