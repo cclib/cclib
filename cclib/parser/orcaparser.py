@@ -404,13 +404,13 @@ class ORCA(logfileparser.Logfile):
                 self.grads = []
             self.grads.append(grads)
         
+        # Grab MP2 gradients
+        #
         # The final MP2 gradient
         # 0:   0.01527469  -0.00292883   0.01125000
         # 1:   0.00098782  -0.00040549   0.00196825
         # 2:  -0.01626251   0.00333431  -0.01321825
-        print('whatttt')
-        if line[:23] == 'The final MP2 gradient':
-            print('here')
+        if line[:22] == 'The final MP2 gradient':
             grads = []
             line = next(inputfile).strip()
             while line:
