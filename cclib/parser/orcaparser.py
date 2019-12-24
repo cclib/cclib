@@ -388,40 +388,38 @@ class ORCA(logfileparser.Logfile):
         # 1   H   :    0.000000004    0.019501450   -0.021537091
         # 2   O   :    0.000000054   -0.042431648    0.042431420
         # 3   H   :    0.000000004    0.021537179   -0.019501388
-        if line[:18] == 'CARTESIAN GRADIENT':
-            next(inputfile)
-            next(inputfile)
-
-            grads = []
-            line = next(inputfile).strip()
-            while line:
-                idx, atom, colon, x, y, z = line.split()
-                grads.append((float(x), float(y), float(z)))
-
-                line = next(inputfile).strip()
-
-            if not hasattr(self, 'grads'):
-                self.grads = []
-            self.grads.append(grads)
-        
-        # Grab MP2 gradients
+        #
+        # ORCA MP2 module has different signal than 'CARTESIAN GRADIENT'.
         #
         # The final MP2 gradient
         # 0:   0.01527469  -0.00292883   0.01125000
         # 1:   0.00098782  -0.00040549   0.00196825
         # 2:  -0.01626251   0.00333431  -0.01321825
-        if line[:22] == 'The final MP2 gradient':
+        if line[:18] == 'CARTESIAN GRADIENT' or line[:22] == 'The final MP2 gradient':
+
             grads = []
-            line = next(inputfile).strip()
-            while line:
-                idx, x, y, z = line.split()
-                grads.append((float(x), float(y), float(z)))
+
+            if line[:18] == 'CARTESIAN GRADIENT':
+                next(inputfile)
+                next(inputfile)
 
                 line = next(inputfile).strip()
+                while line:
+                    idx, atom, colon, x, y, z = line.split()
+                    grads.append((float(x), float(y), float(z)))
+                    line = next(inputfile).strip()
+            
+            if line[:22] == 'The final MP2 gradient':
+                line = next(inputfile).strip()
+                while line:
+                    idx, x, y, z = line.split()
+                    grads.append((float(x), float(y), float(z)))
+                    line = next(inputfile).strip()
 
             if not hasattr(self, 'grads'):
                 self.grads = []
             self.grads.append(grads)
+
 
         # After each geometry optimization step, ORCA prints the current convergence
         # parameters and the targets (again), so it is a good idea to check that they
