@@ -322,6 +322,7 @@ def fallback(source):
     if isinstance(source, str):
         ext = os.path.splitext(source)[1][1:].lower()
         if _has_cclib2openbabel:
+            # From OB 3.0 onward, Pybel is contained inside the OB module.
             try:
                 import openbabel.pybel as pb
             except:
