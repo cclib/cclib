@@ -398,23 +398,15 @@ class ORCA(logfileparser.Logfile):
         if line[:18] == 'CARTESIAN GRADIENT' or line[:22] == 'The final MP2 gradient':
 
             grads = []
-
             if line[:18] == 'CARTESIAN GRADIENT':
-                next(inputfile)
-                next(inputfile)
+                self.skip_lines(inputfile, ['dashes', 'blank'])
 
+            line = next(inputfile).strip()
+            while line:
+                tokens = line.split()
+                x, y, z = float(tokens[-3]), float(tokens[-2]), float(tokens[-1])
+                grads.append((x, y, z))
                 line = next(inputfile).strip()
-                while line:
-                    idx, atom, colon, x, y, z = line.split()
-                    grads.append((float(x), float(y), float(z)))
-                    line = next(inputfile).strip()
-            
-            if line[:22] == 'The final MP2 gradient':
-                line = next(inputfile).strip()
-                while line:
-                    idx, x, y, z = line.split()
-                    grads.append((float(x), float(y), float(z)))
-                    line = next(inputfile).strip()
 
             if not hasattr(self, 'grads'):
                 self.grads = []
