@@ -1643,6 +1643,16 @@ def testORCA_ORCA4_1_porphine_out(logfile):
     assert len(logfile.data.etenergies) == 1
 
 
+def testORCA_ORCA4_2_MP2_gradient_out(logfile):
+    """ORCA numerical frequency calculation with gradients."""
+    assert logfile.data.metadata["package_version"] == "4.2.0"
+    assert hasattr(logfile.data, 'grads')
+    assert logfile.data.grads.shape == (1, 3, 3)
+    # atom 2, y-coordinate.
+    idx = (0, 1, 1)
+    assert logfile.data.grads[idx] == -0.00040549
+
+
 # PSI 3 #
 
 
