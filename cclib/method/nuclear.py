@@ -165,9 +165,9 @@ class Nuclear(Method):
             _check_scipy(_found_scipy)
             bohr2ang = spc.value("atomic unit of length") / spc.angstrom
             conv = 1 / bohr2ang ** 2
-        if units == "amu_angstrom_2":
+        elif units == "amu_angstrom_2":
             conv = 1
-        if units == "g_cm_2":
+        elif units == "g_cm_2":
             _check_scipy(_found_scipy)
             amu2g = spc.value("unified atomic mass unit") * spc.kilo
             conv = amu2g * (spc.angstrom / spc.centi) ** 2
