@@ -376,6 +376,14 @@ ORCA/ORCA4.0/IrCl6_sp.out
 ORCA/ORCA4.0/CO2_freqs.out
 ORCA/ORCA4.0/H2-_CASSCF_opt.out
 ORCA/ORCA4.0/comment_or_blank_line.out
+ORCA/ORCA4.0/Trp_polar.out
+ORCA/ORCA4.0/dvb_gopt.out
+ORCA/ORCA4.0/dvb_ir.out
+ORCA/ORCA4.0/dvb_raman.out
+ORCA/ORCA4.0/dvb_rocis.out
+ORCA/ORCA4.0/dvb_sp.out
+ORCA/ORCA4.0/dvb_sp_un.out
+ORCA/ORCA4.0/dvb_td.out
 ORCA/ORCA4.1/725.out
 ORCA/ORCA4.1/750.out
 ORCA/ORCA4.1/raw_failed_run_from_issue_426.out
