@@ -380,6 +380,42 @@ class ORCA(logfileparser.Logfile):
                 target = float(line.split()[-2])
                 self.geotargets_names.append(name)
                 self.geotargets.append(target)
+        
+
+        # Moller-Plesset energies.
+        #
+        # ---------------------------------------
+        # MP2 TOTAL ENERGY:      -76.112119693 Eh
+        # ---------------------------------------
+        if 'MP2 TOTAL ENERGY' in line[:16]:
+
+            if not hasattr(self, 'mpenergies'):
+                self.metadata['methods'].append('MP2')
+                self.mpenergies = []
+
+            self.mpenergies.append([])
+            mp2energy = utils.float(line.split()[-2])
+            self.mpenergies[-1].append(utils.convertor(mp2energy, 'hartree', 'eV'))
+
+        # MP2 energy output line is different for MP3.
+        # This MP2 line is unique to MP3 calculations.
+        # 
+        # E(MP2)  =    -76.112119775   EC(MP2)=    -0.128216417
+        # E(MP3)  =    -76.113783480   EC(MP3)=    -0.129880122  E3=    -0.001663705
+        if 'E(MP2)' in line[:6]:
+
+            if not hasattr(self, 'mpenergies'):
+                self.metadata['methods'].append('MP3')
+                self.mpenergies = []
+
+            self.mpenergies.append([])
+            mp2energy = utils.float(line.split()[2])
+            line = next(inputfile)
+            mp3energy = utils.float(line.split()[2])
+
+            self.mpenergies[-1].append(utils.convertor(mp2energy, 'hartree', 'eV'))
+            self.mpenergies[-1].append(utils.convertor(mp3energy, 'hartree', 'eV'))
+
 
         # ------------------
         # CARTESIAN GRADIENT
