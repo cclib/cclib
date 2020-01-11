@@ -1,7 +1,8 @@
-! rks b3lyp sto-3g usesym opt
+! rks b3lyp sto-3g usesym
 
 %output
  printlevel normal
+ print[ p_basis ] 2
  print[ p_mos ] 1
  print[ p_overlap ] 1
  end 
@@ -28,3 +29,6 @@
  H        4.9316453546   0.0711049543   0.0000000000
  H       -4.9316453546  -0.0711049543   0.0000000000
 *
+%pal
+ nprocs 4
+end
