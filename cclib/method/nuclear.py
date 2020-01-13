@@ -161,16 +161,16 @@ class Nuclear(Method):
             raise ValueError("Invalid units, pick one of {}".format(choices))
         moi_tensor = self.moment_of_inertia_tensor()
         principal_moments, principal_axes = np.linalg.eigh(moi_tensor)
-        if units == 'amu_bohr_2':
+        if units == "amu_bohr_2":
+            _check_scipy(_found_scipy)
+            bohr2ang = spc.value("atomic unit of length") / spc.angstrom
+            conv = 1 / bohr2ang ** 2
+        elif units == "amu_angstrom_2":
             conv = 1
-        if units == 'amu_angstrom_2':
+        elif units == "g_cm_2":
             _check_scipy(_found_scipy)
-            bohr2ang = spc.value('atomic unit of length') / spc.angstrom
-            conv = bohr2ang ** 2
-        if units == 'g_cm_2':
-            _check_scipy(_found_scipy)
-            amu2g = spc.value('unified atomic mass unit') * spc.kilo
-            conv = amu2g * (spc.value('atomic unit of length') * spc.centi) ** 2
+            amu2g = spc.value("unified atomic mass unit") * spc.kilo
+            conv = amu2g * (spc.angstrom / spc.centi) ** 2
         return conv * principal_moments, principal_axes
 
     def rotational_constants(self, units='ghz'):
@@ -179,7 +179,7 @@ class Nuclear(Method):
         units = units.lower()
         if units not in choices:
             raise ValueError("Invalid units, pick one of {}".format(choices))
-        principal_moments = self.principal_moments_of_inertia()[0]
+        principal_moments = self.principal_moments_of_inertia("amu_angstrom_2")[0]
         _check_scipy(_found_scipy)
         bohr2ang = spc.value('atomic unit of length') / spc.angstrom
         xfamu = 1 / spc.value('electron mass in u')

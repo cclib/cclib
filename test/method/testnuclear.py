@@ -96,7 +96,7 @@ class NuclearTest(unittest.TestCase):
                         tokens = [float(x) for x in next(f).split()[1:]]
                         ref_pmoi.append(tokens[0])
                         ref_axes.append(tokens[1:])
-        pmoi, axes = nuclear.principal_moments_of_inertia()
+        pmoi, axes = nuclear.principal_moments_of_inertia("amu_angstrom_2")
         np.testing.assert_allclose(pmoi, ref_pmoi, rtol=0, atol=1.0e-4)
         # The phases of the eigenvectors may be different, but they
         # are still orthonormal within each set.
