@@ -178,6 +178,10 @@ MP        Molpro      GenericMP4SDTQTest    basicMolpro2012       h2o_mp4.out
 MP        Molcas      GenericMP2Test        basicOpenMolcas18.0   water_mbpt2.out
 MP        NWChem      GenericMP2Test        basicNWChem6.0        water_mp2.out
 MP        NWChem      GenericMP2Test        basicNWChem6.5        water_mp2.out
+MP        ORCA        GenericMP2Test        basicORCA4.1          water_mp2.out
+MP        ORCA        GenericMP2Test        basicORCA4.2          water_mp2.out
+MP        ORCA        GenericMP3Test        basicORCA4.1          water_mp3.out
+MP        ORCA        GenericMP3Test        basicORCA4.2          water_mp3.out
 MP        Psi4        GenericMP2Test        basicPsi4-1.0         water_mp2.out
 MP        QChem       GenericMP2Test        basicQChem4.2         water_mp2.out
 MP        QChem       GenericMP3Test        basicQChem4.2         water_mp3.out
