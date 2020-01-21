@@ -103,6 +103,21 @@ class NuclearTest(unittest.TestCase):
         np.testing.assert_allclose(np.abs(axes), np.abs(ref_axes), rtol=0, atol=1.0e-4)
 
     @unittest.skipIf(sys.version_info < (3, 0), "The periodictable package doesn't work in Python2.")
+    def test_principal_moments_of_inertia_2(self):
+        """Testing principal moments of inertia and the principal axes for one
+        logfile where it is printed.
+
+        This test was added as a follow-up to PR #790.
+        """        
+        data, _ = getdatafile(Gaussian, "basicGaussian16", ["dvb_ir.out"])
+        nuclear = Nuclear(data)
+        nuclear.logger.setLevel(logging.ERROR)
+
+        ref_pmoi = [390.07633792, 2635.01850639, 3025.09484431]
+        pmoi, _ = nuclear.principal_moments_of_inertia("amu_bohr_2")
+        np.testing.assert_allclose(pmoi, ref_pmoi, rtol=0, atol=1.0e-4)
+
+    @unittest.skipIf(sys.version_info < (3, 0), "The periodictable package doesn't work in Python2.")
     def test_rotational_constants(self):
         """Testing rotational constants for two logfiles where they are
         printed.
