@@ -111,7 +111,7 @@ The job types currently included as unit tests:
 * geometry optimization and scan for dvb (RHF/STO-3G and/or B3LYP/STO-3G)
 * frequency calculation with IR and Raman intensities for dvb (RHF/STO-3G or B3LYP/STO-3G)
 * single point energy for carbon atom using a large basis set such as aug-cc-pCVQZ
-* Møller–Plesset and coupled cluster energies for water (STO-3G or 6-31G basis set)
+* Møller–Plesset and coupled cluster energies for water (STO-3G basis set)
 * static polarizabilities for tryptophan (RHF/STO-3G)
 
 .. _`table of attribute coverage`: data_dev.html#details-of-current-implementation

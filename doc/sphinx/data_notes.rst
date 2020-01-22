@@ -420,6 +420,8 @@ The attribute ``mpenergies`` holds the total molecule energies including Møller
 
 **Jaguar**: the LMP2 is available.
 
+**ORCA**: MP2 and MP3 are available. The MP2 module can be called with the ``MP2`` keyword; while MP3 corrections are included in the matrix driven configuration interaction (MDCI) module through the ``MP3`` keyword.
+
 mult
 ----
 
