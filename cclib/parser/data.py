@@ -85,7 +85,7 @@ class ccData(object):
         vibdisps -- cartesian displacement vectors (array[3], delta angstrom)
         vibfreqs -- vibrational frequencies (array[1], 1/cm)
         vibirs -- IR intensities (array[1], km/mol)
-        vibramans -- Raman intensities (array[1], A^4/Da)
+        vibramans -- Raman activities (array[1], A^4/Da)
         vibsyms -- symmetries of vibrations (list of strings)
     (1) The term 'array' refers to a numpy array
     (2) The number of dimensions of an array is given in square brackets
