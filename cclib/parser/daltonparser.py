@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2017, the cclib development team
+# Copyright (c) 2020, the cclib development team
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
@@ -1087,7 +1087,7 @@ class DALTON(logfileparser.Logfile):
 
             vibramans = []
 
-            # The Raman intensities appear under the "Pol.Int."
+            # The Raman activities appear under the "Pol.Int."
             # (polarization intensity) column.
             for m in range(len(self.vibfreqs)):
                 vibramans.append(float(line.split()[4]))
