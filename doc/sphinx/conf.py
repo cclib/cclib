@@ -243,7 +243,7 @@ texinfo_documents = [
 
 # Update template context with project information.
 context = {
-    'conf_py_path': '/docs/sphinx/',
+    'conf_py_path': '/doc/sphinx/',
     'github_user': 'cclib',
     'github_repo': 'cclib',
     'github_version': 'master',
