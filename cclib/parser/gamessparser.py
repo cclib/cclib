@@ -748,12 +748,12 @@ class GAMESS(logfileparser.Logfile):
         # MODES 1 TO 6 ARE TAKEN AS ROTATIONS AND TRANSLATIONS.
         #
         #     FREQUENCIES IN CM**-1, IR INTENSITIES IN DEBYE**2/AMU-ANGSTROM**2
-        #     RAMAN INTENSITIES IN ANGSTROM**4/AMU, DEPOLARIZATIONS ARE DIMENSIONLESS
+        #     RAMAN ACTIVITIES IN ANGSTROM**4/AMU, DEPOLARIZATIONS ARE DIMENSIONLESS
         #
         #                          1           2           3           4           5
         #       FREQUENCY:         5.89        1.46        0.04        0.03        0.01
         #    IR INTENSITY:      0.00000     0.00000     0.00000     0.00000     0.00000
-        # RAMAN INTENSITY:       12.675       1.828       0.000       0.000       0.000
+        # RAMAN ACTIVITY:       12.675       1.828       0.000       0.000       0.000
         #  DEPOLARIZATION:        0.750       0.750       0.124       0.009       0.750
         #
         # If GAMESS-US or PC-GAMESS has not reached the stationary point we have
