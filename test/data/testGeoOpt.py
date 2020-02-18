@@ -228,7 +228,7 @@ class ADFGeoOptTest(GenericGeoOptTest):
 
 
 class DALTONGeoOptTest(GenericGeoOptTest):
-    """Customzed geometry optimziation unittest"""
+    """Customzed geometry optimization unittest"""
 
     # DALTON will normally print the geometry several extra times as the "final geometry"
     # when an optimziation converges. We don't parse those coordinates, but the parser
@@ -247,7 +247,7 @@ class DALTONGeoOptTest(GenericGeoOptTest):
 
 
 class MolcasGeoOptTest(GenericGeoOptTest):
-    """Customized restricted single point HF unittest"""
+    """Customized geometry optimization unittest"""
 
     # Molcas prints the input coordinates and performs the &scf job
     # once before entering the optimization part where the coordinates and

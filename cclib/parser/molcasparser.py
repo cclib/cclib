@@ -726,34 +726,25 @@ class Molcas(logfileparser.Logfile):
                 grads.append(tmpgrads)
                 line = next(inputfile)
 
-            self.grads.append(grads)
+            self.append_attribute('grads', grads)
 
         # This code here works, but QM/MM gradients are printed after QM ones.
         # Maybe another attribute is needed to store them to have both.
         if "Molecular gradients, after ESPF" in line:
 
-            if not hasattr(self, "_grads"):
-                self._grads = []
-
             self.skip_lines(inputfile, ['stars', 'stars', 'blank', 'header',
                                         'dashes', 'header', 'dashes'])
 
-            _grads = []
+            grads = []
             line = next(inputfile)
             while len(line.split()) == 4:
                 tmpgrads = list(map(float, line.split()[1:]))
-                _grads.append(tmpgrads)
+                grads.append(tmpgrads)
                 line = next(inputfile)
 
-            self._grads.append(_grads)
+            self.grads[-1] = grads
 
-        # Replace the main attribute with QM/MM gradients
-        try:
-            self.grads = self._grads[:]
-        except AttributeError:
-            pass
         ###
-
         #        All orbitals with orbital energies smaller than  E(LUMO)+0.5 are printed
         #
         #  ++    Molecular orbitals:
