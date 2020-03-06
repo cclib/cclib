@@ -13,7 +13,7 @@ cache:
     - $HOME/miniconda
 
 before_install:
-  - sudo add-apt-repository "deb http://archive.ubuntu.com/ubuntu cosmic universe"
+  - sudo add-apt-repository "deb http://archive.ubuntu.com/ubuntu eoan universe"
   - sudo apt update
   - sudo apt install libopenbabel-dev
 
