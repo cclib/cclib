@@ -686,6 +686,65 @@ class Molcas(logfileparser.Logfile):
                         'symmetry. Ignoring these coordinates.'
                         % (len(atomcoords), self.natom))
 
+        ## Parsing Molecular Gradients attributes in this section.
+        # ()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()
+        # 
+        #                                               &ALASKA
+        # 
+        #                                    only a single process is used
+        #                        available to each process: 2.0 GB of memory, 1 thread
+        # ()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()
+        # ...
+        # ...
+        #  **************************************************
+        #  *                                                *
+        #  *              Molecular gradients               *
+        #  *                                                *
+        #  **************************************************
+        # 
+        #   Irreducible representation: a  
+        #  ---------------------------------------------------------
+        #                      X             Y             Z        
+        #  ---------------------------------------------------------
+        #   C1               -0.00009983   -0.00003043    0.00001004
+        #   ...
+        #   H20              -0.00027629    0.00010546    0.00003317
+        #  ---------------------------------------------------
+        # WARNING: "Molecular gradients, after ESPF" is found for ESPF QM/MM calculations
+        if "Molecular gradients " in line:
+
+            if not hasattr(self, "grads"):
+                self.grads = []
+
+            self.skip_lines(inputfile, ['stars', 'stars', 'blank', 'header',
+                                        'dashes', 'header', 'dashes'])
+
+            grads = []
+            line = next(inputfile)
+            while len(line.split()) == 4:
+                tmpgrads = list(map(float, line.split()[1:]))
+                grads.append(tmpgrads)
+                line = next(inputfile)
+
+            self.append_attribute('grads', grads)
+
+        # This code here works, but QM/MM gradients are printed after QM ones.
+        # Maybe another attribute is needed to store them to have both.
+        if "Molecular gradients, after ESPF" in line:
+
+            self.skip_lines(inputfile, ['stars', 'stars', 'blank', 'header',
+                                        'dashes', 'header', 'dashes'])
+
+            grads = []
+            line = next(inputfile)
+            while len(line.split()) == 4:
+                tmpgrads = list(map(float, line.split()[1:]))
+                grads.append(tmpgrads)
+                line = next(inputfile)
+
+            self.grads[-1] = grads
+
+        ###
         #        All orbitals with orbital energies smaller than  E(LUMO)+0.5 are printed
         #
         #  ++    Molecular orbitals:
