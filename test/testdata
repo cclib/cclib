@@ -34,10 +34,10 @@ Basis     NWChem      GenericBasisTest      basicNWChem6.5        dvb_sp_hf.out
 Basis     NWChem      GenericBasisTest      basicNWChem6.5        dvb_sp_ks.out
 Basis     ORCA        GenericBasisTest      basicORCA4.1          dvb_sp.out
 Basis     ORCA        GenericBasisTest      basicORCA4.2          dvb_sp.out
-Basis     Psi4        GenericBasisTest      basicPsi4-1.0         dvb_sp_rhf.out
-Basis     Psi4        GenericBasisTest      basicPsi4-1.0         dvb_sp_rks.out
 Basis     Psi4        GenericBasisTest      basicPsi4-1.2.1       dvb_sp_rhf.out
 Basis     Psi4        GenericBasisTest      basicPsi4-1.2.1       dvb_sp_rks.out
+Basis     Psi4        GenericBasisTest      basicPsi4-1.3.1       dvb_sp_rhf.out
+Basis     Psi4        GenericBasisTest      basicPsi4-1.3.1       dvb_sp_rks.out
 Basis     QChem       GenericBasisTest      basicQChem4.2         dvb_sp.out
 Basis     QChem       GenericBasisTest      basicQChem5.1         dvb_sp.out
 
@@ -55,6 +55,7 @@ Basis     Molpro      MolproBigBasisTest    basicMolpro2012       C_bigbasis.out
 Basis     NWChem      GenericBigBasisTest   basicNWChem6.0        C_bigbasis.out
 Basis     NWChem      GenericBigBasisTest   basicNWChem6.5        C_bigbasis.out
 Basis     Psi4        Psi4BigBasisTest      basicPsi4-1.2.1       C_bigbasis.out
+Basis     Psi4        Psi4BigBasisTest      basicPsi4-1.3.1       C_bigbasis.out
 Basis     QChem       QChemBigBasisTest     basicQChem4.2         C_bigbasis.out
 Basis     QChem       QChemBigBasisTest     basicQChem5.1         C_bigbasis.out
 
@@ -88,6 +89,8 @@ CC        NWChem      GenericCCTest         basicNWChem6.0        water_ccsd(t).
 CC        NWChem      GenericCCTest         basicNWChem6.5        water_ccsd(t).out
 CC        Psi4        GenericCCTest         basicPsi4-1.2.1       water_ccsd.out
 CC        Psi4        GenericCCTest         basicPsi4-1.2.1       water_ccsd(t).out
+CC        Psi4        GenericCCTest         basicPsi4-1.3.1       water_ccsd.out
+CC        Psi4        GenericCCTest         basicPsi4-1.3.1       water_ccsd(t).out
 CC        QChem       GenericCCTest         basicQChem4.2         water_ccd.out
 CC        QChem       GenericCCTest         basicQChem4.2         water_ccsd.out
 CC        QChem       GenericCCTest         basicQChem4.2         water_ccsd(t).out
@@ -145,10 +148,10 @@ GeoOpt    NWChem      NWChemGeoOptTest      basicNWChem6.5        dvb_gopt_hf.ou
 GeoOpt    NWChem      NWChemGeoOptTest      basicNWChem6.5        dvb_gopt_ks.out
 GeoOpt    ORCA        OrcaGeoOptTest        basicORCA4.1          dvb_gopt.out
 GeoOpt    ORCA        OrcaGeoOptTest        basicORCA4.2          dvb_gopt.out
-GeoOpt    Psi4        Psi4GeoOptTest        basicPsi4-1.0         dvb_gopt_rhf.out
-GeoOpt    Psi4        Psi4GeoOptTest        basicPsi4-1.0         dvb_gopt_rks.out
 GeoOpt    Psi4        Psi4GeoOptTest        basicPsi4-1.2.1       dvb_gopt_rhf.out
 GeoOpt    Psi4        Psi4GeoOptTest        basicPsi4-1.2.1       dvb_gopt_rks.out
+GeoOpt    Psi4        Psi4GeoOptTest        basicPsi4-1.3.1       dvb_gopt_rhf.out
+GeoOpt    Psi4        Psi4GeoOptTest        basicPsi4-1.3.1       dvb_gopt_rks.out
 GeoOpt    QChem       GenericGeoOptTest     basicQChem4.2         dvb_gopt.out
 GeoOpt    QChem       GenericGeoOptTest     basicQChem5.1         dvb_gopt.out
 
@@ -186,8 +189,8 @@ MP        ORCA        GenericMP2Test        basicORCA4.1          water_mp2.out
 MP        ORCA        GenericMP2Test        basicORCA4.2          water_mp2.out
 MP        ORCA        GenericMP3Test        basicORCA4.1          water_mp3.out
 MP        ORCA        GenericMP3Test        basicORCA4.2          water_mp3.out
-MP        Psi4        GenericMP2Test        basicPsi4-1.0         water_mp2.out
 MP        Psi4        GenericMP2Test        basicPsi4-1.2.1       water_mp2.out
+MP        Psi4        GenericMP2Test        basicPsi4-1.3.1       water_mp2.out
 MP        QChem       GenericMP2Test        basicQChem4.2         water_mp2.out
 MP        QChem       GenericMP3Test        basicQChem4.2         water_mp3.out
 MP        QChem       QChemMP4SDQTest       basicQChem4.2         water_mp4sdq.out
@@ -245,10 +248,10 @@ SP        NWChem      NWChemKSSPTest        basicNWChem6.5              dvb_sp_k
 SP        ORCA        OrcaSPTest            basicORCA4.1                dvb_sp.out
 SP        ORCA        OrcaSPTest            basicORCA4.2                dvb_sp.out
 SP        Psi3        Psi3SPTest            basicPsi3                   dvb_sp_hf.out
-SP        Psi4        PsiSPTest             basicPsi4-1.0               dvb_sp_rhf.out
-SP        Psi4        PsiSPTest             basicPsi4-1.0               dvb_sp_rks.out
 SP        Psi4        PsiSPTest             basicPsi4-1.2.1             dvb_sp_rhf.out
 SP        Psi4        PsiSPTest             basicPsi4-1.2.1             dvb_sp_rks.out
+SP        Psi4        PsiSPTest             basicPsi4-1.3.1             dvb_sp_rhf.out
+SP        Psi4        PsiSPTest             basicPsi4-1.3.1             dvb_sp_rks.out
 SP        QChem       GenericSPTest         basicQChem4.2               dvb_sp.out
 SP        QChem       GenericSPTest         basicQChem5.1               dvb_sp.out
 SP        Turbomole   TurbomoleSPTest       basicTurbomole5.9           dvb_sp/basis      dvb_sp/control      dvb_sp/job.last      dvb_sp/coord      dvb_sp/mos
@@ -278,12 +281,12 @@ SPun      NWChem      GenericSPunTest       basicNWChem6.0        dvb_un_sp_ks.o
 SPun      NWChem      GenericSPunTest       basicNWChem6.5        dvb_un_sp_ks.out
 SPun      ORCA        GenericSPunTest       basicORCA4.1          dvb_sp_un.out
 SPun      ORCA        GenericSPunTest       basicORCA4.2          dvb_sp_un.out
-SPun      Psi4        GenericROSPTest       basicPsi4-1.0         dvb_sp_rohf.out
-SPun      Psi4        GenericSPunTest       basicPsi4-1.0         dvb_sp_uhf.out
-SPun      Psi4        GenericSPunTest       basicPsi4-1.0         dvb_sp_uks.out
 SPun      Psi4        GenericROSPTest       basicPsi4-1.2.1       dvb_sp_rohf.out
 SPun      Psi4        GenericSPunTest       basicPsi4-1.2.1       dvb_sp_uhf.out
 SPun      Psi4        GenericSPunTest       basicPsi4-1.2.1       dvb_sp_uks.out
+SPun      Psi4        GenericROSPTest       basicPsi4-1.3.1       dvb_sp_rohf.out
+SPun      Psi4        GenericSPunTest       basicPsi4-1.3.1       dvb_sp_uhf.out
+SPun      Psi4        GenericSPunTest       basicPsi4-1.3.1       dvb_sp_uks.out
 SPun      QChem       GenericSPunTest       basicQChem4.2         dvb_sp_un.out
 SPun      QChem       GenericSPunTest       basicQChem5.1         dvb_sp_un.out
 SPun      Turbomole   GenericSPunTest       basicTurbomole5.9     dvb_un_sp/basis    dvb_un_sp/control    dvb_un_sp/job.last    dvb_un_sp/coord    dvb_un_sp/alpha    dvb_un_sp/beta    dvb_un_sp/gradient
@@ -329,8 +332,8 @@ vib       Molpro      GenericIRTest         basicMolpro2006       dvb_ir.out    
 vib       Molpro      GenericIRTest         basicMolpro2012       dvb_ir.out            dvb_ir.log
 vib       ORCA        GenericIRTest         basicORCA4.1          dvb_ir.out
 vib       ORCA        GenericIRTest         basicORCA4.2          dvb_ir.out
-vib       Psi4        GenericIRTest         basicPsi4-1.0         dvb_ir_rhf.out
 vib       Psi4        GenericIRTest         basicPsi4-1.2.1       dvb_ir_rhf.out
+vib       Psi4        GenericIRTest         basicPsi4-1.3.1       dvb_ir_rhf.out
 vib       QChem       QChemIRTest           basicQChem4.2         dvb_ir.out
 vib       QChem       QChemIRTest           basicQChem5.1         dvb_ir.out
 vib       Turbomole   GenericIRTest         basicTurbomole5.9     dvb_ir/basis            dvb_ir/control            dvb_ir/mos            dvb_ir/aoforce.out
