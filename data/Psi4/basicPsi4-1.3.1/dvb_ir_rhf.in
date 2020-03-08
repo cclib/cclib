@@ -24,6 +24,7 @@ molecule dvb {
 
 set {
     basis sto-3g
+    fd_project true
 }
 
 frequencies('scf', dertype='gradient')
