@@ -107,18 +107,18 @@ class GaussianTDDFTTest(GenericTDTest):
         """Is the length of etrotats correct?"""
         self.assertEqual(len(self.data.etrotats), self.number)
 
-    def testeteltrdipsshape(self):
-        """Is the shape of eteltrdips correct?"""
-        self.assertEqual(numpy.shape(self.data.eteltrdips), (self.number, 3))
+    def testetdipsshape(self):
+        """Is the shape of etdips correct?"""
+        self.assertEqual(numpy.shape(self.data.etdips), (self.number, 3))
 
-    def testetveleltrdipsshape(self):
-        """Is the shape of etveleltrdips correct?"""
+    def testetveldipsshape(self):
+        """Is the shape of etveldips correct?"""
         self.assertEqual(numpy.shape(
-            self.data.etveleltrdips), (self.number, 3))
+            self.data.etveldips), (self.number, 3))
 
-    def testetmagtrdipsshape(self):
-        """Is the shape of etmagtrdips correct?"""
-        self.assertEqual(numpy.shape(self.data.etmagtrdips), (self.number, 3))
+    def testetmagdipsshape(self):
+        """Is the shape of etmagdips correct?"""
+        self.assertEqual(numpy.shape(self.data.etmagdips), (self.number, 3))
 
 class GAMESSUSTDDFTTest(GenericTDTest):
     """Customized time-dependent HF/DFT unittest"""

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2018, the cclib development team
+# Copyright (c) 2020, the cclib development team
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
@@ -1332,10 +1332,10 @@ class Gaussian(logfileparser.Logfile):
         # so to look for a match, we will lower() everything.
 
         if line[1:51].lower() == "ground to excited state transition electric dipole":
-            if not hasattr(self, "eteltrdips"):
-                self.eteltrdips = []
-                self.etveleltrdips = []
-                self.etmagtrdips = []
+            if not hasattr(self, "etdips"):
+                self.etdips = []
+                self.etveldips = []
+                self.etmagdips = []
                 self.netroot = 0
             etrootcount = 0  # to count number of et roots
 
@@ -1343,7 +1343,7 @@ class Gaussian(logfileparser.Logfile):
             line = next(inputfile)  # state          X ...
             line = next(inputfile)  # 1        -0.0001 ...
             while line[1:40].lower() != "ground to excited state transition velo":
-                self.eteltrdips.append(list(map(float, line.split()[1:4])))
+                self.etdips.append(list(map(float, line.split()[1:4])))
                 etrootcount += 1
                 line = next(inputfile)
             if not self.netroot:
@@ -1354,14 +1354,14 @@ class Gaussian(logfileparser.Logfile):
             line = next(inputfile)  # state          X ...
             line = next(inputfile)  # 1        -0.0001 ...
             while line[1:40].lower() != "ground to excited state transition magn":
-                self.etveleltrdips.append(list(map(float, line.split()[1:4])))
+                self.etveldips.append(list(map(float, line.split()[1:4])))
                 line = next(inputfile)
 
             # now loop over lines while the line starts with at least 3 spaces
             line = next(inputfile)  # state          X ...
             line = next(inputfile)  # 1        -0.0001 ...
             while line[0:3] == "   ":
-                self.etmagtrdips.append(list(map(float, line.split()[1:4])))
+                self.etmagdips.append(list(map(float, line.split()[1:4])))
                 line = next(inputfile)
 
         # Circular dichroism data (different for G03 vs G09)
