@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2019, the cclib development team
+# Copyright (c) 2020, the cclib development team
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
@@ -38,6 +38,9 @@ class ccData(object):
         entropy -- entropy (float, hartree/particle)
         etenergies -- energies of electronic transitions (array[1], 1/cm)
         etoscs -- oscillator strengths of electronic transitions (array[1])
+        etdips -- electric transition dipoles of electronic transitions (array[2], ebohr)
+        etveldips -- velocity-gauge electric transition dipoles of electronic transitions (array[2], ebohr)
+        etmagdips -- magnetic transition dipoles of electronic transitions (array[2], ebohr)
         etrotats -- rotatory strengths of electronic transitions (array[1], ??)
         etsecs -- singly-excited configurations for electronic transitions (list of lists)
         etsyms -- symmetries of electronic transitions (list of string)
@@ -112,6 +115,9 @@ class ccData(object):
        "entropy":          Attribute(float,            'entropy',                     'properties'),
        "etenergies":       Attribute(numpy.ndarray,    'electronic transitions',      'transitions'),
        "etoscs":           Attribute(numpy.ndarray,    'oscillator strength',         'transitions'),
+       "etdips":           Attribute(numpy.ndarray,    'electic transition dipoles',  'transitions'),
+       "etveldips":        Attribute(numpy.ndarray,    'velocity-gauge electric transition dipoles', 'transitions'),
+       "etmagdips":        Attribute(numpy.ndarray,    'magnetic transition dipoles', 'transitions'),
        "etrotats":         Attribute(numpy.ndarray,    'rotatory strength',           'transitions'),
        "etsecs":           Attribute(list,             'one excited config',          'transitions'),
        "etsyms":           Attribute(list,             'symmetry',                    'transitions'),

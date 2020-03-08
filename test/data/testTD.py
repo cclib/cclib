@@ -103,6 +103,22 @@ class GaussianTDDFTTest(GenericTDTest):
 
     expected_l_max = 48000
 
+    def testrotatsnumber(self):
+        """Is the length of etrotats correct?"""
+        self.assertEqual(len(self.data.etrotats), self.number)
+
+    def testetdipsshape(self):
+        """Is the shape of etdips correct?"""
+        self.assertEqual(numpy.shape(self.data.etdips), (self.number, 3))
+
+    def testetveldipsshape(self):
+        """Is the shape of etveldips correct?"""
+        self.assertEqual(numpy.shape(
+            self.data.etveldips), (self.number, 3))
+
+    def testetmagdipsshape(self):
+        """Is the shape of etmagdips correct?"""
+        self.assertEqual(numpy.shape(self.data.etmagdips), (self.number, 3))
 
 class GAMESSUSTDDFTTest(GenericTDTest):
     """Customized time-dependent HF/DFT unittest"""
