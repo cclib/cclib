@@ -43,6 +43,7 @@ def makecclib(mol):
         attributes['atomcoords'].append([atom.GetX(), atom.GetY(), atom.GetZ()])
         attributes['atommasses'].append(atom.GetAtomicMass())
         attributes['atomnos'].append(atom.GetAtomicNum())
+    attributes['atomcoords'] = [attributes['atomcoords']]
     return ccData(attributes)
 
 
