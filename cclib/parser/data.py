@@ -72,7 +72,7 @@ class ccData(object):
         optdone -- flags whether an optimization has converged (Boolean)
         optstatus -- optimization status for each set of atomic coordinates (array[1])
         polarizabilities -- (dipole) polarizabilities, static or dynamic (list of arrays[2])
-        pressure -- temperature used for Thermochemistry (float, atm)
+        pressure -- pressure used for Thermochemistry (float, atm)
         scancoords -- geometries of each scan step (array[3], angstroms)
         scanenergies -- energies of potential energy surface (list)
         scannames -- names of varaibles scanned (list of strings)
