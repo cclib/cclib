@@ -236,3 +236,4 @@ A complete data table can be parsed from many output files by following this for
 
 The argument for ``-O`` indicates the data file to be written and its extension specifies the filetype (e.g. csv, h5/hdf/hdf5, json, pickle/pkl, xlsx).
 Since higher-dimensional attributes (e.g. ``atomcoords``) are handled as plain text in some file formats (such as Excel XLSX or CSV), we recommend storing JSON or HDF5 files.
+Observe that the output data file is overwritten if it exits already.

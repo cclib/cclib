@@ -31,15 +31,15 @@ def process_logfiles(filenames, output, identifier):
             )
 
         if outputtype in {'csv'}:
-            df.to_csv(output)
+            df.to_csv(output, mode='w')
         elif outputtype in {'h5', 'hdf', 'hdf5'}:
-            df.to_hdf(output, key=identifier)
+            df.to_hdf(output, mode='w', key=identifier)
         elif outputtype in {'json'}:
             df.to_json(output)
         elif outputtype in {'pickle', 'pkl'}:
             df.to_pickle(output)
         elif outputtype in {'xlsx'}:
-            writer = pd.ExcelWriter(output)
+            writer = pd.ExcelWriter(output, mode='w')
             # This overwrites previous sheets
             # (see https://stackoverflow.com/a/42375263/4039050)
             df.to_excel(writer, sheet_name=identifier)
