@@ -1582,14 +1582,12 @@ cannot be determined. Rerun without `$molecule read`."""
                     self.entropy = utils.convertor(entropy,
                                                    'kcal/mol', 'hartree')
                 if not hasattr(self, 'freeenergy'):
-                    self.freeenergy = self.enthalpy - self.entropy
+                    self.freeenergy = self.enthalpy - self.entropy * self.temperature
 
         if line[:16] == ' Total job time:':
             self.metadata['success'] = True
 
         # TODO:
-        # 'enthalpy' (incorrect)
-        # 'freeenergy' (incorrect)
         # 'nocoeffs'
         # 'nooccnos'
         # 'vibanharms'

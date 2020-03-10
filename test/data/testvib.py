@@ -107,6 +107,8 @@ class GaussianIRTest(GenericIRTest):
         self.assertAlmostEqual(self.data.zpve, zpve, delta=0.001)
 
     entropy_places = 3
+    enthalpy_places = 3
+    freeenergy_places = 3
 
     def testtemperature(self):
         """Is the temperature 298.15 K?"""
@@ -115,6 +117,14 @@ class GaussianIRTest(GenericIRTest):
     def testentropy(self):
          """Is the entropy reasonable"""
          self.assertAlmostEqual(0.0001462623335480945, self.data.entropy, self.entropy_places)
+
+    def testenthalpy(self):
+         """Is the enthalpy reasonable"""
+         self.assertAlmostEqual(-382.12130688525264, self.data.enthalpy, self.enthalpy_places)
+
+    def testfreeenergy(self):
+         """Is the freeenergy reasonable"""
+         self.assertAlmostEqual(-382.164915, self.data.freeenergy, self.freeenergy_places)
 
 
 class JaguarIRTest(GenericIRTest):
@@ -193,23 +203,25 @@ class OrcaIRTest(GenericIRTest):
 class QChemIRTest(GenericIRTest):
     """Customized vibrational frequency unittest"""
 
+    enthalpy_places = 3
     entropy_places = 3
+    freeenergy_places = 3
 
     def testtemperature(self):
         """Is the temperature 298.15 K?"""
         self.assertEqual(298.15, self.data.temperature)
 
-    # def testenthalpy(self):
-    #     """Is the enthalpy ..."""
-    #     self.assertInside(self.data.enthalpy, )
+    def testenthalpy(self):
+         """Is the enthalpy reasonable"""
+         self.assertAlmostEqual(0.1871270552135131, self.data.enthalpy, self.enthalpy_places)
 
     def testentropy(self):
          """Is the entropy reasonable"""
          self.assertAlmostEqual(0.00014667348271900577, self.data.entropy, self.entropy_places)
 
-    # def testfreeenergy(self):
-    #     """Is the free energy ..."""
-    #     self.assertInside(self.data.freeenergy, )
+    def testfreeenergy(self):
+         """Is the freeenergy reasonable"""
+         self.assertAlmostEqual(0.14339635634084155, self.data.freeenergy, self.freeenergy_places)
 
     # Molecular mass of DVB in mD.
     molecularmass = 130078.25
