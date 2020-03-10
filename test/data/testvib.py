@@ -173,7 +173,7 @@ class OrcaIRTest(GenericIRTest):
 
     def testentropy(self):
          """Is the entropy reasonable"""
-         self.assertAlmostEqual(0.03601749, self.data.entropy, self.entropy_places)
+         self.assertAlmostEqual(0.00012080325339594164, self.data.entropy, self.entropy_places)
 
     def testfreeenergy(self):
          """Is the freeenergy reasonable"""
