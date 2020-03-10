@@ -106,6 +106,16 @@ class GaussianIRTest(GenericIRTest):
         """Is the zero-point correction correct?"""
         self.assertAlmostEqual(self.data.zpve, zpve, delta=0.001)
 
+    entropy_places = 3
+
+    def testtemperature(self):
+        """Is the temperature 298.15 K?"""
+        self.assertAlmostEqual(298.15, self.data.temperature)
+
+    def testentropy(self):
+         """Is the entropy reasonable"""
+         self.assertAlmostEqual(0.0001462623335480945, self.data.entropy, self.entropy_places)
+
 
 class JaguarIRTest(GenericIRTest):
     """Customized vibrational frequency unittest"""
@@ -183,6 +193,8 @@ class OrcaIRTest(GenericIRTest):
 class QChemIRTest(GenericIRTest):
     """Customized vibrational frequency unittest"""
 
+    entropy_places = 3
+
     def testtemperature(self):
         """Is the temperature 298.15 K?"""
         self.assertEqual(298.15, self.data.temperature)
@@ -191,9 +203,9 @@ class QChemIRTest(GenericIRTest):
     #     """Is the enthalpy ..."""
     #     self.assertInside(self.data.enthalpy, )
 
-    # def testentropy(self):
-    #     """Is the entropy ..."""
-    #     self.assertInside(self.data.entropy, )
+    def testentropy(self):
+         """Is the entropy reasonable"""
+         self.assertAlmostEqual(0.00014667348271900577, self.data.entropy, self.entropy_places)
 
     # def testfreeenergy(self):
     #     """Is the free energy ..."""

@@ -1577,7 +1577,7 @@ cannot be determined. Rerun without `$molecule read`."""
                 line = next(inputfile)
                 assert 'Total Entropy' in line
                 if not hasattr(self, 'entropy'):
-                    entropy = float(line.split()[2]) * self.temperature / 1000
+                    entropy = float(line.split()[2]) / 1000
                     # This is the *temperature dependent* entropy.
                     self.entropy = utils.convertor(entropy,
                                                    'kcal/mol', 'hartree')
@@ -1589,7 +1589,6 @@ cannot be determined. Rerun without `$molecule read`."""
 
         # TODO:
         # 'enthalpy' (incorrect)
-        # 'entropy' (incorrect)
         # 'freeenergy' (incorrect)
         # 'nocoeffs'
         # 'nooccnos'
