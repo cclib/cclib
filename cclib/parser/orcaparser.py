@@ -183,7 +183,7 @@ class ORCA(logfileparser.Logfile):
                                 continue
                             if line[0] == '#' or line.strip(' ') == '\n':
                                 continue
-                            if '*' in line or line.strip() == "end":
+                            if line.strip()[0] == '*' or line.strip() == "end":
                                 break
                             # Strip basis specification that can appear after coordinates
                             line = line.split('newGTO')[0].strip()
