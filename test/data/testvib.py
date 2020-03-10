@@ -126,6 +126,10 @@ class GaussianIRTest(GenericIRTest):
          """Is the freeenergy reasonable"""
          self.assertAlmostEqual(-382.164915, self.data.freeenergy, self.freeenergy_places)
 
+    def testfreeenergyconsistency(self):
+        """Does G = H - TS hold"""
+        self.assertAlmostEqual(self.data.enthalpy - self.data.temperature * self.data.entropy, self.data.freeenergy, self.freeenergy_places)
+
 
 class JaguarIRTest(GenericIRTest):
     """Customized vibrational frequency unittest"""
@@ -168,6 +172,10 @@ class MolcasIRTest(GenericIRTest):
          """Is the freeenergy reasonable"""
          self.assertAlmostEqual(-382.153812, self.data.freeenergy, self.freeenergy_places)
 
+    def testfreeenergyconsistency(self):
+        """Does G = H - TS hold"""
+        self.assertAlmostEqual(self.data.enthalpy - self.data.temperature * self.data.entropy, self.data.freeenergy, self.freeenergy_places)
+
 
 class OrcaIRTest(GenericIRTest):
     """Customized vibrational frequency unittest"""
@@ -198,6 +206,10 @@ class OrcaIRTest(GenericIRTest):
     def testfreeenergy(self):
          """Is the freeenergy reasonable"""
          self.assertAlmostEqual(-381.88826585, self.data.freeenergy, self.freeenergy_places)
+
+    def testfreeenergyconsistency(self):
+        """Does G = H - TS hold"""
+        self.assertAlmostEqual(self.data.enthalpy - self.data.temperature * self.data.entropy, self.data.freeenergy, self.freeenergy_places)
 
 
 class QChemIRTest(GenericIRTest):
@@ -234,6 +246,10 @@ class QChemIRTest(GenericIRTest):
     def testhessian(self):
         """Do the frequencies from the Hessian match the printed frequencies?"""
 
+    def testfreeenergyconsistency(self):
+        """Does G = H - TS hold"""
+        self.assertAlmostEqual(self.data.enthalpy - self.data.temperature * self.data.entropy, self.data.freeenergy, self.freeenergy_places)
+
 
 class GamessIRTest(GenericIRTest):
     """Customized vibrational frequency unittest"""
@@ -267,6 +283,10 @@ class GamessIRTest(GenericIRTest):
     def testfreeenergy(self):
          """Is the freeenergy reasonable"""
          self.assertAlmostEqual(-381.90808120060200, self.data.freeenergy, self.freeenergy_places)
+
+    def testfreeenergyconsistency(self):
+        """Does G = H - TS hold"""
+        self.assertAlmostEqual(self.data.enthalpy - self.data.temperature * self.data.entropy, self.data.freeenergy, self.freeenergy_places)
 
 
 class Psi4IRTest(GenericIRTest):
