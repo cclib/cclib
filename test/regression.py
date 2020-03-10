@@ -1652,6 +1652,12 @@ def testORCA_ORCA4_2_MP2_gradient_out(logfile):
     idx = (0, 1, 1)
     assert logfile.data.grads[idx] == -0.00040549
 
+def testORCA_ORCA4_2_long_input_out(logfile):
+    """Long ORCA input file (#804)."""
+    assert logfile.data.metadata["package_version"] == "4.2.0"
+    assert hasattr(logfile.data, 'atomcoords')
+    assert logfile.data.atomcoords.shape == (100, 12, 3)
+
 
 # PSI 3 #
 
