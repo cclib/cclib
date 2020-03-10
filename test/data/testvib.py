@@ -138,7 +138,7 @@ class MolcasIRTest(GenericIRTest):
 
     def testentropy(self):
          """Is the entropy reasonable"""
-         self.assertAlmostEqual(0.13403144, self.data.entropy, self.entropy_places)
+         self.assertAlmostEqual(0.00013403320476271246, self.data.entropy, self.entropy_places)
 
     def testenthalpy(self):
          """Is the enthalpy reasonable"""
