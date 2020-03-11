@@ -114,6 +114,10 @@ class GaussianIRTest(GenericIRTest):
         """Is the temperature 298.15 K?"""
         self.assertAlmostEqual(298.15, self.data.temperature)
 
+    def testpressure(self):
+        """Is the pressure 1 atm?"""
+        self.assertAlmostEqual(1, self.data.pressure)
+
     def testentropy(self):
          """Is the entropy reasonable"""
          self.assertAlmostEqual(0.0001462623335480945, self.data.entropy, self.entropy_places)
@@ -222,6 +226,10 @@ class QChemIRTest(GenericIRTest):
     def testtemperature(self):
         """Is the temperature 298.15 K?"""
         self.assertEqual(298.15, self.data.temperature)
+
+    def testpressure(self):
+        """Is the pressure 1 atm?"""
+        self.assertAlmostEqual(1, self.data.pressure)
 
     def testenthalpy(self):
          """Is the enthalpy reasonable"""
