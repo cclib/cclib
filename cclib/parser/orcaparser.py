@@ -1059,20 +1059,24 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
             if float(self.metadata["package_version"][:3]) > 4.0:
                 self.skip_lines(inputfile, ['Scaling factor for frequencies', 'b'])
 
-            vibfreqs = numpy.zeros(3 * self.natom)
-            for i, line in zip(range(3 * self.natom), inputfile):
-                vibfreqs[i] = float(line.split()[1])
+            if self.natom > 1:
+                vibfreqs = numpy.zeros(3 * self.natom)
+                for i, line in zip(range(3 * self.natom), inputfile):
+                    vibfreqs[i] = float(line.split()[1])
 
-            nonzero = numpy.nonzero(vibfreqs)[0]
-            self.first_mode = nonzero[0]
-            # Take all modes after first
-            # Mode between imaginary and real modes could be 0
-            self.num_modes = 3*self.natom - self.first_mode
-            if self.num_modes > 3*self.natom - 6:
-                msg = "Modes corresponding to rotations/translations may be non-zero."
-                if self.num_modes == 3*self.natom - 5:
-                    msg += '\n You can ignore this if the molecule is linear.'
-            self.set_attribute('vibfreqs', vibfreqs[self.first_mode:])
+                nonzero = numpy.nonzero(vibfreqs)[0]
+                self.first_mode = nonzero[0]
+                # Take all modes after first
+                # Mode between imaginary and real modes could be 0
+                self.num_modes = 3*self.natom - self.first_mode
+                if self.num_modes > 3*self.natom - 6:
+                    msg = "Modes corresponding to rotations/translations may be non-zero."
+                    if self.num_modes == 3*self.natom - 5:
+                        msg += '\n You can ignore this if the molecule is linear.'
+                self.set_attribute('vibfreqs', vibfreqs[self.first_mode:])
+            else:
+                # we have a single atom
+                self.set_attribute('vibfreqs', numpy.array([]))
 
         # NORMAL MODES
         # ------------
@@ -1087,18 +1091,22 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
         #       2       0.000000   0.000000   0.000000   0.000000   0.000000   0.000000
         # ...
         if line[:12] == "NORMAL MODES":
-            all_vibdisps = numpy.zeros((3 * self.natom, self.natom, 3), "d")
+            if self.natom > 1:
+                all_vibdisps = numpy.zeros((3 * self.natom, self.natom, 3), "d")
 
-            self.skip_lines(inputfile, ['d', 'b', 'text', 'text', 'text', 'b'])
+                self.skip_lines(inputfile, ['d', 'b', 'text', 'text', 'text', 'b'])
 
-            for mode in range(0, 3 * self.natom, 6):
-                header = next(inputfile)
-                for atom in range(self.natom):
-                    all_vibdisps[mode:mode + 6, atom, 0] = next(inputfile).split()[1:]
-                    all_vibdisps[mode:mode + 6, atom, 1] = next(inputfile).split()[1:]
-                    all_vibdisps[mode:mode + 6, atom, 2] = next(inputfile).split()[1:]
+                for mode in range(0, 3 * self.natom, 6):
+                    header = next(inputfile)
+                    for atom in range(self.natom):
+                        all_vibdisps[mode:mode + 6, atom, 0] = next(inputfile).split()[1:]
+                        all_vibdisps[mode:mode + 6, atom, 1] = next(inputfile).split()[1:]
+                        all_vibdisps[mode:mode + 6, atom, 2] = next(inputfile).split()[1:]
 
-            self.set_attribute('vibdisps', all_vibdisps[self.first_mode:])
+                self.set_attribute('vibdisps', all_vibdisps[self.first_mode:])
+            else:
+                # we have a single atom
+                self.set_attribute('vibdisps', numpy.array([]))
 
         # -----------
         # IR SPECTRUM
@@ -1112,15 +1120,19 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
         if line[:11] == "IR SPECTRUM":
             self.skip_lines(inputfile, ['d', 'b', 'header', 'd'])
 
-            all_vibirs = numpy.zeros((3 * self.natom,), "d")
+            if self.natom > 1:
+                all_vibirs = numpy.zeros((3 * self.natom,), "d")
 
-            line = next(inputfile)
-            while len(line) > 2:
-                num = int(line[0:4])
-                all_vibirs[num] = float(line.split()[2])
                 line = next(inputfile)
+                while len(line) > 2:
+                    num = int(line[0:4])
+                    all_vibirs[num] = float(line.split()[2])
+                    line = next(inputfile)
 
-            self.set_attribute('vibirs', all_vibirs[self.first_mode:])
+                self.set_attribute('vibirs', all_vibirs[self.first_mode:])
+            else:
+                # we have a single atom
+                self.set_attribute('vibirs', numpy.array([]))
 
         # --------------
         # RAMAN SPECTRUM
@@ -1134,16 +1146,19 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
         if line[:14] == "RAMAN SPECTRUM":
             self.skip_lines(inputfile, ['d', 'b', 'header', 'd'])
 
-            all_vibramans = numpy.zeros(3 * self.natom)
+            if self.natom > 1:
+                all_vibramans = numpy.zeros(3 * self.natom)
 
-            line = next(inputfile)
-            while len(line) > 2:
-                num = int(line[0:4])
-                all_vibramans[num] = float(line.split()[2])
                 line = next(inputfile)
+                while len(line) > 2:
+                    num = int(line[0:4])
+                    all_vibramans[num] = float(line.split()[2])
+                    line = next(inputfile)
 
-            self.set_attribute('vibramans', all_vibramans[self.first_mode:])
-
+                self.set_attribute('vibramans', all_vibramans[self.first_mode:])
+            else:
+                # we have a single atom
+                self.set_attribute('vibramans', numpy.array([]))
 
         # ORCA will print atomic charges along with the spin populations,
         #   so care must be taken about choosing the proper column.
