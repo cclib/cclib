@@ -1643,6 +1643,15 @@ def testORCA_ORCA4_1_porphine_out(logfile):
     assert len(logfile.data.etenergies) == 1
 
 
+def testORCA_ORCA4_1_single_atom_freq_out(logfile):
+    """ORCA frequency with single atom."""
+    assert len(logfile.data.vibdisps) == 0
+    assert len(logfile.data.vibfreqs) == 0
+    assert len(logfile.data.vibirs) == 0
+    assert len(logfile.data.entropy) == -numpy.inf
+    assert len(logfile.data.freeenergy) == numpy.inf
+
+
 def testORCA_ORCA4_2_MP2_gradient_out(logfile):
     """ORCA numerical frequency calculation with gradients."""
     assert logfile.data.metadata["package_version"] == "4.2.0"
