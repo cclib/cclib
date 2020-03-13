@@ -63,7 +63,12 @@ def main():
                         help=('name of sheet which will contain DataFrame, if '
                               'writing to an Excel file, or identifier for '
                               'the group in HDFStore, if writing a HDF file'))
+    parser.add_argument('-f', '--force', action='store_true',
+                        help=('overwrite output file in case it already exists'))
     args = parser.parse_args()
+    if args.output is not None and not args.force and os.path.exists(args.output):
+        parser.exit(1, 'failure: exiting to avoid overwriting existing file "{}"\n'.format(args.output))
+
     process_logfiles(args.compchemlogfiles, args.output, args.identifier)
 
 
