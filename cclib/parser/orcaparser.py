@@ -780,7 +780,8 @@ class ORCA(logfileparser.Logfile):
             line = next(inputfile)
             while line[:17] != 'Electronic energy':
                 line = next(inputfile)
-            self.zpe = next(inputfile).split()[4]
+            self.electronic_energy = float(line.split()[3])
+            self.zpe = float(next(inputfile).split()[4])
             thermal_vibrational_correction = float(next(inputfile).split()[4])
             thermal_rotional_correction = float(next(inputfile).split()[4])
             thermal_translational_correction = float(next(inputfile).split()[4])
@@ -793,7 +794,11 @@ class ORCA(logfileparser.Logfile):
                 line = next(inputfile)
             thermal_enthalpy_correction = float(next(inputfile).split()[4])
             next(inputfile)
-            self.enthalpy = float(next(inputfile).split()[3])
+
+            if self.natom > 1:
+                self.enthalpy = float(next(inputfile).split()[3])
+            else:
+                self.enthalpy = self.electronic_energy + thermal_translational_correction
 
             # Entropy
             line = next(inputfile)
@@ -804,12 +809,20 @@ class ORCA(logfileparser.Logfile):
             rotational_entropy = float(next(inputfile).split()[3])
             translational_entropy = float(next(inputfile).split()[3])
             next(inputfile)
-            self.entropy = float(next(inputfile).split()[4])
+
+            if self.natom > 1:
+                self.entropy = float(next(inputfile).split()[4])
+            else:
+                self.entropy = (electronic_entropy + translational_entropy) / self.temperature
 
             line = next(inputfile)
             while (line[:25] != 'Final Gibbs free enthalpy') and (line[:23] != 'Final Gibbs free energy'):
                 line = next(inputfile)
-            self.freeenergy = float(line.split()[5])
+
+            if self.natom > 1:
+                self.freeenergy = float(line.split()[5])
+            else:
+                self.freeenergy = self.enthalpy - self.temperature * self.entropy
 
         # Read TDDFT information
         if any(x in line for x in ("TD-DFT/TDA EXCITED", "TD-DFT EXCITED")):

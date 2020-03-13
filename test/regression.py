@@ -1648,8 +1648,9 @@ def testORCA_ORCA4_1_single_atom_freq_out(logfile):
     assert len(logfile.data.vibdisps) == 0
     assert len(logfile.data.vibfreqs) == 0
     assert len(logfile.data.vibirs) == 0
-    assert len(logfile.data.entropy) == -numpy.inf
-    assert len(logfile.data.freeenergy) == numpy.inf
+    numpy.testing.assert_almost_equal(logfile.data.enthalpy, -460.14376, 5)
+    numpy.testing.assert_almost_equal(logfile.data.entropy, 6.056e-5, 8)
+    numpy.testing.assert_almost_equal(logfile.data.freeenergy, -460.16182, 6)
 
 
 def testORCA_ORCA4_2_MP2_gradient_out(logfile):
