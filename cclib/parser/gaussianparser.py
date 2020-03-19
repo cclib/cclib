@@ -1789,6 +1789,25 @@ class Gaussian(logfileparser.Logfile):
             else:
                 self.atomcharges["lowdin"] = charges
 
+        #  Mulliken atomic spin densities:
+        #               1
+        #      1  C    0.213023
+        #      2  C    0.025415
+        #      3  C    0.019730
+        #      4  C    0.213023
+        if "Mulliken atomic spin densities:" in line:
+            if not hasattr(self, "atomspins"):
+                self.atomspins = {}
+
+            spins = []
+            nline = next(inputfile)
+            while not "Sum of" in nline:
+                spins.append(float(nline.split()[2]))
+                nline = next(inputfile)
+                    
+            self.atomspins["mulliken"] = spins
+
+
         if line.strip() == "Natural Population":
             if not hasattr(self, 'atomcharges'):
                 self.atomcharges = {}
