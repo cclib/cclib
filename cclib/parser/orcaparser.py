@@ -763,15 +763,39 @@ class ORCA(logfileparser.Logfile):
                 self.gbasis.append(gbasis_tmp[bas_atname])
             del self.tmp_atnames
 
-        """ Banner announcing Thermochemistry
+        """
         --------------------------
         THERMOCHEMISTRY AT 298.15K
         --------------------------
-        """
-        if 'THERMOCHEMISTRY AT' == line[:18]:
 
-            next(inputfile)
-            next(inputfile)
+        Temperature         ... 298.15 K
+        Pressure            ... 1.00 atm
+        Total Mass          ... 130.19 AMU
+
+        Throughout the following assumptions are being made:
+          (1) The electronic state is orbitally nondegenerate
+          ...
+
+        freq.      45.75  E(vib)   ...       0.53 
+        freq.      78.40  E(vib)   ...       0.49
+        ...
+
+
+        ------------
+        INNER ENERGY
+        ------------
+
+        The inner energy is: U= E(el) + E(ZPE) + E(vib) + E(rot) + E(trans)
+             E(el)   - is the total energy from the electronic structure calc
+             ...
+
+        Summary of contributions to the inner energy U:
+        Electronic energy                ...   -382.05075804 Eh
+        ...
+        """
+        if line.strip().startswith('THERMOCHEMISTRY AT'):
+
+            self.skip_lines(inputfile, ['dashes', 'blank'])
             self.temperature = float(next(inputfile).split()[2])
             self.pressure = float(next(inputfile).split()[2])
             total_mass = float(next(inputfile).split()[3])
@@ -785,11 +809,10 @@ class ORCA(logfileparser.Logfile):
             thermal_vibrational_correction = float(next(inputfile).split()[4])
             thermal_rotional_correction = float(next(inputfile).split()[4])
             thermal_translational_correction = float(next(inputfile).split()[4])
-            next(inputfile)
+            self.skip_lines(inputfile, ['dashes'])
             total_thermal_energy = float(next(inputfile).split()[3])
 
             # Enthalpy
-            line = next(inputfile)
             while line[:17] != 'Total free energy':
                 line = next(inputfile)
             thermal_enthalpy_correction = float(next(inputfile).split()[4])
@@ -801,14 +824,13 @@ class ORCA(logfileparser.Logfile):
                 self.enthalpy = self.electronic_energy + thermal_translational_correction
 
             # Entropy
-            line = next(inputfile)
             while line[:18] != 'Electronic entropy':
                 line = next(inputfile)
             electronic_entropy = float(line.split()[3])
             vibrational_entropy = float(next(inputfile).split()[3])
             rotational_entropy = float(next(inputfile).split()[3])
             translational_entropy = float(next(inputfile).split()[3])
-            next(inputfile)
+            self.skip_lines(inputfile, ['dashes'])
 
             # ORCA prints -inf for single atom entropy.
             if self.natom > 1:
@@ -816,9 +838,10 @@ class ORCA(logfileparser.Logfile):
             else:
                 self.entropy = (electronic_entropy + translational_entropy) / self.temperature
 
-            line = next(inputfile)
             while (line[:25] != 'Final Gibbs free enthalpy') and (line[:23] != 'Final Gibbs free energy'):
                 line = next(inputfile)
+            self.skip_lines(inputfile, ['dashes'])
+
 
             # ORCA prints -inf for sinle atom free energy.
             if self.natom > 1:
