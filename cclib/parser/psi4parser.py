@@ -116,8 +116,8 @@ class Psi4(logfileparser.Logfile):
         # Determine whether or not the reference wavefunction is
         # restricted, unrestricted, or restricted open-shell.
         if line.strip() == "SCF":
-            self.skip_line(inputfile, 'author list')
-            line = next(inputfile)
+            while "Reference" not in line:
+                line = next(inputfile)
             self.reference = line.split()[0]
             # Work with a complex reference as if it's real.
             if self.reference[0] == 'C':

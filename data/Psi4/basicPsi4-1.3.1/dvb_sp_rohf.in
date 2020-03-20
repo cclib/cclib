@@ -1,5 +1,5 @@
 molecule dvb {
-    0 1
+    1 2
     C    -1.4152533224   0.2302217854   0.0000000000
     C     1.4152533224  -0.2302217854   0.0000000000
     C    -0.4951331558   1.3144608674   0.0000000000
@@ -24,7 +24,10 @@ molecule dvb {
 
 set {
     basis sto-3g
-    fd_project true
+    reference rohf
+    print_basis true
+    print_mos true
 }
 
-frequencies('scf', dertype='gradient')
+scf_e, scf_wfn = energy('scf', return_wfn=True)
+oeprop(scf_wfn, 'MULLIKEN_CHARGES', 'LOWDIN_CHARGES', 'MULTIPOLE(5)')

@@ -24,7 +24,9 @@ molecule dvb {
 
 set {
     basis sto-3g
-    fd_project true
+    print_basis true
+    print_mos true
 }
 
-frequencies('scf', dertype='gradient')
+scf_e, scf_wfn = energy('scf', return_wfn=True)
+oeprop(scf_wfn, 'MULLIKEN_CHARGES', 'LOWDIN_CHARGES', 'MULTIPOLE(5)')

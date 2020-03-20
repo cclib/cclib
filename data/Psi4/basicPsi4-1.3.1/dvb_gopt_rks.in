@@ -24,7 +24,7 @@ molecule dvb {
 
 set {
     basis sto-3g
-    fd_project true
+    scf_type pk
 }
 
-frequencies('scf', dertype='gradient')
+optimize('b3lyp')
