@@ -810,6 +810,7 @@ class ORCA(logfileparser.Logfile):
             translational_entropy = float(next(inputfile).split()[3])
             next(inputfile)
 
+            # ORCA prints -inf for single atom entropy.
             if self.natom > 1:
                 self.entropy = float(next(inputfile).split()[4])
             else:
@@ -819,6 +820,7 @@ class ORCA(logfileparser.Logfile):
             while (line[:25] != 'Final Gibbs free enthalpy') and (line[:23] != 'Final Gibbs free energy'):
                 line = next(inputfile)
 
+            # ORCA prints -inf for sinle atom free energy.
             if self.natom > 1:
                 self.freeenergy = float(line.split()[5])
             else:
