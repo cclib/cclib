@@ -1795,7 +1795,7 @@ class Gaussian(logfileparser.Logfile):
         #      2  C    0.025415
         #      3  C    0.019730
         #      4  C    0.213023
-        if "Mulliken atomic spin densities:" in line:
+        if line[1:32] == "Mulliken atomic spin densities:":
             if not hasattr(self, "atomspins"):
                 self.atomspins = {}
 
