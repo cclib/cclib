@@ -47,7 +47,7 @@ class UnrestrictedCalculationTest(unittest.TestCase):
 class RestrictedOpenShellCalculationTest(unittest.TestCase):
     """Check restricted open shell calcualtion."""
     def setUp(self):
-        self.data, self.logfile = getdatafile(Psi4, "basicPsi4-1.0", ["dvb_sp_rohf.out"])
+        self.data, self.logfile = getdatafile(Psi4, "basicPsi4-1.3.1", ["dvb_sp_rohf.out"])
 
     def test_closed_shel(self):
         self.assertFalse(Orbitals(self.data).closed_shell())
