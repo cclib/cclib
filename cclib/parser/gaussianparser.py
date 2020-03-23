@@ -1760,11 +1760,13 @@ class Gaussian(logfileparser.Logfile):
         #
         if line[1:25] == "Mulliken atomic charges:" or line[1:18] == "Mulliken charges:" or \
            line[1:23] == "Lowdin Atomic Charges:" or line[1:16] == "Lowdin charges:" or \
-           line[1:37] == "Mulliken charges and spin densities:":
+           line[1:37] == "Mulliken charges and spin densities:" or \
+           line[1:32] == "Mulliken atomic spin densities:":
 
             has_spin = 'spin densities' in line 
+            has_charges = 'charges' in line 
 
-            if not hasattr(self, "atomcharges"):
+            if has_charges and not hasattr(self, "atomcharges"):
                 self.atomcharges = {}
 
             if has_spin and not hasattr(self, "atomspins"):
@@ -1776,36 +1778,25 @@ class Gaussian(logfileparser.Logfile):
             spins = []
             nline = next(inputfile)
             while not "Sum of" in nline:
-                charges.append(float(nline.split()[2]))
-                if has_spin:
+                if has_charges:
+                    charges.append(float(nline.split()[2]))
+
+                if has_spin and has_charges:
                     spins.append(float(nline.split()[3]))
+
+                if has_spin and not has_charges:
+                    spins.append(float(nline.split()[2]))
+
                 nline = next(inputfile)
 
             if "Mulliken" in line:
-                self.atomcharges["mulliken"] = charges
+                if has_charges:
+                    self.atomcharges["mulliken"] = charges
                 if has_spin:
                     self.atomspins["mulliken"] = spins
 
-            else:
+            elif "Lowdin" in line:
                 self.atomcharges["lowdin"] = charges
-
-        #  Mulliken atomic spin densities:
-        #               1
-        #      1  C    0.213023
-        #      2  C    0.025415
-        #      3  C    0.019730
-        #      4  C    0.213023
-        if line[1:32] == "Mulliken atomic spin densities:":
-            if not hasattr(self, "atomspins"):
-                self.atomspins = {}
-
-            spins = []
-            nline = next(inputfile)
-            while not "Sum of" in nline:
-                spins.append(float(nline.split()[2]))
-                nline = next(inputfile)
-                    
-            self.atomspins["mulliken"] = spins
 
 
         if line.strip() == "Natural Population":
