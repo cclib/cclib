@@ -93,7 +93,82 @@ class Volume(object):
         boxvol = (self.spacing[0] * self.spacing[1] * self.spacing[2] *
                   convertor(1, "Angstrom", "bohr") ** 3)
         return sum(self.data.ravel() ** 2) * boxvol
+    
+def grad_cartesian(func, boundaryCondition):
+        gradf = copy.copy(volume)
+        gradf.data = numpy.zeros(gradf.data.shape, "d")
 
+        conversion = convertor(1, "bohr", "Angstrom")
+        x = numpy.arange(gradf.origin[0], gradf.topcorner[0] + gradf.spacing[0], gradf.spacing[0]) / conversion
+        y = numpy.arange(gradf.origin[1], gradf.topcorner[1] + gradf.spacing[1], gradf.spacing[1]) / conversion
+        z = numpy.arange(gradf.origin[2], gradf.topcorner[2] + gradf.spacing[2], gradf.spacing[2]) / conversion
+
+        der_x = numpy.zeros(numpy.size(x))
+        der_y = numpy.zeros(numpy.size(y))
+        der_z = numpy.zeros(numpy.size(z))
+
+        if(boundaryCondition == "Periodic"):
+            for xval in enumerate(x):
+                for yval in enumerate(y):
+                    for zval in enumerate(z):                    
+                        if(xval == x[-1]):
+                            der_x[xval] = (func.origin[0], yval, zval] - func[xval, yval, zval]) / func.spacing[0]
+                        if(yval == y[-1]):
+                            der_y[xval] = (xval, func.origin[1], zval] - func[xval, yval, zval]) / func.spacing[1]
+                        if(zval == z[-1]):                        
+                            der_z[zval] = (xval, yval, func.origin[2]] - func[xval, yval, zval]) / func.spacing[2]
+                        else:
+                            der_x = (func[xval + func.spacing[0], yval, zval] - func[xval, yval, zval]) / func.spacing[0]
+                            der_y = (func[xval, yval + func.spacing[1], zval] - func[xval, yval, zval]) / func.spacing[1]
+                            der_z = (func[xval, yval, zval + func.spacing[2]] - func[xval, yval, zval]) / func.spacing[2]
+
+                        gradf.data[xval, yval, zval] = der_x[xval] + der_y[yval] + der_z[zval]
+        else:
+            print("Invalid Boundary Condition passed to the Gradient")
+        return gradf
+
+    def laplacian_cartesian(func, boundaryCondition):
+        lapf = copy.copy(volume)
+        lapf.data = numpy.zeros(lapf.data.shape, "d")
+
+        conversion = convertor(1, "bohr", "Angstrom")
+        x = numpy.arange(lapf.origin[0], lapf.topcorner[0] + lapf.spacing[0], lapf.spacing[0]) / conversion
+        y = numpy.arange(lapf.origin[1], lapf.topcorner[1] + lapf.spacing[1], lapf.spacing[1]) / conversion
+        z = numpy.arange(lapf.origin[2], lapf.topcorner[2] + lapf.spacing[2], lapf.spacing[2]) / conversion
+
+        der2_x = numpy.zeros(numpy.size(x))
+        der2_y = numpy.zeros(numpy.size(y))
+        der2_z = numpy.zeros(numpy.size(z))
+
+        if(boundaryCondition == "Periodic"):
+            for xval in enumerate(x):
+                for yval in enumerate(y):
+                    for zval in enumerate(z):
+                        if(xval == x[0]):
+                            der2_x[xval] = (func[xval + func.spacing[0], yval, zval] - (2 * func[xval, yval, zval]) + func[func.topcorner[0], yval, zval) / (func.spacing[0] ** 2)
+                        if(xval == x[-1]):                        
+                            der2_x[xval] = (func[func.origin[0], yval, zval] - (2 * func[xval, yval, zval]) + func[xval - func.spacing[0], yval, zval) / (func.spacing[0] ** 2)
+
+                        if(yval == y[0]):
+                            der2_y[yval] = (func[xval, yval + func.spacing[1], zval] - (2 * func[xval, yval, zval]) + func[xval, func.topcorner[1], zval) / (func.spacing[1] ** 2)
+                        if(yval == y[-1]):
+                            der2_y[yval] = (func[xval, func.origin[1], zval] - (2 * func[xval, yval, zval]) + func[xval, yval - func.spacing[1], zval) / (func.spacing[1] ** 2)
+                        
+                        if(zval == z[0]):
+                            der2_z[zval] = (func[xval, yval, zval + func.spacing[2]] - (2 * func[xval, yval, zval]) + func[xval, yval, func.topcorner[2]) / (func.spacing[2] ** 2)
+                        if(zval == z[-1]):
+                            der2_z[zval] = (func[xval, yval, func.origin[2]] - (2 * func[xval, yval, zval]) + func[xval, yval, zval - func.spacing[2]) / (func.spacing[2] ** 2)
+
+                        else:
+                            der2_x = (func[xval + func.spacing[0], yval, zval] - (2 * func[xval, yval, zval]) + func[xval - func.spacing[0], yval, zval) / (func.spacing[0] ** 2)
+                            der2_y = (func[xval, yval + func.spacing[1], zval] - (2 * func[xval, yval, zval]) + func[xval, yval - func.spacing[1], zval) / (func.spacing[1] ** 2)
+                            der2_z = (func[xval, yval, zval + func.spacing[2]] - (2 * func[xval, yval, zval]) + func[xval, yval, zval - func.spacing[2]) / (func.spacing[2] ** 2)
+
+                        lapf.data[xval, yval, zval] = der2_x[xval] + der2_y[yval] + der2_z[zval]
+        else:
+            print("Invalid Boundary Condition passed to the Laplacian")
+        return lapf
+                                                                                                                     
     def writeascube(self, filename):
         # Remember that the units are bohr, not Angstroms
         def convert(x):
