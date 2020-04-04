@@ -857,6 +857,8 @@ class Gaussian(logfileparser.Logfile):
         if line[1:10] == "DE(Corr)=" and line[27:35] == "E(CORR)=":
             self.metadata["methods"].append("CCSD")
             self.ccenergy = utils.float(line.split()[3])
+        if line[1:14] == "T1 Diagnostic":
+            self.metadata["t1_diagnostic"] = utils.float(line.split()[-1])
         if line[1:10] == "T5(CCSD)=":
             line = next(inputfile)
             if line[1:9] == "CCSD(T)=":
