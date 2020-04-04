@@ -548,6 +548,8 @@ class Molpro(logfileparser.Logfile):
             if not hasattr(self, "ccenergies"):
                 self.ccenergies = []
             while line[1:20] != "Program statistics:":
+                if line[71:84] == "T1 diagnostic":
+                    self.metadata["t1_diagnostic"] = float(line.split()[-1])
                 # The last energy (most exact) will be read last and thus saved.
                 if line[1:5] == "!CCD" or line[1:6] == "!CCSD" or line[1:9] == "!CCSD(T)":
                     ccenergy = float(line.split()[-1])
