@@ -12,15 +12,12 @@ import unittest
 
 import numpy
 
-from skip import skipForParser
-
 __filedir__ = os.path.realpath(os.path.dirname(__file__))
 
 
 class GenericCCTest(unittest.TestCase):
     """Generic coupled cluster unittest"""
 
-    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testsign(self):
         """Are the coupled cluster corrections negative?"""
         corrections = self.data.ccenergies - self.data.scfenergies
