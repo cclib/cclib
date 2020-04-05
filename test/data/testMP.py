@@ -12,8 +12,6 @@ import unittest
 
 import numpy
 
-from skip import skipForParser
-
 __filedir__ = os.path.realpath(os.path.dirname(__file__))
 
 
@@ -27,14 +25,14 @@ class GenericMP2Test(unittest.TestCase):
         self.assertEqual(self.data.mpenergies.shape,
                          (len(self.data.scfenergies), self.level-1))
 
-    def testchange(self):
-        """(MP2) Are Moller-Plesset corrections negative?"""
+    def testsign(self):
+        """Are the Moller-Plesset corrections negative?"""
         if self.level == 2:
             corrections = self.data.mpenergies[:,0] - self.data.scfenergies
         else:
             corrections = self.data.mpenergies[:,self.level-2] - self.data.mpenergies[:,self.level-3]
         self.assertTrue(numpy.alltrue(corrections < 0.0))
-        
+
 class GenericMP3Test(GenericMP2Test):
     """Generic MP3 unittest"""
     level = 3
