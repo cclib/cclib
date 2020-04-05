@@ -1,0 +1,565 @@
+                  Welcome to Q-Chem
+     A Quantum Leap Into The Future Of Chemistry
+
+
+ Q-Chem 5.3 (devel), Q-Chem, Inc., Pleasanton, CA (2020)
+
+ Yihan Shao,  Zhengting Gan,  E. Epifanovsky,  A. T. B. Gilbert,  M. Wormit,  
+ J. Kussmann,  A. W. Lange,  A. Behn,  Jia Deng,  Xintian Feng,  D. Ghosh,  
+ M. Goldey,  P. R. Horn,  L. D. Jacobson,  I. Kaliman,  T. Kus,  A. Landau,  
+ Jie Liu,  E. I. Proynov,  R. M. Richard,  R. P. Steele,  E. J. Sundstrom,  
+ H. L. Woodcock III,  P. M. Zimmerman,  D. Zuev,  B. Alam,  B. Albrecht,  
+ E. Alguire,  S. A. Baeppler,  D. Barton,  Z. Benda,  Y. A. Bernard,  
+ E. J. Berquist,  K. B. Bravaya,  H. Burton,  K. Carter-Fenk,  D. Casanova,  
+ Chun-Min Chang,  Yunqing Chen,  A. Chien,  K. D. Closser,  M. P. Coons,  
+ S. Coriani,  S. Dasgupta,  A. L. Dempwolff,  M. Diedenhofen,  Hainam Do,  
+ R. G. Edgar,  Po-Tung Fang,  S. Faraji,  S. Fatehi,  Qingguo Feng,  
+ J. Fosso-Tande,  J. Gayvert,  Qinghui Ge,  A. Ghysels,  G. Gidofalvi,  
+ J. Gomes,  J. Gonthier,  A. Gunina,  D. Hait,  M. W. D. Hanson-Heine,  
+ P. H. P. Harbach,  A. W. Hauser,  M. F. Herbst,  J. E. Herr,  
+ E. G. Hohenstein,  Z. C. Holden,  Kerwin Hui,  B. C. Huynh,  T.-C. Jagau,  
+ Hyunjun Ji,  B. Kaduk,  K. Khistyaev,  Jaehoon Kim,  P. Klunzinger,  K. Koh,  
+ D. Kosenkov,  L. Koulias,  T. Kowalczyk,  C. M. Krauter,  A. Kunitsa,  
+ Ka Un Lao,  A. Laurent,  K. V. Lawler,  Joonho Lee,  D. Lefrancois,  
+ S. Lehtola,  D. S. Levine,  Yi-Pei Li,  You-Sheng Lin,  Fenglai Liu,  
+ Kuan-Yu Liu,  E. Livshits,  M. Loipersberger,  A. Luenser,  P. Manohar,  
+ E. Mansoor,  S. F. Manzer,  Shan-Ping Mao,  Yuezhi Mao,  N. Mardirossian,  
+ A. V. Marenich,  T. Markovich,  L. A. Martinez-Martinez,  S. A. Maurer,  
+ N. J. Mayhall,  S. C. McKenzie,  J.-M. Mewes,  P. Morgante,  A. F. Morrison,  
+ J. W. Mullinax,  K. Nanda,  T. S. Nguyen-Beck,  R. Olivares-Amaya,  
+ J. A. Parkhill,  S. K. Paul,  F. Pavosevic,  Zheng Pei,  T. M. Perrine,  
+ F. Plasser,  P. Pokhilko,  S. Prager,  A. Prociuk,  E. Ramos,  B. Rana,  
+ D. R. Rehn,  F. Rob,  M. Scheurer,  M. Schneider,  N. Sergueev,  
+ S. M. Sharada,  S. Sharma,  D. W. Small,  T. Stauch,  C. J. Stein,  
+ T. Stein,  Yu-Chuan Su,  S. P. Veccham,  Zhen Tao,  A. J. W. Thom,  
+ A. Tkatchenko,  T. Tsuchimochi,  N. M. Tubman,  L. Vogt,  M. L. Vidal,  
+ O. Vydrov,  M. A. Watson,  J. Wenzel,  M. de Wergifosse,  T. A. Wesolowski,  
+ A. White,  J. Witte,  A. Yamada,  Jun Yang,  K. Yao,  S. Yeganeh,  
+ S. R. Yost,  Zhi-Qiang You,  A. Zech,  Igor Ying Zhang,  Xing Zhang,  
+ Yan Zhao,  Ying Zhu,  B. R. Brooks,  G. K. L. Chan,  C. J. Cramer,  
+ M. S. Gordon,  W. J. Hehre,  A. Klamt,  M. W. Schmidt,  C. D. Sherrill,  
+ D. G. Truhlar,  A. Aspuru-Guzik,  R. Baer,  A. T. Bell,  N. A. Besley,  
+ Jeng-Da Chai,  A. E. DePrince, III,  R. A. DiStasio Jr.,  A. Dreuw,  
+ B. D. Dunietz,  T. R. Furlani,  Chao-Ping Hsu,  Yousung Jung,  Jing Kong,  
+ D. S. Lambrecht,  WanZhen Liang,  C. Ochsenfeld,  V. A. Rassolov,  
+ L. V. Slipchenko,  J. E. Subotnik,  T. Van Voorhis,  J. M. Herbert,  
+ A. I. Krylov,  P. M. W. Gill,  M. Head-Gordon
+
+ Contributors to earlier versions of Q-Chem not listed above: 
+ R. D. Adamson,  B. Austin,  J. Baker,  G. J. O. Beran,  K. Brandhorst,  
+ S. T. Brown,  E. F. C. Byrd,  A. K. Chakraborty,  C.-L. Cheng,  
+ Siu Hung Chien,  D. M. Chipman,  D. L. Crittenden,  H. Dachsel,  
+ R. J. Doerksen,  A. D. Dutoi,  L. Fusti-Molnar,  W. A. Goddard III,  
+ A. Golubeva-Zadorozhnaya,  S. R. Gwaltney,  G. Hawkins,  A. Heyden,  
+ S. Hirata,  G. Kedziora,  F. J. Keil,  C. Kelley,  Jihan Kim,  R. A. King,  
+ R. Z. Khaliullin,  P. P. Korambath,  W. Kurlancheek,  A. M. Lee,  M. S. Lee,  
+ S. V. Levchenko,  Ching Yeh Lin,  D. Liotard,  R. C. Lochan,  I. Lotan,  
+ P. E. Maslen,  N. Nair,  D. P. O'Neill,  D. Neuhauser,  E. Neuscamman,  
+ C. M. Oana,  R. Olson,  B. Peters,  R. Peverati,  P. A. Pieniazek,  
+ Y. M. Rhee,  J. Ritchie,  M. A. Rohrdanz,  E. Rosta,  N. J. Russ,  
+ H. F. Schaefer III,  N. E. Schultz,  N. Shenvi,  A. C. Simmonett,  A. Sodt,  
+ D. Stuck,  K. S. Thanthiriwatte,  V. Vanovschi,  Tao Wang,  A. Warshel,  
+ C. F. Williams,  Q. Wu,  X. Xu,  W. Zhang
+
+ Please cite Q-Chem as follows:
+ Y. Shao et al., Mol. Phys. 113, 184-215 (2015)
+ DOI: 10.1080/00268976.2014.952696
+
+ Q-Chem 5.3.0 for Intel X86 EM64T Linux
+
+ Parts of Q-Chem use Armadillo 9.800.1 (Horizon Scraper).
+ http://arma.sourceforge.net/
+
+Compilation information
+-----------------------
+
+ SVN revision             | 33520
+ SVN branch               | trunk
+ Last SVN revision        | 33520
+ Last SVN author          | xfeng
+ Hostname                 | cheetah
+ User                     | qcdevops
+ System                   | Linux-4.4.104-18.44-default
+ Processor                | x86_64
+ Compiler                 | Intel
+ C compiler version       | 17.0.5.20170817
+ CXX compiler version     | 17.0.5.20170817
+ Fortran compiler version | 17.0.5.20170817
+ Configuration time       | 2020-03-18 07:38:57
+
+
+ Q-Chem begins on Wed Mar 18 08:51:29 2020  
+
+Host: cheetah
+0
+
+     Scratch files written to /scratch/qcdevops/qchem/qchem137263//
+Processing $rem in /scratch/qcdevops/jenkins/workspace/build_qchem/qchem/config/preferences:
+Processing $rem in /home/qcdevops/.qchemrc:
+
+Checking the input file for inconsistencies... 	...done.
+
+--------------------------------------------------------------
+User input:
+--------------------------------------------------------------
+$comment
+NH spin-orbit coupling calculation using SF-CISD/6-31g
+SOC between S0 (Ms=0) and T1 (Ms=1) states
+SOC(1e) = 114.38 cm(-1)
+SOC(1e+2emf) = 64.97 cm(-1)
+$end
+
+$molecule
+0 3
+N 0.0000 0.0000 0.0000
+H 0.0000 0.0000 1.9748
+$end
+
+$rem
+jobtype = sp
+method = eom-ccsd
+basis = 6-31g
+input_bohr = true
+unrestricted = false
+scf_guess = gwh
+
+cc_max_iter = 0
+n_frozen_core = 3
+n_frozen_virtual = 6
+
+sf_states = [1,2,0,0]
+cc_trans_prop = true
+calc_soc = 3
+cc_state_to_opt = [1,1]
+$end
+
+--------------------------------------------------------------
+ ----------------------------------------------------------------
+             Standard Nuclear Orientation (Bohr)
+    I     Atom           X                Y                Z
+ ----------------------------------------------------------------
+    1      N       0.0000000000     0.0000000000    -0.2468500000
+    2      H       0.0000000000     0.0000000000     1.7279500000
+ ----------------------------------------------------------------
+ Molecular Point Group                 C2v   NOp =  4
+ Largest Abelian Subgroup              C2v   NOp =  4
+ Nuclear Repulsion Energy =           3.54466275 hartrees
+ There are        5 alpha and        3 beta electrons
+ Requested basis set is 6-31G
+ There are 5 shells and 11 basis functions
+ Total memory of 2000 MB is distributed as follows: 
+   MEM_STATIC is set to 192 MB
+   QALLOC/CCMAN JOB total memory use is  1808 MB
+ Warning: actual memory use might exceed 2000 MB
+
+ Total QAlloc Memory Limit   2000 MB
+ Mega-Array Size       188 MB
+ MEM_STATIC part       192 MB
+
+                       Distance Matrix (Bohrs)
+             N (  1)
+   H (  2)  1.974800
+ 
+ A cutoff of  1.0D-14 yielded     15 shell pairs
+ There are        78 function pairs
+ Smallest overlap matrix eigenvalue = 6.68E-02
+
+ Scale SEOQF with 1.000000e+00/1.000000e+00/1.000000e+00
+
+ Standard Electronic Orientation quadrupole field applied
+ Nucleus-field energy     =    -0.0000000010 hartrees
+ Constructing guess Fock matrix from core Hamiltonian
+ Applying Wolfsberg-Helmholtz approximation
+
+ -----------------------------------------------------------------------
+  General SCF calculation program by
+  Eric Jon Sundstrom, Paul Horn, Yuezhi Mao, Dmitri Zuev, Alec White,
+  David Stuck, Shaama M.S., Shane Yost, Joonho Lee, David Small,
+  Daniel Levine, Susi Lehtola, Hugh Burton, Evgeny Epifanovsky,
+  Bang C. Huynh
+ -----------------------------------------------------------------------
+ Hartree-Fock
+ Orthonormalizing orbitals
+ using 2 threads for integral computing
+ -------------------------------------------------------
+ OpenMP Integral computing Module                
+ Release: version 2.0, May 2017, Q-Chem Inc. Pleasanton 
+ -------------------------------------------------------
+ A restricted open-shell SCF calculation will be
+ performed using GDM
+ SCF converges when RMS gradient is below 1.0e-08
+ ---------------------------------------
+  Cycle       Energy        RMS Gradient
+ ---------------------------------------
+    1     -54.4793895146      6.27e-01   Descent step
+    2     -54.7932564169      3.75e-01   Descent step
+    3     -54.9234724003      1.08e-01   Normal BFGS step
+    4     -54.9378681513      1.33e-02   Normal BFGS step
+    5     -54.9382053427      3.09e-03   Normal BFGS step
+    6     -54.9382254384      4.88e-04   Normal BFGS step
+    7     -54.9382257345      1.08e-04   Normal BFGS step
+    8     -54.9382257473      5.87e-06   Normal BFGS step
+    9     -54.9382257473      1.11e-06   Normal BFGS step
+   10     -54.9382257473      8.55e-08   Normal BFGS step
+   11     -54.9382257473      8.45e-09  Convergence criterion met
+The disked orbital energies are calculated using alpha and beta Focks
+ ---------------------------------------
+ SCF time:   CPU 2.68s  wall 1.00s 
+<S^2> =          2.000000000
+ SCF   energy in the final basis set =      -54.9382257473
+ Total energy in the final basis set =      -54.9382257473
+
+
+ ------------------------------------------------------------------------------
+
+   CCMAN2: suite of methods based on coupled cluster
+           and equation of motion theories.
+
+   Components:
+   * libvmm-1.3-trunk
+     by Evgeny Epifanovsky, Ilya Kaliman.
+   * libtensor-2.5-trunk
+     by Evgeny Epifanovsky, Michael Wormit, Dmitry Zuev, Sam Manzer, 
+        Ilya Kaliman.
+   * libcc-2.5-trunk
+     by Evgeny Epifanovsky, Arik Landau, Tomasz Kus, Kirill Khistyaev, 
+        Dmitry Zuev, Prashant Manohar, Xintian Feng, Anna Krylov, 
+        Matthew Goldey, Alec White, Thomas Jagau, Kaushik Nanda, 
+        Anastasia Gunina, Alexander Kunitsa, Joonho Lee.
+
+   CCMAN original authors:
+   Anna I. Krylov, C. David Sherrill, Steven R. Gwaltney,
+   Edward F. C. Byrd (2000)
+   Sergey V. Levchenko, Lyudmila V. Slipchenko, Tao Wang,
+   Ana-Maria C. Cristian (2003)
+   Piotr A. Pieniazek, C. Melania Oana, Evgeny Epifanovsky (2007)
+   Prashant Manohar (2009)
+
+ ------------------------------------------------------------------------------
+
+
+ Allocating and initializing 1808MB of RAM...
+ Calculation will run on 2 cores.
+
+ 
+ Alpha MOs, Restricted
+ -- Doubly Occupied --           
+-15.644  -1.158  -0.582
+  1 A1    2 A1    3 A1                                                         
+ -- Singly Occupied (Occupied) --
+ -0.537  -0.537
+  1 B1    1 B2                                                                 
+ -- Virtual --                   
+  0.227   0.861   0.861   0.956   1.026   1.199
+  4 A1    2 B1    2 B2    5 A1    6 A1    7 A1                                 
+ 
+ Beta MOs, Restricted
+ -- Doubly Occupied --           
+-15.590  -0.935  -0.491
+  1 A1    2 A1    3 A1                                                         
+ -- Singly Occupied (Vacant) --  
+  0.190   0.190
+  1 B1    1 B2                                                                 
+ -- Virtual --                   
+  0.252   1.007   1.007   0.991   1.066   1.260
+  4 A1    2 B1    2 B2    5 A1    6 A1    7 A1                                 
+
+ Occupation and symmetry of molecular orbitals
+
+ Point group: C2v (4 irreducible representations).
+
+                           A1   A2   B1   B2    All 
+ ----------------------------------------------------
+ All molecular orbitals:
+  - Alpha                  7    0    2    2     11  
+  - Beta                   7    0    2    2     11  
+ ----------------------------------------------------
+ Alpha orbitals:
+  - Frozen occupied        3    0    0    0     3   
+  - Active occupied        0    0    1    1     2   
+  - Active virtual         0    0    0    0     0   
+  - Frozen virtual         4    0    1    1     6   
+ ----------------------------------------------------
+ Beta orbitals:
+  - Frozen occupied        3    0    0    0     3   
+  - Active occupied        0    0    0    0     0   
+  - Active virtual         0    0    1    1     2   
+  - Frozen virtual         4    0    1    1     6   
+ ----------------------------------------------------
+
+ Import integrals:   CPU 0.00 s  wall 0.00 s
+
+ Molecular orbitals will be canonicalized.
+ Import integrals:   CPU 0.04 s  wall 0.02 s
+
+ MP2 amplitudes:   CPU 0.00 s  wall 0.00 s
+
+Running a double precision version
+ Computation of CCSD T amplitudes will be skipped.
+
+ SCF energy                 = -54.93822575
+ MP2 energy                 = -54.93822575
+ CCSD correlation energy    =   0.00000000
+ CCSD total energy          = -54.93822575
+
+ CCSD  T1^2 = 0.0000  T2^2 = 0.0000  Leading amplitudes:
+
+ Amplitude    Orbitals with energies
+
+ Amplitude    Orbitals with energies
+
+ Computing CCSD intermediates for later calculations in double precision
+ Finished.
+
+ CCSD calculation:   CPU 0.01 s  wall 0.01 s
+
+        Solving for EOMSF-CCSD A1 transitions.
+
+Running a double precision version
+       EOMSF-CCSD/MP2 right amplitudes will be solved using Davidson.
+        Amplitudes will be solved using standard  algorithm.
+     Hard-coded thresholds: 
+     LinDepThresh=1.00e-15  NormThresh=1.00e-06  ReorthogonThresh=1.00e-02
+
+      Roots     MaxVec    MaxIter   Precond   Conv      Shift    
+      1         120       60        1         1.00e-05  0.00e+00  
+ ------------------------------------------------------------------------------
+      Iter ConvRoots NVecs ResNorm Current eigenvalues (eV)
+ ------------------------------------------------------------------------------
+      0    1      2     1.44e-36   -0.0000*  
+
+     Davidson procedure converged
+
+ EOMSF transition 1/A1
+ Total energy = -54.93822575 a.u.  Excitation energy = -0.0000 eV.
+ R1^2 = 1.0000  R2^2 = 0.0000  Res^2 = 1.44e-36
+ Conv-d = yes
+
+ Amplitude    Transitions between orbitals
+ -0.7071       1 (B2) A                  ->    1 (B2) B                   
+ -0.7071       1 (B1) A                  ->    1 (B1) B                   
+
+              Summary of significant orbitals:
+
+               Number  Type             Irrep      Energy
+               5       Occ  Alpha       1 (B1)     -0.5370
+               4       Occ  Alpha       1 (B2)     -0.5370
+               5       Vir  Beta        1 (B1)      0.1896
+               4       Vir  Beta        1 (B2)      0.1896
+
+
+Running a double precision version
+      EOM-CCSD/MP2 left amplitudes will be solved using Davidson.
+        Amplitudes will be solved using MOM  algorithm.
+     Hard-coded thresholds: 
+     LinDepThresh=1.00e-15  NormThresh=1.00e-06  ReorthogonThresh=1.00e-02
+
+      Roots     MaxVec    MaxIter   Precond   Conv      Shift    
+      1         120       60        1         1.00e-05  0.00e+00  
+ ------------------------------------------------------------------------------
+      Iter ConvRoots NVecs ResNorm Current eigenvalues (eV)
+ ------------------------------------------------------------------------------
+      0    1      1     6.90e-60   -0.0000*  
+
+     Davidson procedure converged
+
+        Solving for EOMSF-CCSD A2 transitions.
+
+Warning! Not enough singles to form guess subspace. Doubles guess vectors will be generated.
+In case of poor EOM convergence, reduce requested EE_STATES.
+
+Running a double precision version
+       EOMSF-CCSD/MP2 right amplitudes will be solved using Davidson.
+        Amplitudes will be solved using standard  algorithm.
+     Hard-coded thresholds: 
+     LinDepThresh=1.00e-15  NormThresh=1.00e-06  ReorthogonThresh=1.00e-02
+
+      Roots     MaxVec    MaxIter   Precond   Conv      Shift    
+      2         120       60        1         1.00e-05  0.00e+00  
+ ------------------------------------------------------------------------------
+      Iter ConvRoots NVecs ResNorm Current eigenvalues (eV)
+ ------------------------------------------------------------------------------
+      0    2      2     1.27e-35   1.8965*  3.7930*  
+
+     Davidson procedure converged
+
+ EOMSF transition 1/A2
+ Total energy = -54.86853128 a.u.  Excitation energy = 1.8965 eV.
+ R1^2 = 1.0000  R2^2 = 0.0000  Res^2 = 6.40e-36
+ Conv-d = yes
+
+ Amplitude    Transitions between orbitals
+ -0.7071       1 (B1) A                  ->    1 (B2) B                   
+ -0.7071       1 (B2) A                  ->    1 (B1) B                   
+
+              Summary of significant orbitals:
+
+               Number  Type             Irrep      Energy
+               5       Occ  Alpha       1 (B1)     -0.5370
+               4       Occ  Alpha       1 (B2)     -0.5370
+               5       Vir  Beta        1 (B1)      0.1896
+               4       Vir  Beta        1 (B2)      0.1896
+
+
+ EOMSF transition 2/A2
+ Total energy = -54.79883682 a.u.  Excitation energy = 3.7930 eV.
+ R1^2 = 1.0000  R2^2 = 0.0000  Res^2 = 1.91e-35
+ Conv-d = yes
+
+ Amplitude    Transitions between orbitals
+ -0.7071       1 (B2) A                  ->    1 (B1) B                   
+  0.7071       1 (B1) A                  ->    1 (B2) B                   
+
+              Summary of significant orbitals:
+
+               Number  Type             Irrep      Energy
+               5       Occ  Alpha       1 (B1)     -0.5370
+               4       Occ  Alpha       1 (B2)     -0.5370
+               5       Vir  Beta        1 (B1)      0.1896
+               4       Vir  Beta        1 (B2)      0.1896
+
+
+Running a double precision version
+      EOM-CCSD/MP2 left amplitudes will be solved using Davidson.
+        Amplitudes will be solved using MOM  algorithm.
+     Hard-coded thresholds: 
+     LinDepThresh=1.00e-15  NormThresh=1.00e-06  ReorthogonThresh=1.00e-02
+
+      Roots     MaxVec    MaxIter   Precond   Conv      Shift    
+      2         120       60        1         1.00e-05  0.00e+00  
+ ------------------------------------------------------------------------------
+      Iter ConvRoots NVecs ResNorm Current eigenvalues (eV)
+ ------------------------------------------------------------------------------
+      0    2      2     1.76e-35   1.8965*  3.7930*  
+
+     Davidson procedure converged
+
+ EOMSF-CCSD calculation:   CPU 0.06 s  wall 0.05 s
+
+
+ Start computing the transition properties
+
+ ------------------------------------------------------------------------------
+ State A: eomsf_ccsd: 1/A1
+ State B: eomsf_ccsd: 1/A2
+ Transition dipole moment (a.u.):
+   A->B: 0.000000 (X 0.000000, Y 0.000000, Z 0.000000)
+   B->A: 0.000000 (X 0.000000, Y 0.000000, Z 0.000000)
+ Oscillator strength (a.u.): 0.000000
+ Transition angular momentum against gauge origin (a.u.):
+   A->B:  (X 0.000000i, Y 0.000000i, Z 0.000000i)
+   B->A:  (X 0.000000i, Y 0.000000i, Z 0.000000i)
+ Norm of one-particle transition density matrix:
+   A->B: 1.000000;   B->A: 1.000000
+   ||gamma^AB||*||gamma^BA||: 1.000000
+ One-electron spin-orbit coupling (cm-1):
+   A->B:  (Re 0.000000, Im 0.000000)
+   B->A:  (Re 0.000000, Im 0.000000)
+   Avg:   (Re 0.000000, Im 0.000000)
+ Mean-field spin-orbit coupling (cm-1):
+   A->B:  (Re 0.000000, Im 0.000000)
+   B->A:  (Re 0.000000, Im 0.000000)
+   Avg:   (Re 0.000000, Im 0.000000)
+
+ ------------------------------------------------------------------------------
+ State A: eomsf_ccsd: 1/A1
+ State B: eomsf_ccsd: 2/A2
+ Transition dipole moment (a.u.):
+   A->B: 0.000000 (X 0.000000, Y 0.000000, Z 0.000000)
+   B->A: 0.000000 (X 0.000000, Y 0.000000, Z 0.000000)
+ Oscillator strength (a.u.): 0.000000
+ Transition angular momentum against gauge origin (a.u.):
+   A->B:  (X 0.000000i, Y 0.000000i, Z 0.000000i)
+   B->A:  (X 0.000000i, Y 0.000000i, Z 0.000000i)
+ Norm of one-particle transition density matrix:
+   A->B: 1.000000;   B->A: 1.000000
+   ||gamma^AB||*||gamma^BA||: 1.000000
+ One-electron spin-orbit coupling (cm-1):
+   A->B:  (Re 0.000000, Im 114.383376)
+   B->A:  (Re 0.000000, Im -114.383376)
+   Avg:   (Re 0.000000, Im 114.383376)
+ Mean-field spin-orbit coupling (cm-1):
+   A->B:  (Re 0.000000, Im 64.967316)
+   B->A:  (Re 0.000000, Im -64.967316)
+   Avg:   (Re 0.000000, Im 64.967316)
+
+
+ All requested transition properties have been computed
+
+ Transition Properties:   CPU 0.14 s  wall 0.11 s
+
+ Total ccman2 time:   CPU 1.15 s  wall 0.60 s
+
+ 
+ --------------------------------------------------------------
+             Orbital Energies (a.u.) and Symmetries
+ --------------------------------------------------------------
+ 
+ Alpha MOs, Restricted
+ -- Doubly Occupied --           
+-15.644  -1.158  -0.582
+  1 A1    2 A1    3 A1                                                         
+ -- Singly Occupied (Occupied) --
+ -0.537  -0.537
+  1 B1    1 B2                                                                 
+ -- Virtual --                   
+  0.227   0.861   0.861   0.956   1.026   1.199
+  4 A1    2 B1    2 B2    5 A1    6 A1    7 A1                                 
+ 
+ Beta MOs, Restricted
+ -- Doubly Occupied --           
+-15.590  -0.935  -0.491
+  1 A1    2 A1    3 A1                                                         
+ -- Singly Occupied (Vacant) --  
+  0.190   0.190
+  1 B1    1 B2                                                                 
+ -- Virtual --                   
+  0.252   1.007   1.007   0.991   1.066   1.260
+  4 A1    2 B1    2 B2    5 A1    6 A1    7 A1                                 
+ --------------------------------------------------------------
+ 
+          Ground-State Mulliken Net Atomic Charges
+
+     Atom                 Charge (a.u.)
+  ----------------------------------------
+      1 N                    -0.273805
+      2 H                     0.273805
+  ----------------------------------------
+  Sum of atomic charges =     0.000000
+
+ -----------------------------------------------------------------
+                    Cartesian Multipole Moments
+ -----------------------------------------------------------------
+    Charge (ESU x 10^10)
+                 0.0000
+    Dipole Moment (Debye)
+         X      -0.0000      Y       0.0000      Z       1.9066
+       Tot       1.9066
+    Quadrupole Moments (Debye-Ang)
+        XX      -6.1765     XY      -0.0000     YY      -6.1765
+        XZ      -0.0000     YZ       0.0000     ZZ      -5.9773
+    Octopole Moments (Debye-Ang^2)
+       XXX      -0.0000    XXY       0.0000    XYY      -0.0000
+       YYY       0.0000    XXZ       0.3700    XYZ       0.0000
+       YYZ       0.3700    XZZ      -0.0000    YZZ       0.0000
+       ZZZ       2.0749
+    Hexadecapole Moments (Debye-Ang^3)
+      XXXX      -5.0877   XXXY      -0.0000   XXYY      -1.6959
+      XYYY      -0.0000   YYYY      -5.0877   XXXZ      -0.0000
+      XXYZ       0.0000   XYYZ      -0.0000   YYYZ       0.0000
+      XXZZ      -2.4841   XYZZ      -0.0000   YYZZ      -2.4841
+      XZZZ      -0.0000   YZZZ       0.0000   ZZZZ      -8.7813
+ -----------------------------------------------------------------
+Archival summary:
+1\1\cheetah\SP\ROProcedureUnspecified\6-31G\11(3)\qcdevops\WedMar1808:51:332020WedMar1808:51:332020\0\\#,ROProcedureUnspecified,6-31G,\\0,3\N\H,1,1.9748\\HF=-54.9382257\\@
+
+ Total job time:  3.50s(wall), 5.78s(cpu) 
+ Wed Mar 18 08:51:33 2020
+
+        *************************************************************
+        *                                                           *
+        *  Thank you very much for using Q-Chem.  Have a nice day.  *
+        *                                                           *
+        *************************************************************
+
+
