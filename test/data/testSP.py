@@ -38,7 +38,7 @@ class GenericSPTest(unittest.TestCase):
     # Overlap first two atomic orbitals.
     overlap01 = 0.24
 
-    # Generally, one criteria for SCF energy convergence. 
+    # Generally, one criteria for SCF energy convergence.
     num_scf_criteria = 1
 
     def testnatom(self):
@@ -78,14 +78,13 @@ class GenericSPTest(unittest.TestCase):
         dev = abs(min_carbon_dist - 1.34)
         self.assertTrue(dev < 0.03, "Minimum carbon dist is %.2f (not 1.34)" % min_carbon_dist)
 
-    @skipForParser('Molcas','The parser is still being developed so we skip this test')
-    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
+    @skipForParser('Molcas', 'missing mult')
+    @skipForParser('Turbomole', 'missing charge')
     def testcharge_and_mult(self):
         """Are the charge and multiplicity correct?"""
         self.assertEqual(self.data.charge, 0)
         self.assertEqual(self.data.mult, 1)
 
-    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testnbasis(self):
         """Is the number of basis set functions correct?"""
         count = sum([self.nbasisdict[n] for n in self.data.atomnos])
@@ -178,7 +177,7 @@ class GenericSPTest(unittest.TestCase):
             self.assertEqual(len(self.data.mocoeffs), 1)
             self.assertEqual(self.data.mocoeffs[0].shape,
                              (self.data.nmo, self.data.nbasis))
-    
+
     @skipForParser('DALTON', 'mocoeffs not implemented yet')
     @skipForLogfile('Jaguar/basicJaguar7', 'Data file does not contain enough information. Can we make a new one?')
     def testfornoormo(self):
@@ -203,7 +202,6 @@ class GenericSPTest(unittest.TestCase):
 
     @skipForParser('DALTON', 'To print: **INTEGRALS\n.PROPRI')
     @skipForParser('Molcas','The parser is still being developed so we skip this test')
-    @skipForParser('Psi3', 'Psi3 does not currently have the option to print the overlap matrix')
     @skipForParser('Psi4', 'Psi4 does not currently have the option to print the overlap matrix')
     @skipForParser('QChem', 'QChem cannot print the overlap matrix')
     @skipForParser('Turbomole','The parser is still being developed so we skip this test')
@@ -227,8 +225,6 @@ class GenericSPTest(unittest.TestCase):
         self.assertEqual(self.data.aooverlaps[3,0], 0.0)
         self.assertEqual(self.data.aooverlaps[0,3], 0.0)
 
-    @skipForParser('Molcas','The parser is still being developed so we skip this test')
-    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testoptdone(self):
         """There should be no optdone attribute set."""
         self.assertFalse(hasattr(self.data, 'optdone'))
@@ -286,28 +282,56 @@ class GenericSPTest(unittest.TestCase):
             for m in moment32:
                 self.assertEqual(m, 0.0)
 
-    @skipForParser('ADF', 'Does not support metadata yet')
-    @skipForParser('GAMESSUK', 'Does not support metadata yet')
-    @skipForParser('Molcas', 'The parser is still being developed so we skip this test')
-    @skipForParser('Molpro', 'Does not support metadata yet')
-    @skipForParser('NWChem', 'Does not support metadata yet')
-    @skipForParser('ORCA', 'Does not support metadata yet')
-    @skipForParser('Psi3', 'Does not support metadata yet')
-    @skipForParser('Psi4', 'Does not support metadata yet')
-    @skipForParser('QChem', 'Does not support metadata yet')
-    @skipForParser('Turbomole', 'The parser is still being developed so we skip this test')
-    def testmetadata(self):
+    @skipForParser('ADF', 'reading basis set names is not implemented')
+    @skipForParser('GAMESSUK', 'reading basis set names is not implemented')
+    @skipForParser('Molcas', 'reading basis set names is not implemented')
+    @skipForParser('ORCA', 'reading basis set names is not implemented')
+    @skipForParser('Psi4', 'reading basis set names is not implemented')
+    @skipForParser('Turbomole', 'reading basis set names is not implemented')
+    def testmetadata_basis_set(self):
         """Does metadata have expected keys and values?"""
-        self.assertTrue(hasattr(self.data, "metadata"))
-        if self.logfile.logname not in ['ORCA', 'Psi']:
-            self.assertIn("basis_set", self.data.metadata)
-        if self.logfile.logname == 'ORCA':
-            self.assertIn("input_file_name", self.data.metadata)
-            self.assertIn("input_file_contents", self.data.metadata)
+        self.assertEqual(self.data.metadata["basis_set"].lower(), "sto-3g")
+
+    @skipForParser('ADF', 'reading input file contents and name is not implemented')
+    @skipForParser('DALTON', 'reading input file contents and name is not implemented')
+    @skipForParser('GAMESS', 'reading input file contents and name is not implemented')
+    @skipForParser('GAMESSUK', 'reading input file contents and name is not implemented')
+    @skipForParser('Gaussian', 'reading input file contents and name is not implemented')
+    @skipForParser('Jaguar', 'reading input file contents and name is not implemented')
+    @skipForParser('Molcas', 'reading input file contents and name is not implemented')
+    @skipForParser('Molpro', 'reading input file contents and name is not implemented')
+    @skipForParser('NWChem', 'reading input file contents and name is not implemented')
+    @skipForParser('Psi4', 'reading input file contents and name is not implemented')
+    @skipForParser('QChem', 'reading input file contents and name is not implemented')
+    @skipForParser('Turbomole', 'reading input file contents and name is not implemented')
+    def testmetadata_input_file(self):
+        """Does metadata have expected keys and values?"""
+        self.assertIn("input_file_contents", self.data.metadata)
+        # TODO make input file names consistent where possible, though some
+        # programs do not allow arbitrary file extensions; for example, DALTON
+        # must end in `dal`.
+        self.assertIn("dvb_sp.in", self.data.metadata["input_file_name"])
+
+    def testmetadata_methods(self):
+        """Does metadata have expected keys and values?"""
+        # TODO implement and unify across parsers; current values are [],
+        # ["HF"], ["RHF"], and ["DFT"]
         self.assertIn("methods", self.data.metadata)
+
+    def testmetadata_package(self):
+        """Does metadata have expected keys and values?"""
+        # TODO How can the value be tested when the package name comes from
+        # the parser and isn't stored on ccData?
         self.assertIn("package", self.data.metadata)
+
+    def testmetadata_legacy_package_version(self):
+        """Does metadata have expected keys and values?"""
+        # TODO Test specific values for each unit test.
         self.assertIn("legacy_package_version", self.data.metadata)
-        self.assertIn("package_version", self.data.metadata)
+
+    def testmetadata_package_version(self):
+        """Does metadata have expected keys and values?"""
+        # TODO Test specific values for each unit test.
         self.assertIsInstance(
             packaging.version.parse(self.data.metadata["package_version"]),
             packaging.version.Version
