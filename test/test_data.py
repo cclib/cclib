@@ -245,14 +245,14 @@ class DataSuite(object):
             'ADF2013.01' : getdatafile('ADF', "basicADF2013.01", ["dvb_gopt.adfout"])[0],
             'DALTON2015' : getdatafile('DALTON', "basicDALTON-2015", ["dvb_gopt_ks.out"])[0],
             'Firefly8.0' : getdatafile('GAMESS', "basicFirefly8.0", ["dvb_gopt_a.out"])[0],
-            'Gaussian09' : getdatafile('Gaussian', "basicGaussian09", ["dvb_gopt.out"])[0],
-            'GAMESS-US' : getdatafile('GAMESS', "basicGAMESS-US2017", ["dvb_gopt_a.out"])[0],
+            'Gaussian16' : getdatafile('Gaussian', "basicGaussian16", ["dvb_gopt.out"])[0],
+            'GAMESS-US2018' : getdatafile('GAMESS', "basicGAMESS-US2018", ["dvb_gopt_a.out"])[0],
             'Jaguar8.0' : getdatafile('Jaguar', "basicJaguar8.3", ["dvb_gopt_ks.out"])[0],
             'Molpro2012' : getdatafile('Molpro', "basicMolpro2012", ["dvb_gopt.out", "dvb_gopt.log"])[0],
             # Note that it doesn't make sense to put MOPAC here, as it
             # is a semiempirical-only program.
             'NWChem6.5' : getdatafile('NWChem', "basicNWChem6.5", ["dvb_gopt_ks.out"])[0],
-            'ORCA4.1' : getdatafile('ORCA', "basicORCA4.1", ["dvb_gopt.out"])[0],
+            'ORCA4.2' : getdatafile('ORCA', "basicORCA4.2", ["dvb_gopt.out"])[0],
             'Psi4-1.3.1' : getdatafile('Psi4', "basicPsi4-1.3.1", ["dvb_gopt_rks.out"])[0],
             'QChem5.1' : getdatafile('QChem', "basicQChem5.1", ["dvb_gopt.out"])[0],
         }
