@@ -7,7 +7,7 @@
 
 """A writer for chemical markup language (CML) files."""
 
-import xml.etree.cElementTree as ET
+import xml.etree.ElementTree as ET
 
 from cclib.io import filewriter
 from cclib.parser.utils import find_package
