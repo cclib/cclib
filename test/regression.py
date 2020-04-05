@@ -1648,6 +1648,9 @@ def testORCA_ORCA4_1_single_atom_freq_out(logfile):
     assert len(logfile.data.vibdisps) == 0
     assert len(logfile.data.vibfreqs) == 0
     assert len(logfile.data.vibirs) == 0
+    # These values are different from what ORCA prints as the total enthalpy,
+    # because for single atoms that includes a spurious correction. We build the
+    # enthalpy ourselves from electronic and translational energies (see #817 for details).
     numpy.testing.assert_almost_equal(logfile.data.enthalpy, -460.14376, 5)
     numpy.testing.assert_almost_equal(logfile.data.entropy, 6.056e-5, 8)
     numpy.testing.assert_almost_equal(logfile.data.freeenergy, -460.16182, 6)

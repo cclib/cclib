@@ -818,6 +818,8 @@ class ORCA(logfileparser.Logfile):
             thermal_enthalpy_correction = float(next(inputfile).split()[4])
             next(inputfile)
 
+            # For a single atom, ORCA provides the total free energy or inner energy
+            # which includes a spurious vibrational correction (see #817 for details).
             if self.natom > 1:
                 self.enthalpy = float(next(inputfile).split()[3])
             else:
