@@ -697,7 +697,7 @@ cannot be determined. Rerun without `$molecule read`."""
                 elif 'Bohr' in line:
                     convertor = lambda x: utils.convertor(x, 'bohr', 'Angstrom')
                 else:
-                    raise RuntimeError("Unknown units in coordinate header: {}".format(line))
+                    raise ValueError("Unknown units in coordinate header: {}".format(line))
                 self.skip_lines(inputfile, ['cols', 'dashes'])
                 atomelements = []
                 atomcoords = []
