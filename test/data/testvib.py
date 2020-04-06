@@ -106,7 +106,7 @@ class GaussianIRTest(GenericIRTest):
         """Is the zero-point correction correct?"""
         self.assertAlmostEqual(self.data.zpve, zpve, delta=0.001)
 
-    entropy_places = 3
+    entropy_places = 6
     enthalpy_places = 3
     freeenergy_places = 3
 
@@ -152,7 +152,7 @@ class MolcasIRTest(GenericIRTest):
 
     max_IR_intensity = 65
 
-    entropy_places = 3
+    entropy_places = 6
     enthalpy_places = 3
     freeenergy_places = 3
 
@@ -188,7 +188,7 @@ class OrcaIRTest(GenericIRTest):
     max_IR_intensity = 215
 
     enthalpy_places = 3
-    entropy_places = 3
+    entropy_places = 6
     freeenergy_places = 3
 
     def testtemperature(self):
@@ -220,7 +220,7 @@ class QChemIRTest(GenericIRTest):
     """Customized vibrational frequency unittest"""
 
     enthalpy_places = 3
-    entropy_places = 3
+    entropy_places = 6
     freeenergy_places = 3
 
     def testtemperature(self):
