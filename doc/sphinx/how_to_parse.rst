@@ -232,7 +232,9 @@ Since the pandas library is not a dependency of cclib, `it must be installed <ht
 
 A complete data table can be parsed from many output files by following this format::
 
-    ccframe -O <OutputDest> <CompChemLogFile> [<CompChemLogFile>...]
+    ccframe [--force|-f] -O <OutputDest> <CompChemLogFile> [<CompChemLogFile>...]
 
 The argument for ``-O`` indicates the data file to be written and its extension specifies the filetype (e.g. csv, h5/hdf/hdf5, json, pickle/pkl, xlsx).
+An error will be thrown if ``<OutputDest>`` already exists, but you can force overwriting by using the ``--force`` (or ``-f``) flag.
 Since higher-dimensional attributes (e.g. ``atomcoords``) are handled as plain text in some file formats (such as Excel XLSX or CSV), we recommend storing JSON or HDF5 files.
+Observe that the output data file is overwritten if it exits already.

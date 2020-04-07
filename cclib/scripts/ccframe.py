@@ -31,15 +31,15 @@ def process_logfiles(filenames, output, identifier):
             )
 
         if outputtype in {'csv'}:
-            df.to_csv(output)
+            df.to_csv(output, mode='w')
         elif outputtype in {'h5', 'hdf', 'hdf5'}:
-            df.to_hdf(output, key=identifier)
+            df.to_hdf(output, mode='w', key=identifier)
         elif outputtype in {'json'}:
             df.to_json(output)
         elif outputtype in {'pickle', 'pkl'}:
             df.to_pickle(output)
         elif outputtype in {'xlsx'}:
-            writer = pd.ExcelWriter(output)
+            writer = pd.ExcelWriter(output, mode='w')
             # This overwrites previous sheets
             # (see https://stackoverflow.com/a/42375263/4039050)
             df.to_excel(writer, sheet_name=identifier)
@@ -63,7 +63,12 @@ def main():
                         help=('name of sheet which will contain DataFrame, if '
                               'writing to an Excel file, or identifier for '
                               'the group in HDFStore, if writing a HDF file'))
+    parser.add_argument('-f', '--force', action='store_true',
+                        help=('overwrite output file in case it already exists'))
     args = parser.parse_args()
+    if args.output is not None and not args.force and os.path.exists(args.output):
+        parser.exit(1, 'failure: exiting to avoid overwriting existing file "{}"\n'.format(args.output))
+
     process_logfiles(args.compchemlogfiles, args.output, args.identifier)
 
 
