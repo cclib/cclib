@@ -9,4 +9,4 @@ python -m pytest -v --capture=no --cov=cclib --cov-report=term --cov-report=html
 pushd data
 bash ./regression_download.sh
 popd
-python -m pytest -v --capture=no --cov=cclib --cov-report=term --cov-report=html --cov-append -k test_regression test/regression.py
+python -m pytest -v --capture=no --cov=cclib --cov-report=term --cov-report=html --cov-append -k test_regression test/regression.py --traceback
