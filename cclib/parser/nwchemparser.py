@@ -1020,21 +1020,20 @@ class NWChem(logfileparser.Logfile):
             self.mpenergies.append([])
             self.mpenergies[-1].append(utils.convertor(mpenerg, "hartree", "eV"))
 
-        if "CCSD total energy / hartree" in line or "total CCSD energy:" in line:
-            self.metadata["methods"].append("CCSD")
-            ccenerg = float(line.split()[-1])
-            if not hasattr(self, "ccenergies"):
-                self.ccenergies = []
-            self.ccenergies.append([])
-            self.ccenergies[-1].append(utils.convertor(ccenerg, "hartree", "eV"))
-
-        if "CCSD(T) total energy / hartree" in line:
-            self.metadata["methods"].append("CCSD(T)")
-            ccenerg = float(line.split()[-1])
-            if not hasattr(self, "ccenergies"):
-                self.ccenergies = []
-            self.ccenergies.append([])
-            self.ccenergies[-1].append(utils.convertor(ccenerg, "hartree", "eV"))
+        if line.strip() == "NWChem Extensible Many-Electron Theory Module":
+            ccenergies = []
+            while "Parallel integral file used" not in line:
+                line = next(inputfile)
+                if "CCSD total energy / hartree" in line or "total CCSD energy:" in line:
+                    self.metadata["methods"].append("CCSD")
+                    ccenergies.append(float(line.split()[-1]))
+                if "CCSD(T) total energy / hartree" in line:
+                    self.metadata["methods"].append("CCSD(T)")
+                    ccenergies.append(float(line.split()[-1]))
+            if ccenergies:
+                self.append_attribute(
+                    "ccenergies", utils.convertor(ccenergies[-1], "hartree", "eV")
+                )
 
         # Static and dynamic polarizability.
         if "Linear Response polarizability / au" in line:
