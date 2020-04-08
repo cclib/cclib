@@ -828,19 +828,31 @@ class DALTON(logfileparser.Logfile):
             self.mpenergies.append([])
             self.mpenergies[-1].append(energ)
 
-        if "Total CCSD  energy:" in line:
-            self.metadata["methods"].append("CCSD")
-            energ = utils.convertor(float(line.split()[-1]), 'hartree', 'eV')
-            if not hasattr(self, "ccenergies"):
-                self.ccenergies = []
-            self.ccenergies.append(energ)
+        if "Starting in Coupled Cluster Section (CC)" in line:
+            self.section = "CC"
 
-        if "Total energy CCSD(T)" in line:
-            self.metadata["methods"].append("CCSD(T)")
-            energ = utils.convertor(float(line.split()[-1]), 'hartree', 'eV')
-            if not hasattr(self, "ccenergies"):
-                self.ccenergies = []
-            self.ccenergies.append(energ)
+        if self.section == "CC" and "SUMMARY OF COUPLED CLUSTER CALCULATION" in line:
+            ccenergies = []
+            while "END OF COUPLED CLUSTER CALCULATION" not in line:
+                if "Total MP2   energy" in line:
+                    # If **WAVE FUNCTIONS\n.MP2 was specified, don't double-add this.
+                    if not hasattr(self, "mpenergies") or \
+                       not len(self.mpenergies) == len(self.scfenergies):
+                        self.append_attribute(
+                            "mpenergies",
+                            [utils.convertor(float(line.split()[-1]), "hartree", "eV")]
+                        )
+                if "Total CCSD  energy:" in line:
+                    self.metadata["methods"].append("CCSD")
+                    ccenergies.append(float(line.split()[-1]))
+                if "Total energy CCSD(T)" in line:
+                    self.metadata["methods"].append("CCSD(T)")
+                    ccenergies.append(float(line.split()[-1]))
+                line = next(inputfile)
+            if ccenergies:
+                self.append_attribute(
+                    "ccenergies", utils.convertor(ccenergies[-1], "hartree", "eV")
+                )
 
         # The molecular geometry requires the use of .RUN PROPERTIES in the input.
         # Note that the second column is not the nuclear charge, but the atom type
