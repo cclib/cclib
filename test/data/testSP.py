@@ -344,6 +344,45 @@ class GenericSPTest(unittest.TestCase):
             packaging.version.parse(self.data.metadata["package_version"]),
             packaging.version.Version
         )
+
+    @skipForParser('ADF', 'reading point group symmetry and name is not implemented')
+    @skipForParser('DALTON', 'reading point group symmetry and name is not implemented')
+    @skipForParser('GAMESS', 'reading point group symmetry and name is not implemented')
+    @skipForParser('GAMESSUK', 'reading point group symmetry and name is not implemented')
+    @skipForParser('Gaussian', 'reading point group symmetry and name is not implemented')
+    @skipForParser('Jaguar', 'reading point group symmetry and name is not implemented')
+    @skipForParser('Molcas', 'reading point group symmetry and name is not implemented')
+    @skipForParser('Molpro', 'reading point group symmetry and name is not implemented')
+    @skipForParser('MOPAC', 'reading point group symmetry and name is not implemented')
+    @skipForParser('NWChem', 'reading point group symmetry and name is not implemented')
+    @skipForParser('ORCA', 'reading point group symmetry and name is not implemented')
+    @skipForParser('Psi3', 'reading point group symmetry and name is not implemented')
+    @skipForParser('Psi4', 'reading point group symmetry and name is not implemented')
+    @skipForParser('QChem', 'reading point group symmetry and name is not implemented')
+    @skipForParser('Turbomole', 'reading point group symmetry and name is not implemented')
+    def testmetadata_symmetry_detected(self):
+        """Does metadata have expected keys and values?"""
+        self.assertEqual(self.data.metadata["symmetry_detected"], "c2h")
+
+    @skipForParser('ADF', 'reading point group symmetry and name is not implemented')
+    @skipForParser('DALTON', 'reading point group symmetry and name is not implemented')
+    @skipForParser('GAMESS', 'reading point group symmetry and name is not implemented')
+    @skipForParser('GAMESSUK', 'reading point group symmetry and name is not implemented')
+    @skipForParser('Gaussian', 'reading point group symmetry and name is not implemented')
+    @skipForParser('Jaguar', 'reading point group symmetry and name is not implemented')
+    @skipForParser('Molcas', 'reading point group symmetry and name is not implemented')
+    @skipForParser('Molpro', 'reading point group symmetry and name is not implemented')
+    @skipForParser('MOPAC', 'reading point group symmetry and name is not implemented')
+    @skipForParser('NWChem', 'reading point group symmetry and name is not implemented')
+    @skipForParser('ORCA', 'reading point group symmetry and name is not implemented')
+    @skipForParser('Psi3', 'reading point group symmetry and name is not implemented')
+    @skipForParser('Psi4', 'reading point group symmetry and name is not implemented')
+    @skipForParser('QChem', 'reading point group symmetry and name is not implemented')
+    @skipForParser('Turbomole', 'reading point group symmetry and name is not implemented')
+    def testmetadata_symmetry_used(self):
+        """Does metadata have expected keys and values?"""
+        self.assertEqual(self.data.metadata["symmetry_used"], "c2h")
+
     @skipForParser('ADF', 'reading cpu/wall time is not implemented for this parser')
     @skipForParser('DALTON', 'reading cpu/wall time is not implemented for this parser') 
     @skipForParser('FChk', 'reading cpu/wall time is not implemented for this parser') 
