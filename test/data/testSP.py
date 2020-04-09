@@ -346,7 +346,6 @@ class GenericSPTest(unittest.TestCase):
         )
 
     @skipForParser('ADF', 'reading point group symmetry and name is not implemented')
-    @skipForParser('DALTON', 'reading point group symmetry and name is not implemented')
     @skipForParser('GAMESS', 'reading point group symmetry and name is not implemented')
     @skipForParser('GAMESSUK', 'reading point group symmetry and name is not implemented')
     @skipForParser('Gaussian', 'reading point group symmetry and name is not implemented')
@@ -365,7 +364,6 @@ class GenericSPTest(unittest.TestCase):
         self.assertEqual(self.data.metadata["symmetry_detected"], "c2h")
 
     @skipForParser('ADF', 'reading point group symmetry and name is not implemented')
-    @skipForParser('DALTON', 'reading point group symmetry and name is not implemented')
     @skipForParser('GAMESS', 'reading point group symmetry and name is not implemented')
     @skipForParser('GAMESSUK', 'reading point group symmetry and name is not implemented')
     @skipForParser('Gaussian', 'reading point group symmetry and name is not implemented')
