@@ -2809,10 +2809,22 @@ class DALTONBigBasisTest_aug_cc_pCVQZ(GenericBigBasisTest):
     spherical = True
 
 
-class DALTONSPTest_nosyms_nolabels(GenericSPTest):
-    @unittest.skip('?')
+class DALTONSPTest_nosymmetry(GenericSPTest):
+
     def testsymlabels(self):
-        """Are all the symmetry labels either Ag/u or Bg/u?."""
+        """Are all the symmetry labels either Ag/u or Bg/u?"""
+        # A calculation without symmetry, meaning it belongs to the C1 point
+        # group, only has the `A` irreducible representation.
+        sumwronglabels = sum(x not in {'A'} for x in self.data.mosyms[0])
+        self.assertEqual(sumwronglabels, 0)
+
+    def testmetadata_symmetry_detected(self):
+        """Does metadata have expected keys and values?"""
+        self.assertEqual(self.data.metadata["symmetry_detected"], "c1")
+
+    def testmetadata_symmetry_used(self):
+        """Does metadata have expected keys and values?"""
+        self.assertEqual(self.data.metadata["symmetry_used"], "c1")
 
 
 class DALTONTDTest_noetsecs(DALTONTDTest):
@@ -3128,8 +3140,8 @@ old_unittests = {
     "ADF/ADF2014.01/dvb_gopt_b_fullscf.out":       ADFGeoOptTest,
 
     "DALTON/DALTON-2013/C_bigbasis.aug-cc-pCVQZ.out":       DALTONBigBasisTest_aug_cc_pCVQZ,
-    "DALTON/DALTON-2013/b3lyp_energy_dvb_sp_nosym.out":     DALTONSPTest_nosyms_nolabels,
-    "DALTON/DALTON-2013/dvb_sp_hf_nosym.out":               GenericSPTest,
+    "DALTON/DALTON-2013/b3lyp_energy_dvb_sp_nosym.out":     DALTONSPTest_nosymmetry,
+    "DALTON/DALTON-2013/dvb_sp_hf_nosym.out":               DALTONSPTest_nosymmetry,
     "DALTON/DALTON-2013/dvb_td_normalprint.out":            DALTONTDTest_noetsecs,
     "DALTON/DALTON-2013/sp_b3lyp_dvb.out":                  GenericSPTest,
     "DALTON/DALTON-2015/dvb_td_normalprint.out":            DALTONTDTest_noetsecs,

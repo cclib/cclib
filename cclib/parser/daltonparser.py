@@ -47,7 +47,7 @@ class DALTON(logfileparser.Logfile):
         self.section = None
 
         # If there is no symmetry (point group is C1), assume this.
-        self.symlabels = ['Ag']
+        self.symlabels = ['A']
 
         # Is the basis set from a single library file? This is true
         # when the first line is BASIS, false for INTGRL/ATOMBASIS.
