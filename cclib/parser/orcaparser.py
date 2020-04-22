@@ -443,8 +443,8 @@ class ORCA(logfileparser.Logfile):
             scfenergy = utils.convertor(utils.float(line.split()[-1]), 'hartree', 'eV')
             line = next(inputfile)
             assert line[:7] == 'E(CORR)'
-            line = next(inputfile)
-            assert line[:6] == 'E(TOT)'
+            while 'E(TOT)' not in line:
+                line = next(inputfile)
             self.append_attribute('ccenergies', [])
             self.ccenergies[-1].append(
                 utils.convertor(utils.float(line.split()[-1]), 'hartree', 'eV')

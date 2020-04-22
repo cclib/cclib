@@ -1669,6 +1669,25 @@ def testORCA_ORCA4_2_long_input_out(logfile):
     assert logfile.data.atomcoords.shape == (100, 12, 3)
 
 
+def testORCA_ORCA4_2_water_dlpno_ccsd_out(logfile):
+    """DLPNO-CCSD files have extra lines between E(0) and E(TOT) than normal CCSD
+    outputs:
+
+        ----------------------
+        COUPLED CLUSTER ENERGY
+        ----------------------
+
+        E(0)                                       ...    -74.963574242
+        E(CORR)(strong-pairs)                      ...     -0.049905771
+        E(CORR)(weak-pairs)                        ...      0.000000000
+        E(CORR)(corrected)                         ...     -0.049905771
+        E(TOT)                                     ...    -75.013480013
+        Singles Norm <S|S>**1/2                    ...      0.013957180  
+        T1 diagnostic                              ...      0.004934608  
+    """
+    assert hasattr(logfile.data, 'ccenergies')
+
+
 # PSI 3 #
 
 
