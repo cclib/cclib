@@ -397,25 +397,58 @@ class ORCA(logfileparser.Logfile):
             mp2energy = utils.float(line.split()[-2])
             self.mpenergies[-1].append(utils.convertor(mp2energy, 'hartree', 'eV'))
 
-        # MP2 energy output line is different for MP3.
-        # This MP2 line is unique to MP3 calculations.
-        # 
+        # MP2 energy output line is different for MP3, since it uses the MDCI
+        # code, which is also in charge of coupled cluster.
+        #
+        # MP3 calculation:
         # E(MP2)  =    -76.112119775   EC(MP2)=    -0.128216417
         # E(MP3)  =    -76.113783480   EC(MP3)=    -0.129880122  E3=    -0.001663705
-        if 'E(MP2)' in line[:6]:
+        #
+        # CCSD calculation:
+        # E(MP2)                                     ...     -0.393722942
+        # Initial E(tot)                             ...  -1639.631576169
+        # <T|T>                                      ...      0.087231847
+        # Number of pairs included                   ... 55
+        # Total number of pairs                      ... 55
+        if 'E(MP2)' in line:
 
             if not hasattr(self, 'mpenergies'):
-                self.metadata['methods'].append('MP3')
                 self.mpenergies = []
 
             self.mpenergies.append([])
-            mp2energy = utils.float(line.split()[2])
-            line = next(inputfile)
-            mp3energy = utils.float(line.split()[2])
-
+            mp2energy = utils.float(line.split()[-1])
             self.mpenergies[-1].append(utils.convertor(mp2energy, 'hartree', 'eV'))
-            self.mpenergies[-1].append(utils.convertor(mp3energy, 'hartree', 'eV'))
 
+            line = next(inputfile)
+            if line[:6] == 'E(MP3)':
+                self.metadata['methods'].append('MP3')
+                mp3energy = utils.float(line.split()[2])
+                self.mpenergies[-1].append(utils.convertor(mp3energy, 'hartree', 'eV'))
+            else:
+                assert line[:14] == 'Initial E(tot)'
+
+        # ----------------------
+        # COUPLED CLUSTER ENERGY
+        # ----------------------
+        #
+        # E(0)                                       ...  -1639.237853227
+        # E(CORR)                                    ...     -0.360153516
+        # E(TOT)                                     ...  -1639.598006742
+        # Singles Norm <S|S>**1/2                    ...      0.176406354  
+        # T1 diagnostic                              ...      0.039445660  
+        if line[:22] == 'COUPLED CLUSTER ENERGY':
+            self.skip_lines(inputfile, ['d', 'b'])
+            line = next(inputfile)
+            assert line[:4] == 'E(0)'
+            scfenergy = utils.convertor(utils.float(line.split()[-1]), 'hartree', 'eV')
+            line = next(inputfile)
+            assert line[:7] == 'E(CORR)'
+            while 'E(TOT)' not in line:
+                line = next(inputfile)
+            self.append_attribute('ccenergies', [])
+            self.ccenergies[-1].append(
+                utils.convertor(utils.float(line.split()[-1]), 'hartree', 'eV')
+            )
 
         # ------------------
         # CARTESIAN GRADIENT
