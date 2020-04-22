@@ -21,6 +21,9 @@ if find_package("PyQuante"):
 if find_package("psi4"):
     from cclib.bridge.cclib2psi4 import makepsi4
 
+if find_package("ase"):
+    from cclib.bridge.cclib2ase import makease
+
 if find_package("horton"):
     try:
         from horton import __version__
