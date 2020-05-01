@@ -691,9 +691,13 @@ cannot be determined. Rerun without `$molecule read`."""
                 self.append_attribute('time', float(tokens[8]))
 
             # Extract the atomic numbers and coordinates of the atoms.
-            if 'Standard Nuclear Orientation (Angstroms)' in line:
-                if not hasattr(self, 'atomcoords'):
-                    self.atomcoords = []
+            if 'Standard Nuclear Orientation' in line:
+                if "Angstroms" in line:
+                    convertor = lambda x: x
+                elif 'Bohr' in line:
+                    convertor = lambda x: utils.convertor(x, 'bohr', 'Angstrom')
+                else:
+                    raise ValueError("Unknown units in coordinate header: {}".format(line))
                 self.skip_lines(inputfile, ['cols', 'dashes'])
                 atomelements = []
                 atomcoords = []
@@ -701,10 +705,10 @@ cannot be determined. Rerun without `$molecule read`."""
                 while list(set(line.strip())) != ['-']:
                     entry = line.split()
                     atomelements.append(entry[1])
-                    atomcoords.append(list(map(float, entry[2:])))
+                    atomcoords.append([convertor(float(value)) for value in entry[2:]])
                     line = next(inputfile)
 
-                self.atomcoords.append(atomcoords)
+                self.append_attribute('atomcoords', atomcoords)
 
                 # We calculate and handle atomnos no matter what, since in
                 # the case of fragment calculations the atoms may change,

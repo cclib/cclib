@@ -2538,6 +2538,13 @@ def testQChem_QChem5_1_old_final_print_1_out(logfile):
     )
 
 
+def testQChem_QChem5_3_ccman2_soc_cisd_out(logfile):
+    """This file has its atomcoords in bohr, which need to be converted."""
+    convfac = 0.5291772109
+    assert logfile.data.atomcoords[0, 0, 2] == -0.24685 * convfac
+    assert logfile.data.atomcoords[0, 1, 2] == 1.72795 * convfac
+
+
 # Turbomole
 
 
