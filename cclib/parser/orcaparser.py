@@ -397,25 +397,58 @@ class ORCA(logfileparser.Logfile):
             mp2energy = utils.float(line.split()[-2])
             self.mpenergies[-1].append(utils.convertor(mp2energy, 'hartree', 'eV'))
 
-        # MP2 energy output line is different for MP3.
-        # This MP2 line is unique to MP3 calculations.
-        # 
+        # MP2 energy output line is different for MP3, since it uses the MDCI
+        # code, which is also in charge of coupled cluster.
+        #
+        # MP3 calculation:
         # E(MP2)  =    -76.112119775   EC(MP2)=    -0.128216417
         # E(MP3)  =    -76.113783480   EC(MP3)=    -0.129880122  E3=    -0.001663705
-        if 'E(MP2)' in line[:6]:
+        #
+        # CCSD calculation:
+        # E(MP2)                                     ...     -0.393722942
+        # Initial E(tot)                             ...  -1639.631576169
+        # <T|T>                                      ...      0.087231847
+        # Number of pairs included                   ... 55
+        # Total number of pairs                      ... 55
+        if 'E(MP2)' in line:
 
             if not hasattr(self, 'mpenergies'):
-                self.metadata['methods'].append('MP3')
                 self.mpenergies = []
 
             self.mpenergies.append([])
-            mp2energy = utils.float(line.split()[2])
-            line = next(inputfile)
-            mp3energy = utils.float(line.split()[2])
-
+            mp2energy = utils.float(line.split()[-1])
             self.mpenergies[-1].append(utils.convertor(mp2energy, 'hartree', 'eV'))
-            self.mpenergies[-1].append(utils.convertor(mp3energy, 'hartree', 'eV'))
 
+            line = next(inputfile)
+            if line[:6] == 'E(MP3)':
+                self.metadata['methods'].append('MP3')
+                mp3energy = utils.float(line.split()[2])
+                self.mpenergies[-1].append(utils.convertor(mp3energy, 'hartree', 'eV'))
+            else:
+                assert line[:14] == 'Initial E(tot)'
+
+        # ----------------------
+        # COUPLED CLUSTER ENERGY
+        # ----------------------
+        #
+        # E(0)                                       ...  -1639.237853227
+        # E(CORR)                                    ...     -0.360153516
+        # E(TOT)                                     ...  -1639.598006742
+        # Singles Norm <S|S>**1/2                    ...      0.176406354  
+        # T1 diagnostic                              ...      0.039445660  
+        if line[:22] == 'COUPLED CLUSTER ENERGY':
+            self.skip_lines(inputfile, ['d', 'b'])
+            line = next(inputfile)
+            assert line[:4] == 'E(0)'
+            scfenergy = utils.convertor(utils.float(line.split()[-1]), 'hartree', 'eV')
+            line = next(inputfile)
+            assert line[:7] == 'E(CORR)'
+            while 'E(TOT)' not in line:
+                line = next(inputfile)
+            self.append_attribute('ccenergies', [])
+            self.ccenergies[-1].append(
+                utils.convertor(utils.float(line.split()[-1]), 'hartree', 'eV')
+            )
 
         # ------------------
         # CARTESIAN GRADIENT
@@ -763,15 +796,39 @@ class ORCA(logfileparser.Logfile):
                 self.gbasis.append(gbasis_tmp[bas_atname])
             del self.tmp_atnames
 
-        """ Banner announcing Thermochemistry
+        """
         --------------------------
         THERMOCHEMISTRY AT 298.15K
         --------------------------
-        """
-        if 'THERMOCHEMISTRY AT' == line[:18]:
 
-            next(inputfile)
-            next(inputfile)
+        Temperature         ... 298.15 K
+        Pressure            ... 1.00 atm
+        Total Mass          ... 130.19 AMU
+
+        Throughout the following assumptions are being made:
+          (1) The electronic state is orbitally nondegenerate
+          ...
+
+        freq.      45.75  E(vib)   ...       0.53 
+        freq.      78.40  E(vib)   ...       0.49
+        ...
+
+
+        ------------
+        INNER ENERGY
+        ------------
+
+        The inner energy is: U= E(el) + E(ZPE) + E(vib) + E(rot) + E(trans)
+             E(el)   - is the total energy from the electronic structure calc
+             ...
+
+        Summary of contributions to the inner energy U:
+        Electronic energy                ...   -382.05075804 Eh
+        ...
+        """
+        if line.strip().startswith('THERMOCHEMISTRY AT'):
+
+            self.skip_lines(inputfile, ['dashes', 'blank'])
             self.temperature = float(next(inputfile).split()[2])
             self.pressure = float(next(inputfile).split()[2])
             total_mass = float(next(inputfile).split()[3])
@@ -785,40 +842,43 @@ class ORCA(logfileparser.Logfile):
             thermal_vibrational_correction = float(next(inputfile).split()[4])
             thermal_rotional_correction = float(next(inputfile).split()[4])
             thermal_translational_correction = float(next(inputfile).split()[4])
-            next(inputfile)
+            self.skip_lines(inputfile, ['dashes'])
             total_thermal_energy = float(next(inputfile).split()[3])
 
             # Enthalpy
-            line = next(inputfile)
             while line[:17] != 'Total free energy':
                 line = next(inputfile)
             thermal_enthalpy_correction = float(next(inputfile).split()[4])
             next(inputfile)
 
+            # For a single atom, ORCA provides the total free energy or inner energy
+            # which includes a spurious vibrational correction (see #817 for details).
             if self.natom > 1:
                 self.enthalpy = float(next(inputfile).split()[3])
             else:
                 self.enthalpy = self.electronic_energy + thermal_translational_correction
 
             # Entropy
-            line = next(inputfile)
             while line[:18] != 'Electronic entropy':
                 line = next(inputfile)
             electronic_entropy = float(line.split()[3])
             vibrational_entropy = float(next(inputfile).split()[3])
             rotational_entropy = float(next(inputfile).split()[3])
             translational_entropy = float(next(inputfile).split()[3])
-            next(inputfile)
+            self.skip_lines(inputfile, ['dashes'])
 
+            # ORCA prints -inf for single atom entropy.
             if self.natom > 1:
                 self.entropy = float(next(inputfile).split()[4])
             else:
                 self.entropy = (electronic_entropy + translational_entropy) / self.temperature
 
-            line = next(inputfile)
             while (line[:25] != 'Final Gibbs free enthalpy') and (line[:23] != 'Final Gibbs free energy'):
                 line = next(inputfile)
+            self.skip_lines(inputfile, ['dashes'])
 
+
+            # ORCA prints -inf for sinle atom free energy.
             if self.natom > 1:
                 self.freeenergy = float(line.split()[5])
             else:
@@ -1195,6 +1255,21 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
         #   are not printed (there is a blank line at the end).
         if line[:22] == "LOEWDIN ATOMIC CHARGES":
             self.parse_charge_section(line, inputfile, 'lowdin')
+        # ------------------
+        # HIRSHFELD ANALYSIS
+        # ------------------
+        # 
+        # Total integrated alpha density =    142.999988722
+        # Total integrated beta density  =    142.999988722
+        #  
+        #   ATOM     CHARGE      SPIN                 
+        #    0 H    0.157924    0.000000         
+        #    1 O   -0.209542    0.000000         
+        #    2 C    0.030659    0.000000
+        # ...
+        #   TOTAL  -0.999977    0.000000    
+        if line[:18] == "HIRSHFELD ANALYSIS":
+            self.parse_charge_section(line, inputfile, 'hirshfeld')
         #CHELPG Charges            
         #--------------------------------
         #  0   C   :       0.363939
@@ -1529,8 +1604,10 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
           handle to file object
         chargestype : str
           what type of charge we're dealing with, must be one of
-          'mulliken', 'lowdin' or 'chelpg'   
+          'mulliken', 'lowdin', 'chelpg' or 'hirshfeld'
         """
+        for i in range(0, 2):
+            heading_line = next(inputfile)
         has_spins = 'AND SPIN POPULATIONS' in line
 
         if not hasattr(self, "atomcharges"):
@@ -1552,6 +1629,16 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
         elif chargestype == 'chelpg':
             should_stop = lambda x: x.startswith('---')
             start, stop = 11, 26
+        elif chargestype == 'hirshfeld':
+            # stops when blank line encountered
+            should_stop = lambda x: not bool(x.strip())
+            start, stop = 9, 17
+            for i in range(0, 2):
+                next(inputfile)
+            has_spins = 'SPIN' in line # Checking the headings line for spin
+            if has_spins and not hasattr(self, "atomspins"):
+                self.atomspins = {}
+            line = next(inputfile) # As Hirshfeld has an extra Headings Line
 
         charges = []
         if has_spins:
