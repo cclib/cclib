@@ -445,8 +445,8 @@ class ORCA(logfileparser.Logfile):
             assert line[:7] == 'E(CORR)'
             while 'E(TOT)' not in line:
                 line = next(inputfile)
-            self.append_attribute('ccenergies', [])
-            self.ccenergies[-1].append(
+            self.append_attribute(
+                'ccenergies',
                 utils.convertor(utils.float(line.split()[-1]), 'hartree', 'eV')
             )
 
