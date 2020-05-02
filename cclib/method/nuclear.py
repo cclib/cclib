@@ -126,7 +126,7 @@ class Nuclear(Method):
             for j in range(i + 1, number_of_atoms - 1):
                 for k in range(j + 1, number_of_atoms):
                     angle_matrix[i][j][k] = np.arccos(((coords[j, 0]**2 + coords[j, 1]**2 + coords[j, 2]**2) - (((coords[i, 0] + coords[k, 0]) * coords[j, 0]) + ((coords[i, 1] + coords[k, 1]) * coords[j, 1]) + ((coords[i, 2] + coords[k, 2]) * coords[j, 2]))) / (np.linalg.norm(np.subtract(coords[i], coords[k])) * np.linalg.norm(np.subtract(coords[j], coords[k]))))
-                    angle_matrix[i][j][k] = angle_matrix[k][j][i]
+                    angle_matrix[k][j][i] = angle_matrix[i][j][k]
         return angle_matrix
 
     def dihedral_angles(self, atomcoords_index = -1):
