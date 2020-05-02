@@ -18,6 +18,11 @@ __filedir__ = os.path.realpath(os.path.dirname(__file__))
 class GenericCCTest(unittest.TestCase):
     """Generic coupled cluster unittest"""
 
+    def testsizeandshape(self):
+        """Are the dimensions of ccenergies correct?"""
+        self.assertEqual(self.data.ccenergies.shape,
+                         (len(self.data.scfenergies),))
+
     def testsign(self):
         """Are the coupled cluster corrections negative?"""
         corrections = self.data.ccenergies - self.data.scfenergies
