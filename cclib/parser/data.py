@@ -166,7 +166,7 @@ class ccData(object):
        "vibfreqs":         Attribute(numpy.ndarray,    'frequencies',                 'vibrations'),
        "vibirs":           Attribute(numpy.ndarray,    'IR',                          'vibrations:intensities'),
        "vibramans":        Attribute(numpy.ndarray,    'raman',                       'vibrations:intensities'),
-       "vibsyms":          Attribute(list,             'vibration symmetry',          'vibrations'
+       "vibsyms":          Attribute(list,             'vibration symmetry',          'vibrations'),
        "zpve":             Attribute(float,            'zero-point correction',       'properties:energies')
     }
 
