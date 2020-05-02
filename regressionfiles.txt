@@ -391,8 +391,9 @@ ORCA/ORCA4.1/orca_from_issue_736.out
 ORCA/ORCA4.1/porphine.out
 ORCA/ORCA4.1/single_atom_freq.out
 ORCA/ORCA4.2/MP2-gradient.out
-ORCA/ORCA4.2/long-input.out
 ORCA/ORCA4.2/cope.out
+ORCA/ORCA4.2/long-input.out
+ORCA/ORCA4.2/water_dlpno_ccsd.out
 Psi3/Psi3.4/dvb_sp_hf.out
 Psi3/Psi3.4/water_psi3.log
 Psi4/Psi4-0.5/sample_fd-freq-gradient.out
