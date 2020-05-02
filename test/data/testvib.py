@@ -67,9 +67,9 @@ class GaussianIRTest(GenericIRTest):
         """Is the length of vibsyms correct?"""
         self.assertEqual(len(self.data.vibsyms), self.numvib)
         
-    # reference zero-point correction from dvb_ir.out
-    zpve = 0.1771
     def testzeropointcorrection(self):
+        # reference zero-point correction from dvb_ir.out
+        zpve = 0.1771
         """Is the zero-point correction correct?"""
         self.assertAlmostEqual(self.data.zpve, zpve, delta=0.001)
 
