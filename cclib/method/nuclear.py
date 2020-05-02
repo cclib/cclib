@@ -101,59 +101,47 @@ class Nuclear(Method):
             formula += "(%s%i)" % (sign, magnitude)
         return formula
     
-    def get_distances(self, atomcoords_index = -1):
-        '''Returns a matrix with distances between i_th and j_th atoms at index [i][j], where i < j
-        *Other indices will give wrong values*'''
+    def distances(self, atomcoords_index = -1):
+        '''Returns a matrix with distances between i_th and j_th atoms at index [i][j]'''
+
         coords = self.data.atomcoords[atomcoords_index]
-        number_of_atoms = self.data.atomcoords.size[1]
-        distance_matrix = np.empty((number_of_atoms, number_of_atoms))
-        i = 0
-        j = 1
-        while(i < number_of_atoms):
-            while(j < number_of_atoms):
+        number_of_atoms = self.data.natom
+        distance_matrix = np.zeros([number_of_atoms, number_of_atoms])
+
+        for i in range(0, number_of_atoms - 1):
+            for j in range(i + 1, number_of_atoms):
                 distance_matrix[i][j] = np.linalg.norm(np.subtract(coords[j], coords[i]))
-                j += 1
-            i += 1
-            j = i + 1
+                distance_matrix[j][i] = distance_matrix[i][j]
+
         return distance_matrix
 
-    def get_angles(self, atomcoords_index = -1):
-        """Returns a matrix with Angles(in radians) between atoms i-j-k at index [i][j][k], where i < j < k
-        *Other indices will give wrong values*"""
+    def angles(self, atomcoords_index = -1):
+        """Returns a matrix with Angles(in radians) between atoms i, j, k at index [i][j][k]"""
+
         coords = self.data.atomcoords[atomcoords_index]
-        number_of_atoms = self.data.atomcoords.size[1]
-        angle_matrix = np.empty((number_of_atoms, number_of_atoms, number_of_atoms))
-        i = 0
-        j = 1
-        k = 2
-        while(i < number_of_atoms):
-            while(j < number_of_atoms):
-                while(k < number_of_atoms):
+        number_of_atoms = self.data.natom
+        angle_matrix = np.zeros([number_of_atoms, number_of_atoms, number_of_atoms])
+    
+        for i in range(0, number_of_atoms - 1):
+            for j in range(i + 1, number_of_atoms - 1):
+                for k in range(j + 1, number_of_atoms):
                     angle_matrix[i][j][k] = np.arccos(((coords[j, 0]**2 + coords[j, 1]**2 + coords[j, 2]**2) - (((coords[i, 0] + coords[k, 0]) * coords[j, 0]) + ((coords[i, 1] + coords[k, 1]) * coords[j, 1]) + ((coords[i, 2] + coords[k, 2]) * coords[j, 2]))) / (np.linalg.norm(np.subtract(coords[i], coords[k])) * np.linalg.norm(np.subtract(coords[j], coords[k]))))
-                    k += 1
-                j += 1
-                k = j + 1
-            i += 1
-            j = i + 1
+                    angle_matrix[i][j][k] = angle_matrix[k][j][i]
         return angle_matrix
 
-    def get_dihedral(self, atomcoords_index = -1):
-        """Returns a matrix with Dihedral angles(in radians) between the planes containing the atoms i-j and k-l at index [i][j][k][l], where i < j < k < l
-        *Other indices will give wrong values* """
-        """Based on this formula ->[https://stackoverflow.com/questions/20305272/dihedral-torsion-angle-from-four-points-in-cartesian-coordinates-in-python]
+    def dihedral_angles(self, atomcoords_index = -1):
+        """Returns a matrix with Dihedral angles(in radians) between the planes containing the atoms i, j and k, l at index [i][j][k][l]"""
+        """Based on this formula -> [https://stackoverflow.com/questions/20305272/dihedral-torsion-angle-from-four-points-in-cartesian-coordinates-in-python]
         1 sqrt, 1 cross product"""
 
         coords = self.data.atomcoords[atomcoords_index]
-        number_of_atoms = self.data.atomcoords.size[1]
-        dihedral_matrix = np.empty((number_of_atoms, number_of_atoms, number_of_atoms, number_of_atoms))
-        i = 0
-        j = 1
-        k = 2
-        l = 3
-        while(i < number_of_atoms):
-            while(j < number_of_atoms):
-                while(k < number_of_atoms):
-                    while(l < number_of_atoms):
+        number_of_atoms = self.data.natom
+        dihedral_matrix = np.zeros([number_of_atoms, number_of_atoms, number_of_atoms, number_of_atoms])
+        
+        for i in range(0, number_of_atoms - 1):
+            for j in range(i + 1, number_of_atoms - 1):
+                for k in range(j + 1, number_of_atoms - 1):
+                    for l in range(k + 1, number_of_atoms):
                         b0 = -1.0*(coords[j] - coords[i])
                         b1 = coords[k] - coords[j]
                         b2 = coords[l] - coords[k]
@@ -164,26 +152,25 @@ class Nuclear(Method):
 
                         # vector rejections
                         # v = projection of b0 onto plane perpendicular to b1
-                        #   = b0 minus component that aligns with b1
                         # w = projection of b2 onto plane perpendicular to b1
-                        #   = b2 minus component that aligns with b1
                         v = b0 - np.dot(b0, b1)*b1
                         w = b2 - np.dot(b2, b1)*b1
 
                         # angle between v and w in a plane is the torsion angle
-                        # v and w may not be normalized but that's fine since tan is y/x
                         x = np.dot(v, w)
                         y = np.dot(np.cross(b1, v), w)
 
                         dihedral_matrix[i][j][k][l] = np.arctan2(y, x)
+                        
+                        # All permutations
+                        dihedral_matrix[i][j][l][k] = dihedral_matrix[i][j][k][l]
+                        dihedral_matrix[j][i][k][l] = dihedral_matrix[i][j][k][l]
+                        dihedral_matrix[j][i][l][k] = dihedral_matrix[i][j][k][l]
+                        dihedral_matrix[k][l][i][j] = dihedral_matrix[i][j][k][l]
+                        dihedral_matrix[k][l][j][i] = dihedral_matrix[i][j][k][l]
+                        dihedral_matrix[l][k][i][j] = dihedral_matrix[i][j][k][l]
+                        dihedral_matrix[l][k][j][i] = dihedral_matrix[i][j][k][l]
 
-                        l += 1
-                    k += 1
-                    l = k + 1
-                j += 1
-                k = j + 1
-            i += 1
-            j = i + 1        
         return dihedral_matrix
 
     def repulsion_energy(self, atomcoords_index=-1):
