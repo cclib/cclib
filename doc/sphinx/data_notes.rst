@@ -4,9 +4,9 @@
 Parsed data notes
 =================
 
-This is a list of descriptions and notes for all the data attributes currently parsed by cclib, either in the official release (|release|) or development branch. In particular, this page contains technical details about the interpretation of attributes, how to produce them in the various programs and examples in some cases. For a summary and details of the current implementation by the different parsers, please see the `extracted data`_ page and its `development`_ version.
+This is a list of descriptions and notes for all the data attributes currently parsed by cclib, either in the official release (|release|) or development branch. In particular, this page contains technical details about the interpretation of attributes, how to produce them in the various programs and examples in some cases. For a summary and details of the current implementation by the different parsers, please see the `parsed data`_ page and its `development`_ version.
 
-.. _`extracted data`: data.html
+.. _`parsed data`: data.html
 .. _`development`: data_dev.html
 
 aonames
@@ -291,7 +291,14 @@ An array of rank 1 that contains the elements of the `hessian <http://en.wikiped
 homos
 -----
 
-A 1D array that holds the indexes of the highest occupied molecular orbitals (HOMOs), which contains one element for restricted and two elements for unrestricted calculations. These indexes can be applied to other attributes describing molecular orbitals, such as `moenergies`_ and `mocoeffs`_.
+A 1D array that holds the indexes of the highest occupied molecular orbitals (HOMOs), with one element for restricted and two elements for unrestricted calculations. These indexes can be applied to other attributes describing molecular orbitals, such as `moenergies`_ and `mocoeffs`_. For example:
+
+.. code-block:: python
+
+  >> data = cclib.io.ccread('water_mp2')
+  >> last_occupied_energy = data.moenergies[0][data.homos[0]]
+
+>> **Note:** All indexes in cclib start from zero, as per Python conventions. This applies to the contents of ``homos`` as well, which means ``homos[0]`` refers to the *index* of the HOMO when referencing other attributes and not the number of occupied orbitals.
 
 .. index::
     single: molecular orbitals; mocoeffs (attribute)
